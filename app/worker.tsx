@@ -162,6 +162,7 @@ app.get("/", async (c) => {
         border-radius: 0.25rem;
         border: 1px solid var(--color-border);
         background: none;
+        color: var(--color-text);
 
         &:focus {
           border-color: var(--color-brand);
