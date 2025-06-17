@@ -202,6 +202,27 @@ table thead th[data-desc]::after {
   font-weight: normal;
 }
 
+table thead th.sortable {
+  cursor: pointer;
+  user-select: none;
+  transition: background-color 0.15s ease;
+}
+
+table thead th.sortable:hover {
+  background-color: var(--color-surface);
+}
+
+table thead th.sortable .sort-arrow {
+  opacity: 0.5;
+  font-size: 0.625rem;
+  margin-left: 0.25rem;
+}
+
+table thead th.sortable.sorted-asc .sort-arrow,
+table thead th.sortable.sorted-desc .sort-arrow {
+  opacity: 1;
+}
+
 th, td {
   padding: 0.75rem;
   text-align: left;

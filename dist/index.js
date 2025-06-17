@@ -16,11 +16,126 @@ function filterTable() {
   })
 }
 
+let currentSort = { column: null, direction: 'asc' }
+
+function sortTable(column) {
+  const tbody = document.getElementById('tableBody')
+  const rows = Array.from(tbody.querySelectorAll('tr'))
+  
+  // Determine sort direction
+  if (currentSort.column === column) {
+    currentSort.direction = currentSort.direction === 'asc' ? 'desc' : 'asc'
+  } else {
+    currentSort.direction = 'asc'
+  }
+  currentSort.column = column
+
+  // Sort rows
+  rows.sort((a, b) => {
+    let aValue, bValue
+    
+    // Get values based on column
+    switch (column) {
+      case 'provider':
+        aValue = a.dataset.provider
+        bValue = b.dataset.provider
+        break
+      case 'model':
+        aValue = a.dataset.model
+        bValue = b.dataset.model
+        break
+      case 'provider-id':
+        aValue = a.dataset.providerId
+        bValue = b.dataset.providerId
+        break
+      case 'model-id':
+        aValue = a.dataset.modelId
+        bValue = b.dataset.modelId
+        break
+      case 'attachment':
+      case 'reasoning':
+      case 'temperature':
+        aValue = parseInt(a.dataset[column.replace('-', '')])
+        bValue = parseInt(b.dataset[column.replace('-', '')])
+        break
+      case 'input-cost':
+        aValue = parseFloat(a.dataset.inputCost)
+        bValue = parseFloat(b.dataset.inputCost)
+        break
+      case 'output-cost':
+        aValue = parseFloat(a.dataset.outputCost)
+        bValue = parseFloat(b.dataset.outputCost)
+        break
+      case 'input-cached-cost':
+        aValue = parseFloat(a.dataset.inputCachedCost)
+        bValue = parseFloat(b.dataset.inputCachedCost)
+        break
+      case 'output-cached-cost':
+        aValue = parseFloat(a.dataset.outputCachedCost)
+        bValue = parseFloat(b.dataset.outputCachedCost)
+        break
+      case 'context-limit':
+        aValue = parseInt(a.dataset.contextLimit)
+        bValue = parseInt(b.dataset.contextLimit)
+        break
+      case 'output-limit':
+        aValue = parseInt(a.dataset.outputLimit)
+        bValue = parseInt(b.dataset.outputLimit)
+        break
+      default:
+        return 0
+    }
+
+    // Compare values
+    let comparison = 0
+    if (typeof aValue === 'string') {
+      comparison = aValue.localeCompare(bValue)
+    } else {
+      comparison = aValue - bValue
+    }
+
+    return currentSort.direction === 'asc' ? comparison : -comparison
+  })
+
+  // Update table
+  rows.forEach(row => tbody.appendChild(row))
+  
+  // Update sort indicators
+  updateSortIndicators()
+}
+
+function updateSortIndicators() {
+  // Remove all existing sort indicators
+  document.querySelectorAll('.sort-arrow').forEach(arrow => {
+    arrow.textContent = ''
+    arrow.parentElement.classList.remove('sorted-asc', 'sorted-desc')
+  })
+  
+  // Add indicator for current sort
+  if (currentSort.column) {
+    const header = document.querySelector(`[data-column="${currentSort.column}"]`)
+    const arrow = header.querySelector('.sort-arrow')
+    arrow.textContent = currentSort.direction === 'asc' ? ' ↑' : ' ↓'
+    header.classList.add(`sorted-${currentSort.direction}`)
+  }
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   const dialog = document.getElementById('howToUse')
   const openBtn = document.getElementById('btnHowToUse')
   const closeBtn = document.getElementById('btnClose')
   let scrollY
+
+  // Add event listeners to sortable headers
+  document.querySelectorAll('.sortable').forEach(header => {
+    header.addEventListener('click', () => {
+      const column = header.dataset.column
+      sortTable(column)
+    })
+  })
+
+  // Initialize with default sort by provider
+  sortTable('provider')
 
   openBtn.addEventListener('click', () => {
     scrollY = window.scrollY

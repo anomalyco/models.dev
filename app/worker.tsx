@@ -57,33 +57,27 @@ app.get("/", async (c) => {
           <table>
             <thead>
               <tr>
-                <th>Provider</th>
-                <th>Model</th>
-                <th>Provider ID</th>
-                <th>Model ID</th>
-                <th>Attachment</th>
-                <th>Reasoning</th>
-                <th>Temperature</th>
-                <th data-desc="per 1M tokens">Input Cost</th>
-                <th data-desc="per 1M tokens">Output Cost</th>
-                <th data-desc="per 1M tokens">Input Cached Cost</th>
-                <th data-desc="per 1M tokens">Output Cached Cost</th>
-                <th>Context Limit</th>
-                <th>Output Limit</th>
+                <th class="sortable" data-column="provider">Provider <span class="sort-arrow"></span></th>
+                <th class="sortable" data-column="model">Model <span class="sort-arrow"></span></th>
+                <th class="sortable" data-column="provider-id">Provider ID <span class="sort-arrow"></span></th>
+                <th class="sortable" data-column="model-id">Model ID <span class="sort-arrow"></span></th>
+                <th class="sortable" data-column="attachment">Attachment <span class="sort-arrow"></span></th>
+                <th class="sortable" data-column="reasoning">Reasoning <span class="sort-arrow"></span></th>
+                <th class="sortable" data-column="temperature">Temperature <span class="sort-arrow"></span></th>
+                <th class="sortable" data-column="input-cost" data-desc="per 1M tokens">Input Cost <span class="sort-arrow"></span></th>
+                <th class="sortable" data-column="output-cost" data-desc="per 1M tokens">Output Cost <span class="sort-arrow"></span></th>
+                <th class="sortable" data-column="input-cached-cost" data-desc="per 1M tokens">Input Cached Cost <span class="sort-arrow"></span></th>
+                <th class="sortable" data-column="output-cached-cost" data-desc="per 1M tokens">Output Cached Cost <span class="sort-arrow"></span></th>
+                <th class="sortable" data-column="context-limit">Context Limit <span class="sort-arrow"></span></th>
+                <th class="sortable" data-column="output-limit">Output Limit <span class="sort-arrow"></span></th>
               </tr>
             </thead>
-            <tbody>
+            <tbody id="tableBody">
               {Object.entries(apiData)
-                .sort(([, providerA], [, providerB]) =>
-                  providerA.name.localeCompare(providerB.name)
-                )
                 .flatMap(([providerId, provider]) =>
                   Object.entries(provider.models)
-                    .sort(([, modelA], [, modelB]) =>
-                      modelA.name.localeCompare(modelB.name)
-                    )
                     .map(([modelId, model]) => (
-                      <tr key={`${providerId}-${modelId}`}>
+                      <tr key={`${providerId}-${modelId}`} data-provider={provider.name} data-model={model.name} data-provider-id={providerId} data-model-id={modelId} data-attachment={model.attachment ? "1" : "0"} data-reasoning={model.reasoning ? "1" : "0"} data-temperature={model.temperature ? "1" : "0"} data-input-cost={model.cost.input} data-output-cost={model.cost.output} data-input-cached-cost={model.cost.inputCached} data-output-cached-cost={model.cost.outputCached} data-context-limit={model.limit.context} data-output-limit={model.limit.output}>
                         <td>{provider.name}</td>
                         <td>{model.name}</td>
                         <td>{providerId}</td>
