@@ -15,8 +15,9 @@ Bun.serve({
   },
 });
 
-export const server = Bun.serve({
+const server = Bun.serve({
   development: true,
+  hostname: "0.0.0.0",
   async fetch(req) {
     // Reject WebSocket upgrade requests
     if (req.headers.get("upgrade") === "websocket") {
@@ -43,3 +44,5 @@ export const server = Bun.serve({
     });
   },
 });
+
+console.log(`Server running at ${server.hostname}:${server.port}`);

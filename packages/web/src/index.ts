@@ -1,6 +1,6 @@
 const modal = document.getElementById("modal") as HTMLDialogElement;
+const modalClose = document.getElementById("close")!;
 const help = document.getElementById("help")!;
-const close = document.getElementById("close")!;
 const search = document.getElementById("search")! as HTMLInputElement;
 
 search.addEventListener("input", () => {
@@ -18,12 +18,12 @@ search.addEventListener("input", () => {
   });
 });
 
-let scrollY = 0;
+let y = 0;
 
 help.addEventListener("click", () => {
   scrollY = window.scrollY;
   document.body.style.position = "fixed";
-  document.body.style.top = `-${scrollY}px`;
+  document.body.style.top = `-${y}px`;
   modal.showModal();
 });
 
@@ -34,7 +34,7 @@ function closeDialog() {
   window.scrollTo(0, scrollY);
 }
 
-close.addEventListener("click", closeDialog);
+modalClose.addEventListener("click", closeDialog);
 modal.addEventListener("cancel", closeDialog);
 modal.addEventListener("click", (e) => {
   if (e.target === modal) closeDialog();
