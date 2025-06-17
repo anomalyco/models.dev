@@ -10,9 +10,10 @@ export default $config({
   async run() {
     const worker = new sst.cloudflare.StaticSite("MyWorker", {
       domain: $app.stage === "dev" ? "models.dev" : undefined,
+      path: "./packages/web/",
       build: {
         output: "./dist",
-        command: "./scripts/build.ts",
+        command: "./script/build.ts",
       },
     });
 

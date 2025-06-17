@@ -23,12 +23,6 @@ jobs:
       - name: Install dependencies
         run: bun install
 
-      - name: Run validation script
-        run: bun scripts/validate
-
-      - name: Generate data
-        run: bun scripts/generate
-
       - run: bun sst deploy --stage=dev
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}

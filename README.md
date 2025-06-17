@@ -1,9 +1,9 @@
 <p align="center">
   <a href="https://models.dev">
     <picture>
-      <source srcset="dist/logo-dark.svg" media="(prefers-color-scheme: dark)">
-      <source srcset="dist/logo-light.svg" media="(prefers-color-scheme: light)">
-      <img src="dist/logo-light.svg" alt="Models.dev logo">
+      <source srcset="./logo-dark.svg" media="(prefers-color-scheme: dark)">
+      <source srcset="./logo-light.svg" media="(prefers-color-scheme: light)">
+      <img src="./logo-light.svg" alt="Models.dev logo">
     </picture>
   </a>
 </p>
