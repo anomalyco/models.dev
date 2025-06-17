@@ -9,7 +9,7 @@ async function build() {
   const providersDir = join(import.meta.dir, "..", "providers");
   const distDir = join(import.meta.dir, "..", "dist");
   const outputPath = join(distDir, "api.json");
-  const result = {};
+  const result = {} as Record<string, any>;
 
   try {
     const providers = await readdir(providersDir);
@@ -57,11 +57,13 @@ async function build() {
     console.log(
       `\n✅ Successfully built data.json with ${
         Object.keys(result).length
-      } providers`
+      } providers`,
     );
   } catch (err) {
-    console.error(`❌ Error: ${err.message}`);
-    process.exit(1);
+    if (err instanceof Error) {
+      console.error(`❌ Error: ${err.message}`);
+      process.exit(1);
+    }
   }
 }
 

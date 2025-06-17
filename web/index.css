@@ -23,6 +23,7 @@
   --color-text-secondary: #666;
   --color-text-tertiary: #999;
 }
+
 @media (prefers-color-scheme: dark) {
   :root {
     --color-brand: #FD9527;
@@ -38,24 +39,30 @@
   }
 }
 
-html, body {
+html,
+body {
   font-family: 'Rubik', sans-serif;
   line-height: 1.6;
   color: var(--color-text);
   background-color: var(--color-background);
 }
+
 body:has(dialog[open]) {
   overscroll-behavior: none;
 }
-input, button {
+
+input,
+button {
   font-family: inherit;
 }
+
 a {
   color: var(--color-text);
   text-decoration: underline;
   text-decoration-style: dotted;
   text-decoration-color: var(--color-text-tertiary);
   text-underline-offset: 0.1875rem;
+
   &:hover {
     color: var(--color-text);
   }
@@ -73,7 +80,7 @@ header {
   position: fixed;
   width: 100%;
 
-  & > div {
+  &>div {
     display: flex;
     align-items: center;
 
@@ -83,6 +90,7 @@ header {
       position: relative;
       align-items: baseline;
     }
+
     &.right {
       flex: 0 0 auto;
       gap: 0.75rem;
@@ -95,6 +103,7 @@ header {
     text-transform: uppercase;
     letter-spacing: -0.5px;
   }
+
   p {
     font-size: 0.875rem;
     white-space: nowrap;
@@ -102,6 +111,7 @@ header {
     text-overflow: ellipsis;
     color: var(--color-text-tertiary);
   }
+
   .slash {
     margin-left: 0.625rem;
     margin-right: 0.25rem;
@@ -115,13 +125,16 @@ header {
     transform: translateX(-50%) rotate(20deg);
     transform-origin: top center;
   }
+
   a.github {
     flex: 0 0 auto;
     color: var(--color-text-secondary);
+
     svg {
       opacity: var(--icon-opacity);
     }
   }
+
   input {
     flex: 1 1 auto;
     font-size: 0.8125rem;
@@ -137,6 +150,7 @@ header {
       outline: none;
     }
   }
+
   button {
     flex: 0 0 auto;
     cursor: pointer;
@@ -152,14 +166,19 @@ header {
 
   @media (max-width: 32rem) {
     div.left {
-      p, span.slash {
+
+      p,
+      span.slash {
         display: none;
       }
     }
   }
+
   @media (max-width: 45rem) {
     div.right {
-      .github, input {
+
+      .github,
+      input {
         display: none;
       }
     }
@@ -174,8 +193,8 @@ table {
   margin-top: var(--header-height);
 }
 
-thead, tbody {
-}
+thead,
+tbody {}
 
 table thead th {
   position: sticky;
@@ -202,7 +221,8 @@ table thead th[data-desc]::after {
   font-weight: normal;
 }
 
-th, td {
+th,
+td {
   padding: 0.75rem;
   text-align: left;
   border-bottom: 1px solid var(--color-border);
@@ -213,14 +233,18 @@ tbody {
   td {
     color: var(--color-text-tertiary);
   }
+
   td:nth-child(1) {
     font-weight: 500;
   }
-  td:nth-child(1), td:nth-child(2) {
+
+  td:nth-child(1),
+  td:nth-child(2) {
     color: var(--color-text);
   }
-  td:nth-child(5) {
-  }
+
+  td:nth-child(5) {}
+
   td:nth-child(5),
   td:nth-child(6),
   td:nth-child(7) {
@@ -228,6 +252,7 @@ tbody {
     font-family: var(--font-mono);
     text-transform: uppercase;
   }
+
   td:nth-child(3),
   td:nth-child(4),
   td:nth-child(8),
@@ -240,6 +265,7 @@ tbody {
     font-family: var(--font-mono);
   }
 }
+
 dialog::backdrop {
   backdrop-filter: blur(8px);
   background-color: rgba(0, 0, 0, 0.03);
@@ -284,6 +310,7 @@ dialog {
       letter-spacing: -0.5px;
       line-height: 1;
     }
+
     button {
       background: transparent;
       color: var(--color-text);
@@ -293,6 +320,7 @@ dialog {
       line-height: 1;
       cursor: pointer;
       outline: none;
+
       svg {
         display: block;
         width: 1.5rem;
@@ -308,30 +336,37 @@ dialog {
     overscroll-behavior: contain;
     font-size: 0.875rem;
 
-    h2, p, .code-block {
+    h2,
+    p,
+    .code-block {
       margin-bottom: 0.625rem;
 
       &:has(+ h2) {
         margin-bottom: 1.5rem;
       }
+
       &:last-child {
         margin-bottom: 0;
       }
     }
+
     h2 {
       font-size: 1rem;
       font-weight: 500;
     }
+
     p {
       b {
         font-weight: 500;
       }
     }
+
     .code-block {
       padding: 0.875rem 1rem;
       border-radius: 0.25rem;
       background-color: var(--color-surface);
     }
+
     code {
       font-size: 0.8125rem;
       font-family: var(--font-mono);
@@ -352,11 +387,11 @@ dialog {
       color: var(--color-text-tertiary);
       text-decoration: none;
 
-      &:hover, &:visited {
+      &:hover,
+      &:visited {
         color: var(--color-text-tertiary);
       }
     }
   }
 
 }
-
