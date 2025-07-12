@@ -1,0 +1,16 @@
+id = "mistralai/mistral-small-3.1-24b-instruct:free"
+name = "Mistral Small 3.1 24B Instruct"
+release_date = "2025-03-17"
+last_updated = "2025-03-17"
+attachment = true
+reasoning = false
+temperature = true
+knowledge = "2024-10"
+tool_call = true
+open_weights = true
+cost = { input = 0, output = 0 }
+limit = { context = 128000, output = 8192 }
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
