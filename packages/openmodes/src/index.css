@@ -186,15 +186,63 @@ header {
 	}
 }
 
-table {
-	border-collapse: separate;
-	border-spacing: 0;
-	font-size: 0.875rem;
+table.table-modes {
 	width: 100%;
+	border-collapse: collapse;
+	table-layout: fixed;
+	font-size: 0.875rem;
 	margin-top: var(--header-height);
-	max-width: 1200px;
+	max-width: 1280px;
 	margin-left: auto;
 	margin-right: auto;
+}
+
+.table-modes th,
+.table-modes td {
+	padding: 0.75rem;
+	text-align: left;
+	border-bottom: 1px solid var(--color-border);
+}
+
+/* Left block: Name and Author */
+.table-modes th.name,
+.table-modes td.name {
+	width: 120px;
+}
+
+.table-modes th.author,
+.table-modes td.author {
+	width: 120px;
+}
+
+/* Center: Description takes remaining space */
+.table-modes th.description,
+.table-modes td.description {
+	width: auto;
+	max-width: 300px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	padding-right: 2.5rem;
+}
+
+/* Right block: Votes, Downloads, Updated */
+.table-modes th.votes,
+.table-modes td.votes {
+	width: 100px;
+	text-align: left;
+}
+
+.table-modes th.downloads,
+.table-modes td.downloads {
+	width: 130px;
+	text-align: left;
+}
+
+.table-modes th.updated,
+.table-modes td.updated {
+	width: 120px;
+	text-align: left;
 }
 
 table thead th {
@@ -253,12 +301,6 @@ tbody tr {
 		white-space: nowrap;
 		overflow: hidden;
 		text-overflow: ellipsis;
-	}
-
-	.votes {
-		font-weight: 500;
-		color: var(--color-text);
-		font-family: var(--font-mono);
 	}
 }
 

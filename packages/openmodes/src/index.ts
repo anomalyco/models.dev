@@ -385,8 +385,7 @@ async function vote(direction: 'up' | 'down') {
 
 			if (call === apiCalls[apiCalls.length - 1]) {
 				const result = await response.json();
-				updateVoteCount(result.newVoteCount, modeId);
-			}
+					updateCountUI('votes', result.newVoteCount, modeId);			}
 		}
 	} catch (error) {
 		console.error('Failed to vote:', error);
@@ -437,14 +436,17 @@ function setButtonsDisabled(disabled: boolean) {
 	}
 }
 
-function updateVoteCount(newCount: number, modeId: string) {
-	currentMode.votes = newCount;
-	DOMElements.voteCountEl.textContent = newCount.toString();
-
+function updateCountUI(type: 'votes' | 'downloads', newCount: number, modeId: string) {
+	if (!currentMode) return;
+	currentMode[type] = newCount;
+	const modalCountEl = type === 'votes' ? DOMElements.voteCountEl : DOMElements.downloadCountEl;
+	modalCountEl.textContent = newCount.toString();
 	const tableRow = document.querySelector(`tr[data-mode-id="${modeId}"]`);
-	const votesCell = tableRow?.querySelector('.votes');
-	if (votesCell) votesCell.textContent = newCount.toString();
+	const cellClass = type;
+	const cell = tableRow?.querySelector(`.${cellClass}`);
+	if (cell) cell.textContent = newCount.toString();
 }
+
 
 async function downloadMode() {
 	if (!currentMode) return;
@@ -490,6 +492,8 @@ function downloadFile(blob: Blob, filename: string) {
 	URL.revokeObjectURL(url);
 }
 
+
+
 async function updateDownloadCount(modeId: string) {
 	try {
 		const countResponse = await fetch('/api/download', {
@@ -500,9 +504,7 @@ async function updateDownloadCount(modeId: string) {
 
 		if (countResponse.ok) {
 			const result = await countResponse.json();
-			currentMode.downloads = result.newDownloadCount;
-			DOMElements.downloadCountEl.textContent =
-				result.newDownloadCount.toString();
+			updateCountUI('downloads', result.newDownloadCount, modeId);
 			UserDataManager.setDownloadStatus(modeId);
 			DOMElements.downloadBtn.classList.add('downloaded');
 		}

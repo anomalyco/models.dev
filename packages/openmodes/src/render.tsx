@@ -286,22 +286,25 @@ export function getRenderWithCurrentVotes() {
 					<button id='help'>How to use</button>
 				</div>
 			</header>
-			<table>
+			<table class='table-modes'>
 				<thead>
 					<tr>
-						<th class='sortable' data-type='text'>
+						<th class='name sortable' data-type='text'>
 							Name <span class='sort-indicator'></span>
 						</th>
-						<th class='sortable' data-type='text'>
+						<th class='author sortable' data-type='text'>
 							Author <span class='sort-indicator'></span>
 						</th>
-						<th class='sortable' data-type='text'>
+						<th class='description sortable' data-type='text'>
 							Description <span class='sort-indicator'></span>
 						</th>
-						<th class='sortable' data-type='number'>
+						<th class='votes sortable' data-type='number'>
 							Votes <span class='sort-indicator'></span>
 						</th>
-						<th class='sortable' data-type='text'>
+						<th class='downloads sortable' data-type='number'>
+							Downloads <span class='sort-indicator'></span>
+						</th>
+						<th class='updated sortable' data-type='text'>
 							Updated <span class='sort-indicator'></span>
 						</th>
 					</tr>
@@ -316,11 +319,12 @@ export function getRenderWithCurrentVotes() {
 								data-mode-id={modeId}
 								onclick='openModeModal(this)'
 							>
-								<td class='mode-name'>{mode.name}</td>
-								<td>{mode.author}</td>
+								<td class='name mode-name'>{mode.name}</td>
+								<td class='author'>{mode.author}</td>
 								<td class='description'>{mode.description}</td>
 								<td class='votes'>{mode.votes}</td>
-								<td>{mode.updated_at}</td>
+								<td class='downloads'>{mode.downloads}</td>
+								<td class='updated'>{mode.updated_at}</td>
 							</tr>
 						))}
 				</tbody>
