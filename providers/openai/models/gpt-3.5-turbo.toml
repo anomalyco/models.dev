@@ -1,0 +1,22 @@
+name = "GPT-3.5-turbo"
+release_date = "2023-03-01"
+last_updated = "2023-11-06"
+attachment = false
+reasoning = false
+temperature = true
+knowledge = "2021-09-01"
+tool_call = false
+open_weights = false
+
+[cost]
+input = 0.50
+output = 1.50
+cache_read = 1.25
+
+[limit]
+context = 16_385
+output = 4_096
+
+[modalities]
+input = ["text"]
+output = ["text"]
