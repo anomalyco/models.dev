@@ -4,13 +4,13 @@ import { readdir, stat } from 'fs/promises';
 import { Mutex } from 'async-mutex';
 
 // Response helpers
-const jsonResponse = (data: any, status = 200, indent?: number) => 
+const jsonResponse = (data: any, status = 200, indent?: number) =>
 	new Response(JSON.stringify(data, null, indent), {
 		status,
 		headers: { 'Content-Type': 'application/json' }
 	});
 
-const textResponse = (text: string, status = 200) => 
+const textResponse = (text: string, status = 200) =>
 	new Response(text, { status });
 
 const fileResponse = (file: any, contentType: string) =>
@@ -75,7 +75,8 @@ class DataManager {
 		return await DataManager.mutexes.downloads.runExclusive(async () => {
 			if (!Modes[modeId]) throw new Error('Mode not found');
 
-			if (!DataManager.data.downloads[modeId]) DataManager.data.downloads[modeId] = 0;
+			if (!DataManager.data.downloads[modeId])
+				DataManager.data.downloads[modeId] = 0;
 			DataManager.data.downloads[modeId]++;
 
 			await DataManager.save('downloads');
@@ -118,6 +119,28 @@ function getAllModesWithVotes() {
 		};
 	}
 	return modesWithVotes;
+}
+
+function getAllModesIndex() {
+	const modesIndex: Record<string, any> = {};
+	for (const [modeId, mode] of Object.entries(Modes)) {
+		const indexEntry: any = {
+			id: modeId,
+			author: mode.author,
+			description: mode.description,
+			votes: DataManager.getCount('votes', modeId),
+			downloads: DataManager.getCount('downloads', modeId),
+			updated_at: mode.updated_at,
+			version: mode.version
+		};
+
+		if (mode.pr_number) {
+			indexEntry.pr_number = mode.pr_number;
+		}
+
+		modesIndex[modeId] = indexEntry;
+	}
+	return modesIndex;
 }
 
 await DataManager.load('votes');
@@ -243,12 +266,16 @@ const server = Bun.serve({
 			return jsonResponse(getAllModesWithVotes(), 200, 2);
 		}
 
+		if (url.pathname === '/mode/index') {
+			return jsonResponse(getAllModesIndex(), 200, 2);
+		}
+
 		if (url.pathname.startsWith('/mode/')) {
 			const modeId = url.pathname.split('/')[2];
 			if (!modeId) {
 				return textResponse('Mode ID required', 400);
 			}
-			
+
 			const mode = getModeWithVotes(modeId);
 
 			if (!mode) {
@@ -267,7 +294,10 @@ const server = Bun.serve({
 			});
 		}
 
-		if (url.pathname.startsWith('/src/') || url.pathname.startsWith('/public/')) {
+		if (
+			url.pathname.startsWith('/src/') ||
+			url.pathname.startsWith('/public/')
+		) {
 			const filePath = path.join(import.meta.dir, '..', url.pathname);
 			const file = Bun.file(filePath);
 			if (await file.exists()) {

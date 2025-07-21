@@ -9,8 +9,6 @@ import { readFileSync, existsSync } from 'fs';
 
 // Constants
 const DEFAULT_AUTHOR = 'OpenCode Community';
-const DEFAULT_DATE = '2025-01-20';
-const DEFAULT_VERSION = '1.0';
 
 // String transformation utilities
 const titleCase = (str: string) =>
@@ -19,24 +17,20 @@ const titleCase = (str: string) =>
 		.map((word) => word.charAt(0).toUpperCase() + word.slice(1))
 		.join(' ');
 
-const toUpperFilename = (filename: string) =>
-	filename.replace('.mode.md', '').toUpperCase();
-
 interface Mode {
 	id: string;
 	name: string;
 	author: string;
-	tools_enabled?: Array<{ name: string; url?: string }>;
-	tools_disabled?: string[];
-	mode_prompt: string;
 	description: string;
 	votes: number;
 	downloads: number;
-	created_at: string;
 	updated_at: string;
 	version: string;
+	pr_number?: number;
+	tools_enabled?: Array<{ name: string; url?: string }>;
+	tools_disabled?: string[];
+	mode_prompt: string;
 	context_instructions?: Array<{ title: string; content: string }>;
-	prompt_file_name?: string;
 }
 
 class DataLoader {
@@ -106,11 +100,9 @@ async function loadModeFromDirectory(
 		const dirFiles = await readdir(modeDir);
 
 		const { enabledTools, disabledTools } = extractTools(opencodeData);
-		const { systemPrompt, promptFileName } = await extractSystemPrompt(
-			modeDir,
-			dirFiles
-		);
-		const { description, author, updatedAt } = await extractMetadata(modeDir);
+		const { systemPrompt } = await extractSystemPrompt(modeDir, dirFiles);
+		const { description, author, updatedAt, version, prNumber } =
+			await extractMetadata(modeDir);
 		const contextInstructions = await extractContextInstructions(
 			modeDir,
 			dirFiles
@@ -120,17 +112,16 @@ async function loadModeFromDirectory(
 			id: dirName,
 			name: titleCase(dirName),
 			author,
+			description,
+			votes: 0,
+			downloads: 0,
+			updated_at: updatedAt,
+			version,
+			...(prNumber && { pr_number: prNumber }),
 			tools_enabled: enabledTools,
 			tools_disabled: disabledTools,
 			mode_prompt: systemPrompt,
-			description,
-			votes: 0,
-			created_at: DEFAULT_DATE,
-			updated_at: updatedAt,
-			version: DEFAULT_VERSION,
-			downloads: 0,
-			context_instructions: contextInstructions,
-			prompt_file_name: promptFileName
+			context_instructions: contextInstructions
 		};
 	} catch (error) {
 		console.log(`Skipping ${dirName}: error reading opencode.json`, error);
@@ -181,21 +172,21 @@ function extractTools(opencodeData: any) {
 async function extractSystemPrompt(modeDir: string, dirFiles: string[]) {
 	const promptFile = dirFiles.find((f) => f.endsWith('.mode.md'));
 	let systemPrompt = 'No system prompt found';
-	let promptFileName = 'PROMPT';
 
 	if (promptFile) {
 		const promptPath = path.join(modeDir, promptFile);
 		systemPrompt = await readFile(promptPath, 'utf-8');
-		promptFileName = toUpperFilename(promptFile);
 	}
 
-	return { systemPrompt, promptFileName };
+	return { systemPrompt };
 }
 
 async function extractMetadata(modeDir: string) {
 	let description = '';
 	let author = DEFAULT_AUTHOR;
-	let updatedAt = DEFAULT_DATE;
+	let updatedAt = '-';
+	let version = '0.1.0';
+	let prNumber: number | undefined;
 
 	try {
 		const metadataPath = path.join(modeDir, 'metadata.json');
@@ -205,11 +196,13 @@ async function extractMetadata(modeDir: string) {
 		if (metaData.description) description = metaData.description.trim();
 		if (metaData.author) author = metaData.author;
 		if (metaData.date) updatedAt = metaData.date;
+		if (metaData.version) version = metaData.version;
+		if (metaData.pr_number) prNumber = metaData.pr_number;
 	} catch {
 		// Use defaults if metadata.json doesn't exist
 	}
 
-	return { description, author, updatedAt };
+	return { description, author, updatedAt, version, prNumber };
 }
 
 async function extractContextInstructions(modeDir: string, dirFiles: string[]) {
@@ -481,7 +474,12 @@ export function getRenderWithCurrentVotes() {
 					<p>You can access this data through an API.</p>
 					<div class='code-block'>
 						<code>
-							# Get all modes
+							# Get modes index (basic info only)
+							<br />
+							curl <a href='/mode/index'>https://openmodes.dev/mode/index</a>
+							<br />
+							<br />
+							# Get all modes (full data)
 							<br />
 							curl <a href='/mode/all'>https://openmodes.dev/mode/all</a>
 							<br />

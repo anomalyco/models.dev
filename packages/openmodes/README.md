@@ -21,9 +21,19 @@ modes/your-mode-name/
 {
 	"author": "Your Name",
 	"description": "What your mode does",
-	"date": "2025-01-20"
+	"date": "2025-01-20",
+	"version": "0.1.0",
+	"pr_number": 123
 }
 ```
+
+**Fields:**
+
+- `author`: Your name or GitHub username
+- `description`: Brief description of what your mode does
+- `date`: Last updated date (YYYY-MM-DD format)
+- `version`: Semantic version of your mode (e.g., "0.1.0")
+- `pr_number`: (Optional) PR number where this mode was introduced
 
 **2. Create `opencode.json`:**
 
@@ -110,6 +120,84 @@ You are a specialized AI that [does what].
 ## Examples
 
 See `modes/archie/` for a complete example with MCP tools, instructions, and prompt files.
+
+## API
+
+The OpenModes database provides a REST API to access mode data programmatically.
+
+### Endpoints
+
+**Get all modes (basic info only):**
+
+```bash
+GET /mode/index
+```
+
+Returns: `{ id, author, description, votes, downloads, updated_at, version, pr_number? }`
+
+**Get all modes (full data):**
+
+```bash
+GET /mode/all
+```
+
+Returns: Complete mode data including prompts, tools, and context instructions
+
+**Get specific mode:**
+
+```bash
+GET /mode/{mode-id}
+```
+
+Returns: Full data for a single mode
+
+**Example:**
+
+```bash
+curl https://openmodes.dev/mode/index
+curl https://openmodes.dev/mode/archie
+```
+
+### Response Format
+
+**Index endpoint (`/mode/index`):**
+
+```json
+{
+	"archie": {
+		"id": "archie",
+		"author": "spoon",
+		"description": "Architectural guidance mode...",
+		"votes": 5,
+		"downloads": 25,
+		"updated_at": "2025-01-20",
+		"version": "0.1.0",
+		"pr_number": 123
+	}
+}
+```
+
+**Full mode endpoint (`/mode/{id}` or `/mode/all`):**
+
+```json
+{
+	"id": "archie",
+	"name": "Archie",
+	"author": "spoon",
+	"description": "Architectural guidance mode...",
+	"votes": 5,
+	"downloads": 25,
+	"updated_at": "2025-01-20",
+	"version": "0.1.0",
+	"pr_number": 123,
+	"tools_enabled": [
+		{ "name": "context7", "url": "https://github.com/upstash/context7" }
+	],
+	"tools_disabled": ["bash"],
+	"mode_prompt": "Your complete system prompt...",
+	"context_instructions": [{ "title": "ADR Guidelines", "content": "..." }]
+}
+```
 
 ---
 
