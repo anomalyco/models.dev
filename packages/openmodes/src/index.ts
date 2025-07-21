@@ -267,9 +267,7 @@ function populateModalContent(mode: any) {
   <button class="context-badge copy-badge" type="button" title="Click to copy" tabindex="0">${
 		mode.prompt_file_name || 'PROMPT'
 	}</button>
-  <pre><code class="language-markdown context-content">${escapeHtml(
-		mode.mode_prompt
-	)}</code></pre></div>`;
+  <div class="context-content">${escapeHtml(mode.mode_prompt)}</div></div>`;
 
 	populateContextInstructions(mode);
 	populateTools(mode);
@@ -288,9 +286,9 @@ function populateContextInstructions(mode: any) {
           <button class="context-badge copy-badge" type="button" title="Click to copy" tabindex="0">${
 						instruction.title
 					}</button>
-          <pre><code class="language-markdown context-content">${escapeHtml(
+          <div class="context-content">${escapeHtml(
 						instruction.content
-					)}</code></pre>        </div>`
+					)}</div>        </div>`
 			)
 			.join('');
 	} else {
