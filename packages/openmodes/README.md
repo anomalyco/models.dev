@@ -182,7 +182,6 @@ curl https://openmodes.dev/mode/archie
 ```json
 {
 	"id": "archie",
-	"name": "Archie",
 	"author": "spoon",
 	"description": "Architectural guidance mode...",
 	"votes": 5,
@@ -190,10 +189,25 @@ curl https://openmodes.dev/mode/archie
 	"updated_at": "2025-01-20",
 	"version": "0.1.0",
 	"pr_number": 123,
-	"tools_enabled": [
-		{ "name": "context7", "url": "https://github.com/upstash/context7" }
-	],
-	"tools_disabled": ["bash"],
+	"opencode_config": {
+		"instructions": ["./adr.instructions.md"],
+		"mcp": {
+			"context7": {
+				"type": "local",
+				"command": ["npx", "-y", "@upstash/context7-mcp"],
+				"enabled": true,
+				"url": "https://github.com/upstash/context7" // for user verification purposes
+			}
+		},
+		"mode": {
+			"test": {
+				"prompt": "{file:./archie.mode.md}",
+				"tools": {
+					"bash": false
+				}
+			}
+		}
+	},
 	"mode_prompt": "Your complete system prompt...",
 	"context_instructions": [{ "title": "ADR Guidelines", "content": "..." }]
 }

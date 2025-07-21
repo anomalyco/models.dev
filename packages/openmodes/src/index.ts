@@ -303,10 +303,33 @@ function populateTools(mode: any) {
 		disabledSection: document.getElementById('modal-tools-disabled-section')!
 	};
 
+	// Parse tools from opencode_config
+	const enabledTools: Array<{ name: string; url?: string }> = [];
+	const disabledTools: string[] = [];
+
+	if (mode.opencode_config?.mcp) {
+		Object.entries(mode.opencode_config.mcp).forEach(([key, value]: [string, any]) => {
+			if (value.enabled !== false) {
+				enabledTools.push({ name: key, url: value.url || undefined });
+			}
+		});
+	}
+
+	if (mode.opencode_config?.mode) {
+		const firstModeKey = Object.keys(mode.opencode_config.mode)[0];
+		if (firstModeKey && mode.opencode_config.mode[firstModeKey].tools) {
+			Object.entries(mode.opencode_config.mode[firstModeKey].tools).forEach(
+				([tool, enabled]) => {
+					if (enabled === false) disabledTools.push(tool);
+				}
+			);
+		}
+	}
+
 	let enabledToolsHtml = '';
-	if (mode.tools_enabled?.length > 0) {
-		enabledToolsHtml = mode.tools_enabled
-			.map((tool: any) => {
+	if (enabledTools.length > 0) {
+		enabledToolsHtml = enabledTools
+			.map((tool) => {
 				const toolName = typeof tool === 'string' ? tool : tool.name;
 				const toolUrl = typeof tool === 'object' && tool.url ? tool.url : null;
 				return toolUrl
@@ -314,18 +337,12 @@ function populateTools(mode: any) {
 					: `<span class="tool-tag tool-enabled">${toolName}</span>`;
 			})
 			.join('');
-	} else if (mode.tools?.length > 0) {
-		enabledToolsHtml = mode.tools
-			.map(
-				(tool: string) => `<span class="tool-tag tool-enabled">${tool}</span>`
-			)
-			.join('');
 	}
 	toolElements.enabledContainer.innerHTML = enabledToolsHtml;
 
-	if (mode.tools_disabled?.length > 0) {
+	if (disabledTools.length > 0) {
 		toolElements.disabledSection.style.display = 'block';
-		toolElements.disabledContainer.innerHTML = mode.tools_disabled
+		toolElements.disabledContainer.innerHTML = disabledTools
 			.map(
 				(tool: string) => `<span class="tool-tag tool-disabled">${tool}</span>`
 			)

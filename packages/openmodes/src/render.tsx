@@ -27,8 +27,7 @@ interface Mode {
 	updated_at: string;
 	version: string;
 	pr_number?: number;
-	tools_enabled?: Array<{ name: string; url?: string }>;
-	tools_disabled?: string[];
+	opencode_config: any;
 	mode_prompt: string;
 	context_instructions?: Array<{ title: string; content: string }>;
 }
@@ -99,7 +98,6 @@ async function loadModeFromDirectory(
 		const modeDir = path.join(modesDir, dirName);
 		const dirFiles = await readdir(modeDir);
 
-		const { enabledTools, disabledTools } = extractTools(opencodeData);
 		const { systemPrompt } = await extractSystemPrompt(modeDir, dirFiles);
 		const { description, author, updatedAt, version, prNumber } =
 			await extractMetadata(modeDir);
@@ -118,8 +116,7 @@ async function loadModeFromDirectory(
 			updated_at: updatedAt,
 			version,
 			...(prNumber && { pr_number: prNumber }),
-			tools_enabled: enabledTools,
-			tools_disabled: disabledTools,
+			opencode_config: opencodeData,
 			mode_prompt: systemPrompt,
 			context_instructions: contextInstructions
 		};
@@ -141,32 +138,6 @@ async function loadModeFromJSON(
 		console.log(`Skipping ${fileName}: invalid JSON`, error);
 		return null;
 	}
-}
-
-function extractTools(opencodeData: any) {
-	const enabledTools: Array<{ name: string; url?: string }> = [];
-	const disabledTools: string[] = [];
-
-	if (opencodeData.mcp) {
-		Object.entries(opencodeData.mcp).forEach(([key, value]: [string, any]) => {
-			if (value.enabled !== false) {
-				enabledTools.push({ name: key, url: value.url || undefined });
-			}
-		});
-	}
-
-	if (opencodeData.mode) {
-		const firstModeKey = Object.keys(opencodeData.mode)[0];
-		if (firstModeKey && opencodeData.mode[firstModeKey].tools) {
-			Object.entries(opencodeData.mode[firstModeKey].tools).forEach(
-				([tool, enabled]) => {
-					if (enabled === false) disabledTools.push(tool);
-				}
-			);
-		}
-	}
-
-	return { enabledTools, disabledTools };
 }
 
 async function extractSystemPrompt(modeDir: string, dirFiles: string[]) {

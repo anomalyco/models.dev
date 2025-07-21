@@ -100,9 +100,9 @@ function getModeWithVotes(modeId: string) {
 	const mode = Modes[modeId];
 	if (!mode) return null;
 
-	const { name, ...modeWithoutName } = mode;
+	const { name, ...modeForApi } = mode;
 	return {
-		...modeWithoutName,
+		...modeForApi,
 		votes: DataManager.getCount('votes', modeId),
 		downloads: DataManager.getCount('downloads', modeId)
 	};
@@ -111,9 +111,9 @@ function getModeWithVotes(modeId: string) {
 function getAllModesWithVotes() {
 	const modesWithVotes: Record<string, any> = {};
 	for (const [modeId, mode] of Object.entries(Modes)) {
-		const { name, ...modeWithoutName } = mode;
+		const { name, ...modeForApi } = mode;
 		modesWithVotes[modeId] = {
-			...modeWithoutName,
+			...modeForApi,
 			votes: DataManager.getCount('votes', modeId),
 			downloads: DataManager.getCount('downloads', modeId)
 		};
