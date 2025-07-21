@@ -280,7 +280,7 @@ export function getRenderWithCurrentVotes() {
 						</svg>
 					</a>
 					<div class='search-container'>
-						<input type='text' id='search' placeholder='Filter by mode name' />
+						<input type='text' id='search' placeholder='Search mode' />
 						<span class='search-shortcut'>⌘K</span>
 					</div>
 					<button id='help'>How to use</button>
