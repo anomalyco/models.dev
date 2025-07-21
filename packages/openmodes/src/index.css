@@ -4,7 +4,7 @@
 	--font-mono: 'IBM Plex Mono', monospace;
 	--color-brand: #fd9527;
 	--color-background: #1e1e1e;
-	--color-background-accent: #2e2e2e;
+	--color-background-accent: #2a2a2a;
 	--color-border: #333;
 	--color-surface: #111;
 	--color-alpha-background: rgba(255, 255, 255, 0.75);
@@ -616,13 +616,19 @@ dialog .body p b {
 
 dialog .body .code-block {
 	padding: 0.875rem 1rem;
-	border-radius: 0.25rem;
-	background-color: var(--color-surface);
+	border-radius: 0 0.25rem 0.25rem 0;
+	border-left: 3px solid var(--color-brand);
+	background-color: #2a2a2a;
 }
 
 dialog .body code {
 	font-family: var(--font-mono);
 	font-size: 0.8125rem;
+}
+
+/* API endpoint styling */
+dialog .body .code-block .api-key {
+	color: var(--color-brand);
 }
 
 dialog .footer a {

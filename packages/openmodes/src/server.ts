@@ -10,6 +10,65 @@ const jsonResponse = (data: any, status = 200, indent?: number) =>
 		headers: { 'Content-Type': 'application/json' }
 	});
 
+const smartJsonResponse = (data: any, req: Request, status = 200) => {
+	const acceptHeader = req.headers.get('accept') || '';
+	const userAgent = req.headers.get('user-agent') || '';
+
+	// Serve JSON for API clients (curl, fetch, etc.)
+	if (
+		acceptHeader.includes('application/json') ||
+		userAgent.includes('curl') ||
+		userAgent.includes('fetch') ||
+		!acceptHeader.includes('text/html')
+	) {
+		return jsonResponse(data, status, 2);
+	}
+
+	// Serve styled HTML for browsers
+	const jsonString = JSON.stringify(data, null, 2);
+	const styledJson = jsonString
+		.replace(/"([^"]+)":/g, '<span class="json-key">"$1"</span>:') // Keys in orange
+		.replace(/: "([^"]*?)"/g, ': <span class="json-string">"$1"</span>') // String values in green
+		.replace(/: (\d+)/g, ': <span class="json-number">$1</span>') // Numbers in green
+		.replace(/: (true|false|null)/g, ': <span class="json-boolean">$1</span>'); // Booleans/null in green
+
+	const html = `<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>OpenModes API Response</title>
+	<style>
+		body {
+			font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+			background-color: #1e1e1eff;
+			color: #fff;
+			padding: 20px;
+			margin: 0;
+			line-height: 1.4;
+		}
+		.json-key {
+			color: #fd9527;
+		}
+		.json-string, .json-number, .json-boolean {
+			color: #62e9b0ff;
+		}
+		pre {
+			white-space: pre-wrap;
+			word-wrap: break-word;
+		}
+	</style>
+</head>
+<body>
+	<pre>${styledJson}</pre>
+</body>
+</html>`;
+
+	return new Response(html, {
+		status,
+		headers: { 'Content-Type': 'text/html' }
+	});
+};
+
 const textResponse = (text: string, status = 200) =>
 	new Response(text, { status });
 
@@ -263,11 +322,11 @@ const server = Bun.serve({
 		}
 
 		if (url.pathname === '/mode/all') {
-			return jsonResponse(getAllModesWithVotes(), 200, 2);
+			return smartJsonResponse(getAllModesWithVotes(), req, 200);
 		}
 
 		if (url.pathname === '/mode/index') {
-			return jsonResponse(getAllModesIndex(), 200, 2);
+			return smartJsonResponse(getAllModesIndex(), req, 200);
 		}
 
 		if (url.pathname.startsWith('/mode/')) {
@@ -282,7 +341,7 @@ const server = Bun.serve({
 				return textResponse('Mode not found', 404);
 			}
 
-			return jsonResponse(mode, 200, 2);
+			return smartJsonResponse(mode, req, 200);
 		}
 
 		if (url.pathname === '/') {

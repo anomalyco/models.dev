@@ -445,19 +445,22 @@ export function getRenderWithCurrentVotes() {
 					<p>You can access this data through an API.</p>
 					<div class='code-block'>
 						<code>
-							# Get modes index (basic info only)
+							<span class='api-key'># Get modes index (basic info only)</span>
 							<br />
-							curl <a href='/mode/index'>https://openmodes.dev/mode/index</a>
-							<br />
-							<br />
-							# Get all modes (full data)
-							<br />
-							curl <a href='/mode/all'>https://openmodes.dev/mode/all</a>
+							<span class='api-key'>curl </span>
+							<a href='/mode/index'>https://openmodes.dev/mode/index</a>
 							<br />
 							<br />
-							# Get specific mode
+							<span class='api-key'># Get all modes (full data)</span>
 							<br />
-							curl <a href='/mode/archie'>https://openmodes.dev/mode/archie</a>
+							<span class='api-key'>curl </span>
+							<a href='/mode/all'>https://openmodes.dev/mode/all</a>
+							<br />
+							<br />
+							<span class='api-key'># Get specific mode</span>
+							<br />
+							<span class='api-key'>curl </span>
+							<a href='/mode/archie'>https://openmodes.dev/mode/archie</a>
 						</code>
 					</div>
 					<h2>Contribute</h2>
