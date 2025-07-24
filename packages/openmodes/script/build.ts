@@ -59,6 +59,56 @@ try {
     console.warn(`  ⚠ CSS file not found: ${cssSource}`);
   }
 
+  // Copy index.html to dist and fix asset paths
+  console.log("Copying HTML files...");
+  const htmlSource = path.join(import.meta.dir, '..', 'index.html');
+  if (existsSync(htmlSource)) {
+    const htmlContent = await Bun.file(htmlSource).text();
+    
+    // Fix asset paths for production
+    let fixedHtml = htmlContent
+      .replace('./src/index.css', './index.css')
+      .replace('./src/index.ts', './index.js')
+      .replace('./public/favicon.svg', './favicon.svg');
+    
+    // Pre-render the content for static deployment
+    try {
+      console.log("  → Attempting to pre-render content...");
+      const { getRenderWithCurrentVotes } = await import('../src/render.tsx');
+      const renderedContent = getRenderWithCurrentVotes();
+      
+      // Check if rendered content is reasonable
+      if (renderedContent && renderedContent.length > 100 && renderedContent.length < 1000000) {
+        fixedHtml = fixedHtml.replace('<!--static-->', renderedContent);
+        console.log(`  ✓ Pre-rendered server content (${renderedContent.length} chars)`);
+      } else {
+        console.warn(`  ⚠ Rendered content seems invalid (length: ${renderedContent?.length || 0})`);
+      }
+    } catch (error) {
+      console.warn(`  ⚠ Failed to pre-render content: ${error}`);
+      console.warn("  → Continuing with static placeholder");
+    }
+    
+    const htmlTarget = path.join(distDir, 'index.html');
+    await Bun.write(htmlTarget, fixedHtml);
+    console.log(`  ✓ Copied and processed index.html`);
+  } else {
+    console.warn(`  ⚠ HTML file not found: ${htmlSource}`);
+  }
+
+  // Copy modes directory to dist for API access
+  const modesSource = path.join(import.meta.dir, '..', 'modes');
+  if (existsSync(modesSource)) {
+    console.log("Copying modes directory...");
+    const modesTarget = path.join(distDir, 'modes');
+    try {
+      const result = await Bun.$`cp -r ${modesSource} ${modesTarget}`.text();
+      console.log(`  ✓ Copied modes directory`);
+    } catch (error) {
+      console.warn("  ⚠ Error copying modes directory:", error);
+    }
+  }
+
   // Copy public assets to dist
   if (existsSync(publicDir)) {
     console.log("Copying public assets...");

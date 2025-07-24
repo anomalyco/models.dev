@@ -1,32 +1,32 @@
 {
-	"instructions": [
-		"./adr.instructions.md",
-		"./codemap.instructions.md",
-		"./resources.instructions.md"
-	],
-	"mcp": {
-		"context7": {
-			"type": "local",
-			"command": ["npx", "-y", "@upstash/context7-mcp"],
-			"enabled": true,
-			"url": "https://github.com/upstash/context7"
-		},
-		"think-tool": {
-			"type": "local",
-			"command": ["npx", "-y", "think-tool-mcp"],
-			"enabled": true,
-			"url": "https://github.com/abhinav-mangla/think-tool-mcp"
-		},
-		"repomix": {
-			"type": "local",
-			"command": ["npx", "-y", "repomix", "--mcp"],
-			"enabled": true,
-			"url": "https://github.com/yamadashy/repomix"
-		}
-	},
 	"mode": {
 		"archie": {
 			"prompt": "{file:./archie.mode.md}",
+			"instructions": [
+				"./adr.instructions.md",
+				"./codemap.instructions.md",
+				"./resources.instructions.md"
+			],
+			"mcp": {
+				"context7": {
+					"type": "local",
+					"command": ["npx", "-y", "@upstash/context7-mcp"],
+					"enabled": true,
+					"url": "https://github.com/upstash/context7"
+				},
+				"think-tool": {
+					"type": "local",
+					"command": ["npx", "-y", "think-tool-mcp"],
+					"enabled": true,
+					"url": "https://github.com/abhinav-mangla/think-tool-mcp"
+				},
+				"repomix": {
+					"type": "local",
+					"command": ["npx", "-y", "repomix", "--mcp"],
+					"enabled": true,
+					"url": "https://github.com/yamadashy/repomix"
+				}
+			},
 			"tools": {
 				"repomix_file_system_read_file": false,
 				"repomix_file_system_read_directory": false,

@@ -17,16 +17,47 @@ function titleCase(str: string): string {
 }
 
 class DOMElements {
-	static modeModal = document.getElementById('mode-modal') as HTMLDialogElement;
-	static helpModal = document.getElementById('help-modal') as HTMLDialogElement;
-	static closeHelpBtn = document.getElementById('close-help')!;
-	static helpBtn = document.getElementById('help')!;
-	static search = document.getElementById('search')! as HTMLInputElement;
-	static upvoteBtn = document.getElementById('upvote-btn')!;
-	static downvoteBtn = document.getElementById('downvote-btn')!;
-	static downloadBtn = document.getElementById('download-btn')!;
-	static voteCountEl = document.getElementById('modal-votes')!;
-	static downloadCountEl = document.getElementById('modal-downloads')!;
+	private static _elements: any = {};
+	
+	static get modeModal(): HTMLDialogElement {
+		return this._elements.modeModal ??= document.getElementById('mode-modal') as HTMLDialogElement;
+	}
+	
+	static get helpModal(): HTMLDialogElement {
+		return this._elements.helpModal ??= document.getElementById('help-modal') as HTMLDialogElement;
+	}
+	
+	static get closeHelpBtn(): HTMLElement {
+		return this._elements.closeHelpBtn ??= document.getElementById('close-help')!;
+	}
+	
+	static get helpBtn(): HTMLElement {
+		return this._elements.helpBtn ??= document.getElementById('help')!;
+	}
+	
+	static get search(): HTMLInputElement {
+		return this._elements.search ??= document.getElementById('search')! as HTMLInputElement;
+	}
+	
+	static get upvoteBtn(): HTMLElement {
+		return this._elements.upvoteBtn ??= document.getElementById('upvote-btn')!;
+	}
+	
+	static get downvoteBtn(): HTMLElement {
+		return this._elements.downvoteBtn ??= document.getElementById('downvote-btn')!;
+	}
+	
+	static get downloadBtn(): HTMLElement {
+		return this._elements.downloadBtn ??= document.getElementById('download-btn')!;
+	}
+	
+	static get voteCountEl(): HTMLElement {
+		return this._elements.voteCountEl ??= document.getElementById('modal-votes')!;
+	}
+	
+	static get downloadCountEl(): HTMLElement {
+		return this._elements.downloadCountEl ??= document.getElementById('modal-downloads')!;
+	}
 }
 
 let currentMode: any = null;
@@ -307,14 +338,18 @@ function populateTools(mode: any) {
 	const enabledTools: Array<{ name: string; url?: string }> = [];
 	const disabledTools: string[] = [];
 
-	if (mode.opencode_config?.mcp) {
-		Object.entries(mode.opencode_config.mcp).forEach(
-			([key, value]: [string, any]) => {
-				if (value.enabled !== false) {
-					enabledTools.push({ name: key, url: value.url || undefined });
+	// Get MCP tools from the mode-specific config
+	if (mode.opencode_config?.mode) {
+		const firstModeKey = Object.keys(mode.opencode_config.mode)[0];
+		if (firstModeKey && mode.opencode_config.mode[firstModeKey].mcp) {
+			Object.entries(mode.opencode_config.mode[firstModeKey].mcp).forEach(
+				([key, value]: [string, any]) => {
+					if (value.enabled !== false) {
+						enabledTools.push({ name: key, url: value.url || undefined });
+					}
 				}
-			}
-		);
+			);
+		}
 	}
 
 	if (mode.opencode_config?.mode) {
@@ -553,6 +588,15 @@ function initializeFromURL() {
 }
 
 function setupEventListeners() {
+	// Check if this is a static site without server-rendered content
+	const modeModal = document.getElementById('mode-modal');
+	const helpModal = document.getElementById('help-modal');
+	
+	if (!modeModal || !helpModal) {
+		console.warn('App appears to be running in static mode without server-rendered content');
+		return;
+	}
+
 	// Add click-to-copy for all context badges in modal
 	DOMElements.modeModal.addEventListener('click', function (e) {
 		const target = e.target as HTMLElement;
@@ -630,6 +674,50 @@ function setupEventListeners() {
 	});
 }
 
+// Load current vote/download data and update table
+async function updateTableCounts() {
+	// First, set all counts to "-" while loading
+	const rows = document.querySelectorAll('.mode-row');
+	rows.forEach((row: Element) => {
+		const votesCell = row.querySelector('.votes');
+		const downloadsCell = row.querySelector('.downloads');
+		if (votesCell) votesCell.textContent = '-';
+		if (downloadsCell) downloadsCell.textContent = '-';
+	});
+
+	try {
+		const response = await fetch('/mode/index');
+		if (!response.ok) return;
+		
+		const modesIndex = await response.json();
+		
+		// Update each table row with current counts
+		rows.forEach((row: Element) => {
+			const modeId = (row as HTMLElement).dataset.modeId;
+			if (modeId && modesIndex[modeId]) {
+				const mode = modesIndex[modeId];
+				
+				// Update votes
+				const votesCell = row.querySelector('.votes');
+				if (votesCell) votesCell.textContent = mode.votes.toString();
+				
+				// Update downloads  
+				const downloadsCell = row.querySelector('.downloads');
+				if (downloadsCell) downloadsCell.textContent = mode.downloads.toString();
+			}
+		});
+	} catch (error) {
+		console.warn('Failed to update table counts:', error);
+		// On error, revert to showing 0s
+		rows.forEach((row: Element) => {
+			const votesCell = row.querySelector('.votes');
+			const downloadsCell = row.querySelector('.downloads');
+			if (votesCell && votesCell.textContent === '-') votesCell.textContent = '0';
+			if (downloadsCell && downloadsCell.textContent === '-') downloadsCell.textContent = '0';
+		});
+	}
+}
+
 (window as any).openModeModal = openModeModal;
 (window as any).vote = vote;
 (window as any).downloadMode = downloadMode;
@@ -637,5 +725,6 @@ function setupEventListeners() {
 document.addEventListener('DOMContentLoaded', () => {
 	setupEventListeners();
 	initializeFromURL();
+	updateTableCounts(); // Load current vote/download data
 });
 window.addEventListener('popstate', initializeFromURL);

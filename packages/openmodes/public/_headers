@@ -1,2 +1,19 @@
 /*
   Access-Control-Allow-Origin: *
+
+# Fix MIME types for JavaScript modules and TypeScript files
+*.js
+  Content-Type: application/javascript; charset=utf-8
+
+*.ts
+  Content-Type: application/javascript; charset=utf-8
+
+# Ensure proper MIME types for web assets
+*.css
+  Content-Type: text/css; charset=utf-8
+
+*.html
+  Content-Type: text/html; charset=utf-8
+
+*.json
+  Content-Type: application/json; charset=utf-8

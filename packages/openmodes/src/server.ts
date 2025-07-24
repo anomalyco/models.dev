@@ -294,10 +294,15 @@ const server = Bun.serve({
 					if (fileName === 'opencode.json') {
 						try {
 							const config = JSON.parse(fileContent);
-							if (config.mcp) {
-								for (const mcpKey in config.mcp) {
-									if (config.mcp[mcpKey].url) {
-										delete config.mcp[mcpKey].url;
+							// Remove URL keys from MCP objects within mode configs
+							if (config.mode) {
+								for (const modeName in config.mode) {
+									if (config.mode[modeName].mcp) {
+										for (const mcpKey in config.mode[modeName].mcp) {
+											if (config.mode[modeName].mcp[mcpKey].url) {
+												delete config.mode[modeName].mcp[mcpKey].url;
+											}
+										}
 									}
 								}
 							}

@@ -1,18 +1,22 @@
 {
 	"$schema": "https://json.schemastore.org/package.json",
 	"name": "@openmodes/web",
+	"type": "module",
 	"scripts": {
-		"dev": "bun run --hot ./src/server.ts",
+		"dev": "bun run build:dev && node local-server.js",
 		"build": "NODE_ENV=production bun ./script/build.ts",
+		"vercel-build": "NODE_ENV=production bun ./script/build.ts",
 		"build:dev": "bun ./script/build.ts",
 		"start": "NODE_ENV=production bun ./src/server.ts",
 		"clean": "rm -rf dist"
 	},
 	"dependencies": {
 		"async-mutex": "^0.5.0",
+		"express": "^5.1.0",
 		"hono": "^4.8.0"
 	},
 	"devDependencies": {
-		"@types/bun": "^1.2.16"
+		"@types/bun": "^1.2.16",
+		"@types/node": "^20.0.0"
 	}
 }

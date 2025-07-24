@@ -2,13 +2,16 @@
 	"$schema": "https://json.schemastore.org/tsconfig",
 	"compilerOptions": {
 		"jsx": "react-jsx",
+		"jsxImportSource": "hono/jsx",
 		"target": "ES2020",
 		"module": "ESNext",
-		"moduleResolution": "bundler",
+		"moduleResolution": "node",
 		"lib": ["ES2020", "DOM", "DOM.Iterable"],
 		"strict": true,
 		"esModuleInterop": true,
 		"skipLibCheck": true,
-		"forceConsistentCasingInFileNames": true
+		"forceConsistentCasingInFileNames": true,
+		"allowSyntheticDefaultImports": true,
+		"types": ["bun-types"]
 	}
 }
