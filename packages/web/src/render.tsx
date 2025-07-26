@@ -124,10 +124,12 @@ const renderCost = (cost?: number) => {
 export const Rendered = renderToString(
   <Fragment>
     <header>
-      <div class="left">
-        <h1>Models.dev</h1>
+     <div class="left">
+        <h1>Nathan Papes</h1>
         <span class="slash"></span>
-        <p>An open-source database of AI models</p>
+        <p>Software Consultant &amp; Developer</p>
+        <span class="slash"></span>
+        <p>A2</p>
       </div>
       <div class="right">
         <a
@@ -152,9 +154,72 @@ export const Rendered = renderToString(
           <input type="text" id="search" placeholder="Filter by model" />
           <span class="search-shortcut">⌘K</span>
         </div>
-        <button id="help">How to use</button>
       </div>
     </header>
+
+    <main>
+      <section>
+        <h2>About</h2>
+        <p>
+          Skateboarding was my favorite hobby growing up. Through exploring this hobby, I learned
+          about computers because I wanted to make skateboard montage videos. Video editing was my
+          introduction to learning how to Google technology questions properly. Little did I know
+          that this experience would lay the foundation for my future.
+        </p>
+        <p>
+          I took my first computer science course while in high school. I enjoyed the fast feedback
+          and creative aspects that writing software offered. After this class, software felt like a
+          viable career option for me, and I haven’t looked back since.
+        </p>
+        <p>
+          I honed my software-building skills at CMU where I had my first programming job and
+          completed my undergrad. After graduating I started my professional career building online
+          wellness campaigns and cloud infrastructures to keep them online. I’ve led development
+          projects, both working independently and with teams of engineers. Writing software is fun
+          but the fulfillment from delivering something that is valuable to others is what keeps me
+          motivated.
+        </p>
+        <p>
+          Outside of work, I like spending time with family and friends. I embrace the outdoors in
+          Michigan — snowboarding in the winter and skateboarding when it’s warmer.
+        </p>
+      </section>
+
+      <section>
+        <h2>Recent Blog Posts</h2>
+        <ul>
+          <li>
+            <strong>Introducing SST v3 for Modern AWS Serverless Infrastructure</strong>
+            <em>(June 24, 2025)</em>
+          </li>
+          <li>
+            <strong>Aurora MySQL 8 Upgrade: Using the AWS Blue/Green Style</strong>
+            <em>(February 12, 2025)</em>
+          </li>
+          <li>
+            <strong>Optimize EF Core Database Query Performance</strong>
+            <em>(October 29, 2024)</em>
+          </li>
+          <li>
+            <strong>From Green to Great: Building Confidence in Consulting</strong>
+            <em>(July 18, 2024)</em>
+          </li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>Connect</h2>
+        <p>
+          Learn more at
+          <a href="https://atomicobject.com/team/nathan-papes" target="_blank" rel="noopener">
+            atomicobject.com/team/nathan-papes
+          </a>
+        </p>
+      </section>
+    </main>
+
+
+
     <table>
       <thead>
         <tr>
@@ -339,103 +404,5 @@ export const Rendered = renderToString(
           )}
       </tbody>
     </table>
-    <dialog id="modal">
-      <div class="header">
-        <h2>How to use</h2>
-        <button id="close">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-            <line
-              x1="18"
-              y1="6"
-              x2="6"
-              y2="18"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-            />
-            <line
-              x1="6"
-              y1="6"
-              x2="18"
-              y2="18"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-            />
-          </svg>
-        </button>
-      </div>
-      <div class="body">
-        <p>
-          <a href="/">Models.dev</a> is a comprehensive open-source database of
-          AI model specifications, pricing, and features.
-        </p>
-        <p>
-          There&apos;s no single database with information about all the
-          available AI models. We started Models.dev as a community-contributed
-          project to address this. We also use it internally in{" "}
-          <a
-            href="https://opencode.ai"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            opencode
-          </a>
-          .
-        </p>
-        <h2>API</h2>
-        <p>You can access this data through an API.</p>
-        <div class="code-block">
-          <code>
-            curl <a href="/api.json">https://models.dev/api.json</a>
-          </code>
-        </div>
-        <p>
-          Use the <b>Model ID</b> field to do a lookup on any model; it&apos;s
-          the identifier used by{" "}
-          <a
-            href="https://ai-sdk.dev/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            AI SDK
-          </a>
-          .
-        </p>
-        <h2>Contribute</h2>
-        <p>
-          The data is stored in the{" "}
-          <a
-            href="https://github.com/sst/models.dev"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            GitHub repo
-          </a>{" "}
-          as TOML files; organized by provider and model. This is used to
-          generate this page and power the API.
-        </p>
-        <p>
-          We need your help keeping this up to date. Feel free to edit the data
-          and submit a pull request. Refer to the{" "}
-          <a href="https://github.com/sst/models.dev/blob/dev/README.md">
-            README
-          </a>{" "}
-          for more information.
-        </p>
-      </div>
-      <div class="footer">
-        <a
-          href="https://github.com/sst/models.dev"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Edit on GitHub
-        </a>
-        <a href="https://sst.dev" target="_blank" rel="noopener noreferrer">
-          Created by SST
-        </a>
-      </div>
-    </dialog>
   </Fragment>
 );

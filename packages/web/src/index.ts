@@ -1,6 +1,3 @@
-const modal = document.getElementById("modal") as HTMLDialogElement;
-const modalClose = document.getElementById("close")!;
-const help = document.getElementById("help")!;
 const search = document.getElementById("search")! as HTMLInputElement;
 
 /////////////////////////
@@ -41,26 +38,6 @@ function getColumnIndexByUrlName(name: string): number {
 // Handle "How to use"
 /////////////////////////
 let y = 0;
-
-help.addEventListener("click", () => {
-  scrollY = window.scrollY;
-  document.body.style.position = "fixed";
-  document.body.style.top = `-${y}px`;
-  modal.showModal();
-});
-
-function closeDialog() {
-  modal.close();
-  document.body.style.position = "";
-  document.body.style.top = "";
-  window.scrollTo(0, scrollY);
-}
-
-modalClose.addEventListener("click", closeDialog);
-modal.addEventListener("cancel", closeDialog);
-modal.addEventListener("click", (e) => {
-  if (e.target === modal) closeDialog();
-});
 
 ////////////////////
 // Handle Sorting
