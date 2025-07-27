@@ -4,7 +4,7 @@
 
 An experimental fullstack project exploring end-to-end type safety from data ingestion to the frontend using a shared schema validated across the stack.
 
-This project builds on a fork of the excellent <a href="https://github.com/sst/models">sst/models.dev</a> repo.
+This project builds on a fork of the excellent <a href="https://github.com/sst/models.dev">sst/models.dev</a> repo.
 
 > For practicality, it’s currently configured to pull content from my personal RSS feeds and index them on a domain I already own.
 
