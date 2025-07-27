@@ -1,9 +1,9 @@
-name: Deploy
+name: deploy
 
 on:
   push:
     branches:
-      - dev
+      - main
   workflow_dispatch:
 
 concurrency: ${{ github.workflow }}-${{ github.ref }}

@@ -1,4 +1,5 @@
-[![Validate Models](https://github.com/papes1ns/spin.dev/actions/workflows/validate.yml/badge.svg)](https://github.com/papes1ns/spin.dev/actions/workflows/validate.yml)[![Deploy](https://github.com/papes1ns/spin.dev/actions/workflows/deploy.yml/badge.svg)](https://github.com/papes1ns/spin.dev/actions/workflows/deploy.yml)
+[![validate](https://github.com/papes1ns/spin.dev/actions/workflows/validate.yml/badge.svg)](https://github.com/papes1ns/spin.dev/actions/workflows/validate.yml)
+[![deploy](https://github.com/papes1ns/spin.dev/actions/workflows/deploy.yml/badge.svg)](https://github.com/papes1ns/spin.dev/actions/workflows/deploy.yml)
 
 <p align="center">
   <img src="https://natepapes.com/favicon.svg" alt="favicon" width="64" height="64"/>
