@@ -1,11 +1,12 @@
-Expermental project of end-to-end type-safety starting from data ingestion.
-The core schema should be validated the same way to the frontend.
+<p align="center">
+  <img src="https://natepapes.com/favicon.svg" alt="favicon" width="64" height="64"/>
+</p>
 
-The end goal is a fullstack web application in Typescript with global scalability for cheap.
+An experimental fullstack project exploring end-to-end type safety from data ingestion to the frontend using a shared schema validated across the stack.
 
-For particality, I forked a the sst/models.dev project and configured it to pull from my RSS feeds to be indexed on a domain I already owned.
+This project builds on a fork of the excellent <a href="https://github.com/sst/models">sst/models.dev</a> repo.
 
----
+> For practicality, it’s currently configured to pull content from my personal RSS feeds and index them on a domain I already own.
 
 ## API
 
@@ -64,8 +65,8 @@ export const Article = z
 
 See existing providers in the `providers/` directory for reference:
 
-- `providers/atomicobject/` - AtomicObject Articles
-- `providers/github/` - Github Gists Article
+- `providers/atomicobject/` - spin posts
+- `providers/github/` - gist posts
 
 ### Working on frontend
 
@@ -82,5 +83,3 @@ And it'll open the frontend at http://localhost:3000
 ---
 
 spin.dev is a fork maintained by me inspired by the creators and maintainers of [SST](https://sst.dev). Please support and credit them for the awesome work they are doing.
-
-**Join the SST community** [Discord](https://sst.dev/discord) | [YouTube](https://www.youtube.com/c/sst-dev) | [X.com](https://x.com/SST_dev)
