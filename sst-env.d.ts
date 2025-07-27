@@ -5,7 +5,7 @@
 
 declare module "sst" {
   export interface Resource {
-    "MyWorker": {
+    "Site": {
       "type": "sst.cloudflare.StaticSite"
       "url": string
     }

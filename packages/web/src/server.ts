@@ -1,6 +1,6 @@
+import path from "path";
 import Index from "../index.html";
 import { Rendered } from "./render";
-import path from "path";
 
 Bun.serve({
   port: 16_000,
@@ -8,9 +8,8 @@ Bun.serve({
     "/": Index,
     "/assets/*": (req) => {
       const file = Bun.file(
-        path.join(import.meta.dir, "../public", new URL(req.url).pathname),
+        path.join(import.meta.dir, new URL(req.url).pathname)
       );
-      console.log(file);
       return new Response(file);
     },
   },

@@ -8,40 +8,40 @@
 :root {
   --icon-opacity: 0.85;
   --header-height: 56px;
-  --font-mono: 'IBM Plex Mono', monospace;
+  --font-mono: "IBM Plex Mono", monospace;
 }
 
 :root {
-  --color-brand: #CDE7DA;
-  --color-background: #FFF;
-  --color-border: #DDD;
-  --color-surface: #EEE;
+  --color-brand: #cde7da;
+  --color-background: #fff;
+  --color-border: #ddd;
+  --color-surface: #eee;
   --color-alpha-background: rgba(255, 255, 255, 0.75);
 
   --color-text: #333;
-  --color-text-invert: #FFF;
+  --color-text-invert: #fff;
   --color-text-secondary: #666;
   --color-text-tertiary: #999;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --color-brand: #CDE7DA;
-    --color-background: #1E1E1E;
+    --color-brand: #cde7da;
+    --color-background: #1e1e1e;
     --color-border: #333;
     --color-surface: #111;
     --color-alpha-background: rgba(30, 30, 30, 0.75);
 
-    --color-text: #FFF;
+    --color-text: #fff;
     --color-text-invert: #333;
-    --color-text-secondary: #AAA;
+    --color-text-secondary: #aaa;
     --color-text-tertiary: #666;
   }
 }
 
 html,
 body {
-  font-family: 'Rubik', sans-serif;
+  font-family: "Rubik", sans-serif;
   line-height: 1.6;
   color: var(--color-text);
   background-color: var(--color-background);
@@ -64,14 +64,14 @@ h2 {
 }
 
 a {
-  color: var(--color-text);
+  color: var(--color-brand);
   text-decoration: underline;
   text-decoration-style: dotted;
   text-decoration-color: var(--color-text-tertiary);
   text-underline-offset: 0.1875rem;
 
   &:hover {
-    color: var(--color-text);
+    color: var(--color-brand);
   }
 }
 
@@ -88,7 +88,7 @@ header {
   width: 100%;
   z-index: 10;
 
-  &>div {
+  & > div {
     display: flex;
     align-items: center;
 
@@ -175,7 +175,8 @@ header {
     font-size: 0.75rem;
     color: var(--color-text-tertiary);
     pointer-events: none;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui,
+      sans-serif;
   }
 
   button {
@@ -193,7 +194,6 @@ header {
 
   @media (max-width: 32rem) {
     div.left {
-
       p,
       span.slash {
         display: none;
@@ -203,7 +203,6 @@ header {
 
   @media (max-width: 45rem) {
     div.right {
-
       .github,
       .search-container {
         display: none;
@@ -221,7 +220,8 @@ table {
 }
 
 thead,
-tbody {}
+tbody {
+}
 
 table thead th {
   position: sticky;

@@ -25,7 +25,7 @@ export const Rendered = renderToString(
           class="github"
           target="_blank"
           rel="noopener noreferrer"
-          href="https://github.com/sst/spin.dev"
+          href="https://github.com/papes1ns/spin.dev"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -121,7 +121,7 @@ export const Rendered = renderToString(
                           href={article.url}
                           target="_blank"
                           rel="noopener noreferrer"
-                          style="color: #0066cc; text-decoration: none;"
+                          style="text-decoration: none;"
                         >
                           Read Article →
                         </a>

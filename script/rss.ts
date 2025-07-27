@@ -82,7 +82,7 @@ async function enrichArticle(url: string): Promise<Partial<Article>> {
           if (content) partial.description = content;
         },
       })
-      // Tags (multiple)
+      // Tags (multiple) - not used currently but could be in the future
       .on("meta[property='article:tag']", {
         element(el: any) {
           const tag = el.getAttribute("content");
