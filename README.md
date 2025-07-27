@@ -81,6 +81,6 @@ And it'll open the frontend at http://localhost:3000
 
 ---
 
-spin.dev is a fork created by the maintainers of [SST](https://sst.dev).
+spin.dev is a fork maintained by me inspired by the creators and maintainers of [SST](https://sst.dev). Please support and credit them for the awesome work they are doing.
 
 **Join the SST community** [Discord](https://sst.dev/discord) | [YouTube](https://www.youtube.com/c/sst-dev) | [X.com](https://x.com/SST_dev)
