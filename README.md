@@ -1,25 +1,25 @@
 <p align="center">
-  <a href="https://models.dev">
+  <a href="https://spin.dev">
     <picture>
       <source srcset="./logo-dark.svg" media="(prefers-color-scheme: dark)">
       <source srcset="./logo-light.svg" media="(prefers-color-scheme: light)">
-      <img src="./logo-light.svg" alt="Models.dev logo">
+      <img src="./logo-light.svg" alt="spin.dev logo">
     </picture>
   </a>
 </p>
 
 ---
 
-[Models.dev](https://models.dev) is a comprehensive open-source database of AI model specifications, pricing, and capabilities.
+[spin.dev](https://spin.dev) is a comprehensive open-source database of AI model specifications, pricing, and capabilities.
 
-There's no single database with information about all the available AI models. We started Models.dev as a community-contributed project to address this. We also use it internally in [opencode](https://opencode.ai).
+There's no single database with information about all the available AI models. We started spin.dev as a community-contributed project to address this. We also use it internally in [opencode](https://opencode.ai).
 
 ## API
 
 You can access this data through an API.
 
 ```bash
-curl https://models.dev/api.json
+curl https://spin.dev/api.json
 ```
 
 Use the **Model ID** field to do a lookup on any model; it's the identifier used by [AI SDK](https://ai-sdk.dev/).
@@ -143,6 +143,6 @@ Open an issue if you need help or have questions about contributing.
 
 ---
 
-Models.dev is created by the maintainers of [SST](https://sst.dev).
+spin.dev is created by the maintainers of [SST](https://sst.dev).
 
 **Join our community** [Discord](https://sst.dev/discord) | [YouTube](https://www.youtube.com/c/sst-dev) | [X.com](https://x.com/SST_dev)

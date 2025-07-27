@@ -1,10 +1,10 @@
 import path from "path";
 
-import { Provider, Model } from "./schema.js";
+import { Provider, Content } from "./schema.js";
 
 export async function generate(directory: string) {
   const result = {} as Record<string, Provider>;
-  for await (const providerPath of new Bun.Glob("*/provider.toml").scan({
+  for await (const providerPath of new Bun.Glob("*/provider*.toml").scan({
     cwd: directory,
     absolute: true,
   })) {
@@ -15,33 +15,45 @@ export async function generate(directory: string) {
       },
     }).then((mod) => mod.default);
     toml.id = providerID;
-    toml.models = {};
+
+    // Ensure provider has a name – default to directory name if not provided
+    if (!("name" in toml)) {
+      toml.name = providerID;
+    }
     const provider = Provider.safeParse(toml);
     if (!provider.success) {
       provider.error.cause = toml;
       throw provider.error;
     }
 
-    const modelsPath = path.join(directory, providerID, "models");
-    for await (const modelPath of new Bun.Glob("**/*.toml").scan({
-      cwd: modelsPath,
-      absolute: true,
-      followSymlinks: true,
-    })) {
-      const modelID = path.relative(modelsPath, modelPath).slice(0, -5);
-      const toml = await import(modelPath, {
-        with: {
-          type: "toml",
-        },
-      }).then((mod) => mod.default);
-      toml.id = modelID;
-      const model = Model.safeParse(toml);
-      if (!model.success) {
-        model.error.cause = toml;
-        throw model.error;
+    // Process articles if articles directory exists
+    const contentPath = path.join(directory, providerID, "content");
+    try {
+      provider.data.articles = {};
+      for await (const articlePath of new Bun.Glob("**/*.toml").scan({
+        cwd: contentPath,
+        absolute: true,
+        followSymlinks: true,
+      })) {
+        const articleID = path.relative(contentPath, articlePath).slice(0, -5);
+        const toml = await import(articlePath, {
+          with: {
+            type: "toml",
+          },
+        }).then((mod) => mod.default);
+        toml.id = articleID;
+        const article = Content.safeParse(toml);
+        if (!article.success) {
+          article.error.cause = toml;
+          throw article.error;
+        }
+        provider.data.articles[articleID] = article.data;
       }
-      provider.data.models[modelID] = model.data;
+    } catch (error) {
+      // Content directory might not exist for all providers
+      console.log(`No content directory found for provider ${providerID}`);
     }
+
     result[providerID] = provider.data;
   }
 

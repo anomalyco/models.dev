@@ -1,6 +1,12 @@
 {
   "type": "module",
   "private": true,
+  "scripts": {
+    "dev": "bun run --cwd packages/web dev",
+    "build": "bun run --cwd packages/web build",
+    "feed": "bun run script/feed.ts",
+    "validate": "bun run script/validate.ts"
+  },
   "workspaces": {
     "packages": [
       "packages/*"
@@ -9,7 +15,6 @@
       "typescript": "5.8.2",
       "@types/node": "22.13.9",
       "zod": "3.24.2",
-      "ai": "4.3.16",
       "@tsconfig/bun": "^1.0.8"
     }
   },

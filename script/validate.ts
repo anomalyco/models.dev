@@ -1,6 +1,6 @@
 #!/usr/bin/env bun
 
-import { generate } from "models.dev";
+import { generate } from "spin.dev";
 import path from "path";
 import { ZodError } from "zod";
 

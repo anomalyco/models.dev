@@ -3,13 +3,13 @@
 export default $config({
   app() {
     return {
-      name: "models-dev",
+      name: "natepapes-com",
       home: "cloudflare",
     };
   },
   async run() {
-    const worker = new sst.cloudflare.StaticSite("MyWorker", {
-      domain: $app.stage === "dev" ? "models.dev" : undefined,
+    const worker = new sst.cloudflare.StaticSite("Site", {
+      domain: $app.stage === "dev" ? "natepapes.com" : undefined,
       path: "./packages/web/",
       build: {
         output: "./dist",

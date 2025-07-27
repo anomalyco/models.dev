@@ -71,7 +71,7 @@ function sortTable(column: number, direction: "asc" | "desc") {
     if (bValue === undefined) return -1;
 
     let comparison = 0;
-    if (columnType === "number" || columnType === "modalities") {
+    if (columnType === "number") {
       comparison = (aValue as number) - (bValue as number);
     } else if (columnType === "boolean") {
       comparison = (aValue as string).localeCompare(bValue as string);
@@ -100,9 +100,6 @@ function getCellValue(
   cell: HTMLTableCellElement,
   type: string
 ): string | number | undefined {
-  if (type === "modalities")
-    return cell.querySelectorAll(".modality-icon").length;
-
   const text = cell.textContent?.trim() || "";
   if (text === "-") return;
   if (type === "number") return parseFloat(text.replace(/[$,]/g, "")) || 0;
@@ -157,35 +154,6 @@ search.addEventListener("keydown", (e) => {
     search.dispatchEvent(new Event("input"));
   }
 });
-
-///////////////////////////////////
-// Handle Copy model ID function
-///////////////////////////////////
-(window as any).copyModelId = async (
-  button: HTMLButtonElement,
-  modelId: string
-) => {
-  try {
-    if (navigator.clipboard) {
-      await navigator.clipboard.writeText(modelId);
-
-      // Switch to check icon
-      const copyIcon = button.querySelector(".copy-icon") as HTMLElement;
-      const checkIcon = button.querySelector(".check-icon") as HTMLElement;
-
-      copyIcon.style.display = "none";
-      checkIcon.style.display = "block";
-
-      // Switch back after 1 second
-      setTimeout(() => {
-        copyIcon.style.display = "block";
-        checkIcon.style.display = "none";
-      }, 1000);
-    }
-  } catch (err) {
-    console.error("Failed to copy text: ", err);
-  }
-};
 
 ///////////////////////////////////
 // Initialize State from URL
