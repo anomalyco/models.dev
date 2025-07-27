@@ -1,10 +1,10 @@
 /** @jsx jsx */
 /** @jsxImportSource hono/jsx */
 
-import { generate } from "spin.dev";
 import { Fragment } from "hono/jsx";
 import { renderToString } from "hono/jsx/dom/server";
 import path from "path";
+import { generate } from "spin.dev";
 
 export const Providers = await generate(
   path.join(import.meta.dir, "..", "..", "..", "providers")
@@ -13,7 +13,7 @@ export const Providers = await generate(
 export const Rendered = renderToString(
   <Fragment>
     <header>
-     <div class="left">
+      <div class="left">
         <h1>Nathan Papes</h1>
         <span class="slash"></span>
         <p>Software Consultant &amp; Developer</p>
@@ -49,9 +49,6 @@ export const Rendered = renderToString(
     <table>
       <thead>
         <tr>
-        <th class="sortable" data-type="text">
-            Provider <span class="sort-indicator"></span>
-          </th>
           <th class="sortable" data-type="text">
             Title <span class="sort-indicator"></span>
           </th>
@@ -65,9 +62,6 @@ export const Rendered = renderToString(
             Reading Time <span class="sort-indicator"></span>
           </th>
           <th class="sortable" data-type="text">
-            Tags <span class="sort-indicator"></span>
-          </th>
-          <th class="sortable" data-type="text">
             Link <span class="sort-indicator"></span>
           </th>
         </tr>
@@ -78,56 +72,63 @@ export const Rendered = renderToString(
             providerA.name.localeCompare(providerB.name)
           )
           .flatMap(([providerId, provider]) =>
-            provider.articles ? Object.entries(provider.articles)
-              .sort(([, articleA], [, articleB]) =>
-                new Date(articleB.created_at).getTime() - new Date(articleA.created_at).getTime()
-              )
-              .map(([articleId, article]) => (
-                <tr key={`${providerId}-${articleId}`}>
-                  <td>
-                    <strong>{article.title}</strong>
-                    {article.description && (
-                      <div style="font-size: 0.9em; color: #666; margin-top: 4px;">
-                        {article.description.slice(0, 45)}...
-                      </div>
-                    )}
-                  </td>
-                  <td>
-                    {new Date(article.created_at).toLocaleDateString("en-US", {
-                      year: "numeric",
-                      month: "short",
-                      day: "numeric",
-                    })}
-                  </td>
-                  <td>{(() => {
-                    try {
-                      return new URL(article.url).hostname.replace("www.", "");
-                    } catch {
-                      return "-";
-                    }
-                  })()}</td>
-                  <td>
-                    {article.reading_time_minutes !== undefined
-                      ? `${article.reading_time_minutes} min`
-                      : "-"}
-                  </td>
-                  <td>
-                    {article.tags && article.tags.length > 0
-                      ? article.tags.join(", ")
-                      : "-"}
-                  </td>
-                  <td>
-                    <a
-                      href={article.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      style="color: #0066cc; text-decoration: none;"
-                    >
-                      Read Article →
-                    </a>
-                  </td>
-                </tr>
-              )) : []
+            provider.articles
+              ? Object.entries(provider.articles)
+                  .sort(
+                    ([, articleA], [, articleB]) =>
+                      new Date(articleB.created_at).getTime() -
+                      new Date(articleA.created_at).getTime()
+                  )
+                  .map(([articleId, article]) => (
+                    <tr key={`${providerId}-${articleId}`}>
+                      <td>
+                        <strong>{article.title}</strong>
+                        {article.description && (
+                          <div style="font-size: 0.9em; color: #666; margin-top: 4px;">
+                            {article.description.slice(0, 45)}...
+                          </div>
+                        )}
+                      </td>
+                      <td>
+                        {new Date(article.created_at).toLocaleDateString(
+                          "en-US",
+                          {
+                            year: "numeric",
+                            month: "short",
+                            day: "numeric",
+                          }
+                        )}
+                      </td>
+                      <td>
+                        {(() => {
+                          try {
+                            return new URL(article.url).hostname.replace(
+                              "www.",
+                              ""
+                            );
+                          } catch {
+                            return "-";
+                          }
+                        })()}
+                      </td>
+                      <td>
+                        {article.reading_time_minutes !== undefined
+                          ? `${article.reading_time_minutes} min`
+                          : "-"}
+                      </td>
+                      <td>
+                        <a
+                          href={article.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          style="color: #0066cc; text-decoration: none;"
+                        >
+                          Read Article →
+                        </a>
+                      </td>
+                    </tr>
+                  ))
+              : []
           )}
       </tbody>
     </table>
