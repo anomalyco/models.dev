@@ -1,6 +1,6 @@
 import path from "path";
 
-import { Provider, Content } from "./schema.js";
+import { Article, Provider } from "./schema.js";
 
 export async function generate(directory: string) {
   const result = {} as Record<string, Provider>;
@@ -42,7 +42,7 @@ export async function generate(directory: string) {
           },
         }).then((mod) => mod.default);
         toml.id = articleID;
-        const article = Content.safeParse(toml);
+        const article = Article.safeParse(toml);
         if (!article.success) {
           article.error.cause = toml;
           throw article.error;
@@ -50,7 +50,7 @@ export async function generate(directory: string) {
         provider.data.articles[articleID] = article.data;
       }
     } catch (error) {
-      // Content directory might not exist for all providers
+      // Article directory might not exist for all providers
       console.log(`No content directory found for provider ${providerID}`);
     }
 
