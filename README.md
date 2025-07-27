@@ -12,7 +12,7 @@ For particality, I forked a the sst/models.dev project and configured it to pull
 You can access this data through an API.
 
 ```bash
-curl https://natepapes/api.json
+curl https://natepapes.com/api.json
 ```
 
 ### Validation
