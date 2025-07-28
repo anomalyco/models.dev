@@ -15,6 +15,7 @@
  */
 
 import fs from "fs/promises";
+import { cpus } from "os";
 import path from "path";
 import { Content, Provider } from "spin.dev"; // re-exported by root `index.ts` of core package
 
@@ -51,6 +52,34 @@ function toTOML(obj: Record<string, unknown>): string {
       })
       .join("\n") + "\n"
   );
+}
+
+/** Remove wrapping CDATA markers from a string */
+function stripCDATA(input: string | null | undefined): string {
+  if (!input) return "";
+  return input.replace(/<!\[CDATA\[([\s\S]*?)\]\]>/gis, "$1").trim();
+}
+
+/** Decode HTML entities (e.g. &amp; &#039;) to plain text */
+function decodeEntities(str: string): string {
+  if (!str) return "";
+  // Prefer DOMParser if available (in Bun it usually is)
+  try {
+    if (typeof (globalThis as any).DOMParser !== "undefined") {
+      const doc = new (globalThis as any).DOMParser().parseFromString(
+        str,
+        "text/html"
+      );
+      return doc.documentElement.textContent || "";
+    }
+  } catch {}
+  // Fallback – minimal replacements
+  return str
+    .replace(/&amp;/g, "&")
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
+    .replace(/&quot;/g, '"')
+    .replace(/&#039;|&#39;|&apos;/g, "'");
 }
 
 // Extract meta tags from the content page using HTMLRewriter.
@@ -115,6 +144,7 @@ function parseFeedEntries(xml: string): Array<{
   link: string;
   published: string;
   summary?: string;
+  tags?: string[];
 }> {
   if (typeof (globalThis as any).DOMParser !== "undefined") {
     const doc = new (globalThis as any).DOMParser().parseFromString(
@@ -123,7 +153,9 @@ function parseFeedEntries(xml: string): Array<{
     );
     const entries = Array.from(doc.querySelectorAll("entry, item"));
     return entries.map((el: any) => {
-      const title = el.querySelector("title")?.textContent?.trim() ?? "";
+      const title = decodeEntities(
+        stripCDATA(el.querySelector("title")?.textContent ?? "")
+      );
       let link = "";
       const linkEl = el.querySelector("link") as any;
       if (linkEl) {
@@ -132,10 +164,17 @@ function parseFeedEntries(xml: string): Array<{
       const published =
         el.querySelector("published, pubDate, updated")?.textContent?.trim() ||
         new Date().toISOString();
-      const summary = el
-        .querySelector("summary, description")
-        ?.textContent?.trim();
-      return { title, link, published, summary };
+      const summary = decodeEntities(
+        stripCDATA(el.querySelector("summary, description")?.textContent ?? "")
+      );
+
+      // Extract categories as tags
+      const tagNodes = Array.from(el.querySelectorAll("category"));
+      const tags = tagNodes
+        .map((c: any) => (c.getAttribute("term") || c.textContent || "").trim())
+        .filter(Boolean);
+
+      return { title, link, published, summary, tags };
     });
   }
 
@@ -145,13 +184,15 @@ function parseFeedEntries(xml: string): Array<{
     link: string;
     published: string;
     summary?: string;
+    tags?: string[];
   }> = [];
   const entryRegex = /<(entry|item)[^>]*>([\s\S]*?)<\/\1>/g;
   let match: RegExpExecArray | null;
   while ((match = entryRegex.exec(xml))) {
     const block = match[2] as string;
-    const title =
-      block.match(/<title[^>]*>([\s\S]*?)<\/title>/)?.[1]?.trim() ?? "";
+    const title = decodeEntities(
+      stripCDATA(block.match(/<title[^>]*>([\s\S]*?)<\/title>/)?.[1] ?? "")
+    );
     const link =
       block.match(/<link[^>]*href=["']([^"']+)["']/)?.[1] ||
       block.match(/<link>([\s\S]*?)<\/link>/)?.[1]?.trim() ||
@@ -160,10 +201,24 @@ function parseFeedEntries(xml: string): Array<{
       block
         .match(/<(published|updated|pubDate)[^>]*>([\s\S]*?)<\//)?.[2]
         ?.trim() || new Date().toISOString();
-    const summary = block
-      .match(/<(summary|description)[^>]*>([\s\S]*?)<\//)?.[2]
-      ?.trim();
-    items.push({ title, link, published, summary });
+    const summary = decodeEntities(
+      stripCDATA(
+        block.match(/<(summary|description)[^>]*>([\s\S]*?)<\//)?.[2] ?? ""
+      )
+    );
+
+    // Extract categories
+    const tags: string[] = [];
+    const catRegex = /<category[^>]*?(?:\/>|>[\s\S]*?<\/category>)/g;
+    const catMatches = block.match(catRegex) || [];
+    for (const cat of catMatches) {
+      const term = cat.match(/term=["']([^"']+)["']/)?.[1];
+      const inner = cat.match(/<category[^>]*>([\s\S]*?)<\/category>/)?.[1];
+      const val = term || inner || "";
+      if (val.trim()) tags.push(val.trim());
+    }
+
+    items.push({ title, link, published, summary, tags });
   }
   return items;
 }
@@ -190,10 +245,10 @@ for (const [providerId, cfg] of Object.entries(configs)) {
   console.log(`Fetching feed for ${providerId}…`);
   const feedResponse = await fetch(providerMeta.rss, { redirect: "follow" });
   const feedXml = await feedResponse.text();
-  const entries = parseFeedEntries(feedXml).slice(0, 20); // limit to 20 most recent
+  const entries = parseFeedEntries(feedXml).slice(0, 30); // limit to 30 most recent
 
-  // Concurrent enrichment (limit to 5 at a time)
-  const concurrency = 5;
+  // Concurrent feeders
+  const concurrency = Math.max(5, cpus().length - 1);
   const queue: Promise<void>[] = [];
 
   const usedSlugs = new Set<string>();
@@ -206,13 +261,35 @@ for (const [providerId, cfg] of Object.entries(configs)) {
 
       const baseContent: Content = {
         id: contentId.toLowerCase(),
-        title: entry.title,
-        description: entry.summary ?? "",
+        title: decodeEntities(entry.title),
+        description: decodeEntities(entry.summary ?? ""),
         url: entry.link,
-        created_at: entry.published,
+        created_at: entry.published.endsWith("Z")
+          ? entry.published
+          : new Date(entry.published).toISOString().replace(/\.\d+Z$/, "Z"), // ISO-8601 string
+        // Include initial tags parsed from feed
+        ...(entry.tags && entry.tags.length
+          ? { tags: entry.tags.map(decodeEntities) }
+          : {}),
       } as Content;
 
       const enriched = await enrichContent(entry.link);
+
+      // Decode any entities in enriched text fields
+      if (enriched.title) enriched.title = decodeEntities(enriched.title);
+      if (enriched.description)
+        enriched.description = decodeEntities(enriched.description);
+
+      // Merge tags from enrichment and feed
+      if (enriched.tags || baseContent.tags) {
+        const merged = Array.from(
+          new Set([...(baseContent.tags ?? []), ...(enriched.tags ?? [])])
+        );
+        if (merged.length) baseContent.tags = merged.map(decodeEntities);
+        // Remove tags from enriched to avoid duplication when spreading below
+        delete (enriched as any).tags;
+      }
+
       const content: Content = { ...baseContent, ...enriched } as Content;
 
       // Write content TOML ---------------------------------------------------

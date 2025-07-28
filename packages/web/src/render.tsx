@@ -52,7 +52,7 @@ export const Rendered = renderToString(
           <th class="sortable" data-type="text">
             Title <span class="sort-indicator"></span>
           </th>
-          <th class="sortable" data-type="text">
+          <th class="sortable" data-type="date">
             Published <span class="sort-indicator"></span>
           </th>
           <th class="sortable" data-type="text">
@@ -121,7 +121,6 @@ export const Rendered = renderToString(
                           href={content.url}
                           target="_blank"
                           rel="noopener noreferrer"
-                          style="text-decoration: none;"
                         >
                           goto →
                         </a>

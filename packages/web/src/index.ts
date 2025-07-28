@@ -73,6 +73,8 @@ function sortTable(column: number, direction: "asc" | "desc") {
     let comparison = 0;
     if (columnType === "number") {
       comparison = (aValue as number) - (bValue as number);
+    } else if (columnType === "date") {
+      comparison = (aValue as number) - (bValue as number);
     } else if (columnType === "boolean") {
       comparison = (aValue as string).localeCompare(bValue as string);
     } else {
@@ -103,6 +105,10 @@ function getCellValue(
   const text = cell.textContent?.trim() || "";
   if (text === "-") return;
   if (type === "number") return parseFloat(text.replace(/[$,]/g, "")) || 0;
+  if (type === "date") {
+    const timestamp = Date.parse(text);
+    return isNaN(timestamp) ? undefined : timestamp;
+  }
   return text;
 }
 

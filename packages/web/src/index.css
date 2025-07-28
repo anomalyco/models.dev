@@ -45,7 +45,6 @@ body {
   line-height: 1.6;
   color: var(--color-text);
   background-color: var(--color-background);
-  /* width: 800px; */
   margin: 0 auto;
 }
 
@@ -65,13 +64,18 @@ h2 {
 
 a {
   color: var(--color-brand);
-  text-decoration: underline;
-  text-decoration-style: dotted;
+  text-decoration: none;
   text-decoration-color: var(--color-text-tertiary);
   text-underline-offset: 0.1875rem;
 
   &:hover {
     color: var(--color-brand);
+    /* text-decoration-style: dotted; */
+  }
+
+  &:visited {
+    color: var(--color-text-tertiary);
+    /* text-decoration: underline; */
   }
 }
 
