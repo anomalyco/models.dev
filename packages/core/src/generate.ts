@@ -1,6 +1,6 @@
 import path from "path";
 
-import { Article, Provider } from "./schema.js";
+import { Content, Provider } from "./schema.js";
 
 export async function generate(directory: string) {
   const result = {} as Record<string, Provider>;
@@ -26,31 +26,31 @@ export async function generate(directory: string) {
       throw provider.error;
     }
 
-    // Process articles if articles directory exists
-    const contentPath = path.join(directory, providerID, "content");
+    // Process contents if contents directory exists
+    const contentsPath = path.join(directory, providerID, "content");
     try {
-      provider.data.articles = {};
-      for await (const articlePath of new Bun.Glob("**/*.toml").scan({
-        cwd: contentPath,
+      provider.data.contents = {};
+      for await (const contentPath of new Bun.Glob("**/*.toml").scan({
+        cwd: contentsPath,
         absolute: true,
         followSymlinks: true,
       })) {
-        const articleID = path.relative(contentPath, articlePath).slice(0, -5);
-        const toml = await import(articlePath, {
+        const contentID = path.relative(contentsPath, contentPath).slice(0, -5);
+        const toml = await import(contentPath, {
           with: {
             type: "toml",
           },
         }).then((mod) => mod.default);
-        toml.id = articleID;
-        const article = Article.safeParse(toml);
-        if (!article.success) {
-          article.error.cause = toml;
-          throw article.error;
+        toml.id = contentID;
+        const content = Content.safeParse(toml);
+        if (!content.success) {
+          content.error.cause = toml;
+          throw content.error;
         }
-        provider.data.articles[articleID] = article.data;
+        provider.data.contents[contentID] = content.data;
       }
     } catch (error) {
-      // Article directory might not exist for all providers
+      // Content directory might not exist for all providers
       console.log(`No content directory found for provider ${providerID}`);
     }
 

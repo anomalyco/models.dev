@@ -6,17 +6,17 @@
  * For each provider we:
  *   1. Fetch the Atom/RSS feed.
  *   2. Parse entries (title, link, published date, summary).
- *   3. Fetch the article URL and extract Open-Graph / Twitter meta-tags for
+ *   3. Fetch the content URL and extract Open-Graph / Twitter meta-tags for
  *      reading time and tags using Bun's HTMLRewriter API – see
  *      https://bun.sh/guides/html-rewriter/extract-links .
- *   4. Materialise a `provider.toml` and individual `content/<article>.toml`
+ *   4. Materialise a `provider.toml` and individual `content/<content>.toml`
  *      files so the rest of the build pipeline (generate.ts, render.tsx, etc.)
  *      can remain unchanged.
  */
 
 import fs from "fs/promises";
 import path from "path";
-import { Article, Provider } from "spin.dev"; // re-exported by root `index.ts` of core package
+import { Content, Provider } from "spin.dev"; // re-exported by root `index.ts` of core package
 
 // ---------- Helpers --------------------------------------------------------
 
@@ -31,7 +31,7 @@ function slugify(input: string): string {
 
 /** Ensure slug is unique within a given Set; append numeric suffixes if needed */
 function uniqueSlug(base: string, existing: Set<string>): string {
-  let candidate = base || "article";
+  let candidate = base || "content";
   let i = 1;
   while (existing.has(candidate)) {
     candidate = `${base}-${i++}`;
@@ -53,9 +53,9 @@ function toTOML(obj: Record<string, unknown>): string {
   );
 }
 
-// Extract meta tags from the article page using HTMLRewriter.
-async function enrichArticle(url: string): Promise<Partial<Article>> {
-  const partial: Partial<Article> = {};
+// Extract meta tags from the content page using HTMLRewriter.
+async function enrichContent(url: string): Promise<Partial<Content>> {
+  const partial: Partial<Content> = {};
 
   try {
     const response = await fetch(url, { redirect: "follow" });
@@ -83,7 +83,7 @@ async function enrichArticle(url: string): Promise<Partial<Article>> {
         },
       })
       // Tags (multiple) - not used currently but could be in the future
-      .on("meta[property='article:tag']", {
+      .on("meta[property='content:tag']", {
         element(el: any) {
           const tag = el.getAttribute("content");
           if (tag) {
@@ -91,8 +91,8 @@ async function enrichArticle(url: string): Promise<Partial<Article>> {
           }
         },
       })
-      // Published time (ISO) – OpenGraph Article extension
-      .on("meta[property='article:published_time']", {
+      // Published time (ISO) – OpenGraph Content extension
+      .on("meta[property='content:published_time']", {
         element(el: any) {
           const content = el.getAttribute("content");
           if (content) partial.created_at = content;
@@ -102,7 +102,7 @@ async function enrichArticle(url: string): Promise<Partial<Article>> {
     // Consume body to completion so the rewriter runs.
     await rewriter.transform(response).arrayBuffer();
   } catch (err) {
-    console.warn(`Failed to enrich article ${url}:`, err);
+    console.warn(`Failed to enrich content ${url}:`, err);
   }
 
   return partial;
@@ -184,7 +184,6 @@ for (const [providerId, cfg] of Object.entries(configs)) {
     name: providerId,
     profile: cfg.profile ?? cfg.url ?? "",
     rss: cfg.rss ?? cfg.url ?? "",
-    articles: {},
   } as Provider;
 
   // Fetch & parse feed ------------------------------------------------------
@@ -202,28 +201,26 @@ for (const [providerId, cfg] of Object.entries(configs)) {
   for (const entry of entries) {
     const task = (async () => {
       const rawSlug = slugify(entry.title) || slugify(entry.link);
-      const articleId = uniqueSlug(rawSlug, usedSlugs);
-      usedSlugs.add(articleId);
+      const contentId = uniqueSlug(rawSlug, usedSlugs);
+      usedSlugs.add(contentId);
 
-      const baseArticle: Article = {
-        id: articleId.toLowerCase(),
+      const baseContent: Content = {
+        id: contentId.toLowerCase(),
         title: entry.title,
-        description: entry.summary,
+        description: entry.summary ?? "",
         url: entry.link,
         created_at: entry.published,
-      } as Article;
+      } as Content;
 
-      const enriched = await enrichArticle(entry.link);
-      const article: Article = { ...baseArticle, ...enriched } as Article;
+      const enriched = await enrichContent(entry.link);
+      const content: Content = { ...baseContent, ...enriched } as Content;
 
-      providerMeta.articles![articleId] = article;
-
-      // Write article TOML ---------------------------------------------------
-      const articleDir = path.join(ROOT, providerId, "content");
-      await fs.mkdir(articleDir, { recursive: true });
+      // Write content TOML ---------------------------------------------------
+      const contentDir = path.join(ROOT, providerId, "content");
+      await fs.mkdir(contentDir, { recursive: true });
       await fs.writeFile(
-        path.join(articleDir, `${articleId}.toml`),
-        toTOML(article)
+        path.join(contentDir, `${contentId}.toml`),
+        toTOML(content)
       );
     })();
 

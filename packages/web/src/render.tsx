@@ -40,7 +40,7 @@ export const Rendered = renderToString(
           </svg>
         </a>
         <div class="search-container">
-          <input type="text" id="search" placeholder="Filter articles" />
+          <input type="text" id="search" placeholder="Filter contents" />
           <span class="search-shortcut">⌘K</span>
         </div>
       </div>
@@ -59,7 +59,7 @@ export const Rendered = renderToString(
             Site <span class="sort-indicator"></span>
           </th>
           <th class="sortable" data-type="number">
-            Reading Time <span class="sort-indicator"></span>
+            Time Est.<span class="sort-indicator"></span>
           </th>
           <th class="sortable" data-type="text">
             Link <span class="sort-indicator"></span>
@@ -72,25 +72,25 @@ export const Rendered = renderToString(
             providerA.name.localeCompare(providerB.name)
           )
           .flatMap(([providerId, provider]) =>
-            provider.articles
-              ? Object.entries(provider.articles)
+            provider.contents
+              ? Object.entries(provider.contents)
                   .sort(
-                    ([, articleA], [, articleB]) =>
-                      new Date(articleB.created_at).getTime() -
-                      new Date(articleA.created_at).getTime()
+                    ([, contentA], [, contentB]) =>
+                      new Date(contentB.created_at).getTime() -
+                      new Date(contentA.created_at).getTime()
                   )
-                  .map(([articleId, article]) => (
-                    <tr key={`${providerId}-${articleId}`}>
+                  .map(([contentId, content]) => (
+                    <tr key={`${providerId}-${contentId}`}>
                       <td>
-                        <strong>{article.title}</strong>
-                        {article.description && (
+                        <strong>{content.title}</strong>
+                        {content.description && (
                           <div style="font-size: 0.9em; color: #666; margin-top: 4px;">
-                            {article.description.slice(0, 45)}...
+                            {content.description.slice(0, 45)}...
                           </div>
                         )}
                       </td>
                       <td>
-                        {new Date(article.created_at).toLocaleDateString(
+                        {new Date(content.created_at).toLocaleDateString(
                           "en-US",
                           {
                             year: "numeric",
@@ -102,7 +102,7 @@ export const Rendered = renderToString(
                       <td>
                         {(() => {
                           try {
-                            return new URL(article.url).hostname.replace(
+                            return new URL(content.url).hostname.replace(
                               "www.",
                               ""
                             );
@@ -112,18 +112,18 @@ export const Rendered = renderToString(
                         })()}
                       </td>
                       <td>
-                        {article.reading_time_minutes !== undefined
-                          ? `${article.reading_time_minutes} min`
+                        {content.reading_time_minutes !== undefined
+                          ? `${content.reading_time_minutes} min`
                           : "-"}
                       </td>
                       <td>
                         <a
-                          href={article.url}
+                          href={content.url}
                           target="_blank"
                           rel="noopener noreferrer"
                           style="text-decoration: none;"
                         >
-                          Read Article →
+                          goto →
                         </a>
                       </td>
                     </tr>

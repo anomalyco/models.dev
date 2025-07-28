@@ -41,7 +41,7 @@ export const Provider = z
     name: z.string(),
     profile: z.string().url("Must be a valid URL"),
     rss: z.string().url("Must be a valid URL"),
-    articles: z.record(Article).optional(),
+    contents: z.record(Content).optional(),
   })
   .strict();
 ```
@@ -49,7 +49,7 @@ export const Provider = z
 **Model Schema:**
 
 ```ts
-export const Article = z
+export const Content = z
   .object({
     id: z.string().toLowerCase(),
     title: z.string(),
@@ -70,6 +70,7 @@ See existing providers in the `providers/` directory for reference:
 
 - `providers/atomicobject/` - spin posts
 - `providers/github/` - gist posts
+- `providers/youtube/` - youtube posts
 
 ### Working on frontend
 

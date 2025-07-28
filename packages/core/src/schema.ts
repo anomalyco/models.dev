@@ -1,7 +1,7 @@
 import { z } from "zod";
 
-// Normalised Article schema used throughout the project.
-export const Article = z
+// Normalised Content schema used throughout the project.
+export const Content = z
   .object({
     id: z.string().toLowerCase(),
     title: z.string(),
@@ -15,7 +15,7 @@ export const Article = z
   })
   .strict();
 
-export type Article = z.infer<typeof Article>;
+export type Content = z.infer<typeof Content>;
 
 // Provider metadata – loosely based on RSS, but includes profile & rss urls.
 export const Provider = z
@@ -24,7 +24,7 @@ export const Provider = z
     name: z.string(),
     profile: z.string().url("Must be a valid URL"),
     rss: z.string().url("Must be a valid URL"),
-    articles: z.record(Article).optional(),
+    contents: z.record(Content).optional(),
   })
   .strict();
 
