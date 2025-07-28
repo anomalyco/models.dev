@@ -117,6 +117,12 @@ Models must conform to the following schema, as defined in `app/schemas.ts`.
 - `modalities.input`: Array of strings — Supported input modalities (e.g., ["text", "image", "audio", "video", "pdf"])
 - `modalities.output`: Array of strings — Supported output modalities (e.g., ["text"])
 
+### Provider Icons
+
+Provider icons enhance the visual representation of AI providers in the UI. Icons are automatically displayed alongside provider names when specified in the provider configuration.
+
+For detailed information about available icons, how to add new ones, and technical implementation, see [Provider Icons Documentation](PROVIDER_ICONS.md).
+
 ### Examples
 
 See existing providers in the `providers/` directory for reference:
