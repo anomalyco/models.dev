@@ -16,6 +16,12 @@ export async function generate(directory: string) {
     }).then((mod) => mod.default);
     toml.id = providerID;
     toml.models = {};
+    
+    // Add iconUrl if icon exists
+    if (toml.icon) {
+      toml.iconUrl = `/icons/providers/${toml.icon}`;
+    }
+    
     const provider = Provider.safeParse(toml);
     if (!provider.success) {
       provider.error.cause = { providerPath, toml };

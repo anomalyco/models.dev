@@ -12,6 +12,17 @@ Bun.serve({
       );
       return new Response(file);
     },
+    "/icons/*": (req) => {
+      const file = Bun.file(
+        path.join(import.meta.dir, "..", "public", new URL(req.url).pathname),
+      );
+      return new Response(file, {
+        headers: {
+          "Content-Type": "image/svg+xml",
+          "Cache-Control": "public, max-age=86400"
+        }
+      });
+    },
   },
 });
 

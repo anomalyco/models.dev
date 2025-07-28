@@ -121,6 +121,20 @@ const renderCost = (cost?: number) => {
   return cost === undefined ? "-" : `$${cost.toFixed(2)}`;
 };
 
+const getProviderIcon = (provider: any) => {
+  if (!provider.iconUrl) return null;
+  
+  return (
+    <img 
+      src={provider.iconUrl}
+      alt={`${provider.name} icon`}
+      width="20"
+      height="20"
+      style="margin-right: 8px; vertical-align: middle;"
+    />
+  );
+};
+
 export const Rendered = renderToString(
   <Fragment>
     <header>
@@ -257,7 +271,12 @@ export const Rendered = renderToString(
               )
               .map(([modelId, model]) => (
                 <tr key={`${providerId}-${modelId}`}>
-                  <td>{provider.name}</td>
+                  <td>
+                    <div style="display: flex; align-items: center;">
+                      {getProviderIcon(provider)}
+                      {provider.name}
+                    </div>
+                  </td>
                   <td>{model.name}</td>
                   <td>{providerId}</td>
                   <td class="model-id-cell">
