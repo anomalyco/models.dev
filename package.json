@@ -1,12 +1,6 @@
 {
   "type": "module",
   "private": true,
-  "scripts": {
-    "dev": "bun run --cwd packages/web dev",
-    "build": "bun run --cwd packages/web build",
-    "validate": "bun run script/validate.ts",
-    "rss": "bun run script/rss.ts"
-  },
   "workspaces": {
     "packages": [
       "packages/*"

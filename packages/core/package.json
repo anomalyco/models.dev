@@ -1,8 +1,12 @@
 {
-  "name": "spin.dev",
+  "name": "@spin.dev/core",
   "version": "0.0.0",
   "$schema": "https://json.schemastore.org/package.json",
   "type": "module",
+  "scripts": {
+    "dev": "bun run --hot ./src/server.ts",
+    "build": "./script/build.ts"
+  },
   "dependencies": {
     "zod": "catalog:"
   },

@@ -14,10 +14,10 @@
  *      can remain unchanged.
  */
 
+import { Content, Provider } from "@spin.dev/core";
 import fs from "fs/promises";
 import { cpus } from "os";
 import path from "path";
-import { Content, Provider } from "spin.dev"; // re-exported by root `index.ts` of core package
 
 // ---------- Helpers --------------------------------------------------------
 

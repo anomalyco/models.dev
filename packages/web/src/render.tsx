@@ -1,10 +1,10 @@
 /** @jsx jsx */
 /** @jsxImportSource hono/jsx */
 
+import { generate } from "@spin.dev/core";
 import { Fragment } from "hono/jsx";
 import { renderToString } from "hono/jsx/dom/server";
 import path from "path";
-import { generate } from "spin.dev";
 
 export const Providers = await generate(
   path.join(import.meta.dir, "..", "..", "..", "providers")

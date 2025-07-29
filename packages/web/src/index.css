@@ -9,6 +9,7 @@
   --icon-opacity: 0.85;
   --header-height: 56px;
   --font-mono: "IBM Plex Mono", monospace;
+  --page-size: 1280px;
 }
 
 :root {
@@ -46,6 +47,7 @@ body {
   color: var(--color-text);
   background-color: var(--color-background);
   margin: 0 auto;
+  /* width: var(--page-size); */
 }
 
 main {
@@ -86,26 +88,27 @@ header {
   justify-content: space-between;
   align-items: center;
   height: var(--header-height);
+  width: 100%;
+  margin: 0 auto;
   padding: 0 0.75rem;
   background-color: var(--color-background);
   position: fixed;
-  width: 100%;
   z-index: 10;
 
   & > div {
     display: flex;
+    justify-content: space-between;
     align-items: center;
 
     &.left {
-      flex: 1 1 auto;
-      min-width: 0;
-      position: relative;
-      align-items: baseline;
+      /* flex: 1 1 auto;
+      align-items: flex-start; */
     }
 
     &.right {
-      flex: 0 0 auto;
+      /* flex: 1 1 auto;
       gap: 0.75rem;
+      justify-content: flex-end; */
     }
   }
 
@@ -279,6 +282,7 @@ td {
 
 tbody {
   td {
+    font-family: var(--font-mono);
     color: var(--color-text-tertiary);
   }
 
