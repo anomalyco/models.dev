@@ -68,7 +68,7 @@ Find provider icons at [https://lobehub.com/icons](https://lobehub.com/icons)
 
 ## Guidelines
 
-- **Format**: SVG preferred, ICO accepted
+- **Format**: SVG.
 - **Size**: 48x48 pixels recommended
 - **Naming**: Use lowercase with hyphens (e.g., `provider-name-color.svg`)
 - **Quality**: Ensure good contrast and visibility
