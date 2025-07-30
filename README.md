@@ -57,7 +57,7 @@ export const Provider = z
   .strict();
 ```
 
-**Model Schema:**
+**Content Schema:**
 
 ```ts
 export const Content = z
