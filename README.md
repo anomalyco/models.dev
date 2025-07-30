@@ -1,3 +1,4 @@
+[![license-check](https://github.com/papes1ns/spin.dev/actions/workflows/license-check.yml/badge.svg)](https://github.com/papes1ns/spin.dev/actions/workflows/license-check.yml)
 [![validate](https://github.com/papes1ns/spin.dev/actions/workflows/validate.yml/badge.svg)](https://github.com/papes1ns/spin.dev/actions/workflows/validate.yml)
 [![deploy](https://github.com/papes1ns/spin.dev/actions/workflows/deploy.yml/badge.svg)](https://github.com/papes1ns/spin.dev/actions/workflows/deploy.yml)
 
