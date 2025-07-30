@@ -16,8 +16,8 @@
 
 import { Content, Provider } from "@spin.dev/core";
 import fs from "fs/promises";
-import { cpus } from "os";
 import path from "path";
+// (Bun currently ships a TOML parser but no serializer, so we keep a tiny helper)
 
 // ---------- Helpers --------------------------------------------------------
 
@@ -82,63 +82,50 @@ function decodeEntities(str: string): string {
     .replace(/&#039;|&#39;|&apos;/g, "'");
 }
 
-// Extract meta tags from the content page using HTMLRewriter.
+// Extract meta tags from the content page using HTMLRewriter (errors bubble up).
 async function enrichContent(url: string): Promise<Partial<Content>> {
   const partial: Partial<Content> = {};
 
-  try {
-    const response = await fetch(url, { redirect: "follow" });
+  const response = await fetch(url, { redirect: "follow" });
 
-    const rewriter = new HTMLRewriter()
-      // Twitter card – reading time e.g. "7 minutes"
-      .on("meta[name='twitter:data2']", {
-        element(el: any) {
-          const content = el.getAttribute("content") || "";
-          const match = content.match(/(\d+)/);
-          if (match) partial.reading_time_minutes = Number(match[1]);
-        },
-      })
-      // OG title / description
-      .on("meta[property='og:title']", {
-        element(el: any) {
-          const content = el.getAttribute("content");
-          if (content) partial.title = content;
-        },
-      })
-      .on("meta[property='og:description']", {
-        element(el: any) {
-          const content = el.getAttribute("content");
-          if (content) partial.description = content;
-        },
-      })
-      // Tags (multiple) - not used currently but could be in the future
-      .on("meta[property='content:tag']", {
-        element(el: any) {
-          const tag = el.getAttribute("content");
-          if (tag) {
-            (partial.tags ??= []).push(tag);
-          }
-        },
-      })
-      // Published time (ISO) – OpenGraph Content extension
-      .on("meta[property='content:published_time']", {
-        element(el: any) {
-          const content = el.getAttribute("content");
-          if (content) partial.created_at = content;
-        },
-      });
+  const rewriter = new HTMLRewriter()
+    .on("meta[name='twitter:data2']", {
+      element(el: any) {
+        const match = el.getAttribute("content")?.match(/(\d+)/);
+        if (match) partial.reading_time_minutes = Number(match[1]);
+      },
+    })
+    .on("meta[property='og:title']", {
+      element(el: any) {
+        const content = el.getAttribute("content");
+        if (content) partial.title = content;
+      },
+    })
+    .on("meta[property='og:description']", {
+      element(el: any) {
+        const content = el.getAttribute("content");
+        if (content) partial.description = content;
+      },
+    })
+    .on("meta[property='content:tag']", {
+      element(el: any) {
+        const tag = el.getAttribute("content");
+        if (tag) (partial.tags ??= []).push(tag);
+      },
+    })
+    .on("meta[property='content:published_time']", {
+      element(el: any) {
+        const content = el.getAttribute("content");
+        if (content) partial.created_at = content;
+      },
+    });
 
-    // Consume body to completion so the rewriter runs.
-    await rewriter.transform(response).arrayBuffer();
-  } catch (err) {
-    console.warn(`Failed to enrich content ${url}:`, err);
-  }
+  await rewriter.transform(response).arrayBuffer();
 
   return partial;
 }
 
-// Naïve XML parsing using DOMParser (available in Bun). Fallback to regex if
-// DOMParser is unavailable (e.g. older Bun versions).
+// Lightweight XML parsing via regex only (throws on malformed feeds).
 function parseFeedEntries(xml: string): Array<{
   title: string;
   link: string;
@@ -146,39 +133,6 @@ function parseFeedEntries(xml: string): Array<{
   summary?: string;
   tags?: string[];
 }> {
-  if (typeof (globalThis as any).DOMParser !== "undefined") {
-    const doc = new (globalThis as any).DOMParser().parseFromString(
-      xml,
-      "application/xml"
-    );
-    const entries = Array.from(doc.querySelectorAll("entry, item"));
-    return entries.map((el: any) => {
-      const title = decodeEntities(
-        stripCDATA(el.querySelector("title")?.textContent ?? "")
-      );
-      let link = "";
-      const linkEl = el.querySelector("link") as any;
-      if (linkEl) {
-        link = linkEl.getAttribute("href") || linkEl.textContent || "";
-      }
-      const published =
-        el.querySelector("published, pubDate, updated")?.textContent?.trim() ||
-        new Date().toISOString();
-      const summary = decodeEntities(
-        stripCDATA(el.querySelector("summary, description")?.textContent ?? "")
-      );
-
-      // Extract categories as tags
-      const tagNodes = Array.from(el.querySelectorAll("category"));
-      const tags = tagNodes
-        .map((c: any) => (c.getAttribute("term") || c.textContent || "").trim())
-        .filter(Boolean);
-
-      return { title, link, published, summary, tags };
-    });
-  }
-
-  // Very small regex fallback – not perfect but works for simple feeds.
   const items: Array<{
     title: string;
     link: string;
@@ -186,6 +140,7 @@ function parseFeedEntries(xml: string): Array<{
     summary?: string;
     tags?: string[];
   }> = [];
+
   const entryRegex = /<(entry|item)[^>]*>([\s\S]*?)<\/\1>/g;
   let match: RegExpExecArray | null;
   while ((match = entryRegex.exec(xml))) {
@@ -196,18 +151,22 @@ function parseFeedEntries(xml: string): Array<{
     const link =
       block.match(/<link[^>]*href=["']([^"']+)["']/)?.[1] ||
       block.match(/<link>([\s\S]*?)<\/link>/)?.[1]?.trim() ||
-      "";
-    const published =
-      block
-        .match(/<(published|updated|pubDate)[^>]*>([\s\S]*?)<\//)?.[2]
-        ?.trim() || new Date().toISOString();
+      (() => {
+        throw new Error("Missing <link> in feed entry");
+      })();
+
+    const publishedRaw = block
+      .match(/<(published|updated|pubDate)[^>]*>([\s\S]*?)<\//)?.[2]
+      ?.trim();
+    if (!publishedRaw)
+      throw new Error("Missing <published>/<pubDate> in feed entry");
+
     const summary = decodeEntities(
       stripCDATA(
         block.match(/<(summary|description)[^>]*>([\s\S]*?)<\//)?.[2] ?? ""
       )
     );
 
-    // Extract categories
     const tags: string[] = [];
     const catRegex = /<category[^>]*?(?:\/>|>[\s\S]*?<\/category>)/g;
     const catMatches = block.match(catRegex) || [];
@@ -218,8 +177,12 @@ function parseFeedEntries(xml: string): Array<{
       if (val.trim()) tags.push(val.trim());
     }
 
-    items.push({ title, link, published, summary, tags });
+    items.push({ title, link, published: publishedRaw, summary, tags });
   }
+
+  if (!items.length)
+    throw new Error("No <entry>/<item> elements found in feed");
+
   return items;
 }
 
@@ -234,12 +197,12 @@ const configs: Record<string, any> = configModule.default as any;
 
 for (const [providerId, cfg] of Object.entries(configs)) {
   // Ensure required fields
-  const providerMeta: Provider = {
+  const providerMeta: Provider = Provider.parse({
     id: providerId.toLowerCase(),
     name: providerId,
     profile: cfg.profile ?? cfg.url ?? "",
     rss: cfg.rss ?? cfg.url ?? "",
-  } as Provider;
+  });
 
   // Fetch & parse feed ------------------------------------------------------
   console.log(`Fetching feed for ${providerId}…`);
@@ -247,19 +210,16 @@ for (const [providerId, cfg] of Object.entries(configs)) {
   const feedXml = await feedResponse.text();
   const entries = parseFeedEntries(feedXml).slice(0, 30); // limit to 30 most recent
 
-  // Concurrent feeders
-  const concurrency = Math.max(5, cpus().length - 1);
-  const queue: Promise<void>[] = [];
-
+  // Generate content files in parallel -------------------------------------
   const usedSlugs = new Set<string>();
 
-  for (const entry of entries) {
-    const task = (async () => {
+  await Promise.all(
+    entries.map(async (entry) => {
       const rawSlug = slugify(entry.title) || slugify(entry.link);
       const contentId = uniqueSlug(rawSlug, usedSlugs);
       usedSlugs.add(contentId);
 
-      const baseContent: Content = {
+      const baseContent: Content = Content.parse({
         id: contentId.toLowerCase(),
         title: decodeEntities(entry.title),
         description: decodeEntities(entry.summary ?? ""),
@@ -267,50 +227,33 @@ for (const [providerId, cfg] of Object.entries(configs)) {
         created_at: entry.published.endsWith("Z")
           ? entry.published
           : new Date(entry.published).toISOString().replace(/\.\d+Z$/, "Z"), // ISO-8601 string
-        // Include initial tags parsed from feed
-        ...(entry.tags && entry.tags.length
-          ? { tags: entry.tags.map(decodeEntities) }
-          : {}),
-      } as Content;
+        ...(entry.tags?.length ? { tags: entry.tags.map(decodeEntities) } : {}),
+      });
 
       const enriched = await enrichContent(entry.link);
 
-      // Decode any entities in enriched text fields
       if (enriched.title) enriched.title = decodeEntities(enriched.title);
       if (enriched.description)
         enriched.description = decodeEntities(enriched.description);
 
-      // Merge tags from enrichment and feed
       if (enriched.tags || baseContent.tags) {
         const merged = Array.from(
           new Set([...(baseContent.tags ?? []), ...(enriched.tags ?? [])])
         );
         if (merged.length) baseContent.tags = merged.map(decodeEntities);
-        // Remove tags from enriched to avoid duplication when spreading below
         delete (enriched as any).tags;
       }
 
-      const content: Content = { ...baseContent, ...enriched } as Content;
+      const content: Content = Content.parse({ ...baseContent, ...enriched });
 
-      // Write content TOML ---------------------------------------------------
       const contentDir = path.join(ROOT, providerId, "content");
       await fs.mkdir(contentDir, { recursive: true });
       await fs.writeFile(
         path.join(contentDir, `${contentId}.toml`),
         toTOML(content)
       );
-    })();
-
-    queue.push(task);
-
-    if (queue.length >= concurrency) {
-      await Promise.race(
-        queue.map((p) => p.then(() => queue.splice(queue.indexOf(p), 1)))
-      );
-    }
-  }
-
-  await Promise.all(queue); // flush remaining
+    })
+  );
 
   // Write provider metadata -----------------------------------------------
   const providerDir = path.join(ROOT, providerId);
