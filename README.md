@@ -15,12 +15,12 @@ This project builds on a fork of the excellent <a href="https://github.com/sst/m
 ## TODO
 
 - [x] add licsense checker to audit the open source supply chain
-- [] setup a `vitest` test suite ideally in its own module eg., `@spin.dev/test`
-- [] write unit test that the rss.ts script fails if the USER_AGENT is in a providers robots.txt
-- [] wrtie unit test that the rss.ts script fails if the HTTP status codes suggest not to scrape
-- [] setup preview environments for PRs
-- [] setup and end-to-end test script to test the robots.txt blocks scraping
-- [] make the main contents table mobile responsive
+- [ ] setup a `vitest` test suite ideally in its own module eg., `@spin.dev/test`
+- [ ] write unit test that the rss.ts script fails if the USER_AGENT is in a providers robots.txt
+- [ ] wrtie unit test that the rss.ts script fails if the HTTP status codes suggest not to scrape
+- [ ] setup preview environments for PRs
+- [ ] setup and end-to-end test script to test the robots.txt blocks scraping
+- [ ] make the main contents table mobile responsive
 
 ## API
 
