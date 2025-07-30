@@ -18,6 +18,96 @@ import { Content, Provider } from "@spin.dev/core";
 import fs from "fs/promises";
 import path from "path";
 // (Bun currently ships a TOML parser but no serializer, so we keep a tiny helper)
+// ---------------------------------------------------------------------------
+// Polite scraping constants & utilities -------------------------------------
+const USER_AGENT = "spin.dev/rss-bot (+https://natepapes.com)";
+const CONCURRENCY_LIMIT = 5;
+const CACHE_PATH = path.join(import.meta.dir, "..", ".cache", "rss-cache.json");
+
+type CacheEntry = { etag?: string; lastModified?: string };
+
+let feedCache: Record<string, CacheEntry> = {};
+try {
+  feedCache = JSON.parse(await fs.readFile(CACHE_PATH, "utf8"));
+} catch {
+  /* first run – cache will be created when we save later */
+}
+
+async function saveCache() {
+  await fs.mkdir(path.dirname(CACHE_PATH), { recursive: true });
+  await fs.writeFile(CACHE_PATH, JSON.stringify(feedCache, null, 2));
+}
+
+/** Simple semaphore enforcing max parallel requests per domain */
+function createSemaphore(limit: number) {
+  let active = 0;
+  const queue: Array<() => void> = [];
+  const next = () => {
+    active--;
+    if (queue.length) queue.shift()!();
+  };
+  return async <T>(fn: () => Promise<T>): Promise<T> =>
+    new Promise<T>((res, rej) => {
+      const run = () => {
+        active++;
+        fn().then(res).catch(rej).finally(next);
+      };
+      active < limit ? run() : queue.push(run);
+    });
+}
+
+const acquire = createSemaphore(CONCURRENCY_LIMIT);
+
+/** Fetch wrapper adding UA + retry/back-off for 429/503 */
+async function fetchWithRetry(
+  url: string,
+  init: RequestInit = {},
+  retries = 3
+): Promise<Response> {
+  const opts: RequestInit = {
+    ...init,
+    headers: { "User-Agent": USER_AGENT, ...(init.headers as any) },
+    redirect: "follow",
+  };
+  for (let attempt = 0; attempt <= retries; attempt++) {
+    const res = await fetch(url, opts);
+    if (![429, 503].includes(res.status) || attempt === retries) return res;
+    const retryAfter =
+      Number(res.headers.get("retry-after")) * 1000 || 2 ** attempt * 1000;
+    await new Promise((r) => setTimeout(r, retryAfter));
+  }
+  throw new Error(`Failed after ${retries + 1} retries → ${url}`);
+}
+
+// robots.txt disallow cache per origin
+const robotsCache: Record<string, string[]> = {};
+async function isAllowed(target: URL): Promise<boolean> {
+  const origin = target.origin;
+  if (!(origin in robotsCache)) {
+    try {
+      const res = await fetchWithRetry(`${origin}/robots.txt`);
+      if (!res.ok) throw new Error();
+      const txt = await res.text();
+      const disallow: string[] = [];
+      let inGlobal = false;
+      for (const line of txt.split("\n")) {
+        const trimmed = line.trim();
+        if (/^user-agent:\s*\*/i.test(trimmed)) inGlobal = true;
+        else if (/^user-agent:/i.test(trimmed)) inGlobal = false;
+        else if (inGlobal && /^disallow:/i.test(trimmed)) {
+          const parts = trimmed.split(":");
+          if (parts[1]) disallow.push(parts[1].trim());
+        }
+      }
+      robotsCache[origin] = disallow;
+    } catch {
+      robotsCache[origin] = []; // assume allowed if cannot fetch
+    }
+  }
+  const rules = robotsCache[origin] ?? [];
+  return rules.every((p) => !target.pathname.startsWith(p));
+}
+// ---------------------------------------------------------------------------
 
 // ---------- Helpers --------------------------------------------------------
 
@@ -86,7 +176,7 @@ function decodeEntities(str: string): string {
 async function enrichContent(url: string): Promise<Partial<Content>> {
   const partial: Partial<Content> = {};
 
-  const response = await fetch(url, { redirect: "follow" });
+  const response = await fetchWithRetry(url);
 
   const rewriter = new HTMLRewriter()
     .on("meta[name='twitter:data2']", {
@@ -189,7 +279,7 @@ function parseFeedEntries(xml: string): Array<{
 // ---------- Main script ----------------------------------------------------
 
 const ROOT = path.join(import.meta.dir, "..", "providers");
-await fs.rm(ROOT, { recursive: true, force: true });
+// No global deletion; we remove per-provider directory only when feed changed.
 
 const rssConfigPath = path.join(import.meta.dir, "..", "rss", "rss.toml");
 const configModule = await import(rssConfigPath, { with: { type: "toml" } });
@@ -204,59 +294,100 @@ for (const [providerId, cfg] of Object.entries(configs)) {
     rss: cfg.rss ?? cfg.url ?? "",
   });
 
-  // Fetch & parse feed ------------------------------------------------------
+  // Fetch & parse feed (ETag/Last-Modified cache) ---------------------------
   console.log(`Fetching feed for ${providerId}…`);
-  const feedResponse = await fetch(providerMeta.rss, { redirect: "follow" });
+
+  const cacheEntry = feedCache[providerMeta.rss] ?? {};
+
+  const feedResponse = await fetchWithRetry(providerMeta.rss, {
+    headers: {
+      ...(cacheEntry.etag ? { "If-None-Match": cacheEntry.etag } : {}),
+      ...(cacheEntry.lastModified
+        ? { "If-Modified-Since": cacheEntry.lastModified }
+        : {}),
+    },
+  });
+
+  if (feedResponse.status === 304) {
+    console.log("ℹ︎  Feed unchanged (304) – skipping.");
+    continue;
+  }
+
+  if (!feedResponse.ok)
+    throw new Error(
+      `Failed to fetch feed (${feedResponse.status}) → ${providerMeta.rss}`
+    );
+
+  feedCache[providerMeta.rss] = {
+    etag: feedResponse.headers.get("etag") ?? undefined,
+    lastModified: feedResponse.headers.get("last-modified") ?? undefined,
+  };
+
   const feedXml = await feedResponse.text();
   const entries = parseFeedEntries(feedXml).slice(0, 30); // limit to 30 most recent
 
-  // Generate content files in parallel -------------------------------------
+  // If feed is modified, clear existing provider directory to regenerate fresh.
+  const providerDir = path.join(ROOT, providerId);
+
+  // remove old provider directory (including provider.toml & content) to avoid stale files
+  await fs.rm(providerDir, { recursive: true, force: true });
+
+  // Generate content files (concurrency-guarded) ----------------------------
   const usedSlugs = new Set<string>();
 
   await Promise.all(
-    entries.map(async (entry) => {
-      const rawSlug = slugify(entry.title) || slugify(entry.link);
-      const contentId = uniqueSlug(rawSlug, usedSlugs);
-      usedSlugs.add(contentId);
+    entries.map((entry) =>
+      acquire(async () => {
+        const linkURL = new URL(entry.link);
+        if (!(await isAllowed(linkURL))) {
+          console.warn(`⚠︎  robots.txt disallow – skipping ${entry.link}`);
+          return;
+        }
 
-      const baseContent: Content = Content.parse({
-        id: contentId.toLowerCase(),
-        title: decodeEntities(entry.title),
-        description: decodeEntities(entry.summary ?? ""),
-        url: entry.link,
-        created_at: entry.published.endsWith("Z")
-          ? entry.published
-          : new Date(entry.published).toISOString().replace(/\.\d+Z$/, "Z"), // ISO-8601 string
-        ...(entry.tags?.length ? { tags: entry.tags.map(decodeEntities) } : {}),
-      });
+        const rawSlug = slugify(entry.title) || slugify(entry.link);
+        const contentId = uniqueSlug(rawSlug, usedSlugs);
+        usedSlugs.add(contentId);
 
-      const enriched = await enrichContent(entry.link);
+        const baseContent: Content = Content.parse({
+          id: contentId.toLowerCase(),
+          title: decodeEntities(entry.title),
+          description: decodeEntities(entry.summary ?? ""),
+          url: entry.link,
+          created_at: entry.published.endsWith("Z")
+            ? entry.published
+            : new Date(entry.published).toISOString().replace(/\.\d+Z$/, "Z"),
+          ...(entry.tags?.length
+            ? { tags: entry.tags.map(decodeEntities) }
+            : {}),
+        });
 
-      if (enriched.title) enriched.title = decodeEntities(enriched.title);
-      if (enriched.description)
-        enriched.description = decodeEntities(enriched.description);
+        const enriched = await enrichContent(entry.link);
 
-      if (enriched.tags || baseContent.tags) {
-        const merged = Array.from(
-          new Set([...(baseContent.tags ?? []), ...(enriched.tags ?? [])])
+        if (enriched.title) enriched.title = decodeEntities(enriched.title);
+        if (enriched.description)
+          enriched.description = decodeEntities(enriched.description);
+
+        if (enriched.tags || baseContent.tags) {
+          const merged = Array.from(
+            new Set([...(baseContent.tags ?? []), ...(enriched.tags ?? [])])
+          );
+          if (merged.length) baseContent.tags = merged.map(decodeEntities);
+          delete (enriched as any).tags;
+        }
+
+        const content: Content = Content.parse({ ...baseContent, ...enriched });
+
+        const contentDir = path.join(providerDir, "content");
+        await fs.mkdir(contentDir, { recursive: true });
+        await fs.writeFile(
+          path.join(contentDir, `${contentId}.toml`),
+          toTOML(content)
         );
-        if (merged.length) baseContent.tags = merged.map(decodeEntities);
-        delete (enriched as any).tags;
-      }
-
-      const content: Content = Content.parse({ ...baseContent, ...enriched });
-
-      const contentDir = path.join(ROOT, providerId, "content");
-      await fs.mkdir(contentDir, { recursive: true });
-      await fs.writeFile(
-        path.join(contentDir, `${contentId}.toml`),
-        toTOML(content)
-      );
-    })
+      })
+    )
   );
 
   // Write provider metadata -----------------------------------------------
-  const providerDir = path.join(ROOT, providerId);
   await fs.mkdir(providerDir, { recursive: true });
   await fs.writeFile(
     path.join(providerDir, "provider.toml"),
@@ -264,4 +395,7 @@ for (const [providerId, cfg] of Object.entries(configs)) {
   );
 }
 
-console.log("✅ providers folder refreshed");
+// Persist updated cache once all providers processed
+await saveCache();
+
+console.log("✅ providers folder refreshed (polite mode enabled)");
