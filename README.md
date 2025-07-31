@@ -16,6 +16,7 @@ This project builds on a fork of the excellent <a href="https://github.com/sst/m
 
 - [x] add licsense checker to audit the open source supply chain
 - [x] add robots.txt to disallow all scraping
+- [ ] look into UNKNOWN and UNLISCENSE liscense type and replace those dependencies 
 - [ ] add pivacy page, no PII is collected, CF analytics tracks device data to protect the service
 - [ ] add terms page, conform to GDRP in combo with the privact page
 - [ ] setup a test suite using `bun:test` package ideally in its own module eg., `@spin.dev/test`
