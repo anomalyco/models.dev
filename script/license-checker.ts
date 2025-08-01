@@ -17,8 +17,6 @@ const DEFAULT_ALLOW = [
   "ISC",
   "BSD-2-Clause",
   "BSD-3-Clause",
-  "UNKNOWN",
-  "UNLICENSED",
 ];
 
 const allowList = new Set(
@@ -39,7 +37,13 @@ for (const [pkg, info] of Object.entries(parsed)) {
   const licArray = Array.isArray(info.licenses)
     ? info.licenses
     : [info.licenses];
-  const bad = licArray.filter((l) => !allowList.has(l));
+  const bad = licArray.filter((l) => {
+    if (/UNKNOWN/.test(l)) {
+      console.warn(`  • ${pkg}  →  ${l}`);
+      return false;
+    }
+    return !allowList.has(l);
+  });
   if (bad.length) violations.push({ pkg, license: bad.join(", ") });
 }
 

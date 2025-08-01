@@ -10,15 +10,15 @@ An experimental fullstack project exploring end-to-end type safety from data ing
 
 This project builds on a fork of the excellent <a href="https://github.com/sst/models.dev">sst/models.dev</a> repo.
 
-> For practicality, it’s currently configured to pull content from my personal RSS feeds and index them on a domain I already own.
+> The changes in this fork are purely for experimentation and demonstration in a blog post. While the RSS feeds and Open Graph metadata can be customized by anyone, this fork reflects my personal setup.
 
 ## TODO
 
 - [x] add licsense checker to audit the open source supply chain
 - [x] add robots.txt to disallow all scraping
-- [ ] look into UNKNOWN and UNLISCENSE liscense type and replace those dependencies 
+- [x] log warnings on UNKNOWN liscenses
 - [ ] add pivacy page, no PII is collected, CF analytics tracks device data to protect the service
-- [ ] add terms page, conform to GDRP in combo with the privact page
+- [ ] add terms page, conform to GDPR in combo with the privacy page
 - [ ] setup a test suite using `bun:test` package ideally in its own module eg., `@spin.dev/test`
 - [ ] write unit test that the rss.ts script fails if the USER_AGENT is in a providers robots.txt
 - [ ] wrtie unit test that the rss.ts script fails if the HTTP status codes suggest not to scrape
