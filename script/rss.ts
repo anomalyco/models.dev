@@ -172,6 +172,16 @@ function decodeEntities(str: string): string {
     .replace(/&#039;|&#39;|&apos;/g, "'");
 }
 
+/** Convert an ISO8601 duration (e.g. PT4M13S) to seconds */
+function isoDurationToSeconds(iso: string): number | undefined {
+  const match = iso.match(/PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/);
+  if (!match) return undefined;
+  const hours = Number(match[1] || 0);
+  const minutes = Number(match[2] || 0);
+  const seconds = Number(match[3] || 0);
+  return hours * 3600 + minutes * 60 + seconds;
+}
+
 // Extract meta tags from the content page using HTMLRewriter (errors bubble up).
 async function enrichContent(url: string): Promise<Partial<Content>> {
   const partial: Partial<Content> = {};
@@ -182,7 +192,7 @@ async function enrichContent(url: string): Promise<Partial<Content>> {
     .on("meta[name='twitter:data2']", {
       element(el: any) {
         const match = el.getAttribute("content")?.match(/(\d+)/);
-        if (match) partial.reading_time_minutes = Number(match[1]);
+        if (match) partial.estimated_time_minutes = Number(match[1]);
       },
     })
     .on("meta[property='og:title']", {
@@ -208,6 +218,26 @@ async function enrichContent(url: string): Promise<Partial<Content>> {
         const content = el.getAttribute("content");
         if (content) partial.created_at = content;
       },
+    })
+    // YouTube video pages expose duration via og:video:duration (seconds)
+    .on("meta[property='og:video:duration']", {
+      element(el: any) {
+        const secondsStr = el.getAttribute("content");
+        const seconds = secondsStr ? Number(secondsStr) : undefined;
+        if (seconds && !isNaN(seconds)) {
+          partial.estimated_time_minutes = Math.ceil(seconds / 60);
+        }
+      },
+    })
+    // Fallback to itemprop=duration such as PT4M13S (ISO)
+    .on("meta[itemprop='duration']", {
+      element(el: any) {
+        const iso = el.getAttribute("content");
+        const secs = iso ? isoDurationToSeconds(iso) : undefined;
+        if (secs && !isNaN(secs)) {
+          partial.estimated_time_minutes = Math.ceil(secs / 60);
+        }
+      },
     });
 
   await rewriter.transform(response).arrayBuffer();
@@ -222,6 +252,7 @@ function parseFeedEntries(xml: string): Array<{
   published: string;
   summary?: string;
   tags?: string[];
+  durationSeconds?: number;
 }> {
   const items: Array<{
     title: string;
@@ -229,6 +260,7 @@ function parseFeedEntries(xml: string): Array<{
     published: string;
     summary?: string;
     tags?: string[];
+    durationSeconds?: number;
   }> = [];
 
   const entryRegex = /<(entry|item)[^>]*>([\s\S]*?)<\/\1>/g;
@@ -267,7 +299,22 @@ function parseFeedEntries(xml: string): Array<{
       if (val.trim()) tags.push(val.trim());
     }
 
-    items.push({ title, link, published: publishedRaw, summary, tags });
+    const durationMatch =
+      block.match(/duration=["'](\d+)["']/) ||
+      block.match(/<media:content[^>]*duration=["'](\d+)["']/) ||
+      block.match(/<yt:duration[^>]*seconds=["'](\d+)["']/);
+    const durationSeconds = durationMatch
+      ? Number(durationMatch[1])
+      : undefined;
+
+    items.push({
+      title,
+      link,
+      published: publishedRaw,
+      summary,
+      tags,
+      ...(durationSeconds !== undefined ? { durationSeconds } : {}),
+    });
   }
 
   if (!items.length)
@@ -279,6 +326,9 @@ function parseFeedEntries(xml: string): Array<{
 // ---------- Main script ----------------------------------------------------
 
 const ROOT = path.join(import.meta.dir, "..", "providers");
+
+// Optional --force flag to re-fetch feeds even if unchanged
+const FORCE_REFRESH = process.argv.includes("--force");
 // No global deletion; we remove per-provider directory only when feed changed.
 
 const rssConfigPath = path.join(import.meta.dir, "..", "rss", "rss.toml");
@@ -299,14 +349,24 @@ for (const [providerId, cfg] of Object.entries(configs)) {
 
   const cacheEntry = feedCache[providerMeta.rss] ?? {};
 
-  const feedResponse = await fetchWithRetry(providerMeta.rss, {
-    headers: {
-      ...(cacheEntry.etag ? { "If-None-Match": cacheEntry.etag } : {}),
-      ...(cacheEntry.lastModified
-        ? { "If-Modified-Since": cacheEntry.lastModified }
-        : {}),
-    },
+  const conditionalHeaders = FORCE_REFRESH
+    ? {}
+    : {
+        ...(cacheEntry.etag ? { "If-None-Match": cacheEntry.etag } : {}),
+        ...(cacheEntry.lastModified
+          ? { "If-Modified-Since": cacheEntry.lastModified }
+          : {}),
+      };
+
+  let feedResponse = await fetchWithRetry(providerMeta.rss, {
+    headers: conditionalHeaders,
   });
+
+  // If server returned 304 but we are forcing refresh, re-request without
+  // conditional headers to obtain the full feed body
+  if (feedResponse.status === 304 && FORCE_REFRESH) {
+    feedResponse = await fetchWithRetry(providerMeta.rss);
+  }
 
   if (feedResponse.status === 304) {
     console.log("ℹ︎  Feed unchanged (304) – skipping.");
@@ -356,6 +416,9 @@ for (const [providerId, cfg] of Object.entries(configs)) {
           created_at: entry.published.endsWith("Z")
             ? entry.published
             : new Date(entry.published).toISOString().replace(/\.\d+Z$/, "Z"),
+          ...(entry.durationSeconds !== undefined
+            ? { estimated_time_minutes: Math.ceil(entry.durationSeconds / 60) }
+            : {}),
           ...(entry.tags?.length
             ? { tags: entry.tags.map(decodeEntities) }
             : {}),

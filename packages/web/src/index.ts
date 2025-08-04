@@ -196,3 +196,31 @@ function initializeFromURL() {
 
 document.addEventListener("DOMContentLoaded", initializeFromURL);
 window.addEventListener("popstate", initializeFromURL);
+
+// Terms & Privacy modal
+const openTerms = document.getElementById("open-terms") as HTMLElement | null;
+const termsModal = document.getElementById("terms-modal") as HTMLElement | null;
+const closeTerms = document.getElementById("close-terms") as HTMLElement | null;
+
+if (openTerms && termsModal && closeTerms) {
+  openTerms.addEventListener("click", (e) => {
+    e.preventDefault();
+    termsModal.classList.add("show");
+  });
+
+  closeTerms.addEventListener("click", () => {
+    termsModal.classList.remove("show");
+  });
+
+  termsModal.addEventListener("click", (e) => {
+    if (e.target === termsModal) {
+      termsModal.classList.remove("show");
+    }
+  });
+
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") {
+      termsModal.classList.remove("show");
+    }
+  });
+}

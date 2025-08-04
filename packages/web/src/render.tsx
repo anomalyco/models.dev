@@ -14,11 +14,9 @@ export const Rendered = renderToString(
   <Fragment>
     <header>
       <div class="left">
-        <h1>Nathan Papes</h1>
+        <h1>Nate Papes</h1>
         <span class="slash"></span>
-        <p>Software Consultant &amp; Developer</p>
-        <span class="slash"></span>
-        <p>A2</p>
+        <p>Contents</p>
       </div>
       <div class="right">
         <a
@@ -112,8 +110,8 @@ export const Rendered = renderToString(
                         })()}
                       </td>
                       <td>
-                        {content.reading_time_minutes !== undefined
-                          ? `${content.reading_time_minutes} min`
+                        {content.estimated_time_minutes !== undefined
+                          ? `${content.estimated_time_minutes} min`
                           : "-"}
                       </td>
                       <td>
@@ -131,5 +129,21 @@ export const Rendered = renderToString(
           )}
       </tbody>
     </table>
+
+    <footer id="site-footer">
+      <div>
+        <a href="#" id="open-terms">
+          Terms &amp; Privacy
+        </a>
+      </div>
+    </footer>
+
+    <div id="terms-modal" class="modal">
+      <div class="modal-content">
+        <h2>Terms &amp; Privacy</h2>
+        <p>This site does not collect any PII. Nor will it ever.</p>
+        <button id="close-terms">Close</button>
+      </div>
+    </div>
   </Fragment>
 );

@@ -7,10 +7,8 @@ export const Content = z
     title: z.string(),
     description: z.string().optional(),
     url: z.string().url("Must be a valid URL"),
-    /** ISO-8601 timestamp of publish date */
     created_at: z.string(),
-    /** Estimated reading time in minutes */
-    reading_time_minutes: z.number().int().positive().optional(),
+    estimated_time_minutes: z.number().int().positive().optional(),
     tags: z.array(z.string()).optional(),
   })
   .strict();

@@ -412,3 +412,75 @@ tbody {
     opacity: 1;
   }
 }
+
+body {
+  padding-bottom: 2.5rem; /* prevent content from hiding behind footer */
+}
+
+/* Fixed footer */
+#site-footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 2.5rem;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 0 0.75rem;
+  gap: 0.75rem;
+  border-top: 1px solid var(--color-border);
+  background-color: var(--color-background);
+  backdrop-filter: blur(6px);
+  z-index: 10;
+  font-size: 0.75rem;
+}
+
+#site-footer a {
+  color: var(--color-text-secondary);
+}
+
+#site-footer a:hover {
+  color: var(--color-brand);
+}
+
+/* Modal styles */
+.modal {
+  position: fixed;
+  inset: 0;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+}
+
+.modal.show {
+  display: flex;
+}
+
+.modal-content {
+  max-width: 600px;
+  max-height: 80vh;
+  overflow-y: auto;
+  padding: 1.5rem;
+  background: var(--color-background);
+  color: var(--color-text);
+  border-radius: 0.25rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+}
+
+.modal-content h2 {
+  margin-bottom: 0.75rem;
+  color: var(--color-brand);
+}
+
+.modal-content button {
+  margin-top: 1rem;
+  background: var(--color-brand);
+  color: var(--color-text-invert);
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 0.25rem;
+  cursor: pointer;
+}
