@@ -184,6 +184,14 @@ function initializeFromURL() {
     const direction = (params.get("order") as "asc" | "desc") || "asc";
     sortTable(columnIndex, direction);
   })();
+
+  // Apply default sort by Published (created_at) column if no sort parameter is present
+  if (!params.get("sort")) {
+    const defaultColumnIndex = getColumnIndexByUrlName("published");
+    if (defaultColumnIndex !== -1) {
+      sortTable(defaultColumnIndex, "desc");
+    }
+  }
 }
 
 document.addEventListener("DOMContentLoaded", initializeFromURL);
