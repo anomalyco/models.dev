@@ -17,8 +17,8 @@ This project builds on a fork of the excellent <a href="https://github.com/sst/m
 - [x] add licsense checker to audit the open source supply chain
 - [x] add robots.txt to disallow all scraping
 - [x] log warnings on UNKNOWN liscenses
-- [ ] add pivacy page, no PII is collected, CF analytics tracks device data to protect the service
-- [ ] add terms page, conform to GDPR in combo with the privacy page
+- [x] add pivacy page, no PII is collected, CF analytics tracks device data to protect the service
+- [x] add terms page, conform to GDPR in combo with the privacy page
 - [ ] setup a test suite using `bun:test` package ideally in its own module eg., `@spin.dev/test`
 - [ ] write unit test that the rss.ts script fails if the USER_AGENT is in a providers robots.txt
 - [ ] wrtie unit test that the rss.ts script fails if the HTTP status codes suggest not to scrape
