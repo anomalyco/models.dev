@@ -7,9 +7,13 @@ temperature = true
 tool_call = true
 open_weights = false
 
+[cost]
+input = 0.15
+output = 0.59
+
 [limit]
-context = 32_768
-output = 32_768
+context = 75_000
+output = 75_000
 
 [modalities]
 input = ["text"]
