@@ -139,9 +139,64 @@ export const Rendered = renderToString(
     </footer>
 
     <div id="terms-modal" class="modal">
-      <div class="modal-content">
+      <div class="modal-content terms">
         <h2>Terms &amp; Privacy</h2>
-        <p>This site does not collect any PII. Nor will it ever.</p>
+        <ul>
+          <li>
+            <strong>Privacy</strong>
+            This is a static site hosted on Cloudflare. Cloudflare sets cookies
+            to keep the service protected. By using the site you are opting in
+            to Cloudflare's privacy policy. You can read more about their
+            <a href="https://www.cloudflare.com/privacypolicy/" target="_blank">
+              privacy policy
+            </a>
+            . PII is not collected, ever.
+          </li>
+          <li>
+            <strong>API</strong>
+            If you wish for content to be removed or want to consume the{" "}
+            <a href="/api.json" target="_blank">
+              API
+            </a>
+            , please contact me at{" "}
+            <a href="mailto:hello@natepapes.com" target="_blank">
+              hello@natepapes.com
+            </a>
+            , otherwise follow the rules in the{" "}
+            <a href="/robots.txt" target="_blank">
+              robots.txt
+            </a>{" "}
+            file please.
+          </li>
+          <li>
+            <strong>Open Source</strong>
+            This site is open source. You can find the source code on{" "}
+            <a href="https://github.com/papes1ns/spin.dev" target="_blank">
+              github.com/papes1ns/spin.dev
+            </a>
+            .
+          </li>
+          <li>
+            <strong>MERLN</strong>
+            This site embodies an experimental open source software project I
+            coined as a, MERLN, expanded means{" "}
+            <em>Metadata Enriched RSS Linker Node</em>. Built for education on
+            fair use and ethical practices in the ethos based in open science.
+          </li>
+          <li>
+            <strong>Acknowledgements</strong>
+            This project was forked from the{" "}
+            <a href="https://models.dev" target="_blank">
+              model.dev
+            </a>{" "}
+            project built by the{" "}
+            <a href="https://sst.dev" target="_blank">
+              SST team
+            </a>
+            . They are raising the bar in open source IaC and AI cli tools for
+            developers.
+          </li>
+        </ul>
         <button id="close-terms">Close</button>
       </div>
     </div>
