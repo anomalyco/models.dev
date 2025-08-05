@@ -1,20 +1,17 @@
-name = "GPT OSS 20B"
+name = "Claude Opus 4.1"
 release_date = "2025-08-05"
 last_updated = "2025-08-05"
-attachment = false
+attachment = true
 reasoning = true
 temperature = true
 tool_call = true
-open_weights = true
-
-[cost]
-input = 0.10
-output = 0.50
+knowledge = "2025-03-31"
+open_weights = false
 
 [limit]
-context = 131_072
-output = 32_768
+context = 200_000
+output = 32_000
 
 [modalities]
-input = ["text"]
+input = ["text", "image"]
 output = ["text"]
