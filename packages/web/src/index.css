@@ -210,9 +210,15 @@ header {
 
   @media (max-width: 45rem) {
     div.right {
-      .github,
-      .search-container {
+      /* Hide optional GitHub icon but keep search visible on mobile */
+      .github {
         display: none;
+      }
+
+      /* Allow search to take full width on smaller screens */
+      .search-container {
+        flex: 1 1 100%;
+        min-width: 0;
       }
     }
   }
@@ -367,6 +373,13 @@ tbody {
     color: var(--color-brand) !important;
   }
 
+  /* Content description under title */
+  .content-description {
+    font-size: 0.9em;
+    color: var(--color-text-secondary);
+    margin-top: 0.25rem;
+  }
+
   .modalities {
     display: flex;
     gap: 0.25rem;
@@ -418,14 +431,14 @@ body {
 }
 
 /* Fixed footer */
-#site-footer {
+.site-footer {
   position: fixed;
   bottom: 0;
   left: 0;
   width: 100%;
   height: 2.5rem;
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
   align-items: center;
   padding: 0 0.75rem;
   gap: 0.75rem;
@@ -436,12 +449,38 @@ body {
   font-size: 0.75rem;
 }
 
-#site-footer a {
+.site-footer a,
+span {
   color: var(--color-text-secondary);
 }
 
-#site-footer a:hover {
+.site-footer a:hover {
   color: var(--color-brand);
+}
+
+/* Ensure footer version uses same color as footer links */
+.site-footer .footer-item {
+  color: var(--color-text-secondary);
+}
+
+/* Align items horizontally inside footer left */
+.site-footer .footer-left {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+/* GitHub icon in footer */
+.site-footer a.github {
+  flex: 0 0 auto;
+  height: 24px;
+  color: var(--color-text-secondary);
+}
+.site-footer a.github:hover {
+  color: var(--color-brand);
+}
+.site-footer a.github svg {
+  opacity: var(--icon-opacity);
 }
 
 /* Modal styles */
@@ -485,23 +524,17 @@ body {
   cursor: pointer;
 }
 
-.modal-content.terms {
-  ul {
-    list-style: disc;
-    padding-left: 1.5rem;
-    margin-bottom: 1rem;
-    li {
-      font-family: var(--font-mono);
-      list-style: none;
-      margin-bottom: 0.5rem;
-      strong {
-        color: var(--color-text);
-        display: block;
-      }
-      a {
-        color: var(--color-brand);
-        text-decoration: underline;
-      }
-    }
-  }
+/* Improved styling for Terms and Privacy modal */
+.modal-content.terms section {
+  margin-bottom: 1.25rem;
+}
+
+.modal-content.terms section p {
+  margin-left: 1rem; /* Indent section content */
+}
+
+.modal-content.terms a {
+  color: var(--color-brand);
+  text-decoration: underline dotted;
+  text-underline-offset: 0.1875rem;
 }

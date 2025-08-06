@@ -15,6 +15,7 @@
  */
 
 import { Content, Provider } from "@spin.dev/core";
+import { $ } from "bun";
 import fs from "fs/promises";
 import path from "path";
 // (Bun currently ships a TOML parser but no serializer, so we keep a tiny helper)
@@ -461,4 +462,7 @@ for (const [providerId, cfg] of Object.entries(configs)) {
 // Persist updated cache once all providers processed
 await saveCache();
 
-console.log("✅ providers folder refreshed (polite mode enabled)");
+// save version
+const version =
+  await $`echo "$(date '+%Y.%m.%d').$(git rev-parse --short HEAD)" > ../VERSION`.text();
+console.log("✅ providers folder refreshed, version: ${version}");

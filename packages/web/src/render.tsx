@@ -19,26 +19,13 @@ export const Rendered = renderToString(
         <p>Contents</p>
       </div>
       <div class="right">
-        <a
-          class="github"
-          target="_blank"
-          rel="noopener noreferrer"
-          href="https://github.com/papes1ns/spin.dev"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-          >
-            <path
-              fill="currentColor"
-              d="M12 2A10 10 0 0 0 2 12c0 4.42 2.87 8.17 6.84 9.5c.5.08.66-.23.66-.5v-1.69c-2.77.6-3.36-1.34-3.36-1.34c-.46-1.16-1.11-1.47-1.11-1.47c-.91-.62.07-.6.07-.6c1 .07 1.53 1.03 1.53 1.03c.87 1.52 2.34 1.07 2.91.83c.09-.65.35-1.09.63-1.34c-2.22-.25-4.55-1.11-4.55-4.92c0-1.11.38-2 1.03-2.71c-.1-.25-.45-1.29.1-2.64c0 0 .84-.27 2.75 1.02c.79-.22 1.65-.33 2.5-.33s1.71.11 2.5.33c1.91-1.29 2.75-1.02 2.75-1.02c.55 1.35.2 2.39.1 2.64c.65.71 1.03 1.6 1.03 2.71c0 3.82-2.34 4.66-4.57 4.91c.36.31.69.92.69 1.85V21c0 .27.16.59.67.5C19.14 20.16 22 16.42 22 12A10 10 0 0 0 12 2"
-            ></path>
-          </svg>
-        </a>
         <div class="search-container">
-          <input type="text" id="search" placeholder="Filter contents" />
+          <input
+            type="text"
+            id="search"
+            placeholder="Filter contents"
+            autofocus
+          />
           <span class="search-shortcut">⌘K</span>
         </div>
       </div>
@@ -82,8 +69,9 @@ export const Rendered = renderToString(
                       <td>
                         <strong>{content.title}</strong>
                         {content.description && (
-                          <div style="font-size: 0.9em; color: #666; margin-top: 4px;">
-                            {content.description.slice(0, 45)}...
+                          <div class="content-description">
+                            {content.description.slice(0, 45)}
+                            {content.description.length > 45 ? "..." : ""}
                           </div>
                         )}
                       </td>
@@ -98,20 +86,13 @@ export const Rendered = renderToString(
                         )}
                       </td>
                       <td>
-                        {(() => {
-                          try {
-                            return new URL(content.url).hostname.replace(
-                              "www.",
-                              ""
-                            );
-                          } catch {
-                            return "-";
-                          }
-                        })()}
+                        {new URL(content.url).hostname.replace("www.", "")}
                       </td>
                       <td>
                         {content.estimated_time_minutes !== undefined
-                          ? `${content.estimated_time_minutes} min`
+                          ? `${content.estimated_time_minutes} min${
+                              content.estimated_time_minutes > 1 ? "s" : ""
+                            }`
                           : "-"}
                       </td>
                       <td>
@@ -130,33 +111,51 @@ export const Rendered = renderToString(
       </tbody>
     </table>
 
-    <footer id="site-footer">
-      <div>
-        <a href="#" id="open-terms">
-          Terms &amp; Privacy
+    <footer class="site-footer">
+      <div class="footer-left">
+        <div class="footer-item">
+          <a
+            class="github"
+            target="_blank"
+            rel="noopener noreferrer"
+            href="https://github.com/papes1ns/spin.dev"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+            >
+              <path
+                fill="currentColor"
+                d="M12 2A10 10 0 0 0 2 12c0 4.42 2.87 8.17 6.84 9.5c.5.08.66-.23.66-.5v-1.69c-2.77.6-3.36-1.34-3.36-1.34c-.46-1.16-1.11-1.47-1.11-1.47c-.91-.62.07-.6.07-.6c1 .07 1.53 1.03 1.53 1.03c.87 1.52 2.34 1.07 2.91.83c.09-.65.35-1.09.63-1.34c-2.22-.25-4.55-1.11-4.55-4.92c0-1.11.38-2 1.03-2.71c-.1-.25-.45-1.29.1-2.64c0 0 .84-.27 2.75 1.02c.79-.22 1.65-.33 2.5-.33s1.71.11 2.5.33c1.91-1.29 2.75-1.02 2.75-1.02c.55 1.35.2 2.39.1 2.64c.65.71 1.03 1.6 1.03 2.71c0 3.82-2.34 4.66-4.57 4.91c.36.31.69.92.69 1.85V21c0 .27.16.59.67.5C19.14 20.16 22 16.42 22 12A10 10 0 0 0 12 2"
+              ></path>
+            </svg>
+          </a>
+        </div>
+        <div class="footer-item">
+          Version:{" "}
+          {await Bun.file(
+            path.join(import.meta.dir, "..", "..", "..", "VERSION")
+          ).text()}
+        </div>
+      </div>
+      <div class="footer-right">
+        <a href="#" id="open-terms" role="modal">
+          Terms and Privacy
         </a>
       </div>
     </footer>
 
     <div id="terms-modal" class="modal">
       <div class="modal-content terms">
-        <h2>Terms &amp; Privacy</h2>
-        <ul>
-          <li>
-            <strong>Privacy</strong>
-            This is a static site hosted on Cloudflare. Cloudflare sets cookies
-            to keep the service protected. By using the site you are opting in
-            to Cloudflare's privacy policy. You can read more about their
-            <a href="https://www.cloudflare.com/privacypolicy/" target="_blank">
-              privacy policy
-            </a>
-            . PII is not collected, ever.
-          </li>
-          <li>
-            <strong>API</strong>
+        <h2>Terms and Privacy</h2>
+        <section>
+          <h3>Terms</h3>
+          <p>
             If you wish for content to be removed or want to consume the{" "}
             <a href="/api.json" target="_blank">
-              API
+              /api.json
             </a>
             , please contact me at{" "}
             <a href="mailto:hello@natepapes.com" target="_blank">
@@ -164,39 +163,37 @@ export const Rendered = renderToString(
             </a>
             , otherwise follow the rules in the{" "}
             <a href="/robots.txt" target="_blank">
-              robots.txt
+              /robots.txt
             </a>{" "}
-            file please.
-          </li>
-          <li>
-            <strong>Open Source</strong>
-            This site is open source. You can find the source code on{" "}
-            <a href="https://github.com/papes1ns/spin.dev" target="_blank">
-              github.com/papes1ns/spin.dev
-            </a>
-            .
-          </li>
-          <li>
-            <strong>MERLN</strong>
-            This site embodies an experimental open source software project I
-            coined as a, MERLN, expanded means{" "}
-            <em>Metadata Enriched RSS Linker Node</em>. Built for education on
-            fair use and ethical practices in the ethos based in open science.
-          </li>
-          <li>
-            <strong>Acknowledgements</strong>
+            file.
+          </p>
+        </section>
+        <section>
+          <h3>Privacy</h3>
+          <p>PII is not collected.</p>
+          <p>Cloudflare sets cookies to keep the service protected.</p>
+        </section>
+        <section>
+          <h3>Acknowledgements</h3>
+          <p>
             This project was forked from the{" "}
             <a href="https://models.dev" target="_blank">
-              model.dev
+              models.dev
             </a>{" "}
             project built by the{" "}
             <a href="https://sst.dev" target="_blank">
               SST team
             </a>
-            . They are raising the bar in open source IaC and AI cli tools for
-            developers.
-          </li>
-        </ul>
+            .
+          </p>
+        </section>
+        <section>
+          <h3>Metadata-Enriched RSS Linker Node (MERLN)</h3>
+          <p>
+            This MERLN is built for education on fair use and ethical practices
+            based on an open science ethos.
+          </p>
+        </section>
         <button id="close-terms">Close</button>
       </div>
     </div>
