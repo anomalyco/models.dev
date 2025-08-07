@@ -9,7 +9,6 @@
 - RSS feed update: `bun run rss`
 - Test feeder: `bun run test`
 - License checker: `bun run license-check`
-- Single test: (no tests in this repo)
 
 ## Code Style
 

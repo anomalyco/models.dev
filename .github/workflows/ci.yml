@@ -32,7 +32,7 @@ jobs:
         run: bun run test
 
       - name: validate
-        run: bun run validate
+        run: bun run script/validate.ts
 
       - name: license check
-        run: bun run license-check
+        run: bun run script/license-check.ts

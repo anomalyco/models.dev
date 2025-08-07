@@ -5,9 +5,9 @@
   "scripts": {
     "dev": "bun run --cwd packages/web dev",
     "build": "bun run --cwd packages/web build",
-    "rss": "bun run --cwd script/rss.ts",
-    "validate": "bun run --cwd script validate.ts",
-    "license-check": "bun run --cwd script license-check.ts",
+    "rss": "bun run script/rss.ts",
+    "validate": "bun run script/validate.ts",
+    "license-check": "bun run script/license-check.ts",
     "test": "bun test"
   },
   "workspaces": {
