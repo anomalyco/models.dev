@@ -1,6 +1,7 @@
-[![license-check](https://github.com/papes1ns/merlin/actions/workflows/license-check.yml/badge.svg)](https://github.com/papes1ns/merlin/actions/workflows/license-check.yml)
-[![validate](https://github.com/papes1ns/merlin/actions/workflows/validate.yml/badge.svg)](https://github.com/papes1ns/merlin/actions/workflows/validate.yml)
-[![deploy](https://github.com/papes1ns/merlin/actions/workflows/deploy.yml/badge.svg)](https://github.com/papes1ns/merlin/actions/workflows/deploy.yml)
+[![test](https://github.com/papes1ns/merln/actions/workflows/test.yml/badge.svg)](https://github.com/papes1ns/merln/actions/workflows/test.yml)
+[![validate](https://github.com/papes1ns/merln/actions/workflows/validate.yml/badge.svg)](https://github.com/papes1ns/merln/actions/workflows/validate.yml)
+[![license-check](https://github.com/papes1ns/merln/actions/workflows/license-check.yml/badge.svg)](https://github.com/papes1ns/merln/actions/workflows/license-check.yml)
+[![deploy](https://github.com/papes1ns/merln/actions/workflows/deploy.yml/badge.svg)](https://github.com/papes1ns/merln/actions/workflows/deploy.yml)
 
 ![merln](packages/web/public/favicon.svg)
 <span style="font-weight: 800; font-size: 2rem; font-family:'IBM Plex Mono', monospace">merln</span>
