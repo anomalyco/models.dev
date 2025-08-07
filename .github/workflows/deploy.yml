@@ -8,12 +8,6 @@ on:
         required: true
         default: "dev"
         type: string
-  # workflow_run:
-  #   workflows: ["ci"]
-  #   types:
-  #     - completed
-  #   branches:
-  #     - dev
 
 concurrency: ${{ github.workflow }}-${{ github.ref }}
 
@@ -30,7 +24,7 @@ jobs:
           bun-version: latest
 
       - name: Install dependencies
-        run: bun install --frozen-lockfile
+        run: bun install
 
       - run: bun sst deploy --stage=${{ inputs.stage }}
         env:
