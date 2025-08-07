@@ -1,24 +1,108 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-labelledby="title desc">
-<defs>
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- MERLN ASCII fish logo -->
+<svg xmlns="http://www.w3.org/2000/svg" width="160" height="50" viewBox="0 0 160 50" aria-label="MERLN fish logo">
+  <title>MERLN fish logo</title>
+  <defs>
     <style>
-      @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@600&amp;family=Rubik:wght@500&amp;display=swap');
+      .ascii-char {
+        font-family: 'Courier New', 'Monaco', monospace;
+        font-size: 40px;
+        font-weight: 900;
+        text-anchor: middle;
+        dominant-baseline: central;
+        font-stretch: expanded;
+      }
+      .eye {
+        font-size: 32px;
+      }
+      .mouth {
+        font-size: 44px;
+        font-weight: 900;
+        stroke: #ff7a93;
+        stroke-width: 1px;
+        paint-order: stroke fill;
+      }
+      
+      /* Swimming animations */
+      .fish-body {
+        animation: swim 3s ease-in-out infinite;
+        transform-origin: center;
+      }
+      
+      .fish-tail {
+        animation: tail-sway 1.5s ease-in-out infinite;
+        transform-origin: 20px 25px;
+      }
+      
+      .fish-fins {
+        animation: fin-wave 2s ease-in-out infinite;
+        transform-origin: center;
+      }
+      
+      .fish-bill {
+        animation: bill-thrust 2.5s ease-in-out infinite;
+        transform-origin: 130px 24px;
+      }
+      
+      .fish-eye {
+        animation: eye-blink 4s ease-in-out infinite;
+      }
+      
+      @keyframes swim {
+        0%, 100% { transform: translateY(0px) rotate(0deg); }
+        25% { transform: translateY(-1px) rotate(0.5deg); }
+        50% { transform: translateY(0px) rotate(0deg); }
+        75% { transform: translateY(1px) rotate(-0.5deg); }
+      }
+      
+      @keyframes tail-sway {
+        0%, 100% { transform: rotate(0deg); }
+        50% { transform: rotate(3deg); }
+      }
+      
+      @keyframes fin-wave {
+        0%, 100% { transform: translateX(0px); }
+        25% { transform: translateX(0.5px); }
+        75% { transform: translateX(-0.5px); }
+      }
+      
+      @keyframes bill-thrust {
+        0%, 100% { transform: translateX(0px) scaleX(1); }
+        50% { transform: translateX(1px) scaleX(1.05); }
+      }
+      
+      @keyframes eye-blink {
+        0%, 90%, 100% { opacity: 1; }
+        95% { opacity: 0.3; }
+      }
     </style>
   </defs>
-  <title id="title">Nathan Papes Periodic Card Logo</title>
-  <desc id="desc">Periodic table element-style logo featuring atomic number 93, office A2, element symbol Np, and the name Nathan.</desc>
-
-  <!-- Background with 4px black border -->
-  <rect x="2" y="2" width="252" height="252" rx="0" ry="0" fill="#CDE7DA" stroke="#000000" stroke-width="4" />
-
-  <!-- Atomic number -->
-  <text x="14" y="30" font-family="'IBM Plex Mono', 'Rubik', monospace, sans-serif" font-size="22" fill="#333333" font-weight="600">93</text>
-
-  <!-- Office code -->
-  <text x="242" y="30" text-anchor="end" font-family="'IBM Plex Mono', 'Rubik', monospace, sans-serif" font-size="22" fill="#333333" font-weight="600">A2</text>
-
-  <!-- Element symbol -->
-  <text x="128" y="140" text-anchor="middle" dominant-baseline="middle" font-family="'IBM Plex Mono', 'Rubik', monospace, sans-serif" font-size="110" fill="#333333" font-weight="500">Np</text>
-
-  <!-- Name -->
-  <text x="128" y="228" text-anchor="middle" font-family="'IBM Plex Mono', 'Rubik', monospace, sans-serif" font-size="30" fill="#333333" font-weight="500">Nathan</text>
-</svg> 
+  
+  <!-- ASCII Fish: < ( ( ( o > -->
+  <!-- Tail section with sway animation -->
+  <g class="fish-tail">
+    <!-- < (cyan) -->
+    <text x="20" y="25" class="ascii-char" fill="#7dcfff">&lt;</text>
+  </g>
+  
+  <!-- Body section with swimming motion -->
+  <g class="fish-body">
+    <!-- ( (light blue) -->
+    <text x="40" y="25" class="ascii-char fish-fins" fill="#5cbdf6">(</text>
+    
+    <!-- ( (blue) -->
+    <text x="58" y="25" class="ascii-char fish-fins" fill="#82aaff">(</text>
+    
+    <!-- ( (purple) -->
+    <text x="76" y="25" class="ascii-char fish-fins" fill="#bb9af7">(</text>
+  </g>
+  
+  <!-- Eye with blinking animation -->
+  <text x="100" y="20" class="ascii-char eye fish-eye" fill="#c0a0f9">o</text>
+  
+  <!-- Mouth section -->
+  <text x="120" y="25" class="ascii-char mouth" fill="#ff7a93">&gt;</text>
+  
+  <!-- Marlin spike/bill with thrust animation -->
+  <line x1="130" y1="24" x2="155" y2="18" stroke="#ff7a93" stroke-width="4" stroke-linecap="round" class="fish-bill"/>
+</svg>

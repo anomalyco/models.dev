@@ -1,7 +1,7 @@
 /** @jsx jsx */
 /** @jsxImportSource hono/jsx */
 
-import { generate } from "@spin.dev/core";
+import { generate } from "@merlin/core";
 import { Fragment } from "hono/jsx";
 import { renderToString } from "hono/jsx/dom/server";
 import path from "path";
@@ -118,7 +118,7 @@ export const Rendered = renderToString(
             class="github"
             target="_blank"
             rel="noopener noreferrer"
-            href="https://github.com/papes1ns/spin.dev"
+            href="https://github.com/papes1ns/merlin"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -139,6 +139,13 @@ export const Rendered = renderToString(
             path.join(import.meta.dir, "..", "..", "..", "VERSION")
           ).text()}
         </div>
+        <img
+          alt="merln"
+          aria-label="merln"
+          width="60"
+          height="20"
+          src="/favicon.svg"
+        />
       </div>
       <div class="footer-right">
         <a href="#" id="open-terms" role="modal">
@@ -153,19 +160,23 @@ export const Rendered = renderToString(
         <section>
           <h3>Terms</h3>
           <p>
-            If you wish for content to be removed or want to consume the{" "}
+            The JSON API is available at{" "}
             <a href="/api.json" target="_blank">
               /api.json
             </a>
-            , please contact me at{" "}
-            <a href="mailto:hello@natepapes.com" target="_blank">
-              hello@natepapes.com
-            </a>
-            , otherwise follow the rules in the{" "}
+          </p>
+          <p>
+            There is a ruleset for crawlers in the{" "}
             <a href="/robots.txt" target="_blank">
               /robots.txt
             </a>{" "}
             file.
+          </p>
+          <p>
+            Contact me at{" "}
+            <a href="mailto:hello@natepapes.com" target="_blank">
+              hello@natepapes.com
+            </a>
           </p>
         </section>
         <section>
@@ -185,13 +196,6 @@ export const Rendered = renderToString(
               SST team
             </a>
             .
-          </p>
-        </section>
-        <section>
-          <h3>Metadata-Enriched RSS Linker Node (MERLN)</h3>
-          <p>
-            This MERLN is built for education on fair use and ethical practices
-            based on an open science ethos.
           </p>
         </section>
         <button id="close-terms">Close</button>

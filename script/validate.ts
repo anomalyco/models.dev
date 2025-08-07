@@ -1,6 +1,6 @@
 #!/usr/bin/env bun
 
-import { generate } from "@spin.dev/core";
+import { generate } from "@merlin/core";
 import path from "path";
 import { ZodError } from "zod";
 

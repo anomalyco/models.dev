@@ -1,30 +1,23 @@
-[![license-check](https://github.com/papes1ns/spin.dev/actions/workflows/license-check.yml/badge.svg)](https://github.com/papes1ns/spin.dev/actions/workflows/license-check.yml)
-[![validate](https://github.com/papes1ns/spin.dev/actions/workflows/validate.yml/badge.svg)](https://github.com/papes1ns/spin.dev/actions/workflows/validate.yml)
-[![deploy](https://github.com/papes1ns/spin.dev/actions/workflows/deploy.yml/badge.svg)](https://github.com/papes1ns/spin.dev/actions/workflows/deploy.yml)
+[![license-check](https://github.com/papes1ns/merlin/actions/workflows/license-check.yml/badge.svg)](https://github.com/papes1ns/merlin/actions/workflows/license-check.yml)
+[![validate](https://github.com/papes1ns/merlin/actions/workflows/validate.yml/badge.svg)](https://github.com/papes1ns/merlin/actions/workflows/validate.yml)
+[![deploy](https://github.com/papes1ns/merlin/actions/workflows/deploy.yml/badge.svg)](https://github.com/papes1ns/merlin/actions/workflows/deploy.yml)
 
-<p align="center">
-  <img src="https://natepapes.com/favicon.svg" alt="favicon" width="64" height="64"/>
-</p>
+![merln](packages/web/public/favicon.svg)
+<span style="font-weight: 800; font-size: 2rem; font-family:'IBM Plex Mono', monospace">merln</span>
 
-An experimental fullstack project exploring end-to-end type safety from data ingestion to the frontend using a shared schema validated across the stack.
+**M**etadata-**E**nriched-**R**SS-**L**inker-**N**ode
 
-This project builds on a fork of the excellent <a href="https://github.com/sst/models.dev">sst/models.dev</a> repo.
+## Overview
 
-> The changes in this fork are purely for experimentation and demonstration in a blog post. While the RSS feeds and Open Graph metadata can be customized by anyone, this fork reflects my personal setup.
+An example `merln` project.
 
-## TODO
+- [x] typesafe code
+- [x] schema validation
+- [x] FOSS license audit
+- [x] GDPR compliant
+- [x] automation
 
-- [x] add licsense checker to audit the open source supply chain
-- [x] add robots.txt to disallow all scraping
-- [x] log warnings on UNKNOWN liscenses
-- [x] add pivacy page, no PII is collected, CF analytics tracks device data to protect the service
-- [x] add terms page, conform to GDPR in combo with the privacy page
-- [ ] setup a test suite using `bun:test` package ideally in its own module eg., `@spin.dev/test`
-- [ ] write unit test that the rss.ts script fails if the USER_AGENT is in a providers robots.txt
-- [ ] wrtie unit test that the rss.ts script fails if the HTTP status codes suggest not to scrape
-- [ ] setup preview environments for PRs
-- [ ] setup and end-to-end test script to test the robots.txt blocks scraping
-- [ ] make the main contents table mobile responsive
+`merln` is maintained by me. Originally started as a simple fork of an open source project by [SST](https://sst.dev). They are innovating across the board. Be sure to check them out!
 
 ## API
 
@@ -70,9 +63,7 @@ export const Content = z
     title: z.string(),
     description: z.string().optional(),
     url: z.string().url("Must be a valid URL"),
-    /** ISO-8601 timestamp of publish date */
     created_at: z.string(),
-    /** Estimated reading time in minutes */
     estimated_time_minutes: z.number().int().positive().optional(),
     tags: z.array(z.string()).optional(),
   })
@@ -92,13 +83,7 @@ See existing providers in the `providers/` directory for reference:
 Make sure you have [Bun](https://bun.sh/) installed.
 
 ```bash
-$ bun install
-$ cd packages/web
-$ bun run dev
+bun run dev
 ```
 
 And it'll open the frontend at http://localhost:3000
-
----
-
-spin.dev is a fork maintained by me inspired by the creators and maintainers of [SST](https://sst.dev). Please support and credit them for the awesome work they are doing.

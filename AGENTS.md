@@ -3,10 +3,11 @@
 ## Commands
 
 - Install dependencies: `bun install`
-- Dev server: `bun run --cwd packages/web dev`
-- Build: `bun run --cwd packages/web build`
-- Validate schema: `./script/validate.ts`
-- RSS feed update: `./script/rss.ts`
+- Dev server: `bun run dev`
+- Build: `bun run build`
+- Validate schema: `bun run validate`
+- RSS feed update: `bun run rss`
+- Test feeder: `bun run test`
 - Single test: (no tests in this repo)
 
 ## Code Style

@@ -12,6 +12,18 @@ Bun.serve({
       );
       return new Response(file);
     },
+    "/*": (req) => {
+      const pathname = new URL(req.url).pathname;
+      // Check if this is a request for a public file
+      const publicFile = Bun.file(
+        path.join(import.meta.dir, "..", "public", pathname)
+      );
+      if (publicFile.size > 0) {
+        return new Response(publicFile);
+      }
+      // Fall back to 404 for non-existent files
+      return new Response("Not Found", { status: 404 });
+    },
   },
 });
 

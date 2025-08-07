@@ -18,10 +18,8 @@ import { Content, Provider } from "@spin.dev/core";
 import { $ } from "bun";
 import fs from "fs/promises";
 import path from "path";
-// (Bun currently ships a TOML parser but no serializer, so we keep a tiny helper)
-// ---------------------------------------------------------------------------
-// Polite scraping constants & utilities -------------------------------------
-const USER_AGENT = "spin.dev/rss-bot (+https://natepapes.com)";
+
+const USER_AGENT = "merln/rss-bot (+https://natepapes.com)";
 const CONCURRENCY_LIMIT = 5;
 const CACHE_PATH = path.join(import.meta.dir, "..", ".cache", "rss-cache.json");
 
@@ -89,30 +87,67 @@ async function isAllowed(target: URL): Promise<boolean> {
       const res = await fetchWithRetry(`${origin}/robots.txt`);
       if (!res.ok) throw new Error();
       const txt = await res.text();
-      const disallow: string[] = [];
+
+      // Extract our user-agent name from USER_AGENT constant
+      const ourAgent = USER_AGENT.split("/")[0] || "merln"; // "merln" from "merln/rss-bot (+https://natepapes.com)"
+
+      const specificDisallow: string[] = [];
+      const globalDisallow: string[] = [];
+
+      let currentAgent = "";
+      let inOurAgent = false;
       let inGlobal = false;
+      let foundOurAgent = false;
+      let foundGlobalAgent = false;
+
       for (const line of txt.split("\n")) {
         const trimmed = line.trim();
-        if (/^user-agent:\s*\*/i.test(trimmed)) inGlobal = true;
-        else if (/^user-agent:/i.test(trimmed)) inGlobal = false;
-        else if (inGlobal && /^disallow:/i.test(trimmed)) {
+
+        // Check for User-agent directive
+        const userAgentMatch = trimmed.match(/^user-agent:\s*(.+)$/i);
+        if (userAgentMatch && userAgentMatch[1]) {
+          currentAgent = userAgentMatch[1].toLowerCase();
+          inOurAgent =
+            currentAgent === ourAgent.toLowerCase() ||
+            currentAgent === USER_AGENT.toLowerCase();
+          inGlobal = currentAgent === "*";
+
+          if (inOurAgent) foundOurAgent = true;
+          if (inGlobal) foundGlobalAgent = true;
+        }
+        // Process Disallow rules
+        else if (/^disallow:/i.test(trimmed)) {
           const parts = trimmed.split(":");
-          if (parts[1]) disallow.push(parts[1].trim());
+          if (parts.length > 1 && parts[1] !== undefined) {
+            const path = parts[1].trim();
+            // Only add non-empty disallow rules (empty means "allow everything") RFC 9309 exclusion rules
+            if (path !== "") {
+              if (inOurAgent) {
+                specificDisallow.push(path);
+              } else if (inGlobal) {
+                globalDisallow.push(path);
+              }
+            }
+          }
         }
       }
-      robotsCache[origin] = disallow;
+
+      // Use specific rules if we found our agent, otherwise fall back to global rules if found
+      if (foundOurAgent) {
+        robotsCache[origin] = specificDisallow;
+      } else if (foundGlobalAgent) {
+        robotsCache[origin] = globalDisallow;
+      } else {
+        robotsCache[origin] = [];
+      }
     } catch {
-      robotsCache[origin] = []; // assume allowed if cannot fetch
+      robotsCache[origin] = [];
     }
   }
   const rules = robotsCache[origin] ?? [];
   return rules.every((p) => !target.pathname.startsWith(p));
 }
-// ---------------------------------------------------------------------------
 
-// ---------- Helpers --------------------------------------------------------
-
-/** Simple slug generator – lowercase, alphanumeric & hyphens only */
 function slugify(input: string): string {
   return input
     .toLowerCase()
@@ -464,5 +499,5 @@ await saveCache();
 
 // save version
 const version =
-  await $`echo "$(date '+%Y.%m.%d').$(git rev-parse --short HEAD)" > ../VERSION`.text();
-console.log("✅ providers folder refreshed, version: ${version}");
+  await $`echo "$(date '+%Y.%m.%d').$(git rev-parse --short HEAD)" > ../VERSION && cat ../VERSION`.text();
+console.log(`✅ providers folder refreshed, version: ${version}`);
