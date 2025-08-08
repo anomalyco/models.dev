@@ -1,11 +1,6 @@
-<<<<<<< HEAD
-[![license-check](https://github.com/papes1ns/merln/actions/workflows/license-check.yml/badge.svg)](https://github.com/papes1ns/merln/actions/workflows/license-check.yml)
-[![validate](https://github.com/papes1ns/merln/actions/workflows/validate.yml/badge.svg)](https://github.com/papes1ns/merln/actions/workflows/validate.yml)
-=======
 [![test](https://github.com/papes1ns/merln/actions/workflows/test.yml/badge.svg)](https://github.com/papes1ns/merln/actions/workflows/test.yml)
 [![validate](https://github.com/papes1ns/merln/actions/workflows/validate.yml/badge.svg)](https://github.com/papes1ns/merln/actions/workflows/validate.yml)
 [![license-check](https://github.com/papes1ns/merln/actions/workflows/license-check.yml/badge.svg)](https://github.com/papes1ns/merln/actions/workflows/license-check.yml)
->>>>>>> 5dac593e2696c9d101186af75c5e89d00325d163
 [![deploy](https://github.com/papes1ns/merln/actions/workflows/deploy.yml/badge.svg)](https://github.com/papes1ns/merln/actions/workflows/deploy.yml)
 
 ![merln](packages/web/public/favicon.svg)
