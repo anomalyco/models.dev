@@ -1,7 +1,7 @@
 /** @jsx jsx */
 /** @jsxImportSource hono/jsx */
 
-import { generate } from "@merlin/core";
+import { generate } from "@merln/core";
 import { Fragment } from "hono/jsx";
 import { renderToString } from "hono/jsx/dom/server";
 import path from "path";
@@ -70,8 +70,14 @@ export const Rendered = renderToString(
                         <strong>{content.title}</strong>
                         {content.description && (
                           <div class="content-description">
-                            {content.description.slice(0, 45)}
-                            {content.description.length > 45 ? "..." : ""}
+                            <span class="description-full">
+                              {content.description.slice(0, 45)}
+                              {content.description.length > 45 ? "..." : ""}
+                            </span>
+                            <span class="description-mobile">
+                              {content.description.slice(0, 30)}
+                              {content.description.length > 30 ? "..." : ""}
+                            </span>
                           </div>
                         )}
                       </td>
@@ -118,7 +124,7 @@ export const Rendered = renderToString(
             class="github"
             target="_blank"
             rel="noopener noreferrer"
-            href="https://github.com/papes1ns/merlin"
+            href="https://github.com/papes1ns/merln"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"

@@ -50,6 +50,15 @@ body {
   /* width: var(--page-size); */
 }
 
+/* Mobile font size adjustments */
+@media (max-width: 48rem) {
+  html,
+  body {
+    font-size: 0.875rem; /* 14px base instead of 16px */
+    line-height: 1.5;
+  }
+}
+
 main {
   position: sticky;
   top: var(--header-height);
@@ -57,6 +66,13 @@ main {
   z-index: 9;
   padding: 0 0.75rem;
   width: 100%;
+}
+
+/* Mobile main adjustments */
+@media (max-width: 48rem) {
+  main {
+    padding: 0 0.5rem; /* Reduce horizontal padding on mobile */
+  }
 }
 
 h2 {
@@ -206,6 +222,10 @@ header {
         display: none;
       }
     }
+
+    h1 {
+      font-size: 0.875rem; /* Smaller header text on very small screens */
+    }
   }
 
   @media (max-width: 45rem) {
@@ -221,6 +241,21 @@ header {
         min-width: 0;
       }
     }
+
+    h1 {
+      font-size: 0.9375rem; /* Slightly smaller header text on mobile */
+    }
+
+    input {
+      font-size: 0.75rem; /* Smaller search input text */
+      padding: 0.4375rem 2.25rem 0.4375rem 0.5rem; /* Reduced padding */
+      height: 1.75rem; /* Shorter input */
+    }
+
+    .search-shortcut {
+      font-size: 0.6875rem; /* Smaller shortcut text */
+      right: 0.375rem;
+    }
   }
 }
 
@@ -230,6 +265,13 @@ table {
   font-size: 0.875rem;
   width: 100%;
   margin-top: var(--header-height);
+}
+
+/* Mobile table adjustments */
+@media (max-width: 48rem) {
+  table {
+    font-size: 0.75rem; /* Smaller table text on mobile */
+  }
 }
 
 thead,
@@ -284,6 +326,25 @@ td {
   text-align: left;
   border-bottom: 1px solid var(--color-border);
   white-space: nowrap;
+}
+
+/* Mobile table cell adjustments */
+@media (max-width: 48rem) {
+  th,
+  td {
+    padding: 0.5rem 0.375rem; /* Reduce padding on mobile */
+  }
+
+  /* Make certain columns more compact on mobile */
+  tbody td:nth-child(4) {
+    /* Time Est. column */
+    font-size: 0.6875rem;
+  }
+
+  tbody td:nth-child(5) {
+    /* Link column */
+    font-size: 0.6875rem;
+  }
 }
 
 tbody {
@@ -380,6 +441,33 @@ tbody {
     margin-top: 0.25rem;
   }
 
+  /* Mobile content description adjustments */
+  @media (max-width: 48rem) {
+    .content-description {
+      font-size: 0.8em; /* Smaller description text on mobile */
+      line-height: 1.3; /* Tighter line height */
+    }
+
+    .description-full {
+      display: none; /* Hide full description on mobile */
+    }
+
+    .description-mobile {
+      display: inline; /* Show mobile description on mobile */
+    }
+  }
+
+  /* Desktop description display */
+  @media (min-width: 48.01rem) {
+    .description-full {
+      display: inline; /* Show full description on desktop */
+    }
+
+    .description-mobile {
+      display: none; /* Hide mobile description on desktop */
+    }
+  }
+
   .modalities {
     display: flex;
     gap: 0.25rem;
@@ -430,6 +518,13 @@ body {
   padding-bottom: 2.5rem; /* prevent content from hiding behind footer */
 }
 
+/* Mobile body adjustments */
+@media (max-width: 48rem) {
+  body {
+    padding-bottom: 2.25rem; /* Adjust for shorter mobile footer */
+  }
+}
+
 /* Fixed footer */
 .site-footer {
   position: fixed;
@@ -447,6 +542,29 @@ body {
   backdrop-filter: blur(6px);
   z-index: 10;
   font-size: 0.75rem;
+}
+
+/* Mobile footer adjustments */
+@media (max-width: 48rem) {
+  .site-footer {
+    height: 2.25rem; /* Slightly shorter footer on mobile */
+    padding: 0 0.5rem; /* Reduce horizontal padding */
+    gap: 0.5rem; /* Smaller gap between items */
+    font-size: 0.6875rem; /* Smaller footer text */
+  }
+
+  .site-footer .footer-left {
+    gap: 0.5rem; /* Smaller gap in footer left section */
+  }
+
+  .site-footer a.github {
+    height: 20px; /* Smaller GitHub icon */
+  }
+
+  .site-footer img[alt="merln"] {
+    width: 50px; /* Smaller logo */
+    height: 16px;
+  }
 }
 
 .site-footer a,

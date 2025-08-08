@@ -14,7 +14,7 @@
  *      can remain unchanged.
  */
 
-import { Content, Provider } from "@spin.dev/core";
+import { Content, Provider } from "@merln/core";
 import { $ } from "bun";
 import fs from "fs/promises";
 import path from "path";

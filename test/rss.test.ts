@@ -1,12 +1,5 @@
 import { describe, expect, test } from "bun:test";
 
-// Extracted robots.txt parsing logic from script/rss.ts for testing
-// This is a simple parser that only supports the most basic rules
-// It does not support comments, whitespace, or other complex features
-// It is not a complete implementation of the robots.txt spec
-// It is only used for testing the rss.ts script
-// It is not used in the production code
-// It is not used in the production code
 const USER_AGENT = "merln/rss-bot (+https://natepapes.com)";
 
 function parseRobotsTxt(robotsTxt: string): string[] {
