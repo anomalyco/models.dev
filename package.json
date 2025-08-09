@@ -13,6 +13,9 @@
       "@tsconfig/bun": "^1.0.8"
     }
   },
+  "scripts": {
+    "validate": "bun script/validate.ts"
+  },
   "dependencies": {
     "@cloudflare/workers-types": "^4.20250801.0",
     "sst": "3.17.5"

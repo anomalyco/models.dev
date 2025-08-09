@@ -1,0 +1,22 @@
+name = "Kimi K2 Turbo"
+release_date = "2025-07-14"
+last_updated = "2025-07-14"
+attachment = false
+reasoning = false
+temperature = true
+tool_call = true
+knowledge = "2024-10"
+open_weights = true
+
+[cost]
+input = 2.4
+output = 10
+cache_read = 0.6
+
+[limit]
+context = 131_072
+output = 16_384
+
+[modalities]
+input = ["text"]
+output = ["text"]

@@ -1,17 +1,16 @@
-name = "GPT-5 Mini"
+name = "GPT-5 Chat (latest)"
 release_date = "2025-08-07"
 last_updated = "2025-08-07"
 attachment = true
 reasoning = true
-temperature = false
-knowledge = "2024-05-30"
-tool_call = true
+temperature = true
+knowledge = "2024-09-30"
+tool_call = false
 open_weights = false
 
 [cost]
-input = 0.25
-output = 2.00
-cache_read = 0.03
+input = 1.25
+output = 10.00
 
 [limit]
 context = 400_000
