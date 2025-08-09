@@ -15,11 +15,12 @@
  */
 
 import { Content, Provider } from "@merln/core";
+import { isPathAllowed as rfcIsPathAllowed } from "@merln/core/src/robots";
 import { $ } from "bun";
 import fs from "fs/promises";
 import path from "path";
 
-const USER_AGENT = "merln/rss-bot (+https://natepapes.com)";
+const USER_AGENT = "merln/rss (+https://natepapes.com)";
 const CONCURRENCY_LIMIT = 5;
 const CACHE_PATH = path.join(import.meta.dir, "..", ".cache", "rss-cache.json");
 
@@ -78,74 +79,46 @@ async function fetchWithRetry(
   throw new Error(`Failed after ${retries + 1} retries → ${url}`);
 }
 
-// robots.txt disallow cache per origin
-const robotsCache: Record<string, string[]> = {};
+// robots.txt cache per origin (stores raw text when 2xx);
+// On 4xx (unavailable) we treat as allow-all; on 5xx/network (unreachable) disallow-all per RFC 9309 §2.3.1.3–.4
+const robotsTextCache: Record<string, string | null> = {};
 async function isAllowed(target: URL): Promise<boolean> {
   const origin = target.origin;
-  if (!(origin in robotsCache)) {
+  let robotsTxt: string | null | undefined = robotsTextCache[origin];
+
+  if (robotsTxt === undefined) {
     try {
       const res = await fetchWithRetry(`${origin}/robots.txt`);
-      if (!res.ok) throw new Error();
-      const txt = await res.text();
-
-      // Extract our user-agent name from USER_AGENT constant
-      const ourAgent = USER_AGENT.split("/")[0] || "merln"; // "merln" from "merln/rss-bot (+https://natepapes.com)"
-
-      const specificDisallow: string[] = [];
-      const globalDisallow: string[] = [];
-
-      let currentAgent = "";
-      let inOurAgent = false;
-      let inGlobal = false;
-      let foundOurAgent = false;
-      let foundGlobalAgent = false;
-
-      for (const line of txt.split("\n")) {
-        const trimmed = line.trim();
-
-        // Check for User-agent directive
-        const userAgentMatch = trimmed.match(/^user-agent:\s*(.+)$/i);
-        if (userAgentMatch && userAgentMatch[1]) {
-          currentAgent = userAgentMatch[1].toLowerCase();
-          inOurAgent =
-            currentAgent === ourAgent.toLowerCase() ||
-            currentAgent === USER_AGENT.toLowerCase();
-          inGlobal = currentAgent === "*";
-
-          if (inOurAgent) foundOurAgent = true;
-          if (inGlobal) foundGlobalAgent = true;
-        }
-        // Process Disallow rules
-        else if (/^disallow:/i.test(trimmed)) {
-          const parts = trimmed.split(":");
-          if (parts.length > 1 && parts[1] !== undefined) {
-            const path = parts[1].trim();
-            // Only add non-empty disallow rules (empty means "allow everything") RFC 9309 exclusion rules
-            if (path !== "") {
-              if (inOurAgent) {
-                specificDisallow.push(path);
-              } else if (inGlobal) {
-                globalDisallow.push(path);
-              }
-            }
-          }
-        }
-      }
-
-      // Use specific rules if we found our agent, otherwise fall back to global rules if found
-      if (foundOurAgent) {
-        robotsCache[origin] = specificDisallow;
-      } else if (foundGlobalAgent) {
-        robotsCache[origin] = globalDisallow;
+      if (res.status >= 200 && res.status < 300) {
+        robotsTxt = await res.text();
+        robotsTextCache[origin] = robotsTxt;
+      } else if (res.status >= 400 && res.status <= 499) {
+        // Unavailable → MAY access any resources
+        robotsTextCache[origin] = null;
+        robotsTxt = null;
+      } else if (res.status >= 500 && res.status <= 599) {
+        // Unreachable → MUST assume complete disallow
+        robotsTextCache[origin] = ""; // sentinel for disallow-all
+        robotsTxt = "";
       } else {
-        robotsCache[origin] = [];
+        robotsTextCache[origin] = null;
+        robotsTxt = null;
       }
     } catch {
-      robotsCache[origin] = [];
+      // Network error → treat as unreachable → disallow all
+      robotsTextCache[origin] = "";
+      robotsTxt = "";
     }
   }
-  const rules = robotsCache[origin] ?? [];
-  return rules.every((p) => !target.pathname.startsWith(p));
+
+  // Disallow-all sentinel
+  if (robotsTxt === "") return false;
+
+  // No robots or unavailable → allow
+  if (robotsTxt == null) return true;
+
+  const pathWithQuery = `${target.pathname}${target.search || ""}`;
+  return rfcIsPathAllowed(robotsTxt, pathWithQuery, USER_AGENT);
 }
 
 function slugify(input: string): string {
