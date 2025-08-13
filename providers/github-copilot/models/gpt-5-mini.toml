@@ -1,0 +1,17 @@
+name = "GPT-5-mini"
+release_date = "2025-08-13"
+last_updated = "2025-08-13"
+attachment = true
+reasoning = true
+temperature = true
+knowledge = "2024-06"
+tool_call = true
+open_weights = false
+
+[limit]
+context = 128_000
+output = 128_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
