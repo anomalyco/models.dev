@@ -1,8 +1,12 @@
 id = "hf:deepseek-ai/DeepSeek-V3-0324"
 name = "DeepSeek V3 (0324)"
+release_date = "2025-08-01"
+last_updated = "2025-08-01"
 attachment = false
 reasoning = false
 temperature = true
+tool_call = true
+open_weights = false
 
 [cost]
 input = 1.20
@@ -11,3 +15,7 @@ output = 1.20
 [limit]
 context = 128_000
 output = 128_000
+
+[modalities]
+input = ["text"]
+output = ["text"]

@@ -1,8 +1,13 @@
 id = "hf:Qwen/Qwen3-235B-A22B-Thinking-2507"
 name = "Qwen3 235B A22B Thinking 2507"
+release_date = "2025-07-25"
+last_updated = "2025-07-25"
 attachment = false
 reasoning = true
 temperature = true
+tool_call = true
+knowledge = "2025-04"
+open_weights = true
 
 [cost]
 input = 0.65
@@ -11,3 +16,7 @@ output = 3.0
 [limit]
 context = 256_000
 output = 32_000
+
+[modalities]
+input = ["text"]
+output = ["text"]
