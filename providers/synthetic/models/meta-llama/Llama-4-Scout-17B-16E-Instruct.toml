@@ -1,0 +1,22 @@
+id = "hf:meta-llama/Llama-4-Scout-17B-16E-Instruct"
+name = "Llama-4-Scout-17B-16E-Instruct"
+release_date = "2025-04-05"
+last_updated = "2025-04-05"
+attachment = true
+reasoning = false
+temperature = true
+knowledge = "2024-08"
+tool_call = true
+open_weights = true
+
+[cost]
+input = 0.15
+output = 0.60
+
+[limit]
+context = 328_000
+output = 4_096
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
