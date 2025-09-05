@@ -1,0 +1,22 @@
+name = "Kimi K2 Instruct 0905"
+release_date = "2025-09-05"
+last_updated = "2025-09-05"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+knowledge = "2024-10"
+open_weights = true
+
+[cost]
+input = 0.6
+output = 2.5
+cache_reads = 0.15
+
+[limit]
+context = 262_144
+output = 16_384
+
+[modalities]
+input = ["text"]
+output = ["text"]
