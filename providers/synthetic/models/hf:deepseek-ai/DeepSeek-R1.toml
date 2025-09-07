@@ -1,20 +1,20 @@
-id = "hf:openai/gpt-oss-120b"
-name = "GPT OSS 120B"
-release_date = "2025-08-05"
-last_updated = "2025-08-05"
+name = "DeepSeek R1"
+release_date = "2025-01-20"
+last_updated = "2025-01-20"
 attachment = false
 reasoning = true
 temperature = true
+knowledge = "2025-01"
 tool_call = true
 open_weights = true
 
 [cost]
-input = 0.10
-output = 0.10
+input = 0.55
+output = 2.19
 
 [limit]
 context = 128_000
-output = 32_768
+output = 128_000
 
 [modalities]
 input = ["text"]

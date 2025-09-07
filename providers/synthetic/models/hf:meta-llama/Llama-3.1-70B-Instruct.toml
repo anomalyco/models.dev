@@ -1,21 +1,20 @@
-id = "hf:zai-org/GLM-4.5"
-name = "GLM 4.5"
-release_date = "2025-07-28"
-last_updated = "2025-07-28"
+name = "Llama-3.1-70B-Instruct"
+release_date = "2024-07-23"
+last_updated = "2024-07-23"
 attachment = false
 reasoning = true
 temperature = true
+knowledge = "2023-12"
 tool_call = true
-knowledge = "2025-04"
 open_weights = true
 
 [cost]
-input = 0.55
-output = 2.19
+input = 0.90
+output = 0.90
 
 [limit]
 context = 128_000
-output = 96_000
+output = 32_768
 
 [modalities]
 input = ["text"]

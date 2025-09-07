@@ -1,12 +1,11 @@
-id = "hf:deepseek-ai/DeepSeek-R1"
-name = "DeepSeek R1"
-release_date = "2025-01-20"
-last_updated = "2025-01-20"
+name = "GLM 4.5"
+release_date = "2025-07-28"
+last_updated = "2025-07-28"
 attachment = false
 reasoning = true
 temperature = true
-knowledge = "2025-01"
 tool_call = true
+knowledge = "2025-04"
 open_weights = true
 
 [cost]
@@ -15,7 +14,7 @@ output = 2.19
 
 [limit]
 context = 128_000
-output = 128_000
+output = 96_000
 
 [modalities]
 input = ["text"]
