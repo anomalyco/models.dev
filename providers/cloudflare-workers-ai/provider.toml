@@ -1,4 +1,5 @@
 name = "Cloudflare Workers AI"
 env = ["CLOUDFLARE_ACCOUNT_ID", "CLOUDFLARE_API_KEY"]
-npm = "workers-ai-provider"
+npm = "@ai-sdk/openai-compatible"
+api = "https://api.cloudflare.com/client/v4/accounts/{CLOUDFLARE_ACCOUNT_ID}/ai/v1"
 doc = "https://developers.cloudflare.com/workers-ai/models/"
