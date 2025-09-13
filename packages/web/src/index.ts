@@ -1,3 +1,5 @@
+import { initializeSelection } from "./selection.js";
+
 const modal = document.getElementById("modal") as HTMLDialogElement;
 const modalClose = document.getElementById("close")!;
 const help = document.getElementById("help")!;
@@ -236,5 +238,8 @@ function initializeFromURL() {
   })();
 }
 
-document.addEventListener("DOMContentLoaded", initializeFromURL);
+document.addEventListener("DOMContentLoaded", () => {
+  initializeFromURL();
+  initializeSelection();
+});
 window.addEventListener("popstate", initializeFromURL);
