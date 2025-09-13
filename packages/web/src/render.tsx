@@ -203,9 +203,9 @@ export const Rendered = renderToString(
           </svg>
         </a>
         <div class="search-container">
-            <input type="text" id="search" placeholder="Filter by model" />
-            <span class="search-shortcut">⌘K</span>
-          </div>
+          <input type="text" id="search" placeholder="Filter by model" />
+          <span class="search-shortcut">⌘K</span>
+        </div>
         <button id="filter-selected" disabled>Show Selected Only</button>
         <button id="help">How to use</button>
       </div>
@@ -525,7 +525,8 @@ export const Rendered = renderToString(
         </a>
       </div>
     </dialog>
-    <script dangerouslySetInnerHTML={{ __html: `
+    <script dangerouslySetInnerHTML={{
+      __html: `
       // --- Selection and Filter Logic ---
       (function() {
         const rowCheckboxes = () => Array.from(document.querySelectorAll('.row-checkbox'));
@@ -563,8 +564,9 @@ export const Rendered = renderToString(
             selectAll.checked = false;
             selectAll.indeterminate = true;
           }
+          selectAll.disabled = filterActive;
           // Update filter button
-          filterBtn.disabled = selected.size === 0;
+          filterBtn.disabled = selectAll.checked || selected.size === 0;
           filterBtn.textContent = filterActive ? 'Show All' : 'Show Selected Only';
         }
 
