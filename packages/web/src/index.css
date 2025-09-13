@@ -266,10 +266,53 @@ td {
   white-space: nowrap;
 }
 
-tbody {
-  td {
-    color: var(--color-text-tertiary);
-  }
+tbody td {
+  color: var(--color-text-tertiary);
+}
+
+/* Checkbox column */
+td:first-child,
+th:first-child {
+  width: 36px;
+  text-align: center;
+  padding: 0.75rem 0.5rem;
+}
+
+/* Row selection highlight */
+tr.selected-row {
+  background-color: var(--color-surface);
+  font-weight: 500;
+  border-left: 2px solid var(--color-brand);
+}
+
+/* Checkbox style */
+input[type="checkbox"].row-checkbox,
+#select-all {
+  accent-color: var(--color-brand);
+  width: 1.15em;
+  height: 1.15em;
+  cursor: pointer;
+  border-radius: 2px;
+}
+
+/* Filter button style - matches "How to use" button */
+#filter-selected {
+  flex: 0 0 auto;
+  cursor: pointer;
+  border: none;
+  background-color: var(--color-brand);
+  color: var(--color-text-invert);
+  font-size: 0.8125rem;
+  line-height: 1.1;
+  height: 2rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.25rem;
+}
+#filter-selected:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 
   td:nth-child(1) {
     font-weight: 500;
@@ -410,7 +453,7 @@ tbody {
   .modality-icon:hover::after {
     opacity: 1;
   }
-}
+
 
 dialog::backdrop {
   backdrop-filter: blur(8px);

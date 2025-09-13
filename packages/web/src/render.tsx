@@ -203,15 +203,17 @@ export const Rendered = renderToString(
           </svg>
         </a>
         <div class="search-container">
-          <input type="text" id="search" placeholder="Filter by model" />
-          <span class="search-shortcut">⌘K</span>
-        </div>
+            <input type="text" id="search" placeholder="Filter by model" />
+            <span class="search-shortcut">⌘K</span>
+          </div>
+        <button id="filter-selected" disabled>Show Selected Only</button>
         <button id="help">How to use</button>
       </div>
     </header>
     <table>
       <thead>
         <tr>
+          <th style="width:32px;"><input type="checkbox" id="select-all" aria-label="Select all models" /></th>
           <th class="sortable" data-type="text">
             Provider <span class="sort-indicator"></span>
           </th>
@@ -321,7 +323,10 @@ export const Rendered = renderToString(
                 modelA.name.localeCompare(modelB.name)
               )
               .map(([modelId, model]) => (
-                <tr key={`${providerId}-${modelId}`}>
+                <tr key={`${providerId}-${modelId}`} data-provider-id={providerId} data-model-id={modelId}>
+                  <td>
+                    <input type="checkbox" class="row-checkbox" aria-label="Select model" tabindex="0" />
+                  </td>
                   <td>
                     <div class="provider-cell">
                       {renderProviderLogo(providerId)}
@@ -520,5 +525,108 @@ export const Rendered = renderToString(
         </a>
       </div>
     </dialog>
+    <script dangerouslySetInnerHTML={{ __html: `
+      // --- Selection and Filter Logic ---
+      (function() {
+        const rowCheckboxes = () => Array.from(document.querySelectorAll('.row-checkbox'));
+        const selectAll = document.getElementById('select-all');
+        const filterBtn = document.getElementById('filter-selected');
+        let selected = new Set();
+        let filterActive = false;
+
+        // Helper: get row key
+        function getRowKey(tr) {
+          return tr.getAttribute('data-provider-id') + '::' + tr.getAttribute('data-model-id');
+        }
+
+        // Update selection state and UI
+        function updateSelectionUI() {
+          rowCheckboxes().forEach(cb => {
+            const tr = cb.closest('tr');
+            const key = getRowKey(tr);
+            if (selected.has(key)) {
+              cb.checked = true;
+              tr.classList.add('selected-row');
+            } else {
+              cb.checked = false;
+              tr.classList.remove('selected-row');
+            }
+          });
+          // Update select-all
+          if (selected.size === 0) {
+            selectAll.checked = false;
+            selectAll.indeterminate = false;
+          } else if (selected.size === rowCheckboxes().length) {
+            selectAll.checked = true;
+            selectAll.indeterminate = false;
+          } else {
+            selectAll.checked = false;
+            selectAll.indeterminate = true;
+          }
+          // Update filter button
+          filterBtn.disabled = selected.size === 0;
+          filterBtn.textContent = filterActive ? 'Show All' : 'Show Selected Only';
+        }
+
+        // Row checkbox click
+        document.addEventListener('change', function(e) {
+          if (e.target.classList.contains('row-checkbox')) {
+            const tr = e.target.closest('tr');
+            const key = getRowKey(tr);
+            if (e.target.checked) {
+              selected.add(key);
+            } else {
+              selected.delete(key);
+            }
+            updateSelectionUI();
+            if (filterActive) applyFilter();
+          }
+        });
+
+        // Select all checkbox
+        selectAll.addEventListener('change', function(e) {
+          if (selectAll.checked) {
+            rowCheckboxes().forEach(cb => {
+              const tr = cb.closest('tr');
+              selected.add(getRowKey(tr));
+            });
+          } else {
+            selected.clear();
+          }
+          updateSelectionUI();
+          if (filterActive) applyFilter();
+        });
+
+        // Filter button
+        filterBtn.addEventListener('click', function() {
+          filterActive = !filterActive;
+          applyFilter();
+          updateSelectionUI();
+        });
+
+        function applyFilter() {
+          rowCheckboxes().forEach(cb => {
+            const tr = cb.closest('tr');
+            const key = getRowKey(tr);
+            if (filterActive) {
+              tr.style.display = selected.has(key) ? '' : 'none';
+            } else {
+              tr.style.display = '';
+            }
+          });
+        }
+
+        // Keyboard accessibility: space/enter on row
+        document.addEventListener('keydown', function(e) {
+          if ((e.key === ' ' || e.key === 'Enter') && document.activeElement.classList.contains('row-checkbox')) {
+            e.preventDefault();
+            document.activeElement.click();
+          }
+        });
+
+        // Initial UI update
+        updateSelectionUI();
+      })();
+    ` }} />
   </Fragment>
 );
