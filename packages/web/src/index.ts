@@ -143,21 +143,60 @@ document.querySelectorAll("th.sortable").forEach((header) => {
   });
 });
 
+///////////////////////////////
+// Handle Provider Filter
+///////////////////////////////
+const providerFilterButton = document.getElementById("provider-filter")!;
+const providerPopover = document.getElementById("provider-popover")!;
+const providerSearch = document.getElementById(
+  "provider-search"
+)! as HTMLInputElement;
+const providerResetButton = document.getElementById(
+  "provider-reset"
+)! as HTMLButtonElement;
+const providerCheckboxes = document.querySelectorAll(
+  ".provider-checkbox"
+) as NodeListOf<HTMLInputElement>;
+const providerItems = document.querySelectorAll(
+  ".provider-item"
+) as NodeListOf<HTMLElement>;
+const providerCountSpan = document.getElementById("provider-count")!;
+
+const allProviderValues = Array.from(providerCheckboxes).map((cb) => cb.value);
+let selectedProviders = new Set<string>(allProviderValues);
+
 ///////////////////
 // Handle Search
 ///////////////////
 function filterTable(value: string) {
-  const lowerCaseValues = value.toLowerCase().split(",").filter(str => str.trim() !== "");
+  const lowerCaseValues = value
+    .toLowerCase()
+    .split(",")
+    .filter((str) => str.trim() !== "");
   const rows = document.querySelectorAll(
     "table tbody tr"
   ) as NodeListOf<HTMLTableRowElement>;
 
   rows.forEach((row) => {
+    const providerId = row.cells[2].textContent?.trim() || "";
+    const isProviderSelected = selectedProviders.has(providerId);
+
+    if (!isProviderSelected) {
+      row.style.display = "none";
+      return;
+    }
+
+    if (lowerCaseValues.length === 0) {
+      row.style.display = "";
+      return;
+    }
+
     const cellTexts = Array.from(row.cells).map((cell) =>
       cell.textContent!.toLowerCase()
     );
-    const isVisible = lowerCaseValues.length === 0 ||
-     lowerCaseValues.some((lowerCaseValue) => cellTexts.some((text) => text.includes(lowerCaseValue)));
+    const isVisible = lowerCaseValues.some((lowerCaseValue) =>
+      cellTexts.some((text) => text.includes(lowerCaseValue))
+    );
     row.style.display = isVisible ? "" : "none";
   });
 
@@ -180,6 +219,124 @@ search.addEventListener("keydown", (e) => {
     search.value = "";
     search.dispatchEvent(new Event("input"));
   }
+});
+
+function updateProviderCount() {
+  const totalProviders = providerCheckboxes.length;
+  const selectedCount = selectedProviders.size;
+  providerCountSpan.textContent = `${selectedCount}/${totalProviders}`;
+  providerResetButton.disabled = selectedCount === totalProviders;
+}
+
+function filterByProviders() {
+  filterTable(search.value);
+  updateProviderCount();
+  updateQueryParams({
+    providers:
+      selectedProviders.size === providerCheckboxes.length
+        ? null
+        : Array.from(selectedProviders).sort().join(","),
+  });
+}
+
+function togglePopover() {
+  const isVisible = providerPopover.style.display !== "none";
+  providerPopover.style.display = isVisible ? "none" : "block";
+
+  if (!isVisible) {
+    const buttonRect = providerFilterButton.getBoundingClientRect();
+    providerPopover.style.top = `${buttonRect.bottom + 4}px`;
+    providerPopover.style.left = `${
+      buttonRect.right - providerPopover.offsetWidth
+    }px`;
+  }
+}
+
+function closePopover() {
+  providerPopover.style.display = "none";
+
+  providerSearch.value = "";
+  filterProviderList("");
+}
+
+function filterProviderList(searchValue: string) {
+  const searchLower = searchValue.toLowerCase();
+  providerItems.forEach((item) => {
+    const providerName = item.getAttribute("data-provider-name") || "";
+    if (providerName.includes(searchLower)) {
+      item.style.display = "";
+    } else {
+      item.style.display = "none";
+    }
+  });
+}
+
+providerFilterButton.addEventListener("click", (e) => {
+  e.stopPropagation();
+  togglePopover();
+});
+
+document.addEventListener("click", (e) => {
+  if (
+    !providerPopover.contains(e.target as Node) &&
+    !providerFilterButton.contains(e.target as Node)
+  ) {
+    closePopover();
+  }
+});
+
+providerSearch.addEventListener("input", () => {
+  filterProviderList(providerSearch.value);
+});
+
+providerResetButton.addEventListener("click", (e) => {
+  e.stopPropagation();
+
+  selectedProviders = new Set(allProviderValues);
+  providerCheckboxes.forEach((cb) => {
+    cb.checked = true;
+  });
+
+  providerSearch.value = "";
+  filterProviderList("");
+
+  filterByProviders();
+});
+
+providerItems.forEach((item) => {
+  item.addEventListener("click", (e) => {
+    e.preventDefault();
+
+    const checkbox = item.querySelector(
+      ".provider-checkbox"
+    ) as HTMLInputElement;
+    const providerId = checkbox.value;
+    const wasChecked = checkbox.checked;
+    const allSelected = selectedProviders.size === providerCheckboxes.length;
+
+    if (allSelected) {
+      selectedProviders.clear();
+      selectedProviders.add(providerId);
+      providerCheckboxes.forEach((cb) => {
+        cb.checked = cb.value === providerId;
+      });
+    } else if (wasChecked) {
+      if (selectedProviders.size === 1) {
+        selectedProviders = new Set(allProviderValues);
+        providerCheckboxes.forEach((cb) => {
+          cb.checked = true;
+        });
+      } else {
+        selectedProviders.delete(providerId);
+        checkbox.checked = false;
+      }
+    } else {
+      selectedProviders.add(providerId);
+      checkbox.checked = true;
+    }
+
+    filterByProviders();
+  });
 });
 
 ///////////////////////////////////
@@ -218,6 +375,19 @@ function initializeFromURL() {
   const params = getQueryParams();
 
   (() => {
+    const providersParam = params.get("providers");
+    if (providersParam) {
+      const providerIds = providersParam.split(",");
+      selectedProviders = new Set(providerIds);
+
+      providerCheckboxes.forEach((cb) => {
+        cb.checked = selectedProviders.has(cb.value);
+      });
+    }
+    updateProviderCount();
+  })();
+
+  (() => {
     const searchQuery = params.get("search");
     if (!searchQuery) return;
     search.value = searchQuery;
@@ -234,6 +404,10 @@ function initializeFromURL() {
     const direction = (params.get("order") as "asc" | "desc") || "asc";
     sortTable(columnIndex, direction);
   })();
+
+  if (selectedProviders.size < providerCheckboxes.length) {
+    filterByProviders();
+  }
 }
 
 document.addEventListener("DOMContentLoaded", initializeFromURL);

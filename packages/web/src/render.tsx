@@ -210,9 +210,50 @@ export const Rendered = renderToString(
           <input type="text" id="search" placeholder="Filter by model" />
           <span class="search-shortcut">⌘K</span>
         </div>
+        <button id="provider-filter" class="provider-filter-button">
+          Providers <span id="provider-count">0/0</span>
+        </button>
         <button id="help">How to use</button>
       </div>
     </header>
+    <div id="provider-popover" class="provider-popover" style="display: none;">
+      <div class="provider-popover-content">
+        <div class="provider-search-container">
+          <input
+            type="text"
+            id="provider-search"
+            placeholder="Search providers..."
+          />
+          <button id="provider-reset" class="provider-reset-button">
+            Reset
+          </button>
+        </div>
+        <div class="provider-list">
+          {Object.entries(Providers)
+            .sort(([, providerA], [, providerB]) =>
+              providerA.name.localeCompare(providerB.name)
+            )
+            .map(([providerId, provider]) => (
+              <label
+                class="provider-item"
+                data-provider-id={providerId}
+                data-provider-name={provider.name.toLowerCase()}
+              >
+                <input
+                  type="checkbox"
+                  class="provider-checkbox"
+                  value={providerId}
+                  checked
+                />
+                <span class="provider-icon">
+                  {renderProviderLogo(providerId)}
+                </span>
+                <span class="provider-name">{provider.name}</span>
+              </label>
+            ))}
+        </div>
+      </div>
+    </div>
     <table>
       <thead>
         <tr>
