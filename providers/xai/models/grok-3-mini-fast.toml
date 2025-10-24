@@ -2,11 +2,17 @@ name = "Grok 3 Mini Fast"
 release_date = "2025-02-17"
 last_updated = "2025-02-17"
 attachment = false
-reasoning = true
 temperature = true
 knowledge = "2024-11"
 tool_call = true
 open_weights = false
+
+[reasoning]
+supported = true
+controllable = true
+type = "effort"
+effort_levels = ["low", "high"]
+default = "high"
 
 [cost]
 input = 0.60

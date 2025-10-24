@@ -402,7 +402,17 @@ export const Rendered = renderToString(
                     </div>
                   </td>
                   <td>{model.tool_call ? "Yes" : "No"}</td>
-                  <td>{model.reasoning ? "Yes" : "No"}</td>
+                  <td>{
+                    typeof model.reasoning === "boolean" 
+                      ? (model.reasoning ? "Yes" : "No")
+                      : model.reasoning.supported 
+                        ? (model.reasoning.controllable === false 
+                           ? "Always" 
+                           : model.reasoning.type 
+                             ? `Yes (${model.reasoning.type})` 
+                             : "Yes") 
+                        : "No"
+                  }</td>
                   <td>
                     <div class="modalities">
                       {model.modalities.input.map((modality) =>

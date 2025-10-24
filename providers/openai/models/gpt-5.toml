@@ -2,11 +2,17 @@ name = "GPT-5"
 release_date = "2025-08-07"
 last_updated = "2025-08-07"
 attachment = true
-reasoning = true
 temperature = false
 knowledge = "2024-09-30"
 tool_call = true
 open_weights = false
+
+[reasoning]
+supported = true
+controllable = true
+type = "effort"
+effort_levels = ["low", "medium", "high"]
+default = "medium"
 
 [cost]
 input = 1.25

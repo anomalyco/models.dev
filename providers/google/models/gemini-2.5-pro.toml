@@ -2,11 +2,21 @@ name = "Gemini 2.5 Pro"
 release_date = "2025-03-20"
 last_updated = "2025-06-05"
 attachment = true
-reasoning = true
 temperature = true
 knowledge = "2025-01"
 tool_call = true
 open_weights = false
+
+[reasoning]
+supported = true
+controllable = false
+type = "budget"
+default = -1
+
+[reasoning.budget_range]
+min = 128
+max = 32768
+dynamic = -1
 
 [cost]
 input = 1.25

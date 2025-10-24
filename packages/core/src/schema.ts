@@ -5,7 +5,29 @@ export const Model = z
     id: z.string(),
     name: z.string().min(1, "Model name cannot be empty"),
     attachment: z.boolean(),
-    reasoning: z.boolean(),
+    reasoning: z.union([
+      z.boolean(),
+      z.object({
+        supported: z.boolean(),
+        controllable: z.boolean().optional(),
+        type: z.enum(["effort", "budget"]).optional(),
+        effort_levels: z.array(z.string()).optional(),
+        budget_range: z.object({
+          min: z.number(),
+          max: z.number(),
+          dynamic: z.number().optional(),
+          off: z.number().optional(),
+        }).optional(),
+        default: z.union([z.string(), z.number()]).optional(),
+      }).refine((data) => {
+        if (!data.supported) return true;
+        if (data.type === "effort" && !data.effort_levels?.length) return false;
+        if (data.type === "budget" && !data.budget_range) return false;
+        return true;
+      }, {
+        message: "effort_levels required for type 'effort', budget_range required for type 'budget'"
+      }),
+    ]),
     temperature: z.boolean(),
     tool_call: z.boolean(),
     knowledge: z
@@ -66,10 +88,13 @@ export const Model = z
   .strict()
   .refine(
     (data) => {
-      return !(data.reasoning === false && data.cost?.reasoning !== undefined);
+      const reasoningSupported = typeof data.reasoning === "boolean" 
+        ? data.reasoning 
+        : data.reasoning.supported;
+      return !(reasoningSupported === false && data.cost?.reasoning !== undefined);
     },
     {
-      message: "Cannot set cost.reasoning when reasoning is false",
+      message: "Cannot set cost.reasoning when reasoning is not supported",
       path: ["cost", "reasoning"],
     }
   );
