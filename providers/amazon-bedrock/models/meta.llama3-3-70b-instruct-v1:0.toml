@@ -5,8 +5,12 @@ attachment = false
 reasoning = false
 temperature = true
 knowledge = "2023-12"
-tool_call = true
 open_weights = true
+
+[tool_call]
+supported = true
+streaming = false
+coerces_types = true
 
 [cost]
 input = 0.72

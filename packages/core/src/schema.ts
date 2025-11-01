@@ -7,7 +7,21 @@ export const Model = z
     attachment: z.boolean(),
     reasoning: z.boolean(),
     temperature: z.boolean(),
-    tool_call: z.boolean(),
+    tool_call: z
+      .union([
+        z.boolean(),
+        z
+          .object({
+            supported: z.boolean(),
+            streaming: z.boolean().optional(),
+            parallel: z.boolean().optional(),
+            coerces_types: z.boolean().optional(),
+          })
+          .strict(),
+      ])
+      .describe(
+        "Supports tool calling. Can be a boolean or an object for granular capabilities.",
+      ),
     knowledge: z
       .string()
       .regex(/^\d{4}-\d{2}(-\d{2})?$/, {
@@ -71,7 +85,7 @@ export const Model = z
     {
       message: "Cannot set cost.reasoning when reasoning is false",
       path: ["cost", "reasoning"],
-    }
+    },
   );
 
 export type Model = z.infer<typeof Model>;
@@ -87,7 +101,7 @@ export const Provider = z
       .string()
       .min(
         1,
-        "Please provide a link to the provider documentation where models are listed"
+        "Please provide a link to the provider documentation where models are listed",
       ),
     models: z.record(Model),
   })
@@ -103,6 +117,6 @@ export const Provider = z
       message:
         "'api' field is required if and only if npm is '@ai-sdk/openai-compatible'",
       path: ["api"],
-    }
+    },
   );
 export type Provider = z.infer<typeof Provider>;
