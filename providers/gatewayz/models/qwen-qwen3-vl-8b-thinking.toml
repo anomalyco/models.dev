@@ -1,0 +1,16 @@
+name = "Qwen: Qwen3 VL 8B Thinking"
+release_date = "2025-11"
+last_updated = "2025-11"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+open_weights = false
+
+[limit]
+context = 256000
+output = 4096
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
