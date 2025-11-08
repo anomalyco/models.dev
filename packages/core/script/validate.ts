@@ -1,8 +1,8 @@
 #!/usr/bin/env bun
 
-import { generate } from "../src/generate";
 import path from "path";
 import { ZodError } from "zod";
+import { generate } from "../src/generate";
 
 try {
 	const result = await generate(

@@ -21,4 +21,3 @@ declare module "sst" {
 }
 
 import "sst";
-export {};

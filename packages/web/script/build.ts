@@ -1,9 +1,9 @@
 #!/usr/bin/env bun
 
-import { Rendered, Providers } from "../src/render";
+import { $ } from "bun";
 import fs from "fs/promises";
 import path from "path";
-import { $ } from "bun";
+import { Providers, Rendered } from "../src/render";
 
 await fs.rm("./dist", { recursive: true, force: true });
 await Bun.build({

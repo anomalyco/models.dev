@@ -1,2 +1,2 @@
-export * from "./schema.js";
 export * from "./generate.js";
+export * from "./schema.js";

@@ -1,6 +1,6 @@
 import path from "path";
 
-import { Provider, Model } from "./schema.js";
+import { Model, Provider } from "./schema.js";
 
 export async function generate(directory: string) {
 	const result = {} as Record<string, Provider>;

@@ -1,6 +1,6 @@
+import path from "path";
 import Index from "../index.html";
 import { Rendered } from "./render";
-import path from "path";
 
 Bun.serve({
 	port: 16_000,
