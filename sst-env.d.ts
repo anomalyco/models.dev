@@ -3,22 +3,22 @@
 /* eslint-disable */
 /* deno-fmt-ignore-file */
 
-import "sst"
+import "sst";
 declare module "sst" {
-  export interface Resource {
-    "PosthogToken": {
-      "type": "sst.sst.Secret"
-      "value": string
-    }
-  }
+	export interface Resource {
+		PosthogToken: {
+			type: "sst.sst.Secret";
+			value: string;
+		};
+	}
 }
-// cloudflare 
+// cloudflare
 import * as cloudflare from "@cloudflare/workers-types";
 declare module "sst" {
-  export interface Resource {
-    "Server": cloudflare.Service
-  }
+	export interface Resource {
+		Server: cloudflare.Service;
+	}
 }
 
-import "sst"
-export {}
+import "sst";
+export {};
