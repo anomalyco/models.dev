@@ -1,0 +1,21 @@
+name = "Llama3.3-70B"
+release_date = "2024-04-02"
+last_updated = "2024-04-02"
+attachment = false
+reasoning = true
+temperature = true
+knowledge = "2024-04"
+tool_call = true
+open_weights = true
+
+[cost]
+input = 0.00000012
+output = 0.0000002
+
+[limit]
+context = 131_072
+output = 8_192
+
+[modalities]
+input = ["text"]
+output = ["text"]
