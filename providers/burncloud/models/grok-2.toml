@@ -1,0 +1,21 @@
+[model]
+name = "Grok 2"
+provider = "burncloud"
+model_id = "grok-2"
+type = "chat"
+description = "Grok 2 model by xAI, witty and knowledgeable conversational AI"
+
+[model.context]
+max_tokens = 131072
+supports_vision = true
+supports_tools = true
+
+[model.pricing]
+input_price_per_token = 0.000002  # $2.00 per million input tokens
+output_price_per_token = 0.00001  # $10.00 per million output tokens
+
+[model.capabilities]
+streaming = true
+json_mode = true
+function_calling = true
+image_vision = true

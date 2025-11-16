@@ -1,0 +1,21 @@
+[model]
+name = "OpenAI o1 Mini"
+provider = "burncloud"
+model_id = "o1-mini"
+type = "chat"
+description = "OpenAI o1 Mini model, efficient reasoning for coding and math"
+
+[model.context]
+max_tokens = 128000
+supports_vision = false
+supports_tools = false
+
+[model.pricing]
+input_price_per_token = 0.000003  # $3.00 per million input tokens
+output_price_per_token = 0.000012  # $12.00 per million output tokens
+
+[model.capabilities]
+streaming = true
+json_mode = false
+function_calling = false
+reasoning = true

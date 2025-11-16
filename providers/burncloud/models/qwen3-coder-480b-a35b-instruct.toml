@@ -1,0 +1,21 @@
+[model]
+name = "Qwen3 Coder 480B A35B Instruct"
+provider = "burncloud"
+model_id = "qwen3-coder-480b-a35b-instruct"
+type = "chat"
+description = "Qwen3 Coder 480B A35B Instruct model, specialized for coding tasks"
+
+[model.context]
+max_tokens = 32768
+supports_vision = false
+supports_tools = true
+
+[model.pricing]
+input_price_per_token = 0.000002  # $2.00 per million input tokens
+output_price_per_token = 0.000006  # $6.00 per million output tokens
+
+[model.capabilities]
+streaming = true
+json_mode = true
+function_calling = true
+code_generation = true

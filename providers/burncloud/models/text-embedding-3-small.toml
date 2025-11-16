@@ -1,0 +1,20 @@
+[model]
+name = "Text Embedding 3 Small"
+provider = "burncloud"
+model_id = "text-embedding-3-small"
+type = "embeddings"
+description = "Small text embedding model for efficient vector representations"
+
+[model.context]
+max_tokens = 8191
+supports_vision = false
+supports_tools = false
+
+[model.pricing]
+input_price_per_token = 0.00000002  # $0.02 per million input tokens
+
+[model.capabilities]
+streaming = false
+json_mode = false
+function_calling = false
+embedding_dimensions = 1536

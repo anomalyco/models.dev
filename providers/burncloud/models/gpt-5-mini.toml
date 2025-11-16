@@ -1,0 +1,21 @@
+[model]
+name = "GPT-5 Mini"
+provider = "burncloud"
+model_id = "gpt-5-mini"
+type = "chat"
+description = "GPT-5 Mini model, efficient next-generation model"
+
+[model.context]
+max_tokens = 128000
+supports_vision = true
+supports_tools = true
+
+[model.pricing]
+input_price_per_token = 0.00000015  # $0.15 per million input tokens
+output_price_per_token = 0.0000006  # $0.60 per million output tokens
+
+[model.capabilities]
+streaming = true
+json_mode = true
+function_calling = true
+image_vision = true

@@ -1,0 +1,20 @@
+[model]
+name = "Claude 3.5 Sonnet (20240620)"
+provider = "burncloud"
+model_id = "claude-3-5-sonnet-20240620"
+type = "chat"
+description = "Claude 3.5 Sonnet model, balanced performance and capability"
+
+[model.context]
+max_tokens = 200000
+supports_vision = true
+supports_tools = true
+
+[model.pricing]
+input_price_per_token = 0.000003  # $3.00 per million input tokens
+output_price_per_token = 0.000015  # $15.00 per million output tokens
+
+[model.capabilities]
+streaming = true
+json_mode = true
+function_calling = true

@@ -1,0 +1,21 @@
+[model]
+name = "Gemini 2.5 Flash"
+provider = "burncloud"
+model_id = "gemini-2.5-flash"
+type = "chat"
+description = "Gemini 2.5 Flash model, enhanced speed and capabilities"
+
+[model.context]
+max_tokens = 1048576  # 1M tokens
+supports_vision = true
+supports_tools = true
+
+[model.pricing]
+input_price_per_token = 0.000000075  # $0.075 per million input tokens
+output_price_per_token = 0.0000003   # $0.30 per million output tokens
+
+[model.capabilities]
+streaming = true
+json_mode = true
+function_calling = true
+image_generation = true

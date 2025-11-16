@@ -1,0 +1,21 @@
+[model]
+name = "OpenAI o1"
+provider = "burncloud"
+model_id = "o1"
+type = "chat"
+description = "OpenAI o1 model, optimized for complex reasoning tasks"
+
+[model.context]
+max_tokens = 128000
+supports_vision = false
+supports_tools = false
+
+[model.pricing]
+input_price_per_token = 0.000015  # $15.00 per million input tokens
+output_price_per_token = 0.00006  # $60.00 per million output tokens
+
+[model.capabilities]
+streaming = true
+json_mode = false
+function_calling = false
+reasoning = true

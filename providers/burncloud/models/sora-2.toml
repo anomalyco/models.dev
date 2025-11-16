@@ -1,0 +1,22 @@
+[model]
+name = "Sora 2"
+provider = "burncloud"
+model_id = "sora-2"
+type = "video_generation"
+description = "Sora 2 model for advanced video generation from text prompts"
+
+[model.context]
+max_tokens = 0
+supports_vision = false
+supports_tools = false
+
+[model.pricing]
+input_price_per_token = 0.000002  # $2.00 per video generation
+
+[model.capabilities]
+streaming = false
+json_mode = false
+function_calling = false
+video_generation = true
+supported_durations = [5, 10, 20]  # seconds
+supported_resolutions = ["1280x720", "1920x1080"]

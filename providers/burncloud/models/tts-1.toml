@@ -1,0 +1,22 @@
+[model]
+name = "TTS 1"
+provider = "burncloud"
+model_id = "tts-1"
+type = "audio_speech"
+description = "TTS 1 model for text-to-speech generation"
+
+[model.context]
+max_tokens = 0
+supports_vision = false
+supports_tools = false
+
+[model.pricing]
+input_price_per_token = 0.000015  # $15.00 per million characters
+
+[model.capabilities]
+streaming = true
+json_mode = false
+function_calling = false
+audio_speech = true
+supported_voices = ["alloy", "echo", "fable", "onyx", "nova", "shimmer"]
+output_format = "mp3"

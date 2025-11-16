@@ -1,0 +1,22 @@
+[model]
+name = "Whisper 1"
+provider = "burncloud"
+model_id = "whisper-1"
+type = "audio_transcription"
+description = "Whisper 1 model for high-quality audio transcription"
+
+[model.context]
+max_tokens = 0
+supports_vision = false
+supports_tools = false
+
+[model.pricing]
+input_price_per_token = 0.000006  # $6.00 per minute
+
+[model.capabilities]
+streaming = false
+json_mode = false
+function_calling = false
+audio_transcription = true
+supported_formats = ["mp3", "mp4", "mpeg", "mpga", "m4a", "wav", "webm"]
+supported_languages = ["en", "zh", "de", "es", "fr", "ja", "ru"]

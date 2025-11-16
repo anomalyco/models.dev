@@ -1,0 +1,21 @@
+[model]
+name = "Grok 3"
+provider = "burncloud"
+model_id = "grok-3"
+type = "chat"
+description = "Grok 3 model, advanced reasoning and knowledge capabilities"
+
+[model.context]
+max_tokens = 131072
+supports_vision = true
+supports_tools = true
+
+[model.pricing]
+input_price_per_token = 0.000003  # $3.00 per million input tokens
+output_price_per_token = 0.000015  # $15.00 per million output tokens
+
+[model.capabilities]
+streaming = true
+json_mode = true
+function_calling = true
+image_vision = true

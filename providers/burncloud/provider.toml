@@ -1,0 +1,21 @@
+[provider]
+name = "BurnCloud"
+base_url = "https://ai.burncloud.com"
+logo = "logo.svg"
+description = "BurnCloud provides access to various AI models including Claude, DeepSeek, Gemini, GPT, Grok, and more."
+
+[provider.auth]
+type = "api_key"
+header_name = "Authorization"
+header_format = "Bearer {api_key}"
+
+[provider.endpoints]
+chat = "/v1/chat/completions"
+embeddings = "/v1/embeddings"
+image_generation = "/v1/images/generations"
+audio_transcription = "/v1/audio/transcriptions"
+audio_speech = "/v1/audio/speech"
+video_generation = "/v1/videos/generations"
+
+[provider.ratelimits]
+default = "60/1m"

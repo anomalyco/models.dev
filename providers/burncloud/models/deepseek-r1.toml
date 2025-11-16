@@ -1,0 +1,20 @@
+[model]
+name = "DeepSeek R1"
+provider = "burncloud"
+model_id = "deepseek-r1"
+type = "chat"
+description = "DeepSeek R1 model, advanced reasoning capabilities"
+
+[model.context]
+max_tokens = 128000
+supports_vision = false
+supports_tools = true
+
+[model.pricing]
+input_price_per_token = 0.00000055  # $0.55 per million input tokens
+output_price_per_token = 0.00000219  # $2.19 per million output tokens
+
+[model.capabilities]
+streaming = true
+json_mode = true
+function_calling = true

@@ -1,0 +1,20 @@
+[model]
+name = "Text Embedding 3 Large"
+provider = "burncloud"
+model_id = "text-embedding-3-large"
+type = "embeddings"
+description = "Large text embedding model for high-quality vector representations"
+
+[model.context]
+max_tokens = 8191
+supports_vision = false
+supports_tools = false
+
+[model.pricing]
+input_price_per_token = 0.00000013  # $0.13 per million input tokens
+
+[model.capabilities]
+streaming = false
+json_mode = false
+function_calling = false
+embedding_dimensions = 3072

@@ -1,0 +1,21 @@
+[model]
+name = "Gemini 2.5 Pro"
+provider = "burncloud"
+model_id = "gemini-2.5-pro"
+type = "chat"
+description = "Gemini 2.5 Pro model, premium performance for complex tasks"
+
+[model.context]
+max_tokens = 2097152  # 2M tokens
+supports_vision = true
+supports_tools = true
+
+[model.pricing]
+input_price_per_token = 0.00000125  # $1.25 per million input tokens
+output_price_per_token = 0.000005   # $5.00 per million output tokens
+
+[model.capabilities]
+streaming = true
+json_mode = true
+function_calling = true
+image_generation = true
