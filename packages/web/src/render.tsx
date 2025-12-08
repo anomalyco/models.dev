@@ -207,12 +207,35 @@ export const Rendered = renderToString(
           </svg>
         </a>
         <div class="search-container">
-          <input type="text" id="search" placeholder="Filter by model" />
+          <input type="text" id="search" placeholder="Quick search..." />
           <span class="search-shortcut">⌘K</span>
         </div>
+        <button id="toggle-advanced" class="toggle-advanced-btn">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+          </svg>
+          <span>Filters</span>
+        </button>
         <button id="help">How to use</button>
       </div>
     </header>
+    <div id="search-builder" class="search-builder collapsed">
+      <div class="search-builder-header">
+        <span class="search-builder-title">Advanced Filters</span>
+        <button id="clear-all-filters" class="clear-all-btn">Clear All</button>
+      </div>
+      <div id="filter-groups" class="filter-groups">
+        {/* Filter groups will be added dynamically */}
+      </div>
+      <button id="add-group" class="add-group-btn">
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="12" y1="5" x2="12" y2="19"></line>
+          <line x1="5" y1="12" x2="19" y2="12"></line>
+        </svg>
+        Add Group
+      </button>
+      <div id="active-filters-summary" class="active-filters-summary"></div>
+    </div>
     <table>
       <thead>
         <tr>
@@ -437,8 +460,8 @@ export const Rendered = renderToString(
                     {model.structured_output === undefined
                       ? "-"
                       : model.structured_output
-                      ? "Yes"
-                      : "No"}
+                        ? "Yes"
+                        : "No"}
                   </td>
                   <td>{model.temperature ? "Yes" : "No"}</td>
                   <td>{model.open_weights ? "Open" : "Closed"}</td>
