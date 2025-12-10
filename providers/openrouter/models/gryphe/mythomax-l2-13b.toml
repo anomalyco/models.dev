@@ -1,0 +1,22 @@
+name = "MythoMax 13B"
+release_date = "2023-07-01"
+last_updated = "2023-07-01"
+open_weights = false
+tool_call = false
+structured_output = true
+temperature = true
+reasoning = false
+attachment = false
+
+[modalities]
+input = [ "text",]
+output = [ "text",]
+
+[limit]
+context = 4096
+input = 4096
+output = 4096
+
+[cost]
+input = 0.06
+output = 0.06

@@ -1,0 +1,22 @@
+name = "Mistral: Ministral 3 3B 2512"
+release_date = "2025-12-02"
+last_updated = "2025-12-02"
+open_weights = false
+tool_call = true
+structured_output = true
+temperature = true
+reasoning = false
+attachment = true
+
+[modalities]
+input = [ "text", "image",]
+output = [ "text",]
+
+[limit]
+context = 131072
+input = 131072
+output = 4096
+
+[cost]
+input = 0.09999999999999999
+output = 0.09999999999999999

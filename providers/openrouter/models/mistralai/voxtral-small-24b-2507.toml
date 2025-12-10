@@ -1,0 +1,22 @@
+name = "Mistral: Voxtral Small 24B 2507"
+release_date = "2025-10-30"
+last_updated = "2025-10-30"
+open_weights = false
+tool_call = true
+structured_output = true
+temperature = true
+reasoning = false
+attachment = false
+
+[modalities]
+input = [ "text", "audio",]
+output = [ "text",]
+
+[limit]
+context = 32000
+input = 32000
+output = 4096
+
+[cost]
+input = 0.09999999999999999
+output = 0.3

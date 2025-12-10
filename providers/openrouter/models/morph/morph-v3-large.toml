@@ -1,0 +1,22 @@
+name = "Morph: Morph V3 Large"
+release_date = "2025-07-07"
+last_updated = "2025-07-07"
+open_weights = false
+tool_call = false
+structured_output = false
+temperature = true
+reasoning = false
+attachment = false
+
+[modalities]
+input = [ "text",]
+output = [ "text",]
+
+[limit]
+context = 262144
+input = 262144
+output = 131072
+
+[cost]
+input = 0.8999999999999999
+output = 1.9

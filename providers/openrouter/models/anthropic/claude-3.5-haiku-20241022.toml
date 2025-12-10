@@ -1,0 +1,22 @@
+name = "Anthropic: Claude 3.5 Haiku (2024-10-22)"
+release_date = "2024-11-03"
+last_updated = "2024-11-03"
+open_weights = false
+tool_call = true
+structured_output = false
+temperature = true
+reasoning = true
+attachment = true
+
+[modalities]
+input = [ "text", "image", "file",]
+output = [ "text",]
+
+[limit]
+context = 200000
+input = 200000
+output = 8192
+
+[cost]
+input = 0.7999999999999999
+output = 4.0

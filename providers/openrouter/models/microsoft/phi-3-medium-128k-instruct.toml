@@ -1,0 +1,22 @@
+name = "Microsoft: Phi-3 Medium 128K Instruct"
+release_date = "2024-05-23"
+last_updated = "2024-05-23"
+open_weights = false
+tool_call = true
+structured_output = false
+temperature = true
+reasoning = true
+attachment = false
+
+[modalities]
+input = [ "text",]
+output = [ "text",]
+
+[limit]
+context = 128000
+input = 128000
+output = 4096
+
+[cost]
+input = 1.0
+output = 1.0

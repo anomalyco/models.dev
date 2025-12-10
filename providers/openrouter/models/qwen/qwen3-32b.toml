@@ -1,0 +1,22 @@
+name = "Qwen: Qwen3 32B"
+release_date = "2025-04-28"
+last_updated = "2025-04-28"
+open_weights = false
+tool_call = true
+structured_output = true
+temperature = true
+reasoning = true
+attachment = false
+
+[modalities]
+input = [ "text",]
+output = [ "text",]
+
+[limit]
+context = 40960
+input = 40960
+output = 40960
+
+[cost]
+input = 0.08
+output = 0.24

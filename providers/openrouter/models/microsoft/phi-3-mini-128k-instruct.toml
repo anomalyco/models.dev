@@ -1,0 +1,22 @@
+name = "Microsoft: Phi-3 Mini 128K Instruct"
+release_date = "2024-05-25"
+last_updated = "2024-05-25"
+open_weights = false
+tool_call = true
+structured_output = false
+temperature = true
+reasoning = true
+attachment = false
+
+[modalities]
+input = [ "text",]
+output = [ "text",]
+
+[limit]
+context = 128000
+input = 128000
+output = 4096
+
+[cost]
+input = 0.09999999999999999
+output = 0.09999999999999999

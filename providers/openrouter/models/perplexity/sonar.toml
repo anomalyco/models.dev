@@ -1,0 +1,22 @@
+name = "Perplexity: Sonar"
+release_date = "2025-01-27"
+last_updated = "2025-01-27"
+open_weights = false
+tool_call = false
+structured_output = false
+temperature = true
+reasoning = false
+attachment = true
+
+[modalities]
+input = [ "text", "image",]
+output = [ "text",]
+
+[limit]
+context = 127072
+input = 127072
+output = 4096
+
+[cost]
+input = 1.0
+output = 1.0

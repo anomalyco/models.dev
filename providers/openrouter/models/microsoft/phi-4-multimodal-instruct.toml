@@ -1,0 +1,22 @@
+name = "Microsoft: Phi 4 Multimodal Instruct"
+release_date = "2025-03-07"
+last_updated = "2025-03-07"
+open_weights = false
+tool_call = false
+structured_output = true
+temperature = true
+reasoning = true
+attachment = true
+
+[modalities]
+input = [ "text", "image",]
+output = [ "text",]
+
+[limit]
+context = 131072
+input = 131072
+output = 4096
+
+[cost]
+input = 0.049999999999999996
+output = 0.09999999999999999

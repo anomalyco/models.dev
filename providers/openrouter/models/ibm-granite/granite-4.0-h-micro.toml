@@ -1,0 +1,22 @@
+name = "IBM: Granite 4.0 Micro"
+release_date = "2025-10-19"
+last_updated = "2025-10-19"
+open_weights = false
+tool_call = false
+structured_output = false
+temperature = true
+reasoning = false
+attachment = false
+
+[modalities]
+input = [ "text",]
+output = [ "text",]
+
+[limit]
+context = 131000
+input = 131000
+output = 4096
+
+[cost]
+input = 0.017
+output = 0.11

@@ -1,0 +1,22 @@
+name = "OpenAI: GPT-3.5 Turbo 16k"
+release_date = "2023-08-27"
+last_updated = "2023-08-27"
+open_weights = false
+tool_call = true
+structured_output = true
+temperature = true
+reasoning = false
+attachment = false
+
+[modalities]
+input = [ "text",]
+output = [ "text",]
+
+[limit]
+context = 16385
+input = 16385
+output = 4096
+
+[cost]
+input = 3.0
+output = 4.0

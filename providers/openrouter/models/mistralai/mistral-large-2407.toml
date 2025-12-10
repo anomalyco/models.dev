@@ -1,0 +1,22 @@
+name = "Mistral Large 2407"
+release_date = "2024-11-18"
+last_updated = "2024-11-18"
+open_weights = false
+tool_call = true
+structured_output = true
+temperature = true
+reasoning = true
+attachment = false
+
+[modalities]
+input = [ "text",]
+output = [ "text",]
+
+[limit]
+context = 131072
+input = 131072
+output = 4096
+
+[cost]
+input = 2.0
+output = 6.0

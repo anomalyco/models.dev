@@ -1,0 +1,22 @@
+name = "Baidu: ERNIE 4.5 21B A3B Thinking"
+release_date = "2025-10-09"
+last_updated = "2025-10-09"
+open_weights = false
+tool_call = false
+structured_output = false
+temperature = true
+reasoning = true
+attachment = false
+
+[modalities]
+input = [ "text",]
+output = [ "text",]
+
+[limit]
+context = 131072
+input = 131072
+output = 65536
+
+[cost]
+input = 0.056
+output = 0.224

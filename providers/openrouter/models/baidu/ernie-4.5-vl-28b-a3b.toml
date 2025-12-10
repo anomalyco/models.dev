@@ -1,0 +1,22 @@
+name = "Baidu: ERNIE 4.5 VL 28B A3B"
+release_date = "2025-08-12"
+last_updated = "2025-08-12"
+open_weights = false
+tool_call = true
+structured_output = false
+temperature = true
+reasoning = true
+attachment = true
+
+[modalities]
+input = [ "text", "image",]
+output = [ "text",]
+
+[limit]
+context = 30000
+input = 30000
+output = 8000
+
+[cost]
+input = 0.112
+output = 0.448

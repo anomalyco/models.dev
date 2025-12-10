@@ -1,0 +1,22 @@
+name = "Mistral: Devstral Medium"
+release_date = "2025-07-10"
+last_updated = "2025-07-10"
+open_weights = false
+tool_call = true
+structured_output = true
+temperature = true
+reasoning = true
+attachment = false
+
+[modalities]
+input = [ "text",]
+output = [ "text",]
+
+[limit]
+context = 131072
+input = 131072
+output = 4096
+
+[cost]
+input = 0.39999999999999997
+output = 2.0

@@ -1,0 +1,22 @@
+name = "Anthropic: Claude Opus 4.1"
+release_date = "2025-08-05"
+last_updated = "2025-08-05"
+open_weights = false
+tool_call = true
+structured_output = true
+temperature = true
+reasoning = true
+attachment = true
+
+[modalities]
+input = [ "image", "text", "file",]
+output = [ "text",]
+
+[limit]
+context = 200000
+input = 200000
+output = 32000
+
+[cost]
+input = 15.0
+output = 75.0

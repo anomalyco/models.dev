@@ -1,0 +1,22 @@
+name = "Meta: Llama 3.1 405B Instruct"
+release_date = "2024-07-22"
+last_updated = "2024-07-22"
+open_weights = true
+tool_call = true
+structured_output = true
+temperature = true
+reasoning = false
+attachment = false
+
+[modalities]
+input = [ "text",]
+output = [ "text",]
+
+[limit]
+context = 130815
+input = 130815
+output = 4096
+
+[cost]
+input = 3.5
+output = 3.5

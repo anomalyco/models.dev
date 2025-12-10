@@ -1,0 +1,22 @@
+name = "Google: Gemini 2.5 Pro Preview 06-05"
+release_date = "2025-06-05"
+last_updated = "2025-06-05"
+open_weights = false
+tool_call = true
+structured_output = true
+temperature = true
+reasoning = true
+attachment = true
+
+[modalities]
+input = [ "file", "image", "text", "audio",]
+output = [ "text",]
+
+[limit]
+context = 1048576
+input = 1048576
+output = 65536
+
+[cost]
+input = 1.25
+output = 10.0

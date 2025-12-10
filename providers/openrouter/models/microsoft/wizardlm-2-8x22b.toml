@@ -1,0 +1,22 @@
+name = "WizardLM-2 8x22B"
+release_date = "2024-04-15"
+last_updated = "2024-04-15"
+open_weights = false
+tool_call = false
+structured_output = true
+temperature = true
+reasoning = false
+attachment = false
+
+[modalities]
+input = [ "text",]
+output = [ "text",]
+
+[limit]
+context = 65536
+input = 65536
+output = 16384
+
+[cost]
+input = 0.48
+output = 0.48

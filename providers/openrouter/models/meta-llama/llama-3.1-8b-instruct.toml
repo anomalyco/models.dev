@@ -1,0 +1,22 @@
+name = "Meta: Llama 3.1 8B Instruct"
+release_date = "2024-07-22"
+last_updated = "2024-07-22"
+open_weights = false
+tool_call = true
+structured_output = true
+temperature = true
+reasoning = false
+attachment = false
+
+[modalities]
+input = [ "text",]
+output = [ "text",]
+
+[limit]
+context = 131072
+input = 131072
+output = 16384
+
+[cost]
+input = 0.02
+output = 0.03

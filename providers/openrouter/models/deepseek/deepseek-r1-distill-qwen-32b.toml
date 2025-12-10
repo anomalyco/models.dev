@@ -1,0 +1,22 @@
+name = "DeepSeek: R1 Distill Qwen 32B"
+release_date = "2025-01-29"
+last_updated = "2025-01-29"
+open_weights = false
+tool_call = false
+structured_output = true
+temperature = true
+reasoning = false
+attachment = false
+
+[modalities]
+input = [ "text",]
+output = [ "text",]
+
+[limit]
+context = 64000
+input = 64000
+output = 32000
+
+[cost]
+input = 0.24
+output = 0.24

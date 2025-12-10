@@ -1,0 +1,22 @@
+name = "Nous: DeepHermes 3 Mistral 24B Preview"
+release_date = "2025-05-09"
+last_updated = "2025-05-09"
+open_weights = false
+tool_call = true
+structured_output = true
+temperature = true
+reasoning = true
+attachment = false
+
+[modalities]
+input = [ "text",]
+output = [ "text",]
+
+[limit]
+context = 32768
+input = 32768
+output = 32768
+
+[cost]
+input = 0.049999999999999996
+output = 0.19999999999999998

@@ -1,0 +1,22 @@
+name = "Z.AI: GLM 4.5V"
+release_date = "2025-08-11"
+last_updated = "2025-08-11"
+open_weights = false
+tool_call = true
+structured_output = true
+temperature = true
+reasoning = true
+attachment = true
+
+[modalities]
+input = [ "text", "image",]
+output = [ "text",]
+
+[limit]
+context = 65536
+input = 65536
+output = 16384
+
+[cost]
+input = 0.48
+output = 1.44

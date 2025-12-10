@@ -1,0 +1,22 @@
+name = "Cohere: Command R7B (12-2024)"
+release_date = "2024-12-14"
+last_updated = "2024-12-14"
+open_weights = false
+tool_call = false
+structured_output = true
+temperature = true
+reasoning = true
+attachment = false
+
+[modalities]
+input = [ "text",]
+output = [ "text",]
+
+[limit]
+context = 128000
+input = 128000
+output = 4000
+
+[cost]
+input = 0.0375
+output = 0.15

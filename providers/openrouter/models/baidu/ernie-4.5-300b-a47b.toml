@@ -1,0 +1,22 @@
+name = "Baidu: ERNIE 4.5 300B A47B "
+release_date = "2025-06-30"
+last_updated = "2025-06-30"
+open_weights = false
+tool_call = false
+structured_output = true
+temperature = true
+reasoning = true
+attachment = false
+
+[modalities]
+input = [ "text",]
+output = [ "text",]
+
+[limit]
+context = 123000
+input = 123000
+output = 12000
+
+[cost]
+input = 0.224
+output = 0.88

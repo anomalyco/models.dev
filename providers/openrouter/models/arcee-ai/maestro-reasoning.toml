@@ -1,0 +1,22 @@
+name = "Arcee AI: Maestro Reasoning"
+release_date = "2025-05-05"
+last_updated = "2025-05-05"
+open_weights = false
+tool_call = false
+structured_output = false
+temperature = true
+reasoning = true
+attachment = false
+
+[modalities]
+input = [ "text",]
+output = [ "text",]
+
+[limit]
+context = 131072
+input = 131072
+output = 32000
+
+[cost]
+input = 0.8999999999999999
+output = 3.3000000000000003

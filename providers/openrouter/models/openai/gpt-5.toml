@@ -1,0 +1,22 @@
+name = "OpenAI: GPT-5"
+release_date = "2025-08-07"
+last_updated = "2025-08-07"
+open_weights = false
+tool_call = true
+structured_output = true
+temperature = false
+reasoning = true
+attachment = true
+
+[modalities]
+input = [ "text", "image", "file",]
+output = [ "text",]
+
+[limit]
+context = 400000
+input = 400000
+output = 128000
+
+[cost]
+input = 1.25
+output = 10.0

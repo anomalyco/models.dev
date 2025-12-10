@@ -1,0 +1,22 @@
+name = "AllenAI: Olmo 3 7B Think"
+release_date = "2025-11-21"
+last_updated = "2025-11-21"
+open_weights = false
+tool_call = false
+structured_output = true
+temperature = true
+reasoning = true
+attachment = false
+
+[modalities]
+input = [ "text",]
+output = [ "text",]
+
+[limit]
+context = 65536
+input = 65536
+output = 65536
+
+[cost]
+input = 0.12
+output = 0.19999999999999998

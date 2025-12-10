@@ -1,0 +1,22 @@
+name = "NousResearch: Hermes 2 Pro - Llama-3 8B"
+release_date = "2024-05-26"
+last_updated = "2024-05-26"
+open_weights = false
+tool_call = false
+structured_output = true
+temperature = true
+reasoning = false
+attachment = false
+
+[modalities]
+input = [ "text",]
+output = [ "text",]
+
+[limit]
+context = 8192
+input = 8192
+output = 2048
+
+[cost]
+input = 0.024999999999999998
+output = 0.08

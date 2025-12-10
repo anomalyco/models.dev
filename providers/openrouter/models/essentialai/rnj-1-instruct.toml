@@ -1,0 +1,22 @@
+name = "EssentialAI: Rnj 1 Instruct"
+release_date = "2025-12-07"
+last_updated = "2025-12-07"
+open_weights = false
+tool_call = false
+structured_output = true
+temperature = true
+reasoning = true
+attachment = false
+
+[modalities]
+input = [ "text",]
+output = [ "text",]
+
+[limit]
+context = 32768
+input = 32768
+output = 4096
+
+[cost]
+input = 0.15
+output = 0.15

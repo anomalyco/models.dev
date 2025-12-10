@@ -1,0 +1,22 @@
+name = "Mistral: Mistral 7B Instruct v0.2"
+release_date = "2023-12-27"
+last_updated = "2023-12-27"
+open_weights = false
+tool_call = false
+structured_output = false
+temperature = true
+reasoning = false
+attachment = false
+
+[modalities]
+input = [ "text",]
+output = [ "text",]
+
+[limit]
+context = 32768
+input = 32768
+output = 4096
+
+[cost]
+input = 0.19999999999999998
+output = 0.19999999999999998

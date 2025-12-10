@@ -1,0 +1,22 @@
+name = "OpenAI: GPT-5 Image Mini"
+release_date = "2025-10-16"
+last_updated = "2025-10-16"
+open_weights = false
+tool_call = true
+structured_output = true
+temperature = true
+reasoning = false
+attachment = true
+
+[modalities]
+input = [ "file", "image", "text",]
+output = [ "image", "text",]
+
+[limit]
+context = 400000
+input = 400000
+output = 128000
+
+[cost]
+input = 2.5
+output = 2.0

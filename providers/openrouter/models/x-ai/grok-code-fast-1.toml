@@ -1,0 +1,22 @@
+name = "xAI: Grok Code Fast 1"
+release_date = "2025-08-26"
+last_updated = "2025-08-26"
+open_weights = false
+tool_call = true
+structured_output = true
+temperature = true
+reasoning = true
+attachment = false
+
+[modalities]
+input = [ "text",]
+output = [ "text",]
+
+[limit]
+context = 256000
+input = 256000
+output = 10000
+
+[cost]
+input = 0.19999999999999998
+output = 1.5

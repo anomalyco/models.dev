@@ -1,0 +1,22 @@
+name = "Qwen: Qwen3 Next 80B A3B Instruct"
+release_date = "2025-09-11"
+last_updated = "2025-09-11"
+open_weights = false
+tool_call = true
+structured_output = true
+temperature = true
+reasoning = true
+attachment = false
+
+[modalities]
+input = [ "text",]
+output = [ "text",]
+
+[limit]
+context = 262144
+input = 262144
+output = 262144
+
+[cost]
+input = 0.09999999999999999
+output = 0.7999999999999999

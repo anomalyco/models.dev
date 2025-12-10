@@ -1,0 +1,22 @@
+name = "Mistral Tiny"
+release_date = "2024-01-09"
+last_updated = "2024-01-09"
+open_weights = false
+tool_call = true
+structured_output = true
+temperature = true
+reasoning = true
+attachment = false
+
+[modalities]
+input = [ "text",]
+output = [ "text",]
+
+[limit]
+context = 32768
+input = 32768
+output = 4096
+
+[cost]
+input = 0.25
+output = 0.25

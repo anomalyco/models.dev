@@ -1,0 +1,22 @@
+name = "Mistral: Devstral 2 2512"
+release_date = "2025-12-09"
+last_updated = "2025-12-09"
+open_weights = true
+tool_call = true
+structured_output = true
+temperature = true
+reasoning = false
+attachment = false
+
+[modalities]
+input = [ "text",]
+output = [ "text",]
+
+[limit]
+context = 262144
+input = 262144
+output = 65536
+
+[cost]
+input = 0.15
+output = 0.6

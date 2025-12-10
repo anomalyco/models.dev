@@ -1,0 +1,22 @@
+name = "NVIDIA: Nemotron Nano 9B V2 (free)"
+release_date = "2025-09-05"
+last_updated = "2025-09-05"
+open_weights = false
+tool_call = true
+structured_output = true
+temperature = false
+reasoning = true
+attachment = false
+
+[modalities]
+input = [ "text",]
+output = [ "text",]
+
+[limit]
+context = 128000
+input = 128000
+output = 4096
+
+[cost]
+input = 0.0
+output = 0.0

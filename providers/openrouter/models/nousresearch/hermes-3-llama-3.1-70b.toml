@@ -1,0 +1,22 @@
+name = "Nous: Hermes 3 70B Instruct"
+release_date = "2024-08-17"
+last_updated = "2024-08-17"
+open_weights = false
+tool_call = false
+structured_output = true
+temperature = true
+reasoning = true
+attachment = false
+
+[modalities]
+input = [ "text",]
+output = [ "text",]
+
+[limit]
+context = 65536
+input = 65536
+output = 4096
+
+[cost]
+input = 0.3
+output = 0.3

@@ -1,0 +1,22 @@
+name = "Google: Nano Banana Pro (Gemini 3 Pro Image Preview)"
+release_date = "2025-11-20"
+last_updated = "2025-11-20"
+open_weights = false
+tool_call = false
+structured_output = true
+temperature = true
+reasoning = true
+attachment = true
+
+[modalities]
+input = [ "image", "text",]
+output = [ "image", "text",]
+
+[limit]
+context = 65536
+input = 65536
+output = 32768
+
+[cost]
+input = 2.0
+output = 12.0

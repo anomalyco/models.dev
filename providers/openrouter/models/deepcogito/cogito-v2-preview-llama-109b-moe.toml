@@ -1,0 +1,22 @@
+name = "Cogito V2 Preview Llama 109B"
+release_date = "2025-09-02"
+last_updated = "2025-09-02"
+open_weights = false
+tool_call = true
+structured_output = false
+temperature = true
+reasoning = true
+attachment = true
+
+[modalities]
+input = [ "image", "text",]
+output = [ "text",]
+
+[limit]
+context = 32767
+input = 32767
+output = 4096
+
+[cost]
+input = 0.18
+output = 0.59

@@ -1,0 +1,22 @@
+name = "Z.AI: GLM 4.6 (exacto)"
+release_date = "2025-09-30"
+last_updated = "2025-09-30"
+open_weights = false
+tool_call = true
+structured_output = true
+temperature = true
+reasoning = true
+attachment = false
+
+[modalities]
+input = [ "text",]
+output = [ "text",]
+
+[limit]
+context = 202752
+input = 202752
+output = 4096
+
+[cost]
+input = 0.43
+output = 1.75

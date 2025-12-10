@@ -1,0 +1,22 @@
+name = "Relace: Relace Search"
+release_date = "2025-12-08"
+last_updated = "2025-12-08"
+open_weights = false
+tool_call = true
+structured_output = false
+temperature = true
+reasoning = true
+attachment = false
+
+[modalities]
+input = [ "text",]
+output = [ "text",]
+
+[limit]
+context = 256000
+input = 256000
+output = 128000
+
+[cost]
+input = 1.0
+output = 3.0

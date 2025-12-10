@@ -1,0 +1,22 @@
+name = "Auto Router"
+release_date = "2023-11-07"
+last_updated = "2023-11-07"
+open_weights = false
+tool_call = false
+structured_output = false
+temperature = false
+reasoning = false
+attachment = false
+
+[modalities]
+input = [ "text",]
+output = [ "text",]
+
+[limit]
+context = 2000000
+input = 2000000
+output = 4096
+
+[cost]
+input = -1000000.0
+output = -1000000.0

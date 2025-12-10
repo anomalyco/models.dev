@@ -1,0 +1,22 @@
+name = "Sao10K: Llama 3 8B Lunaris"
+release_date = "2024-08-12"
+last_updated = "2024-08-12"
+open_weights = false
+tool_call = false
+structured_output = true
+temperature = true
+reasoning = true
+attachment = false
+
+[modalities]
+input = [ "text",]
+output = [ "text",]
+
+[limit]
+context = 8192
+input = 8192
+output = 4096
+
+[cost]
+input = 0.04
+output = 0.049999999999999996

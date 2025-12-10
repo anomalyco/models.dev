@@ -1,0 +1,22 @@
+name = "Meituan: LongCat Flash Chat"
+release_date = "2025-09-09"
+last_updated = "2025-09-09"
+open_weights = false
+tool_call = false
+structured_output = false
+temperature = true
+reasoning = true
+attachment = false
+
+[modalities]
+input = [ "text",]
+output = [ "text",]
+
+[limit]
+context = 131072
+input = 131072
+output = 131072
+
+[cost]
+input = 0.15
+output = 0.75

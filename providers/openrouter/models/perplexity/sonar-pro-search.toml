@@ -1,0 +1,22 @@
+name = "Perplexity: Sonar Pro Search"
+release_date = "2025-10-30"
+last_updated = "2025-10-30"
+open_weights = false
+tool_call = false
+structured_output = true
+temperature = true
+reasoning = true
+attachment = true
+
+[modalities]
+input = [ "text", "image",]
+output = [ "text",]
+
+[limit]
+context = 200000
+input = 200000
+output = 8000
+
+[cost]
+input = 3.0
+output = 15.0

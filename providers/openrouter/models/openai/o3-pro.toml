@@ -1,0 +1,22 @@
+name = "OpenAI: o3 Pro"
+release_date = "2025-06-10"
+last_updated = "2025-06-10"
+open_weights = false
+tool_call = true
+structured_output = true
+temperature = false
+reasoning = true
+attachment = true
+
+[modalities]
+input = [ "text", "file", "image",]
+output = [ "text",]
+
+[limit]
+context = 200000
+input = 200000
+output = 100000
+
+[cost]
+input = 20.0
+output = 80.0

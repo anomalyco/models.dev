@@ -1,0 +1,22 @@
+name = "Google: Gemini 2.5 Flash Preview 09-2025"
+release_date = "2025-09-25"
+last_updated = "2025-09-25"
+open_weights = false
+tool_call = true
+structured_output = true
+temperature = true
+reasoning = true
+attachment = true
+
+[modalities]
+input = [ "image", "file", "text", "audio", "video",]
+output = [ "text",]
+
+[limit]
+context = 1048576
+input = 1048576
+output = 65536
+
+[cost]
+input = 0.3
+output = 2.5

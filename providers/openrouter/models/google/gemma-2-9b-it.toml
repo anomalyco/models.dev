@@ -1,0 +1,22 @@
+name = "Google: Gemma 2 9B"
+release_date = "2024-06-27"
+last_updated = "2024-06-27"
+open_weights = true
+tool_call = false
+structured_output = false
+temperature = true
+reasoning = false
+attachment = false
+
+[modalities]
+input = [ "text",]
+output = [ "text",]
+
+[limit]
+context = 8192
+input = 8192
+output = 4096
+
+[cost]
+input = 0.03
+output = 0.09

@@ -1,0 +1,22 @@
+name = "Google: Gemma 3 4B"
+release_date = "2025-03-13"
+last_updated = "2025-03-13"
+open_weights = false
+tool_call = false
+structured_output = true
+temperature = true
+reasoning = true
+attachment = true
+
+[modalities]
+input = [ "text", "image",]
+output = [ "text",]
+
+[limit]
+context = 96000
+input = 96000
+output = 4096
+
+[cost]
+input = 0.01703012
+output = 0.0681536

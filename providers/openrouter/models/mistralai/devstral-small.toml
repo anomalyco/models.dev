@@ -1,0 +1,22 @@
+name = "Mistral: Devstral Small 1.1"
+release_date = "2025-07-10"
+last_updated = "2025-07-10"
+open_weights = false
+tool_call = true
+structured_output = true
+temperature = true
+reasoning = false
+attachment = false
+
+[modalities]
+input = [ "text",]
+output = [ "text",]
+
+[limit]
+context = 128000
+input = 128000
+output = 4096
+
+[cost]
+input = 0.07
+output = 0.28

@@ -1,0 +1,22 @@
+name = "Google: Gemma 3n 2B (free)"
+release_date = "2025-07-09"
+last_updated = "2025-07-09"
+open_weights = false
+tool_call = false
+structured_output = true
+temperature = true
+reasoning = true
+attachment = false
+
+[modalities]
+input = [ "text",]
+output = [ "text",]
+
+[limit]
+context = 8192
+input = 8192
+output = 2048
+
+[cost]
+input = 0.0
+output = 0.0

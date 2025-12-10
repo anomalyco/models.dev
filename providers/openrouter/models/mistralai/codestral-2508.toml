@@ -1,0 +1,22 @@
+name = "Mistral: Codestral 2508"
+release_date = "2025-08-01"
+last_updated = "2025-08-01"
+open_weights = false
+tool_call = true
+structured_output = true
+temperature = true
+reasoning = false
+attachment = false
+
+[modalities]
+input = [ "text",]
+output = [ "text",]
+
+[limit]
+context = 256000
+input = 256000
+output = 4096
+
+[cost]
+input = 0.3
+output = 0.8999999999999999

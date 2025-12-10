@@ -1,0 +1,22 @@
+name = "Sao10K: Llama 3.3 Euryale 70B"
+release_date = "2024-12-18"
+last_updated = "2024-12-18"
+open_weights = false
+tool_call = false
+structured_output = true
+temperature = true
+reasoning = false
+attachment = false
+
+[modalities]
+input = [ "text",]
+output = [ "text",]
+
+[limit]
+context = 131072
+input = 131072
+output = 16384
+
+[cost]
+input = 0.65
+output = 0.75

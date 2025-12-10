@@ -1,0 +1,22 @@
+name = "DeepSeek: DeepSeek V3"
+release_date = "2024-12-26"
+last_updated = "2024-12-26"
+open_weights = true
+tool_call = true
+structured_output = true
+temperature = true
+reasoning = false
+attachment = false
+
+[modalities]
+input = [ "text",]
+output = [ "text",]
+
+[limit]
+context = 163840
+input = 163840
+output = 163840
+
+[cost]
+input = 0.3
+output = 1.2

@@ -1,0 +1,22 @@
+name = "Qwen: Qwen Plus 0728 (thinking)"
+release_date = "2025-09-08"
+last_updated = "2025-09-08"
+open_weights = false
+tool_call = true
+structured_output = true
+temperature = true
+reasoning = true
+attachment = false
+
+[modalities]
+input = [ "text",]
+output = [ "text",]
+
+[limit]
+context = 1000000
+input = 1000000
+output = 32768
+
+[cost]
+input = 0.39999999999999997
+output = 4.0

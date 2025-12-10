@@ -1,0 +1,22 @@
+name = "Arcee AI: Virtuoso Large"
+release_date = "2025-05-05"
+last_updated = "2025-05-05"
+open_weights = false
+tool_call = true
+structured_output = false
+temperature = true
+reasoning = true
+attachment = false
+
+[modalities]
+input = [ "text",]
+output = [ "text",]
+
+[limit]
+context = 131072
+input = 131072
+output = 64000
+
+[cost]
+input = 0.75
+output = 1.2

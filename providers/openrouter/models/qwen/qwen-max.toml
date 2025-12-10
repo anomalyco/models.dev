@@ -1,0 +1,22 @@
+name = "Qwen: Qwen-Max "
+release_date = "2025-02-01"
+last_updated = "2025-02-01"
+open_weights = false
+tool_call = true
+structured_output = true
+temperature = true
+reasoning = false
+attachment = false
+
+[modalities]
+input = [ "text",]
+output = [ "text",]
+
+[limit]
+context = 32768
+input = 32768
+output = 8192
+
+[cost]
+input = 1.5999999999999999
+output = 6.3999999999999995

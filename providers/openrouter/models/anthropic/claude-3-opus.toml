@@ -1,0 +1,22 @@
+name = "Anthropic: Claude 3 Opus"
+release_date = "2024-03-04"
+last_updated = "2024-03-04"
+open_weights = false
+tool_call = true
+structured_output = false
+temperature = true
+reasoning = false
+attachment = true
+
+[modalities]
+input = [ "text", "image",]
+output = [ "text",]
+
+[limit]
+context = 200000
+input = 200000
+output = 4096
+
+[cost]
+input = 15.0
+output = 75.0

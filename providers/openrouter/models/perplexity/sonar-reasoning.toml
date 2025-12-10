@@ -1,0 +1,22 @@
+name = "Perplexity: Sonar Reasoning"
+release_date = "2025-01-29"
+last_updated = "2025-01-29"
+open_weights = false
+tool_call = false
+structured_output = false
+temperature = true
+reasoning = true
+attachment = false
+
+[modalities]
+input = [ "text",]
+output = [ "text",]
+
+[limit]
+context = 127000
+input = 127000
+output = 4096
+
+[cost]
+input = 1.0
+output = 5.0

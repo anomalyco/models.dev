@@ -1,0 +1,22 @@
+name = "OpenGVLab: InternVL3 78B"
+release_date = "2025-09-15"
+last_updated = "2025-09-15"
+open_weights = false
+tool_call = false
+structured_output = true
+temperature = true
+reasoning = true
+attachment = true
+
+[modalities]
+input = [ "image", "text",]
+output = [ "text",]
+
+[limit]
+context = 32768
+input = 32768
+output = 32768
+
+[cost]
+input = 0.09999999999999999
+output = 0.39

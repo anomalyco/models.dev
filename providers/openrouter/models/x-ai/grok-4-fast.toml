@@ -1,0 +1,22 @@
+name = "xAI: Grok 4 Fast"
+release_date = "2025-09-18"
+last_updated = "2025-09-18"
+open_weights = false
+tool_call = true
+structured_output = true
+temperature = true
+reasoning = true
+attachment = true
+
+[modalities]
+input = [ "text", "image",]
+output = [ "text",]
+
+[limit]
+context = 2000000
+input = 2000000
+output = 30000
+
+[cost]
+input = 0.19999999999999998
+output = 0.5

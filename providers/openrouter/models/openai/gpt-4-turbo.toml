@@ -1,0 +1,22 @@
+name = "OpenAI: GPT-4 Turbo"
+release_date = "2024-04-08"
+last_updated = "2024-04-08"
+open_weights = false
+tool_call = true
+structured_output = true
+temperature = true
+reasoning = false
+attachment = true
+
+[modalities]
+input = [ "text", "image",]
+output = [ "text",]
+
+[limit]
+context = 128000
+input = 128000
+output = 4096
+
+[cost]
+input = 10.0
+output = 30.0

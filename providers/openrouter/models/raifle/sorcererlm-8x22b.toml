@@ -1,0 +1,22 @@
+name = "SorcererLM 8x22B"
+release_date = "2024-11-08"
+last_updated = "2024-11-08"
+open_weights = false
+tool_call = false
+structured_output = false
+temperature = true
+reasoning = true
+attachment = false
+
+[modalities]
+input = [ "text",]
+output = [ "text",]
+
+[limit]
+context = 16000
+input = 16000
+output = 4096
+
+[cost]
+input = 4.5
+output = 4.5
