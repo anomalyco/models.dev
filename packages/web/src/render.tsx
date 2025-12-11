@@ -68,6 +68,59 @@ function renderProviderLogo(providerId: string) {
   return <span dangerouslySetInnerHTML={{ __html: svgContent }} />;
 }
 
+// Render a reusable table cell for IDs (provider/model).
+function renderIdCell(
+  id: string,
+  label: string,
+  className = "id-cell"
+) {
+  const textClass = "id-text";
+  return (
+    <td>
+      <div class={className}>
+        <span class={textClass}>{id}</span>
+        <button
+          class="copy-button"
+          title={`Copy ${label} ID`}
+          aria-label={`Copy ${label} ID`}
+          data-copy-id={id}
+        >
+          <svg
+            class="copy-icon"
+            xmlns="http://www.w3.org/2000/svg"
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <rect width="14" height="14" x="8" y="8" rx="2" ry="2" />
+            <path d="m4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2" />
+          </svg>
+          <svg
+            class="check-icon"
+            xmlns="http://www.w3.org/2000/svg"
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            style="display: none;"
+          >
+            <polyline points="20,6 9,17 4,12" />
+          </svg>
+        </button>
+      </div>
+    </td>
+  );
+}
+
 const getModalityIcon = (modality: string) => {
   switch (modality) {
     case "text":
@@ -363,54 +416,8 @@ export const Rendered = renderToString(
                   </td>
                   <td>{model.name}</td>
                   <td>{model.family ?? "-"}</td>
-                  <td>{providerId}</td>
-                  <td>
-                    <div class="model-id-cell">
-                      <span class="model-id-text">{modelId}</span>
-                      <button
-                        class="copy-button"
-                        onclick={`copyModelId(this, '${modelId}')`}
-                      >
-                        <svg
-                          class="copy-icon"
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="14"
-                          height="14"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          stroke-width="2"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                        >
-                          <rect
-                            width="14"
-                            height="14"
-                            x="8"
-                            y="8"
-                            rx="2"
-                            ry="2"
-                          />
-                          <path d="m4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2" />
-                        </svg>
-                        <svg
-                          class="check-icon"
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="14"
-                          height="14"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          stroke-width="2"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          style="display: none;"
-                        >
-                          <polyline points="20,6 9,17 4,12" />
-                        </svg>
-                      </button>
-                    </div>
-                  </td>
+                  {renderIdCell(providerId, "Provider")}
+                  {renderIdCell(modelId, "Model")}
                   <td>{model.tool_call ? "Yes" : "No"}</td>
                   <td>{model.reasoning ? "Yes" : "No"}</td>
                   <td>

@@ -183,15 +183,14 @@ search.addEventListener("keydown", (e) => {
 });
 
 ///////////////////////////////////
-// Handle Copy model ID function
+// Handle Copy ID function
 ///////////////////////////////////
-(window as any).copyModelId = async (
-  button: HTMLButtonElement,
-  modelId: string
-) => {
+// Generic copy function for model or provider IDs
+// Copy text helper for buttons. This is now used by delegation below
+async function copyText(button: HTMLButtonElement, id: string) {
   try {
     if (navigator.clipboard) {
-      await navigator.clipboard.writeText(modelId);
+      await navigator.clipboard.writeText(id);
 
       // Switch to check icon
       const copyIcon = button.querySelector(".copy-icon") as HTMLElement;
@@ -209,7 +208,28 @@ search.addEventListener("keydown", (e) => {
   } catch (err) {
     console.error("Failed to copy text: ", err);
   }
-};
+}
+
+// Attach to window for compatibility with any existing calling sites.
+(window as any).copyText = copyText;
+
+// Event delegation: catch clicks on copy buttons and handle them safely.
+document.addEventListener("click", (e) => {
+  const target = e.target as Element | null;
+  if (!target) return;
+
+  const button = target.closest("button.copy-button") as HTMLButtonElement | null;
+  if (!button) return;
+
+  const id = button.dataset.copyId;
+  if (!id) return;
+
+  // Prevent accidental form submits/navigation
+  e.preventDefault();
+  copyText(button, id);
+});
+
+// NOTE: If you need to support older releases, update the calling sites accordingly.
 
 ///////////////////////////////////
 // Initialize State from URL

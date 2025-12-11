@@ -330,7 +330,7 @@ tbody {
     color: var(--color-text-secondary);
   }
 
-  .model-id-cell {
+  .id-cell {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -351,11 +351,11 @@ tbody {
     transition: opacity 0.2s ease, color 0.2s ease;
   }
 
-  .model-id-cell:hover .copy-button {
+  .id-cell:hover .copy-button {
     opacity: 1;
   }
 
-  .model-id-cell .copy-button svg {
+  .id-cell .copy-button svg {
     display: block;
   }
 
@@ -370,6 +370,11 @@ tbody {
 
   .copy-button.copied {
     color: var(--color-brand) !important;
+  }
+
+  /* Visual failure state when copy is not possible */
+  .copy-button.failed {
+    color: #e11 !important;
   }
 
   .modalities {
