@@ -1,0 +1,22 @@
+name = "nex-agi/DeepSeek-V3.1-Nex-N1"
+family = "deepseek-v3"
+release_date = "2025-01-01"
+last_updated = "2025-11-25"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[cost]
+input = 0.5
+output = 2.0
+
+[limit]
+context = 131_000
+output = 131_000
+
+[modalities]
+input = ["text"]
+output = ["text"]

@@ -1,0 +1,22 @@
+name = "deepseek-ai/deepseek-vl2"
+family = "deepseek"
+release_date = "2024-12-13"
+last_updated = "2025-11-25"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[cost]
+input = 0.15
+output = 0.15
+
+[limit]
+context = 4_000
+output = 4_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

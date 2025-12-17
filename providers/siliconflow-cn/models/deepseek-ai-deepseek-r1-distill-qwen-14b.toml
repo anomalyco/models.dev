@@ -1,0 +1,22 @@
+name = "deepseek-ai/DeepSeek-R1-Distill-Qwen-14B"
+family = "qwen"
+release_date = "2025-01-20"
+last_updated = "2025-11-25"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[cost]
+input = 0.1
+output = 0.1
+
+[limit]
+context = 131_000
+output = 131_000
+
+[modalities]
+input = ["text"]
+output = ["text"]

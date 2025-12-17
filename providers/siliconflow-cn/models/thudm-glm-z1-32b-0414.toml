@@ -1,0 +1,22 @@
+name = "THUDM/GLM-Z1-32B-0414"
+family = "glm-z1"
+release_date = "2025-04-18"
+last_updated = "2025-11-25"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[cost]
+input = 0.14
+output = 0.57
+
+[limit]
+context = 131_000
+output = 131_000
+
+[modalities]
+input = ["text"]
+output = ["text"]

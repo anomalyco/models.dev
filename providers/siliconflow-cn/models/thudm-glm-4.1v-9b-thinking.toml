@@ -1,0 +1,22 @@
+name = "THUDM/GLM-4.1V-9B-Thinking"
+family = "glm-4v"
+release_date = "2025-07-04"
+last_updated = "2025-11-25"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[cost]
+input = 0.035
+output = 0.14
+
+[limit]
+context = 66_000
+output = 66_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
