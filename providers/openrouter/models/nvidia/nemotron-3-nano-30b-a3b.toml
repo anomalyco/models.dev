@@ -1,0 +1,25 @@
+name = "Nemotron 3 Nano 30B A3B"
+family = "nemotron-3-nano"
+release_date = "2025-12-10"
+last_updated = "2025-12-10"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+knowledge = "2025-12"
+open_weights = true
+
+[cost]
+input = 0
+output = 0
+
+[limit]
+context = 256_000
+output = 256_000
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[provider]
+npm = "@openrouter/ai-sdk-provider"
