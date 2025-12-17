@@ -1,0 +1,21 @@
+name = "Voxtral Small 24B 2507"
+family = "mistral"
+release_date = "2025-07-01"
+last_updated = "2025-07-01"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = true
+open_weights = true
+
+[cost]
+input = 0.15
+output = 0.35
+
+[limit]
+context = 32_000
+output = 8192
+
+[modalities]
+input = ["text", "audio"]
+output = ["text"]

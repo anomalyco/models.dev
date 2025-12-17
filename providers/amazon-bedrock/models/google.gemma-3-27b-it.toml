@@ -1,0 +1,22 @@
+name = "Google Gemma 3 27B Instruct"
+family = "gemma-3"
+attachment = true
+reasoning = false
+tool_call = true
+temperature = true
+knowledge = "2025-07"
+release_date = "2025-07-27"
+last_updated = "2025-07-27"
+open_weights = true
+
+[cost]
+input = 0.12
+output = 0.2
+
+[limit]
+context = 202_752
+output = 8_192
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

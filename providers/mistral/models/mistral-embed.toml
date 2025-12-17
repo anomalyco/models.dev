@@ -1,0 +1,21 @@
+name = "Mistral Embed"
+family = "mistral-embed"
+release_date = "2023-12-11"
+last_updated = "2023-12-11"
+attachment = false
+reasoning = false
+temperature = false
+tool_call = false
+open_weights = false
+
+[cost]
+input = 0.10
+output = 0.00
+
+[limit]
+context = 8_000
+output = 3_072
+
+[modalities]
+input = ["text"]
+output = ["text"]

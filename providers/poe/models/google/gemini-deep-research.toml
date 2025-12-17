@@ -1,0 +1,20 @@
+name = "gemini-deep-research"
+release_date = "2025-12-11"
+last_updated = "2025-12-11"
+attachment = true
+reasoning = true
+temperature = false
+open_weights = false
+tool_call = true
+
+[cost]
+input = 1.6
+output = 9.6
+
+[limit]
+context = 1_048_576
+output = 0
+
+[modalities]
+input = ["text", "image", "video"]
+output = ["text"]

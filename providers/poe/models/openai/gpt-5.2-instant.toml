@@ -1,0 +1,21 @@
+name = "gpt-5.2-instant"
+release_date = "2025-12-11"
+last_updated = "2025-12-11"
+attachment = true
+reasoning = false
+temperature = false
+open_weights = false
+tool_call = true
+
+[cost]
+input = 1.6
+output = 13
+cache_read = 0.16
+
+[limit]
+context = 128_000
+output = 16_384
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

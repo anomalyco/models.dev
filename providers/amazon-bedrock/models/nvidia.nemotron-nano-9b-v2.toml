@@ -1,0 +1,21 @@
+name = "NVIDIA Nemotron Nano 9B v2"
+family = "nemotron"
+release_date = "2024-12-01"
+last_updated = "2024-12-01"
+attachment = false
+reasoning = false
+temperature = true
+tool_call = true
+open_weights = false
+
+[cost]
+input = 0.06
+output = 0.23
+
+[limit]
+context = 128_000
+output = 4_096
+
+[modalities]
+input = ["text"]
+output = ["text"]

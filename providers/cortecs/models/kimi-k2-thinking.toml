@@ -1,0 +1,24 @@
+name = "Kimi K2 Thinking"
+release_date = "2025-12-08"
+last_updated = "2025-12-08"
+knowledge = "2025-12"
+attachment = true
+reasoning = true
+tool_call = true
+temperature = true
+open_weights = true
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.656
+output = 2.731
+
+[limit]
+context = 262_000
+output = 262_000
+
+[modalities]
+input = ["text"]
+output = ["text"]

@@ -1,0 +1,23 @@
+name = "Kimi K2 Thinking"
+family = "kimi-k2"
+release_date = "2025-11-06"
+last_updated = "2025-11-06"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+knowledge = "2025-07"
+open_weights = true
+interleaved = true
+
+[cost]
+input = 1.2
+output = 4
+
+[limit]
+context = 262_144
+output = 32_768
+
+[modalities]
+input = ["text"]
+output = ["text"]
