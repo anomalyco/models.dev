@@ -1,0 +1,26 @@
+name = "MiniMax M2"
+family = "minimax"
+release_date = "2025-11-13"
+last_updated = "2025-11-13"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+knowledge = "2024-10"
+open_weights = true
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.254
+output = 1.02
+cached_input = 0.127
+
+[limit]
+context = 262_144
+output = 32_768
+
+[modalities]
+input = ["text"]
+output = ["text"]

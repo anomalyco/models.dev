@@ -82,7 +82,7 @@ export const Model = z
     {
       message: "Cannot set cost.reasoning when reasoning is false",
       path: ["cost", "reasoning"],
-    }
+    },
   );
 
 export type Model = z.infer<typeof Model>;
@@ -98,7 +98,7 @@ export const Provider = z
       .string()
       .min(
         1,
-        "Please provide a link to the provider documentation where models are listed"
+        "Please provide a link to the provider documentation where models are listed",
       ),
     models: z.record(Model),
   })
@@ -106,23 +106,26 @@ export const Provider = z
   .refine(
     (data) => {
       const isOpenAIcompatible = data.npm === "@ai-sdk/openai-compatible";
+      const isOpenrouter = data.npm === "@openrouter/ai-sdk-provider";
       const isAnthropic = data.npm === "@ai-sdk/anthropic";
       const hasApi = data.api !== undefined;
 
       return (
         // openai-compatible: must have api
         (isOpenAIcompatible && hasApi) ||
+        // openrouter: must have api
+        (isOpenrouter && hasApi) ||
         // anthropic: api optional (always allowed)
         isAnthropic ||
         // all others: must NOT have api
-        (!isOpenAIcompatible && !isAnthropic && !hasApi)
+        (!isOpenAIcompatible && !isOpenrouter && !isAnthropic && !hasApi)
       );
     },
     {
       message:
-        "'api' is required for openai-compatible, optional for anthropic, forbidden otherwise",
+        "'api' is required for openai-compatible and openrouter, optional for anthropic, forbidden otherwise",
       path: ["api"],
-    }
+    },
   );
 
 export type Provider = z.infer<typeof Provider>;

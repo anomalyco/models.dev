@@ -3,19 +3,20 @@ family = "mistral"
 attachment = true
 reasoning = false
 tool_call = true
+structured_output = true
 temperature = true
 knowledge = "2023-10"
-release_date = "2025-07-15"
-last_updated = "2025-12-09"
+release_date = "2025-03-18"
+last_updated = "2025-12-18"
 open_weights = true
 
 [cost]
 input = 0.5
-output = 2.0
+output = 2
 
 [limit]
 context = 131_072
-output = 8_192
+output = 32_768
 
 [modalities]
 input = ["text", "image"]

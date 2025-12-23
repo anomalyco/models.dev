@@ -1,21 +1,24 @@
-name = "Claude Opus 4"
+name = "Claude Opus 4 (latest)"
 family = "claude-opus"
 release_date = "2025-05-22"
 last_updated = "2025-05-22"
-attachment = false
-reasoning = false
+attachment = true
+reasoning = true
 temperature = true
-tool_call = false
+tool_call = true
+knowledge = "2025-03-31"
 open_weights = false
 
 [cost]
-input = 15
-output = 75
+input = 15.00
+output = 75.00
+cache_read = 1.50
+cache_write = 18.75
 
 [limit]
-context = 128000
-output = 16384
+context = 200_000
+output = 32_000
 
 [modalities]
-input = ["text"]
+input = ["text", "image", "pdf"]
 output = ["text"]

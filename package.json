@@ -14,9 +14,10 @@
       "@tsconfig/bun": "^1.0.8"
     }
   },
-  "scripts": {
+"scripts": {
     "validate": "bun ./packages/core/script/validate.ts",
-    "helicone:generate": "bun ./packages/core/script/generate-helicone.ts"
+    "helicone:generate": "bun ./packages/core/script/generate-helicone.ts",
+    "venice:generate": "bun ./packages/core/script/generate-venice.ts"
   },
   "dependencies": {
     "@cloudflare/workers-types": "^4.20250801.0",
