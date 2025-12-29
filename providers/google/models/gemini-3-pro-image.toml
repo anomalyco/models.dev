@@ -1,0 +1,23 @@
+name = "Gemini 3 Pro Image"
+family = "gemini-pro-image"
+release_date = "2025-11-01"
+last_updated = "2025-11-01"
+attachment = true
+reasoning = true
+temperature = true
+knowledge = "2025-01"
+tool_call = false
+open_weights = false
+
+[cost]
+# Multi-modal pricing simplified to primary token rates (matches gemini-2.5-flash-image pattern)
+input = 2.00
+output = 120.00
+
+[limit]
+context = 65_536
+output = 32_768
+
+[modalities]
+input = ["text", "image"]
+output = ["text", "image"]

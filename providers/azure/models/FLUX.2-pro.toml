@@ -1,0 +1,19 @@
+name = "FLUX.2-pro"
+family = "Black Forest Labs"
+# Source: https://blackforestlabs.ai/blog/flux-2
+release_date = "2025-11-25"
+last_updated = "2025-11-25"
+attachment = false
+reasoning = false
+tool_call = false
+open_weights = false
+
+[modalities]
+input = ["text", "image"]
+output = ["image"]
+
+[limit]
+context = 32000
+output = 0
+
+# Real pricing is per-image — omitted to match patterns in repository (see dall-e-3, imagen-4)

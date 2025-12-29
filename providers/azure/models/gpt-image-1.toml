@@ -1,0 +1,18 @@
+name = "gpt-image-1"
+family = "Azure OpenAI"
+release_date = "2025-04-15"
+last_updated = "2025-04-15"
+attachment = true
+reasoning = false
+tool_call = false
+open_weights = false
+
+[modalities]
+input = ["text", "image"]
+output = ["image"]
+
+[limit]
+context = 0
+output = 0
+
+# Real pricing is per-image — omitted to match patterns in repository (see dall-e-3, imagen-4)

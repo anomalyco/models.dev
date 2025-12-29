@@ -1,0 +1,19 @@
+name = "gpt-image-1.5"
+family = "Azure OpenAI"
+# Release date matches upstream OpenAI model; Azure publishes no independent date
+release_date = "2025-12-16"
+last_updated = "2025-12-16"
+attachment = true
+reasoning = false
+tool_call = false
+open_weights = false
+
+[modalities]
+input = ["text", "image"]
+output = ["image"]
+
+[limit]
+context = 0
+output = 0
+
+# Real pricing is per-image — omitted to match patterns in repository (see dall-e-3, imagen-4)

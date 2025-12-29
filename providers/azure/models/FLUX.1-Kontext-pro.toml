@@ -1,0 +1,19 @@
+name = "FLUX.1-Kontext-pro"
+family = "Black Forest Labs"
+# Source: https://blackforestlabs.ai/blog/flux-1-kontext
+release_date = "2025-05-29"
+last_updated = "2025-05-29"
+attachment = false
+reasoning = false
+tool_call = false
+open_weights = false
+
+[modalities]
+input = ["text", "image"]
+output = ["image"]
+
+[limit]
+context = 5000
+output = 0
+
+# Real pricing is per-image — omitted to match patterns in repository (see dall-e-3, imagen-4)

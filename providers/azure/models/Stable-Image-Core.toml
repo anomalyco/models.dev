@@ -1,0 +1,19 @@
+name = "Stable Image Core"
+family = "Stability AI"
+# Source: https://stability.ai/news/stability-ais-top-3-text-to-image-models-now-available-in-amazon-bedrock
+release_date = "2024-09-04"
+last_updated = "2024-09-04"
+attachment = false
+reasoning = false
+tool_call = false
+open_weights = false
+
+[modalities]
+input = ["text"]
+output = ["image"]
+
+[limit]
+context = 1000
+output = 0
+
+# Real pricing is per-image — omitted to match patterns in repository (see dall-e-3, imagen-4)

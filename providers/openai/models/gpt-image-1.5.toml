@@ -1,0 +1,21 @@
+# Real pricing is per-image — omitted to match patterns in repository (see dall-e-3, imagen-4)
+# Source: https://platform.openai.com/docs/models/gpt-image-1.5
+# Release date source: https://platform.openai.com/docs/changelog (Dec 16, 2025)
+
+name = "gpt-image-1.5"
+family = "gpt-image"
+release_date = "2025-12-16"
+last_updated = "2025-12-16"
+attachment = true
+reasoning = false
+tool_call = false
+temperature = false
+open_weights = false
+
+[limit]
+context = 0
+output = 0
+
+[modalities]
+input = ["text", "image"]
+output = ["image", "text"]
