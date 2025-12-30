@@ -1,0 +1,19 @@
+name = "parasail-hunyuan-ocr"
+release_date = "2025-12-29"
+last_updated = "2025-12-29"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = false
+open_weights = true
+
+[cost]
+input = 0.025
+output = 0.1
+
+[limit]
+context = 32_768
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
