@@ -1,0 +1,22 @@
+name = "MiniMax M2.1"
+attachment = true
+reasoning = true
+tool_call = true
+structured_output = true
+temperature = true
+release_date = "2025-12-01"
+last_updated = "2025-12-30"
+open_weights = false
+
+[cost]
+input = 0.4
+output = 1.6
+cache_read = 0.04
+
+[limit]
+context = 202_752
+output = 50_688
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
