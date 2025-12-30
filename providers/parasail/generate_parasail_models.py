@@ -3,20 +3,15 @@
 Generate TOML model files for Parasail from parasail.json API data.
 
 Usage:
-    python generate_parasail_models.py
-
-This will read parasail.json and generate TOML files in providers/parasail/models/
+    python generate_parasail_models.py parasail.json models/
+    python generate_parasail_models.py --input parasail.json --output models/
 """
 
+import argparse
 import json
-import os
 import re
 from datetime import date
 from pathlib import Path
-
-# Configuration
-INPUT_FILE = "parasail.json"
-OUTPUT_DIR = Path("providers/parasail/models")
 
 
 def sanitize_filename(name: str) -> str:
@@ -147,12 +142,42 @@ def generate_toml(model: dict) -> str:
 
 
 def main():
+    parser = argparse.ArgumentParser(
+        description="Generate TOML model files for Parasail from API JSON data."
+    )
+    parser.add_argument(
+        "input",
+        nargs="?",
+        default="parasail.json",
+        help="Input JSON file from Parasail API (default: parasail.json)",
+    )
+    parser.add_argument(
+        "output",
+        nargs="?",
+        default="models",
+        help="Output directory for TOML files (default: models/)",
+    )
+    parser.add_argument(
+        "-i", "--input",
+        dest="input_file",
+        help="Input JSON file (alternative to positional arg)",
+    )
+    parser.add_argument(
+        "-o", "--output",
+        dest="output_dir",
+        help="Output directory (alternative to positional arg)",
+    )
+    args = parser.parse_args()
+
+    input_file = Path(args.input_file or args.input)
+    output_dir = Path(args.output_dir or args.output)
+
     # Load API data
-    with open(INPUT_FILE, 'r') as f:
+    with open(input_file, 'r') as f:
         models = json.load(f)
     
     # Ensure output directory exists
-    OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+    output_dir.mkdir(parents=True, exist_ok=True)
     
     # Track generated files
     generated = []
@@ -172,7 +197,7 @@ def main():
         
         # Generate filename from external alias
         filename = sanitize_filename(external_alias) + ".toml"
-        filepath = OUTPUT_DIR / filename
+        filepath = output_dir / filename
         
         # Generate TOML content
         toml_content = generate_toml(model)
@@ -184,7 +209,7 @@ def main():
         generated.append(filename)
         print(f"Generated: {filepath}")
     
-    print(f"\n✓ Generated {len(generated)} model files in {OUTPUT_DIR}")
+    print(f"\n✓ Generated {len(generated)} model files in {output_dir}")
     if skipped:
         print(f"⚠ Skipped {len(skipped)} models without external alias: {skipped}")
 
