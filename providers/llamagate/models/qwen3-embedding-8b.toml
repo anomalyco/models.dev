@@ -1,0 +1,19 @@
+name = "Qwen 3 Embedding 8B"
+release_date = "2025-01-01"
+last_updated = "2025-01-01"
+attachment = false
+reasoning = false
+temperature = false
+tool_call = false
+structured_output = false
+open_weights = true
+
+[cost]
+input = 0.02
+
+[limit]
+context = 40_960
+
+[modalities]
+input = ["text"]
+output = ["embedding"]

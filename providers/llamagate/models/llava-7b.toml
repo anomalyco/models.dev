@@ -1,0 +1,21 @@
+name = "LLaVA 1.5 7B"
+release_date = "2023-10-05"
+last_updated = "2023-10-05"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = false
+structured_output = true
+open_weights = true
+
+[cost]
+input = 0.10
+output = 0.20
+
+[limit]
+context = 4_096
+output = 2_048
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
