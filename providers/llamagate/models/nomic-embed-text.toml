@@ -10,10 +10,12 @@ open_weights = true
 
 [cost]
 input = 0.02
+output = 0.00
 
 [limit]
 context = 8_192
+output = 768
 
 [modalities]
 input = ["text"]
-output = ["embedding"]
+output = ["text"]
