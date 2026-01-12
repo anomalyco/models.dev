@@ -75,6 +75,13 @@ export const Model = z
         api: z.string().optional(),
       })
       .optional(),
+    variants: z
+      .record(
+        z.object({
+          chat_template_kwargs: z.record(z.union([z.boolean(), z.string(), z.number()])).optional(),
+        })
+      )
+      .optional(),
   })
   .strict()
   .refine(

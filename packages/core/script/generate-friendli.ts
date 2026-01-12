@@ -408,7 +408,13 @@ async function main() {
     process.exit(1);
   }
 
-  const apiModels = parsed.data.data;
+  const apiModels = parsed.data.data.filter((model) => {
+    if (!model.functionality.tool_call) {
+      console.log(`Skipping ${model.id}: tool_call not supported`);
+      return false;
+    }
+    return true;
+  });
 
   // Get existing files (recursively)
   const existingFiles = new Set<string>();
