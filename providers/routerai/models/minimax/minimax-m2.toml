@@ -1,0 +1,29 @@
+name = "MiniMax M2"
+family = "minimax"
+attachment = false
+reasoning = true
+tool_call = true
+temperature = true
+release_date = "2025-10-23"
+last_updated = "2025-10-23"
+open_weights = true
+
+[interleaved]
+field = "reasoning_details"
+
+[cost]
+input = 0.36
+output = 1.49
+cache_read = 0.36
+cache_write = 1.49
+
+[limit]
+context = 196_600
+output = 118_000
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[provider]
+npm = "@openrouter/ai-sdk-provider"

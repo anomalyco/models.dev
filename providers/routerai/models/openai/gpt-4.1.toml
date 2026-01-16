@@ -1,0 +1,23 @@
+name = "GPT-4.1"
+family = "gpt"
+release_date = "2025-04-14"
+last_updated = "2025-04-14"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = true
+knowledge = "2024-04"
+open_weights = false
+
+[cost]
+input = 2.60
+output = 10.40
+cache_read = 0.65
+
+[limit]
+context = 1_047_576
+output = 32_768
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

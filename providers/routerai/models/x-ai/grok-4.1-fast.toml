@@ -1,0 +1,24 @@
+name = "Grok 4.1 Fast"
+family = "grok"
+release_date = "2025-11-19"
+last_updated = "2025-11-19"
+attachment = false
+reasoning = true
+temperature = true
+knowledge = "2024-11"
+tool_call = true
+open_weights = false
+
+[cost]
+input = 0.26
+output = 0.65
+cache_read = 0.07
+cache_write = 0.07
+
+[limit]
+context = 2_000_000
+output = 30_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

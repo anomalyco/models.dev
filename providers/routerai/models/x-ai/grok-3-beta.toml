@@ -1,0 +1,24 @@
+name = "Grok 3 Beta"
+family = "grok"
+release_date = "2025-02-17"
+last_updated = "2025-02-17"
+attachment = false
+reasoning = false
+temperature = true
+knowledge = "2024-11"
+tool_call = true
+open_weights = false
+
+[cost]
+input = 3.90
+output = 19.50
+cache_read = 0.98
+cache_write = 19.50
+
+[limit]
+context = 131_072
+output = 8_192
+
+[modalities]
+input = ["text"]
+output = ["text"]
