@@ -1,0 +1,20 @@
+name = "MiniMax M2.1"
+family = "minimax"
+release_date = "2025-06-01"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = true
+open_weights = false
+
+[cost]
+input = 0.15
+output = 0.55
+
+[limit]
+context = 1_000_000
+output = 40_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
