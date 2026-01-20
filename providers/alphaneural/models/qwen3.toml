@@ -1,0 +1,21 @@
+name = "qwen3"
+release_date = "2025-04-29"
+last_updated = "2025-04-29"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = false
+structured_output = false
+open_weights = true
+
+[cost]
+input = 0.07
+output = 0.24
+
+[limit]
+context = 128_000
+output = 8_192
+
+[modalities]
+input = ["text"]
+output = ["text"]
