@@ -1,0 +1,28 @@
+# GLM-4.7-AWQ - 358B parameter reasoning model
+name = "GLM-4.7-AWQ"
+description = "GLM 4.7 with AWQ quantization (358B params)"
+family = "glm"
+release_date = "2025-12-22"
+last_updated = "2026-01-15"
+knowledge = "2025-04"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+open_weights = true
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.40
+output = 1.50
+cache_read = 0.20
+
+[limit]
+context = 65_536
+output = 16_384
+
+[modalities]
+input = ["text"]
+output = ["text"]

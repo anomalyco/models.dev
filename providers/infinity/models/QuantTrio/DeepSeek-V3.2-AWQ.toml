@@ -1,0 +1,23 @@
+# DeepSeek-V3.2-AWQ - High-performance MoE model
+name = "DeepSeek-V3.2-AWQ"
+description = "A next-generation open language model that balances strong reasoning, efficient long-context processing and everyday agent tasks with high performance and practical inference efficiency"
+family = "deepseek"
+release_date = "2025-10-01"
+last_updated = "2026-01-15"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+open_weights = true
+
+[cost]
+input = 0.28
+output = 0.42
+
+[limit]
+context = 32_768
+output = 16_384
+
+[modalities]
+input = ["text"]
+output = ["text"]

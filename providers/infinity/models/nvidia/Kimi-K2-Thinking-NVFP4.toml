@@ -1,0 +1,26 @@
+# Kimi-K2-Thinking-NVFP4 - Moonshot's reasoning model in NVFP4 format
+name = "Kimi-K2-Thinking-NVFP4"
+description = "Built for long documents and deep analysis, Kimi K2 excels at reading, summarization, and multi-step reasoning across massive contexts."
+family = "kimi-thinking"
+release_date = "2025-11-06"
+last_updated = "2026-01-15"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+open_weights = true
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.40
+output = 1.75
+
+[limit]
+context = 32_768
+output = 32_768
+
+[modalities]
+input = ["text"]
+output = ["text"]
