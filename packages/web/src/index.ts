@@ -1,7 +1,10 @@
+import { initCommandPalette } from "./components/command-palette/command-palette.js";
+
 const modal = document.getElementById("modal") as HTMLDialogElement;
 const modalClose = document.getElementById("close")!;
 const help = document.getElementById("help")!;
 const search = document.getElementById("search")! as HTMLInputElement;
+const searchIconMobile = document.getElementById("search-icon-mobile");
 
 /////////////////////////
 // URL State Management
@@ -33,8 +36,18 @@ function getColumnNameForURL(headerEl: Element): string {
 function getColumnIndexByUrlName(name: string): number {
   const headers = document.querySelectorAll("th.sortable");
   return Array.from(headers).findIndex(
-    (header) => getColumnNameForURL(header) === name
+    (header) => getColumnNameForURL(header) === name,
   );
+}
+
+/////////////////////////
+// Handle "Search" button on mobile
+/////////////////////////
+if (searchIconMobile) {
+  searchIconMobile.addEventListener("click", () => {
+    const palette = document.querySelector("command-palette") as any;
+    if (palette) palette.open();
+  });
 }
 
 /////////////////////////
@@ -67,7 +80,7 @@ modal.addEventListener("click", (e) => {
 ////////////////////
 let currentSort = { column: -1, direction: "asc" };
 
-function sortTable(column: number, direction: "asc" | "desc") {
+export function sortTable(column: number, direction: "asc" | "desc") {
   const header = document.querySelectorAll("th.sortable")[column];
   const columnType = header.getAttribute("data-type");
   if (!columnType) return;
@@ -82,7 +95,7 @@ function sortTable(column: number, direction: "asc" | "desc") {
   // sort rows
   const tbody = document.querySelector("table tbody")!;
   const rows = Array.from(
-    tbody.querySelectorAll("tr")
+    tbody.querySelectorAll("tr"),
   ) as HTMLTableRowElement[];
   rows.sort((a, b) => {
     const aValue = getCellValue(a.cells[column], columnType);
@@ -121,7 +134,7 @@ function sortTable(column: number, direction: "asc" | "desc") {
 
 function getCellValue(
   cell: HTMLTableCellElement,
-  type: string
+  type: string,
 ): string | number | undefined {
   if (type === "modalities")
     return cell.querySelectorAll(".modality-icon").length;
@@ -147,17 +160,23 @@ document.querySelectorAll("th.sortable").forEach((header) => {
 // Handle Search
 ///////////////////
 function filterTable(value: string) {
-  const lowerCaseValues = value.toLowerCase().split(",").filter(str => str.trim() !== "");
+  const lowerCaseValues = value
+    .toLowerCase()
+    .split(",")
+    .filter((str) => str.trim() !== "");
   const rows = document.querySelectorAll(
-    "table tbody tr"
+    "table tbody tr",
   ) as NodeListOf<HTMLTableRowElement>;
 
   rows.forEach((row) => {
     const cellTexts = Array.from(row.cells).map((cell) =>
-      cell.textContent!.toLowerCase()
+      cell.textContent!.toLowerCase(),
     );
-    const isVisible = lowerCaseValues.length === 0 ||
-     lowerCaseValues.some((lowerCaseValue) => cellTexts.some((text) => text.includes(lowerCaseValue)));
+    const isVisible =
+      lowerCaseValues.length === 0 ||
+      lowerCaseValues.some((lowerCaseValue) =>
+        cellTexts.some((text) => text.includes(lowerCaseValue)),
+      );
     row.style.display = isVisible ? "" : "none";
   });
 
@@ -168,12 +187,7 @@ search.addEventListener("input", () => {
   filterTable(search.value);
 });
 
-document.addEventListener("keydown", (e) => {
-  if ((e.metaKey || e.ctrlKey) && e.key === "k") {
-    e.preventDefault();
-    search.focus();
-  }
-});
+// Command palette handles Cmd/Ctrl+K automatically
 
 search.addEventListener("keydown", (e) => {
   if (e.key === "Escape") {
@@ -182,12 +196,29 @@ search.addEventListener("keydown", (e) => {
   }
 });
 
+search.addEventListener("click", (e) => {
+  e.preventDefault();
+  const palette = document.querySelector("command-palette") as any;
+  if (palette) {
+    palette.open();
+  }
+});
+
+search.addEventListener("focus", (e) => {
+  e.preventDefault();
+  search.blur();
+  const palette = document.querySelector("command-palette") as any;
+  if (palette) {
+    palette.open();
+  }
+});
+
 ///////////////////////////////////
 // Handle Copy model ID function
 ///////////////////////////////////
 (window as any).copyModelId = async (
   button: HTMLButtonElement,
-  modelId: string
+  modelId: string,
 ) => {
   try {
     if (navigator.clipboard) {
@@ -236,5 +267,9 @@ function initializeFromURL() {
   })();
 }
 
-document.addEventListener("DOMContentLoaded", initializeFromURL);
+document.addEventListener("DOMContentLoaded", () => {
+  initializeFromURL();
+  initCommandPalette();
+});
+
 window.addEventListener("popstate", initializeFromURL);

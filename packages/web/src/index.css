@@ -194,12 +194,38 @@ header {
     }
   }
 
+  .search-icon-mobile {
+    display: none;
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    border: none;
+    background: none;
+    color: var(--color-text-secondary);
+    height: 2rem;
+    padding: 0 0.5rem;
+    border-radius: 0.25rem;
+
+    &:hover {
+      background-color: var(--color-surface);
+    }
+
+    &:active {
+      opacity: 0.7;
+    }
+  }
+
   @media (max-width: 45rem) {
     div.right {
 
       .github,
       .search-container {
         display: none;
+      }
+
+      .search-icon-mobile {
+        display: flex;
       }
     }
   }
@@ -545,5 +571,51 @@ dialog {
       }
     }
   }
+}
 
+/* Command palette */
+command-palette {
+  --command-palette-accent-color: var(--color-brand);
+  --command-palette-text: var(--color-text);
+  --command-palette-secondary-text: var(--color-text-secondary);
+  --command-palette-secondary-bg: var(--color-surface);
+  --command-palette-scrollbar-track: color-mix(in srgb,
+      var(--color-background) 70%,
+      var(--color-surface));
+  --command-palette-scrollbar-thumb: color-mix(in srgb,
+      var(--color-border) 55%,
+      var(--color-text-tertiary));
+  --command-palette-scrollbar-thumb-hover: color-mix(in srgb,
+      var(--color-border) 35%,
+      var(--color-text-secondary));
+  --command-palette-selected-bg: color-mix(in srgb,
+      var(--command-palette-accent-color) 22%,
+      var(--color-background));
+  --command-palette-selected-text: var(--color-text);
+  --command-palette-border: 1px solid var(--color-border);
+  --command-palette-placeholder: var(--color-text-tertiary);
+  --command-palette-footer-bg: var(--color-alpha-background);
+  --command-palette-modal-bg: var(--color-alpha-background);
+  --command-palette-icon-filter: none;
+  --command-palette-icon-opacity: 0.95;
+  --command-palette-backdrop: rgba(0, 0, 0, 0.03);
+}
+
+@media (prefers-color-scheme: dark) {
+  command-palette {
+    --command-palette-backdrop: rgba(0, 0, 0, 0.7);
+    --command-palette-icon-filter: brightness(0) invert(1);
+    --command-palette-scrollbar-track: color-mix(in srgb,
+        var(--color-background) 60%,
+        var(--color-surface));
+    --command-palette-scrollbar-thumb: color-mix(in srgb,
+        var(--color-border) 40%,
+        var(--color-text-tertiary));
+    --command-palette-scrollbar-thumb-hover: color-mix(in srgb,
+        var(--color-border) 25%,
+        var(--color-text-secondary));
+    --command-palette-selected-bg: color-mix(in srgb,
+        var(--command-palette-accent-color) 30%,
+        var(--color-background));
+  }
 }
