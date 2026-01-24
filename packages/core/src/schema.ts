@@ -31,6 +31,7 @@ export const Model = z
     attachment: z.boolean(),
     reasoning: z.boolean(),
     tool_call: z.boolean(),
+    tool_call_format: z.enum(["kimi"]).optional(),
     interleaved: z
       .union([
         z.literal(true),
