@@ -1,0 +1,23 @@
+name = "Gemma 3 27B IT"
+attachment = true
+reasoning = false
+tool_call = true
+structured_output = true
+temperature = true
+knowledge = "2024-08"
+release_date = "2025-03-12"
+last_updated = "2026-01-27"
+open_weights = true
+
+[cost]
+input = 0.18
+output = 0.71
+
+[limit]
+context = 110000
+input = 110000
+output = 8192
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

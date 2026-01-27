@@ -1,0 +1,23 @@
+name = "Nemotron Nano 12B V2"
+attachment = false
+reasoning = true
+tool_call = true
+structured_output = false
+temperature = true
+knowledge = "2025-05"
+release_date = "2025-10-28"
+last_updated = "2026-01-27"
+open_weights = true
+
+[cost]
+input = 0.09
+output = 0.36
+
+[limit]
+context = 128000
+input = 128000
+output = 16384
+
+[modalities]
+input = ["text"]
+output = ["text"]

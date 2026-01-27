@@ -1,0 +1,23 @@
+name = "Hermes 4 70B"
+attachment = false
+reasoning = true
+tool_call = true
+structured_output = true
+temperature = true
+knowledge = "2024-03"
+release_date = "2025-08-27"
+last_updated = "2026-01-27"
+open_weights = true
+
+[cost]
+input = 0.18
+output = 0.71
+
+[limit]
+context = 128000
+input = 128000
+output = 16384
+
+[modalities]
+input = ["text"]
+output = ["text"]

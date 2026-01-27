@@ -1,0 +1,23 @@
+name = "Mistral Small 3.2 24B Instruct"
+attachment = true
+reasoning = false
+tool_call = true
+structured_output = true
+temperature = true
+knowledge = "2024-11"
+release_date = "2025-06-20"
+last_updated = "2026-01-27"
+open_weights = true
+
+[cost]
+input = 0.15
+output = 0.48
+
+[limit]
+context = 131072
+input = 131072
+output = 32768
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

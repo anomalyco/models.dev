@@ -1,0 +1,23 @@
+name = "Qwen3 235B A22B Instruct"
+attachment = false
+reasoning = false
+tool_call = true
+structured_output = true
+temperature = true
+knowledge = "2024-03"
+release_date = "2025-04-28"
+last_updated = "2026-01-27"
+open_weights = true
+
+[cost]
+input = 0.24
+output = 0.95
+
+[limit]
+context = 262144
+input = 262144
+output = 32768
+
+[modalities]
+input = ["text"]
+output = ["text"]
