@@ -11,6 +11,7 @@ export default {
   ): Promise<Response> {
     const url = new URL(request.url);
     const ip = request.headers.get("cf-connecting-ip") || "unknown";
+    const country = request.headers.get("cf-ipcountry") || "unknown";
     const agent = request.headers.get("user-agent") || "unknown";
     if (agent.includes("opencode") || agent.includes("bun")) {
       ctx.waitUntil(
@@ -26,6 +27,7 @@ export default {
             properties: {
               $process_person_profile: false,
               user_agent: agent,
+              country,
               path: url.pathname,
             },
           }),

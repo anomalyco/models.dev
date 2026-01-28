@@ -1,0 +1,22 @@
+name = "gemini-2.5-flash"
+family = "gemini-flash"
+release_date = "2025-06-17"
+last_updated = "2025-06-17"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = true
+open_weights = false
+knowledge = "2025-01"
+
+[cost]
+input = 0.300
+output = 2.500
+
+[limit]
+context = 1_000_000
+output = 65_536
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

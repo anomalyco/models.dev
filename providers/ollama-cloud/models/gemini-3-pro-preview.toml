@@ -1,0 +1,16 @@
+name = "gemini-3-pro-preview"
+family = "gemini-pro"
+attachment = true
+reasoning = true
+tool_call = true
+release_date = "2025-11-18"
+last_updated = "2026-01-19"
+open_weights = true
+
+[limit]
+context = 1048576
+output = 64000
+
+[modalities]
+input = ["text","image"]
+output = ["text"]

@@ -1,0 +1,16 @@
+name = "gemma3:12b"
+family = "gemma"
+attachment = true
+reasoning = false
+tool_call = false
+release_date = "2024-12-01"
+last_updated = "2026-01-19"
+open_weights = true
+
+[limit]
+context = 131072
+output = 131072
+
+[modalities]
+input = ["text","image"]
+output = ["text"]

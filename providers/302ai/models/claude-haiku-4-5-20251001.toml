@@ -1,0 +1,21 @@
+name = "claude-haiku-4-5-20251001"
+release_date = "2025-10-16"
+last_updated = "2025-10-16"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = true
+open_weights = false
+knowledge = "2025-03"
+
+[cost]
+input = 1.000
+output = 5.000
+
+[limit]
+context = 200_000
+output = 64_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

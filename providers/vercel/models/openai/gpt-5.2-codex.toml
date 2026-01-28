@@ -1,0 +1,23 @@
+name = "GPT-5.2-Codex"
+family = "gpt-codex"
+release_date = "2025-12"
+last_updated = "2025-12"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+open_weights = false
+knowledge = "2024-10"
+
+[cost]
+input = 1.75
+output = 14
+cache_read = 0.175
+
+[limit]
+context = 400000
+output = 128000
+
+[modalities]
+input = ["text", "image", "pdf"]
+output = ["text"]

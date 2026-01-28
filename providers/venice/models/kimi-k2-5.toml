@@ -1,0 +1,27 @@
+name = "Kimi K2.5"
+family = "kimi"
+attachment = true
+reasoning = true
+tool_call = true
+structured_output = true
+temperature = true
+knowledge = "2024-04"
+release_date = "2026-01-27"
+last_updated = "2026-01-27"
+open_weights = true
+
+[cost]
+input = 0.75
+output = 3.75
+cache_read = 0.125
+
+[limit]
+context = 262_144
+output = 65_536
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[interleaved]
+field = "reasoning_content"

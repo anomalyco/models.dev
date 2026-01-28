@@ -1,0 +1,22 @@
+name = "Deepseek-Chat"
+family = "deepseek"
+release_date = "2024-11-29"
+last_updated = "2024-11-29"
+attachment = false
+reasoning = false
+temperature = true
+tool_call = true
+open_weights = false
+knowledge = "2024-07"
+
+[cost]
+input = 0.290
+output = 0.430
+
+[limit]
+context = 128_000
+output = 8_192
+
+[modalities]
+input = ["text"]
+output = ["text"]

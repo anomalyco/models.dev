@@ -1,0 +1,22 @@
+name = "Qwen3 VL 235B"
+family = "qwen"
+attachment = true
+reasoning = false
+tool_call = true
+structured_output = true
+temperature = true
+release_date = "2026-01-16"
+last_updated = "2026-01-19"
+open_weights = true
+
+[cost]
+input = 0.25
+output = 1.5
+
+[limit]
+context = 262_144
+output = 65_536
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

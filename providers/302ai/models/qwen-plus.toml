@@ -1,0 +1,22 @@
+name = "Qwen-Plus"
+family = "qwen"
+release_date = "2024-07-23"
+last_updated = "2024-07-23"
+attachment = false
+reasoning = false
+temperature = true
+tool_call = true
+open_weights = false
+knowledge = "2024-10"
+
+[cost]
+input = 0.120
+output = 1.200
+
+[limit]
+context = 1_000_000
+output = 32_768
+
+[modalities]
+input = ["text"]
+output = ["text"]

@@ -2,10 +2,11 @@ name = "Agentic Chat (Claude Sonnet 4.5)"
 family = "claude-sonnet"
 release_date = "2026-01-08"
 last_updated = "2026-01-08"
-attachment = false
-reasoning = false
+attachment = true
+reasoning = true
 temperature = true
 tool_call = true
+knowledge = "2025-07-31"
 open_weights = false
 
 [cost]
@@ -16,8 +17,8 @@ cache_write = 0
 
 [limit]
 context = 200_000
-output = 4_096
+output = 64_000
 
 [modalities]
-input = ["text"]
+input = ["text", "image", "pdf"]
 output = ["text"]

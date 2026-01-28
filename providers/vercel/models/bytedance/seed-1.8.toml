@@ -1,0 +1,23 @@
+name = "Seed 1.8"
+family = "seed"
+release_date = "2025-10"
+last_updated = "2025-10"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+open_weights = false
+knowledge = "2024-10"
+
+[cost]
+input = 0.25
+output = 2
+cache_read = 0.05
+
+[limit]
+context = 256000
+output = 64000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

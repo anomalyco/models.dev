@@ -4,6 +4,7 @@ import { z } from "zod";
 import path from "node:path";
 import { readdir } from "node:fs/promises";
 import * as readline from "node:readline";
+import { ModelFamilyValues } from "../src/family.js";
 
 // Venice API endpoint
 const API_ENDPOINT = "https://api.venice.ai/api/v1/models?type=text";
@@ -83,31 +84,35 @@ const VeniceResponse = z
   })
   .passthrough();
 
-// Family inference patterns
-const familyPatterns: [RegExp, string][] = [
-  [/^llama-3\.3/i, "llama-3.3"],
-  [/^llama-3\.2/i, "llama-3.2"],
-  [/^qwen3/i, "qwen3"],
-  [/^deepseek/i, "deepseek"],
-  [/^mistral/i, "mistral"],
-  [/^devstral/i, "devstral"],
-  [/^gemini/i, "gemini"],
-  [/^grok/i, "grok"],
-  [/^claude/i, "claude"],
-  [/^hermes/i, "hermes"],
-  [/^google-gemma/i, "gemma"],
-  [/^kimi/i, "kimi"],
-  [/glm-4.6/i, "glm-4.6"],
-  [/^venice/i, "venice-uncensored"],
-  [/^openai-gpt/i, "openai-gpt"],
-];
+function matchesFamily(target: string, family: string): boolean {
+  const targetLower = target.toLowerCase();
+  const familyLower = family.toLowerCase();
+  let familyIdx = 0;
+
+  for (let i = 0; i < targetLower.length && familyIdx < familyLower.length; i++) {
+    if (targetLower[i] === familyLower[familyIdx]) {
+      familyIdx++;
+    }
+  }
+
+  return familyIdx === familyLower.length;
+}
 
 function inferFamily(modelId: string, modelName: string): string | undefined {
-  for (const [pattern, family] of familyPatterns) {
-    if (pattern.test(modelId) || pattern.test(modelName)) {
+  const sortedFamilies = [...ModelFamilyValues].sort((a, b) => b.length - a.length);
+
+  for (const family of sortedFamilies) {
+    if (matchesFamily(modelId, family)) {
       return family;
     }
   }
+
+  for (const family of sortedFamilies) {
+    if (matchesFamily(modelName, family)) {
+      return family;
+    }
+  }
+
   return undefined;
 }
 
@@ -282,15 +287,8 @@ function mergeModel(
     };
   }
 
-  // Preserve from existing OR infer
-  if (existing?.family) {
-    merged.family = existing.family;
-  } else {
-    const inferred = inferFamily(apiModel.id, spec.name);
-    if (inferred) {
-      merged.family = inferred;
-    }
-  }
+  const inferred = inferFamily(apiModel.id, spec.name);
+  merged.family = inferred ?? existing?.family;
 
   // Preserve manual fields from existing
   if (existing?.knowledge) {

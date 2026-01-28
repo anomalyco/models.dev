@@ -1,5 +1,4 @@
 name = "Qwen3-32B"
-family = "qwen"
 release_date = "2025-07-16"
 last_updated = "2025-07-16"
 attachment = false
@@ -14,8 +13,8 @@ input = 0.09
 output = 0.25
 
 [limit]
-context = 32_000
-output = 32_000
+context = 32_768
+output = 32_768
 
 [modalities]
 input = ["text"]

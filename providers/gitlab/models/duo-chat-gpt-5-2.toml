@@ -1,0 +1,24 @@
+name = "Agentic Chat (GPT-5.2)"
+family = "gpt"
+release_date = "2026-01-23"
+last_updated = "2026-01-23"
+knowledge = "2025-08-31"
+attachment = true
+reasoning = true
+temperature = false
+tool_call = true
+structured_output = true
+open_weights = false
+
+[cost]
+input = 0
+output = 0
+
+[limit]
+context = 400_000
+input = 272_000
+output = 128_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

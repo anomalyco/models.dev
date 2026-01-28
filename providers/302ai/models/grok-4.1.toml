@@ -1,0 +1,21 @@
+name = "grok-4.1"
+release_date = "2025-11-18"
+last_updated = "2025-11-18"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = true
+open_weights = false
+knowledge = "2025-06"
+
+[cost]
+input = 2.000
+output = 10.000
+
+[limit]
+context = 200_000
+output = 64_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

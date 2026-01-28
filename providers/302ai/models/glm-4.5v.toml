@@ -1,0 +1,21 @@
+name = "GLM-4.5V"
+release_date = "2025-07-29"
+last_updated = "2025-07-29"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = true
+open_weights = false
+knowledge = "2024-10"
+
+[cost]
+input = 0.290
+output = 0.860
+
+[limit]
+context = 64_000
+output = 16_384
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

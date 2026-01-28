@@ -1,0 +1,22 @@
+name = "Deepseek-Reasoner"
+family = "deepseek-thinking"
+release_date = "2025-01-20"
+last_updated = "2025-01-20"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+open_weights = false
+knowledge = "2024-07"
+
+[cost]
+input = 0.290
+output = 0.430
+
+[limit]
+context = 128_000
+output = 128_000
+
+[modalities]
+input = ["text"]
+output = ["text"]

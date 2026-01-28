@@ -1,0 +1,21 @@
+name = "ministral-14b-2512"
+release_date = "2025-12-16"
+last_updated = "2025-12-16"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = true
+open_weights = false
+knowledge = "2024-12"
+
+[cost]
+input = 0.330
+output = 0.330
+
+[limit]
+context = 128_000
+output = 128_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

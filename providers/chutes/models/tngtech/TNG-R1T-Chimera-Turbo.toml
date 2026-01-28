@@ -1,0 +1,21 @@
+name = "TNG R1T Chimera Turbo"
+release_date = "2026-01-27"
+last_updated = "2026-01-27"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = true
+
+[cost]
+input = 0.22
+output = 0.60
+
+[limit]
+context = 163_840
+output = 65_536
+
+[modalities]
+input = ["text"]
+output = ["text"]

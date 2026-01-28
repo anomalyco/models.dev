@@ -1,0 +1,22 @@
+name = "Kwaipilot/KAT-Dev"
+family = "kat-coder"
+release_date = "2025-09-27"
+last_updated = "2026-01-16"
+attachment = false
+reasoning = false
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[cost]
+input = 0.2
+output = 0.6
+
+[limit]
+context = 128_000
+output = 128_000
+
+[modalities]
+input = ["text"]
+output = ["text"]

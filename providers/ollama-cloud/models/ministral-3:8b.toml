@@ -1,0 +1,16 @@
+name = "ministral-3:8b"
+family = "ministral"
+attachment = true
+reasoning = false
+tool_call = true
+release_date = "2024-12-01"
+last_updated = "2026-01-19"
+open_weights = true
+
+[limit]
+context = 262144
+output = 128000
+
+[modalities]
+input = ["text","image"]
+output = ["text"]

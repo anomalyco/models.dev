@@ -1,0 +1,27 @@
+name = "Coding-GLM-4.7"
+family = "glm"
+release_date = "2025-12-22"
+last_updated = "2025-12-22"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+knowledge = "2025-04"
+open_weights = true
+
+[interleaved]
+field = "reasoning_details"
+
+[cost]
+input = 0.27
+output = 1.10
+cache_read = 0.548
+
+[limit]
+context = 204800
+output = 131072
+
+[modalities]
+input = ["text"]
+output = ["text"]
+

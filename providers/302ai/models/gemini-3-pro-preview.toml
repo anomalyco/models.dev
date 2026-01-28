@@ -1,0 +1,21 @@
+name = "gemini-3-pro-preview"
+release_date = "2025-11-19"
+last_updated = "2025-11-19"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = true
+open_weights = false
+knowledge = "2025-06"
+
+[cost]
+input = 2.000
+output = 12.000
+
+[limit]
+context = 1_000_000
+output = 64_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

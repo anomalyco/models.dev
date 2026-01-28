@@ -1,0 +1,21 @@
+name = "gpt-5-thinking"
+release_date = "2025-08-08"
+last_updated = "2025-08-08"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+open_weights = false
+knowledge = "2024-10"
+
+[cost]
+input = 1.250
+output = 10.000
+
+[limit]
+context = 400_000
+output = 128_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
