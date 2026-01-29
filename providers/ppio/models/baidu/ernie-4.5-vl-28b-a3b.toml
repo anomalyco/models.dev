@@ -1,0 +1,25 @@
+name = "ERNIE-4.5-VL-28B-A3B"
+family = "baidu"
+release_date = "2025-01-29"
+last_updated = "2025-01-29"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = true
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.139
+output = 0.556
+
+[limit]
+context = 30000
+output = 8000
+
+[modalities]
+input = ["text","image"]
+output = ["text"]

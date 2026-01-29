@@ -1,0 +1,25 @@
+name = "Qwen3 235B A22b Thinking 2507"
+family = "qwen"
+release_date = "2025-01-29"
+last_updated = "2025-01-29"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = false
+open_weights = true
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.278
+output = 2.778
+
+[limit]
+context = 131072
+output = 114688
+
+[modalities]
+input = ["text"]
+output = ["text"]

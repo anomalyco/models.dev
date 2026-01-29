@@ -1,0 +1,25 @@
+name = "DeepSeek R1 Distill Llama 70B"
+family = "deepseek"
+release_date = "2025-01-29"
+last_updated = "2025-01-29"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = false
+structured_output = true
+open_weights = true
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.806
+output = 0.806
+
+[limit]
+context = 32000
+output = 8000
+
+[modalities]
+input = ["text"]
+output = ["text"]
