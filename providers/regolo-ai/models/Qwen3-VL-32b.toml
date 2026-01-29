@@ -1,0 +1,26 @@
+name = "qwen3‑vl‑32b"
+family = "qwen3-vl-32b"
+release_date = "2025-01-01"
+last_updated = "2025-01-01"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+open_weights = false
+
+[description]
+text = "Qwen3‑VL‑32B is a 32‑billion‑parameter multimodal vision‑language model from the Qwen 3 family, supporting text, image, audio and video inputs."
+
+[cost]
+# Prices need verification against Regolo pricing page
+input = 0.50   # € per 1M tokens (official price)
+output = 2.50  # € per 1M tokens (official price)
+
+[limit]
+context = 128000
+output = 128000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+

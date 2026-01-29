@@ -1,0 +1,24 @@
+name = "qwen3‑coder‑30b"
+family = "qwen3-coder-30b"
+release_date = "2025-01-01"
+last_updated = "2025-01-01"
+attachment = false
+reasoning = false
+temperature = true
+tool_call = true
+open_weights = false
+
+[description]
+text = "Qwen3‑Coder‑30B is a large‑scale MOE coding model designed for complex software tasks, featuring strong code understanding, long‑context reasoning, and reliable structured outputs for repository‑level analysis and agentic programming workflows."
+
+[cost]
+input = 0.50    # € per 1M tokens (0.0000005 * 1_000_000)
+output = 2.00   # € per 1M tokens (0.0000020 * 1_000_000)
+
+[limit]
+context = 120000
+output = 120000
+
+[modalities]
+input = ["text"]
+output = ["text"]

@@ -1,0 +1,24 @@
+name = "Qwen3‑8B"
+family = "qwen3-8b"
+release_date = "2025-04-28"
+last_updated = "2025-04-28"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+open_weights = false
+
+[description]
+text = "Qwen3‑8B is a versatile 8.2‑billion parameter language model that uniquely allows switching between a step‑by‑step 'thinking mode' for complex tasks and a fast 'non‑thinking mode' for general conversation."
+
+[cost]
+input = 0.07   # € per 1M tokens (placeholder from Regolo pricing)
+    output = 0.35   # € per 1M tokens (placeholder from Regolo pricing)
+
+[limit]
+context = 40960
+output = 40960
+
+[modalities]
+input = ["text"]
+output = ["text"]

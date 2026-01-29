@@ -1,0 +1,26 @@
+name = "iQuest‑coder‑v1‑40b"
+family = "iquest-coder-v1"
+release_date = "2025-12-10"
+last_updated = "2025-12-10"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+open_weights = false
+
+[description]
+text = "iQuest‑coder‑v1‑40b is a 40‑billion‑parameter open‑source code generation model optimized for instruction‑following and tool‑calling tasks."
+
+[cost]
+# Prices need to be verified against Regolo AI pricing page
+input = 0.80    # € per 1M tokens (official price)
+output = 2.80   # € per 1M tokens (official price)
+
+[limit]
+context = 128000
+output = 128000
+
+[modalities]
+input = ["text"]
+output = ["text"]
+

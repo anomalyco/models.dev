@@ -1,0 +1,24 @@
+name = "gpt-oss-120b"
+family = "gpt-oss"
+release_date = "2025-08-05"
+last_updated = "2025-08-05"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+open_weights = false
+
+[description]
+text = "GPT‑OSS‑120B is an open‑weight 117B‑parameter Mixture‑of‑Experts model by OpenAI, using only 5.1B active parameters per token. Supports reasoning, chain‑of‑thought, tool use, and fine‑tuning."
+
+[cost]
+input = 1.00    # € per 1M tokens (0.000001 * 1_000_000)
+output = 4.20   # € per 1M tokens (0.0000042 * 1_000_000)
+
+[limit]
+context = 128000
+output = 128000
+
+[modalities]
+input = ["text"]
+output = ["text"]

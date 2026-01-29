@@ -1,0 +1,24 @@
+name = "maestrale‑chat‑v0.4‑beta"
+family = "maestrale-chat-v0.4-beta"
+release_date = "2025-01-01"
+last_updated = "2025-01-01"
+attachment = false
+reasoning = false
+temperature = true
+tool_call = true
+open_weights = false
+
+[description]
+text = "Mistral‑7b for the Italian language, continued pre‑training for Italian on a curated large‑scale high‑quality corpus. Powered by mii‑llm."
+
+[cost]
+input = 0.05   # € per 1M tokens (0.00000005 * 1_000_000)
+output = 0.25  # € per 1M tokens (0.00000025 * 1_000_000)
+
+[limit]
+context = 64000
+output = 64000
+
+[modalities]
+input = ["text"]
+output = ["text"]
