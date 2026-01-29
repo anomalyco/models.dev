@@ -1,0 +1,22 @@
+name = "Raptor Mini"
+family = "gpt-mini"
+release_date = "2025-08-13"
+last_updated = "2025-08-13"
+attachment = true
+reasoning = true
+temperature = true
+knowledge = "2024-06"
+tool_call = true
+open_weights = false
+
+[cost]
+input = 1
+output = 1
+
+[limit]
+context = 128_000
+output = 64_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
