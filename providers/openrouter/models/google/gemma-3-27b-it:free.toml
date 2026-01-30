@@ -1,5 +1,4 @@
-id = "google/gemma-3-27b-it:free"
-name = "Gemma 3 27B"
+name = "Gemma 3 27B (free)"
 family = "gemma"
 release_date = "2025-03-12"
 last_updated = "2025-03-12"
@@ -9,8 +8,14 @@ temperature = true
 knowledge = "2024-10"
 tool_call = true
 open_weights = true
-cost = { input = 0, output = 0 }
-limit = { context = 131_072, output = 8_192 }
+
+[cost]
+input = 0
+output = 0
+
+[limit] 
+context = 131_072
+output = 8_192
 
 [modalities]
 input = ["text", "image"]

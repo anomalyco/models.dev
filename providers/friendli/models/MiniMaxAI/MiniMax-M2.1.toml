@@ -1,17 +1,20 @@
-name = "GLM 4.6"
-family = "glm"
+name = "MiniMax M2.1"
 attachment = false
 reasoning = true
 tool_call = true
 structured_output = true
 temperature = true
-release_date = "2025-10-31"
-last_updated = "2025-12-23"
+release_date = "2026-01-13"
+last_updated = "2026-01-29"
 open_weights = true
 
+[cost]
+input = 0.3
+output = 1.2
+
 [limit]
-context = 131_072
-output = 131_072
+context = 196_608
+output = 196_608
 
 [modalities]
 input = ["text"]

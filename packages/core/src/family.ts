@@ -55,6 +55,7 @@ export const ModelFamilyValues = [
 
   // Moonshot Kimi
   "kimi",
+  "kimi-free",
   "kimi-thinking",
 
   // Mistral family
@@ -101,6 +102,7 @@ export const ModelFamilyValues = [
 
   // MiniMax
   "minimax",
+  "minimax-free",
 
   // Hunyuan
   "hunyuan",

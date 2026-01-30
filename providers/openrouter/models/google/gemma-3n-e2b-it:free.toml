@@ -1,7 +1,7 @@
-name = "Gemma 3n 4B"
+name = "Gemma 3n 2B (free)"
 family = "gemma"
-release_date = "2025-05-20"
-last_updated = "2025-05-20"
+release_date = "2025-07-09"
+last_updated = "2025-07-09"
 attachment = true
 reasoning = false
 temperature = true
@@ -9,13 +9,13 @@ knowledge = "2024-06"
 tool_call = false
 open_weights = true
 
-[cost]  
-input = 0.02
-output = 0.04
+[cost]
+input = 0.00
+output = 0.00
 
 [limit]
-context = 32_768
-output = 32_768
+context = 8_192
+output = 2_000
 
 [modalities]
 input = ["text"]
