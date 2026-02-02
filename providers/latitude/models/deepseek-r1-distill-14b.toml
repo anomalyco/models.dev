@@ -1,0 +1,22 @@
+name = "DeepSeek R1 Distill 14B"
+family = "deepseek-thinking"
+release_date = "2025-01-20"
+last_updated = "2025-01-20"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = false
+structured_output = false
+open_weights = true
+
+[cost]
+input = 1.44
+output = 1.44
+
+[limit]
+context = 64_000
+output = 8_192
+
+[modalities]
+input = ["text"]
+output = ["text"]
