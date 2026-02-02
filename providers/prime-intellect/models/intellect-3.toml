@@ -1,0 +1,22 @@
+name = "INTELLECT-3"
+family = "intellect"
+release_date = "2025-11-01"
+last_updated = "2025-02-02"
+attachment = false
+reasoning = true
+temperature = true
+knowledge = "2024-12"
+tool_call = true
+open_weights = true
+
+[cost]
+input = 0.20
+output = 1.10
+
+[limit]
+context = 131_072
+output = 16_384
+
+[modalities]
+input = ["text"]
+output = ["text"]
