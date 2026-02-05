@@ -1,0 +1,23 @@
+name = "Seed 1.6 (250615)"
+family = "seed"
+release_date = "2025-06-25"
+last_updated = "2025-06-25"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[cost]
+input = 0.25
+output = 2.00
+cache_read = 0.05
+
+[limit]
+context = 256_000
+output = 16_384
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

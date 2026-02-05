@@ -1,0 +1,22 @@
+name = "Qwen3 Coder"
+family = "qwen"
+release_date = "2025-07-23"
+last_updated = "2025-07-23"
+attachment = false
+reasoning = false
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = true
+
+[cost]
+input = 0.22
+output = 0.95
+
+[limit]
+context = 262_000
+output = 8_192
+
+[modalities]
+input = ["text"]
+output = ["text"]

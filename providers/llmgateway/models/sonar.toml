@@ -1,0 +1,22 @@
+name = "Sonar"
+family = "sonar"
+release_date = "2025-01-01"
+last_updated = "2025-01-01"
+attachment = false
+reasoning = false
+temperature = true
+tool_call = false
+structured_output = true
+open_weights = false
+
+[cost]
+input = 1.00
+output = 1.00
+
+[limit]
+context = 130_000
+output = 16_384
+
+[modalities]
+input = ["text"]
+output = ["text"]

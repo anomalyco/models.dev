@@ -1,0 +1,22 @@
+name = "Grok 4"
+family = "grok"
+release_date = "2025-07-09"
+last_updated = "2025-07-09"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[cost]
+input = 3.00
+output = 15.00
+
+[limit]
+context = 256_000
+output = 256_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

@@ -1,0 +1,22 @@
+name = "Gemini 3 Pro (Preview)"
+family = "gemini"
+release_date = "2025-11-18"
+last_updated = "2025-11-18"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[cost]
+input = 2.00
+output = 12.00
+
+[limit]
+context = 1_000_000
+output = 65_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
