@@ -1,0 +1,24 @@
+name = "qwen3-coder-next"
+family = "qwen3-coder-next-fp8"
+release_date = "2025-02-05"
+last_updated = "2025-02-05"
+attachment = false
+reasoning = false
+temperature = true
+tool_call = true
+open_weights = false
+
+[description]
+text = "Qwen3-Coder-Next-FP8 is a 3B activated (80B total) MoE coding model designed for coding agents and local development. Features 256K context length and advanced tool calling capabilities."
+
+[cost]
+input = 0.50    # € per 1M tokens
+output = 2.00   # € per 1M tokens
+
+[limit]
+context = 262144
+output = 65536
+
+[modalities]
+input = ["text"]
+output = ["text"]
