@@ -1,0 +1,22 @@
+name = "Raptor mini"
+family = "raptor"
+release_date = "2025-11-10"
+last_updated = "2025-11-10"
+attachment = true
+reasoning = true
+temperature = true
+knowledge = "2024-06"
+tool_call = true
+open_weights = false
+
+[cost]
+input = 0
+output = 0
+
+[limit]
+context = 200_000
+output = 64_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
