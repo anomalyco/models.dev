@@ -1,0 +1,20 @@
+# Real pricing is per-image — omitted to match patterns in repository (see dall-e-3, imagen-4)
+# Source: https://platform.openai.com/docs/models/gpt-image-1-mini
+# Release date source: https://platform.openai.com/docs/changelog (Oct 6, 2025 - OpenAI DevDay)
+
+name = "gpt-image-1-mini"
+release_date = "2025-10-06"
+last_updated = "2025-10-06"
+attachment = true
+reasoning = false
+tool_call = false
+temperature = false
+open_weights = false
+
+[limit]
+context = 0
+output = 0
+
+[modalities]
+input = ["text", "image"]
+output = ["image"]
