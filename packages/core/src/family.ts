@@ -367,7 +367,8 @@ export const ModelFamilyValues = [
   "allenai",
 
   // GigaChat
-  "gigachat",
+  "gigachat-llm",
+  "gigachat-embedding"
 ] as const;
 
 export const ModelFamily = z.enum(ModelFamilyValues);
