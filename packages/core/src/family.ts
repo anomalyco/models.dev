@@ -364,7 +364,10 @@ export const ModelFamilyValues = [
   "sourceful",
 
   // AllenAI
-  "allenai"
+  "allenai",
+
+  // GigaChat
+  "gigachat",
 ] as const;
 
 export const ModelFamily = z.enum(ModelFamilyValues);
