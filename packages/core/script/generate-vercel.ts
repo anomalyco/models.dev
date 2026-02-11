@@ -17,9 +17,14 @@ const API_ENDPOINT = "https://ai-gateway.vercel.sh/v1/models";
 
 enum ModelType {
   Language = "language",
+  Embedding = "embedding",
   Image = "image",
   Video = "video",
-  Embedding = "embedding",
+}
+
+enum SkipZeroFields {
+  LimitContext = "limit.context",
+  LimitOutput = "limit.output",
 }
 
 const PricingTier = z.object({
@@ -31,10 +36,12 @@ const PricingTier = z.object({
 const Pricing = z.object({
   input: z.string().optional(),
   output: z.string().optional(),
-  cache_read: z.string().optional(),
-  cache_write: z.string().optional(),
+  input_cache_read: z.string().optional(),
+  input_cache_write: z.string().optional(),
   input_tiers: z.array(PricingTier).optional(),
   output_tiers: z.array(PricingTier).optional(),
+  input_cache_read_tiers: z.array(PricingTier).optional(),
+  input_cache_write_tiers: z.array(PricingTier).optional(),
 }).passthrough();
 
 const VercelModel = z.object({
@@ -53,11 +60,70 @@ const VercelResponse = z.object({
   data: z.array(VercelModel),
 }).passthrough();
 
-function formatNumber(n: number): string {
-  if (n >= 1000) {
-    return n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, "_");
-  }
-  return n.toString();
+interface ExistingModel {
+  name?: string;
+  family?: string;
+  attachment?: boolean;
+  reasoning?: boolean;
+  tool_call?: boolean;
+  structured_output?: boolean;
+  temperature?: boolean;
+  knowledge?: string;
+  release_date?: string;
+  last_updated?: string;
+  open_weights?: boolean;
+  interleaved?: boolean | { field: string };
+  status?: string;
+  cost?: {
+    input?: number;
+    output?: number;
+    cache_read?: number;
+    cache_write?: number;
+  };
+  limit?: {
+    context?: number;
+    output?: number;
+  };
+  modalities?: {
+    input?: string[];
+    output?: string[];
+  };
+}
+
+interface MergedModel {
+  name: string;
+  family?: string;
+  attachment: boolean;
+  reasoning: boolean;
+  tool_call: boolean;
+  structured_output?: boolean;
+  temperature: boolean;
+  knowledge?: string;
+  release_date: string;
+  last_updated: string;
+  open_weights: boolean;
+  interleaved?: boolean | { field: string };
+  status?: string;
+  cost?: {
+    input: number;
+    output: number;
+    cache_read?: number;
+    cache_write?: number;
+  };
+  limit: {
+    context: number;
+    output: number;
+  };
+  modalities: {
+    input: string[];
+    output: string[];
+  };
+}
+
+interface Changes {
+  field: string;
+  oldValue: string;
+  newValue: string;
 }
 
 function timestampToDate(timestamp: number): string {
@@ -67,6 +133,14 @@ function timestampToDate(timestamp: number): string {
 
 function getTodayDate(): string {
   return new Date().toISOString().slice(0, 10);
+}
+
+// Number utilities
+function formatNumber(n: number): string {
+  if (n >= 1000) {
+    return n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, "_");
+  }
+  return n.toString();
 }
 
 function isSubstring(target: string, family: string): boolean {
@@ -129,64 +203,17 @@ function buildInputModalities(tags: string[]): string[] {
   return mods;
 }
 
-interface ExistingModel {
-  name?: string;
-  family?: string;
-  attachment?: boolean;
-  reasoning?: boolean;
-  tool_call?: boolean;
-  structured_output?: boolean;
-  temperature?: boolean;
-  knowledge?: string;
-  release_date?: string;
-  last_updated?: string;
-  open_weights?: boolean;
-  interleaved?: boolean | { field: string };
-  status?: string;
-  cost?: {
-    input?: number;
-    output?: number;
-    cache_read?: number;
-    cache_write?: number;
-  };
-  limit?: {
-    context?: number;
-    output?: number;
-  };
-  modalities?: {
-    input?: string[];
-    output?: string[];
-  };
-}
+function buildOutputModalities(modelType: ModelType, tags: string[]): string[] {
+  const mods: string[] = ["text"];
+  const tagSet = new Set(tags);
 
-interface MergedModel {
-  name: string;
-  family?: string;
-  attachment: boolean;
-  reasoning: boolean;
-  tool_call: boolean;
-  structured_output?: boolean;
-  temperature: boolean;
-  knowledge?: string;
-  release_date: string;
-  last_updated: string;
-  open_weights: boolean;
-  interleaved?: boolean | { field: string };
-  status?: string;
-  cost?: {
-    input: number;
-    output: number;
-    cache_read?: number;
-    cache_write?: number;
-  };
-  limit: {
-    context: number;
-    output: number;
-  };
-  modalities: {
-    input: string[];
-    output: string[];
-  };
+  if (modelType === ModelType.Image || tagSet.has("image-generation")) {
+    mods.push("image");
+  } else if (modelType === ModelType.Video) {
+    mods.push("video");
+  }
+
+  return mods;
 }
 
 async function loadExistingModel(filePath: string): Promise<ExistingModel | null> {
@@ -211,20 +238,26 @@ function mergeModel(
 ): MergedModel {
   const tagSet = new Set(apiModel.tags);
   const inputModalities = buildInputModalities(apiModel.tags);
+  const outputModalities = buildOutputModalities(apiModel.type, apiModel.tags);
 
-  // Preserve existing values when available  
+  // Preserve existing values when available (previously manually specified)
   const name = existing?.name ?? apiModel.name;
   const attachment = existing?.attachment ?? (tagSet.has("vision") || tagSet.has("file-input"));
   const reasoning = existing?.reasoning ?? tagSet.has("reasoning");
   const toolCall = existing?.tool_call ?? tagSet.has("tool-use");
   const openWeights = existing?.open_weights ?? false;
+  const family = existing?.family ?? inferFamily(apiModel.id, apiModel.name);
+  const structuredOutput = existing?.structured_output;
+  const knowledge = existing?.knowledge;
+  const interleaved = existing?.interleaved;
+  const status = existing?.status;
 
-  // Use API, fallback to existing, then today
+  // Release date: use API, fallback to existing, then today
   const releaseDate = apiModel.released
     ? timestampToDate(apiModel.released)
     : (existing?.release_date ?? getTodayDate());
 
-  // Preserve existing if API returns 0 (indicates missing/invalid data)
+  // Preserve existing limits if API returns 0 (indicates missing/invalid data)
   const contextLimit = apiModel.context_window > 0
     ? apiModel.context_window
     : (existing?.limit?.context ?? 0);
@@ -232,16 +265,9 @@ function mergeModel(
     ? apiModel.max_tokens
     : (existing?.limit?.output ?? 0);
 
-  // Deduce output modalities from model type
-  const outputModalities: string[] = ["text"];
-  if (apiModel.type === ModelType.Image) {
-    outputModalities.push("image");
-  } else if (apiModel.type === ModelType.Video) {
-    outputModalities.push("video");
-  }
-
   const merged: MergedModel = {
     name,
+    family,
     attachment,
     reasoning,
     tool_call: toolCall,
@@ -249,6 +275,10 @@ function mergeModel(
     release_date: releaseDate,
     last_updated: getTodayDate(),
     open_weights: openWeights,
+    ...(structuredOutput !== undefined && { structured_output: structuredOutput }),
+    ...(knowledge && { knowledge }),
+    ...(interleaved !== undefined && { interleaved }),
+    ...(status && { status }),
     limit: {
       context: contextLimit,
       output: outputLimit,
@@ -259,35 +289,24 @@ function mergeModel(
     },
   };
 
-  if (tagSet.has("structured-output")) {
-    merged.structured_output = true;
-  } else if (existing?.structured_output !== undefined) {
-    merged.structured_output = existing.structured_output;
-  }
+  if (apiModel.pricing) {
+    const inputPrice = apiModel.pricing.input_tiers?.[0]?.cost ?? apiModel.pricing.input;
+    const outputPrice = apiModel.pricing.output_tiers?.[0]?.cost ?? apiModel.pricing.output;
+    const cacheReadPrice = apiModel.pricing.input_cache_read_tiers?.[0]?.cost ?? apiModel.pricing.input_cache_read;
+    const cacheWritePrice = apiModel.pricing.input_cache_write_tiers?.[0]?.cost ?? apiModel.pricing.input_cache_write;
 
-  if (apiModel.pricing?.input && apiModel.pricing?.output) {
-    merged.cost = {
-      input: parseFloat(apiModel.pricing.input) * 1_000_000,
-      output: parseFloat(apiModel.pricing.output) * 1_000_000,
-      ...(apiModel.pricing.cache_read && {
-        cache_read: parseFloat(apiModel.pricing.cache_read) * 1_000_000,
-      }),
-      ...(apiModel.pricing.cache_write && {
-        cache_write: parseFloat(apiModel.pricing.cache_write) * 1_000_000,
-      }),
-    };
-  }
-
-  merged.family = existing?.family ?? inferFamily(apiModel.id, apiModel.name);
-
-  if (existing?.knowledge) {
-    merged.knowledge = existing.knowledge;
-  }
-  if (existing?.interleaved !== undefined) {
-    merged.interleaved = existing.interleaved;
-  }
-  if (existing?.status !== undefined) {
-    merged.status = existing.status;
+    if (inputPrice && outputPrice) {
+      merged.cost = {
+        input: parseFloat(inputPrice) * 1_000_000,
+        output: parseFloat(outputPrice) * 1_000_000,
+        ...(cacheReadPrice && {
+          cache_read: parseFloat(cacheReadPrice) * 1_000_000,
+        }),
+        ...(cacheWritePrice && {
+          cache_write: parseFloat(cacheWritePrice) * 1_000_000,
+        }),
+      };
+    }
   }
 
   return merged;
@@ -353,17 +372,6 @@ function formatToml(model: MergedModel): string {
   return lines.join("\n") + "\n";
 }
 
-interface Changes {
-  field: string;
-  oldValue: string;
-  newValue: string;
-}
-
-enum SkipZeroFields {
-  LimitContext = "limit.context",
-  LimitOutput = "limit.output",
-}
-
 function detectChanges(
   existing: ExistingModel | null,
   merged: MergedModel,
@@ -371,7 +379,7 @@ function detectChanges(
   if (!existing) return [];
 
   const changes: Changes[] = [];
-  const EPSILON = 0.0001;
+  const EPSILON = 0.001; // price diff to ignore (per million tokens)
 
   const shouldSkipZero = (field: string, oldVal: unknown, newVal: unknown): boolean => {
     if (!Object.values(SkipZeroFields).includes(field as SkipZeroFields)) {
@@ -389,19 +397,23 @@ function detectChanges(
 
   const isMaterialPriceDiff = (oldPrice: unknown, newPrice: unknown): boolean => {
     // 0 → undefined is not material (cost removed)
-    // undefined → 0 is material (cost added)
     if (oldPrice === 0 && newPrice === undefined) return false;
 
-    if (typeof oldPrice === "number" && typeof newPrice === "number") {
-      return Math.abs(oldPrice - newPrice) > EPSILON;
+    if (oldPrice !== undefined && newPrice !== undefined) {
+      return Math.abs((oldPrice as number) - (newPrice as number)) > EPSILON;
     }
-    return JSON.stringify(oldPrice) !== JSON.stringify(newPrice);
+
+    return oldPrice !== newPrice;
   };
 
   const compare = (field: string, oldVal: unknown, newVal: unknown) => {
     if (shouldSkipZero(field, oldVal, newVal)) return;
 
-    if (isMaterialPriceDiff(oldVal, newVal)) {
+    const isDiff = field.startsWith("cost.")
+      ? isMaterialPriceDiff(oldVal, newVal)
+      : JSON.stringify(oldVal) !== JSON.stringify(newVal);
+
+    if (isDiff) {
       changes.push({
         field,
         oldValue: formatValue(oldVal),
