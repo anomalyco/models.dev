@@ -1,11 +1,26 @@
 #!/usr/bin/env bun
 
+/**
+ * Generates Vercel model TOML files from the AI Gateway API.
+ *
+ * Flags:
+ * --dry-run: Preview changes without writing files
+ * --new-only: Only create new models, skip updating existing ones
+ */
+
 import { z } from "zod";
 import path from "node:path";
 import { mkdir } from "node:fs/promises";
 import { ModelFamilyValues } from "../src/family.js";
 
 const API_ENDPOINT = "https://ai-gateway.vercel.sh/v1/models";
+
+enum ModelType {
+  Language = "language",
+  Image = "image",
+  Video = "video",
+  Embedding = "embedding",
+}
 
 const PricingTier = z.object({
   cost: z.string(),
@@ -29,6 +44,7 @@ const VercelModel = z.object({
   released: z.number().optional(),
   context_window: z.number(),
   max_tokens: z.number(),
+  type: z.nativeEnum(ModelType),
   tags: z.array(z.string()).optional().default([]),
   pricing: Pricing.optional(),
 }).passthrough();
@@ -53,6 +69,10 @@ function getTodayDate(): string {
   return new Date().toISOString().slice(0, 10);
 }
 
+function isSubstring(target: string, family: string): boolean {
+  return target.toLowerCase().includes(family.toLowerCase());
+}
+
 function matchesFamily(target: string, family: string): boolean {
   const targetLower = target.toLowerCase();
   const familyLower = family.toLowerCase();
@@ -70,6 +90,20 @@ function matchesFamily(target: string, family: string): boolean {
 function inferFamily(modelId: string, modelName: string): string | undefined {
   const sortedFamilies = [...ModelFamilyValues].sort((a, b) => b.length - a.length);
 
+  // First pass: try exact substring matches
+  for (const family of sortedFamilies) {
+    if (isSubstring(modelId, family)) {
+      return family;
+    }
+  }
+
+  for (const family of sortedFamilies) {
+    if (isSubstring(modelName, family)) {
+      return family;
+    }
+  }
+
+  // Second pass: fall back to subsequence matching
   for (const family of sortedFamilies) {
     if (matchesFamily(modelId, family)) {
       return family;
@@ -178,32 +212,57 @@ function mergeModel(
   const tagSet = new Set(apiModel.tags);
   const inputModalities = buildInputModalities(apiModel.tags);
 
-  const attachment = tagSet.has("vision") || tagSet.has("file-input");
+  // Preserve existing values when available  
+  const name = existing?.name ?? apiModel.name;
+  const attachment = existing?.attachment ?? (tagSet.has("vision") || tagSet.has("file-input"));
+  const reasoning = existing?.reasoning ?? tagSet.has("reasoning");
+  const toolCall = existing?.tool_call ?? tagSet.has("tool-use");
+  const openWeights = existing?.open_weights ?? false;
+
+  // Use API, fallback to existing, then today
   const releaseDate = apiModel.released
     ? timestampToDate(apiModel.released)
-    : timestampToDate(apiModel.created);
+    : (existing?.release_date ?? getTodayDate());
+
+  // Preserve existing if API returns 0 (indicates missing/invalid data)
+  const contextLimit = apiModel.context_window > 0
+    ? apiModel.context_window
+    : (existing?.limit?.context ?? 0);
+  const outputLimit = apiModel.max_tokens > 0
+    ? apiModel.max_tokens
+    : (existing?.limit?.output ?? 0);
+
+  // Deduce output modalities from model type
+  const outputModalities: string[] = ["text"];
+  if (apiModel.type === ModelType.Image) {
+    outputModalities.push("image");
+  } else if (apiModel.type === ModelType.Video) {
+    outputModalities.push("video");
+  }
 
   const merged: MergedModel = {
-    name: apiModel.name,
+    name,
     attachment,
-    reasoning: tagSet.has("reasoning"),
-    tool_call: tagSet.has("tool-use"),
+    reasoning,
+    tool_call: toolCall,
     temperature: true,
     release_date: releaseDate,
     last_updated: getTodayDate(),
-    open_weights: false,
+    open_weights: openWeights,
     limit: {
-      context: apiModel.context_window,
-      output: apiModel.max_tokens,
+      context: contextLimit,
+      output: outputLimit,
     },
     modalities: {
       input: inputModalities,
-      output: ["text"],
+      output: outputModalities,
     },
   };
 
   if (tagSet.has("structured-output")) {
     merged.structured_output = true;
+  } else if (existing?.structured_output !== undefined) {
+    merged.structured_output = existing.structured_output;
   }
 
   if (apiModel.pricing?.input && apiModel.pricing?.output) {
@@ -219,8 +278,7 @@ function mergeModel(
     };
   }
 
-  const inferred = inferFamily(apiModel.id, apiModel.name);
-  merged.family = inferred ?? existing?.family;
+  merged.family = existing?.family ?? inferFamily(apiModel.id, apiModel.name);
 
   if (existing?.knowledge) {
     merged.knowledge = existing.knowledge;
@@ -301,6 +359,11 @@ interface Changes {
   newValue: string;
 }
 
+enum SkipZeroFields {
+  LimitContext = "limit.context",
+  LimitOutput = "limit.output",
+}
+
 function detectChanges(
   existing: ExistingModel | null,
   merged: MergedModel,
@@ -308,6 +371,14 @@ function detectChanges(
   if (!existing) return [];
 
   const changes: Changes[] = [];
+  const EPSILON = 0.0001;
+
+  const shouldSkipZero = (field: string, oldVal: unknown, newVal: unknown): boolean => {
+    if (!Object.values(SkipZeroFields).includes(field as SkipZeroFields)) {
+      return false;
+    }
+    return (typeof oldVal === "number" && oldVal === 0) || (typeof newVal === "number" && newVal === 0);
+  };
 
   const formatValue = (val: unknown): string => {
     if (typeof val === "number") return formatNumber(val);
@@ -316,10 +387,21 @@ function detectChanges(
     return String(val);
   };
 
+  const isMaterialPriceDiff = (oldPrice: unknown, newPrice: unknown): boolean => {
+    // 0 → undefined is not material (cost removed)
+    // undefined → 0 is material (cost added)
+    if (oldPrice === 0 && newPrice === undefined) return false;
+
+    if (typeof oldPrice === "number" && typeof newPrice === "number") {
+      return Math.abs(oldPrice - newPrice) > EPSILON;
+    }
+    return JSON.stringify(oldPrice) !== JSON.stringify(newPrice);
+  };
+
   const compare = (field: string, oldVal: unknown, newVal: unknown) => {
-    const oldStr = JSON.stringify(oldVal);
-    const newStr = JSON.stringify(newVal);
-    if (oldStr !== newStr) {
+    if (shouldSkipZero(field, oldVal, newVal)) return;
+
+    if (isMaterialPriceDiff(oldVal, newVal)) {
       changes.push({
         field,
         oldValue: formatValue(oldVal),
@@ -350,6 +432,7 @@ function detectChanges(
 async function main() {
   const args = process.argv.slice(2);
   const dryRun = args.includes("--dry-run");
+  const newOnly = args.includes("--new-only");
 
   const modelsDir = path.join(
     import.meta.dirname,
@@ -361,7 +444,7 @@ async function main() {
     "models",
   );
 
-  console.log(`${dryRun ? "[DRY RUN] " : ""}Fetching Vercel models from API...`);
+  console.log(`${dryRun ? "[DRY RUN] " : ""}${newOnly ? "[NEW ONLY] " : ""}Fetching Vercel models from API...`);
 
   const res = await fetch(API_ENDPOINT);
   if (!res.ok) {
@@ -423,6 +506,11 @@ async function main() {
         console.log(`Created: ${relativePath}`);
       }
     } else {
+      if (newOnly) {
+        unchanged++;
+        continue;
+      }
+
       const changes = detectChanges(existing, merged);
 
       if (changes.length > 0) {
