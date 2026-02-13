@@ -1,0 +1,16 @@
+name = "Gemma 3 12B"
+family = "gemma"
+release_date = "2025-03-10"
+last_updated = "2025-03-10"
+attachment = true
+reasoning = false
+tool_call = false
+open_weights = true
+
+[limit]
+context = 131_072
+output = 131_072
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
