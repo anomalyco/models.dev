@@ -31,19 +31,27 @@ jobs:
       - name: Install Dependencies
         run: bun install
 
+      - name: Sync with upstream
+        run: |
+          git remote add upstream https://github.com/anomalyco/models.dev.git || true
+          git fetch upstream
+          git merge upstream/dev --no-edit
+          git push origin dev
+
       - name: Generate Vercel models
         run: bun run vercel:generate --new-only
 
       - name: Check for changes
         id: check-changes
         run: |
-          if git diff --quiet providers/vercel/; then
+          git add providers/vercel/
+          if git diff --cached --quiet providers/vercel/; then
             echo "has-changes=false" >> "$GITHUB_OUTPUT"
             echo "No changes detected in Vercel models"
           else
             echo "has-changes=true" >> "$GITHUB_OUTPUT"
             echo "Changes detected in Vercel models"
-            git diff --stat providers/vercel/
+            git diff --cached --stat providers/vercel/
           fi
 
       - name: Create branch and commit changes
@@ -105,7 +113,7 @@ jobs:
         run: |
           echo "No changes detected. Vercel models are already up to date."
 
-      - name: Send Slack notification to Vercel team
+      - name: Send Slack notification
         if: always()
         run: |
           if [ -z "$VERCEL_SLACK_WEBHOOK_URL" ]; then
@@ -115,17 +123,13 @@ jobs:
           fi
 
           if [ "$HAS_CHANGES" == "true" ]; then
-            MESSAGE="*Models.dev Update*\n\n PR created: <$PR_URL|#$PR_NUMBER - $PR_TITLE>\n\nReview needed: <@$REVIEWER>"
+            curl "$VERCEL_SLACK_WEBHOOK_URL" -X POST -H "Content-Type: application/json" \
+              -d "{\"channel_id\": \"$VERCEL_SLACK_CHANNEL\", \"title\": \"$PR_TITLE\", \"reviewer\": \"$SLACK_USER_ID\", \"url\": \"$PR_URL\"}"
           fi
-
-          curl -X POST "$VERCEL_SLACK_WEBHOOK_URL" \
-            -H "Content-Type: application/json" \
-            -d "{\"channel\": \"$VERCEL_SLACK_CHANNEL\", \"text\": \"$MESSAGE\"}"
         env:
           VERCEL_SLACK_WEBHOOK_URL: ${{ secrets.VERCEL_SLACK_WEBHOOK_URL }}
-          VERCEL_SLACK_CHANNEL: "C0A7TF81HS5"
           HAS_CHANGES: ${{ steps.check-changes.outputs.has-changes }}
           PR_TITLE: ${{ steps.create-pr.outputs.pr-title }}
           PR_URL: ${{ steps.create-pr.outputs.pr-url }}
-          PR_NUMBER: ${{ steps.create-pr.outputs.pr-number }}
-          REVIEWER: "U0A54KMV02E"
+          VERCEL_SLACK_CHANNEL: "C0A7TF81HS5"
+          SLACK_USER_ID: "U0A54KMV02E"
