@@ -44,14 +44,13 @@ jobs:
       - name: Check for changes
         id: check-changes
         run: |
-          git add providers/vercel/
-          if git diff --cached --quiet providers/vercel/; then
+          if [ -z "$(git status --porcelain providers/vercel/)" ]; then
             echo "has-changes=false" >> "$GITHUB_OUTPUT"
             echo "No changes detected in Vercel models"
           else
             echo "has-changes=true" >> "$GITHUB_OUTPUT"
             echo "Changes detected in Vercel models"
-            git diff --cached --stat providers/vercel/
+            git status --porcelain providers/vercel/
           fi
 
       - name: Create branch and commit changes
