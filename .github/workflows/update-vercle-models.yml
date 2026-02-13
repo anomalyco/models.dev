@@ -106,7 +106,7 @@ jobs:
           echo "pr-title=$PR_TITLE" >> "$GITHUB_OUTPUT"
           echo "PR created: $PR_URL"
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.GH_PAT }}
 
       - name: No changes
         if: steps.check-changes.outputs.has-changes == 'false'
