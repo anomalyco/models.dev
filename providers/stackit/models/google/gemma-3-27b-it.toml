@@ -1,0 +1,22 @@
+name = "Gemma 3 27B"
+family = "gemma"
+release_date = "2025-05-17"
+last_updated = "2025-05-17"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = false
+structured_output = false
+open_weights = true
+
+[cost]
+input = 0.49
+output = 0.71
+
+[limit]
+context = 37_000
+output = 8_192
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

@@ -1,0 +1,21 @@
+name = "Palmyra X4"
+family = "palmyra"
+release_date = "2025-04-28"
+last_updated = "2025-04-28"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+open_weights = false
+
+[cost]
+input = 2.5
+output = 10
+
+[limit]
+context = 122_880
+output = 8_192
+
+[modalities]
+input = ["text"]
+output = ["text"]

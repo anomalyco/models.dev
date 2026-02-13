@@ -1,0 +1,25 @@
+name = "Kimi K2.5 (NVFP4)"
+family = "kimi"
+release_date = "2026-01"
+last_updated = "2026-01"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+knowledge = "2025-01"
+open_weights = true
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.55
+output = 2.19
+
+[limit]
+context = 262_144
+output = 65_536
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

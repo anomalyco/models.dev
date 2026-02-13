@@ -50,6 +50,7 @@ const familyPatterns: [RegExp, string][] = [
   [/deepseek-r1/i, "deepseek-r1"],
   [/exaone/i, "exaone"],
   [/glm-4/i, "glm-4"],
+  [/glm-5/i, "glm"],
 ];
 
 function inferFamily(modelId: string, modelName: string): string | undefined {

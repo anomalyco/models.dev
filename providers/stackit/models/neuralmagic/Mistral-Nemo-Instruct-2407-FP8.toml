@@ -1,0 +1,22 @@
+name = "Mistral Nemo"
+family = "mistral"
+release_date = "2024-07-01"
+last_updated = "2024-07-01"
+attachment = false
+reasoning = false
+temperature = true
+tool_call = true
+structured_output = false
+open_weights = true
+
+[cost]
+input = 0.49
+output = 0.71
+
+[limit]
+context = 128_000
+output = 8_192
+
+[modalities]
+input = ["text"]
+output = ["text"]

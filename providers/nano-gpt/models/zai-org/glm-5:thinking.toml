@@ -1,0 +1,26 @@
+name = "GLM 5 Thinking"
+family = "glm"
+release_date = "2026-02-11"
+last_updated = "2026-02-11"
+attachment = false
+reasoning = true
+temperature = true
+knowledge = "2025-06"
+tool_call = true
+structured_output = true
+open_weights = true
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.80
+output = 2.56
+
+[limit]
+context = 200000
+output = 128000
+
+[modalities]
+input = ["text"]
+output = ["text"]
