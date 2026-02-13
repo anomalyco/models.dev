@@ -97,8 +97,7 @@ jobs:
             --title "$PR_TITLE" \
             --body "$PR_BODY" \
             --base dev \
-            --head "${{ steps.create-branch.outputs.branch-name }}" \
-            --assignee sylviezhang37)
+            --head "${{ steps.create-branch.outputs.branch-name }}"
 
           PR_NUMBER=$(echo "$PR_URL" | grep -oE '[0-9]+$')
           echo "pr-url=$PR_URL" >> "$GITHUB_OUTPUT"
