@@ -250,7 +250,8 @@ function mergeModel(
 
   const toolCall = existing?.tool_call ?? apiModel.tool_call ?? false;
   const openWeights = existing?.open_weights ?? apiModel.open_weights ?? false;
-  const family = existing?.family ?? inferFamily(modelId, name);
+  // if the existing family is *unset*, DON'T infer it
+  const family = existing ? existing.family : inferFamily(modelId, name);
   const structuredOutput = existing?.structured_output;
   const knowledge = existing?.knowledge ?? apiModel.knowledge;
   const interleaved = existing?.interleaved;
