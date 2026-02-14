@@ -1,0 +1,23 @@
+name = "gpt-4.1-nano"
+family = "gpt"
+attachment = true
+reasoning = false
+tool_call = true
+temperature = true
+knowledge = "2024-04"
+release_date = "2025-04-14"
+last_updated = "2026-02-14"
+open_weights = false
+
+[cost]
+input = 0.1
+output = 0.4
+cache_read = 0.02
+
+[limit]
+context = 128_000
+output = 32_768
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

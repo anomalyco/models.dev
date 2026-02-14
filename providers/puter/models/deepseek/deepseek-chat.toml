@@ -1,0 +1,23 @@
+name = "DeepSeek Chat"
+family = "deepseek"
+attachment = false
+reasoning = false
+tool_call = true
+temperature = true
+knowledge = "2024-07"
+release_date = "2024-12-26"
+last_updated = "2026-02-14"
+open_weights = false
+
+[cost]
+input = 0.56
+output = 1.68
+cache_read = 0
+
+[limit]
+context = 128_000
+output = 8_000
+
+[modalities]
+input = ["text"]
+output = ["text"]

@@ -1,0 +1,23 @@
+name = "o1"
+family = "o"
+attachment = true
+reasoning = false
+tool_call = true
+temperature = true
+knowledge = "2023-09"
+release_date = "2024-12-05"
+last_updated = "2026-02-14"
+open_weights = false
+
+[cost]
+input = 15
+output = 60
+cache_read = 7.5
+
+[limit]
+context = 128_000
+output = 100_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

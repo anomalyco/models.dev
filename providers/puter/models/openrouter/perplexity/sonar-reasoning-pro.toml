@@ -1,0 +1,21 @@
+name = "Perplexity: Sonar Reasoning Pro (OpenRouter)"
+family = "sonar-reasoning"
+attachment = false
+reasoning = true
+tool_call = undefined
+temperature = true
+release_date = "2026-02-14"
+last_updated = "2026-02-14"
+open_weights = undefined
+
+[cost]
+input = 2
+output = 8
+
+[limit]
+context = 128_000
+output = 4_096
+
+[modalities]
+input = ["text"]
+output = ["text"]

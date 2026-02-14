@@ -1,0 +1,22 @@
+name = "open-mistral-7b"
+family = "mistral"
+attachment = false
+reasoning = false
+tool_call = true
+temperature = true
+knowledge = "2023-12"
+release_date = "2023-09-27"
+last_updated = "2026-02-14"
+open_weights = true
+
+[cost]
+input = 0.25
+output = 0.25
+
+[limit]
+context = 128_000
+output = 32_768
+
+[modalities]
+input = ["text"]
+output = ["text"]

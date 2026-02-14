@@ -1,0 +1,21 @@
+name = "AllenAI: Olmo 2 32B Instruct (OpenRouter)"
+family = "allenai"
+attachment = false
+reasoning = false
+tool_call = undefined
+temperature = true
+release_date = "2026-02-14"
+last_updated = "2026-02-14"
+open_weights = undefined
+
+[cost]
+input = 0.05
+output = 0.2
+
+[limit]
+context = 128_000
+output = 4_096
+
+[modalities]
+input = ["text"]
+output = ["text"]

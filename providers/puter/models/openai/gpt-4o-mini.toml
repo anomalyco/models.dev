@@ -1,0 +1,23 @@
+name = "gpt-4o-mini"
+family = "o-mini"
+attachment = true
+reasoning = false
+tool_call = true
+temperature = true
+knowledge = "2023-09"
+release_date = "2024-07-18"
+last_updated = "2026-02-14"
+open_weights = false
+
+[cost]
+input = 0.15
+output = 0.6
+cache_read = 0.08
+
+[limit]
+context = 128_000
+output = 16_384
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

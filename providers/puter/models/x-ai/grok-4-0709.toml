@@ -1,0 +1,23 @@
+name = "Grok 4 (0709)"
+family = "grok"
+attachment = true
+reasoning = false
+tool_call = true
+temperature = true
+knowledge = "2025-07"
+release_date = "2025-07-09"
+last_updated = "2026-02-14"
+open_weights = false
+
+[cost]
+input = 3
+output = 15
+cache_read = 0.75
+
+[limit]
+context = 256_000
+output = 256_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

@@ -1,0 +1,22 @@
+name = "Z.ai: GLM 4.5V (OpenRouter)"
+family = "glm"
+attachment = false
+reasoning = false
+tool_call = undefined
+temperature = true
+release_date = "2026-02-14"
+last_updated = "2026-02-14"
+open_weights = undefined
+
+[cost]
+input = 0.6
+output = 1.8
+cache_read = 0.11
+
+[limit]
+context = 128_000
+output = 16_384
+
+[modalities]
+input = ["text"]
+output = ["text"]

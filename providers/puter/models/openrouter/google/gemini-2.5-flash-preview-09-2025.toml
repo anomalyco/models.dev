@@ -1,0 +1,23 @@
+name = "Google: Gemini 2.5 Flash Preview 09-2025 (OpenRouter)"
+family = "gemini"
+attachment = false
+reasoning = false
+tool_call = undefined
+temperature = true
+release_date = "2026-02-14"
+last_updated = "2026-02-14"
+open_weights = undefined
+
+[cost]
+input = 0.3
+output = 2.5
+cache_read = 0.03
+cache_write = 0.08
+
+[limit]
+context = 128_000
+output = 65_536
+
+[modalities]
+input = ["text"]
+output = ["text"]

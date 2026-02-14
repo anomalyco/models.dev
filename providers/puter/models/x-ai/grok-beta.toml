@@ -1,0 +1,22 @@
+name = "Grok Beta"
+family = "grok-beta"
+attachment = false
+reasoning = false
+tool_call = true
+temperature = true
+knowledge = "2024-08"
+release_date = "2024-11-01"
+last_updated = "2026-02-14"
+open_weights = false
+
+[cost]
+input = 5
+output = 15
+
+[limit]
+context = 131_072
+output = 131_072
+
+[modalities]
+input = ["text"]
+output = ["text"]

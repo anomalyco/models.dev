@@ -1,0 +1,23 @@
+name = "Grok 3 Mini Fast"
+family = "grok"
+attachment = false
+reasoning = false
+tool_call = true
+temperature = true
+knowledge = "2024-11"
+release_date = "2025-02-17"
+last_updated = "2026-02-14"
+open_weights = false
+
+[cost]
+input = 0.6
+output = 4
+cache_read = 0.15
+
+[limit]
+context = 131_072
+output = 131_072
+
+[modalities]
+input = ["text"]
+output = ["text"]

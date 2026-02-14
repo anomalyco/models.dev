@@ -1,0 +1,22 @@
+name = "TNG: DeepSeek R1T Chimera (OpenRouter)"
+family = "deepseek"
+attachment = false
+reasoning = true
+tool_call = undefined
+temperature = true
+release_date = "2026-02-14"
+last_updated = "2026-02-14"
+open_weights = undefined
+
+[cost]
+input = 0.3
+output = 1.2
+cache_read = 0.15
+
+[limit]
+context = 128_000
+output = 163_840
+
+[modalities]
+input = ["text"]
+output = ["text"]

@@ -1,0 +1,21 @@
+name = "Goliath 120B (OpenRouter)"
+family = "o"
+attachment = false
+reasoning = false
+tool_call = undefined
+temperature = true
+release_date = "2026-02-14"
+last_updated = "2026-02-14"
+open_weights = undefined
+
+[cost]
+input = 3.75
+output = 7.5
+
+[limit]
+context = 128_000
+output = 1_024
+
+[modalities]
+input = ["text"]
+output = ["text"]

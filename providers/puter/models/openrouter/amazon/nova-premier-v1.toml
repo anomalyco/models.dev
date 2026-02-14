@@ -1,0 +1,22 @@
+name = "Amazon: Nova Premier 1.0 (OpenRouter)"
+family = "nova"
+attachment = false
+reasoning = false
+tool_call = undefined
+temperature = true
+release_date = "2026-02-14"
+last_updated = "2026-02-14"
+open_weights = undefined
+
+[cost]
+input = 2.5
+output = 12.5
+cache_read = 0.63
+
+[limit]
+context = 128_000
+output = 32_000
+
+[modalities]
+input = ["text"]
+output = ["text"]

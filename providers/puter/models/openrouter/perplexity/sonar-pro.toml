@@ -1,0 +1,21 @@
+name = "Perplexity: Sonar Pro (OpenRouter)"
+family = "sonar-pro"
+attachment = false
+reasoning = false
+tool_call = undefined
+temperature = true
+release_date = "2026-02-14"
+last_updated = "2026-02-14"
+open_weights = undefined
+
+[cost]
+input = 3
+output = 15
+
+[limit]
+context = 128_000
+output = 8_000
+
+[modalities]
+input = ["text"]
+output = ["text"]

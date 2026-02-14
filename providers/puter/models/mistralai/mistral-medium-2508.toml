@@ -1,0 +1,22 @@
+name = "mistral-medium-2508"
+family = "mistral-medium"
+attachment = true
+reasoning = false
+tool_call = true
+temperature = true
+knowledge = "2025-05"
+release_date = "2025-08-12"
+last_updated = "2026-02-14"
+open_weights = false
+
+[cost]
+input = 0.4
+output = 2
+
+[limit]
+context = 128_000
+output = 131_072
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

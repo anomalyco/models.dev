@@ -1,0 +1,22 @@
+name = "DeepSeek: DeepSeek V3.2 Speciale (OpenRouter)"
+family = "deepseek"
+attachment = false
+reasoning = false
+tool_call = undefined
+temperature = true
+release_date = "2026-02-14"
+last_updated = "2026-02-14"
+open_weights = undefined
+
+[cost]
+input = 0.27
+output = 0.41
+cache_read = 0.14
+
+[limit]
+context = 128_000
+output = 65_536
+
+[modalities]
+input = ["text"]
+output = ["text"]

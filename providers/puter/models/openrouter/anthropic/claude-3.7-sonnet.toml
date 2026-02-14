@@ -1,0 +1,23 @@
+name = "Anthropic: Claude 3.7 Sonnet (OpenRouter)"
+family = "claude"
+attachment = false
+reasoning = false
+tool_call = undefined
+temperature = true
+release_date = "2026-02-14"
+last_updated = "2026-02-14"
+open_weights = undefined
+
+[cost]
+input = 3
+output = 15
+cache_read = 0.3
+cache_write = 3.75
+
+[limit]
+context = 128_000
+output = 64_000
+
+[modalities]
+input = ["text"]
+output = ["text"]

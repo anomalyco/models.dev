@@ -1,0 +1,22 @@
+name = "OpenAI: o3 Mini High (OpenRouter)"
+family = "o"
+attachment = false
+reasoning = false
+tool_call = undefined
+temperature = true
+release_date = "2026-02-14"
+last_updated = "2026-02-14"
+open_weights = undefined
+
+[cost]
+input = 1.1
+output = 4.4
+cache_read = 0.55
+
+[limit]
+context = 128_000
+output = 100_000
+
+[modalities]
+input = ["text"]
+output = ["text"]

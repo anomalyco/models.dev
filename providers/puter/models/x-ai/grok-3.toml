@@ -1,0 +1,23 @@
+name = "Grok 3"
+family = "grok"
+attachment = false
+reasoning = false
+tool_call = true
+temperature = true
+knowledge = "2024-11"
+release_date = "2025-02-17"
+last_updated = "2026-02-14"
+open_weights = false
+
+[cost]
+input = 3
+output = 15
+cache_read = 0.0075
+
+[limit]
+context = 131_072
+output = 131_072
+
+[modalities]
+input = ["text"]
+output = ["text"]

@@ -1,0 +1,23 @@
+name = "gpt-5-mini-2025-08-07"
+family = "gpt"
+attachment = true
+reasoning = false
+tool_call = true
+temperature = true
+knowledge = "2024-05-30"
+release_date = "2025-08-07"
+last_updated = "2026-02-14"
+open_weights = false
+
+[cost]
+input = 0.25
+output = 2
+cache_read = 0.03
+
+[limit]
+context = 128_000
+output = 128_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

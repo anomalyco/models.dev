@@ -1,0 +1,22 @@
+name = "Mistral: Devstral 2 2512 (OpenRouter)"
+family = "devstral"
+attachment = false
+reasoning = false
+tool_call = undefined
+temperature = true
+release_date = "2026-02-14"
+last_updated = "2026-02-14"
+open_weights = undefined
+
+[cost]
+input = 0.05
+output = 0.22
+cache_read = 0.03
+
+[limit]
+context = 128_000
+output = 65_536
+
+[modalities]
+input = ["text"]
+output = ["text"]

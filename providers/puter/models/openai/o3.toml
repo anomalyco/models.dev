@@ -1,0 +1,23 @@
+name = "o3"
+family = "o"
+attachment = true
+reasoning = false
+tool_call = true
+temperature = true
+knowledge = "2024-05"
+release_date = "2025-04-16"
+last_updated = "2026-02-14"
+open_weights = false
+
+[cost]
+input = 2
+output = 8
+cache_read = 0.5
+
+[limit]
+context = 128_000
+output = 100_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

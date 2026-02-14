@@ -1,0 +1,21 @@
+name = "Mistral: Mistral 7B Instruct v0.2 (OpenRouter)"
+family = "mistral"
+attachment = false
+reasoning = false
+tool_call = undefined
+temperature = true
+release_date = "2026-02-14"
+last_updated = "2026-02-14"
+open_weights = undefined
+
+[cost]
+input = 0.2
+output = 0.2
+
+[limit]
+context = 128_000
+output = 4_096
+
+[modalities]
+input = ["text"]
+output = ["text"]
