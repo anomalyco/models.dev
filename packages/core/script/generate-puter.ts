@@ -475,7 +475,14 @@ async function main() {
     process.exit(1);
   }
 
-  const apiModels = parsed.data.models;
+  let apiModels = parsed.data.models;
+
+  // openrouter free models are unreliable through puter API. filter them out temporarily
+  apiModels = apiModels.filter((model) => {
+    const name = model.name ?? "";
+    const modelId = model.puterId ?? model.id ?? "";
+    return !name.toLowerCase().includes("(free)") && !modelId.toLowerCase().includes("(free)");
+  });
 
   const existingFiles = new Set<string>();
   try {
