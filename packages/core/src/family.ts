@@ -368,7 +368,6 @@ export const ModelFamilyValues = [
 
   // Writer
   "palmyra",
-  "allenai",
 
   // GigaChat
   "gigachat-llm",
