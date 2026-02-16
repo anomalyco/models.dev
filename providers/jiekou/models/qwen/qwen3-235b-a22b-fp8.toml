@@ -1,0 +1,22 @@
+name = "Qwen3 235B A22B"
+family = "qwen"
+release_date = "2026-01"
+last_updated = "2026-01"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = false
+structured_output = false
+open_weights = true
+
+[cost]
+input = 0.2
+output = 0.8
+
+[limit]
+context = 40960
+output = 20000
+
+[modalities]
+input = ["text"]
+output = ["text"]

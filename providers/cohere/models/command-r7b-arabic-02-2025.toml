@@ -1,0 +1,22 @@
+name = "Command R7B Arabic"
+family = "command-r"
+release_date = "2025-02-27"
+last_updated = "2025-02-27"
+attachment = false
+reasoning = false
+temperature = true
+knowledge = "2024-06-01"
+tool_call = true
+open_weights = true
+
+[cost]
+input = 0.0375
+output = 0.15
+
+[limit]
+context = 128_000
+output = 4_000
+
+[modalities]
+input = ["text"]
+output = ["text"]

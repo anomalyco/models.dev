@@ -1,0 +1,22 @@
+name = "GPT OSS 20B"
+family = "gpt-oss"
+release_date = "1970-01-01"
+last_updated = "1970-01-01"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = true
+
+[cost]
+input = 0.07
+output = 0.2
+
+[limit]
+context = 131_072
+output = 32_768
+
+[modalities]
+input = ["text"]
+output = ["text"]

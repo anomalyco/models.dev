@@ -1,0 +1,22 @@
+name = "o4-mini"
+family = "o"
+release_date = "2026-01"
+last_updated = "2026-01"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[cost]
+input = 1.1
+output = 4.4
+
+[limit]
+context = 200000
+output = 100000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

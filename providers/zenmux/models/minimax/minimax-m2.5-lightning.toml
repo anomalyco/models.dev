@@ -1,0 +1,26 @@
+name = "MiniMax: MiniMax M2.5 highspeed"
+release_date = "2026-02-13"
+last_updated = "2026-02-13"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+knowledge = "2025-01-01"
+open_weights = false
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.60
+output = 4.80
+cache_read = 0.06
+cache_write = 0.75
+
+[limit]
+context = 204_800
+output = 131_072
+
+[modalities]
+input = ["text"]
+output = ["text"]

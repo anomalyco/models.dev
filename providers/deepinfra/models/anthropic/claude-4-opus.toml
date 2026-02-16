@@ -1,0 +1,22 @@
+name = "Claude Opus 4"
+family = "claude-opus"
+release_date = "2025-06-12"
+last_updated = "2025-06-12"
+attachment = true
+reasoning = true
+temperature = true
+knowledge = "2025-03-31"
+tool_call = true
+open_weights = false
+
+[cost]
+input = 16.5
+output = 82.5
+
+[limit]
+context = 200_000
+output = 32_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

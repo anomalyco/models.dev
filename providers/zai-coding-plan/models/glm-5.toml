@@ -1,0 +1,26 @@
+name = "GLM-5"
+family = "glm"
+release_date = "2026-02-11"
+last_updated = "2026-02-11"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+open_weights = false
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0
+output = 0
+cache_read = 0
+cache_write = 0
+
+[limit]
+context = 204800
+output = 131072
+
+[modalities]
+input = ["text"]
+output = ["text"]

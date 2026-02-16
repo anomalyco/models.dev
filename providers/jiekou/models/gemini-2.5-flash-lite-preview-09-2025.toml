@@ -1,0 +1,22 @@
+name = "gemini-2.5-flash-lite-preview-09-2025"
+family = "gemini-flash-lite"
+release_date = "2026-01"
+last_updated = "2026-01"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[cost]
+input = 0.09
+output = 0.36
+
+[limit]
+context = 1048576
+output = 65536
+
+[modalities]
+input = ["text", "image", "video", "audio"]
+output = ["text"]

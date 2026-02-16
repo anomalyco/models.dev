@@ -1,5 +1,4 @@
 name = "Cloudflare AI Gateway"
 env = ["CLOUDFLARE_API_TOKEN", "CLOUDFLARE_ACCOUNT_ID", "CLOUDFLARE_GATEWAY_ID"]
-npm = "@ai-sdk/openai-compatible"
-api = "https://gateway.ai.cloudflare.com/v1/${CLOUDFLARE_ACCOUNT_ID}/${CLOUDFLARE_GATEWAY_ID}/compat/"
+npm = "ai-gateway-provider"
 doc = "https://developers.cloudflare.com/ai-gateway/"

@@ -1,0 +1,25 @@
+name = "GPT-5.3 Codex Spark"
+family = "gpt-codex-spark"
+release_date = "2026-02-05"
+last_updated = "2026-02-05"
+attachment = true
+reasoning = true
+temperature = false
+knowledge = "2025-08-31"
+tool_call = true
+structured_output = true
+open_weights = false
+
+[cost]
+input = 1.75
+output = 14.00
+cache_read = 0.175
+
+[limit]
+context = 128_000
+input = 100_000
+output = 32_000
+
+[modalities]
+input = ["text", "image", "pdf"]
+output = ["text"]

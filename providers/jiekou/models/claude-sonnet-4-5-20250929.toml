@@ -1,0 +1,22 @@
+name = "claude-sonnet-4-5-20250929"
+family = "claude-sonnet"
+release_date = "2026-01"
+last_updated = "2026-01"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[cost]
+input = 2.7
+output = 13.5
+
+[limit]
+context = 200000
+output = 64000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

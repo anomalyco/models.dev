@@ -1,0 +1,22 @@
+name = "Claude-Opus-4.6"
+release_date = "2026-02-04"
+last_updated = "2026-02-04"
+attachment = true
+reasoning = true
+temperature = false
+open_weights = false
+tool_call = true
+
+[cost]
+input = 4.3
+output = 21
+cache_read = 0.43
+cache_write = 5.3
+
+[limit]
+context = 983_040
+output = 128_000
+
+[modalities]
+input = ["text", "image", "pdf"]
+output = ["text"]

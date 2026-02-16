@@ -1,0 +1,22 @@
+name = "GLM-4.7-Flash"
+family = "glm"
+release_date = "2026-01"
+last_updated = "2026-01"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = true
+
+[cost]
+input = 0.07
+output = 0.4
+
+[limit]
+context = 200000
+output = 128000
+
+[modalities]
+input = ["text"]
+output = ["text"]

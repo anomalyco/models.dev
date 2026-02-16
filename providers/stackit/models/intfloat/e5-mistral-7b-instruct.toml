@@ -1,0 +1,22 @@
+name = "E5 Mistral 7B"
+family = "mistral"
+release_date = "2023-12-11"
+last_updated = "2023-12-11"
+attachment = false
+reasoning = false
+temperature = false
+tool_call = false
+structured_output = false
+open_weights = true
+
+[cost]
+input = 0.02
+output = 0.02
+
+[limit]
+context = 4_096
+output = 4_096
+
+[modalities]
+input = ["text"]
+output = ["text"]

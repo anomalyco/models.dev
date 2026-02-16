@@ -1,0 +1,29 @@
+name = "GLM-5"
+family = "glm"
+release_date = "2026-02-12"
+last_updated = "2026-02-12"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = true
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 1.00
+output = 3.20
+cache_read = 0.2
+
+[limit]
+context = 202_752
+output = 131_000
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[provider]
+npm = "@ai-sdk/openai-compatible"

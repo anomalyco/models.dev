@@ -1,0 +1,22 @@
+name = "claude-opus-4-6"
+family = "claude-opus"
+release_date = "2026-02"
+last_updated = "2026-02"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[cost]
+input = 5
+output = 25
+
+[limit]
+context = 1000000
+output = 128000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
