@@ -332,6 +332,9 @@ export const Rendered = renderToString(
             Weights <span class="sort-indicator"></span>
           </th>
           <th class="sortable" data-type="text">
+            HuggingFace ID <span class="sort-indicator"></span>
+          </th>
+          <th class="sortable" data-type="text">
             Knowledge <span class="sort-indicator"></span>
           </th>
           <th class="sortable" data-type="text">
@@ -446,6 +449,19 @@ export const Rendered = renderToString(
                   </td>
                   <td>{model.temperature ? "Yes" : "No"}</td>
                   <td>{model.open_weights ? "Open" : "Closed"}</td>
+                  <td>
+                    {model.huggingface_id ? (
+                      <a
+                        href={`https://huggingface.co/${model.huggingface_id}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        {model.huggingface_id}
+                      </a>
+                    ) : (
+                      "-"
+                    )}
+                  </td>
                   <td>
                     {model.knowledge ? model.knowledge.substring(0, 7) : "-"}
                   </td>

@@ -97,6 +97,7 @@ knowledge = "2024-04"       # Knowledge-cutoff date
 release_date = "2025-02-19" # First public release date
 last_updated = "2025-02-19" # Most recent update date
 open_weights = true         # or false  - model’s trained weights are publicly available
+huggingface_id = "org/model-name" # Optional - HuggingFace model ID (only for open_weights=true)
 
 [cost]
 input = 3.00                # Cost per million input tokens (USD)
