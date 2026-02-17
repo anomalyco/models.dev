@@ -62,7 +62,7 @@ export const Model = z
     open_weights: z.boolean(),
     huggingface_id: z
       .string()
-      .regex(/^[a-zA-Z0-9_\-\.]+\/[a-zA-Z0-9_\-\.]+$/, {
+      .regex(/^[a-zA-Z0-9_\-]+\/[a-zA-Z0-9_\-\.]+$/, {
         message: "Must be in format 'organization/model-name'",
       })
       .optional(),
@@ -94,9 +94,11 @@ export const Model = z
   )
   .refine(
     (data) => {
-      return !(
-        data.huggingface_id !== undefined && data.open_weights === false
-      );
+      // huggingface_id can only be set when open_weights is true
+      if (data.huggingface_id !== undefined) {
+        return data.open_weights === true;
+      }
+      return true;
     },
     {
       message: "Cannot set huggingface_id when open_weights is false",
