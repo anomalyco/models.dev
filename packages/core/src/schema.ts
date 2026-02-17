@@ -60,6 +60,12 @@ export const Model = z
       output: z.array(z.enum(["text", "audio", "image", "video", "pdf"])),
     }),
     open_weights: z.boolean(),
+    huggingface_id: z
+      .string()
+      .regex(/^[a-zA-Z0-9_\-\.]+\/[a-zA-Z0-9_\-\.]+$/, {
+        message: "Must be in format 'organization/model-name'",
+      })
+      .optional(),
     cost: Cost.extend({
       context_over_200k: Cost.optional(),
     }).optional(),
@@ -84,6 +90,17 @@ export const Model = z
     {
       message: "Cannot set cost.reasoning when reasoning is false",
       path: ["cost", "reasoning"],
+    },
+  )
+  .refine(
+    (data) => {
+      return !(
+        data.huggingface_id !== undefined && data.open_weights === false
+      );
+    },
+    {
+      message: "Cannot set huggingface_id when open_weights is false",
+      path: ["huggingface_id"],
     },
   );
 
