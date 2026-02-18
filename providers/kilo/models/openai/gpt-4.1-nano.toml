@@ -1,0 +1,21 @@
+name = "OpenAI: GPT-4.1 Nano"
+release_date = "2025-04-14"
+last_updated = "2025-04-15"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = true
+open_weights = false
+
+[cost]
+input = 0.1
+output = 0.4
+cache_read = 0.025
+
+[limit]
+context = 1047576
+output = 32768
+
+[modalities]
+input = ["image", "text"]
+output = ["text"]

@@ -1,0 +1,20 @@
+name = "Perplexity: Sonar Reasoning Pro"
+release_date = "2024-01-01"
+last_updated = "2025-09-01"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = false
+open_weights = false
+
+[cost]
+input = 2.0
+output = 8.0
+
+[limit]
+context = 128000
+output = 25600
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

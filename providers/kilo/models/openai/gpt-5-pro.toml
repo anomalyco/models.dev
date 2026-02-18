@@ -1,0 +1,20 @@
+name = "OpenAI: GPT-5 Pro"
+release_date = "2025-10-06"
+last_updated = "2025-10-06"
+attachment = true
+reasoning = true
+temperature = false
+tool_call = true
+open_weights = false
+
+[cost]
+input = 15.0
+output = 120.0
+
+[limit]
+context = 400000
+output = 128000
+
+[modalities]
+input = ["image", "text"]
+output = ["text"]

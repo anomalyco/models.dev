@@ -1,0 +1,20 @@
+name = "Baidu: ERNIE 4.5 VL 424B A47B "
+release_date = "2025-06-30"
+last_updated = "2026-01"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = false
+open_weights = true
+
+[cost]
+input = 0.42
+output = 1.25
+
+[limit]
+context = 123000
+output = 16000
+
+[modalities]
+input = ["image", "text"]
+output = ["text"]

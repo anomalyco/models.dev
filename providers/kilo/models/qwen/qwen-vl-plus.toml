@@ -1,0 +1,21 @@
+name = "Qwen: Qwen VL Plus"
+release_date = "2024-01-25"
+last_updated = "2025-08-15"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = false
+open_weights = false
+
+[cost]
+input = 0.21
+output = 0.63
+cache_read = 0.042
+
+[limit]
+context = 131072
+output = 8192
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

@@ -1,0 +1,22 @@
+name = "Claude-Sonnet-4.6"
+release_date = "2026-02-05"
+last_updated = "2026-02-05"
+attachment = true
+reasoning = true
+temperature = false
+open_weights = false
+tool_call = true
+
+[cost]
+input = 2.6
+output = 13
+cache_read = 0.26
+cache_write = 3.2
+
+[limit]
+context = 983_040
+output = 128_000
+
+[modalities]
+input = ["text", "pdf"]
+output = ["text"]

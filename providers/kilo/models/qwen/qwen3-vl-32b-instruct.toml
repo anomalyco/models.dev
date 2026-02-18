@@ -1,0 +1,20 @@
+name = "Qwen: Qwen3 VL 32B Instruct"
+release_date = "2025-10-21"
+last_updated = "2025-11-25"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = true
+open_weights = false
+
+[cost]
+input = 0.104
+output = 0.416
+
+[limit]
+context = 131072
+output = 32768
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

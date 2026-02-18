@@ -1,0 +1,20 @@
+name = "OpenAI: GPT-4o (extended)"
+release_date = "2024-05-13"
+last_updated = "2024-08-06"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = true
+open_weights = false
+
+[cost]
+input = 6.0
+output = 18.0
+
+[limit]
+context = 128000
+output = 64000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

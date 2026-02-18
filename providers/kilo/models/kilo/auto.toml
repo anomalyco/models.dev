@@ -1,0 +1,20 @@
+name = "Kilo: Auto"
+release_date = "2024-06-01"
+last_updated = "2024-06-01"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+open_weights = false
+
+[cost]
+input = 1.0
+output = 1.0
+
+[limit]
+context = 200000
+output = 64000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

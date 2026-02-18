@@ -1,0 +1,21 @@
+name = "OpenAI: GPT-5.2-Codex"
+release_date = "2026-01-14"
+last_updated = "2026-01-14"
+attachment = true
+reasoning = true
+temperature = false
+tool_call = true
+open_weights = false
+
+[cost]
+input = 1.75
+output = 14.0
+cache_read = 0.175
+
+[limit]
+context = 400000
+output = 128000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

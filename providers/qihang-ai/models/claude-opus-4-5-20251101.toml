@@ -1,0 +1,22 @@
+name = "Claude Opus 4.5"
+family = "claude-opus"
+release_date = "2025-11-01"
+last_updated = "2025-11-01"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+knowledge = "2025-03"
+open_weights = false
+
+[cost]
+input = 0.71
+output = 3.57
+
+[limit]
+context = 200_000
+output = 32_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

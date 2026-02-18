@@ -1,0 +1,17 @@
+name = "Gemini 3.0 Pro Image Preview"
+release_date = "2025-11-20"
+last_updated = "2025-11-20"
+attachment = true
+reasoning = false
+tool_call = false
+temperature = true
+structured_output = false
+open_weights = false
+
+[limit]
+context = 32_768
+output = 8_192
+
+[modalities]
+input = ["text", "image"]
+output = ["text", "image"]

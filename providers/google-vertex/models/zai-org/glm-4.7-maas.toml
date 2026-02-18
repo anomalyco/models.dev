@@ -1,11 +1,12 @@
 name = "GLM-4.7"
 family = "glm"
-release_date = "2025-12-22"
-last_updated = "2025-12-22"
+release_date = "2026-01-06"
+last_updated = "2026-01-06"
 attachment = false
 reasoning = true
 temperature = true
 tool_call = true
+structured_output = true
 knowledge = "2025-04"
 open_weights = true
 
@@ -13,13 +14,17 @@ open_weights = true
 field = "reasoning_content"
 
 [cost]
-input = 0.6
-output = 2.2
+input = 0.60
+output = 2.20
 
 [limit]
-context = 204800
-output = 131072
+context = 200_000
+output = 128_000
 
 [modalities]
-input = ["text"]
+input = ["text", "pdf"]
 output = ["text"]
+
+[provider]
+npm = "@ai-sdk/openai-compatible"
+api = "https://${GOOGLE_VERTEX_ENDPOINT}/v1/projects/${GOOGLE_VERTEX_PROJECT}/locations/${GOOGLE_VERTEX_LOCATION}/endpoints/openapi"

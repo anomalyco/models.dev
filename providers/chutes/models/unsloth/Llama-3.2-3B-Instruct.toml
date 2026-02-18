@@ -1,0 +1,23 @@
+name = "Llama 3.2 3B Instruct"
+family = "unsloth"
+release_date = "2025-02-12"
+last_updated = "2025-02-12"
+attachment = false
+reasoning = false
+temperature = true
+tool_call = false
+structured_output = false
+open_weights = true
+
+[cost]
+input = 0.01
+output = 0.01
+cache_read = 0.005
+
+[limit]
+context = 16384
+output = 16384
+
+[modalities]
+input = ["text"]
+output = ["text"]

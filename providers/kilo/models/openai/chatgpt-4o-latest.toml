@@ -1,0 +1,20 @@
+name = "OpenAI: ChatGPT-4o"
+release_date = "2024-08-08"
+last_updated = "2024-08-14"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = false
+open_weights = false
+
+[cost]
+input = 5.0
+output = 15.0
+
+[limit]
+context = 128000
+output = 16384
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

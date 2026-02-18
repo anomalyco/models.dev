@@ -1,0 +1,22 @@
+name = "Google: Gemini 2.5 Flash Lite Preview 09-2025"
+release_date = "2025-09-25"
+last_updated = "2025-09-25"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+open_weights = false
+
+[cost]
+input = 0.1
+output = 0.4
+cache_read = 0.01
+cache_write = 0.083333
+
+[limit]
+context = 1048576
+output = 65535
+
+[modalities]
+input = ["text", "image", "audio", "video"]
+output = ["text"]

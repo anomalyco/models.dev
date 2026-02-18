@@ -1,0 +1,21 @@
+name = "OpenAI: GPT-5 Codex"
+release_date = "2025-09-15"
+last_updated = "2025-09-15"
+attachment = true
+reasoning = true
+temperature = false
+tool_call = true
+open_weights = false
+
+[cost]
+input = 1.25
+output = 10.0
+cache_read = 0.125
+
+[limit]
+context = 400000
+output = 128000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

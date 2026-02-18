@@ -1,0 +1,19 @@
+name = "qwen3.5:397b"
+family = "qwen"
+attachment = true
+reasoning = true
+tool_call = true
+release_date = "2026-02-15"
+last_updated = "2026-02-17"
+open_weights = true
+
+[interleaved]
+field = "reasoning_details"
+
+[limit]
+context = 262144
+output = 81920
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

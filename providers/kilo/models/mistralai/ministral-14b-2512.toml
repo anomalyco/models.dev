@@ -1,0 +1,20 @@
+name = "Mistral: Ministral 3 14B 2512"
+release_date = "2025-12-16"
+last_updated = "2025-12-16"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = true
+open_weights = false
+
+[cost]
+input = 0.2
+output = 0.2
+
+[limit]
+context = 262144
+output = 52429
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

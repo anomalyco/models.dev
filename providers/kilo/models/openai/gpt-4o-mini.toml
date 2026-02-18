@@ -1,0 +1,21 @@
+name = "OpenAI: GPT-4o-mini"
+release_date = "2024-07-18"
+last_updated = "2024-07-18"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = true
+open_weights = false
+
+[cost]
+input = 0.15
+output = 0.6
+cache_read = 0.075
+
+[limit]
+context = 128000
+output = 16384
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
