@@ -1,0 +1,22 @@
+name = "GPT-5-Mini"
+family = "gpt-mini"
+release_date = "2025-09-15"
+last_updated = "2025-09-15"
+attachment = true
+reasoning = true
+temperature = true
+knowledge = "2024-09-30"
+tool_call = true
+open_weights = false
+
+[cost]
+input = 0.04
+output = 0.29
+
+[limit]
+context = 200_000
+output = 64_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

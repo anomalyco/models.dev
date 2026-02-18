@@ -1,0 +1,22 @@
+name = "Google: Gemini 2.5 Pro"
+release_date = "2025-03-20"
+last_updated = "2025-06-05"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+open_weights = false
+
+[cost]
+input = 1.25
+output = 10.0
+cache_read = 0.125
+cache_write = 0.375
+
+[limit]
+context = 1048576
+output = 65536
+
+[modalities]
+input = ["text", "image", "audio", "video"]
+output = ["text"]

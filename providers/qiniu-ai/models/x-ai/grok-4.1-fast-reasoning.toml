@@ -1,0 +1,17 @@
+name = "X-Ai/Grok 4.1 Fast Reasoning"
+release_date = "2025-12-19"
+last_updated = "2025-12-19"
+attachment = true
+reasoning = true
+tool_call = true
+temperature = true
+structured_output = false
+open_weights = false
+
+[limit]
+context = 20_000_000
+output = 2_000_000
+
+[modalities]
+input = ["text", "image", "audio", "video"]
+output = ["text"]

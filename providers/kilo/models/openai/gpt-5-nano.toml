@@ -1,0 +1,21 @@
+name = "OpenAI: GPT-5 Nano"
+release_date = "2025-08-07"
+last_updated = "2025-08-07"
+attachment = true
+reasoning = true
+temperature = false
+tool_call = true
+open_weights = false
+
+[cost]
+input = 0.05
+output = 0.4
+cache_read = 0.005
+
+[limit]
+context = 400000
+output = 128000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

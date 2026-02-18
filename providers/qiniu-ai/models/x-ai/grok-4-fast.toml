@@ -1,0 +1,17 @@
+name = "x-AI/Grok-4-Fast"
+release_date = "2025-09-20"
+last_updated = "2025-09-20"
+attachment = true
+reasoning = true
+tool_call = true
+temperature = true
+structured_output = false
+open_weights = false
+
+[limit]
+context = 2_000_000
+output = 2_000_000
+
+[modalities]
+input = ["text", "image", "audio", "video"]
+output = ["text"]

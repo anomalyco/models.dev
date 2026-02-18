@@ -1,0 +1,17 @@
+name = "Gemini 2.5 Flash Image"
+release_date = "2025-10-22"
+last_updated = "2025-10-22"
+attachment = true
+reasoning = false
+tool_call = false
+temperature = true
+structured_output = false
+open_weights = false
+
+[limit]
+context = 32_768
+output = 8_192
+
+[modalities]
+input = ["text", "image"]
+output = ["image"]

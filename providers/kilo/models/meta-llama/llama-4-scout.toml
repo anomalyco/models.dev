@@ -1,0 +1,20 @@
+name = "Meta: Llama 4 Scout"
+release_date = "2025-04-05"
+last_updated = "2025-04-05"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = true
+open_weights = true
+
+[cost]
+input = 0.08
+output = 0.3
+
+[limit]
+context = 327680
+output = 16384
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

@@ -1,0 +1,20 @@
+name = "Meta: Llama 3.3 70B Instruct"
+release_date = "2024-08-01"
+last_updated = "2026-02-04"
+attachment = false
+reasoning = false
+temperature = true
+tool_call = true
+open_weights = true
+
+[cost]
+input = 0.1
+output = 0.32
+
+[limit]
+context = 131072
+output = 16384
+
+[modalities]
+input = ["text"]
+output = ["text"]

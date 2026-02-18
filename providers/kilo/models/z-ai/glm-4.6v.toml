@@ -1,0 +1,20 @@
+name = "Z.ai: GLM 4.6V"
+release_date = "2025-09-30"
+last_updated = "2026-01-10"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+open_weights = true
+
+[cost]
+input = 0.3
+output = 0.9
+
+[limit]
+context = 131072
+output = 131072
+
+[modalities]
+input = ["image", "text", "video"]
+output = ["text"]

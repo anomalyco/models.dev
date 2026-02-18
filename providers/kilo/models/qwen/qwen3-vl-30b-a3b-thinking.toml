@@ -1,0 +1,20 @@
+name = "Qwen: Qwen3 VL 30B A3B Thinking"
+release_date = "2025-10-11"
+last_updated = "2025-11-25"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+open_weights = true
+
+[cost]
+input = 0
+output = 0
+
+[limit]
+context = 131072
+output = 32768
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

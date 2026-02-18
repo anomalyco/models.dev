@@ -1,0 +1,17 @@
+name = "OpenAI/GPT-5.2"
+release_date = "2025-12-11"
+last_updated = "2025-12-11"
+attachment = true
+reasoning = true
+tool_call = true
+temperature = true
+structured_output = false
+open_weights = false
+
+[limit]
+context = 400_000
+output = 128_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

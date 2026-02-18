@@ -1,0 +1,20 @@
+name = "NVIDIA: Nemotron Nano 12B 2 VL"
+release_date = "2025-10-28"
+last_updated = "2026-01-31"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = false
+open_weights = true
+
+[cost]
+input = 0.2
+output = 0.6
+
+[limit]
+context = 131072
+output = 26215
+
+[modalities]
+input = ["image", "text", "video"]
+output = ["text"]

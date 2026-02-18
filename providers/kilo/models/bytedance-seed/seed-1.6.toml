@@ -1,0 +1,20 @@
+name = "ByteDance Seed: Seed 1.6"
+release_date = "2025-09"
+last_updated = "2025-09"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+open_weights = false
+
+[cost]
+input = 0.25
+output = 2.0
+
+[limit]
+context = 262144
+output = 32768
+
+[modalities]
+input = ["image", "text", "video"]
+output = ["text"]
