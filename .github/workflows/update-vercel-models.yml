@@ -130,7 +130,7 @@ jobs:
           VERCEL_SLACK_WEBHOOK_URL: ${{ secrets.VERCEL_SLACK_WEBHOOK_URL }}
           HAS_CHANGES: ${{ steps.check-changes.outputs.has-changes }}
           PR_CREATED: ${{ steps.create-pr.outcome }}
-          PR_TITLE: ${{ steps.create-pr.outputs.pr-title }}
+          PR_TITLE: "Update Vercel models (for Models.dev)"
           PR_URL: ${{ steps.create-pr.outputs.pr-url }}
           VERCEL_SLACK_CHANNEL: "C099VQB75TP"
           SLACK_USER_ID: "U09LK204TPZ"
