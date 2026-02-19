@@ -3,7 +3,7 @@ name: Update Vercel Models
 on:
   schedule:
     # Run every Monday to Friday at 8:00 AM Pacific Time (4:00 PM UTC)
-    - cron: '0 16 * * 1,3'
+    - cron: '0 16 * * 1,3,5'
   workflow_dispatch:
 
 permissions:
