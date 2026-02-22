@@ -1,0 +1,22 @@
+name = "Gemini 3.1 Pro Preview"
+family = "gemini"
+attachment = true
+reasoning = true
+tool_call = true
+temperature = true
+release_date = "2026-02-19"
+last_updated = "2026-02-22"
+open_weights = false
+
+[cost]
+input = 2
+output = 12
+cache_read = 0.19999999999999998
+
+[limit]
+context = 1_000_000
+output = 64_000
+
+[modalities]
+input = ["text", "image", "pdf"]
+output = ["text"]
