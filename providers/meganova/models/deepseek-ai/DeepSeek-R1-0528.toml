@@ -1,0 +1,25 @@
+name = "DeepSeek R1 0528"
+family = "deepseek-thinking"
+release_date = "2025-05-28"
+last_updated = "2025-05-28"
+attachment = false
+reasoning = true
+temperature = true
+knowledge = "2024-07"
+tool_call = false
+open_weights = true
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.50
+output = 2.15
+
+[limit]
+context = 163_840
+output = 64_000
+
+[modalities]
+input = ["text"]
+output = ["text"]

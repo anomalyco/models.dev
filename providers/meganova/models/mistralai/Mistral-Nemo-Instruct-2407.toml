@@ -1,0 +1,22 @@
+name = "Mistral Nemo Instruct 2407"
+family = "mistral"
+release_date = "2024-07-18"
+last_updated = "2024-07-18"
+attachment = false
+reasoning = false
+tool_call = true
+structured_output = true
+temperature = true
+open_weights = true
+
+[cost]
+input = 0.02
+output = 0.04
+
+[limit]
+context = 131_072
+output = 65_536
+
+[modalities]
+input = ["text"]
+output = ["text"]

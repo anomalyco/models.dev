@@ -1,0 +1,20 @@
+name = "PaddlePaddle/PaddleOCR-VL"
+release_date = "2025-10-16"
+last_updated = "2025-10-16"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = false
+open_weights = true
+
+[cost]
+input = 0
+output = 0
+
+[limit]
+context = 16384
+output = 16384
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
