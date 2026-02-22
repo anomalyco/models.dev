@@ -74,5 +74,5 @@ jobs:
           PR_CREATED: ${{ steps.check-changes.outcome }}
           PR_TITLE: "Update Vercel models (for Models.dev)"
           OUTCOME: ${{ steps.check-changes.outcome }}
-          VERCEL_SLACK_CHANNEL: "C0A7TF81HS5"
-          SLACK_USER_ID: "U0A54KMV02E"
+          CHANNEL_ID: "C0A7TF81HS5"
+          REVIEWER: "U0A54KMV02E"
