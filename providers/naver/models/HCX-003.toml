@@ -1,0 +1,21 @@
+name = "HCX-003"
+family = "naver"
+attachment = false
+reasoning = false
+tool_call = false
+structured_output = false
+temperature = false
+open_weights = false
+
+[cost]
+input = 3.50
+output = 3.50
+
+[limit]
+context = 8192
+input = 7600
+output = 4096
+
+[modalities]
+input = ["text"]
+output = ["text"]
