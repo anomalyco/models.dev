@@ -210,252 +210,20 @@ export const Rendered = renderToString(
           <input type="text" id="search" placeholder="Search models" />
           <span class="search-shortcut">⌘K</span>
         </div>
+        <div class="columns-container">
+          <button id="columns-toggle">Columns</button>
+          <div id="columns-picker" hidden></div>
+        </div>
         <button id="help">How to use</button>
       </div>
     </header>
-    <table>
-      <thead>
-        <tr>
-          <th class="sortable" data-type="text">
-            Provider <span class="sort-indicator"></span>
-          </th>
-          <th class="sortable" data-type="text">
-            Model <span class="sort-indicator"></span>
-          </th>
-          <th class="sortable" data-type="text">
-            Family <span class="sort-indicator"></span>
-          </th>
-          <th class="sortable" data-type="text">
-            Provider ID <span class="sort-indicator"></span>
-          </th>
-          <th class="sortable" data-type="text">
-            Model ID <span class="sort-indicator"></span>
-          </th>
-          <th class="sortable" data-type="boolean">
-            Tool Call <span class="sort-indicator"></span>
-          </th>
-          <th class="sortable" data-type="boolean">
-            Reasoning <span class="sort-indicator"></span>
-          </th>
-          <th class="sortable" data-type="modalities">
-            Input <span class="sort-indicator"></span>
-          </th>
-          <th class="sortable" data-type="modalities">
-            Output <span class="sort-indicator"></span>
-          </th>
-          <th class="sortable" data-type="number">
-            <div class="header-container">
-              <span class="header-text">
-                Input Cost
-                <br />
-                <span class="desc">per 1M tokens</span>
-              </span>
-              <span class="sort-indicator"></span>
-            </div>
-          </th>
-          <th class="sortable" data-type="number">
-            <div class="header-container">
-              <span class="header-text">
-                Output Cost
-                <br />
-                <span class="desc">per 1M tokens</span>
-              </span>
-              <span class="sort-indicator"></span>
-            </div>
-          </th>
-          <th class="sortable" data-type="number">
-            <div class="header-container">
-              <span class="header-text">
-                Reasoning Cost
-                <br />
-                <span class="desc">per 1M tokens</span>
-              </span>
-              <span class="sort-indicator"></span>
-            </div>
-          </th>
-          <th class="sortable" data-type="number">
-            <div class="header-container">
-              <span class="header-text">
-                Cache Read Cost
-                <br />
-                <span class="desc">per 1M tokens</span>
-              </span>
-              <span class="sort-indicator"></span>
-            </div>
-          </th>
-          <th class="sortable" data-type="number">
-            <div class="header-container">
-              <span class="header-text">
-                Cache Write Cost
-                <br />
-                <span class="desc">per 1M tokens</span>
-              </span>
-              <span class="sort-indicator"></span>
-            </div>
-          </th>
-          <th class="sortable" data-type="number">
-            <div class="header-container">
-              <span class="header-text">
-                Audio Input Cost
-                <br />
-                <span class="desc">per 1M tokens</span>
-              </span>
-              <span class="sort-indicator"></span>
-            </div>
-          </th>
-          <th class="sortable" data-type="number">
-            <div class="header-container">
-              <span class="header-text">
-                Audio Output Cost
-                <br />
-                <span class="desc">per 1M tokens</span>
-              </span>
-              <span class="sort-indicator"></span>
-            </div>
-          </th>
-          <th class="sortable" data-type="number">
-            Context Limit <span class="sort-indicator"></span>
-          </th>
-          <th class="sortable" data-type="number">
-            Input Limit <span class="sort-indicator"></span>
-          </th>
-          <th class="sortable" data-type="number">
-            Output Limit <span class="sort-indicator"></span>
-          </th>
-          <th class="sortable" data-type="boolean">
-            Structured Output <span class="sort-indicator"></span>
-          </th>
-          <th class="sortable" data-type="boolean">
-            Temperature <span class="sort-indicator"></span>
-          </th>
-          <th class="sortable" data-type="text">
-            Weights <span class="sort-indicator"></span>
-          </th>
-          <th class="sortable" data-type="text">
-            Knowledge <span class="sort-indicator"></span>
-          </th>
-          <th class="sortable" data-type="text">
-            Release Date <span class="sort-indicator"></span>
-          </th>
-          <th class="sortable" data-type="text">
-            Last Updated <span class="sort-indicator"></span>
-          </th>
-        </tr>
-      </thead>
-      <tbody>
-        {Object.entries(Providers)
-          .sort(([, providerA], [, providerB]) =>
-            providerA.name.localeCompare(providerB.name)
-          )
-          .flatMap(([providerId, provider]) =>
-            Object.entries(provider.models)
-              .filter(([, model]) => model.status !== "alpha")
-              .sort(([, modelA], [, modelB]) =>
-                modelA.name.localeCompare(modelB.name)
-              )
-              .map(([modelId, model]) => (
-                <tr key={`${providerId}-${modelId}`}>
-                  <td>
-                    <div class="provider-cell">
-                      {renderProviderLogo(providerId)}
-                      <span>{provider.name}</span>
-                    </div>
-                  </td>
-                  <td>{model.name}</td>
-                  <td>{model.family ?? "-"}</td>
-                  <td>{providerId}</td>
-                  <td>
-                    <div class="model-id-cell">
-                      <span class="model-id-text">{modelId}</span>
-                      <button
-                        class="copy-button"
-                        onclick={`copyModelId(this, '${modelId}')`}
-                      >
-                        <svg
-                          class="copy-icon"
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="14"
-                          height="14"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          stroke-width="2"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                        >
-                          <rect
-                            width="14"
-                            height="14"
-                            x="8"
-                            y="8"
-                            rx="2"
-                            ry="2"
-                          />
-                          <path d="m4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2" />
-                        </svg>
-                        <svg
-                          class="check-icon"
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="14"
-                          height="14"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          stroke-width="2"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          style="display: none;"
-                        >
-                          <polyline points="20,6 9,17 4,12" />
-                        </svg>
-                      </button>
-                    </div>
-                  </td>
-                  <td>{model.tool_call ? "Yes" : "No"}</td>
-                  <td>{model.reasoning ? "Yes" : "No"}</td>
-                  <td>
-                    <div class="modalities">
-                      {model.modalities.input.map((modality) =>
-                        getModalityIcon(modality)
-                      )}
-                    </div>
-                  </td>
-                  <td>
-                    <div class="modalities">
-                      {model.modalities.output.map((modality) =>
-                        getModalityIcon(modality)
-                      )}
-                    </div>
-                  </td>
-                  <td>{renderCost(model.cost?.input)}</td>
-                  <td>{renderCost(model.cost?.output)}</td>
-                  <td>{renderCost(model.cost?.reasoning)}</td>
-                  <td>{renderCost(model.cost?.cache_read)}</td>
-                  <td>{renderCost(model.cost?.cache_write)}</td>
-                  <td>{renderCost(model.cost?.input_audio)}</td>
-                  <td>{renderCost(model.cost?.output_audio)}</td>
-                  <td>{model.limit.context.toLocaleString()}</td>
-                  <td>{model.limit.input?.toLocaleString() ?? "-"}</td>
-                  <td>{model.limit.output.toLocaleString()}</td>
-                  <td>
-                    {model.structured_output === undefined
-                      ? "-"
-                      : model.structured_output
-                      ? "Yes"
-                      : "No"}
-                  </td>
-                  <td>{model.temperature ? "Yes" : "No"}</td>
-                  <td>{model.open_weights ? "Open" : "Closed"}</td>
-                  <td>
-                    {model.knowledge ? model.knowledge.substring(0, 7) : "-"}
-                  </td>
-                  <td>{model.release_date}</td>
-                  <td>{model.last_updated}</td>
-                </tr>
-              ))
-          )}
-      </tbody>
-    </table>
+    <div id="table-scroll-container">
+      <table id="main-table">
+        <thead id="table-head"></thead>
+        <tbody id="table-body"></tbody>
+      </table>
+      <div id="table-loading">Loading models…</div>
+    </div>
     <dialog id="modal">
       <div class="header">
         <h2>How to use</h2>
@@ -533,7 +301,8 @@ export const Rendered = renderToString(
           </code>
         </div>
         <p>
-          If we don't have a provider's logo, a default logo is served instead.
+          If we don&apos;t have a provider&apos;s logo, a default logo is served
+          instead.
         </p>
         <h2>Contribute</h2>
         <p>
