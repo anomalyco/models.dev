@@ -202,6 +202,7 @@ function renderRows() {
       const td = document.createElement("td");
       const colSize = cell.column.getSize();
       td.style.cssText = `width: ${colSize}px; flex: 0 0 ${colSize}px; overflow: hidden;`;
+      td.dataset.columnId = cell.column.id;
 
       const colDef = cell.column.columnDef;
       if (typeof colDef.cell === "function") {

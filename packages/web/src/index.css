@@ -143,6 +143,11 @@ header {
     min-width: 12.5rem;
   }
 
+  .columns-container {
+    position: relative;
+    flex: 0 0 auto;
+  }
+
   input {
     width: 100%;
     font-size: 0.8125rem;
@@ -205,12 +210,101 @@ header {
   }
 }
 
+/* ─── Column picker dropdown ────────────────────────────────────────────────── */
+#columns-picker {
+  position: absolute;
+  top: calc(100% + 0.25rem);
+  right: 0;
+  background-color: var(--color-background);
+  border: 1px solid var(--color-border);
+  border-radius: 0.375rem;
+  box-shadow:
+    0 4px 8px rgba(0, 0, 0, 0.08),
+    0 8px 24px rgba(0, 0, 0, 0.1);
+  padding: 0.375rem;
+  z-index: 100;
+  min-width: 11rem;
+  max-height: 32rem;
+  overflow-y: auto;
+}
+
+.picker-actions {
+  padding: 0.25rem 0.5rem 0.5rem;
+  border-bottom: 1px solid var(--color-border);
+  margin-bottom: 0.375rem;
+
+  button {
+    background: none;
+    color: var(--color-brand);
+    border: none;
+    font-size: 0.75rem;
+    cursor: pointer;
+    padding: 0;
+    height: auto;
+    line-height: 1;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+.picker-group {
+  margin-bottom: 0.375rem;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.picker-group-label {
+  font-size: 0.625rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--color-text-tertiary);
+  padding: 0.25rem 0.5rem;
+  font-weight: 500;
+}
+
+.picker-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  cursor: pointer;
+  font-size: 0.8125rem;
+
+  &:hover {
+    background-color: var(--color-surface);
+  }
+
+  input[type="checkbox"] {
+    cursor: pointer;
+    accent-color: var(--color-brand);
+  }
+}
+
+/* ─── Virtual scroll container ──────────────────────────────────────────────── */
+#table-scroll-container {
+  height: calc(100svh - var(--header-height));
+  overflow-y: auto;
+  overflow-x: auto;
+  margin-top: var(--header-height);
+}
+
+#table-loading {
+  padding: 2rem;
+  text-align: center;
+  color: var(--color-text-tertiary);
+  font-size: 0.875rem;
+}
+
 table {
   border-collapse: separate;
   border-spacing: 0;
   font-size: 0.875rem;
   width: 100%;
-  margin-top: var(--header-height);
 }
 
 thead,
@@ -218,7 +312,7 @@ tbody {}
 
 table thead th {
   position: sticky;
-  top: var(--header-height);
+  top: 0;
   border-top: 1px solid var(--color-border);
   border-bottom: 1px solid var(--color-border);
   font-size: 0.75rem;
@@ -271,44 +365,53 @@ tbody {
     color: var(--color-text-tertiary);
   }
 
-  td:nth-child(1) {
+  /* Provider column — bold name */
+  td[data-column-id="provider"] {
     font-weight: 500;
-  }
-
-  td:nth-child(1),
-  td:nth-child(2),
-  td:nth-child(5),
-  td:nth-child(6),
-  td:nth-child(9),
-  td:nth-child(10),
-  td:nth-child(11),
-  td:nth-child(12),
-  td:nth-child(13),
-  td:nth-child(14),
-  td:nth-child(15),
-  td:nth-child(16) {
     color: var(--color-text);
   }
 
-  td:nth-child(5),
-  td:nth-child(6),
-  td:nth-child(18) {
-    font-size: 0.8125rem;
-    font-family: var(--font-mono);
-    text-transform: uppercase;
+  /* Main identity columns — full text color */
+  td[data-column-id="model"],
+  td[data-column-id="family"],
+  td[data-column-id="weights"] {
+    color: var(--color-text);
   }
 
-  td:nth-child(3),
-  td:nth-child(4),
-  td:nth-child(9),
-  td:nth-child(10),
-  td:nth-child(11),
-  td:nth-child(12),
-  td:nth-child(13),
-  td:nth-child(14),
-  td:nth-child(15),
-  td:nth-child(16),
-  td:nth-child(17) {
+  /* ID columns — mono, uppercase */
+  td[data-column-id="provider-id"],
+  td[data-column-id="model-id"] {
+    font-size: 0.8125rem;
+    font-family: var(--font-mono);
+    color: var(--color-text);
+  }
+
+  /* Cost columns — mono */
+  td[data-column-id="input-cost"],
+  td[data-column-id="output-cost"],
+  td[data-column-id="reasoning-cost"],
+  td[data-column-id="cache-read-cost"],
+  td[data-column-id="cache-write-cost"],
+  td[data-column-id="audio-input-cost"],
+  td[data-column-id="audio-output-cost"] {
+    font-size: 0.8125rem;
+    font-family: var(--font-mono);
+    color: var(--color-text);
+  }
+
+  /* Limit columns — mono */
+  td[data-column-id="context-limit"],
+  td[data-column-id="input-limit"],
+  td[data-column-id="output-limit"] {
+    font-size: 0.8125rem;
+    font-family: var(--font-mono);
+    color: var(--color-text);
+  }
+
+  /* Date/metadata columns — mono */
+  td[data-column-id="knowledge"],
+  td[data-column-id="release-date"],
+  td[data-column-id="last-updated"] {
     font-size: 0.8125rem;
     font-family: var(--font-mono);
   }
@@ -319,15 +422,12 @@ tbody {
     gap: 0.375rem;
   }
 
-  .provider-cell span:first-child {
-    flex: 0 0 auto;
-  }
-
-  .provider-cell svg {
+  .provider-logo {
     display: block;
+    flex: 0 0 auto;
     width: 1rem;
     height: 1rem;
-    color: var(--color-text-secondary);
+    object-fit: contain;
   }
 
   .model-id-cell {
