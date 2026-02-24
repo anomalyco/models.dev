@@ -87,17 +87,25 @@ const table = createTable<Row>({
   },
 });
 
+// Prime state with all feature-provided defaults (e.g. columnPinning: {left:[],right:[]})
+// so that getHeaderGroups() never reads undefined.left
+table.setOptions((prev) => ({
+  ...prev,
+  state: { ...table.initialState, ...prev.state },
+}));
+
 function afterStateChange() {
   table.setOptions((prev) => ({
     ...prev,
     data: rows,
-    state: { sorting, globalFilter, columnVisibility },
+    state: { ...prev.state, sorting, globalFilter, columnVisibility },
   }));
   const rowCount = table.getRowModel().rows.length;
   virtualizer.setOptions({
     ...virtualizer.options,
     count: rowCount,
   });
+  virtualizer._willUpdate();
   virtualizer.scrollToOffset(0);
   renderHead();
   renderRows();
@@ -117,6 +125,9 @@ const virtualizer = new Virtualizer<HTMLDivElement, HTMLTableRowElement>({
   measureElement,
   onChange: () => renderRows(),
 });
+// In vanilla JS, _willUpdate() must be called manually to start observing
+// the scroll element (frameworks call it automatically via lifecycle hooks).
+virtualizer._willUpdate();
 
 // ─── Render: thead ────────────────────────────────────────────────────────────
 function renderHead() {
@@ -374,11 +385,12 @@ function applyUrlState() {
   table.setOptions((prev) => ({
     ...prev,
     data: rows,
-    state: { sorting, globalFilter, columnVisibility },
+    state: { ...prev.state, sorting, globalFilter, columnVisibility },
   }));
 
   const rowCount = table.getRowModel().rows.length;
   virtualizer.setOptions({ ...virtualizer.options, count: rowCount });
+  virtualizer._willUpdate();
   virtualizer.scrollToOffset(0);
 
   renderHead();
