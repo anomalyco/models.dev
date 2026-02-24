@@ -136,7 +136,7 @@ function makeCopyIcon(): SVGSVGElement {
   const path = document.createElementNS(NS, "path");
   path.setAttribute(
     "d",
-    "m4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"
+    "m4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2",
   );
   svg.append(rect, path);
   return svg;
@@ -195,7 +195,7 @@ function makeModelIdCell(modelId: string): HTMLElement {
 
 function makeProviderCell(
   providerId: string,
-  providerName: string
+  providerName: string,
 ): HTMLElement {
   const div = document.createElement("div");
   div.className = "provider-cell";

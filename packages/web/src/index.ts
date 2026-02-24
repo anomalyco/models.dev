@@ -1,39 +1,39 @@
 import {
   createTable,
   getCoreRowModel,
-  getSortedRowModel,
   getFilteredRowModel,
+  getSortedRowModel,
   type SortingState,
   type VisibilityState,
 } from "@tanstack/table-core";
 import {
-  Virtualizer,
-  observeElementRect,
-  observeElementOffset,
   elementScroll,
   measureElement,
+  observeElementOffset,
+  observeElementRect,
+  Virtualizer,
 } from "@tanstack/virtual-core";
+import { type ColumnMeta, columnDefs } from "./columns";
 import { flattenProviders, type Row } from "./data";
-import { columnDefs, type ColumnMeta } from "./columns";
-import { parseUrlState, serializeUrlState, ALL_COLUMN_IDS } from "./url-state";
+import { ALL_COLUMN_IDS, parseUrlState, serializeUrlState } from "./url-state";
 
 // ─── DOM refs ──────────────────────────────────────────────────────────────────
 const scrollContainer = document.getElementById(
-  "table-scroll-container"
+  "table-scroll-container",
 ) as HTMLDivElement;
 const tableHead = document.getElementById(
-  "table-head"
+  "table-head",
 ) as HTMLTableSectionElement;
 const tableBody = document.getElementById(
-  "table-body"
+  "table-body",
 ) as HTMLTableSectionElement;
 const tableLoading = document.getElementById("table-loading") as HTMLDivElement;
 const searchInput = document.getElementById("search") as HTMLInputElement;
 const columnsToggle = document.getElementById(
-  "columns-toggle"
+  "columns-toggle",
 ) as HTMLButtonElement;
 const columnsPicker = document.getElementById(
-  "columns-picker"
+  "columns-picker",
 ) as HTMLDivElement;
 const modal = document.getElementById("modal") as HTMLDialogElement;
 const modalClose = document.getElementById("close") as HTMLButtonElement;
@@ -79,7 +79,7 @@ const table = createTable<Row>({
     const orig = row.original as Record<string, unknown>;
     const text = Object.values(orig)
       .map((v) =>
-        typeof v === "string" || typeof v === "number" ? String(v) : ""
+        typeof v === "string" || typeof v === "number" ? String(v) : "",
       )
       .join(" ")
       .toLowerCase();

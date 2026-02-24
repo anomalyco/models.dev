@@ -1,5 +1,5 @@
-import { describe, it, expect } from "bun:test";
-import { parseUrlState, serializeUrlState, ALL_COLUMN_IDS } from "./url-state";
+import { describe, expect, it } from "bun:test";
+import { ALL_COLUMN_IDS, parseUrlState, serializeUrlState } from "./url-state";
 
 describe("parseUrlState", () => {
   it("returns empty defaults when no params", () => {
@@ -16,13 +16,17 @@ describe("parseUrlState", () => {
   });
 
   it("parses sort and order", () => {
-    const state = parseUrlState(new URLSearchParams("sort=input-cost&order=desc"));
+    const state = parseUrlState(
+      new URLSearchParams("sort=input-cost&order=desc"),
+    );
     expect(state.sort).toBe("input-cost");
     expect(state.order).toBe("desc");
   });
 
   it("parses cols param as array", () => {
-    const state = parseUrlState(new URLSearchParams("cols=provider,model,input-cost"));
+    const state = parseUrlState(
+      new URLSearchParams("cols=provider,model,input-cost"),
+    );
     expect(state.cols).toEqual(["provider", "model", "input-cost"]);
   });
 });

@@ -1,6 +1,6 @@
-import Index from "../index.html";
-import { Rendered, Providers } from "./render";
 import path from "path";
+import Index from "../index.html";
+import { Providers, Rendered } from "./render";
 
 Bun.serve({
   port: 16_000,
@@ -12,7 +12,7 @@ Bun.serve({
       }),
     "/assets/*": (req) => {
       const file = Bun.file(
-        path.join(import.meta.dir, new URL(req.url).pathname)
+        path.join(import.meta.dir, new URL(req.url).pathname),
       );
       return new Response(file);
     },
@@ -26,7 +26,7 @@ Bun.serve({
         "..",
         "providers",
         provider,
-        "logo.svg"
+        "logo.svg",
       );
       const defaultLogoPath = path.join(
         import.meta.dir,
@@ -34,7 +34,7 @@ Bun.serve({
         "..",
         "..",
         "providers",
-        "logo.svg"
+        "logo.svg",
       );
 
       let file = Bun.file(logoPath);

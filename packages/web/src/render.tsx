@@ -1,14 +1,14 @@
 /** @jsx jsx */
 /** @jsxImportSource hono/jsx */
 
-import { generate } from "models.dev";
+import { existsSync } from "fs";
 import { Fragment } from "hono/jsx";
 import { renderToString } from "hono/jsx/dom/server";
-import { existsSync } from "fs";
+import { generate } from "models.dev";
 import path from "path";
 
 export const Providers = await generate(
-  path.join(import.meta.dir, "..", "..", "..", "providers")
+  path.join(import.meta.dir, "..", "..", "..", "providers"),
 );
 
 // Function to load SVG content
@@ -20,7 +20,7 @@ const loadProviderSvg = async (providerId: string): Promise<string | null> => {
     "..",
     "providers",
     providerId,
-    "logo.svg"
+    "logo.svg",
   );
 
   const defaultLogoPath = path.join(
@@ -29,7 +29,7 @@ const loadProviderSvg = async (providerId: string): Promise<string | null> => {
     "..",
     "..",
     "providers",
-    "logo.svg"
+    "logo.svg",
   );
 
   try {
@@ -211,10 +211,14 @@ export const Rendered = renderToString(
           <span class="search-shortcut">⌘K</span>
         </div>
         <div class="columns-container">
-          <button id="columns-toggle">Columns</button>
+          <button id="columns-toggle" type="button">
+            Columns
+          </button>
           <div id="columns-picker" hidden></div>
         </div>
-        <button id="help">How to use</button>
+        <button id="help" type="button">
+          How to use
+        </button>
       </div>
     </header>
     <div id="table-scroll-container">
@@ -227,7 +231,7 @@ export const Rendered = renderToString(
     <dialog id="modal">
       <div class="header">
         <h2>How to use</h2>
-        <button id="close">
+        <button id="close" type="button">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
             <line
               x1="18"
@@ -339,5 +343,5 @@ export const Rendered = renderToString(
         </a>
       </div>
     </dialog>
-  </Fragment>
+  </Fragment>,
 );

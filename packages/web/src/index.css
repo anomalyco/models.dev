@@ -8,40 +8,40 @@
 :root {
   --icon-opacity: 0.85;
   --header-height: 56px;
-  --font-mono: 'IBM Plex Mono', monospace;
+  --font-mono: "IBM Plex Mono", monospace;
 }
 
 :root {
-  --color-brand: #FD9527;
-  --color-background: #FFF;
-  --color-border: #DDD;
-  --color-surface: #EEE;
+  --color-brand: #fd9527;
+  --color-background: #fff;
+  --color-border: #ddd;
+  --color-surface: #eee;
   --color-alpha-background: rgba(255, 255, 255, 0.75);
 
   --color-text: #333;
-  --color-text-invert: #FFF;
+  --color-text-invert: #fff;
   --color-text-secondary: #666;
   --color-text-tertiary: #999;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --color-brand: #FD9527;
-    --color-background: #1E1E1E;
+    --color-brand: #fd9527;
+    --color-background: #1e1e1e;
     --color-border: #333;
     --color-surface: #111;
     --color-alpha-background: rgba(30, 30, 30, 0.75);
 
-    --color-text: #FFF;
+    --color-text: #fff;
     --color-text-invert: #333;
-    --color-text-secondary: #AAA;
+    --color-text-secondary: #aaa;
     --color-text-tertiary: #666;
   }
 }
 
 html,
 body {
-  font-family: 'Rubik', sans-serif;
+  font-family: "Rubik", sans-serif;
   line-height: 1.6;
   color: var(--color-text);
   background-color: var(--color-background);
@@ -81,7 +81,7 @@ header {
   width: 100%;
   z-index: 10;
 
-  &>div {
+  & > div {
     display: flex;
     align-items: center;
 
@@ -173,7 +173,8 @@ header {
     font-size: 0.75rem;
     color: var(--color-text-tertiary);
     pointer-events: none;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    font-family:
+      -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
   }
 
   button {
@@ -191,7 +192,6 @@ header {
 
   @media (max-width: 32rem) {
     div.left {
-
       p,
       span.slash {
         display: none;
@@ -201,7 +201,6 @@ header {
 
   @media (max-width: 45rem) {
     div.right {
-
       .github,
       .search-container {
         display: none;
@@ -222,10 +221,15 @@ header {
     0 4px 8px rgba(0, 0, 0, 0.08),
     0 8px 24px rgba(0, 0, 0, 0.1);
   padding: 0.375rem;
-  z-index: 100;
+  z-index: 10;
   min-width: 11rem;
   max-height: 32rem;
   overflow-y: auto;
+}
+
+#table-head {
+  z-index: 1;
+  position: relative;
 }
 
 .picker-actions {
@@ -282,6 +286,8 @@ header {
   input[type="checkbox"] {
     cursor: pointer;
     accent-color: var(--color-brand);
+    width: 1rem;
+    height: 1rem;
   }
 }
 
@@ -308,7 +314,8 @@ table {
 }
 
 thead,
-tbody {}
+tbody {
+}
 
 table thead th {
   position: sticky;
@@ -437,7 +444,8 @@ tbody {
     gap: 0.375rem;
   }
 
-  .model-id-text {}
+  .model-id-text {
+  }
 
   .copy-button {
     flex: 0 0 auto;
@@ -448,7 +456,9 @@ tbody {
     border-radius: 0.25rem;
     color: var(--color-text-tertiary);
     opacity: 0;
-    transition: opacity 0.2s ease, color 0.2s ease;
+    transition:
+      opacity 0.2s ease,
+      color 0.2s ease;
   }
 
   .model-id-cell:hover .copy-button {
@@ -533,12 +543,12 @@ dialog {
   max-width: 40rem;
   max-height: calc(100svh - 2rem);
   box-shadow:
-    0 2px 4px rgba(0, 0, 0, .05),
-    0 4px 8px rgba(0, 0, 0, .05),
-    0 8px 16px rgba(0, 0, 0, .07),
-    0 16px 32px rgba(0, 0, 0, .07),
-    0 32px 64px rgba(0, 0, 0, .07),
-    0 48px 96px rgba(0, 0, 0, .07);
+    0 2px 4px rgba(0, 0, 0, 0.05),
+    0 4px 8px rgba(0, 0, 0, 0.05),
+    0 8px 16px rgba(0, 0, 0, 0.07),
+    0 16px 32px rgba(0, 0, 0, 0.07),
+    0 32px 64px rgba(0, 0, 0, 0.07),
+    0 48px 96px rgba(0, 0, 0, 0.07);
 
   flex-direction: column;
   overflow: hidden;
@@ -645,5 +655,4 @@ dialog {
       }
     }
   }
-
 }
