@@ -49,6 +49,215 @@ let rows: Row[] = [];
 let sorting: SortingState = [];
 let globalFilter = "";
 let columnVisibility: VisibilityState = {};
+let computedColumnSizes: Partial<Record<string, number>> = {};
+
+function textWidthPx(length: number, mono = false): number {
+  return length * (mono ? 8 : 7);
+}
+
+function maxLength<T>(items: T[], getLength: (item: T) => number): number {
+  let max = 0;
+  for (const item of items) max = Math.max(max, getLength(item));
+  return max;
+}
+
+function formatCost(value: number | undefined): string {
+  return value === undefined ? "-" : `$${value.toFixed(2)}`;
+}
+
+function formatNumber(value: number | undefined): string {
+  return value == null ? "-" : value.toLocaleString();
+}
+
+function computeColumnSizes(data: Row[]): Partial<Record<string, number>> {
+  const tdHorizontalPaddingPx = 24;
+  const sortIndicatorPx = 18;
+  const extraSafetyPx = 16;
+  const iconSizePx = 16;
+  const iconGapPx = 6;
+  const copyButtonWidthPx = 30;
+  const modalityIconWidthPx = 20;
+  const modalityIconGapPx = 4;
+  const widths: Partial<Record<string, number>> = {};
+
+  for (const col of columnDefs) {
+    const id = String(col.id ?? "");
+    if (!id) continue;
+
+    const meta = col.meta as ColumnMeta | undefined;
+    const baseSize = col.size ?? 0;
+    const headerLabel = meta?.headerLabel ?? id;
+    const headerSubLabel = meta?.headerSubLabel ?? "";
+    const headerTextWidth =
+      Math.max(
+        textWidthPx(headerLabel.length),
+        textWidthPx(headerSubLabel.length),
+      ) +
+      tdHorizontalPaddingPx +
+      sortIndicatorPx +
+      extraSafetyPx;
+
+    let cellWidth = baseSize;
+    switch (id) {
+      case "provider":
+        cellWidth =
+          textWidthPx(maxLength(data, (row) => row.providerName.length)) +
+          iconSizePx +
+          iconGapPx +
+          tdHorizontalPaddingPx +
+          extraSafetyPx;
+        break;
+      case "model":
+        cellWidth =
+          textWidthPx(maxLength(data, (row) => row.name.length)) +
+          tdHorizontalPaddingPx +
+          extraSafetyPx;
+        break;
+      case "family":
+        cellWidth =
+          textWidthPx(maxLength(data, (row) => (row.family ?? "-").length)) +
+          tdHorizontalPaddingPx +
+          extraSafetyPx;
+        break;
+      case "provider-id":
+        cellWidth =
+          textWidthPx(maxLength(data, (row) => row.providerId.length), true) +
+          tdHorizontalPaddingPx +
+          extraSafetyPx;
+        break;
+      case "model-id":
+        cellWidth =
+          textWidthPx(maxLength(data, (row) => row.modelId.length), true) +
+          copyButtonWidthPx +
+          iconGapPx +
+          tdHorizontalPaddingPx +
+          extraSafetyPx;
+        break;
+      case "input-modalities":
+        cellWidth =
+          maxLength(data, (row) => {
+            const count = row.modalities.input.length;
+            return count * modalityIconWidthPx + Math.max(0, count - 1) * modalityIconGapPx;
+          }) +
+          tdHorizontalPaddingPx +
+          extraSafetyPx;
+        break;
+      case "output-modalities":
+        cellWidth =
+          maxLength(data, (row) => {
+            const count = row.modalities.output.length;
+            return count * modalityIconWidthPx + Math.max(0, count - 1) * modalityIconGapPx;
+          }) +
+          tdHorizontalPaddingPx +
+          extraSafetyPx;
+        break;
+      case "input-cost":
+        cellWidth =
+          textWidthPx(maxLength(data, (row) => formatCost(row.cost?.input).length), true) +
+          tdHorizontalPaddingPx +
+          extraSafetyPx;
+        break;
+      case "output-cost":
+        cellWidth =
+          textWidthPx(maxLength(data, (row) => formatCost(row.cost?.output).length), true) +
+          tdHorizontalPaddingPx +
+          extraSafetyPx;
+        break;
+      case "reasoning-cost":
+        cellWidth =
+          textWidthPx(maxLength(data, (row) => formatCost(row.cost?.reasoning).length), true) +
+          tdHorizontalPaddingPx +
+          extraSafetyPx;
+        break;
+      case "cache-read-cost":
+        cellWidth =
+          textWidthPx(maxLength(data, (row) => formatCost(row.cost?.cache_read).length), true) +
+          tdHorizontalPaddingPx +
+          extraSafetyPx;
+        break;
+      case "cache-write-cost":
+        cellWidth =
+          textWidthPx(maxLength(data, (row) => formatCost(row.cost?.cache_write).length), true) +
+          tdHorizontalPaddingPx +
+          extraSafetyPx;
+        break;
+      case "audio-input-cost":
+        cellWidth =
+          textWidthPx(maxLength(data, (row) => formatCost(row.cost?.input_audio).length), true) +
+          tdHorizontalPaddingPx +
+          extraSafetyPx;
+        break;
+      case "audio-output-cost":
+        cellWidth =
+          textWidthPx(maxLength(data, (row) => formatCost(row.cost?.output_audio).length), true) +
+          tdHorizontalPaddingPx +
+          extraSafetyPx;
+        break;
+      case "context-limit":
+        cellWidth =
+          textWidthPx(maxLength(data, (row) => formatNumber(row.limit.context).length), true) +
+          tdHorizontalPaddingPx +
+          extraSafetyPx;
+        break;
+      case "input-limit":
+        cellWidth =
+          textWidthPx(maxLength(data, (row) => formatNumber(row.limit.input).length), true) +
+          tdHorizontalPaddingPx +
+          extraSafetyPx;
+        break;
+      case "output-limit":
+        cellWidth =
+          textWidthPx(maxLength(data, (row) => formatNumber(row.limit.output).length), true) +
+          tdHorizontalPaddingPx +
+          extraSafetyPx;
+        break;
+      case "knowledge":
+        cellWidth =
+          textWidthPx(
+            maxLength(data, (row) => (row.knowledge ? row.knowledge.substring(0, 7) : "-").length),
+            true,
+          ) +
+          tdHorizontalPaddingPx +
+          extraSafetyPx;
+        break;
+      case "release-date":
+        cellWidth =
+          textWidthPx(maxLength(data, (row) => (row.release_date ?? "-").length), true) +
+          tdHorizontalPaddingPx +
+          extraSafetyPx;
+        break;
+      case "last-updated":
+        cellWidth =
+          textWidthPx(maxLength(data, (row) => (row.last_updated ?? "-").length), true) +
+          tdHorizontalPaddingPx +
+          extraSafetyPx;
+        break;
+      default:
+        if (meta?.dataType === "boolean") {
+          cellWidth = textWidthPx(3) + tdHorizontalPaddingPx + extraSafetyPx;
+        } else if (meta?.dataType === "text") {
+          cellWidth =
+            textWidthPx(
+              maxLength(data, (row) => {
+                if (id === "weights") return (row.open_weights ? "Open" : "Closed").length;
+                return 1;
+              }),
+            ) +
+            tdHorizontalPaddingPx +
+            extraSafetyPx;
+        }
+        break;
+    }
+
+    widths[id] = Math.max(baseSize, headerTextWidth, cellWidth);
+  }
+
+  return widths;
+}
+
+function getColumnSize(columnId: string, fallbackSize: number): number {
+  return Math.max(fallbackSize, computedColumnSizes[columnId] ?? fallbackSize);
+}
 
 // ─── Tanstack Table ───────────────────────────────────────────────────────────
 const table = createTable<Row>({
@@ -154,7 +363,7 @@ function renderHead() {
       if (!header.column.getIsVisible()) continue;
 
       const meta = header.column.columnDef.meta as ColumnMeta | undefined;
-      const colSize = header.column.getSize();
+      const colSize = getColumnSize(header.column.id, header.column.getSize());
       const isSorted = header.column.getIsSorted();
 
       const th = document.createElement("th");
@@ -226,7 +435,7 @@ function renderRows() {
 
     for (const cell of row.getVisibleCells()) {
       const td = document.createElement("td");
-      const colSize = cell.column.getSize();
+      const colSize = getColumnSize(cell.column.id, cell.column.getSize());
       const meta = cell.column.columnDef.meta as ColumnMeta | undefined;
       const grow = flexGrow(meta?.dataType, colSize);
       td.style.cssText = `width: ${colSize}px; flex: ${grow} 0 ${colSize}px; overflow: hidden;`;
@@ -520,6 +729,8 @@ function init() {
     const p = a.providerName.localeCompare(b.providerName);
     return p !== 0 ? p : a.name.localeCompare(b.name);
   });
+
+  computedColumnSizes = computeColumnSizes(allRows);
 
   buildSearchIndex(allRows);
   rows = allRows;
