@@ -1,0 +1,23 @@
+name = "OpenAI: GPT-5.3-Codex"
+
+release_date = "2026-02-24"
+last_updated = "2026-02-24"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[cost]
+input = 1.75
+output = 14
+cache_read = 0.175
+
+[limit]
+context = 400_000
+output = 128_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

@@ -1,0 +1,22 @@
+name = "OpenAI: GPT Audio"
+
+release_date = "2026-01-19"
+last_updated = "2026-01-19"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = false
+structured_output = true
+open_weights = false
+
+[cost]
+input = 2.5
+output = 10
+
+[limit]
+context = 128_000
+output = 16_384
+
+[modalities]
+input = ["text", "audio"]
+output = ["text", "audio"]
