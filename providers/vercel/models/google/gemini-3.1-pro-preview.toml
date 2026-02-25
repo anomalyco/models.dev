@@ -1,29 +1,22 @@
 name = "Gemini 3.1 Pro Preview"
-family = "gemini-pro"
+family = "gemini"
 attachment = true
 reasoning = true
 tool_call = true
-structured_output = true
 temperature = true
 release_date = "2026-02-19"
 last_updated = "2026-02-24"
 open_weights = false
 
 [cost]
-input = 2.5
-output = 15
-cache_read = 0.5
-cache_write = 0.5
-
-[cost.context_over_200k]
-input = 5
-output = 22.5
-cache_read = 0.5
+input = 2
+output = 12
+cache_read = 0.2
 
 [limit]
 context = 1_000_000
-output = 65_000
+output = 64_000
 
 [modalities]
-input = ["text", "image", "audio", "video"]
+input = ["text", "image", "pdf"]
 output = ["text"]
