@@ -33,6 +33,8 @@ jobs:
 
       - name: Sync with upstream
         run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git remote add upstream https://github.com/anomalyco/models.dev.git || true
           git fetch upstream
           git merge upstream/dev --no-edit
