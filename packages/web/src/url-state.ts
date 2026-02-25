@@ -28,6 +28,18 @@ export const ALL_COLUMN_IDS = [
 
 export type ColumnId = (typeof ALL_COLUMN_IDS)[number];
 
+export const DEFAULT_COLUMN_IDS: string[] = [
+  "provider",
+  "model",
+  "family",
+  "model-id",
+  "tool-call",
+  "reasoning",
+  "input-cost",
+  "output-cost",
+  "context-limit",
+];
+
 export type UrlState = {
   search: string;
   sort: string | null;
@@ -41,13 +53,13 @@ export function parseUrlState(params: URLSearchParams): UrlState {
     ? colsParam
         .split(",")
         .filter((c) => (ALL_COLUMN_IDS as readonly string[]).includes(c))
-    : [...ALL_COLUMN_IDS];
+    : [...DEFAULT_COLUMN_IDS];
 
   return {
     search: params.get("search") ?? "",
     sort: params.get("sort"),
     order: params.get("order") === "desc" ? "desc" : "asc",
-    cols: cols.length > 0 ? cols : [...ALL_COLUMN_IDS],
+    cols: cols.length > 0 ? cols : [...DEFAULT_COLUMN_IDS],
   };
 }
 
@@ -58,9 +70,9 @@ export function serializeUrlState(state: UrlState): URLSearchParams {
     params.set("sort", state.sort);
     if (state.order !== "asc") params.set("order", state.order);
   }
-  const allVisible =
-    state.cols.length === ALL_COLUMN_IDS.length &&
-    ALL_COLUMN_IDS.every((id) => state.cols.includes(id));
-  if (!allVisible) params.set("cols", state.cols.join(","));
+  const isDefault =
+    state.cols.length === DEFAULT_COLUMN_IDS.length &&
+    DEFAULT_COLUMN_IDS.every((id) => state.cols.includes(id));
+  if (!isDefault) params.set("cols", state.cols.join(","));
   return params;
 }
