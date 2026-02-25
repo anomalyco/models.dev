@@ -39,6 +39,12 @@
   }
 }
 
+@media (max-width: 45rem) {
+  :root {
+    --header-height: 92px;
+  }
+}
+
 html,
 body {
   font-family: "Rubik", sans-serif;
@@ -71,6 +77,7 @@ a {
 header {
   top: 0;
   display: flex;
+  flex-wrap: nowrap;
   gap: 0.5rem;
   justify-content: space-between;
   align-items: center;
@@ -190,20 +197,38 @@ header {
     border-radius: 0.25rem;
   }
 
-  @media (max-width: 32rem) {
+  @media (max-width: 45rem) {
     div.left {
       p,
       span.slash {
         display: none;
       }
     }
-  }
 
-  @media (max-width: 45rem) {
+    flex-wrap: wrap;
+    align-content: center;
+    gap: 0.75rem;
+    row-gap: 0.5rem;
+    padding: 0.5rem 0.75rem;
+
+    div.left {
+      order: 0;
+    }
+
     div.right {
+      display: contents;
+
       .github,
+      .columns-container,
+      button#help {
+        order: 1;
+        flex: 0 0 auto;
+      }
+
       .search-container {
-        display: none;
+        order: 2;
+        flex: 1 0 100%;
+        min-width: 0;
       }
     }
   }
