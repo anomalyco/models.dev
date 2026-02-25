@@ -322,6 +322,8 @@ header {
   overflow-y: auto;
   overflow-x: auto;
   margin-top: var(--header-height);
+  -webkit-overflow-scrolling: touch;
+  transform: translateZ(0);
 }
 
 #table-loading {
@@ -354,8 +356,7 @@ table thead th {
   text-transform: uppercase;
   letter-spacing: 0.5px;
   color: var(--color-text-secondary);
-  backdrop-filter: blur(6px);
-  background-color: var(--color-alpha-background);
+  background-color: var(--color-background);
   z-index: 10;
 }
 
