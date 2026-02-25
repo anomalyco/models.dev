@@ -1,7 +1,6 @@
 import {
   createTable,
   getCoreRowModel,
-  getFilteredRowModel,
   getSortedRowModel,
   type SortingState,
   type VisibilityState,
@@ -15,7 +14,13 @@ import {
 } from "@tanstack/virtual-core";
 import { type ColumnMeta, columnDefs } from "./columns";
 import { flattenProviders, type Row } from "./data";
-import { ALL_COLUMN_IDS, parseUrlState, serializeUrlState } from "./url-state";
+import { buildSearchIndex, searchRows, debounce } from "./search";
+import {
+  ALL_COLUMN_IDS,
+  DEFAULT_COLUMN_IDS,
+  parseUrlState,
+  serializeUrlState,
+} from "./url-state";
 
 // ─── DOM refs ──────────────────────────────────────────────────────────────────
 const scrollContainer = document.getElementById(
@@ -27,7 +32,6 @@ const tableHead = document.getElementById(
 const tableBody = document.getElementById(
   "table-body",
 ) as HTMLTableSectionElement;
-const tableLoading = document.getElementById("table-loading") as HTMLDivElement;
 const searchInput = document.getElementById("search") as HTMLInputElement;
 const columnsToggle = document.getElementById(
   "columns-toggle",
@@ -40,6 +44,7 @@ const modalClose = document.getElementById("close") as HTMLButtonElement;
 const helpButton = document.getElementById("help") as HTMLButtonElement;
 
 // ─── State ────────────────────────────────────────────────────────────────────
+let allRows: Row[] = [];
 let rows: Row[] = [];
 let sorting: SortingState = [];
 let globalFilter = "";
@@ -49,16 +54,11 @@ let columnVisibility: VisibilityState = {};
 const table = createTable<Row>({
   data: rows,
   columns: columnDefs,
-  state: { sorting, globalFilter, columnVisibility },
+  state: { sorting, columnVisibility },
   onStateChange: () => {},
   renderFallbackValue: null,
   onSortingChange: (updater) => {
     sorting = typeof updater === "function" ? updater(sorting) : updater;
-    afterStateChange();
-  },
-  onGlobalFilterChange: (updater) => {
-    globalFilter =
-      typeof updater === "function" ? updater(globalFilter) : updater;
     afterStateChange();
   },
   onColumnVisibilityChange: (updater) => {
@@ -68,23 +68,6 @@ const table = createTable<Row>({
   },
   getCoreRowModel: getCoreRowModel(),
   getSortedRowModel: getSortedRowModel(),
-  getFilteredRowModel: getFilteredRowModel(),
-  globalFilterFn: (row, _columnId, filterValue: string) => {
-    const terms = filterValue
-      .toLowerCase()
-      .split(",")
-      .map((t) => t.trim())
-      .filter(Boolean);
-    if (terms.length === 0) return true;
-    const orig = row.original as Record<string, unknown>;
-    const text = Object.values(orig)
-      .map((v) =>
-        typeof v === "string" || typeof v === "number" ? String(v) : "",
-      )
-      .join(" ")
-      .toLowerCase();
-    return terms.some((term) => text.includes(term));
-  },
 });
 
 // Prime state with all feature-provided defaults (e.g. columnPinning: {left:[],right:[]})
@@ -95,10 +78,14 @@ table.setOptions((prev) => ({
 }));
 
 function afterStateChange() {
+  const filtered = globalFilter
+    ? searchRows(globalFilter, allRows) ?? allRows
+    : allRows;
+  rows = filtered;
   table.setOptions((prev) => ({
     ...prev,
     data: rows,
-    state: { ...prev.state, sorting, globalFilter, columnVisibility },
+    state: { ...prev.state, sorting, columnVisibility },
   }));
   const rowCount = table.getRowModel().rows.length;
   virtualizer.setOptions({
@@ -111,6 +98,13 @@ function afterStateChange() {
   renderRows();
   updateUrl();
   updateColumnPickerCheckboxes();
+
+  // Persist column visibility changes to localStorage
+  const visibleCols = table
+    .getAllColumns()
+    .filter((c) => c.getIsVisible())
+    .map((c) => c.id);
+  saveColsToStorage(visibleCols);
 }
 
 // ─── Tanstack Virtual ─────────────────────────────────────────────────────────
@@ -277,6 +271,7 @@ function buildColumnPicker() {
   showAll.textContent = "Show all";
   showAll.addEventListener("click", () => {
     table.toggleAllColumnsVisible(true);
+    saveColsToStorage([...ALL_COLUMN_IDS]);
   });
   actions.append(showAll);
   columnsPicker.append(actions);
@@ -347,6 +342,30 @@ document.addEventListener("keydown", (e) => {
   }
 });
 
+// ─── localStorage persistence ─────────────────────────────────────────────────
+const LS_KEY = "models.dev:cols";
+
+function saveColsToStorage(cols: string[]): void {
+  try {
+    localStorage.setItem(LS_KEY, cols.join(","));
+  } catch {
+    // localStorage unavailable (e.g. private browsing with strict settings)
+  }
+}
+
+function loadColsFromStorage(): string[] | null {
+  try {
+    const raw = localStorage.getItem(LS_KEY);
+    if (!raw) return null;
+    const cols = raw
+      .split(",")
+      .filter((c) => (ALL_COLUMN_IDS as readonly string[]).includes(c));
+    return cols.length > 0 ? cols : null;
+  } catch {
+    return null;
+  }
+}
+
 // ─── URL state ────────────────────────────────────────────────────────────────
 function updateUrl() {
   const visibleCols = table
@@ -368,7 +387,8 @@ function updateUrl() {
 }
 
 function applyUrlState() {
-  const state = parseUrlState(new URLSearchParams(window.location.search));
+  const urlParams = new URLSearchParams(window.location.search);
+  const state = parseUrlState(urlParams);
 
   globalFilter = state.search;
   searchInput.value = state.search;
@@ -376,16 +396,30 @@ function applyUrlState() {
     ? [{ id: state.sort, desc: state.order === "desc" }]
     : [];
 
+  // Priority: URL cols= param > localStorage > DEFAULT_COLUMN_IDS
+  let activeCols: string[];
+  if (urlParams.has("cols")) {
+    // Explicit URL param — use it (already parsed and validated in state.cols)
+    activeCols = state.cols;
+  } else {
+    // No URL param — check localStorage, fall back to defaults
+    activeCols = loadColsFromStorage() ?? [...DEFAULT_COLUMN_IDS];
+  }
+
   const newVisibility: VisibilityState = {};
   for (const id of ALL_COLUMN_IDS) {
-    newVisibility[id] = state.cols.includes(id);
+    newVisibility[id] = activeCols.includes(id);
   }
   columnVisibility = newVisibility;
 
+  const filtered = globalFilter
+    ? searchRows(globalFilter, allRows) ?? allRows
+    : allRows;
+  rows = filtered;
   table.setOptions((prev) => ({
     ...prev,
     data: rows,
-    state: { ...prev.state, sorting, globalFilter, columnVisibility },
+    state: { ...prev.state, sorting, columnVisibility },
   }));
 
   const rowCount = table.getRowModel().rows.length;
@@ -399,14 +433,21 @@ function applyUrlState() {
 }
 
 // ─── Search ───────────────────────────────────────────────────────────────────
+const debouncedSearch = debounce((value: string) => {
+  globalFilter = value;
+  afterStateChange();
+}, 150);
+
 searchInput.addEventListener("input", () => {
-  table.setGlobalFilter(searchInput.value);
+  debouncedSearch(searchInput.value);
 });
 
 searchInput.addEventListener("keydown", (e) => {
   if (e.key === "Escape") {
+    debouncedSearch.cancel();
     searchInput.value = "";
-    table.setGlobalFilter("");
+    globalFilter = "";
+    afterStateChange();
   }
 });
 
@@ -441,23 +482,24 @@ modal.addEventListener("click", (e) => {
 });
 
 // ─── Init ─────────────────────────────────────────────────────────────────────
-async function init() {
-  const res = await fetch("/api.json");
-  const api: Record<string, unknown> = await res.json();
-  rows = flattenProviders(api as any);
+function init() {
+  const dataEl = document.getElementById("model-data");
+  const api = JSON.parse(dataEl!.textContent!);
+  allRows = flattenProviders(api as any);
 
   // Default sort: provider name, then model name
-  rows.sort((a, b) => {
+  allRows.sort((a, b) => {
     const p = a.providerName.localeCompare(b.providerName);
     return p !== 0 ? p : a.name.localeCompare(b.name);
   });
 
+  buildSearchIndex(allRows);
+  rows = allRows;
   table.setOptions((prev) => ({ ...prev, data: rows }));
-  tableLoading.remove();
   applyUrlState();
 }
 
 window.addEventListener("popstate", applyUrlState);
 document.addEventListener("DOMContentLoaded", () => {
-  init().catch(console.error);
+  init();
 });
