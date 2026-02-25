@@ -43,6 +43,10 @@ for (const entry of entries) {
 
 let html = await Bun.file("./dist/index.html").text();
 html = html.replace("<!--static-->", Rendered);
+html = html.replace(
+  '<script id="model-data" type="application/json"></script>',
+  '<script id="model-data" type="application/json">' + JSON.stringify(Providers) + '</script>'
+);
 await Bun.write("./dist/index.html", html);
 await Bun.write("./dist/api.json", JSON.stringify(Providers));
 

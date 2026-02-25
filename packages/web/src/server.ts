@@ -74,6 +74,10 @@ const server = Bun.serve({
 
     let html = await result.then((r) => r.text());
     html = html.replace("<!--static-->", Rendered);
+    html = html.replace(
+      '<script id="model-data" type="application/json"></script>',
+      '<script id="model-data" type="application/json">' + JSON.stringify(Providers) + '</script>'
+    );
     return new Response(html, {
       headers: {
         "Content-Type": "text/html",

@@ -226,7 +226,7 @@ export const Rendered = renderToString(
         <thead id="table-head"></thead>
         <tbody id="table-body"></tbody>
       </table>
-      <div id="table-loading">Loading models…</div>
+
     </div>
     <dialog id="modal">
       <div class="header">
