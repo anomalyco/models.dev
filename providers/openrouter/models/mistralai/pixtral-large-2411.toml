@@ -1,0 +1,22 @@
+name = "Mistral: Pixtral Large 2411"
+
+release_date = "2024-11-19"
+last_updated = "2024-11-19"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[cost]
+input = 2
+output = 6
+
+[limit]
+context = 131_072
+output = 131_072
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
