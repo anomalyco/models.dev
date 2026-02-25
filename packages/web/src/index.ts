@@ -123,6 +123,26 @@ const virtualizer = new Virtualizer<HTMLDivElement, HTMLTableRowElement>({
 // the scroll element (frameworks call it automatically via lifecycle hooks).
 virtualizer._willUpdate();
 
+/** Compute proportional flex-grow so text-heavy columns absorb more extra space. */
+export function flexGrow(dataType: string | undefined, baseSize: number): number {
+  switch (dataType) {
+    case "text":
+      // Text columns grow proportionally to their base size
+      // e.g. Model (200) → grow 3, Provider (150) → grow 2, Family (120) → grow 2
+      return Math.max(1, Math.round(baseSize / 80));
+    case "cost":
+    case "number":
+      // Numbers/costs get minimal growth — they're fairly fixed width
+      return 1;
+    case "boolean":
+    case "modalities":
+      // Booleans and modality icons don't need extra space at all
+      return 0;
+    default:
+      return 1;
+  }
+}
+
 // ─── Render: thead ────────────────────────────────────────────────────────────
 function renderHead() {
   tableHead.textContent = "";
@@ -139,7 +159,8 @@ function renderHead() {
 
       const th = document.createElement("th");
       th.className = "sortable";
-      th.style.cssText = `width: ${colSize}px; flex: 0 0 ${colSize}px; overflow: hidden;`;
+      const grow = flexGrow(meta?.dataType, colSize);
+      th.style.cssText = `width: ${colSize}px; flex: ${grow} 0 ${colSize}px; overflow: hidden;`;
       th.setAttribute("data-column-id", header.column.id);
 
       if (meta?.headerSubLabel) {
@@ -206,7 +227,9 @@ function renderRows() {
     for (const cell of row.getVisibleCells()) {
       const td = document.createElement("td");
       const colSize = cell.column.getSize();
-      td.style.cssText = `width: ${colSize}px; flex: 0 0 ${colSize}px; overflow: hidden;`;
+      const meta = cell.column.columnDef.meta as ColumnMeta | undefined;
+      const grow = flexGrow(meta?.dataType, colSize);
+      td.style.cssText = `width: ${colSize}px; flex: ${grow} 0 ${colSize}px; overflow: hidden;`;
       td.dataset.columnId = cell.column.id;
 
       const colDef = cell.column.columnDef;
@@ -220,6 +243,11 @@ function renderRows() {
       } else {
         const v = cell.getValue();
         td.textContent = v != null ? String(v) : "-";
+      }
+
+      // Add tooltip for text cells that might overflow
+      if (meta?.dataType === "text" && td.textContent) {
+        td.title = td.textContent;
       }
 
       tr.append(td);
