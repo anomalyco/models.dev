@@ -519,6 +519,16 @@ export const Rendered = renderToString(
           </a>
           .
         </p>
+        <p>Search models by name and/or provider:</p>
+        <div class="code-block">
+          <code>
+            curl &quot;<a href="/search?q=gpt-4&amp;provider=openai">https://models.dev/search?q=gpt-4&amp;provider=openai</a>&quot;
+          </code>
+        </div>
+        <p>
+          Parameters: <code>q</code> (search query), <code>provider</code>{" "}
+          (filter by provider ID), <code>limit</code> (limit results).
+        </p>
         <h2>Logos</h2>
         <p>
           Provider logos are available at <code>/logos/{`{provider}`}.svg</code>{" "}

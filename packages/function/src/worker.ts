@@ -3,6 +3,14 @@ export interface Env {
   PosthogToken: string;
 }
 
+async function fetchAsset<T>(env: Env, path: string): Promise<T> {
+  const response = await env.ASSETS.fetch(new Request(new URL(path, "http://assets.local")));
+  if (!response.ok) {
+    throw new Error(`Failed to fetch ${path}: ${response.status}`);
+  }
+  return response.json();
+}
+
 export default {
   async fetch(
     request: Request,
@@ -33,6 +41,66 @@ export default {
           }),
         }),
       );
+    }
+
+    // Search API endpoint
+    if (url.pathname === "/search") {
+      const query = url.searchParams.get("q")?.toLowerCase() || "";
+      const providerFilter = url.searchParams.get("provider")?.toLowerCase() || "";
+      const limit = parseInt(url.searchParams.get("limit") || "") || undefined;
+
+      try {
+        // Load search index and providers metadata
+        const [searchIndex, providersMeta] = await Promise.all([
+          fetchAsset<Array<{ p: string; m: string; n: string }>>(env, "/_search-index.json"),
+          fetchAsset<Record<string, { id: string; name: string; env: string[]; npm: string; api?: string; doc: string }>>(env, "/_providers.json"),
+        ]);
+
+        // Filter matches
+        const matches: Array<{ p: string; m: string }> = [];
+        for (const item of searchIndex) {
+          if (providerFilter && item.p.toLowerCase() !== providerFilter) continue;
+          if (query && !item.m.toLowerCase().includes(query) && !item.n.toLowerCase().includes(query)) continue;
+          matches.push({ p: item.p, m: item.m });
+          if (limit && matches.length >= limit) break;
+        }
+
+        if (matches.length === 0) {
+          return new Response(JSON.stringify({ total: 0, results: [] }), {
+            headers: { "Content-Type": "application/json" },
+          });
+        }
+
+        // Fetch model details in parallel
+        const modelPromises = matches.map((match) => {
+          const safeModelId = match.m.replace(/\//g, "__");
+          return fetchAsset(env, `/_models/${match.p}/${safeModelId}.json`);
+        });
+        const models = await Promise.all(modelPromises);
+
+        // Build response (align with api.json structure)
+        const results: Record<string, { id: string; name: string; env: string[]; npm: string; api?: string; doc: string; models: Record<string, any> }> = {};
+        for (let i = 0; i < matches.length; i++) {
+          const match = matches[i];
+          const providerMeta = providersMeta[match.p];
+          if (!results[match.p]) {
+            results[match.p] = {
+              ...providerMeta,
+              models: {},
+            };
+          }
+          results[match.p].models[match.m] = models[i];
+        }
+
+        return new Response(JSON.stringify({ total: matches.length, results }), {
+          headers: { "Content-Type": "application/json" },
+        });
+      } catch {
+        return new Response(JSON.stringify({ error: "Search failed" }), {
+          status: 500,
+          headers: { "Content-Type": "application/json" },
+        });
+      }
     }
 
     if (url.pathname === "/model-schema.json") {

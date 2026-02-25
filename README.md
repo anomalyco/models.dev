@@ -24,6 +24,24 @@ curl https://models.dev/api.json
 
 Use the **Model ID** field to do a lookup on any model; it's the identifier used by [AI SDK](https://ai-sdk.dev/).
 
+### Search
+
+Search models by name and/or provider:
+
+```bash
+# Search by model name
+curl "https://models.dev/search?q=gpt-4"
+
+# Filter by provider
+curl "https://models.dev/search?provider=openai"
+
+# Combine filters
+curl "https://models.dev/search?q=gpt-4&provider=openai"
+
+# Limit results
+curl "https://models.dev/search?q=gpt&limit=10"
+```
+
 ### Logos
 
 Provider logos are available as SVG files:
