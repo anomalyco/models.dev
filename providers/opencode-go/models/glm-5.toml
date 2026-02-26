@@ -1,5 +1,5 @@
-name = "GLM-5 Free"
-family = "glm-free"
+name = "GLM-5"
+family = "glm"
 release_date = "2026-02-11"
 last_updated = "2026-02-11"
 attachment = false
@@ -8,15 +8,14 @@ temperature = true
 tool_call = true
 knowledge = "2025-04"
 open_weights = true
-status = "deprecated"
 
 [interleaved]
 field = "reasoning_content"
 
 [cost]
-input = 0
-output = 0
-cache_read = 0
+input = 1.0
+output = 3.2
+cache_read = 0.2
 
 [limit]
 context = 204800
