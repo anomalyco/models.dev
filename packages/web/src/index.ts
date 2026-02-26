@@ -72,14 +72,12 @@ function sortTable(column: number, direction: "asc" | "desc") {
   const columnType = header.getAttribute("data-type");
   if (!columnType) return;
 
-  // update state
   currentSort = { column, direction };
   updateQueryParams({
     sort: getColumnNameForURL(header),
     order: direction,
   });
 
-  // sort rows
   const tbody = document.querySelector("table tbody")!;
   const rows = Array.from(
     tbody.querySelectorAll("tr")
@@ -88,7 +86,6 @@ function sortTable(column: number, direction: "asc" | "desc") {
     const aValue = getCellValue(a.cells[column], columnType);
     const bValue = getCellValue(b.cells[column], columnType);
 
-    // Handle undefined values - always sort to bottom
     if (aValue === undefined && bValue === undefined) return 0;
     if (aValue === undefined) return 1;
     if (bValue === undefined) return -1;
@@ -106,7 +103,6 @@ function sortTable(column: number, direction: "asc" | "desc") {
   });
   rows.forEach((row) => tbody.appendChild(row));
 
-  // update sort indicators
   const headers = document.querySelectorAll("th.sortable");
   headers.forEach((header, i) => {
     const indicator = header.querySelector(".sort-indicator")!;
@@ -193,14 +189,12 @@ search.addEventListener("keydown", (e) => {
     if (navigator.clipboard) {
       await navigator.clipboard.writeText(modelId);
 
-      // Switch to check icon
       const copyIcon = button.querySelector(".copy-icon") as HTMLElement;
       const checkIcon = button.querySelector(".check-icon") as HTMLElement;
 
       copyIcon.style.display = "none";
       checkIcon.style.display = "block";
 
-      // Switch back after 1 second
       setTimeout(() => {
         copyIcon.style.display = "block";
         checkIcon.style.display = "none";
@@ -238,3 +232,142 @@ function initializeFromURL() {
 
 document.addEventListener("DOMContentLoaded", initializeFromURL);
 window.addEventListener("popstate", initializeFromURL);
+
+
+///////////////////////////
+// Column Settings Sidebar
+///////////////////////////
+const sidebar = document.getElementById("column-sidebar")!;
+const sidebarOverlay = document.getElementById("sidebar-overlay")!;
+const columnSettingsBtn = document.getElementById("column-settings")!;
+const sidebarCloseBtn = document.getElementById("sidebar-close")!;
+
+const STORAGE_KEY = "column-visibility";
+
+function openSidebar() {
+  sidebar.classList.add("active");
+  sidebarOverlay.classList.add("active");
+  document.body.style.overflow = "hidden";
+}
+
+function closeSidebar() {
+  sidebar.classList.remove("active");
+  sidebarOverlay.classList.remove("active");
+  document.body.style.overflow = "";
+}
+
+columnSettingsBtn.addEventListener("click", openSidebar);
+sidebarCloseBtn.addEventListener("click", closeSidebar);
+sidebarOverlay.addEventListener("click", closeSidebar);
+
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape" && sidebar.classList.contains("active")) {
+    closeSidebar();
+  }
+});
+
+/////////////////////////////////////
+// Column Visibility Management
+/////////////////////////////////////
+
+function getSavedColumnVisibility(): Record<string, boolean> {
+  try {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    return saved ? JSON.parse(saved) : {};
+  } catch {
+    return {};
+  }
+}
+
+function saveColumnVisibility(visibility: Record<string, boolean>) {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(visibility));
+  } catch {
+    // Ignore storage errors
+  }
+}
+
+function applyColumnVisibility(visibility: Record<string, boolean>) {
+  const headers = document.querySelectorAll("th[data-col]") as NodeListOf<HTMLTableCellElement>;
+  const rows = document.querySelectorAll("tbody tr");
+  
+  const columnStates: { index: number; isVisible: boolean }[] = [];
+  
+  headers.forEach((header, index) => {
+    const colName = header.getAttribute("data-col")!;
+    const isVisible = visibility[colName] !== false;
+    columnStates.push({ index, isVisible });
+  });
+  
+  requestAnimationFrame(() => {
+    columnStates.forEach(({ index, isVisible }) => {
+      headers[index].classList.toggle("hidden-col", !isVisible);
+      
+      rows.forEach((row) => {
+        const cell = row.children[index] as HTMLTableCellElement;
+        if (cell) {
+          cell.classList.toggle("hidden-col", !isVisible);
+        }
+      });
+    });
+  });
+}
+
+function updateCheckboxes(visibility: Record<string, boolean>) {
+  const checkboxes = document.querySelectorAll(".column-toggle input[data-col]") as NodeListOf<HTMLInputElement>;
+  
+  checkboxes.forEach((checkbox) => {
+    const colName = checkbox.getAttribute("data-col")!;
+    const isVisible = visibility[colName] !== false;
+    checkbox.checked = isVisible;
+  });
+}
+
+function handleCheckboxChange(e: Event) {
+  const checkbox = e.target as HTMLInputElement;
+  const colName = checkbox.getAttribute("data-col")!;
+  
+  if (!checkbox.checked) {
+    const visibility = getSavedColumnVisibility();
+    const visibleCount = Object.values(visibility).filter(v => v !== false).length;
+    const currentlyVisible = visibility[colName] !== false;
+    
+    if (currentlyVisible && visibleCount <= 1) {
+      checkbox.checked = true;
+      return;
+    }
+  }
+  
+  const visibility = getSavedColumnVisibility();
+  visibility[colName] = checkbox.checked;
+  
+  saveColumnVisibility(visibility);
+  applyColumnVisibility(visibility);
+}
+
+function initColumnVisibility() {
+  const visibility = getSavedColumnVisibility();
+  
+  applyColumnVisibility(visibility);
+  updateCheckboxes(visibility);
+  
+  const checkboxes = document.querySelectorAll(".column-toggle input[data-col]") as NodeListOf<HTMLInputElement>;
+  checkboxes.forEach((checkbox) => {
+    checkbox.addEventListener("change", handleCheckboxChange);
+  });
+}
+
+function resetColumnVisibility() {
+  localStorage.removeItem(STORAGE_KEY);
+  applyColumnVisibility({});
+  updateCheckboxes({});
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  initColumnVisibility();
+  
+  const resetBtn = document.getElementById("reset-columns");
+  if (resetBtn) {
+    resetBtn.addEventListener("click", resetColumnVisibility);
+  }
+});

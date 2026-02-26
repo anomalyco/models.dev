@@ -210,40 +210,57 @@ export const Rendered = renderToString(
           <input type="text" id="search" placeholder="Search models" />
           <span class="search-shortcut">⌘K</span>
         </div>
+        <button id="column-settings" aria-label="Column settings">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"></path>
+            <circle cx="12" cy="12" r="3"></circle>
+          </svg>
+        </button>
+
         <button id="help">How to use</button>
       </div>
     </header>
     <table>
       <thead>
         <tr>
-          <th class="sortable" data-type="text">
+          <th class="sortable" data-type="text" data-col="provider">
             Provider <span class="sort-indicator"></span>
           </th>
-          <th class="sortable" data-type="text">
+          <th class="sortable" data-type="text" data-col="model">
             Model <span class="sort-indicator"></span>
           </th>
-          <th class="sortable" data-type="text">
+          <th class="sortable" data-type="text" data-col="family">
             Family <span class="sort-indicator"></span>
           </th>
-          <th class="sortable" data-type="text">
+          <th class="sortable" data-type="text" data-col="provider-id">
             Provider ID <span class="sort-indicator"></span>
           </th>
-          <th class="sortable" data-type="text">
+          <th class="sortable" data-type="text" data-col="model-id">
             Model ID <span class="sort-indicator"></span>
           </th>
-          <th class="sortable" data-type="boolean">
+          <th class="sortable" data-type="boolean" data-col="tool-call">
             Tool Call <span class="sort-indicator"></span>
           </th>
-          <th class="sortable" data-type="boolean">
+          <th class="sortable" data-type="boolean" data-col="reasoning">
             Reasoning <span class="sort-indicator"></span>
           </th>
-          <th class="sortable" data-type="modalities">
+          <th class="sortable" data-type="modalities" data-col="input">
             Input <span class="sort-indicator"></span>
           </th>
-          <th class="sortable" data-type="modalities">
+          <th class="sortable" data-type="modalities" data-col="output">
             Output <span class="sort-indicator"></span>
           </th>
-          <th class="sortable" data-type="number">
+          <th class="sortable" data-type="number" data-col="input-cost">
             <div class="header-container">
               <span class="header-text">
                 Input Cost
@@ -253,7 +270,7 @@ export const Rendered = renderToString(
               <span class="sort-indicator"></span>
             </div>
           </th>
-          <th class="sortable" data-type="number">
+          <th class="sortable" data-type="number" data-col="output-cost">
             <div class="header-container">
               <span class="header-text">
                 Output Cost
@@ -263,7 +280,7 @@ export const Rendered = renderToString(
               <span class="sort-indicator"></span>
             </div>
           </th>
-          <th class="sortable" data-type="number">
+          <th class="sortable" data-type="number" data-col="reasoning-cost">
             <div class="header-container">
               <span class="header-text">
                 Reasoning Cost
@@ -273,7 +290,7 @@ export const Rendered = renderToString(
               <span class="sort-indicator"></span>
             </div>
           </th>
-          <th class="sortable" data-type="number">
+          <th class="sortable" data-type="number" data-col="cache-read-cost">
             <div class="header-container">
               <span class="header-text">
                 Cache Read Cost
@@ -283,7 +300,7 @@ export const Rendered = renderToString(
               <span class="sort-indicator"></span>
             </div>
           </th>
-          <th class="sortable" data-type="number">
+          <th class="sortable" data-type="number" data-col="cache-write-cost">
             <div class="header-container">
               <span class="header-text">
                 Cache Write Cost
@@ -293,7 +310,7 @@ export const Rendered = renderToString(
               <span class="sort-indicator"></span>
             </div>
           </th>
-          <th class="sortable" data-type="number">
+          <th class="sortable" data-type="number" data-col="audio-input-cost">
             <div class="header-container">
               <span class="header-text">
                 Audio Input Cost
@@ -303,7 +320,7 @@ export const Rendered = renderToString(
               <span class="sort-indicator"></span>
             </div>
           </th>
-          <th class="sortable" data-type="number">
+          <th class="sortable" data-type="number" data-col="audio-output-cost">
             <div class="header-container">
               <span class="header-text">
                 Audio Output Cost
@@ -313,31 +330,31 @@ export const Rendered = renderToString(
               <span class="sort-indicator"></span>
             </div>
           </th>
-          <th class="sortable" data-type="number">
+          <th class="sortable" data-type="number" data-col="context-limit">
             Context Limit <span class="sort-indicator"></span>
           </th>
-          <th class="sortable" data-type="number">
+          <th class="sortable" data-type="number" data-col="input-limit">
             Input Limit <span class="sort-indicator"></span>
           </th>
-          <th class="sortable" data-type="number">
+          <th class="sortable" data-type="number" data-col="output-limit">
             Output Limit <span class="sort-indicator"></span>
           </th>
-          <th class="sortable" data-type="boolean">
+          <th class="sortable" data-type="boolean" data-col="structured-output">
             Structured Output <span class="sort-indicator"></span>
           </th>
-          <th class="sortable" data-type="boolean">
+          <th class="sortable" data-type="boolean" data-col="temperature">
             Temperature <span class="sort-indicator"></span>
           </th>
-          <th class="sortable" data-type="text">
+          <th class="sortable" data-type="text" data-col="weights">
             Weights <span class="sort-indicator"></span>
           </th>
-          <th class="sortable" data-type="text">
+          <th class="sortable" data-type="text" data-col="knowledge">
             Knowledge <span class="sort-indicator"></span>
           </th>
-          <th class="sortable" data-type="text">
+          <th class="sortable" data-type="text" data-col="release-date">
             Release Date <span class="sort-indicator"></span>
           </th>
-          <th class="sortable" data-type="text">
+          <th class="sortable" data-type="text" data-col="last-updated">
             Last Updated <span class="sort-indicator"></span>
           </th>
         </tr>
@@ -570,5 +587,141 @@ export const Rendered = renderToString(
         </a>
       </div>
     </dialog>
+    <aside id="column-sidebar">
+      <div class="sidebar-header">
+        <h2>Column Settings</h2>
+        <button id="sidebar-close">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <line
+              x1="18"
+              y1="6"
+              x2="6"
+              y2="18"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+            />
+            <line
+              x1="6"
+              y1="6"
+              x2="18"
+              y2="18"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+            />
+          </svg>
+        </button>
+      </div>
+      <div class="sidebar-body">
+        <p class="sidebar-desc">Toggle which columns are visible in the table.</p>
+        <div class="column-toggles">
+          <label class="column-toggle">
+            <input type="checkbox" data-col="provider" checked />
+            <span>Provider</span>
+          </label>
+          <label class="column-toggle">
+            <input type="checkbox" data-col="model" checked />
+            <span>Model</span>
+          </label>
+          <label class="column-toggle">
+            <input type="checkbox" data-col="family" checked />
+            <span>Family</span>
+          </label>
+          <label class="column-toggle">
+            <input type="checkbox" data-col="provider-id" checked />
+            <span>Provider ID</span>
+          </label>
+          <label class="column-toggle">
+            <input type="checkbox" data-col="model-id" checked />
+            <span>Model ID</span>
+          </label>
+          <label class="column-toggle">
+            <input type="checkbox" data-col="tool-call" checked />
+            <span>Tool Call</span>
+          </label>
+          <label class="column-toggle">
+            <input type="checkbox" data-col="reasoning" checked />
+            <span>Reasoning</span>
+          </label>
+          <label class="column-toggle">
+            <input type="checkbox" data-col="input" checked />
+            <span>Input</span>
+          </label>
+          <label class="column-toggle">
+            <input type="checkbox" data-col="output" checked />
+            <span>Output</span>
+          </label>
+          <label class="column-toggle">
+            <input type="checkbox" data-col="input-cost" checked />
+            <span>Input Cost</span>
+          </label>
+          <label class="column-toggle">
+            <input type="checkbox" data-col="output-cost" checked />
+            <span>Output Cost</span>
+          </label>
+          <label class="column-toggle">
+            <input type="checkbox" data-col="reasoning-cost" checked />
+            <span>Reasoning Cost</span>
+          </label>
+          <label class="column-toggle">
+            <input type="checkbox" data-col="cache-read-cost" checked />
+            <span>Cache Read Cost</span>
+          </label>
+          <label class="column-toggle">
+            <input type="checkbox" data-col="cache-write-cost" checked />
+            <span>Cache Write Cost</span>
+          </label>
+          <label class="column-toggle">
+            <input type="checkbox" data-col="audio-input-cost" checked />
+            <span>Audio Input Cost</span>
+          </label>
+          <label class="column-toggle">
+            <input type="checkbox" data-col="audio-output-cost" checked />
+            <span>Audio Output Cost</span>
+          </label>
+          <label class="column-toggle">
+            <input type="checkbox" data-col="context-limit" checked />
+            <span>Context Limit</span>
+          </label>
+          <label class="column-toggle">
+            <input type="checkbox" data-col="input-limit" checked />
+            <span>Input Limit</span>
+          </label>
+          <label class="column-toggle">
+            <input type="checkbox" data-col="output-limit" checked />
+            <span>Output Limit</span>
+          </label>
+          <label class="column-toggle">
+            <input type="checkbox" data-col="structured-output" checked />
+            <span>Structured Output</span>
+          </label>
+          <label class="column-toggle">
+            <input type="checkbox" data-col="temperature" checked />
+            <span>Temperature</span>
+          </label>
+          <label class="column-toggle">
+            <input type="checkbox" data-col="weights" checked />
+            <span>Weights</span>
+          </label>
+          <label class="column-toggle">
+            <input type="checkbox" data-col="knowledge" checked />
+            <span>Knowledge</span>
+          </label>
+          <label class="column-toggle">
+            <input type="checkbox" data-col="release-date" checked />
+            <span>Release Date</span>
+          </label>
+          <label class="column-toggle">
+            <input type="checkbox" data-col="last-updated" checked />
+            <span>Last Updated</span>
+          </label>
+        </div>
+      </div>
+      <div class="sidebar-footer">
+        <button id="reset-columns">Reset to Default</button>
+      </div>
+    </aside>
+    <div id="sidebar-overlay"></div>
   </Fragment>
 );
