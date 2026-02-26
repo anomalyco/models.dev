@@ -1,5 +1,5 @@
 import Index from "../index.html";
-import { Rendered } from "./render";
+import { Rendered, Providers } from "./render";
 import path from "path";
 
 Bun.serve({
@@ -70,6 +70,11 @@ const server = Bun.serve({
 
     let html = await result.then((r) => r.text());
     html = html.replace("<!--static-->", Rendered);
+    const modelDataJson = JSON.stringify(Providers).replace(/<\/script/gi, "<\\/script");
+    html = html.replace(
+      '<script id="model-data" type="application/json"></script>',
+      `<script id="model-data" type="application/json">${modelDataJson}</script>`
+    );
     return new Response(html, {
       headers: {
         "Content-Type": "text/html",

@@ -43,6 +43,14 @@ for (const entry of entries) {
 
 let html = await Bun.file("./dist/index.html").text();
 html = html.replace("<!--static-->", Rendered);
+
+// Inline model data JSON into the script tag (escape closing tags for safety)
+const modelDataJson = JSON.stringify(Providers).replace(/<\/script/gi, "<\\/script");
+html = html.replace(
+  '<script id="model-data" type="application/json"></script>',
+  `<script id="model-data" type="application/json">${modelDataJson}</script>`
+);
+
 await Bun.write("./dist/index.html", html);
 await Bun.write("./dist/api.json", JSON.stringify(Providers));
 
