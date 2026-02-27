@@ -1,0 +1,20 @@
+name = "AllenAI: Molmo2 8B"
+release_date = "2026-01-09"
+last_updated = "2026-01-31"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = false
+open_weights = true
+
+[cost]
+input = 0.2
+output = 0.2
+
+[limit]
+context = 36864
+output = 36864
+
+[modalities]
+input = ["text", "image", "video"]
+output = ["text"]

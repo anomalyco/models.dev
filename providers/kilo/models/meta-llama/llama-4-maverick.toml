@@ -1,0 +1,20 @@
+name = "Meta: Llama 4 Maverick"
+release_date = "2025-04-05"
+last_updated = "2025-12-24"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = true
+open_weights = true
+
+[cost]
+input = 0.15
+output = 0.6
+
+[limit]
+context = 1048576
+output = 16384
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

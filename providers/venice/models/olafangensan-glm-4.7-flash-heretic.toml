@@ -1,0 +1,22 @@
+name = "GLM 4.7 Flash Heretic"
+family = "glm-flash"
+attachment = false
+reasoning = true
+tool_call = true
+structured_output = true
+temperature = true
+release_date = "2026-02-04"
+last_updated = "2026-02-18"
+open_weights = true
+
+[cost]
+input = 0.14
+output = 0.8
+
+[limit]
+context = 128_000
+output = 32_000
+
+[modalities]
+input = ["text"]
+output = ["text"]

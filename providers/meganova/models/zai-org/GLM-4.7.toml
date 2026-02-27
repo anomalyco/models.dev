@@ -1,0 +1,25 @@
+name = "GLM-4.7"
+family = "glm"
+release_date = "2025-12-22"
+last_updated = "2025-12-22"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+knowledge = "2025-04"
+open_weights = true
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.20
+output = 0.80
+
+[limit]
+context = 202_752
+output = 131_072
+
+[modalities]
+input = ["text"]
+output = ["text"]

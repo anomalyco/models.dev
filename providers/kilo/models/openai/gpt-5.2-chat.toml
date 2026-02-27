@@ -1,0 +1,21 @@
+name = "OpenAI: GPT-5.2 Chat"
+release_date = "2025-12-11"
+last_updated = "2025-12-11"
+attachment = true
+reasoning = false
+temperature = false
+tool_call = true
+open_weights = false
+
+[cost]
+input = 1.75
+output = 14.0
+cache_read = 0.175
+
+[limit]
+context = 128000
+output = 16384
+
+[modalities]
+input = ["image", "text"]
+output = ["text"]

@@ -1,0 +1,22 @@
+name = "Anthropic: Claude 3.7 Sonnet (thinking)"
+release_date = "2025-02-19"
+last_updated = "2025-02-24"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+open_weights = false
+
+[cost]
+input = 3.0
+output = 15.0
+cache_read = 0.3
+cache_write = 3.75
+
+[limit]
+context = 200000
+output = 64000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

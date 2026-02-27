@@ -1,0 +1,21 @@
+name = "Xiaomi: MiMo-V2-Flash"
+release_date = "2025-12-14"
+last_updated = "2025-12-14"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+open_weights = true
+
+[cost]
+input = 0.09
+output = 0.29
+cache_read = 0.045
+
+[limit]
+context = 262144
+output = 52429
+
+[modalities]
+input = ["text"]
+output = ["text"]

@@ -1,0 +1,22 @@
+name = "Voxtral Small 24B"
+family = "voxtral"
+release_date = "2025-03-01"
+last_updated = "2025-03-01"
+attachment = false
+reasoning = false
+tool_call = false
+open_weights = true
+
+[cost]
+# per audio minute
+input = 0.00236
+output = 0.00236
+output_audio = 2.36
+
+[limit]
+context = 32_000
+output = 32_000
+
+[modalities]
+input = ["audio", "text"]
+output = ["text"]

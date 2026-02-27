@@ -1,0 +1,17 @@
+name = "Gemini 2.5 Flash"
+release_date = "2025-08-05"
+last_updated = "2025-08-05"
+attachment = true
+reasoning = true
+tool_call = true
+temperature = true
+structured_output = false
+open_weights = false
+
+[limit]
+context = 1_048_576
+output = 64_000
+
+[modalities]
+input = ["text", "image", "audio", "video"]
+output = ["text"]

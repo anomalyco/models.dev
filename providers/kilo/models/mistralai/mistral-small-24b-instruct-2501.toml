@@ -1,0 +1,20 @@
+name = "Mistral: Mistral Small 3"
+release_date = "2025-12-29"
+last_updated = "2026-01-10"
+attachment = false
+reasoning = false
+temperature = true
+tool_call = true
+open_weights = true
+
+[cost]
+input = 0.05
+output = 0.08
+
+[limit]
+context = 32768
+output = 16384
+
+[modalities]
+input = ["text"]
+output = ["text"]

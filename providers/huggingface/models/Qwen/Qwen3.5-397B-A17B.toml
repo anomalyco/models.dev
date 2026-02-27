@@ -1,0 +1,25 @@
+name = "Qwen3.5-397B-A17B"
+family = "qwen"
+release_date = "2026-02-01"
+last_updated = "2026-02-01"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+knowledge = "2025-04"
+open_weights = true
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.60
+output = 3.60
+
+[limit]
+context = 262_144
+output = 32_768
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

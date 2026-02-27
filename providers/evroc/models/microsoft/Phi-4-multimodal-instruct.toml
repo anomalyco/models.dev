@@ -1,0 +1,20 @@
+name = "Phi-4 15B"
+family = "phi"
+release_date = "2025-01-01"
+last_updated = "2025-01-01"
+attachment = false
+reasoning = false
+tool_call = true
+open_weights = true
+
+[cost]
+input = 0.24
+output = 0.47
+
+[limit]
+context = 32_000
+output = 32_000
+
+[modalities]
+input = ["text"]
+output = ["text", "image"]

@@ -1,0 +1,22 @@
+name = "Whisper 3 Large"
+family = "whisper"
+release_date = "2024-10-01"
+last_updated = "2024-10-01"
+attachment = false
+reasoning = false
+tool_call = false
+open_weights = true
+
+[cost]
+# per audio minute
+input = 0.00236
+output = 0.00236
+output_audio = 2.36
+
+[limit]
+context = 448
+output = 4_096
+
+[modalities]
+input = ["audio"]
+output = ["text"]

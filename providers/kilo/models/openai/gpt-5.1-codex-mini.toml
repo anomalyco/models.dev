@@ -1,0 +1,21 @@
+name = "OpenAI: GPT-5.1-Codex-Mini"
+release_date = "2025-11-13"
+last_updated = "2025-11-13"
+attachment = true
+reasoning = true
+temperature = false
+tool_call = true
+open_weights = false
+
+[cost]
+input = 0.25
+output = 2
+cache_read = 0.025
+
+[limit]
+context = 400000
+output = 100000
+
+[modalities]
+input = ["image", "text"]
+output = ["text"]

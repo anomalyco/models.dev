@@ -1,0 +1,17 @@
+name = "Claude 4.5 Opus"
+release_date = "2025-11-25"
+last_updated = "2025-11-25"
+attachment = true
+reasoning = true
+tool_call = true
+temperature = true
+structured_output = false
+open_weights = false
+
+[limit]
+context = 200_000
+output = 200_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

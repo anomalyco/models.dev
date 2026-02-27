@@ -1,0 +1,21 @@
+name = "OpenAI: o4 Mini Deep Research"
+release_date = "2024-06-26"
+last_updated = "2025-06-27"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+open_weights = false
+
+[cost]
+input = 2.0
+output = 8.0
+cache_read = 0.5
+
+[limit]
+context = 200000
+output = 100000
+
+[modalities]
+input = ["image", "text"]
+output = ["text"]

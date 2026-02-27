@@ -1,1 +1,29 @@
-../../azure/models/claude-haiku-4-5.toml
+name = "Claude Haiku 4.5"
+family = "claude-haiku"
+release_date = "2025-11-18"
+last_updated = "2025-11-18"
+attachment = true
+reasoning = true
+temperature = true
+knowledge = "2025-02-31"
+tool_call = true
+structured_output = true
+open_weights = false
+
+[cost]
+input = 1.00
+output = 5.00
+cache_read = 0.10
+cache_write = 1.25
+
+[limit]
+context = 200_000
+output = 64_000
+
+[modalities]
+input = ["text", "image", "pdf"]
+output = ["text"]
+
+[provider]
+npm = "@ai-sdk/anthropic"
+api = "https://${AZURE_COGNITIVE_SERVICES_RESOURCE_NAME}.services.ai.azure.com/anthropic/v1"

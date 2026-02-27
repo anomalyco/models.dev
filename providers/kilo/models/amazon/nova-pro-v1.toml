@@ -1,0 +1,20 @@
+name = "Amazon: Nova Pro 1.0"
+release_date = "2024-12-03"
+last_updated = "2024-12-03"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = true
+open_weights = false
+
+[cost]
+input = 0.8
+output = 3.2
+
+[limit]
+context = 300000
+output = 5120
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

@@ -1,0 +1,23 @@
+name = "Step 2 (16K)"
+release_date = "2025-01-01"
+last_updated = "2026-02-13"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+knowledge = "2024-06"
+open_weights = false
+
+[cost]
+input = 5.21
+output = 16.44
+cache_read = 1.04
+
+[limit]
+context = 16_384
+input = 16_384
+output = 8_192
+
+[modalities]
+input = ["text"]
+output = ["text"]

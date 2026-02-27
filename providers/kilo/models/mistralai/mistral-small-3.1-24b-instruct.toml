@@ -1,0 +1,21 @@
+name = "Mistral: Mistral Small 3.1 24B"
+release_date = "2025-03-17"
+last_updated = "2025-03-17"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = true
+open_weights = true
+
+[cost]
+input = 0.03
+output = 0.11
+cache_read = 0.015
+
+[limit]
+context = 131072
+output = 131072
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

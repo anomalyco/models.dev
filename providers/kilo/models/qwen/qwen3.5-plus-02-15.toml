@@ -1,0 +1,20 @@
+name = "Qwen: Qwen3.5 Plus 2026-02-15"
+release_date = "2026-02-15"
+last_updated = "2026-02-15"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+open_weights = false
+
+[cost]
+input = 0.4
+output = 2.4
+
+[limit]
+context = 1000000
+output = 64000
+
+[modalities]
+input = ["text", "image", "video"]
+output = ["text"]

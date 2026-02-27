@@ -1,0 +1,20 @@
+name = "Qwen: Qwen2.5-VL 7B Instruct"
+release_date = "2024-08-28"
+last_updated = "2024-09"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = false
+open_weights = true
+
+[cost]
+input = 0.2
+output = 0.2
+
+[limit]
+context = 32768
+output = 6554
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

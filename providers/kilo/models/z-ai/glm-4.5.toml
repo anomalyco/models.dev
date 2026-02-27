@@ -1,0 +1,21 @@
+name = "Z.ai: GLM 4.5"
+release_date = "2025-07-28"
+last_updated = "2025-07-28"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+open_weights = true
+
+[cost]
+input = 0.35
+output = 1.55
+cache_read = 0.175
+
+[limit]
+context = 131072
+output = 65536
+
+[modalities]
+input = ["text"]
+output = ["text"]

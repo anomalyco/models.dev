@@ -1,0 +1,20 @@
+name = "Meta: Llama Guard 4 12B"
+release_date = "2025-04-05"
+last_updated = "2025-04-05"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = false
+open_weights = true
+
+[cost]
+input = 0.18
+output = 0.18
+
+[limit]
+context = 163840
+output = 32768
+
+[modalities]
+input = ["image", "text"]
+output = ["text"]

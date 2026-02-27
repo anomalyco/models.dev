@@ -1,0 +1,21 @@
+name = "xAI: Grok 4"
+release_date = "2025-07-09"
+last_updated = "2025-07-09"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+open_weights = false
+
+[cost]
+input = 3.0
+output = 15.0
+cache_read = 0.75
+
+[limit]
+context = 256000
+output = 51200
+
+[modalities]
+input = ["image", "text"]
+output = ["text"]

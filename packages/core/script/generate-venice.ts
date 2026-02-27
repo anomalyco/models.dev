@@ -43,12 +43,25 @@ const Capabilities = z
   })
   .passthrough();
 
+const PricingTier = z.object({ usd: z.number(), diem: z.number().optional() }).passthrough();
+
+const ExtendedPricing = z
+  .object({
+    context_token_threshold: z.number(),
+    input: PricingTier,
+    output: PricingTier,
+    cache_input: PricingTier.optional(),
+    cache_write: PricingTier.optional(),
+  })
+  .passthrough();
+
 const Pricing = z
   .object({
-    input: z.object({ usd: z.number(), diem: z.number().optional() }).passthrough(),
-    output: z.object({ usd: z.number(), diem: z.number().optional() }).passthrough(),
-    cache_input: z.object({ usd: z.number(), diem: z.number().optional() }).passthrough().optional(),
-    cache_write: z.object({ usd: z.number(), diem: z.number().optional() }).passthrough().optional(),
+    input: PricingTier,
+    output: PricingTier,
+    cache_input: PricingTier.optional(),
+    cache_write: PricingTier.optional(),
+    extended: ExtendedPricing.optional(),
   })
   .passthrough();
 
@@ -162,6 +175,12 @@ interface ExistingModel {
     reasoning?: number;
     cache_read?: number;
     cache_write?: number;
+    context_over_200k?: {
+      input?: number;
+      output?: number;
+      cache_read?: number;
+      cache_write?: number;
+    };
   };
   limit?: {
     context?: number;
@@ -213,6 +232,12 @@ interface MergedModel {
     output: number;
     cache_read?: number;
     cache_write?: number;
+    context_over_200k?: {
+      input: number;
+      output: number;
+      cache_read?: number;
+      cache_write?: number;
+    };
   };
   limit: {
     context: number;
@@ -285,6 +310,16 @@ function mergeModel(
       ...(spec.pricing.cache_input && { cache_read: spec.pricing.cache_input.usd }),
       ...(spec.pricing.cache_write && { cache_write: spec.pricing.cache_write.usd }),
     };
+
+    // Extended pricing maps to context_over_200k
+    if (spec.pricing.extended) {
+      merged.cost.context_over_200k = {
+        input: spec.pricing.extended.input.usd,
+        output: spec.pricing.extended.output.usd,
+        ...(spec.pricing.extended.cache_input && { cache_read: spec.pricing.extended.cache_input.usd }),
+        ...(spec.pricing.extended.cache_write && { cache_write: spec.pricing.extended.cache_write.usd }),
+      };
+    }
   }
 
   const inferred = inferFamily(apiModel.id, spec.name);
@@ -352,6 +387,19 @@ function formatToml(model: MergedModel): string {
     if (model.cost.cache_write !== undefined) {
       lines.push(`cache_write = ${model.cost.cache_write}`);
     }
+
+    if (model.cost.context_over_200k) {
+      lines.push("");
+      lines.push(`[cost.context_over_200k]`);
+      lines.push(`input = ${model.cost.context_over_200k.input}`);
+      lines.push(`output = ${model.cost.context_over_200k.output}`);
+      if (model.cost.context_over_200k.cache_read !== undefined) {
+        lines.push(`cache_read = ${model.cost.context_over_200k.cache_read}`);
+      }
+      if (model.cost.context_over_200k.cache_write !== undefined) {
+        lines.push(`cache_write = ${model.cost.context_over_200k.cache_write}`);
+      }
+    }
   }
 
   // Limit section
@@ -414,6 +462,10 @@ function detectChanges(
   compare("cost.output", existing.cost?.output, merged.cost?.output);
   compare("cost.cache_read", existing.cost?.cache_read, merged.cost?.cache_read);
   compare("cost.cache_write", existing.cost?.cache_write, merged.cost?.cache_write);
+  compare("cost.context_over_200k.input", existing.cost?.context_over_200k?.input, merged.cost?.context_over_200k?.input);
+  compare("cost.context_over_200k.output", existing.cost?.context_over_200k?.output, merged.cost?.context_over_200k?.output);
+  compare("cost.context_over_200k.cache_read", existing.cost?.context_over_200k?.cache_read, merged.cost?.context_over_200k?.cache_read);
+  compare("cost.context_over_200k.cache_write", existing.cost?.context_over_200k?.cache_write, merged.cost?.context_over_200k?.cache_write);
   compare("limit.context", existing.limit?.context, merged.limit.context);
   compare("limit.output", existing.limit?.output, merged.limit.output);
   compare("modalities.input", existing.modalities?.input, merged.modalities.input);

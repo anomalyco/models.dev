@@ -1,0 +1,17 @@
+name = "Claude 3.5 Sonnet"
+release_date = "2025-09-09"
+last_updated = "2025-09-09"
+attachment = true
+reasoning = true
+tool_call = true
+temperature = true
+structured_output = false
+open_weights = false
+
+[limit]
+context = 200_000
+output = 8_200
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
