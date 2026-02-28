@@ -1,0 +1,22 @@
+name = "MiniMax M2"
+release_date = "2025-10-27"
+last_updated = "2025-10-27"
+family = "minimax"
+attachment = false
+reasoning = true
+tool_call = true
+open_weights = true
+structured_output = false
+temperature = true
+
+[cost]
+input = 0.30
+output = 1.20
+
+[limit]
+context = 204_608
+output = 128_000
+
+[modalities]
+input = ["text"]
+output = ["text"]

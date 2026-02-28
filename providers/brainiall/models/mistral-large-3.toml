@@ -1,0 +1,23 @@
+name = "Mistral Large 3 675B"
+release_date = "2024-11-01"
+last_updated = "2025-12-02"
+family = "mistral-large"
+attachment = true
+reasoning = false
+tool_call = true
+open_weights = true
+structured_output = true
+temperature = true
+knowledge = "2024-11"
+
+[cost]
+input = 2.00
+output = 6.00
+
+[limit]
+context = 262_144
+output = 262_144
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

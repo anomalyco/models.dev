@@ -1,0 +1,24 @@
+name = "Amazon Nova Lite"
+release_date = "2024-12-03"
+last_updated = "2024-12-03"
+family = "nova-lite"
+attachment = true
+reasoning = false
+tool_call = true
+open_weights = false
+structured_output = true
+temperature = true
+knowledge = "2024-10"
+
+[cost]
+input = 0.06
+output = 0.24
+cache_read = 0.015
+
+[limit]
+context = 300_000
+output = 5_120
+
+[modalities]
+input = ["text", "image", "video"]
+output = ["text"]

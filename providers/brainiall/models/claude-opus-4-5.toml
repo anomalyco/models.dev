@@ -1,13 +1,14 @@
-name = "anthropic--claude-4.6-opus"
+name = "Claude Opus 4.5"
+release_date = "2025-11-24"
+last_updated = "2025-11-24"
 family = "claude-opus"
-release_date = "2026-02-05"
-last_updated = "2026-02-05"
 attachment = true
 reasoning = true
-temperature = true
 tool_call = true
-knowledge = "2025-05"
 open_weights = false
+structured_output = true
+temperature = true
+knowledge = "2025-03-31"
 
 [cost]
 input = 5.00
@@ -15,15 +16,9 @@ output = 25.00
 cache_read = 0.50
 cache_write = 6.25
 
-[cost.context_over_200k]
-input = 10.00
-output = 37.50
-cache_read = 1.00
-cache_write = 12.50
-
 [limit]
 context = 200_000
-output = 128_000
+output = 64_000
 
 [modalities]
 input = ["text", "image", "pdf"]

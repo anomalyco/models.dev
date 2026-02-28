@@ -1,0 +1,23 @@
+name = "Llama 3.3 70B"
+release_date = "2024-12-06"
+last_updated = "2024-12-06"
+family = "llama"
+attachment = false
+reasoning = false
+tool_call = true
+open_weights = true
+structured_output = true
+temperature = true
+knowledge = "2023-12"
+
+[cost]
+input = 0.72
+output = 0.72
+
+[limit]
+context = 128_000
+output = 4_096
+
+[modalities]
+input = ["text"]
+output = ["text"]

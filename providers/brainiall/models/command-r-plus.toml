@@ -1,0 +1,23 @@
+name = "Command R+"
+release_date = "2024-04-04"
+last_updated = "2024-04-04"
+family = "command-r"
+attachment = false
+reasoning = false
+tool_call = true
+open_weights = true
+structured_output = true
+temperature = true
+knowledge = "2024-04"
+
+[cost]
+input = 3.00
+output = 15.00
+
+[limit]
+context = 128_000
+output = 4_096
+
+[modalities]
+input = ["text"]
+output = ["text"]
