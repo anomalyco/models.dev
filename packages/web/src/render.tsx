@@ -50,7 +50,7 @@ export const Rendered = renderToString(
             >
               Columns
             </button>
-            <div id="columns-picker" hidden=""></div>
+            <div id="columns-picker" hidden></div>
           </div>
         <button id="help">How to use</button>
       </div>
