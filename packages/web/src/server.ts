@@ -1,5 +1,5 @@
 import Index from "../index.html";
-import { Rendered } from "./render";
+import { Providers, Rendered } from "./render";
 import path from "path";
 
 Bun.serve({
@@ -11,6 +11,12 @@ Bun.serve({
         path.join(import.meta.dir, new URL(req.url).pathname)
       );
       return new Response(file);
+    },
+    "/api.json": () => {
+      return Response.json(Providers);
+    },
+    "/_api.json": () => {
+      return Response.json(Providers);
     },
     "/logos/*": async (req) => {
       const url = new URL(req.url);
