@@ -16,6 +16,7 @@
   --color-background: #FFF;
   --color-border: #DDD;
   --color-surface: #EEE;
+  --color-row-hover: rgba(253, 149, 39, 0.08);
   --color-alpha-background: rgba(255, 255, 255, 0.75);
 
   --color-text: #333;
@@ -30,6 +31,7 @@
     --color-background: #1E1E1E;
     --color-border: #333;
     --color-surface: #111;
+    --color-row-hover: rgba(253, 149, 39, 0.12);
     --color-alpha-background: rgba(30, 30, 30, 0.75);
 
     --color-text: #FFF;
@@ -281,6 +283,15 @@ td {
 }
 
 tbody {
+  tr td {
+    transition: background-color 0.12s ease;
+  }
+
+  tr:hover td,
+  tr:focus-within td {
+    background-color: var(--color-row-hover);
+  }
+
   td {
     color: var(--color-text-tertiary);
   }
