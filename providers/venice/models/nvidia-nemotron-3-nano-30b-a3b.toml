@@ -1,0 +1,22 @@
+name = "NVIDIA Nemotron 3 Nano 30B"
+family = "nemotron"
+attachment = false
+reasoning = false
+tool_call = true
+structured_output = true
+temperature = true
+release_date = "2026-01-27"
+last_updated = "2026-02-26"
+open_weights = true
+
+[cost]
+input = 0.075
+output = 0.3
+
+[limit]
+context = 128_000
+output = 12_288
+
+[modalities]
+input = ["text"]
+output = ["text"]

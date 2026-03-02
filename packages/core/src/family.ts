@@ -128,9 +128,6 @@ export const ModelFamilyValues = [
   "solar-mini",
   "solar-pro",
 
-  // Exaone
-  "exaone",
-
   // Step (StepFun)
   "step",
 
