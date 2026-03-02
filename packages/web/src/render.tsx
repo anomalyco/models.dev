@@ -5,6 +5,7 @@ import { generate } from "models.dev";
 import { Fragment } from "hono/jsx";
 import { renderToString } from "hono/jsx/dom/server";
 import path from "path";
+import { TABLE_COLUMNS } from "./columns";
 
 export const Providers = await generate(
   path.join(import.meta.dir, "..", "..", "..", "providers")
@@ -47,135 +48,33 @@ export const Rendered = renderToString(
     <table>
       <thead>
         <tr>
-          <th class="sortable" data-type="text">
-            Provider <span class="sort-indicator"></span>
-          </th>
-          <th class="sortable" data-type="text">
-            Model <span class="sort-indicator"></span>
-          </th>
-          <th class="sortable" data-type="text">
-            Family <span class="sort-indicator"></span>
-          </th>
-          <th class="sortable" data-type="text">
-            Provider ID <span class="sort-indicator"></span>
-          </th>
-          <th class="sortable" data-type="text">
-            Model ID <span class="sort-indicator"></span>
-          </th>
-          <th class="sortable" data-type="boolean">
-            Tool Call <span class="sort-indicator"></span>
-          </th>
-          <th class="sortable" data-type="boolean">
-            Reasoning <span class="sort-indicator"></span>
-          </th>
-          <th class="sortable" data-type="modalities">
-            Input <span class="sort-indicator"></span>
-          </th>
-          <th class="sortable" data-type="modalities">
-            Output <span class="sort-indicator"></span>
-          </th>
-          <th class="sortable" data-type="number">
-            <div class="header-container">
-              <span class="header-text">
-                Input Cost
-                <br />
-                <span class="desc">per 1M tokens</span>
-              </span>
-              <span class="sort-indicator"></span>
-            </div>
-          </th>
-          <th class="sortable" data-type="number">
-            <div class="header-container">
-              <span class="header-text">
-                Output Cost
-                <br />
-                <span class="desc">per 1M tokens</span>
-              </span>
-              <span class="sort-indicator"></span>
-            </div>
-          </th>
-          <th class="sortable" data-type="number">
-            <div class="header-container">
-              <span class="header-text">
-                Reasoning Cost
-                <br />
-                <span class="desc">per 1M tokens</span>
-              </span>
-              <span class="sort-indicator"></span>
-            </div>
-          </th>
-          <th class="sortable" data-type="number">
-            <div class="header-container">
-              <span class="header-text">
-                Cache Read Cost
-                <br />
-                <span class="desc">per 1M tokens</span>
-              </span>
-              <span class="sort-indicator"></span>
-            </div>
-          </th>
-          <th class="sortable" data-type="number">
-            <div class="header-container">
-              <span class="header-text">
-                Cache Write Cost
-                <br />
-                <span class="desc">per 1M tokens</span>
-              </span>
-              <span class="sort-indicator"></span>
-            </div>
-          </th>
-          <th class="sortable" data-type="number">
-            <div class="header-container">
-              <span class="header-text">
-                Audio Input Cost
-                <br />
-                <span class="desc">per 1M tokens</span>
-              </span>
-              <span class="sort-indicator"></span>
-            </div>
-          </th>
-          <th class="sortable" data-type="number">
-            <div class="header-container">
-              <span class="header-text">
-                Audio Output Cost
-                <br />
-                <span class="desc">per 1M tokens</span>
-              </span>
-              <span class="sort-indicator"></span>
-            </div>
-          </th>
-          <th class="sortable" data-type="number">
-            Context Limit <span class="sort-indicator"></span>
-          </th>
-          <th class="sortable" data-type="number">
-            Input Limit <span class="sort-indicator"></span>
-          </th>
-          <th class="sortable" data-type="number">
-            Output Limit <span class="sort-indicator"></span>
-          </th>
-          <th class="sortable" data-type="boolean">
-            Structured Output <span class="sort-indicator"></span>
-          </th>
-          <th class="sortable" data-type="boolean">
-            Temperature <span class="sort-indicator"></span>
-          </th>
-          <th class="sortable" data-type="text">
-            Weights <span class="sort-indicator"></span>
-          </th>
-          <th class="sortable" data-type="text">
-            Knowledge <span class="sort-indicator"></span>
-          </th>
-          <th class="sortable" data-type="text">
-            Release Date <span class="sort-indicator"></span>
-          </th>
-          <th class="sortable" data-type="text">
-            Last Updated <span class="sort-indicator"></span>
-          </th>
+          {TABLE_COLUMNS.map((column) => (
+            <th
+              class="sortable"
+              data-type={column.type}
+              data-column-id={column.id}
+            >
+              {column.desc ? (
+                <div class="header-container">
+                  <span class="header-text">
+                    {column.label}
+                    <br />
+                    <span class="desc">{column.desc}</span>
+                  </span>
+                  <span class="sort-indicator"></span>
+                </div>
+              ) : (
+                <>
+                  {column.label} <span class="sort-indicator"></span>
+                </>
+              )}
+            </th>
+          ))}
         </tr>
       </thead>
       <tbody id="models-tbody">
         <tr id="loading-row">
-          <td colSpan={25}>Loading models...</td>
+          <td colSpan={TABLE_COLUMNS.length}>Loading models...</td>
         </tr>
       </tbody>
     </table>

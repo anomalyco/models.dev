@@ -1,3 +1,5 @@
+import { TABLE_COLUMNS, type TableColumnId } from "./columns";
+
 const modal = document.getElementById("modal") as HTMLDialogElement;
 const modalClose = document.getElementById("close")!;
 const help = document.getElementById("help")!;
@@ -55,6 +57,11 @@ interface RowData {
   searchText: string;
 }
 
+type SortValue = string | number | undefined;
+type SortAccessor = (row: RowData) => SortValue;
+const COLUMN_IDS = new Set<TableColumnId>(TABLE_COLUMNS.map((column) => column.id));
+const TABLE_COLUMN_BY_ID = new Map(TABLE_COLUMNS.map((column) => [column.id, column] as const));
+
 /////////////////////////
 // URL State Management
 /////////////////////////
@@ -85,16 +92,21 @@ function updateQueryParams(
   window.history.pushState({}, "", newPath);
 }
 
-function getColumnNameForURL(headerEl: Element): string {
-  const text = headerEl.textContent?.trim().toLowerCase() || "";
-  return text.replace(/↑|↓/g, "").trim().split(/\s+/).slice(0, 2).join("-");
+function toColumnId(value: string | null): TableColumnId | null {
+  if (!value) return null;
+  if (COLUMN_IDS.has(value as TableColumnId)) {
+    return value as TableColumnId;
+  }
+  return null;
 }
 
-function getColumnIndexByUrlName(name: string): number {
-  const headers = document.querySelectorAll("th.sortable");
-  return Array.from(headers).findIndex(
-    (header) => getColumnNameForURL(header) === name
-  );
+function getColumnIdByUrlName(name: string): TableColumnId | null {
+  const column = TABLE_COLUMNS.find((item) => item.urlName === name || item.id === name);
+  return column?.id ?? null;
+}
+
+function getColumnUrlName(columnId: TableColumnId): string {
+  return TABLE_COLUMN_BY_ID.get(columnId)?.urlName ?? columnId;
 }
 
 /////////////////////////
@@ -130,7 +142,7 @@ let viewRows: RowData[] = [];
 let isDataReady = false;
 let isAppending = false;
 let renderedCount = 0;
-let currentSort = { column: -1, direction: "asc" as "asc" | "desc" };
+let currentSort = { columnId: null as TableColumnId | null, direction: "asc" as "asc" | "desc" };
 let observer: IntersectionObserver | null = null;
 const supportsIntersectionObserver = "IntersectionObserver" in window;
 
@@ -145,6 +157,15 @@ function escapeHtml(value: string): string {
 
 function renderCost(cost?: number): string {
   return cost === undefined ? "-" : `$${cost.toFixed(2)}`;
+}
+
+function boolToYesNo(value: boolean): string {
+  return value ? "Yes" : "No";
+}
+
+function optionalBoolToYesNo(value?: boolean): string | undefined {
+  if (value === undefined) return undefined;
+  return value ? "Yes" : "No";
 }
 
 function renderModalityIcons(modalities: string[]): string {
@@ -163,96 +184,113 @@ function renderModalityIcons(modalities: string[]): string {
     .join("");
 }
 
-function buildRowSearchText(row: {
-  providerName: string;
-  providerId: string;
-  modelId: string;
-  model: ModelData;
-}): string {
-  const model = row.model;
-  return [
-    row.providerName,
-    model.name,
-    model.family ?? "-",
-    row.providerId,
-    row.modelId,
-    model.tool_call ? "yes" : "no",
-    model.reasoning ? "yes" : "no",
-    model.modalities.input.join(" "),
-    model.modalities.output.join(" "),
-    renderCost(model.cost?.input),
-    renderCost(model.cost?.output),
-    renderCost(model.cost?.reasoning),
-    renderCost(model.cost?.cache_read),
-    renderCost(model.cost?.cache_write),
-    renderCost(model.cost?.input_audio),
-    renderCost(model.cost?.output_audio),
-    model.limit.context.toLocaleString(),
-    model.limit.input?.toLocaleString() ?? "-",
-    model.limit.output.toLocaleString(),
-    model.structured_output === undefined
-      ? "-"
-      : model.structured_output
-      ? "yes"
-      : "no",
-    model.temperature ? "yes" : "no",
-    model.open_weights ? "open" : "closed",
-    model.knowledge ? model.knowledge.substring(0, 7) : "-",
-    model.release_date,
-    model.last_updated,
-  ]
+const SORT_ACCESSORS: Record<TableColumnId, SortAccessor> = {
+  provider: (row) => row.providerName,
+  model: (row) => row.model.name,
+  family: (row) => row.model.family,
+  "provider-id": (row) => row.providerId,
+  "model-id": (row) => row.modelId,
+  "tool-call": (row) => boolToYesNo(row.model.tool_call),
+  reasoning: (row) => boolToYesNo(row.model.reasoning),
+  "input-modalities": (row) => row.model.modalities.input.length,
+  "output-modalities": (row) => row.model.modalities.output.length,
+  "input-cost": (row) => row.model.cost?.input,
+  "output-cost": (row) => row.model.cost?.output,
+  "reasoning-cost": (row) => row.model.cost?.reasoning,
+  "cache-read-cost": (row) => row.model.cost?.cache_read,
+  "cache-write-cost": (row) => row.model.cost?.cache_write,
+  "audio-input-cost": (row) => row.model.cost?.input_audio,
+  "audio-output-cost": (row) => row.model.cost?.output_audio,
+  "context-limit": (row) => row.model.limit.context,
+  "input-limit": (row) => row.model.limit.input,
+  "output-limit": (row) => row.model.limit.output,
+  "structured-output": (row) => optionalBoolToYesNo(row.model.structured_output),
+  temperature: (row) => boolToYesNo(!!row.model.temperature),
+  weights: (row) => (row.model.open_weights ? "Open" : "Closed"),
+  knowledge: (row) => row.model.knowledge?.substring(0, 7),
+  "release-date": (row) => row.model.release_date,
+  "last-updated": (row) => row.model.last_updated,
+};
+
+function stringifySortValue(value: SortValue): string {
+  return value === undefined ? "-" : String(value);
+}
+
+function buildRowSearchText(row: RowData): string {
+  return TABLE_COLUMNS.map((column) => {
+    if (column.id === "input-modalities") {
+      return row.model.modalities.input.join(" ");
+    }
+    if (column.id === "output-modalities") {
+      return row.model.modalities.output.join(" ");
+    }
+    return stringifySortValue(SORT_ACCESSORS[column.id](row));
+  })
     .join(" ")
     .toLowerCase();
 }
 
-function createRow(row: RowData): HTMLTableRowElement {
-  const model = row.model;
-  const tr = document.createElement("tr");
-  tr.innerHTML = `
-    <td>
-      <div class="provider-cell">
-        <img src="/logos/${encodeURIComponent(row.providerId)}.svg" alt="${escapeHtml(row.providerName)} logo" loading="lazy" decoding="async" width="18" height="18" />
-        <span>${escapeHtml(row.providerName)}</span>
-      </div>
-    </td>
-    <td>${escapeHtml(model.name)}</td>
-    <td>${escapeHtml(model.family ?? "-")}</td>
-    <td>${escapeHtml(row.providerId)}</td>
-    <td>
-      <div class="model-id-cell">
-        <span class="model-id-text">${escapeHtml(row.modelId)}</span>
-        <button class="copy-button" data-model-id="${escapeHtml(row.modelId)}" aria-label="Copy model ID">
-          <svg class="copy-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <rect width="14" height="14" x="8" y="8" rx="2" ry="2" />
-            <path d="m4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2" />
-          </svg>
-          <svg class="check-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: none;">
-            <polyline points="20,6 9,17 4,12" />
-          </svg>
-        </button>
-      </div>
-    </td>
-    <td>${model.tool_call ? "Yes" : "No"}</td>
-    <td>${model.reasoning ? "Yes" : "No"}</td>
-    <td><div class="modalities">${renderModalityIcons(model.modalities.input)}</div></td>
-    <td><div class="modalities">${renderModalityIcons(model.modalities.output)}</div></td>
-    <td>${renderCost(model.cost?.input)}</td>
-    <td>${renderCost(model.cost?.output)}</td>
-    <td>${renderCost(model.cost?.reasoning)}</td>
-    <td>${renderCost(model.cost?.cache_read)}</td>
-    <td>${renderCost(model.cost?.cache_write)}</td>
-    <td>${renderCost(model.cost?.input_audio)}</td>
-    <td>${renderCost(model.cost?.output_audio)}</td>
-    <td>${model.limit.context.toLocaleString()}</td>
-    <td>${model.limit.input?.toLocaleString() ?? "-"}</td>
-    <td>${model.limit.output.toLocaleString()}</td>
-    <td>${model.structured_output === undefined ? "-" : model.structured_output ? "Yes" : "No"}</td>
-    <td>${model.temperature ? "Yes" : "No"}</td>
-    <td>${model.open_weights ? "Open" : "Closed"}</td>
-    <td>${escapeHtml(model.knowledge ? model.knowledge.substring(0, 7) : "-")}</td>
-    <td>${escapeHtml(model.release_date)}</td>
-    <td>${escapeHtml(model.last_updated)}</td>
+function renderProviderCell(row: RowData): string {
+  return `
+    <div class="provider-cell">
+      <img src="/logos/${encodeURIComponent(row.providerId)}.svg" alt="${escapeHtml(row.providerName)} logo" loading="lazy" decoding="async" width="18" height="18" />
+      <span>${escapeHtml(row.providerName)}</span>
+    </div>
   `;
+}
+
+function renderModelIdCell(row: RowData): string {
+  return `
+    <div class="model-id-cell">
+      <span class="model-id-text">${escapeHtml(row.modelId)}</span>
+      <button class="copy-button" data-model-id="${escapeHtml(row.modelId)}" aria-label="Copy model ID">
+        <svg class="copy-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect width="14" height="14" x="8" y="8" rx="2" ry="2" />
+          <path d="m4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2" />
+        </svg>
+        <svg class="check-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: none;">
+          <polyline points="20,6 9,17 4,12" />
+        </svg>
+      </button>
+    </div>
+  `;
+}
+
+const CELL_RENDERERS: Record<TableColumnId, (row: RowData) => string> = {
+  provider: (row) => renderProviderCell(row),
+  model: (row) => escapeHtml(row.model.name),
+  family: (row) => escapeHtml(row.model.family ?? "-"),
+  "provider-id": (row) => escapeHtml(row.providerId),
+  "model-id": (row) => renderModelIdCell(row),
+  "tool-call": (row) => boolToYesNo(row.model.tool_call),
+  reasoning: (row) => boolToYesNo(row.model.reasoning),
+  "input-modalities": (row) =>
+    `<div class="modalities">${renderModalityIcons(row.model.modalities.input)}</div>`,
+  "output-modalities": (row) =>
+    `<div class="modalities">${renderModalityIcons(row.model.modalities.output)}</div>`,
+  "input-cost": (row) => renderCost(row.model.cost?.input),
+  "output-cost": (row) => renderCost(row.model.cost?.output),
+  "reasoning-cost": (row) => renderCost(row.model.cost?.reasoning),
+  "cache-read-cost": (row) => renderCost(row.model.cost?.cache_read),
+  "cache-write-cost": (row) => renderCost(row.model.cost?.cache_write),
+  "audio-input-cost": (row) => renderCost(row.model.cost?.input_audio),
+  "audio-output-cost": (row) => renderCost(row.model.cost?.output_audio),
+  "context-limit": (row) => row.model.limit.context.toLocaleString(),
+  "input-limit": (row) => row.model.limit.input?.toLocaleString() ?? "-",
+  "output-limit": (row) => row.model.limit.output.toLocaleString(),
+  "structured-output": (row) => optionalBoolToYesNo(row.model.structured_output) ?? "-",
+  temperature: (row) => boolToYesNo(!!row.model.temperature),
+  weights: (row) => (row.model.open_weights ? "Open" : "Closed"),
+  knowledge: (row) => escapeHtml(row.model.knowledge?.substring(0, 7) ?? "-"),
+  "release-date": (row) => escapeHtml(row.model.release_date),
+  "last-updated": (row) => escapeHtml(row.model.last_updated),
+};
+
+function createRow(row: RowData): HTMLTableRowElement {
+  const tr = document.createElement("tr");
+  tr.innerHTML = TABLE_COLUMNS.map((column) =>
+    `<td>${CELL_RENDERERS[column.id](row)}</td>`
+  ).join("");
   return tr;
 }
 
@@ -272,16 +310,18 @@ function flattenRows(providers: ProvidersData): RowData[] {
             modelId,
             model,
           };
-          return {
+          const row = {
             ...base,
-            searchText: buildRowSearchText(base),
-          };
+            searchText: "",
+          } as RowData;
+          row.searchText = buildRowSearchText(row);
+          return row;
         })
     );
 }
 
 function setStatusRow(message: string) {
-  tbody.innerHTML = `<tr><td colspan="25">${escapeHtml(message)}</td></tr>`;
+  tbody.innerHTML = `<tr><td colspan="${TABLE_COLUMNS.length}">${escapeHtml(message)}</td></tr>`;
 }
 
 function updateInfiniteStatus() {
@@ -322,83 +362,11 @@ async function fetchProviders(): Promise<ProvidersData> {
   throw lastError ?? new Error("Failed to load provider data");
 }
 
-function getSortValue(row: RowData, column: number, columnType: string) {
-  const model = row.model;
-
-  if (columnType === "modalities") {
-    if (column === 7) return model.modalities.input.length;
-    if (column === 8) return model.modalities.output.length;
-    return 0;
-  }
-
-  if (columnType === "number") {
-    switch (column) {
-      case 9:
-        return model.cost?.input;
-      case 10:
-        return model.cost?.output;
-      case 11:
-        return model.cost?.reasoning;
-      case 12:
-        return model.cost?.cache_read;
-      case 13:
-        return model.cost?.cache_write;
-      case 14:
-        return model.cost?.input_audio;
-      case 15:
-        return model.cost?.output_audio;
-      case 16:
-        return model.limit.context;
-      case 17:
-        return model.limit.input;
-      case 18:
-        return model.limit.output;
-      default:
-        return undefined;
-    }
-  }
-
-  switch (column) {
-    case 0:
-      return row.providerName;
-    case 1:
-      return model.name;
-    case 2:
-      return model.family;
-    case 3:
-      return row.providerId;
-    case 4:
-      return row.modelId;
-    case 5:
-      return model.tool_call ? "Yes" : "No";
-    case 6:
-      return model.reasoning ? "Yes" : "No";
-    case 19:
-      return model.structured_output === undefined
-        ? undefined
-        : model.structured_output
-        ? "Yes"
-        : "No";
-    case 20:
-      return model.temperature ? "Yes" : "No";
-    case 21:
-      return model.open_weights ? "Open" : "Closed";
-    case 22:
-      return model.knowledge ? model.knowledge.substring(0, 7) : undefined;
-    case 23:
-      return model.release_date;
-    case 24:
-      return model.last_updated;
-    default:
-      return undefined;
-  }
-}
-
-function updateSortIndicators(column: number) {
+function updateSortIndicators(columnId: TableColumnId) {
   const headers = document.querySelectorAll("th.sortable");
-  headers.forEach((header, i) => {
+  headers.forEach((header) => {
     const indicator = header.querySelector(".sort-indicator")!;
-    if (i === column) {
+    if (header.getAttribute("data-column-id") === columnId) {
       indicator.textContent = currentSort.direction === "asc" ? "↑" : "↓";
     } else {
       indicator.textContent = "";
@@ -428,26 +396,25 @@ function applySearchAndSort() {
     );
   }
 
-  if (currentSort.column >= 0) {
-    const header = document.querySelectorAll("th.sortable")[currentSort.column];
-    const columnType = header?.getAttribute("data-type") || "text";
+  if (currentSort.columnId) {
+    const accessor = SORT_ACCESSORS[currentSort.columnId];
     rows = [...rows].sort((a, b) => {
-      const aValue = getSortValue(a, currentSort.column, columnType);
-      const bValue = getSortValue(b, currentSort.column, columnType);
+        const aValue = accessor(a);
+        const bValue = accessor(b);
 
-      if (aValue === undefined && bValue === undefined) return 0;
-      if (aValue === undefined) return 1;
-      if (bValue === undefined) return -1;
+        if (aValue === undefined && bValue === undefined) return 0;
+        if (aValue === undefined) return 1;
+        if (bValue === undefined) return -1;
 
-      let result = 0;
-      if (typeof aValue === "number" && typeof bValue === "number") {
-        result = aValue - bValue;
-      } else {
-        result = String(aValue).localeCompare(String(bValue));
-      }
+        let result = 0;
+        if (typeof aValue === "number" && typeof bValue === "number") {
+          result = aValue - bValue;
+        } else {
+          result = String(aValue).localeCompare(String(bValue));
+        }
 
-      return currentSort.direction === "asc" ? result : -result;
-    });
+        return currentSort.direction === "asc" ? result : -result;
+      });
   }
 
   viewRows = rows;
@@ -523,18 +490,20 @@ document.querySelectorAll("th.sortable").forEach((header) => {
   header.addEventListener("click", () => {
     if (!isDataReady) return;
 
-    const column = Array.from(header.parentElement!.children).indexOf(header);
+    const columnId = toColumnId(header.getAttribute("data-column-id"));
+    if (!columnId) return;
+
     const direction =
-      currentSort.column === column && currentSort.direction === "asc"
+      currentSort.columnId === columnId && currentSort.direction === "asc"
         ? "desc"
         : "asc";
 
-    currentSort = { column, direction };
+    currentSort = { columnId, direction };
     refreshView();
-    updateSortIndicators(column);
+    updateSortIndicators(columnId);
     updateQueryParams(
       {
-        sort: getColumnNameForURL(header),
+        sort: getColumnUrlName(columnId),
         order: direction,
       },
       "push"
@@ -625,16 +594,16 @@ function applyStateFromURL() {
   const direction = (params.get("order") as "asc" | "desc") || "asc";
 
   if (!columnName) {
-    currentSort = { column: -1, direction: "asc" };
+    currentSort = { columnId: null, direction: "asc" };
     clearSortIndicators();
   } else {
-    const columnIndex = getColumnIndexByUrlName(columnName);
-    if (columnIndex === -1) {
-      currentSort = { column: -1, direction: "asc" };
+    const columnId = getColumnIdByUrlName(columnName);
+    if (!columnId) {
+      currentSort = { columnId: null, direction: "asc" };
       clearSortIndicators();
     } else {
-      currentSort = { column: columnIndex, direction };
-      updateSortIndicators(columnIndex);
+      currentSort = { columnId, direction };
+      updateSortIndicators(columnId);
     }
   }
 
