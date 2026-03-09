@@ -1,0 +1,22 @@
+name = "siliconflow/deepseek-v3.2"
+family = "deepseek"
+release_date = "2025-12-03"
+last_updated = "2025-12-03"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[cost]
+input = 0.27
+output = 0.42
+
+[limit]
+context = 163_840
+output = 65_536
+
+[modalities]
+input = ["text"]
+output = ["text"]

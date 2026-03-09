@@ -1,0 +1,28 @@
+# https://deepinfra.com/MiniMaxAI/MiniMax-M2.5
+name = "MiniMax M2.5"
+family = "minimax"
+release_date = "2026-02-12"
+last_updated = "2026-02-12"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+knowledge = "2025-06"
+open_weights = true
+
+[cost]
+input = 0.27
+output = 0.95
+cache_read = 0.03
+cache_write = 0.375
+
+[limit]
+context = 204_800
+output = 131_072
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[interleaved]
+field = "reasoning_content"

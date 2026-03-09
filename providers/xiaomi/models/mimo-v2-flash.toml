@@ -1,7 +1,7 @@
 name = "MiMo-V2-Flash"
 family = "mimo"
-release_date = "2025-12-17"
-last_updated = "2025-12-17"
+release_date = "2025-12-16"
+last_updated = "2026-02-04"
 attachment = false
 reasoning = true
 temperature = true
@@ -10,12 +10,13 @@ tool_call = true
 open_weights = true
 
 [cost]
-input = 0.07
-output = 0.21
+input = 0.10
+output = 0.30
+cache_read = 0.01
 
 [limit]
 context = 256_000
-output = 32_000
+output = 64_000
 
 [modalities]
 input = ["text"]

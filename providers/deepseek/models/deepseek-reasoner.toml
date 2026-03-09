@@ -1,13 +1,13 @@
 name = "DeepSeek Reasoner"
 family = "deepseek-thinking"
-release_date = "2025-01-20"
-last_updated = "2025-09-29"
+release_date = "2025-12-01"
+last_updated = "2026-02-28"
 attachment = true
 reasoning = true
 temperature = true
-knowledge = "2024-07"
+knowledge = "2025-09"
 tool_call = true
-open_weights = false
+open_weights = true
 
 [interleaved]
 field = "reasoning_content"
@@ -19,7 +19,7 @@ cache_read = 0.028
 
 [limit]
 context = 128_000
-output = 128_000
+output = 64_000
 
 [modalities]
 input = ["text"]

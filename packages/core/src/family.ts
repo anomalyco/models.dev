@@ -128,9 +128,6 @@ export const ModelFamilyValues = [
   "solar-mini",
   "solar-pro",
 
-  // Exaone
-  "exaone",
-
   // Step (StepFun)
   "step",
 
@@ -283,6 +280,9 @@ export const ModelFamilyValues = [
 
   // Parakeet
   "parakeet",
+
+  // MiMo
+  "mimo-flash-free",
 
   // NeMo
   "nemoretriever",

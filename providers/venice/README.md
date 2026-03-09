@@ -16,14 +16,13 @@ The script can include alpha models when provided with a Venice API key with alp
 Key can be provided via:
 1. CLI argument: `--api-key=YOUR_KEY` or `--api-key YOUR_KEY`
 2. Environment variable: `VENICE_API_KEY`
-3. Interactive prompt (press Enter to skip for public models only)
 
 Details
 - Source endpoint: `https://api.venice.ai/api/v1/models?type=text`
 - Output path: `providers/venice/models/<model-id>.toml`
 - Merge behavior: Updates API-sourced fields, preserves manual fields
 - Dates: `release_date`/`last_updated` use `YYYY-MM-DD`; `knowledge` uses `YYYY-MM`
-- Output limit: Calculated as `context / 4`
+- Output limit: Sourced from `maxCompletionTokens` in the API response (falls back to `context / 4` if absent)
 
 Preserved Fields (manual input)
 - `family`: Inferred from model ID if not already set

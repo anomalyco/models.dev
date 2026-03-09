@@ -1,0 +1,21 @@
+name = "Mercury Edit"
+release_date = "2026-02-24"
+last_updated = "2026-02-24"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = false
+open_weights = false
+
+[cost]
+input = 0.25
+output = 0.75
+cache_read = 0.025
+
+[limit]
+context = 128000
+output = 8192
+
+[modalities]
+input = ["text"]
+output = ["text"]

@@ -1,0 +1,23 @@
+name = "GPT-5.3 Codex"
+family = "gpt-codex"
+attachment = true
+reasoning = true
+tool_call = true
+structured_output = true
+temperature = true
+release_date = "2026-02-24"
+last_updated = "2026-02-25"
+open_weights = false
+
+[cost]
+input = 2.19
+output = 17.5
+cache_read = 0.219
+
+[limit]
+context = 400_000
+output = 131_072
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

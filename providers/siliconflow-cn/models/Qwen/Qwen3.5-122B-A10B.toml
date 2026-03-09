@@ -1,0 +1,22 @@
+name = "Qwen/Qwen3.5-122B-A10B"
+family = "qwen"
+release_date = "2026-02-26"
+last_updated = "2026-02-26"
+attachment = false
+reasoning = true
+temperature = true
+knowledge = "2025-04"
+tool_call = true
+open_weights = true
+
+[cost]
+input = 0.29
+output = 2.32
+
+[limit]
+context = 262_144
+output = 65_536
+
+[modalities]
+input = ["text", "image", "video"]
+output = ["text"]
