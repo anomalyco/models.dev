@@ -1,0 +1,19 @@
+name = "Devstral 2"
+family = "mistral"
+release_date = "2025-05-01"
+last_updated = "2025-05-01"
+temperature = true
+tool_call = true
+open_weights = true
+
+[cost]
+input = 0.10
+output = 0.30
+
+[limit]
+context = 131_072
+output = 131_072
+
+[modalities]
+input = ["text"]
+output = ["text"]

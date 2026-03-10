@@ -1,0 +1,19 @@
+name = "Nemotron 3 Nano 30B"
+family = "nemotron"
+release_date = "2025-03-01"
+last_updated = "2025-03-01"
+temperature = true
+tool_call = true
+open_weights = false
+
+[cost]
+input = 0.10
+output = 0.10
+
+[limit]
+context = 131_072
+output = 131_072
+
+[modalities]
+input = ["text"]
+output = ["text"]

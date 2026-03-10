@@ -1,0 +1,20 @@
+name = "Nova Premier"
+family = "nova"
+release_date = "2025-02-01"
+last_updated = "2025-02-01"
+reasoning = true
+temperature = true
+tool_call = true
+open_weights = false
+
+[cost]
+input = 2.50
+output = 12.50
+
+[limit]
+context = 1_000_000
+output = 5_120
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

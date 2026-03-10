@@ -1,0 +1,19 @@
+name = "Llama 3.1 8B Instruct"
+family = "llama"
+release_date = "2024-07-23"
+last_updated = "2024-07-23"
+temperature = true
+tool_call = true
+open_weights = true
+
+[cost]
+input = 0.02
+output = 0.05
+
+[limit]
+context = 131_072
+output = 131_072
+
+[modalities]
+input = ["text"]
+output = ["text"]

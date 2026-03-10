@@ -1,0 +1,19 @@
+name = "GLM 4.7"
+family = "glm"
+release_date = "2025-06-01"
+last_updated = "2025-06-01"
+temperature = true
+tool_call = true
+open_weights = false
+
+[cost]
+input = 0.50
+output = 2.00
+
+[limit]
+context = 131_072
+output = 131_072
+
+[modalities]
+input = ["text"]
+output = ["text"]
