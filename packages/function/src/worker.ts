@@ -76,6 +76,7 @@ export default {
     if (url.pathname === "/api.json") {
       url.pathname = "/_api.json";
       const providerParam = url.searchParams.get("provider");
+      const flattenParam = url.searchParams.get("flatten");
 
       if (providerParam) {
         const apiResponse = await env.ASSETS.fetch(
@@ -87,15 +88,26 @@ export default {
         >;
 
         if (providers[providerParam]) {
-          return new Response(
-            JSON.stringify(providers[providerParam].models),
-            {
+          const models = providers[providerParam].models;
+
+          if (flattenParam === "true") {
+            const flattened = Object.entries(models).map(
+              ([id, model]) => ({ id, ...model as object }),
+            );
+            return new Response(JSON.stringify(flattened), {
               headers: {
                 "Content-Type": "application/json",
                 "Cache-Control": "public, max-age=3600",
               },
+            });
+          }
+
+          return new Response(JSON.stringify(models), {
+            headers: {
+              "Content-Type": "application/json",
+              "Cache-Control": "public, max-age=3600",
             },
-          );
+          });
         }
 
         return new Response(
