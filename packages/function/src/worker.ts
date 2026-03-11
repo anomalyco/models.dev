@@ -75,6 +75,37 @@ export default {
 
     if (url.pathname === "/api.json") {
       url.pathname = "/_api.json";
+      const providerParam = url.searchParams.get("provider");
+
+      if (providerParam) {
+        const apiResponse = await env.ASSETS.fetch(
+          new Request(url.toString(), request),
+        );
+        const providers = (await apiResponse.json()) as Record<
+          string,
+          { models: Record<string, unknown> }
+        >;
+
+        if (providers[providerParam]) {
+          return new Response(
+            JSON.stringify(providers[providerParam].models),
+            {
+              headers: {
+                "Content-Type": "application/json",
+                "Cache-Control": "public, max-age=3600",
+              },
+            },
+          );
+        }
+
+        return new Response(
+          JSON.stringify({ error: `Provider '${providerParam}' not found` }),
+          {
+            status: 404,
+            headers: { "Content-Type": "application/json" },
+          },
+        );
+      }
     } else if (
       url.pathname === "/" ||
       url.pathname === "/index.html" ||
