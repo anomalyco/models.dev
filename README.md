@@ -22,6 +22,33 @@ You can access this data through an API.
 curl https://models.dev/api.json
 ```
 
+### Query Parameters
+
+| Parameter | Description | Default |
+|-----------|-------------|---------|
+| `provider` | Filter to a specific provider's models only | All providers |
+| `flatten` | Return models as a flat array with `id` field included | `false` |
+
+### Examples
+
+Get all providers and models:
+
+```bash
+curl https://models.dev/api.json
+```
+
+Get models for a specific provider:
+
+```bash
+curl "https://models.dev/api.json?provider=anthropic"
+```
+
+Get models for a specific provider as a flat array:
+
+```bash
+curl "https://models.dev/api.json?provider=anthropic&flatten=true"
+```
+
 Use the **Model ID** field to do a lookup on any model; it's the identifier used by [AI SDK](https://ai-sdk.dev/).
 
 ### Logos
