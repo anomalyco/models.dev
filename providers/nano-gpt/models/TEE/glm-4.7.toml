@@ -1,0 +1,22 @@
+name = "GLM 4.7 TEE"
+family = "glm"
+release_date = "2026-01-29"
+last_updated = "2026-01-29"
+attachment = false
+reasoning = false
+tool_call = false
+structured_output = false
+open_weights = false
+
+[cost]
+input = 0.85
+output = 3.3
+
+[limit]
+context = 131_000
+input = 131_000
+output = 65_535
+
+[modalities]
+input = ["text"]
+output = ["text"]

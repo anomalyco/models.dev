@@ -1,0 +1,22 @@
+name = "Llama 4 Scout"
+family = "llama"
+release_date = "2025-09-05"
+last_updated = "2025-09-05"
+attachment = true
+reasoning = false
+tool_call = true
+structured_output = true
+open_weights = false
+
+[cost]
+input = 0.085
+output = 0.46
+
+[limit]
+context = 328_000
+input = 328_000
+output = 65_536
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

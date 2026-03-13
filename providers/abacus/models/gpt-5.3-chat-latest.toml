@@ -1,0 +1,21 @@
+name = "GPT-5.3 Chat Latest"
+family = "gpt"
+release_date = "2026-03-01"
+last_updated = "2026-03-01"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+open_weights = false
+
+[cost]
+input = 1.75
+output = 14.00
+
+[limit]
+context = 400_000
+output = 128_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

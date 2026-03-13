@@ -1,0 +1,22 @@
+name = "Mistral Small Creative"
+family = "mistral-small"
+release_date = "2025-12-16"
+last_updated = "2025-12-16"
+attachment = false
+reasoning = false
+tool_call = true
+structured_output = true
+open_weights = false
+
+[cost]
+input = 0.1
+output = 0.3
+
+[limit]
+context = 32_768
+input = 32_768
+output = 32_768
+
+[modalities]
+input = ["text"]
+output = ["text"]

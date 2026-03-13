@@ -1,21 +1,21 @@
-name = "Devstral 2 123b Instruct 2512"
-family = "mistral"
-release_date = "2025-12-11"
-last_updated = "2025-12-24"
+name = "Devstral 2 123B"
+family = "devstral"
+release_date = "2025-12-09"
+last_updated = "2025-12-09"
 attachment = false
 reasoning = false
-temperature = true
-tool_call = true
-structured_output = true
-open_weights = true
+tool_call = false
+structured_output = false
+open_weights = false
 
 [cost]
-input = 1.00
-output = 2.00
+input = 0.4
+output = 1.4
 
 [limit]
-context = 131072
-output = 8192
+context = 262_144
+input = 262_144
+output = 65_536
 
 [modalities]
 input = ["text"]

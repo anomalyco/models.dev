@@ -1,0 +1,22 @@
+name = "Ministral 14B"
+family = "ministral"
+release_date = "2025-12-04"
+last_updated = "2025-12-04"
+attachment = false
+reasoning = false
+tool_call = false
+structured_output = false
+open_weights = false
+
+[cost]
+input = 0.2
+output = 0.2
+
+[limit]
+context = 262_144
+input = 262_144
+output = 32_768
+
+[modalities]
+input = ["text"]
+output = ["text"]

@@ -1,0 +1,22 @@
+name = "OpenAI o3-mini (High)"
+family = "o-mini"
+release_date = "2025-01-31"
+last_updated = "2025-01-31"
+attachment = false
+reasoning = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[cost]
+input = 0.64
+output = 2.588
+
+[limit]
+context = 200_000
+input = 200_000
+output = 100_000
+
+[modalities]
+input = ["text"]
+output = ["text"]

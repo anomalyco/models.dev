@@ -1,0 +1,23 @@
+name = "DeepSeek v3.2"
+family = "deepseek"
+release_date = "2024-12-26"
+last_updated = "2025-09-29"
+attachment = true
+reasoning = false
+temperature = true
+knowledge = "2024-07"
+tool_call = true
+open_weights = false
+
+[cost]
+input = 0.58
+output = 1.68
+cache_read= 0.28
+
+[limit]
+context = 128_000
+output = 8_192
+
+[modalities]
+input = ["text"]
+output = ["text"]

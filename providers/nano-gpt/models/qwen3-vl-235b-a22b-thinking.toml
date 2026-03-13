@@ -1,0 +1,21 @@
+name = "Qwen3 VL 235B A22B Thinking"
+release_date = "2025-08-26"
+last_updated = "2025-08-26"
+attachment = true
+reasoning = true
+tool_call = false
+structured_output = false
+open_weights = false
+
+[cost]
+input = 0.5
+output = 6.00
+
+[limit]
+context = 32_768
+input = 32_768
+output = 32_768
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

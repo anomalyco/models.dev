@@ -1,0 +1,22 @@
+name = "Kimi K2.5 TEE"
+family = "kimi"
+release_date = "2026-01-29"
+last_updated = "2026-01-29"
+attachment = false
+reasoning = false
+tool_call = false
+structured_output = false
+open_weights = false
+
+[cost]
+input = 0.3
+output = 1.9
+
+[limit]
+context = 128_000
+input = 128_000
+output = 65_535
+
+[modalities]
+input = ["text"]
+output = ["text"]

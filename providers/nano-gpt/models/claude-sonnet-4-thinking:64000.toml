@@ -1,0 +1,21 @@
+name = "Claude 4 Sonnet Thinking (64K)"
+release_date = "2025-05-22"
+last_updated = "2025-05-22"
+attachment = true
+reasoning = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[cost]
+input = 2.992
+output = 14.994
+
+[limit]
+context = 1_000_000
+input = 1_000_000
+output = 64_000
+
+[modalities]
+input = ["text", "image", "pdf"]
+output = ["text"]

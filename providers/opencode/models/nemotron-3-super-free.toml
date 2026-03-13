@@ -1,0 +1,26 @@
+name = "Nemotron 3 Super Free"
+family = "nemotron-free"
+release_date = "2026-03-11"
+last_updated = "2026-03-11"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+knowledge = "2026-02"
+open_weights = true
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0
+output = 0
+cache_read = 0
+
+[limit]
+context = 1_000_000
+output = 128_000
+
+[modalities]
+input = ["text"]
+output = ["text"]

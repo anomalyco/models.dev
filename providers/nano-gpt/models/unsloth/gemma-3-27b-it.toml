@@ -1,0 +1,22 @@
+name = "Gemma 3 27B IT"
+family = "unsloth"
+release_date = "2025-03-10"
+last_updated = "2025-03-10"
+attachment = true
+reasoning = false
+tool_call = false
+structured_output = false
+open_weights = false
+
+[cost]
+input = 0.2992
+output = 0.2992
+
+[limit]
+context = 128_000
+input = 128_000
+output = 96_000
+
+[modalities]
+input = ["text", "pdf"]
+output = ["text"]

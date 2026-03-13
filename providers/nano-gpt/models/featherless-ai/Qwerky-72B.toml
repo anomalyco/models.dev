@@ -1,0 +1,22 @@
+name = "Qwerky 72B"
+family = "qwerky"
+release_date = "2025-03-20"
+last_updated = "2025-03-20"
+attachment = false
+reasoning = false
+tool_call = false
+structured_output = false
+open_weights = false
+
+[cost]
+input = 0.5
+output = 0.5
+
+[limit]
+context = 32_000
+input = 32_000
+output = 8_192
+
+[modalities]
+input = ["text"]
+output = ["text"]

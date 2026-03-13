@@ -1,0 +1,22 @@
+name = "RNJ-1 Instruct 8B"
+family = "rnj"
+release_date = "2025-12-13"
+last_updated = "2025-12-13"
+attachment = false
+reasoning = false
+tool_call = false
+structured_output = false
+open_weights = false
+
+[cost]
+input = 0.15
+output = 0.15
+
+[limit]
+context = 128_000
+input = 128_000
+output = 8_192
+
+[modalities]
+input = ["text"]
+output = ["text"]

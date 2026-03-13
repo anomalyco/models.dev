@@ -1,0 +1,22 @@
+name = "DeepSeek V3.1 Thinking"
+family = "deepseek-thinking"
+release_date = "2025-08-21"
+last_updated = "2025-08-21"
+attachment = false
+reasoning = false
+tool_call = false
+structured_output = false
+open_weights = false
+
+[cost]
+input = 0.2
+output = 0.7
+
+[limit]
+context = 128_000
+input = 128_000
+output = 65_536
+
+[modalities]
+input = ["text"]
+output = ["text"]

@@ -1,0 +1,22 @@
+name = "GPT 4.1 Mini"
+family = "gpt-mini"
+release_date = "2025-04-14"
+last_updated = "2025-04-14"
+attachment = true
+reasoning = false
+tool_call = false
+structured_output = false
+open_weights = false
+
+[cost]
+input = 0.4
+output = 1.6
+
+[limit]
+context = 1_047_576
+input = 1_047_576
+output = 32_768
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

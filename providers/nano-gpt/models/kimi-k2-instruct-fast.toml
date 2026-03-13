@@ -1,0 +1,21 @@
+name = "Kimi K2 0711 Fast"
+release_date = "2025-07-15"
+last_updated = "2025-07-15"
+attachment = true
+reasoning = false
+tool_call = false
+structured_output = false
+open_weights = false
+
+[cost]
+input = 0.1
+output = 2.00
+
+[limit]
+context = 131_072
+input = 131_072
+output = 16_384
+
+[modalities]
+input = ["text", "pdf"]
+output = ["text"]

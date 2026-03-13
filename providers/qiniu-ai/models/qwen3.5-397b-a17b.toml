@@ -1,0 +1,17 @@
+name = "Qwen3.5 397B A17B"
+release_date = "2026-02-22"
+last_updated = "2026-02-22"
+attachment = true
+reasoning = true
+tool_call = true
+temperature = true
+structured_output = false
+open_weights = false
+
+[limit]
+context = 256_000
+output = 64_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

@@ -1,0 +1,22 @@
+name = "Mistral Medium 3.1"
+family = "mistral-medium"
+release_date = "2025-09-05"
+last_updated = "2025-09-05"
+attachment = false
+reasoning = false
+tool_call = false
+structured_output = false
+open_weights = false
+
+[cost]
+input = 0.4
+output = 2.00
+
+[limit]
+context = 131_072
+input = 131_072
+output = 32_768
+
+[modalities]
+input = ["text"]
+output = ["text"]

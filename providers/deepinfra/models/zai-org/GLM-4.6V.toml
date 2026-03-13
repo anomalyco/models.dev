@@ -1,0 +1,26 @@
+# https://deepinfra.com/zai-org/GLM-4.6V
+name = "GLM-4.6V"
+family = "glm"
+release_date = "2025-09-30"
+last_updated = "2025-09-30"
+knowledge = "2025-04"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+open_weights = true
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.30
+output = 0.90
+
+[limit]
+context = 204_800
+output = 131_072
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

@@ -1,0 +1,21 @@
+name = "GPT OSS 120B High Throughput"
+family = "gpt-oss"
+release_date = "2025-08-05"
+last_updated = "2026-02-25"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+open_weights = true
+
+[cost]
+input = 0.09
+output = 0.36
+
+[limit]
+context = 131_072
+output = 16_384
+
+[modalities]
+input = ["text"]
+output = ["text"]

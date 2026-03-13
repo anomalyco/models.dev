@@ -1,0 +1,21 @@
+name = "Claude 4.5 Opus"
+release_date = "2025-11-01"
+last_updated = "2025-11-01"
+attachment = true
+reasoning = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[cost]
+input = 4.998
+output = 25.007
+
+[limit]
+context = 200_000
+input = 200_000
+output = 32_000
+
+[modalities]
+input = ["text", "image", "pdf"]
+output = ["text"]

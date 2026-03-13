@@ -1,0 +1,22 @@
+name = "Qwen3 30B A3B Instruct 2507"
+family = "qwen"
+release_date = "2025-07-30"
+last_updated = "2026-02-25"
+attachment = false
+reasoning = false
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = true
+
+[cost]
+input = 0.30
+output = 0.50
+
+[limit]
+context = 262_144
+output = 262_144
+
+[modalities]
+input = ["text"]
+output = ["text"]

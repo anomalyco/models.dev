@@ -1,0 +1,23 @@
+name = "Qwen3.5-397B-A17B"
+family = "qwen"
+release_date = "2026-02-16"
+last_updated = "2026-02-16"
+attachment = true
+reasoning = true
+temperature = true
+knowledge = "2026-01"
+tool_call = true
+structured_output = true
+open_weights = true
+
+[cost]
+input = 0.0
+output = 0.0
+
+[limit]
+context = 262_144
+output = 8_192
+
+[modalities]
+input = ["text", "image"] # video is natively supported by Qwen3.5 but not available on NVIDIA NIM
+output = ["text"]

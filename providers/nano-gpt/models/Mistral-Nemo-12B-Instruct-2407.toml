@@ -1,0 +1,21 @@
+name = "Mistral Nemo 12B Instruct 2407"
+release_date = "2024-07-18"
+last_updated = "2024-07-18"
+attachment = true
+reasoning = false
+tool_call = false
+structured_output = false
+open_weights = false
+
+[cost]
+input = 0.01
+output = 0.01
+
+[limit]
+context = 16_384
+input = 16_384
+output = 16_384
+
+[modalities]
+input = ["text", "pdf"]
+output = ["text"]

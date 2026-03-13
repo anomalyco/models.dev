@@ -4,21 +4,18 @@ release_date = "2026-02-12"
 last_updated = "2026-02-12"
 attachment = false
 reasoning = true
-temperature = true
 tool_call = true
 structured_output = true
 open_weights = false
 
-[interleaved]
-field = "reasoning_content"
-
 [cost]
-input = 0.30
-output = 1.20
+input = 0.3
+output = 1.2
 
 [limit]
-context = 204800
-output = 131072
+context = 204_800
+input = 204_800
+output = 131_072
 
 [modalities]
 input = ["text"]

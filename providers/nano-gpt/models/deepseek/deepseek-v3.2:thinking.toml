@@ -1,25 +1,22 @@
-name = "Deepseek V3.2 Thinking"
+name = "DeepSeek V3.2 Thinking"
 family = "deepseek"
 release_date = "2025-12-01"
-last_updated = "2025-12-24"
-attachment = false
+last_updated = "2025-12-01"
+attachment = true
 reasoning = true
-temperature = true
 tool_call = true
 structured_output = true
-open_weights = true
-
-[interleaved]
-field = "reasoning_content"
+open_weights = false
 
 [cost]
-input = 1.00
-output = 2.00
+input = 0.27999999999999997
+output = 0.42000000000000004
 
 [limit]
-context = 128000
-output = 8192
+context = 163_000
+input = 163_000
+output = 65_536
 
 [modalities]
-input = ["text"]
+input = ["text", "pdf"]
 output = ["text"]

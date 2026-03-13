@@ -1,0 +1,21 @@
+name = "Claude 4.1 Opus Thinking (32K)"
+release_date = "2025-05-22"
+last_updated = "2025-05-22"
+attachment = true
+reasoning = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[cost]
+input = 14.994
+output = 75.004
+
+[limit]
+context = 200_000
+input = 200_000
+output = 32_000
+
+[modalities]
+input = ["text", "image", "pdf"]
+output = ["text"]

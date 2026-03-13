@@ -1,0 +1,22 @@
+name = "Claude 4.6 Opus Thinking Max"
+family = "claude-opus"
+release_date = "2026-02-05"
+last_updated = "2026-02-05"
+attachment = true
+reasoning = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[cost]
+input = 4.998
+output = 25.007
+
+[limit]
+context = 1_000_000
+input = 1_000_000
+output = 128_000
+
+[modalities]
+input = ["text", "image", "pdf"]
+output = ["text"]

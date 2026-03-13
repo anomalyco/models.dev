@@ -1,0 +1,23 @@
+name = "GPT-5.2 Pro"
+family = "gpt-pro"
+release_date = "2025-12-11"
+last_updated = "2025-12-11"
+attachment = true
+reasoning = true
+temperature = false
+knowledge = "2025-08-31"
+tool_call = true
+structured_output = true
+open_weights = false
+
+[cost]
+input = 21.00
+output = 168.00
+
+[limit]
+context = 400_000
+output = 128_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

@@ -22,3 +22,8 @@ output = 262_144
 [modalities]
 input = ["text", "image"]
 output = ["text"]
+
+[provider]
+shape = "completions"
+npm = "@ai-sdk/openai-compatible"
+api = "https://${AZURE_RESOURCE_NAME}.services.ai.azure.com/models"

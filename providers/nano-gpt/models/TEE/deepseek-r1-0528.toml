@@ -1,0 +1,22 @@
+name = "DeepSeek R1 0528 TEE"
+family = "deepseek"
+release_date = "2025-05-28"
+last_updated = "2025-05-28"
+attachment = false
+reasoning = false
+tool_call = false
+structured_output = false
+open_weights = false
+
+[cost]
+input = 2.00
+output = 2.00
+
+[limit]
+context = 128_000
+input = 128_000
+output = 65_536
+
+[modalities]
+input = ["text"]
+output = ["text"]

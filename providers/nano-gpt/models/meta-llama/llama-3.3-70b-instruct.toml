@@ -1,22 +1,21 @@
 name = "Llama 3.3 70b Instruct"
 family = "llama"
-release_date = "2024-12-06"
-last_updated = "2025-12-24"
+release_date = "2025-02-27"
+last_updated = "2025-02-27"
 attachment = false
 reasoning = false
-temperature = true
-knowledge = "2023-12"
 tool_call = true
 structured_output = true
-open_weights = true
+open_weights = false
 
 [cost]
-input = 1.00
-output = 2.00
+input = 0.05
+output = 0.23
 
 [limit]
-context = 128000
-output = 8192
+context = 131_072
+input = 131_072
+output = 16_384
 
 [modalities]
 input = ["text"]

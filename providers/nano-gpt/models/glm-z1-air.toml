@@ -1,0 +1,21 @@
+name = "GLM Z1 Air"
+release_date = "2025-04-15"
+last_updated = "2025-04-15"
+attachment = false
+reasoning = false
+tool_call = true
+structured_output = true
+open_weights = false
+
+[cost]
+input = 0.07
+output = 0.07
+
+[limit]
+context = 32_000
+input = 32_000
+output = 16_384
+
+[modalities]
+input = ["text"]
+output = ["text"]

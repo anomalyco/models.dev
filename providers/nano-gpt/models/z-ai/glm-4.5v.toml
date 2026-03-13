@@ -1,0 +1,22 @@
+name = "GLM 4.5V"
+family = "glmv"
+release_date = "2025-11-22"
+last_updated = "2025-11-22"
+attachment = true
+reasoning = true
+tool_call = false
+structured_output = false
+open_weights = false
+
+[cost]
+input = 0.6
+output = 1.7999999999999998
+
+[limit]
+context = 64_000
+input = 64_000
+output = 96_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

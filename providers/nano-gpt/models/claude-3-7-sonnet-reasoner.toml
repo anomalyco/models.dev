@@ -1,0 +1,21 @@
+name = "Claude 3.7 Sonnet Reasoner"
+release_date = "2025-03-29"
+last_updated = "2025-03-29"
+attachment = true
+reasoning = false
+tool_call = false
+structured_output = false
+open_weights = false
+
+[cost]
+input = 3.00
+output = 15.00
+
+[limit]
+context = 128_000
+input = 128_000
+output = 8_192
+
+[modalities]
+input = ["text", "pdf"]
+output = ["text"]

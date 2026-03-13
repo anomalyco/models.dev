@@ -1,0 +1,22 @@
+name = "GLM 4 9B 0414"
+family = "glm"
+release_date = "2025-04-14"
+last_updated = "2025-04-14"
+attachment = false
+reasoning = false
+tool_call = false
+structured_output = false
+open_weights = false
+
+[cost]
+input = 0.2
+output = 0.2
+
+[limit]
+context = 32_000
+input = 32_000
+output = 8_000
+
+[modalities]
+input = ["text"]
+output = ["text"]

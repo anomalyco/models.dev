@@ -1,0 +1,22 @@
+name = "Hermes 4 Large (Thinking)"
+family = "nousresearch"
+release_date = "2025-01-01"
+last_updated = "2025-01-01"
+attachment = false
+reasoning = false
+tool_call = true
+structured_output = true
+open_weights = false
+
+[cost]
+input = 0.3
+output = 1.2
+
+[limit]
+context = 128_000
+input = 128_000
+output = 8_192
+
+[modalities]
+input = ["text"]
+output = ["text"]

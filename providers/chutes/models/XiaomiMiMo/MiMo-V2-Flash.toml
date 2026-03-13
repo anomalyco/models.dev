@@ -3,9 +3,9 @@ family = "mimo"
 release_date = "2025-12-29"
 last_updated = "2026-01-27"
 attachment = false
-reasoning = false
+reasoning = true
 temperature = true
-tool_call = false
+tool_call = true
 structured_output = false
 open_weights = true
 
@@ -14,8 +14,8 @@ input = 0.09
 output = 0.29
 
 [limit]
-context = 32_768
-output = 8_192
+context = 262_144
+output = 32_000
 
 [modalities]
 input = ["text"]

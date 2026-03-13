@@ -1,0 +1,21 @@
+name = "MM Poly 8B"
+family = "mm-poly"
+release_date = "2025-06"
+last_updated = "2026-02-25"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = false
+open_weights = false
+
+[cost]
+input = 0.658
+output = 1.11
+
+[limit]
+context = 32_768
+output = 4_096
+
+[modalities]
+input = ["text", "image", "video"]
+output = ["text"]

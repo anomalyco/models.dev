@@ -1,0 +1,22 @@
+name = "GLM 4.6"
+family = "glm"
+release_date = "2025-09-30"
+last_updated = "2025-09-30"
+attachment = false
+reasoning = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[cost]
+input = 0.4
+output = 1.5
+
+[limit]
+context = 200_000
+input = 200_000
+output = 65_535
+
+[modalities]
+input = ["text"]
+output = ["text"]

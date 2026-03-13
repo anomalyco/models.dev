@@ -1,0 +1,22 @@
+name = "ERNIE 4.5 VL 28B"
+family = "ernie"
+release_date = "2025-06-30"
+last_updated = "2025-06-30"
+attachment = true
+reasoning = false
+tool_call = false
+structured_output = false
+open_weights = false
+
+[cost]
+input = 0.13999999999999999
+output = 0.5599999999999999
+
+[limit]
+context = 32_768
+input = 32_768
+output = 16_384
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

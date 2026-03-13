@@ -1,0 +1,21 @@
+name = "Study Mode"
+release_date = "2024-05-13"
+last_updated = "2024-05-13"
+attachment = true
+reasoning = false
+tool_call = false
+structured_output = false
+open_weights = false
+
+[cost]
+input = 4.998
+output = 14.994
+
+[limit]
+context = 200_000
+input = 200_000
+output = 16_384
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

@@ -1,0 +1,21 @@
+name = "Gemini 2.5 Pro"
+release_date = "2025-06-05"
+last_updated = "2025-06-05"
+attachment = true
+reasoning = true
+tool_call = false
+structured_output = false
+open_weights = false
+
+[cost]
+input = 2.5
+output = 10.00
+
+[limit]
+context = 1_048_756
+input = 1_048_756
+output = 65_536
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

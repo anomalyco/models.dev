@@ -1,0 +1,21 @@
+name = "Claude 3.7 Sonnet"
+release_date = "2025-02-19"
+last_updated = "2025-02-19"
+attachment = true
+reasoning = false
+tool_call = true
+structured_output = true
+open_weights = false
+
+[cost]
+input = 2.992
+output = 14.994
+
+[limit]
+context = 200_000
+input = 200_000
+output = 16_000
+
+[modalities]
+input = ["text", "image", "pdf"]
+output = ["text"]

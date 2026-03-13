@@ -1,0 +1,21 @@
+name = "Gemini Text + Image"
+release_date = "2025-02-19"
+last_updated = "2025-02-19"
+attachment = false
+reasoning = false
+tool_call = false
+structured_output = false
+open_weights = false
+
+[cost]
+input = 0.2
+output = 0.8
+
+[limit]
+context = 32_767
+input = 32_767
+output = 8_192
+
+[modalities]
+input = ["text"]
+output = ["text"]

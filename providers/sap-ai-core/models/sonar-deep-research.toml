@@ -1,0 +1,23 @@
+name = "sonar-deep-research"
+family = "sonar-deep-research"
+release_date = "2025-02-01"
+last_updated = "2025-09-01"
+attachment = false
+reasoning = true
+temperature = false
+tool_call = false
+knowledge = "2025-01"
+open_weights = false
+
+[cost]
+input = 2.00
+output = 8.00
+reasoning = 3.00
+
+[limit]
+context = 128_000
+output = 32_768
+
+[modalities]
+input = ["text"]
+output = ["text"]

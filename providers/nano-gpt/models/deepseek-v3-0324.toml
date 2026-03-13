@@ -1,0 +1,21 @@
+name = "DeepSeek Chat 0324"
+release_date = "2025-03-24"
+last_updated = "2025-03-24"
+attachment = false
+reasoning = false
+tool_call = true
+structured_output = true
+open_weights = false
+
+[cost]
+input = 0.25
+output = 0.7
+
+[limit]
+context = 128_000
+input = 128_000
+output = 8_192
+
+[modalities]
+input = ["text"]
+output = ["text"]

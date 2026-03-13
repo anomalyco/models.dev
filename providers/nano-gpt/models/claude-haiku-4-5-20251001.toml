@@ -1,0 +1,21 @@
+name = "Claude Haiku 4.5"
+release_date = "2025-10-15"
+last_updated = "2025-10-15"
+attachment = true
+reasoning = false
+tool_call = true
+structured_output = true
+open_weights = false
+
+[cost]
+input = 1.00
+output = 5.00
+
+[limit]
+context = 200_000
+input = 200_000
+output = 64_000
+
+[modalities]
+input = ["text", "image", "pdf"]
+output = ["text"]

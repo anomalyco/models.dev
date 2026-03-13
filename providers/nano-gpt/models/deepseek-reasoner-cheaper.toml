@@ -1,0 +1,21 @@
+name = "Deepseek R1 Cheaper"
+release_date = "2025-01-20"
+last_updated = "2025-01-20"
+attachment = false
+reasoning = false
+tool_call = false
+structured_output = false
+open_weights = false
+
+[cost]
+input = 0.4
+output = 1.7
+
+[limit]
+context = 128_000
+input = 128_000
+output = 65_536
+
+[modalities]
+input = ["text"]
+output = ["text"]

@@ -4,7 +4,7 @@ release_date = "2025-01-01"
 last_updated = "2025-01-01"
 attachment = false
 reasoning = false
-tool_call = true
+tool_call = false
 open_weights = true
 
 [cost]
@@ -16,5 +16,5 @@ context = 32_000
 output = 32_000
 
 [modalities]
-input = ["text"]
-output = ["text", "image"]
+input = ["text", "image"]
+output = ["text"]

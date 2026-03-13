@@ -73,6 +73,7 @@ export const Model = z
       .object({
         npm: z.string().optional(),
         api: z.string().optional(),
+        shape: z.enum(["responses", "completions"]).optional(),
       })
       .optional(),
   })

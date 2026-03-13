@@ -1,0 +1,22 @@
+name = "OpenAI o4-mini high"
+family = "o-mini"
+release_date = "2025-04-16"
+last_updated = "2025-04-16"
+attachment = false
+reasoning = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[cost]
+input = 1.1
+output = 4.4
+
+[limit]
+context = 200_000
+input = 200_000
+output = 100_000
+
+[modalities]
+input = ["text"]
+output = ["text"]

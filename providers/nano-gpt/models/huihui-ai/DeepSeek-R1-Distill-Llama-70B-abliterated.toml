@@ -1,0 +1,22 @@
+name = "DeepSeek R1 Llama 70B Abliterated"
+family = "deepseek"
+release_date = "2025-01-20"
+last_updated = "2025-01-20"
+attachment = false
+reasoning = true
+tool_call = false
+structured_output = false
+open_weights = false
+
+[cost]
+input = 0.7
+output = 0.7
+
+[limit]
+context = 16_384
+input = 16_384
+output = 8_192
+
+[modalities]
+input = ["text"]
+output = ["text"]

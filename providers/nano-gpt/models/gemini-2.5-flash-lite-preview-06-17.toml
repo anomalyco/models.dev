@@ -1,0 +1,21 @@
+name = "Gemini 2.5 Flash Lite Preview"
+release_date = "2025-06-17"
+last_updated = "2025-06-17"
+attachment = true
+reasoning = true
+tool_call = false
+structured_output = false
+open_weights = false
+
+[cost]
+input = 0.15
+output = 0.6
+
+[limit]
+context = 1_048_756
+input = 1_048_756
+output = 65_536
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

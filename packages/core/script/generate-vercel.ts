@@ -24,6 +24,7 @@ enum ModelType {
 
 enum SkipZeroFields {
   LimitContext = "limit.context",
+  LimitInput = "limit.input",
   LimitOutput = "limit.output",
 }
 
@@ -82,6 +83,7 @@ interface ExistingModel {
   };
   limit?: {
     context?: number;
+    input?: number;
     output?: number;
   };
   modalities?: {
@@ -112,6 +114,7 @@ interface MergedModel {
   };
   limit: {
     context: number;
+    input?: number;
     output: number;
   };
   modalities: {
@@ -232,6 +235,10 @@ async function loadExistingModel(filePath: string): Promise<ExistingModel | null
   }
 }
 
+function isOpenAIModel(modelId: string): boolean {
+  return modelId.startsWith("openai/");
+}
+
 function mergeModel(
   apiModel: z.infer<typeof VercelModel>,
   existing: ExistingModel | null,
@@ -281,6 +288,7 @@ function mergeModel(
     ...(status && { status }),
     limit: {
       context: contextLimit,
+      ...(isOpenAIModel(apiModel.id) && contextLimit > outputLimit && { input: contextLimit - outputLimit }),
       output: outputLimit,
     },
     modalities: {
@@ -362,6 +370,9 @@ function formatToml(model: MergedModel): string {
   lines.push("");
   lines.push(`[limit]`);
   lines.push(`context = ${formatNumber(model.limit.context)}`);
+  if (model.limit.input !== undefined) {
+    lines.push(`input = ${formatNumber(model.limit.input)}`);
+  }
   lines.push(`output = ${formatNumber(model.limit.output)}`);
 
   lines.push("");
@@ -435,6 +446,7 @@ function detectChanges(
   compare("cost.cache_read", existing.cost?.cache_read, merged.cost?.cache_read);
   compare("cost.cache_write", existing.cost?.cache_write, merged.cost?.cache_write);
   compare("limit.context", existing.limit?.context, merged.limit.context);
+  compare("limit.input", existing.limit?.input, merged.limit.input);
   compare("limit.output", existing.limit?.output, merged.limit.output);
   compare("modalities.input", existing.modalities?.input, merged.modalities.input);
 
