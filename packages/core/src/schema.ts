@@ -2,10 +2,64 @@ import { z } from "zod";
 
 import { ModelFamily } from "./family";
 
+// ── Date helpers ──────────────────────────────────────────────────────────────
+
+/**
+ * Validates that a YYYY-MM or YYYY-MM-DD date string represents a real
+ * calendar date (rejects impossible dates like 2024-02-31).
+ */
+function isRealDate(value: string): boolean {
+  const parts = value.split("-");
+  const year = parseInt(parts[0], 10);
+  const month = parseInt(parts[1], 10);
+  if (month < 1 || month > 12) return false;
+  if (parts.length === 3) {
+    const day = parseInt(parts[2], 10);
+    const daysInMonth = new Date(year, month, 0).getDate();
+    if (day < 1 || day > daysInMonth) return false;
+  }
+  return true;
+}
+
+/**
+ * Normalises a YYYY-MM or YYYY-MM-DD string to a plain numeric tuple
+ * [year, month, day] so two dates with different precisions can be compared.
+ * YYYY-MM is treated as the first of that month.
+ */
+function toDateTuple(value: string): [number, number, number] {
+  const parts = value.split("-");
+  return [
+    parseInt(parts[0], 10),
+    parseInt(parts[1], 10),
+    parts.length > 2 ? parseInt(parts[2], 10) : 1,
+  ];
+}
+
+function compareDates(a: string, b: string): number {
+  const [ay, am, ad] = toDateTuple(a);
+  const [by, bm, bd] = toDateTuple(b);
+  if (ay !== by) return ay - by;
+  if (am !== bm) return am - bm;
+  return ad - bd;
+}
+
+// ── Date schema (reusable) ────────────────────────────────────────────────────
+
+const dateString = z
+  .string()
+  .regex(/^\d{4}-\d{2}(-\d{2})?$/, {
+    message: "Must be in YYYY-MM or YYYY-MM-DD format",
+  })
+  .refine(isRealDate, {
+    message: "Date is not a valid calendar date",
+  });
+
+// ── Cost schema ───────────────────────────────────────────────────────────────
+
 const Cost = z.object({
   input: z.number().min(0, "Input price cannot be negative"),
   output: z.number().min(0, "Output price cannot be negative"),
-  reasoning: z.number().min(0, "Input price cannot be negative").optional(),
+  reasoning: z.number().min(0, "Reasoning price cannot be negative").optional(),
   cache_read: z
     .number()
     .min(0, "Cache read price cannot be negative")
@@ -23,6 +77,9 @@ const Cost = z.object({
     .min(0, "Audio output price cannot be negative")
     .optional(),
 });
+
+// ── Model schema ──────────────────────────────────────────────────────────────
+
 export const Model = z
   .object({
     id: z.string(),
@@ -43,31 +100,30 @@ export const Model = z
       .optional(),
     structured_output: z.boolean().optional(),
     temperature: z.boolean().optional(),
-    knowledge: z
-      .string()
-      .regex(/^\d{4}-\d{2}(-\d{2})?$/, {
-        message: "Must be in YYYY-MM or YYYY-MM-DD format",
+    knowledge: dateString.optional(),
+    release_date: dateString,
+    last_updated: dateString,
+    modalities: z
+      .object({
+        input: z
+          .array(z.enum(["text", "audio", "image", "video", "pdf"]))
+          .min(1, "At least one input modality is required"),
+        output: z
+          .array(z.enum(["text", "audio", "image", "video", "pdf"]))
+          .min(1, "At least one output modality is required"),
       })
-      .optional(),
-    release_date: z.string().regex(/^\d{4}-\d{2}(-\d{2})?$/, {
-      message: "Must be in YYYY-MM or YYYY-MM-DD format",
-    }),
-    last_updated: z.string().regex(/^\d{4}-\d{2}(-\d{2})?$/, {
-      message: "Must be in YYYY-MM or YYYY-MM-DD format",
-    }),
-    modalities: z.object({
-      input: z.array(z.enum(["text", "audio", "image", "video", "pdf"])),
-      output: z.array(z.enum(["text", "audio", "image", "video", "pdf"])),
-    }),
+      .strict(),
     open_weights: z.boolean(),
     cost: Cost.extend({
       context_over_200k: Cost.optional(),
     }).optional(),
-    limit: z.object({
-      context: z.number().min(0, "Context window must be positive"),
-      input: z.number().min(0, "Input tokens must be positive").optional(),
-      output: z.number().min(0, "Output tokens must be positive"),
-    }),
+    limit: z
+      .object({
+        context: z.number().min(0, "Context window must be non-negative"),
+        input: z.number().min(0, "Input token limit must be non-negative").optional(),
+        output: z.number().min(0, "Output token limit must be non-negative"),
+      })
+      .strict(),
     status: z.enum(["alpha", "beta", "deprecated"]).optional(),
     provider: z
       .object({
@@ -86,9 +142,21 @@ export const Model = z
       message: "Cannot set cost.reasoning when reasoning is false",
       path: ["cost", "reasoning"],
     },
+  )
+  .refine(
+    (data) => {
+      if (!data.release_date || !data.last_updated) return true;
+      return compareDates(data.last_updated, data.release_date) >= 0;
+    },
+    {
+      message: "last_updated cannot be earlier than release_date",
+      path: ["last_updated"],
+    },
   );
 
 export type Model = z.infer<typeof Model>;
+
+// ── Provider schema ───────────────────────────────────────────────────────────
 
 export const Provider = z
   .object({
