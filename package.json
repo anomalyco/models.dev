@@ -15,6 +15,7 @@
     }
   },
   "scripts": {
+    "test": "bun test packages/core/test/",
     "validate": "bun ./packages/core/script/validate.ts",
     "helicone:generate": "bun ./packages/core/script/generate-helicone.ts",
     "venice:generate": "bun ./packages/core/script/generate-venice.ts",

@@ -214,7 +214,10 @@ for (const { name, data } of modelsData) {
     },
     limit: {
       context: contextLength,
-      output: existingData?.limit.output,
+      // Preserve manually curated output limit; fall back to a conservative
+      // default of 4096 tokens when creating a new file, since the Ollama API
+      // does not expose a max-output value directly.
+      output: existingData?.limit.output ?? 4096,
     },
   };
 

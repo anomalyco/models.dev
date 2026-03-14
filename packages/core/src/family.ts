@@ -209,9 +209,6 @@ export const ModelFamilyValues = [
   // Phoenix
   "phoenix",
 
-  // Trinity
-  "trinity",
-
   // Lucid
   "lucid",
 

@@ -1,0 +1,22 @@
+name = "GLM-4.6V-Flash"
+family = "glm-flash"
+release_date = "2025-12-08"
+last_updated = "2025-12-08"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = false
+knowledge = "2025-04"
+open_weights = true
+
+[cost]
+input = 0
+output = 0
+
+[limit]
+context = 128_000
+output = 32_768
+
+[modalities]
+input = ["text", "image", "video"]
+output = ["text"]

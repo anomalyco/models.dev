@@ -5,7 +5,7 @@ import { ModelFamily } from "./family";
 const Cost = z.object({
   input: z.number().min(0, "Input price cannot be negative"),
   output: z.number().min(0, "Output price cannot be negative"),
-  reasoning: z.number().min(0, "Input price cannot be negative").optional(),
+  reasoning: z.number().min(0, "Reasoning price cannot be negative").optional(),
   cache_read: z
     .number()
     .min(0, "Cache read price cannot be negative")
