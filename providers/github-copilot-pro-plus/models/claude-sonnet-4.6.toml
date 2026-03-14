@@ -1,0 +1,21 @@
+name = "Claude Sonnet 4.6"
+family = "claude-sonnet"
+release_date = "2026-02-17"
+last_updated = "2026-02-17"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+open_weights = false
+
+[cost]
+input = 0
+output = 0
+
+[limit]
+context = 128_000
+output = 32_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
