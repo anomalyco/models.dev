@@ -213,6 +213,7 @@ export const Rendered = renderToString(
         <button id="help">How to use</button>
       </div>
     </header>
+    <div class="table-scroll-wrapper">
     <table>
       <thead>
         <tr>
@@ -456,6 +457,7 @@ export const Rendered = renderToString(
           )}
       </tbody>
     </table>
+    </div>
     <dialog id="modal">
       <div class="header">
         <h2>How to use</h2>
