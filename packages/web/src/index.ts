@@ -2,6 +2,11 @@ const modal = document.getElementById("modal") as HTMLDialogElement;
 const modalClose = document.getElementById("close")!;
 const help = document.getElementById("help")!;
 const search = document.getElementById("search")! as HTMLInputElement;
+const filtersToggle = document.getElementById("filters-toggle") as HTMLButtonElement;
+const filtersPanel = document.getElementById("filters-panel") as HTMLElement;
+const filtersClear = document.getElementById("filters-clear") as HTMLButtonElement;
+const filterCountBadge = document.getElementById("filter-count") as HTMLElement;
+const rowCountEl = document.getElementById("row-count") as HTMLElement;
 
 /////////////////////////
 // URL State Management
@@ -146,24 +151,6 @@ document.querySelectorAll("th.sortable").forEach((header) => {
 ///////////////////
 // Handle Search
 ///////////////////
-function filterTable(value: string) {
-  const lowerCaseValues = value.toLowerCase().split(",").filter(str => str.trim() !== "");
-  const rows = document.querySelectorAll(
-    "table tbody tr"
-  ) as NodeListOf<HTMLTableRowElement>;
-
-  rows.forEach((row) => {
-    const cellTexts = Array.from(row.cells).map((cell) =>
-      cell.textContent!.toLowerCase()
-    );
-    const isVisible = lowerCaseValues.length === 0 ||
-     lowerCaseValues.some((lowerCaseValue) => cellTexts.some((text) => text.includes(lowerCaseValue)));
-    row.style.display = isVisible ? "" : "none";
-  });
-
-  updateQueryParams({ search: value || null });
-}
-
 search.addEventListener("input", () => {
   filterTable(search.value);
 });
@@ -211,6 +198,188 @@ search.addEventListener("keydown", (e) => {
   }
 };
 
+///////////////////////////////////////////
+// Faceted Filtering
+///////////////////////////////////////////
+
+/** Current active filter values */
+const activeFilters: Record<string, string> = {
+  reasoning: "",
+  tool_call: "",
+  structured_output: "",
+  open_weights: "",
+  min_context: "",
+  max_input_cost: "",
+  status: "active", // default: hide deprecated
+};
+
+/** Count of non-default active filters (shown in badge) */
+function countActiveFilters(): number {
+  let count = 0;
+  if (activeFilters.reasoning !== "") count++;
+  if (activeFilters.tool_call !== "") count++;
+  if (activeFilters.structured_output !== "") count++;
+  if (activeFilters.open_weights !== "") count++;
+  if (activeFilters.min_context !== "") count++;
+  if (activeFilters.max_input_cost !== "") count++;
+  if (activeFilters.status !== "active") count++; // non-default
+  return count;
+}
+
+function updateFilterBadge() {
+  const count = countActiveFilters();
+  filterCountBadge.hidden = count === 0;
+  filterCountBadge.textContent = String(count);
+  filtersToggle.setAttribute("aria-expanded", filtersPanel.hidden ? "false" : "true");
+}
+
+function applyFilters() {
+  const rows = document.querySelectorAll<HTMLTableRowElement>("table tbody tr");
+  const searchVal = search.value.toLowerCase();
+  const searchTerms = searchVal.split(",").map(s => s.trim()).filter(Boolean);
+  let visible = 0;
+  let total = 0;
+
+  rows.forEach((row) => {
+    total++;
+    let show = true;
+
+    // Search filter (existing)
+    if (searchTerms.length > 0) {
+      const cellTexts = Array.from(row.cells).map(c => c.textContent!.toLowerCase());
+      show = searchTerms.some(term => cellTexts.some(text => text.includes(term)));
+    }
+
+    // Boolean capability filters
+    for (const filterKey of ["reasoning", "tool_call", "structured_output", "open_weights"] as const) {
+      const filterVal = activeFilters[filterKey];
+      if (!filterVal) continue;
+      const dataAttr = filterKey === "tool_call" ? "data-tool-call" : `data-${filterKey.replace(/_/g, "-")}`;
+      const rowVal = row.getAttribute(dataAttr) ?? "";
+      if (rowVal === "") {
+        // Field not set on this model — hide if filtering for a specific value
+        show = false;
+      } else if (rowVal !== filterVal) {
+        show = false;
+      }
+    }
+
+    // Min context filter
+    if (activeFilters.min_context) {
+      const minCtx = parseInt(activeFilters.min_context, 10);
+      const rowCtx = parseInt(row.getAttribute("data-context") ?? "0", 10);
+      if (rowCtx < minCtx) show = false;
+    }
+
+    // Max input cost filter
+    if (activeFilters.max_input_cost) {
+      const maxCost = parseFloat(activeFilters.max_input_cost);
+      const costAttr = row.getAttribute("data-input-cost");
+      if (!costAttr) {
+        show = false; // no pricing data
+      } else if (parseFloat(costAttr) > maxCost) {
+        show = false;
+      }
+    }
+
+    // Status filter
+    if (activeFilters.status === "active") {
+      const rowStatus = row.getAttribute("data-status") ?? "active";
+      if (rowStatus === "deprecated") show = false;
+    } else if (activeFilters.status === "deprecated") {
+      const rowStatus = row.getAttribute("data-status") ?? "active";
+      if (rowStatus !== "deprecated") show = false;
+    }
+    // "" means show all
+
+    row.style.display = show ? "" : "none";
+    if (show) visible++;
+  });
+
+  // Update row count display
+  if (rowCountEl) {
+    rowCountEl.textContent =
+      visible === total
+        ? `${total.toLocaleString()} models`
+        : `${visible.toLocaleString()} of ${total.toLocaleString()} models`;
+  }
+
+  updateFilterBadge();
+  updateQueryParams({
+    reasoning: activeFilters.reasoning || null,
+    tool_call: activeFilters.tool_call || null,
+    structured_output: activeFilters.structured_output || null,
+    open_weights: activeFilters.open_weights || null,
+    min_context: activeFilters.min_context || null,
+    max_input_cost: activeFilters.max_input_cost || null,
+    status: activeFilters.status !== "active" ? activeFilters.status : null,
+  });
+}
+
+// Tri-state buttons (boolean filters + status)
+document.querySelectorAll<HTMLButtonElement>(".tristate-btn, .preset-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    const filterKey = btn.getAttribute("data-filter")!;
+    const value = btn.getAttribute("data-value") ?? "";
+
+    // Update active state on sibling buttons
+    const siblings = btn.parentElement!.querySelectorAll<HTMLButtonElement>(".tristate-btn, .preset-btn");
+    siblings.forEach(s => s.classList.remove("active"));
+    btn.classList.add("active");
+
+    activeFilters[filterKey] = value;
+    applyFilters();
+  });
+});
+
+// Number input filters
+const maxInputCostInput = document.getElementById("filter-max-input-cost") as HTMLInputElement | null;
+if (maxInputCostInput) {
+  maxInputCostInput.addEventListener("input", () => {
+    activeFilters.max_input_cost = maxInputCostInput.value;
+    applyFilters();
+  });
+}
+
+// Toggle filter panel
+filtersToggle.addEventListener("click", () => {
+  filtersPanel.hidden = !filtersPanel.hidden;
+  filtersToggle.setAttribute("aria-expanded", filtersPanel.hidden ? "false" : "true");
+});
+
+// Clear all filters
+filtersClear.addEventListener("click", () => {
+  activeFilters.reasoning = "";
+  activeFilters.tool_call = "";
+  activeFilters.structured_output = "";
+  activeFilters.open_weights = "";
+  activeFilters.min_context = "";
+  activeFilters.max_input_cost = "";
+  activeFilters.status = "active";
+
+  // Reset all tri-state buttons to first (Any/Active) option
+  document.querySelectorAll<HTMLButtonElement>(".tristate-btn, .preset-btn").forEach(btn => {
+    btn.classList.remove("active");
+  });
+  document.querySelectorAll<HTMLElement>(".filter-group").forEach(group => {
+    const firstBtn = group.querySelector<HTMLButtonElement>(".tristate-btn, .preset-btn");
+    if (firstBtn) firstBtn.classList.add("active");
+  });
+
+  // Reset number inputs
+  if (maxInputCostInput) maxInputCostInput.value = "";
+
+  applyFilters();
+});
+
+///////////////////////////////////////////
+// Override filterTable to use applyFilters
+///////////////////////////////////////////
+function filterTable(value: string) {
+  updateQueryParams({ search: value || null });
+  applyFilters();
+}
+
 ///////////////////////////////////
 // Initialize State from URL
 ///////////////////////////////////
@@ -221,8 +390,35 @@ function initializeFromURL() {
     const searchQuery = params.get("search");
     if (!searchQuery) return;
     search.value = searchQuery;
-    filterTable(searchQuery);
   })();
+
+  // Restore filter state from URL
+  for (const key of ["reasoning", "tool_call", "structured_output", "open_weights", "min_context", "max_input_cost"] as const) {
+    const val = params.get(key);
+    if (val !== null) {
+      activeFilters[key] = val;
+      // Update button states
+      const btns = document.querySelectorAll<HTMLButtonElement>(`[data-filter="${key}"]`);
+      btns.forEach(btn => {
+        btn.classList.toggle("active", btn.getAttribute("data-value") === val);
+      });
+      // Restore number input
+      if (key === "max_input_cost" && maxInputCostInput) {
+        maxInputCostInput.value = val;
+      }
+    }
+  }
+
+  const statusParam = params.get("status");
+  if (statusParam !== null) {
+    activeFilters.status = statusParam;
+    const btns = document.querySelectorAll<HTMLButtonElement>('[data-filter="status"]');
+    btns.forEach(btn => {
+      btn.classList.toggle("active", btn.getAttribute("data-value") === statusParam);
+    });
+  }
+
+  applyFilters();
 
   (() => {
     const columnName = params.get("sort");

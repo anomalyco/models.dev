@@ -213,6 +213,97 @@ export const Rendered = renderToString(
         <button id="help">How to use</button>
       </div>
     </header>
+
+    {/* ── Filter Bar ─────────────────────────────────────────────────────── */}
+    <div id="filter-bar" class="filter-bar">
+      <div class="filter-bar-row">
+        <button id="filters-toggle" class="filter-toggle-btn" aria-expanded="false">
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+          </svg>
+          Filters
+          <span id="filter-count" class="filter-count" hidden></span>
+        </button>
+        <span id="row-count" class="row-count"></span>
+      </div>
+
+      <div id="filters-panel" class="filters-panel" hidden>
+        <div class="filters-grid">
+
+          {/* Reasoning */}
+          <div class="filter-group">
+            <label class="filter-label">Reasoning</label>
+            <div class="filter-tristate">
+              <button class="tristate-btn active" data-filter="reasoning" data-value="">Any</button>
+              <button class="tristate-btn" data-filter="reasoning" data-value="true">Yes</button>
+              <button class="tristate-btn" data-filter="reasoning" data-value="false">No</button>
+            </div>
+          </div>
+
+          {/* Tool Call */}
+          <div class="filter-group">
+            <label class="filter-label">Tool Call</label>
+            <div class="filter-tristate">
+              <button class="tristate-btn active" data-filter="tool_call" data-value="">Any</button>
+              <button class="tristate-btn" data-filter="tool_call" data-value="true">Yes</button>
+              <button class="tristate-btn" data-filter="tool_call" data-value="false">No</button>
+            </div>
+          </div>
+
+          {/* Structured Output */}
+          <div class="filter-group">
+            <label class="filter-label">Structured Output</label>
+            <div class="filter-tristate">
+              <button class="tristate-btn active" data-filter="structured_output" data-value="">Any</button>
+              <button class="tristate-btn" data-filter="structured_output" data-value="true">Yes</button>
+              <button class="tristate-btn" data-filter="structured_output" data-value="false">No</button>
+            </div>
+          </div>
+
+          {/* Open Weights */}
+          <div class="filter-group">
+            <label class="filter-label">Open Weights</label>
+            <div class="filter-tristate">
+              <button class="tristate-btn active" data-filter="open_weights" data-value="">Any</button>
+              <button class="tristate-btn" data-filter="open_weights" data-value="true">Yes</button>
+              <button class="tristate-btn" data-filter="open_weights" data-value="false">No</button>
+            </div>
+          </div>
+
+          {/* Min Context */}
+          <div class="filter-group">
+            <label class="filter-label">Min Context</label>
+            <div class="filter-presets">
+              <button class="preset-btn" data-filter="min_context" data-value="">Any</button>
+              <button class="preset-btn" data-filter="min_context" data-value="32000">32K</button>
+              <button class="preset-btn" data-filter="min_context" data-value="128000">128K</button>
+              <button class="preset-btn" data-filter="min_context" data-value="200000">200K</button>
+              <button class="preset-btn" data-filter="min_context" data-value="1000000">1M</button>
+            </div>
+          </div>
+
+          {/* Max Input Cost */}
+          <div class="filter-group">
+            <label class="filter-label">Max Input Cost ($/1M)</label>
+            <input type="number" id="filter-max-input-cost" class="filter-number-input" placeholder="e.g. 5.00" min="0" step="0.01" data-filter="max_input_cost" />
+          </div>
+
+          {/* Status */}
+          <div class="filter-group">
+            <label class="filter-label">Status</label>
+            <div class="filter-tristate">
+              <button class="tristate-btn active" data-filter="status" data-value="active">Active</button>
+              <button class="tristate-btn" data-filter="status" data-value="">All</button>
+              <button class="tristate-btn" data-filter="status" data-value="deprecated">Deprecated</button>
+            </div>
+          </div>
+
+        </div>
+
+        <button id="filters-clear" class="filter-clear-btn">Clear all filters</button>
+      </div>
+    </div>
+
     <table>
       <thead>
         <tr>
@@ -354,7 +445,16 @@ export const Rendered = renderToString(
                 modelA.name.localeCompare(modelB.name)
               )
               .map(([modelId, model]) => (
-                <tr key={`${providerId}-${modelId}`}>
+                <tr
+                  key={`${providerId}-${modelId}`}
+                  data-reasoning={String(model.reasoning)}
+                  data-tool-call={String(model.tool_call)}
+                  data-structured-output={model.structured_output !== undefined ? String(model.structured_output) : ""}
+                  data-open-weights={String(model.open_weights)}
+                  data-context={String(model.limit.context)}
+                  data-input-cost={model.cost?.input !== undefined ? String(model.cost.input) : ""}
+                  data-status={model.status ?? "active"}
+                >
                   <td>
                     <div class="provider-cell">
                       {renderProviderLogo(providerId)}

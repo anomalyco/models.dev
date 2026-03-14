@@ -205,12 +205,18 @@ header {
   }
 }
 
+/* Dynamic sticky offset: header (56px) + filter bar (40px collapsed) */
+:root {
+  --filter-bar-height: 40px;
+  --sticky-offset: calc(var(--header-height) + var(--filter-bar-height));
+}
+
 table {
   border-collapse: separate;
   border-spacing: 0;
   font-size: 0.875rem;
   width: 100%;
-  margin-top: var(--header-height);
+  margin-top: calc(var(--header-height) + var(--filter-bar-height));
 }
 
 thead,
@@ -218,7 +224,7 @@ tbody {}
 
 table thead th {
   position: sticky;
-  top: var(--header-height);
+  top: var(--sticky-offset);
   border-top: 1px solid var(--color-border);
   border-bottom: 1px solid var(--color-border);
   font-size: 0.75rem;
@@ -546,4 +552,161 @@ dialog {
     }
   }
 
+}
+
+/* ── Filter Bar ──────────────────────────────────────────────────────────── */
+
+.filter-bar {
+  position: sticky;
+  top: var(--header-height);
+  z-index: 9;
+  background-color: var(--color-background);
+  border-bottom: 1px solid var(--color-border);
+  padding: 0 0.75rem;
+}
+
+.filter-bar-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  height: 40px;
+}
+
+.filter-toggle-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  background: none;
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  font-size: 0.75rem;
+  padding: 0.25rem 0.625rem;
+  transition: border-color 0.15s, color 0.15s;
+
+  &:hover {
+    border-color: var(--color-text-secondary);
+    color: var(--color-text);
+  }
+
+  &[aria-expanded="true"] {
+    border-color: var(--color-brand);
+    color: var(--color-text);
+  }
+}
+
+.filter-count {
+  background-color: var(--color-brand);
+  color: white;
+  border-radius: 999px;
+  font-size: 0.65rem;
+  font-weight: 600;
+  line-height: 1;
+  padding: 0.15rem 0.4rem;
+  min-width: 16px;
+  text-align: center;
+}
+
+.row-count {
+  font-size: 0.75rem;
+  color: var(--color-text-tertiary);
+  margin-left: auto;
+  font-family: var(--font-mono);
+}
+
+.filters-panel {
+  padding: 0.75rem 0;
+  border-top: 1px solid var(--color-border);
+}
+
+.filters-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.25rem;
+  align-items: flex-start;
+}
+
+.filter-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+  min-width: 120px;
+}
+
+.filter-label {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--color-text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+}
+
+.filter-tristate,
+.filter-presets {
+  display: flex;
+  gap: 2px;
+}
+
+.tristate-btn,
+.preset-btn {
+  background: none;
+  border: 1px solid var(--color-border);
+  border-radius: 3px;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  font-size: 0.75rem;
+  padding: 0.2rem 0.5rem;
+  transition: background-color 0.1s, color 0.1s, border-color 0.1s;
+  white-space: nowrap;
+
+  &:hover {
+    background-color: var(--color-surface);
+    color: var(--color-text);
+  }
+
+  &.active {
+    background-color: var(--color-brand);
+    border-color: var(--color-brand);
+    color: #fff;
+  }
+}
+
+.filter-number-input {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 3px;
+  color: var(--color-text);
+  font-size: 0.75rem;
+  font-family: var(--font-mono);
+  padding: 0.2rem 0.5rem;
+  width: 120px;
+  transition: border-color 0.15s;
+
+  &:focus {
+    outline: none;
+    border-color: var(--color-brand);
+  }
+
+  &::placeholder {
+    color: var(--color-text-tertiary);
+  }
+}
+
+.filter-clear-btn {
+  background: none;
+  border: none;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  font-size: 0.75rem;
+  margin-top: 0.5rem;
+  padding: 0;
+  text-decoration: underline;
+  text-decoration-style: dotted;
+  text-underline-offset: 2px;
+
+  &:hover {
+    color: var(--color-text);
+  }
 }
