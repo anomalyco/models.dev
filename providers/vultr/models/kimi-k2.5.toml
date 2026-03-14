@@ -1,0 +1,22 @@
+name = "Kimi K2.5"
+family = "kimi"
+attachment = false
+reasoning = true
+tool_call = true
+temperature = true
+open_weights = true
+knowledge = "2025-10"
+release_date = "2026-01-20"
+last_updated = "2026-01-20"
+
+[cost]
+input = 0.55
+output = 2.75
+
+[limit]
+context = 256_000
+output = 32_768
+
+[modalities]
+input = ["text"]
+output = ["text"]
