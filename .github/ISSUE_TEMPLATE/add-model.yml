@@ -1,0 +1,80 @@
+name: Add New Model
+description: Submit a new AI model to the database
+title: "feat: add [Provider] [Model Name]"
+labels: ["new-model"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for contributing! Please fill in the details below.
+        Before submitting, check if the model already exists in the `providers/` directory.
+
+  - type: input
+    id: provider
+    attributes:
+      label: Provider
+      description: The provider name (e.g. OpenAI, Anthropic, Google)
+      placeholder: e.g. Mistral
+    validations:
+      required: true
+
+  - type: input
+    id: model-name
+    attributes:
+      label: Model Name
+      description: The display name of the model
+      placeholder: e.g. Mistral Large 2
+    validations:
+      required: true
+
+  - type: input
+    id: model-id
+    attributes:
+      label: Model ID
+      description: The AI SDK model identifier (used in code)
+      placeholder: e.g. mistral-large-2407
+    validations:
+      required: true
+
+  - type: input
+    id: docs-url
+    attributes:
+      label: Documentation URL
+      description: Link to the official model documentation or pricing page
+      placeholder: https://docs.provider.com/models/...
+    validations:
+      required: true
+
+  - type: textarea
+    id: model-details
+    attributes:
+      label: Model Details
+      description: |
+        Provide the key model specs (copy from the official docs):
+        - Context window size
+        - Input/output pricing ($/1M tokens)
+        - Supported modalities (text, image, audio, video, pdf)
+        - Capabilities (tool calling, structured output, reasoning)
+        - Knowledge cutoff date
+        - Release date
+      placeholder: |
+        Context: 128K tokens
+        Input cost: $2.50/1M tokens
+        Output cost: $10.00/1M tokens
+        Modalities: text, image
+        Tool calling: yes
+        Structured output: yes
+        Knowledge cutoff: 2024-09
+        Release date: 2024-09-18
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Submission Checklist
+      options:
+        - label: I have checked that this model is not already in the `providers/` directory
+          required: true
+        - label: The data I provided comes from official documentation
+          required: true
+        - label: I have run `bun validate` and it passes
+          required: true

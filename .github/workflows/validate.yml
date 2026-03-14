@@ -1,4 +1,4 @@
-name: Validate Models
+name: Validate
 
 on:
   pull_request:
@@ -6,6 +6,7 @@ on:
 
 jobs:
   validate:
+    name: Validate Models & Schema
     runs-on: ubuntu-latest
 
     steps:
@@ -20,5 +21,21 @@ jobs:
       - name: Install dependencies
         run: bun install
 
-      - name: Run validation script
+      - name: Validate all provider/model TOML configurations
         run: bun validate
+
+      - name: Run unit tests
+        run: |
+          # Run tests if test directories exist; skip gracefully if not
+          TEST_DIRS=""
+          [ -d packages/core/test ] && TEST_DIRS="$TEST_DIRS packages/core/test/"
+          [ -d packages/web/test ] && TEST_DIRS="$TEST_DIRS packages/web/test/"
+          [ -d packages/function/test ] && TEST_DIRS="$TEST_DIRS packages/function/test/"
+          if [ -n "$TEST_DIRS" ]; then
+            bun test $TEST_DIRS
+          else
+            echo "No test directories found, skipping tests"
+          fi
+
+      - name: Build web interface
+        run: cd packages/web && bun run build

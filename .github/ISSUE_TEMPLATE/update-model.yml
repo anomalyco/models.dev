@@ -1,0 +1,50 @@
+name: Update Model Data
+description: Report incorrect or outdated model information
+title: "fix: update [Provider] [Model Name] data"
+labels: ["data-correction"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this template to report incorrect pricing, context windows, capabilities,
+        or other model data that needs to be updated.
+
+  - type: input
+    id: provider-model
+    attributes:
+      label: Provider / Model
+      description: Provider name and model name
+      placeholder: e.g. OpenAI / GPT-4o
+    validations:
+      required: true
+
+  - type: textarea
+    id: current-incorrect
+    attributes:
+      label: Current (Incorrect) Data
+      description: What does the current TOML file show that is wrong?
+      placeholder: |
+        context = 128_000  # wrong
+        cost.input = 5.00  # wrong
+    validations:
+      required: true
+
+  - type: textarea
+    id: correct-data
+    attributes:
+      label: Correct Data
+      description: What should the data be?
+      placeholder: |
+        context = 200_000  # correct per official docs
+        cost.input = 2.50  # updated pricing
+    validations:
+      required: true
+
+  - type: input
+    id: source
+    attributes:
+      label: Source URL
+      description: Link to the official documentation confirming the correct data
+      placeholder: https://platform.openai.com/docs/models/gpt-4o
+    validations:
+      required: true
