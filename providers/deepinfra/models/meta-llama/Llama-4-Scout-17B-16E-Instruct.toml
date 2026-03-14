@@ -1,0 +1,20 @@
+name = "Llama 4 Scout 17B"
+family = "llama"
+release_date = "2025-04-05"
+last_updated = "2025-04-05"
+attachment = false
+reasoning = false
+tool_call = true
+open_weights = true
+
+[cost]
+input = 0.08
+output = 0.30
+
+[limit]
+context = 10_000_000
+output = 16_384
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
