@@ -1,9 +1,42 @@
+# Environment & secrets
 .env
+.env.*
+
+# SST build artifacts
 .sst
+
+# IDE / Editor
 .idea
+.vscode
+*.swp
+*.swo
+*~
+
+# Build output
 dist
+
+# OS files
 .DS_Store
+Thumbs.db
+
+# Dependencies
 node_modules
+
+# Data files
 data/tokenspeed-monitor.sqlite
 data/tokenspeed-monitor.sqlite-shm
 data/tokenspeed-monitor.sqlite-wal
+
+# Internal planning & reference documents (never commit)
+.plans/
+.internal/
+.reference/
+.notes/
+*.plan.md
+*.draft.md
+PLAN.md
+PLANNING.md
+TODO.md
+
+# Claude / AI assistant configs (project-specific, not upstream)
+.claude.md
