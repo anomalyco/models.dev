@@ -11,6 +11,16 @@ export const Providers = await generate(
   path.join(import.meta.dir, "..", "..", "..", "providers")
 );
 
+// Build-time "recent" thresholds (14-day window relative to build date)
+const BUILD_DATE = new Date();
+
+function daysSince(dateStr: string): number {
+  const d = new Date(dateStr.length === 7 ? `${dateStr}-01` : dateStr);
+  return Math.floor((BUILD_DATE.getTime() - d.getTime()) / (1000 * 60 * 60 * 24));
+}
+
+const RECENT_DAYS = 14;
+
 // Function to load SVG content
 const loadProviderSvg = async (providerId: string): Promise<string | null> => {
   const providerLogoPath = path.join(
@@ -353,15 +363,27 @@ export const Rendered = renderToString(
               .sort(([, modelA], [, modelB]) =>
                 modelA.name.localeCompare(modelB.name)
               )
-              .map(([modelId, model]) => (
-                <tr key={`${providerId}-${modelId}`}>
+              .map(([modelId, model]) => {
+                const isNew = daysSince(model.release_date) <= RECENT_DAYS;
+                const isUpdated = !isNew && daysSince(model.last_updated) <= RECENT_DAYS;
+                return (
+                <tr
+                  key={`${providerId}-${modelId}`}
+                  data-new={isNew ? "true" : undefined}
+                  data-updated={isUpdated ? "true" : undefined}
+                  class={isNew ? "row-new" : isUpdated ? "row-updated" : undefined}
+                >
                   <td>
                     <div class="provider-cell">
                       {renderProviderLogo(providerId)}
                       <span>{provider.name}</span>
                     </div>
                   </td>
-                  <td>{model.name}</td>
+                  <td>
+                    {model.name}
+                    {isNew && <span class="badge badge-new">New</span>}
+                    {isUpdated && <span class="badge badge-updated">Updated</span>}
+                  </td>
                   <td>{model.family ?? "-"}</td>
                   <td>{providerId}</td>
                   <td>
@@ -452,7 +474,8 @@ export const Rendered = renderToString(
                   <td>{model.release_date}</td>
                   <td>{model.last_updated}</td>
                 </tr>
-              ))
+                );
+              })
           )}
       </tbody>
     </table>

@@ -547,3 +547,36 @@ dialog {
   }
 
 }
+
+/* ── Recently Updated & New badges ──────────────────────────────────────── */
+
+.badge {
+  border-radius: 3px;
+  display: inline-block;
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  margin-left: 0.375rem;
+  padding: 0.1rem 0.35rem;
+  text-transform: uppercase;
+  vertical-align: middle;
+}
+
+.badge-new {
+  background-color: #16a34a;
+  color: white;
+}
+
+.badge-updated {
+  background-color: #2563eb;
+  color: white;
+}
+
+/* Subtle row tint for new/updated rows */
+tr.row-new td {
+  background-color: rgba(22, 163, 74, 0.04);
+}
+
+tr.row-updated td {
+  background-color: rgba(37, 99, 235, 0.04);
+}
