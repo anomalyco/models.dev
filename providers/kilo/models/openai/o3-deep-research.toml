@@ -1,6 +1,6 @@
 name = "OpenAI: o3 Deep Research"
 release_date = "2024-06-26"
-last_updated = "2025-06-27"
+last_updated = "2026-03-15"
 attachment = true
 reasoning = true
 temperature = true
@@ -8,8 +8,8 @@ tool_call = true
 open_weights = false
 
 [cost]
-input = 10.0
-output = 40.0
+input = 10
+output = 40
 cache_read = 2.5
 
 [limit]
@@ -17,5 +17,5 @@ context = 200000
 output = 100000
 
 [modalities]
-input = ["image", "text"]
+input = ["image", "pdf", "text"]
 output = ["text"]

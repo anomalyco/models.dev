@@ -1,0 +1,22 @@
+name = "Venice Role Play Uncensored"
+family = "venice"
+attachment = true
+reasoning = false
+tool_call = true
+structured_output = true
+temperature = true
+release_date = "2026-02-20"
+last_updated = "2026-03-16"
+open_weights = true
+
+[cost]
+input = 0.5
+output = 2
+
+[limit]
+context = 128_000
+output = 4_096
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

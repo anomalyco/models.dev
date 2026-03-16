@@ -1,21 +1,21 @@
 name = "Mistral: Mistral Small 3.1 24B"
 release_date = "2025-03-17"
-last_updated = "2025-03-17"
+last_updated = "2026-03-15"
 attachment = true
 reasoning = false
 temperature = true
-tool_call = true
+tool_call = false
 open_weights = true
 
 [cost]
-input = 0.03
-output = 0.11
+input = 0.35
+output = 0.56
 cache_read = 0.015
 
 [limit]
-context = 131072
+context = 128000
 output = 131072
 
 [modalities]
-input = ["text", "image"]
+input = ["image", "text"]
 output = ["text"]

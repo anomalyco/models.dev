@@ -1,6 +1,6 @@
 name = "Qwen: Qwen3 VL 235B A22B Thinking"
 release_date = "2025-09-24"
-last_updated = "2025-09-24"
+last_updated = "2026-03-15"
 attachment = true
 reasoning = true
 temperature = true
@@ -8,13 +8,13 @@ tool_call = true
 open_weights = true
 
 [cost]
-input = 0
-output = 0
+input = 0.26
+output = 2.6
 
 [limit]
 context = 131072
 output = 32768
 
 [modalities]
-input = ["text", "image"]
+input = ["image", "text"]
 output = ["text"]

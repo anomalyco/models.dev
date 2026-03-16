@@ -6,7 +6,7 @@ tool_call = true
 structured_output = true
 temperature = true
 release_date = "2026-02-17"
-last_updated = "2026-02-28"
+last_updated = "2026-03-16"
 open_weights = false
 
 [cost]
@@ -14,12 +14,6 @@ input = 3.6
 output = 18
 cache_read = 0.36
 cache_write = 4.5
-
-[cost.context_over_200k]
-input = 7.2
-output = 27
-cache_read = 0.72
-cache_write = 9
 
 [limit]
 context = 1_000_000

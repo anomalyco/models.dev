@@ -199,6 +199,17 @@ $ bun run dev
 
 And it'll open the frontend at http://localhost:3000
 
+### Manual testing with opencode
+
+You can manually check provider changes with opencode by:
+
+```bash
+$ bun install
+$ cd packages/web
+$ bun run build
+$ OPENCODE_MODELS_PATH="dist/_api.json" opencode
+```
+
 ### Questions?
 
 Open an issue if you need help or have questions about contributing.

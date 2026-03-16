@@ -1,6 +1,6 @@
 name = "OpenAI: GPT-5 Chat"
 release_date = "2025-08-07"
-last_updated = "2025-08-07"
+last_updated = "2026-03-15"
 attachment = true
 reasoning = false
 temperature = false
@@ -9,7 +9,7 @@ open_weights = false
 
 [cost]
 input = 1.25
-output = 10.0
+output = 10
 cache_read = 0.125
 
 [limit]
@@ -17,5 +17,5 @@ context = 128000
 output = 16384
 
 [modalities]
-input = ["image", "text"]
+input = ["image", "pdf", "text"]
 output = ["text"]

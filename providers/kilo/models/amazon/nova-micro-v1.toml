@@ -1,0 +1,20 @@
+name = "Amazon: Nova Micro 1.0"
+release_date = "2024-12-06"
+last_updated = "2026-03-15"
+attachment = false
+reasoning = false
+temperature = true
+tool_call = true
+open_weights = false
+
+[cost]
+input = 0.035
+output = 0.14
+
+[limit]
+context = 128000
+output = 5120
+
+[modalities]
+input = ["text"]
+output = ["text"]

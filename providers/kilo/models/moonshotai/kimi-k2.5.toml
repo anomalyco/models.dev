@@ -1,6 +1,6 @@
 name = "MoonshotAI: Kimi K2.5"
 release_date = "2026-01-27"
-last_updated = "2026-01-27"
+last_updated = "2026-03-15"
 attachment = true
 reasoning = true
 temperature = true
@@ -8,13 +8,13 @@ tool_call = true
 open_weights = true
 
 [cost]
-input = 0.23
-output = 3
+input = 0.45
+output = 2.2
 
 [limit]
 context = 262144
-output = 262144
+output = 65535
 
 [modalities]
-input = ["text", "image"]
+input = ["image", "text"]
 output = ["text"]

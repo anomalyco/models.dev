@@ -1,0 +1,19 @@
+name = "OpenAI: o4 Mini High"
+release_date = "2025-04-17"
+last_updated = "2026-03-15"
+attachment = true
+reasoning = true
+tool_call = true
+open_weights = false
+
+[cost]
+input = 1.1
+output = 4.4
+
+[limit]
+context = 200000
+output = 100000
+
+[modalities]
+input = ["image", "pdf", "text"]
+output = ["text"]

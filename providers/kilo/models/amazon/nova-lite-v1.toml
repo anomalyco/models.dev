@@ -1,0 +1,20 @@
+name = "Amazon: Nova Lite 1.0"
+release_date = "2024-12-06"
+last_updated = "2026-03-15"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = true
+open_weights = false
+
+[cost]
+input = 0.06
+output = 0.24
+
+[limit]
+context = 300000
+output = 5120
+
+[modalities]
+input = ["image", "text"]
+output = ["text"]

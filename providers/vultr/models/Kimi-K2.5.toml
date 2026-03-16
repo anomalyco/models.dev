@@ -1,0 +1,22 @@
+name = "Kimi K2 Instruct"
+family = "kimi"
+attachment = false
+reasoning = false
+tool_call = true
+temperature = true
+open_weights = true
+knowledge = "2024-10"
+release_date = "2024-07-18"
+last_updated = "2024-07-18"
+
+[cost]
+input = 0.55
+output = 2.75
+
+[limit]
+context = 261_000
+output = 32_768
+
+[modalities]
+input = ["text"]
+output = ["text"]

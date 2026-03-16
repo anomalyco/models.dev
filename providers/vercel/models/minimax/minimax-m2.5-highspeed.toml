@@ -1,0 +1,23 @@
+name = "MiniMax M2.5 High Speed"
+family = "minimax"
+attachment = false
+reasoning = true
+tool_call = true
+temperature = true
+release_date = "2026-02-12"
+last_updated = "2026-03-13"
+open_weights = false
+
+[cost]
+input = 0.6
+output = 2.4
+cache_read = 0.03
+cache_write = 0.375
+
+[limit]
+context = 0
+output = 0
+
+[modalities]
+input = ["text"]
+output = ["text"]

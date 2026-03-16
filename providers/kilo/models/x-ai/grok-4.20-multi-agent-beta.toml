@@ -1,0 +1,20 @@
+name = "xAI: Grok 4.20 Multi-Agent Beta"
+release_date = "2026-03-12"
+last_updated = "2026-03-15"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = false
+open_weights = false
+
+[cost]
+input = 2
+output = 6
+
+[limit]
+context = 2000000
+output = 32768
+
+[modalities]
+input = ["image", "text"]
+output = ["text"]

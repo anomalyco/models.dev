@@ -1,6 +1,6 @@
 name = "Google: Gemma 3 27B"
 release_date = "2025-03-12"
-last_updated = "2025-03-12"
+last_updated = "2026-03-15"
 attachment = true
 reasoning = false
 temperature = true
@@ -8,8 +8,8 @@ tool_call = true
 open_weights = true
 
 [cost]
-input = 0.04
-output = 0.15
+input = 0.03
+output = 0.11
 cache_read = 0.02
 
 [limit]
@@ -17,5 +17,5 @@ context = 128000
 output = 65536
 
 [modalities]
-input = ["text", "image"]
+input = ["image", "text"]
 output = ["text"]

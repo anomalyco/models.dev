@@ -1,0 +1,28 @@
+name = "Grok 4.20 Beta"
+family = "grok-beta"
+attachment = true
+reasoning = true
+tool_call = true
+structured_output = true
+temperature = true
+release_date = "2026-03-12"
+last_updated = "2026-03-16"
+open_weights = false
+
+[cost]
+input = 2.5
+output = 7.5
+cache_read = 0.25
+
+[cost.context_over_200k]
+input = 5
+output = 15
+cache_read = 0.25
+
+[limit]
+context = 2_000_000
+output = 128_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

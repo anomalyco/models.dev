@@ -1,6 +1,6 @@
 name = "Google: Gemini 3 Pro Preview"
 release_date = "2025-11-18"
-last_updated = "2025-11"
+last_updated = "2026-03-15"
 attachment = true
 reasoning = true
 temperature = true
@@ -10,6 +10,7 @@ open_weights = false
 [cost]
 input = 2
 output = 12
+reasoning = 12
 cache_read = 0.2
 cache_write = 0.375
 
@@ -18,5 +19,5 @@ context = 1048576
 output = 65536
 
 [modalities]
-input = ["text", "image", "audio", "video"]
+input = ["audio", "image", "pdf", "text", "video"]
 output = ["text"]
