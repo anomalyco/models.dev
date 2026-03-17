@@ -2,6 +2,19 @@ import { z } from "zod";
 
 import { ModelFamily } from "./family";
 
+const ProviderValue: z.ZodType<
+  string | number | boolean | null | Array<unknown> | Record<string, unknown>
+> = z.lazy(() =>
+  z.union([
+    z.string(),
+    z.number(),
+    z.boolean(),
+    z.null(),
+    z.array(ProviderValue),
+    z.record(ProviderValue),
+  ]),
+);
+
 const Cost = z.object({
   input: z.number().min(0, "Input price cannot be negative"),
   output: z.number().min(0, "Output price cannot be negative"),
@@ -74,6 +87,7 @@ export const Model = z
         npm: z.string().optional(),
         api: z.string().optional(),
         shape: z.enum(["responses", "completions"]).optional(),
+        options: z.record(ProviderValue).optional(),
       })
       .optional(),
   })
