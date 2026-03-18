@@ -1,0 +1,22 @@
+name = "GLM 5 Turbo"
+family = "glm"
+attachment = false
+reasoning = true
+tool_call = true
+temperature = true
+release_date = "2026-03-15"
+last_updated = "2026-03-17"
+open_weights = false
+
+[cost]
+input = 1.2
+output = 4
+cache_read = 0.24
+
+[limit]
+context = 202_800
+output = 131_100
+
+[modalities]
+input = ["text"]
+output = ["text"]
