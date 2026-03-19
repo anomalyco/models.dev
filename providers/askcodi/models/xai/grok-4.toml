@@ -1,0 +1,21 @@
+name = "Grok 4"
+release_date = "2025-08-28"
+last_updated = "2025-12-22"
+attachment = true
+reasoning = true
+tool_call = true
+structured_output = true
+temperature = true
+open_weights = false
+
+[cost]
+input = 3.00
+output = 15.00
+
+[limit]
+context = 256_000
+output = 256_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

@@ -1,0 +1,21 @@
+name = "Claude Opus 4.6"
+release_date = "2026-02-06"
+last_updated = "2026-02-06"
+attachment = true
+reasoning = true
+tool_call = true
+structured_output = true
+temperature = true
+open_weights = false
+
+[cost]
+input = 5.00
+output = 25.00
+
+[limit]
+context = 200_000
+output = 200_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

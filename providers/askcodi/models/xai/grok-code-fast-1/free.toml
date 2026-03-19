@@ -1,0 +1,21 @@
+name = "Grok Code Fast 1"
+release_date = "2025-08-28"
+last_updated = "2026-01-09"
+attachment = false
+reasoning = true
+tool_call = true
+structured_output = true
+temperature = true
+open_weights = false
+
+[cost]
+input = 0.2
+output = 1.5
+
+[limit]
+context = 256_000
+output = 10_000
+
+[modalities]
+input = ["text"]
+output = ["text"]

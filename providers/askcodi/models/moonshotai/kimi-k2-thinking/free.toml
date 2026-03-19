@@ -1,0 +1,21 @@
+name = "Moonshot Kimi K2"
+release_date = "2026-01-09"
+last_updated = "2026-01-09"
+attachment = false
+reasoning = true
+tool_call = true
+structured_output = true
+temperature = true
+open_weights = true
+
+[cost]
+input = 0.6
+output = 2.5
+
+[limit]
+context = 131_072
+output = 65_000
+
+[modalities]
+input = ["text"]
+output = ["text"]

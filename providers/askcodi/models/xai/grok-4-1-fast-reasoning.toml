@@ -1,0 +1,21 @@
+name = "Grok 4.1 Fast (Reasoning)"
+release_date = "2025-11-17"
+last_updated = "2025-12-22"
+attachment = true
+reasoning = true
+tool_call = true
+structured_output = true
+temperature = true
+open_weights = false
+
+[cost]
+input = 0.2
+output = 0.5
+
+[limit]
+context = 2_000_000
+output = 30_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

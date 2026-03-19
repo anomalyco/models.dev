@@ -1,0 +1,21 @@
+name = "DeepSeek V3.2"
+release_date = "2025-12-22"
+last_updated = "2025-12-22"
+attachment = false
+reasoning = true
+tool_call = true
+structured_output = true
+temperature = true
+open_weights = true
+
+[cost]
+input = 0.3
+output = 0.5
+
+[limit]
+context = 128_000
+output = 64_000
+
+[modalities]
+input = ["text"]
+output = ["text"]
