@@ -1,0 +1,21 @@
+name = "Qwen3 VL 30B A3B"
+family = "qwen"
+attachment = true
+reasoning = false
+tool_call = false
+temperature = true
+release_date = "2026-03-18"
+last_updated = "2026-03-19"
+open_weights = true
+
+[cost]
+input = 0.25
+output = 0.9
+
+[limit]
+context = 128_000
+output = 4_096
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

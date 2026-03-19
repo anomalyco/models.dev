@@ -1,21 +1,19 @@
-name = "DeepSeek V3.2"
-family = "deepseek"
+name = "GPT OSS 20B"
+family = "gpt-oss"
 attachment = false
 reasoning = true
 tool_call = false
 temperature = true
-knowledge = "2025-10"
-release_date = "2025-12-04"
+release_date = "2026-03-18"
 last_updated = "2026-03-19"
 open_weights = true
 
 [cost]
-input = 0.33
-output = 0.48
-cache_read = 0.16
+input = 0.05
+output = 0.19
 
 [limit]
-context = 160_000
+context = 128_000
 output = 32_768
 
 [modalities]
