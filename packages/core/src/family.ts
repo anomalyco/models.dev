@@ -15,6 +15,9 @@ export const ModelFamilyValues = [
   "gpt-nano",
   "gpt-oss",
 
+  // Cursor Composer
+  "composer",
+
   // OpenAI o-series (reasoning models)
   "o",
   "o-mini",
