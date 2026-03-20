@@ -1,0 +1,20 @@
+name = "Gemini 3.1 Flash Lite Preview"
+release_date = "2025-03-20"
+last_updated = "2025-03-20"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = true
+open_weights = false
+
+[cost]
+input = 0.25
+output = 1.50
+
+[limit]
+context = 1050000
+output = 65530
+
+[modalities]
+input = ["text", "image", "audio", "video"]
+output = ["text"]
