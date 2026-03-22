@@ -216,7 +216,7 @@ export const Rendered = renderToString(
     <table>
       <thead>
         <tr>
-          <th class="sortable" data-type="text">
+          <th class="sortable filterable" data-type="text">
             Provider <span class="sort-indicator"></span>
           </th>
           <th class="sortable" data-type="text">

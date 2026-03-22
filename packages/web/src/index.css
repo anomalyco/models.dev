@@ -418,6 +418,137 @@ tbody {
   }
 }
 
+/* Column Filters */
+
+.filter-icon {
+  position: absolute;
+  right: 0.25rem;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1rem;
+  height: 1rem;
+  color: var(--color-text-tertiary);
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.15s ease, color 0.15s ease;
+
+  &:hover,
+  &.active {
+    color: var(--color-brand);
+  }
+
+  &.active {
+    opacity: 1;
+  }
+
+  svg {
+    display: block;
+  }
+}
+
+th.filterable:hover .filter-icon {
+  opacity: 1;
+}
+
+.filter-dropdown {
+  position: absolute;
+  top: calc(100% + 2px);
+  left: 0;
+  z-index: 100;
+  min-width: 12rem;
+  max-width: 20rem;
+  background-color: var(--color-background);
+  border: 1px solid var(--color-border);
+  border-radius: 0.375rem;
+  box-shadow:
+    0 4px 8px rgba(0, 0, 0, 0.12),
+    0 8px 16px rgba(0, 0, 0, 0.08);
+  padding: 0.375rem;
+  text-transform: none;
+  letter-spacing: normal;
+  font-weight: normal;
+  white-space: normal;
+}
+
+.filter-search {
+  width: 100%;
+  font-size: 0.75rem;
+  padding: 0.375rem 0.5rem;
+  border: 1px solid var(--color-border);
+  border-radius: 0.25rem;
+  background: none;
+  color: var(--color-text);
+  margin-bottom: 0.25rem;
+  height: auto;
+
+  &:focus {
+    border-color: var(--color-text-tertiary);
+    outline: none;
+  }
+}
+
+.filter-actions {
+  display: flex;
+  gap: 0.25rem;
+  padding: 0.25rem 0;
+  border-bottom: 1px solid var(--color-border);
+  margin-bottom: 0.25rem;
+
+  button {
+    flex: 1;
+    font-size: 0.6875rem;
+    padding: 0.25rem 0.375rem;
+    border: none;
+    border-radius: 0.25rem;
+    background: var(--color-surface);
+    color: var(--color-text-secondary);
+    cursor: pointer;
+    line-height: 1;
+    height: auto;
+
+    &:hover {
+      color: var(--color-text);
+    }
+  }
+}
+
+.filter-list {
+  max-height: 14rem;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.filter-option {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.3125rem 0.375rem;
+  border-radius: 0.25rem;
+  cursor: pointer;
+  font-size: 0.75rem;
+  color: var(--color-text);
+  line-height: 1.2;
+
+  &:hover {
+    background-color: var(--color-surface);
+  }
+
+  input[type="checkbox"] {
+    flex: 0 0 auto;
+    margin: 0;
+    accent-color: var(--color-brand);
+  }
+
+  span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+
 dialog::backdrop {
   backdrop-filter: blur(8px);
   background-color: rgba(0, 0, 0, 0.03);
