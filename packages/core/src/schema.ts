@@ -150,6 +150,7 @@ export const Provider = z
       const isOpenAIcompatible = data.npm === "@ai-sdk/openai-compatible";
       const isOpenrouter = data.npm === "@openrouter/ai-sdk-provider";
       const isAnthropic = data.npm === "@ai-sdk/anthropic";
+      const isKiro = data.npm === "kiro";
       const hasApi = data.api !== undefined;
 
       return (
@@ -161,17 +162,20 @@ export const Provider = z
         isAnthropic ||
         // openai: api optional (always allowed)
         isOpenAI ||
+        // kiro: api optional (always allowed)
+        isKiro ||
         // all others: must NOT have api
         (!isOpenAI &&
           !isOpenAIcompatible &&
           !isOpenrouter &&
           !isAnthropic &&
+          !isKiro &&
           !hasApi)
       );
     },
     {
       message:
-        "'api' is required for openai-compatible and openrouter, optional for anthropic and openai, forbidden otherwise",
+        "'api' is required for openai-compatible and openrouter, optional for anthropic, openai, and kiro, forbidden otherwise",
       path: ["api"],
     },
   );
