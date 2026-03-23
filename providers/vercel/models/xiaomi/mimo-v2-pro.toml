@@ -1,0 +1,22 @@
+name = "MiMo V2 Pro"
+family = "mimo"
+attachment = false
+reasoning = true
+tool_call = true
+temperature = true
+release_date = "2026-03-18"
+last_updated = "2026-03-20"
+open_weights = false
+
+[cost]
+input = 1
+output = 3
+cache_read = 0.19999999999999998
+
+[limit]
+context = 1_000_000
+output = 128_000
+
+[modalities]
+input = ["text"]
+output = ["text"]
