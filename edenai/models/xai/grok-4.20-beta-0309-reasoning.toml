@@ -1,0 +1,16 @@
+name = "xai/grok-4.20-beta-0309-reasoning"
+family = "grok-4.20"
+
+[capabilities]
+reasoning = true
+temperature = true
+tool_call = true
+open_weights = false
+
+[pricing]
+input = 2.0
+output = 6.0
+cache_read = 0.2
+
+[limits]
+context = 2000000

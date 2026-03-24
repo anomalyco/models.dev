@@ -1,0 +1,16 @@
+name = "openai/gpt-5.1-codex-max"
+family = "gpt-5.1"
+
+[capabilities]
+reasoning = true
+temperature = true
+tool_call = true
+open_weights = false
+
+[pricing]
+input = 1.25
+output = 10.0
+cache_read = 0.125
+
+[limits]
+context = 272000

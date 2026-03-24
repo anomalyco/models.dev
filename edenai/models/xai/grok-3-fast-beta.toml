@@ -1,0 +1,15 @@
+name = "xai/grok-3-fast-beta"
+family = "grok-3"
+
+[capabilities]
+temperature = true
+tool_call = true
+open_weights = false
+
+[pricing]
+input = 5.0
+output = 25.0
+cache_read = 1.25
+
+[limits]
+context = 131072

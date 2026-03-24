@@ -1,0 +1,24 @@
+name = "Google: Gemini 2.5 Pro"
+family = "gemini-2.5"
+release = 2025-03-25
+updated = 2025-03-25
+
+[capabilities]
+reasoning = true
+temperature = true
+tool_call = true
+attachment = false
+knowledge = "January 2025"
+open_weights = false
+
+[pricing]
+input = 1.25
+output = 10
+
+[limits]
+context = 1048576
+output = 8192
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

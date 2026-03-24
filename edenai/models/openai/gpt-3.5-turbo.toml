@@ -1,0 +1,14 @@
+name = "openai/gpt-3.5-turbo"
+family = "gpt-3.5"
+
+[capabilities]
+temperature = true
+tool_call = true
+open_weights = false
+
+[pricing]
+input = 0.5
+output = 1.5
+
+[limits]
+context = 16385

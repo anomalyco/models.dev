@@ -1,0 +1,16 @@
+name = "google/gemini-3.1-pro-preview-customtools"
+family = "gemini-3.1"
+
+[capabilities]
+reasoning = true
+temperature = true
+tool_call = true
+open_weights = false
+
+[pricing]
+input = 2.0
+output = 12.0
+cache_read = 0.2
+
+[limits]
+context = 1048576

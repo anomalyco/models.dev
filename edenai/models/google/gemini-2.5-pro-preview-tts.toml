@@ -1,0 +1,15 @@
+name = "google/gemini-2.5-pro-preview-tts"
+family = "gemini-2.5"
+
+[capabilities]
+temperature = true
+tool_call = true
+open_weights = false
+
+[pricing]
+input = 1.25
+output = 10.0
+cache_read = 0.125
+
+[limits]
+context = 1048576

@@ -1,0 +1,15 @@
+name = "xai/grok-3"
+family = "grok-3"
+
+[capabilities]
+temperature = true
+tool_call = true
+open_weights = false
+
+[pricing]
+input = 3.0
+output = 15.0
+cache_read = 0.75
+
+[limits]
+context = 131072

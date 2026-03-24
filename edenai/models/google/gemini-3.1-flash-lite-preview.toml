@@ -1,0 +1,16 @@
+name = "google/gemini-3.1-flash-lite-preview"
+family = "gemini-3.1"
+
+[capabilities]
+reasoning = true
+temperature = true
+tool_call = true
+open_weights = false
+
+[pricing]
+input = 0.25
+output = 1.5
+cache_read = 0.025
+
+[limits]
+context = 1048576

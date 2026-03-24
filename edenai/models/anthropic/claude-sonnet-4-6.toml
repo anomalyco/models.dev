@@ -1,0 +1,17 @@
+name = "anthropic/claude-sonnet-4-6"
+family = "claude-sonnet"
+
+[capabilities]
+reasoning = true
+temperature = true
+tool_call = true
+open_weights = false
+
+[pricing]
+input = 3.0
+output = 15.0
+cache_read = 0.3
+cache_write = 3.75
+
+[limits]
+context = 200000

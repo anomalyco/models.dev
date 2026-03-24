@@ -1,0 +1,23 @@
+name = "OpenAI: GPT-4o"
+family = "gpt-4o"
+release = 2024-05-13
+updated = 2024-05-13
+
+[capabilities]
+temperature = true
+tool_call = true
+attachment = false
+knowledge = "April 2024"
+open_weights = false
+
+[pricing]
+input = 2.5
+output = 10
+
+[limits]
+context = 128000
+output = 16384
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

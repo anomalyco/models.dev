@@ -1,0 +1,17 @@
+name = "anthropic/claude-opus-4-6"
+family = "claude-opus"
+
+[capabilities]
+reasoning = true
+temperature = true
+tool_call = true
+open_weights = false
+
+[pricing]
+input = 5.0
+output = 25.0
+cache_read = 0.5
+cache_write = 6.25
+
+[limits]
+context = 1000000

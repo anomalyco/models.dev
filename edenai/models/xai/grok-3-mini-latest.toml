@@ -1,0 +1,16 @@
+name = "xai/grok-3-mini-latest"
+family = "grok-3"
+
+[capabilities]
+reasoning = true
+temperature = true
+tool_call = true
+open_weights = false
+
+[pricing]
+input = 0.3
+output = 0.5
+cache_read = 0.075
+
+[limits]
+context = 131072

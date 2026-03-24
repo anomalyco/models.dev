@@ -1,0 +1,15 @@
+name = "openai/gpt-4o-mini-search-preview"
+family = "gpt-4o"
+
+[capabilities]
+temperature = true
+tool_call = true
+open_weights = false
+
+[pricing]
+input = 0.15
+output = 0.6
+cache_read = 0.075
+
+[limits]
+context = 128000

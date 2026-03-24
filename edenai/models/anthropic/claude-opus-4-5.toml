@@ -1,0 +1,26 @@
+name = "Anthropic: Claude Opus 4.5"
+family = "claude-opus"
+release = 2025-02-24
+updated = 2025-02-24
+
+[capabilities]
+reasoning = true
+temperature = true
+tool_call = true
+attachment = false
+knowledge = "February 2025"
+open_weights = false
+
+[pricing]
+input = 15
+output = 75
+cache_read = 1.50
+cache_write = 18.75
+
+[limits]
+context = 200000
+output = 8192
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

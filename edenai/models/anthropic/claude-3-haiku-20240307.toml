@@ -1,0 +1,16 @@
+name = "anthropic/claude-3-haiku-20240307"
+family = "claude-3"
+
+[capabilities]
+temperature = true
+tool_call = true
+open_weights = false
+
+[pricing]
+input = 0.25
+output = 1.25
+cache_read = 0.03
+cache_write = 0.3
+
+[limits]
+context = 200000

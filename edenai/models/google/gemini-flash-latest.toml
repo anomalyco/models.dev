@@ -1,0 +1,16 @@
+name = "google/gemini-flash-latest"
+family = "gemini-flash"
+
+[capabilities]
+reasoning = true
+temperature = true
+tool_call = true
+open_weights = false
+
+[pricing]
+input = 0.3
+output = 2.5
+cache_read = 0.075
+
+[limits]
+context = 1048576

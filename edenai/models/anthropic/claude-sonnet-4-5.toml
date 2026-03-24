@@ -1,0 +1,26 @@
+name = "Anthropic: Claude Sonnet 4.5"
+family = "claude-sonnet"
+release = 2025-02-24
+updated = 2025-02-24
+
+[capabilities]
+reasoning = false
+temperature = true
+tool_call = true
+attachment = false
+knowledge = "February 2025"
+open_weights = false
+
+[pricing]
+input = 3
+output = 15
+cache_read = 0.30
+cache_write = 3.75
+
+[limits]
+context = 200000
+output = 8192
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

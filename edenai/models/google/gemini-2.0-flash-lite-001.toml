@@ -1,0 +1,15 @@
+name = "google/gemini-2.0-flash-lite-001"
+family = "gemini-2.0"
+
+[capabilities]
+temperature = true
+tool_call = true
+open_weights = false
+
+[pricing]
+input = 0.075
+output = 0.3
+cache_read = 0.01875
+
+[limits]
+context = 1048576

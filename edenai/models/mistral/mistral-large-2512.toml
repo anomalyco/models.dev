@@ -1,0 +1,14 @@
+name = "mistral/mistral-large-2512"
+family = "mistral-large"
+
+[capabilities]
+temperature = true
+tool_call = true
+open_weights = false
+
+[pricing]
+input = 0.5
+output = 1.5
+
+[limits]
+context = 262144

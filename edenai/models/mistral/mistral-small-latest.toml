@@ -1,0 +1,14 @@
+name = "mistral/mistral-small-latest"
+family = "mistral-small"
+
+[capabilities]
+temperature = true
+tool_call = true
+open_weights = false
+
+[pricing]
+input = 0.06
+output = 0.18
+
+[limits]
+context = 131072

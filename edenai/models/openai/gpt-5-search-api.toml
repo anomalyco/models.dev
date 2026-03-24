@@ -1,0 +1,15 @@
+name = "openai/gpt-5-search-api"
+family = "gpt-5"
+
+[capabilities]
+temperature = true
+tool_call = true
+open_weights = false
+
+[pricing]
+input = 1.25
+output = 10.0
+cache_read = 0.125
+
+[limits]
+context = 272000
