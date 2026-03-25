@@ -1,14 +1,19 @@
-name = "xai/grok-4-latest"
-family = "grok-4"
-
-[capabilities]
+name = "grok-4-latest"
+release_date = "2025-07-09"
+last_updated = "2025-07-09"
+attachment = false
+reasoning = false
 temperature = true
 tool_call = true
 open_weights = false
 
-[pricing]
+[cost]
 input = 3.0
 output = 15.0
 
-[limits]
-context = 256000
+[limit]
+context = 256_000
+
+[modalities]
+input = ["text"]
+output = ["text"]

@@ -1,16 +1,21 @@
-name = "google/gemini-2.5-flash-lite-preview-09-2025"
-family = "gemini-2.5"
-
-[capabilities]
+name = "gemini-2.5-flash-lite-preview-09-2025"
+release_date = "2025-03-25"
+last_updated = "2025-03-25"
+attachment = false
 reasoning = true
 temperature = true
 tool_call = true
+structured_output = true
 open_weights = false
 
-[pricing]
+[cost]
 input = 0.1
 output = 0.4
 cache_read = 0.01
 
-[limits]
-context = 1048576
+[limit]
+context = 1_048_576
+
+[modalities]
+input = ["text"]
+output = ["text"]

@@ -1,15 +1,21 @@
-name = "openai/gpt-4.1-mini"
-family = "gpt-4.1"
-
-[capabilities]
+name = "gpt-4.1-mini"
+release_date = "2025-04-14"
+last_updated = "2025-04-14"
+attachment = false
+reasoning = false
 temperature = true
 tool_call = true
+structured_output = true
 open_weights = false
 
-[pricing]
+[cost]
 input = 0.4
 output = 1.6
 cache_read = 0.1
 
-[limits]
-context = 1047576
+[limit]
+context = 1_047_576
+
+[modalities]
+input = ["text"]
+output = ["text"]

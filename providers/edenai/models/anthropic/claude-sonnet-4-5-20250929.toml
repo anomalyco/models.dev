@@ -1,17 +1,22 @@
-name = "anthropic/claude-sonnet-4-5-20250929"
-family = "claude-sonnet"
-
-[capabilities]
+name = "claude-sonnet-4-5-20250929"
+release_date = "2025-02-24"
+last_updated = "2025-09-29"
+attachment = false
 reasoning = true
 temperature = true
 tool_call = true
+structured_output = true
 open_weights = false
 
-[pricing]
+[cost]
 input = 3.0
 output = 15.0
 cache_read = 0.3
 cache_write = 3.75
 
-[limits]
-context = 200000
+[limit]
+context = 200_000
+
+[modalities]
+input = ["text"]
+output = ["text"]

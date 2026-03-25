@@ -1,15 +1,21 @@
-name = "openai/gpt-5-search-api-2025-10-14"
-family = "gpt-5"
-
-[capabilities]
+name = "gpt-5-search-api-2025-10-14"
+release_date = "2025-08-07"
+last_updated = "2025-08-07"
+attachment = false
+reasoning = false
 temperature = true
 tool_call = true
+structured_output = true
 open_weights = false
 
-[pricing]
+[cost]
 input = 1.25
 output = 10.0
 cache_read = 0.125
 
-[limits]
-context = 272000
+[limit]
+context = 272_000
+
+[modalities]
+input = ["text"]
+output = ["text"]

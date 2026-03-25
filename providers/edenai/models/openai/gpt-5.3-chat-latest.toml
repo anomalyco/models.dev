@@ -1,16 +1,21 @@
-name = "openai/gpt-5.3-chat-latest"
-family = "gpt-5.3"
-
-[capabilities]
+name = "gpt-5.3-chat-latest"
+release_date = "2025-08-07"
+last_updated = "2025-08-07"
+attachment = false
 reasoning = true
 temperature = true
 tool_call = true
+structured_output = true
 open_weights = false
 
-[pricing]
+[cost]
 input = 1.75
 output = 14.0
 cache_read = 0.175
 
-[limits]
-context = 128000
+[limit]
+context = 128_000
+
+[modalities]
+input = ["text"]
+output = ["text"]

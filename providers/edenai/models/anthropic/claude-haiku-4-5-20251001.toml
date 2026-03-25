@@ -1,17 +1,22 @@
-name = "anthropic/claude-haiku-4-5-20251001"
-family = "claude-haiku"
-
-[capabilities]
+name = "claude-haiku-4-5-20251001"
+release_date = "2025-02-24"
+last_updated = "2025-10-01"
+attachment = false
 reasoning = true
 temperature = true
 tool_call = true
+structured_output = true
 open_weights = false
 
-[pricing]
+[cost]
 input = 1.0
 output = 5.0
 cache_read = 0.1
 cache_write = 1.25
 
-[limits]
-context = 200000
+[limit]
+context = 200_000
+
+[modalities]
+input = ["text"]
+output = ["text"]

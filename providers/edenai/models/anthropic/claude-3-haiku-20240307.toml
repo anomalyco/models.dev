@@ -1,16 +1,22 @@
-name = "anthropic/claude-3-haiku-20240307"
-family = "claude-3"
-
-[capabilities]
+name = "claude-3-haiku-20240307"
+release_date = "2024-03-07"
+last_updated = "2024-03-07"
+attachment = false
+reasoning = false
 temperature = true
 tool_call = true
+structured_output = true
 open_weights = false
 
-[pricing]
+[cost]
 input = 0.25
 output = 1.25
 cache_read = 0.03
 cache_write = 0.3
 
-[limits]
-context = 200000
+[limit]
+context = 200_000
+
+[modalities]
+input = ["text"]
+output = ["text"]

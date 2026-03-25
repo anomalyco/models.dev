@@ -1,16 +1,20 @@
-name = "xai/grok-4.20-beta-0309-reasoning"
-family = "grok-4.20"
-
-[capabilities]
+name = "grok-4.20-beta-0309-reasoning"
+release_date = "2025-07-09"
+last_updated = "2025-07-09"
+attachment = false
 reasoning = true
 temperature = true
 tool_call = true
 open_weights = false
 
-[pricing]
+[cost]
 input = 2.0
 output = 6.0
 cache_read = 0.2
 
-[limits]
-context = 2000000
+[limit]
+context = 2_000_000
+
+[modalities]
+input = ["text"]
+output = ["text"]

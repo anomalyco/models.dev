@@ -1,15 +1,20 @@
-name = "xai/grok-3-fast-latest"
-family = "grok-3"
-
-[capabilities]
+name = "grok-3-fast-latest"
+release_date = "2025-02-17"
+last_updated = "2025-02-17"
+attachment = false
+reasoning = false
 temperature = true
 tool_call = true
 open_weights = false
 
-[pricing]
+[cost]
 input = 5.0
 output = 25.0
 cache_read = 1.25
 
-[limits]
-context = 131072
+[limit]
+context = 131_072
+
+[modalities]
+input = ["text"]
+output = ["text"]

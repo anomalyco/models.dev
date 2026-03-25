@@ -1,15 +1,20 @@
-name = "mistral/magistral-medium-2509"
-family = "magistral-medium"
-
-[capabilities]
+name = "magistral-medium-2509"
+release_date = "2025-09-01"
+last_updated = "2025-09-01"
+attachment = false
 reasoning = true
 temperature = true
 tool_call = true
+structured_output = true
 open_weights = false
 
-[pricing]
+[cost]
 input = 2.0
 output = 5.0
 
-[limits]
-context = 40000
+[limit]
+context = 40_000
+
+[modalities]
+input = ["text"]
+output = ["text"]

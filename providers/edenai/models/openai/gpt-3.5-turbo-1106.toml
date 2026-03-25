@@ -1,14 +1,19 @@
-name = "openai/gpt-3.5-turbo-1106"
-family = "gpt-3.5"
-
-[capabilities]
+name = "gpt-3.5-turbo-1106"
+release_date = "2022-11-30"
+last_updated = "2024-01-25"
+attachment = false
+reasoning = false
 temperature = true
 tool_call = true
 open_weights = false
 
-[pricing]
+[cost]
 input = 1.0
 output = 2.0
 
-[limits]
-context = 16385
+[limit]
+context = 16_385
+
+[modalities]
+input = ["text"]
+output = ["text"]

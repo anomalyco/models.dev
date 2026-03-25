@@ -1,0 +1,21 @@
+name = "MiniMax-M2.5"
+release_date = "2024-01"
+last_updated = "2024-01"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+open_weights = false
+
+[cost]
+input = 0.3
+output = 1.2
+cache_read = 0.03
+cache_write = 0.375
+
+[limit]
+context = 1_000_000
+
+[modalities]
+input = ["text"]
+output = ["text"]

@@ -1,22 +1,20 @@
-name = "DeepSeek: DeepSeek Chat V3"
-family = "deepseek-v3"
-release = 2024-12-26
-updated = 2024-12-26
-
-[capabilities]
+name = "deepseek-chat"
+release_date = "2024-12-26"
+last_updated = "2024-12-26"
+attachment = false
+reasoning = false
 temperature = true
 tool_call = true
-attachment = false
-knowledge = "July 2024"
-open_weights = true
+structured_output = true
+open_weights = false
 
-[pricing]
-input = 0.27
-output = 1.10
+[cost]
+input = 0.28
+output = 0.42
+cache_read = 0.028
 
-[limits]
-context = 64000
-output = 8192
+[limit]
+context = 131_072
 
 [modalities]
 input = ["text"]

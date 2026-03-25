@@ -1,24 +1,21 @@
-name = "Google: Gemini 2.5 Flash"
-family = "gemini-2.5"
-release = 2025-03-25
-updated = 2025-03-25
-
-[capabilities]
+name = "gemini-2.5-flash"
+release_date = "2025-03-25"
+last_updated = "2025-03-25"
+attachment = false
 reasoning = true
 temperature = true
 tool_call = true
-attachment = false
-knowledge = "January 2025"
+structured_output = true
 open_weights = false
 
-[pricing]
-input = 0.075
-output = 0.30
+[cost]
+input = 0.3
+output = 2.5
+cache_read = 0.03
 
-[limits]
-context = 1048576
-output = 8192
+[limit]
+context = 1_048_576
 
 [modalities]
-input = ["text", "image"]
+input = ["text"]
 output = ["text"]

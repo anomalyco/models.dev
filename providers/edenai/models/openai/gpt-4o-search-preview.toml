@@ -1,15 +1,21 @@
-name = "openai/gpt-4o-search-preview"
-family = "gpt-4o"
-
-[capabilities]
+name = "gpt-4o-search-preview"
+release_date = "2024-05-13"
+last_updated = "2024-11-20"
+attachment = false
+reasoning = false
 temperature = true
 tool_call = true
+structured_output = true
 open_weights = false
 
-[pricing]
+[cost]
 input = 2.5
 output = 10.0
 cache_read = 1.25
 
-[limits]
-context = 128000
+[limit]
+context = 128_000
+
+[modalities]
+input = ["text"]
+output = ["text"]

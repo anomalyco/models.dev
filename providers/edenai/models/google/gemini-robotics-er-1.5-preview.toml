@@ -1,15 +1,20 @@
-name = "google/gemini-robotics-er-1.5-preview"
-family = "gemini-robotics"
-
-[capabilities]
+name = "gemini-robotics-er-1.5-preview"
+release_date = "2024-01"
+last_updated = "2024-01"
+attachment = false
 reasoning = true
 temperature = true
 tool_call = true
+structured_output = true
 open_weights = false
 
-[pricing]
+[cost]
 input = 0.3
 output = 2.5
 
-[limits]
-context = 1048576
+[limit]
+context = 1_048_576
+
+[modalities]
+input = ["text"]
+output = ["text"]

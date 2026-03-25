@@ -1,16 +1,21 @@
-name = "google/gemini-3-flash-preview"
-family = "gemini-3"
-
-[capabilities]
+name = "gemini-3-flash-preview"
+release_date = "2024-01"
+last_updated = "2024-01"
+attachment = false
 reasoning = true
 temperature = true
 tool_call = true
+structured_output = true
 open_weights = false
 
-[pricing]
+[cost]
 input = 0.5
 output = 3.0
 cache_read = 0.05
 
-[limits]
-context = 1048576
+[limit]
+context = 1_048_576
+
+[modalities]
+input = ["text"]
+output = ["text"]

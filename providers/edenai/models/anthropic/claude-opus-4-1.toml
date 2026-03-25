@@ -1,17 +1,22 @@
-name = "anthropic/claude-opus-4-1"
-family = "claude-opus"
-
-[capabilities]
+name = "claude-opus-4-1"
+release_date = "2025-07-09"
+last_updated = "2025-08-05"
+attachment = false
 reasoning = true
 temperature = true
 tool_call = true
+structured_output = true
 open_weights = false
 
-[pricing]
+[cost]
 input = 15.0
 output = 75.0
 cache_read = 1.5
 cache_write = 18.75
 
-[limits]
-context = 200000
+[limit]
+context = 200_000
+
+[modalities]
+input = ["text"]
+output = ["text"]

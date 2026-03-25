@@ -1,11 +1,17 @@
-name = "minimax/minimax-m1"
-family = "minimax-m1"
-
-[capabilities]
+name = "minimax-m1"
+release_date = "2025-01-15"
+last_updated = "2025-01-15"
+attachment = false
+reasoning = false
 temperature = true
 tool_call = true
+structured_output = true
 open_weights = false
 
-[pricing]
+[cost]
 input = 0.4
 output = 2.2
+
+[modalities]
+input = ["text"]
+output = ["text"]

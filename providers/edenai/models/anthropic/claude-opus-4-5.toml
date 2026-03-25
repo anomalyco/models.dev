@@ -1,26 +1,22 @@
-name = "Anthropic: Claude Opus 4.5"
-family = "claude-opus"
-release = 2025-02-24
-updated = 2025-02-24
-
-[capabilities]
+name = "claude-opus-4-5"
+release_date = "2025-02-24"
+last_updated = "2025-11-01"
+attachment = false
 reasoning = true
 temperature = true
 tool_call = true
-attachment = false
-knowledge = "February 2025"
+structured_output = true
 open_weights = false
 
-[pricing]
-input = 15
-output = 75
-cache_read = 1.50
-cache_write = 18.75
+[cost]
+input = 5.0
+output = 25.0
+cache_read = 0.5
+cache_write = 6.25
 
-[limits]
-context = 200000
-output = 8192
+[limit]
+context = 200_000
 
 [modalities]
-input = ["text", "image"]
+input = ["text"]
 output = ["text"]
