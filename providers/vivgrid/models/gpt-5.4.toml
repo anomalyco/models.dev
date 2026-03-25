@@ -1,0 +1,28 @@
+name = "GPT-5.4"
+family = "gpt"
+release_date = "2026-03-05"
+last_updated = "2026-03-05"
+attachment = true
+reasoning = true
+temperature = false
+knowledge = "2025-08-31"
+tool_call = true
+structured_output = true
+open_weights = false
+
+[cost]
+input = 2.50
+output = 15.00
+cache_read = 0.25
+
+[limit]
+context = 400_000
+input = 272_000
+output = 128_000
+
+[modalities]
+input = ["text", "image", "pdf"]
+output = ["text"]
+
+[provider]
+npm = "@ai-sdk/openai-compatible"

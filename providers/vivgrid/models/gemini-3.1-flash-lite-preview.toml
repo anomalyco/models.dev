@@ -1,7 +1,7 @@
-name = "Gemini 3 Flash Preview"
-family = "gemini-flash"
-release_date = "2025-12-17"
-last_updated = "2025-12-17"
+name = "Gemini 3.1 Flash Lite Preview"
+family = "gemini-flash-lite"
+release_date = "2026-03-03"
+last_updated = "2026-03-03"
 attachment = true
 reasoning = true
 temperature = true
@@ -11,14 +11,10 @@ knowledge = "2025-01"
 open_weights = false
 
 [cost]
-input = 0.50
-output = 3.00
-cache_read = 0.05
-
-[cost.context_over_200k]
-input = 0.50
-output = 3.00
-cache_read = 0.05
+input = 0.25
+output = 1.50
+cache_read = 0.025
+cache_write = 1.00
 
 [limit]
 context = 1048576
