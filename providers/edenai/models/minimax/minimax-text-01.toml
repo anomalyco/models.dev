@@ -12,6 +12,10 @@ open_weights = false
 input = 0.2
 output = 1.1
 
+[limit]
+context = 0
+output = 8_192
+
 [modalities]
 input = ["text"]
 output = ["text"]
