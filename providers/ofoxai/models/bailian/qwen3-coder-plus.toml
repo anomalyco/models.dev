@@ -1,0 +1,21 @@
+name = "Qwen3 Coder Plus"
+release_date = "2025-09-23"
+last_updated = "2025-09-23"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+open_weights = false
+
+[cost]
+input = 1.8
+output = 9
+cache_read = 0.2
+
+[limit]
+context = 1000000
+output = 64000
+
+[modalities]
+input = ["text"]
+output = ["text"]

@@ -1,0 +1,21 @@
+name = "Qwen VL Max"
+release_date = "2025-08-13"
+last_updated = "2025-08-13"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = true
+open_weights = false
+
+[cost]
+input = 0.23
+output = 0.58
+cache_read = 0.046
+
+[limit]
+context = 128000
+output = 8000
+
+[modalities]
+input = ["image", "text"]
+output = ["text"]

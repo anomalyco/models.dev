@@ -1,0 +1,21 @@
+name = "Qwen: Qwen3.5 27B"
+release_date = "2026-02-23"
+last_updated = "2026-02-23"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+open_weights = false
+
+[cost]
+input = 0.29
+output = 2.05
+cache_read = 0.29
+
+[limit]
+context = 256000
+output = 64000
+
+[modalities]
+input = ["image", "text"]
+output = ["text"]

@@ -1,0 +1,21 @@
+name = "Doubao Seed 2.0 Pro"
+release_date = "2026-02-14"
+last_updated = "2026-02-14"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+open_weights = false
+
+[cost]
+input = 0.67
+output = 3.36
+cache_read = 0.14
+
+[limit]
+context = 256000
+output = 128000
+
+[modalities]
+input = ["image", "text"]
+output = ["text"]

@@ -1,0 +1,21 @@
+name = "Doubao Seed 2.0 Mini"
+release_date = "2026-02-14"
+last_updated = "2026-02-14"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+open_weights = false
+
+[cost]
+input = 0.06
+output = 0.56
+cache_read = 0.02
+
+[limit]
+context = 256000
+output = 32000
+
+[modalities]
+input = ["image", "text"]
+output = ["text"]
