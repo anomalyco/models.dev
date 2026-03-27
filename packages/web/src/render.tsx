@@ -62,118 +62,59 @@ for (const [providerId] of Object.entries(Providers)) {
   }
 }
 
-function renderProviderLogo(providerId: string) {
-  const svgContent = providerLogos.get(providerId) || "";
-
-  return <span dangerouslySetInnerHTML={{ __html: svgContent }} />;
+// Extract viewBox and inner content from an SVG string for <symbol> creation
+function parseSvgForSymbol(svgStr: string): { viewBox: string; inner: string } {
+  const viewBoxMatch = svgStr.match(/viewBox="([^"]*)"/);
+  const viewBox = viewBoxMatch ? viewBoxMatch[1] : "0 0 24 24";
+  // Extract content between <svg ...> and </svg>
+  const innerMatch = svgStr.match(/<svg[^>]*>([\s\S]*?)<\/svg>/);
+  const inner = innerMatch ? innerMatch[1].trim() : "";
+  return { viewBox, inner };
 }
 
-const getModalityIcon = (modality: string) => {
-  switch (modality) {
-    case "text":
-      return (
-        <span class="modality-icon" data-tooltip="Text">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="16"
-            height="16"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          >
-            <polyline points="4,7 4,4 20,4 20,7"></polyline>
-            <line x1="9" y1="20" x2="15" y2="20"></line>
-            <line x1="12" y1="4" x2="12" y2="20"></line>
-          </svg>
-        </span>
-      );
-    case "image":
-      return (
-        <span class="modality-icon" data-tooltip="Image">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="16"
-            height="16"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          >
-            <rect width="18" height="18" x="3" y="3" rx="2" ry="2"></rect>
-            <circle cx="9" cy="9" r="2"></circle>
-            <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"></path>
-          </svg>
-        </span>
-      );
-    case "audio":
-      return (
-        <span class="modality-icon" data-tooltip="Audio">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="16"
-            height="16"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          >
-            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
-            <path d="m19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
-          </svg>
-        </span>
-      );
-    case "video":
-      return (
-        <span class="modality-icon" data-tooltip="Video">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="16"
-            height="16"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          >
-            <path d="m22 8-6 4 6 4V8Z"></path>
-            <rect width="14" height="12" x="2" y="6" rx="2" ry="2"></rect>
-          </svg>
-        </span>
-      );
-    case "pdf":
-      return (
-        <span class="modality-icon" data-tooltip="PDF">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="16"
-            height="16"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          >
-            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-            <polyline points="14,2 14,8 20,8"></polyline>
-            <line x1="16" y1="13" x2="8" y2="13"></line>
-            <line x1="16" y1="17" x2="8" y2="17"></line>
-            <polyline points="10,9 9,9 8,9"></polyline>
-          </svg>
-        </span>
-      );
-    default:
-      return null;
+// Build SVG defs block with all symbols
+function buildSvgDefs(): string {
+  let symbols = "";
+
+  // Modality icon symbols
+  symbols += `<symbol id="icon-text" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4,7 4,4 20,4 20,7"></polyline><line x1="9" y1="20" x2="15" y2="20"></line><line x1="12" y1="4" x2="12" y2="20"></line></symbol>`;
+  symbols += `<symbol id="icon-image" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"></rect><circle cx="9" cy="9" r="2"></circle><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"></path></symbol>`;
+  symbols += `<symbol id="icon-audio" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="m19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></symbol>`;
+  symbols += `<symbol id="icon-video" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m22 8-6 4 6 4V8Z"></path><rect width="14" height="12" x="2" y="6" rx="2" ry="2"></rect></symbol>`;
+  symbols += `<symbol id="icon-pdf" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14,2 14,8 20,8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10,9 9,9 8,9"></polyline></symbol>`;
+
+  // Copy/check icon symbols
+  symbols += `<symbol id="icon-copy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="m4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></symbol>`;
+  symbols += `<symbol id="icon-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20,6 9,17 4,12"/></symbol>`;
+
+  // Provider logo symbols
+  for (const [providerId, svgContent] of providerLogos.entries()) {
+    const { viewBox, inner } = parseSvgForSymbol(svgContent);
+    symbols += `<symbol id="logo-${providerId}" viewBox="${viewBox}">${inner}</symbol>`;
   }
+
+  return `<svg xmlns="http://www.w3.org/2000/svg" style="display:none"><defs>${symbols}</defs></svg>`;
+}
+
+const svgDefsBlock = buildSvgDefs();
+
+const getModalityIcon = (modality: string) => {
+  const iconId = `icon-${modality}`;
+  const tooltip = modality.charAt(0).toUpperCase() + modality.slice(1);
+  return (
+    <span class="modality-icon" data-tooltip={tooltip}>
+      <svg width="16" height="16"><use href={`#${iconId}`} /></svg>
+    </span>
+  );
 };
+
+function renderProviderLogo(providerId: string) {
+  return (
+    <span class="provider-logo">
+      <svg width="16" height="16"><use href={`#logo-${providerId}`} /></svg>
+    </span>
+  );
+}
 
 const renderCost = (cost?: number) => {
   return cost === undefined ? "-" : `$${cost.toFixed(2)}`;
@@ -208,42 +149,93 @@ export const Rendered = renderToString(
         </a>
         <div class="search-container">
           <input type="text" id="search" placeholder="Search models" />
+          <button id="filter-toggle" class="filter-toggle" aria-expanded="false" title="Toggle filters">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+            </svg>
+            <span id="filter-badge" class="filter-badge" hidden></span>
+          </button>
           <span class="search-shortcut">⌘K</span>
         </div>
         <button id="help">How to use</button>
       </div>
     </header>
-    <table>
+    <div id="filter-bar" class="filter-bar" hidden>
+      <div class="filter-bar-inner">
+        <div class="filter-group">
+          <span class="filter-group-label">Features</span>
+          <div class="filter-chips">
+            <button class="filter-chip" data-filter="reasoning">Reasoning</button>
+            <button class="filter-chip" data-filter="tool_call">Tool Call</button>
+            <button class="filter-chip" data-filter="open_weights">Open Weights</button>
+            <button class="filter-chip" data-filter="structured_output">Structured Output</button>
+          </div>
+        </div>
+        <div class="filter-group">
+          <span class="filter-group-label">Input</span>
+          <div class="filter-chips">
+            <button class="filter-chip" data-filter="input-text">Text</button>
+            <button class="filter-chip" data-filter="input-image">Image</button>
+            <button class="filter-chip" data-filter="input-audio">Audio</button>
+            <button class="filter-chip" data-filter="input-video">Video</button>
+            <button class="filter-chip" data-filter="input-pdf">PDF</button>
+          </div>
+        </div>
+        <div class="filter-group">
+          <span class="filter-group-label">Output</span>
+          <div class="filter-chips">
+            <button class="filter-chip" data-filter="output-text">Text</button>
+            <button class="filter-chip" data-filter="output-image">Image</button>
+            <button class="filter-chip" data-filter="output-audio">Audio</button>
+            <button class="filter-chip" data-filter="output-video">Video</button>
+          </div>
+        </div>
+        <div class="filter-group">
+          <span class="filter-group-label">Status</span>
+          <div class="filter-chips">
+            <button class="filter-chip" data-filter="hide-deprecated">Hide Deprecated</button>
+            <button class="filter-chip" data-filter="hide-beta">Hide Beta</button>
+          </div>
+        </div>
+        <div class="filter-actions">
+          <span id="filter-count" class="filter-count" hidden></span>
+          <button id="clear-filters" class="filter-clear" hidden>Clear all</button>
+        </div>
+      </div>
+    </div>
+    <span dangerouslySetInnerHTML={{ __html: svgDefsBlock }} />
+    <div id="scroll-sentinel-top" class="scroll-sentinel"></div>
+    <table class="not-ready">
       <thead>
         <tr>
-          <th class="sortable" data-type="text">
+          <th class="sortable" data-type="text" data-column="provider">
             Provider <span class="sort-indicator"></span>
           </th>
-          <th class="sortable" data-type="text">
+          <th class="sortable" data-type="text" data-column="model">
             Model <span class="sort-indicator"></span>
           </th>
-          <th class="sortable" data-type="text">
+          <th class="sortable" data-type="text" data-column="family">
             Family <span class="sort-indicator"></span>
           </th>
-          <th class="sortable" data-type="text">
+          <th class="sortable" data-type="text" data-column="provider-id">
             Provider ID <span class="sort-indicator"></span>
           </th>
-          <th class="sortable" data-type="text">
+          <th class="sortable" data-type="text" data-column="model-id">
             Model ID <span class="sort-indicator"></span>
           </th>
-          <th class="sortable" data-type="boolean">
+          <th class="sortable" data-type="boolean" data-column="tool-call">
             Tool Call <span class="sort-indicator"></span>
           </th>
-          <th class="sortable" data-type="boolean">
+          <th class="sortable" data-type="boolean" data-column="reasoning">
             Reasoning <span class="sort-indicator"></span>
           </th>
-          <th class="sortable" data-type="modalities">
+          <th class="sortable" data-type="modalities" data-column="input">
             Input <span class="sort-indicator"></span>
           </th>
-          <th class="sortable" data-type="modalities">
+          <th class="sortable" data-type="modalities" data-column="output">
             Output <span class="sort-indicator"></span>
           </th>
-          <th class="sortable" data-type="number">
+          <th class="sortable" data-type="number" data-column="input-cost">
             <div class="header-container">
               <span class="header-text">
                 Input Cost
@@ -253,7 +245,7 @@ export const Rendered = renderToString(
               <span class="sort-indicator"></span>
             </div>
           </th>
-          <th class="sortable" data-type="number">
+          <th class="sortable" data-type="number" data-column="output-cost">
             <div class="header-container">
               <span class="header-text">
                 Output Cost
@@ -263,7 +255,7 @@ export const Rendered = renderToString(
               <span class="sort-indicator"></span>
             </div>
           </th>
-          <th class="sortable" data-type="number">
+          <th class="sortable" data-type="number" data-column="reasoning-cost">
             <div class="header-container">
               <span class="header-text">
                 Reasoning Cost
@@ -273,7 +265,7 @@ export const Rendered = renderToString(
               <span class="sort-indicator"></span>
             </div>
           </th>
-          <th class="sortable" data-type="number">
+          <th class="sortable" data-type="number" data-column="cache-read-cost">
             <div class="header-container">
               <span class="header-text">
                 Cache Read Cost
@@ -283,7 +275,7 @@ export const Rendered = renderToString(
               <span class="sort-indicator"></span>
             </div>
           </th>
-          <th class="sortable" data-type="number">
+          <th class="sortable" data-type="number" data-column="cache-write-cost">
             <div class="header-container">
               <span class="header-text">
                 Cache Write Cost
@@ -293,7 +285,7 @@ export const Rendered = renderToString(
               <span class="sort-indicator"></span>
             </div>
           </th>
-          <th class="sortable" data-type="number">
+          <th class="sortable" data-type="number" data-column="audio-input-cost">
             <div class="header-container">
               <span class="header-text">
                 Audio Input Cost
@@ -303,7 +295,7 @@ export const Rendered = renderToString(
               <span class="sort-indicator"></span>
             </div>
           </th>
-          <th class="sortable" data-type="number">
+          <th class="sortable" data-type="number" data-column="audio-output-cost">
             <div class="header-container">
               <span class="header-text">
                 Audio Output Cost
@@ -313,31 +305,31 @@ export const Rendered = renderToString(
               <span class="sort-indicator"></span>
             </div>
           </th>
-          <th class="sortable" data-type="number">
+          <th class="sortable" data-type="number" data-column="context-limit">
             Context Limit <span class="sort-indicator"></span>
           </th>
-          <th class="sortable" data-type="number">
+          <th class="sortable" data-type="number" data-column="input-limit">
             Input Limit <span class="sort-indicator"></span>
           </th>
-          <th class="sortable" data-type="number">
+          <th class="sortable" data-type="number" data-column="output-limit">
             Output Limit <span class="sort-indicator"></span>
           </th>
-          <th class="sortable" data-type="boolean">
+          <th class="sortable" data-type="boolean" data-column="structured-output">
             Structured Output <span class="sort-indicator"></span>
           </th>
-          <th class="sortable" data-type="boolean">
+          <th class="sortable" data-type="boolean" data-column="temperature">
             Temperature <span class="sort-indicator"></span>
           </th>
-          <th class="sortable" data-type="text">
+          <th class="sortable" data-type="text" data-column="weights">
             Weights <span class="sort-indicator"></span>
           </th>
-          <th class="sortable" data-type="text">
+          <th class="sortable" data-type="text" data-column="knowledge">
             Knowledge <span class="sort-indicator"></span>
           </th>
-          <th class="sortable" data-type="text">
+          <th class="sortable" data-type="text" data-column="release-date">
             Release Date <span class="sort-indicator"></span>
           </th>
-          <th class="sortable" data-type="text">
+          <th class="sortable" data-type="text" data-column="last-updated">
             Last Updated <span class="sort-indicator"></span>
           </th>
         </tr>
@@ -354,7 +346,27 @@ export const Rendered = renderToString(
                 modelA.name.localeCompare(modelB.name)
               )
               .map(([modelId, model]) => (
-                <tr key={`${providerId}-${modelId}`}>
+                <tr
+                  key={`${providerId}-${modelId}`}
+                  data-provider={provider.name.toLowerCase()}
+                  data-provider-id={providerId}
+                  data-model={model.name.toLowerCase()}
+                  data-model-id={modelId}
+                  data-family={model.family ?? ""}
+                  data-reasoning={model.reasoning ? "1" : "0"}
+                  data-tool-call={model.tool_call ? "1" : "0"}
+                  data-open-weights={model.open_weights ? "1" : "0"}
+                  data-structured-output={model.structured_output === undefined ? "" : model.structured_output ? "1" : "0"}
+                  data-temperature={model.temperature ? "1" : "0"}
+                  data-attachment={model.attachment ? "1" : "0"}
+                  data-input-modalities={model.modalities.input.join(",")}
+                  data-output-modalities={model.modalities.output.join(",")}
+                  data-input-cost={model.cost?.input?.toString() ?? ""}
+                  data-output-cost={model.cost?.output?.toString() ?? ""}
+                  data-context-limit={model.limit.context.toString()}
+                  data-output-limit={model.limit.output.toString()}
+                  data-status={model.status ?? ""}
+                >
                   <td>
                     <div class="provider-cell">
                       {renderProviderLogo(providerId)}
@@ -371,43 +383,8 @@ export const Rendered = renderToString(
                         class="copy-button"
                         onclick={`copyModelId(this, '${modelId}')`}
                       >
-                        <svg
-                          class="copy-icon"
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="14"
-                          height="14"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          stroke-width="2"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                        >
-                          <rect
-                            width="14"
-                            height="14"
-                            x="8"
-                            y="8"
-                            rx="2"
-                            ry="2"
-                          />
-                          <path d="m4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2" />
-                        </svg>
-                        <svg
-                          class="check-icon"
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="14"
-                          height="14"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          stroke-width="2"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          style="display: none;"
-                        >
-                          <polyline points="20,6 9,17 4,12" />
-                        </svg>
+                        <svg class="copy-icon" width="14" height="14"><use href="#icon-copy" /></svg>
+                        <svg class="check-icon" width="14" height="14" style="display: none;"><use href="#icon-check" /></svg>
                       </button>
                     </div>
                   </td>
@@ -441,8 +418,8 @@ export const Rendered = renderToString(
                     {model.structured_output === undefined
                       ? "-"
                       : model.structured_output
-                      ? "Yes"
-                      : "No"}
+                        ? "Yes"
+                        : "No"}
                   </td>
                   <td>{model.temperature ? "Yes" : "No"}</td>
                   <td>{model.open_weights ? "Open" : "Closed"}</td>
@@ -456,6 +433,8 @@ export const Rendered = renderToString(
           )}
       </tbody>
     </table>
+    <div id="scroll-sentinel" class="scroll-sentinel"></div>
+    <div id="ghost-container" class="ghost-container"></div>
     <dialog id="modal">
       <div class="header">
         <h2>How to use</h2>
@@ -500,6 +479,46 @@ export const Rendered = renderToString(
           </a>
           .
         </p>
+        <h2>Search</h2>
+        <p>
+          The search bar supports natural language and keyword filters. Combine them freely.
+        </p>
+        <p><b>Examples</b></p>
+        <div class="code-block">
+          <code>bedrock claude sort:input</code>
+        </div>
+        <div class="code-block">
+          <code>in:image out:text in:&lt;5 out:&lt;15</code>
+        </div>
+        <p><b>Filter keywords</b></p>
+        <table class="help-table">
+          <tbody>
+            <tr><td><code>in:</code></td><td>Input modality or cost — <code>in:image</code>, <code>in:&lt;5</code></td></tr>
+            <tr><td><code>out:</code></td><td>Output modality or cost — <code>out:video</code>, <code>out:&lt;15</code></td></tr>
+            <tr><td><code>ctx:</code></td><td>Context limit — <code>ctx:&gt;100k</code></td></tr>
+            <tr><td><code>p:</code></td><td>Provider — <code>p:openai</code></td></tr>
+            <tr><td><code>f:</code></td><td>Family — <code>f:gpt</code></td></tr>
+            <tr><td><code>status:</code></td><td>Status — <code>status:deprecated</code></td></tr>
+          </tbody>
+        </table>
+        <p><b>Sort keywords</b> — prefix with <code>-</code> for descending (input/ -input)</p>
+        <table class="help-table">
+          <tbody>
+            <tr><td><code>sort:input</code></td><td>Input cost</td></tr>
+            <tr><td><code>sort:output</code></td><td>Output cost</td></tr>
+            <tr><td><code>sort:reasoning</code></td><td>Reasoning cost</td></tr>
+            <tr><td><code>sort:cache-r</code></td><td>Cache read cost</td></tr>
+            <tr><td><code>sort:cache-w</code></td><td>Cache write cost</td></tr>
+            <tr><td><code>sort:audio-in</code></td><td>Audio input cost</td></tr>
+            <tr><td><code>sort:audio-out</code></td><td>Audio output cost</td></tr>
+            <tr><td><code>sort:context</code></td><td>Context limit</td></tr>
+            <tr><td><code>sort:release</code></td><td>Release date</td></tr>
+            <tr><td><code>sort:update</code></td><td>Last updated</td></tr>
+          </tbody>
+        </table>
+        <p>
+          Numbers support <code>k</code> and <code>m</code> suffixes. Multiple words use AND logic.
+        </p>
         <h2>API</h2>
         <p>You can access this data through an API.</p>
         <div class="code-block">
@@ -535,6 +554,7 @@ export const Rendered = renderToString(
         <p>
           If we don't have a provider's logo, a default logo is served instead.
         </p>
+
         <h2>Contribute</h2>
         <p>
           The data is stored in the{" "}
