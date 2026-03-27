@@ -1,0 +1,23 @@
+name = "Gemini 3 Pro Image (Preview)"
+family = "gemini"
+release_date = "2025-11-20"
+last_updated = "2025-11-20"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = false
+structured_output = true
+open_weights = false
+
+[cost]
+input = 2.00
+output = 12.00
+cache_read = 0.20
+
+[limit]
+context = 65_536
+output = 32_768
+
+[modalities]
+input = ["text", "image"]
+output = ["text", "image"]

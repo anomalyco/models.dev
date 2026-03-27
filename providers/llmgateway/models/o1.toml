@@ -1,0 +1,23 @@
+name = "o1"
+family = "gpt"
+release_date = "2024-09-12"
+last_updated = "2024-09-12"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = false
+structured_output = true
+open_weights = false
+
+[cost]
+input = 15.00
+output = 60.00
+cache_read = 7.50
+
+[limit]
+context = 200_000
+output = 16_384
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

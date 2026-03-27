@@ -1,0 +1,22 @@
+name = "Qwen3 VL 8B Instruct"
+family = "qwen"
+release_date = "2025-10-14"
+last_updated = "2025-10-14"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = false
+structured_output = true
+open_weights = true
+
+[cost]
+input = 0.08
+output = 0.50
+
+[limit]
+context = 131_072
+output = 8_192
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

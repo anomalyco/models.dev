@@ -1,0 +1,23 @@
+name = "Gemini 2.5 Pro"
+family = "gemini"
+release_date = "2025-03-25"
+last_updated = "2025-03-25"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[cost]
+input = 1.25
+output = 10.00
+cache_read = 0.13
+
+[limit]
+context = 1_048_576
+output = 65_536
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

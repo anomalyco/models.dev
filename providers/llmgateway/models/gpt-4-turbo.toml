@@ -1,0 +1,22 @@
+name = "GPT-4 Turbo"
+family = "gpt"
+release_date = "2023-11-06"
+last_updated = "2023-11-06"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[cost]
+input = 10.00
+output = 30.00
+
+[limit]
+context = 128_000
+output = 16_384
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

@@ -1,0 +1,22 @@
+name = "Qwen Omni Turbo"
+family = "qwen"
+release_date = "2025-03-26"
+last_updated = "2025-03-26"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = false
+structured_output = true
+open_weights = true
+
+[cost]
+input = 0.20
+output = 0.80
+
+[limit]
+context = 32_768
+output = 8_192
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

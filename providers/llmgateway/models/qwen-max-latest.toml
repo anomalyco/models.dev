@@ -1,0 +1,22 @@
+name = "Qwen Max Latest"
+family = "qwen"
+release_date = "2025-01-25"
+last_updated = "2025-01-25"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = true
+
+[cost]
+input = 1.60
+output = 6.40
+
+[limit]
+context = 131_072
+output = 32_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

@@ -1,0 +1,22 @@
+name = "Safety GPT OSS 20B"
+family = "gpt-oss"
+release_date = "2025-03-05"
+last_updated = "2025-03-05"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+open_weights = true
+
+[cost]
+input = 0.075
+output = 0.30
+cache_read = 0.037
+
+[limit]
+context = 131_072
+output = 65_536
+
+[modalities]
+input = ["text"]
+output = ["text"]

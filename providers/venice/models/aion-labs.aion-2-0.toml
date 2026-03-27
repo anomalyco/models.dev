@@ -1,0 +1,22 @@
+name = "Aion 2.0"
+family = "o"
+attachment = false
+reasoning = false
+tool_call = false
+temperature = true
+release_date = "2026-03-24"
+last_updated = "2026-03-27"
+open_weights = false
+
+[cost]
+input = 1
+output = 2
+cache_read = 0.25
+
+[limit]
+context = 128_000
+output = 32_768
+
+[modalities]
+input = ["text"]
+output = ["text"]
