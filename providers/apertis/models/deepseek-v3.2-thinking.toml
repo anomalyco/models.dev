@@ -1,0 +1,25 @@
+name = "DeepSeek V3.2 (Thinking)"
+family = "deepseek"
+release_date = "2025-09-01"
+last_updated = "2025-09-01"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+knowledge = "2025-04"
+open_weights = true
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.27
+output = 1.10
+
+[limit]
+context = 128_000
+output = 64_000
+
+[modalities]
+input = ["text"]
+output = ["text"]

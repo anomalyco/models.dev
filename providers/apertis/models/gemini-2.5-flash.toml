@@ -1,0 +1,23 @@
+name = "Gemini 2.5 Flash"
+family = "gemini-flash"
+release_date = "2025-04-17"
+last_updated = "2025-05-20"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+knowledge = "2025-01"
+open_weights = false
+
+[cost]
+input = 0.15
+output = 0.60
+cache_read = 0.04
+
+[limit]
+context = 1_048_576
+output = 65_536
+
+[modalities]
+input = ["text", "image", "audio", "video", "pdf"]
+output = ["text"]

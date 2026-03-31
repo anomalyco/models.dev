@@ -1,0 +1,24 @@
+name = "Grok 4.1 (Thinking)"
+family = "grok"
+release_date = "2026-02-01"
+last_updated = "2026-02-01"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+open_weights = false
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 3.00
+output = 15.00
+
+[limit]
+context = 256_000
+output = 32_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

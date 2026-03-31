@@ -1,0 +1,23 @@
+name = "Gemini 3 Flash Preview"
+family = "gemini-flash"
+release_date = "2026-02-01"
+last_updated = "2026-02-01"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+knowledge = "2025-10"
+open_weights = false
+status = "beta"
+
+[cost]
+input = 0.15
+output = 0.60
+
+[limit]
+context = 1_048_576
+output = 65_536
+
+[modalities]
+input = ["text", "image", "audio", "video", "pdf"]
+output = ["text"]
