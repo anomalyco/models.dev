@@ -1,26 +1,25 @@
-name = "Kimi K2.5"
-family = "kimi"
-release_date = "2026-01"
-last_updated = "2026-01-27"
+name = "NVIDIA Nemotron 3 Super 120B A12B NVFP4"
+family = "nemotron"
+release_date = "2026-03-11"
+last_updated = "2026-03-11"
 attachment = false
 reasoning = true
 temperature = true
 tool_call = true
 structured_output = true
-knowledge = "2025-01"
 open_weights = true
 
 [interleaved]
 field = "reasoning_content"
 
 [cost]
-input = 0.45
-output = 3.40
+input = 0.30
+output = 1.00
 
 [limit]
 context = 262_144
 output = 65_536
 
 [modalities]
-input = ["text", "image"]
+input = ["text"]
 output = ["text"]

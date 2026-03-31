@@ -6,6 +6,7 @@ attachment = false
 reasoning = true
 temperature = true
 tool_call = true
+structured_output = true
 knowledge = "2025-04"
 open_weights = true
 
@@ -13,12 +14,12 @@ open_weights = true
 field = "reasoning_content"
 
 [cost]
-input = 0.55
+input = 0.45
 output = 2.19
 
 [limit]
-context = 200_000
-output = 64_000
+context = 202_752
+output = 65_536
 
 [modalities]
 input = ["text"]
