@@ -1,0 +1,24 @@
+name = "O3 Mini"
+family = "o-mini"
+release_date = "2024-12-20"
+last_updated = "2025-01-29"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = true
+knowledge = "2024-05"
+open_weights = false
+
+[cost]
+input = 1.1
+output = 4.4
+cache_read = 0.55
+
+[limit]
+context = 200000
+output = 100000
+
+[modalities]
+input = ["text"]
+output = ["text"]

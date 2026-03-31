@@ -1,0 +1,20 @@
+name = "Nemotron Nano 12B VL (Bedrock)"
+release_date = "2025-01"
+last_updated = "2025-01"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = false
+open_weights = false
+
+[cost]
+input = 0.06
+output = 0.24
+
+[limit]
+context = 128000
+output = 128000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

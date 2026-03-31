@@ -1,0 +1,21 @@
+name = "Mistral Small 3.1 24B (Berget)"
+release_date = "2025-01"
+last_updated = "2025-01"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[cost]
+input = 0.35
+output = 0.35
+
+[limit]
+context = 128000
+output = 128000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

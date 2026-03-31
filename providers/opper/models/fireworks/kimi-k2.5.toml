@@ -1,0 +1,21 @@
+name = "Kimi K2.5 (Fireworks)"
+release_date = "2025-01"
+last_updated = "2025-01"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[cost]
+input = 0.6
+output = 3
+
+[limit]
+context = 262144
+output = 262144
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

@@ -1,0 +1,20 @@
+name = "Pixtral Large (Bedrock EU)"
+release_date = "2025-01"
+last_updated = "2025-01"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = true
+open_weights = false
+
+[cost]
+input = 2
+output = 6
+
+[limit]
+context = 128000
+output = 128000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

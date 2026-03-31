@@ -1,0 +1,23 @@
+name = "GPT-4o (May 2024)"
+family = "gpt"
+release_date = "2024-05-13"
+last_updated = "2024-08-06"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = true
+structured_output = true
+knowledge = "2023-09"
+open_weights = false
+
+[cost]
+input = 5
+output = 15
+
+[limit]
+context = 128000
+output = 16384
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

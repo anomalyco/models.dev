@@ -1,0 +1,21 @@
+name = "Gemini 2.0 Flash Lite (EU)"
+release_date = "2025-01"
+last_updated = "2025-01"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = false
+structured_output = true
+open_weights = false
+
+[cost]
+input = 0.075
+output = 0.3
+
+[limit]
+context = 1048576
+output = 1048576
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

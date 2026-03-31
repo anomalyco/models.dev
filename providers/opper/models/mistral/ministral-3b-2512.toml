@@ -1,0 +1,23 @@
+name = "Ministral 3 3B"
+family = "ministral"
+release_date = "2024-10-01"
+last_updated = "2024-10-04"
+attachment = false
+reasoning = false
+temperature = true
+tool_call = true
+structured_output = true
+knowledge = "2024-10"
+open_weights = false
+
+[cost]
+input = 0.1
+output = 0.1
+
+[limit]
+context = 256000
+output = 128000
+
+[modalities]
+input = ["text"]
+output = ["text"]
