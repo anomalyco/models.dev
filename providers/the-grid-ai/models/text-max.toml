@@ -1,0 +1,18 @@
+name = "Text Max"
+release_date = "2026-03-24"
+last_updated = "2026-03-24"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = true
+status = "beta"
+open_weights = false
+
+[limit]
+context = 1_000_000
+output = 128_000
+
+[modalities]
+input = ["text"]
+output = ["text"]
