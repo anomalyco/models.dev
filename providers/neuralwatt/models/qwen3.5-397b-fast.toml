@@ -1,0 +1,21 @@
+name = "Qwen3.5 397B Fast"
+family = "qwen"
+release_date = "2025-01"
+last_updated = "2026-03"
+attachment = false
+reasoning = false
+tool_call = true
+structured_output = true
+open_weights = true
+
+[cost]
+input = 0.70
+output = 4.10
+
+[limit]
+context = 262_144
+output = 32_768
+
+[modalities]
+input = ["text"]
+output = ["text"]

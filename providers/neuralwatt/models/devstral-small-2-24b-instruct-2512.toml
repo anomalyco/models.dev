@@ -1,0 +1,21 @@
+name = "Devstral Small 2 24B"
+family = "devstral"
+release_date = "2025-12"
+last_updated = "2026-03"
+attachment = true
+reasoning = false
+tool_call = true
+structured_output = true
+open_weights = true
+
+[cost]
+input = 0.10
+output = 0.30
+
+[limit]
+context = 262_144
+output = 32_768
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
