@@ -21,3 +21,7 @@ output = 64_000
 [modalities]
 input = ["pdf", "image", "text"]
 output = ["text"]
+
+[provider]
+npm = "@ai-sdk/anthropic"
+api = "https://zenmux.ai/api/anthropic/v1"

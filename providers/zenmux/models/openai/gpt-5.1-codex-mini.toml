@@ -20,3 +20,7 @@ output = 64_000
 [modalities]
 input = ["image", "text"]
 output = ["text"]
+
+[provider]
+npm = "@ai-sdk/openai"
+api = "https://zenmux.ai/api/v1"

@@ -8,9 +8,6 @@ tool_call = true
 knowledge = "2025-01-01"
 open_weights = false
 
-[interleaved]
-field = "reasoning_content"
-
 [cost]
 input = 0.60
 output = 4.80
@@ -24,3 +21,7 @@ output = 131_072
 [modalities]
 input = ["text"]
 output = ["text"]
+
+[provider]
+npm = "@ai-sdk/anthropic"
+api = "https://zenmux.ai/api/anthropic/v1"

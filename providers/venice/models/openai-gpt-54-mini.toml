@@ -1,0 +1,23 @@
+name = "GPT-5.4 Mini"
+family = "gpt-mini"
+attachment = true
+reasoning = true
+tool_call = true
+structured_output = true
+temperature = true
+release_date = "2026-03-27"
+last_updated = "2026-03-31"
+open_weights = false
+
+[cost]
+input = 0.9375
+output = 5.625
+cache_read = 0.09375
+
+[limit]
+context = 400_000
+output = 128_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

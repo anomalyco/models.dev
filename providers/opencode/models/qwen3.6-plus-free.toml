@@ -1,0 +1,26 @@
+name = "Qwen3.6 Plus Free"
+family = "qwen-free"
+release_date = "2026-03-30"
+last_updated = "2026-03-30"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+knowledge = "2024-12"
+open_weights = false
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0
+output = 0
+cache_read = 0
+
+[limit]
+context = 1_048_576
+output = 64_000
+
+[modalities]
+input = ["text"]
+output = ["text"]
