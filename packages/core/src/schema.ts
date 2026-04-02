@@ -2,7 +2,7 @@ import { z } from "zod";
 
 import { ModelFamily } from "./family";
 
-const ProviderValue: z.ZodType<
+const BodyValue: z.ZodType<
   string | number | boolean | null | Array<unknown> | Record<string, unknown>
 > = z.lazy(() =>
   z.union([
@@ -10,8 +10,8 @@ const ProviderValue: z.ZodType<
     z.number(),
     z.boolean(),
     z.null(),
-    z.array(ProviderValue),
-    z.record(ProviderValue),
+    z.array(BodyValue),
+    z.record(BodyValue),
   ]),
 );
 
@@ -87,7 +87,7 @@ export const Model = z
         npm: z.string().optional(),
         api: z.string().optional(),
         shape: z.enum(["responses", "completions"]).optional(),
-        options: z.record(ProviderValue).optional(),
+        body: z.record(BodyValue).optional(),
       })
       .optional(),
   })
