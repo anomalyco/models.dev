@@ -1,0 +1,22 @@
+name = "Trinity Large"
+attachment = false
+reasoning = true
+tool_call = false
+temperature = true
+open_weights = false
+release_date = "2025-06"
+last_updated = "2025-06"
+status = "beta"
+
+[cost]
+input = 0.25
+output = 0.90
+cache_read = 0.06
+
+[limit]
+context = 128_000
+output = 128_000
+
+[modalities]
+input = ["text"]
+output = ["text"]

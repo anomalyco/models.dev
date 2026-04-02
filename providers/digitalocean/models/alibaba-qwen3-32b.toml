@@ -1,0 +1,21 @@
+name = "Qwen3-32B"
+family = "qwen"
+attachment = false
+reasoning = true
+tool_call = true
+temperature = true
+open_weights = true
+release_date = "2025-04"
+last_updated = "2025-04"
+
+[cost]
+input = 0.25
+output = 0.55
+
+[limit]
+context = 131_072
+output = 40_960
+
+[modalities]
+input = ["text"]
+output = ["text"]

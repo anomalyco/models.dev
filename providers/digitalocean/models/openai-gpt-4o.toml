@@ -1,0 +1,22 @@
+name = "GPT-4o"
+family = "gpt"
+attachment = true
+reasoning = false
+tool_call = true
+temperature = true
+open_weights = false
+release_date = "2024-05"
+last_updated = "2024-05"
+
+[cost]
+input = 2.50
+output = 10.00
+cache_read = 1.25
+
+[limit]
+context = 128_000
+output = 16_384
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

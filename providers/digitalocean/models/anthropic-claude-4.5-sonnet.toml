@@ -1,0 +1,27 @@
+name = "Claude Sonnet 4.5"
+family = "claude"
+attachment = true
+reasoning = true
+tool_call = true
+temperature = true
+open_weights = false
+release_date = "2025-09"
+last_updated = "2025-09"
+
+[cost]
+input = 3.00
+output = 15.00
+cache_read = 0.30
+cache_write = 3.75
+
+[cost.context_over_200k]
+input = 6.00
+output = 22.50
+
+[limit]
+context = 1_000_000
+output = 64_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

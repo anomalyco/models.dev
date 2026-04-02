@@ -1,0 +1,22 @@
+name = "GPT-5.2"
+family = "gpt"
+attachment = true
+reasoning = true
+tool_call = true
+temperature = true
+open_weights = false
+release_date = "2025-10"
+last_updated = "2025-10"
+
+[cost]
+input = 1.75
+output = 14.00
+cache_read = 0.175
+
+[limit]
+context = 200_000
+output = 128_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

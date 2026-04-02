@@ -1,0 +1,21 @@
+name = "Mistral NeMo"
+family = "mistral"
+attachment = false
+reasoning = false
+tool_call = true
+temperature = true
+open_weights = true
+release_date = "2024-07"
+last_updated = "2024-07"
+
+[cost]
+input = 0.30
+output = 0.30
+
+[limit]
+context = 128_000
+output = 128_000
+
+[modalities]
+input = ["text"]
+output = ["text"]
