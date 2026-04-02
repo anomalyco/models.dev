@@ -1,0 +1,71 @@
+[workspace]
+members = ["crates/*"]
+resolver = "2"
+
+[workspace.package]
+edition = "2024"
+version = "0.1.0"
+rust-version = "1.87.0"
+publish = false
+
+[workspace.dependencies]
+serde = { version = "1.0.228", features = ["derive"] }
+thiserror = "2.0.18"
+toml = "1.0.4"
+
+[workspace.lints.rust]
+keyword_idents_2024 = "forbid"
+missing_unsafe_on_extern = "forbid"
+unsafe_code = "deny"
+unsafe_op_in_unsafe_fn = "forbid"
+unused_results = "forbid"
+
+[workspace.lints.clippy]
+absolute_paths = "deny"
+as_conversions = "deny"
+as_pointer_underscore = "deny"
+as_underscore = "deny"
+cast_possible_truncation = "deny"
+cast_possible_wrap = "deny"
+cast_precision_loss = "deny"
+cast_sign_loss = "deny"
+clone_on_ref_ptr = "deny"
+dbg_macro = "deny"
+empty_drop = "deny"
+exhaustive_enums = "allow"
+exhaustive_structs = "allow"
+filetype_is_file = "deny"
+fn_to_numeric_cast_any = "deny"
+get_unwrap = "deny"
+infinite_loop = "deny"
+let_underscore_must_use = "deny"
+mem_forget = "deny"
+missing_asserts_for_indexing = "deny"
+module_name_repetitions = "allow"
+multiple_crate_versions = "allow"
+multiple_unsafe_ops_per_block = "deny"
+mutex_atomic = "deny"
+panic = "deny"
+rc_buffer = "deny"
+rc_mutex = "deny"
+str_to_string = "deny"
+string_slice = "deny"
+struct_field_names = "allow"
+tests_outside_test_module = "deny"
+todo = "deny"
+try_err = "deny"
+unimplemented = "deny"
+unnecessary_safety_comment = "deny"
+unnecessary_safety_doc = "deny"
+unreachable = "deny"
+unwrap_in_result = "deny"
+wildcard_imports = "allow"
+
+cargo = { level = "deny", priority = -1 }
+complexity = { level = "deny", priority = -1 }
+correctness = { level = "deny", priority = -1 }
+nursery = { level = "deny", priority = -1 }
+pedantic = { level = "deny", priority = -1 }
+perf = { level = "deny", priority = -1 }
+style = { level = "deny", priority = -1 }
+suspicious = { level = "deny", priority = -1 }
