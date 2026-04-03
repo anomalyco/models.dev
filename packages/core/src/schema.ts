@@ -23,6 +23,29 @@ const Cost = z.object({
     .min(0, "Audio output price cannot be negative")
     .optional(),
 });
+
+/**
+ * A pricing tier that applies when the total input tokens (input + cache_read)
+ * meet or exceed the min_context threshold. Matches OpenRouter's tiered pricing
+ * format: https://openrouter.ai/docs/guides/get-started/for-providers
+ */
+const ContextTier = z.object({
+  min_context: z
+    .number()
+    .int()
+    .positive("min_context must be a positive integer (token count)"),
+  input: z.number().min(0, "Input price cannot be negative"),
+  output: z.number().min(0, "Output price cannot be negative"),
+  cache_read: z
+    .number()
+    .min(0, "Cache read price cannot be negative")
+    .optional(),
+  cache_write: z
+    .number()
+    .min(0, "Cache write price cannot be negative")
+    .optional(),
+});
+
 export const Model = z
   .object({
     id: z.string(),
@@ -61,7 +84,36 @@ export const Model = z
     }),
     open_weights: z.boolean(),
     cost: Cost.extend({
+      /**
+       * @deprecated Use `context_tiers` instead.
+       * Kept for backward compatibility — consumers should merge this into
+       * context_tiers if present.
+       */
       context_over_200k: Cost.optional(),
+      /**
+       * Ordered array of pricing tiers that apply when total input tokens
+       * (input + cache_read) meet or exceed the tier's min_context threshold.
+       * Only the highest matching tier is applied.
+       *
+       * Example (TOML):
+       * ```toml
+       * [[cost.context_tiers]]
+       * min_context = 200_000
+       * input = 2.00
+       * output = 6.00
+       * cache_read = 0.40
+       *
+       * [[cost.context_tiers]]
+       * min_context = 500_000
+       * input = 4.00
+       * output = 12.00
+       * cache_read = 0.80
+       * ```
+       */
+      context_tiers: z
+        .array(ContextTier)
+        .max(4, "Maximum 4 context tiers supported")
+        .optional(),
     }).optional(),
     limit: z.object({
       context: z.number().min(0, "Context window must be positive"),
@@ -85,6 +137,24 @@ export const Model = z
     {
       message: "Cannot set cost.reasoning when reasoning is false",
       path: ["cost", "reasoning"],
+    },
+  )
+  .refine(
+    (data) => {
+      const tiers = data.cost?.context_tiers;
+      if (!tiers || tiers.length < 2) return true;
+      // Ensure tiers are sorted by min_context ascending
+      for (let i = 1; i < tiers.length; i++) {
+        if (tiers[i]!.min_context <= tiers[i - 1]!.min_context) {
+          return false;
+        }
+      }
+      return true;
+    },
+    {
+      message:
+        "context_tiers must be sorted by min_context in ascending order",
+      path: ["cost", "context_tiers"],
     },
   );
 

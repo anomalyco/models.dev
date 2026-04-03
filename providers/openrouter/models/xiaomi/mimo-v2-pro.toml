@@ -13,6 +13,21 @@ open_weights = true
 input = 1.00
 output = 3.00
 
+# Tiered pricing based on context length (matches OpenRouter pricing tiers)
+# Tier 1: applies when input + cache_read tokens >= 200,000
+[[cost.context_tiers]]
+min_context = 200_000
+input = 2.00
+output = 6.00
+cache_read = 0.40
+
+# Tier 2: applies when input + cache_read tokens >= 500,000
+[[cost.context_tiers]]
+min_context = 500_000
+input = 4.00
+output = 12.00
+cache_read = 0.80
+
 [limit]
 context = 1_048_576
 output = 65_536
