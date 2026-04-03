@@ -1,0 +1,21 @@
+name = "Kimi-K2.5-FW"
+release_date = "2026-01-27"
+last_updated = "2026-01-27"
+attachment = true
+reasoning = false
+temperature = false
+open_weights = false
+tool_call = true
+
+[cost]
+input = 0
+output = 0
+
+[limit]
+context = 262_144
+input = 245_760
+output = 16_384
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

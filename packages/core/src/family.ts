@@ -198,6 +198,8 @@ export const ModelFamilyValues = [
 
   // Mimo
   "mimo",
+  "mimo-pro",
+  "mimo-omni",
   "mimo-pro-free",
   "mimo-omni-free",
   "mimo-flash-free",
