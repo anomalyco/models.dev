@@ -1,26 +1,23 @@
-name = "o4-mini"
+name = "GPT-4.1 mini"
 family = "gpt"
-release_date = "2025-04-16"
-last_updated = "2025-04-16"
+release_date = "2025-04-14"
+last_updated = "2025-04-14"
 attachment = true
-reasoning = true
+reasoning = false
 temperature = true
 tool_call = true
 structured_output = true
 open_weights = false
 
 [cost]
-input = 1.155
-output = 4.62
-cache_read = 0.2888
+input = 0.42
+output = 1.68
+cache_read = 0.105
 
 [limit]
 context = 200_000
-output = 100_000
+output = 32_768
 
 [modalities]
 input = ["text", "image"]
 output = ["text"]
-
-[interleaved]
-field = "reasoning_content"

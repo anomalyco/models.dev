@@ -1,7 +1,7 @@
-name = "o4-mini"
-family = "gpt"
-release_date = "2025-04-16"
-last_updated = "2025-04-16"
+name = "Claude Sonnet 4.5"
+family = "claude"
+release_date = "2025-09-29"
+last_updated = "2025-09-29"
 attachment = true
 reasoning = true
 temperature = true
@@ -10,17 +10,15 @@ structured_output = true
 open_weights = false
 
 [cost]
-input = 1.155
-output = 4.62
-cache_read = 0.2888
+input = 3.15
+output = 15.75
+cache_read = 0.315
+cache_write = 3.9375
 
 [limit]
 context = 200_000
-output = 100_000
+output = 64_000
 
 [modalities]
 input = ["text", "image"]
 output = ["text"]
-
-[interleaved]
-field = "reasoning_content"

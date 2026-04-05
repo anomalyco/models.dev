@@ -1,4 +1,4 @@
-name = "Gemini 2.5 Pro"
+name = "Gemini 2.5 Flash"
 family = "gemini"
 release_date = "2025-06-17"
 last_updated = "2025-06-17"
@@ -10,17 +10,14 @@ structured_output = true
 open_weights = false
 
 [cost]
-input = 1.3125
-output = 10.5
-cache_read = 0.328
+input = 0.315
+output = 2.625
+cache_read = 0.0788
 
 [limit]
-context = 2_097_152
+context = 1_048_576
 output = 65_536
 
 [modalities]
 input = ["text", "image", "audio", "video"]
 output = ["text"]
-
-[interleaved]
-field = "reasoning_content"

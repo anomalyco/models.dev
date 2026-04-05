@@ -1,7 +1,7 @@
-name = "GPT-4.1"
-family = "gpt"
-release_date = "2025-04-14"
-last_updated = "2025-04-14"
+name = "Grok 3"
+family = "grok"
+release_date = "2025-02-17"
+last_updated = "2025-02-17"
 attachment = true
 reasoning = false
 temperature = true
@@ -10,13 +10,12 @@ structured_output = true
 open_weights = false
 
 [cost]
-input = 2.1
-output = 8.4
-cache_read = 0.525
+input = 3.15
+output = 15.75
 
 [limit]
-context = 200_000
-output = 32_768
+context = 131_072
+output = 16_384
 
 [modalities]
 input = ["text", "image"]

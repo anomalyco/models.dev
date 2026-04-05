@@ -1,7 +1,7 @@
 name = "Claude Haiku 4.5"
 family = "claude"
-release_date = "2025-10-01"
-last_updated = "2025-10-01"
+release_date = "2025-10-15"
+last_updated = "2025-10-15"
 attachment = true
 reasoning = false
 temperature = true
@@ -10,13 +10,14 @@ structured_output = true
 open_weights = false
 
 [cost]
-input = 1
-output = 5
-cache_read = 0.1
+input = 1.05
+output = 5.25
+cache_read = 0.105
+cache_write = 1.3125
 
 [limit]
 context = 200_000
-output = 8_192
+output = 32_000
 
 [modalities]
 input = ["text", "image"]

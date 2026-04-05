@@ -1,22 +1,23 @@
 name = "Claude Sonnet 4.6"
 family = "claude"
-release_date = "2026-03-01"
-last_updated = "2026-03-01"
+release_date = "2026-02-15"
+last_updated = "2026-02-15"
 attachment = true
-reasoning = false
+reasoning = true
 temperature = true
 tool_call = true
 structured_output = true
 open_weights = false
 
 [cost]
-input = 3
-output = 15
-cache_read = 0.3
+input = 3.15
+output = 15.75
+cache_read = 0.315
+cache_write = 3.9375
 
 [limit]
 context = 200_000
-output = 16_000
+output = 64_000
 
 [modalities]
 input = ["text", "image"]
