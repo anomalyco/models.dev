@@ -1,0 +1,22 @@
+name = "Nemotron Nano 12B 2 VL"
+family = "nemotron"
+release_date = "2025-10-28"
+last_updated = "2025-10-28"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = false
+structured_output = true
+open_weights = true
+
+[cost]
+input = 0.2
+output = 0.6
+
+[limit]
+context = 131_072
+output = 131_072
+
+[modalities]
+input = ["image", "text", "video"]
+output = ["text"]

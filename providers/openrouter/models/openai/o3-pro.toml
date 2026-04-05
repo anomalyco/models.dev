@@ -1,0 +1,23 @@
+name = "o3 Pro"
+family = "o-pro"
+release_date = "2025-06-10"
+last_updated = "2025-06-10"
+attachment = true
+reasoning = true
+temperature = false
+tool_call = true
+structured_output = true
+open_weights = false
+knowledge = "2024-06"
+
+[cost]
+input = 20
+output = 80
+
+[limit]
+context = 200_000
+output = 100_000
+
+[modalities]
+input = ["text", "pdf", "image"]
+output = ["text"]

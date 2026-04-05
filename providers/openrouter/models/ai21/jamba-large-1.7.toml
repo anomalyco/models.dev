@@ -1,0 +1,23 @@
+name = "Jamba Large 1.7"
+family = "jamba"
+release_date = "2025-08-08"
+last_updated = "2025-08-08"
+attachment = false
+reasoning = false
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = false
+knowledge = "2024-08"
+
+[cost]
+input = 2
+output = 8
+
+[limit]
+context = 256_000
+output = 4_096
+
+[modalities]
+input = ["text"]
+output = ["text"]

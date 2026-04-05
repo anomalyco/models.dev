@@ -1,0 +1,23 @@
+name = "Gemma 2 27B"
+family = "gemma"
+release_date = "2024-07-13"
+last_updated = "2024-07-13"
+attachment = false
+reasoning = false
+temperature = true
+tool_call = false
+structured_output = true
+open_weights = true
+knowledge = "2024-06"
+
+[cost]
+input = 0.65
+output = 0.65
+
+[limit]
+context = 8_192
+output = 2_048
+
+[modalities]
+input = ["text"]
+output = ["text"]

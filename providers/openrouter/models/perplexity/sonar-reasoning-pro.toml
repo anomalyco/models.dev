@@ -1,0 +1,21 @@
+name = "Sonar Reasoning Pro"
+family = "sonar-reasoning"
+release_date = "2025-03-07"
+last_updated = "2025-03-07"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = false
+open_weights = false
+
+[cost]
+input = 2
+output = 8
+
+[limit]
+context = 128_000
+output = 128_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

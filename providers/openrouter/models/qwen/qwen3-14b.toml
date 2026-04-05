@@ -1,0 +1,23 @@
+name = "Qwen3 14B"
+family = "qwen"
+release_date = "2025-04-28"
+last_updated = "2025-04-28"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = true
+knowledge = "2025-03"
+
+[cost]
+input = 0.06
+output = 0.24
+
+[limit]
+context = 40_960
+output = 40_960
+
+[modalities]
+input = ["text"]
+output = ["text"]

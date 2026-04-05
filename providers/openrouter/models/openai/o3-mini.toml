@@ -1,0 +1,23 @@
+name = "o3 Mini"
+family = "o-mini"
+release_date = "2025-01-31"
+last_updated = "2025-01-31"
+attachment = true
+reasoning = true
+temperature = false
+tool_call = true
+structured_output = true
+open_weights = false
+knowledge = "2023-10"
+
+[cost]
+input = 1.1
+output = 4.4
+
+[limit]
+context = 200_000
+output = 100_000
+
+[modalities]
+input = ["text", "pdf"]
+output = ["text"]

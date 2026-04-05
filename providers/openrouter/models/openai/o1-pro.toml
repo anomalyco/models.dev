@@ -1,0 +1,23 @@
+name = "o1-pro"
+family = "o-pro"
+release_date = "2025-03-19"
+last_updated = "2025-03-19"
+attachment = true
+reasoning = true
+temperature = false
+tool_call = false
+structured_output = true
+open_weights = false
+knowledge = "2023-10"
+
+[cost]
+input = 150
+output = 600
+
+[limit]
+context = 200_000
+output = 100_000
+
+[modalities]
+input = ["text", "image", "pdf"]
+output = ["text"]

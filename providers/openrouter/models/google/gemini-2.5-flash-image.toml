@@ -1,0 +1,23 @@
+name = "Nano Banana (Gemini 2.5 Flash Image)"
+family = "gemini-flash"
+release_date = "2025-10-07"
+last_updated = "2025-10-07"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = false
+structured_output = true
+open_weights = false
+knowledge = "2025-01"
+
+[cost]
+input = 0.3
+output = 2.5
+
+[limit]
+context = 32_768
+output = 32_768
+
+[modalities]
+input = ["image", "text"]
+output = ["image", "text"]

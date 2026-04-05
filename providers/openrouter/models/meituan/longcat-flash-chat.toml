@@ -1,0 +1,23 @@
+name = "LongCat Flash Chat"
+family = "longcat"
+release_date = "2025-09-09"
+last_updated = "2025-09-09"
+attachment = false
+reasoning = false
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = false
+knowledge = "2025-03"
+
+[cost]
+input = 0.2
+output = 0.8
+
+[limit]
+context = 131_072
+output = 131_072
+
+[modalities]
+input = ["text"]
+output = ["text"]

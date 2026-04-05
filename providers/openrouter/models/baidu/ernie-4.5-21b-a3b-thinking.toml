@@ -1,0 +1,22 @@
+name = "ERNIE 4.5 21B A3B Thinking"
+family = "ernie"
+release_date = "2025-10-09"
+last_updated = "2025-10-09"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = false
+open_weights = false
+knowledge = "2025-03"
+
+[cost]
+input = 0.07
+output = 0.28
+
+[limit]
+context = 131_072
+output = 65_536
+
+[modalities]
+input = ["text"]
+output = ["text"]

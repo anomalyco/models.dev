@@ -1,0 +1,21 @@
+name = "Nova Premier 1.0"
+family = "nova-pro"
+release_date = "2025-10-31"
+last_updated = "2025-10-31"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = false
+open_weights = false
+
+[cost]
+input = 2.5
+output = 12.5
+
+[limit]
+context = 1_000_000
+output = 32_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
