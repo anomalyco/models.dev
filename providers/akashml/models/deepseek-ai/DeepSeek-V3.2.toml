@@ -1,0 +1,23 @@
+name              = "DeepSeek V3.2"
+attachment        = false
+reasoning         = true
+tool_call         = true
+structured_output = true
+temperature       = true
+release_date      = "2025-03"
+last_updated      = "2025-03"
+open_weights      = true
+family            = "deepseek"
+
+[cost]
+input  = 0.28
+output = 0.42
+
+[limit]
+context = 131_072
+input   = 131_072
+output  = 8_192
+
+[modalities]
+input  = ["text"]
+output = ["text"]
