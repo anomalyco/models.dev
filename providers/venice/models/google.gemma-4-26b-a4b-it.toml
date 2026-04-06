@@ -1,22 +1,21 @@
-name = "Gemma 4 31B"
+name = "Google Gemma 4 26B A4B Instruct"
 family = "gemma"
-release_date = "2026-04-02"
-last_updated = "2026-04-02"
 attachment = true
 reasoning = true
-temperature = true
-knowledge = "2025-01"
 tool_call = true
 structured_output = true
+temperature = true
+release_date = "2026-04-02"
+last_updated = "2026-04-04"
 open_weights = true
 
 [cost]
-input = 0.14
-output = 0.40
+input = 0.1625
+output = 0.5
 
 [limit]
-context = 262_144
-output = 131_072
+context = 256_000
+output = 12_288
 
 [modalities]
 input = ["text", "image", "video"]
