@@ -1,0 +1,21 @@
+name = "Trinity Large Thinking"
+family = "trinity"
+attachment = false
+reasoning = true
+tool_call = true
+temperature = true
+release_date = "2026-04-01"
+last_updated = "2026-04-03"
+open_weights = true
+
+[cost]
+input = 0.25
+output = 0.8999999999999999
+
+[limit]
+context = 262_100
+output = 80_000
+
+[modalities]
+input = ["text"]
+output = ["text"]
