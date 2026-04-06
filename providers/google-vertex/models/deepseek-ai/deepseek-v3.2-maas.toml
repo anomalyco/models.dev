@@ -1,0 +1,27 @@
+name = "DeepSeek V3.2"
+family = "deepseek"
+release_date = "2025-12-17"
+last_updated = "2026-04-04"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = true
+
+[cost]
+input = 0.56
+output = 1.68
+cache_read = 0.056
+
+[limit]
+context = 163_840
+output = 65_536
+
+[modalities]
+input = ["text", "pdf"]
+output = ["text"]
+
+[provider]
+npm = "@ai-sdk/openai-compatible"
+api = "https://${GOOGLE_VERTEX_ENDPOINT}/v1/projects/${GOOGLE_VERTEX_PROJECT}/locations/${GOOGLE_VERTEX_LOCATION}/endpoints/openapi"

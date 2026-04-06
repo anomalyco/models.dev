@@ -1,0 +1,22 @@
+name = "Google Gemma 4 26B A4B Instruct"
+family = "gemma"
+attachment = true
+reasoning = true
+tool_call = true
+structured_output = true
+temperature = true
+release_date = "2026-04-02"
+last_updated = "2026-04-04"
+open_weights = true
+
+[cost]
+input = 0.1625
+output = 0.5
+
+[limit]
+context = 256_000
+output = 12_288
+
+[modalities]
+input = ["text", "image", "video"]
+output = ["text"]
