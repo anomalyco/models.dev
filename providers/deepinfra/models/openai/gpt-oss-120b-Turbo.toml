@@ -1,0 +1,21 @@
+name = "GPT OSS 120B Turbo"
+family = "gpt-oss"
+release_date = "2025-08-05"
+last_updated = "2025-08-05"
+attachment = false
+reasoning = true
+tool_call = true
+temperature = true
+open_weights = true
+
+[cost]
+input = 0.15
+output = 0.60
+
+[limit]
+context = 131_072
+output = 131_072
+
+[modalities]
+input = ["text"]
+output = ["text"]

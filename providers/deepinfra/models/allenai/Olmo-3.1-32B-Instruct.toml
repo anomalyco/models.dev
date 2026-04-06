@@ -1,0 +1,21 @@
+name = "Olmo 3.1 32B Instruct"
+family = "allenai"
+release_date = "2026-01-07"
+last_updated = "2026-03-15"
+attachment = false
+reasoning = false
+tool_call = true
+temperature = true
+open_weights = true
+
+[cost]
+input = 0.20
+output = 0.60
+
+[limit]
+context = 65_536
+output = 65_536
+
+[modalities]
+input = ["text"]
+output = ["text"]

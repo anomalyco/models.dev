@@ -1,0 +1,21 @@
+name = "PaddleOCR-VL-0.9B"
+family = "o"
+release_date = "2025-10-22"
+last_updated = "2025-10-22"
+attachment = true
+reasoning = false
+tool_call = false
+temperature = true
+open_weights = true
+
+[cost]
+input = 0.14
+output = 0.80
+
+[limit]
+context = 16_384
+output = 16_384
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

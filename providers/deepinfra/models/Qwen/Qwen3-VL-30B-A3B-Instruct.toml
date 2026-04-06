@@ -1,0 +1,21 @@
+name = "Qwen 3 VL 30B A3B Instruct"
+family = "qwen"
+release_date = "2025-10-05"
+last_updated = "2025-11-25"
+attachment = true
+reasoning = false
+tool_call = true
+temperature = true
+open_weights = false
+
+[cost]
+input = 0.15
+output = 0.60
+
+[limit]
+context = 262_144
+output = 262_144
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

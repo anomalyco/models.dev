@@ -1,11 +1,12 @@
-name = "DeepSeek-V3.2"
+name = "DeepSeek V3.2"
+family = "deepseek"
 release_date = "2025-12-02"
 last_updated = "2025-12-02"
 attachment = false
 reasoning = true
+tool_call = true
 temperature = true
 knowledge = "2024-12"
-tool_call = true
 open_weights = false
 
 [interleaved]
@@ -18,7 +19,7 @@ cache_read = 0.13
 
 [limit]
 context = 163_840
-output = 64_000
+output = 163_840
 
 [modalities]
 input = ["text"]

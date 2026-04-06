@@ -1,0 +1,21 @@
+name = "Meta Llama 3.1 8B Instruct Turbo"
+family = "llama"
+release_date = "2024-07-23"
+last_updated = "2024-07-23"
+attachment = false
+reasoning = false
+tool_call = true
+temperature = true
+open_weights = true
+
+[cost]
+input = 0.02
+output = 0.03
+
+[limit]
+context = 131_072
+output = 131_072
+
+[modalities]
+input = ["text"]
+output = ["text"]

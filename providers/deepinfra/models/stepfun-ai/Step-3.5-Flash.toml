@@ -1,0 +1,22 @@
+name = "Step-3.5-Flash"
+family = "step"
+release_date = "2026-04-06"
+last_updated = "2026-04-06"
+attachment = false
+reasoning = false
+tool_call = false
+temperature = true
+open_weights = false
+
+[cost]
+input = 0.10
+output = 0.30
+cache_read = 0.02
+
+[limit]
+context = 262_144
+output = 262_144
+
+[modalities]
+input = ["text"]
+output = ["text"]

@@ -1,0 +1,21 @@
+name = "Qwen 3 30B A3B"
+family = "qwen"
+release_date = "2025-04-29"
+last_updated = "2025-04-29"
+attachment = false
+reasoning = true
+tool_call = true
+temperature = true
+open_weights = true
+
+[cost]
+input = 0.08
+output = 0.28
+
+[limit]
+context = 40_960
+output = 40_960
+
+[modalities]
+input = ["text"]
+output = ["text"]

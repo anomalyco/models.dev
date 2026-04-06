@@ -1,0 +1,22 @@
+name = "Seed-2.0-mini"
+family = "seed"
+release_date = "2026-02-26"
+last_updated = "2026-02-26"
+attachment = true
+reasoning = true
+tool_call = true
+temperature = true
+open_weights = false
+
+[cost]
+input = 0.10
+output = 0.40
+cache_read = 0.02
+
+[limit]
+context = 256_000
+output = 256_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

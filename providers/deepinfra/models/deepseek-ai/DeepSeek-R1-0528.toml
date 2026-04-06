@@ -1,24 +1,25 @@
-name = "DeepSeek-R1-0528"
+name = "DeepSeek R1 0528"
+family = "deepseek"
 release_date = "2025-05-28"
 last_updated = "2025-05-28"
 attachment = false
 reasoning = true
+tool_call = true
 temperature = true
 knowledge = "2024-07"
-tool_call = false
 open_weights = false
 
 [interleaved]
 field = "reasoning_content"
 
 [cost]
-input = 0.5
+input = 0.50
 output = 2.15
 cache_read = 0.35
 
 [limit]
 context = 163_840
-output = 64_000
+output = 163_840
 
 [modalities]
 input = ["text"]

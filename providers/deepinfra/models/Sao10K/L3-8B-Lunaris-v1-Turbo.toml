@@ -1,0 +1,21 @@
+name = "L3 8B Lunaris v1 Turbo"
+family = "o"
+release_date = "2024-08-13"
+last_updated = "2026-03-15"
+attachment = false
+reasoning = false
+tool_call = false
+temperature = true
+open_weights = true
+
+[cost]
+input = 0.04
+output = 0.05
+
+[limit]
+context = 8_192
+output = 8_192
+
+[modalities]
+input = ["text"]
+output = ["text"]

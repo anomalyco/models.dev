@@ -1,0 +1,22 @@
+name = "Mixtral 8x7B Instruct v0.1"
+family = "mixtral"
+release_date = "2023-12-11"
+last_updated = "2023-12-11"
+attachment = false
+reasoning = false
+tool_call = true
+temperature = true
+knowledge = "2024-01"
+open_weights = true
+
+[cost]
+input = 0.54
+output = 0.54
+
+[limit]
+context = 32_768
+output = 32_768
+
+[modalities]
+input = ["text"]
+output = ["text"]

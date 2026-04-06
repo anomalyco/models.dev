@@ -1,0 +1,21 @@
+name = "olmOCR-2-7B-1025"
+family = "allenai"
+release_date = "2025-10-22"
+last_updated = "2025-10-22"
+attachment = true
+reasoning = false
+tool_call = false
+temperature = true
+open_weights = true
+
+[cost]
+input = 0.09
+output = 0.19
+
+[limit]
+context = 16_384
+output = 16_384
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

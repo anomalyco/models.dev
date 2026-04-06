@@ -1,13 +1,12 @@
-# https://deepinfra.com/zai-org/GLM-4.6
-name = "GLM-4.6"
+name = "GLM 4.6"
 family = "glm"
 release_date = "2025-09-30"
 last_updated = "2025-09-30"
-knowledge = "2025-04"
 attachment = false
 reasoning = true
-temperature = true
 tool_call = true
+temperature = true
+knowledge = "2025-04"
 open_weights = true
 
 [interleaved]
@@ -19,8 +18,8 @@ output = 1.74
 cache_read = 0.08
 
 [limit]
-context = 204_800
-output = 131_072
+context = 202_752
+output = 202_752
 
 [modalities]
 input = ["text"]

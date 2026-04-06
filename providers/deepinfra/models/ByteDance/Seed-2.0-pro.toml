@@ -1,0 +1,22 @@
+name = "Seed-2.0-pro"
+family = "seed"
+release_date = "2026-02-14"
+last_updated = "2026-02-14"
+attachment = true
+reasoning = true
+tool_call = true
+temperature = true
+open_weights = false
+
+[cost]
+input = 0.50
+output = 3.00
+cache_read = 0.10
+
+[limit]
+context = 256_000
+output = 256_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

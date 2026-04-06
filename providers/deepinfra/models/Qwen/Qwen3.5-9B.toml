@@ -1,0 +1,22 @@
+name = "Qwen 3.5 9B"
+family = "qwen"
+release_date = "2026-03-10"
+last_updated = "2026-03-15"
+attachment = true
+reasoning = false
+tool_call = true
+temperature = true
+knowledge = "2026-01"
+open_weights = true
+
+[cost]
+input = 0.04
+output = 0.20
+
+[limit]
+context = 262_144
+output = 262_144
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

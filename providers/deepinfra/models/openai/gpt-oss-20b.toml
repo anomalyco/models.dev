@@ -1,13 +1,11 @@
-# https://deepinfra.com/openai/gpt-oss-20b
-
 name = "GPT OSS 20B"
 family = "gpt-oss"
 release_date = "2025-08-05"
 last_updated = "2025-08-05"
 attachment = false
 reasoning = true
-temperature = true
 tool_call = true
+temperature = true
 open_weights = true
 
 [cost]
@@ -16,8 +14,7 @@ output = 0.14
 
 [limit]
 context = 131_072
-# https://deepinfra.com/docs/advanced/max_tokens_limit
-output = 16_384	
+output = 131_072
 
 [modalities]
 input = ["text"]

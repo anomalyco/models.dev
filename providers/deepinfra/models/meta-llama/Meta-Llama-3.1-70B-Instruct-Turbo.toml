@@ -1,10 +1,12 @@
-name = "Llama 3.1 70B Turbo"
+name = "Meta-Llama-3.1-70B-Instruct-Turbo"
 family = "llama"
-release_date = "2024-07-23"
-last_updated = "2024-07-23"
+release_date = "2024-12-06"
+last_updated = "2024-12-06"
 attachment = false
 reasoning = false
 tool_call = true
+temperature = true
+knowledge = "2023-12"
 open_weights = true
 
 [cost]
@@ -13,7 +15,7 @@ output = 0.40
 
 [limit]
 context = 131_072
-output = 16_384
+output = 131_072
 
 [modalities]
 input = ["text"]

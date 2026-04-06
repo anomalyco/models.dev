@@ -1,0 +1,22 @@
+name = "Claude 4 Sonnet"
+family = "claude"
+release_date = "2025-05-22"
+last_updated = "2025-05-22"
+attachment = true
+reasoning = true
+tool_call = true
+temperature = true
+knowledge = "2025-03-31"
+open_weights = false
+
+[cost]
+input = 3.30
+output = 16.50
+
+[limit]
+context = 200_000
+output = 200_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

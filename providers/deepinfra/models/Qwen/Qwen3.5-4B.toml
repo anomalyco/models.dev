@@ -1,0 +1,22 @@
+name = "Qwen 3.5 4B"
+family = "qwen"
+release_date = "2026-03-02"
+last_updated = "2026-03-02"
+attachment = true
+reasoning = true
+tool_call = true
+temperature = true
+knowledge = "2026-01"
+open_weights = true
+
+[cost]
+input = 0.03
+output = 0.15
+
+[limit]
+context = 262_144
+output = 262_144
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
