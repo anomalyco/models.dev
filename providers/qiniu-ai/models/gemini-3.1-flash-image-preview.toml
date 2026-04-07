@@ -1,0 +1,17 @@
+name = "Gemini 3.1 Flash Image Preview"
+release_date = "2026-04-07"
+last_updated = "2026-04-07"
+attachment = true
+reasoning = true
+tool_call = false
+temperature = true
+structured_output = false
+open_weights = false
+
+[limit]
+context = 131_072
+output = 32_768
+
+[modalities]
+input = ["text", "image", "pdf"]
+output = ["text", "image"]

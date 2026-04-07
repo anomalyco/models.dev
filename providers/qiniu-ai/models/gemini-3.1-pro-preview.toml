@@ -1,0 +1,17 @@
+name = "Gemini 3.1 Pro Preview"
+release_date = "2026-04-07"
+last_updated = "2026-04-07"
+attachment = true
+reasoning = true
+tool_call = true
+temperature = true
+structured_output = true
+open_weights = false
+
+[limit]
+context = 1_048_576
+output = 65_536
+
+[modalities]
+input = ["text", "image", "video", "audio", "pdf"]
+output = ["text"]
