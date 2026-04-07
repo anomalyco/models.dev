@@ -1,0 +1,23 @@
+name              = "Qwen3.5 35B A3B"
+release_date      = "2025-01"
+last_updated      = "2026-04-05"
+attachment        = false
+reasoning         = false
+tool_call         = false
+structured_output = false
+temperature       = true
+open_weights      = true
+family            = "qwen"
+
+[cost]
+input  = 0.23
+output = 1.80
+
+[limit]
+context = 262_144
+input   = 262_144
+output  = 262_144
+
+[modalities]
+input  = ["text"]
+output = ["text"]
