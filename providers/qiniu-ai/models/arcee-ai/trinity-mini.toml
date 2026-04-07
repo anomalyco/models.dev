@@ -1,17 +1,17 @@
-name = "Kling-V2 6"
-release_date = "2026-01-13"
-last_updated = "2026-01-13"
+name = "Arcee Trinity Mini"
+release_date = "2026-04-07"
+last_updated = "2026-04-07"
 attachment = true
 reasoning = false
-tool_call = false
+tool_call = true
 temperature = true
 structured_output = false
 open_weights = false
 
 [limit]
-context = 99_999_999
-output = 99_999_999
+context = 256_000
+output = 64_000
 
 [modalities]
 input = ["text", "image", "video"]
-output = ["video"]
+output = ["text"]

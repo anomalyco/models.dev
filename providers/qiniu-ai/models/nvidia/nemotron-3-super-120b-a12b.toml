@@ -1,16 +1,16 @@
-name = "Deepseek/Deepseek-Math-V2"
-release_date = "2025-12-04"
-last_updated = "2025-12-04"
+name = "Nemotron-3-Super-120B-A12B"
+release_date = "2026-04-07"
+last_updated = "2026-04-07"
 attachment = false
 reasoning = true
-tool_call = false
+tool_call = true
 temperature = true
 structured_output = false
 open_weights = false
 
 [limit]
-context = 160_000
-output = 160_000
+context = 128_000
+output = 64_000
 
 [modalities]
 input = ["text"]

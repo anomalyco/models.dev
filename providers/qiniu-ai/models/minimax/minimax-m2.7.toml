@@ -1,16 +1,16 @@
-name = "Claude 3.5 Haiku"
-release_date = "2025-08-26"
-last_updated = "2025-08-26"
+name = "Minimax/Minimax-M2.7"
+release_date = "2026-04-07"
+last_updated = "2026-04-07"
 attachment = true
-reasoning = false
+reasoning = true
 tool_call = true
 temperature = true
 structured_output = false
 open_weights = false
 
 [limit]
-context = 200_000
-output = 8_192
+context = 256_000
+output = 64_000
 
 [modalities]
 input = ["text", "image"]
