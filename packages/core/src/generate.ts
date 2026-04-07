@@ -42,6 +42,9 @@ export async function generate(directory: string) {
       }
       provider.data.models[modelID] = model.data;
     }
+    if (provider.data.api) {
+      (provider.data as any).baseURL = provider.data.api;
+    }
     result[providerID] = provider.data;
   }
 
