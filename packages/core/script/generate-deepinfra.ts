@@ -38,6 +38,16 @@ const MODEL_REGEX_DENYLIST: RegExp[] = [
   /embed/i,
 
   /(^|\/)FLUX/i,
+
+  // Old Google models
+  /gemini-1.5/i,
+  /gemini-2.5/i,
+  /gemma-3/i,
+
+  // Old Llama models
+  /Llama-3-/i,
+  /Llama-3.1-/i,
+
   /Janus-Pro/i,
   /p-image/i,
 
@@ -46,6 +56,7 @@ const MODEL_REGEX_DENYLIST: RegExp[] = [
 
   // Qwen 2.5 models are obsolete
   /Qwen2.5/i,
+
   /Seedream/i,
 ];
 
