@@ -16,33 +16,46 @@ import { ModelFamilyValues } from "../src/family.js";
 
 const API_ENDPOINT = "https://api.deepinfra.com/v1/openai/models";
 
-const PROVIDER_DENYLIST: string[] = [
-  "BAAI",
-  "Bria",
-  "Clarity",
-  "ClarityAI",
-  "intfloat",
-  "sentence-transformers",
-  "shibing624",
-  "stabilityai",
-  "thenlper",
-  "Wan-AI",
+// Allowlist of providers to include - only these providers will be tracked
+// This is intentionally restrictive since most models shouldn't be included
+const PROVIDER_ALLOWLIST: string[] = [
+  "anthropic",
+  "deepseek-ai",
+  "google",
+  "meta-llama",
+  "MiniMaxAI",
+  "moonshotai",
+  "nvidia",
+  "openai",
+  "Qwen",
+  "stepfun-ai",
+  "zai-org",
 ];
 
+// Models/patterns to skip even from allowed providers (embeddings, image gen, etc.)
 const MODEL_REGEX_DENYLIST: RegExp[] = [
+  // Avoid most embedding models
   /embed/i,
+
   /(^|\/)FLUX/i,
-  /Seedream/i,
   /Janus-Pro/i,
   /p-image/i,
+
+  // Avoid any Qwen image generation models
   /Qwen-Image/i,
+
+  // Qwen 2.5 models are obsolete
+  /Qwen2.5/i,
+  /Seedream/i,
 ];
 
 function shouldSkipModel(modelId: string): boolean {
   const provider = modelId.split("/")[0];
-  if (provider && PROVIDER_DENYLIST.includes(provider)) {
+  // Skip if provider is not in the allowlist
+  if (!provider || !PROVIDER_ALLOWLIST.includes(provider)) {
     return true;
   }
+  // Also skip models matching excluded patterns (embeddings, image gen, etc.)
   return MODEL_REGEX_DENYLIST.some((pattern) => pattern.test(modelId));
 }
 
@@ -433,7 +446,9 @@ function detectChanges(
     if (oldPrice === 0 && newPrice === undefined) return false;
 
     if (oldPrice !== undefined && newPrice !== undefined) {
-      return (oldPrice as number).toFixed(2) !== (newPrice as number).toFixed(2);
+      return (
+        (oldPrice as number).toFixed(2) !== (newPrice as number).toFixed(2)
+      );
     }
 
     return oldPrice !== newPrice;
