@@ -1,0 +1,22 @@
+name = "gemini-3.1-flash-lite-preview"
+family = "gemini-flash-lite"
+release_date = "2026-04"
+last_updated = "2026-04"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[cost]
+input = 0.2375
+output = 1.425
+
+[limit]
+context = 1_048_576
+output = 65_536
+
+[modalities]
+input = ["text", "image", "video", "audio"]
+output = ["text"]

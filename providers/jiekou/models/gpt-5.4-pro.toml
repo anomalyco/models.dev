@@ -1,0 +1,22 @@
+name = "gpt-5.4-pro"
+family = "gpt-pro"
+release_date = "2026-04"
+last_updated = "2026-04"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = false
+open_weights = false
+
+[cost]
+input = 28.5
+output = 171
+
+[limit]
+context = 1_050_000
+output = 128_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
