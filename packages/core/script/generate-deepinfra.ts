@@ -39,6 +39,10 @@ const MODEL_REGEX_DENYLIST: RegExp[] = [
 
   /(^|\/)FLUX/i,
 
+  // Old DeepSeek models
+  /DeepSeek-V3(?!\.)/i,
+  /DeepSeek-V3.1/i,
+
   // Old Google models
   /gemini-1.5/i,
   /gemini-2.5/i,
