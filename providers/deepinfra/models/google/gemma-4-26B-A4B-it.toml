@@ -1,0 +1,22 @@
+name = "Gemma 4 26B A4B"
+family = "gemma"
+release_date = "2026-04-02"
+last_updated = "2026-04-02"
+attachment = true
+reasoning = true
+tool_call = true
+temperature = true
+open_weights = true
+
+[cost]
+input = 0.08
+output = 0.35
+cache_read = 0.01
+
+[limit]
+context = 262_144
+output = 262_144
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
