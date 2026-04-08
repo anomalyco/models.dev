@@ -1,0 +1,16 @@
+name = "gemma4:31b"
+family = "gemma"
+release_date = "2026-04-02"
+last_updated = "2026-04-06"
+attachment = true
+reasoning = true
+tool_call = true
+open_weights = true
+
+[limit]
+context = 262144
+output = 262144
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
