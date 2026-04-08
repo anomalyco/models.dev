@@ -1,0 +1,22 @@
+name = "Claude Sonnet 3.7"
+family = "claude-sonnet"
+release_date = "2025-02-19"
+last_updated = "2025-02-19"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+knowledge = "2024-10-31"
+open_weights = false
+
+[cost]
+input = 3.31
+output = 16.55
+
+[limit]
+context = 200_000
+output = 64_000
+
+[modalities]
+input = ["text", "image", "pdf"]
+output = ["text"]
