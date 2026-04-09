@@ -82,6 +82,7 @@ interface ExistingModel {
   };
   limit?: {
     context?: number;
+    input?: number;
     output?: number;
   };
   modalities?: {
@@ -114,6 +115,7 @@ interface MergedModel {
   };
   limit: {
     context: number;
+    input?: number;
     output: number;
   };
   modalities: {
@@ -143,6 +145,25 @@ function formatNumber(n: number): string {
   return n.toString();
 }
 
+function formatCostNumber(n: number): string {
+  if (Number.isInteger(n)) {
+    return n.toFixed(2);
+  }
+
+  const asHundredths = Number(n.toFixed(2));
+  if (Math.abs(n - asHundredths) < 1e-9) {
+    return n.toFixed(2);
+  }
+
+  return n.toString();
+}
+
+function containsFamilyToken(target: string, family: string): boolean {
+  const escaped = family.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  const regex = new RegExp(`(^|[^a-z0-9])${escaped}([^a-z0-9]|$)`, "i");
+  return regex.test(target);
+}
+
 function isSubstring(target: string, family: string): boolean {
   return target.toLowerCase().includes(family.toLowerCase());
 }
@@ -165,12 +186,25 @@ function inferFamily(modelId: string, modelName: string): string | undefined {
   const sortedFamilies = [...ModelFamilyValues].sort((a, b) => b.length - a.length);
 
   for (const family of sortedFamilies) {
-    if (isSubstring(modelId, family) || isSubstring(modelName, family)) {
+    if (
+      family.length >= 3
+      && (isSubstring(modelId, family) || isSubstring(modelName, family))
+    ) {
+      return family;
+    }
+
+    if (
+      family.length < 3
+      && (containsFamilyToken(modelId, family) || containsFamilyToken(modelName, family))
+    ) {
       return family;
     }
   }
 
   for (const family of sortedFamilies) {
+    if (family.length < 3) {
+      continue;
+    }
     if (matchesFamily(modelId, family) || matchesFamily(modelName, family)) {
       return family;
     }
@@ -204,7 +238,11 @@ function boolFromParams(params: string[], keys: string[]): boolean {
 
 function pricingToPerMillion(value: string | undefined): number | undefined {
   if (!value) return undefined;
-  return Number(value) * 1_000_000;
+  const parsed = Number(value) * 1_000_000;
+  if (!Number.isFinite(parsed) || parsed < 0) {
+    return undefined;
+  }
+  return parsed;
 }
 
 function hasOpenWeights(huggingFaceId: string | null | undefined): boolean {
@@ -268,6 +306,7 @@ function mergeModel(
     status: existing?.status,
     limit: {
       context: contextLimit,
+      input: existing?.limit?.input,
       output: outputLimit,
     },
     modalities: {
@@ -320,28 +359,31 @@ function formatToml(model: MergedModel): string {
   if (model.cost) {
     lines.push("");
     lines.push(`[cost]`);
-    lines.push(`input = ${model.cost.input}`);
-    lines.push(`output = ${model.cost.output}`);
+    lines.push(`input = ${formatCostNumber(model.cost.input)}`);
+    lines.push(`output = ${formatCostNumber(model.cost.output)}`);
     if (model.cost.reasoning !== undefined) {
-      lines.push(`reasoning = ${model.cost.reasoning}`);
+      lines.push(`reasoning = ${formatCostNumber(model.cost.reasoning)}`);
     }
     if (model.cost.cache_read !== undefined) {
-      lines.push(`cache_read = ${model.cost.cache_read}`);
+      lines.push(`cache_read = ${formatCostNumber(model.cost.cache_read)}`);
     }
     if (model.cost.cache_write !== undefined) {
-      lines.push(`cache_write = ${model.cost.cache_write}`);
+      lines.push(`cache_write = ${formatCostNumber(model.cost.cache_write)}`);
     }
     if (model.cost.input_audio !== undefined) {
-      lines.push(`input_audio = ${model.cost.input_audio}`);
+      lines.push(`input_audio = ${formatCostNumber(model.cost.input_audio)}`);
     }
     if (model.cost.output_audio !== undefined) {
-      lines.push(`output_audio = ${model.cost.output_audio}`);
+      lines.push(`output_audio = ${formatCostNumber(model.cost.output_audio)}`);
     }
   }
 
   lines.push("");
   lines.push(`[limit]`);
   lines.push(`context = ${formatNumber(model.limit.context)}`);
+  if (model.limit.input !== undefined) {
+    lines.push(`input = ${formatNumber(model.limit.input)}`);
+  }
   lines.push(`output = ${formatNumber(model.limit.output)}`);
 
   lines.push("");
@@ -366,10 +408,8 @@ function detectChanges(existing: ExistingModel | null, merged: MergedModel): Cha
   };
 
   const compare = (field: string, oldValue: unknown, newValue: unknown) => {
-    const isDiff = field.startsWith("cost.")
-      ? (oldValue === undefined || newValue === undefined
-        ? oldValue !== newValue
-        : Math.abs((oldValue as number) - (newValue as number)) > epsilon)
+    const isDiff = typeof oldValue === "number" && typeof newValue === "number"
+      ? Math.abs(oldValue - newValue) > epsilon
       : JSON.stringify(oldValue) !== JSON.stringify(newValue);
 
     if (isDiff) {
@@ -399,6 +439,7 @@ function detectChanges(existing: ExistingModel | null, merged: MergedModel): Cha
   compare("cost.input_audio", existing.cost?.input_audio, merged.cost?.input_audio);
   compare("cost.output_audio", existing.cost?.output_audio, merged.cost?.output_audio);
   compare("limit.context", existing.limit?.context, merged.limit.context);
+  compare("limit.input", existing.limit?.input, merged.limit.input);
   compare("limit.output", existing.limit?.output, merged.limit.output);
   compare("modalities.input", existing.modalities?.input, merged.modalities.input);
   compare("modalities.output", existing.modalities?.output, merged.modalities.output);
