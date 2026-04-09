@@ -6,10 +6,11 @@
  * Flags:
  * --dry-run: Preview changes without writing files
  * --new-only: Only create new models, skip updating existing ones
+ * --delete-orphaned: Delete local model files not present in the API response
  */
 
 import path from "node:path";
-import { mkdir } from "node:fs/promises";
+import { mkdir, unlink } from "node:fs/promises";
 import { z } from "zod";
 import { ModelFamilyValues } from "../src/family.js";
 
@@ -409,6 +410,7 @@ async function main() {
   const args = process.argv.slice(2);
   const dryRun = args.includes("--dry-run");
   const newOnly = args.includes("--new-only");
+  const deleteOrphaned = args.includes("--delete-orphaned");
 
   const modelsDir = path.join(
     import.meta.dirname,
@@ -420,8 +422,13 @@ async function main() {
     "models",
   );
 
-  console.log(`${dryRun ? "[DRY RUN] " : ""}${newOnly ? "[NEW ONLY] " : ""}Fetching OpenRouter models from API...
-`);
+  const modeLabels = [
+    dryRun ? "[DRY RUN]" : "",
+    newOnly ? "[NEW ONLY]" : "",
+    deleteOrphaned ? "[DELETE ORPHANED]" : "",
+  ].filter(Boolean).join(" ");
+
+  console.log(`${modeLabels ? `${modeLabels} ` : ""}Fetching OpenRouter models from API...\n`);
 
   const res = await fetch(API_ENDPOINT);
   if (!res.ok) {
@@ -506,18 +513,31 @@ async function main() {
   for (const file of existingFiles) {
     if (!apiModelIds.has(file)) {
       orphaned.push(file);
-      console.log(`Warning: Orphaned file (not in API): ${file}`);
+      if (deleteOrphaned) {
+        const filePath = path.join(modelsDir, file);
+        if (dryRun) {
+          console.log(`[DRY RUN] Would delete orphaned: ${file}`);
+        } else {
+          await unlink(filePath);
+          console.log(`Deleted orphaned: ${file}`);
+        }
+      } else {
+        console.log(`Warning: Orphaned file (not in API): ${file}`);
+      }
     }
   }
 
   console.log("");
+  const orphanedSummary = deleteOrphaned
+    ? `${orphaned.length} orphaned${dryRun ? " would be deleted" : " deleted"}`
+    : `${orphaned.length} orphaned`;
   if (dryRun) {
     console.log(
-      `Summary: ${created} would be created, ${updated} would be updated, ${unchanged} unchanged, ${orphaned.length} orphaned`,
+      `Summary: ${created} would be created, ${updated} would be updated, ${unchanged} unchanged, ${orphanedSummary}`,
     );
   } else {
     console.log(
-      `Summary: ${created} created, ${updated} updated, ${unchanged} unchanged, ${orphaned.length} orphaned`,
+      `Summary: ${created} created, ${updated} updated, ${unchanged} unchanged, ${orphanedSummary}`,
     );
   }
 }
