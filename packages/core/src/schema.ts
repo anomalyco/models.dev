@@ -134,6 +134,7 @@ export const Provider = z
     env: z.array(z.string()).min(1, "Provider env cannot be empty"),
     npm: z.string().min(1, "Provider npm module cannot be empty"),
     api: z.string().optional(),
+    auth_type: z.enum(["bearer"]).optional(),
     name: z.string().min(1, "Provider name cannot be empty"),
     doc: z
       .string()
