@@ -1,0 +1,22 @@
+name = "Qwen 3.6 Plus"
+family = "qwen"
+attachment = true
+reasoning = true
+tool_call = true
+temperature = true
+release_date = "2026-04-02"
+last_updated = "2026-04-03"
+open_weights = false
+
+[cost]
+input = 0.5
+output = 3
+cache_read = 0.1
+
+[limit]
+context = 1_000_000
+output = 64_000
+
+[modalities]
+input = ["text", "image", "pdf"]
+output = ["text"]

@@ -1,0 +1,27 @@
+name = "Nemotron 3 Super 120B"
+family = "nemotron"
+attachment = false
+reasoning = true
+tool_call = true
+structured_output = true
+temperature = true
+release_date = "2026-03-11"
+knowledge = "2024-04"
+last_updated = "2026-04-03"
+open_weights = true
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.3
+output = 1
+cache_read = 0.3
+
+[limit]
+context = 262144
+output = 65536
+
+[modalities]
+input = ["text"]
+output = ["text"]

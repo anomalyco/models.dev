@@ -1,0 +1,23 @@
+name = "Mercury 2"
+family = "mercury"
+attachment = false
+reasoning = true
+tool_call = true
+structured_output = true
+temperature = true
+release_date = "2026-02-20"
+last_updated = "2026-04-09"
+open_weights = false
+
+[cost]
+input = 0.3125
+output = 0.9375
+cache_read = 0.03125
+
+[limit]
+context = 128_000
+output = 50_000
+
+[modalities]
+input = ["text"]
+output = ["text"]
