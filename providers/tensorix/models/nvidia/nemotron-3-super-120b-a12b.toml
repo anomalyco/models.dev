@@ -1,0 +1,20 @@
+name = "Nemotron 3 Super 120B"
+family = "nemotron"
+release_date = "2025-10-01"
+last_updated = "2025-10-01"
+attachment = false
+reasoning = true
+tool_call = true
+open_weights = true
+
+[cost]
+input = 0.3
+output = 0.9
+
+[limit]
+context = 262_144
+output = 16_384
+
+[modalities]
+input = ["text"]
+output = ["text"]

@@ -1,0 +1,20 @@
+name = "Qwen3 Coder 30B"
+family = "qwen"
+release_date = "2025-09-01"
+last_updated = "2025-09-01"
+attachment = false
+reasoning = false
+tool_call = true
+open_weights = true
+
+[cost]
+input = 0.06
+output = 0.25
+
+[limit]
+context = 262_144
+output = 16_384
+
+[modalities]
+input = ["text"]
+output = ["text"]

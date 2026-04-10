@@ -1,0 +1,20 @@
+name = "GLM 5"
+family = "glm"
+release_date = "2026-02-11"
+last_updated = "2026-02-11"
+attachment = false
+reasoning = true
+tool_call = true
+open_weights = true
+
+[cost]
+input = 1.0
+output = 3.2
+
+[limit]
+context = 204_800
+output = 16_384
+
+[modalities]
+input = ["text"]
+output = ["text"]

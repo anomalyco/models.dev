@@ -1,0 +1,20 @@
+name = "Llama 4 Maverick"
+family = "llama"
+release_date = "2025-04-05"
+last_updated = "2025-04-05"
+attachment = false
+reasoning = false
+tool_call = true
+open_weights = true
+
+[cost]
+input = 0.14
+output = 0.68
+
+[limit]
+context = 1_048_576
+output = 16_384
+
+[modalities]
+input = ["text"]
+output = ["text"]
