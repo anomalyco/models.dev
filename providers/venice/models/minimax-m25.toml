@@ -5,20 +5,20 @@ reasoning = true
 tool_call = true
 temperature = true
 release_date = "2026-02-12"
-last_updated = "2026-02-19"
+last_updated = "2026-03-16"
 open_weights = true
 
 [interleaved]
 field = "reasoning_content"
 
 [cost]
-input = 0.4
-output = 1.6
+input = 0.34
+output = 1.19
 cache_read = 0.04
 
 [limit]
 context = 198_000
-output = 32_000
+output = 32_768
 
 [modalities]
 input = ["text"]

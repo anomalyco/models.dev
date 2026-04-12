@@ -1,0 +1,20 @@
+name = "Amazon: Nova Premier 1.0"
+release_date = "2025-11-01"
+last_updated = "2026-03-15"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = true
+open_weights = false
+
+[cost]
+input = 2.5
+output = 12.5
+
+[limit]
+context = 1000000
+output = 32000
+
+[modalities]
+input = ["image", "text"]
+output = ["text"]

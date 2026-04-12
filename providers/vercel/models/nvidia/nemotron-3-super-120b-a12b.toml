@@ -1,0 +1,21 @@
+name = "NVIDIA Nemotron 3 Super 120B A12B"
+family = "nemotron"
+attachment = false
+reasoning = false
+tool_call = false
+temperature = true
+release_date = "2026-03-18"
+last_updated = "2026-03-30"
+open_weights = false
+
+[cost]
+input = 0.15
+output = 0.65
+
+[limit]
+context = 256_000
+output = 32_000
+
+[modalities]
+input = ["text"]
+output = ["text"]

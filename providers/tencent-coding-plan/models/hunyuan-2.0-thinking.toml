@@ -1,0 +1,26 @@
+name = "Tencent HY 2.0 Think"
+family = "hunyuan"
+release_date = "2026-03-08"
+last_updated = "2026-03-08"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+open_weights = false
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0
+output = 0
+cache_read = 0
+cache_write = 0
+
+[limit]
+context = 131_072
+output = 16_384
+
+[modalities]
+input = ["text"]
+output = ["text"]

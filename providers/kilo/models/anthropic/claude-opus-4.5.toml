@@ -1,6 +1,6 @@
 name = "Anthropic: Claude Opus 4.5"
 release_date = "2025-11-24"
-last_updated = "2025-11-24"
+last_updated = "2026-03-15"
 attachment = true
 reasoning = true
 temperature = true
@@ -8,8 +8,8 @@ tool_call = true
 open_weights = false
 
 [cost]
-input = 5.0
-output = 25.0
+input = 5
+output = 25
 cache_read = 0.5
 cache_write = 6.25
 
@@ -18,5 +18,5 @@ context = 200000
 output = 64000
 
 [modalities]
-input = ["image", "text"]
+input = ["image", "pdf", "text"]
 output = ["text"]

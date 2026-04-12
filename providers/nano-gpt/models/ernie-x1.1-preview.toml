@@ -1,0 +1,21 @@
+name = "ERNIE X1.1"
+release_date = "2025-09-10"
+last_updated = "2025-09-10"
+attachment = true
+reasoning = false
+tool_call = false
+structured_output = false
+open_weights = false
+
+[cost]
+input = 0.15
+output = 0.6
+
+[limit]
+context = 64_000
+input = 64_000
+output = 8_192
+
+[modalities]
+input = ["text", "pdf"]
+output = ["text"]

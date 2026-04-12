@@ -1,0 +1,22 @@
+name = "Llama-xLAM-2 70B fc-r"
+family = "llama"
+release_date = "2025-04-13"
+last_updated = "2025-04-13"
+attachment = false
+reasoning = false
+tool_call = false
+structured_output = false
+open_weights = false
+
+[cost]
+input = 2.5
+output = 2.5
+
+[limit]
+context = 128_000
+input = 128_000
+output = 16_384
+
+[modalities]
+input = ["text"]
+output = ["text"]

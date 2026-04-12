@@ -1,0 +1,19 @@
+name = "OpenAI: GPT-5.4"
+release_date = "2026-03-06"
+last_updated = "2026-03-15"
+attachment = true
+reasoning = true
+tool_call = true
+open_weights = false
+
+[cost]
+input = 2.5
+output = 15
+
+[limit]
+context = 1050000
+output = 128000
+
+[modalities]
+input = ["image", "pdf", "text"]
+output = ["text"]

@@ -1,0 +1,23 @@
+name = "Nemotron-3-Super-120B-A12B"
+attachment = false
+reasoning = true
+tool_call = true
+structured_output = true
+temperature = true
+knowledge = "2026-02"
+release_date = "2026-03-11"
+last_updated = "2026-03-12"
+open_weights = true
+
+[cost]
+input = 0.30
+output = 0.90
+
+[limit]
+context = 256_000
+input = 256_000
+output = 32_768
+
+[modalities]
+input = ["text"]
+output = ["text"]

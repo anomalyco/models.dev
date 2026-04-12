@@ -1,0 +1,22 @@
+name = "Cogito v2.1 671B MoE"
+family = "cogito"
+release_date = "2025-11-19"
+last_updated = "2025-11-19"
+attachment = false
+reasoning = true
+tool_call = false
+structured_output = false
+open_weights = false
+
+[cost]
+input = 1.25
+output = 1.25
+
+[limit]
+context = 128_000
+input = 128_000
+output = 16_384
+
+[modalities]
+input = ["text"]
+output = ["text"]

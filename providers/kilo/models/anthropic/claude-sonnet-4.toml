@@ -1,6 +1,6 @@
 name = "Anthropic: Claude Sonnet 4"
 release_date = "2025-05-22"
-last_updated = "2025-05-22"
+last_updated = "2026-03-15"
 attachment = true
 reasoning = true
 temperature = true
@@ -8,15 +8,15 @@ tool_call = true
 open_weights = false
 
 [cost]
-input = 3.0
-output = 15.0
+input = 3
+output = 15
 cache_read = 0.3
 cache_write = 3.75
 
 [limit]
-context = 1000000
+context = 200000
 output = 64000
 
 [modalities]
-input = ["image", "text"]
+input = ["image", "pdf", "text"]
 output = ["text"]

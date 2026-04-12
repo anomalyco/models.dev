@@ -1,0 +1,22 @@
+name = "Nemotron 3 Super"
+family = "nemotron"
+attachment = false
+reasoning = true
+tool_call = true
+temperature = true
+knowledge = "2024-04"
+release_date = "2026-03-11"
+last_updated = "2026-03-11"
+open_weights = true
+
+[cost]
+input = 0.20
+output = 0.80
+
+[limit]
+context = 262144
+output = 262144
+
+[modalities]
+input = ["text"]
+output = ["text"]

@@ -1,0 +1,20 @@
+name = "Auto Router"
+release_date = "2026-03-15"
+last_updated = "2026-03-15"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+open_weights = false
+
+[cost]
+input = 0
+output = 0
+
+[limit]
+context = 2000000
+output = 32768
+
+[modalities]
+input = ["audio", "image", "pdf", "text", "video"]
+output = ["image", "text"]

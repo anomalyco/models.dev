@@ -1,0 +1,23 @@
+name = "MiniMax M2.7 High Speed"
+family = "minimax"
+attachment = true
+reasoning = true
+tool_call = true
+temperature = true
+release_date = "2026-03-18"
+last_updated = "2026-03-18"
+open_weights = true
+
+[cost]
+input = 0.6
+output = 2.4
+cache_read = 0.06
+cache_write = 0.375
+
+[limit]
+context = 204_800
+output = 131_100
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

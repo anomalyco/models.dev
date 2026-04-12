@@ -1,0 +1,23 @@
+name = "Seed 1.6 Flash (250715)"
+family = "seed"
+release_date = "2025-07-26"
+last_updated = "2025-07-26"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[cost]
+input = 0.07
+output = 0.30
+cache_read = 0.02
+
+[limit]
+context = 256_000
+output = 16_384
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

@@ -1,0 +1,22 @@
+name = "Gemini 2.5 Flash Image (Preview)"
+family = "gemini"
+release_date = "2025-10-02"
+last_updated = "2025-10-02"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = false
+structured_output = true
+open_weights = false
+
+[cost]
+input = 0.30
+output = 2.50
+
+[limit]
+context = 32_768
+output = 32_768
+
+[modalities]
+input = ["text", "image"]
+output = ["text", "image"]

@@ -1,0 +1,22 @@
+name = "Qwen3 Coder 480B TEE"
+family = "qwen"
+release_date = "2025-07-23"
+last_updated = "2025-07-23"
+attachment = false
+reasoning = false
+tool_call = false
+structured_output = false
+open_weights = false
+
+[cost]
+input = 1.5
+output = 2.00
+
+[limit]
+context = 128_000
+input = 128_000
+output = 32_768
+
+[modalities]
+input = ["text"]
+output = ["text"]

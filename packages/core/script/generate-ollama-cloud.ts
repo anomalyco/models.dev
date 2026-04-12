@@ -35,6 +35,31 @@ type OllamaModel = Omit<Model, "id"> & {
   limit: Model["limit"] & { output?: number };
 };
 
+type ComparableModel = Pick<Model,
+  | "name"
+  | "attachment"
+  | "reasoning"
+  | "tool_call"
+  | "knowledge"
+  | "open_weights"
+  | "modalities"
+> & {
+  limit: Pick<Model["limit"], "context">;
+};
+
+function normalizeForComparison(model: Omit<Model, "id">): ComparableModel {
+  return {
+    name: model.name,
+    attachment: model.attachment,
+    reasoning: model.reasoning,
+    tool_call: model.tool_call,
+    knowledge: model.knowledge,
+    open_weights: model.open_weights,
+    limit: { context: model.limit.context },
+    modalities: model.modalities,
+  };
+}
+
 const OllamaTagsResponse = z.object({
   models: z.array(
     z.object({
@@ -137,20 +162,34 @@ for (const modelName of modelNames) {
   modelsData.push({ name: modelName, data: showParsed.data });
 }
 
-console.log(`Fetched all models. Writing new files...`);
+console.log(`Fetched all models. Syncing files...`);
+
+const existingFiles = Array.from(new Bun.Glob("*.toml").scanSync(modelsDir));
+const existingModelNames = new Set(existingFiles.map((f) => f.replace(/\.toml$/, "")));
+const apiModelNames = new Set(modelNames);
+
+let deleted = 0;
+for (const existingName of existingModelNames) {
+  if (!apiModelNames.has(existingName)) {
+    const filePath = path.join(modelsDir, modelFileName(existingName));
+    await Bun.file(filePath).delete();
+    console.log(`Deleted: ${modelFileName(existingName)}`);
+    deleted++;
+  }
+}
 
 let created = 0;
+let skipped = 0;
 for (const { name, data } of modelsData) {
   const fileName = modelFileName(name);
   const filePath = path.join(modelsDir, fileName);
 
-  let existingData: Omit<Model, "id"> | null;
+  let existingData: Omit<Model, "id"> | null = null;
   try {
     const existingToml = await Bun.file(filePath).text();
     existingData = Bun.TOML.parse(existingToml) as Omit<Model, "id">;
   } catch {
     // File doesn't exist
-    existingData = null;
   }
 
   const family = existingData?.family ?? (data.details.family as ModelFamily);
@@ -179,9 +218,20 @@ for (const { name, data } of modelsData) {
     },
   };
 
+  if (existingData) {
+    const normalizedExisting = normalizeForComparison(existingData);
+    const normalizedIncoming = normalizeForComparison(ollamaModel);
+
+    if (Bun.deepEquals(normalizedExisting, normalizedIncoming)) {
+      console.log(`Skipped (no changes): ${fileName}`);
+      skipped++;
+      continue;
+    }
+  }
+
   await Bun.write(filePath, generateToml(name, ollamaModel));
   console.log(`Created: ${fileName}`);
   created++;
 }
 
-console.log(`\nDone. Created ${created}`);
+console.log(`\nDone. Created: ${created}, Skipped: ${skipped}, Deleted: ${deleted}`);

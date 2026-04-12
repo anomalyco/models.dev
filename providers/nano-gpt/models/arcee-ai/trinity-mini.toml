@@ -1,0 +1,22 @@
+name = "Trinity Mini"
+family = "trinity-mini"
+release_date = "2025-12-01"
+last_updated = "2025-12-01"
+attachment = false
+reasoning = false
+tool_call = false
+structured_output = false
+open_weights = false
+
+[cost]
+input = 0.045000000000000005
+output = 0.15
+
+[limit]
+context = 131_072
+input = 131_072
+output = 8_192
+
+[modalities]
+input = ["text"]
+output = ["text"]

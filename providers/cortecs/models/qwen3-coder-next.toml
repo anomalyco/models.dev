@@ -1,0 +1,22 @@
+name = "Qwen3 Coder Next 80B"
+family = "qwen"
+release_date = "2026-02-04"
+last_updated = "2026-02-04"
+knowledge = "2025-04"
+attachment = false
+reasoning = true
+tool_call = true
+temperature = true
+open_weights = true
+
+[cost]
+input = 0.158
+output = 0.84
+
+[limit]
+context = 256_000
+output = 65_536
+
+[modalities]
+input = ["text"]
+output = ["text"]

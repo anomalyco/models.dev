@@ -1,0 +1,22 @@
+name = "Qwen3 30B A3B Thinking 2507"
+family = "qwen"
+release_date = "2025-07-31"
+last_updated = "2026-02-25"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = true
+
+[cost]
+input = 0.36
+output = 1.30
+
+[limit]
+context = 262_144
+output = 131_072
+
+[modalities]
+input = ["text"]
+output = ["text"]

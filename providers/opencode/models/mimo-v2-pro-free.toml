@@ -1,0 +1,27 @@
+name = "MiMo V2 Pro Free"
+family = "mimo-pro-free"
+release_date = "2026-03-18"
+last_updated = "2026-03-18"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+knowledge = "2024-12"
+open_weights = true
+status = "deprecated"
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0
+output = 0
+cache_read = 0
+
+[limit]
+context = 1_048_576
+output = 64_000
+
+[modalities]
+input = ["text"]
+output = ["text"]

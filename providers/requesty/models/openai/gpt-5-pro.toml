@@ -1,0 +1,23 @@
+name = "GPT-5 Pro"
+family = "gpt-pro"
+release_date = "2025-10-06"
+last_updated = "2025-10-06"
+attachment = true
+reasoning = true
+temperature = false
+knowledge = "2024-09-30"
+tool_call = true
+structured_output = true
+open_weights = false
+
+[cost]
+input = 15.00
+output = 120.00
+
+[limit]
+context = 400_000
+output = 272_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

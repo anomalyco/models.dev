@@ -1,0 +1,22 @@
+name = "Step 3.5 Flash"
+family = "step"
+release_date = "2026-02-02"
+last_updated = "2026-02-02"
+attachment = false
+reasoning = true
+tool_call = false
+structured_output = false
+open_weights = false
+
+[cost]
+input = 0.2
+output = 0.5
+
+[limit]
+context = 256_000
+input = 256_000
+output = 256_000
+
+[modalities]
+input = ["text"]
+output = ["text"]

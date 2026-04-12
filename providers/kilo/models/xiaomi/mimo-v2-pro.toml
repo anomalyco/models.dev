@@ -1,0 +1,21 @@
+name = "Xiaomi: MiMo-V2-Pro"
+release_date = "2026-03-18"
+last_updated = "2026-04-11"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+open_weights = true
+
+[cost]
+input = 1
+output = 3
+cache_read = 0.2
+
+[limit]
+context = 1048576
+output = 131072
+
+[modalities]
+input = ["text"]
+output = ["text"]

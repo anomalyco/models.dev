@@ -1,0 +1,22 @@
+name = "DeepSeek TNG R1T2 Chimera"
+family = "tngtech"
+release_date = "2025-09-05"
+last_updated = "2025-09-05"
+attachment = false
+reasoning = false
+tool_call = false
+structured_output = false
+open_weights = false
+
+[cost]
+input = 0.31
+output = 0.31
+
+[limit]
+context = 128_000
+input = 128_000
+output = 8_192
+
+[modalities]
+input = ["text"]
+output = ["text"]

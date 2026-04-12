@@ -1,0 +1,21 @@
+name = "Gemini 2.0 Flash Thinking 0121"
+release_date = "2025-01-21"
+last_updated = "2025-01-21"
+attachment = true
+reasoning = true
+tool_call = false
+structured_output = false
+open_weights = false
+
+[cost]
+input = 0.306
+output = 1.003
+
+[limit]
+context = 1_000_000
+input = 1_000_000
+output = 8_192
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

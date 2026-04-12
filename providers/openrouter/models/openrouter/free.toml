@@ -1,0 +1,22 @@
+name = "Free Models Router"
+release_date = "2026-02-01"
+last_updated = "2026-02-01"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[cost]
+input = 0.00
+output = 0.00
+
+[limit]
+context = 200_000
+input = 200_000
+output = 8_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

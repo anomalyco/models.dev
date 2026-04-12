@@ -1,0 +1,21 @@
+name = "Gemini 2.5 Flash 0520 Thinking"
+release_date = "2025-05-20"
+last_updated = "2025-05-20"
+attachment = true
+reasoning = true
+tool_call = false
+structured_output = false
+open_weights = false
+
+[cost]
+input = 0.15
+output = 3.5
+
+[limit]
+context = 1_048_000
+input = 1_048_000
+output = 65_536
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

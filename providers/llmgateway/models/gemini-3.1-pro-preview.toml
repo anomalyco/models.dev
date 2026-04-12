@@ -1,0 +1,23 @@
+name = "Gemini 3.1 Pro (Preview)"
+family = "gemini"
+release_date = "2026-02-19"
+last_updated = "2026-02-19"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[cost]
+input = 2.00
+output = 12.00
+cache_read = 0.20
+
+[limit]
+context = 1_048_576
+output = 65_536
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

@@ -1,0 +1,22 @@
+name = "Qwen2.5 VL 72B Instruct"
+family = "qwen"
+release_date = "2025-01-26"
+last_updated = "2025-01-26"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = false
+structured_output = true
+open_weights = true
+
+[cost]
+input = 0.13
+output = 0.40
+
+[limit]
+context = 32_768
+output = 8_192
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

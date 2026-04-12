@@ -1,0 +1,21 @@
+name = "Qwen25 VL 72b"
+release_date = "2025-05-10"
+last_updated = "2025-05-10"
+attachment = true
+reasoning = false
+tool_call = false
+structured_output = false
+open_weights = false
+
+[cost]
+input = 0.69989
+output = 0.69989
+
+[limit]
+context = 32_000
+input = 32_000
+output = 32_768
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

@@ -1,0 +1,21 @@
+name = "Gemini 3.1 Flash Image Preview (Nano Banana 2)"
+family = "gemini"
+attachment = true
+reasoning = true
+tool_call = false
+temperature = true
+release_date = "2026-02-26"
+last_updated = "2026-03-06"
+open_weights = false
+
+[cost]
+input = 0.5
+output = 3
+
+[limit]
+context = 131_072
+output = 32_768
+
+[modalities]
+input = ["text", "image"]
+output = ["text", "image"]

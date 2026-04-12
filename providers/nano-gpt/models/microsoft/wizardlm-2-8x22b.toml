@@ -1,0 +1,22 @@
+name = "WizardLM-2 8x22B"
+family = "gpt"
+release_date = "2025-04-15"
+last_updated = "2025-04-15"
+attachment = true
+reasoning = false
+tool_call = false
+structured_output = false
+open_weights = false
+
+[cost]
+input = 0.49299999999999994
+output = 0.49299999999999994
+
+[limit]
+context = 65_536
+input = 65_536
+output = 8_192
+
+[modalities]
+input = ["text", "pdf"]
+output = ["text"]

@@ -1,0 +1,19 @@
+name = "AllenAI: Olmo 2 32B Instruct"
+release_date = "2025-03-15"
+last_updated = "2026-03-15"
+attachment = false
+reasoning = false
+tool_call = false
+open_weights = true
+
+[cost]
+input = 0.05
+output = 0.2
+
+[limit]
+context = 128000
+output = 32768
+
+[modalities]
+input = ["text"]
+output = ["text"]

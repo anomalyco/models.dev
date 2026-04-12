@@ -1,0 +1,24 @@
+name = "MiniMax M2.5"
+family = "minimax"
+attachment = false
+reasoning = true
+tool_call = true
+temperature = true
+release_date = "2025-03-01"
+last_updated = "2025-03-01"
+open_weights = false
+
+[interleaved]
+field = "reasoning_details"
+
+[cost]
+input = 0.29
+output = 1.16
+
+[limit]
+context = 204_800
+output = 131_072
+
+[modalities]
+input = ["text"]
+output = ["text"]

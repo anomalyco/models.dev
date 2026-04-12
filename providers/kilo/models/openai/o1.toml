@@ -1,6 +1,6 @@
 name = "OpenAI: o1"
 release_date = "2024-12-05"
-last_updated = "2025-01-01"
+last_updated = "2026-03-15"
 attachment = true
 reasoning = false
 temperature = false
@@ -8,8 +8,8 @@ tool_call = true
 open_weights = false
 
 [cost]
-input = 15.0
-output = 60.0
+input = 15
+output = 60
 cache_read = 7.5
 
 [limit]
@@ -17,5 +17,5 @@ context = 200000
 output = 100000
 
 [modalities]
-input = ["text", "image"]
+input = ["image", "pdf", "text"]
 output = ["text"]

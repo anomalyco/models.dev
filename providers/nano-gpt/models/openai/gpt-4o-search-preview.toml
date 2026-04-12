@@ -1,0 +1,22 @@
+name = "GPT-4o Search Preview"
+family = "gpt"
+release_date = "2024-05-13"
+last_updated = "2024-05-13"
+attachment = true
+reasoning = false
+tool_call = false
+structured_output = false
+open_weights = false
+
+[cost]
+input = 1.47
+output = 5.88
+
+[limit]
+context = 128_000
+input = 128_000
+output = 16_384
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

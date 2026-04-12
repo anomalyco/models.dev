@@ -1,0 +1,28 @@
+name = "Gemini 3.1 Flash Lite Preview"
+family = "gemini-flash-lite"
+release_date = "2026-03-03"
+last_updated = "2026-03-03"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = true
+knowledge = "2025-01"
+open_weights = false
+
+[cost]
+input = 0.25
+output = 1.50
+cache_read = 0.025
+cache_write = 1.00
+
+[limit]
+context = 1048576
+output = 65536
+
+[modalities]
+input = ["text", "image", "video", "audio", "pdf"]
+output = ["text"]
+
+[provider]
+npm = "@ai-sdk/openai-compatible"

@@ -1,0 +1,21 @@
+name = "Ministral 3 3B Reasoning 2512"
+family = "ministral"
+release_date = "2025-12"
+last_updated = "2026-02-25"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+open_weights = true
+
+[cost]
+input = 1.039
+output = 0.54825
+
+[limit]
+context = 262_144
+output = 262_144
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

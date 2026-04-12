@@ -1,0 +1,21 @@
+name = "Grok-4.20-Multi-Agent"
+release_date = "2026-03-13"
+last_updated = "2026-03-13"
+attachment = true
+reasoning = false
+temperature = false
+open_weights = false
+tool_call = true
+
+[cost]
+input = 2
+output = 6
+cache_read = 0.2
+
+[limit]
+context = 128_000
+output = 0
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

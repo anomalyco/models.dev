@@ -1,11 +1,12 @@
 name = "Claude Opus 4.6 (Global)"
 family = "claude-opus"
 release_date = "2026-02-05"
-last_updated = "2026-02-05"
+last_updated = "2026-03-18"
 attachment = true
 reasoning = true
 temperature = true
 tool_call = true
+structured_output = true
 knowledge = "2025-05"
 open_weights = false
 
@@ -14,12 +15,6 @@ input = 5.00
 output = 25.00
 cache_read = 0.50
 cache_write = 6.25
-
-[cost.context_over_200k]
-input = 10.00
-output = 37.50
-cache_read = 1.00
-cache_write = 12.50
 
 [limit]
 context = 1_000_000

@@ -1,0 +1,22 @@
+name = "Llama 3.1 Nemotron Ultra 253B"
+family = "llama"
+release_date = "2025-04-07"
+last_updated = "2025-04-07"
+attachment = false
+reasoning = false
+temperature = true
+tool_call = false
+structured_output = true
+open_weights = true
+
+[cost]
+input = 0.60
+output = 1.80
+
+[limit]
+context = 128_000
+output = 16_384
+
+[modalities]
+input = ["text"]
+output = ["text"]

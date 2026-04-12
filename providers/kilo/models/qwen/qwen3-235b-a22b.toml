@@ -1,6 +1,6 @@
 name = "Qwen: Qwen3 235B A22B"
 release_date = "2024-12-01"
-last_updated = "2026-01"
+last_updated = "2026-03-15"
 attachment = false
 reasoning = true
 temperature = true
@@ -8,13 +8,13 @@ tool_call = true
 open_weights = true
 
 [cost]
-input = 0.3
-output = 1.2
+input = 0.455
+output = 1.82
 cache_read = 0.15
 
 [limit]
-context = 40960
-output = 40960
+context = 131072
+output = 8192
 
 [modalities]
 input = ["text"]

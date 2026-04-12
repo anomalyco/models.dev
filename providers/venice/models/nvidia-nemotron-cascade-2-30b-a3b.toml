@@ -1,0 +1,22 @@
+name = "Nemotron Cascade 2 30B A3B"
+family = "nemotron"
+attachment = false
+reasoning = true
+tool_call = true
+structured_output = true
+temperature = true
+release_date = "2026-03-24"
+last_updated = "2026-04-09"
+open_weights = true
+
+[cost]
+input = 0.14
+output = 0.8
+
+[limit]
+context = 256_000
+output = 32_768
+
+[modalities]
+input = ["text"]
+output = ["text"]

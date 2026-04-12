@@ -1,0 +1,24 @@
+name = "GPT-5.1-Codex-Max"
+family = "gpt-codex"
+release_date = "2025-11-13"
+last_updated = "2025-11-13"
+attachment = true
+reasoning = true
+temperature = true
+knowledge = "2024-09-30"
+tool_call = true
+structured_output = true
+open_weights = false
+
+[cost]
+input = 1.10
+output = 9.00
+cache_read = 0.11
+
+[limit]
+context = 400_000
+output = 128_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

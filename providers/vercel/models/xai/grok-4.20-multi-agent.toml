@@ -1,0 +1,22 @@
+name = "Grok 4.20 Multi-Agent"
+family = "grok"
+attachment = false
+reasoning = true
+tool_call = true
+temperature = true
+release_date = "2026-03-09"
+last_updated = "2026-03-23"
+open_weights = false
+
+[cost]
+input = 2
+output = 6
+cache_read = 0.19999999999999998
+
+[limit]
+context = 2_000_000
+output = 2_000_000
+
+[modalities]
+input = ["text"]
+output = ["text"]

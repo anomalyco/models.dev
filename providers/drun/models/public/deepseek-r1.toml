@@ -1,0 +1,25 @@
+name = "DeepSeek R1"
+family = "deepseek-thinking"
+release_date = "2025-01-20"
+last_updated = "2025-01-20"
+attachment = false
+reasoning = true
+temperature = true
+knowledge = "2024-12"
+tool_call = true
+open_weights = true
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.55
+output = 2.20
+
+[limit]
+context = 131_072
+output = 32_000
+
+[modalities]
+input = ["text"]
+output = ["text"]

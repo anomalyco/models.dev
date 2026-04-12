@@ -1,0 +1,21 @@
+name = "Inception: Mercury 2"
+release_date = "2026-02-24"
+last_updated = "2026-02-24"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+open_weights = false
+
+[cost]
+input = 0.25
+output = 0.75
+cache_read = 0.025
+
+[limit]
+context = 128000
+output = 50000
+
+[modalities]
+input = ["text"]
+output = ["text"]

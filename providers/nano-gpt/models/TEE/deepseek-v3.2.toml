@@ -1,0 +1,22 @@
+name = "DeepSeek V3.2 TEE"
+family = "deepseek"
+release_date = "2025-12-01"
+last_updated = "2025-12-01"
+attachment = false
+reasoning = false
+tool_call = false
+structured_output = false
+open_weights = false
+
+[cost]
+input = 0.5
+output = 1.00
+
+[limit]
+context = 164_000
+input = 164_000
+output = 65_536
+
+[modalities]
+input = ["text"]
+output = ["text"]

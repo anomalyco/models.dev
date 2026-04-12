@@ -1,0 +1,22 @@
+name = "Olmo 3.1 32B Think"
+family = "allenai"
+release_date = "2026-01-25"
+last_updated = "2026-01-25"
+attachment = false
+reasoning = true
+tool_call = false
+structured_output = false
+open_weights = false
+
+[cost]
+input = 0.15
+output = 0.5
+
+[limit]
+context = 65_536
+input = 65_536
+output = 8_192
+
+[modalities]
+input = ["text"]
+output = ["text"]

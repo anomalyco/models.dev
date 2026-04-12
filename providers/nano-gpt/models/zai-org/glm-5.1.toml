@@ -1,0 +1,22 @@
+name = "GLM 5.1"
+family = "glm"
+release_date = "2026-03-27"
+last_updated = "2026-03-27"
+attachment = false
+reasoning = true
+tool_call = true
+structured_output = true
+open_weights = true
+
+[cost]
+input = 0.30
+output = 2.55
+
+[limit]
+context = 200_000
+input = 200_000
+output = 131_072
+
+[modalities]
+input = ["text"]
+output = ["text"]

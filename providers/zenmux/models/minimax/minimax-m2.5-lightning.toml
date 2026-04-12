@@ -1,4 +1,4 @@
-name = "MiniMax: MiniMax M2.5 highspeed"
+name = "MiniMax M2.5 highspeed"
 release_date = "2026-02-13"
 last_updated = "2026-02-13"
 attachment = false
@@ -7,9 +7,6 @@ temperature = true
 tool_call = true
 knowledge = "2025-01-01"
 open_weights = false
-
-[interleaved]
-field = "reasoning_content"
 
 [cost]
 input = 0.60
@@ -24,3 +21,7 @@ output = 131_072
 [modalities]
 input = ["text"]
 output = ["text"]
+
+[provider]
+npm = "@ai-sdk/anthropic"
+api = "https://zenmux.ai/api/anthropic/v1"

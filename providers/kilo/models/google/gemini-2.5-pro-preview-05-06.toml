@@ -1,6 +1,6 @@
 name = "Google: Gemini 2.5 Pro Preview 05-06"
 release_date = "2025-05-06"
-last_updated = "2025-05-06"
+last_updated = "2026-03-15"
 attachment = true
 reasoning = true
 temperature = true
@@ -9,7 +9,8 @@ open_weights = false
 
 [cost]
 input = 1.25
-output = 10.0
+output = 10
+reasoning = 10
 cache_read = 0.125
 cache_write = 0.375
 
@@ -18,5 +19,5 @@ context = 1048576
 output = 65535
 
 [modalities]
-input = ["text", "image", "audio", "video"]
+input = ["audio", "image", "pdf", "text", "video"]
 output = ["text"]

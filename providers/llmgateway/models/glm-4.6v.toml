@@ -1,0 +1,23 @@
+name = "GLM-4.6V"
+family = "glm"
+release_date = "2025-12-08"
+last_updated = "2025-12-08"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[cost]
+input = 0.30
+output = 0.90
+cache_read = 0.05
+
+[limit]
+context = 128_000
+output = 16_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

@@ -1,0 +1,22 @@
+name = "DeepSeek Prover v2 671B"
+family = "deepseek"
+release_date = "2025-04-30"
+last_updated = "2025-04-30"
+attachment = false
+reasoning = false
+tool_call = false
+structured_output = false
+open_weights = false
+
+[cost]
+input = 1.00
+output = 2.5
+
+[limit]
+context = 160_000
+input = 160_000
+output = 16_384
+
+[modalities]
+input = ["text"]
+output = ["text"]

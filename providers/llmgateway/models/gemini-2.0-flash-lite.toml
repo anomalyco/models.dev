@@ -1,0 +1,23 @@
+name = "Gemini 2.0 Flash Lite"
+family = "gemini"
+release_date = "2025-02-25"
+last_updated = "2025-02-25"
+attachment = false
+reasoning = false
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = false
+status = "deprecated"
+
+[cost]
+input = 0.08
+output = 0.30
+
+[limit]
+context = 1_048_576
+output = 8_192
+
+[modalities]
+input = ["text"]
+output = ["text"]

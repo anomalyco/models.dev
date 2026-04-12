@@ -1,0 +1,21 @@
+name = "ASI1 Mini"
+release_date = "2025-03-25"
+last_updated = "2025-03-25"
+attachment = true
+reasoning = false
+tool_call = false
+structured_output = false
+open_weights = false
+
+[cost]
+input = 1.00
+output = 1.00
+
+[limit]
+context = 128_000
+input = 128_000
+output = 16_384
+
+[modalities]
+input = ["text", "pdf"]
+output = ["text"]

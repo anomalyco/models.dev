@@ -1,0 +1,21 @@
+name = "GLM 4.1V Thinking Flash"
+release_date = "2025-07-09"
+last_updated = "2025-07-09"
+attachment = true
+reasoning = false
+tool_call = false
+structured_output = false
+open_weights = false
+
+[cost]
+input = 0.3
+output = 0.3
+
+[limit]
+context = 64_000
+input = 64_000
+output = 8_192
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

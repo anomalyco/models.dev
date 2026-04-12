@@ -1,0 +1,20 @@
+name = "Qwen: Qwen3.5-Flash"
+release_date = "2026-02-26"
+last_updated = "2026-03-15"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+open_weights = true
+
+[cost]
+input = 0.1
+output = 0.4
+
+[limit]
+context = 1000000
+output = 65536
+
+[modalities]
+input = ["image", "text", "video"]
+output = ["text"]

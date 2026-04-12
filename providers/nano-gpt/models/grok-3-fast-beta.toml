@@ -1,0 +1,21 @@
+name = "Grok 3 Fast Beta"
+release_date = "2025-02-17"
+last_updated = "2025-02-17"
+attachment = true
+reasoning = false
+tool_call = false
+structured_output = false
+open_weights = false
+
+[cost]
+input = 5.00
+output = 25.00
+
+[limit]
+context = 131_072
+input = 131_072
+output = 131_072
+
+[modalities]
+input = ["text", "pdf"]
+output = ["text"]

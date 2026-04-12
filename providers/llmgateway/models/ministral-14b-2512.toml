@@ -1,0 +1,22 @@
+name = "Ministral 14B"
+family = "mistral"
+release_date = "2025-12-02"
+last_updated = "2025-12-02"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = false
+structured_output = true
+open_weights = true
+
+[cost]
+input = 0.20
+output = 0.20
+
+[limit]
+context = 262_144
+output = 16_384
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

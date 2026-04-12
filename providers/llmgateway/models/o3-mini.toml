@@ -1,0 +1,23 @@
+name = "o3 Mini"
+family = "gpt"
+release_date = "2025-06-01"
+last_updated = "2025-06-01"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = false
+structured_output = true
+open_weights = false
+
+[cost]
+input = 1.10
+output = 4.40
+cache_read = 0.55
+
+[limit]
+context = 200_000
+output = 16_384
+
+[modalities]
+input = ["text"]
+output = ["text"]

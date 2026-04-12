@@ -1,0 +1,22 @@
+name = "OpenAI o1 Pro"
+family = "o-pro"
+release_date = "2025-01-25"
+last_updated = "2025-01-25"
+attachment = true
+reasoning = false
+tool_call = false
+structured_output = false
+open_weights = false
+
+[cost]
+input = 150.00
+output = 600.00
+
+[limit]
+context = 200_000
+input = 200_000
+output = 100_000
+
+[modalities]
+input = ["text", "image", "pdf"]
+output = ["text"]

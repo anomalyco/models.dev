@@ -1,0 +1,27 @@
+name = "MiMo V2 Flash Free"
+family = "mimo-flash-free"
+release_date = "2025-12-16"
+last_updated = "2025-12-16"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+knowledge = "2024-12"
+open_weights = true
+status = "deprecated"
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0
+output = 0
+cache_read = 0
+
+[limit]
+context = 262_144
+output = 65_536
+
+[modalities]
+input = ["text"]
+output = ["text"]

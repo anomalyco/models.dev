@@ -1,0 +1,23 @@
+name = "GPT 5.4"
+family = "gpt"
+attachment = true
+reasoning = true
+tool_call = true
+temperature = true
+release_date = "2026-03-05"
+last_updated = "2026-03-06"
+open_weights = false
+
+[cost]
+input = 2.5
+output = 15
+cache_read = 0.25
+
+[limit]
+context = 1_050_000
+input = 922_000
+output = 128_000
+
+[modalities]
+input = ["text", "image", "pdf"]
+output = ["text"]

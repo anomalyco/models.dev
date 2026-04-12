@@ -1,0 +1,22 @@
+name = "Kimi-K2.5"
+release_date = "1970-01-01"
+last_updated = "1970-01-01"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[cost]
+input = 0.6
+output = 3.0
+cache_read = 0.1
+
+[limit]
+context = 256_000
+output = 128_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

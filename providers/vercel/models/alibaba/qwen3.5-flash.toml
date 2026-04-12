@@ -1,0 +1,23 @@
+name = "Qwen 3.5 Flash"
+family = "qwen"
+attachment = true
+reasoning = true
+tool_call = true
+temperature = true
+release_date = "2026-02-24"
+last_updated = "2026-02-24"
+open_weights = false
+
+[cost]
+input = 0.1
+output = 0.4
+cache_read = 0.001
+cache_write = 0.125
+
+[limit]
+context = 1_000_000
+output = 64_000
+
+[modalities]
+input = ["text", "image", "pdf"]
+output = ["text"]

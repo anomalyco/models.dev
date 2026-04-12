@@ -1,0 +1,22 @@
+name = "Trinity Large"
+family = "trinity"
+release_date = "2025-12-01"
+last_updated = "2025-12-01"
+attachment = false
+reasoning = false
+tool_call = false
+structured_output = false
+open_weights = false
+
+[cost]
+input = 0.25
+output = 1.00
+
+[limit]
+context = 131_072
+input = 131_072
+output = 8_192
+
+[modalities]
+input = ["text"]
+output = ["text"]

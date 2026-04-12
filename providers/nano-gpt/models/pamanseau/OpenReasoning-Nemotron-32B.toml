@@ -1,0 +1,22 @@
+name = "OpenReasoning Nemotron 32B"
+family = "nemotron"
+release_date = "2025-08-21"
+last_updated = "2025-08-21"
+attachment = false
+reasoning = true
+tool_call = false
+structured_output = false
+open_weights = false
+
+[cost]
+input = 0.1
+output = 0.4
+
+[limit]
+context = 32_768
+input = 32_768
+output = 65_536
+
+[modalities]
+input = ["text"]
+output = ["text"]

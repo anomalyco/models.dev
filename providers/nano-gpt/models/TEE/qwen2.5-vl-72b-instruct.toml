@@ -1,0 +1,22 @@
+name = "Qwen2.5 VL 72B TEE"
+family = "qwen"
+release_date = "2025-02-01"
+last_updated = "2025-02-01"
+attachment = true
+reasoning = false
+tool_call = false
+structured_output = false
+open_weights = false
+
+[cost]
+input = 0.7
+output = 0.7
+
+[limit]
+context = 65_536
+input = 65_536
+output = 8_192
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

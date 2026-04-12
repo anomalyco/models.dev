@@ -1,0 +1,22 @@
+name = "Mistral 7B Instruct"
+family = "mistral"
+release_date = "2024-05-27"
+last_updated = "2024-05-27"
+attachment = true
+reasoning = false
+tool_call = false
+structured_output = false
+open_weights = false
+
+[cost]
+input = 0.0544
+output = 0.0544
+
+[limit]
+context = 32_768
+input = 32_768
+output = 8_192
+
+[modalities]
+input = ["text", "pdf"]
+output = ["text"]

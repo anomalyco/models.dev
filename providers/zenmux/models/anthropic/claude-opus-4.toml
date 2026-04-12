@@ -16,8 +16,12 @@ cache_write = 18.75
 
 [limit]
 context = 200_000
-output = 64_000
+output = 32_000
 
 [modalities]
 input = ["image", "text", "pdf"]
 output = ["text"]
+
+[provider]
+npm = "@ai-sdk/anthropic"
+api = "https://zenmux.ai/api/anthropic/v1"

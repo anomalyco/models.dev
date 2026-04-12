@@ -1,0 +1,22 @@
+name = "Molmo 2 8B"
+family = "allenai"
+release_date = "2026-02-14"
+last_updated = "2026-02-14"
+attachment = true
+reasoning = false
+tool_call = false
+structured_output = false
+open_weights = false
+
+[cost]
+input = 0.2
+output = 0.2
+
+[limit]
+context = 36_864
+input = 36_864
+output = 36_864
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

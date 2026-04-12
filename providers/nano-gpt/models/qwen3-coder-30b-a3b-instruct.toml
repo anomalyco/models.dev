@@ -1,0 +1,21 @@
+name = "Qwen3 Coder 30B A3B Instruct"
+release_date = "2025-08-05"
+last_updated = "2025-08-05"
+attachment = false
+reasoning = false
+tool_call = true
+structured_output = true
+open_weights = false
+
+[cost]
+input = 0.1
+output = 0.4
+
+[limit]
+context = 128_000
+input = 128_000
+output = 65_536
+
+[modalities]
+input = ["text"]
+output = ["text"]

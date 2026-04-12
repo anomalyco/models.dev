@@ -1,12 +1,13 @@
 name = "Phi-4-mini-instruct"
 family = "phi"
 release_date = "2024-12-11"
-last_updated = "2024-12-11"
+last_updated = "2026-03-12"
 attachment = false
 reasoning = true
+structured_output = true
 temperature = true
-knowledge = "2023-10"
 tool_call = true
+knowledge = "2023-10"
 open_weights = true
 
 [cost]
@@ -15,7 +16,7 @@ output = 0.35
 
 [limit]
 context = 128_000
-output = 4_096
+output = 128_000
 
 [modalities]
 input = ["text"]

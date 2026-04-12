@@ -1,0 +1,22 @@
+name = "ERNIE 4.5 300B"
+family = "ernie"
+release_date = "2025-06-30"
+last_updated = "2025-06-30"
+attachment = false
+reasoning = false
+tool_call = false
+structured_output = false
+open_weights = false
+
+[cost]
+input = 0.35
+output = 1.15
+
+[limit]
+context = 131_072
+input = 131_072
+output = 16_384
+
+[modalities]
+input = ["text"]
+output = ["text"]
