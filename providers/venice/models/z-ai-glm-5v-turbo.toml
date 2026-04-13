@@ -1,0 +1,23 @@
+name = "GLM 5V Turbo"
+family = "glmv"
+attachment = true
+reasoning = true
+tool_call = true
+structured_output = true
+temperature = true
+release_date = "2026-04-01"
+last_updated = "2026-04-12"
+open_weights = false
+
+[cost]
+input = 1.5
+output = 5
+cache_read = 0.3
+
+[limit]
+context = 200_000
+output = 32_768
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
