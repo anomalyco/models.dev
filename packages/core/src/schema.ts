@@ -150,7 +150,7 @@ export const Provider = z
       const isOpenAIcompatible = data.npm === "@ai-sdk/openai-compatible";
       const isOpenrouter = data.npm === "@openrouter/ai-sdk-provider";
       const isAnthropic = data.npm === "@ai-sdk/anthropic";
-      const isKiro = data.npm === "kiro";
+      const isKiro = data.npm === "kiro-ai-provider";
       const hasApi = data.api !== undefined;
 
       return (
