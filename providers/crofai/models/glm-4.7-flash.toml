@@ -1,0 +1,29 @@
+name = "GLM-4.7 Flash"
+family = "glm"
+attachment = true
+reasoning = true
+tool_call = true
+structured_output = true
+temperature = true
+knowledge = "2025-04"
+release_date = "2025-01-10"
+last_updated = "2025-01-10"
+open_weights = true
+
+[cost]
+input = 0.00
+output = 0.00
+cache_read = 0.00
+cache_write = 0.00
+
+[limit]
+context = 202_752
+input = 202_752
+output = 131_072
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[interleaved]
+field = "reasoning_content"

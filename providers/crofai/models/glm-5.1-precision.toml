@@ -1,0 +1,30 @@
+name = "GLM-5.1 Precision (Beta)"
+family = "glm"
+attachment = true
+reasoning = true
+tool_call = true
+structured_output = false
+temperature = true
+knowledge = "2024-01"
+release_date = "2025-01-15"
+last_updated = "2025-01-15"
+open_weights = true
+status = "beta"
+
+[cost]
+input = 0.70
+output = 2.50
+cache_read = 0.14
+cache_write = 0.14
+
+[limit]
+context = 202_752
+input = 202_752
+output = 202_752
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[interleaved]
+field = "reasoning_content"

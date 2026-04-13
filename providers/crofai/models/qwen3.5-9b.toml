@@ -1,0 +1,29 @@
+name = "Qwen3.5 9B (Vision)"
+family = "qwen"
+attachment = true
+reasoning = true
+tool_call = true
+structured_output = false
+temperature = true
+knowledge = "2024-01"
+release_date = "2025-01-25"
+last_updated = "2025-01-25"
+open_weights = true
+
+[cost]
+input = 0.00
+output = 0.00
+cache_read = 0.00
+cache_write = 0.00
+
+[limit]
+context = 262_144
+input = 262_144
+output = 262_144
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[interleaved]
+field = "reasoning_content"

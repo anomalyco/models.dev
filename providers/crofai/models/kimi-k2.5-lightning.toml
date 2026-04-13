@@ -1,0 +1,30 @@
+name = "Kimi k2.5 Lightning (Beta)"
+family = "kimi"
+attachment = true
+reasoning = true
+tool_call = true
+structured_output = true
+temperature = true
+knowledge = "2025-01"
+release_date = "2025-01-20"
+last_updated = "2025-01-20"
+open_weights = true
+status = "beta"
+
+[cost]
+input = 1.00
+output = 3.00
+cache_read = 0.20
+cache_write = 0.20
+
+[limit]
+context = 131_072
+input = 131_072
+output = 32_768
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[interleaved]
+field = "reasoning_content"
