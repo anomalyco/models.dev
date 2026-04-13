@@ -147,13 +147,15 @@ export const Provider = z
   .refine(
     (data) => {
       const isOpenAI = data.npm === "@ai-sdk/openai";
-      const isOpenAIcompatible = data.npm === "@ai-sdk/openai-compatible";
+      const isOpenAIcompatible =
+        data.npm === "@ai-sdk/openai-compatible" ||
+        data.npm === "@databricks/ai-sdk-provider";
       const isOpenrouter = data.npm === "@openrouter/ai-sdk-provider";
       const isAnthropic = data.npm === "@ai-sdk/anthropic";
       const hasApi = data.api !== undefined;
 
       return (
-        // openai-compatible: must have api
+        // openai-compatible (incl. Databricks AI SDK provider): must have api
         (isOpenAIcompatible && hasApi) ||
         // openrouter: must have api
         (isOpenrouter && hasApi) ||
@@ -171,7 +173,7 @@ export const Provider = z
     },
     {
       message:
-        "'api' is required for openai-compatible and openrouter, optional for anthropic and openai, forbidden otherwise",
+        "'api' is required for @ai-sdk/openai-compatible, @databricks/ai-sdk-provider, and openrouter; optional for anthropic and openai; forbidden otherwise",
       path: ["api"],
     },
   );

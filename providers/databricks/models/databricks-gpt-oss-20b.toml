@@ -1,0 +1,17 @@
+name = "Databricks GPT-OSS 20B"
+family = "gpt-oss"
+release_date = "2025-06-01"
+last_updated = "2026-04-11"
+attachment = true
+reasoning = false
+tool_call = false
+temperature = true
+open_weights = true
+
+[limit]
+context = 128000
+output = 16384
+
+[modalities]
+input = ["text"]
+output = ["text"]

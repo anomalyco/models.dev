@@ -1,0 +1,21 @@
+name = "Databricks Claude Sonnet 4"
+family = "claude-sonnet"
+release_date = "2025-06-01"
+last_updated = "2026-04-11"
+attachment = true
+reasoning = true
+tool_call = true
+temperature = true
+open_weights = false
+
+[limit]
+context = 200000
+output = 64000
+
+[modalities]
+input = ["text", "image", "pdf"]
+output = ["text"]
+
+[provider]
+npm = "@ai-sdk/anthropic"
+api = "https://<workspace-numeric-id>.ai-gateway.cloud.databricks.com/anthropic"

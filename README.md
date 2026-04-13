@@ -179,7 +179,7 @@ Models must conform to the following schema, as defined in `packages/core/src/sc
 - `npm`: String - AI SDK Package name
 - `env`: String[] - Environment variable keys used for auth
 - `doc`: String - Link to the provider's documentation
-- `api` _(optional)_: String - OpenAI-compatible API endpoint. Required only when using `@ai-sdk/openai-compatible` as the npm package
+- `api` _(optional)_: String - OpenAI-compatible API endpoint. Required when using `@ai-sdk/openai-compatible` or `@databricks/ai-sdk-provider` as the npm package
 
 **Model Schema:**
 
@@ -219,6 +219,7 @@ See existing providers in the `providers/` directory for reference:
 - `providers/anthropic/` - Anthropic Claude models
 - `providers/openai/` - OpenAI GPT models
 - `providers/google/` - Google Gemini models
+- `providers/databricks/` - Databricks Foundation Model APIs on **AI Gateway**: default **`mlflow/v1`** for chat and embeddings via **`@databricks/ai-sdk-provider`**; per-model **`[provider]`** for **Claude** (Anthropic Messages), **Gemini** (native API), and **OpenAI Responses**. See [providers/databricks/README.md](providers/databricks/README.md) for discovery, authentication, and validation scripts.
 
 ### Working on frontend
 

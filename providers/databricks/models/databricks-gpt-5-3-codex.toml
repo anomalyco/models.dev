@@ -1,0 +1,22 @@
+name = "Databricks GPT-5.3 Codex"
+family = "gpt-codex"
+release_date = "2025-06-01"
+last_updated = "2026-04-11"
+attachment = true
+reasoning = true
+tool_call = true
+temperature = true
+open_weights = false
+
+[limit]
+context = 400000
+output = 128000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[provider]
+npm = "@databricks/ai-sdk-provider"
+api = "https://<workspace-numeric-id>.ai-gateway.cloud.databricks.com/openai/v1"
+shape = "responses"

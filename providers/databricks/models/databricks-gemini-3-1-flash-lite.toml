@@ -1,0 +1,21 @@
+name = "Databricks Gemini 3.1 Flash Lite"
+family = "gemini-flash-lite"
+release_date = "2025-06-01"
+last_updated = "2026-04-11"
+attachment = true
+reasoning = true
+tool_call = true
+temperature = true
+open_weights = false
+
+[limit]
+context = 1048576
+output = 65536
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[provider]
+npm = "@ai-sdk/google"
+api = "https://<workspace-numeric-id>.ai-gateway.cloud.databricks.com/gemini"

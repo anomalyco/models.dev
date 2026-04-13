@@ -1,0 +1,13 @@
+name = "Databricks"
+# Environment hints. Use the subset that matches each auth mode. Integrators substitute
+# <workspace-numeric-id> in `api` (or set baseURL after discovery—see README).
+env = [
+  "DATABRICKS_HOST",
+  "DATABRICKS_WORKSPACE_ID",
+  "DATABRICKS_TOKEN",
+  "DATABRICKS_CLIENT_ID",
+  "DATABRICKS_CLIENT_SECRET",
+]
+npm = "@databricks/ai-sdk-provider"
+api = "https://<workspace-numeric-id>.ai-gateway.cloud.databricks.com/mlflow/v1"
+doc = "https://docs.databricks.com/en/machine-learning/foundation-models/api-reference.html"

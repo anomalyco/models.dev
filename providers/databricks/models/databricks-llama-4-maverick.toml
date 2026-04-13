@@ -1,0 +1,17 @@
+name = "Databricks Llama 4 Maverick"
+family = "llama"
+release_date = "2025-06-01"
+last_updated = "2026-04-11"
+attachment = true
+reasoning = true
+tool_call = true
+temperature = true
+open_weights = true
+
+[limit]
+context = 128000
+output = 16384
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

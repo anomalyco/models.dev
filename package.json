@@ -20,7 +20,9 @@
     "helicone:generate": "bun ./packages/core/script/generate-helicone.ts",
     "venice:generate": "bun ./packages/core/script/generate-venice.ts",
     "vercel:generate": "bun ./packages/core/script/generate-vercel.ts",
-    "wandb:generate": "bun ./packages/core/script/generate-wandb.ts"
+    "wandb:generate": "bun ./packages/core/script/generate-wandb.ts",
+    "databricks:list-gateway": "bun ./packages/core/script/list-databricks-ai-gateway.ts",
+    "databricks:test-inference": "bun ./packages/core/script/test-databricks.ts"
   },
   "dependencies": {
     "@cloudflare/workers-types": "^4.20250801.0",
