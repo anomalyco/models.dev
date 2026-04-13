@@ -1,26 +1,23 @@
-name = "Kimi K2.5"
-family = "kimi"
+name = "Claude Sonnet 4.5"
+family = "claude-sonnet"
 attachment = true
 reasoning = true
 tool_call = true
 structured_output = true
 temperature = true
-knowledge = "2024-04"
-release_date = "2026-01-27"
+release_date = "2025-01-15"
 last_updated = "2026-04-12"
 open_weights = false
 
-[interleaved]
-field = "reasoning_content"
-
 [cost]
-input = 0.56
-output = 3.5
-cache_read = 0.11
+input = 3.75
+output = 18.75
+cache_read = 0.375
+cache_write = 4.69
 
 [limit]
-context = 256_000
-output = 65_536
+context = 198_000
+output = 64_000
 
 [modalities]
 input = ["text", "image"]

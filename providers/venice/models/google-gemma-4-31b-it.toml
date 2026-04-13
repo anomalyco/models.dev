@@ -1,22 +1,21 @@
-name = "Qwen 3.5 35B A3B"
-family = "qwen"
+name = "Google Gemma 4 31B Instruct"
+family = "gemma"
 attachment = true
 reasoning = true
 tool_call = true
 structured_output = true
 temperature = true
-release_date = "2026-02-25"
+release_date = "2026-04-03"
 last_updated = "2026-04-12"
-open_weights = false
+open_weights = true
 
 [cost]
-input = 0.3125
-output = 1.25
-cache_read = 0.15625
+input = 0.175
+output = 0.5
 
 [limit]
 context = 256_000
-output = 65_536
+output = 8_192
 
 [modalities]
 input = ["text", "image", "video"]

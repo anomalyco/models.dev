@@ -1,0 +1,21 @@
+name = "OpenAI: GPT-5.4 Mini"
+release_date = "2026-03-17"
+last_updated = "2026-04-11"
+attachment = true
+reasoning = true
+temperature = false
+tool_call = true
+open_weights = false
+
+[cost]
+input = 0.75
+output = 4.5
+cache_read = 0.075
+
+[limit]
+context = 400000
+output = 128000
+
+[modalities]
+input = ["image", "pdf", "text"]
+output = ["text"]

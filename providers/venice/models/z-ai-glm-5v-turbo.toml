@@ -1,26 +1,22 @@
-name = "Kimi K2.5"
-family = "kimi"
+name = "GLM 5V Turbo"
+family = "glmv"
 attachment = true
 reasoning = true
 tool_call = true
 structured_output = true
 temperature = true
-knowledge = "2024-04"
-release_date = "2026-01-27"
+release_date = "2026-04-01"
 last_updated = "2026-04-12"
 open_weights = false
 
-[interleaved]
-field = "reasoning_content"
-
 [cost]
-input = 0.56
-output = 3.5
-cache_read = 0.11
+input = 1.5
+output = 5
+cache_read = 0.3
 
 [limit]
-context = 256_000
-output = 65_536
+context = 200_000
+output = 32_768
 
 [modalities]
 input = ["text", "image"]

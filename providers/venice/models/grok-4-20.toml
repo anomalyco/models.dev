@@ -1,26 +1,27 @@
-name = "Kimi K2.5"
-family = "kimi"
+name = "Grok 4.20"
+family = "grok"
 attachment = true
 reasoning = true
 tool_call = true
 structured_output = true
 temperature = true
-knowledge = "2024-04"
-release_date = "2026-01-27"
+release_date = "2026-03-12"
 last_updated = "2026-04-12"
 open_weights = false
 
-[interleaved]
-field = "reasoning_content"
-
 [cost]
-input = 0.56
-output = 3.5
-cache_read = 0.11
+input = 2.27
+output = 6.8
+cache_read = 0.23
+
+[cost.context_over_200k]
+input = 4.53
+output = 13.6
+cache_read = 0.23
 
 [limit]
-context = 256_000
-output = 65_536
+context = 2_000_000
+output = 128_000
 
 [modalities]
 input = ["text", "image"]
