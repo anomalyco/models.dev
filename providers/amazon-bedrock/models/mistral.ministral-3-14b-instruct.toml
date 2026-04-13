@@ -1,7 +1,7 @@
 name = "Ministral 14B 3.0"
 family = "ministral"
-release_date = "2024-12-01"
-last_updated = "2024-12-01"
+release_date = "2025-12-02"
+last_updated = "2026-04-13"
 attachment = false
 reasoning = false
 temperature = true
@@ -10,13 +10,13 @@ structured_output = true
 open_weights = false
 
 [cost]
-input = 0.20
-output = 0.20
+input = 0.1
+output = 0.1
 
 [limit]
 context = 128_000
 output = 4_096
 
 [modalities]
-input = ["text"]
+input = ["image", "text"]
 output = ["text"]
