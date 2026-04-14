@@ -5,7 +5,7 @@ last_updated = "2026-04-11"
 attachment = true
 reasoning = true
 tool_call = true
-temperature = true
+temperature = false
 open_weights = false
 
 [limit]
@@ -13,7 +13,7 @@ context = 400000
 output = 128000
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image", "pdf"]
 output = ["text"]
 
 [provider]

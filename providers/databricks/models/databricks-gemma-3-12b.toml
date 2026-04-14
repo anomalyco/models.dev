@@ -3,7 +3,7 @@ family = "gemma"
 release_date = "2025-03-01"
 last_updated = "2026-04-11"
 attachment = true
-reasoning = false
+reasoning = true
 tool_call = true
 temperature = true
 open_weights = true
@@ -13,5 +13,5 @@ context = 131072
 output = 8192
 
 [modalities]
-input = ["text"]
+input = ["text", "image"]
 output = ["text"]
