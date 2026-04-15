@@ -1,4 +1,4 @@
-name = "gpt-oss-120b-cs"
+name = "GPT-OSS-120B-CS"
 release_date = "2025-08-06"
 last_updated = "2025-08-06"
 attachment = true
@@ -7,8 +7,12 @@ temperature = false
 open_weights = false
 tool_call = true
 
+[cost]
+input = 0.35
+output = 0.75
+
 [limit]
-context = 0
+context = 128_000
 output = 0
 
 [modalities]

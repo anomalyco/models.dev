@@ -47,6 +47,8 @@ export const ModelFamilyValues = [
 
   // Alibaba Qwen
   "qwen",
+  "qwen3.5",
+  "qwen3.6",
   "qwen-free",
 
   // DeepSeek
@@ -387,6 +389,9 @@ export const ModelFamilyValues = [
 
   // Groq
   "groq",
+
+  // Elephant
+  "elephant",
 ] as const;
 
 export const ModelFamily = z.enum(ModelFamilyValues);
