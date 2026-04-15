@@ -1,21 +1,20 @@
-name = "claude-sonnet-4-5-20250929"
+name = "glm-for-coding"
 release_date = "2025-09-30"
 last_updated = "2025-09-30"
-attachment = true
-reasoning = false
+attachment = false
+reasoning = true
 temperature = true
 tool_call = true
 open_weights = false
-knowledge = "2025-03"
 
 [cost]
-input = 3.000
-output = 15.000
+input = 0.086
+output = 0.343
 
 [limit]
 context = 200_000
-output = 64_000
+output = 131_072
 
 [modalities]
-input = ["text", "image", "pdf"]
+input = ["text"]
 output = ["text"]
