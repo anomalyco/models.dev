@@ -20,6 +20,7 @@ enum ModelType {
   Embedding = "embedding",
   Image = "image",
   Video = "video",
+  Reranking = "reranking",
 }
 
 enum SkipZeroFields {
@@ -505,8 +506,12 @@ async function main() {
   let unchanged = 0;
 
   for (const apiModel of apiModels) {
-    // Skip these since OpenCode does not support image / video generation yet
-    if (apiModel.type === ModelType.Image || apiModel.type === ModelType.Video) {
+    // Skip these since OpenCode does not support image / video / reranking yet
+    if (
+      apiModel.type === ModelType.Image ||
+      apiModel.type === ModelType.Video ||
+      apiModel.type === ModelType.Reranking
+    ) {
       continue;
     }
 
