@@ -1,0 +1,24 @@
+name = "MiniMax M2.5 (UD-TQ1_0)"
+family = "minimax-m2.5"
+release_date = "2026-02-12"
+last_updated = "2026-02-12"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+open_weights = true
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0
+output = 0
+
+[limit]
+context = 196_608
+output = 24_576
+
+[modalities]
+input = ["text"]
+output = ["text"]
