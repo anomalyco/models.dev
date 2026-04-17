@@ -1,4 +1,4 @@
-name = "Claude Opus 4.7 (US)"
+name = "Claude Opus 4.7"
 family = "claude-opus"
 release_date = "2026-04-16"
 last_updated = "2026-04-16"
@@ -6,20 +6,18 @@ attachment = true
 reasoning = true
 temperature = false
 tool_call = true
-structured_output = true
 knowledge = "2026-01-31"
 open_weights = false
 
 [cost]
-input = 5.00
-output = 25.00
-cache_read = 0.50
-cache_write = 6.25
+input = 0
+output = 0
 
 [limit]
-context = 1_000_000
-output = 128_000
+context = 144_000
+output = 64_000
+input = 128_000
 
 [modalities]
-input = ["text", "image", "pdf"]
+input = ["text", "image"]
 output = ["text"]
