@@ -1,6 +1,19 @@
 import path from "path";
+import { z } from "zod";
 
 import { Provider, Model } from "./schema.js";
+
+const ExtendsModel = Model.sourceType()
+  .partial()
+  .extend({
+    extends: z
+      .object({
+        from: z.string(),
+        omit: z.array(z.string()).optional(),
+      })
+      .strict(),
+  })
+  .strict();
 
 export async function generate(directory: string) {
   const result = {} as Record<string, Provider>;
