@@ -1,0 +1,21 @@
+name = "GTE Large (v1.5)"
+family = "text-embedding"
+release_date = "2024-03-27"
+last_updated = "2026-04-16"
+attachment = false
+reasoning = false
+temperature = false
+tool_call = false
+open_weights = true
+
+[cost]
+input = 0.09
+output = 0.00
+
+[limit]
+context = 8_192
+output = 1_024
+
+[modalities]
+input = ["text"]
+output = ["text"]
