@@ -1,25 +1,25 @@
-name = "MiniMax M2.1"
-family = "minimax"
+name = "GLM 5.1"
+family = "glm"
+release_date = "2026-04-08"
+last_updated = "2026-04-08"
 attachment = false
 reasoning = true
+temperature = true
 tool_call = true
 structured_output = true
-temperature = true
-release_date = "2025-12-01"
-last_updated = "2026-03-16"
 open_weights = true
 
 [interleaved]
 field = "reasoning_content"
 
 [cost]
-input = 0.35
-output = 1.5
-cache_read = 0.04
+input = 0.66
+output = 2.00
+cache_read = 0.12
 
 [limit]
-context = 198_000
-output = 32_768
+context = 202_000
+output = 202_000
 
 [modalities]
 input = ["text"]

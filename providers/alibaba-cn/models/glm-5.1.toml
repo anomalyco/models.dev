@@ -1,25 +1,25 @@
 name = "GLM-5.1"
 family = "glm"
+release_date = "2026-04-14"
+last_updated = "2026-04-14"
 attachment = false
 reasoning = true
-tool_call = true
 structured_output = true
 temperature = true
-release_date = "2026-04-07"
-last_updated = "2026-04-07"
+tool_call = true
 open_weights = true
 
 [interleaved]
 field = "reasoning_content"
 
 [cost]
-input = 1.4
-output = 4.4
-cache_read = 0.26
+input = 0.87
+output = 3.48
+cache_read = 0.17
 
 [limit]
 context = 202_752
-output = 202_752
+output = 128_000
 
 [modalities]
 input = ["text"]
