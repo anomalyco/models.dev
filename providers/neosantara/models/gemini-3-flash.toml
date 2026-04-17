@@ -1,0 +1,25 @@
+name = "Gemini 3 Flash"
+family = "gemini"
+release_date = "2025-02-01"
+last_updated = "2025-02-01"
+attachment = true
+reasoning = false
+tool_call = true
+temperature = true
+knowledge = "2025-01"
+open_weights = false
+structured_output = true
+
+[cost]
+input = 0.50
+output = 3.00
+cache_read = 0.10
+cache_write = 0.03
+
+[limit]
+context = 1_000_000
+output = 2_400
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

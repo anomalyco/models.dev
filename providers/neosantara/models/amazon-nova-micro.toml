@@ -1,0 +1,22 @@
+name = "Amazon Nova Micro"
+family = "nova"
+release_date = "2025-01-01"
+last_updated = "2025-01-01"
+attachment = false
+reasoning = false
+tool_call = true
+temperature = true
+knowledge = "2024-10"
+open_weights = false
+
+[cost]
+input = 0.035
+output = 0.14
+
+[limit]
+context = 300_000
+output = 4_096
+
+[modalities]
+input = ["text"]
+output = ["text"]

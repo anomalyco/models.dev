@@ -1,0 +1,24 @@
+name = "Grok 4.1 Fast (non-reasoning)"
+family = "grok"
+release_date = "2025-03-01"
+last_updated = "2025-03-01"
+attachment = false
+reasoning = false
+tool_call = true
+temperature = true
+knowledge = "2025-03"
+open_weights = false
+
+[cost]
+input = 0.30
+output = 0.72
+cache_read = 0.10
+cache_write = 0.15
+
+[limit]
+context = 2_000_000
+output = 4_096
+
+[modalities]
+input = ["text"]
+output = ["text"]

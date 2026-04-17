@@ -1,0 +1,21 @@
+name = "Nusantara Base"
+release_date = "2024-10-01"
+last_updated = "2025-04-01"
+attachment = true
+reasoning = false
+temperature = true
+knowledge = "2025-03"
+tool_call = true
+open_weights = false
+
+[cost]
+input = 0.30
+output = 1.50
+
+[limit]
+context = 64_000
+output = 2_048
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
