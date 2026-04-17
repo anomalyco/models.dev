@@ -1,4 +1,4 @@
-name = "Claude Opus 4.7 (US)"
+name = "Claude Opus 4.7"
 family = "claude-opus"
 release_date = "2026-04-16"
 last_updated = "2026-04-16"
@@ -6,8 +6,7 @@ attachment = true
 reasoning = true
 temperature = false
 tool_call = true
-structured_output = true
-knowledge = "2026-01-31"
+knowledge = "2026-01"
 open_weights = false
 
 [cost]
@@ -23,3 +22,6 @@ output = 128_000
 [modalities]
 input = ["text", "image", "pdf"]
 output = ["text"]
+
+[provider]
+npm = "@ai-sdk/anthropic"
