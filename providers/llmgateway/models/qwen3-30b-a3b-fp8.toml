@@ -3,19 +3,19 @@ family = "qwen"
 release_date = "2025-04-28"
 last_updated = "2025-04-28"
 attachment = false
-reasoning = false
+reasoning = true
 temperature = true
-tool_call = false
-structured_output = false
+tool_call = true
+structured_output = true
 open_weights = true
 
 [cost]
-input = 0.09
-output = 0.45
+input = 0.10
+output = 0.10
 
 [limit]
-context = 40_960
-output = 20_000
+context = 131_072
+output = 8_192
 
 [modalities]
 input = ["text"]
