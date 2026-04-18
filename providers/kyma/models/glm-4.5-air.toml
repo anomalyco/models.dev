@@ -1,0 +1,22 @@
+name = "GLM 4.5 Air"
+family = "glm"
+release_date = "2025-01-01"
+last_updated = "2026-04-18"
+attachment = false
+reasoning = true
+temperature = true
+knowledge = "2025-03"
+tool_call = true
+open_weights = true
+
+[cost]
+input = 0.18
+output = 1.15
+
+[limit]
+context = 131_072
+output = 8_192
+
+[modalities]
+input = ["text"]
+output = ["text"]
