@@ -1,19 +1,20 @@
-name = "Qwen3 14B"
+name = "Qwen3 2507 GPTQ 235B"
 family = "qwen"
-release_date = "2025-04"
-last_updated = "2025-04"
+release_date = "2025-07"
+last_updated = "2025-07"
 attachment = false
-reasoning = false
+reasoning = true
 tool_call = true
 open_weights = true
 
 [cost]
 input = 2.07
 output = 8.72
+reasoning = 8.72
 
 [limit]
-context = 131_072
-output = 131_072
+context = 130_000
+output = 130_000
 
 [modalities]
 input = ["text"]

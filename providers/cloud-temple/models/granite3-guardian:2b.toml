@@ -1,10 +1,10 @@
-name = "Qwen3 2507 30B-A3B"
-family = "qwen"
-release_date = "2025-07"
-last_updated = "2025-07"
+name = "Granite 3 Guardian 2B"
+family = "granite"
+release_date = "2024-12"
+last_updated = "2024-12"
 attachment = false
 reasoning = false
-tool_call = true
+tool_call = false
 open_weights = true
 
 [cost]
@@ -12,8 +12,8 @@ input = 2.07
 output = 8.72
 
 [limit]
-context = 250_000
-output = 250_000
+context = 8_192
+output = 8_192
 
 [modalities]
 input = ["text"]

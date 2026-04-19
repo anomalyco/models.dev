@@ -1,10 +1,10 @@
-name = "Gemma 3 4B"
+name = "FunctionGemma 270M"
 family = "gemma"
-release_date = "2025-03"
-last_updated = "2025-03"
+release_date = "2025-06"
+last_updated = "2025-06"
 attachment = false
 reasoning = false
-tool_call = false
+tool_call = true
 open_weights = true
 
 [cost]
@@ -12,8 +12,8 @@ input = 2.07
 output = 8.72
 
 [limit]
-context = 120_000
-output = 120_000
+context = 8_192
+output = 8_192
 
 [modalities]
 input = ["text"]

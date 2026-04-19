@@ -1,0 +1,20 @@
+name = "Voxtral"
+family = "voxtral"
+release_date = "2025-03"
+last_updated = "2025-03"
+attachment = true
+reasoning = false
+tool_call = false
+open_weights = true
+
+[cost]
+input = 2.07
+output = 8.72
+
+[limit]
+context = 32_768
+output = 32_768
+
+[modalities]
+input = ["text", "audio"]
+output = ["text"]

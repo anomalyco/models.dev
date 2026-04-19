@@ -1,10 +1,10 @@
-name = "MedGemma 27B"
+name = "Gemma 4 31B"
 family = "gemma"
-release_date = "2025-06"
-last_updated = "2025-06"
-attachment = true
+release_date = "2025-07"
+last_updated = "2025-07"
+attachment = false
 reasoning = false
-tool_call = false
+tool_call = true
 open_weights = true
 
 [cost]
@@ -16,5 +16,5 @@ context = 128_000
 output = 128_000
 
 [modalities]
-input = ["text", "image"]
+input = ["text"]
 output = ["text"]
