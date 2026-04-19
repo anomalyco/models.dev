@@ -1,10 +1,2 @@
-temperature = true
-
 [extends]
 from = "openai/gpt-5.2"
-omit = ["limit.input"]
-
-[cost]
-input = 1.75
-output = 14.00
-cache_read = 0.18

@@ -7,16 +7,16 @@ reasoning = true
 temperature = true
 tool_call = true
 structured_output = true
-open_weights = false
+open_weights = true
 
 [cost]
 input = 0.07
 output = 0.30
-cache_read = 0.02
+cache_read = 0.01
 
 [limit]
 context = 256_000
-output = 16_384
+output = 8_192
 
 [modalities]
 input = ["text", "image"]
