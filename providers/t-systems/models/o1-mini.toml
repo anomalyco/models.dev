@@ -1,23 +1,7 @@
-name = "o1-mini"
-family = "o-mini"
-release_date = "2024-09-12"
-last_updated = "2024-09-12"
-attachment = false
-reasoning = true
-temperature = false
-knowledge = "2023-09"
-tool_call = false
-structured_output = true
-open_weights = false
+[extends]
+from = "openai/o1-mini"
+omit = ["cost.cache_read"]
 
 [cost]
 input = 3.90
 output = 15.58
-
-[limit]
-context = 128_000
-output = 65_536
-
-[modalities]
-input = ["text"]
-output = ["text"]

@@ -1,23 +1,7 @@
-name = "o3"
-family = "o"
-release_date = "2025-04-16"
-last_updated = "2025-04-16"
-attachment = true
-reasoning = true
-temperature = false
-knowledge = "2024-05"
-tool_call = true
-structured_output = true
-open_weights = false
+[extends]
+from = "openai/o3"
+omit = ["cost.cache_read"]
 
 [cost]
 input = 2.18
 output = 8.71
-
-[limit]
-context = 200_000
-output = 100_000
-
-[modalities]
-input = ["text", "image", "pdf"]
-output = ["text"]

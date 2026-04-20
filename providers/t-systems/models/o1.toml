@@ -1,23 +1,7 @@
-name = "o1"
-family = "o"
-release_date = "2024-12-05"
-last_updated = "2024-12-05"
-attachment = true
-reasoning = true
-temperature = false
-knowledge = "2023-09"
-tool_call = true
-structured_output = true
-open_weights = false
+[extends]
+from = "openai/o1"
+omit = ["cost.cache_read"]
 
 [cost]
 input = 19.48
 output = 77.92
-
-[limit]
-context = 200_000
-output = 100_000
-
-[modalities]
-input = ["text", "image", "pdf"]
-output = ["text"]

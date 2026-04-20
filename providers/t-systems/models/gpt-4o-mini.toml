@@ -1,23 +1,9 @@
 name = "GPT-4o Mini"
-family = "gpt-mini"
-release_date = "2024-07-18"
-last_updated = "2024-07-18"
-attachment = true
-reasoning = false
-temperature = true
-knowledge = "2023-09"
-tool_call = true
-structured_output = true
-open_weights = false
+
+[extends]
+from = "openai/gpt-4o-mini"
+omit = ["cost.cache_read"]
 
 [cost]
 input = 0.19
 output = 0.78
-
-[limit]
-context = 128_000
-output = 16_384
-
-[modalities]
-input = ["text", "image", "pdf"]
-output = ["text"]

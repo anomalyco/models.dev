@@ -1,22 +1,12 @@
 name = "GPT-4.1 Mini"
-family = "gpt-mini"
-release_date = "2025-04-14"
-last_updated = "2025-04-14"
-attachment = true
-reasoning = false
-temperature = true
-knowledge = "2024-04"
-tool_call = true
-structured_output = true
-open_weights = false
+
+[extends]
+from = "openai/gpt-4.1-mini"
+omit = ["cost.cache_read"]
 
 [cost]
 input = 0.44
 output = 1.73
-
-[limit]
-context = 1_047_576
-output = 32_768
 
 [modalities]
 input = ["text", "image"]

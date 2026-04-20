@@ -1,14 +1,8 @@
 name = "Gemini 3 Pro"
-family = "gemini-pro"
-release_date = "2025-11-18"
-last_updated = "2025-11-18"
-attachment = true
-reasoning = true
-temperature = true
-tool_call = true
-structured_output = true
-knowledge = "2025-01"
-open_weights = false
+
+[extends]
+from = "google/gemini-3-pro-preview"
+omit = ["cost.cache_read", "cost.context_over_200k"]
 
 [cost]
 input = 4.41
@@ -17,7 +11,3 @@ output = 19.86
 [limit]
 context = 1_048_576
 output = 65_536
-
-[modalities]
-input = ["text", "image", "video", "audio", "pdf"]
-output = ["text"]
