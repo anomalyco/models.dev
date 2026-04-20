@@ -1,4 +1,5 @@
 import Index from "../index.html";
+import { normalizeLogoSvg } from "./logo.js";
 import { Providers, Rendered } from "./render";
 import path from "path";
 
@@ -45,7 +46,7 @@ Bun.serve({
         file = Bun.file(defaultLogoPath);
       }
 
-      return new Response(file, {
+      return new Response(normalizeLogoSvg(await file.text()), {
         headers: {
           "Content-Type": "image/svg+xml",
           "Cache-Control": "public, max-age=3600",

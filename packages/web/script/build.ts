@@ -1,6 +1,7 @@
 #!/usr/bin/env bun
 
 import { Rendered, Providers } from "../src/render";
+import { normalizeLogoSvg } from "../src/logo.js";
 import fs from "fs/promises";
 import path from "path";
 import { $ } from "bun";
@@ -23,7 +24,10 @@ await fs.mkdir("./dist/logos", { recursive: true });
 const defaultLogoPath = "../../providers/logo.svg";
 const defaultLogo = Bun.file(defaultLogoPath);
 if (await defaultLogo.exists()) {
-  await Bun.write("./dist/logos/default.svg", defaultLogo);
+  await Bun.write(
+    "./dist/logos/default.svg",
+    normalizeLogoSvg(await defaultLogo.text())
+  );
 }
 
 // Then copy provider-specific logos
@@ -36,7 +40,10 @@ for (const entry of entries) {
     const logoFile = Bun.file(logoPath);
 
     if (await logoFile.exists()) {
-      await Bun.write(`./dist/logos/${provider}.svg`, logoFile);
+      await Bun.write(
+        `./dist/logos/${provider}.svg`,
+        normalizeLogoSvg(await logoFile.text())
+      );
     }
   }
 }
