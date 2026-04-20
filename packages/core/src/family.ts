@@ -115,6 +115,9 @@ export const ModelFamilyValues = [
   // Hunyuan
   "hunyuan",
 
+  // Hy
+  "Hy",
+
   // Yi
   "yi",
 

@@ -31,8 +31,26 @@
 ## Model Configuration
 
 - Model `id` is **auto-injected** from filename (minus `.toml`) — never put `id` in TOML files
-- Same model is duplicated across provider directories with no cross-referencing
+- Models may reuse another model's definition via `extends` (see below); otherwise the full definition must be present in the file
 - Schema uses `.strict()` — extra fields cause validation errors
+
+### `[extends]` (inheritance between models)
+- Syntax — a table at the top of the TOML:
+  ```toml
+  [extends]
+  from = "<provider-id>/<model-id>"   # required
+  omit = ["experimental.modes.fast"]  # optional, dot-path strings
+  ```
+  Example: `from = "anthropic/claude-opus-4-6"`
+- Resolved at parse time in `generate()`; the final JSON output contains **no** `extends` field — it exists only to cut duplication in the TOMLs
+- Merge semantics:
+  - Plain objects (`[cost]`, `[limit]`, `[modalities]`, `[provider]`, `[experimental]`, …) are **deep-merged**
+  - Arrays (e.g. `modalities.input`) and primitives are **replaced** wholesale by the child
+  - Any field the child omits is inherited verbatim from the base
+- `omit` runs **after** the merge and deletes each dot-path from the result (used when the child needs to *remove* something the base defines, e.g. a provider-specific experimental mode). Every listed path must exist in the merged model, else an error is thrown. Ancestor tables that become empty as a result are also pruned, so `omit = ["experimental.modes.fast"]` yields no `experimental` key in the final JSON when `fast` was the only mode.
+- Chains are allowed (A extends B extends C); cycles throw
+- The base model must exist; `[extends.from]` pointing at a missing provider/model is an error
+- The `extends` table is stripped before schema validation, so the merged result must still satisfy the strict `Model` schema
 
 ### Bedrock Naming Patterns
 - Dated models: `-v1:0` suffix (`anthropic.claude-3-5-sonnet-20241022-v1:0.toml`)

@@ -2,7 +2,7 @@ name = "claude-opus-4-5-20251101"
 release_date = "2025-11-25"
 last_updated = "2025-11-25"
 attachment = true
-reasoning = false
+reasoning = true
 temperature = true
 tool_call = true
 open_weights = false
@@ -17,5 +17,5 @@ context = 200_000
 output = 64_000
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image", "pdf"]
 output = ["text"]
