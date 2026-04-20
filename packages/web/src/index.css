@@ -319,15 +319,12 @@ tbody {
     gap: 0.375rem;
   }
 
-  .provider-cell span:first-child {
+  .provider-logo {
     flex: 0 0 auto;
-  }
-
-  .provider-cell svg {
     display: block;
     width: 1rem;
     height: 1rem;
-    color: var(--color-text-secondary);
+    object-fit: contain;
   }
 
   .model-id-cell {
@@ -415,6 +412,17 @@ tbody {
 
   .modality-icon:hover::after {
     opacity: 1;
+  }
+
+  tr.loading-row td,
+  tr.error-row td {
+    padding: 1rem 0.75rem;
+    text-align: center;
+    font-family: inherit;
+    font-size: 0.875rem;
+    font-weight: 400;
+    text-transform: none;
+    color: var(--color-text-secondary);
   }
 }
 
