@@ -1,0 +1,21 @@
+name = "gpt-5.4-mini"
+release_date = "2026-03-19"
+last_updated = "2026-03-19"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = true
+open_weights = false
+knowledge = "2025-08"
+
+[cost]
+input = 0.750
+output = 4.500
+
+[limit]
+context = 400_000
+output = 128_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

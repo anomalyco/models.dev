@@ -1,22 +1,6 @@
-name = "GPT-4.1"
-family = "gpt"
-release_date = "2025-04-14"
-last_updated = "2025-04-14"
-attachment = true
-reasoning = false
-temperature = true
-knowledge = "2024-05"
-tool_call = true
-open_weights = false
-
-[cost]
-input = 2.00
-output = 8.00
-cache_read = 0.50
-
-[limit]
-context = 1_047_576
-output = 32_768
+[extends]
+from = "openai/gpt-4.1"
+omit = ["structured_output"]
 
 [modalities]
 input = ["text", "image"]
