@@ -1,0 +1,21 @@
+name = "Qwen 3.5 35B A3B FP8"
+family = "qwen"
+release_date = "2026-02-24"
+last_updated = "2026-02-24"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+open_weights = true
+
+[cost]
+input = 0.25
+output = 2.0
+
+[limit]
+context = 262_144
+output = 16_384
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
