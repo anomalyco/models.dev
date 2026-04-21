@@ -1,0 +1,21 @@
+name = "Qwen3.6 35B A3B Thinking"
+family = "qwen3.6"
+release_date = "2026-04-19"
+last_updated = "2026-04-21"
+attachment = false
+reasoning = true
+tool_call = false
+structured_output = false
+open_weights = true
+
+[cost]
+input = 0.29
+output = 1.74
+
+[limit]
+context = 262_144
+output = 16_384
+
+[modalities]
+input = ["text", "image", "video"]
+output = ["text"]
