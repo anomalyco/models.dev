@@ -284,6 +284,7 @@ export const ModelFamilyValues = [
 
   // Ling & Ring (InclusionAI)
   "ling",
+  "ling-flash-free",
   "ring",
 
   // Kat Coder
