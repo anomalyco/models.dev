@@ -203,7 +203,7 @@ cd packages/web && bun run build
 | `bun run databricks:test-inference -- --profile PROFILE` | Exercises each catalog route against AI Gateway (`--only`, `--delay-ms`, `--json` supported). |
 
 
-Scripts: `[list-databricks-ai-gateway.ts](../../packages/core/script/list-databricks-ai-gateway.ts)`, `[test-databricks.ts](../../packages/core/script/test-databricks.ts)`.
+Scripts: `[list-databricks-ai-gateway.ts](./scripts/list-databricks-ai-gateway.ts)`, `[test-databricks.ts](./scripts/test-databricks.ts)`.
 
 ---
 

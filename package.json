@@ -3,7 +3,8 @@
   "private": true,
   "workspaces": {
     "packages": [
-      "packages/*"
+      "packages/*",
+      "providers/databricks"
     ],
     "catalog": {
       "typescript": "5.8.2",
@@ -21,9 +22,9 @@
     "venice:generate": "bun ./packages/core/script/generate-venice.ts",
     "vercel:generate": "bun ./packages/core/script/generate-vercel.ts",
     "wandb:generate": "bun ./packages/core/script/generate-wandb.ts",
-    "databricks:list-gateway": "bun ./packages/core/script/list-databricks-ai-gateway.ts",
-    "databricks:test-inference": "bun ./packages/core/script/test-databricks.ts",
-    "databricks:probe-capabilities": "bun ./packages/core/script/probe-databricks-capabilities.ts"
+    "databricks:list-gateway": "bun ./providers/databricks/scripts/list-databricks-ai-gateway.ts",
+    "databricks:test-inference": "bun ./providers/databricks/scripts/test-databricks.ts",
+    "databricks:probe-capabilities": "bun ./providers/databricks/scripts/probe-databricks-capabilities.ts"
   },
   "dependencies": {
     "@cloudflare/workers-types": "^4.20250801.0",

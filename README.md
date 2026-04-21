@@ -219,7 +219,7 @@ See existing providers in the `providers/` directory for reference:
 - `providers/anthropic/` - Anthropic Claude models
 - `providers/openai/` - OpenAI GPT models
 - `providers/google/` - Google Gemini models
-- `providers/databricks/` - Databricks Foundation Model APIs on **AI Gateway**: default **`mlflow/v1`** for chat and embeddings via **`@databricks/ai-sdk-provider`**; per-model **`[provider]`** for **Claude** (Anthropic Messages), **Gemini** (native API), and **OpenAI Responses**. See [providers/databricks/README.md](providers/databricks/README.md) for discovery, authentication, and validation scripts.
+- `providers/databricks/` - Databricks Foundation Model APIs via AI Gateway. See [providers/databricks/README.md](providers/databricks/README.md).
 
 ### Working on frontend
 
