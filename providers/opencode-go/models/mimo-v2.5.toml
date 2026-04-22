@@ -1,7 +1,7 @@
-name = "MiMo V2 Omni"
-family = "mimo-v2-omni"
-release_date = "2026-03-18"
-last_updated = "2026-03-18"
+name = "MiMo V2.5"
+family = "mimo-v2.5"
+release_date = "2026-04-22"
+last_updated = "2026-04-22"
 attachment = true
 reasoning = true
 temperature = true
@@ -16,6 +16,11 @@ field = "reasoning_content"
 input = 0.40
 output = 2.00
 cache_read = 0.08
+
+[cost.context_over_200k]
+input = 0.80
+output = 4.00
+cache_read = 0.16
 
 [limit]
 context = 262_144
