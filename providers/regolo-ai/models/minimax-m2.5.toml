@@ -1,7 +1,7 @@
-name = "GPT-OSS-120B"
-family = "gpt-oss"
-release_date = "2025-08-05"
-last_updated = "2025-08-05"
+name = "MiniMax 2.5"
+family = "minimax"
+release_date = "2026-03-10"
+last_updated = "2026-03-10"
 attachment = false
 reasoning = true
 temperature = true
@@ -9,12 +9,12 @@ tool_call = true
 open_weights = false
 
 [cost]
-input = 1.00
-output = 4.20
+input = 0.80
+output = 3.50
 
 [limit]
-context = 128000
-output = 16384
+context = 190000
+output = 64000
 
 [modalities]
 input = ["text"]

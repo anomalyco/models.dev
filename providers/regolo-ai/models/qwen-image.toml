@@ -1,21 +1,21 @@
-name = "Qwen3-Coder-Next"
+name = "Qwen-Image"
 family = "qwen"
 release_date = "2026-03-01"
 last_updated = "2026-03-01"
 attachment = false
-reasoning = true
+reasoning = false
 temperature = true
-tool_call = true
-open_weights = true
+tool_call = false
+open_weights = false
 
 [cost]
-input = 0.30
-output = 1.20
+input = 0.50
+output = 2.00
 
 [limit]
-context = 262144
-output = 16384
+context = 8192
+output = 4096
 
 [modalities]
 input = ["text"]
-output = ["text"]
+output = ["image"]
