@@ -1,0 +1,17 @@
+name = "Pareto Code Router"
+release_date = "2026-04-21"
+last_updated = "2026-04-21"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[limit]
+context = 200_000
+output = 200_000
+
+[modalities]
+input = ["text"]
+output = ["text"]
