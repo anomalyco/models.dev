@@ -1,0 +1,26 @@
+name = "DeepSeek V3.2 Fast"
+family = "deepseek"
+release_date = "2025-12-01"
+last_updated = "2026-02-28"
+attachment = true
+reasoning = true
+temperature = true
+knowledge = "2025-09"
+tool_call = true
+open_weights = true
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.50
+output = 1.50
+cache_read = 0.05
+
+[limit]
+context = 163_840
+output = 131_072
+
+[modalities]
+input = ["text"]
+output = ["text"]
