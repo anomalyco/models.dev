@@ -60,6 +60,8 @@ export const ModelFamilyValues = [
 
   // Moonshot Kimi
   "kimi",
+  "kimi-k2.5",
+  "kimi-k2.6",
   "kimi-free",
   "kimi-thinking",
 
@@ -115,8 +117,8 @@ export const ModelFamilyValues = [
   // Hunyuan
   "hunyuan",
 
-  // HY
-  "HY",
+  // Hy
+  "Hy",
 
   // Yi
   "yi",
@@ -205,6 +207,10 @@ export const ModelFamilyValues = [
   "mimo",
   "mimo-pro",
   "mimo-omni",
+  "mimo-v2-pro",
+  "mimo-v2-omni",
+  "mimo-v2.5-pro",
+  "mimo-v2.5",
   "mimo-pro-free",
   "mimo-omni-free",
   "mimo-flash-free",
@@ -280,8 +286,12 @@ export const ModelFamilyValues = [
   // RNJ
   "rnj",
 
+  // Tecent Hy
+  "hy3-free",
+
   // Ling & Ring (InclusionAI)
   "ling",
+  "ling-flash-free",
   "ring",
 
   // Kat Coder
