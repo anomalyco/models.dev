@@ -1,0 +1,26 @@
+name = "Kimi K2.6 TEE"
+family = "kimi"
+release_date = "2026-04-20"
+last_updated = "2026-04-23"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+knowledge = "2025-12"
+open_weights = true
+structured_output = true
+
+[interleaved]
+field = "reasoning"
+
+[cost]
+input = 0.44
+output = 2.00
+
+[limit]
+context = 262_144
+output = 262_144
+
+[modalities]
+input = ["text", "image", "video"]
+output = ["text"]
