@@ -286,6 +286,9 @@ export const ModelFamilyValues = [
   // RNJ
   "rnj",
 
+  // Tecent Hy
+  "hy3-free",
+
   // Ling & Ring (InclusionAI)
   "ling",
   "ling-flash-free",
