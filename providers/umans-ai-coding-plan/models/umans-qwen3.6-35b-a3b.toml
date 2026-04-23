@@ -1,0 +1,19 @@
+name = "Qwen3.6 35B A3B"
+temperature = false
+
+[cost]
+input = 0
+output = 0
+cache_read = 0
+cache_write = 0
+
+[limit]
+context = 262_144
+output = 262_144
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[extends]
+from = "alibaba/qwen3.6-35b-a3b"
