@@ -1,0 +1,23 @@
+name = "Hermes-2-Pro-Mistral-7b"
+family = "mistral"
+release_date = "2024-04-01"
+last_updated = "2024-04-01"
+attachment = false
+reasoning = false
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = true
+
+[cost]
+input = 0.05
+output = 0.1
+
+[limit]
+context = 24000
+input = 19904
+output = 4096
+
+[modalities]
+input = ["text"]
+output = ["text"]

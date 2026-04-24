@@ -1,0 +1,23 @@
+name = "Sonar Deep Research"
+family = "perplexity"
+release_date = "2024-01-01"
+last_updated = "2024-01-01"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = false
+structured_output = false
+open_weights = false
+
+[cost]
+input = 2
+output = 8
+
+[limit]
+context = 127000
+input = 110616
+output = 16384
+
+[modalities]
+input = ["text"]
+output = ["text"]

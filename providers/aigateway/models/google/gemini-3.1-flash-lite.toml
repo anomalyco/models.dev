@@ -1,0 +1,23 @@
+name = "Gemini 3.1 Flash Lite"
+family = "gemini-3"
+release_date = "2026-04-13"
+last_updated = "2026-04-13"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = true
+
+[cost]
+input = 0.25
+output = 1.5
+
+[limit]
+context = 1000000
+input = 991808
+output = 8192
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

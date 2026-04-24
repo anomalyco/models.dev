@@ -1,0 +1,23 @@
+name = "Llama-2-7b-Chat-HF-Lora"
+family = "llama-2"
+release_date = "2024-04-02"
+last_updated = "2024-04-02"
+attachment = false
+reasoning = false
+temperature = true
+tool_call = false
+structured_output = false
+open_weights = true
+
+[cost]
+input = 0.04
+output = 0.08
+
+[limit]
+context = 8192
+input = 4096
+output = 4096
+
+[modalities]
+input = ["text"]
+output = ["text"]

@@ -1,0 +1,23 @@
+name = "Nemotron-3-120b-A12b"
+family = "nemotron"
+release_date = "2026-02-24"
+last_updated = "2026-02-24"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = true
+
+[cost]
+input = 0.5
+output = 1.5
+
+[limit]
+context = 256000
+input = 251904
+output = 4096
+
+[modalities]
+input = ["text"]
+output = ["text"]

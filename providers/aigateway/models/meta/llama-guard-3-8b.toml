@@ -1,0 +1,23 @@
+name = "Llama-Guard-3-8b"
+family = "llama-guard"
+release_date = "2025-01-22"
+last_updated = "2025-01-22"
+attachment = false
+reasoning = false
+temperature = true
+tool_call = false
+structured_output = false
+open_weights = true
+
+[cost]
+input = 0.48
+output = 0.03
+
+[limit]
+context = 131072
+input = 126976
+output = 4096
+
+[modalities]
+input = ["text"]
+output = ["text"]
