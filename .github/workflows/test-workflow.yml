@@ -31,12 +31,11 @@ jobs:
       - name: Install Dependencies
         run: bun install
 
-      - name: Sync with upstream
+      - name: Checkout upstream dev
         run: |
           git remote add upstream https://github.com/anomalyco/models.dev.git || true
-          git fetch upstream
-          git merge upstream/dev --no-edit
-          git push origin dev
+          git fetch upstream dev
+          git checkout -B upstream-dev upstream/dev
 
       - name: Generate Vercel models
         run: bun run vercel:generate --new-only
