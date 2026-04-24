@@ -1,0 +1,28 @@
+name = "Kimi K2.6"
+family = "kimi"
+release_date = "2026-04-21"
+last_updated = "2026-04-21"
+attachment = true
+reasoning = true
+structured_output = true
+temperature = true
+tool_call = true
+knowledge = "2024-04"
+open_weights = true
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.75
+output = 3.50
+cache_read = 0.15
+
+[limit]
+context = 262_144
+# https://deepinfra.com/docs/advanced/max_tokens_limit
+output = 16_384
+
+[modalities]
+input = ["text", "image", "video"]
+output = ["text"]

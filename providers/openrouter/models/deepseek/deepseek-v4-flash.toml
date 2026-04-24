@@ -1,0 +1,11 @@
+attachment = false
+
+[extends]
+from = "deepseek/deepseek-v4-flash"
+
+[interleaved]
+field = "reasoning_details"
+
+[limit]
+context = 1_048_576
+output = 393_216

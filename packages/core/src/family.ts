@@ -54,6 +54,7 @@ export const ModelFamilyValues = [
   // DeepSeek
   "deepseek",
   "deepseek-thinking",
+  "deepseek-flash",
 
   // Microsoft Phi
   "phi",
@@ -285,6 +286,9 @@ export const ModelFamilyValues = [
 
   // RNJ
   "rnj",
+
+  // Tecent Hy
+  "hy3-free",
 
   // Ling & Ring (InclusionAI)
   "ling",
