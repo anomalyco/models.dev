@@ -1,13 +1,13 @@
-name = "MiMo-V2-Omni"
+name = "MiMo-V2.5-Pro"
 family = "mimo"
-release_date = "2026-03-18"
-last_updated = "2026-03-18"
+release_date = "2026-04-23"
+last_updated = "2026-04-23"
 attachment = false
 reasoning = true
 temperature = true
 tool_call = true
-knowledge = "2024-12"
-open_weights = true
+knowledge = "2025-04"
+open_weights = false
 
 [interleaved]
 field = "reasoning_content"
@@ -18,9 +18,9 @@ output = 0
 cache_read = 0
 
 [limit]
-context = 256_000
+context = 1_000_000
 output = 128_000
 
 [modalities]
-input = ["text", "image", "audio", "video", "pdf"]
+input = ["text"]
 output = ["text"]

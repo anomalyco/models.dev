@@ -1,0 +1,20 @@
+name = "MiMo-V2.5-TTS"
+family = "mimo"
+release_date = "2026-04-23"
+last_updated = "2026-04-23"
+attachment = false
+reasoning = false
+tool_call = false
+open_weights = true
+
+[cost]
+input = 0
+output = 0
+
+[limit]
+context = 8_000
+output = 8_000
+
+[modalities]
+input = ["text"]
+output = ["audio"]
