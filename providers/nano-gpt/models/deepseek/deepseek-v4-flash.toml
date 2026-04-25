@@ -1,0 +1,21 @@
+name = "DeepSeek V4 Flash"
+family = "deepseek"
+attachment = true
+reasoning = true
+tool_call = true
+structured_output = true
+release_date = "2026-04-24"
+last_updated = "2026-04-24"
+open_weights = true
+
+[cost]
+input = 0.14
+output = 0.28
+
+[limit]
+context = 1_048_576
+output = 384_000
+
+[modalities]
+input = ["text", "pdf"]
+output = ["text"]
