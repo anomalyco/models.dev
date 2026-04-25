@@ -13,13 +13,13 @@ open_weights = true
 field = "reasoning_content"
 
 [cost]
-input = 0.28
-output = 0.42
+input = 0.14
+output = 0.28
 cache_read = 0.028
 
 [limit]
-context = 128_000
-output = 64_000
+context = 1_000_000
+output = 384_000
 
 [modalities]
 input = ["text"]
