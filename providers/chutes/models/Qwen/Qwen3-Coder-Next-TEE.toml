@@ -1,6 +1,7 @@
-name = "Devstral 2 123B Instruct 2512 TEE"
-release_date = "2026-01-10"
-last_updated = "2026-01-10"
+name = "Qwen3 Coder Next TEE"
+family = "qwen"
+release_date = "2026-04-25"
+last_updated = "2026-04-25"
 attachment = false
 reasoning = false
 temperature = true
@@ -9,8 +10,9 @@ structured_output = true
 open_weights = true
 
 [cost]
-input = 0.05
-output = 0.22
+input = 0.12
+output = 0.75
+cache_read = 0.06
 
 [limit]
 context = 262_144

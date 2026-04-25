@@ -1,22 +1,22 @@
-name = "dots.ocr"
-family = "rednote"
-release_date = "2025-12-29"
+name = "gemma 4 31B turbo TEE"
+family = "gemma"
+release_date = "2026-04-25"
 last_updated = "2026-04-25"
 attachment = true
-reasoning = false
+reasoning = true
 temperature = true
-tool_call = false
+tool_call = true
 structured_output = true
 open_weights = true
 
 [cost]
-input = 0.01
-output = 0.0109
-cache_read = 0.005
+input = 0.13
+output = 0.38
+cache_read = 0.065
 
 [limit]
 context = 131_072
-output = 131_072
+output = 65_536
 
 [modalities]
 input = ["text", "image"]

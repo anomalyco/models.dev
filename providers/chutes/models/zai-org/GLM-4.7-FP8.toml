@@ -1,6 +1,7 @@
 name = "GLM 4.7 FP8"
+family = "glm"
 release_date = "2026-01-27"
-last_updated = "2026-01-27"
+last_updated = "2026-04-25"
 attachment = false
 reasoning = true
 temperature = true
@@ -9,8 +10,9 @@ structured_output = true
 open_weights = true
 
 [cost]
-input = 0.30
-output = 1.20
+input = 0.2989
+output = 1.1957
+cache_read = 0.14945
 
 [limit]
 context = 202_752
