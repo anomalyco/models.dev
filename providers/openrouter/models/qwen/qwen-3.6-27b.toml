@@ -3,7 +3,7 @@ name = "Qwen3.6 27B"
 family = "qwen"
 release_date = "2026-04-22"
 last_updated = "2026-04-22"
-attachment = false
+attachment = true
 reasoning = false
 temperature = true
 knowledge = "2025-04"
@@ -16,8 +16,8 @@ input = 0.195
 output = 1.56
 
 [limit]
-context = 262144
-output = 81920
+context = 262_144
+output = 81_920
 
 [modalities]
 input = ["text", "image", "video"]
