@@ -1,0 +1,24 @@
+name = "Qwen3.5 397B A17B FP8"
+family = "qwen"
+release_date = "2026-02-01"
+last_updated = "2026-02-01"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+open_weights = true
+
+[cost]
+input = 0.35
+output = 1.75
+
+[limit]
+context = 262_144
+output = 262_144
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[interleaved]
+field = "reasoning_content"

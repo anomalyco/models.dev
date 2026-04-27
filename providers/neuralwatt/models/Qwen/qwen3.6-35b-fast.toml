@@ -1,0 +1,21 @@
+name = "Qwen3.6 35B Fast"
+family = "qwen3.6"
+release_date = "2026-04-01"
+last_updated = "2026-04-01"
+attachment = false
+reasoning = false
+temperature = true
+tool_call = true
+open_weights = true
+
+[cost]
+input = 0.25
+output = 1.25
+
+[limit]
+context = 131_072
+output = 131_072
+
+[modalities]
+input = ["text"]
+output = ["text"]
