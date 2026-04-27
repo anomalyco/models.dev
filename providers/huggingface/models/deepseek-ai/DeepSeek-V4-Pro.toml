@@ -1,19 +1,5 @@
-name = "DeepSeek-V4-Pro"
-release_date = "2026-04-24"
-last_updated = "2026-04-24"
-knowledge = "2025-05"
-structured_output = true
-
 [extends]
-from = "huggingface/deepseek-ai/DeepSeek-V3.2"
-
-[interleaved]
-field = "reasoning_content"
-
-[cost]
-input = 1.74
-output = 3.48
-cache_read = 0.0145
+from = "deepseek/deepseek-v4-pro"
 
 [limit]
 context = 1_048_576
