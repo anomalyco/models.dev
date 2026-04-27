@@ -54,6 +54,7 @@ export const ModelFamilyValues = [
   // DeepSeek
   "deepseek",
   "deepseek-thinking",
+  "deepseek-flash",
 
   // Microsoft Phi
   "phi",

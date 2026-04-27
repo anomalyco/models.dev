@@ -1,0 +1,22 @@
+name = "Abliterated Model"
+release_date = "2026-01-06"
+last_updated = "2026-01-06"
+attachment = true
+reasoning = false
+tool_call = true
+structured_output = false
+temperature = true
+open_weights = true
+
+[cost]
+input = 3.00
+output = 3.00
+
+[limit]
+context = 150_000
+input = 150_000
+output = 8_192
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

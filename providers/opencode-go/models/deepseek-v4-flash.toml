@@ -1,12 +1,13 @@
-name = "DeepSeek Reasoner"
-family = "deepseek-thinking"
-release_date = "2025-12-01"
-last_updated = "2026-02-28"
-attachment = true
+name = "DeepSeek V4 Flash"
+family = "deepseek-flash"
+release_date = "2026-04-24"
+last_updated = "2026-04-24"
+attachment = false
 reasoning = true
 temperature = true
-knowledge = "2025-09"
+knowledge = "2025-05"
 tool_call = true
+structured_output = true
 open_weights = true
 
 [interleaved]
@@ -15,7 +16,7 @@ field = "reasoning_content"
 [cost]
 input = 0.14
 output = 0.28
-cache_read = 0.028
+cache_read = 0.0028
 
 [limit]
 context = 1_000_000

@@ -1,0 +1,28 @@
+name = "GPT-5.5"
+family = "gpt"
+attachment = true
+reasoning = true
+tool_call = true
+structured_output = true
+temperature = true
+release_date = "2026-04-23"
+last_updated = "2026-04-25"
+open_weights = false
+
+[cost]
+input = 6.25
+output = 37.5
+cache_read = 0.625
+
+[cost.context_over_200k]
+input = 12.5
+output = 56.25
+cache_read = 1.25
+
+[limit]
+context = 1_000_000
+output = 131_072
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

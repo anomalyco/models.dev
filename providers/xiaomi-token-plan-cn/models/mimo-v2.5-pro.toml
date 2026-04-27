@@ -1,5 +1,5 @@
-name = "MiMo V2.5"
-family = "mimo-v2.5"
+name = "MiMo-V2.5-Pro"
+family = "mimo-v2.5-pro"
 release_date = "2026-04-22"
 last_updated = "2026-04-22"
 attachment = true
@@ -13,19 +13,14 @@ open_weights = true
 field = "reasoning_content"
 
 [cost]
-input = 0.40
-output = 2.00
-cache_read = 0.08
-
-[cost.context_over_200k]
-input = 0.80
-output = 4.00
-cache_read = 0.16
+input = 0
+output = 0
+cache_read = 0
 
 [limit]
 context = 1_000_000
 output = 128_000
 
 [modalities]
-input = ["text", "image", "audio", "pdf"]
+input = ["text"]
 output = ["text"]
