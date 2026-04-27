@@ -1,11 +1,17 @@
 name = "GPT-5.5-Pro"
 release_date = "2026-04-08"
 last_updated = "2026-04-08"
-attachment = true
-reasoning = true
-temperature = false
-open_weights = false
-tool_call = true
+
+[extends]
+from = "opencode/gpt-5.5-pro"
+omit = [
+  "family",
+  "knowledge",
+  "structured_output",
+  "cost.cache_read",
+  "limit.input",
+  "provider",
+]
 
 [cost]
 input = 27.2727
