@@ -1,11 +1,11 @@
-[extends]
-from = "huggingface/deepseek-ai/DeepSeek-V3.2"
-
 name = "DeepSeek-V4-Pro"
 release_date = "2026-04-24"
 last_updated = "2026-04-24"
 knowledge = "2025-05"
 structured_output = true
+
+[extends]
+from = "huggingface/deepseek-ai/DeepSeek-V3.2"
 
 [interleaved]
 field = "reasoning_content"
