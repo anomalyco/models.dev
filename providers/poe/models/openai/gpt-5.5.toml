@@ -1,11 +1,16 @@
-name = "GPT-5.5"
 release_date = "2026-04-08"
 last_updated = "2026-04-08"
-attachment = true
-reasoning = true
-temperature = false
-open_weights = false
-tool_call = true
+
+[extends]
+from = "openai/gpt-5.5"
+omit = [
+  "family",
+  "knowledge",
+  "structured_output",
+  "cost.context_over_200k",
+  "limit.input",
+  "experimental",
+]
 
 [cost]
 input = 4.5455
