@@ -1,12 +1,7 @@
 name = "Hy3 Preview"
-release_date = "2026-04-20"
-last_updated = "2026-04-20"
-attachment = false
-reasoning = true
-temperature = true
-knowledge = "2025-06"
-tool_call = true
-open_weights = true
+
+[extends]
+from = "tencent-tokenhub/hy3-preview"
 
 [cost]
 input = 0.172
@@ -15,7 +10,3 @@ output = 0.572
 [limit]
 context = 262_140
 output = 131_070
-
-[modalities]
-input = ["text"]
-output = ["text"]
