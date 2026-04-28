@@ -1,15 +1,7 @@
 name = "MiMo V2.5"
-release_date = "2026-04-22"
-last_updated = "2026-04-22"
-attachment = true
-reasoning = true
-temperature = true
-tool_call = true
-knowledge = "2024-12"
-open_weights = true
 
-[interleaved]
-field = "reasoning_content"
+[extends]
+from = "xiaomi/mimo-v2.5"
 
 [cost]
 input = 0.40
@@ -20,11 +12,3 @@ cache_read = 0.08
 input = 0.80
 output = 4.00
 cache_read = 0.16
-
-[limit]
-context = 1_050_000
-output = 131_070
-
-[modalities]
-input = ["text", "image", "audio", "video"]
-output = ["text"]
