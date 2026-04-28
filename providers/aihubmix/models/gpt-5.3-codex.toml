@@ -1,19 +1,19 @@
-name = "GPT-5.1 Codex"
+name = "GPT-5.3 Codex"
 family = "gpt-codex"
-release_date = "2025-11-13"
-last_updated = "2025-11-13"
+release_date = "2026-02-05"
+last_updated = "2026-02-05"
 attachment = true
 reasoning = true
 temperature = false
 tool_call = true
 structured_output = true
-knowledge = "2024-09-30"
+knowledge = "2025-08-31"
 open_weights = false
 
 [cost]
-input = 1.25
-output = 10
-cache_read = 0.125
+input = 1.75
+output = 14
+cache_read = 0.175
 
 [limit]
 context = 400_000
@@ -21,5 +21,5 @@ output = 128_000
 input = 272_000
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image", "pdf"]
 output = ["text"]
