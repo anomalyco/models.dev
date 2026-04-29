@@ -1,0 +1,11 @@
+attachment = false
+
+[extends]
+from = "deepseek/deepseek-v4-pro"
+
+[interleaved]
+field = "reasoning_content"
+
+[limit]
+context = 1_048_576
+output = 393_216
