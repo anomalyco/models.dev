@@ -1,12 +1,14 @@
 name = "gpt-5-pro"
+family = "gpt-pro"
 release_date = "2025-10-08"
 last_updated = "2025-10-08"
 attachment = true
-reasoning = false
-temperature = true
+reasoning = true
+temperature = false
 tool_call = true
+structured_output = true
 open_weights = false
-knowledge = "2024-10"
+knowledge = "2024-09-30"
 
 [cost]
 input = 15.000
@@ -14,6 +16,7 @@ output = 120.000
 
 [limit]
 context = 400_000
+input = 272_000
 output = 272_000
 
 [modalities]
