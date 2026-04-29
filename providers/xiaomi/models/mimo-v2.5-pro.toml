@@ -6,8 +6,9 @@ attachment = true
 reasoning = true
 temperature = true
 tool_call = true
+structured_output = true
 knowledge = "2024-12"
-open_weights = false
+open_weights = true
 
 [cost]
 input = 1
@@ -24,9 +25,8 @@ context = 1_048_576
 output = 131_072
 
 [modalities]
-input = ["text", "image", "audio", "video", "pdf"]
+input = ["text"]
 output = ["text"]
 
 [interleaved]
 field = "reasoning_content"
-
