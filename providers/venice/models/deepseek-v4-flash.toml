@@ -6,15 +6,16 @@ tool_call = true
 structured_output = true
 temperature = true
 release_date = "2026-04-24"
-last_updated = "2026-04-25"
-open_weights = false
+last_updated = "2026-04-29"
+open_weights = true
 
 [interleaved]
 field = "reasoning_content"
 
 [cost]
-input = 0.175
+input = 0.17
 output = 0.35
+cache_read = 0.028
 
 [limit]
 context = 1_000_000
