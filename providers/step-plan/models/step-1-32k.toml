@@ -1,0 +1,23 @@
+name = "Step 1 (32K)"
+release_date = "2025-01-01"
+last_updated = "2026-02-13"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+knowledge = "2024-06"
+open_weights = false
+
+[cost]
+input = 2.05
+output = 9.59
+cache_read = 0.41
+
+[limit]
+context = 32_768
+input = 32_768
+output = 32_768
+
+[modalities]
+input = ["text"]
+output = ["text"]
