@@ -1,0 +1,21 @@
+name = "BGE Reranker v2 M3"
+family = "bge"
+release_date = "2024-03-12"
+last_updated = "2026-04-30"
+attachment = false
+reasoning = false
+temperature = false
+tool_call = false
+open_weights = true
+
+[cost]
+input = 0.01
+output = 0.00
+
+[limit]
+context = 8_192
+output = 1
+
+[modalities]
+input = ["text"]
+output = ["text"]

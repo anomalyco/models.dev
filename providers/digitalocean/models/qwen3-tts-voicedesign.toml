@@ -1,0 +1,17 @@
+name = "Qwen3 TTS VoiceDesign"
+family = "qwen"
+release_date = "2026-04-21"
+last_updated = "2026-04-30"
+attachment = false
+reasoning = false
+temperature = false
+tool_call = false
+open_weights = true
+
+[limit]
+context = 32_768
+output = 1
+
+[modalities]
+input = ["text"]
+output = ["audio"]
