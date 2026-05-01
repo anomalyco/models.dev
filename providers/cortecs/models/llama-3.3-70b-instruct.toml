@@ -1,0 +1,22 @@
+name = "Llama 3.3 70B Instruct"
+family = "llama"
+release_date = "2024-12-06"
+last_updated = "2024-12-06"
+knowledge = "2023-12"
+attachment = false
+reasoning = true
+tool_call = true
+temperature = true
+open_weights = true
+
+[cost]
+input = 0.089
+output = 0.275
+
+[limit]
+context = 131_000
+output = 131_000
+
+[modalities]
+input = ["text"]
+output = ["text"]
