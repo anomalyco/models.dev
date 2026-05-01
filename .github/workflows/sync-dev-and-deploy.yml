@@ -1,0 +1,95 @@
+name: Sync upstream dev and deploy
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "*/15 * * * *"
+
+concurrency:
+  group: sync-dev-and-deploy
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+
+jobs:
+  sync-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout fork
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Configure git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Add upstream and fetch
+        run: |
+          git remote add upstream https://github.com/anomalyco/models.dev.git || true
+          git fetch upstream dev
+          git fetch origin
+
+      - name: Sync fork dev to upstream/dev
+        run: |
+          git checkout dev
+          git reset --hard upstream/dev
+          git push --force-with-lease origin dev
+
+      - name: Rebase feature branch on upstream/dev
+        id: rebase
+        run: |
+          git checkout feat/perf-improvements-v2
+          BEFORE="$(git rev-parse HEAD)"
+          git rebase upstream/dev
+          AFTER="$(git rev-parse HEAD)"
+          if [ "$BEFORE" = "$AFTER" ]; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Push rebased feature branch
+        if: steps.rebase.outputs.changed == 'true'
+        run: |
+          git push --force-with-lease origin feat/perf-improvements-v2
+
+      - name: Install deps
+        if: steps.rebase.outputs.changed == 'true'
+        run: bun install
+
+      - name: Validate + build
+        if: steps.rebase.outputs.changed == 'true'
+        run: |
+          bun validate
+          cd packages/web
+          bun run build
+
+      - name: Prepare deploy dir
+        if: steps.rebase.outputs.changed == 'true'
+        run: |
+          rm -rf /tmp/models-dev-pages
+          mkdir -p /tmp/models-dev-pages
+          cp -r packages/web/dist/* /tmp/models-dev-pages/
+          cp packages/web/dist/_index.html /tmp/models-dev-pages/index.html
+          cp packages/web/dist/_api.json /tmp/models-dev-pages/api.json
+          echo '{"$schema":"https://json-schema.org/draft/2020-12/schema"}' > /tmp/models-dev-pages/model-schema.json
+          printf '/api.json\n  Content-Type: application/json\n' > /tmp/models-dev-pages/_redirects
+
+      - name: Deploy to Cloudflare Pages
+        if: steps.rebase.outputs.changed == 'true'
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          bunx wrangler pages deploy /tmp/models-dev-pages \
+            --project-name models-dev \
+            --branch feat/perf-improvements-v2 \
+            --commit-dirty=true
