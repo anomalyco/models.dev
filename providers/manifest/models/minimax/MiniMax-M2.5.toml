@@ -1,0 +1,19 @@
+name = "MiniMax M2.5"
+release_date = "2026-01-15"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+open_weights = false
+
+[cost]
+input = 0
+output = 0
+
+[limit]
+context = 1_000_000
+output = 16_384
+
+[modalities]
+input = ["text"]
+output = ["text"]
