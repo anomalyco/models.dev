@@ -1,0 +1,22 @@
+# https://deepinfra.com/Sao10K/L3-8B-Lunaris-v1-Turbo
+name = "L3 8B Lunaris v1 Turbo"
+family = "llama"
+release_date = "2024-09-01"
+last_updated = "2024-09-01"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+open_weights = true
+
+[cost]
+input = 0.04
+output = 0.05
+
+[limit]
+context = 8192
+output = 2048
+
+[modalities]
+input = ["text"]
+output = ["text"]

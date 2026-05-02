@@ -1,0 +1,22 @@
+# https://deepinfra.com/nvidia/NVIDIA-Nemotron-3-Super-120B-A12B
+name = "Nemotron 3 Super 120B A12B"
+family = "nemotron"
+release_date = "2025-10-01"
+last_updated = "2025-10-01"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+open_weights = true
+
+[cost]
+input = 0.10
+output = 0.50
+
+[limit]
+context = 262_144
+output = 16_384
+
+[modalities]
+input = ["text"]
+output = ["text"]

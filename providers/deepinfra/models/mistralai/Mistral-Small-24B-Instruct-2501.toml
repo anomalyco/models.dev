@@ -1,0 +1,23 @@
+# https://deepinfra.com/mistralai/Mistral-Small-24B-Instruct-2501
+name = "Mistral Small 24B Instruct 2501"
+family = "mistral-small"
+release_date = "2025-01-01"
+last_updated = "2025-01-01"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+knowledge = "2024-10"
+open_weights = true
+
+[cost]
+input = 0.05
+output = 0.08
+
+[limit]
+context = 32_768
+output = 8192
+
+[modalities]
+input = ["text"]
+output = ["text"]

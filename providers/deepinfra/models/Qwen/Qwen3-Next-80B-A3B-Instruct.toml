@@ -1,0 +1,23 @@
+# https://deepinfra.com/Qwen/Qwen3-Next-80B-A3B-Instruct
+name = "Qwen3 Next 80B A3B Instruct"
+family = "qwen"
+release_date = "2026-03-01"
+last_updated = "2026-03-01"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+knowledge = "2025-01"
+open_weights = true
+
+[cost]
+input = 0.09
+output = 1.10
+
+[limit]
+context = 262_144
+output = 16_384
+
+[modalities]
+input = ["text"]
+output = ["text"]

@@ -1,0 +1,21 @@
+# https://deepinfra.com/nvidia/NVIDIA-Nemotron-Nano-9B-v2
+name = "Nemotron Nano 9B v2"
+family = "nemotron"
+release_date = "2026-02-01"
+last_updated = "2026-02-01"
+attachment = false
+reasoning = true
+temperature = true
+open_weights = true
+
+[cost]
+input = 0.04
+output = 0.16
+
+[limit]
+context = 131_072
+output = 8192
+
+[modalities]
+input = ["text"]
+output = ["text"]

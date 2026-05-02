@@ -1,0 +1,21 @@
+# https://deepinfra.com/Gryphe/MythoMax-L2-13b
+name = "MythoMax L2 13B"
+family = "llama"
+release_date = "2023-11-01"
+last_updated = "2023-11-01"
+attachment = false
+reasoning = false
+temperature = true
+open_weights = true
+
+[cost]
+input = 0.40
+output = 0.40
+
+[limit]
+context = 4096
+output = 2048
+
+[modalities]
+input = ["text"]
+output = ["text"]

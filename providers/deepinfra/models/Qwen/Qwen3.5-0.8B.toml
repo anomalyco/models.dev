@@ -1,0 +1,22 @@
+# https://deepinfra.com/Qwen/Qwen3.5-0.8B
+name = "Qwen3.5 0.8B"
+family = "qwen3.5"
+release_date = "2026-02-01"
+last_updated = "2026-02-01"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+open_weights = true
+
+[cost]
+input = 0.01
+output = 0.05
+
+[limit]
+context = 262_144
+output = 16_384
+
+[modalities]
+input = ["text"]
+output = ["text"]
