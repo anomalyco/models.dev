@@ -1,17 +1,12 @@
 name = "Qwen3.5 397B A17B"
-family = "qwen"
 release_date = "2026-02-16"
 last_updated = "2026-02-16"
 knowledge = "2026-01"
 attachment = false
-reasoning = true
-tool_call = true
-temperature = true
-open_weights = true
 
-[cost]
-input = 0.6
-output = 3.6
+[extends]
+from = "alibaba/qwen3.5-397b-a17b"
+omit = ["structured_output"]
 
 [limit]
 context = 250_000

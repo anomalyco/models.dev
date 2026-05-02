@@ -1,16 +1,6 @@
-name = "DeepSeek V4 Flash"
-family = "deepseek-flash"
-release_date = "2026-04-24"
-last_updated = "2026-04-24"
-knowledge = "2025-05"
-attachment = false
-reasoning = true
-tool_call = true
-temperature = true
-open_weights = true
-
-[interleaved]
-field = "reasoning_content"
+[extends]
+from = "deepseek/deepseek-v4-flash"
+omit = ["structured_output"]
 
 [cost]
 input = 0.133
@@ -19,7 +9,3 @@ output = 0.266
 [limit]
 context = 1_048_576
 output = 384_000
-
-[modalities]
-input = ["text"]
-output = ["text"]

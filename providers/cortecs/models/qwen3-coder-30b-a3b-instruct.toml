@@ -1,13 +1,10 @@
 name = "Qwen3 Coder 30B A3B Instruct"
-family = "qwen"
 release_date = "2025-07-31"
 last_updated = "2025-07-31"
-knowledge = "2025-04"
-attachment = false
 reasoning = true
-tool_call = true
-temperature = true
-open_weights = true
+
+[extends]
+from = "alibaba/qwen3-coder-30b-a3b-instruct"
 
 [cost]
 input = 0.053
@@ -16,7 +13,3 @@ output = 0.222
 [limit]
 context = 262_000
 output = 262_000
-
-[modalities]
-input = ["text"]
-output = ["text"]
