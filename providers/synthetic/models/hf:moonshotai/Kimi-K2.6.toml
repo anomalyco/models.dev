@@ -1,21 +1,10 @@
-name = "Kimi K2.6"
-family = "kimi"
-release_date = "2026-04-20"
-last_updated = "2026-04-20"
-attachment = false
-reasoning = true
-temperature = true
-tool_call = true
-structured_output = true
-knowledge = "2025-01"
-open_weights = true
-
-[interleaved]
-field = "reasoning_content"
+[extends]
+from = "moonshotai/kimi-k2.6"
 
 [cost]
 input = 0.95
 output = 4
+cache_read = 0.95
 
 [limit]
 context = 262_144
