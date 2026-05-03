@@ -1,7 +1,7 @@
 name = "GLM-5V-Turbo"
 family = "glm"
-release_date = "2026-04-02"
-last_updated = "2026-04-02"
+release_date = "2026-04-01"
+last_updated = "2026-04-01"
 attachment = true
 reasoning = true
 temperature = true
@@ -12,13 +12,15 @@ open_weights = false
 field = "reasoning_content"
 
 [cost]
-input = 0.720
-output = 3.200
+input = 0
+output = 0
+cache_read = 0
+cache_write = 0
 
 [limit]
-context = 200_000
-output = 131_072
+context = 200000
+output = 131072
 
 [modalities]
-input = ["text", "image", "video", "audio", "pdf"]
+input = ["text", "image", "video", "pdf"]
 output = ["text"]
