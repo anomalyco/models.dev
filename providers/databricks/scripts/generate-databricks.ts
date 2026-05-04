@@ -10,7 +10,7 @@
  */
 
 import path from "node:path";
-import { mkdir, writeFile, readdir, rm } from "node:fs/promises";
+import { mkdir, writeFile, readFile, readdir, rm } from "node:fs/promises";
 import { existsSync } from "node:fs";
 
 const args = process.argv.slice(2);
@@ -40,13 +40,16 @@ const PREFIX_TO_PROVIDER: [string, string][] = [
   ["mixtral-",  "mistral"],
 ];
 
-async function findCanonical(endpointName: string): Promise<string | null> {
-  let bare = endpointName.replace(/^databricks-/, "");
+type Resolution = { type: "extends"; from: string } | { type: "inline"; content: string } | null;
 
-  // GPT OSS: extend from openrouter
+async function resolve(endpointName: string): Promise<Resolution> {
+  const bare = endpointName.replace(/^databricks-/, "");
+
+  // Models in provider subdirectories can't use extends (schema requires provider/model format),
+  // so inline their content directly.
   if (bare.startsWith("gpt-oss-")) {
     const p = path.join(PROVIDERS_DIR, "openrouter", "models", "openai", `${bare}.toml`);
-    if (existsSync(p)) return `openrouter/openai/${bare}`;
+    if (existsSync(p)) return { type: "inline", content: await readFile(p, "utf8") };
   }
 
   // Meta Llama: "meta-llama-3-3-70b-instruct" → "llama-3.3-70b-instruct"
@@ -55,20 +58,18 @@ async function findCanonical(endpointName: string): Promise<string | null> {
       .replace(/^meta-llama-/, "llama-")
       .replace(/^(llama-\d+)-(\d+)-/, "$1.$2-");
     const p = path.join(PROVIDERS_DIR, "llama", "models", `${llamaId}.toml`);
-    if (existsSync(p)) return `llama/${llamaId}`;
+    if (existsSync(p)) return { type: "extends", from: `llama/${llamaId}` };
   }
 
   for (const [prefix, provider] of PREFIX_TO_PROVIDER) {
     if (!bare.startsWith(prefix)) continue;
     const exact = path.join(PROVIDERS_DIR, provider, "models", `${bare}.toml`);
-    if (existsSync(exact)) return `${provider}/${bare}`;
-    // Also try with hyphens-as-dots for version numbers (e.g. gpt-5-4 → gpt-5.4)
+    if (existsSync(exact)) return { type: "extends", from: `${provider}/${bare}` };
     const dotted = bare.replace(/^((?:[a-z]+-)+\d+)-(\d)/, "$1.$2");
     if (dotted !== bare) {
       const dottedExact = path.join(PROVIDERS_DIR, provider, "models", `${dotted}.toml`);
-      if (existsSync(dottedExact)) return `${provider}/${dotted}`;
+      if (existsSync(dottedExact)) return { type: "extends", from: `${provider}/${dotted}` };
     }
-    // Fuzzy: find longest filename that shares a prefix with bare or its dotted form
     const files = await readdir(path.join(PROVIDERS_DIR, provider, "models")).catch(() => []);
     const candidates = [bare, ...(dotted !== bare ? [dotted] : [])];
     const match = files
@@ -76,7 +77,7 @@ async function findCanonical(endpointName: string): Promise<string | null> {
       .map(f => f.replace(/\.toml$/, ""))
       .filter(id => candidates.some(c => id.startsWith(c) || c.startsWith(id)))
       .sort((a, b) => b.length - a.length)[0];
-    if (match) return `${provider}/${match}`;
+    if (match) return { type: "extends", from: `${provider}/${match}` };
   }
 
   return null;
@@ -117,15 +118,22 @@ for (const f of await readdir(outDir)) {
   if (f.endsWith(".toml")) await rm(path.join(outDir, f), { force: true });
 }
 
-let extended = 0, stubbed = 0;
+let extended = 0, inlined = 0, stubbed = 0;
 for (const ep of endpoints) {
-  const canonical = await findCanonical(ep.name);
-  const toml = canonical
-    ? `[extends]\nfrom = "${canonical}"\n`
-    : `# TODO: fill in details for ${ep.name}\nname = "${ep.name}"\n`;
+  const resolution = await resolve(ep.name);
+  let toml: string;
+  if (resolution?.type === "extends") {
+    toml = `[extends]\nfrom = "${resolution.from}"\n`;
+    extended++;
+  } else if (resolution?.type === "inline") {
+    toml = resolution.content;
+    inlined++;
+  } else {
+    toml = `# TODO: fill in details for ${ep.name}\nname = "${ep.name}"\n`;
+    stubbed++;
+  }
   await writeFile(path.join(outDir, `${ep.name}.toml`), toml, "utf8");
-  console.log(`  ${ep.name}  →  ${canonical ?? "stub"}`);
-  if (canonical) extended++; else stubbed++;
+  console.log(`  ${ep.name}  →  ${resolution?.type === "extends" ? resolution.from : resolution?.type ?? "stub"}`);
 }
 
-console.log(`\nWrote ${endpoints.length} file(s): ${extended} with extends, ${stubbed} stubs`);
+console.log(`\nWrote ${endpoints.length} file(s): ${extended} extends, ${inlined} inlined, ${stubbed} stubs`);
