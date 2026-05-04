@@ -1,8 +1,9 @@
 #!/usr/bin/env bun
 
 /**
- * Fetches Databricks ai_gateway_v2 endpoints and generates TOML files
- * under providers/databricks/models/.
+ * Fetches Databricks ai_gateway_v2 endpoints, generates TOML files under
+ * providers/databricks/models/, then smoke-tests each model with the AI SDK
+ * and removes any that are incompatible with @ai-sdk/openai-compatible.
  *
  * Usage:
  *   DATABRICKS_HOST=<host> DATABRICKS_TOKEN=<pat> bun run generate-databricks.ts
@@ -12,6 +13,8 @@
 import path from "node:path";
 import { mkdir, writeFile, readFile, readdir, rm } from "node:fs/promises";
 import { existsSync } from "node:fs";
+import { createOpenAICompatible } from "@ai-sdk/openai-compatible";
+import { streamText } from "ai";
 
 const args = process.argv.slice(2);
 const flag = (name: string) => { const i = args.indexOf(`--${name}`); return i !== -1 ? args[i + 1] : undefined; };
@@ -84,6 +87,25 @@ async function resolve(endpointName: string): Promise<Resolution> {
 }
 
 // ---------------------------------------------------------------------------
+// AI SDK compatibility test
+// ---------------------------------------------------------------------------
+
+async function testModel(modelId: string): Promise<boolean> {
+  const provider = createOpenAICompatible({
+    name: "databricks",
+    baseURL: `https://${workspace}/ai-gateway/mlflow/v1`,
+    apiKey: token!,
+  });
+  try {
+    const result = streamText({ model: provider(modelId), prompt: "Say hello in one word" });
+    const text = await result.text;
+    return text.trim().length > 0;
+  } catch {
+    return false;
+  }
+}
+
+// ---------------------------------------------------------------------------
 // Main
 // ---------------------------------------------------------------------------
 
@@ -110,7 +132,7 @@ const endpoints = json.endpoints.filter(e =>
     se.foundation_model?.api_types?.includes("mlflow/v1/chat/completions")
   )
 );
-console.log(`${endpoints.length} ai_gateway_v2 endpoint(s)`);
+console.log(`${endpoints.length} ai_gateway_v2 endpoint(s)\n`);
 
 const outDir = path.join(PROVIDERS_DIR, "databricks", "models");
 await mkdir(outDir, { recursive: true });
@@ -118,6 +140,7 @@ for (const f of await readdir(outDir)) {
   if (f.endsWith(".toml")) await rm(path.join(outDir, f), { force: true });
 }
 
+// Write TOMLs
 let extended = 0, inlined = 0, stubbed = 0;
 for (const ep of endpoints) {
   const resolution = await resolve(ep.name);
@@ -133,7 +156,23 @@ for (const ep of endpoints) {
     stubbed++;
   }
   await writeFile(path.join(outDir, `${ep.name}.toml`), toml, "utf8");
-  console.log(`  ${ep.name}  →  ${resolution?.type === "extends" ? resolution.from : resolution?.type ?? "stub"}`);
+}
+console.log(`Wrote ${endpoints.length} file(s): ${extended} extends, ${inlined} inlined, ${stubbed} stubs\n`);
+
+// Test each model with the AI SDK and remove incompatible ones
+console.log(`Testing AI SDK compatibility...`);
+let kept = 0, removed = 0;
+for (const ep of endpoints) {
+  process.stdout.write(`  ${ep.name}  →  `);
+  const ok = await testModel(ep.name);
+  if (ok) {
+    console.log(`✓`);
+    kept++;
+  } else {
+    console.log(`✗  removed`);
+    await rm(path.join(outDir, `${ep.name}.toml`), { force: true });
+    removed++;
+  }
 }
 
-console.log(`\nWrote ${endpoints.length} file(s): ${extended} extends, ${inlined} inlined, ${stubbed} stubs`);
+console.log(`\n${kept} models kept, ${removed} removed as incompatible with @ai-sdk/openai-compatible`);
