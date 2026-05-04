@@ -1,11 +1,11 @@
 [extends]
-from = "zai/glm-4.7"
+from = "minimax/MiniMax-M2.5"
 omit = ["cost.cache_read", "cost.cache_write"]
 
 [cost]
-input = 0.45
-output = 1.65
+input = 0.22
+output = 0.88
 
 [limit]
 context = 200_000
-output = 128_000
+output = 32_000

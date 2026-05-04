@@ -1,16 +1,6 @@
-name = "GLM-5"
-family = "glm"
-release_date = "2026-02"
-last_updated = "2026-02"
-attachment = false
-reasoning = true
-temperature = true
-tool_call = true
-knowledge = "2025-04"
-open_weights = true
-
-[interleaved]
-field = "reasoning_content"
+[extends]
+from = "zhipuai/glm-5"
+omit = ["cost.cache_read", "cost.cache_write"]
 
 [cost]
 input = 0.75
@@ -19,7 +9,3 @@ output = 2.40
 [limit]
 context = 200_000
 output = 128_000
-
-[modalities]
-input = ["text"]
-output = ["text"]
