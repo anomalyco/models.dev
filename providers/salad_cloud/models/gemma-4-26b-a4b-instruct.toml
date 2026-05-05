@@ -1,0 +1,23 @@
+name = "Gemma 4 26B-A4B Instruct"
+family = "gemma"
+attachment = true
+reasoning = true
+tool_call = true
+structured_output = true
+temperature = true
+release_date = "2026-04"
+last_updated = "2026-04"
+open_weights = true
+
+[cost]
+input = 0.04
+output = 0.20
+
+[limit]
+context = 262_144
+input = 262_144
+output = 262_144
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
