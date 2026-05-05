@@ -1,0 +1,22 @@
+name = "Google: Gemini Pro Latest"
+release_date = "2026-04-27"
+last_updated = "2026-05-01"
+attachment = true
+reasoning = true
+tool_call = true
+temperature = true
+open_weights = false
+
+[cost]
+input = 2.0
+output = 12.0
+cache_read = 0.2
+cache_write = 0.375
+
+[limit]
+context = 1048576
+output = 65536
+
+[modalities]
+input = ["text", "image", "audio", "video", "pdf"]
+output = ["text"]

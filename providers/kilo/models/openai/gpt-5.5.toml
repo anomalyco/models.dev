@@ -1,0 +1,21 @@
+name = "OpenAI: GPT-5.5"
+release_date = "2026-04-24"
+last_updated = "2026-05-01"
+attachment = true
+reasoning = true
+tool_call = true
+temperature = false
+open_weights = false
+
+[cost]
+input = 5.0
+output = 30.0
+cache_read = 0.5
+
+[limit]
+context = 1050000
+output = 128000
+
+[modalities]
+input = ["text", "image", "pdf"]
+output = ["text"]
