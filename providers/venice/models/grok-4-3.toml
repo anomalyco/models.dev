@@ -1,0 +1,28 @@
+name = "Grok 4.3"
+family = "grok"
+attachment = true
+reasoning = true
+tool_call = true
+structured_output = true
+temperature = true
+release_date = "2026-04-18"
+last_updated = "2026-05-04"
+open_weights = false
+
+[cost]
+input = 1.42
+output = 2.83
+cache_read = 0.23
+
+[cost.context_over_200k]
+input = 2.83
+output = 5.67
+cache_read = 0.45
+
+[limit]
+context = 1_000_000
+output = 32_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

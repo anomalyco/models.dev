@@ -1,0 +1,21 @@
+name = "OpenAI: GPT-5.4 Image 2"
+release_date = "2026-04-21"
+last_updated = "2026-05-01"
+attachment = true
+reasoning = true
+tool_call = false
+temperature = false
+open_weights = false
+
+[cost]
+input = 8.0
+output = 15.0
+cache_read = 2.0
+
+[limit]
+context = 272000
+output = 128000
+
+[modalities]
+input = ["image", "text", "pdf"]
+output = ["image", "text"]

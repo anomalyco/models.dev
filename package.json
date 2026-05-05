@@ -16,13 +16,14 @@
   },
   "scripts": {
     "validate": "bun ./packages/core/script/validate.ts",
+    "compare:migrations": "bun ./packages/core/script/compare-model-migrations.ts",
     "helicone:generate": "bun ./packages/core/script/generate-helicone.ts",
     "venice:generate": "bun ./packages/core/script/generate-venice.ts",
     "vercel:generate": "bun ./packages/core/script/generate-vercel.ts",
     "wandb:generate": "bun ./packages/core/script/generate-wandb.ts"
   },
   "dependencies": {
-    "@cloudflare/workers-types": "^4.20250801.0",
+    "@cloudflare/workers-types": "^4.20260424.1",
     "sst": "3.17.23"
   }
 }

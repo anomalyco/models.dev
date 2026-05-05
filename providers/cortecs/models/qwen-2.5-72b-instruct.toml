@@ -1,0 +1,22 @@
+name = "Qwen2.5 72B Instruct"
+family = "qwen"
+release_date = "2024-09-19"
+last_updated = "2024-09-19"
+knowledge = "2024-06"
+attachment = false
+reasoning = false
+tool_call = true
+temperature = true
+open_weights = true
+
+[cost]
+input = 0.062
+output = 0.231
+
+[limit]
+context = 33_000
+output = 33_000
+
+[modalities]
+input = ["text"]
+output = ["text"]

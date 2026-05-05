@@ -1,0 +1,18 @@
+[extends]
+from = "anthropic/claude-opus-4-6"
+omit = ["experimental.modes.fast"]
+
+[cost]
+input = 5.00
+output = 25.00
+cache_read = 0.50
+cache_write = 6.25
+
+[cost.context_over_200k]
+input = 10.00
+output = 37.50
+cache_read = 1.00
+cache_write = 12.50
+
+[provider]
+npm = "@ai-sdk/google-vertex/anthropic"

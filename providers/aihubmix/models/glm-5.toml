@@ -6,18 +6,19 @@ attachment = false
 reasoning = true
 temperature = true
 tool_call = true
-open_weights = false
+open_weights = true
 
 [interleaved]
 field = "reasoning_content"
 
 [cost]
 input = 0.88
-output = 2.82
+output = 2.816
+cache_read = 0.176
 
 [limit]
-context = 204800
-output = 131072
+context = 202_752
+output = 0
 
 [modalities]
 input = ["text"]

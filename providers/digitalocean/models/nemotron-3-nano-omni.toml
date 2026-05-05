@@ -1,0 +1,22 @@
+name = "Nemotron Nano 3 Omni"
+family = "nemotron"
+release_date = "2026-04-28"
+last_updated = "2026-04-30"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = true
+
+[cost]
+input = 0.50
+output = 0.90
+
+[limit]
+context = 65_536
+output = 65_536
+
+[modalities]
+input = ["text", "image", "video", "audio"]
+output = ["text"]

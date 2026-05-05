@@ -1,0 +1,26 @@
+name = "Kimi K2.6 (3x limits)"
+family = "kimi-k2.6"
+release_date = "2026-04-21"
+last_updated = "2026-04-21"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+knowledge = "2024-10"
+open_weights = true
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.32
+output = 1.34
+cache_read = 0.054
+
+[limit]
+context = 262_144
+output = 65_536
+
+[modalities]
+input = ["text", "image", "video"]
+output = ["text"]

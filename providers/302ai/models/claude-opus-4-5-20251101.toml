@@ -1,12 +1,13 @@
 name = "claude-opus-4-5-20251101"
+family = "claude-opus"
 release_date = "2025-11-25"
 last_updated = "2025-11-25"
 attachment = true
-reasoning = false
+reasoning = true
 temperature = true
 tool_call = true
 open_weights = false
-knowledge = "2025-03"
+knowledge = "2025-03-31"
 
 [cost]
 input = 5.000
@@ -17,5 +18,5 @@ context = 200_000
 output = 64_000
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image", "pdf"]
 output = ["text"]

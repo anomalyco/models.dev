@@ -1,0 +1,21 @@
+name = "GLM-5"
+release_date = "2026-02-15"
+last_updated = "2026-02-15"
+attachment = true
+reasoning = true
+temperature = true
+open_weights = false
+tool_call = true
+
+[cost]
+input = 1
+output = 3.2
+cache_read = 0.2
+
+[limit]
+context = 205_000
+output = 131_072
+
+[modalities]
+input = ["text"]
+output = ["text"]

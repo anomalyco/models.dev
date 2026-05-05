@@ -1,0 +1,21 @@
+name = "Qwen 3.6 Plus"
+family = "qwen3.6"
+release_date = "2026-04-02"
+last_updated = "2026-04-02"
+attachment = false
+reasoning = false
+tool_call = false
+structured_output = false
+open_weights = false
+
+[cost]
+input = 0.45
+output = 2.70
+
+[limit]
+context = 991_800
+output = 65_536
+
+[modalities]
+input = ["text", "image", "video"]
+output = ["text"]

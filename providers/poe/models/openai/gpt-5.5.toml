@@ -1,0 +1,23 @@
+release_date = "2026-04-08"
+last_updated = "2026-04-08"
+
+[extends]
+from = "openai/gpt-5.5"
+omit = [
+  "cost.context_over_200k",
+  "limit.input",
+  "experimental",
+]
+
+[cost]
+input = 4.5455
+output = 27.2727
+cache_read = 0.4545
+
+[limit]
+context = 400_000
+output = 128_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text", "image"]

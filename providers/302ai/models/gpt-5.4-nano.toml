@@ -1,0 +1,24 @@
+name = "gpt-5.4-nano"
+family = "gpt-nano"
+release_date = "2026-03-19"
+last_updated = "2026-03-19"
+attachment = true
+reasoning = true
+temperature = false
+tool_call = true
+structured_output = true
+open_weights = false
+knowledge = "2025-08-31"
+
+[cost]
+input = 0.200
+output = 1.250
+
+[limit]
+context = 400_000
+input = 272_000
+output = 128_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
