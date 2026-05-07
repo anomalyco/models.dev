@@ -18,6 +18,7 @@
     "validate": "bun ./packages/core/script/validate.ts",
     "compare:migrations": "bun ./packages/core/script/compare-model-migrations.ts",
     "chutes:generate": "bun ./packages/core/script/generate-chutes.ts",
+    "databricks:generate": "bun ./packages/core/script/generate-databricks.ts",
     "helicone:generate": "bun ./packages/core/script/generate-helicone.ts",
     "venice:generate": "bun ./packages/core/script/generate-venice.ts",
     "vercel:generate": "bun ./packages/core/script/generate-vercel.ts",
@@ -25,10 +26,7 @@
     "digitalocean:generate": "bun ./packages/core/script/generate-digitalocean.ts"
   },
   "dependencies": {
-    "@ai-sdk/openai-compatible": "^3.0.0-beta.31",
     "@cloudflare/workers-types": "^4.20260424.1",
-    "ai": "^7.0.0-beta.111",
-    "sst": "3.17.23",
-    "zod": "^4"
+    "sst": "3.17.23"
   }
 }
