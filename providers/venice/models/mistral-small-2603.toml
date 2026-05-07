@@ -1,0 +1,22 @@
+name = "Mistral Small 4"
+family = "mistral-small"
+attachment = true
+reasoning = true
+tool_call = true
+structured_output = true
+temperature = true
+release_date = "2026-03-16"
+last_updated = "2026-04-09"
+open_weights = true
+
+[cost]
+input = 0.1875
+output = 0.75
+
+[limit]
+context = 256_000
+output = 65_536
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

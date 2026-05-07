@@ -1,0 +1,9 @@
+name = "Xiaomi: MiMo-V2-Omni"
+
+[extends]
+from = "xiaomi/mimo-v2-omni"
+omit = ["interleaved"]
+
+[limit]
+context = 262144
+output = 65536

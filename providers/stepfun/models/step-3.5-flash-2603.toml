@@ -1,0 +1,23 @@
+name = "Step 3.5 Flash 2603"
+release_date = "2026-04-02"
+last_updated = "2026-04-02"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+knowledge = "2025-01"
+open_weights = true
+
+[cost]
+input = 0.10
+output = 0.30
+cache_read = 0.02
+
+[limit]
+context = 256_000
+input = 256_000
+output = 256_000
+
+[modalities]
+input = ["text"]
+output = ["text"]

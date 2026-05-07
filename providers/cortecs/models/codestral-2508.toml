@@ -1,0 +1,23 @@
+name = "Codestral 2508"
+family = "mistral"
+release_date = "2025-07-30"
+last_updated = "2025-07-30"
+knowledge = "2025-03"
+attachment = false
+reasoning = false
+tool_call = true
+temperature = true
+open_weights = true
+
+[cost]
+input = 0.3
+output = 0.9
+cache_read = 0.03
+
+[limit]
+context = 256_000
+output = 256_000
+
+[modalities]
+input = ["text"]
+output = ["text"]

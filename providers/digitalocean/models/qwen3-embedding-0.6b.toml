@@ -1,0 +1,22 @@
+name = "Qwen3 Embedding 0.6B"
+family = "text-embedding"
+release_date = "2025-06-03"
+last_updated = "2026-04-16"
+attachment = false
+reasoning = false
+temperature = false
+tool_call = false
+open_weights = true
+status = "beta"
+
+[cost]
+input = 0.04
+output = 0.00
+
+[limit]
+context = 8_000
+output = 1_024
+
+[modalities]
+input = ["text"]
+output = ["text"]

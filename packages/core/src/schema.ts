@@ -2,6 +2,25 @@ import { z } from "zod";
 
 import { ModelFamily } from "./family";
 
+type JsonValue =
+  | string
+  | number
+  | boolean
+  | null
+  | { [key: string]: JsonValue }
+  | JsonValue[];
+
+const JsonValue: z.ZodType<JsonValue> = z.lazy(() =>
+  z.union([
+    z.string(),
+    z.number(),
+    z.boolean(),
+    z.null(),
+    z.array(JsonValue),
+    z.record(JsonValue),
+  ]),
+);
+
 const Cost = z.object({
   input: z.number().min(0, "Input price cannot be negative"),
   output: z.number().min(0, "Output price cannot be negative"),
@@ -69,11 +88,30 @@ export const Model = z
       output: z.number().min(0, "Output tokens must be positive"),
     }),
     status: z.enum(["alpha", "beta", "deprecated"]).optional(),
+    experimental: z
+      .object({
+        modes: z
+          .record(
+            z.object({
+              cost: Cost.optional(),
+              provider: z
+                .object({
+                  body: z.record(JsonValue).optional(),
+                  headers: z.record(z.string()).optional(),
+                })
+                .optional(),
+            }),
+          )
+          .optional(),
+      })
+      .optional(),
     provider: z
       .object({
         npm: z.string().optional(),
         api: z.string().optional(),
         shape: z.enum(["responses", "completions"]).optional(),
+        body: z.record(JsonValue).optional(),
+        headers: z.record(z.string()).optional(),
       })
       .optional(),
   })
@@ -112,6 +150,7 @@ export const Provider = z
       const isOpenAIcompatible = data.npm === "@ai-sdk/openai-compatible";
       const isOpenrouter = data.npm === "@openrouter/ai-sdk-provider";
       const isAnthropic = data.npm === "@ai-sdk/anthropic";
+      const isKiro = data.npm === "kiro-acp-ai-provider";
       const hasApi = data.api !== undefined;
 
       return (
@@ -123,17 +162,20 @@ export const Provider = z
         isAnthropic ||
         // openai: api optional (always allowed)
         isOpenAI ||
+        // kiro: api optional (always allowed)
+        isKiro ||
         // all others: must NOT have api
         (!isOpenAI &&
           !isOpenAIcompatible &&
           !isOpenrouter &&
           !isAnthropic &&
+          !isKiro &&
           !hasApi)
       );
     },
     {
       message:
-        "'api' is required for openai-compatible and openrouter, optional for anthropic and openai, forbidden otherwise",
+        "'api' is required for openai-compatible and openrouter, optional for anthropic, openai, and kiro, forbidden otherwise",
       path: ["api"],
     },
   );

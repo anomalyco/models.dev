@@ -1,0 +1,22 @@
+name = "GPT OSS 120B"
+family = "gpt-oss"
+attachment = false
+reasoning = false
+tool_call = true
+temperature = true
+open_weights = true
+knowledge = "2024-06"
+release_date = "2025-08-05"
+last_updated = "2025-08-05"
+
+[cost]
+input = 0.15
+output = 0.60
+
+[limit]
+context = 129_000
+output = 4_096
+
+[modalities]
+input = ["text"]
+output = ["text"]

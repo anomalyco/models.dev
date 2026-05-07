@@ -1,0 +1,25 @@
+name = "glm-5.1"
+family = "glm"
+release_date = "2026-04-10"
+last_updated = "2026-04-10"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.860
+output = 3.500
+
+[limit]
+context = 200_000
+output = 131_072
+
+[modalities]
+input = ["text"]
+output = ["text"]

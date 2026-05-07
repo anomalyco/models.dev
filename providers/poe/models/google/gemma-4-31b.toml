@@ -1,0 +1,20 @@
+name = "Gemma-4-31B"
+release_date = "2026-04-02"
+last_updated = "2026-04-02"
+attachment = true
+reasoning = false
+temperature = false
+open_weights = false
+tool_call = true
+
+[cost]
+input = 0
+output = 0
+
+[limit]
+context = 262_144
+output = 8_192
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

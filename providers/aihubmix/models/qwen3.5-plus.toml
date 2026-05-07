@@ -1,21 +1,23 @@
-name = "Qwen 3.5 Plus"
+name = "Qwen3.5 Plus"
 family = "qwen"
 release_date = "2026-02-16"
 last_updated = "2026-02-16"
 attachment = false
 reasoning = true
 temperature = true
-knowledge = "2025-04"
 tool_call = true
+knowledge = "2025-04"
 open_weights = false
 
 [cost]
-input = 0.11
-output = 0.66
+input = 0.1096
+output = 0.6576
+cache_read = 0.01096
+cache_write = 0.137
 
 [limit]
-context = 1_000_000
-output = 65_536
+context = 991_000
+output = 64_000
 
 [modalities]
 input = ["text", "image", "video"]

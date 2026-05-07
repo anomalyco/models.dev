@@ -1,4 +1,4 @@
-name = "llama-3.1-8b-cs"
+name = "Llama-3.1-8B-CS"
 release_date = "2025-05-13"
 last_updated = "2025-05-13"
 attachment = true
@@ -7,8 +7,12 @@ temperature = false
 open_weights = false
 tool_call = true
 
+[cost]
+input = 0.1
+output = 0.1
+
 [limit]
-context = 0
+context = 128_000
 output = 0
 
 [modalities]
