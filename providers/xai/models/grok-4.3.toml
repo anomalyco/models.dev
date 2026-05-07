@@ -1,7 +1,7 @@
 name = "Grok 4.3"
 family = "grok"
-release_date = "2026-05-01"
-last_updated = "2026-05-01"
+release_date = "2026-05-07"
+last_updated = "2026-05-07"
 attachment = true
 reasoning = true
 temperature = true
@@ -11,12 +11,7 @@ open_weights = false
 [cost]
 input = 1.25
 output = 2.50
-cache_read = 0.20
-
-[cost.context_over_200k]
-input = 2.50
-output = 5.00
-cache_read = 0.40
+cache_read = 0.3125
 
 [limit]
 context = 1_000_000
