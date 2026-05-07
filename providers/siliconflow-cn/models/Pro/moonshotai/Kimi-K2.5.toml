@@ -7,11 +7,15 @@ reasoning = true
 temperature = true
 tool_call = true
 structured_output = true
-open_weights = false
+open_weights = true
+
+[interleaved]
+field = "reasoning_content"
 
 [cost]
-input = 0.55
-output = 3.00
+input = 0.45
+output = 2.25
+cache_input = 0.07
 
 [limit]
 context = 262_000

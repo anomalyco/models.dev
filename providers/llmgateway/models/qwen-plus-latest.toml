@@ -1,23 +1,22 @@
 name = "Qwen Plus Latest"
 family = "qwen"
-release_date = "2024-09-09"
-last_updated = "2024-09-09"
-attachment = false
+release_date = "2025-01-25"
+last_updated = "2025-01-25"
+attachment = true
 reasoning = false
 temperature = true
 tool_call = true
 structured_output = true
-open_weights = true
+open_weights = false
 
 [cost]
-input = 0.40
-output = 1.20
-cache_read = 0.08
+input = 0.30
+output = 0.90
 
 [limit]
-context = 1_000_000
-output = 32_000
+context = 131_072
+output = 8_192
 
 [modalities]
-input = ["text"]
+input = ["text", "image"]
 output = ["text"]

@@ -1,0 +1,25 @@
+name = "AU Anthropic Claude Opus 4.6"
+family = "claude-opus"
+release_date = "2026-02-05"
+last_updated = "2026-02-05"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = true
+knowledge = "2025-05"
+open_weights = false
+
+[cost]
+input = 16.50
+output = 82.50
+cache_read = 1.65
+cache_write = 20.625
+
+[limit]
+context = 1_000_000
+output = 128_000
+
+[modalities]
+input = ["text", "image", "pdf"]
+output = ["text"]

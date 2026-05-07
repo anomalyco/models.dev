@@ -1,0 +1,21 @@
+name = "Qwen3-Reranker-4B"
+family = "qwen"
+release_date = "2026-02-01"
+last_updated = "2026-02-01"
+attachment = false
+reasoning = false
+temperature = false
+tool_call = false
+open_weights = true
+
+[cost]
+input = 0.12
+output = 0.12
+
+[limit]
+context = 32768
+output = 8192
+
+[modalities]
+input = ["text"]
+output = ["text"]

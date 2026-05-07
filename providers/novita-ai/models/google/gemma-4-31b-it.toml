@@ -1,0 +1,21 @@
+name = "Gemma 4 31B"
+family = "gemma"
+release_date = "2026-04-02"
+last_updated = "2026-04-02"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+open_weights = true
+
+[cost]
+input = 0.14
+output = 0.4
+
+[limit]
+context = 262_144
+output = 131_072
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

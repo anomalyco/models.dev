@@ -1,0 +1,17 @@
+name = "Llama Guard 4 12B"
+family = "llama"
+release_date = "2025-04-05"
+last_updated = "2026-04-30"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = false
+open_weights = true
+
+[limit]
+context = 128_000
+output = 16_384
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

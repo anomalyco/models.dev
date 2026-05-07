@@ -1,0 +1,22 @@
+name = "Anthropic: Claude Opus 4.7"
+release_date = "2026-04-16"
+last_updated = "2026-05-01"
+attachment = true
+reasoning = true
+tool_call = true
+temperature = false
+open_weights = false
+
+[cost]
+input = 5.0
+output = 25.0
+cache_read = 0.5
+cache_write = 6.25
+
+[limit]
+context = 1000000
+output = 128000
+
+[modalities]
+input = ["text", "image", "pdf"]
+output = ["text"]

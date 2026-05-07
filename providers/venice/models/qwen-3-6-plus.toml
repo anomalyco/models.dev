@@ -1,4 +1,4 @@
-name = "Qwen 3.6 Plus"
+name = "Qwen 3.6 Plus Uncensored"
 family = "qwen"
 attachment = true
 reasoning = true
@@ -6,12 +6,18 @@ tool_call = true
 structured_output = true
 temperature = true
 release_date = "2026-04-06"
-last_updated = "2026-04-07"
+last_updated = "2026-04-12"
 open_weights = false
 
 [cost]
 input = 0.625
 output = 3.75
+cache_read = 0.0625
+cache_write = 0.78
+
+[cost.context_over_200k]
+input = 2.5
+output = 7.5
 cache_read = 0.0625
 cache_write = 0.78
 

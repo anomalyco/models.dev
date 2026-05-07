@@ -1,21 +1,21 @@
 name = "Qwen2.5 VL 32B Instruct"
 family = "qwen"
-release_date = "2025-02-19"
-last_updated = "2025-02-19"
+release_date = "2025-03-15"
+last_updated = "2025-03-15"
 attachment = true
 reasoning = false
 temperature = true
-tool_call = false
+tool_call = true
 structured_output = true
 open_weights = true
 
 [cost]
-input = 1.40
-output = 4.20
+input = 0.30
+output = 0.30
 
 [limit]
 context = 131_072
-output = 32_768
+output = 8_192
 
 [modalities]
 input = ["text", "image"]

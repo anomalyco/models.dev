@@ -1,0 +1,26 @@
+name = "Kimi K2.6"
+family = "kimi"
+attachment = true
+reasoning = true
+tool_call = true
+structured_output = true
+temperature = true
+release_date = "2026-04-20"
+last_updated = "2026-04-30"
+open_weights = true
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.85
+output = 4.655
+cache_read = 0.22
+
+[limit]
+context = 256_000
+output = 65_536
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

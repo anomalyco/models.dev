@@ -1,0 +1,22 @@
+name = "Anthropic: Claude Haiku Latest"
+release_date = "2026-04-27"
+last_updated = "2026-05-01"
+attachment = true
+reasoning = true
+tool_call = true
+temperature = true
+open_weights = false
+
+[cost]
+input = 1.0
+output = 5.0
+cache_read = 0.1
+cache_write = 1.25
+
+[limit]
+context = 200000
+output = 64000
+
+[modalities]
+input = ["text", "image", "pdf"]
+output = ["text"]

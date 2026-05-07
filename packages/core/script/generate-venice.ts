@@ -241,9 +241,7 @@ function mergeModel(
   const contextTokens = spec.availableContextTokens;
   const outputTokens = spec.maxCompletionTokens ?? Math.floor(contextTokens / 4);
 
-  const openWeights = spec.modelSource
-    ? spec.modelSource.toLowerCase().includes("huggingface")
-    : spec.privacy === "private";
+  const openWeights = spec.modelSource?.toLowerCase().includes("huggingface") ?? false;
 
   const inputModalities = buildInputModalities(caps);
 

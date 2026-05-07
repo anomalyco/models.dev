@@ -1,0 +1,22 @@
+name = "claude-opus-4-20250514"
+family = "claude-opus"
+release_date = "2025-05-22"
+last_updated = "2025-05-22"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+open_weights = false
+knowledge = "2025-03-31"
+
+[cost]
+input = 15.000
+output = 75.000
+
+[limit]
+context = 200_000
+output = 32_000
+
+[modalities]
+input = ["text", "image", "pdf"]
+output = ["text"]

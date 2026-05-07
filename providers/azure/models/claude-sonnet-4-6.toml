@@ -1,0 +1,8 @@
+structured_output = true
+
+[extends]
+from = "anthropic/claude-sonnet-4-6"
+
+[provider]
+npm = "@ai-sdk/anthropic"
+api = "https://${AZURE_RESOURCE_NAME}.services.ai.azure.com/anthropic/v1"

@@ -120,6 +120,31 @@ output = ["text"]           # Supported output modalities
 field = "reasoning_content" # Name of the interleaved field "reasoning_content" or "reasoning_details"
 ```
 
+#### 3a. Reuse an Existing Model with `extends`
+
+For wrapper providers that mirror a model from another provider, prefer reusing the canonical model definition instead of duplicating the whole file.
+
+Use `extends` only for non-first-party wrappers and mirrors. Do not use it inside the actual lab provider directories that act as the canonical source for a model family, for example `providers/anthropic/`, `providers/openai/`, `providers/google/`, `providers/xai/`, `providers/minimax/`, or `providers/moonshot/`.
+
+```toml
+[extends]
+from = "anthropic/claude-opus-4-6"
+omit = ["experimental.modes.fast"]
+
+[provider]
+npm = "@ai-sdk/anthropic"
+```
+
+Rules:
+
+- `from` must point to another model using `<provider>/<model-id>`.
+- `omit` is optional and removes fields after the inherited model and local overrides are merged.
+- You can override any top-level model field locally.
+- If you override a nested table like `[cost]`, `[limit]`, or `[modalities]`, include the full values needed for that table.
+- `id` still comes from the filename; do not add it to the TOML.
+
+Use `extends` when the wrapper model is materially the same as the source model and only differs by a small set of overrides or omitted fields.
+
 #### 4. Submit a Pull Request
 
 1. Fork this repo
@@ -136,9 +161,17 @@ There's a GitHub Action that will automatically validate your submission against
 - Values are within acceptable ranges
 - TOML syntax is valid
 
+When converting existing wrapper models to `extends`, compare generated output before and after the change:
+
+```bash
+bun run compare:migrations
+```
+
+This prints a diff for each changed model TOML so you can confirm the generated JSON only changed where you intended.
+
 ### Schema Reference
 
-Models must conform to the following schema, as defined in `app/schemas.ts`.
+Models must conform to the following schema, as defined in `packages/core/src/schema.ts`.
 
 **Provider Schema:**
 
