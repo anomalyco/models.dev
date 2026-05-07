@@ -1,0 +1,21 @@
+name = "Qwen3 Coder Next"
+family = "qwen"
+release_date = "2026-03-23"
+last_updated = "2026-03-23"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = true
+open_weights = true
+
+[cost]
+input = 0
+output = 0
+
+[limit]
+context = 256_000
+output = 64_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

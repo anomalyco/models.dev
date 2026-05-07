@@ -1,0 +1,22 @@
+name = "MiMo M2.5"
+family = "mimo-v2.5"
+attachment = true
+reasoning = true
+tool_call = true
+temperature = true
+release_date = "2026-04-22"
+last_updated = "2026-05-01"
+open_weights = false
+
+[cost]
+input = 0.39999999999999997
+output = 2
+cache_read = 0.08
+
+[limit]
+context = 1_050_000
+output = 131_100
+
+[modalities]
+input = ["text", "image", "audio", "video"]
+output = ["text"]

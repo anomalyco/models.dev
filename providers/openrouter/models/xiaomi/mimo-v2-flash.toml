@@ -1,24 +1,7 @@
-name = "MiMo-V2-Flash"
-family = "mimo"
-release_date = "2025-12-14"
-last_updated = "2025-12-14"
-attachment = false
-reasoning = true
-temperature = true
-tool_call = true
-structured_output = true
-knowledge = "2024-12"
-open_weights = true
+name = "Xiaomi: MiMo-V2-Flash"
 
-[cost]
-input = 0.10
-output = 0.30
-cache_read = 0.01
+[extends]
+from = "xiaomi/mimo-v2-flash"
 
-[limit]
-context = 262_144
-output = 65_536
-
-[modalities]
-input = ["text"]
-output = ["text"]
+[interleaved]
+field = "reasoning_details"

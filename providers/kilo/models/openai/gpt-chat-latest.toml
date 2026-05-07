@@ -1,0 +1,22 @@
+name = "OpenAI: GPT Chat Latest"
+release_date = "2026-05-05"
+last_updated = "2026-05-07"
+attachment = true
+reasoning = true
+temperature = false
+tool_call = true
+structured_output = true
+open_weights = false
+
+[cost]
+input = 5.0
+output = 30.0
+cache_read = 0.5
+
+[limit]
+context = 400000
+output = 128000
+
+[modalities]
+input = ["image", "pdf", "text"]
+output = ["text"]

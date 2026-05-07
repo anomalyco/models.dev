@@ -4,6 +4,7 @@ release_date = "2026-03-05"
 last_updated = "2026-03-05"
 attachment = false
 reasoning = true
+structured_output = true
 temperature = true
 tool_call = true
 knowledge = "2026-01"
@@ -15,7 +16,8 @@ output = 1.20
 
 [limit]
 context = 196_000
-output = 196_000
+input = 180_000
+output = 16_000
 
 [modalities]
 input = ["text"]

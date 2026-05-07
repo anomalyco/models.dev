@@ -1,4 +1,5 @@
-name = "glm-5v-turbo"
+name = "GLM-5V-Turbo"
+family = "glm"
 release_date = "2026-04-02"
 last_updated = "2026-04-02"
 attachment = true
@@ -6,6 +7,9 @@ reasoning = true
 temperature = true
 tool_call = true
 open_weights = false
+
+[interleaved]
+field = "reasoning_content"
 
 [cost]
 input = 0.720

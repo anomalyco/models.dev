@@ -6,6 +6,7 @@ attachment = true
 reasoning = false
 temperature = true
 tool_call = true
+structured_output = true
 open_weights = false
 knowledge = "2023-09"
 
@@ -18,5 +19,5 @@ context = 128_000
 output = 16_384
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image", "pdf"]
 output = ["text"]
