@@ -133,3 +133,45 @@ export function renderRow(row: TableRowFields, index: number) {
     <td>${escapeHtml(row.lastUpdated)}</td>
   </tr>`;
 }
+
+export function scanWorstCaseRow(rows: TableRowFields[]): TableRowFields {
+  const worst: TableRowFields = {
+    providerId: "", providerName: "", modelId: "", modelName: "",
+    toolCall: true, reasoning: true,
+    input: [], output: [],
+    contextLimit: 0, outputLimit: 0,
+    structuredOutput: true, temperature: true, openWeights: false,
+    releaseDate: "", lastUpdated: "",
+  };
+
+  for (const row of rows) {
+    if (row.providerName.length > worst.providerName.length) worst.providerName = row.providerName;
+    if (row.modelName.length > worst.modelName.length) worst.modelName = row.modelName;
+    if ((row.family ?? "").length > (worst.family ?? "").length) worst.family = row.family;
+    if (row.providerId.length > worst.providerId.length) worst.providerId = row.providerId;
+    if (row.modelId.length > worst.modelId.length) worst.modelId = row.modelId;
+    if ((row.knowledge ?? "").length > (worst.knowledge ?? "").length) worst.knowledge = row.knowledge;
+    if (row.releaseDate.length > worst.releaseDate.length) worst.releaseDate = row.releaseDate;
+    if (row.lastUpdated.length > worst.lastUpdated.length) worst.lastUpdated = row.lastUpdated;
+    if (row.input.length > worst.input.length) worst.input = row.input;
+    if (row.output.length > worst.output.length) worst.output = row.output;
+
+    const costWider = (a: number | undefined, b: number | undefined) =>
+      b !== undefined && (a === undefined || formatCost(b).length > formatCost(a).length);
+    if (costWider(worst.inputCost, row.inputCost)) worst.inputCost = row.inputCost;
+    if (costWider(worst.outputCost, row.outputCost)) worst.outputCost = row.outputCost;
+    if (costWider(worst.reasoningCost, row.reasoningCost)) worst.reasoningCost = row.reasoningCost;
+    if (costWider(worst.cacheReadCost, row.cacheReadCost)) worst.cacheReadCost = row.cacheReadCost;
+    if (costWider(worst.cacheWriteCost, row.cacheWriteCost)) worst.cacheWriteCost = row.cacheWriteCost;
+    if (costWider(worst.audioInputCost, row.audioInputCost)) worst.audioInputCost = row.audioInputCost;
+    if (costWider(worst.audioOutputCost, row.audioOutputCost)) worst.audioOutputCost = row.audioOutputCost;
+
+    const numWider = (a: number | undefined, b: number | undefined) =>
+      b !== undefined && (a === undefined || formatNumber(b).length > formatNumber(a).length);
+    if (numWider(worst.contextLimit as number | undefined, row.contextLimit)) worst.contextLimit = row.contextLimit;
+    if (numWider(worst.inputLimit, row.inputLimit)) worst.inputLimit = row.inputLimit;
+    if (numWider(worst.outputLimit as number | undefined, row.outputLimit)) worst.outputLimit = row.outputLimit;
+  }
+
+  return worst;
+}

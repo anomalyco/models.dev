@@ -111,6 +111,25 @@ modal.addEventListener("click", (e) => {
 ////////////////////
 // Row Data
 ////////////////////
+function lockColumnWidths() {
+  const ths = document.querySelectorAll("#models-table thead th");
+  const widths = Array.from(ths).map((th) => th.getBoundingClientRect().width);
+
+  const measurementRow = tbody.querySelector('tr[aria-hidden="true"]');
+  if (measurementRow) measurementRow.remove();
+
+  const table = document.getElementById("models-table")!;
+  table.style.tableLayout = "fixed";
+
+  const colgroup = document.createElement("colgroup");
+  for (const width of widths) {
+    const col = document.createElement("col");
+    col.style.width = `${width}px`;
+    colgroup.appendChild(col);
+  }
+  table.insertBefore(colgroup, table.firstChild);
+}
+
 function prepareRow(row: TableRowFields): TableRow {
   const sortValues: TableRow["sortValues"] = [
     row.providerName,
@@ -432,6 +451,7 @@ function initializeFromURL() {
 function loadRows() {
   try {
     allRows = window.__TABLE_DATA__.map(prepareRow);
+    lockColumnWidths();
     isLoaded = true;
     initializeFromURL();
   } catch (error) {
