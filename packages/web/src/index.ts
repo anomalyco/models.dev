@@ -14,7 +14,7 @@ import {
   formatNumber,
   knowledgeText,
   weightsText,
-} from "./shared/row-render.js";
+} from "./shared.js";
 
 declare global {
   interface Window {

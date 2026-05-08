@@ -5,7 +5,7 @@ import { generate } from "models.dev";
 import { Fragment } from "hono/jsx";
 import { renderToString } from "hono/jsx/dom/server";
 import path from "path";
-import { TableRowFields, renderRow } from "./shared/row-render.js";
+import { TableRowFields, renderRow } from "./shared.js";
 
 export const Providers = await generate(
   path.join(import.meta.dir, "..", "..", "..", "providers")
