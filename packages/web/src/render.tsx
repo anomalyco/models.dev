@@ -4,68 +4,144 @@
 import { generate } from "models.dev";
 import { Fragment } from "hono/jsx";
 import { renderToString } from "hono/jsx/dom/server";
-import { existsSync } from "fs";
 import path from "path";
 
 export const Providers = await generate(
   path.join(import.meta.dir, "..", "..", "..", "providers")
 );
 
-// Function to load SVG content
-const loadProviderSvg = async (providerId: string): Promise<string | null> => {
-  const providerLogoPath = path.join(
-    import.meta.dir,
-    "..",
-    "..",
-    "..",
-    "providers",
-    providerId,
-    "logo.svg"
-  );
+export const INITIAL_ROW_COUNT = 50;
 
-  const defaultLogoPath = path.join(
-    import.meta.dir,
-    "..",
-    "..",
-    "..",
-    "providers",
-    "logo.svg"
-  );
-
-  try {
-    // Try provider-specific logo first
-    if (existsSync(providerLogoPath)) {
-      const file = Bun.file(providerLogoPath);
-      return await file.text();
-    }
-    //
-    // Fall back to default logo
-    if (existsSync(defaultLogoPath)) {
-      const file = Bun.file(defaultLogoPath);
-      return await file.text();
-    }
-    return null;
-  } catch (error) {
-    console.warn(`Failed to load logo for provider ${providerId}:`, error);
-    return null;
-  }
-};
-
-// Create a cache of loaded SVGs at build time
-const providerLogos = new Map<string, string>();
-
-// Pre-load all provider logos
-for (const [providerId] of Object.entries(Providers)) {
-  const svgContent = await loadProviderSvg(providerId);
-  if (svgContent) {
-    providerLogos.set(providerId, svgContent);
-  }
+export interface TableRowData {
+  providerId: string;
+  providerName: string;
+  modelId: string;
+  modelName: string;
+  family?: string;
+  toolCall: boolean;
+  reasoning: boolean;
+  input: string[];
+  output: string[];
+  inputCost?: number;
+  outputCost?: number;
+  reasoningCost?: number;
+  cacheReadCost?: number;
+  cacheWriteCost?: number;
+  audioInputCost?: number;
+  audioOutputCost?: number;
+  contextLimit: number;
+  inputLimit?: number;
+  outputLimit: number;
+  structuredOutput?: boolean;
+  temperature: boolean;
+  openWeights: boolean;
+  knowledge?: string;
+  releaseDate: string;
+  lastUpdated: string;
 }
 
-function renderProviderLogo(providerId: string) {
-  const svgContent = providerLogos.get(providerId) || "";
+export type TableRowTuple = [
+  providerId: string,
+  providerName: string,
+  modelId: string,
+  modelName: string,
+  family: string | null,
+  toolCall: boolean,
+  reasoning: boolean,
+  input: string[],
+  output: string[],
+  inputCost: number | null,
+  outputCost: number | null,
+  reasoningCost: number | null,
+  cacheReadCost: number | null,
+  cacheWriteCost: number | null,
+  audioInputCost: number | null,
+  audioOutputCost: number | null,
+  contextLimit: number,
+  inputLimit: number | null,
+  outputLimit: number,
+  structuredOutput: boolean | null,
+  temperature: boolean,
+  openWeights: boolean,
+  knowledge: string | null,
+  releaseDate: string,
+  lastUpdated: string,
+];
 
-  return <span dangerouslySetInnerHTML={{ __html: svgContent }} />;
+export const TableRows: TableRowData[] = Object.entries(Providers)
+  .sort(([, providerA], [, providerB]) =>
+    providerA.name.localeCompare(providerB.name)
+  )
+  .flatMap(([providerId, provider]) =>
+    Object.entries(provider.models)
+      .filter(([, model]) => model.status !== "alpha")
+      .sort(([, modelA], [, modelB]) => modelA.name.localeCompare(modelB.name))
+      .map(([modelId, model]) => ({
+        providerId,
+        providerName: provider.name,
+        modelId,
+        modelName: model.name,
+        family: model.family,
+        toolCall: model.tool_call,
+        reasoning: model.reasoning,
+        input: model.modalities.input,
+        output: model.modalities.output,
+        inputCost: model.cost?.input,
+        outputCost: model.cost?.output,
+        reasoningCost: model.cost?.reasoning,
+        cacheReadCost: model.cost?.cache_read,
+        cacheWriteCost: model.cost?.cache_write,
+        audioInputCost: model.cost?.input_audio,
+        audioOutputCost: model.cost?.output_audio,
+        contextLimit: model.limit.context,
+        inputLimit: model.limit.input,
+        outputLimit: model.limit.output,
+        structuredOutput: model.structured_output,
+        temperature: model.temperature ?? false,
+        openWeights: model.open_weights,
+        knowledge: model.knowledge,
+        releaseDate: model.release_date,
+        lastUpdated: model.last_updated,
+      }))
+  );
+
+export const TableData: TableRowTuple[] = TableRows.map((row) => [
+  row.providerId,
+  row.providerName,
+  row.modelId,
+  row.modelName,
+  row.family ?? null,
+  row.toolCall,
+  row.reasoning,
+  row.input,
+  row.output,
+  row.inputCost ?? null,
+  row.outputCost ?? null,
+  row.reasoningCost ?? null,
+  row.cacheReadCost ?? null,
+  row.cacheWriteCost ?? null,
+  row.audioInputCost ?? null,
+  row.audioOutputCost ?? null,
+  row.contextLimit,
+  row.inputLimit ?? null,
+  row.outputLimit,
+  row.structuredOutput ?? null,
+  row.temperature,
+  row.openWeights,
+  row.knowledge ?? null,
+  row.releaseDate,
+  row.lastUpdated,
+]);
+
+function renderProviderLogo(providerId: string) {
+  return (
+    <img
+      src={`/logos/${providerId}.svg`}
+      alt=""
+      loading="lazy"
+      decoding="async"
+    />
+  );
 }
 
 const getModalityIcon = (modality: string) => {
@@ -179,6 +255,93 @@ const renderCost = (cost?: number) => {
   return cost === undefined ? "-" : `$${cost.toFixed(2)}`;
 };
 
+function renderModelRow(row: TableRowData) {
+  return (
+    <tr key={`${row.providerId}-${row.modelId}`}>
+      <td>
+        <div class="provider-cell">
+          {renderProviderLogo(row.providerId)}
+          <span>{row.providerName}</span>
+        </div>
+      </td>
+      <td>{row.modelName}</td>
+      <td>{row.family ?? "-"}</td>
+      <td>{row.providerId}</td>
+      <td>
+        <div class="model-id-cell">
+          <span class="model-id-text">{row.modelId}</span>
+          <button class="copy-button" data-model-id={row.modelId}>
+            <svg
+              class="copy-icon"
+              xmlns="http://www.w3.org/2000/svg"
+              width="14"
+              height="14"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <rect width="14" height="14" x="8" y="8" rx="2" ry="2" />
+              <path d="m4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2" />
+            </svg>
+            <svg
+              class="check-icon"
+              xmlns="http://www.w3.org/2000/svg"
+              width="14"
+              height="14"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              style="display: none;"
+            >
+              <polyline points="20,6 9,17 4,12" />
+            </svg>
+          </button>
+        </div>
+      </td>
+      <td>{row.toolCall ? "Yes" : "No"}</td>
+      <td>{row.reasoning ? "Yes" : "No"}</td>
+      <td>
+        <div class="modalities">
+          {row.input.map((modality) => getModalityIcon(modality))}
+        </div>
+      </td>
+      <td>
+        <div class="modalities">
+          {row.output.map((modality) => getModalityIcon(modality))}
+        </div>
+      </td>
+      <td>{renderCost(row.inputCost)}</td>
+      <td>{renderCost(row.outputCost)}</td>
+      <td>{renderCost(row.reasoningCost)}</td>
+      <td>{renderCost(row.cacheReadCost)}</td>
+      <td>{renderCost(row.cacheWriteCost)}</td>
+      <td>{renderCost(row.audioInputCost)}</td>
+      <td>{renderCost(row.audioOutputCost)}</td>
+      <td>{row.contextLimit.toLocaleString()}</td>
+      <td>{row.inputLimit?.toLocaleString() ?? "-"}</td>
+      <td>{row.outputLimit.toLocaleString()}</td>
+      <td>
+        {row.structuredOutput === undefined
+          ? "-"
+          : row.structuredOutput
+          ? "Yes"
+          : "No"}
+      </td>
+      <td>{row.temperature ? "Yes" : "No"}</td>
+      <td>{row.openWeights ? "Open" : "Closed"}</td>
+      <td>{row.knowledge ? row.knowledge.substring(0, 7) : "-"}</td>
+      <td>{row.releaseDate}</td>
+      <td>{row.lastUpdated}</td>
+    </tr>
+  );
+}
+
 export const Rendered = renderToString(
   <Fragment>
     <header>
@@ -213,7 +376,8 @@ export const Rendered = renderToString(
         <button id="help">How to use</button>
       </div>
     </header>
-    <table>
+    <div id="table-viewport" class="table-viewport">
+      <table id="models-table">
       <thead>
         <tr>
           <th class="sortable" data-type="text">
@@ -342,120 +506,11 @@ export const Rendered = renderToString(
           </th>
         </tr>
       </thead>
-      <tbody>
-        {Object.entries(Providers)
-          .sort(([, providerA], [, providerB]) =>
-            providerA.name.localeCompare(providerB.name)
-          )
-          .flatMap(([providerId, provider]) =>
-            Object.entries(provider.models)
-              .filter(([, model]) => model.status !== "alpha")
-              .sort(([, modelA], [, modelB]) =>
-                modelA.name.localeCompare(modelB.name)
-              )
-              .map(([modelId, model]) => (
-                <tr key={`${providerId}-${modelId}`}>
-                  <td>
-                    <div class="provider-cell">
-                      {renderProviderLogo(providerId)}
-                      <span>{provider.name}</span>
-                    </div>
-                  </td>
-                  <td>{model.name}</td>
-                  <td>{model.family ?? "-"}</td>
-                  <td>{providerId}</td>
-                  <td>
-                    <div class="model-id-cell">
-                      <span class="model-id-text">{modelId}</span>
-                      <button
-                        class="copy-button"
-                        onclick={`copyModelId(this, '${modelId}')`}
-                      >
-                        <svg
-                          class="copy-icon"
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="14"
-                          height="14"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          stroke-width="2"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                        >
-                          <rect
-                            width="14"
-                            height="14"
-                            x="8"
-                            y="8"
-                            rx="2"
-                            ry="2"
-                          />
-                          <path d="m4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2" />
-                        </svg>
-                        <svg
-                          class="check-icon"
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="14"
-                          height="14"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          stroke-width="2"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          style="display: none;"
-                        >
-                          <polyline points="20,6 9,17 4,12" />
-                        </svg>
-                      </button>
-                    </div>
-                  </td>
-                  <td>{model.tool_call ? "Yes" : "No"}</td>
-                  <td>{model.reasoning ? "Yes" : "No"}</td>
-                  <td>
-                    <div class="modalities">
-                      {model.modalities.input.map((modality) =>
-                        getModalityIcon(modality)
-                      )}
-                    </div>
-                  </td>
-                  <td>
-                    <div class="modalities">
-                      {model.modalities.output.map((modality) =>
-                        getModalityIcon(modality)
-                      )}
-                    </div>
-                  </td>
-                  <td>{renderCost(model.cost?.input)}</td>
-                  <td>{renderCost(model.cost?.output)}</td>
-                  <td>{renderCost(model.cost?.reasoning)}</td>
-                  <td>{renderCost(model.cost?.cache_read)}</td>
-                  <td>{renderCost(model.cost?.cache_write)}</td>
-                  <td>{renderCost(model.cost?.input_audio)}</td>
-                  <td>{renderCost(model.cost?.output_audio)}</td>
-                  <td>{model.limit.context.toLocaleString()}</td>
-                  <td>{model.limit.input?.toLocaleString() ?? "-"}</td>
-                  <td>{model.limit.output.toLocaleString()}</td>
-                  <td>
-                    {model.structured_output === undefined
-                      ? "-"
-                      : model.structured_output
-                      ? "Yes"
-                      : "No"}
-                  </td>
-                  <td>{model.temperature ? "Yes" : "No"}</td>
-                  <td>{model.open_weights ? "Open" : "Closed"}</td>
-                  <td>
-                    {model.knowledge ? model.knowledge.substring(0, 7) : "-"}
-                  </td>
-                  <td>{model.release_date}</td>
-                  <td>{model.last_updated}</td>
-                </tr>
-              ))
-          )}
+      <tbody id="models-table-body">
+        {TableRows.slice(0, 50).map(renderModelRow)}
       </tbody>
-    </table>
+      </table>
+    </div>
     <dialog id="modal">
       <div class="header">
         <h2>How to use</h2>
@@ -570,5 +625,10 @@ export const Rendered = renderToString(
         </a>
       </div>
     </dialog>
+    <script
+      dangerouslySetInnerHTML={{
+        __html: `window.__TABLE_DATA__ = ${JSON.stringify(TableData)}`,
+      }}
+    ></script>
   </Fragment>
 );
