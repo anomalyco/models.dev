@@ -331,8 +331,8 @@ export const Rendered = renderToString(
         >
           Edit on GitHub
         </a>
-        <a href="https://sst.dev" target="_blank" rel="noopener noreferrer">
-          Created by SST
+        <a href="https://opencode.ai" target="_blank" rel="noopener noreferrer">
+          Created by OpenCode
         </a>
       </div>
     </dialog>
