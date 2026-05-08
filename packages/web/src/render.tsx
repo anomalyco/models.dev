@@ -5,6 +5,7 @@ import { generate } from "models.dev";
 import { Fragment } from "hono/jsx";
 import { renderToString } from "hono/jsx/dom/server";
 import path from "path";
+import { TableRowFields, TableRowTuple, renderRow } from "./shared/row-render.js";
 
 export const Providers = await generate(
   path.join(import.meta.dir, "..", "..", "..", "providers")
@@ -12,63 +13,7 @@ export const Providers = await generate(
 
 export const INITIAL_ROW_COUNT = 50;
 
-export interface TableRowData {
-  providerId: string;
-  providerName: string;
-  modelId: string;
-  modelName: string;
-  family?: string;
-  toolCall: boolean;
-  reasoning: boolean;
-  input: string[];
-  output: string[];
-  inputCost?: number;
-  outputCost?: number;
-  reasoningCost?: number;
-  cacheReadCost?: number;
-  cacheWriteCost?: number;
-  audioInputCost?: number;
-  audioOutputCost?: number;
-  contextLimit: number;
-  inputLimit?: number;
-  outputLimit: number;
-  structuredOutput?: boolean;
-  temperature: boolean;
-  openWeights: boolean;
-  knowledge?: string;
-  releaseDate: string;
-  lastUpdated: string;
-}
-
-export type TableRowTuple = [
-  providerId: string,
-  providerName: string,
-  modelId: string,
-  modelName: string,
-  family: string | null,
-  toolCall: boolean,
-  reasoning: boolean,
-  input: string[],
-  output: string[],
-  inputCost: number | null,
-  outputCost: number | null,
-  reasoningCost: number | null,
-  cacheReadCost: number | null,
-  cacheWriteCost: number | null,
-  audioInputCost: number | null,
-  audioOutputCost: number | null,
-  contextLimit: number,
-  inputLimit: number | null,
-  outputLimit: number,
-  structuredOutput: boolean | null,
-  temperature: boolean,
-  openWeights: boolean,
-  knowledge: string | null,
-  releaseDate: string,
-  lastUpdated: string,
-];
-
-export const TableRows: TableRowData[] = Object.entries(Providers)
+export const TableRows: TableRowFields[] = Object.entries(Providers)
   .sort(([, providerA], [, providerB]) =>
     providerA.name.localeCompare(providerB.name)
   )
@@ -132,215 +77,6 @@ export const TableData: TableRowTuple[] = TableRows.map((row) => [
   row.releaseDate,
   row.lastUpdated,
 ]);
-
-function renderProviderLogo(providerId: string) {
-  return (
-    <img
-      src={`/logos/${providerId}.svg`}
-      alt=""
-      loading="lazy"
-      decoding="async"
-    />
-  );
-}
-
-const getModalityIcon = (modality: string) => {
-  switch (modality) {
-    case "text":
-      return (
-        <span class="modality-icon" data-tooltip="Text">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="16"
-            height="16"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          >
-            <polyline points="4,7 4,4 20,4 20,7"></polyline>
-            <line x1="9" y1="20" x2="15" y2="20"></line>
-            <line x1="12" y1="4" x2="12" y2="20"></line>
-          </svg>
-        </span>
-      );
-    case "image":
-      return (
-        <span class="modality-icon" data-tooltip="Image">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="16"
-            height="16"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          >
-            <rect width="18" height="18" x="3" y="3" rx="2" ry="2"></rect>
-            <circle cx="9" cy="9" r="2"></circle>
-            <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"></path>
-          </svg>
-        </span>
-      );
-    case "audio":
-      return (
-        <span class="modality-icon" data-tooltip="Audio">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="16"
-            height="16"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          >
-            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
-            <path d="m19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
-          </svg>
-        </span>
-      );
-    case "video":
-      return (
-        <span class="modality-icon" data-tooltip="Video">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="16"
-            height="16"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          >
-            <path d="m22 8-6 4 6 4V8Z"></path>
-            <rect width="14" height="12" x="2" y="6" rx="2" ry="2"></rect>
-          </svg>
-        </span>
-      );
-    case "pdf":
-      return (
-        <span class="modality-icon" data-tooltip="PDF">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="16"
-            height="16"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          >
-            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-            <polyline points="14,2 14,8 20,8"></polyline>
-            <line x1="16" y1="13" x2="8" y2="13"></line>
-            <line x1="16" y1="17" x2="8" y2="17"></line>
-            <polyline points="10,9 9,9 8,9"></polyline>
-          </svg>
-        </span>
-      );
-    default:
-      return null;
-  }
-};
-
-const renderCost = (cost?: number) => {
-  return cost === undefined ? "-" : `$${cost.toFixed(2)}`;
-};
-
-function renderModelRow(row: TableRowData) {
-  return (
-    <tr key={`${row.providerId}-${row.modelId}`}>
-      <td>
-        <div class="provider-cell">
-          {renderProviderLogo(row.providerId)}
-          <span>{row.providerName}</span>
-        </div>
-      </td>
-      <td>{row.modelName}</td>
-      <td>{row.family ?? "-"}</td>
-      <td>{row.providerId}</td>
-      <td>
-        <div class="model-id-cell">
-          <span class="model-id-text">{row.modelId}</span>
-          <button class="copy-button" data-model-id={row.modelId}>
-            <svg
-              class="copy-icon"
-              xmlns="http://www.w3.org/2000/svg"
-              width="14"
-              height="14"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            >
-              <rect width="14" height="14" x="8" y="8" rx="2" ry="2" />
-              <path d="m4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2" />
-            </svg>
-            <svg
-              class="check-icon"
-              xmlns="http://www.w3.org/2000/svg"
-              width="14"
-              height="14"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              style="display: none;"
-            >
-              <polyline points="20,6 9,17 4,12" />
-            </svg>
-          </button>
-        </div>
-      </td>
-      <td>{row.toolCall ? "Yes" : "No"}</td>
-      <td>{row.reasoning ? "Yes" : "No"}</td>
-      <td>
-        <div class="modalities">
-          {row.input.map((modality) => getModalityIcon(modality))}
-        </div>
-      </td>
-      <td>
-        <div class="modalities">
-          {row.output.map((modality) => getModalityIcon(modality))}
-        </div>
-      </td>
-      <td>{renderCost(row.inputCost)}</td>
-      <td>{renderCost(row.outputCost)}</td>
-      <td>{renderCost(row.reasoningCost)}</td>
-      <td>{renderCost(row.cacheReadCost)}</td>
-      <td>{renderCost(row.cacheWriteCost)}</td>
-      <td>{renderCost(row.audioInputCost)}</td>
-      <td>{renderCost(row.audioOutputCost)}</td>
-      <td>{row.contextLimit.toLocaleString()}</td>
-      <td>{row.inputLimit?.toLocaleString() ?? "-"}</td>
-      <td>{row.outputLimit.toLocaleString()}</td>
-      <td>
-        {row.structuredOutput === undefined
-          ? "-"
-          : row.structuredOutput
-          ? "Yes"
-          : "No"}
-      </td>
-      <td>{row.temperature ? "Yes" : "No"}</td>
-      <td>{row.openWeights ? "Open" : "Closed"}</td>
-      <td>{row.knowledge ? row.knowledge.substring(0, 7) : "-"}</td>
-      <td>{row.releaseDate}</td>
-      <td>{row.lastUpdated}</td>
-    </tr>
-  );
-}
 
 export const Rendered = renderToString(
   <Fragment>
@@ -506,9 +242,9 @@ export const Rendered = renderToString(
           </th>
         </tr>
       </thead>
-      <tbody id="models-table-body">
-        {TableRows.slice(0, 50).map(renderModelRow)}
-      </tbody>
+      <tbody id="models-table-body" dangerouslySetInnerHTML={{
+        __html: TableRows.slice(0, INITIAL_ROW_COUNT).map((row, i) => renderRow(row, i)).join('')
+      }} />
       </table>
     </div>
     <dialog id="modal">
