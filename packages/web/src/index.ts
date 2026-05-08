@@ -6,7 +6,6 @@ import {
 } from "@tanstack/virtual-core";
 import {
   TableRowFields,
-  TableRowTuple,
   renderRow,
   escapeHtml,
   booleanText,
@@ -19,7 +18,7 @@ import {
 
 declare global {
   interface Window {
-    __TABLE_DATA__: TableRowTuple[];
+    __TABLE_DATA__: TableRowFields[];
   }
 }
 
@@ -112,126 +111,68 @@ modal.addEventListener("click", (e) => {
 ////////////////////
 // Row Data
 ////////////////////
-function optional<T>(value: T | null) {
-  return value === null ? undefined : value;
-}
-
-function hydrateRow(row: TableRowTuple): TableRow {
-  const [
-    providerId,
-    providerName,
-    modelId,
-    modelName,
-    family,
-    toolCall,
-    reasoning,
-    input,
-    output,
-    inputCost,
-    outputCost,
-    reasoningCost,
-    cacheReadCost,
-    cacheWriteCost,
-    audioInputCost,
-    audioOutputCost,
-    contextLimit,
-    inputLimit,
-    outputLimit,
-    structuredOutput,
-    temperature,
-    openWeights,
-    knowledge,
-    releaseDate,
-    lastUpdated,
-  ] = row;
-  const fields: TableRowFields = {
-    providerId,
-    providerName,
-    modelId,
-    modelName,
-    family: optional(family),
-    toolCall,
-    reasoning,
-    input,
-    output,
-    inputCost: optional(inputCost),
-    outputCost: optional(outputCost),
-    reasoningCost: optional(reasoningCost),
-    cacheReadCost: optional(cacheReadCost),
-    cacheWriteCost: optional(cacheWriteCost),
-    audioInputCost: optional(audioInputCost),
-    audioOutputCost: optional(audioOutputCost),
-    contextLimit,
-    inputLimit: optional(inputLimit),
-    outputLimit,
-    structuredOutput: optional(structuredOutput),
-    temperature,
-    openWeights,
-    knowledge: optional(knowledge),
-    releaseDate,
-    lastUpdated,
-  };
+function prepareRow(row: TableRowFields): TableRow {
   const sortValues: TableRow["sortValues"] = [
-    fields.providerName,
-    fields.modelName,
-    fields.family,
-    fields.providerId,
-    fields.modelId,
-    booleanText(fields.toolCall),
-    booleanText(fields.reasoning),
-    fields.input.length,
-    fields.output.length,
-    fields.inputCost,
-    fields.outputCost,
-    fields.reasoningCost,
-    fields.cacheReadCost,
-    fields.cacheWriteCost,
-    fields.audioInputCost,
-    fields.audioOutputCost,
-    fields.contextLimit,
-    fields.inputLimit,
-    fields.outputLimit,
-    fields.structuredOutput === undefined
+    row.providerName,
+    row.modelName,
+    row.family,
+    row.providerId,
+    row.modelId,
+    booleanText(row.toolCall),
+    booleanText(row.reasoning),
+    row.input.length,
+    row.output.length,
+    row.inputCost,
+    row.outputCost,
+    row.reasoningCost,
+    row.cacheReadCost,
+    row.cacheWriteCost,
+    row.audioInputCost,
+    row.audioOutputCost,
+    row.contextLimit,
+    row.inputLimit,
+    row.outputLimit,
+    row.structuredOutput === undefined
       ? undefined
-      : booleanText(fields.structuredOutput),
-    booleanText(fields.temperature),
-    weightsText(fields.openWeights),
-    fields.knowledge ? knowledgeText(fields.knowledge) : undefined,
-    fields.releaseDate,
-    fields.lastUpdated,
+      : booleanText(row.structuredOutput),
+    booleanText(row.temperature),
+    weightsText(row.openWeights),
+    row.knowledge ? knowledgeText(row.knowledge) : undefined,
+    row.releaseDate,
+    row.lastUpdated,
   ];
 
   const searchableValues = [
-    fields.providerName,
-    fields.modelName,
-    fields.family ?? "",
-    fields.providerId,
-    fields.modelId,
-    booleanText(fields.toolCall),
-    booleanText(fields.reasoning),
-    fields.input.join(" "),
-    fields.output.join(" "),
-    formatCost(fields.inputCost),
-    formatCost(fields.outputCost),
-    formatCost(fields.reasoningCost),
-    formatCost(fields.cacheReadCost),
-    formatCost(fields.cacheWriteCost),
-    formatCost(fields.audioInputCost),
-    formatCost(fields.audioOutputCost),
-    formatNumber(fields.contextLimit),
-    formatNumber(fields.inputLimit),
-    formatNumber(fields.outputLimit),
-    optionalBooleanText(fields.structuredOutput),
-    booleanText(fields.temperature),
-    weightsText(fields.openWeights),
-    knowledgeText(fields.knowledge),
-    fields.releaseDate,
-    fields.lastUpdated,
+    row.providerName,
+    row.modelName,
+    row.family ?? "",
+    row.providerId,
+    row.modelId,
+    booleanText(row.toolCall),
+    booleanText(row.reasoning),
+    row.input.join(" "),
+    row.output.join(" "),
+    formatCost(row.inputCost),
+    formatCost(row.outputCost),
+    formatCost(row.reasoningCost),
+    formatCost(row.cacheReadCost),
+    formatCost(row.cacheWriteCost),
+    formatCost(row.audioInputCost),
+    formatCost(row.audioOutputCost),
+    formatNumber(row.contextLimit),
+    formatNumber(row.inputLimit),
+    formatNumber(row.outputLimit),
+    optionalBooleanText(row.structuredOutput),
+    booleanText(row.temperature),
+    weightsText(row.openWeights),
+    knowledgeText(row.knowledge),
+    row.releaseDate,
+    row.lastUpdated,
   ];
 
   return {
-    ...fields,
-    key: `${fields.providerId}/${fields.modelId}`,
+    ...row,
+    key: `${row.providerId}/${row.modelId}`,
     searchText: searchableValues.join(" ").toLowerCase(),
     sortValues,
   };
@@ -490,7 +431,7 @@ function initializeFromURL() {
 
 function loadRows() {
   try {
-    allRows = window.__TABLE_DATA__.map(hydrateRow);
+    allRows = window.__TABLE_DATA__.map(prepareRow);
     isLoaded = true;
     initializeFromURL();
   } catch (error) {

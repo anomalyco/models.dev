@@ -5,7 +5,7 @@ import { generate } from "models.dev";
 import { Fragment } from "hono/jsx";
 import { renderToString } from "hono/jsx/dom/server";
 import path from "path";
-import { TableRowFields, TableRowTuple, renderRow } from "./shared/row-render.js";
+import { TableRowFields, renderRow } from "./shared/row-render.js";
 
 export const Providers = await generate(
   path.join(import.meta.dir, "..", "..", "..", "providers")
@@ -49,34 +49,6 @@ export const TableRows: TableRowFields[] = Object.entries(Providers)
         lastUpdated: model.last_updated,
       }))
   );
-
-export const TableData: TableRowTuple[] = TableRows.map((row) => [
-  row.providerId,
-  row.providerName,
-  row.modelId,
-  row.modelName,
-  row.family ?? null,
-  row.toolCall,
-  row.reasoning,
-  row.input,
-  row.output,
-  row.inputCost ?? null,
-  row.outputCost ?? null,
-  row.reasoningCost ?? null,
-  row.cacheReadCost ?? null,
-  row.cacheWriteCost ?? null,
-  row.audioInputCost ?? null,
-  row.audioOutputCost ?? null,
-  row.contextLimit,
-  row.inputLimit ?? null,
-  row.outputLimit,
-  row.structuredOutput ?? null,
-  row.temperature,
-  row.openWeights,
-  row.knowledge ?? null,
-  row.releaseDate,
-  row.lastUpdated,
-]);
 
 export const Rendered = renderToString(
   <Fragment>
@@ -363,7 +335,7 @@ export const Rendered = renderToString(
     </dialog>
     <script
       dangerouslySetInnerHTML={{
-        __html: `window.__TABLE_DATA__ = ${JSON.stringify(TableData)}`,
+        __html: `window.__TABLE_DATA__ = ${JSON.stringify(TableRows)}`,
       }}
     ></script>
   </Fragment>
