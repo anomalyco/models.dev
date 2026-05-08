@@ -1,0 +1,21 @@
+base_model = "alibaba/qwen3.5-122b-a10b"
+name = "Qwen3.5 122B-A10B FP8"
+last_updated = "2026-05-06"
+status = "beta"
+reasoning_options = [{ type = "toggle" }]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.40
+output = 3.20
+
+[limit]
+context = 200_000
+input = 200_000
+output = 50_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

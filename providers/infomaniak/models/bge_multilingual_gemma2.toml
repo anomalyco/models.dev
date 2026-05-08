@@ -1,0 +1,22 @@
+name = "BGE Multilingual Gemma2"
+family = "text-embedding"
+release_date = "2024-07-30"
+last_updated = "2026-05-06"
+attachment = false
+reasoning = false
+temperature = false
+tool_call = false
+open_weights = true
+
+[cost]
+input = 0.065
+output = 0.00
+
+[limit]
+context = 8_192
+input = 8_192
+output = 3_584
+
+[modalities]
+input = ["text"]
+output = ["text"]
