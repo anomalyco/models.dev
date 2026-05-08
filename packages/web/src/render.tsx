@@ -4,12 +4,63 @@
 import { generate } from "models.dev";
 import { Fragment } from "hono/jsx";
 import { renderToString } from "hono/jsx/dom/server";
+import { existsSync } from "fs";
 import path from "path";
 import { TableRowFields, renderRow, scanWorstCaseRow } from "./shared.js";
 
 export const Providers = await generate(
   path.join(import.meta.dir, "..", "..", "..", "providers")
 );
+
+// Function to load SVG content
+const loadProviderSvg = async (providerId: string): Promise<string | null> => {
+  const providerLogoPath = path.join(
+    import.meta.dir,
+    "..",
+    "..",
+    "..",
+    "providers",
+    providerId,
+    "logo.svg"
+  );
+
+  const defaultLogoPath = path.join(
+    import.meta.dir,
+    "..",
+    "..",
+    "..",
+    "providers",
+    "logo.svg"
+  );
+
+  try {
+    // Try provider-specific logo first
+    if (existsSync(providerLogoPath)) {
+      const file = Bun.file(providerLogoPath);
+      return await file.text();
+    }
+    // Fall back to default logo
+    if (existsSync(defaultLogoPath)) {
+      const file = Bun.file(defaultLogoPath);
+      return await file.text();
+    }
+    return null;
+  } catch (error) {
+    console.warn(`Failed to load logo for provider ${providerId}:`, error);
+    return null;
+  }
+};
+
+// Create a cache of loaded SVGs at build time
+const providerLogos = new Map<string, string>();
+
+// Pre-load all provider logos
+for (const [providerId] of Object.entries(Providers)) {
+  const svgContent = await loadProviderSvg(providerId);
+  if (svgContent) {
+    providerLogos.set(providerId, svgContent);
+  }
+}
 
 export const INITIAL_ROW_COUNT = 50;
 
@@ -24,6 +75,7 @@ export const TableRows: TableRowFields[] = Object.entries(Providers)
       .map(([modelId, model]) => ({
         providerId,
         providerName: provider.name,
+        providerLogoSvg: providerLogos.get(providerId) || "",
         modelId,
         modelName: model.name,
         family: model.family,

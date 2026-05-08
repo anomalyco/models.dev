@@ -1,6 +1,7 @@
 export interface TableRowFields {
   providerId: string;
   providerName: string;
+  providerLogoSvg: string;
   modelId: string;
   modelName: string;
   family?: string;
@@ -100,9 +101,7 @@ export function renderCopyButton(modelId: string) {
 
 export function renderRow(row: TableRowFields, index: number) {
   return `<tr data-index="${index}">
-    <td><div class="provider-cell"><img src="/logos/${encodeURIComponent(
-      row.providerId
-    )}.svg" alt="" loading="lazy" decoding="async"><span>${escapeHtml(
+    <td><div class="provider-cell">${row.providerLogoSvg}<span>${escapeHtml(
     row.providerName
   )}</span></div></td>
     <td>${escapeHtml(row.modelName)}</td>
@@ -136,7 +135,7 @@ export function renderRow(row: TableRowFields, index: number) {
 
 export function scanWorstCaseRow(rows: TableRowFields[]): TableRowFields {
   const worst: TableRowFields = {
-    providerId: "", providerName: "", modelId: "", modelName: "",
+    providerId: "", providerName: "", providerLogoSvg: "", modelId: "", modelName: "",
     toolCall: true, reasoning: true,
     input: [], output: [],
     contextLimit: 0, outputLimit: 0,
