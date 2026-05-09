@@ -1,0 +1,25 @@
+name = "Qwen3-235B-A22B-Thinking-2507-fast"
+attachment = false
+reasoning = true
+tool_call = true
+structured_output = true
+temperature = true
+knowledge = "2025-07"
+release_date = "2025-07-25"
+last_updated = "2026-05-07"
+open_weights = true
+
+[cost]
+input = 0.50
+output = 2.00
+cache_read = 0.05
+cache_write = 0.625
+
+[limit]
+context = 8_000
+input = 7_000
+output = 8_192
+
+[modalities]
+input = ["text"]
+output = ["text"]
