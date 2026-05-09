@@ -75,6 +75,13 @@ export default {
 
     if (url.pathname === "/api.json") {
       url.pathname = "/_api.json";
+    } else if (url.pathname === "/api/models.json") {
+      url.pathname = "/_api/models.json";
+    } else if (url.pathname === "/api/schema.json") {
+      url.pathname = "/_api/schema.json";
+    } else if (url.pathname.match(/^\/api\/[a-z0-9][a-z0-9._-]+\.json$/)) {
+      const providerId = url.pathname.replace("/api/", "").replace(".json", "");
+      url.pathname = `/_api/${providerId}.json`;
     } else if (
       url.pathname === "/" ||
       url.pathname === "/index.html" ||

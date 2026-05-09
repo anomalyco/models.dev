@@ -24,6 +24,22 @@ curl https://models.dev/api.json
 
 Use the **Model ID** field to do a lookup on any model; it's the identifier used by [AI SDK](https://ai-sdk.dev/).
 
+The API also provides several specialized endpoints for faster access:
+
+| Endpoint | Description |
+|---|---|
+| `/api/models.json` | Lightweight index of all model IDs with capabilities and provider list |
+| `/api/{provider}.json` | Full data for a single provider (e.g., `/api/anthropic.json`) |
+| `/api/schema.json` | JSON Schema describing the full data shape |
+
+```bash
+# Find which providers offer a specific model
+curl https://models.dev/api/models.json | jq '."claude-sonnet-4-5".providers'
+
+# Get full pricing for one provider
+curl https://models.dev/api/anthropic.json
+```
+
 ### Logos
 
 Provider logos are available as SVG files:

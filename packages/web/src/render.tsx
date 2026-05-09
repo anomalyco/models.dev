@@ -519,6 +519,40 @@ export const Rendered = renderToString(
           </a>
           .
         </p>
+        <h3>Model Index</h3>
+        <p>
+          Lightweight index of all model IDs with their capabilities and which
+          providers offer each model. Useful for finding which providers carry a
+          model without downloading the full dataset.
+        </p>
+        <div class="code-block">
+          <code>
+            curl{" "}
+            <a href="/api/models.json">https://models.dev/api/models.json</a>
+            {" | jq '.\"claude-sonnet-4-5\".providers'"}
+          </code>
+        </div>
+        <h3>Per-Provider</h3>
+        <p>
+          Full data for a single provider. Replace <code>{`{provider}`}</code>{" "}
+          with the <b>Provider ID</b>.
+        </p>
+        <div class="code-block">
+          <code>
+            curl{" "}
+            <a href="/api/anthropic.json">
+              https://models.dev/api/anthropic.json
+            </a>
+          </code>
+        </div>
+        <h3>Schema</h3>
+        <p>JSON Schema describing the full API data shape.</p>
+        <div class="code-block">
+          <code>
+            curl{" "}
+            <a href="/api/schema.json">https://models.dev/api/schema.json</a>
+          </code>
+        </div>
         <h2>Logos</h2>
         <p>
           Provider logos are available at <code>/logos/{`{provider}`}.svg</code>{" "}
