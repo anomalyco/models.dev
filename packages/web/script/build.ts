@@ -187,3 +187,16 @@ const schema = {
   },
 };
 await Bun.write("./dist/_api/schema.json", JSON.stringify(schema, null, 2));
+
+// Build provider list: lightweight index of all providers
+const providerList = providerEntries
+  .sort(([, a], [, b]) => a.name.localeCompare(b.name))
+  .map(([id, provider]) => ({
+    id,
+    name: provider.name,
+    doc: provider.doc,
+    model_count: Object.keys(provider.models).length,
+    npm: provider.npm,
+    api: provider.api,
+  }));
+await Bun.write("./dist/_api/providers.json", JSON.stringify(providerList));

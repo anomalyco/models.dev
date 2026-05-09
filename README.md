@@ -30,6 +30,7 @@ The API also provides several specialized endpoints for faster access:
 |---|---|
 | `/api/models.json` | Lightweight index of all model IDs with capabilities and provider list |
 | `/api/{provider}.json` | Full data for a single provider (e.g., `/api/anthropic.json`) |
+| `/api/providers.json` | Lightweight list of all providers with name, model count, and docs link |
 | `/api/schema.json` | JSON Schema describing the full data shape |
 
 ```bash

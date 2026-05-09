@@ -545,6 +545,20 @@ export const Rendered = renderToString(
             </a>
           </code>
         </div>
+        <h3>Providers</h3>
+        <p>
+          Lightweight list of all providers with their display name, model
+          count, and documentation link. Useful for finding the right{" "}
+          <b>Provider ID</b>.
+        </p>
+        <div class="code-block">
+          <code>
+            curl{" "}
+            <a href="/api/providers.json">
+              https://models.dev/api/providers.json
+            </a>
+          </code>
+        </div>
         <h3>Schema</h3>
         <p>JSON Schema describing the full API data shape.</p>
         <div class="code-block">
