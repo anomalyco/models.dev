@@ -1,0 +1,25 @@
+name = "Qwen3.6 Max Preview"
+family = "qwen"
+release_date = "2026-05-09"
+last_updated = "2026-05-09"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = true
+knowledge = "2025-04"
+open_weights = false
+
+[cost]
+input = 1.268
+output = 7.608
+cache_read = 0.1268
+cache_write = 1.585
+
+[limit]
+context = 240_000
+output = 64_000
+
+[modalities]
+input = ["text"]
+output = ["text"]
