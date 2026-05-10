@@ -289,6 +289,7 @@ export const ModelFamilyValues = [
   "rnj",
 
   // Tecent Hy
+  "hy3",
   "hy3-free",
 
   // Ling & Ring (InclusionAI)
