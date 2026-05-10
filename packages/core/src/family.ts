@@ -296,6 +296,7 @@ export const ModelFamilyValues = [
   "ling",
   "ling-flash-free",
   "ring",
+  "ring-1t-free",
 
   // Kat Coder
   "kat-coder",
