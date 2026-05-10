@@ -1,0 +1,21 @@
+name = "GLM 0808 360B-DR"
+family = "glm"
+release_date = "2025-08-08"
+last_updated = "2025-08-08"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+open_weights = true
+
+[cost]
+input = 2.0
+output = 2.0
+
+[limit]
+context = 128_000
+output = 16_384
+
+[modalities]
+input = ["text"]
+output = ["text"]
