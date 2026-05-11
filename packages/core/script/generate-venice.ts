@@ -163,6 +163,16 @@ interface ExistingModel {
       cache_read?: number;
       cache_write?: number;
     };
+    tiers?: Array<{
+      context: {
+        min?: number;
+        max?: number;
+      };
+      input?: number;
+      output?: number;
+      cache_read?: number;
+      cache_write?: number;
+    }>;
   };
   limit?: {
     context?: number;
@@ -366,7 +376,8 @@ function formatToml(model: MergedModel): string {
 
     if (model.cost.context_over_200k) {
       lines.push("");
-      lines.push(`[cost.context_over_200k]`);
+      lines.push(`[[cost.tiers]]`);
+      lines.push(`context = { min = 200_000 }`);
       lines.push(`input = ${model.cost.context_over_200k.input}`);
       lines.push(`output = ${model.cost.context_over_200k.output}`);
       if (model.cost.context_over_200k.cache_read !== undefined) {

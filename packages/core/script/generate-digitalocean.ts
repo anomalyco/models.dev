@@ -210,6 +210,16 @@ interface ExistingModel {
       cache_read?: number;
       cache_write?: number;
     };
+    tiers?: Array<{
+      context: {
+        min?: number;
+        max?: number;
+      };
+      input?: number;
+      output?: number;
+      cache_read?: number;
+      cache_write?: number;
+    }>;
   };
   limit?: {
     context?: number;
@@ -310,6 +320,13 @@ function inferFamily(modelId: string, modelName: string): string | undefined {
   return undefined;
 }
 
+function getExistingLongContextCost(existing: ExistingModel | null) {
+  return (
+    existing?.cost?.tiers?.find((tier) => tier.context.min !== undefined && tier.context.min >= 200_000 && tier.context.max === undefined) ??
+    existing?.cost?.context_over_200k
+  );
+}
+
 // ---------------------------------------------------------------------------
 // Merge API data with existing TOML
 // ---------------------------------------------------------------------------
@@ -394,27 +411,28 @@ function mergeModel(
     };
 
     // Context-tiered pricing (>200k) from the static-content API
+    const existingLongContextCost = getExistingLongContextCost(existing);
     if (pricing?.inputOver200k !== undefined && pricing?.outputOver200k !== undefined) {
       merged.cost.context_over_200k = {
         input: pricing.inputOver200k,
         output: pricing.outputOver200k,
-        ...(existing?.cost?.context_over_200k?.cache_read !== undefined && {
-          cache_read: existing.cost.context_over_200k.cache_read,
+        ...(existingLongContextCost?.cache_read !== undefined && {
+          cache_read: existingLongContextCost.cache_read,
         }),
-        ...(existing?.cost?.context_over_200k?.cache_write !== undefined && {
-          cache_write: existing.cost.context_over_200k.cache_write,
+        ...(existingLongContextCost?.cache_write !== undefined && {
+          cache_write: existingLongContextCost.cache_write,
         }),
       };
-    } else if (existing?.cost?.context_over_200k) {
-      // Preserve manually-entered context_over_200k if API has no data
+    } else if (existingLongContextCost) {
+      // Preserve manually-entered tiered pricing if API has no data
       merged.cost.context_over_200k = {
-        input: existing.cost.context_over_200k.input ?? inputPrice,
-        output: existing.cost.context_over_200k.output ?? outputPrice,
-        ...(existing.cost.context_over_200k.cache_read !== undefined && {
-          cache_read: existing.cost.context_over_200k.cache_read,
+        input: existingLongContextCost.input ?? inputPrice,
+        output: existingLongContextCost.output ?? outputPrice,
+        ...(existingLongContextCost.cache_read !== undefined && {
+          cache_read: existingLongContextCost.cache_read,
         }),
-        ...(existing.cost.context_over_200k.cache_write !== undefined && {
-          cache_write: existing.cost.context_over_200k.cache_write,
+        ...(existingLongContextCost.cache_write !== undefined && {
+          cache_write: existingLongContextCost.cache_write,
         }),
       };
     }
@@ -463,7 +481,8 @@ function formatToml(model: MergedModel): string {
 
     if (model.cost.context_over_200k) {
       lines.push("");
-      lines.push(`[cost.context_over_200k]`);
+      lines.push(`[[cost.tiers]]`);
+      lines.push(`context = { min = 200_000 }`);
       lines.push(`input = ${model.cost.context_over_200k.input}`);
       lines.push(`output = ${model.cost.context_over_200k.output}`);
       if (model.cost.context_over_200k.cache_read !== undefined)

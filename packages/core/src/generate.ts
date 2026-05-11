@@ -171,6 +171,10 @@ function normalizeCost(model: Record<string, unknown>) {
     return model;
   }
 
+  if (tiers.length !== 1) {
+    return model;
+  }
+
   const contextOver200k = tiers.find((tier) => {
     if (tier === null || typeof tier !== "object" || Array.isArray(tier)) return false;
     const context = (tier as { context?: unknown }).context;
