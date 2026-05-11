@@ -354,7 +354,7 @@ export const Rendered = renderToString(
                 modelA.name.localeCompare(modelB.name)
               )
               .map(([modelId, model]) => (
-                <tr key={`${providerId}-${modelId}`}>
+                <tr key={`${providerId}-${modelId}`} data-model={JSON.stringify(model)} style="height: 50px;display: none;">
                   <td>
                     <div class="provider-cell">
                       {renderProviderLogo(providerId)}

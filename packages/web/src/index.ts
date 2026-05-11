@@ -83,7 +83,7 @@ function sortTable(column: number, direction: "asc" | "desc") {
   const tbody = document.querySelector("table tbody")!;
   const rows = Array.from(
     tbody.querySelectorAll("tr")
-  ) as HTMLTableRowElement[];
+  ) as (HTMLTableRowElement)[];
   rows.sort((a, b) => {
     const aValue = getCellValue(a.cells[column], columnType);
     const bValue = getCellValue(b.cells[column], columnType);
@@ -153,9 +153,8 @@ function filterTable(value: string) {
   ) as NodeListOf<HTMLTableRowElement>;
 
   rows.forEach((row) => {
-    const cellTexts = Array.from(row.cells).map((cell) =>
-      cell.textContent!.toLowerCase()
-    );
+    const cellTexts = row.dataset['keywords']?.toLowerCase().split(',')!
+
     const isVisible = lowerCaseValues.length === 0 ||
      lowerCaseValues.some((lowerCaseValue) => cellTexts.some((text) => text.includes(lowerCaseValue)));
     row.style.display = isVisible ? "" : "none";
@@ -164,8 +163,13 @@ function filterTable(value: string) {
   updateQueryParams({ search: value || null });
 }
 
+let debounceHandle: NodeJS.Timeout | null = null
 search.addEventListener("input", () => {
-  filterTable(search.value);
+  clearTimeout(debounceHandle!)
+
+  setTimeout(() => {
+    filterTable(search.value);
+  }, 50)
 });
 
 document.addEventListener("keydown", (e) => {
@@ -238,3 +242,67 @@ function initializeFromURL() {
 
 document.addEventListener("DOMContentLoaded", initializeFromURL);
 window.addEventListener("popstate", initializeFromURL);
+
+
+function renderRowWhenVisible(tr: HTMLTableRowElement, initialRender: boolean) {
+  // const lightweightPlaceholder = '<td colspan="25"></td>'
+  const lightweightPlaceholder = `<td colspan="25" style="padding:12px;">
+      <div
+        style="
+          height:50px;
+          width:100%;
+          border-radius:6px;
+          background:linear-gradient(
+            90deg,
+            #f0f0f0 25%,
+            #e0e0e0 37%,
+            #f0f0f0 63%
+          );
+          background-size:400% 100%;
+          animation:skeleton-loading 1s ease infinite;
+        "
+      ></div>`
+
+  const originalContent = tr.innerHTML
+
+  let rendered = initialRender;
+
+  if (!rendered) {
+    tr.innerHTML = lightweightPlaceholder
+  }
+
+  tr.style.display = ''
+
+  const observer = new IntersectionObserver(
+    ([entry]) => {
+      if (entry.isIntersecting) {
+        if (!rendered) {
+          rendered = true;
+          tr.innerHTML = originalContent
+        }
+      } else {
+        rendered = false;
+        tr.innerHTML = lightweightPlaceholder
+      }
+    },
+    {
+      rootMargin: "1000px",
+    }
+  );
+
+  observer.observe(tr);
+}
+
+
+function parseObject(tr: any) {
+  tr.parsedModel = JSON.parse(tr.dataset['model'] || '{}')
+  tr.dataset['keywords'] = Object.values(tr.parsedModel).join(',')
+}
+
+
+document
+  .querySelectorAll<HTMLTableRowElement>('table tr')
+  .forEach((tr, index) => {
+    parseObject(tr)
+    renderRowWhenVisible(tr, index < 30)
+})
