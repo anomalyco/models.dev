@@ -209,6 +209,7 @@ interface ExistingModel {
       output?: number;
       cache_read?: number;
       cache_write?: number;
+      context_min?: number;
     };
     tiers?: Array<{
       context: {
@@ -272,6 +273,7 @@ interface MergedModel {
       output: number;
       cache_read?: number;
       cache_write?: number;
+      context_min?: number;
     };
   };
   limit: {
@@ -321,10 +323,33 @@ function inferFamily(modelId: string, modelName: string): string | undefined {
 }
 
 function getExistingLongContextCost(existing: ExistingModel | null) {
-  return (
-    existing?.cost?.tiers?.find((tier) => tier.context.min !== undefined && tier.context.min >= 200_000 && tier.context.max === undefined) ??
-    existing?.cost?.context_over_200k
+  const tier = existing?.cost?.tiers?.find(
+    (tier) =>
+      tier.context.min !== undefined &&
+      tier.context.min >= 200_000 &&
+      tier.context.max === undefined,
   );
+  if (tier) {
+    return {
+      ...tier,
+      context_min: tier.context.min,
+    };
+  }
+
+  return existing?.cost?.context_over_200k === undefined
+    ? undefined
+    : {
+        ...existing.cost.context_over_200k,
+        context_min: 200_000,
+      };
+}
+
+function getLongContextMin(cost: { context_min?: number }) {
+  return cost.context_min ?? 200_000;
+}
+
+function formatInlineNumber(n: number): string {
+  return n >= 1000 ? n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, "_") : n.toString();
 }
 
 // ---------------------------------------------------------------------------
@@ -416,6 +441,7 @@ function mergeModel(
       merged.cost.context_over_200k = {
         input: pricing.inputOver200k,
         output: pricing.outputOver200k,
+        context_min: existingLongContextCost?.context_min ?? 200_000,
         ...(existingLongContextCost?.cache_read !== undefined && {
           cache_read: existingLongContextCost.cache_read,
         }),
@@ -428,6 +454,7 @@ function mergeModel(
       merged.cost.context_over_200k = {
         input: existingLongContextCost.input ?? inputPrice,
         output: existingLongContextCost.output ?? outputPrice,
+        context_min: existingLongContextCost.context_min,
         ...(existingLongContextCost.cache_read !== undefined && {
           cache_read: existingLongContextCost.cache_read,
         }),
@@ -482,7 +509,7 @@ function formatToml(model: MergedModel): string {
     if (model.cost.context_over_200k) {
       lines.push("");
       lines.push(`[[cost.tiers]]`);
-      lines.push(`context = { min = 200_000 }`);
+      lines.push(`context = { min = ${formatInlineNumber(getLongContextMin(model.cost.context_over_200k))} }`);
       lines.push(`input = ${model.cost.context_over_200k.input}`);
       lines.push(`output = ${model.cost.context_over_200k.output}`);
       if (model.cost.context_over_200k.cache_read !== undefined)

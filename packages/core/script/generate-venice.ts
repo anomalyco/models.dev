@@ -162,6 +162,7 @@ interface ExistingModel {
       output?: number;
       cache_read?: number;
       cache_write?: number;
+      context_min?: number;
     };
     tiers?: Array<{
       context: {
@@ -205,6 +206,21 @@ async function loadExistingModel(filePath: string): Promise<ExistingModel | null
   }
 }
 
+function getExistingLongContextMin(existing: ExistingModel | null) {
+  return (
+    existing?.cost?.tiers?.find(
+      (tier) =>
+        tier.context.min !== undefined &&
+        tier.context.min >= 200_000 &&
+        tier.context.max === undefined,
+    )?.context.min ?? 200_000
+  );
+}
+
+function getLongContextMin(cost: { context_min?: number }) {
+  return cost.context_min ?? 200_000;
+}
+
 interface MergedModel {
   name: string;
   family?: string;
@@ -229,6 +245,7 @@ interface MergedModel {
       output: number;
       cache_read?: number;
       cache_write?: number;
+      context_min?: number;
     };
   };
   limit: {
@@ -302,6 +319,7 @@ function mergeModel(
       merged.cost.context_over_200k = {
         input: spec.pricing.extended.input.usd,
         output: spec.pricing.extended.output.usd,
+        context_min: getExistingLongContextMin(existing),
         ...(spec.pricing.extended.cache_input && { cache_read: spec.pricing.extended.cache_input.usd }),
         ...(spec.pricing.extended.cache_write && { cache_write: spec.pricing.extended.cache_write.usd }),
       };
@@ -377,7 +395,7 @@ function formatToml(model: MergedModel): string {
     if (model.cost.context_over_200k) {
       lines.push("");
       lines.push(`[[cost.tiers]]`);
-      lines.push(`context = { min = 200_000 }`);
+      lines.push(`context = { min = ${formatNumber(getLongContextMin(model.cost.context_over_200k))} }`);
       lines.push(`input = ${model.cost.context_over_200k.input}`);
       lines.push(`output = ${model.cost.context_over_200k.output}`);
       if (model.cost.context_over_200k.cache_read !== undefined) {
