@@ -169,7 +169,7 @@ search.addEventListener("input", () => {
 
   setTimeout(() => {
     filterTable(search.value);
-  }, 50)
+  }, 100)
 });
 
 document.addEventListener("keydown", (e) => {
@@ -261,7 +261,7 @@ function renderRowWhenVisible(tr: HTMLTableRowElement, initialRender: boolean) {
           background-size:400% 100%;
           animation:skeleton-loading 1s ease infinite;
         "
-      ></div>`
+      ></div></td>`
 
   const originalContent = tr.innerHTML
 
