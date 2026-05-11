@@ -1,12 +1,16 @@
-name = "Coding-MiniMax-M2.7-Free"
-family = "minimax"
+name = "Coding MiniMax M2.7 (Free)"
+family = "minimax-free"
 release_date = "2026-03-18"
 last_updated = "2026-03-18"
 attachment = false
 reasoning = true
 temperature = true
 tool_call = true
+structured_output = true
 open_weights = true
+
+[interleaved]
+field = "reasoning_content"
 
 [cost]
 input = 0
@@ -14,7 +18,7 @@ output = 0
 
 [limit]
 context = 204_800
-output = 13_100
+output = 128_100
 
 [modalities]
 input = ["text"]

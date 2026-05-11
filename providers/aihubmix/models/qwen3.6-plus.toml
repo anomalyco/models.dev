@@ -1,5 +1,5 @@
 name = "Qwen3.6 Plus"
-family = "qwen"
+family = "qwen3.6"
 release_date = "2026-05-09"
 last_updated = "2026-05-09"
 attachment = true
@@ -10,11 +10,20 @@ structured_output = true
 knowledge = "2025-04"
 open_weights = false
 
+[interleaved]
+field = "reasoning_content"
+
 [cost]
 input = 0.282
 output = 1.692
 cache_read = 0.0282
 cache_write = 0.3525
+
+[cost.context_over_200k]
+input = 1.13
+output = 6.77
+cache_read = 0.1128
+cache_write = 1.41
 
 [limit]
 context = 991_000

@@ -10,16 +10,25 @@ structured_output = true
 knowledge = "2026-01-31"
 open_weights = false
 
+[interleaved]
+field = "reasoning_content"
+
 [cost]
 input = 5
 output = 25
 cache_read = 0.5
 cache_write = 6.25
 
+[cost.context_over_200k]
+input = 10
+output = 37.5
+cache_read = 1.0
+cache_write = 12.5
+
 [limit]
-context = 200_000
-output = 32_000
+context = 1_000_000
+output = 128_000
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image", "pdf"]
 output = ["text"]
