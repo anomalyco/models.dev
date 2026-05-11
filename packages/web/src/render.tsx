@@ -314,6 +314,16 @@ export const Rendered = renderToString(
             </div>
           </th>
           <th class="sortable" data-type="number">
+            <div class="header-container">
+              <span class="header-text">
+                Cost
+                <br />
+                <span class="desc">per minute</span>
+              </span>
+              <span class="sort-indicator"></span>
+            </div>
+          </th>
+          <th class="sortable" data-type="number">
             Context Limit <span class="sort-indicator"></span>
           </th>
           <th class="sortable" data-type="number">
@@ -434,6 +444,7 @@ export const Rendered = renderToString(
                   <td>{renderCost(model.cost?.cache_write)}</td>
                   <td>{renderCost(model.cost?.input_audio)}</td>
                   <td>{renderCost(model.cost?.output_audio)}</td>
+                  <td>{renderCost(model.cost?.per_minute)}</td>
                   <td>{model.limit.context.toLocaleString()}</td>
                   <td>{model.limit.input?.toLocaleString() ?? "-"}</td>
                   <td>{model.limit.output.toLocaleString()}</td>

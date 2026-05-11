@@ -41,6 +41,10 @@ const Cost = z.object({
     .number()
     .min(0, "Audio output price cannot be negative")
     .optional(),
+  per_minute: z
+    .number()
+    .min(0, "Per-minute price cannot be negative")
+    .optional(),
 });
 export const Model = z
   .object({

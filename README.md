@@ -202,6 +202,7 @@ Models must conform to the following schema, as defined in `packages/core/src/sc
 - `cost.cache_write` _(optional)_: Number — Cost per million cached write tokens (USD)
 - `cost.input_audio` _(optional)_: Number — Cost per million audio input tokens, if billed separately (USD)
 - `cost.output_audio` _(optional)_: Number — Cost per million audio output tokens, if billed separately (USD)
+- `cost.per_minute` _(optional)_: Number — Cost per minute of audio, for models billed by duration (e.g. Whisper) (USD)
 - `limit.context`: Number — Maximum context window (tokens)
 - `limit.input`: Number — Maximum input tokens
 - `limit.output`: Number — Maximum output tokens
