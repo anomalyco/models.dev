@@ -2,9 +2,9 @@ import path from "path";
 import { mergeDeep } from "remeda";
 import { z } from "zod";
 
-import { Provider, Model } from "./schema.js";
+import { Provider, Model, AuthoredModel, AuthoredModelShape } from "./schema.js";
 
-const ExtendsModel = Model.sourceType()
+const ExtendsModel = AuthoredModelShape
   .partial()
   .extend({
     extends: z
@@ -71,12 +71,12 @@ export async function generate(directory: string) {
         });
         continue;
       }
-      const model = Model.safeParse(toml);
+      const model = AuthoredModel.safeParse(toml);
       if (!model.success) {
         model.error.cause = { modelPath, toml };
         throw model.error;
       }
-      provider.data.models[modelID] = model.data;
+      provider.data.models[modelID] = normalizeModelCost(model.data);
     }
     result[providerID] = provider.data;
   }
@@ -144,7 +144,7 @@ export async function generate(directory: string) {
       }
     }
 
-    const model = Model.safeParse(merged);
+    const model = Model.safeParse(normalizeCost(merged));
     if (!model.success) {
       model.error.cause = { modelPath: pendingModel.modelPath, toml: merged };
       throw model.error;
@@ -154,4 +154,45 @@ export async function generate(directory: string) {
   }
 
   return result;
+}
+
+function normalizeModelCost(model: z.infer<typeof AuthoredModel>): Model {
+  return normalizeCost(model) as Model;
+}
+
+function normalizeCost(model: Record<string, unknown>) {
+  const cost = model.cost;
+  if (cost === undefined || cost === null || typeof cost !== "object" || Array.isArray(cost)) {
+    return model;
+  }
+
+  const tiers = (cost as { tiers?: unknown }).tiers;
+  if (!Array.isArray(tiers)) {
+    return model;
+  }
+
+  const contextOver200k = tiers.find((tier) => {
+    if (tier === null || typeof tier !== "object" || Array.isArray(tier)) return false;
+    const context = (tier as { context?: unknown }).context;
+    if (context === null || typeof context !== "object" || Array.isArray(context)) return false;
+    const min = (context as { min?: unknown }).min;
+    return (
+      typeof min === "number" &&
+      min >= 200_000 &&
+      (context as { max?: unknown }).max === undefined
+    );
+  });
+
+  if (contextOver200k === undefined) {
+    return model;
+  }
+
+  const { context: _context, ...legacyCost } = contextOver200k as Record<string, unknown>;
+  return {
+    ...model,
+    cost: {
+      ...(cost as Record<string, unknown>),
+      context_over_200k: legacyCost,
+    },
+  };
 }

@@ -15,7 +15,8 @@ input = 5.00
 output = 30.00
 cache_read = 0.50
 
-[cost.context_over_200k]
+[[cost.tiers]]
+context = { min = 272_000 }
 input = 10.00
 output = 45.00
 cache_read = 1.00

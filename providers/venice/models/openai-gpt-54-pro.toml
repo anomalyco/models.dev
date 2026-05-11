@@ -13,7 +13,8 @@ open_weights = false
 input = 37.5
 output = 225
 
-[cost.context_over_200k]
+[[cost.tiers]]
+context = { min = 272_000 }
 input = 75
 output = 337.5
 
