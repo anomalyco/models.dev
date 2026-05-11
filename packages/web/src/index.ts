@@ -145,6 +145,8 @@ function prepareRow(row: TableRow): VirtualizedRow {
     row.cacheWriteCost,
     row.audioInputCost,
     row.audioOutputCost,
+    row.imageInputCost,
+    row.videoInputCost,
     row.contextLimit,
     row.inputLimit,
     row.outputLimit,

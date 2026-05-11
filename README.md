@@ -106,6 +106,8 @@ cache_read = 0.30           # Cost per million cached read tokens (USD)
 cache_write = 3.75          # Cost per million cached write tokens (USD)
 input_audio = 1.00          # Cost per million audio input tokens (USD)
 output_audio = 10.00        # Cost per million audio output tokens (USD)
+input_image = 0.45          # Cost per million image input tokens (USD)
+input_video = 12.00         # Cost per million video input tokens (USD)
 
 [limit]
 context = 400_000           # Maximum context window (tokens)
@@ -202,6 +204,8 @@ Models must conform to the following schema, as defined in `packages/core/src/sc
 - `cost.cache_write` _(optional)_: Number — Cost per million cached write tokens (USD)
 - `cost.input_audio` _(optional)_: Number — Cost per million audio input tokens, if billed separately (USD)
 - `cost.output_audio` _(optional)_: Number — Cost per million audio output tokens, if billed separately (USD)
+- `cost.input_image` _(optional)_: Number — Cost per million image input tokens, if billed separately (USD)
+- `cost.input_video` _(optional)_: Number — Cost per million video input tokens, if billed separately (USD)
 - `limit.context`: Number — Maximum context window (tokens)
 - `limit.input`: Number — Maximum input tokens
 - `limit.output`: Number — Maximum output tokens

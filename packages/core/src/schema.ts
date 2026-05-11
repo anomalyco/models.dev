@@ -45,6 +45,14 @@ const Cost = z
       .number()
       .min(0, "Audio output price cannot be negative")
       .optional(),
+    input_image: z
+      .number()
+      .min(0, "Image input price cannot be negative")
+      .optional(),
+    input_video: z
+      .number()
+      .min(0, "Video input price cannot be negative")
+      .optional(),
   });
 
 const CostTier = Cost.extend({

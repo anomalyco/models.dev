@@ -90,6 +90,8 @@ export const TableRows: TableRow[] = Object.entries(Providers)
         cacheWriteCost: model.cost?.cache_write,
         audioInputCost: model.cost?.input_audio,
         audioOutputCost: model.cost?.output_audio,
+        imageInputCost: model.cost?.input_image,
+        videoInputCost: model.cost?.input_video,
         contextLimit: model.limit.context,
         inputLimit: model.limit.input,
         outputLimit: model.limit.output,
@@ -233,6 +235,26 @@ export const Rendered = renderToString(
             <div class="header-container">
               <span class="header-text">
                 Audio Output Cost
+                <br />
+                <span class="desc">per 1M tokens</span>
+              </span>
+              <span class="sort-indicator"></span>
+            </div>
+          </th>
+          <th class="sortable" data-type="number">
+            <div class="header-container">
+              <span class="header-text">
+                Image Input Cost
+                <br />
+                <span class="desc">per 1M tokens</span>
+              </span>
+              <span class="sort-indicator"></span>
+            </div>
+          </th>
+          <th class="sortable" data-type="number">
+            <div class="header-container">
+              <span class="header-text">
+                Video Input Cost
                 <br />
                 <span class="desc">per 1M tokens</span>
               </span>

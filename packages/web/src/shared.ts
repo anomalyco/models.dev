@@ -16,6 +16,8 @@ export interface TableRow {
   cacheWriteCost?: number;
   audioInputCost?: number;
   audioOutputCost?: number;
+  imageInputCost?: number;
+  videoInputCost?: number;
   contextLimit: number;
   inputLimit?: number;
   outputLimit: number;
@@ -121,6 +123,8 @@ export function renderRow(row: TableRow, index: number) {
     <td>${formatCost(row.cacheWriteCost)}</td>
     <td>${formatCost(row.audioInputCost)}</td>
     <td>${formatCost(row.audioOutputCost)}</td>
+    <td>${formatCost(row.imageInputCost)}</td>
+    <td>${formatCost(row.videoInputCost)}</td>
     <td>${formatNumber(row.contextLimit)}</td>
     <td>${formatNumber(row.inputLimit)}</td>
     <td>${formatNumber(row.outputLimit)}</td>
@@ -164,6 +168,8 @@ export function getLargestRow(rows: TableRow[]): TableRow {
     if (costWider(worst.cacheWriteCost, row.cacheWriteCost)) worst.cacheWriteCost = row.cacheWriteCost;
     if (costWider(worst.audioInputCost, row.audioInputCost)) worst.audioInputCost = row.audioInputCost;
     if (costWider(worst.audioOutputCost, row.audioOutputCost)) worst.audioOutputCost = row.audioOutputCost;
+    if (costWider(worst.imageInputCost, row.imageInputCost)) worst.imageInputCost = row.imageInputCost;
+    if (costWider(worst.videoInputCost, row.videoInputCost)) worst.videoInputCost = row.videoInputCost;
 
     const numWider = (a: number | undefined, b: number | undefined) =>
       b !== undefined && (a === undefined || formatNumber(b).length > formatNumber(a).length);
