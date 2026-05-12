@@ -3,6 +3,16 @@ structured_output = true
 [extends]
 from = "xai/grok-4.3"
 
+[cost]
+input = 1.25
+output = 2.50
+cache_read = 0.20
+
+[[cost.tiers]]
+tier = { size = 200_000 }
+input = 2.50
+output = 5.00
+cache_read = 0.40
 
 [limit]
 context = 1_000_000

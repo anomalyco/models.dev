@@ -162,7 +162,18 @@ interface ExistingModel {
       output?: number;
       cache_read?: number;
       cache_write?: number;
+      context_min?: number;
     };
+    tiers?: Array<{
+      tier: {
+        type?: "context";
+        size: number;
+      };
+      input?: number;
+      output?: number;
+      cache_read?: number;
+      cache_write?: number;
+    }>;
   };
   limit?: {
     context?: number;
@@ -195,6 +206,30 @@ async function loadExistingModel(filePath: string): Promise<ExistingModel | null
   }
 }
 
+function getExistingLongContextMin(existing: ExistingModel | null) {
+  return (
+    existing?.cost?.tiers?.find(
+      (tier) =>
+        (tier.tier.type === undefined || tier.tier.type === "context") &&
+        tier.tier.size >= 200_000,
+    )?.tier.size ?? 200_000
+  );
+}
+
+function getExistingLongContextCost(existing: ExistingModel | null) {
+  return (
+    existing?.cost?.tiers?.find(
+      (tier) =>
+        (tier.tier.type === undefined || tier.tier.type === "context") &&
+        tier.tier.size >= 200_000,
+    ) ?? existing?.cost?.context_over_200k
+  );
+}
+
+function getLongContextMin(cost: { context_min?: number }) {
+  return cost.context_min ?? 200_000;
+}
+
 interface MergedModel {
   name: string;
   family?: string;
@@ -219,6 +254,7 @@ interface MergedModel {
       output: number;
       cache_read?: number;
       cache_write?: number;
+      context_min?: number;
     };
   };
   limit: {
@@ -292,6 +328,7 @@ function mergeModel(
       merged.cost.context_over_200k = {
         input: spec.pricing.extended.input.usd,
         output: spec.pricing.extended.output.usd,
+        context_min: spec.pricing.extended.context_token_threshold,
         ...(spec.pricing.extended.cache_input && { cache_read: spec.pricing.extended.cache_input.usd }),
         ...(spec.pricing.extended.cache_write && { cache_write: spec.pricing.extended.cache_write.usd }),
       };
@@ -366,7 +403,8 @@ function formatToml(model: MergedModel): string {
 
     if (model.cost.context_over_200k) {
       lines.push("");
-      lines.push(`[cost.context_over_200k]`);
+      lines.push(`[[cost.tiers]]`);
+      lines.push(`tier = { size = ${formatNumber(getLongContextMin(model.cost.context_over_200k))} }`);
       lines.push(`input = ${model.cost.context_over_200k.input}`);
       lines.push(`output = ${model.cost.context_over_200k.output}`);
       if (model.cost.context_over_200k.cache_read !== undefined) {
@@ -438,10 +476,11 @@ function detectChanges(
   compare("cost.output", existing.cost?.output, merged.cost?.output);
   compare("cost.cache_read", existing.cost?.cache_read, merged.cost?.cache_read);
   compare("cost.cache_write", existing.cost?.cache_write, merged.cost?.cache_write);
-  compare("cost.context_over_200k.input", existing.cost?.context_over_200k?.input, merged.cost?.context_over_200k?.input);
-  compare("cost.context_over_200k.output", existing.cost?.context_over_200k?.output, merged.cost?.context_over_200k?.output);
-  compare("cost.context_over_200k.cache_read", existing.cost?.context_over_200k?.cache_read, merged.cost?.context_over_200k?.cache_read);
-  compare("cost.context_over_200k.cache_write", existing.cost?.context_over_200k?.cache_write, merged.cost?.context_over_200k?.cache_write);
+  const existingLongContextCost = getExistingLongContextCost(existing);
+  compare("cost.context_over_200k.input", existingLongContextCost?.input, merged.cost?.context_over_200k?.input);
+  compare("cost.context_over_200k.output", existingLongContextCost?.output, merged.cost?.context_over_200k?.output);
+  compare("cost.context_over_200k.cache_read", existingLongContextCost?.cache_read, merged.cost?.context_over_200k?.cache_read);
+  compare("cost.context_over_200k.cache_write", existingLongContextCost?.cache_write, merged.cost?.context_over_200k?.cache_write);
   compare("limit.context", existing.limit?.context, merged.limit.context);
   compare("limit.output", existing.limit?.output, merged.limit.output);
   compare("modalities.input", existing.modalities?.input, merged.modalities.input);
