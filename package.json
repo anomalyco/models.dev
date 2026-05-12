@@ -23,9 +23,11 @@
     "venice:generate": "bun ./packages/core/script/generate-venice.ts",
     "vercel:generate": "bun ./packages/core/script/generate-vercel.ts",
     "wandb:generate": "bun ./packages/core/script/generate-wandb.ts",
-    "digitalocean:generate": "bun ./packages/core/script/generate-digitalocean.ts"
+    "digitalocean:generate": "bun ./packages/core/script/generate-digitalocean.ts",
+    "bedrock:generate": "bun ./packages/core/script/generate-bedrock.ts"
   },
   "dependencies": {
+    "@aws-sdk/client-bedrock": "^3.1045.0",
     "@cloudflare/workers-types": "^4.20260424.1",
     "sst": "3.17.23"
   }

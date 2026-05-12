@@ -47,6 +47,7 @@ export const Model = z
     id: z.string(),
     name: z.string().min(1, "Model name cannot be empty"),
     family: ModelFamily.optional(),
+    supported_regions: z.array(z.string()).optional(),
     attachment: z.boolean(),
     reasoning: z.boolean(),
     tool_call: z.boolean(),
