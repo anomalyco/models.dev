@@ -6,7 +6,7 @@ import { Fragment } from "hono/jsx";
 import { renderToString } from "hono/jsx/dom/server";
 import { existsSync } from "fs";
 import path from "path";
-import { TableRowFields, renderRow, scanWorstCaseRow } from "./shared.js";
+import { TableRow, renderRow, getLargestRow } from "./shared.js";
 
 export const Providers = await generate(
   path.join(import.meta.dir, "..", "..", "..", "providers")
@@ -64,7 +64,7 @@ for (const [providerId] of Object.entries(Providers)) {
 
 export const INITIAL_ROW_COUNT = 50;
 
-export const TableRows: TableRowFields[] = Object.entries(Providers)
+export const TableRows: TableRow[] = Object.entries(Providers)
   .sort(([, providerA], [, providerB]) =>
     providerA.name.localeCompare(providerB.name)
   )
@@ -102,7 +102,7 @@ export const TableRows: TableRowFields[] = Object.entries(Providers)
       }))
   );
 
-const worstCaseRow = scanWorstCaseRow(TableRows);
+const largestRow = getLargestRow(TableRows);
 
 export const Rendered = renderToString(
   <Fragment>
@@ -270,7 +270,7 @@ export const Rendered = renderToString(
       </thead>
       <tbody id="models-table-body" dangerouslySetInnerHTML={{
         __html: TableRows.slice(0, INITIAL_ROW_COUNT).map((row, i) => renderRow(row, i)).join('')
-          + renderRow(worstCaseRow, -1).replace('<tr', '<tr style="visibility:hidden" aria-hidden="true"')
+          + renderRow(largestRow, -1).replace('<tr', '<tr style="visibility:hidden" aria-hidden="true"')
       }} />
       </table>
     </div>

@@ -367,16 +367,12 @@ search.addEventListener("input", () => {
   applyRows();
 });
 
-function focusSearch() {
-  search.focus();
-  search.select();
-}
-
 document.addEventListener("keydown", (e) => {
   const key = e.key.toLowerCase();
   if ((e.metaKey || e.ctrlKey) && (key === "k" || key === "f")) {
     e.preventDefault();
-    focusSearch();
+    search.focus();
+    search.select();
   }
 });
 
@@ -388,19 +384,21 @@ search.addEventListener("keydown", (e) => {
 });
 
 ///////////////////////////////////
-// Copy model ID
+// Handle Copy model ID function
 ///////////////////////////////////
 async function copyModelId(button: HTMLButtonElement, modelId: string) {
   try {
     if (navigator.clipboard) {
       await navigator.clipboard.writeText(modelId);
 
+      // Switch to check icon
       const copyIcon = button.querySelector(".copy-icon") as HTMLElement;
       const checkIcon = button.querySelector(".check-icon") as HTMLElement;
 
       copyIcon.style.display = "none";
       checkIcon.style.display = "block";
 
+      // Switch back after 1 second
       setTimeout(() => {
         copyIcon.style.display = "block";
         checkIcon.style.display = "none";
@@ -425,7 +423,7 @@ document.addEventListener("click", (event) => {
 });
 
 ///////////////////////////////////
-// Initialize State
+// Initialize State from URL
 ///////////////////////////////////
 function initializeFromURL() {
   const params = getQueryParams();

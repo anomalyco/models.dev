@@ -1,4 +1,4 @@
-export interface TableRowFields {
+export interface TableRow {
   providerId: string;
   providerName: string;
   providerLogoSvg: string;
@@ -99,7 +99,7 @@ export function renderCopyButton(modelId: string) {
   return `<button type="button" class="copy-button" data-model-id="${escapedModelId}" aria-label="Copy model ID"><svg class="copy-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect><path d="m4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path></svg><svg class="check-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: none;"><polyline points="20,6 9,17 4,12"></polyline></svg></button>`;
 }
 
-export function renderRow(row: TableRowFields, index: number) {
+export function renderRow(row: TableRow, index: number) {
   return `<tr data-index="${index}">
     <td><div class="provider-cell">${row.providerLogoSvg}<span>${escapeHtml(
     row.providerName
@@ -133,8 +133,8 @@ export function renderRow(row: TableRowFields, index: number) {
   </tr>`;
 }
 
-export function scanWorstCaseRow(rows: TableRowFields[]): TableRowFields {
-  const worst: TableRowFields = {
+export function getLargestRow(rows: TableRow[]): TableRow {
+  const worst: TableRow = {
     providerId: "", providerName: "", providerLogoSvg: "", modelId: "", modelName: "",
     toolCall: true, reasoning: true,
     input: [], output: [],
