@@ -1,0 +1,21 @@
+name = "Claudinio"
+release_date = "2026-05-12"
+last_updated = "2026-05-12"
+attachment = true
+reasoning = true
+tool_call = true
+open_weights = false
+knowledge = "2026-05"
+
+[cost]
+input = 0.50
+output = 2.00
+cache_read = 0.05
+
+[limit]
+context = 256_000
+output = 64_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
