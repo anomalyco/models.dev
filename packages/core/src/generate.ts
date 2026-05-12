@@ -181,6 +181,8 @@ function normalizeCost(model: Record<string, unknown>) {
     if (tierConfig === null || typeof tierConfig !== "object" || Array.isArray(tierConfig)) return false;
     const type = (tierConfig as { type?: unknown }).type;
     const size = (tierConfig as { size?: unknown }).size;
+    // context_over_200k is a legacy compatibility field. It intentionally
+    // includes higher thresholds; cost.tiers carries the exact threshold.
     return (
       (type === undefined || type === "context") &&
       typeof size === "number" &&

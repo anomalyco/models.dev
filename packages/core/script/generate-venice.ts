@@ -328,7 +328,7 @@ function mergeModel(
       merged.cost.context_over_200k = {
         input: spec.pricing.extended.input.usd,
         output: spec.pricing.extended.output.usd,
-        context_min: getExistingLongContextMin(existing),
+        context_min: spec.pricing.extended.context_token_threshold,
         ...(spec.pricing.extended.cache_input && { cache_read: spec.pricing.extended.cache_input.usd }),
         ...(spec.pricing.extended.cache_write && { cache_write: spec.pricing.extended.cache_write.usd }),
       };
