@@ -226,9 +226,9 @@ virtualizer._willUpdate();
 window.addEventListener("pagehide", () => cleanupVirtualizer());
 
 function renderStatusRow(message: string) {
-  tbody.innerHTML = `<tr class="empty-row"><td colspan="${columnCount}">${escapeHtml(
+  tbody.innerHTML = `<tr class="empty-row"><td colspan="${columnCount}"><div>${escapeHtml(
     message
-  )}</td></tr>`;
+  )}</div></td></tr>`;
 }
 
 function setVirtualizerCount(count: number, resetScroll: boolean) {

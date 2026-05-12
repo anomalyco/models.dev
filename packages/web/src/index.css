@@ -343,8 +343,14 @@ tbody {
 
   .empty-row td {
     padding: 2rem 0.75rem;
-    text-align: center;
     color: var(--color-text-tertiary);
+  }
+
+  .empty-row div {
+    position: sticky;
+    left: 0;
+    width: calc(100vw - 1.5rem);
+    text-align: center;
   }
 
   .model-id-cell {
