@@ -177,13 +177,14 @@ function normalizeCost(model: Record<string, unknown>) {
 
   const contextOver200k = tiers.find((tier) => {
     if (tier === null || typeof tier !== "object" || Array.isArray(tier)) return false;
-    const context = (tier as { context?: unknown }).context;
-    if (context === null || typeof context !== "object" || Array.isArray(context)) return false;
-    const min = (context as { min?: unknown }).min;
+    const tierConfig = (tier as { tier?: unknown }).tier;
+    if (tierConfig === null || typeof tierConfig !== "object" || Array.isArray(tierConfig)) return false;
+    const type = (tierConfig as { type?: unknown }).type;
+    const size = (tierConfig as { size?: unknown }).size;
     return (
-      typeof min === "number" &&
-      min >= 200_000 &&
-      (context as { max?: unknown }).max === undefined
+      (type === undefined || type === "context") &&
+      typeof size === "number" &&
+      size >= 200_000
     );
   });
 
@@ -191,7 +192,7 @@ function normalizeCost(model: Record<string, unknown>) {
     return model;
   }
 
-  const { context: _context, ...legacyCost } = contextOver200k as Record<string, unknown>;
+  const { tier: _tier, ...legacyCost } = contextOver200k as Record<string, unknown>;
   return {
     ...model,
     cost: {

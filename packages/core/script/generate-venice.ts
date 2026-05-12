@@ -165,9 +165,9 @@ interface ExistingModel {
       context_min?: number;
     };
     tiers?: Array<{
-      context: {
-        min?: number;
-        max?: number;
+      tier: {
+        type?: "context";
+        size: number;
       };
       input?: number;
       output?: number;
@@ -210,10 +210,9 @@ function getExistingLongContextMin(existing: ExistingModel | null) {
   return (
     existing?.cost?.tiers?.find(
       (tier) =>
-        tier.context.min !== undefined &&
-        tier.context.min >= 200_000 &&
-        tier.context.max === undefined,
-    )?.context.min ?? 200_000
+        (tier.tier.type === undefined || tier.tier.type === "context") &&
+        tier.tier.size >= 200_000,
+    )?.tier.size ?? 200_000
   );
 }
 
@@ -395,7 +394,7 @@ function formatToml(model: MergedModel): string {
     if (model.cost.context_over_200k) {
       lines.push("");
       lines.push(`[[cost.tiers]]`);
-      lines.push(`context = { min = ${formatNumber(getLongContextMin(model.cost.context_over_200k))} }`);
+      lines.push(`tier = { size = ${formatNumber(getLongContextMin(model.cost.context_over_200k))} }`);
       lines.push(`input = ${model.cost.context_over_200k.input}`);
       lines.push(`output = ${model.cost.context_over_200k.output}`);
       if (model.cost.context_over_200k.cache_read !== undefined) {

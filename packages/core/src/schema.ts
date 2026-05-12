@@ -48,10 +48,10 @@ const Cost = z
   });
 
 const CostTier = Cost.extend({
-  context: z
+  tier: z
     .object({
-      min: z.number().min(0, "Context tier minimum cannot be negative").optional(),
-      max: z.number().min(0, "Context tier maximum cannot be negative").optional(),
+      type: z.literal("context").default("context"),
+      size: z.number().int().min(0, "Context tier size cannot be negative"),
     })
     .strict(),
 }).strict();
@@ -149,29 +149,14 @@ function refineModel<T extends z.ZodTypeAny>(schema: T) {
     )
     .refine(
       (data) => {
-        return (
-          data.cost?.tiers?.every((tier: { context: { min?: number; max?: number } }) => {
-            const { min, max } = tier.context;
-            return min !== undefined || max !== undefined;
-          }) ?? true
-        );
+        const tiers = data.cost?.tiers;
+        if (tiers === undefined) return true;
+
+        const sizes = tiers.map((tier: { tier: { size: number } }) => tier.tier.size);
+        return new Set(sizes).size === sizes.length;
       },
       {
-        message: "Cost tiers must include at least one context bound",
-        path: ["cost", "tiers"],
-      },
-    )
-    .refine(
-      (data) => {
-        return (
-          data.cost?.tiers?.every((tier: { context: { min?: number; max?: number } }) => {
-            const { min, max } = tier.context;
-            return min === undefined || max === undefined || min < max;
-          }) ?? true
-        );
-      },
-      {
-        message: "Cost tier context min must be less than max",
+        message: "Cost context tiers must not have duplicate sizes",
         path: ["cost", "tiers"],
       },
     );

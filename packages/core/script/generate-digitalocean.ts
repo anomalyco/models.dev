@@ -212,9 +212,9 @@ interface ExistingModel {
       context_min?: number;
     };
     tiers?: Array<{
-      context: {
-        min?: number;
-        max?: number;
+      tier: {
+        type?: "context";
+        size: number;
       };
       input?: number;
       output?: number;
@@ -325,14 +325,13 @@ function inferFamily(modelId: string, modelName: string): string | undefined {
 function getExistingLongContextCost(existing: ExistingModel | null) {
   const tier = existing?.cost?.tiers?.find(
     (tier) =>
-      tier.context.min !== undefined &&
-      tier.context.min >= 200_000 &&
-      tier.context.max === undefined,
+      (tier.tier.type === undefined || tier.tier.type === "context") &&
+      tier.tier.size >= 200_000,
   );
   if (tier) {
     return {
       ...tier,
-      context_min: tier.context.min,
+      context_min: tier.tier.size,
     };
   }
 
@@ -509,7 +508,7 @@ function formatToml(model: MergedModel): string {
     if (model.cost.context_over_200k) {
       lines.push("");
       lines.push(`[[cost.tiers]]`);
-      lines.push(`context = { min = ${formatInlineNumber(getLongContextMin(model.cost.context_over_200k))} }`);
+      lines.push(`tier = { size = ${formatInlineNumber(getLongContextMin(model.cost.context_over_200k))} }`);
       lines.push(`input = ${model.cost.context_over_200k.input}`);
       lines.push(`output = ${model.cost.context_over_200k.output}`);
       if (model.cost.context_over_200k.cache_read !== undefined)
