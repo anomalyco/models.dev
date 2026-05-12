@@ -1,0 +1,5 @@
+name = "Databricks"
+npm = "@ai-sdk/openai-compatible"
+api = "https://${DATABRICKS_HOST}/ai-gateway/mlflow/v1"
+env = ["DATABRICKS_HOST", "DATABRICKS_TOKEN"]
+doc = "https://docs.databricks.com/aws/en/machine-learning/foundation-models/"

@@ -55,6 +55,7 @@ export const ModelFamilyValues = [
   "deepseek",
   "deepseek-thinking",
   "deepseek-flash",
+  "deepseek-flash-free",
   "deepseek-flash-think",
 
   // Microsoft Phi
@@ -289,12 +290,14 @@ export const ModelFamilyValues = [
   "rnj",
 
   // Tecent Hy
+  "hy3",
   "hy3-free",
 
   // Ling & Ring (InclusionAI)
   "ling",
   "ling-flash-free",
   "ring",
+  "ring-1t-free",
 
   // Kat Coder
   "kat-coder",
