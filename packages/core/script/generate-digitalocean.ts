@@ -569,8 +569,9 @@ function detectChanges(existing: ExistingModel | null, merged: MergedModel): Cha
   compare("status", existing.status, merged.status);
   compare("cost.input", existing.cost?.input, merged.cost?.input);
   compare("cost.output", existing.cost?.output, merged.cost?.output);
-  compare("cost.context_over_200k.input", existing.cost?.context_over_200k?.input, merged.cost?.context_over_200k?.input);
-  compare("cost.context_over_200k.output", existing.cost?.context_over_200k?.output, merged.cost?.context_over_200k?.output);
+  const existingLongContextCost = getExistingLongContextCost(existing);
+  compare("cost.context_over_200k.input", existingLongContextCost?.input, merged.cost?.context_over_200k?.input);
+  compare("cost.context_over_200k.output", existingLongContextCost?.output, merged.cost?.context_over_200k?.output);
   compare("limit.context", existing.limit?.context, merged.limit.context);
   compare("limit.output", existing.limit?.output, merged.limit.output);
   compare("modalities.input", existing.modalities?.input, merged.modalities.input);
