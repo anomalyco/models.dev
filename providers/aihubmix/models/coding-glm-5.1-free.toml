@@ -1,5 +1,5 @@
 name = "Coding GLM 5.1 (free)"
-family = "glm"
+family = "glm-free"
 release_date = "2026-04-11"
 last_updated = "2026-04-11"
 attachment = false
@@ -7,7 +7,7 @@ reasoning = true
 temperature = true
 tool_call = true
 structured_output = true
-open_weights = false
+open_weights = true
 
 [interleaved]
 field = "reasoning_content"
@@ -15,10 +15,9 @@ field = "reasoning_content"
 [cost]
 input = 0
 output = 0
-cache_read = 0
 
 [limit]
-context = 204_800
+context = 200_000
 output = 128_000
 
 [modalities]

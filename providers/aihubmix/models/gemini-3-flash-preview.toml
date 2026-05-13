@@ -15,6 +15,12 @@ input = 0.5
 output = 3
 cache_read = 0.05
 
+[[cost.tiers]]
+tier = { size = 200_000 }
+input = 0.50
+output = 3.00
+cache_read = 0.05
+
 [limit]
 context = 1_048_576
 output = 65_536
