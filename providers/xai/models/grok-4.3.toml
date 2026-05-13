@@ -13,7 +13,8 @@ input = 1.25
 output = 2.50
 cache_read = 0.20
 
-[cost.context_over_200k]
+[[cost.tiers]]
+tier = { size = 200_000 }
 input = 2.50
 output = 5.00
 cache_read = 0.40
