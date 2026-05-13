@@ -30,8 +30,8 @@ interface TableRow extends TableRowFields {
 
 type SortDirection = "asc" | "desc";
 
-const ESTIMATED_ROW_HEIGHT = 47;
-const VIRTUAL_OVERSCAN = 10;
+const ESTIMATED_ROW_HEIGHT = 48;
+const VIRTUAL_OVERSCAN = 5;
 
 const modal = document.getElementById("modal") as HTMLDialogElement;
 const modalClose = document.getElementById("close")!;
