@@ -22,5 +22,8 @@ output = 131_072
 input = ["text"]
 output = ["text"]
 
+[interleaved]
+field = "reasoning_content"
+
 [provider]
 npm = "@ai-sdk/anthropic"

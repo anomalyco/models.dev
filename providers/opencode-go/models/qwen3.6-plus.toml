@@ -23,5 +23,8 @@ output = 65_536
 input = ["text", "image", "video"]
 output = ["text"]
 
+[interleaved]
+field = "reasoning_content"
+
 [provider]
 npm = "@ai-sdk/anthropic"
