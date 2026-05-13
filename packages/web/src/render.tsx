@@ -6,7 +6,7 @@ import { Fragment } from "hono/jsx";
 import { renderToString } from "hono/jsx/dom/server";
 import { existsSync } from "fs";
 import path from "path";
-import { TableRow, renderRow, getLargestRow } from "./shared.js";
+import { type TableRow, renderRow, getLargestRow } from "./shared.js";
 
 export const Providers = await generate(
   path.join(import.meta.dir, "..", "..", "..", "providers")

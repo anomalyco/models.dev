@@ -5,24 +5,21 @@ import {
   observeElementRect,
 } from "@tanstack/virtual-core";
 import {
-  TableRowFields,
+  type TableRow,
   renderRow,
   escapeHtml,
   booleanText,
-  optionalBooleanText,
-  formatCost,
-  formatNumber,
   knowledgeText,
   weightsText,
 } from "./shared.js";
 
 declare global {
   interface Window {
-    __TABLE_DATA__: TableRowFields[];
+    __TABLE_DATA__: TableRow[];
   }
 }
 
-interface TableRow extends TableRowFields {
+interface VirtualizedRow extends TableRow {
   key: string;
   searchText: string;
   sortValues: Array<string | number | undefined>;
@@ -45,8 +42,8 @@ const headers = Array.from(document.querySelectorAll("th.sortable"));
 const columnCount = document.querySelectorAll("thead th").length;
 
 let isLoaded = false;
-let allRows: TableRow[] = [];
-let visibleRows: TableRow[] = [];
+let allRows: VirtualizedRow[] = [];
+let visibleRows: VirtualizedRow[] = [];
 let currentSort: { column: number; direction: SortDirection } = {
   column: -1,
   direction: "asc",
@@ -130,8 +127,8 @@ function lockColumnWidths() {
   table.insertBefore(colgroup, table.firstChild);
 }
 
-function prepareRow(row: TableRowFields): TableRow {
-  const sortValues: TableRow["sortValues"] = [
+function prepareRow(row: TableRow): VirtualizedRow {
+  const sortValues: VirtualizedRow["sortValues"] = [
     row.providerName,
     row.modelName,
     row.family,
@@ -167,24 +164,6 @@ function prepareRow(row: TableRowFields): TableRow {
     row.family ?? "",
     row.providerId,
     row.modelId,
-    booleanText(row.toolCall),
-    booleanText(row.reasoning),
-    row.input.join(" "),
-    row.output.join(" "),
-    formatCost(row.inputCost),
-    formatCost(row.outputCost),
-    formatCost(row.reasoningCost),
-    formatCost(row.cacheReadCost),
-    formatCost(row.cacheWriteCost),
-    formatCost(row.audioInputCost),
-    formatCost(row.audioOutputCost),
-    formatNumber(row.contextLimit),
-    formatNumber(row.inputLimit),
-    formatNumber(row.outputLimit),
-    optionalBooleanText(row.structuredOutput),
-    booleanText(row.temperature),
-    weightsText(row.openWeights),
-    knowledgeText(row.knowledge),
     row.releaseDate,
     row.lastUpdated,
   ];
@@ -408,8 +387,6 @@ async function copyModelId(button: HTMLButtonElement, modelId: string) {
     console.error("Failed to copy text: ", err);
   }
 }
-
-(window as any).copyModelId = copyModelId;
 
 document.addEventListener("click", (event) => {
   if (!(event.target instanceof Element)) return;
