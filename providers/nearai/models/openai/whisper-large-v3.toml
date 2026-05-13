@@ -1,0 +1,21 @@
+name = "Whisper Large v3"
+family = "whisper"
+release_date = "2023-11-06"
+last_updated = "2023-11-06"
+attachment = false
+reasoning = false
+temperature = false
+tool_call = false
+open_weights = true
+
+[cost]
+input = 0.01
+output = 0.00
+
+[limit]
+context = 448
+output = 448
+
+[modalities]
+input = ["audio"]
+output = ["text"]
