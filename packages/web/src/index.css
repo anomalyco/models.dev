@@ -41,6 +41,8 @@
 
 html,
 body {
+  height: 100%;
+  overflow: hidden;
   font-family: 'Rubik', sans-serif;
   line-height: 1.6;
   color: var(--color-text);
@@ -205,12 +207,17 @@ header {
   }
 }
 
+.table-viewport {
+  height: calc(100svh - var(--header-height));
+  margin-top: var(--header-height);
+  overflow: auto;
+}
+
 table {
   border-collapse: separate;
   border-spacing: 0;
   font-size: 0.875rem;
   width: 100%;
-  margin-top: var(--header-height);
 }
 
 thead,
@@ -218,7 +225,7 @@ tbody {}
 
 table thead th {
   position: sticky;
-  top: var(--header-height);
+  top: 0;
   border-top: 1px solid var(--color-border);
   border-bottom: 1px solid var(--color-border);
   font-size: 0.75rem;
@@ -264,6 +271,7 @@ td {
   text-align: left;
   border-bottom: 1px solid var(--color-border);
   white-space: nowrap;
+  height: 48px;
 }
 
 tbody {
@@ -319,21 +327,37 @@ tbody {
     gap: 0.375rem;
   }
 
-  .provider-cell span:first-child {
-    flex: 0 0 auto;
-  }
-
+  .provider-cell img,
   .provider-cell svg {
+    flex: 0 0 auto;
     display: block;
     width: 1rem;
     height: 1rem;
     color: var(--color-text-secondary);
   }
 
+  .virtual-spacer td {
+    height: inherit;
+    padding: 0;
+    border-bottom: 0;
+  }
+
+  .empty-row td {
+    padding: 2rem 0.75rem;
+    color: var(--color-text-tertiary);
+  }
+
+  .empty-row div {
+    position: sticky;
+    left: 0;
+    width: calc(100vw - 1.5rem);
+    text-align: center;
+  }
+
   .model-id-cell {
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: flex-start;
     gap: 0.375rem;
   }
 
