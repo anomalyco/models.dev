@@ -1,5 +1,5 @@
 name = "Qwen3.6 Max Preview"
-family = "qwen"
+family = "qwen3.6"
 release_date = "2026-05-09"
 last_updated = "2026-05-09"
 attachment = false
@@ -10,11 +10,21 @@ structured_output = true
 knowledge = "2025-04"
 open_weights = false
 
+[interleaved]
+field = "reasoning_content"
+
 [cost]
-input = 1.268
-output = 7.608
+input = 1.27
+output = 7.61
 cache_read = 0.1268
 cache_write = 1.585
+
+[[cost.tiers]]
+tier = { size = 128_000 }
+input = 2.11
+output = 12.67
+cache_read = 0.2112
+cache_write = 2.64
 
 [limit]
 context = 240_000

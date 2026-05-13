@@ -1,0 +1,17 @@
+name = "Xiaomi MiMo-V2.5-Pro"
+family = "mimo-v2.5-pro"
+last_updated = "2026-05-13"
+
+[extends]
+from = "xiaomi/mimo-v2.5-pro"
+
+[cost]
+input = 1.10
+output = 3.30
+cache_read = 0.22
+
+[[cost.tiers]]
+tier = { size = 256_000 }
+input = 2.20
+output = 6.60
+cache_read = 0.44

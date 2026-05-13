@@ -6,14 +6,24 @@ attachment = true
 reasoning = true
 temperature = false
 tool_call = true
+structured_output = true
 knowledge = "2026-01-31"
 open_weights = false
+
+interleaved = true
 
 [cost]
 input = 5
 output = 25
 cache_read = 0.5
 cache_write = 6.25
+
+[[cost.tiers]]
+tier = { size = 200_000 }
+input = 10
+output = 37.5
+cache_read = 1.0
+cache_write = 12.5
 
 [limit]
 context = 1_000_000

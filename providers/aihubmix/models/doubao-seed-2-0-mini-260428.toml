@@ -1,0 +1,41 @@
+name = "Doubao Seed 2.0 Mini 260428"
+family = "seed"
+release_date = "2026-04-28"
+last_updated = "2026-04-28"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.03
+output = 0.28
+cache_read = 0.00564
+input_audio = 0.423
+
+[[cost.tiers]]
+tier = { size = 32_000 }
+input = 0.06
+output = 0.56
+cache_read = 0.01128
+input_audio = 0.846
+
+[[cost.tiers]]
+tier = { size = 128_000 }
+input = 0.11
+output = 1.13
+cache_read = 0.02256
+input_audio = 1.692
+
+[limit]
+context = 256_000
+output = 128_000
+
+[modalities]
+input = ["text", "image", "video"]
+output = ["text"]

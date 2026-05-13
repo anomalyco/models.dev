@@ -1,7 +1,7 @@
 name = "Gemini 3.1 Flash Lite"
 family = "gemini-flash-lite"
-release_date = "2026-03-03"
-last_updated = "2026-03-03"
+release_date = "2026-05-07"
+last_updated = "2026-05-07"
 attachment = true
 reasoning = true
 temperature = true
@@ -13,7 +13,8 @@ open_weights = false
 [cost]
 input = 0.25
 output = 1.5
-cache_read = 0.25
+cache_read = 0.025
+cache_write = 1.00
 
 [limit]
 context = 1_048_576
