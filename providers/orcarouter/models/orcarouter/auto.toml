@@ -1,0 +1,22 @@
+name = "OrcaRouter Auto"
+family = "auto"
+release_date = "2025-01-01"
+last_updated = "2026-05-14"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[cost]
+input = 0.00
+output = 0.00
+
+[limit]
+context = 128_000
+output = 16_384
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
