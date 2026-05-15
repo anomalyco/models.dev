@@ -1,13 +1,13 @@
-name = "nvidia-nemotron-nano-9b-v2"
+name = "Nemotron Nano 9B V2"
 family = "nemotron"
-
-release_date = "2025-08-18"
-last_updated = "2025-08-18"
+release_date = "2025-09-05"
+last_updated = "2025-09-05"
 attachment = false
 reasoning = true
 temperature = true
-knowledge = "2024-09"
 tool_call = true
+structured_output = true
+knowledge = "2025-03-31"
 open_weights = true
 
 [cost]
@@ -16,7 +16,7 @@ output = 0.16
 
 [limit]
 context = 131_072
-output = 131_072
+output = 16_384
 
 [modalities]
 input = ["text"]

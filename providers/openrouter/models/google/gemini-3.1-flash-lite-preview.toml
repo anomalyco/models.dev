@@ -14,13 +14,11 @@ input = 0.25
 output = 1.5
 reasoning = 1.5
 cache_read = 0.025
-cache_write = 0.083
-input_audio = 0.5
-output_audio = 0.5
+cache_write = 0.083333
 
 [limit]
-context = 1048576
-output = 65536
+context = 1_048_576
+output = 65_536
 
 [modalities]
 input = ["text", "image", "video", "pdf", "audio"]

@@ -2,24 +2,23 @@ name = "Grok 4.1 Fast"
 family = "grok"
 release_date = "2025-11-19"
 last_updated = "2025-11-19"
-attachment = false
+attachment = true
 reasoning = true
 temperature = true
-knowledge = "2024-11"
 tool_call = true
 structured_output = true
+knowledge = "2024-11"
 open_weights = false
 
 [cost]
-input = 0.20
-output = 0.50
+input = 0.2
+output = 0.5
 cache_read = 0.05
-cache_write = 0.05
 
 [limit]
 context = 2_000_000
 output = 30_000
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image", "pdf"]
 output = ["text"]

@@ -1,0 +1,25 @@
+name = "Nano Banana Pro (Gemini 3 Pro Image Preview)"
+family = "gemini"
+release_date = "2025-11-20"
+last_updated = "2025-11-20"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = false
+structured_output = true
+open_weights = false
+
+[cost]
+input = 2
+output = 12
+reasoning = 12
+cache_read = 0.2
+cache_write = 0.375
+
+[limit]
+context = 65_536
+output = 32_768
+
+[modalities]
+input = ["image", "text"]
+output = ["image", "text"]

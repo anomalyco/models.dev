@@ -1,20 +1,22 @@
 name = "Trinity Large Thinking"
 family = "trinity"
+release_date = "2026-04-01"
+last_updated = "2026-04-01"
 attachment = false
 reasoning = true
-tool_call = true
 temperature = true
-release_date = "2026-04-01"
-last_updated = "2026-04-03"
+tool_call = true
+structured_output = true
 open_weights = true
 
 [cost]
 input = 0.22
 output = 0.85
+cache_read = 0.06
 
 [limit]
 context = 262_144
-output = 80_000
+output = 262_144
 
 [modalities]
 input = ["text"]

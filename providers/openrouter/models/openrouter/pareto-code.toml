@@ -1,15 +1,16 @@
 name = "Pareto Code Router"
+family = "o"
 release_date = "2026-04-21"
 last_updated = "2026-04-21"
-attachment = true
-reasoning = true
-temperature = true
-tool_call = true
-structured_output = true
+attachment = false
+reasoning = false
+temperature = false
+tool_call = false
+structured_output = false
 open_weights = false
 
 [limit]
-context = 200_000
+context = 2_000_000
 output = 200_000
 
 [modalities]
