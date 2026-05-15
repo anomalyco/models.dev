@@ -1,0 +1,64 @@
+name: Sync OpenRouter Models
+
+on:
+  schedule:
+    - cron: "17 8 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency: ${{ github.workflow }}
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+        with:
+          ref: dev
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@f4d14e03ff726c06358e5557344e1da148b56cf7
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        run: bun install
+
+      - name: Sync OpenRouter models
+        run: bun openrouter:sync
+        env:
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+
+      - name: Validate models
+        run: bun validate
+
+      - name: Create pull request
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if [ -z "$(git status --porcelain -- providers/openrouter/models)" ]; then
+            echo "No OpenRouter model changes found."
+            exit 0
+          fi
+
+          branch="automation/sync-openrouter-models"
+          body=$'Updates OpenRouter model TOMLs from the OpenRouter /models endpoint.\n\nThis PR was created automatically by the daily OpenRouter sync workflow.'
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -B "$branch"
+          git add providers/openrouter/models
+          git commit -m "Sync OpenRouter models"
+          git push --force-with-lease origin "$branch"
+
+          pr_number="$(gh pr list --head "$branch" --base dev --json number --jq '.[0].number')"
+          if [ -n "$pr_number" ]; then
+            gh pr edit "$pr_number" --title "Sync OpenRouter models" --body "$body"
+          else
+            gh pr create --base dev --head "$branch" --title "Sync OpenRouter models" --body "$body"
+          fi
