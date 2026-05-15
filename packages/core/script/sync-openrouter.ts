@@ -94,7 +94,13 @@ function inferFamily(model: OpenRouterModel, name: string) {
   const target = `${model.id} ${name}`.toLowerCase();
   return [...ModelFamilyValues]
     .sort((a, b) => b.length - a.length)
-    .find((family) => target.includes(family.toLowerCase()));
+    .find((family) => {
+      const value = family.toLowerCase().replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+      if (family === "o") {
+        return new RegExp(`(^|[^a-z0-9])${value}(?=\\d|$|[^a-z0-9])`).test(target);
+      }
+      return new RegExp(`(^|[^a-z0-9])${value}(?=$|[^a-z0-9])`).test(target);
+    });
 }
 
 function buildModel(model: OpenRouterModel, existing: ExistingModel | undefined) {
@@ -107,10 +113,13 @@ function buildModel(model: OpenRouterModel, existing: ExistingModel | undefined)
   const reasoning = params.has("reasoning") || params.has("include_reasoning");
   const context = model.top_provider?.context_length ?? model.context_length ?? 0;
   const maxOutput = model.top_provider?.max_completion_tokens ?? existing?.limit?.output ?? context;
+  const family = inferFamily(model, name);
 
   return {
     name,
-    family: existing?.family ?? inferFamily(model, name),
+    family: existing?.family === "o" && family !== "o"
+      ? family
+      : (existing?.family ?? family),
     release_date: dateFromTimestamp(model.created),
     last_updated: dateFromTimestamp(model.created),
     attachment: input.some((value) => value !== "text"),
