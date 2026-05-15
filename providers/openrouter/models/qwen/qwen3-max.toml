@@ -1,19 +1,18 @@
 name = "Qwen3 Max"
 family = "qwen"
-release_date = "2025-09-05"
-last_updated = "2025-09-05"
+release_date = "2025-09-23"
+last_updated = "2025-09-23"
 attachment = false
-reasoning = true
+reasoning = false
 temperature = true
 tool_call = true
+structured_output = true
+knowledge = "2025-06-30"
 open_weights = false
 
 [cost]
-# cost at >= 128k context
-# input = 1
-# output = 5
-input = 1.20
-output = 6.00
+input = 0.78
+output = 3.9
 cache_read = 0.156
 cache_write = 0.975
 

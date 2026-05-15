@@ -24,7 +24,8 @@
     "vercel:generate": "bun ./packages/core/script/generate-vercel.ts",
     "wandb:generate": "bun ./packages/core/script/generate-wandb.ts",
     "digitalocean:generate": "bun ./packages/core/script/generate-digitalocean.ts",
-    "ambient:generate": "bun ./packages/core/script/generate-ambient.ts"
+    "ambient:generate": "bun ./packages/core/script/generate-ambient.ts",
+    "openrouter:sync": "bun ./packages/core/script/sync-openrouter.ts"
   },
   "dependencies": {
     "@cloudflare/workers-types": "^4.20260424.1",

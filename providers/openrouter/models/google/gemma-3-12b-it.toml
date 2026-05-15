@@ -5,18 +5,18 @@ last_updated = "2025-03-13"
 attachment = true
 reasoning = false
 temperature = true
-knowledge = "2024-10"
-tool_call = false
+tool_call = true
 structured_output = true
+knowledge = "2024-08-31"
 open_weights = true
 
 [cost]
-input = 0.03
-output = 0.10
+input = 0.04
+output = 0.13
 
 [limit]
 context = 131_072
-output = 131_072
+output = 16_384
 
 [modalities]
 input = ["text", "image"]

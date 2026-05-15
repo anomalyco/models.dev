@@ -1,4 +1,4 @@
-name = "GLM-4.7-Flash"
+name = "GLM 4.7 Flash"
 family = "glm"
 release_date = "2026-01-19"
 last_updated = "2026-01-19"
@@ -12,15 +12,14 @@ open_weights = true
 [interleaved]
 field = "reasoning_details"
 
-
-
 [cost]
-input = 0.07
+input = 0.06
 output = 0.4
+cache_read = 0.01
 
 [limit]
-context = 200_000
-output = 65_535
+context = 202_752
+output = 16_384
 
 [modalities]
 input = ["text"]

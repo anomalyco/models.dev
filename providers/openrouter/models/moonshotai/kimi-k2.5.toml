@@ -14,14 +14,14 @@ open_weights = true
 field = "reasoning_details"
 
 [cost]
-input = 0.60
-output = 3.00
-cache_read = 0.10
+input = 0.4
+output = 1.9
+cache_read = 0.09
 
 [limit]
 context = 262_144
 output = 262_144
 
 [modalities]
-input = ["text", "image", "video"]
+input = ["text", "image"]
 output = ["text"]

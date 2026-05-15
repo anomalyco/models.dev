@@ -1,4 +1,23 @@
-name = "Xiaomi: MiMo-V2.5-Pro"
+name = "MiMo-V2.5-Pro"
+family = "mimo-v2.5-pro"
+release_date = "2026-04-22"
+last_updated = "2026-04-22"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = true
 
-[extends]
-from = "xiaomi/mimo-v2.5-pro"
+[cost]
+input = 1
+output = 3
+cache_read = 0.2
+
+[limit]
+context = 1_048_576
+output = 16_384
+
+[modalities]
+input = ["text"]
+output = ["text"]

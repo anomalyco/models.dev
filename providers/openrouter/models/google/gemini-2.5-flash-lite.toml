@@ -1,24 +1,26 @@
 name = "Gemini 2.5 Flash Lite"
 family = "gemini-flash-lite"
-release_date = "2025-06-17"
-last_updated = "2025-06-17"
+release_date = "2025-07-22"
+last_updated = "2025-07-22"
 attachment = true
 reasoning = true
 temperature = true
-knowledge = "2025-01"
 tool_call = true
 structured_output = true
+knowledge = "2025-01-31"
 open_weights = false
 
 [cost]
-input = 0.10
-output = 0.40
-cache_read = 0.025
+input = 0.1
+output = 0.4
+reasoning = 0.4
+cache_read = 0.01
+cache_write = 0.083333
 
 [limit]
 context = 1_048_576
-output = 65_536
+output = 65_535
 
 [modalities]
-input = ["text", "image", "audio", "video", "pdf"]
+input = ["text", "image", "pdf", "audio", "video"]
 output = ["text"]

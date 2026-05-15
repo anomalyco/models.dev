@@ -7,18 +7,18 @@ reasoning = false
 temperature = true
 tool_call = true
 structured_output = true
-knowledge = "2024-10"
+knowledge = "2023-10-31"
 open_weights = false
 
 [cost]
 input = 0.15
-output = 0.60
-cache_read = 0.08
+output = 0.6
+cache_read = 0.075
 
 [limit]
 context = 128_000
 output = 16_384
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image", "pdf"]
 output = ["text"]
