@@ -1,0 +1,14 @@
+last_updated = "2026-05-12"
+
+[extends]
+from = "deepseek/deepseek-v4-pro"
+omit = ["cost.cache_read", "structured_output"]
+
+[cost]
+input = 1.617
+output = 3.235
+
+[limit]
+context = 1_000_000
+input = 1_000_000
+output = 128_000

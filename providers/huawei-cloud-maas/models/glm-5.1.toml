@@ -1,0 +1,20 @@
+release_date = "2026-04-07"
+last_updated = "2026-05-12"
+
+[extends]
+from = "zai/glm-5.1"
+omit = ["cost.cache_read", "cost.cache_write", "structured_output"]
+
+[cost]
+input = 0.809
+output = 3.235
+
+[[cost.tiers]]
+tier = { size = 32_000 }
+input = 1.078
+output = 3.774
+
+[limit]
+context = 198_000
+input = 192_000
+output = 128_000
