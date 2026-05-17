@@ -1,0 +1,16 @@
+name = "Kimi K2.6 Precision"
+
+[extends]
+from = "moonshotai/kimi-k2.6"
+
+[cost]
+input = 0.6468
+output = 3.388
+
+[limit]
+context = 262_144
+output = 262_144
+
+[modalities]
+input = ["text", "image", "video"]
+output = ["text"]

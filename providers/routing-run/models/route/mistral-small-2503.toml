@@ -1,0 +1,8 @@
+name = "Mistral Small 2503"
+
+[extends]
+from = "mistral/mistral-small-2603"
+
+[limit]
+context = 128_000
+output = 32_768

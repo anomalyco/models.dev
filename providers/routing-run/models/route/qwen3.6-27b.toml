@@ -1,0 +1,12 @@
+name = "Qwen3.6 27B"
+
+[extends]
+from = "alibaba/qwen3.6-27b"
+
+[cost]
+input = 1.10
+output = 3.30
+
+[limit]
+context = 262_144
+output = 262_144
