@@ -12,17 +12,10 @@ open_weights = false
 interleaved = true
 
 [cost]
-input = 3.00
-output = 15.00
-cache_read = 0.30
+input = 3
+output = 15
+cache_read = 0.3
 cache_write = 3.75
-
-[[cost.tiers]]
-tier = { size = 200_000 }
-input = 6.00
-output = 22.50
-cache_read = 0.60
-cache_write = 7.50
 
 [limit]
 context = 1_000_000

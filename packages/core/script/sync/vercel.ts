@@ -47,6 +47,7 @@ const VercelResponse = z.object({
 }).passthrough();
 
 type VercelModel = z.infer<typeof VercelModel>;
+type PricingTier = z.infer<typeof PricingTier>;
 
 export const vercel = {
   id: "vercel",
@@ -90,6 +91,68 @@ function price(value: string | undefined) {
     : undefined;
 }
 
+function baseTier(tiers: PricingTier[] | undefined) {
+  return tiers?.find((tier) => tier.min === 0) ?? tiers?.[0];
+}
+
+function tierAt(tiers: PricingTier[] | undefined, min: number) {
+  return tiers?.find((tier) => tier.min === min);
+}
+
+function contextTierSize(min: number) {
+  return min > 0 && min % 1_000 === 1 ? min - 1 : min;
+}
+
+function buildCost(model: VercelModel, existing: ExistingModel | undefined) {
+  const pricing = model.pricing;
+  if (pricing === undefined) return existing?.cost;
+
+  const inputPrice = price(baseTier(pricing.input_tiers)?.cost ?? pricing.input);
+  const outputPrice = price(baseTier(pricing.output_tiers)?.cost ?? pricing.output)
+    ?? (model.type === ModelType.Embedding ? 0 : undefined);
+  const cacheRead = price(baseTier(pricing.input_cache_read_tiers)?.cost ?? pricing.input_cache_read);
+  const cacheWrite = price(baseTier(pricing.input_cache_write_tiers)?.cost ?? pricing.input_cache_write);
+
+  if (inputPrice === undefined || outputPrice === undefined) return existing?.cost;
+
+  const tierMins = new Set<number>();
+  for (const tiers of [
+    pricing.input_tiers,
+    pricing.output_tiers,
+    pricing.input_cache_read_tiers,
+    pricing.input_cache_write_tiers,
+  ]) {
+    for (const tier of tiers ?? []) {
+      if (tier.min > 0) tierMins.add(tier.min);
+    }
+  }
+
+  const tiers = [...tierMins]
+    .sort((a, b) => a - b)
+    .map((min) => {
+      const tierInput = price(tierAt(pricing.input_tiers, min)?.cost) ?? inputPrice;
+      const tierOutput = price(tierAt(pricing.output_tiers, min)?.cost) ?? outputPrice;
+      const tierCacheRead = price(tierAt(pricing.input_cache_read_tiers, min)?.cost) ?? cacheRead;
+      const tierCacheWrite = price(tierAt(pricing.input_cache_write_tiers, min)?.cost) ?? cacheWrite;
+
+      return {
+        tier: { size: contextTierSize(min) },
+        input: tierInput,
+        output: tierOutput,
+        cache_read: tierCacheRead,
+        cache_write: tierCacheWrite,
+      };
+    });
+
+  return {
+    input: inputPrice,
+    output: outputPrice,
+    cache_read: cacheRead,
+    cache_write: cacheWrite,
+    tiers: tiers.length > 0 ? tiers : undefined,
+  };
+}
+
 function inferFamily(modelId: string, modelName: string) {
   const target = `${modelId} ${modelName}`.toLowerCase();
   return [...ModelFamilyValues]
@@ -126,14 +189,7 @@ function buildModel(model: VercelModel, existing: ExistingModel | undefined) {
   const output = model.max_tokens > 0
     ? model.max_tokens
     : (existing?.limit?.output ?? 0);
-  const inputPrice = price(model.pricing?.input_tiers?.[0]?.cost ?? model.pricing?.input);
-  const outputPrice = price(model.pricing?.output_tiers?.[0]?.cost ?? model.pricing?.output);
-  const cacheRead = price(
-    model.pricing?.input_cache_read_tiers?.[0]?.cost ?? model.pricing?.input_cache_read,
-  );
-  const cacheWrite = price(
-    model.pricing?.input_cache_write_tiers?.[0]?.cost ?? model.pricing?.input_cache_write,
-  );
+  const cost = buildCost(model, existing);
 
   return {
     name: existing?.name ?? model.name,
@@ -149,15 +205,7 @@ function buildModel(model: VercelModel, existing: ExistingModel | undefined) {
     open_weights: existing?.open_weights ?? false,
     status: existing?.status,
     interleaved: existing?.interleaved,
-    cost: inputPrice !== undefined && outputPrice !== undefined
-      ? {
-          input: inputPrice,
-          output: outputPrice,
-          cache_read: cacheRead,
-          cache_write: cacheWrite,
-          tiers: existing?.cost?.tiers,
-        }
-      : existing?.cost,
+    cost,
     limit: {
       context,
       input: model.id.startsWith("openai/") && context > output ? context - output : existing?.limit?.input,
