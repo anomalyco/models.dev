@@ -1,14 +1,10 @@
 name = "MiniMax M2.7"
-family = "minimax"
-release_date = "2026-03-18"
-last_updated = "2026-03-18"
-attachment = false
-reasoning = true
 structured_output = true
-temperature = true
-tool_call = true
 knowledge = "2025-01"
-open_weights = true
+
+[extends]
+from = "minimax/MiniMax-M2.7"
+omit = ["cost.cache_write"]
 
 [interleaved]
 field = "reasoning_content"
