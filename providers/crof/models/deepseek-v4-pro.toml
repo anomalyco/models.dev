@@ -6,5 +6,9 @@ input = 0.40
 output = 0.85
 cache_read = 0.003
 
+[limit]
+context = 1_000_000
+output = 131_072
+
 [provider]
 npm = "@ai-sdk/openai-compatible"
