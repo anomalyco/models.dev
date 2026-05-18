@@ -21,3 +21,6 @@ output = 204_800
 [modalities]
 input = ["text"]
 output = ["text"]
+
+[experimental.modes.non-reasoning]
+provider = { body = { chat_template_kwargs = { thinking = false, enable_thinking = false } } }

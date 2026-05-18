@@ -19,3 +19,6 @@ output = 262_100
 [modalities]
 input = ["text", "image", "video"]
 output = ["text"]
+
+[experimental.modes.thinking]
+provider = { body = { chat_template_kwargs = { thinking = true, enable_thinking = true } } }
