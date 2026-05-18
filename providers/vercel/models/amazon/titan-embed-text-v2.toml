@@ -1,10 +1,10 @@
 name = "Titan Text Embeddings V2"
 family = "titan-embed"
-release_date = "2024-04"
+release_date = "2024-04-01"
 last_updated = "2024-04"
 attachment = false
 reasoning = false
-temperature = false
+temperature = true
 tool_call = false
 open_weights = false
 
@@ -13,8 +13,8 @@ input = 0.02
 output = 0
 
 [limit]
-context = 8192
-output = 1536
+context = 8_192
+output = 1_536
 
 [modalities]
 input = ["text"]

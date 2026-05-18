@@ -1,1 +1,25 @@
-../../../openai/models/o4-mini.toml
+name = "o4-mini"
+family = "o-mini"
+release_date = "2025-04-16"
+last_updated = "2025-04-16"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = true
+knowledge = "2024-05"
+open_weights = false
+
+[cost]
+input = 1.1
+output = 4.4
+cache_read = 0.275
+
+[limit]
+context = 200_000
+input = 100_000
+output = 100_000
+
+[modalities]
+input = ["text", "image", "pdf"]
+output = ["text"]

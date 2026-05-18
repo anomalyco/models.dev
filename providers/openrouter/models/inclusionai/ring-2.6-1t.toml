@@ -1,4 +1,4 @@
-name = "Ring-2.6-1T (free)"
+name = "Ring-2.6-1T"
 family = "ring"
 release_date = "2026-05-08"
 last_updated = "2026-05-08"
@@ -10,8 +10,9 @@ structured_output = false
 open_weights = false
 
 [cost]
-input = 0
-output = 0
+input = 0.075
+output = 0.625
+cache_read = 0.015
 
 [limit]
 context = 262_144

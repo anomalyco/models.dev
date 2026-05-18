@@ -4,7 +4,7 @@ release_date = "2022-12-15"
 last_updated = "2022-12-15"
 attachment = false
 reasoning = false
-temperature = false
+temperature = true
 tool_call = false
 open_weights = false
 
@@ -13,9 +13,9 @@ input = 0.1
 output = 0
 
 [limit]
-context = 8192
+context = 8_192
 input = 6_656
-output = 1536
+output = 1_536
 
 [modalities]
 input = ["text"]

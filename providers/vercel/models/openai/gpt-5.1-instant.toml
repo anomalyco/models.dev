@@ -1,24 +1,24 @@
 name = "GPT-5.1 Instant"
 family = "gpt"
-release_date = "2025-08-07"
+release_date = "2025-11-12"
 last_updated = "2025-08-07"
 attachment = true
 reasoning = true
 temperature = true
 tool_call = true
-open_weights = false
 knowledge = "2024-10"
+open_weights = false
 
 [cost]
 input = 1.25
 output = 10
-cache_read = 0.13
+cache_read = 0.125
 
 [limit]
-context = 128000
+context = 128_000
 input = 111_616
-output = 16384
+output = 16_384
 
 [modalities]
 input = ["text", "image", "pdf"]
-output = ["text", "image"]
+output = ["text"]

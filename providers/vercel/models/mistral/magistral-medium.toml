@@ -1,1 +1,22 @@
-../../../mistral/models/magistral-medium-latest.toml
+name = "Magistral Medium (latest)"
+family = "magistral-medium"
+release_date = "2025-03-17"
+last_updated = "2025-03-20"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+knowledge = "2025-06"
+open_weights = true
+
+[cost]
+input = 2
+output = 5
+
+[limit]
+context = 128_000
+output = 64_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

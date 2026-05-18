@@ -1,21 +1,22 @@
 name = "Nano Banana Pro (Gemini 3 Pro Image)"
 family = "gemini-pro"
-release_date = "2025-09"
+release_date = "2025-09-01"
 last_updated = "2025-09"
 attachment = false
 reasoning = false
 temperature = true
 tool_call = false
-open_weights = false
 knowledge = "2025-03"
+open_weights = false
 
 [cost]
 input = 2
-output = 120
+output = 12
+cache_read = 0.2
 
 [limit]
-context = 65536
-output = 32768
+context = 65_536
+output = 32_768
 
 [modalities]
 input = ["text"]

@@ -6,16 +6,17 @@ attachment = true
 reasoning = true
 temperature = true
 tool_call = false
-open_weights = false
 knowledge = "2024-10"
+open_weights = false
 
 [cost]
 input = 0.3
 output = 2.5
+cache_read = 0.075
 
 [limit]
-context = 1000000
-output = 1000000
+context = 1_000_000
+output = 1_000_000
 
 [modalities]
 input = ["text", "image"]

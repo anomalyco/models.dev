@@ -6,19 +6,19 @@ attachment = false
 reasoning = true
 temperature = true
 tool_call = true
-open_weights = false
 knowledge = "2024-10"
+open_weights = false
 
 interleaved = true
 
 [cost]
-input = 0.43
-output = 1.75
-cache_read = 0.08
+input = 2.25
+output = 2.75
+cache_read = 2.25
 
 [limit]
-context = 202752
-output = 120000
+context = 131_000
+output = 40_000
 
 [modalities]
 input = ["text"]

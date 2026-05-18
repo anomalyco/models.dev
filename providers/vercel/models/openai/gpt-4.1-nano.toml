@@ -1,1 +1,25 @@
-../../../openai/models/gpt-4.1-nano.toml
+name = "GPT-4.1 nano"
+family = "gpt-nano"
+release_date = "2025-04-14"
+last_updated = "2025-04-14"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = true
+structured_output = true
+knowledge = "2024-04"
+open_weights = false
+
+[cost]
+input = 0.1
+output = 0.4
+cache_read = 0.025
+
+[limit]
+context = 1_047_576
+input = 1_014_808
+output = 32_768
+
+[modalities]
+input = ["text", "image", "pdf"]
+output = ["text"]

@@ -1,10 +1,10 @@
 name = "Text Embedding 005"
 family = "text-embedding"
-release_date = "2024-08"
+release_date = "2024-08-01"
 last_updated = "2024-08"
 attachment = false
 reasoning = false
-temperature = false
+temperature = true
 tool_call = false
 open_weights = false
 
@@ -13,8 +13,8 @@ input = 0.03
 output = 0
 
 [limit]
-context = 8192
-output = 1536
+context = 8_192
+output = 1_536
 
 [modalities]
 input = ["text"]

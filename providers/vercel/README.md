@@ -6,9 +6,9 @@ Prerequisites
 - Install Bun: https://bun.sh
 
 Commands
-- Generate files: `bun run vercel:generate`
-- Dry run: `bun run vercel:generate --dry-run`
-- New only: `bun run vercel:generate --new-only`
+- Sync files: `bun models:sync vercel`
+- Dry run: `bun models:sync vercel --dry-run`
+- New only: `bun models:sync vercel --new-only`
 - Validate: `bun validate`
 
 Details

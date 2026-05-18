@@ -6,8 +6,8 @@ attachment = false
 reasoning = false
 temperature = true
 tool_call = true
-open_weights = false
 knowledge = "2024-10"
+open_weights = false
 
 [cost]
 input = 0.2
@@ -15,9 +15,9 @@ output = 0.5
 cache_read = 0.05
 
 [limit]
-context = 2000000
-output = 30000
+context = 1_000_000
+output = 1_000_000
 
 [modalities]
-input = ["text"]
+input = ["text", "image", "pdf"]
 output = ["text"]

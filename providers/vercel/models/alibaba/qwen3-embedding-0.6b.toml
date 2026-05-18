@@ -4,7 +4,7 @@ release_date = "2025-11-14"
 last_updated = "2025-11-14"
 attachment = false
 reasoning = false
-temperature = false
+temperature = true
 tool_call = false
 open_weights = false
 
@@ -13,8 +13,8 @@ input = 0.01
 output = 0
 
 [limit]
-context = 32768
-output = 32768
+context = 32_768
+output = 32_768
 
 [modalities]
 input = ["text"]

@@ -1,21 +1,21 @@
 name = "Nvidia Nemotron Nano 12B V2 VL"
 family = "nemotron"
-release_date = "2024-12"
+release_date = "2024-12-01"
 last_updated = "2024-12"
 attachment = true
 reasoning = true
 temperature = true
 tool_call = true
-open_weights = false
 knowledge = "2024-10"
+open_weights = false
 
 [cost]
 input = 0.2
 output = 0.6
 
 [limit]
-context = 131072
-output = 131072
+context = 131_072
+output = 131_072
 
 [modalities]
 input = ["text", "image"]
