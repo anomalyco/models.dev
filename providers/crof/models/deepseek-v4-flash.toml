@@ -1,0 +1,10 @@
+[extends]
+from = "deepseek/deepseek-v4-flash"
+
+[cost]
+input = 0.12
+output = 0.21
+cache_read = 0.02
+
+[provider]
+npm = "@ai-sdk/openai-compatible"

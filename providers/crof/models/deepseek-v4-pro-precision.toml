@@ -1,0 +1,26 @@
+name = "DeepSeek V4 Pro (Precision)"
+family = "deepseek-thinking"
+release_date = "2026-04-24"
+last_updated = "2026-04-24"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = true
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 1.25
+output = 2.50
+cache_read = 0.10
+
+[limit]
+context = 1_000_000
+output = 131_072
+
+[modalities]
+input = ["text"]
+output = ["text"]
