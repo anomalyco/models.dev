@@ -10,9 +10,6 @@ tool_call = true
 structured_output = true
 open_weights = false
 
-[interleaved]
-field = "reasoning_content"
-
 [cost]
 input = 0.0
 output = 0.0
@@ -26,3 +23,6 @@ output = 128_000
 [modalities]
 input = ["text"]
 output = ["text"]
+
+[provider]
+npm = "@ai-sdk/anthropic"
