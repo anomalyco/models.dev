@@ -12,14 +12,13 @@ open_weights = true
 interleaved = true
 
 [cost]
-input = 0.6
-output = 3
-cache_read = 0.1
+input = 0.60
+output = 1.20
 
 [limit]
-context = 262_114
-output = 262_114
+context = 262_144
+output = 262_144
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image", "video"]
 output = ["text"]

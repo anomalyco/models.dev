@@ -1,21 +1,16 @@
 name = "GPT 5.5 Pro"
 family = "gpt"
-release_date = "2026-04-24"
-last_updated = "2026-04-24"
 attachment = true
 reasoning = true
-temperature = true
 tool_call = true
+temperature = true
+release_date = "2026-04-24"
+last_updated = "2026-04-24"
 open_weights = false
 
 [cost]
 input = 30
 output = 180
-
-[[cost.tiers]]
-tier = { size = 272_000 }
-input = 60
-output = 270
 
 [limit]
 context = 1_000_000

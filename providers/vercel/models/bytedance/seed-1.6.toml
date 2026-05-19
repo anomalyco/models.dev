@@ -1,28 +1,22 @@
 name = "Seed 1.6"
 family = "seed"
-release_date = "2025-09-01"
+release_date = "2025-09"
 last_updated = "2025-09"
 attachment = false
 reasoning = true
 temperature = true
 tool_call = true
-knowledge = "2024-10"
 open_weights = false
+knowledge = "2024-10"
 
 [cost]
 input = 0.25
 output = 2
 cache_read = 0.05
 
-[[cost.tiers]]
-tier = { size = 128_000 }
-input = 0.5
-output = 4
-cache_read = 0.05
-
 [limit]
-context = 256_000
-output = 32_000
+context = 256000
+output = 32000
 
 [modalities]
 input = ["text"]

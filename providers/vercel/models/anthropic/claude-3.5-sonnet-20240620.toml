@@ -1,0 +1,22 @@
+name = "Claude 3.5 Sonnet (2024-06-20)"
+family = "claude-sonnet"
+release_date = "2024-06-20"
+last_updated = "2024-06-20"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = true
+open_weights = false
+knowledge = "2024-04"
+
+[cost]
+input = 3
+output = 15
+
+[limit]
+context = 200000
+output = 8192
+
+[modalities]
+input = ["text", "image", "pdf"]
+output = ["text"]

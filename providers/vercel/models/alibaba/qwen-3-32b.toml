@@ -1,21 +1,21 @@
 name = "Qwen 3.32B"
 family = "qwen"
-release_date = "2025-04-01"
+release_date = "2025-04"
 last_updated = "2025-04"
 attachment = false
 reasoning = true
 temperature = true
 tool_call = true
-knowledge = "2025-04"
 open_weights = false
+knowledge = "2025-04"
 
 [cost]
-input = 0.16
-output = 0.64
+input = 0.1
+output = 0.3
 
 [limit]
-context = 128_000
-output = 8_192
+context = 40960
+output = 16384
 
 [modalities]
 input = ["text"]

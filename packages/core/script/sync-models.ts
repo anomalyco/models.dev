@@ -6,7 +6,6 @@ import { z } from "zod";
 
 import { AuthoredModel, AuthoredModelShape } from "../src/schema.js";
 import { openrouter } from "./sync/openrouter.js";
-import { vercel } from "./sync/vercel.js";
 
 const ExistingModel = AuthoredModelShape.partial()
   .extend({
@@ -48,11 +47,10 @@ export interface SyncResult {
 
 export const providers = {
   openrouter,
-  vercel,
 };
 
 export const groups = {
-  aggregators: ["openrouter", "vercel"],
+  aggregators: ["openrouter"],
 } as const;
 
 type ProviderID = keyof typeof providers;

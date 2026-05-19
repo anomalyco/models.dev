@@ -4,19 +4,19 @@ release_date = "2025-04-16"
 last_updated = "2025-04-16"
 attachment = true
 reasoning = true
-temperature = true
+temperature = false
 tool_call = true
-knowledge = "2024-10"
 open_weights = false
+knowledge = "2024-10"
 
 [cost]
 input = 20
 output = 80
 
 [limit]
-context = 200_000
+context = 200000
 input = 100_000
-output = 100_000
+output = 100000
 
 [modalities]
 input = ["text", "image", "pdf"]

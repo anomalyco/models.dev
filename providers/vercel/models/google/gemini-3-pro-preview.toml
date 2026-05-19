@@ -10,20 +10,20 @@ knowledge = "2025-01"
 open_weights = false
 
 [cost]
-input = 2
-output = 12
-cache_read = 0.2
+input = 2.00
+output = 12.00
+cache_read = 0.20
 
 [[cost.tiers]]
 tier = { size = 200_000 }
-input = 4
-output = 18
-cache_read = 0.4
+input = 4.00
+output = 18.00
+cache_read = 0.40
 
 [limit]
-context = 1_000_000
-output = 64_000
+context = 1000000
+output = 64000
 
 [modalities]
-input = ["text", "image", "pdf"]
+input = ["text", "image", "video", "audio", "pdf"]
 output = ["text"]

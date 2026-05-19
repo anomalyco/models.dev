@@ -1,0 +1,23 @@
+name = "Gemini 2.5 Flash Lite Preview 09-25"
+family = "gemini-flash-lite"
+release_date = "2025-09-25"
+last_updated = "2025-09-25"
+attachment = true
+reasoning = true
+temperature = true
+knowledge = "2025-01"
+tool_call = true
+open_weights = false
+
+[cost]
+input = 0.10
+output = 0.40
+cache_read = 0.01
+
+[limit]
+context = 1_048_576
+output = 65_536
+
+[modalities]
+input = ["text", "image", "audio", "video", "pdf"]
+output = ["text"]

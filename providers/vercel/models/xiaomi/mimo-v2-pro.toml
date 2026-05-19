@@ -1,23 +1,17 @@
 name = "MiMo V2 Pro"
 family = "mimo"
-release_date = "2026-03-18"
-last_updated = "2026-03-20"
 attachment = false
 reasoning = true
-temperature = true
 tool_call = true
+temperature = true
+release_date = "2026-03-18"
+last_updated = "2026-03-20"
 open_weights = false
 
 [cost]
 input = 1
 output = 3
-cache_read = 0.2
-
-[[cost.tiers]]
-tier = { size = 256_000 }
-input = 2
-output = 6
-cache_read = 0.4
+cache_read = 0.19999999999999998
 
 [limit]
 context = 1_000_000

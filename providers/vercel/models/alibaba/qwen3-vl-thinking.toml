@@ -5,18 +5,18 @@ last_updated = "2025-09-24"
 attachment = true
 reasoning = true
 temperature = true
-tool_call = true
 knowledge = "2025-09"
+tool_call = true
 open_weights = true
 
 [cost]
-input = 0.4
-output = 4
+input = 0.7
+output = 8.4
 
 [limit]
 context = 131_072
-output = 32_768
+output = 129_024
 
 [modalities]
-input = ["text", "image", "pdf"]
+input = ["text", "image"]
 output = ["text"]
