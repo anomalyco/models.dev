@@ -1,7 +1,11 @@
 name = "Mistral Medium 2505"
+reasoning = true
 
 [extends]
 from = "mistral/mistral-medium-2505"
+
+[interleaved]
+field = "reasoning_content"
 
 [limit]
 context = 128_000

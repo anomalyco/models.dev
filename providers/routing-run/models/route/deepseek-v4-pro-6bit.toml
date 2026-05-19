@@ -1,7 +1,11 @@
 name = "DeepSeek V4 Pro 6bit"
+reasoning = true
 
 [extends]
 from = "deepseek/deepseek-v4-pro"
+
+[interleaved]
+field = "reasoning_content"
 
 [cost]
 input = 0.4928

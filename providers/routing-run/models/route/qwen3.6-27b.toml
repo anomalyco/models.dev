@@ -1,7 +1,11 @@
 name = "Qwen3.6 27B"
+reasoning = true
 
 [extends]
 from = "alibaba/qwen3.6-27b"
+
+[interleaved]
+field = "reasoning_content"
 
 [cost]
 input = 1.10

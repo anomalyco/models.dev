@@ -1,7 +1,11 @@
 name = "Step 3.5 Flash"
+reasoning = true
 
 [extends]
 from = "stepfun/step-3.5-flash"
+
+[interleaved]
+field = "reasoning_content"
 
 [limit]
 context = 262_144

@@ -1,7 +1,11 @@
 name = "GLM 5.1 6bit"
+reasoning = true
 
 [extends]
 from = "zai/glm-5.1"
+
+[interleaved]
+field = "reasoning_content"
 
 [cost]
 input = 1.00
