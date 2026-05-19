@@ -1,3 +1,5 @@
+TODO: delete
+
 # Model Sync Scripts
 
 Model syncs are centralized in `packages/core/script/sync-models.ts`. The runner owns file IO, TOML formatting, validation, reporting, dry runs, and deletion behavior. Individual provider sync modules only fetch source data, parse it, and translate each source model into the catalog schema.
