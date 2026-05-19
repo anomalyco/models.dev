@@ -1,8 +1,8 @@
-name = "NVIDIA Nemotron 3 Super 120B"
-family = "nemotron"
-release_date = "2026-03-11"
+name = "Qwen3.5 35B A3B"
+family = "qwen3.5"
+release_date = "2026-02-24"
 last_updated = "2026-05-19"
-attachment = false
+attachment = true
 reasoning = true
 structured_output = true
 temperature = true
@@ -10,14 +10,14 @@ tool_call = true
 open_weights = true
 
 [cost]
-input = 0.2
-output = 0.8
-cache_read = 0.2
+input = 0.25
+output = 1.25
+cache_read = 0.25
 
 [limit]
 context = 262_144
 output = 262_144
 
 [modalities]
-input = ["text"]
+input = ["text", "image"]
 output = ["text"]

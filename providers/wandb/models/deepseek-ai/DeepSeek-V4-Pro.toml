@@ -1,22 +1,22 @@
-name = "NVIDIA Nemotron 3 Super 120B"
-family = "nemotron"
-release_date = "2026-03-11"
+name = "DeepSeek V4 Pro"
+family = "deepseek"
+release_date = "2026-04-24"
 last_updated = "2026-05-19"
 attachment = false
-reasoning = true
+reasoning = false
 structured_output = true
 temperature = true
 tool_call = true
 open_weights = true
 
 [cost]
-input = 0.2
-output = 0.8
-cache_read = 0.2
+input = 1.74
+output = 3.48
+cache_read = 0.14
 
 [limit]
-context = 262_144
-output = 262_144
+context = 1_048_576
+output = 1_048_576
 
 [modalities]
 input = ["text"]

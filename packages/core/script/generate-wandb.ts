@@ -1,11 +1,12 @@
 #!/usr/bin/env bun
 
 import path from "node:path";
-import { mkdir } from "node:fs/promises";
+import { mkdir, rm } from "node:fs/promises";
 import { z } from "zod";
 import { ModelFamilyValues } from "../src/family.js";
 
-const API_ENDPOINT = "https://trace.wandb.ai/inference/analysis/artificialanalysis/models";
+const ACTIVE_MODELS_ENDPOINT = "https://api.inference.wandb.ai/v1/models";
+const METADATA_ENDPOINT = "https://trace.wandb.ai/inference/analysis/artificialanalysis/models";
 
 const Pricing = z
   .object({
@@ -13,6 +14,8 @@ const Pricing = z
     completion: z.string().optional(),
     image: z.string().optional(),
     request: z.string().optional(),
+    input_cache_read: z.string().optional(),
+    input_cache_write: z.string().optional(),
     input_cache_reads: z.string().optional(),
     input_cache_writes: z.string().optional(),
   })
@@ -38,6 +41,12 @@ const WandbResponse = z
     data: z.array(WandbModel),
   })
   .strict();
+
+const ActiveModelsResponse = z
+  .object({
+    data: z.array(z.object({ id: z.string() }).passthrough()),
+  })
+  .passthrough();
 
 interface ExistingModel {
   name?: string;
@@ -100,6 +109,10 @@ interface MergedModel {
   };
 }
 
+type ManualModel = Omit<MergedModel, "last_updated"> & {
+  last_updated?: string;
+};
+
 interface Changes {
   field: string;
   oldValue: string;
@@ -120,15 +133,139 @@ const modalityMap: Record<string, SupportedModality | undefined> = {
 
 const openWeightsPrefixes = new Set([
   "deepseek-ai/",
+  "google/",
+  "ibm-granite/",
   "meta-llama/",
   "microsoft/",
   "MiniMaxAI/",
   "moonshotai/",
   "nvidia/",
   "OpenPipe/",
+  "openai/gpt-oss-",
   "Qwen/",
   "zai-org/",
 ]);
+
+// W&B's Artificial Analysis metadata feed does not expose reasoning support.
+// These IDs were verified on 2026-05-19 with live /v1/chat/completions probes
+// against an authenticated W&B Inference project: the response message included
+// a non-empty `reasoning` string for a basic text prompt.
+const probedReasoningModelIds = new Set([
+  "MiniMaxAI/MiniMax-M2.5",
+  "Qwen/Qwen3-235B-A22B-Thinking-2507",
+  "Qwen/Qwen3.5-27B",
+  "Qwen/Qwen3.5-35B-A3B",
+  "Qwen/Qwen3.6-27B",
+  "Qwen/Qwen3.6-35B-A3B",
+  "google/gemma-4-31B-it",
+  "moonshotai/Kimi-K2.5",
+  "moonshotai/Kimi-K2.6",
+  "nvidia/NVIDIA-Nemotron-3-Super-120B-A12B-FP8",
+  "openai/gpt-oss-120b",
+  "openai/gpt-oss-20b",
+  "zai-org/GLM-5.1",
+]);
+
+// These IDs were probed in the same run and returned no reasoning payload
+// (`message.reasoning` was null) for the basic text prompt.
+const probedNoReasoningModelIds = new Set([
+  "OpenPipe/Qwen3-14B-Instruct",
+  "Qwen/Qwen3-235B-A22B-Instruct-2507",
+  "Qwen/Qwen3-30B-A3B-Instruct-2507",
+  "Qwen/Qwen3-Coder-480B-A35B-Instruct",
+  "deepseek-ai/DeepSeek-V3.1",
+  "deepseek-ai/DeepSeek-V4-Flash",
+  "deepseek-ai/DeepSeek-V4-Pro",
+  "ibm-granite/granite-4.1-8b",
+  "meta-llama/Llama-3.1-70B-Instruct",
+  "meta-llama/Llama-3.1-8B-Instruct",
+  "meta-llama/Llama-3.3-70B-Instruct",
+  "meta-llama/Llama-4-Scout-17B-16E-Instruct",
+  "microsoft/Phi-4-mini-instruct",
+]);
+
+// Active /v1 models that are missing from the W&B Artificial Analysis metadata
+// feed. Functionality flags here were verified on 2026-05-19 with live
+// /v1/chat/completions probes. Pricing, limits, release dates, and knowledge
+// cutoffs are manually sourced from existing models.dev entries for the same
+// model/provider family and preserved here so the generator can cover the full
+// active /v1/models list without inventing metadata.
+const manualModelOverrides: Record<string, ManualModel> = {
+  "meta-llama/Llama-4-Scout-17B-16E-Instruct": {
+    name: "Llama 4 Scout 17B 16E Instruct",
+    family: "llama",
+    release_date: "2025-04-05",
+    attachment: true,
+    reasoning: false,
+    structured_output: true,
+    temperature: true,
+    tool_call: true,
+    knowledge: "2024-08",
+    open_weights: true,
+    cost: {
+      input: 0.17,
+      output: 0.66,
+    },
+    limit: {
+      context: 64_000,
+      output: 64_000,
+    },
+    modalities: {
+      input: ["text", "image"],
+      output: ["text"],
+    },
+  },
+  "moonshotai/Kimi-K2.5": {
+    name: "Kimi K2.5",
+    family: "kimi",
+    release_date: "2026-01-27",
+    attachment: true,
+    reasoning: true,
+    structured_output: true,
+    temperature: true,
+    tool_call: true,
+    open_weights: true,
+    interleaved: true,
+    cost: {
+      input: 0.5,
+      output: 2.85,
+    },
+    limit: {
+      context: 262_144,
+      output: 262_144,
+    },
+    modalities: {
+      input: ["text", "image"],
+      output: ["text"],
+    },
+  },
+  "zai-org/GLM-5.1": {
+    name: "GLM-5.1",
+    family: "glm",
+    release_date: "2026-03-27",
+    attachment: false,
+    reasoning: true,
+    structured_output: true,
+    temperature: true,
+    tool_call: true,
+    open_weights: false,
+    interleaved: true,
+    cost: {
+      input: 1.4,
+      output: 4.4,
+      cache_read: 0.26,
+      cache_write: 0,
+    },
+    limit: {
+      context: 200_000,
+      output: 131_072,
+    },
+    modalities: {
+      input: ["text"],
+      output: ["text"],
+    },
+  },
+};
 
 function timestampToDate(timestamp: number): string {
   return new Date(timestamp * 1000).toISOString().slice(0, 10);
@@ -195,8 +332,25 @@ function normalizeName(apiModel: z.infer<typeof WandbModel>): string {
 }
 
 function inferReasoning(apiModel: z.infer<typeof WandbModel>): boolean {
+  const verified = verifiedReasoning(apiModel.id);
+  if (verified !== undefined) {
+    return verified;
+  }
+
   const text = `${apiModel.id} ${apiModel.name}`.toLowerCase();
   return text.includes("thinking") || /\br1\b/.test(text) || text.includes("reasoning");
+}
+
+function verifiedReasoning(modelId: string): boolean | undefined {
+  if (probedReasoningModelIds.has(modelId)) {
+    return true;
+  }
+
+  if (probedNoReasoningModelIds.has(modelId)) {
+    return false;
+  }
+
+  return undefined;
 }
 
 function inferOpenWeights(modelId: string): boolean {
@@ -245,12 +399,12 @@ function mergeModel(
     name: existing?.name ?? normalizeName(apiModel),
     family: existing?.family ?? inferFamily(apiModel.id, apiModel.name),
     attachment: existing?.attachment ?? inputModalities.some((m) => m !== "text"),
-    reasoning: existing?.reasoning ?? inferReasoning(apiModel),
+    reasoning: verifiedReasoning(apiModel.id) ?? existing?.reasoning ?? inferReasoning(apiModel),
     tool_call: existing?.tool_call ?? featureSet.has("tools"),
     temperature: existing?.temperature ?? samplingSet.has("temperature"),
     release_date: existing?.release_date ?? timestampToDate(apiModel.created),
     last_updated: getTodayDate(),
-    open_weights: existing?.open_weights ?? inferOpenWeights(apiModel.id),
+    open_weights: inferOpenWeights(apiModel.id) || (existing?.open_weights ?? false),
     ...(existing?.structured_output !== undefined
       ? { structured_output: existing.structured_output }
       : featureSet.has("structured_outputs")
@@ -277,8 +431,8 @@ function mergeModel(
 
   const prompt = apiModel.pricing?.prompt;
   const completion = apiModel.pricing?.completion;
-  const cacheRead = apiModel.pricing?.input_cache_reads;
-  const cacheWrite = apiModel.pricing?.input_cache_writes;
+  const cacheRead = apiModel.pricing?.input_cache_read ?? apiModel.pricing?.input_cache_reads;
+  const cacheWrite = apiModel.pricing?.input_cache_write ?? apiModel.pricing?.input_cache_writes;
 
   if (prompt && completion) {
     merged.cost = {
@@ -301,6 +455,14 @@ function mergeModel(
   }
 
   return merged;
+}
+
+function mergeManualModel(manual: ManualModel, existing: ExistingModel | null): MergedModel {
+  return {
+    ...manual,
+    last_updated: getTodayDate(),
+    ...(existing?.status ? { status: existing.status } : {}),
+  };
 }
 
 function formatToml(model: MergedModel): string {
@@ -406,7 +568,10 @@ function detectChanges(existing: ExistingModel | null, merged: MergedModel): Cha
   compare("structured_output", existing.structured_output, merged.structured_output);
   compare("temperature", existing.temperature, merged.temperature);
   compare("tool_call", existing.tool_call, merged.tool_call);
+  compare("knowledge", existing.knowledge, merged.knowledge);
   compare("open_weights", existing.open_weights, merged.open_weights);
+  compare("interleaved", existing.interleaved, merged.interleaved);
+  compare("status", existing.status, merged.status);
   compare("cost.input", existing.cost?.input, merged.cost?.input);
   compare("cost.output", existing.cost?.output, merged.cost?.output);
   compare("cost.cache_read", existing.cost?.cache_read, merged.cost?.cache_read);
@@ -419,6 +584,54 @@ function detectChanges(existing: ExistingModel | null, merged: MergedModel): Cha
   return changes;
 }
 
+async function fetchMetadataModels(): Promise<Array<z.infer<typeof WandbModel>>> {
+  const res = await fetch(METADATA_ENDPOINT);
+  if (!res.ok) {
+    throw new Error(`Failed to fetch W&B metadata API: ${res.status} ${res.statusText}`);
+  }
+
+  const json = await res.json();
+  const parsed = WandbResponse.safeParse(json);
+  if (!parsed.success) {
+    parsed.error.cause = { endpoint: METADATA_ENDPOINT };
+    throw parsed.error;
+  }
+
+  return parsed.data.data;
+}
+
+async function fetchActiveModelIds(): Promise<string[]> {
+  const apiKey = process.env.WANDB_API_KEY;
+  const project = process.env.WANDB_INFERENCE_PROJECT ?? process.env.OPENAI_PROJECT;
+
+  if (!apiKey || !project) {
+    throw new Error(
+      "W&B active model sync requires WANDB_API_KEY and WANDB_INFERENCE_PROJECT (or OPENAI_PROJECT).",
+    );
+  }
+
+  const res = await fetch(ACTIVE_MODELS_ENDPOINT, {
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${apiKey}`,
+      "OpenAI-Project": project,
+    },
+  });
+
+  if (!res.ok) {
+    throw new Error(`Failed to fetch W&B active models API: ${res.status} ${res.statusText}`);
+  }
+
+  const json = await res.json();
+  const parsed = ActiveModelsResponse.safeParse(json);
+  if (!parsed.success) {
+    parsed.error.cause = { endpoint: ACTIVE_MODELS_ENDPOINT };
+    throw parsed.error;
+  }
+
+  return [...new Set(parsed.data.data.map((model) => model.id))].sort();
+}
+
 async function main() {
   const args = process.argv.slice(2);
   const dryRun = args.includes("--dry-run");
@@ -426,44 +639,52 @@ async function main() {
 
   const modelsDir = path.join(import.meta.dirname, "..", "..", "..", "providers", "wandb", "models");
 
-  console.log(`${dryRun ? "[DRY RUN] " : ""}${newOnly ? "[NEW ONLY] " : ""}Fetching WandB models from API...`);
+  console.log(`${dryRun ? "[DRY RUN] " : ""}${newOnly ? "[NEW ONLY] " : ""}Fetching W&B active model list and metadata...`);
 
-  const res = await fetch(API_ENDPOINT);
-  if (!res.ok) {
-    console.error(`Failed to fetch API: ${res.status} ${res.statusText}`);
-    process.exit(1);
+  const [activeModelIds, metadataModels] = await Promise.all([
+    fetchActiveModelIds(),
+    fetchMetadataModels(),
+  ]);
+  const metadataById = new Map(metadataModels.map((model) => [model.id, model]));
+  const missingMetadata = activeModelIds.filter((id) => (
+    !metadataById.has(id) && !(id in manualModelOverrides)
+  ));
+
+  if (missingMetadata.length > 0) {
+    throw new Error(
+      `Active W&B models missing metadata or manual overrides: ${missingMetadata.join(", ")}`,
+    );
   }
 
-  const json = await res.json();
-  const parsed = WandbResponse.safeParse(json);
-  if (!parsed.success) {
-    console.error("Invalid API response:", parsed.error.errors);
-    process.exit(1);
-  }
-
-  const apiModels = parsed.data.data;
   const existingFiles = new Set<string>();
 
   for await (const file of new Bun.Glob("**/*.toml").scan({ cwd: modelsDir, absolute: false })) {
     existingFiles.add(file);
   }
 
-  console.log(`Found ${apiModels.length} models in API, ${existingFiles.size} existing files\n`);
+  console.log(
+    `Found ${activeModelIds.length} active models, ${metadataModels.length} metadata models, ${existingFiles.size} existing files\n`,
+  );
 
   const apiModelIds = new Set<string>();
   let created = 0;
   let updated = 0;
+  let deleted = 0;
   let unchanged = 0;
 
-  for (const apiModel of apiModels) {
-    const relativePath = `${apiModel.id}.toml`;
+  for (const modelId of activeModelIds) {
+    const relativePath = `${modelId}.toml`;
     const filePath = path.join(modelsDir, relativePath);
     const dirPath = path.dirname(filePath);
 
     apiModelIds.add(relativePath);
 
     const existing = await loadExistingModel(filePath);
-    const merged = mergeModel(apiModel, existing);
+    const apiModel = metadataById.get(modelId);
+    const manual = manualModelOverrides[modelId];
+    const merged = apiModel !== undefined
+      ? mergeModel(apiModel, existing)
+      : mergeManualModel(manual, existing);
     const tomlContent = formatToml(merged);
 
     if (existing === null) {
@@ -509,16 +730,29 @@ async function main() {
     console.log("");
   }
 
-  const orphaned = [...existingFiles].filter((file) => !apiModelIds.has(file));
+  const orphaned = [...existingFiles].filter((file) => !apiModelIds.has(file)).sort();
   for (const file of orphaned) {
-    console.log(`Warning: Orphaned file (not in API): ${file}`);
+    const filePath = path.join(modelsDir, file);
+    if (newOnly) {
+      unchanged++;
+      console.log(`Skipping removal in new-only mode: ${file}`);
+      continue;
+    }
+
+    deleted++;
+    if (dryRun) {
+      console.log(`[DRY RUN] Would remove inactive model: ${file}`);
+    } else {
+      await rm(filePath, { force: true });
+      console.log(`Removed inactive model: ${file}`);
+    }
   }
 
   console.log("");
   console.log(
     dryRun
-      ? `Summary: ${created} would be created, ${updated} would be updated, ${unchanged} unchanged, ${orphaned.length} orphaned`
-      : `Summary: ${created} created, ${updated} updated, ${unchanged} unchanged, ${orphaned.length} orphaned`,
+      ? `Summary: ${created} would be created, ${updated} would be updated, ${deleted} would be removed, ${unchanged} unchanged`
+      : `Summary: ${created} created, ${updated} updated, ${deleted} removed, ${unchanged} unchanged`,
   );
 }
 

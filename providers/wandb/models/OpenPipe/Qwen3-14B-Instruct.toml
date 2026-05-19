@@ -1,7 +1,7 @@
 name = "OpenPipe Qwen3 14B Instruct"
 family = "qwen"
 release_date = "2025-04-29"
-last_updated = "2026-03-12"
+last_updated = "2026-05-19"
 attachment = false
 reasoning = false
 structured_output = true
@@ -12,6 +12,7 @@ open_weights = true
 [cost]
 input = 0.05
 output = 0.22
+cache_read = 0.05
 
 [limit]
 context = 32_768
