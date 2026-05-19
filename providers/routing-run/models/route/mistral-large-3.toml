@@ -1,12 +1,13 @@
 name = "Mistral Large 3"
-reasoning = true
+attachment = false
 
 [extends]
 from = "mistral/mistral-large-2512"
 
-[interleaved]
-field = "reasoning_content"
-
 [limit]
 context = 128_000
 output = 32_768
+
+[modalities]
+input = ["text"]
+output = ["text"]

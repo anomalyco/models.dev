@@ -1,19 +1,18 @@
 name = "Kimi K2.5"
-reasoning = true
+attachment = true
+reasoning = false
 
 [extends]
 from = "moonshotai/kimi-k2.5"
-
-[interleaved]
-field = "reasoning_content"
+omit = ["interleaved"]
 
 [cost]
 input = 0.462
 output = 2.42
 
 [limit]
-context = 262_144
-output = 262_144
+context = 131_072
+output = 32_768
 
 [modalities]
 input = ["text", "image", "video"]

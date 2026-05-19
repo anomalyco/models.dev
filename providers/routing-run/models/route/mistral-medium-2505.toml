@@ -1,12 +1,12 @@
 name = "Mistral Medium 2505"
-reasoning = true
 
 [extends]
 from = "mistral/mistral-medium-2505"
 
-[interleaved]
-field = "reasoning_content"
-
 [limit]
 context = 128_000
 output = 32_768
+
+[modalities]
+input = ["text", "image", "video"]
+output = ["text"]
