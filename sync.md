@@ -4,12 +4,14 @@ TODO: delete
 
 Model syncs are centralized in `packages/core/script/sync-models.ts`. The runner owns file IO, TOML formatting, validation, reporting, dry runs, and deletion behavior. Individual provider sync modules only fetch source data, parse it, and translate each source model into the catalog schema.
 
-The current grouped sync target is `aggregators`, which runs OpenRouter only.
+The grouped sync targets are `aggregators`, which runs OpenRouter, and `direct`, which runs direct provider APIs like Google.
 
 ## Commands
 
 - `bun models:sync aggregators` syncs every provider in the `aggregators` group.
 - `bun models:sync openrouter` syncs only OpenRouter.
+- `bun models:sync direct` syncs every provider in the `direct` group.
+- `bun models:sync google` syncs only Google.
 - `bun models:sync aggregators --dry-run` prints changes without writing model files.
 - `bun models:sync aggregators --new-only` creates new model files but skips updates and removals.
 - `bun validate` validates the generated catalog after a sync.
@@ -107,6 +109,16 @@ OpenRouter is implemented in `packages/core/script/sync/openrouter.ts`.
 - API prices are per-token strings and are converted to per-1M-token numbers.
 - `structured_output` comes from `supported_parameters.includes("structured_outputs")` only.
 - Existing `status`, `interleaved`, `knowledge`, `limit.input`, and `cost.tiers` may be preserved when OpenRouter is not authoritative enough for those fields.
+
+## Google Notes
+
+Google is implemented in `packages/core/script/sync/google.ts`.
+
+- Source endpoint: `https://generativelanguage.googleapis.com/v1beta/models`.
+- Required auth: `GOOGLE_API_KEY`, `GEMINI_API_KEY`, or `GOOGLE_GENERATIVE_AI_API_KEY`.
+- Model IDs are derived from the `models/{model}` resource names.
+- The API is authoritative for the model list, display names, token limits, supported methods, temperature metadata, and the `thinking` flag when present.
+- Existing pricing, knowledge cutoff, release date, modalities, tool calling, structured output, status, and interleaved metadata may be preserved when the Google API is not authoritative enough for those fields.
 
 ## Vercel Status
 

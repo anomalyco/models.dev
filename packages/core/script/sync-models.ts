@@ -5,6 +5,7 @@ import { mkdir, readdir, rm } from "node:fs/promises";
 import { z } from "zod";
 
 import { AuthoredModel, AuthoredModelShape } from "../src/schema.js";
+import { google } from "./sync/google.js";
 import { openrouter } from "./sync/openrouter.js";
 
 const ExistingModel = AuthoredModelShape.partial()
@@ -46,11 +47,13 @@ export interface SyncResult {
 }
 
 export const providers = {
+  google,
   openrouter,
 };
 
 export const groups = {
   aggregators: ["openrouter"],
+  direct: ["google"],
 } as const;
 
 type ProviderID = keyof typeof providers;
