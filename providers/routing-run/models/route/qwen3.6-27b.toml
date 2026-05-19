@@ -1,4 +1,5 @@
 name = "Qwen3.6 27B"
+reasoning = false
 
 [extends]
 from = "alibaba/qwen3.6-27b"
@@ -10,3 +11,7 @@ output = 3.30
 [limit]
 context = 262_144
 output = 262_144
+
+[modalities]
+input = ["text", "image", "video"]
+output = ["text"]

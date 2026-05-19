@@ -1,4 +1,5 @@
 name = "Mistral Large 3"
+attachment = false
 
 [extends]
 from = "mistral/mistral-large-2512"
@@ -6,3 +7,7 @@ from = "mistral/mistral-large-2512"
 [limit]
 context = 128_000
 output = 32_768
+
+[modalities]
+input = ["text"]
+output = ["text"]

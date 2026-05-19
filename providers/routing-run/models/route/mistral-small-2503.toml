@@ -1,4 +1,5 @@
 name = "Mistral Small 2503"
+reasoning = false
 
 [extends]
 from = "mistral/mistral-small-2603"
@@ -6,3 +7,7 @@ from = "mistral/mistral-small-2603"
 [limit]
 context = 128_000
 output = 32_768
+
+[modalities]
+input = ["text", "image", "video"]
+output = ["text"]
