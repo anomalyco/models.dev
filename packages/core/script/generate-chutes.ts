@@ -138,7 +138,7 @@ function humanizeModelName(modelId: string): string {
   return modelPart.replace(/-/g, " ");
 }
 
-// ── Family inference (same approach as generate-vercel.ts) ───────────
+// ── Family inference ───────────
 
 function isSubstring(target: string, family: string): boolean {
   return target.toLowerCase().includes(family.toLowerCase());

@@ -1,0 +1,83 @@
+name: Sync Model Catalogs
+
+on:
+  schedule:
+    - cron: "17 8 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  issues: write
+  pull-requests: write
+
+concurrency: ${{ github.workflow }}-${{ github.ref }}
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - group: aggregators
+            title: "chore(sync): update aggregator model catalogs"
+            branch: automation/sync-models-aggregators
+            labels: automation,model-sync,sync-group:aggregators,provider:openrouter
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+        with:
+          ref: dev
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@f4d14e03ff726c06358e5557344e1da148b56cf7
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        run: bun install
+
+      - name: Sync model catalogs
+        run: bun models:sync ${{ matrix.group }}
+        env:
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+
+      - name: Validate models
+        run: bun validate
+
+      - name: Create pull request
+        env:
+          GH_TOKEN: ${{ github.token }}
+          BRANCH: ${{ matrix.branch }}
+          LABELS: ${{ matrix.labels }}
+          TITLE: ${{ matrix.title }}
+        run: |
+          if [ -z "$(git status --porcelain -- providers)" ]; then
+            echo "No model catalog changes found."
+            exit 0
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -B "$BRANCH"
+          git add providers
+          git commit -m "$TITLE"
+          git push --force-with-lease origin "$BRANCH"
+
+          label_args=()
+          IFS=',' read -ra labels <<< "$LABELS"
+          for label in "${labels[@]}"; do
+            gh label create "$label" --color "0E8A16" --description "Automated model catalog sync" >/dev/null 2>&1 || true
+            label_args+=(--label "$label")
+          done
+
+          pr_number="$(gh pr list --head "$BRANCH" --base dev --json number --jq '.[0].number')"
+          if [ -n "$pr_number" ]; then
+            gh pr edit "$pr_number" --title "$TITLE" --body-file .sync/model-sync-report.md
+            for label in "${labels[@]}"; do
+              gh pr edit "$pr_number" --add-label "$label"
+            done
+          else
+            gh pr create --base dev --head "$BRANCH" --title "$TITLE" --body-file .sync/model-sync-report.md "${label_args[@]}"
+          fi
