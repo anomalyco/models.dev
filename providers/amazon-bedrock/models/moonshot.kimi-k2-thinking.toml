@@ -1,3 +1,4 @@
+# See https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-moonshot-ai-kimi-k2-thinking.html
 name = "Kimi K2 Thinking"
 release_date = "2025-12-02"
 family = "kimi-thinking"
@@ -15,8 +16,8 @@ input = 0.6
 output = 2.5
 
 [limit]
-context = 256_000
-output = 256_000
+context = 262_143
+output = 16_000
 
 [modalities]
 input = ["text"]
