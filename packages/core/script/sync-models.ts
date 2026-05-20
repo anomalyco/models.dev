@@ -5,6 +5,7 @@ import { mkdir, readdir, rm } from "node:fs/promises";
 import { z } from "zod";
 
 import { AuthoredModel, AuthoredModelShape } from "../src/schema.js";
+import { google } from "./sync/google.js";
 import { openrouter } from "./sync/openrouter.js";
 
 const ExistingModel = AuthoredModelShape.partial()
@@ -26,6 +27,9 @@ export interface SyncProvider<SourceModel> {
   id: string;
   name: string;
   modelsDir: string;
+  skipCreates?: boolean;
+  sourceID?(model: SourceModel): string;
+  skippedNotice?(ids: string[]): string[];
   fetchModels(): Promise<unknown>;
   parseModels(raw: unknown): SourceModel[];
   translateModel(
@@ -42,15 +46,21 @@ export interface SyncResult {
   updated: number;
   deleted: number;
   unchanged: number;
+  notices: string[];
   files: Array<{ status: "created" | "updated" | "deleted"; path: string }>;
 }
 
-export const providers = {
+export const providers: {
+  google: SyncProvider<any>;
+  openrouter: SyncProvider<any>;
+} = {
+  google,
   openrouter,
 };
 
 export const groups = {
   aggregators: ["openrouter"],
+  direct: ["google"],
 } as const;
 
 type ProviderID = keyof typeof providers;
@@ -73,6 +83,7 @@ export async function syncProvider<SourceModel>(
   const existing = await readExisting(provider.modelsDir);
   const sourceModels = provider.parseModels(await provider.fetchModels());
   const desired = new Map<string, { model: z.infer<typeof AuthoredModel>; content: string }>();
+  const skippedRemote: string[] = [];
 
   for (const sourceModel of sourceModels) {
     const translated = provider.translateModel(sourceModel, {
@@ -80,9 +91,17 @@ export async function syncProvider<SourceModel>(
         return existing.get(`${id}.toml`)?.toml;
       },
     });
-    if (translated === undefined) continue;
+    if (translated === undefined) {
+      if (provider.skipCreates) skippedRemote.push(provider.sourceID?.(sourceModel) ?? "unknown");
+      continue;
+    }
 
     const relativePath = `${translated.id}.toml`;
+    if (provider.skipCreates && !existing.has(relativePath)) {
+      skippedRemote.push(translated.id);
+      continue;
+    }
+
     if (desired.has(relativePath)) {
       throw new Error(`Duplicate synced model path: ${provider.id}/${relativePath}`);
     }
@@ -155,7 +174,7 @@ export async function syncProvider<SourceModel>(
     }
   }
 
-  const result = summarize(provider, files, unchanged);
+  const result = summarize(provider, files, unchanged, provider.skippedNotice?.(skippedRemote) ?? []);
   console.log(
     `${options.dryRun ? "Dry run: " : ""}${result.created} created, ${result.updated} updated, ${result.deleted} removed, ${result.unchanged} unchanged`,
   );
@@ -215,6 +234,7 @@ function summarize(
   provider: { id: string; name: string },
   files: SyncResult["files"],
   unchanged: number,
+  notices: string[],
 ): SyncResult {
   return {
     id: provider.id,
@@ -224,6 +244,7 @@ function summarize(
     updated: files.filter((file) => file.status === "updated").length,
     deleted: files.filter((file) => file.status === "deleted").length,
     unchanged,
+    notices,
     files,
   };
 }
@@ -280,6 +301,17 @@ async function writeReport(target: string, results: SyncResult[]) {
       lines.push(`- ${file.status}: \`${file.path}\``);
     }
     lines.push("", "</details>");
+  }
+
+  const noticeResults = results.filter((item) => item.notices.length > 0);
+  if (noticeResults.length > 0) {
+    lines.push("", "## Notices");
+    for (const result of noticeResults) {
+      lines.push("", `### ${result.name}`);
+      for (const notice of result.notices) {
+        lines.push(`- ${notice}`);
+      }
+    }
   }
 
   lines.push("", "This PR was created automatically by the daily model sync workflow.");
