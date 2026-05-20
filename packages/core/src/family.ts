@@ -82,6 +82,7 @@ export const ModelFamilyValues = [
 
   // xAI Grok
   "grok",
+  "grok-build",
   "grok-vision",
   "grok-beta",
 
