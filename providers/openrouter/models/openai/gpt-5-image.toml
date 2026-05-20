@@ -5,14 +5,14 @@ last_updated = "2025-10-14"
 attachment = true
 reasoning = true
 temperature = true
-knowledge = "2024-10-01"
-tool_call = true
+tool_call = false
 structured_output = true
+knowledge = "2024-10-01"
 open_weights = false
 
 [cost]
-input = 5.00
-output = 10.00
+input = 10
+output = 10
 cache_read = 1.25
 
 [limit]
@@ -20,5 +20,5 @@ context = 400_000
 output = 128_000
 
 [modalities]
-input = ["text", "image", "pdf"]
-output = ["text", "image"]
+input = ["image", "text", "pdf"]
+output = ["image", "text"]

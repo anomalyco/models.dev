@@ -32,6 +32,7 @@
     "packages/web": {
       "name": "@models.dev/web",
       "dependencies": {
+        "@tanstack/virtual-core": "^3.14.0",
         "hono": "^4.8.0",
         "models.dev": "workspace:*",
       },
@@ -56,6 +57,8 @@
     "@models.dev/function": ["@models.dev/function@workspace:packages/function"],
 
     "@models.dev/web": ["@models.dev/web@workspace:packages/web"],
+
+    "@tanstack/virtual-core": ["@tanstack/virtual-core@3.14.0", "", {}, "sha512-JLANqGy/D6k4Ujmh8Tr25lGimuOXNiaVyXaCAZS0W+1390sADdGnyUdSWNIfd49gebtIxGMij4IktRVzrdr12Q=="],
 
     "@tsconfig/bun": ["@tsconfig/bun@1.0.8", "", {}, "sha512-JlJaRaS4hBTypxtFe8WhnwV8blf0R+3yehLk8XuyxUYNx6VXsKCjACSCvOYEFUiqlhlBWxtYCn/zRlOb8BzBQg=="],
 

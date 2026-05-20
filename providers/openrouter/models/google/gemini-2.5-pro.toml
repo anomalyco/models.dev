@@ -1,2 +1,26 @@
-[extends]
-from = "google/gemini-2.5-pro"
+name = "Gemini 2.5 Pro"
+family = "gemini"
+release_date = "2025-06-17"
+last_updated = "2025-06-17"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = true
+knowledge = "2025-01-31"
+open_weights = false
+
+[cost]
+input = 1.25
+output = 10
+reasoning = 10
+cache_read = 0.125
+cache_write = 0.375
+
+[limit]
+context = 1_048_576
+output = 65_536
+
+[modalities]
+input = ["text", "image", "pdf", "audio", "video"]
+output = ["text"]

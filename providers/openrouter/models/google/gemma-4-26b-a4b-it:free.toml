@@ -1,13 +1,13 @@
-name = "Gemma 4 26B A4B (free)"
+name = "Gemma 4 26B A4B  (free)"
 family = "gemma"
 release_date = "2026-04-03"
 last_updated = "2026-04-03"
 attachment = true
 reasoning = true
 temperature = true
-knowledge = "2025-01"
 tool_call = true
-structured_output = true
+structured_output = false
+knowledge = "2025-01"
 open_weights = true
 
 [cost]
@@ -19,5 +19,5 @@ context = 262_144
 output = 32_768
 
 [modalities]
-input = ["text", "image", "video"]
+input = ["image", "text", "video"]
 output = ["text"]

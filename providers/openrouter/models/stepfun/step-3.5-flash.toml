@@ -6,17 +6,17 @@ attachment = false
 reasoning = true
 temperature = true
 tool_call = true
+structured_output = false
 knowledge = "2025-01"
 open_weights = true
 
 [cost]
-input = 0.10
-output = 0.30
-cache_read = 0.02
+input = 0.1
+output = 0.3
 
 [limit]
-context = 256_000
-output = 256_000
+context = 262_144
+output = 65_536
 
 [modalities]
 input = ["text"]

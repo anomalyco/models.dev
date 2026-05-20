@@ -1,0 +1,23 @@
+name = "Google: Gemini 3.1 Flash Lite"
+release_date = "2026-05-07"
+last_updated = "2026-05-16"
+attachment = true
+reasoning = true
+tool_call = true
+temperature = true
+open_weights = false
+
+[cost]
+input = 0.25
+output = 1.5
+reasoning = 1.5
+cache_read = 0.025
+cache_write = 0.08333
+
+[limit]
+context = 1048576
+output = 65536
+
+[modalities]
+input = ["audio", "image", "pdf", "text", "video"]
+output = ["text"]

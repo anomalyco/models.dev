@@ -1,24 +1,24 @@
 name = "MiniMax M2.5 (free)"
 family = "minimax"
-attachment = false
-reasoning = true
-tool_call = true
-structured_output = true
-temperature = true
 release_date = "2026-02-12"
 last_updated = "2026-02-12"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = false
 open_weights = true
 
 [interleaved]
 field = "reasoning_details"
 
 [cost]
-input = 0.00
-output = 0.00
+input = 0
+output = 0
 
 [limit]
-context = 204_800
-output = 131_072
+context = 196_608
+output = 8_192
 
 [modalities]
 input = ["text"]

@@ -1,22 +1,21 @@
-name = "GLM-5-Turbo"
+name = "GLM 5 Turbo"
 family = "glm"
-release_date = "2026-03-16"
-last_updated = "2026-03-16"
+release_date = "2026-03-15"
+last_updated = "2026-03-15"
 attachment = false
 reasoning = true
 temperature = true
 tool_call = true
-structured_output = true
+structured_output = false
 open_weights = false
 
 [interleaved]
 field = "reasoning_content"
 
 [cost]
-input = 0.96
-output = 3.20
-cache_read = 0.192
-cache_write = 0
+input = 1.2
+output = 4
+cache_read = 0.24
 
 [limit]
 context = 202_752

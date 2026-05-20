@@ -11,15 +11,15 @@ knowledge = "2025-05-30"
 open_weights = false
 
 [cost]
-input = 5.00
-output = 25.00
-cache_read = 0.50
+input = 5
+output = 25
+cache_read = 0.5
 cache_write = 6.25
 
 [limit]
 context = 200_000
-output = 32_000
+output = 64_000
 
 [modalities]
-input = ["text", "image", "pdf"]
+input = ["pdf", "image", "text"]
 output = ["text"]

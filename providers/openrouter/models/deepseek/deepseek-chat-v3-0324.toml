@@ -1,4 +1,3 @@
-id = "deepseek/deepseek-chat-v3-0324:free"
 name = "DeepSeek V3 0324"
 family = "deepseek"
 release_date = "2025-03-24"
@@ -6,12 +5,19 @@ last_updated = "2025-03-24"
 attachment = false
 reasoning = false
 temperature = true
-knowledge = "2024-10"
-tool_call = false
+tool_call = true
 structured_output = true
+knowledge = "2024-07-31"
 open_weights = true
-cost = { input = 0, output = 0 }
-limit = { context = 16384, output = 8192 }
+
+[cost]
+input = 0.2
+output = 0.77
+cache_read = 0.135
+
+[limit]
+context = 163_840
+output = 16_384
 
 [modalities]
 input = ["text"]

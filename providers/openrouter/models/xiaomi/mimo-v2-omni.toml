@@ -1,7 +1,26 @@
-name = "Xiaomi: MiMo-V2-Omni"
-
-[extends]
-from = "xiaomi/mimo-v2-omni"
+name = "MiMo-V2-Omni"
+family = "mimo-v2-omni"
+release_date = "2026-03-18"
+last_updated = "2026-03-18"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = false
+open_weights = false
 
 [interleaved]
 field = "reasoning_details"
+
+[cost]
+input = 0.4
+output = 2
+cache_read = 0.08
+
+[limit]
+context = 262_144
+output = 65_536
+
+[modalities]
+input = ["text", "audio", "image", "video"]
+output = ["text"]

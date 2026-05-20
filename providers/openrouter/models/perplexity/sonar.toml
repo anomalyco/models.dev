@@ -1,0 +1,22 @@
+name = "Sonar"
+family = "sonar"
+release_date = "2025-01-27"
+last_updated = "2025-01-27"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = false
+structured_output = false
+open_weights = false
+
+[cost]
+input = 1
+output = 1
+
+[limit]
+context = 127_072
+output = 127_072
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

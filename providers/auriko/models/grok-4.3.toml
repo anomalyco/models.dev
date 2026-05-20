@@ -1,0 +1,8 @@
+[extends]
+from = "xai/grok-4.3"
+omit = ["cost.context_over_200k"]
+
+[cost]
+input = 1.25
+output = 2.50
+cache_read = 0.2
