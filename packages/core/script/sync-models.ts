@@ -7,6 +7,7 @@ import { z } from "zod";
 import { AuthoredModel, AuthoredModelShape } from "../src/schema.js";
 import { google } from "./sync/google.js";
 import { openrouter } from "./sync/openrouter.js";
+import { xai } from "./sync/xai.js";
 
 const ExistingModel = AuthoredModelShape.partial()
   .extend({
@@ -53,14 +54,16 @@ export interface SyncResult {
 export const providers: {
   google: SyncProvider<any>;
   openrouter: SyncProvider<any>;
+  xai: SyncProvider<any>;
 } = {
   google,
   openrouter,
+  xai,
 };
 
 export const groups = {
   aggregators: ["openrouter"],
-  direct: ["google"],
+  direct: ["google", "xai"],
 } as const;
 
 type ProviderID = keyof typeof providers;
