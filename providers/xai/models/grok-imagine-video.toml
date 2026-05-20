@@ -1,7 +1,7 @@
 name = "Grok Imagine Video"
 family = "grok"
-release_date = "2026-03"
-last_updated = "2026-05-16"
+release_date = "2026-01-28"
+last_updated = "2026-01-28"
 attachment = true
 reasoning = false
 temperature = false
@@ -9,9 +9,9 @@ tool_call = false
 open_weights = false
 
 [limit]
-context = 1024
+context = 1_024
 output = 0
 
 [modalities]
-input = ["text", "image", "video"]
+input = ["text", "image"]
 output = ["video"]

@@ -4,7 +4,7 @@ TODO: delete
 
 Model syncs are centralized in `packages/core/script/sync-models.ts`. The runner owns file IO, TOML formatting, validation, reporting, dry runs, and deletion behavior. Individual provider sync modules only fetch source data, parse it, and translate each source model into the catalog schema.
 
-The grouped sync targets are `aggregators`, which runs OpenRouter, and `direct`, which runs direct provider APIs like Google.
+The grouped sync targets are `aggregators`, which runs OpenRouter, and `direct`, which runs direct provider APIs like Google and xAI.
 
 ## Commands
 
@@ -12,6 +12,7 @@ The grouped sync targets are `aggregators`, which runs OpenRouter, and `direct`,
 - `bun models:sync openrouter` syncs only OpenRouter.
 - `bun models:sync direct` syncs every provider in the `direct` group.
 - `bun models:sync google` syncs only Google.
+- `bun models:sync xai` syncs only xAI.
 - `bun models:sync aggregators --dry-run` prints changes without writing model files.
 - `bun models:sync aggregators --new-only` creates new model files but skips updates and removals.
 - `bun validate` validates the generated catalog after a sync.
@@ -120,6 +121,16 @@ Google is implemented in `packages/core/script/sync/google.ts`.
 - The API is authoritative for display names, token limits, temperature metadata, and the `thinking` flag when present.
 - Local Google models missing from the API response are removed.
 - New Google API models are reported in `.sync/model-sync-report.md` but not created automatically because the API does not provide authoritative modalities, pricing, knowledge cutoff, release date, tool calling, or structured output metadata.
+
+## xAI Notes
+
+xAI is implemented in `packages/core/script/sync/xai.ts`.
+
+- Source endpoints: `https://api.x.ai/v1/language-models`, `https://api.x.ai/v1/image-generation-models`, and `https://api.x.ai/v1/video-generation-models`.
+- Required auth: `XAI_API_KEY`.
+- The richer typed endpoints provide model IDs, creation timestamps, modalities, pricing for language models, and prompt/input limits where available.
+- Existing xAI models are updated from API-authoritative fields while local metadata is preserved for fields the API does not expose, especially output token limits and some feature/capability flags.
+- New xAI API models are reported in `.sync/model-sync-report.md` but not created automatically because the API does not provide enough authoritative metadata for complete catalog entries.
 
 ## Vercel Status
 
