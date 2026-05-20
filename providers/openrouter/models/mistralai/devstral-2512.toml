@@ -1,14 +1,10 @@
-name = "Devstral 2 2512"
-family = "devstral"
-release_date = "2025-12-09"
-last_updated = "2025-12-09"
 attachment = true
-reasoning = false
 temperature = true
 tool_call = true
 structured_output = true
-knowledge = "2025-12"
-open_weights = true
+
+[extends]
+from = "mistral/devstral-2512"
 
 [cost]
 input = 0.4

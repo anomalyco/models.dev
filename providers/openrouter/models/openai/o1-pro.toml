@@ -1,14 +1,9 @@
-name = "o1-pro"
-family = "o"
-release_date = "2025-03-19"
-last_updated = "2025-03-19"
-attachment = true
-reasoning = true
 temperature = false
 tool_call = false
 structured_output = true
-knowledge = "2023-10-31"
-open_weights = false
+
+[extends]
+from = "openai/o1-pro"
 
 [cost]
 input = 150

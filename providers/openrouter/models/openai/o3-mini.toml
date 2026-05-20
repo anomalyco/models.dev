@@ -1,14 +1,10 @@
-name = "o3 Mini"
-family = "o"
-release_date = "2025-01-31"
-last_updated = "2025-01-31"
 attachment = true
-reasoning = true
 temperature = false
 tool_call = true
 structured_output = true
-knowledge = "2023-10-31"
-open_weights = false
+
+[extends]
+from = "openai/o3-mini"
 
 [cost]
 input = 1.1

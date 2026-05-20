@@ -1,13 +1,9 @@
-name = "MiMo-V2-Omni"
-family = "mimo-v2-omni"
-release_date = "2026-03-18"
-last_updated = "2026-03-18"
-attachment = true
-reasoning = true
 temperature = true
 tool_call = true
 structured_output = false
-open_weights = false
+
+[extends]
+from = "xiaomi/mimo-v2-omni"
 
 [interleaved]
 field = "reasoning_details"

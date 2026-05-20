@@ -1,14 +1,9 @@
-name = "Gemma 4 31B"
-family = "gemma"
-release_date = "2026-04-02"
-last_updated = "2026-04-02"
-attachment = true
-reasoning = true
 temperature = true
 tool_call = true
 structured_output = true
-knowledge = "2025-01"
-open_weights = true
+
+[extends]
+from = "google/gemma-4-31b-it"
 
 [cost]
 input = 0.12

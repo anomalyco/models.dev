@@ -1,20 +1,19 @@
-attachment = true
 temperature = true
 tool_call = true
 structured_output = true
 
 [extends]
-from = "mistral/mistral-large-2411"
+from = "xai/grok-build-0.1"
 
 [cost]
-input = 2
-output = 6
+input = 1
+output = 2
 cache_read = 0.2
 
 [limit]
-context = 131_072
-output = 131_072
+context = 256_000
+output = 256_000
 
 [modalities]
-input = ["text", "pdf"]
+input = ["text", "image"]
 output = ["text"]
