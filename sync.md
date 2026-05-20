@@ -10,6 +10,8 @@ The grouped sync targets are `aggregators`, which runs OpenRouter, and `direct`,
 
 - `bun models:sync aggregators` syncs every provider in the `aggregators` group.
 - `bun models:sync openrouter` syncs only OpenRouter.
+- `bun models:sync cloudflare-workers-ai` syncs only Cloudflare Workers AI.
+- `bun models:sync cloudflare` syncs the Cloudflare sync group.
 - `bun models:sync direct` syncs every provider in the `direct` group.
 - `bun models:sync google` syncs only Google.
 - `bun models:sync xai` syncs only xAI.
@@ -110,6 +112,16 @@ OpenRouter is implemented in `packages/core/script/sync/openrouter.ts`.
 - API prices are per-token strings and are converted to per-1M-token numbers.
 - `structured_output` comes from `supported_parameters.includes("structured_outputs")` only.
 - Existing `status`, `interleaved`, `knowledge`, `limit.input`, and `cost.tiers` may be preserved when OpenRouter is not authoritative enough for those fields.
+
+## Cloudflare Workers AI Notes
+
+Cloudflare Workers AI is implemented in `packages/core/script/sync/cloudflare-workers-ai.ts`.
+
+- Source endpoint: `https://api.cloudflare.com/client/v4/accounts/$CLOUDFLARE_ACCOUNT_ID/ai/models/search?format=openrouter`.
+- Required auth: `CLOUDFLARE_ACCOUNT_ID` and `CLOUDFLARE_API_TOKEN` (or `CLOUDFLARE_API_KEY`).
+- The endpoint is parsed as Cloudflare's OpenRouter-like Workers AI metadata.
+- Model IDs map directly to TOML paths under `providers/cloudflare-workers-ai/models`.
+- This sync target does not manage `providers/cloudflare-ai-gateway`, because the AI Gateway `/compat/models` endpoint does not support `format=openrouter` and does not provide enough model metadata for authoritative catalog sync.
 
 ## Google Notes
 

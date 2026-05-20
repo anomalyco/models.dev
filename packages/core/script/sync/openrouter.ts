@@ -5,7 +5,7 @@ import type { ExistingModel, SyncProvider } from "../sync-models.js";
 
 const API_ENDPOINT = "https://openrouter.ai/api/v1/models";
 
-const OpenRouterModel = z.object({
+export const OpenRouterModel = z.object({
   id: z.string(),
   name: z.string(),
   created: z.number(),
@@ -30,11 +30,11 @@ const OpenRouterModel = z.object({
   supported_parameters: z.array(z.string()),
 });
 
-const OpenRouterResponse = z.object({
+export const OpenRouterResponse = z.object({
   data: z.array(OpenRouterModel),
 }).passthrough();
 
-type OpenRouterModel = z.infer<typeof OpenRouterModel>;
+export type OpenRouterModel = z.infer<typeof OpenRouterModel>;
 
 export const openrouter = {
   id: "openrouter",
@@ -56,7 +56,7 @@ export const openrouter = {
   translateModel(model, context) {
     return {
       id: model.id,
-      model: buildModel(model, context.existing(model.id)),
+      model: buildOpenRouterModel(model, context.existing(model.id)),
     };
   },
 } satisfies SyncProvider<OpenRouterModel>;
@@ -97,7 +97,7 @@ function inferFamily(model: OpenRouterModel, name: string) {
     });
 }
 
-function buildModel(model: OpenRouterModel, existing: ExistingModel | undefined) {
+export function buildOpenRouterModel(model: OpenRouterModel, existing: ExistingModel | undefined) {
   const params = new Set(model.supported_parameters);
   const name = model.name.replace(/^[^:]+:\s+/, "");
   const input = modalities(model.architecture.input_modalities, ["text"]);
