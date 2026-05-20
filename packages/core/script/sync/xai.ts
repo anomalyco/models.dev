@@ -128,6 +128,7 @@ function modalities(values: string[] | undefined, fallback: Modality[]) {
   const result = (values ?? [])
     .map((value) => value.toLowerCase())
     .filter((value): value is Modality => allowed.has(value as Modality));
+  if (result.includes("image")) result.push("pdf");
   return [...new Set(result.length > 0 ? result : fallback)];
 }
 
