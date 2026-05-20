@@ -5,6 +5,7 @@ import { mkdir, readdir, rm } from "node:fs/promises";
 import { z } from "zod";
 
 import { AuthoredModel, AuthoredModelShape } from "../src/schema.js";
+import { cloudflareWorkersAi } from "./sync/cloudflare-workers-ai.js";
 import { google } from "./sync/google.js";
 import { openrouter } from "./sync/openrouter.js";
 import { xai } from "./sync/xai.js";
@@ -52,10 +53,12 @@ export interface SyncResult {
 }
 
 export const providers: {
+  "cloudflare-workers-ai": SyncProvider<any>;
   google: SyncProvider<any>;
   openrouter: SyncProvider<any>;
   xai: SyncProvider<any>;
 } = {
+  "cloudflare-workers-ai": cloudflareWorkersAi,
   google,
   openrouter,
   xai,
@@ -63,6 +66,7 @@ export const providers: {
 
 export const groups = {
   aggregators: ["openrouter"],
+  cloudflare: ["cloudflare-workers-ai"],
   direct: ["google", "xai"],
 } as const;
 
