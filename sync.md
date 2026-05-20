@@ -117,8 +117,9 @@ Google is implemented in `packages/core/script/sync/google.ts`.
 - Source endpoint: `https://generativelanguage.googleapis.com/v1beta/models`.
 - Required auth: `GOOGLE_API_KEY`, `GEMINI_API_KEY`, or `GOOGLE_GENERATIVE_AI_API_KEY`.
 - Model IDs are derived from the `models/{model}` resource names.
-- The API is authoritative for the model list, display names, token limits, supported methods, temperature metadata, and the `thinking` flag when present.
-- Existing pricing, knowledge cutoff, release date, modalities, tool calling, structured output, status, and interleaved metadata may be preserved when the Google API is not authoritative enough for those fields.
+- The API is only authoritative enough for deletion sync: local Google models missing from the API response are removed.
+- New Google API models are reported in `.sync/model-sync-report.md` but not created automatically because the API does not provide authoritative modalities, pricing, knowledge cutoff, release date, tool calling, or structured output metadata.
+- Existing Google model metadata is not updated by the sync script.
 
 ## Vercel Status
 
