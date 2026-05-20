@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import type { SyncProvider } from "../sync-models.js";
+import type { ExistingModel, SyncProvider, SyncedModel } from "../sync-models.js";
 
 const API_ENDPOINT = "https://generativelanguage.googleapis.com/v1beta/models";
 
@@ -31,14 +31,14 @@ export const google = {
   id: "google",
   name: "Google",
   modelsDir: "providers/google/models",
-  deletionOnly: true,
+  skipCreates: true,
   sourceID(model) {
     return model.name.replace(/^models\//, "");
   },
   skippedNotice(ids) {
     if (ids.length === 0) return [];
     return [
-      `${ids.length} Google models returned by the API were not created because the Models API does not provide authoritative modalities, pricing, knowledge cutoff, release date, tool calling, or structured output metadata.`,
+      `${ids.length} Google models returned by the API were not created because the Models API does not provide authoritative modalities, pricing, knowledge cutoff, release date, tool calling, or structured output metadata. Existing models are still updated from API-authoritative fields.`,
       `Skipped remote IDs: ${ids.map((id) => `\`${id}\``).join(", ")}`,
     ];
   },
@@ -81,7 +81,58 @@ export const google = {
 
     return {
       id,
-      model: existing,
+      model: buildModel(model, existing),
     };
   },
 } satisfies SyncProvider<GoogleModel>;
+
+function buildModel(model: GoogleModel, existing: ExistingModel): SyncedModel {
+  const name = existing.name;
+  const releaseDate = existing.release_date;
+  const lastUpdated = existing.last_updated;
+  const attachment = existing.attachment;
+  const reasoning = existing.reasoning;
+  const toolCall = existing.tool_call;
+  const openWeights = existing.open_weights;
+  const limit = existing.limit;
+  const modalities = existing.modalities;
+
+  if (
+    name === undefined
+    || releaseDate === undefined
+    || lastUpdated === undefined
+    || attachment === undefined
+    || reasoning === undefined
+    || toolCall === undefined
+    || openWeights === undefined
+    || limit === undefined
+    || modalities === undefined
+  ) {
+    throw new Error(`Google model ${model.name} has incomplete local TOML metadata required for sync`);
+  }
+
+  return {
+    name: model.displayName ?? name,
+    family: existing.family,
+    release_date: releaseDate,
+    last_updated: lastUpdated,
+    attachment,
+    reasoning: model.thinking ?? reasoning,
+    temperature: model.temperature !== undefined || model.maxTemperature !== undefined
+      ? true
+      : existing.temperature,
+    tool_call: toolCall,
+    structured_output: existing.structured_output,
+    knowledge: existing.knowledge,
+    open_weights: openWeights,
+    status: existing.status,
+    interleaved: existing.interleaved,
+    cost: existing.cost,
+    limit: {
+      input: limit.input,
+      context: model.inputTokenLimit,
+      output: model.outputTokenLimit,
+    },
+    modalities,
+  };
+}

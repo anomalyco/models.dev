@@ -27,7 +27,7 @@ export interface SyncProvider<SourceModel> {
   id: string;
   name: string;
   modelsDir: string;
-  deletionOnly?: boolean;
+  skipCreates?: boolean;
   sourceID?(model: SourceModel): string;
   skippedNotice?(ids: string[]): string[];
   fetchModels(): Promise<unknown>;
@@ -50,7 +50,10 @@ export interface SyncResult {
   files: Array<{ status: "created" | "updated" | "deleted"; path: string }>;
 }
 
-export const providers = {
+export const providers: {
+  google: SyncProvider<any>;
+  openrouter: SyncProvider<any>;
+} = {
   google,
   openrouter,
 };
@@ -89,12 +92,12 @@ export async function syncProvider<SourceModel>(
       },
     });
     if (translated === undefined) {
-      if (provider.deletionOnly) skippedRemote.push(provider.sourceID?.(sourceModel) ?? "unknown");
+      if (provider.skipCreates) skippedRemote.push(provider.sourceID?.(sourceModel) ?? "unknown");
       continue;
     }
 
     const relativePath = `${translated.id}.toml`;
-    if (provider.deletionOnly && !existing.has(relativePath)) {
+    if (provider.skipCreates && !existing.has(relativePath)) {
       skippedRemote.push(translated.id);
       continue;
     }

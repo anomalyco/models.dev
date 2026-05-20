@@ -73,12 +73,14 @@ function price(value: string | undefined) {
     : undefined;
 }
 
-function modalities(values: string[], fallback: string[]) {
-  const allowed = new Set(["text", "audio", "image", "video", "pdf"]);
+type Modality = "text" | "audio" | "image" | "video" | "pdf";
+
+function modalities(values: string[], fallback: Modality[]): Modality[] {
+  const allowed = new Set<Modality>(["text", "audio", "image", "video", "pdf"]);
   const result = values
     .map((value) => value.toLowerCase())
     .map((value) => value === "file" ? "pdf" : value)
-    .filter((value) => allowed.has(value));
+    .filter((value): value is Modality => allowed.has(value as Modality));
   return [...new Set(result.length > 0 ? result : fallback)];
 }
 
