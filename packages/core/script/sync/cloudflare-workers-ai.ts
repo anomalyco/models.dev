@@ -48,10 +48,12 @@ export const cloudflareWorkersAi = {
   name: "Cloudflare Workers AI",
   modelsDir: "providers/cloudflare-workers-ai/models",
   async fetchModels() {
-    const accountID = process.env.CLOUDFLARE_ACCOUNT_ID;
-    const token = process.env.CLOUDFLARE_API_TOKEN ?? process.env.CLOUDFLARE_API_KEY;
+    const accountID = process.env.CLOUDFLARE_WORKERS_AI_SYNC_ACCOUNT_ID;
+    const token = process.env.CLOUDFLARE_WORKERS_AI_SYNC_API_TOKEN;
     if (accountID === undefined || token === undefined) {
-      throw new Error("Cloudflare Workers AI sync requires CLOUDFLARE_ACCOUNT_ID and CLOUDFLARE_API_TOKEN");
+      throw new Error(
+        "Cloudflare Workers AI sync requires CLOUDFLARE_WORKERS_AI_SYNC_ACCOUNT_ID and CLOUDFLARE_WORKERS_AI_SYNC_API_TOKEN",
+      );
     }
 
     const first = await fetchPage(accountID, token, 1);
