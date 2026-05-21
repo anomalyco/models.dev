@@ -4,7 +4,7 @@ TODO: delete
 
 Model syncs are centralized in `packages/core/script/sync-models.ts`. The runner owns file IO, TOML formatting, validation, reporting, dry runs, and deletion behavior. Individual provider sync modules only fetch source data, parse it, and translate each source model into the catalog schema.
 
-The grouped sync targets are `aggregators`, which runs OpenRouter, and `direct`, which runs direct provider APIs like Google and xAI.
+The grouped sync targets are available for local convenience, but CI syncs each provider separately so every provider gets its own reusable automation PR.
 
 ## Commands
 
@@ -79,7 +79,7 @@ Do not put TOML scanning, writing, deletion, reporting, or generic comparison lo
 3. Export a `SyncProvider` implementation with `fetchModels`, `parseModels`, and `translateModel`.
 4. Add the provider to `providers` in `packages/core/script/sync-models.ts`.
 5. Add the provider ID to an existing group or create a new group in `groups`.
-6. Update `.github/workflows/sync-models.yml` matrix labels and titles if the new group should run in automation.
+6. Add any required API secrets to `.github/workflows/sync-models.yml` if the provider needs new credentials.
 7. Run `bun models:sync <provider> --dry-run` to inspect the first diff.
 8. Run `bun models:sync <provider>` to write files.
 9. Run `bun models:sync <provider> --dry-run` again and expect a clean result.
@@ -89,16 +89,21 @@ Prefer small, provider-specific PRs when adding a provider. If the provider has 
 
 ## Automation
 
-`.github/workflows/sync-models.yml` runs on a daily schedule and manually through `workflow_dispatch`.
+`.github/workflows/sync-models.yml` runs on an hourly schedule and manually through `workflow_dispatch`.
 
 The workflow:
 
 - Checks out `dev`.
 - Installs dependencies with Bun.
-- Runs `bun models:sync ${{ matrix.group }}`.
+- Discovers sync providers with `bun models:sync --list-providers`.
+- Runs one provider per matrix job with `bun models:sync ${{ matrix.provider }}`.
 - Runs `bun validate`.
-- Creates or updates a sync PR only when `providers` changed.
+- Creates or updates a provider-specific sync PR only when `providers` changed.
 - Uses `.sync/model-sync-report.md` as the PR body.
+
+Each provider job checks out `dev` and writes to a fixed provider branch like `automation/sync-models-openrouter`. If that provider's sync PR is already open, later scheduled runs force-update the same branch and edit the existing PR instead of creating another one. Provider jobs do not share unmerged changes with each other; OpenRouter only extends from canonical provider TOMLs already present on `dev`.
+
+CI automatically picks up providers registered in `providers` in `packages/core/script/sync-models.ts`. Adding a new sync provider there is enough to get an hourly provider-specific sync job, branch, labels, title, and PR naming convention. The workflow only needs manual updates when a new provider requires new secrets or other environment variables.
 
 Actions are pinned by commit SHA. Keep new workflow actions pinned the same way.
 

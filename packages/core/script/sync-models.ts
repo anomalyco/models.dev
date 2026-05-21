@@ -225,6 +225,15 @@ export async function syncTargets(target: string, options: SyncOptions = {}) {
   return results;
 }
 
+export function syncProviderMatrix() {
+  return {
+    include: Object.values(providers).map((provider) => ({
+      provider: provider.id,
+      name: provider.name,
+    })),
+  };
+}
+
 async function readExisting(modelsDir: string) {
   const existing = new Map<string, { text: string; toml: ExistingModel; symlink: boolean }>();
 
@@ -450,6 +459,11 @@ function formatToml(model: z.infer<typeof SyncedAuthoredModel>) {
 }
 
 export async function main(args = process.argv.slice(2)) {
+  if (args.includes("--list-providers")) {
+    console.log(JSON.stringify(syncProviderMatrix()));
+    return;
+  }
+
   const target = args.find((arg) => !arg.startsWith("-")) ?? "aggregators";
   const results = await syncTargets(target, {
     dryRun: args.includes("--dry-run"),
