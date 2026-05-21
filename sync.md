@@ -137,10 +137,9 @@ Fireworks AI is implemented in `packages/core/src/sync/providers/fireworks-ai.ts
 - Source endpoint: `https://api.fireworks.ai/v1/accounts/fireworks/models` with `supports_serverless = true`.
 - Required auth: `FIREWORKS_API_KEY`.
 - Model IDs map directly to TOML paths under `providers/fireworks-ai/models`.
-- The API is authoritative for serverless availability, context length, image input support, and tool support.
-- Existing Fireworks AI models are updated from API-authoritative fields while local metadata is preserved for fields the API does not expose, especially pricing, output token limits, release dates, reasoning, and knowledge cutoff.
+- Existing Fireworks AI models are preserved unchanged because the API does not provide pricing, output token limits, release dates, or enough complete capability metadata for safe catalog rewrites.
 - New Fireworks AI API models are reported in `.sync/model-sync-report.md` but not created automatically because the API does not provide enough authoritative metadata for complete catalog entries.
-- Local Fireworks AI models missing from the API response are preserved because the API omits curated router entries and non-serverless catalog metadata.
+- Local Fireworks AI models missing from the API response are preserved because the API omits curated router entries and non-serverless catalog metadata. Fireworks has a routers API, but the public `accounts/fireworks` routers are not listable with the sync API key.
 
 ## Google Notes
 
