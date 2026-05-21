@@ -2,7 +2,7 @@ TODO: delete
 
 # Model Sync Scripts
 
-Model syncs are centralized in `packages/core/script/sync-models.ts`. The runner owns file IO, TOML formatting, validation, reporting, dry runs, and deletion behavior. Individual provider sync modules only fetch source data, parse it, and translate each source model into the catalog schema.
+Model syncs are centralized in `packages/core/src/sync/index.ts`. The runner owns file IO, TOML formatting, validation, reporting, dry runs, and deletion behavior. `packages/core/script/sync-models.ts` is only the CLI wrapper for `bun models:sync`. Individual provider sync modules only fetch source data, parse it, and translate each source model into the catalog schema.
 
 The grouped sync targets are available for local convenience, but CI syncs each provider separately so every provider gets its own reusable automation PR.
 
@@ -23,7 +23,7 @@ Sync runs also write `.sync/model-sync-report.md` for the automation workflow PR
 
 ## Runner Responsibilities
 
-`packages/core/script/sync-models.ts` handles the shared behavior:
+`packages/core/src/sync/index.ts` handles the shared behavior:
 
 - Reads existing TOML files from the provider `modelsDir`.
 - Parses existing files with `Bun.TOML.parse` and `AuthoredModelShape.partial()`.
@@ -39,7 +39,7 @@ Because the runner removes files missing from the desired set, a provider module
 
 ## Provider Modules
 
-Provider modules live in `packages/core/script/sync/`. A provider exports an object satisfying `SyncProvider<SourceModel>`:
+Provider modules live in `packages/core/src/sync/providers/`. A provider exports an object satisfying `SyncProvider<SourceModel>`:
 
 ```ts
 export const provider = {
@@ -74,10 +74,10 @@ Do not put TOML scanning, writing, deletion, reporting, or generic comparison lo
 
 ## Adding A Provider
 
-1. Create `packages/core/script/sync/<provider>.ts`.
+1. Create `packages/core/src/sync/providers/<provider>.ts`.
 2. Define strict-enough Zod schemas for the provider response.
 3. Export a `SyncProvider` implementation with `fetchModels`, `parseModels`, and `translateModel`.
-4. Add the provider to `providers` in `packages/core/script/sync-models.ts`.
+4. Add the provider to `providers` in `packages/core/src/sync/index.ts`.
 5. Add the provider ID to an existing group or create a new group in `groups`.
 6. Add any required API secrets to `.github/workflows/sync-models.yml` if the provider needs new credentials.
 7. Run `bun models:sync <provider> --dry-run` to inspect the first diff.
@@ -103,13 +103,13 @@ The workflow:
 
 Each provider job checks out `dev` and writes to a fixed provider branch like `automation/sync-models-openrouter`. If that provider's sync PR is already open, later scheduled runs force-update the same branch and edit the existing PR instead of creating another one. Provider jobs do not share unmerged changes with each other; OpenRouter only extends from canonical provider TOMLs already present on `dev`.
 
-CI automatically picks up providers registered in `providers` in `packages/core/script/sync-models.ts`. Adding a new sync provider there is enough to get an hourly provider-specific sync job, branch, labels, title, and PR naming convention. The workflow only needs manual updates when a new provider requires new secrets or other environment variables.
+CI automatically picks up providers registered in `providers` in `packages/core/src/sync/index.ts`. Adding a new sync provider there is enough to get an hourly provider-specific sync job, branch, labels, title, and PR naming convention. The workflow only needs manual updates when a new provider requires new secrets or other environment variables.
 
 Actions are pinned by commit SHA. Keep new workflow actions pinned the same way.
 
 ## OpenRouter Notes
 
-OpenRouter is implemented in `packages/core/script/sync/openrouter.ts`.
+OpenRouter is implemented in `packages/core/src/sync/providers/openrouter.ts`.
 
 - Source endpoint: `https://openrouter.ai/api/v1/models`.
 - Optional auth: `OPENROUTER_API_KEY`.
@@ -120,7 +120,7 @@ OpenRouter is implemented in `packages/core/script/sync/openrouter.ts`.
 
 ## Cloudflare Workers AI Notes
 
-Cloudflare Workers AI is implemented in `packages/core/script/sync/cloudflare-workers-ai.ts`.
+Cloudflare Workers AI is implemented in `packages/core/src/sync/providers/cloudflare-workers-ai.ts`.
 
 - Source endpoint: `https://api.cloudflare.com/client/v4/accounts/$CLOUDFLARE_WORKERS_AI_SYNC_ACCOUNT_ID/ai/models/search?format=openrouter`.
 - Required auth: `CLOUDFLARE_WORKERS_AI_SYNC_ACCOUNT_ID` and `CLOUDFLARE_WORKERS_AI_SYNC_API_TOKEN`.
@@ -131,7 +131,7 @@ Cloudflare Workers AI is implemented in `packages/core/script/sync/cloudflare-wo
 
 ## Google Notes
 
-Google is implemented in `packages/core/script/sync/google.ts`.
+Google is implemented in `packages/core/src/sync/providers/google.ts`.
 
 - Source endpoint: `https://generativelanguage.googleapis.com/v1beta/models`.
 - Required auth: `GOOGLE_API_KEY`, `GEMINI_API_KEY`, or `GOOGLE_GENERATIVE_AI_API_KEY`.
@@ -142,7 +142,7 @@ Google is implemented in `packages/core/script/sync/google.ts`.
 
 ## xAI Notes
 
-xAI is implemented in `packages/core/script/sync/xai.ts`.
+xAI is implemented in `packages/core/src/sync/providers/xai.ts`.
 
 - Source endpoints: `https://api.x.ai/v1/language-models`, `https://api.x.ai/v1/image-generation-models`, and `https://api.x.ai/v1/video-generation-models`.
 - Required auth: `XAI_API_KEY`.

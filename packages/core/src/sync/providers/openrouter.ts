@@ -2,11 +2,11 @@ import { z } from "zod";
 import { readFileSync, readdirSync } from "node:fs";
 import path from "node:path";
 
-import { ModelFamilyValues } from "../../src/family.js";
-import type { ExistingModel, SyncProvider, SyncedFullModel, SyncedModel } from "../sync-models.js";
+import { ModelFamilyValues } from "../../family.js";
+import type { ExistingModel, SyncProvider, SyncedFullModel, SyncedModel } from "../index.js";
 
 const API_ENDPOINT = "https://openrouter.ai/api/v1/models";
-const PROVIDERS_DIR = path.join(import.meta.dirname, "..", "..", "..", "..", "providers");
+const PROVIDERS_DIR = path.join(import.meta.dirname, "..", "..", "..", "..", "..", "providers");
 const modelFilesByProvider = new Map<string, Set<string>>();
 const canonicalTomlByModel = new Map<string, Record<string, unknown>>();
 
