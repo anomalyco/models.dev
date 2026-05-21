@@ -1,0 +1,16 @@
+[extends]
+from = "anthropic/claude-opus-4-6"
+omit = ["experimental.modes.fast", "cost.cache_write"]
+
+[cost]
+input = 5.00
+output = 25.00
+cache_read = 0.50
+
+[limit]
+context = 409_600
+output = 128_000
+
+[modalities]
+input = ["text"]
+output = ["text"]

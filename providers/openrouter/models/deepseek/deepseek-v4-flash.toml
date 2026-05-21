@@ -1,4 +1,6 @@
-attachment = false
+temperature = true
+tool_call = true
+structured_output = true
 
 [extends]
 from = "deepseek/deepseek-v4-flash"
@@ -6,6 +8,15 @@ from = "deepseek/deepseek-v4-flash"
 [interleaved]
 field = "reasoning_content"
 
+[cost]
+input = 0.112
+output = 0.224
+cache_read = 0.022
+
 [limit]
-context = 1_048_576
-output = 393_216
+context = 1_048_575
+output = 131_072
+
+[modalities]
+input = ["text"]
+output = ["text"]

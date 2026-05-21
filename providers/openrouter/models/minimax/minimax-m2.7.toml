@@ -1,21 +1,17 @@
-name = "MiniMax M2.7"
-family = "minimax"
-release_date = "2026-03-18"
-last_updated = "2026-03-18"
-attachment = false
-reasoning = true
 temperature = true
 tool_call = true
-open_weights = true
+structured_output = true
+
+[extends]
+from = "minimax/MiniMax-M2.7"
+omit = ["cost.cache_read", "cost.cache_write"]
 
 [cost]
-input = 0.30
-output = 1.20
-cache_read = 0.06
-cache_write = 0.375
+input = 0.279
+output = 1.2
 
 [limit]
-context = 204_800
+context = 196_608
 output = 131_072
 
 [modalities]

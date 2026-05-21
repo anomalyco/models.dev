@@ -6,15 +6,17 @@ attachment = false
 reasoning = true
 temperature = true
 tool_call = true
+structured_output = false
+knowledge = "2024-06-30"
 open_weights = true
 
 [cost]
-input = 0.00
-output = 0.00
+input = 0
+output = 0
 
 [limit]
 context = 131_072
-output = 32_768
+output = 131_072
 
 [modalities]
 input = ["text"]

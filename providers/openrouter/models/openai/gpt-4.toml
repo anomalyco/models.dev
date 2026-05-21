@@ -1,0 +1,19 @@
+attachment = false
+temperature = true
+tool_call = true
+structured_output = true
+
+[extends]
+from = "openai/gpt-4"
+
+[cost]
+input = 30
+output = 60
+
+[limit]
+context = 8_191
+output = 4_096
+
+[modalities]
+input = ["text"]
+output = ["text"]

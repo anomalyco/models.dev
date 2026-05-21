@@ -1,0 +1,17 @@
+name = "Gemini-3.5-Flash"
+temperature = false
+
+[extends]
+from = "google/gemini-3.5-flash"
+omit = [
+  "cost.input_audio",
+]
+
+[cost]
+input = 1.5152
+output = 9.0909
+cache_read = 0.1515
+
+[modalities]
+input = ["text", "image", "audio"]
+output = ["text"]

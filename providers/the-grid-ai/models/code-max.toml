@@ -1,0 +1,22 @@
+name = "Code Max"
+release_date = "2026-05-04"
+last_updated = "2026-05-19"
+# reflects last update to contract specification: https://thegrid.ai/docs/instrument-specifications/current-instruments
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = true
+status = "beta"
+open_weights = false
+
+[interleaved]
+field = "reasoning_content"
+
+[limit]
+context = 1_000_000
+output = 128_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

@@ -1,0 +1,8 @@
+[extends]
+from = "zhipuai/glm-5.1"
+omit = ["cost.cache_write"]
+
+[cost]
+input = 1.40
+output = 4.40
+cache_read = 0.26

@@ -1,23 +1,19 @@
-name = "GLM 4.6"
-family = "glm"
-release_date = "2025-09-30"
-last_updated = "2025-09-30"
-attachment = false
-reasoning = true
 temperature = true
 tool_call = true
 structured_output = true
-knowledge = "2025-09"
-open_weights = true
+
+[extends]
+from = "zai/glm-4.6"
+omit = ["cost.cache_write"]
 
 [cost]
-input = 0.60
-output = 2.20
-cache_read = 0.11
+input = 0.43
+output = 1.74
+cache_read = 0.08
 
 [limit]
-context = 200_000
-output = 128_000
+context = 202_752
+output = 131_072
 
 [modalities]
 input = ["text"]

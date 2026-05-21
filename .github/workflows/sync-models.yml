@@ -1,0 +1,107 @@
+name: Sync Model Catalogs
+
+on:
+  schedule:
+    - cron: "17 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  issues: write
+  pull-requests: write
+
+concurrency: ${{ github.workflow }}-${{ github.ref }}
+
+jobs:
+  providers:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.providers.outputs.matrix }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+        with:
+          ref: dev
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@f4d14e03ff726c06358e5557344e1da148b56cf7
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        run: bun install
+
+      - name: List sync providers
+        id: providers
+        run: echo "matrix=$(bun models:sync --list-providers)" >> "$GITHUB_OUTPUT"
+
+  sync:
+    needs: providers
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJSON(needs.providers.outputs.matrix) }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+        with:
+          ref: dev
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@f4d14e03ff726c06358e5557344e1da148b56cf7
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        run: bun install
+
+      - name: Sync model catalogs
+        run: bun models:sync ${{ matrix.provider }}
+        env:
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GOOGLE_GENERATIVE_AI_API_KEY: ${{ secrets.GOOGLE_GENERATIVE_AI_API_KEY }}
+          XAI_API_KEY: ${{ secrets.XAI_API_KEY }}
+          CLOUDFLARE_WORKERS_AI_SYNC_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_WORKERS_AI_SYNC_ACCOUNT_ID }}
+          CLOUDFLARE_WORKERS_AI_SYNC_API_TOKEN: ${{ secrets.CLOUDFLARE_WORKERS_AI_SYNC_API_TOKEN }}
+
+      - name: Validate models
+        run: bun validate
+
+      - name: Create pull request
+        env:
+          GH_TOKEN: ${{ github.token }}
+          BRANCH: automation/sync-models-${{ matrix.provider }}
+          LABELS: automation,model-sync,provider:${{ matrix.provider }}
+          TITLE: "chore(sync): update ${{ matrix.name }} model catalog"
+        run: |
+          if [ -z "$(git status --porcelain -- providers)" ]; then
+            echo "No model catalog changes found."
+            exit 0
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -B "$BRANCH"
+          git add providers
+          git commit -m "$TITLE"
+          git push --force-with-lease origin "$BRANCH"
+
+          label_args=()
+          IFS=',' read -ra labels <<< "$LABELS"
+          for label in "${labels[@]}"; do
+            gh label create "$label" --color "0E8A16" --description "Automated model catalog sync" >/dev/null 2>&1 || true
+            label_args+=(--label "$label")
+          done
+
+          pr_number="$(gh pr list --head "$BRANCH" --base dev --json number --jq '.[0].number')"
+          if [ -n "$pr_number" ]; then
+            gh pr edit "$pr_number" --title "$TITLE" --body-file .sync/model-sync-report.md
+            for label in "${labels[@]}"; do
+              gh pr edit "$pr_number" --add-label "$label"
+            done
+          else
+            gh pr create --base dev --head "$BRANCH" --title "$TITLE" --body-file .sync/model-sync-report.md "${label_args[@]}"
+          fi

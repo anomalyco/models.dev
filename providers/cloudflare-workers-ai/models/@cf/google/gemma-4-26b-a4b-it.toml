@@ -6,15 +6,16 @@ attachment = true
 reasoning = true
 temperature = true
 tool_call = true
+structured_output = true
 open_weights = true
 
 [cost]
-input = 0.10
-output = 0.30
+input = 0.1
+output = 0.3
 
 [limit]
-context = 256000
-output = 16384
+context = 256_000
+output = 16_384
 
 [modalities]
 input = ["text", "image"]

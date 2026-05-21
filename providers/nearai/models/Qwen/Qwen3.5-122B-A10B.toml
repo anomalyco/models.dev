@@ -1,0 +1,14 @@
+[extends]
+from = "alibaba/qwen3.5-122b-a10b"
+
+[cost]
+input = 0.40
+output = 3.20
+
+[limit]
+context = 131_072
+output = 32_768
+
+[modalities]
+input = ["text"]
+output = ["text"]

@@ -1,0 +1,21 @@
+name = "FLUX.2 Klein 4B"
+family = "flux"
+release_date = "2026-01-14"
+last_updated = "2026-01-14"
+attachment = false
+reasoning = false
+temperature = true
+tool_call = false
+open_weights = true
+
+[cost]
+input = 1.00
+output = 1.00
+
+[limit]
+context = 128_000
+output = 128_000
+
+[modalities]
+input = ["text", "image"]
+output = ["image"]

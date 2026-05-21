@@ -1,4 +1,4 @@
-name = "Qwen: Qwen3.5-Flash"
+name = "Qwen3.5-Flash"
 family = "qwen"
 release_date = "2026-02-25"
 last_updated = "2026-02-25"
@@ -12,6 +12,7 @@ open_weights = false
 [cost]
 input = 0.065
 output = 0.26
+cache_write = 0.08125
 
 [limit]
 context = 1_000_000

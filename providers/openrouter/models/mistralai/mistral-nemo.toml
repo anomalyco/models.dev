@@ -1,0 +1,18 @@
+temperature = true
+tool_call = true
+structured_output = true
+
+[extends]
+from = "mistral/mistral-nemo"
+
+[cost]
+input = 0.02
+output = 0.03
+
+[limit]
+context = 131_072
+output = 131_072
+
+[modalities]
+input = ["text"]
+output = ["text"]

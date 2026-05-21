@@ -1,0 +1,12 @@
+[extends]
+from = "zai/glm-5"
+omit = ["cost.cache_write"]
+
+[cost]
+input = 0.60
+output = 1.92
+cache_read = 0.12
+
+[limit]
+context = 202_752
+output = 131_072

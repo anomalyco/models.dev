@@ -1,0 +1,21 @@
+name = "Qianfan-OCR-Fast"
+release_date = "2026-04-20"
+last_updated = "2026-04-20"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = false
+structured_output = false
+open_weights = false
+
+[cost]
+input = 0.68
+output = 2.81
+
+[limit]
+context = 65_536
+output = 28_672
+
+[modalities]
+input = ["image", "text"]
+output = ["text"]

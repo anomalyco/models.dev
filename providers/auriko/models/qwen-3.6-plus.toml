@@ -1,0 +1,8 @@
+[extends]
+from = "alibaba/qwen3.6-plus"
+omit = ["cost.cache_write"]
+
+[cost]
+input = 0.5
+output = 3.00
+cache_read = 0.1

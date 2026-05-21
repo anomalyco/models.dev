@@ -14,7 +14,8 @@ open_weights = false
 input = 0.09
 output = 0.71
 
-[cost.context_over_200k]
+[[cost.tiers]]
+tier = { size = 200_000 }
 input = 0.09
 output = 0.71
 

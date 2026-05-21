@@ -1,0 +1,26 @@
+name = "Ring 2.6 1T Free"
+family = "ring-1t-free"
+release_date = "2026-05-08"
+last_updated = "2026-05-08"
+attachment = false
+reasoning = true
+temperature = true
+knowledge = "2025-06"
+tool_call = true
+open_weights = true
+status = "deprecated"
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.00
+output = 0.00
+
+[limit]
+context = 262_000
+output = 66_000
+
+[modalities]
+input = ["text"]
+output = ["text"]
