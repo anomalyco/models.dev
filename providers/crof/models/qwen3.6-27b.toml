@@ -1,0 +1,14 @@
+[extends]
+from = "alibaba/qwen3.6-27b"
+
+[cost]
+input = 0.20
+output = 1.50
+cache_read = 0.04
+
+[limit]
+context = 262_144
+output = 262_144
+
+[provider]
+npm = "@ai-sdk/openai-compatible"

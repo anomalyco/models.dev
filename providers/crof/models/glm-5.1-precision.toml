@@ -1,0 +1,26 @@
+name = "GLM 5.1 (Precision)"
+family = "glm"
+release_date = "2026-03-27"
+last_updated = "2026-03-27"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.75
+output = 2.90
+cache_read = 0.15
+
+[limit]
+context = 202_752
+output = 202_752
+
+[modalities]
+input = ["text"]
+output = ["text"]
