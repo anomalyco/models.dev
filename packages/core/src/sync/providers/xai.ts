@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import type { ExistingModel, SyncProvider, SyncedModel } from "../sync-models.js";
+import type { ExistingModel, SyncProvider, SyncedModel } from "../index.js";
 
 const API_BASE = "https://api.x.ai/v1";
 

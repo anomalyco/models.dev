@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import type { ExistingModel, SyncProvider } from "../sync-models.js";
+import type { ExistingModel, SyncProvider } from "../index.js";
 import {
   buildOpenRouterModel,
   OpenRouterModel,
