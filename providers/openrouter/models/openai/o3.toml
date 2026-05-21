@@ -1,14 +1,9 @@
-name = "o3"
-family = "o"
-release_date = "2025-04-16"
-last_updated = "2025-04-16"
-attachment = true
-reasoning = true
 temperature = false
 tool_call = true
 structured_output = true
-knowledge = "2024-06-30"
-open_weights = false
+
+[extends]
+from = "openai/o3"
 
 [cost]
 input = 2

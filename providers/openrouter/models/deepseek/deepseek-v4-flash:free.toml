@@ -1,13 +1,11 @@
 name = "DeepSeek V4 Flash (free)"
-family = "deepseek"
-release_date = "2026-04-24"
-last_updated = "2026-04-24"
-attachment = false
-reasoning = true
 temperature = false
 tool_call = true
 structured_output = false
-open_weights = true
+
+[extends]
+from = "deepseek/deepseek-v4-flash"
+omit = ["cost.cache_read"]
 
 [cost]
 input = 0

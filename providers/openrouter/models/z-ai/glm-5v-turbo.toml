@@ -1,13 +1,10 @@
-name = "GLM 5V Turbo"
-family = "glm"
-release_date = "2026-04-01"
-last_updated = "2026-04-01"
-attachment = true
-reasoning = true
 temperature = true
 tool_call = true
 structured_output = false
-open_weights = false
+
+[extends]
+from = "zai/glm-5v-turbo"
+omit = ["cost.cache_write"]
 
 [cost]
 input = 1.2

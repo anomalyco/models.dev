@@ -1,13 +1,9 @@
-name = "Grok 4.3"
-family = "grok"
-release_date = "2026-04-30"
-last_updated = "2026-04-30"
-attachment = true
-reasoning = true
 temperature = true
 tool_call = true
 structured_output = true
-open_weights = false
+
+[extends]
+from = "xai/grok-4.3"
 
 [cost]
 input = 1.25

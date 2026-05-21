@@ -1,13 +1,9 @@
-name = "Mistral Large 3 2512"
-family = "mistral-large"
-release_date = "2025-12-01"
-last_updated = "2025-12-01"
-attachment = true
-reasoning = false
 temperature = true
 tool_call = true
 structured_output = true
-open_weights = false
+
+[extends]
+from = "mistral/mistral-large-2512"
 
 [cost]
 input = 0.5

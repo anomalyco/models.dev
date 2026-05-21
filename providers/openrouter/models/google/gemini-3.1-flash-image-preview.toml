@@ -1,14 +1,9 @@
-name = "Nano Banana 2 (Gemini 3.1 Flash Image Preview)"
-family = "gemini-flash"
-release_date = "2026-02-26"
-last_updated = "2026-02-26"
-attachment = true
-reasoning = true
 temperature = true
 tool_call = false
 structured_output = true
-knowledge = "2025-01"
-open_weights = false
+
+[extends]
+from = "google/gemini-3.1-flash-image-preview"
 
 [cost]
 input = 0.5

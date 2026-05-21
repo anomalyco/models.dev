@@ -10,20 +10,39 @@ import { google } from "./sync/google.js";
 import { openrouter } from "./sync/openrouter.js";
 import { xai } from "./sync/xai.js";
 
-const ExistingModel = AuthoredModelShape.partial()
-  .extend({
-    extends: z
-      .object({
-        from: z.string(),
-        omit: z.array(z.string()).optional(),
-      })
-      .strict()
-      .optional(),
+const ExtendsConfig = z
+  .object({
+    from: z.string(),
+    omit: z.array(z.string()).optional(),
   })
   .strict();
 
+const ExistingExtendsConfig = z
+  .object({
+    from: z.string(),
+    omit: z.array(z.string()).optional(),
+  })
+  .passthrough();
+
+const ExistingModel = AuthoredModelShape.partial()
+  .extend({
+    extends: ExistingExtendsConfig.optional(),
+  })
+  .strict();
+
+const SyncedExtendsModel = AuthoredModelShape.partial()
+  .extend({
+    id: z.string(),
+    extends: ExtendsConfig,
+  })
+  .strict();
+
+const SyncedAuthoredModel = z.union([AuthoredModel, SyncedExtendsModel]);
+
 export type ExistingModel = z.infer<typeof ExistingModel>;
-export type SyncedModel = Omit<z.infer<typeof AuthoredModelShape>, "id">;
+export type SyncedFullModel = Omit<z.infer<typeof AuthoredModelShape>, "id">;
+export type SyncedExtendsModel = Omit<z.infer<typeof SyncedExtendsModel>, "id">;
+export type SyncedModel = SyncedFullModel | SyncedExtendsModel;
 
 export interface SyncProvider<SourceModel> {
   id: string;
@@ -89,7 +108,7 @@ export async function syncProvider<SourceModel>(
 
   const existing = await readExisting(provider.modelsDir);
   const sourceModels = provider.parseModels(await provider.fetchModels());
-  const desired = new Map<string, { model: z.infer<typeof AuthoredModel>; content: string }>();
+  const desired = new Map<string, { model: z.infer<typeof SyncedAuthoredModel>; content: string }>();
   const skippedRemote: string[] = [];
 
   for (const sourceModel of sourceModels) {
@@ -113,7 +132,7 @@ export async function syncProvider<SourceModel>(
       throw new Error(`Duplicate synced model path: ${provider.id}/${relativePath}`);
     }
 
-    const parsed = AuthoredModel.safeParse({
+    const parsed = SyncedAuthoredModel.safeParse({
       id: translated.id,
       ...translated.model,
     });
@@ -259,9 +278,9 @@ function summarize(
 function sameModel(
   relativePath: string,
   current: ExistingModel,
-  desired: z.infer<typeof AuthoredModel>,
+  desired: z.infer<typeof SyncedAuthoredModel>,
 ) {
-  const parsed = AuthoredModel.safeParse({
+  const parsed = SyncedAuthoredModel.safeParse({
     id: relativePath.slice(0, -5),
     ...current,
   });
@@ -337,23 +356,37 @@ function formatNumber(n: number) {
   return Number.isInteger(n) ? formatInteger(n) : String(n);
 }
 
-function formatToml(model: z.infer<typeof AuthoredModel>) {
+function formatToml(model: z.infer<typeof SyncedAuthoredModel>) {
   const lines: string[] = [];
+  const extendsLines: string[] = [];
 
-  lines.push(`name = ${quote(model.name)}`);
+  if ("extends" in model) {
+    extendsLines.push("[extends]");
+    extendsLines.push(`from = ${quote(model.extends.from)}`);
+    if (model.extends.omit !== undefined) {
+      extendsLines.push(`omit = [${model.extends.omit.map(quote).join(", ")}]`);
+    }
+  }
+
+  if (model.name !== undefined) lines.push(`name = ${quote(model.name)}`);
   if (model.family !== undefined) lines.push(`family = ${quote(model.family)}`);
-  lines.push(`release_date = ${quote(model.release_date)}`);
-  lines.push(`last_updated = ${quote(model.last_updated)}`);
-  lines.push(`attachment = ${model.attachment}`);
-  lines.push(`reasoning = ${model.reasoning}`);
+  if (model.release_date !== undefined) lines.push(`release_date = ${quote(model.release_date)}`);
+  if (model.last_updated !== undefined) lines.push(`last_updated = ${quote(model.last_updated)}`);
+  if (model.attachment !== undefined) lines.push(`attachment = ${model.attachment}`);
+  if (model.reasoning !== undefined) lines.push(`reasoning = ${model.reasoning}`);
   if (model.temperature !== undefined) lines.push(`temperature = ${model.temperature}`);
-  lines.push(`tool_call = ${model.tool_call}`);
+  if (model.tool_call !== undefined) lines.push(`tool_call = ${model.tool_call}`);
   if (model.structured_output !== undefined) {
     lines.push(`structured_output = ${model.structured_output}`);
   }
   if (model.knowledge !== undefined) lines.push(`knowledge = ${quote(model.knowledge)}`);
-  lines.push(`open_weights = ${model.open_weights}`);
+  if (model.open_weights !== undefined) lines.push(`open_weights = ${model.open_weights}`);
   if (model.status !== undefined) lines.push(`status = ${quote(model.status)}`);
+
+  if (extendsLines.length > 0) {
+    if (lines.length > 0) lines.push("");
+    lines.push(...extendsLines);
+  }
 
   if (model.interleaved !== undefined) {
     lines.push("");
@@ -396,14 +429,22 @@ function formatToml(model: z.infer<typeof AuthoredModel>) {
     }
   }
 
-  lines.push("", "[limit]");
-  lines.push(`context = ${formatInteger(model.limit.context)}`);
-  if (model.limit.input !== undefined) lines.push(`input = ${formatInteger(model.limit.input)}`);
-  lines.push(`output = ${formatInteger(model.limit.output)}`);
+  if (model.limit !== undefined) {
+    lines.push("", "[limit]");
+    if (model.limit.context !== undefined) lines.push(`context = ${formatInteger(model.limit.context)}`);
+    if (model.limit.input !== undefined) lines.push(`input = ${formatInteger(model.limit.input)}`);
+    if (model.limit.output !== undefined) lines.push(`output = ${formatInteger(model.limit.output)}`);
+  }
 
-  lines.push("", "[modalities]");
-  lines.push(`input = [${model.modalities.input.map(quote).join(", ")}]`);
-  lines.push(`output = [${model.modalities.output.map(quote).join(", ")}]`);
+  if (model.modalities !== undefined) {
+    lines.push("", "[modalities]");
+    if (model.modalities.input !== undefined) {
+      lines.push(`input = [${model.modalities.input.map(quote).join(", ")}]`);
+    }
+    if (model.modalities.output !== undefined) {
+      lines.push(`output = [${model.modalities.output.map(quote).join(", ")}]`);
+    }
+  }
 
   return `${lines.join("\n")}\n`;
 }

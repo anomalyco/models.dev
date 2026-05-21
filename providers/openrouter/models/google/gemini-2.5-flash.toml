@@ -1,14 +1,10 @@
-name = "Gemini 2.5 Flash"
-family = "gemini-flash"
-release_date = "2025-06-17"
-last_updated = "2025-06-17"
-attachment = true
-reasoning = true
 temperature = true
 tool_call = true
 structured_output = true
-knowledge = "2025-01-31"
-open_weights = false
+
+[extends]
+from = "google/gemini-2.5-flash"
+omit = ["cost.input_audio"]
 
 [cost]
 input = 0.3
