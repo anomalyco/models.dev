@@ -41,9 +41,9 @@ export const fireworksAi = {
     ];
   },
   async fetchModels() {
-    const key = process.env.FIREWORKS_AI_API_KEY ?? process.env.FIREWORKS_API_KEY;
+    const key = process.env.FIREWORKS_API_KEY;
     if (key === undefined) {
-      throw new Error("Fireworks AI sync requires FIREWORKS_AI_API_KEY or FIREWORKS_API_KEY");
+      throw new Error("Fireworks AI sync requires FIREWORKS_API_KEY");
     }
 
     const models: FireworksModel[] = [];

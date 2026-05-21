@@ -135,7 +135,7 @@ Cloudflare Workers AI is implemented in `packages/core/src/sync/providers/cloudf
 Fireworks AI is implemented in `packages/core/src/sync/providers/fireworks-ai.ts`.
 
 - Source endpoint: `https://api.fireworks.ai/v1/accounts/fireworks/models` with `supports_serverless = true`.
-- Required auth: `FIREWORKS_AI_API_KEY` or `FIREWORKS_API_KEY`.
+- Required auth: `FIREWORKS_API_KEY`.
 - Model IDs map directly to TOML paths under `providers/fireworks-ai/models`.
 - The API is authoritative for serverless availability, context length, image input support, and tool support.
 - Existing Fireworks AI models are updated from API-authoritative fields while local metadata is preserved for fields the API does not expose, especially pricing, output token limits, release dates, reasoning, and knowledge cutoff.
