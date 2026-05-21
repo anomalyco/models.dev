@@ -4,6 +4,7 @@ import { z } from "zod";
 
 import { AuthoredModel, AuthoredModelShape } from "../schema.js";
 import { cloudflareWorkersAi } from "./providers/cloudflare-workers-ai.js";
+import { fireworksAi } from "./providers/fireworks-ai.js";
 import { google } from "./providers/google.js";
 import { openrouter } from "./providers/openrouter.js";
 import { xai } from "./providers/xai.js";
@@ -47,6 +48,7 @@ export interface SyncProvider<SourceModel> {
   name: string;
   modelsDir: string;
   skipCreates?: boolean;
+  deleteMissing?: boolean;
   sourceID?(model: SourceModel): string;
   skippedNotice?(ids: string[]): string[];
   fetchModels(): Promise<unknown>;
@@ -71,11 +73,13 @@ export interface SyncResult {
 
 export const providers: {
   "cloudflare-workers-ai": SyncProvider<any>;
+  "fireworks-ai": SyncProvider<any>;
   google: SyncProvider<any>;
   openrouter: SyncProvider<any>;
   xai: SyncProvider<any>;
 } = {
   "cloudflare-workers-ai": cloudflareWorkersAi,
+  "fireworks-ai": fireworksAi,
   google,
   openrouter,
   xai,
@@ -84,7 +88,7 @@ export const providers: {
 export const groups = {
   aggregators: ["openrouter"],
   cloudflare: ["cloudflare-workers-ai"],
-  direct: ["google", "xai"],
+  direct: ["fireworks-ai", "google", "xai"],
 } as const;
 
 type ProviderID = keyof typeof providers;
@@ -183,6 +187,10 @@ export async function syncProvider<SourceModel>(
 
   for (const relativePath of existing.keys()) {
     if (desired.has(relativePath)) continue;
+    if (provider.deleteMissing === false) {
+      unchanged++;
+      continue;
+    }
     if (options.newOnly) {
       console.log(`Skipping removal in new-only mode: ${relativePath}`);
       unchanged++;

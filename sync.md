@@ -13,6 +13,7 @@ The grouped sync targets are available for local convenience, but CI syncs each 
 - `bun models:sync cloudflare-workers-ai` syncs only Cloudflare Workers AI.
 - `bun models:sync cloudflare` syncs the Cloudflare sync group.
 - `bun models:sync direct` syncs every provider in the `direct` group.
+- `bun models:sync fireworks-ai` syncs only Fireworks AI.
 - `bun models:sync google` syncs only Google.
 - `bun models:sync xai` syncs only xAI.
 - `bun models:sync aggregators --dry-run` prints changes without writing model files.
@@ -128,6 +129,18 @@ Cloudflare Workers AI is implemented in `packages/core/src/sync/providers/cloudf
 - The endpoint is parsed as Cloudflare's OpenRouter-like Workers AI metadata.
 - Model IDs map directly to TOML paths under `providers/cloudflare-workers-ai/models`.
 - This sync target does not manage `providers/cloudflare-ai-gateway`, because the AI Gateway `/compat/models` endpoint does not support `format=openrouter` and does not provide enough model metadata for authoritative catalog sync.
+
+## Fireworks AI Notes
+
+Fireworks AI is implemented in `packages/core/src/sync/providers/fireworks-ai.ts`.
+
+- Source endpoint: `https://api.fireworks.ai/v1/accounts/fireworks/models` with `supports_serverless = true`.
+- Required auth: `FIREWORKS_AI_API_KEY` or `FIREWORKS_API_KEY`.
+- Model IDs map directly to TOML paths under `providers/fireworks-ai/models`.
+- The API is authoritative for serverless availability, context length, image input support, and tool support.
+- Existing Fireworks AI models are updated from API-authoritative fields while local metadata is preserved for fields the API does not expose, especially pricing, output token limits, release dates, reasoning, and knowledge cutoff.
+- New Fireworks AI API models are reported in `.sync/model-sync-report.md` but not created automatically because the API does not provide enough authoritative metadata for complete catalog entries.
+- Local Fireworks AI models missing from the API response are preserved because the API omits curated router entries and non-serverless catalog metadata.
 
 ## Google Notes
 
