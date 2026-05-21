@@ -1,24 +1,2 @@
-name = "Gemini 3.5 Flash"
-family = "gemini-flash"
-release_date = "2026-05-21"
-last_updated = "2026-05-21"
-attachment = true
-reasoning = true
-temperature = true
-tool_call = true
-structured_output = true
-open_weights = false
-
-[cost]
-input = 1.50
-output = 9.00
-cache_read = 0.15
-cache_write = 0.083
-
-[limit]
-context = 1_048_576
-output = 65_536
-
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[extends]
+from = "google/gemini-3.5-flash"
