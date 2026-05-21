@@ -137,6 +137,11 @@ function tokenPrice(value: number | undefined) {
   return value / 10_000;
 }
 
+function preservedCostTiers(existing: ExistingModel) {
+  // The xAI models API exposes base pricing only; long-context tiers are curated from xAI docs/console.
+  return existing.cost?.tiers;
+}
+
 function cost(model: XAIModel, existing: ExistingModel) {
   const input = tokenPrice(model.prompt_text_token_price);
   const output = tokenPrice(model.completion_text_token_price);
@@ -150,7 +155,7 @@ function cost(model: XAIModel, existing: ExistingModel) {
     cache_write: existing.cost?.cache_write,
     input_audio: existing.cost?.input_audio,
     output_audio: existing.cost?.output_audio,
-    tiers: existing.cost?.tiers,
+    tiers: preservedCostTiers(existing),
   };
 }
 
