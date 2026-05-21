@@ -4,17 +4,18 @@ structured_output = true
 
 [extends]
 from = "zai/glm-5.1"
-omit = ["cost.cache_read", "cost.cache_write"]
+omit = ["cost.cache_write"]
 
 [interleaved]
 field = "reasoning_content"
 
 [cost]
-input = 0
-output = 0
+input = 0.98
+output = 3.08
+cache_read = 0.182
 
 [limit]
-context = 202_800
+context = 202_752
 output = 202_800
 
 [modalities]
