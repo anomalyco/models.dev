@@ -4,6 +4,7 @@ structured_output = true
 
 [extends]
 from = "xai/grok-build-0.1"
+omit = ["cost.tiers", "cost.context_over_200k"]
 
 [cost]
 input = 1
