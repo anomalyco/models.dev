@@ -1,0 +1,21 @@
+name = "Qwen3.7 Max"
+family = "qwen"
+release_date = "2026-05-21"
+last_updated = "2026-05-21"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+open_weights = false
+
+[cost]
+input = 2.50
+output = 7.50
+
+[limit]
+context = 1_000_000
+output = 500_000
+
+[modalities]
+input = ["text"]
+output = ["text"]
