@@ -1,0 +1,14 @@
+status = "alpha"
+
+[extends]
+from = "anthropic/claude-opus-4-7"
+omit = ["experimental.modes.fast"]
+
+[cost]
+input = 5.00
+output = 25.00
+cache_read = 0.50
+
+[limit]
+context = 200_000
+output = 16_384

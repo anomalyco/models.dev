@@ -1,0 +1,11 @@
+[extends]
+from = "anthropic/claude-haiku-4-5"
+
+[cost]
+input = 1.00
+output = 5.00
+cache_read = 0.10
+
+[limit]
+context = 200_000
+output = 16_384
