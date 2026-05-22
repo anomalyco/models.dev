@@ -7,14 +7,15 @@ reasoning = true
 temperature = true
 tool_call = true
 knowledge = "2024-12"
-open_weights = false
+open_weights = true
 
 [cost]
 input = 0.4
 output = 2
 cache_read = 0.08
 
-[cost.context_over_200k]
+[[cost.tiers]]
+tier = { size = 256_000 }
 input = 0.80
 output = 4.00
 cache_read = 0.16
@@ -24,9 +25,8 @@ context = 1_048_576
 output = 131_072
 
 [modalities]
-input = ["text"]
+input = ["text", "image", "audio", "video"]
 output = ["text"]
 
 [interleaved]
 field = "reasoning_content"
-

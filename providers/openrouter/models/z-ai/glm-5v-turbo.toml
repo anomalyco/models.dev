@@ -1,0 +1,20 @@
+temperature = true
+tool_call = true
+structured_output = false
+
+[extends]
+from = "zai/glm-5v-turbo"
+omit = ["cost.cache_write"]
+
+[cost]
+input = 1.2
+output = 4
+cache_read = 0.24
+
+[limit]
+context = 202_752
+output = 131_072
+
+[modalities]
+input = ["image", "text", "video"]
+output = ["text"]

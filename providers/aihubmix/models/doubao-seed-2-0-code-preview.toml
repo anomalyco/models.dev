@@ -1,0 +1,38 @@
+name = "Doubao Seed 2.0 Code Preview"
+family = "seed"
+release_date = "2026-02-14"
+last_updated = "2026-02-14"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.48
+output = 2.41
+cache_read = 0.09644
+
+[[cost.tiers]]
+tier = { size = 32_000 }
+input = 0.72
+output = 3.62
+cache_read = 0.144656
+
+[[cost.tiers]]
+tier = { size = 128_000 }
+input = 1.45
+output = 7.23
+cache_read = 0.28932
+
+[limit]
+context = 256_000
+output = 128_000
+
+[modalities]
+input = ["text", "image", "video"]
+output = ["text"]

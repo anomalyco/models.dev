@@ -1,17 +1,16 @@
-name = "MiMo-V2-Omni"
-family = "mimo"
-release_date = "2026-03-18"
-last_updated = "2026-03-18"
-attachment = true
-reasoning = true
 temperature = true
 tool_call = true
-structured_output = true
-open_weights = true
+structured_output = false
+
+[extends]
+from = "xiaomi/mimo-v2-omni"
+
+[interleaved]
+field = "reasoning_details"
 
 [cost]
-input = 0.40
-output = 2.00
+input = 0.4
+output = 2
 cache_read = 0.08
 
 [limit]
@@ -19,8 +18,5 @@ context = 262_144
 output = 65_536
 
 [modalities]
-input = ["text", "image", "video", "audio"]
+input = ["text", "audio", "image", "video"]
 output = ["text"]
-
-[interleaved]
-field = "reasoning_details"

@@ -1,0 +1,16 @@
+name = "DeepSeek V4 Flash 6bit"
+reasoning = true
+
+[extends]
+from = "deepseek/deepseek-v4-flash"
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.4928
+output = 0.7392
+
+[limit]
+context = 1_000_000
+output = 131_072

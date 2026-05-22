@@ -1,0 +1,23 @@
+name = "Llama 3.3 Nemotron Super 49B V1.5"
+family = "nemotron"
+release_date = "2025-10-10"
+last_updated = "2025-10-10"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = false
+knowledge = "2024-03-31"
+open_weights = true
+
+[cost]
+input = 0.1
+output = 0.4
+
+[limit]
+context = 131_072
+output = 16_384
+
+[modalities]
+input = ["text"]
+output = ["text"]

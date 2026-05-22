@@ -1,0 +1,12 @@
+name = "Step 3.5 Flash 2603"
+reasoning = true
+
+[extends]
+from = "stepfun/step-3.5-flash-2603"
+
+[interleaved]
+field = "reasoning_content"
+
+[limit]
+context = 262_144
+output = 65_536

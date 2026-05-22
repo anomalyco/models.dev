@@ -1,25 +1,21 @@
-name = "MiniMax M2.1"
-family = "minimax"
-attachment = false
-reasoning = true
+temperature = true
 tool_call = true
 structured_output = true
-temperature = true
-release_date = "2025-12-23"
-last_updated = "2025-12-23"
-open_weights = true
+
+[extends]
+from = "minimax/MiniMax-M2.1"
 
 [interleaved]
 field = "reasoning_details"
 
 [cost]
-# Derived per-1k-token costs (approx)
-input = 0.30
-output = 1.20
+input = 0.29
+output = 0.95
+cache_read = 0.03
 
 [limit]
-context = 204_800
-output = 131_072
+context = 196_608
+output = 196_608
 
 [modalities]
 input = ["text"]

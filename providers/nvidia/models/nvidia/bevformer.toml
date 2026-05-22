@@ -1,0 +1,20 @@
+name = "bevformer"
+release_date = "2025-03-18"
+last_updated = "2025-07-20"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = false
+open_weights = true
+
+[cost]
+input = 0.0
+output = 0.0
+
+[limit]
+context = 128_000
+output = 8_192
+
+[modalities]
+input = ["video"]
+output = ["text"]

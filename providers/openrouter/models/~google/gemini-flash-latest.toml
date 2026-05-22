@@ -1,0 +1,26 @@
+name = "Google Gemini Flash Latest"
+family = "gemini-flash"
+release_date = "2026-04-27"
+last_updated = "2026-04-27"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = true
+knowledge = "2025-01-01"
+open_weights = false
+
+[cost]
+input = 1.5
+output = 9
+reasoning = 9
+cache_read = 0.15
+cache_write = 0.083333
+
+[limit]
+context = 1_048_576
+output = 65_536
+
+[modalities]
+input = ["text", "image", "video", "pdf", "audio"]
+output = ["text"]

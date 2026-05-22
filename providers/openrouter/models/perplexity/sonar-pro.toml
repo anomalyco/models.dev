@@ -1,0 +1,22 @@
+name = "Sonar Pro"
+family = "sonar-pro"
+release_date = "2025-03-07"
+last_updated = "2025-03-07"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = false
+structured_output = false
+open_weights = false
+
+[cost]
+input = 3
+output = 15
+
+[limit]
+context = 200_000
+output = 8_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

@@ -6,6 +6,7 @@ import { Fragment } from "hono/jsx";
 import { renderToString } from "hono/jsx/dom/server";
 import { existsSync } from "fs";
 import path from "path";
+import { type TableRow, renderRow, getLargestRow } from "./shared.js";
 
 export const Providers = await generate(
   path.join(import.meta.dir, "..", "..", "..", "providers")
@@ -38,7 +39,6 @@ const loadProviderSvg = async (providerId: string): Promise<string | null> => {
       const file = Bun.file(providerLogoPath);
       return await file.text();
     }
-    //
     // Fall back to default logo
     if (existsSync(defaultLogoPath)) {
       const file = Bun.file(defaultLogoPath);
@@ -62,122 +62,47 @@ for (const [providerId] of Object.entries(Providers)) {
   }
 }
 
-function renderProviderLogo(providerId: string) {
-  const svgContent = providerLogos.get(providerId) || "";
+export const INITIAL_ROW_COUNT = 50;
 
-  return <span dangerouslySetInnerHTML={{ __html: svgContent }} />;
-}
+export const TableRows: TableRow[] = Object.entries(Providers)
+  .sort(([, providerA], [, providerB]) =>
+    providerA.name.localeCompare(providerB.name)
+  )
+  .flatMap(([providerId, provider]) =>
+    Object.entries(provider.models)
+      .filter(([, model]) => model.status !== "alpha")
+      .sort(([, modelA], [, modelB]) => modelA.name.localeCompare(modelB.name))
+      .map(([modelId, model]) => ({
+        providerId,
+        providerName: provider.name,
+        providerLogoSvg: providerLogos.get(providerId) || "",
+        modelId,
+        modelName: model.name,
+        family: model.family,
+        toolCall: model.tool_call,
+        reasoning: model.reasoning,
+        input: model.modalities.input,
+        output: model.modalities.output,
+        inputCost: model.cost?.input,
+        outputCost: model.cost?.output,
+        reasoningCost: model.cost?.reasoning,
+        cacheReadCost: model.cost?.cache_read,
+        cacheWriteCost: model.cost?.cache_write,
+        audioInputCost: model.cost?.input_audio,
+        audioOutputCost: model.cost?.output_audio,
+        contextLimit: model.limit.context,
+        inputLimit: model.limit.input,
+        outputLimit: model.limit.output,
+        structuredOutput: model.structured_output,
+        temperature: model.temperature ?? false,
+        openWeights: model.open_weights,
+        knowledge: model.knowledge,
+        releaseDate: model.release_date,
+        lastUpdated: model.last_updated,
+      }))
+  );
 
-const getModalityIcon = (modality: string) => {
-  switch (modality) {
-    case "text":
-      return (
-        <span class="modality-icon" data-tooltip="Text">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="16"
-            height="16"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          >
-            <polyline points="4,7 4,4 20,4 20,7"></polyline>
-            <line x1="9" y1="20" x2="15" y2="20"></line>
-            <line x1="12" y1="4" x2="12" y2="20"></line>
-          </svg>
-        </span>
-      );
-    case "image":
-      return (
-        <span class="modality-icon" data-tooltip="Image">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="16"
-            height="16"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          >
-            <rect width="18" height="18" x="3" y="3" rx="2" ry="2"></rect>
-            <circle cx="9" cy="9" r="2"></circle>
-            <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"></path>
-          </svg>
-        </span>
-      );
-    case "audio":
-      return (
-        <span class="modality-icon" data-tooltip="Audio">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="16"
-            height="16"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          >
-            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
-            <path d="m19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
-          </svg>
-        </span>
-      );
-    case "video":
-      return (
-        <span class="modality-icon" data-tooltip="Video">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="16"
-            height="16"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          >
-            <path d="m22 8-6 4 6 4V8Z"></path>
-            <rect width="14" height="12" x="2" y="6" rx="2" ry="2"></rect>
-          </svg>
-        </span>
-      );
-    case "pdf":
-      return (
-        <span class="modality-icon" data-tooltip="PDF">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="16"
-            height="16"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          >
-            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-            <polyline points="14,2 14,8 20,8"></polyline>
-            <line x1="16" y1="13" x2="8" y2="13"></line>
-            <line x1="16" y1="17" x2="8" y2="17"></line>
-            <polyline points="10,9 9,9 8,9"></polyline>
-          </svg>
-        </span>
-      );
-    default:
-      return null;
-  }
-};
-
-const renderCost = (cost?: number) => {
-  return cost === undefined ? "-" : `$${cost.toFixed(2)}`;
-};
+const largestRow = getLargestRow(TableRows);
 
 export const Rendered = renderToString(
   <Fragment>
@@ -213,7 +138,8 @@ export const Rendered = renderToString(
         <button id="help">How to use</button>
       </div>
     </header>
-    <table>
+    <div id="table-viewport" class="table-viewport">
+      <table id="models-table">
       <thead>
         <tr>
           <th class="sortable" data-type="text">
@@ -342,120 +268,12 @@ export const Rendered = renderToString(
           </th>
         </tr>
       </thead>
-      <tbody>
-        {Object.entries(Providers)
-          .sort(([, providerA], [, providerB]) =>
-            providerA.name.localeCompare(providerB.name)
-          )
-          .flatMap(([providerId, provider]) =>
-            Object.entries(provider.models)
-              .filter(([, model]) => model.status !== "alpha")
-              .sort(([, modelA], [, modelB]) =>
-                modelA.name.localeCompare(modelB.name)
-              )
-              .map(([modelId, model]) => (
-                <tr key={`${providerId}-${modelId}`}>
-                  <td>
-                    <div class="provider-cell">
-                      {renderProviderLogo(providerId)}
-                      <span>{provider.name}</span>
-                    </div>
-                  </td>
-                  <td>{model.name}</td>
-                  <td>{model.family ?? "-"}</td>
-                  <td>{providerId}</td>
-                  <td>
-                    <div class="model-id-cell">
-                      <span class="model-id-text">{modelId}</span>
-                      <button
-                        class="copy-button"
-                        onclick={`copyModelId(this, '${modelId}')`}
-                      >
-                        <svg
-                          class="copy-icon"
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="14"
-                          height="14"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          stroke-width="2"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                        >
-                          <rect
-                            width="14"
-                            height="14"
-                            x="8"
-                            y="8"
-                            rx="2"
-                            ry="2"
-                          />
-                          <path d="m4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2" />
-                        </svg>
-                        <svg
-                          class="check-icon"
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="14"
-                          height="14"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          stroke-width="2"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          style="display: none;"
-                        >
-                          <polyline points="20,6 9,17 4,12" />
-                        </svg>
-                      </button>
-                    </div>
-                  </td>
-                  <td>{model.tool_call ? "Yes" : "No"}</td>
-                  <td>{model.reasoning ? "Yes" : "No"}</td>
-                  <td>
-                    <div class="modalities">
-                      {model.modalities.input.map((modality) =>
-                        getModalityIcon(modality)
-                      )}
-                    </div>
-                  </td>
-                  <td>
-                    <div class="modalities">
-                      {model.modalities.output.map((modality) =>
-                        getModalityIcon(modality)
-                      )}
-                    </div>
-                  </td>
-                  <td>{renderCost(model.cost?.input)}</td>
-                  <td>{renderCost(model.cost?.output)}</td>
-                  <td>{renderCost(model.cost?.reasoning)}</td>
-                  <td>{renderCost(model.cost?.cache_read)}</td>
-                  <td>{renderCost(model.cost?.cache_write)}</td>
-                  <td>{renderCost(model.cost?.input_audio)}</td>
-                  <td>{renderCost(model.cost?.output_audio)}</td>
-                  <td>{model.limit.context.toLocaleString()}</td>
-                  <td>{model.limit.input?.toLocaleString() ?? "-"}</td>
-                  <td>{model.limit.output.toLocaleString()}</td>
-                  <td>
-                    {model.structured_output === undefined
-                      ? "-"
-                      : model.structured_output
-                      ? "Yes"
-                      : "No"}
-                  </td>
-                  <td>{model.temperature ? "Yes" : "No"}</td>
-                  <td>{model.open_weights ? "Open" : "Closed"}</td>
-                  <td>
-                    {model.knowledge ? model.knowledge.substring(0, 7) : "-"}
-                  </td>
-                  <td>{model.release_date}</td>
-                  <td>{model.last_updated}</td>
-                </tr>
-              ))
-          )}
-      </tbody>
-    </table>
+      <tbody id="models-table-body" dangerouslySetInnerHTML={{
+        __html: TableRows.slice(0, INITIAL_ROW_COUNT).map((row, i) => renderRow(row, i)).join('')
+          + renderRow(largestRow, -1).replace('<tr', '<tr style="visibility:hidden" aria-hidden="true"')
+      }} />
+      </table>
+    </div>
     <dialog id="modal">
       <div class="header">
         <h2>How to use</h2>
@@ -565,10 +383,15 @@ export const Rendered = renderToString(
         >
           Edit on GitHub
         </a>
-        <a href="https://sst.dev" target="_blank" rel="noopener noreferrer">
-          Created by SST
+        <a href="https://opencode.ai" target="_blank" rel="noopener noreferrer">
+          Created by OpenCode
         </a>
       </div>
     </dialog>
+    <script
+      dangerouslySetInnerHTML={{
+        __html: `window.__TABLE_DATA__ = ${JSON.stringify(TableRows)}`,
+      }}
+    ></script>
   </Fragment>
 );

@@ -1,0 +1,15 @@
+name = "MiniMax M2.5"
+structured_output = true
+
+[extends]
+from = "minimax/MiniMax-M2.5"
+
+[cost]
+input = 0.24
+output = 0.9
+cache_read = 0.03
+cache_write = 0
+
+[limit]
+context = 196608
+output = 196608

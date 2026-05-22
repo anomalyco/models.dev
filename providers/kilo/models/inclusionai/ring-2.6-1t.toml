@@ -1,0 +1,21 @@
+name = "inclusionAI: Ring-2.6-1T"
+release_date = "2026-05-08"
+last_updated = "2026-05-16"
+attachment = false
+reasoning = true
+tool_call = true
+temperature = true
+open_weights = false
+
+[cost]
+input = 0.075
+output = 0.625
+cache_read = 0.015
+
+[limit]
+context = 262144
+output = 65536
+
+[modalities]
+input = ["text"]
+output = ["text"]

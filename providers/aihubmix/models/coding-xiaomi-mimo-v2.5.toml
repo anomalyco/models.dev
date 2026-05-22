@@ -1,0 +1,17 @@
+name = "Coding Xiaomi MiMo-V2.5"
+family = "mimo-v2.5"
+last_updated = "2026-05-13"
+
+[extends]
+from = "xiaomi/mimo-v2.5"
+
+[cost]
+input = 0.08
+output = 0.40
+cache_read = 0.016
+
+[[cost.tiers]]
+tier = { size = 256_000 }
+input = 0.16
+output = 0.80
+cache_read = 0.032

@@ -1,0 +1,7 @@
+[extends]
+from = "anthropic/claude-opus-4-6"
+omit = ["experimental.modes.fast"]
+
+[limit]
+context = 200_000
+output = 128_000

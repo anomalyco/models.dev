@@ -1,7 +1,53 @@
+import {
+  Virtualizer,
+  elementScroll,
+  observeElementOffset,
+  observeElementRect,
+} from "@tanstack/virtual-core";
+import {
+  type TableRow,
+  renderRow,
+  escapeHtml,
+  booleanText,
+  knowledgeText,
+  weightsText,
+} from "./shared.js";
+
+declare global {
+  interface Window {
+    __TABLE_DATA__: TableRow[];
+  }
+}
+
+interface VirtualizedRow extends TableRow {
+  key: string;
+  searchText: string;
+  sortValues: Array<string | number | undefined>;
+}
+
+type SortDirection = "asc" | "desc";
+
+const ESTIMATED_ROW_HEIGHT = 48;
+const VIRTUAL_OVERSCAN = 5;
+
 const modal = document.getElementById("modal") as HTMLDialogElement;
 const modalClose = document.getElementById("close")!;
 const help = document.getElementById("help")!;
 const search = document.getElementById("search")! as HTMLInputElement;
+const viewport = document.getElementById("table-viewport") as HTMLElement;
+const tbody = document.getElementById(
+  "models-table-body"
+) as HTMLTableSectionElement;
+const headers = Array.from(document.querySelectorAll("th.sortable"));
+const columnCount = document.querySelectorAll("thead th").length;
+
+let isLoaded = false;
+let allRows: VirtualizedRow[] = [];
+let visibleRows: VirtualizedRow[] = [];
+let currentSort: { column: number; direction: SortDirection } = {
+  column: -1,
+  direction: "asc",
+};
 
 /////////////////////////
 // URL State Management
@@ -31,10 +77,7 @@ function getColumnNameForURL(headerEl: Element): string {
 }
 
 function getColumnIndexByUrlName(name: string): number {
-  const headers = document.querySelectorAll("th.sortable");
-  return Array.from(headers).findIndex(
-    (header) => getColumnNameForURL(header) === name
-  );
+  return headers.findIndex((header) => getColumnNameForURL(header) === name);
 }
 
 /////////////////////////
@@ -63,32 +106,181 @@ modal.addEventListener("click", (e) => {
 });
 
 ////////////////////
-// Handle Sorting
+// Row Data
 ////////////////////
-let currentSort = { column: -1, direction: "asc" };
+function lockColumnWidths() {
+  const ths = document.querySelectorAll("#models-table thead th");
+  const widths = Array.from(ths).map((th) => th.getBoundingClientRect().width);
 
-function sortTable(column: number, direction: "asc" | "desc") {
-  const header = document.querySelectorAll("th.sortable")[column];
-  const columnType = header.getAttribute("data-type");
-  if (!columnType) return;
+  const measurementRow = tbody.querySelector('tr[aria-hidden="true"]');
+  if (measurementRow) measurementRow.remove();
 
-  // update state
-  currentSort = { column, direction };
-  updateQueryParams({
-    sort: getColumnNameForURL(header),
-    order: direction,
-  });
+  const table = document.getElementById("models-table")!;
+  table.style.tableLayout = "fixed";
 
-  // sort rows
-  const tbody = document.querySelector("table tbody")!;
-  const rows = Array.from(
-    tbody.querySelectorAll("tr")
-  ) as HTMLTableRowElement[];
-  rows.sort((a, b) => {
-    const aValue = getCellValue(a.cells[column], columnType);
-    const bValue = getCellValue(b.cells[column], columnType);
+  const colgroup = document.createElement("colgroup");
+  for (const width of widths) {
+    const col = document.createElement("col");
+    col.style.width = `${width}px`;
+    colgroup.appendChild(col);
+  }
+  table.insertBefore(colgroup, table.firstChild);
+}
 
-    // Handle undefined values - always sort to bottom
+function prepareRow(row: TableRow): VirtualizedRow {
+  const sortValues: VirtualizedRow["sortValues"] = [
+    row.providerName,
+    row.modelName,
+    row.family,
+    row.providerId,
+    row.modelId,
+    booleanText(row.toolCall),
+    booleanText(row.reasoning),
+    row.input.length,
+    row.output.length,
+    row.inputCost,
+    row.outputCost,
+    row.reasoningCost,
+    row.cacheReadCost,
+    row.cacheWriteCost,
+    row.audioInputCost,
+    row.audioOutputCost,
+    row.contextLimit,
+    row.inputLimit,
+    row.outputLimit,
+    row.structuredOutput === undefined
+      ? undefined
+      : booleanText(row.structuredOutput),
+    booleanText(row.temperature),
+    weightsText(row.openWeights),
+    row.knowledge ? knowledgeText(row.knowledge) : undefined,
+    row.releaseDate,
+    row.lastUpdated,
+  ];
+
+  const searchableValues = [
+    row.providerName,
+    row.modelName,
+    row.family ?? "",
+    row.providerId,
+    row.modelId,
+    row.releaseDate,
+    row.lastUpdated,
+  ];
+
+  return {
+    ...row,
+    key: `${row.providerId}/${row.modelId}`,
+    searchText: searchableValues.join(" ").toLowerCase(),
+    sortValues,
+  };
+}
+
+////////////////////
+// Virtual Table
+////////////////////
+function getVirtualizerOptions(count: number) {
+  return {
+    count,
+    getScrollElement: () => viewport,
+    estimateSize: () => ESTIMATED_ROW_HEIGHT,
+    getItemKey: (index: number) => visibleRows[index]?.key ?? index,
+    initialRect: {
+      width: viewport.clientWidth || window.innerWidth,
+      height: viewport.clientHeight || window.innerHeight,
+    },
+    overscan: VIRTUAL_OVERSCAN,
+    observeElementRect,
+    observeElementOffset,
+    scrollToFn: elementScroll,
+    onChange: () => renderVirtualRows(),
+  };
+}
+
+const virtualizer = new Virtualizer<HTMLElement, HTMLTableRowElement>(
+  getVirtualizerOptions(0)
+);
+const cleanupVirtualizer = virtualizer._didMount();
+virtualizer._willUpdate();
+window.addEventListener("pagehide", () => cleanupVirtualizer());
+
+function renderStatusRow(message: string) {
+  tbody.innerHTML = `<tr class="empty-row"><td colspan="${columnCount}"><div>${escapeHtml(
+    message
+  )}</div></td></tr>`;
+}
+
+function setVirtualizerCount(count: number, resetScroll: boolean) {
+  virtualizer.setOptions(getVirtualizerOptions(count));
+  virtualizer._willUpdate();
+  if (resetScroll) virtualizer.scrollToOffset(0);
+  renderVirtualRows();
+}
+
+function renderVirtualRows() {
+  if (!isLoaded) return;
+  if (visibleRows.length === 0) {
+    renderStatusRow("No models found");
+    return;
+  }
+
+  const virtualRows = virtualizer.getVirtualItems();
+  if (virtualRows.length === 0) return;
+
+  const firstRow = virtualRows[0]!;
+  const lastRow = virtualRows[virtualRows.length - 1]!;
+  const paddingTop = firstRow.start;
+  const paddingBottom = Math.max(virtualizer.getTotalSize() - lastRow.end, 0);
+  const html: string[] = [];
+
+  if (paddingTop > 0) html.push(renderSpacerRow(paddingTop));
+  for (const virtualRow of virtualRows) {
+    const row = visibleRows[virtualRow.index];
+    if (row) html.push(renderRow(row, virtualRow.index));
+  }
+  if (paddingBottom > 0) html.push(renderSpacerRow(paddingBottom));
+
+  tbody.innerHTML = html.join("");
+  tbody.querySelectorAll<HTMLTableRowElement>("tr[data-index]").forEach((row) =>
+    virtualizer.measureElement(row)
+  );
+}
+
+function renderSpacerRow(height: number) {
+  return `<tr class="virtual-spacer" style="height: ${height}px"><td colspan="${columnCount}"></td></tr>`;
+}
+
+function applyRows(resetScroll = true) {
+  if (!isLoaded) return;
+  visibleRows = getRowsForDisplay();
+  setVirtualizerCount(visibleRows.length, resetScroll);
+}
+
+////////////////////
+// Sorting
+////////////////////
+function getRowsForDisplay() {
+  const terms = search.value
+    .toLowerCase()
+    .split(",")
+    .map((term) => term.trim())
+    .filter(Boolean);
+  const filteredRows =
+    terms.length === 0
+      ? allRows
+      : allRows.filter((row) =>
+          terms.some((term) => row.searchText.includes(term))
+        );
+
+  if (currentSort.column === -1) return filteredRows;
+
+  const columnType = headers[currentSort.column]?.getAttribute("data-type");
+  if (!columnType) return filteredRows;
+
+  return [...filteredRows].sort((a, b) => {
+    const aValue = a.sortValues[currentSort.column];
+    const bValue = b.sortValues[currentSort.column];
+
     if (aValue === undefined && bValue === undefined) return 0;
     if (aValue === undefined) return 1;
     if (bValue === undefined) return -1;
@@ -96,45 +288,48 @@ function sortTable(column: number, direction: "asc" | "desc") {
     let comparison = 0;
     if (columnType === "number" || columnType === "modalities") {
       comparison = (aValue as number) - (bValue as number);
-    } else if (columnType === "boolean") {
-      comparison = (aValue as string).localeCompare(bValue as string);
     } else {
-      comparison = (aValue as string).localeCompare(bValue as string);
+      comparison = String(aValue).localeCompare(String(bValue));
     }
 
-    return direction === "asc" ? comparison : -comparison;
+    return currentSort.direction === "asc" ? comparison : -comparison;
   });
-  rows.forEach((row) => tbody.appendChild(row));
+}
 
-  // update sort indicators
-  const headers = document.querySelectorAll("th.sortable");
+function sortTable(
+  column: number,
+  direction: SortDirection,
+  updateURL = true
+) {
+  const header = headers[column];
+  if (!header?.getAttribute("data-type")) return;
+
+  currentSort = { column, direction };
+  if (updateURL) {
+    updateQueryParams({
+      sort: getColumnNameForURL(header),
+      order: direction,
+    });
+  }
+
+  updateSortIndicators();
+  applyRows();
+}
+
+function updateSortIndicators() {
   headers.forEach((header, i) => {
     const indicator = header.querySelector(".sort-indicator")!;
-
-    if (i === column) {
-      indicator.textContent = direction === "asc" ? "↑" : "↓";
-    } else {
-      indicator.textContent = "";
-    }
+    indicator.textContent =
+      i === currentSort.column
+        ? currentSort.direction === "asc"
+          ? "↑"
+          : "↓"
+        : "";
   });
 }
 
-function getCellValue(
-  cell: HTMLTableCellElement,
-  type: string
-): string | number | undefined {
-  if (type === "modalities")
-    return cell.querySelectorAll(".modality-icon").length;
-
-  const text = cell.textContent?.trim() || "";
-  if (text === "-") return;
-  if (type === "number") return parseFloat(text.replace(/[$,]/g, "")) || 0;
-  return text;
-}
-
-document.querySelectorAll("th.sortable").forEach((header) => {
+headers.forEach((header, column) => {
   header.addEventListener("click", () => {
-    const column = Array.from(header.parentElement!.children).indexOf(header);
     const direction =
       currentSort.column === column && currentSort.direction === "asc"
         ? "desc"
@@ -144,34 +339,19 @@ document.querySelectorAll("th.sortable").forEach((header) => {
 });
 
 ///////////////////
-// Handle Search
+// Search
 ///////////////////
-function filterTable(value: string) {
-  const lowerCaseValues = value.toLowerCase().split(",").filter(str => str.trim() !== "");
-  const rows = document.querySelectorAll(
-    "table tbody tr"
-  ) as NodeListOf<HTMLTableRowElement>;
-
-  rows.forEach((row) => {
-    const cellTexts = Array.from(row.cells).map((cell) =>
-      cell.textContent!.toLowerCase()
-    );
-    const isVisible = lowerCaseValues.length === 0 ||
-     lowerCaseValues.some((lowerCaseValue) => cellTexts.some((text) => text.includes(lowerCaseValue)));
-    row.style.display = isVisible ? "" : "none";
-  });
-
-  updateQueryParams({ search: value || null });
-}
-
 search.addEventListener("input", () => {
-  filterTable(search.value);
+  updateQueryParams({ search: search.value || null });
+  applyRows();
 });
 
 document.addEventListener("keydown", (e) => {
-  if ((e.metaKey || e.ctrlKey) && e.key === "k") {
+  const key = e.key.toLowerCase();
+  if ((e.metaKey || e.ctrlKey) && (key === "k" || key === "f")) {
     e.preventDefault();
     search.focus();
+    search.select();
   }
 });
 
@@ -185,10 +365,7 @@ search.addEventListener("keydown", (e) => {
 ///////////////////////////////////
 // Handle Copy model ID function
 ///////////////////////////////////
-(window as any).copyModelId = async (
-  button: HTMLButtonElement,
-  modelId: string
-) => {
+async function copyModelId(button: HTMLButtonElement, modelId: string) {
   try {
     if (navigator.clipboard) {
       await navigator.clipboard.writeText(modelId);
@@ -209,7 +386,18 @@ search.addEventListener("keydown", (e) => {
   } catch (err) {
     console.error("Failed to copy text: ", err);
   }
-};
+}
+
+document.addEventListener("click", (event) => {
+  if (!(event.target instanceof Element)) return;
+  const button = event.target.closest<HTMLButtonElement>(
+    ".copy-button[data-model-id]"
+  );
+  if (!button) return;
+
+  const modelId = button.dataset.modelId;
+  if (modelId) void copyModelId(button, modelId);
+});
 
 ///////////////////////////////////
 // Initialize State from URL
@@ -217,24 +405,37 @@ search.addEventListener("keydown", (e) => {
 function initializeFromURL() {
   const params = getQueryParams();
 
-  (() => {
-    const searchQuery = params.get("search");
-    if (!searchQuery) return;
-    search.value = searchQuery;
-    filterTable(searchQuery);
-  })();
+  search.value = params.get("search") ?? "";
 
-  (() => {
-    const columnName = params.get("sort");
-    if (!columnName) return;
-
+  currentSort = { column: -1, direction: "asc" };
+  const columnName = params.get("sort");
+  if (columnName) {
     const columnIndex = getColumnIndexByUrlName(columnName);
-    if (columnIndex === -1) return;
+    if (columnIndex !== -1) {
+      currentSort = {
+        column: columnIndex,
+        direction: params.get("order") === "desc" ? "desc" : "asc",
+      };
+    }
+  }
 
-    const direction = (params.get("order") as "asc" | "desc") || "asc";
-    sortTable(columnIndex, direction);
-  })();
+  updateSortIndicators();
+  applyRows(false);
 }
 
-document.addEventListener("DOMContentLoaded", initializeFromURL);
+function loadRows() {
+  try {
+    allRows = window.__TABLE_DATA__.map(prepareRow);
+    lockColumnWidths();
+    isLoaded = true;
+    initializeFromURL();
+  } catch (error) {
+    console.error(error);
+    isLoaded = true;
+    visibleRows = [];
+    renderStatusRow("Failed to load model data");
+  }
+}
+
+loadRows();
 window.addEventListener("popstate", initializeFromURL);

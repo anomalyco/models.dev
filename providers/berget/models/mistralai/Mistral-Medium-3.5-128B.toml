@@ -1,0 +1,23 @@
+name = "Mistral Medium 3.5 128B"
+family = "mistral-medium"
+release_date = "2026-04-29"
+last_updated = "2026-04-29"
+attachment = true
+reasoning = true
+temperature = true
+knowledge = "2026-04"
+tool_call = true
+structured_output = true
+open_weights = true
+
+[cost]
+input = 1.65
+output = 5.5
+
+[limit]
+context = 262_144
+output = 131_072
+
+[modalities]
+input = ["image", "text"]
+output = ["text"]

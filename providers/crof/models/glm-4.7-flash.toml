@@ -1,0 +1,10 @@
+[extends]
+from = "zhipuai/glm-4.7-flash"
+
+[cost]
+input = 0.04
+output = 0.30
+cache_read = 0.008
+
+[provider]
+npm = "@ai-sdk/openai-compatible"

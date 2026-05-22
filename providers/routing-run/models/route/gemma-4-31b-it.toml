@@ -1,0 +1,18 @@
+name = "Gemma 4 31B IT"
+attachment = true
+reasoning = false
+
+[extends]
+from = "google/gemma-4-31b-it"
+
+[cost]
+input = 0.10
+output = 0.30
+
+[limit]
+context = 131_072
+output = 65_536
+
+[modalities]
+input = ["text", "image", "video"]
+output = ["text"]
