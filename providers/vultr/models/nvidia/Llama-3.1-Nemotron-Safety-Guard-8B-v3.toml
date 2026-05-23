@@ -1,0 +1,22 @@
+name = "Llama 3.1 Nemotron Safety Guard"
+family = "llama"
+attachment = false
+reasoning = false
+tool_call = false
+temperature = true
+open_weights = true
+knowledge = "2023-12"
+release_date = "2025-10-28"
+last_updated = "2025-10-28"
+
+[cost]
+input = 0.01
+output = 0.01
+
+[limit]
+context = 8_192
+output = 4_096
+
+[modalities]
+input = ["text"]
+output = ["text"]
