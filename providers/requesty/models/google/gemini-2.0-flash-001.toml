@@ -1,0 +1,22 @@
+name = "Gemini 2.0 Flash 001"
+family = "gemini"
+release_date = "2025-02-05"
+last_updated = "2025-02-05"
+attachment = true
+reasoning = false
+tool_call = true
+open_weights = false
+
+[cost]
+input = 0.1
+output = 0.4
+cache_read = 0.1
+cache_write = 0.1
+
+[limit]
+context = 1_048_576
+output = 8_192
+
+[modalities]
+input = ["text", "image", "pdf"]
+output = ["text"]

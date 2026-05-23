@@ -1,0 +1,22 @@
+name = "Kimi K2"
+family = "kimi"
+release_date = "2026-04-16"
+last_updated = "2026-04-16"
+attachment = true
+reasoning = true
+tool_call = true
+open_weights = false
+
+[cost]
+input = 0.6
+output = 2.5
+cache_read = 0.06
+cache_write = 2.5
+
+[limit]
+context = 262_144
+output = 262_144
+
+[modalities]
+input = ["text", "image", "pdf"]
+output = ["text"]

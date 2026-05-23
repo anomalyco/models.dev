@@ -1,2 +1,19 @@
+tool_call = true
+
 [extends]
-from = "openai/gpt-5.2-chat-latest"
+from = "openai/gpt-5.2"
+omit = ["limit.input"]
+
+[cost]
+input = 1.75
+output = 14
+cache_read = 0.175
+cache_write = 14
+
+[limit]
+context = 128_000
+output = 16_384
+
+[modalities]
+input = ["text", "image", "pdf"]
+output = ["text"]

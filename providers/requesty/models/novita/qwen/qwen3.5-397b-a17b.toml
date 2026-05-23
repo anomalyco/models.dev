@@ -1,0 +1,22 @@
+name = "Qwen/Qwen3.5 397b A17b"
+family = "qwen3.5"
+release_date = "2025-11-28"
+last_updated = "2025-11-28"
+attachment = true
+reasoning = true
+tool_call = true
+open_weights = false
+
+[cost]
+input = 0.6
+output = 3.6
+cache_read = 0.6
+cache_write = 3.6
+
+[limit]
+context = 262_144
+output = 65_536
+
+[modalities]
+input = ["text", "image", "pdf"]
+output = ["text"]

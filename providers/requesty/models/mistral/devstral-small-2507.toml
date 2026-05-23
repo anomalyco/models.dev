@@ -1,0 +1,18 @@
+tool_call = true
+
+[extends]
+from = "mistral/devstral-small-2507"
+
+[cost]
+input = 0.1
+output = 0.3
+cache_read = 0.1
+cache_write = 0.3
+
+[limit]
+context = 131_072
+output = 131_072
+
+[modalities]
+input = ["text"]
+output = ["text"]

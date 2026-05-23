@@ -1,0 +1,19 @@
+tool_call = true
+
+[extends]
+from = "google/gemini-3.1-pro-preview"
+omit = ["cost.tiers"]
+
+[cost]
+input = 2
+output = 12
+cache_read = 0.2
+cache_write = 4.5
+
+[limit]
+context = 1_048_576
+output = 65_535
+
+[modalities]
+input = ["text", "image", "pdf"]
+output = ["text"]

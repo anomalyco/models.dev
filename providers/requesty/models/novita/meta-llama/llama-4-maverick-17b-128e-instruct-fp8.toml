@@ -1,0 +1,22 @@
+name = "Meta Llama/Llama 4 Maverick 17b 128e Instruct Fp8"
+family = "llama"
+release_date = "2025-01-30"
+last_updated = "2025-01-30"
+attachment = false
+reasoning = false
+tool_call = false
+open_weights = false
+
+[cost]
+input = 0.2
+output = 0.85
+cache_read = 0.2
+cache_write = 0.2
+
+[limit]
+context = 1_048_576
+output = 1_048_576
+
+[modalities]
+input = ["text"]
+output = ["text"]

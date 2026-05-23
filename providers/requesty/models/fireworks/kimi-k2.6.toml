@@ -1,0 +1,21 @@
+name = "Kimi K2.6"
+family = "kimi-k2.6"
+release_date = "2026-04-24"
+last_updated = "2026-04-24"
+attachment = true
+reasoning = true
+tool_call = true
+open_weights = false
+
+[cost]
+input = 0.95
+output = 4
+cache_read = 0.16
+
+[limit]
+context = 262_144
+output = 32_768
+
+[modalities]
+input = ["text", "image", "pdf"]
+output = ["text"]

@@ -1,0 +1,19 @@
+attachment = false
+tool_call = true
+
+[extends]
+from = "mistral/pixtral-large-latest"
+
+[cost]
+input = 2
+output = 5
+cache_read = 2
+cache_write = 5
+
+[limit]
+context = 131_072
+output = 131_072
+
+[modalities]
+input = ["text"]
+output = ["text"]

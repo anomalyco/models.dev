@@ -1,0 +1,22 @@
+name = "O1"
+family = "o"
+release_date = "2024-12-17"
+last_updated = "2024-12-17"
+attachment = true
+reasoning = true
+tool_call = true
+open_weights = false
+
+[cost]
+input = 15
+output = 60
+cache_read = 7.5
+cache_write = 15
+
+[limit]
+context = 200_000
+output = 100_000
+
+[modalities]
+input = ["text", "image", "pdf"]
+output = ["text"]

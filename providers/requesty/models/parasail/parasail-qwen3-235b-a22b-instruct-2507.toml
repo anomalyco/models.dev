@@ -1,0 +1,21 @@
+name = "Parasail Qwen3 235b A22b Instruct 2507"
+release_date = "2025-07-21"
+last_updated = "2025-07-21"
+attachment = false
+reasoning = false
+tool_call = true
+open_weights = false
+
+[cost]
+input = 0.15
+output = 0.85
+cache_read = 0.15
+cache_write = 0.85
+
+[limit]
+context = 262_144
+output = 8_192
+
+[modalities]
+input = ["text"]
+output = ["text"]

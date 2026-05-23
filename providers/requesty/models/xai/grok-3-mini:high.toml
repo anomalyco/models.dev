@@ -1,0 +1,22 @@
+name = "Grok 3 Mini"
+family = "grok"
+release_date = "2025-10-16"
+last_updated = "2025-10-16"
+attachment = false
+reasoning = true
+tool_call = true
+open_weights = false
+
+[cost]
+input = 0.3
+output = 0.5
+cache_read = 0.3
+cache_write = 0.3
+
+[limit]
+context = 131_072
+output = 131_072
+
+[modalities]
+input = ["text"]
+output = ["text"]

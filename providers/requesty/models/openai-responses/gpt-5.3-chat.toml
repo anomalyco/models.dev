@@ -1,0 +1,22 @@
+name = "Gpt 5.3 Chat"
+family = "gpt"
+release_date = "2026-03-18"
+last_updated = "2026-03-18"
+attachment = true
+reasoning = true
+tool_call = true
+open_weights = false
+
+[cost]
+input = 1.75
+output = 14
+cache_read = 0.175
+cache_write = 14
+
+[limit]
+context = 128_000
+output = 16_384
+
+[modalities]
+input = ["text", "image", "pdf"]
+output = ["text"]

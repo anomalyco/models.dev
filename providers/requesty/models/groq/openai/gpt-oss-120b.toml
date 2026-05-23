@@ -1,0 +1,22 @@
+name = "Openai/Gpt Oss 120b"
+family = "gpt-oss"
+release_date = "2025-08-05"
+last_updated = "2025-08-05"
+attachment = false
+reasoning = false
+tool_call = true
+open_weights = false
+
+[cost]
+input = 0.15
+output = 0.75
+cache_read = 0.15
+cache_write = 0.75
+
+[limit]
+context = 131_072
+output = 32_768
+
+[modalities]
+input = ["text"]
+output = ["text"]

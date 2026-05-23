@@ -1,0 +1,18 @@
+tool_call = true
+
+[extends]
+from = "mistral/mistral-small-2603"
+
+[cost]
+input = 0.15
+output = 0.6
+cache_read = 0.15
+cache_write = 0.15
+
+[limit]
+context = 256_000
+output = 256_000
+
+[modalities]
+input = ["text", "image", "pdf"]
+output = ["text"]

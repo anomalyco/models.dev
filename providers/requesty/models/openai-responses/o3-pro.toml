@@ -1,0 +1,18 @@
+tool_call = true
+
+[extends]
+from = "openai/o3-pro"
+
+[cost]
+input = 20
+output = 80
+cache_read = 20
+cache_write = 20
+
+[limit]
+context = 200_000
+output = 100_000
+
+[modalities]
+input = ["text", "image", "pdf"]
+output = ["text"]

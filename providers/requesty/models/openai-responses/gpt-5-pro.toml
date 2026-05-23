@@ -1,0 +1,19 @@
+tool_call = true
+
+[extends]
+from = "openai/gpt-5-pro"
+omit = ["limit.input"]
+
+[cost]
+input = 15
+output = 120
+cache_read = 15
+cache_write = 120
+
+[limit]
+context = 400_000
+output = 272_000
+
+[modalities]
+input = ["text", "image", "pdf"]
+output = ["text"]

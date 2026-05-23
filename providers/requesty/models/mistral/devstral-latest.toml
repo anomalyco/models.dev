@@ -1,0 +1,22 @@
+name = "Devstral Latest"
+family = "devstral"
+release_date = "2025-12-10"
+last_updated = "2025-12-10"
+attachment = false
+reasoning = false
+tool_call = true
+open_weights = false
+
+[cost]
+input = 0.4
+output = 2
+cache_read = 0.4
+cache_write = 2
+
+[limit]
+context = 256_000
+output = 256_000
+
+[modalities]
+input = ["text"]
+output = ["text"]

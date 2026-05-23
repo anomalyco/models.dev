@@ -1,9 +1,19 @@
+tool_call = true
+
 [extends]
 from = "google/gemini-2.5-pro"
-omit = ["structured_output"]
+omit = ["cost.tiers"]
 
 [cost]
 input = 1.25
-output = 10.00
+output = 10
 cache_read = 0.31
 cache_write = 2.375
+
+[limit]
+context = 1_048_576
+output = 65_535
+
+[modalities]
+input = ["text", "image", "pdf"]
+output = ["text"]

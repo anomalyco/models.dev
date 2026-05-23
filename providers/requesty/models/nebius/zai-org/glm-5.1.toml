@@ -1,0 +1,22 @@
+name = "Zai Org/Glm 5.1"
+family = "glm"
+release_date = "2026-05-20"
+last_updated = "2026-05-20"
+attachment = false
+reasoning = true
+tool_call = true
+open_weights = false
+
+[cost]
+input = 1.4
+output = 4.4
+cache_read = 1.4
+cache_write = 4.4
+
+[limit]
+context = 200_000
+output = 200_000
+
+[modalities]
+input = ["text"]
+output = ["text"]

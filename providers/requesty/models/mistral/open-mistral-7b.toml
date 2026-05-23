@@ -1,0 +1,18 @@
+tool_call = true
+
+[extends]
+from = "mistral/open-mistral-7b"
+
+[cost]
+input = 0.25
+output = 0.25
+cache_read = 0.25
+cache_write = 0.25
+
+[limit]
+context = 32_768
+output = 32_768
+
+[modalities]
+input = ["text"]
+output = ["text"]

@@ -1,0 +1,21 @@
+name = "Minimax M2.5"
+family = "minimax-m2.5"
+release_date = "2026-04-02"
+last_updated = "2026-04-02"
+attachment = false
+reasoning = false
+tool_call = true
+open_weights = false
+
+[cost]
+input = 0.3
+output = 1.2
+cache_read = 0.03
+
+[limit]
+context = 196_608
+output = 24_576
+
+[modalities]
+input = ["text"]
+output = ["text"]

@@ -1,0 +1,22 @@
+name = "Deepseek V3.2"
+family = "deepseek"
+release_date = "2026-03-19"
+last_updated = "2026-03-19"
+attachment = true
+reasoning = true
+tool_call = true
+open_weights = false
+
+[cost]
+input = 0.56
+output = 1.68
+cache_read = 0.056
+cache_write = 1.68
+
+[limit]
+context = 163_840
+output = 65_535
+
+[modalities]
+input = ["text", "image", "pdf"]
+output = ["text", "image"]

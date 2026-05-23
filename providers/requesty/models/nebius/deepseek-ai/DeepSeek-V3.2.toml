@@ -1,0 +1,22 @@
+name = "Deepseek Ai/DeepSeek V3.2"
+family = "deepseek"
+release_date = "2026-02-28"
+last_updated = "2026-02-28"
+attachment = false
+reasoning = true
+tool_call = true
+open_weights = false
+
+[cost]
+input = 0.3
+output = 0.45
+cache_read = 0.3
+cache_write = 0.3
+
+[limit]
+context = 164_000
+output = 128_000
+
+[modalities]
+input = ["text"]
+output = ["text"]

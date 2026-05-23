@@ -1,0 +1,18 @@
+tool_call = true
+
+[extends]
+from = "openai/o4-mini-deep-research"
+
+[cost]
+input = 2
+output = 8
+cache_read = 0.5
+cache_write = 2
+
+[limit]
+context = 100_000
+output = 200_000
+
+[modalities]
+input = ["text", "image", "pdf"]
+output = ["text"]

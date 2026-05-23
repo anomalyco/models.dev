@@ -1,0 +1,19 @@
+attachment = false
+tool_call = true
+
+[extends]
+from = "deepseek/deepseek-chat"
+
+[cost]
+input = 0.14
+output = 0.28
+cache_read = 0.028
+cache_write = 0.14
+
+[limit]
+context = 1_000_000
+output = 384_000
+
+[modalities]
+input = ["text"]
+output = ["text"]

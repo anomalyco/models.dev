@@ -1,0 +1,22 @@
+name = "Meta Llama/Llama 3.3 70B Instruct Turbo"
+family = "llama"
+release_date = "2025-01-30"
+last_updated = "2025-01-30"
+attachment = false
+reasoning = false
+tool_call = true
+open_weights = false
+
+[cost]
+input = 0.88
+output = 0.88
+cache_read = 0.88
+cache_write = 0.88
+
+[limit]
+context = 131_072
+output = 131_072
+
+[modalities]
+input = ["text"]
+output = ["text"]

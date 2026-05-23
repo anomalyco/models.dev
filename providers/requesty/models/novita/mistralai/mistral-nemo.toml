@@ -1,0 +1,22 @@
+name = "Mistralai/Mistral Nemo"
+family = "mistral-nemo"
+release_date = "2024-06-10"
+last_updated = "2024-06-10"
+attachment = false
+reasoning = false
+tool_call = false
+open_weights = false
+
+[cost]
+input = 0.17
+output = 0.17
+cache_read = 0.17
+cache_write = 0.17
+
+[limit]
+context = 131_072
+output = 131_072
+
+[modalities]
+input = ["text"]
+output = ["text"]

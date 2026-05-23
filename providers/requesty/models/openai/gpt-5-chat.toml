@@ -1,23 +1,21 @@
-name = "GPT-5 Chat (latest)"
-family = "gpt-codex"
-release_date = "2025-08-07"
-last_updated = "2025-08-07"
-attachment = true
-reasoning = true
 temperature = true
-knowledge = "2024-09-30"
-tool_call = false
+tool_call = true
 structured_output = true
-open_weights = false
+
+[extends]
+from = "openai/gpt-5"
+omit = ["limit.input"]
 
 [cost]
 input = 1.25
-output = 10.00
+output = 10
+cache_read = 0.125
+cache_write = 10
 
 [limit]
-context = 400_000
-output = 128_000
+context = 128_000
+output = 16_384
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image", "pdf"]
 output = ["text"]

@@ -1,0 +1,22 @@
+name = "Deepseek/Deepseek R1 Distill Qwen 14b"
+family = "deepseek"
+release_date = "2025-01-30"
+last_updated = "2025-01-30"
+attachment = false
+reasoning = false
+tool_call = true
+open_weights = false
+
+[cost]
+input = 0.15
+output = 0.15
+cache_read = 0.15
+cache_write = 0.15
+
+[limit]
+context = 128_000
+output = 128_000
+
+[modalities]
+input = ["text"]
+output = ["text"]

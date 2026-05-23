@@ -1,0 +1,18 @@
+tool_call = true
+
+[extends]
+from = "moonshotai/kimi-k2-turbo-preview"
+
+[cost]
+input = 1.2
+output = 5
+cache_read = 0.3
+cache_write = 5
+
+[limit]
+context = 131_072
+output = 131_072
+
+[modalities]
+input = ["text"]
+output = ["text"]

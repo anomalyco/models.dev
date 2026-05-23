@@ -1,0 +1,22 @@
+name = "Gemini 3 Flash Preview"
+family = "gemini"
+release_date = "2025-12-18"
+last_updated = "2025-12-18"
+attachment = true
+reasoning = true
+tool_call = true
+open_weights = false
+
+[cost]
+input = 0.5
+output = 3
+cache_read = 0.05
+cache_write = 1
+
+[limit]
+context = 1_048_576
+output = 65_535
+
+[modalities]
+input = ["text", "image", "pdf"]
+output = ["text"]

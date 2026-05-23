@@ -1,0 +1,18 @@
+tool_call = true
+
+[extends]
+from = "mistral/codestral-latest"
+
+[cost]
+input = 0.3
+output = 0.9
+cache_read = 0.3
+cache_write = 0.9
+
+[limit]
+context = 131_072
+output = 131_072
+
+[modalities]
+input = ["text"]
+output = ["text"]

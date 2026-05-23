@@ -1,0 +1,22 @@
+name = "Zai Org/GLM 4.5 Air"
+family = "glm"
+release_date = "2025-07-30"
+last_updated = "2025-07-30"
+attachment = false
+reasoning = false
+tool_call = true
+open_weights = false
+
+[cost]
+input = 0.2
+output = 1.1
+cache_read = 0.2
+cache_write = 1.1
+
+[limit]
+context = 131_072
+output = 4_096
+
+[modalities]
+input = ["text"]
+output = ["text"]

@@ -1,0 +1,20 @@
+reasoning = false
+tool_call = true
+
+[extends]
+from = "google/gemini-3.1-flash-lite-preview"
+omit = ["cost.input_audio"]
+
+[cost]
+input = 0.25
+output = 1.5
+cache_read = 0.025
+cache_write = 0.08333
+
+[limit]
+context = 1_048_576
+output = 65_535
+
+[modalities]
+input = ["text", "image", "pdf"]
+output = ["text"]

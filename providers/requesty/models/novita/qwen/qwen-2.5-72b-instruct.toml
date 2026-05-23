@@ -1,0 +1,22 @@
+name = "Qwen/Qwen 2.5 72b Instruct"
+family = "qwen"
+release_date = "2025-04-28"
+last_updated = "2025-04-28"
+attachment = false
+reasoning = false
+tool_call = true
+open_weights = false
+
+[cost]
+input = 0.38
+output = 0.4
+cache_read = 0.38
+cache_write = 0.38
+
+[limit]
+context = 32_000
+output = 32_000
+
+[modalities]
+input = ["text"]
+output = ["text"]

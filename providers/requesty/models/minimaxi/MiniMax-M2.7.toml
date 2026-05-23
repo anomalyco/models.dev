@@ -1,0 +1,19 @@
+attachment = true
+tool_call = true
+
+[extends]
+from = "minimax/MiniMax-M2.7"
+
+[cost]
+input = 0.3
+output = 1.2
+cache_read = 0.06
+cache_write = 1.2
+
+[limit]
+context = 200_000
+output = 128_000
+
+[modalities]
+input = ["text", "image", "pdf"]
+output = ["text"]

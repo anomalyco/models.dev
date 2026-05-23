@@ -1,0 +1,18 @@
+tool_call = true
+
+[extends]
+from = "openai/o3-deep-research"
+
+[cost]
+input = 10
+output = 40
+cache_read = 2.5
+cache_write = 10
+
+[limit]
+context = 100_000
+output = 200_000
+
+[modalities]
+input = ["text", "image", "pdf"]
+output = ["text"]

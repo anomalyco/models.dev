@@ -1,0 +1,22 @@
+name = "Microsoft/Phi 4"
+family = "phi"
+release_date = "2025-05-01"
+last_updated = "2025-05-01"
+attachment = false
+reasoning = false
+tool_call = false
+open_weights = false
+
+[cost]
+input = 0.07
+output = 0.14
+cache_read = 0.07
+cache_write = 0.07
+
+[limit]
+context = 16_384
+output = 16_384
+
+[modalities]
+input = ["text"]
+output = ["text"]

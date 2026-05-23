@@ -1,0 +1,19 @@
+reasoning = false
+tool_call = true
+
+[extends]
+from = "moonshotai/kimi-k2-thinking-turbo"
+
+[cost]
+input = 0.6
+output = 2.5
+cache_read = 0.15
+cache_write = 0.6
+
+[limit]
+context = 131_072
+output = 131_072
+
+[modalities]
+input = ["text"]
+output = ["text"]

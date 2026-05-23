@@ -1,0 +1,21 @@
+name = "Parasail Gemma3 27b It"
+release_date = "2025-03-14"
+last_updated = "2025-03-14"
+attachment = false
+reasoning = false
+tool_call = true
+open_weights = false
+
+[cost]
+input = 0.3
+output = 0.5
+cache_read = 0.3
+cache_write = 0.5
+
+[limit]
+context = 128_000
+output = 8_192
+
+[modalities]
+input = ["text"]
+output = ["text"]

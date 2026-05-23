@@ -1,0 +1,22 @@
+name = "Deepseek Ai/DeepSeek R1"
+family = "deepseek"
+release_date = "2025-01-30"
+last_updated = "2025-01-30"
+attachment = false
+reasoning = false
+tool_call = true
+open_weights = false
+
+[cost]
+input = 0.85
+output = 2.5
+cache_read = 0.85
+cache_write = 0.85
+
+[limit]
+context = 64_000
+output = 8_192
+
+[modalities]
+input = ["text"]
+output = ["text"]

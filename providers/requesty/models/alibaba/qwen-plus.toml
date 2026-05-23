@@ -1,0 +1,22 @@
+name = "Qwen Plus"
+family = "qwen"
+release_date = "2025-04-28"
+last_updated = "2025-04-28"
+attachment = false
+reasoning = false
+tool_call = true
+open_weights = false
+
+[cost]
+input = 0.4
+output = 1.2
+cache_read = 0.4
+cache_write = 0.4
+
+[limit]
+context = 131_072
+output = 131_072
+
+[modalities]
+input = ["text"]
+output = ["text"]

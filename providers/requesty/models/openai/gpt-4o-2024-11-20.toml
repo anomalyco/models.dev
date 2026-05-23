@@ -1,0 +1,18 @@
+tool_call = true
+
+[extends]
+from = "openai/gpt-4o-2024-11-20"
+
+[cost]
+input = 2.5
+output = 10
+cache_read = 1.25
+cache_write = 2.5
+
+[limit]
+context = 128_000
+output = 16_384
+
+[modalities]
+input = ["text", "image", "pdf"]
+output = ["text"]

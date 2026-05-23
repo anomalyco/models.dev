@@ -1,0 +1,22 @@
+name = "O4 Mini"
+family = "o"
+release_date = "2025-04-16"
+last_updated = "2025-04-16"
+attachment = false
+reasoning = true
+tool_call = true
+open_weights = false
+
+[cost]
+input = 1.1
+output = 4.4
+cache_read = 0.275
+cache_write = 1.1
+
+[limit]
+context = 200_000
+output = 100_000
+
+[modalities]
+input = ["text"]
+output = ["text"]

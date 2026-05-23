@@ -1,0 +1,19 @@
+tool_call = true
+
+[extends]
+from = "xai/grok-4.3"
+omit = ["cost.tiers"]
+
+[cost]
+input = 1.25
+output = 2.5
+cache_read = 0.2
+cache_write = 1.25
+
+[limit]
+context = 1_000_000
+output = 1_000_000
+
+[modalities]
+input = ["text", "image", "pdf"]
+output = ["text"]

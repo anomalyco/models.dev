@@ -1,0 +1,19 @@
+attachment = false
+tool_call = true
+
+[extends]
+from = "openai/o4-mini"
+
+[cost]
+input = 0.55
+output = 2.2
+cache_read = 0.138
+cache_write = 0.55
+
+[limit]
+context = 200_000
+output = 100_000
+
+[modalities]
+input = ["text"]
+output = ["text"]

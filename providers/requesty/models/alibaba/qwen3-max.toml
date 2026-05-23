@@ -1,0 +1,19 @@
+name = "Qwen3 Max"
+release_date = "2025-09-10"
+last_updated = "2025-09-10"
+attachment = true
+reasoning = false
+tool_call = true
+open_weights = false
+
+[cost]
+input = 0.861
+output = 3.441
+
+[limit]
+context = 262_144
+output = 65_536
+
+[modalities]
+input = ["text", "image", "pdf"]
+output = ["text"]

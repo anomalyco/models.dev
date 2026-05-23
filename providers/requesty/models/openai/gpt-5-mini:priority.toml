@@ -1,0 +1,19 @@
+tool_call = true
+
+[extends]
+from = "openai/gpt-5-mini"
+omit = ["limit.input"]
+
+[cost]
+input = 0.45
+output = 3.6
+cache_read = 0.045
+cache_write = 3.6
+
+[limit]
+context = 400_000
+output = 128_000
+
+[modalities]
+input = ["text", "image", "pdf"]
+output = ["text"]

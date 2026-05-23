@@ -1,0 +1,22 @@
+name = "Openai Responses/Gpt 4.1"
+family = "gpt"
+release_date = "2025-04-14"
+last_updated = "2025-04-14"
+attachment = true
+reasoning = false
+tool_call = true
+open_weights = false
+
+[cost]
+input = 2
+output = 8
+cache_read = 0.5
+cache_write = 2
+
+[limit]
+context = 1_047_576
+output = 32_768
+
+[modalities]
+input = ["text", "image", "pdf"]
+output = ["text"]

@@ -1,0 +1,22 @@
+name = "Mistral Small 2503"
+family = "mistral-small"
+release_date = "2024-02-24"
+last_updated = "2024-02-24"
+attachment = false
+reasoning = false
+tool_call = true
+open_weights = false
+
+[cost]
+input = 0.1
+output = 0.3
+cache_read = 0.1
+cache_write = 0.1
+
+[limit]
+context = 32_768
+output = 32_768
+
+[modalities]
+input = ["text"]
+output = ["text"]

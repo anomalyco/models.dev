@@ -1,0 +1,22 @@
+name = "Openai/Gpt Oss 20b"
+family = "gpt-oss"
+release_date = "2025-08-05"
+last_updated = "2025-08-05"
+attachment = false
+reasoning = false
+tool_call = true
+open_weights = false
+
+[cost]
+input = 0.1
+output = 0.5
+cache_read = 0.1
+cache_write = 0.5
+
+[limit]
+context = 131_072
+output = 32_768
+
+[modalities]
+input = ["text"]
+output = ["text"]

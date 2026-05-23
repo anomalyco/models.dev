@@ -1,0 +1,22 @@
+name = "Meta Llama/Meta Llama 3.1 70B Instruct"
+family = "llama"
+release_date = "2025-02-06"
+last_updated = "2025-02-06"
+attachment = false
+reasoning = false
+tool_call = true
+open_weights = false
+
+[cost]
+input = 0.23
+output = 0.4
+cache_read = 0.23
+cache_write = 0.23
+
+[limit]
+context = 130_815
+output = 130_815
+
+[modalities]
+input = ["text"]
+output = ["text"]

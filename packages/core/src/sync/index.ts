@@ -6,6 +6,7 @@ import { AuthoredModel, AuthoredModelShape } from "../schema.js";
 import { cloudflareWorkersAi } from "./providers/cloudflare-workers-ai.js";
 import { google } from "./providers/google.js";
 import { openrouter } from "./providers/openrouter.js";
+import { requesty } from "./providers/requesty.js";
 import { xai } from "./providers/xai.js";
 
 const ExtendsConfig = z
@@ -73,16 +74,18 @@ export const providers: {
   "cloudflare-workers-ai": SyncProvider<any>;
   google: SyncProvider<any>;
   openrouter: SyncProvider<any>;
+  requesty: SyncProvider<any>;
   xai: SyncProvider<any>;
 } = {
   "cloudflare-workers-ai": cloudflareWorkersAi,
   google,
   openrouter,
+  requesty,
   xai,
 };
 
 export const groups = {
-  aggregators: ["openrouter"],
+  aggregators: ["openrouter", "requesty"],
   cloudflare: ["cloudflare-workers-ai"],
   direct: ["google", "xai"],
 } as const;

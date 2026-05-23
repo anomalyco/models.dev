@@ -1,0 +1,22 @@
+name = "Claude Haiku 4 5"
+family = "claude-haiku"
+release_date = "2025-05-22"
+last_updated = "2025-05-22"
+attachment = true
+reasoning = false
+tool_call = true
+open_weights = false
+
+[cost]
+input = 1
+output = 5
+cache_read = 0.1
+cache_write = 1.25
+
+[limit]
+context = 200_000
+output = 64_000
+
+[modalities]
+input = ["text", "image", "pdf"]
+output = ["text"]

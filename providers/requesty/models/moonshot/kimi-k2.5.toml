@@ -1,0 +1,19 @@
+attachment = true
+tool_call = true
+
+[extends]
+from = "moonshotai/kimi-k2.5"
+
+[cost]
+input = 0.6
+output = 3
+cache_read = 0.1
+cache_write = 0.6
+
+[limit]
+context = 262_144
+output = 262_144
+
+[modalities]
+input = ["text", "image", "pdf"]
+output = ["text"]

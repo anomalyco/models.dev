@@ -1,0 +1,22 @@
+name = "GLM 4.5"
+family = "glm"
+release_date = "2025-10-16"
+last_updated = "2025-10-16"
+attachment = false
+reasoning = true
+tool_call = true
+open_weights = false
+
+[cost]
+input = 0.6
+output = 2.2
+cache_read = 0.11
+cache_write = 0.6
+
+[limit]
+context = 131_072
+output = 98_304
+
+[modalities]
+input = ["text"]
+output = ["text"]

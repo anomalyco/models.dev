@@ -1,0 +1,22 @@
+name = "Mistral Medium 3 5"
+family = "mistral-medium"
+release_date = "2026-05-20"
+last_updated = "2026-05-20"
+attachment = true
+reasoning = true
+tool_call = true
+open_weights = false
+
+[cost]
+input = 1.5
+output = 7.5
+cache_read = 1.5
+cache_write = 1.5
+
+[limit]
+context = 262_144
+output = 262_144
+
+[modalities]
+input = ["text", "image", "pdf"]
+output = ["text"]

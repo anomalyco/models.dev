@@ -1,0 +1,22 @@
+name = "Deepseek/Deepseek V3 0324"
+family = "deepseek"
+release_date = "2025-05-30"
+last_updated = "2025-05-30"
+attachment = false
+reasoning = false
+tool_call = true
+open_weights = false
+
+[cost]
+input = 0.4
+output = 1.3
+cache_read = 0.4
+cache_write = 0.4
+
+[limit]
+context = 128_000
+output = 128_000
+
+[modalities]
+input = ["text"]
+output = ["text"]

@@ -1,0 +1,22 @@
+name = "Grok 4 Fast Non Reasoning"
+family = "grok"
+release_date = "2025-10-16"
+last_updated = "2025-10-16"
+attachment = false
+reasoning = false
+tool_call = true
+open_weights = false
+
+[cost]
+input = 0.2
+output = 0.5
+cache_read = 0.05
+cache_write = 0.2
+
+[limit]
+context = 2_000_000
+output = 2_000_000
+
+[modalities]
+input = ["text"]
+output = ["text"]
