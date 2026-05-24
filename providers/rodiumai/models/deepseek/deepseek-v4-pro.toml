@@ -1,0 +1,20 @@
+name = "DeepSeek V4 Pro"
+family = "deepseek"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+open_weights = false
+
+[cost]
+input = 0.435
+output = 0.87
+cache_read = 0.003625
+
+[limit]
+context = 1_000_000
+output = 384_000
+
+[modalities]
+input = ["text"]
+output = ["text"]
