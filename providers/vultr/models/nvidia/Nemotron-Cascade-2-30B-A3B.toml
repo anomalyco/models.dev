@@ -1,7 +1,7 @@
-name = "DeepSeek V3.2"
-family = "deepseek"
+name = "NVIDIA Nemotron Cascade 2"
+family = "nemotron"
 attachment = false
-reasoning = false
+reasoning = true
 tool_call = true
 temperature = true
 open_weights = true
@@ -10,12 +10,12 @@ release_date = "2025-12-01"
 last_updated = "2025-12-01"
 
 [cost]
-input = 0.55
-output = 1.65
+input = 0.15
+output = 0.60
 
 [limit]
-context = 127_000
-output = 4_096
+context = 262_144
+output = 131_072
 
 [modalities]
 input = ["text"]
