@@ -337,6 +337,9 @@ export const ModelFamilyValues = [
   "auto",
   "model-router",
 
+  // RodiumAi smart routing tiers
+  "rodium-smart",
+
   // V0
   "v0",
 
