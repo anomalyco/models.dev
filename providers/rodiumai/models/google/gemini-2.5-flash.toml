@@ -1,0 +1,20 @@
+name = "Gemini 2.5 Flash"
+family = "gemini"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+open_weights = false
+
+[cost]
+input = 0.3
+output = 2.5
+cache_read = 0.3
+
+[limit]
+context = 1_000_000
+output = 65_536
+
+[modalities]
+input = ["text","image","video","audio","pdf"]
+output = ["text"]

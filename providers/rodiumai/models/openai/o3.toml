@@ -1,0 +1,20 @@
+name = "o3"
+family = "o-series"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+open_weights = false
+
+[cost]
+input = 2
+output = 8
+cache_read = 0.5
+
+[limit]
+context = 200_000
+output = 100_000
+
+[modalities]
+input = ["text","image","pdf"]
+output = ["text"]
