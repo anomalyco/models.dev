@@ -1,0 +1,25 @@
+name = "Laguna XS.2"
+release_date = "2026-04-28"
+last_updated = "2026-04-28"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+open_weights = true
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.0
+output = 0.0
+cache_read = 0.0
+cache_write = 0.0
+
+[limit]
+context = 131_040
+output = 8_192
+
+[modalities]
+input = ["text"]
+output = ["text"]
