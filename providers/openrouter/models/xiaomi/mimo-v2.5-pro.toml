@@ -7,13 +7,13 @@ from = "xiaomi/mimo-v2.5-pro"
 omit = ["cost.tiers", "cost.context_over_200k"]
 
 [cost]
-input = 1
-output = 3
-cache_read = 0.2
+input = 0.435
+output = 0.87
+cache_read = 0.0036
 
 [limit]
 context = 1_048_576
-output = 16_384
+output = 131_072
 
 [modalities]
 input = ["text"]
