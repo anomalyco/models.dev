@@ -1,12 +1,11 @@
+[extends]
+from = "mistral/mistral-small-2506"
+
 name = "Mistral Small 3.2"
-family = "mistral-small"
 release_date = "2025-06-20"
 last_updated = "2025-06-20"
-attachment = false
-reasoning = false
-temperature = true
-tool_call = true
 knowledge = "2023-10"
+tool_call = true
 open_weights = true
 
 [cost]
@@ -15,8 +14,3 @@ output = 0.20
 
 [limit]
 context = 128000
-output = 128000
-
-[modalities]
-input = ["text", "image"]
-output = ["text"]
