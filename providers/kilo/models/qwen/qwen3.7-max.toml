@@ -1,6 +1,6 @@
-name = "StepFun: Step 3.5 Flash (free)"
+name = "Qwen: Qwen3.7 Max"
 release_date = "2025-08-26"
-last_updated = "2026-05-01"
+last_updated = "2026-05-27"
 attachment = false
 reasoning = true
 tool_call = true
@@ -8,12 +8,14 @@ temperature = true
 open_weights = false
 
 [cost]
-input = 0.0
-output = 0.0
+input = 1.625
+output = 4.875
+cache_read = 0.1625
+cache_write = 2.03125
 
 [limit]
-context = 262144
-output = 262144
+context = 1000000
+output = 65536
 
 [modalities]
 input = ["text"]
