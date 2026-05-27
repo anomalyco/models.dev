@@ -1,0 +1,24 @@
+name = "Devstral Medium"
+family = "devstral"
+release_date = "2025-07-10"
+last_updated = "2025-07-10"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = true
+structured_output = true
+knowledge = "2025-06-30"
+open_weights = false
+
+[cost]
+input = 0.4
+output = 2
+cache_read = 0.04
+
+[limit]
+context = 131_072
+output = 131_072
+
+[modalities]
+input = ["text", "pdf"]
+output = ["text"]

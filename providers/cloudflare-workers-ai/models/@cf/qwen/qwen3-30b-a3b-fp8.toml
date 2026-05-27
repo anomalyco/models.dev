@@ -1,0 +1,22 @@
+name = "Qwen3 30B A3b fp8"
+family = "qwen"
+release_date = "2025-04-30"
+last_updated = "2025-04-30"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = false
+open_weights = true
+
+[cost]
+input = 0.0509
+output = 0.335
+
+[limit]
+context = 32_768
+output = 32_768
+
+[modalities]
+input = ["text"]
+output = ["text"]

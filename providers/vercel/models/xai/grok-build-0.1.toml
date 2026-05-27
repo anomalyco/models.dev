@@ -1,0 +1,22 @@
+name = "Grok Build 0.1"
+family = "grok-build"
+attachment = true
+reasoning = true
+tool_call = true
+temperature = true
+release_date = "2026-05-20"
+last_updated = "2026-05-21"
+open_weights = false
+
+[cost]
+input = 1
+output = 2
+cache_read = 0.19999999999999998
+
+[limit]
+context = 256_000
+output = 256_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

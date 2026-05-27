@@ -1,0 +1,20 @@
+name = "paligemma"
+release_date = "2024-05-14"
+last_updated = "2024-08-26"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = false
+open_weights = true
+
+[cost]
+input = 0.0
+output = 0.0
+
+[limit]
+context = 128_000
+output = 8_192
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

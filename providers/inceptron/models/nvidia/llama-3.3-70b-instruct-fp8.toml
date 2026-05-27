@@ -1,0 +1,15 @@
+name = "Llama 3.3 70B Instruct"
+structured_output = true
+
+[extends]
+from = "llama/llama-3.3-70b-instruct"
+
+[cost]
+input = 0.12
+output = 0.38
+cache_read = 0
+cache_write = 0
+
+[limit]
+context = 131072
+output = 131072

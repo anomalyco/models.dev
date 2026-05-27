@@ -5,20 +5,20 @@ last_updated = "2025-11-13"
 attachment = true
 reasoning = true
 temperature = false
+knowledge = "2024-09-30"
 tool_call = true
 structured_output = true
-knowledge = "2024-09-30"
 open_weights = false
 
 [cost]
 input = 1.25
-output = 10
+output = 10.00
 cache_read = 0.125
 
 [limit]
 context = 400_000
-output = 128_000
 input = 272_000
+output = 128_000
 
 [modalities]
 input = ["text", "image"]

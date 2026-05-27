@@ -1,0 +1,24 @@
+name = "Gemini 3.5 Flash"
+family = "gemini-flash"
+attachment = true
+reasoning = true
+tool_call = true
+structured_output = true
+temperature = true
+release_date = "2026-05-22"
+last_updated = "2026-05-25"
+open_weights = false
+
+[cost]
+input = 1.55
+output = 9.45
+cache_read = 0.155
+cache_write = 0.086
+
+[limit]
+context = 1_000_000
+output = 65_536
+
+[modalities]
+input = ["text", "image", "audio", "video"]
+output = ["text"]

@@ -1,0 +1,21 @@
+name = "Qwen3.6 35B A3B"
+
+release_date = "2026-05-01"
+last_updated = "2026-05-22"
+knowledge = "2025-04"
+status = "beta"
+
+[extends]
+from = "alibaba/qwen3.6-35b-a3b"
+
+[cost]
+input = 0.25
+output = 1.50
+
+[limit]
+context = 128_000
+output = 16_384
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

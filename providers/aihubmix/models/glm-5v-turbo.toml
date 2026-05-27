@@ -1,0 +1,26 @@
+name = "GLM 5 Vision Turbo"
+family = "glmv"
+release_date = "2026-05-09"
+last_updated = "2026-05-09"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.7042
+output = 3.09848
+cache_read = 0.169008
+
+[limit]
+context = 200_000
+output = 128_000
+
+[modalities]
+input = ["text", "image", "video"]
+output = ["text"]

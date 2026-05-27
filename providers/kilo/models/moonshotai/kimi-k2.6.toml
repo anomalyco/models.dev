@@ -1,6 +1,7 @@
 name = "MoonshotAI: Kimi K2.6"
 release_date = "2026-04-20"
-last_updated = "2026-04-20"
+last_updated = "2026-05-12"
+
 attachment = true
 reasoning = true
 temperature = true
@@ -8,17 +9,14 @@ tool_call = true
 structured_output = true
 open_weights = true
 
-[interleaved]
-field = "reasoning_details"
-
 [cost]
-input = 0.95
-output = 4.00
-cache_read = 0.16
+input = 0.75
+output = 3.50
+cache_read = 0.375
 
 [limit]
 context = 262144
-output = 262144
+output = 65535
 
 [modalities]
 input = ["text", "image"]

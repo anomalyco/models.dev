@@ -1,0 +1,35 @@
+name = "Claude Opus 4.7 Thinking"
+family = "claude-opus"
+release_date = "2026-04-16"
+last_updated = "2026-04-16"
+attachment = true
+reasoning = true
+temperature = false
+tool_call = true
+structured_output = true
+knowledge = "2026-01-31"
+open_weights = false
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 5
+output = 25
+cache_read = 0.5
+cache_write = 6.25
+
+[[cost.tiers]]
+tier = { size = 200_000 }
+input = 10
+output = 37.5
+cache_read = 1.0
+cache_write = 12.5
+
+[limit]
+context = 1_000_000
+output = 128_000
+
+[modalities]
+input = ["text", "image", "pdf"]
+output = ["text"]

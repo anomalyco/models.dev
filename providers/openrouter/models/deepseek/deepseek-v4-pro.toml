@@ -1,4 +1,6 @@
-attachment = false
+temperature = true
+tool_call = true
+structured_output = true
 
 [extends]
 from = "deepseek/deepseek-v4-pro"
@@ -6,6 +8,15 @@ from = "deepseek/deepseek-v4-pro"
 [interleaved]
 field = "reasoning_content"
 
+[cost]
+input = 0.435
+output = 0.87
+cache_read = 0.003625
+
 [limit]
 context = 1_048_576
-output = 393_216
+output = 384_000
+
+[modalities]
+input = ["text"]
+output = ["text"]

@@ -1,0 +1,15 @@
+[extends]
+from = "xiaomi/mimo-v2.5"
+
+# Source: https://deepinfra.com/XiaomiMiMo/MiMo-V2.5
+# Note: Overriding costs and limits for DeepInfra provider.
+
+[cost]
+input = 0.40
+output = 2.00
+cache_read = 0.08
+
+[limit]
+# https://docs.deepinfra.com/chat/overview#max-output-tokens
+context = 262_144
+output = 16_384

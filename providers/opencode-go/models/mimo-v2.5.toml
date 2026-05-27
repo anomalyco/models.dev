@@ -13,9 +13,21 @@ open_weights = true
 field = "reasoning_content"
 
 [cost]
+<<<<<<< update/opencode-go-mimo-v2-5-pricing
 input = 0.14
 output = 0.28
 cache_read = 0.0028
+=======
+input = 0.40
+output = 2.00
+cache_read = 0.08
+
+[[cost.tiers]]
+tier = { size = 256_000 }
+input = 0.80
+output = 4.00
+cache_read = 0.16
+>>>>>>> dev
 
 [limit]
 context = 1_000_000

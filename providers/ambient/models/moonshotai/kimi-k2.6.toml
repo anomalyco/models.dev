@@ -1,0 +1,16 @@
+[extends]
+from = "moonshotai/kimi-k2.6"
+
+[cost]
+input = 0.95
+output = 4
+cache_read = 0.2
+cache_write = 0
+
+[limit]
+context = 262144
+output = 262144
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
