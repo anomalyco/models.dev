@@ -216,6 +216,7 @@ export const ModelFamilyValues = [
   "mimo-v2-omni",
   "mimo-v2.5-pro",
   "mimo-v2.5",
+  "mimo-v2.5-free",
   "mimo-pro-free",
   "mimo-omni-free",
   "mimo-flash-free",
