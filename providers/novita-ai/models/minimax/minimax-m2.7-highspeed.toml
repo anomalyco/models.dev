@@ -1,0 +1,23 @@
+last_updated = "2026-05-27"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = true
+
+[extends]
+from = "minimax/MiniMax-M2.7-highspeed"
+
+[cost]
+input = 0.6
+output = 2.4
+cache_read = 0.06
+cache_write = 0.375
+
+[limit]
+context = 204_800
+output = 131_072
+
+[modalities]
+input = ["text"]
+output = ["text"]

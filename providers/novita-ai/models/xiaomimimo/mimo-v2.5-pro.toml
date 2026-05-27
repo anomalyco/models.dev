@@ -1,0 +1,22 @@
+last_updated = "2026-05-27"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = true
+
+[extends]
+from = "xiaomi/mimo-v2.5-pro"
+
+[cost]
+input = 2
+output = 6
+cache_read = 0.4
+
+[limit]
+context = 1_048_576
+output = 131_072
+
+[modalities]
+input = ["text"]
+output = ["text"]
