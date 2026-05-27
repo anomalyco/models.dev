@@ -10,15 +10,9 @@ knowledge = "2024-12"
 open_weights = true
 
 [cost]
-input = 0.4
-output = 2
-cache_read = 0.08
-
-[[cost.tiers]]
-tier = { size = 256_000 }
-input = 0.80
-output = 4.00
-cache_read = 0.16
+input = 0.14
+output = 0.28
+cache_read = 0.0028
 
 [limit]
 context = 1_048_576
