@@ -1,0 +1,17 @@
+name = "Claude-Opus-4.8"
+
+[extends]
+from = "anthropic/claude-opus-4-8"
+omit = [
+  "cost.cache_read",
+  "cost.cache_write",
+  "experimental",
+]
+
+[cost]
+input = 4.2929
+output = 21.4646
+
+[limit]
+context = 1_048_576
+output = 128_000
