@@ -131,6 +131,9 @@ function prepareRow(row: TableRow): VirtualizedRow {
   const sortValues: VirtualizedRow["sortValues"] = [
     row.providerName,
     row.modelName,
+    row.overallScore,
+    row.valueScore,
+    row.capabilityScore,
     row.family,
     row.providerId,
     row.modelId,

@@ -7,6 +7,7 @@ import { renderToString } from "hono/jsx/dom/server";
 import { existsSync } from "fs";
 import path from "path";
 import { type TableRow, renderRow, getLargestRow } from "./shared.js";
+import { annotateScores } from "./score.js";
 
 export const Providers = await generate(
   path.join(import.meta.dir, "..", "..", "..", "providers")
@@ -64,7 +65,7 @@ for (const [providerId] of Object.entries(Providers)) {
 
 export const INITIAL_ROW_COUNT = 50;
 
-export const TableRows: TableRow[] = Object.entries(Providers)
+const RawRows = Object.entries(Providers)
   .sort(([, providerA], [, providerB]) =>
     providerA.name.localeCompare(providerB.name)
   )
@@ -101,6 +102,11 @@ export const TableRows: TableRow[] = Object.entries(Providers)
         lastUpdated: model.last_updated,
       }))
   );
+
+// Attach objective scores, then default the table to a "best overall" ranking.
+export const TableRows: TableRow[] = annotateScores(RawRows).sort(
+  (a, b) => b.overallScore - a.overallScore
+);
 
 const largestRow = getLargestRow(TableRows);
 
@@ -142,11 +148,42 @@ export const Rendered = renderToString(
       <table id="models-table">
       <thead>
         <tr>
+          <th class="rank-col">#</th>
           <th class="sortable" data-type="text">
             Provider <span class="sort-indicator"></span>
           </th>
           <th class="sortable" data-type="text">
             Model <span class="sort-indicator"></span>
+          </th>
+          <th class="sortable" data-type="number">
+            <div class="header-container">
+              <span class="header-text">
+                Overall
+                <br />
+                <span class="desc">score /100</span>
+              </span>
+              <span class="sort-indicator"></span>
+            </div>
+          </th>
+          <th class="sortable" data-type="number">
+            <div class="header-container">
+              <span class="header-text">
+                Value
+                <br />
+                <span class="desc">score /100</span>
+              </span>
+              <span class="sort-indicator"></span>
+            </div>
+          </th>
+          <th class="sortable" data-type="number">
+            <div class="header-container">
+              <span class="header-text">
+                Capability
+                <br />
+                <span class="desc">score /100</span>
+              </span>
+              <span class="sort-indicator"></span>
+            </div>
           </th>
           <th class="sortable" data-type="text">
             Family <span class="sort-indicator"></span>

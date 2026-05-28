@@ -274,51 +274,101 @@ td {
   height: 48px;
 }
 
+th.rank-col {
+  text-align: right;
+  font-weight: normal;
+  color: var(--color-text-tertiary);
+}
+
+#models-table th:first-child,
+#models-table td:first-child {
+  min-width: 2.75rem;
+}
+
 tbody {
   td {
     color: var(--color-text-tertiary);
   }
 
-  td:nth-child(1) {
+  td:nth-child(2) {
     font-weight: 500;
   }
 
-  td:nth-child(1),
   td:nth-child(2),
+  td:nth-child(3),
+  td:nth-child(4),
   td:nth-child(5),
   td:nth-child(6),
   td:nth-child(9),
   td:nth-child(10),
-  td:nth-child(11),
-  td:nth-child(12),
   td:nth-child(13),
   td:nth-child(14),
   td:nth-child(15),
-  td:nth-child(16) {
+  td:nth-child(16),
+  td:nth-child(17),
+  td:nth-child(18),
+  td:nth-child(19),
+  td:nth-child(20) {
     color: var(--color-text);
   }
 
-  td:nth-child(5),
-  td:nth-child(6),
-  td:nth-child(18) {
+  td:nth-child(9),
+  td:nth-child(10),
+  td:nth-child(22) {
     font-size: 0.8125rem;
     font-family: var(--font-mono);
     text-transform: uppercase;
   }
 
-  td:nth-child(3),
-  td:nth-child(4),
-  td:nth-child(9),
-  td:nth-child(10),
-  td:nth-child(11),
-  td:nth-child(12),
+  td:nth-child(7),
+  td:nth-child(8),
   td:nth-child(13),
   td:nth-child(14),
   td:nth-child(15),
   td:nth-child(16),
-  td:nth-child(17) {
+  td:nth-child(17),
+  td:nth-child(18),
+  td:nth-child(19),
+  td:nth-child(20),
+  td:nth-child(21) {
     font-size: 0.8125rem;
     font-family: var(--font-mono);
+  }
+
+  td.rank {
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    color: var(--color-text-tertiary);
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .score {
+    position: relative;
+    display: flex;
+    align-items: center;
+    min-width: 3rem;
+  }
+
+  .score::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    height: 0.875rem;
+    width: calc(var(--score) * 1%);
+    background: color-mix(in srgb, var(--color-brand) 22%, transparent);
+    border-radius: 2px;
+    z-index: 0;
+  }
+
+  .score-value {
+    position: relative;
+    z-index: 1;
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    font-variant-numeric: tabular-nums;
   }
 
   .provider-cell {

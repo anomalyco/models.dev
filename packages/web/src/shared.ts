@@ -5,6 +5,9 @@ export interface TableRow {
   modelId: string;
   modelName: string;
   family?: string;
+  overallScore: number;
+  valueScore: number;
+  capabilityScore: number;
   toolCall: boolean;
   reasoning: boolean;
   input: string[];
@@ -78,6 +81,17 @@ export function weightsText(value: boolean) {
   return value ? "Open" : "Closed";
 }
 
+export function rankText(index: number) {
+  return index >= 0 ? String(index + 1) : "";
+}
+
+export function renderScore(value: number) {
+  const pct = Math.max(0, Math.min(100, value));
+  return `<div class="score" style="--score:${pct}"><span class="score-value">${value.toFixed(
+    1
+  )}</span></div>`;
+}
+
 export function renderModalityIcon(modality: string) {
   const label =
     modality === "pdf"
@@ -101,10 +115,14 @@ export function renderCopyButton(modelId: string) {
 
 export function renderRow(row: TableRow, index: number) {
   return `<tr data-index="${index}">
+    <td class="rank">${rankText(index)}</td>
     <td><div class="provider-cell">${row.providerLogoSvg}<span>${escapeHtml(
     row.providerName
   )}</span></div></td>
     <td>${escapeHtml(row.modelName)}</td>
+    <td>${renderScore(row.overallScore)}</td>
+    <td>${renderScore(row.valueScore)}</td>
+    <td>${renderScore(row.capabilityScore)}</td>
     <td>${escapeHtml(row.family ?? "-")}</td>
     <td>${escapeHtml(row.providerId)}</td>
     <td><div class="model-id-cell"><span class="model-id-text">${escapeHtml(
@@ -136,6 +154,7 @@ export function renderRow(row: TableRow, index: number) {
 export function getLargestRow(rows: TableRow[]): TableRow {
   const worst: TableRow = {
     providerId: "", providerName: "", providerLogoSvg: "", modelId: "", modelName: "",
+    overallScore: 100, valueScore: 100, capabilityScore: 100,
     toolCall: true, reasoning: true,
     input: [], output: [],
     contextLimit: 0, outputLimit: 0,
