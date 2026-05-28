@@ -1,0 +1,7 @@
+[extends]
+from = "llama/llama-3.3-70b-instruct"
+omit = ["cost"]
+
+[limit]
+context = 131_072
+output = 131_072
