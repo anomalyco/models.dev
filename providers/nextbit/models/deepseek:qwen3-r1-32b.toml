@@ -1,0 +1,7 @@
+[extends]
+from = "alibaba-cn/deepseek-r1-distill-qwen-32b"
+omit = ["cost"]
+
+[limit]
+context = 32_768
+output = 32_768
