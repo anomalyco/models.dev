@@ -1,6 +1,9 @@
 [extends]
 from = "alibaba-cn/deepseek-r1-distill-qwen-32b"
-omit = ["cost"]
+
+[cost]
+input = 0.29
+output = 0.29
 
 [limit]
 context = 32_768

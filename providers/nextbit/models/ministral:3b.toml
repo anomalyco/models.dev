@@ -1,6 +1,9 @@
 [extends]
 from = "mistral/ministral-3b-latest"
-omit = ["cost"]
+
+[cost]
+input = 0.15
+output = 0.15
 
 [limit]
 context = 131_072

@@ -1,6 +1,9 @@
 [extends]
 from = "alibaba/qwen3.5-35b-a3b"
-omit = ["cost"]
+
+[cost]
+input = 0.30
+output = 1.80
 
 [limit]
 context = 262_144
