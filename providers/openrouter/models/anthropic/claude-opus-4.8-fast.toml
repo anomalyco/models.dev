@@ -1,0 +1,24 @@
+name = "Claude Opus 4.8 (Fast)"
+family = "claude-opus"
+release_date = "2026-05-27"
+last_updated = "2026-05-27"
+attachment = true
+reasoning = true
+temperature = false
+tool_call = true
+structured_output = true
+open_weights = false
+
+[cost]
+input = 10
+output = 50
+cache_read = 1
+cache_write = 12.5
+
+[limit]
+context = 1_000_000
+output = 128_000
+
+[modalities]
+input = ["text", "image", "pdf"]
+output = ["text"]
