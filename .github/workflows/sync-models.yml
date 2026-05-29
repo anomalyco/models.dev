@@ -14,6 +14,7 @@ concurrency: ${{ github.workflow }}-${{ github.ref }}
 
 jobs:
   providers:
+    if: github.repository == 'anomalyco/models.dev'
     runs-on: ubuntu-latest
     outputs:
       matrix: ${{ steps.providers.outputs.matrix }}
@@ -37,6 +38,7 @@ jobs:
 
   sync:
     needs: providers
+    if: github.repository == 'anomalyco/models.dev'
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
