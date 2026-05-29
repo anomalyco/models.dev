@@ -1,0 +1,14 @@
+open_weights = false
+
+[extends]
+from = "zhipuai/glm-5"
+
+[cost]
+input = 0
+output = 0
+cache_read = 0
+cache_write = 0
+
+[limit]
+context = 202_752
+output = 16_384

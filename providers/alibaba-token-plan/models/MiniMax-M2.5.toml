@@ -1,0 +1,16 @@
+[extends]
+from = "minimax/MiniMax-M2.5"
+
+[cost]
+input = 0
+output = 0
+cache_read = 0
+cache_write = 0
+
+[interleaved]
+field = "reasoning_content"
+
+[limit]
+context = 196_608
+input = 196_601
+output = 24_576
