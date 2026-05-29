@@ -1,0 +1,7 @@
+[extends]
+from = "anthropic/claude-sonnet-4-5"
+omit = ["cost"]
+
+[limit]
+context = 200_000
+output = 16_384
