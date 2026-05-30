@@ -81,6 +81,19 @@ export async function generate(directory: string) {
     result[providerID] = provider.data;
   }
 
+  const nameToProviderID = new Map<string, string>();
+  for (const provider of Object.values(result)) {
+    const nameKey = provider.name.toLowerCase();
+    const existingID = nameToProviderID.get(nameKey);
+    if (existingID !== undefined) {
+      throw new Error(
+        `Duplicate provider name "${provider.name}" used by both "${existingID}" and "${provider.id}". Provider names must be unique.`,
+        { cause: { providerIDs: [existingID, provider.id], name: provider.name } },
+      );
+    }
+    nameToProviderID.set(nameKey, provider.id);
+  }
+
   for (const pendingModel of extendsModels) {
     const [providerID, modelID] = pendingModel.model.extends.from.split("/");
     const baseModel = result[providerID]?.models[modelID];
