@@ -1,0 +1,26 @@
+name = "MiniMax M3 Free (New)"
+family = "minimax-free"
+release_date = "2026-05-31"
+last_updated = "2026-05-31"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+knowledge = "2025-01"
+open_weights = true
+
+[cost]
+input = 0
+output = 0
+cache_read = 0
+
+[limit]
+context = 200_000
+output = 32_000
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[provider]
+npm = "@ai-sdk/anthropic"
