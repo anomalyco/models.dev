@@ -118,6 +118,7 @@ export const ModelFamilyValues = [
   "minimax-m2.5",
   "minimax-m2.7",
   "minimax-m3",
+  "minimax-m3-free",
   "minimax-free",
 
   // Hunyuan
