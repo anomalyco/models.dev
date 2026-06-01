@@ -1,6 +1,9 @@
 import { z } from "zod";
 
 export const ModelFamilyValues = [
+  // Sapiens AI / Agnes AI
+  "agnes",
+
   // Arcee
   "trinity",
   "trinity-mini",
