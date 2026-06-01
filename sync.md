@@ -150,6 +150,18 @@ xAI is implemented in `packages/core/src/sync/providers/xai.ts`.
 - Existing xAI models are updated from API-authoritative fields while local metadata is preserved for fields the API does not expose, especially output token limits and some feature/capability flags.
 - New xAI API models are reported in `.sync/model-sync-report.md` but not created automatically because the API does not provide enough authoritative metadata for complete catalog entries.
 
+## OVHcloud Notes
+
+OVHcloud AI Endpoints is implemented in `packages/core/src/sync/providers/ovhcloud.ts`.
+
+- Source endpoint: `https://catalog.endpoints.ai.ovh.net/rest/v2/openrouter`.
+- No auth required: the catalog is public.
+- Model IDs are lowercased from the catalog `id` to match the existing TOML paths under `providers/ovhcloud/models`.
+- API prices are per-token strings and are converted to per-1M-token numbers; free models (price `0`) get no `[cost]` section.
+- `reasoning`, `tool_call`, and `structured_output` come from `supported_features`; `temperature` comes from `supported_sampling_parameters`.
+- `attachment` is derived from non-text `input_modalities`, and `open_weights` from the presence of `hugging_face_id`.
+- `release_date`/`last_updated` default to the catalog `created` timestamp but preserve any existing hand-authored dates; `knowledge`, `family`, `status`, `interleaved`, and `limit.input` are preserved when present.
+
 ## Vercel Status
 
 Vercel is intentionally not wired into `bun models:sync` right now. Keep using the existing `vercel:generate` script until Vercel sync behavior is redesigned and reviewed separately.
