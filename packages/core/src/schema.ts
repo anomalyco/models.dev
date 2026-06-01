@@ -21,31 +21,27 @@ const JsonValue: z.ZodType<JsonValue> = z.lazy(() =>
   ]),
 );
 
-const Cost = z
-  .object({
-    input: z.number().min(0, "Input price cannot be negative"),
-    output: z.number().min(0, "Output price cannot be negative"),
-    reasoning: z
-      .number()
-      .min(0, "Reasoning price cannot be negative")
-      .optional(),
-    cache_read: z
-      .number()
-      .min(0, "Cache read price cannot be negative")
-      .optional(),
-    cache_write: z
-      .number()
-      .min(0, "Cache write price cannot be negative")
-      .optional(),
-    input_audio: z
-      .number()
-      .min(0, "Audio input price cannot be negative")
-      .optional(),
-    output_audio: z
-      .number()
-      .min(0, "Audio output price cannot be negative")
-      .optional(),
-  });
+const Cost = z.object({
+  input: z.number().min(0, "Input price cannot be negative"),
+  output: z.number().min(0, "Output price cannot be negative"),
+  reasoning: z.number().min(0, "Reasoning price cannot be negative").optional(),
+  cache_read: z
+    .number()
+    .min(0, "Cache read price cannot be negative")
+    .optional(),
+  cache_write: z
+    .number()
+    .min(0, "Cache write price cannot be negative")
+    .optional(),
+  input_audio: z
+    .number()
+    .min(0, "Audio input price cannot be negative")
+    .optional(),
+  output_audio: z
+    .number()
+    .min(0, "Audio output price cannot be negative")
+    .optional(),
+});
 
 const CostTier = Cost.extend({
   tier: z
@@ -140,7 +136,9 @@ function refineModel<T extends z.ZodTypeAny>(schema: T) {
   return schema
     .refine(
       (data) => {
-        return !(data.reasoning === false && data.cost?.reasoning !== undefined);
+        return !(
+          data.reasoning === false && data.cost?.reasoning !== undefined
+        );
       },
       {
         message: "Cannot set cost.reasoning when reasoning is false",
@@ -152,7 +150,9 @@ function refineModel<T extends z.ZodTypeAny>(schema: T) {
         const tiers = data.cost?.tiers;
         if (tiers === undefined) return true;
 
-        const sizes = tiers.map((tier: { tier: { size: number } }) => tier.tier.size);
+        const sizes = tiers.map(
+          (tier: { tier: { size: number } }) => tier.tier.size,
+        );
         return new Set(sizes).size === sizes.length;
       },
       {
