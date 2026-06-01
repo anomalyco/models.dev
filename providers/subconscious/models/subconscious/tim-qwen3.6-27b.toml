@@ -1,0 +1,21 @@
+name = "TIM-Qwen3.6 27B"
+attachment = true
+reasoning = true
+tool_call = true
+structured_output = true
+temperature = true
+release_date = "2026-05-11"
+last_updated = "2026-05-11"
+open_weights = false
+
+[cost]
+input = 0.5
+output = 3.5
+
+[limit]
+context = 262144
+output = 262144
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
