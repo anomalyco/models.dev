@@ -72,4 +72,5 @@
 | `attachment`, `reasoning`, `tool_call`, `open_weights` | Yes | Boolean capabilities |
 | `cost`, `limit`, `modalities` | Yes | Objects with their own required fields |
 | `family`, `knowledge`, `temperature`, `structured_output` | No | Optional metadata |
+| `retirement_date` | No | Date the model is/will be retired (no longer served), `YYYY-MM` or `YYYY-MM-DD` |
 | `status` | No | Use for `"alpha"`, `"beta"`, `"deprecated"` lifecycle |

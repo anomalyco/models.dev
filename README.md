@@ -96,6 +96,7 @@ temperature = true          # or false - supports temperature control
 knowledge = "2024-04"       # Knowledge-cutoff date
 release_date = "2025-02-19" # First public release date
 last_updated = "2025-02-19" # Most recent update date
+retirement_date = "2027-02-19" # Optional - date the model is/will be retired
 open_weights = true         # or false  - model’s trained weights are publicly available
 
 [cost]
@@ -192,6 +193,7 @@ Models must conform to the following schema, as defined in `packages/core/src/sc
 - `knowledge` _(optional)_: String — Knowledge-cutoff date in `YYYY-MM` or `YYYY-MM-DD` format
 - `release_date`: String — First public release date in `YYYY-MM` or `YYYY-MM-DD`
 - `last_updated`: String — Most recent update date in `YYYY-MM` or `YYYY-MM-DD`
+- `retirement_date` _(optional)_: String — Date the model is (or will be) retired and no longer served by the provider, in `YYYY-MM` or `YYYY-MM-DD` format
 - `open_weights`: Boolean - Indicate the model's trained weights are publicly available
 - `interleaved` _(optional)_: Boolean or Object — Supports interleaved reasoning. Use `true` for general support or an object with `field` to specify the format
 - `interleaved.field`: String — Name of the interleaved field (`"reasoning_content"` or `"reasoning_details"`)
@@ -210,7 +212,7 @@ Models must conform to the following schema, as defined in `packages/core/src/sc
 - `status` _(optional)_: String — Supported status:
   - `alpha` - Indicate the model is in alpha testing
   - `beta` - Indicate the model is in beta testing
-  - `deprecated` - Indicate the model is no longer served by the provider's public API
+  - `deprecated` - Indicate the model is deprecated and no longer recommended; see `retirement_date` for when it is/was retired
 
 ### Examples
 

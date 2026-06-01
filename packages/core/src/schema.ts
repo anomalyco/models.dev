@@ -97,6 +97,12 @@ const ModelBase = z.object({
   last_updated: z.string().regex(/^\d{4}-\d{2}(-\d{2})?$/, {
     message: "Must be in YYYY-MM or YYYY-MM-DD format",
   }),
+  retirement_date: z
+    .string()
+    .regex(/^\d{4}-\d{2}(-\d{2})?$/, {
+      message: "Must be in YYYY-MM or YYYY-MM-DD format",
+    })
+    .optional(),
   modalities: z.object({
     input: z.array(z.enum(["text", "audio", "image", "video", "pdf"])),
     output: z.array(z.enum(["text", "audio", "image", "video", "pdf"])),
