@@ -8,6 +8,10 @@ temperature = false
 tool_call = true
 open_weights = false
 
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high", "xhigh", "max"]
+
 [cost]
 input = 5.00
 output = 25.00
