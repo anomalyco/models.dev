@@ -104,8 +104,11 @@ export async function generate(directory: string) {
     }
 
     const { extends: extendsConfig, ...overrides } = pendingModel.model;
+    // Reasoning controls describe the endpoint interface, not just the model.
+    // Derived providers must declare the controls their API exposes explicitly.
+    const { reasoning_options: _reasoningOptions, ...inherited } = baseModel;
     const merged: Record<string, unknown> = structuredClone(
-      mergeDeep(baseModel, overrides),
+      mergeDeep(inherited, overrides),
     );
 
     for (const omit of extendsConfig.omit ?? []) {
