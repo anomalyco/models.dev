@@ -1,2 +1,7 @@
 [extends]
 from = "google/gemini-3.1-pro-preview"
+
+[limit]
+context = 200_000
+input = 136_000
+output = 64_000

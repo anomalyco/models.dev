@@ -1,2 +1,7 @@
 [extends]
 from = "openai/gpt-4.1"
+
+[limit]
+context = 128_000
+input = 128_000
+output = 16_384

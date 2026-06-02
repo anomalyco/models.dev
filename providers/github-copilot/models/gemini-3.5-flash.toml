@@ -1,2 +1,7 @@
 [extends]
 from = "google/gemini-3.5-flash"
+
+[limit]
+context = 200_000
+input = 128_000
+output = 64_000
