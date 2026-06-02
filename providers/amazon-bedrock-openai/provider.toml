@@ -1,0 +1,5 @@
+name = "Amazon Bedrock (OpenAI)"
+env = ["AWS_BEARER_TOKEN_BEDROCK"]
+npm = "@ai-sdk/openai-compatible"
+api = "https://bedrock-mantle.${AWS_REGION}.api.aws/openai/v1"
+doc = "https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-openai-gpt-55.html"

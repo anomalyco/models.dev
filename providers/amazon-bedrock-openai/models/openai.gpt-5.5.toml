@@ -1,0 +1,7 @@
+# Available in: us-east-2
+[extends]
+from = "openai/gpt-5.5"
+omit = ["experimental.modes.fast"]
+
+[provider]
+shape = "responses"
