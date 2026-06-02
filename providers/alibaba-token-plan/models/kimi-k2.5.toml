@@ -1,0 +1,17 @@
+family = "kimi"
+attachment = true
+temperature = true
+
+[extends]
+from = "moonshotai/kimi-k2.5"
+omit = ["structured_output"]
+
+[cost]
+input = 0
+output = 0
+cache_read = 0
+cache_write = 0
+
+[limit]
+context = 262_144
+output = 32_768
