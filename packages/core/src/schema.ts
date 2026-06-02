@@ -21,31 +21,42 @@ const JsonValue: z.ZodType<JsonValue> = z.lazy(() =>
   ]),
 );
 
-const ReasoningOption = z.discriminatedUnion("type", [
-  z
-    .object({
-      type: z.literal("effort"),
-      values: z.array(z.enum(["none", "low", "medium", "high", "xhigh", "max"])),
-    })
-    .strict(),
-  z
-    .object({
-      type: z.literal("budget_tokens"),
-      min: z.number().min(0, "Minimum reasoning budget cannot be negative").optional(),
-      max: z.number().min(0, "Maximum reasoning budget cannot be negative").optional(),
-    })
-    .strict(),
-]).refine(
-  (data) =>
-    data.type !== "budget_tokens" ||
-    data.min === undefined ||
-    data.max === undefined ||
-    data.min <= data.max,
-  {
-    message: "Minimum reasoning budget cannot exceed maximum reasoning budget",
-    path: ["min"],
-  },
-);
+const ReasoningOption = z
+  .discriminatedUnion("type", [
+    z
+      .object({
+        type: z.literal("effort"),
+        values: z.array(
+          z.enum(["none", "minimal", "low", "medium", "high", "xhigh", "max"]),
+        ),
+      })
+      .strict(),
+    z
+      .object({
+        type: z.literal("budget_tokens"),
+        min: z
+          .number()
+          .min(0, "Minimum reasoning budget cannot be negative")
+          .optional(),
+        max: z
+          .number()
+          .min(0, "Maximum reasoning budget cannot be negative")
+          .optional(),
+      })
+      .strict(),
+  ])
+  .refine(
+    (data) =>
+      data.type !== "budget_tokens" ||
+      data.min === undefined ||
+      data.max === undefined ||
+      data.min <= data.max,
+    {
+      message:
+        "Minimum reasoning budget cannot exceed maximum reasoning budget",
+      path: ["min"],
+    },
+  );
 
 const Cost = z.object({
   input: z.number().min(0, "Input price cannot be negative"),
