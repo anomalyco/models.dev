@@ -111,7 +111,7 @@ export async function generate(directory: string) {
       mergeDeep(inherited, overrides),
     );
 
-    for (const omit of extendsConfig.omit ?? []) {
+    omitLoop: for (const omit of extendsConfig.omit ?? []) {
       const parts = omit.split(".");
       const parents: Array<{
         value: Record<string, unknown>;
@@ -127,9 +127,7 @@ export async function generate(directory: string) {
           typeof next !== "object" ||
           Array.isArray(next)
         ) {
-          throw new Error(`Unable to omit missing path: ${omit}`, {
-            cause: { modelPath: pendingModel.modelPath, toml: pendingModel.model },
-          });
+          continue omitLoop;
         }
         parents.push({ value: current, key: part });
         current = next as Record<string, unknown>;
@@ -137,9 +135,7 @@ export async function generate(directory: string) {
 
       const lastPart = parts.at(-1);
       if (lastPart === undefined || !(lastPart in current)) {
-        throw new Error(`Unable to omit missing path: ${omit}`, {
-          cause: { modelPath: pendingModel.modelPath, toml: pendingModel.model },
-        });
+        continue;
       }
 
       delete current[lastPart];

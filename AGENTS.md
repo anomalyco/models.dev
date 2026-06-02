@@ -48,7 +48,7 @@
   - Arrays (e.g. `modalities.input`) and primitives are **replaced** wholesale by the child
   - Any field the child omits is inherited verbatim from the base, except `reasoning_options`
   - `reasoning_options` describes the endpoint interface and is never inherited; each derived provider must declare the controls its API exposes explicitly
-- `omit` runs **after** the merge and deletes each dot-path from the result (used when the child needs to *remove* something the base defines, e.g. a provider-specific experimental mode). Every listed path must exist in the merged model, else an error is thrown. Ancestor tables that become empty as a result are also pruned, so `omit = ["experimental.modes.fast"]` yields no `experimental` key in the final JSON when `fast` was the only mode.
+- `omit` runs **after** the merge and deletes each dot-path from the result (used when the child needs to *remove* something the base defines, e.g. a provider-specific experimental mode). Missing paths are ignored so omits remain safe when a base model stops defining a field. Ancestor tables that become empty as a result are also pruned, so `omit = ["experimental.modes.fast"]` yields no `experimental` key in the final JSON when `fast` was the only mode.
 - Chains are allowed (A extends B extends C); cycles throw
 - The base model must exist; `[extends.from]` pointing at a missing provider/model is an error
 - The `extends` table is stripped before schema validation, so the merged result must still satisfy the strict `Model` schema
