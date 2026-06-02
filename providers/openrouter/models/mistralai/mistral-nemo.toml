@@ -1,9 +1,11 @@
 temperature = true
 tool_call = true
 structured_output = true
+open_weights = true
+status = "deprecated"
 
 [extends]
-from = "mistral/mistral-nemo"
+from = "mistral/open-mistral-nemo"
 
 [cost]
 input = 0.02
