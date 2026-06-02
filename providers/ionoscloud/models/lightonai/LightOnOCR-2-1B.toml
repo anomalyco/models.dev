@@ -1,0 +1,20 @@
+name = "LightOnOCR 2 1B"
+release_date = "2025-02-01"
+last_updated = "2026-06-02"
+attachment = true
+reasoning = false
+tool_call = false
+temperature = false
+open_weights = true
+
+[cost]
+input = 0.17
+output = 0.33
+
+[limit]
+context = 16_384
+output = 4_096
+
+[modalities]
+input = ["image"]
+output = ["text"]

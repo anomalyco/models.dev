@@ -1,0 +1,21 @@
+name = "Qwen3 VL Embedding 8B"
+family = "qwen"
+release_date = "2025-05-13"
+last_updated = "2026-06-02"
+attachment = true
+reasoning = false
+tool_call = false
+temperature = false
+open_weights = true
+
+[cost]
+input = 0.11
+output = 0.00
+
+[limit]
+context = 32_768
+output = 4_096
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

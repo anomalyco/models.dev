@@ -1,0 +1,22 @@
+name = "Meta Llama 3.1 405B Instruct FP8"
+family = "llama"
+release_date = "2024-07-23"
+last_updated = "2026-06-02"
+attachment = false
+reasoning = false
+tool_call = true
+temperature = true
+open_weights = true
+knowledge = "2023-12"
+
+[cost]
+input = 1.93
+output = 1.93
+
+[limit]
+context = 128_000
+output = 16_384
+
+[modalities]
+input = ["text"]
+output = ["text"]
