@@ -1,8 +1,8 @@
-name = "Gemma 4 26B"
+name = "Gemma 4 26B A4B IT"
 family = "gemma"
 release_date = "2026-04-02"
 last_updated = "2026-04-02"
-attachment = false
+attachment = true
 reasoning = true
 temperature = true
 tool_call = true
@@ -10,8 +10,8 @@ structured_output = true
 open_weights = true
 
 [limit]
-context = 256000
-output = 8192
+context = 262_144
+output = 32_768
 
 [modalities]
 input = ["text", "image"]

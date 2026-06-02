@@ -1,21 +1,21 @@
 name = "LFM2.5-1.2B-Thinking (free)"
 family = "liquid"
 release_date = "2026-01-20"
-last_updated = "2026-01-28"
+last_updated = "2026-01-20"
 attachment = false
 reasoning = true
 temperature = true
-# may be inaccurate
-knowledge = "2025-06"
 tool_call = false
+structured_output = false
+knowledge = "2025-06"
 open_weights = true
 
 [cost]
-input = 0.00
-output = 0.00
+input = 0
+output = 0
 
 [limit]
-context = 131_072
+context = 32_768
 output = 32_768
 
 [modalities]

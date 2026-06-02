@@ -1,0 +1,12 @@
+name = "Mistral Medium 3.5 128B"
+
+[extends]
+from = "mistral/mistral-medium-2604"
+
+[cost]
+input = 1.50
+output = 7.50
+
+[limit]
+context = 256_000
+output = 16_384

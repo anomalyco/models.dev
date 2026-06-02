@@ -1,4 +1,4 @@
-name = "MiniMax-M2.7"
+name = "MiniMax M2.7"
 family = "minimax"
 release_date = "2026-03-18"
 last_updated = "2026-03-18"
@@ -6,15 +6,20 @@ attachment = false
 reasoning = true
 temperature = true
 tool_call = true
+structured_output = true
 open_weights = true
 
+[interleaved]
+field = "reasoning_content"
+
 [cost]
-input = 0.2958
-output = 1.1832
-cache_read = 0.05916
+input = 0.3
+output = 1.2
+cache_read = 0.06
+cache_write = 0.375
 
 [limit]
-context = 200_000
+context = 204_800
 output = 128_000
 
 [modalities]

@@ -1,0 +1,22 @@
+name = "Gemini 3.5 Flash"
+family = "gemini"
+attachment = true
+reasoning = true
+tool_call = true
+temperature = true
+release_date = "2026-05-19"
+last_updated = "2026-05-21"
+open_weights = false
+
+[cost]
+input = 1.5
+output = 9
+cache_read = 0.15
+
+[limit]
+context = 1_000_000
+output = 64_000
+
+[modalities]
+input = ["text", "image", "pdf"]
+output = ["text"]

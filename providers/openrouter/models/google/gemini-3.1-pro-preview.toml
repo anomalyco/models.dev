@@ -1,32 +1,30 @@
-name = "Gemini 3.1 Pro Preview"
-family = "gemini-pro"
-release_date = "2026-02-19"
-last_updated = "2026-02-19"
-attachment = true
-reasoning = true
 temperature = true
-knowledge = "2025-01"
 tool_call = true
 structured_output = true
-open_weights = false
+
+[extends]
+from = "google/gemini-3.1-pro-preview"
 
 [interleaved]
 field = "reasoning_details"
 
 [cost]
-input = 2.00
-output = 12.00
-reasoning = 12.00
+input = 2
+output = 12
+reasoning = 12
+cache_read = 0.2
+cache_write = 0.375
 
-[cost.context_over_200k]
-input = 4.00
-output = 18.00
-cache_read = 0.40
+[[cost.tiers]]
+tier = { size = 200_000 }
+input = 4
+output = 18
+cache_read = 0.4
 
 [limit]
 context = 1_048_576
 output = 65_536
 
 [modalities]
-input = ["text", "image", "audio", "video", "pdf"]
+input = ["audio", "pdf", "image", "text", "video"]
 output = ["text"]

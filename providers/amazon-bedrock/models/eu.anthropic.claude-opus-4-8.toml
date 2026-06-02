@@ -1,0 +1,11 @@
+name = "Claude Opus 4.8 (EU)"
+
+[extends]
+from = "anthropic/claude-opus-4-8"
+omit = ["experimental.modes.fast"]
+
+[cost]
+input = 5.50
+output = 27.50
+cache_read = 0.55
+cache_write = 6.875

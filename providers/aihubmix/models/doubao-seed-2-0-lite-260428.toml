@@ -1,0 +1,41 @@
+name = "Doubao Seed 2.0 Lite 260428"
+family = "seed"
+release_date = "2026-04-28"
+last_updated = "2026-04-28"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.08
+output = 0.51
+cache_read = 0.01692
+input_audio = 1.269
+
+[[cost.tiers]]
+tier = { size = 32_000 }
+input = 0.13
+output = 0.76
+cache_read = 0.02536
+input_audio = 1.902
+
+[[cost.tiers]]
+tier = { size = 128_000 }
+input = 0.25
+output = 1.52
+cache_read = 0.05072
+input_audio = 3.804
+
+[limit]
+context = 256_000
+output = 128_000
+
+[modalities]
+input = ["text", "image", "video"]
+output = ["text"]

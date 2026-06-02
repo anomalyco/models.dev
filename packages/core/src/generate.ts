@@ -2,9 +2,9 @@ import path from "path";
 import { mergeDeep } from "remeda";
 import { z } from "zod";
 
-import { Provider, Model } from "./schema.js";
+import { Provider, Model, AuthoredModel, AuthoredModelShape } from "./schema.js";
 
-const ExtendsModel = Model.sourceType()
+const ExtendsModel = AuthoredModelShape
   .partial()
   .extend({
     extends: z
@@ -71,14 +71,27 @@ export async function generate(directory: string) {
         });
         continue;
       }
-      const model = Model.safeParse(toml);
+      const model = AuthoredModel.safeParse(toml);
       if (!model.success) {
         model.error.cause = { modelPath, toml };
         throw model.error;
       }
-      provider.data.models[modelID] = model.data;
+      provider.data.models[modelID] = normalizeModelCost(model.data);
     }
     result[providerID] = provider.data;
+  }
+
+  const nameToProviderID = new Map<string, string>();
+  for (const provider of Object.values(result)) {
+    const nameKey = provider.name.toLowerCase();
+    const existingID = nameToProviderID.get(nameKey);
+    if (existingID !== undefined) {
+      throw new Error(
+        `Duplicate provider name "${provider.name}" used by both "${existingID}" and "${provider.id}". Provider names must be unique.`,
+        { cause: { providerIDs: [existingID, provider.id], name: provider.name } },
+      );
+    }
+    nameToProviderID.set(nameKey, provider.id);
   }
 
   for (const pendingModel of extendsModels) {
@@ -91,8 +104,11 @@ export async function generate(directory: string) {
     }
 
     const { extends: extendsConfig, ...overrides } = pendingModel.model;
+    // Reasoning controls describe the endpoint interface, not just the model.
+    // Derived providers must declare the controls their API exposes explicitly.
+    const { reasoning_options: _reasoningOptions, ...inherited } = baseModel;
     const merged: Record<string, unknown> = structuredClone(
-      mergeDeep(baseModel, overrides),
+      mergeDeep(inherited, overrides),
     );
 
     for (const omit of extendsConfig.omit ?? []) {
@@ -144,7 +160,7 @@ export async function generate(directory: string) {
       }
     }
 
-    const model = Model.safeParse(merged);
+    const model = Model.safeParse(normalizeCost(merged));
     if (!model.success) {
       model.error.cause = { modelPath: pendingModel.modelPath, toml: merged };
       throw model.error;
@@ -154,4 +170,52 @@ export async function generate(directory: string) {
   }
 
   return result;
+}
+
+function normalizeModelCost(model: z.infer<typeof AuthoredModel>): Model {
+  return normalizeCost(model) as Model;
+}
+
+function normalizeCost(model: Record<string, unknown>) {
+  const cost = model.cost;
+  if (cost === undefined || cost === null || typeof cost !== "object" || Array.isArray(cost)) {
+    return model;
+  }
+
+  const tiers = (cost as { tiers?: unknown }).tiers;
+  if (!Array.isArray(tiers)) {
+    return model;
+  }
+
+  if (tiers.length !== 1) {
+    return model;
+  }
+
+  const contextOver200k = tiers.find((tier) => {
+    if (tier === null || typeof tier !== "object" || Array.isArray(tier)) return false;
+    const tierConfig = (tier as { tier?: unknown }).tier;
+    if (tierConfig === null || typeof tierConfig !== "object" || Array.isArray(tierConfig)) return false;
+    const type = (tierConfig as { type?: unknown }).type;
+    const size = (tierConfig as { size?: unknown }).size;
+    // context_over_200k is a legacy compatibility field. It intentionally
+    // includes higher thresholds; cost.tiers carries the exact threshold.
+    return (
+      (type === undefined || type === "context") &&
+      typeof size === "number" &&
+      size >= 200_000
+    );
+  });
+
+  if (contextOver200k === undefined) {
+    return model;
+  }
+
+  const { tier: _tier, ...legacyCost } = contextOver200k as Record<string, unknown>;
+  return {
+    ...model,
+    cost: {
+      ...(cost as Record<string, unknown>),
+      context_over_200k: legacyCost,
+    },
+  };
 }

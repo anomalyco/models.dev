@@ -1,0 +1,14 @@
+[extends]
+from = "zhipuai/glm-5.1"
+
+[cost]
+input = 0.45
+output = 2.15
+cache_read = 0.08
+
+[limit]
+context = 202_752
+output = 202_752
+
+[provider]
+npm = "@ai-sdk/openai-compatible"

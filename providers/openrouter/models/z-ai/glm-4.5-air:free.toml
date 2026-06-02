@@ -1,20 +1,18 @@
 name = "GLM 4.5 Air (free)"
-family = "glm-air"
-release_date = "2025-07-28"
-last_updated = "2025-07-28"
-attachment = false
-reasoning = true
 temperature = true
-tool_call = false
-knowledge = "2025-04"
-open_weights = true
+tool_call = true
+structured_output = false
+
+[extends]
+from = "zai/glm-4.5-air"
+omit = ["cost.cache_read", "cost.cache_write"]
 
 [cost]
-input = 0.00
-output = 0.00
+input = 0
+output = 0
 
 [limit]
-context = 128_000
+context = 131_072
 output = 96_000
 
 [modalities]

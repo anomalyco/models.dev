@@ -209,7 +209,18 @@ interface ExistingModel {
       output?: number;
       cache_read?: number;
       cache_write?: number;
+      context_min?: number;
     };
+    tiers?: Array<{
+      tier: {
+        type?: "context";
+        size: number;
+      };
+      input?: number;
+      output?: number;
+      cache_read?: number;
+      cache_write?: number;
+    }>;
   };
   limit?: {
     context?: number;
@@ -262,6 +273,7 @@ interface MergedModel {
       output: number;
       cache_read?: number;
       cache_write?: number;
+      context_min?: number;
     };
   };
   limit: {
@@ -308,6 +320,35 @@ function inferFamily(modelId: string, modelName: string): string | undefined {
     }
   }
   return undefined;
+}
+
+function getExistingLongContextCost(existing: ExistingModel | null) {
+  const tier = existing?.cost?.tiers?.find(
+    (tier) =>
+      (tier.tier.type === undefined || tier.tier.type === "context") &&
+      tier.tier.size >= 200_000,
+  );
+  if (tier) {
+    return {
+      ...tier,
+      context_min: tier.tier.size,
+    };
+  }
+
+  return existing?.cost?.context_over_200k === undefined
+    ? undefined
+    : {
+        ...existing.cost.context_over_200k,
+        context_min: 200_000,
+      };
+}
+
+function getLongContextMin(cost: { context_min?: number }) {
+  return cost.context_min ?? 200_000;
+}
+
+function formatInlineNumber(n: number): string {
+  return n >= 1000 ? n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, "_") : n.toString();
 }
 
 // ---------------------------------------------------------------------------
@@ -394,27 +435,30 @@ function mergeModel(
     };
 
     // Context-tiered pricing (>200k) from the static-content API
+    const existingLongContextCost = getExistingLongContextCost(existing);
     if (pricing?.inputOver200k !== undefined && pricing?.outputOver200k !== undefined) {
       merged.cost.context_over_200k = {
         input: pricing.inputOver200k,
         output: pricing.outputOver200k,
-        ...(existing?.cost?.context_over_200k?.cache_read !== undefined && {
-          cache_read: existing.cost.context_over_200k.cache_read,
+        context_min: existingLongContextCost?.context_min ?? 200_000,
+        ...(existingLongContextCost?.cache_read !== undefined && {
+          cache_read: existingLongContextCost.cache_read,
         }),
-        ...(existing?.cost?.context_over_200k?.cache_write !== undefined && {
-          cache_write: existing.cost.context_over_200k.cache_write,
+        ...(existingLongContextCost?.cache_write !== undefined && {
+          cache_write: existingLongContextCost.cache_write,
         }),
       };
-    } else if (existing?.cost?.context_over_200k) {
-      // Preserve manually-entered context_over_200k if API has no data
+    } else if (existingLongContextCost) {
+      // Preserve manually-entered tiered pricing if API has no data
       merged.cost.context_over_200k = {
-        input: existing.cost.context_over_200k.input ?? inputPrice,
-        output: existing.cost.context_over_200k.output ?? outputPrice,
-        ...(existing.cost.context_over_200k.cache_read !== undefined && {
-          cache_read: existing.cost.context_over_200k.cache_read,
+        input: existingLongContextCost.input ?? inputPrice,
+        output: existingLongContextCost.output ?? outputPrice,
+        context_min: existingLongContextCost.context_min,
+        ...(existingLongContextCost.cache_read !== undefined && {
+          cache_read: existingLongContextCost.cache_read,
         }),
-        ...(existing.cost.context_over_200k.cache_write !== undefined && {
-          cache_write: existing.cost.context_over_200k.cache_write,
+        ...(existingLongContextCost.cache_write !== undefined && {
+          cache_write: existingLongContextCost.cache_write,
         }),
       };
     }
@@ -463,7 +507,8 @@ function formatToml(model: MergedModel): string {
 
     if (model.cost.context_over_200k) {
       lines.push("");
-      lines.push(`[cost.context_over_200k]`);
+      lines.push(`[[cost.tiers]]`);
+      lines.push(`tier = { size = ${formatInlineNumber(getLongContextMin(model.cost.context_over_200k))} }`);
       lines.push(`input = ${model.cost.context_over_200k.input}`);
       lines.push(`output = ${model.cost.context_over_200k.output}`);
       if (model.cost.context_over_200k.cache_read !== undefined)
@@ -524,8 +569,9 @@ function detectChanges(existing: ExistingModel | null, merged: MergedModel): Cha
   compare("status", existing.status, merged.status);
   compare("cost.input", existing.cost?.input, merged.cost?.input);
   compare("cost.output", existing.cost?.output, merged.cost?.output);
-  compare("cost.context_over_200k.input", existing.cost?.context_over_200k?.input, merged.cost?.context_over_200k?.input);
-  compare("cost.context_over_200k.output", existing.cost?.context_over_200k?.output, merged.cost?.context_over_200k?.output);
+  const existingLongContextCost = getExistingLongContextCost(existing);
+  compare("cost.context_over_200k.input", existingLongContextCost?.input, merged.cost?.context_over_200k?.input);
+  compare("cost.context_over_200k.output", existingLongContextCost?.output, merged.cost?.context_over_200k?.output);
   compare("limit.context", existing.limit?.context, merged.limit.context);
   compare("limit.output", existing.limit?.output, merged.limit.output);
   compare("modalities.input", existing.modalities?.input, merged.modalities.input);

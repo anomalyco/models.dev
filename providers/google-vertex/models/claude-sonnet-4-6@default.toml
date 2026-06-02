@@ -7,15 +7,16 @@ output = 15.00
 cache_read = 0.30
 cache_write = 3.75
 
-[cost.context_over_200k]
+[[cost.tiers]]
+tier = { size = 200_000 }
 input = 6.00
 output = 22.50
 cache_read = 0.60
 cache_write = 7.50
 
 [limit]
-context = 200_000
-output = 64_000
+context = 1_000_000
+output = 128_000
 
 [provider]
 npm = "@ai-sdk/google-vertex/anthropic"

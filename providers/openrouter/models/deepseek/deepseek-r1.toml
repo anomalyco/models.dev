@@ -1,18 +1,18 @@
-name = "DeepSeek: R1"
+name = "R1"
 family = "deepseek-thinking"
 release_date = "2025-01-20"
 last_updated = "2025-01-20"
 attachment = false
 reasoning = true
 temperature = true
-knowledge = "2024-07"
 tool_call = true
-structured_output = false
+structured_output = true
+knowledge = "2024-07-31"
 open_weights = true
 
 [cost]
-input = 0.70
-output = 2.50
+input = 0.7
+output = 2.5
 
 [limit]
 context = 64_000

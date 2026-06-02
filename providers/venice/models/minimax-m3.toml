@@ -1,0 +1,22 @@
+name = "MiniMax M3"
+family = "minimax-m3"
+attachment = true
+reasoning = true
+tool_call = true
+temperature = true
+release_date = "2026-06-01"
+last_updated = "2026-06-01"
+open_weights = false
+
+[cost]
+input = 0.3
+output = 1.2
+cache_read = 0.06
+
+[limit]
+context = 500_000
+output = 32_768
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

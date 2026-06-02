@@ -1,0 +1,26 @@
+name = "Kimi K2.5 (Lightning)"
+family = "kimi-k2.5"
+release_date = "2026-02-06"
+last_updated = "2026-02-06"
+attachment = false
+reasoning = true
+temperature = false
+tool_call = true
+structured_output = true
+open_weights = true
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 1.00
+output = 3.00
+cache_read = 0.20
+
+[limit]
+context = 131_072
+output = 32_768
+
+[modalities]
+input = ["text", "image", "video"]
+output = ["text"]

@@ -1,7 +1,23 @@
-name = "Xiaomi: MiMo-V2.5"
+temperature = true
+tool_call = true
+structured_output = false
 
 [extends]
 from = "xiaomi/mimo-v2.5"
+omit = ["cost.tiers", "cost.context_over_200k"]
 
 [interleaved]
 field = "reasoning_details"
+
+[cost]
+input = 0.14
+output = 0.28
+cache_read = 0.0028
+
+[limit]
+context = 1_048_576
+output = 131_072
+
+[modalities]
+input = ["text", "audio", "image", "video"]
+output = ["text"]

@@ -1,0 +1,8 @@
+[extends]
+from = "google/gemini-3.1-pro-preview"
+omit = ["cost.context_over_200k"]
+
+[cost]
+input = 2.00
+output = 12.00
+cache_read = 0.2

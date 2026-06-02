@@ -1,12 +1,8 @@
 [extends]
 from = "xiaomi/mimo-v2.5"
+omit = ["cost.context_over_200k", "cost.tiers"]
 
 [cost]
-input = 0
-output = 0
-cache_read = 0
-
-[cost.context_over_200k]
 input = 0
 output = 0
 cache_read = 0

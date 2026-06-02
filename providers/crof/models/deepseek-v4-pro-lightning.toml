@@ -1,0 +1,14 @@
+[extends]
+from = "deepseek/deepseek-v4-pro"
+
+[cost]
+input = 0.80
+output = 1.60
+cache_read = 0.02
+
+[limit]
+context = 1_000_000
+output = 131_072
+
+[provider]
+npm = "@ai-sdk/openai-compatible"

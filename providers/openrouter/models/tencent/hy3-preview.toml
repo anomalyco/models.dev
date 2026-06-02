@@ -1,22 +1,22 @@
 name = "Hy3 preview"
 family = "Hy"
-release_date = "2026-04-20"
-last_updated = "2026-04-20"
+release_date = "2026-04-22"
+last_updated = "2026-04-22"
 attachment = false
 reasoning = true
-tool_call = true
 temperature = true
+tool_call = true
+structured_output = false
 open_weights = true
 
 [cost]
-input = 0.066
-output = 0.26
-cache_read = 0.029
-cache_write = 0.029
+input = 0.063
+output = 0.21
+cache_read = 0.021
 
 [limit]
-context = 256000
-output = 64000
+context = 262_144
+output = 262_144
 
 [modalities]
 input = ["text"]
