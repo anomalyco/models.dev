@@ -25,6 +25,11 @@ const ReasoningOption = z
   .discriminatedUnion("type", [
     z
       .object({
+        type: z.literal("toggle"),
+      })
+      .strict(),
+    z
+      .object({
         type: z.literal("effort"),
         values: z.array(
           z.enum(["none", "minimal", "low", "medium", "high", "xhigh", "max"]),
