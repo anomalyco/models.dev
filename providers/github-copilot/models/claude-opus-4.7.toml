@@ -1,2 +1,7 @@
 [extends]
 from = "anthropic/claude-opus-4-7"
+
+[limit]
+context = 200_000
+input = 168_000
+output = 32_000
