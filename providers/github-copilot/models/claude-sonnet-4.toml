@@ -1,2 +1,7 @@
 [extends]
 from = "anthropic/claude-sonnet-4-0"
+
+[limit]
+context = 216_000
+input = 128_000
+output = 16_000

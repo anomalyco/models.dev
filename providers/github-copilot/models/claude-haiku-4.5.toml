@@ -1,2 +1,7 @@
 [extends]
 from = "anthropic/claude-haiku-4-5"
+
+[limit]
+context = 200_000
+input = 136_000
+output = 64_000
