@@ -1,0 +1,19 @@
+last_updated = "2026-06-01"
+
+[extends]
+from = "openai/gpt-5.5"
+omit = ["cost.tiers", "cost.context_over_200k", "experimental.modes.fast", "limit.input"]
+
+[cost]
+input = 5.50
+output = 33.00
+cache_read = 0.55
+
+[limit]
+context = 272_000
+output = 128_000
+
+[provider]
+npm = "@ai-sdk/amazon-bedrock/mantle"
+api = "https://bedrock-mantle.${AWS_REGION}.api.aws/openai/v1"
+shape = "responses"
