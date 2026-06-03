@@ -1,0 +1,22 @@
+# Not included in subscription
+name = "Mistral Code Latest"
+release_date = "2026-06-02"
+last_updated = "2026-06-02"
+attachment = false
+reasoning = false
+tool_call = true
+structured_output = true
+open_weights = false
+
+[cost]
+input = 0.3
+output = 0.9
+
+[limit]
+context = 256000
+input = 256000
+output = 32768
+
+[modalities]
+input = ["text"]
+output = ["text"]

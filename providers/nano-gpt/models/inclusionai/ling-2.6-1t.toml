@@ -1,0 +1,23 @@
+# Not included in subscription
+name = "Ling 2.6 1T"
+release_date = "2026-04-23"
+last_updated = "2026-04-23"
+attachment = false
+reasoning = false
+tool_call = true
+structured_output = true
+open_weights = false
+
+[cost]
+input = 0.3
+output = 2.5
+cache_read = 0.06
+
+[limit]
+context = 262144
+input = 262144
+output = 32768
+
+[modalities]
+input = ["text"]
+output = ["text"]

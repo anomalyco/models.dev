@@ -1,0 +1,23 @@
+# Included in subscription (uses 2x input tokens)
+name = "DeepSeek Latest"
+release_date = "2026-05-03"
+last_updated = "2026-05-03"
+attachment = false
+reasoning = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[cost]
+input = 1.1
+output = 2.2
+cache_read = 0.11
+
+[limit]
+context = 1048576
+input = 1048576
+output = 384000
+
+[modalities]
+input = ["text"]
+output = ["text"]

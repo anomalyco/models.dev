@@ -1,0 +1,22 @@
+# Not included in subscription
+name = "MiniMax M2.5 TEE"
+release_date = "2026-04-20"
+last_updated = "2026-04-20"
+attachment = false
+reasoning = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[cost]
+input = 0.2
+output = 1.38
+
+[limit]
+context = 196608
+input = 196608
+output = 131072
+
+[modalities]
+input = ["text"]
+output = ["text"]

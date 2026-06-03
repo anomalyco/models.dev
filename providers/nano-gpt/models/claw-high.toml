@@ -1,0 +1,22 @@
+# Not included in subscription
+name = "Claw High"
+release_date = "2026-05-11"
+last_updated = "2026-05-11"
+attachment = true
+reasoning = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[cost]
+input = 4.998
+output = 25.007
+
+[limit]
+context = 1000000
+input = 1000000
+output = 128000
+
+[modalities]
+input = ["text", "image", "pdf"]
+output = ["text"]

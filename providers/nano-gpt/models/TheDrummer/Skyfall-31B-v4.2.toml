@@ -1,0 +1,22 @@
+# Not included in subscription
+name = "TheDrummer Skyfall 31B v4.2"
+release_date = "2026-03-26"
+last_updated = "2026-03-26"
+attachment = true
+reasoning = false
+tool_call = false
+structured_output = false
+open_weights = false
+
+[cost]
+input = 0.55
+output = 0.8
+
+[limit]
+context = 131072
+input = 131072
+output = 16384
+
+[modalities]
+input = ["text", "pdf"]
+output = ["text"]

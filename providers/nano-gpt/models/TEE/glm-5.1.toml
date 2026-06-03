@@ -1,0 +1,23 @@
+# Not included in subscription
+name = "GLM 5.1 TEE"
+release_date = "2026-04-20"
+last_updated = "2026-04-20"
+attachment = false
+reasoning = false
+tool_call = false
+structured_output = false
+open_weights = false
+
+[cost]
+input = 1.5
+output = 5.25
+cache_read = 0.3
+
+[limit]
+context = 202752
+input = 202752
+output = 65535
+
+[modalities]
+input = ["text"]
+output = ["text"]

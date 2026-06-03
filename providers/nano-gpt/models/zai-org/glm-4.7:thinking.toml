@@ -1,0 +1,22 @@
+# Included in subscription
+name = "GLM 4.7 Thinking"
+release_date = "2025-12-22"
+last_updated = "2025-12-22"
+attachment = false
+reasoning = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[cost]
+input = 0.2
+output = 0.8
+
+[limit]
+context = 200000
+input = 200000
+output = 65535
+
+[modalities]
+input = ["text"]
+output = ["text"]
