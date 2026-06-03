@@ -8,15 +8,17 @@ temperature = true
 tool_call = true
 open_weights = true
 
+[[reasoning_options]]
+type = "toggle"
+
 [cost]
-input = 0.30
-output = 1.20
-cache_read = 0.06
-cache_write = 0.375
+input = 0.60
+output = 2.40
+cache_read = 0.12
 
 [limit]
 context = 512_000
-output = 131072
+output = 128_000
 
 [modalities]
 input = ["text", "image", "video"]

@@ -1,13 +1,9 @@
-name = "MiniMax M3"
-family = "minimax-m3"
-release_date = "2026-05-31"
-last_updated = "2026-05-31"
-attachment = true
-reasoning = true
 temperature = true
 tool_call = true
 structured_output = false
-open_weights = true
+
+[extends]
+from = "minimax/MiniMax-M3"
 
 [cost]
 input = 0.3
