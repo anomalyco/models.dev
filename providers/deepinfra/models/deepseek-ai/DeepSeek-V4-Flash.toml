@@ -1,2 +1,14 @@
+# https://deepinfra.com/deepseek-ai/DeepSeek-V4-Flash
+
 [extends]
 from = "deepseek/deepseek-v4-flash"
+
+[cost]
+input = 0.1
+output = 0.2
+cache_read = 0.02
+
+# https://docs.deepinfra.com/chat/overview#max-output-tokens
+[limit]
+context = 1_048_576
+output = 16_384
