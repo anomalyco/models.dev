@@ -8,6 +8,13 @@ temperature = true
 tool_call = true
 open_weights = true
 
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high"]
+
 [interleaved]
 field = "reasoning_content"
 
