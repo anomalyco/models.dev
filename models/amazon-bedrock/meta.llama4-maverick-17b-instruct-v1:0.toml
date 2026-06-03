@@ -1,0 +1,18 @@
+name = "Llama 4 Maverick 17B Instruct"
+family = "llama"
+release_date = "2025-04-05"
+last_updated = "2025-04-05"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = true
+knowledge = "2024-08"
+open_weights = true
+
+[limit]
+context = 1_000_000
+output = 16_384
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

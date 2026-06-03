@@ -1,6 +1,7 @@
-[extends]
-from = "minimax/MiniMax-M2.5-highspeed"
+base_model = "minimax/MiniMax-M2.5-highspeed"
 
 [cost]
 input = 0.6
 output = 2.4
+cache_read = 0.06
+cache_write = 0.375

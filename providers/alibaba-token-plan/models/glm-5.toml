@@ -1,7 +1,8 @@
+base_model = "zhipuai/glm-5"
 open_weights = false
 
-[extends]
-from = "zhipuai/glm-5"
+[interleaved]
+field = "reasoning_content"
 
 [cost]
 input = 0

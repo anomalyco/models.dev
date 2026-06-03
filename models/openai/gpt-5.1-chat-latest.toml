@@ -1,0 +1,19 @@
+name = "GPT-5.1 Chat"
+family = "gpt-codex"
+release_date = "2025-11-13"
+last_updated = "2025-11-13"
+attachment = true
+reasoning = true
+temperature = false
+tool_call = true
+structured_output = true
+knowledge = "2024-09-30"
+open_weights = false
+
+[limit]
+context = 128_000
+output = 16_384
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

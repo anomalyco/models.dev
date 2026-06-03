@@ -1,18 +1,9 @@
-temperature = false
-tool_call = true
-structured_output = true
-
-[extends]
-from = "openai/o3"
+base_model = "openai/o3"
 
 [cost]
 input = 2
 output = 8
 cache_read = 0.5
-
-[limit]
-context = 200_000
-output = 100_000
 
 [modalities]
 input = ["image", "text", "pdf"]

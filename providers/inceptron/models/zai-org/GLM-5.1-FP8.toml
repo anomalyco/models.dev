@@ -1,7 +1,8 @@
+base_model = "zai/glm-5.1"
 name = "GLM 5.1"
 
-[extends]
-from = "zai/glm-5.1"
+[interleaved]
+field = "reasoning_content"
 
 [cost]
 input = 1.4
@@ -10,5 +11,5 @@ cache_read = 0.26
 cache_write = 0
 
 [limit]
-context = 202752
-output = 202752
+context = 202_752
+output = 202_752

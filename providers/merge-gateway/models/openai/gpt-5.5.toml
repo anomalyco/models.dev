@@ -1,2 +1,16 @@
-[extends]
-from = "openai/gpt-5.5"
+base_model = "openai/gpt-5.5"
+
+[cost]
+input = 5
+output = 30
+cache_read = 0.5
+
+[[cost.tiers]]
+tier = { type = "context", size = 272_000 }
+input = 10
+output = 45
+cache_read = 1
+
+[experimental.modes.fast]
+cost = { input = 12.5, output = 75, cache_read = 1.25 }
+provider = { body = { service_tier = "priority" } }

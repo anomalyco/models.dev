@@ -1,9 +1,6 @@
+base_model = "xiaomi/mimo-v2.5-pro"
 name = "MiMo V2.5 Pro"
 attachment = true
-reasoning = true
-
-[extends]
-from = "xiaomi/mimo-v2.5-pro"
 
 [interleaved]
 field = "reasoning_content"
@@ -11,6 +8,13 @@ field = "reasoning_content"
 [cost]
 input = 0.45
 output = 1.35
+cache_read = 0.2
+
+[[cost.tiers]]
+tier = { type = "context", size = 256_000 }
+input = 2
+output = 6
+cache_read = 0.4
 
 [limit]
 context = 1_000_000

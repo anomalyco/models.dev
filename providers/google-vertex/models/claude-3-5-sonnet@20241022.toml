@@ -1,5 +1,10 @@
-[extends]
-from = "anthropic/claude-3-5-sonnet-20241022"
+base_model = "anthropic/claude-3-5-sonnet-20241022"
+
+[cost]
+input = 3
+output = 15
+cache_read = 0.3
+cache_write = 3.75
 
 [provider]
 npm = "@ai-sdk/google-vertex/anthropic"

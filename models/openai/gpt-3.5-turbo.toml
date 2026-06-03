@@ -1,0 +1,19 @@
+name = "GPT-3.5-turbo"
+family = "gpt"
+release_date = "2023-03-01"
+last_updated = "2023-11-06"
+attachment = false
+reasoning = false
+temperature = true
+tool_call = false
+structured_output = false
+knowledge = "2021-09-01"
+open_weights = false
+
+[limit]
+context = 16_385
+output = 4_096
+
+[modalities]
+input = ["text"]
+output = ["text"]

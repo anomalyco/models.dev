@@ -1,5 +1,8 @@
+base_model = "anthropic/claude-opus-4-8"
 name = "Claude Opus 4.8 (AU)"
 
-[extends]
-from = "anthropic/claude-opus-4-8"
-omit = ["experimental.modes.fast"]
+[cost]
+input = 5
+output = 25
+cache_read = 0.5
+cache_write = 6.25

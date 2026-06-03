@@ -1,9 +1,5 @@
-temperature = true
-tool_call = true
+base_model = "anthropic/claude-sonnet-4-6"
 structured_output = true
-
-[extends]
-from = "anthropic/claude-sonnet-4-6"
 
 [cost]
 input = 3
@@ -12,7 +8,7 @@ cache_read = 0.3
 cache_write = 3.75
 
 [[cost.tiers]]
-tier = { size = 200_000 }
+tier = { type = "context", size = 200_000 }
 input = 6
 output = 22.5
 cache_read = 0.6
@@ -21,7 +17,3 @@ cache_write = 7.5
 [limit]
 context = 1_000_000
 output = 128_000
-
-[modalities]
-input = ["text", "image", "pdf"]
-output = ["text"]

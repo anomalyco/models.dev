@@ -1,10 +1,8 @@
-[extends]
-from = "anthropic/claude-opus-4-7"
-omit = ["cost.cache_write"]
+base_model = "anthropic/claude-opus-4-7"
 
 [cost]
-input = 4.50
-output = 22.50
+input = 4.5
+output = 22.5
 cache_read = 0.45
 
 [limit]
@@ -14,3 +12,7 @@ output = 128_000
 [modalities]
 input = ["text"]
 output = ["text"]
+
+[experimental.modes.fast]
+cost = { input = 30, output = 150, cache_read = 3, cache_write = 37.5 }
+provider = { body = { speed = "fast" }, headers = { anthropic-beta = "fast-mode-2026-02-01" } }

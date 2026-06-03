@@ -1,3 +1,4 @@
-[extends]
-from = "deepseek/deepseek-v4-flash"
-omit = ["cost"]
+base_model = "deepseek/deepseek-v4-flash"
+
+[interleaved]
+field = "reasoning_content"

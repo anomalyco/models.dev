@@ -1,12 +1,14 @@
-name = "Step 3.5 Flash 2603"
-reasoning = true
-
-[extends]
-from = "stepfun/step-3.5-flash-2603"
+base_model = "stepfun/step-3.5-flash-2603"
 
 [interleaved]
 field = "reasoning_content"
 
+[cost]
+input = 0.1
+output = 0.3
+cache_read = 0.02
+
 [limit]
 context = 262_144
+input = 256_000
 output = 65_536

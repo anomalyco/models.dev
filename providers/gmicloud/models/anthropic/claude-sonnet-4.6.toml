@@ -1,11 +1,9 @@
-[extends]
-from = "anthropic/claude-sonnet-4-6"
-omit = ["cost.cache_write"]
+base_model = "anthropic/claude-sonnet-4-6"
 
 [cost]
-input = 3.00
-output = 15.00
-cache_read = 0.30
+input = 3
+output = 15
+cache_read = 0.3
 
 [limit]
 context = 409_600

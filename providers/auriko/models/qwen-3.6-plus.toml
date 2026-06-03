@@ -1,8 +1,13 @@
-[extends]
-from = "alibaba/qwen3.6-plus"
-omit = ["cost.cache_write"]
+base_model = "alibaba/qwen3.6-plus"
 
 [cost]
 input = 0.5
-output = 3.00
+output = 3
 cache_read = 0.1
+
+[[cost.tiers]]
+tier = { type = "context", size = 256_000 }
+input = 2
+output = 6
+cache_read = 0.2
+cache_write = 2.5

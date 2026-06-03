@@ -1,9 +1,9 @@
-attachment = false
+base_model = "deepseek/deepseek-v4-pro"
+
+[interleaved]
+field = "reasoning_content"
 
 [cost]
 input = 1.74
 output = 3.48
 cache_read = 0.15
-
-[extends]
-from = "deepseek/deepseek-v4-pro"

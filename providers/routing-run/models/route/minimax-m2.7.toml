@@ -1,8 +1,5 @@
+base_model = "minimax/MiniMax-M2.7"
 name = "MiniMax M2.7"
-reasoning = true
-
-[extends]
-from = "minimax/MiniMax-M2.7"
 
 [interleaved]
 field = "reasoning_content"
@@ -10,6 +7,8 @@ field = "reasoning_content"
 [cost]
 input = 0.33
 output = 1.32
+cache_read = 0.06
+cache_write = 0.375
 
 [limit]
 context = 100_000

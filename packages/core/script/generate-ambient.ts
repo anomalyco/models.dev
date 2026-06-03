@@ -3,7 +3,7 @@
 /**
  * Generates Ambient model TOML files from https://api.ambient.xyz/v1/models.
  *
- * Emits `[extends]`-format TOMLs that inherit upstream metadata
+ * Emits `base_model` TOMLs that inherit upstream metadata
  * (family, release_date, knowledge, capabilities) from the canonical
  * provider model, and override only the fields Ambient's API reports:
  * cost, limit, modalities.
@@ -24,10 +24,8 @@ const ALLOWLIST = new Set<string>([
   "moonshotai/kimi-k2.6",
 ]);
 
-// Maps Ambient model IDs to canonical <provider>/<model> in this repo.
-// The generated TOML uses this path as `[extends].from` so capabilities
-// and metadata propagate from the upstream provider automatically.
-const EXTENDS_MAP: Record<string, string> = {
+// Maps Ambient model IDs to canonical model metadata IDs in this repo.
+const BASE_MODEL_MAP: Record<string, string> = {
   "zai-org/GLM-5.1-FP8": "zai/glm-5.1",
   "moonshotai/kimi-k2.6": "moonshotai/kimi-k2.6",
 };
@@ -79,11 +77,10 @@ function perMTok(price: string): number {
 
 function formatToml(
   model: z.infer<typeof AmbientModel>,
-  extendsFrom: string,
+  baseModel: string,
 ): string {
   const lines: string[] = [];
-  lines.push("[extends]");
-  lines.push(`from = "${extendsFrom}"`);
+  lines.push(`base_model = "${baseModel}"`);
   lines.push("");
 
   lines.push("[cost]");
@@ -147,13 +144,13 @@ async function main() {
 
   let count = 0;
   for (const model of selected) {
-    const extendsFrom = EXTENDS_MAP[model.id];
-    if (!extendsFrom) {
-      console.error(`No EXTENDS_MAP entry for ${model.id}; skipping`);
+    const baseModel = BASE_MODEL_MAP[model.id];
+    if (!baseModel) {
+      console.error(`No BASE_MODEL_MAP entry for ${model.id}; skipping`);
       continue;
     }
     const filePath = path.join(outDir, `${model.id}.toml`);
-    const toml = formatToml(model, extendsFrom);
+    const toml = formatToml(model, baseModel);
     if (dryRun) {
       console.log(`--- ${path.relative(process.cwd(), filePath)} ---`);
       console.log(toml);

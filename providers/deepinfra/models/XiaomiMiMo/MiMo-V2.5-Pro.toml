@@ -1,15 +1,19 @@
-[extends]
-from = "xiaomi/mimo-v2.5-pro"
+base_model = "xiaomi/mimo-v2.5-pro"
 
-# Source: https://deepinfra.com/XiaomiMiMo/MiMo-V2.5-Pro
-# Note: Overriding costs and limits for DeepInfra provider.
+[interleaved]
+field = "reasoning_content"
 
 [cost]
-input = 1.00
-output = 3.00
-cache_read = 0.20
+input = 1
+output = 3
+cache_read = 0.2
+
+[[cost.tiers]]
+tier = { type = "context", size = 256_000 }
+input = 2
+output = 6
+cache_read = 0.4
 
 [limit]
-# https://docs.deepinfra.com/chat/overview#max-output-tokens
 context = 1_048_576
 output = 16_384

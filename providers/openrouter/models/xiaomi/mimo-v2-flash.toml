@@ -1,9 +1,5 @@
-temperature = true
-tool_call = true
+base_model = "xiaomi/mimo-v2-flash"
 structured_output = false
-
-[extends]
-from = "xiaomi/mimo-v2-flash"
 
 [interleaved]
 field = "reasoning_details"
@@ -12,11 +8,3 @@ field = "reasoning_details"
 input = 0.1
 output = 0.3
 cache_read = 0.01
-
-[limit]
-context = 262_144
-output = 65_536
-
-[modalities]
-input = ["text"]
-output = ["text"]

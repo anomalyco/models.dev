@@ -1,9 +1,11 @@
-[extends]
-from = "deepseek/deepseek-v4-pro"
+base_model = "deepseek/deepseek-v4-pro"
+
+[interleaved]
+field = "reasoning_content"
 
 [cost]
-input = 0.80
-output = 1.60
+input = 0.8
+output = 1.6
 cache_read = 0.02
 
 [limit]

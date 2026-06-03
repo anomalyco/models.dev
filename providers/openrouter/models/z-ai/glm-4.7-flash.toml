@@ -1,10 +1,5 @@
-temperature = true
-tool_call = true
+base_model = "zai/glm-4.7-flash"
 structured_output = true
-
-[extends]
-from = "zai/glm-4.7-flash"
-omit = ["cost.cache_write"]
 
 [interleaved]
 field = "reasoning_details"
@@ -17,7 +12,3 @@ cache_read = 0.01
 [limit]
 context = 202_752
 output = 16_384
-
-[modalities]
-input = ["text"]
-output = ["text"]

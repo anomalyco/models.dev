@@ -1,12 +1,12 @@
+base_model = "minimax/MiniMax-M2.5-highspeed"
 name = "MiniMax M2.5 Highspeed"
 reasoning = false
-
-[extends]
-from = "minimax/MiniMax-M2.5-highspeed"
 
 [cost]
 input = 0.193
 output = 1.238
+cache_read = 0.06
+cache_write = 0.375
 
 [limit]
 context = 100_000

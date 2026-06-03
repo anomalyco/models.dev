@@ -1,8 +1,10 @@
+base_model = "xiaomi/mimo-v2-omni"
 name = "MiMo V2 Omni"
 
-[extends]
-from = "xiaomi/mimo-v2-omni"
-omit = ["interleaved"]
+[cost]
+input = 0.4
+output = 2
+cache_read = 0.08
 
 [limit]
 context = 265_000

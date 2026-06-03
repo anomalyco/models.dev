@@ -1,7 +1,16 @@
-[extends]
-from = "anthropic/claude-opus-4-7"
+base_model = "anthropic/claude-opus-4-7"
+
+[cost]
+input = 5
+output = 25
+cache_read = 0.5
+cache_write = 6.25
 
 [limit]
 context = 200_000
 input = 168_000
 output = 32_000
+
+[experimental.modes.fast]
+cost = { input = 30, output = 150, cache_read = 3, cache_write = 37.5 }
+provider = { body = { speed = "fast" }, headers = { anthropic-beta = "fast-mode-2026-02-01" } }

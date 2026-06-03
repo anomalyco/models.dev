@@ -1,2 +1,7 @@
-[extends]
-from = "alibaba/qwen3.6-max-preview"
+base_model = "alibaba/qwen3.6-max-preview"
+
+[cost]
+input = 1.3
+output = 7.8
+cache_read = 0.13
+cache_write = 1.625

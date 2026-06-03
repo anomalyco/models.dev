@@ -1,6 +1,7 @@
-[extends]
-from = "anthropic/claude-opus-4-0"
+base_model = "anthropic/claude-opus-4-0"
 
 [cost]
-input = 15.0
-output = 75.0
+input = 15
+output = 75
+cache_read = 1.5
+cache_write = 18.75

@@ -1,12 +1,9 @@
+base_model = "anthropic/claude-opus-4-6"
 name = "Claude Opus 4.6 (EU)"
 structured_output = true
 
-[extends]
-from = "anthropic/claude-opus-4-6"
-omit = ["experimental.modes.fast"]
-
 [cost]
-input = 5.50
-output = 27.50
+input = 5.5
+output = 27.5
 cache_read = 0.55
 cache_write = 6.875

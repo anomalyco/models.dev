@@ -1,6 +1,15 @@
-[extends]
-from = "openai/gpt-5.4"
-omit = ["experimental.modes.fast"]
+base_model = "openai/gpt-5.4"
+
+[cost]
+input = 2.5
+output = 15
+cache_read = 0.25
+
+[[cost.tiers]]
+tier = { type = "context", size = 272_000 }
+input = 5
+output = 22.5
+cache_read = 0.5
 
 [provider]
 npm = "@ai-sdk/openai"

@@ -1,6 +1,10 @@
-[extends]
-from = "openai/gpt-4o"
-omit = ["structured_output"]
+base_model = "openai/gpt-4o"
+base_model_omit = ["structured_output"]
+
+[cost]
+input = 2.5
+output = 10
+cache_read = 1.25
 
 [modalities]
 input = ["text", "image"]

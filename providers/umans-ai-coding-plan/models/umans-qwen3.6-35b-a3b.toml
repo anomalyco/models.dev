@@ -1,3 +1,4 @@
+base_model = "alibaba/qwen3.6-35b-a3b"
 name = "Qwen3.6 35B A3B"
 temperature = false
 
@@ -14,6 +15,3 @@ output = 262_144
 [modalities]
 input = ["text", "image"]
 output = ["text"]
-
-[extends]
-from = "alibaba/qwen3.6-35b-a3b"

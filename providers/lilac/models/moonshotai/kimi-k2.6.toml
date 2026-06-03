@@ -1,10 +1,12 @@
-[extends]
-from = "moonshotai/kimi-k2.6"
+base_model = "moonshotai/kimi-k2.6"
+
+[interleaved]
+field = "reasoning_content"
 
 [cost]
-input = 0.70
-output = 3.50
-cache_read = 0.20
+input = 0.7
+output = 3.5
+cache_read = 0.2
 
 [modalities]
 input = ["text", "image"]

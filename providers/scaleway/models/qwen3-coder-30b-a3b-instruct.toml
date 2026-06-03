@@ -1,14 +1,9 @@
-name = "Qwen3-Coder 30B-A3B Instruct"
-
-release_date = "2025-04"
+base_model = "alibaba/qwen3-coder-30b-a3b-instruct"
 last_updated = "2026-03-17"
 
-[extends]
-from = "alibaba/qwen3-coder-30b-a3b-instruct"
-
 [cost]
-input = 0.20
-output = 0.80
+input = 0.2
+output = 0.8
 
 [limit]
 context = 128_000

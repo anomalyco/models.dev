@@ -1,12 +1,12 @@
+base_model = "minimax/MiniMax-M2.5"
 name = "MiniMax M2.5"
 reasoning = false
-
-[extends]
-from = "minimax/MiniMax-M2.5"
 
 [cost]
 input = 0.193
 output = 1.238
+cache_read = 0.03
+cache_write = 0.375
 
 [limit]
 context = 100_000

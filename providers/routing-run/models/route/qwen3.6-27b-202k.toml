@@ -1,13 +1,11 @@
+base_model = "alibaba/qwen3.6-27b"
 name = "Qwen3.6 27B 202K"
 attachment = false
 reasoning = false
 
-[extends]
-from = "alibaba/qwen3.6-27b"
-
 [cost]
-input = 1.10
-output = 3.30
+input = 1.1
+output = 3.3
 
 [limit]
 context = 202_000

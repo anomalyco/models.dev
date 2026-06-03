@@ -1,6 +1,10 @@
-[extends]
-from = "anthropic/claude-opus-4-6"
-omit = ["experimental.modes.fast"]
+base_model = "anthropic/claude-opus-4-6"
+
+[cost]
+input = 5
+output = 25
+cache_read = 0.5
+cache_write = 6.25
 
 [provider]
 npm = "@ai-sdk/anthropic"

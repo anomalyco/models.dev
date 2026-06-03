@@ -1,16 +1,18 @@
 /** @jsx jsx */
 /** @jsxImportSource hono/jsx */
 
-import { generate } from "models.dev";
+import { generateCatalog } from "models.dev";
 import { Fragment } from "hono/jsx";
 import { renderToString } from "hono/jsx/dom/server";
 import { existsSync } from "fs";
 import path from "path";
 import { type TableRow, renderRow, getLargestRow } from "./shared.js";
 
-export const Providers = await generate(
-  path.join(import.meta.dir, "..", "..", "..", "providers")
+const Catalog = await generateCatalog(
+  path.join(import.meta.dir, "..", "..", "..")
 );
+export const Models = Catalog.models;
+export const Providers = Catalog.providers;
 
 // Function to load SVG content
 const loadProviderSvg = async (providerId: string): Promise<string | null> => {

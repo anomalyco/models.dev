@@ -1,10 +1,11 @@
+base_model = "moonshotai/kimi-k2.5"
+base_model_omit = ["structured_output"]
 family = "kimi"
 attachment = true
 temperature = true
 
-[extends]
-from = "moonshotai/kimi-k2.5"
-omit = ["structured_output"]
+[interleaved]
+field = "reasoning_content"
 
 [cost]
 input = 0

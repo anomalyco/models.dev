@@ -1,11 +1,6 @@
+base_model = "google/gemini-3.5-flash"
 name = "Gemini-3.5-Flash"
 temperature = false
-
-[extends]
-from = "google/gemini-3.5-flash"
-omit = [
-  "cost.input_audio",
-]
 
 [cost]
 input = 1.5152

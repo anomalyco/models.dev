@@ -1,16 +1,11 @@
+base_model = "minimax/MiniMax-M2.5"
 reasoning = false
-
-[extends]
-from = "minimax/MiniMax-M2.5"
 
 [cost]
 input = 0.11
 output = 0.95
 cache_read = 0.02
-
-[limit]
-context = 204_800
-output = 131_072
+cache_write = 0.375
 
 [provider]
 npm = "@ai-sdk/openai-compatible"

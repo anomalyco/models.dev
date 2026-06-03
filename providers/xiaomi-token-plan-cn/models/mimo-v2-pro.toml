@@ -1,6 +1,7 @@
-[extends]
-from = "xiaomi/mimo-v2-pro"
-omit = ["cost.context_over_200k", "cost.tiers"]
+base_model = "xiaomi/mimo-v2-pro"
+
+[interleaved]
+field = "reasoning_content"
 
 [cost]
 input = 0

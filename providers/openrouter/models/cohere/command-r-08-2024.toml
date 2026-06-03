@@ -1,18 +1,6 @@
-temperature = true
-tool_call = true
+base_model = "cohere/command-r-08-2024"
 structured_output = true
-
-[extends]
-from = "cohere/command-r-08-2024"
 
 [cost]
 input = 0.15
 output = 0.6
-
-[limit]
-context = 128_000
-output = 4_000
-
-[modalities]
-input = ["text"]
-output = ["text"]

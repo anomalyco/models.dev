@@ -31,27 +31,25 @@
 ## Model Configuration
 
 - Model `id` is **auto-injected** from filename (minus `.toml`) — never put `id` in TOML files
-- Models may reuse another model's definition via `extends` (see below); otherwise the full definition must be present in the file
+- Provider models may reuse provider-agnostic facts from `models/` via `base_model`; otherwise the full provider model definition must be present in the file
 - Schema uses `.strict()` — extra fields cause validation errors
 
-### `[extends]` (inheritance between models)
-- Syntax — a table at the top of the TOML:
+### Model metadata and `base_model`
+- Provider-agnostic model facts live under `models/<provider>/<model>.toml`
+- Provider TOMLs can inherit those facts with:
   ```toml
-  [extends]
-  from = "<provider-id>/<model-id>"   # required
-  omit = ["experimental.modes.fast"]  # optional, dot-path strings
+  base_model = "<provider-id>/<model-id>"
+  base_model_omit = ["limit.input"] # optional, dot-path strings
   ```
-  Example: `from = "anthropic/claude-opus-4-6"`
-- Resolved at parse time in `generate()`; the final JSON output contains **no** `extends` field — it exists only to cut duplication in the TOMLs
+  Example: `base_model = "anthropic/claude-opus-4-6"`
+- Resolved at parse time in `generate()`; the final provider JSON output contains **no** `base_model` or `base_model_omit` fields
 - Merge semantics:
-  - Plain objects (`[cost]`, `[limit]`, `[modalities]`, `[provider]`, `[experimental]`, …) are **deep-merged**
+  - Plain objects from metadata and provider TOML (`[limit]`, `[modalities]`, …) are **deep-merged**
   - Arrays (e.g. `modalities.input`) and primitives are **replaced** wholesale by the child
-  - Any field the child omits is inherited verbatim from the base, except `reasoning_options`
-  - `reasoning_options` describes the endpoint interface and is never inherited; each derived provider must declare the controls its API exposes explicitly
-- `omit` runs **after** the merge and deletes each dot-path from the result (used when the child needs to *remove* something the base defines, e.g. a provider-specific experimental mode). Missing paths are ignored so omits remain safe when a base model stops defining a field. Ancestor tables that become empty as a result are also pruned, so `omit = ["experimental.modes.fast"]` yields no `experimental` key in the final JSON when `fast` was the only mode.
-- Chains are allowed (A extends B extends C); cycles throw
-- The base model must exist; `[extends.from]` pointing at a missing provider/model is an error
-- The `extends` table is stripped before schema validation, so the merged result must still satisfy the strict `Model` schema
+  - Any provider field omitted is inherited verbatim from model metadata
+  - `cost`, `provider`, `experimental`, `reasoning_options`, `interleaved`, and `status` are provider-specific and must be declared in provider TOMLs when needed
+- `base_model_omit` runs **after** the merge and deletes each dot-path from the result. Missing paths are ignored. Ancestor tables that become empty as a result are also pruned.
+- The base model metadata file must exist; `base_model` pointing at a missing `models/` entry is an error
 
 ### Bedrock Naming Patterns
 - Dated models: `-v1:0` suffix (`anthropic.claude-3-5-sonnet-20241022-v1:0.toml`)

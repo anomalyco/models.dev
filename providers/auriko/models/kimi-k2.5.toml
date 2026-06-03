@@ -1,7 +1,8 @@
-[extends]
-from = "moonshotai/kimi-k2.5"
-omit = ["cost.cache_read"]
+base_model = "moonshotai/kimi-k2.5"
+
+[interleaved]
+field = "reasoning_content"
 
 [cost]
 input = 0.5
-output = 2.80
+output = 2.8
