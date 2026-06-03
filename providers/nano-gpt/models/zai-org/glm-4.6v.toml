@@ -1,0 +1,22 @@
+# Included in subscription
+name = "GLM 4.6V"
+release_date = "2025-12-11"
+last_updated = "2025-12-11"
+attachment = true
+reasoning = false
+tool_call = false
+structured_output = false
+open_weights = false
+
+[cost]
+input = 0.3
+output = 0.9
+
+[limit]
+context = 128000
+input = 128000
+output = 24000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

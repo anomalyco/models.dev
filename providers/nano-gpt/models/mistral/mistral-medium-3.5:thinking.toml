@@ -1,0 +1,22 @@
+# Not included in subscription
+name = "Mistral Medium 3.5 Thinking"
+release_date = "2026-04-30"
+last_updated = "2026-04-30"
+attachment = true
+reasoning = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[cost]
+input = 1.5
+output = 7.5
+
+[limit]
+context = 256000
+input = 256000
+output = 32768
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

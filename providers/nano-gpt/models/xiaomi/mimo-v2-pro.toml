@@ -1,0 +1,23 @@
+# Not included in subscription
+name = "MiMo V2 Pro"
+release_date = "2026-03-19"
+last_updated = "2026-03-19"
+attachment = false
+reasoning = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[cost]
+input = 1
+output = 3
+cache_read = 0.2
+
+[limit]
+context = 1048576
+input = 1048576
+output = 131072
+
+[modalities]
+input = ["text"]
+output = ["text"]

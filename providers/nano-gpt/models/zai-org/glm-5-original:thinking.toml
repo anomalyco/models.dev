@@ -1,0 +1,23 @@
+# Not included in subscription
+name = "GLM 5 Original Thinking"
+release_date = "2026-02-11"
+last_updated = "2026-02-11"
+attachment = false
+reasoning = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[cost]
+input = 1
+output = 3.2
+cache_read = 0.2
+
+[limit]
+context = 200000
+input = 200000
+output = 128000
+
+[modalities]
+input = ["text"]
+output = ["text"]

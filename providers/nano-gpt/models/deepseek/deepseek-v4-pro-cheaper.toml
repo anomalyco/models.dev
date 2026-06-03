@@ -1,0 +1,23 @@
+# Included in subscription
+name = "DeepSeek V4 Pro Cheaper"
+release_date = "2026-04-25"
+last_updated = "2026-04-25"
+attachment = false
+reasoning = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[cost]
+input = 0.435
+output = 0.87
+cache_read = 0.003625
+
+[limit]
+context = 1048576
+input = 1048576
+output = 384000
+
+[modalities]
+input = ["text"]
+output = ["text"]

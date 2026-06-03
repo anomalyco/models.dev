@@ -1,0 +1,22 @@
+# Included in subscription
+name = "Nvidia Nemotron 3 Super 120B"
+release_date = "2026-03-01"
+last_updated = "2026-03-01"
+attachment = false
+reasoning = true
+tool_call = true
+structured_output = false
+open_weights = false
+
+[cost]
+input = 0.05
+output = 0.25
+
+[limit]
+context = 262144
+input = 262144
+output = 16384
+
+[modalities]
+input = ["text"]
+output = ["text"]

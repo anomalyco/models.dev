@@ -1,0 +1,23 @@
+# Not included in subscription
+name = "Coding Router Max"
+release_date = "2026-05-12"
+last_updated = "2026-05-12"
+attachment = false
+reasoning = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[cost]
+input = 5
+output = 30
+cache_read = 0.5
+
+[limit]
+context = 1000000
+input = 1000000
+output = 128000
+
+[modalities]
+input = ["text"]
+output = ["text"]

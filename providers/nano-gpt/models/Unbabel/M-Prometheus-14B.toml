@@ -1,0 +1,22 @@
+# Included in subscription
+name = "M-Prometheus 14B"
+release_date = "2026-05-29"
+last_updated = "2026-05-29"
+attachment = false
+reasoning = false
+tool_call = false
+structured_output = false
+open_weights = false
+
+[cost]
+input = 0.2
+output = 0.2
+
+[limit]
+context = 32768
+input = 32768
+output = 8192
+
+[modalities]
+input = ["text"]
+output = ["text"]

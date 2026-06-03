@@ -1,21 +1,21 @@
 # Included in subscription
-name = "Qwen3.6 35B A3B Thinking"
-release_date = "2026-04-19"
-last_updated = "2026-04-19"
+name = "Qwen3.5 122B A10B"
+release_date = "2026-02-24"
+last_updated = "2026-02-24"
 attachment = true
-reasoning = true
+reasoning = false
 tool_call = false
 structured_output = false
 open_weights = false
 
 [cost]
-input = 0.112
-output = 0.8
+input = 0.36
+output = 2.88
 
 [limit]
-context = 262144
-input = 262144
-output = 16384
+context = 260096
+input = 260096
+output = 65536
 
 [modalities]
 input = ["text", "image", "video"]

@@ -1,0 +1,22 @@
+# Included in subscription
+name = "Qwen3.5 9B"
+release_date = "2026-03-10"
+last_updated = "2026-03-10"
+attachment = true
+reasoning = true
+tool_call = false
+structured_output = false
+open_weights = false
+
+[cost]
+input = 0.05
+output = 0.15
+
+[limit]
+context = 256000
+input = 256000
+output = 65536
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

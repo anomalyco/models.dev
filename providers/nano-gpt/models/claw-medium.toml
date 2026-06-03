@@ -1,0 +1,22 @@
+# Included in subscription
+name = "Claw Medium"
+release_date = "2026-05-11"
+last_updated = "2026-05-11"
+attachment = false
+reasoning = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[cost]
+input = 0.3
+output = 1.2
+
+[limit]
+context = 204800
+input = 204800
+output = 131072
+
+[modalities]
+input = ["text"]
+output = ["text"]
