@@ -1,10 +1,6 @@
+base_model = "meta/llama-3.3-70b-instruct"
 attachment = false
-temperature = true
-tool_call = true
 structured_output = true
-
-[extends]
-from = "llama/llama-3.3-70b-instruct"
 
 [cost]
 input = 0.1
@@ -13,7 +9,3 @@ output = 0.32
 [limit]
 context = 131_072
 output = 16_384
-
-[modalities]
-input = ["text"]
-output = ["text"]

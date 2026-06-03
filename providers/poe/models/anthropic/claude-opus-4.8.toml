@@ -1,12 +1,5 @@
+base_model = "anthropic/claude-opus-4-8"
 name = "Claude-Opus-4.8"
-
-[extends]
-from = "anthropic/claude-opus-4-8"
-omit = [
-  "cost.cache_read",
-  "cost.cache_write",
-  "experimental",
-]
 
 [cost]
 input = 4.2929

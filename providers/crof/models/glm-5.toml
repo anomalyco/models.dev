@@ -1,10 +1,13 @@
-[extends]
-from = "zhipuai/glm-5"
+base_model = "zhipuai/glm-5"
+
+[interleaved]
+field = "reasoning_content"
 
 [cost]
 input = 0.48
-output = 1.90
-cache_read = 0.10
+output = 1.9
+cache_read = 0.1
+cache_write = 0
 
 [limit]
 context = 202_752

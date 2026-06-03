@@ -1,6 +1,6 @@
 #!/usr/bin/env bun
 
-import { Rendered, Providers } from "../src/render";
+import { Rendered, Providers, Models } from "../src/render";
 import fs from "fs/promises";
 import path from "path";
 import { $ } from "bun";
@@ -45,6 +45,13 @@ let html = await Bun.file("./dist/index.html").text();
 html = html.replace("<!--static-->", Rendered);
 await Bun.write("./dist/index.html", html);
 await Bun.write("./dist/api.json", JSON.stringify(Providers));
+await Bun.write(
+  "./dist/catalog.json",
+  JSON.stringify({ models: Models, providers: Providers }),
+);
+await Bun.write("./dist/models.json", JSON.stringify(Models));
 
 await $`mv ./dist/index.html ./dist/_index.html`;
 await $`mv ./dist/api.json ./dist/_api.json`;
+await $`mv ./dist/catalog.json ./dist/_catalog.json`;
+await $`mv ./dist/models.json ./dist/_models.json`;

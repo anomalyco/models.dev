@@ -1,5 +1,7 @@
-[extends]
-from = "zai/glm-5v-turbo"
+base_model = "zai/glm-5v-turbo"
+
+[interleaved]
+field = "reasoning_content"
 
 [cost]
 input = 0

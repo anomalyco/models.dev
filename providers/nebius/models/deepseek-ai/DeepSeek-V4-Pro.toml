@@ -1,5 +1,7 @@
-[extends]
-from = "deepseek/deepseek-v4-pro"
+base_model = "deepseek/deepseek-v4-pro"
+
+[interleaved]
+field = "reasoning_content"
 
 [cost]
 input = 1.75

@@ -1,8 +1,5 @@
+base_model = "moonshotai/kimi-k2.6"
 name = "Kimi K2.6 6bit"
-reasoning = true
-
-[extends]
-from = "moonshotai/kimi-k2.6"
 
 [interleaved]
 field = "reasoning_content"
@@ -10,11 +7,4 @@ field = "reasoning_content"
 [cost]
 input = 0.462
 output = 2.42
-
-[limit]
-context = 262_144
-output = 262_144
-
-[modalities]
-input = ["text", "image", "video"]
-output = ["text"]
+cache_read = 0.16

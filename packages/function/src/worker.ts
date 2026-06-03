@@ -103,6 +103,10 @@ export default {
 
     if (url.pathname === "/api.json") {
       url.pathname = "/_api.json";
+    } else if (url.pathname === "/models.json") {
+      url.pathname = "/_models.json";
+    } else if (url.pathname === "/catalog.json") {
+      url.pathname = "/_catalog.json";
     } else if (
       url.pathname === "/" ||
       url.pathname === "/index.html" ||

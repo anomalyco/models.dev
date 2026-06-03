@@ -1,10 +1,11 @@
-[extends]
-from = "zhipuai/glm-5"
-omit = ["cost.cache_read", "cost.cache_write"]
+base_model = "zhipuai/glm-5"
+
+[interleaved]
+field = "reasoning_content"
 
 [cost]
 input = 0.75
-output = 2.40
+output = 2.4
 
 [limit]
 context = 200_000

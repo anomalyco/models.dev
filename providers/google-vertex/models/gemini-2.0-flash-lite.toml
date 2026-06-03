@@ -1,3 +1,6 @@
-[extends]
-from = "google/gemini-2.0-flash-lite"
-omit = ["structured_output"]
+base_model = "google/gemini-2.0-flash-lite"
+base_model_omit = ["structured_output"]
+
+[cost]
+input = 0.075
+output = 0.3

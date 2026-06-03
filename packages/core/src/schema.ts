@@ -104,6 +104,102 @@ const OutputCost = Cost.extend({
   tiers: z.array(CostTier).optional(),
 });
 
+const DateString = z.string().regex(/^\d{4}-\d{2}(-\d{2})?$/, {
+  message: "Must be in YYYY-MM or YYYY-MM-DD format",
+});
+
+const Modality = z.enum(["text", "audio", "image", "video", "pdf"]);
+
+const Modalities = z
+  .object({
+    input: z.array(Modality),
+    output: z.array(Modality),
+  })
+  .strict();
+
+const LimitBase = z
+  .object({
+    context: z.number().min(0, "Context window must be positive"),
+    input: z.number().min(0, "Input tokens must be positive").optional(),
+  })
+  .strict();
+
+const ModelLimit = LimitBase.extend({
+  output: z.number().min(0, "Output tokens must be positive").optional(),
+}).strict();
+
+const ProviderModelLimit = LimitBase.extend({
+  output: z.number().min(0, "Output tokens must be positive"),
+}).strict();
+
+const UrlString = z.string().url("Must be a valid URL");
+
+export const ModelLink = z
+  .object({
+    label: z.string().min(1, "Link label cannot be empty").optional(),
+    url: UrlString,
+    type: z
+      .enum([
+        "announcement",
+        "blog",
+        "docs",
+        "license",
+        "model_card",
+        "paper",
+        "weights",
+        "other",
+      ])
+      .optional(),
+  })
+  .strict();
+
+export const ModelWeights = z
+  .object({
+    label: z.string().min(1, "Weights label cannot be empty").optional(),
+    url: UrlString,
+    format: z.string().min(1, "Weights format cannot be empty").optional(),
+    quantization: z
+      .string()
+      .min(1, "Weights quantization cannot be empty")
+      .optional(),
+  })
+  .strict();
+
+export const BenchmarkResult = z
+  .object({
+    name: z.string().min(1, "Benchmark name cannot be empty"),
+    score: z.union([z.number(), z.string().min(1)]),
+    metric: z.string().min(1, "Benchmark metric cannot be empty").optional(),
+    source: UrlString.optional(),
+    date: DateString.optional(),
+  })
+  .strict();
+
+const ModelMetadataBase = z.object({
+  id: z.string(),
+  name: z.string().min(1, "Model name cannot be empty"),
+  family: ModelFamily.optional(),
+  attachment: z.boolean().optional(),
+  reasoning: z.boolean().optional(),
+  tool_call: z.boolean().optional(),
+  structured_output: z.boolean().optional(),
+  temperature: z.boolean().optional(),
+  knowledge: DateString.optional(),
+  release_date: DateString.optional(),
+  last_updated: DateString.optional(),
+  modalities: Modalities.optional(),
+  open_weights: z.boolean().optional(),
+  limit: ModelLimit.optional(),
+  license: z.string().min(1, "License cannot be empty").optional(),
+  links: z.array(ModelLink).optional(),
+  weights: z.array(ModelWeights).optional(),
+  benchmarks: z.array(BenchmarkResult).optional(),
+});
+
+export const ModelMetadata = ModelMetadataBase.strict();
+
+export type ModelMetadata = z.infer<typeof ModelMetadata>;
+
 const ModelBase = z.object({
   id: z.string(),
   name: z.string().min(1, "Model name cannot be empty"),
@@ -130,22 +226,11 @@ const ModelBase = z.object({
       message: "Must be in YYYY-MM or YYYY-MM-DD format",
     })
     .optional(),
-  release_date: z.string().regex(/^\d{4}-\d{2}(-\d{2})?$/, {
-    message: "Must be in YYYY-MM or YYYY-MM-DD format",
-  }),
-  last_updated: z.string().regex(/^\d{4}-\d{2}(-\d{2})?$/, {
-    message: "Must be in YYYY-MM or YYYY-MM-DD format",
-  }),
-  modalities: z.object({
-    input: z.array(z.enum(["text", "audio", "image", "video", "pdf"])),
-    output: z.array(z.enum(["text", "audio", "image", "video", "pdf"])),
-  }),
+  release_date: DateString,
+  last_updated: DateString,
+  modalities: Modalities,
   open_weights: z.boolean(),
-  limit: z.object({
-    context: z.number().min(0, "Context window must be positive"),
-    input: z.number().min(0, "Input tokens must be positive").optional(),
-    output: z.number().min(0, "Output tokens must be positive"),
-  }),
+  limit: ProviderModelLimit,
   status: z.enum(["alpha", "beta", "deprecated"]).optional(),
   experimental: z
     .object({

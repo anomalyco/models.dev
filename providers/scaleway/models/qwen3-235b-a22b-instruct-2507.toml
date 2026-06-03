@@ -1,14 +1,12 @@
+base_model = "alibaba/qwen3-235b-a22b"
 name = "Qwen3 235B A22B Instruct 2507"
-
 release_date = "2025-07-01"
 last_updated = "2026-03-17"
-
-[extends]
-from = "alibaba/qwen3-235b-a22b"
 
 [cost]
 input = 0.75
 output = 2.25
+reasoning = 8.4
 
 [limit]
 context = 260_000

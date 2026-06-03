@@ -1,14 +1,13 @@
-# https://deepinfra.com/deepseek-ai/DeepSeek-V4-Pro
+base_model = "deepseek/deepseek-v4-pro"
 
-[extends]
-from = "deepseek/deepseek-v4-pro"
+[interleaved]
+field = "reasoning_content"
 
 [cost]
 input = 1.3
 output = 2.6
 cache_read = 0.1
 
-# https://docs.deepinfra.com/chat/overview#max-output-tokens
 [limit]
 context = 1_048_576
 output = 16_384

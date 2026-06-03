@@ -1,6 +1,4 @@
-[extends]
-from = "anthropic/claude-sonnet-4-6"
-omit = ["cost"]
+base_model = "anthropic/claude-sonnet-4-6"
 
 [limit]
 context = 1_000_000

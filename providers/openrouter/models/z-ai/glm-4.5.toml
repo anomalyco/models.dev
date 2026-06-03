@@ -1,20 +1,7 @@
-temperature = true
-tool_call = true
+base_model = "zai/glm-4.5"
 structured_output = false
-
-[extends]
-from = "zai/glm-4.5"
-omit = ["cost.cache_write"]
 
 [cost]
 input = 0.6
 output = 2.2
 cache_read = 0.11
-
-[limit]
-context = 131_072
-output = 98_304
-
-[modalities]
-input = ["text"]
-output = ["text"]

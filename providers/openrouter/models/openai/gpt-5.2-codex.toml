@@ -1,10 +1,5 @@
-temperature = false
-tool_call = true
-structured_output = true
-
-[extends]
-from = "openai/gpt-5.2-codex"
-omit = ["limit.input"]
+base_model = "openai/gpt-5.2-codex"
+base_model_omit = ["limit.input"]
 
 [cost]
 input = 1.75

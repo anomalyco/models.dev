@@ -9,39 +9,27 @@ import { openrouter } from "./providers/openrouter.js";
 import { ovhcloud } from "./providers/ovhcloud.js";
 import { xai } from "./providers/xai.js";
 
-const ExtendsConfig = z
-  .object({
-    from: z.string(),
-    omit: z.array(z.string()).optional(),
-  })
-  .strict();
-
-const ExistingExtendsConfig = z
-  .object({
-    from: z.string(),
-    omit: z.array(z.string()).optional(),
-  })
-  .passthrough();
-
 const ExistingModel = AuthoredModelShape.partial()
   .extend({
-    extends: ExistingExtendsConfig.optional(),
+    base_model: z.string().optional(),
+    base_model_omit: z.array(z.string()).optional(),
   })
   .strict();
 
-const SyncedExtendsModel = AuthoredModelShape.partial()
+const SyncedBaseModel = AuthoredModelShape.partial()
   .extend({
     id: z.string(),
-    extends: ExtendsConfig,
+    base_model: z.string(),
+    base_model_omit: z.array(z.string()).optional(),
   })
   .strict();
 
-const SyncedAuthoredModel = z.union([AuthoredModel, SyncedExtendsModel]);
+const SyncedAuthoredModel = z.union([AuthoredModel, SyncedBaseModel]);
 
 export type ExistingModel = z.infer<typeof ExistingModel>;
 export type SyncedFullModel = Omit<z.infer<typeof AuthoredModelShape>, "id">;
-export type SyncedExtendsModel = Omit<z.infer<typeof SyncedExtendsModel>, "id">;
-export type SyncedModel = SyncedFullModel | SyncedExtendsModel;
+export type SyncedBaseModel = Omit<z.infer<typeof SyncedBaseModel>, "id">;
+export type SyncedModel = SyncedFullModel | SyncedBaseModel;
 
 export interface SyncProvider<SourceModel> {
   id: string;
@@ -368,16 +356,11 @@ function formatNumber(n: number) {
 
 function formatToml(model: z.infer<typeof SyncedAuthoredModel>) {
   const lines: string[] = [];
-  const extendsLines: string[] = [];
 
-  if ("extends" in model) {
-    extendsLines.push("[extends]");
-    extendsLines.push(`from = ${quote(model.extends.from)}`);
-    if (model.extends.omit !== undefined) {
-      extendsLines.push(`omit = [${model.extends.omit.map(quote).join(", ")}]`);
-    }
+  if (model.base_model !== undefined) lines.push(`base_model = ${quote(model.base_model)}`);
+  if (model.base_model_omit !== undefined) {
+    lines.push(`base_model_omit = [${model.base_model_omit.map(quote).join(", ")}]`);
   }
-
   if (model.name !== undefined) lines.push(`name = ${quote(model.name)}`);
   if (model.family !== undefined) lines.push(`family = ${quote(model.family)}`);
   if (model.release_date !== undefined) lines.push(`release_date = ${quote(model.release_date)}`);
@@ -392,11 +375,6 @@ function formatToml(model: z.infer<typeof SyncedAuthoredModel>) {
   if (model.knowledge !== undefined) lines.push(`knowledge = ${quote(model.knowledge)}`);
   if (model.open_weights !== undefined) lines.push(`open_weights = ${model.open_weights}`);
   if (model.status !== undefined) lines.push(`status = ${quote(model.status)}`);
-
-  if (extendsLines.length > 0) {
-    if (lines.length > 0) lines.push("");
-    lines.push(...extendsLines);
-  }
 
   if (model.interleaved !== undefined) {
     lines.push("");

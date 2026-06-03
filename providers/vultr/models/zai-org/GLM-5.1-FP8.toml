@@ -1,15 +1,8 @@
-[extends]
-from = "zai/glm-5.1"
-omit = ["cost.cache_read", "cost.cache_write"]
+base_model = "zai/glm-5.1"
+
+[interleaved]
+field = "reasoning_content"
 
 [cost]
 input = 0.85
-output = 3.10
-
-[limit]
-context = 200_000
-output = 131_072
-
-[modalities]
-input = ["text"]
-output = ["text"]
+output = 3.1

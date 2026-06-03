@@ -1,19 +1,7 @@
-temperature = true
+base_model = "openai/gpt-3.5-turbo"
 tool_call = true
 structured_output = true
-
-[extends]
-from = "openai/gpt-3.5-turbo"
-omit = ["cost.cache_read"]
 
 [cost]
 input = 0.5
 output = 1.5
-
-[limit]
-context = 16_385
-output = 4_096
-
-[modalities]
-input = ["text"]
-output = ["text"]

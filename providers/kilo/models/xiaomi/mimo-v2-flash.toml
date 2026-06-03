@@ -1,14 +1,7 @@
+base_model = "xiaomi/mimo-v2-flash"
 name = "Xiaomi: MiMo-V2-Flash"
-
-[extends]
-from = "xiaomi/mimo-v2-flash"
-omit = ["interleaved"]
 
 [cost]
 input = 0.09
 output = 0.29
 cache_read = 0.045
-
-[limit]
-context = 262144
-output = 65536

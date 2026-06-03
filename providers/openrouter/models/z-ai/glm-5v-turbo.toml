@@ -1,10 +1,8 @@
-temperature = true
-tool_call = true
+base_model = "zai/glm-5v-turbo"
 structured_output = false
 
-[extends]
-from = "zai/glm-5v-turbo"
-omit = ["cost.cache_write"]
+[interleaved]
+field = "reasoning_content"
 
 [cost]
 input = 1.2

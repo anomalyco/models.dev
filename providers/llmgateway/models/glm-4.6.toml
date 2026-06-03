@@ -1,2 +1,7 @@
-[extends]
-from = "zhipuai/glm-4.6"
+base_model = "zhipuai/glm-4.6"
+
+[cost]
+input = 0.6
+output = 2.2
+cache_read = 0.11
+cache_write = 0

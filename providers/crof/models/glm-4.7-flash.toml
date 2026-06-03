@@ -1,10 +1,10 @@
-[extends]
-from = "zhipuai/glm-4.7-flash"
+base_model = "zhipuai/glm-4.7-flash"
 
 [cost]
 input = 0.04
-output = 0.30
+output = 0.3
 cache_read = 0.008
+cache_write = 0
 
 [limit]
 context = 202_752

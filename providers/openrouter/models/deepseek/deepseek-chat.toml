@@ -1,11 +1,6 @@
+base_model = "deepseek/deepseek-chat"
 attachment = false
-temperature = true
-tool_call = true
 structured_output = true
-
-[extends]
-from = "deepseek/deepseek-chat"
-omit = ["cost.cache_read"]
 
 [cost]
 input = 0.2002
@@ -14,7 +9,3 @@ output = 0.8001
 [limit]
 context = 128_000
 output = 16_000
-
-[modalities]
-input = ["text"]
-output = ["text"]

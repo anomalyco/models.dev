@@ -1,15 +1,12 @@
+base_model = "alibaba/qwen3.5-397b-a17b"
 name = "Qwen3.5 397B A17B"
-
 release_date = "2026-03-17"
 last_updated = "2026-03-17"
 knowledge = "2025-04"
 
-[extends]
-from = "alibaba/qwen3.5-397b-a17b"
-
 [cost]
-input = 0.60
-output = 3.60
+input = 0.6
+output = 3.6
 
 [limit]
 context = 256_000

@@ -1,7 +1,9 @@
+base_model = "mistral/mistral-medium-2505"
 name = "Mistral Medium 2505"
 
-[extends]
-from = "mistral/mistral-medium-2505"
+[cost]
+input = 0.4
+output = 2
 
 [limit]
 context = 128_000

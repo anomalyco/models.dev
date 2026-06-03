@@ -1,2 +1,6 @@
-[extends]
-from = "openai/gpt-5.3-codex"
+base_model = "openai/gpt-5.3-codex"
+
+[cost]
+input = 1.75
+output = 14
+cache_read = 0.175

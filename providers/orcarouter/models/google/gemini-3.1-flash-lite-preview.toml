@@ -1,6 +1,7 @@
-[extends]
-from = "google/gemini-3.1-flash-lite-preview"
+base_model = "google/gemini-3.1-flash-lite-preview"
 
 [cost]
 input = 0.25
 output = 1.5
+cache_read = 0.025
+input_audio = 0.5

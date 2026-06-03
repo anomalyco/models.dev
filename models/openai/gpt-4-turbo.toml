@@ -1,0 +1,19 @@
+name = "GPT-4 Turbo"
+family = "gpt"
+release_date = "2023-11-06"
+last_updated = "2024-04-09"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = true
+structured_output = false
+knowledge = "2023-12"
+open_weights = false
+
+[limit]
+context = 128_000
+output = 4_096
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

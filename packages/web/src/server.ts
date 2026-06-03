@@ -1,5 +1,5 @@
 import Index from "../index.html";
-import { Rendered } from "./render";
+import { Models, Providers, Rendered } from "./render";
 import path from "path";
 
 Bun.serve({
@@ -45,6 +45,27 @@ Bun.serve({
         },
       });
     },
+    "/api.json": () =>
+      Response.json(Providers, {
+        headers: {
+          "Cache-Control": "public, max-age=3600",
+        },
+      }),
+    "/models.json": () =>
+      Response.json(Models, {
+        headers: {
+          "Cache-Control": "public, max-age=3600",
+        },
+      }),
+    "/catalog.json": () =>
+      Response.json(
+        { models: Models, providers: Providers },
+        {
+          headers: {
+            "Cache-Control": "public, max-age=3600",
+          },
+        },
+      ),
   },
 });
 

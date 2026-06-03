@@ -1,19 +1,12 @@
-name = "Kimi K2.5"
+base_model = "moonshotai/kimi-k2.5"
 attachment = true
 reasoning = false
-
-[extends]
-from = "moonshotai/kimi-k2.5"
-omit = ["interleaved"]
 
 [cost]
 input = 0.462
 output = 2.42
+cache_read = 0.1
 
 [limit]
 context = 131_072
 output = 32_768
-
-[modalities]
-input = ["text", "image", "video"]
-output = ["text"]

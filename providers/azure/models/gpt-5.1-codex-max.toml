@@ -1,3 +1,11 @@
-[extends]
-from = "openai/gpt-5.1-codex-max"
-omit = ["limit.input"]
+base_model = "openai/gpt-5.1-codex-max"
+base_model_omit = ["limit.input"]
+
+[cost]
+input = 1.25
+output = 10
+cache_read = 0.125
+
+[limit]
+context = 400_000
+output = 128_000

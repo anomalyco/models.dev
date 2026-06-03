@@ -1,5 +1,7 @@
-[extends]
-from = "deepseek/deepseek-v4-flash"
+base_model = "deepseek/deepseek-v4-flash"
+
+[interleaved]
+field = "reasoning_content"
 
 [cost]
 input = 0.112

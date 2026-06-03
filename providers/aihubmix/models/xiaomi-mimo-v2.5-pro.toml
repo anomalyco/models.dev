@@ -1,17 +1,18 @@
+base_model = "xiaomi/mimo-v2.5-pro"
 name = "Xiaomi MiMo-V2.5-Pro"
 family = "mimo-v2.5-pro"
 last_updated = "2026-05-13"
 
-[extends]
-from = "xiaomi/mimo-v2.5-pro"
+[interleaved]
+field = "reasoning_content"
 
 [cost]
-input = 1.10
-output = 3.30
+input = 1.1
+output = 3.3
 cache_read = 0.22
 
 [[cost.tiers]]
-tier = { size = 256_000 }
-input = 2.20
-output = 6.60
+tier = { type = "context", size = 256_000 }
+input = 2.2
+output = 6.6
 cache_read = 0.44

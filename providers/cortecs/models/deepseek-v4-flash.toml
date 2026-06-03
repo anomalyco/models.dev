@@ -1,10 +1,13 @@
-[extends]
-from = "deepseek/deepseek-v4-flash"
-omit = ["structured_output"]
+base_model = "deepseek/deepseek-v4-flash"
+base_model_omit = ["structured_output"]
+
+[interleaved]
+field = "reasoning_content"
 
 [cost]
 input = 0.133
 output = 0.266
+cache_read = 0.0028
 
 [limit]
 context = 1_048_576

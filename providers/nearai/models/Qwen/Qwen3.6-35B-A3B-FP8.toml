@@ -1,11 +1,9 @@
+base_model = "alibaba/qwen3.6-35b-a3b"
 name = "Qwen 3.6 35B A3B FP8"
-
-[extends]
-from = "alibaba/qwen3.6-35b-a3b"
 
 [cost]
 input = 0.17
-output = 1.10
+output = 1.1
 cache_read = 0.056
 
 [limit]

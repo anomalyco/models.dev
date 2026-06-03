@@ -1,6 +1,4 @@
-[extends]
-from = "alibaba/qwen3.6-plus"
-omit = ["cost.tiers", "cost.context_over_200k"]
+base_model = "alibaba/qwen3.6-plus"
 
 [cost]
 input = 0

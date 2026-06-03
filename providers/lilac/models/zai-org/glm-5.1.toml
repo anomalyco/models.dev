@@ -1,20 +1,16 @@
+base_model = "zai/glm-5.1"
 name = "GLM 5.1"
 knowledge = "2025-04"
 open_weights = true
 
-[extends]
-from = "zai/glm-5.1"
-omit = ["cost.cache_write"]
+[interleaved]
+field = "reasoning_content"
 
 [cost]
-input = 0.90
-output = 3.00
+input = 0.9
+output = 3
 cache_read = 0.27
 
 [limit]
 context = 202_800
 output = 131_072
-
-[modalities]
-input = ["text"]
-output = ["text"]

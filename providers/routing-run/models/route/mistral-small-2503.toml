@@ -1,8 +1,10 @@
+base_model = "mistral/mistral-small-2603"
 name = "Mistral Small 2503"
 reasoning = false
 
-[extends]
-from = "mistral/mistral-small-2603"
+[cost]
+input = 0.15
+output = 0.6
 
 [limit]
 context = 128_000

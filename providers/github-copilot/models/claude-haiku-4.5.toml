@@ -1,5 +1,10 @@
-[extends]
-from = "anthropic/claude-haiku-4-5"
+base_model = "anthropic/claude-haiku-4-5"
+
+[cost]
+input = 1
+output = 5
+cache_read = 0.1
+cache_write = 1.25
 
 [limit]
 context = 200_000

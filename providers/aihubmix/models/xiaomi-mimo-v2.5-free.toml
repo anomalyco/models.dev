@@ -1,16 +1,12 @@
+base_model = "xiaomi/mimo-v2.5"
 name = "Xiaomi MiMo-V2.5 (free)"
 family = "mimo-v2.5"
 last_updated = "2026-05-13"
 
-[extends]
-from = "xiaomi/mimo-v2.5"
-omit = ["cost.context_over_200k", "cost.tiers"]
+[interleaved]
+field = "reasoning_content"
 
 [cost]
 input = 0
 output = 0
 cache_read = 0
-
-[limit]
-context = 1_048_576
-output = 131_072

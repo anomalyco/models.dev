@@ -1,6 +1,10 @@
-[extends]
-from = "openai/o3"
-omit = ["structured_output"]
+base_model = "openai/o3"
+base_model_omit = ["structured_output"]
+
+[cost]
+input = 2
+output = 8
+cache_read = 0.5
 
 [modalities]
 input = ["text", "image"]

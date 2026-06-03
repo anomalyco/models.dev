@@ -1,8 +1,4 @@
-name = "DeepSeek V4 Flash"
-reasoning = true
-
-[extends]
-from = "deepseek/deepseek-v4-flash"
+base_model = "deepseek/deepseek-v4-flash"
 
 [interleaved]
 field = "reasoning_content"
@@ -10,6 +6,7 @@ field = "reasoning_content"
 [cost]
 input = 0.4928
 output = 0.7392
+cache_read = 0.0028
 
 [limit]
 context = 1_000_000

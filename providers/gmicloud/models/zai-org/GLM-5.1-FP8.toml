@@ -1,6 +1,7 @@
-[extends]
-from = "zai/glm-5.1"
-omit = ["cost.cache_write"]
+base_model = "zai/glm-5.1"
+
+[interleaved]
+field = "reasoning_content"
 
 [cost]
 input = 0.98

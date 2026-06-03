@@ -1,31 +1,75 @@
 import path from "path";
+import { existsSync } from "node:fs";
 import { mergeDeep } from "remeda";
 import { z } from "zod";
 
-import { Provider, Model, AuthoredModel, AuthoredModelShape } from "./schema.js";
+import {
+  Provider,
+  Model,
+  AuthoredModel,
+  AuthoredModelShape,
+  ModelMetadata,
+} from "./schema.js";
 
-const ExtendsModel = AuthoredModelShape
+const BaseModel = AuthoredModelShape
   .partial()
   .extend({
-    extends: z
-      .object({
-        from: z
-          .string()
-          .regex(/^[^/]+\/[^/]+$/, "Must be in provider/model format"),
-        omit: z.array(z.string()).optional(),
-      })
-      .strict(),
+    id: z.string(),
+    base_model: z.string().min(1, "Base model cannot be empty"),
+    base_model_omit: z.array(z.string()).optional(),
   })
   .strict();
 
+export async function generateCatalog(directory: string) {
+  const models = await generateModels(path.join(directory, "models"));
+  const providers = await generateProviders(
+    path.join(directory, "providers"),
+    models,
+  );
+
+  return { models, providers };
+}
+
+export async function generateModels(directory: string) {
+  const result: Record<string, ModelMetadata> = {};
+  if (!existsSync(directory)) return result;
+
+  for await (const modelPath of new Bun.Glob("**/*.toml").scan({
+    cwd: directory,
+    absolute: true,
+    followSymlinks: true,
+  })) {
+    const modelID = path.relative(directory, modelPath).slice(0, -5);
+    const toml = await import(modelPath, {
+      with: {
+        type: "toml",
+      },
+    }).then((mod) => mod.default);
+    toml.id = modelID;
+
+    const model = ModelMetadata.safeParse(toml);
+    if (!model.success) {
+      model.error.cause = { modelPath, toml };
+      throw model.error;
+    }
+    result[modelID] = model.data;
+  }
+
+  return result;
+}
+
 export async function generate(directory: string) {
+  const modelsDirectory = path.join(path.dirname(directory), "models");
+  const models = await generateModels(modelsDirectory);
+
+  return generateProviders(directory, models);
+}
+
+async function generateProviders(
+  directory: string,
+  models: Record<string, ModelMetadata>,
+) {
   const result: Record<string, Provider> = {};
-  const extendsModels: Array<{
-    providerID: string;
-    modelID: string;
-    modelPath: string;
-    model: z.infer<typeof ExtendsModel>;
-  }> = [];
   for await (const providerPath of new Bun.Glob("*/provider.toml").scan({
     cwd: directory,
     absolute: true,
@@ -57,18 +101,20 @@ export async function generate(directory: string) {
         },
       }).then((mod) => mod.default);
       toml.id = modelID;
-      if (toml.extends !== undefined) {
-        const model = ExtendsModel.safeParse(toml);
+      if (toml.base_model !== undefined) {
+        const baseModel = BaseModel.safeParse(toml);
+        if (!baseModel.success) {
+          baseModel.error.cause = { modelPath, toml };
+          throw baseModel.error;
+        }
+
+        const merged = mergeBaseModel(baseModel.data, models, modelPath);
+        const model = AuthoredModel.safeParse(merged);
         if (!model.success) {
-          model.error.cause = { modelPath, toml };
+          model.error.cause = { modelPath, toml: merged };
           throw model.error;
         }
-        extendsModels.push({
-          providerID,
-          modelID,
-          modelPath,
-          model: model.data,
-        });
+        provider.data.models[modelID] = normalizeModelCost(model.data);
         continue;
       }
       const model = AuthoredModel.safeParse(toml);
@@ -94,78 +140,90 @@ export async function generate(directory: string) {
     nameToProviderID.set(nameKey, provider.id);
   }
 
-  for (const pendingModel of extendsModels) {
-    const [providerID, modelID] = pendingModel.model.extends.from.split("/");
-    const baseModel = result[providerID]?.models[modelID];
-    if (baseModel === undefined) {
-      throw new Error(`Unable to resolve extends.from: ${pendingModel.model.extends.from}`, {
-        cause: { modelPath: pendingModel.modelPath, toml: pendingModel.model },
-      });
-    }
+  return result;
+}
 
-    const { extends: extendsConfig, ...overrides } = pendingModel.model;
-    // Reasoning controls describe the endpoint interface, not just the model.
-    // Derived providers must declare the controls their API exposes explicitly.
-    const { reasoning_options: _reasoningOptions, ...inherited } = baseModel;
-    const merged: Record<string, unknown> = structuredClone(
-      mergeDeep(inherited, overrides),
-    );
-
-    omitLoop: for (const omit of extendsConfig.omit ?? []) {
-      const parts = omit.split(".");
-      const parents: Array<{
-        value: Record<string, unknown>;
-        key: string;
-      }> = [];
-      let current = merged;
-
-      for (const part of parts.slice(0, -1)) {
-        const next = current[part];
-        if (
-          next === undefined ||
-          next === null ||
-          typeof next !== "object" ||
-          Array.isArray(next)
-        ) {
-          continue omitLoop;
-        }
-        parents.push({ value: current, key: part });
-        current = next as Record<string, unknown>;
-      }
-
-      const lastPart = parts.at(-1);
-      if (lastPart === undefined || !(lastPart in current)) {
-        continue;
-      }
-
-      delete current[lastPart];
-
-      for (let index = parents.length - 1; index >= 0; index--) {
-        const parent = parents[index];
-        const value = parent?.value[parent.key];
-        if (
-          value === null ||
-          value === undefined ||
-          typeof value !== "object" ||
-          Array.isArray(value) ||
-          Object.keys(value).length > 0
-        ) {
-          break;
-        }
-        delete parent.value[parent.key];
-      }
-    }
-
-    const model = Model.safeParse(normalizeCost(merged));
-    if (!model.success) {
-      model.error.cause = { modelPath: pendingModel.modelPath, toml: merged };
-      throw model.error;
-    }
-
-    result[pendingModel.providerID]!.models[pendingModel.modelID] = model.data;
+function mergeBaseModel(
+  model: z.infer<typeof BaseModel>,
+  models: Record<string, ModelMetadata>,
+  modelPath: string,
+) {
+  const base = models[model.base_model];
+  if (base === undefined) {
+    throw new Error(`Unable to resolve base_model: ${model.base_model}`, {
+      cause: { modelPath, toml: model },
+    });
   }
 
-  return result;
+  const { base_model: _baseModel, base_model_omit: omit, ...overrides } = model;
+  const merged: Record<string, unknown> = structuredClone(
+    mergeDeep(inheritableModelMetadata(base), overrides),
+  );
+
+  applyOmit(merged, omit ?? []);
+  return merged;
+}
+
+function inheritableModelMetadata(model: ModelMetadata) {
+  const {
+    id: _id,
+    benchmarks: _benchmarks,
+    license: _license,
+    links: _links,
+    weights: _weights,
+    ...metadata
+  } = model;
+
+  return Object.fromEntries(
+    Object.entries(metadata).filter(([, value]) => value !== undefined),
+  );
+}
+
+function applyOmit(target: Record<string, unknown>, paths: string[]) {
+  omitLoop: for (const omit of paths) {
+    const parts = omit.split(".");
+    const parents: Array<{
+      value: Record<string, unknown>;
+      key: string;
+    }> = [];
+    let current = target;
+
+    for (const part of parts.slice(0, -1)) {
+      const next = current[part];
+      if (
+        next === undefined ||
+        next === null ||
+        typeof next !== "object" ||
+        Array.isArray(next)
+      ) {
+        continue omitLoop;
+      }
+      parents.push({ value: current, key: part });
+      current = next as Record<string, unknown>;
+    }
+
+    const lastPart = parts.at(-1);
+    if (lastPart === undefined || !(lastPart in current)) {
+      continue;
+    }
+
+    delete current[lastPart];
+
+    for (let index = parents.length - 1; index >= 0; index--) {
+      const parent = parents[index];
+      const value = parent?.value[parent.key];
+      if (
+        value === null ||
+        value === undefined ||
+        typeof value !== "object" ||
+        Array.isArray(value) ||
+        Object.keys(value).length > 0
+      ) {
+        break;
+      }
+      delete parent.value[parent.key];
+    }
+  }
 }
 
 function normalizeModelCost(model: z.infer<typeof AuthoredModel>): Model {

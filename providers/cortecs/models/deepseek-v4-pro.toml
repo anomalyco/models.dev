@@ -1,10 +1,13 @@
-[extends]
-from = "deepseek/deepseek-v4-pro"
-omit = ["structured_output"]
+base_model = "deepseek/deepseek-v4-pro"
+base_model_omit = ["structured_output"]
+
+[interleaved]
+field = "reasoning_content"
 
 [cost]
 input = 1.553
 output = 3.106
+cache_read = 0.003625
 
 [limit]
 context = 1_048_576

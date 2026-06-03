@@ -1,8 +1,9 @@
+base_model = "moonshotai/kimi-k2.6"
+base_model_omit = ["structured_output"]
 family = "kimi"
 
-[extends]
-from = "moonshotai/kimi-k2.6"
-omit = ["structured_output"]
+[interleaved]
+field = "reasoning_content"
 
 [cost]
 input = 0

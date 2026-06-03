@@ -1,2 +1,10 @@
-[extends]
-from = "zai/glm-5-turbo"
+base_model = "zai/glm-5-turbo"
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 1.2
+output = 4
+cache_read = 0.24
+cache_write = 0
