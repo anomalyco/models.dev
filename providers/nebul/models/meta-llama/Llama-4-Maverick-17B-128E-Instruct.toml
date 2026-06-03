@@ -1,0 +1,7 @@
+[extends]
+from = "llama/llama-4-maverick-17b-128e-instruct-fp8"
+omit = ["cost"]
+
+[limit]
+context = 300_000
+output = 4_096

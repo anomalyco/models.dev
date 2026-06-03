@@ -1,0 +1,9 @@
+[extends]
+from = "alibaba/qwen3-vl-235b-a22b"
+omit = ["cost"]
+
+structured_output = true
+
+[limit]
+context = 262_000
+output = 32_768
