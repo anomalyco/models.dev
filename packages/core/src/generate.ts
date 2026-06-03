@@ -18,14 +18,17 @@ const ExtendsModel = AuthoredModelShape
   })
   .strict();
 
+type PendingModel = {
+  providerID: string;
+  modelID: string;
+  modelPath: string;
+  model: z.infer<typeof ExtendsModel>;
+};
+
 export async function generate(directory: string) {
   const result: Record<string, Provider> = {};
-  const extendsModels: Array<{
-    providerID: string;
-    modelID: string;
-    modelPath: string;
-    model: z.infer<typeof ExtendsModel>;
-  }> = [];
+  const extendsModels: PendingModel[] = [];
+  const pendingModelByID = new Map<string, PendingModel>();
   for await (const providerPath of new Bun.Glob("*/provider.toml").scan({
     cwd: directory,
     absolute: true,
@@ -63,12 +66,14 @@ export async function generate(directory: string) {
           model.error.cause = { modelPath, toml };
           throw model.error;
         }
-        extendsModels.push({
+        const pendingModel = {
           providerID,
           modelID,
           modelPath,
           model: model.data,
-        });
+        };
+        extendsModels.push(pendingModel);
+        pendingModelByID.set(`${providerID}/${modelID}`, pendingModel);
         continue;
       }
       const model = AuthoredModel.safeParse(toml);
@@ -94,9 +99,45 @@ export async function generate(directory: string) {
     nameToProviderID.set(nameKey, provider.id);
   }
 
-  for (const pendingModel of extendsModels) {
+  const resolveModel = (
+    providerID: string,
+    modelID: string,
+    stack: string[],
+  ): Model | undefined => {
+    const existing = result[providerID]?.models[modelID];
+    if (existing !== undefined) {
+      return existing;
+    }
+
+    const pendingModel = pendingModelByID.get(`${providerID}/${modelID}`);
+    if (pendingModel === undefined) {
+      return undefined;
+    }
+
+    return resolvePendingModel(pendingModel, stack);
+  };
+
+  const resolvePendingModel = (
+    pendingModel: PendingModel,
+    stack: string[],
+  ): Model => {
+    const pendingModelID = `${pendingModel.providerID}/${pendingModel.modelID}`;
+    const existing = result[pendingModel.providerID]?.models[pendingModel.modelID];
+    if (existing !== undefined) {
+      return existing;
+    }
+
+    if (stack.includes(pendingModelID)) {
+      throw new Error(
+        `Cycle detected in extends.from chain: ${[...stack, pendingModelID].join(" -> ")}`,
+        {
+          cause: { modelPath: pendingModel.modelPath, toml: pendingModel.model },
+        },
+      );
+    }
+
     const [providerID, modelID] = pendingModel.model.extends.from.split("/");
-    const baseModel = result[providerID]?.models[modelID];
+    const baseModel = resolveModel(providerID!, modelID!, [...stack, pendingModelID]);
     if (baseModel === undefined) {
       throw new Error(`Unable to resolve extends.from: ${pendingModel.model.extends.from}`, {
         cause: { modelPath: pendingModel.modelPath, toml: pendingModel.model },
@@ -142,7 +183,10 @@ export async function generate(directory: string) {
 
       for (let index = parents.length - 1; index >= 0; index--) {
         const parent = parents[index];
-        const value = parent?.value[parent.key];
+        if (parent === undefined) {
+          break;
+        }
+        const value = parent.value[parent.key];
         if (
           value === null ||
           value === undefined ||
@@ -163,6 +207,11 @@ export async function generate(directory: string) {
     }
 
     result[pendingModel.providerID]!.models[pendingModel.modelID] = model.data;
+    return model.data;
+  };
+
+  for (const pendingModel of extendsModels) {
+    resolvePendingModel(pendingModel, []);
   }
 
   return result;
