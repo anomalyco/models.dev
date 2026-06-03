@@ -235,7 +235,7 @@ function canonicalModelExists(provider: string, modelID: string) {
 }
 
 function modelMetadataExists(provider: string, modelID: string) {
-  return existsSync(path.join(MODELS_DIR, provider, `${modelID}.toml"));
+  return existsSync(path.join(MODELS_DIR, provider, `${modelID}.toml`));
 }
 
 function baseModelOmit(
