@@ -12,21 +12,21 @@ const modelFilesByProvider = new Map<string, Set<string>>();
 const modelMetadataByID = new Map<string, Record<string, unknown>>();
 
 const CANONICAL_PROVIDER_PREFIXES = {
-  anthropic: "anthropic",
-  cohere: "cohere",
-  deepseek: "deepseek",
-  google: "google",
-  meta: "llama",
-  "meta-llama": "llama",
-  minimax: "minimax",
-  mistralai: "mistral",
-  moonshotai: "moonshotai",
-  openai: "openai",
-  "x-ai": "xai",
-  xai: "xai",
-  xiaomi: "xiaomi",
-  zai: "zai",
-  "z-ai": "zai",
+  anthropic: { provider: "anthropic", metadata: "anthropic" },
+  cohere: { provider: "cohere", metadata: "cohere" },
+  deepseek: { provider: "deepseek", metadata: "deepseek" },
+  google: { provider: "google", metadata: "google" },
+  meta: { provider: "llama", metadata: "meta" },
+  "meta-llama": { provider: "llama", metadata: "meta" },
+  minimax: { provider: "minimax", metadata: "minimax" },
+  mistralai: { provider: "mistral", metadata: "mistral" },
+  moonshotai: { provider: "moonshotai", metadata: "moonshotai" },
+  openai: { provider: "openai", metadata: "openai" },
+  "x-ai": { provider: "xai", metadata: "xai" },
+  xai: { provider: "xai", metadata: "xai" },
+  xiaomi: { provider: "xiaomi", metadata: "xiaomi" },
+  zai: { provider: "zai", metadata: "zai" },
+  "z-ai": { provider: "zai", metadata: "zai" },
 } as const;
 
 export const OpenRouterModel = z.object({
@@ -202,20 +202,21 @@ function resolveCanonicalModel(openrouterID: string) {
   if (prefix === undefined || modelParts.length === 0) return undefined;
   if (openrouterID.startsWith("~/") || prefix.startsWith("~")) return undefined;
 
-  const provider = CANONICAL_PROVIDER_PREFIXES[prefix as keyof typeof CANONICAL_PROVIDER_PREFIXES];
-  if (provider === undefined) return undefined;
+  const canonical = CANONICAL_PROVIDER_PREFIXES[prefix as keyof typeof CANONICAL_PROVIDER_PREFIXES];
+  if (canonical === undefined) return undefined;
 
   const modelID = modelParts.join("/").replace(/:free$/, "");
-  const candidates = canonicalCandidates(provider, modelID);
+  const candidates = canonicalCandidates(canonical.provider, modelID);
   const match = candidates.find((candidate) => {
-    return canonicalModelExists(provider, candidate) && modelMetadataExists(provider, candidate);
+    return canonicalModelExists(canonical.provider, candidate) &&
+      modelMetadataExists(canonical.metadata, candidate);
   });
 
   return match === undefined
     ? undefined
     : {
-        from: `${provider}/${match}`,
-        provider,
+        from: `${canonical.metadata}/${match}`,
+        provider: canonical.provider,
         modelID: match,
       };
 }

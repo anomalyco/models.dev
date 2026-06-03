@@ -41,6 +41,7 @@ if (!host || !token) {
 
 const workspace = host.replace(/^https?:\/\//, "").replace(/\/$/, "");
 const PROVIDERS_DIR = path.join(import.meta.dirname, "..", "..", "..", "providers");
+const MODEL_METADATA_DIR = path.join(import.meta.dirname, "..", "..", "..", "models");
 const MODELS_DIR = path.join(PROVIDERS_DIR, "databricks", "models");
 
 // ---------------------------------------------------------------------------
@@ -113,7 +114,10 @@ async function resolveCanonical(endpointName: string): Promise<Resolution> {
       .replace(/^meta-llama-/, "llama-")
       .replace(/^(llama-\d+)-(\d+)-/, "$1.$2-");
     const p = path.join(PROVIDERS_DIR, "llama", "models", `${llamaId}.toml`);
-    if (existsSync(p)) return { type: "base_model", from: `llama/${llamaId}` };
+    const metadata = path.join(MODEL_METADATA_DIR, "meta", `${llamaId}.toml`);
+    if (existsSync(p) && existsSync(metadata)) {
+      return { type: "base_model", from: `meta/${llamaId}` };
+    }
   }
 
   for (const [prefix, provider] of PREFIX_TO_PROVIDER) {

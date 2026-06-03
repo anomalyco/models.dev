@@ -1,5 +1,6 @@
 import { describe, expect, test } from "bun:test";
 import path from "node:path";
+import { existsSync } from "node:fs";
 import { mkdir, mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 
@@ -152,6 +153,33 @@ output = 32_000
     }
 
     expect(leaked).toEqual([]);
+  });
+
+  test("repository model metadata avoids provider-only namespaces", async () => {
+    const root = path.join(import.meta.dirname, "..", "..", "..");
+    const providerNamespaces = [
+      "amazon-bedrock",
+      "llama",
+      "opencode",
+      "tencent-tokenhub",
+    ];
+    const namespaceDirs = providerNamespaces.filter((namespace) =>
+      existsSync(path.join(root, "models", namespace))
+    );
+    const baseModelRefs: string[] = [];
+
+    for await (const file of new Bun.Glob("providers/**/*.toml").scan({
+      cwd: root,
+    })) {
+      const text = await Bun.file(path.join(root, file)).text();
+      const match = /^base_model = "([^/"]+)\//m.exec(text);
+      if (match?.[1] !== undefined && providerNamespaces.includes(match[1])) {
+        baseModelRefs.push(file);
+      }
+    }
+
+    expect(namespaceDirs).toEqual([]);
+    expect(baseModelRefs).toEqual([]);
   });
 });
 

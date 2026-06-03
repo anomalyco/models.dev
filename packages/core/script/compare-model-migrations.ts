@@ -2,6 +2,7 @@
 
 import path from "node:path";
 import { cp, mkdir, rm, writeFile } from "node:fs/promises";
+import { existsSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { mergeDeep } from "remeda";
 import { z } from "zod";
@@ -40,7 +41,9 @@ await mkdir(baselineRoot, { recursive: true });
 try {
   const baselineProvidersPath = path.join(baselineRoot, "providers");
   await cp(providersPath, baselineProvidersPath, { recursive: true });
-  await cp(modelsPath, path.join(baselineRoot, "models"), { recursive: true });
+  const baselineModelsPath = path.join(baselineRoot, "models");
+  await cp(modelsPath, baselineModelsPath, { recursive: true });
+  await installModelNamespaceAliases(baselineModelsPath);
 
   for (const filePath of changedProviderPaths) {
     const tempFilePath = path.join(baselineRoot, filePath);
@@ -103,6 +106,71 @@ try {
   }
 } finally {
   await rm(baselineRoot, { recursive: true, force: true });
+}
+
+async function installModelNamespaceAliases(directory: string) {
+  await copyModelAlias(
+    directory,
+    "deepseek/deepseek-r1",
+    "amazon-bedrock/deepseek.r1-v1:0",
+  );
+  await copyModelAlias(
+    directory,
+    "meta/llama-4-maverick-17b-instruct",
+    "amazon-bedrock/meta.llama4-maverick-17b-instruct-v1:0",
+  );
+  await copyModelAlias(
+    directory,
+    "meta/llama-4-scout-17b-instruct",
+    "amazon-bedrock/meta.llama4-scout-17b-instruct-v1:0",
+  );
+  await copyModelAlias(
+    directory,
+    "meta/llama-3.3-70b-instruct",
+    "llama/llama-3.3-70b-instruct",
+  );
+  await copyModelAliasWithReplacements(
+    directory,
+    "openai/gpt-5.5-pro",
+    "opencode/gpt-5.5-pro",
+    [
+      [/release_date = "2026-04-23"/, 'release_date = "2026-04-24"'],
+      [/last_updated = "2026-04-23"/, 'last_updated = "2026-04-24"'],
+      [/structured_output = true/, "structured_output = false"],
+    ],
+  );
+  await copyModelAlias(
+    directory,
+    "tencent/hy3-preview",
+    "tencent-tokenhub/hy3-preview",
+  );
+}
+
+async function copyModelAlias(directory: string, from: string, to: string) {
+  return copyModelAliasWithReplacements(directory, from, to, []);
+}
+
+async function copyModelAliasWithReplacements(
+  directory: string,
+  from: string,
+  to: string,
+  replacements: Array<[RegExp, string]>,
+) {
+  const source = path.join(directory, `${from}.toml`);
+  const target = path.join(directory, `${to}.toml`);
+  if (!existsSync(source) || existsSync(target)) return;
+
+  await mkdir(path.dirname(target), { recursive: true });
+  if (replacements.length === 0) {
+    await cp(source, target);
+    return;
+  }
+
+  let text = await Bun.file(source).text();
+  for (const [pattern, replacement] of replacements) {
+    text = text.replace(pattern, replacement);
+  }
+  await writeFile(target, text);
 }
 
 async function generateForComparison(directory: string) {
