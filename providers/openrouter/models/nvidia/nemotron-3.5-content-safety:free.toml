@@ -1,0 +1,22 @@
+name = "Nemotron 3.5 Content Safety (free)"
+family = "nemotron"
+release_date = "2026-06-04"
+last_updated = "2026-06-04"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = false
+structured_output = false
+open_weights = true
+
+[cost]
+input = 0
+output = 0
+
+[limit]
+context = 128_000
+output = 8_192
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
