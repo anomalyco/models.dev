@@ -112,6 +112,8 @@ function buildModel(model: GoogleModel, existing: ExistingModel): SyncedModel {
   }
 
   return {
+    base_model: existing.base_model,
+    base_model_omit: existing.base_model_omit,
     name: model.displayName ?? name,
     family: existing.family,
     release_date: releaseDate,

@@ -27,10 +27,11 @@ Sync runs also write `.sync/model-sync-report.md` for the automation workflow PR
 
 - Reads existing TOML files from the provider `modelsDir`.
 - Parses existing files with `Bun.TOML.parse` and `AuthoredModelShape.partial()`.
+- Resolves existing `base_model` / `base_model_omit` metadata before passing local metadata to provider modules.
 - Calls the provider module to fetch, parse, and translate source models.
 - Validates translated models with `AuthoredModel` before writing.
 - Formats TOML consistently for all synced providers.
-- Compares semantic model data before writing to avoid formatting-only churn.
+- Compares authored TOML shapes before writing so existing factored TOMLs stay factored instead of being expanded.
 - Replaces symlinked files safely by removing the symlink before writing.
 - Removes existing files that are no longer present in the desired synced set.
 - Writes `.sync/model-sync-report.md` for GitHub Actions.
@@ -68,9 +69,12 @@ Keep provider modules focused on provider-specific logic:
 - Convert provider pricing units to per-1M-token catalog prices.
 - Convert dates, modalities, limits, capabilities, and model IDs into catalog fields.
 - Preserve existing hand-authored fields only when the provider API is not authoritative for that field.
+- Preserve `base_model` and `base_model_omit` from existing TOMLs when updating a factored provider model.
 - Return `undefined` from `translateModel` only when skipped source models should be treated as absent from the synced catalog.
 
 Do not put TOML scanning, writing, deletion, reporting, or generic comparison logic in provider modules.
+
+Provider sync code must use `base_model` and `base_model_omit`; do not write legacy `[extends]` tables. If a sync or generator updates a provider file that already uses `base_model`, it should keep that pointer and only write provider-specific overrides.
 
 ## Adding A Provider
 
@@ -117,6 +121,7 @@ OpenRouter is implemented in `packages/core/src/sync/providers/openrouter.ts`.
 - API prices are per-token strings and are converted to per-1M-token numbers.
 - `structured_output` comes from `supported_parameters.includes("structured_outputs")` only.
 - Existing `status`, `interleaved`, `knowledge`, `limit.input`, and `cost.tiers` may be preserved when OpenRouter is not authoritative enough for those fields.
+- Canonical OpenRouter model IDs should emit `base_model` references to model metadata when a matching `models/` entry exists.
 
 ## Cloudflare Workers AI Notes
 
@@ -167,3 +172,7 @@ OVHcloud AI Endpoints is implemented in `packages/core/src/sync/providers/ovhclo
 Vercel is intentionally not wired into `bun models:sync` right now. Keep using the existing `vercel:generate` script until Vercel sync behavior is redesigned and reviewed separately.
 
 Do not add Vercel model changes to OpenRouter sync PRs.
+
+## Standalone Generators
+
+Some provider scripts in `packages/core/script/generate-*.ts` are not wired into `bun models:sync`. When updating those scripts, preserve existing `base_model` and `base_model_omit` fields for generated TOMLs that already use model metadata inheritance. New inheritance-aware output should use `base_model`; do not reintroduce legacy `[extends]` syntax.
