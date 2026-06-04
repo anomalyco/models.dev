@@ -20,85 +20,111 @@ input = ["text", "image", "pdf"]
 output = ["text"]
 
 [[benchmarks]]
-name = "SWE-Bench Pro (Scale Public)"
+name = "SWE-Bench Pro"
 score = 59.1
 metric = "resolve rate"
+dataset = "public"
 source = "https://labs.scale.com/leaderboard/swe_bench_pro_public"
 
 [[benchmarks]]
-name = "SWE-Atlas Codebase QnA (Codex)"
+name = "SWE-Atlas Codebase QnA"
 score = 40.8
 metric = "score"
+harness = "Codex"
 source = "https://labs.scale.com/leaderboard/sweatlas-qna"
 
 [[benchmarks]]
-name = "SWE-Atlas Codebase QnA (Mini-SWE-Agent)"
+name = "SWE-Atlas Codebase QnA"
 score = 36.3
 metric = "score"
+harness = "Mini-SWE-Agent"
 source = "https://labs.scale.com/leaderboard/sweatlas-qna"
 
 [[benchmarks]]
-name = "SWE-Atlas Refactoring (Codex)"
+name = "SWE-Atlas Refactoring"
 score = 44.29
 metric = "score"
+harness = "Codex"
 source = "https://labs.scale.com/leaderboard/sweatlas-refactoring"
 
 [[benchmarks]]
-name = "SWE-Atlas Test Writing (Codex CLI)"
+name = "SWE-Atlas Test Writing"
 score = 44.36
 metric = "score"
+harness = "Codex CLI"
 source = "https://labs.scale.com/leaderboard/sweatlas-tw"
 
 [[benchmarks]]
-name = "SWE-Atlas Test Writing (Mini-SWE-Agent)"
+name = "SWE-Atlas Test Writing"
 score = 40
 metric = "score"
+harness = "Mini-SWE-Agent"
 source = "https://labs.scale.com/leaderboard/sweatlas-tw"
 
 [[benchmarks]]
-name = "Artificial Analysis Coding Agent Index (Codex, medium)"
+name = "Artificial Analysis Coding Agent Index"
 score = 53.6
 metric = "average pass@1"
+harness = "Codex"
+variant = "medium"
 source = "https://artificialanalysis.ai/agents/coding-agents"
 
 [[benchmarks]]
-name = "SWE-Atlas-QnA (Artificial Analysis, Codex, medium)"
+name = "SWE-Atlas Codebase QnA"
 score = 72.4
 metric = "pass@1"
+harness = "Codex"
+variant = "medium"
 source = "https://artificialanalysis.ai/agents/coding-agents"
 
 [[benchmarks]]
-name = "SWE-Bench-Pro-Hard-AA (Codex, medium)"
+name = "SWE-Bench Pro"
 score = 18.4
 metric = "pass@1"
+harness = "Codex"
+variant = "medium"
+dataset = "hard-aa"
 source = "https://artificialanalysis.ai/agents/coding-agents"
 
 [[benchmarks]]
-name = "Terminal-Bench v2 (Artificial Analysis, Codex, medium)"
+name = "Terminal-Bench"
 score = 69.8
 metric = "pass@1"
+harness = "Codex"
+variant = "medium"
+version = "2.1"
 source = "https://artificialanalysis.ai/agents/coding-agents"
 
 [[benchmarks]]
-name = "Artificial Analysis Coding Agent Index (Cursor CLI, medium)"
+name = "Artificial Analysis Coding Agent Index"
 score = 52.2
 metric = "average pass@1"
+harness = "Cursor CLI"
+variant = "medium"
 source = "https://artificialanalysis.ai/agents/coding-agents"
 
 [[benchmarks]]
-name = "SWE-Atlas-QnA (Artificial Analysis, Cursor CLI, medium)"
+name = "SWE-Atlas Codebase QnA"
 score = 72.9
 metric = "pass@1"
+harness = "Cursor CLI"
+variant = "medium"
 source = "https://artificialanalysis.ai/agents/coding-agents"
 
 [[benchmarks]]
-name = "SWE-Bench-Pro-Hard-AA (Cursor CLI, medium)"
+name = "SWE-Bench Pro"
 score = 18.9
 metric = "pass@1"
+harness = "Cursor CLI"
+variant = "medium"
+dataset = "hard-aa"
 source = "https://artificialanalysis.ai/agents/coding-agents"
 
 [[benchmarks]]
-name = "Terminal-Bench v2 (Artificial Analysis, Cursor CLI, medium)"
+name = "Terminal-Bench"
 score = 64.7
 metric = "pass@1"
+harness = "Cursor CLI"
+variant = "medium"
+version = "2.1"
 source = "https://artificialanalysis.ai/agents/coding-agents"

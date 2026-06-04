@@ -70,6 +70,10 @@ cache_read = 0.125
           name: "SWE-Bench Verified",
           score: 71.2,
           metric: "resolved",
+          harness: "Example Harness",
+          variant: "high",
+          dataset: "verified",
+          version: "1",
           source: "https://example.com/benchmarks",
         },
       ]);
@@ -235,6 +239,22 @@ output = 32_000
 
     expect(unsourced).toEqual([]);
   });
+
+  test("repository benchmark names are normalized", async () => {
+    const root = path.join(import.meta.dirname, "..", "..", "..");
+    const catalog = await generateCatalog(root);
+    const qualifiedNames: string[] = [];
+
+    for (const [modelID, model] of Object.entries(catalog.models)) {
+      for (const benchmark of model.benchmarks ?? []) {
+        if (/\s\([^)]+\)$/.test(benchmark.name)) {
+          qualifiedNames.push(`${modelID}: ${benchmark.name}`);
+        }
+      }
+    }
+
+    expect(qualifiedNames).toEqual([]);
+  });
 });
 
 function providerToml(name: string) {
@@ -282,6 +302,10 @@ format = "safetensors"
 name = "SWE-Bench Verified"
 score = 71.2
 metric = "resolved"
+harness = "Example Harness"
+variant = "high"
+dataset = "verified"
+version = "1"
 source = "https://example.com/benchmarks"
 `;
 }

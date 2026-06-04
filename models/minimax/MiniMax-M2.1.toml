@@ -27,7 +27,8 @@ metric = "resolved"
 source = "https://huggingface.co/MiniMaxAI/MiniMax-M2.1"
 
 [[benchmarks]]
-name = "SWE-Bench Pro (Scale Public)"
+name = "SWE-Bench Pro"
 score = 36.81
 metric = "resolve rate"
+dataset = "public"
 source = "https://labs.scale.com/leaderboard/swe_bench_pro_public"

@@ -19,7 +19,8 @@ input = ["text", "image", "video", "audio", "pdf"]
 output = ["text"]
 
 [[benchmarks]]
-name = "SWE-Bench Pro (Scale Public)"
+name = "SWE-Bench Pro"
 score = 43.3
 metric = "resolve rate"
+dataset = "public"
 source = "https://labs.scale.com/leaderboard/swe_bench_pro_public"

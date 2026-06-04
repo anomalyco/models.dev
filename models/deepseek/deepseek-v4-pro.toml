@@ -29,25 +29,35 @@ metric = "resolved"
 source = "https://huggingface.co/deepseek-ai/DeepSeek-V4-Pro"
 
 [[benchmarks]]
-name = "Artificial Analysis Coding Agent Index (Claude Code, high)"
+name = "Artificial Analysis Coding Agent Index"
 score = 50.1
 metric = "average pass@1"
+harness = "Claude Code"
+variant = "high"
 source = "https://artificialanalysis.ai/agents/coding-agents"
 
 [[benchmarks]]
-name = "SWE-Atlas-QnA (Artificial Analysis, Claude Code, high)"
+name = "SWE-Atlas Codebase QnA"
 score = 67.8
 metric = "pass@1"
+harness = "Claude Code"
+variant = "high"
 source = "https://artificialanalysis.ai/agents/coding-agents"
 
 [[benchmarks]]
-name = "SWE-Bench-Pro-Hard-AA (Claude Code, high)"
+name = "SWE-Bench Pro"
 score = 18
 metric = "pass@1"
+harness = "Claude Code"
+variant = "high"
+dataset = "hard-aa"
 source = "https://artificialanalysis.ai/agents/coding-agents"
 
 [[benchmarks]]
-name = "Terminal-Bench v2 (Artificial Analysis, Claude Code, high)"
+name = "Terminal-Bench"
 score = 64.7
 metric = "pass@1"
+harness = "Claude Code"
+variant = "high"
+version = "2.1"
 source = "https://artificialanalysis.ai/agents/coding-agents"

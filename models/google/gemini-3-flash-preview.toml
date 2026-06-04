@@ -19,25 +19,29 @@ input = ["text", "image", "video", "audio", "pdf"]
 output = ["text"]
 
 [[benchmarks]]
-name = "SWE-Bench Pro (Scale Public)"
+name = "SWE-Bench Pro"
 score = 34.63
 metric = "resolve rate"
+dataset = "public"
 source = "https://labs.scale.com/leaderboard/swe_bench_pro_public"
 
 [[benchmarks]]
-name = "SWE-Atlas Codebase QnA (Mini-SWE-Agent)"
+name = "SWE-Atlas Codebase QnA"
 score = 8.2
 metric = "score"
+harness = "Mini-SWE-Agent"
 source = "https://labs.scale.com/leaderboard/sweatlas-qna"
 
 [[benchmarks]]
-name = "SWE-Atlas Refactoring (Mini-SWE-Agent)"
+name = "SWE-Atlas Refactoring"
 score = 10
 metric = "score"
+harness = "Mini-SWE-Agent"
 source = "https://labs.scale.com/leaderboard/sweatlas-refactoring"
 
 [[benchmarks]]
-name = "SWE-Atlas Test Writing (Mini-SWE-Agent)"
+name = "SWE-Atlas Test Writing"
 score = 30.3
 metric = "score"
+harness = "Mini-SWE-Agent"
 source = "https://labs.scale.com/leaderboard/sweatlas-tw"

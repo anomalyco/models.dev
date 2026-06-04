@@ -22,25 +22,31 @@ label = "Hugging Face"
 url = "https://huggingface.co/zai-org/GLM-5.1"
 
 [[benchmarks]]
-name = "Artificial Analysis Coding Agent Index (Claude Code)"
+name = "Artificial Analysis Coding Agent Index"
 score = 52.7
 metric = "average pass@1"
+harness = "Claude Code"
 source = "https://artificialanalysis.ai/agents/coding-agents"
 
 [[benchmarks]]
-name = "SWE-Atlas-QnA (Artificial Analysis, Claude Code)"
+name = "SWE-Atlas Codebase QnA"
 score = 73.2
 metric = "pass@1"
+harness = "Claude Code"
 source = "https://artificialanalysis.ai/agents/coding-agents"
 
 [[benchmarks]]
-name = "SWE-Bench-Pro-Hard-AA (Claude Code)"
+name = "SWE-Bench Pro"
 score = 19.8
 metric = "pass@1"
+harness = "Claude Code"
+dataset = "hard-aa"
 source = "https://artificialanalysis.ai/agents/coding-agents"
 
 [[benchmarks]]
-name = "Terminal-Bench v2 (Artificial Analysis, Claude Code)"
+name = "Terminal-Bench"
 score = 65.1
 metric = "pass@1"
+harness = "Claude Code"
+version = "2.1"
 source = "https://artificialanalysis.ai/agents/coding-agents"
