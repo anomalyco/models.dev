@@ -18,3 +18,10 @@ output = 128_000
 [modalities]
 input = ["text", "image", "pdf"]
 output = ["text"]
+
+[[benchmarks]]
+name = "SWE-Bench Pro"
+score = 41.04
+metric = "resolve rate"
+dataset = "public"
+source = "https://labs.scale.com/leaderboard/swe_bench_pro_public"

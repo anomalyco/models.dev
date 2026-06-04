@@ -17,3 +17,17 @@ output = 4_096
 [modalities]
 input = ["text", "image"]
 output = ["text"]
+
+[[benchmarks]]
+name = "Artificial Analysis Coding Index"
+score = 24.2
+metric = "index"
+source = "https://openrouter.ai/openai/gpt-4o-2024-05-13/benchmarks"
+date = "2026-03-11"
+
+[[benchmarks]]
+name = "SciCode"
+score = 30.9
+metric = "percent correct"
+source = "https://openrouter.ai/openai/gpt-4o-2024-05-13/benchmarks"
+date = "2026-03-11"

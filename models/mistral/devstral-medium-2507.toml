@@ -7,7 +7,7 @@ reasoning = false
 temperature = true
 tool_call = true
 knowledge = "2025-05"
-open_weights = true
+open_weights = false
 
 [limit]
 context = 128_000
@@ -16,3 +16,10 @@ output = 128_000
 [modalities]
 input = ["text"]
 output = ["text"]
+
+[[benchmarks]]
+name = "SWE-Bench Verified"
+score = 61.6
+metric = "resolved"
+source = "https://mistral.ai/news/devstral-2507"
+date = "2025-07-10"

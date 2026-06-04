@@ -16,3 +16,13 @@ output = 262_144
 [modalities]
 input = ["text", "image"]
 output = ["text"]
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/mistralai/Mistral-Medium-3.5-128B"
+
+[[benchmarks]]
+name = "SWE-Bench Verified"
+score = 77.6
+metric = "resolved"
+source = "https://huggingface.co/mistralai/Mistral-Medium-3.5-128B"

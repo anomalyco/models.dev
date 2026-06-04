@@ -16,3 +16,14 @@ output = 65_536
 [modalities]
 input = ["text"]
 output = ["text"]
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/Qwen/Qwen3-Coder-480B-A35B-Instruct"
+
+[[benchmarks]]
+name = "SWE-Bench Pro"
+score = 38.7
+metric = "resolve rate"
+dataset = "public"
+source = "https://labs.scale.com/leaderboard/swe_bench_pro_public"

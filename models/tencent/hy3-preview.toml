@@ -15,3 +15,13 @@ output = 64_000
 [modalities]
 input = ["text"]
 output = ["text"]
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/tencent/Hy3-preview"
+
+[[benchmarks]]
+name = "SWE-Bench Verified"
+score = 74.4
+metric = "resolved"
+source = "https://huggingface.co/tencent/Hy3-preview"

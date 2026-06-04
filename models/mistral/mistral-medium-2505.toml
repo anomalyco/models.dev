@@ -16,3 +16,24 @@ output = 131_072
 [modalities]
 input = ["text", "image"]
 output = ["text"]
+
+[[benchmarks]]
+name = "Artificial Analysis Coding Index"
+score = 13.6
+metric = "index"
+source = "https://openrouter.ai/mistralai/mistral-medium-3/benchmarks"
+date = "2026-05-30"
+
+[[benchmarks]]
+name = "SciCode"
+score = 33.1
+metric = "percent correct"
+source = "https://openrouter.ai/mistralai/mistral-medium-3/benchmarks"
+date = "2026-05-30"
+
+[[benchmarks]]
+name = "Terminal-Bench Hard"
+score = 3.8
+metric = "success rate"
+source = "https://openrouter.ai/mistralai/mistral-medium-3/benchmarks"
+date = "2026-05-30"

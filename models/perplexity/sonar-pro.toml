@@ -16,3 +16,10 @@ output = 8_192
 [modalities]
 input = ["text", "image"]
 output = ["text"]
+
+[[benchmarks]]
+name = "SciCode"
+score = 22.6
+metric = "percent correct"
+source = "https://openrouter.ai/perplexity/sonar-pro/benchmarks"
+date = "2026-03-11"

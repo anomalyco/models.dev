@@ -170,6 +170,10 @@ export const BenchmarkResult = z
     name: z.string().min(1, "Benchmark name cannot be empty"),
     score: z.union([z.number(), z.string().min(1)]),
     metric: z.string().min(1, "Benchmark metric cannot be empty").optional(),
+    harness: z.string().min(1, "Benchmark harness cannot be empty").optional(),
+    variant: z.string().min(1, "Benchmark variant cannot be empty").optional(),
+    dataset: z.string().min(1, "Benchmark dataset cannot be empty").optional(),
+    version: z.string().min(1, "Benchmark version cannot be empty").optional(),
     source: UrlString.optional(),
     date: DateString.optional(),
   })
