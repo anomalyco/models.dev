@@ -161,19 +161,19 @@ export function buildOpenRouterModel(model: OpenRouterModel, existing: ExistingM
     return {
       base_model: canonical.from,
       base_model_omit: baseModelOmit(canonical.from, limit),
-      ...baseModelRuntimeOverrides(canonical.from, {
+      ...baseModelOverrides(canonical.from, {
         name: model.id.endsWith(":free") ? name : undefined,
         attachment,
         reasoning,
+        temperature: params.has("temperature"),
+        tool_call: toolCall,
+        structured_output: structuredOutput,
+        status: existing?.status,
+        interleaved: existing?.interleaved,
+        limit,
+        modalities: { input, output },
       }),
-      temperature: params.has("temperature"),
-      tool_call: toolCall,
-      structured_output: structuredOutput,
-      status: existing?.status,
-      interleaved: existing?.interleaved,
       cost,
-      limit,
-      modalities: { input, output },
     };
   }
 
@@ -259,14 +259,63 @@ function baseModelOmit(
   return omit.length > 0 ? omit : undefined;
 }
 
-function baseModelRuntimeOverrides(
+function baseModelOverrides(
   modelID: string,
-  values: Pick<SyncedFullModel, "name" | "attachment" | "reasoning">,
+  values: Partial<SyncedFullModel>,
 ) {
   const metadata = modelMetadata(modelID);
-  return Object.fromEntries(
-    Object.entries(values).filter(([key, value]) => value !== undefined && metadata[key] !== value),
-  );
+  const result: Record<string, unknown> = {};
+
+  for (const [key, value] of Object.entries(values)) {
+    const override = inheritedOverride(value, metadata[key]);
+    if (override !== undefined) result[key] = override;
+  }
+
+  return result;
+}
+
+function inheritedOverride(value: unknown, inherited: unknown): unknown {
+  if (value === undefined) return undefined;
+  if (sameInheritedValue(value, inherited)) return undefined;
+  return stripUndefined(value);
+}
+
+function stripUndefined(value: unknown): unknown {
+  if (Array.isArray(value)) return value.map(stripUndefined);
+  if (isPlainObject(value)) {
+    return Object.fromEntries(
+      Object.entries(value)
+        .filter(([, item]) => item !== undefined)
+        .map(([key, item]) => [key, stripUndefined(item)]),
+    );
+  }
+  return value;
+}
+
+function sameInheritedValue(value: unknown, inherited: unknown) {
+  return stableInheritedValue(value) === stableInheritedValue(inherited);
+}
+
+function stableInheritedValue(value: unknown): string {
+  if (Array.isArray(value)) {
+    const items = value.map(stableInheritedValue);
+    const ordered = value.every((item) => item === null || typeof item !== "object")
+      ? items.sort()
+      : items;
+    return `[${ordered.join(",")}]`;
+  }
+  if (isPlainObject(value)) {
+    return `{${Object.entries(value)
+      .filter(([, item]) => item !== undefined)
+      .sort(([a], [b]) => a.localeCompare(b))
+      .map(([key, item]) => `${JSON.stringify(key)}:${stableInheritedValue(item)}`)
+      .join(",")}}`;
+  }
+  return JSON.stringify(value);
+}
+
+function isPlainObject(value: unknown): value is Record<string, unknown> {
+  return value !== null && typeof value === "object" && !Array.isArray(value);
 }
 
 function modelMetadata(modelID: string) {

@@ -220,6 +220,8 @@ Rules:
 
 Use `base_model` when the wrapper model is materially the same as the source model and only differs by provider-specific pricing, limits, modalities, provider request shape, or lifecycle flags.
 
+Sync and generator scripts should preserve existing `base_model` / `base_model_omit` fields when updating provider TOMLs. Do not use legacy `[extends]` tables.
+
 #### 4. Submit a Pull Request
 
 1. Fork this repo

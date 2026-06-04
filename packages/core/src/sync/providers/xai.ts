@@ -187,6 +187,8 @@ function buildModel(model: XAIModel, existing: ExistingModel): SyncedModel {
   const created = dateFromTimestamp(model.created);
 
   return {
+    base_model: existing.base_model,
+    base_model_omit: existing.base_model_omit,
     name,
     family: existing.family,
     release_date: model.canonical_id === undefined ? created : releaseDate!,
