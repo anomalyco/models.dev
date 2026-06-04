@@ -1,0 +1,25 @@
+name = "GPT 5.5"
+release_date = "2026-05-29"
+last_updated = "2026-05-29"
+attachment = false
+reasoning = true
+temperature = false
+knowledge = "2025-12-30"
+tool_call = true
+structured_output = true
+interleaved = { field = "reasoning_content" }
+open_weights = false
+
+[cost]
+input = 3.00
+output = 18.00
+reasoning = 18.00
+cache_read = 0.30
+
+[limit]
+context = 1_000_000
+output = 128_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
