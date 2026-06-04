@@ -123,6 +123,7 @@ function buildModel(model: GoogleModel, existing: ExistingModel): SyncedModel {
     temperature: model.temperature !== undefined || model.maxTemperature !== undefined
       ? true
       : existing.temperature,
+    reasoning_options: existing.reasoning_options,
     tool_call: toolCall,
     structured_output: existing.structured_output,
     knowledge: existing.knowledge,
