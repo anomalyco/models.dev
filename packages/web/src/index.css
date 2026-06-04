@@ -396,6 +396,22 @@ tbody {
     color: var(--color-brand) !important;
   }
 
+  .resource-links {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+  }
+
+  .resource-links a {
+    color: var(--color-text);
+    text-decoration-color: var(--color-text-tertiary);
+  }
+
+  .resource-extra {
+    color: var(--color-text-tertiary);
+    font-size: 0.75rem;
+  }
+
   .modalities {
     display: flex;
     gap: 0.25rem;
