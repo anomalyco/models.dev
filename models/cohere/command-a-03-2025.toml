@@ -16,3 +16,14 @@ output = 8_000
 [modalities]
 input = ["text"]
 output = ["text"]
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/CohereLabs/c4ai-command-a-03-2025"
+
+[[benchmarks]]
+name = "Aider Polyglot"
+score = 12.0
+metric = "percent correct"
+source = "https://aider.chat/docs/leaderboards/"
+date = "2025-03-14"

@@ -17,3 +17,10 @@ output = 65_536
 [modalities]
 input = ["text", "image", "audio", "video", "pdf"]
 output = ["text"]
+
+[[benchmarks]]
+name = "Aider Polyglot"
+score = 83.1
+metric = "percent correct"
+source = "https://aider.chat/docs/leaderboards/"
+date = "2025-06-06"

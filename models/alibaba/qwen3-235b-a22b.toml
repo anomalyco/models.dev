@@ -16,3 +16,14 @@ output = 16_384
 [modalities]
 input = ["text"]
 output = ["text"]
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/Qwen/Qwen3-235B-A22B"
+
+[[benchmarks]]
+name = "Aider Polyglot"
+score = 59.6
+metric = "percent correct"
+source = "https://aider.chat/docs/leaderboards/"
+date = "2025-05-09"

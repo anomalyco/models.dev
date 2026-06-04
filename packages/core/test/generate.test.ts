@@ -155,6 +155,24 @@ output = 32_000
     expect(leaked).toEqual([]);
   });
 
+  test("repository provider JSON excludes model-only metadata", async () => {
+    const root = path.join(import.meta.dirname, "..", "..", "..");
+    const providers = await generate(path.join(root, "providers"));
+    const modelOnlyFields = ["benchmarks", "license", "links", "weights"];
+    const leaked: string[] = [];
+
+    for (const [providerID, provider] of Object.entries(providers)) {
+      for (const [modelID, model] of Object.entries(provider.models)) {
+        const leakedFields = modelOnlyFields.filter((field) => field in model);
+        if (leakedFields.length > 0) {
+          leaked.push(`${providerID}/${modelID}: ${leakedFields.join(", ")}`);
+        }
+      }
+    }
+
+    expect(leaked).toEqual([]);
+  });
+
   test("repository model metadata avoids provider-only namespaces", async () => {
     const root = path.join(import.meta.dirname, "..", "..", "..");
     const providerNamespaces = [
@@ -180,6 +198,42 @@ output = 32_000
 
     expect(namespaceDirs).toEqual([]);
     expect(baseModelRefs).toEqual([]);
+  });
+
+  test("repository open-weight model metadata includes weights links", async () => {
+    const root = path.join(import.meta.dirname, "..", "..", "..");
+    const catalog = await generateCatalog(root);
+    const missingWeights: string[] = [];
+    const closedWithWeights: string[] = [];
+
+    for (const [modelID, model] of Object.entries(catalog.models)) {
+      const hasWeights = (model.weights?.length ?? 0) > 0;
+      if (model.open_weights === true && !hasWeights) {
+        missingWeights.push(modelID);
+      }
+      if (model.open_weights !== true && hasWeights) {
+        closedWithWeights.push(modelID);
+      }
+    }
+
+    expect(missingWeights).toEqual([]);
+    expect(closedWithWeights).toEqual([]);
+  });
+
+  test("repository benchmark metadata is sourced", async () => {
+    const root = path.join(import.meta.dirname, "..", "..", "..");
+    const catalog = await generateCatalog(root);
+    const unsourced: string[] = [];
+
+    for (const [modelID, model] of Object.entries(catalog.models)) {
+      for (const benchmark of model.benchmarks ?? []) {
+        if (benchmark.source === undefined) {
+          unsourced.push(`${modelID}: ${benchmark.name}`);
+        }
+      }
+    }
+
+    expect(unsourced).toEqual([]);
   });
 });
 

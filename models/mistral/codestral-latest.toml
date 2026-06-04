@@ -16,3 +16,14 @@ output = 4_096
 [modalities]
 input = ["text"]
 output = ["text"]
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/mistralai/Codestral-22B-v0.1"
+
+[[benchmarks]]
+name = "Aider Polyglot"
+score = 11.1
+metric = "percent correct"
+source = "https://aider.chat/docs/leaderboards/"
+date = "2025-01-13"

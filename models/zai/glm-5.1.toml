@@ -7,7 +7,7 @@ reasoning = true
 temperature = true
 tool_call = true
 structured_output = true
-open_weights = false
+open_weights = true
 
 [limit]
 context = 200_000
@@ -16,3 +16,7 @@ output = 131_072
 [modalities]
 input = ["text"]
 output = ["text"]
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/zai-org/GLM-5.1"

@@ -7,7 +7,7 @@ reasoning = true
 temperature = true
 tool_call = true
 knowledge = "2024-07"
-open_weights = false
+open_weights = true
 
 [limit]
 context = 128_000
@@ -16,3 +16,14 @@ output = 32_768
 [modalities]
 input = ["text"]
 output = ["text"]
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/deepseek-ai/DeepSeek-R1"
+
+[[benchmarks]]
+name = "Aider Polyglot"
+score = 56.9
+metric = "percent correct"
+source = "https://aider.chat/docs/leaderboards/"
+date = "2025-01-20"

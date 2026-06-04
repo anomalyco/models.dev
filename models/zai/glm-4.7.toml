@@ -16,3 +16,19 @@ output = 131_072
 [modalities]
 input = ["text"]
 output = ["text"]
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/zai-org/GLM-4.7"
+
+[[benchmarks]]
+name = "SWE-Bench Verified"
+score = 73.8
+metric = "resolved"
+source = "https://huggingface.co/zai-org/GLM-4.7"
+
+[[benchmarks]]
+name = "Terminal Bench 2.0"
+score = 33.4
+metric = "score"
+source = "https://huggingface.co/zai-org/GLM-4.7"

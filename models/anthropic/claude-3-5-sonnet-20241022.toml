@@ -16,3 +16,10 @@ output = 8_192
 [modalities]
 input = ["text", "image", "pdf"]
 output = ["text"]
+
+[[benchmarks]]
+name = "Aider Polyglot"
+score = 51.6
+metric = "percent correct"
+source = "https://aider.chat/docs/leaderboards/"
+date = "2025-01-17"
