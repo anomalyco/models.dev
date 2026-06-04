@@ -222,6 +222,7 @@ input = ["text"]
       "llama",
       "opencode",
       "tencent-tokenhub",
+      "zai",
     ];
     const namespaceDirs = providerNamespaces.filter((namespace) =>
       existsSync(path.join(root, "models", namespace))

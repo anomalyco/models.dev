@@ -26,7 +26,7 @@ const CHUTES_ORG_TO_MODEL_PROVIDER: Record<string, string | undefined> = {
   "google": "google",
   "moonshotai": "moonshotai",
   "openai": "openai",
-  "zai-org": "zai",
+  "zai-org": "zhipuai",
 };
 
 const BASE_MODEL_ALIASES: Record<string, string | undefined> = {
