@@ -1,10 +1,16 @@
 base_model = "mistral/mistral-large-2512"
+temperature = true
+tool_call = true
 structured_output = true
 
 [cost]
 input = 0.5
 output = 1.5
 cache_read = 0.05
+
+[limit]
+context = 262_144
+output = 262_144
 
 [modalities]
 input = ["text", "image", "pdf"]

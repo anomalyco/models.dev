@@ -1,4 +1,6 @@
 base_model = "xiaomi/mimo-v2.5-pro"
+temperature = true
+tool_call = true
 structured_output = true
 
 [interleaved]
@@ -8,3 +10,11 @@ field = "reasoning_content"
 input = 0.435
 output = 0.87
 cache_read = 0.0036
+
+[limit]
+context = 1_048_576
+output = 131_072
+
+[modalities]
+input = ["text"]
+output = ["text"]

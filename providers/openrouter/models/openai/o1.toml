@@ -1,6 +1,17 @@
 base_model = "openai/o1"
+temperature = false
+tool_call = true
+structured_output = true
 
 [cost]
 input = 15
 output = 60
 cache_read = 7.5
+
+[limit]
+context = 200_000
+output = 100_000
+
+[modalities]
+input = ["text", "image", "pdf"]
+output = ["text"]

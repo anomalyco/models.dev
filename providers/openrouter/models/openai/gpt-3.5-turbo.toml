@@ -1,7 +1,16 @@
 base_model = "openai/gpt-3.5-turbo"
+temperature = true
 tool_call = true
 structured_output = true
 
 [cost]
 input = 0.5
 output = 1.5
+
+[limit]
+context = 16_385
+output = 4_096
+
+[modalities]
+input = ["text"]
+output = ["text"]

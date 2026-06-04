@@ -1,4 +1,6 @@
 base_model = "zai/glm-4.5-air"
+temperature = true
+tool_call = true
 structured_output = false
 
 [cost]
@@ -9,3 +11,7 @@ cache_read = 0.06
 [limit]
 context = 131_070
 output = 131_070
+
+[modalities]
+input = ["text"]
+output = ["text"]

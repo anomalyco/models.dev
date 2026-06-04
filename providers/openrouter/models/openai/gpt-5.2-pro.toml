@@ -1,5 +1,7 @@
 base_model = "openai/gpt-5.2-pro"
 base_model_omit = ["limit.input"]
+temperature = false
+tool_call = true
 structured_output = true
 
 [cost]

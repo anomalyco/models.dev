@@ -1,4 +1,6 @@
 base_model = "anthropic/claude-opus-4-7"
+temperature = false
+tool_call = true
 structured_output = true
 
 [cost]
@@ -8,8 +10,16 @@ cache_read = 0.5
 cache_write = 6.25
 
 [[cost.tiers]]
-tier = { type = "context", size = 200_000 }
+tier = { size = 200_000 }
 input = 10
 output = 37.5
 cache_read = 1
 cache_write = 12.5
+
+[limit]
+context = 1_000_000
+output = 128_000
+
+[modalities]
+input = ["text", "image", "pdf"]
+output = ["text"]

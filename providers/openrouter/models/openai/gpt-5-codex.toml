@@ -1,6 +1,9 @@
 base_model = "openai/gpt-5-codex"
 base_model_omit = ["limit.input"]
 attachment = true
+temperature = false
+tool_call = true
+structured_output = true
 
 [cost]
 input = 1.25
@@ -10,3 +13,7 @@ cache_read = 0.125
 [limit]
 context = 400_000
 output = 128_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

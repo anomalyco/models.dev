@@ -1,9 +1,16 @@
 base_model = "openai/o4-mini"
+temperature = false
+tool_call = true
+structured_output = true
 
 [cost]
 input = 1.1
 output = 4.4
 cache_read = 0.275
+
+[limit]
+context = 200_000
+output = 100_000
 
 [modalities]
 input = ["image", "text", "pdf"]

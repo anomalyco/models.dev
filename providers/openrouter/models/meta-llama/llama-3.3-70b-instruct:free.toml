@@ -1,6 +1,8 @@
 base_model = "meta/llama-3.3-70b-instruct"
 name = "Llama 3.3 70B Instruct (free)"
 attachment = false
+temperature = true
+tool_call = true
 structured_output = false
 
 [cost]
@@ -10,3 +12,7 @@ output = 0
 [limit]
 context = 65_536
 output = 131_072
+
+[modalities]
+input = ["text"]
+output = ["text"]

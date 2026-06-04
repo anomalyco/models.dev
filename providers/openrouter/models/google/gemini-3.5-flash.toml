@@ -1,4 +1,7 @@
 base_model = "google/gemini-3.5-flash"
+temperature = true
+tool_call = true
+structured_output = true
 
 [cost]
 input = 1.5
@@ -6,6 +9,10 @@ output = 9
 reasoning = 9
 cache_read = 0.15
 cache_write = 0.083333
+
+[limit]
+context = 1_048_576
+output = 65_536
 
 [modalities]
 input = ["text", "image", "video", "pdf", "audio"]

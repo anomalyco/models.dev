@@ -1,5 +1,16 @@
 base_model = "openai/gpt-4o"
+temperature = true
+tool_call = true
+structured_output = true
 
 [cost]
 input = 2.5
 output = 10
+
+[limit]
+context = 128_000
+output = 16_384
+
+[modalities]
+input = ["text", "image", "pdf"]
+output = ["text"]

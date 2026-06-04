@@ -1,4 +1,6 @@
 base_model = "anthropic/claude-opus-4-8"
+temperature = false
+tool_call = true
 structured_output = true
 
 [cost]
@@ -6,3 +8,11 @@ input = 5
 output = 25
 cache_read = 0.5
 cache_write = 6.25
+
+[limit]
+context = 1_000_000
+output = 128_000
+
+[modalities]
+input = ["text", "image", "pdf"]
+output = ["text"]
