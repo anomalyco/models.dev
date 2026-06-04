@@ -2,7 +2,7 @@ name = "MiMo-V2.5-Pro"
 family = "mimo"
 release_date = "2026-04-22"
 last_updated = "2026-04-22"
-attachment = false
+attachment = true
 reasoning = true
 temperature = true
 tool_call = true
@@ -14,5 +14,5 @@ context = 1_048_576
 output = 131_072
 
 [modalities]
-input = ["text"]
+input = ["text", "image", "audio", "video"]
 output = ["text"]
