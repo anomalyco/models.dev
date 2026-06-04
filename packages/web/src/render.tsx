@@ -151,25 +151,6 @@ function getWeightLinks(metadata?: ModelMetadata): TableLink[] {
   return dedupeLinks([...weights, ...links]);
 }
 
-function getBenchmarkLinks(metadata?: ModelMetadata): TableLink[] {
-  return dedupeLinks(
-    (metadata?.benchmarks ?? [])
-      .filter((benchmark) => benchmark.source !== undefined)
-      .map((benchmark) => ({
-        label: benchmark.name,
-        url: benchmark.source!,
-        title: [
-          benchmark.metric
-            ? `${benchmark.score} ${benchmark.metric}`
-            : String(benchmark.score),
-          benchmark.date,
-        ]
-          .filter(Boolean)
-          .join(" - "),
-      }))
-  );
-}
-
 export const INITIAL_ROW_COUNT = 50;
 
 export const TableRows: TableRow[] = Object.entries(Providers)
@@ -208,7 +189,6 @@ export const TableRows: TableRow[] = Object.entries(Providers)
           temperature: model.temperature ?? false,
           openWeights: model.open_weights,
           weightLinks: getWeightLinks(metadata),
-          benchmarkLinks: getBenchmarkLinks(metadata),
           knowledge: model.knowledge,
           releaseDate: model.release_date,
           lastUpdated: model.last_updated,
@@ -370,9 +350,6 @@ export const Rendered = renderToString(
           </th>
           <th class="sortable" data-type="text">
             Weights <span class="sort-indicator"></span>
-          </th>
-          <th class="sortable" data-type="number">
-            Benchmarks <span class="sort-indicator"></span>
           </th>
           <th class="sortable" data-type="text">
             Knowledge <span class="sort-indicator"></span>

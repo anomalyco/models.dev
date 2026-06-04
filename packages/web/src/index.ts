@@ -153,7 +153,6 @@ function prepareRow(row: TableRow): VirtualizedRow {
       : booleanText(row.structuredOutput),
     booleanText(row.temperature),
     weightsText(row.openWeights),
-    row.benchmarkLinks.length,
     row.knowledge ? knowledgeText(row.knowledge) : undefined,
     row.releaseDate,
     row.lastUpdated,
@@ -166,7 +165,6 @@ function prepareRow(row: TableRow): VirtualizedRow {
     row.providerId,
     row.modelId,
     ...row.weightLinks.map((link) => link.label),
-    ...row.benchmarkLinks.map((link) => link.label),
     row.releaseDate,
     row.lastUpdated,
   ];
