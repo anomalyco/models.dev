@@ -16,3 +16,95 @@ output = 128_000
 [modalities]
 input = ["text", "image", "pdf"]
 output = ["text"]
+
+[[benchmarks]]
+name = "SWE-Bench Pro (Anthropic launch table)"
+score = 64.3
+metric = "resolve rate"
+source = "https://www.anthropic.com/news/claude-opus-4-8"
+date = "2026-05-28"
+
+[[benchmarks]]
+name = "Terminal-Bench 2.1 (Terminus-2)"
+score = 66.1
+metric = "success rate"
+source = "https://www.anthropic.com/news/claude-opus-4-8"
+date = "2026-05-28"
+
+[[benchmarks]]
+name = "SWE-Atlas Refactoring (Claude Code)"
+score = 48.57
+metric = "score"
+source = "https://labs.scale.com/leaderboard/sweatlas-refactoring"
+
+[[benchmarks]]
+name = "Artificial Analysis Coding Agent Index (Claude Code, max)"
+score = 66.6
+metric = "average pass@1"
+source = "https://artificialanalysis.ai/agents/coding-agents"
+
+[[benchmarks]]
+name = "SWE-Atlas-QnA (Artificial Analysis, Claude Code, max)"
+score = 81
+metric = "pass@1"
+source = "https://artificialanalysis.ai/agents/coding-agents"
+
+[[benchmarks]]
+name = "SWE-Bench-Pro-Hard-AA (Claude Code, max)"
+score = 44.9
+metric = "pass@1"
+source = "https://artificialanalysis.ai/agents/coding-agents"
+
+[[benchmarks]]
+name = "Terminal-Bench v2 (Artificial Analysis, Claude Code, max)"
+score = 73.8
+metric = "pass@1"
+source = "https://artificialanalysis.ai/agents/coding-agents"
+
+[[benchmarks]]
+name = "Artificial Analysis Coding Agent Index (Cursor CLI, medium)"
+score = 61.2
+metric = "average pass@1"
+source = "https://artificialanalysis.ai/agents/coding-agents"
+
+[[benchmarks]]
+name = "SWE-Atlas-QnA (Artificial Analysis, Cursor CLI, medium)"
+score = 78.4
+metric = "pass@1"
+source = "https://artificialanalysis.ai/agents/coding-agents"
+
+[[benchmarks]]
+name = "SWE-Bench-Pro-Hard-AA (Cursor CLI, medium)"
+score = 34.4
+metric = "pass@1"
+source = "https://artificialanalysis.ai/agents/coding-agents"
+
+[[benchmarks]]
+name = "Terminal-Bench v2 (Artificial Analysis, Cursor CLI, medium)"
+score = 70.6
+metric = "pass@1"
+source = "https://artificialanalysis.ai/agents/coding-agents"
+
+[[benchmarks]]
+name = "Artificial Analysis Coding Agent Index (Claude Code, medium)"
+score = 59.9
+metric = "average pass@1"
+source = "https://artificialanalysis.ai/agents/coding-agents"
+
+[[benchmarks]]
+name = "SWE-Atlas-QnA (Artificial Analysis, Claude Code, medium)"
+score = 71.7
+metric = "pass@1"
+source = "https://artificialanalysis.ai/agents/coding-agents"
+
+[[benchmarks]]
+name = "SWE-Bench-Pro-Hard-AA (Claude Code, medium)"
+score = 36.4
+metric = "pass@1"
+source = "https://artificialanalysis.ai/agents/coding-agents"
+
+[[benchmarks]]
+name = "Terminal-Bench v2 (Artificial Analysis, Claude Code, medium)"
+score = 71.4
+metric = "pass@1"
+source = "https://artificialanalysis.ai/agents/coding-agents"

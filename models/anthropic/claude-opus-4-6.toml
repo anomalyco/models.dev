@@ -16,3 +16,63 @@ output = 128_000
 [modalities]
 input = ["text", "image", "pdf"]
 output = ["text"]
+
+[[benchmarks]]
+name = "SWE-Bench Pro (Scale Public)"
+score = 51.9
+metric = "resolve rate"
+source = "https://labs.scale.com/leaderboard/swe_bench_pro_public"
+
+[[benchmarks]]
+name = "SWE-Atlas Codebase QnA (Claude Code)"
+score = 33.3
+metric = "score"
+source = "https://labs.scale.com/leaderboard/sweatlas-qna"
+
+[[benchmarks]]
+name = "SWE-Atlas Codebase QnA (Mini-SWE-Agent)"
+score = 30
+metric = "score"
+source = "https://labs.scale.com/leaderboard/sweatlas-qna"
+
+[[benchmarks]]
+name = "SWE-Atlas Refactoring (Claude Code)"
+score = 35.58
+metric = "score"
+source = "https://labs.scale.com/leaderboard/sweatlas-refactoring"
+
+[[benchmarks]]
+name = "SWE-Atlas Test Writing (Claude Code)"
+score = 36.67
+metric = "score"
+source = "https://labs.scale.com/leaderboard/sweatlas-tw"
+
+[[benchmarks]]
+name = "SWE-Atlas Test Writing (Mini-SWE-Agent)"
+score = 36.08
+metric = "score"
+source = "https://labs.scale.com/leaderboard/sweatlas-tw"
+
+[[benchmarks]]
+name = "Artificial Analysis Coding Agent Index (Claude Code, medium)"
+score = 51.3
+metric = "average pass@1"
+source = "https://artificialanalysis.ai/agents/coding-agents"
+
+[[benchmarks]]
+name = "SWE-Atlas-QnA (Artificial Analysis, Claude Code, medium)"
+score = 71.9
+metric = "pass@1"
+source = "https://artificialanalysis.ai/agents/coding-agents"
+
+[[benchmarks]]
+name = "SWE-Bench-Pro-Hard-AA (Claude Code, medium)"
+score = 11.8
+metric = "pass@1"
+source = "https://artificialanalysis.ai/agents/coding-agents"
+
+[[benchmarks]]
+name = "Terminal-Bench v2 (Artificial Analysis, Claude Code, medium)"
+score = 70.2
+metric = "pass@1"
+source = "https://artificialanalysis.ai/agents/coding-agents"

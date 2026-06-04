@@ -17,3 +17,65 @@ output = 65_536
 [modalities]
 input = ["text", "image", "video", "audio", "pdf"]
 output = ["text"]
+
+[[benchmarks]]
+name = "SWE-Bench Pro (Anthropic launch table)"
+score = 54.2
+metric = "resolve rate"
+source = "https://www.anthropic.com/news/claude-opus-4-8"
+date = "2026-05-28"
+
+[[benchmarks]]
+name = "Terminal-Bench 2.1 (Terminus-2)"
+score = 70.3
+metric = "success rate"
+source = "https://www.anthropic.com/news/claude-opus-4-8"
+date = "2026-05-28"
+
+[[benchmarks]]
+name = "SWE-Bench Pro (Scale Public)"
+score = 46.1
+metric = "resolve rate"
+source = "https://labs.scale.com/leaderboard/swe_bench_pro_public"
+
+[[benchmarks]]
+name = "SWE-Atlas Codebase QnA (Mini-SWE-Agent)"
+score = 13.5
+metric = "score"
+source = "https://labs.scale.com/leaderboard/sweatlas-qna"
+
+[[benchmarks]]
+name = "SWE-Atlas Refactoring (Gemini CLI)"
+score = 33.81
+metric = "score"
+source = "https://labs.scale.com/leaderboard/sweatlas-refactoring"
+
+[[benchmarks]]
+name = "SWE-Atlas Test Writing (Mini-SWE-Agent)"
+score = 29.84
+metric = "score"
+source = "https://labs.scale.com/leaderboard/sweatlas-tw"
+
+[[benchmarks]]
+name = "Artificial Analysis Coding Agent Index (Gemini CLI, high)"
+score = 43
+metric = "average pass@1"
+source = "https://artificialanalysis.ai/agents/coding-agents"
+
+[[benchmarks]]
+name = "SWE-Atlas-QnA (Artificial Analysis, Gemini CLI, high)"
+score = 45.6
+metric = "pass@1"
+source = "https://artificialanalysis.ai/agents/coding-agents"
+
+[[benchmarks]]
+name = "SWE-Bench-Pro-Hard-AA (Gemini CLI, high)"
+score = 15.1
+metric = "pass@1"
+source = "https://artificialanalysis.ai/agents/coding-agents"
+
+[[benchmarks]]
+name = "Terminal-Bench v2 (Artificial Analysis, Gemini CLI, high)"
+score = 68.3
+metric = "pass@1"
+source = "https://artificialanalysis.ai/agents/coding-agents"

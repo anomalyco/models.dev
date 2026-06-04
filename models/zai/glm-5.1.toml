@@ -20,3 +20,27 @@ output = ["text"]
 [[weights]]
 label = "Hugging Face"
 url = "https://huggingface.co/zai-org/GLM-5.1"
+
+[[benchmarks]]
+name = "Artificial Analysis Coding Agent Index (Claude Code)"
+score = 52.7
+metric = "average pass@1"
+source = "https://artificialanalysis.ai/agents/coding-agents"
+
+[[benchmarks]]
+name = "SWE-Atlas-QnA (Artificial Analysis, Claude Code)"
+score = 73.2
+metric = "pass@1"
+source = "https://artificialanalysis.ai/agents/coding-agents"
+
+[[benchmarks]]
+name = "SWE-Bench-Pro-Hard-AA (Claude Code)"
+score = 19.8
+metric = "pass@1"
+source = "https://artificialanalysis.ai/agents/coding-agents"
+
+[[benchmarks]]
+name = "Terminal-Bench v2 (Artificial Analysis, Claude Code)"
+score = 65.1
+metric = "pass@1"
+source = "https://artificialanalysis.ai/agents/coding-agents"

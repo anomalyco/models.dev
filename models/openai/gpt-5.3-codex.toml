@@ -18,3 +18,21 @@ output = 128_000
 [modalities]
 input = ["text", "image", "pdf"]
 output = ["text"]
+
+[[benchmarks]]
+name = "SWE-Atlas Codebase QnA (Codex)"
+score = 32.6
+metric = "score"
+source = "https://labs.scale.com/leaderboard/sweatlas-qna"
+
+[[benchmarks]]
+name = "SWE-Atlas Refactoring (Codex)"
+score = 42.38
+metric = "score"
+source = "https://labs.scale.com/leaderboard/sweatlas-refactoring"
+
+[[benchmarks]]
+name = "SWE-Atlas Test Writing (Codex)"
+score = 38.98
+metric = "score"
+source = "https://labs.scale.com/leaderboard/sweatlas-tw"

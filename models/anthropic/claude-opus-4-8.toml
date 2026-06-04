@@ -15,3 +15,17 @@ output = 128_000
 [modalities]
 input = ["text", "image", "pdf"]
 output = ["text"]
+
+[[benchmarks]]
+name = "SWE-Bench Pro (Anthropic launch table)"
+score = 69.2
+metric = "resolve rate"
+source = "https://www.anthropic.com/news/claude-opus-4-8"
+date = "2026-05-28"
+
+[[benchmarks]]
+name = "Terminal-Bench 2.1 (Terminus-2)"
+score = 74.6
+metric = "success rate"
+source = "https://www.anthropic.com/news/claude-opus-4-8"
+date = "2026-05-28"

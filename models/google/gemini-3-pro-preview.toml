@@ -17,3 +17,9 @@ output = 65_536
 [modalities]
 input = ["text", "image", "video", "audio", "pdf"]
 output = ["text"]
+
+[[benchmarks]]
+name = "SWE-Bench Pro (Scale Public)"
+score = 43.3
+metric = "resolve rate"
+source = "https://labs.scale.com/leaderboard/swe_bench_pro_public"
