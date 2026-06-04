@@ -5,25 +5,20 @@ last_updated = "2025-06-05"
 attachment = true
 reasoning = true
 temperature = true
-knowledge = "2025-01"
 tool_call = true
 structured_output = true
+knowledge = "2025-01"
 open_weights = false
-
-[[reasoning_options]]
-type = "budget_tokens"
-min = 128
-max = 32_768
 
 [cost]
 input = 1.25
-output = 10.00
+output = 10
 cache_read = 0.125
 
 [[cost.tiers]]
-tier = { size = 200_000 }
-input = 2.50
-output = 15.00
+tier = { type = "context", size = 200_000 }
+input = 2.5
+output = 15
 cache_read = 0.25
 
 [limit]

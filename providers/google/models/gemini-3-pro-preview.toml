@@ -11,17 +11,13 @@ knowledge = "2025-01"
 open_weights = false
 status = "deprecated"
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "high"]
-
 [cost]
 input = 2
 output = 12
 cache_read = 0.2
 
 [[cost.tiers]]
-tier = { size = 200_000 }
+tier = { type = "context", size = 200_000 }
 input = 4
 output = 18
 cache_read = 0.4

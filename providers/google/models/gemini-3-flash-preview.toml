@@ -10,19 +10,15 @@ structured_output = true
 knowledge = "2025-01"
 open_weights = false
 
-[[reasoning_options]]
-type = "effort"
-values = ["minimal", "low", "medium", "high"]
-
 [cost]
-input = 0.50
-output = 3.00
+input = 0.5
+output = 3
 cache_read = 0.05
-input_audio = 1.00
+input_audio = 1
 
 [limit]
-context = 1048576
-output = 65536
+context = 1_048_576
+output = 65_536
 
 [modalities]
 input = ["text", "image", "video", "audio", "pdf"]
