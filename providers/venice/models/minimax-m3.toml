@@ -5,7 +5,7 @@ reasoning = true
 tool_call = true
 temperature = true
 release_date = "2026-06-01"
-last_updated = "2026-06-01"
+last_updated = "2026-06-04"
 open_weights = false
 
 [cost]
@@ -15,8 +15,8 @@ cache_read = 0.06
 
 [limit]
 context = 500_000
-output = 32_768
+output = 131_072
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image", "video"]
 output = ["text"]
