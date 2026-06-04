@@ -19,3 +19,9 @@ output = ["text"]
 [[weights]]
 label = "Hugging Face"
 url = "https://huggingface.co/zai-org/GLM-5"
+
+[[benchmarks]]
+name = "SWE-Bench Verified"
+score = 72.8
+metric = "resolved"
+source = "https://www.swebench.com/"

@@ -18,3 +18,24 @@ output = 128_000
 [modalities]
 input = ["text", "image"]
 output = ["text"]
+
+[[benchmarks]]
+name = "Artificial Analysis Coding Index"
+score = 38.9
+metric = "index"
+source = "https://openrouter.ai/openai/gpt-5-codex/benchmarks"
+date = "2026-06-01"
+
+[[benchmarks]]
+name = "SciCode"
+score = 40.9
+metric = "percent correct"
+source = "https://openrouter.ai/openai/gpt-5-codex/benchmarks"
+date = "2026-06-01"
+
+[[benchmarks]]
+name = "Terminal-Bench Hard"
+score = 37.9
+metric = "success rate"
+source = "https://openrouter.ai/openai/gpt-5-codex/benchmarks"
+date = "2026-06-01"

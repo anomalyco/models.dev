@@ -21,3 +21,9 @@ output = ["text"]
 [[weights]]
 label = "Hugging Face"
 url = "https://huggingface.co/moonshotai/Kimi-K2.5"
+
+[[benchmarks]]
+name = "SWE-Bench Verified"
+score = 70.8
+metric = "resolved"
+source = "https://www.swebench.com/"

@@ -21,3 +21,9 @@ output = ["text"]
 [[weights]]
 label = "Hugging Face"
 url = "https://huggingface.co/deepseek-ai/DeepSeek-V4-Flash"
+
+[[benchmarks]]
+name = "SWE-Bench Verified"
+score = 79
+metric = "resolved"
+source = "https://huggingface.co/deepseek-ai/DeepSeek-V4-Flash"

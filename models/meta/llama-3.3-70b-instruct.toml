@@ -20,3 +20,24 @@ output = ["text"]
 [[weights]]
 label = "Hugging Face"
 url = "https://huggingface.co/meta-llama/Llama-3.3-70B-Instruct"
+
+[[benchmarks]]
+name = "Artificial Analysis Coding Index"
+score = 10.7
+metric = "index"
+source = "https://openrouter.ai/meta-llama/llama-3.3-70b-instruct/benchmarks"
+date = "2026-03-11"
+
+[[benchmarks]]
+name = "SciCode"
+score = 26
+metric = "percent correct"
+source = "https://openrouter.ai/meta-llama/llama-3.3-70b-instruct/benchmarks"
+date = "2026-03-11"
+
+[[benchmarks]]
+name = "Terminal-Bench Hard"
+score = 3
+metric = "success rate"
+source = "https://openrouter.ai/meta-llama/llama-3.3-70b-instruct/benchmarks"
+date = "2026-03-11"

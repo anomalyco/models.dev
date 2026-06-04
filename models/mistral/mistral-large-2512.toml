@@ -20,3 +20,24 @@ output = ["text"]
 [[weights]]
 label = "Hugging Face"
 url = "https://huggingface.co/mistralai/Mistral-Large-3-675B-Instruct-2512"
+
+[[benchmarks]]
+name = "Artificial Analysis Coding Index"
+score = 22.7
+metric = "index"
+source = "https://openrouter.ai/mistralai/mistral-large-2512/benchmarks"
+date = "2026-06-04"
+
+[[benchmarks]]
+name = "SciCode"
+score = 36.2
+metric = "percent correct"
+source = "https://openrouter.ai/mistralai/mistral-large-2512/benchmarks"
+date = "2026-06-04"
+
+[[benchmarks]]
+name = "Terminal-Bench Hard"
+score = 15.9
+metric = "success rate"
+source = "https://openrouter.ai/mistralai/mistral-large-2512/benchmarks"
+date = "2026-06-04"

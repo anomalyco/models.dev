@@ -17,3 +17,24 @@ output = 65_536
 [modalities]
 input = ["text", "image", "audio", "video", "pdf"]
 output = ["text"]
+
+[[benchmarks]]
+name = "Artificial Analysis Coding Index"
+score = 9.5
+metric = "index"
+source = "https://openrouter.ai/google/gemini-2.5-flash-lite/benchmarks"
+date = "2026-03-11"
+
+[[benchmarks]]
+name = "SciCode"
+score = 19.3
+metric = "percent correct"
+source = "https://openrouter.ai/google/gemini-2.5-flash-lite/benchmarks"
+date = "2026-03-11"
+
+[[benchmarks]]
+name = "Terminal-Bench Hard"
+score = 4.5
+metric = "success rate"
+source = "https://openrouter.ai/google/gemini-2.5-flash-lite/benchmarks"
+date = "2026-03-11"

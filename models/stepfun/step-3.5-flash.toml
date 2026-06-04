@@ -20,3 +20,30 @@ output = ["text"]
 [[weights]]
 label = "Hugging Face"
 url = "https://huggingface.co/stepfun-ai/Step-3.5-Flash"
+
+[[benchmarks]]
+name = "Artificial Analysis Coding Index"
+score = 31.6
+metric = "index"
+source = "https://openrouter.ai/stepfun/step-3.5-flash/benchmarks"
+date = "2026-06-02"
+
+[[benchmarks]]
+name = "SciCode"
+score = 40.4
+metric = "percent correct"
+source = "https://openrouter.ai/stepfun/step-3.5-flash/benchmarks"
+date = "2026-06-02"
+
+[[benchmarks]]
+name = "Terminal-Bench Hard"
+score = 27.3
+metric = "success rate"
+source = "https://openrouter.ai/stepfun/step-3.5-flash/benchmarks"
+date = "2026-06-02"
+
+[[benchmarks]]
+name = "SWE-Bench Verified"
+score = 74.4
+metric = "resolved"
+source = "https://arxiv.org/abs/2602.10604"

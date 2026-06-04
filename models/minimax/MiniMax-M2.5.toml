@@ -19,3 +19,9 @@ output = ["text"]
 [[weights]]
 label = "Hugging Face"
 url = "https://huggingface.co/MiniMaxAI/MiniMax-M2.5"
+
+[[benchmarks]]
+name = "SWE-Bench Verified"
+score = 75.8
+metric = "resolved"
+source = "https://www.swebench.com/"

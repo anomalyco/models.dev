@@ -20,3 +20,9 @@ output = ["text"]
 [[weights]]
 label = "Hugging Face"
 url = "https://huggingface.co/Qwen/Qwen3.6-27B"
+
+[[benchmarks]]
+name = "SWE-Bench Verified"
+score = 77.2
+metric = "resolved"
+source = "https://huggingface.co/Qwen/Qwen3.6-27B"

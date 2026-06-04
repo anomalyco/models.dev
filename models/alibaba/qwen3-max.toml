@@ -16,3 +16,24 @@ output = 65_536
 [modalities]
 input = ["text"]
 output = ["text"]
+
+[[benchmarks]]
+name = "Artificial Analysis Coding Index"
+score = 26.4
+metric = "index"
+source = "https://openrouter.ai/qwen/qwen3-max/benchmarks"
+date = "2026-05-30"
+
+[[benchmarks]]
+name = "SciCode"
+score = 38.3
+metric = "percent correct"
+source = "https://openrouter.ai/qwen/qwen3-max/benchmarks"
+date = "2026-05-30"
+
+[[benchmarks]]
+name = "Terminal-Bench Hard"
+score = 20.5
+metric = "success rate"
+source = "https://openrouter.ai/qwen/qwen3-max/benchmarks"
+date = "2026-05-30"
