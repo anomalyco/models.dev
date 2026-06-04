@@ -1,7 +1,7 @@
 name = "Qwen3.7 Plus"
 family = "qwen"
 release_date = "2026-06-02"
-last_updated = "2026-06-02"
+last_updated = "2026-06-04"
 attachment = false
 reasoning = true
 temperature = true
@@ -23,9 +23,9 @@ cache_read = 0.20
 cache_write = 2.50
 
 [limit]
-context = 131_072
+context = 1_000_000
 output = 16_384
 
 [modalities]
-input = ["text"]
+input = ["text", "image", "video"]
 output = ["text"]
