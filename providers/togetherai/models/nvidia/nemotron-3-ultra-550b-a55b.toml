@@ -1,0 +1,23 @@
+name = "Nemotron 3 Ultra 550B A55B"
+family = "nemotron"
+release_date = "2026-06-04"
+last_updated = "2026-06-04"
+attachment = false
+reasoning = true
+structured_output = true
+temperature = true
+tool_call = true
+open_weights = true
+
+[cost]
+input = 0.60
+output = 3.60
+cache_read = 0.20
+
+[limit]
+context = 512_300
+output = 512_300
+
+[modalities]
+input = ["text"]
+output = ["text"]
