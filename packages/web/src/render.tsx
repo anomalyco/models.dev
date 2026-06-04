@@ -2,17 +2,23 @@
 /** @jsxImportSource hono/jsx */
 
 import { generateCatalog } from "models.dev";
+import type { ModelMetadata } from "models.dev";
 import { Fragment } from "hono/jsx";
 import { renderToString } from "hono/jsx/dom/server";
 import { existsSync } from "fs";
 import path from "path";
-import { type TableRow, renderRow, getLargestRow } from "./shared.js";
+import {
+  type TableLink,
+  type TableRow,
+  renderRow,
+  getLargestRow,
+} from "./shared.js";
 
-const Catalog = await generateCatalog(
-  path.join(import.meta.dir, "..", "..", "..")
-);
+const root = path.join(import.meta.dir, "..", "..", "..");
+const Catalog = await generateCatalog(root);
 export const Models = Catalog.models;
 export const Providers = Catalog.providers;
+const BaseModelRefs = await loadProviderBaseModelRefs(root);
 
 // Function to load SVG content
 const loadProviderSvg = async (providerId: string): Promise<string | null> => {
@@ -64,6 +70,106 @@ for (const [providerId] of Object.entries(Providers)) {
   }
 }
 
+async function loadProviderBaseModelRefs(root: string) {
+  const refs = new Map<string, string>();
+  const providersDirectory = path.join(root, "providers");
+  if (!existsSync(providersDirectory)) return refs;
+
+  for await (const modelPath of new Bun.Glob("*/models/**/*.toml").scan({
+    cwd: providersDirectory,
+    absolute: true,
+    followSymlinks: true,
+  })) {
+    const parts = path.relative(providersDirectory, modelPath).split(path.sep);
+    const [providerId, modelsSegment, ...modelParts] = parts;
+    if (!providerId || modelsSegment !== "models" || modelParts.length === 0) {
+      continue;
+    }
+
+    const modelId = modelParts.join("/").slice(0, -5);
+    const toml = await import(modelPath, {
+      with: {
+        type: "toml",
+      },
+    }).then((mod) => mod.default as { base_model?: unknown });
+
+    if (typeof toml.base_model === "string") {
+      refs.set(`${providerId}/${modelId}`, toml.base_model);
+    }
+  }
+
+  return refs;
+}
+
+function getModelMetadata(providerId: string, modelId: string) {
+  const baseModelId = BaseModelRefs.get(`${providerId}/${modelId}`);
+  const candidates = [
+    baseModelId,
+    modelId,
+    `${providerId}/${modelId}`,
+  ].filter((candidate): candidate is string => candidate !== undefined);
+
+  for (const candidate of candidates) {
+    const metadata = Models[candidate];
+    if (metadata) return metadata;
+  }
+}
+
+function dedupeLinks(links: TableLink[]) {
+  const seen = new Set<string>();
+  return links.filter((link) => {
+    const key = `${link.label}\n${link.url}`;
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
+}
+
+function getWeightLinks(metadata?: ModelMetadata): TableLink[] {
+  if (!metadata) return [];
+
+  const weights = (metadata.weights ?? []).map((weight) => {
+    const details = [weight.format, weight.quantization]
+      .filter(Boolean)
+      .join(" ");
+    return {
+      label: weight.label ?? (details || "Weights"),
+      url: weight.url,
+      title:
+        [weight.format, weight.quantization].filter(Boolean).join(", ") ||
+        undefined,
+    };
+  });
+
+  const links = (metadata.links ?? [])
+    .filter((link) => link.type === "weights")
+    .map((link) => ({
+      label: link.label ?? "Weights",
+      url: link.url,
+    }));
+
+  return dedupeLinks([...weights, ...links]);
+}
+
+function getBenchmarkLinks(metadata?: ModelMetadata): TableLink[] {
+  return dedupeLinks(
+    (metadata?.benchmarks ?? [])
+      .filter((benchmark) => benchmark.source !== undefined)
+      .map((benchmark) => ({
+        label: benchmark.name,
+        url: benchmark.source!,
+        title: [
+          benchmark.metric
+            ? `${benchmark.score} ${benchmark.metric}`
+            : String(benchmark.score),
+          benchmark.date,
+        ]
+          .filter(Boolean)
+          .join(" - "),
+      }))
+  );
+}
+
 export const INITIAL_ROW_COUNT = 50;
 
 export const TableRows: TableRow[] = Object.entries(Providers)
@@ -74,34 +180,40 @@ export const TableRows: TableRow[] = Object.entries(Providers)
     Object.entries(provider.models)
       .filter(([, model]) => model.status !== "alpha")
       .sort(([, modelA], [, modelB]) => modelA.name.localeCompare(modelB.name))
-      .map(([modelId, model]) => ({
-        providerId,
-        providerName: provider.name,
-        providerLogoSvg: providerLogos.get(providerId) || "",
-        modelId,
-        modelName: model.name,
-        family: model.family,
-        toolCall: model.tool_call,
-        reasoning: model.reasoning,
-        input: model.modalities.input,
-        output: model.modalities.output,
-        inputCost: model.cost?.input,
-        outputCost: model.cost?.output,
-        reasoningCost: model.cost?.reasoning,
-        cacheReadCost: model.cost?.cache_read,
-        cacheWriteCost: model.cost?.cache_write,
-        audioInputCost: model.cost?.input_audio,
-        audioOutputCost: model.cost?.output_audio,
-        contextLimit: model.limit.context,
-        inputLimit: model.limit.input,
-        outputLimit: model.limit.output,
-        structuredOutput: model.structured_output,
-        temperature: model.temperature ?? false,
-        openWeights: model.open_weights,
-        knowledge: model.knowledge,
-        releaseDate: model.release_date,
-        lastUpdated: model.last_updated,
-      }))
+      .map(([modelId, model]) => {
+        const metadata = getModelMetadata(providerId, modelId);
+
+        return {
+          providerId,
+          providerName: provider.name,
+          providerLogoSvg: providerLogos.get(providerId) || "",
+          modelId,
+          modelName: model.name,
+          family: model.family,
+          toolCall: model.tool_call,
+          reasoning: model.reasoning,
+          input: model.modalities.input,
+          output: model.modalities.output,
+          inputCost: model.cost?.input,
+          outputCost: model.cost?.output,
+          reasoningCost: model.cost?.reasoning,
+          cacheReadCost: model.cost?.cache_read,
+          cacheWriteCost: model.cost?.cache_write,
+          audioInputCost: model.cost?.input_audio,
+          audioOutputCost: model.cost?.output_audio,
+          contextLimit: model.limit.context,
+          inputLimit: model.limit.input,
+          outputLimit: model.limit.output,
+          structuredOutput: model.structured_output,
+          temperature: model.temperature ?? false,
+          openWeights: model.open_weights,
+          weightLinks: getWeightLinks(metadata),
+          benchmarkLinks: getBenchmarkLinks(metadata),
+          knowledge: model.knowledge,
+          releaseDate: model.release_date,
+          lastUpdated: model.last_updated,
+        };
+      })
   );
 
 const largestRow = getLargestRow(TableRows);
@@ -259,6 +371,9 @@ export const Rendered = renderToString(
           <th class="sortable" data-type="text">
             Weights <span class="sort-indicator"></span>
           </th>
+          <th class="sortable" data-type="number">
+            Benchmarks <span class="sort-indicator"></span>
+          </th>
           <th class="sortable" data-type="text">
             Knowledge <span class="sort-indicator"></span>
           </th>
@@ -321,10 +436,23 @@ export const Rendered = renderToString(
           .
         </p>
         <h2>API</h2>
-        <p>You can access this data through an API.</p>
+        <p>
+          You can access provider data, provider-agnostic model metadata, or the
+          combined catalog through JSON endpoints.
+        </p>
         <div class="code-block">
           <code>
             curl <a href="/api.json">https://models.dev/api.json</a>
+          </code>
+        </div>
+        <div class="code-block">
+          <code>
+            curl <a href="/models.json">https://models.dev/models.json</a>
+          </code>
+        </div>
+        <div class="code-block">
+          <code>
+            curl <a href="/catalog.json">https://models.dev/catalog.json</a>
           </code>
         </div>
         <p>

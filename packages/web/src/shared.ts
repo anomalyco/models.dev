@@ -22,9 +22,17 @@ export interface TableRow {
   structuredOutput?: boolean;
   temperature: boolean;
   openWeights: boolean;
+  weightLinks: TableLink[];
+  benchmarkLinks: TableLink[];
   knowledge?: string;
   releaseDate: string;
   lastUpdated: string;
+}
+
+export interface TableLink {
+  label: string;
+  url: string;
+  title?: string;
 }
 
 const MODALITY_ICONS: Record<string, string> = {
@@ -78,6 +86,36 @@ export function weightsText(value: boolean) {
   return value ? "Open" : "Closed";
 }
 
+export function renderResourceLinks(links: TableLink[], empty = "-") {
+  if (links.length === 0) return empty;
+
+  const visibleLinks = links.slice(0, 3);
+  const extraCount = links.length - visibleLinks.length;
+  const renderedLinks = visibleLinks.map((link) => {
+    const title = link.title ? ` title="${escapeHtml(link.title)}"` : "";
+    return `<a href="${escapeHtml(
+      link.url
+    )}" target="_blank" rel="noopener noreferrer"${title}>${escapeHtml(
+      link.label
+    )}</a>`;
+  });
+
+  if (extraCount > 0) {
+    const allLabels = links.map((link) => link.label).join(", ");
+    renderedLinks.push(
+      `<span class="resource-extra" title="${escapeHtml(allLabels)}">+${extraCount}</span>`
+    );
+  }
+
+  return `<div class="resource-links">${renderedLinks.join("")}</div>`;
+}
+
+export function renderWeights(
+  row: Pick<TableRow, "openWeights" | "weightLinks">
+) {
+  return renderResourceLinks(row.weightLinks, weightsText(row.openWeights));
+}
+
 export function renderModalityIcon(modality: string) {
   const label =
     modality === "pdf"
@@ -126,7 +164,8 @@ export function renderRow(row: TableRow, index: number) {
     <td>${formatNumber(row.outputLimit)}</td>
     <td>${optionalBooleanText(row.structuredOutput)}</td>
     <td>${booleanText(row.temperature)}</td>
-    <td>${weightsText(row.openWeights)}</td>
+    <td>${renderWeights(row)}</td>
+    <td>${renderResourceLinks(row.benchmarkLinks)}</td>
     <td>${knowledgeText(row.knowledge)}</td>
     <td>${escapeHtml(row.releaseDate)}</td>
     <td>${escapeHtml(row.lastUpdated)}</td>
@@ -140,6 +179,7 @@ export function getLargestRow(rows: TableRow[]): TableRow {
     input: [], output: [],
     contextLimit: 0, outputLimit: 0,
     structuredOutput: true, temperature: true, openWeights: false,
+    weightLinks: [], benchmarkLinks: [],
     releaseDate: "", lastUpdated: "",
   };
 
@@ -154,6 +194,21 @@ export function getLargestRow(rows: TableRow[]): TableRow {
     if (row.lastUpdated.length > worst.lastUpdated.length) worst.lastUpdated = row.lastUpdated;
     if (row.input.length > worst.input.length) worst.input = row.input;
     if (row.output.length > worst.output.length) worst.output = row.output;
+    if (
+      renderResourceLinks(row.weightLinks, weightsText(row.openWeights))
+        .length >
+      renderResourceLinks(worst.weightLinks, weightsText(worst.openWeights))
+        .length
+    ) {
+      worst.openWeights = row.openWeights;
+      worst.weightLinks = row.weightLinks;
+    }
+    if (
+      renderResourceLinks(row.benchmarkLinks).length >
+      renderResourceLinks(worst.benchmarkLinks).length
+    ) {
+      worst.benchmarkLinks = row.benchmarkLinks;
+    }
 
     const costWider = (a: number | undefined, b: number | undefined) =>
       b !== undefined && (a === undefined || formatCost(b).length > formatCost(a).length);
