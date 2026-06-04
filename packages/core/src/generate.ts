@@ -12,7 +12,7 @@ import {
 } from "./schema.js";
 
 const BaseModel = AuthoredModelShape
-  .partial()
+  .deepPartial()
   .extend({
     id: z.string(),
     base_model: z.string().min(1, "Base model cannot be empty"),
@@ -211,7 +211,8 @@ function applyOmit(target: Record<string, unknown>, paths: string[]) {
 
     for (let index = parents.length - 1; index >= 0; index--) {
       const parent = parents[index];
-      const value = parent?.value[parent.key];
+      if (parent === undefined) continue;
+      const value = parent.value[parent.key];
       if (
         value === null ||
         value === undefined ||

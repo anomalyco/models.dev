@@ -1,7 +1,6 @@
 base_model = "zai/glm-5.1"
 name = "GLM 5.1"
 knowledge = "2025-04"
-open_weights = true
 
 [interleaved]
 field = "reasoning_content"
@@ -13,4 +12,3 @@ cache_read = 0.27
 
 [limit]
 context = 202_800
-output = 131_072

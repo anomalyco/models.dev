@@ -10,14 +10,21 @@ import { openrouter } from "./providers/openrouter.js";
 import { ovhcloud } from "./providers/ovhcloud.js";
 import { xai } from "./providers/xai.js";
 
-const ExistingModel = AuthoredModelShape.partial()
+const ExistingModelType = AuthoredModelShape.partial()
   .extend({
     base_model: z.string().optional(),
     base_model_omit: z.array(z.string()).optional(),
   })
   .strict();
 
-const SyncedBaseModel = AuthoredModelShape.partial()
+const ExistingModel = AuthoredModelShape.deepPartial()
+  .extend({
+    base_model: z.string().optional(),
+    base_model_omit: z.array(z.string()).optional(),
+  })
+  .strict();
+
+const SyncedBaseModel = AuthoredModelShape.deepPartial()
   .extend({
     id: z.string(),
     base_model: z.string(),
@@ -27,7 +34,7 @@ const SyncedBaseModel = AuthoredModelShape.partial()
 
 const SyncedAuthoredModel = z.union([AuthoredModel, SyncedBaseModel]);
 
-export type ExistingModel = z.infer<typeof ExistingModel>;
+export type ExistingModel = z.infer<typeof ExistingModelType>;
 export type SyncedFullModel = Omit<z.infer<typeof AuthoredModelShape>, "id">;
 export type SyncedBaseModel = Omit<z.infer<typeof SyncedBaseModel>, "id">;
 export type SyncedModel = SyncedFullModel | SyncedBaseModel;
@@ -240,7 +247,7 @@ async function readExisting(modelsDir: string) {
       throw parsed.error;
     }
 
-    const authored = parsed.data;
+    const authored = parsed.data as ExistingModel;
     if (authored.base_model !== undefined && modelMetadata === undefined) {
       modelMetadata = await readModelMetadata(modelsDir);
     }
@@ -304,7 +311,7 @@ function resolveBaseModel(
     parsed.error.cause = { modelPath, toml: merged };
     throw parsed.error;
   }
-  return parsed.data;
+  return parsed.data as ExistingModel;
 }
 
 function inheritableModelMetadata(model: Record<string, unknown>) {
