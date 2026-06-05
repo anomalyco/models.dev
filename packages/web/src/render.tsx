@@ -61,6 +61,26 @@ interface LabEntry {
   lastUpdated?: string;
 }
 
+interface SearchIndexItem {
+  type: "model" | "provider" | "lab";
+  title: string;
+  id: string;
+  href: string;
+  tokens: string[];
+  lab?: string;
+  family?: string;
+  modelCount?: number;
+  providerCount?: number;
+  context?: number;
+  inputCost?: number;
+  outputCost?: number;
+  npm?: string;
+  api?: string;
+  families?: string[];
+  updated?: string;
+  capabilities?: string[];
+}
+
 const LAB_NAME_OVERRIDES: Record<string, string> = {
   alibaba: "Alibaba",
   meta: "Meta",
@@ -77,6 +97,11 @@ const ModelEntries = buildModelEntries();
 const ProviderModelEntries = buildProviderModelEntries(ModelEntries);
 connectProviderEntries(ModelEntries, ProviderModelEntries);
 const LabEntries = buildLabEntries(ModelEntries);
+const SearchItems = buildSearchItems(
+  sortModels([...ModelEntries.values()]),
+  Object.entries(Providers).sort(([, a], [, b]) => a.name.localeCompare(b.name)),
+  LabEntries,
+);
 
 export const RenderedPages = buildPages();
 export const Rendered = RenderedPages.get("/")!;
@@ -232,6 +257,95 @@ function buildLabEntries(models: Map<string, ModelEntry>) {
     .sort((a, b) => a.name.localeCompare(b.name));
 }
 
+function buildSearchItems(
+  models: ModelEntry[],
+  providers: Array<[string, CatalogProvider]>,
+  labs: LabEntry[],
+): SearchIndexItem[] {
+  const items: SearchIndexItem[] = [];
+
+  for (const model of models) {
+    const metadata = model.metadata;
+    items.push({
+      type: "model",
+      title: metadata.name,
+      id: model.id,
+      href: modelHref(model.id),
+      lab: model.labName,
+      family: metadata.family,
+      providerCount: model.providers.length,
+      context: metadata.limit?.context,
+      inputCost: model.minInputCost,
+      outputCost: model.minOutputCost,
+      updated: metadata.last_updated,
+      capabilities: [
+        metadata.reasoning ? "reasoning" : undefined,
+        metadata.tool_call ? "tools" : undefined,
+        metadata.structured_output ? "structured" : undefined,
+        metadata.temperature ? "temperature" : undefined,
+        weightsText(metadata.open_weights),
+      ].filter((capability): capability is string => capability !== undefined),
+      tokens: [
+        metadata.name,
+        model.id,
+        model.labName,
+        model.labId,
+        metadata.family,
+        metadata.release_date,
+        metadata.last_updated,
+        ...(metadata.modalities?.input ?? []),
+        ...(metadata.modalities?.output ?? []),
+      ].filter((token): token is string => Boolean(token)),
+    });
+  }
+
+  for (const [providerId, provider] of providers) {
+    const providerModels = ProviderModelEntries.filter(
+      (entry) => entry.providerId === providerId,
+    );
+
+    items.push({
+      type: "provider",
+      title: provider.name,
+      id: providerId,
+      href: providerHref(providerId),
+      modelCount: providerModels.length,
+      npm: provider.npm,
+      api: provider.api,
+      tokens: [
+        provider.name,
+        providerId,
+        provider.npm,
+        provider.api,
+        provider.doc,
+        ...providerModels.slice(0, 20).map(displayModelName),
+      ].filter((token): token is string => Boolean(token)),
+    });
+  }
+
+  for (const lab of labs) {
+    items.push({
+      type: "lab",
+      title: lab.name,
+      id: lab.id,
+      href: labHref(lab.id),
+      modelCount: lab.models.length,
+      providerCount: lab.providerCount,
+      families: lab.families,
+      updated: lab.lastUpdated,
+      tokens: [
+        lab.name,
+        lab.id,
+        lab.lastUpdated,
+        ...lab.families,
+        ...lab.models.slice(0, 20).map((model) => model.metadata.name),
+      ].filter((token): token is string => Boolean(token)),
+    });
+  }
+
+  return items;
+}
+
 function resolveCanonicalModelId(
   models: Map<string, ModelEntry>,
   providerId: string,
@@ -298,6 +412,7 @@ function renderPage(active: "models" | "providers" | "labs", content: unknown) {
     <Fragment>
       <Header active={active} />
       <main class="page-scroll">{content}</main>
+      <SearchDialog items={SearchItems} />
       <HelpDialog />
     </Fragment>,
   );
@@ -348,8 +463,34 @@ function Header(props: { active: "models" | "providers" | "labs" }) {
           </svg>
         </a>
         <div class="search-container">
-          <input type="text" id="search" placeholder="Search this page" />
-          <span class="search-shortcut">⌘K</span>
+          <button
+            type="button"
+            id="search-trigger"
+            class="search-trigger"
+            aria-label="Search"
+            aria-keyshortcuts="Control+F Meta+F Control+K Meta+K"
+            aria-haspopup="dialog"
+            aria-controls="search-modal"
+          >
+            <span class="search-trigger-label">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <circle cx="11" cy="11" r="8"></circle>
+                <path d="m21 21-4.35-4.35"></path>
+              </svg>
+              <span>Search</span>
+            </span>
+            <span class="search-shortcut">Ctrl F</span>
+          </button>
         </div>
         <button id="help">How to use</button>
       </div>
@@ -957,6 +1098,60 @@ function CopyButton(props: { value: string; label: string }) {
         <polyline points="20,6 9,17 4,12"></polyline>
       </svg>
     </button>
+  );
+}
+
+function SearchDialog(props: { items: SearchIndexItem[] }) {
+  const json = JSON.stringify(props.items).replace(/</g, "\\u003c");
+
+  return (
+    <dialog
+      id="search-modal"
+      class="search-modal"
+      aria-labelledby="search-modal-title"
+    >
+      <div class="search-field">
+        <svg
+          class="search-field-icon"
+          xmlns="http://www.w3.org/2000/svg"
+          width="18"
+          height="18"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+        >
+          <circle cx="11" cy="11" r="8"></circle>
+          <path d="m21 21-4.35-4.35"></path>
+        </svg>
+        <input
+          id="search-input"
+          type="text"
+          placeholder="Search models, providers, and labs"
+          autocomplete="off"
+          spellcheck="false"
+          role="combobox"
+          aria-expanded="true"
+          aria-controls="search-results"
+          aria-autocomplete="list"
+        />
+        <span class="search-escape">Esc</span>
+      </div>
+      <h2 id="search-modal-title" class="sr-only">
+        Search
+      </h2>
+      <div id="search-count" class="search-count"></div>
+      <div id="search-results" class="search-results" role="listbox"></div>
+      <p id="search-empty" class="search-empty">No matching results.</p>
+      <script
+        id="search-index"
+        type="application/json"
+        dangerouslySetInnerHTML={{ __html: json }}
+      />
+    </dialog>
   );
 }
 

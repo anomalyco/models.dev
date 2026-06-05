@@ -1,117 +1,477 @@
 type SortDirection = "asc" | "desc";
 
-const modal = document.getElementById("modal") as HTMLDialogElement | null;
+interface SearchIndexItem {
+  type: "model" | "provider" | "lab";
+  title: string;
+  id: string;
+  href: string;
+  tokens: string[];
+  lab?: string;
+  family?: string;
+  modelCount?: number;
+  providerCount?: number;
+  context?: number;
+  inputCost?: number;
+  outputCost?: number;
+  npm?: string;
+  api?: string;
+  families?: string[];
+  updated?: string;
+  capabilities?: string[];
+}
+
+interface SearchResult {
+  item: SearchIndexItem;
+  score: number;
+}
+
+const helpModal = document.getElementById("modal") as HTMLDialogElement | null;
 const modalClose = document.getElementById("close");
 const help = document.getElementById("help");
-const search = document.getElementById("search") as HTMLInputElement | null;
+const searchModal = document.getElementById(
+  "search-modal",
+) as HTMLDialogElement | null;
+const searchTrigger = document.getElementById("search-trigger");
+const searchInput = document.getElementById(
+  "search-input",
+) as HTMLInputElement | null;
+const searchResults = document.getElementById("search-results");
+const searchCount = document.getElementById("search-count");
+const searchEmpty = document.getElementById("search-empty");
 const tables = Array.from(
   document.querySelectorAll<HTMLTableElement>("table[data-enhanced-table]"),
 );
 
 let scrollYBeforeModal = 0;
+let lastFocusedElement: HTMLElement | null = null;
+let activeSearchIndex = 0;
+let rankedSearchResults: SearchResult[] = [];
 
-/////////////////////////
-// URL State Management
-/////////////////////////
-function getQueryParams() {
-  return new URLSearchParams(window.location.search);
-}
-
-function updateQueryParams(updates: Record<string, string | null>) {
-  const params = getQueryParams();
-  for (const [key, value] of Object.entries(updates)) {
-    if (value) {
-      params.set(key, value);
-    } else {
-      params.delete(key);
-    }
-  }
-  const newPath = params.toString()
-    ? `${window.location.pathname}?${params.toString()}`
-    : window.location.pathname;
-  window.history.pushState({}, "", newPath);
-}
+const searchItems = parseSearchIndex();
+const compactNumberFormatter = new Intl.NumberFormat(undefined, {
+  notation: "compact",
+  maximumFractionDigits: 1,
+});
 
 /////////////////////////
 // Help Dialog
 /////////////////////////
 help?.addEventListener("click", () => {
-  if (!modal) return;
+  if (!helpModal) return;
   scrollYBeforeModal = window.scrollY;
   document.body.style.position = "fixed";
   document.body.style.top = `-${scrollYBeforeModal}px`;
-  modal.showModal();
+  helpModal.showModal();
 });
 
 function closeDialog() {
-  if (!modal) return;
-  modal.close();
+  if (!helpModal) return;
+  helpModal.close();
   document.body.style.position = "";
   document.body.style.top = "";
   window.scrollTo(0, scrollYBeforeModal);
 }
 
 modalClose?.addEventListener("click", closeDialog);
-modal?.addEventListener("cancel", closeDialog);
-modal?.addEventListener("click", (event) => {
-  if (event.target === modal) closeDialog();
+helpModal?.addEventListener("cancel", closeDialog);
+helpModal?.addEventListener("click", (event) => {
+  if (event.target === helpModal) closeDialog();
 });
 
 ////////////////////
 // Search
 ////////////////////
-function filterRows() {
-  if (!search) return;
+function parseSearchIndex() {
+  const index = document.getElementById("search-index")?.textContent;
+  if (!index) return [];
 
-  const terms = search.value
-    .toLowerCase()
-    .split(",")
-    .map((term) => term.trim())
-    .filter(Boolean);
-
-  for (const table of tables) {
-    const rows = Array.from(table.tBodies[0]?.rows ?? []);
-    let visibleCount = 0;
-
-    for (const row of rows) {
-      if (row.classList.contains("empty-row")) continue;
-
-      const searchText =
-        row.getAttribute("data-search")?.toLowerCase() ??
-        row.textContent?.toLowerCase() ??
-        "";
-      const visible =
-        terms.length === 0 ||
-        terms.some((term) => searchText.includes(term));
-
-      row.hidden = !visible;
-      if (visible) visibleCount++;
-    }
-
-    table
-      .closest(".table-section")
-      ?.toggleAttribute("data-empty", visibleCount === 0);
+  try {
+    const parsed = JSON.parse(index);
+    return Array.isArray(parsed) ? (parsed as SearchIndexItem[]) : [];
+  } catch {
+    return [];
   }
 }
 
-search?.addEventListener("input", () => {
-  updateQueryParams({ search: search.value || null });
-  filterRows();
+function normalizeSearchText(value: string) {
+  return value.toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
+}
+
+function searchFields(item: SearchIndexItem) {
+  return [item.title, item.id, ...item.tokens].filter(Boolean);
+}
+
+function fuzzySequenceScore(haystack: string, needle: string) {
+  let score = 0;
+  let previousIndex = -1;
+  let searchFrom = 0;
+
+  for (const character of needle) {
+    const index = haystack.indexOf(character, searchFrom);
+    if (index === -1) return 0;
+
+    if (index === 0 || haystack[index - 1] === " ") {
+      score += 8;
+    } else if (index === previousIndex + 1) {
+      score += 6;
+    } else {
+      score += 2;
+    }
+
+    previousIndex = index;
+    searchFrom = index + 1;
+  }
+
+  return score + Math.max(0, 12 - haystack.length / 8);
+}
+
+function scoreTerm(field: string, term: string) {
+  const normalized = normalizeSearchText(field);
+  if (!normalized) return 0;
+  if (normalized === term) return 120;
+  if (normalized.startsWith(term)) return 100;
+  if (normalized.split(" ").some((word) => word.startsWith(term))) return 82;
+
+  const index = normalized.indexOf(term);
+  if (index !== -1) return 64 - Math.min(index, 24);
+
+  return fuzzySequenceScore(normalized, term);
+}
+
+function scoreSearchItem(item: SearchIndexItem, query: string) {
+  const terms = normalizeSearchText(query).split(/\s+/).filter(Boolean);
+  if (terms.length === 0) return 1;
+
+  let score = 0;
+  for (const term of terms) {
+    let best = 0;
+    for (const field of searchFields(item)) {
+      best = Math.max(best, scoreTerm(field, term));
+    }
+    if (best <= 0) return 0;
+    score += best;
+  }
+
+  const normalizedTitle = normalizeSearchText(item.title);
+  const normalizedId = normalizeSearchText(item.id);
+  const normalizedQuery = normalizeSearchText(query);
+  if (normalizedTitle === normalizedQuery || normalizedId === normalizedQuery) {
+    score += 120;
+  } else if (normalizedTitle.startsWith(normalizedQuery)) {
+    score += 44;
+  } else if (normalizedId.startsWith(normalizedQuery)) {
+    score += 36;
+  }
+
+  if (item.type === "model") score += 8;
+  return score;
+}
+
+function rankSearchItems(query: string) {
+  const normalizedQuery = normalizeSearchText(query);
+  const results = searchItems
+    .map((item) => ({ item, score: scoreSearchItem(item, normalizedQuery) }))
+    .filter((result) => result.score > 0)
+    .sort((a, b) => {
+      if (b.score !== a.score) return b.score - a.score;
+      return a.item.title.localeCompare(b.item.title, undefined, {
+        numeric: true,
+        sensitivity: "base",
+      });
+    });
+
+  return normalizedQuery ? results.slice(0, 40) : results.slice(0, 18);
+}
+
+function formatCompactNumber(value?: number) {
+  if (value === undefined) return undefined;
+  return compactNumberFormatter.format(value);
+}
+
+function formatCost(input?: number, output?: number) {
+  if (input === undefined && output === undefined) return undefined;
+  const inputText = input === undefined ? "-" : `$${input.toFixed(2)}`;
+  const outputText = output === undefined ? "-" : `$${output.toFixed(2)}`;
+  return `${inputText} / ${outputText}`;
+}
+
+function appendHighlightedText(
+  element: HTMLElement,
+  text: string,
+  query: string,
+) {
+  const terms = normalizeSearchText(query).split(/\s+/).filter(Boolean);
+  if (terms.length === 0) {
+    element.textContent = text;
+    return;
+  }
+
+  const lowerText = text.toLowerCase();
+  const ranges = terms
+    .map((term) => {
+      const index = lowerText.indexOf(term);
+      return index === -1 ? undefined : [index, index + term.length] as const;
+    })
+    .filter((range): range is readonly [number, number] => range !== undefined)
+    .sort((a, b) => a[0] - b[0]);
+
+  if (ranges.length === 0) {
+    element.textContent = text;
+    return;
+  }
+
+  let cursor = 0;
+  for (const [start, end] of ranges) {
+    if (start < cursor) continue;
+    if (start > cursor) {
+      element.append(document.createTextNode(text.slice(cursor, start)));
+    }
+    const mark = document.createElement("mark");
+    mark.textContent = text.slice(start, end);
+    element.append(mark);
+    cursor = end;
+  }
+  if (cursor < text.length) {
+    element.append(document.createTextNode(text.slice(cursor)));
+  }
+}
+
+function resultMeta(item: SearchIndexItem) {
+  if (item.type === "model") {
+    return [
+      item.lab,
+      item.family,
+      item.providerCount === undefined
+        ? undefined
+        : `${item.providerCount} providers`,
+      item.context === undefined
+        ? undefined
+        : `${formatCompactNumber(item.context)} context`,
+      formatCost(item.inputCost, item.outputCost),
+      item.updated,
+    ].filter((value): value is string => Boolean(value));
+  }
+
+  if (item.type === "provider") {
+    return [
+      item.modelCount === undefined ? undefined : `${item.modelCount} models`,
+      item.npm,
+      item.api,
+    ].filter((value): value is string => Boolean(value));
+  }
+
+  return [
+    item.modelCount === undefined ? undefined : `${item.modelCount} models`,
+    item.providerCount === undefined
+      ? undefined
+      : `${item.providerCount} providers`,
+    ...(item.families ?? []).slice(0, 3),
+    item.updated,
+  ].filter((value): value is string => Boolean(value));
+}
+
+function resultSubtitle(item: SearchIndexItem) {
+  if (item.type === "model") return item.id;
+  if (item.type === "provider") return item.id;
+  return item.id;
+}
+
+function createSearchResult(result: SearchResult, index: number, query: string) {
+  const { item } = result;
+  const link = document.createElement("a");
+  link.className = `search-result search-result-${item.type}`;
+  link.href = item.href;
+  link.id = `search-result-${index}`;
+  link.setAttribute("role", "option");
+  link.setAttribute("aria-selected", index === activeSearchIndex ? "true" : "false");
+  link.dataset.searchIndex = String(index);
+  if (index === activeSearchIndex) link.classList.add("is-active");
+
+  const icon = document.createElement("span");
+  icon.className = "search-result-icon";
+  icon.textContent = item.type[0]!.toUpperCase();
+  link.append(icon);
+
+  const body = document.createElement("span");
+  body.className = "search-result-body";
+
+  const top = document.createElement("span");
+  top.className = "search-result-top";
+
+  const title = document.createElement("span");
+  title.className = "search-result-title";
+  appendHighlightedText(title, item.title, query);
+  top.append(title);
+
+  const kind = document.createElement("span");
+  kind.className = "search-result-kind";
+  kind.textContent = item.type;
+  top.append(kind);
+  body.append(top);
+
+  const subtitle = document.createElement("span");
+  subtitle.className = "search-result-subtitle mono";
+  appendHighlightedText(subtitle, resultSubtitle(item), query);
+  body.append(subtitle);
+
+  const meta = document.createElement("span");
+  meta.className = "search-result-meta";
+  for (const value of resultMeta(item)) {
+    const chip = document.createElement("span");
+    chip.textContent = value;
+    meta.append(chip);
+  }
+  body.append(meta);
+
+  if (item.capabilities && item.capabilities.length > 0) {
+    const capabilities = document.createElement("span");
+    capabilities.className = "search-result-capabilities";
+    capabilities.textContent = item.capabilities.slice(0, 4).join(", ");
+    body.append(capabilities);
+  }
+
+  link.append(body);
+  return link;
+}
+
+function updateActiveSearchResult() {
+  if (!searchResults || !searchInput) return;
+
+  const resultNodes = Array.from(
+    searchResults.querySelectorAll<HTMLElement>(".search-result"),
+  );
+
+  for (const [index, result] of resultNodes.entries()) {
+    const active = index === activeSearchIndex;
+    result.classList.toggle("is-active", active);
+    result.setAttribute("aria-selected", active ? "true" : "false");
+    if (active) {
+      searchInput.setAttribute("aria-activedescendant", result.id);
+      result.scrollIntoView({ block: "nearest" });
+    }
+  }
+}
+
+function setActiveSearchIndex(index: number) {
+  if (rankedSearchResults.length === 0) return;
+  activeSearchIndex =
+    (index + rankedSearchResults.length) % rankedSearchResults.length;
+  updateActiveSearchResult();
+}
+
+function renderSearchResults() {
+  if (!searchInput || !searchResults || !searchCount || !searchEmpty) return;
+
+  const query = searchInput.value;
+  rankedSearchResults = rankSearchItems(query);
+  activeSearchIndex = rankedSearchResults.length > 0 ? 0 : -1;
+  searchResults.replaceChildren();
+
+  const fragment = document.createDocumentFragment();
+  rankedSearchResults.forEach((result, index) => {
+    fragment.append(createSearchResult(result, index, query));
+  });
+  searchResults.append(fragment);
+
+  const normalizedQuery = normalizeSearchText(query);
+  searchCount.textContent = normalizedQuery
+    ? `${rankedSearchResults.length} result${rankedSearchResults.length === 1 ? "" : "s"}`
+    : "Recently updated models, providers, and labs";
+  searchEmpty.hidden = rankedSearchResults.length > 0;
+
+  if (rankedSearchResults.length > 0) {
+    searchInput.setAttribute("aria-activedescendant", "search-result-0");
+  } else {
+    searchInput.removeAttribute("aria-activedescendant");
+  }
+}
+
+function openSearchModal() {
+  if (!searchModal || !searchInput) return;
+  if (helpModal?.open) closeDialog();
+
+  lastFocusedElement =
+    document.activeElement instanceof HTMLElement
+      ? document.activeElement
+      : null;
+
+  if (!searchModal.open) searchModal.showModal();
+  renderSearchResults();
+  requestAnimationFrame(() => {
+    searchInput.focus();
+    searchInput.select();
+  });
+}
+
+function closeSearchModal() {
+  if (!searchModal) return;
+  if (searchModal.open) searchModal.close();
+  searchInput?.removeAttribute("aria-activedescendant");
+  lastFocusedElement?.focus();
+}
+
+function closestSearchResult(target: EventTarget | null) {
+  if (!(target instanceof Element)) return null;
+  return target.closest<HTMLElement>(".search-result[data-search-index]");
+}
+
+searchTrigger?.addEventListener("click", openSearchModal);
+
+searchModal?.addEventListener("cancel", (event) => {
+  event.preventDefault();
+  closeSearchModal();
+});
+
+searchModal?.addEventListener("click", (event) => {
+  if (event.target === searchModal) closeSearchModal();
+});
+
+searchResults?.addEventListener("mousemove", (event) => {
+  const result = closestSearchResult(event.target);
+  if (!result?.dataset.searchIndex) return;
+  setActiveSearchIndex(Number(result.dataset.searchIndex));
+});
+
+searchResults?.addEventListener("click", (event) => {
+  if (closestSearchResult(event.target)) {
+    searchInput?.removeAttribute("aria-activedescendant");
+  }
+});
+
+searchInput?.addEventListener("input", renderSearchResults);
+
+searchInput?.addEventListener("keydown", (event) => {
+  if (event.key === "Escape") {
+    event.preventDefault();
+    closeSearchModal();
+    return;
+  }
+
+  if (event.key === "ArrowDown") {
+    event.preventDefault();
+    setActiveSearchIndex(activeSearchIndex + 1);
+    return;
+  }
+
+  if (event.key === "ArrowUp") {
+    event.preventDefault();
+    setActiveSearchIndex(activeSearchIndex - 1);
+    return;
+  }
+
+  if (event.key === "Enter") {
+    const result = rankedSearchResults[activeSearchIndex];
+    if (!result) return;
+    event.preventDefault();
+    window.location.href = result.item.href;
+  }
 });
 
 document.addEventListener("keydown", (event) => {
   const key = event.key.toLowerCase();
   if ((event.metaKey || event.ctrlKey) && (key === "k" || key === "f")) {
     event.preventDefault();
-    search?.focus();
-    search?.select();
-  }
-});
-
-search?.addEventListener("keydown", (event) => {
-  if (event.key === "Escape") {
-    search.value = "";
-    search.dispatchEvent(new Event("input"));
+    openSearchModal();
   }
 });
 
@@ -339,12 +699,3 @@ document.addEventListener("keydown", (event) => {
   event.preventDefault();
   void copyValue(copy.button, copy.value);
 });
-
-function initializeFromURL() {
-  if (!search) return;
-  search.value = getQueryParams().get("search") ?? "";
-  filterRows();
-}
-
-initializeFromURL();
-window.addEventListener("popstate", initializeFromURL);
