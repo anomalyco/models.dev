@@ -1,0 +1,7 @@
+[extends]
+from = "amazon-bedrock/openai.gpt-oss-120b-1:0"
+
+[provider]
+npm = "@ai-sdk/amazon-bedrock/mantle"
+api = "https://bedrock-mantle.${AWS_REGION}.api.aws/v1"
+shape = "responses"
