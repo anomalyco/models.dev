@@ -1,5 +1,25 @@
-[extends]
-from = "amazon-bedrock/openai.gpt-oss-120b-1:0"
+name = "gpt-oss-120b"
+family = "gpt-oss"
+release_date = "2025-08-05"
+last_updated = "2025-08-05"
+attachment = false
+reasoning = false
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[cost]
+input = 0.15
+output = 0.60
+
+[limit]
+context = 128_000
+output = 16_384
+
+[modalities]
+input = ["text"]
+output = ["text"]
 
 [provider]
 npm = "@ai-sdk/amazon-bedrock/mantle"
