@@ -40,6 +40,29 @@ for (const entry of entries) {
   }
 }
 
+// Copy lab logos to dist/logos/labs/
+await fs.mkdir("./dist/logos/labs", { recursive: true });
+
+const labsDir = "../../labs";
+try {
+  const labEntries = await fs.readdir(labsDir, { withFileTypes: true });
+  for (const entry of labEntries) {
+    if (entry.isDirectory()) {
+      const lab = entry.name;
+      const logoPath = path.join(labsDir, lab, "logo.svg");
+      const logoFile = Bun.file(logoPath);
+
+      if (await logoFile.exists()) {
+        await Bun.write(`./dist/logos/labs/${lab}.svg`, logoFile);
+      }
+    }
+  }
+} catch (error) {
+  if ((error as NodeJS.ErrnoException).code !== "ENOENT") {
+    throw error;
+  }
+}
+
 const template = await Bun.file("./dist/index.html").text();
 
 for (const [route, rendered] of RenderedPages) {

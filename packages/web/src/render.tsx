@@ -28,6 +28,7 @@ export const Providers = Catalog.providers;
 
 const BaseModelRefs = await loadProviderBaseModelRefs(root);
 const ProviderLogoSvgs = new Map<string, string>();
+const LabLogoSvgs = new Map<string, string>();
 
 type CatalogModel = ModelMetadata;
 type CatalogProvider = Provider;
@@ -58,6 +59,7 @@ interface LabEntry {
   models: ModelEntry[];
   providerCount: number;
   families: string[];
+  lastReleased?: string;
   lastUpdated?: string;
 }
 
@@ -66,19 +68,18 @@ interface SearchIndexItem {
   title: string;
   id: string;
   href: string;
+  logo: string;
   tokens: string[];
   lab?: string;
-  family?: string;
   modelCount?: number;
   providerCount?: number;
   context?: number;
+  releaseDate?: string;
   inputCost?: number;
   outputCost?: number;
   npm?: string;
   api?: string;
-  families?: string[];
   updated?: string;
-  capabilities?: string[];
 }
 
 const LAB_NAME_OVERRIDES: Record<string, string> = {
@@ -232,11 +233,18 @@ function buildLabEntries(models: Map<string, ModelEntry>) {
     .map(([id, modelEntries]) => {
       const providers = new Set<string>();
       const families = new Set<string>();
+      let lastReleased: string | undefined;
       let lastUpdated: string | undefined;
 
       for (const model of modelEntries) {
         for (const provider of model.providers) providers.add(provider.providerId);
         if (model.metadata.family) families.add(model.metadata.family);
+        if (
+          model.metadata.release_date &&
+          (!lastReleased || model.metadata.release_date > lastReleased)
+        ) {
+          lastReleased = model.metadata.release_date;
+        }
         if (
           model.metadata.last_updated &&
           (!lastUpdated || model.metadata.last_updated > lastUpdated)
@@ -251,6 +259,7 @@ function buildLabEntries(models: Map<string, ModelEntry>) {
         models: sortModels(modelEntries),
         providerCount: providers.size,
         families: [...families].sort(),
+        lastReleased,
         lastUpdated,
       };
     })
@@ -271,20 +280,14 @@ function buildSearchItems(
       title: metadata.name,
       id: model.id,
       href: modelHref(model.id),
+      logo: labLogoHref(model.labId),
       lab: model.labName,
-      family: metadata.family,
       providerCount: model.providers.length,
       context: metadata.limit?.context,
+      releaseDate: metadata.release_date,
       inputCost: model.minInputCost,
       outputCost: model.minOutputCost,
       updated: metadata.last_updated,
-      capabilities: [
-        metadata.reasoning ? "reasoning" : undefined,
-        metadata.tool_call ? "tools" : undefined,
-        metadata.structured_output ? "structured" : undefined,
-        metadata.temperature ? "temperature" : undefined,
-        weightsText(metadata.open_weights),
-      ].filter((capability): capability is string => capability !== undefined),
       tokens: [
         metadata.name,
         model.id,
@@ -303,15 +306,20 @@ function buildSearchItems(
     const providerModels = ProviderModelEntries.filter(
       (entry) => entry.providerId === providerId,
     );
+    const providerLastReleased = maxModelDate(providerModels, "release_date");
+    const providerLastUpdated = maxModelDate(providerModels, "last_updated");
 
     items.push({
       type: "provider",
       title: provider.name,
       id: providerId,
       href: providerHref(providerId),
+      logo: logoHref(providerId),
       modelCount: providerModels.length,
       npm: provider.npm,
       api: provider.api,
+      releaseDate: providerLastReleased,
+      updated: providerLastUpdated,
       tokens: [
         provider.name,
         providerId,
@@ -329,9 +337,10 @@ function buildSearchItems(
       title: lab.name,
       id: lab.id,
       href: labHref(lab.id),
+      logo: labLogoHref(lab.id),
       modelCount: lab.models.length,
       providerCount: lab.providerCount,
-      families: lab.families,
+      releaseDate: lab.lastReleased,
       updated: lab.lastUpdated,
       tokens: [
         lab.name,
@@ -412,6 +421,7 @@ function renderPage(active: "models" | "providers" | "labs", content: unknown) {
     <Fragment>
       <Header active={active} />
       <main class="page-scroll">{content}</main>
+      <MobileMenu active={active} />
       <SearchDialog items={SearchItems} />
       <HelpDialog />
     </Fragment>,
@@ -493,6 +503,30 @@ function Header(props: { active: "models" | "providers" | "labs" }) {
           </button>
         </div>
         <button id="help">How to use</button>
+        <button
+          type="button"
+          id="mobile-menu-trigger"
+          class="mobile-menu-trigger"
+          aria-label="Open menu"
+          aria-haspopup="dialog"
+          aria-controls="mobile-menu"
+          aria-expanded="false"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+          >
+            <line x1="4" y1="6" x2="20" y2="6"></line>
+            <line x1="4" y1="12" x2="20" y2="12"></line>
+            <line x1="4" y1="18" x2="20" y2="18"></line>
+          </svg>
+        </button>
       </div>
     </header>
   );
@@ -575,7 +609,7 @@ function LabsPage(props: { labs: LabEntry[] }) {
             {props.labs.map((lab) => (
               <tr data-search={`${lab.name} ${lab.id} ${lab.families.join(" ")}`}>
                 <td data-sort={lab.name}>
-                  <a href={labHref(lab.id)}>{lab.name}</a>
+                  <LabLink labId={lab.id} labName={lab.name} />
                   <span class="subtle mono">{lab.id}</span>
                 </td>
                 <td data-sort={String(lab.models.length)}>{lab.models.length}</td>
@@ -610,7 +644,7 @@ function ModelPage(props: { model: ModelEntry }) {
       />
       <Facts
         items={[
-          ["Lab", <a href={labHref(model.labId)}>{model.labName}</a>],
+          ["Lab", <LabLink labId={model.labId} labName={model.labName} />],
           ["Family", metadata.family ?? "-"],
           ["Providers", model.providers.length],
           ["Context", formatNumber(metadata.limit?.context)],
@@ -816,7 +850,7 @@ function ModelTable(props: {
                 </td>
                 {showLab && (
                   <td data-sort={model.labName}>
-                    <a href={labHref(model.labId)}>{model.labName}</a>
+                    <LabLink labId={model.labId} labName={model.labName} />
                   </td>
                 )}
                 <td data-sort={String(model.providers.length)}>
@@ -935,7 +969,7 @@ function ProviderModelsTable(props: {
               )}
               {showLab && (
                 <td data-sort={lab?.name ?? ""}>
-                  {lab ? <a href={labHref(lab.id)}>{lab.name}</a> : "-"}
+                  {lab ? <LabLink labId={lab.id} labName={lab.name} /> : "-"}
                 </td>
               )}
               <td class="mono" data-sort={entry.modelId}>
@@ -1058,6 +1092,18 @@ function ProviderLink(props: {
   );
 }
 
+function LabLink(props: { labId: string; labName: string }) {
+  return (
+    <a class="lab-link" href={labHref(props.labId)}>
+      <span
+        class="lab-logo"
+        dangerouslySetInnerHTML={{ __html: labLogoSvg(props.labId) }}
+      />
+      <span>{props.labName}</span>
+    </a>
+  );
+}
+
 function CopyButton(props: { value: string; label: string }) {
   return (
     <button
@@ -1098,6 +1144,69 @@ function CopyButton(props: { value: string; label: string }) {
         <polyline points="20,6 9,17 4,12"></polyline>
       </svg>
     </button>
+  );
+}
+
+function MobileMenu(props: { active: "models" | "providers" | "labs" }) {
+  return (
+    <dialog
+      id="mobile-menu"
+      class="mobile-menu"
+      aria-labelledby="mobile-menu-title"
+    >
+      <div class="header">
+        <h2 id="mobile-menu-title">Menu</h2>
+        <button type="button" id="mobile-menu-close" aria-label="Close menu">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <line
+              x1="18"
+              y1="6"
+              x2="6"
+              y2="18"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+            />
+            <line
+              x1="6"
+              y1="6"
+              x2="18"
+              y2="18"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+            />
+          </svg>
+        </button>
+      </div>
+      <nav class="mobile-menu-list" aria-label="Mobile">
+        <a class={props.active === "models" ? "active" : ""} href="/models">
+          Models
+        </a>
+        <a
+          class={props.active === "providers" ? "active" : ""}
+          href="/providers"
+        >
+          Providers
+        </a>
+        <a class={props.active === "labs" ? "active" : ""} href="/labs">
+          Labs
+        </a>
+        <button type="button" id="mobile-search-trigger">
+          Search
+        </button>
+        <a
+          target="_blank"
+          rel="noopener noreferrer"
+          href="https://github.com/sst/models.dev"
+        >
+          GitHub
+        </a>
+        <button type="button" id="mobile-help-trigger">
+          How to use
+        </button>
+      </nav>
+    </dialog>
   );
 }
 
@@ -1217,7 +1326,8 @@ function HelpDialog() {
         <h2>Logos</h2>
         <p>
           Provider logos are available at <code>/logos/{`{provider}`}.svg</code>{" "}
-          where <code>{`{provider}`}</code> is the provider ID.
+          where <code>{`{provider}`}</code> is the provider ID. Lab logos are
+          available at <code>/logos/labs/{`{lab}`}.svg</code>.
         </p>
         <div class="code-block">
           <code>
@@ -1276,6 +1386,18 @@ function displayModelName(entry: ProviderModelEntry) {
   return entry.canonical?.metadata.name ?? entry.model.name;
 }
 
+function maxModelDate(
+  entries: ProviderModelEntry[],
+  field: "last_updated" | "release_date",
+) {
+  let result: string | undefined;
+  for (const entry of entries) {
+    const value = entry.canonical?.metadata[field];
+    if (value && (result === undefined || value > result)) result = value;
+  }
+  return result;
+}
+
 function countLinkedProviderEntries() {
   return ProviderModelEntries.filter(
     (entry) => entry.canonicalModelId !== undefined,
@@ -1324,6 +1446,10 @@ function logoHref(providerId: string) {
   return `/logos/${encodeURIComponent(providerId)}.svg`;
 }
 
+function labLogoHref(labId: string) {
+  return `/logos/labs/${encodeURIComponent(labId)}.svg`;
+}
+
 function providerLogoSvg(providerId: string) {
   const cached = ProviderLogoSvgs.get(providerId);
   if (cached) return cached;
@@ -1343,5 +1469,27 @@ function providerLogoSvg(providerId: string) {
     .replace(/\sstroke="(?!none|currentColor)[^"]*"/gi, ' stroke="currentColor"');
 
   ProviderLogoSvgs.set(providerId, svg);
+  return svg;
+}
+
+function labLogoSvg(labId: string) {
+  const cached = LabLogoSvgs.get(labId);
+  if (cached) return cached;
+
+  const logoPath = path.join(root, "labs", labId, "logo.svg");
+  const defaultLogoPath = path.join(root, "providers", "logo.svg");
+  const rawSvg = readFileSync(
+    existsSync(logoPath) ? logoPath : defaultLogoPath,
+    "utf8",
+  );
+  const svg = rawSvg
+    .replace(/<svg\b([^>]*)>/i, (_, attributes: string) => {
+      const cleaned = attributes.replace(/\s(width|height)="[^"]*"/gi, "");
+      return `<svg${cleaned} aria-hidden="true" focusable="false">`;
+    })
+    .replace(/\sfill="(?!none)[^"]*"/gi, ' fill="currentColor"')
+    .replace(/\sstroke="(?!none)[^"]*"/gi, ' stroke="currentColor"');
+
+  LabLogoSvgs.set(labId, svg);
   return svg;
 }

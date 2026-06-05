@@ -20,6 +20,7 @@
   --color-text-invert: #FFF;
   --color-text-secondary: #666;
   --color-text-tertiary: #999;
+  --logo-image-filter: none;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -34,6 +35,7 @@
     --color-text-invert: #333;
     --color-text-secondary: #AAA;
     --color-text-tertiary: #666;
+    --logo-image-filter: invert(1);
   }
 }
 
@@ -237,6 +239,28 @@ header button {
   height: 2rem;
   padding: 0.5rem 0.75rem;
   border-radius: 0.25rem;
+}
+
+header .mobile-menu-trigger {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  padding: 0;
+  color: var(--color-text);
+  background-color: transparent;
+  border: 1px solid var(--color-border);
+}
+
+header .mobile-menu-trigger:hover,
+header .mobile-menu-trigger:focus {
+  border-color: var(--color-brand);
+  background-color: var(--color-surface);
+  outline: none;
+}
+
+header .mobile-menu-trigger svg {
+  display: block;
 }
 
 .page-scroll {
@@ -481,13 +505,15 @@ tbody tr:last-child td {
   margin-top: 0.125rem;
 }
 
-.provider-link {
+.provider-link,
+.lab-link {
   display: inline-flex;
   align-items: center;
   gap: 0.375rem;
 }
 
-.provider-logo {
+.provider-logo,
+.lab-logo {
   flex: 0 0 auto;
   display: block;
   width: 1rem;
@@ -495,7 +521,8 @@ tbody tr:last-child td {
   color: currentColor;
 }
 
-.provider-logo svg {
+.provider-logo svg,
+.lab-logo svg {
   display: block;
   width: 100%;
   height: 100%;
@@ -762,6 +789,56 @@ dialog .footer a {
   text-decoration: none;
 }
 
+.mobile-menu {
+  width: min(18rem, calc(100vw - 1.5rem));
+  max-width: calc(100vw - 1.5rem);
+  max-height: calc(100svh - var(--header-height) - 1rem);
+  margin: calc(var(--header-height) + 0.5rem) 0.75rem auto auto;
+}
+
+.mobile-menu .header {
+  padding: 0.875rem calc(0.875rem - 0.25rem) calc(0.875rem - 4px) 0.875rem;
+}
+
+.mobile-menu-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding: 0.5rem;
+  overflow-y: auto;
+}
+
+.mobile-menu-list a,
+.mobile-menu-list button {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  min-height: 2.5rem;
+  padding: 0.625rem 0.75rem;
+  border: 0;
+  border-radius: 0.375rem;
+  background-color: transparent;
+  color: var(--color-text);
+  cursor: pointer;
+  font-size: 0.875rem;
+  line-height: 1.2;
+  text-align: left;
+  text-decoration: none;
+}
+
+.mobile-menu-list a:hover,
+.mobile-menu-list a:focus,
+.mobile-menu-list button:hover,
+.mobile-menu-list button:focus,
+.mobile-menu-list a.active {
+  background-color: var(--color-surface);
+  outline: none;
+}
+
+.mobile-menu-list a.active {
+  color: var(--color-brand);
+}
+
 .search-modal {
   margin-top: 10svh;
   width: calc(100vw - 1.5rem);
@@ -852,22 +929,16 @@ dialog .footer a {
   height: 2rem;
   border: 1px solid var(--color-border);
   border-radius: 0.375rem;
-  font-size: 0.75rem;
-  font-weight: 600;
   color: var(--color-text-secondary);
   background-color: var(--color-background);
 }
 
-.search-result-model .search-result-icon {
-  color: var(--color-brand);
-}
-
-.search-result-provider .search-result-icon {
-  color: #2682d9;
-}
-
-.search-result-lab .search-result-icon {
-  color: #2f9f70;
+.search-result-icon img {
+  display: block;
+  width: 1.125rem;
+  height: 1.125rem;
+  object-fit: contain;
+  filter: var(--logo-image-filter);
 }
 
 .search-result-body {
@@ -920,8 +991,7 @@ dialog .footer a {
   color: var(--color-text-tertiary);
 }
 
-.search-result-meta,
-.search-result-capabilities {
+.search-result-meta {
   display: flex;
   flex-wrap: wrap;
   gap: 0.25rem;
@@ -930,8 +1000,7 @@ dialog .footer a {
   line-height: 1.25;
 }
 
-.search-result-meta span,
-.search-result-capabilities {
+.search-result-meta span {
   min-width: 0;
   max-width: 100%;
   overflow: hidden;
@@ -982,13 +1051,13 @@ dialog .footer a {
     display: none;
   }
 
-  header .search-trigger {
-    width: auto;
-    gap: 0.5rem;
+  header .search-container,
+  header > div.right > #help {
+    display: none;
   }
 
-  header .search-shortcut {
-    display: none;
+  header .mobile-menu-trigger {
+    display: inline-flex;
   }
 
   .overview h2,
@@ -1012,13 +1081,13 @@ dialog .footer a {
     display: none;
   }
 
-  header .search-trigger-label span {
-    display: none;
-  }
-
   header button {
     padding-left: 0.625rem;
     padding-right: 0.625rem;
+  }
+
+  header .mobile-menu-trigger {
+    padding: 0;
   }
 
   .overview,
