@@ -83,7 +83,7 @@ export const google = {
 
     return {
       id,
-      model: buildModel(model, existing, context.authored(id), context.base(id)),
+      model: buildModel(model, existing, context.authored(id)),
     };
   },
 } satisfies SyncProvider<GoogleModel>;
@@ -92,7 +92,6 @@ function buildModel(
   model: GoogleModel,
   existing: ExistingModel,
   authored: ExistingModel | undefined,
-  base: ExistingModel | undefined,
 ): SyncedModel {
   const name = existing.name;
   const releaseDate = existing.release_date;
@@ -118,7 +117,28 @@ function buildModel(
     throw new Error(`Google model ${model.name} has incomplete local TOML metadata required for sync`);
   }
 
-  const synced = {
+  if (authored?.base_model !== undefined) {
+    const result: SyncedModel = { ...authored, base_model: authored.base_model };
+    const limitOverride = { ...authored.limit };
+    if (model.inputTokenLimit !== limit.context) {
+      limitOverride.context = model.inputTokenLimit;
+    }
+    if (model.outputTokenLimit !== limit.output) {
+      limitOverride.output = model.outputTokenLimit;
+    }
+    if (
+      limitOverride.context !== undefined
+      || limitOverride.input !== undefined
+      || limitOverride.output !== undefined
+    ) {
+      result.limit = limitOverride;
+    } else {
+      delete result.limit;
+    }
+    return result;
+  }
+
+  return {
     base_model: existing.base_model,
     base_model_omit: existing.base_model_omit,
     name: model.displayName ?? name,
@@ -145,60 +165,4 @@ function buildModel(
     },
     modalities,
   };
-
-  if (authored?.base_model === undefined || base === undefined) return synced;
-
-  // Keep base_model TOMLs minimal by writing only provider-specific fields and API overrides.
-  const result: SyncedModel = {
-    base_model: authored.base_model,
-    base_model_omit: authored.base_model_omit,
-    cost: authored.cost,
-    provider: authored.provider,
-    experimental: authored.experimental,
-    reasoning_options: authored.reasoning_options,
-    interleaved: authored.interleaved,
-    status: authored.status,
-  };
-
-  setOverride(result, "name", synced.name, base.name);
-  setOverride(result, "family", synced.family, base.family);
-  setOverride(result, "release_date", synced.release_date, base.release_date);
-  setOverride(result, "last_updated", synced.last_updated, base.last_updated);
-  setOverride(result, "attachment", synced.attachment, base.attachment);
-  setOverride(result, "reasoning", synced.reasoning, base.reasoning);
-  setOverride(result, "temperature", synced.temperature, base.temperature);
-  setOverride(result, "tool_call", synced.tool_call, base.tool_call);
-  setOverride(result, "structured_output", synced.structured_output, base.structured_output);
-  setOverride(result, "knowledge", synced.knowledge, base.knowledge);
-  setOverride(result, "open_weights", synced.open_weights, base.open_weights);
-  setOverride(result, "modalities", synced.modalities, base.modalities);
-
-  const limitOverride = {
-    input: synced.limit.input !== base.limit?.input ? synced.limit.input : undefined,
-    context: synced.limit.context !== base.limit?.context ? synced.limit.context : undefined,
-    output: synced.limit.output !== base.limit?.output ? synced.limit.output : undefined,
-  };
-  if (
-    limitOverride.input !== undefined
-    || limitOverride.context !== undefined
-    || limitOverride.output !== undefined
-  ) {
-    result.limit = limitOverride;
-  }
-
-  return result;
-}
-
-function setOverride<K extends keyof SyncedModel>(
-  target: SyncedModel,
-  key: K,
-  value: SyncedModel[K],
-  baseValue: ExistingModel[K],
-) {
-  if (sameValue(value, baseValue)) return;
-  target[key] = value;
-}
-
-function sameValue(left: unknown, right: unknown) {
-  return JSON.stringify(left) === JSON.stringify(right);
 }

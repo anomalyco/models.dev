@@ -54,7 +54,6 @@ export interface SyncProvider<SourceModel> {
     context: {
       existing(id: string): ExistingModel | undefined;
       authored(id: string): ExistingModel | undefined;
-      base(id: string): ExistingModel | undefined;
     },
   ): { id: string; model: SyncedModel } | undefined;
 }
@@ -121,9 +120,6 @@ export async function syncProvider<SourceModel>(
       },
       authored(id) {
         return existing.get(`${id}.toml`)?.authored;
-      },
-      base(id) {
-        return existing.get(`${id}.toml`)?.base;
       },
     });
     if (translated === undefined) {
@@ -249,7 +245,6 @@ async function readExisting(modelsDir: string) {
   const existing = new Map<string, {
     authored: ExistingModel;
     toml: ExistingModel;
-    base: ExistingModel | undefined;
     symlink: boolean;
   }>();
   let modelMetadata: Record<string, Record<string, unknown>> | undefined;
@@ -266,21 +261,11 @@ async function readExisting(modelsDir: string) {
     if (authored.base_model !== undefined && modelMetadata === undefined) {
       modelMetadata = await readModelMetadata(modelsDir);
     }
-    const base = authored.base_model === undefined
-      ? undefined
-      : resolveBaseModel(
-        {
-          base_model: authored.base_model,
-          base_model_omit: authored.base_model_omit,
-        },
-        modelMetadata ?? {},
-        path.join(modelsDir, file),
-      );
     const toml = authored.base_model === undefined
       ? authored
       : resolveBaseModel(authored, modelMetadata ?? {}, path.join(modelsDir, file));
 
-    existing.set(file, { authored, toml, base, symlink });
+    existing.set(file, { authored, toml, symlink });
   }
 
   return existing;
