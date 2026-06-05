@@ -246,12 +246,10 @@ function baseModelOmit(
   const omit: string[] = [];
   const baseLimit = metadata.limit;
   if (
-    baseLimit !== undefined &&
-    baseLimit !== null &&
-    typeof baseLimit === "object" &&
-    !Array.isArray(baseLimit) &&
-    (baseLimit as Record<string, unknown>).input !== undefined &&
-    limit.input === undefined
+    isPlainObject(baseLimit) &&
+    baseLimit.input !== undefined &&
+    limit.input === undefined &&
+    baseLimit.context !== limit.context
   ) {
     omit.push("limit.input");
   }
