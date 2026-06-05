@@ -1,0 +1,21 @@
+name = "Skyfall 36B v2 (FP8)"
+release_date = "2025-02-18"
+last_updated = "2025-02-18"
+attachment = false
+reasoning = false
+temperature = true
+tool_call = false
+open_weights = true
+
+[cost]
+input = 0.55
+output = 0.8
+cache_read = 0.25
+
+[limit]
+context = 32768
+output = 32768
+
+[modalities]
+input = ["text"]
+output = ["text"]
