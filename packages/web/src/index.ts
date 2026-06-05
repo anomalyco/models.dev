@@ -5,19 +5,18 @@ interface SearchIndexItem {
   title: string;
   id: string;
   href: string;
+  logo: string;
   tokens: string[];
   lab?: string;
-  family?: string;
   modelCount?: number;
   providerCount?: number;
   context?: number;
+  releaseDate?: string;
   inputCost?: number;
   outputCost?: number;
   npm?: string;
   api?: string;
-  families?: string[];
   updated?: string;
-  capabilities?: string[];
 }
 
 interface SearchResult {
@@ -28,6 +27,13 @@ interface SearchResult {
 const helpModal = document.getElementById("modal") as HTMLDialogElement | null;
 const modalClose = document.getElementById("close");
 const help = document.getElementById("help");
+const mobileMenu = document.getElementById(
+  "mobile-menu",
+) as HTMLDialogElement | null;
+const mobileMenuTrigger = document.getElementById("mobile-menu-trigger");
+const mobileMenuClose = document.getElementById("mobile-menu-close");
+const mobileSearchTrigger = document.getElementById("mobile-search-trigger");
+const mobileHelpTrigger = document.getElementById("mobile-help-trigger");
 const searchModal = document.getElementById(
   "search-modal",
 ) as HTMLDialogElement | null;
@@ -56,13 +62,18 @@ const compactNumberFormatter = new Intl.NumberFormat(undefined, {
 /////////////////////////
 // Help Dialog
 /////////////////////////
-help?.addEventListener("click", () => {
+function openHelpDialog() {
   if (!helpModal) return;
+  if (searchModal?.open) closeSearchModal();
+  if (mobileMenu?.open) closeMobileMenu(false);
+
   scrollYBeforeModal = window.scrollY;
   document.body.style.position = "fixed";
   document.body.style.top = `-${scrollYBeforeModal}px`;
   helpModal.showModal();
-});
+}
+
+help?.addEventListener("click", openHelpDialog);
 
 function closeDialog() {
   if (!helpModal) return;
@@ -174,6 +185,11 @@ function rankSearchItems(query: string) {
     .filter((result) => result.score > 0)
     .sort((a, b) => {
       if (b.score !== a.score) return b.score - a.score;
+      const dateComparison = compareSearchDates(
+        searchSortDate(a.item),
+        searchSortDate(b.item),
+      );
+      if (dateComparison !== 0) return dateComparison;
       return a.item.title.localeCompare(b.item.title, undefined, {
         numeric: true,
         sensitivity: "base",
@@ -181,6 +197,17 @@ function rankSearchItems(query: string) {
     });
 
   return normalizedQuery ? results.slice(0, 40) : results.slice(0, 18);
+}
+
+function compareSearchDates(a?: string, b?: string) {
+  if (a === undefined && b === undefined) return 0;
+  if (a === undefined) return 1;
+  if (b === undefined) return -1;
+  return b.localeCompare(a);
+}
+
+function searchSortDate(item: SearchIndexItem) {
+  return item.releaseDate ?? item.updated;
 }
 
 function formatCompactNumber(value?: number) {
@@ -240,7 +267,6 @@ function resultMeta(item: SearchIndexItem) {
   if (item.type === "model") {
     return [
       item.lab,
-      item.family,
       item.providerCount === undefined
         ? undefined
         : `${item.providerCount} providers`,
@@ -265,7 +291,6 @@ function resultMeta(item: SearchIndexItem) {
     item.providerCount === undefined
       ? undefined
       : `${item.providerCount} providers`,
-    ...(item.families ?? []).slice(0, 3),
     item.updated,
   ].filter((value): value is string => Boolean(value));
 }
@@ -289,7 +314,11 @@ function createSearchResult(result: SearchResult, index: number, query: string) 
 
   const icon = document.createElement("span");
   icon.className = "search-result-icon";
-  icon.textContent = item.type[0]!.toUpperCase();
+  const logo = document.createElement("img");
+  logo.src = item.logo;
+  logo.alt = "";
+  logo.loading = "lazy";
+  icon.append(logo);
   link.append(icon);
 
   const body = document.createElement("span");
@@ -322,13 +351,6 @@ function createSearchResult(result: SearchResult, index: number, query: string) 
     meta.append(chip);
   }
   body.append(meta);
-
-  if (item.capabilities && item.capabilities.length > 0) {
-    const capabilities = document.createElement("span");
-    capabilities.className = "search-result-capabilities";
-    capabilities.textContent = item.capabilities.slice(0, 4).join(", ");
-    body.append(capabilities);
-  }
 
   link.append(body);
   return link;
@@ -389,6 +411,7 @@ function renderSearchResults() {
 function openSearchModal() {
   if (!searchModal || !searchInput) return;
   if (helpModal?.open) closeDialog();
+  if (mobileMenu?.open) closeMobileMenu(false);
 
   lastFocusedElement =
     document.activeElement instanceof HTMLElement
@@ -416,6 +439,44 @@ function closestSearchResult(target: EventTarget | null) {
 }
 
 searchTrigger?.addEventListener("click", openSearchModal);
+mobileSearchTrigger?.addEventListener("click", openSearchModal);
+
+/////////////////////
+// Mobile Menu
+/////////////////////
+function openMobileMenu() {
+  if (!mobileMenu || !mobileMenuTrigger) return;
+  if (searchModal?.open) closeSearchModal();
+  if (helpModal?.open) closeDialog();
+
+  mobileMenu.showModal();
+  mobileMenuTrigger.setAttribute("aria-expanded", "true");
+  requestAnimationFrame(() => {
+    mobileMenu
+      .querySelector<HTMLElement>(".mobile-menu-list a, .mobile-menu-list button")
+      ?.focus();
+  });
+}
+
+function closeMobileMenu(restoreFocus = true) {
+  if (!mobileMenu || !mobileMenuTrigger) return;
+  if (mobileMenu.open) mobileMenu.close();
+  mobileMenuTrigger.setAttribute("aria-expanded", "false");
+  if (restoreFocus) mobileMenuTrigger.focus();
+}
+
+mobileMenuTrigger?.addEventListener("click", openMobileMenu);
+mobileMenuClose?.addEventListener("click", () => closeMobileMenu());
+mobileHelpTrigger?.addEventListener("click", openHelpDialog);
+
+mobileMenu?.addEventListener("cancel", (event) => {
+  event.preventDefault();
+  closeMobileMenu();
+});
+
+mobileMenu?.addEventListener("click", (event) => {
+  if (event.target === mobileMenu) closeMobileMenu();
+});
 
 searchModal?.addEventListener("cancel", (event) => {
   event.preventDefault();
