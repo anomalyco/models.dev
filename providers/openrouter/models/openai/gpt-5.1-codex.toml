@@ -5,3 +5,7 @@ base_model_omit = ["limit.input"]
 input = 1.25
 output = 10
 cache_read = 0.13
+
+[limit]
+context = 400_000
+output = 128_000

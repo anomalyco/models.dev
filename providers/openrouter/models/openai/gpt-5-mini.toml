@@ -6,5 +6,10 @@ input = 0.25
 output = 2
 cache_read = 0.025
 
+[limit]
+context = 400_000
+output = 128_000
+
 [modalities]
 input = ["text", "image", "pdf"]
+output = ["text"]
