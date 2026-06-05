@@ -44,13 +44,18 @@ export interface SyncProvider<SourceModel> {
   name: string;
   modelsDir: string;
   skipCreates?: boolean;
+  preserveMissing?: string[];
   sourceID?(model: SourceModel): string;
   skippedNotice?(ids: string[]): string[];
   fetchModels(): Promise<unknown>;
   parseModels(raw: unknown): SourceModel[];
   translateModel(
     model: SourceModel,
-    context: { existing(id: string): ExistingModel | undefined },
+    context: {
+      existing(id: string): ExistingModel | undefined;
+      authored(id: string): ExistingModel | undefined;
+      base(id: string): ExistingModel | undefined;
+    },
   ): { id: string; model: SyncedModel } | undefined;
 }
 
@@ -106,12 +111,19 @@ export async function syncProvider<SourceModel>(
   const existing = await readExisting(provider.modelsDir);
   const sourceModels = provider.parseModels(await provider.fetchModels());
   const desired = new Map<string, { model: z.infer<typeof SyncedAuthoredModel>; content: string }>();
+  const preserveMissing = new Set(provider.preserveMissing ?? []);
   const skippedRemote: string[] = [];
 
   for (const sourceModel of sourceModels) {
     const translated = provider.translateModel(sourceModel, {
       existing(id) {
         return existing.get(`${id}.toml`)?.toml;
+      },
+      authored(id) {
+        return existing.get(`${id}.toml`)?.authored;
+      },
+      base(id) {
+        return existing.get(`${id}.toml`)?.base;
       },
     });
     if (translated === undefined) {
@@ -182,8 +194,10 @@ export async function syncProvider<SourceModel>(
 
   for (const relativePath of existing.keys()) {
     if (desired.has(relativePath)) continue;
-    if (options.newOnly) {
-      console.log(`Skipping removal in new-only mode: ${relativePath}`);
+    const id = relativePath.slice(0, -5);
+    if (options.newOnly || preserveMissing.has(id)) {
+      const mode = options.newOnly ? "new-only mode" : "preserve list";
+      console.log(`Skipping removal in ${mode}: ${relativePath}`);
       unchanged++;
       continue;
     }
@@ -235,6 +249,7 @@ async function readExisting(modelsDir: string) {
   const existing = new Map<string, {
     authored: ExistingModel;
     toml: ExistingModel;
+    base: ExistingModel | undefined;
     symlink: boolean;
   }>();
   let modelMetadata: Record<string, Record<string, unknown>> | undefined;
@@ -251,11 +266,21 @@ async function readExisting(modelsDir: string) {
     if (authored.base_model !== undefined && modelMetadata === undefined) {
       modelMetadata = await readModelMetadata(modelsDir);
     }
+    const base = authored.base_model === undefined
+      ? undefined
+      : resolveBaseModel(
+        {
+          base_model: authored.base_model,
+          base_model_omit: authored.base_model_omit,
+        },
+        modelMetadata ?? {},
+        path.join(modelsDir, file),
+      );
     const toml = authored.base_model === undefined
       ? authored
       : resolveBaseModel(authored, modelMetadata ?? {}, path.join(modelsDir, file));
 
-    existing.set(file, { authored, toml, symlink });
+    existing.set(file, { authored, toml, base, symlink });
   }
 
   return existing;
