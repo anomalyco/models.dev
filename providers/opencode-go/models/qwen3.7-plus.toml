@@ -1,10 +1,11 @@
 name = "Qwen3.7 Plus"
 family = "qwen3.7-plus"
 release_date = "2026-06-02"
-last_updated = "2026-06-02"
+last_updated = "2026-06-04"
 attachment = true
 reasoning = true
 temperature = true
+knowledge = "2025-04"
 tool_call = true
 open_weights = false
 
@@ -15,7 +16,7 @@ cache_read = 0.04
 cache_write = 0.5
 
 [limit]
-context = 262_144
+context = 1_000_000
 output = 65_536
 
 [modalities]
