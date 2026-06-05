@@ -87,7 +87,6 @@ export const ModelFamilyValues = [
   "grok-build",
   "grok-vision",
   "grok-beta",
-  "composer",
 
   // Google Gemma
   "gemma",
