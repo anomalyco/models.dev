@@ -20,3 +20,24 @@ output = ["text"]
 [[weights]]
 label = "Hugging Face"
 url = "https://huggingface.co/zai-org/GLM-4.5-Air"
+
+[[benchmarks]]
+name = "Artificial Analysis Coding Index"
+score = 23.8
+metric = "index"
+source = "https://openrouter.ai/z-ai/glm-4.5-air/benchmarks"
+date = "2026-05-30"
+
+[[benchmarks]]
+name = "SciCode"
+score = 30.6
+metric = "percent correct"
+source = "https://openrouter.ai/z-ai/glm-4.5-air/benchmarks"
+date = "2026-05-30"
+
+[[benchmarks]]
+name = "Terminal-Bench Hard"
+score = 20.5
+metric = "success rate"
+source = "https://openrouter.ai/z-ai/glm-4.5-air/benchmarks"
+date = "2026-05-30"

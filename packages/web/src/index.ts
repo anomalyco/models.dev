@@ -1,53 +1,14 @@
-import {
-  Virtualizer,
-  elementScroll,
-  observeElementOffset,
-  observeElementRect,
-} from "@tanstack/virtual-core";
-import {
-  type TableRow,
-  renderRow,
-  escapeHtml,
-  booleanText,
-  knowledgeText,
-  weightsText,
-} from "./shared.js";
-
-declare global {
-  interface Window {
-    __TABLE_DATA__: TableRow[];
-  }
-}
-
-interface VirtualizedRow extends TableRow {
-  key: string;
-  searchText: string;
-  sortValues: Array<string | number | undefined>;
-}
-
 type SortDirection = "asc" | "desc";
 
-const ESTIMATED_ROW_HEIGHT = 48;
-const VIRTUAL_OVERSCAN = 5;
+const modal = document.getElementById("modal") as HTMLDialogElement | null;
+const modalClose = document.getElementById("close");
+const help = document.getElementById("help");
+const search = document.getElementById("search") as HTMLInputElement | null;
+const tables = Array.from(
+  document.querySelectorAll<HTMLTableElement>("table[data-enhanced-table]"),
+);
 
-const modal = document.getElementById("modal") as HTMLDialogElement;
-const modalClose = document.getElementById("close")!;
-const help = document.getElementById("help")!;
-const search = document.getElementById("search")! as HTMLInputElement;
-const viewport = document.getElementById("table-viewport") as HTMLElement;
-const tbody = document.getElementById(
-  "models-table-body"
-) as HTMLTableSectionElement;
-const headers = Array.from(document.querySelectorAll("th.sortable"));
-const columnCount = document.querySelectorAll("thead th").length;
-
-let isLoaded = false;
-let allRows: VirtualizedRow[] = [];
-let visibleRows: VirtualizedRow[] = [];
-let currentSort: { column: number; direction: SortDirection } = {
-  column: -1,
-  direction: "asc",
-};
+let scrollYBeforeModal = 0;
 
 /////////////////////////
 // URL State Management
@@ -71,372 +32,319 @@ function updateQueryParams(updates: Record<string, string | null>) {
   window.history.pushState({}, "", newPath);
 }
 
-function getColumnNameForURL(headerEl: Element): string {
-  const text = headerEl.textContent?.trim().toLowerCase() || "";
-  return text.replace(/↑|↓/g, "").trim().split(/\s+/).slice(0, 2).join("-");
-}
-
-function getColumnIndexByUrlName(name: string): number {
-  return headers.findIndex((header) => getColumnNameForURL(header) === name);
-}
-
 /////////////////////////
-// Handle "How to use"
+// Help Dialog
 /////////////////////////
-let y = 0;
-
-help.addEventListener("click", () => {
-  y = window.scrollY;
+help?.addEventListener("click", () => {
+  if (!modal) return;
+  scrollYBeforeModal = window.scrollY;
   document.body.style.position = "fixed";
-  document.body.style.top = `-${y}px`;
+  document.body.style.top = `-${scrollYBeforeModal}px`;
   modal.showModal();
 });
 
 function closeDialog() {
+  if (!modal) return;
   modal.close();
   document.body.style.position = "";
   document.body.style.top = "";
-  window.scrollTo(0, y);
+  window.scrollTo(0, scrollYBeforeModal);
 }
 
-modalClose.addEventListener("click", closeDialog);
-modal.addEventListener("cancel", closeDialog);
-modal.addEventListener("click", (e) => {
-  if (e.target === modal) closeDialog();
+modalClose?.addEventListener("click", closeDialog);
+modal?.addEventListener("cancel", closeDialog);
+modal?.addEventListener("click", (event) => {
+  if (event.target === modal) closeDialog();
 });
 
 ////////////////////
-// Row Data
+// Search
 ////////////////////
-function lockColumnWidths() {
-  const ths = document.querySelectorAll("#models-table thead th");
-  const widths = Array.from(ths).map((th) => th.getBoundingClientRect().width);
+function filterRows() {
+  if (!search) return;
 
-  const measurementRow = tbody.querySelector('tr[aria-hidden="true"]');
-  if (measurementRow) measurementRow.remove();
-
-  const table = document.getElementById("models-table")!;
-  table.style.tableLayout = "fixed";
-
-  const colgroup = document.createElement("colgroup");
-  for (const width of widths) {
-    const col = document.createElement("col");
-    col.style.width = `${width}px`;
-    colgroup.appendChild(col);
-  }
-  table.insertBefore(colgroup, table.firstChild);
-}
-
-function prepareRow(row: TableRow): VirtualizedRow {
-  const sortValues: VirtualizedRow["sortValues"] = [
-    row.providerName,
-    row.modelName,
-    row.family,
-    row.providerId,
-    row.modelId,
-    booleanText(row.toolCall),
-    booleanText(row.reasoning),
-    row.input.length,
-    row.output.length,
-    row.inputCost,
-    row.outputCost,
-    row.reasoningCost,
-    row.cacheReadCost,
-    row.cacheWriteCost,
-    row.audioInputCost,
-    row.audioOutputCost,
-    row.contextLimit,
-    row.inputLimit,
-    row.outputLimit,
-    row.structuredOutput === undefined
-      ? undefined
-      : booleanText(row.structuredOutput),
-    booleanText(row.temperature),
-    weightsText(row.openWeights),
-    row.knowledge ? knowledgeText(row.knowledge) : undefined,
-    row.releaseDate,
-    row.lastUpdated,
-  ];
-
-  const searchableValues = [
-    row.providerName,
-    row.modelName,
-    row.family ?? "",
-    row.providerId,
-    row.modelId,
-    ...row.weightLinks.map((link) => link.label),
-    row.releaseDate,
-    row.lastUpdated,
-  ];
-
-  return {
-    ...row,
-    key: `${row.providerId}/${row.modelId}`,
-    searchText: searchableValues.join(" ").toLowerCase(),
-    sortValues,
-  };
-}
-
-////////////////////
-// Virtual Table
-////////////////////
-function getVirtualizerOptions(count: number) {
-  return {
-    count,
-    getScrollElement: () => viewport,
-    estimateSize: () => ESTIMATED_ROW_HEIGHT,
-    getItemKey: (index: number) => visibleRows[index]?.key ?? index,
-    initialRect: {
-      width: viewport.clientWidth || window.innerWidth,
-      height: viewport.clientHeight || window.innerHeight,
-    },
-    overscan: VIRTUAL_OVERSCAN,
-    observeElementRect,
-    observeElementOffset,
-    scrollToFn: elementScroll,
-    onChange: () => renderVirtualRows(),
-  };
-}
-
-const virtualizer = new Virtualizer<HTMLElement, HTMLTableRowElement>(
-  getVirtualizerOptions(0)
-);
-const cleanupVirtualizer = virtualizer._didMount();
-virtualizer._willUpdate();
-window.addEventListener("pagehide", () => cleanupVirtualizer());
-
-function renderStatusRow(message: string) {
-  tbody.innerHTML = `<tr class="empty-row"><td colspan="${columnCount}"><div>${escapeHtml(
-    message
-  )}</div></td></tr>`;
-}
-
-function setVirtualizerCount(count: number, resetScroll: boolean) {
-  virtualizer.setOptions(getVirtualizerOptions(count));
-  virtualizer._willUpdate();
-  if (resetScroll) virtualizer.scrollToOffset(0);
-  renderVirtualRows();
-}
-
-function renderVirtualRows() {
-  if (!isLoaded) return;
-  if (visibleRows.length === 0) {
-    renderStatusRow("No models found");
-    return;
-  }
-
-  const virtualRows = virtualizer.getVirtualItems();
-  if (virtualRows.length === 0) return;
-
-  const firstRow = virtualRows[0]!;
-  const lastRow = virtualRows[virtualRows.length - 1]!;
-  const paddingTop = firstRow.start;
-  const paddingBottom = Math.max(virtualizer.getTotalSize() - lastRow.end, 0);
-  const html: string[] = [];
-
-  if (paddingTop > 0) html.push(renderSpacerRow(paddingTop));
-  for (const virtualRow of virtualRows) {
-    const row = visibleRows[virtualRow.index];
-    if (row) html.push(renderRow(row, virtualRow.index));
-  }
-  if (paddingBottom > 0) html.push(renderSpacerRow(paddingBottom));
-
-  tbody.innerHTML = html.join("");
-  tbody.querySelectorAll<HTMLTableRowElement>("tr[data-index]").forEach((row) =>
-    virtualizer.measureElement(row)
-  );
-}
-
-function renderSpacerRow(height: number) {
-  return `<tr class="virtual-spacer" style="height: ${height}px"><td colspan="${columnCount}"></td></tr>`;
-}
-
-function applyRows(resetScroll = true) {
-  if (!isLoaded) return;
-  visibleRows = getRowsForDisplay();
-  setVirtualizerCount(visibleRows.length, resetScroll);
-}
-
-////////////////////
-// Sorting
-////////////////////
-function getRowsForDisplay() {
   const terms = search.value
     .toLowerCase()
     .split(",")
     .map((term) => term.trim())
     .filter(Boolean);
-  const filteredRows =
-    terms.length === 0
-      ? allRows
-      : allRows.filter((row) =>
-          terms.some((term) => row.searchText.includes(term))
-        );
 
-  if (currentSort.column === -1) return filteredRows;
+  for (const table of tables) {
+    const rows = Array.from(table.tBodies[0]?.rows ?? []);
+    let visibleCount = 0;
 
-  const columnType = headers[currentSort.column]?.getAttribute("data-type");
-  if (!columnType) return filteredRows;
+    for (const row of rows) {
+      if (row.classList.contains("empty-row")) continue;
 
-  return [...filteredRows].sort((a, b) => {
-    const aValue = a.sortValues[currentSort.column];
-    const bValue = b.sortValues[currentSort.column];
+      const searchText =
+        row.getAttribute("data-search")?.toLowerCase() ??
+        row.textContent?.toLowerCase() ??
+        "";
+      const visible =
+        terms.length === 0 ||
+        terms.some((term) => searchText.includes(term));
 
-    if (aValue === undefined && bValue === undefined) return 0;
-    if (aValue === undefined) return 1;
-    if (bValue === undefined) return -1;
-
-    let comparison = 0;
-    if (columnType === "number" || columnType === "modalities") {
-      comparison = (aValue as number) - (bValue as number);
-    } else {
-      comparison = String(aValue).localeCompare(String(bValue));
+      row.hidden = !visible;
+      if (visible) visibleCount++;
     }
 
-    return currentSort.direction === "asc" ? comparison : -comparison;
-  });
-}
-
-function sortTable(
-  column: number,
-  direction: SortDirection,
-  updateURL = true
-) {
-  const header = headers[column];
-  if (!header?.getAttribute("data-type")) return;
-
-  currentSort = { column, direction };
-  if (updateURL) {
-    updateQueryParams({
-      sort: getColumnNameForURL(header),
-      order: direction,
-    });
+    table
+      .closest(".table-section")
+      ?.toggleAttribute("data-empty", visibleCount === 0);
   }
-
-  updateSortIndicators();
-  applyRows();
 }
 
-function updateSortIndicators() {
-  headers.forEach((header, i) => {
-    const indicator = header.querySelector(".sort-indicator")!;
-    indicator.textContent =
-      i === currentSort.column
-        ? currentSort.direction === "asc"
-          ? "↑"
-          : "↓"
-        : "";
-  });
-}
-
-headers.forEach((header, column) => {
-  header.addEventListener("click", () => {
-    const direction =
-      currentSort.column === column && currentSort.direction === "asc"
-        ? "desc"
-        : "asc";
-    sortTable(column, direction);
-  });
-});
-
-///////////////////
-// Search
-///////////////////
-search.addEventListener("input", () => {
+search?.addEventListener("input", () => {
   updateQueryParams({ search: search.value || null });
-  applyRows();
+  filterRows();
 });
 
-document.addEventListener("keydown", (e) => {
-  const key = e.key.toLowerCase();
-  if ((e.metaKey || e.ctrlKey) && (key === "k" || key === "f")) {
-    e.preventDefault();
-    search.focus();
-    search.select();
+document.addEventListener("keydown", (event) => {
+  const key = event.key.toLowerCase();
+  if ((event.metaKey || event.ctrlKey) && (key === "k" || key === "f")) {
+    event.preventDefault();
+    search?.focus();
+    search?.select();
   }
 });
 
-search.addEventListener("keydown", (e) => {
-  if (e.key === "Escape") {
+search?.addEventListener("keydown", (event) => {
+  if (event.key === "Escape") {
     search.value = "";
     search.dispatchEvent(new Event("input"));
   }
 });
 
-///////////////////////////////////
-// Handle Copy model ID function
-///////////////////////////////////
-async function copyModelId(button: HTMLButtonElement, modelId: string) {
+////////////////////
+// Sorting
+////////////////////
+function getCellSortValue(row: HTMLTableRowElement, index: number) {
+  const cell = row.cells[index];
+  return cell?.getAttribute("data-sort") ?? cell?.textContent?.trim() ?? "";
+}
+
+function compareValues(a: string, b: string, type: string | null) {
+  if (a === "" && b === "") return 0;
+  if (a === "") return 1;
+  if (b === "") return -1;
+
+  if (type === "number") {
+    return Number(a) - Number(b);
+  }
+
+  return a.localeCompare(b, undefined, {
+    numeric: true,
+    sensitivity: "base",
+  });
+}
+
+function sortTable(
+  table: HTMLTableElement,
+  column: number,
+  direction: SortDirection,
+) {
+  const tbody = table.tBodies[0];
+  const header = table.tHead?.rows[0]?.cells[column];
+  if (!tbody || !header) return;
+
+  const type = header.getAttribute("data-type");
+  const rows = Array.from(tbody.rows).filter(
+    (row) => !row.classList.contains("empty-row"),
+  );
+
+  rows.sort((rowA, rowB) => {
+    const comparison = compareValues(
+      getCellSortValue(rowA, column),
+      getCellSortValue(rowB, column),
+      type,
+    );
+    return direction === "asc" ? comparison : -comparison;
+  });
+
+  for (const row of rows) {
+    tbody.appendChild(row);
+  }
+
+  for (const sortable of table.querySelectorAll("th.sortable")) {
+    sortable.removeAttribute("aria-sort");
+    const indicator = sortable.querySelector(".sort-indicator");
+    if (indicator) indicator.textContent = "";
+  }
+
+  header.setAttribute(
+    "aria-sort",
+    direction === "asc" ? "ascending" : "descending",
+  );
+  const indicator = header.querySelector(".sort-indicator");
+  if (indicator) indicator.textContent = direction === "asc" ? "↑" : "↓";
+}
+
+for (const table of tables) {
+  const headers = Array.from(table.querySelectorAll<HTMLTableCellElement>("th"));
+  headers.forEach((header, column) => {
+    if (!header.classList.contains("sortable")) return;
+
+    header.addEventListener("click", () => {
+      const current = header.getAttribute("aria-sort");
+      const direction: SortDirection =
+        current === "ascending" ? "desc" : "asc";
+      sortTable(table, column, direction);
+    });
+  });
+}
+
+////////////////////
+// Copy Buttons
+////////////////////
+const copyTimers = new WeakMap<
+  HTMLButtonElement,
+  ReturnType<typeof setTimeout>
+>();
+const pointerCopyTimes = new WeakMap<HTMLButtonElement, number>();
+
+function writeClipboardWithSelection(value: string) {
+  let copied = false;
+  const onCopy = (event: ClipboardEvent) => {
+    event.clipboardData?.setData("text/plain", value);
+    event.preventDefault();
+    copied = true;
+  };
+  const textarea = document.createElement("textarea");
+  textarea.value = value;
+  textarea.setAttribute("readonly", "");
+  textarea.style.position = "fixed";
+  textarea.style.top = "0";
+  textarea.style.left = "0";
+  textarea.style.width = "1px";
+  textarea.style.height = "1px";
+  textarea.style.opacity = "0";
+
+  document.body.appendChild(textarea);
+  window.focus();
+  textarea.focus();
+  textarea.select();
+  textarea.setSelectionRange(0, value.length);
+  document.addEventListener("copy", onCopy);
+
   try {
-    if (navigator.clipboard) {
-      await navigator.clipboard.writeText(modelId);
+    return document.execCommand("copy") || copied;
+  } finally {
+    document.removeEventListener("copy", onCopy);
+    textarea.remove();
+  }
+}
 
-      // Switch to check icon
-      const copyIcon = button.querySelector(".copy-icon") as HTMLElement;
-      const checkIcon = button.querySelector(".check-icon") as HTMLElement;
+async function writeClipboard(value: string) {
+  if (writeClipboardWithSelection(value)) return true;
 
-      copyIcon.style.display = "none";
-      checkIcon.style.display = "block";
+  if (navigator.clipboard?.writeText) {
+    try {
+      await navigator.clipboard.writeText(value);
+      return true;
+    } catch {
+      return false;
+    }
+  }
 
-      // Switch back after 1 second
-      setTimeout(() => {
+  return false;
+}
+
+function selectCopySource(button: HTMLButtonElement) {
+  const source = button
+    .closest(".code-line, td")
+    ?.querySelector<HTMLElement>("code, .copy-source, span");
+  const selection = window.getSelection();
+  if (!source || !selection) return false;
+
+  const range = document.createRange();
+  range.selectNodeContents(source);
+  selection.removeAllRanges();
+  selection.addRange(range);
+  return true;
+}
+
+async function copyValue(button: HTMLButtonElement, value: string) {
+  const originalLabel =
+    button.dataset.copyLabel ??
+    button.getAttribute("aria-label") ??
+    button.title ??
+    "Copy";
+  button.dataset.copyLabel = originalLabel;
+
+  const copyIcon = button.querySelector<HTMLElement>(".copy-icon");
+  const checkIcon = button.querySelector<HTMLElement>(".check-icon");
+  const copied = await writeClipboard(value);
+  const selected = copied ? false : selectCopySource(button);
+
+  window.clearTimeout(copyTimers.get(button));
+  button.classList.toggle("copied", copied);
+  button.classList.toggle("selected", selected);
+  button.classList.toggle("copy-failed", !copied && !selected);
+
+  const feedback = copied ? "Copied" : selected ? "Selected" : "Copy failed";
+  button.setAttribute("aria-label", feedback);
+  button.title = feedback;
+
+  if (copyIcon && checkIcon) {
+    copyIcon.style.display = copied ? "none" : "block";
+    checkIcon.style.display = copied ? "block" : "none";
+  }
+
+  copyTimers.set(
+    button,
+    setTimeout(() => {
+      button.classList.remove("copied", "selected", "copy-failed");
+      button.setAttribute("aria-label", originalLabel);
+      button.title = originalLabel;
+      if (copyIcon && checkIcon) {
         copyIcon.style.display = "block";
         checkIcon.style.display = "none";
-      }, 1000);
-    }
-  } catch (err) {
-    console.error("Failed to copy text: ", err);
-  }
+      }
+    }, 1200),
+  );
 }
 
-document.addEventListener("click", (event) => {
-  if (!(event.target instanceof Element)) return;
-  const button = event.target.closest<HTMLButtonElement>(
-    ".copy-button[data-model-id]"
+function copyFromEventTarget(target: EventTarget | null) {
+  if (!(target instanceof Element)) return undefined;
+  const button = target.closest<HTMLButtonElement>(
+    ".copy-button[data-copy-value]",
   );
-  if (!button) return;
+  const value = button?.dataset.copyValue;
+  if (!button || !value) return undefined;
+  return { button, value };
+}
 
-  const modelId = button.dataset.modelId;
-  if (modelId) void copyModelId(button, modelId);
+document.addEventListener("pointerdown", (event) => {
+  const copy = copyFromEventTarget(event.target);
+  if (!copy) return;
+  pointerCopyTimes.set(copy.button, Date.now());
+  void copyValue(copy.button, copy.value);
 });
 
-///////////////////////////////////
-// Initialize State from URL
-///////////////////////////////////
+document.addEventListener("click", (event) => {
+  const copy = copyFromEventTarget(event.target);
+  if (!copy) return;
+
+  const pointerCopyTime = pointerCopyTimes.get(copy.button);
+  if (pointerCopyTime && Date.now() - pointerCopyTime < 500) return;
+
+  void copyValue(copy.button, copy.value);
+});
+
+document.addEventListener("keydown", (event) => {
+  if (event.key !== "Enter" && event.key !== " ") return;
+  if (!(event.target instanceof Element)) return;
+  const copy = copyFromEventTarget(event.target);
+  if (!copy) return;
+  event.preventDefault();
+  void copyValue(copy.button, copy.value);
+});
+
 function initializeFromURL() {
-  const params = getQueryParams();
-
-  search.value = params.get("search") ?? "";
-
-  currentSort = { column: -1, direction: "asc" };
-  const columnName = params.get("sort");
-  if (columnName) {
-    const columnIndex = getColumnIndexByUrlName(columnName);
-    if (columnIndex !== -1) {
-      currentSort = {
-        column: columnIndex,
-        direction: params.get("order") === "desc" ? "desc" : "asc",
-      };
-    }
-  }
-
-  updateSortIndicators();
-  applyRows(false);
+  if (!search) return;
+  search.value = getQueryParams().get("search") ?? "";
+  filterRows();
 }
 
-function loadRows() {
-  try {
-    allRows = window.__TABLE_DATA__.map(prepareRow);
-    lockColumnWidths();
-    isLoaded = true;
-    initializeFromURL();
-  } catch (error) {
-    console.error(error);
-    isLoaded = true;
-    visibleRows = [];
-    renderStatusRow("Failed to load model data");
-  }
-}
-
-loadRows();
+initializeFromURL();
 window.addEventListener("popstate", initializeFromURL);

@@ -113,6 +113,8 @@ export default {
       url.pathname === "/index"
     ) {
       url.pathname = "/_index";
+    } else if (isHtmlRoute(url.pathname)) {
+      url.pathname = htmlRouteAssetPath(url.pathname);
     } else if (url.pathname.startsWith("/logos/")) {
       // Check if the specific provider logo exists in static assets
       const logoResponse = await env.ASSETS.fetch(
@@ -129,17 +131,36 @@ export default {
       }
 
       return logoResponse;
-    } else {
-      // redirect to "/"
-      return new Response(null, {
-        status: 302,
-        headers: { Location: "/" },
-      });
     }
 
-    return await env.ASSETS.fetch(new Request(url.toString(), request));
+    const response = await env.ASSETS.fetch(new Request(url.toString(), request));
+    if (response.status !== 404) return response;
+
+    return new Response(null, {
+      status: 302,
+      headers: { Location: "/" },
+    });
   },
 };
+
+function isHtmlRoute(pathname: string) {
+  return (
+    pathname === "/models" ||
+    pathname === "/providers" ||
+    pathname === "/labs" ||
+    pathname.startsWith("/models/") ||
+    pathname.startsWith("/providers/") ||
+    pathname.startsWith("/labs/")
+  );
+}
+
+function htmlRouteAssetPath(pathname: string) {
+  const normalized =
+    pathname !== "/" && pathname.endsWith("/")
+      ? pathname.slice(0, -1)
+      : pathname;
+  return `${normalized}/index.html`;
+}
 
 // Returns a stable lookup key for an IP address.
 // IPv4: full address as /32 (e.g. "203.0.113.45/32").

@@ -25,8 +25,8 @@ const CANONICAL_PROVIDER_PREFIXES = {
   "x-ai": { provider: "xai", metadata: "xai" },
   xai: { provider: "xai", metadata: "xai" },
   xiaomi: { provider: "xiaomi", metadata: "xiaomi" },
-  zai: { provider: "zai", metadata: "zai" },
-  "z-ai": { provider: "zai", metadata: "zai" },
+  zai: { provider: "zai", metadata: "zhipuai" },
+  "z-ai": { provider: "zai", metadata: "zhipuai" },
 } as const;
 
 export const OpenRouterModel = z.object({
