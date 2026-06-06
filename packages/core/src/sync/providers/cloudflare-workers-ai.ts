@@ -108,7 +108,11 @@ function buildWorkersAiModel(
       max_completion_tokens: existing?.limit?.output ?? model.top_provider.max_completion_tokens,
     },
   };
-  const synced = buildOpenRouterModel(source, existing, resolveCloudflareBaseModel(model));
+  const synced = buildOpenRouterModel(
+    source,
+    existing,
+    existing?.base_model ?? resolveCloudflareBaseModel(model),
+  );
   if ("base_model" in synced) return synced;
   return {
     ...synced,
