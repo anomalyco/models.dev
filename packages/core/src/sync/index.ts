@@ -47,6 +47,7 @@ export interface SyncProvider<SourceModel> {
   skipCreates?: boolean;
   deleteMissing?: boolean;
   sameModel?(current: ExistingModel, desired: SyncedModel): boolean;
+  missingNotice?(paths: string[]): string[];
   sourceID?(model: SourceModel): string;
   skippedNotice?(ids: string[]): string[];
   fetchModels(): Promise<unknown>;
@@ -108,7 +109,7 @@ export async function syncProvider<SourceModel>(
 ): Promise<SyncResult> {
   console.log(`\nSyncing ${provider.name}...`);
 
-  const existing = await readExisting(provider.modelsDir);
+  const { models: existing, brokenSymlinks } = await readExisting(provider.modelsDir);
   const sourceModels = provider.parseModels(await provider.fetchModels());
   const desired = new Map<string, { model: z.infer<typeof SyncedAuthoredModel>; content: string }>();
   const skippedRemote: string[] = [];
@@ -186,9 +187,12 @@ export async function syncProvider<SourceModel>(
     }
   }
 
-  for (const relativePath of existing.keys()) {
+  const missingLocal: string[] = [];
+  for (const relativePath of new Set([...existing.keys(), ...brokenSymlinks])) {
     if (desired.has(relativePath)) continue;
     if (provider.deleteMissing === false) {
+      missingLocal.push(relativePath);
+      console.log(`Retaining model missing from source: ${relativePath}`);
       unchanged++;
       continue;
     }
@@ -207,7 +211,10 @@ export async function syncProvider<SourceModel>(
     }
   }
 
-  const result = summarize(provider, files, unchanged, provider.skippedNotice?.(skippedRemote) ?? []);
+  const result = summarize(provider, files, unchanged, [
+    ...provider.skippedNotice?.(skippedRemote) ?? [],
+    ...provider.missingNotice?.(missingLocal) ?? [],
+  ]);
   console.log(
     `${options.dryRun ? "Dry run: " : ""}${result.created} created, ${result.updated} updated, ${result.deleted} removed, ${result.unchanged} unchanged`,
   );
@@ -262,6 +269,7 @@ async function readExisting(modelsDir: string) {
     toml: ExistingModel;
     symlink: boolean;
   }>();
+  const brokenSymlinks = new Set<string>();
   let modelMetadata: Record<string, Record<string, unknown>> | undefined;
 
   for (const { file, symlink } of await tomlFiles(modelsDir)) {
@@ -270,7 +278,10 @@ async function readExisting(modelsDir: string) {
     try {
       text = await Bun.file(filePath).text();
     } catch (error) {
-      if (symlink && error instanceof Error && "code" in error && error.code === "ENOENT") continue;
+      if (symlink && error instanceof Error && "code" in error && error.code === "ENOENT") {
+        brokenSymlinks.add(file);
+        continue;
+      }
       throw error;
     }
     const parsed = ExistingModel.safeParse(Bun.TOML.parse(text));
@@ -290,7 +301,7 @@ async function readExisting(modelsDir: string) {
     existing.set(file, { authored, toml, symlink });
   }
 
-  return existing;
+  return { models: existing, brokenSymlinks };
 }
 
 async function isSymlink(filePath: string) {

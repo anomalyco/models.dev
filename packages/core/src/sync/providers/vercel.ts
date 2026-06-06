@@ -48,6 +48,9 @@ export const vercel = {
   name: "Vercel AI Gateway",
   modelsDir: "providers/vercel/models",
   deleteMissing: false,
+  missingNotice(paths) {
+    return paths.map((model) => `Vercel model is no longer returned by the API: ${model}`);
+  },
   async fetchModels() {
     const response = await fetch(API_ENDPOINT);
     if (!response.ok) {
@@ -92,7 +95,7 @@ export function buildVercelModel(model: VercelModel, existing: ExistingModel | u
     name: existing?.name ?? model.name,
     family: existing?.family ?? inferFamily(model.id, model.name),
     release_date: releaseDate,
-    last_updated: existing?.last_updated ?? releaseDate,
+    last_updated: new Date().toISOString().slice(0, 10),
     attachment: existing?.attachment ?? (tags.has("vision") || tags.has("file-input")),
     reasoning: existing?.reasoning ?? tags.has("reasoning"),
     reasoning_options: existing?.reasoning_options,
