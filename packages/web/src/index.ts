@@ -8,7 +8,6 @@ interface SearchIndexItem {
   logo: string;
   tokens: string[];
   lab?: string;
-  provider?: string;
   modelCount?: number;
   providerCount?: number;
   context?: number;
@@ -267,7 +266,7 @@ function appendHighlightedText(
 function resultMeta(item: SearchIndexItem) {
   if (item.type === "model") {
     return [
-      item.lab ?? item.provider,
+      item.lab,
       item.providerCount === undefined
         ? undefined
         : `${item.providerCount} providers`,
