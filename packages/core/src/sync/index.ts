@@ -46,6 +46,7 @@ export interface SyncProvider<SourceModel> {
   modelsDir: string;
   skipCreates?: boolean;
   deleteMissing?: boolean;
+  preserveSymlinks?: boolean;
   sameModel?(current: ExistingModel, desired: SyncedModel): boolean;
   missingNotice?(paths: string[]): string[];
   sourceID?(model: SourceModel): string;
@@ -166,6 +167,11 @@ export async function syncProvider<SourceModel>(
         if (await isSymlink(filePath)) await rm(filePath, { force: true });
         await Bun.write(filePath, file.content);
       }
+      continue;
+    }
+
+    if (current.symlink && provider.preserveSymlinks) {
+      unchanged++;
       continue;
     }
 
@@ -623,7 +629,7 @@ function formatToml(model: z.infer<typeof SyncedAuthoredModel>) {
 
     for (const tier of model.cost.tiers ?? []) {
       lines.push("", "[[cost.tiers]]");
-      lines.push(`tier = { type = ${quote(tier.tier.type)}, size = ${formatInteger(tier.tier.size)} }`);
+      lines.push(`tier = { type = ${quote(tier.tier.type ?? "context")}, size = ${formatInteger(tier.tier.size)} }`);
       lines.push(`input = ${formatNumber(tier.input)}`);
       lines.push(`output = ${formatNumber(tier.output)}`);
       if (tier.reasoning !== undefined) lines.push(`reasoning = ${formatNumber(tier.reasoning)}`);

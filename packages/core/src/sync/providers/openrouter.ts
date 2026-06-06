@@ -161,7 +161,7 @@ export function buildOpenRouterModel(
     input: existing?.limit?.input,
     output: model.top_provider.max_completion_tokens ?? existing?.limit?.output ?? context,
   };
-  const canonical = existing?.base_model ?? baseModel ?? resolveCanonicalModel(model.id)?.from;
+  const canonical = existing?.base_model ?? baseModel ?? resolveCanonicalBaseModel(model.id);
 
   if (canonical !== undefined) {
     return factorBaseModel(
@@ -204,7 +204,7 @@ export function buildOpenRouterModel(
   } satisfies SyncedFullModel;
 }
 
-function resolveCanonicalModel(openrouterID: string) {
+export function resolveCanonicalBaseModel(openrouterID: string) {
   const [prefix, ...modelParts] = openrouterID.split("/");
   if (prefix === undefined || modelParts.length === 0) return undefined;
   if (openrouterID.startsWith("~/") || prefix.startsWith("~")) return undefined;
@@ -218,13 +218,7 @@ function resolveCanonicalModel(openrouterID: string) {
     return modelMetadataExists(canonical.metadata, candidate);
   });
 
-  return match === undefined
-    ? undefined
-    : {
-        from: `${canonical.metadata}/${match}`,
-        provider: canonical.provider,
-        modelID: match,
-      };
+  return match === undefined ? undefined : `${canonical.metadata}/${match}`;
 }
 
 function modelMetadataExists(provider: string, modelID: string) {

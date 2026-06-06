@@ -25,12 +25,18 @@ async function fixture() {
   return { root, modelsDir };
 }
 
-function provider(modelsDir: string, ids: string[], deleteMissing = true): SyncProvider<string> {
+function provider(
+  modelsDir: string,
+  ids: string[],
+  deleteMissing = true,
+  preserveSymlinks = false,
+): SyncProvider<string> {
   return {
     id: "test",
     name: "Test",
     modelsDir,
     deleteMissing,
+    preserveSymlinks,
     missingNotice: (paths) => paths.map((item) => `missing: ${item}`),
     async fetchModels() {
       return ids;
@@ -54,6 +60,19 @@ test("sync repairs a broken symlink returned by the source", async () => {
   expect(result.created).toBe(1);
   expect(await Bun.file(filePath).text()).toContain('name = "Test model"');
   expect(readlink(filePath)).rejects.toThrow();
+});
+
+test("sync preserves valid symlink aliases when configured", async () => {
+  const { root, modelsDir } = await fixture();
+  const targetPath = path.join(root, "target.toml");
+  const filePath = path.join(modelsDir, "model.toml");
+  await Bun.write(targetPath, `name = "Alias target"\n`);
+  await symlink(targetPath, filePath);
+
+  const result = await syncProvider(provider(modelsDir, ["model"], true, true));
+
+  expect(result.updated).toBe(0);
+  expect(await readlink(filePath)).toBe(targetPath);
 });
 
 test("sync removes a broken symlink absent from the source", async () => {

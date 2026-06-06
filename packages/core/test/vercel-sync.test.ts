@@ -63,3 +63,14 @@ test("Vercel models preserve curated metadata and missing limits", () => {
   expect(synced.cost?.tiers).toHaveLength(1);
   expect(synced.limit).toEqual({ context: 64_000, input: 48_000, output: 16_000 });
 });
+
+test("Vercel models use canonical metadata when available", () => {
+  const synced = buildVercelModel({
+    ...model,
+    id: "nvidia/nemotron-3-ultra-550b-a55b",
+    name: "Nemotron 3 Ultra",
+  }, undefined);
+
+  expect("base_model" in synced ? synced.base_model : undefined)
+    .toBe("nvidia/nemotron-3-ultra-550b-a55b");
+});

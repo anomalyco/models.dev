@@ -2,7 +2,7 @@ import { z } from "zod";
 
 import { ModelFamilyValues } from "../../family.js";
 import type { ExistingModel, SyncProvider, SyncedFullModel, SyncedModel } from "../index.js";
-import { factorBaseModel } from "./openrouter.js";
+import { factorBaseModel, resolveCanonicalBaseModel } from "./openrouter.js";
 
 const API_ENDPOINT = "https://ai-gateway.vercel.sh/v1/models";
 
@@ -48,6 +48,7 @@ export const vercel = {
   name: "Vercel AI Gateway",
   modelsDir: "providers/vercel/models",
   deleteMissing: false,
+  preserveSymlinks: true,
   missingNotice(paths) {
     return paths.map((model) => `Vercel model is no longer returned by the API: ${model}`);
   },
@@ -117,9 +118,10 @@ export function buildVercelModel(model: VercelModel, existing: ExistingModel | u
     },
   };
 
-  return existing?.base_model === undefined
+  const baseModel = existing?.base_model ?? resolveCanonicalBaseModel(model.id);
+  return baseModel === undefined
     ? synced
-    : factorBaseModel(existing.base_model, synced, synced.limit, existing.base_model_omit);
+    : factorBaseModel(baseModel, synced, synced.limit, existing?.base_model_omit);
 }
 
 function dateFromTimestamp(timestamp: number) {
