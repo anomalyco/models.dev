@@ -66,14 +66,38 @@ test("OpenRouter-derived syncs preserve existing base model links", () => {
     .toEqual(["limit.input"]);
 });
 
-test("existing links do not replace newly detected base models", () => {
-  const synced = preserveBaseModel({
-    base_model: "zhipuai/glm-5.1",
-  }, {
+test("newly detected base models do not replace existing links", () => {
+  const model: OpenRouterModel = {
+    id: "z-ai/glm-5.1",
+    name: "Z.AI: GLM-5.1",
+    created: 1_777_680_000,
+    hugging_face_id: null,
+    knowledge_cutoff: null,
+    context_length: 200_000,
+    architecture: { input_modalities: ["text"], output_modalities: ["text"] },
+    pricing: { prompt: "0.0000014", completion: "0.0000044" },
+    top_provider: { context_length: 200_000, max_completion_tokens: 131_072 },
+    supported_parameters: ["tools"],
+  };
+  const synced = buildOpenRouterModel(model, {
     base_model: "zhipuai/glm-5",
   });
 
-  expect("base_model" in synced ? synced.base_model : undefined).toBe("zhipuai/glm-5.1");
+  expect("base_model" in synced ? synced.base_model : undefined).toBe("zhipuai/glm-5");
+});
+
+test("undefined translated links preserve existing base model fields", () => {
+  const synced = preserveBaseModel({
+    base_model: undefined,
+  } as never, {
+    base_model: "nvidia/nemotron-3-super-120b-a12b",
+    base_model_omit: ["limit.input"],
+  });
+
+  expect("base_model" in synced ? synced.base_model : undefined)
+    .toBe("nvidia/nemotron-3-super-120b-a12b");
+  expect("base_model_omit" in synced ? synced.base_model_omit : undefined)
+    .toEqual(["limit.input"]);
 });
 
 test("new Cloudflare models discover a unique metadata base model", () => {
