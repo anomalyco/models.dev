@@ -1,5 +1,5 @@
 import path from "node:path";
-import { mkdir, readdir, rm } from "node:fs/promises";
+import { lstat, mkdir, readdir, rm } from "node:fs/promises";
 import { mergeDeep } from "remeda";
 import { z } from "zod";
 
@@ -8,6 +8,7 @@ import { cloudflareWorkersAi } from "./providers/cloudflare-workers-ai.js";
 import { google } from "./providers/google.js";
 import { openrouter } from "./providers/openrouter.js";
 import { ovhcloud } from "./providers/ovhcloud.js";
+import { vercel } from "./providers/vercel.js";
 import { xai } from "./providers/xai.js";
 
 const ExistingModelType = AuthoredModelShape.partial()
@@ -44,6 +45,8 @@ export interface SyncProvider<SourceModel> {
   name: string;
   modelsDir: string;
   skipCreates?: boolean;
+  deleteMissing?: boolean;
+  sameModel?(current: ExistingModel, desired: SyncedModel): boolean;
   sourceID?(model: SourceModel): string;
   skippedNotice?(ids: string[]): string[];
   fetchModels(): Promise<unknown>;
@@ -71,17 +74,19 @@ export const providers: {
   google: SyncProvider<any>;
   openrouter: SyncProvider<any>;
   ovhcloud: SyncProvider<any>;
+  vercel: SyncProvider<any>;
   xai: SyncProvider<any>;
 } = {
   "cloudflare-workers-ai": cloudflareWorkersAi,
   google,
   openrouter,
   ovhcloud,
+  vercel,
   xai,
 };
 
 export const groups = {
-  aggregators: ["openrouter"],
+  aggregators: ["openrouter", "vercel"],
   cloudflare: ["cloudflare-workers-ai"],
   direct: ["google", "ovhcloud", "xai"],
 } as const;
@@ -157,12 +162,13 @@ export async function syncProvider<SourceModel>(
         console.log(`Would create ${relativePath}`);
       } else {
         await mkdir(path.dirname(filePath), { recursive: true });
+        if (await isSymlink(filePath)) await rm(filePath, { force: true });
         await Bun.write(filePath, file.content);
       }
       continue;
     }
 
-    if (!sameModel(relativePath, current.authored, file.model)) {
+    if (!(provider.sameModel?.(current.authored, file.model) ?? sameModel(relativePath, current.authored, file.model))) {
       if (options.newOnly) {
         unchanged++;
         continue;
@@ -182,6 +188,10 @@ export async function syncProvider<SourceModel>(
 
   for (const relativePath of existing.keys()) {
     if (desired.has(relativePath)) continue;
+    if (provider.deleteMissing === false) {
+      unchanged++;
+      continue;
+    }
     if (options.newOnly) {
       console.log(`Skipping removal in new-only mode: ${relativePath}`);
       unchanged++;
@@ -255,10 +265,17 @@ async function readExisting(modelsDir: string) {
   let modelMetadata: Record<string, Record<string, unknown>> | undefined;
 
   for (const { file, symlink } of await tomlFiles(modelsDir)) {
-    const text = await Bun.file(path.join(modelsDir, file)).text();
+    const filePath = path.join(modelsDir, file);
+    let text: string;
+    try {
+      text = await Bun.file(filePath).text();
+    } catch (error) {
+      if (symlink && error instanceof Error && "code" in error && error.code === "ENOENT") continue;
+      throw error;
+    }
     const parsed = ExistingModel.safeParse(Bun.TOML.parse(text));
     if (!parsed.success) {
-      parsed.error.cause = { path: path.join(modelsDir, file) };
+      parsed.error.cause = { path: filePath };
       throw parsed.error;
     }
 
@@ -268,12 +285,21 @@ async function readExisting(modelsDir: string) {
     }
     const toml = authored.base_model === undefined
       ? authored
-      : resolveBaseModel(authored, modelMetadata ?? {}, path.join(modelsDir, file));
+      : resolveBaseModel(authored, modelMetadata ?? {}, filePath);
 
     existing.set(file, { authored, toml, symlink });
   }
 
   return existing;
+}
+
+async function isSymlink(filePath: string) {
+  try {
+    return (await lstat(filePath)).isSymbolicLink();
+  } catch (error) {
+    if (error instanceof Error && "code" in error && error.code === "ENOENT") return false;
+    throw error;
+  }
 }
 
 async function readModelMetadata(modelsDir: string) {

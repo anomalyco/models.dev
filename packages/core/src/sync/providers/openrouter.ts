@@ -164,12 +164,9 @@ export function buildOpenRouterModel(
   const canonical = existing?.base_model ?? baseModel ?? resolveCanonicalModel(model.id)?.from;
 
   if (canonical !== undefined) {
-    return {
-      base_model: canonical,
-      base_model_omit: existing?.base_model === canonical
-        ? existing.base_model_omit ?? baseModelOmit(canonical, limit)
-        : baseModelOmit(canonical, limit),
-      ...baseModelOverrides(canonical, {
+    return factorBaseModel(
+      canonical,
+      {
         name: baseModel !== undefined || model.id.endsWith(":free") ? name : undefined,
         attachment,
         reasoning,
@@ -180,9 +177,11 @@ export function buildOpenRouterModel(
         interleaved: existing?.interleaved,
         limit,
         modalities: { input, output },
-      }),
-      cost,
-    };
+        cost,
+      },
+      limit,
+      existing?.base_model === canonical ? existing.base_model_omit : undefined,
+    );
   }
 
   return {
@@ -230,6 +229,19 @@ function resolveCanonicalModel(openrouterID: string) {
 
 function modelMetadataExists(provider: string, modelID: string) {
   return existsSync(path.join(MODELS_DIR, provider, `${modelID}.toml`));
+}
+
+export function factorBaseModel(
+  modelID: string,
+  values: Partial<SyncedFullModel>,
+  limit: SyncedFullModel["limit"],
+  existingOmit?: string[],
+): SyncedModel {
+  return {
+    base_model: modelID,
+    base_model_omit: existingOmit ?? baseModelOmit(modelID, limit),
+    ...baseModelOverrides(modelID, values),
+  };
 }
 
 function baseModelOmit(
