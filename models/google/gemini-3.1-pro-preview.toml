@@ -1,0 +1,97 @@
+name = "Gemini 3.1 Pro Preview"
+family = "gemini-pro"
+release_date = "2026-02-19"
+last_updated = "2026-02-19"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = true
+knowledge = "2025-01"
+open_weights = false
+
+[limit]
+context = 1_048_576
+output = 65_536
+
+[modalities]
+input = ["text", "image", "video", "audio", "pdf"]
+output = ["text"]
+
+[[benchmarks]]
+name = "SWE-Bench Pro"
+score = 54.2
+metric = "resolve rate"
+source = "https://www.anthropic.com/news/claude-opus-4-8"
+date = "2026-05-28"
+
+[[benchmarks]]
+name = "Terminal-Bench"
+score = 70.3
+metric = "success rate"
+harness = "Terminus-2"
+version = "2.1"
+source = "https://www.anthropic.com/news/claude-opus-4-8"
+date = "2026-05-28"
+
+[[benchmarks]]
+name = "SWE-Bench Pro"
+score = 46.1
+metric = "resolve rate"
+dataset = "public"
+source = "https://labs.scale.com/leaderboard/swe_bench_pro_public"
+
+[[benchmarks]]
+name = "SWE-Atlas Codebase QnA"
+score = 13.5
+metric = "score"
+harness = "Mini-SWE-Agent"
+source = "https://labs.scale.com/leaderboard/sweatlas-qna"
+
+[[benchmarks]]
+name = "SWE-Atlas Refactoring"
+score = 33.81
+metric = "score"
+harness = "Gemini CLI"
+source = "https://labs.scale.com/leaderboard/sweatlas-refactoring"
+
+[[benchmarks]]
+name = "SWE-Atlas Test Writing"
+score = 29.84
+metric = "score"
+harness = "Mini-SWE-Agent"
+source = "https://labs.scale.com/leaderboard/sweatlas-tw"
+
+[[benchmarks]]
+name = "Artificial Analysis Coding Agent Index"
+score = 43
+metric = "average pass@1"
+harness = "Gemini CLI"
+variant = "high"
+source = "https://artificialanalysis.ai/agents/coding-agents"
+
+[[benchmarks]]
+name = "SWE-Atlas Codebase QnA"
+score = 45.6
+metric = "pass@1"
+harness = "Gemini CLI"
+variant = "high"
+source = "https://artificialanalysis.ai/agents/coding-agents"
+
+[[benchmarks]]
+name = "SWE-Bench Pro"
+score = 15.1
+metric = "pass@1"
+harness = "Gemini CLI"
+variant = "high"
+dataset = "hard-aa"
+source = "https://artificialanalysis.ai/agents/coding-agents"
+
+[[benchmarks]]
+name = "Terminal-Bench"
+score = 68.3
+metric = "pass@1"
+harness = "Gemini CLI"
+variant = "high"
+version = "2.1"
+source = "https://artificialanalysis.ai/agents/coding-agents"

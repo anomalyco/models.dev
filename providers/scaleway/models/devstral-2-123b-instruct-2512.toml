@@ -1,13 +1,12 @@
+base_model = "mistral/devstral-2512"
 name = "Devstral 2 123B Instruct (2512)"
 release_date = "2026-01-07"
 last_updated = "2026-03-17"
-
-[extends]
-from = "mistral/devstral-2512"
+status = "deprecated"
 
 [cost]
-input = 0.40
-output = 2.00
+input = 0.4
+output = 2
 
 [limit]
 context = 256_000

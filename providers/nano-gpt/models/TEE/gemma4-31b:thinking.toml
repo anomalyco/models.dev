@@ -1,0 +1,22 @@
+# Not included in subscription
+name = "Gemma 4 31B Thinking TEE"
+release_date = "2026-05-02"
+last_updated = "2026-05-02"
+attachment = false
+reasoning = true
+tool_call = false
+structured_output = true
+open_weights = false
+
+[cost]
+input = 0.45
+output = 1
+
+[limit]
+context = 262144
+input = 262144
+output = 131072
+
+[modalities]
+input = ["text"]
+output = ["text"]

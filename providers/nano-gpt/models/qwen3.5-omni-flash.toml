@@ -1,0 +1,22 @@
+# Not included in subscription
+name = "Qwen3.5 Omni Flash"
+release_date = "2026-03-30"
+last_updated = "2026-03-30"
+attachment = true
+reasoning = false
+tool_call = false
+structured_output = false
+open_weights = false
+
+[cost]
+input = 0
+output = 0
+
+[limit]
+context = 49152
+input = 49152
+output = 16384
+
+[modalities]
+input = ["text", "image", "video", "audio"]
+output = ["text"]

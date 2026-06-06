@@ -1,0 +1,22 @@
+# Included in subscription
+name = "Gemma 4 31B"
+release_date = "2026-04-02"
+last_updated = "2026-04-02"
+attachment = true
+reasoning = true
+tool_call = false
+structured_output = true
+open_weights = false
+
+[cost]
+input = 0.1
+output = 0.35
+
+[limit]
+context = 262144
+input = 262144
+output = 131072
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

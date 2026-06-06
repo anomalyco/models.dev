@@ -1,0 +1,23 @@
+# Included in subscription
+name = "MiMo V2.5"
+release_date = "2026-04-22"
+last_updated = "2026-04-22"
+attachment = true
+reasoning = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[cost]
+input = 0.14
+output = 0.28
+cache_read = 0.0028
+
+[limit]
+context = 1048576
+input = 1048576
+output = 131072
+
+[modalities]
+input = ["text", "image", "video"]
+output = ["text"]

@@ -1,2 +1,6 @@
-[extends]
-from = "openai/gpt-4.1-nano"
+base_model = "openai/gpt-4.1-nano"
+
+[cost]
+input = 0.1
+output = 0.4
+cache_read = 0.025

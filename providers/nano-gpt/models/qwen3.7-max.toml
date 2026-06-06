@@ -1,0 +1,23 @@
+# Not included in subscription
+name = "Qwen3.7 Max"
+release_date = "2026-05-21"
+last_updated = "2026-05-21"
+attachment = false
+reasoning = false
+tool_call = false
+structured_output = false
+open_weights = false
+
+[cost]
+input = 2.5
+output = 7.5
+cache_read = 0.25
+
+[limit]
+context = 1000000
+input = 1000000
+output = 65536
+
+[modalities]
+input = ["text"]
+output = ["text"]

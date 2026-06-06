@@ -40,6 +40,8 @@ const WandbResponse = z
   .strict();
 
 interface ExistingModel {
+  base_model?: string;
+  base_model_omit?: string[];
   name?: string;
   family?: string;
   attachment?: boolean;
@@ -71,6 +73,8 @@ interface ExistingModel {
 }
 
 interface MergedModel {
+  base_model?: string;
+  base_model_omit?: string[];
   name: string;
   family?: string;
   attachment: boolean;
@@ -242,6 +246,8 @@ function mergeModel(
   const outputModalities = normalizeModalities(apiModel.output_modalities);
 
   const merged: MergedModel = {
+    ...(existing?.base_model ? { base_model: existing.base_model } : {}),
+    ...(existing?.base_model_omit ? { base_model_omit: existing.base_model_omit } : {}),
     name: existing?.name ?? normalizeName(apiModel),
     family: existing?.family ?? inferFamily(apiModel.id, apiModel.name),
     attachment: existing?.attachment ?? inputModalities.some((m) => m !== "text"),
@@ -306,6 +312,14 @@ function mergeModel(
 function formatToml(model: MergedModel): string {
   const lines: string[] = [];
 
+  if (model.base_model !== undefined) {
+    lines.push(`base_model = "${model.base_model}"`);
+  }
+  if (model.base_model_omit !== undefined) {
+    lines.push(
+      `base_model_omit = [${model.base_model_omit.map((item) => `"${item}"`).join(", ")}]`,
+    );
+  }
   lines.push(`name = "${model.name.replace(/"/g, '\\"')}"`);
   if (model.family) {
     lines.push(`family = "${model.family}"`);
@@ -331,7 +345,7 @@ function formatToml(model: MergedModel): string {
     lines.push("");
     if (model.interleaved === true) {
       lines.push("interleaved = true");
-    } else {
+    } else if (model.interleaved !== false) {
       lines.push("[interleaved]");
       lines.push(`field = "${model.interleaved.field}"`);
     }

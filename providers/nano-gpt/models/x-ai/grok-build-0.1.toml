@@ -1,0 +1,23 @@
+# Not included in subscription
+name = "Grok Build 0.1"
+release_date = "2026-05-20"
+last_updated = "2026-05-20"
+attachment = true
+reasoning = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[cost]
+input = 1
+output = 2
+cache_read = 0.2
+
+[limit]
+context = 256000
+input = 256000
+output = 256000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

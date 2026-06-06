@@ -1,2 +1,6 @@
-[extends]
-from = "openai/gpt-4o"
+base_model = "openai/gpt-4o"
+
+[cost]
+input = 2.5
+output = 10
+cache_read = 1.25

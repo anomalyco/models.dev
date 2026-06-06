@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { readFileSync, readdirSync } from "node:fs";
+import { existsSync, readFileSync, readdirSync } from "node:fs";
 import path from "node:path";
 
 import { ModelFamilyValues } from "../../family.js";
@@ -7,25 +7,26 @@ import type { ExistingModel, SyncProvider, SyncedFullModel, SyncedModel } from "
 
 const API_ENDPOINT = "https://openrouter.ai/api/v1/models";
 const PROVIDERS_DIR = path.join(import.meta.dirname, "..", "..", "..", "..", "..", "providers");
+const MODELS_DIR = path.join(import.meta.dirname, "..", "..", "..", "..", "..", "models");
 const modelFilesByProvider = new Map<string, Set<string>>();
-const canonicalTomlByModel = new Map<string, Record<string, unknown>>();
+const modelMetadataByID = new Map<string, Record<string, unknown>>();
 
 const CANONICAL_PROVIDER_PREFIXES = {
-  anthropic: "anthropic",
-  cohere: "cohere",
-  deepseek: "deepseek",
-  google: "google",
-  meta: "llama",
-  "meta-llama": "llama",
-  minimax: "minimax",
-  mistralai: "mistral",
-  moonshotai: "moonshotai",
-  openai: "openai",
-  "x-ai": "xai",
-  xai: "xai",
-  xiaomi: "xiaomi",
-  zai: "zai",
-  "z-ai": "zai",
+  anthropic: { provider: "anthropic", metadata: "anthropic" },
+  cohere: { provider: "cohere", metadata: "cohere" },
+  deepseek: { provider: "deepseek", metadata: "deepseek" },
+  google: { provider: "google", metadata: "google" },
+  meta: { provider: "llama", metadata: "meta" },
+  "meta-llama": { provider: "llama", metadata: "meta" },
+  minimax: { provider: "minimax", metadata: "minimax" },
+  mistralai: { provider: "mistral", metadata: "mistral" },
+  moonshotai: { provider: "moonshotai", metadata: "moonshotai" },
+  openai: { provider: "openai", metadata: "openai" },
+  "x-ai": { provider: "xai", metadata: "xai" },
+  xai: { provider: "xai", metadata: "xai" },
+  xiaomi: { provider: "xiaomi", metadata: "xiaomi" },
+  zai: { provider: "zai", metadata: "zhipuai" },
+  "z-ai": { provider: "zai", metadata: "zhipuai" },
 } as const;
 
 export const OpenRouterModel = z.object({
@@ -158,23 +159,21 @@ export function buildOpenRouterModel(model: OpenRouterModel, existing: ExistingM
 
   if (canonical !== undefined) {
     return {
-      extends: {
-        from: canonical.from,
-        omit: canonicalOmit(canonical.provider, canonical.modelID, cost, limit),
-      },
-      ...canonicalRuntimeOverrides(canonical.provider, canonical.modelID, {
+      base_model: canonical.from,
+      base_model_omit: baseModelOmit(canonical.from, limit),
+      ...baseModelOverrides(canonical.from, {
         name: model.id.endsWith(":free") ? name : undefined,
         attachment,
         reasoning,
+        temperature: params.has("temperature"),
+        tool_call: toolCall,
+        structured_output: structuredOutput,
+        status: existing?.status,
+        interleaved: existing?.interleaved,
+        limit,
+        modalities: { input, output },
       }),
-      temperature: params.has("temperature"),
-      tool_call: toolCall,
-      structured_output: structuredOutput,
-      status: existing?.status,
-      interleaved: existing?.interleaved,
       cost,
-      limit,
-      modalities: { input, output },
     };
   }
 
@@ -203,20 +202,21 @@ function resolveCanonicalModel(openrouterID: string) {
   if (prefix === undefined || modelParts.length === 0) return undefined;
   if (openrouterID.startsWith("~/") || prefix.startsWith("~")) return undefined;
 
-  const provider = CANONICAL_PROVIDER_PREFIXES[prefix as keyof typeof CANONICAL_PROVIDER_PREFIXES];
-  if (provider === undefined) return undefined;
+  const canonical = CANONICAL_PROVIDER_PREFIXES[prefix as keyof typeof CANONICAL_PROVIDER_PREFIXES];
+  if (canonical === undefined) return undefined;
 
   const modelID = modelParts.join("/").replace(/:free$/, "");
-  const candidates = canonicalCandidates(provider, modelID);
+  const candidates = canonicalCandidates(canonical.provider, modelID);
   const match = candidates.find((candidate) => {
-    return canonicalModelExists(provider, candidate);
+    return canonicalModelExists(canonical.provider, candidate) &&
+      modelMetadataExists(canonical.metadata, candidate);
   });
 
   return match === undefined
     ? undefined
     : {
-        from: `${provider}/${match}`,
-        provider,
+        from: `${canonical.metadata}/${match}`,
+        provider: canonical.provider,
         modelID: match,
       };
 }
@@ -234,39 +234,22 @@ function canonicalModelExists(provider: string, modelID: string) {
   return files.has(`${modelID}.toml`);
 }
 
-function canonicalOmit(
-  provider: string,
+function modelMetadataExists(provider: string, modelID: string) {
+  return existsSync(path.join(MODELS_DIR, provider, `${modelID}.toml`));
+}
+
+function baseModelOmit(
   modelID: string,
-  cost: SyncedFullModel["cost"],
   limit: SyncedFullModel["limit"],
 ) {
-  const toml = canonicalToml(provider, modelID);
-  const omit = ["provider", "experimental"].filter((key) => toml[key] !== undefined);
-
-  const baseCost = toml.cost;
-  if (baseCost !== undefined && baseCost !== null && typeof baseCost === "object" && !Array.isArray(baseCost)) {
-    if (cost === undefined) {
-      omit.push("cost");
-    } else {
-      for (const key of ["reasoning", "cache_read", "cache_write", "input_audio", "output_audio", "tiers"] as const) {
-        if ((baseCost as Record<string, unknown>)[key] !== undefined && cost[key] === undefined) {
-          omit.push(`cost.${key}`);
-        }
-      }
-      if (hasLegacyContextOver200k(baseCost) && cost.tiers === undefined) {
-        omit.push("cost.context_over_200k");
-      }
-    }
-  }
-
-  const baseLimit = toml.limit;
+  const metadata = modelMetadata(modelID);
+  const omit: string[] = [];
+  const baseLimit = metadata.limit;
   if (
-    baseLimit !== undefined &&
-    baseLimit !== null &&
-    typeof baseLimit === "object" &&
-    !Array.isArray(baseLimit) &&
-    (baseLimit as Record<string, unknown>).input !== undefined &&
-    limit.input === undefined
+    isPlainObject(baseLimit) &&
+    baseLimit.input !== undefined &&
+    limit.input === undefined &&
+    baseLimit.context !== limit.context
   ) {
     omit.push("limit.input");
   }
@@ -274,39 +257,73 @@ function canonicalOmit(
   return omit.length > 0 ? omit : undefined;
 }
 
-function hasLegacyContextOver200k(cost: object) {
-  const tiers = (cost as { tiers?: unknown }).tiers;
-  if (!Array.isArray(tiers) || tiers.length !== 1) return false;
-
-  const tier = tiers[0];
-  if (tier === null || typeof tier !== "object" || Array.isArray(tier)) return false;
-  const tierConfig = (tier as { tier?: unknown }).tier;
-  if (tierConfig === null || typeof tierConfig !== "object" || Array.isArray(tierConfig)) return false;
-
-  const size = (tierConfig as { size?: unknown }).size;
-  return typeof size === "number" && size >= 200_000;
-}
-
-function canonicalRuntimeOverrides(
-  provider: string,
+function baseModelOverrides(
   modelID: string,
-  values: Pick<SyncedFullModel, "name" | "attachment" | "reasoning">,
+  values: Partial<SyncedFullModel>,
 ) {
-  const toml = canonicalToml(provider, modelID);
-  return Object.fromEntries(
-    Object.entries(values).filter(([key, value]) => value !== undefined && toml[key] !== value),
-  );
+  const metadata = modelMetadata(modelID);
+  const result: Record<string, unknown> = {};
+
+  for (const [key, value] of Object.entries(values)) {
+    const override = inheritedOverride(value, metadata[key]);
+    if (override !== undefined) result[key] = override;
+  }
+
+  return result;
 }
 
-function canonicalToml(provider: string, modelID: string) {
-  const key = `${provider}/${modelID}`;
-  let toml = canonicalTomlByModel.get(key);
-  if (toml === undefined) {
-    const filePath = path.join(PROVIDERS_DIR, provider, "models", `${modelID}.toml`);
-    toml = Bun.TOML.parse(readFileSync(filePath, "utf8")) as Record<string, unknown>;
-    canonicalTomlByModel.set(key, toml);
+function inheritedOverride(value: unknown, inherited: unknown): unknown {
+  if (value === undefined) return undefined;
+  if (sameInheritedValue(value, inherited)) return undefined;
+  return stripUndefined(value);
+}
+
+function stripUndefined(value: unknown): unknown {
+  if (Array.isArray(value)) return value.map(stripUndefined);
+  if (isPlainObject(value)) {
+    return Object.fromEntries(
+      Object.entries(value)
+        .filter(([, item]) => item !== undefined)
+        .map(([key, item]) => [key, stripUndefined(item)]),
+    );
   }
-  return toml;
+  return value;
+}
+
+function sameInheritedValue(value: unknown, inherited: unknown) {
+  return stableInheritedValue(value) === stableInheritedValue(inherited);
+}
+
+function stableInheritedValue(value: unknown): string {
+  if (Array.isArray(value)) {
+    const items = value.map(stableInheritedValue);
+    const ordered = value.every((item) => item === null || typeof item !== "object")
+      ? items.sort()
+      : items;
+    return `[${ordered.join(",")}]`;
+  }
+  if (isPlainObject(value)) {
+    return `{${Object.entries(value)
+      .filter(([, item]) => item !== undefined)
+      .sort(([a], [b]) => a.localeCompare(b))
+      .map(([key, item]) => `${JSON.stringify(key)}:${stableInheritedValue(item)}`)
+      .join(",")}}`;
+  }
+  return JSON.stringify(value);
+}
+
+function isPlainObject(value: unknown): value is Record<string, unknown> {
+  return value !== null && typeof value === "object" && !Array.isArray(value);
+}
+
+function modelMetadata(modelID: string) {
+  let metadata = modelMetadataByID.get(modelID);
+  if (metadata === undefined) {
+    const filePath = path.join(MODELS_DIR, `${modelID}.toml`);
+    metadata = Bun.TOML.parse(readFileSync(filePath, "utf8")) as Record<string, unknown>;
+    modelMetadataByID.set(modelID, metadata);
+  }
+  return metadata;
 }
 
 function canonicalCandidates(provider: string, modelID: string) {

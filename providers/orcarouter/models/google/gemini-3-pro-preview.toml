@@ -1,6 +1,12 @@
-[extends]
-from = "google/gemini-3-pro-preview"
+base_model = "google/gemini-3-pro-preview"
 
 [cost]
 input = 4
-output = 18.0
+output = 18
+cache_read = 0.2
+
+[[cost.tiers]]
+tier = { type = "context", size = 200_000 }
+input = 4
+output = 18
+cache_read = 0.4

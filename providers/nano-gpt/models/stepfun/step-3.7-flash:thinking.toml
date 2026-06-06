@@ -1,0 +1,23 @@
+# Included in subscription
+name = "Step 3.7 Flash Thinking"
+release_date = "2026-05-29"
+last_updated = "2026-05-29"
+attachment = true
+reasoning = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[cost]
+input = 0.2
+output = 1.15
+cache_read = 0.04
+
+[limit]
+context = 256000
+input = 256000
+output = 256000
+
+[modalities]
+input = ["text", "image", "video"]
+output = ["text"]

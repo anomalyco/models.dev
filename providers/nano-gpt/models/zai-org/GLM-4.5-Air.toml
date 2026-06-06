@@ -1,0 +1,22 @@
+# Included in subscription
+name = "GLM 4.5 Air"
+release_date = "2025-04-15"
+last_updated = "2025-04-15"
+attachment = false
+reasoning = false
+tool_call = true
+structured_output = true
+open_weights = false
+
+[cost]
+input = 0.12
+output = 0.8
+
+[limit]
+context = 128000
+input = 128000
+output = 98304
+
+[modalities]
+input = ["text"]
+output = ["text"]

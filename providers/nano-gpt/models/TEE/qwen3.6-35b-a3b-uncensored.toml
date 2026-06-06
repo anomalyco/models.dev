@@ -1,0 +1,22 @@
+# Not included in subscription
+name = "Qwen3.6 35B A3B Uncensored TEE"
+release_date = "2026-05-23"
+last_updated = "2026-05-23"
+attachment = true
+reasoning = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[cost]
+input = 0.3
+output = 1.5
+
+[limit]
+context = 131072
+input = 131072
+output = 131072
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

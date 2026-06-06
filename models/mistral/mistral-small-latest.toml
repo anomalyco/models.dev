@@ -1,0 +1,22 @@
+name = "Mistral Small (latest)"
+family = "mistral-small"
+release_date = "2026-03-16"
+last_updated = "2026-03-16"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+knowledge = "2025-06"
+open_weights = true
+
+[limit]
+context = 256_000
+output = 256_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/mistralai/Mistral-Small-4-119B-2603"

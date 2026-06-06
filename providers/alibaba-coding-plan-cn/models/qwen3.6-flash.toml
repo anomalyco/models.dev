@@ -1,2 +1,6 @@
-[extends]
-from = "alibaba/qwen3.6-flash"
+base_model = "alibaba/qwen3.6-flash"
+
+[cost]
+input = 0.1875
+output = 1.125
+cache_write = 0.234375

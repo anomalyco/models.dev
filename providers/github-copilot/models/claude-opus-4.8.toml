@@ -1,23 +1,16 @@
-name = "Claude Opus 4.8"
-family = "claude-opus"
-release_date = "2026-05-28"
-last_updated = "2026-05-28"
-attachment = true
-reasoning = true
-temperature = false
-tool_call = true
-knowledge = "2026-01-31"
-open_weights = false
+base_model = "anthropic/claude-opus-4-8"
 
 [cost]
-input = 0
-output = 0
+input = 5
+output = 25
+cache_read = 0.5
+cache_write = 6.25
 
 [limit]
 context = 200_000
-output = 64_000
 input = 168_000
+output = 64_000
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[experimental.modes.fast]
+cost = { input = 10, output = 50, cache_read = 1, cache_write = 12.5 }
+provider = { body = { speed = "fast" }, headers = { anthropic-beta = "fast-mode-2026-02-01" } }

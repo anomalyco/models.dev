@@ -1,2 +1,7 @@
-[extends]
-from = "anthropic/claude-3-5-haiku-20241022"
+base_model = "anthropic/claude-3-5-haiku-20241022"
+
+[cost]
+input = 0.8
+output = 4
+cache_read = 0.08
+cache_write = 1

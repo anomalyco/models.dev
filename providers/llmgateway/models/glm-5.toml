@@ -1,2 +1,10 @@
-[extends]
-from = "zhipuai/glm-5"
+base_model = "zhipuai/glm-5"
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 1
+output = 3.2
+cache_read = 0.2
+cache_write = 0

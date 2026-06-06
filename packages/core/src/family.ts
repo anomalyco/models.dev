@@ -49,6 +49,7 @@ export const ModelFamilyValues = [
   "qwen",
   "qwen3.5",
   "qwen3.6",
+  "qwen3.7-plus",
   "qwen3.7-max",
   "qwen-free",
 
@@ -117,6 +118,8 @@ export const ModelFamilyValues = [
   "minimax",
   "minimax-m2.5",
   "minimax-m2.7",
+  "minimax-m3",
+  "minimax-m3-free",
   "minimax-free",
 
   // Hunyuan

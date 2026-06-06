@@ -1,0 +1,43 @@
+name = "Mistral Large 3"
+family = "mistral-large"
+release_date = "2024-11-01"
+last_updated = "2025-12-02"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = true
+knowledge = "2024-11"
+open_weights = true
+
+[limit]
+context = 262_144
+output = 262_144
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/mistralai/Mistral-Large-3-675B-Instruct-2512"
+
+[[benchmarks]]
+name = "Artificial Analysis Coding Index"
+score = 22.7
+metric = "index"
+source = "https://openrouter.ai/mistralai/mistral-large-2512/benchmarks"
+date = "2026-06-04"
+
+[[benchmarks]]
+name = "SciCode"
+score = 36.2
+metric = "percent correct"
+source = "https://openrouter.ai/mistralai/mistral-large-2512/benchmarks"
+date = "2026-06-04"
+
+[[benchmarks]]
+name = "Terminal-Bench Hard"
+score = 15.9
+metric = "success rate"
+source = "https://openrouter.ai/mistralai/mistral-large-2512/benchmarks"
+date = "2026-06-04"
