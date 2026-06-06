@@ -131,7 +131,7 @@ export async function syncProvider<SourceModel>(
 
     const parsed = SyncedAuthoredModel.safeParse(stripUndefined({
       id: translated.id,
-      ...translated.model,
+      ...preserveBaseModel(translated.model, existing.get(relativePath)?.authored),
     }));
     if (!parsed.success) {
       parsed.error.cause = { provider: provider.id, path: relativePath };
@@ -202,6 +202,15 @@ export async function syncProvider<SourceModel>(
     `${options.dryRun ? "Dry run: " : ""}${result.created} created, ${result.updated} updated, ${result.deleted} removed, ${result.unchanged} unchanged`,
   );
   return result;
+}
+
+export function preserveBaseModel(model: SyncedModel, existing: ExistingModel | undefined): SyncedModel {
+  if (existing?.base_model === undefined || "base_model" in model) return model;
+  return {
+    ...model,
+    base_model: existing.base_model,
+    base_model_omit: existing.base_model_omit,
+  };
 }
 
 export async function syncTargets(target: string, options: SyncOptions = {}) {
