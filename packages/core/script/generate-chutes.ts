@@ -158,7 +158,7 @@ function formatNumber(n: number): string {
  */
 function humanizeModelName(modelId: string): string {
   const parts = modelId.split("/");
-  const modelPart = parts[parts.length - 1];
+  const modelPart = parts.at(-1) ?? modelId;
   return modelPart.replace(/-/g, " ");
 }
 

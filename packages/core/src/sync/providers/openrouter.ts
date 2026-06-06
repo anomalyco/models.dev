@@ -121,7 +121,11 @@ function inferFamily(model: OpenRouterModel, name: string) {
     });
 }
 
-export function buildOpenRouterModel(model: OpenRouterModel, existing: ExistingModel | undefined): SyncedModel {
+export function buildOpenRouterModel(
+  model: OpenRouterModel,
+  existing: ExistingModel | undefined,
+  baseModel?: string,
+): SyncedModel {
   const params = new Set(model.supported_parameters);
   const name = model.name.replace(/^[^:]+:\s+/, "");
   const input = modalities(model.architecture.input_modalities, ["text"]);
@@ -155,14 +159,14 @@ export function buildOpenRouterModel(model: OpenRouterModel, existing: ExistingM
     input: existing?.limit?.input,
     output: model.top_provider.max_completion_tokens ?? existing?.limit?.output ?? context,
   };
-  const canonical = resolveCanonicalModel(model.id);
+  const canonical = baseModel ?? resolveCanonicalModel(model.id)?.from;
 
   if (canonical !== undefined) {
     return {
-      base_model: canonical.from,
-      base_model_omit: baseModelOmit(canonical.from, limit),
-      ...baseModelOverrides(canonical.from, {
-        name: model.id.endsWith(":free") ? name : undefined,
+      base_model: canonical,
+      base_model_omit: baseModelOmit(canonical, limit),
+      ...baseModelOverrides(canonical, {
+        name: baseModel !== undefined || model.id.endsWith(":free") ? name : undefined,
         attachment,
         reasoning,
         temperature: params.has("temperature"),
