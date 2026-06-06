@@ -1,14 +1,12 @@
 import { z } from "zod";
-import { existsSync, readFileSync, readdirSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import path from "node:path";
 
 import { ModelFamilyValues } from "../../family.js";
 import type { ExistingModel, SyncProvider, SyncedFullModel, SyncedModel } from "../index.js";
 
 const API_ENDPOINT = "https://openrouter.ai/api/v1/models";
-const PROVIDERS_DIR = path.join(import.meta.dirname, "..", "..", "..", "..", "..", "providers");
 const MODELS_DIR = path.join(import.meta.dirname, "..", "..", "..", "..", "..", "models");
-const modelFilesByProvider = new Map<string, Set<string>>();
 const modelMetadataByID = new Map<string, Record<string, unknown>>();
 
 const CANONICAL_PROVIDER_PREFIXES = {
@@ -22,6 +20,10 @@ const CANONICAL_PROVIDER_PREFIXES = {
   mistralai: { provider: "mistral", metadata: "mistral" },
   moonshotai: { provider: "moonshotai", metadata: "moonshotai" },
   openai: { provider: "openai", metadata: "openai" },
+  nvidia: { provider: "nvidia", metadata: "nvidia" },
+  qwen: { provider: "alibaba", metadata: "alibaba" },
+  stepfun: { provider: "stepfun", metadata: "stepfun" },
+  tencent: { provider: "tencent", metadata: "tencent" },
   "x-ai": { provider: "xai", metadata: "xai" },
   xai: { provider: "xai", metadata: "xai" },
   xiaomi: { provider: "xiaomi", metadata: "xiaomi" },
@@ -159,12 +161,14 @@ export function buildOpenRouterModel(
     input: existing?.limit?.input,
     output: model.top_provider.max_completion_tokens ?? existing?.limit?.output ?? context,
   };
-  const canonical = baseModel ?? resolveCanonicalModel(model.id)?.from;
+  const canonical = existing?.base_model ?? baseModel ?? resolveCanonicalModel(model.id)?.from;
 
   if (canonical !== undefined) {
     return {
       base_model: canonical,
-      base_model_omit: baseModelOmit(canonical, limit),
+      base_model_omit: existing?.base_model === canonical
+        ? existing.base_model_omit ?? baseModelOmit(canonical, limit)
+        : baseModelOmit(canonical, limit),
       ...baseModelOverrides(canonical, {
         name: baseModel !== undefined || model.id.endsWith(":free") ? name : undefined,
         attachment,
@@ -212,8 +216,7 @@ function resolveCanonicalModel(openrouterID: string) {
   const modelID = modelParts.join("/").replace(/:free$/, "");
   const candidates = canonicalCandidates(canonical.provider, modelID);
   const match = candidates.find((candidate) => {
-    return canonicalModelExists(canonical.provider, candidate) &&
-      modelMetadataExists(canonical.metadata, candidate);
+    return modelMetadataExists(canonical.metadata, candidate);
   });
 
   return match === undefined
@@ -223,19 +226,6 @@ function resolveCanonicalModel(openrouterID: string) {
         provider: canonical.provider,
         modelID: match,
       };
-}
-
-function canonicalModelExists(provider: string, modelID: string) {
-  let files = modelFilesByProvider.get(provider);
-  if (files === undefined) {
-    try {
-      files = new Set(readdirSync(path.join(PROVIDERS_DIR, provider, "models")));
-    } catch {
-      files = new Set();
-    }
-    modelFilesByProvider.set(provider, files);
-  }
-  return files.has(`${modelID}.toml`);
 }
 
 function modelMetadataExists(provider: string, modelID: string) {

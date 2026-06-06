@@ -205,7 +205,13 @@ export async function syncProvider<SourceModel>(
 }
 
 export function preserveBaseModel(model: SyncedModel, existing: ExistingModel | undefined): SyncedModel {
-  if (existing?.base_model === undefined || "base_model" in model) return model;
+  if (existing?.base_model === undefined) return model;
+  const translatedBase = "base_model" in model ? model.base_model : undefined;
+  if (translatedBase !== undefined) {
+    const translatedOmit = "base_model_omit" in model ? model.base_model_omit : undefined;
+    if (translatedBase !== existing.base_model || translatedOmit !== undefined) return model;
+    return { ...model, base_model_omit: existing.base_model_omit };
+  }
   return {
     ...model,
     base_model: existing.base_model,
