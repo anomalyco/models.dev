@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { existsSync, readFileSync } from "node:fs";
+import { readFileSync, readdirSync } from "node:fs";
 import path from "node:path";
 
 import { ModelFamilyValues } from "../../family.js";
@@ -8,6 +8,7 @@ import type { ExistingModel, SyncProvider, SyncedFullModel, SyncedModel } from "
 const API_ENDPOINT = "https://openrouter.ai/api/v1/models";
 const MODELS_DIR = path.join(import.meta.dirname, "..", "..", "..", "..", "..", "models");
 const modelMetadataByID = new Map<string, Record<string, unknown>>();
+const modelMetadataFilesByProvider = new Map<string, Set<string>>();
 
 const CANONICAL_PROVIDER_PREFIXES = {
   anthropic: { provider: "anthropic", metadata: "anthropic" },
@@ -222,7 +223,16 @@ export function resolveCanonicalBaseModel(openrouterID: string) {
 }
 
 function modelMetadataExists(provider: string, modelID: string) {
-  return existsSync(path.join(MODELS_DIR, provider, `${modelID}.toml`));
+  let files = modelMetadataFilesByProvider.get(provider);
+  if (files === undefined) {
+    try {
+      files = new Set(readdirSync(path.join(MODELS_DIR, provider)));
+    } catch {
+      files = new Set();
+    }
+    modelMetadataFilesByProvider.set(provider, files);
+  }
+  return files.has(`${modelID}.toml`);
 }
 
 export function factorBaseModel(
