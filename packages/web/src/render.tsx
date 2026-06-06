@@ -71,6 +71,7 @@ interface SearchIndexItem {
   logo: string;
   tokens: string[];
   lab?: string;
+  provider?: string;
   modelCount?: number;
   providerCount?: number;
   context?: number;
@@ -296,8 +297,44 @@ function buildSearchItems(
         metadata.family,
         metadata.release_date,
         metadata.last_updated,
+        ...model.providers.flatMap((provider) => [
+          displayModelName(provider),
+          provider.modelId,
+          provider.provider.name,
+          provider.providerId,
+        ]),
         ...(metadata.modalities?.input ?? []),
         ...(metadata.modalities?.output ?? []),
+      ].filter((token): token is string => Boolean(token)),
+    });
+  }
+
+  for (const entry of ProviderModelEntries) {
+    if (entry.canonical) continue;
+
+    const displayName = displayModelName(entry);
+    items.push({
+      type: "model",
+      title: displayName,
+      id: `${entry.providerId}/${entry.modelId}`,
+      href: providerModelHref(entry.providerId, entry.modelId),
+      logo: logoHref(entry.providerId),
+      provider: entry.provider.name,
+      context: entry.model.limit?.context,
+      releaseDate: entry.model.release_date,
+      inputCost: entry.model.cost?.input,
+      outputCost: entry.model.cost?.output,
+      updated: entry.model.last_updated,
+      tokens: [
+        displayName,
+        entry.modelId,
+        entry.provider.name,
+        entry.providerId,
+        entry.model.family,
+        entry.model.release_date,
+        entry.model.last_updated,
+        ...(entry.model.modalities?.input ?? []),
+        ...(entry.model.modalities?.output ?? []),
       ].filter((token): token is string => Boolean(token)),
     });
   }
@@ -326,7 +363,6 @@ function buildSearchItems(
         provider.npm,
         provider.api,
         provider.doc,
-        ...providerModels.slice(0, 20).map(displayModelName),
       ].filter((token): token is string => Boolean(token)),
     });
   }
@@ -945,6 +981,7 @@ function ProviderModelsTable(props: {
 
           return (
             <tr
+              id={providerModelAnchor(entry.providerId, entry.modelId)}
               data-search={`${displayName} ${entry.modelId} ${entry.provider.name} ${entry.providerId} ${lab?.name ?? ""} ${entry.model.family ?? ""} ${booleanText(entry.model.reasoning)} ${booleanText(entry.model.tool_call)} ${booleanText(entry.model.structured_output)} ${booleanText(entry.model.temperature)}`}
             >
               {props.mode === "model" ? (
@@ -1436,6 +1473,14 @@ function modelHref(id: string) {
 
 function providerHref(id: string) {
   return `/providers/${encodeURIComponent(id)}`;
+}
+
+function providerModelHref(providerId: string, modelId: string) {
+  return `${providerHref(providerId)}#${providerModelAnchor(providerId, modelId)}`;
+}
+
+function providerModelAnchor(providerId: string, modelId: string) {
+  return `provider-model-${encodeURIComponent(`${providerId}/${modelId}`).replace(/%/g, "_")}`;
 }
 
 function labHref(id: string) {

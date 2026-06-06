@@ -491,6 +491,14 @@ tbody td:nth-child(3) {
   color: var(--color-text);
 }
 
+tbody tr:target td {
+  background-color: color-mix(
+    in srgb,
+    var(--color-brand) 12%,
+    var(--color-background)
+  );
+}
+
 tbody tr:last-child td {
   border-bottom: 0;
 }
