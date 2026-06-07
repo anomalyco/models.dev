@@ -33,10 +33,6 @@ export const google = {
   name: "Google",
   modelsDir: "providers/google/models",
   skipCreates: true,
-  deleteMissing: false,
-  missingNotice(paths) {
-    return paths.map((model) => `Google model is not currently returned by the Models API and was retained: ${model}`);
-  },
   sourceID(model) {
     return model.name.replace(/^models\//, "");
   },
