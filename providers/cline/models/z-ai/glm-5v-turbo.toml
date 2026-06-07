@@ -1,10 +1,18 @@
 base_model = "zhipuai/glm-5v-turbo"
 structured_output = false
 
+[interleaved]
+field = "reasoning_content"
+
 [cost]
 input = 1.2
 output = 4
 cache_read = 0.24
 
-[interleaved]
-field = "reasoning_content"
+[limit]
+context = 202_752
+output = 131_072
+
+[modalities]
+input = ["image", "text", "video"]
+output = ["text"]

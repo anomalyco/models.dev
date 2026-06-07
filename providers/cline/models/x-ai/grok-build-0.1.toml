@@ -4,3 +4,7 @@ base_model = "xai/grok-build-0.1"
 input = 1
 output = 2
 cache_read = 0.2
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

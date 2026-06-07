@@ -1,0 +1,14 @@
+base_model = "zhipuai/glm-4.7-flash"
+structured_output = true
+
+[interleaved]
+field = "reasoning_details"
+
+[cost]
+input = 0.06
+output = 0.4
+cache_read = 0.01
+
+[limit]
+context = 202_752
+output = 16_384

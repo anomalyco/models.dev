@@ -3,3 +3,11 @@ base_model = "alibaba/qwen3.6-27b"
 [cost]
 input = 0.289
 output = 2.4
+
+[limit]
+context = 131_072
+output = 131_072
+
+[modalities]
+input = ["text", "image", "video"]
+output = ["text"]

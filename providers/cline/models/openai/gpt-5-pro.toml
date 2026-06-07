@@ -3,3 +3,12 @@ base_model = "openai/gpt-5-pro"
 [cost]
 input = 15
 output = 120
+
+[limit]
+context = 400_000
+input = 272_000
+output = 128_000
+
+[modalities]
+input = ["image", "text", "pdf"]
+output = ["text"]

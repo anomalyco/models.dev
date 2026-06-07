@@ -1,0 +1,12 @@
+base_model = "openai/o4-mini-deep-research"
+temperature = true
+structured_output = true
+
+[cost]
+input = 2
+output = 8
+cache_read = 0.5
+
+[modalities]
+input = ["pdf", "image", "text"]
+output = ["text"]
