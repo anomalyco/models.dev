@@ -1,0 +1,21 @@
+name = "Mercury Coder Small Beta"
+family = "mercury"
+release_date = "2025-02-26"
+last_updated = "2025-02-26"
+attachment = false
+reasoning = false
+temperature = true
+tool_call = true
+open_weights = false
+
+[cost]
+input = 0.25
+output = 1
+
+[limit]
+context = 32_000
+output = 16_384
+
+[modalities]
+input = ["text"]
+output = ["text"]

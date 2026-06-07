@@ -1,23 +1,17 @@
+base_model = "alibaba/qwen3.7-max"
 name = "Qwen 3.7 Max"
-family = "qwen"
 attachment = true
-reasoning = true
-tool_call = true
-temperature = true
-release_date = "2026-05-21"
-last_updated = "2026-05-21"
-open_weights = false
 
 [cost]
-input = 2.5
-output = 7.5
-cache_read = 0.5
-cache_write = 3.125
+input = 1.25
+output = 3.75
+cache_read = 0.25
+cache_write = 1.5625
 
 [limit]
 context = 991_000
 output = 64_000
 
 [modalities]
-input = ["text", "image", "pdf"]
+input = ["text", "pdf"]
 output = ["text"]
