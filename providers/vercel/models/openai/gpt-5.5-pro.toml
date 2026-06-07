@@ -1,12 +1,8 @@
+base_model = "openai/gpt-5.5-pro"
 name = "GPT 5.5 Pro"
 family = "gpt"
-attachment = true
-reasoning = true
-tool_call = true
-temperature = true
 release_date = "2026-04-24"
-last_updated = "2026-04-24"
-open_weights = false
+temperature = true
 
 [cost]
 input = 30
@@ -16,7 +12,3 @@ output = 180
 context = 1_000_000
 input = 872_000
 output = 128_000
-
-[modalities]
-input = ["text", "image", "pdf"]
-output = ["text"]

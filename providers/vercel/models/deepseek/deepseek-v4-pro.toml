@@ -1,22 +1,12 @@
-name = "DeepSeek V4 Pro"
+base_model = "deepseek/deepseek-v4-pro"
 family = "deepseek"
-attachment = false
-reasoning = true
-tool_call = true
-temperature = true
 release_date = "2026-04-23"
-last_updated = "2026-04-24"
-open_weights = true
 
 [cost]
-input = 1.74
-output = 3.48
-cache_read = 0.145
-
-[limit]
-context = 1_000_000
-output = 384_000
+input = 0.435
+output = 0.87
+cache_read = 0.0036
 
 [modalities]
-input = ["text"]
+input = ["text", "pdf"]
 output = ["text"]
