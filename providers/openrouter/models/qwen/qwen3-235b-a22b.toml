@@ -1,14 +1,5 @@
-name = "Qwen3 235B A22B"
-family = "qwen"
-release_date = "2025-04-28"
-last_updated = "2025-04-28"
-attachment = false
-reasoning = true
-temperature = true
-tool_call = true
+base_model = "alibaba/qwen3-235b-a22b"
 structured_output = false
-knowledge = "2025-03-31"
-open_weights = true
 
 [cost]
 input = 0.455
@@ -17,7 +8,3 @@ output = 1.82
 [limit]
 context = 131_072
 output = 8_192
-
-[modalities]
-input = ["text"]
-output = ["text"]
