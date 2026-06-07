@@ -1,13 +1,8 @@
+base_model = "minimax/MiniMax-M2.1"
 name = "MiniMax M2.1"
-family = "minimax"
 release_date = "2025-10-27"
-last_updated = "2025-10-27"
-attachment = false
-reasoning = true
-temperature = true
-tool_call = true
-open_weights = false
 knowledge = "2024-10"
+open_weights = false
 
 interleaved = true
 
@@ -15,12 +10,4 @@ interleaved = true
 input = 0.3
 output = 1.2
 cache_read = 0.03
-cache_write = 0.38
-
-[limit]
-context = 204800
-output = 131072
-
-[modalities]
-input = ["text"]
-output = ["text"]
+cache_write = 0.375
