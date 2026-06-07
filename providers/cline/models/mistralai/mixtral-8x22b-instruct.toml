@@ -1,0 +1,24 @@
+name = "Mixtral 8x22B Instruct"
+family = "mistral"
+release_date = "2024-04-17"
+last_updated = "2024-04-17"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = true
+structured_output = true
+knowledge = "2024-01-31"
+open_weights = true
+
+[cost]
+input = 2
+output = 6
+cache_read = 0.2
+
+[limit]
+context = 65_536
+output = 65_536
+
+[modalities]
+input = ["text", "pdf"]
+output = ["text"]

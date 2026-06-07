@@ -1,0 +1,17 @@
+base_model = "google/gemini-3.1-pro-preview-customtools"
+
+[cost]
+input = 2
+output = 12
+reasoning = 12
+cache_read = 0.2
+cache_write = 0.375
+
+[[cost.tiers]]
+input = 4
+output = 18
+cache_read = 0.4
+tier = { type = "context", size = 200000 }
+
+[interleaved]
+field = "reasoning_details"

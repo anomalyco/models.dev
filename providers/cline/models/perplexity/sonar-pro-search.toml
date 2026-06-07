@@ -1,0 +1,22 @@
+name = "Sonar Pro Search"
+family = "sonar-pro"
+release_date = "2025-10-30"
+last_updated = "2025-10-30"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = false
+structured_output = true
+open_weights = false
+
+[cost]
+input = 3
+output = 15
+
+[limit]
+context = 200_000
+output = 8_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

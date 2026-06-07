@@ -1,0 +1,23 @@
+name = "Gemma 3 4B"
+family = "gemma"
+release_date = "2025-03-13"
+last_updated = "2025-03-13"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = false
+structured_output = true
+knowledge = "2024-08-31"
+open_weights = true
+
+[cost]
+input = 0.04
+output = 0.08
+
+[limit]
+context = 131_072
+output = 16_384
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

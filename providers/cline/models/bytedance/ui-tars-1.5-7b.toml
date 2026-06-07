@@ -1,0 +1,23 @@
+name = "UI-TARS 7B "
+release_date = "2025-07-22"
+last_updated = "2025-07-22"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = false
+structured_output = false
+knowledge = "2025-01-31"
+open_weights = true
+
+[cost]
+input = 0.1
+output = 0.2
+cache_read = 0.1
+
+[limit]
+context = 128_000
+output = 2_048
+
+[modalities]
+input = ["image", "text"]
+output = ["text"]

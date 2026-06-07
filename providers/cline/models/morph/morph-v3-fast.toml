@@ -1,0 +1,22 @@
+name = "Morph V3 Fast"
+family = "morph"
+release_date = "2025-07-07"
+last_updated = "2025-07-07"
+attachment = false
+reasoning = false
+temperature = true
+tool_call = false
+structured_output = false
+open_weights = false
+
+[cost]
+input = 0.8
+output = 1.2
+
+[limit]
+context = 81_920
+output = 38_000
+
+[modalities]
+input = ["text"]
+output = ["text"]

@@ -1,0 +1,10 @@
+base_model = "zhipuai/glm-4.7"
+structured_output = true
+
+[cost]
+input = 0.4
+output = 1.75
+cache_read = 0.08
+
+[interleaved]
+field = "reasoning_details"
