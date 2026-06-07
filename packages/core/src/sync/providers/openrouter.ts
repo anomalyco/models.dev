@@ -286,6 +286,14 @@ function baseModelOverrides(
 function inheritedOverride(value: unknown, inherited: unknown): unknown {
   if (value === undefined) return undefined;
   if (sameInheritedValue(value, inherited)) return undefined;
+  if (isPlainObject(value) && isPlainObject(inherited)) {
+    const overrides = Object.fromEntries(
+      Object.entries(value)
+        .map(([key, item]) => [key, inheritedOverride(item, inherited[key])])
+        .filter(([, item]) => item !== undefined),
+    );
+    return Object.keys(overrides).length > 0 ? overrides : undefined;
+  }
   return stripUndefined(value);
 }
 
