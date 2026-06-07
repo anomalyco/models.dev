@@ -24,7 +24,7 @@ test("Vercel models translate gateway metadata", () => {
   expect(synced).toMatchObject({
     name: "GPT Test",
     release_date: "2024-03-09",
-    last_updated: new Date().toISOString().slice(0, 10),
+    last_updated: "2024-03-09",
     attachment: true,
     reasoning: true,
     tool_call: true,
@@ -58,7 +58,7 @@ test("Vercel models preserve curated metadata and missing limits", () => {
   });
 
   expect(synced.name).toBe("Curated name");
-  expect(synced.last_updated).toBe(new Date().toISOString().slice(0, 10));
+  expect(synced.last_updated).toBe("2025-01-01");
   expect(synced.reasoning_options).toEqual([{ type: "effort", values: ["low", "high"] }]);
   expect(synced.cost?.tiers).toHaveLength(1);
   expect(synced.limit).toEqual({ context: 64_000, input: 48_000, output: 16_000 });
@@ -73,4 +73,5 @@ test("Vercel models use canonical metadata when available", () => {
 
   expect("base_model" in synced ? synced.base_model : undefined)
     .toBe("nvidia/nemotron-3-ultra-550b-a55b");
+  expect("last_updated" in synced ? synced.last_updated : undefined).toBeUndefined();
 });

@@ -96,7 +96,7 @@ export function buildVercelModel(model: VercelModel, existing: ExistingModel | u
     name: existing?.name ?? model.name,
     family: existing?.family ?? inferFamily(model.id, model.name),
     release_date: releaseDate,
-    last_updated: new Date().toISOString().slice(0, 10),
+    last_updated: existing?.last_updated ?? releaseDate,
     attachment: existing?.attachment ?? (tags.has("vision") || tags.has("file-input")),
     reasoning: existing?.reasoning ?? tags.has("reasoning"),
     reasoning_options: existing?.reasoning_options,
@@ -119,9 +119,10 @@ export function buildVercelModel(model: VercelModel, existing: ExistingModel | u
   };
 
   const baseModel = existing?.base_model ?? resolveCanonicalBaseModel(model.id);
-  return baseModel === undefined
-    ? synced
-    : factorBaseModel(baseModel, synced, synced.limit, existing?.base_model_omit);
+  if (baseModel === undefined) return synced;
+
+  const { last_updated: _lastUpdated, ...overrides } = synced;
+  return factorBaseModel(baseModel, overrides, synced.limit, existing?.base_model_omit);
 }
 
 function dateFromTimestamp(timestamp: number) {
