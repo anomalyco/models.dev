@@ -1,5 +1,23 @@
 base_model = "google/gemini-3-pro-image-preview"
+name = "Nano Banana Pro"
+family = "gemini-pro"
+release_date = "2025-11-20"
+last_updated = "2025-11-20"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = false
+knowledge = "2025-01"
+open_weights = false
 
 [cost]
 input = 2
 output = 120
+
+[limit]
+context = 131_072
+output = 32_768
+
+[modalities]
+input = ["text", "image"]
+output = ["text", "image"]
