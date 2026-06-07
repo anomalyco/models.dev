@@ -1,0 +1,30 @@
+name = "Grok 4.3"
+release_date = "2026-04-17"
+last_updated = "2026-05-01"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+knowledge = "2025-12-31"
+open_weights = false
+
+[cost]
+input = 1.25
+output = 2.50
+cache_read = 0.20
+cache_write = 0
+
+[[cost.tiers]]
+tier = { size = 200_000 }
+input = 2.50
+output = 5.00
+cache_read = 0.40
+cache_write = 0
+
+[limit]
+context = 1_000_000
+output = 1_000_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
