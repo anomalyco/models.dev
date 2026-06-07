@@ -1,0 +1,13 @@
+base_model = "moonshotai/kimi-k2.6"
+
+[cost]
+input = 1.20
+output = 4.50
+
+[limit]
+context = 262_144
+output = 32_768
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
