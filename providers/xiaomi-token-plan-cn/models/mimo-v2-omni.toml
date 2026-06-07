@@ -1,5 +1,7 @@
-[extends]
-from = "xiaomi/mimo-v2-omni"
+base_model = "xiaomi/mimo-v2-omni"
+
+[interleaved]
+field = "reasoning_content"
 
 [cost]
 input = 0

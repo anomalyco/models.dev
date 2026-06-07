@@ -1,15 +1,12 @@
-name = "Gemma 4 26B A4B IT"
+base_model = "google/gemma-4-26b-a4b-it"
 release_date = "2026-04-01"
 last_updated = "2026-05-22"
 knowledge = "2025-04"
 status = "beta"
 
-[extends]
-from = "google/gemma-4-26b-a4b-it"
-
 [cost]
 input = 0.25
-output = 0.50
+output = 0.5
 
 [limit]
 context = 256_000

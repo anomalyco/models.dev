@@ -1,3 +1,4 @@
+base_model = "alibaba/qwen3.6-35b-a3b"
 name = "Qwen3.6 35B A3B"
 temperature = false
 
@@ -8,12 +9,7 @@ cache_read = 0
 cache_write = 0
 
 [limit]
-context = 262_144
 output = 262_144
 
 [modalities]
 input = ["text", "image"]
-output = ["text"]
-
-[extends]
-from = "alibaba/qwen3.6-35b-a3b"

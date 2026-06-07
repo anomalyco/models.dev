@@ -509,10 +509,10 @@ async function main() {
   const apiKeyArgIndex = args.findIndex((arg) => arg.startsWith("--api-key"));
   if (apiKeyArgIndex !== -1) {
     const arg = args[apiKeyArgIndex];
-    if (arg.includes("=")) {
-      apiKey = arg.split("=")[1];
+    if (arg?.includes("=")) {
+      apiKey = arg.split("=")[1] ?? null;
     } else if (args[apiKeyArgIndex + 1]) {
-      apiKey = args[apiKeyArgIndex + 1];
+      apiKey = args[apiKeyArgIndex + 1] ?? null;
     }
   }
 

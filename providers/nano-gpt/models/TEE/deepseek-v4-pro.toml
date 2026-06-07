@@ -1,0 +1,23 @@
+# Not included in subscription
+name = "DeepSeek V4 Pro TEE"
+release_date = "2026-04-25"
+last_updated = "2026-04-25"
+attachment = false
+reasoning = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[cost]
+input = 1.5
+output = 5.25
+cache_read = 0.15
+
+[limit]
+context = 800000
+input = 800000
+output = 65536
+
+[modalities]
+input = ["text"]
+output = ["text"]

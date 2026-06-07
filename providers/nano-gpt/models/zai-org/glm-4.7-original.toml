@@ -1,0 +1,23 @@
+# Not included in subscription
+name = "GLM 4.7 Original"
+release_date = "2025-12-22"
+last_updated = "2025-12-22"
+attachment = false
+reasoning = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[cost]
+input = 0.6
+output = 2.2
+cache_read = 0.11
+
+[limit]
+context = 200000
+input = 200000
+output = 65535
+
+[modalities]
+input = ["text"]
+output = ["text"]

@@ -1,7 +1,7 @@
-name = "Qwen3.6 35B A3B"
+name = "Qwen3.6-35B-A3B"
 family = "qwen"
 release_date = "2026-05-11"
-last_updated = "2026-05-11"
+last_updated = "2026-05-30"
 knowledge = "2025-04"
 attachment = true
 reasoning = true
@@ -11,14 +11,15 @@ structured_output = true
 open_weights = true
 
 [cost]
-input = 0.19
-output = 1.25
+input = 0.15
+output = 1.00
 cache_read = 0.02
 cache_write = 0
 
 [limit]
-context = 32_768
-output = 16_384
+context = 256_000
+input = 229_376
+output = 65_536
 
 [modalities]
 input = ["text", "image", "video"]

@@ -1,0 +1,22 @@
+# Included in subscription
+name = "Mistral Small 4 119B"
+release_date = "2026-03-16"
+last_updated = "2026-03-16"
+attachment = true
+reasoning = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[cost]
+input = 0.4
+output = 1.4
+
+[limit]
+context = 262144
+input = 262144
+output = 16384
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

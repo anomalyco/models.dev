@@ -1,5 +1,6 @@
-name = "MiMo-V2-Flash"
+base_model = "xiaomi/mimo-v2-flash"
 
-[extends]
-from = "xiaomi/mimo-v2-flash"
-omit = ["interleaved"]
+[cost]
+input = 0.1
+output = 0.3
+cache_read = 0.01

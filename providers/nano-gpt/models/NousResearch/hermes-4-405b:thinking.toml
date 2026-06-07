@@ -1,0 +1,22 @@
+# Included in subscription
+name = "Hermes 4 Large (Thinking)"
+release_date = "2024-01-01"
+last_updated = "2024-01-01"
+attachment = false
+reasoning = false
+tool_call = false
+structured_output = true
+open_weights = false
+
+[cost]
+input = 0.3
+output = 1.2
+
+[limit]
+context = 128000
+input = 128000
+output = 8192
+
+[modalities]
+input = ["text"]
+output = ["text"]

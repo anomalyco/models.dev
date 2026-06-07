@@ -1,9 +1,5 @@
-temperature = true
-tool_call = true
+base_model = "xai/grok-4.3"
 structured_output = true
-
-[extends]
-from = "xai/grok-4.3"
 
 [cost]
 input = 1.25
@@ -11,7 +7,7 @@ output = 2.5
 cache_read = 0.2
 
 [[cost.tiers]]
-tier = { size = 200_000 }
+tier = { type = "context", size = 200_000 }
 input = 2.5
 output = 5
 cache_read = 0.4

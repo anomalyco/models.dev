@@ -1,0 +1,14 @@
+base_model = "stepfun/step-3.5-flash"
+base_model_omit = ["limit.input"]
+name = "StepFun 3.5 Flash"
+family = "step"
+open_weights = false
+
+[cost]
+input = 0.09
+output = 0.3
+cache_write = 0.02
+
+[limit]
+context = 262_114
+output = 262_114

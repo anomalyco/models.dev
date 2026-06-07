@@ -1,3 +1,6 @@
-[extends]
-from = "openai/gpt-4-turbo"
-omit = ["structured_output"]
+base_model = "openai/gpt-4-turbo"
+base_model_omit = ["structured_output"]
+
+[cost]
+input = 10
+output = 30

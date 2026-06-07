@@ -1,0 +1,23 @@
+# Not included in subscription
+name = "Sarvam 30B"
+release_date = "2026-05-12"
+last_updated = "2026-05-12"
+attachment = false
+reasoning = true
+tool_call = true
+structured_output = false
+open_weights = false
+
+[cost]
+input = 0.028
+output = 0.111
+cache_read = 0.017
+
+[limit]
+context = 65536
+input = 65536
+output = 4096
+
+[modalities]
+input = ["text"]
+output = ["text"]

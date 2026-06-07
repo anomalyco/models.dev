@@ -1,0 +1,22 @@
+# Included in subscription
+name = "Holo3-35B-A3B Thinking"
+release_date = "2024-01-01"
+last_updated = "2024-01-01"
+attachment = true
+reasoning = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[cost]
+input = 0.25
+output = 1.8
+
+[limit]
+context = 65536
+input = 65536
+output = 65536
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

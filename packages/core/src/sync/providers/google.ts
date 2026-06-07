@@ -112,6 +112,8 @@ function buildModel(model: GoogleModel, existing: ExistingModel): SyncedModel {
   }
 
   return {
+    base_model: existing.base_model,
+    base_model_omit: existing.base_model_omit,
     name: model.displayName ?? name,
     family: existing.family,
     release_date: releaseDate,
@@ -121,6 +123,7 @@ function buildModel(model: GoogleModel, existing: ExistingModel): SyncedModel {
     temperature: model.temperature !== undefined || model.maxTemperature !== undefined
       ? true
       : existing.temperature,
+    reasoning_options: existing.reasoning_options,
     tool_call: toolCall,
     structured_output: existing.structured_output,
     knowledge: existing.knowledge,

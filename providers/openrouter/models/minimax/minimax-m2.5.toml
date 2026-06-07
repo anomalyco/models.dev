@@ -1,10 +1,5 @@
-temperature = true
-tool_call = true
+base_model = "minimax/MiniMax-M2.5"
 structured_output = true
-
-[extends]
-from = "minimax/MiniMax-M2.5"
-omit = ["cost.cache_read", "cost.cache_write"]
 
 [interleaved]
 field = "reasoning_details"
@@ -16,7 +11,3 @@ output = 1.15
 [limit]
 context = 196_608
 output = 196_608
-
-[modalities]
-input = ["text"]
-output = ["text"]

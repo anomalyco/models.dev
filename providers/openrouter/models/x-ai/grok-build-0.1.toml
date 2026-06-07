@@ -1,19 +1,9 @@
-temperature = true
-tool_call = true
-structured_output = true
-
-[extends]
-from = "xai/grok-build-0.1"
-omit = ["cost.tiers", "cost.context_over_200k"]
+base_model = "xai/grok-build-0.1"
 
 [cost]
 input = 1
 output = 2
 cache_read = 0.2
-
-[limit]
-context = 256_000
-output = 256_000
 
 [modalities]
 input = ["text", "image"]

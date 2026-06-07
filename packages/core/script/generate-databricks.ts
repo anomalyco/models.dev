@@ -4,8 +4,8 @@
  * Generates Databricks model TOML files from the Foundation Model API endpoint.
  *
  * Each Databricks endpoint exposes a model from another provider (Anthropic,
- * OpenAI, Google, etc.), so the generated TOML uses [extends] to inherit
- * canonical metadata from that upstream provider's TOML in models.dev.
+ * OpenAI, Google, etc.), so the generated TOML uses base_model to inherit
+ * provider-agnostic metadata from models.dev.
  *
  * Usage:
  *   DATABRICKS_HOST=<host> DATABRICKS_TOKEN=<pat> bun run databricks:generate
@@ -41,6 +41,7 @@ if (!host || !token) {
 
 const workspace = host.replace(/^https?:\/\//, "").replace(/\/$/, "");
 const PROVIDERS_DIR = path.join(import.meta.dirname, "..", "..", "..", "providers");
+const MODEL_METADATA_DIR = path.join(import.meta.dirname, "..", "..", "..", "models");
 const MODELS_DIR = path.join(PROVIDERS_DIR, "databricks", "models");
 
 // ---------------------------------------------------------------------------
@@ -91,15 +92,15 @@ const PREFIX_TO_PROVIDER: [string, string][] = [
 ];
 
 type Resolution =
-  | { type: "extends"; from: string }
+  | { type: "base_model"; from: string }
   | { type: "inline"; content: string }
   | null;
 
 async function resolveCanonical(endpointName: string): Promise<Resolution> {
   const bare = endpointName.replace(/^databricks-/, "");
 
-  // Models in provider subdirectories (e.g. openrouter/openai/gpt-oss-*)
-  // can't use [extends] (schema requires provider/model format), so inline.
+  // Models in provider subdirectories may not have provider-agnostic metadata
+  // yet, so inline when no model-only entry exists.
   if (bare.startsWith("gpt-oss-")) {
     const p = path.join(PROVIDERS_DIR, "openrouter", "models", "openai", `${bare}.toml`);
     if (existsSync(p)) {
@@ -113,20 +114,23 @@ async function resolveCanonical(endpointName: string): Promise<Resolution> {
       .replace(/^meta-llama-/, "llama-")
       .replace(/^(llama-\d+)-(\d+)-/, "$1.$2-");
     const p = path.join(PROVIDERS_DIR, "llama", "models", `${llamaId}.toml`);
-    if (existsSync(p)) return { type: "extends", from: `llama/${llamaId}` };
+    const metadata = path.join(MODEL_METADATA_DIR, "meta", `${llamaId}.toml`);
+    if (existsSync(p) && existsSync(metadata)) {
+      return { type: "base_model", from: `meta/${llamaId}` };
+    }
   }
 
   for (const [prefix, provider] of PREFIX_TO_PROVIDER) {
     if (!bare.startsWith(prefix)) continue;
 
     const exact = path.join(PROVIDERS_DIR, provider, "models", `${bare}.toml`);
-    if (existsSync(exact)) return { type: "extends", from: `${provider}/${bare}` };
+    if (existsSync(exact)) return { type: "base_model", from: `${provider}/${bare}` };
 
     // Try with hyphens-as-dots in version (e.g. gpt-5-4 → gpt-5.4)
     const dotted = bare.replace(/^((?:[a-z]+-)+\d+)-(\d)/, "$1.$2");
     if (dotted !== bare) {
       const dottedExact = path.join(PROVIDERS_DIR, provider, "models", `${dotted}.toml`);
-      if (existsSync(dottedExact)) return { type: "extends", from: `${provider}/${dotted}` };
+      if (existsSync(dottedExact)) return { type: "base_model", from: `${provider}/${dotted}` };
     }
 
     // Fuzzy: longest filename that shares a prefix with bare or its dotted form
@@ -145,15 +149,15 @@ async function resolveCanonical(endpointName: string): Promise<Resolution> {
       .map((f) => f.replace(/\.toml$/, ""))
       .filter((id) => candidates.some((c) => id.startsWith(c) || c.startsWith(id)))
       .sort((a, b) => b.length - a.length)[0];
-    if (match) return { type: "extends", from: `${provider}/${match}` };
+    if (match) return { type: "base_model", from: `${provider}/${match}` };
   }
 
   return null;
 }
 
 function formatToml(resolution: Resolution, endpointName: string): string {
-  if (resolution?.type === "extends") {
-    return `[extends]\nfrom = "${resolution.from}"\n`;
+  if (resolution?.type === "base_model") {
+    return `base_model = "${resolution.from}"\n`;
   }
   if (resolution?.type === "inline") {
     return resolution.content;
@@ -229,7 +233,7 @@ async function main() {
 
     const resolution = await resolveCanonical(ep.name);
     const newContent = formatToml(resolution, ep.name);
-    const tag = resolution?.type === "extends" ? `extends ${resolution.from}` : resolution?.type ?? "stub";
+    const tag = resolution?.type === "base_model" ? `base_model ${resolution.from}` : resolution?.type ?? "stub";
 
     const existed = existsSync(filePath);
     if (!existed) {

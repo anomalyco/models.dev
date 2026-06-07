@@ -1,6 +1,8 @@
 import { z } from "zod";
+import { readdirSync } from "node:fs";
+import path from "node:path";
 
-import type { ExistingModel, SyncProvider } from "../index.js";
+import type { ExistingModel, SyncedModel, SyncProvider } from "../index.js";
 import {
   buildOpenRouterModel,
   OpenRouterModel,
@@ -8,6 +10,19 @@ import {
 } from "./openrouter.js";
 
 const API_BASE = "https://api.cloudflare.com/client/v4/accounts";
+const MODELS_DIR = path.join(import.meta.dirname, "..", "..", "..", "..", "..", "models");
+const metadataFilesByPublisher = new Map<string, string[]>();
+const METADATA_PUBLISHERS: Record<string, string> = {
+  "deepseek-ai": "deepseek",
+  google: "google",
+  meta: "meta",
+  mistralai: "mistral",
+  moonshotai: "moonshotai",
+  nvidia: "nvidia",
+  openai: "openai",
+  qwen: "alibaba",
+  "zai-org": "zhipuai",
+};
 
 const CloudflareOpenRouterResponse = z.object({
   result: z.union([OpenRouterResponse, z.array(OpenRouterModel)]).optional(),
@@ -81,8 +96,24 @@ export const cloudflareWorkersAi = {
   },
 } satisfies SyncProvider<CloudflareModel>;
 
-function buildWorkersAiModel(model: z.infer<typeof OpenRouterModel>, existing: ExistingModel | undefined) {
-  const synced = buildOpenRouterModel(model, existing);
+function buildWorkersAiModel(
+  model: z.infer<typeof OpenRouterModel>,
+  existing: ExistingModel | undefined,
+): SyncedModel {
+  const source = {
+    ...model,
+    name: existing?.name ?? model.name,
+    top_provider: {
+      ...model.top_provider,
+      max_completion_tokens: existing?.limit?.output ?? model.top_provider.max_completion_tokens,
+    },
+  };
+  const synced = buildOpenRouterModel(
+    source,
+    existing,
+    existing?.base_model ?? resolveCloudflareBaseModel(model),
+  );
+  if ("base_model" in synced) return synced;
   return {
     ...synced,
     name: existing?.name ?? synced.name,
@@ -93,6 +124,34 @@ function buildWorkersAiModel(model: z.infer<typeof OpenRouterModel>, existing: E
       output: existing?.limit?.output ?? synced.limit.output,
     },
   };
+}
+
+export function resolveCloudflareBaseModel(model: z.infer<typeof OpenRouterModel>) {
+  const [, publisher] = model.id.replace(/^workers-ai\//, "").split("/");
+  if (publisher === undefined) return undefined;
+
+  const metadataPublisher = METADATA_PUBLISHERS[publisher];
+  if (metadataPublisher === undefined) return undefined;
+
+  let files = metadataFilesByPublisher.get(metadataPublisher);
+  if (files === undefined) {
+    try {
+      files = readdirSync(path.join(MODELS_DIR, metadataPublisher))
+        .filter((file) => file.endsWith(".toml"))
+        .map((file) => file.slice(0, -5));
+    } catch {
+      files = [];
+    }
+    metadataFilesByPublisher.set(metadataPublisher, files);
+  }
+
+  const identity = new Set(identityTokens(`${model.id} ${model.name}`));
+  const matches = files.filter((file) => identityTokens(file).every((token) => identity.has(token)));
+  return matches.length === 1 ? `${metadataPublisher}/${matches[0]}` : undefined;
+}
+
+function identityTokens(value: string) {
+  return value.toLowerCase().match(/[a-z]+|\d+(?:\.\d+)?/g) ?? [];
 }
 
 async function fetchPage(accountID: string, token: string, page: number) {
@@ -112,18 +171,19 @@ async function fetchPage(accountID: string, token: string, page: number) {
   return response.json();
 }
 
-function parseCloudflareModels(raw: unknown) {
+function parseCloudflareModels(raw: unknown): CloudflareModel[] {
   const cloudflare = CloudflareResponse.safeParse(raw);
   if (cloudflare.success) return cloudflare.data.data;
 
   const direct = OpenRouterResponse.safeParse(raw);
-  if (direct.success) return direct.data.data;
+  if (direct.success) return direct.data.data.map((model) => CloudflareModel.parse(model));
 
   const wrapped = CloudflareOpenRouterResponse.parse(raw);
   if (wrapped.result === undefined) {
     throw new Error("Cloudflare Workers AI response did not include model data");
   }
-  return Array.isArray(wrapped.result) ? wrapped.result : wrapped.result.data;
+  const models = Array.isArray(wrapped.result) ? wrapped.result : wrapped.result.data;
+  return models.map((model) => CloudflareModel.parse(model));
 }
 
 function normalizeModel(model: CloudflareModel) {

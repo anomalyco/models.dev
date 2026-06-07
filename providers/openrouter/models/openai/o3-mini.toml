@@ -1,19 +1,10 @@
+base_model = "openai/o3-mini"
 attachment = true
-temperature = false
-tool_call = true
-structured_output = true
-
-[extends]
-from = "openai/o3-mini"
 
 [cost]
 input = 1.1
 output = 4.4
 cache_read = 0.55
-
-[limit]
-context = 200_000
-output = 100_000
 
 [modalities]
 input = ["text", "pdf"]

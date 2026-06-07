@@ -1,20 +1,21 @@
+# Included in subscription
 name = "Qwen3.6 35B A3B"
-family = "qwen3.6"
 release_date = "2026-04-17"
-last_updated = "2026-04-21"
-attachment = false
+last_updated = "2026-04-17"
+attachment = true
 reasoning = false
 tool_call = false
 structured_output = false
-open_weights = true
+open_weights = false
 
 [cost]
-input = 0.29
-output = 1.74
+input = 0.112
+output = 0.8
 
 [limit]
-context = 262_144
-output = 16_384
+context = 262144
+input = 262144
+output = 16384
 
 [modalities]
 input = ["text", "image", "video"]

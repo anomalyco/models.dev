@@ -1,2 +1,9 @@
-[extends]
-from = "xiaomi/mimo-v2-flash"
+base_model = "xiaomi/mimo-v2-flash"
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.1
+output = 0.3
+cache_read = 0.01
