@@ -1,22 +1,12 @@
-name = "DeepSeek V4 Flash"
+base_model = "deepseek/deepseek-v4-flash"
 family = "deepseek"
-attachment = false
-reasoning = true
-tool_call = true
-temperature = true
 release_date = "2026-04-23"
-last_updated = "2026-04-24"
-open_weights = true
 
 [cost]
 input = 0.14
 output = 0.28
-cache_read = 0.028
-
-[limit]
-context = 1_000_000
-output = 384_000
+cache_read = 0.0028
 
 [modalities]
-input = ["text"]
+input = ["text", "image", "pdf"]
 output = ["text"]

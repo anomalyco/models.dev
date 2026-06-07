@@ -1,11 +1,5 @@
+base_model = "minimax/MiniMax-M2.5"
 name = "MiniMax M2.5"
-family = "minimax"
-attachment = false
-reasoning = true
-tool_call = true
-temperature = true
-release_date = "2026-02-12"
-last_updated = "2026-02-19"
 open_weights = false
 
 [cost]
@@ -17,7 +11,3 @@ cache_write = 0.375
 [limit]
 context = 204_800
 output = 131_000
-
-[modalities]
-input = ["text"]
-output = ["text"]
