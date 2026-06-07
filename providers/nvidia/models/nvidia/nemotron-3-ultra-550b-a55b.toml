@@ -1,0 +1,24 @@
+name = "Nemotron 3 Ultra"
+family = "nemotron"
+attachment = false
+reasoning = true
+structured_output = true
+tool_call = true
+temperature = true
+knowledge = "2026-05"
+release_date = "2026-06-04"
+last_updated = "2026-06-04"
+open_weights = true
+
+[cost]
+input = 0.50
+output = 2.50
+cache_read = 0.15
+
+[limit]
+context = 1_000_000
+output = 65_536
+
+[modalities]
+input = ["text"]
+output = ["text"]
