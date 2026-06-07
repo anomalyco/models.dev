@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { existsSync, readFileSync } from "node:fs";
+import { readFileSync, readdirSync } from "node:fs";
 import path from "node:path";
 
 import { ModelFamilyValues } from "../../family.js";
@@ -8,8 +8,10 @@ import type { ExistingModel, SyncProvider, SyncedFullModel, SyncedModel } from "
 const API_ENDPOINT = "https://openrouter.ai/api/v1/models";
 const MODELS_DIR = path.join(import.meta.dirname, "..", "..", "..", "..", "..", "models");
 const modelMetadataByID = new Map<string, Record<string, unknown>>();
+const modelMetadataFilesByProvider = new Map<string, Set<string>>();
 
 const CANONICAL_PROVIDER_PREFIXES = {
+  alibaba: { provider: "alibaba", metadata: "alibaba" },
   anthropic: { provider: "anthropic", metadata: "anthropic" },
   cohere: { provider: "cohere", metadata: "cohere" },
   deepseek: { provider: "deepseek", metadata: "deepseek" },
@@ -161,15 +163,12 @@ export function buildOpenRouterModel(
     input: existing?.limit?.input,
     output: model.top_provider.max_completion_tokens ?? existing?.limit?.output ?? context,
   };
-  const canonical = existing?.base_model ?? baseModel ?? resolveCanonicalModel(model.id)?.from;
+  const canonical = existing?.base_model ?? baseModel ?? resolveCanonicalBaseModel(model.id);
 
   if (canonical !== undefined) {
-    return {
-      base_model: canonical,
-      base_model_omit: existing?.base_model === canonical
-        ? existing.base_model_omit ?? baseModelOmit(canonical, limit)
-        : baseModelOmit(canonical, limit),
-      ...baseModelOverrides(canonical, {
+    return factorBaseModel(
+      canonical,
+      {
         name: baseModel !== undefined || model.id.endsWith(":free") ? name : undefined,
         attachment,
         reasoning,
@@ -180,9 +179,11 @@ export function buildOpenRouterModel(
         interleaved: existing?.interleaved,
         limit,
         modalities: { input, output },
-      }),
-      cost,
-    };
+        cost,
+      },
+      limit,
+      existing?.base_model === canonical ? existing.base_model_omit : undefined,
+    );
   }
 
   return {
@@ -205,7 +206,7 @@ export function buildOpenRouterModel(
   } satisfies SyncedFullModel;
 }
 
-function resolveCanonicalModel(openrouterID: string) {
+export function resolveCanonicalBaseModel(openrouterID: string) {
   const [prefix, ...modelParts] = openrouterID.split("/");
   if (prefix === undefined || modelParts.length === 0) return undefined;
   if (openrouterID.startsWith("~/") || prefix.startsWith("~")) return undefined;
@@ -219,17 +220,33 @@ function resolveCanonicalModel(openrouterID: string) {
     return modelMetadataExists(canonical.metadata, candidate);
   });
 
-  return match === undefined
-    ? undefined
-    : {
-        from: `${canonical.metadata}/${match}`,
-        provider: canonical.provider,
-        modelID: match,
-      };
+  return match === undefined ? undefined : `${canonical.metadata}/${match}`;
 }
 
 function modelMetadataExists(provider: string, modelID: string) {
-  return existsSync(path.join(MODELS_DIR, provider, `${modelID}.toml`));
+  let files = modelMetadataFilesByProvider.get(provider);
+  if (files === undefined) {
+    try {
+      files = new Set(readdirSync(path.join(MODELS_DIR, provider)));
+    } catch {
+      files = new Set();
+    }
+    modelMetadataFilesByProvider.set(provider, files);
+  }
+  return files.has(`${modelID}.toml`);
+}
+
+export function factorBaseModel(
+  modelID: string,
+  values: Partial<SyncedFullModel>,
+  limit: SyncedFullModel["limit"],
+  existingOmit?: string[],
+): SyncedModel {
+  return {
+    base_model: modelID,
+    base_model_omit: existingOmit ?? baseModelOmit(modelID, limit),
+    ...baseModelOverrides(modelID, values),
+  };
 }
 
 function baseModelOmit(
