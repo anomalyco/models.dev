@@ -1,14 +1,6 @@
-name = "Nemotron 3 Super 120B"
 base_model = "nvidia/nemotron-3-super-120b-a12b"
-family = "nemotron"
-release_date = "2026-03-11"
-last_updated = "2026-03-11"
-attachment = false
-reasoning = true
-temperature = true
-tool_call = true
+name = "Nemotron 3 Super 120B"
 structured_output = true
-open_weights = true
 
 [interleaved]
 field = "reasoning_content"
@@ -20,7 +12,3 @@ output = 1.5
 [limit]
 context = 256_000
 output = 256_000
-
-[modalities]
-input = ["text"]
-output = ["text"]
