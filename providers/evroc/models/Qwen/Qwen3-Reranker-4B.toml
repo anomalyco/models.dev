@@ -1,19 +1,19 @@
-name = "Qwen3 30B 2507"
+name = "Qwen3 Reranker 4B"
 family = "qwen"
 release_date = "2025-07-30"
 last_updated = "2025-07-30"
 attachment = false
 reasoning = false
-tool_call = true
+tool_call = false
 open_weights = true
 
 [cost]
-input = 0.35
-output = 1.42
+input = 0.0575
+output = 0
 
 [limit]
-context = 64_000
-output = 64_000
+context = 32_000
+output = 4_096
 
 [modalities]
 input = ["text"]
