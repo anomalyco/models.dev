@@ -20,20 +20,3 @@ output = 16_384
 [modalities]
 input = ["text"]
 output = ["text"]
-
-[[benchmarks]]
-name = "SWE-bench Verified"
-score = 77.2
-metric = "accuracy"
-source = "https://qwen.ai/blog?id=qwen3.6-27b"
-
-[[benchmarks]]
-name = "GPQA Diamond"
-score = 87.8
-metric = "accuracy"
-source = "https://qwen.ai/blog?id=qwen3.6-27b"
-
-[[weights]]
-label = "Model weights"
-url = "https://huggingface.co/Qwen/Qwen3.6-27B"
-format = "safetensors"
