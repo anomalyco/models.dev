@@ -1,0 +1,11 @@
+base_model = "google/gemini-3-flash-preview"
+
+[interleaved]
+field = "reasoning_details"
+
+[cost]
+input = 0.5
+output = 3
+reasoning = 3
+cache_read = 0.05
+cache_write = 0.083333
