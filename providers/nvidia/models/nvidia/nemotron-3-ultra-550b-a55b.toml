@@ -1,0 +1,11 @@
+base_model = "nvidia/nemotron-3-ultra-550b-a55b"
+structured_output = true
+
+[cost]
+input = 0.50
+output = 2.50
+cache_read = 0.15
+
+[limit]
+context = 1_000_000
+output = 65_536
