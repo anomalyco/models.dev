@@ -1,12 +1,4 @@
-name = "Qwen 3.6 35B-A3B"
-family = "qwen"
-release_date = "2026-04-22"
-last_updated = "2026-04-22"
-attachment = false
-reasoning = false
-temperature = true
-tool_call = false
-open_weights = true
+base_model = "alibaba/qwen3.6-35b-a3b"
 
 [cost]
 input = 5.0
@@ -14,8 +6,3 @@ output = 10.0
 
 [limit]
 context = 16_384
-output = 8_192
-
-[modalities]
-input = ["text"]
-output = ["text"]
