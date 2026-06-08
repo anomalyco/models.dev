@@ -1,6 +1,6 @@
 import { expect, test } from "bun:test";
 
-import { buildVercelModel, type VercelModel } from "../src/sync/providers/vercel.js";
+import { buildVercelModel, type VercelModel, vercel } from "../src/sync/providers/vercel.js";
 
 const model: VercelModel = {
   id: "openai/gpt-test",
@@ -62,6 +62,42 @@ test("Vercel models preserve curated metadata and missing limits", () => {
   expect(synced.reasoning_options).toEqual([{ type: "effort", values: ["low", "high"] }]);
   expect(synced.cost?.tiers).toHaveLength(1);
   expect(synced.limit).toEqual({ context: 64_000, input: 48_000, output: 16_000 });
+});
+
+test("Vercel non-language models use API tool capabilities", () => {
+  const synced = buildVercelModel({
+    ...model,
+    type: "image",
+    tags: [],
+  }, {
+    tool_call: true,
+  });
+
+  expect(synced.tool_call).toBe(false);
+});
+
+test("Vercel sync includes non-language model types", () => {
+  for (const [type, output] of [
+    ["image", ["image"]],
+    ["video", ["video"]],
+    ["reranking", ["text"]],
+  ] as const) {
+    const source = {
+      ...model,
+      id: `test/${type}`,
+      type,
+      tags: [],
+      context_window: 0,
+      max_tokens: 0,
+      pricing: undefined,
+    };
+
+    expect(vercel.translateModel(source, { existing: () => undefined })).toBeDefined();
+    expect(buildVercelModel(source, undefined)).toMatchObject({
+      tool_call: false,
+      modalities: { input: ["text"], output },
+    });
+  }
 });
 
 test("Vercel models use canonical metadata when available", () => {
