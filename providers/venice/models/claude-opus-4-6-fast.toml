@@ -2,7 +2,7 @@ name = "Claude Opus 4.6 Fast"
 family = "claude-opus"
 attachment = true
 reasoning = true
-reasoning_options = []
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "max"] }]
 tool_call = true
 structured_output = true
 temperature = true

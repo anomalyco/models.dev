@@ -10,6 +10,40 @@ const API_ENDPOINT = "https://api.venice.ai/api/v1/models?type=text";
 
 // Zod schemas for API response validation
 const ReasoningEffort = z.enum(["none", "minimal", "low", "medium", "high", "xhigh", "max"]);
+type ReasoningOption = {
+  type: "effort";
+  values: Array<z.infer<typeof ReasoningEffort>>;
+};
+
+const effort = (...values: ReasoningOption["values"]): ReasoningOption[] => [{ type: "effort", values }];
+
+// Venice documents these model-specific values even where /models is stale or incomplete.
+// Source: https://docs.venice.ai/guides/features/reasoning-models
+export const REASONING_OVERRIDES: Record<string, ReasoningOption[]> = {
+  "claude-opus-4-5": effort("low", "medium", "high"),
+  "claude-opus-4-6": effort("low", "medium", "high", "max"),
+  "claude-opus-4-6-fast": effort("low", "medium", "high", "max"),
+  "claude-sonnet-4-5": effort("low", "medium", "high"),
+  "claude-sonnet-4-6": effort("low", "medium", "high"),
+  "gemini-3-flash-preview": effort("minimal", "low", "medium", "high"),
+  "kimi-k2-5": effort("low", "medium", "high"),
+  "openai-gpt-52": effort("none", "low", "medium", "high", "xhigh"),
+  "openai-gpt-52-codex": effort("low", "medium", "high", "xhigh"),
+  "openai-gpt-53-codex": effort("low", "medium", "high", "xhigh"),
+  "qwen3-5-35b-a3b": effort("low", "medium", "high"),
+  "zai-org-glm-5-1": [],
+
+  // Provisional until funded Venice probes can confirm that its proxy preserves
+  // OpenAI's current controls. Sources:
+  // https://developers.openai.com/api/docs/models/gpt-5.4
+  // https://developers.openai.com/api/docs/models/gpt-5.4-pro
+  // https://developers.openai.com/api/docs/guides/reasoning
+  "openai-gpt-54": effort("none", "low", "medium", "high", "xhigh"),
+  "openai-gpt-54-mini": effort("none", "low", "medium", "high", "xhigh"),
+  "openai-gpt-54-pro": effort("medium", "high", "xhigh"),
+  "openai-gpt-55": effort("none", "low", "medium", "high", "xhigh"),
+  "openai-gpt-55-pro": effort("medium", "high", "xhigh"),
+};
 
 const Capabilities = z
   .object({
@@ -19,7 +53,7 @@ const Capabilities = z
     supportsFunctionCalling: z.boolean().optional(),
     supportsLogProbs: z.boolean().optional(),
     supportsReasoning: z.boolean().optional(),
-    supportsReasoningEffort: z.boolean(),
+    supportsReasoningEffort: z.boolean().optional(),
     reasoningEffortOptions: z.array(ReasoningEffort).optional(),
     defaultReasoningEffort: ReasoningEffort.optional(),
     supportsResponseSchema: z.boolean().optional(),
@@ -27,23 +61,7 @@ const Capabilities = z
     supportsVision: z.boolean().optional(),
     supportsWebSearch: z.boolean().optional(),
   })
-  .passthrough()
-  .superRefine((capabilities, context) => {
-    if (capabilities.supportsReasoningEffort && capabilities.reasoningEffortOptions === undefined) {
-      context.addIssue({
-        code: z.ZodIssueCode.custom,
-        path: ["reasoningEffortOptions"],
-        message: "Reasoning effort options are required when reasoning effort is supported",
-      });
-    }
-    if (capabilities.supportsReasoningEffort && capabilities.defaultReasoningEffort === undefined) {
-      context.addIssue({
-        code: z.ZodIssueCode.custom,
-        path: ["defaultReasoningEffort"],
-        message: "Default reasoning effort is required when reasoning effort is supported",
-      });
-    }
-  });
+  .passthrough();
 
 const PricingTier = z.object({ usd: z.number(), diem: z.number().optional() }).passthrough();
 
@@ -163,10 +181,7 @@ interface ExistingModel {
   family?: string;
   attachment?: boolean;
   reasoning?: boolean;
-  reasoning_options?: Array<{
-    type: "effort";
-    values: Array<z.infer<typeof ReasoningEffort>>;
-  }>;
+  reasoning_options?: ReasoningOption[];
   tool_call?: boolean;
   structured_output?: boolean;
   temperature?: boolean;
@@ -260,10 +275,7 @@ interface MergedModel {
   family?: string;
   attachment: boolean;
   reasoning: boolean;
-  reasoning_options?: Array<{
-    type: "effort";
-    values: Array<z.infer<typeof ReasoningEffort>>;
-  }>;
+  reasoning_options?: ReasoningOption[];
   tool_call: boolean;
   structured_output?: boolean;
   temperature: boolean;
@@ -299,6 +311,7 @@ interface MergedModel {
 export function mergeModel(
   apiModel: z.infer<typeof VeniceModel>,
   existing: ExistingModel | null,
+  reportDiscrepancy: (message: string) => void = console.warn,
 ): MergedModel {
   const spec = apiModel.model_spec;
   const caps = spec.capabilities;
@@ -338,10 +351,29 @@ export function mergeModel(
     },
   };
 
-  if (merged.reasoning) {
-    merged.reasoning_options = caps.supportsReasoningEffort === true
-      ? [{ type: "effort", values: caps.reasoningEffortOptions ?? [] }]
-      : [];
+  const override = REASONING_OVERRIDES[apiModel.id];
+  const catalogOptions = caps.supportsReasoningEffort === true && caps.reasoningEffortOptions !== undefined
+    ? effort(...caps.reasoningEffortOptions)
+    : undefined;
+  const curatedOptions = existing?.reasoning_options;
+  const selectedOptions = override ?? curatedOptions ?? catalogOptions;
+
+  if (selectedOptions !== undefined) {
+    merged.reasoning_options = selectedOptions;
+  }
+
+  const catalogClaim = catalogOptions ?? (caps.supportsReasoningEffort === false ? [] : undefined);
+  if (override !== undefined && JSON.stringify(override) !== JSON.stringify(curatedOptions) && curatedOptions !== undefined) {
+    reportDiscrepancy(`${apiModel.id}: documented override replaces curated reasoning_options`);
+  }
+  if (
+    selectedOptions !== undefined &&
+    catalogClaim !== undefined &&
+    JSON.stringify(selectedOptions) !== JSON.stringify(catalogClaim)
+  ) {
+    reportDiscrepancy(
+      `${apiModel.id}: preserving ${override !== undefined ? "documented override" : "curated reasoning_options"} despite catalog ${caps.supportsReasoningEffort === false ? "supportsReasoningEffort=false" : "option mismatch"}`,
+    );
   }
 
   // structured_output only if true
