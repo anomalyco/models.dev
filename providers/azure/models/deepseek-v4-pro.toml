@@ -1,23 +1,12 @@
+base_model = "deepseek/deepseek-v4-pro"
 name = "DeepSeek-V4-Pro"
-family = "deepseek"
-release_date = "2026-04-28"
-last_updated = "2026-04-28"
-attachment = false
-reasoning = true
-temperature = true
-knowledge = "2025-05"
-tool_call = true
-structured_output = true
-open_weights = true
+tool_call = false
 
 [cost]
 input = 0.19
 output = 0.51
 
-[limit]
-context = 1_000_000
-output = 128_000
-
-[modalities]
-input = ["text"]
-output = ["text"]
+[provider]
+shape = "completions"
+npm = "@ai-sdk/openai-compatible"
+api = "https://${AZURE_RESOURCE_NAME}.services.ai.azure.com/models"
