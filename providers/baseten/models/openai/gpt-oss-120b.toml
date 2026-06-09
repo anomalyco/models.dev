@@ -4,14 +4,15 @@ release_date = "2025-08-05"
 last_updated = "2025-08-05"
 attachment = false
 reasoning = true
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
 temperature = true
 knowledge = "2025-08"
 tool_call = true
 open_weights = true
 
 [limit]
-context = 128_000
-output = 128_000
+context = 128_072
+output = 128_072
 
 [modalities]
 input = ["text"]

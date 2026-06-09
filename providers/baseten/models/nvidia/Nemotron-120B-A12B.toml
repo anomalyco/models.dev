@@ -5,6 +5,7 @@ release_date = "2026-03-11"
 last_updated = "2026-03-11"
 attachment = false
 reasoning = true
+reasoning_options = [{ type = "toggle" }]
 temperature = true
 tool_call = true
 knowledge = "2026-02"
@@ -16,10 +17,11 @@ field = "reasoning_content"
 [cost]
 input = 0.30
 output = 0.75
+cache_read = 0.06
 
 [limit]
-context = 262144
-output = 32678
+context = 202_800
+output = 202_800
 
 [modalities]
 input = ["text"]

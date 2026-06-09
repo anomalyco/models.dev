@@ -4,6 +4,7 @@ release_date = "2026-04-21"
 last_updated = "2026-04-21"
 attachment = true
 reasoning = true
+reasoning_options = [{ type = "toggle" }]
 structured_output = true
 temperature = true
 tool_call = true
@@ -19,8 +20,8 @@ output = 4.0
 cache_read = 0.16
 
 [limit]
-context = 262_144
-output = 262_144
+context = 262_000
+output = 262_000
 
 [modalities]
 input = ["text", "image", "video"]
