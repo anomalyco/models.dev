@@ -1,4 +1,9 @@
 base_model = "alibaba/qwen3-next-80b-a3b-thinking"
+temperature = true
+tool_call = true
+attachment = false
+reasoning_options = [{ type = "budget_tokens", min = 1 }]
+reasoning = true
 structured_output = true
 
 [cost]

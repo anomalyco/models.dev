@@ -1,4 +1,8 @@
 base_model = "openai/o4-mini-deep-research"
+tool_call = true
+attachment = true
+reasoning_options = [{ type = "effort", values = ["medium"] }]
+reasoning = true
 temperature = true
 structured_output = true
 

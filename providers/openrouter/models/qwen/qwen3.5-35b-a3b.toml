@@ -1,4 +1,10 @@
 base_model = "alibaba/qwen3.5-35b-a3b"
+temperature = true
+structured_output = true
+tool_call = true
+attachment = true
+reasoning_options = [{ type = "toggle" }, { type = "budget_tokens", min = 0 }]
+reasoning = true
 
 [cost]
 input = 0.14

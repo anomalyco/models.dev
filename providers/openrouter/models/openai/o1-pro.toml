@@ -1,4 +1,9 @@
 base_model = "openai/o1-pro"
+temperature = false
+structured_output = true
+attachment = true
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
+reasoning = true
 tool_call = false
 
 [cost]

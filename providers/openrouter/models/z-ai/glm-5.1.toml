@@ -1,4 +1,10 @@
 base_model = "zhipuai/glm-5.1"
+temperature = true
+structured_output = true
+tool_call = true
+attachment = false
+reasoning_options = [{ type = "toggle" }]
+reasoning = true
 
 [interleaved]
 field = "reasoning_content"

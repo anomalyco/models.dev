@@ -1,4 +1,10 @@
 base_model = "alibaba/qwen3.6-flash"
+temperature = true
+structured_output = true
+tool_call = true
+attachment = true
+reasoning_options = [{ type = "toggle" }, { type = "budget_tokens", min = 1 }]
+reasoning = true
 
 [cost]
 input = 0.1875

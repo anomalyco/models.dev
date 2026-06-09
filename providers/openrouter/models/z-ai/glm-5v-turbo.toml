@@ -1,4 +1,9 @@
 base_model = "zhipuai/glm-5v-turbo"
+temperature = true
+tool_call = true
+attachment = true
+reasoning_options = [{ type = "toggle" }]
+reasoning = true
 structured_output = false
 
 [interleaved]

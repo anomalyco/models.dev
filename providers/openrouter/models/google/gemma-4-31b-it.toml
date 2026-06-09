@@ -1,4 +1,10 @@
 base_model = "google/gemma-4-31b-it"
+temperature = true
+structured_output = true
+tool_call = true
+attachment = true
+reasoning_options = [{ type = "toggle" }]
+reasoning = true
 
 [cost]
 input = 0.12

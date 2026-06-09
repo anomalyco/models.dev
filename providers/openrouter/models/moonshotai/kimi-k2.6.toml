@@ -1,4 +1,10 @@
 base_model = "moonshotai/kimi-k2.6"
+temperature = true
+structured_output = true
+tool_call = true
+attachment = true
+reasoning_options = [{ type = "toggle" }]
+reasoning = true
 
 [interleaved]
 field = "reasoning_details"

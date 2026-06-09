@@ -1,4 +1,10 @@
 base_model = "openai/o4-mini"
+temperature = false
+structured_output = true
+tool_call = true
+attachment = true
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
+reasoning = true
 
 [cost]
 input = 1.1

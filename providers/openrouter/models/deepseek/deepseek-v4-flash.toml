@@ -1,4 +1,10 @@
 base_model = "deepseek/deepseek-v4-flash"
+temperature = true
+structured_output = true
+tool_call = true
+attachment = false
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["high", "xhigh"] }]
+reasoning = true
 
 [interleaved]
 field = "reasoning_content"
