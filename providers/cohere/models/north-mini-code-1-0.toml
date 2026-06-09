@@ -11,11 +11,8 @@ tool_call = true
 open_weights = true
 
 [[reasoning_options]]
-type = "toggle"
-
-[[reasoning_options]]
-type = "budget_tokens"
-min = 1
+type = "effort"
+values = ["none", "high"]
 
 [cost]
 input = 0.00
@@ -31,3 +28,7 @@ output = ["text"]
 
 [interleaved]
 field = "reasoning_content"
+
+[provider]
+npm = "@ai-sdk/openai-compatible"
+api = "https://api.cohere.ai/compatibility/v1"
