@@ -63,6 +63,7 @@ jobs:
       - name: Sync model catalogs
         run: bun models:sync ${{ matrix.provider }}
         env:
+          BASETEN_API_KEY: ${{ secrets.BASETEN_API_KEY }}
           OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
           GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}

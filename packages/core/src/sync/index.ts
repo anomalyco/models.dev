@@ -4,6 +4,7 @@ import { mergeDeep } from "remeda";
 import { z } from "zod";
 
 import { AuthoredModel, AuthoredModelShape } from "../schema.js";
+import { baseten } from "./providers/baseten.js";
 import { cloudflareWorkersAi } from "./providers/cloudflare-workers-ai.js";
 import { google } from "./providers/google.js";
 import { openrouter } from "./providers/openrouter.js";
@@ -72,6 +73,7 @@ export interface SyncResult {
 }
 
 export const providers: {
+  baseten: SyncProvider<any>;
   "cloudflare-workers-ai": SyncProvider<any>;
   google: SyncProvider<any>;
   openrouter: SyncProvider<any>;
@@ -79,6 +81,7 @@ export const providers: {
   vercel: SyncProvider<any>;
   xai: SyncProvider<any>;
 } = {
+  baseten,
   "cloudflare-workers-ai": cloudflareWorkersAi,
   google,
   openrouter,
@@ -90,7 +93,7 @@ export const providers: {
 export const groups = {
   aggregators: ["openrouter", "vercel"],
   cloudflare: ["cloudflare-workers-ai"],
-  direct: ["google", "ovhcloud", "xai"],
+  direct: ["baseten", "google", "ovhcloud", "xai"],
 } as const;
 
 type ProviderID = keyof typeof providers;
@@ -122,7 +125,7 @@ export async function syncProvider<SourceModel>(
       },
     });
     if (translated === undefined) {
-      if (provider.skipCreates) skippedRemote.push(provider.sourceID?.(sourceModel) ?? "unknown");
+      if (provider.sourceID !== undefined) skippedRemote.push(provider.sourceID(sourceModel));
       continue;
     }
 
