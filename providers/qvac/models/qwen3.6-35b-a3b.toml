@@ -1,0 +1,21 @@
+name = "Qwen3.6 35B-A3B"
+family = "qwen"
+attachment = true
+reasoning = true
+tool_call = true
+temperature = true
+open_weights = true
+release_date = "2026-02-01"
+last_updated = "2026-02-01"
+
+[cost]
+input = 0
+output = 0
+
+[limit]
+context = 32_768
+output = 8_192
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
