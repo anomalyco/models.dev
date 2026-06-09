@@ -1,6 +1,7 @@
-name = "GLM 4.5"
-release_date = "2025-07-28"
-last_updated = "2025-07-28"
+name = "Qwen3 30B A3B"
+family = "qwen"
+release_date = "2025-04-28"
+last_updated = "2025-04-28"
 attachment = false
 reasoning = true
 temperature = true
@@ -9,12 +10,12 @@ knowledge = "2025-04"
 open_weights = true
 
 [cost]
-input = 0.60
-output = 2.20
+input = 0.09
+output = 0.45
 
 [limit]
-context = 128_000
-output = 96_000
+context = 40_960
+output = 32_768
 
 [modalities]
 input = ["text"]

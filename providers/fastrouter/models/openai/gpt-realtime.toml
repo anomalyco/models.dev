@@ -1,0 +1,22 @@
+name = "GPT Realtime"
+family = "gpt"
+release_date = "2024-10-01"
+last_updated = "2024-10-01"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = true
+open_weights = false
+knowledge = "2023-10"
+
+[cost]
+input = 4
+output = 16
+
+[limit]
+context = 32_000
+output = 4_096
+
+[modalities]
+input = ["text", "audio", "image"]
+output = ["text", "audio"]
