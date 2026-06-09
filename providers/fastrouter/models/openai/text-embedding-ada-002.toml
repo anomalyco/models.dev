@@ -1,0 +1,22 @@
+name = "text-embedding-ada-002"
+family = "text-embedding"
+release_date = "2022-12-15"
+last_updated = "2022-12-15"
+attachment = false
+reasoning = false
+temperature = false
+tool_call = false
+knowledge = "2021-09"
+open_weights = false
+
+[cost]
+input = 0.10
+output = 0
+
+[limit]
+context = 8_191
+output = 1_536
+
+[modalities]
+input = ["text"]
+output = ["text"]
