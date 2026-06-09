@@ -1,0 +1,33 @@
+name = "North-Mini-Code-1.0"
+family = "north"
+release_date = "2026-06-09"
+last_updated = "2026-06-09"
+attachment = false
+reasoning = true
+temperature = true
+structured_output = true
+knowledge = "2025-09-23"
+tool_call = true
+open_weights = true
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "budget_tokens"
+min = 1
+
+[cost]
+input = 0.00
+output = 0.00
+
+[limit]
+context = 256_000
+output = 64_000
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[interleaved]
+field = "reasoning_content"
