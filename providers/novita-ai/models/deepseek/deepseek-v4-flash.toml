@@ -1,5 +1,5 @@
 base_model = "deepseek/deepseek-v4-flash"
-reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["none", "minimal", "low", "medium", "high", "xhigh"] }]
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["minimal", "low", "medium", "high", "xhigh"] }]
 
 [interleaved]
 field = "reasoning_content"
