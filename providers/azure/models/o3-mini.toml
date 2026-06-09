@@ -1,4 +1,5 @@
 base_model = "openai/o3-mini"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
 base_model_omit = ["structured_output"]
 
 [cost]
