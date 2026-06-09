@@ -1,9 +1,10 @@
 base_model = "nvidia/nemotron-3-super-120b-a12b"
 name = "Nemotron 3 Super 120B"
 structured_output = true
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "medium", "high"] }]
 
 [interleaved]
-field = "reasoning_content"
+field = "reasoning"
 
 [cost]
 input = 0.5

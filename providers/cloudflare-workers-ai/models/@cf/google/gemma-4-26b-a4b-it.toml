@@ -1,4 +1,8 @@
 base_model = "google/gemma-4-26b-a4b-it"
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "medium", "high"] }]
+
+[interleaved]
+field = "reasoning"
 
 [cost]
 input = 0.1
