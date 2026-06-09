@@ -61,6 +61,17 @@ test("catalog fills only an uncurated new model", () => {
   expect(merged.reasoning_options).toEqual(options("low", "high"));
 });
 
+test("catalog does not fill an unresolved existing model", () => {
+  const existing = { reasoning: true };
+  const merged = mergeModel(model("existing-unresolved-reasoner", {
+    supportsReasoningEffort: true,
+    reasoningEffortOptions: ["low", "high"],
+  }), existing);
+
+  expect(merged.reasoning_options).toBeUndefined();
+  expect(detectChanges(existing, merged).find((change) => change.field === "reasoning_options")).toBeUndefined();
+});
+
 test("catalog false without curated evidence leaves options undefined", () => {
   const merged = mergeModel(model("unknown-fixed-reasoner", {
     supportsReasoningEffort: false,

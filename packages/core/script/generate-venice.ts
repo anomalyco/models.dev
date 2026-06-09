@@ -356,7 +356,7 @@ export function mergeModel(
     ? effort(...caps.reasoningEffortOptions)
     : undefined;
   const curatedOptions = existing?.reasoning_options;
-  const selectedOptions = override ?? curatedOptions ?? catalogOptions;
+  const selectedOptions = override ?? curatedOptions ?? (existing === null ? catalogOptions : undefined);
 
   if (selectedOptions !== undefined) {
     merged.reasoning_options = selectedOptions;
