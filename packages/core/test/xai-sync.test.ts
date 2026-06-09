@@ -9,7 +9,6 @@ const model: XAIModel = {
   output_modalities: ["text"],
   prompt_text_token_price: 10_000,
   completion_text_token_price: 20_000,
-  max_prompt_length: 1_000_000,
 };
 
 test("xAI sync preserves reasoning options", () => {
@@ -27,5 +26,5 @@ test("xAI sync preserves reasoning options", () => {
   });
 
   expect(synced.reasoning_options).toEqual([{ type: "effort", values: ["none", "high"] }]);
-  expect(synced.limit?.context).toBe(1_000_000);
+  expect(synced.limit?.context).toBe(2_000_000);
 });
