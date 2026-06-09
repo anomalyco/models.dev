@@ -103,6 +103,7 @@ export const ModelFamilyValues = [
   "command-a",
   "command-light",
   "north",
+  "north-free",
 
   // AI21 Jamba
   "jamba",
