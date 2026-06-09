@@ -9,6 +9,8 @@ import { ModelFamilyValues } from "../src/family.js";
 const API_ENDPOINT = "https://api.venice.ai/api/v1/models?type=text";
 
 // Zod schemas for API response validation
+const ReasoningEffort = z.enum(["none", "minimal", "low", "medium", "high", "xhigh", "max"]);
+
 const Capabilities = z
   .object({
     optimizedForCode: z.boolean().optional(),
@@ -17,12 +19,31 @@ const Capabilities = z
     supportsFunctionCalling: z.boolean().optional(),
     supportsLogProbs: z.boolean().optional(),
     supportsReasoning: z.boolean().optional(),
+    supportsReasoningEffort: z.boolean(),
+    reasoningEffortOptions: z.array(ReasoningEffort).optional(),
+    defaultReasoningEffort: ReasoningEffort.optional(),
     supportsResponseSchema: z.boolean().optional(),
     supportsVideoInput: z.boolean().optional(),
     supportsVision: z.boolean().optional(),
     supportsWebSearch: z.boolean().optional(),
   })
-  .passthrough();
+  .passthrough()
+  .superRefine((capabilities, context) => {
+    if (capabilities.supportsReasoningEffort && capabilities.reasoningEffortOptions === undefined) {
+      context.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["reasoningEffortOptions"],
+        message: "Reasoning effort options are required when reasoning effort is supported",
+      });
+    }
+    if (capabilities.supportsReasoningEffort && capabilities.defaultReasoningEffort === undefined) {
+      context.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["defaultReasoningEffort"],
+        message: "Default reasoning effort is required when reasoning effort is supported",
+      });
+    }
+  });
 
 const PricingTier = z.object({ usd: z.number(), diem: z.number().optional() }).passthrough();
 
@@ -142,6 +163,10 @@ interface ExistingModel {
   family?: string;
   attachment?: boolean;
   reasoning?: boolean;
+  reasoning_options?: Array<{
+    type: "effort";
+    values: Array<z.infer<typeof ReasoningEffort>>;
+  }>;
   tool_call?: boolean;
   structured_output?: boolean;
   temperature?: boolean;
@@ -235,6 +260,10 @@ interface MergedModel {
   family?: string;
   attachment: boolean;
   reasoning: boolean;
+  reasoning_options?: Array<{
+    type: "effort";
+    values: Array<z.infer<typeof ReasoningEffort>>;
+  }>;
   tool_call: boolean;
   structured_output?: boolean;
   temperature: boolean;
@@ -267,7 +296,7 @@ interface MergedModel {
   };
 }
 
-function mergeModel(
+export function mergeModel(
   apiModel: z.infer<typeof VeniceModel>,
   existing: ExistingModel | null,
 ): MergedModel {
@@ -308,6 +337,12 @@ function mergeModel(
       output: ["text"],
     },
   };
+
+  if (merged.reasoning) {
+    merged.reasoning_options = caps.supportsReasoningEffort === true
+      ? [{ type: "effort", values: caps.reasoningEffortOptions ?? [] }]
+      : [];
+  }
 
   // structured_output only if true
   if (caps.supportsResponseSchema === true) {
@@ -352,7 +387,7 @@ function mergeModel(
   return merged;
 }
 
-function formatToml(model: MergedModel): string {
+export function formatToml(model: MergedModel): string {
   const lines: string[] = [];
 
   // Basic fields
@@ -362,6 +397,9 @@ function formatToml(model: MergedModel): string {
   }
   lines.push(`attachment = ${model.attachment}`);
   lines.push(`reasoning = ${model.reasoning}`);
+  if (model.reasoning_options?.length === 0) {
+    lines.push("reasoning_options = []");
+  }
   lines.push(`tool_call = ${model.tool_call}`);
   if (model.structured_output !== undefined) {
     lines.push(`structured_output = ${model.structured_output}`);
@@ -375,6 +413,13 @@ function formatToml(model: MergedModel): string {
   lines.push(`open_weights = ${model.open_weights}`);
   if (model.status) {
     lines.push(`status = "${model.status}"`);
+  }
+
+  for (const option of model.reasoning_options ?? []) {
+    lines.push("");
+    lines.push("[[reasoning_options]]");
+    lines.push(`type = "${option.type}"`);
+    lines.push(`values = [${option.values.map((value) => `"${value}"`).join(", ")}]`);
   }
 
   // Interleaved section (if present)
@@ -437,7 +482,7 @@ interface Changes {
   newValue: string;
 }
 
-function detectChanges(
+export function detectChanges(
   existing: ExistingModel | null,
   merged: MergedModel,
 ): Changes[] {
@@ -459,7 +504,7 @@ function detectChanges(
 
   const formatValue = (val: unknown): string => {
     if (typeof val === "number") return formatNumber(val);
-    if (Array.isArray(val)) return `[${val.join(", ")}]`;
+    if (Array.isArray(val)) return JSON.stringify(val);
     if (val === undefined) return "(none)";
     return String(val);
   };
@@ -468,6 +513,7 @@ function detectChanges(
   compare("family", existing.family, merged.family);
   compare("attachment", existing.attachment, merged.attachment);
   compare("reasoning", existing.reasoning, merged.reasoning);
+  compare("reasoning_options", existing.reasoning_options, merged.reasoning_options);
   compare("tool_call", existing.tool_call, merged.tool_call);
   compare("structured_output", existing.structured_output, merged.structured_output);
   compare("open_weights", existing.open_weights, merged.open_weights);
@@ -650,4 +696,6 @@ async function main() {
   }
 }
 
-await main();
+if (import.meta.main) {
+  await main();
+}

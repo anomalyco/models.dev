@@ -2,6 +2,7 @@ name = "Gemini 3 Flash Preview"
 family = "gemini-flash"
 attachment = true
 reasoning = true
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
 tool_call = true
 structured_output = true
 temperature = true

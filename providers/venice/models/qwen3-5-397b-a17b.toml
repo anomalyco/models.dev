@@ -2,6 +2,7 @@ name = "Qwen 3.5 397B"
 family = "qwen"
 attachment = true
 reasoning = true
+reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high"] }]
 tool_call = true
 structured_output = true
 temperature = true

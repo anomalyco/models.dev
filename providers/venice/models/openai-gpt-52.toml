@@ -2,6 +2,7 @@ name = "GPT-5.2"
 family = "gpt"
 attachment = false
 reasoning = true
+reasoning_options = [{ type = "effort", values = ["none", "minimal", "low", "medium", "high"] }]
 tool_call = true
 structured_output = true
 temperature = true
