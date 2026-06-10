@@ -1,0 +1,17 @@
+base_model = "google/gemma-4-31b-it"
+attachment = false
+reasoning = false
+tool_call = false
+structured_output = false
+
+[cost]
+input = 0.38
+output = 1.15
+
+[limit]
+context = 131_072
+output = 131_072
+
+[modalities]
+input = ["text"]
+output = ["text"]
