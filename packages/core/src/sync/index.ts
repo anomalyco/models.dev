@@ -47,6 +47,7 @@ export interface SyncProvider<SourceModel> {
   id: string;
   name: string;
   modelsDir: string;
+  metadataNamespace?: string;
   skipCreates?: boolean;
   deleteMissing?: boolean;
   preserveSymlinks?: boolean;
@@ -199,6 +200,28 @@ export async function syncProvider<SourceModel>(
     } else {
       await mkdir(path.dirname(filePath), { recursive: true });
       await Bun.write(filePath, file.content);
+    }
+  }
+
+  if (provider.metadataNamespace !== undefined) {
+    if (!/^[a-z0-9-]+$/.test(provider.metadataNamespace)) {
+      throw new Error(`Invalid metadata namespace: ${provider.metadataNamespace}`);
+    }
+    const namespaceDir = path.join(metadataDir, provider.metadataNamespace);
+    for (const { file } of await tomlFiles(namespaceDir)) {
+      const relativePath = path.join(provider.metadataNamespace, file);
+      if (desiredMetadata.has(relativePath) || provider.deleteMissing === false) continue;
+      if (options.newOnly) {
+        console.log(`Skipping metadata removal in new-only mode: ${relativePath}`);
+        continue;
+      }
+      const filePath = path.join(metadataDir, relativePath);
+      files.push({ status: "deleted", path: filePath });
+      if (options.dryRun) {
+        console.log(`Would remove metadata ${relativePath}`);
+      } else {
+        await rm(filePath, { force: true });
+      }
     }
   }
 

@@ -82,6 +82,7 @@ export const venice = {
   id: "venice",
   name: "Venice",
   modelsDir: "providers/venice/models",
+  metadataNamespace: "venice",
   async fetchModels() {
     const headers = process.env.VENICE_API_KEY
       ? { Authorization: `Bearer ${process.env.VENICE_API_KEY}` }

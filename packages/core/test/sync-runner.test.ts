@@ -207,3 +207,21 @@ test("sync writes metadata returned by a provider translator", async () => {
   expect(second).toMatchObject({ created: 0, updated: 0 });
   expect(await Bun.file(path.join(root, "models", "test", "model.toml")).text()).toContain('name = "Model"');
 });
+
+test("sync removes missing metadata only from its owned namespace", async () => {
+  const { root, modelsDir } = await fixture();
+  const ownedDir = path.join(root, "models", "test");
+  const otherDir = path.join(root, "models", "other");
+  await mkdir(ownedDir, { recursive: true });
+  await mkdir(otherDir, { recursive: true });
+  await Bun.write(path.join(ownedDir, "stale.toml"), 'name = "Stale"\n');
+  await Bun.write(path.join(otherDir, "retained.toml"), 'name = "Retained"\n');
+  const sync = provider(modelsDir, []);
+  sync.metadataNamespace = "test";
+
+  const result = await syncProvider(sync);
+
+  expect(result.deleted).toBe(1);
+  expect(await Bun.file(path.join(ownedDir, "stale.toml")).exists()).toBe(false);
+  expect(await Bun.file(path.join(otherDir, "retained.toml")).exists()).toBe(true);
+});
