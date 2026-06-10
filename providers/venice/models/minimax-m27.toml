@@ -1,22 +1,16 @@
+base_model = "minimax/MiniMax-M2.7"
 name = "MiniMax M2.7"
-family = "minimax"
-attachment = false
-reasoning = true
-tool_call = true
-temperature = true
-release_date = "2026-03-18"
-last_updated = "2026-04-12"
-open_weights = false
+last_updated = "2026-06-10"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high"]
 
 [cost]
 input = 0.375
 output = 1.5
-cache_read = 0.075
+cache_read = 0.06875
 
 [limit]
 context = 198_000
 output = 32_768
-
-[modalities]
-input = ["text"]
-output = ["text"]
