@@ -1,0 +1,21 @@
+name = "Venice Role Play Uncensored"
+family = "dall-e"
+release_date = "2026-02-20"
+last_updated = "2026-03-16"
+attachment = true
+reasoning = false
+tool_call = true
+structured_output = true
+temperature = true
+open_weights = true
+
+[limit]
+context = 128000
+output = 4096
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[[weights]]
+url = "https://huggingface.co/dphnAI/24B-3.2-RP-K2-final"

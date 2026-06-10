@@ -1,12 +1,4 @@
-name = "GPT OSS 20B"
-family = "gpt-oss"
-release_date = "2026-03-18"
-last_updated = "2026-06-10"
-attachment = false
-reasoning = true
-temperature = true
-tool_call = false
-open_weights = true
+base_model = "venice/e2ee-gpt-oss-20b-p"
 
 [[reasoning_options]]
 type = "effort"
@@ -15,11 +7,3 @@ values = ["none", "low", "medium", "high"]
 [cost]
 input = 0.05
 output = 0.19
-
-[limit]
-context = 128_000
-output = 32_768
-
-[modalities]
-input = ["text"]
-output = ["text"]

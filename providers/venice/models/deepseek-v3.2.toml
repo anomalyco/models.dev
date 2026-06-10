@@ -1,14 +1,4 @@
-name = "DeepSeek V3.2"
-family = "deepseek"
-attachment = false
-reasoning = true
-tool_call = true
-structured_output = true
-temperature = true
-knowledge = "2025-10"
-release_date = "2025-12-04"
-last_updated = "2026-06-10"
-open_weights = true
+base_model = "venice/deepseek-v3.2"
 
 [[reasoning_options]]
 type = "effort"
@@ -18,11 +8,3 @@ values = ["none", "low", "medium", "high"]
 input = 0.33
 output = 0.48
 cache_read = 0.16
-
-[limit]
-context = 160_000
-output = 32_768
-
-[modalities]
-input = ["text"]
-output = ["text"]

@@ -1,13 +1,4 @@
-name = "GLM 4.7 Flash Heretic"
-family = "glm-flash"
-attachment = false
-reasoning = true
-tool_call = true
-structured_output = true
-temperature = true
-release_date = "2026-02-04"
-last_updated = "2026-06-10"
-open_weights = true
+base_model = "venice/olafangensan-glm-4.7-flash-heretic"
 
 [[reasoning_options]]
 type = "effort"
@@ -16,11 +7,3 @@ values = ["none", "low", "medium", "high"]
 [cost]
 input = 0.14
 output = 0.8
-
-[limit]
-context = 200_000
-output = 24_000
-
-[modalities]
-input = ["text"]
-output = ["text"]

@@ -1,4 +1,6 @@
 import { expect, test } from "bun:test";
+import { readdirSync } from "node:fs";
+import path from "node:path";
 
 import {
   buildVeniceModel,
@@ -38,6 +40,25 @@ const catalogModel: VeniceModel = {
 
 test("Venice resolves flattened IDs to canonical metadata", () => {
   expect(resolveVeniceBaseModel("openai-gpt-54", "GPT-5.4")).toBe("openai/gpt-5.4");
+  expect(resolveVeniceBaseModel("claude-opus-4-8-fast", "Claude Opus 4.8 Fast"))
+    .toBe("anthropic/claude-opus-4-8");
+});
+
+test("Venice emits empty reasoning options when efforts are unavailable", () => {
+  const synced = buildVeniceModel({
+    ...catalogModel,
+    id: "reasoning-without-efforts",
+    model_spec: {
+      ...catalogModel.model_spec,
+      name: "Reasoning Without Efforts",
+      capabilities: {
+        ...catalogModel.model_spec.capabilities,
+        reasoningEffortOptions: [],
+      },
+    },
+  }, undefined, undefined, "2026-06-10");
+
+  expect(synced).toMatchObject({ reasoning: true, reasoning_options: [] });
 });
 
 test("Venice maps API fields and keeps inherited models compact", () => {
@@ -94,4 +115,19 @@ test("Venice preserves last_updated when authoritative data is unchanged", () =>
 
 test("Venice rejects malformed responses", () => {
   expect(() => VeniceResponse.parse({ data: [{ id: "broken" }] })).toThrow();
+});
+
+test("all Venice models use metadata inheritance and declare reasoning options", async () => {
+  const root = path.join(import.meta.dirname, "..", "..", "..");
+  const modelsDir = path.join(root, "providers", "venice", "models");
+
+  for (const file of readdirSync(modelsDir).filter((item) => item.endsWith(".toml"))) {
+    const model = Bun.TOML.parse(await Bun.file(path.join(modelsDir, file)).text()) as {
+      base_model?: string;
+      reasoning_options?: unknown[];
+    };
+    expect(model.base_model, file).toBeDefined();
+    expect(model.reasoning_options, file).toBeDefined();
+    expect(await Bun.file(path.join(root, "models", `${model.base_model}.toml`)).exists(), file).toBe(true);
+  }
 });

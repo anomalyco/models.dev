@@ -1,0 +1,21 @@
+name = "Qwen 3 Coder 480B Turbo"
+family = "qwen3.5"
+release_date = "2026-01-27"
+last_updated = "2026-02-26"
+attachment = false
+reasoning = false
+tool_call = true
+structured_output = true
+temperature = true
+open_weights = true
+
+[limit]
+context = 256000
+output = 65536
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[[weights]]
+url = "https://huggingface.co/Qwen/Qwen3-Coder-480B-A35B-Instruct-Turbo"

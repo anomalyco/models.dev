@@ -1,13 +1,4 @@
-name = "OpenAI GPT OSS 120B"
-family = "gpt-oss"
-attachment = false
-reasoning = true
-tool_call = true
-temperature = true
-knowledge = "2025-07"
-release_date = "2025-11-06"
-last_updated = "2026-06-10"
-open_weights = true
+base_model = "venice/openai-gpt-oss-120b"
 
 [[reasoning_options]]
 type = "effort"
@@ -16,11 +7,3 @@ values = ["none", "low", "medium", "high"]
 [cost]
 input = 0.07
 output = 0.3
-
-[limit]
-context = 128_000
-output = 16_384
-
-[modalities]
-input = ["text"]
-output = ["text"]

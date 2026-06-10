@@ -1,22 +1,7 @@
-name = "Qwen 3.6 35B A3B FP8"
-family = "qwen3.5"
-release_date = "2026-05-20"
-last_updated = "2026-06-10"
-attachment = false
-reasoning = true
-temperature = true
-tool_call = true
-open_weights = true
+base_model = "venice/e2ee-qwen3-6-35b-a3b"
+reasoning_options = []
 
 [cost]
 input = 0.182
 output = 1.18
 cache_read = 0.06
-
-[limit]
-context = 32_000
-output = 4_096
-
-[modalities]
-input = ["text"]
-output = ["text"]

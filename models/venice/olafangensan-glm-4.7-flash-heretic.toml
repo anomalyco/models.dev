@@ -1,0 +1,21 @@
+name = "GLM 4.7 Flash Heretic"
+family = "glm-flash"
+release_date = "2026-02-04"
+last_updated = "2026-06-10"
+attachment = false
+reasoning = true
+tool_call = true
+structured_output = true
+temperature = true
+open_weights = true
+
+[limit]
+context = 200000
+output = 24000
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[[weights]]
+url = "https://huggingface.co/Olafangensan/GLM-4.7-Flash-heretic"

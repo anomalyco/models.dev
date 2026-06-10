@@ -1,0 +1,21 @@
+name = "Gemma 4 Uncensored"
+family = "command"
+release_date = "2026-04-13"
+last_updated = "2026-04-19"
+attachment = true
+reasoning = false
+tool_call = true
+structured_output = true
+temperature = true
+open_weights = true
+
+[limit]
+context = 256000
+output = 8192
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[[weights]]
+url = "https://huggingface.co/Jiunsong/supergemma4-26b-uncensored-gguf-v2"

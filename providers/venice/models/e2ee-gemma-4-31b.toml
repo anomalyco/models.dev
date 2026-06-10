@@ -1,22 +1,7 @@
-name = "Gemma 4 31B Instruct"
-family = "gemma"
-release_date = "2026-05-20"
-last_updated = "2026-06-10"
-attachment = false
-reasoning = true
-temperature = true
-tool_call = false
-open_weights = true
+base_model = "venice/e2ee-gemma-4-31b"
+reasoning_options = []
 
 [cost]
 input = 0.139
 output = 0.43
 cache_read = 0.028
-
-[limit]
-context = 32_000
-output = 4_096
-
-[modalities]
-input = ["text"]
-output = ["text"]

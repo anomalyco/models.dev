@@ -72,6 +72,12 @@ interface MetadataEntry {
 
 let metadataEntries: MetadataEntry[] | undefined;
 
+const BASE_MODEL_ALIASES: Record<string, string> = {
+  "claude-opus-4-6-fast": "anthropic/claude-opus-4-6",
+  "claude-opus-4-7-fast": "anthropic/claude-opus-4-7",
+  "claude-opus-4-8-fast": "anthropic/claude-opus-4-8",
+};
+
 export const venice = {
   id: "venice",
   name: "Venice",
@@ -123,7 +129,7 @@ export function buildVeniceModel(
   const reasoningEfforts = capabilities.reasoningEffortOptions?.filter(isReasoningEffort);
   const reasoningOptions = reasoningEfforts?.length
     ? [{ type: "effort" as const, values: reasoningEfforts }]
-    : existing?.reasoning_options;
+    : [];
   const cost = spec.pricing === undefined
     ? existing?.cost
     : {
@@ -179,6 +185,8 @@ export function buildVeniceModel(
 }
 
 export function resolveVeniceBaseModel(id: string, name: string) {
+  const alias = BASE_MODEL_ALIASES[id];
+  if (alias !== undefined) return alias;
   const entries = getMetadataEntries();
   const normalizedID = normalize(id);
   const normalizedName = normalize(name);

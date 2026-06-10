@@ -180,7 +180,8 @@ Venice is implemented in `packages/core/src/sync/providers/venice.ts`.
 - Run it with `bun models:sync venice` or `bun venice:sync`.
 - `VENICE_API_KEY` is optional locally and includes models visible to that account when set.
 - Models missing from the API response are removed from the Venice catalog.
-- Flattened Venice model IDs are matched to provider-agnostic metadata before provider-specific overrides are written with `base_model`.
+- Every Venice model uses `base_model`; flattened IDs are matched to provider-agnostic metadata before provider-specific overrides are written.
+- Every Venice model declares `reasoning_options`; models without API-provided effort levels use an empty array.
 
 ## Standalone Generators
 

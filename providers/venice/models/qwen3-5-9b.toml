@@ -1,13 +1,4 @@
-name = "Qwen 3.5 9B"
-family = "qwen3.5"
-release_date = "2026-03-05"
-last_updated = "2026-06-10"
-attachment = true
-reasoning = true
-temperature = true
-tool_call = true
-structured_output = true
-open_weights = true
+base_model = "venice/qwen3-5-9b"
 
 [[reasoning_options]]
 type = "effort"
@@ -16,11 +7,3 @@ values = ["none", "low", "medium", "high"]
 [cost]
 input = 0.1
 output = 0.15
-
-[limit]
-context = 256_000
-output = 32_768
-
-[modalities]
-input = ["text", "image"]
-output = ["text"]

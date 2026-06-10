@@ -1,0 +1,21 @@
+name = "Mistral Small 3.2 24B Instruct"
+family = "mistral-small"
+release_date = "2026-01-15"
+last_updated = "2026-03-16"
+attachment = false
+reasoning = false
+tool_call = true
+structured_output = true
+temperature = true
+open_weights = true
+
+[limit]
+context = 256000
+output = 16384
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[[weights]]
+url = "https://huggingface.co/mistralai/Mistral-Small-3.2-24B-Instruct-2506"
