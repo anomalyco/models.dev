@@ -1,8 +1,8 @@
 base_model = "nvidia/nemotron-3-ultra-550b-a55b"
 name = "NVIDIA Nemotron 3 Ultra"
-attachment = true
-structured_output = true
+family = "nano-banana"
 last_updated = "2026-06-10"
+structured_output = true
 
 [[reasoning_options]]
 type = "effort"
@@ -16,7 +16,3 @@ cache_read = 0.1875
 [limit]
 context = 256_000
 output = 32_768
-
-[modalities]
-input = ["text", "image"]
-output = ["text"]

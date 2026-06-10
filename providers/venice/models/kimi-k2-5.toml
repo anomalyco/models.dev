@@ -1,7 +1,10 @@
 base_model = "moonshotai/kimi-k2.5"
-attachment = true
-knowledge = "2024-04"
+release_date = "2026-01-27"
 last_updated = "2026-06-10"
+attachment = true
+temperature = true
+knowledge = "2024-04"
+open_weights = false
 
 [[reasoning_options]]
 type = "effort"
@@ -21,4 +24,3 @@ output = 65_536
 
 [modalities]
 input = ["text", "image"]
-output = ["text"]

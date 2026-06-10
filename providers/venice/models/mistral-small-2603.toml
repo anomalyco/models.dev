@@ -1,6 +1,6 @@
 base_model = "mistral/mistral-small-2603"
-structured_output = true
 last_updated = "2026-06-10"
+structured_output = true
 
 [[reasoning_options]]
 type = "effort"
@@ -11,5 +11,4 @@ input = 0.1875
 output = 0.75
 
 [limit]
-context = 256_000
 output = 65_536

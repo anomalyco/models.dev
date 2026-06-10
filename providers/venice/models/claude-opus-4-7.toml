@@ -1,6 +1,7 @@
 base_model = "anthropic/claude-opus-4-7"
-structured_output = true
 last_updated = "2026-06-10"
+temperature = true
+structured_output = true
 
 [cost]
 input = 6
@@ -10,4 +11,3 @@ cache_write = 7.5
 
 [modalities]
 input = ["text", "image"]
-output = ["text"]

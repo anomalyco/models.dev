@@ -1,7 +1,8 @@
 base_model = "anthropic/claude-sonnet-4-5"
 name = "Claude Sonnet 4.5"
-structured_output = true
+release_date = "2025-01-15"
 last_updated = "2026-06-10"
+structured_output = true
 
 [cost]
 input = 3.75
@@ -11,8 +12,6 @@ cache_write = 4.69
 
 [limit]
 context = 198_000
-output = 64_000
 
 [modalities]
 input = ["text", "image"]
-output = ["text"]

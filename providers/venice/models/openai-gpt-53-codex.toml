@@ -1,5 +1,7 @@
 base_model = "openai/gpt-5.3-codex"
+release_date = "2026-02-24"
 last_updated = "2026-06-10"
+temperature = true
 
 [[reasoning_options]]
 type = "effort"
@@ -10,10 +12,5 @@ input = 2.19
 output = 17.5
 cache_read = 0.219
 
-[limit]
-context = 400_000
-output = 128_000
-
 [modalities]
 input = ["text", "image"]
-output = ["text"]

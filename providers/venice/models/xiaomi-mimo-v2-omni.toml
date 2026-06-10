@@ -1,0 +1,16 @@
+base_model = "xiaomi/mimo-v2-omni"
+family = "mimo-v2-omni"
+release_date = "2026-03-19"
+last_updated = "2026-06-10"
+reasoning = false
+
+[cost]
+input = 0.5
+output = 2.5
+
+[limit]
+context = 256_000
+output = 65_536
+
+[modalities]
+input = ["text", "image", "audio", "video"]

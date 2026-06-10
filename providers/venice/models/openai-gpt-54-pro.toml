@@ -1,6 +1,7 @@
 base_model = "openai/gpt-5.4-pro"
-structured_output = true
 last_updated = "2026-06-10"
+temperature = true
+structured_output = true
 
 [[reasoning_options]]
 type = "effort"
@@ -11,10 +12,9 @@ input = 37.5
 output = 225
 
 [[cost.tiers]]
-tier = { size = 272_000 }
+tier = { type = "context", size = 272_000 }
 input = 75
 output = 337.5
 
 [limit]
 context = 1_000_000
-output = 128_000

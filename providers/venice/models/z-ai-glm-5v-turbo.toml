@@ -1,7 +1,8 @@
 base_model = "zhipuai/glm-5v-turbo"
 name = "GLM 5V Turbo"
-structured_output = true
+family = "glmv"
 last_updated = "2026-06-10"
+structured_output = true
 
 [[reasoning_options]]
 type = "effort"
@@ -13,9 +14,7 @@ output = 5
 cache_read = 0.3
 
 [limit]
-context = 200_000
 output = 32_768
 
 [modalities]
 input = ["text", "image"]
-output = ["text"]

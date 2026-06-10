@@ -10,6 +10,7 @@ import { google } from "./providers/google.js";
 import { openrouter } from "./providers/openrouter.js";
 import { ovhcloud } from "./providers/ovhcloud.js";
 import { vercel } from "./providers/vercel.js";
+import { venice } from "./providers/venice.js";
 import { xai } from "./providers/xai.js";
 
 const ExistingModelType = AuthoredModelShape.partial()
@@ -79,6 +80,7 @@ export const providers: {
   openrouter: SyncProvider<any>;
   ovhcloud: SyncProvider<any>;
   vercel: SyncProvider<any>;
+  venice: SyncProvider<any>;
   xai: SyncProvider<any>;
 } = {
   baseten,
@@ -87,13 +89,14 @@ export const providers: {
   openrouter,
   ovhcloud,
   vercel,
+  venice,
   xai,
 };
 
 export const groups = {
   aggregators: ["openrouter", "vercel"],
   cloudflare: ["cloudflare-workers-ai"],
-  direct: ["baseten", "google", "ovhcloud", "xai"],
+  direct: ["baseten", "google", "ovhcloud", "venice", "xai"],
 } as const;
 
 type ProviderID = keyof typeof providers;

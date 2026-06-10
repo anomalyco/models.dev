@@ -1,8 +1,10 @@
 base_model = "alibaba/qwen3.6-plus"
 name = "Qwen 3.6 Plus Uncensored"
+family = "qwen3.6"
+release_date = "2026-04-06"
+last_updated = "2026-06-10"
 attachment = true
 structured_output = true
-last_updated = "2026-06-10"
 
 [cost]
 input = 0.625
@@ -11,7 +13,7 @@ cache_read = 0.0625
 cache_write = 0.78
 
 [[cost.tiers]]
-tier = { size = 256_000 }
+tier = { type = "context", size = 256_000 }
 input = 2.5
 output = 7.5
 cache_read = 0.0625

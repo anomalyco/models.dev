@@ -1,0 +1,14 @@
+base_model = "anthropic/claude-fable-5"
+release_date = "2026-06-10"
+last_updated = "2026-06-10"
+temperature = true
+structured_output = true
+
+[cost]
+input = 12
+output = 60
+cache_read = 1.2
+cache_write = 15
+
+[modalities]
+input = ["text", "image"]

@@ -23,7 +23,7 @@
     "chutes:generate": "bun ./packages/core/script/generate-chutes.ts",
     "databricks:generate": "bun ./packages/core/script/generate-databricks.ts",
     "helicone:generate": "bun ./packages/core/script/generate-helicone.ts",
-    "venice:generate": "bun ./packages/core/script/generate-venice.ts",
+    "venice:sync": "bun ./packages/core/script/sync-models.ts venice",
     "vercel:generate": "bun ./packages/core/script/sync-models.ts vercel",
     "wandb:generate": "bun ./packages/core/script/generate-wandb.ts",
     "digitalocean:generate": "bun ./packages/core/script/generate-digitalocean.ts",

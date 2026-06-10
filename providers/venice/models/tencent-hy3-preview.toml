@@ -1,0 +1,18 @@
+base_model = "tencent/hy3-preview"
+name = "Hy3 Preview"
+family = "phi"
+release_date = "2026-06-08"
+last_updated = "2026-06-10"
+structured_output = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "high"]
+
+[cost]
+input = 0.063
+output = 0.21
+cache_read = 0.021
+
+[limit]
+output = 32_768
