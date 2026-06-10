@@ -1,21 +1,5 @@
-name = "Grok Build 1"
-family = "grok-build"
-release_date = "2026-05-01"
-last_updated = "2026-05-01"
-attachment = false
-reasoning = true
-temperature = true
-tool_call = true
-open_weights = false
+base_model = "xai/grok-build-0.1"
 
 [cost]
 input = 1
 output = 2
-
-[limit]
-context = 256_000
-output = 64_000
-
-[modalities]
-input = ["text"]
-output = ["text"]
