@@ -296,6 +296,12 @@ function buildSearchItems(
         metadata.family,
         metadata.release_date,
         metadata.last_updated,
+        ...model.providers.flatMap((provider) => [
+          displayModelName(provider),
+          provider.modelId,
+          provider.provider.name,
+          provider.providerId,
+        ]),
         ...(metadata.modalities?.input ?? []),
         ...(metadata.modalities?.output ?? []),
       ].filter((token): token is string => Boolean(token)),
@@ -326,7 +332,6 @@ function buildSearchItems(
         provider.npm,
         provider.api,
         provider.doc,
-        ...providerModels.slice(0, 20).map(displayModelName),
       ].filter((token): token is string => Boolean(token)),
     });
   }

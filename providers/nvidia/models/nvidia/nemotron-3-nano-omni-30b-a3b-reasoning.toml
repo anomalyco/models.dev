@@ -1,10 +1,12 @@
 name = "Nemotron 3 Nano Omni"
+base_model = "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning"
 family = "nemotron"
 
 release_date = "2026-04-28"
 last_updated = "2026-04-28"
 attachment = true
 reasoning = true
+reasoning_options = [{ type = "toggle" }, { type = "budget_tokens", min = -1, max = 32768 }]
 temperature = true
 tool_call = true
 structured_output = true

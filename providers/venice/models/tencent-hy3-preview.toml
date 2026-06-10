@@ -1,0 +1,17 @@
+base_model = "tencent/hy3-preview"
+name = "Hy3 Preview"
+structured_output = true
+last_updated = "2026-06-10"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "high"]
+
+[cost]
+input = 0.063
+output = 0.21
+cache_read = 0.021
+
+[limit]
+context = 256_000
+output = 32_768

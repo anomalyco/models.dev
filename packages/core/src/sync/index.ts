@@ -1,13 +1,15 @@
 import path from "node:path";
-import { mkdir, readdir, rm } from "node:fs/promises";
+import { lstat, mkdir, readdir, rm } from "node:fs/promises";
 import { mergeDeep } from "remeda";
 import { z } from "zod";
 
 import { AuthoredModel, AuthoredModelShape } from "../schema.js";
+import { baseten } from "./providers/baseten.js";
 import { cloudflareWorkersAi } from "./providers/cloudflare-workers-ai.js";
 import { google } from "./providers/google.js";
 import { openrouter } from "./providers/openrouter.js";
 import { ovhcloud } from "./providers/ovhcloud.js";
+import { vercel } from "./providers/vercel.js";
 import { xai } from "./providers/xai.js";
 
 const ExistingModelType = AuthoredModelShape.partial()
@@ -44,6 +46,10 @@ export interface SyncProvider<SourceModel> {
   name: string;
   modelsDir: string;
   skipCreates?: boolean;
+  deleteMissing?: boolean;
+  preserveSymlinks?: boolean;
+  sameModel?(current: ExistingModel, desired: SyncedModel): boolean;
+  missingNotice?(paths: string[]): string[];
   sourceID?(model: SourceModel): string;
   skippedNotice?(ids: string[]): string[];
   fetchModels(): Promise<unknown>;
@@ -67,23 +73,27 @@ export interface SyncResult {
 }
 
 export const providers: {
+  baseten: SyncProvider<any>;
   "cloudflare-workers-ai": SyncProvider<any>;
   google: SyncProvider<any>;
   openrouter: SyncProvider<any>;
   ovhcloud: SyncProvider<any>;
+  vercel: SyncProvider<any>;
   xai: SyncProvider<any>;
 } = {
+  baseten,
   "cloudflare-workers-ai": cloudflareWorkersAi,
   google,
   openrouter,
   ovhcloud,
+  vercel,
   xai,
 };
 
 export const groups = {
-  aggregators: ["openrouter"],
+  aggregators: ["openrouter", "vercel"],
   cloudflare: ["cloudflare-workers-ai"],
-  direct: ["google", "ovhcloud", "xai"],
+  direct: ["baseten", "google", "ovhcloud", "xai"],
 } as const;
 
 type ProviderID = keyof typeof providers;
@@ -103,7 +113,7 @@ export async function syncProvider<SourceModel>(
 ): Promise<SyncResult> {
   console.log(`\nSyncing ${provider.name}...`);
 
-  const existing = await readExisting(provider.modelsDir);
+  const { models: existing, brokenSymlinks } = await readExisting(provider.modelsDir);
   const sourceModels = provider.parseModels(await provider.fetchModels());
   const desired = new Map<string, { model: z.infer<typeof SyncedAuthoredModel>; content: string }>();
   const skippedRemote: string[] = [];
@@ -115,7 +125,7 @@ export async function syncProvider<SourceModel>(
       },
     });
     if (translated === undefined) {
-      if (provider.skipCreates) skippedRemote.push(provider.sourceID?.(sourceModel) ?? "unknown");
+      if (provider.sourceID !== undefined) skippedRemote.push(provider.sourceID(sourceModel));
       continue;
     }
 
@@ -131,7 +141,10 @@ export async function syncProvider<SourceModel>(
 
     const parsed = SyncedAuthoredModel.safeParse(stripUndefined({
       id: translated.id,
-      ...translated.model,
+      ...preserveReasoningOptions(
+        preserveBaseModel(translated.model, existing.get(relativePath)?.authored),
+        existing.get(relativePath)?.authored,
+      ),
     }));
     if (!parsed.success) {
       parsed.error.cause = { provider: provider.id, path: relativePath };
@@ -157,12 +170,18 @@ export async function syncProvider<SourceModel>(
         console.log(`Would create ${relativePath}`);
       } else {
         await mkdir(path.dirname(filePath), { recursive: true });
+        if (await isSymlink(filePath)) await rm(filePath, { force: true });
         await Bun.write(filePath, file.content);
       }
       continue;
     }
 
-    if (!sameModel(relativePath, current.authored, file.model)) {
+    if (current.symlink && provider.preserveSymlinks) {
+      unchanged++;
+      continue;
+    }
+
+    if (!(provider.sameModel?.(current.authored, file.model) ?? sameModel(relativePath, current.authored, file.model))) {
       if (options.newOnly) {
         unchanged++;
         continue;
@@ -180,8 +199,15 @@ export async function syncProvider<SourceModel>(
     }
   }
 
-  for (const relativePath of existing.keys()) {
+  const missingLocal: string[] = [];
+  for (const relativePath of new Set([...existing.keys(), ...brokenSymlinks])) {
     if (desired.has(relativePath)) continue;
+    if (provider.deleteMissing === false) {
+      missingLocal.push(relativePath);
+      console.log(`Retaining model missing from source: ${relativePath}`);
+      unchanged++;
+      continue;
+    }
     if (options.newOnly) {
       console.log(`Skipping removal in new-only mode: ${relativePath}`);
       unchanged++;
@@ -197,11 +223,40 @@ export async function syncProvider<SourceModel>(
     }
   }
 
-  const result = summarize(provider, files, unchanged, provider.skippedNotice?.(skippedRemote) ?? []);
+  const result = summarize(provider, files, unchanged, [
+    ...provider.skippedNotice?.(skippedRemote) ?? [],
+    ...provider.missingNotice?.(missingLocal) ?? [],
+  ]);
   console.log(
     `${options.dryRun ? "Dry run: " : ""}${result.created} created, ${result.updated} updated, ${result.deleted} removed, ${result.unchanged} unchanged`,
   );
   return result;
+}
+
+export function preserveBaseModel(model: SyncedModel, existing: ExistingModel | undefined): SyncedModel {
+  if (existing?.base_model === undefined) return model;
+  const translatedBase = "base_model" in model ? model.base_model : undefined;
+  if (translatedBase !== undefined) {
+    const translatedOmit = "base_model_omit" in model ? model.base_model_omit : undefined;
+    if (translatedBase !== existing.base_model || translatedOmit !== undefined) return model;
+    return { ...model, base_model_omit: existing.base_model_omit };
+  }
+  return {
+    ...model,
+    base_model: existing.base_model,
+    base_model_omit: existing.base_model_omit,
+  };
+}
+
+export function preserveReasoningOptions(
+  model: SyncedModel,
+  existing: ExistingModel | undefined,
+): SyncedModel {
+  if (model.reasoning_options !== undefined || existing?.reasoning_options === undefined) return model;
+  return {
+    ...model,
+    reasoning_options: existing.reasoning_options,
+  };
 }
 
 export async function syncTargets(target: string, options: SyncOptions = {}) {
@@ -237,13 +292,24 @@ async function readExisting(modelsDir: string) {
     toml: ExistingModel;
     symlink: boolean;
   }>();
+  const brokenSymlinks = new Set<string>();
   let modelMetadata: Record<string, Record<string, unknown>> | undefined;
 
   for (const { file, symlink } of await tomlFiles(modelsDir)) {
-    const text = await Bun.file(path.join(modelsDir, file)).text();
+    const filePath = path.join(modelsDir, file);
+    let text: string;
+    try {
+      text = await Bun.file(filePath).text();
+    } catch (error) {
+      if (symlink && error instanceof Error && "code" in error && error.code === "ENOENT") {
+        brokenSymlinks.add(file);
+        continue;
+      }
+      throw error;
+    }
     const parsed = ExistingModel.safeParse(Bun.TOML.parse(text));
     if (!parsed.success) {
-      parsed.error.cause = { path: path.join(modelsDir, file) };
+      parsed.error.cause = { path: filePath };
       throw parsed.error;
     }
 
@@ -253,12 +319,21 @@ async function readExisting(modelsDir: string) {
     }
     const toml = authored.base_model === undefined
       ? authored
-      : resolveBaseModel(authored, modelMetadata ?? {}, path.join(modelsDir, file));
+      : resolveBaseModel(authored, modelMetadata ?? {}, filePath);
 
     existing.set(file, { authored, toml, symlink });
   }
 
-  return existing;
+  return { models: existing, brokenSymlinks };
+}
+
+async function isSymlink(filePath: string) {
+  try {
+    return (await lstat(filePath)).isSymbolicLink();
+  } catch (error) {
+    if (error instanceof Error && "code" in error && error.code === "ENOENT") return false;
+    throw error;
+  }
 }
 
 async function readModelMetadata(modelsDir: string) {
@@ -571,7 +646,7 @@ function formatToml(model: z.infer<typeof SyncedAuthoredModel>) {
 
     for (const tier of model.cost.tiers ?? []) {
       lines.push("", "[[cost.tiers]]");
-      lines.push(`tier = { type = ${quote(tier.tier.type)}, size = ${formatInteger(tier.tier.size)} }`);
+      lines.push(`tier = { type = ${quote(tier.tier.type ?? "context")}, size = ${formatInteger(tier.tier.size)} }`);
       lines.push(`input = ${formatNumber(tier.input)}`);
       lines.push(`output = ${formatNumber(tier.output)}`);
       if (tier.reasoning !== undefined) lines.push(`reasoning = ${formatNumber(tier.reasoning)}`);

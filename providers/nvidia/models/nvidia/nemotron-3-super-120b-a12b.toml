@@ -1,7 +1,9 @@
 name = "Nemotron 3 Super"
+base_model = "nvidia/nemotron-3-super-120b-a12b"
 family = "nemotron"
 attachment = false
 reasoning = true
+reasoning_options = [{ type = "toggle" }]
 tool_call = true
 temperature = true
 knowledge = "2024-04"

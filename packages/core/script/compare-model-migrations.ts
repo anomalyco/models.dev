@@ -71,6 +71,7 @@ try {
     if (!match) continue;
 
     const [, providerID, modelID] = match;
+    if (providerID === undefined || modelID === undefined) continue;
     const beforeModel = before[providerID]?.models[modelID];
     const afterModel = after[providerID]?.models[modelID];
     const beforeJson = sortedJson(beforeModel);
@@ -263,6 +264,9 @@ async function generateLegacyExtends(directory: string) {
   for (const pendingModel of pendingModels) {
     const [providerID, ...modelParts] = pendingModel.model.extends.from.split("/");
     const modelID = modelParts.join("/");
+    if (providerID === undefined) {
+      throw new Error(`Invalid legacy extends.from: ${pendingModel.model.extends.from}`);
+    }
     const baseModel = result[providerID]?.models[modelID];
     if (baseModel === undefined) {
       throw new Error(`Unable to resolve legacy extends.from: ${pendingModel.model.extends.from}`, {
@@ -363,7 +367,8 @@ function applyOmit(target: Record<string, unknown>, paths: string[]) {
 
     for (let index = parents.length - 1; index >= 0; index--) {
       const parent = parents[index];
-      const value = parent?.value[parent.key];
+      if (parent === undefined) continue;
+      const value = parent.value[parent.key];
       if (
         value === null ||
         value === undefined ||

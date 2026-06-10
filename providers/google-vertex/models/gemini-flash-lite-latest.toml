@@ -1,5 +1,6 @@
 base_model = "google/gemini-flash-lite-latest"
 base_model_omit = ["structured_output"]
+reasoning_options = [{ type = "effort", values = ["minimal", "low", "medium", "high"] }]
 
 [cost]
 input = 0.1

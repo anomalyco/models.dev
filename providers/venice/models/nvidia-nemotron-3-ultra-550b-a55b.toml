@@ -1,0 +1,23 @@
+name = "NVIDIA Nemotron 3 Ultra"
+family = "nemotron"
+attachment = true
+reasoning = true
+tool_call = true
+structured_output = true
+temperature = true
+release_date = "2026-06-04"
+last_updated = "2026-06-08"
+open_weights = true
+
+[cost]
+input = 0.625
+output = 3.125
+cache_read = 0.1875
+
+[limit]
+context = 256_000
+output = 32_768
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

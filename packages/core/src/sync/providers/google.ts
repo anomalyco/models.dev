@@ -1,6 +1,7 @@
 import { z } from "zod";
 
-import type { ExistingModel, SyncProvider, SyncedModel } from "../index.js";
+import type { ExistingModel, SyncProvider, SyncedFullModel, SyncedModel } from "../index.js";
+import { factorBaseModel } from "./openrouter.js";
 
 const API_ENDPOINT = "https://generativelanguage.googleapis.com/v1beta/models";
 
@@ -81,12 +82,12 @@ export const google = {
 
     return {
       id,
-      model: buildModel(model, existing),
+      model: buildGoogleModel(model, existing),
     };
   },
 } satisfies SyncProvider<GoogleModel>;
 
-function buildModel(model: GoogleModel, existing: ExistingModel): SyncedModel {
+export function buildGoogleModel(model: GoogleModel, existing: ExistingModel): SyncedModel {
   const name = existing.name;
   const releaseDate = existing.release_date;
   const lastUpdated = existing.last_updated;
@@ -111,9 +112,7 @@ function buildModel(model: GoogleModel, existing: ExistingModel): SyncedModel {
     throw new Error(`Google model ${model.name} has incomplete local TOML metadata required for sync`);
   }
 
-  return {
-    base_model: existing.base_model,
-    base_model_omit: existing.base_model_omit,
+  const synced: SyncedFullModel = {
     name: model.displayName ?? name,
     family: existing.family,
     release_date: releaseDate,
@@ -138,4 +137,8 @@ function buildModel(model: GoogleModel, existing: ExistingModel): SyncedModel {
     },
     modalities,
   };
+
+  return existing.base_model === undefined
+    ? synced
+    : factorBaseModel(existing.base_model, synced, synced.limit, existing.base_model_omit);
 }

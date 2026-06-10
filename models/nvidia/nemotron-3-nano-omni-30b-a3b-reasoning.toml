@@ -1,0 +1,17 @@
+name = "Nemotron 3 Nano Omni 30B A3B Reasoning"
+family = "nemotron"
+release_date = "2026-04-28"
+last_updated = "2026-04-28"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+open_weights = true
+
+[limit]
+context = 256_000
+output = 65_536
+
+[modalities]
+input = ["text", "image", "video", "audio"]
+output = ["text"]
