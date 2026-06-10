@@ -1,0 +1,27 @@
+name = "Qwen Flash (2025-07-28, US)"
+family = "qwen"
+release_date = "2025-07-28"
+last_updated = "2025-07-28"
+attachment = false
+reasoning = true
+temperature = true
+knowledge = "2025-04"
+tool_call = true
+open_weights = false
+
+[cost]
+input = 0.05
+output = 0.40
+
+[[cost.tiers]]
+tier = { size = 256_000 }
+input = 0.25
+output = 2.00
+
+[limit]
+context = 1_000_000
+output = 32_768
+
+[modalities]
+input = ["text"]
+output = ["text"]

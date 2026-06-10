@@ -1,0 +1,22 @@
+name = "Qwen3-ASR Flash (2025-09-08, US)"
+family = "qwen"
+release_date = "2025-09-08"
+last_updated = "2025-09-08"
+attachment = false
+reasoning = false
+temperature = false
+knowledge = "2025-04"
+tool_call = false
+open_weights = false
+
+[cost]
+input = 0.20
+output = 0.20
+
+[limit]
+context = 131_072
+output = 8_192
+
+[modalities]
+input = ["audio"]
+output = ["text"]
