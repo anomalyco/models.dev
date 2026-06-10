@@ -97,3 +97,47 @@ test("non-deleting sync reports missing broken symlinks", async () => {
   expect(result.notices).toEqual(["missing: model.toml"]);
   expect(await readlink(filePath)).toBe("missing.toml");
 });
+
+test("sync preserves authored reasoning options omitted by a translator", async () => {
+  const { modelsDir } = await fixture();
+  const filePath = path.join(modelsDir, "model.toml");
+  await Bun.write(filePath, `name = "Old name"
+release_date = "2026-01-01"
+last_updated = "2026-01-01"
+attachment = false
+reasoning = true
+tool_call = false
+open_weights = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high"]
+
+[cost]
+input = 1
+output = 2
+
+[limit]
+context = 1000
+output = 100
+
+[modalities]
+input = ["text"]
+output = ["text"]
+`);
+  const sync = provider(modelsDir, ["model"]);
+  sync.translateModel = (id) => ({
+    id,
+    model: { ...model, reasoning: true },
+  });
+
+  const first = await syncProvider(sync);
+  const content = await Bun.file(filePath).text();
+  const second = await syncProvider(sync);
+
+  expect(first.updated).toBe(1);
+  expect(content).toContain("[[reasoning_options]]");
+  expect(content).toContain('values = ["low", "high"]');
+  expect(second.updated).toBe(0);
+  expect(second.unchanged).toBe(1);
+});

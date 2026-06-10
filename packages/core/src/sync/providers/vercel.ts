@@ -176,6 +176,7 @@ function sameVercelModel(current: ExistingModel, desired: SyncedModel) {
     [current.family, desiredModel.family],
     [current.attachment, desiredModel.attachment],
     [current.reasoning, desiredModel.reasoning],
+    [current.reasoning_options, desiredModel.reasoning_options],
     [current.tool_call, desiredModel.tool_call],
     [current.structured_output, desiredModel.structured_output],
     [current.open_weights, desiredModel.open_weights],
