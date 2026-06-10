@@ -1,0 +1,21 @@
+name = "WAN 2.6 T2I"
+family = "wan"
+release_date = "2026-05-28"
+last_updated = "2026-05-28"
+attachment = false
+reasoning = false
+temperature = false
+tool_call = false
+open_weights = true
+
+[cost]
+input = 0
+output = 0.03
+
+[limit]
+context = 8_192
+output = 4_096
+
+[modalities]
+input = ["text"]
+output = ["image"]
