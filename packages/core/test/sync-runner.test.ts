@@ -3,6 +3,7 @@ import path from "node:path";
 import { mkdtemp, mkdir, readlink, symlink } from "node:fs/promises";
 import os from "node:os";
 
+import { AuthoredModelShape } from "../src/schema.js";
 import { syncProvider, type SyncProvider, type SyncedFullModel } from "../src/sync/index.js";
 
 const model: SyncedFullModel = {
@@ -17,6 +18,19 @@ const model: SyncedFullModel = {
   limit: { context: 1_000, output: 100 },
   modalities: { input: ["text"], output: ["text"] },
 };
+
+test("reasoning budgets allow only the -1 negative sentinel", () => {
+  const authored = { id: "model", ...model };
+
+  expect(AuthoredModelShape.safeParse({
+    ...authored,
+    reasoning_options: [{ type: "budget_tokens", min: -1, max: 32_768 }],
+  }).success).toBe(true);
+  expect(AuthoredModelShape.safeParse({
+    ...authored,
+    reasoning_options: [{ type: "budget_tokens", min: -2, max: 32_768 }],
+  }).success).toBe(false);
+});
 
 async function fixture() {
   const root = await mkdtemp(path.join(os.tmpdir(), "models-dev-sync-"));
@@ -113,6 +127,11 @@ open_weights = false
 type = "effort"
 values = ["low", "high"]
 
+[[reasoning_options]]
+type = "budget_tokens"
+min = -1
+max = 32768
+
 [cost]
 input = 1
 output = 2
@@ -138,6 +157,8 @@ output = ["text"]
   expect(first.updated).toBe(1);
   expect(content).toContain("[[reasoning_options]]");
   expect(content).toContain('values = ["low", "high"]');
+  expect(content).toContain("min = -1");
+  expect(content).toContain("max = 32_768");
   expect(second.updated).toBe(0);
   expect(second.unchanged).toBe(1);
 });
