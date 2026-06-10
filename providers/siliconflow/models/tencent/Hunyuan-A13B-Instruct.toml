@@ -3,7 +3,8 @@ family = "hunyuan"
 release_date = "2025-06-30"
 last_updated = "2025-11-25"
 attachment = false
-reasoning = false
+reasoning = true
+reasoning_options = [{ type = "toggle" }, { type = "budget_tokens", min = 128, max = 32_768 }]
 temperature = true
 tool_call = true
 structured_output = true
