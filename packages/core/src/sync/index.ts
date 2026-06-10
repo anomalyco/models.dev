@@ -141,7 +141,10 @@ export async function syncProvider<SourceModel>(
 
     const parsed = SyncedAuthoredModel.safeParse(stripUndefined({
       id: translated.id,
-      ...preserveBaseModel(translated.model, existing.get(relativePath)?.authored),
+      ...preserveReasoningOptions(
+        preserveBaseModel(translated.model, existing.get(relativePath)?.authored),
+        existing.get(relativePath)?.authored,
+      ),
     }));
     if (!parsed.success) {
       parsed.error.cause = { provider: provider.id, path: relativePath };
@@ -242,6 +245,17 @@ export function preserveBaseModel(model: SyncedModel, existing: ExistingModel | 
     ...model,
     base_model: existing.base_model,
     base_model_omit: existing.base_model_omit,
+  };
+}
+
+export function preserveReasoningOptions(
+  model: SyncedModel,
+  existing: ExistingModel | undefined,
+): SyncedModel {
+  if (model.reasoning_options !== undefined || existing?.reasoning_options === undefined) return model;
+  return {
+    ...model,
+    reasoning_options: existing.reasoning_options,
   };
 }
 
