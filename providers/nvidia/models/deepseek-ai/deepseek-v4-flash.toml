@@ -1,6 +1,6 @@
 base_model = "deepseek/deepseek-v4-flash"
 
-reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "max"] }]
+reasoning_options = [{ type = "effort", values = ["none", "high", "max"] }]
 
 [interleaved]
 field = "reasoning_content"
