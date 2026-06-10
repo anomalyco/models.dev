@@ -83,7 +83,7 @@ jobs:
           LABELS: automation,model-sync,provider:${{ matrix.provider }}
           TITLE: "chore(sync): update ${{ matrix.name }} model catalog"
         run: |
-          if [ -z "$(git status --porcelain -- providers)" ]; then
+          if [ -z "$(git status --porcelain -- models providers)" ]; then
             echo "No model catalog changes found."
             exit 0
           fi
@@ -92,7 +92,7 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git fetch --no-tags --depth=1 origin "+refs/heads/$BRANCH:refs/remotes/origin/$BRANCH" || true
           git checkout -B "$BRANCH"
-          git add providers
+          git add models providers
           git commit -m "$TITLE"
           git push --force-with-lease origin "$BRANCH"
 

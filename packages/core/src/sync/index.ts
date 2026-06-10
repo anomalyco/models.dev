@@ -3,7 +3,7 @@ import { lstat, mkdir, readdir, rm } from "node:fs/promises";
 import { mergeDeep } from "remeda";
 import { z } from "zod";
 
-import { AuthoredModel, AuthoredModelShape } from "../schema.js";
+import { AuthoredModel, AuthoredModelShape, ModelMetadata } from "../schema.js";
 import { baseten } from "./providers/baseten.js";
 import { cloudflareWorkersAi } from "./providers/cloudflare-workers-ai.js";
 import { google } from "./providers/google.js";
@@ -41,6 +41,7 @@ export type ExistingModel = z.infer<typeof ExistingModelType>;
 export type SyncedFullModel = Omit<z.infer<typeof AuthoredModelShape>, "id">;
 export type SyncedBaseModel = Omit<z.infer<typeof SyncedBaseModel>, "id">;
 export type SyncedModel = SyncedFullModel | SyncedBaseModel;
+export type SyncedMetadata = Omit<z.infer<typeof ModelMetadata>, "id">;
 
 export interface SyncProvider<SourceModel> {
   id: string;
@@ -58,7 +59,7 @@ export interface SyncProvider<SourceModel> {
   translateModel(
     model: SourceModel,
     context: { existing(id: string): ExistingModel | undefined },
-  ): { id: string; model: SyncedModel } | undefined;
+  ): { id: string; model: SyncedModel; metadata?: { id: string; model: SyncedMetadata } } | undefined;
 }
 
 export interface SyncResult {
@@ -119,6 +120,7 @@ export async function syncProvider<SourceModel>(
   const { models: existing, brokenSymlinks } = await readExisting(provider.modelsDir);
   const sourceModels = provider.parseModels(await provider.fetchModels());
   const desired = new Map<string, { model: z.infer<typeof SyncedAuthoredModel>; content: string }>();
+  const desiredMetadata = new Map<string, { model: z.infer<typeof ModelMetadata>; content: string }>();
   const skippedRemote: string[] = [];
 
   for (const sourceModel of sourceModels) {
@@ -142,6 +144,23 @@ export async function syncProvider<SourceModel>(
       throw new Error(`Duplicate synced model path: ${provider.id}/${relativePath}`);
     }
 
+    if (translated.metadata !== undefined) {
+      const parsedMetadata = ModelMetadata.safeParse({
+        id: translated.metadata.id,
+        ...stripUndefined(translated.metadata.model),
+      });
+      if (!parsedMetadata.success) {
+        parsedMetadata.error.cause = { provider: provider.id, metadata: translated.metadata.id };
+        throw parsedMetadata.error;
+      }
+      const metadataPath = `${translated.metadata.id}.toml`;
+      if (desiredMetadata.has(metadataPath)) throw new Error(`Duplicate synced metadata path: ${metadataPath}`);
+      desiredMetadata.set(metadataPath, {
+        model: parsedMetadata.data,
+        content: formatMetadataToml(parsedMetadata.data),
+      });
+    }
+
     const parsed = SyncedAuthoredModel.safeParse(stripUndefined({
       id: translated.id,
       ...preserveReasoningOptions(
@@ -162,6 +181,26 @@ export async function syncProvider<SourceModel>(
 
   const files: SyncResult["files"] = [];
   let unchanged = 0;
+
+  const metadataDir = modelMetadataDir(provider.modelsDir);
+  for (const [relativePath, file] of desiredMetadata) {
+    const filePath = path.join(metadataDir, relativePath);
+    const currentFile = Bun.file(filePath);
+    const current = await currentFile.exists()
+      ? ModelMetadata.safeParse({
+          id: relativePath.slice(0, -5),
+          ...Bun.TOML.parse(await currentFile.text()) as Record<string, unknown>,
+        })
+      : undefined;
+    if (current?.success && stable(current.data) === stable(file.model)) continue;
+    files.push({ status: current === undefined ? "created" : "updated", path: filePath });
+    if (options.dryRun) {
+      console.log(`Would ${current === undefined ? "create" : "update"} metadata ${relativePath}`);
+    } else {
+      await mkdir(path.dirname(filePath), { recursive: true });
+      await Bun.write(filePath, file.content);
+    }
+  }
 
   for (const [relativePath, file] of desired) {
     const filePath = path.join(provider.modelsDir, relativePath);
@@ -340,8 +379,7 @@ async function isSymlink(filePath: string) {
 }
 
 async function readModelMetadata(modelsDir: string) {
-  const root = path.dirname(path.dirname(path.dirname(modelsDir)));
-  const metadataDir = path.join(root, "models");
+  const metadataDir = modelMetadataDir(modelsDir);
   const result: Record<string, Record<string, unknown>> = {};
 
   for await (const modelPath of new Bun.Glob("**/*.toml").scan({
@@ -357,6 +395,10 @@ async function readModelMetadata(modelsDir: string) {
   }
 
   return result;
+}
+
+function modelMetadataDir(modelsDir: string) {
+  return path.join(path.dirname(path.dirname(path.dirname(modelsDir))), "models");
 }
 
 function resolveBaseModel(
@@ -679,6 +721,19 @@ function formatToml(model: z.infer<typeof SyncedAuthoredModel>) {
     }
   }
 
+  return `${lines.join("\n")}\n`;
+}
+
+function formatMetadataToml(model: z.infer<typeof ModelMetadata>) {
+  const content = formatToml(model as unknown as z.infer<typeof SyncedAuthoredModel>).trimEnd();
+  const lines = [content];
+  for (const weight of model.weights ?? []) {
+    lines.push("", "[[weights]]");
+    if (weight.label !== undefined) lines.push(`label = ${quote(weight.label)}`);
+    lines.push(`url = ${quote(weight.url)}`);
+    if (weight.format !== undefined) lines.push(`format = ${quote(weight.format)}`);
+    if (weight.quantization !== undefined) lines.push(`quantization = ${quote(weight.quantization)}`);
+  }
   return `${lines.join("\n")}\n`;
 }
 

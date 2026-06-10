@@ -61,6 +61,16 @@ test("Venice emits empty reasoning options when efforts are unavailable", () => 
   expect(synced).toMatchObject({ reasoning: true, reasoning_options: [] });
 });
 
+test("Venice uses boundary-aware family matching", () => {
+  const synced = buildVeniceModel({
+    ...catalogModel,
+    id: "google-gemma-4-31b-it",
+    model_spec: { ...catalogModel.model_spec, name: "Google Gemma 4 31B Instruct" },
+  }, undefined, null, "2026-06-10");
+
+  expect(synced).toMatchObject({ family: "gemma" });
+});
+
 test("Venice maps API fields and keeps inherited models compact", () => {
   const synced = buildVeniceModel(catalogModel, {
     base_model: "openai/gpt-5.4",

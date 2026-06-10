@@ -171,3 +171,39 @@ output = ["text"]
   expect(second.updated).toBe(0);
   expect(second.unchanged).toBe(1);
 });
+
+test("sync writes metadata returned by a provider translator", async () => {
+  const root = await mkdtemp(path.join(os.tmpdir(), "models-dev-sync-metadata-"));
+  const modelsDir = path.join(root, "providers", "test", "models");
+  await mkdir(modelsDir, { recursive: true });
+  const sync = provider(modelsDir, ["model"]);
+  sync.translateModel = () => ({
+    id: "model",
+    model: {
+      base_model: "test/model",
+      reasoning_options: [],
+      cost: { input: 1, output: 2 },
+    },
+    metadata: {
+      id: "test/model",
+      model: {
+        name: "Model",
+        release_date: "2026-06-10",
+        last_updated: "2026-06-10",
+        attachment: false,
+        reasoning: false,
+        tool_call: true,
+        open_weights: false,
+        limit: { context: 1_000, output: 100 },
+        modalities: { input: ["text"], output: ["text"] },
+      },
+    },
+  });
+
+  const first = await syncProvider(sync);
+  const second = await syncProvider(sync);
+
+  expect(first).toMatchObject({ created: 2, updated: 0 });
+  expect(second).toMatchObject({ created: 0, updated: 0 });
+  expect(await Bun.file(path.join(root, "models", "test", "model.toml")).text()).toContain('name = "Model"');
+});

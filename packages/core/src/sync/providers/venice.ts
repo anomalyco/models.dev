@@ -3,7 +3,7 @@ import path from "node:path";
 import { z } from "zod";
 
 import { ModelFamilyValues } from "../../family.js";
-import type { ExistingModel, SyncProvider, SyncedFullModel, SyncedModel } from "../index.js";
+import type { ExistingModel, SyncProvider, SyncedFullModel, SyncedMetadata, SyncedModel } from "../index.js";
 import { factorBaseModel } from "./openrouter.js";
 
 const API_ENDPOINT = "https://api.venice.ai/api/v1/models?type=text";
@@ -98,10 +98,18 @@ export const venice = {
   translateModel(model, context) {
     const id = model.id.replaceAll("/", "-");
     const existing = context.existing(id);
-    const baseModel = existing?.base_model ?? resolveVeniceBaseModel(model.id, model.model_spec.name);
+    const resolvedBase = existing?.base_model ?? resolveVeniceBaseModel(model.id, model.model_spec.name);
+    const baseModel = resolvedBase ?? `venice/${id}`;
+    const full = buildVeniceModel(model, existing, null);
+    const metadata = baseModel.startsWith("venice/")
+      ? { id: baseModel, model: buildVeniceMetadata(full, model.model_spec.modelSource) }
+      : undefined;
     return {
       id,
-      model: buildVeniceModel(model, existing, baseModel),
+      model: resolvedBase === undefined
+        ? factorNewMetadata(baseModel, full)
+        : buildVeniceModel(model, existing, baseModel),
+      metadata,
     };
   },
 } satisfies SyncProvider<VeniceModel>;
@@ -109,7 +117,7 @@ export const venice = {
 export function buildVeniceModel(
   model: VeniceModel,
   existing: ExistingModel | undefined,
-  baseModel = existing?.base_model ?? resolveVeniceBaseModel(model.id, model.model_spec.name),
+  baseModel: string | null | undefined = existing?.base_model ?? resolveVeniceBaseModel(model.id, model.model_spec.name),
   today = new Date().toISOString().slice(0, 10),
 ): SyncedModel {
   const spec = model.model_spec;
@@ -168,7 +176,7 @@ export function buildVeniceModel(
   const releaseDate = new Date(model.created * 1000).toISOString().slice(0, 10);
   const values: SyncedFullModel = {
     ...authoritative,
-    family: inferFamily(model.id, spec.name) ?? existing?.family,
+    family: baseModel == null ? inferFamily(model.id, spec.name) ?? existing?.family : existing?.family,
     release_date: releaseDate,
     last_updated: existing === undefined || changed ? today : (existing.last_updated ?? today),
     knowledge: existing?.knowledge,
@@ -179,7 +187,7 @@ export function buildVeniceModel(
     interleaved: existing?.interleaved,
   };
 
-  return baseModel === undefined
+  return baseModel == null
     ? values
     : factorBaseModel(baseModel, values, limit, existing?.base_model_omit);
 }
@@ -226,18 +234,36 @@ function isReasoningEffort(value: string): value is ReasoningEffort {
 }
 
 function inferFamily(id: string, name: string) {
-  const target = normalize(`${id} ${name}`);
+  const target = `${id} ${name}`.toLowerCase();
   return [...ModelFamilyValues]
     .sort((a, b) => b.length - a.length)
-    .find((family) => isSubsequence(target, normalize(family)));
+    .find((family) => {
+      const value = family.toLowerCase().replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+      if (family === "o") return new RegExp(`(^|[^a-z0-9])${value}(?=\\d|$|[^a-z0-9])`).test(target);
+      return new RegExp(`(^|[^a-z0-9])${value}(?=$|[^a-z0-9])`).test(target);
+    });
 }
 
-function isSubsequence(target: string, candidate: string) {
-  let index = 0;
-  for (const character of target) {
-    if (character === candidate[index]) index++;
-  }
-  return index === candidate.length;
+function buildVeniceMetadata(model: SyncedModel, source: string | undefined): SyncedMetadata {
+  if ("base_model" in model) throw new Error("Cannot build Venice metadata from a factored model");
+  const { cost: _cost, reasoning_options: _reasoningOptions, interleaved: _interleaved, status: _status, ...metadata } = model;
+  return {
+    ...metadata,
+    weights: model.open_weights && source?.startsWith("https://huggingface.co/")
+      ? [{ url: source }]
+      : undefined,
+  };
+}
+
+function factorNewMetadata(baseModel: string, model: SyncedModel): SyncedModel {
+  if ("base_model" in model) return model;
+  return {
+    base_model: baseModel,
+    reasoning_options: model.reasoning_options,
+    cost: model.cost,
+    status: model.status,
+    interleaved: model.interleaved,
+  };
 }
 
 function stable(value: unknown): string {
