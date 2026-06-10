@@ -367,8 +367,6 @@ function mergeModel(
   const contextTokens = spec.availableContextTokens;
   const outputTokens = spec.maxCompletionTokens ?? Math.floor(contextTokens / 4);
 
-  const openWeights = spec.modelSource?.toLowerCase().includes("huggingface") ?? false;
-
   const inputModalities = buildInputModalities(caps);
 
   if (existing?.modalities?.input?.includes("pdf") && !inputModalities.includes("pdf")) {
@@ -381,6 +379,17 @@ function mergeModel(
     caps.supportsVideoInput === true;
 
   const baseModel = resolveBaseModel(apiModel.id, spec.name) ?? existing?.base_model;
+
+  let openWeights: boolean;
+  if (baseModel) {
+    const [lab, ...rest] = baseModel.split("/");
+    const metadataOpenWeights = loadMetadata(lab, rest.join("/")).open_weights;
+    openWeights = typeof metadataOpenWeights === "boolean"
+      ? metadataOpenWeights
+      : (spec.modelSource?.toLowerCase().includes("huggingface") ?? false);
+  } else {
+    openWeights = spec.modelSource?.toLowerCase().includes("huggingface") ?? false;
+  }
 
   const merged: MergedModel = {
     ...(baseModel && { base_model: baseModel }),
@@ -492,7 +501,6 @@ function baseModelOverrides(model: MergedModel): Record<string, unknown> {
     tool_call: model.tool_call,
     structured_output: model.structured_output,
     knowledge: model.knowledge,
-    open_weights: model.open_weights,
     status: model.status,
     interleaved: model.interleaved,
     modalities: model.modalities,
@@ -635,7 +643,6 @@ function formatBaseModelToml(model: MergedModel): string {
     "reasoning",
     "tool_call",
     "structured_output",
-    "open_weights",
   ] as const) {
     if (overrides[field] !== undefined) {
       lines.push(`${field} = ${overrides[field]}`);
@@ -732,8 +739,6 @@ function detectChanges(
     compare("reasoning", existing.reasoning, overrides.reasoning);
     compare("tool_call", existing.tool_call, overrides.tool_call);
     compare("structured_output", existing.structured_output, overrides.structured_output);
-    compare("temperature", existing.temperature, overrides.temperature);
-    compare("open_weights", existing.open_weights, overrides.open_weights);
     compare("knowledge", existing.knowledge, overrides.knowledge);
     compare("last_updated", existing.last_updated, merged.last_updated);
     compare("status", existing.status, overrides.status);
@@ -769,6 +774,7 @@ function detectChanges(
   compare("reasoning_options", existing.reasoning_options, merged.reasoning_options);
   compare("tool_call", existing.tool_call, merged.tool_call);
   compare("structured_output", existing.structured_output, merged.structured_output);
+  compare("temperature", existing.temperature, merged.temperature);
   compare("open_weights", existing.open_weights, merged.open_weights);
   compare("release_date", existing.release_date, merged.release_date);
   compare("cost.input", existing.cost?.input, merged.cost?.input);
