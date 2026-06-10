@@ -76,14 +76,6 @@ export const venice = {
   id: "venice",
   name: "Venice",
   modelsDir: "providers/venice/models",
-  deleteMissing: false,
-  missingNotice(paths) {
-    if (paths.length === 0) return [];
-    return [
-      `${paths.length} local Venice models were absent from the API response and were retained because model visibility can depend on API-key access.`,
-      `Retained local paths: ${paths.map((item) => `\`${item}\``).join(", ")}`,
-    ];
-  },
   async fetchModels() {
     const headers = process.env.VENICE_API_KEY
       ? { Authorization: `Bearer ${process.env.VENICE_API_KEY}` }

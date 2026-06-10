@@ -179,7 +179,7 @@ Venice is implemented in `packages/core/src/sync/providers/venice.ts`.
 
 - Run it with `bun models:sync venice` or `bun venice:sync`.
 - `VENICE_API_KEY` is optional locally and includes models visible to that account when set.
-- Models missing from an API response are retained because unauthenticated and authenticated responses can expose different model sets.
+- Models missing from the API response are removed from the Venice catalog.
 - Flattened Venice model IDs are matched to provider-agnostic metadata before provider-specific overrides are written with `base_model`.
 
 ## Standalone Generators
