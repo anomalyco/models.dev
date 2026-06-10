@@ -1,0 +1,10 @@
+base_model = "deepseek/deepseek-v4-flash"
+name = "DeepSeek V4 Flash"
+
+[cost]
+input = 0.17
+output = 0.35
+cache_read = 0.035
+
+[limit]
+output = 8_192

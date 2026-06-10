@@ -1,7 +1,6 @@
-name = "Whisper Large v3"
-family = "whisper"
-release_date = "2023-11-06"
-last_updated = "2023-11-06"
+name = "Privacy Filter"
+release_date = "2026-03-16"
+last_updated = "2026-03-16"
 attachment = false
 reasoning = false
 temperature = false
@@ -13,9 +12,9 @@ input = 0.01
 output = 0.00
 
 [limit]
-context = 448
+context = 512
 output = 1_024
 
 [modalities]
-input = ["audio"]
+input = ["text"]
 output = ["text"]

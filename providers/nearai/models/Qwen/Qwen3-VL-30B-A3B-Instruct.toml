@@ -5,7 +5,7 @@ last_updated = "2025-09-23"
 attachment = true
 reasoning = false
 temperature = true
-tool_call = true
+tool_call = false
 structured_output = true
 open_weights = true
 
@@ -14,8 +14,8 @@ input = 0.15
 output = 0.55
 
 [limit]
-context = 256_000
-output = 32_768
+context = 16_384
+output = 8_192
 
 [modalities]
 input = ["text", "image"]
