@@ -1,5 +1,5 @@
 base_model = "xiaomi/mimo-v2.5"
-reasoning_options = [{ type = "toggle" }]
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "medium", "high"] }]
 
 [interleaved]
 field = "reasoning_content"
