@@ -1,13 +1,11 @@
+base_model = "zhipuai/glm-5"
 name = "GLM 5"
-family = "glm"
-attachment = false
-reasoning = true
-tool_call = true
 structured_output = true
-temperature = true
-release_date = "2026-02-11"
-last_updated = "2026-03-12"
-open_weights = true
+last_updated = "2026-06-10"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high"]
 
 [interleaved]
 field = "reasoning_content"
@@ -20,7 +18,3 @@ cache_read = 0.2
 [limit]
 context = 198_000
 output = 32_000
-
-[modalities]
-input = ["text"]
-output = ["text"]

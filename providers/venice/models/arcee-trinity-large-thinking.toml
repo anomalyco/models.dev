@@ -6,8 +6,12 @@ tool_call = true
 structured_output = true
 temperature = true
 release_date = "2026-04-02"
-last_updated = "2026-04-04"
+last_updated = "2026-06-10"
 open_weights = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high"]
 
 [interleaved]
 field = "reasoning_content"
