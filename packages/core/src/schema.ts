@@ -25,7 +25,7 @@ const ReasoningEffortValue = z.preprocess(
   (value) => (value === "null" ? null : value),
   z.union([
     z.null(),
-    z.enum(["none", "minimal", "low", "medium", "high", "xhigh", "max"]),
+    z.enum(["none", "minimal", "low", "medium", "high", "xhigh", "max", "default"]),
   ]),
 );
 

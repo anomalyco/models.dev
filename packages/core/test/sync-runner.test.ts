@@ -32,6 +32,15 @@ test("reasoning budgets allow only the -1 negative sentinel", () => {
   }).success).toBe(false);
 });
 
+test("reasoning efforts accept the provider default value", () => {
+  expect(AuthoredModelShape.safeParse({
+    id: "model",
+    ...model,
+    reasoning: true,
+    reasoning_options: [{ type: "effort", values: ["none", "default"] }],
+  }).success).toBe(true);
+});
+
 async function fixture() {
   const root = await mkdtemp(path.join(os.tmpdir(), "models-dev-sync-"));
   const modelsDir = path.join(root, "providers", "test", "models");
