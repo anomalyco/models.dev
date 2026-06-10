@@ -1,24 +1,17 @@
-name = "Gemini 3.1 Pro Preview"
-family = "gemini-pro"
-release_date = "2026-02-19"
-last_updated = "2026-02-19"
-attachment = true
-reasoning = true
-temperature = true
-tool_call = true
-structured_output = true
-knowledge = "2025-01"
-open_weights = false
+base_model = "google/gemini-3.1-pro-preview"
 
 [cost]
-input = 0
-output = 0
+input = 2
+output = 12
+cache_read = 0.2
+
+[[cost.tiers]]
+tier = { type = "context", size = 200_000 }
+input = 4
+output = 18
+cache_read = 0.4
 
 [limit]
-context = 128_000
+context = 200_000
+input = 136_000
 output = 64_000
-input = 128_000
-
-[modalities]
-input = ["text", "image"]
-output = ["text"]

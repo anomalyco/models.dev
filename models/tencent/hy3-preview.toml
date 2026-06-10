@@ -1,0 +1,27 @@
+name = "Hy3 preview"
+family = "Hy"
+release_date = "2026-04-20"
+last_updated = "2026-04-20"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+open_weights = true
+
+[limit]
+context = 256_000
+output = 64_000
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/tencent/Hy3-preview"
+
+[[benchmarks]]
+name = "SWE-Bench Verified"
+score = 74.4
+metric = "resolved"
+source = "https://huggingface.co/tencent/Hy3-preview"

@@ -1,0 +1,22 @@
+# Not included in subscription
+name = "ByteDance Seed 2.0 Lite"
+release_date = "2026-03-10"
+last_updated = "2026-03-10"
+attachment = false
+reasoning = false
+tool_call = false
+structured_output = true
+open_weights = false
+
+[cost]
+input = 0.25
+output = 2
+
+[limit]
+context = 262144
+input = 262144
+output = 131072
+
+[modalities]
+input = ["text"]
+output = ["text"]

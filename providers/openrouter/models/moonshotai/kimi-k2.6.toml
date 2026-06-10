@@ -1,17 +1,12 @@
-temperature = true
-tool_call = true
-structured_output = true
-
-[extends]
-from = "moonshotai/kimi-k2.6"
+base_model = "moonshotai/kimi-k2.6"
 
 [interleaved]
 field = "reasoning_details"
 
 [cost]
-input = 0.73
-output = 3.49
-cache_read = 0.25
+input = 0.68
+output = 3.41
+cache_read = 0.34
 
 [limit]
 context = 262_142
@@ -19,4 +14,3 @@ output = 262_142
 
 [modalities]
 input = ["text", "image"]
-output = ["text"]

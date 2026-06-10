@@ -1,3 +1,7 @@
-[extends]
-from = "openai/gpt-4.1-nano"
-omit = ["structured_output"]
+base_model = "openai/gpt-4.1-nano"
+base_model_omit = ["structured_output"]
+
+[cost]
+input = 0.1
+output = 0.4
+cache_read = 0.025

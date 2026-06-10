@@ -26,6 +26,7 @@ export const ModelFamilyValues = [
   "claude-haiku",
   "claude-sonnet",
   "claude-opus",
+  "claude-fable",
 
   // Gemini style
   "gemini",
@@ -49,6 +50,8 @@ export const ModelFamilyValues = [
   "qwen",
   "qwen3.5",
   "qwen3.6",
+  "qwen3.7-plus",
+  "qwen3.7-max",
   "qwen-free",
 
   // DeepSeek
@@ -100,6 +103,8 @@ export const ModelFamilyValues = [
   "command-r",
   "command-a",
   "command-light",
+  "north",
+  "north-free",
 
   // AI21 Jamba
   "jamba",
@@ -116,6 +121,8 @@ export const ModelFamilyValues = [
   "minimax",
   "minimax-m2.5",
   "minimax-m2.7",
+  "minimax-m3",
+  "minimax-m3-free",
   "minimax-free",
 
   // Hunyuan
@@ -215,6 +222,7 @@ export const ModelFamilyValues = [
   "mimo-v2-omni",
   "mimo-v2.5-pro",
   "mimo-v2.5",
+  "mimo-v2.5-free",
   "mimo-pro-free",
   "mimo-omni-free",
   "mimo-flash-free",

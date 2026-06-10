@@ -29,7 +29,7 @@ const XAIAPIKey = z.object({
   acls: z.array(z.string()),
 }).passthrough();
 
-type XAIModel = z.infer<typeof XAIModel>;
+export type XAIModel = z.infer<typeof XAIModel>;
 
 export const xai = {
   id: "xai",
@@ -87,7 +87,7 @@ export const xai = {
 
     return {
       id: model.id,
-      model: buildModel(model, existing),
+      model: buildXAIModel(model, existing),
     };
   },
 } satisfies SyncProvider<XAIModel>;
@@ -159,7 +159,7 @@ function cost(model: XAIModel, existing: ExistingModel) {
   };
 }
 
-function buildModel(model: XAIModel, existing: ExistingModel): SyncedModel {
+export function buildXAIModel(model: XAIModel, existing: ExistingModel): SyncedModel {
   const name = existing.name;
   const attachment = existing.attachment;
   const reasoning = existing.reasoning;
@@ -187,12 +187,15 @@ function buildModel(model: XAIModel, existing: ExistingModel): SyncedModel {
   const created = dateFromTimestamp(model.created);
 
   return {
+    base_model: existing.base_model,
+    base_model_omit: existing.base_model_omit,
     name,
     family: existing.family,
     release_date: model.canonical_id === undefined ? created : releaseDate!,
     last_updated: model.canonical_id === undefined ? created : lastUpdated!,
     attachment: input.some((value) => value !== "text"),
     reasoning,
+    reasoning_options: existing.reasoning_options,
     temperature: existing.temperature,
     tool_call: toolCall,
     structured_output: existing.structured_output,

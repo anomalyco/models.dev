@@ -1,13 +1,7 @@
-name = "GLM-4.6V"
-family = "glm"
+base_model = "zhipuai/glm-4.6v"
 release_date = "2025-09-30"
-last_updated = "2025-09-30"
-attachment = true
-reasoning = true
-temperature = true
-tool_call = true
-open_weights = false
 knowledge = "2024-10"
+open_weights = false
 
 [cost]
 input = 0.3
@@ -15,9 +9,7 @@ output = 0.9
 cache_read = 0.05
 
 [limit]
-context = 128000
-output = 24000
+output = 24_000
 
 [modalities]
 input = ["text", "image", "pdf"]
-output = ["text"]

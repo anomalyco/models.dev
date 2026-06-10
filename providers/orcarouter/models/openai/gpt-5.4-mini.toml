@@ -1,6 +1,10 @@
-[extends]
-from = "openai/gpt-5.4-mini"
+base_model = "openai/gpt-5.4-mini"
 
 [cost]
 input = 0.75
 output = 4.5
+cache_read = 0.075
+
+[experimental.modes.fast]
+cost = { input = 1.5, output = 9, cache_read = 0.15 }
+provider = { body = { service_tier = "priority" } }

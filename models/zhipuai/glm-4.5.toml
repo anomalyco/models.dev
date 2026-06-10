@@ -1,0 +1,43 @@
+name = "GLM-4.5"
+family = "glm"
+release_date = "2025-07-28"
+last_updated = "2025-07-28"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+knowledge = "2025-04"
+open_weights = true
+
+[limit]
+context = 131_072
+output = 98_304
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/zai-org/GLM-4.5"
+
+[[benchmarks]]
+name = "Artificial Analysis Coding Index"
+score = 26.3
+metric = "index"
+source = "https://openrouter.ai/z-ai/glm-4.5/benchmarks"
+date = "2026-03-11"
+
+[[benchmarks]]
+name = "SciCode"
+score = 34.8
+metric = "percent correct"
+source = "https://openrouter.ai/z-ai/glm-4.5/benchmarks"
+date = "2026-03-11"
+
+[[benchmarks]]
+name = "Terminal-Bench Hard"
+score = 22
+metric = "success rate"
+source = "https://openrouter.ai/z-ai/glm-4.5/benchmarks"
+date = "2026-03-11"

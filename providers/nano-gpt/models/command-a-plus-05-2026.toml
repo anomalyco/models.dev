@@ -1,0 +1,22 @@
+# Not included in subscription
+name = "Cohere Command A+ (05/2026)"
+release_date = "2026-05-22"
+last_updated = "2026-05-22"
+attachment = true
+reasoning = true
+tool_call = false
+structured_output = true
+open_weights = false
+
+[cost]
+input = 2.5
+output = 10
+
+[limit]
+context = 128000
+input = 128000
+output = 64000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

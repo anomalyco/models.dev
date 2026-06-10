@@ -1,0 +1,23 @@
+# Not included in subscription
+name = "AionLabs: Aion-2.5"
+release_date = "2026-03-20"
+last_updated = "2026-03-20"
+attachment = false
+reasoning = false
+tool_call = false
+structured_output = false
+open_weights = false
+
+[cost]
+input = 1
+output = 3
+cache_read = 0.35
+
+[limit]
+context = 131072
+input = 131072
+output = 32768
+
+[modalities]
+input = ["text"]
+output = ["text"]

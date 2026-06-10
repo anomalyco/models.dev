@@ -1,0 +1,50 @@
+name = "Kimi K2.5"
+family = "kimi-k2.5"
+release_date = "2026-01"
+last_updated = "2026-01"
+attachment = false
+reasoning = true
+temperature = false
+tool_call = true
+structured_output = true
+knowledge = "2025-01"
+open_weights = true
+
+[limit]
+context = 262_144
+output = 262_144
+
+[modalities]
+input = ["text", "image", "video"]
+output = ["text"]
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/moonshotai/Kimi-K2.5"
+
+[[benchmarks]]
+name = "SWE-Bench Verified"
+score = 70.8
+metric = "resolved"
+source = "https://www.swebench.com/"
+
+[[benchmarks]]
+name = "SWE-Atlas Codebase QnA"
+score = 13.1
+metric = "score"
+harness = "Mini-SWE-Agent"
+source = "https://labs.scale.com/leaderboard/sweatlas-qna"
+
+[[benchmarks]]
+name = "SWE-Atlas Refactoring"
+score = 20.95
+metric = "score"
+harness = "Mini-SWE-Agent"
+source = "https://labs.scale.com/leaderboard/sweatlas-refactoring"
+
+[[benchmarks]]
+name = "SWE-Atlas Test Writing"
+score = 25.77
+metric = "score"
+harness = "Mini-SWE-Agent"
+source = "https://labs.scale.com/leaderboard/sweatlas-tw"

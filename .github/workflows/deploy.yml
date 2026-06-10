@@ -10,6 +10,7 @@ concurrency: ${{ github.workflow }}-${{ github.ref }}
 
 jobs:
   deploy:
+    if: github.repository == 'anomalyco/models.dev'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code

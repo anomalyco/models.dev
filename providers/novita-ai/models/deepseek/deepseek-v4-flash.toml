@@ -1,5 +1,8 @@
-[extends]
-from = "deepseek/deepseek-v4-flash"
+base_model = "deepseek/deepseek-v4-flash"
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["minimal", "low", "medium", "high", "xhigh"] }]
+
+[interleaved]
+field = "reasoning_content"
 
 [cost]
 input = 0.14

@@ -1,0 +1,14 @@
+base_model = "moonshotai/kimi-k2.6"
+name = "Kimi K2.6 (free)"
+temperature = false
+structured_output = false
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0
+output = 0
+
+[modalities]
+input = ["text", "image"]

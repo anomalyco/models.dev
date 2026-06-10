@@ -1,0 +1,63 @@
+name = "DeepSeek V4 Pro"
+family = "deepseek-thinking"
+release_date = "2026-04-24"
+last_updated = "2026-04-24"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = true
+knowledge = "2025-05"
+open_weights = true
+
+[limit]
+context = 1_000_000
+output = 384_000
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/deepseek-ai/DeepSeek-V4-Pro"
+
+[[benchmarks]]
+name = "SWE-Bench Verified"
+score = 80.6
+metric = "resolved"
+source = "https://huggingface.co/deepseek-ai/DeepSeek-V4-Pro"
+
+[[benchmarks]]
+name = "Artificial Analysis Coding Agent Index"
+score = 50.1
+metric = "average pass@1"
+harness = "Claude Code"
+variant = "high"
+source = "https://artificialanalysis.ai/agents/coding-agents"
+
+[[benchmarks]]
+name = "SWE-Atlas Codebase QnA"
+score = 67.8
+metric = "pass@1"
+harness = "Claude Code"
+variant = "high"
+source = "https://artificialanalysis.ai/agents/coding-agents"
+
+[[benchmarks]]
+name = "SWE-Bench Pro"
+score = 18
+metric = "pass@1"
+harness = "Claude Code"
+variant = "high"
+dataset = "hard-aa"
+source = "https://artificialanalysis.ai/agents/coding-agents"
+
+[[benchmarks]]
+name = "Terminal-Bench"
+score = 64.7
+metric = "pass@1"
+harness = "Claude Code"
+variant = "high"
+version = "2.1"
+source = "https://artificialanalysis.ai/agents/coding-agents"

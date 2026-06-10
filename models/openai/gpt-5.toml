@@ -1,0 +1,34 @@
+name = "GPT-5"
+family = "gpt"
+release_date = "2025-08-07"
+last_updated = "2025-08-07"
+attachment = true
+reasoning = true
+temperature = false
+knowledge = "2024-09-30"
+tool_call = true
+structured_output = true
+open_weights = false
+
+[limit]
+context = 400_000
+input = 272_000
+output = 128_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[[benchmarks]]
+name = "Aider Polyglot"
+score = 88.0
+metric = "percent correct"
+source = "https://aider.chat/docs/leaderboards/"
+date = "2025-08-23"
+
+[[benchmarks]]
+name = "SWE-Bench Pro"
+score = 41.78
+metric = "resolve rate"
+dataset = "public"
+source = "https://labs.scale.com/leaderboard/swe_bench_pro_public"

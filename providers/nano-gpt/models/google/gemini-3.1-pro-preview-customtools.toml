@@ -1,0 +1,23 @@
+# Not included in subscription
+name = "Gemini 3.1 Pro (Preview Custom Tools)"
+release_date = "2026-02-27"
+last_updated = "2026-02-27"
+attachment = true
+reasoning = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[cost]
+input = 2
+output = 12
+cache_read = 0.2
+
+[limit]
+context = 1048756
+input = 1048756
+output = 65536
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

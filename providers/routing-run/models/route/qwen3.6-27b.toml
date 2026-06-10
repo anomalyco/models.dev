@@ -1,17 +1,14 @@
-name = "Qwen3.6 27B"
+base_model = "alibaba/qwen3.6-27b"
+attachment = false
 reasoning = false
 
-[extends]
-from = "alibaba/qwen3.6-27b"
-
 [cost]
-input = 1.10
-output = 3.30
+input = 1.1
+output = 3.3
 
 [limit]
-context = 262_144
-output = 262_144
+context = 202_000
+output = 32_768
 
 [modalities]
-input = ["text", "image", "video"]
-output = ["text"]
+input = ["text"]

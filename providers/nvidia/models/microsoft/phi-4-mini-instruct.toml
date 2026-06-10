@@ -2,12 +2,12 @@ name = "Phi-4-Mini"
 family = "phi"
 release_date = "2024-12-01"
 last_updated = "2025-09-05"
-attachment = true
-reasoning = true
+attachment = false
+reasoning = false
 temperature = true
 knowledge = "2024-12"
 tool_call = true
-open_weights = false
+open_weights = true
 
 [cost]
 input = 0.0
@@ -18,5 +18,5 @@ context = 131_072
 output = 8_192
 
 [modalities]
-input = ["text", "image", "audio"]
+input = ["text"]
 output = ["text"]

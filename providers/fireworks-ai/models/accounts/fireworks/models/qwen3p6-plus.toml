@@ -8,14 +8,21 @@ temperature = true
 tool_call = true
 open_weights = false
 
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high"]
+
 [cost]
 cache_read = 0.10
 input = 0.50
 output = 3.00
 
 [limit]
-context = 128_000
-output = 8_192
+context = 262_144
+output = 65_536
 
 [modalities]
 input = ["text", "image"]

@@ -1,0 +1,5 @@
+name = "Snowflake Cortex"
+npm = "@ai-sdk/openai-compatible"
+api = "https://${SNOWFLAKE_ACCOUNT}.snowflakecomputing.com/api/v2/cortex/v1"
+env = ["SNOWFLAKE_ACCOUNT", "SNOWFLAKE_CORTEX_PAT"]
+doc = "https://docs.snowflake.com/en/user-guide/snowflake-cortex/cortex-rest-api"

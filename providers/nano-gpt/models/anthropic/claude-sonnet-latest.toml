@@ -1,0 +1,23 @@
+# Not included in subscription
+name = "Claude Sonnet Latest"
+release_date = "2026-03-01"
+last_updated = "2026-03-01"
+attachment = true
+reasoning = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[cost]
+input = 2.992
+output = 14.994
+cache_read = 0.2992
+
+[limit]
+context = 1000000
+input = 1000000
+output = 128000
+
+[modalities]
+input = ["text", "image", "pdf"]
+output = ["text"]

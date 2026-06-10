@@ -1,0 +1,22 @@
+# Included in subscription
+name = "Qwen 3 235b A22B"
+release_date = "2025-04-29"
+last_updated = "2025-04-29"
+attachment = true
+reasoning = false
+tool_call = true
+structured_output = true
+open_weights = false
+
+[cost]
+input = 0.3
+output = 0.5
+
+[limit]
+context = 41000
+input = 41000
+output = 32768
+
+[modalities]
+input = ["text", "pdf"]
+output = ["text"]

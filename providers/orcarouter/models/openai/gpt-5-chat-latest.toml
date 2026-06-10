@@ -1,6 +1,6 @@
-[extends]
-from = "openai/gpt-5-chat-latest"
+base_model = "openai/gpt-5-chat-latest"
 
 [cost]
 input = 1.25
-output = 10.0
+output = 10
+cache_read = 0.125

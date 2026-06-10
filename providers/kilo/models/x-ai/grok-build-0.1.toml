@@ -1,0 +1,21 @@
+name = "xAI: Grok Build 0.1"
+release_date = "2026-05-20"
+last_updated = "2026-05-27"
+attachment = true
+reasoning = true
+tool_call = true
+temperature = true
+open_weights = false
+
+[cost]
+input = 1.0
+output = 2.0
+cache_read = 0.2
+
+[limit]
+context = 256000
+output = 256000
+
+[modalities]
+input = ["image", "text"]
+output = ["text"]

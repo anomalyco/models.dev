@@ -1,25 +1,14 @@
+base_model = "zhipuai/glm-4.7-flashx"
 name = "GLM 4.7 FlashX"
-family = "glm-flash"
-release_date = "2025-01"
-last_updated = "2025-01"
-attachment = false
-reasoning = true
-temperature = true
+release_date = "2025-01-01"
 knowledge = "2025-01"
-tool_call = true
-open_weights = true
 
 interleaved = true
 
 [cost]
 input = 0.06
-output = 0.40
+output = 0.4
 cache_read = 0.01
 
 [limit]
-context = 200_000
 output = 128_000
-
-[modalities]
-input = ["text"]
-output = ["text"]

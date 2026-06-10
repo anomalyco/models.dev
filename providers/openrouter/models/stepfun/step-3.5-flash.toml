@@ -1,14 +1,6 @@
-name = "Step 3.5 Flash"
-family = "step"
-release_date = "2026-01-29"
-last_updated = "2026-01-29"
-attachment = false
-reasoning = true
-temperature = true
-tool_call = true
+base_model = "stepfun/step-3.5-flash"
+base_model_omit = ["limit.input"]
 structured_output = false
-knowledge = "2025-01"
-open_weights = true
 
 [cost]
 input = 0.09
@@ -18,7 +10,3 @@ cache_read = 0.02
 [limit]
 context = 262_144
 output = 16_384
-
-[modalities]
-input = ["text"]
-output = ["text"]

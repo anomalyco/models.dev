@@ -1,0 +1,18 @@
+name = "Qwen Plus"
+family = "qwen"
+release_date = "2024-01-25"
+last_updated = "2025-09-11"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+knowledge = "2024-04"
+open_weights = false
+
+[limit]
+context = 1_000_000
+output = 32_768
+
+[modalities]
+input = ["text"]
+output = ["text"]

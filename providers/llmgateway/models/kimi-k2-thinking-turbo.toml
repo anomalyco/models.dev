@@ -1,2 +1,9 @@
-[extends]
-from = "moonshotai/kimi-k2-thinking-turbo"
+base_model = "moonshotai/kimi-k2-thinking-turbo"
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 1.15
+output = 8
+cache_read = 0.15

@@ -1,0 +1,22 @@
+name = "Stealth: Claude Opus 4.6 (20% off)"
+release_date = "2026-02-05"
+last_updated = "2026-05-27"
+attachment = true
+reasoning = true
+tool_call = true
+temperature = true
+open_weights = false
+
+[cost]
+input = 4.0
+output = 20.0
+cache_read = 0.4
+cache_write = 5.0
+
+[limit]
+context = 1000000
+output = 128000
+
+[modalities]
+input = ["image", "pdf", "text"]
+output = ["text"]

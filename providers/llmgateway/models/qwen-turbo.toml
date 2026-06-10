@@ -1,2 +1,6 @@
-[extends]
-from = "alibaba/qwen-turbo"
+base_model = "alibaba/qwen-turbo"
+
+[cost]
+input = 0.05
+output = 0.2
+reasoning = 0.5

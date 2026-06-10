@@ -1,0 +1,23 @@
+# Not included in subscription
+name = "Claude Opus 4.8"
+release_date = "2026-05-28"
+last_updated = "2026-05-28"
+attachment = true
+reasoning = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[cost]
+input = 4.998
+output = 25.007
+cache_read = 0.4998
+
+[limit]
+context = 1000000
+input = 1000000
+output = 128000
+
+[modalities]
+input = ["text", "image", "pdf"]
+output = ["text"]

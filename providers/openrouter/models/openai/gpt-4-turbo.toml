@@ -1,18 +1,6 @@
-temperature = true
-tool_call = true
+base_model = "openai/gpt-4-turbo"
 structured_output = true
-
-[extends]
-from = "openai/gpt-4-turbo"
 
 [cost]
 input = 10
 output = 30
-
-[limit]
-context = 128_000
-output = 4_096
-
-[modalities]
-input = ["text", "image"]
-output = ["text"]

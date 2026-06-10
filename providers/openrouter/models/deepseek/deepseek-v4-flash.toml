@@ -1,22 +1,13 @@
-temperature = true
-tool_call = true
-structured_output = true
-
-[extends]
-from = "deepseek/deepseek-v4-flash"
+base_model = "deepseek/deepseek-v4-flash"
 
 [interleaved]
 field = "reasoning_content"
 
 [cost]
-input = 0.1
-output = 0.2
-cache_read = 0.02
+input = 0.0983
+output = 0.1966
+cache_read = 0.0197
 
 [limit]
 context = 1_048_576
-output = 16_384
-
-[modalities]
-input = ["text"]
-output = ["text"]
+output = 131_072

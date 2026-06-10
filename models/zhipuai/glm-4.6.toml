@@ -1,0 +1,50 @@
+name = "GLM-4.6"
+family = "glm"
+release_date = "2025-09-30"
+last_updated = "2025-09-30"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+knowledge = "2025-04"
+open_weights = true
+
+[limit]
+context = 204_800
+output = 131_072
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/zai-org/GLM-4.6"
+
+[[benchmarks]]
+name = "Artificial Analysis Coding Index"
+score = 29.5
+metric = "index"
+source = "https://openrouter.ai/z-ai/glm-4.6/benchmarks"
+date = "2026-05-22"
+
+[[benchmarks]]
+name = "SciCode"
+score = 38.4
+metric = "percent correct"
+source = "https://openrouter.ai/z-ai/glm-4.6/benchmarks"
+date = "2026-05-22"
+
+[[benchmarks]]
+name = "Terminal-Bench Hard"
+score = 25
+metric = "success rate"
+source = "https://openrouter.ai/z-ai/glm-4.6/benchmarks"
+date = "2026-05-22"
+
+[[benchmarks]]
+name = "SWE-Bench Pro"
+score = 9.67
+metric = "resolve rate"
+dataset = "public"
+source = "https://labs.scale.com/leaderboard/swe_bench_pro_public"

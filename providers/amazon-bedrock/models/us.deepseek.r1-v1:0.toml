@@ -1,4 +1,7 @@
+base_model = "deepseek/deepseek-r1"
+reasoning_options = []
 name = "DeepSeek-R1 (US)"
 
-[extends]
-from = "amazon-bedrock/deepseek.r1-v1:0"
+[cost]
+input = 1.35
+output = 5.4

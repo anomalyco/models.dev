@@ -14,6 +14,7 @@ concurrency: ${{ github.workflow }}-${{ github.ref }}
 
 jobs:
   providers:
+    if: github.repository == 'anomalyco/models.dev'
     runs-on: ubuntu-latest
     outputs:
       matrix: ${{ steps.providers.outputs.matrix }}
@@ -33,10 +34,13 @@ jobs:
 
       - name: List sync providers
         id: providers
-        run: echo "matrix=$(bun models:sync --list-providers)" >> "$GITHUB_OUTPUT"
+        run: |
+          matrix="$(bun models:sync --list-providers)"
+          echo "matrix=$matrix" >> "$GITHUB_OUTPUT"
 
   sync:
     needs: providers
+    if: github.repository == 'anomalyco/models.dev'
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -59,6 +63,7 @@ jobs:
       - name: Sync model catalogs
         run: bun models:sync ${{ matrix.provider }}
         env:
+          BASETEN_API_KEY: ${{ secrets.BASETEN_API_KEY }}
           OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
           GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
