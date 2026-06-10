@@ -1,13 +1,7 @@
-name = "Grok 4.3"
-family = "grok"
-attachment = true
-reasoning = true
-tool_call = true
-structured_output = true
-temperature = true
+base_model = "xai/grok-4.3"
 release_date = "2026-04-18"
-last_updated = "2026-05-04"
-open_weights = false
+last_updated = "2026-06-10"
+reasoning_options = []
 
 [cost]
 input = 1.42
@@ -15,15 +9,13 @@ output = 2.83
 cache_read = 0.23
 
 [[cost.tiers]]
-tier = { size = 200_000 }
+tier = { type = "context", size = 200_000 }
 input = 2.83
 output = 5.67
 cache_read = 0.45
 
 [limit]
-context = 1_000_000
 output = 32_000
 
 [modalities]
 input = ["text", "image"]
-output = ["text"]

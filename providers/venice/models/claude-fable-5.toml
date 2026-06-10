@@ -1,6 +1,9 @@
 base_model = "anthropic/claude-fable-5"
-structured_output = true
+release_date = "2026-06-10"
 last_updated = "2026-06-10"
+temperature = true
+structured_output = true
+reasoning_options = []
 
 [cost]
 input = 12
@@ -10,4 +13,3 @@ cache_write = 15
 
 [modalities]
 input = ["text", "image"]
-output = ["text"]

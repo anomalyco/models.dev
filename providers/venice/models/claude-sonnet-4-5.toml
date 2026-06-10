@@ -1,13 +1,9 @@
+base_model = "anthropic/claude-sonnet-4-5"
 name = "Claude Sonnet 4.5"
-family = "claude-sonnet"
-attachment = true
-reasoning = true
-tool_call = true
-structured_output = true
-temperature = true
 release_date = "2025-01-15"
-last_updated = "2026-04-12"
-open_weights = false
+last_updated = "2026-06-10"
+structured_output = true
+reasoning_options = []
 
 [cost]
 input = 3.75
@@ -17,8 +13,6 @@ cache_write = 4.69
 
 [limit]
 context = 198_000
-output = 64_000
 
 [modalities]
 input = ["text", "image"]
-output = ["text"]

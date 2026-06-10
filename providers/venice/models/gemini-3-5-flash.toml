@@ -1,13 +1,11 @@
-name = "Gemini 3.5 Flash"
-family = "gemini-flash"
-attachment = true
-reasoning = true
-tool_call = true
-structured_output = true
-temperature = true
+base_model = "google/gemini-3.5-flash"
+family = "gemini"
 release_date = "2026-05-22"
-last_updated = "2026-05-25"
-open_weights = false
+last_updated = "2026-06-10"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high"]
 
 [cost]
 input = 1.55
@@ -17,8 +15,6 @@ cache_write = 0.086
 
 [limit]
 context = 1_000_000
-output = 65_536
 
 [modalities]
 input = ["text", "image", "audio", "video"]
-output = ["text"]

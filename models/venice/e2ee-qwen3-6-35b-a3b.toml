@@ -1,0 +1,20 @@
+name = "Qwen 3.6 35B A3B FP8"
+family = "qwen"
+release_date = "2026-05-20"
+last_updated = "2026-06-10"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+open_weights = true
+
+[limit]
+context = 32_000
+output = 4_096
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[[weights]]
+url = "https://huggingface.co/Qwen/Qwen3.6-35B-A3B-FP8"
