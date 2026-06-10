@@ -47,7 +47,7 @@ const ReasoningOption = z
         type: z.literal("budget_tokens"),
         min: z
           .number()
-          .min(0, "Minimum reasoning budget cannot be negative")
+          .min(-1, "Minimum reasoning budget cannot be less than -1")
           .optional(),
         max: z
           .number()
