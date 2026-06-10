@@ -170,12 +170,14 @@ export const ModelFamilyValues = [
   "stable-diffusion",
   "ideogram",
   "dreamshaper",
+  "wan",
 
   // Video generation
   "sora",
   "veo",
   "runway",
   "dream-machine",
+  "happyhorse",
 
   // Audio/Speech
   "whisper",
