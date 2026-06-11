@@ -85,4 +85,10 @@ test("DeepInfra models expose only verified reasoning controls", async () => {
     expect(deepinfra?.models[id]?.reasoning).toBe(true);
     expect(deepinfra?.models[id]?.reasoning_options).toBeUndefined();
   }
+
+  expect({
+    qwen35: deepinfra?.models["Qwen/Qwen3.5-35B-A3B"]?.cost.cache_read,
+    qwen35Large: deepinfra?.models["Qwen/Qwen3.5-397B-A17B"]?.cost.cache_read,
+    kimiK25: deepinfra?.models["moonshotai/Kimi-K2.5"]?.cost.cache_read,
+  }).toEqual({ qwen35: 0.05, qwen35Large: 0.22, kimiK25: 0.07 });
 });
