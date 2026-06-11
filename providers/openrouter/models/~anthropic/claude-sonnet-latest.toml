@@ -1,4 +1,4 @@
-reasoning_options = [{ type = "toggle" }, { type = "budget_tokens", min = 1024, max = 127999 }]
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "medium", "high", "max"] }, { type = "budget_tokens", min = 1024, max = 127999 }]
 name = "Anthropic Claude Sonnet Latest"
 family = "claude-sonnet"
 release_date = "2026-04-27"
