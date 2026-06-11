@@ -164,7 +164,7 @@ OVHcloud AI Endpoints is implemented in `packages/core/src/sync/providers/ovhclo
 - Model IDs are lowercased from the catalog `id` to match the existing TOML paths under `providers/ovhcloud/models`.
 - API prices are per-token strings and are converted to per-1M-token numbers; free models (price `0`) get no `[cost]` section.
 - `reasoning`, `tool_call`, and `structured_output` come from `supported_features`; `temperature` comes from `supported_sampling_parameters`.
-- Authored `reasoning_options` are preserved for reasoning models. `Qwen3-32B` supports toggling reasoning through OVHcloud's documented `/no_think` prompt control; both gpt-oss models support `low`, `medium`, and `high` reasoning effort; the remaining reasoning models declare an empty array because OVHcloud documents no configurable control for them.
+- Authored `reasoning_options` are preserved for reasoning models. `Qwen3-32B` supports toggling reasoning through OVHcloud's documented `/no_think` prompt control. Both gpt-oss models support `low`, `medium`, and `high` reasoning effort. The Qwen3.5 models support `none`, `low`, `medium`, and `high`; Qwen3.6-27B additionally supports `minimal`.
 - `attachment` is derived from non-text `input_modalities`, and `open_weights` from the presence of `hugging_face_id`.
 - `release_date`/`last_updated` default to the catalog `created` timestamp but preserve any existing hand-authored dates; `knowledge`, `family`, `status`, `interleaved`, and `limit.input` are preserved when present.
 

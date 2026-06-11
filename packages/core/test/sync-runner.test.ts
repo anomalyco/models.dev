@@ -198,6 +198,14 @@ input = ["text"]
 output = ["text"]
 `);
   const sync = provider(modelsDir, ["model"]);
+  sync.translateModel = (id) => ({
+    id,
+    model: {
+      ...model,
+      reasoning: false,
+      reasoning_options: [{ type: "toggle" }],
+    },
+  });
 
   const first = await syncProvider(sync);
   const content = await Bun.file(filePath).text();

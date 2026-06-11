@@ -163,14 +163,20 @@ export async function syncProvider<SourceModel>(
       });
     }
 
+    const translatedModel = provider.preserveBaseModels === false
+      ? translated.model
+      : preserveBaseModel(translated.model, existing.get(relativePath)?.authored);
+    const resolvedReasoning = translated.metadata !== undefined &&
+        "base_model" in translatedModel &&
+        translated.metadata?.id === translatedModel.base_model
+      ? translated.metadata.model.reasoning
+      : existing.get(relativePath)?.toml.reasoning;
     const parsed = SyncedAuthoredModel.safeParse(stripUndefined({
       id: translated.id,
       ...preserveReasoningOptions(
-        provider.preserveBaseModels === false
-          ? translated.model
-          : preserveBaseModel(translated.model, existing.get(relativePath)?.authored),
+        translatedModel,
         existing.get(relativePath)?.authored,
-        existing.get(relativePath)?.toml,
+        resolvedReasoning,
       ),
     }));
     if (!parsed.success) {
@@ -320,13 +326,13 @@ export function preserveBaseModel(model: SyncedModel, existing: ExistingModel | 
 export function preserveReasoningOptions(
   model: SyncedModel,
   existing: ExistingModel | undefined,
-  resolvedExisting: ExistingModel | undefined = existing,
+  resolvedReasoning: boolean | undefined = existing?.reasoning,
 ): SyncedModel {
-  if (
-    (model.reasoning ?? resolvedExisting?.reasoning) === false ||
-    model.reasoning_options !== undefined ||
-    existing?.reasoning_options === undefined
-  ) return model;
+  if ((model.reasoning ?? resolvedReasoning) === false) {
+    const { reasoning_options: _reasoningOptions, ...withoutReasoningOptions } = model;
+    return withoutReasoningOptions as SyncedModel;
+  }
+  if (model.reasoning_options !== undefined || existing?.reasoning_options === undefined) return model;
   return {
     ...model,
     reasoning_options: existing.reasoning_options,
