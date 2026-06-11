@@ -1,22 +1,18 @@
+base_model = "zhipuai/glm-4.6v"
+base_model_omit = ["knowledge"]
 name = "zai-org/GLM-4.6V"
-family = "glm"
 release_date = "2025-12-07"
 last_updated = "2025-12-07"
-attachment = true
-reasoning = true
-temperature = true
-tool_call = true
 structured_output = false
 open_weights = false
 
 [cost]
-input = 0.30
-output = 0.90
+input = 0.3
+output = 0.9
 
 [limit]
-context = 131_000
-output = 131_000
+context = 131000
+output = 131000
 
 [modalities]
-input = ["text","image"]
-output = ["text"]
+input = ["text", "image"]
