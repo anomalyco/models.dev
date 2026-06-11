@@ -1,0 +1,15 @@
+base_model = "google/gemma-4-31b-it"
+reasoning = false
+knowledge = "2025-01"
+
+[cost]
+input = 0.15
+output = 0.4
+
+[limit]
+context = 262_144
+output = 262_144
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
