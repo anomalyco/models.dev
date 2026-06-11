@@ -170,6 +170,7 @@ export async function syncProvider<SourceModel>(
           ? translated.model
           : preserveBaseModel(translated.model, existing.get(relativePath)?.authored),
         existing.get(relativePath)?.authored,
+        existing.get(relativePath)?.toml,
       ),
     }));
     if (!parsed.success) {
@@ -319,9 +320,10 @@ export function preserveBaseModel(model: SyncedModel, existing: ExistingModel | 
 export function preserveReasoningOptions(
   model: SyncedModel,
   existing: ExistingModel | undefined,
+  resolvedExisting: ExistingModel | undefined = existing,
 ): SyncedModel {
   if (
-    model.reasoning === false ||
+    (model.reasoning ?? resolvedExisting?.reasoning) === false ||
     model.reasoning_options !== undefined ||
     existing?.reasoning_options === undefined
   ) return model;

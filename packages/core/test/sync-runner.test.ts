@@ -3,6 +3,7 @@ import path from "node:path";
 import { mkdtemp, mkdir, readlink, symlink } from "node:fs/promises";
 import os from "node:os";
 
+import { generate } from "../src/index.js";
 import { AuthoredModelShape } from "../src/schema.js";
 import { syncProvider, type SyncProvider, type SyncedFullModel } from "../src/sync/index.js";
 
@@ -205,6 +206,61 @@ output = ["text"]
   expect(first.updated).toBe(1);
   expect(content).toContain("reasoning = false");
   expect(content).not.toContain("reasoning_options");
+  expect(second.updated).toBe(0);
+  expect(second.unchanged).toBe(1);
+});
+
+test("sync removes authored reasoning options inherited beside reasoning false", async () => {
+  const { root, modelsDir } = await fixture();
+  const filePath = path.join(modelsDir, "model.toml");
+  await Bun.write(path.join(root, "providers", "test", "provider.toml"), `name = "Test"
+npm = "@ai-sdk/openai"
+env = ["TEST_API_KEY"]
+doc = "https://example.com/models"
+`);
+  await mkdir(path.join(root, "models", "test"), { recursive: true });
+  await Bun.write(path.join(root, "models", "test", "model.toml"), `name = "Test model"
+release_date = "2026-01-01"
+last_updated = "2026-01-01"
+attachment = false
+reasoning = false
+tool_call = false
+open_weights = false
+
+[limit]
+context = 1000
+output = 100
+
+[modalities]
+input = ["text"]
+output = ["text"]
+`);
+  await Bun.write(filePath, `base_model = "test/model"
+reasoning_options = [{ type = "toggle" }]
+
+[cost]
+input = 1
+output = 2
+`);
+  const sync = provider(modelsDir, ["model"]);
+  sync.translateModel = (id) => ({
+    id,
+    model: {
+      base_model: "test/model",
+      cost: { input: 1, output: 2 },
+    },
+  });
+
+  const first = await syncProvider(sync);
+  const content = await Bun.file(filePath).text();
+  const generated = (await generate(path.join(root, "providers"))).test?.models.model;
+  const second = await syncProvider(sync);
+
+  expect(first.updated).toBe(1);
+  expect(content).toContain('base_model = "test/model"');
+  expect(content).not.toContain("reasoning_options");
+  expect(generated?.reasoning).toBe(false);
+  expect(generated?.reasoning_options).toBeUndefined();
   expect(second.updated).toBe(0);
   expect(second.unchanged).toBe(1);
 });
