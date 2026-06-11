@@ -1,7 +1,7 @@
 base_model = "tencent/hy3-preview"
 attachment = false
 reasoning = true
-reasoning_options = [{ type = "effort", values = ["none", "low", "high"] }, { type = "budget_tokens", min = 128, max = 32_768 }]
+reasoning_options = [{ type = "budget_tokens", min = 128, max = 32_768 }]
 open_weights = false
 
 [cost]

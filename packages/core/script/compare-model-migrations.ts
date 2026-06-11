@@ -1,7 +1,7 @@
 #!/usr/bin/env bun
 
 import path from "node:path";
-import { cp, mkdir, rm, writeFile } from "node:fs/promises";
+import { cp, mkdir, rm, symlink, writeFile } from "node:fs/promises";
 import { existsSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { mergeDeep } from "remeda";
@@ -60,7 +60,13 @@ try {
 
     const contents = await new Response(show.stdout).text();
     await mkdir(path.dirname(tempFilePath), { recursive: true });
-    await writeFile(tempFilePath, contents);
+    const tree = await Bun.$`git ls-tree HEAD -- ${filePath}`.cwd(root).text();
+    if (tree.startsWith("120000 ")) {
+      await rm(tempFilePath, { force: true });
+      await symlink(contents.trim(), tempFilePath);
+    } else {
+      await writeFile(tempFilePath, contents);
+    }
   }
 
   const before = await generateForComparison(baselineProvidersPath);
