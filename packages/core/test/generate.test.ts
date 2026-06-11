@@ -215,6 +215,39 @@ input = ["text"]
     expect(leaked).toEqual([]);
   });
 
+  test("repository Replicate provider resolves its discovery inventory", async () => {
+    const root = path.join(import.meta.dirname, "..", "..", "..");
+    const providers = await generate(path.join(root, "providers"));
+    const models = providers.replicate?.models;
+
+    expect(Object.keys(models ?? {}).sort()).toEqual([
+      "deepseek-ai/deepseek-r1",
+      "meta/meta-llama-3-70b-instruct",
+      "meta/meta-llama-3-8b-instruct",
+    ]);
+    expect(models?.["meta/meta-llama-3.1-405b-instruct"]).toBeUndefined();
+
+    expect(models?.["deepseek-ai/deepseek-r1"]).toMatchObject({
+      reasoning: true,
+      reasoning_options: [],
+      tool_call: false,
+    });
+
+    for (const modelID of [
+      "meta/meta-llama-3-8b-instruct",
+      "meta/meta-llama-3-70b-instruct",
+    ]) {
+      const model = models?.[modelID];
+      expect(model).toMatchObject({ reasoning: false, tool_call: false });
+      expect(model).not.toHaveProperty("reasoning_options");
+    }
+
+    for (const model of Object.values(models ?? {})) {
+      expect(model).not.toHaveProperty("base_model");
+      expect(model).not.toHaveProperty("base_model_omit");
+    }
+  });
+
   test("repository model metadata avoids provider-only namespaces", async () => {
     const root = path.join(import.meta.dirname, "..", "..", "..");
     const providerNamespaces = [
