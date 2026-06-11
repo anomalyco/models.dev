@@ -1,8 +1,8 @@
-name = "NVIDIA Nemotron 3 Super 120B"
 base_model = "nvidia/nemotron-3-super-120b-a12b"
+name = "NVIDIA Nemotron 3 Super 120B"
 family = "nemotron"
 release_date = "2026-03-11"
-last_updated = "2026-03-12"
+last_updated = "2026-06-11"
 attachment = false
 reasoning = false
 structured_output = true
@@ -13,6 +13,7 @@ open_weights = true
 [cost]
 input = 0.2
 output = 0.8
+cache_read = 0.2
 
 [limit]
 context = 262_144

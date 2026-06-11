@@ -1,4 +1,14 @@
 base_model = "zhipuai/glm-5.1"
+name = "GLM 5.1"
+family = "glm"
+release_date = "2026-04-07"
+last_updated = "2026-06-11"
+attachment = false
+reasoning = true
+structured_output = true
+temperature = true
+tool_call = true
+open_weights = true
 
 [interleaved]
 field = "reasoning_content"
@@ -7,4 +17,11 @@ field = "reasoning_content"
 input = 1.4
 output = 4.4
 cache_read = 0.26
-cache_write = 0
+
+[limit]
+context = 202_752
+output = 202_752
+
+[modalities]
+input = ["text"]
+output = ["text"]
