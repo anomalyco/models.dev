@@ -22,6 +22,7 @@ test("DeepInfra models expose only verified reasoning controls", async () => {
     "zai-org/GLM-5",
   ];
   const standardEffort = ["openai/gpt-oss-120b", "openai/gpt-oss-20b"];
+  const r1 = ["deepseek-ai/DeepSeek-R1-0528"];
   const v4 = [
     "deepseek-ai/DeepSeek-V4-Flash",
     "deepseek-ai/DeepSeek-V4-Pro",
@@ -37,7 +38,6 @@ test("DeepInfra models expose only verified reasoning controls", async () => {
     "Qwen/Qwen3.5-35B-A3B",
     "Qwen/Qwen3.5-397B-A17B",
     "Qwen/Qwen3.6-35B-A3B",
-    "deepseek-ai/DeepSeek-R1-0528",
     "moonshotai/Kimi-K2.5",
     "zai-org/GLM-4.7-Flash",
   ];
@@ -46,6 +46,7 @@ test("DeepInfra models expose only verified reasoning controls", async () => {
     [
       ...toggle,
       ...standardEffort,
+      ...r1,
       ...v4,
       ...nonReasoning,
       ...unresolved,
@@ -59,6 +60,13 @@ test("DeepInfra models expose only verified reasoning controls", async () => {
   for (const id of standardEffort) {
     expect(deepinfra?.models[id]?.reasoning).toBe(true);
     expect(deepinfra?.models[id]?.reasoning_options).toEqual([
+      { type: "effort", values: ["low", "medium", "high"] },
+    ]);
+  }
+  for (const id of r1) {
+    expect(deepinfra?.models[id]?.reasoning).toBe(true);
+    expect(deepinfra?.models[id]?.reasoning_options).toEqual([
+      { type: "toggle" },
       { type: "effort", values: ["low", "medium", "high"] },
     ]);
   }
