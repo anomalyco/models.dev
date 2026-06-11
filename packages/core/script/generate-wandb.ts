@@ -5,39 +5,73 @@ import { mkdir } from "node:fs/promises";
 import { z } from "zod";
 import { inferKimiFamily, ModelFamilyValues } from "../src/family.js";
 
-const API_ENDPOINT = "https://trace.wandb.ai/inference/analysis/artificialanalysis/models";
+// This endpoint already returns data in the models.dev schema, so most fields
+// map straight through. Only fields the catalog can't provide (family) are
+// inferred, and manually-curated fields in existing TOMLs are preserved.
+const API_ENDPOINT = "https://trace.wandb.ai/inference/modelsdev/models";
 
-const Pricing = z
+const ApiCost = z
   .object({
-    prompt: z.string().optional(),
-    completion: z.string().optional(),
-    image: z.string().optional(),
-    request: z.string().optional(),
-    input_cache_reads: z.string().optional(),
-    input_cache_writes: z.string().optional(),
+    input: z.number(),
+    output: z.number(),
+    reasoning: z.number().optional(),
+    cache_read: z.number().optional(),
+    cache_write: z.number().optional(),
+    input_audio: z.number().optional(),
+    output_audio: z.number().optional(),
   })
   .passthrough();
 
-const WandbModel = z
+const ApiLimit = z
+  .object({
+    context: z.number(),
+    input: z.number(),
+    output: z.number(),
+  })
+  .passthrough();
+
+const ApiModalities = z
+  .object({
+    input: z.array(z.string()),
+    output: z.array(z.string()),
+  })
+  .passthrough();
+
+const ApiModel = z
   .object({
     id: z.string(),
     name: z.string(),
-    created: z.number(),
-    input_modalities: z.array(z.string()),
-    output_modalities: z.array(z.string()),
-    context_length: z.number(),
-    max_output_length: z.number(),
-    pricing: Pricing.optional(),
-    supported_sampling_parameters: z.array(z.string()).default([]),
-    supported_features: z.array(z.string()).default([]),
+    attachment: z.boolean(),
+    reasoning: z.boolean(),
+    tool_call: z.boolean(),
+    structured_output: z.boolean().optional(),
+    temperature: z.boolean().optional(),
+    knowledge: z.string().optional(),
+    release_date: z.string(),
+    last_updated: z.string(),
+    open_weights: z.boolean(),
+    status: z.string().optional(),
+    interleaved: z.union([z.boolean(), z.object({ field: z.string() })]).optional(),
+    cost: ApiCost.optional(),
+    limit: ApiLimit.optional(),
+    modalities: ApiModalities.optional(),
   })
   .passthrough();
 
-const WandbResponse = z
+const ApiProvider = z
   .object({
-    data: z.array(WandbModel),
+    id: z.string(),
+    name: z.string(),
+    npm: z.string(),
+    env: z.array(z.string()),
+    doc: z.string(),
+    api: z.string().optional(),
+    models: z.record(z.string(), ApiModel),
   })
-  .strict();
+  .passthrough();
+
+// The models.dev `api.json` shape: a mapping of provider id -> provider.
+const ApiResponse = z.record(z.string(), ApiProvider);
 
 interface ExistingModel {
   base_model?: string;
@@ -99,8 +133,8 @@ interface MergedModel {
     output: number;
   };
   modalities: {
-    input: Array<"text" | "audio" | "image" | "video" | "pdf">;
-    output: Array<"text" | "audio" | "image" | "video" | "pdf">;
+    input: SupportedModality[];
+    output: SupportedModality[];
   };
 }
 
@@ -122,22 +156,6 @@ const modalityMap: Record<string, SupportedModality | undefined> = {
   files: "pdf",
 };
 
-const openWeightsPrefixes = new Set([
-  "deepseek-ai/",
-  "meta-llama/",
-  "microsoft/",
-  "MiniMaxAI/",
-  "moonshotai/",
-  "nvidia/",
-  "OpenPipe/",
-  "Qwen/",
-  "zai-org/",
-]);
-
-function timestampToDate(timestamp: number): string {
-  return new Date(timestamp * 1000).toISOString().slice(0, 10);
-}
-
 function getTodayDate(): string {
   return new Date().toISOString().slice(0, 10);
 }
@@ -151,10 +169,6 @@ function formatNumber(n: number): string {
 
 function formatDecimal(n: number): string {
   return Number(n.toFixed(6)).toString();
-}
-
-function priceToPerMillion(value: string): number {
-  return Number((parseFloat(value) * 1_000_000).toFixed(6));
 }
 
 function isSubstring(target: string, family: string): boolean {
@@ -196,24 +210,9 @@ function inferFamily(modelId: string, modelName: string): string | undefined {
   return undefined;
 }
 
-function normalizeName(apiModel: z.infer<typeof WandbModel>): string {
+function normalizeName(apiModel: z.infer<typeof ApiModel>): string {
   const stripped = apiModel.name.replace(/^[^:]+:\s*/, "").trim();
   return stripped || path.basename(apiModel.id);
-}
-
-function inferReasoning(apiModel: z.infer<typeof WandbModel>): boolean {
-  const text = `${apiModel.id} ${apiModel.name}`.toLowerCase();
-  return text.includes("thinking") || /\br1\b/.test(text) || text.includes("reasoning");
-}
-
-function inferOpenWeights(modelId: string): boolean {
-  for (const prefix of openWeightsPrefixes) {
-    if (modelId.startsWith(prefix)) {
-      return true;
-    }
-  }
-
-  return false;
 }
 
 function normalizeModalities(values: string[]): SupportedModality[] {
@@ -240,64 +239,63 @@ async function loadExistingModel(filePath: string): Promise<ExistingModel | null
 }
 
 function mergeModel(
-  apiModel: z.infer<typeof WandbModel>,
+  apiModel: z.infer<typeof ApiModel>,
   existing: ExistingModel | null,
 ): MergedModel {
-  const featureSet = new Set(apiModel.supported_features);
-  const samplingSet = new Set(apiModel.supported_sampling_parameters);
-  const inputModalities = normalizeModalities(apiModel.input_modalities);
-  const outputModalities = normalizeModalities(apiModel.output_modalities);
+  const inputModalities = normalizeModalities(apiModel.modalities?.input ?? []);
+  const outputModalities = normalizeModalities(apiModel.modalities?.output ?? []);
 
   const merged: MergedModel = {
     ...(existing?.base_model ? { base_model: existing.base_model } : {}),
     ...(existing?.base_model_omit ? { base_model_omit: existing.base_model_omit } : {}),
     name: existing?.name ?? normalizeName(apiModel),
     family: existing?.family ?? inferFamily(apiModel.id, apiModel.name),
-    attachment: existing?.attachment ?? inputModalities.some((m) => m !== "text"),
-    reasoning: existing?.reasoning ?? inferReasoning(apiModel),
-    tool_call: existing?.tool_call ?? featureSet.has("tools"),
-    temperature: existing?.temperature ?? samplingSet.has("temperature"),
-    release_date: existing?.release_date ?? timestampToDate(apiModel.created),
+    attachment: existing?.attachment ?? apiModel.attachment,
+    reasoning: existing?.reasoning ?? apiModel.reasoning,
+    tool_call: existing?.tool_call ?? apiModel.tool_call,
+    temperature: existing?.temperature ?? apiModel.temperature ?? true,
+    release_date: existing?.release_date ?? apiModel.release_date,
     last_updated: getTodayDate(),
-    open_weights: existing?.open_weights ?? inferOpenWeights(apiModel.id),
+    open_weights: existing?.open_weights ?? apiModel.open_weights,
     ...(existing?.structured_output !== undefined
       ? { structured_output: existing.structured_output }
-      : featureSet.has("structured_outputs")
+      : apiModel.structured_output
         ? { structured_output: true }
         : {}),
-    ...(existing?.knowledge ? { knowledge: existing.knowledge } : {}),
-    ...(existing?.interleaved !== undefined ? { interleaved: existing.interleaved } : {}),
-    ...(existing?.status ? { status: existing.status } : {}),
+    ...(existing?.knowledge ?? apiModel.knowledge
+      ? { knowledge: existing?.knowledge ?? apiModel.knowledge }
+      : {}),
+    ...(existing?.interleaved ?? apiModel.interleaved
+      ? { interleaved: existing?.interleaved ?? apiModel.interleaved }
+      : {}),
+    ...(existing?.status ?? apiModel.status
+      ? { status: existing?.status ?? apiModel.status }
+      : {}),
     limit: {
-      context: apiModel.context_length > 0 ? apiModel.context_length : (existing?.limit?.context ?? 0),
-      output: apiModel.max_output_length > 0
-        ? apiModel.max_output_length
-        : (existing?.limit?.output ?? 0),
+      context: apiModel.limit?.context ?? existing?.limit?.context ?? 0,
+      output: apiModel.limit?.output ?? existing?.limit?.output ?? 0,
     },
     modalities: {
-      input: inputModalities.length > 0
-        ? inputModalities
-        : ((existing?.modalities?.input as SupportedModality[] | undefined) ?? ["text"]),
-      output: outputModalities.length > 0
-        ? outputModalities
-        : ((existing?.modalities?.output as SupportedModality[] | undefined) ?? ["text"]),
+      input:
+        inputModalities.length > 0
+          ? inputModalities
+          : ((existing?.modalities?.input as SupportedModality[] | undefined) ?? ["text"]),
+      output:
+        outputModalities.length > 0
+          ? outputModalities
+          : ((existing?.modalities?.output as SupportedModality[] | undefined) ?? ["text"]),
     },
   };
 
-  const prompt = apiModel.pricing?.prompt;
-  const completion = apiModel.pricing?.completion;
-  const cacheRead = apiModel.pricing?.input_cache_reads;
-  const cacheWrite = apiModel.pricing?.input_cache_writes;
-
-  if (prompt && completion) {
+  if (apiModel.cost) {
     merged.cost = {
-      input: priceToPerMillion(prompt),
-      output: priceToPerMillion(completion),
-      ...(cacheRead && parseFloat(cacheRead) > 0
-        ? { cache_read: priceToPerMillion(cacheRead) }
+      input: apiModel.cost.input,
+      output: apiModel.cost.output,
+      ...(apiModel.cost.cache_read && apiModel.cost.cache_read > 0
+        ? { cache_read: apiModel.cost.cache_read }
         : {}),
-      ...(cacheWrite && parseFloat(cacheWrite) > 0
-        ? { cache_write: priceToPerMillion(cacheWrite) }
+      ...(apiModel.cost.cache_write && apiModel.cost.cache_write > 0
+        ? { cache_write: apiModel.cost.cache_write }
         : {}),
     };
   } else if (existing?.cost?.input !== undefined && existing.cost.output !== undefined) {
@@ -397,13 +395,11 @@ function detectChanges(existing: ExistingModel | null, merged: MergedModel): Cha
 
   const compare = (field: string, oldValue: unknown, newValue: unknown) => {
     const changed = field.startsWith("cost.")
-      ? (
-          oldValue === undefined && newValue === undefined
-            ? false
-            : oldValue === undefined || newValue === undefined
-              ? true
-              : Math.abs((oldValue as number) - (newValue as number)) > epsilon
-        )
+      ? oldValue === undefined && newValue === undefined
+        ? false
+        : oldValue === undefined || newValue === undefined
+          ? true
+          : Math.abs((oldValue as number) - (newValue as number)) > epsilon
       : JSON.stringify(oldValue) !== JSON.stringify(newValue);
 
     if (changed) {
@@ -452,13 +448,16 @@ async function main() {
   }
 
   const json = await res.json();
-  const parsed = WandbResponse.safeParse(json);
+  const parsed = ApiResponse.safeParse(json);
   if (!parsed.success) {
     console.error("Invalid API response:", parsed.error.errors);
     process.exit(1);
   }
 
-  const apiModels = parsed.data.data;
+  // The response groups models by provider; flatten to a single list.
+  const apiModels = Object.values(parsed.data).flatMap((provider) =>
+    Object.values(provider.models),
+  );
   const existingFiles = new Set<string>();
 
   for await (const file of new Bun.Glob("**/*.toml").scan({ cwd: modelsDir, absolute: false })) {
