@@ -17,6 +17,7 @@ const expectedReasoningOptions = {
   "accounts/fireworks/models/qwen3p6-plus": [
     { type: "toggle" },
     { type: "effort", values: ["low", "medium", "high"] },
+    { type: "budget_tokens", min: 1 },
   ],
 } as const;
 
