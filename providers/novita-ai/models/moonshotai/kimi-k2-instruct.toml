@@ -5,7 +5,6 @@ attachment = false
 reasoning = false
 temperature = true
 tool_call = true
-structured_output = true
 open_weights = true
 
 [cost]
@@ -14,7 +13,7 @@ output = 2.3
 
 [limit]
 context = 131_072
-output = 131_072
+output = 32_768
 
 [modalities]
 input = ["text"]

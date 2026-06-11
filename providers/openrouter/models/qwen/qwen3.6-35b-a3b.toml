@@ -7,12 +7,12 @@ reasoning_options = [{ type = "toggle" }, { type = "budget_tokens", min = 0 }]
 reasoning = true
 
 [cost]
-input = 0.14
+input = 0.15
 output = 1
+cache_read = 0.05
 
 [limit]
-context = 262_140
-output = 262_140
+output = 262_144
 
 [modalities]
 input = ["text", "image", "video"]

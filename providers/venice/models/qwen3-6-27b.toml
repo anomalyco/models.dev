@@ -1,13 +1,12 @@
+base_model = "alibaba/qwen3.6-27b"
 name = "Qwen 3.6 27B"
-family = "qwen"
-attachment = true
-reasoning = true
-tool_call = true
-structured_output = true
-temperature = true
 release_date = "2026-04-24"
-last_updated = "2026-04-29"
+last_updated = "2026-06-11"
 open_weights = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high"]
 
 [cost]
 input = 0.325
@@ -15,8 +14,6 @@ output = 3.25
 
 [limit]
 context = 256_000
-output = 65_536
 
 [modalities]
 input = ["text", "image", "video"]
-output = ["text"]

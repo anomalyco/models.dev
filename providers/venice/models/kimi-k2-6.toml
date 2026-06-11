@@ -1,13 +1,11 @@
-name = "Kimi K2.6"
+base_model = "moonshotai/kimi-k2.6"
 family = "kimi"
-attachment = true
-reasoning = true
-tool_call = true
-structured_output = true
-temperature = true
 release_date = "2026-04-20"
-last_updated = "2026-04-30"
-open_weights = true
+last_updated = "2026-06-11"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high"]
 
 [interleaved]
 field = "reasoning_content"
@@ -23,4 +21,3 @@ output = 65_536
 
 [modalities]
 input = ["text", "image"]
-output = ["text"]
