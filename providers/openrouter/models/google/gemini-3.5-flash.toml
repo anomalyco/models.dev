@@ -1,4 +1,10 @@
 base_model = "google/gemini-3.5-flash"
+temperature = true
+structured_output = true
+tool_call = true
+attachment = true
+reasoning_options = [{ type = "effort", values = ["minimal", "low", "medium", "high"] }]
+reasoning = true
 
 [cost]
 input = 1.5

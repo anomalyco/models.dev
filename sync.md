@@ -173,6 +173,16 @@ Vercel is intentionally not wired into `bun models:sync` right now. Keep using t
 
 Do not add Vercel model changes to OpenRouter sync PRs.
 
+## Venice Notes
+
+Venice is implemented in `packages/core/src/sync/providers/venice.ts`.
+
+- Run it with `bun models:sync venice` or `bun venice:sync`.
+- `VENICE_API_KEY` is optional locally and includes models visible to that account when set.
+- Models missing from the API response are removed from the Venice catalog.
+- Every Venice model uses `base_model`; flattened IDs are matched to provider-agnostic metadata before provider-specific overrides are written.
+- Every Venice model declares `reasoning_options`; models without API-provided effort levels use an empty array.
+
 ## Standalone Generators
 
 Some provider scripts in `packages/core/script/generate-*.ts` are not wired into `bun models:sync`. When updating those scripts, preserve existing `base_model` and `base_model_omit` fields for generated TOMLs that already use model metadata inheritance. New inheritance-aware output should use `base_model`; do not reintroduce legacy `[extends]` syntax.
