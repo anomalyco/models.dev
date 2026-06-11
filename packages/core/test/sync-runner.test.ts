@@ -273,6 +273,70 @@ output = 2
   expect(second.unchanged).toBe(1);
 });
 
+test("sync removes authored reasoning options when changing to a non-reasoning base", async () => {
+  const { root, modelsDir } = await fixture();
+  const metadataDir = path.join(root, "models", "test");
+  const filePath = path.join(modelsDir, "model.toml");
+  await mkdir(metadataDir, { recursive: true });
+  await Bun.write(path.join(metadataDir, "reasoning.toml"), `name = "Reasoning base"
+release_date = "2026-01-01"
+last_updated = "2026-01-01"
+attachment = false
+reasoning = true
+tool_call = false
+open_weights = false
+
+[limit]
+context = 1000
+output = 100
+
+[modalities]
+input = ["text"]
+output = ["text"]
+`);
+  await Bun.write(path.join(metadataDir, "standard.toml"), `name = "Standard base"
+release_date = "2026-01-01"
+last_updated = "2026-01-01"
+attachment = false
+reasoning = false
+tool_call = false
+open_weights = false
+
+[limit]
+context = 1000
+output = 100
+
+[modalities]
+input = ["text"]
+output = ["text"]
+`);
+  await Bun.write(filePath, `base_model = "test/reasoning"
+reasoning_options = [{ type = "toggle" }]
+
+[cost]
+input = 1
+output = 2
+`);
+  const sync = provider(modelsDir, ["model"]);
+  sync.translateModel = (id) => ({
+    id,
+    model: {
+      base_model: "test/standard",
+      cost: { input: 1, output: 2 },
+    },
+  });
+
+  const first = await syncProvider(sync);
+  const content = await Bun.file(filePath).text();
+  const second = await syncProvider(sync);
+
+  expect(first.updated).toBe(1);
+  expect(content).toContain('base_model = "test/standard"');
+  expect(content).not.toContain("reasoning_options");
+  expect(second.updated).toBe(0);
+  expect(second.unchanged).toBe(1);
+});
+
 test("sync writes metadata returned by a provider translator", async () => {
   const root = await mkdtemp(path.join(os.tmpdir(), "models-dev-sync-metadata-"));
   const modelsDir = path.join(root, "providers", "test", "models");

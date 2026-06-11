@@ -119,7 +119,9 @@ export async function syncProvider<SourceModel>(
 ): Promise<SyncResult> {
   console.log(`\nSyncing ${provider.name}...`);
 
-  const { models: existing, brokenSymlinks } = await readExisting(provider.modelsDir);
+  const existingState = await readExisting(provider.modelsDir);
+  const { models: existing, brokenSymlinks } = existingState;
+  let { modelMetadata } = existingState;
   const sourceModels = provider.parseModels(await provider.fetchModels());
   const desired = new Map<string, { model: z.infer<typeof SyncedAuthoredModel>; content: string }>();
   const desiredMetadata = new Map<string, { model: z.infer<typeof ModelMetadata>; content: string }>();
@@ -166,11 +168,19 @@ export async function syncProvider<SourceModel>(
     const translatedModel = provider.preserveBaseModels === false
       ? translated.model
       : preserveBaseModel(translated.model, existing.get(relativePath)?.authored);
-    const resolvedReasoning = translated.metadata !== undefined &&
-        "base_model" in translatedModel &&
-        translated.metadata?.id === translatedModel.base_model
-      ? translated.metadata.model.reasoning
-      : existing.get(relativePath)?.toml.reasoning;
+    const translatedBase = "base_model" in translatedModel ? translatedModel.base_model : undefined;
+    let resolvedReasoning: boolean | undefined;
+    if (translatedBase !== undefined) {
+      if (translated.metadata?.id === translatedBase) {
+        resolvedReasoning = translated.metadata.model.reasoning;
+      } else {
+        modelMetadata ??= await readModelMetadata(provider.modelsDir);
+        const canonicalReasoning = modelMetadata[translatedBase]?.reasoning;
+        resolvedReasoning = typeof canonicalReasoning === "boolean" ? canonicalReasoning : undefined;
+      }
+    } else {
+      resolvedReasoning = existing.get(relativePath)?.toml.reasoning;
+    }
     const parsed = SyncedAuthoredModel.safeParse(stripUndefined({
       id: translated.id,
       ...preserveReasoningOptions(
@@ -404,7 +414,7 @@ async function readExisting(modelsDir: string) {
     existing.set(file, { authored, toml, symlink });
   }
 
-  return { models: existing, brokenSymlinks };
+  return { models: existing, brokenSymlinks, modelMetadata };
 }
 
 async function isSymlink(filePath: string) {
