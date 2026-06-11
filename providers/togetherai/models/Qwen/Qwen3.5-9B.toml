@@ -1,21 +1,22 @@
-name = "Qwen3.5 397B A17B"
+name = "Qwen3.5 9B"
 family = "qwen"
-release_date = "2026-02-16"
-last_updated = "2026-02-16"
-attachment = false
+release_date = "2026-03-03"
+last_updated = "2026-03-03"
+attachment = true
 reasoning = true
 reasoning_options = [{ type = "toggle" }]
 temperature = true
 tool_call = true
+structured_output = true
 open_weights = true
 
 [cost]
-input = 0.60
-output = 3.60
+input = 0.17
+output = 0.25
 
 [limit]
 context = 262_144
-output = 130_000
+output = 65_536
 
 [modalities]
 input = ["text", "image"]
