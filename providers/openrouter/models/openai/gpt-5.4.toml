@@ -1,4 +1,10 @@
 base_model = "openai/gpt-5.4"
+temperature = false
+structured_output = true
+tool_call = true
+attachment = true
+reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh"] }]
+reasoning = true
 
 [cost]
 input = 2.5
