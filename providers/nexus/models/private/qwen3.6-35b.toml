@@ -1,0 +1,22 @@
+name = "Qwen 3.6 - Private"
+family = "qwen"
+release_date = "2026-04-17"
+last_updated = "2026-04-17"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = true
+structured_output = false
+open_weights = true
+
+[cost]
+input = 0.2077
+output = 1.3385
+
+[limit]
+context = 262_000
+output = 81_920
+
+[modalities]
+input = ["text", "image", "video", "audio"]
+output = ["text"]
