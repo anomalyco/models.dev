@@ -1,10 +1,6 @@
 base_model = "zhipuai/glm-4.5-air"
-temperature = true
-tool_call = true
-attachment = false
 reasoning_options = [{ type = "toggle" }]
-reasoning = true
-structured_output = false
+structured_output = true
 
 [cost]
 input = 0.125
