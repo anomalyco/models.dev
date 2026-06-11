@@ -7,6 +7,18 @@ test("SiliconFlow catalogs expose only positively documented reasoning controls"
   const global = providers.siliconflow!.models;
   const china = providers["siliconflow-cn"]!.models;
 
+  expect(Object.keys(global)).toHaveLength(49);
+  expect(Object.keys(china)).toHaveLength(46);
+  expect(global["zai-org/GLM-4.7"]).toMatchObject({
+    name: "zai-org/GLM-4.7",
+    reasoning: true,
+    cost: { input: 0.6, output: 2.2 },
+  });
+  expect(global["deepseek-ai/DeepSeek-V4-Flash"]).toBeDefined();
+  expect(global["deepseek-ai/DeepSeek-V4-Pro"]).toBeDefined();
+  expect(global["deepseek-ai/deepseek-v4-flash"]).toBeUndefined();
+  expect(global["deepseek-ai/deepseek-v4-pro"]).toBeUndefined();
+
   for (const id of [
     "Pro/MiniMaxAI/MiniMax-M2.1",
     "Pro/moonshotai/Kimi-K2-Thinking",
@@ -28,11 +40,14 @@ test("SiliconFlow catalogs expose only positively documented reasoning controls"
     "deepseek-ai/DeepSeek-V3.1-Terminus",
     "deepseek-ai/DeepSeek-V3.2",
     "deepseek-ai/DeepSeek-V3.2-Exp",
+    "deepseek-ai/DeepSeek-V4-Flash",
+    "deepseek-ai/DeepSeek-V4-Pro",
     "moonshotai/Kimi-K2.5",
     "moonshotai/Kimi-K2.6",
     "openai/gpt-oss-120b",
     "tencent/Hunyuan-A13B-Instruct",
     "tencent/Hy3-preview",
+    "zai-org/GLM-4.7",
     "zai-org/GLM-5",
     "zai-org/GLM-5.1",
   ]);
@@ -84,8 +99,6 @@ test("SiliconFlow catalogs expose only positively documented reasoning controls"
     "Qwen/Qwen3-VL-235B-A22B-Thinking",
     "Qwen/Qwen3-VL-30B-A3B-Thinking",
     "Qwen/Qwen3-VL-32B-Thinking",
-    "deepseek-ai/deepseek-v4-flash",
-    "deepseek-ai/deepseek-v4-pro",
     "stepfun-ai/Step-3.5-Flash",
   ]);
   expect(unresolvedReasoningIDs(china)).toEqual([
