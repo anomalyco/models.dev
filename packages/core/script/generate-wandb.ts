@@ -8,7 +8,8 @@ import { inferKimiFamily, ModelFamilyValues } from "../src/family.js";
 // This endpoint already returns data in the models.dev schema, so most fields
 // map straight through. Only fields the catalog can't provide (family) are
 // inferred, and manually-curated fields in existing TOMLs are preserved.
-const API_ENDPOINT = "https://trace.wandb.ai/inference/modelsdev/models";
+//const API_ENDPOINT = "https://trace.wandb.ai/inference/modelsdev/models";
+const API_ENDPOINT = "http://localhost:8080/traces/inference/modelsdev/models";
 
 const ApiCost = z
   .object({
@@ -51,7 +52,9 @@ const ApiModel = z
     last_updated: z.string(),
     open_weights: z.boolean(),
     status: z.string().optional(),
-    interleaved: z.union([z.boolean(), z.object({ field: z.string() })]).optional(),
+    interleaved: z
+      .union([z.boolean(), z.object({ field: z.string() })])
+      .optional(),
     cost: ApiCost.optional(),
     limit: ApiLimit.optional(),
     modalities: ApiModalities.optional(),
@@ -180,7 +183,11 @@ function matchesFamily(target: string, family: string): boolean {
   const familyLower = family.toLowerCase();
   let familyIdx = 0;
 
-  for (let i = 0; i < targetLower.length && familyIdx < familyLower.length; i++) {
+  for (
+    let i = 0;
+    i < targetLower.length && familyIdx < familyLower.length;
+    i++
+  ) {
     if (targetLower[i] === familyLower[familyIdx]) {
       familyIdx++;
     }
@@ -193,7 +200,9 @@ function inferFamily(modelId: string, modelName: string): string | undefined {
   const kimiFamily = inferKimiFamily(modelId, modelName);
   if (kimiFamily !== undefined) return kimiFamily;
 
-  const sortedFamilies = [...ModelFamilyValues].sort((a, b) => b.length - a.length);
+  const sortedFamilies = [...ModelFamilyValues].sort(
+    (a, b) => b.length - a.length,
+  );
 
   for (const family of sortedFamilies) {
     if (isSubstring(modelId, family) || isSubstring(modelName, family)) {
@@ -223,14 +232,18 @@ function normalizeModalities(values: string[]): SupportedModality[] {
   return [...new Set(normalized)];
 }
 
-async function loadExistingModel(filePath: string): Promise<ExistingModel | null> {
+async function loadExistingModel(
+  filePath: string,
+): Promise<ExistingModel | null> {
   try {
     const file = Bun.file(filePath);
     if (!(await file.exists())) {
       return null;
     }
 
-    const toml = await import(filePath, { with: { type: "toml" } }).then((mod) => mod.default);
+    const toml = await import(filePath, { with: { type: "toml" } }).then(
+      (mod) => mod.default,
+    );
     return toml as ExistingModel;
   } catch (cause) {
     console.warn(`Warning: Failed to parse existing file ${filePath}:`, cause);
@@ -243,11 +256,15 @@ function mergeModel(
   existing: ExistingModel | null,
 ): MergedModel {
   const inputModalities = normalizeModalities(apiModel.modalities?.input ?? []);
-  const outputModalities = normalizeModalities(apiModel.modalities?.output ?? []);
+  const outputModalities = normalizeModalities(
+    apiModel.modalities?.output ?? [],
+  );
 
   const merged: MergedModel = {
     ...(existing?.base_model ? { base_model: existing.base_model } : {}),
-    ...(existing?.base_model_omit ? { base_model_omit: existing.base_model_omit } : {}),
+    ...(existing?.base_model_omit
+      ? { base_model_omit: existing.base_model_omit }
+      : {}),
     name: existing?.name ?? normalizeName(apiModel),
     family: existing?.family ?? inferFamily(apiModel.id, apiModel.name),
     attachment: existing?.attachment ?? apiModel.attachment,
@@ -262,13 +279,13 @@ function mergeModel(
       : apiModel.structured_output
         ? { structured_output: true }
         : {}),
-    ...(existing?.knowledge ?? apiModel.knowledge
+    ...((existing?.knowledge ?? apiModel.knowledge)
       ? { knowledge: existing?.knowledge ?? apiModel.knowledge }
       : {}),
-    ...(existing?.interleaved ?? apiModel.interleaved
+    ...((existing?.interleaved ?? apiModel.interleaved)
       ? { interleaved: existing?.interleaved ?? apiModel.interleaved }
       : {}),
-    ...(existing?.status ?? apiModel.status
+    ...((existing?.status ?? apiModel.status)
       ? { status: existing?.status ?? apiModel.status }
       : {}),
     limit: {
@@ -279,11 +296,15 @@ function mergeModel(
       input:
         inputModalities.length > 0
           ? inputModalities
-          : ((existing?.modalities?.input as SupportedModality[] | undefined) ?? ["text"]),
+          : ((existing?.modalities?.input as
+              | SupportedModality[]
+              | undefined) ?? ["text"]),
       output:
         outputModalities.length > 0
           ? outputModalities
-          : ((existing?.modalities?.output as SupportedModality[] | undefined) ?? ["text"]),
+          : ((existing?.modalities?.output as
+              | SupportedModality[]
+              | undefined) ?? ["text"]),
     },
   };
 
@@ -298,12 +319,19 @@ function mergeModel(
         ? { cache_write: apiModel.cost.cache_write }
         : {}),
     };
-  } else if (existing?.cost?.input !== undefined && existing.cost.output !== undefined) {
+  } else if (
+    existing?.cost?.input !== undefined &&
+    existing.cost.output !== undefined
+  ) {
     merged.cost = {
       input: existing.cost.input,
       output: existing.cost.output,
-      ...(existing.cost.cache_read !== undefined ? { cache_read: existing.cost.cache_read } : {}),
-      ...(existing.cost.cache_write !== undefined ? { cache_write: existing.cost.cache_write } : {}),
+      ...(existing.cost.cache_read !== undefined
+        ? { cache_read: existing.cost.cache_read }
+        : {}),
+      ...(existing.cost.cache_write !== undefined
+        ? { cache_write: existing.cost.cache_write }
+        : {}),
     };
   }
 
@@ -372,13 +400,20 @@ function formatToml(model: MergedModel): string {
 
   lines.push("");
   lines.push("[modalities]");
-  lines.push(`input = [${model.modalities.input.map((m) => `"${m}"`).join(", ")}]`);
-  lines.push(`output = [${model.modalities.output.map((m) => `"${m}"`).join(", ")}]`);
+  lines.push(
+    `input = [${model.modalities.input.map((m) => `"${m}"`).join(", ")}]`,
+  );
+  lines.push(
+    `output = [${model.modalities.output.map((m) => `"${m}"`).join(", ")}]`,
+  );
 
   return `${lines.join("\n")}\n`;
 }
 
-function detectChanges(existing: ExistingModel | null, merged: MergedModel): Changes[] {
+function detectChanges(
+  existing: ExistingModel | null,
+  merged: MergedModel,
+): Changes[] {
   if (!existing) {
     return [];
   }
@@ -416,18 +451,38 @@ function detectChanges(existing: ExistingModel | null, merged: MergedModel): Cha
   compare("release_date", existing.release_date, merged.release_date);
   compare("attachment", existing.attachment, merged.attachment);
   compare("reasoning", existing.reasoning, merged.reasoning);
-  compare("structured_output", existing.structured_output, merged.structured_output);
+  compare(
+    "structured_output",
+    existing.structured_output,
+    merged.structured_output,
+  );
   compare("temperature", existing.temperature, merged.temperature);
   compare("tool_call", existing.tool_call, merged.tool_call);
   compare("open_weights", existing.open_weights, merged.open_weights);
   compare("cost.input", existing.cost?.input, merged.cost?.input);
   compare("cost.output", existing.cost?.output, merged.cost?.output);
-  compare("cost.cache_read", existing.cost?.cache_read, merged.cost?.cache_read);
-  compare("cost.cache_write", existing.cost?.cache_write, merged.cost?.cache_write);
+  compare(
+    "cost.cache_read",
+    existing.cost?.cache_read,
+    merged.cost?.cache_read,
+  );
+  compare(
+    "cost.cache_write",
+    existing.cost?.cache_write,
+    merged.cost?.cache_write,
+  );
   compare("limit.context", existing.limit?.context, merged.limit.context);
   compare("limit.output", existing.limit?.output, merged.limit.output);
-  compare("modalities.input", existing.modalities?.input, merged.modalities.input);
-  compare("modalities.output", existing.modalities?.output, merged.modalities.output);
+  compare(
+    "modalities.input",
+    existing.modalities?.input,
+    merged.modalities.input,
+  );
+  compare(
+    "modalities.output",
+    existing.modalities?.output,
+    merged.modalities.output,
+  );
 
   return changes;
 }
@@ -437,9 +492,19 @@ async function main() {
   const dryRun = args.includes("--dry-run");
   const newOnly = args.includes("--new-only");
 
-  const modelsDir = path.join(import.meta.dirname, "..", "..", "..", "providers", "wandb", "models");
+  const modelsDir = path.join(
+    import.meta.dirname,
+    "..",
+    "..",
+    "..",
+    "providers",
+    "wandb",
+    "models",
+  );
 
-  console.log(`${dryRun ? "[DRY RUN] " : ""}${newOnly ? "[NEW ONLY] " : ""}Fetching WandB models from API...`);
+  console.log(
+    `${dryRun ? "[DRY RUN] " : ""}${newOnly ? "[NEW ONLY] " : ""}Fetching WandB models from API...`,
+  );
 
   const res = await fetch(API_ENDPOINT);
   if (!res.ok) {
@@ -460,11 +525,16 @@ async function main() {
   );
   const existingFiles = new Set<string>();
 
-  for await (const file of new Bun.Glob("**/*.toml").scan({ cwd: modelsDir, absolute: false })) {
+  for await (const file of new Bun.Glob("**/*.toml").scan({
+    cwd: modelsDir,
+    absolute: false,
+  })) {
     existingFiles.add(file);
   }
 
-  console.log(`Found ${apiModels.length} models in API, ${existingFiles.size} existing files\n`);
+  console.log(
+    `Found ${apiModels.length} models in API, ${existingFiles.size} existing files\n`,
+  );
 
   const apiModelIds = new Set<string>();
   let created = 0;
