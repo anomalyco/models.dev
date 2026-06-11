@@ -12,7 +12,7 @@ test("SiliconFlow catalogs expose only positively documented reasoning controls"
   expect(global["zai-org/GLM-4.7"]).toMatchObject({
     name: "zai-org/GLM-4.7",
     reasoning: true,
-    cost: { input: 0.6, output: 2.2 },
+    cost: { input: 0.42, output: 2.2 },
   });
   expect(global["deepseek-ai/DeepSeek-V4-Flash"]).toBeDefined();
   expect(global["deepseek-ai/DeepSeek-V4-Pro"]).toBeDefined();
