@@ -49,6 +49,34 @@ async function fixture() {
   return { root, modelsDir };
 }
 
+async function factoredFixture(reasoning: boolean) {
+  const result = await fixture();
+  const metadataDir = path.join(result.root, "models", "test");
+  await mkdir(metadataDir, { recursive: true });
+  await Bun.write(path.join(result.root, "providers", "test", "provider.toml"), `name = "Test"
+npm = "@ai-sdk/openai"
+env = ["TEST_API_KEY"]
+doc = "https://example.com/models"
+`);
+  await Bun.write(path.join(metadataDir, "model.toml"), `name = "Canonical model"
+release_date = "2026-01-01"
+last_updated = "2026-01-01"
+attachment = false
+reasoning = ${reasoning}
+tool_call = false
+open_weights = false
+
+[limit]
+context = 1000
+output = 100
+
+[modalities]
+input = ["text"]
+output = ["text"]
+`);
+  return result;
+}
+
 function provider(
   modelsDir: string,
   ids: string[],
@@ -333,6 +361,75 @@ output = 2
   expect(first.updated).toBe(1);
   expect(content).toContain('base_model = "test/standard"');
   expect(content).not.toContain("reasoning_options");
+  expect(second.updated).toBe(0);
+  expect(second.unchanged).toBe(1);
+});
+
+test("sync removes a reasoning override and options over a non-reasoning base", async () => {
+  const { root, modelsDir } = await factoredFixture(false);
+  const filePath = path.join(modelsDir, "model.toml");
+  await Bun.write(filePath, `base_model = "test/model"
+reasoning = true
+reasoning_options = [{ type = "toggle" }]
+
+[cost]
+input = 1
+output = 2
+`);
+  const sync = provider(modelsDir, ["model"]);
+  sync.translateModel = (id) => ({
+    id,
+    model: {
+      base_model: "test/model",
+      cost: { input: 1, output: 2 },
+    },
+  });
+
+  const first = await syncProvider(sync);
+  const content = await Bun.file(filePath).text();
+  const generated = (await generate(path.join(root, "providers"))).test?.models.model;
+  const second = await syncProvider(sync);
+
+  expect(first.updated).toBe(1);
+  expect(content).not.toContain("reasoning =");
+  expect(content).not.toContain("reasoning_options");
+  expect(generated?.reasoning).toBe(false);
+  expect(generated?.reasoning_options).toBeUndefined();
+  expect(second.updated).toBe(0);
+  expect(second.unchanged).toBe(1);
+});
+
+test("sync preserves options when removing a non-reasoning override over a reasoning base", async () => {
+  const { root, modelsDir } = await factoredFixture(true);
+  const filePath = path.join(modelsDir, "model.toml");
+  await Bun.write(filePath, `base_model = "test/model"
+reasoning = false
+reasoning_options = [{ type = "toggle" }]
+
+[cost]
+input = 1
+output = 2
+`);
+  const sync = provider(modelsDir, ["model"]);
+  sync.translateModel = (id) => ({
+    id,
+    model: {
+      base_model: "test/model",
+      cost: { input: 1, output: 2 },
+    },
+  });
+
+  const first = await syncProvider(sync);
+  const content = await Bun.file(filePath).text();
+  const generated = (await generate(path.join(root, "providers"))).test?.models.model;
+  const second = await syncProvider(sync);
+
+  expect(first.updated).toBe(1);
+  expect(content).not.toContain("reasoning = false");
+  expect(content).toContain("[[reasoning_options]]");
+  expect(content).toContain('type = "toggle"');
+  expect(generated?.reasoning).toBe(true);
+  expect(generated?.reasoning_options).toEqual([{ type: "toggle" }]);
   expect(second.updated).toBe(0);
   expect(second.unchanged).toBe(1);
 });
