@@ -1,7 +1,23 @@
-base_model = "venice/qwen3-coder-480b-a35b-instruct-turbo"
+name = "Qwen 3 Coder 480B Turbo"
+family = "qwen"
+release_date = "2026-01-27"
+last_updated = "2026-06-11"
+attachment = false
+reasoning = false
+tool_call = true
+structured_output = true
+open_weights = true
 reasoning_options = []
 
 [cost]
 input = 0.35
 output = 1.5
 cache_read = 0.04
+
+[limit]
+context = 256_000
+output = 65_536
+
+[modalities]
+input = ["text"]
+output = ["text"]

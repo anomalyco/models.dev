@@ -17,7 +17,7 @@ Provide the key through the `VENICE_API_KEY` environment variable.
 
 Details
 - Source endpoint: `https://api.venice.ai/api/v1/models?type=text`
-- Output paths: `providers/venice/models/<model-id>.toml` and generated metadata under `models/venice/`
+- Output path: `providers/venice/models/<model-id>.toml`
 - Merge behavior: Updates API-sourced fields, preserves manual fields
 - Dates: `release_date`/`last_updated` use `YYYY-MM-DD`; `knowledge` uses `YYYY-MM`
 - Output limit: Sourced from `maxCompletionTokens` in the API response (falls back to `context / 4` if absent)
@@ -30,6 +30,6 @@ Preserved Fields (manual input)
 - PDF in `modalities.input`: Not auto-added, preserved if exists
 
 Notes
-- The sync updates existing files and creates metadata for new models
-- Provider files and generated Venice metadata missing from the API are deleted
+- The sync updates existing files and skips E2EE models, which require unsupported client-side encryption
+- Provider files missing from the API are deleted
 - Run with `--dry-run` to preview changes before applying
