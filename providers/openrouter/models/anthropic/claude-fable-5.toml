@@ -1,5 +1,6 @@
 base_model = "anthropic/claude-fable-5"
-reasoning_options = []
+# OpenRouter maps these effort values through `verbosity`, not `reasoning.effort`.
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
 structured_output = true
 
 [cost]

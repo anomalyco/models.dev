@@ -2,7 +2,8 @@ base_model = "anthropic/claude-opus-4-7"
 temperature = false
 tool_call = true
 attachment = true
-reasoning_options = [{ type = "toggle" }]
+# OpenRouter maps these effort values through `verbosity`, not `reasoning.effort`.
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
 reasoning = true
 structured_output = true
 

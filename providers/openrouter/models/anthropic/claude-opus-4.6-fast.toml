@@ -1,4 +1,5 @@
-reasoning_options = [{ type = "toggle" }, { type = "budget_tokens", min = 1024, max = 127999 }]
+# OpenRouter maps these effort values through `verbosity`, not `reasoning.effort`.
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "medium", "high", "max"] }, { type = "budget_tokens", min = 1024, max = 127999 }]
 name = "Claude Opus 4.6 (Fast)"
 family = "claude-opus"
 release_date = "2026-04-07"
