@@ -51,6 +51,7 @@ export interface SyncProvider<SourceModel> {
   skipCreates?: boolean;
   deleteMissing?: boolean;
   preserveSymlinks?: boolean;
+  preserveBaseModels?: boolean;
   sameModel?(current: ExistingModel, desired: SyncedModel): boolean;
   missingNotice?(paths: string[]): string[];
   sourceID?(model: SourceModel): string;
@@ -165,7 +166,9 @@ export async function syncProvider<SourceModel>(
     const parsed = SyncedAuthoredModel.safeParse(stripUndefined({
       id: translated.id,
       ...preserveReasoningOptions(
-        preserveBaseModel(translated.model, existing.get(relativePath)?.authored),
+        provider.preserveBaseModels === false
+          ? translated.model
+          : preserveBaseModel(translated.model, existing.get(relativePath)?.authored),
         existing.get(relativePath)?.authored,
       ),
     }));

@@ -1,4 +1,12 @@
-base_model = "venice/mercury-2"
+name = "Mercury 2"
+family = "mercury"
+release_date = "2026-02-20"
+last_updated = "2026-06-11"
+attachment = false
+reasoning = true
+tool_call = true
+structured_output = true
+open_weights = false
 
 [[reasoning_options]]
 type = "effort"
@@ -8,3 +16,11 @@ values = ["none", "low", "medium", "high"]
 input = 0.3125
 output = 0.9375
 cache_read = 0.03125
+
+[limit]
+context = 128_000
+output = 50_000
+
+[modalities]
+input = ["text"]
+output = ["text"]

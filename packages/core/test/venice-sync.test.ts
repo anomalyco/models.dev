@@ -5,6 +5,7 @@ import path from "node:path";
 import {
   buildVeniceModel,
   resolveVeniceBaseModel,
+  venice,
   VeniceResponse,
   type VeniceModel,
 } from "../src/sync/providers/venice.js";
@@ -61,6 +62,25 @@ test("Venice emits empty reasoning options when efforts are unavailable", () => 
   expect(synced).toMatchObject({ reasoning: true, reasoning_options: [] });
 });
 
+test("Venice does not infer temperature support", () => {
+  const synced = buildVeniceModel(catalogModel, undefined, null, "2026-06-10");
+
+  expect(synced.temperature).toBeUndefined();
+});
+
+test("Venice skips E2EE models", () => {
+  const translated = venice.translateModel({
+    ...catalogModel,
+    id: "e2ee-test-model",
+    model_spec: {
+      ...catalogModel.model_spec,
+      capabilities: { ...catalogModel.model_spec.capabilities, supportsE2EE: true },
+    },
+  }, { existing: () => undefined });
+
+  expect(translated).toBeUndefined();
+});
+
 test("Venice uses boundary-aware family matching", () => {
   const synced = buildVeniceModel({
     ...catalogModel,
@@ -108,6 +128,7 @@ test("Venice maps API fields and keeps inherited models compact", () => {
   expect(synced).not.toHaveProperty("release_date");
   expect(synced).not.toHaveProperty("open_weights");
   expect(synced).not.toHaveProperty("modalities");
+  expect(synced).not.toHaveProperty("temperature");
 });
 
 test("Venice preserves last_updated when authoritative data is unchanged", () => {
@@ -127,7 +148,7 @@ test("Venice rejects malformed responses", () => {
   expect(() => VeniceResponse.parse({ data: [{ id: "broken" }] })).toThrow();
 });
 
-test("all Venice models use metadata inheritance and declare reasoning options", async () => {
+test("Venice models use only canonical metadata and declare reasoning options", async () => {
   const root = path.join(import.meta.dirname, "..", "..", "..");
   const modelsDir = path.join(root, "providers", "venice", "models");
 
@@ -136,8 +157,11 @@ test("all Venice models use metadata inheritance and declare reasoning options",
       base_model?: string;
       reasoning_options?: unknown[];
     };
-    expect(model.base_model, file).toBeDefined();
     expect(model.reasoning_options, file).toBeDefined();
-    expect(await Bun.file(path.join(root, "models", `${model.base_model}.toml`)).exists(), file).toBe(true);
+    if (model.base_model !== undefined) {
+      expect(model.base_model.startsWith("venice/"), file).toBe(false);
+      expect(await Bun.file(path.join(root, "models", `${model.base_model}.toml`)).exists(), file).toBe(true);
+    }
+    expect(file.startsWith("e2ee-"), file).toBe(false);
   }
 });

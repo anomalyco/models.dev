@@ -3,7 +3,7 @@ import path from "node:path";
 import { z } from "zod";
 
 import { ModelFamilyValues } from "../../family.js";
-import type { ExistingModel, SyncProvider, SyncedFullModel, SyncedMetadata, SyncedModel } from "../index.js";
+import type { ExistingModel, SyncProvider, SyncedFullModel, SyncedModel } from "../index.js";
 import { factorBaseModel } from "./openrouter.js";
 
 const API_ENDPOINT = "https://api.venice.ai/api/v1/models?type=text";
@@ -11,6 +11,7 @@ const MODELS_DIR = path.join(import.meta.dirname, "..", "..", "..", "..", "..", 
 
 const Capabilities = z.object({
   supportsAudioInput: z.boolean().optional(),
+  supportsE2EE: z.boolean().optional(),
   supportsFunctionCalling: z.boolean().optional(),
   supportsReasoning: z.boolean().optional(),
   supportsReasoningEffort: z.boolean().optional(),
@@ -82,7 +83,7 @@ export const venice = {
   id: "venice",
   name: "Venice",
   modelsDir: "providers/venice/models",
-  metadataNamespace: "venice",
+  preserveBaseModels: false,
   async fetchModels() {
     const headers = process.env.VENICE_API_KEY
       ? { Authorization: `Bearer ${process.env.VENICE_API_KEY}` }
@@ -97,20 +98,14 @@ export const venice = {
     return VeniceResponse.parse(raw).data;
   },
   translateModel(model, context) {
+    if (model.model_spec.capabilities.supportsE2EE === true) return undefined;
     const id = model.id.replaceAll("/", "-");
     const existing = context.existing(id);
-    const resolvedBase = existing?.base_model ?? resolveVeniceBaseModel(model.id, model.model_spec.name);
-    const baseModel = resolvedBase ?? `venice/${id}`;
-    const full = buildVeniceModel(model, existing, null);
-    const metadata = baseModel.startsWith("venice/")
-      ? { id: baseModel, model: buildVeniceMetadata(full, model.model_spec.modelSource) }
-      : undefined;
+    const existingBase = existing?.base_model?.startsWith("venice/") === false ? existing.base_model : undefined;
+    const resolvedBase = existingBase ?? resolveVeniceBaseModel(model.id, model.model_spec.name);
     return {
       id,
-      model: resolvedBase === undefined
-        ? factorNewMetadata(baseModel, full)
-        : buildVeniceModel(model, existing, baseModel),
-      metadata,
+      model: buildVeniceModel(model, existing, resolvedBase ?? null),
     };
   },
 } satisfies SyncProvider<VeniceModel>;
@@ -166,7 +161,7 @@ export function buildVeniceModel(
     reasoning_options: reasoningOptions,
     tool_call: capabilities.supportsFunctionCalling === true,
     structured_output: capabilities.supportsResponseSchema === true ? true : undefined,
-    temperature: true,
+    temperature: undefined,
     cost,
     limit,
     modalities: { input: [...new Set(input)], output: ["text" as const] },
@@ -243,28 +238,6 @@ function inferFamily(id: string, name: string) {
       if (family === "o") return new RegExp(`(^|[^a-z0-9])${value}(?=\\d|$|[^a-z0-9])`).test(target);
       return new RegExp(`(^|[^a-z0-9])${value}(?=$|[^a-z0-9])`).test(target);
     });
-}
-
-function buildVeniceMetadata(model: SyncedModel, source: string | undefined): SyncedMetadata {
-  if ("base_model" in model) throw new Error("Cannot build Venice metadata from a factored model");
-  const { cost: _cost, reasoning_options: _reasoningOptions, interleaved: _interleaved, status: _status, ...metadata } = model;
-  return {
-    ...metadata,
-    weights: model.open_weights && source?.startsWith("https://huggingface.co/")
-      ? [{ url: source }]
-      : undefined,
-  };
-}
-
-function factorNewMetadata(baseModel: string, model: SyncedModel): SyncedModel {
-  if ("base_model" in model) return model;
-  return {
-    base_model: baseModel,
-    reasoning_options: model.reasoning_options,
-    cost: model.cost,
-    status: model.status,
-    interleaved: model.interleaved,
-  };
 }
 
 function stable(value: unknown): string {
