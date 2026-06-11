@@ -7,6 +7,7 @@ import { AuthoredModel, AuthoredModelShape } from "../schema.js";
 import { baseten } from "./providers/baseten.js";
 import { cloudflareWorkersAi } from "./providers/cloudflare-workers-ai.js";
 import { google } from "./providers/google.js";
+import { nexus } from "./providers/nexus.js";
 import { openrouter } from "./providers/openrouter.js";
 import { ovhcloud } from "./providers/ovhcloud.js";
 import { vercel } from "./providers/vercel.js";
@@ -76,6 +77,7 @@ export const providers: {
   baseten: SyncProvider<any>;
   "cloudflare-workers-ai": SyncProvider<any>;
   google: SyncProvider<any>;
+  nexus: SyncProvider<any>;
   openrouter: SyncProvider<any>;
   ovhcloud: SyncProvider<any>;
   vercel: SyncProvider<any>;
@@ -84,6 +86,7 @@ export const providers: {
   baseten,
   "cloudflare-workers-ai": cloudflareWorkersAi,
   google,
+  nexus,
   openrouter,
   ovhcloud,
   vercel,
@@ -91,7 +94,7 @@ export const providers: {
 };
 
 export const groups = {
-  aggregators: ["openrouter", "vercel"],
+  aggregators: ["openrouter", "vercel", "nexus"],
   cloudflare: ["cloudflare-workers-ai"],
   direct: ["baseten", "google", "ovhcloud", "xai"],
 } as const;
