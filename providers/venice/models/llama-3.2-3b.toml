@@ -1,6 +1,21 @@
-base_model = "venice/llama-3.2-3b"
+name = "Llama 3.2 3B"
+family = "llama"
+release_date = "2024-10-03"
+last_updated = "2026-06-11"
+attachment = false
+reasoning = false
+tool_call = true
+open_weights = true
 reasoning_options = []
 
 [cost]
 input = 0.15
 output = 0.6
+
+[limit]
+context = 128_000
+output = 4_096
+
+[modalities]
+input = ["text"]
+output = ["text"]
