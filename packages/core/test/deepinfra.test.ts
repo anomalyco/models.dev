@@ -9,26 +9,20 @@ test("DeepInfra models expose only verified reasoning controls", async () => {
 
   expect(deepinfra).toBeDefined();
 
-  const fixed = ["MiniMaxAI/MiniMax-M2.5"];
   const toggle = [
-    "Qwen/Qwen3.5-35B-A3B",
-    "Qwen/Qwen3.5-397B-A17B",
-    "Qwen/Qwen3.6-35B-A3B",
     "XiaomiMiMo/MiMo-V2.5-Pro",
     "XiaomiMiMo/MiMo-V2.5",
     "deepseek-ai/DeepSeek-V3.2",
     "google/gemma-4-26B-A4B-it",
     "google/gemma-4-31B-it",
-    "moonshotai/Kimi-K2.5",
     "moonshotai/Kimi-K2.6",
     "zai-org/GLM-4.6",
-    "zai-org/GLM-4.7-Flash",
     "zai-org/GLM-4.7",
     "zai-org/GLM-5.1",
     "zai-org/GLM-5",
   ];
   const standardEffort = ["openai/gpt-oss-120b", "openai/gpt-oss-20b"];
-  const v4Effort = [
+  const v4 = [
     "deepseek-ai/DeepSeek-V4-Flash",
     "deepseek-ai/DeepSeek-V4-Pro",
   ];
@@ -38,23 +32,26 @@ test("DeepInfra models expose only verified reasoning controls", async () => {
     "meta-llama/Llama-4-Maverick-17B-128E-Instruct-FP8",
     "meta-llama/Llama-4-Scout-17B-16E-Instruct",
   ];
-  const unresolved = ["deepseek-ai/DeepSeek-R1-0528"];
+  const unresolved = [
+    "MiniMaxAI/MiniMax-M2.5",
+    "Qwen/Qwen3.5-35B-A3B",
+    "Qwen/Qwen3.5-397B-A17B",
+    "Qwen/Qwen3.6-35B-A3B",
+    "deepseek-ai/DeepSeek-R1-0528",
+    "moonshotai/Kimi-K2.5",
+    "zai-org/GLM-4.7-Flash",
+  ];
 
   expect(Object.keys(deepinfra?.models ?? {}).sort()).toEqual(
     [
-      ...fixed,
       ...toggle,
       ...standardEffort,
-      ...v4Effort,
+      ...v4,
       ...nonReasoning,
       ...unresolved,
     ].sort(),
   );
 
-  for (const id of fixed) {
-    expect(deepinfra?.models[id]?.reasoning).toBe(true);
-    expect(deepinfra?.models[id]?.reasoning_options).toEqual([]);
-  }
   for (const id of toggle) {
     expect(deepinfra?.models[id]?.reasoning).toBe(true);
     expect(deepinfra?.models[id]?.reasoning_options).toEqual([{ type: "toggle" }]);
@@ -65,10 +62,11 @@ test("DeepInfra models expose only verified reasoning controls", async () => {
       { type: "effort", values: ["low", "medium", "high"] },
     ]);
   }
-  for (const id of v4Effort) {
+  for (const id of v4) {
     expect(deepinfra?.models[id]?.reasoning).toBe(true);
     expect(deepinfra?.models[id]?.reasoning_options).toEqual([
-      { type: "effort", values: ["none", "high", "max"] },
+      { type: "toggle" },
+      { type: "effort", values: ["high"] },
     ]);
   }
   for (const id of nonReasoning) {
