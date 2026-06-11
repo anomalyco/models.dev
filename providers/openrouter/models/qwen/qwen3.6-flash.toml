@@ -3,7 +3,7 @@ temperature = true
 structured_output = true
 tool_call = true
 attachment = true
-reasoning_options = [{ type = "toggle" }, { type = "budget_tokens", min = 1 }]
+reasoning_options = [{ type = "toggle" }, { type = "budget_tokens", min = 1, max = 81920 }]
 reasoning = true
 
 [cost]
