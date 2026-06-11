@@ -1,22 +1,6 @@
-name = "Llama 4 Maverick Instruct (FP8)"
-release_date = "2025-04-05"
-last_updated = "2025-04-05"
-attachment = false
-reasoning = false
-temperature = true
-tool_call = false
-structured_output = true
-open_weights = true
+base_model = "meta/llama-4-maverick-17b-instruct"
 
 [cost]
 input = 0.35
 output = 1
 cache_read = 0.17
-
-[limit]
-context = 524288
-output = 32768
-
-[modalities]
-input = ["text"]
-output = ["text"]
