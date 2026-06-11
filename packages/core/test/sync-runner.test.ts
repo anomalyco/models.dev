@@ -172,6 +172,43 @@ output = ["text"]
   expect(second.unchanged).toBe(1);
 });
 
+test("sync removes authored reasoning options when a translator disables reasoning", async () => {
+  const { modelsDir } = await fixture();
+  const filePath = path.join(modelsDir, "model.toml");
+  await Bun.write(filePath, `name = "Old name"
+release_date = "2026-01-01"
+last_updated = "2026-01-01"
+attachment = false
+reasoning = true
+reasoning_options = [{ type = "toggle" }]
+tool_call = false
+open_weights = false
+
+[cost]
+input = 1
+output = 2
+
+[limit]
+context = 1000
+output = 100
+
+[modalities]
+input = ["text"]
+output = ["text"]
+`);
+  const sync = provider(modelsDir, ["model"]);
+
+  const first = await syncProvider(sync);
+  const content = await Bun.file(filePath).text();
+  const second = await syncProvider(sync);
+
+  expect(first.updated).toBe(1);
+  expect(content).toContain("reasoning = false");
+  expect(content).not.toContain("reasoning_options");
+  expect(second.updated).toBe(0);
+  expect(second.unchanged).toBe(1);
+});
+
 test("sync writes metadata returned by a provider translator", async () => {
   const root = await mkdtemp(path.join(os.tmpdir(), "models-dev-sync-metadata-"));
   const modelsDir = path.join(root, "providers", "test", "models");

@@ -320,7 +320,11 @@ export function preserveReasoningOptions(
   model: SyncedModel,
   existing: ExistingModel | undefined,
 ): SyncedModel {
-  if (model.reasoning_options !== undefined || existing?.reasoning_options === undefined) return model;
+  if (
+    model.reasoning === false ||
+    model.reasoning_options !== undefined ||
+    existing?.reasoning_options === undefined
+  ) return model;
   return {
     ...model,
     reasoning_options: existing.reasoning_options,
