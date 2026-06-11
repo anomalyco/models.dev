@@ -44,7 +44,19 @@ Provider logos are available as SVG files:
 curl https://models.dev/logos/{provider}.svg
 ```
 
-Replace `{provider}` with the **Provider ID** (e.g., `anthropic`, `openai`, `google`). If we don't have a provider's logo, a default logo is served instead.
+Lab logos are also available:
+
+```bash
+curl https://models.dev/logos/labs/{lab}.svg
+```
+
+And model logos return the logo for the lab that created the model:
+
+```bash
+curl https://models.dev/logos/models/{model-id}.svg
+```
+
+Replace `{provider}` with the **Provider ID** (e.g., `anthropic`, `openai`, `google`), `{lab}` with the **Lab ID** (e.g., `anthropic`, `openai`, `google`), and `{model-id}` with the short model ID (e.g., `gpt-5`, `claude-opus-4-6`). If we don't have a matching logo, a default logo is served instead.
 
 ## Contributing
 

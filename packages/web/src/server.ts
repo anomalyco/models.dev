@@ -33,6 +33,48 @@ Bun.serve({
       );
       return new Response(file);
     },
+    "/logos/models/*": async (req) => {
+      const url = new URL(req.url);
+      const model = decodeURIComponent(
+        url.pathname.slice("/logos/models/".length).replace(/\.svg$/, ""),
+      );
+      const canonicalModel = Object.keys(Models).find((id) => {
+        const [, ...modelParts] = id.split("/");
+        return modelParts.join("/") === model;
+      });
+      const lab = canonicalModel?.split("/")[0];
+      const defaultLogoPath = path.join(
+        import.meta.dir,
+        "..",
+        "..",
+        "..",
+        "providers",
+        "logo.svg"
+      );
+      const logoPath = lab === undefined
+        ? defaultLogoPath
+        : path.join(
+            import.meta.dir,
+            "..",
+            "..",
+            "..",
+            "labs",
+            lab,
+            "logo.svg"
+          );
+
+      let file = Bun.file(logoPath);
+      if (!(await file.exists())) {
+        file = Bun.file(defaultLogoPath);
+      }
+
+      return new Response(file, {
+        headers: {
+          "Content-Type": "image/svg+xml",
+          "Cache-Control": "public, max-age=3600",
+        },
+      });
+    },
     "/logos/labs/*": async (req) => {
       const url = new URL(req.url);
       const lab = url.pathname.split("/")[3].replace(".svg", "");

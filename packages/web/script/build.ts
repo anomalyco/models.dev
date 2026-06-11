@@ -63,6 +63,30 @@ try {
   }
 }
 
+// Copy lab logos to dist/logos/models/<model-id>.svg.
+await fs.mkdir("./dist/logos/models", { recursive: true });
+
+const modelLogoIds = new Set<string>();
+for (const canonicalModelId of Object.keys(Models)) {
+  const [lab, ...modelParts] = canonicalModelId.split("/");
+  const model = modelParts.join("/");
+  if (!lab || !model) continue;
+
+  if (modelLogoIds.has(model)) {
+    throw new Error(`Duplicate model logo id: ${model}`);
+  }
+  modelLogoIds.add(model);
+
+  const logoPath = path.join(labsDir, lab, "logo.svg");
+  const logoFile = Bun.file(logoPath);
+  const modelLogoPath = path.join("./dist/logos/models", `${model}.svg`);
+  await fs.mkdir(path.dirname(modelLogoPath), { recursive: true });
+  await Bun.write(
+    modelLogoPath,
+    (await logoFile.exists()) ? logoFile : defaultLogo,
+  );
+}
+
 const template = await Bun.file("./dist/index.html").text();
 
 for (const [route, rendered] of RenderedPages) {

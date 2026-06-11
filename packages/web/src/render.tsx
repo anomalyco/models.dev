@@ -1332,13 +1332,31 @@ function HelpDialog() {
         <p>
           Provider logos are available at <code>/logos/{`{provider}`}.svg</code>{" "}
           where <code>{`{provider}`}</code> is the provider ID. Lab logos are
-          available at <code>/logos/labs/{`{lab}`}.svg</code>.
+          available at <code>/logos/labs/{`{lab}`}.svg</code>. Model logos are
+          available at <code>/logos/models/{`{model-id}`}.svg</code> and return
+          the logo for the lab that created the model.
         </p>
         <div class="code-block">
           <code>
             curl{" "}
             <a href="/logos/anthropic.svg">
               https://models.dev/logos/anthropic.svg
+            </a>
+          </code>
+        </div>
+        <div class="code-block">
+          <code>
+            curl{" "}
+            <a href="/logos/labs/anthropic.svg">
+              https://models.dev/logos/labs/anthropic.svg
+            </a>
+          </code>
+        </div>
+        <div class="code-block">
+          <code>
+            curl{" "}
+            <a href="/logos/models/gpt-5.svg">
+              https://models.dev/logos/models/gpt-5.svg
             </a>
           </code>
         </div>
