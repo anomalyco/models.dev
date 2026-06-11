@@ -10,23 +10,26 @@ const expectedReasoningOptions = {
     { type: "toggle" },
     { type: "effort", values: ["high", "max"] },
   ],
-  "accounts/fireworks/models/glm-5p1": [{ type: "toggle" }],
   "accounts/fireworks/models/gpt-oss-120b": [{ type: "effort", values: ["low", "medium", "high"] }],
   "accounts/fireworks/models/gpt-oss-20b": [{ type: "effort", values: ["low", "medium", "high"] }],
-  "accounts/fireworks/models/kimi-k2p5": [{ type: "toggle" }],
-  "accounts/fireworks/models/kimi-k2p6": [{ type: "toggle" }],
   "accounts/fireworks/models/minimax-m2p5": [{ type: "effort", values: ["low", "medium", "high"] }],
   "accounts/fireworks/models/minimax-m2p7": [{ type: "effort", values: ["low", "medium", "high"] }],
   "accounts/fireworks/models/qwen3p6-plus": [
     { type: "toggle" },
     { type: "effort", values: ["low", "medium", "high"] },
   ],
-  "accounts/fireworks/routers/glm-5p1-fast": [{ type: "toggle" }],
-  "accounts/fireworks/routers/kimi-k2p6-fast": [{ type: "toggle" }],
-  "accounts/fireworks/routers/kimi-k2p6-turbo": [{ type: "toggle" }],
 } as const;
 
-test("all Fireworks models declare exact reasoning controls", async () => {
+const unresolvedReasoningOptions = [
+  "accounts/fireworks/models/glm-5p1",
+  "accounts/fireworks/models/kimi-k2p5",
+  "accounts/fireworks/models/kimi-k2p6",
+  "accounts/fireworks/routers/glm-5p1-fast",
+  "accounts/fireworks/routers/kimi-k2p6-fast",
+  "accounts/fireworks/routers/kimi-k2p6-turbo",
+] as const;
+
+test("Fireworks models declare only positively verified reasoning controls", async () => {
   const root = path.join(import.meta.dirname, "..", "..", "..");
   const modelsDir = path.join(root, "providers", "fireworks-ai", "models");
   const actualIds: string[] = [];
@@ -50,8 +53,13 @@ test("all Fireworks models declare exact reasoning controls", async () => {
       continue;
     }
 
-    expect(model.reasoning_options, id).toEqual(expectedReasoningOptions[id as keyof typeof expectedReasoningOptions]);
+    if (id in expectedReasoningOptions) {
+      expect(model.reasoning_options, id).toEqual(expectedReasoningOptions[id as keyof typeof expectedReasoningOptions]);
+    } else {
+      expect(unresolvedReasoningOptions, id).toContain(id);
+      expect(model.reasoning_options, id).toBeUndefined();
+    }
   }
 
-  expect(actualIds.sort()).toEqual(Object.keys(expectedReasoningOptions).sort());
+  expect(actualIds.sort()).toEqual([...Object.keys(expectedReasoningOptions), ...unresolvedReasoningOptions].sort());
 });
