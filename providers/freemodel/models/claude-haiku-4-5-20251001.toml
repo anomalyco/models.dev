@@ -1,5 +1,8 @@
 base_model = "anthropic/claude-haiku-4-5-20251001"
-reasoning_options = []
+
+[[reasoning_options]]
+type = "budget_tokens"
+min = 1_024
 
 [cost]
 input = 1.00
