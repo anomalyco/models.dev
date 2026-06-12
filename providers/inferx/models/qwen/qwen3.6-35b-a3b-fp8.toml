@@ -1,4 +1,5 @@
 name = "Qwen3.6 35B A3B FP8"
+base_model = "Qwen/Qwen3.6-35B"
 family = "qwen3.6"
 release_date = "2026-05"
 last_updated = "2026-05-13"
@@ -19,3 +20,6 @@ output = 8192
 [modalities]
 input = ["text"]
 output = ["text"]
+
+[[reasoning_options]]
+type = "effort"
