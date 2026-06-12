@@ -4,6 +4,7 @@ release_date = "2026-04-16"
 last_updated = "2026-04-16"
 attachment = true
 reasoning = true
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }, { type = "budget_tokens", min = 1_024, max = 127_999 }]
 temperature = false
 tool_call = true
 knowledge = "2026-01-31"
