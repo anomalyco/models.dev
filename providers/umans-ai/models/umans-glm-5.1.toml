@@ -1,18 +1,18 @@
-base_model = "alibaba/qwen3.6-35b-a3b"
-name = "Umans Flash"
+base_model = "zhipuai/glm-5.1"
+name = "GLM 5.1"
 reasoning_options = [{ type = "toggle" }]
 
 [interleaved]
 field = "reasoning_content"
 
 [cost]
-input = 0
-output = 0
-cache_read = 0
-cache_write = 0
+input = 1.40
+output = 4.40
+cache_read = 0.29
 
 [limit]
-output = 262_144
+context = 204_800
+output = 131_072
 
 [modalities]
 input = ["text", "image"]

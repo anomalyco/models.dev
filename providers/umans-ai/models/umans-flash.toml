@@ -6,13 +6,12 @@ reasoning_options = [{ type = "toggle" }]
 field = "reasoning_content"
 
 [cost]
-input = 0
-output = 0
-cache_read = 0
-cache_write = 0
+input = 0.15
+output = 1.00
+cache_read = 0.05
 
 [limit]
-output = 262_144
+output = 32_768
 
 [modalities]
 input = ["text", "image"]
