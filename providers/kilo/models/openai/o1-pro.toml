@@ -2,6 +2,7 @@ name = "OpenAI: o1-pro"
 release_date = "2025-03-19"
 last_updated = "2026-03-15"
 attachment = true
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "medium", "high", "xhigh"] }]
 reasoning = true
 temperature = false
 tool_call = false

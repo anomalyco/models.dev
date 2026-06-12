@@ -2,6 +2,7 @@ name = "Anthropic: Claude Opus 4.7"
 release_date = "2026-04-16"
 last_updated = "2026-05-01"
 attachment = true
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
 reasoning = true
 tool_call = true
 temperature = false
