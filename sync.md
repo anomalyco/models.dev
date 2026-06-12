@@ -183,6 +183,18 @@ Venice is implemented in `packages/core/src/sync/providers/venice.ts`.
 - Every Venice model uses `base_model`; flattened IDs are matched to provider-agnostic metadata before provider-specific overrides are written.
 - Every Venice model declares `reasoning_options`; models without API-provided effort levels use an empty array.
 
+## RodiumAi Notes
+
+RodiumAi is implemented in `packages/core/src/sync/providers/rodiumai.ts`.
+
+- Run it with `bun models:sync rodiumai` or `bun rodiumai:sync`.
+- Source endpoint: `https://api.rodiumai.io/v1/models` (no auth required for listing).
+- Only coding/chat models are synced: text output, tool support, and no image/video/embedding slugs.
+- Five smart-routing profiles (`auto`, `basic`, `fast`, `pro`, `max`) are authored locally and always included.
+- Vendor passthrough slugs use `base_model` when a matching `models/` metadata entry exists.
+- Every model declares `reasoning_options`; Anthropic slugs inherit effort/toggle defaults, others default to `[]`.
+- Existing `[cost]` overrides are preserved when updating factored models.
+
 ## Standalone Generators
 
 Some provider scripts in `packages/core/script/generate-*.ts` are not wired into `bun models:sync`. When updating those scripts, preserve existing `base_model` and `base_model_omit` fields for generated TOMLs that already use model metadata inheritance. New inheritance-aware output should use `base_model`; do not reintroduce legacy `[extends]` syntax.

@@ -1,22 +1,7 @@
-name = "Gemini 2.5 Flash"
-family = "gemini"
-release_date = "2025-03-20"
-last_updated = "2025-06-05"
-attachment = true
-reasoning = true
-temperature = true
-tool_call = true
-open_weights = false
-
-[cost]
-input = 0.3
-output = 2.5
-cache_read = 0.3
+base_model = "google/gemini-2.5-flash"
+last_updated = "2026-06-12"
+reasoning_options = []
 
 [limit]
 context = 1_000_000
-output = 65_536
-
-[modalities]
-input = ["text","image","video","audio","pdf"]
-output = ["text"]
+output = 32_768

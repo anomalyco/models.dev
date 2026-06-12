@@ -1,23 +1,15 @@
-name = "Claude Sonnet 4.6"
-family = "claude-sonnet"
-release_date = "2026-02-17"
-last_updated = "2026-03-13"
-attachment = true
-reasoning = true
-temperature = true
-tool_call = true
-open_weights = false
+base_model = "anthropic/claude-sonnet-4-6"
+last_updated = "2026-06-12"
+structured_output = true
 
-[cost]
-input = 3
-output = 15
-cache_read = 0.3
-cache_write = 3.75
+[[reasoning_options]]
+type = "toggle"
 
-[limit]
-context = 1_000_000
-output = 64_000
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high", "max"]
 
-[modalities]
-input = ["text","image","pdf"]
-output = ["text"]
+[[reasoning_options]]
+type = "budget_tokens"
+min = 1_024
+max = 127_999

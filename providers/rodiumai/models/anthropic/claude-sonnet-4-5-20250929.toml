@@ -1,4 +1,4 @@
-base_model = "anthropic/claude-haiku-4-5-20251001"
+base_model = "anthropic/claude-sonnet-4-5-20250929"
 last_updated = "2026-06-12"
 structured_output = true
 
@@ -9,3 +9,6 @@ type = "toggle"
 type = "budget_tokens"
 min = 1_024
 max = 63_999
+
+[limit]
+context = 1_000_000

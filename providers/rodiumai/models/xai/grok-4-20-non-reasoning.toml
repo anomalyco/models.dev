@@ -1,0 +1,11 @@
+base_model = "xai/grok-4.20-0309-non-reasoning"
+name = "Grok 4.20 Non-Reasoning"
+last_updated = "2026-06-12"
+reasoning_options = []
+
+[limit]
+context = 262_000
+output = 8_192
+
+[modalities]
+input = ["text", "image"]
