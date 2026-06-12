@@ -70,7 +70,7 @@ test("RodiumAi smart profiles declare reasoning_options", () => {
   expect(synced.family).toBe("rodium-smart");
 });
 
-test("RodiumAi vendor models use base_model and reasoning_options", () => {
+test("RodiumAi vendor models inherit anthropic reasoning_options from direct provider", () => {
   const synced = buildRodiumVendorModel(vendorModel, {
     cost: { input: 3, output: 15, cache_read: 0.3, cache_write: 3.75 },
     limit: { context: 1_000_000, output: 64_000 },
@@ -79,13 +79,13 @@ test("RodiumAi vendor models use base_model and reasoning_options", () => {
   expect(synced).toMatchObject({
     base_model: "anthropic/claude-sonnet-4-6",
     reasoning_options: [
-      { type: "toggle" },
       { type: "effort", values: ["low", "medium", "high", "max"] },
-      { type: "budget_tokens", min: 1024, max: 127_999 },
+      { type: "budget_tokens", min: 1024 },
     ],
     cost: { input: 3, output: 15, cache_read: 0.3, cache_write: 3.75 },
   });
   expect(synced).not.toHaveProperty("family");
+  expect(synced).not.toHaveProperty("reasoning");
 });
 
 test("RodiumAi skips models without tools support", () => {

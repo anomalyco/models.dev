@@ -1,5 +1,7 @@
 base_model = "anthropic/claude-opus-4-1-20250805"
 last_updated = "2026-06-12"
-reasoning = false
 structured_output = true
-reasoning_options = []
+
+[[reasoning_options]]
+type = "budget_tokens"
+min = 1_024

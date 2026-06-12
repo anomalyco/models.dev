@@ -192,7 +192,7 @@ RodiumAi is implemented in `packages/core/src/sync/providers/rodiumai.ts`.
 - Only coding/chat models are synced: text output, tool support, and no image/video/embedding slugs.
 - Five smart-routing profiles (`auto`, `basic`, `fast`, `pro`, `max`) are authored locally and always included.
 - Vendor passthrough slugs use `base_model` when a matching `models/` metadata entry exists.
-- Every model declares `reasoning_options`; Anthropic slugs inherit effort/toggle defaults, others default to `[]`.
+- Every model declares `reasoning_options`. For Anthropic passthrough slugs, the sync copies controls from `providers/anthropic/models/` when present; others default to `[]`. RodiumAi's `supports_reasoning` API flag is not used to override `reasoning` on factored models.
 - Existing `[cost]` overrides are preserved when updating factored models.
 
 ## Standalone Generators

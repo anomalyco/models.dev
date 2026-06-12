@@ -1,4 +1,4 @@
-import { readdirSync } from "node:fs";
+import { readFileSync, readdirSync } from "node:fs";
 import path from "node:path";
 import { z } from "zod";
 
@@ -7,7 +7,9 @@ import type { ExistingModel, SyncProvider, SyncedFullModel, SyncedModel } from "
 import { factorBaseModel, resolveCanonicalBaseModel } from "./openrouter.js";
 
 const API_ENDPOINT = "https://api.rodiumai.io/v1/models";
-const MODELS_DIR = path.join(import.meta.dirname, "..", "..", "..", "..", "..", "models");
+const REPO_ROOT = path.join(import.meta.dirname, "..", "..", "..", "..", "..");
+const MODELS_DIR = path.join(REPO_ROOT, "models");
+const ANTHROPIC_PROVIDER_DIR = path.join(REPO_ROOT, "providers", "anthropic", "models");
 
 const EXCLUDED_SLUG_PARTS = [
   "embed",
@@ -107,6 +109,7 @@ type Modality = "text" | "audio" | "image" | "video" | "pdf";
 type ReasoningOption = NonNullable<SyncedFullModel["reasoning_options"]>[number];
 
 const metadataFilesByProvider = new Map<string, Set<string>>();
+const anthropicProviderModels = new Map<string, Record<string, unknown>>();
 
 export const rodiumai = {
   id: "rodiumai",
@@ -218,48 +221,52 @@ export function resolveRodiumBaseModel(apiID: string): string | undefined {
   return directCandidates.find((candidate) => metadataFileExists(candidate));
 }
 
-function defaultReasoningOptions(
+function anthropicDirectProviderModel(baseModel: string): Record<string, unknown> | undefined {
+  if (!baseModel.startsWith("anthropic/")) return undefined;
+  const slug = baseModel.slice("anthropic/".length);
+  let cached = anthropicProviderModels.get(slug);
+  if (cached === undefined) {
+    try {
+      cached = Bun.TOML.parse(
+        readFileSync(path.join(ANTHROPIC_PROVIDER_DIR, `${slug}.toml`), "utf8"),
+      ) as Record<string, unknown>;
+      anthropicProviderModels.set(slug, cached);
+    } catch {
+      return undefined;
+    }
+  }
+  return cached;
+}
+
+function resolveReasoningOptions(
   baseModel: string | undefined,
-  reasoning: boolean,
   existing: ExistingModel | undefined,
 ): ReasoningOption[] {
   if (existing?.reasoning_options !== undefined) return existing.reasoning_options;
-  if (!reasoning) return [];
-
-  if (baseModel === "anthropic/claude-fable-5") {
-    return [{ type: "effort", values: ["low", "medium", "high", "xhigh", "max"] }];
-  }
-  if (baseModel?.startsWith("anthropic/claude-opus-4-8")) {
-    return [
-      { type: "toggle" },
-      { type: "effort", values: ["low", "medium", "high", "xhigh", "max"] },
-    ];
-  }
-  if (baseModel?.startsWith("anthropic/claude-opus-4-7")) {
-    return [
-      { type: "toggle" },
-      { type: "effort", values: ["low", "medium", "high", "xhigh", "max"] },
-    ];
-  }
-  if (baseModel?.startsWith("anthropic/claude-opus-4-6")) {
-    return [
-      { type: "toggle" },
-      { type: "effort", values: ["low", "medium", "high", "max"] },
-      { type: "budget_tokens", min: 1024, max: 127_999 },
-    ];
-  }
-  if (baseModel?.startsWith("anthropic/claude-sonnet-4-6")) {
-    return [
-      { type: "toggle" },
-      { type: "effort", values: ["low", "medium", "high", "max"] },
-      { type: "budget_tokens", min: 1024, max: 127_999 },
-    ];
-  }
-  if (baseModel?.startsWith("anthropic/")) {
-    return [{ type: "toggle" }, { type: "budget_tokens", min: 1024, max: 63_999 }];
-  }
-
+  if (baseModel === undefined) return [];
+  const direct = anthropicDirectProviderModel(baseModel);
+  const options = direct?.reasoning_options;
+  if (Array.isArray(options)) return options as ReasoningOption[];
   return [];
+}
+
+function resolveProviderTemperature(
+  baseModel: string | undefined,
+): boolean | undefined {
+  if (baseModel === undefined) return undefined;
+  const direct = anthropicDirectProviderModel(baseModel);
+  return typeof direct?.temperature === "boolean" ? direct.temperature : undefined;
+}
+
+function resolveReasoningFlag(
+  baseModel: string | undefined,
+  supportsReasoning: boolean | undefined,
+): boolean | undefined {
+  if (supportsReasoning === true) return true;
+  // RodiumAi's supports_reasoning flag is unreliable for adaptive-thinking models.
+  // When factoring a base model, inherit reasoning from models/ metadata instead.
+  if (baseModel !== undefined) return undefined;
+  return supportsReasoning === true ? true : false;
 }
 
 export function buildSmartProfile(
@@ -304,7 +311,8 @@ export function buildRodiumVendorModel(
   const input = modalities(caps.input_modalities ?? ["text"], ["text"]);
   const output = modalities(caps.output_modalities ?? ["text"], ["text"]);
   const attachment = input.some((value) => value !== "text") || caps.supports_vision === true;
-  const reasoning = caps.supports_reasoning === true;
+  const baseModel = existing?.base_model ?? resolveRodiumBaseModel(model.id);
+  const reasoning = resolveReasoningFlag(baseModel, caps.supports_reasoning);
   const toolCall = caps.supports_tools === true;
   const structuredOutput = caps.supports_json_mode === true ? true : undefined;
   const releaseDate = existing?.release_date ?? dateFromTimestamp(model.created);
@@ -313,8 +321,8 @@ export function buildRodiumVendorModel(
     input: existing?.limit?.input,
     output: caps.max_output_tokens ?? existing?.limit?.output ?? 32_768,
   };
-  const baseModel = existing?.base_model ?? resolveRodiumBaseModel(model.id);
-  const reasoningOptions = defaultReasoningOptions(baseModel, reasoning, existing);
+  const reasoningOptions = resolveReasoningOptions(baseModel, existing);
+  const temperature = resolveProviderTemperature(baseModel);
   const cost = existing?.cost;
   const changed = existing !== undefined && (
     existing.name !== name
@@ -333,7 +341,7 @@ export function buildRodiumVendorModel(
         attachment,
         reasoning,
         reasoning_options: reasoningOptions,
-        temperature: true,
+        temperature,
         tool_call: toolCall,
         structured_output: structuredOutput,
         last_updated: existing === undefined || changed ? today : (existing.last_updated ?? today),
@@ -352,9 +360,9 @@ export function buildRodiumVendorModel(
     release_date: releaseDate,
     last_updated: existing === undefined || changed ? today : (existing.last_updated ?? today),
     attachment,
-    reasoning,
+    reasoning: reasoning ?? false,
     reasoning_options: reasoningOptions,
-    temperature: true,
+    temperature: temperature ?? true,
     tool_call: toolCall,
     structured_output: structuredOutput,
     open_weights: false,
