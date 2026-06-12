@@ -1,6 +1,14 @@
+name = "Gemma 4 31B IT FP8"
 base_model = "google/gemma-4-31b-it"
-attachment = false
-reasoning = false
+family = "gemma"
+release_date = "2026-04-02"
+last_updated = "2026-04-02"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = true
 
 [cost]
 input = 0.0
