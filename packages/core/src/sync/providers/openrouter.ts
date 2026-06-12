@@ -2,7 +2,7 @@ import { z } from "zod";
 import { readFileSync, readdirSync } from "node:fs";
 import path from "node:path";
 
-import { ModelFamilyValues } from "../../family.js";
+import { inferKimiFamily, ModelFamilyValues } from "../../family.js";
 import type { ExistingModel, SyncProvider, SyncedFullModel, SyncedModel } from "../index.js";
 
 const API_ENDPOINT = "https://openrouter.ai/api/v1/models";
@@ -113,6 +113,9 @@ function modalities(values: string[], fallback: Modality[]): Modality[] {
 }
 
 function inferFamily(model: OpenRouterModel, name: string) {
+  const kimiFamily = inferKimiFamily(model.id, name);
+  if (kimiFamily !== undefined) return kimiFamily;
+
   const target = `${model.id} ${name}`.toLowerCase();
   return [...ModelFamilyValues]
     .sort((a, b) => b.length - a.length)

@@ -422,3 +422,10 @@ export const ModelFamilyValues = [
 
 export const ModelFamily = z.enum(ModelFamilyValues);
 export type ModelFamily = z.infer<typeof ModelFamily>;
+
+export function inferKimiFamily(...values: string[]): ModelFamily | undefined {
+  const target = values.join(" ").toLowerCase();
+  if (/kimi[^a-z0-9]*k2(?:[^a-z0-9]*\d+)?[^a-z0-9]*thinking/.test(target)) return "kimi-thinking";
+  if (/kimi[\s_-]*k2/.test(target)) return "kimi-k2";
+  return undefined;
+}
