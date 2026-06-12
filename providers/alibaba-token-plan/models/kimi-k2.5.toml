@@ -3,6 +3,7 @@ base_model_omit = ["structured_output"]
 family = "kimi"
 attachment = true
 temperature = true
+reasoning_options = [{ type = "toggle" }, { type = "budget_tokens" }]
 
 [interleaved]
 field = "reasoning_content"

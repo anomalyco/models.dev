@@ -1,6 +1,7 @@
 base_model = "moonshotai/kimi-k2.6"
 base_model_omit = ["structured_output"]
 family = "kimi"
+reasoning_options = [{ type = "toggle" }, { type = "budget_tokens" }]
 
 [interleaved]
 field = "reasoning_content"
