@@ -2,6 +2,7 @@
 # Manual overrides preserved on re-run: name, family, knowledge, interleaved, status
 base_model = "google/gemma-4-31b-it"
 name = "gemma 4 31B turbo TEE"
+reasoning_options = [{ type = "toggle" }]
 
 [cost]
 input = 0.13
