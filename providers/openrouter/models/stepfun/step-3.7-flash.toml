@@ -1,10 +1,9 @@
 base_model = "stepfun/step-3.7-flash"
-temperature = true
-tool_call = true
-attachment = true
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
-reasoning = true
 structured_output = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high"]
 
 [cost]
 input = 0.2

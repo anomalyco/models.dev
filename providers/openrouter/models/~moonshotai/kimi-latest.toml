@@ -1,4 +1,3 @@
-reasoning_options = []
 name = "MoonshotAI Kimi Latest"
 family = "kimi"
 release_date = "2026-04-27"
@@ -9,15 +8,16 @@ temperature = true
 tool_call = true
 structured_output = true
 open_weights = false
+reasoning_options = []
 
 [cost]
-input = 0.67
-output = 3.39
-cache_read = 0.14
+input = 0.68
+output = 3.41
+cache_read = 0.34
 
 [limit]
-context = 262_144
-output = 262_144
+context = 262_142
+output = 262_142
 
 [modalities]
 input = ["text", "image"]

@@ -1,10 +1,13 @@
 base_model = "alibaba/qwen3.6-max-preview"
-temperature = true
-tool_call = true
-attachment = false
-reasoning_options = [{ type = "toggle" }, { type = "budget_tokens", min = 1, max = 131072 }]
-reasoning = true
 structured_output = true
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "budget_tokens"
+min = 1
+max = 131_072
 
 [cost]
 input = 1.04
