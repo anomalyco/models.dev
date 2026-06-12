@@ -51,6 +51,7 @@ export interface SyncProvider<SourceModel> {
   skipCreates?: boolean;
   deleteMissing?: boolean;
   preserveSymlinks?: boolean;
+  preserveBaseModels?: boolean;
   sameModel?(current: ExistingModel, desired: SyncedModel): boolean;
   missingNotice?(paths: string[]): string[];
   sourceID?(model: SourceModel): string;
@@ -118,7 +119,9 @@ export async function syncProvider<SourceModel>(
 ): Promise<SyncResult> {
   console.log(`\nSyncing ${provider.name}...`);
 
-  const { models: existing, brokenSymlinks } = await readExisting(provider.modelsDir);
+  const existingState = await readExisting(provider.modelsDir);
+  const { models: existing, brokenSymlinks } = existingState;
+  let { modelMetadata } = existingState;
   const sourceModels = provider.parseModels(await provider.fetchModels());
   const desired = new Map<string, { model: z.infer<typeof SyncedAuthoredModel>; content: string }>();
   const desiredMetadata = new Map<string, { model: z.infer<typeof ModelMetadata>; content: string }>();
@@ -162,11 +165,28 @@ export async function syncProvider<SourceModel>(
       });
     }
 
+    const translatedModel = provider.preserveBaseModels === false
+      ? translated.model
+      : preserveBaseModel(translated.model, existing.get(relativePath)?.authored);
+    const translatedBase = "base_model" in translatedModel ? translatedModel.base_model : undefined;
+    let resolvedReasoning: boolean | undefined;
+    if (translatedBase !== undefined) {
+      if (translated.metadata?.id === translatedBase) {
+        resolvedReasoning = translated.metadata.model.reasoning;
+      } else {
+        modelMetadata ??= await readModelMetadata(provider.modelsDir);
+        const canonicalReasoning = modelMetadata[translatedBase]?.reasoning;
+        resolvedReasoning = typeof canonicalReasoning === "boolean" ? canonicalReasoning : undefined;
+      }
+    } else {
+      resolvedReasoning = existing.get(relativePath)?.toml.reasoning;
+    }
     const parsed = SyncedAuthoredModel.safeParse(stripUndefined({
       id: translated.id,
       ...preserveReasoningOptions(
-        preserveBaseModel(translated.model, existing.get(relativePath)?.authored),
+        translatedModel,
         existing.get(relativePath)?.authored,
+        resolvedReasoning,
       ),
     }));
     if (!parsed.success) {
@@ -316,7 +336,12 @@ export function preserveBaseModel(model: SyncedModel, existing: ExistingModel | 
 export function preserveReasoningOptions(
   model: SyncedModel,
   existing: ExistingModel | undefined,
+  resolvedReasoning: boolean | undefined = existing?.reasoning,
 ): SyncedModel {
+  if ((model.reasoning ?? resolvedReasoning) === false) {
+    const { reasoning_options: _reasoningOptions, ...withoutReasoningOptions } = model;
+    return withoutReasoningOptions as SyncedModel;
+  }
   if (model.reasoning_options !== undefined || existing?.reasoning_options === undefined) return model;
   return {
     ...model,
@@ -389,7 +414,7 @@ async function readExisting(modelsDir: string) {
     existing.set(file, { authored, toml, symlink });
   }
 
-  return { models: existing, brokenSymlinks };
+  return { models: existing, brokenSymlinks, modelMetadata };
 }
 
 async function isSymlink(filePath: string) {
