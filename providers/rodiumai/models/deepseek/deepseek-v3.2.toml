@@ -1,14 +1,21 @@
 name = "DeepSeek V3.2"
 family = "deepseek"
-release_date = "2026-06-09"
+release_date = "2025-12-01"
 last_updated = "2026-06-12"
 attachment = false
-reasoning = false
+reasoning = true
 temperature = true
 tool_call = true
 structured_output = true
-open_weights = false
-reasoning_options = []
+knowledge = "2024-07"
+open_weights = true
+
+[[reasoning_options]]
+type = "toggle"
+
+[cost]
+input = 0.2288
+output = 0.3432
 
 [limit]
 context = 164_000

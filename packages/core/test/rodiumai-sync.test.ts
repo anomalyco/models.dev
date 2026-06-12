@@ -2,7 +2,6 @@ import { expect, test } from "bun:test";
 
 import {
   buildRodiumVendorModel,
-  buildSmartProfile,
   isCodingApiModel,
   resolveRodiumBaseModel,
   rodiumai,
@@ -55,19 +54,6 @@ test("RodiumAi filters non-coding models", () => {
       supports_tools: true,
     },
   })).toBe(false);
-});
-
-test("RodiumAi smart profiles declare reasoning_options", () => {
-  const synced = buildSmartProfile({
-    id: "pro",
-    name: "Pro",
-    reasoning: true,
-    cost: { input: 0.3, output: 2.5 },
-    limit: { context: 1_000_000, output: 32_000 },
-  }, undefined, "2026-06-12");
-
-  expect(synced.reasoning_options).toEqual([]);
-  expect(synced.family).toBe("rodium-smart");
 });
 
 test("RodiumAi vendor models inherit anthropic reasoning_options from direct provider", () => {

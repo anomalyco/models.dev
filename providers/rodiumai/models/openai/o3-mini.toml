@@ -1,4 +1,12 @@
 base_model = "openai/o3-mini"
 last_updated = "2026-06-12"
-temperature = true
-reasoning_options = []
+attachment = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high"]
+
+[cost]
+input = 1.1
+output = 4.4
+cache_read = 0.55

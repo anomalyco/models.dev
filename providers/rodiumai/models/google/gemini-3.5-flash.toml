@@ -1,6 +1,16 @@
 base_model = "google/gemini-3.5-flash"
 last_updated = "2026-06-12"
-reasoning_options = []
+
+[[reasoning_options]]
+type = "effort"
+values = ["minimal", "low", "medium", "high"]
+
+[cost]
+input = 1.5
+output = 9
+reasoning = 9
+cache_read = 0.15
+cache_write = 0.083333
 
 [limit]
 context = 1_000_000

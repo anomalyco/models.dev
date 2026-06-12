@@ -232,7 +232,7 @@ export async function syncProvider<SourceModel>(
   }
 
   for (const [relativePath, file] of desired) {
-    const filePath = path.join(provider.modelsDir, relativePath);
+    const filePath = path.join(provider.modelsDir, ...relativePath.split("/"));
     const current = existing.get(relativePath);
 
     if (current === undefined) {
@@ -285,7 +285,7 @@ export async function syncProvider<SourceModel>(
       continue;
     }
 
-    const filePath = path.join(provider.modelsDir, relativePath);
+    const filePath = path.join(provider.modelsDir, ...relativePath.split("/"));
     files.push({ status: "deleted", path: filePath });
     if (options.dryRun) {
       console.log(`Would remove ${relativePath}`);
@@ -416,7 +416,7 @@ async function readModelMetadata(modelsDir: string) {
     absolute: true,
     followSymlinks: true,
   })) {
-    const modelID = path.relative(metadataDir, modelPath).slice(0, -5);
+    const modelID = path.relative(metadataDir, modelPath).slice(0, -5).replaceAll("\\", "/");
     const toml = Bun.TOML.parse(
       await Bun.file(modelPath).text(),
     ) as Record<string, unknown>;
@@ -525,7 +525,7 @@ async function tomlFiles(root: string, dir = "") {
   const result: Array<{ file: string; symlink: boolean }> = [];
 
   for (const entry of await readdir(path.join(root, dir), { withFileTypes: true })) {
-    const file = path.join(dir, entry.name);
+    const file = path.join(dir, entry.name).replaceAll("\\", "/");
     if (entry.isDirectory()) {
       result.push(...await tomlFiles(root, file));
     } else if (entry.name.endsWith(".toml") && (entry.isFile() || entry.isSymbolicLink())) {

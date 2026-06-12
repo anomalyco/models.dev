@@ -10,6 +10,7 @@ const API_ENDPOINT = "https://api.rodiumai.io/v1/models";
 const REPO_ROOT = path.join(import.meta.dirname, "..", "..", "..", "..", "..");
 const MODELS_DIR = path.join(REPO_ROOT, "models");
 const ANTHROPIC_PROVIDER_DIR = path.join(REPO_ROOT, "providers", "anthropic", "models");
+const OPENROUTER_PROVIDER_DIR = path.join(REPO_ROOT, "providers", "openrouter", "models");
 
 const EXCLUDED_SLUG_PARTS = [
   "embed",
@@ -34,44 +35,6 @@ const BASE_MODEL_ALIASES: Record<string, string> = {
   "xai/grok-4-20-reasoning": "xai/grok-4.20-0309-reasoning",
   "xai/grok-4-20-non-reasoning": "xai/grok-4.20-0309-non-reasoning",
 };
-
-const SMART_PROFILES = [
-  {
-    id: "auto",
-    name: "Auto (RodiumAI Smart Routing)",
-    reasoning: false,
-    cost: { input: 0.3, output: 2.5 },
-    limit: { context: 1_000_000, output: 32_000 },
-  },
-  {
-    id: "basic",
-    name: "Basic",
-    reasoning: false,
-    cost: { input: 0.05, output: 0.08 },
-    limit: { context: 128_000, output: 8192 },
-  },
-  {
-    id: "fast",
-    name: "Fast",
-    reasoning: false,
-    cost: { input: 0.11, output: 0.34 },
-    limit: { context: 128_000, output: 16_384 },
-  },
-  {
-    id: "pro",
-    name: "Pro",
-    reasoning: true,
-    cost: { input: 0.3, output: 2.5 },
-    limit: { context: 1_000_000, output: 32_000 },
-  },
-  {
-    id: "max",
-    name: "Max",
-    reasoning: true,
-    cost: { input: 3.0, output: 15.0 },
-    limit: { context: 200_000, output: 16_384 },
-  },
-] as const;
 
 export const RodiumCapabilities = z.object({
   context_window: z.number().int().nonnegative().nullable().optional(),
@@ -103,13 +66,14 @@ export const RodiumResponse = z.object({
 }).passthrough();
 
 export type RodiumApiModel = z.infer<typeof RodiumApiModel>;
-export type SmartProfile = (typeof SMART_PROFILES)[number];
 
 type Modality = "text" | "audio" | "image" | "video" | "pdf";
 type ReasoningOption = NonNullable<SyncedFullModel["reasoning_options"]>[number];
+type ModelCost = NonNullable<SyncedFullModel["cost"]>;
 
 const metadataFilesByProvider = new Map<string, Set<string>>();
 const anthropicProviderModels = new Map<string, Record<string, unknown>>();
+const openRouterProviderModels = new Map<string, Record<string, unknown> | null>();
 
 export const rodiumai = {
   id: "rodiumai",
@@ -123,22 +87,15 @@ export const rodiumai = {
     return response.json();
   },
   parseModels(raw) {
-    const data = RodiumResponse.parse(raw).data.filter(isCodingApiModel);
-    return [...SMART_PROFILES, ...data];
+    return RodiumResponse.parse(raw).data.filter(isCodingApiModel);
   },
   translateModel(model, context) {
-    if (isSmartProfile(model)) {
-      return {
-        id: model.id,
-        model: buildSmartProfile(model, context.existing(model.id)),
-      };
-    }
     return {
       id: model.id,
       model: buildRodiumVendorModel(model, context.existing(model.id)),
     };
   },
-} satisfies SyncProvider<RodiumApiModel | SmartProfile>;
+} satisfies SyncProvider<RodiumApiModel>;
 
 export function isCodingApiModel(model: RodiumApiModel): boolean {
   const id = model.id.toLowerCase();
@@ -155,10 +112,6 @@ export function isCodingApiModel(model: RodiumApiModel): boolean {
   if (caps.supports_tools !== true) return false;
 
   return true;
-}
-
-function isSmartProfile(model: RodiumApiModel | SmartProfile): model is SmartProfile {
-  return !("created" in model);
 }
 
 function dateFromTimestamp(timestamp: number) {
@@ -221,6 +174,22 @@ export function resolveRodiumBaseModel(apiID: string): string | undefined {
   return directCandidates.find((candidate) => metadataFileExists(candidate));
 }
 
+function openRouterProviderModel(apiID: string): Record<string, unknown> | undefined {
+  if (openRouterProviderModels.has(apiID)) {
+    return openRouterProviderModels.get(apiID) ?? undefined;
+  }
+
+  const filePath = path.join(OPENROUTER_PROVIDER_DIR, `${apiID}.toml`);
+  try {
+    const parsed = Bun.TOML.parse(readFileSync(filePath, "utf8")) as Record<string, unknown>;
+    openRouterProviderModels.set(apiID, parsed);
+    return parsed;
+  } catch {
+    openRouterProviderModels.set(apiID, null);
+    return undefined;
+  }
+}
+
 function anthropicDirectProviderModel(baseModel: string): Record<string, unknown> | undefined {
   if (!baseModel.startsWith("anthropic/")) return undefined;
   const slug = baseModel.slice("anthropic/".length);
@@ -238,67 +207,85 @@ function anthropicDirectProviderModel(baseModel: string): Record<string, unknown
   return cached;
 }
 
+function isPlainObject(value: unknown): value is Record<string, unknown> {
+  return value !== null && typeof value === "object" && !Array.isArray(value);
+}
+
 function resolveReasoningOptions(
+  apiID: string,
   baseModel: string | undefined,
   existing: ExistingModel | undefined,
-): ReasoningOption[] {
-  if (existing?.reasoning_options !== undefined) return existing.reasoning_options;
-  if (baseModel === undefined) return [];
+): ReasoningOption[] | undefined {
+  if (existing?.reasoning_options !== undefined && existing.reasoning_options.length > 0) {
+    return existing.reasoning_options;
+  }
+
+  const fromOpenRouter = openRouterProviderModel(apiID)?.reasoning_options;
+  if (Array.isArray(fromOpenRouter) && fromOpenRouter.length > 0) {
+    return fromOpenRouter as ReasoningOption[];
+  }
+
+  if (baseModel === undefined) return undefined;
   const direct = anthropicDirectProviderModel(baseModel);
   const options = direct?.reasoning_options;
-  if (Array.isArray(options)) return options as ReasoningOption[];
-  return [];
+  if (Array.isArray(options) && options.length > 0) return options as ReasoningOption[];
+  return undefined;
 }
 
 function resolveProviderTemperature(
+  apiID: string,
   baseModel: string | undefined,
 ): boolean | undefined {
+  const fromOpenRouter = openRouterProviderModel(apiID)?.temperature;
+  if (typeof fromOpenRouter === "boolean") return fromOpenRouter;
   if (baseModel === undefined) return undefined;
   const direct = anthropicDirectProviderModel(baseModel);
   return typeof direct?.temperature === "boolean" ? direct.temperature : undefined;
 }
 
 function resolveReasoningFlag(
+  apiID: string,
   baseModel: string | undefined,
   supportsReasoning: boolean | undefined,
 ): boolean | undefined {
+  const fromOpenRouter = openRouterProviderModel(apiID)?.reasoning;
+  if (typeof fromOpenRouter === "boolean") return fromOpenRouter;
   if (supportsReasoning === true) return true;
-  // RodiumAi's supports_reasoning flag is unreliable for adaptive-thinking models.
-  // When factoring a base model, inherit reasoning from models/ metadata instead.
   if (baseModel !== undefined) return undefined;
   return supportsReasoning === true ? true : false;
 }
 
-export function buildSmartProfile(
-  profile: SmartProfile,
-  existing: ExistingModel | undefined,
-  today = new Date().toISOString().slice(0, 10),
-): SyncedFullModel {
-  const releaseDate = existing?.release_date ?? today;
-  const changed = existing !== undefined && (
-    existing.name !== profile.name
-    || existing.reasoning !== profile.reasoning
-    || existing.cost?.input !== profile.cost.input
-    || existing.cost?.output !== profile.cost.output
-    || existing.limit?.context !== profile.limit.context
-    || existing.limit?.output !== profile.limit.output
-  );
+function resolveProviderCost(apiID: string, existing: ExistingModel | undefined): ModelCost | undefined {
+  if (existing?.cost?.input !== undefined && existing.cost.output !== undefined) {
+    return existing.cost;
+  }
+  const fromOpenRouter = openRouterProviderModel(apiID)?.cost;
+  if (isPlainObject(fromOpenRouter)
+    && typeof fromOpenRouter.input === "number"
+    && typeof fromOpenRouter.output === "number") {
+    return fromOpenRouter as ModelCost;
+  }
+  return existing?.cost;
+}
 
-  return {
-    name: profile.name,
-    family: "rodium-smart",
-    release_date: releaseDate,
-    last_updated: existing === undefined || changed ? today : (existing.last_updated ?? today),
-    attachment: false,
-    reasoning: profile.reasoning,
-    reasoning_options: existing?.reasoning_options ?? [],
-    temperature: true,
-    tool_call: true,
-    open_weights: false,
-    cost: profile.cost,
-    limit: profile.limit,
-    modalities: { input: ["text"], output: ["text"] },
-  };
+function resolveOpenRouterBaseModel(apiID: string): string | undefined {
+  const reference = openRouterProviderModel(apiID);
+  return typeof reference?.base_model === "string" ? reference.base_model : undefined;
+}
+
+function openRouterFactoredOverrides(apiID: string): Partial<SyncedFullModel> {
+  const reference = openRouterProviderModel(apiID);
+  if (reference === undefined) return {};
+
+  const overrides: Partial<SyncedFullModel> = {};
+  if (typeof reference.structured_output === "boolean") {
+    overrides.structured_output = reference.structured_output;
+  }
+  if (typeof reference.tool_call === "boolean") overrides.tool_call = reference.tool_call;
+  if (reference.interleaved !== undefined) {
+    overrides.interleaved = reference.interleaved as SyncedFullModel["interleaved"];
+  }
+  return overrides;
 }
 
 export function buildRodiumVendorModel(
@@ -311,19 +298,31 @@ export function buildRodiumVendorModel(
   const input = modalities(caps.input_modalities ?? ["text"], ["text"]);
   const output = modalities(caps.output_modalities ?? ["text"], ["text"]);
   const attachment = input.some((value) => value !== "text") || caps.supports_vision === true;
-  const baseModel = existing?.base_model ?? resolveRodiumBaseModel(model.id);
-  const reasoning = resolveReasoningFlag(baseModel, caps.supports_reasoning);
+  const baseModel = existing?.base_model
+    ?? resolveRodiumBaseModel(model.id)
+    ?? resolveOpenRouterBaseModel(model.id);
+  const openRouterRef = openRouterProviderModel(model.id);
+  const reasoning = resolveReasoningFlag(model.id, baseModel, caps.supports_reasoning);
   const toolCall = caps.supports_tools === true;
   const structuredOutput = caps.supports_json_mode === true ? true : undefined;
   const releaseDate = existing?.release_date ?? dateFromTimestamp(model.created);
   const limit = {
-    context: caps.context_window ?? existing?.limit?.context ?? 128_000,
+    context: caps.context_window
+      ?? existing?.limit?.context
+      ?? (isPlainObject(openRouterRef?.limit) && typeof openRouterRef.limit.context === "number"
+        ? openRouterRef.limit.context
+        : 128_000),
     input: existing?.limit?.input,
-    output: caps.max_output_tokens ?? existing?.limit?.output ?? 32_768,
+    output: caps.max_output_tokens
+      ?? existing?.limit?.output
+      ?? (isPlainObject(openRouterRef?.limit) && typeof openRouterRef.limit.output === "number"
+        ? openRouterRef.limit.output
+        : 32_768),
   };
-  const reasoningOptions = resolveReasoningOptions(baseModel, existing);
-  const temperature = resolveProviderTemperature(baseModel);
-  const cost = existing?.cost;
+  const reasoningOptions = resolveReasoningOptions(model.id, baseModel, existing);
+  const temperature = resolveProviderTemperature(model.id, baseModel);
+  const cost = resolveProviderCost(model.id, existing);
+  const referenceOverrides = openRouterFactoredOverrides(model.id);
   const changed = existing !== undefined && (
     existing.name !== name
     || existing.reasoning !== reasoning
@@ -337,13 +336,14 @@ export function buildRodiumVendorModel(
     return factorBaseModel(
       baseModel,
       {
+        ...referenceOverrides,
         name,
-        attachment,
+        attachment: typeof openRouterRef?.attachment === "boolean" ? openRouterRef.attachment : attachment,
         reasoning,
         reasoning_options: reasoningOptions,
         temperature,
-        tool_call: toolCall,
-        structured_output: structuredOutput,
+        tool_call: referenceOverrides.tool_call ?? toolCall,
+        structured_output: referenceOverrides.structured_output ?? structuredOutput,
         last_updated: existing === undefined || changed ? today : (existing.last_updated ?? today),
         cost,
         limit,
@@ -354,6 +354,31 @@ export function buildRodiumVendorModel(
     );
   }
 
+  if (openRouterRef !== undefined && openRouterRef.base_model === undefined) {
+    return {
+      name: typeof openRouterRef.name === "string" ? openRouterRef.name : name,
+      family: existing?.family
+        ?? (typeof openRouterRef.family === "string" ? openRouterRef.family : inferFamily(model.id.split("/").slice(1).join("/"), name)),
+      release_date: typeof openRouterRef.release_date === "string" ? openRouterRef.release_date : releaseDate,
+      last_updated: existing === undefined || changed ? today : (existing.last_updated ?? today),
+      attachment: typeof openRouterRef.attachment === "boolean" ? openRouterRef.attachment : attachment,
+      reasoning: typeof openRouterRef.reasoning === "boolean" ? openRouterRef.reasoning : (reasoning ?? false),
+      reasoning_options: reasoningOptions ?? (Array.isArray(openRouterRef.reasoning_options)
+        ? openRouterRef.reasoning_options as ReasoningOption[]
+        : []),
+      temperature: typeof openRouterRef.temperature === "boolean" ? openRouterRef.temperature : (temperature ?? true),
+      tool_call: typeof openRouterRef.tool_call === "boolean" ? openRouterRef.tool_call : toolCall,
+      structured_output: typeof openRouterRef.structured_output === "boolean"
+        ? openRouterRef.structured_output
+        : structuredOutput,
+      knowledge: typeof openRouterRef.knowledge === "string" ? openRouterRef.knowledge : existing?.knowledge,
+      open_weights: typeof openRouterRef.open_weights === "boolean" ? openRouterRef.open_weights : false,
+      cost: cost ?? (isPlainObject(openRouterRef.cost) ? openRouterRef.cost as ModelCost : undefined),
+      limit,
+      modalities: { input, output },
+    } satisfies SyncedFullModel;
+  }
+
   return {
     name,
     family: existing?.family ?? inferFamily(model.id.split("/").slice(1).join("/"), name),
@@ -361,7 +386,7 @@ export function buildRodiumVendorModel(
     last_updated: existing === undefined || changed ? today : (existing.last_updated ?? today),
     attachment,
     reasoning: reasoning ?? false,
-    reasoning_options: reasoningOptions,
+    reasoning_options: reasoningOptions ?? [],
     temperature: temperature ?? true,
     tool_call: toolCall,
     structured_output: structuredOutput,

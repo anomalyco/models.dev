@@ -1,8 +1,14 @@
 base_model = "openai/o3-pro"
 name = "o3 Pro"
 last_updated = "2026-06-12"
-temperature = true
-reasoning_options = []
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high"]
+
+[cost]
+input = 20
+output = 80
 
 [modalities]
 input = ["text", "image", "pdf"]

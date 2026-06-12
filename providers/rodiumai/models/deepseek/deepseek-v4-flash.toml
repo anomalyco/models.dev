@@ -1,3 +1,17 @@
 base_model = "deepseek/deepseek-v4-flash"
 last_updated = "2026-06-12"
-reasoning_options = []
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["high", "xhigh"]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.0983
+output = 0.1966
+cache_read = 0.0197
