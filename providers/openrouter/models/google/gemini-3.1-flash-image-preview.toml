@@ -1,4 +1,9 @@
 base_model = "google/gemini-3.1-flash-image-preview"
+temperature = true
+tool_call = false
+attachment = true
+reasoning_options = [{ type = "effort", values = ["minimal", "high"] }]
+reasoning = true
 structured_output = true
 
 [cost]

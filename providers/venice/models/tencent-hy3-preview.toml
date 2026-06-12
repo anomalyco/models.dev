@@ -1,7 +1,9 @@
 base_model = "tencent/hy3-preview"
 name = "Hy3 Preview"
+family = "hy3"
+release_date = "2026-06-08"
+last_updated = "2026-06-11"
 structured_output = true
-last_updated = "2026-06-10"
 
 [[reasoning_options]]
 type = "effort"
@@ -13,5 +15,4 @@ output = 0.21
 cache_read = 0.021
 
 [limit]
-context = 256_000
 output = 32_768

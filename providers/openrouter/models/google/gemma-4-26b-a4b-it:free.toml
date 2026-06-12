@@ -1,4 +1,9 @@
 base_model = "google/gemma-4-26b-a4b-it"
+temperature = true
+tool_call = true
+attachment = true
+reasoning_options = [{ type = "toggle" }]
+reasoning = true
 name = "Gemma 4 26B A4B  (free)"
 structured_output = false
 

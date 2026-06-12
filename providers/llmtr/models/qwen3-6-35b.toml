@@ -1,0 +1,9 @@
+base_model = "alibaba/qwen3.6-35b-a3b"
+reasoning_options = [{ type = "toggle" }]
+
+[cost]
+input = 5.0
+output = 10.0
+
+[limit]
+context = 16_384
