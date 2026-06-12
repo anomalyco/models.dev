@@ -1,6 +1,5 @@
-base_model = "moonshotai/kimi-k2.6"
-name = "Umans Coder"
-temperature = false
+base_model = "moonshotai/kimi-k2.7-code"
+name = "Kimi K2.7 Code"
 reasoning_options = [{ type = "toggle" }]
 
 [interleaved]
@@ -11,6 +10,3 @@ input = 0
 output = 0
 cache_read = 0
 cache_write = 0
-
-[modalities]
-input = ["text", "image"]

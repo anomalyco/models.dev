@@ -1,5 +1,5 @@
 base_model = "moonshotai/kimi-k2.6"
-name = "Umans Coder"
+name = "Kimi K2.6"
 temperature = false
 reasoning_options = [{ type = "toggle" }]
 
@@ -7,10 +7,9 @@ reasoning_options = [{ type = "toggle" }]
 field = "reasoning_content"
 
 [cost]
-input = 0
-output = 0
-cache_read = 0
-cache_write = 0
+input = 0.95
+output = 4.00
+cache_read = 0.20
 
-[modalities]
-input = ["text", "image"]
+[limit]
+output = 32_768
