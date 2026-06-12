@@ -26,7 +26,7 @@
 import { z } from "zod";
 import path from "node:path";
 import { mkdir } from "node:fs/promises";
-import { ModelFamilyValues } from "../src/family.js";
+import { inferKimiFamily, ModelFamilyValues } from "../src/family.js";
 
 const MODELS_API = "https://api.digitalocean.com/v2/gen-ai/models";
 const PRICING_API = "https://www.digitalocean.com/api/static-content/v1/products";
@@ -311,6 +311,9 @@ function formatNumber(n: number): string {
 }
 
 function inferFamily(modelId: string, modelName: string): string | undefined {
+  const kimiFamily = inferKimiFamily(modelId, modelName);
+  if (kimiFamily !== undefined) return kimiFamily;
+
   const sorted = [...ModelFamilyValues].sort((a, b) => b.length - a.length);
   const targets = [modelId.toLowerCase(), modelName.toLowerCase()];
   for (const family of sorted) {

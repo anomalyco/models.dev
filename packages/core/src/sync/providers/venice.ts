@@ -2,7 +2,7 @@ import { readdirSync } from "node:fs";
 import path from "node:path";
 import { z } from "zod";
 
-import { ModelFamilyValues } from "../../family.js";
+import { inferKimiFamily, ModelFamilyValues } from "../../family.js";
 import type { ExistingModel, SyncProvider, SyncedFullModel, SyncedModel } from "../index.js";
 import { factorBaseModel } from "./openrouter.js";
 
@@ -230,6 +230,9 @@ function isReasoningEffort(value: string): value is ReasoningEffort {
 }
 
 function inferFamily(id: string, name: string) {
+  const kimiFamily = inferKimiFamily(id, name);
+  if (kimiFamily !== undefined) return kimiFamily;
+
   const target = `${id} ${name}`.toLowerCase();
   return [...ModelFamilyValues]
     .sort((a, b) => b.length - a.length)
