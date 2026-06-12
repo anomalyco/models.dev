@@ -1,4 +1,5 @@
 name = "Qwen3 Coder Next FP8"
+base_model = "Qwen/Qwen3-Coder-Next"
 family = "qwen"
 release_date = "2026-05"
 last_updated = "2026-05-08"
@@ -19,3 +20,6 @@ output = 8192
 [modalities]
 input = ["text"]
 output = ["text"]
+
+[[reasoning_options]]
+type = "effort"
