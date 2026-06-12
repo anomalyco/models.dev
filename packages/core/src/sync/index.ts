@@ -675,6 +675,9 @@ function formatToml(model: z.infer<typeof SyncedAuthoredModel>) {
   if (model.knowledge !== undefined) lines.push(`knowledge = ${quote(model.knowledge)}`);
   if (model.open_weights !== undefined) lines.push(`open_weights = ${model.open_weights}`);
   if (model.status !== undefined) lines.push(`status = ${quote(model.status)}`);
+  if (model.reasoning_options !== undefined && model.reasoning_options.length === 0) {
+    lines.push("reasoning_options = []");
+  }
 
   if (model.reasoning_options?.length === 0) {
     lines.push("reasoning_options = []");

@@ -9,6 +9,9 @@ tool_call = true
 structured_output = true
 open_weights = false
 
+[[reasoning_options]]
+type = "toggle"
+
 [limit]
 context = 1_048_576
 output = 393_216

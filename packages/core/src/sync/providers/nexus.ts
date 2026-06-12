@@ -86,11 +86,13 @@ export function buildNexusModel(
   const releaseDate = dateFromTimestamp(model.created) ?? existing?.release_date ?? today;
   const cost = isRouter ? undefined : buildCost(model, existing?.cost);
   const canonical = resolveNexusBaseModel(model.id, existing?.base_model);
+  const reasoning = isRouter || features.has("reasoning");
 
   const values: Partial<SyncedFullModel> = {
     name,
     attachment: existing?.attachment ?? modalities.input.some((value) => value !== "text"),
-    reasoning: isRouter || features.has("reasoning"),
+    reasoning,
+    reasoning_options: nexusReasoningOptions(model.id, reasoning, existing),
     temperature: existing?.temperature ?? true,
     tool_call: isRouter || features.has("function-calling") || features.has("parallel-tool-calls"),
     structured_output: isRouter || features.has("structured-outputs"),
@@ -117,6 +119,7 @@ export function buildNexusModel(
     last_updated: existing?.last_updated ?? releaseDate,
     attachment: values.attachment ?? false,
     reasoning: values.reasoning ?? false,
+    reasoning_options: values.reasoning_options,
     temperature: values.temperature,
     tool_call: values.tool_call ?? false,
     structured_output: values.structured_output,
@@ -142,6 +145,25 @@ function resolveNexusBaseModel(id: string, existingBaseModel: string | undefined
 function privateName(name: string, isPrivateModel: boolean) {
   if (!isPrivateModel || name.endsWith(" - Private")) return name;
   return `${name} - Private`;
+}
+
+function nexusReasoningOptions(
+  id: string,
+  reasoning: boolean,
+  existing: ExistingModel | undefined,
+): SyncedFullModel["reasoning_options"] {
+  if (existing?.reasoning_options !== undefined) return existing.reasoning_options;
+  if (!reasoning) return [];
+  if (id.startsWith("deepseek/")) {
+    return [
+      { type: "toggle" },
+      { type: "effort", values: ["low", "medium", "high", "xhigh"] },
+    ];
+  }
+  if (id === "minimax/minmax-m3" || id.startsWith("moonshotai/") || id.startsWith("nexus/")) {
+    return [{ type: "toggle" }];
+  }
+  return [];
 }
 
 function buildCost(model: NexusModel, existing: ExistingModel["cost"]) {
