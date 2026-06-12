@@ -142,7 +142,7 @@ const PRICING_NAME_MAP: Record<string, string> = {
   // DO-hosted
   "qwen3-32b": "alibaba-qwen3-32b",
   "minimax m2.5 (public preview)": "minimax-m2.5",
-  "kimi k2.5": "kimi-k2.5",
+  "kimi k2.5": "kimi-k2",
   "nvidia nemotron 3 super 120b (public preview)": "nvidia-nemotron-3-super-120b",
   "glm 5": "glm-5",
 };

@@ -66,8 +66,7 @@ export const ModelFamilyValues = [
 
   // Moonshot Kimi
   "kimi",
-  "kimi-k2.5",
-  "kimi-k2.6",
+  "kimi-k2",
   "kimi-free",
   "kimi-thinking",
 
