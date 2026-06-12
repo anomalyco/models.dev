@@ -1,5 +1,5 @@
 base_model = "openai/gpt-5.4-mini"
-reasoning_options = []
+reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh"] }]
 
 [cost]
 input = 0.75
