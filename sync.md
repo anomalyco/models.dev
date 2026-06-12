@@ -123,17 +123,6 @@ OpenRouter is implemented in `packages/core/src/sync/providers/openrouter.ts`.
 - Existing `status`, `interleaved`, `knowledge`, `limit.input`, and `cost.tiers` may be preserved when OpenRouter is not authoritative enough for those fields.
 - Canonical OpenRouter model IDs should emit `base_model` references to model metadata when a matching `models/` entry exists.
 
-## Nexus Notes
-
-Nexus is implemented in `packages/core/src/sync/providers/nexus.ts`.
-
-- Source endpoint: `https://nexus-api.dappnode.com/v1/models`.
-- No auth required: the public gateway catalog is readable without an API key.
-- Model IDs map directly to TOML paths under `providers/nexus/models`.
-- Local models missing from the Nexus catalog are removed.
-- Pricing comes from Nexus `*_price_per_1m_tokens_usd` fields; EUR cent fields are ignored.
-- Router entries omit `[cost]`; `nexus/auto` as it depends on the model decided by the router.
-
 ## Cloudflare Workers AI Notes
 
 Cloudflare Workers AI is implemented in `packages/core/src/sync/providers/cloudflare-workers-ai.ts`.
