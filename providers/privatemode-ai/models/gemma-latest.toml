@@ -1,13 +1,14 @@
-name = "Gemma 3 27B"
+name = "Gemma"
 family = "gemma"
 attachment = true
-reasoning = false
+reasoning = true
+reasoning_options = [{ type = "toggle" }]
 structured_output = true
 temperature = true
 tool_call = true
 release_date = "2025-03-12"
 last_updated = "2025-03-12"
-knowledge = "2024-08"
+knowledge = "2025-01"
 open_weights = true
 
 [cost]
@@ -15,8 +16,8 @@ input = 0.00
 output = 0.00
 
 [limit]
-context = 128_000
-output = 8_192
+context = 262_144
+output = 32_768
 
 [modalities]
 input = ["text", "image"]
