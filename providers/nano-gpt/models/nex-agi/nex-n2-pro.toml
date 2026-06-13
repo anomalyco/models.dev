@@ -1,0 +1,22 @@
+# Included in subscription
+name = "Nex N2 Pro"
+release_date = "2026-06-04"
+last_updated = "2026-06-04"
+attachment = true
+reasoning = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[cost]
+input = 0.5
+output = 1.5
+
+[limit]
+context = 262144
+input = 262144
+output = 262144
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

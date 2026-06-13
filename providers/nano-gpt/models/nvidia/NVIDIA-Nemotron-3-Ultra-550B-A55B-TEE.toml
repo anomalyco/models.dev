@@ -1,0 +1,23 @@
+# Not included in subscription
+name = "Nvidia Nemotron 3 Ultra 550B TEE"
+release_date = "2026-06-11"
+last_updated = "2026-06-11"
+attachment = false
+reasoning = true
+tool_call = true
+structured_output = false
+open_weights = false
+
+[cost]
+input = 1.5
+output = 4
+cache_read = 0.75
+
+[limit]
+context = 262144
+input = 262144
+output = 65536
+
+[modalities]
+input = ["text"]
+output = ["text"]
