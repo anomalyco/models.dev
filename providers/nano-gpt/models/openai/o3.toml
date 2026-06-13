@@ -1,22 +1,20 @@
 name = "OpenAI o3"
-family = "o"
-release_date = "2025-04-16"
-last_updated = "2025-04-16"
+base_model = "openai/o3"
 attachment = false
 reasoning = false
 tool_call = false
 structured_output = false
-open_weights = false
 
 [cost]
-input = 2.00
-output = 8.00
+input = 2
+output = 8
 
 [limit]
-context = 200_000
-input = 200_000
-output = 100_000
+context = 200000
+input = 200000
+output = 100000
 
 [modalities]
-input = ["text"]
-output = ["text"]
+input = [ "text" ]
+output = [ "text" ]
+

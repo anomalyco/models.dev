@@ -1,0 +1,20 @@
+base_model = "zhipuai/glm-5.2"
+name = "GLM 5.2 Thinking"
+release_date = "2026-06-15"
+last_updated = "2026-06-15"
+open_weights = true
+reasoning = true
+
+[cost]
+input = 1.1
+output = 3.3
+cache_read = 0.2
+
+[limit]
+context = 1048576
+input = 1048576
+output = 131072
+
+[modalities]
+input = ["text"]
+output = ["text"]

@@ -1,0 +1,18 @@
+name = "DeepSeek V4 Flash TEE"
+base_model = "deepseek/deepseek-v4-flash"
+release_date = "2026-06-09"
+last_updated = "2026-06-09"
+reasoning = false
+tool_call = false
+structured_output = false
+open_weights = false
+
+[cost]
+input = 0.2
+output = 0.4
+cache_read = 0.04
+
+[limit]
+context = 1048576
+input = 1048576
+output = 1048576

@@ -1,0 +1,21 @@
+name = "Qwen3.6 27B TEE"
+base_model = "alibaba/qwen3.6-27b"
+release_date = "2026-06-04"
+last_updated = "2026-06-04"
+reasoning_options = [{ type = "toggle" }]
+tool_call = false
+structured_output = false
+open_weights = false
+
+[cost]
+input = 0.32
+output = 2.7
+
+[limit]
+context = 262144
+input = 262144
+output = 65536
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

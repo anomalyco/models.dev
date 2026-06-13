@@ -1,10 +1,5 @@
-name = "Kimi K2 Thinking"
-family = "kimi-thinking"
-release_date = "2025-11-06"
-last_updated = "2025-11-06"
-attachment = false
+base_model = "moonshotai/kimi-k2-thinking"
 reasoning = false
-tool_call = true
 structured_output = true
 open_weights = false
 
@@ -13,10 +8,7 @@ input = 0.3
 output = 1.2
 
 [limit]
-context = 256_000
-input = 256_000
-output = 262_144
+context = 256000
+input = 256000
+output = 262144
 
-[modalities]
-input = ["text"]
-output = ["text"]

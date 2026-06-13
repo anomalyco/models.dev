@@ -1,0 +1,21 @@
+name = "MiMo V2.5 Thinking"
+base_model = "xiaomi/mimo-v2.5"
+release_date = "2026-06-03"
+last_updated = "2026-06-03"
+reasoning_options = [{ type = "toggle" }]
+structured_output = true
+open_weights = false
+
+[cost]
+input = 0.14
+output = 0.28
+cache_read = 0.0028
+
+[limit]
+context = 1048576
+input = 1048576
+output = 131072
+
+[modalities]
+input = ["text", "image", "video"]
+output = ["text"]

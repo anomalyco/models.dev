@@ -1,0 +1,17 @@
+name = "Nvidia Nemotron 3 Ultra 550B TEE"
+base_model = "nvidia/nemotron-3-ultra-550b-a55b"
+release_date = "2026-06-11"
+last_updated = "2026-06-11"
+reasoning_options = [{ type = "toggle" }]
+structured_output = false
+open_weights = false
+
+[cost]
+input = 1.5
+output = 4
+cache_read = 0.75
+
+[limit]
+context = 262144
+input = 262144
+output = 65536

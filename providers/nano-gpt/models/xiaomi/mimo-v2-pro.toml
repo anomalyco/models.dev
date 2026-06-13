@@ -1,5 +1,5 @@
-# Not included in subscription
 name = "MiMo V2 Pro"
+base_model = "xiaomi/mimo-v2-pro"
 release_date = "2026-03-19"
 last_updated = "2026-03-19"
 attachment = false
@@ -7,7 +7,9 @@ reasoning = true
 reasoning_options = [{ type = "toggle" }]
 tool_call = true
 structured_output = true
-open_weights = false
+
+[[reasoning_options]]
+type = "toggle"
 
 [cost]
 input = 1
@@ -20,5 +22,5 @@ input = 1048576
 output = 131072
 
 [modalities]
-input = ["text"]
-output = ["text"]
+input = [ "text", "image", "video" ]
+output = [ "text" ]

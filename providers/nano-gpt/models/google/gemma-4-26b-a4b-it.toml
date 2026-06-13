@@ -1,12 +1,10 @@
-# Included in subscription
 name = "Gemma 4 26B A4B"
-release_date = "2026-04-02"
-last_updated = "2026-04-02"
-attachment = true
-reasoning = true
+base_model = "google/gemma-4-26b-a4b-it"
 tool_call = false
-structured_output = true
 open_weights = false
+
+[[reasoning_options]]
+type = "toggle"
 
 [cost]
 input = 0.13
@@ -17,6 +15,3 @@ context = 262144
 input = 262144
 output = 131072
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]

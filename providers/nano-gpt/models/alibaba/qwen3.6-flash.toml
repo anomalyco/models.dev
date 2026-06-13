@@ -1,21 +1,16 @@
-name = "Qwen3.6 Flash"
-family = "qwen3.6"
+base_model = "alibaba/qwen3.6-flash"
 release_date = "2026-04-17"
 last_updated = "2026-04-17"
 attachment = false
 reasoning = false
 tool_call = false
 structured_output = false
-open_weights = false
 
 [cost]
 input = 0.19
 output = 1.16
 
 [limit]
-context = 991_800
-output = 65_536
+context = 991800
+output = 65536
 
-[modalities]
-input = ["text", "image", "video"]
-output = ["text"]

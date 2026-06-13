@@ -1,10 +1,5 @@
 name = "Cohere: Command R+"
-family = "command-r"
-release_date = "2024-08-30"
-last_updated = "2024-08-30"
-attachment = false
-reasoning = false
-tool_call = true
+base_model = "cohere/command-r-plus-08-2024"
 structured_output = false
 open_weights = false
 
@@ -13,10 +8,7 @@ input = 2.856
 output = 14.246
 
 [limit]
-context = 128_000
-input = 128_000
-output = 4_096
+context = 128000
+input = 128000
+output = 4096
 
-[modalities]
-input = ["text"]
-output = ["text"]
