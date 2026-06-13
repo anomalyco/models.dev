@@ -1,10 +1,9 @@
 base_model = "tencent/hy3-preview"
-temperature = true
-tool_call = true
-attachment = false
-reasoning_options = [{ type = "effort", values = ["none", "low", "high"] }]
-reasoning = true
 structured_output = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "high"]
 
 [cost]
 input = 0.063

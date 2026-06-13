@@ -1,10 +1,12 @@
 base_model = "google/gemini-2.5-flash-lite"
-temperature = true
-structured_output = true
-tool_call = true
-attachment = true
-reasoning_options = [{ type = "toggle" }, { type = "budget_tokens", min = 512, max = 24576 }]
-reasoning = true
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "budget_tokens"
+min = 512
+max = 24_576
 
 [cost]
 input = 0.1

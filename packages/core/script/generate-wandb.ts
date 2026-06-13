@@ -3,7 +3,7 @@
 import path from "node:path";
 import { mkdir } from "node:fs/promises";
 import { z } from "zod";
-import { ModelFamilyValues } from "../src/family.js";
+import { inferKimiFamily, ModelFamilyValues } from "../src/family.js";
 
 const API_ENDPOINT = "https://trace.wandb.ai/inference/analysis/artificialanalysis/models";
 
@@ -176,6 +176,9 @@ function matchesFamily(target: string, family: string): boolean {
 }
 
 function inferFamily(modelId: string, modelName: string): string | undefined {
+  const kimiFamily = inferKimiFamily(modelId, modelName);
+  if (kimiFamily !== undefined) return kimiFamily;
+
   const sortedFamilies = [...ModelFamilyValues].sort((a, b) => b.length - a.length);
 
   for (const family of sortedFamilies) {

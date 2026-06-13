@@ -1,8 +1,7 @@
-name = "Kimi K2.5"
+name = "Kimi K2.7 Code"
 family = "kimi-thinking"
-release_date = "2026-01-27"
-last_updated = "2026-01-27"
-knowledge = "2025-01"
+release_date = "2026-06-12"
+last_updated = "2026-06-12"
 attachment = true
 reasoning = true
 temperature = true
@@ -13,16 +12,16 @@ open_weights = true
 type = "toggle"
 
 [cost]
-cache_read = 0.10
-input = 0.60
-output = 3.00
+cache_read = 0.19
+input = 0.95
+output = 4.00
 
 [limit]
-context = 256_000
-output = 256_000
+context = 262_000
+output = 262_000
 
 [modalities]
-input = ["text", "image", "video"]
+input = ["text", "image"]
 output = ["text"]
 
 [interleaved]

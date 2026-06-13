@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { ModelFamilyValues } from "../../family.js";
+import { inferKimiFamily, ModelFamilyValues } from "../../family.js";
 import type { ExistingModel, SyncProvider, SyncedFullModel, SyncedModel } from "../index.js";
 import { factorBaseModel, resolveCanonicalBaseModel } from "./openrouter.js";
 
@@ -153,6 +153,9 @@ function buildCost(pricing: VercelModel["pricing"], existing?: ExistingModel["co
 }
 
 function inferFamily(modelID: string, name: string) {
+  const kimiFamily = inferKimiFamily(modelID, name);
+  if (kimiFamily !== undefined) return kimiFamily;
+
   const targets = [modelID, name].map((value) => value.toLowerCase());
   const families = [...ModelFamilyValues].sort((a, b) => b.length - a.length);
   return families.find((family) => targets.some((target) => target.includes(family.toLowerCase())))
