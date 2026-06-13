@@ -1,5 +1,5 @@
 base_model = "anthropic/claude-opus-4-7"
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "medium", "high"] }]
 
 [experimental.modes.fast]
 cost = { input = 30, output = 150, cache_read = 3, cache_write = 37.5 }
