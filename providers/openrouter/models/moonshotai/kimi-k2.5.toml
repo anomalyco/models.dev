@@ -1,18 +1,17 @@
 base_model = "moonshotai/kimi-k2.5"
-structured_output = true
-tool_call = true
-reasoning_options = []
-reasoning = true
 attachment = true
 temperature = true
+reasoning_options = []
 
 [interleaved]
 field = "reasoning_details"
 
 [cost]
-input = 0.4
-output = 1.9
-cache_read = 0.09
+input = 0.375
+output = 2.025
+
+[limit]
+context = 256_000
 
 [modalities]
 input = ["text", "image"]

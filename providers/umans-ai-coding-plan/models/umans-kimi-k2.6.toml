@@ -1,6 +1,7 @@
 base_model = "moonshotai/kimi-k2.6"
-reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high"] }]
+name = "Kimi K2.6"
 temperature = false
+reasoning_options = [{ type = "toggle" }]
 
 [interleaved]
 field = "reasoning_content"
@@ -10,6 +11,3 @@ input = 0
 output = 0
 cache_read = 0
 cache_write = 0
-
-[modalities]
-input = ["text", "image"]

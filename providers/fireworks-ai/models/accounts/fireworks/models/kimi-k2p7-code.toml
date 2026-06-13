@@ -1,0 +1,21 @@
+base_model = "moonshotai/kimi-k2.7-code"
+temperature = true
+
+[[reasoning_options]]
+type = "toggle"
+
+[cost]
+cache_read = 0.19
+input = 0.95
+output = 4.00
+
+[limit]
+context = 262_000
+output = 262_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[interleaved]
+field = "reasoning_content"

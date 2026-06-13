@@ -1,8 +1,8 @@
-name = "MiniMax-M2.5"
+name = "MiniMax-M3"
 family = "minimax"
-release_date = "2026-02-12"
-last_updated = "2026-02-12"
-attachment = false
+release_date = "2026-06-12"
+last_updated = "2026-06-12"
+attachment = true
 reasoning = true
 temperature = true
 tool_call = true
@@ -15,11 +15,11 @@ values = ["low", "medium", "high"]
 [cost]
 input = 0.30
 output = 1.20
-cache_read = 0.03
+cache_read = 0.06
 
 [limit]
-context = 196_608
-output = 196_608
+context = 512_000
+output = 512_000
 
 [modalities]
 input = ["text"]

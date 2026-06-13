@@ -1,10 +1,7 @@
 base_model = "google/gemma-4-26b-a4b-it"
-temperature = true
-structured_output = true
-tool_call = true
-attachment = true
-reasoning_options = [{ type = "toggle" }]
-reasoning = true
+
+[[reasoning_options]]
+type = "toggle"
 
 [cost]
 input = 0.06
