@@ -1,0 +1,20 @@
+name = "Qwen3.5 4B"
+last_updated = "2026-06-13"
+attachment = true
+reasoning = true
+tool_call = true
+open_weights = true
+
+reasoning_options = []
+
+[cost]
+input = 0.04
+output = 0.07
+
+[limit]
+context = 262_144
+output = 32_768
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
