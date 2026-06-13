@@ -1,9 +1,15 @@
+name = "GLM-5"
+family = "glm"
 release_date = "2026-02-12"
 last_updated = "2026-05-12"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+open_weights = true
 
-[extends]
-from = "zai/glm-5"
-omit = ["cost.cache_read", "cost.cache_write"]
+[interleaved]
+field = "reasoning_content"
 
 [cost]
 input = 0.539
@@ -18,3 +24,7 @@ output = 2.965
 context = 198_000
 input = 192_000
 output = 64_000
+
+[modalities]
+input = ["text"]
+output = ["text"]

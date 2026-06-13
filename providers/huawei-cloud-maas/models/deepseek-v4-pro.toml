@@ -1,8 +1,16 @@
+name = "DeepSeek V4 Pro"
+family = "deepseek-thinking"
+release_date = "2026-04-24"
 last_updated = "2026-05-12"
+attachment = false
+reasoning = true
+temperature = true
+knowledge = "2025-05"
+tool_call = true
+open_weights = true
 
-[extends]
-from = "deepseek/deepseek-v4-pro"
-omit = ["cost.cache_read", "structured_output"]
+[interleaved]
+field = "reasoning_content"
 
 [cost]
 input = 1.617
@@ -12,3 +20,7 @@ output = 3.235
 context = 1_000_000
 input = 1_000_000
 output = 128_000
+
+[modalities]
+input = ["text"]
+output = ["text"]
