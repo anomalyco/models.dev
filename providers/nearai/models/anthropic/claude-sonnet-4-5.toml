@@ -1,5 +1,5 @@
 base_model = "anthropic/claude-sonnet-4-5"
-reasoning_options = [{ type = "toggle" }, { type = "budget_tokens", min = 1_024, max = 63_999 }]
+reasoning_options = [{ type = "budget_tokens", min = 1_024, max = 63_999 }]
 
 [cost]
 input = 3
