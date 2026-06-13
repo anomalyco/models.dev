@@ -5,6 +5,7 @@ last_updated = "2025-09-29"
 knowledge = "2025-07-31"
 attachment = true
 reasoning = true
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }, { type = "budget_tokens", min = 1_024, max = 63_999 }]
 tool_call = true
 temperature = true
 open_weights = false
