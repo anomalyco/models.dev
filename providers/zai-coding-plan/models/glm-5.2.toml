@@ -1,13 +1,4 @@
-name = "GLM-5.2"
-release_date = "2026-06-13"
-last_updated = "2026-06-13"
-family = "glm"
-reasoning = true
-tool_call = true
-temperature = true
-structured_output = true
-attachment = false
-open_weights = false
+base_model = "zhipuai/glm-5.2"
 
 [[reasoning_options]]
 type = "effort"
@@ -21,14 +12,6 @@ input = 0
 output = 0
 cache_read = 0
 cache_write = 0
-
-[limit]
-context = 1000000
-output = 131072
-
-[modalities]
-input = ["text"]
-output = ["text"]
 
 [provider]
 npm = "@ai-sdk/anthropic"
