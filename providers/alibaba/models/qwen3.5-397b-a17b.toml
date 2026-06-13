@@ -9,6 +9,13 @@ tool_call = true
 structured_output = true
 open_weights = true
 
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "budget_tokens"
+max = 81_920
+
 [cost]
 input = 0.6
 output = 3.6
