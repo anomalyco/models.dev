@@ -1,27 +1,17 @@
-name = "GLM 5.1"
-family = "glm"
-release_date = "2026-05-18"
-last_updated = "2026-05-18"
-attachment = false
-reasoning = true
-temperature = true
-knowledge = "2025-04"
-tool_call = true
-open_weights = false
+base_model = "zhipuai/glm-5.1"
 
 [cost]
-input = 0.573
-output = 2.58
+input = 0.825
+output = 3.301
+cache_read = 0.165
+cache_write = 0.165
 
 [[cost.tiers]]
 tier = { size = 32_768 }
-input = 0.86
-output = 3.154
+input = 1.1
+output = 3.851
+cache_read = 0.22
+cache_write = 0.22
 
 [limit]
-context = 166_000
-output = 16_384
-
-[modalities]
-input = ["text"]
-output = ["text"]
+context = 202_745
