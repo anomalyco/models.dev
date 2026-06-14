@@ -1,22 +1,17 @@
-name = "GPT-4o mini"
-family = "gpt-mini"
-release_date = "2024-07-18"
-last_updated = "2024-07-18"
-attachment = true
-reasoning = false
+base_model = "openai/gpt-4o-mini"
 tool_call = false
 structured_output = false
-open_weights = false
 
 [cost]
 input = 0.1496
 output = 0.595
 
 [limit]
-context = 128_000
-input = 128_000
-output = 16_384
+context = 128000
+input = 128000
+output = 16384
 
 [modalities]
-input = ["text", "image"]
-output = ["text"]
+input = [ "text", "image" ]
+output = [ "text" ]
+

@@ -1,12 +1,7 @@
-# Not included in subscription
-name = "Gemini 3.5 Flash"
-release_date = "2026-05-19"
-last_updated = "2026-05-19"
-attachment = true
-reasoning = true
-tool_call = true
-structured_output = true
-open_weights = false
+base_model = "google/gemini-3.5-flash"
+
+[[reasoning_options]]
+type = "toggle"
 
 [cost]
 input = 1.5
@@ -19,5 +14,6 @@ input = 1048576
 output = 65536
 
 [modalities]
-input = ["text", "image", "audio"]
-output = ["text"]
+input = [ "text", "image", "audio" ]
+output = [ "text" ]
+

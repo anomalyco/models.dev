@@ -1,22 +1,20 @@
 name = "OpenAI o4-mini"
-family = "o-mini"
-release_date = "2025-04-16"
-last_updated = "2025-04-16"
+base_model = "openai/o4-mini"
 attachment = false
-reasoning = true
-tool_call = true
-structured_output = true
-open_weights = false
+
+[[reasoning_options]]
+type = "toggle"
 
 [cost]
 input = 1.1
 output = 4.4
 
 [limit]
-context = 200_000
-input = 200_000
-output = 100_000
+context = 200000
+input = 200000
+output = 100000
 
 [modalities]
-input = ["text"]
-output = ["text"]
+input = [ "text" ]
+output = [ "text" ]
+

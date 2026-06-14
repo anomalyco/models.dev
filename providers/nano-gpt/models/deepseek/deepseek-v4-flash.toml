@@ -1,12 +1,8 @@
-# Included in subscription
-name = "DeepSeek V4 Flash"
-release_date = "2026-04-24"
-last_updated = "2026-04-24"
-attachment = false
-reasoning = true
-tool_call = true
-structured_output = true
+base_model = "deepseek/deepseek-v4-flash"
 open_weights = false
+
+[[reasoning_options]]
+type = "toggle"
 
 [cost]
 input = 0.14
@@ -18,6 +14,3 @@ context = 1048576
 input = 1048576
 output = 384000
 
-[modalities]
-input = ["text"]
-output = ["text"]

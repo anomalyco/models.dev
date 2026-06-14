@@ -1,9 +1,8 @@
-# Not included in subscription
 name = "Qwen3.6 27B TEE"
+base_model = "alibaba/qwen3.6-27b"
 release_date = "2026-06-04"
 last_updated = "2026-06-04"
-attachment = true
-reasoning = true
+reasoning_options = [{ type = "toggle" }]
 tool_call = false
 structured_output = false
 open_weights = false

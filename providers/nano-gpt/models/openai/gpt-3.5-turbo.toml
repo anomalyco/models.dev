@@ -1,22 +1,14 @@
 name = "GPT-3.5 Turbo"
-family = "gpt"
+base_model = "openai/gpt-3.5-turbo"
 release_date = "2022-11-30"
 last_updated = "2024-01-01"
-attachment = false
-reasoning = false
-tool_call = false
-structured_output = false
-open_weights = false
 
 [cost]
 input = 0.5
 output = 1.5
 
 [limit]
-context = 16_385
-input = 16_385
-output = 4_096
+context = 16385
+input = 16385
+output = 4096
 
-[modalities]
-input = ["text"]
-output = ["text"]

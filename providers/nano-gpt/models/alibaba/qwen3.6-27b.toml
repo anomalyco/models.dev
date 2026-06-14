@@ -1,8 +1,6 @@
-# Included in subscription
-name = "Qwen3.6 27B"
+base_model = "alibaba/qwen3.6-27b"
 release_date = "2026-04-23"
 last_updated = "2026-04-23"
-attachment = true
 reasoning = false
 tool_call = false
 structured_output = false
@@ -18,5 +16,6 @@ input = 260096
 output = 65536
 
 [modalities]
-input = ["text", "image", "video"]
-output = ["text"]
+input = [ "text", "image", "video" ]
+output = [ "text" ]
+

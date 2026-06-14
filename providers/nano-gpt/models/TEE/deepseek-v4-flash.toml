@@ -1,8 +1,7 @@
-# Not included in subscription
 name = "DeepSeek V4 Flash TEE"
+base_model = "deepseek/deepseek-v4-flash"
 release_date = "2026-06-09"
 last_updated = "2026-06-09"
-attachment = false
 reasoning = false
 tool_call = false
 structured_output = false
@@ -17,7 +16,3 @@ cache_read = 0.04
 context = 1048576
 input = 1048576
 output = 1048576
-
-[modalities]
-input = ["text"]
-output = ["text"]

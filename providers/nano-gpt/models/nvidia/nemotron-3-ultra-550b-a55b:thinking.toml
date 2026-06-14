@@ -1,10 +1,6 @@
-# Included in subscription
 name = "Nvidia Nemotron 3 Ultra 550B Thinking"
-release_date = "2026-06-04"
-last_updated = "2026-06-04"
-attachment = false
-reasoning = true
-tool_call = true
+base_model = "nvidia/nemotron-3-ultra-550b-a55b"
+reasoning_options = [{ type = "toggle" }]
 structured_output = false
 open_weights = false
 
@@ -16,7 +12,3 @@ output = 2.5
 context = 1000000
 input = 1000000
 output = 65536
-
-[modalities]
-input = ["text"]
-output = ["text"]

@@ -1,10 +1,8 @@
-# Not included in subscription
 name = "Nvidia Nemotron 3 Ultra 550B TEE"
+base_model = "nvidia/nemotron-3-ultra-550b-a55b"
 release_date = "2026-06-11"
 last_updated = "2026-06-11"
-attachment = false
-reasoning = true
-tool_call = true
+reasoning_options = [{ type = "toggle" }]
 structured_output = false
 open_weights = false
 
@@ -17,7 +15,3 @@ cache_read = 0.75
 context = 262144
 input = 262144
 output = 65536
-
-[modalities]
-input = ["text"]
-output = ["text"]
