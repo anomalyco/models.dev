@@ -1,0 +1,17 @@
+name = "Cosmos3 Nano Reasoner"
+family = "cosmos"
+release_date = "2026-06-01"
+last_updated = "2026-06-01"
+attachment = true
+reasoning = true
+temperature = false
+tool_call = false
+open_weights = true
+
+[limit]
+context = 0
+output = 4_096
+
+[modalities]
+input = ["text", "image", "video"]
+output = ["text"]
