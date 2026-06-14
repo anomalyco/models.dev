@@ -1,0 +1,25 @@
+name = "MiniMax M3 Preview"
+family = "minimax-m3"
+release_date = "2026-06-12"
+last_updated = "2026-06-13"
+attachment = false
+reasoning = true
+tool_call = true
+open_weights = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high"]
+
+[cost]
+input = 0.3
+output = 1.2
+cache_read = 0.06
+
+[limit]
+context = 524_288
+output = 65_536
+
+[modalities]
+input = ["text"]
+output = ["text"]
