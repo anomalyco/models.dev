@@ -1,9 +1,0 @@
-base_model = "alibaba/qwen3.7-max"
-
-reasoning_options = [{ type = "toggle" }, { type = "budget_tokens", max = 262_144 }]
-
-[cost]
-input = 0
-output = 0
-cache_read = 0
-cache_write = 0
