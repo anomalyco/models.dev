@@ -91,7 +91,7 @@ test("Venice uses boundary-aware family matching", () => {
   expect(synced).toMatchObject({ family: "gemma" });
 });
 
-test("Venice maps API fields and keeps inherited models compact", () => {
+test("Venice maps API fields without bumping inherited model timestamps", () => {
   const synced = buildVeniceModel(catalogModel, {
     base_model: "openai/gpt-5.4",
     name: "GPT-5.4",
@@ -113,7 +113,7 @@ test("Venice maps API fields and keeps inherited models compact", () => {
   expect(synced).toMatchObject({
     base_model: "openai/gpt-5.4",
     base_model_omit: ["limit.input"],
-    last_updated: "2026-06-10",
+    last_updated: "2026-03-09",
     reasoning_options: [{ type: "effort", values: ["none", "low", "medium", "high"] }],
     interleaved: { field: "reasoning_content" },
     cost: {

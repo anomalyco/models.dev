@@ -2,6 +2,7 @@
 # Manual overrides preserved on re-run: name, family, knowledge, interleaved, status
 base_model = "alibaba/qwen3.6-27b"
 name = "Qwen3.6 27B TEE"
+reasoning_options = [{ type = "toggle" }]
 
 [cost]
 input = 0.195

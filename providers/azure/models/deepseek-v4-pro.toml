@@ -2,9 +2,11 @@ base_model = "deepseek/deepseek-v4-pro"
 name = "DeepSeek-V4-Pro"
 tool_call = false
 
+reasoning_options = []
+
 [cost]
-input = 0.19
-output = 0.51
+input = 1.74
+output = 3.48
 
 [provider]
 shape = "completions"

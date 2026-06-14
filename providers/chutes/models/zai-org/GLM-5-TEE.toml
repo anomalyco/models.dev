@@ -2,6 +2,7 @@
 # Manual overrides preserved on re-run: name, family, knowledge, interleaved, status
 base_model = "zhipuai/glm-5"
 name = "GLM 5 TEE"
+reasoning_options = [{ type = "toggle" }]
 structured_output = true
 
 [interleaved]
