@@ -1,9 +1,11 @@
 name = "Llama 3.1 Nemotron Nano 8B v1"
+base_model = "nvidia/llama-3.1-nemotron-nano-8b-v1"
 family = "llama"
 release_date = "2025-07-01"
 last_updated = "2025-07-01"
 attachment = false
 reasoning = true
+reasoning_options = [{ type = "toggle" }]
 temperature = true
 knowledge = "2023-12"
 tool_call = true
