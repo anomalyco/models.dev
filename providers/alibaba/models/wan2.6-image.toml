@@ -1,21 +1,5 @@
-name = "WAN 2.6 Image"
-family = "wan"
-release_date = "2026-05-28"
-last_updated = "2026-05-28"
-attachment = false
-reasoning = false
-temperature = false
-tool_call = false
-open_weights = true
+xbase_model = "alibaba/wan2.6-image"
 
 [cost]
-input = 0.03
-output = 0.03
-
-[limit]
-context = 32_768
-output = 4_096
-
-[modalities]
-input = ["text", "image"]
-output = ["image"]
+input = 0
+output = 0.028671

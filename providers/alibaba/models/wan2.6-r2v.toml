@@ -1,21 +1,5 @@
-name = "Wan2.6 R2V"
-family = "wan"
-release_date = "2025-12-16"
-last_updated = "2025-12-16"
-attachment = false
-reasoning = false
-temperature = false
-tool_call = false
-open_weights = true
+base_model = "alibaba/wan2.6-r2v"
 
 [cost]
 input = 0
 output = 0
-
-[limit]
-context = 0
-output = 1
-
-[modalities]
-input = ["video", "text", "audio"]
-output = ["video", "audio"]
