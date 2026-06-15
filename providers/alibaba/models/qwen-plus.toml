@@ -1,23 +1,24 @@
-name = "Qwen Plus"
-family = "qwen"
-release_date = "2024-01-25"
-last_updated = "2025-09-11"
-attachment = false
-reasoning = true
-temperature = true
-knowledge = "2024-04"
-tool_call = true
-open_weights = false
+base_model = "alibaba/qwen-plus"
 
 [cost]
-input = 0.4
-output = 1.2
-reasoning = 4
+input = 0.115
+output = 0.287
+cache_read = 0.023
+cache_write = 0.023
+reasoning = 1.147
 
-[limit]
-context = 1_000_000
-output = 32_768
+[[cost.tiers]]
+tier = { size = 128_000 }
+input = 0.345
+output = 2.868
+cache_read = 0.069
+cache_write = 0.069
+reasoning = 3.441
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[[cost.tiers]]
+tier = { size = 256_000 }
+input = 0.689
+output = 6.881
+cache_read = 0.138
+cache_write = 0.138
+reasoning = 9.175

@@ -1,22 +1,10 @@
-name = "Qwen3.5 397B-A17B"
-family = "qwen"
-release_date = "2026-02-15"
-last_updated = "2026-02-15"
-attachment = true
-reasoning = true
-temperature = true
-tool_call = true
-structured_output = true
-open_weights = true
+base_model = "alibaba/qwen3.5-397b-a17b"
 
 [cost]
-input = 0.6
-output = 3.6
+input = 0.172
+output = 1.032
 
-[limit]
-context = 262_144
-output = 65_536
-
-[modalities]
-input = ["text", "image", "video", "audio"]
-output = ["text"]
+[[cost.tiers]]
+tier = { size = 128_000 }
+input = 0.43
+output = 2.58

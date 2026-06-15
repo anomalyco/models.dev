@@ -1,22 +1,10 @@
-name = "Qwen3.5 27B"
-family = "qwen"
-release_date = "2026-02-23"
-last_updated = "2026-02-23"
-attachment = true
-reasoning = true
-temperature = true
-tool_call = true
-structured_output = true
-open_weights = true
+base_model = "alibaba/qwen3.5-27b"
 
 [cost]
-input = 0.3
-output = 2.4
+input = 0.086
+output = 0.688
 
-[limit]
-context = 262_144
-output = 65_536
-
-[modalities]
-input = ["text", "image", "video", "audio"]
-output = ["text"]
+[[cost.tiers]]
+tier = { size = 128_000 }
+input = 0.258
+output = 2.064

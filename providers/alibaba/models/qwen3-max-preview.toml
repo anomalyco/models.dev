@@ -1,22 +1,21 @@
-name = "Qwen3 Max Preview"
-family = "qwen"
-release_date = "2025-09-23"
-last_updated = "2025-09-23"
-attachment = false
-reasoning = false
-temperature = true
-knowledge = "2025-04"
-tool_call = true
-open_weights = false
+base_model = "alibaba/qwen3-max-preview"
 
 [cost]
-input = 1.2
-output = 6.0
+input = 0.861
+output = 3.441
+cache_read = 0.173
+cache_write = 0.173
 
-[limit]
-context = 262_144
-output = 65_536
+[[cost.tiers]]
+tier = { size = 32_000 }
+input = 1.434
+output = 5.735
+cache_read = 0.287
+cache_write = 0.287
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[[cost.tiers]]
+tier = { size = 128_000 }
+input = 2.151
+output = 8.602
+cache_read = 0.431
+cache_write = 0.431
