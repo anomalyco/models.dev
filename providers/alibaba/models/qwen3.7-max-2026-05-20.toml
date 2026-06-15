@@ -3,6 +3,14 @@ name = "Qwen3.7 Max (2026-05-20)"
 release_date = "2026-05-20"
 last_updated = "2026-05-20"
 
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "budget_tokens"
+min = 1
+max = 262_144
+
 [cost]
 input = 1.65
 output = 4.951

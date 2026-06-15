@@ -1,6 +1,14 @@
 base_model = "alibaba/qwen3-vl-flash"
 name = "Qwen3-VL Flash (2025-10-15)"
 
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "budget_tokens"
+min = 1
+max = 81_920
+
 [cost]
 input = 0.022
 output = 0.215

@@ -3,6 +3,14 @@ name = "Qwen3-VL Flash (2026-01-22, US)"
 release_date = "2026-01-22"
 last_updated = "2026-01-22"
 
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "budget_tokens"
+min = 1
+max = 81_920
+
 [cost]
 input = 0.05
 output = 0.4

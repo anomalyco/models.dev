@@ -1,5 +1,13 @@
 base_model = "alibaba/qwen3-235b-a22b"
 
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "budget_tokens"
+min = 1
+max = 38_912
+
 [cost]
 input = 0.287
 output = 1.147

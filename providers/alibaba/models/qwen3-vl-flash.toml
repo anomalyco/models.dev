@@ -1,5 +1,13 @@
 base_model = "alibaba/qwen3-vl-flash"
 
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "budget_tokens"
+min = 1
+max = 81_920
+
 [cost]
 input = 0.022
 output = 0.215
@@ -19,4 +27,3 @@ input = 0.086
 output = 0.859
 cache_read = 0.018
 cache_write = 0.018
-

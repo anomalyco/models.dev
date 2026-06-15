@@ -1,6 +1,9 @@
 base_model = "alibaba/qwen-flash"
 name = "Qwen Flash (US)"
 
+[[reasoning_options]]
+type = "toggle"
+
 [cost]
 input = 0.05
 output = 0.4
@@ -13,4 +16,3 @@ input = 0.25
 output = 2
 cache_read = 0.05
 cache_write = 0.05
-
