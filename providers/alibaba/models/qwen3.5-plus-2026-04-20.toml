@@ -1,0 +1,31 @@
+base_model = "alibaba/qwen3.5-plus"
+name = "Qwen3.5 Plus (2026-04-20)"
+release_date = "2026-04-20"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "budget_tokens"
+min = 1
+max = 81_920
+
+[cost]
+input = 0.115
+output = 0.688
+cache_read = 0.0115
+cache_write = 0.023
+
+[[cost.tiers]]
+tier = { size = 128_000 }
+input = 0.14375
+output = 0.86
+cache_read = 0.014375
+cache_write = 0.02875
+
+[[cost.tiers]]
+tier = { size = 256_000 }
+input = 0.2875
+output = 1.72
+cache_read = 0.02875
+cache_write = 0.0575

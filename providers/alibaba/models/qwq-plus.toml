@@ -1,27 +1,9 @@
-name = "QwQ Plus"
-family = "qwen"
-release_date = "2025-03-05"
-last_updated = "2025-03-05"
-attachment = false
-reasoning = true
-temperature = true
-knowledge = "2024-04"
-tool_call = true
-open_weights = false
+base_model = "alibaba/qwq-plus"
 status = "deprecated"
-
 
 [[reasoning_options]]
 type = "toggle"
 
 [cost]
 input = 0.8
-output = 2.4
-
-[limit]
-context = 131_072
-output = 8_192
-
-[modalities]
-input = ["text"]
-output = ["text"]
+output = 8

@@ -1,0 +1,28 @@
+base_model = "alibaba/qwen3-coder-flash"
+
+[cost]
+input = 0.144
+output = 0.574
+cache_read = 0.029
+cache_write = 0.029
+
+[[cost.tiers]]
+tier = { size = 32_000 }
+input = 0.216
+output = 0.861
+cache_read = 0.044
+cache_write = 0.044
+
+[[cost.tiers]]
+tier = { size = 128_000 }
+input = 0.359
+output = 1.434
+cache_read = 0.072
+cache_write = 0.072
+
+[[cost.tiers]]
+tier = { size = 256_000 }
+input = 0.717
+output = 3.584
+cache_read = 0.144
+cache_write = 0.144

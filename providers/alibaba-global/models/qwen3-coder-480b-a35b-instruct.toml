@@ -1,0 +1,20 @@
+base_model = "alibaba/qwen3-coder-480b-a35b-instruct"
+
+[cost]
+input = 0.861
+output = 3.441
+
+[[cost.tiers]]
+tier = { size = 32_000 }
+input = 1.291
+output = 5.161
+
+[[cost.tiers]]
+tier = { size = 128_000 }
+input = 2.151
+output = 8.602
+
+[[cost.tiers]]
+tier = { size = 256_000 }
+input = 4.301
+output = 43.006

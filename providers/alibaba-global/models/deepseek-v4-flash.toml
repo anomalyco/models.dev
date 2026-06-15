@@ -1,0 +1,15 @@
+base_model = "deepseek/deepseek-v4-flash"
+
+tool_call = true
+
+[[reasoning_options]]
+type = "toggle"
+
+[cost]
+input = 0.138
+output = 0.275
+cache_read = 0.028
+cache_write = 0.028
+
+[limit]
+output = 393_216

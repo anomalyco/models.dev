@@ -1,0 +1,23 @@
+base_model = "alibaba/qwen3-coder-plus"
+name = "Qwen3 Coder Plus (2025-07-22)"
+release_date = "2025-07-22"
+last_updated = "2025-07-22"
+
+[cost]
+input = 0.574
+output = 2.294
+
+[[cost.tiers]]
+tier = { size = 32_000 }
+input = 0.861
+output = 3.441
+
+[[cost.tiers]]
+tier = { size = 128_000 }
+input = 1.434
+output = 5.735
+
+[[cost.tiers]]
+tier = { size = 256_000 }
+input = 2.868
+output = 28.671

@@ -1,0 +1,29 @@
+base_model = "alibaba/qwen3-vl-plus"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "budget_tokens"
+min = 1
+max = 81_920
+
+[cost]
+input = 0.144
+output = 1.434
+cache_read = 0.029
+cache_write = 0.029
+
+[[cost.tiers]]
+tier = { size = 32_768 }
+input = 0.216
+output = 2.151
+cache_read = 0.044
+cache_write = 0.044
+
+[[cost.tiers]]
+tier = { size = 128_000 }
+input = 0.431
+output = 4.301
+cache_read = 0.087
+cache_write = 0.087

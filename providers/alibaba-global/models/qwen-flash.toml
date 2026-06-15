@@ -1,0 +1,25 @@
+base_model = "alibaba/qwen-flash"
+
+[[reasoning_options]]
+type = "toggle"
+
+[cost]
+input = 0.022
+output = 0.216
+cache_read = 0.005
+cache_write = 0.005
+
+[[cost.tiers]]
+tier = { size = 128_000 }
+input = 0.087
+output = 0.861
+cache_read = 0.018
+cache_write = 0.018
+
+
+[[cost.tiers]]
+tier = { size = 256_000 }
+input = 0.173
+output = 1.721
+cache_read = 0.035
+cache_write = 0.035

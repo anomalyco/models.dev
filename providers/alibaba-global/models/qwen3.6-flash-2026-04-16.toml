@@ -1,0 +1,16 @@
+base_model = "alibaba/qwen3.6-flash"
+name = "Qwen3.6 Flash (2026-04-16)"
+release_date = "2026-04-16"
+last_updated = "2026-04-16"
+
+[[reasoning_options]]
+type = "toggle"
+
+[cost]
+input = 0.165
+output = 0.99
+
+[[cost.tiers]]
+tier = { size = 256_000 }
+input = 0.66
+output = 3.961

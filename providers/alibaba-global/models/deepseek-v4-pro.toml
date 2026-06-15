@@ -1,0 +1,15 @@
+base_model = "deepseek/deepseek-v4-pro"
+
+tool_call = true
+
+[[reasoning_options]]
+type = "toggle"
+
+[cost]
+input = 1.65
+output = 3.301
+cache_read = 0.138
+cache_write = 0.138
+
+[limit]
+output = 393_216

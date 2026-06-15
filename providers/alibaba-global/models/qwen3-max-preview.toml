@@ -1,0 +1,21 @@
+base_model = "alibaba/qwen3-max-preview"
+
+[cost]
+input = 0.861
+output = 3.441
+cache_read = 0.173
+cache_write = 0.173
+
+[[cost.tiers]]
+tier = { size = 32_000 }
+input = 1.434
+output = 5.735
+cache_read = 0.287
+cache_write = 0.287
+
+[[cost.tiers]]
+tier = { size = 128_000 }
+input = 2.151
+output = 8.602
+cache_read = 0.431
+cache_write = 0.431

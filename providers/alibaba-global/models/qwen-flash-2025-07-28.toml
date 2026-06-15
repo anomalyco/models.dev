@@ -1,0 +1,21 @@
+base_model = "alibaba/qwen-flash"
+name = "Qwen Flash (2025-07-28)"
+release_date = "2025-07-28"
+last_updated = "2025-07-28"
+
+[[reasoning_options]]
+type = "toggle"
+
+[cost]
+input = 0.022
+output = 0.216
+
+[[cost.tiers]]
+tier = { size = 128_000 }
+input = 0.087
+output = 0.861
+
+[[cost.tiers]]
+tier = { size = 256_000 }
+input = 0.173
+output = 1.721

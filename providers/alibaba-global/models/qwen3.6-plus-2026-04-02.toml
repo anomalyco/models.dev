@@ -1,0 +1,16 @@
+base_model = "alibaba/qwen3.6-plus"
+name = "Qwen3.6 Plus (2026-04-02)"
+release_date = "2026-04-02"
+last_updated = "2026-04-02"
+
+[[reasoning_options]]
+type = "toggle"
+
+[cost]
+input = 0.276
+output = 1.651
+
+[[cost.tiers]]
+tier = { size = 256_000 }
+input = 1.101
+output = 6.602

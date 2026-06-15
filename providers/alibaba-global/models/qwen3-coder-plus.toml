@@ -1,0 +1,28 @@
+base_model = "alibaba/qwen3-coder-plus"
+
+[cost]
+input = 0.574
+output = 2.294
+cache_read = 0.115
+cache_write = 0.115
+
+[[cost.tiers]]
+tier = { size = 32_000 }
+input = 0.861
+output = 3.441
+cache_read = 0.173
+cache_write = 0.173
+
+[[cost.tiers]]
+tier = { size = 128_000 }
+input = 1.434
+output = 5.735
+cache_read = 0.287
+cache_write = 0.287
+
+[[cost.tiers]]
+tier = { size = 256_000 }
+input = 2.868
+output = 28.671
+cache_read = 0.574
+cache_write = 0.574

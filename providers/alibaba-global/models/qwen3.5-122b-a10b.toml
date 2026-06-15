@@ -1,0 +1,18 @@
+base_model = "alibaba/qwen3.5-122b-a10b"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "budget_tokens"
+min = 1
+max = 81_920
+
+[cost]
+input = 0.115
+output = 0.917
+
+[[cost.tiers]]
+tier = { size = 128_000 }
+input = 0.287
+output = 2.294

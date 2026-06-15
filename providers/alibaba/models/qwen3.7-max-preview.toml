@@ -1,0 +1,14 @@
+base_model = "alibaba/qwen3.7-max"
+name = "Qwen3.7 Max Preview"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "budget_tokens"
+min = 1
+max = 262_144
+
+[cost]
+input = 1.65
+output = 4.951

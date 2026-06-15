@@ -1,0 +1,21 @@
+base_model = "alibaba/qwen3-coder-flash"
+name = "Qwen3 Coder Flash (2025-07-28)"
+
+[cost]
+input = 0.144
+output = 0.574
+
+[[cost.tiers]]
+tier = { size = 32_000 }
+input = 0.216
+output = 0.861
+
+[[cost.tiers]]
+tier = { size = 128_000 }
+input = 0.359
+output = 1.434
+
+[[cost.tiers]]
+tier = { size = 256_000 }
+input = 0.717
+output = 3.584
