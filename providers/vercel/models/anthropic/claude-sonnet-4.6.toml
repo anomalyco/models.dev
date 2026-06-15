@@ -1,5 +1,5 @@
 base_model = "anthropic/claude-sonnet-4-6"
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "medium", "high"] }, { type = "budget_tokens", min = 1_024, max = 63_999 }]
 
 interleaved = true
 
