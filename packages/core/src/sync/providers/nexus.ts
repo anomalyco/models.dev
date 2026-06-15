@@ -1,19 +1,22 @@
+import { existsSync, readdirSync } from "node:fs";
+import path from "node:path";
 import { z } from "zod";
 
 import type { ExistingModel, SyncProvider, SyncedFullModel, SyncedModel } from "../index.js";
 import { factorBaseModel, resolveCanonicalBaseModel } from "./openrouter.js";
 
 const API_ENDPOINT = "https://nexus-api.dappnode.com/v1/models";
-const NEXUS_BASE_MODELS: Record<string, string> = {
-  "minimax/minmax-m3": "minimax/MiniMax-M3",
-};
+const MODELS_DIR = path.join(import.meta.dirname, "..", "..", "..", "..", "..", "models");
 const ROUTER_COMPATIBILITY_LIMIT = {
   context: 1_048_576,
   output: 393_216,
 };
+let modelMetadataIDs: Set<string> | undefined;
+let modelMetadataIDsByModelID: Map<string, string[]> | undefined;
 
 const NexusModel = z.object({
   id: z.string(),
+  base_model: z.string().optional(),
   kind: z.enum(["public_model", "router"]).optional(),
   created: z.number().optional(),
   display_name: z.string().optional(),
@@ -85,12 +88,13 @@ export function buildNexusModel(
   };
   const releaseDate = dateFromTimestamp(model.created) ?? existing?.release_date ?? today;
   const cost = isRouter ? undefined : buildCost(model, existing?.cost);
-  const canonical = resolveNexusBaseModel(model.id, existing?.base_model);
+  const canonical = resolveNexusBaseModel(model.id, model.base_model, existing?.base_model);
   const reasoning = isRouter || features.has("reasoning");
+  const authoredModalities = existing?.modalities ?? (canonical === undefined ? modalities : undefined);
 
   const values: Partial<SyncedFullModel> = {
     name,
-    attachment: existing?.attachment ?? modalities.input.some((value) => value !== "text"),
+    attachment: existing?.attachment ?? authoredModalities?.input.some((value) => value !== "text"),
     reasoning,
     reasoning_options: nexusReasoningOptions(model.id, reasoning, existing),
     temperature: existing?.temperature ?? true,
@@ -100,7 +104,7 @@ export function buildNexusModel(
     interleaved: existing?.interleaved,
     cost,
     limit,
-    modalities,
+    modalities: authoredModalities,
   };
 
   if (canonical !== undefined) {
@@ -137,13 +141,70 @@ function dateFromTimestamp(timestamp: number | undefined) {
   return new Date(timestamp * 1000).toISOString().slice(0, 10);
 }
 
-function resolveNexusBaseModel(id: string, existingBaseModel: string | undefined) {
-  if (id.startsWith("private/")) return undefined;
-  return existingBaseModel ?? NEXUS_BASE_MODELS[id] ?? resolveCanonicalBaseModel(id);
+function resolveNexusBaseModel(
+  id: string,
+  apiBaseModel: string | undefined,
+  existingBaseModel: string | undefined,
+) {
+  if (apiBaseModel !== undefined) return canonicalNexusBaseModel(apiBaseModel);
+
+  return existingBaseModel ?? (id.startsWith("private/") ? undefined : resolveCanonicalBaseModel(id));
+}
+
+function canonicalNexusBaseModel(baseModel: string | undefined) {
+  if (baseModel === undefined) return undefined;
+  return resolveCanonicalBaseModel(baseModel)
+    ?? (modelMetadataExists(baseModel) ? baseModel : undefined)
+    ?? uniqueModelMetadataID(baseModel);
+}
+
+function modelMetadataExists(modelID: string) {
+  return modelMetadataIDSet().has(modelID) || existsSync(path.join(MODELS_DIR, `${modelID}.toml`));
+}
+
+function uniqueModelMetadataID(baseModel: string) {
+  const [, ...parts] = baseModel.split("/");
+  if (parts.length === 0) return undefined;
+  const modelID = parts.join("/").replace(/:free$/, "").toLowerCase();
+  const matches = modelMetadataIDMap().get(modelID) ?? [];
+  return matches.length === 1 ? matches[0] : undefined;
+}
+
+function modelMetadataIDSet() {
+  loadModelMetadataIDs();
+  return modelMetadataIDs!;
+}
+
+function modelMetadataIDMap() {
+  loadModelMetadataIDs();
+  return modelMetadataIDsByModelID!;
+}
+
+function loadModelMetadataIDs() {
+  if (modelMetadataIDs !== undefined && modelMetadataIDsByModelID !== undefined) return;
+
+  modelMetadataIDs = new Set();
+  modelMetadataIDsByModelID = new Map();
+
+  for (const provider of readdirSync(MODELS_DIR, { withFileTypes: true })) {
+    if (!provider.isDirectory()) continue;
+    for (const model of readdirSync(path.join(MODELS_DIR, provider.name), { withFileTypes: true })) {
+      if (!model.isFile() || !model.name.endsWith(".toml")) continue;
+
+      const modelID = model.name.slice(0, -".toml".length);
+      const metadataID = `${provider.name}/${modelID}`;
+      modelMetadataIDs.add(metadataID);
+
+      const key = modelID.toLowerCase();
+      const matches = modelMetadataIDsByModelID.get(key) ?? [];
+      matches.push(metadataID);
+      modelMetadataIDsByModelID.set(key, matches);
+    }
+  }
 }
 
 function privateName(name: string, isPrivateModel: boolean) {
-  if (!isPrivateModel || name.endsWith(" - Private")) return name;
+  if (!isPrivateModel || name.startsWith("Private ") || name.endsWith(" - Private")) return name;
   return `${name} - Private`;
 }
 

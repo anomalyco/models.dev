@@ -1,23 +1,13 @@
+base_model = "deepseek/deepseek-v4-pro"
 name = "Deepseek v4 Pro - Private"
-family = "deepseek-thinking"
-release_date = "2026-04-24"
-last_updated = "2026-04-24"
-attachment = false
 reasoning = false
-temperature = true
-tool_call = true
 structured_output = false
-open_weights = true
 reasoning_options = []
 
 [cost]
-input = 1.5693
-output = 5.5156
+input = 1.5731
+output = 5.5175
 
 [limit]
 context = 800_000
 output = 60_000
-
-[modalities]
-input = ["text"]
-output = ["text"]

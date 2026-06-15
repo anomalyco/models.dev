@@ -1,23 +1,13 @@
+base_model = "alibaba/qwen3.6-35b-a3b"
 name = "Qwen 3.6 - Private"
-family = "qwen"
-release_date = "2026-04-17"
-last_updated = "2026-04-17"
-attachment = true
 reasoning = false
-temperature = true
-tool_call = true
 structured_output = false
-open_weights = true
 reasoning_options = []
 
 [cost]
-input = 0.2077
-output = 1.3385
+input = 0.2082
+output = 1.3302
 
 [limit]
 context = 262_000
 output = 81_920
-
-[modalities]
-input = ["text", "image", "video", "audio"]
-output = ["text"]
