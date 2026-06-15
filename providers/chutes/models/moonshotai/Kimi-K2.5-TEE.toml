@@ -2,6 +2,7 @@
 # Manual overrides preserved on re-run: name, family, knowledge, interleaved, status
 base_model = "moonshotai/kimi-k2.5"
 name = "Kimi K2.5 TEE"
+reasoning_options = [{ type = "toggle" }]
 attachment = true
 temperature = true
 knowledge = "2024-10"

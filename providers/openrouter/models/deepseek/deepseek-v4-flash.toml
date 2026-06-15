@@ -1,19 +1,19 @@
 base_model = "deepseek/deepseek-v4-flash"
-temperature = true
-structured_output = true
-tool_call = true
-attachment = false
-reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["high", "xhigh"] }]
-reasoning = true
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["high", "xhigh"]
 
 [interleaved]
 field = "reasoning_content"
 
 [cost]
-input = 0.0983
-output = 0.1966
-cache_read = 0.0197
+input = 0.09
+output = 0.18
+cache_read = 0.02
 
 [limit]
-context = 1_048_576
-output = 131_072
+output = 65_536

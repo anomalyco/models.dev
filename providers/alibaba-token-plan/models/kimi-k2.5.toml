@@ -1,8 +1,9 @@
 base_model = "moonshotai/kimi-k2.5"
 base_model_omit = ["structured_output"]
-family = "kimi"
+family = "kimi-k2"
 attachment = true
 temperature = true
+reasoning_options = [{ type = "toggle" }, { type = "budget_tokens" }]
 
 [interleaved]
 field = "reasoning_content"

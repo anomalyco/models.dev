@@ -2,7 +2,7 @@ import { readdirSync } from "node:fs";
 import path from "node:path";
 import { z } from "zod";
 
-import { ModelFamilyValues } from "../../family.js";
+import { inferKimiFamily, ModelFamilyValues } from "../../family.js";
 import type { ExistingModel, SyncProvider, SyncedFullModel, SyncedModel } from "../index.js";
 import { factorBaseModel } from "./openrouter.js";
 
@@ -166,15 +166,12 @@ export function buildVeniceModel(
     limit,
     modalities: { input: [...new Set(input)], output: ["text" as const] },
   };
-  const changed = existing !== undefined && Object.entries(authoritative).some(([key, value]) => {
-    return stable(value) !== stable(existing[key as keyof ExistingModel]);
-  });
   const releaseDate = new Date(model.created * 1000).toISOString().slice(0, 10);
   const values: SyncedFullModel = {
     ...authoritative,
     family: baseModel == null ? inferFamily(model.id, spec.name) ?? existing?.family : existing?.family,
     release_date: releaseDate,
-    last_updated: existing === undefined || changed ? today : (existing.last_updated ?? today),
+    last_updated: existing?.last_updated ?? today,
     knowledge: existing?.knowledge,
     open_weights: spec.modelSource?.toLowerCase().includes("huggingface")
       ?? existing?.open_weights
@@ -230,6 +227,9 @@ function isReasoningEffort(value: string): value is ReasoningEffort {
 }
 
 function inferFamily(id: string, name: string) {
+  const kimiFamily = inferKimiFamily(id, name);
+  if (kimiFamily !== undefined) return kimiFamily;
+
   const target = `${id} ${name}`.toLowerCase();
   return [...ModelFamilyValues]
     .sort((a, b) => b.length - a.length)
@@ -238,16 +238,4 @@ function inferFamily(id: string, name: string) {
       if (family === "o") return new RegExp(`(^|[^a-z0-9])${value}(?=\\d|$|[^a-z0-9])`).test(target);
       return new RegExp(`(^|[^a-z0-9])${value}(?=$|[^a-z0-9])`).test(target);
     });
-}
-
-function stable(value: unknown): string {
-  if (Array.isArray(value)) return `[${value.map(stable).sort().join(",")}]`;
-  if (value !== null && typeof value === "object") {
-    return `{${Object.entries(value)
-      .filter(([, item]) => item !== undefined)
-      .sort(([a], [b]) => a.localeCompare(b))
-      .map(([key, item]) => `${key}:${stable(item)}`)
-      .join(",")}}`;
-  }
-  return JSON.stringify(value);
 }

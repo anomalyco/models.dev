@@ -1,10 +1,8 @@
 base_model = "alibaba/qwen3-32b"
-temperature = true
-tool_call = true
-attachment = false
-reasoning_options = [{ type = "toggle" }]
-reasoning = true
 structured_output = true
+
+[[reasoning_options]]
+type = "toggle"
 
 [cost]
 input = 0.08

@@ -1,10 +1,8 @@
 base_model = "google/gemini-3-flash-preview"
-temperature = true
-structured_output = true
-tool_call = true
-attachment = true
-reasoning_options = [{ type = "effort", values = ["minimal", "low", "medium", "high"] }]
-reasoning = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["minimal", "low", "medium", "high"]
 
 [interleaved]
 field = "reasoning_details"

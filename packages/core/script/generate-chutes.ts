@@ -13,7 +13,7 @@ import { z } from "zod";
 import path from "node:path";
 import { existsSync, readFileSync } from "node:fs";
 import { mkdir } from "node:fs/promises";
-import { ModelFamilyValues } from "../src/family.js";
+import { inferKimiFamily, ModelFamilyValues } from "../src/family.js";
 
 const API_ENDPOINT = "https://llm.chutes.ai/v1/models";
 const MODEL_METADATA_DIR = path.join(import.meta.dirname, "..", "..", "..", "models");
@@ -261,6 +261,9 @@ function matchesFamily(target: string, family: string): boolean {
 }
 
 function inferFamily(modelId: string, modelName: string): string | undefined {
+  const kimiFamily = inferKimiFamily(modelId, modelName);
+  if (kimiFamily !== undefined) return kimiFamily;
+
   const sortedFamilies = [...ModelFamilyValues].sort((a, b) => b.length - a.length);
 
   // First pass: try exact substring matches
