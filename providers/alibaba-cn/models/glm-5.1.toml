@@ -9,6 +9,13 @@ temperature = true
 tool_call = true
 open_weights = true
 
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "budget_tokens"
+max = 131_072
+
 [interleaved]
 field = "reasoning_content"
 
