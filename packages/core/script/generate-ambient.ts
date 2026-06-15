@@ -26,7 +26,7 @@ const ALLOWLIST = new Set<string>([
 
 // Maps Ambient model IDs to canonical model metadata IDs in this repo.
 const BASE_MODEL_MAP: Record<string, string> = {
-  "zai-org/GLM-5.1-FP8": "zai/glm-5.1",
+  "zai-org/GLM-5.1-FP8": "zhipuai/glm-5.1",
   "moonshotai/kimi-k2.6": "moonshotai/kimi-k2.6",
 };
 

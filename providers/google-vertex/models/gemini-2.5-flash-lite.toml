@@ -1,5 +1,6 @@
 base_model = "google/gemini-2.5-flash-lite"
 base_model_omit = ["structured_output"]
+reasoning_options = [{ type = "toggle" }, { type = "budget_tokens", min = 512, max = 24_576 }]
 
 [cost]
 input = 0.1

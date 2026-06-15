@@ -6,13 +6,14 @@ release_date = "2025-08-05"
 last_updated = "2025-08-05"
 attachment = false
 reasoning = true
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
 temperature = true
 tool_call = true
 open_weights = true
 
 [cost]
-input = 0.05
-output = 0.24
+input = 0.039
+output = 0.19
 
 [limit]
 context = 131_072

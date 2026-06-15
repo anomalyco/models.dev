@@ -1,12 +1,14 @@
 base_model = "minimax/MiniMax-M2.5"
 structured_output = true
+reasoning_options = []
 
 [interleaved]
 field = "reasoning_details"
 
 [cost]
 input = 0.15
-output = 1.15
+output = 0.9
+cache_read = 0.05
 
 [limit]
 context = 196_608

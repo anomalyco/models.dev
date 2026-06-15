@@ -2,16 +2,12 @@
 # Manual overrides preserved on re-run: name, family, knowledge, interleaved, status
 base_model = "alibaba/qwen3.6-27b"
 name = "Qwen3.6 27B TEE"
+reasoning_options = [{ type = "toggle" }]
 
 [cost]
 input = 0.195
 output = 1.56
 cache_read = 0.0975
 
-[limit]
-context = 262_144
-output = 65_536
-
 [modalities]
 input = ["text", "image"]
-output = ["text"]

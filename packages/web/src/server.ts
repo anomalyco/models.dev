@@ -1,16 +1,70 @@
 import Index from "../index.html";
-import { Models, Providers, Rendered } from "./render";
+import { getRenderedPage, Models, Providers } from "./render";
 import path from "path";
 
+const assetPort = Number(Bun.env.ASSET_PORT ?? 16000);
+
 Bun.serve({
-  port: 16_000,
+  port: assetPort,
   routes: {
     "/": Index,
+    "/src/*": (req) => {
+      const url = new URL(req.url);
+      const file = Bun.file(
+        path.join(import.meta.dir, "..", url.pathname.slice(1)),
+      );
+      return new Response(file);
+    },
+    "/favicon.svg": () =>
+      new Response(Bun.file(path.join(import.meta.dir, "..", "public/favicon.svg")), {
+        headers: {
+          "Content-Type": "image/svg+xml",
+        },
+      }),
+    "/social-share.png": () =>
+      new Response(Bun.file(path.join(import.meta.dir, "..", "public/social-share.png")), {
+        headers: {
+          "Content-Type": "image/png",
+        },
+      }),
     "/assets/*": (req) => {
       const file = Bun.file(
         path.join(import.meta.dir, new URL(req.url).pathname)
       );
       return new Response(file);
+    },
+    "/logos/labs/*": async (req) => {
+      const url = new URL(req.url);
+      const lab = url.pathname.split("/")[3].replace(".svg", "");
+      const logoPath = path.join(
+        import.meta.dir,
+        "..",
+        "..",
+        "..",
+        "labs",
+        lab,
+        "logo.svg"
+      );
+      const defaultLogoPath = path.join(
+        import.meta.dir,
+        "..",
+        "..",
+        "..",
+        "providers",
+        "logo.svg"
+      );
+
+      let file = Bun.file(logoPath);
+      if (!(await file.exists())) {
+        file = Bun.file(defaultLogoPath);
+      }
+
+      return new Response(file, {
+        headers: {
+          "Content-Type": "image/svg+xml",
+          "Cache-Control": "public, max-age=3600",
+        },
+      });
     },
     "/logos/*": async (req) => {
       const url = new URL(req.url);
@@ -72,6 +126,7 @@ Bun.serve({
 const server = Bun.serve({
   development: true,
   hostname: "0.0.0.0",
+  port: Number(Bun.env.PORT ?? 3000),
   async fetch(req) {
     // Reject WebSocket upgrade requests
     if (req.headers.get("upgrade") === "websocket") {
@@ -84,18 +139,24 @@ const server = Bun.serve({
     }
 
     const url = new URL(req.url);
-    url.host = "localhost:16000";
-    const result = fetch(url.toString(), req);
+    const rendered = getRenderedPage(url.pathname);
+    if (rendered !== undefined) {
+      const shellUrl = new URL(url);
+      shellUrl.host = `localhost:${assetPort}`;
+      shellUrl.pathname = "/";
+      shellUrl.search = "";
 
-    if (url.pathname !== "/") return result;
+      let html = await fetch(shellUrl.toString(), req).then((r) => r.text());
+      html = html.replace("<!--static-->", rendered);
+      return new Response(html, {
+        headers: {
+          "Content-Type": "text/html",
+        },
+      });
+    }
 
-    let html = await result.then((r) => r.text());
-    html = html.replace("<!--static-->", Rendered);
-    return new Response(html, {
-      headers: {
-        "Content-Type": "text/html",
-      },
-    });
+    url.host = `localhost:${assetPort}`;
+    return fetch(url.toString(), req);
   },
 });
 

@@ -1,14 +1,8 @@
-name = "Qwen3 32B"
-family = "qwen"
-release_date = "2025-04-28"
-last_updated = "2025-04-28"
-attachment = false
-reasoning = true
-temperature = true
-tool_call = true
+base_model = "alibaba/qwen3-32b"
 structured_output = true
-knowledge = "2025-03-31"
-open_weights = true
+
+[[reasoning_options]]
+type = "toggle"
 
 [cost]
 input = 0.08
@@ -16,8 +10,3 @@ output = 0.28
 
 [limit]
 context = 40_960
-output = 16_384
-
-[modalities]
-input = ["text"]
-output = ["text"]

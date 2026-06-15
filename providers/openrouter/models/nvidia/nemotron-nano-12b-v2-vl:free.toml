@@ -1,23 +1,8 @@
+base_model = "nvidia/nemotron-nano-12b-v2-vl"
 name = "Nemotron Nano 12B 2 VL (free)"
-family = "nemotron"
-release_date = "2025-10-28"
-last_updated = "2025-10-28"
-attachment = true
-reasoning = true
-temperature = true
-tool_call = true
 structured_output = false
-knowledge = "2025-11"
-open_weights = true
+reasoning_options = []
 
 [cost]
 input = 0
 output = 0
-
-[limit]
-context = 128_000
-output = 128_000
-
-[modalities]
-input = ["image", "text", "video"]
-output = ["text"]

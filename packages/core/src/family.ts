@@ -26,6 +26,7 @@ export const ModelFamilyValues = [
   "claude-haiku",
   "claude-sonnet",
   "claude-opus",
+  "claude-fable",
 
   // Gemini style
   "gemini",
@@ -65,9 +66,7 @@ export const ModelFamilyValues = [
 
   // Moonshot Kimi
   "kimi",
-  "kimi-k2.5",
-  "kimi-k2.6",
-  "kimi-k2.7",
+  "kimi-k2",
   "kimi-free",
   "kimi-thinking",
 
@@ -103,6 +102,8 @@ export const ModelFamilyValues = [
   "command-r",
   "command-a",
   "command-light",
+  "north",
+  "north-free",
 
   // AI21 Jamba
   "jamba",
@@ -421,3 +422,10 @@ export const ModelFamilyValues = [
 
 export const ModelFamily = z.enum(ModelFamilyValues);
 export type ModelFamily = z.infer<typeof ModelFamily>;
+
+export function inferKimiFamily(...values: string[]): ModelFamily | undefined {
+  const target = values.join(" ").toLowerCase();
+  if (/kimi[^a-z0-9]*k2(?:[^a-z0-9]*\d+)?[^a-z0-9]*thinking/.test(target)) return "kimi-thinking";
+  if (/kimi[\s_-]*k2/.test(target)) return "kimi-k2";
+  return undefined;
+}

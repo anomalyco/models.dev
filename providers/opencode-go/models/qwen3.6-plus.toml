@@ -4,6 +4,7 @@ release_date = "2026-04-02"
 last_updated = "2026-04-02"
 attachment = true
 reasoning = true
+reasoning_options = []
 temperature = true
 tool_call = true
 knowledge = "2025-04"
@@ -15,8 +16,15 @@ output = 3.00
 cache_read = 0.05
 cache_write = 0.625
 
+[[cost.tiers]]
+tier = { size = 256_000 }
+input = 2.00
+output = 6.00
+cache_read = 0.2
+cache_write = 2.50
+
 [limit]
-context = 262_144
+context = 1_000_000
 output = 65_536
 
 [modalities]

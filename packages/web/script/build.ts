@@ -1,9 +1,8 @@
 #!/usr/bin/env bun
 
-import { Rendered, Providers, Models } from "../src/render";
+import { RenderedPages, Providers, Models } from "../src/render";
 import fs from "fs/promises";
 import path from "path";
-import { $ } from "bun";
 
 await fs.rm("./dist", { recursive: true, force: true });
 await Bun.build({
@@ -41,9 +40,40 @@ for (const entry of entries) {
   }
 }
 
-let html = await Bun.file("./dist/index.html").text();
-html = html.replace("<!--static-->", Rendered);
-await Bun.write("./dist/index.html", html);
+// Copy lab logos to dist/logos/labs/
+await fs.mkdir("./dist/logos/labs", { recursive: true });
+
+const labsDir = "../../labs";
+try {
+  const labEntries = await fs.readdir(labsDir, { withFileTypes: true });
+  for (const entry of labEntries) {
+    if (entry.isDirectory()) {
+      const lab = entry.name;
+      const logoPath = path.join(labsDir, lab, "logo.svg");
+      const logoFile = Bun.file(logoPath);
+
+      if (await logoFile.exists()) {
+        await Bun.write(`./dist/logos/labs/${lab}.svg`, logoFile);
+      }
+    }
+  }
+} catch (error) {
+  if ((error as NodeJS.ErrnoException).code !== "ENOENT") {
+    throw error;
+  }
+}
+
+const template = await Bun.file("./dist/index.html").text();
+
+for (const [route, rendered] of RenderedPages) {
+  const filePath = route === "/"
+    ? "./dist/_index.html"
+    : path.join("./dist", route, "index.html");
+
+  await fs.mkdir(path.dirname(filePath), { recursive: true });
+  await Bun.write(filePath, template.replace("<!--static-->", rendered));
+}
+
 await Bun.write("./dist/api.json", JSON.stringify(Providers));
 await Bun.write(
   "./dist/catalog.json",
@@ -51,7 +81,8 @@ await Bun.write(
 );
 await Bun.write("./dist/models.json", JSON.stringify(Models));
 
-await $`mv ./dist/index.html ./dist/_index.html`;
-await $`mv ./dist/api.json ./dist/_api.json`;
-await $`mv ./dist/catalog.json ./dist/_catalog.json`;
-await $`mv ./dist/models.json ./dist/_models.json`;
+await fs.rename("./dist/api.json", "./dist/_api.json");
+await fs.rename("./dist/catalog.json", "./dist/_catalog.json");
+await fs.rename("./dist/models.json", "./dist/_models.json");
+
+await fs.rm("./dist/index.html", { force: true });

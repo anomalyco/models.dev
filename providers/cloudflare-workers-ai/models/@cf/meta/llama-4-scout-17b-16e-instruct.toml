@@ -1,13 +1,6 @@
+base_model = "meta/llama-4-scout-17b-instruct"
 name = "Llama 4 Scout 17B 16E Instruct"
-family = "llama"
-release_date = "2025-04-16"
-last_updated = "2025-04-16"
-attachment = true
-reasoning = false
-temperature = true
-tool_call = true
 structured_output = false
-open_weights = true
 
 [cost]
 input = 0.27
@@ -15,8 +8,3 @@ output = 0.85
 
 [limit]
 context = 131_000
-output = 16_384
-
-[modalities]
-input = ["text", "image"]
-output = ["text"]

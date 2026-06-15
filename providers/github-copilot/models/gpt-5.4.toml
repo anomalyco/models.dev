@@ -14,8 +14,3 @@ cache_read = 0.5
 [limit]
 context = 400_000
 input = 272_000
-output = 128_000
-
-[experimental.modes.fast]
-cost = { input = 5, output = 30, cache_read = 0.5 }
-provider = { body = { service_tier = "priority" } }

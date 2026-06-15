@@ -1,22 +1,11 @@
-name = "Nemotron Cascade 2 30B A3B"
-family = "nemotron"
-attachment = false
-reasoning = true
-tool_call = true
+base_model = "nvidia/nemotron-cascade-2-30b-a3b"
+last_updated = "2026-06-11"
 structured_output = true
-temperature = true
-release_date = "2026-03-24"
-last_updated = "2026-04-09"
-open_weights = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high"]
 
 [cost]
 input = 0.14
 output = 0.8
-
-[limit]
-context = 256_000
-output = 32_768
-
-[modalities]
-input = ["text"]
-output = ["text"]

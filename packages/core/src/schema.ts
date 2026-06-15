@@ -21,6 +21,14 @@ const JsonValue: z.ZodType<JsonValue> = z.lazy(() =>
   ]),
 );
 
+const ReasoningEffortValue = z.preprocess(
+  (value) => (value === "null" ? null : value),
+  z.union([
+    z.null(),
+    z.enum(["none", "minimal", "low", "medium", "high", "xhigh", "max", "default"]),
+  ]),
+);
+
 const ReasoningOption = z
   .discriminatedUnion("type", [
     z
@@ -31,9 +39,7 @@ const ReasoningOption = z
     z
       .object({
         type: z.literal("effort"),
-        values: z.array(
-          z.enum(["none", "minimal", "low", "medium", "high", "xhigh", "max"]),
-        ),
+        values: z.array(ReasoningEffortValue),
       })
       .strict(),
     z
@@ -41,7 +47,7 @@ const ReasoningOption = z
         type: z.literal("budget_tokens"),
         min: z
           .number()
-          .min(0, "Minimum reasoning budget cannot be negative")
+          .min(-1, "Minimum reasoning budget cannot be less than -1")
           .optional(),
         max: z
           .number()

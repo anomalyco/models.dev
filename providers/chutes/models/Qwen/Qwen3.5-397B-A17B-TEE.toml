@@ -2,6 +2,7 @@
 # Manual overrides preserved on re-run: name, family, knowledge, interleaved, status
 base_model = "alibaba/qwen3.5-397b-a17b"
 name = "Qwen3.5 397B A17B TEE"
+reasoning_options = [{ type = "toggle" }]
 
 [interleaved]
 field = "reasoning_content"
@@ -11,10 +12,5 @@ input = 0.39
 output = 2.34
 cache_read = 0.195
 
-[limit]
-context = 262_144
-output = 65_536
-
 [modalities]
 input = ["text", "image"]
-output = ["text"]

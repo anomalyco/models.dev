@@ -4,17 +4,13 @@ release_date = "2025-04-15"
 last_updated = "2025-04-15"
 attachment = false
 reasoning = false
-temperature = false
+temperature = true
 tool_call = false
 open_weights = false
 
-[cost]
-input = 0.12
-output = 0
-
 [limit]
-context = 8192
-output = 1536
+context = 128_000
+output = 1_536
 
 [modalities]
 input = ["text"]

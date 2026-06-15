@@ -1,34 +1,3 @@
-export interface TableRow {
-  providerId: string;
-  providerName: string;
-  providerLogoSvg: string;
-  modelId: string;
-  modelName: string;
-  family?: string;
-  toolCall: boolean;
-  reasoning: boolean;
-  input: string[];
-  output: string[];
-  inputCost?: number;
-  outputCost?: number;
-  reasoningCost?: number;
-  cacheReadCost?: number;
-  cacheWriteCost?: number;
-  audioInputCost?: number;
-  audioOutputCost?: number;
-  contextLimit: number;
-  inputLimit?: number;
-  outputLimit: number;
-  structuredOutput?: boolean;
-  temperature: boolean;
-  openWeights: boolean;
-  weightLinks: TableLink[];
-  benchmarkLinks: TableLink[];
-  knowledge?: string;
-  releaseDate: string;
-  lastUpdated: string;
-}
-
 export interface TableLink {
   label: string;
   url: string;
@@ -62,12 +31,9 @@ export function escapeHtml(value: string | number) {
   });
 }
 
-export function booleanText(value: boolean) {
+export function booleanText(value?: boolean) {
+  if (value === undefined) return "-";
   return value ? "Yes" : "No";
-}
-
-export function optionalBooleanText(value?: boolean) {
-  return value === undefined ? "-" : booleanText(value);
 }
 
 export function formatCost(cost?: number) {
@@ -82,38 +48,9 @@ export function knowledgeText(value?: string) {
   return value ? value.substring(0, 7) : "-";
 }
 
-export function weightsText(value: boolean) {
+export function weightsText(value?: boolean) {
+  if (value === undefined) return "-";
   return value ? "Open" : "Closed";
-}
-
-export function renderResourceLinks(links: TableLink[], empty = "-") {
-  if (links.length === 0) return empty;
-
-  const visibleLinks = links.slice(0, 3);
-  const extraCount = links.length - visibleLinks.length;
-  const renderedLinks = visibleLinks.map((link) => {
-    const title = link.title ? ` title="${escapeHtml(link.title)}"` : "";
-    return `<a href="${escapeHtml(
-      link.url
-    )}" target="_blank" rel="noopener noreferrer"${title}>${escapeHtml(
-      link.label
-    )}</a>`;
-  });
-
-  if (extraCount > 0) {
-    const allLabels = links.map((link) => link.label).join(", ");
-    renderedLinks.push(
-      `<span class="resource-extra" title="${escapeHtml(allLabels)}">+${extraCount}</span>`
-    );
-  }
-
-  return `<div class="resource-links">${renderedLinks.join("")}</div>`;
-}
-
-export function renderWeights(
-  row: Pick<TableRow, "openWeights" | "weightLinks">
-) {
-  return renderResourceLinks(row.weightLinks, weightsText(row.openWeights));
 }
 
 export function renderModalityIcon(modality: string) {
@@ -126,106 +63,30 @@ export function renderModalityIcon(modality: string) {
   return `<span class="modality-icon" data-tooltip="${label}">${icon}</span>`;
 }
 
-export function renderModalities(modalities: string[]) {
+export function renderModalities(modalities?: string[]) {
+  if (!modalities || modalities.length === 0) return "-";
   return `<div class="modalities">${modalities
     .map(renderModalityIcon)
     .join("")}</div>`;
 }
 
-export function renderCopyButton(modelId: string) {
-  const escapedModelId = escapeHtml(modelId);
-  return `<button type="button" class="copy-button" data-model-id="${escapedModelId}" aria-label="Copy model ID"><svg class="copy-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect><path d="m4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path></svg><svg class="check-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: none;"><polyline points="20,6 9,17 4,12"></polyline></svg></button>`;
+export function costSummary(input?: number, output?: number) {
+  if (input === undefined && output === undefined) return "-";
+  return `${formatCost(input)} / ${formatCost(output)}`;
 }
 
-export function renderRow(row: TableRow, index: number) {
-  return `<tr data-index="${index}">
-    <td><div class="provider-cell">${row.providerLogoSvg}<span>${escapeHtml(
-    row.providerName
-  )}</span></div></td>
-    <td>${escapeHtml(row.modelName)}</td>
-    <td>${escapeHtml(row.family ?? "-")}</td>
-    <td>${escapeHtml(row.providerId)}</td>
-    <td><div class="model-id-cell"><span class="model-id-text">${escapeHtml(
-      row.modelId
-    )}</span>${renderCopyButton(row.modelId)}</div></td>
-    <td>${booleanText(row.toolCall)}</td>
-    <td>${booleanText(row.reasoning)}</td>
-    <td>${renderModalities(row.input)}</td>
-    <td>${renderModalities(row.output)}</td>
-    <td>${formatCost(row.inputCost)}</td>
-    <td>${formatCost(row.outputCost)}</td>
-    <td>${formatCost(row.reasoningCost)}</td>
-    <td>${formatCost(row.cacheReadCost)}</td>
-    <td>${formatCost(row.cacheWriteCost)}</td>
-    <td>${formatCost(row.audioInputCost)}</td>
-    <td>${formatCost(row.audioOutputCost)}</td>
-    <td>${formatNumber(row.contextLimit)}</td>
-    <td>${formatNumber(row.inputLimit)}</td>
-    <td>${formatNumber(row.outputLimit)}</td>
-    <td>${optionalBooleanText(row.structuredOutput)}</td>
-    <td>${booleanText(row.temperature)}</td>
-    <td>${renderWeights(row)}</td>
-    <td>${renderResourceLinks(row.benchmarkLinks)}</td>
-    <td>${knowledgeText(row.knowledge)}</td>
-    <td>${escapeHtml(row.releaseDate)}</td>
-    <td>${escapeHtml(row.lastUpdated)}</td>
-  </tr>`;
+export function capabilitySummary(capabilities: Array<[string, boolean | undefined]>) {
+  const active = capabilities
+    .filter(([, value]) => value === true)
+    .map(([label]) => label);
+
+  return active.length > 0 ? active.join(", ") : "-";
 }
 
-export function getLargestRow(rows: TableRow[]): TableRow {
-  const worst: TableRow = {
-    providerId: "", providerName: "", providerLogoSvg: "", modelId: "", modelName: "",
-    toolCall: true, reasoning: true,
-    input: [], output: [],
-    contextLimit: 0, outputLimit: 0,
-    structuredOutput: true, temperature: true, openWeights: false,
-    weightLinks: [], benchmarkLinks: [],
-    releaseDate: "", lastUpdated: "",
-  };
+export function sortDate(value?: string) {
+  return value ?? "";
+}
 
-  for (const row of rows) {
-    if (row.providerName.length > worst.providerName.length) worst.providerName = row.providerName;
-    if (row.modelName.length > worst.modelName.length) worst.modelName = row.modelName;
-    if ((row.family ?? "").length > (worst.family ?? "").length) worst.family = row.family;
-    if (row.providerId.length > worst.providerId.length) worst.providerId = row.providerId;
-    if (row.modelId.length > worst.modelId.length) worst.modelId = row.modelId;
-    if ((row.knowledge ?? "").length > (worst.knowledge ?? "").length) worst.knowledge = row.knowledge;
-    if (row.releaseDate.length > worst.releaseDate.length) worst.releaseDate = row.releaseDate;
-    if (row.lastUpdated.length > worst.lastUpdated.length) worst.lastUpdated = row.lastUpdated;
-    if (row.input.length > worst.input.length) worst.input = row.input;
-    if (row.output.length > worst.output.length) worst.output = row.output;
-    if (
-      renderResourceLinks(row.weightLinks, weightsText(row.openWeights))
-        .length >
-      renderResourceLinks(worst.weightLinks, weightsText(worst.openWeights))
-        .length
-    ) {
-      worst.openWeights = row.openWeights;
-      worst.weightLinks = row.weightLinks;
-    }
-    if (
-      renderResourceLinks(row.benchmarkLinks).length >
-      renderResourceLinks(worst.benchmarkLinks).length
-    ) {
-      worst.benchmarkLinks = row.benchmarkLinks;
-    }
-
-    const costWider = (a: number | undefined, b: number | undefined) =>
-      b !== undefined && (a === undefined || formatCost(b).length > formatCost(a).length);
-    if (costWider(worst.inputCost, row.inputCost)) worst.inputCost = row.inputCost;
-    if (costWider(worst.outputCost, row.outputCost)) worst.outputCost = row.outputCost;
-    if (costWider(worst.reasoningCost, row.reasoningCost)) worst.reasoningCost = row.reasoningCost;
-    if (costWider(worst.cacheReadCost, row.cacheReadCost)) worst.cacheReadCost = row.cacheReadCost;
-    if (costWider(worst.cacheWriteCost, row.cacheWriteCost)) worst.cacheWriteCost = row.cacheWriteCost;
-    if (costWider(worst.audioInputCost, row.audioInputCost)) worst.audioInputCost = row.audioInputCost;
-    if (costWider(worst.audioOutputCost, row.audioOutputCost)) worst.audioOutputCost = row.audioOutputCost;
-
-    const numWider = (a: number | undefined, b: number | undefined) =>
-      b !== undefined && (a === undefined || formatNumber(b).length > formatNumber(a).length);
-    if (numWider(worst.contextLimit as number | undefined, row.contextLimit)) worst.contextLimit = row.contextLimit;
-    if (numWider(worst.inputLimit, row.inputLimit)) worst.inputLimit = row.inputLimit;
-    if (numWider(worst.outputLimit as number | undefined, row.outputLimit)) worst.outputLimit = row.outputLimit;
-  }
-
-  return worst;
+export function sortNumber(value?: number) {
+  return value === undefined ? "" : String(value);
 }

@@ -9,6 +9,10 @@ tool_call = true
 structured_output = true
 open_weights = true
 
+[[reasoning_options]]
+type = "effort"
+values = ["none", "high"]
+
 [cost]
 input = 1.50
 output = 7.50

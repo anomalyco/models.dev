@@ -1,4 +1,5 @@
 base_model = "moonshotai/kimi-k2.6"
+reasoning_options = []
 
 [interleaved]
 field = "reasoning_content"
@@ -14,4 +15,3 @@ output = 65_536
 
 [modalities]
 input = ["text"]
-output = ["text"]

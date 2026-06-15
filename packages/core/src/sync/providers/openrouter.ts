@@ -1,17 +1,17 @@
 import { z } from "zod";
-import { existsSync, readFileSync, readdirSync } from "node:fs";
+import { readFileSync, readdirSync } from "node:fs";
 import path from "node:path";
 
-import { ModelFamilyValues } from "../../family.js";
+import { inferKimiFamily, ModelFamilyValues } from "../../family.js";
 import type { ExistingModel, SyncProvider, SyncedFullModel, SyncedModel } from "../index.js";
 
 const API_ENDPOINT = "https://openrouter.ai/api/v1/models";
-const PROVIDERS_DIR = path.join(import.meta.dirname, "..", "..", "..", "..", "..", "providers");
 const MODELS_DIR = path.join(import.meta.dirname, "..", "..", "..", "..", "..", "models");
-const modelFilesByProvider = new Map<string, Set<string>>();
 const modelMetadataByID = new Map<string, Record<string, unknown>>();
+const modelMetadataFilesByProvider = new Map<string, Set<string>>();
 
 const CANONICAL_PROVIDER_PREFIXES = {
+  alibaba: { provider: "alibaba", metadata: "alibaba" },
   anthropic: { provider: "anthropic", metadata: "anthropic" },
   cohere: { provider: "cohere", metadata: "cohere" },
   deepseek: { provider: "deepseek", metadata: "deepseek" },
@@ -22,11 +22,15 @@ const CANONICAL_PROVIDER_PREFIXES = {
   mistralai: { provider: "mistral", metadata: "mistral" },
   moonshotai: { provider: "moonshotai", metadata: "moonshotai" },
   openai: { provider: "openai", metadata: "openai" },
+  nvidia: { provider: "nvidia", metadata: "nvidia" },
+  qwen: { provider: "alibaba", metadata: "alibaba" },
+  stepfun: { provider: "stepfun", metadata: "stepfun" },
+  tencent: { provider: "tencent", metadata: "tencent" },
   "x-ai": { provider: "xai", metadata: "xai" },
   xai: { provider: "xai", metadata: "xai" },
   xiaomi: { provider: "xiaomi", metadata: "xiaomi" },
-  zai: { provider: "zai", metadata: "zai" },
-  "z-ai": { provider: "zai", metadata: "zai" },
+  zai: { provider: "zai", metadata: "zhipuai" },
+  "z-ai": { provider: "zai", metadata: "zhipuai" },
 } as const;
 
 export const OpenRouterModel = z.object({
@@ -109,6 +113,9 @@ function modalities(values: string[], fallback: Modality[]): Modality[] {
 }
 
 function inferFamily(model: OpenRouterModel, name: string) {
+  const kimiFamily = inferKimiFamily(model.id, name);
+  if (kimiFamily !== undefined) return kimiFamily;
+
   const target = `${model.id} ${name}`.toLowerCase();
   return [...ModelFamilyValues]
     .sort((a, b) => b.length - a.length)
@@ -121,7 +128,11 @@ function inferFamily(model: OpenRouterModel, name: string) {
     });
 }
 
-export function buildOpenRouterModel(model: OpenRouterModel, existing: ExistingModel | undefined): SyncedModel {
+export function buildOpenRouterModel(
+  model: OpenRouterModel,
+  existing: ExistingModel | undefined,
+  baseModel?: string,
+): SyncedModel {
   const params = new Set(model.supported_parameters);
   const name = model.name.replace(/^[^:]+:\s+/, "");
   const input = modalities(model.architecture.input_modalities, ["text"]);
@@ -155,14 +166,13 @@ export function buildOpenRouterModel(model: OpenRouterModel, existing: ExistingM
     input: existing?.limit?.input,
     output: model.top_provider.max_completion_tokens ?? existing?.limit?.output ?? context,
   };
-  const canonical = resolveCanonicalModel(model.id);
+  const canonical = existing?.base_model ?? baseModel ?? resolveCanonicalBaseModel(model.id);
 
   if (canonical !== undefined) {
-    return {
-      base_model: canonical.from,
-      base_model_omit: baseModelOmit(canonical.from, limit),
-      ...baseModelOverrides(canonical.from, {
-        name: model.id.endsWith(":free") ? name : undefined,
+    return factorBaseModel(
+      canonical,
+      {
+        name: baseModel !== undefined || model.id.endsWith(":free") ? name : undefined,
         attachment,
         reasoning,
         temperature: params.has("temperature"),
@@ -172,9 +182,11 @@ export function buildOpenRouterModel(model: OpenRouterModel, existing: ExistingM
         interleaved: existing?.interleaved,
         limit,
         modalities: { input, output },
-      }),
-      cost,
-    };
+        cost,
+      },
+      limit,
+      existing?.base_model === canonical ? existing.base_model_omit : undefined,
+    );
   }
 
   return {
@@ -197,7 +209,7 @@ export function buildOpenRouterModel(model: OpenRouterModel, existing: ExistingM
   } satisfies SyncedFullModel;
 }
 
-function resolveCanonicalModel(openrouterID: string) {
+export function resolveCanonicalBaseModel(openrouterID: string) {
   const [prefix, ...modelParts] = openrouterID.split("/");
   if (prefix === undefined || modelParts.length === 0) return undefined;
   if (openrouterID.startsWith("~/") || prefix.startsWith("~")) return undefined;
@@ -208,34 +220,36 @@ function resolveCanonicalModel(openrouterID: string) {
   const modelID = modelParts.join("/").replace(/:free$/, "");
   const candidates = canonicalCandidates(canonical.provider, modelID);
   const match = candidates.find((candidate) => {
-    return canonicalModelExists(canonical.provider, candidate) &&
-      modelMetadataExists(canonical.metadata, candidate);
+    return modelMetadataExists(canonical.metadata, candidate);
   });
 
-  return match === undefined
-    ? undefined
-    : {
-        from: `${canonical.metadata}/${match}`,
-        provider: canonical.provider,
-        modelID: match,
-      };
+  return match === undefined ? undefined : `${canonical.metadata}/${match}`;
 }
 
-function canonicalModelExists(provider: string, modelID: string) {
-  let files = modelFilesByProvider.get(provider);
+function modelMetadataExists(provider: string, modelID: string) {
+  let files = modelMetadataFilesByProvider.get(provider);
   if (files === undefined) {
     try {
-      files = new Set(readdirSync(path.join(PROVIDERS_DIR, provider, "models")));
+      files = new Set(readdirSync(path.join(MODELS_DIR, provider)));
     } catch {
       files = new Set();
     }
-    modelFilesByProvider.set(provider, files);
+    modelMetadataFilesByProvider.set(provider, files);
   }
   return files.has(`${modelID}.toml`);
 }
 
-function modelMetadataExists(provider: string, modelID: string) {
-  return existsSync(path.join(MODELS_DIR, provider, `${modelID}.toml`));
+export function factorBaseModel(
+  modelID: string,
+  values: Partial<SyncedFullModel>,
+  limit: SyncedFullModel["limit"],
+  existingOmit?: string[],
+): SyncedModel {
+  return {
+    base_model: modelID,
+    base_model_omit: existingOmit ?? baseModelOmit(modelID, limit),
+    ...baseModelOverrides(modelID, values),
+  };
 }
 
 function baseModelOmit(
@@ -246,12 +260,10 @@ function baseModelOmit(
   const omit: string[] = [];
   const baseLimit = metadata.limit;
   if (
-    baseLimit !== undefined &&
-    baseLimit !== null &&
-    typeof baseLimit === "object" &&
-    !Array.isArray(baseLimit) &&
-    (baseLimit as Record<string, unknown>).input !== undefined &&
-    limit.input === undefined
+    isPlainObject(baseLimit) &&
+    baseLimit.input !== undefined &&
+    limit.input === undefined &&
+    baseLimit.context !== limit.context
   ) {
     omit.push("limit.input");
   }
@@ -277,6 +289,14 @@ function baseModelOverrides(
 function inheritedOverride(value: unknown, inherited: unknown): unknown {
   if (value === undefined) return undefined;
   if (sameInheritedValue(value, inherited)) return undefined;
+  if (isPlainObject(value) && isPlainObject(inherited)) {
+    const overrides = Object.fromEntries(
+      Object.entries(value)
+        .map(([key, item]) => [key, inheritedOverride(item, inherited[key])])
+        .filter(([, item]) => item !== undefined),
+    );
+    return Object.keys(overrides).length > 0 ? overrides : undefined;
+  }
   return stripUndefined(value);
 }
 

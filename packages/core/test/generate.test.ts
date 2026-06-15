@@ -128,6 +128,44 @@ output = 32_000
     });
   });
 
+  test("base_model can inherit sibling fields from partial object overrides", async () => {
+    await withFixture(async (root) => {
+      await write(root, "providers/provider/provider.toml", providerToml("Provider"));
+      await write(root, "models/lab/model.toml", modelMetadataToml());
+      await write(
+        root,
+        "providers/provider/models/model.toml",
+        `base_model = "lab/model"
+open_weights = true
+
+[cost]
+input = 1.25
+output = 2.50
+
+[limit]
+context = 200_000
+
+[modalities]
+input = ["text"]
+`,
+      );
+
+      const providers = await generate(path.join(root, "providers"));
+      const model = providers.provider?.models.model;
+
+      expect(model?.open_weights).toBe(true);
+      expect(model?.limit).toEqual({
+        context: 200_000,
+        input: 272_000,
+        output: 128_000,
+      });
+      expect(model?.modalities).toEqual({
+        input: ["text"],
+        output: ["text"],
+      });
+    });
+  });
+
   test("repository provider TOMLs do not use legacy extends tables", async () => {
     const root = path.join(import.meta.dirname, "..", "..", "..");
     const matches: string[] = [];
@@ -184,6 +222,7 @@ output = 32_000
       "llama",
       "opencode",
       "tencent-tokenhub",
+      "zai",
     ];
     const namespaceDirs = providerNamespaces.filter((namespace) =>
       existsSync(path.join(root, "models", namespace))

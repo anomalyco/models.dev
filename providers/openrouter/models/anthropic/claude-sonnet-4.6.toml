@@ -1,6 +1,18 @@
 base_model = "anthropic/claude-sonnet-4-6"
 structured_output = true
 
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high", "max"]
+
+[[reasoning_options]]
+type = "budget_tokens"
+min = 1_024
+max = 127_999
+
 [cost]
 input = 3
 output = 15
@@ -15,5 +27,4 @@ cache_read = 0.6
 cache_write = 7.5
 
 [limit]
-context = 1_000_000
 output = 128_000

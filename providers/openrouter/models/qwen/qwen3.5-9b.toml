@@ -1,3 +1,4 @@
+reasoning_options = [{ type = "toggle" }]
 name = "Qwen3.5-9B"
 family = "qwen3.5"
 release_date = "2026-03-10"
@@ -10,12 +11,12 @@ structured_output = true
 open_weights = true
 
 [cost]
-input = 0.04
+input = 0.1
 output = 0.15
 
 [limit]
 context = 262_144
-output = 81_920
+output = 262_144
 
 [modalities]
 input = ["text", "image", "video"]

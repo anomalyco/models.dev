@@ -1,5 +1,13 @@
 base_model = "google/gemini-2.5-flash"
 
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "budget_tokens"
+min = 0
+max = 24_576
+
 [cost]
 input = 0.3
 output = 2.5
@@ -8,5 +16,4 @@ cache_read = 0.03
 cache_write = 0.083333
 
 [limit]
-context = 1_048_576
 output = 65_535

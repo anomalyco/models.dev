@@ -1,5 +1,6 @@
-base_model = "zai/glm-4.5-air"
-structured_output = false
+base_model = "zhipuai/glm-4.5-air"
+reasoning_options = [{ type = "toggle" }]
+structured_output = true
 
 [cost]
 input = 0.125
