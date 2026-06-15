@@ -1,4 +1,5 @@
 base_model = "xai/grok-4.20-0309-reasoning"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
 
 [cost]
 input = 1.25
