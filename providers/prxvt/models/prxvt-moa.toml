@@ -1,0 +1,19 @@
+name = "PRXVT MoA"
+attachment = true
+reasoning = true
+tool_call = false
+release_date = "2026-06"
+last_updated = "2026-06"
+open_weights = false
+
+[cost]
+input = 40.7
+output = 121.0
+
+[limit]
+context = 200_000
+output = 64_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
