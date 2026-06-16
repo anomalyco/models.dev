@@ -7,14 +7,16 @@ reasoning = true
 temperature = true
 tool_call = true
 open_weights = true
+reasoning_options = []
 
 [cost]
 input = 0.10
 output = 0.10
+cache_read = 0.10
 
 [limit]
-context = 128_000
-output = 32_768
+context = 131_072
+output = 32_768 # Synthetic's API doesn't mention an output limit, so sticking to the official value.
 
 [modalities]
 input = ["text"]

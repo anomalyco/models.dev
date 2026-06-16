@@ -1,26 +1,13 @@
-name = "GLM 5.1"
-family = "glm"
-attachment = false
-reasoning = true
-tool_call = true
-structured_output = true
-temperature = true
-release_date = "2026-03-27"
-last_updated = "2026-04-12"
-open_weights = true
-
-[interleaved]
-field = "reasoning_content"
+base_model = "zhipuai/glm-5.1"
+release_date = "2026-04-07"
+last_updated = "2026-04-07"
+reasoning_options = []
 
 [cost]
-input = 1
-output = 3
-cache_read = 1
+input = 1.00
+output = 3.00
+cache_read = 1.00
 
 [limit]
-context = 196608
-output = 65536
-
-[modalities]
-input = ["text"]
-output = ["text"]
+context = 196_608
+output = 65_536
