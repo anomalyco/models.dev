@@ -1,0 +1,13 @@
+base_model = "moonshotai/kimi-k2.7-code"
+temperature = true
+
+[cost]
+input = 0.16
+output = 4
+
+[limit]
+context = 262_000
+output = 262_000
+
+[modalities]
+input = ["text", "image"]
