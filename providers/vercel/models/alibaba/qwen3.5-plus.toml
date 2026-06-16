@@ -1,5 +1,5 @@
 base_model = "alibaba/qwen3.5-plus"
-reasoning_options = [{ type = "toggle" }]
+reasoning_options = [{ type = "toggle" }, { type = "budget_tokens", min = 1, max = 81_920 }]
 name = "Qwen 3.5 Plus"
 attachment = true
 
