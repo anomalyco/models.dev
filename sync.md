@@ -14,6 +14,7 @@ The grouped sync targets are available for local convenience, but CI syncs each 
 - `bun models:sync cloudflare` syncs the Cloudflare sync group.
 - `bun models:sync direct` syncs every provider in the `direct` group.
 - `bun models:sync google` syncs only Google.
+- `bun models:sync moonshotai` syncs only Moonshot AI.
 - `bun models:sync xai` syncs only xAI.
 - `bun models:sync aggregators --dry-run` prints changes without writing model files.
 - `bun models:sync aggregators --new-only` creates new model files but skips updates and removals.
@@ -144,6 +145,15 @@ Google is implemented in `packages/core/src/sync/providers/google.ts`.
 - The API is authoritative for display names, token limits, temperature metadata, and the `thinking` flag when present.
 - Local Google models missing from the API response are removed.
 - New Google API models are reported in `.sync/model-sync-report.md` but not created automatically because the API does not provide authoritative modalities, pricing, knowledge cutoff, release date, tool calling, or structured output metadata.
+
+## Moonshot AI Notes
+
+Moonshot AI is implemented in `packages/core/src/sync/providers/moonshotai.ts`.
+
+- Source endpoint: `https://api.moonshot.ai/v1/models` with required `MOONSHOTAI_SYNC_API_KEY` auth.
+- The API is authoritative for context length, image/video input, and reasoning support on existing models.
+- New API models are reported but not created because the endpoint omits required pricing, output limits, tool calling, structured output, and open-weight metadata.
+- Missing local models are reported but retained because the China provider references global model TOMLs through symlinks.
 
 ## xAI Notes
 
