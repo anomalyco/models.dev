@@ -1,0 +1,13 @@
+base_model = "xai/grok-build-0.1"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
+
+[cost]
+input = 1
+output = 2
+cache_read = 0.2
+
+[[cost.tiers]]
+tier = { type = "context", size = 200_000 }
+input = 2
+output = 4
+cache_read = 0.4
