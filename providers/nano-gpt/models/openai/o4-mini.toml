@@ -1,9 +1,11 @@
 name = "OpenAI o4-mini"
 base_model = "openai/o4-mini"
 attachment = false
-
-[[reasoning_options]]
-type = "toggle"
+reasoning = true
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
+tool_call = true
+structured_output = true
+open_weights = false
 
 [cost]
 input = 1.1
