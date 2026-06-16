@@ -1,0 +1,18 @@
+
+base_model = "minimaxai/minimax-m3"
+structured_output = true
+reasoning_options = []
+
+[cost]
+input = 0.0
+output = 0.0
+cache_read = 0.0
+
+[limit]
+context = 1000000
+input = 1000000
+output = 131072
+
+[modalities]
+input = ["text", "image", "video"]
+output = ["text"]
