@@ -1,5 +1,5 @@
 base_model = "anthropic/claude-haiku-4-5"
-reasoning_options = [{ type = "toggle" }]
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["none", "minimal", "low", "medium", "high", "xhigh"] }]
 name = "Claude Haiku 4.5"
 
 interleaved = true
