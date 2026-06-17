@@ -7,6 +7,11 @@ temperature = true
 open_weights = true
 release_date = "2026-02-01"
 last_updated = "2026-02-01"
+reasoning_options = [{ type = "effort", values = ["none", "max"] }]
+
+[extends]
+from = "alibaba/qwen3.6-35b-a3b"
+omit = ["structured_output"]
 
 [cost]
 input = 0

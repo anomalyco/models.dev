@@ -8,6 +8,10 @@ open_weights = true
 release_date = "2026-01-01"
 last_updated = "2026-01-01"
 
+[extends]
+from = "google/gemma-4-31b-it"
+omit = ["structured_output"]
+
 [cost]
 input = 0
 output = 0
