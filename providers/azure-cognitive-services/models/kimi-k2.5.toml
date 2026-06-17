@@ -1,1 +1,30 @@
-../../azure/models/kimi-k2.5.toml
+name = "Kimi K2.5"
+family = "kimi-k2"
+release_date = "2026-02-06"
+last_updated = "2026-02-06"
+attachment = false
+reasoning = true
+reasoning_options = [{ type = "toggle" }]
+structured_output = true
+temperature = true
+tool_call = true
+knowledge = "2025-01"
+interleaved = true
+open_weights = true
+
+[cost]
+input = 0.60
+output = 3.00
+
+[limit]
+context = 262_144
+output = 262_144
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[provider]
+shape = "completions"
+npm = "@ai-sdk/openai-compatible"
+api = "https://${AZURE_COGNITIVE_SERVICES_RESOURCE_NAME}.services.ai.azure.com/models"
