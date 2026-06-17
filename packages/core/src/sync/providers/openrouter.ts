@@ -7,6 +7,7 @@ import type { ExistingModel, SyncProvider, SyncedFullModel, SyncedModel } from "
 
 const API_ENDPOINT = "https://openrouter.ai/api/v1/models";
 const MODELS_DIR = path.join(import.meta.dirname, "..", "..", "..", "..", "..", "models");
+const MODEL_NAME_BLACKLIST = ["fable-5"];
 const modelMetadataByID = new Map<string, Record<string, unknown>>();
 const modelMetadataFilesByProvider = new Map<string, Set<string>>();
 
@@ -79,7 +80,10 @@ export const openrouter = {
     return response.json();
   },
   parseModels(raw) {
-    return OpenRouterResponse.parse(raw).data;
+    return OpenRouterResponse.parse(raw).data.filter((model) => {
+      const name = `${model.id} ${model.name}`.toLowerCase();
+      return MODEL_NAME_BLACKLIST.every((value) => !name.includes(value));
+    });
   },
   translateModel(model, context) {
     return {
