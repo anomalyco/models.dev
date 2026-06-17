@@ -1,13 +1,19 @@
-base_model = "moonshotai/kimi-k2.7-code"
 name = "Kimi K2.7 Code Fast"
+family = "kimi-k2"
+release_date = "2026-06-12"
+last_updated = "2026-06-16"
+attachment = true
+reasoning = true
 temperature = true
+tool_call = true
+open_weights = true
 
 [[reasoning_options]]
 type = "toggle"
 
 [cost]
 cache_read = 0.38
-input = 2.00
+input = 1.90
 output = 8.00
 
 [limit]
