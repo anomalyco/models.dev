@@ -9,8 +9,12 @@ type = "toggle"
 [cost]
 input = 0.05
 output = 0.4
+cache_read = 0.005
+cache_write = 0.063
 
 [[cost.tiers]]
 tier = { size = 256_000 }
 input = 0.25
 output = 2
+cache_read = 0.025
+cache_write = 0.313

@@ -8,15 +8,13 @@ temperature = true
 knowledge = "2024-04"
 tool_call = false
 open_weights = false
-status = "deprecated"
 
 [cost]
 input = 0.16
-output = 8
-
+output = 0.49
 [limit]
-context = 16_384
-output = 8_192
+context = 4_096
+output = 2_048
 
 [modalities]
 input = ["text"]

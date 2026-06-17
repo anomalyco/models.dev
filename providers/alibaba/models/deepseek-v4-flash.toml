@@ -2,10 +2,13 @@ base_model = "deepseek/deepseek-v4-flash"
 
 tool_call = true
 
-[[reasoning_options]]
-type = "toggle"
+reasoning_options = []
+
+[interleaved]
+field = "reasoning_content"
 
 [cost]
-input = 0.138
-output = 393
-cache_read = 0.028
+input = 0.2
+output = 0.4
+cache_read = 0.04
+cache_write = 0

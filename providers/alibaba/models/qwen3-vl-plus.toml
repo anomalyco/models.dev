@@ -9,21 +9,21 @@ min = 1
 max = 81_920
 
 [cost]
-input = 0.144
-output = 1.434
-cache_read = 0.029
-cache_write = 0.029
+input = 0.2
+output = 1.6
+cache_read = 0.04
+cache_write = 0.25
 
 [[cost.tiers]]
-tier = { size = 32_768 }
-input = 0.216
-output = 2.151
-cache_read = 0.044
-cache_write = 0.044
+tier = { size = 32_000 }
+input = 0.3
+output = 2.4
+cache_read = 0.06
+cache_write = 0.375
 
 [[cost.tiers]]
 tier = { size = 128_000 }
-input = 0.431
-output = 4.301
-cache_read = 0.087
-cache_write = 0.087
+input = 0.6
+output = 4.8
+cache_read = 0.12
+cache_write = 0.75

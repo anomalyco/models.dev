@@ -12,14 +12,14 @@ max = 81_920
 [cost]
 input = 0.4
 output = 1.2
-cache_read = 0.08
-cache_write = 0.08
+cache_read = 0.04
+cache_write = 0.5
 reasoning = 4
 
 [[cost.tiers]]
 tier = { size = 256_000 }
 input = 1.2
 output = 3.6
-cache_read = 0.24
-cache_write = 0.24
+cache_read = 0.12
+cache_write = 1.5
 reasoning = 12
