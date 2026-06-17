@@ -1,0 +1,16 @@
+name = "GLM-5.2"
+family = "glm"
+base_model= "zhipuai/glm-5.2"
+
+[cost]
+input = 1.331
+output = 3.993
+cache_read = 0.337
+
+[limit]
+context = 204_800
+output = 131_072
+
+[modalities]
+input = ["text"]
+output = ["text"]
