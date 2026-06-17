@@ -246,6 +246,9 @@ export const ModelFamilyValues = [
   // Lucid
   "lucid",
 
+  // LucidQuery
+  "agi",
+
   // Intellect
   "intellect",
 
