@@ -1,6 +1,9 @@
 base_model = "zhipuai/glm-5.2"
 open_weights = true
-reasoning_options = [{ type = "toggle" }]
+
+[[reasoning_options]]
+type = "effort"
+values = ["high", "max"]
 
 [interleaved]
 field = "reasoning_content"
