@@ -1,5 +1,5 @@
 base_model = "zhipuai/glm-5.2"
-name = "glm-5.2:cloud"
+name = "glm-5.2"
 reasoning_options = [{ type = "toggle" }]
 
 [interleaved]
@@ -8,3 +8,8 @@ field = "reasoning_content"
 [limit]
 context = 976000
 output = 131072
+
+[cost]
+input = 1.40
+output = 4.40
+cache_read = 0.39
