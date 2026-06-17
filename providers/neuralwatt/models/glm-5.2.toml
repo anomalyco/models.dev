@@ -1,7 +1,7 @@
-name = "GPT OSS 20B"
-family = "gpt-oss"
-release_date = "2025-08-05"
-last_updated = "2025-08-05"
+name = "GLM 5.2"
+family = "glm"
+release_date = "2026-06-17"
+last_updated = "2026-06-17"
 attachment = false
 reasoning = true
 reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
@@ -10,12 +10,12 @@ tool_call = true
 open_weights = true
 
 [cost]
-input = 0.03
-output = 0.16
+input = 1.45
+output = 4.5
 
 [limit]
-context = 16_368
-output = 16_368
+context = 1_048_560
+output = 1_048_560
 
 [modalities]
 input = ["text"]
