@@ -2,7 +2,38 @@ import { expect, test } from "bun:test";
 
 import { preserveBaseModel } from "../src/sync/index.js";
 import { resolveCloudflareBaseModel } from "../src/sync/providers/cloudflare-workers-ai.js";
-import { buildOpenRouterModel, type OpenRouterModel } from "../src/sync/providers/openrouter.js";
+import {
+  buildOpenRouterModel,
+  openrouter,
+  type OpenRouterModel,
+} from "../src/sync/providers/openrouter.js";
+
+function openRouterModel(id: string, name: string): OpenRouterModel {
+  return {
+    id,
+    name,
+    created: 1_777_680_000,
+    hugging_face_id: null,
+    knowledge_cutoff: null,
+    context_length: 200_000,
+    architecture: { input_modalities: ["text"], output_modalities: ["text"] },
+    pricing: { prompt: "0.000001", completion: "0.000002" },
+    top_provider: { context_length: 200_000, max_completion_tokens: 100_000 },
+    supported_parameters: [],
+  };
+}
+
+test("OpenRouter excludes models containing fable-5 in their ID or name", () => {
+  const models = openrouter.parseModels({
+    data: [
+      openRouterModel("anthropic/claude-fable-5", "Anthropic: Claude Fable 5"),
+      openRouterModel("example/model", "Example: FABLE-5 Preview"),
+      openRouterModel("anthropic/claude-sonnet-4.6", "Anthropic: Claude Sonnet 4.6"),
+    ],
+  });
+
+  expect(models.map((model) => model.id)).toEqual(["anthropic/claude-sonnet-4.6"]);
+});
 
 test("OpenRouter z-ai models inherit from zhipuai metadata", () => {
   const model: OpenRouterModel = {
