@@ -1,0 +1,20 @@
+name = "glm-5.2"
+family = "glm"
+attachment = false
+reasoning = true
+reasoning_options = [{ type = "toggle" }]
+tool_call = true
+release_date = "2026-03-27"
+last_updated = "2026-06-16"
+open_weights = true
+
+[interleaved]
+field = "reasoning_content"
+
+[limit]
+context = 1000000
+output = 131072
+
+[modalities]
+input = ["text"]
+output = ["text"]
