@@ -1,7 +1,7 @@
-base_model = "moonshotai/kimi-k2.6"
+base_model = "moonshotai/kimi-k2.7-code"
 name = "Umans Coder"
 temperature = false
-reasoning_options = [{ type = "toggle" }]
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
 
 [interleaved]
 field = "reasoning_content"
@@ -9,7 +9,7 @@ field = "reasoning_content"
 [cost]
 input = 0.95
 output = 4.00
-cache_read = 0.20
+cache_read = 0.19
 
 [limit]
 output = 32_768
