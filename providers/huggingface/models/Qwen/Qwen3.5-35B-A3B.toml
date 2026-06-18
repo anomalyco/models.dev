@@ -1,0 +1,9 @@
+base_model = "alibaba/qwen3.5-35b-a3b"
+reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high"] }]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.25
+output = 2.00

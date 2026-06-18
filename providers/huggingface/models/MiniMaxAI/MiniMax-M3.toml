@@ -1,0 +1,13 @@
+base_model = "minimax/MiniMax-M3"
+reasoning_options = []
+structured_output = true
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.30
+output = 1.20
+
+[limit]
+context = 524_288
