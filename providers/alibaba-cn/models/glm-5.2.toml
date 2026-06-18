@@ -11,4 +11,11 @@ field = "reasoning_content"
 input = 1.1
 output = 3.851
 cache_read = 0.275
-cache_write = 0
+
+[limit]
+context = 1000000
+output = 128_000
+
+[modalities]
+input = ["text"]
+output = ["text"]
