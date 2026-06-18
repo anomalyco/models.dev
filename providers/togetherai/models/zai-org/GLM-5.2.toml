@@ -1,0 +1,28 @@
+name = "GLM-5.2"
+base_model = "zhipuai/glm-5.2"
+family = "glm"
+release_date = "2026-06-16"
+last_updated = "2026-06-16"
+attachment = false
+reasoning = true
+reasoning_options = [{ type = "toggle" }]
+temperature = true
+structured_output = true
+tool_call = true
+open_weights = true
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 1.40
+cache_read = 0.26
+output = 4.40
+
+[limit]
+context = 262_144
+output = 164_000
+
+[modalities]
+input = ["text"]
+output = ["text"]
