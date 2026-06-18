@@ -1,1 +1,16 @@
-../../azure/models/kimi-k2.5.toml
+base_model = "moonshotai/kimi-k2.5"
+reasoning_options = [{ type = "toggle" }]
+temperature = true
+interleaved = true
+
+[cost]
+input = 0.60
+output = 3.00
+
+[modalities]
+input = ["text", "image"]
+
+[provider]
+shape = "completions"
+npm = "@ai-sdk/openai-compatible"
+api = "https://${AZURE_COGNITIVE_SERVICES_RESOURCE_NAME}.services.ai.azure.com/models"
