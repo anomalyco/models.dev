@@ -1,0 +1,22 @@
+name = "GLM 5.2"
+family = "glm"
+release_date = "2026-06-17"
+last_updated = "2026-06-17"
+attachment = false
+reasoning = true
+reasoning_options = [{ type = "effort", values = ["minimal", "low", "medium", "high", "xhigh"] }]
+temperature = true
+tool_call = true
+open_weights = true
+
+[cost]
+input = 1.45
+output = 4.5
+
+[limit]
+context = 1_048_560
+output = 1_048_560
+
+[modalities]
+input = ["text"]
+output = ["text"]
