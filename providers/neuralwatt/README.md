@@ -21,6 +21,7 @@ Reasoning Models (with interleaved thinking):
 Fast Variants (optimized for speed, non-reasoning):
 - glm-5-fast — GLM 5 Fast
 - glm-5.1-fast — GLM 5.1 Fast
+- glm-5.2-fast — GLM 5.2 Fast
 - kimi-k2.5-fast — Kimi K2.5 Fast, image input
 - kimi-k2.6-fast — Kimi K2.6 Fast, image input
 - qwen3.5-397b-fast — Qwen3.5 397B Fast
