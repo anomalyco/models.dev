@@ -1,26 +1,13 @@
-name = "Kimi K2 Thinking"
-family = "kimi-thinking"
-release_date = "2025-11-07"
-last_updated = "2025-11-07"
-attachment = false
-reasoning = true
+base_model = "moonshotai/kimi-k2-thinking"
 reasoning_options = []
-temperature = true
-tool_call = true
-structured_output = true
-open_weights = true
+
+[interleaved]
+field = "reasoning_content"
 
 [cost]
 input = 0
 output = 0
 
 [limit]
-context = 32768
-output = 32768
-
-[interleaved]
-field = "reasoning_content"
-
-[modalities]
-input = ["text"]
-output = ["text"]
+context = 32_768
+output = 32_768
