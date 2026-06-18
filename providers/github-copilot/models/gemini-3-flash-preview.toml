@@ -1,5 +1,5 @@
 base_model = "google/gemini-3-flash-preview"
-reasoning_options = []
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }, { type = "budget_tokens", min = 256, max = 32_000 }]
 
 [cost]
 input = 0.5
