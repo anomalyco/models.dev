@@ -1,26 +1,15 @@
 name = "GLM-5.2"
 base_model = "zhipuai/glm-5.2"
 
-release_date = "2026-06-16"
-last_updated = "2026-06-16"
-attachment = false
-reasoning = true
-reasoning_options = [{ type = "toggle" }]
-tool_call = true
-structured_output = true
-open_weights = false
+reasoning_options = [{ type = "effort", values = ["high", "max"]}]
 
 [cost]
 input = 1.4
 output = 4.4
 
 [limit]
-context = 131_072
+context = 432_000
 output = 131_072
-
-[modalities]
-input = ["text"]
-output = ["text"]
 
 [interleaved]
 field = "reasoning_content"
