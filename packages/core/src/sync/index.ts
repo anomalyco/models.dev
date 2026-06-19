@@ -4,6 +4,8 @@ import { mergeDeep } from "remeda";
 import { z } from "zod";
 
 import { AuthoredModel, AuthoredModelShape, ModelMetadata } from "../schema.js";
+import { alibaba } from "./providers/alibaba.js";
+import { alibabaGlobal } from "./providers/alibaba-global.js";
 import { baseten } from "./providers/baseten.js";
 import { cloudflareWorkersAi } from "./providers/cloudflare-workers-ai.js";
 import { google } from "./providers/google.js";
@@ -77,6 +79,8 @@ export interface SyncResult {
 }
 
 export const providers: {
+  alibaba: SyncProvider<any>;
+  "alibaba-global": SyncProvider<any>;
   baseten: SyncProvider<any>;
   "cloudflare-workers-ai": SyncProvider<any>;
   google: SyncProvider<any>;
@@ -86,6 +90,8 @@ export const providers: {
   venice: SyncProvider<any>;
   xai: SyncProvider<any>;
 } = {
+  alibaba,
+  "alibaba-global": alibabaGlobal,
   baseten,
   "cloudflare-workers-ai": cloudflareWorkersAi,
   google,
@@ -99,7 +105,7 @@ export const providers: {
 export const groups = {
   aggregators: ["openrouter", "vercel"],
   cloudflare: ["cloudflare-workers-ai"],
-  direct: ["baseten", "google", "ovhcloud", "venice", "xai"],
+  direct: ["alibaba", "alibaba-global", "baseten", "google", "ovhcloud", "venice", "xai"],
 } as const;
 
 type ProviderID = keyof typeof providers;

@@ -2,7 +2,7 @@ import { z } from "zod";
 
 import type { ExistingModel, SyncProvider, SyncedModel } from "../index.js";
 
-const API_ENDPOINT = "https://dashscope-intl.aliyuncs.com/api/v1/models";
+const INTL_API_ENDPOINT = "https://dashscope-intl.aliyuncs.com/api/v1/models";
 const API_PAGE_SIZE = 100;
 
 const AlibabaPrice = z.object({
@@ -65,78 +65,98 @@ type Modality = "text" | "audio" | "image" | "video" | "pdf";
 type Cost = NonNullable<ExistingModel["cost"]>;
 type CostTier = NonNullable<Cost["tiers"]>[number];
 
-export const alibaba = {
+interface AlibabaProviderOptions {
+  id: string;
+  name: string;
+  modelsDir: string;
+  apiEndpoint: string;
+  apiKeyEnv: string;
+  deploymentName: string;
+}
+
+export const alibaba = createAlibabaProvider({
   id: "alibaba",
   name: "Alibaba",
   modelsDir: "providers/alibaba/models",
-  skipCreates: true,
-  deleteMissing: false,
-  sourceID(model) {
-    return model.model;
-  },
-  skippedNotice(ids) {
-    if (ids.length === 0) return [];
-    return [
-      `${ids.length} Alibaba models returned by the source were not created because the source does not provide enough curated catalog metadata for new entries. Existing models are still updated from source-authoritative fields.`,
-      `Skipped remote IDs: ${ids.map((id) => `\`${id}\``).join(", ")}`,
-    ];
-  },
-  missingNotice(paths) {
-    if (paths.length === 0) return [];
-    return [
-      `${paths.length} local Alibaba model files were retained even though they were missing from the source. This is intentional because the current source snapshot is for the international deployment and the provider directory still contains deprecated or region-specific entries.`,
-      `Retained local files: ${paths.map((path) => `\`${path}\``).join(", ")}`,
-    ];
-  },
-  async fetchModels() {
-    const apiKey = process.env.DASHSCOPE_API_KEY;
-    if (apiKey === undefined || apiKey.length === 0) {
-      throw new Error("DASHSCOPE_API_KEY is required to sync Alibaba models");
-    }
+  apiEndpoint: INTL_API_ENDPOINT,
+  apiKeyEnv: "DASHSCOPE_API_KEY",
+  deploymentName: "international",
+});
 
-    const first = await fetchModelsPage(apiKey, 1);
-    const models = [...first.output.models];
-    const totalPages = Math.ceil(first.output.total / first.output.page_size);
+export function createAlibabaProvider(options: AlibabaProviderOptions): SyncProvider<AlibabaModel> {
+  return {
+    id: options.id,
+    name: options.name,
+    modelsDir: options.modelsDir,
+    skipCreates: true,
+    deleteMissing: false,
+    sourceID(model) {
+      return model.model;
+    },
+    skippedNotice(ids) {
+      if (ids.length === 0) return [];
+      return [
+        `${ids.length} Alibaba models returned by the source were not created because the source does not provide enough curated catalog metadata for new entries. Existing models are still updated from source-authoritative fields.`,
+        `Skipped remote IDs: ${ids.map((id) => `\`${id}\``).join(", ")}`,
+      ];
+    },
+    missingNotice(paths) {
+      if (paths.length === 0) return [];
+      return [
+        `${paths.length} local Alibaba model files were retained even though they were missing from the source. This is intentional because the current source snapshot is for the ${options.deploymentName} deployment and the provider directory still contains deprecated or region-specific entries.`,
+        `Retained local files: ${paths.map((path) => `\`${path}\``).join(", ")}`,
+      ];
+    },
+    async fetchModels() {
+      const apiKey = process.env[options.apiKeyEnv];
+      if (apiKey === undefined || apiKey.length === 0) {
+        throw new Error(`${options.apiKeyEnv} is required to sync ${options.name} models`);
+      }
 
-    for (let pageNo = first.output.page_no + 1; pageNo <= totalPages; pageNo++) {
-      const page = await fetchModelsPage(apiKey, pageNo);
-      models.push(...page.output.models);
-    }
+      const first = await fetchModelsPage(options.apiEndpoint, apiKey, 1);
+      const models = [...first.output.models];
+      const totalPages = Math.ceil(first.output.total / first.output.page_size);
 
-    return {
-      ...first,
-      output: {
-        ...first.output,
-        models,
-      },
-    };
-  },
-  parseModels(raw) {
-    const models = AlibabaCatalogResponse.parse(raw).output.models;
-    const seen = new Set<string>();
-    const deduped: AlibabaModel[] = [];
+      for (let pageNo = first.output.page_no + 1; pageNo <= totalPages; pageNo++) {
+        const page = await fetchModelsPage(options.apiEndpoint, apiKey, pageNo);
+        models.push(...page.output.models);
+      }
 
-    for (const model of models) {
-      if (seen.has(model.model)) continue;
-      seen.add(model.model);
-      deduped.push(model);
-    }
+      return {
+        ...first,
+        output: {
+          ...first.output,
+          models,
+        },
+      };
+    },
+    parseModels(raw) {
+      const models = AlibabaCatalogResponse.parse(raw).output.models;
+      const seen = new Set<string>();
+      const deduped: AlibabaModel[] = [];
 
-    return deduped;
-  },
-  translateModel(model, context) {
-    const existing = context.existing(model.model);
-    if (existing === undefined) return undefined;
+      for (const model of models) {
+        if (seen.has(model.model)) continue;
+        seen.add(model.model);
+        deduped.push(model);
+      }
 
-    return {
-      id: model.model,
-      model: buildAlibabaModel(model, existing),
-    };
-  },
-} satisfies SyncProvider<AlibabaModel>;
+      return deduped;
+    },
+    translateModel(model, context) {
+      const existing = context.existing(model.model);
+      if (existing === undefined) return undefined;
 
-async function fetchModelsPage(apiKey: string, pageNo: number) {
-  const url = new URL(API_ENDPOINT);
+      return {
+        id: model.model,
+        model: buildAlibabaModel(model, existing),
+      };
+    },
+  };
+}
+
+async function fetchModelsPage(apiEndpoint: string, apiKey: string, pageNo: number) {
+  const url = new URL(apiEndpoint);
   url.searchParams.set("page_no", String(pageNo));
   url.searchParams.set("page_size", String(API_PAGE_SIZE));
 
