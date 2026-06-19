@@ -1,6 +1,7 @@
 import { z } from "zod";
 
-import type { ExistingModel, SyncProvider, SyncedModel } from "../index.js";
+import type { ExistingModel, SyncProvider, SyncedFullModel, SyncedModel } from "../index.js";
+import { factorBaseModel } from "./openrouter.js";
 
 const INTL_API_ENDPOINT = "https://dashscope-intl.aliyuncs.com/api/v1/models";
 const API_PAGE_SIZE = 100;
@@ -315,27 +316,30 @@ export function buildAlibabaModel(model: AlibabaModel, existing: ExistingModel):
   const translatedLimit = limit(model, existing);
 
   if (existing.base_model !== undefined) {
-    return {
-      base_model: existing.base_model,
-      base_model_omit: existing.base_model_omit,
-      name: existing.name,
-      family: existing.family,
-      release_date: existing.release_date,
-      last_updated: existing.last_updated,
-      attachment: existing.attachment,
-      reasoning: existing.reasoning,
-      reasoning_options: existing.reasoning_options,
-      temperature: existing.temperature,
-      tool_call: existing.tool_call,
-      structured_output: existing.structured_output,
-      knowledge: existing.knowledge,
-      open_weights: existing.open_weights,
-      status: existing.status,
-      interleaved: existing.interleaved,
-      cost: translatedCost,
-      limit: translatedLimit,
-      modalities: translatedModalities,
-    };
+    return factorBaseModel(
+      existing.base_model,
+      {
+        name: existing.name,
+        family: existing.family,
+        release_date: existing.release_date,
+        last_updated: existing.last_updated,
+        attachment: existing.attachment,
+        reasoning: existing.reasoning,
+        reasoning_options: existing.reasoning_options,
+        temperature: existing.temperature,
+        tool_call: existing.tool_call,
+        structured_output: existing.structured_output,
+        knowledge: existing.knowledge,
+        open_weights: existing.open_weights,
+        status: existing.status,
+        interleaved: existing.interleaved,
+        cost: translatedCost,
+        limit: translatedLimit,
+        modalities: translatedModalities,
+      },
+      requireExisting(model, "limit", translatedLimit) as SyncedFullModel["limit"],
+      existing.base_model_omit,
+    );
   }
 
   return {
