@@ -8,8 +8,7 @@ import { inferKimiFamily, ModelFamilyValues } from "../src/family.js";
 // This endpoint already returns data in the models.dev schema, so most fields
 // map straight through. Only fields the catalog can't provide (family) are
 // inferred, and manually-curated fields in existing TOMLs are preserved.
-//const API_ENDPOINT = "https://trace.wandb.ai/inference/modelsdev/models";
-const API_ENDPOINT = "http://localhost:8080/traces/inference/modelsdev/models";
+const API_ENDPOINT = "https://trace.wandb.ai/inference/modelsdev/models";
 
 const ApiCost = z
   .object({
