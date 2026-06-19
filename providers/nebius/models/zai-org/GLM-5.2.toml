@@ -1,0 +1,26 @@
+name = "GLM-5.2"
+family = "glm"
+attachment = false
+reasoning = true
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
+tool_call = true
+structured_output = true
+temperature = true
+release_date = "2026-06-13"
+last_updated = "2026-06-13"
+open_weights = false
+
+[cost]
+input = 1.4
+output = 4.4
+
+[limit]
+context = 432_000
+output = 432_000
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[interleaved]
+field = "reasoning_content"
