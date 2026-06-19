@@ -1,6 +1,17 @@
 base_model = "alibaba/qwen3.6-flash"
 
 [cost]
-input = 0.1875
-output = 1.125
-cache_write = 0.234375
+input = 0.165
+output = 0.99
+cache_read = 0.017
+cache_write = 0.206
+
+[[cost.tiers]]
+tier = { type = "context", size = 256_000 }
+input = 0.66
+output = 3.961
+cache_read = 0.066
+cache_write = 0.825
+
+[modalities]
+input = ["image", "text", "video", "pdf"]

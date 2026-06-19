@@ -5,8 +5,9 @@ last_updated = "2025-03-26"
 attachment = false
 reasoning = false
 temperature = true
-knowledge = "2024-04"
 tool_call = true
+structured_output = false
+knowledge = "2024-04"
 open_weights = false
 
 [cost]
@@ -20,5 +21,5 @@ context = 32_768
 output = 2_048
 
 [modalities]
-input = ["text", "image", "audio", "video"]
+input = ["text", "image", "video", "audio", "pdf"]
 output = ["text", "audio"]

@@ -6,14 +6,22 @@ attachment = false
 reasoning = true
 temperature = true
 tool_call = true
+structured_output = false
 open_weights = false
 
 [interleaved]
 field = "reasoning_content"
 
 [cost]
+input = 0.573
+output = 2.58
+cache_read = 0.115
+
+[[cost.tiers]]
+tier = { type = "context", size = 32_000 }
 input = 0.86
-output = 3.15
+output = 3.154
+cache_read = 0.172
 
 [limit]
 context = 202_752

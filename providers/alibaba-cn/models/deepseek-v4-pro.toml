@@ -4,6 +4,9 @@ base_model = "deepseek/deepseek-v4-pro"
 field = "reasoning_content"
 
 [cost]
-input = 0.435
-output = 0.87
-cache_read = 0.003625
+input = 1.65
+output = 3.301
+cache_read = 0.138
+
+[limit]
+output = 393_216

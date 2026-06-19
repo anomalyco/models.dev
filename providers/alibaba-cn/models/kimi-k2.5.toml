@@ -6,21 +6,23 @@ attachment = false
 reasoning = true
 temperature = true
 tool_call = true
-open_weights = true
-knowledge = "2025-01"
 structured_output = false
+knowledge = "2025-01"
+open_weights = true
 
 [interleaved]
 field = "reasoning_content"
 
 [cost]
 input = 0.574
-output = 2.411
+output = 3.011
+cache_read = 0.115
+cache_write = 0.718
 
 [limit]
 context = 262_144
-output = 32_768
+output = 16_384
 
 [modalities]
-input = ["text", "image", "video"]
+input = ["text", "image", "video", "pdf"]
 output = ["text"]

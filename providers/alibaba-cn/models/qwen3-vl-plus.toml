@@ -5,19 +5,38 @@ last_updated = "2025-09-23"
 attachment = false
 reasoning = true
 temperature = true
-knowledge = "2025-04"
 tool_call = true
+structured_output = true
+knowledge = "2025-04"
 open_weights = false
 
 [cost]
-input = 0.143353
-output = 1.433525
+input = 0.144
+output = 1.434
 reasoning = 4.300576
+cache_read = 0.029
+cache_write = 0.18
+
+[[cost.tiers]]
+tier = { type = "context", size = 32_000 }
+input = 0.216
+output = 2.151
+reasoning = 4.300576
+cache_read = 0.044
+cache_write = 0.27
+
+[[cost.tiers]]
+tier = { type = "context", size = 128_000 }
+input = 0.431
+output = 4.301
+reasoning = 4.300576
+cache_read = 0.087
+cache_write = 0.539
 
 [limit]
 context = 262_144
 output = 32_768
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image", "video", "pdf"]
 output = ["text"]

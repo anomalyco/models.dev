@@ -5,8 +5,9 @@ last_updated = "2024-01"
 attachment = false
 reasoning = false
 temperature = true
-knowledge = "2024-04"
 tool_call = false
+structured_output = false
+knowledge = "2024-04"
 open_weights = false
 
 [cost]
@@ -15,7 +16,7 @@ output = 0.144
 
 [limit]
 context = 8_192
-output = 1_024
+output = 4_096
 
 [modalities]
 input = ["text"]

@@ -4,22 +4,30 @@ release_date = "2026-04-14"
 last_updated = "2026-04-14"
 attachment = false
 reasoning = true
-structured_output = true
 temperature = true
 tool_call = true
+structured_output = true
 open_weights = true
 
 [interleaved]
 field = "reasoning_content"
 
 [cost]
-input = 0.87
-output = 3.48
-cache_read = 0.17
+input = 0.825
+output = 3.301
+cache_read = 0.165
+cache_write = 1.031
+
+[[cost.tiers]]
+tier = { type = "context", size = 32_000 }
+input = 1.1
+output = 3.851
+cache_read = 0.22
+cache_write = 1.375
 
 [limit]
-context = 202_752
-output = 128_000
+context = 202_745
+output = 131_072
 
 [modalities]
 input = ["text"]

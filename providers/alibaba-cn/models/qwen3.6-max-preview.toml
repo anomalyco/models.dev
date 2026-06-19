@@ -6,16 +6,24 @@ attachment = false
 reasoning = true
 temperature = true
 tool_call = true
-open_weights = false
 structured_output = true
+open_weights = false
 
 [cost]
-input = 1.32
-cache_read = 0.132
-output = 7.9
+input = 1.238
+output = 7.426
+cache_read = 0.1238
+cache_write = 1.547
+
+[[cost.tiers]]
+tier = { type = "context", size = 128_000 }
+input = 2.063
+output = 12.377
+cache_read = 0.206
+cache_write = 2.579
 
 [limit]
-context = 245_800
+context = 262_144
 output = 65_536
 
 [modalities]

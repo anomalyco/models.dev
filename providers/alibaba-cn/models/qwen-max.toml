@@ -5,16 +5,18 @@ last_updated = "2025-01-25"
 attachment = false
 reasoning = false
 temperature = true
-knowledge = "2024-04"
 tool_call = true
+structured_output = true
+knowledge = "2024-04"
 open_weights = false
 
 [cost]
 input = 0.345
 output = 1.377
+cache_read = 0.072
 
 [limit]
-context = 131_072
+context = 32_768
 output = 8_192
 
 [modalities]

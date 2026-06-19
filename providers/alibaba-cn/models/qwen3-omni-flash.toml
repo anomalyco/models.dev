@@ -5,20 +5,21 @@ last_updated = "2025-09-15"
 attachment = false
 reasoning = true
 temperature = true
-knowledge = "2024-04"
 tool_call = true
+structured_output = false
+knowledge = "2024-04"
 open_weights = false
 
 [cost]
-input = 0.058
-output = 0.230
-input_audio = 3.584
-output_audio = 7.168
+input = 0.258
+output = 0.989
+input_audio = 2.265
+output_audio = 8.974
 
 [limit]
 context = 65_536
 output = 16_384
 
 [modalities]
-input = ["text", "image", "audio", "video"]
+input = ["text", "image", "video", "audio", "pdf"]
 output = ["text", "audio"]

@@ -6,8 +6,8 @@ attachment = false
 reasoning = true
 temperature = true
 tool_call = true
-open_weights = true
 structured_output = true
+open_weights = true
 
 [interleaved]
 field = "reasoning_content"
@@ -15,6 +15,7 @@ field = "reasoning_content"
 [cost]
 input = 0.574
 output = 2.294
+cache_read = 0.115
 
 [limit]
 context = 262_144
