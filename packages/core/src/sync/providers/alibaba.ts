@@ -353,7 +353,7 @@ export function buildAlibabaModel(model: AlibabaModel, existing: ExistingModel):
     temperature: requireExisting(model, "temperature", existing.temperature),
     tool_call: existing.tool_call ?? model.features.includes("function-calling"),
     structured_output: existing.structured_output ?? model.features.includes("structured-outputs"),
-    knowledge: requireExisting(model, "knowledge", existing.knowledge),
+    knowledge: existing.knowledge,
     open_weights: requireExisting(model, "open_weights", existing.open_weights),
     status: existing.status,
     interleaved: existing.interleaved,
