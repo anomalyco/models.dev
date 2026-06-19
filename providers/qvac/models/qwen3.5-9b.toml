@@ -1,6 +1,6 @@
 name = "Qwen3.5 9B"
 family = "qwen"
-attachment = true
+attachment = false
 reasoning = true
 tool_call = true
 temperature = true
@@ -18,5 +18,5 @@ context = 32_768
 output = 8_192
 
 [modalities]
-input = ["text", "image"]
+input = ["text"]
 output = ["text"]
