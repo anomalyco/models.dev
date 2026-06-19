@@ -5,10 +5,10 @@ last_updated = "2025-03-25"
 attachment = false
 reasoning = true
 temperature = true
-knowledge = "2024-04"
 tool_call = true
+structured_output = false
+knowledge = "2024-04"
 open_weights = false
-
 
 [[reasoning_options]]
 type = "toggle"
@@ -22,5 +22,5 @@ context = 131_072
 output = 8_192
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image", "video", "pdf"]
 output = ["text"]

@@ -1,25 +1,24 @@
 base_model = "alibaba/qwen3-coder-plus"
 name = "Qwen3 Coder Plus (2025-09-23)"
-tool_call = false
-structured_output = true
 release_date = "2025-09-23"
 last_updated = "2025-09-23"
+structured_output = true
 
 [cost]
 input = 1
 output = 5
 
 [[cost.tiers]]
-tier = { size = 32_000 }
+tier = { type = "context", size = 32_000 }
 input = 1.8
 output = 9
 
 [[cost.tiers]]
-tier = { size = 128_000 }
+tier = { type = "context", size = 128_000 }
 input = 3
 output = 15
 
 [[cost.tiers]]
-tier = { size = 256_000 }
+tier = { type = "context", size = 256_000 }
 input = 6
 output = 60

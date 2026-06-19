@@ -1,8 +1,5 @@
 base_model = "zhipuai/glm-5.1"
 
-tool_call = true
-structured_output = true
-
 [[reasoning_options]]
 type = "toggle"
 
@@ -10,3 +7,6 @@ type = "toggle"
 input = 1.4
 output = 4.4
 cache_read = 0.26
+
+[limit]
+context = 202_745

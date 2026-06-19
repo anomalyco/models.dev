@@ -11,14 +11,14 @@ max = 81_920
 [cost]
 input = 0.4
 output = 1.2
+reasoning = 4
 cache_read = 0.08
 cache_write = 0.5
-reasoning = 4
 
 [[cost.tiers]]
-tier = { size = 256_000 }
+tier = { type = "context", size = 256_000 }
 input = 1.2
 output = 3.6
+reasoning = 12
 cache_read = 0.24
 cache_write = 1.5
-reasoning = 12

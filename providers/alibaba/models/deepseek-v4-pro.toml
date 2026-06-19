@@ -1,7 +1,4 @@
 base_model = "deepseek/deepseek-v4-pro"
-
-tool_call = true
-
 reasoning_options = []
 
 [interleaved]
@@ -11,4 +8,6 @@ field = "reasoning_content"
 input = 2.4
 output = 4.8
 cache_read = 0.2
-cache_write = 0
+
+[limit]
+output = 393_216

@@ -1,9 +1,7 @@
 base_model = "alibaba/qwen3.6-max-preview"
 
-
 [[reasoning_options]]
 type = "toggle"
-
 
 [cost]
 input = 1.3
@@ -12,7 +10,7 @@ cache_read = 0.13
 cache_write = 1.625
 
 [[cost.tiers]]
-tier = { size = 128_000 }
+tier = { type = "context", size = 128_000 }
 input = 2
 output = 12
 cache_read = 0.2

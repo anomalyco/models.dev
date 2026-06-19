@@ -3,13 +3,16 @@ base_model = "alibaba/qwen3-max-preview"
 [cost]
 input = 1.2
 output = 6
+cache_read = 0.24
 
 [[cost.tiers]]
-tier = { size = 32_000 }
+tier = { type = "context", size = 32_000 }
 input = 2.4
 output = 12
+cache_read = 0.48
 
 [[cost.tiers]]
-tier = { size = 128_000 }
+tier = { type = "context", size = 128_000 }
 input = 3
 output = 15
+cache_read = 0.6

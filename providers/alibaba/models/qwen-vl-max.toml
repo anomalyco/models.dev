@@ -1,6 +1,12 @@
 base_model = "alibaba/qwen-vl-max"
 
-
 [cost]
 input = 0.8
 output = 3.2
+cache_read = 0.16
+
+[limit]
+output = 32_768
+
+[modalities]
+input = ["text", "image", "video", "pdf"]

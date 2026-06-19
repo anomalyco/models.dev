@@ -1,8 +1,10 @@
 base_model = "alibaba/qwen-omni-turbo"
 
-
 [cost]
 input = 0.27
-output = 2
+output = 1.07
 input_audio = 4.44
 output_audio = 8.89
+
+[modalities]
+input = ["text", "image", "audio", "pdf"]

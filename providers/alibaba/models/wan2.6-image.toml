@@ -3,3 +3,7 @@ base_model = "alibaba/wan2.6-image"
 [cost]
 input = 0
 output = 0.03
+
+[modalities]
+input = ["text", "image", "pdf"]
+output = ["image", "text", "pdf"]

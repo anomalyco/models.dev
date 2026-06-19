@@ -5,17 +5,17 @@ last_updated = "2025-09-15"
 attachment = false
 reasoning = true
 temperature = true
-knowledge = "2024-04"
 tool_call = true
+structured_output = false
+knowledge = "2024-04"
 open_weights = false
-
 
 [[reasoning_options]]
 type = "toggle"
 
 [cost]
 input = 0.43
-output = 16
+output = 1.66
 input_audio = 3.81
 output_audio = 15.11
 
@@ -24,5 +24,5 @@ context = 65_536
 output = 16_384
 
 [modalities]
-input = ["text", "image", "audio", "video"]
+input = ["text", "image", "audio", "video", "pdf"]
 output = ["text", "audio"]

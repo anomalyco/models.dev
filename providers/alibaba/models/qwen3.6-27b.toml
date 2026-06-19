@@ -1,10 +1,11 @@
 base_model = "alibaba/qwen3.6-27b"
 
-
 [[reasoning_options]]
 type = "toggle"
-
 
 [cost]
 input = 0.6
 output = 3.6
+
+[modalities]
+input = ["image", "text", "video", "pdf"]

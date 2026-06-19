@@ -6,16 +6,16 @@ input = 0.3
 output = 1.5
 
 [[cost.tiers]]
-tier = { size = 32_000 }
+tier = { type = "context", size = 32_000 }
 input = 0.5
 output = 2.5
 
 [[cost.tiers]]
-tier = { size = 128_000 }
+tier = { type = "context", size = 128_000 }
 input = 0.8
 output = 4
 
 [[cost.tiers]]
-tier = { size = 256_000 }
+tier = { type = "context", size = 256_000 }
 input = 1.6
 output = 9.6
