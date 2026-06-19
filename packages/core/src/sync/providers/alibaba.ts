@@ -37,13 +37,13 @@ const AlibabaModel = z.object({
   description: z.string(),
   features: z.array(z.string()),
   prices: z.array(AlibabaPriceRange),
-  provider: z.string(),
+  provider: z.string().nullable(),
   capabilities: z.array(z.string()),
   published_time: z.string(),
   inference_metadata: AlibabaInferenceMetadata,
   model_info: AlibabaModelInfo,
   equivalent_snapshot: z.string().nullable(),
-  inference_provider: z.string(),
+  inference_provider: z.string().nullable(),
 }).passthrough();
 
 const AlibabaCatalogResponse = z.object({
