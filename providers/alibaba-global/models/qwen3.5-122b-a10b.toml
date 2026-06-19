@@ -13,6 +13,9 @@ input = 0.115
 output = 0.917
 
 [[cost.tiers]]
-tier = { size = 128_000 }
+tier = { type = "context", size = 128_000 }
 input = 0.287
 output = 2.294
+
+[modalities]
+input = ["text", "image", "video", "pdf"]

@@ -1,7 +1,9 @@
 base_model = "alibaba/qwen3-vl-30b-a3b-thinking"
-
 reasoning_options = []
 
 [cost]
 input = 0.108
 output = 1.076
+
+[modalities]
+input = ["text", "image", "video", "pdf"]

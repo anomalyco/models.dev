@@ -1,15 +1,14 @@
 base_model = "alibaba/qwen3-30b-a3b"
 name = "Qwen3 30B-A3B Thinking (2507)"
-tool_call = false
-structured_output = false
 release_date = "2025-07-09"
 last_updated = "2025-07-09"
-
+structured_output = false
 reasoning_options = []
-[limit]
-context = 81_920
-output = 32_768
 
 [cost]
 input = 0.108
 output = 1.076
+
+[limit]
+context = 81_920
+output = 32_768

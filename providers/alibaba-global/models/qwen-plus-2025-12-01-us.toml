@@ -1,9 +1,8 @@
 base_model = "alibaba/qwen-plus"
 name = "Qwen Plus (2025-12-01, US)"
-tool_call = false
-structured_output = false
 release_date = "2025-12-01"
 last_updated = "2025-12-01"
+structured_output = false
 
 [[reasoning_options]]
 type = "toggle"
@@ -19,7 +18,7 @@ output = 1.2
 reasoning = 4
 
 [[cost.tiers]]
-tier = { size = 256_000 }
+tier = { type = "context", size = 256_000 }
 input = 1.2
 output = 3.6
 reasoning = 12

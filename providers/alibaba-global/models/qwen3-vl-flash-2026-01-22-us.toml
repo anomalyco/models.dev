@@ -1,9 +1,8 @@
 base_model = "alibaba/qwen3-vl-flash"
 name = "Qwen3-VL Flash (2026-01-22, US)"
-tool_call = false
-structured_output = false
 release_date = "2026-01-22"
 last_updated = "2026-01-22"
+structured_output = false
 
 [[reasoning_options]]
 type = "toggle"
@@ -18,11 +17,14 @@ input = 0.05
 output = 0.4
 
 [[cost.tiers]]
-tier = { size = 32_768 }
+tier = { type = "context", size = 32_768 }
 input = 0.075
 output = 0.6
 
 [[cost.tiers]]
-tier = { size = 131_072 }
+tier = { type = "context", size = 131_072 }
 input = 0.12
 output = 0.96
+
+[modalities]
+input = ["text", "image", "video", "pdf"]

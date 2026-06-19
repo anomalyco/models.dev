@@ -1,7 +1,5 @@
 base_model = "moonshotai/kimi-k2.5"
 
-tool_call = true
-
 [[reasoning_options]]
 type = "toggle"
 
@@ -15,4 +13,4 @@ cache_write = 0.115
 output = 16_384
 
 [modalities]
-input = ["text"]
+input = ["text", "image", "video", "pdf"]

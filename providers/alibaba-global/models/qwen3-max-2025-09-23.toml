@@ -1,18 +1,16 @@
 base_model = "alibaba/qwen3-max"
 name = "Qwen3 Max (2025-09-23)"
-release_date = "2025-09-23"
-last_updated = "2025-09-23"
 
 [cost]
 input = 0.359
 output = 1.434
 
 [[cost.tiers]]
-tier = { size = 32_000 }
+tier = { type = "context", size = 32_000 }
 input = 0.574
 output = 2.294
 
 [[cost.tiers]]
-tier = { size = 128_000 }
+tier = { type = "context", size = 128_000 }
 input = 1.004
 output = 4.014
