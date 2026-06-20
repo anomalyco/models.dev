@@ -1,12 +1,8 @@
+base_model = "alibaba/qwen3.5-9b"
 name = "Qwen 3.5 9B"
-family = "qwen"
 release_date = "2026-03-05"
 last_updated = "2026-06-11"
 attachment = true
-reasoning = true
-tool_call = true
-structured_output = true
-open_weights = true
 
 [[reasoning_options]]
 type = "effort"
@@ -22,4 +18,3 @@ output = 32_768
 
 [modalities]
 input = ["text", "image"]
-output = ["text"]
