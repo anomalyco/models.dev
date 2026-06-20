@@ -3,10 +3,14 @@ family = "claude-sonnet"
 release_date = "2026-03-23"
 last_updated = "2026-03-23"
 attachment = true
-reasoning = false
+reasoning = true
 temperature = true
 tool_call = true
 open_weights = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high", "max"]
 
 [cost]
 input = 0
