@@ -3,10 +3,14 @@ family = "claude-opus"
 release_date = "2026-05-28"
 last_updated = "2026-05-28"
 attachment = true
-reasoning = false
+reasoning = true
 temperature = false
 tool_call = true
 open_weights = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high", "xhigh", "max"]
 
 [cost]
 input = 0
