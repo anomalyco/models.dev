@@ -1,0 +1,28 @@
+base_model = "google/gemma-4-26b-a4b-it"
+name = "Gemma 4 26B-A4B"
+family = "gemma"
+release_date = "2026-04-02"
+last_updated = "2026-06-12"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "max"]
+
+[cost]
+input = 0.05
+output = 0.29
+cache_read = 0.025
+
+[limit]
+context = 262_144
+output = 32_768
+
+[modalities]
+input = ["text", "image", "video"]
+output = ["text"]

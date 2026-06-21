@@ -1,0 +1,27 @@
+base_model = "deepseek/deepseek-v4-pro"
+name = "DeepSeek V4 Pro"
+family = "deepseek-thinking"
+release_date = "2026-04-24"
+last_updated = "2026-06-12"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = false
+knowledge = "2025-05"
+open_weights = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "max"]
+
+[cost]
+input = 1.65
+output = 3.3
+
+[limit]
+context = 1_000_000
+output = 393_216
+
+[modalities]
+input = ["text"]
+output = ["text"]
