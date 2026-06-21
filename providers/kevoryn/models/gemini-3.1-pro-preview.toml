@@ -1,0 +1,28 @@
+name = "Gemini 3.1 Pro Preview"
+family = "gemini"
+release_date = "2026-05-01"
+last_updated = "2026-06-01"
+attachment = true
+reasoning = true
+temperature = true
+knowledge = "2026-01-01"
+tool_call = true
+structured_output = true
+open_weights = false
+
+[cost]
+input = 2.25
+output = 10.00
+cache_read = 0.30
+
+[limit]
+context = 1_000_000
+input = 1_000_000
+output = 65_000
+
+[modalities]
+input = ["text", "image", "video", "audio"]
+output = ["text"]
+
+[provider]
+order = ["kevoryn"]

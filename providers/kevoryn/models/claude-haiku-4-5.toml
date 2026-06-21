@@ -1,0 +1,28 @@
+name = "Claude Haiku 4.5"
+family = "claude"
+release_date = "2026-03-15"
+last_updated = "2026-03-15"
+attachment = true
+reasoning = false
+temperature = true
+knowledge = "2026-01-01"
+tool_call = true
+structured_output = true
+open_weights = false
+
+[cost]
+input = 1.05
+output = 5.25
+cache_read = 0.30
+
+[limit]
+context = 200_000
+input = 200_000
+output = 64_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[provider]
+order = ["kevoryn"]
