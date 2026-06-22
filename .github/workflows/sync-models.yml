@@ -64,6 +64,7 @@ jobs:
         run: bun models:sync ${{ matrix.provider }}
         env:
           BASETEN_API_KEY: ${{ secrets.BASETEN_API_KEY }}
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
           OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
           VENICE_API_KEY: ${{ secrets.VENICE_API_KEY }}
           GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
