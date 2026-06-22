@@ -1,23 +1,22 @@
-name = "DeepSeek-R1"
-family = "deepseek-thinking"
+name = "DeepSeek R1"
+family = "deepseek"
 release_date = "2025-01-20"
-last_updated = "2025-03-24"
-attachment = false
+last_updated = "2025-01-20"
+attachment = true
 reasoning = true
-reasoning_options = []
-status = "deprecated"
 temperature = true
-knowledge = "2024-07"
-tool_call = false
+tool_call = true
+structured_output = true
 open_weights = true
 
 [cost]
-input = 3
-output = 7
+input = 7.00
+output = 7.00
+reasoning = 7.00
 
 [limit]
-context = 163_839
-output = 163_839
+context = 131_072
+output = 8_192
 
 [modalities]
 input = ["text"]
