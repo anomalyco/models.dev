@@ -1,5 +1,8 @@
 base_model = "zhipuai/glm-5.2"
-reasoning_options = []
+
+[[reasoning_options]]
+type = "effort"
+values = ["high", "max"]
 
 [interleaved]
 field = "reasoning_content"
