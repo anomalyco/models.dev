@@ -3,6 +3,11 @@ base_model = "minimax/MiniMax-M3"
 [[reasoning_options]]
 type = "toggle"
 
+[[reasoning_options]]
+type = "budget_tokens"
+min = 1
+max = 128_000
+
 [cost]
 input = 0.6
 output = 2.4

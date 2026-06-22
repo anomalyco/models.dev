@@ -1,5 +1,12 @@
 base_model = "moonshotai/kimi-k2.7-code-highspeed"
-reasoning_options = []
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "budget_tokens"
+min = 1
+max = 32_768
 
 [interleaved]
 field = "reasoning_content"
