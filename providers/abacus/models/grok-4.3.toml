@@ -1,0 +1,14 @@
+base_model = "xai/grok-4.3"
+
+[cost]
+input = 1.25
+output = 2.50
+cache_read = 0.20
+
+[limit]
+context = 1_000_000
+output = 32_768
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

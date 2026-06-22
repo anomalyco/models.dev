@@ -1,0 +1,13 @@
+base_model = "google/gemma-4-31b-it"
+
+[cost]
+input = 0.14
+output = 0.40
+
+[limit]
+context = 262_144
+output = 131_072
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

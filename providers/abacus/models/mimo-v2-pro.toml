@@ -1,0 +1,14 @@
+base_model = "xiaomi/mimo-v2-pro"
+
+[cost]
+input = 1.00
+output = 3.00
+cache_read = 0.20
+
+[limit]
+context = 1_048_576
+output = 131_072
+
+[modalities]
+input = ["text"]
+output = ["text"]
