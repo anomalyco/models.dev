@@ -1,0 +1,9 @@
+base_model = "zai/glm-5.2"
+base_model_omit = ["cost"]
+
+[[reasoning_options]]
+type = "effort"
+values = ["high", "max"]
+
+[interleaved]
+field = "reasoning_content"
