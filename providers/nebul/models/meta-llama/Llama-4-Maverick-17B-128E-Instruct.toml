@@ -1,6 +1,5 @@
-[extends]
-from = "llama/llama-4-maverick-17b-128e-instruct-fp8"
-omit = ["cost"]
+base_model = "llama/llama-4-maverick-17b-128e-instruct-fp8"
+base_model_omit = ["cost"]
 
 [limit]
 context = 300_000
