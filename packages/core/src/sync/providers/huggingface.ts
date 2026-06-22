@@ -66,7 +66,7 @@ export const huggingface = {
   skippedNotice(ids) {
     if (ids.length === 0) return [];
     return [
-      `${ids.length} Hugging Face Inference Providers models were not created because their IDs could not be mapped to provider-agnostic metadata or had no priced provider.`,
+      `${ids.length} Hugging Face Inference Providers models were not created because their IDs could not be mapped to provider-agnostic metadata, had no live provider, or had no priced provider.`,
       `Skipped remote IDs: ${ids.map((id) => `\`${id}\``).join(", ")}`,
     ];
   },
@@ -91,6 +91,8 @@ export const huggingface = {
     return HuggingFaceResponse.parse(raw).data;
   },
   translateModel(model, context) {
+    if (!model.providers.some((provider) => provider.status === "live")) return undefined;
+
     const existing = context.existing(model.id);
     const baseModel = existing === undefined
       ? resolveHuggingFaceBaseModel(model.id)
@@ -133,8 +135,7 @@ function price(value: number) {
 // take: pricing and context from the highest-throughput provider, plus capabilities
 // advertised by any provider (a caller can always pin a slower provider).
 function aggregateProviders(model: HuggingFaceModel): Aggregate {
-  const live = model.providers.filter((provider) => provider.status === "live");
-  const providers = live.length > 0 ? live : model.providers;
+  const providers = model.providers.filter((provider) => provider.status === "live");
 
   const byThroughput = (a: HuggingFaceProvider, b: HuggingFaceProvider) =>
     (b.throughput ?? -Infinity) - (a.throughput ?? -Infinity);
