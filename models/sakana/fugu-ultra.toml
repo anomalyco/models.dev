@@ -1,0 +1,82 @@
+name = "Fugu Ultra"
+family = "fugu"
+release_date = "2026-06-15"
+last_updated = "2026-06-15"
+attachment = true
+reasoning = true
+temperature = false
+tool_call = true
+structured_output = true
+open_weights = false
+
+[limit]
+context = 1_000_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[[links]]
+label = "Official model catalog"
+url = "https://raw.githubusercontent.com/SakanaAI/fugu/refs/heads/main/configs/files/fugu.json"
+type = "docs"
+
+[[benchmarks]]
+name = "SWE Bench Pro"
+score = 73.7
+source = "https://console.sakana.ai/models"
+
+[[benchmarks]]
+name = "Terminal Bench 2.1"
+score = 82.1
+source = "https://console.sakana.ai/models"
+
+[[benchmarks]]
+name = "LiveCodeBench"
+score = 93.2
+source = "https://console.sakana.ai/models"
+
+[[benchmarks]]
+name = "LiveCodeBench Pro"
+score = 90.8
+source = "https://console.sakana.ai/models"
+
+[[benchmarks]]
+name = "Humanity’s Last Exam"
+score = 50.0
+source = "https://console.sakana.ai/models"
+
+[[benchmarks]]
+name = "CharXiv Reasoning"
+score = 86.6
+source = "https://console.sakana.ai/models"
+
+[[benchmarks]]
+name = "GPQA Diamond"
+score = 95.5
+source = "https://console.sakana.ai/models"
+
+[[benchmarks]]
+name = "SciCode"
+score = 58.7
+source = "https://console.sakana.ai/models"
+
+[[benchmarks]]
+name = "τ3 Banking"
+score = 20.6
+source = "https://console.sakana.ai/models"
+
+[[benchmarks]]
+name = "Long Context Reasoning"
+score = 73.3
+source = "https://console.sakana.ai/models"
+
+[[benchmarks]]
+name = "MRCRv2"
+score = 93.6
+source = "https://console.sakana.ai/models"
+
+[[benchmarks]]
+name = "CTI-REALM"
+score = 69.4
+source = "https://console.sakana.ai/models"
