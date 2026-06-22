@@ -1,7 +1,22 @@
-base_model = "amazon-bedrock/openai.gpt-oss-120b-1:0"
-base_model_omit = ["cost"]
+name = "gpt-oss-120b"
+family = "gpt-oss"
+release_date = "2025-08-05"
+last_updated = "2025-08-05"
+attachment = false
 reasoning = true
 reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[limit]
+context = 128_000
+output = 16_384
+
+[modalities]
+input = ["text"]
+output = ["text"]
 
 [interleaved]
 field = "reasoning_content"
