@@ -1,0 +1,13 @@
+base_model = "deepseek/deepseek-v4-pro"
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 1.305
+output = 2.61
+cache_read = 0.10875
+
+[limit]
+context = 256000
+output = 16384

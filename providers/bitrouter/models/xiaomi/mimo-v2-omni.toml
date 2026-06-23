@@ -1,0 +1,13 @@
+base_model = "xiaomi/mimo-v2-omni"
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.3
+output = 1.5
+cache_read = 0.06
+
+[limit]
+context = 262144
+output = 131072

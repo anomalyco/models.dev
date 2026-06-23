@@ -1,0 +1,13 @@
+base_model = "google/gemini-3.5-flash"
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 1.5
+output = 9
+cache_read = 0.15
+
+[limit]
+context = 1048576
+output = 65536

@@ -1,0 +1,13 @@
+base_model = "alibaba/qwen3.6-flash"
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.1875
+output = 1.125
+cache_read = 0.01875
+
+[limit]
+context = 1000000
+output = 65536

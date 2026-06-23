@@ -1,0 +1,14 @@
+base_model = "minimax/MiniMax-M2.5"
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.225
+output = 0.9
+cache_read = 0.0225
+cache_write = 0.28125
+
+[limit]
+context = 196608
+output = 196608

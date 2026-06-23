@@ -1,0 +1,13 @@
+base_model = "stepfun/step-3.7-flash"
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.15
+output = 0.8625
+cache_read = 0.03
+
+[limit]
+context = 256000
+output = 256000
