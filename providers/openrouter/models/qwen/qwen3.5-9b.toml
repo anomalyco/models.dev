@@ -9,7 +9,8 @@ input = 0.1
 output = 0.15
 
 [limit]
-output = 262_144
+context = 256_000
+output = 32_768
 
 [modalities]
 input = ["text", "image", "video"]
