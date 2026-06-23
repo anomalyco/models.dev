@@ -2,6 +2,7 @@ import { z } from "zod";
 
 import type { ExistingModel, SyncProvider, SyncedFullModel, SyncedModel } from "../index.js";
 import { factorBaseModel, resolveCanonicalBaseModel } from "./openrouter.js";
+import { assertValidNearAISource, cachePrice, requiredOutputLimit } from "./nearai-validation.js";
 
 const API_ENDPOINT = "https://cloud-api.near.ai/v1/models";
 
@@ -106,16 +107,6 @@ export const nearai = {
   id: "nearai",
   name: "NEAR AI Cloud",
   modelsDir: "providers/nearai/models",
-  sourceID(model) {
-    return model.id;
-  },
-  skippedNotice(ids) {
-    if (ids.length === 0) return [];
-    return [
-      `${ids.length} NEAR AI Cloud models were not created because their source metadata lacked a required output token limit.`,
-      `Skipped remote IDs: ${ids.map((id) => `\`${id}\``).join(", ")}`,
-    ];
-  },
   async fetchModels() {
     const response = await fetch(API_ENDPOINT);
     if (!response.ok) {
@@ -124,12 +115,13 @@ export const nearai = {
     return response.json();
   },
   parseModels(raw) {
-    return NearAIResponse.parse(raw).data;
+    const models = NearAIResponse.parse(raw).data;
+    assertValidNearAISource(models);
+    return models;
   },
   translateModel(model, context) {
     const existing = context.existing(model.id);
     const synced = buildNearAIModel(model, existing);
-    if (synced === undefined) return undefined;
     return { id: model.id, model: synced };
   },
 } satisfies SyncProvider<NearAIModel>;
@@ -137,9 +129,8 @@ export const nearai = {
 export function buildNearAIModel(
   model: NearAIModel,
   existing: ExistingModel | undefined,
-): SyncedModel | undefined {
-  const outputLimit = model.max_output_length ?? model.top_provider?.max_completion_tokens ?? existing?.limit?.output;
-  if (outputLimit === undefined) return undefined;
+): SyncedModel {
+  const outputLimit = requiredOutputLimit(model);
 
   const features = new Set(model.supported_features);
   const samplingParameters = new Set(model.supported_sampling_parameters);
@@ -169,8 +160,8 @@ export function buildNearAIModel(
       input: model.pricing.input,
       output: model.pricing.output,
       reasoning: existing?.cost?.reasoning,
-      cache_read: price(model.pricing.input_cache_read) ?? existing?.cost?.cache_read,
-      cache_write: price(model.pricing.input_cache_write) ?? existing?.cost?.cache_write,
+      cache_read: cachePrice(model.pricing.input_cache_read) ?? existing?.cost?.cache_read,
+      cache_write: cachePrice(model.pricing.input_cache_write) ?? existing?.cost?.cache_write,
       input_audio: existing?.cost?.input_audio,
       output_audio: existing?.cost?.output_audio,
       tiers: existing?.cost?.tiers,
@@ -218,14 +209,6 @@ function reasoningOptions(model: NearAIModel, existing: ExistingModel | undefine
 
 function dateFromTimestamp(timestamp: number) {
   return new Date(timestamp * 1000).toISOString().slice(0, 10);
-}
-
-function price(value: string | number | undefined) {
-  if (value === undefined || value === "") return undefined;
-  const number = Number(value);
-  return Number.isFinite(number) && number >= 0
-    ? Math.round(number * 1_000_000_000_000) / 1_000_000
-    : undefined;
 }
 
 function normalizedCanonicalID(id: string) {

@@ -62,6 +62,27 @@ describe("NEAR AI sync", () => {
     expect(model).toHaveProperty("reasoning_options", existing.reasoning_options);
   });
 
+  test("rejects source rows with zero cache pricing", () => {
+    // Given: a Cloud API response that reports cache reads as free.
+    const response = {
+      data: [
+        nearModel({
+          id: "anthropic/claude-opus-4-6",
+          pricing: {
+            input: 5,
+            output: 25,
+            prompt: "0.000005",
+            completion: "0.000025",
+            input_cache_read: "0",
+          },
+        }),
+      ],
+    };
+
+    // When/Then: the provider fails before bogus cache pricing can reach TOML.
+    expect(() => nearai.parseModels(response)).toThrow("non-positive input_cache_read values");
+  });
+
   test("sets explicit reasoning controls for new self-hosted and proxied models", () => {
     // Given: one self-hosted NEAR model and one proxied model with reasoning behavior.
     const selfHosted = nearModel({ id: "Qwen/Qwen3.6-27B-FP8", supported_features: ["reasoning", "tools"] });
@@ -120,7 +141,7 @@ describe("NEAR AI sync", () => {
     expect(model).toHaveProperty("last_updated", "2025-05-18");
   });
 
-  test("skips new models that lack an output token limit", () => {
+  test("rejects source rows that lack an output token limit", () => {
     // Given: a new Cloud API row without max_output_length or top_provider max tokens.
     const source = nearModel({
       id: "deepseek/deepseek-v3.2",
@@ -128,11 +149,8 @@ describe("NEAR AI sync", () => {
       top_provider: { context_length: 128_000, is_moderated: false },
     });
 
-    // When: the sync provider translates it.
-    const translated = nearai.translateModel(source, { existing: () => undefined });
-
-    // Then: the provider reports it as skipped rather than inventing an output limit.
-    expect(translated).toBeUndefined();
+    // When/Then: the provider fails instead of skipping or inventing a limit.
+    expect(() => nearai.translateModel(source, { existing: () => undefined })).toThrow("output token limit");
   });
 });
 
