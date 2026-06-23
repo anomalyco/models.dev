@@ -3,7 +3,7 @@
 import path from "node:path";
 import { mkdir } from "node:fs/promises";
 import { z } from "zod";
-import { inferKimiFamily, ModelFamilyValues } from "../src/family.js";
+import { inferKimiFamily, ModelFamily, ModelFamilyValues } from "../src/family.js";
 
 // This endpoint already returns data in the models.dev schema, so most fields
 // map straight through. Only fields the catalog can't provide (family) are
@@ -218,6 +218,23 @@ function inferFamily(modelId: string, modelName: string): string | undefined {
   return undefined;
 }
 
+function isValidFamily(family: string | undefined): family is ModelFamily {
+  return family !== undefined && ModelFamily.safeParse(family).success;
+}
+
+function resolveFamily(
+  existing: ExistingModel | null,
+  apiModel: z.infer<typeof ApiModel>,
+): ModelFamily | undefined {
+  // Preserve a manually-curated family only when it's a recognized enum value;
+  // otherwise fall back to inference so we never emit an invalid family.
+  if (isValidFamily(existing?.family)) {
+    return existing.family;
+  }
+  const inferred = inferFamily(apiModel.id, apiModel.name);
+  return isValidFamily(inferred) ? inferred : undefined;
+}
+
 function normalizeName(apiModel: z.infer<typeof ApiModel>): string {
   const stripped = apiModel.name.replace(/^[^:]+:\s*/, "").trim();
   return stripped || path.basename(apiModel.id);
@@ -265,7 +282,7 @@ function mergeModel(
       ? { base_model_omit: existing.base_model_omit }
       : {}),
     name: existing?.name ?? normalizeName(apiModel),
-    family: existing?.family ?? inferFamily(apiModel.id, apiModel.name),
+    family: resolveFamily(existing, apiModel),
     attachment: existing?.attachment ?? apiModel.attachment,
     reasoning: existing?.reasoning ?? apiModel.reasoning,
     tool_call: existing?.tool_call ?? apiModel.tool_call,
