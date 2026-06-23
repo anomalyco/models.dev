@@ -1,0 +1,19 @@
+base_model = "zhipuai/glm-5.2"
+name = "GLM 5.2"
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["high", "max"] }]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.9
+output = 3
+cache_read = 0.27
+
+[limit]
+context = 524_288
+output = 524_288
+
+[modalities]
+input = ["text"]
+output = ["text"]
