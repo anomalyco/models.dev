@@ -1,0 +1,22 @@
+name = "Fugu Ultra"
+family = "aura"
+release_date = "2026-06-21"
+last_updated = "2026-06-21"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+open_weights = false
+
+[cost]
+input = 5
+output = 30
+cache_read = 0.5
+
+[limit]
+context = 1_000_000
+output = 1_000_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
