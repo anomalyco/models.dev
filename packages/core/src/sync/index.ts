@@ -8,6 +8,7 @@ import { baseten } from "./providers/baseten.js";
 import { cloudflareWorkersAi } from "./providers/cloudflare-workers-ai.js";
 import { google } from "./providers/google.js";
 import { huggingface } from "./providers/huggingface.js";
+import { nearai, type NearAIModel } from "./providers/nearai.js";
 import { openrouter } from "./providers/openrouter.js";
 import { ovhcloud } from "./providers/ovhcloud.js";
 import { vercel } from "./providers/vercel.js";
@@ -82,6 +83,7 @@ export const providers: {
   "cloudflare-workers-ai": SyncProvider<any>;
   google: SyncProvider<any>;
   huggingface: SyncProvider<any>;
+  nearai: SyncProvider<NearAIModel>;
   openrouter: SyncProvider<any>;
   ovhcloud: SyncProvider<any>;
   vercel: SyncProvider<any>;
@@ -92,6 +94,7 @@ export const providers: {
   "cloudflare-workers-ai": cloudflareWorkersAi,
   google,
   huggingface,
+  nearai,
   openrouter,
   ovhcloud,
   vercel,
@@ -102,7 +105,7 @@ export const providers: {
 export const groups = {
   aggregators: ["huggingface", "openrouter", "vercel"],
   cloudflare: ["cloudflare-workers-ai"],
-  direct: ["baseten", "google", "ovhcloud", "venice", "xai"],
+  direct: ["baseten", "google", "nearai", "ovhcloud", "venice", "xai"],
 } as const;
 
 type ProviderID = keyof typeof providers;

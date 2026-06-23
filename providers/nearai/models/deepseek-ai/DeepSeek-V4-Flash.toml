@@ -1,0 +1,13 @@
+base_model = "deepseek/deepseek-v4-flash"
+
+[[reasoning_options]]
+type = "toggle"
+
+[cost]
+input = 0.17
+output = 0.35000000000000003
+cache_read = 0.035
+
+[limit]
+context = 1_048_576
+output = 8_192

@@ -1,8 +1,15 @@
 base_model = "google/gemini-3.1-flash-lite"
-reasoning_options = []
+attachment = false
+reasoning = false
 
 [cost]
 input = 0.25
 output = 1.5
-cache_read = 0.025
+cache_read = 0
 input_audio = 0.5
+
+[limit]
+output = 8_192
+
+[modalities]
+input = ["text"]

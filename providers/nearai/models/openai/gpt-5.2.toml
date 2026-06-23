@@ -1,6 +1,15 @@
 base_model = "openai/gpt-5.2"
+name = "OpenAI GPT-5.2"
+temperature = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "xhigh"]
 
 [cost]
 input = 1.8
 output = 15.5
 cache_read = 0.18
+
+[limit]
+output = 16_384

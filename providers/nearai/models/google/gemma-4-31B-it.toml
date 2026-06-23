@@ -1,10 +1,13 @@
 base_model = "google/gemma-4-31b-it"
-reasoning_options = [{ type = "toggle" }]
+name = "Gemma 4 31B Instruct"
+
+[[reasoning_options]]
+type = "toggle"
 
 [cost]
 input = 0.13
 output = 0.4
 cache_read = 0.026
 
-[modalities]
-input = ["text"]
+[limit]
+output = 8_192

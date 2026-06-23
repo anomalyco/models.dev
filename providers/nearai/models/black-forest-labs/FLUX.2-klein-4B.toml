@@ -1,21 +1,23 @@
-name = "FLUX.2 Klein 4B"
+name = "FLUX.2-klein-4B"
 family = "flux"
 release_date = "2026-01-14"
 last_updated = "2026-01-14"
 attachment = false
 reasoning = false
-temperature = true
+temperature = false
 tool_call = false
+structured_output = false
 open_weights = true
 
 [cost]
-input = 1.00
-output = 1.00
+input = 1
+output = 1
+cache_read = 0
 
 [limit]
 context = 128_000
-output = 128_000
+output = 1
 
 [modalities]
-input = ["text", "image"]
+input = ["text"]
 output = ["image"]

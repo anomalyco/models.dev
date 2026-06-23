@@ -2,19 +2,21 @@ name = "Whisper Large v3"
 family = "whisper"
 release_date = "2023-11-06"
 last_updated = "2023-11-06"
-attachment = false
+attachment = true
 reasoning = false
-temperature = false
+temperature = true
 tool_call = false
+structured_output = false
 open_weights = true
 
 [cost]
 input = 0.01
-output = 0.00
+output = 0.01
+cache_read = 0
 
 [limit]
 context = 448
-output = 448
+output = 1_024
 
 [modalities]
 input = ["audio"]
