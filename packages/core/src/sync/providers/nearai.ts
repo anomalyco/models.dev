@@ -157,8 +157,8 @@ export function buildNearAIModel(
     status: existing?.status,
     interleaved: existing?.interleaved,
     cost: {
-      input: model.pricing.input,
-      output: model.pricing.output,
+      input: perMillionPrice(model.pricing.input),
+      output: perMillionPrice(model.pricing.output),
       reasoning: existing?.cost?.reasoning,
       cache_read: cachePrice(model.pricing.input_cache_read) ?? existing?.cost?.cache_read,
       cache_write: cachePrice(model.pricing.input_cache_write) ?? existing?.cost?.cache_write,
@@ -169,7 +169,7 @@ export function buildNearAIModel(
     limit,
     modalities: { input, output },
   };
-  const baseModel = existing?.base_model ?? resolveNearAIBaseModel(model.id, existing);
+  const baseModel = existing?.base_model ?? resolveNearAIBaseModel(model.id);
   if (baseModel !== undefined) {
     return factorBaseModel(baseModel, values, limit, existing?.base_model_omit);
   }
@@ -192,9 +192,7 @@ export function buildNearAIModel(
   } satisfies SyncedFullModel;
 }
 
-export function resolveNearAIBaseModel(id: string, existing: ExistingModel | undefined) {
-  if (existing?.base_model !== undefined) return existing.base_model;
-  if (existing !== undefined) return undefined;
+export function resolveNearAIBaseModel(id: string) {
   const alias = BASE_MODEL_ALIASES[id];
   if (alias !== undefined) return alias;
   const canonical = resolveCanonicalBaseModel(id);
@@ -210,6 +208,10 @@ function reasoningOptions(model: NearAIModel, existing: ExistingModel | undefine
 
 function dateFromTimestamp(timestamp: number) {
   return new Date(timestamp * 1000).toISOString().slice(0, 10);
+}
+
+function perMillionPrice(value: number) {
+  return Math.round(value * 1_000_000) / 1_000_000;
 }
 
 function normalizedCanonicalID(id: string) {

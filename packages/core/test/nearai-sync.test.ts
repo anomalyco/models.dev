@@ -30,7 +30,7 @@ describe("NEAR AI sync", () => {
     ];
 
     // When: each id is resolved for provider TOML inheritance.
-    const resolved = ids.map((id) => resolveNearAIBaseModel(id, undefined));
+    const resolved = ids.map((id) => resolveNearAIBaseModel(id));
 
     // Then: the sync uses existing model metadata instead of provider-only namespaces.
     expect(resolved).toEqual([
@@ -60,43 +60,6 @@ describe("NEAR AI sync", () => {
 
     // Then: the curated controls survive instead of being inferred from generic capabilities.
     expect(model).toHaveProperty("reasoning_options", existing.reasoning_options);
-  });
-
-  test("keeps existing full models explicit instead of converting them to base models", () => {
-    // Given: an existing full provider model that could resolve to canonical metadata.
-    const existing = existingModel({
-      name: "GLM-5.1 FP8",
-      family: "glm",
-      reasoning_options: [{ type: "toggle" }],
-      structured_output: true,
-      temperature: true,
-      open_weights: true,
-      interleaved: { field: "reasoning_content" },
-      limit: { context: 202_752, output: 131_072 },
-    });
-
-    // When: the NEAR row is translated.
-    const model = buildNearAIModel(
-      nearModel({
-        id: "zai-org/GLM-5.1-FP8",
-        name: "GLM 5.1",
-        context_length: 202_752,
-        max_output_length: 16_384,
-        input_modalities: ["text"],
-        output_modalities: ["text"],
-        top_provider: { context_length: 202_752, max_completion_tokens: 16_384, is_moderated: false },
-      }),
-      existing,
-    );
-
-    // Then: provider-specific metadata stays explicit rather than hidden behind inheritance.
-    expect(model).not.toHaveProperty("base_model");
-    expect(model).toHaveProperty("family", "glm");
-    expect(model).toHaveProperty("reasoning", true);
-    expect(model).toHaveProperty("tool_call", true);
-    expect(model).toHaveProperty("structured_output", true);
-    expect(model).toHaveProperty("open_weights", true);
-    expect(model).toHaveProperty("modalities", { input: ["text"], output: ["text"] });
   });
 
   test("rejects source rows with zero cache pricing", () => {
@@ -136,6 +99,27 @@ describe("NEAR AI sync", () => {
     // Then: self-hosted routes expose a toggle and proxied routes declare no provider control.
     expect(selfHostedModel).toHaveProperty("reasoning_options", [{ type: "toggle" }]);
     expect(proxiedModel).toHaveProperty("reasoning_options", []);
+  });
+
+  test("normalizes numeric per-million prices without changing units", () => {
+    // Given: source numeric prices with floating-point representation noise.
+    const source = nearModel({
+      pricing: {
+        input: 1.4000000000000001,
+        output: 3.3000000000000003,
+        input_cache_read: "0.00000017",
+      },
+    });
+
+    // When: the model is translated.
+    const model = buildNearAIModel(source, undefined);
+
+    // Then: generated costs stay in per-million units and do not leak binary float noise.
+    expect(model).toHaveProperty("cost", {
+      input: 1.4,
+      output: 3.3,
+      cache_read: 0.17,
+    });
   });
 
   test("preserves existing timestamps and normalizes unsupported modalities", () => {

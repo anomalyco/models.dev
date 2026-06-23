@@ -1,13 +1,5 @@
+base_model = "zhipuai/glm-5.1"
 name = "GLM 5.1"
-family = "glm"
-release_date = "2026-03-27"
-last_updated = "2026-03-27"
-attachment = false
-reasoning = true
-temperature = true
-tool_call = true
-structured_output = true
-open_weights = true
 
 [[reasoning_options]]
 type = "toggle"
@@ -17,13 +9,9 @@ field = "reasoning_content"
 
 [cost]
 input = 0.85
-output = 3.3000000000000003
+output = 3.3
 cache_read = 0.17
 
 [limit]
 context = 202_752
 output = 16_384
-
-[modalities]
-input = ["text"]
-output = ["text"]
