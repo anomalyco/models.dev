@@ -1,12 +1,14 @@
-base_model = "deepseek/deepseek-chat"
-base_model_omit = ["knowledge"]
 name = "DeepSeek-V3.2"
-release_date = "2026-09-09"
-last_updated = "2026-09-09"
+family = "deepseek"
 attachment = false
 reasoning = true
-structured_output = true
 reasoning_options = [{ type = "toggle" }]
+tool_call = true
+structured_output = true
+temperature = true
+release_date = "2025-12-01"
+last_updated = "2025-12-01"
+open_weights = true
 
 [interleaved]
 field = "reasoning_content"
@@ -19,3 +21,7 @@ cache_read = 0.25
 [limit]
 context = 163_840
 output = 163_840
+
+[modalities]
+input = ["text"]
+output = ["text"]
