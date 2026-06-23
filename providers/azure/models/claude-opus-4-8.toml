@@ -1,14 +1,7 @@
-name = "Claude Opus 4.8"
-family = "claude-opus"
-release_date = "2026-05-28"
-last_updated = "2026-05-28"
-attachment = true
-reasoning = true
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "max"] }]
+base_model = "anthropic/claude-opus-4-8"
 temperature = true
-tool_call = true
 knowledge = "2025-12-31"
-open_weights = false
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "max"] }]
 
 [cost]
 input = 5.00
@@ -25,11 +18,6 @@ cache_write = 12.50
 
 [limit]
 context = 200_000
-output = 128_000
-
-[modalities]
-input = ["text", "image", "pdf"]
-output = ["text"]
 
 [provider]
 npm = "@ai-sdk/anthropic"
