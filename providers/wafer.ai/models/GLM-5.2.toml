@@ -1,14 +1,6 @@
-name = "GLM-5.2"
-family = "glm"
-release_date = "2026-06-13"
+base_model = "zhipuai/glm-5.2"
 last_updated = "2026-06-22"
-attachment = false
-reasoning = true
-reasoning_options = [{ type = "toggle" }]
-temperature = true
-tool_call = true
-structured_output = true
-open_weights = true
+reasoning_options = [{ type = "effort", values = ["high", "max"] }]
 
 [cost]
 input = 1.20
@@ -19,7 +11,3 @@ cache_write = 0
 [limit]
 context = 1_048_576
 output = 131_072
-
-[modalities]
-input = ["text"]
-output = ["text"]
