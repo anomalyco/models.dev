@@ -194,6 +194,7 @@ export function buildNearAIModel(
 
 export function resolveNearAIBaseModel(id: string, existing: ExistingModel | undefined) {
   if (existing?.base_model !== undefined) return existing.base_model;
+  if (existing !== undefined) return undefined;
   const alias = BASE_MODEL_ALIASES[id];
   if (alias !== undefined) return alias;
   const canonical = resolveCanonicalBaseModel(id);

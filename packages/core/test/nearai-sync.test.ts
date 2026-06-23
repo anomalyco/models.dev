@@ -62,6 +62,43 @@ describe("NEAR AI sync", () => {
     expect(model).toHaveProperty("reasoning_options", existing.reasoning_options);
   });
 
+  test("keeps existing full models explicit instead of converting them to base models", () => {
+    // Given: an existing full provider model that could resolve to canonical metadata.
+    const existing = existingModel({
+      name: "GLM-5.1 FP8",
+      family: "glm",
+      reasoning_options: [{ type: "toggle" }],
+      structured_output: true,
+      temperature: true,
+      open_weights: true,
+      interleaved: { field: "reasoning_content" },
+      limit: { context: 202_752, output: 131_072 },
+    });
+
+    // When: the NEAR row is translated.
+    const model = buildNearAIModel(
+      nearModel({
+        id: "zai-org/GLM-5.1-FP8",
+        name: "GLM 5.1",
+        context_length: 202_752,
+        max_output_length: 16_384,
+        input_modalities: ["text"],
+        output_modalities: ["text"],
+        top_provider: { context_length: 202_752, max_completion_tokens: 16_384, is_moderated: false },
+      }),
+      existing,
+    );
+
+    // Then: provider-specific metadata stays explicit rather than hidden behind inheritance.
+    expect(model).not.toHaveProperty("base_model");
+    expect(model).toHaveProperty("family", "glm");
+    expect(model).toHaveProperty("reasoning", true);
+    expect(model).toHaveProperty("tool_call", true);
+    expect(model).toHaveProperty("structured_output", true);
+    expect(model).toHaveProperty("open_weights", true);
+    expect(model).toHaveProperty("modalities", { input: ["text"], output: ["text"] });
+  });
+
   test("rejects source rows with zero cache pricing", () => {
     // Given: a Cloud API response that reports cache reads as free.
     const response = {
