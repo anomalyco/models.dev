@@ -1,5 +1,13 @@
 base_model = "google/gemini-2.5-pro"
-reasoning_options = [{ type = "toggle" }]
+attachment = false
+
+[limit]
+context = 1_000_000
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
 [cost]
-input = 1.2875
-output = 10.3
+input = 1.25
+output = 10

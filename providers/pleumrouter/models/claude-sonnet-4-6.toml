@@ -1,5 +1,10 @@
 base_model = "anthropic/claude-sonnet-4-6"
-reasoning_options = [{ type = "toggle" }]
+attachment = false
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
 [cost]
-input = 3.09
-output = 15.45
+input = 3
+output = 15

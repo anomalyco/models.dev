@@ -1,5 +1,10 @@
 base_model = "anthropic/claude-fable-5"
-reasoning_options = [{ type = "toggle" }]
+attachment = false
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
 [cost]
-input = 10.3
-output = 51.5
+input = 10
+output = 50

@@ -1,5 +1,10 @@
 base_model = "openai/gpt-5.4-pro"
-reasoning_options = [{ type = "toggle" }]
+attachment = false
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
 [cost]
-input = 30.9
-output = 185.4
+input = 30
+output = 180
