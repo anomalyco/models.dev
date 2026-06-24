@@ -2,7 +2,7 @@ name = "xAI: Grok 4.20 Multi-Agent"
 release_date = "2026-03-31"
 last_updated = "2026-04-11"
 attachment = true
-reasoning_options = [{ type = "toggle" }]
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "medium", "high", "xhigh"] }]
 reasoning = true
 temperature = true
 tool_call = false
