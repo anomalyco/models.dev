@@ -4,7 +4,7 @@ release_date = "2026-02-06"
 last_updated = "2026-03-13"
 attachment = true
 reasoning = true
-reasoning_options = [{ type = "toggle" }, { type = "budget_tokens", min = 1024, max = 127999 }]
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "medium", "high", "max"] }, { type = "budget_tokens", min = 1024, max = 127999 }]
 temperature = true
 tool_call = true
 open_weights = false
