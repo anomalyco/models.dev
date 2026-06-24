@@ -4,7 +4,7 @@ release_date = "2025-02-05"
 last_updated = "2025-02-05"
 attachment = true
 reasoning = true
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
+reasoning_options = [{ type = "budget_tokens", min = 0, max = 32_768 }]
 temperature = false
 open_weights = false
 tool_call = true
