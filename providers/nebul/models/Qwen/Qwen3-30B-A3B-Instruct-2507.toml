@@ -1,3 +1,5 @@
-base_model = "alibaba/qwen3-coder-30b-a3b-instruct"
-base_model_omit = ["cost"]
+[extends]
+from = "alibaba/qwen3-coder-30b-a3b-instruct"
+omit = ["cost"]
+
 reasoning_options = []

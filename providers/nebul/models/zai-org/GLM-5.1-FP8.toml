@@ -1,5 +1,6 @@
-base_model = "zhipuai/glm-5.1"
-base_model_omit = ["cost"]
+[extends]
+from = "zhipuai/glm-5.1"
+omit = ["cost"]
 
 [[reasoning_options]]
 type = "toggle"

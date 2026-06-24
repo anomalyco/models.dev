@@ -1,5 +1,6 @@
-base_model = "alibaba/qwen3.5-397b-a17b"
-base_model_omit = ["cost"]
+[extends]
+from = "alibaba/qwen3.5-397b-a17b"
+omit = ["cost"]
 
 [[reasoning_options]]
 type = "effort"

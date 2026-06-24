@@ -1,5 +1,6 @@
-base_model = "minimax/MiniMax-M2.5"
-base_model_omit = ["cost"]
+[extends]
+from = "minimax/MiniMax-M2.5"
+omit = ["cost"]
 
 [[reasoning_options]]
 type = "toggle"

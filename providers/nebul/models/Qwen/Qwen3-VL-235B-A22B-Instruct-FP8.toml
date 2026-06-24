@@ -1,5 +1,6 @@
-base_model = "alibaba/qwen3-vl-235b-a22b"
-base_model_omit = ["cost"]
+[extends]
+from = "alibaba/qwen3-235b-a22b"
+omit = ["cost"]
 
 attachment = true
 reasoning = true
