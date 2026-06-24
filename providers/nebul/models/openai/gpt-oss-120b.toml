@@ -2,7 +2,10 @@ base_model = "amazon-bedrock/openai.gpt-oss-120b-1:0"
 base_model_omit = ["cost"]
 
 reasoning = true
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high"]
 
 [interleaved]
 field = "reasoning_content"

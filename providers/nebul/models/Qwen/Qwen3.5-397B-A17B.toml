@@ -1,3 +1,6 @@
 base_model = "alibaba/qwen3.5-397b-a17b"
 base_model_omit = ["cost"]
-reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high"] }]
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high"]
