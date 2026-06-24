@@ -2,7 +2,7 @@ name = "Google: Gemini 2.5 Pro"
 release_date = "2025-03-20"
 last_updated = "2026-03-15"
 attachment = true
-reasoning_options = []
+reasoning_options = [{ type = "budget_tokens", min = 128, max = 32_768 }]
 reasoning = true
 temperature = true
 tool_call = true
