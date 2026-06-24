@@ -1,7 +1,7 @@
-name = "Qwen3 VL Flash"
-family = "qwen"
-release_date = "2025-10-09"
-last_updated = "2025-10-09"
+name = "Gemini 2.5 Flash Lite Preview (09-2025)"
+family = "gemini"
+release_date = "2025-09-25"
+last_updated = "2025-09-25"
 attachment = true
 reasoning = false
 temperature = true
@@ -10,13 +10,13 @@ structured_output = true
 open_weights = false
 
 [cost]
-input = 0.05
+input = 0.1
 output = 0.4
 cache_read = 0.01
 
 [limit]
-context = 262_144
-output = 32_000
+context = 1_048_576
+output = 1_048_576
 
 [modalities]
 input = ["text", "image"]
