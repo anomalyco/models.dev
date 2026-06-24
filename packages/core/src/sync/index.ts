@@ -676,7 +676,7 @@ function formatReasoningValue(value: string | null) {
   return value === null ? quote("null") : quote(value);
 }
 
-function formatToml(model: z.infer<typeof SyncedAuthoredModel>) {
+export function formatToml(model: z.infer<typeof SyncedAuthoredModel>) {
   const lines: string[] = [];
 
   if (model.base_model !== undefined) lines.push(`base_model = ${quote(model.base_model)}`);
@@ -697,22 +697,7 @@ function formatToml(model: z.infer<typeof SyncedAuthoredModel>) {
   if (model.knowledge !== undefined) lines.push(`knowledge = ${quote(model.knowledge)}`);
   if (model.open_weights !== undefined) lines.push(`open_weights = ${model.open_weights}`);
   if (model.status !== undefined) lines.push(`status = ${quote(model.status)}`);
-
-  if (model.reasoning_options?.length === 0) {
-    lines.push("reasoning_options = []");
-  } else {
-    for (const option of model.reasoning_options ?? []) {
-      lines.push("", "[[reasoning_options]]");
-      lines.push(`type = ${quote(option.type)}`);
-      if (option.type === "effort") {
-        lines.push(`values = [${option.values.map(formatReasoningValue).join(", ")}]`);
-      }
-      if (option.type === "budget_tokens") {
-        if (option.min !== undefined) lines.push(`min = ${formatInteger(option.min)}`);
-        if (option.max !== undefined) lines.push(`max = ${formatInteger(option.max)}`);
-      }
-    }
-  }
+  if (model.reasoning_options?.length === 0) lines.push("reasoning_options = []");
 
   if (model.interleaved !== undefined) {
     lines.push("");
@@ -721,6 +706,18 @@ function formatToml(model: z.infer<typeof SyncedAuthoredModel>) {
     } else {
       lines.push("[interleaved]");
       lines.push(`field = ${quote(model.interleaved.field)}`);
+    }
+  }
+
+  for (const option of model.reasoning_options ?? []) {
+    lines.push("", "[[reasoning_options]]");
+    lines.push(`type = ${quote(option.type)}`);
+    if (option.type === "effort") {
+      lines.push(`values = [${option.values.map(formatReasoningValue).join(", ")}]`);
+    }
+    if (option.type === "budget_tokens") {
+      if (option.min !== undefined) lines.push(`min = ${formatInteger(option.min)}`);
+      if (option.max !== undefined) lines.push(`max = ${formatInteger(option.max)}`);
     }
   }
 
