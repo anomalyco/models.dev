@@ -2,7 +2,7 @@ name = "Z.ai: GLM 5V Turbo"
 release_date = "2026-04-01"
 last_updated = "2026-04-11"
 attachment = true
-reasoning_options = []
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["high", "xhigh"] }]
 reasoning = true
 temperature = true
 tool_call = true
