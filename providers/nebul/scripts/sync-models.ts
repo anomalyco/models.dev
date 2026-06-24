@@ -18,15 +18,15 @@ const REASONING_EFFORT_MODELS: Record<string, { type: "effort"; values: string[]
 const REASONING_TOGGLE_MODELS = new Set([
   "nvidia/NVIDIA-Nemotron-3-Super-120B-A12B-BF16",
   "zai-org/GLM-5.1-FP8",
+  "MiniMaxAI/MiniMax-M2.5",
+  "nvidia/Nemotron-3-Nano-Omni-30B-A3B-Reasoning-FP8",
+  "Qwen/Qwen3-VL-235B-A22B-Instruct-FP8",
 ]);
 
 const REASONING_DISABLED_MODELS = new Set([
   "mistralai/Mistral-Large-3-675B-Instruct-2512-NVFP4",
   "meta-llama/Llama-4-Maverick-17B-128E-Instruct",
   "Qwen/Qwen3-30B-A3B-Instruct-2507",
-  "MiniMaxAI/MiniMax-M2.5",
-  "nvidia/Nemotron-3-Nano-Omni-30B-A3B-Reasoning-FP8",
-  "Qwen/Qwen3-VL-235B-A22B-Instruct-FP8",
 ]);
 
 const INTERLEAVED_MODELS: Record<string, string> = {
@@ -67,7 +67,7 @@ const BASE_MODEL_MAP: Record<string, { base_model: string; overrides?: Record<st
     base_model: "alibaba/qwen3-vl-235b-a22b",
     overrides: {
       attachment: true,
-      reasoning: false,
+      reasoning: true,
       structured_output: true,
       limit: { context: 262_000 },
     },

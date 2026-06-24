@@ -2,9 +2,11 @@ base_model = "alibaba/qwen3-vl-235b-a22b"
 base_model_omit = ["cost"]
 
 attachment = true
-reasoning = false
-reasoning_options = []
+reasoning = true
 structured_output = true
+
+[[reasoning_options]]
+type = "toggle"
 
 [limit]
 context = 262_000
