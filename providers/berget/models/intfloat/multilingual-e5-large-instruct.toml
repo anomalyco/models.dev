@@ -1,0 +1,22 @@
+# https://berget.ai
+name = "Multilingual E5 Large Instruct"
+family = "text-embedding"
+release_date = "2024-01-01"
+last_updated = "2024-01-01"
+attachment = false
+reasoning = false
+temperature = false
+tool_call = false
+open_weights = true
+
+[cost]
+input = 0.03
+output = 0.02
+
+[limit]
+context = 512
+output = 512
+
+[modalities]
+input = ["text"]
+output = ["text"]

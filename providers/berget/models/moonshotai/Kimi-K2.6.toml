@@ -1,0 +1,22 @@
+# https://berget.ai
+name = "Kimi K2.6"
+family = "kimi"
+release_date = "2026-04-21"
+last_updated = "2026-04-21"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+open_weights = true
+
+[cost]
+input = 0.82
+output = 3.82
+
+[limit]
+context = 262_144
+output = 16_384
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
