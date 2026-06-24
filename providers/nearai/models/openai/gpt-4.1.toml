@@ -1,6 +1,14 @@
 base_model = "openai/gpt-4.1"
+name = "OpenAI GPT-4.1"
 
 [cost]
 input = 2
 output = 8
 cache_read = 0.5
+
+[limit]
+context = 1_000_000
+output = 16_384
+
+[modalities]
+input = ["text", "image"]

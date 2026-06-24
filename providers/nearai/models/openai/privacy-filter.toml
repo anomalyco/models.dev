@@ -1,7 +1,6 @@
-name = "Qwen3-Embedding-0.6B"
-family = "text-embedding"
-release_date = "2025-06-03"
-last_updated = "2025-06-03"
+name = "Privacy Filter"
+release_date = "2026-05-18"
+last_updated = "2026-05-18"
 attachment = false
 reasoning = false
 temperature = false
@@ -11,10 +10,10 @@ open_weights = true
 
 [cost]
 input = 0.01
-output = 0.01
+output = 0
 
 [limit]
-context = 40_960
+context = 512
 output = 1_024
 
 [modalities]

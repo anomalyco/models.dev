@@ -1,7 +1,16 @@
 base_model = "anthropic/claude-haiku-4-5"
+name = "Claude Haiku 4.5"
+reasoning = false
+structured_output = true
 
 [cost]
 input = 1
 output = 5
 cache_read = 0.1
 cache_write = 1.25
+
+[limit]
+output = 8_192
+
+[modalities]
+input = ["text", "image"]

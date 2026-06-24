@@ -1,6 +1,14 @@
 base_model = "openai/o3-mini"
+name = "o3 Mini"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high"]
 
 [cost]
 input = 1.1
 output = 4.4
 cache_read = 0.55
+
+[limit]
+output = 32_768

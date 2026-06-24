@@ -1,4 +1,10 @@
 base_model = "openai/gpt-5.4"
+attachment = false
+temperature = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "xhigh"]
 
 [cost]
 input = 2.5
@@ -10,3 +16,9 @@ tier = { type = "context", size = 272_000 }
 input = 5
 output = 22.5
 cache_read = 0.5
+
+[limit]
+output = 16_384
+
+[modalities]
+input = ["text"]

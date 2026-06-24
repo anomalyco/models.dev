@@ -1,6 +1,17 @@
 base_model = "openai/o3"
+name = "OpenAI o3"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high"]
 
 [cost]
 input = 2
 output = 8
-cache_read = 0.5
+cache_read = 1
+
+[limit]
+output = 32_768
+
+[modalities]
+input = ["text", "image"]
