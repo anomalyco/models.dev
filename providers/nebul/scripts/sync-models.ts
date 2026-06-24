@@ -10,7 +10,6 @@ const PROVIDER_ID = "nebul";
 const SKIP_MODELS: string[] = [];
 
 const REASONING_EFFORT_MODELS: Record<string, { type: "effort"; values: string[] }> = {
-  "openai/gpt-oss-120b": { type: "effort", values: ["low", "medium", "high"] },
   "Qwen/Qwen3.5-397B-A17B": { type: "effort", values: ["none", "low", "medium", "high"] },
   "zai-org/GLM-5.2-FP8": { type: "effort", values: ["high", "max"] },
 };
@@ -30,7 +29,6 @@ const REASONING_DISABLED_MODELS = new Set([
 ]);
 
 const INTERLEAVED_MODELS: Record<string, string> = {
-  "openai/gpt-oss-120b": "reasoning_content",
   "zai-org/GLM-5.1-FP8": "reasoning_content",
   "zai-org/GLM-5.2-FP8": "reasoning_content",
 };
@@ -56,12 +54,6 @@ const BASE_MODEL_MAP: Record<string, { base_model: string; overrides?: Record<st
   },
   "nvidia/Nemotron-3-Nano-Omni-30B-A3B-Reasoning-FP8": {
     base_model: "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning",
-  },
-  "openai/gpt-oss-120b": {
-    base_model: "amazon-bedrock/openai.gpt-oss-120b-1:0",
-    overrides: {
-      reasoning: true,
-    },
   },
   "Qwen/Qwen3-VL-235B-A22B-Instruct-FP8": {
     base_model: "alibaba/qwen3-vl-235b-a22b",
