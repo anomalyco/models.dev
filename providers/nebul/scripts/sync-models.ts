@@ -1,9 +1,11 @@
 #!/usr/bin/env bun
 
 import path from "node:path";
-import { readdir, mkdir, readFile, writeFile } from "node/fs/promises";
+import { readdir, mkdir, unlink, rmdir, readFile, writeFile } from "node:fs/promises";
 
 const API_ENDPOINT = "https://api.inference.nebul.io/v1/models";
+
+const PROVIDER_ID = "nebul";
 
 const SKIP_MODELS: string[] = [];
 
@@ -33,44 +35,36 @@ const INTERLEAVED_MODELS: Record<string, string> = {
   "zai-org/GLM-5.2-FP8": "reasoning_content",
 };
 
-const EXTENDS_MAP: Record<string, { from: string; omit?: string[]; overrides?: Record<string, unknown> }> = {
+const BASE_MODEL_MAP: Record<string, { base_model: string; overrides?: Record<string, unknown> }> = {
   "mistralai/Mistral-Large-3-675B-Instruct-2512-NVFP4": {
-    from: "mistral/mistral-large-2512",
-    omit: ["cost"],
+    base_model: "mistral/mistral-large-2512",
   },
   "Qwen/Qwen3-30B-A3B-Instruct-2507": {
-    from: "alibaba/qwen3-coder-30b-a3b-instruct",
-    omit: ["cost"],
+    base_model: "alibaba/qwen3-coder-30b-a3b-instruct",
   },
   "meta-llama/Llama-4-Maverick-17B-128E-Instruct": {
-    from: "llama/llama-4-maverick-17b-128e-instruct-fp8",
-    omit: ["cost"],
+    base_model: "meta/llama-4-maverick-17b-instruct",
     overrides: {
       limit: { context: 300_000, output: 4_096 },
     },
   },
   "MiniMaxAI/MiniMax-M2.5": {
-    from: "minimax/MiniMax-M2.5",
-    omit: ["cost"],
+    base_model: "minimax/MiniMax-M2.5",
   },
   "nvidia/NVIDIA-Nemotron-3-Super-120B-A12B-BF16": {
-    from: "nvidia/nemotron-3-super-120b-a12b",
-    omit: ["cost"],
+    base_model: "nvidia/nemotron-3-super-120b-a12b",
   },
   "nvidia/Nemotron-3-Nano-Omni-30B-A3B-Reasoning-FP8": {
-    from: "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning",
-    omit: ["cost"],
+    base_model: "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning",
   },
   "openai/gpt-oss-120b": {
-    from: "amazon-bedrock/openai.gpt-oss-120b-1:0",
-    omit: ["cost"],
+    base_model: "amazon-bedrock/openai.gpt-oss-120b-1:0",
     overrides: {
       reasoning: true,
     },
   },
   "Qwen/Qwen3-VL-235B-A22B-Instruct-FP8": {
-    from: "alibaba/qwen3-235b-a22b",
-    omit: ["cost"],
+    base_model: "alibaba/qwen3-vl-235b-a22b",
     overrides: {
       attachment: true,
       reasoning: true,
@@ -79,18 +73,15 @@ const EXTENDS_MAP: Record<string, { from: string; omit?: string[]; overrides?: R
     },
   },
   "Qwen/Qwen3.5-397B-A17B": {
-    from: "alibaba/qwen3.5-397b-a17b",
-    omit: ["cost"],
+    base_model: "alibaba/qwen3.5-397b-a17b",
   },
   "zai-org/GLM-5.1-FP8": {
-    from: "zhipuai/glm-5.1",
-    omit: ["cost"],
+    base_model: "zhipuai/glm-5.1",
+  },
+  "zai-org/GLM-5.2-FP8": {
+    base_model: "zhipuai/glm-5.2",
   },
 };
-
-const FULLY_AUTHORED_MODELS = new Set([
-  "zai-org/GLM-5.2-FP8",
-]);
 
 interface NebulModel {
   id: string;
@@ -111,35 +102,32 @@ function formatNumber(n: number): string {
   return n.toString();
 }
 
-function getReasoningOptionsToml(modelId: string): string[] {
+function getReasoningOptions(modelId: string): string | null {
   if (REASONING_EFFORT_MODELS[modelId]) {
     const opts = REASONING_EFFORT_MODELS[modelId];
     const values = opts.values.map((v) => `"${v}"`).join(", ");
-    return [
-      "[[reasoning_options]]",
-      `type = "effort"`,
-      `values = [${values}]`,
-    ];
+    return `reasoning_options = [{ type = "effort", values = [${values}] }]`;
   }
   if (REASONING_TOGGLE_MODELS.has(modelId)) {
-    return [
-      "[[reasoning_options]]",
-      `type = "toggle"`,
-    ];
+    return `reasoning_options = [{ type = "toggle" }]`;
   }
   if (REASONING_DISABLED_MODELS.has(modelId)) {
-    return ["reasoning_options = []"];
+    return `reasoning_options = []`;
   }
-  return [];
+  return null;
 }
 
-function generateExtendsToml(modelId: string): string {
-  const config = EXTENDS_MAP[modelId];
+function generateToml(modelId: string): string {
+  const config = BASE_MODEL_MAP[modelId];
   if (!config) {
-    throw new Error(`No extends config for ${modelId}. Add it to EXTENDS_MAP.`);
+    throw new Error(`No base_model config for ${modelId}. Add it to BASE_MODEL_MAP.`);
   }
 
   const lines: string[] = [];
+
+  lines.push(`base_model = "${config.base_model}"`);
+  lines.push(`base_model_omit = ["cost"]`);
+
   const overrides = config.overrides ?? {};
   const hasLimitOverride = overrides.limit != null;
   const limitCtx = (overrides.limit as Record<string, number>)?.context;
@@ -151,24 +139,18 @@ function generateExtendsToml(modelId: string): string {
   if (hasReasoningOverride) {
     lines.push(`reasoning = ${overrides.reasoning}`);
   }
+
   if (hasAttachmentOverride) {
     lines.push(`attachment = ${overrides.attachment}`);
   }
+
   if (hasStructuredOutputOverride) {
-    lines.push(`structured_output = ${overrides.structured_output}`);
+    lines.push(`structured_output = ${overrides.structured_output ?? true}`);
   }
 
-  lines.push("");
-  lines.push("[extends]");
-  lines.push(`from = "${config.from}"`);
-  if (config.omit && config.omit.length > 0) {
-    lines.push(`omit = [${config.omit.map((o) => `"${o}"`).join(", ")}]`);
-  }
-
-  const reasoningOptions = getReasoningOptionsToml(modelId);
-  if (reasoningOptions.length > 0) {
-    lines.push("");
-    lines.push(...reasoningOptions);
+  const reasoningOptions = getReasoningOptions(modelId);
+  if (reasoningOptions) {
+    lines.push(reasoningOptions);
   }
 
   if (hasLimitOverride) {
@@ -191,47 +173,6 @@ function generateExtendsToml(modelId: string): string {
 
   lines.push("");
   return lines.join("\n");
-}
-
-function generateAuthoredToml(modelId: string): string {
-  if (modelId === "zai-org/GLM-5.2-FP8") {
-    return [
-      `name = "GLM-5.2"`,
-      `family = "glm"`,
-      `release_date = "2026-05-15"`,
-      `last_updated = "2026-05-15"`,
-      `attachment = false`,
-      `reasoning = true`,
-      `temperature = true`,
-      `tool_call = true`,
-      `structured_output = true`,
-      `open_weights = false`,
-      ``,
-      `[[reasoning_options]]`,
-      `type = "effort"`,
-      `values = ["high", "max"]`,
-      ``,
-      `[interleaved]`,
-      `field = "reasoning_content"`,
-      ``,
-      `[limit]`,
-      `context = 200_000`,
-      `output = 131_072`,
-      ``,
-      `[modalities]`,
-      `input = ["text"]`,
-      `output = ["text"]`,
-      ``,
-    ].join("\n");
-  }
-  throw new Error(`No authored template for ${modelId}`);
-}
-
-function generateToml(modelId: string): string {
-  if (FULLY_AUTHORED_MODELS.has(modelId)) {
-    return generateAuthoredToml(modelId);
-  }
-  return generateExtendsToml(modelId);
 }
 
 function getFilePath(modelsDir: string, modelId: string): { filePath: string; dirPath: string } {
@@ -336,8 +277,8 @@ async function main() {
       continue;
     }
 
-    if (!EXTENDS_MAP[apiModel.id] && !FULLY_AUTHORED_MODELS.has(apiModel.id)) {
-      console.log(`Skipping (no config): ${apiModel.id}`);
+    if (!BASE_MODEL_MAP[apiModel.id]) {
+      console.log(`Skipping (no base_model config): ${apiModel.id}`);
       skipped++;
       continue;
     }
@@ -388,8 +329,9 @@ async function main() {
   }
 
   console.log("");
+  const action = dryRun ? "would be" : "";
   console.log(
-    `Summary: ${created} created, ${updated} updated, ${unchanged} unchanged, ${skipped} skipped, ${orphaned.length} orphaned`
+    `Summary: ${created} ${action} created, ${updated} ${action} updated, ${unchanged} unchanged, ${skipped} skipped, ${orphaned.length} orphaned`
   );
 }
 

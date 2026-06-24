@@ -1,8 +1,7 @@
-reasoning = true
+base_model = "amazon-bedrock/openai.gpt-oss-120b-1:0"
+base_model_omit = ["cost"]
 
-[extends]
-from = "amazon-bedrock/openai.gpt-oss-120b-1:0"
-omit = ["cost"]
+reasoning = true
 
 [[reasoning_options]]
 type = "effort"
