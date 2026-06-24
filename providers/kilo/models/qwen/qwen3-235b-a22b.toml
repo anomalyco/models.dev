@@ -2,7 +2,7 @@ name = "Qwen: Qwen3 235B A22B"
 release_date = "2024-12-01"
 last_updated = "2026-03-15"
 attachment = false
-reasoning_options = [{ type = "toggle" }]
+reasoning_options = [{ type = "toggle" }, { type = "budget_tokens", min = 1, max = 38_912 }]
 reasoning = true
 temperature = true
 tool_call = true
