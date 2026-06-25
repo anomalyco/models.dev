@@ -1,0 +1,18 @@
+name = "Mistral OCR (latest)"
+family = "mistral"
+release_date = "2025-03-06"
+last_updated = "2025-03-06"
+attachment = true
+reasoning = false
+temperature = false
+tool_call = false
+structured_output = false
+open_weights = false
+
+[limit]
+context = 1_000
+output = 1_000
+
+[modalities]
+input = ["text", "image", "pdf"]
+output = ["text"]
