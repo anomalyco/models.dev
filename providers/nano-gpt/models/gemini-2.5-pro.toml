@@ -3,7 +3,7 @@ release_date = "2025-06-05"
 last_updated = "2025-06-05"
 attachment = true
 reasoning = true
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }, { type = "budget_tokens", min = 128, max = 32_768 }]
 tool_call = false
 structured_output = false
 open_weights = false
