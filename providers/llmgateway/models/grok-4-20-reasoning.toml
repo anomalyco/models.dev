@@ -1,9 +1,12 @@
 base_model = "xai/grok-4.20-0309-reasoning"
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high"]
 
 [cost]
-input = 1.25
-output = 2.5
+input = 2
+output = 6
 cache_read = 0.2
 
 [[cost.tiers]]
@@ -11,3 +14,6 @@ tier = { type = "context", size = 200_000 }
 input = 2.5
 output = 5
 cache_read = 0.4
+
+[limit]
+context = 2_000_000

@@ -1,14 +1,17 @@
 base_model = "stepfun/step-3.5-flash"
-reasoning_options = []
 base_model_omit = ["limit.input"]
 name = "StepFun 3.5 Flash"
 family = "step"
 open_weights = false
 
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high"]
+
 [cost]
 input = 0.09
 output = 0.3
-cache_write = 0.02
+cache_read = 0.02
 
 [limit]
 context = 262_114

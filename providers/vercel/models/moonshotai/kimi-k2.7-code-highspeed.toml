@@ -1,0 +1,16 @@
+base_model = "moonshotai/kimi-k2.7-code-highspeed"
+name = "Kimi K2.7 Code High Speed"
+release_date = "2026-06-15"
+temperature = true
+open_weights = false
+
+[cost]
+input = 1.9
+output = 8
+cache_read = 0.38
+
+[limit]
+output = 32_768
+
+[modalities]
+input = ["text", "image", "pdf"]
