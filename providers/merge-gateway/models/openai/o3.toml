@@ -1,5 +1,5 @@
 base_model = "openai/o3"
-reasoning_options = []
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
 
 [cost]
 input = 2
