@@ -1,0 +1,16 @@
+base_model = "moonshotai/kimi-k2.6"
+name = "Kimi K2.6 - Private"
+attachment = false
+reasoning = false
+structured_output = false
+
+[cost]
+input = 1.5763
+output = 5.5112
+
+[limit]
+context = 256_000
+output = 200_000
+
+[modalities]
+input = ["text"]
