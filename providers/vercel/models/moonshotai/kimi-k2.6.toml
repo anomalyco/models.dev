@@ -1,6 +1,9 @@
 base_model = "moonshotai/kimi-k2.6"
 release_date = "2026-04-20"
 
+[[reasoning_options]]
+type = "toggle"
+
 [cost]
 input = 0.95
 output = 4
@@ -11,5 +14,4 @@ context = 262_000
 output = 262_000
 
 [modalities]
-input = ["text", "image", "pdf"]
-output = ["text"]
+input = ["text", "image"]

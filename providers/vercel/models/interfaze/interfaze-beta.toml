@@ -1,11 +1,12 @@
 name = "Interfaze Beta"
-attachment = false
-reasoning = true
-tool_call = false
-temperature = true
 release_date = "2025-10-07"
 last_updated = "2026-04-29"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = false
 open_weights = false
+reasoning_options = []
 
 [cost]
 input = 1.5
@@ -16,5 +17,5 @@ context = 1_000_000
 output = 32_000
 
 [modalities]
-input = ["text"]
+input = ["text", "image", "pdf"]
 output = ["text"]

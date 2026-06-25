@@ -1,0 +1,18 @@
+base_model = "tencent/hy3-preview"
+attachment = false
+reasoning = true
+reasoning_options = [{ type = "budget_tokens", min = 128, max = 32_768 }]
+open_weights = false
+
+[cost]
+input = 0.066
+cache_read = 0.029
+output = 0.26
+
+[limit]
+context = 262_144
+output = 262_144
+
+[modalities]
+input = ["text"]
+output = ["text"]

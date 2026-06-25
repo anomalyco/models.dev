@@ -1,0 +1,14 @@
+base_model = "zhipuai/glm-5.2"
+reasoning_options = [{ type = "effort", values = ["none", "high"] }]
+
+[cost]
+input = 1.54
+output = 4.84
+
+[limit]
+context = 524_288
+output = 32_768
+
+[modalities]
+input = ["text"]
+output = ["text"]

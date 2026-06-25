@@ -769,7 +769,7 @@ async function main() {
       cwd: modelsDir,
       absolute: false,
     })) {
-      existingFiles.add(file);
+      existingFiles.add(file.split(path.sep).join("/"));
     }
   } catch {
   }

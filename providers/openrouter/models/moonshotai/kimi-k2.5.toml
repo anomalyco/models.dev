@@ -7,11 +7,13 @@ reasoning_options = []
 field = "reasoning_details"
 
 [cost]
-input = 0.375
-output = 2.025
+input = 0
+output = 0
+cache_read = 0
 
 [limit]
 context = 256_000
+output = 256_000
 
 [modalities]
 input = ["text", "image"]
