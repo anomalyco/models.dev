@@ -1,0 +1,10 @@
+base_model = "deepseek/deepseek-v4-flash"
+
+[cost]
+input = 0.16
+output = 0.32
+cache_read = 0.004
+cache_write = 0.16
+
+[limit]
+output = 65000

@@ -1,0 +1,15 @@
+base_model = "xiaomi/mimo-v2.5"
+
+[cost]
+input = 0.16
+output = 0.32
+cache_read = 0.004
+cache_write = 0.16
+
+[limit]
+context = 1000000
+output = 128000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

@@ -1,0 +1,18 @@
+base_model = "openai/gpt-5.5-pro"
+
+[cost]
+input = 30
+output = 180
+cache_read = 30
+cache_write = 30
+
+[[cost.tiers]]
+tier = { type = "context", size = 272000 }
+input = 60
+output = 270
+cache_read = 60
+cache_write = 60
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
