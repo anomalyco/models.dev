@@ -12,7 +12,23 @@ const Pricing = z.object({
   internal_reasoning: z.string().optional(),
   input_cache_read: z.string().optional(),
   input_cache_write: z.string().optional(),
-});
+}).passthrough();
+
+// Chat / text-completion models bill per token (plus cache, image, web search
+// and reasoning add-ons). Specialty models — OCR (ocr_page), rerank, etc. —
+// carry their own billing unit. A non-zero price on any key outside this set
+// marks a non-chat model we don't want in the catalog.
+const CHAT_PRICING_KEYS = new Set([
+  "prompt",
+  "completion",
+  "image",
+  "request",
+  "input_cache_read",
+  "input_cache_write",
+  "input_cache_write_1h",
+  "web_search",
+  "internal_reasoning",
+]);
 
 export const LLMGatewayModel = z.object({
   id: z.string(),
@@ -50,10 +66,7 @@ export const llmgateway = {
     return response.json();
   },
   parseModels(raw) {
-    return LLMGatewayResponse.parse(raw).data.filter((model) => {
-      const output = model.architecture.output_modalities;
-      return output.length === 1 && output[0] === "text";
-    });
+    return LLMGatewayResponse.parse(raw).data.filter(isChatModel);
   },
   translateModel(model, context) {
     return {
@@ -62,6 +75,16 @@ export const llmgateway = {
     };
   },
 } satisfies SyncProvider<LLMGatewayModel>;
+
+// Keep only chat / text-completion models: text-only output and no specialty
+// (non-chat) billing unit such as OCR pages.
+function isChatModel(model: LLMGatewayModel) {
+  const output = model.architecture.output_modalities;
+  if (output.length !== 1 || output[0] !== "text") return false;
+  return Object.entries(model.pricing).every(([key, value]) => {
+    return CHAT_PRICING_KEYS.has(key) || !(Number(value) > 0);
+  });
+}
 
 function dateFromTimestamp(timestamp: number) {
   return new Date(timestamp * 1000).toISOString().slice(0, 10);
