@@ -4,17 +4,17 @@ release_date = "2024-04-01"
 last_updated = "2026-06-11"
 structured_output = true
 
+[interleaved]
+field = "reasoning_content"
+
 [[reasoning_options]]
 type = "effort"
 values = ["low", "medium", "high"]
 
-[interleaved]
-field = "reasoning_content"
-
 [cost]
-input = 0.85
-output = 2.75
-cache_read = 0.3
+input = 0.43
+output = 1.75
+cache_read = 0.08
 
 [limit]
 context = 198_000
