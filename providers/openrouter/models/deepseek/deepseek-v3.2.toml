@@ -1,4 +1,3 @@
-reasoning_options = [{ type = "toggle" }]
 name = "DeepSeek V3.2"
 family = "deepseek"
 release_date = "2025-12-01"
@@ -11,9 +10,13 @@ structured_output = true
 knowledge = "2024-07"
 open_weights = true
 
+[[reasoning_options]]
+type = "toggle"
+
 [cost]
-input = 0.2288
-output = 0.3432
+input = 0
+output = 0
+cache_read = 0
 
 [limit]
 context = 128_000

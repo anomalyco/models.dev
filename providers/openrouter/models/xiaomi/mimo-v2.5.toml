@@ -1,11 +1,15 @@
 base_model = "xiaomi/mimo-v2.5"
-structured_output = false
-reasoning_options = [{ type = "toggle" }]
+structured_output = true
 
 [interleaved]
 field = "reasoning_details"
 
+[[reasoning_options]]
+type = "toggle"
+
 [cost]
-input = 0.14
+input = 0.105
 output = 0.28
-cache_read = 0.0028
+
+[limit]
+context = 32_000

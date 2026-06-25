@@ -1,0 +1,16 @@
+name = "Whisper Large v3 Turbo"
+family = "whisper"
+release_date = "2024-10-01"
+last_updated = "2024-10-01"
+attachment = false
+reasoning = false
+tool_call = false
+open_weights = true
+
+[limit]
+context = 448
+output = 448
+
+[modalities]
+input = ["audio"]
+output = ["text"]

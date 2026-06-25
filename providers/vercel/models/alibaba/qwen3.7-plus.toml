@@ -1,8 +1,15 @@
 base_model = "alibaba/qwen3.7-plus"
 name = "Qwen 3.7 Plus"
 family = "qwen3.7-plus"
-release_date = "2026-06-01"
 attachment = true
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "budget_tokens"
+min = 1
+max = 262_144
 
 [cost]
 input = 0.4
