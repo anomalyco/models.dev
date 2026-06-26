@@ -248,6 +248,10 @@ function costFromPrices(
 		"vision_input_token",
 		"translate_vision_input_token",
 		"embedding_token",
+		// DashScope renamed the text/image/video input bucket to `omni_no_audio_input_token`
+		// in the qwen3.5 omni series (qwen3.5-omni-{flash,plus} + realtime). Old omni models
+		// still report `text_input_token`, so this falls through cleanly for them.
+		"omni_no_audio_input_token",
 	);
 	const output = price(
 		prices,
@@ -255,6 +259,10 @@ function costFromPrices(
 		"purein_text_output_token",
 		"multiin_text_output_token",
 		"translate_multi_text_output_token",
+		// DashScope renamed the text-only output bucket to `omni_no_audio_output_token`
+		// in the qwen3.5 omni series. The audio-only output bucket is `omni_audio_output_token`
+		// (handled below in `output_audio`).
+		"omni_no_audio_output_token",
 	);
 	const imageOutput = price(
 		prices,
