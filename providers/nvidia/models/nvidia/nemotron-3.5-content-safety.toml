@@ -1,7 +1,7 @@
-name = "llama-nemotron-embed-vl-1b-v2"
-base_model = "nvidia/llama-nemotron-embed-vl-1b-v2"
-release_date = "2026-02-10"
-last_updated = "2026-02-10"
+name = "nemotron-3.5-content-safety"
+base_model = "nvidia/nemotron-3.5-content-safety"
+release_date = "2026-06-03"
+last_updated = "2026-06-03"
 attachment = true
 reasoning = false
 temperature = false
@@ -13,8 +13,8 @@ input = 0.0
 output = 0.0
 
 [limit]
-context = 32_768
-output = 2_048
+context = 128_000
+output = 4_096
 
 [modalities]
 input = ["text", "image"]

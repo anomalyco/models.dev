@@ -1,0 +1,16 @@
+name = "Ising Calibration 1 35B A3B"
+release_date = "2026-05-06"
+last_updated = "2026-05-06"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = false
+open_weights = true
+
+[limit]
+context = 131_072
+output = 32_768
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

@@ -1,14 +1,14 @@
-base_model = "nvidia/nemotron-3-ultra-550b-a55b"
-family = "nemotron"
-release_date = "2026-06-04"
-last_updated = "2026-06-04"
+name = "Llama 3.1 Nemotron Nano 8B v1"
+base_model = "nvidia/llama-3.1-nemotron-nano-8b-v1"
+family = "llama"
+release_date = "2025-07-01"
+last_updated = "2025-07-01"
 attachment = false
 reasoning = true
 reasoning_options = [{ type = "toggle" }]
 temperature = true
-knowledge = "2025-06"
+knowledge = "2023-12"
 tool_call = true
-structured_output = true
 open_weights = true
 
 [cost]
@@ -16,8 +16,8 @@ input = 0.0
 output = 0.0
 
 [limit]
-context = 1_000_000
-output = 65_536
+context = 128_000
+output = 16_384
 
 [modalities]
 input = ["text"]

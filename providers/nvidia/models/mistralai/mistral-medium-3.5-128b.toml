@@ -1,0 +1,24 @@
+name = "Mistral Medium 3.5 128B"
+base_model = "mistralai/mistral-medium-3.5-128b"
+family = "mistral-medium"
+release_date = "2026-05-01"
+last_updated = "2026-05-01"
+attachment = true
+reasoning = true
+reasoning_options = [{ type = "effort", values = ["none", "high"] }]
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = true
+
+[cost]
+input = 0.0
+output = 0.0
+
+[limit]
+context = 256_000
+output = 16_384
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
