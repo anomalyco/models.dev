@@ -1,0 +1,16 @@
+base_model = "moonshotai/kimi-k2-thinking"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "budget_tokens"
+min = 1
+max = 32_768
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.6
+output = 2.5

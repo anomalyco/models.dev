@@ -1,4 +1,11 @@
 base_model = "alibaba/qwen3.7-plus"
+# Reasoning HTTP format (accessed 2026-06-25):
+# Coding Plan exact-string allowlist model. Hybrid thinking is on by default;
+# top-level `enable_thinking`: true|false toggles it. The plan docs do not state
+# a numeric budget bound or a plan-specific effort control.
+# Sources:
+# https://help.aliyun.com/zh/model-studio/coding-plan
+# https://help.aliyun.com/zh/model-studio/deep-thinking
 reasoning_options = [{ type = "toggle" }]
 
 [cost]

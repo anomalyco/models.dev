@@ -1,4 +1,6 @@
 base_model = "deepseek/deepseek-v4-pro"
+# Fireworks' published schema does not document this model's toggle or "max"
+# effort mapping. https://docs.fireworks.ai/guides/reasoning (accessed 2026-06-25)
 
 [[reasoning_options]]
 type = "toggle"

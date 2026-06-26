@@ -1,4 +1,7 @@
 name = "Anthropic: Claude Sonnet 4"
+# Native exception (accessed 2026-06-25): `thinking.type` is enabled or disabled;
+# manual `budget_tokens` is >=1024 and below max_tokens, hence this 63,999 cap.
+# https://docs.anthropic.com/en/docs/build-with-claude/extended-thinking
 family = "claude-sonnet"
 release_date = "2025-05-14"
 last_updated = "2025-05-14"

@@ -1,3 +1,6 @@
+# $.chat_template_kwargs.enable_thinking = true|false; default false. The
+# template ignores $.chat_template_kwargs.thinking when sent alone.
+# https://docs.getlilac.com/inference/chat-completions#reasoning (accessed 2026-06-25)
 reasoning_options = [{ type = "toggle" }]
 base_model = "google/gemma-4-31b-it"
 knowledge = "2025-01"

@@ -1,13 +1,8 @@
+base_model = "meta/llama-3.3-70b-instruct"
 name = "Llama 3.3 70B Instruct"
-family = "llama"
-attachment = false
-reasoning = false
-tool_call = true
-structured_output = true
-temperature = true
 release_date = "2024-08-01"
 last_updated = "2025-12-23"
-open_weights = true
+structured_output = true
 
 [cost]
 input = 0.6
@@ -16,7 +11,3 @@ output = 0.6
 [limit]
 context = 131_072
 output = 131_072
-
-[modalities]
-input = ["text"]
-output = ["text"]

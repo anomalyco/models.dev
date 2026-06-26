@@ -1,4 +1,7 @@
 name = "GLM-4.7-Flash"
+# Native `/ai/run` accepts `reasoning_effort = low|medium|high` and
+# `chat_template_kwargs.enable_thinking = true|false`; no budget is documented.
+# https://developers.cloudflare.com/workers-ai/models/glm-4.7-flash/sync-input.json (accessed 2026-06-25)
 family = "glm-flash"
 release_date = "2026-01-19"
 last_updated = "2026-01-19"

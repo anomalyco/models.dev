@@ -10,7 +10,3 @@ tier = { type = "context", size = 272_000 }
 input = 10
 output = 45
 cache_read = 1
-
-[experimental.modes.fast]
-cost = { input = 12.5, output = 75, cache_read = 1.25 }
-provider = { body = { service_tier = "priority" } }

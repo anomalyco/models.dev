@@ -1,10 +1,14 @@
 name = "Claude 4.5 Sonnet"
+# Cortecs maps `reasoning_effort = low|medium|high` and
+# `thinking.budget_tokens >= 1024`; unsupported fields may be silently ignored.
+# https://api.cortecs.ai/v1/models (accessed 2026-06-25)
 family = "claude-sonnet"
 release_date = "2025-09-29"
 last_updated = "2025-09-29"
 knowledge = "2025-07-31"
 attachment = true
 reasoning = true
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }, { type = "budget_tokens", min = 1_024 }]
 tool_call = true
 temperature = true
 open_weights = false

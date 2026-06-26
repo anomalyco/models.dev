@@ -4,6 +4,9 @@ release_date = "2026-04-29"
 last_updated = "2026-04-29"
 attachment = true
 reasoning = true
+# Berget's schema accepts none/low/medium/high, but documents no Mistral-specific
+# mapping; schema acceptance alone does not establish meaningful support.
+# https://api.berget.ai/openapi.json
 reasoning_options = [{ type = "effort", values = ["none", "high"] }]
 temperature = true
 knowledge = "2026-04"

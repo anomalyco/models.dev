@@ -1,5 +1,12 @@
 base_model = "alibaba/qwen3.7-plus"
 
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "budget_tokens"
+max = 262_144
+
 [cost]
 input = 0.5
 output = 3

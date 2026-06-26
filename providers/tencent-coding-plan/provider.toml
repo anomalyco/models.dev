@@ -1,5 +1,14 @@
 name = "Tencent Coding Plan (China)"
 env = ["TENCENT_CODING_PLAN_API_KEY"]
 npm = "@ai-sdk/openai-compatible"
+# Reasoning HTTP format (accessed 2026-06-25):
+# OpenAI plan endpoint: POST /coding/v3/chat/completions. Top-level
+# `thinking.type` is enabled or disabled; reasoning is returned at
+# `choices[].message.reasoning_content` or streamed `choices[].delta.reasoning_content`.
+# GLM-5 and Kimi-K2.5 default enabled and allow both values. Hunyuan thinking,
+# Hunyuan-T1, and MiniMax-M2.5 are always-on; no plan effort control is listed.
+# Sources:
+# https://cloud.tencent.com/document/product/1823/130092
+# https://cloud.tencent.com/document/product/1823/131208
 doc = "https://cloud.tencent.com/document/product/1772/128947"
 api = "https://api.lkeap.cloud.tencent.com/coding/v3"
