@@ -1,13 +1,15 @@
 import { z } from "zod";
 
 import type { ExistingModel, SyncProvider, SyncedFullModel, SyncedModel } from "../index.js";
-import { factorBaseModel } from "./openrouter.js";
+import { factorBaseModel, resolveCanonicalBaseModel } from "./openrouter.js";
 
 // EmpirioLabs exposes a public, unauthenticated OpenAI-compatible model
 // catalog, so no API key is needed or used for this sync.
 const API_ENDPOINT = "https://api.empiriolabs.ai/v1/models";
 
 const CANONICAL_BASE_MODELS: Record<string, string> = {
+  "gemma-4-26b-a4b": "google/gemma-4-26b-a4b-it",
+  "gemma-4-e4b": "google/gemma-4-E4B-it",
   "qwen3-5-9b": "alibaba/qwen3.5-9b",
   "qwen3-7-max": "alibaba/qwen3.7-max",
   "qwen3-7-plus": "alibaba/qwen3.7-plus",
@@ -67,15 +69,14 @@ export const empiriolabs = {
   id: "empiriolabs",
   name: "EmpirioLabs AI",
   modelsDir: "providers/empiriolabs/models",
-  skipCreates: true,
   sourceID(model) {
     return model.id;
   },
   skippedNotice(ids) {
     if (ids.length === 0) return [];
     return [
-      `${ids.length} EmpirioLabs AI models returned by the API were not created because the API does not provide authoritative release date, open-weight, or canonical base model metadata. `
-        + "Existing models are still updated from API-authoritative fields.",
+      `${ids.length} EmpirioLabs AI models returned by the API were not created because they could not be mapped exactly to models.dev canonical metadata. `
+        + "Existing models and canonical matches are still updated from API-authoritative fields.",
       `Skipped remote IDs: ${ids.map((id) => `\`${id}\``).join(", ")}`,
     ];
   },
@@ -95,7 +96,8 @@ export const empiriolabs = {
   },
   translateModel(model, context) {
     const existing = context.existing(model.id);
-    const baseModel = existing?.base_model ?? CANONICAL_BASE_MODELS[model.id];
+    const baseModel = existing?.base_model ?? resolveEmpiriolabsBaseModel(model.id);
+    if (existing === undefined && baseModel === undefined) return undefined;
     const built = buildEmpiriolabsModel(model, existing, baseModel);
     // A model with no resolvable context window cannot produce a valid TOML
     // (limit.context is required), so skip it rather than fail the whole sync.
@@ -168,10 +170,61 @@ function reasoningOptions(model: EmpiriolabsModel) {
   return [];
 }
 
+export function resolveEmpiriolabsBaseModel(id: string) {
+  const explicit = CANONICAL_BASE_MODELS[id];
+  if (explicit !== undefined) return explicit;
+  return canonicalCandidates(id)
+    .map((candidate) => resolveCanonicalBaseModel(candidate))
+    .find((candidate) => candidate !== undefined);
+}
+
+function canonicalCandidates(id: string) {
+  const candidates: string[] = [];
+
+  if (id.startsWith("deepseek-")) {
+    candidates.push(`deepseek/${id}`);
+    candidates.push(`deepseek/${id.replace(/^deepseek-v(\d+)-(\d+)/, "deepseek-v$1.$2")}`);
+  }
+
+  if (id.startsWith("glm-")) {
+    const normalized = id
+      .replace(/^glm-(\d+)-(\d+)/, "glm-$1.$2")
+      .replace(/^glm-(\d+)-(\d+)v/, "glm-$1.$2v");
+    candidates.push(`z-ai/${id}`);
+    candidates.push(`z-ai/${normalized}`);
+  }
+
+  if (id.startsWith("kimi-")) {
+    const normalized = id.replace(/^(kimi-k\d+)-(\d+)/, "$1.$2");
+    candidates.push(`moonshotai/${id}`);
+    candidates.push(`moonshotai/${normalized}`);
+  }
+
+  if (id.startsWith("minimax-")) {
+    const normalized = id.replace(/^minimax-m(\d+)-(\d+)/, "minimax-m$1.$2");
+    candidates.push(`minimax/${id}`);
+    candidates.push(`minimax/${normalized}`);
+  }
+
+  if (id.startsWith("mimo-")) {
+    const normalized = id.replace(/^mimo-v(\d+)-(\d+)/, "mimo-v$1.$2");
+    candidates.push(`xiaomi/${id}`);
+    candidates.push(`xiaomi/${normalized}`);
+  }
+
+  if (id.startsWith("qwen")) {
+    const normalized = id.replace(/^(qwen\d+)-(\d+)/, "$1.$2");
+    candidates.push(`qwen/${id}`);
+    candidates.push(`qwen/${normalized}`);
+  }
+
+  return [...new Set(candidates)];
+}
+
 export function buildEmpiriolabsModel(
   model: EmpiriolabsModel,
   existing: ExistingModel | undefined,
-  baseModel = existing?.base_model ?? CANONICAL_BASE_MODELS[model.id],
+  baseModel = existing?.base_model ?? resolveEmpiriolabsBaseModel(model.id),
 ): SyncedModel | undefined {
   const features = new Set(model.features ?? []);
   const capabilities = (model.capabilities ?? {}) as Record<string, unknown>;
