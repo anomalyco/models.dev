@@ -1,4 +1,12 @@
 name = "Cerebras"
 env = ["CEREBRAS_API_KEY"]
 npm = "@ai-sdk/cerebras"
+# Reasoning HTTP format (accessed 2026-06-25):
+# OpenAI Chat: POST https://api.cerebras.ai/v1/chat/completions.
+# Effort/toggle: top-level reasoning_effort, with accepted values depending on
+# the model. Token budget is not documented in the complete request schema.
+# Sources:
+# https://inference-docs.cerebras.ai/api-reference/chat-completions
+# https://inference-docs.cerebras.ai/capabilities/reasoning
+# https://inference-docs.cerebras.ai/resources/openai
 doc = "https://inference-docs.cerebras.ai/models/overview"

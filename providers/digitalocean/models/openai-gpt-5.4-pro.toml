@@ -1,4 +1,8 @@
 name = "GPT-5.4 pro"
+# Serverless supports only POST `/v1/responses`; this model restricts
+# `reasoning.effort` to medium|high|xhigh.
+# https://docs.digitalocean.com/products/inference/details/models/index.html.md (accessed 2026-06-25)
+# https://developers.openai.com/api/docs/models/gpt-5.4-pro (accessed 2026-06-25)
 family = "gpt-pro"
 release_date = "2026-03-05"
 last_updated = "2026-03-05"
