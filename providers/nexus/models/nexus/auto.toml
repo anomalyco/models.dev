@@ -1,0 +1,21 @@
+name = "Auto Router"
+family = "auto"
+release_date = "2026-05-18"
+last_updated = "2026-05-18"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[[reasoning_options]]
+type = "toggle"
+
+[limit]
+context = 1_048_576
+output = 393_216
+
+[modalities]
+input = ["text"]
+output = ["text"]

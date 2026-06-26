@@ -1,0 +1,16 @@
+base_model = "google/gemma-4-31b-it"
+name = "Gemma 4 31b - Private"
+attachment = false
+reasoning = false
+structured_output = false
+
+[cost]
+input = 0.4196
+output = 1.0546
+
+[limit]
+context = 256_000
+output = 16_384
+
+[modalities]
+input = ["text"]
