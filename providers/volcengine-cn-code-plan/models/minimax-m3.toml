@@ -1,0 +1,9 @@
+base_model = "minimax/MiniMax-M3"
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[limit]
+context = 512_000
+output = 4_096

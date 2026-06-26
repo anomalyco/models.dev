@@ -1,0 +1,17 @@
+name = "Doubao Seed Code"
+release_date = "2026-06-26"
+last_updated = "2026-06-26"
+attachment = true
+reasoning = true
+tool_call = true
+open_weights = false
+temperature = true
+structured_output = true
+
+[limit]
+context = 256_000
+output = 4_096
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
