@@ -3,14 +3,17 @@ release_date = "2025-12-02"
 last_updated = "2025-12-02"
 attachment = false
 reasoning = true
-reasoning_options = [{ type = "toggle" }]
 temperature = true
-knowledge = "2024-12"
 tool_call = true
+structured_output = true
+knowledge = "2024-12"
 open_weights = false
 
 [interleaved]
 field = "reasoning_content"
+
+[[reasoning_options]]
+type = "toggle"
 
 [cost]
 input = 0.26

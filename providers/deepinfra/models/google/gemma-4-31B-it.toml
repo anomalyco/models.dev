@@ -1,6 +1,11 @@
 base_model = "google/gemma-4-31b-it"
-reasoning_options = [{ type = "toggle" }]
+
+[[reasoning_options]]
+type = "toggle"
 
 [cost]
 input = 0.13
 output = 0.38
+
+[modalities]
+input = ["text", "image", "audio", "video"]
