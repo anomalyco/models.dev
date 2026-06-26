@@ -1,0 +1,13 @@
+base_model = "google/gemini-3.1-pro-preview"
+attachment = false
+
+[limit]
+context = 1_000_000
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[cost]
+input = 2
+output = 12
