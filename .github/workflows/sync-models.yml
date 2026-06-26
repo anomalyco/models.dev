@@ -74,6 +74,7 @@ jobs:
           XAI_API_KEY: ${{ secrets.XAI_API_KEY }}
           CLOUDFLARE_WORKERS_AI_SYNC_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_WORKERS_AI_SYNC_ACCOUNT_ID }}
           CLOUDFLARE_WORKERS_AI_SYNC_API_TOKEN: ${{ secrets.CLOUDFLARE_WORKERS_AI_SYNC_API_TOKEN }}
+          DASHSCOPE_API_KEY: ${{ secrets.DASHSCOPE_API_KEY }}
 
       - name: Validate models
         run: bun validate
