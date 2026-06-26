@@ -1,6 +1,8 @@
 base_model = "openai/gpt-5.5"
 last_updated = "2026-06-11"
 
+# Live /models (2026-06-25): none|minimal|low|medium|high; no dedicated reasoning budget.
+# https://api.venice.ai/api/v1/models?type=text (accessed 2026-06-25)
 [[reasoning_options]]
 type = "effort"
 values = ["none", "minimal", "low", "medium", "high"]

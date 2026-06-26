@@ -10,6 +10,9 @@ structured_output = true
 knowledge = "2025-04"
 open_weights = true
 
+# Opt in with chat_template_args.enable_thinking=true. Baseten documents no
+# explicit false behavior, effort values, or reasoning-token budget.
+# https://docs.baseten.co/inference/model-apis/reasoning
 [[reasoning_options]]
 type = "toggle"
 
@@ -17,7 +20,7 @@ type = "toggle"
 field = "reasoning_content"
 
 [cost]
-input = 0.12
+input = 0.6
 output = 2.2
 cache_read = 0.12
 

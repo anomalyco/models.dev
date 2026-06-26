@@ -1,4 +1,12 @@
 name = "Command A Reasoning"
+# Model-specific reasoning HTTP restrictions (accessed 2026-06-25):
+# Native thinking.token_budget must be positive; leave at least 1K output tokens.
+# OpenAI compatibility instead accepts reasoning_effort = "none"|"high" and
+# does not document token-budget control.
+# Sources:
+# https://docs.cohere.com/docs/command-a-reasoning
+# https://docs.cohere.com/docs/reasoning
+# https://docs.cohere.com/docs/compatibility-api
 family = "command-a"
 release_date = "2025-08-21"
 last_updated = "2025-08-21"

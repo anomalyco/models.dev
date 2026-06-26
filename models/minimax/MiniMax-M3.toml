@@ -6,7 +6,7 @@ attachment = true
 reasoning = true
 temperature = true
 tool_call = true
-open_weights = false
+open_weights = true
 
 [limit]
 context = 512_000
@@ -15,3 +15,7 @@ output = 128_000
 [modalities]
 input = ["text", "image", "video"]
 output = ["text"]
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/MiniMaxAI/MiniMax-M3"

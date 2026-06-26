@@ -1,4 +1,9 @@
 base_model = "deepseek/deepseek-v4-pro"
+# Model-specific reasoning HTTP values (accessed 2026-06-25):
+# reasoning_effort = "low"|"medium"|"high"|"xhigh"; "none" disables reasoning.
+# Sources:
+# https://docs.deepinfra.com/api-reference/chat-completions/openai-chat-completions
+# https://deepinfra.com/deepseek-ai/DeepSeek-V4-Pro/api
 reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "medium", "high", "xhigh"] }]
 
 [interleaved]

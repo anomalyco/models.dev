@@ -1,8 +1,11 @@
 name = "Laguna XS.2"
 release_date = "2026-04-28"
-last_updated = "2026-04-28"
+last_updated = "2026-06-13"
 attachment = false
 reasoning = true
+# Laguna-specific support is represented here; the public API schema supplies
+# the exact `reasoning.effort` enum, while this model page only confirms API use.
+# https://docs.poolside.ai/release-notes/laguna-xs2
 reasoning_options = [{ type = "effort", values = ["none", "minimal", "low", "medium", "high", "xhigh"] }]
 temperature = true
 tool_call = true
@@ -18,8 +21,8 @@ cache_read = 0.0
 cache_write = 0.0
 
 [limit]
-context = 131_040
-output = 8_192
+context = 262_144
+output = 32_768
 
 [modalities]
 input = ["text"]

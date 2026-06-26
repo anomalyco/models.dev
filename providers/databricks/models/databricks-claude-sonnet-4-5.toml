@@ -1,4 +1,8 @@
 base_model = "anthropic/claude-sonnet-4-5"
+# Chat uses `thinking = { type = "enabled", budget_tokens = N }`; N >= 1024
+# and must be less than `max_tokens`.
+# https://docs.databricks.com/aws/en/machine-learning/model-serving/query-reason-models (accessed 2026-06-25)
+reasoning_options = [{ type = "budget_tokens", min = 1_024 }]
 
 [cost]
 input = 3

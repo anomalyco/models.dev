@@ -1,5 +1,20 @@
 name = "Alibaba (China)"
 env = ["DASHSCOPE_API_KEY"]
 npm = "@ai-sdk/openai-compatible"
+# Reasoning HTTP format (accessed 2026-06-25):
+# OpenAI Chat: POST /compatible-mode/v1/chat/completions; top-level
+# `enable_thinking` is true or false and `thinking_budget` is an integer token
+# cap (Qwen3 in thinking mode and Kimi only; default is the model maximum).
+# Responses: POST /compatible-mode/v1/responses; `reasoning.effort` is none,
+# minimal, low, medium (default), or high; no numeric thinking budget is accepted.
+# Anthropic: POST /apps/anthropic/v1/messages; `thinking.type` is enabled or
+# disabled and `thinking.budget_tokens` is an integer used only when enabled.
+# `reasoning_effort` is high or max only for DeepSeek V4 Pro/Flash.
+# DashScope text: POST /api/v1/services/aigc/text-generation/generation; put
+# `enable_thinking` and `thinking_budget` under `parameters`, not at JSON root.
+# Sources:
+# https://help.aliyun.com/zh/model-studio/deep-thinking
+# https://help.aliyun.com/zh/model-studio/compatibility-with-openai-responses-api
+# https://www.alibabacloud.com/help/en/model-studio/anthropic-api-messages
 doc = "https://www.alibabacloud.com/help/en/model-studio/models"
 api = "https://dashscope.aliyuncs.com/compatible-mode/v1" 
