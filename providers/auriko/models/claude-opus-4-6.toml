@@ -1,5 +1,8 @@
 base_model = "anthropic/claude-opus-4-6"
 
+# Claude 4.6 uses adaptive thinking; Auriko maps effort and "off" to its native
+# control. No caller-selected token budget is exposed.
+# https://docs.auriko.ai/guides/extensions-and-thinking
 reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "medium", "high", "max"] }]
 
 [cost]

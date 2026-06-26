@@ -1,4 +1,7 @@
 name = "Claude Opus 4.7"
+# Cortecs maps `reasoning_effort = low|medium|high` to
+# `output_config.effort`; no explicit budget is exposed for this model.
+# https://api.cortecs.ai/v1/models (accessed 2026-06-25)
 family = "claude-opus"
 release_date = "2026-04-16"
 last_updated = "2026-04-16"

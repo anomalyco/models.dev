@@ -1,4 +1,7 @@
 name = "Claude Opus 4.5"
+# Cortecs maps `reasoning_effort = low|medium|high` and
+# `thinking.budget_tokens >= 1024`; unsupported fields may be silently ignored.
+# https://api.cortecs.ai/v1/models (accessed 2026-06-25)
 family = "claude-opus"
 release_date = "2025-11-24"
 last_updated = "2025-11-24"
