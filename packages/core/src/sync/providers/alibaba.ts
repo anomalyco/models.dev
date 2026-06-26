@@ -350,12 +350,30 @@ function cost(model: AlibabaModel, existing: ExistingModel) {
 	if (ranges.length === 0) return existing.cost;
 
 	const base = ranges[0]!.cost;
-	const tiers = ranges.slice(1).map(
+	// Build the API-derived tiers. Each tier carries its `lowerBound` as `size` —
+	// a tier with `size: N` covers `N < context <= (next tier's size, or model
+	// context_window)`. The base rate (the smallest range) is intentionally NOT
+	// included here; it lives at the top level of `cost` so consumers can read
+	// the default rate without indexing into `tiers[0]`.
+	const aboveBase = ranges.slice(1);
+	const apiTiers = aboveBase.map(
 		(range): CostTier => ({
 			tier: { type: "context", size: range.lowerBound },
 			...range.cost,
 		}),
 	);
+	// The API's tier structure supersedes hand-curated tiers in `existing.cost.tiers`
+	// when the API has at least as many tiers as the TOML (the API is up to date).
+	// When the TOML has more tiers than the API (the team curated additional tiers
+	// — e.g. per-tier `cache_read` values the API doesn't expose), preserve the
+	// TOML's tiers so the hand-curated rates aren't lost on next sync.
+	const existingTiers = existing.cost?.tiers;
+	const tiers =
+		existingTiers !== undefined && existingTiers.length > apiTiers.length
+			? existingTiers
+			: apiTiers.length > 0
+				? apiTiers
+				: undefined;
 
 	// `context_over_200k` is a sync-only convenience field (see `OutputCost` in schema.ts)
 	// that consumers can read directly without walking `tiers`. A tier with `size: N` covers
@@ -365,7 +383,7 @@ function cost(model: AlibabaModel, existing: ExistingModel) {
 	// field is omitted so consumers fall back to `cost.input`/`cost.output`.
 	const over200k = ranges
 		.filter((range) => range.lowerBound < 200_000)
-		.reduce<typeof ranges[number] | undefined>(
+		.reduce<(typeof ranges)[number] | undefined>(
 			(best, current) =>
 				best === undefined || current.lowerBound > best.lowerBound
 					? current
@@ -373,7 +391,9 @@ function cost(model: AlibabaModel, existing: ExistingModel) {
 			undefined,
 		);
 	const contextOver200k =
-		over200k !== undefined && over200k.lowerBound > 0 ? over200k.cost : undefined;
+		over200k !== undefined && over200k.lowerBound > 0
+			? over200k.cost
+			: undefined;
 
 	// `SyncedFullModel["cost"]` is typed as `AuthoredCost` (which forbids
 	// `context_over_200k`), but the catalog schema's `OutputCost` allows it and the
@@ -382,7 +402,7 @@ function cost(model: AlibabaModel, existing: ExistingModel) {
 	return {
 		...base,
 		context_over_200k: contextOver200k,
-		tiers: tiers.length > 0 ? tiers : undefined,
+		tiers,
 	} as unknown as Cost;
 }
 
