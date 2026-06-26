@@ -1,7 +1,5 @@
-
-base_model = "minimaxai/minimax-m3"
-structured_output = true
-reasoning_options = []
+base_model = "minimax/MiniMax-M3"
+reasoning = true
 
 [cost]
 input = 0.0
@@ -11,7 +9,7 @@ cache_read = 0.0
 [limit]
 context = 1000000
 input = 1000000
-output = 131072
+output = 16384
 
 [modalities]
 input = ["text", "image", "video"]
