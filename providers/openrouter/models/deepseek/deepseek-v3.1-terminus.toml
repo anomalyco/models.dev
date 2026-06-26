@@ -14,12 +14,13 @@ open_weights = true
 type = "toggle"
 
 [cost]
-input = 0
-output = 0
+input = 0.27
+output = 0.95
+cache_read = 0.13
 
 [limit]
-context = 128_000
-output = 32_000
+context = 163_840
+output = 32_768
 
 [modalities]
 input = ["text"]
