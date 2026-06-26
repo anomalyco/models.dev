@@ -1,3 +1,7 @@
+# Reasoning HTTP format (accessed 2026-06-25):
+# POST https://api.together.ai/v1/chat/completions (dedicated endpoint model).
+# Reasoning is returned in content within <think> tags; no control is documented.
+# Sources: https://docs.together.ai/docs/inference/chat/reasoning#think-tags-in-content
 name = "DeepSeek-R1"
 family = "deepseek-thinking"
 release_date = "2025-01-20"

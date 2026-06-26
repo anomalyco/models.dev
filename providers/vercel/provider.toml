@@ -1,4 +1,14 @@
 name = "Vercel AI Gateway"
 env = ["AI_GATEWAY_API_KEY"]
 npm = "@ai-sdk/gateway"
+# Reasoning HTTP format (accessed 2026-06-25):
+# POST https://ai-gateway.vercel.sh/v1/chat/completions
+# JSON reasoning.enabled: true | false; reasoning.effort: "none" | "minimal" |
+# "low" | "medium" | "high" | "xhigh"; reasoning.max_tokens: number.
+# reasoning.effort and reasoning.max_tokens are mutually exclusive. This is the
+# gateway vocabulary, not proof that every model or route implements each value.
+# Pin a route with providerOptions.gateway.only: ["<provider-slug>"] (or order).
+# Sources:
+# https://vercel.com/docs/ai-gateway/sdks-and-apis/openai-chat-completions/advanced
+# https://vercel.com/docs/ai-gateway/models-and-providers/provider-filtering-and-ordering
 doc = "https://github.com/vercel/ai/tree/5eb85cc45a259553501f535b8ac79a77d0e79223/packages/gateway"

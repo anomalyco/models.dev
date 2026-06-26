@@ -4,6 +4,8 @@ release_date = "2026-03-15"
 last_updated = "2026-06-11"
 open_weights = true
 
+# Live /models (2026-06-25): none|low|medium|high; no dedicated reasoning budget.
+# https://api.venice.ai/api/v1/models?type=text (accessed 2026-06-25)
 [[reasoning_options]]
 type = "effort"
 values = ["none", "low", "medium", "high"]

@@ -1,3 +1,11 @@
+# Reasoning HTTP format (accessed 2026-06-25):
+# POST https://api.groq.com/openai/v1/chat/completions
+# The model page says Harmony supports low/medium/high effort, but Groq's API
+# reasoning page limits documented GPT-OSS reasoning_effort support to 20B/120B.
+# Raw HTTP acceptance for this safeguard model remains unresolved.
+# Sources:
+# https://console.groq.com/docs/model/openai/gpt-oss-safeguard-20b
+# https://console.groq.com/docs/reasoning#options-for-reasoning-effort-gptoss
 name = "Safety GPT OSS 20B"
 family = "gpt-oss"
 release_date = "2025-10-29"

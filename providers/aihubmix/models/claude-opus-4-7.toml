@@ -5,6 +5,7 @@ last_updated = "2026-04-16"
 attachment = true
 reasoning = true
 reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
+# Native Messages uses $.thinking.type = "adaptive" and $.output_config.effort = "low"|"medium"|"high"|"xhigh"|"max"; manual budget_tokens is rejected. https://docs.aihubmix.com/cn/blogs/Claude-Opus4.7 (accessed 2026-06-25)
 temperature = false
 tool_call = true
 structured_output = true

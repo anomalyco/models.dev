@@ -1,4 +1,10 @@
 name = "Abliterated Model"
+# Reasoning HTTP format (accessed 2026-06-25):
+# This model thinks by default. On POST /v1/chat/completions or /v1/messages,
+# top-level `thinking: false` skips thinking; omission keeps it enabled.
+# Sources:
+# https://docs.abliteration.ai/models
+# https://docs.abliteration.ai/capabilities/thinking
 release_date = "2026-01-06"
 last_updated = "2026-01-06"
 attachment = true

@@ -5,6 +5,7 @@ last_updated = "2025-06-05"
 attachment = true
 reasoning = true
 reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "medium", "high"] }, { type = "budget_tokens", min = 0, max = 24_576 }]
+# Native Gemini uses $.generationConfig.thinkingConfig.thinkingBudget: 0 disables, -1 is dynamic, and manual budgets are 1..24576. https://cloud.google.com/vertex-ai/generative-ai/docs/thinking (accessed 2026-06-25)
 temperature = true
 tool_call = true
 structured_output = true

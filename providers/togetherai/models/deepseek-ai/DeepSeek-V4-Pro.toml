@@ -1,3 +1,8 @@
+# Reasoning HTTP format (accessed 2026-06-25):
+# POST https://api.together.ai/v1/chat/completions
+# JSON reasoning.enabled: true | false; reasoning_effort: "high" | "max".
+# "low"/"medium" map to "high"; "xhigh" maps to "max".
+# Sources: https://docs.together.ai/docs/deepseek-v4-quickstart#reasoning-effort
 name = "DeepSeek V4 Pro"
 family = "deepseek"
 release_date = "2026-04-24"
