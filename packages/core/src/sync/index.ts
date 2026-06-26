@@ -103,9 +103,9 @@ export const providers: {
 };
 
 export const groups = {
-  aggregators: ["huggingface", "openrouter", "vercel", "wandb"],
+  aggregators: ["huggingface", "openrouter", "vercel"],
   cloudflare: ["cloudflare-workers-ai"],
-  direct: ["baseten", "google", "ovhcloud", "venice", "xai"],
+  direct: ["baseten", "google", "ovhcloud", "venice", "wandb", "xai"],
 } as const;
 
 type ProviderID = keyof typeof providers;
