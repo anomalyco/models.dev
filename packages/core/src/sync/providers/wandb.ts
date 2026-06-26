@@ -1,10 +1,13 @@
 import path from "node:path";
+import { readdirSync } from "node:fs";
 import { z } from "zod";
 
 import { inferKimiFamily, ModelFamily, ModelFamilyValues } from "../../family.js";
 import type { ExistingModel, SyncProvider, SyncedFullModel, SyncedModel } from "../index.js";
+import { factorBaseModel } from "./openrouter.js";
 
 const API_ENDPOINT = "https://trace.wandb.ai/inference/modelsdev/models";
+const MODELS_DIR = path.join(import.meta.dirname, "..", "..", "..", "..", "..", "models");
 
 const WandbCost = z.object({
   input: z.number(),
@@ -63,6 +66,27 @@ export type WandbModel = z.infer<typeof WandbModel>;
 type SupportedModality = "text" | "audio" | "image" | "video" | "pdf";
 type InterleavedObject = Exclude<SyncedFullModel["interleaved"], true | undefined>;
 
+interface MetadataEntry {
+  id: string;
+  filename: string;
+  normalizedFull: string;
+  normalizedFilename: string;
+}
+
+const CANONICAL_PREFIXES: Record<string, string> = {
+  "deepseek-ai": "deepseek",
+  google: "google",
+  "meta-llama": "meta",
+  MiniMaxAI: "minimax",
+  moonshotai: "moonshotai",
+  nvidia: "nvidia",
+  openai: "openai",
+  Qwen: "alibaba",
+  "zai-org": "zhipuai",
+};
+
+let metadataEntries: MetadataEntry[] | undefined;
+
 const modalityMap: Record<string, SupportedModality | undefined> = {
   text: "text",
   image: "image",
@@ -99,49 +123,45 @@ export const wandb = {
     return Object.values(WandbResponse.parse(raw)).flatMap((provider) => Object.values(provider.models));
   },
   translateModel(model, context) {
+    const existing = context.existing(model.id);
+    const baseModel = existing?.base_model ?? resolveWandbBaseModel(model.id);
     return {
       id: model.id,
-      model: buildWandbModel(model, context.existing(model.id)),
+      model: buildWandbModel(model, existing, baseModel),
     };
-  },
-  sameModel(current, desired) {
-    return sameWandbModel(current, desired);
   },
 } satisfies SyncProvider<WandbModel>;
 
 export function buildWandbModel(
   model: WandbModel,
   existing: ExistingModel | undefined,
-  today = new Date().toISOString().slice(0, 10),
-): SyncedFullModel {
+  baseModel = existing?.base_model ?? resolveWandbBaseModel(model.id),
+): SyncedModel {
   const inputModalities = normalizeModalities(model.modalities?.input ?? []);
   const outputModalities = normalizeModalities(model.modalities?.output ?? []);
-
-  return {
-    name: existing?.name ?? normalizeName(model),
-    family: resolveFamily(existing, model),
-    attachment: existing?.attachment ?? model.attachment,
-    reasoning: existing?.reasoning ?? model.reasoning,
-    reasoning_options: existing?.reasoning_options,
-    temperature: existing?.temperature ?? model.temperature ?? true,
-    tool_call: existing?.tool_call ?? model.tool_call,
-    structured_output: existing?.structured_output !== undefined
-      ? existing.structured_output
-      : model.structured_output === true
-      ? true
-      : undefined,
-    knowledge: existing?.knowledge ?? model.knowledge,
-    release_date: existing?.release_date ?? model.release_date,
-    last_updated: today,
-    open_weights: existing?.open_weights ?? model.open_weights,
+  const limit = {
+    context: model.limit?.context ?? existing?.limit?.context ?? 0,
+    output: model.limit?.output ?? existing?.limit?.output ?? 0,
+  };
+  const synced: SyncedFullModel = {
+    name: normalizeName(model),
+    family: resolveFamily(model),
+    attachment: model.attachment,
+    reasoning: model.reasoning,
+    reasoning_options: model.reasoning ? existing?.reasoning_options ?? [] : undefined,
+    temperature: model.temperature ?? true,
+    tool_call: model.tool_call,
+    structured_output: model.structured_output === true,
+    knowledge: model.knowledge ?? existing?.knowledge,
+    release_date: model.release_date,
+    last_updated: model.last_updated,
+    open_weights: model.open_weights,
     status: resolveStatus(existing, model.status),
-    interleaved: existing?.interleaved ?? normalizeInterleaved(model.interleaved),
+    interleaved: model.reasoning
+      ? normalizeInterleaved(model.interleaved) ?? existing?.interleaved
+      : undefined,
     cost: buildCost(model.cost, existing?.cost),
-    limit: {
-      context: model.limit?.context ?? existing?.limit?.context ?? 0,
-      output: model.limit?.output ?? existing?.limit?.output ?? 0,
-      input: existing?.limit?.input,
-    },
+    limit,
     modalities: {
       input: inputModalities.length > 0
         ? inputModalities
@@ -151,6 +171,9 @@ export function buildWandbModel(
         : existing?.modalities?.output ?? ["text"],
     },
   };
+
+  if (baseModel === undefined) return synced;
+  return factorBaseModel(baseModel, synced, limit, existing?.base_model_omit);
 }
 
 function buildCost(
@@ -161,12 +184,15 @@ function buildCost(
     return {
       input: cost.input,
       output: cost.output,
+      reasoning: cost.reasoning,
       cache_read: cost.cache_read !== undefined && cost.cache_read > 0
         ? cost.cache_read
         : undefined,
       cache_write: cost.cache_write !== undefined && cost.cache_write > 0
         ? cost.cache_write
         : undefined,
+      input_audio: cost.input_audio,
+      output_audio: cost.output_audio,
     };
   }
 
@@ -174,8 +200,11 @@ function buildCost(
   return {
     input: existing.input,
     output: existing.output,
+    reasoning: existing.reasoning,
     cache_read: existing.cache_read,
     cache_write: existing.cache_write,
+    input_audio: existing.input_audio,
+    output_audio: existing.output_audio,
   };
 }
 
@@ -208,11 +237,7 @@ function resolveStatus(
   return existing?.status ?? (status as SyncedFullModel["status"] | undefined);
 }
 
-function resolveFamily(
-  existing: ExistingModel | undefined,
-  model: WandbModel,
-): SyncedFullModel["family"] | undefined {
-  if (existing?.family !== undefined) return existing.family;
+function resolveFamily(model: WandbModel): SyncedFullModel["family"] | undefined {
   const inferred = inferFamily(model.id, model.name);
   return isValidFamily(inferred) ? inferred : undefined;
 }
@@ -258,34 +283,75 @@ function isSubsequence(target: string, value: string) {
   return valueIndex === valueLower.length;
 }
 
-function sameWandbModel(current: ExistingModel, desired: SyncedModel) {
-  const desiredModel = desired as SyncedFullModel;
-  const fields: Array<[unknown, unknown, boolean?]> = [
-    [current.name, desiredModel.name],
-    [current.family, desiredModel.family],
-    [current.release_date, desiredModel.release_date],
-    [current.attachment, desiredModel.attachment],
-    [current.reasoning, desiredModel.reasoning],
-    [current.structured_output, desiredModel.structured_output],
-    [current.temperature, desiredModel.temperature],
-    [current.tool_call, desiredModel.tool_call],
-    [current.open_weights, desiredModel.open_weights],
-    [current.cost?.input, desiredModel.cost?.input, true],
-    [current.cost?.output, desiredModel.cost?.output, true],
-    [current.cost?.cache_read, desiredModel.cost?.cache_read, true],
-    [current.cost?.cache_write, desiredModel.cost?.cache_write, true],
-    [current.limit?.context, desiredModel.limit?.context],
-    [current.limit?.output, desiredModel.limit?.output],
-    [current.modalities?.input, desiredModel.modalities?.input],
-    [current.modalities?.output, desiredModel.modalities?.output],
+function resolveWandbBaseModel(id: string) {
+  const [prefix, ...modelParts] = id.split("/");
+  if (prefix === undefined || modelParts.length === 0) return undefined;
+
+  const namespace = CANONICAL_PREFIXES[prefix];
+  if (namespace === undefined) return undefined;
+
+  const modelID = modelParts.join("/");
+  const candidates = canonicalCandidates(namespace, modelID);
+  for (const candidate of candidates) {
+    const match = metadataMatch(namespace, candidate);
+    if (match !== undefined) return match.id;
+  }
+
+  return undefined;
+}
+
+function canonicalCandidates(namespace: string, modelID: string) {
+  const lower = modelID.toLowerCase();
+  const candidates = [
+    modelID,
+    lower,
+    lower.replace(/^nvidia-/, ""),
+    lower.replace(/^nvidia-/, "").replace(/-fp8$/, ""),
+    lower.replace(/-(?:instruct|thinking)-2507$/, ""),
   ];
 
-  return fields.every(([currentValue, desiredValue, cost]) => {
-    if (cost && currentValue === undefined && desiredValue === undefined) return true;
-    if (cost && (currentValue === undefined || desiredValue === undefined)) return false;
-    if (cost && typeof currentValue === "number" && typeof desiredValue === "number") {
-      return Math.abs(currentValue - desiredValue) <= 0.001;
+  if (namespace === "alibaba") {
+    candidates.push(lower.replace(/-a22b-(?:instruct|thinking)-2507$/, "-a22b"));
+  }
+
+  return [...new Set(candidates)];
+}
+
+function metadataMatch(namespace: string, candidate: string) {
+  const normalizedCandidate = normalize(candidate);
+  const normalizedFull = normalize(`${namespace}/${candidate}`);
+  const matches = getMetadataEntries(namespace).filter((entry) =>
+    entry.filename === candidate ||
+    entry.normalizedFilename === normalizedCandidate ||
+    entry.normalizedFull === normalizedFull
+  );
+  return matches.length === 1 ? matches[0] : undefined;
+}
+
+function getMetadataEntries(namespace: string) {
+  metadataEntries ??= readMetadataEntries();
+  return metadataEntries.filter((entry) => entry.id.startsWith(`${namespace}/`));
+}
+
+function readMetadataEntries() {
+  const entries: MetadataEntry[] = [];
+  for (const provider of readdirSync(MODELS_DIR, { withFileTypes: true })) {
+    if (!provider.isDirectory()) continue;
+    for (const file of readdirSync(path.join(MODELS_DIR, provider.name), { withFileTypes: true })) {
+      if (!file.isFile() || !file.name.endsWith(".toml")) continue;
+      const filename = file.name.slice(0, -5);
+      const id = `${provider.name}/${filename}`;
+      entries.push({
+        id,
+        filename,
+        normalizedFull: normalize(id),
+        normalizedFilename: normalize(filename),
+      });
     }
-    return JSON.stringify(currentValue) === JSON.stringify(desiredValue);
-  });
+  }
+  return entries;
+}
+
+function normalize(value: string) {
+  return value.toLowerCase().replaceAll(/[^a-z0-9]/g, "");
 }

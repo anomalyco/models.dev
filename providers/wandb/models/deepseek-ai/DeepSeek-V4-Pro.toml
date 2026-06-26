@@ -1,13 +1,6 @@
-name = "DeepSeek V4 Pro"
+base_model = "deepseek/deepseek-v4-pro"
 family = "deepseek"
-release_date = "2026-04-24"
-last_updated = "2026-06-11"
-attachment = false
-reasoning = true
-structured_output = true
-temperature = true
-tool_call = true
-open_weights = true
+reasoning_options = []
 
 [cost]
 input = 1.74
@@ -17,7 +10,3 @@ cache_read = 0.14
 [limit]
 context = 1_048_576
 output = 1_048_576
-
-[modalities]
-input = ["text"]
-output = ["text"]
