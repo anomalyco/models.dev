@@ -1,10 +1,17 @@
 import { z } from "zod";
 
-import type { ExistingModel, SyncProvider, SyncedModel } from "../index.js";
+import type { ExistingModel, SyncProvider, SyncedFullModel, SyncedModel } from "../index.js";
+import { factorBaseModel } from "./openrouter.js";
 
 // EmpirioLabs exposes a public, unauthenticated OpenAI-compatible model
 // catalog, so no API key is needed or used for this sync.
 const API_ENDPOINT = "https://api.empiriolabs.ai/v1/models";
+
+const CANONICAL_BASE_MODELS: Record<string, string> = {
+  "qwen3-5-9b": "alibaba/qwen3.5-9b",
+  "qwen3-7-max": "alibaba/qwen3.7-max",
+  "qwen3-7-plus": "alibaba/qwen3.7-plus",
+};
 
 const EmpiriolabsParameter = z
   .object({
@@ -38,6 +45,7 @@ const EmpiriolabsModel = z
     context_length: z.number().nullable().optional(),
     context_window: z.number().nullable().optional(),
     max_output_tokens: z.number().nullable().optional(),
+    model_released_at: z.string().optional(),
     pricing: EmpiriolabsPricing.optional(),
     capabilities: z.record(z.unknown()).optional(),
     features: z.array(z.string()).optional(),
@@ -59,6 +67,18 @@ export const empiriolabs = {
   id: "empiriolabs",
   name: "EmpirioLabs AI",
   modelsDir: "providers/empiriolabs/models",
+  skipCreates: true,
+  sourceID(model) {
+    return model.id;
+  },
+  skippedNotice(ids) {
+    if (ids.length === 0) return [];
+    return [
+      `${ids.length} EmpirioLabs AI models returned by the API were not created because the API does not provide authoritative release date, open-weight, or canonical base model metadata. `
+        + "Existing models are still updated from API-authoritative fields.",
+      `Skipped remote IDs: ${ids.map((id) => `\`${id}\``).join(", ")}`,
+    ];
+  },
   async fetchModels() {
     const response = await fetch(API_ENDPOINT);
     if (!response.ok) {
@@ -75,7 +95,8 @@ export const empiriolabs = {
   },
   translateModel(model, context) {
     const existing = context.existing(model.id);
-    const built = buildEmpiriolabsModel(model, existing);
+    const baseModel = existing?.base_model ?? CANONICAL_BASE_MODELS[model.id];
+    const built = buildEmpiriolabsModel(model, existing, baseModel);
     // A model with no resolvable context window cannot produce a valid TOML
     // (limit.context is required), so skip it rather than fail the whole sync.
     if (built === undefined) return undefined;
@@ -87,7 +108,15 @@ export const empiriolabs = {
 } satisfies SyncProvider<EmpiriolabsModel>;
 
 type Modality = "text" | "audio" | "image" | "video" | "pdf";
-type EffortValue = "none" | "minimal" | "low" | "medium" | "high" | "xhigh" | "max" | "default";
+type EffortValue =
+  | "none"
+  | "minimal"
+  | "low"
+  | "medium"
+  | "high"
+  | "xhigh"
+  | "max"
+  | "default";
 
 const EFFORT_VALUES: EffortValue[] = [
   "none",
@@ -139,46 +168,62 @@ function reasoningOptions(model: EmpiriolabsModel) {
   return [];
 }
 
-function today() {
-  return new Date().toISOString().slice(0, 10);
-}
-
 export function buildEmpiriolabsModel(
   model: EmpiriolabsModel,
   existing: ExistingModel | undefined,
+  baseModel = existing?.base_model ?? CANONICAL_BASE_MODELS[model.id],
 ): SyncedModel | undefined {
   const features = new Set(model.features ?? []);
   const capabilities = (model.capabilities ?? {}) as Record<string, unknown>;
   const input = modalities(model.input_modalities, ["text"]);
   const output = modalities(model.output_modalities, ["text"]);
   const attachment = input.some((value) => value !== "text");
-  const reasoning = capabilities.reasoning === true || features.has("reasoning");
-  const toolCall = features.has("function_calling") || features.has("tools");
-  const structuredOutput = features.has("structured_output");
-  const temperature = (model.supported_parameters ?? []).some(
-    (parameter) => parameter.name === "temperature",
-  );
+  const reasoning =
+    capabilities.reasoning === true || features.has("reasoning") || existing?.reasoning === true;
+  const toolCall =
+    features.has("function_calling") || features.has("tools") || existing?.tool_call === true;
+  const structuredOutput = features.has("structured_output") || existing?.structured_output === true;
+  const temperature =
+    (model.supported_parameters ?? []).some((parameter) => parameter.name === "temperature")
+    || existing?.temperature === true;
 
   const tier = firstPricingTier(model.pricing);
-  const inputCost = price(tier?.prompt) ?? 0;
-  const outputCost = price(tier?.completion) ?? 0;
-  const cacheRead = price(tier?.input_cache_read);
+  const inputCost = price(tier?.prompt) ?? existing?.cost?.input;
+  const outputCost = price(tier?.completion) ?? existing?.cost?.output;
+  const cacheRead = price(tier?.input_cache_read) ?? existing?.cost?.cache_read;
+  const cost = inputCost !== undefined && outputCost !== undefined
+    ? {
+        input: inputCost,
+        output: outputCost,
+        reasoning: existing?.cost?.reasoning,
+        cache_read: cacheRead !== undefined && cacheRead > 0 ? cacheRead : undefined,
+        cache_write: existing?.cost?.cache_write,
+        tiers: existing?.cost?.tiers,
+      }
+    : existing?.cost;
 
   const context =
     model.context_length ?? model.context_window ?? existing?.limit?.context;
   // No usable context window: cannot build a valid model TOML, so skip.
   if (context === undefined || context === null) return undefined;
 
-  const releaseDate = existing?.release_date ?? existing?.last_updated ?? today();
+  const releaseDate = baseModel === undefined
+    ? model.model_released_at ?? existing?.release_date
+    : existing?.release_date;
+  const lastUpdated = baseModel === undefined
+    ? model.model_released_at ?? existing?.last_updated ?? releaseDate
+    : existing?.last_updated ?? releaseDate;
   const output_tokens = model.max_output_tokens ?? existing?.limit?.output ?? context;
-
-  return {
-    base_model: existing?.base_model,
-    base_model_omit: existing?.base_model_omit,
+  const limit = {
+    context,
+    input: existing?.limit?.input,
+    output: output_tokens,
+  };
+  const values: Partial<SyncedFullModel> = {
     name: model.display_name ?? model.name ?? model.id,
     family: existing?.family,
     release_date: releaseDate,
-    last_updated: existing?.last_updated ?? releaseDate,
+    last_updated: lastUpdated,
     attachment,
     reasoning,
     reasoning_options: reasoning ? reasoningOptions(model) : undefined,
@@ -186,19 +231,29 @@ export function buildEmpiriolabsModel(
     tool_call: toolCall,
     structured_output: structuredOutput || undefined,
     knowledge: existing?.knowledge,
-    open_weights: existing?.open_weights ?? false,
+    open_weights: existing?.open_weights,
     status: existing?.status,
     interleaved: existing?.interleaved,
-    cost: {
-      input: inputCost,
-      output: outputCost,
-      cache_read: cacheRead !== undefined && cacheRead > 0 ? cacheRead : undefined,
-    },
-    limit: {
-      context,
-      input: existing?.limit?.input,
-      output: output_tokens,
-    },
+    cost,
+    limit,
     modalities: { input, output },
-  } satisfies SyncedModel;
+  };
+
+  if (baseModel !== undefined) {
+    return factorBaseModel(baseModel, values, limit, existing?.base_model_omit);
+  }
+
+  if (existing === undefined) return undefined;
+  const required = z.object({
+    name: z.string(),
+    release_date: z.string(),
+    last_updated: z.string(),
+    open_weights: z.boolean(),
+    cost: z.object({ input: z.number(), output: z.number() }),
+  }).safeParse(values);
+  if (!required.success) {
+    throw new Error(`EmpirioLabs model ${model.id} has incomplete local metadata required for sync`);
+  }
+
+  return values as SyncedFullModel;
 }

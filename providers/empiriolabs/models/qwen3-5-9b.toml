@@ -1,12 +1,5 @@
-name = "Qwen3.5 9B"
-release_date = "2026-06-13"
-last_updated = "2026-06-13"
+base_model = "alibaba/qwen3.5-9b"
 attachment = true
-reasoning = true
-temperature = true
-tool_call = true
-structured_output = true
-open_weights = true
 
 [[reasoning_options]]
 type = "effort"
@@ -18,9 +11,7 @@ output = 0.13
 cache_read = 0.045
 
 [limit]
-context = 262_144
 output = 32_768
 
 [modalities]
 input = ["text", "image", "video"]
-output = ["text"]

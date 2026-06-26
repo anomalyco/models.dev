@@ -1,13 +1,5 @@
 base_model = "alibaba/qwen3.7-max"
-name = "Qwen3.7 Max"
-family = "qwen"
-release_date = "2026-05-21"
 last_updated = "2026-06-12"
-attachment = false
-reasoning = true
-temperature = true
-tool_call = true
-open_weights = false
 
 [[reasoning_options]]
 type = "effort"
@@ -16,11 +8,3 @@ values = ["none", "low", "medium", "high", "max"]
 [cost]
 input = 2.5
 output = 7.5
-
-[limit]
-context = 1_000_000
-output = 65_536
-
-[modalities]
-input = ["text"]
-output = ["text"]
