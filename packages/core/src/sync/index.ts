@@ -12,6 +12,7 @@ import { openrouter } from "./providers/openrouter.js";
 import { ovhcloud } from "./providers/ovhcloud.js";
 import { vercel } from "./providers/vercel.js";
 import { venice } from "./providers/venice.js";
+import { wandb } from "./providers/wandb.js";
 import { xai } from "./providers/xai.js";
 
 const ExistingModelType = AuthoredModelShape.partial()
@@ -86,6 +87,7 @@ export const providers: {
   ovhcloud: SyncProvider<any>;
   vercel: SyncProvider<any>;
   venice: SyncProvider<any>;
+  wandb: SyncProvider<any>;
   xai: SyncProvider<any>;
 } = {
   baseten,
@@ -96,11 +98,12 @@ export const providers: {
   ovhcloud,
   vercel,
   venice,
+  wandb,
   xai,
 };
 
 export const groups = {
-  aggregators: ["huggingface", "openrouter", "vercel"],
+  aggregators: ["huggingface", "openrouter", "vercel", "wandb"],
   cloudflare: ["cloudflare-workers-ai"],
   direct: ["baseten", "google", "ovhcloud", "venice", "xai"],
 } as const;
