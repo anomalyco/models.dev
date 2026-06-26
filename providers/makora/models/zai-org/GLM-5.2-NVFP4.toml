@@ -1,0 +1,13 @@
+base_model = "zhipuai/glm-5.2"
+name = "GLM-5.2 NVFP4"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["high", "max"]
+
+[limit]
+context = 980_000
+output = 128_000

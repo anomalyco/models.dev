@@ -1,0 +1,15 @@
+name = "Makora"
+env = ["MAKORA_OPTIMIZE_TOKEN"]
+npm = "@ai-sdk/openai-compatible"
+# Reasoning HTTP format (accessed 2026-06-26):
+# POST https://inference.makora.com/v1/chat/completions (OpenAI-compatible, vLLM)
+# Reasoning returned in the "reasoning" field of each message.
+# DeepSeek V4 / GLM-5.2: reasoning_effort = "high"|"max"|"none" (none disables).
+# Qwen3.6: enable_thinking via qwen-chat-template; levels "enabled"|"none".
+# Kimi K2.7 Code: thinking-only model (always on, cannot disable).
+# Gemma 4 26B A4B: reasoning always on (level "enabled" only).
+# Sources:
+# https://inference.makora.com/v1/models
+# https://github.com/monotykamary/pi-makora-provider/blob/main/README.md
+api = "https://inference.makora.com/v1"
+doc = "https://inference.makora.com/v1/models"
