@@ -366,8 +366,15 @@ export function buildAlibabaModel(model: AlibabaModel, existing: ExistingModel):
     release_date: existing.release_date ?? requireExisting(model, "published_time", publishedDate),
     last_updated: existing.last_updated ?? requireExisting(model, "published_time", publishedDate),
     attachment: existing.attachment ?? translatedModalities?.input.some((value) => value !== "text") ?? false,
-    reasoning: existing.reasoning ?? model.capabilities.includes("Reasoning"),
-    reasoning_options: existing.reasoning_options,
+		reasoning: existing.reasoning ?? model.capabilities.includes("Reasoning"),
+		// DashScope's catalog blob exposes `capabilities: ["Reasoning"]` but no per-model
+		// reasoning controls (no enable_thinking toggle, no effort levels, no budget knob).
+		// The team hand-curates real `reasoning_options` (e.g. qwen3.5-plus) when the inference
+		// API documents the controls; otherwise default to `[]` so reasoning models still get
+		// a non-undefined `reasoning_options` block.
+		reasoning_options:
+			existing.reasoning_options ??
+			(existing.reasoning ?? model.capabilities.includes("Reasoning") ? [] : undefined),
     temperature: requireExisting(model, "temperature", existing.temperature),
     tool_call: existing.tool_call ?? model.features.includes("function-calling"),
     structured_output: existing.structured_output ?? model.features.includes("structured-outputs"),
