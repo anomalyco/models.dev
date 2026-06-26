@@ -170,6 +170,7 @@ export const ModelFamilyValues = [
   "stable-diffusion",
   "ideogram",
   "dreamshaper",
+  "z-image",
 
   // Video generation
   "sora",

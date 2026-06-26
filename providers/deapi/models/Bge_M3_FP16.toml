@@ -1,0 +1,22 @@
+name = "BGE M3 FP16"
+family = "bge"
+release_date = "2024-01-30"
+last_updated = "2024-01-30"
+attachment = false
+reasoning = false
+temperature = false
+knowledge = "2024-01"
+tool_call = false
+open_weights = true
+
+[cost]
+input = 0.068
+output = 0.00
+
+[limit]
+context = 8_192
+output = 1_024
+
+[modalities]
+input = ["text"]
+output = ["text"]
