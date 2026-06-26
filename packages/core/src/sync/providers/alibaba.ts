@@ -226,7 +226,18 @@ function costFromPrices(prices: z.infer<typeof AlibabaPrice>[], existing: Cost |
 
   return {
     input: input ?? existing?.input ?? 0,
-    output: output ?? imageOutput ?? (duration === undefined ? undefined : duration * 1000) ?? tts ?? existing?.output ?? 0,
+    // Only `output_token` (and its aliases) are per-token output prices. `image_number`,
+    // `content_duration`, and `cosy_tts_number` are per-image, per-second, and per-character
+    // respectively — writing any of them into `cost.output` would corrupt the per-token
+    // semantic. For image-gen, ASR, and TTS models the cost is hand-curated in the TOML
+    // and the sync script leaves it alone, matching `google.ts` (`cost: existing.cost`).
+    //
+    // | model type       | output_token | cost.output after sync          |
+    // | ---------------- | ------------ | ------------------------------- |
+    // | text             | yes          | overwritten with API per-token  |
+    // | image-gen/ASR/TTS| no           | preserved from existing TOML    |
+    // | (new, no TOML)   | no           | falls back to 0                 |
+    output: output ?? existing?.output ?? 0,
     reasoning: price(prices, "thinking_output_token") ?? existing?.reasoning,
     cache_read: price(prices, "input_token_cache", "thinking_input_token_cache", "input_token_cache_read"),
     cache_write: price(prices, "input_token_cache_creation_5m", "thinking_input_token_cache_creation_5m"),
