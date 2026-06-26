@@ -3,9 +3,9 @@ family = "gpt-oss"
 attachment = false
 reasoning = true
 reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
-structured_output = false
+structured_output = true
 temperature = true
-tool_call = false
+tool_call = true
 release_date = "2025-10-29"
 last_updated = "2025-10-29"
 knowledge = "2024-06"
@@ -17,7 +17,7 @@ output = 0.6
 
 [limit]
 context = 131_000
-output = 131_000
+output = 32_768
 
 [modalities]
 input = ["text"]
