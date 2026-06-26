@@ -1,5 +1,5 @@
 name = "TIM-Qwen3.6 27B"
-attachment = true
+attachment = false
 reasoning = true
 tool_call = true
 structured_output = true
@@ -9,13 +9,14 @@ last_updated = "2026-05-11"
 open_weights = false
 
 [cost]
-input = 0.5
-output = 3.5
+input = 0
+output = 0
 
 [limit]
-context = 262144
-output = 262144
+context = 8192
+input = 8192
+output = 5000
 
 [modalities]
-input = ["text", "image"]
+input = ["text"]
 output = ["text"]
