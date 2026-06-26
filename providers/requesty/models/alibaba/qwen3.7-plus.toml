@@ -1,0 +1,13 @@
+base_model = "alibaba/qwen3.7-plus"
+attachment = true
+reasoning = false
+structured_output = true
+
+[cost]
+input = 0.32
+output = 1.28
+cache_read = 0.032
+
+[limit]
+context = 1_048_576
+output = 65_536

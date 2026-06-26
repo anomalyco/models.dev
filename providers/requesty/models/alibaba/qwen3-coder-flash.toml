@@ -1,0 +1,14 @@
+base_model = "alibaba/qwen3-coder-flash"
+attachment = true
+structured_output = true
+
+[cost]
+input = 0.3
+output = 1.5
+cache_read = 0.08
+
+[limit]
+context = 1_048_576
+
+[modalities]
+input = ["text", "image"]

@@ -1,0 +1,16 @@
+base_model = "google/gemini-3.1-flash-image-preview"
+tool_call = true
+structured_output = false
+
+[cost]
+input = 0.5
+output = 2
+cache_read = 0
+
+[limit]
+context = 131_072
+output = 32_768
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
