@@ -4,7 +4,7 @@ release_date = "2026-04-16"
 last_updated = "2026-04-16"
 attachment = true
 reasoning = true
-# Bedrock Claude 4.7 uses $.thinking.type = "adaptive" and $.output_config.effort = "low"|"medium"|"high"|"xhigh"|"max"; manual budget_tokens is rejected. Converse prefixes both paths with $.additionalModelRequestFields. https://docs.anthropic.com/en/docs/build-with-claude/extended-thinking (accessed 2026-06-25)
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
 temperature = false
 tool_call = true
 knowledge = "2026-01-31"
