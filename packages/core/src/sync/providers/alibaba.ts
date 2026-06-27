@@ -1,4 +1,6 @@
 import { z } from "zod";
+import { existsSync, readFileSync } from "node:fs";
+import path from "node:path";
 
 import type {
 	ExistingModel,
@@ -10,6 +12,29 @@ import { factorBaseModel } from "./openrouter.js";
 
 const INTL_API_ENDPOINT = "https://dashscope-intl.aliyuncs.com/api/v1/models";
 const API_PAGE_SIZE = 100;
+const MODELS_DIR = path.join(
+	import.meta.dirname,
+	"..",
+	"..",
+	"..",
+	"..",
+	"..",
+	"models",
+);
+const modelMetadataByID = new Map<string, Record<string, unknown>>();
+function baseModelMetadata(modelID: string): Record<string, unknown> {
+	let metadata = modelMetadataByID.get(modelID);
+	if (metadata === undefined) {
+		metadata = Bun.TOML.parse(
+			readFileSync(path.join(MODELS_DIR, `${modelID}.toml`), "utf8"),
+		) as Record<string, unknown>;
+		modelMetadataByID.set(modelID, metadata);
+	}
+	return metadata;
+}
+function baseModelMetadataExists(modelID: string): boolean {
+	return existsSync(path.join(MODELS_DIR, `${modelID}.toml`));
+}
 
 const AlibabaPrice = z
 	.object({
@@ -171,8 +196,17 @@ export function createAlibabaProvider(
 		},
 		translateModel(model, context) {
 			const existing = context.existing(model.model);
-			if (existing === undefined) return undefined;
-
+			if (existing === undefined) {
+				// Creation: no provider TOML but base-model metadata exists → mint a
+				// thin provider TOML (base_model + API cost only). `options.id` is the
+				// base metadata dir prefix (models/<id>/<model>.toml). Skip unless the
+				// API exposes usable pricing — `cost` is required and not inherited.
+				const baseModelID = `${options.id}/${model.model}`;
+				if (!baseModelMetadataExists(baseModelID)) return undefined;
+				const stub = { base_model: baseModelID };
+				if (cost(model, stub) === undefined) return undefined;
+				return { id: model.model, model: buildAlibabaModel(model, stub) };
+			}
 			return {
 				id: model.model,
 				model: buildAlibabaModel(model, existing),
@@ -421,6 +455,27 @@ export function buildAlibabaModel(
 	const translatedLimit = limit(model, existing);
 
 	if (existing.base_model !== undefined) {
+		// Reasoning models must carry a `reasoning_options` block (≥ []); default to
+		// [] when neither the provider TOML nor base metadata supply one. Inherited
+		// reasoning_options (from base metadata) are left to factorBaseModel.
+		const baseMetadata = baseModelMetadata(existing.base_model);
+		const resolvedReasoning =
+			existing.reasoning ?? baseMetadata.reasoning === true;
+		const reasoningOptions =
+			existing.reasoning_options ??
+			(resolvedReasoning && baseMetadata.reasoning_options === undefined
+				? []
+				: undefined);
+		// factorBaseModel's required 3rd arg feeds baseModelOmit(), which reads
+		// limit.input/context and throws on undefined. Use the translated limit, or
+		// the base limit when the TOML declares none (thin stub inherits verbatim,
+		// no omit). Matches the other factorBaseModel callers — no requireExisting.
+		const baseLimit = baseMetadata.limit as
+			| SyncedFullModel["limit"]
+			| undefined;
+		const limitForOmit = (translatedLimit ??
+			baseLimit ??
+			{}) as SyncedFullModel["limit"];
 		return factorBaseModel(
 			existing.base_model,
 			{
@@ -430,7 +485,7 @@ export function buildAlibabaModel(
 				last_updated: existing.last_updated,
 				attachment: existing.attachment,
 				reasoning: existing.reasoning,
-				reasoning_options: existing.reasoning_options,
+				reasoning_options: reasoningOptions,
 				temperature: existing.temperature,
 				tool_call: existing.tool_call,
 				structured_output: existing.structured_output,
@@ -442,11 +497,7 @@ export function buildAlibabaModel(
 				limit: translatedLimit,
 				modalities: translatedModalities,
 			},
-			requireExisting(
-				model,
-				"limit",
-				translatedLimit,
-			) as SyncedFullModel["limit"],
+			limitForOmit,
 			existing.base_model_omit,
 		);
 	}
