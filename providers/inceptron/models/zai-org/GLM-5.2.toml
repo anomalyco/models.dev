@@ -1,15 +1,16 @@
 reasoning_options = []
-base_model = "moonshotai/kimi-k2.6"
+base_model = "zhipuai/glm-5.2"
+name = "GLM 5.2"
 
 [interleaved]
 field = "reasoning_content"
 
 [cost]
-input = 0.66
-output = 3.5
-cache_read = 0.2
+input = 1.2
+output = 4.2
+cache_read = 0.26
 cache_write = 0
 
 [modalities]
-input = ["text", "image", "video"]
+input = ["text"]
 output = ["text"]
