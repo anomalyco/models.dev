@@ -10,8 +10,9 @@ env = ["SNOWFLAKE_ACCOUNT", "SNOWFLAKE_CORTEX_PAT"]
 # max_tokens is the native budget. Adaptive-only Claude models use effort, not a
 # manual thinking-token budget. Other model families ignore all three controls.
 # Anthropic-compatible POST /api/v2/cortex/v1/messages (Claude only): adaptive
-# thinking uses thinking.type = "adaptive" and output_config.effort =
-# "low"|"medium"|"high"|"max" for claude-opus-4-6+ and claude-sonnet-4-6.
+# thinking uses thinking.type = "adaptive" and output_config.effort. Snowflake
+# documents "low"|"medium"|"high"|"max"; Anthropic documents xhigh for
+# Claude Fable 5, Claude Opus 4.7, and Claude Opus 4.8 on this routed surface.
 # Source:
 # https://docs.snowflake.com/en/user-guide/snowflake-cortex/cortex-rest-api
 doc = "https://docs.snowflake.com/en/user-guide/snowflake-cortex/cortex-rest-api"
