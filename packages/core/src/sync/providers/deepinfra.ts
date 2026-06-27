@@ -288,8 +288,10 @@ export function buildDeepInfraModel(
   if (tags.has("multimodal")) derivedModalities.push("image");
   if (tags.has("input-audio")) derivedModalities.push("audio");
   if (tags.has("input-video")) derivedModalities.push("video");
-  const inputModalities = existing?.modalities?.input !== undefined
-    ? mergeModalities(existing.modalities.input, derivedModalities)
+  const unsupportedModalities = UNSUPPORTED_MODALITIES[model.model_name];
+  const inputModalities = existing?.modalities?.input !== undefined || derivedModalities.length > 0
+    ? mergeModalities(existing?.modalities?.input, derivedModalities)
+        .filter((value) => !unsupportedModalities?.has(value))
     : undefined;
   const modalities = inputModalities === undefined
     ? undefined
@@ -398,6 +400,12 @@ function deriveName(id: string) {
 type Modality = "text" | "audio" | "image" | "video" | "pdf";
 
 const ALLOWED_MODALITIES = new Set<Modality>(["text", "audio", "image", "video", "pdf"]);
+
+// DeepInfra currently applies `input-audio` to the whole Gemma 4 family, but
+// its model page limits audio input to the E2B and E4B variants.
+const UNSUPPORTED_MODALITIES: Record<string, Set<Modality>> = {
+  "google/gemma-4-31B-it": new Set(["audio"]),
+};
 
 function mergeModalities(existing: string[] | undefined, add: Modality[]): Modality[] {
   const result = new Set<Modality>(["text"]);
