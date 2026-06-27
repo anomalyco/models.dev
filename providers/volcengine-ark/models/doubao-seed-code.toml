@@ -1,0 +1,36 @@
+name = "Doubao Seed Code"
+release_date = "2025-10-28"
+last_updated = "2025-10-28"
+attachment = true
+reasoning = true
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
+temperature = true
+tool_call = true
+knowledge = "2025-01-01"
+open_weights = false
+
+[cost]
+input = 1.2
+output = 8
+cache_read = 0.24
+
+[[cost.tiers]]
+tier = { size = 128_000 }
+input = 1.4
+output = 12
+cache_read = 0.24
+
+[[cost.tiers]]
+tier = { size = 256_000 }
+input = 2.8
+output = 16
+cache_read = 0.24
+
+[limit]
+context = 256_000
+input = 224_000
+output = 32_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

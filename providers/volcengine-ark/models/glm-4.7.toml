@@ -1,0 +1,22 @@
+base_model = "zhipuai/glm-4.7"
+
+[cost]
+input = 2
+output = 8
+cache_read = 0.4
+
+[[cost.tiers]]
+tier = { size = 128_000 }
+input = 3
+output = 14
+cache_read = 0.6
+
+[[cost.tiers]]
+tier = { size = 200_000 }
+input = 4
+output = 16
+cache_read = 0.8
+
+[limit]
+context = 200_000
+output = 131_072

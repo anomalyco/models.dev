@@ -1,0 +1,20 @@
+name = "Doubao 1.5 Vision Pro"
+release_date = "2025-01-15"
+last_updated = "2025-01-15"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = true
+open_weights = false
+
+[cost]
+input = 3
+output = 9
+
+[limit]
+context = 32_000
+output = 12_000
+
+[modalities]
+input = ["text", "image", "video"]
+output = ["text"]
