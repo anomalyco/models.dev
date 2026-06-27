@@ -4,6 +4,7 @@ release_date = "2026-02-05"
 last_updated = "2026-02-05"
 attachment = true
 reasoning = true
+reasoning_options = []
 temperature = true
 tool_call = true
 structured_output = true
@@ -30,10 +31,3 @@ output = 128_000
 [modalities]
 input = ["text", "image", "pdf"]
 output = ["text"]
-
-[[reasoning_options]]
-type = "effort"
-values = ["none", "low", "medium", "high", "max"]
-
-[[reasoning_options]]
-type = "budget_tokens"

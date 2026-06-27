@@ -1,11 +1,6 @@
 base_model = "openai/gpt-5.2-chat-latest"
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "low", "medium", "high", "max"]
-
-[[reasoning_options]]
-type = "budget_tokens"
+reasoning_options = []
 
 [cost]
 input = 1.75
