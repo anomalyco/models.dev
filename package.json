@@ -20,7 +20,7 @@
     "compare:migrations": "bun ./packages/core/script/compare-model-migrations.ts",
     "baseten:sync": "bun ./packages/core/script/sync-models.ts baseten",
     "cloudflare:sync": "bun ./packages/core/script/sync-models.ts cloudflare-workers-ai",
-    "chutes:generate": "bun ./packages/core/script/generate-chutes.ts",
+    "chutes:sync": "bun ./packages/core/script/sync-models.ts chutes",
     "databricks:generate": "bun ./packages/core/script/generate-databricks.ts",
     "helicone:generate": "bun ./packages/core/script/generate-helicone.ts",
     "huggingface:sync": "bun ./packages/core/script/sync-models.ts huggingface",
