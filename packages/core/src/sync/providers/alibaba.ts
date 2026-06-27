@@ -11,17 +11,11 @@ import type {
 import { factorBaseModel } from "./openrouter.js";
 
 const INTL_API_ENDPOINT = "https://dashscope-intl.aliyuncs.com/api/v1/models";
+const BASE_PREFIX = "alibaba";
 const API_PAGE_SIZE = 100;
-const MODELS_DIR = path.join(
-	import.meta.dirname,
-	"..",
-	"..",
-	"..",
-	"..",
-	"..",
-	"models",
-);
+const MODELS_DIR = path.join(import.meta.dirname, "..", "..", "..", "..", "..", "models");
 const modelMetadataByID = new Map<string, Record<string, unknown>>();
+
 function baseModelMetadata(modelID: string): Record<string, unknown> {
 	let metadata = modelMetadataByID.get(modelID);
 	if (metadata === undefined) {
@@ -32,8 +26,9 @@ function baseModelMetadata(modelID: string): Record<string, unknown> {
 	}
 	return metadata;
 }
-function baseModelMetadataExists(modelID: string): boolean {
-	return existsSync(path.join(MODELS_DIR, `${modelID}.toml`));
+function resolveAlibabaBaseModel(modelID: string): string | undefined {
+	const candidate = `${BASE_PREFIX}/${modelID}`;
+	return existsSync(path.join(MODELS_DIR, `${candidate}.toml`)) ? candidate : undefined;
 }
 
 const AlibabaPrice = z
@@ -133,7 +128,9 @@ export function createAlibabaProvider(
 		id: options.id,
 		name: options.name,
 		modelsDir: options.modelsDir,
-		skipCreates: true,
+		// skipCreates stays false: new models with a matching
+		// models/alibaba/<id>.toml base file are auto-minted as thin
+		// stubs. Models without a base match are skipped by translateModel.
 		deleteMissing: false,
 		sourceID(model) {
 			return model.model;
@@ -141,7 +138,7 @@ export function createAlibabaProvider(
 		skippedNotice(ids) {
 			if (ids.length === 0) return [];
 			return [
-				`${ids.length} Alibaba models returned by the source were not created because the source does not provide enough curated catalog metadata for new entries. Existing models are still updated from source-authoritative fields.`,
+				`${ids.length} Alibaba models returned by the source were not created because no matching \`models/alibaba/<id>.toml\` base-metadata file exists for them. The DashScope API does not authoritatively expose \`family\`, \`temperature\`, \`open_weights\`, or \`knowledge\`, so a base-metadata file is required to mint a thin provider stub via inheritance. Add the file to enable auto-creation. Existing models are still updated from source-authoritative fields.`,
 				`Skipped remote IDs: ${ids.map((id) => `\`${id}\``).join(", ")}`,
 			];
 		},
@@ -196,20 +193,19 @@ export function createAlibabaProvider(
 		},
 		translateModel(model, context) {
 			const existing = context.existing(model.model);
-			if (existing === undefined) {
-				// Creation: no provider TOML but base-model metadata exists → mint a
-				// thin provider TOML (base_model + API cost only). `options.id` is the
-				// base metadata dir prefix (models/<id>/<model>.toml). Skip unless the
-				// API exposes usable pricing — `cost` is required and not inherited.
-				const baseModelID = `${options.id}/${model.model}`;
-				if (!baseModelMetadataExists(baseModelID)) return undefined;
-				const stub = { base_model: baseModelID };
-				if (cost(model, stub) === undefined) return undefined;
-				return { id: model.model, model: buildAlibabaModel(model, stub) };
-			}
+			const baseModel = existing === undefined
+				? resolveAlibabaBaseModel(model.model)
+				: existing.base_model;
+			// Per-model skip: refuse to mint when no base-metadata match exists
+			// and there's no existing provider TOML. Required inline fields
+			// (family, temperature, open_weights, knowledge) aren't authoritatively
+			// exposed by the DashScope API, and inventing them would propagate
+			// to every downstream consumer. A base match lets those fields
+			// inherit at read time via factorBaseModel + resolveBaseModel.
+			if (existing === undefined && baseModel === undefined) return undefined;
 			return {
 				id: model.model,
-				model: buildAlibabaModel(model, existing),
+				model: buildAlibabaModel(model, existing, baseModel),
 			};
 		},
 	};
@@ -366,18 +362,18 @@ function tierLowerBound(rangeName: string) {
 	return undefined;
 }
 
-function cost(model: AlibabaModel, existing: ExistingModel) {
+function cost(model: AlibabaModel, existing: ExistingModel | undefined) {
 	const ranges = model.prices
 		.map((range) => ({
 			lowerBound: tierLowerBound(range.range_name),
-			cost: costFromPrices(range.prices, existing.cost),
+			cost: costFromPrices(range.prices, existing?.cost),
 		}))
 		.filter((range): range is { lowerBound: number; cost: Cost } => {
 			return range.lowerBound !== undefined && range.cost !== undefined;
 		})
 		.sort((left, right) => left.lowerBound - right.lowerBound);
 
-	if (ranges.length === 0) return existing.cost;
+	if (ranges.length === 0) return existing?.cost;
 
 	const base = ranges[0]!.cost;
 	// Build the API-derived tiers. Each tier carries its `lowerBound` as `size` —
@@ -401,8 +397,8 @@ function cost(model: AlibabaModel, existing: ExistingModel) {
 	};
 }
 
-function limit(model: AlibabaModel, existing: ExistingModel) {
-	if (existing.limit === undefined) return undefined;
+function limit(model: AlibabaModel, existing: ExistingModel | undefined) {
+	if (existing?.limit === undefined) return undefined;
 
 	return {
 		input: existing.limit.input,
@@ -411,8 +407,8 @@ function limit(model: AlibabaModel, existing: ExistingModel) {
 	};
 }
 
-function modalities(model: AlibabaModel, existing: ExistingModel) {
-	if (existing.modalities === undefined) return undefined;
+function modalities(model: AlibabaModel, existing: ExistingModel | undefined) {
+	if (existing?.modalities === undefined) return undefined;
 
 	const input = normalizedModalities(model.inference_metadata.request_modality);
 	// DashScope does not surface `pdf` in `inference_metadata.request_modality`, but vision-understanding
@@ -447,61 +443,71 @@ function requireExisting<T>(
 
 export function buildAlibabaModel(
 	model: AlibabaModel,
-	existing: ExistingModel,
+	existing: ExistingModel | undefined,
+	baseModel: string | undefined = existing?.base_model ?? resolveAlibabaBaseModel(model.model),
 ): SyncedModel {
 	const publishedDate = dateFromPublishedTime(model.published_time);
 	const translatedModalities = modalities(model, existing);
 	const translatedCost = cost(model, existing);
 	const translatedLimit = limit(model, existing);
 
-	if (existing.base_model !== undefined) {
-		// Reasoning models must carry a `reasoning_options` block (≥ []); default to
-		// [] when neither the provider TOML nor base metadata supply one. Inherited
-		// reasoning_options (from base metadata) are left to factorBaseModel.
-		const baseMetadata = baseModelMetadata(existing.base_model);
-		const resolvedReasoning =
-			existing.reasoning ?? baseMetadata.reasoning === true;
-		const reasoningOptions =
-			existing.reasoning_options ??
-			(resolvedReasoning && baseMetadata.reasoning_options === undefined
-				? []
-				: undefined);
-		// factorBaseModel's required 3rd arg feeds baseModelOmit(), which reads
-		// limit.input/context and throws on undefined. Use the translated limit, or
-		// the base limit when the TOML declares none (thin stub inherits verbatim,
-		// no omit). Matches the other factorBaseModel callers — no requireExisting.
+	if (baseModel !== undefined) {
+		// Thin-stub path. Fields not supplied here are inherited at read
+		// time by resolveBaseModel in sync/index.ts — see factorBaseModel.
+		// Pass undefined (not false / 0 / "") for fields the API can't
+		// authoritatively expose so the base is the sole authority; writing
+		// false would override a base that says attachment = true.
+		// limitForOmit falls back to baseMetadata.limit when the API returns
+		// null for context_window / max_output_tokens so the stub inherits
+		// the base's limit verbatim.
+		const baseMetadata = baseModelMetadata(baseModel);
 		const baseLimit = baseMetadata.limit as
 			| SyncedFullModel["limit"]
 			| undefined;
 		const limitForOmit = (translatedLimit ??
 			baseLimit ??
 			{}) as SyncedFullModel["limit"];
+		const resolvedReasoning = existing?.reasoning
+			?? (baseMetadata.reasoning === true);
 		return factorBaseModel(
-			existing.base_model,
+			baseModel,
 			{
-				name: existing.name,
-				family: existing.family,
-				release_date: existing.release_date,
-				last_updated: existing.last_updated,
-				attachment: existing.attachment,
-				reasoning: existing.reasoning,
-				reasoning_options: reasoningOptions,
-				temperature: existing.temperature,
-				tool_call: existing.tool_call,
-				structured_output: existing.structured_output,
-				knowledge: existing.knowledge,
-				open_weights: existing.open_weights,
-				status: existing.status,
-				interleaved: existing.interleaved,
+				name: existing?.name ?? model.name,
+				family: existing?.family,
+				release_date: existing?.release_date ?? publishedDate,
+				last_updated: existing?.last_updated ?? publishedDate,
+				attachment: existing?.attachment,
+				reasoning: resolvedReasoning,
+				// Default to [] only when the base has no reasoning_options
+				// of its own — otherwise leave undefined so the base's
+				// curated options (if any are added later) inherit.
+				reasoning_options: existing?.reasoning_options
+					?? (resolvedReasoning && baseMetadata.reasoning_options === undefined
+						? []
+						: undefined),
+				temperature: existing?.temperature,
+				tool_call: existing?.tool_call,
+				structured_output: existing?.structured_output,
+				knowledge: existing?.knowledge,
+				open_weights: existing?.open_weights,
+				status: existing?.status,
+				interleaved: existing?.interleaved,
 				cost: translatedCost,
 				limit: translatedLimit,
 				modalities: translatedModalities,
 			},
 			limitForOmit,
-			existing.base_model_omit,
+			existing?.base_model_omit,
 		);
 	}
-
+	// Inline path: existing models with no base reference and no resolvable
+	// base match. translateModel skips new models without a base match,
+	// so `existing` is always defined here — requireExisting enforces it.
+	if (existing === undefined) {
+		throw new Error(
+			`Alibaba model ${model.model} reached inline path without existing TOML or base-model match`,
+		);
+	}
 	return {
 		name: existing.name ?? model.name,
 		family: requireExisting(model, "family", existing.family),
