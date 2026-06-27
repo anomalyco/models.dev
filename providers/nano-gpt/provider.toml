@@ -1,5 +1,15 @@
 name = "NanoGPT"
 env = ["NANO_GPT_API_KEY"]
 npm = "@ai-sdk/openai-compatible"
+# Chat variants are POST `/api/v1/chat/completions` (`reasoning`),
+# `/api/v1legacy/chat/completions` (`reasoning_content`), and
+# `/api/v1thinking/chat/completions` (reasoning merged into `content`). Requests
+# accept `reasoning_effort` or `reasoning.effort`; exact values are `none`,
+# `minimal`, `low`, `medium`, `high`, and `xhigh`, and `none` disables reasoning.
+# `reasoning.exclude = true` only hides output. Separately, `:thinking`, legacy
+# `-thinking`, and Anthropic `:<number>` budgets are model-ID variants/aliases.
+# https://docs.nano-gpt.com/api-reference/miscellaneous/extended-thinking
+# https://docs.nano-gpt.com/api-reference/miscellaneous/model-suffixes
+# (accessed 2026-06-25)
 api = "https://nano-gpt.com/api/v1"
 doc = "https://docs.nano-gpt.com"

@@ -2,4 +2,14 @@ name = "Requesty"
 env = ["REQUESTY_API_KEY"]
 npm = "@ai-sdk/openai-compatible"
 api = "https://router.requesty.ai/v1"
+# Reasoning HTTP format (accessed 2026-06-25):
+# POST /v1/chat/completions uses top-level reasoning_effort as an effort string
+# or decimal budget string. OpenAI: low|medium|high pass through, max -> high,
+# none|min -> low; budgets 0..1024/1025..8192/>=8193 map low/medium/high.
+# Anthropic: none|min|low -> 1024, medium -> 8192, high -> 16384, max ->
+# model max output minus 1. Vertex: none|min -> 0 for Flash/Flash Lite or 128
+# for Pro, low -> 1024, medium -> 8192, high -> 24576, max -> max output.
+# Thus none is a gateway translation and does not always disable reasoning.
+# Source:
+# https://docs.requesty.ai/features/reasoning
 doc = "https://requesty.ai/solution/llm-routing/models"

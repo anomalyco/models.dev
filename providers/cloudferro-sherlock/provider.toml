@@ -1,5 +1,9 @@
 name = "CloudFerro Sherlock"
 env = ["CLOUDFERRO_SHERLOCK_API_KEY"]
 npm = "@ai-sdk/openai-compatible"
+# Raw HTTP is OpenAI Chat at POST `/openai/v1/chat/completions`. Sherlock's
+# public request documentation does not document a shared reasoning toggle,
+# effort, or token-budget field.
+# https://docs.sherlock.cloudferro.com/ (accessed 2026-06-25)
 api = "https://api-sherlock.cloudferro.com/openai/v1/"
 doc = "https://docs.sherlock.cloudferro.com/"

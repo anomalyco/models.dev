@@ -1,4 +1,8 @@
 name = "Gemini 3.1 Pro Preview"
+# Raw POST /v1/chat/completions is documented for this model, but no reasoning
+# request field is specified; /v1/responses limits reasoning to GPT-5/o-series.
+# https://docs.vivgrid.com/models/gemini-3.1-pro-preview (accessed 2026-06-25)
+# https://docs.vivgrid.com/api/model-api (accessed 2026-06-25)
 family = "gemini-pro"
 release_date = "2026-02-19"
 last_updated = "2026-02-19"

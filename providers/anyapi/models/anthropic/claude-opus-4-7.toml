@@ -1,4 +1,7 @@
 base_model = "anthropic/claude-opus-4-7"
+# AnyAPI documents generic effort and thinking fields, but no Opus 4.7-specific
+# mapping or budget bounds; accepted schema does not prove effective control.
+# https://docs.anyapi.ai/guides/parameters
 reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "medium", "high"] }]
 
 [experimental.modes.fast]

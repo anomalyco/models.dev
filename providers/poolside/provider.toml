@@ -1,5 +1,13 @@
 name = "Poolside"
 env = ["POOLSIDE_API_KEY"]
 npm = "@ai-sdk/openai-compatible"
+# Raw HTTP reasoning controls (sources accessed 2026-06-25): POST
+# `/openai/v1/chat/completions` has generic `reasoning.effort` with
+# none|minimal|low|medium|high|xhigh and allows additional properties. That
+# schema describes the API surface, not support by every model; the published
+# Laguna model pages establish OpenAI-compatible use but do not repeat the enum.
+# https://docs.poolside.ai/openai-api/chat/create-chat-completion
+# https://docs.poolside.ai/release-notes/laguna-m1
+# https://docs.poolside.ai/release-notes/laguna-xs2
 api = "https://inference.poolside.ai/v1"
 doc = "https://platform.poolside.ai"

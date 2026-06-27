@@ -6,7 +6,7 @@ reasoning = true
 temperature = true
 tool_call = false
 open_weights = false
-reasoning_options = []
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
 
 [cost]
 input = 1.5
