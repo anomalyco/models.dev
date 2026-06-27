@@ -2,11 +2,4 @@ name = "Qiniu"
 env = ["QINIU_API_KEY"]
 npm = "@ai-sdk/openai-compatible"
 api = "https://api.qnaigc.com/v1"
-# Reasoning HTTP format (accessed 2026-06-25):
-# POST /v1/chat/completions accepts top-level reasoning_effort =
-# "low"|"medium"|"high", or thinking = {type = "enabled",
-# budget_tokens = N}. The generic schema says model support varies; it does not
-# map either field or a budget range to every catalog model.
-# Source:
-# https://developer.qiniu.com/aitokenapi/13390/chat-completions
 doc= "https://developer.qiniu.com/aitokenapi"
