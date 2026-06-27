@@ -1,5 +1,17 @@
 base_model = "anthropic/claude-opus-4-7"
 
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high"]
+
+[[reasoning_options]]
+type = "budget_tokens"
+min = 1_024
+max = 32_000
+
 [cost]
 input = 5
 output = 25
@@ -8,4 +20,3 @@ cache_write = 6.25
 
 [modalities]
 input = ["text", "image"]
-output = ["text"]

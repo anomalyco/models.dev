@@ -1,5 +1,9 @@
 base_model = "google/gemini-3.1-pro-preview"
 
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high"]
+
 [cost]
 input = 2
 output = 12
@@ -7,7 +11,7 @@ cache_read = 0.2
 cache_write = 2
 
 [[cost.tiers]]
-tier = { type = "context", size = 200000 }
+tier = { type = "context", size = 200_000 }
 input = 4
 output = 18
 cache_read = 0.4
@@ -15,4 +19,3 @@ cache_write = 4
 
 [modalities]
 input = ["text", "image", "audio", "video"]
-output = ["text"]

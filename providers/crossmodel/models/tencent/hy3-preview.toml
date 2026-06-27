@@ -1,5 +1,9 @@
 base_model = "tencent/hy3-preview"
 
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "high"]
+
 [cost]
 input = 0.19
 output = 0.63
@@ -7,18 +11,18 @@ cache_read = 0.063
 cache_write = 0.19
 
 [[cost.tiers]]
-tier = { type = "context", size = 16000 }
+tier = { type = "context", size = 16_000 }
 input = 0.25
 output = 1
 cache_read = 0.094
 cache_write = 0.25
 
 [[cost.tiers]]
-tier = { type = "context", size = 32000 }
+tier = { type = "context", size = 32_000 }
 input = 0.32
 output = 1.25
 cache_read = 0.125
 cache_write = 0.32
 
 [limit]
-output = 128000
+output = 128_000

@@ -6,6 +6,7 @@ import { z } from "zod";
 import { AuthoredModel, AuthoredModelShape, ModelMetadata } from "../schema.js";
 import { baseten } from "./providers/baseten.js";
 import { cloudflareWorkersAi } from "./providers/cloudflare-workers-ai.js";
+import { crossmodel } from "./providers/crossmodel.js";
 import { google } from "./providers/google.js";
 import { huggingface } from "./providers/huggingface.js";
 import { llmgateway } from "./providers/llmgateway.js";
@@ -81,6 +82,7 @@ export interface SyncResult {
 export const providers: {
   baseten: SyncProvider<any>;
   "cloudflare-workers-ai": SyncProvider<any>;
+  crossmodel: SyncProvider<any>;
   google: SyncProvider<any>;
   huggingface: SyncProvider<any>;
   llmgateway: SyncProvider<any>;
@@ -92,6 +94,7 @@ export const providers: {
 } = {
   baseten,
   "cloudflare-workers-ai": cloudflareWorkersAi,
+  crossmodel,
   google,
   huggingface,
   llmgateway,
@@ -103,7 +106,7 @@ export const providers: {
 };
 
 export const groups = {
-  aggregators: ["huggingface", "llmgateway", "openrouter", "vercel"],
+  aggregators: ["crossmodel", "huggingface", "llmgateway", "openrouter", "vercel"],
   cloudflare: ["cloudflare-workers-ai"],
   direct: ["baseten", "google", "ovhcloud", "venice", "xai"],
 } as const;

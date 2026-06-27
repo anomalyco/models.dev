@@ -1,5 +1,17 @@
 base_model = "anthropic/claude-sonnet-4-6"
 
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high"]
+
+[[reasoning_options]]
+type = "budget_tokens"
+min = 1_024
+max = 32_000
+
 [cost]
 input = 3
 output = 15
@@ -8,4 +20,3 @@ cache_write = 3.75
 
 [modalities]
 input = ["text", "image"]
-output = ["text"]

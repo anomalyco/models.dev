@@ -1,4 +1,5 @@
 base_model = "moonshotai/kimi-k2.7-code"
+reasoning_options = []
 
 [cost]
 input = 1
@@ -6,6 +7,9 @@ output = 4.16
 cache_read = 0.18
 cache_write = 1
 
+[limit]
+context = 262_000
+output = 262_000
+
 [modalities]
 input = ["text", "image"]
-output = ["text"]

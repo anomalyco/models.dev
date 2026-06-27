@@ -1,5 +1,11 @@
 base_model = "alibaba/qwen3.6-plus"
 
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "budget_tokens"
+
 [cost]
 input = 0.32
 output = 1.88
@@ -7,7 +13,7 @@ cache_read = 0.032
 cache_write = 0.4
 
 [[cost.tiers]]
-tier = { type = "context", size = 256000 }
+tier = { type = "context", size = 256_000 }
 input = 1.25
 output = 7.5
 cache_read = 0.124

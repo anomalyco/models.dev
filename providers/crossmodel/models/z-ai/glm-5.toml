@@ -1,5 +1,8 @@
 base_model = "zhipuai/glm-5"
 
+[[reasoning_options]]
+type = "toggle"
+
 [cost]
 input = 0.6
 output = 3
@@ -7,12 +10,12 @@ cache_read = 0.16
 cache_write = 0.6
 
 [[cost.tiers]]
-tier = { type = "context", size = 32000 }
+tier = { type = "context", size = 32_000 }
 input = 0.8
 output = 3.4
 cache_read = 0.2
 cache_write = 0.8
 
 [limit]
-context = 200000
-output = 128000
+context = 200_000
+output = 128_000
