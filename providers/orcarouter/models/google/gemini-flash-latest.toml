@@ -1,4 +1,5 @@
 base_model = "google/gemini-flash-latest"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }, { type = "budget_tokens" }]
 
 [cost]
 input = 0.5
