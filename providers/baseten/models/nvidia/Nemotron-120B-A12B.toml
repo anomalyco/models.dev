@@ -3,6 +3,9 @@ name = "Nemotron Super"
 structured_output = true
 knowledge = "2026-02"
 
+# Opt in with chat_template_args.enable_thinking=true. Baseten documents no
+# explicit false behavior, effort values, or reasoning-token budget.
+# https://docs.baseten.co/inference/model-apis/reasoning
 reasoning_options = []
 
 [interleaved]
