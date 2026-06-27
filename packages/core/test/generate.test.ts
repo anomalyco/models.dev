@@ -55,6 +55,7 @@ cache_read = 0.125
         root,
         "providers/factored/models/model.toml",
         `base_model = "lab/model"
+reasoning_options = []
 
 [cost]
 input = 1.25
@@ -106,6 +107,7 @@ cache_read = 0.125
         "providers/provider/models/model.toml",
         `base_model = "lab/model"
 base_model_omit = ["limit.input", "structured_output"]
+reasoning_options = []
 
 [cost]
 input = 1.25
@@ -137,6 +139,7 @@ output = 32_000
         "providers/provider/models/model.toml",
         `base_model = "lab/model"
 open_weights = true
+reasoning_options = []
 
 [cost]
 input = 1.25
@@ -311,6 +314,7 @@ release_date = "2026-01-02"
 last_updated = "2026-01-03"
 attachment = true
 reasoning = true
+reasoning_options = []
 temperature = false
 tool_call = true
 structured_output = true
