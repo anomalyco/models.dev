@@ -1,5 +1,5 @@
 base_model = "zhipuai/glm-5.2"
-reasoning_options = [{ type = "toggle" }]
+reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh", "max"] }]
 
 [interleaved]
 field = "reasoning_content"
