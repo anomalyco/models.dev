@@ -1,14 +1,8 @@
+base_model = "openai/gpt-oss-120b"
 name = "OpenAI GPT OSS 120B"
-family = "gpt-oss"
 release_date = "2025-11-06"
 last_updated = "2026-06-11"
-attachment = false
-reasoning = true
-tool_call = true
-open_weights = true
 
-# Live /models (2026-06-25): none|low|medium|high; no dedicated reasoning budget.
-# https://api.venice.ai/api/v1/models?type=text (accessed 2026-06-25)
 [[reasoning_options]]
 type = "effort"
 values = ["none", "low", "medium", "high"]
@@ -20,7 +14,3 @@ output = 0.3
 [limit]
 context = 128_000
 output = 16_384
-
-[modalities]
-input = ["text"]
-output = ["text"]
