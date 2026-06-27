@@ -1,7 +1,7 @@
 base_model = "anthropic/claude-opus-4-7"
 status = "beta"
 
-reasoning_options = [{ type = "budget_tokens" }, { type = "effort", values = ["low", "medium", "high", "max"] }]
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "max"] }]
 
 [experimental.modes.fast]
 cost = { input = 30, output = 150, cache_read = 3, cache_write = 37.5 }
