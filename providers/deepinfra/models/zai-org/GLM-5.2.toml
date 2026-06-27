@@ -1,0 +1,14 @@
+base_model = "zai-org/GLM-5"
+name = "GLM-5.2"
+release_date = "2026-06-16"
+last_updated = "2026-06-16"
+
+[cost]
+input = 0.95
+output = 3.00
+cache_read = 0.18
+
+[limit]
+context = 1_048_576 
+# https://deepinfra.com/docs/advanced/max_tokens_limit
+output = 32_768
