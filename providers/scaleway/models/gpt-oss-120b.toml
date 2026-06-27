@@ -3,10 +3,7 @@ family = "gpt-oss"
 release_date = "2024-01-01"
 last_updated = "2026-03-17"
 attachment = true
-reasoning = false
-# Scaleway excludes gpt-oss-120b from reasoning_effort = "none"; documented
-# effort values are "low"|"medium"|"high" (accessed 2026-06-25).
-# https://www.scaleway.com/en/docs/generative-apis/how-to/query-reasoning-models/
+reasoning = true
 reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
 temperature = true
 tool_call = true
