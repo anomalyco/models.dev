@@ -362,48 +362,13 @@ function cost(model: AlibabaModel, existing: ExistingModel) {
 			...range.cost,
 		}),
 	);
-	// The API's tier structure supersedes hand-curated tiers in `existing.cost.tiers`
-	// when the API has at least as many tiers as the TOML (the API is up to date).
-	// When the TOML has more tiers than the API (the team curated additional tiers
-	// — e.g. per-tier `cache_read` values the API doesn't expose), preserve the
-	// TOML's tiers so the hand-curated rates aren't lost on next sync.
-	const existingTiers = existing.cost?.tiers;
-	const tiers =
-		existingTiers !== undefined && existingTiers.length > apiTiers.length
-			? existingTiers
-			: apiTiers.length > 0
-				? apiTiers
-				: undefined;
+	// API is the source of truth for tiers; hand-curated TOML tiers are never preserved.
+	const tiers = apiTiers.length > 0 ? apiTiers : undefined;
 
-	// `context_over_200k` is a sync-only convenience field (see `OutputCost` in schema.ts)
-	// that consumers can read directly without walking `tiers`. A tier with `size: N` covers
-	// `N < context <= (next tier's size, or model context_window)`. The 200k+ rate is the
-	// tier with the largest `size` that's still < 200,000. If only the base covers 200k+
-	// (no non-base tier with size > 0 below 200k), the base IS the 200k+ rate and the
-	// field is omitted so consumers fall back to `cost.input`/`cost.output`.
-	const over200k = ranges
-		.filter((range) => range.lowerBound < 200_000)
-		.reduce<(typeof ranges)[number] | undefined>(
-			(best, current) =>
-				best === undefined || current.lowerBound > best.lowerBound
-					? current
-					: best,
-			undefined,
-		);
-	const contextOver200k =
-		over200k !== undefined && over200k.lowerBound > 0
-			? over200k.cost
-			: undefined;
-
-	// `SyncedFullModel["cost"]` is typed as `AuthoredCost` (which forbids
-	// `context_over_200k`), but the catalog schema's `OutputCost` allows it and the
-	// sync output is validated as `OutputCost`. The cast widens the return type to
-	// match the actual runtime contract.
 	return {
 		...base,
-		context_over_200k: contextOver200k,
 		tiers,
-	} as unknown as Cost;
+	};
 }
 
 function limit(model: AlibabaModel, existing: ExistingModel) {
