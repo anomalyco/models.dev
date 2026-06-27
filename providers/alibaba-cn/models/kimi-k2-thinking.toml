@@ -9,6 +9,9 @@ tool_call = true
 open_weights = true
 structured_output = true
 
+[[reasoning_options]]
+type = "budget_tokens"
+
 [interleaved]
 field = "reasoning_content"
 
