@@ -1,13 +1,13 @@
 name = "GPT OSS 20B"
-# Native `/ai/run` schema has no reasoning control; OpenAI Chat/Responses use
-# `reasoning_effort = low|medium|high`. No token budget is documented.
+# Native `/ai/run` schema has no reasoning control, and no model-specific
+# OpenAI-compatible reasoning field was verified. No token budget is documented.
 # https://developers.cloudflare.com/workers-ai/models/gpt-oss-20b/sync-input.json (accessed 2026-06-25)
 family = "gpt-oss"
 release_date = "2025-08-05"
 last_updated = "2025-08-05"
 attachment = false
 reasoning = true
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
+reasoning_options = []
 temperature = true
 tool_call = true
 structured_output = true
