@@ -21,3 +21,10 @@ output = 4_000
 [modalities]
 input = ["text"]
 output = ["text"]
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "max"]
+
+[[reasoning_options]]
+type = "budget_tokens"

@@ -22,3 +22,10 @@ output = 65_536
 [modalities]
 input = ["text", "image", "audio", "video", "pdf"]
 output = ["text"]
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "max"]
+
+[[reasoning_options]]
+type = "budget_tokens"

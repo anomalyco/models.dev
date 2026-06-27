@@ -1,6 +1,13 @@
 base_model = "google/gemini-2.5-pro"
 base_model_omit = ["structured_output"]
 
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "max"]
+
+[[reasoning_options]]
+type = "budget_tokens"
+
 [cost]
 input = 1.25
 output = 10

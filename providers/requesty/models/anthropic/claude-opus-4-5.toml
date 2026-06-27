@@ -22,3 +22,10 @@ output = 64_000
 [modalities]
 input = ["text", "image", "pdf"]
 output = ["text"]
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "max"]
+
+[[reasoning_options]]
+type = "budget_tokens"
