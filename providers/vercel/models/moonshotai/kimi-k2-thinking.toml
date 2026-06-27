@@ -1,14 +1,14 @@
 base_model = "moonshotai/kimi-k2-thinking"
-reasoning_options = []
 open_weights = false
+reasoning_options = []
 
 interleaved = true
 
 [cost]
-input = 0.6
-output = 2.5
-cache_read = 0.15
+input = 0.47
+output = 2
+cache_read = 0.141
 
 [limit]
-context = 262_114
-output = 262_114
+context = 216_144
+output = 216_144
