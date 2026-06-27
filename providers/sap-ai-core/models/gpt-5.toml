@@ -4,6 +4,7 @@ release_date = "2025-08-07"
 last_updated = "2025-08-07"
 attachment = true
 reasoning = true
+# Azure OpenAI deployment adapter: raw Chat uses top-level $.reasoning_effort = "minimal"|"low"|"medium"|"high"; there is no explicit off value for original gpt-5. https://learn.microsoft.com/en-us/azure/ai-foundry/openai/how-to/reasoning (accessed 2026-06-25)
 reasoning_options = [{ type = "effort", values = ["minimal", "low", "medium", "high"] }]
 temperature = false
 knowledge = "2024-09-30"
