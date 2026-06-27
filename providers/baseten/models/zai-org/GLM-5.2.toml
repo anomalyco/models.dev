@@ -1,6 +1,9 @@
 base_model = "zhipuai/glm-5.2"
 name = "GLM 5.2"
 
+# Opt in with chat_template_args.enable_thinking=true. Baseten documents no
+# explicit false behavior, effort values, or reasoning-token budget.
+# https://docs.baseten.co/inference/model-apis/reasoning
 reasoning_options = []
 
 [interleaved]
