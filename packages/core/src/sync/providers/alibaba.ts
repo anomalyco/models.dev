@@ -57,8 +57,6 @@ const AlibabaModel = z
 		published_time: z.string(),
 		inference_metadata: AlibabaInferenceMetadata,
 		model_info: AlibabaModelInfo,
-		equivalent_snapshot: z.string().nullable(),
-		inference_provider: z.string().nullable(),
 	})
 	.passthrough();
 
