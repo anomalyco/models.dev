@@ -1,15 +1,18 @@
-base_model = "minimax/MiniMax-M3"
+name = "MiniMax M3"
+release_date = "2026-06-07"
+last_updated = "2026-06-07"
 reasoning = true
+reasoning_options = [{ type = "toggle" }]
+temperature = true
+tool_call = true
 
 [cost]
 input = 0.0
 output = 0.0
-cache_read = 0.0
 
 [limit]
-context = 1000000
-input = 1000000
-output = 16384
+context = 1_000_000
+output = 16_384
 
 [modalities]
 input = ["text", "image", "video"]
