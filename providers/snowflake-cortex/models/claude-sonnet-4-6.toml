@@ -1,6 +1,6 @@
 base_model = "anthropic/claude-sonnet-4-6"
 
-reasoning_options = [{ type = "budget_tokens" }, { type = "effort", values = ["low", "medium", "high", "max"] }]
+reasoning_options = [{ type = "budget_tokens" }]
 
 [limit]
 output = 16_384

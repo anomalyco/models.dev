@@ -5,14 +5,11 @@ env = ["SNOWFLAKE_ACCOUNT", "SNOWFLAKE_CORTEX_PAT"]
 # Reasoning HTTP format (accessed 2026-06-25):
 # OpenAI-compatible POST /api/v2/cortex/v1/chat/completions: OpenAI models use
 # top-level reasoning_effort = "none"|"minimal"|"low"|"medium"|"high".
-# Claude budget-capable models use reasoning.effort or reasoning.max_tokens;
-# reasoning_effort is ignored, reasoning.effort is converted to max_tokens, and
-# max_tokens is the native budget. Adaptive-only Claude models use effort, not a
-# manual thinking-token budget. Other model families ignore all three controls.
-# Anthropic-compatible POST /api/v2/cortex/v1/messages (Claude only): adaptive
-# thinking uses thinking.type = "adaptive" and output_config.effort. Snowflake
-# documents "low"|"medium"|"high"|"max"; Anthropic documents xhigh for
-# Claude Fable 5, Claude Opus 4.7, and Claude Opus 4.8 on this routed surface.
+# Claude models use reasoning.max_tokens for manual thinking budgets;
+# reasoning_effort is ignored, and reasoning.effort is converted to max_tokens.
+# Adaptive-only Claude controls are exposed on Snowflake's Messages API, not on
+# this OpenAI-compatible provider surface. Other model families ignore all three
+# reasoning controls.
 # Source:
 # https://docs.snowflake.com/en/user-guide/snowflake-cortex/cortex-rest-api
 doc = "https://docs.snowflake.com/en/user-guide/snowflake-cortex/cortex-rest-api"
