@@ -2,9 +2,12 @@ name = "MiniMax M3"
 release_date = "2026-06-07"
 last_updated = "2026-06-07"
 reasoning = true
-reasoning_options = [{ type = "effort", values = ["enabled", "disabled", "adaptive"] }]
-temperature = true
+reasoning_options = [
+  { type = "effort", values = ["low", "medium", "high"] }
+]temperature = true
 tool_call = true
+attachment = true
+open_weights = true
 
 [cost]
 input = 0.0
