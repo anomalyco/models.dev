@@ -103,113 +103,89 @@ type Modality = "text" | "audio" | "image" | "video" | "pdf";
 type Cost = NonNullable<ExistingModel["cost"]>;
 type CostTier = NonNullable<Cost["tiers"]>[number];
 
-interface AlibabaProviderOptions {
-	id: string;
-	name: string;
-	modelsDir: string;
-	apiEndpoint: string;
-	apiKeyEnv: string;
-	deploymentName: string;
-}
-
-export const alibaba = createAlibabaProvider({
+export const alibaba = {
 	id: "alibaba",
 	name: "Alibaba",
 	modelsDir: "providers/alibaba/models",
-	apiEndpoint: INTL_API_ENDPOINT,
-	apiKeyEnv: "DASHSCOPE_API_KEY",
-	deploymentName: "international",
-});
+	// skipCreates stays false: new models with a matching
+	// models/alibaba/<id>.toml base file are auto-minted as thin
+	// stubs. Models without a base match are skipped by translateModel.
+	deleteMissing: false,
+	sourceID(model) {
+		return model.model;
+	},
+	skippedNotice(ids) {
+		if (ids.length === 0) return [];
+		return [
+			`${ids.length} Alibaba models returned by the source were not created because no matching \`models/alibaba/<id>.toml\` base-metadata file exists for them. The DashScope API does not authoritatively expose \`family\`, \`temperature\`, \`open_weights\`, or \`knowledge\`, so a base-metadata file is required to mint a thin provider stub via inheritance. Add the file to enable auto-creation. Existing models are still updated from source-authoritative fields.`,
+			`Skipped remote IDs: ${ids.map((id) => `\`${id}\``).join(", ")}`,
+		];
+	},
+	missingNotice(paths) {
+		if (paths.length === 0) return [];
+		return [
+			`${paths.length} local Alibaba model files were retained even though they were missing from the source. This is intentional because the current source snapshot is for the international deployment and the provider directory still contains deprecated or region-specific entries.`,
+			`Retained local files: ${paths.map((path) => `\`${path}\``).join(", ")}`,
+		];
+	},
+	async fetchModels() {
+		const apiKey = process.env.DASHSCOPE_API_KEY;
+		if (apiKey === undefined || apiKey.length === 0) {
+			throw new Error("DASHSCOPE_API_KEY is required to sync Alibaba models");
+		}
 
-export function createAlibabaProvider(
-	options: AlibabaProviderOptions,
-): SyncProvider<AlibabaModel> {
-	return {
-		id: options.id,
-		name: options.name,
-		modelsDir: options.modelsDir,
-		// skipCreates stays false: new models with a matching
-		// models/alibaba/<id>.toml base file are auto-minted as thin
-		// stubs. Models without a base match are skipped by translateModel.
-		deleteMissing: false,
-		sourceID(model) {
-			return model.model;
-		},
-		skippedNotice(ids) {
-			if (ids.length === 0) return [];
-			return [
-				`${ids.length} Alibaba models returned by the source were not created because no matching \`models/alibaba/<id>.toml\` base-metadata file exists for them. The DashScope API does not authoritatively expose \`family\`, \`temperature\`, \`open_weights\`, or \`knowledge\`, so a base-metadata file is required to mint a thin provider stub via inheritance. Add the file to enable auto-creation. Existing models are still updated from source-authoritative fields.`,
-				`Skipped remote IDs: ${ids.map((id) => `\`${id}\``).join(", ")}`,
-			];
-		},
-		missingNotice(paths) {
-			if (paths.length === 0) return [];
-			return [
-				`${paths.length} local Alibaba model files were retained even though they were missing from the source. This is intentional because the current source snapshot is for the ${options.deploymentName} deployment and the provider directory still contains deprecated or region-specific entries.`,
-				`Retained local files: ${paths.map((path) => `\`${path}\``).join(", ")}`,
-			];
-		},
-		async fetchModels() {
-			const apiKey = process.env[options.apiKeyEnv];
-			if (apiKey === undefined || apiKey.length === 0) {
-				throw new Error(
-					`${options.apiKeyEnv} is required to sync ${options.name} models`,
-				);
-			}
+		const first = await fetchModelsPage(INTL_API_ENDPOINT, apiKey, 1);
+		const models = [...first.output.models];
+		const totalPages = Math.ceil(first.output.total / first.output.page_size);
 
-			const first = await fetchModelsPage(options.apiEndpoint, apiKey, 1);
-			const models = [...first.output.models];
-			const totalPages = Math.ceil(first.output.total / first.output.page_size);
+		for (
+			let pageNo = first.output.page_no + 1;
+			pageNo <= totalPages;
+			pageNo++
+		) {
+			const page = await fetchModelsPage(INTL_API_ENDPOINT, apiKey, pageNo);
+			models.push(...page.output.models);
+		}
 
-			for (
-				let pageNo = first.output.page_no + 1;
-				pageNo <= totalPages;
-				pageNo++
-			) {
-				const page = await fetchModelsPage(options.apiEndpoint, apiKey, pageNo);
-				models.push(...page.output.models);
-			}
+		return {
+			...first,
+			output: {
+				...first.output,
+				models,
+			},
+		};
+	},
+	parseModels(raw) {
+		const models = AlibabaCatalogResponse.parse(raw).output.models;
+		const seen = new Set<string>();
+		const deduped: AlibabaModel[] = [];
 
-			return {
-				...first,
-				output: {
-					...first.output,
-					models,
-				},
-			};
-		},
-		parseModels(raw) {
-			const models = AlibabaCatalogResponse.parse(raw).output.models;
-			const seen = new Set<string>();
-			const deduped: AlibabaModel[] = [];
+		for (const model of models) {
+			if (seen.has(model.model)) continue;
+			seen.add(model.model);
+			deduped.push(model);
+		}
 
-			for (const model of models) {
-				if (seen.has(model.model)) continue;
-				seen.add(model.model);
-				deduped.push(model);
-			}
-
-			return deduped;
-		},
-		translateModel(model, context) {
-			const existing = context.existing(model.model);
-			const baseModel = existing === undefined
-				? resolveAlibabaBaseModel(model.model)
-				: existing.base_model;
-			// Per-model skip: refuse to mint when no base-metadata match exists
-			// and there's no existing provider TOML. Required inline fields
-			// (family, temperature, open_weights, knowledge) aren't authoritatively
-			// exposed by the DashScope API, and inventing them would propagate
-			// to every downstream consumer. A base match lets those fields
-			// inherit at read time via factorBaseModel + resolveBaseModel.
-			if (existing === undefined && baseModel === undefined) return undefined;
-			return {
-				id: model.model,
-				model: buildAlibabaModel(model, existing, baseModel),
-			};
-		},
-	};
-}
+		return deduped;
+	},
+	translateModel(model, context) {
+		const existing = context.existing(model.model);
+		const baseModel = existing === undefined
+			? resolveAlibabaBaseModel(model.model)
+			: existing.base_model;
+		// Per-model skip: refuse to mint when no base-metadata match exists
+		// and there's no existing provider TOML. Required inline fields
+		// (family, temperature, open_weights, knowledge) aren't authoritatively
+		// exposed by the DashScope API, and inventing them would propagate
+		// to every downstream consumer. A base match lets those fields
+		// inherit at read time via factorBaseModel + resolveBaseModel.
+		if (existing === undefined && baseModel === undefined) return undefined;
+		return {
+			id: model.model,
+			model: buildAlibabaModel(model, existing, baseModel),
+		};
+	},
+} satisfies SyncProvider<AlibabaModel>;
 
 async function fetchModelsPage(
 	apiEndpoint: string,
