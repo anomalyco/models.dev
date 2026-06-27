@@ -1,0 +1,13 @@
+base_model = "moonshotai/kimi-k2.7-code"
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.7125
+output = 3
+cache_read = 0.1425
+
+[limit]
+context = 262144
+output = 32768

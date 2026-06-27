@@ -1,0 +1,14 @@
+base_model = "alibaba/qwen3.7-plus"
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.375
+output = 2.25
+cache_read = 0.0375
+cache_write = 0.46875
+
+[limit]
+context = 1000000
+output = 65536

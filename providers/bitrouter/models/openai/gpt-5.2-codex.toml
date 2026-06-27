@@ -1,0 +1,13 @@
+base_model = "openai/gpt-5.2-codex"
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 1.75
+output = 14
+cache_read = 0.175
+
+[limit]
+context = 400000
+output = 128000

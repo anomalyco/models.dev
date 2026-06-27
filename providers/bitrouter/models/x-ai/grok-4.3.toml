@@ -1,0 +1,13 @@
+base_model = "xai/grok-4.3"
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 1.25
+output = 2.5
+cache_read = 0.2
+
+[limit]
+context = 1000000
+output = 30000

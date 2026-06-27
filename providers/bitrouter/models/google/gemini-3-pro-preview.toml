@@ -1,0 +1,13 @@
+base_model = "google/gemini-3-pro-preview"
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 2
+output = 12
+cache_read = 0.2
+
+[limit]
+context = 1048576
+output = 65536
