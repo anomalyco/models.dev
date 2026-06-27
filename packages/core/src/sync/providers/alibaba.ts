@@ -330,9 +330,9 @@ function costFromPrices(
 }
 
 function tierLowerBound(rangeName: string) {
-	if (/^(Default|Input\s*<=|输入\s*<=)/i.test(rangeName)) return 0;
+	if (/^(Default|Input\s*<=)/i.test(rangeName)) return 0;
 
-	const match = /([0-9]+)\s*k\s*<\s*(?:Input|输入)/i.exec(rangeName);
+	const match = /([0-9]+)\s*k\s*<\s*Input/i.exec(rangeName);
 	if (match !== null) return Number(match[1]) * 1000;
 
 	return undefined;
