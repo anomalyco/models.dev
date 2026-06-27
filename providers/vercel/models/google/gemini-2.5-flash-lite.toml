@@ -1,5 +1,5 @@
 base_model = "google/gemini-2.5-flash-lite"
-reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["none", "minimal", "low", "medium", "high", "xhigh"] }, { type = "budget_tokens", min = 512, max = 24_576 }]
+reasoning_options = [{ type = "toggle" }, { type = "budget_tokens", min = 512, max = 24_576 }]
 name = "Gemini 2.5 Flash Lite"
 
 [cost]
