@@ -238,7 +238,7 @@ export async function syncProvider<SourceModel>(
     }
     const namespaceDir = path.join(metadataDir, provider.metadataNamespace);
     for (const { file } of await tomlFiles(namespaceDir)) {
-      const relativePath = path.join(provider.metadataNamespace, file);
+      const relativePath = path.join(provider.metadataNamespace, file).split(path.sep).join("/");
       if (desiredMetadata.has(relativePath) || provider.deleteMissing === false) continue;
       if (options.newOnly) {
         console.log(`Skipping metadata removal in new-only mode: ${relativePath}`);
@@ -444,7 +444,7 @@ async function readModelMetadata(modelsDir: string) {
     absolute: true,
     followSymlinks: true,
   })) {
-    const modelID = path.relative(metadataDir, modelPath).slice(0, -5);
+    const modelID = path.relative(metadataDir, modelPath).split(path.sep).join("/").slice(0, -5);
     const toml = Bun.TOML.parse(
       await Bun.file(modelPath).text(),
     ) as Record<string, unknown>;
@@ -553,7 +553,7 @@ async function tomlFiles(root: string, dir = "") {
   const result: Array<{ file: string; symlink: boolean }> = [];
 
   for (const entry of await readdir(path.join(root, dir), { withFileTypes: true })) {
-    const file = path.join(dir, entry.name);
+    const file = path.join(dir, entry.name).split(path.sep).join("/");
     if (entry.isDirectory()) {
       result.push(...await tomlFiles(root, file));
     } else if (entry.name.endsWith(".toml") && (entry.isFile() || entry.isSymbolicLink())) {
