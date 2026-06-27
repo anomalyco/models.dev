@@ -1,17 +1,11 @@
+base_model = "openai/gpt-oss-120b"
 name = "OpenAI GPT OSS 120B"
+release_date = "2025-08-28"
+last_updated = "2025-08-28"
 # The configured OpenAI effort shape is `reasoning_effort = low|medium|high`,
 # but Sherlock documents no reasoning control or token budget.
 # https://docs.sherlock.cloudferro.com/ (accessed 2026-06-25)
-family = "gpt-oss"
-release_date = "2025-08-28"
-last_updated = "2025-08-28"
-attachment = false
-reasoning = true
 reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
-temperature = true
-structured_output = true
-tool_call = true
-open_weights = true
 
 [cost]
 input = 2.92
@@ -20,7 +14,3 @@ output = 2.92
 [limit]
 context = 131_000
 output = 131_000
-
-[modalities]
-input = ["text"]
-output = ["text"]
