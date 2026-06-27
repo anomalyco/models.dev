@@ -1,4 +1,7 @@
 base_model = "moonshotai/kimi-k2.7-code"
+# Baseten documents opt-in via chat_template_args.enable_thinking=true, but no
+# explicit false behavior, effort values, or reasoning-token budget.
+# https://docs.baseten.co/inference/model-apis/reasoning
 temperature = true
 
 [cost]

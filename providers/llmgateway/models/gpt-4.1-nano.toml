@@ -4,3 +4,6 @@ base_model = "openai/gpt-4.1-nano"
 input = 0.1
 output = 0.4
 cache_read = 0.025
+
+[limit]
+context = 1_000_000

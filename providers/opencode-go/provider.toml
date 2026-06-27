@@ -1,5 +1,11 @@
 name = "OpenCode Go"
 env = ["OPENCODE_API_KEY"]
 npm = "@ai-sdk/openai-compatible"
+# Raw HTTP caveat (source accessed 2026-06-25): the Zen endpoint table does not
+# document the `/zen/go/v1` API or any Go reasoning request fields, values,
+# bounds, translation, or passthrough. The configured endpoint is therefore an
+# undocumented surface; model reasoning options are not an HTTP contract cited
+# by the public Zen page.
+# https://opencode.ai/docs/zen#endpoints
 api = "https://opencode.ai/zen/go/v1"
 doc = "https://opencode.ai/docs/zen"

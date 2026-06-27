@@ -2,6 +2,9 @@ base_model = "alibaba/qwen3.7-max"
 name = "Qwen 3.7 Max"
 release_date = "2026-05-22"
 last_updated = "2026-06-11"
+attachment = true
+# Live metadata: reasoning only; no effort control or dedicated budget (2026-06-25).
+# https://api.venice.ai/api/v1/models?type=text
 reasoning_options = []
 
 [cost]
@@ -9,3 +12,6 @@ input = 2.7
 output = 8.05
 cache_read = 0.27
 cache_write = 3.35
+
+[modalities]
+input = ["text", "image", "video"]

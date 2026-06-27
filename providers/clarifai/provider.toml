@@ -1,5 +1,11 @@
 name = "Clarifai"
 env = ["CLARIFAI_PAT"]
 npm = "@ai-sdk/openai-compatible"
+# Raw HTTP reasoning controls (source accessed 2026-06-25):
+# POST https://api.clarifai.com/v2/ext/openai/v1/chat/completions. Clarifai's
+# OpenAI-compatible request examples and documented parameter surface expose no
+# reasoning toggle, effort, or token-budget field. A hosted model's own ability
+# to reason therefore does not establish a Clarifai request control.
+# https://docs.clarifai.com/compute/inference/open-ai
 api = "https://api.clarifai.com/v2/ext/openai/v1"
 doc = "https://docs.clarifai.com/compute/inference/"
