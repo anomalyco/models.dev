@@ -9,6 +9,13 @@ knowledge = "2025-04"
 tool_call = true
 open_weights = true
 
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "budget_tokens"
+max = 81_920
+
 [cost]
 input = 0.430
 output = 2.58

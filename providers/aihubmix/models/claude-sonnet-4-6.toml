@@ -4,6 +4,8 @@ release_date = "2026-02-17"
 last_updated = "2026-03-13"
 attachment = true
 reasoning = true
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "medium", "high", "max"] }, { type = "budget_tokens", min = 1_024 }]
+# Native Messages prefers $.thinking.type = "adaptive" with $.output_config.effort = "low"|"medium"|"high"; enabled budget_tokens >= 1024 is deprecated and must be < $.max_tokens. Chat effort "max" maps to native "high". https://docs.aihubmix.com/cn/api/Claude-Native (accessed 2026-06-25)
 temperature = true
 tool_call = true
 structured_output = true

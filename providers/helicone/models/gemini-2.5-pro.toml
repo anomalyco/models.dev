@@ -1,4 +1,7 @@
 name = "Google Gemini 2.5 Pro"
+# Native exception (accessed 2026-06-25): `thinkingBudget` -1 is dynamic and the
+# manual range is 128..32768; thinking cannot be disabled with budget 0.
+# https://ai.google.dev/gemini-api/docs/thinking
 family = "gemini-pro"
 release_date = "2025-06-17"
 last_updated = "2025-06-17"

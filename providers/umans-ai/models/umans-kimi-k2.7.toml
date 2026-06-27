@@ -1,5 +1,7 @@
 base_model = "moonshotai/kimi-k2.7-code"
 name = "Kimi K2.7 Code"
+# Live metadata says reasoning is always on (`can_disable=false`) with no effort
+# levels (accessed 2026-06-25): https://api.code.umans.ai/v1/models/info
 reasoning_options = []
 
 [interleaved]

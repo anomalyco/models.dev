@@ -1,0 +1,28 @@
+name = "roc"
+release_date = "2026-06-06"
+last_updated = "2026-06-06"
+attachment = true
+reasoning = true
+structured_output = true
+temperature = true
+tool_call = true
+knowledge = "2026-01"
+open_weights = false
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "budget_tokens"
+
+[cost]
+input = 2.875
+output = 11.516
+
+[limit]
+context = 262_144
+output = 262_144
+
+[modalities]
+input = ["text", "image", "video"]
+output = ["text"]
