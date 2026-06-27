@@ -270,7 +270,13 @@ function costFromPrices(
 	);
 	const duration = price(prices, "content_duration");
 	const tts = price(prices, "cosy_tts_number");
-
+	// Guard-only: imageOutput/duration/tts are never written — the Cost schema is
+	// token-centric and has no field for per-image (`image_number`), per-second
+	// (`content_duration`), or per-char TTS (`cosy_tts_number`) pricing. They exist
+	// solely to suppress this early-return so the `?? existing` fallback below can
+	// preserve the hand-curated token cost for non-token-priced models. Without
+	// them, e.g. qwen3-asr-flash (API: `content_duration` only) returns undefined
+	// → requireExisting("cost") throws → sync crashes.
 	if (
 		input === undefined &&
 		output === undefined &&
@@ -283,19 +289,10 @@ function costFromPrices(
 
 	return {
 		input: input ?? existing?.input ?? 0,
-		// Only `output_token` (and its aliases) are per-token output prices. `image_number`,
-		// `content_duration`, and `cosy_tts_number` are per-image, per-second, and per-character
-		// respectively — writing any of them into `cost.output` would corrupt the per-token
-		// semantic. For image-gen, ASR, and TTS models the cost is hand-curated in the TOML
-		// and the sync script leaves it alone, matching `google.ts` (`cost: existing.cost`).
-		//
-		// | model type       | output_token | cost.output after sync          |
-		// | ---------------- | ------------ | ------------------------------- |
-		// | text             | yes          | overwritten with API per-token  |
-		// | image-gen/ASR/TTS| no           | preserved from existing TOML    |
-		// | (new, no TOML)   | no           | falls back to 0                 |
 		output: output ?? existing?.output ?? 0,
 		reasoning: price(prices, "thinking_output_token") ?? existing?.reasoning,
+		// API-only, no `?? existing` fallback: DashScope reliably exposes cache price types;
+		// omission is intentional.
 		cache_read: price(
 			prices,
 			"input_token_cache",
@@ -307,6 +304,7 @@ function costFromPrices(
 			"input_token_cache_creation_5m",
 			"thinking_input_token_cache_creation_5m",
 		),
+		// audio price-type names vary across omni generations.
 		input_audio:
 			price(
 				prices,
