@@ -1,7 +1,7 @@
-name = "Kwaipilot/KAT-Dev"
-family = "kat-coder"
-release_date = "2025-09-27"
-last_updated = "2026-01-16"
+name = "Qwen/Qwen3.5-9B"
+family = "qwen"
+release_date = "2026-03-03"
+last_updated = "2026-04-24"
 attachment = false
 reasoning = false
 temperature = true
@@ -10,12 +10,12 @@ structured_output = true
 open_weights = false
 
 [cost]
-input = 0.2
-output = 0.6
+input = 0.10
+output = 0.15
 
 [limit]
-context = 128_000
-output = 128_000
+context = 262_144
+output = 262_144
 
 [modalities]
 input = ["text"]
