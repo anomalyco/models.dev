@@ -1,14 +1,5 @@
 name = "Baseten"
 npm = "@ai-sdk/openai-compatible"
-# Raw HTTP reasoning controls (sources accessed 2026-06-25):
-# POST https://inference.baseten.co/v1/chat/completions uses top-level
-# chat_template_args.enable_thinking = true for documented opt-in models and
-# top-level reasoning_effort for DeepSeek V4 Pro and GPT OSS 120B. No explicit
-# false toggle behavior or reasoning-token budget field/bounds are documented.
-# The strict OpenAPI omits reasoning_effort but allows chat_template_args;
-# model support is established by the model-specific reasoning guide, not schema.
-# https://docs.baseten.co/inference/model-apis/reasoning
-# https://docs.baseten.co/reference/inference-api/chat-completions
 doc = "https://docs.baseten.co/inference/model-apis/overview"
 api = "https://inference.baseten.co/v1"
 env = ["BASETEN_API_KEY"]
