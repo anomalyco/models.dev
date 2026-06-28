@@ -5,14 +5,21 @@ import { readdir, mkdir, unlink, rmdir, readFile, writeFile } from "node:fs/prom
 
 const API_ENDPOINT = "https://api.inference.nebul.io/v1/models";
 
+// The models endpoint requires authentication; an unauthenticated request errors.
+const API_KEY = process.env.NEBUL_API_KEY;
+
+const MAX_RETRIES = 3;
+
 const PROVIDER_ID = "nebul";
 
 const SKIP_MODELS: string[] = [];
 
-const REASONING_EFFORT_MODELS: Record<string, { type: "effort"; values: string[] }> = {
-  "Qwen/Qwen3.5-397B-A17B": { type: "effort", values: ["none", "low", "medium", "high"] },
-  "zai-org/GLM-5.2-FP8": { type: "effort", values: ["high", "max"] },
-};
+// Nebul keeps reasoning always on for these models and does not expose an
+// effort control, so they emit no configurable reasoning options.
+const REASONING_ALWAYS_ON_MODELS = new Set([
+  "Qwen/Qwen3.5-397B-A17B",
+  "zai-org/GLM-5.2-FP8",
+]);
 
 const REASONING_TOGGLE_MODELS = new Set([
   "nvidia/NVIDIA-Nemotron-3-Super-120B-A12B-BF16",
@@ -22,6 +29,7 @@ const REASONING_TOGGLE_MODELS = new Set([
   "Qwen/Qwen3-VL-235B-A22B-Instruct-FP8",
 ]);
 
+// Non-reasoning models.
 const REASONING_DISABLED_MODELS = new Set([
   "mistralai/Mistral-Large-3-675B-Instruct-2512-NVFP4",
   "meta-llama/Llama-4-Maverick-17B-128E-Instruct",
@@ -56,7 +64,7 @@ const BASE_MODEL_MAP: Record<string, { base_model: string; overrides?: Record<st
     base_model: "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning",
   },
   "Qwen/Qwen3-VL-235B-A22B-Instruct-FP8": {
-    base_model: "alibaba/qwen3-vl-235b-a22b",
+    base_model: "alibaba/qwen3-235b-a22b",
     overrides: {
       attachment: true,
       reasoning: true,
@@ -95,15 +103,10 @@ function formatNumber(n: number): string {
 }
 
 function getReasoningOptions(modelId: string): string | null {
-  if (REASONING_EFFORT_MODELS[modelId]) {
-    const opts = REASONING_EFFORT_MODELS[modelId];
-    const values = opts.values.map((v) => `"${v}"`).join(", ");
-    return `reasoning_options = [{ type = "effort", values = [${values}] }]`;
-  }
   if (REASONING_TOGGLE_MODELS.has(modelId)) {
     return `reasoning_options = [{ type = "toggle" }]`;
   }
-  if (REASONING_DISABLED_MODELS.has(modelId)) {
+  if (REASONING_ALWAYS_ON_MODELS.has(modelId) || REASONING_DISABLED_MODELS.has(modelId)) {
     return `reasoning_options = []`;
   }
   return null;
@@ -228,6 +231,52 @@ function shouldSkipModel(modelId: string): boolean {
   return false;
 }
 
+async function fetchModels(): Promise<NebulModel[]> {
+  const headers: Record<string, string> = { Accept: "application/json" };
+  if (API_KEY) {
+    headers.Authorization = `Bearer ${API_KEY}`;
+  }
+
+  let lastError: unknown;
+  for (let attempt = 1; attempt <= MAX_RETRIES; attempt++) {
+    try {
+      const res = await fetch(API_ENDPOINT, { headers });
+      if (!res.ok) {
+        const body = await res.text().catch(() => "");
+        // Auth failures won't recover on retry, so surface them immediately.
+        if (res.status === 401 || res.status === 403) {
+          throw new Error(
+            `Authentication failed (${res.status} ${res.statusText}). Set NEBUL_API_KEY to a valid key.${body ? ` Response: ${body}` : ""}`,
+          );
+        }
+        throw new Error(`HTTP ${res.status} ${res.statusText}${body ? `: ${body}` : ""}`);
+      }
+      const json = (await res.json()) as NebulModelsResponse;
+      if (!Array.isArray(json.data)) {
+        throw new Error(`Unexpected response shape: missing "data" array`);
+      }
+      return json.data;
+    } catch (err) {
+      lastError = err;
+      const message = err instanceof Error ? err.message : String(err);
+      if (message.startsWith("Authentication failed")) break;
+      if (attempt < MAX_RETRIES) {
+        const delayMs = 500 * 2 ** (attempt - 1);
+        console.warn(
+          `Fetch attempt ${attempt}/${MAX_RETRIES} failed (${message}); retrying in ${delayMs}ms...`,
+        );
+        await new Promise((resolve) => setTimeout(resolve, delayMs));
+      }
+    }
+  }
+
+  throw new Error(
+    `Failed to fetch Nebul models from ${API_ENDPOINT} after ${MAX_RETRIES} attempt(s): ${
+      lastError instanceof Error ? lastError.message : String(lastError)
+    }`,
+  );
+}
+
 async function main() {
   const args = process.argv.slice(2);
   const dryRun = args.includes("--dry-run");
@@ -240,14 +289,19 @@ async function main() {
     console.log("Fetching Nebul models from API...");
   }
 
-  const res = await fetch(API_ENDPOINT);
-  if (!res.ok) {
-    console.error(`Failed to fetch API: ${res.status} ${res.statusText}`);
-    process.exit(1);
+  if (!API_KEY) {
+    console.warn(
+      "Warning: NEBUL_API_KEY is not set. The models endpoint requires authentication and the request will likely fail.",
+    );
   }
 
-  const json = (await res.json()) as NebulModelsResponse;
-  const apiModels = json.data ?? [];
+  let apiModels: NebulModel[];
+  try {
+    apiModels = await fetchModels();
+  } catch (err) {
+    console.error(err instanceof Error ? err.message : String(err));
+    process.exit(1);
+  }
 
   const existingFiles = await getAllExistingFiles(modelsDir);
 
