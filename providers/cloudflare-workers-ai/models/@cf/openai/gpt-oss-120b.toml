@@ -1,7 +1,7 @@
+base_model = "openai/gpt-oss-120b"
 # Native `/ai/run` schema has no reasoning control, and no model-specific
 # OpenAI-compatible reasoning field was verified. No token budget is documented.
 # https://developers.cloudflare.com/workers-ai/models/gpt-oss-120b/sync-input.json (accessed 2026-06-25)
-base_model = "openai/gpt-oss-120b"
 
 [[reasoning_options]]
 type = "effort"
