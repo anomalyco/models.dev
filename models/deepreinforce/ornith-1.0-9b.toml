@@ -1,0 +1,75 @@
+name = "Ornith 1.0 9B"
+family = "ornith"
+release_date = "2026-06-25"
+last_updated = "2026-06-25"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+open_weights = true
+license = "MIT"
+
+[limit]
+context = 262_144
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/deepreinforce-ai/Ornith-1.0-9B"
+
+[[links]]
+label = "Model card"
+url = "https://huggingface.co/deepreinforce-ai/Ornith-1.0-9B"
+type = "model_card"
+
+[[links]]
+label = "Announcement"
+url = "https://deep-reinforce.com/ornith_1_0.html"
+type = "announcement"
+
+[[benchmarks]]
+name = "SWE-Bench Verified"
+score = 69.4
+metric = "percent resolved"
+source = "https://huggingface.co/deepreinforce-ai/Ornith-1.0-9B"
+
+[[benchmarks]]
+name = "SWE-Bench Pro"
+score = 42.9
+metric = "percent resolved"
+source = "https://huggingface.co/deepreinforce-ai/Ornith-1.0-9B"
+
+[[benchmarks]]
+name = "SWE-Bench Multilingual"
+score = 52
+metric = "percent resolved"
+source = "https://huggingface.co/deepreinforce-ai/Ornith-1.0-9B"
+
+[[benchmarks]]
+name = "Terminal-Bench 2.1"
+score = 43.1
+metric = "percent"
+variant = "Terminus-2"
+source = "https://huggingface.co/deepreinforce-ai/Ornith-1.0-9B"
+
+[[benchmarks]]
+name = "Terminal-Bench 2.1"
+score = 40.6
+metric = "percent"
+variant = "Claude Code"
+source = "https://huggingface.co/deepreinforce-ai/Ornith-1.0-9B"
+
+[[benchmarks]]
+name = "NL2Repo"
+score = 27.2
+metric = "percent"
+source = "https://huggingface.co/deepreinforce-ai/Ornith-1.0-9B"
+
+[[benchmarks]]
+name = "Claw-eval"
+score = 63.1
+metric = "percent"
+source = "https://huggingface.co/deepreinforce-ai/Ornith-1.0-9B"
