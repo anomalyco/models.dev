@@ -1,6 +1,6 @@
 name = "Qwen3 8B"
 family = "qwen"
-release_date = "2025-04-28"
+release_date = "2025-03-31"
 last_updated = "2025-04-28"
 attachment = false
 reasoning = true
@@ -11,8 +11,10 @@ knowledge = "2025-03-31"
 open_weights = true
 
 [cost]
-input = 0.20
-output = 0.20
+input = 0.2
+output = 0.2
+cache_read = 0.2
+cache_write = 0.2
 
 [limit]
 context = 40_960

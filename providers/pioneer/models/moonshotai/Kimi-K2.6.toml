@@ -3,4 +3,8 @@ base_model = "moonshotai/kimi-k2.6"
 [cost]
 input = 0.95
 output = 4
-cache_read = 0.16
+cache_read = 0.34
+cache_write = 0.95
+
+[limit]
+context = 256_000

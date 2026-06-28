@@ -1,9 +1,10 @@
 base_model = "alibaba/qwen3-32b"
-structured_output = true
 
 [cost]
-input = 0.08
-output = 0.28
+input = 0.9
+output = 0.9
+cache_read = 0.9
+cache_write = 0.9
 
 [limit]
-context = 40_960
+context = 32_768

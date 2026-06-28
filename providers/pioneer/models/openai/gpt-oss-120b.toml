@@ -1,6 +1,6 @@
 name = "GPT-OSS 120B"
 family = "gpt-oss"
-release_date = "2025-08-05"
+release_date = "2025-07-31"
 last_updated = "2025-08-05"
 attachment = false
 reasoning = true
@@ -12,8 +12,9 @@ open_weights = true
 
 [cost]
 input = 0.15
-output = 0.60
+output = 0.6
 cache_read = 0.015
+cache_write = 0.15
 
 [limit]
 context = 131_072

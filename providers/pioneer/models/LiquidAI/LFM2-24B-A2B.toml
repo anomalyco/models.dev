@@ -1,6 +1,6 @@
-name = "LFM2-24B-A2B"
+name = "LFM2 24B A2B"
 family = "liquid"
-release_date = "2026-02-25"
+release_date = "2026-01-31"
 last_updated = "2026-02-25"
 attachment = false
 reasoning = false
@@ -12,9 +12,11 @@ open_weights = true
 [cost]
 input = 0.03
 output = 0.12
+cache_read = 0.03
+cache_write = 0.03
 
 [limit]
-context = 32_768
+context = 128_000
 output = 32_768
 
 [modalities]

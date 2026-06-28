@@ -1,6 +1,6 @@
 name = "Llama 3.1 8B Instruct"
 family = "llama"
-release_date = "2024-07-23"
+release_date = "2024-06-30"
 last_updated = "2024-07-23"
 attachment = false
 reasoning = false
@@ -11,11 +11,13 @@ knowledge = "2023-12-31"
 open_weights = true
 
 [cost]
-input = 0.02
-output = 0.03
+input = 0.2
+output = 0.2
+cache_read = 0.2
+cache_write = 0.2
 
 [limit]
-context = 131_072
+context = 16_384
 output = 16_384
 
 [modalities]

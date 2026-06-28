@@ -1,0 +1,22 @@
+name = "DiffusionGemma 26B-A4B IT"
+release_date = "2026-05-31"
+last_updated = "2026-05-31"
+attachment = false
+reasoning = false
+temperature = true
+tool_call = true
+open_weights = false
+
+[cost]
+input = 0.5
+output = 0.5
+cache_read = 0.5
+cache_write = 0.5
+
+[limit]
+context = 262_144
+output = 4_096
+
+[modalities]
+input = ["text"]
+output = ["text"]

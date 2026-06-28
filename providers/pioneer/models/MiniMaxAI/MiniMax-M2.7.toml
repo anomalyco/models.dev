@@ -1,9 +1,10 @@
 base_model = "minimax/MiniMax-M2.7"
-structured_output = true
 
 [cost]
 input = 0.279
 output = 1.2
+cache_read = 0.279
+cache_write = 0.279
 
 [limit]
 context = 196_608
