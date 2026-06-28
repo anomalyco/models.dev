@@ -6,6 +6,7 @@ model: opencode/glm-5.2
 color: "#44BA81"
 permission:
   bash: deny
+  external_directory: deny
   edit:
     "*": deny
     "models/**": allow
