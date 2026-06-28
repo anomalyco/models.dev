@@ -5,8 +5,7 @@ hidden: true
 model: opencode/glm-5.2
 color: "#44BA81"
 permission:
-  bash:
-    "*": deny
+  bash: deny
 ---
 
 You are the automated issue fixer for models.dev.

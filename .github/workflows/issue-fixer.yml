@@ -40,7 +40,7 @@ jobs:
       - name: Run issue fixer
         env:
           OPENCODE_API_KEY: ${{ secrets.OPENCODE_API_KEY }}
-          OPENCODE_PERMISSION: '{"bash":{"*":"deny"}}'
+          OPENCODE_PERMISSION: '{"bash":"deny"}'
         run: |
           set -o pipefail
           RESPONSE_FILE="$RUNNER_TEMP/issue-fixer-response.md"
