@@ -1,5 +1,12 @@
 name = "Poe"
 env = ["POE_API_KEY"]
 npm = "@ai-sdk/openai-compatible"
+# Raw HTTP reasoning controls (source accessed 2026-06-25): Responses POST
+# `/v1/responses` accepts `reasoning.effort` and `reasoning.summary`. On Chat
+# POST `/v1/chat/completions`, top-level `reasoning_effort` is ignored; pass bot
+# controls such as `reasoning_effort` or `thinking_budget` through `extra_body`.
+# Forwarding is best-effort, varies by bot, and unsupported fields are generally
+# silently ignored, so acceptance alone does not prove an effective control.
+# https://creator.poe.com/docs/external-applications/openai-compatible-api
 api = "https://api.poe.com/v1"
 doc= "https://creator.poe.com/docs/external-applications/openai-compatible-api"

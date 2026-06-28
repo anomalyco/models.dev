@@ -1,3 +1,6 @@
+# This route maps effort through top-level `verbosity`, not `reasoning.effort`.
+# https://openrouter.ai/docs/api/reference/parameters#verbosity (accessed 2026-06-25)
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
 name = "Claude Fable Latest"
 family = "claude-fable"
 release_date = "2026-06-09"

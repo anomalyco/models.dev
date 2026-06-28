@@ -1,0 +1,21 @@
+base_model = "minimax/MiniMax-M2.5"
+# Reasoning HTTP format (accessed 2026-06-25):
+# Alibaba-deployed MiniMax-M2.5 is thinking-only. No toggle, effort, or numeric
+# reasoning-budget request field is documented for this model.
+# Sources:
+# https://help.aliyun.com/zh/model-studio/deep-thinking
+reasoning_options = []
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0
+output = 0
+cache_read = 0
+cache_write = 0
+
+[limit]
+context = 196_608
+input = 196_601
+output = 24_576

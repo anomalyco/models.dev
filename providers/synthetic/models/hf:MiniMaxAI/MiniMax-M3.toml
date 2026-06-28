@@ -1,0 +1,21 @@
+base_model = "minimax/MiniMax-M3"
+release_date = "2026-06-12"
+last_updated = "2026-06-12"
+structured_output = true
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.60
+output = 1.20
+cache_read = 0.60
+
+[limit]
+context = 524_288
+output = 65_536
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

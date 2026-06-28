@@ -1,8 +1,11 @@
 base_model = "openai/o3-pro"
 name = "o3 Pro"
-release_date = "2025-04-16"
 temperature = true
 knowledge = "2024-10"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high"]
 
 [cost]
 input = 20

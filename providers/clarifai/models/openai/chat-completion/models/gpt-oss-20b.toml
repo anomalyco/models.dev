@@ -4,6 +4,10 @@ release_date = "2025-08-05"
 last_updated = "2025-12-12"
 attachment = false
 reasoning = true
+# Clarifai's POST /v2/ext/openai/v1/chat/completions request surface documents
+# no reasoning_effort field; upstream model support does not prove forwarding.
+# https://docs.clarifai.com/compute/inference/open-ai
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
 temperature = true
 tool_call = true
 open_weights = true

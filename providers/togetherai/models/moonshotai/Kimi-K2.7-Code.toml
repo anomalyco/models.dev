@@ -1,0 +1,24 @@
+name = "Kimi K2.7 Code"
+family = "kimi-k2"
+release_date = "2026-06-14"
+last_updated = "2026-06-14"
+attachment = false
+reasoning = true
+reasoning_options = []
+structured_output = true
+temperature = true
+tool_call = true
+open_weights = true
+
+[cost]
+input = 0.95
+cache_read = 0.19
+output = 4.00
+
+[limit]
+context = 262_144
+output = 131_072
+
+[modalities]
+input = ["text"]
+output = ["text"]

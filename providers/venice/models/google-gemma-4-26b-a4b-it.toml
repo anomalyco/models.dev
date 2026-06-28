@@ -1,7 +1,9 @@
 base_model = "google/gemma-4-26b-a4b-it"
 name = "Google Gemma 4 26B A4B Instruct"
-last_updated = "2026-06-10"
+last_updated = "2026-06-11"
 
+# Live /models (2026-06-25): none|low|medium|high; no dedicated reasoning budget.
+# https://api.venice.ai/api/v1/models?type=text (accessed 2026-06-25)
 [[reasoning_options]]
 type = "effort"
 values = ["none", "low", "medium", "high"]

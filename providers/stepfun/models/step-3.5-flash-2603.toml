@@ -8,6 +8,9 @@ tool_call = true
 knowledge = "2025-01"
 open_weights = true
 
+# Chat `reasoning_effort` and Messages `output_config.effort` accept low/high
+# (accessed 2026-06-25).
+# https://platform.stepfun.com/docs/zh/guides/models/step-3.5-flash
 [[reasoning_options]]
 type = "effort"
 values = ["low", "high"]

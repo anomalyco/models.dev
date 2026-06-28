@@ -1,8 +1,10 @@
 base_model = "nvidia/nemotron-3-ultra-550b-a55b"
 name = "NVIDIA Nemotron 3 Ultra"
-last_updated = "2026-06-10"
+last_updated = "2026-06-11"
 structured_output = true
 
+# Live /models (2026-06-25): none|low|medium|high; no dedicated reasoning budget.
+# https://api.venice.ai/api/v1/models?type=text (accessed 2026-06-25)
 [[reasoning_options]]
 type = "effort"
 values = ["none", "low", "medium", "high"]

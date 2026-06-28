@@ -1,8 +1,12 @@
 name = "Claudinio"
+# The configured OpenAI effort shape is `reasoning_effort = low|medium|high`,
+# but the published request list documents no reasoning control or budget.
+# https://claudin.io/docs/api-reference/ (accessed 2026-06-25)
 release_date = "2026-05-12"
 last_updated = "2026-06-02"
 attachment = true
 reasoning = true
+reasoning_options = []
 tool_call = true
 open_weights = false
 knowledge = "2026-05"

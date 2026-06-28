@@ -4,6 +4,9 @@ release_date = "2025-11-24"
 last_updated = "2025-08-01"
 attachment = true
 reasoning = true
+# POST /anthropic/v1/messages accepts thinking.budget_tokens >=1024 and effort
+# low/medium/high for this model; a raw budget must remain below max_tokens.
+# https://docs.anthropic.com/en/docs/build-with-claude/extended-thinking
 reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }, { type = "budget_tokens", min = 1_024 }]
 temperature = true
 tool_call = true

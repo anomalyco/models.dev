@@ -1,0 +1,19 @@
+base_model = "moonshotai/kimi-k2.7-code"
+# Reasoning HTTP format (accessed 2026-06-25):
+# Thinking-only model: `enable_thinking` defaults to true and cannot disable
+# thinking. `thinking_budget` is an integer token cap; no bounds are documented.
+# Sources:
+# https://www.alibabacloud.com/help/en/model-studio/kimi-api
+# https://www.alibabacloud.com/help/en/model-studio/deep-thinking
+base_model_omit = ["structured_output"]
+family = "kimi-k2"
+reasoning_options = [{ type = "toggle" }, { type = "budget_tokens" }]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0
+output = 0
+cache_read = 0
+cache_write = 0

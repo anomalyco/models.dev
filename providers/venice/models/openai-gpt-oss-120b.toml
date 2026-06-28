@@ -1,4 +1,7 @@
-base_model = "venice/openai-gpt-oss-120b"
+base_model = "openai/gpt-oss-120b"
+name = "OpenAI GPT OSS 120B"
+release_date = "2025-11-06"
+last_updated = "2026-06-11"
 
 [[reasoning_options]]
 type = "effort"
@@ -7,3 +10,7 @@ values = ["none", "low", "medium", "high"]
 [cost]
 input = 0.07
 output = 0.3
+
+[limit]
+context = 128_000
+output = 16_384

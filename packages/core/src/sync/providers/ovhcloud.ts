@@ -121,6 +121,7 @@ export function buildOvhcloudModel(
     last_updated: lastUpdated,
     attachment,
     reasoning,
+    reasoning_options: reasoning ? existing?.reasoning_options : undefined,
     temperature: temperature || undefined,
     tool_call: toolCall,
     structured_output: structuredOutput || undefined,

@@ -1,6 +1,14 @@
 base_model = "alibaba/qwen3.6-max-preview"
 structured_output = true
 
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "budget_tokens"
+min = 1
+max = 131_072
+
 [cost]
 input = 1.04
 output = 6.24

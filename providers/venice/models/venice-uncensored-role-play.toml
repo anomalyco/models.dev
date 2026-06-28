@@ -1,6 +1,21 @@
-base_model = "venice/venice-uncensored-role-play"
-reasoning_options = []
+name = "Venice Role Play Uncensored"
+family = "venice"
+release_date = "2026-02-20"
+last_updated = "2026-06-11"
+attachment = true
+reasoning = false
+tool_call = true
+structured_output = true
+open_weights = true
 
 [cost]
 input = 0.5
 output = 2
+
+[limit]
+context = 128_000
+output = 4_096
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

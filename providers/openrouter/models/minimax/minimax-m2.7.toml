@@ -1,7 +1,11 @@
 base_model = "minimax/MiniMax-M2.7"
 structured_output = true
+reasoning_options = []
 
 [cost]
-input = 0.27
-output = 1.08
-cache_read = 0.054
+input = 0.18
+output = 0.72
+
+[limit]
+context = 196_608
+output = 196_608

@@ -1,9 +1,13 @@
 name = "Kimi-K2.5"
-family = "kimi"
+family = "kimi-k2"
 release_date = "2026-01-27"
 last_updated = "2026-01-27"
 attachment = true
 reasoning = true
+# Top-level `thinking.type` accepts enabled/disabled and defaults enabled
+# (accessed 2026-06-25).
+# https://cloud.tencent.com/document/product/1823/132232
+reasoning_options = [{ type = "toggle" }]
 temperature = true
 tool_call = true
 knowledge = "2025-01"

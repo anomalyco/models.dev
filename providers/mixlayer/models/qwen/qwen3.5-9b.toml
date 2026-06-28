@@ -1,9 +1,12 @@
+# Qwen 3.5 supports the provider's binary $.thinking = true|false mapping.
+# https://docs.mixlayer.com/reasoning (accessed 2026-06-25)
 name = "Qwen3.5 9B"
 family = "qwen"
 release_date = "2026-03-18"
 last_updated = "2026-03-18"
 attachment = false
 reasoning = true
+reasoning_options = [{ type = "toggle" }]
 temperature = true
 tool_call = true
 open_weights = true

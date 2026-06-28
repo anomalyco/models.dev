@@ -10,9 +10,13 @@ structured_output = true
 knowledge = "2025-09-01"
 open_weights = false
 
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high"]
+
 [cost]
-input = 2
-output = 6
+input = 1.25
+output = 2.5
 cache_read = 0.2
 
 [limit]

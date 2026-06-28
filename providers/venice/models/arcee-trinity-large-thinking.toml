@@ -1,5 +1,15 @@
-base_model = "venice/arcee-trinity-large-thinking"
+name = "Trinity Large Thinking"
+family = "trinity"
+release_date = "2026-04-02"
+last_updated = "2026-06-11"
+attachment = false
+reasoning = true
+tool_call = true
+structured_output = true
+open_weights = true
 
+# Live /models (2026-06-25): low|medium|high; no dedicated reasoning budget.
+# https://api.venice.ai/api/v1/models?type=text (accessed 2026-06-25)
 [[reasoning_options]]
 type = "effort"
 values = ["low", "medium", "high"]
@@ -11,3 +21,11 @@ field = "reasoning_content"
 input = 0.3125
 output = 1.125
 cache_read = 0.075
+
+[limit]
+context = 256_000
+output = 65_536
+
+[modalities]
+input = ["text"]
+output = ["text"]

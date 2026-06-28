@@ -1,4 +1,13 @@
 base_model = "deepseek/deepseek-v4-pro"
+# Reasoning HTTP format (accessed 2026-06-25):
+# This model toggles with `enable_thinking`: true or false. Chat Completions
+# `reasoning_effort` accepts high (default) or max; low/medium map to high and
+# xhigh maps to max. Anthropic Messages defaults `reasoning_effort` to max.
+# Sources:
+# https://www.alibabacloud.com/help/en/model-studio/deepseek-api
+# https://www.alibabacloud.com/help/en/model-studio/anthropic-api-messages
+
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["high", "max"] }]
 
 [interleaved]
 field = "reasoning_content"

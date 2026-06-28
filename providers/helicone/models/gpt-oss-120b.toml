@@ -1,9 +1,13 @@
 name = "OpenAI GPT-OSS 120b"
+# Native exception (accessed 2026-06-25): top-level `reasoning_effort` is low,
+# medium, or high; there is no per-request numeric reasoning-token budget.
+# https://huggingface.co/openai/gpt-oss-120b
 family = "gpt-oss"
 release_date = "2024-06-01"
 last_updated = "2024-06-01"
 attachment = false
 reasoning = true
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
 temperature = true
 tool_call = true
 knowledge = "2024-06"

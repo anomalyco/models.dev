@@ -1,4 +1,7 @@
 base_model = "deepseek/deepseek-v4-flash"
+# Fireworks' published schema does not document this model's toggle or "max"
+# effort mapping. https://docs.fireworks.ai/guides/reasoning (accessed 2026-06-25)
+last_updated = "2026-06-16"
 
 [[reasoning_options]]
 type = "toggle"
@@ -13,4 +16,4 @@ field = "reasoning_content"
 [cost]
 input = 0.14
 output = 0.28
-cache_read = 0.03
+cache_read = 0.028

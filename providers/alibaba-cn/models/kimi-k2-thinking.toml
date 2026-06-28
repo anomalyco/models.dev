@@ -1,5 +1,5 @@
 name = "Moonshot Kimi K2 Thinking"
-family = "kimi"
+family = "kimi-thinking"
 release_date = "2025-11-06"
 last_updated = "2025-11-06"
 attachment = false
@@ -8,6 +8,9 @@ temperature = true
 tool_call = true
 open_weights = true
 structured_output = true
+
+[[reasoning_options]]
+type = "budget_tokens"
 
 [interleaved]
 field = "reasoning_content"

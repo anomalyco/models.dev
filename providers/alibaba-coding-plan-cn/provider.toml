@@ -1,5 +1,15 @@
 name = "Alibaba Coding Plan (China)"
 env = ["ALIBABA_CODING_PLAN_API_KEY"]
 npm = "@ai-sdk/openai-compatible"
+# Reasoning HTTP format (accessed 2026-06-25):
+# OpenAI plan base https://coding.dashscope.aliyuncs.com/v1 uses POST
+# /chat/completions with top-level `enable_thinking`: true or false.
+# Anthropic plan base https://coding.dashscope.aliyuncs.com/apps/anthropic uses
+# POST /v1/messages with `thinking.type`: enabled or disabled and optional
+# integer `thinking.budget_tokens`. No plan-specific effort field is documented.
+# Sources:
+# https://help.aliyun.com/zh/model-studio/coding-plan
+# https://help.aliyun.com/zh/model-studio/deep-thinking
+# https://www.alibabacloud.com/help/en/model-studio/anthropic-api-messages
 doc = "https://help.aliyun.com/zh/model-studio/coding-plan"
 api = "https://coding.dashscope.aliyuncs.com/v1"

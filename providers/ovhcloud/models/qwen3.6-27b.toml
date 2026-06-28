@@ -3,6 +3,9 @@ release_date = "2026-06-01"
 last_updated = "2026-06-01"
 attachment = true
 reasoning = true
+# Chat `reasoning_effort` supports none|minimal|low|medium|high; `none` disables it.
+# https://www.ovhcloud.com/en/public-cloud/ai-endpoints/catalog/qwen-3-6-27b/
+reasoning_options = [{ type = "effort", values = ["none", "minimal", "low", "medium", "high"] }]
 temperature = true
 tool_call = true
 structured_output = true

@@ -1,6 +1,21 @@
-base_model = "venice/venice-uncensored-1-2"
-reasoning_options = []
+name = "Venice Uncensored 1.2"
+family = "venice"
+release_date = "2026-04-01"
+last_updated = "2026-06-11"
+attachment = true
+reasoning = false
+tool_call = true
+structured_output = true
+open_weights = true
 
 [cost]
 input = 0.2
 output = 0.9
+
+[limit]
+context = 128_000
+output = 8_192
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

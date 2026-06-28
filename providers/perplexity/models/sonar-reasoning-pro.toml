@@ -1,9 +1,17 @@
+# Reasoning HTTP format (accessed 2026-06-25):
+# POST https://api.perplexity.ai/v1/sonar
+# JSON reasoning_effort: "minimal" | "low" | "medium" | "high".
+# No toggle or reasoning-token budget is documented for this model.
+# Sources:
+# https://docs.perplexity.ai/api-reference/sonar-post
+# https://docs.perplexity.ai/docs/sonar/models/sonar-reasoning-pro
 name = "Sonar Reasoning Pro"
 family = "sonar-reasoning"
 release_date = "2024-01-01"
 last_updated = "2025-09-01"
 attachment = true
 reasoning = true
+reasoning_options = [{ type = "effort", values = ["minimal", "low", "medium", "high"] }]
 temperature = true
 tool_call = false
 knowledge = "2025-09-01"

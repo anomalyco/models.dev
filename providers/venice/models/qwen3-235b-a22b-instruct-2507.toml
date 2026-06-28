@@ -1,6 +1,21 @@
-base_model = "venice/qwen3-235b-a22b-instruct-2507"
-reasoning_options = []
+name = "Qwen 3 235B A22B Instruct 2507"
+family = "qwen"
+release_date = "2025-04-29"
+last_updated = "2026-06-11"
+attachment = false
+reasoning = false
+tool_call = true
+structured_output = true
+open_weights = true
 
 [cost]
 input = 0.15
 output = 0.75
+
+[limit]
+context = 128_000
+output = 16_384
+
+[modalities]
+input = ["text"]
+output = ["text"]

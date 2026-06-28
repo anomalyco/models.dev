@@ -1,11 +1,21 @@
 name = "Z.AI GLM-4.7"
-release_date = "2026-01-10"
-last_updated = "2026-01-10"
+# Model-specific reasoning HTTP values (accessed 2026-06-25):
+# Reasoning defaults on; reasoning_effort = "none" disables it. The alternative
+# disable_reasoning = true|false is deprecated and will be removed after
+# 2026-07-21. No positive effort levels or token budget are documented.
+# Sources:
+# https://inference-docs.cerebras.ai/capabilities/reasoning#glm-reasoning-effort-and-disable-reasoning
+# https://inference-docs.cerebras.ai/models/zai-glm-47
+release_date = "2026-01-07"
+last_updated = "2026-06-10"
 attachment = false
-reasoning = false
+reasoning = true
+reasoning_options = [{ type = "effort", values = ["none"] }]
 temperature = true
 tool_call = true
 open_weights = true
+structured_output = true
+status = "beta"
 
 [cost]
 input = 2.25
@@ -15,7 +25,7 @@ cache_write = 0
 
 [limit]
 context = 131_072
-output = 40_000
+output = 40_960
 
 [modalities]
 input = ["text"]

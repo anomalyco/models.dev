@@ -1,6 +1,21 @@
-base_model = "venice/mistral-small-3-2-24b-instruct"
-reasoning_options = []
+name = "Mistral Small 3.2 24B Instruct"
+family = "mistral-small"
+release_date = "2026-01-15"
+last_updated = "2026-06-11"
+attachment = false
+reasoning = false
+tool_call = true
+structured_output = true
+open_weights = true
 
 [cost]
 input = 0.09375
 output = 0.25
+
+[limit]
+context = 256_000
+output = 16_384
+
+[modalities]
+input = ["text"]
+output = ["text"]

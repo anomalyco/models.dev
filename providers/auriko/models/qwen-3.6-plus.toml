@@ -1,5 +1,10 @@
 base_model = "alibaba/qwen3.6-plus"
 
+# Auriko's schema accepts reasoning_effort, but its provider support table gives
+# no Qwen 3.6 mapping; no meaningful toggle, effort, or budget is documented.
+# https://docs.auriko.ai/guides/extensions-and-thinking
+reasoning_options = []
+
 [cost]
 input = 0.5
 output = 3

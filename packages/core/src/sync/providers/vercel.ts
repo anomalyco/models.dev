@@ -1,12 +1,21 @@
 import { z } from "zod";
 
-import { ModelFamilyValues } from "../../family.js";
+import { inferKimiFamily, ModelFamilyValues } from "../../family.js";
 import type { ExistingModel, SyncProvider, SyncedFullModel, SyncedModel } from "../index.js";
 import { factorBaseModel, resolveCanonicalBaseModel } from "./openrouter.js";
 
 const API_ENDPOINT = "https://ai-gateway.vercel.sh/v1/models";
 
-const ModelType = z.enum(["language", "embedding", "image", "video", "reranking"]);
+const ModelType = z.enum([
+  "language",
+  "embedding",
+  "image",
+  "video",
+  "reranking",
+  "transcription",
+  "speech",
+  "realtime",
+]);
 
 const PricingTier = z.object({
   cost: z.string(),
@@ -30,8 +39,8 @@ export const VercelModel = z.object({
   name: z.string(),
   created: z.number(),
   released: z.number().optional(),
-  context_window: z.number(),
-  max_tokens: z.number(),
+  context_window: z.number().optional().default(0),
+  max_tokens: z.number().optional().default(0),
   type: ModelType,
   tags: z.array(z.string()).optional().default([]),
   pricing: Pricing.optional(),
@@ -107,9 +116,17 @@ export function buildVercelModel(model: VercelModel, existing: ExistingModel | u
     cost,
     limit: { context, input, output },
     modalities: {
-      input: ["text", tags.has("vision") ? "image" : undefined, tags.has("file-input") ? "pdf" : undefined]
-        .filter((value): value is "text" | "image" | "pdf" => value !== undefined),
-      output: model.type === "image"
+      input: model.type === "transcription"
+        ? ["audio"]
+        : model.type === "realtime"
+        ? ["text", "audio"]
+        : ["text", tags.has("vision") ? "image" : undefined, tags.has("file-input") ? "pdf" : undefined]
+          .filter((value): value is "text" | "image" | "pdf" => value !== undefined),
+      output: model.type === "speech"
+        ? ["audio"]
+        : model.type === "realtime"
+        ? ["text", "audio"]
+        : model.type === "image"
         ? ["image"]
         : model.type === "video"
         ? ["video"]
@@ -153,6 +170,9 @@ function buildCost(pricing: VercelModel["pricing"], existing?: ExistingModel["co
 }
 
 function inferFamily(modelID: string, name: string) {
+  const kimiFamily = inferKimiFamily(modelID, name);
+  if (kimiFamily !== undefined) return kimiFamily;
+
   const targets = [modelID, name].map((value) => value.toLowerCase());
   const families = [...ModelFamilyValues].sort((a, b) => b.length - a.length);
   return families.find((family) => targets.some((target) => target.includes(family.toLowerCase())))

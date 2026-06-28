@@ -1,4 +1,10 @@
 name = "Xiaomi Token Plan (Europe)"
+# Raw endpoints are POST https://token-plan-ams.xiaomimimo.com/v1/chat/completions
+# and POST https://token-plan-ams.xiaomimimo.com/anthropic/v1/messages.
+# Both protocols use thinking.type="enabled"|"disabled"; Flash defaults
+# disabled, while V2.5 Pro, V2.5, V2 Pro, and V2 Omni default enabled.
+# https://platform.xiaomimimo.com/static/docs/price/tokenplan/quick-access.md (accessed 2026-06-25)
+# https://platform.xiaomimimo.com/static/docs/api/chat/openai-api.md (accessed 2026-06-25)
 env = ["XIAOMI_API_KEY"]
 npm = "@ai-sdk/openai-compatible"
 api = "https://token-plan-ams.xiaomimimo.com/v1"

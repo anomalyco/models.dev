@@ -1,3 +1,11 @@
+# Reasoning HTTP format (accessed 2026-06-25):
+# POST https://api.groq.com/openai/v1/chat/completions
+# The model page recommends reasoning_effort: "default" for thinking and calls
+# the model dual-mode, but the API page scopes "none"/"default" to Qwen 3.6 27B.
+# Raw HTTP acceptance of both values for Qwen3-32B remains unresolved.
+# Sources:
+# https://console.groq.com/docs/model/qwen/qwen3-32b
+# https://console.groq.com/docs/reasoning
 name = "Qwen3-32B"
 family = "qwen"
 release_date = "2025-06-11"

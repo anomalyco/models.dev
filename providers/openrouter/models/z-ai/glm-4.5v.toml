@@ -1,6 +1,9 @@
 base_model = "zhipuai/glm-4.5v"
 structured_output = false
 
+[[reasoning_options]]
+type = "toggle"
+
 [cost]
 input = 0.6
 output = 1.8

@@ -1,0 +1,21 @@
+base_model = "alibaba/qwen3.6-plus"
+# Reasoning HTTP format (accessed 2026-06-25):
+# Hybrid, thinking on by default. Chat/DashScope `enable_thinking`: true|false;
+# integer `thinking_budget` maximum 81920; no minimum or disable sentinel is
+# documented. Responses instead uses `reasoning.effort` and no numeric budget.
+# Sources:
+# https://help.aliyun.com/zh/model-studio/deep-thinking
+# https://help.aliyun.com/zh/model-studio/compatibility-with-openai-responses-api
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "budget_tokens"
+max = 81_920
+
+[cost]
+input = 0
+output = 0
+cache_read = 0
+cache_write = 0

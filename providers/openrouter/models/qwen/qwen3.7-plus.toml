@@ -2,11 +2,19 @@ base_model = "alibaba/qwen3.7-plus"
 attachment = true
 structured_output = true
 
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "budget_tokens"
+min = 1
+max = 262_144
+
 [cost]
-input = 0.4
-output = 1.6
-cache_read = 0.08
-cache_write = 0.5
+input = 0.32
+output = 1.28
+cache_read = 0.064
+cache_write = 0.4
 
 [limit]
 output = 65_536
