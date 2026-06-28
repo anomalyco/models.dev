@@ -27,9 +27,18 @@ Fast Variants (optimized for speed, non-reasoning):
 - qwen3.5-397b-fast — Qwen3.5 397B Fast
 - qwen3.6-35b-fast — Qwen3.6 35B Fast
 
+Flex Variants (streaming required, discounted):
+- glm-5.2-flex — GLM 5.2 Flex, reasoning enabled
+- glm-5.2-short-flex — GLM 5.2 Short Flex, reasoning enabled
+- glm-5.2-short-fast-flex — GLM 5.2 Short Fast Flex
+- kimi-k2.6-flex — Kimi K2.6 Flex, reasoning + image input
+- kimi-k2.7-code-flex — Kimi K2.7 Code Flex, reasoning + image input
+
 Notes
-- Model IDs, pricing, and limits sourced directly from the Neuralwatt API
+- Standard model IDs, pricing, and limits are sourced directly from the Neuralwatt API; flex pricing applies the official 0.5 docs multiplier to the corresponding standard rates
 - Cache reads are billed at 25% of the input token price; there is no separate cache-write charge
 - Neuralwatt provides real-time energy consumption data (Joules/kWh) per request
 - "Fast" variants are optimized for lower latency without reasoning
+- Flex requires streaming; non-streaming requests fall back to the standard tier
+- Official Neuralwatt docs currently describe Flex as a 50% token-pricing discount, including cached-input billing
 - Vision models support image input via OpenAI-compatible API
