@@ -13,7 +13,9 @@ concurrency: issue-fixer-${{ github.event.issue.number }}
 
 jobs:
   fix:
-    if: github.repository == 'anomalyco/models.dev'
+    if: |
+      github.repository == 'anomalyco/models.dev' &&
+      contains(fromJSON('["OWNER","MEMBER","COLLABORATOR"]'), github.event.issue.author_association)
     runs-on: ubuntu-latest
     env:
       ISSUE_NUMBER: ${{ github.event.issue.number }}
@@ -61,12 +63,43 @@ jobs:
           If it is a feature request, a request to track a new kind of information, a question, or any miscellaneous non-catalog-data request, do not edit files. Respond briefly that it needs maintainer review and no automated fix was opened.
           EOF
 
+      - name: Check changed paths
+        if: success()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          unsupported=()
+          while IFS= read -r line; do
+            path="${line:3}"
+            case "$path" in
+              models/*|providers/*) ;;
+              *) unsupported+=("$path") ;;
+            esac
+          done < <(git status --porcelain)
+
+          if [ "${#unsupported[@]}" -eq 0 ]; then
+            exit 0
+          fi
+
+          COMMENT="$RUNNER_TEMP/issue-fixer-unsupported-changes.md"
+          {
+            echo "The automated issue fixer produced changes outside model catalog paths, so I did not open a PR."
+            echo
+            echo "Unsupported changed paths:"
+            for path in "${unsupported[@]}"; do
+              echo "- \`$path\`"
+            done
+          } > "$COMMENT"
+
+          gh issue comment "$ISSUE_NUMBER" --body-file "$COMMENT"
+          exit 1
+
       - name: Comment when no changes were made
         if: success()
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          if [ -n "$(git status --porcelain)" ]; then
+          if [ -n "$(git status --porcelain -- models providers)" ]; then
             exit 0
           fi
 
@@ -79,7 +112,7 @@ jobs:
       - name: Validate models
         if: success()
         run: |
-          if [ -z "$(git status --porcelain)" ]; then
+          if [ -z "$(git status --porcelain -- models providers)" ]; then
             exit 0
           fi
 
@@ -92,7 +125,7 @@ jobs:
           BRANCH: opencode/issue-${{ github.event.issue.number }}
           TITLE: "fix: address issue #${{ github.event.issue.number }}"
         run: |
-          if [ -z "$(git status --porcelain)" ]; then
+          if [ -z "$(git status --porcelain -- models providers)" ]; then
             exit 0
           fi
 
@@ -100,7 +133,7 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git fetch --no-tags --depth=1 origin "+refs/heads/$BRANCH:refs/remotes/origin/$BRANCH" || true
           git checkout -B "$BRANCH"
-          git add -A
+          git add -A models providers
           git commit -m "$TITLE"
           git push --force-with-lease origin "$BRANCH"
 
