@@ -1,0 +1,130 @@
+name: Issue Fixer
+
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  contents: write
+  issues: write
+  pull-requests: write
+
+concurrency: issue-fixer-${{ github.event.issue.number }}
+
+jobs:
+  fix:
+    if: github.repository == 'anomalyco/models.dev'
+    runs-on: ubuntu-latest
+    env:
+      ISSUE_NUMBER: ${{ github.event.issue.number }}
+      ISSUE_TITLE: ${{ github.event.issue.title }}
+      ISSUE_BODY: ${{ github.event.issue.body }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          ref: dev
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        run: bun install
+
+      - name: Install opencode
+        run: curl -fsSL https://opencode.ai/install | bash
+
+      - name: Run issue fixer
+        env:
+          OPENCODE_API_KEY: ${{ secrets.OPENCODE_API_KEY }}
+          OPENCODE_PERMISSION: '{"bash":{"*":"deny"}}'
+        run: |
+          set -o pipefail
+          RESPONSE_FILE="$RUNNER_TEMP/issue-fixer-response.md"
+          echo "RESPONSE_FILE=$RESPONSE_FILE" >> "$GITHUB_ENV"
+
+          opencode run --agent issue-fixer -m opencode/glm-5.2 <<EOF | tee "$RESPONSE_FILE"
+          A new GitHub issue was opened in anomalyco/models.dev.
+
+          Issue #$ISSUE_NUMBER: $ISSUE_TITLE
+
+          Body:
+          $ISSUE_BODY
+
+          Decide whether this is an actionable model catalog data fix.
+
+          If it asks for a model to be added or for factual model/provider metadata to be corrected, make the minimal TOML changes in the repository. Do not use Bash. Do not create branches, commits, comments, or pull requests yourself.
+
+          If it is a feature request, a request to track a new kind of information, a question, or any miscellaneous non-catalog-data request, do not edit files. Respond briefly that it needs maintainer review and no automated fix was opened.
+          EOF
+
+      - name: Comment when no changes were made
+        if: success()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if [ -n "$(git status --porcelain)" ]; then
+            exit 0
+          fi
+
+          if [ -s "$RESPONSE_FILE" ]; then
+            gh issue comment "$ISSUE_NUMBER" --body-file "$RESPONSE_FILE"
+          else
+            gh issue comment "$ISSUE_NUMBER" --body "Thanks for the suggestion. This looks like it needs maintainer review rather than an automated model catalog fix, so I did not open a PR."
+          fi
+
+      - name: Validate models
+        if: success()
+        run: |
+          if [ -z "$(git status --porcelain)" ]; then
+            exit 0
+          fi
+
+          bun validate
+
+      - name: Create pull request
+        if: success()
+        env:
+          GH_TOKEN: ${{ github.token }}
+          BRANCH: opencode/issue-${{ github.event.issue.number }}
+          TITLE: "fix: address issue #${{ github.event.issue.number }}"
+        run: |
+          if [ -z "$(git status --porcelain)" ]; then
+            exit 0
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git fetch --no-tags --depth=1 origin "+refs/heads/$BRANCH:refs/remotes/origin/$BRANCH" || true
+          git checkout -B "$BRANCH"
+          git add -A
+          git commit -m "$TITLE"
+          git push --force-with-lease origin "$BRANCH"
+
+          PR_BODY="$RUNNER_TEMP/issue-fixer-pr-body.md"
+          {
+            echo "Automated model catalog fix for #$ISSUE_NUMBER."
+            echo
+            echo "Agent summary:"
+            echo
+            if [ -s "$RESPONSE_FILE" ]; then
+              cat "$RESPONSE_FILE"
+            else
+              echo "No agent summary was produced."
+            fi
+            echo
+            echo "Closes #$ISSUE_NUMBER"
+          } > "$PR_BODY"
+
+          pr_number="$(gh pr list --head "$BRANCH" --base dev --json number --jq '.[0].number')"
+          if [ -n "$pr_number" ]; then
+            gh pr edit "$pr_number" --title "$TITLE" --body-file "$PR_BODY"
+            pr_url="$(gh pr view "$pr_number" --json url --jq '.url')"
+          else
+            pr_url="$(gh pr create --base dev --head "$BRANCH" --title "$TITLE" --body-file "$PR_BODY")"
+          fi
+
+          gh issue comment "$ISSUE_NUMBER" --body "Opened $pr_url with an automated model catalog fix."
