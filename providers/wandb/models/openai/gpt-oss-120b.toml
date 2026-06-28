@@ -1,13 +1,5 @@
+base_model = "openai/gpt-oss-120b"
 name = "gpt-oss-120b"
-family = "gpt-oss"
-release_date = "2025-08-05"
-last_updated = "2025-08-05"
-attachment = false
-reasoning = true
-temperature = true
-tool_call = true
-structured_output = true
-open_weights = true
 reasoning_options = []
 
 [cost]
@@ -16,9 +8,4 @@ output = 0.14
 cache_read = 0.04
 
 [limit]
-context = 131_072
 output = 131_072
-
-[modalities]
-input = ["text"]
-output = ["text"]
