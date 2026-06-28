@@ -387,10 +387,14 @@ function modalities(model: AlibabaModel, existing: ExistingModel | undefined) {
 	if (existing?.modalities === undefined) return undefined;
 
 	const input = normalizedModalities(model.inference_metadata.request_modality);
-	// DashScope does not surface `pdf` in `inference_metadata.request_modality`, but vision-understanding
-	// models accept PDF inputs (the underlying VL stack parses document pages as images).
+	// DashScope does not surface `pdf` in `inference_metadata.request_modality`,
+	// but vision-understanding models accept PDF inputs (the underlying VL
+	// stack parses document pages as images). `VU` is broad but undocumented;
+	// the `vl` segment catches qwen3-vl-32b-* where live intl API omits VU.
 	// See: https://www.alibabacloud.com/help/en/model-studio/vision-model/?spm=a2c63.p38356.help-menu-2400256.d_0_3_1.46b16feaB6sCxE
-	if (model.capabilities.includes("VU") && !input.includes("pdf")) {
+	const isVision = model.capabilities.includes("VU")
+		|| /(^|[-_.])vl([-_.]|$)/i.test(model.model);
+	if (isVision && !input.includes("pdf")) {
 		input.push("pdf");
 	}
 
