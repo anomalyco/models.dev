@@ -1,0 +1,35 @@
+name: opencode-issue-fix
+
+on:
+  issues:
+    types: [opened]
+
+jobs:
+  opencode-issue-fix:
+    if: github.repository == 'anomalyco/models.dev'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+      issues: read
+      pull-requests: read
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+
+      - name: Run opencode
+        uses: anomalyco/opencode/github@2c14fc5586fe0b88e5c04732d2e846769cc35671 # latest
+        env:
+          OPENCODE_API_KEY: ${{ secrets.OPENCODE_API_KEY }}
+          OPENCODE_PERMISSION: '{"bash": "deny"}'
+        with:
+          model: opencode/claude-opus-4-5
+          prompt: |
+            Fix the issue that was just opened.
+
+            Requirements:
+            - Implement the smallest correct change that addresses the issue.
+            - Do not use the bash/shell tool. The workflow denies it; use file read/edit tools instead.
+            - If there is not enough information to make a safe fix, explain what is missing instead of making speculative changes.
+
+            The GitHub Action will create a pull request if you modify files.
