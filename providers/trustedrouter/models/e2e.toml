@@ -1,0 +1,18 @@
+name = "End-to-End Encrypted"
+release_date = "2026-06-01"
+last_updated = "2026-06-27"
+attachment = true
+reasoning = true
+reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high"] }]
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[limit]
+context = 1_000_000
+output = 131_072
+
+[modalities]
+input = ["text", "image", "pdf"]
+output = ["text"]
