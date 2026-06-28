@@ -11,6 +11,7 @@ permissions:
 
 jobs:
   close-stale-pull-requests:
+    if: github.repository == 'anomalyco/models.dev'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/github-script@v8
