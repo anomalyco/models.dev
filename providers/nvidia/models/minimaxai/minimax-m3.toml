@@ -1,0 +1,10 @@
+base_model = "minimax/MiniMax-M3"
+reasoning_options = [{ type = "toggle" }]
+
+[cost]
+input = 0.0
+output = 0.0
+
+[limit]
+context = 1_000_000
+output = 16_384

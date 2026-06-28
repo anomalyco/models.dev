@@ -3,6 +3,7 @@
 # https://docs.vivgrid.com/models/deepseek-v4-pro (accessed 2026-06-25)
 # https://docs.vivgrid.com/api/model-api (accessed 2026-06-25)
 base_model = "deepseek/deepseek-v4-pro"
+reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high"] }]
 
 [interleaved]
 field = "reasoning_content"

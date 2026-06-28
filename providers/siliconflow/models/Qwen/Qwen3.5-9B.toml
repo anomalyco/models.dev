@@ -1,7 +1,7 @@
-name = "Qwen/Qwen3-235B-A22B"
+name = "Qwen/Qwen3.5-9B"
 family = "qwen"
-release_date = "2025-04-30"
-last_updated = "2025-11-25"
+release_date = "2026-03-03"
+last_updated = "2026-04-24"
 attachment = false
 reasoning = false
 temperature = true
@@ -10,12 +10,12 @@ structured_output = true
 open_weights = false
 
 [cost]
-input = 0.35
-output = 1.42
+input = 0.10
+output = 0.15
 
 [limit]
-context = 131_000
-output = 131_000
+context = 262_144
+output = 262_144
 
 [modalities]
 input = ["text"]

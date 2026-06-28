@@ -1,1 +1,23 @@
-../../../siliconflow/models/Qwen/Qwen3-14B.toml
+name = "Qwen/Qwen3-14B"
+family = "qwen"
+release_date = "2025-04-30"
+last_updated = "2025-11-25"
+attachment = false
+reasoning = true
+reasoning_options = [{ type = "toggle" }, { type = "budget_tokens", min = 128, max = 32_768 }]
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[cost]
+input = 0.07
+output = 0.28
+
+[limit]
+context = 131_000
+output = 131_000
+
+[modalities]
+input = ["text"]
+output = ["text"]

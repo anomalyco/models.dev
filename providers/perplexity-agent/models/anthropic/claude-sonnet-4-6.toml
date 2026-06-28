@@ -9,6 +9,10 @@ tool_call = true
 knowledge = "2025-08-31"
 open_weights = false
 
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high", "xhigh", "max"]
+
 [cost]
 input = 3.00
 output = 15.00
