@@ -1,15 +1,11 @@
-# https://deepinfra.com/zai-org/GLM-5.1
-name = "GLM-5.2"
-family = "glm"
-release_date = "2026-06-16"
-last_updated = "2026-06-16"
-attachment = false
-reasoning = true
-reasoning_options = [{ type = "toggle" }]
-temperature = true
-tool_call = true
-open_weights = true
-structured_output = true
+base_model = "zhipuai/glm-5.2"
+
+# Model-specific reasoning HTTP values (accessed 2026-06-28):
+# reasoning.enabled=false disables reasoning; reasoning_effort accepts low/medium/high/xhigh.
+# Sources:
+# https://docs.deepinfra.com/api-reference/chat-completions/openai-chat-completions
+# https://deepinfra.com/zai-org/GLM-5.2/api
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "medium", "high", "xhigh"] }]
 
 [interleaved]
 field = "reasoning_content"
@@ -23,7 +19,3 @@ cache_read = 0.18
 context = 1_048_576
 # https://deepinfra.com/docs/advanced/max_tokens_limit
 output = 32_768
-
-[modalities]
-input = ["text"]
-output = ["text"]
