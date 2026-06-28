@@ -1,9 +1,24 @@
+# Reasoning HTTP format (accessed 2026-06-25):
+# POST https://ai-gateway.vercel.sh/v1/chat/completions
+# JSON reasoning.enabled: true | false; reasoning.max_tokens: number.
+# Routes are alibaba, fireworks, and togetherai; pin with
+# providerOptions.gateway.only. The documented pages do not verify the model's
+# 1..262144 reasoning.max_tokens bounds or equal behavior on every route.
+# Sources:
+# https://vercel.com/docs/ai-gateway/sdks-and-apis/openai-chat-completions/advanced
+# https://vercel.com/ai-gateway/models/qwen3.7-plus
 base_model = "alibaba/qwen3.7-plus"
-reasoning_options = [{ type = "toggle" }, { type = "budget_tokens", min = 1, max = 262_144 }]
 name = "Qwen 3.7 Plus"
 family = "qwen3.7-plus"
-release_date = "2026-06-01"
 attachment = true
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "budget_tokens"
+min = 1
+max = 262_144
 
 [cost]
 input = 0.4

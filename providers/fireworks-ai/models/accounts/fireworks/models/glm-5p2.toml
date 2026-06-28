@@ -1,4 +1,6 @@
 name = "GLM 5.2"
+# Fireworks' published schema does not document this model's toggle or "max"
+# effort mapping. https://docs.fireworks.ai/guides/reasoning (accessed 2026-06-25)
 family = "glm"
 release_date = "2026-06-16"
 last_updated = "2026-06-16"
@@ -21,7 +23,7 @@ output = 4.40
 cache_read = 0.26
 
 [limit]
-context = 1_048_576
+context = 1_048_575
 output = 131_072
 
 [modalities]

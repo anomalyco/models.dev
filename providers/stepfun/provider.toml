@@ -1,5 +1,17 @@
 name = "StepFun (China)"
 env = ["STEPFUN_API_KEY"]
 npm = "@ai-sdk/openai-compatible"
+# Reasoning HTTP format (accessed 2026-06-25):
+# POST /v1/chat/completions uses top-level `reasoning_effort`; POST /v1/messages
+# uses `output_config.effort`; POST /v1/responses uses `reasoning.effort`.
+# Values are low/medium/high for step-3.7-flash; step-3.5-flash-2603 accepts
+# low/high. Responses supports only step-3.7-flash. Chat returns reasoning at
+# `choices[].message.reasoning` or streamed `choices[].delta.reasoning`;
+# `reasoning_format` is general (default) or deepseek-style, the latter using
+# `reasoning_content`. Responses streams `response.reasoning_text.delta`.
+# Sources:
+# https://platform.stepfun.com/docs/zh/api-reference/chat/chat-completion-create
+# https://platform.stepfun.com/docs/zh/api-reference/chat/messages-create
+# https://platform.stepfun.com/docs/zh/api-reference/responses/responses-create
 doc = "https://platform.stepfun.com/docs/zh/overview/concept"
 api = "https://api.stepfun.com/v1"

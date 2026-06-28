@@ -1,5 +1,10 @@
 name = "Bailing"
 env = ["BAILING_API_TOKEN"]
 npm = "@ai-sdk/openai-compatible"
+# Raw HTTP reasoning controls (source accessed 2026-06-25):
+# POST https://api.tbox.cn/api/llm/v1/chat/completions. The provider request
+# surface documents no reasoning toggle, effort, or token-budget request field;
+# Ring-1T being a reasoning model does not by itself establish such a control.
+# https://alipaytbox.yuque.com/sxs0ba/ling/intro
 doc = "https://alipaytbox.yuque.com/sxs0ba/ling/intro"
 api = "https://api.tbox.cn/api/llm/v1/chat/completions"

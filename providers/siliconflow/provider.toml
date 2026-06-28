@@ -2,4 +2,14 @@ name = "SiliconFlow"
 env = ["SILICONFLOW_API_KEY"]
 npm = "@ai-sdk/openai-compatible"
 api = "https://api.siliconflow.com/v1"
+# Reasoning HTTP format (accessed 2026-06-25):
+# POST /v1/chat/completions uses top-level enable_thinking = true|false only
+# for the schema's enumerated models (default true), and thinking_budget =
+# 128..32768 for all reasoning models. No zero/negative disable sentinel is
+# documented by the global endpoint schema. Model-specific launch posts may
+# document additional controls; GLM-5.2 documents reasoning effort High/Max on
+# SiliconFlow.
+# Source:
+# https://docs.siliconflow.com/en/api-reference/chat-completions/chat-completions
+# https://www.siliconflow.com/blog/glm-5.2-now-on-siliconflow-1m-context-long-horizon-engineering-near-opus-coding
 doc = "https://cloud.siliconflow.com/models"

@@ -4,6 +4,8 @@ release_date = "2025-02-24"
 last_updated = "2025-02-24"
 attachment = true
 reasoning = true
+# Bedrock Invoke body: $.thinking = {"type":"enabled","budget_tokens":N} or {"type":"disabled"}, with N >= 1024 and N < $.max_tokens. Bedrock Converse nests that object at $.additionalModelRequestFields.thinking. https://docs.aws.amazon.com/bedrock/latest/userguide/conversation-inference.html#converse-additional-model-request-fields (accessed 2026-06-25)
+reasoning_options = [{ type = "budget_tokens", min = 1_024 }]
 temperature = true
 tool_call = true
 knowledge = "2024-10-31"

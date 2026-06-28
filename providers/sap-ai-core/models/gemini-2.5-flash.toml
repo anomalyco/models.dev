@@ -4,6 +4,8 @@ release_date = "2025-04-17"
 last_updated = "2025-06-05"
 attachment = true
 reasoning = true
+# Vertex Gemini adapter: $.generationConfig.thinkingConfig.thinkingBudget is 0 (off), -1 (dynamic), or 1..24576. https://cloud.google.com/vertex-ai/generative-ai/docs/thinking (accessed 2026-06-25)
+reasoning_options = [{ type = "toggle" }, { type = "budget_tokens", min = 0, max = 24_576 }]
 temperature = true
 knowledge = "2025-01"
 tool_call = true

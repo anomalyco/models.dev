@@ -1,4 +1,5 @@
 base_model = "moonshotai/kimi-k2.7-code"
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "medium", "high"] }]
 temperature = true
 
 [cost]
