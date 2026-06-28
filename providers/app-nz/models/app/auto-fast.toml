@@ -1,0 +1,22 @@
+name = "Auto Fast"
+release_date = "2026-06-28"
+last_updated = "2026-06-28"
+attachment = false
+reasoning = false
+tool_call = true
+temperature = true
+open_weights = false
+
+# Routed to mixed upstream low-latency models; pricing is variable. Values
+# below are modest representative numbers, not a fixed per-token rate.
+[cost]
+input = 0.50
+output = 1.50
+
+[limit]
+context = 200_000
+output = 32_000
+
+[modalities]
+input = ["text"]
+output = ["text"]
