@@ -1,0 +1,27 @@
+name = "GLM 5.2 TEE"
+family = "glm"
+release_date = "2026-06-16"
+last_updated = "2026-06-16"
+attachment = false
+reasoning = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["high", "xhigh"]
+
+[cost]
+input = 1.4
+output = 4.6
+cache_read = 0.5
+
+[limit]
+context = 1_048_576
+input = 1_048_576
+output = 131_072
+
+[modalities]
+input = ["text"]
+output = ["text"]

@@ -1,0 +1,27 @@
+name = "MiMo V2.5 Pro UltraSpeed"
+family = "mimo-v2.5-pro"
+release_date = "2026-06-10"
+last_updated = "2026-06-10"
+attachment = false
+reasoning = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[[reasoning_options]]
+type = "toggle"
+
+[cost]
+input = 1.5
+output = 3
+cache_read = 0.015
+cache_write = 0
+
+[limit]
+context = 1_048_576
+input = 1_048_576
+output = 131_072
+
+[modalities]
+input = ["text"]
+output = ["text"]
