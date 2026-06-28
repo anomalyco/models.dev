@@ -13,9 +13,7 @@ concurrency: issue-fixer-${{ github.event.issue.number }}
 
 jobs:
   fix:
-    if: |
-      github.repository == 'anomalyco/models.dev' &&
-      contains(fromJSON('["OWNER","MEMBER","COLLABORATOR"]'), github.event.issue.author_association)
+    if: github.repository == 'anomalyco/models.dev'
     runs-on: ubuntu-latest
     env:
       ISSUE_NUMBER: ${{ github.event.issue.number }}
