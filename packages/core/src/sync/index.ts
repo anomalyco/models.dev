@@ -12,6 +12,7 @@ import { huggingface } from "./providers/huggingface.js";
 import { llmgateway } from "./providers/llmgateway.js";
 import { openrouter } from "./providers/openrouter.js";
 import { ovhcloud } from "./providers/ovhcloud.js";
+import { privatemind } from "./providers/privatemind.js";
 import { vercel } from "./providers/vercel.js";
 import { venice } from "./providers/venice.js";
 import { xai } from "./providers/xai.js";
@@ -88,6 +89,7 @@ export const providers: {
   llmgateway: SyncProvider<any>;
   openrouter: SyncProvider<any>;
   ovhcloud: SyncProvider<any>;
+  privatemind: SyncProvider<any>;
   vercel: SyncProvider<any>;
   venice: SyncProvider<any>;
   xai: SyncProvider<any>;
@@ -100,6 +102,7 @@ export const providers: {
   llmgateway,
   openrouter,
   ovhcloud,
+  privatemind,
   vercel,
   venice,
   xai,
