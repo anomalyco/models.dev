@@ -1,0 +1,12 @@
+base_model = "google/gemini-3.1-pro-preview"
+
+[cost]
+input = 2
+output = 12
+cache_read = 0.2
+
+[limit]
+output = 65_535
+
+[modalities]
+input = ["text", "image"]

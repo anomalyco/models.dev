@@ -12,6 +12,7 @@ import { huggingface } from "./providers/huggingface.js";
 import { llmgateway } from "./providers/llmgateway.js";
 import { openrouter } from "./providers/openrouter.js";
 import { ovhcloud } from "./providers/ovhcloud.js";
+import { requesty } from "./providers/requesty.js";
 import { vercel } from "./providers/vercel.js";
 import { venice } from "./providers/venice.js";
 import { xai } from "./providers/xai.js";
@@ -88,6 +89,7 @@ export const providers: {
   llmgateway: SyncProvider<any>;
   openrouter: SyncProvider<any>;
   ovhcloud: SyncProvider<any>;
+  requesty: SyncProvider<any>;
   vercel: SyncProvider<any>;
   venice: SyncProvider<any>;
   xai: SyncProvider<any>;
@@ -100,13 +102,14 @@ export const providers: {
   llmgateway,
   openrouter,
   ovhcloud,
+  requesty,
   vercel,
   venice,
   xai,
 };
 
 export const groups = {
-  aggregators: ["huggingface", "llmgateway", "openrouter", "vercel"],
+  aggregators: ["huggingface", "llmgateway", "openrouter", "requesty", "vercel"],
   cloudflare: ["cloudflare-workers-ai"],
   direct: ["baseten", "chutes", "google", "ovhcloud", "venice", "xai"],
 } as const;

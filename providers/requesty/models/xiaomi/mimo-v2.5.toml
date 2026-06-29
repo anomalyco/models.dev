@@ -1,0 +1,11 @@
+base_model = "xiaomi/mimo-v2.5"
+reasoning = false
+structured_output = false
+
+[cost]
+input = 0.14
+output = 0.28
+cache_read = 0.0028
+
+[modalities]
+input = ["text", "image"]

@@ -1,0 +1,11 @@
+base_model = "anthropic/claude-fable-5"
+temperature = true
+structured_output = true
+
+[cost]
+input = 10
+output = 50
+cache_read = 1
+
+[modalities]
+input = ["text", "image"]
