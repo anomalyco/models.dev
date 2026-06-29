@@ -1,7 +1,7 @@
 name = "MiMo-V2.5-Pro"
 family = "mimo"
 release_date = "2026-04-22"
-last_updated = "2026-04-22"
+last_updated = "2026-06-24"
 attachment = false
 reasoning = true
 temperature = true
@@ -13,15 +13,9 @@ open_weights = true
 type = "toggle"
 
 [cost]
-input = 1
-output = 3
-cache_read = 0.2
-
-[[cost.tiers]]
-tier = { size = 256_000 }
-input = 2.00
-output = 6.00
-cache_read = 0.40
+input = 0.435
+output = 0.87
+cache_read = 0.0036
 
 [limit]
 context = 1_048_576
