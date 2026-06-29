@@ -1,9 +1,0 @@
-name = "evroc"
-# Reasoning HTTP format (accessed 2026-06-25): POST /v1/chat/completions.
-# evroc documents OpenAI compatibility but no toggle, effort, or budget field;
-# the raw reasoning-control surface is undocumented.
-# https://docs.evroc.com/products/think/overview.html
-env = ["EVROC_API_KEY"]
-npm = "@ai-sdk/openai-compatible"
-doc = "https://docs.evroc.com/products/think/overview.html"
-api = "https://models.think.evroc.com/v1"

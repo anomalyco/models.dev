@@ -1,9 +1,0 @@
-name = "HPC-AI"
-env = ["HPC_AI_API_KEY"]
-npm = "@ai-sdk/openai-compatible"
-# Reasoning HTTP format (accessed 2026-06-25): POST /inference/v1/chat/completions
-# accepts top-level `reasoning_effort` = none, low, medium, or high. The reference
-# documents no numeric reasoning budget; support among models is not specified.
-# https://www.hpc-ai.com/doc/docs/Model-APIs/API-Reference/OpenAI-Compatible-API/Create-Chat-Completions/
-doc = "https://www.hpc-ai.com/doc/docs/quickstart/"
-api = "https://api.hpc-ai.com/inference/v1"

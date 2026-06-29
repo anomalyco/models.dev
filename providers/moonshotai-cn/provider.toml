@@ -1,9 +1,0 @@
-name = "Moonshot AI (China)"
-env = ["MOONSHOT_API_KEY"]
-npm = "@ai-sdk/openai-compatible"
-# Chat is POST `/v1/chat/completions`. Kimi K2.5 and K2.6 toggle reasoning with
-# `thinking.type = "enabled"|"disabled"` (enabled by default); K2.7 Code only
-# accepts `"enabled"`, so it is always on. No effort or token budget is exposed.
-# https://platform.kimi.com/docs/api/chat (accessed 2026-06-25)
-doc = "https://platform.moonshot.cn/docs/api/chat"
-api = "https://api.moonshot.cn/v1"

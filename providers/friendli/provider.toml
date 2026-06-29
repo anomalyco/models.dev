@@ -1,9 +1,0 @@
-name = "Friendli"
-# Reasoning HTTP format (accessed 2026-06-25): POST /serverless/v1/chat/completions.
-# Toggle: chat_template_kwargs.enable_thinking = true | false; support is
-# model-specific. No effort or reasoning-token budget field is documented.
-# https://friendli.ai/docs/guides/reasoning
-env = ["FRIENDLI_TOKEN"]
-npm = "@ai-sdk/openai-compatible"
-api = "https://api.friendli.ai/serverless/v1"
-doc = "https://friendli.ai/docs/guides/serverless_endpoints/introduction"
