@@ -71,9 +71,18 @@ models_dev_value = narev_per_token_value * 1_000_000
 
 Round to match nearby values in the same provider (typically up to 6 decimal places for small rates, fewer for large ones). Omit optional cost keys when Narev returns `0` or the field is absent, unless the file already tracks that field and the provider documents a non-zero rate.
 
+### Numeric equality
+
+Compare cost values **numerically**, not as strings or formatting.
+
+- `0.3` and `0.30` are the same — no change needed.
+- `1.0` and `1` are the same — no change needed.
+- Do not edit a file just to add, remove, or rearrange trailing zeros or decimal places.
+- Only update a cost field when the numeric value would actually change (use a reasonable tolerance only for floating-point noise after conversion, not for cosmetic formatting).
+
 ## Edit rules
 
-- Change a file only when at least one cost field would differ after conversion.
+- Change a file only when at least one cost field would differ **numerically** after conversion (not formatting alone).
 - When you change any cost field, set `last_updated` to today's date in `YYYY-MM-DD`.
 - Preserve TOML formatting, comments, field order, and **existing cost key names** where practical.
 - Make the smallest correct diff per file.
