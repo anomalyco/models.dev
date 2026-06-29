@@ -1,13 +1,15 @@
-reasoning_options = []
 base_model = "moonshotai/kimi-k2.6"
+name = "Kimi K2.6 Fast"
+status = "alpha"
+reasoning_options = []
 
 [interleaved]
 field = "reasoning_content"
 
 [cost]
-input = 0.66
-output = 3.5
-cache_read = 0.2
+input = 1.32
+output = 7.0
+cache_read = 0.4
 cache_write = 0
 
 [modalities]
