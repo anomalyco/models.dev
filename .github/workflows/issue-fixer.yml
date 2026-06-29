@@ -76,6 +76,9 @@ jobs:
         if: success()
         run: |
           if [ -z "$(git status --porcelain -- models providers)" ]; then
+            if [ -s "$RESPONSE_FILE" ]; then
+              gh issue comment "$ISSUE_NUMBER" --body-file "$RESPONSE_FILE"
+            fi
             exit 0
           fi
 
