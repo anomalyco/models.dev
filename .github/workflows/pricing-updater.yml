@@ -2,8 +2,13 @@ name: Pricing Updater
 
 on:
   schedule:
-    - cron: "0 0 * * 1" # Monday 00:00 UTC
+    - cron: "0 0 * * 1" # Monday 00:00 UTC — sync only unless a provider has scheduled: true
   workflow_dispatch:
+    inputs:
+      providers:
+        description: Comma-separated provider dirs to update (e.g. groq or groq,nebius)
+        required: true
+        type: string
 
 permissions:
   contents: write
@@ -47,26 +52,78 @@ jobs:
 
           git push origin dev
 
-  update:
+  providers:
     needs: sync
     if: |
       always() &&
       (needs.sync.result == 'success' || needs.sync.result == 'skipped')
     runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.matrix.outputs.matrix }}
+    steps:
+      - name: Checkout dev
+        uses: actions/checkout@v4
+        with:
+          ref: dev
+
+      - name: Build provider matrix
+        id: matrix
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          REQUESTED_PROVIDERS: ${{ github.event.inputs.providers }}
+        run: |
+          set -euo pipefail
+
+          if [ "$EVENT_NAME" = "workflow_dispatch" ]; then
+            if [ -z "$REQUESTED_PROVIDERS" ]; then
+              echo "No providers requested." >&2
+              exit 1
+            fi
+
+            matrix="$(
+              jq -c --arg requested "$REQUESTED_PROVIDERS" '
+                ($requested | split(",") | map(gsub("^\\s+|\\s+$"; "")) | map(select(length > 0))) as $want |
+                {include: [.[] | select(.provider as $p | $want | index($p) != null)]}
+              ' .github/pricing-updater/providers.json
+            )"
+
+            unknown="$(
+              jq -r --arg requested "$REQUESTED_PROVIDERS" '
+                ($requested | split(",") | map(gsub("^\\s+|\\s+$"; "")) | map(select(length > 0))) as $want |
+                ($want - ([.[] | .provider])) | .[]
+              ' .github/pricing-updater/providers.json
+            )"
+            if [ -n "$unknown" ]; then
+              echo "Unknown provider(s) not in .github/pricing-updater/providers.json:" >&2
+              echo "$unknown" >&2
+              exit 1
+            fi
+          else
+            matrix="$(
+              jq -c '{include: [.[] | select(.scheduled == true) | {provider, branch_slug}]}' \
+                .github/pricing-updater/providers.json
+            )"
+          fi
+
+          if [ "$(echo "$matrix" | jq '.include | length')" -eq 0 ]; then
+            echo "No providers selected for this run."
+          else
+            echo "Providers selected:"
+            echo "$matrix" | jq -r '.include[] | "  - \(.provider)"'
+          fi
+
+          echo "matrix=$matrix" >> "$GITHUB_OUTPUT"
+
+  update:
+    needs: providers
+    if: |
+      always() &&
+      needs.providers.result == 'success' &&
+      fromJSON(needs.providers.outputs.matrix).include[0] != null
+    runs-on: ubuntu-latest
     strategy:
       fail-fast: false
-      matrix:
-        include:
-          - provider: togetherai
-            branch_slug: togetherai
-          - provider: stepfun
-            branch_slug: stepfun
-          - provider: siliconflow
-            branch_slug: siliconflow
-          - provider: novita-ai
-            branch_slug: novita-ai
-          - provider: nebius
-            branch_slug: nebius
+      matrix: ${{ fromJSON(needs.providers.outputs.matrix) }}
     concurrency: pricing-updater-${{ matrix.provider }}
     env:
       PROVIDER: ${{ matrix.provider }}
