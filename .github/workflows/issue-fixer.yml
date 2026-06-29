@@ -108,13 +108,41 @@ jobs:
           fi
 
       - name: Validate models
+        id: validate_models
         if: success()
         run: |
           if [ -z "$(git status --porcelain -- models providers)" ]; then
             exit 0
           fi
 
-          bun validate
+          set -o pipefail
+          VALIDATION_LOG="$RUNNER_TEMP/issue-fixer-validation.log"
+          echo "VALIDATION_LOG=$VALIDATION_LOG" >> "$GITHUB_ENV"
+          bun validate 2>&1 | tee "$VALIDATION_LOG"
+
+      - name: Comment when validation fails
+        if: failure() && steps.validate_models.outcome == 'failure'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          COMMENT="$RUNNER_TEMP/issue-fixer-validation-failed.md"
+          {
+            echo "The automated issue fixer made model catalog changes, but validation failed, so I did not open a PR."
+            echo
+            echo "Workflow run: $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
+            echo
+            echo "Validation output (truncated to the last 60000 bytes):"
+            echo '```'
+            if [ -s "$VALIDATION_LOG" ]; then
+              tail -c 60000 "$VALIDATION_LOG"
+            else
+              echo "No validation output was captured."
+            fi
+            echo
+            echo '```'
+          } > "$COMMENT"
+
+          gh issue comment "$ISSUE_NUMBER" --body-file "$COMMENT"
 
       - name: Create pull request
         if: success()
