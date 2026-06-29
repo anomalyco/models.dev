@@ -1,0 +1,20 @@
+name = "Mistral Large"
+release_date = "2024-11-18"
+last_updated = "2026-06-29"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = true
+open_weights = false
+
+[cost]
+input = 2
+output = 6
+
+[limit]
+context = 262144
+output = 8192
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
