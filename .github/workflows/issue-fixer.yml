@@ -63,93 +63,30 @@ jobs:
 
       - name: Check changed paths
         if: success()
-        env:
-          GH_TOKEN: ${{ github.token }}
         run: |
-          unsupported=()
           while IFS= read -r line; do
             path="${line:3}"
             case "$path" in
               models/*|providers/*) ;;
-              *) unsupported+=("$path") ;;
+              *) exit 1 ;;
             esac
           done < <(git status --porcelain)
 
-          if [ "${#unsupported[@]}" -eq 0 ]; then
-            exit 0
-          fi
-
-          COMMENT="$RUNNER_TEMP/issue-fixer-unsupported-changes.md"
-          {
-            echo "The automated issue fixer produced changes outside model catalog paths, so I did not open a PR."
-            echo
-            echo "Unsupported changed paths:"
-            for path in "${unsupported[@]}"; do
-              echo "- \`$path\`"
-            done
-          } > "$COMMENT"
-
-          gh issue comment "$ISSUE_NUMBER" --body-file "$COMMENT"
-          exit 1
-
-      - name: Comment when no changes were made
-        if: success()
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          if [ -n "$(git status --porcelain -- models providers)" ]; then
-            exit 0
-          fi
-
-          if [ -s "$RESPONSE_FILE" ]; then
-            gh issue comment "$ISSUE_NUMBER" --body-file "$RESPONSE_FILE"
-          else
-            gh issue comment "$ISSUE_NUMBER" --body "Thanks for the suggestion. This looks like it needs maintainer review rather than an automated model catalog fix, so I did not open a PR."
-          fi
-
       - name: Validate models
-        id: validate_models
         if: success()
         run: |
           if [ -z "$(git status --porcelain -- models providers)" ]; then
             exit 0
           fi
 
-          set -o pipefail
-          VALIDATION_LOG="$RUNNER_TEMP/issue-fixer-validation.log"
-          echo "VALIDATION_LOG=$VALIDATION_LOG" >> "$GITHUB_ENV"
-          bun validate 2>&1 | tee "$VALIDATION_LOG"
-
-      - name: Comment when validation fails
-        if: failure() && steps.validate_models.outcome == 'failure'
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          COMMENT="$RUNNER_TEMP/issue-fixer-validation-failed.md"
-          {
-            echo "The automated issue fixer made model catalog changes, but validation failed, so I did not open a PR."
-            echo
-            echo "Workflow run: $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
-            echo
-            echo "Validation output (truncated to the last 60000 bytes):"
-            echo '```'
-            if [ -s "$VALIDATION_LOG" ]; then
-              tail -c 60000 "$VALIDATION_LOG"
-            else
-              echo "No validation output was captured."
-            fi
-            echo
-            echo '```'
-          } > "$COMMENT"
-
-          gh issue comment "$ISSUE_NUMBER" --body-file "$COMMENT"
+          bun validate
 
       - name: Create pull request
         if: success()
         env:
           GH_TOKEN: ${{ github.token }}
-          BRANCH: opencode/issue-${{ github.event.issue.number }}
-          TITLE: "fix: address issue #${{ github.event.issue.number }}"
+          BRANCH: issue-${{ github.event.issue.number }}
+          TITLE: "fix: #${{ github.event.issue.number }}"
         run: |
           if [ -z "$(git status --porcelain -- models providers)" ]; then
             exit 0
@@ -181,9 +118,6 @@ jobs:
           pr_number="$(gh pr list --head "$BRANCH" --base dev --json number --jq '.[0].number')"
           if [ -n "$pr_number" ]; then
             gh pr edit "$pr_number" --title "$TITLE" --body-file "$PR_BODY"
-            pr_url="$(gh pr view "$pr_number" --json url --jq '.url')"
           else
-            pr_url="$(gh pr create --base dev --head "$BRANCH" --title "$TITLE" --body-file "$PR_BODY")"
+            gh pr create --base dev --head "$BRANCH" --title "$TITLE" --body-file "$PR_BODY"
           fi
-
-          gh issue comment "$ISSUE_NUMBER" --body "Opened $pr_url with an automated model catalog fix."
