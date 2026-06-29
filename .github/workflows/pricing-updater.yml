@@ -1,0 +1,169 @@
+name: Pricing Updater
+
+on:
+  schedule:
+    - cron: "0 0 * * 1" # Monday 00:00 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    if: github.event.repository.fork
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout dev
+        uses: actions/checkout@v4
+        with:
+          ref: dev
+          fetch-depth: 0
+
+      - name: Sync fork dev from upstream
+        env:
+          UPSTREAM_REPO: anomalyco/models.dev
+        run: |
+          set -euo pipefail
+
+          git remote add upstream "https://github.com/${UPSTREAM_REPO}.git" 2>/dev/null \
+            || git remote set-url upstream "https://github.com/${UPSTREAM_REPO}.git"
+          git fetch upstream dev
+          git checkout dev
+          git pull --ff-only origin dev
+
+          if git rev-parse HEAD >/dev/null && [ "$(git rev-parse HEAD)" = "$(git rev-parse upstream/dev)" ]; then
+            echo "dev is already synced with upstream/dev."
+            exit 0
+          fi
+
+          if git merge --ff-only upstream/dev; then
+            echo "Fast-forwarded dev to upstream/dev."
+          elif git merge upstream/dev -m "chore: sync dev from ${UPSTREAM_REPO}"; then
+            echo "Merged upstream/dev into dev."
+          else
+            echo "Failed to sync dev with upstream/dev due to merge conflicts." >&2
+            exit 1
+          fi
+
+          git push origin dev
+
+  update:
+    needs: sync
+    if: |
+      always() &&
+      (needs.sync.result == 'success' || needs.sync.result == 'skipped')
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - provider: togetherai
+            branch_slug: togetherai
+          - provider: stepfun
+            branch_slug: stepfun
+          - provider: siliconflow
+            branch_slug: siliconflow
+          - provider: novita-ai
+            branch_slug: novita-ai
+          - provider: nebius
+            branch_slug: nebius
+    concurrency: pricing-updater-${{ matrix.provider }}
+    env:
+      PROVIDER: ${{ matrix.provider }}
+      BRANCH_SLUG: ${{ matrix.branch_slug }}
+
+    steps:
+      - name: Checkout dev
+        uses: actions/checkout@v4
+        with:
+          ref: dev
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@f4d14e03ff726c06358e5557344e1da148b56cf7
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        run: bun install
+
+      - name: Install opencode
+        run: curl -fsSL https://opencode.ai/install | bash
+
+      - name: Run pricing updater agent
+        env:
+          OPENCODE_API_KEY: ${{ secrets.OPENCODE_API_KEY }}
+          OPENCODE_PERMISSION: '{"bash":"deny"}'
+          OPENCODE_CONFIG_CONTENT: |
+            {
+              "$schema": "https://opencode.ai/config.json",
+              "mcp": {
+                "narev": {
+                  "type": "remote",
+                  "url": "https://mcp.narev.ai",
+                  "enabled": true,
+                  "oauth": false,
+                  "timeout": 30000
+                }
+              }
+            }
+        run: |
+          set -o pipefail
+          RESPONSE_FILE="$RUNNER_TEMP/pricing-updater-response.md"
+          echo "RESPONSE_FILE=$RESPONSE_FILE" >> "$GITHUB_ENV"
+
+          opencode run --agent pricing-updater -m opencode/glm-5.2 <<EOF | tee "$RESPONSE_FILE"
+          Refresh token pricing for provider: ${PROVIDER}
+
+          Scope this run to providers/${PROVIDER}/ only.
+          EOF
+
+      - name: Check changed paths
+        if: success()
+        run: |
+          while IFS= read -r line; do
+            path="${line:3}"
+            case "$path" in
+              "providers/${PROVIDER}"/*) ;;
+              *)
+                echo "Unexpected change outside providers/${PROVIDER}/: $path" >&2
+                exit 1
+                ;;
+            esac
+          done < <(git status --porcelain)
+
+      - name: Validate models
+        if: success()
+        run: bun validate
+
+      - name: Push branch
+        if: success()
+        run: |
+          if [ -z "$(git status --porcelain -- "providers/${PROVIDER}")" ]; then
+            echo "No pricing changes for ${PROVIDER}."
+            exit 0
+          fi
+
+          git config user.name "narevBull"
+          git config user.email "290319999+narevBull@users.noreply.github.com"
+
+          DATE="$(date -u +%Y-%m-%d)"
+          BRANCH="chore/${BRANCH_SLUG}-pricing-${DATE}"
+          TITLE="chore: update ${BRANCH_SLUG} pricing"
+
+          summary=""
+          if [ -s "$RESPONSE_FILE" ]; then
+            summary="$(cat "$RESPONSE_FILE")"
+          fi
+
+          git fetch --no-tags --depth=1 origin "+refs/heads/${BRANCH}:refs/remotes/origin/${BRANCH}" || true
+          git checkout -B "$BRANCH"
+          git add "providers/${PROVIDER}"
+
+          if [ -n "$summary" ]; then
+            git commit -m "$TITLE" -m "$summary"
+          else
+            git commit -m "$TITLE"
+          fi
+
+          git push --force-with-lease origin "$BRANCH"
+          echo "Pushed ${BRANCH} for review."
