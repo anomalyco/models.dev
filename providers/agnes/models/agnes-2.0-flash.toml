@@ -13,9 +13,15 @@ input = 0
 output = 0
 
 [limit]
-context = 262144
+context = 512000
 output = 65536
 
 [modalities]
 input = ["text", "image"]
 output = ["text"]
+
+[interleaved]
+field = "reasoning_content"
+
+[options]
+chat_template_kwargs = { enable_thinking = true }
