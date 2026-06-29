@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { existsSync, readFileSync } from "node:fs";
+import { existsSync, readdirSync, readFileSync } from "node:fs";
 import path from "node:path";
 
 import type {
@@ -26,9 +26,22 @@ function baseModelMetadata(modelID: string): Record<string, unknown> {
   }
   return metadata;
 }
+
 function resolveAlibabaBaseModel(modelID: string): string | undefined {
   const candidate = `${BASE_PREFIX}/${modelID}`;
-  return existsSync(path.join(MODELS_DIR, `${candidate}.toml`)) ? candidate : undefined;
+  return canonicalExists(candidate) ? candidate : undefined;
+}
+
+// existsSync is case-insensitive on macOS/Windows; verify the real on-disk filename
+// case so the resolved base_model matches the canonical metadata exactly (and CI on Linux).
+function canonicalExists(candidate: string): boolean {
+  const file = path.join(MODELS_DIR, `${candidate}.toml`);
+  if (!existsSync(file)) return false;
+  try {
+    return readdirSync(path.dirname(file)).includes(path.basename(file));
+  } catch {
+    return false;
+  }
 }
 
 const AlibabaPrice = z
