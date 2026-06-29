@@ -1,0 +1,20 @@
+name = "GPT-4o mini"
+release_date = "2024-07-18"
+last_updated = "2026-06-29"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = true
+open_weights = false
+
+[cost]
+input = 0.15
+output = 0.6
+
+[limit]
+context = 128000
+output = 16384
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
