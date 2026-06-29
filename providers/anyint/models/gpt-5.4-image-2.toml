@@ -1,0 +1,13 @@
+base_model = "openai/gpt-image-2"
+name = "GPT-5.4 Image 2"
+reasoning = true
+reasoning_options = []
+structured_output = true
+
+[limit]
+context = 272_000
+output = 128_000
+
+[modalities]
+input = ["text", "image", "pdf"]
+output = ["text", "image"]
