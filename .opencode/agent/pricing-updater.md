@@ -48,10 +48,19 @@ Narev returns USD **per token**. models.dev stores USD **per million tokens**.
 | `prompt` | `input` |
 | `completion` | `output` |
 | `internal_reasoning` | `reasoning` |
-| `input_cache_read` | `cache_read` |
+| `input_cache_read` | `cache_read` **or** `cache_input` (see below) |
 | `input_cache_write` | `cache_write` |
 | `input_audio` | `input_audio` |
 | `output_audio` | `output_audio` |
+
+### Cache field names
+
+`cache_read` and `cache_input` are interchangeable — both mean cached input token pricing.
+
+- If a file already uses `cache_input`, update `cache_input`. **Do not rename it to `cache_read`.**
+- If a file already uses `cache_read`, update `cache_read`. **Do not rename it to `cache_input`.**
+- Map Narev `input_cache_read` onto whichever key is already present.
+- When adding cache pricing to a file that has neither key, match the dominant convention in that provider directory (`cache_read` vs `cache_input`).
 
 Convert with:
 
@@ -65,7 +74,7 @@ Round to match nearby values in the same provider (typically up to 6 decimal pla
 
 - Change a file only when at least one cost field would differ after conversion.
 - When you change any cost field, set `last_updated` to today's date in `YYYY-MM-DD`.
-- Preserve TOML formatting, comments, and field order where practical.
+- Preserve TOML formatting, comments, field order, and **existing cost key names** where practical.
 - Make the smallest correct diff per file.
 
 ## Workflow
