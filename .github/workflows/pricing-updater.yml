@@ -109,10 +109,8 @@ jobs:
             }
         run: |
           set -o pipefail
-          RESPONSE_FILE="$RUNNER_TEMP/pricing-updater-response.md"
-          echo "RESPONSE_FILE=$RESPONSE_FILE" >> "$GITHUB_ENV"
 
-          opencode run --agent pricing-updater -m opencode/glm-5.2 <<EOF | tee "$RESPONSE_FILE"
+          opencode run --agent pricing-updater -m opencode/glm-5.2 <<EOF
           Refresh token pricing for provider: ${PROVIDER}
 
           Scope this run to providers/${PROVIDER}/ only.
@@ -161,11 +159,6 @@ jobs:
           BRANCH="chore/${BRANCH_SLUG}-pricing-${DATE}"
           TITLE="chore: update ${BRANCH_SLUG} pricing"
 
-          summary=""
-          if [ -s "$RESPONSE_FILE" ]; then
-            summary="$(cat "$RESPONSE_FILE")"
-          fi
-
           git fetch --no-tags origin "+refs/heads/${BRANCH}:refs/remotes/origin/${BRANCH}" || true
           git checkout -B "$BRANCH" upstream/dev
           rsync -a "${SNAPSHOT}/" "providers/${PROVIDER}/"
@@ -176,11 +169,7 @@ jobs:
             exit 0
           fi
 
-          if [ -n "$summary" ]; then
-            git commit -m "$TITLE" -m "$summary"
-          else
-            git commit -m "$TITLE"
-          fi
+          git commit -m "$TITLE"
 
           git push --force-with-lease origin "$BRANCH"
           echo "Pushed ${BRANCH} for review (based on upstream/dev)."

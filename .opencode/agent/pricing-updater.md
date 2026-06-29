@@ -30,6 +30,7 @@ When the prompt names a single provider, edit only files under that provider dir
 - Skip models with no public Narev pricing (`pricing` is null or missing).
 - Skip enterprise, BYOK-only, or custom-provisioned pricing that Narev does not publish.
 - Do not add or remove models. Do not change non-cost fields (`name`, `limit`, `modalities`, `reasoning_options`, etc.).
+- Do not add comments, notes, or `description` fields to TOML files.
 - Do not touch `experimental.cost`, `context_over_200k`, or `tiers` unless you have explicit tiered rates from Narev for that exact model and provider.
 
 ## Provider and model matching
@@ -82,6 +83,6 @@ Round to match nearby values in the same provider (typically up to 6 decimal pla
 1. Work within the provider scope given in the prompt. If none is given, inventory providers with model TOMLs under `providers/`.
 2. For each in-scope provider you can map to Narev, page through `get_prices` (or filter with `list_models`) and compare rates to the catalog.
 3. Apply only confirmed pricing corrections.
-4. Finish with a concise summary: provider(s) checked, files changed, files skipped, and anything you could not map safely.
+4. Finish with a one-line summary only (for example: `Updated 3 files, skipped 12.`). Do not list per-file descriptions, rationales, or notes.
 
 If nothing needs updating, say so clearly and do not edit files.
