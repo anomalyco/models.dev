@@ -27,14 +27,6 @@ jobs:
         with:
           ref: dev
 
-      - name: Setup Bun
-        uses: oven-sh/setup-bun@v1
-        with:
-          bun-version: latest
-
-      - name: Install dependencies
-        run: bun install
-
       - name: Install opencode
         run: curl -fsSL https://opencode.ai/install | bash
 
@@ -73,52 +65,24 @@ jobs:
             esac
           done < <(git status --porcelain)
 
-      - name: Validate models
-        if: success()
-        run: |
-          if [ -z "$(git status --porcelain -- ':(glob)models/**/*.toml' ':(glob)providers/**/*.toml')" ]; then
-            if [ -s "$RESPONSE_FILE" ]; then
-              gh issue comment "$ISSUE_NUMBER" --body-file "$RESPONSE_FILE"
-            fi
-            exit 0
-          fi
-
-          bun validate
-
       - name: Create pull request
         if: success()
         env:
           BRANCH: issue-${{ github.event.issue.number }}
           TITLE: "fix: #${{ github.event.issue.number }}"
         run: |
-          if [ -z "$(git status --porcelain -- ':(glob)models/**/*.toml' ':(glob)providers/**/*.toml')" ]; then
+          if [ -z "$(git status --porcelain)" ]; then
+            if [ -s "$RESPONSE_FILE" ]; then
+              gh issue comment "$ISSUE_NUMBER" --body-file "$RESPONSE_FILE"
+            fi
             exit 0
           fi
 
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          if git ls-remote --exit-code --heads origin "$BRANCH" >/dev/null; then
-            exit 1
-          fi
-
-          git checkout -B "$BRANCH"
-          git add -A -- ':(glob)models/**/*.toml' ':(glob)providers/**/*.toml'
+          git switch -c "$BRANCH"
+          git add -A
           git commit -m "$TITLE"
           git push origin "$BRANCH"
 
-          PR_BODY="$RUNNER_TEMP/issue-fixer-pr-body.md"
-          {
-            echo "Automated model catalog fix for #$ISSUE_NUMBER."
-            echo
-            echo "Agent summary:"
-            echo
-            if [ -s "$RESPONSE_FILE" ]; then
-              cat "$RESPONSE_FILE"
-            else
-              echo "No agent summary was produced."
-            fi
-            echo
-            echo "Closes #$ISSUE_NUMBER"
-          } > "$PR_BODY"
-
-          gh pr create --base dev --head "$BRANCH" --title "$TITLE" --body-file "$PR_BODY"
+          gh pr create --base dev --head "$BRANCH" --title "$TITLE" --body "Closes #$ISSUE_NUMBER"
