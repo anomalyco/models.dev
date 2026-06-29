@@ -1,0 +1,14 @@
+base_model = "anthropic/claude-haiku-4-5"
+name = "Claude Haiku 4.5 (Free)"
+reasoning = false
+structured_output = true
+
+[cost]
+input = 0
+output = 0
+
+[limit]
+output = 200_000
+
+[modalities]
+input = ["text", "image"]
