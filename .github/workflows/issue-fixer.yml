@@ -16,6 +16,7 @@ jobs:
     if: github.repository == 'anomalyco/models.dev'
     runs-on: ubuntu-latest
     env:
+      GH_TOKEN: ${{ github.token }}
       ISSUE_NUMBER: ${{ github.event.issue.number }}
       ISSUE_TITLE: ${{ github.event.issue.title }}
       ISSUE_BODY: ${{ github.event.issue.body }}
@@ -87,7 +88,6 @@ jobs:
       - name: Create pull request
         if: success()
         env:
-          GH_TOKEN: ${{ github.token }}
           BRANCH: issue-${{ github.event.issue.number }}
           TITLE: "fix: #${{ github.event.issue.number }}"
         run: |
