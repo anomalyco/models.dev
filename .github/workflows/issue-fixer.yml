@@ -68,7 +68,7 @@ jobs:
           while IFS= read -r line; do
             path="${line:3}"
             case "$path" in
-              models/*|providers/*) ;;
+              models/*.toml|providers/*.toml) ;;
               *) exit 1 ;;
             esac
           done < <(git status --porcelain)
@@ -76,7 +76,7 @@ jobs:
       - name: Validate models
         if: success()
         run: |
-          if [ -z "$(git status --porcelain -- models providers)" ]; then
+          if [ -z "$(git status --porcelain -- ':(glob)models/**/*.toml' ':(glob)providers/**/*.toml')" ]; then
             if [ -s "$RESPONSE_FILE" ]; then
               gh issue comment "$ISSUE_NUMBER" --body-file "$RESPONSE_FILE"
             fi
@@ -91,17 +91,20 @@ jobs:
           BRANCH: issue-${{ github.event.issue.number }}
           TITLE: "fix: #${{ github.event.issue.number }}"
         run: |
-          if [ -z "$(git status --porcelain -- models providers)" ]; then
+          if [ -z "$(git status --porcelain -- ':(glob)models/**/*.toml' ':(glob)providers/**/*.toml')" ]; then
             exit 0
           fi
 
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git fetch --no-tags --depth=1 origin "+refs/heads/$BRANCH:refs/remotes/origin/$BRANCH" || true
+          if git ls-remote --exit-code --heads origin "$BRANCH" >/dev/null; then
+            exit 1
+          fi
+
           git checkout -B "$BRANCH"
-          git add -A models providers
+          git add -A -- ':(glob)models/**/*.toml' ':(glob)providers/**/*.toml'
           git commit -m "$TITLE"
-          git push --force-with-lease origin "$BRANCH"
+          git push origin "$BRANCH"
 
           PR_BODY="$RUNNER_TEMP/issue-fixer-pr-body.md"
           {
@@ -118,9 +121,4 @@ jobs:
             echo "Closes #$ISSUE_NUMBER"
           } > "$PR_BODY"
 
-          pr_number="$(gh pr list --head "$BRANCH" --base dev --json number --jq '.[0].number')"
-          if [ -n "$pr_number" ]; then
-            gh pr edit "$pr_number" --title "$TITLE" --body-file "$PR_BODY"
-          else
-            gh pr create --base dev --head "$BRANCH" --title "$TITLE" --body-file "$PR_BODY"
-          fi
+          gh pr create --base dev --head "$BRANCH" --title "$TITLE" --body-file "$PR_BODY"

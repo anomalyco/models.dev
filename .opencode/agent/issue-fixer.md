@@ -9,8 +9,8 @@ permission:
   external_directory: deny
   edit:
     "*": deny
-    "models/**": allow
-    "providers/**": allow
+    "models/**/*.toml": allow
+    "providers/**/*.toml": allow
 ---
 
 You are the automated issue fixer for models.dev.
