@@ -1,0 +1,28 @@
+name = "Kimi K2.7 Code Fast"
+family = "kimi-k2"
+release_date = "2026-06-12"
+last_updated = "2026-06-16"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+open_weights = true
+
+[[reasoning_options]]
+type = "toggle"
+
+[cost]
+input = 1.90
+output = 8.00
+cache_read = 0.38
+
+[limit]
+context = 262_000
+output = 262_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[interleaved]
+field = "reasoning_content"
