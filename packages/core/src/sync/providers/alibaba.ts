@@ -109,6 +109,25 @@ const AlibabaCatalogResponse = z
   })
   .passthrough();
 
+// Light envelope for pagination: validates transport/success fields without
+// re-validating model bodies. parseModels does the single full
+// AlibabaCatalogResponse parse so each model is validated exactly once.
+const AlibabaCatalogPage = z
+  .object({
+    code: z.string().nullable(),
+    message: z.string().nullable(),
+    success: z.boolean(),
+    output: z
+      .object({
+        total: z.number().int().nonnegative(),
+        page_no: z.number().int().positive(),
+        page_size: z.number().int().positive(),
+        models: z.array(z.unknown()),
+      })
+      .passthrough(),
+  })
+  .passthrough();
+
 export type AlibabaModel = z.infer<typeof AlibabaModel>;
 
 type Modality = "text" | "audio" | "image" | "video" | "pdf";
@@ -221,7 +240,7 @@ async function fetchModelsPage(
     );
   }
 
-  const page = AlibabaCatalogResponse.parse(await response.json());
+  const page = AlibabaCatalogPage.parse(await response.json());
   if (!page.success) {
     throw new Error(
       `Alibaba model catalog request failed: ${page.code ?? "unknown"}: ${page.message ?? "unknown error"}`,
