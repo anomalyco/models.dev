@@ -1,0 +1,26 @@
+name = "TIM-Qwen3.6 27B"
+attachment = false
+reasoning = true
+tool_call = true
+structured_output = true
+temperature = true
+release_date = "2026-05-11"
+last_updated = "2026-05-11"
+open_weights = false
+interleaved = { field = "reasoning_content" }
+
+[[reasoning_options]]
+type = "toggle"
+
+[cost]
+input = 0
+output = 0
+
+[limit]
+context = 8192
+input = 8192
+output = 5000
+
+[modalities]
+input = ["text"]
+output = ["text"]
