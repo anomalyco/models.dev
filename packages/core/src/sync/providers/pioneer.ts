@@ -57,11 +57,7 @@ export const pioneer = {
   translateModel(model, context) {
     return {
       id: model.id,
-      model: buildPioneerModel(
-        model,
-        context.existing(model.id),
-        context.authored(model.id),
-      ),
+      model: buildPioneerModel(model, context.existing(model.id)),
     };
   },
   missingNotice(paths) {
@@ -91,14 +87,12 @@ function supported(model: PioneerModel, capability: keyof PioneerModel["capabili
 function buildPioneerModel(
   model: PioneerModel,
   existing: ExistingModel | undefined,
-  authored: ExistingModel | undefined,
 ): SyncedModel {
   const status = model.deprecated === true ? "deprecated" : existing?.status;
 
   if (existing?.base_model !== undefined) {
     return stripInheritedMetadata({
       ...existing,
-      reasoning_options: authored?.reasoning_options,
       status,
       limit: {
         context: model.max_input_tokens,
@@ -121,7 +115,7 @@ function buildPioneerModel(
     last_updated: existing?.last_updated ?? dateFromModel(model),
     attachment: input.some((value) => value !== "text"),
     reasoning: supported(model, "thinking"),
-    reasoning_options: authored?.reasoning_options ?? existing?.reasoning_options,
+    reasoning_options: existing?.reasoning_options,
     temperature: existing?.temperature ?? true,
     tool_call: existing?.tool_call ?? true,
     structured_output: supported(model, "structured_outputs") || undefined,

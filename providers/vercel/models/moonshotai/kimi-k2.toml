@@ -1,1 +1,21 @@
-../../../groq/models/moonshotai/kimi-k2-instruct.toml
+name = "Kimi K2 Instruct"
+family = "kimi-k2"
+release_date = "2025-07-11"
+last_updated = "2025-09-05"
+attachment = false
+reasoning = false
+temperature = true
+tool_call = true
+open_weights = false
+
+[cost]
+input = 0.57
+output = 2.3
+
+[limit]
+context = 131_072
+output = 131_072
+
+[modalities]
+input = ["text"]
+output = ["text"]

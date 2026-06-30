@@ -1,0 +1,14 @@
+# POST /v1/responses uses $.reasoning.effort = minimal|low|medium|high|xhigh;
+# model suffixes :min|:low|:medium|:med|:high|:max|:xhigh are aliases, body
+# wins, and unsupported levels return 400 unsupported_capability. Codex models
+# are Responses-only and return 400 endpoint_mismatch at /v1/chat/completions.
+# Chat GLM thinking instead uses $.reasoning = true|false or :think|:fast;
+# omission sends upstream $.thinking.type = "disabled". No token-budget field
+# is published for either endpoint.
+# https://llmtr.com/docs/gateway/reasoning-effort/ (accessed 2026-06-25)
+# https://llmtr.com/docs/gateway/zai-thinking/ (accessed 2026-06-25)
+name = "LLMTR"
+env = ["LLMTR_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+doc = "https://llmtr.com/docs"
+api = "https://llmtr.com/v1"

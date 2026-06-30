@@ -1,13 +1,18 @@
 name = "Trinity Large Thinking"
 family = "trinity"
+release_date = "2026-04-02"
+last_updated = "2026-06-11"
 attachment = false
 reasoning = true
 tool_call = true
 structured_output = true
-temperature = true
-release_date = "2026-04-02"
-last_updated = "2026-04-04"
 open_weights = true
+
+# Live /models (2026-06-25): low|medium|high; no dedicated reasoning budget.
+# https://api.venice.ai/api/v1/models?type=text (accessed 2026-06-25)
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high"]
 
 [interleaved]
 field = "reasoning_content"

@@ -4,6 +4,10 @@ release_date = "2026-02-11"
 last_updated = "2026-02-11"
 attachment = false
 reasoning = true
+# Top-level `thinking.type` accepts enabled/disabled and defaults enabled
+# (accessed 2026-06-25).
+# https://cloud.tencent.com/document/product/1823/132061
+reasoning_options = [{ type = "toggle" }]
 temperature = true
 tool_call = true
 open_weights = false

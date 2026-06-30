@@ -1,5 +1,6 @@
 base_model = "xiaomi/mimo-v2.5-pro"
 structured_output = true
+reasoning_options = [{ type = "toggle" }]
 
 [interleaved]
 field = "reasoning_content"

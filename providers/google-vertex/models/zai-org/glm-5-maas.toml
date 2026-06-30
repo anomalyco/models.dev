@@ -1,9 +1,13 @@
 name = "GLM-5"
+# POST .../endpoints/openapi/chat/completions; toggle with
+# $.chat_template_kwargs.enable_thinking = true | false.
+# https://cloud.google.com/vertex-ai/generative-ai/docs/maas/capabilities/thinking (accessed 2026-06-25)
 family = "glm"
 release_date = "2026-02-11"
 last_updated = "2026-02-11"
 attachment = false
 reasoning = true
+reasoning_options = [{ type = "toggle" }]
 temperature = true
 tool_call = true
 open_weights = true

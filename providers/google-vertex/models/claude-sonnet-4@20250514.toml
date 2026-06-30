@@ -1,4 +1,6 @@
 base_model = "anthropic/claude-sonnet-4-20250514"
+reasoning_options = [{ type = "budget_tokens", min = 1_024 }]
+status = "deprecated"
 
 [cost]
 input = 3

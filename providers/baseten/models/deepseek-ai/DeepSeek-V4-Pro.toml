@@ -1,9 +1,21 @@
 base_model = "deepseek/deepseek-v4-pro"
+name = "Deepseek V4 Pro"
 
 [interleaved]
 field = "reasoning_content"
 
+# Baseten documents top-level reasoning_effort = low | medium | high | xhigh
+# for DeepSeek V4 Pro; no toggle or reasoning-token budget field is documented.
+# https://docs.baseten.co/inference/model-apis/reasoning
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high", "xhigh"]
+
 [cost]
 input = 1.74
 output = 3.48
-cache_read = 0.15
+cache_read = 0.145
+
+[limit]
+context = 262_144
+output = 262_144

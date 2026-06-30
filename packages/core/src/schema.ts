@@ -25,7 +25,7 @@ const ReasoningEffortValue = z.preprocess(
   (value) => (value === "null" ? null : value),
   z.union([
     z.null(),
-    z.enum(["none", "minimal", "low", "medium", "high", "xhigh", "max"]),
+    z.enum(["none", "minimal", "low", "medium", "high", "xhigh", "max", "default"]),
   ]),
 );
 
@@ -47,7 +47,7 @@ const ReasoningOption = z
         type: z.literal("budget_tokens"),
         min: z
           .number()
-          .min(0, "Minimum reasoning budget cannot be negative")
+          .min(-1, "Minimum reasoning budget cannot be less than -1")
           .optional(),
         max: z
           .number()
@@ -272,6 +272,24 @@ const ModelBase = z.object({
 
 function refineModel<T extends z.ZodTypeAny>(schema: T) {
   return schema
+    .refine(
+      (data) => {
+        return data.reasoning !== true || data.reasoning_options !== undefined;
+      },
+      {
+        message: "Must set reasoning_options when reasoning is true",
+        path: ["reasoning_options"],
+      },
+    )
+    .refine(
+      (data) => {
+        return data.reasoning !== false || data.reasoning_options === undefined;
+      },
+      {
+        message: "Cannot set reasoning_options when reasoning is false",
+        path: ["reasoning_options"],
+      },
+    )
     .refine(
       (data) => {
         return !(

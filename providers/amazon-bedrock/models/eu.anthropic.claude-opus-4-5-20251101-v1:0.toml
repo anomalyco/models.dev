@@ -4,6 +4,7 @@ release_date = "2025-11-24"
 last_updated = "2025-08-01"
 attachment = true
 reasoning = true
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }, { type = "budget_tokens", min = 1_024 }]
 temperature = true
 tool_call = true
 structured_output = true
@@ -11,10 +12,10 @@ knowledge = "2025-03-31"
 open_weights = false
 
 [cost]
-input = 5.00
-output = 25.00
-cache_read = 0.50
-cache_write = 6.25
+input = 5.50
+output = 27.50
+cache_read = 0.55
+cache_write = 6.875
 
 [limit]
 context = 200_000

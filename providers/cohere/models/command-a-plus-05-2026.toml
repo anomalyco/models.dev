@@ -1,0 +1,20 @@
+base_model = "cohere/command-a-plus-05-2026"
+# Model-specific reasoning HTTP restrictions (accessed 2026-06-25):
+# Native thinking.token_budget must be positive; leave at least 1K output tokens.
+# OpenAI compatibility instead accepts reasoning_effort = "none"|"high" and
+# does not document token-budget control.
+# Sources:
+# https://docs.cohere.com/docs/command-a-plus
+# https://docs.cohere.com/docs/reasoning
+# https://docs.cohere.com/docs/compatibility-api
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "budget_tokens"
+min = 1
+
+[cost]
+input = 2.50
+output = 10.00

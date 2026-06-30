@@ -1,12 +1,16 @@
 name = "Mistral Medium Latest"
 family = "mistral-medium"
+release_date = "2026-04-29"
+last_updated = "2026-05-21"
 attachment = false
 reasoning = true
-tool_call = true
 temperature = true
-release_date = "2026-05-21"
-last_updated = "2026-05-21"
+tool_call = true
 open_weights = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "high"]
 
 [cost]
 input = 1.5
@@ -17,5 +21,5 @@ context = 256_000
 output = 256_000
 
 [modalities]
-input = ["text"]
+input = ["text", "image"]
 output = ["text"]

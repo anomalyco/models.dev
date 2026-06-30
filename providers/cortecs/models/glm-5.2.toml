@@ -1,0 +1,12 @@
+base_model = "zhipuai/glm-5.2"
+# Cortecs Chat maps `reasoning_effort = high|max`; other efforts are not listed.
+# https://api.cortecs.ai/v1/models (accessed 2026-06-25)
+reasoning_options = [{ type = "effort", values = ["high", "max"]}]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 1.44
+output = 4.53
+cache_read = 0.39

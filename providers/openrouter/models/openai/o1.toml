@@ -1,5 +1,9 @@
 base_model = "openai/o1"
 
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high"]
+
 [cost]
 input = 15
 output = 60

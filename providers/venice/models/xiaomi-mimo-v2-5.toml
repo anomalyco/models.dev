@@ -1,0 +1,19 @@
+base_model = "xiaomi/mimo-v2.5"
+release_date = "2026-06-11"
+last_updated = "2026-06-11"
+structured_output = true
+
+# Live /models (2026-06-25): none|low|medium|high; no dedicated reasoning budget.
+# https://api.venice.ai/api/v1/models?type=text (accessed 2026-06-25)
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high"]
+
+[cost]
+input = 0.175
+output = 0.35
+cache_read = 0.0625
+
+[limit]
+context = 1_000_000
+output = 65_536

@@ -1,8 +1,10 @@
 base_model = "nvidia/nemotron-3-nano-30b-a3b"
-release_date = "2024-12-01"
 tool_call = false
 knowledge = "2024-10"
 open_weights = false
+
+[[reasoning_options]]
+type = "toggle"
 
 [cost]
 input = 0.05

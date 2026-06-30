@@ -1,4 +1,7 @@
 base_model = "google/gemini-3-flash-preview"
+# Chat `reasoning_effort = low|medium|high`; `low` is the default.
+# https://docs.databricks.com/aws/en/machine-learning/model-serving/query-reason-models (accessed 2026-06-25)
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
 
 [cost]
 input = 0.5

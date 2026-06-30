@@ -1,9 +1,14 @@
+# Reasoning HTTP format (accessed 2026-06-25):
+# POST https://api.groq.com/openai/v1/chat/completions
+# JSON reasoning_effort: "low" | "medium" | "high".
+# Sources: https://console.groq.com/docs/reasoning#options-for-reasoning-effort-gptoss
 name = "GPT OSS 20B"
 family = "gpt-oss"
 release_date = "2025-08-05"
-last_updated = "2026-05-27"
+last_updated = "2025-09-25"
 attachment = false
 reasoning = true
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
 temperature = true
 tool_call = true
 structured_output = true

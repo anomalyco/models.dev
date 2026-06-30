@@ -1,9 +1,15 @@
+# Reasoning HTTP format (accessed 2026-06-25):
+# POST https://api.together.ai/v1/chat/completions
+# JSON reasoning.enabled: true | false (thinking is on by default).
+# Compatibility: chat_template_kwargs.thinking or .enable_thinking: boolean.
+# Sources: https://docs.together.ai/docs/inference/chat/reasoning#enable-and-disable-reasoning
 name = "Qwen3.5 397B A17B"
 family = "qwen"
 release_date = "2026-02-16"
-last_updated = "2026-02-16"
+last_updated = "2026-06-15"
 attachment = false
 reasoning = true
+reasoning_options = [{ type = "toggle" }]
 temperature = true
 tool_call = true
 open_weights = true
@@ -11,6 +17,7 @@ open_weights = true
 [cost]
 input = 0.60
 output = 3.60
+cached_input = 0.35
 
 [limit]
 context = 262_144

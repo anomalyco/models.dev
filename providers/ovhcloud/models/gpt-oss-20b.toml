@@ -3,6 +3,9 @@ release_date = "2025-08-28"
 last_updated = "2025-08-28"
 attachment = false
 reasoning = true
+# Chat: `reasoning_effort = low|medium|high`; Responses: `reasoning.effort`.
+# https://www.ovhcloud.com/en/public-cloud/ai-endpoints/catalog/gpt-oss-20b/
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
 tool_call = true
 structured_output = true
 open_weights = true

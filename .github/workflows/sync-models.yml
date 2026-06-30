@@ -63,7 +63,11 @@ jobs:
       - name: Sync model catalogs
         run: bun models:sync ${{ matrix.provider }}
         env:
+          BASETEN_API_KEY: ${{ secrets.BASETEN_API_KEY }}
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
           OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          VENICE_API_KEY: ${{ secrets.VENICE_API_KEY }}
+          LLMGATEWAY_API_KEY: ${{ secrets.LLMGATEWAY_API_KEY }}
           GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           GOOGLE_GENERATIVE_AI_API_KEY: ${{ secrets.GOOGLE_GENERATIVE_AI_API_KEY }}
@@ -81,7 +85,7 @@ jobs:
           LABELS: automation,model-sync,provider:${{ matrix.provider }}
           TITLE: "chore(sync): update ${{ matrix.name }} model catalog"
         run: |
-          if [ -z "$(git status --porcelain -- providers)" ]; then
+          if [ -z "$(git status --porcelain -- models providers)" ]; then
             echo "No model catalog changes found."
             exit 0
           fi
@@ -90,7 +94,7 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git fetch --no-tags --depth=1 origin "+refs/heads/$BRANCH:refs/remotes/origin/$BRANCH" || true
           git checkout -B "$BRANCH"
-          git add providers
+          git add models providers
           git commit -m "$TITLE"
           git push --force-with-lease origin "$BRANCH"
 

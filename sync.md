@@ -164,6 +164,7 @@ OVHcloud AI Endpoints is implemented in `packages/core/src/sync/providers/ovhclo
 - Model IDs are lowercased from the catalog `id` to match the existing TOML paths under `providers/ovhcloud/models`.
 - API prices are per-token strings and are converted to per-1M-token numbers; free models (price `0`) get no `[cost]` section.
 - `reasoning`, `tool_call`, and `structured_output` come from `supported_features`; `temperature` comes from `supported_sampling_parameters`.
+- Authored `reasoning_options` are preserved for reasoning models. `Qwen3-32B` supports toggling reasoning through OVHcloud's documented `/no_think` prompt control. Both gpt-oss models support `low`, `medium`, and `high` reasoning effort. The Qwen3.5 models support `none`, `low`, `medium`, and `high`; Qwen3.6-27B additionally supports `minimal`.
 - `attachment` is derived from non-text `input_modalities`, and `open_weights` from the presence of `hugging_face_id`.
 - `release_date`/`last_updated` default to the catalog `created` timestamp but preserve any existing hand-authored dates; `knowledge`, `family`, `status`, `interleaved`, and `limit.input` are preserved when present.
 
@@ -172,6 +173,29 @@ OVHcloud AI Endpoints is implemented in `packages/core/src/sync/providers/ovhclo
 Vercel is intentionally not wired into `bun models:sync` right now. Keep using the existing `vercel:generate` script until Vercel sync behavior is redesigned and reviewed separately.
 
 Do not add Vercel model changes to OpenRouter sync PRs.
+
+## Chutes Notes
+
+Chutes is implemented in `packages/core/src/sync/providers/chutes.ts`.
+
+- Run it with `bun models:sync chutes` or `bun chutes:sync`.
+- Source endpoint: `https://llm.chutes.ai/v1/models`; no auth required (the model list is public).
+- Model IDs map directly to TOML paths under `providers/chutes/models`.
+- `reasoning`, `tool_call`, and `structured_output` come from `supported_features`; `temperature` comes from `supported_sampling_parameters`.
+- `reasoning_options` is always an empty array: the API advertises a `reasoning` capability but exposes no toggle or effort parameter, so there is no provider evidence for a reasoning option.
+- TEE model IDs emit `base_model` references to matching `models/` metadata; checkpoints without a canonical entry (e.g. `Qwen3-235B-A22B-Thinking-2507`, `DeepSeek-V3.2`) are written inline.
+- `attachment` is derived from non-text `input_modalities`, and all models are `open_weights`.
+- `release_date`/`last_updated` default to the API `created` timestamp but preserve existing hand-authored dates; `knowledge`, `family`, `status`, `interleaved`, and `limit.input` are preserved when present.
+
+## Venice Notes
+
+Venice is implemented in `packages/core/src/sync/providers/venice.ts`.
+
+- Run it with `bun models:sync venice` or `bun venice:sync`.
+- `VENICE_API_KEY` is optional locally and includes models visible to that account when set.
+- Models missing from the API response are removed from the Venice catalog.
+- Every Venice model uses `base_model`; flattened IDs are matched to provider-agnostic metadata before provider-specific overrides are written.
+- Every Venice model declares `reasoning_options`; models without API-provided effort levels use an empty array.
 
 ## Standalone Generators
 

@@ -1,9 +1,13 @@
+# low|medium|high is documented at $.reasoning.effort on /v1/responses, not on
+# this provider's configured /v1 Chat Completions surface; no budget is listed.
+# https://lmstudio.ai/docs/developer/openai-compat/responses (accessed 2026-06-25)
 name = "GPT OSS 20B"
 family = "gpt-oss"
 release_date = "2025-08-05"
 last_updated = "2025-08-05"
 attachment = false
 reasoning = true
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
 temperature = true
 tool_call = true
 open_weights = true

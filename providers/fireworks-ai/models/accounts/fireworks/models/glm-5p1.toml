@@ -1,4 +1,6 @@
 name = "GLM 5.1"
+# Fireworks documents thinking.type = "enabled", but no explicit disabled
+# value for this model. https://docs.fireworks.ai/guides/reasoning (accessed 2026-06-25)
 family = "glm"
 release_date = "2026-04-01"
 last_updated = "2026-04-01"
@@ -7,6 +9,9 @@ reasoning = true
 temperature = true
 tool_call = true
 open_weights = true
+
+[[reasoning_options]]
+type = "toggle"
 
 [cost]
 input = 1.40

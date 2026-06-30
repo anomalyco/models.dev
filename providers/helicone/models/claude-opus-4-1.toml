@@ -1,9 +1,13 @@
 name = "Anthropic: Claude Opus 4.1"
+# Native exception (accessed 2026-06-25): `thinking.type` is enabled or disabled;
+# manual `budget_tokens` is >=1024 and below max_tokens, hence this 31,999 cap.
+# https://docs.anthropic.com/en/docs/build-with-claude/extended-thinking
 family = "claude-opus"
 release_date = "2025-08-05"
 last_updated = "2025-08-05"
 attachment = false
 reasoning = true
+reasoning_options = [{ type = "toggle" }, { type = "budget_tokens", min = 1_024, max = 31_999 }]
 temperature = true
 tool_call = true
 knowledge = "2025-08"

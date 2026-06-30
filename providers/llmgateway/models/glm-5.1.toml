@@ -1,10 +1,14 @@
 base_model = "zhipuai/glm-5.1"
+reasoning_options = [{ type = "toggle" }]
 
 [interleaved]
 field = "reasoning_content"
 
 [cost]
-input = 6
-output = 24
-cache_read = 1.3
+input = 0.931
+output = 2.93
+cache_read = 0.173
 cache_write = 0
+
+[limit]
+context = 204_800

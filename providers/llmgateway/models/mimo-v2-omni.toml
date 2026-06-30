@@ -1,4 +1,5 @@
 base_model = "xiaomi/mimo-v2-omni"
+reasoning = false
 
 [interleaved]
 field = "reasoning_content"
@@ -7,3 +8,6 @@ field = "reasoning_content"
 input = 0.4
 output = 2
 cache_read = 0.08
+
+[limit]
+context = 256_000

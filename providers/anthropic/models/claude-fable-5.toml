@@ -1,0 +1,27 @@
+name = "Claude Fable 5"
+family = "claude-fable"
+release_date = "2026-06-09"
+last_updated = "2026-06-09"
+attachment = true
+reasoning = true
+temperature = false
+tool_call = true
+open_weights = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high", "xhigh", "max"]
+
+[cost]
+input = 10.00
+output = 50.00
+cache_read = 1.00
+cache_write = 12.50
+
+[limit]
+context = 1_000_000
+output = 128_000
+
+[modalities]
+input = ["text", "image", "pdf"]
+output = ["text"]

@@ -4,6 +4,10 @@ release_date = "2026-03-01"
 last_updated = "2026-03-01"
 attachment = false
 reasoning = true
+# Regolo documents these fields with gpt-oss-120b; it does not separately map
+# them to gpt-oss-20b (accessed 2026-06-25).
+# https://docs.regolo.ai/models/features/thinking/
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
 temperature = true
 tool_call = true
 open_weights = true

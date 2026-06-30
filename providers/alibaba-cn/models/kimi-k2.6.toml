@@ -1,5 +1,5 @@
 name = "Moonshot Kimi K2.6"
-family = "kimi"
+family = "kimi-k2"
 release_date = "2026-04-21"
 last_updated = "2026-04-21"
 attachment = true
@@ -9,6 +9,13 @@ tool_call = true
 open_weights = true
 knowledge = "2025-01"
 structured_output = false
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "budget_tokens"
+max = 81_920
 
 [interleaved]
 field = "reasoning_content"

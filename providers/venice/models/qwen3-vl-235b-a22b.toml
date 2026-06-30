@@ -1,12 +1,10 @@
 name = "Qwen3 VL 235B"
-family = "qwen"
+release_date = "2026-01-16"
+last_updated = "2026-06-11"
 attachment = true
 reasoning = false
 tool_call = true
 structured_output = true
-temperature = true
-release_date = "2026-01-16"
-last_updated = "2026-03-12"
 open_weights = true
 
 [cost]
@@ -14,7 +12,7 @@ input = 0.25
 output = 1.5
 
 [limit]
-context = 256_000
+context = 128_000
 output = 16_384
 
 [modalities]

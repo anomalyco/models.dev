@@ -1,13 +1,15 @@
 name = "Grok 4.20"
 family = "grok"
+release_date = "2026-03-12"
+last_updated = "2026-06-11"
 attachment = true
 reasoning = true
 tool_call = true
 structured_output = true
-temperature = true
-release_date = "2026-03-12"
-last_updated = "2026-05-07"
 open_weights = false
+# Live metadata: reasoning only; no effort control or dedicated budget (2026-06-25).
+# https://api.venice.ai/api/v1/models?type=text
+reasoning_options = []
 
 [cost]
 input = 1.42
@@ -15,7 +17,7 @@ output = 2.83
 cache_read = 0.23
 
 [[cost.tiers]]
-tier = { size = 200_000 }
+tier = { type = "context", size = 200_000 }
 input = 2.83
 output = 5.67
 cache_read = 0.45

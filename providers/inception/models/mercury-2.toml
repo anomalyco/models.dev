@@ -1,9 +1,13 @@
 name = "Mercury 2"
+# Model exception (accessed 2026-06-25): `reasoning_effort = "instant"` is also
+# accepted for near-realtime responses, but it is not a models.dev effort enum.
+# https://docs.inceptionlabs.ai/capabilities/instant
 family = "mercury"
 release_date = "2026-02-24"
 last_updated = "2026-02-24"
 attachment = false
 reasoning = true
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
 temperature = true
 knowledge = "2025-01-01"
 tool_call = true

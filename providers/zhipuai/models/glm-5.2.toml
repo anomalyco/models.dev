@@ -1,0 +1,34 @@
+# `reasoning_effort`: none|minimal skip thinking, low|medium map to high,
+# and xhigh maps to max; effective levels are high|max (default: max).
+# https://docs.bigmodel.cn/cn/guide/capabilities/thinking (accessed 2026-06-25)
+name = "GLM-5.2"
+family = "glm"
+release_date = "2026-06-13"
+last_updated = "2026-06-13"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["high", "max"]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 1.4
+output = 4.4
+cache_read = 0.26
+cache_write = 0
+
+[limit]
+context = 1000000
+output = 131072
+
+[modalities]
+input = ["text"]
+output = ["text"]

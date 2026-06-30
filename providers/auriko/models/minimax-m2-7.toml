@@ -1,5 +1,10 @@
 base_model = "minimax/MiniMax-M2.7"
 
+# Auriko documents M2-series reasoning as built in and drops reasoning_effort;
+# schema acceptance is therefore not a meaningful control for this model.
+# https://docs.auriko.ai/guides/extensions-and-thinking
+reasoning_options = []
+
 [cost]
 input = 0.3
 output = 1.2

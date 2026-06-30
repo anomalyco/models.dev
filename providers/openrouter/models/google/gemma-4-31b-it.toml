@@ -1,13 +1,15 @@
 base_model = "google/gemma-4-31b-it"
 
+[[reasoning_options]]
+type = "toggle"
+
 [cost]
 input = 0.12
-output = 0.36
+output = 0.35
 cache_read = 0.09
 
 [limit]
-context = 256_000
-output = 8_192
+output = 262_144
 
 [modalities]
 input = ["image", "text", "video"]

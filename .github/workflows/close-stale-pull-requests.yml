@@ -1,0 +1,69 @@
+name: Close stale pull requests
+
+on:
+  schedule:
+    - cron: "17 3 * * *"
+  workflow_dispatch:
+
+permissions:
+  issues: write
+  pull-requests: write
+
+jobs:
+  close-stale-pull-requests:
+    if: github.repository == 'anomalyco/models.dev'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/github-script@v8
+        env:
+          REVIEWER: rekram1-node
+        with:
+          script: |
+            const { owner, repo } = context.repo
+            const now = Date.now()
+            const weekAgo = now - 7 * 24 * 60 * 60 * 1000
+            const monthAgo = now - 30 * 24 * 60 * 60 * 1000
+
+            const pulls = await github.paginate(github.rest.pulls.list, {
+              owner,
+              repo,
+              state: "open",
+              per_page: 100,
+            })
+
+            const feedbackPulls = new Set()
+            for (const qualifier of ["commenter", "reviewed-by"]) {
+              const results = await github.paginate(
+                github.rest.search.issuesAndPullRequests,
+                {
+                  q: `repo:${owner}/${repo} is:pr is:open ${qualifier}:${process.env.REVIEWER}`,
+                  per_page: 100,
+                },
+              )
+
+              for (const result of results) feedbackPulls.add(result.number)
+            }
+
+            for (const pull of pulls) {
+              const updatedAt = Date.parse(pull.updated_at)
+              const monthStale = updatedAt < monthAgo
+              const feedbackStale = updatedAt < weekAgo && feedbackPulls.has(pull.number)
+              if (!monthStale && !feedbackStale) continue
+
+              const reason = monthStale
+                ? "it has not been updated in 30 days"
+                : `it has not been updated in 7 days after feedback from @${process.env.REVIEWER}`
+
+              await github.rest.issues.createComment({
+                owner,
+                repo,
+                issue_number: pull.number,
+                body: `Closing this pull request as stale because ${reason}. Feel free to reopen it or submit a new pull request if the work is resumed.`,
+              })
+              await github.rest.pulls.update({
+                owner,
+                repo,
+                pull_number: pull.number,
+                state: "closed",
+              })
+            }

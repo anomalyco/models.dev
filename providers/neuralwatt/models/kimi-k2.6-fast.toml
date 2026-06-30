@@ -1,5 +1,5 @@
 name = "Kimi K2.6 Fast"
-family = "kimi"
+family = "kimi-k2"
 release_date = "2026-04-21"
 last_updated = "2026-04-21"
 attachment = true
@@ -11,6 +11,7 @@ open_weights = true
 [cost]
 input = 0.69
 output = 3.22
+cache_read = 0.1725
 
 [limit]
 context = 262_128
@@ -19,5 +20,3 @@ output = 262_128
 [modalities]
 input = ["text", "image"]
 output = ["text"]
-
-

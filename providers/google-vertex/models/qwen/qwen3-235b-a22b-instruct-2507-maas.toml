@@ -1,9 +1,13 @@
 name = "Qwen3 235B A22B Instruct"
+# POST .../endpoints/openapi/chat/completions; this Instruct variant has no
+# documented toggle, effort, or reasoning-token budget field.
+# https://cloud.google.com/vertex-ai/generative-ai/docs/maas/capabilities/thinking (accessed 2026-06-25)
 family = "qwen"
 release_date = "2025-08-13"
 last_updated = "2025-08-13"
 attachment = false
 reasoning = true
+reasoning_options = []
 temperature = true
 tool_call = true
 structured_output = true

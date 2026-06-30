@@ -1,9 +1,16 @@
 name = "GLM-5"
+# Reasoning HTTP format (accessed 2026-06-25):
+# Coding Plan exact-string allowlist model. Hybrid thinking is on by default and
+# top-level `enable_thinking`: true|false toggles it. No effort/budget documented.
+# Sources:
+# https://help.aliyun.com/zh/model-studio/coding-plan
+# https://help.aliyun.com/zh/model-studio/deep-thinking
 family = "glm"
 release_date = "2026-02-11"
 last_updated = "2026-02-11"
 attachment = false
 reasoning = true
+reasoning_options = [{ type = "toggle" }]
 temperature = true
 tool_call = true
 open_weights = false

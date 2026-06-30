@@ -1,13 +1,10 @@
+base_model = "anthropic/claude-opus-4-8"
 name = "Claude Opus 4.8 Fast"
-family = "claude-opus"
-attachment = true
-reasoning = true
-tool_call = true
+last_updated = "2026-06-11"
 structured_output = true
-temperature = true
-release_date = "2026-05-28"
-last_updated = "2026-05-28"
-open_weights = false
+# Live metadata: reasoning only; no effort control or dedicated budget (2026-06-25).
+# https://api.venice.ai/api/v1/models?type=text
+reasoning_options = []
 
 [cost]
 input = 12
@@ -15,10 +12,5 @@ output = 60
 cache_read = 1.2
 cache_write = 15
 
-[limit]
-context = 1_000_000
-output = 128_000
-
 [modalities]
 input = ["text", "image"]
-output = ["text"]

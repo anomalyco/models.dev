@@ -4,6 +4,9 @@ family = "mimo-v2.5-pro"
 attachment = true
 open_weights = false
 
+[[reasoning_options]]
+type = "toggle"
+
 [cost]
 input = 0.435
 output = 0.87
@@ -14,5 +17,4 @@ context = 1_050_000
 output = 131_000
 
 [modalities]
-input = ["text", "image", "pdf"]
-output = ["text"]
+input = ["text", "pdf"]

@@ -1,9 +1,13 @@
+# This model is restricted here to $.reasoning_effort or $.reasoning.effort
+# = "low"|"medium"|"high"; no exact token budget is documented for it.
+# https://docs.llmgateway.io/features/reasoning (accessed 2026-06-25)
 name = "Grok 4.1 Fast Reasoning"
 family = "grok"
 release_date = "2025-11-19"
 last_updated = "2025-11-19"
 attachment = true
 reasoning = true
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
 temperature = true
 tool_call = true
 structured_output = true

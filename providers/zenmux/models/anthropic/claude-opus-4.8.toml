@@ -1,0 +1,12 @@
+base_model = "anthropic/claude-opus-4-8"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
+
+[cost]
+input = 5.00
+output = 25.00
+cache_read = 0.50
+cache_write = 6.25
+
+[provider]
+npm = "@ai-sdk/anthropic"
+api = "https://zenmux.ai/api/anthropic/v1"

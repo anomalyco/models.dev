@@ -1,16 +1,17 @@
 name = "Qwen3.7 Max"
 family = "qwen"
 release_date = "2026-05-21"
-last_updated = "2026-05-21"
+last_updated = "2026-06-15"
 attachment = false
-reasoning = true
+reasoning = false
 temperature = true
 tool_call = true
 open_weights = false
 
 [cost]
-input = 2.50
-output = 7.50
+input = 1.25
+output = 3.75
+cached_input = 0.13
 
 [limit]
 context = 1_000_000

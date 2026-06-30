@@ -1,21 +1,17 @@
-name = "Kimi K2.6"
-family = "kimi"
-attachment = true
-reasoning = true
-tool_call = true
-structured_output = true
-temperature = true
+base_model = "moonshotai/kimi-k2.6"
 release_date = "2026-04-20"
-last_updated = "2026-04-30"
-open_weights = true
+last_updated = "2026-06-11"
+# Live metadata: reasoning only; no effort control or dedicated budget (2026-06-25).
+# https://api.venice.ai/api/v1/models?type=text
+reasoning_options = []
 
 [interleaved]
 field = "reasoning_content"
 
 [cost]
-input = 0.85
-output = 4.655
-cache_read = 0.22
+input = 0.75
+output = 3.5
+cache_read = 0.16
 
 [limit]
 context = 256_000
@@ -23,4 +19,3 @@ output = 65_536
 
 [modalities]
 input = ["text", "image"]
-output = ["text"]

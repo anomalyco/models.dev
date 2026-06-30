@@ -11,27 +11,34 @@ Provider Details
 Model Categories
 
 Reasoning Models (with interleaved thinking):
-- zai-org/GLM-5.1-FP8 — GLM 5.1 FP8, reasoning enabled
+- glm-5.2 — GLM 5.2, reasoning enabled
+- glm-5.2-short — GLM 5.2 Short, reasoning enabled
 - moonshotai/Kimi-K2.5 — Kimi K2.5, reasoning + image input
 - moonshotai/Kimi-K2.6 — Kimi K2.6, reasoning + image input
-- MiniMaxAI/MiniMax-M2.5 — MiniMax M2.5, reasoning enabled
+- moonshotai/Kimi-K2.7-Code — Kimi K2.7 Code, reasoning + image input
 - Qwen/Qwen3.5-397B-A17B-FP8 — Qwen3.5 397B, reasoning enabled
 - Qwen/Qwen3.6-35B-A3B — Qwen3.6 35B A3B, reasoning enabled
-- openai/gpt-oss-20b — GPT OSS 20B, reasoning enabled
 
 Fast Variants (optimized for speed, non-reasoning):
-- glm-5-fast — GLM 5 Fast
-- glm-5.1-fast — GLM 5.1 Fast
+- glm-5.2-fast — GLM 5.2 Fast
+- glm-5.2-short-fast — GLM 5.2 Short Fast
 - kimi-k2.5-fast — Kimi K2.5 Fast, image input
 - kimi-k2.6-fast — Kimi K2.6 Fast, image input
 - qwen3.5-397b-fast — Qwen3.5 397B Fast
 - qwen3.6-35b-fast — Qwen3.6 35B Fast
 
-Other:
-- mistralai/Devstral-Small-2-24B-Instruct-2512 — Devstral Small 2, code-focused + image input
+Flex Variants (streaming required, discounted):
+- glm-5.2-flex — GLM 5.2 Flex, reasoning enabled
+- glm-5.2-short-flex — GLM 5.2 Short Flex, reasoning enabled
+- glm-5.2-short-fast-flex — GLM 5.2 Short Fast Flex
+- kimi-k2.6-flex — Kimi K2.6 Flex, reasoning + image input
+- kimi-k2.7-code-flex — Kimi K2.7 Code Flex, reasoning + image input
 
 Notes
-- Model IDs, pricing, and limits sourced directly from the Neuralwatt API
+- Standard model IDs, pricing, and limits are sourced directly from the Neuralwatt API; flex pricing applies the official 0.5 docs multiplier to the corresponding standard rates
+- Cache reads are billed at 25% of the input token price; there is no separate cache-write charge
 - Neuralwatt provides real-time energy consumption data (Joules/kWh) per request
 - "Fast" variants are optimized for lower latency without reasoning
+- Flex requires streaming; non-streaming requests fall back to the standard tier
+- Official Neuralwatt docs currently describe Flex as a 50% token-pricing discount, including cached-input billing
 - Vision models support image input via OpenAI-compatible API

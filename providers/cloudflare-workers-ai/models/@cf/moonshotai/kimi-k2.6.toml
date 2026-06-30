@@ -1,4 +1,8 @@
 base_model = "moonshotai/kimi-k2.6"
+# Native `/ai/run` accepts `reasoning_effort = low|medium|high` and
+# `chat_template_kwargs.thinking = true|false`; no budget is documented.
+# https://developers.cloudflare.com/workers-ai/models/kimi-k2.6/sync-input.json (accessed 2026-06-25)
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "medium", "high"] }]
 
 [interleaved]
 field = "reasoning_content"

@@ -1,4 +1,8 @@
 base_model = "openai/gpt-5.4"
+# Azure OpenAI Chat uses top-level reasoning_effort; this model accepts
+# none/low/medium/high/xhigh. No separate token-budget field is documented.
+# https://learn.microsoft.com/en-us/azure/foundry/openai/how-to/reasoning
+reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh"] }]
 
 [cost]
 input = 2.5
