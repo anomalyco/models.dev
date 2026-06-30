@@ -296,6 +296,87 @@ input = ["text"]
   });
 });
 
+describe("reasoning_options default", () => {
+  test("carries an effort default through to provider JSON", async () => {
+    await withFixture(async (root) => {
+      await write(root, "providers/provider/provider.toml", providerToml("Provider"));
+      await write(
+        root,
+        "providers/provider/models/model.toml",
+        reasoningModelToml(
+          `[{ type = "effort", values = ["low", "medium", "high"], default = "medium" }]`,
+        ),
+      );
+
+      const providers = await generate(path.join(root, "providers"));
+
+      expect(providers.provider?.models.model?.reasoning_options).toEqual([
+        { type: "effort", values: ["low", "medium", "high"], default: "medium" },
+      ]);
+    });
+  });
+
+  test("rejects an effort default that is not an allowed value", async () => {
+    await withFixture(async (root) => {
+      await write(root, "providers/provider/provider.toml", providerToml("Provider"));
+      await write(
+        root,
+        "providers/provider/models/model.toml",
+        reasoningModelToml(
+          `[{ type = "effort", values = ["low", "high"], default = "medium" }]`,
+        ),
+      );
+
+      expect(generate(path.join(root, "providers"))).rejects.toThrow();
+    });
+  });
+
+  test("rejects a budget default outside [min, max]", async () => {
+    await withFixture(async (root) => {
+      await write(root, "providers/provider/provider.toml", providerToml("Provider"));
+      await write(
+        root,
+        "providers/provider/models/model.toml",
+        reasoningModelToml(
+          `[{ type = "budget_tokens", min = 128, max = 32_768, default = 1_000_000 }]`,
+        ),
+      );
+
+      expect(generate(path.join(root, "providers"))).rejects.toThrow();
+    });
+  });
+
+  test("allows a budget default of -1 for dynamic thinking", async () => {
+    await withFixture(async (root) => {
+      await write(root, "providers/provider/provider.toml", providerToml("Provider"));
+      await write(
+        root,
+        "providers/provider/models/model.toml",
+        reasoningModelToml(
+          `[{ type = "budget_tokens", min = 128, max = 32_768, default = -1 }]`,
+        ),
+      );
+
+      const providers = await generate(path.join(root, "providers"));
+
+      expect(providers.provider?.models.model?.reasoning_options).toEqual([
+        { type: "budget_tokens", min: 128, max: 32_768, default: -1 },
+      ]);
+    });
+  });
+});
+
+function reasoningModelToml(optionsInline: string) {
+  return `${providerFieldsToml().replace(
+    "reasoning = true\n",
+    `reasoning = true\nreasoning_options = ${optionsInline}\n`,
+  )}
+[cost]
+input = 1.25
+output = 2.50
+`;
+}
+
 function providerToml(name: string) {
   return `name = "${name}"
 npm = "@ai-sdk/openai"
