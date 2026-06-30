@@ -1,0 +1,14 @@
+base_model = "minimax/MiniMax-M2.1"
+
+[cost]
+input = 0.3
+output = 2.4
+cache_read = 0.075
+cache_write = 0.375
+
+[limit]
+context = 196608
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

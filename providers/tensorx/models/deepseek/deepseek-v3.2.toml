@@ -1,0 +1,28 @@
+name = "DeepSeek V3.2"
+family = "deepseek"
+release_date = "2025-12-01"
+last_updated = "2025-12-01"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+knowledge = "2025-05"
+open_weights = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"]
+
+[cost]
+input = 0.3
+output = 0.5
+cache_read = 0.075
+cache_write = 0.375
+
+[limit]
+context = 163840
+output = 163840
+
+[modalities]
+input = ["text"]
+output = ["text"]
