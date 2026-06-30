@@ -1,0 +1,24 @@
+name = "Nex-N2-Pro"
+reasoning_options = []
+family = "agi"
+release_date = "2026-06-08"
+last_updated = "2026-06-08"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = false
+structured_output = false
+open_weights = true
+
+[cost]
+input = 0.25
+output = 1
+cache_read = 0.025
+
+[limit]
+context = 262_144
+output = 262_144
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

@@ -3,8 +3,7 @@ family = "deepseek"
 release_date = "2025-12-01"
 last_updated = "2025-12-01"
 attachment = false
-reasoning = true
-reasoning_options = [{ type = "toggle" }]
+reasoning = false
 temperature = true
 tool_call = false
 knowledge = "2024-07"
@@ -20,5 +19,5 @@ context = 128_000
 output = 8_000
 
 [modalities]
-input = ["text", "image", "pdf"]
+input = ["text"]
 output = ["text"]

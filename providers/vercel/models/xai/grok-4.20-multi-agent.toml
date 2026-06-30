@@ -1,13 +1,16 @@
 name = "Grok 4.20 Multi-Agent"
 family = "grok"
-release_date = "2026-03-09"
+release_date = "2026-03-10"
 last_updated = "2026-03-23"
 attachment = false
 reasoning = true
-reasoning_options = [{ type = "effort", values = ["low", "high"] }]
 temperature = true
 tool_call = true
 open_weights = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high", "xhigh"]
 
 [cost]
 input = 1.25

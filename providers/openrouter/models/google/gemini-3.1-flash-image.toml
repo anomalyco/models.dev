@@ -1,4 +1,5 @@
 name = "Nano Banana 2 (Gemini 3.1 Flash Image)"
+reasoning_options = [{ type = "effort", values = ["high", "minimal"] }]
 family = "gemini"
 release_date = "2026-06-18"
 last_updated = "2026-06-18"
@@ -14,8 +15,8 @@ input = 0.5
 output = 3
 
 [limit]
-context = 65_536
-output = 65_536
+context = 131_072
+output = 32_768
 
 [modalities]
 input = ["image", "text"]

@@ -11,12 +11,18 @@ knowledge = "2025-01"
 open_weights = true
 
 [cost]
-input = 0.1
-output = 0.4
-cache_read = 0.02
+input = 0.3
+output = 1.2
+cache_read = 0.06
+
+[[cost.tiers]]
+tier = { size = 512_000 }
+input = 0.6
+output = 2.4
+cache_read = 0.12
 
 [limit]
-context = 512_000
+context = 1_000_000
 output = 131_072
 
 [modalities]

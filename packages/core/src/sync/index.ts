@@ -5,9 +5,12 @@ import { z } from "zod";
 
 import { AuthoredModel, AuthoredModelShape, ModelMetadata } from "../schema.js";
 import { baseten } from "./providers/baseten.js";
+import { chutes } from "./providers/chutes.js";
 import { cloudflareWorkersAi } from "./providers/cloudflare-workers-ai.js";
 import { empiriolabs } from "./providers/empiriolabs.js";
 import { google } from "./providers/google.js";
+import { huggingface } from "./providers/huggingface.js";
+import { llmgateway } from "./providers/llmgateway.js";
 import { openrouter } from "./providers/openrouter.js";
 import { ovhcloud } from "./providers/ovhcloud.js";
 import { vercel } from "./providers/vercel.js";
@@ -79,9 +82,12 @@ export interface SyncResult {
 
 export const providers: {
   baseten: SyncProvider<any>;
+  chutes: SyncProvider<any>;
   "cloudflare-workers-ai": SyncProvider<any>;
   empiriolabs: SyncProvider<any>;
   google: SyncProvider<any>;
+  huggingface: SyncProvider<any>;
+  llmgateway: SyncProvider<any>;
   openrouter: SyncProvider<any>;
   ovhcloud: SyncProvider<any>;
   vercel: SyncProvider<any>;
@@ -89,9 +95,12 @@ export const providers: {
   xai: SyncProvider<any>;
 } = {
   baseten,
+  chutes,
   "cloudflare-workers-ai": cloudflareWorkersAi,
   empiriolabs,
   google,
+  huggingface,
+  llmgateway,
   openrouter,
   ovhcloud,
   vercel,
@@ -100,9 +109,9 @@ export const providers: {
 };
 
 export const groups = {
-  aggregators: ["openrouter", "vercel"],
+  aggregators: ["huggingface", "llmgateway", "openrouter", "vercel"],
   cloudflare: ["cloudflare-workers-ai"],
-  direct: ["baseten", "empiriolabs", "google", "ovhcloud", "venice", "xai"],
+  direct: ["baseten", "chutes", "empiriolabs", "google", "ovhcloud", "venice", "xai"],
 } as const;
 
 type ProviderID = keyof typeof providers;
@@ -232,7 +241,7 @@ export async function syncProvider<SourceModel>(
     }
     const namespaceDir = path.join(metadataDir, provider.metadataNamespace);
     for (const { file } of await tomlFiles(namespaceDir)) {
-      const relativePath = path.join(provider.metadataNamespace, file);
+      const relativePath = path.join(provider.metadataNamespace, file).split(path.sep).join("/");
       if (desiredMetadata.has(relativePath) || provider.deleteMissing === false) continue;
       if (options.newOnly) {
         console.log(`Skipping metadata removal in new-only mode: ${relativePath}`);
@@ -345,7 +354,12 @@ export function preserveReasoningOptions(
     const { reasoning_options: _reasoningOptions, ...withoutReasoningOptions } = model;
     return withoutReasoningOptions as SyncedModel;
   }
-  if (model.reasoning_options !== undefined || existing?.reasoning_options === undefined) return model;
+  if (model.reasoning_options !== undefined) return model;
+  if (existing?.reasoning_options === undefined) {
+    return (model.reasoning ?? resolvedReasoning) === true
+      ? { ...model, reasoning_options: [] }
+      : model;
+  }
   return {
     ...model,
     reasoning_options: existing.reasoning_options,
@@ -438,7 +452,7 @@ async function readModelMetadata(modelsDir: string) {
     absolute: true,
     followSymlinks: true,
   })) {
-    const modelID = path.relative(metadataDir, modelPath).slice(0, -5);
+    const modelID = path.relative(metadataDir, modelPath).split(path.sep).join("/").slice(0, -5);
     const toml = Bun.TOML.parse(
       await Bun.file(modelPath).text(),
     ) as Record<string, unknown>;
@@ -547,7 +561,7 @@ async function tomlFiles(root: string, dir = "") {
   const result: Array<{ file: string; symlink: boolean }> = [];
 
   for (const entry of await readdir(path.join(root, dir), { withFileTypes: true })) {
-    const file = path.join(dir, entry.name);
+    const file = path.join(dir, entry.name).split(path.sep).join("/");
     if (entry.isDirectory()) {
       result.push(...await tomlFiles(root, file));
     } else if (entry.name.endsWith(".toml") && (entry.isFile() || entry.isSymbolicLink())) {
@@ -676,7 +690,7 @@ function formatReasoningValue(value: string | null) {
   return value === null ? quote("null") : quote(value);
 }
 
-function formatToml(model: z.infer<typeof SyncedAuthoredModel>) {
+export function formatToml(model: z.infer<typeof SyncedAuthoredModel>) {
   const lines: string[] = [];
 
   if (model.base_model !== undefined) lines.push(`base_model = ${quote(model.base_model)}`);
@@ -697,22 +711,7 @@ function formatToml(model: z.infer<typeof SyncedAuthoredModel>) {
   if (model.knowledge !== undefined) lines.push(`knowledge = ${quote(model.knowledge)}`);
   if (model.open_weights !== undefined) lines.push(`open_weights = ${model.open_weights}`);
   if (model.status !== undefined) lines.push(`status = ${quote(model.status)}`);
-
-  if (model.reasoning_options?.length === 0) {
-    lines.push("reasoning_options = []");
-  } else {
-    for (const option of model.reasoning_options ?? []) {
-      lines.push("", "[[reasoning_options]]");
-      lines.push(`type = ${quote(option.type)}`);
-      if (option.type === "effort") {
-        lines.push(`values = [${option.values.map(formatReasoningValue).join(", ")}]`);
-      }
-      if (option.type === "budget_tokens") {
-        if (option.min !== undefined) lines.push(`min = ${formatInteger(option.min)}`);
-        if (option.max !== undefined) lines.push(`max = ${formatInteger(option.max)}`);
-      }
-    }
-  }
+  if (model.reasoning_options?.length === 0) lines.push("reasoning_options = []");
 
   if (model.interleaved !== undefined) {
     lines.push("");
@@ -721,6 +720,18 @@ function formatToml(model: z.infer<typeof SyncedAuthoredModel>) {
     } else {
       lines.push("[interleaved]");
       lines.push(`field = ${quote(model.interleaved.field)}`);
+    }
+  }
+
+  for (const option of model.reasoning_options ?? []) {
+    lines.push("", "[[reasoning_options]]");
+    lines.push(`type = ${quote(option.type)}`);
+    if (option.type === "effort") {
+      lines.push(`values = [${option.values.map(formatReasoningValue).join(", ")}]`);
+    }
+    if (option.type === "budget_tokens") {
+      if (option.min !== undefined) lines.push(`min = ${formatInteger(option.min)}`);
+      if (option.max !== undefined) lines.push(`max = ${formatInteger(option.max)}`);
     }
   }
 

@@ -6,10 +6,9 @@ attachment = false
 reasoning = true
 tool_call = true
 open_weights = true
-
-[[reasoning_options]]
-type = "effort"
-values = ["none", "low", "medium", "high"]
+# Live metadata: reasoning only; no effort control or dedicated budget (2026-06-25).
+# https://api.venice.ai/api/v1/models?type=text
+reasoning_options = []
 
 [cost]
 input = 0.3

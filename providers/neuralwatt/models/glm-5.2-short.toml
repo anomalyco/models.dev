@@ -1,0 +1,27 @@
+name = "GLM 5.2 Short"
+family = "glm"
+release_date = "2026-06-17"
+last_updated = "2026-06-17"
+attachment = false
+reasoning = true
+reasoning_options = [
+  { type = "toggle" },
+  { type = "effort", values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"] },
+  { type = "budget_tokens" },
+]
+temperature = true
+tool_call = true
+open_weights = true
+
+[cost]
+input = 1.45
+output = 4.5
+cache_read = 0.3625
+
+[limit]
+context = 199_984
+output = 199_984
+
+[modalities]
+input = ["text"]
+output = ["text"]
