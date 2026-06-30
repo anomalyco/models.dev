@@ -1,0 +1,23 @@
+name = "Qwen3.5-9B-EL"
+family = "qwen"
+release_date = "2026-02-23"
+last_updated = "2026-02-23"
+attachment = true
+reasoning = true
+reasoning_options = [{ type = "toggle" }, { type = "budget_tokens", min = 1_024, max = 32_768 }]
+temperature = true
+open_weights = true
+tool_call = true
+
+[cost]
+input = 0.0909
+output = 0.1313
+cache_read = 0.0455
+
+[limit]
+context = 262_144
+output = 65_536
+
+[modalities]
+input = ["text", "image", "video", "pdf"]
+output = ["text"]

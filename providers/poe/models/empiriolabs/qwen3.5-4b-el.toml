@@ -1,0 +1,24 @@
+name = "Qwen3.5-4B-EL"
+family = "qwen"
+release_date = "2026-03-03"
+last_updated = "2026-03-03"
+attachment = true
+reasoning = true
+reasoning_options = [{ type = "toggle" }, { type = "budget_tokens", min = 1_024, max = 32_768 }]
+temperature = true
+knowledge = "2025-04"
+open_weights = true
+tool_call = true
+
+[cost]
+input = 0.0404
+output = 0.0707
+cache_read = 0.0202
+
+[limit]
+context = 262_144
+output = 65_536
+
+[modalities]
+input = ["text", "image", "video", "pdf"]
+output = ["text"]

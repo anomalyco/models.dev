@@ -1,8 +1,7 @@
-name = "Kimi-K2.5-FW"
-description = "Kimi multimodal agent model for visual understanding, coding, and planning"
+name = "Kimi-K2.7-Code-EL"
 family = "kimi-k2"
-release_date = "2026-01-27"
-last_updated = "2026-01-27"
+release_date = "2026-06-12"
+last_updated = "2026-06-12"
 attachment = true
 reasoning = true
 reasoning_options = []
@@ -11,10 +10,14 @@ knowledge = "2025-01"
 open_weights = true
 tool_call = true
 
+[cost]
+input = 0.9596
+output = 4.0404
+
 [limit]
 context = 262_144
 output = 262_144
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image", "video", "pdf"]
 output = ["text"]

@@ -1,0 +1,25 @@
+name = "GLM-5.2-EL"
+family = "glm"
+release_date = "2026-06-13"
+last_updated = "2026-06-13"
+attachment = true
+reasoning = true
+reasoning_options = [
+  { type = "toggle" },
+  { type = "effort", values = ["minimal", "low", "medium", "high", "xhigh", "max"] },
+]
+temperature = true
+open_weights = true
+tool_call = true
+
+[cost]
+input = 1.4141
+output = 4.4444
+
+[limit]
+context = 1_000_000
+output = 131_072
+
+[modalities]
+input = ["text", "pdf"]
+output = ["text"]

@@ -1,0 +1,28 @@
+name = "Qwen3.6-Max-Preview"
+family = "qwen"
+release_date = "2026-04-20"
+last_updated = "2026-04-20"
+attachment = true
+reasoning = true
+reasoning_options = [{ type = "toggle" }, { type = "budget_tokens", min = 1, max = 32_768 }]
+temperature = true
+knowledge = "2025-04"
+open_weights = false
+tool_call = true
+
+[cost]
+input = 1.3131
+output = 7.8788
+
+[[cost.tiers]]
+tier = { type = "context", size = 128_000 }
+input = 1.96965
+output = 11.8182
+
+[limit]
+context = 256_000
+output = 65_536
+
+[modalities]
+input = ["text", "pdf"]
+output = ["text"]

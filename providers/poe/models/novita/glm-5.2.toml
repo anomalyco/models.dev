@@ -1,8 +1,7 @@
-name = "GLM-4.7-N"
-description = "Flagship GLM model for hybrid reasoning, coding, and agentic engineering"
+name = "GLM-5.2"
 family = "glm"
-release_date = "2025-12-22"
-last_updated = "2025-12-22"
+release_date = "2026-06-13"
+last_updated = "2026-06-13"
 attachment = true
 reasoning = true
 reasoning_options = [{ type = "toggle" }]
@@ -11,11 +10,12 @@ open_weights = true
 tool_call = true
 
 [cost]
-input = 0.6061
-output = 2.2222
+input = 1.4141
+output = 4.4444
+cache_read = 0.2626
 
 [limit]
-context = 205_000
+context = 1_048_576
 output = 131_072
 
 [modalities]

@@ -1,0 +1,28 @@
+name = "MiMo-V2.5-Pro"
+family = "mimo"
+release_date = "2026-04-22"
+last_updated = "2026-04-22"
+attachment = true
+reasoning = true
+reasoning_options = [{ type = "toggle" }]
+temperature = true
+knowledge = "2024-12"
+open_weights = true
+tool_call = true
+
+[cost]
+input = 1.0101
+output = 3.0303
+
+[[cost.tiers]]
+tier = { type = "context", size = 256_000 }
+input = 2.0202
+output = 6.0606
+
+[limit]
+context = 1_000_000
+output = 131_072
+
+[modalities]
+input = ["text", "pdf"]
+output = ["text"]
