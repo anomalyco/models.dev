@@ -1,6 +1,12 @@
 base_model = "nvidia/nemotron-3-ultra-550b-a55b"
 structured_output = true
-reasoning_options = []
+
+[[reasoning_options]]
+type = "effort"
+values = ["medium", "high"]
+
+[[reasoning_options]]
+type = "budget_tokens"
 
 [cost]
 input = 0.5
