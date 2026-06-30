@@ -1,5 +1,2 @@
 base_model = "openai/gpt-oss-120b"
-# AnyAPI accepts low/medium/high generically but documents no model-specific
-# effectiveness; unsupported parameters may be silently ignored.
-# https://docs.anyapi.ai/guides/parameters
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
+reasoning_options = []
