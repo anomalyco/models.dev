@@ -3,13 +3,12 @@ family = "gpt-oss"
 release_date = "2025-07-31"
 last_updated = "2025-08-05"
 attachment = false
-reasoning = true
-reasoning_options = []
+reasoning = false
 temperature = true
 tool_call = true
-structured_output = true
 knowledge = "2024-06-30"
 open_weights = true
+reasoning_options = []
 
 [cost]
 input = 0.15
@@ -19,7 +18,7 @@ cache_write = 0.15
 
 [limit]
 context = 131_072
-output = 32_768
+output = 4_096
 
 [modalities]
 input = ["text"]

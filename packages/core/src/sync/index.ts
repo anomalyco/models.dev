@@ -8,6 +8,7 @@ import { cloudflareWorkersAi } from "./providers/cloudflare-workers-ai.js";
 import { google } from "./providers/google.js";
 import { openrouter } from "./providers/openrouter.js";
 import { ovhcloud } from "./providers/ovhcloud.js";
+import { pioneer } from "./providers/pioneer.js";
 import { vercel } from "./providers/vercel.js";
 import { xai } from "./providers/xai.js";
 
@@ -55,7 +56,10 @@ export interface SyncProvider<SourceModel> {
   parseModels(raw: unknown): SourceModel[];
   translateModel(
     model: SourceModel,
-    context: { existing(id: string): ExistingModel | undefined },
+    context: {
+      existing(id: string): ExistingModel | undefined;
+      authored(id: string): ExistingModel | undefined;
+    },
   ): { id: string; model: SyncedModel } | undefined;
 }
 
@@ -76,6 +80,7 @@ export const providers: {
   google: SyncProvider<any>;
   openrouter: SyncProvider<any>;
   ovhcloud: SyncProvider<any>;
+  pioneer: SyncProvider<any>;
   vercel: SyncProvider<any>;
   xai: SyncProvider<any>;
 } = {
@@ -83,6 +88,7 @@ export const providers: {
   google,
   openrouter,
   ovhcloud,
+  pioneer,
   vercel,
   xai,
 };
@@ -90,7 +96,7 @@ export const providers: {
 export const groups = {
   aggregators: ["openrouter", "vercel"],
   cloudflare: ["cloudflare-workers-ai"],
-  direct: ["google", "ovhcloud", "xai"],
+  direct: ["google", "ovhcloud", "pioneer", "xai"],
 } as const;
 
 type ProviderID = keyof typeof providers;
@@ -111,6 +117,9 @@ export async function syncProvider<SourceModel>(
   console.log(`\nSyncing ${provider.name}...`);
 
   const { models: existing, brokenSymlinks } = await readExisting(provider.modelsDir);
+  const authoredExisting = new Map(
+    [...existing].map(([file, value]) => [file, { ...value.authored } satisfies ExistingModel]),
+  );
   const sourceModels = provider.parseModels(await provider.fetchModels());
   const desired = new Map<string, { model: z.infer<typeof SyncedAuthoredModel>; content: string }>();
   const skippedRemote: string[] = [];
@@ -119,6 +128,9 @@ export async function syncProvider<SourceModel>(
     const translated = provider.translateModel(sourceModel, {
       existing(id) {
         return existing.get(`${id}.toml`)?.toml;
+      },
+      authored(id) {
+        return authoredExisting.get(`${id}.toml`);
       },
     });
     if (translated === undefined) {
@@ -584,6 +596,10 @@ function formatToml(model: z.infer<typeof SyncedAuthoredModel>) {
   if (model.knowledge !== undefined) lines.push(`knowledge = ${quote(model.knowledge)}`);
   if (model.open_weights !== undefined) lines.push(`open_weights = ${model.open_weights}`);
   if (model.status !== undefined) lines.push(`status = ${quote(model.status)}`);
+
+  if (model.reasoning_options !== undefined && model.reasoning_options.length === 0) {
+    lines.push("reasoning_options = []");
+  }
 
   for (const option of model.reasoning_options ?? []) {
     lines.push("", "[[reasoning_options]]");
