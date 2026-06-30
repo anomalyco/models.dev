@@ -1,17 +1,19 @@
 name = "Kimi-K2.5"
+family = "kimi-k2"
 release_date = "2026-01-27"
 last_updated = "2026-01-27"
 attachment = true
 reasoning = true
 reasoning_options = [{ type = "toggle" }]
 temperature = true
-open_weights = false
+knowledge = "2025-01"
+open_weights = true
 tool_call = true
 
 [cost]
-input = 0.6
-output = 3
-cache_read = 0.1
+input = 0.6061
+output = 3.0303
+cache_read = 0.101
 
 [limit]
 context = 128_000

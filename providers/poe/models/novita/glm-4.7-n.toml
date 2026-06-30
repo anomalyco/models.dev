@@ -1,17 +1,22 @@
-name = "glm-4.7-n"
+name = "GLM-4.7-N"
+family = "glm"
 release_date = "2025-12-22"
 last_updated = "2025-12-22"
 attachment = true
 reasoning = true
 reasoning_options = [{ type = "toggle" }]
-temperature = false
-open_weights = false
+temperature = true
+open_weights = true
 tool_call = true
+
+[cost]
+input = 0.6061
+output = 2.2222
 
 [limit]
 context = 205_000
 output = 131_072
 
 [modalities]
-input = ["text"]
+input = ["text", "pdf"]
 output = ["text"]

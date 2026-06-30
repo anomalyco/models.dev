@@ -1,0 +1,22 @@
+name = "Qwen3-Next-80B"
+family = "qwen"
+release_date = "2025-09-10"
+last_updated = "2025-09-10"
+attachment = true
+reasoning = false
+temperature = true
+knowledge = "2025-04"
+open_weights = true
+tool_call = true
+
+[cost]
+input = 0.1515
+output = 1.5152
+
+[limit]
+context = 131_072
+output = 32_768
+
+[modalities]
+input = ["text", "pdf"]
+output = ["text"]

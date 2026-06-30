@@ -1,22 +1,21 @@
-name = "DeepSeek-V4-Flash-EL"
+name = "DeepSeek-V4-Flash-E"
 family = "deepseek-flash"
+release_date = "2026-04-24"
+last_updated = "2026-04-24"
 attachment = true
 reasoning = true
 reasoning_options = [{ type = "toggle" }, { type = "budget_tokens", min = 1, max = 393_216 }]
 temperature = true
-tool_call = true
-release_date = "2026-04-24"
-last_updated = "2026-04-24"
 knowledge = "2025-05"
 open_weights = true
+tool_call = true
 
 [cost]
-input = 0.1394
-output = 0.2778
+input = 0.202
+output = 0.404
 
 [limit]
 context = 1_000_000
-input = 1_000_000
 output = 384_000
 
 [modalities]

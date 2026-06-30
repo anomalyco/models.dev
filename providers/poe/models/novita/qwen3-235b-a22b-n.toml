@@ -1,0 +1,18 @@
+name = "Qwen3-235B-A22B-N"
+family = "qwen"
+release_date = "2025-04"
+last_updated = "2025-04"
+attachment = true
+reasoning = false
+temperature = true
+knowledge = "2025-04"
+open_weights = true
+tool_call = true
+
+[limit]
+context = 131_072
+output = 16_384
+
+[modalities]
+input = ["text", "pdf"]
+output = ["text"]

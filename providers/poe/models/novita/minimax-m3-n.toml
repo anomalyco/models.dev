@@ -1,7 +1,7 @@
-name = "Minimax-M2.1"
+name = "Minimax-M3-N"
 family = "minimax"
-release_date = "2025-12-26"
-last_updated = "2025-12-26"
+release_date = "2026-06-01"
+last_updated = "2026-06-25"
 attachment = true
 reasoning = true
 reasoning_options = [{ type = "toggle" }]
@@ -12,12 +12,12 @@ tool_call = true
 [cost]
 input = 0.303
 output = 1.2121
-cache_read = 0.0303
+cache_read = 0.0606
 
 [limit]
-context = 205_000
+context = 1_048_576
 output = 131_072
 
 [modalities]
-input = ["text"]
+input = ["text", "image", "video", "pdf"]
 output = ["text"]
