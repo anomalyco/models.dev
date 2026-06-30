@@ -32,8 +32,6 @@ function resolveAlibabaBaseModel(modelID: string): string | undefined {
   return canonicalExists(candidate) ? candidate : undefined;
 }
 
-// existsSync is case-insensitive on macOS/Windows; verify the real on-disk filename
-// case so the resolved base_model matches the canonical metadata exactly (and CI on Linux).
 function canonicalExists(candidate: string): boolean {
   const file = path.join(MODELS_DIR, `${candidate}.toml`);
   if (!existsSync(file)) return false;
