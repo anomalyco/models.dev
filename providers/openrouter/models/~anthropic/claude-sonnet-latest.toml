@@ -1,22 +1,31 @@
-# This route maps effort through top-level `verbosity`, not `reasoning.effort`.
-# https://openrouter.ai/docs/api/reference/parameters#verbosity (accessed 2026-06-25)
-reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "medium", "high", "max"] }, { type = "budget_tokens", min = 1024, max = 127999 }]
 name = "Anthropic Claude Sonnet Latest"
 family = "claude-sonnet"
 release_date = "2026-04-27"
 last_updated = "2026-04-27"
 attachment = true
 reasoning = true
-temperature = true
+temperature = false
 tool_call = true
 structured_output = true
 open_weights = false
 
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high", "max"]
+
+[[reasoning_options]]
+type = "budget_tokens"
+min = 1_024
+max = 127_999
+
 [cost]
-input = 3
-output = 15
-cache_read = 0.3
-cache_write = 3.75
+input = 2
+output = 10
+cache_read = 0.2
+cache_write = 2.5
 
 [limit]
 context = 1_000_000
