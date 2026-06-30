@@ -150,7 +150,8 @@ export const alibaba = {
     if (ids.length === 0) return [];
     return [
       `${ids.length} Alibaba models returned by the source were not created because no matching \`models/alibaba/<id>.toml\` base-metadata file exists for them. The DashScope API does not authoritatively expose \`family\`, \`temperature\`, \`open_weights\`, or \`knowledge\`, so a base-metadata file is required to mint a thin provider stub via inheritance. Add the file to enable auto-creation. Existing models are still updated from source-authoritative fields.`,
-      `Skipped remote IDs: ${ids.map((id) => `\`${id}\``).join(", ")}`,
+      "Skipped remote IDs:",
+      ...ids.map((id) => `\`${id}\``),
     ];
   },
   missingNotice(paths) {
@@ -224,7 +225,12 @@ async function fetchModelsPage(
   apiKey: string,
   pageNo: number,
 ) {
-  const url = new URL(apiEndpoint);
+  let url: URL;
+  try {
+    url = new URL(apiEndpoint);
+  } catch (cause) {
+    throw new Error(`Invalid Alibaba model catalog URL: ${apiEndpoint}`, { cause });
+  }
   url.searchParams.set("page_no", String(pageNo));
   url.searchParams.set("page_size", String(API_PAGE_SIZE));
 
