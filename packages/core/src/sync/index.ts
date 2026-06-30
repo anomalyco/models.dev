@@ -351,7 +351,12 @@ export function preserveReasoningOptions(
     const { reasoning_options: _reasoningOptions, ...withoutReasoningOptions } = model;
     return withoutReasoningOptions as SyncedModel;
   }
-  if (model.reasoning_options !== undefined || existing?.reasoning_options === undefined) return model;
+  if (model.reasoning_options !== undefined) return model;
+  if (existing?.reasoning_options === undefined) {
+    return (model.reasoning ?? resolvedReasoning) === true
+      ? { ...model, reasoning_options: [] }
+      : model;
+  }
   return {
     ...model,
     reasoning_options: existing.reasoning_options,

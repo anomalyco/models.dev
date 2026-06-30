@@ -1,6 +1,6 @@
 import { expect, test } from "bun:test";
 
-import { formatToml } from "../src/sync/index.js";
+import { formatToml, preserveReasoningOptions } from "../src/sync/index.js";
 
 test("formats interleaved as a root field before reasoning option tables", () => {
   const content = formatToml({
@@ -44,6 +44,13 @@ test("formats empty reasoning options outside the interleaved table", () => {
 
   expect(Bun.TOML.parse(content)).toMatchObject({
     interleaved: { field: "reasoning_content" },
+    reasoning_options: [],
+  });
+});
+
+test("defaults new reasoning models to empty reasoning options", () => {
+  expect(preserveReasoningOptions({ reasoning: true }, undefined)).toEqual({
+    reasoning: true,
     reasoning_options: [],
   });
 });
