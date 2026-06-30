@@ -1,0 +1,23 @@
+name = "voyage-context-3"
+family = "voyage"
+attachment = false
+reasoning = false
+tool_call = false
+temperature = false
+release_date = "2025-07-23"
+last_updated = "2025-07-23"
+open_weights = false
+
+[cost]
+input = 0.18
+output = 0.00
+
+[limit]
+# 120K tokens total per request; up to 32K tokens per chunk.
+context = 120_000
+# output holds the default embedding dimension (also supports 256, 512, 2048)
+output = 1_024
+
+[modalities]
+input = ["text"]
+output = ["text"]
