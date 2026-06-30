@@ -1,0 +1,31 @@
+name = "Claude Sonnet 5"
+family = "claude-sonnet"
+release_date = "2026-06-30"
+last_updated = "2026-06-30"
+attachment = true
+reasoning = true
+temperature = false
+tool_call = true
+knowledge = "2026-01-31"
+open_weights = false
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high", "xhigh", "max"]
+
+[cost]
+input = 2.00
+output = 10.00
+cache_read = 0.20
+cache_write = 2.50
+
+[limit]
+context = 1_000_000
+output = 128_000
+
+[modalities]
+input = ["text", "image", "pdf"]
+output = ["text"]
