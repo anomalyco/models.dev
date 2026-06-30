@@ -350,6 +350,9 @@ export const ModelFamilyValues = [
   "auto",
   "model-router",
 
+  // Conductor
+  "fugu",
+
   // V0
   "v0",
 
