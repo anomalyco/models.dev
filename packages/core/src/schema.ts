@@ -34,12 +34,14 @@ const ReasoningOption = z
     z
       .object({
         type: z.literal("toggle"),
+        default: z.boolean().optional(),
       })
       .strict(),
     z
       .object({
         type: z.literal("effort"),
         values: z.array(ReasoningEffortValue),
+        default: ReasoningEffortValue.optional(),
       })
       .strict(),
     z
@@ -52,6 +54,10 @@ const ReasoningOption = z
         max: z
           .number()
           .min(0, "Maximum reasoning budget cannot be negative")
+          .optional(),
+        default: z
+          .number()
+          .min(-1, "Default reasoning budget cannot be less than -1")
           .optional(),
       })
       .strict(),
@@ -66,6 +72,30 @@ const ReasoningOption = z
       message:
         "Minimum reasoning budget cannot exceed maximum reasoning budget",
       path: ["min"],
+    },
+  )
+  .refine(
+    (data) =>
+      data.type !== "effort" ||
+      data.default === undefined ||
+      data.values.includes(data.default),
+    {
+      message: "Default reasoning effort must be one of the allowed values",
+      path: ["default"],
+    },
+  )
+  .refine(
+    (data) =>
+      data.type !== "budget_tokens" ||
+      data.default === undefined ||
+      // -1 is the dynamic-thinking sentinel and is always allowed
+      data.default === -1 ||
+      ((data.min === undefined || data.default >= data.min) &&
+        (data.max === undefined || data.default <= data.max)),
+    {
+      message:
+        "Default reasoning budget must be within [min, max] or -1 for dynamic",
+      path: ["default"],
     },
   );
 
