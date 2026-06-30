@@ -49,6 +49,30 @@ test("formats empty reasoning options outside the interleaved table", () => {
   });
 });
 
+test("formats reasoning efforts from lowest to highest", () => {
+  const content = formatToml({
+    id: "example/model",
+    name: "Example Model",
+    release_date: "2026-01-01",
+    last_updated: "2026-01-01",
+    attachment: false,
+    reasoning: true,
+    reasoning_options: [{
+      type: "effort",
+      values: ["max", "xhigh", "high", "medium", "low", "minimal", "none", "default"],
+    }],
+    tool_call: true,
+    open_weights: false,
+    cost: { input: 1, output: 2 },
+    limit: { context: 1_000, output: 100 },
+    modalities: { input: ["text"], output: ["text"] },
+  });
+
+  expect(content).toContain(
+    'values = ["none", "minimal", "low", "medium", "high", "xhigh", "max", "default"]',
+  );
+});
+
 test("defaults new reasoning models to empty reasoning options", () => {
   expect(preserveReasoningOptions({ reasoning: true }, undefined)).toEqual({
     reasoning: true,
