@@ -1,0 +1,18 @@
+base_model = "google/gemma-4-31b-it"
+last_updated = "2026-06-28"
+status = "beta"
+# Reasoning checked live against the Infomaniak API on 2026-06-28: gemma-4-31B-it ignores
+# `reasoning_effort` (none/low/high produce identical output) and never populates
+# `message.reasoning` — any step-by-step text stays inline in `content`. No reasoning toggle is
+# exposed on this provider, so reasoning is disabled and reasoning_options/interleaved omitted.
+# Source: https://developer.infomaniak.com/docs/api/post/2/ai/{product_id}/openai/v1/chat/completions
+reasoning = false
+
+[cost]
+input = 0.20
+output = 0.40
+
+[limit]
+context = 100_000
+input = 100_000
+output = 8_192
