@@ -27,10 +27,11 @@
     "llmgateway:sync": "bun ./packages/core/script/sync-models.ts llmgateway",
     "venice:sync": "bun ./packages/core/script/sync-models.ts venice",
     "vercel:generate": "bun ./packages/core/script/sync-models.ts vercel",
-    "wandb:generate": "bun ./packages/core/script/generate-wandb.ts",
+    "wandb:generate": "bun ./packages/core/script/sync-models.ts wandb",
     "digitalocean:generate": "bun ./packages/core/script/generate-digitalocean.ts",
     "ambient:generate": "bun ./packages/core/script/generate-ambient.ts",
-    "models:sync": "bun ./packages/core/script/sync-models.ts"
+    "models:sync": "bun ./packages/core/script/sync-models.ts",
+    "sync:models": "bun ./packages/core/script/sync-models.ts"
   },
   "dependencies": {
     "@cloudflare/workers-types": "^4.20260424.1",

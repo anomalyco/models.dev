@@ -1,0 +1,13 @@
+base_model = "nvidia/nemotron-3-ultra-550b-a55b"
+name = "Nemotron 3 Ultra"
+structured_output = true
+reasoning_options = []
+
+[cost]
+input = 0.75
+output = 2.75
+cache_read = 0.15
+
+[limit]
+context = 262_144
+output = 262_144

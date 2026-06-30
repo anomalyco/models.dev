@@ -1,0 +1,11 @@
+base_model = "google/gemma-4-31b-it"
+name = "Gemma 4 31B"
+reasoning_options = []
+
+[cost]
+input = 0.12
+output = 0.35
+cache_read = 0.09
+
+[limit]
+output = 262_144

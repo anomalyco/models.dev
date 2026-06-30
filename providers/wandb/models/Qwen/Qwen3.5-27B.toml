@@ -1,0 +1,18 @@
+base_model = "alibaba/qwen3.5-27b"
+name = "Qwen3.5-27B"
+family = "qwen3.5"
+release_date = "2026-02-24"
+last_updated = "2026-02-24"
+status = "alpha"
+reasoning_options = []
+
+[cost]
+input = 0.39
+output = 3.12
+cache_read = 0.08
+
+[limit]
+output = 262_144
+
+[modalities]
+input = ["text", "image"]

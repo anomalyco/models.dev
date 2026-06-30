@@ -1,0 +1,14 @@
+base_model = "alibaba/qwen3.6-27b"
+family = "qwen3.6"
+reasoning_options = []
+
+[cost]
+input = 0.6
+output = 3.6
+cache_read = 0.12
+
+[limit]
+output = 262_144
+
+[modalities]
+input = ["text", "image"]

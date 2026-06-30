@@ -1,0 +1,17 @@
+base_model = "alibaba/qwen3.5-35b-a3b"
+name = "Qwen3.5-35B-A3B"
+family = "qwen3.5"
+release_date = "2026-02-24"
+last_updated = "2026-02-24"
+reasoning_options = []
+
+[cost]
+input = 0.25
+output = 1.25
+cache_read = 0.25
+
+[limit]
+output = 262_144
+
+[modalities]
+input = ["text", "image"]
