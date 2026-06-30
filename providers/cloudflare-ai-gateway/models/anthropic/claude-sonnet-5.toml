@@ -1,0 +1,9 @@
+base_model = "anthropic/claude-sonnet-5"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
+interleaved = true
+
+[cost]
+input = 2.00
+output = 10.00
+cache_read = 0.20
+cache_write = 2.50
