@@ -1,0 +1,12 @@
+base_model = "tencent/hy3-preview"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high"]
+
+[interleaved]
+field = "reasoning_details"
+
+[cost]
+input = 0.066
+output = 0.26
