@@ -1,4 +1,3 @@
-reasoning_options = []
 name = "Seed-2.0-Lite"
 family = "seed"
 release_date = "2026-03-10"
@@ -9,6 +8,10 @@ temperature = true
 tool_call = true
 structured_output = true
 open_weights = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["minimal", "low", "medium", "high"]
 
 [cost]
 input = 0.25
