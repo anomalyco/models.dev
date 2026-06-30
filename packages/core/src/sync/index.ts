@@ -687,6 +687,26 @@ function formatReasoningValue(value: string | null) {
   return value === null ? quote("null") : quote(value);
 }
 
+const ReasoningEffortOrder = new Map<string | null, number>([
+  ["none", 0],
+  ["minimal", 1],
+  ["low", 2],
+  ["medium", 3],
+  ["high", 4],
+  ["xhigh", 5],
+  ["max", 6],
+  ["default", 7],
+  [null, 8],
+]);
+
+function sortReasoningValues(values: Array<string | null>) {
+  return [...values].sort((a, b) => {
+    const order = (ReasoningEffortOrder.get(a) ?? Number.MAX_SAFE_INTEGER)
+      - (ReasoningEffortOrder.get(b) ?? Number.MAX_SAFE_INTEGER);
+    return order || formatReasoningValue(a).localeCompare(formatReasoningValue(b));
+  });
+}
+
 export function formatToml(model: z.infer<typeof SyncedAuthoredModel>) {
   const lines: string[] = [];
 
@@ -724,7 +744,8 @@ export function formatToml(model: z.infer<typeof SyncedAuthoredModel>) {
     lines.push("", "[[reasoning_options]]");
     lines.push(`type = ${quote(option.type)}`);
     if (option.type === "effort") {
-      lines.push(`values = [${option.values.map(formatReasoningValue).join(", ")}]`);
+      const values = sortReasoningValues(option.values).map(formatReasoningValue).join(", ");
+      lines.push(`values = [${values}]`);
     }
     if (option.type === "budget_tokens") {
       if (option.min !== undefined) lines.push(`min = ${formatInteger(option.min)}`);
