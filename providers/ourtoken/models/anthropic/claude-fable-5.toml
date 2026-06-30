@@ -1,0 +1,12 @@
+base_model = "anthropic/claude-fable-5"
+
+[cost]
+input = 4
+output = 20
+cache_read = 0.4
+cache_write = 5
+
+[provider]
+npm = "@ai-sdk/anthropic"
+
+reasoning_options = []

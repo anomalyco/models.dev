@@ -1,0 +1,12 @@
+base_model = "anthropic/claude-opus-4-6"
+
+[cost]
+input = 2
+output = 10
+cache_read = 0.2
+cache_write = 2.5
+
+[provider]
+npm = "@ai-sdk/anthropic"
+
+reasoning_options = []

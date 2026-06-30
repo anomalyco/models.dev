@@ -1,0 +1,12 @@
+base_model = "anthropic/claude-sonnet-4-6"
+
+[cost]
+input = 1.2
+output = 6
+cache_read = 0.12
+cache_write = 1.5
+
+[provider]
+npm = "@ai-sdk/anthropic"
+
+reasoning_options = []
