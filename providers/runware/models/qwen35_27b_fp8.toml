@@ -1,0 +1,12 @@
+base_model = "alibaba/qwen3.5-27b"
+
+[cost]
+input = 0.165
+output = 1.326
+cache_read = 0.024
+
+[limit]
+output = 128000
+
+[modalities]
+input = ["text", "image"]
