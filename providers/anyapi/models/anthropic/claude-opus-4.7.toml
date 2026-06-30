@@ -1,0 +1,9 @@
+base_model = "anthropic/claude-opus-4-7"
+# AnyAPI documents generic effort and thinking fields, but no model-specific
+# mapping or budget bounds; accepted schema does not prove effective control.
+# https://docs.anyapi.ai/guides/parameters
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "medium", "high"] }]
+
+[experimental.modes.fast]
+cost = { input = 30, output = 150, cache_read = 3, cache_write = 37.5 }
+provider = { body = { speed = "fast" }, headers = { anthropic-beta = "fast-mode-2026-02-01" } }

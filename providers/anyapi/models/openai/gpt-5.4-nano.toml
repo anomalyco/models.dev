@@ -1,0 +1,5 @@
+base_model = "openai/gpt-5.4-nano"
+# AnyAPI accepts low/medium/high generically but documents no model-specific
+# effectiveness; unsupported parameters may be silently ignored.
+# https://docs.anyapi.ai/guides/parameters
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
