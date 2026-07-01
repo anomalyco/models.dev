@@ -1,0 +1,22 @@
+name = "Auto Code"
+release_date = "2026-07-01"
+last_updated = "2026-07-01"
+attachment = false
+reasoning = false
+tool_call = true
+temperature = true
+open_weights = false
+
+# Routed to mixed upstream coding models; pricing is variable. Values below are
+# representative, not a fixed per-token rate.
+[cost]
+input = 1.50
+output = 6.00
+
+[limit]
+context = 200_000
+output = 64_000
+
+[modalities]
+input = ["text"]
+output = ["text"]

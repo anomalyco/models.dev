@@ -1,0 +1,22 @@
+name = "Auto Easy Task"
+release_date = "2026-07-01"
+last_updated = "2026-07-01"
+attachment = false
+reasoning = false
+tool_call = true
+temperature = true
+open_weights = false
+
+# Routed to lower-cost upstream models for simple tasks; pricing is variable.
+# Values below are representative, not a fixed per-token rate.
+[cost]
+input = 0.20
+output = 0.60
+
+[limit]
+context = 128_000
+output = 16_000
+
+[modalities]
+input = ["text"]
+output = ["text"]
