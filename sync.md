@@ -93,7 +93,7 @@ Prefer small, provider-specific PRs when adding a provider. If the provider has 
 
 ## Automation
 
-`.github/workflows/sync-models.yml` runs on an hourly schedule and manually through `workflow_dispatch`.
+`.github/workflows/sync-models.yml` runs on a daily schedule and manually through `workflow_dispatch`.
 
 The workflow:
 
@@ -107,7 +107,7 @@ The workflow:
 
 Each provider job checks out `dev` and writes to a fixed provider branch like `automation/sync-models-openrouter`. If that provider's sync PR is already open, later scheduled runs force-update the same branch and edit the existing PR instead of creating another one. Provider jobs do not share unmerged changes with each other; OpenRouter only uses `base_model` for model metadata entries already present on `dev`.
 
-CI automatically picks up providers registered in `providers` in `packages/core/src/sync/index.ts`. Adding a new sync provider there is enough to get an hourly provider-specific sync job, branch, labels, title, and PR naming convention. The workflow only needs manual updates when a new provider requires new secrets or other environment variables.
+CI automatically picks up providers registered in `providers` in `packages/core/src/sync/index.ts`. Adding a new sync provider there is enough to get a daily provider-specific sync job, branch, labels, title, and PR naming convention. The workflow only needs manual updates when a new provider requires new secrets or other environment variables.
 
 Actions are pinned by commit SHA. Keep new workflow actions pinned the same way.
 
@@ -154,6 +154,18 @@ xAI is implemented in `packages/core/src/sync/providers/xai.ts`.
 - The richer typed endpoints provide model IDs, creation timestamps, modalities, pricing for language models, and prompt/input limits where available.
 - Existing xAI models are updated from API-authoritative fields while local metadata is preserved for fields the API does not expose, especially output token limits and some feature/capability flags.
 - New xAI API models are reported in `.sync/model-sync-report.md` but not created automatically because the API does not provide enough authoritative metadata for complete catalog entries.
+
+## Nebius Token Factory Notes
+
+Nebius Token Factory is implemented in `packages/core/src/sync/providers/nebius.ts`.
+
+- Source endpoint: `https://api.tokenfactory.nebius.com/v1/models?verbose=true`; the `verbose=true` query parameter is required, since the default response only returns bare model IDs with no pricing, context length, or capability metadata.
+- Required auth: `NEBIUS_API_KEY`.
+- Model IDs map directly to TOML paths under `providers/nebius/models` (e.g. `openai/gpt-oss-120b` → `providers/nebius/models/openai/gpt-oss-120b.toml`).
+- The API is authoritative for `name` (a small `NEBIUS_ORG_TO_MODEL_PROVIDER`-independent fix strips org prefixes Nebius sometimes bakes into `name`, e.g. `openbmb/MiniCPM-V-4_5`), `cost` (converted from per-token to per-1M-token pricing), `limit.context`, `reasoning`/`tool_call`/`structured_output` (from `supported_features`), `temperature` (from `supported_sampling_parameters`, falling back to the existing flag when the list is empty), and `modalities`/`attachment` (parsed from `architecture.modality`, e.g. `text+image->text`; the `embedding` modality is mapped to `text` since the catalog schema has no embedding modality).
+- New remote models are created automatically. A small `NEBIUS_ORG_TO_MODEL_PROVIDER` map (scoped to orgs Nebius currently hosts) resolves known orgs (`meta-llama`, `Qwen`, `google`, `openai`, `nvidia`, `zai-org`, `moonshotai`, `MiniMaxAI`, `deepseek-ai`) to their `models/` namespace, and `factorBaseModel` (shared with OpenRouter) writes a `base_model` reference when a matching canonical entry exists — this is how new models get an authoritative output token limit despite the Models API not exposing one. New models with no canonical `models/` match (unmapped orgs, or a checkpoint not yet in `models/`) are still created as full entries, with `limit.output` falling back to the served context length.
+- `reasoning_options`, `limit.input`, `limit.output` (for already-factored/full existing entries), `knowledge`, `family`, `status`, `interleaved`, and cache pricing ratios are preserved from existing TOMLs since the API does not expose them.
+- `base_model`/`base_model_omit` are preserved from existing TOMLs, and newly resolved for brand-new models per the point above.
 
 ## OVHcloud Notes
 

@@ -2,7 +2,7 @@ name: Sync Model Catalogs
 
 on:
   schedule:
-    - cron: "17 * * * *"
+    - cron: "17 0 * * *"
   workflow_dispatch:
 
 permissions:
@@ -65,6 +65,7 @@ jobs:
         env:
           BASETEN_API_KEY: ${{ secrets.BASETEN_API_KEY }}
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
+          NEBIUS_API_KEY: ${{ secrets.NEBIUS_API_KEY }}
           OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
           VENICE_API_KEY: ${{ secrets.VENICE_API_KEY }}
           LLMGATEWAY_API_KEY: ${{ secrets.LLMGATEWAY_API_KEY }}

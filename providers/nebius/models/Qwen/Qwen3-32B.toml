@@ -1,25 +1,14 @@
-name = "Qwen3-32B"
-attachment = false
-reasoning = false
-tool_call = true
+base_model = "alibaba/qwen3-32b"
 structured_output = true
-temperature = true
-knowledge = "2025-12"
-release_date = "2026-01-28"
-last_updated = "2026-02-04"
-open_weights = true
+reasoning_options = []
 
 [cost]
-input = 0.10
-output = 0.30
+input = 0.1
+output = 0.3
 cache_read = 0.01
 cache_write = 0.125
 
 [limit]
-context = 128_000
+context = 40_960
 input = 120_000
 output = 8_192
-
-[modalities]
-input = ["text"]
-output = ["text"]
