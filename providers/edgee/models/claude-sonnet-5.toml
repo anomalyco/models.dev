@@ -1,4 +1,4 @@
-name = "Qwen3.6 35B A3B"
+name = "Claude Sonnet 5"
 release_date = "2026-06-24"
 last_updated = "2026-06-24"
 attachment = false
@@ -8,11 +8,13 @@ tool_call = true
 open_weights = false
 
 [cost]
-input = 0.28
-output = 1.71
+input = 3.00
+output = 15.00
+cache_read = 0.30
+cache_write = 3.75
 
 [limit]
-context = 256_000
+context = 1_000_000
 output = 32_768
 
 [modalities]
