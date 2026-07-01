@@ -1,0 +1,19 @@
+[model]
+name = "longcat-2.0"
+displayName = "LongCat-2.0"
+contextWindow = 1000000
+maxOutputTokens = 128000
+
+[model.pricing]
+input = 0.75
+output = 2.95
+
+[model.capabilities]
+input = ["text"]
+output = ["text"]
+reasoning = true
+toolCall = true
+
+[model.thinking]
+type = "enabled"
+default = "disabled"
