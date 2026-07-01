@@ -1,0 +1,21 @@
+name = "Mistral Medium"
+family = "mistral-medium"
+release_date = "2025-05-07"
+last_updated = "2026-06-30"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = true
+open_weights = false
+
+[cost]
+input = 0.4
+output = 2
+
+[limit]
+context = 262144
+output = 8192
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
