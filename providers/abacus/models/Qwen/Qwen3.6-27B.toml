@@ -1,0 +1,14 @@
+base_model = "alibaba/qwen3.6-27b"
+reasoning_options = []
+
+[cost]
+input = 0.32
+output = 3.20
+
+[limit]
+context = 262_144
+output = 8_192
+
+[modalities]
+input = ["text"]
+output = ["text"]
