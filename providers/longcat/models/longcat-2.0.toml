@@ -1,0 +1,26 @@
+name = "LongCat-2.0"
+family = "longcat"
+attachment = false
+reasoning = true
+reasoning_options = [{ type = "toggle" }]
+tool_call = true
+temperature = true
+release_date = "2026-06-30"
+last_updated = "2026-06-30"
+open_weights = false
+
+[cost]
+input = 0.75
+output = 2.95
+cache_read = 0.015
+
+[limit]
+context = 1000000
+output = 131072
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[interleaved]
+field = "reasoning_content"
