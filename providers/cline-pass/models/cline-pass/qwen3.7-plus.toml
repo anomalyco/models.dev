@@ -1,0 +1,15 @@
+base_model = "alibaba/qwen3.7-plus"
+reasoning_options = []
+
+[cost]
+input = 0.4
+output = 1.6
+cache_read = 0.04
+cache_write = 0.5
+
+[[cost.tiers]]
+tier = { type = "context", size = 256_000 }
+input = 1.2
+output = 4.8
+cache_read = 0.12
+cache_write = 1.5

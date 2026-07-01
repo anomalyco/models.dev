@@ -1,0 +1,10 @@
+name = "ClinePass"
+env = ["CLINE_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+# ClinePass uses the Cline API's OpenAI-compatible Chat Completions endpoint.
+# The model IDs below are the full ClinePass slugs documented for the `model`
+# request field. ClinePass is subscription-based; model TOML costs are the
+# reference per-1M-token rates Cline documents for quota accounting.
+# https://docs.cline.bot/getting-started/clinepass (accessed 2026-06-30)
+api = "https://api.cline.bot/api/v1"
+doc = "https://docs.cline.bot/getting-started/clinepass"
