@@ -1,0 +1,18 @@
+base_model = "alibaba/qwen3.5-397b-a17b"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "budget_tokens"
+
+[cost]
+input = 0.327
+output = 1.989
+cache_read = 0.05
+
+[limit]
+output = 128000
+
+[modalities]
+input = ["text", "image"]

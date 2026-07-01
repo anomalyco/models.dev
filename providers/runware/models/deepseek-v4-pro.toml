@@ -1,0 +1,16 @@
+base_model = "deepseek/deepseek-v4-pro"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["high", "max"]
+
+[cost]
+input = 0.961
+output = 1.922
+cache_read = 0.079
+
+[limit]
+context = 1048576

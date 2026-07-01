@@ -1,0 +1,15 @@
+base_model = "moonshotai/kimi-k2.6"
+
+[[reasoning_options]]
+type = "toggle"
+
+[cost]
+input = 0.9
+output = 4.2
+cache_read = 0.18
+
+[limit]
+output = 49152
+
+[modalities]
+input = ["text", "image"]

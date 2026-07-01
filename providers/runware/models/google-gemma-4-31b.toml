@@ -1,0 +1,12 @@
+base_model = "google/gemma-4-31b-it"
+
+[[reasoning_options]]
+type = "toggle"
+
+[cost]
+input = 0.102
+output = 0.297
+cache_read = 0.012
+
+[limit]
+output = 65536
