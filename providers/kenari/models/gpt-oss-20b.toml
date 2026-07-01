@@ -1,0 +1,24 @@
+name = "GPT OSS 20B"
+family = "gpt-oss"
+attachment = false
+reasoning = true
+tool_call = true
+release_date = "2025-08-05"
+last_updated = "2025-08-05"
+open_weights = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high"]
+
+[cost]
+input = 0
+output = 0
+
+[limit]
+context = 131_072
+output = 32_768
+
+[modalities]
+input = ["text"]
+output = ["text"]
