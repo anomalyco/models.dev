@@ -1,0 +1,7 @@
+base_model = "google/gemini-3-pro-preview"
+reasoning_options = [{ type = "budget_tokens", min = 128, max = 32768 }]
+
+[cost]
+input = 0.54
+output = 3.27
+cache_read = 0.05

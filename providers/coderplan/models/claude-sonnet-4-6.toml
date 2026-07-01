@@ -1,0 +1,7 @@
+base_model = "anthropic/claude-sonnet-4-6"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }, { type = "budget_tokens", min = 1024 }]
+
+[cost]
+input = 0.41
+output = 2.05
+cache_read = 0.04

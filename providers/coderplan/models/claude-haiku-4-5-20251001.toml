@@ -1,0 +1,7 @@
+base_model = "anthropic/claude-haiku-4-5"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }, { type = "budget_tokens", min = 1024 }]
+
+[cost]
+input = 0.14
+output = 0.68
+cache_read = 0.01

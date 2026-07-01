@@ -1,0 +1,7 @@
+base_model = "anthropic/claude-opus-4-7"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }, { type = "budget_tokens", min = 1024 }]
+
+[cost]
+input = 0.68
+output = 3.42
+cache_read = 0.07
