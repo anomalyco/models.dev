@@ -1,4 +1,3 @@
-reasoning_options = []
 name = "o3 Mini High"
 family = "o"
 release_date = "2025-02-12"
@@ -10,6 +9,10 @@ tool_call = true
 structured_output = true
 knowledge = "2023-10-31"
 open_weights = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["high"]
 
 [cost]
 input = 1.1

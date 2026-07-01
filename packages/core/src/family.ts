@@ -54,6 +54,9 @@ export const ModelFamilyValues = [
   "qwen3.7-max",
   "qwen-free",
 
+  // DeepReinforce
+  "ornith",
+
   // DeepSeek
   "deepseek",
   "deepseek-thinking",
@@ -346,6 +349,9 @@ export const ModelFamilyValues = [
   // Auto router
   "auto",
   "model-router",
+
+  // Conductor
+  "fugu",
 
   // V0
   "v0",

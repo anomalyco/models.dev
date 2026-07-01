@@ -1,0 +1,27 @@
+name = "Fugu Ultra"
+family = "fugu"
+release_date = "2026-06-24"
+last_updated = "2026-06-24"
+attachment = true
+reasoning = true
+temperature = false
+tool_call = true
+structured_output = true
+open_weights = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["max", "xhigh", "high"]
+
+[cost]
+input = 5
+output = 30
+cache_read = 0.5
+
+[limit]
+context = 1_000_000
+output = 128_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

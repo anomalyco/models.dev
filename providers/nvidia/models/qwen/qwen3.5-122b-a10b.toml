@@ -4,6 +4,8 @@ release_date = "2026-02-23"
 last_updated = "2026-02-23"
 attachment = true
 reasoning = true
+# NIM Chat schema: `chat_template_kwargs.enable_thinking = true|false`.
+# https://docs.api.nvidia.com/nim/reference/qwen-qwen3-5-122b-a10b-infer
 reasoning_options = [{ type = "toggle" }]
 temperature = true
 tool_call = true

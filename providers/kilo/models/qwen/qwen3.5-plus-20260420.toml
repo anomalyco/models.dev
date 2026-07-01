@@ -2,6 +2,7 @@ name = "Qwen: Qwen3.5 Plus 2026-04-20"
 release_date = "2026-04-27"
 last_updated = "2026-05-01"
 attachment = true
+reasoning_options = [{ type = "toggle" }, { type = "budget_tokens", min = 1, max = 81_920 }]
 reasoning = true
 tool_call = true
 temperature = true

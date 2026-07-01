@@ -1,4 +1,5 @@
 base_model = "zhipuai/glm-5.2"
+reasoning_options = [{ type = "effort", values = ["high", "max"] }]
 
 [interleaved]
 field = "reasoning_content"
@@ -10,5 +11,5 @@ cache_input = 0.26
 cache_write = 0
 
 [limit]
-context = 205_000
-output = 205_000
+context = 1_049_000
+output = 262_000

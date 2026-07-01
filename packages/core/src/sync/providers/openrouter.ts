@@ -57,6 +57,17 @@ export const OpenRouterModel = z.object({
     max_completion_tokens: z.number().nullable(),
   }),
   supported_parameters: z.array(z.string()),
+  reasoning: z
+    .object({
+      mandatory: z.boolean(),
+      supported_efforts: z
+        .array(z.enum(["max", "xhigh", "high", "medium", "low", "minimal", "none"]))
+        .nullable()
+        .optional(),
+      supports_max_tokens: z.boolean().optional(),
+    })
+    .passthrough()
+    .optional(),
 });
 
 export const OpenRouterResponse = z.object({
@@ -144,6 +155,9 @@ export function buildOpenRouterModel(
   const prompt = price(model.pricing.prompt);
   const completion = price(model.pricing.completion);
   const reasoning = params.has("reasoning") || params.has("include_reasoning");
+  const reasoning_options = existing?.reasoning_options?.length
+    ? existing.reasoning_options
+    : openRouterReasoningOptions(model.reasoning) ?? existing?.reasoning_options;
   const context = model.top_provider.context_length ?? model.context_length;
   const family = inferFamily(model, name);
   const releaseDate = dateFromTimestamp(model.created);
@@ -179,6 +193,7 @@ export function buildOpenRouterModel(
         name: baseModel !== undefined || model.id.endsWith(":free") ? name : undefined,
         attachment,
         reasoning,
+        reasoning_options,
         temperature: params.has("temperature"),
         tool_call: toolCall,
         structured_output: structuredOutput,
@@ -200,6 +215,7 @@ export function buildOpenRouterModel(
     last_updated: releaseDate,
     attachment,
     reasoning,
+    reasoning_options,
     temperature: params.has("temperature"),
     tool_call: toolCall,
     structured_output: structuredOutput,
@@ -211,6 +227,28 @@ export function buildOpenRouterModel(
     limit,
     modalities: { input, output },
   } satisfies SyncedFullModel;
+}
+
+function openRouterReasoningOptions(reasoning: OpenRouterModel["reasoning"]): SyncedFullModel["reasoning_options"] {
+  if (reasoning === undefined) return undefined;
+
+  const options: NonNullable<SyncedFullModel["reasoning_options"]> = [];
+  const efforts = reasoning.supported_efforts === null
+    ? ["max", "xhigh", "high", "medium", "low", "minimal", "none"] as const
+    : reasoning.supported_efforts;
+
+  if (efforts !== undefined) {
+    options.push({
+      type: "effort",
+      values: reasoning.mandatory ? efforts.filter((value) => value !== "none") : [...efforts],
+    });
+  }
+
+  if (reasoning.supports_max_tokens === true) {
+    options.push({ type: "budget_tokens" });
+  }
+
+  return options.length > 0 ? options : undefined;
 }
 
 export function resolveCanonicalBaseModel(openrouterID: string) {

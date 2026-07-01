@@ -274,6 +274,24 @@ function refineModel<T extends z.ZodTypeAny>(schema: T) {
   return schema
     .refine(
       (data) => {
+        return data.reasoning !== true || data.reasoning_options !== undefined;
+      },
+      {
+        message: "Must set reasoning_options when reasoning is true",
+        path: ["reasoning_options"],
+      },
+    )
+    .refine(
+      (data) => {
+        return data.reasoning !== false || data.reasoning_options === undefined;
+      },
+      {
+        message: "Cannot set reasoning_options when reasoning is false",
+        path: ["reasoning_options"],
+      },
+    )
+    .refine(
+      (data) => {
         return !(
           data.reasoning === false && data.cost?.reasoning !== undefined
         );

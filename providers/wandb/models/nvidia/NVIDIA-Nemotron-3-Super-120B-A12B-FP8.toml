@@ -4,11 +4,14 @@ family = "nemotron"
 release_date = "2026-03-11"
 last_updated = "2026-03-12"
 attachment = false
-reasoning = false
+reasoning = true
 structured_output = true
 temperature = true
 tool_call = true
 open_weights = true
+
+[[reasoning_options]]
+type = "toggle"
 
 [cost]
 input = 0.2

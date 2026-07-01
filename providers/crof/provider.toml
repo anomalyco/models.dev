@@ -1,5 +1,10 @@
 name = "CrofAI"
 env = ["CROF_API_KEY"]
 npm = "@ai-sdk/openai-compatible"
+# Raw OpenAI Chat is POST `/v1/chat/completions` (also `/v2/chat/completions`);
+# Anthropic compatibility is POST `https://anthropic.nahcrof.com/v1/messages`.
+# Chat accepts `reasoning_effort = none|low|medium|high`; `none` disables
+# reasoning. No reasoning-token budget field is documented.
+# https://crof.ai/docs.md (accessed 2026-06-25)
 api = "https://crof.ai/v1"
 doc = "https://crof.ai/docs"
