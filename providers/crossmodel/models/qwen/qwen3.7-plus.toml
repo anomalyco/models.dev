@@ -1,0 +1,23 @@
+base_model = "alibaba/qwen3.7-plus"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "budget_tokens"
+
+[cost]
+input = 0.32
+output = 1.25
+cache_read = 0.032
+cache_write = 0.4
+
+[[cost.tiers]]
+tier = { type = "context", size = 256_000 }
+input = 0.94
+output = 3.75
+cache_read = 0.094
+cache_write = 0.18
+
+[modalities]
+input = ["text", "image", "video"]

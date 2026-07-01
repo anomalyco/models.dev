@@ -1,0 +1,21 @@
+base_model = "zhipuai/glm-4.7"
+
+[[reasoning_options]]
+type = "toggle"
+
+[cost]
+input = 0.47
+output = 2.16
+cache_read = 0.1
+cache_write = 0.47
+
+[[cost.tiers]]
+tier = { type = "context", size = 32_000 }
+input = 0.62
+output = 2.47
+cache_read = 0.13
+cache_write = 0.62
+
+[limit]
+context = 200_000
+output = 128_000
