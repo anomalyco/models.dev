@@ -1,0 +1,23 @@
+name = "Voxtral Small 24B"
+family = "mistral"
+release_date = "2025-07-15"
+last_updated = "2025-07-15"
+attachment = true
+reasoning = false
+temperature = true
+knowledge = "2025-07"
+tool_call = true
+structured_output = false
+open_weights = true
+
+[cost]
+input = 0.228
+output = 0.513
+
+[limit]
+context = 32_768
+output = 16_384
+
+[modalities]
+input = ["text", "audio"]
+output = ["text"]
