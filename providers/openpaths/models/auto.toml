@@ -1,0 +1,23 @@
+name = "Auto"
+release_date = "2026-07-01"
+last_updated = "2026-07-01"
+attachment = false
+reasoning = false
+tool_call = true
+temperature = true
+open_weights = false
+
+# OpenPaths is an aggregating router; requests are routed to mixed upstream
+# models, so pricing is variable. Values below are representative, not a fixed
+# per-token rate.
+[cost]
+input = 1.00
+output = 3.00
+
+[limit]
+context = 200_000
+output = 32_000
+
+[modalities]
+input = ["text"]
+output = ["text"]
