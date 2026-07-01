@@ -4,6 +4,7 @@ import { mergeDeep } from "remeda";
 import { z } from "zod";
 
 import { AuthoredModel, AuthoredModelShape, ModelMetadata } from "../schema.js";
+import { alibaba } from "./providers/alibaba.js";
 import { baseten } from "./providers/baseten.js";
 import { chutes } from "./providers/chutes.js";
 import { cloudflareWorkersAi } from "./providers/cloudflare-workers-ai.js";
@@ -74,12 +75,14 @@ export interface SyncResult {
   created: number;
   updated: number;
   deleted: number;
+  skipped: number;
   unchanged: number;
   notices: string[];
   files: Array<{ status: "created" | "updated" | "deleted"; path: string }>;
 }
 
 export const providers: {
+  alibaba: SyncProvider<any>;
   baseten: SyncProvider<any>;
   chutes: SyncProvider<any>;
   "cloudflare-workers-ai": SyncProvider<any>;
@@ -92,6 +95,7 @@ export const providers: {
   venice: SyncProvider<any>;
   xai: SyncProvider<any>;
 } = {
+  alibaba,
   baseten,
   chutes,
   "cloudflare-workers-ai": cloudflareWorkersAi,
@@ -108,7 +112,7 @@ export const providers: {
 export const groups = {
   aggregators: ["huggingface", "llmgateway", "openrouter", "vercel"],
   cloudflare: ["cloudflare-workers-ai"],
-  direct: ["baseten", "chutes", "google", "ovhcloud", "venice", "xai"],
+  direct: ["alibaba", "baseten", "chutes", "google", "ovhcloud", "venice", "xai"],
 } as const;
 
 type ProviderID = keyof typeof providers;
@@ -317,13 +321,20 @@ export async function syncProvider<SourceModel>(
     }
   }
 
-  const result = summarize(provider, files, unchanged, [
-    ...provider.skippedNotice?.(skippedRemote) ?? [],
+  const sortedSkippedRemote = skippedRemote.toSorted((a, b) => a.localeCompare(b));
+  const result = summarize(provider, files, unchanged, sortedSkippedRemote.length, [
+    ...provider.skippedNotice?.(sortedSkippedRemote) ?? [],
     ...provider.missingNotice?.(missingLocal) ?? [],
   ]);
   console.log(
-    `${options.dryRun ? "Dry run: " : ""}${result.created} created, ${result.updated} updated, ${result.deleted} removed, ${result.unchanged} unchanged`,
+    `${options.dryRun ? "Dry run: " : ""}${result.created} created, ${result.updated} updated, ${result.deleted} removed, ${result.skipped} skipped creating, ${result.unchanged} unchanged`,
   );
+  if (sortedSkippedRemote.length > 0) {
+    console.log("Skipped creating:");
+    for (const id of sortedSkippedRemote) {
+      console.log(`  ${id}`);
+    }
+  }
   return result;
 }
 
@@ -573,6 +584,7 @@ function summarize(
   provider: { id: string; name: string },
   files: SyncResult["files"],
   unchanged: number,
+  skipped: number,
   notices: string[],
 ): SyncResult {
   return {
@@ -582,6 +594,7 @@ function summarize(
     created: files.filter((file) => file.status === "created").length,
     updated: files.filter((file) => file.status === "updated").length,
     deleted: files.filter((file) => file.status === "deleted").length,
+    skipped,
     unchanged,
     notices,
     files,
@@ -638,13 +651,13 @@ async function writeReport(target: string, results: SyncResult[]) {
   const lines = [
     `Updates model TOMLs for the \`${target}\` sync target.`,
     "",
-    "| Provider | Status | Created | Updated | Deleted |",
-    "| --- | --- | ---: | ---: | ---: |",
+    "| Provider | Status | Created | Updated | Deleted | Skipped Creating |",
+    "| --- | --- | ---: | ---: | ---: | ---: |",
   ];
 
   for (const result of results) {
     lines.push(
-      `| ${result.name} | ${result.status} | ${result.created} | ${result.updated} | ${result.deleted} |`,
+      `| ${result.name} | ${result.status} | ${result.created} | ${result.updated} | ${result.deleted} | ${result.skipped} |`,
     );
   }
 
@@ -834,7 +847,7 @@ export async function main(args = process.argv.slice(2)) {
   console.log("\nSync summary");
   for (const result of results) {
     console.log(
-      `${result.name}: ${result.created} created, ${result.updated} updated, ${result.deleted} deleted`,
+      `${result.name}: ${result.created} created, ${result.updated} updated, ${result.deleted} deleted, ${result.skipped} skipped creating`,
     );
   }
 }
