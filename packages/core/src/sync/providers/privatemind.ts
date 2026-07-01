@@ -62,11 +62,9 @@ export const privatemind = {
   // Mirror the live fleet: drop entries for models no longer returned by the API.
   deleteMissing: true,
   async fetchModels() {
-    const key = process.env.PRIVATEMIND_API_KEY;
-    if (!key) throw new Error("PRIVATEMIND_API_KEY is not set");
-    const response = await fetch(API_ENDPOINT, {
-      headers: { Authorization: `Bearer ${key}` },
-    });
+    // /v1/models is public (no API key): the endpoint returns the default
+    // org's catalog to anonymous callers.
+    const response = await fetch(API_ENDPOINT);
     if (!response.ok) {
       throw new Error(`PrivateMind /v1/models failed: ${response.status} ${response.statusText}`);
     }
