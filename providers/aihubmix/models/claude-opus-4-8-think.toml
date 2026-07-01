@@ -1,5 +1,4 @@
 base_model = "anthropic/claude-opus-4-8"
-reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "medium", "high", "max"] }, { type = "budget_tokens", min = 1_024 }]
 
 [interleaved]
 field = "reasoning_content"
