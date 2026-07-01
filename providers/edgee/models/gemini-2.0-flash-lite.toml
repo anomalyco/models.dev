@@ -1,0 +1,9 @@
+base_model = "google/gemini-2.0-flash-lite"
+
+[cost]
+input = 0.10
+output = 0.40
+cache_read = 0.01
+
+[limit]
+context = 1_048_576

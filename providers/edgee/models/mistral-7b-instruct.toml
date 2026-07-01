@@ -1,0 +1,20 @@
+name = "Mistral 7B Instruct"
+release_date = "2026-06-24"
+last_updated = "2026-06-24"
+attachment = false
+reasoning = false
+temperature = true
+tool_call = true
+open_weights = false
+
+[cost]
+input = 0.18
+output = 0.24
+
+[limit]
+context = 32_000
+output = 32_000
+
+[modalities]
+input = ["text"]
+output = ["text"]

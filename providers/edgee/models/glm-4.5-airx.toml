@@ -1,0 +1,21 @@
+name = "GLM 4.5 AirX"
+release_date = "2026-06-24"
+last_updated = "2026-06-24"
+attachment = false
+reasoning = false
+temperature = true
+tool_call = true
+open_weights = false
+
+[cost]
+input = 1.10
+output = 4.50
+cache_read = 0.22
+
+[limit]
+context = 128_000
+output = 32_768
+
+[modalities]
+input = ["text"]
+output = ["text"]
