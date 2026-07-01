@@ -1,0 +1,25 @@
+name = "GLM 5.2 744B-40B"
+release_date = "2026-06-30"
+last_updated = "2026-06-30"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high"]
+
+[cost]
+input = 2
+output = 7
+
+[limit]
+context = 1_048_576
+output = 1_048_576
+
+[modalities]
+input = ["text"]
+output = ["text"]
