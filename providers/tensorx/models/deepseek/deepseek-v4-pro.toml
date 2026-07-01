@@ -1,0 +1,18 @@
+base_model = "deepseek/deepseek-v4-pro"
+# Chat reasoning: POST /v1/chat/completions defaults to non-thinking; toggle via
+# `extra_body.chat_template_kwargs.thinking` (true|false) and set budget with
+# `extra_body.reasoning_effort` (verified value: "max"). Reasoning returns
+# `message.reasoning_content`. Verified on DeepSeek V4 models.
+# https://docs.tensorx.ai/api-reference/chat-completions (accessed 2026-07-01)
+reasoning_options = [
+  { type = "toggle" },
+  { type = "effort", values = ["max"] },
+]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 1.75
+output = 3.50
+cache_read = 0.44
