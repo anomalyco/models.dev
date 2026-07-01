@@ -1,0 +1,30 @@
+name = "Doubao Seed Character"
+release_date = "2026-06-28"
+last_updated = "2026-06-28"
+attachment = true
+reasoning = true
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
+temperature = true
+tool_call = true
+knowledge = "2025-01-01"
+open_weights = false
+
+[cost]
+input = 0.8
+output = 2
+cache_read = 0.16
+
+[[cost.tiers]]
+tier = { size = 128_000 }
+input = 1.2
+output = 6
+cache_read = 0.16
+
+[limit]
+context = 128_000
+input = 96_000
+output = 32_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

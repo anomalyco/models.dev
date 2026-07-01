@@ -1,0 +1,40 @@
+name = "Doubao Seed 2.0 Lite"
+release_date = "2026-02-14"
+last_updated = "2026-02-14"
+attachment = true
+reasoning = true
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
+temperature = true
+tool_call = true
+structured_output = true
+knowledge = "2026-02-14"
+open_weights = false
+
+[cost]
+input = 0.6
+output = 3.6
+cache_read = 0.12
+input_audio = 9
+
+[[cost.tiers]]
+tier = { size = 128_000 }
+input = 0.9
+output = 5.4
+cache_read = 0.18
+input_audio = 13.5
+
+[[cost.tiers]]
+tier = { size = 256_000 }
+input = 1.8
+output = 10.8
+cache_read = 0.36
+input_audio = 27
+
+[limit]
+context = 256_000
+input = 224_000
+output = 128_000
+
+[modalities]
+input = ["text", "image", "video", "audio"]
+output = ["text"]
