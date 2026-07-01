@@ -1,0 +1,23 @@
+name = "Mercury Coder Small"
+family = "mercury"
+release_date = "2024-01-01"
+last_updated = "2024-01-01"
+attachment = false
+reasoning = false
+tool_call = false
+structured_output = false
+open_weights = false
+
+[cost]
+input = 0.25
+output = 1
+cache_read = 0.125
+
+[limit]
+context = 32_768
+input = 32_768
+output = 16_384
+
+[modalities]
+input = ["text"]
+output = ["text"]

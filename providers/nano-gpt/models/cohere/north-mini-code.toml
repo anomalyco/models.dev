@@ -1,0 +1,26 @@
+name = "Cohere North Mini Code 1.0"
+family = "north"
+release_date = "2026-06-18"
+last_updated = "2026-06-18"
+attachment = false
+reasoning = true
+tool_call = false
+structured_output = false
+open_weights = false
+
+[[reasoning_options]]
+type = "toggle"
+
+[cost]
+input = 0.2
+output = 0.8
+cache_read = 0.1
+
+[limit]
+context = 256_000
+input = 256_000
+output = 64_000
+
+[modalities]
+input = ["text"]
+output = ["text"]

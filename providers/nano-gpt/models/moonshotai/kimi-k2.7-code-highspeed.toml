@@ -1,0 +1,26 @@
+name = "Kimi K2.7 Code High-Speed"
+family = "kimi-k2"
+release_date = "2026-06-15"
+last_updated = "2026-06-15"
+attachment = true
+reasoning = true
+tool_call = true
+structured_output = false
+open_weights = false
+
+[[reasoning_options]]
+type = "toggle"
+
+[cost]
+input = 1.9
+output = 8
+cache_read = 0.32
+
+[limit]
+context = 262_144
+input = 262_144
+output = 65_536
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

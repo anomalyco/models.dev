@@ -1,0 +1,27 @@
+name = "GLM 5.2 Thinking"
+family = "glm"
+release_date = "2026-06-15"
+last_updated = "2026-06-15"
+attachment = false
+reasoning = true
+tool_call = true
+structured_output = true
+open_weights = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["high", "xhigh"]
+
+[cost]
+input = 0.9
+output = 2.7
+cache_read = 0.2
+
+[limit]
+context = 1_048_576
+input = 1_048_576
+output = 131_072
+
+[modalities]
+input = ["text"]
+output = ["text"]

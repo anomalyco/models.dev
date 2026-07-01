@@ -1,0 +1,24 @@
+name = "Nvidia Nemotron 3 Ultra 550B Thinking"
+family = "nemotron"
+release_date = "2026-06-04"
+last_updated = "2026-06-04"
+attachment = false
+reasoning = true
+tool_call = true
+structured_output = false
+open_weights = false
+reasoning_options = []
+
+[cost]
+input = 0.5
+output = 2.5
+cache_read = 0.25
+
+[limit]
+context = 1_000_000
+input = 1_000_000
+output = 65_536
+
+[modalities]
+input = ["text"]
+output = ["text"]

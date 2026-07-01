@@ -10,6 +10,7 @@ import { cloudflareWorkersAi } from "./providers/cloudflare-workers-ai.js";
 import { google } from "./providers/google.js";
 import { huggingface } from "./providers/huggingface.js";
 import { llmgateway } from "./providers/llmgateway.js";
+import { nanoGpt } from "./providers/nano-gpt.js";
 import { openrouter } from "./providers/openrouter.js";
 import { ovhcloud } from "./providers/ovhcloud.js";
 import { vercel } from "./providers/vercel.js";
@@ -86,6 +87,7 @@ export const providers: {
   google: SyncProvider<any>;
   huggingface: SyncProvider<any>;
   llmgateway: SyncProvider<any>;
+  "nano-gpt": SyncProvider<any>;
   openrouter: SyncProvider<any>;
   ovhcloud: SyncProvider<any>;
   vercel: SyncProvider<any>;
@@ -98,6 +100,7 @@ export const providers: {
   google,
   huggingface,
   llmgateway,
+  "nano-gpt": nanoGpt,
   openrouter,
   ovhcloud,
   vercel,
@@ -106,7 +109,7 @@ export const providers: {
 };
 
 export const groups = {
-  aggregators: ["huggingface", "llmgateway", "openrouter", "vercel"],
+  aggregators: ["huggingface", "llmgateway", "nano-gpt", "openrouter", "vercel"],
   cloudflare: ["cloudflare-workers-ai"],
   direct: ["baseten", "chutes", "google", "ovhcloud", "venice", "xai"],
 } as const;

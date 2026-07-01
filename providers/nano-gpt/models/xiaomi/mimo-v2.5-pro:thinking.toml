@@ -1,0 +1,25 @@
+name = "MiMo V2.5 Pro Thinking"
+family = "mimo-v2.5-pro"
+release_date = "2026-06-03"
+last_updated = "2026-06-03"
+attachment = false
+reasoning = true
+tool_call = true
+structured_output = true
+open_weights = false
+reasoning_options = []
+
+[cost]
+input = 0.435
+output = 0.87
+cache_read = 0.0036
+cache_write = 0
+
+[limit]
+context = 1_048_576
+input = 1_048_576
+output = 131_072
+
+[modalities]
+input = ["text"]
+output = ["text"]

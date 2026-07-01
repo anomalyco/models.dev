@@ -1,0 +1,26 @@
+name = "Qwen3.6 27B TEE"
+family = "qwen3.6"
+release_date = "2026-06-04"
+last_updated = "2026-06-04"
+attachment = true
+reasoning = true
+tool_call = false
+structured_output = false
+open_weights = false
+
+[[reasoning_options]]
+type = "toggle"
+
+[cost]
+input = 0.32
+output = 2.7
+cache_read = 0.16
+
+[limit]
+context = 262_144
+input = 262_144
+output = 65_536
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

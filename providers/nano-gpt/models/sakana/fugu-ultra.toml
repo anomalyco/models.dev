@@ -1,0 +1,25 @@
+name = "Fugu Ultra"
+release_date = "2026-06-22"
+last_updated = "2026-06-22"
+attachment = true
+reasoning = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[[reasoning_options]]
+type = "toggle"
+
+[cost]
+input = 5.25
+output = 31.5
+cache_read = 0.525
+
+[limit]
+context = 1_000_000
+input = 1_000_000
+output = 16_384
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
