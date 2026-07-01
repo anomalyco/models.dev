@@ -1,0 +1,10 @@
+[provider]
+name = "longcat"
+displayName = "LongCat"
+description = "LongCat is a high-performance AI model by Meituan, offering long context, reasoning, and tool calling capabilities."
+website = "https://longcat.chat"
+auth = { type = "api-key", env = "LONGCAT_API_KEY" }
+
+[provider.api]
+type = "openai"
+baseUrl = "https://api.longcat.chat/openai"
