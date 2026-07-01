@@ -1,0 +1,18 @@
+base_model = "alibaba/qwen3.7-plus"
+last_updated = "2026-06-12"
+attachment = true
+structured_output = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "max"]
+
+[cost]
+input = 0.4
+output = 1.6
+
+[limit]
+output = 65_536
+
+[modalities]
+input = ["text", "image", "video"]

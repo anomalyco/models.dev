@@ -1,0 +1,17 @@
+base_model = "alibaba/qwen3.5-9b"
+attachment = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "max"]
+
+[cost]
+input = 0.09
+output = 0.13
+cache_read = 0.045
+
+[limit]
+output = 32_768
+
+[modalities]
+input = ["text", "image", "video"]
