@@ -1,0 +1,22 @@
+name = "Green S"
+release_date = "2023-11"
+last_updated = "2023-11"
+attachment = false
+reasoning = false
+temperature = false
+tool_call = false
+open_weights = false
+
+[cost]
+# Speech-to-text billed per minute of audio (USD). GreenPT lists EUR 0.52/hour
+# for pre-recorded ("listen") transcription; converted at 1.14 EUR->USD.
+input = 0.00988
+output = 0.0
+
+[limit]
+context = 0
+output = 8_192
+
+[modalities]
+input = ["audio"]
+output = ["text"]
