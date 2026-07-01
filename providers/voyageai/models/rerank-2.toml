@@ -1,0 +1,22 @@
+name = "rerank-2"
+# Reranker: scores query/document pairs; emits no generated or embedding tokens.
+attachment = false
+reasoning = false
+tool_call = false
+temperature = false
+release_date = "2024-09-30"
+last_updated = "2024-09-30"
+open_weights = false
+
+[cost]
+input = 0.05
+output = 0.00
+
+[limit]
+# Max query + single-document context; query alone up to 4K tokens.
+context = 16_000
+output = 0
+
+[modalities]
+input = ["text"]
+output = ["text"]

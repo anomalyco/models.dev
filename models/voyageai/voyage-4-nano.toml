@@ -1,0 +1,25 @@
+name = "voyage-4-nano"
+family = "voyage"
+attachment = false
+reasoning = false
+tool_call = false
+temperature = false
+release_date = "2026-01-15"
+last_updated = "2026-01-15"
+# Open-weight member of the Voyage 4 family (available on Hugging Face).
+open_weights = true
+license = "Apache-2.0"
+
+[limit]
+context = 32_000
+# output holds the default embedding dimension (also supports 256, 512, 2048)
+output = 1_024
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[[weights]]
+label = "voyage-4-nano"
+url = "https://huggingface.co/voyageai/voyage-4-nano"
+format = "safetensors"

@@ -1,0 +1,22 @@
+name = "voyage-3.5"
+family = "voyage"
+attachment = false
+reasoning = false
+tool_call = false
+temperature = false
+release_date = "2025-05-20"
+last_updated = "2025-05-20"
+open_weights = false
+
+[cost]
+input = 0.06
+output = 0.00
+
+[limit]
+context = 32_000
+# output holds the default embedding dimension (also supports 256, 512, 2048)
+output = 1_024
+
+[modalities]
+input = ["text"]
+output = ["text"]
