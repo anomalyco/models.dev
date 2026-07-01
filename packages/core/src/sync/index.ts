@@ -14,6 +14,7 @@ import { openrouter } from "./providers/openrouter.js";
 import { ovhcloud } from "./providers/ovhcloud.js";
 import { vercel } from "./providers/vercel.js";
 import { venice } from "./providers/venice.js";
+import { wandb } from "./providers/wandb.js";
 import { xai } from "./providers/xai.js";
 
 const ExistingModelType = AuthoredModelShape.partial()
@@ -90,6 +91,7 @@ export const providers: {
   ovhcloud: SyncProvider<any>;
   vercel: SyncProvider<any>;
   venice: SyncProvider<any>;
+  wandb: SyncProvider<any>;
   xai: SyncProvider<any>;
 } = {
   baseten,
@@ -102,13 +104,14 @@ export const providers: {
   ovhcloud,
   vercel,
   venice,
+  wandb,
   xai,
 };
 
 export const groups = {
   aggregators: ["huggingface", "llmgateway", "openrouter", "vercel"],
   cloudflare: ["cloudflare-workers-ai"],
-  direct: ["baseten", "chutes", "google", "ovhcloud", "venice", "xai"],
+  direct: ["baseten", "chutes", "google", "ovhcloud", "venice", "wandb", "xai"],
 } as const;
 
 type ProviderID = keyof typeof providers;
