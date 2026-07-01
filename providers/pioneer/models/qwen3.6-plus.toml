@@ -1,0 +1,12 @@
+base_model = "alibaba/qwen3.6-plus"
+reasoning_options = []
+
+[cost]
+input = 0.325
+output = 1.95
+cache_read = 0.065
+cache_write = 0.40625
+
+[limit]
+context = 1_000_000
+output = 65_536

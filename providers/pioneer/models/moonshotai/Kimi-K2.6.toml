@@ -1,0 +1,12 @@
+base_model = "moonshotai/kimi-k2.6"
+reasoning_options = []
+
+[cost]
+input = 0.95
+output = 4
+cache_read = 0.34
+cache_write = 0.95
+
+[limit]
+context = 262_144
+output = 131_072

@@ -1,0 +1,22 @@
+name = "GLM 5.2"
+release_date = "2026-05-31"
+last_updated = "2026-05-31"
+attachment = false
+reasoning = false
+temperature = true
+tool_call = true
+open_weights = false
+
+[cost]
+input = 1.4
+output = 4.4
+cache_read = 0.26
+cache_write = 1.4
+
+[limit]
+context = 1_048_576
+output = 32_768
+
+[modalities]
+input = ["text"]
+output = ["text"]

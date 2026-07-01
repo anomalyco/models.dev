@@ -1,0 +1,12 @@
+base_model = "deepseek/deepseek-v4-flash"
+reasoning_options = []
+
+[cost]
+input = 0.1
+output = 0.2
+cache_read = 0.0197
+cache_write = 0.1
+
+[limit]
+context = 1_000_000
+output = 65_536

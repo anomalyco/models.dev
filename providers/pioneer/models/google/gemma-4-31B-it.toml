@@ -1,0 +1,12 @@
+base_model = "google/gemma-4-31b-it"
+reasoning_options = []
+
+[cost]
+input = 0.5
+output = 0.5
+cache_read = 0.5
+cache_write = 0.5
+
+[limit]
+context = 32_768
+output = 4_096

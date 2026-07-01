@@ -1,0 +1,11 @@
+base_model = "openai/gpt-4.1"
+
+[cost]
+input = 2
+output = 8
+cache_read = 1
+cache_write = 2
+
+[limit]
+context = 1_047_576
+output = 32_768
