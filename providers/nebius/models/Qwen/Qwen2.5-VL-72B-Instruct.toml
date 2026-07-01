@@ -1,13 +1,14 @@
 name = "Qwen2.5-VL-72B-Instruct"
 description = "Qwen vision-language model for visual reasoning, documents, and agent tasks"
-attachment = true
-reasoning = false
-tool_call = true
-structured_output = true
-temperature = true
-knowledge = "2024-12"
+family = "qwen"
 release_date = "2025-01-20"
 last_updated = "2026-02-04"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = false
+structured_output = false
+knowledge = "2024-12"
 open_weights = true
 
 [cost]
@@ -17,7 +18,7 @@ cache_read = 0.025
 cache_write = 0.31
 
 [limit]
-context = 128_000
+context = 32_000
 input = 120_000
 output = 8_192
 

@@ -1,0 +1,22 @@
+name = "Cosmos3-Super-Reasoner"
+release_date = "2026-07-01"
+last_updated = "2026-07-01"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = true
+reasoning_options = []
+
+[cost]
+input = 0.1
+output = 0.3
+
+[limit]
+context = 8_000
+output = 8_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
