@@ -272,6 +272,10 @@ Models must conform to the following schema, as defined in `packages/core/src/sc
 - `open_weights`: Boolean - Indicate the model's trained weights are publicly available
 - `interleaved` _(optional)_: Boolean or Object — Supports interleaved reasoning. Use `true` for general support or an object with `field` to specify the format
 - `interleaved.field`: String — Name of the interleaved field (`"reasoning_content"` or `"reasoning_details"`)
+- `reasoning_options` _(optional, provider-specific)_: Array of objects — How the model's reasoning can be configured. Each entry is one of:
+  - `{ type = "toggle", default? = <bool> }` — reasoning can be turned on/off. `default` is the value applied when the request omits it.
+  - `{ type = "effort", values = [...], default? = <value> }` — reasoning effort selectable from `values` (a subset of `none`, `minimal`, `low`, `medium`, `high`, `xhigh`, `max`). `default`, when present, must be one of `values` and is the effort the provider applies when the request omits it.
+  - `{ type = "budget_tokens", min? = <n>, max? = <n>, default? = <n> }` — reasoning controlled by a token budget. `default`, when present, must fall within `[min, max]`, or be `-1` to denote the provider's dynamic-thinking default.
 - `cost.input`: Number — Cost per million input tokens (USD)
 - `cost.output`: Number — Cost per million output tokens (USD)
 - `cost.reasoning` _(optional)_: Number — Cost per million reasoning tokens (USD)

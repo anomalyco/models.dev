@@ -1,6 +1,6 @@
 base_model = "openai/gpt-5"
 
-reasoning_options = [{ type = "effort", values = ["minimal", "low", "medium", "high"] }]
+reasoning_options = [{ type = "effort", values = ["minimal", "low", "medium", "high"], default = "medium" }]
 
 [cost]
 input = 1.25
