@@ -1,6 +1,11 @@
 base_model = "zhipuai/glm-5.2"
-name = "GLM 5.2"
-release_date = "2026-06-16"
+
+[[reasoning_options]]
+type = "effort"
+values = ["high", "max"]
+
+[interleaved]
+field = "reasoning_content"
 
 [cost]
 input = 1.2
