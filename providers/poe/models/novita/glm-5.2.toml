@@ -1,7 +1,7 @@
-name = "DeepSeek-V3.2"
-family = "deepseek"
-release_date = "2025-12-01"
-last_updated = "2025-12-01"
+name = "GLM-5.2"
+family = "glm"
+release_date = "2026-06-13"
+last_updated = "2026-06-13"
 attachment = true
 reasoning = true
 reasoning_options = [{ type = "toggle" }]
@@ -10,13 +10,13 @@ open_weights = true
 tool_call = true
 
 [cost]
-input = 0.2717
-output = 0.404
-cache_read = 0.1359
+input = 1.4141
+output = 4.4444
+cache_read = 0.2626
 
 [limit]
-context = 128_000
-output = 65_536
+context = 1_048_576
+output = 131_072
 
 [modalities]
 input = ["text", "pdf"]

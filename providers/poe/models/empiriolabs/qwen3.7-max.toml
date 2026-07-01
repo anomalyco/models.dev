@@ -1,21 +1,20 @@
-name = "DeepSeek-V3.2"
-family = "deepseek"
-release_date = "2025-12-01"
-last_updated = "2025-12-01"
+name = "Qwen3.7-Max"
+family = "qwen"
+release_date = "2026-05-21"
+last_updated = "2026-05-21"
 attachment = true
 reasoning = true
 reasoning_options = [{ type = "toggle" }]
 temperature = true
-open_weights = true
+open_weights = false
 tool_call = true
 
 [cost]
-input = 0.2717
-output = 0.404
-cache_read = 0.1359
+input = 2.5253
+output = 7.5758
 
 [limit]
-context = 128_000
+context = 1_000_000
 output = 65_536
 
 [modalities]

@@ -1,17 +1,18 @@
 name = "GLM-5"
+family = "glm"
 release_date = "2026-02-15"
 last_updated = "2026-02-15"
 attachment = true
 reasoning = true
 reasoning_options = [{ type = "toggle" }]
 temperature = true
-open_weights = false
+open_weights = true
 tool_call = true
 
 [cost]
-input = 1
-output = 3.2
-cache_read = 0.2
+input = 1.0101
+output = 3.2323
+cache_read = 0.202
 
 [limit]
 context = 205_000

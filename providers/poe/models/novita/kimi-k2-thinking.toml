@@ -1,17 +1,22 @@
-name = "kimi-k2-thinking"
+name = "Kimi-K2-Thinking"
 family = "kimi-thinking"
 release_date = "2025-11-07"
 last_updated = "2025-11-07"
 attachment = true
 reasoning = true
 reasoning_options = [{ type = "toggle" }]
-temperature = false
-open_weights = false
+temperature = true
+open_weights = true
 tool_call = true
+
+[cost]
+input = 0.6061
+output = 2.5253
+cache_read = 0.1515
 
 [limit]
 context = 256_000
-output = 0
+output = 100_352
 
 [modalities]
 input = ["text"]

@@ -3,15 +3,21 @@ family = "glm"
 release_date = "2025-09-30"
 last_updated = "2025-09-30"
 attachment = true
-reasoning = false
-temperature = false
-open_weights = false
+reasoning = true
+reasoning_options = [{ type = "toggle" }]
+temperature = true
+open_weights = true
 tool_call = true
 
+[cost]
+input = 0.5556
+output = 2.2222
+cache_read = 0.1111
+
 [limit]
-context = 0
-output = 0
+context = 205_000
+output = 131_072
 
 [modalities]
-input = ["text"]
+input = ["text", "pdf"]
 output = ["text"]
