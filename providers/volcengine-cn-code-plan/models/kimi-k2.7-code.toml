@@ -1,0 +1,11 @@
+base_model = "moonshotai/kimi-k2.7-code"
+family = "kimi-k2"
+reasoning_options = []
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[limit]
+context = 256_000
+output = 4_096

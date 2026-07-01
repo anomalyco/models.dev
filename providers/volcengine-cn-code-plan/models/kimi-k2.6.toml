@@ -1,0 +1,11 @@
+base_model = "moonshotai/kimi-k2.6"
+family = "kimi-k2"
+reasoning_options = [{ type = "toggle" }]
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[limit]
+context = 256_000
+output = 4_096
