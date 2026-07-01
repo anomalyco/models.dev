@@ -1,0 +1,25 @@
+name = "Qwen3 Coder Next FP8"
+base_model = "alibaba/qwen3-coder-plus"
+family = "qwen"
+release_date = "2026-05"
+last_updated = "2026-05-08"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+open_weights = true
+
+[cost]
+input = 0.0
+output = 0.0
+
+[limit]
+context = 256144
+output = 8192
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[[reasoning_options]]
+type = "toggle"

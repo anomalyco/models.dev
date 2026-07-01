@@ -1,0 +1,26 @@
+name = "Qwen3.6 35B A3B FP8"
+base_model = "alibaba/qwen3.6-35b-a3b"
+family = "qwen3.6"
+release_date = "2026-05"
+last_updated = "2026-05-13"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+open_weights = true
+
+[cost]
+input = 0.0
+output = 0.0
+
+[limit]
+context = 262000
+output = 8192
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high"]

@@ -1,0 +1,26 @@
+name = "Qwen3.5 122B A10B NVFP4"
+base_model = "alibaba/qwen3.5-122b-a10b"
+family = "qwen3.5"
+release_date = "2026-05"
+last_updated = "2026-05-13"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+open_weights = true
+
+[cost]
+input = 0.0
+output = 0.0
+
+[limit]
+context = 256144
+output = 8192
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high"]
