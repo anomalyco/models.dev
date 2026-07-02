@@ -1,0 +1,13 @@
+base_model = "alibaba/qwen3.6-max-preview"
+name = "Qwen3.6-Max"
+reasoning_options = [{ type = "toggle" }]
+
+[cost]
+input = 2.0
+output = 12.0
+cache_read = 2.5
+cache_write = 0.2
+
+[limit]
+context = 256_000
+output = 64_000

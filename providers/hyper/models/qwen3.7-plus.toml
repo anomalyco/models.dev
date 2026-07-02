@@ -1,0 +1,10 @@
+base_model = "alibaba/qwen3.7-plus"
+reasoning_options = [{ type = "toggle" }]
+
+[cost]
+input = 1.2
+output = 4.8
+cache_read = 1.5
+
+[limit]
+output = 64_000

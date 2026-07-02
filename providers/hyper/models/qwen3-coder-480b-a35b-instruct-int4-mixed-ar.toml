@@ -1,0 +1,15 @@
+base_model = "alibaba/qwen3-coder-480b-a35b-instruct"
+reasoning = true
+reasoning_options = [{ type = "toggle" }]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.557
+output = 2.545
+cache_read = 0.2785
+
+[limit]
+context = 106_000
+output = 10_600
