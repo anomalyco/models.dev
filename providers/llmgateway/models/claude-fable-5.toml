@@ -1,0 +1,26 @@
+name = "Claude Fable 5"
+description = "Claude model for creative writing, analysis, and controlled agent workflows"
+family = "claude-fable"
+release_date = "2026-06-09"
+last_updated = "2026-06-09"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = false
+structured_output = true
+open_weights = false
+reasoning_options = []
+
+[cost]
+input = 10
+output = 50
+cache_read = 1
+cache_write = 12.5
+
+[limit]
+context = 1_000_000
+output = 1_000_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
