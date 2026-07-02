@@ -63,7 +63,10 @@ export interface SyncProvider<SourceModel> {
   parseModels(raw: unknown): SourceModel[];
   translateModel(
     model: SourceModel,
-    context: { existing(id: string): ExistingModel | undefined },
+    context: {
+      existing(id: string): ExistingModel | undefined;
+      authored(id: string): ExistingModel | undefined;
+    },
   ): { id: string; model: SyncedModel; metadata?: { id: string; model: SyncedMetadata } } | undefined;
 }
 
@@ -141,6 +144,9 @@ export async function syncProvider<SourceModel>(
       existing(id) {
         return existing.get(`${id}.toml`)?.toml;
       },
+      authored(id) {
+        return existing.get(`${id}.toml`)?.authored;
+      },
     });
     if (translated === undefined) {
       if (provider.sourceID !== undefined) skippedRemote.push(provider.sourceID(sourceModel));
@@ -205,7 +211,7 @@ export async function syncProvider<SourceModel>(
 
     desired.set(relativePath, {
       model: parsed.data,
-      content: formatToml(parsed.data),
+      content: (existing.get(relativePath)?.header ?? "") + formatToml(parsed.data),
     });
   }
 
@@ -216,10 +222,11 @@ export async function syncProvider<SourceModel>(
   for (const [relativePath, file] of desiredMetadata) {
     const filePath = path.join(metadataDir, relativePath);
     const currentFile = Bun.file(filePath);
-    const current = await currentFile.exists()
+    const currentText = await currentFile.exists() ? await currentFile.text() : undefined;
+    const current = currentText !== undefined
       ? ModelMetadata.safeParse({
           id: relativePath.slice(0, -5),
-          ...Bun.TOML.parse(await currentFile.text()) as Record<string, unknown>,
+          ...Bun.TOML.parse(currentText) as Record<string, unknown>,
         })
       : undefined;
     if (current?.success && stable(current.data) === stable(file.model)) continue;
@@ -228,7 +235,7 @@ export async function syncProvider<SourceModel>(
       console.log(`Would ${current === undefined ? "create" : "update"} metadata ${relativePath}`);
     } else {
       await mkdir(path.dirname(filePath), { recursive: true });
-      await Bun.write(filePath, file.content);
+      await Bun.write(filePath, (currentText !== undefined ? leadingComments(currentText) : "") + file.content);
     }
   }
 
@@ -351,7 +358,12 @@ export function preserveReasoningOptions(
     const { reasoning_options: _reasoningOptions, ...withoutReasoningOptions } = model;
     return withoutReasoningOptions as SyncedModel;
   }
-  if (model.reasoning_options !== undefined || existing?.reasoning_options === undefined) return model;
+  if (model.reasoning_options !== undefined) return model;
+  if (existing?.reasoning_options === undefined) {
+    return (model.reasoning ?? resolvedReasoning) === true
+      ? { ...model, reasoning_options: [] }
+      : model;
+  }
   return {
     ...model,
     reasoning_options: existing.reasoning_options,
@@ -389,6 +401,7 @@ async function readExisting(modelsDir: string) {
   const existing = new Map<string, {
     authored: ExistingModel;
     toml: ExistingModel;
+    header: string;
     symlink: boolean;
   }>();
   const brokenSymlinks = new Set<string>();
@@ -420,7 +433,7 @@ async function readExisting(modelsDir: string) {
       ? authored
       : resolveBaseModel(authored, modelMetadata ?? {}, filePath);
 
-    existing.set(file, { authored, toml, symlink });
+    existing.set(file, { authored, toml, header: leadingComments(text), symlink });
   }
 
   return { models: existing, brokenSymlinks, modelMetadata };
@@ -670,6 +683,23 @@ function quote(value: string) {
   return `"${value.replaceAll("\\", "\\\\").replaceAll('"', '\\"')}"`;
 }
 
+// Preserve the leading comment block (header) authored at the top of a TOML file.
+// `Bun.TOML.parse` discards comments, so the serializer must re-attach them or
+// every rewrite would silently delete hand-authored documentation.
+function leadingComments(text: string) {
+  const header: string[] = [];
+  for (const line of text.split("\n")) {
+    const trimmed = line.trim();
+    if (trimmed === "" || trimmed.startsWith("#")) {
+      header.push(line);
+    } else {
+      break;
+    }
+  }
+  while (header.length > 0 && header[header.length - 1]?.trim() === "") header.pop();
+  return header.length > 0 ? `${header.join("\n")}\n` : "";
+}
+
 function formatInteger(n: number) {
   return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, "_");
 }
@@ -682,6 +712,26 @@ function formatReasoningValue(value: string | null) {
   return value === null ? quote("null") : quote(value);
 }
 
+const ReasoningEffortOrder = new Map<string | null, number>([
+  ["none", 0],
+  ["minimal", 1],
+  ["low", 2],
+  ["medium", 3],
+  ["high", 4],
+  ["xhigh", 5],
+  ["max", 6],
+  ["default", 7],
+  [null, 8],
+]);
+
+function sortReasoningValues(values: Array<string | null>) {
+  return [...values].sort((a, b) => {
+    const order = (ReasoningEffortOrder.get(a) ?? Number.MAX_SAFE_INTEGER)
+      - (ReasoningEffortOrder.get(b) ?? Number.MAX_SAFE_INTEGER);
+    return order || formatReasoningValue(a).localeCompare(formatReasoningValue(b));
+  });
+}
+
 export function formatToml(model: z.infer<typeof SyncedAuthoredModel>) {
   const lines: string[] = [];
 
@@ -690,6 +740,7 @@ export function formatToml(model: z.infer<typeof SyncedAuthoredModel>) {
     lines.push(`base_model_omit = [${model.base_model_omit.map(quote).join(", ")}]`);
   }
   if (model.name !== undefined) lines.push(`name = ${quote(model.name)}`);
+  if (model.description !== undefined) lines.push(`description = ${quote(model.description)}`);
   if (model.family !== undefined) lines.push(`family = ${quote(model.family)}`);
   if (model.release_date !== undefined) lines.push(`release_date = ${quote(model.release_date)}`);
   if (model.last_updated !== undefined) lines.push(`last_updated = ${quote(model.last_updated)}`);
@@ -719,7 +770,8 @@ export function formatToml(model: z.infer<typeof SyncedAuthoredModel>) {
     lines.push("", "[[reasoning_options]]");
     lines.push(`type = ${quote(option.type)}`);
     if (option.type === "effort") {
-      lines.push(`values = [${option.values.map(formatReasoningValue).join(", ")}]`);
+      const values = sortReasoningValues(option.values).map(formatReasoningValue).join(", ");
+      lines.push(`values = [${values}]`);
     }
     if (option.type === "budget_tokens") {
       if (option.min !== undefined) lines.push(`min = ${formatInteger(option.min)}`);

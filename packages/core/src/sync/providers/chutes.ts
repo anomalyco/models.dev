@@ -2,6 +2,7 @@ import { existsSync, readdirSync } from "node:fs";
 import path from "node:path";
 import { z } from "zod";
 
+import { describeModel } from "../../describe.js";
 import { inferKimiFamily, ModelFamilyValues } from "../../family.js";
 import type { ExistingModel, SyncProvider, SyncedFullModel, SyncedModel } from "../index.js";
 import { factorBaseModel } from "./openrouter.js";
@@ -117,6 +118,17 @@ export function buildChutesModel(
 
   const values: SyncedFullModel = {
     name,
+    description: existing?.description ?? describeModel({
+      id: model.id,
+      name,
+      family: baseModel == null ? (existing?.family ?? inferFamily(model.id, name)) : existing?.family,
+      reasoning,
+      tool_call: toolCall,
+      structured_output: structuredOutput ? true : undefined,
+      open_weights: true,
+      limit,
+      modalities: { input, output },
+    }),
     family: baseModel == null ? (existing?.family ?? inferFamily(model.id, name)) : existing?.family,
     release_date: existing?.release_date ?? dateFromTimestamp(model.created),
     last_updated: existing?.last_updated ?? today,

@@ -1,9 +1,10 @@
 name = "Gemini 2.5 Pro Experimental 0325"
+description = "Compact GPT model for low-latency assistance and high-volume workloads"
 release_date = "2025-03-25"
 last_updated = "2025-03-25"
 attachment = true
 reasoning = true
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }, { type = "budget_tokens", min = 128, max = 32_768 }]
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
 tool_call = false
 structured_output = false
 open_weights = false
