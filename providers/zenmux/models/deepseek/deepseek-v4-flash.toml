@@ -1,26 +1,10 @@
-name = "DeepSeek V4 Flash"
-description = "Fast and efficient reasoning model from DeepSeek with 1M context window"
-release_date = "2026-04-24"
-last_updated = "2026-04-24"
-attachment = false
-reasoning = true
+base_model = "deepseek/deepseek-v4-flash"
 reasoning_options = []
-temperature = true
-tool_call = true
-open_weights = false
 
 [cost]
 input = 0.14
 output = 0.28
 cache_read = 0.0028
-
-[limit]
-context = 1_000_000
-output = 32_768
-
-[modalities]
-input = ["text"]
-output = ["text"]
 
 [provider]
 npm = "@ai-sdk/anthropic"
