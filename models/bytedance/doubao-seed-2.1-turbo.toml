@@ -1,0 +1,18 @@
+name = "Doubao-Seed-2.1-turbo"
+description = "Doubao-Seed-2.1-turbo model"
+family = "seed"
+release_date = "2026-06-23"
+last_updated = "2026-06-23"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+open_weights = false
+
+[limit]
+context = 256_000
+output = 8_192
+
+[modalities]
+input = ["text", "image", "video"]
+output = ["text"]

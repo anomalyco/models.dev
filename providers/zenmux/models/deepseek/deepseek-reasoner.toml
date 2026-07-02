@@ -1,0 +1,11 @@
+base_model = "deepseek/deepseek-reasoner"
+reasoning_options = []
+
+[cost]
+input = 0.14
+output = 0.28
+cache_read = 0.028
+
+[provider]
+npm = "@ai-sdk/anthropic"
+api = "https://zenmux.ai/api/anthropic/v1"

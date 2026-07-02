@@ -1,0 +1,12 @@
+base_model = "qwen/qwen3.6-flash"
+reasoning_options = []
+
+[cost]
+input = 0.134717
+output = 0.808302
+cache_read = 0.0134717
+cache_write = 0.16839625
+
+[provider]
+npm = "@ai-sdk/anthropic"
+api = "https://zenmux.ai/api/anthropic/v1"

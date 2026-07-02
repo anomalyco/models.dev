@@ -1,0 +1,18 @@
+name = "MiniMax M2.5"
+description = "MiniMax M2.5 model"
+family = "minimax-m2.5"
+release_date = "2026-02-13"
+last_updated = "2026-02-13"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+open_weights = false
+
+[limit]
+context = 204_800
+output = 8_192
+
+[modalities]
+input = ["text"]
+output = ["text"]

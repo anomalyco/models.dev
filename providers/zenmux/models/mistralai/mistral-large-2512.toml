@@ -1,0 +1,10 @@
+base_model = "mistralai/mistral-large-2512"
+
+[cost]
+input = 0.5
+output = 1.5
+cache_read = 0.05
+
+[provider]
+npm = "@ai-sdk/anthropic"
+api = "https://zenmux.ai/api/anthropic/v1"

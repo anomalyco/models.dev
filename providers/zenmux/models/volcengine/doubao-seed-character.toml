@@ -1,0 +1,11 @@
+base_model = "bytedance/doubao-seed-character"
+reasoning_options = []
+
+[cost]
+input = 0.1179
+output = 0.2947
+cache_read = 0.0236
+
+[provider]
+npm = "@ai-sdk/anthropic"
+api = "https://zenmux.ai/api/anthropic/v1"

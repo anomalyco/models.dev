@@ -1,0 +1,10 @@
+base_model = "baidu/ernie-x1.1-preview"
+reasoning_options = []
+
+[cost]
+input = 0.14
+output = 0.56
+
+[provider]
+npm = "@ai-sdk/anthropic"
+api = "https://zenmux.ai/api/anthropic/v1"

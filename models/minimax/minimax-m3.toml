@@ -1,0 +1,18 @@
+name = "MiniMax M3"
+description = "MiniMax M3 model"
+family = "minimax-m3"
+release_date = "2026-06-01"
+last_updated = "2026-06-01"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+open_weights = false
+
+[limit]
+context = 1_000_000
+output = 32_768
+
+[modalities]
+input = ["text", "image", "pdf", "video"]
+output = ["text"]

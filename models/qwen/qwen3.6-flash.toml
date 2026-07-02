@@ -1,0 +1,18 @@
+name = "Qwen3.6 Flash"
+description = "Qwen3.6 Flash model"
+family = "qwen3.6"
+release_date = "2026-02-25"
+last_updated = "2026-02-25"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+open_weights = false
+
+[limit]
+context = 1_000_000
+output = 32_768
+
+[modalities]
+input = ["text", "image", "video"]
+output = ["text"]

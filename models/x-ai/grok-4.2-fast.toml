@@ -1,0 +1,18 @@
+name = "Grok 4.2 Fast"
+description = "Grok 4.2 Fast model"
+family = "grok"
+release_date = "2026-03-06"
+last_updated = "2026-03-06"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = true
+open_weights = false
+
+[limit]
+context = 2_000_000
+output = 32_768
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

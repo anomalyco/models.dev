@@ -1,0 +1,12 @@
+base_model = "anthropic/claude-sonnet-5"
+name = "Claude Sonnet 5 (Free)"
+reasoning_options = []
+
+[cost]
+input = 0
+output = 0
+cache_read = 0
+
+[provider]
+npm = "@ai-sdk/anthropic"
+api = "https://zenmux.ai/api/anthropic/v1"

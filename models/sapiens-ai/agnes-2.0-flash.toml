@@ -1,0 +1,18 @@
+name = "Agnes-2.0-Flash"
+description = "Agnes-2.0-Flash model"
+family = "trinity"
+release_date = "2026-05-21"
+last_updated = "2026-05-21"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+open_weights = false
+
+[limit]
+context = 256_000
+output = 8_192
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

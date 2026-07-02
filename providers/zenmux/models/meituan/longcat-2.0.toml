@@ -1,0 +1,11 @@
+base_model = "meituan/longcat-2.0"
+reasoning_options = []
+
+[cost]
+input = 0.3
+output = 1.18
+cache_read = 0.006
+
+[provider]
+npm = "@ai-sdk/anthropic"
+api = "https://zenmux.ai/api/anthropic/v1"

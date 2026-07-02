@@ -1,0 +1,18 @@
+name = "Doubao-Seed-2.0-mini"
+description = "Doubao-Seed-2.0-mini model"
+family = "seed"
+release_date = "2026-02-14"
+last_updated = "2026-02-14"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+open_weights = false
+
+[limit]
+context = 256_000
+output = 8_192
+
+[modalities]
+input = ["text", "image", "video"]
+output = ["text"]

@@ -1,0 +1,10 @@
+base_model = "openai/chat-latest"
+
+[cost]
+input = 5
+output = 30
+cache_read = 0.5
+
+[provider]
+npm = "@ai-sdk/anthropic"
+api = "https://zenmux.ai/api/anthropic/v1"

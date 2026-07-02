@@ -1,0 +1,18 @@
+name = "GLM 4.6"
+description = "GLM 4.6 model"
+family = "glm"
+release_date = "2025-09-30"
+last_updated = "2025-09-30"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+open_weights = false
+
+[limit]
+context = 200_000
+output = 8_192
+
+[modalities]
+input = ["text"]
+output = ["text"]

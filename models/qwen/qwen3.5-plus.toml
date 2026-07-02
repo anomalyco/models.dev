@@ -1,0 +1,18 @@
+name = "Qwen3.5-Plus"
+description = "Qwen3.5-Plus model"
+family = "qwen3.5"
+release_date = "2026-02-16"
+last_updated = "2026-02-16"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+open_weights = false
+
+[limit]
+context = 1_000_000
+output = 32_768
+
+[modalities]
+input = ["text", "image", "pdf", "video"]
+output = ["text"]

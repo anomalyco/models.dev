@@ -1,0 +1,11 @@
+base_model = "moonshotai/kimi-k2.7-code-highspeed"
+reasoning_options = []
+
+[cost]
+input = 1.9
+output = 8
+cache_read = 0.38
+
+[provider]
+npm = "@ai-sdk/anthropic"
+api = "https://zenmux.ai/api/anthropic/v1"

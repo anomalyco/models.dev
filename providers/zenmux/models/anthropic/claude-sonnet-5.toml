@@ -1,0 +1,11 @@
+base_model = "anthropic/claude-sonnet-5"
+reasoning_options = []
+
+[cost]
+input = 2
+output = 10
+cache_read = 0.2
+
+[provider]
+npm = "@ai-sdk/anthropic"
+api = "https://zenmux.ai/api/anthropic/v1"

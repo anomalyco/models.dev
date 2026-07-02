@@ -1,0 +1,10 @@
+base_model = "sapiens-ai/agnes-2.0-flash"
+reasoning_options = []
+
+[cost]
+input = 0.1
+output = 0.2
+
+[provider]
+npm = "@ai-sdk/anthropic"
+api = "https://zenmux.ai/api/anthropic/v1"
