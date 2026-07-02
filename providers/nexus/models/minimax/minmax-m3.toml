@@ -1,14 +1,12 @@
 base_model = "minimax/MiniMax-M3"
 attachment = false
 structured_output = true
-
-[[reasoning_options]]
-type = "toggle"
+reasoning_options = []
 
 [cost]
-input = 0.3175
-output = 1.2587
-cache_read = 0.068
+input = 0.319
+output = 1.2533
+cache_read = 0.0684
 
 [limit]
 output = 131_072

@@ -2,6 +2,7 @@ import { existsSync, readdirSync } from "node:fs";
 import path from "node:path";
 import { z } from "zod";
 
+import { describeModel } from "../../describe.js";
 import type { ExistingModel, SyncProvider, SyncedFullModel, SyncedModel } from "../index.js";
 import { factorBaseModel, resolveCanonicalBaseModel } from "./openrouter.js";
 
@@ -11,6 +12,11 @@ const ROUTER_COMPATIBILITY_LIMIT = {
   context: 1_048_576,
   output: 393_216,
 };
+// Nexus currently advertises reasoning as a feature flag, not as controllable efforts/budgets.
+const AUDITED_REASONING_OPTIONS = {} satisfies Record<
+  string,
+  NonNullable<SyncedFullModel["reasoning_options"]>
+>;
 let modelMetadataIDs: Set<string> | undefined;
 let modelMetadataIDsByModelID: Map<string, string[]> | undefined;
 
@@ -89,17 +95,30 @@ export function buildNexusModel(
   const releaseDate = dateFromTimestamp(model.created) ?? existing?.release_date ?? today;
   const cost = isRouter ? undefined : buildCost(model, existing?.cost);
   const canonical = resolveNexusBaseModel(model.id, model.base_model, existing?.base_model);
-  const reasoning = isRouter || features.has("reasoning");
+  const reasoning = features.has("reasoning");
   const authoredModalities = existing?.modalities ?? (canonical === undefined ? modalities : undefined);
+  const description = existing?.description ?? describeModel({
+    id: model.id,
+    providerId: "nexus",
+    name,
+    family: isRouter ? "auto" : existing?.family,
+    reasoning,
+    tool_call: features.has("function-calling") || features.has("parallel-tool-calls"),
+    structured_output: features.has("structured-outputs"),
+    open_weights: existing?.open_weights ?? false,
+    limit,
+    modalities: authoredModalities ?? modalities,
+  });
 
   const values: Partial<SyncedFullModel> = {
     name,
+    description,
     attachment: existing?.attachment ?? authoredModalities?.input.some((value) => value !== "text"),
     reasoning,
-    reasoning_options: nexusReasoningOptions(model.id, reasoning, existing),
+    reasoning_options: nexusReasoningOptions(model.id, reasoning),
     temperature: existing?.temperature ?? true,
-    tool_call: isRouter || features.has("function-calling") || features.has("parallel-tool-calls"),
-    structured_output: isRouter || features.has("structured-outputs"),
+    tool_call: features.has("function-calling") || features.has("parallel-tool-calls"),
+    structured_output: features.has("structured-outputs"),
     status: existing?.status,
     interleaved: existing?.interleaved,
     cost,
@@ -118,6 +137,7 @@ export function buildNexusModel(
 
   return {
     name,
+    description,
     family: existing?.family ?? (isRouter ? "auto" : undefined),
     release_date: releaseDate,
     last_updated: existing?.last_updated ?? releaseDate,
@@ -238,20 +258,8 @@ function privateName(name: string, isPrivateModel: boolean) {
 function nexusReasoningOptions(
   id: string,
   reasoning: boolean,
-  existing: ExistingModel | undefined,
 ): SyncedFullModel["reasoning_options"] {
-  if (existing?.reasoning_options !== undefined) return existing.reasoning_options;
-  if (!reasoning) return [];
-  if (id.startsWith("deepseek/")) {
-    return [
-      { type: "toggle" },
-      { type: "effort", values: ["low", "medium", "high", "xhigh"] },
-    ];
-  }
-  if (id === "minimax/minmax-m3" || id.startsWith("moonshotai/") || id.startsWith("nexus/")) {
-    return [{ type: "toggle" }];
-  }
-  return [];
+  return reasoning ? AUDITED_REASONING_OPTIONS[id] ?? [] : undefined;
 }
 
 function buildCost(model: NexusModel, existing: ExistingModel["cost"]) {
@@ -270,5 +278,5 @@ function buildCost(model: NexusModel, existing: ExistingModel["cost"]) {
 
 function price(value: number | undefined) {
   if (value === undefined) return undefined;
-  return Math.round(value * 1_000_000) / 1_000_000;
+  return Number.isFinite(value) && value >= 0 ? value : undefined;
 }
