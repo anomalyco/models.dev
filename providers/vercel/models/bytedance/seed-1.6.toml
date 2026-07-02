@@ -1,14 +1,17 @@
 name = "Seed 1.6"
+description = "Multimodal reasoning model for visual analysis, planning, and tool use"
 family = "seed"
 release_date = "2025-09-01"
 last_updated = "2025-09"
 attachment = false
 reasoning = true
-reasoning_options = [{ type = "toggle" }]
 temperature = true
 tool_call = true
 knowledge = "2024-10"
 open_weights = false
+
+[[reasoning_options]]
+type = "toggle"
 
 [cost]
 input = 0.25
@@ -20,5 +23,5 @@ context = 256_000
 output = 32_000
 
 [modalities]
-input = ["text"]
+input = ["text", "image"]
 output = ["text"]

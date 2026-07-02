@@ -7,10 +7,13 @@ on:
 jobs:
   opencode:
     if: |
-      contains(github.event.comment.body, ' /oc') ||
-      startsWith(github.event.comment.body, '/oc') ||
-      contains(github.event.comment.body, ' /opencode') ||
-      startsWith(github.event.comment.body, '/opencode')
+      github.repository == 'anomalyco/models.dev' &&
+      (
+        contains(github.event.comment.body, ' /oc') ||
+        startsWith(github.event.comment.body, '/oc') ||
+        contains(github.event.comment.body, ' /opencode') ||
+        startsWith(github.event.comment.body, '/opencode')
+      )
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -20,8 +23,8 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Run opencode
-        uses: sst/opencode/github@latest
+        uses: anomalyco/opencode/github@latest
         env:
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          OPENCODE_API_KEY: ${{ secrets.OPENCODE_API_KEY }}
         with:
-          model: anthropic/claude-sonnet-4-20250514
+          model: opencode/gpt-5.5

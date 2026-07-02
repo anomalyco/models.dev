@@ -1,5 +1,12 @@
 name = "iFlow"
 env = ["IFLOW_API_KEY"]
 npm = "@ai-sdk/openai-compatible"
+# Reasoning HTTP format (accessed 2026-06-25): the retired iFlow CLI advertised
+# a UI-level "Thinking" feature and configured `https://apis.iflow.cn/v1`, but
+# that is not documentation of a raw POST /v1/chat/completions request field.
+# Current platform API docs cover Search endpoints only and publish no raw LLM
+# toggle, effort, or reasoning-token budget field for this configured API.
+# https://github.com/iflow-ai/iflow-cli/blob/main/README.md
+# https://platform.iflow.cn/en/docs/api-reference
 doc = "https://platform.iflow.cn/en/docs"
 api = "https://apis.iflow.cn/v1"

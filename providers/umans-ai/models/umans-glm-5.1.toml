@@ -1,5 +1,7 @@
 base_model = "zhipuai/glm-5.1"
 name = "GLM 5.1"
+# Live metadata: levels none/medium, default medium, and `can_disable=true`
+# (accessed 2026-06-25): https://api.code.umans.ai/v1/models/info
 reasoning_options = [{ type = "toggle" }]
 
 [interleaved]

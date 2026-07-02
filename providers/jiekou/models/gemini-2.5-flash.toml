@@ -1,9 +1,11 @@
 name = "gemini-2.5-flash"
+description = "Fast Gemini model balancing multimodal reasoning, tool use, and cost"
 family = "gemini-flash"
 release_date = "2026-01"
 last_updated = "2026-01"
 attachment = true
-reasoning = false
+reasoning = true
+reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high"] }]
 temperature = true
 tool_call = true
 structured_output = true

@@ -4,6 +4,8 @@ release_date = "2025-01-15"
 last_updated = "2026-06-11"
 knowledge = "2025-08"
 
+# Live /models (2026-06-25): none|minimal|low|medium|high; no dedicated reasoning budget.
+# https://api.venice.ai/api/v1/models?type=text (accessed 2026-06-25)
 [[reasoning_options]]
 type = "effort"
 values = ["none", "minimal", "low", "medium", "high"]

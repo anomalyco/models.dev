@@ -1,4 +1,7 @@
 base_model = "google/gemma-4-26b-a4b-it"
+# Native `/ai/run` accepts `reasoning_effort = low|medium|high` and
+# `chat_template_kwargs.enable_thinking = true|false`; no budget is documented.
+# https://developers.cloudflare.com/workers-ai/models/gemma-4-26b-a4b-it/sync-input.json (accessed 2026-06-25)
 reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "medium", "high"] }]
 interleaved = true
 

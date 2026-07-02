@@ -2,6 +2,7 @@ import { readdirSync } from "node:fs";
 import path from "node:path";
 import { z } from "zod";
 
+import { describeModel } from "../../describe.js";
 import { inferKimiFamily, ModelFamilyValues } from "../../family.js";
 import type { ExistingModel, SyncProvider, SyncedFullModel, SyncedModel } from "../index.js";
 import { factorBaseModel } from "./openrouter.js";
@@ -169,6 +170,19 @@ export function buildVeniceModel(
   const releaseDate = new Date(model.created * 1000).toISOString().slice(0, 10);
   const values: SyncedFullModel = {
     ...authoritative,
+    description: existing?.description ?? describeModel({
+      id: model.id,
+      name: spec.name,
+      family: baseModel == null ? inferFamily(model.id, spec.name) ?? existing?.family : existing?.family,
+      reasoning: capabilities.supportsReasoning === true,
+      tool_call: capabilities.supportsFunctionCalling === true,
+      structured_output: capabilities.supportsResponseSchema === true ? true : undefined,
+      open_weights: spec.modelSource?.toLowerCase().includes("huggingface")
+        ?? existing?.open_weights
+        ?? false,
+      limit,
+      modalities: authoritative.modalities,
+    }),
     family: baseModel == null ? inferFamily(model.id, spec.name) ?? existing?.family : existing?.family,
     release_date: releaseDate,
     last_updated: existing?.last_updated ?? today,

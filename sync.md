@@ -174,6 +174,19 @@ Vercel is intentionally not wired into `bun models:sync` right now. Keep using t
 
 Do not add Vercel model changes to OpenRouter sync PRs.
 
+## Chutes Notes
+
+Chutes is implemented in `packages/core/src/sync/providers/chutes.ts`.
+
+- Run it with `bun models:sync chutes` or `bun chutes:sync`.
+- Source endpoint: `https://llm.chutes.ai/v1/models`; no auth required (the model list is public).
+- Model IDs map directly to TOML paths under `providers/chutes/models`.
+- `reasoning`, `tool_call`, and `structured_output` come from `supported_features`; `temperature` comes from `supported_sampling_parameters`.
+- `reasoning_options` is always an empty array: the API advertises a `reasoning` capability but exposes no toggle or effort parameter, so there is no provider evidence for a reasoning option.
+- TEE model IDs emit `base_model` references to matching `models/` metadata; checkpoints without a canonical entry (e.g. `Qwen3-235B-A22B-Thinking-2507`, `DeepSeek-V3.2`) are written inline.
+- `attachment` is derived from non-text `input_modalities`, and all models are `open_weights`.
+- `release_date`/`last_updated` default to the API `created` timestamp but preserve existing hand-authored dates; `knowledge`, `family`, `status`, `interleaved`, and `limit.input` are preserved when present.
+
 ## Venice Notes
 
 Venice is implemented in `packages/core/src/sync/providers/venice.ts`.

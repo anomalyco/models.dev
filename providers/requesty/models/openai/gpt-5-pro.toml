@@ -1,6 +1,8 @@
 base_model = "openai/gpt-5-pro"
 base_model_omit = ["limit.input"]
 
+reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "max"] }, { type = "budget_tokens" }]
+
 [cost]
 input = 15
 output = 120

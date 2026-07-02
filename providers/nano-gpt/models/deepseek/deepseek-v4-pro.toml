@@ -1,9 +1,11 @@
 # Included in subscription (uses 2x input tokens)
 name = "DeepSeek V4 Pro"
+description = "Flagship DeepSeek model for coding, reasoning, and agentic work"
 release_date = "2026-04-24"
 last_updated = "2026-04-24"
 attachment = false
 reasoning = true
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["high", "xhigh"] }]
 tool_call = true
 structured_output = true
 open_weights = false

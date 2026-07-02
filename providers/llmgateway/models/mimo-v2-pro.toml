@@ -1,3 +1,6 @@
+# Gateway-wide $.reasoning_effort = "none" disables non-OpenAI reasoning;
+# this model has no documented effort tiers or exact reasoning-token budget.
+# https://docs.llmgateway.io/features/reasoning (accessed 2026-06-25)
 base_model = "xiaomi/mimo-v2-pro"
 
 [[reasoning_options]]

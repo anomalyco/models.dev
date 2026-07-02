@@ -1,5 +1,6 @@
 import { z } from "zod";
 
+import { describeModel } from "../../describe.js";
 import type { ExistingModel, SyncProvider, SyncedFullModel, SyncedModel } from "../index.js";
 import { factorBaseModel, resolveCanonicalBaseModel } from "./openrouter.js";
 
@@ -196,6 +197,17 @@ export function buildHuggingFaceModel(
   } as SyncedFullModel["limit"];
   const values: Partial<SyncedFullModel> = {
     name: existing?.name,
+    description: existing?.description ?? describeModel({
+      id: model.id,
+      name: existing?.name ?? model.id,
+      family: existing?.family,
+      reasoning: existing?.reasoning,
+      tool_call: aggregate.tools || existing?.tool_call || undefined,
+      structured_output: aggregate.structuredOutput || existing?.structured_output || undefined,
+      open_weights: existing?.open_weights ?? true,
+      limit,
+      modalities: { input, output },
+    }),
     family: existing?.family,
     release_date: existing?.release_date,
     last_updated: existing?.last_updated,
@@ -225,6 +237,7 @@ export function buildHuggingFaceModel(
     name: z.string(),
     release_date: z.string(),
     last_updated: z.string(),
+    description: z.string(),
     reasoning: z.boolean(),
     open_weights: z.boolean(),
     cost: z.object({ input: z.number(), output: z.number() }),

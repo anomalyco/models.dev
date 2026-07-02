@@ -1,0 +1,88 @@
+name: Issue Fixer
+
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  contents: write
+  issues: write
+  pull-requests: write
+
+concurrency: issue-fixer-${{ github.event.issue.number }}
+
+jobs:
+  fix:
+    if: github.repository == 'anomalyco/models.dev'
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+      ISSUE_NUMBER: ${{ github.event.issue.number }}
+      ISSUE_TITLE: ${{ github.event.issue.title }}
+      ISSUE_BODY: ${{ github.event.issue.body }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          ref: dev
+
+      - name: Install opencode
+        run: curl -fsSL https://opencode.ai/install | bash
+
+      - name: Run issue fixer
+        env:
+          OPENCODE_API_KEY: ${{ secrets.OPENCODE_API_KEY }}
+          OPENCODE_PERMISSION: '{"bash":"deny"}'
+        run: |
+          set -o pipefail
+          RESPONSE_FILE="$RUNNER_TEMP/issue-fixer-response.md"
+          echo "RESPONSE_FILE=$RESPONSE_FILE" >> "$GITHUB_ENV"
+
+          opencode run --agent issue-fixer -m opencode/glm-5.2 <<EOF | tee "$RESPONSE_FILE"
+          A new GitHub issue was opened in anomalyco/models.dev.
+
+          Issue #$ISSUE_NUMBER: $ISSUE_TITLE
+
+          Body:
+          $ISSUE_BODY
+
+          Decide whether this is an actionable model catalog data fix.
+
+          If it asks for a model to be added or for factual model/provider metadata to be corrected, make the minimal TOML changes in the repository. Do not use Bash. Do not create branches, commits, comments, or pull requests yourself.
+
+          If it is a feature request, a request to track a new kind of information, a question, or any miscellaneous non-catalog-data request, do not edit files. Respond briefly that it needs maintainer review and no automated fix was opened.
+          EOF
+
+      - name: Check changed paths
+        if: success()
+        run: |
+          while IFS= read -r line; do
+            path="${line:3}"
+            case "$path" in
+              models/*.toml|providers/*.toml) ;;
+              *) exit 1 ;;
+            esac
+          done < <(git status --porcelain)
+
+      - name: Create pull request
+        if: success()
+        env:
+          BRANCH: issue-${{ github.event.issue.number }}
+          TITLE: "fix: #${{ github.event.issue.number }}"
+        run: |
+          if [ -z "$(git status --porcelain)" ]; then
+            if [ -s "$RESPONSE_FILE" ]; then
+              gh issue comment "$ISSUE_NUMBER" --body-file "$RESPONSE_FILE"
+            fi
+            exit 0
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git switch -c "$BRANCH"
+          git add -A
+          git commit -m "$TITLE"
+          git push origin "$BRANCH"
+
+          gh pr create --base dev --head "$BRANCH" --title "$TITLE" --body "Closes #$ISSUE_NUMBER"

@@ -1,5 +1,12 @@
 name = "StepFun AI"
 env = ["STEPFUN_API_KEY"]
 npm = "@ai-sdk/openai-compatible"
+# Reasoning HTTP format (accessed 2026-06-25):
+# Step Plan exposes POST /step_plan/v1/chat/completions with top-level
+# `reasoning_effort` and POST /step_plan/v1/messages with
+# `output_config.effort`. step-3.7-flash accepts low/medium/high;
+# step-3.5-flash-2603 accepts low/high. No plan Responses endpoint is listed.
+# Source:
+# https://platform.stepfun.ai/docs/en/step-plan/integrations/reasoning-api
 doc = "https://platform.stepfun.ai/docs/en/step-plan/integrations/open-code"
 api = "https://api.stepfun.ai/step_plan/v1"

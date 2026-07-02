@@ -1,9 +1,11 @@
 # Not included in subscription
 name = "Qwen3.6 35B A3B Uncensored TEE"
+description = "Multimodal reasoning model for visual analysis, planning, and tool use"
 release_date = "2026-05-23"
 last_updated = "2026-05-23"
 attachment = true
 reasoning = true
+reasoning_options = [{ type = "toggle" }, { type = "budget_tokens", min = 1_024, max = 131_072 }]
 tool_call = true
 structured_output = true
 open_weights = false

@@ -1,9 +1,11 @@
 name = "Qwen/Qwen3-235B-A22B-Thinking-2507"
+description = "Qwen reasoning model for deliberate problem solving, math, and coding"
 family = "qwen"
 release_date = "2025-07-28"
 last_updated = "2025-11-25"
 attachment = false
 reasoning = true
+reasoning_options = [{ type = "budget_tokens", min = 128, max = 32_768 }]
 temperature = true
 tool_call = true
 structured_output = true

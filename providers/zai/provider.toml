@@ -1,3 +1,6 @@
+# Chat reasoning: POST https://api.z.ai/api/paas/v4/chat/completions with
+# `thinking.type = "enabled" | "disabled"` (default: enabled).
+# https://docs.z.ai/guides/capabilities/thinking (accessed 2026-06-25)
 name = "Z.AI"
 env = ["ZHIPU_API_KEY"]
 npm = "@ai-sdk/openai-compatible"

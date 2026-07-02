@@ -1,4 +1,10 @@
 base_model = "moonshotai/kimi-k2.5"
+# Reasoning HTTP format (accessed 2026-06-25):
+# Hybrid model: top-level `enable_thinking` true enables thinking; false is the
+# default. `thinking_budget` is an integer token cap; no bounds are documented.
+# Sources:
+# https://www.alibabacloud.com/help/en/model-studio/kimi-api
+# https://www.alibabacloud.com/help/en/model-studio/deep-thinking
 base_model_omit = ["structured_output"]
 family = "kimi-k2"
 attachment = true
