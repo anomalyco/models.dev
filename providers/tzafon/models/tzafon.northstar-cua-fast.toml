@@ -1,0 +1,26 @@
+name = "Northstar CUA Fast"
+description = "Computer-use agent model for browser and desktop automation via screenshot input"
+attachment = true # accepts screenshot/image input
+reasoning = false
+tool_call = true
+structured_output = true # response_format: json_object / json schema
+temperature = true
+release_date = "2026-04-22" # /v1/models created timestamp
+last_updated = "2026-07-02"
+open_weights = false
+
+[cost]
+# https://docs.lightcone.ai/guides/pricing — "input is now $0.50/M (was $1.00) and
+# output is $1.50/M (was $5.00) — a 50-70% reduction"
+input = 0.50
+output = 1.50
+
+[limit]
+# probed 2026-07-02: max_model_len=max_total_tokens=262144 (shared input+output budget)
+context = 262_144
+input = 262_144
+output = 262_144
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

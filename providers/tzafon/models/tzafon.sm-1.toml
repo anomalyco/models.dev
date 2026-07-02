@@ -1,0 +1,25 @@
+name = "SM-1"
+description = "Compact text model for lightweight tool-calling and chat workloads"
+attachment = false
+reasoning = false
+tool_call = true
+structured_output = true
+temperature = true
+release_date = "2026-02-09" # /v1/models created timestamp
+last_updated = "2026-02-09"
+open_weights = false
+
+[cost]
+# https://docs.lightcone.ai/guides/pricing
+input = 0.20
+output = 0.30
+
+[limit]
+# probed 2026-07-02: max_model_len=max_total_tokens=4096 (shared input+output budget)
+context = 4_096
+input = 4_096
+output = 4_096
+
+[modalities]
+input = ["text"]
+output = ["text"]

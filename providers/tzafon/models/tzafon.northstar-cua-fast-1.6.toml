@@ -1,0 +1,27 @@
+name = "Northstar CUA Fast 1.6"
+description = "Updated computer-use agent model for browser and desktop automation via screenshot input"
+attachment = true
+reasoning = false
+tool_call = true
+structured_output = true
+temperature = true
+release_date = "2026-05-09" # /v1/models created timestamp
+last_updated = "2026-05-09"
+open_weights = false
+
+[cost]
+# NOT YET PUBLISHED on https://docs.lightcone.ai/guides/pricing as of 2026-07-02.
+# Assumed same as tzafon.northstar-cua-fast pending an official price — verify/update
+# once Tzafon publishes a citable number for this model.
+input = 0.50
+output = 1.50
+
+[limit]
+# probed 2026-07-02: max_model_len=max_total_tokens=131072
+context = 131_072
+input = 131_072
+output = 131_072
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
