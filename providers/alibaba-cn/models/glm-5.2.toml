@@ -1,0 +1,14 @@
+base_model = "zhipuai/glm-5.2"
+
+# Alibaba Cloud Model Studio lists this as the Alibaba-supplied glm-5.2 model.
+# https://bailian.console.aliyun.com/cn-beijing/?tab=model#/model-market/detail/glm-5.2?serviceSite=asia-pacific-china
+reasoning_options = []
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 1.1
+output = 3.851
+cache_read = 0.275
+cache_write = 0
