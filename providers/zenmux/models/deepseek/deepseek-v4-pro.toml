@@ -1,0 +1,27 @@
+name = "DeepSeek V4 Pro"
+description = "High-performance reasoning model from DeepSeek with 1M context window"
+release_date = "2026-04-24"
+last_updated = "2026-04-24"
+attachment = false
+reasoning = true
+reasoning_options = []
+temperature = true
+tool_call = true
+open_weights = false
+
+[cost]
+input = 0.435
+output = 0.87
+cache_read = 0.003625
+
+[limit]
+context = 1_000_000
+output = 32_768
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[provider]
+npm = "@ai-sdk/anthropic"
+api = "https://zenmux.ai/api/anthropic/v1"
