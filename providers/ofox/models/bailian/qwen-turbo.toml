@@ -1,0 +1,31 @@
+name = "Qwen Turbo"
+description = "Efficient Qwen model for fast chat, extraction, and high-volume workloads"
+family = "qwen"
+release_date = "2024-11-01"
+last_updated = "2025-07-15"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+knowledge = "2024-04"
+open_weights = false
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "budget_tokens"
+max = 38912
+
+[cost]
+input = 0.05
+output = 0.09
+cache_read = 0.0086
+
+[limit]
+context = 128000
+output = 16000
+
+[modalities]
+input = ["text"]
+output = ["text"]

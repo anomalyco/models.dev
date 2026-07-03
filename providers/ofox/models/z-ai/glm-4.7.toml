@@ -1,0 +1,27 @@
+name = "GLM-4.7"
+description = "Mature GLM model for dependable coding, reasoning, and structured agent tasks"
+family = "glm"
+release_date = "2025-12-22"
+last_updated = "2025-12-22"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+knowledge = "2025-04"
+open_weights = true
+
+[[reasoning_options]]
+type = "toggle"
+
+[cost]
+input = 0.4
+output = 2
+cache_read = 0.08
+
+[limit]
+context = 200000
+output = 128000
+
+[modalities]
+input = ["text"]
+output = ["text"]

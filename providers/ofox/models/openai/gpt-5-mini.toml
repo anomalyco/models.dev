@@ -1,0 +1,33 @@
+name = "GPT-5 Mini"
+description = "Small GPT-5 for responsive agents, coding help, and everyday automation"
+family = "gpt-mini"
+release_date = "2025-08-07"
+last_updated = "2025-08-07"
+attachment = true
+reasoning = true
+temperature = false
+tool_call = true
+knowledge = "2024-05-30"
+open_weights = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["minimal", "low", "medium", "high"]
+
+[cost]
+input = 0.25
+output = 2
+cache_read = 0.03
+
+[limit]
+context = 256000
+input = 272000
+output = 32768
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[provider]
+npm = "@ai-sdk/openai"
+api = "https://api.ofox.ai/v1"

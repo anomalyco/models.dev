@@ -1,0 +1,26 @@
+name = "GLM-5V-Turbo"
+description = "Fast GLM vision model for screenshots, documents, and multimodal agent tasks"
+family = "glm"
+release_date = "2026-04-01"
+last_updated = "2026-04-01"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+open_weights = false
+
+[[reasoning_options]]
+type = "toggle"
+
+[cost]
+input = 1.2
+output = 4
+cache_read = 0.24
+
+[limit]
+context = 200000
+output = 128000
+
+[modalities]
+input = ["text", "image", "video", "pdf"]
+output = ["text"]

@@ -1,0 +1,23 @@
+name = "gemini-2.5-flash-image"
+description = "Image model for prompt-driven generation, editing, and visual design workflows"
+family = "gemini-flash"
+release_date = "2025-10-08"
+last_updated = "2025-10-08"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = false
+knowledge = "2025-01"
+open_weights = false
+
+[cost]
+input = 0.3
+output = 2.5
+
+[limit]
+context = 32000
+output = 32000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

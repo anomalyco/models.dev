@@ -1,0 +1,22 @@
+name = "doubao-seed-1-6-vision-250815"
+description = "Multimodal model for analyzing text, images, documents, and rich media"
+release_date = "2025-09-30"
+last_updated = "2025-09-30"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = true
+open_weights = false
+
+[cost]
+input = 0.12
+output = 1.15
+cache_read = 0.023
+
+[limit]
+context = 256000
+output = 32000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

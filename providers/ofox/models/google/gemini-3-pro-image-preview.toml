@@ -1,0 +1,22 @@
+name = "gemini-3-pro-image-preview"
+description = "Image model for prompt-driven generation, editing, and visual design workflows"
+release_date = "2025-11-20"
+last_updated = "2025-11-20"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = false
+knowledge = "2025-06"
+open_weights = false
+
+[cost]
+input = 2
+output = 12
+
+[limit]
+context = 64000
+output = 32000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

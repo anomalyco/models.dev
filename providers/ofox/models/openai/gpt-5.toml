@@ -1,0 +1,33 @@
+name = "GPT-5"
+description = "GPT model for general reasoning, writing, coding, and tool-assisted tasks"
+family = "gpt"
+release_date = "2025-08-07"
+last_updated = "2025-08-07"
+attachment = true
+reasoning = true
+temperature = false
+tool_call = true
+knowledge = "2024-09-30"
+open_weights = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["minimal", "low", "medium", "high"]
+
+[cost]
+input = 1.25
+output = 10
+cache_read = 0.13
+
+[limit]
+context = 256000
+input = 272000
+output = 65536
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[provider]
+npm = "@ai-sdk/openai"
+api = "https://api.ofox.ai/v1"

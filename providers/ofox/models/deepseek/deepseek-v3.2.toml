@@ -1,0 +1,27 @@
+name = "siliconflow/deepseek-v3.2"
+description = "DeepSeek chat model for instruction following, coding, and analysis"
+family = "deepseek"
+release_date = "2025-12-03"
+last_updated = "2025-12-03"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+knowledge = "2024-12"
+open_weights = false
+
+[[reasoning_options]]
+type = "toggle"
+
+[cost]
+input = 0.29
+output = 0.43
+cache_read = 0.06
+
+[limit]
+context = 128000
+output = 32000
+
+[modalities]
+input = ["text"]
+output = ["text"]

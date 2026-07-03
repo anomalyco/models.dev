@@ -1,0 +1,33 @@
+name = "GPT-5 Nano"
+description = "Tiny GPT-5 lane for routing, extraction, classification, and bulk jobs"
+family = "gpt-nano"
+release_date = "2025-08-07"
+last_updated = "2025-08-07"
+attachment = true
+reasoning = true
+temperature = false
+tool_call = true
+knowledge = "2024-05-30"
+open_weights = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["minimal", "low", "medium", "high"]
+
+[cost]
+input = 0.05
+output = 0.4
+cache_read = 0.01
+
+[limit]
+context = 128000
+input = 272000
+output = 16384
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[provider]
+npm = "@ai-sdk/openai"
+api = "https://api.ofox.ai/v1"

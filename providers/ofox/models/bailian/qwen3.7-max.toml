@@ -1,0 +1,29 @@
+name = "Qwen3.7 Max"
+description = "Qwen frontier model tuned for agent frameworks, coding assistants, and long tasks"
+family = "qwen"
+release_date = "2026-05-21"
+last_updated = "2026-05-21"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+open_weights = false
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "budget_tokens"
+
+[cost]
+input = 2.5
+output = 7.5
+cache_read = 0.25
+
+[limit]
+context = 1064000
+output = 64000
+
+[modalities]
+input = ["text"]
+output = ["text"]

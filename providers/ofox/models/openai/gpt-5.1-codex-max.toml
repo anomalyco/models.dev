@@ -1,0 +1,33 @@
+name = "GPT-5.1 Codex Max"
+description = "Coding-optimized GPT model for repository edits, reviews, and agentic software work"
+family = "gpt-codex"
+release_date = "2025-11-13"
+last_updated = "2025-11-13"
+attachment = true
+reasoning = true
+temperature = false
+tool_call = true
+knowledge = "2024-09-30"
+open_weights = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high", "xhigh"]
+
+[cost]
+input = 1.25
+output = 10
+cache_read = 0.13
+
+[limit]
+context = 256000
+input = 272000
+output = 128000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[provider]
+npm = "@ai-sdk/openai"
+api = "https://api.ofox.ai/v1"

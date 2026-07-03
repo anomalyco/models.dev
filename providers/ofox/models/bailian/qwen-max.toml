@@ -1,0 +1,24 @@
+name = "Qwen Max"
+description = "Flagship Qwen model for complex reasoning, coding, and agentic workflows"
+family = "qwen"
+release_date = "2024-04-03"
+last_updated = "2025-01-25"
+attachment = false
+reasoning = false
+temperature = true
+tool_call = true
+knowledge = "2024-04"
+open_weights = false
+
+[cost]
+input = 0.35
+output = 1.38
+cache_read = 0.069
+
+[limit]
+context = 32000
+output = 8000
+
+[modalities]
+input = ["text"]
+output = ["text"]

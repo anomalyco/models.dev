@@ -1,0 +1,36 @@
+name = "Claude Sonnet 5"
+description = "Everyday Claude agent model for coding, planning, browsing, and general work"
+family = "claude-sonnet"
+release_date = "2026-06-30"
+last_updated = "2026-06-30"
+attachment = true
+reasoning = true
+temperature = false
+tool_call = true
+knowledge = "2026-01-31"
+open_weights = false
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high", "xhigh", "max"]
+
+[cost]
+input = 2
+output = 10
+cache_read = 0.2
+cache_write = 2.5
+
+[limit]
+context = 1000000
+output = 128000
+
+[modalities]
+input = ["text", "image", "pdf"]
+output = ["text"]
+
+[provider]
+npm = "@ai-sdk/anthropic"
+api = "https://api.ofox.ai/anthropic/v1"

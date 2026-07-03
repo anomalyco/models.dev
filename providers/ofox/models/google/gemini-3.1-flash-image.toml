@@ -1,0 +1,26 @@
+name = "Nano Banana 2 (Gemini 3.1 Flash Image)"
+description = "Image model for prompt-driven generation, editing, and visual design workflows"
+family = "gemini"
+release_date = "2026-06-18"
+last_updated = "2026-06-18"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = false
+open_weights = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["high", "minimal"]
+
+[cost]
+input = 0.5
+output = 3
+
+[limit]
+context = 131000
+output = 64000
+
+[modalities]
+input = ["image", "text"]
+output = ["image", "text"]

@@ -1,0 +1,29 @@
+name = "Minimax M2.1"
+description = "MiniMax model for chat, coding, office work, and agentic tasks"
+family = "minimax"
+release_date = "2026-01"
+last_updated = "2026-01"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+knowledge = "2025-10"
+open_weights = true
+
+[[reasoning_options]]
+type = "budget_tokens"
+min = 1024
+max = 131071
+
+[cost]
+input = 0.3
+output = 1.2
+cache_read = 0.03
+
+[limit]
+context = 204800
+output = 131000
+
+[modalities]
+input = ["text"]
+output = ["text"]

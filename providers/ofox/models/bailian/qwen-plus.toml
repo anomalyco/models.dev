@@ -1,0 +1,31 @@
+name = "Qwen Plus"
+description = "Qwen instruction model for multilingual chat, reasoning, and tool use"
+family = "qwen"
+release_date = "2024-01-25"
+last_updated = "2025-09-11"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+knowledge = "2024-04"
+open_weights = false
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "budget_tokens"
+max = 81920
+
+[cost]
+input = 0.12
+output = 0.29
+cache_read = 0.023
+
+[limit]
+context = 1000000
+output = 32000
+
+[modalities]
+input = ["text"]
+output = ["text"]

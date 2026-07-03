@@ -1,0 +1,31 @@
+name = "GLM-5"
+description = "Flagship GLM model for hybrid reasoning, coding, and agentic engineering"
+family = "glm"
+release_date = "2026-02-11"
+last_updated = "2026-02-11"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+knowledge = "2026-01"
+open_weights = false
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "budget_tokens"
+max = 32768
+
+[cost]
+input = 1
+output = 3.2
+cache_read = 0.2
+
+[limit]
+context = 200000
+output = 128000
+
+[modalities]
+input = ["text"]
+output = ["text"]
