@@ -1,0 +1,18 @@
+base_model = "minimax/MiniMax-M3"
+
+[[reasoning_options]]
+type = "toggle"
+
+[cost]
+input = 0
+output = 0
+cache_read = 0
+cache_write = 0
+
+[limit]
+context = 512_000
+output = 4_096
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

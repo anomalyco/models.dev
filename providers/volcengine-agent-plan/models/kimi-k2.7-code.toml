@@ -1,0 +1,20 @@
+base_model = "moonshotai/kimi-k2.7-code"
+
+reasoning_options = [{ type = "toggle" }, { type = "budget_tokens" }]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0
+output = 0
+cache_read = 0
+cache_write = 0
+
+[limit]
+context = 256_000
+output = 4_096
+
+[modalities]
+input = ["text"]
+output = ["text"]
