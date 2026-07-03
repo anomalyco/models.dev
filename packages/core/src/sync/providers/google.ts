@@ -1,5 +1,6 @@
 import { z } from "zod";
 
+import { describeModel } from "../../describe.js";
 import type { ExistingModel, SyncProvider, SyncedFullModel, SyncedModel } from "../index.js";
 import { factorBaseModel } from "./openrouter.js";
 
@@ -89,6 +90,7 @@ export const google = {
 
 export function buildGoogleModel(model: GoogleModel, existing: ExistingModel): SyncedModel {
   const name = existing.name;
+  const description = existing.description;
   const releaseDate = existing.release_date;
   const lastUpdated = existing.last_updated;
   const attachment = existing.attachment;
@@ -114,6 +116,21 @@ export function buildGoogleModel(model: GoogleModel, existing: ExistingModel): S
 
   const synced: SyncedFullModel = {
     name: model.displayName ?? name,
+    description: description ?? model.description ?? describeModel({
+      id: model.name.replace(/^models\//, ""),
+      name: model.displayName ?? name,
+      family: existing.family,
+      reasoning: model.thinking ?? reasoning,
+      tool_call: toolCall,
+      structured_output: existing.structured_output,
+      open_weights: openWeights,
+      limit: {
+        input: limit.input,
+        context: model.inputTokenLimit,
+        output: model.outputTokenLimit,
+      },
+      modalities,
+    }),
     family: existing.family,
     release_date: releaseDate,
     last_updated: lastUpdated,

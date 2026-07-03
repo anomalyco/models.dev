@@ -1,4 +1,5 @@
 name = "GPT OSS 120B"
+description = "Open-weight GPT model for self-hosted reasoning and instruction-following workloads"
 family = "gpt-oss"
 release_date = "2025-08-05"
 last_updated = "2025-08-05"
@@ -12,9 +13,10 @@ open_weights = true
 [cost]
 input = 0.10
 output = 0.10
+cache_read = 0.10
 
 [limit]
-context = 128_000
+context = 131_072
 output = 32_768
 
 [modalities]

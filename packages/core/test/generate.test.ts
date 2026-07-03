@@ -309,12 +309,12 @@ doc = "https://example.com/models"
 
 function modelMetadataToml() {
   return `name = "Lab Model"
+description = "Example model for catalog generation and inheritance tests"
 family = "gpt"
 release_date = "2026-01-02"
 last_updated = "2026-01-03"
 attachment = true
 reasoning = true
-reasoning_options = []
 temperature = false
 tool_call = true
 structured_output = true
@@ -355,11 +355,13 @@ source = "https://example.com/benchmarks"
 
 function providerFieldsToml() {
   return `name = "Lab Model"
+description = "Example model for catalog generation and inheritance tests"
 family = "gpt"
 release_date = "2026-01-02"
 last_updated = "2026-01-03"
 attachment = true
 reasoning = true
+reasoning_options = []
 temperature = false
 tool_call = true
 structured_output = true

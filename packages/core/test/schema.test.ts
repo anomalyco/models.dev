@@ -35,6 +35,7 @@ function baseModel(overrides: Partial<AuthoredModelData>) {
   return {
     id: "example/model",
     name: "Example Model",
+    description: "Example model for schema validation and regression tests",
     attachment: false,
     reasoning: false,
     tool_call: true,

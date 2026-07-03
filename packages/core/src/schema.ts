@@ -188,6 +188,7 @@ export const BenchmarkResult = z
 const ModelMetadataBase = z.object({
   id: z.string(),
   name: z.string().min(1, "Model name cannot be empty"),
+  description: z.string().min(1, "Model description cannot be empty"),
   family: ModelFamily.optional(),
   attachment: z.boolean().optional(),
   reasoning: z.boolean().optional(),
@@ -213,6 +214,7 @@ export type ModelMetadata = z.infer<typeof ModelMetadata>;
 const ModelBase = z.object({
   id: z.string(),
   name: z.string().min(1, "Model name cannot be empty"),
+  description: z.string().min(1, "Model description cannot be empty"),
   family: ModelFamily.optional(),
   attachment: z.boolean(),
   reasoning: z.boolean(),
