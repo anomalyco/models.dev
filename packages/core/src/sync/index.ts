@@ -8,6 +8,7 @@ import { baseten } from "./providers/baseten.js";
 import { chutes } from "./providers/chutes.js";
 import { cloudflareWorkersAi } from "./providers/cloudflare-workers-ai.js";
 import { google } from "./providers/google.js";
+import { hyper } from "./providers/hyper.js";
 import { huggingface } from "./providers/huggingface.js";
 import { llmgateway } from "./providers/llmgateway.js";
 import { openrouter } from "./providers/openrouter.js";
@@ -87,6 +88,7 @@ export const providers: {
   chutes: SyncProvider<any>;
   "cloudflare-workers-ai": SyncProvider<any>;
   google: SyncProvider<any>;
+  hyper: SyncProvider<any>;
   huggingface: SyncProvider<any>;
   llmgateway: SyncProvider<any>;
   openrouter: SyncProvider<any>;
@@ -99,6 +101,7 @@ export const providers: {
   chutes,
   "cloudflare-workers-ai": cloudflareWorkersAi,
   google,
+  hyper,
   huggingface,
   llmgateway,
   openrouter,
@@ -111,7 +114,7 @@ export const providers: {
 export const groups = {
   aggregators: ["huggingface", "llmgateway", "openrouter", "vercel"],
   cloudflare: ["cloudflare-workers-ai"],
-  direct: ["baseten", "chutes", "google", "ovhcloud", "venice", "xai"],
+  direct: ["baseten", "chutes", "google", "hyper", "ovhcloud", "venice", "xai"],
 } as const;
 
 type ProviderID = keyof typeof providers;
