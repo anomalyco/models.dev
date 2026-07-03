@@ -78,7 +78,6 @@ export interface SyncResult {
   created: number;
   updated: number;
   deleted: number;
-  skipped: number;
   unchanged: number;
   notices: string[];
   files: Array<{ status: "created" | "updated" | "deleted"; path: string }>;
@@ -328,20 +327,13 @@ export async function syncProvider<SourceModel>(
     }
   }
 
-  const sortedSkippedRemote = skippedRemote.toSorted((a, b) => a.localeCompare(b));
-  const result = summarize(provider, files, unchanged, sortedSkippedRemote.length, [
-    ...provider.skippedNotice?.(sortedSkippedRemote) ?? [],
+  const result = summarize(provider, files, unchanged, [
+    ...provider.skippedNotice?.(skippedRemote) ?? [],
     ...provider.missingNotice?.(missingLocal) ?? [],
   ]);
   console.log(
-    `${options.dryRun ? "Dry run: " : ""}${result.created} created, ${result.updated} updated, ${result.deleted} removed, ${result.skipped} skipped creating, ${result.unchanged} unchanged`,
+    `${options.dryRun ? "Dry run: " : ""}${result.created} created, ${result.updated} updated, ${result.deleted} removed, ${result.unchanged} unchanged`,
   );
-  if (sortedSkippedRemote.length > 0) {
-    console.log("Skipped creating:");
-    for (const id of sortedSkippedRemote) {
-      console.log(`  ${id}`);
-    }
-  }
   return result;
 }
 
@@ -592,7 +584,6 @@ function summarize(
   provider: { id: string; name: string },
   files: SyncResult["files"],
   unchanged: number,
-  skipped: number,
   notices: string[],
 ): SyncResult {
   return {
@@ -602,7 +593,6 @@ function summarize(
     created: files.filter((file) => file.status === "created").length,
     updated: files.filter((file) => file.status === "updated").length,
     deleted: files.filter((file) => file.status === "deleted").length,
-    skipped,
     unchanged,
     notices,
     files,
@@ -659,13 +649,13 @@ async function writeReport(target: string, results: SyncResult[]) {
   const lines = [
     `Updates model TOMLs for the \`${target}\` sync target.`,
     "",
-    "| Provider | Status | Created | Updated | Deleted | Skipped Creating |",
-    "| --- | --- | ---: | ---: | ---: | ---: |",
+    "| Provider | Status | Created | Updated | Deleted |",
+    "| --- | --- | ---: | ---: | ---: |",
   ];
 
   for (const result of results) {
     lines.push(
-      `| ${result.name} | ${result.status} | ${result.created} | ${result.updated} | ${result.deleted} | ${result.skipped} |`,
+      `| ${result.name} | ${result.status} | ${result.created} | ${result.updated} | ${result.deleted} |`,
     );
   }
 
@@ -873,7 +863,7 @@ export async function main(args = process.argv.slice(2)) {
   console.log("\nSync summary");
   for (const result of results) {
     console.log(
-      `${result.name}: ${result.created} created, ${result.updated} updated, ${result.deleted} deleted, ${result.skipped} skipped creating`,
+      `${result.name}: ${result.created} created, ${result.updated} updated, ${result.deleted} deleted`,
     );
   }
 }

@@ -9,6 +9,7 @@ The grouped sync targets are available for local convenience, but CI syncs each 
 ## Commands
 
 - `bun models:sync aggregators` syncs every provider in the `aggregators` group.
+- `bun models:sync alibaba` syncs only Alibaba.
 - `bun models:sync openrouter` syncs only OpenRouter.
 - `bun models:sync cloudflare-workers-ai` syncs only Cloudflare Workers AI.
 - `bun models:sync cloudflare` syncs the Cloudflare sync group.
@@ -110,6 +111,20 @@ Each provider job checks out `dev` and writes to a fixed provider branch like `a
 CI automatically picks up providers registered in `providers` in `packages/core/src/sync/index.ts`. Adding a new sync provider there is enough to get an hourly provider-specific sync job, branch, labels, title, and PR naming convention. The workflow only needs manual updates when a new provider requires new secrets or other environment variables.
 
 Actions are pinned by commit SHA. Keep new workflow actions pinned the same way.
+
+## Alibaba Notes
+
+Alibaba is implemented in `packages/core/src/sync/providers/alibaba.ts`.
+
+- Source endpoint: `https://dashscope-intl.aliyuncs.com/api/v1/models`.
+- Required auth: `DASHSCOPE_API_KEY`.
+- Model IDs map directly to TOML paths under `providers/alibaba/models`.
+- The API is paginated and duplicate model IDs are deduped before translation.
+- API prices are per-1M-token numbers; context tiers are derived from DashScope price ranges.
+- Existing local files missing from the international API source are retained because the provider directory may contain deprecated or region-specific entries.
+- New API models require a matching `models/alibaba/<id>.toml` base-metadata file before the sync mints a thin provider stub.
+- Canonical Alibaba model IDs should emit `base_model` references to model metadata when a matching `models/` entry exists.
+- Existing `family`, `temperature`, `open_weights`, `knowledge`, `status`, `interleaved`, and some non-authoritative capability fields may be preserved when the API is not authoritative enough for those fields.
 
 ## OpenRouter Notes
 
