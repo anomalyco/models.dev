@@ -1,0 +1,24 @@
+name = "Laguna XS 2.1"
+description = "Reasoning model for deliberate analysis, multi-step problem solving, and tool use"
+release_date = "2026-07-02"
+last_updated = "2026-07-02"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = false
+open_weights = true
+reasoning_options = []
+
+[cost]
+input = 0.06
+output = 0.12
+cache_read = 0.03
+
+[limit]
+context = 262_144
+output = 32_768
+
+[modalities]
+input = ["text"]
+output = ["text"]
