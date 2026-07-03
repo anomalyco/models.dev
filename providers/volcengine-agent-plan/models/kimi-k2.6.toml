@@ -1,0 +1,16 @@
+base_model = "moonshotai/kimi-k2.6"
+base_model_omit = ["video"]
+
+[cost]
+input = 0
+output = 0
+cache_read = 0
+cache_write = 0
+
+[limit]
+context = 256_000
+output = 4_096
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
