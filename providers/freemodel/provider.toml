@@ -1,9 +1,0 @@
-name = "FreeModel"
-# Reasoning HTTP format (accessed 2026-06-25): POST /v1/messages.
-# FreeModel publishes no request schema for toggle, effort, or budget controls;
-# its public site does not document the raw API surface.
-# https://freemodel.dev
-env = ["FREEMODEL_API_KEY"]
-npm = "@ai-sdk/anthropic"
-api = "https://cc.freemodel.dev/v1"
-doc = "https://freemodel.dev"

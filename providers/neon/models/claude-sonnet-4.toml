@@ -1,8 +1,0 @@
-base_model = "anthropic/claude-sonnet-4-5-20250929"
-reasoning_options = [{ type = "toggle" }, { type = "budget_tokens", min = 1_024, max = 63_999 }]
-
-[cost]
-input = 3
-output = 15
-cache_read = 0.3
-cache_write = 3.75

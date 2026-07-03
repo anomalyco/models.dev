@@ -1,0 +1,24 @@
+base_model = "deepseek/deepseek-v4-pro"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["high", "max"]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0
+output = 0
+cache_read = 0
+
+[limit]
+context = 1_024_000
+output = 4_096
+
+[modalities]
+input = ["text"]
+output = ["text"]
