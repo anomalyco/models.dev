@@ -4,8 +4,50 @@ import { tmpdir } from "node:os";
 import path from "node:path";
 
 import { formatToml, preserveReasoningOptions, syncProvider, type SyncProvider } from "../src/sync/index.js";
+import { buildHyperModel, type HyperModel } from "../src/sync/providers/hyper.js";
 import { buildOpenRouterModel, openrouter, type OpenRouterModel } from "../src/sync/providers/openrouter.js";
 import { buildLLMGatewayModel, type LLMGatewayModel } from "../src/sync/providers/llmgateway.js";
+
+test("syncs Hyper pricing from cost_per_1m fields", () => {
+  const model = hyperModel({
+    id: "minimax-m2.7",
+    cost_per_1m_in: 0.3,
+    cost_per_1m_out: 1.2,
+    cost_per_1m_in_cached: 0.06,
+  });
+
+  expect(buildHyperModel(model, undefined, "minimax/MiniMax-M2.7")).toMatchObject({
+    base_model: "minimax/MiniMax-M2.7",
+    cost: { input: 0.3, output: 1.2, cache_read: 0.06 },
+  });
+});
+
+test("syncs Hyper pricing from OpenRouter-style per-token strings", () => {
+  const model = hyperModel({
+    id: "minimax-m2.7",
+    pricing: {
+      prompt: "0.0000003",
+      completion: "0.0000012",
+      input_cache_read: "0.00000006",
+    },
+  });
+
+  expect(buildHyperModel(model, undefined, "minimax/MiniMax-M2.7")).toMatchObject({
+    cost: { input: 0.3, output: 1.2, cache_read: 0.06 },
+  });
+});
+
+test("preserves existing Hyper cost when API pricing is missing", () => {
+  const existing = {
+    cost: { input: 1, output: 2 },
+    release_date: "2026-01-01",
+    last_updated: "2026-01-01",
+  };
+
+  expect(buildHyperModel(hyperModel({ id: "minimax-m2.7" }), existing, "minimax/MiniMax-M2.7")).toMatchObject({
+    cost: { input: 1, output: 2 },
+  });
+});
 
 test("formats interleaved as a root field before reasoning option tables", () => {
   const content = formatToml({
@@ -311,6 +353,21 @@ function llmGatewayModel(overrides: Partial<LLMGatewayModel> = {}): LLMGatewayMo
     context_length: 1_000_000,
     supported_parameters: ["temperature", "max_tokens", "top_p", "effort", "reasoning"],
     structured_outputs: true,
+    ...overrides,
+  };
+}
+
+function hyperModel(overrides: Partial<HyperModel> = {}): HyperModel {
+  return {
+    id: "deepseek-v4-flash",
+    created: 1_780_592_628,
+    display_name: "DeepSeek V4 Flash",
+    supports_reasoning: true,
+    supports_reasoning_effort: true,
+    reasoning_effort_levels: ["high", "xhigh"],
+    supports_attachments: false,
+    context_window: 1_000_000,
+    max_output_tokens: 384_000,
     ...overrides,
   };
 }
