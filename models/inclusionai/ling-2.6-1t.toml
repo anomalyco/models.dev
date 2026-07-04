@@ -1,0 +1,19 @@
+name = "Ling 2.6 1T"
+description = "Ling is a general-purpose large language model series independently developed and open-sourced by Ant Group"
+family = "ling"
+release_date = "2026-05-03"
+last_updated = "2026-05-03"
+attachment = false
+reasoning = true
+temperature = true
+knowledge = "2025-06"
+tool_call = true
+open_weights = true
+
+[limit]
+context = 262_144
+output = 64_000
+
+[modalities]
+input = ["text"]
+output = ["text"]
