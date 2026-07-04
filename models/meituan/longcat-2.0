@@ -1,0 +1,24 @@
+name = "LongCat-2.0"
+description = "First model to be trained on AI ASIC SuperPods"
+family = "LongCat"
+release_date = "2026-06-30"
+last_updated = "2026-06-30"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = true
+knowledge = "2025-05"
+open_weights = true
+
+[limit]
+context = 1_000_000
+output = 384_000
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/meituan-longcat/LongCat-2.0-FP8"
