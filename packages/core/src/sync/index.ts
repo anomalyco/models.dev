@@ -4,9 +4,11 @@ import { mergeDeep } from "remeda";
 import { z } from "zod";
 
 import { AuthoredModel, AuthoredModelShape, ModelMetadata } from "../schema.js";
+import { anthropic } from "./providers/anthropic.js";
 import { baseten } from "./providers/baseten.js";
 import { chutes } from "./providers/chutes.js";
 import { cloudflareWorkersAi } from "./providers/cloudflare-workers-ai.js";
+import { deepinfra } from "./providers/deepinfra.js";
 import { google } from "./providers/google.js";
 import { huggingface } from "./providers/huggingface.js";
 import { llmgateway } from "./providers/llmgateway.js";
@@ -83,9 +85,11 @@ export interface SyncResult {
 }
 
 export const providers: {
+  anthropic: SyncProvider<any>;
   baseten: SyncProvider<any>;
   chutes: SyncProvider<any>;
   "cloudflare-workers-ai": SyncProvider<any>;
+  deepinfra: SyncProvider<any>;
   google: SyncProvider<any>;
   huggingface: SyncProvider<any>;
   llmgateway: SyncProvider<any>;
@@ -95,9 +99,11 @@ export const providers: {
   venice: SyncProvider<any>;
   xai: SyncProvider<any>;
 } = {
+  anthropic,
   baseten,
   chutes,
   "cloudflare-workers-ai": cloudflareWorkersAi,
+  deepinfra,
   google,
   huggingface,
   llmgateway,
@@ -111,7 +117,7 @@ export const providers: {
 export const groups = {
   aggregators: ["huggingface", "llmgateway", "openrouter", "vercel"],
   cloudflare: ["cloudflare-workers-ai"],
-  direct: ["baseten", "chutes", "google", "ovhcloud", "venice", "xai"],
+  direct: ["anthropic", "baseten", "chutes", "deepinfra", "google", "ovhcloud", "venice", "xai"],
 } as const;
 
 type ProviderID = keyof typeof providers;
@@ -708,6 +714,24 @@ function formatNumber(n: number) {
   return Number.isInteger(n) ? formatInteger(n) : String(n);
 }
 
+function formatKey(value: string) {
+  return /^[A-Za-z0-9_-]+$/.test(value) ? value : quote(value);
+}
+
+function formatInlineValue(value: unknown): string {
+  if (typeof value === "string") return quote(value);
+  if (typeof value === "number") return formatNumber(value);
+  if (typeof value === "boolean") return String(value);
+  if (Array.isArray(value)) return `[${value.map(formatInlineValue).join(", ")}]`;
+  if (value !== null && typeof value === "object") {
+    const fields = Object.entries(value)
+      .filter(([, item]) => item !== undefined)
+      .map(([key, item]) => `${formatKey(key)} = ${formatInlineValue(item)}`);
+    return `{ ${fields.join(", ")} }`;
+  }
+  throw new Error("Cannot serialize null or undefined as TOML");
+}
+
 function formatReasoningValue(value: string | null) {
   return value === null ? quote("null") : quote(value);
 }
@@ -825,6 +849,21 @@ export function formatToml(model: z.infer<typeof SyncedAuthoredModel>) {
     if (model.modalities.output !== undefined) {
       lines.push(`output = [${model.modalities.output.map(quote).join(", ")}]`);
     }
+  }
+
+  if (model.provider !== undefined) {
+    lines.push("", "[provider]");
+    if (model.provider.npm !== undefined) lines.push(`npm = ${quote(model.provider.npm)}`);
+    if (model.provider.api !== undefined) lines.push(`api = ${quote(model.provider.api)}`);
+    if (model.provider.shape !== undefined) lines.push(`shape = ${quote(model.provider.shape)}`);
+    if (model.provider.body !== undefined) lines.push(`body = ${formatInlineValue(model.provider.body)}`);
+    if (model.provider.headers !== undefined) lines.push(`headers = ${formatInlineValue(model.provider.headers)}`);
+  }
+
+  for (const [name, mode] of Object.entries(model.experimental?.modes ?? {})) {
+    lines.push("", `[experimental.modes.${formatKey(name)}]`);
+    if (mode.cost !== undefined) lines.push(`cost = ${formatInlineValue(mode.cost)}`);
+    if (mode.provider !== undefined) lines.push(`provider = ${formatInlineValue(mode.provider)}`);
   }
 
   return `${lines.join("\n")}\n`;
