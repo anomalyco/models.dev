@@ -1,0 +1,15 @@
+# Manifest — OpenAI-compatible gateway for AI agents. One endpoint in
+# front of multiple providers (API keys, subscriptions, local models),
+# with per-message cost/token tracking and fallback on failures.
+# The served model is resolved server-side from the user's dashboard
+# configuration; requests target the single "auto" model id.
+# POST /v1/chat/completions is the primary surface; POST /v1/messages
+# accepts Anthropic's thinking parameter. GET /v1/models requires a
+# "Bearer mnfst_*" key and lists only "auto", so this catalog is
+# hand-authored rather than synced.
+# https://manifest.build/docs (accessed 2026-07-05)
+name = "Manifest"
+env = ["MANIFEST_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+api = "https://app.manifest.build/v1"
+doc = "https://manifest.build/docs"

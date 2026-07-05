@@ -1,0 +1,24 @@
+# Manifest resolves the served model server-side from the models the user
+# connected in their dashboard; the request's model field is not used for
+# selection. Limits are a conservative floor across routable models, and
+# cost is omitted because billing follows the user's own provider keys.
+# https://manifest.build/docs (accessed 2026-07-05)
+reasoning_options = []
+name = "Manifest Auto"
+description = "Routes each request to a model resolved from the user's connected providers"
+family = "auto"
+release_date = "2026-01-20"
+last_updated = "2026-01-20"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+open_weights = false
+
+[limit]
+context = 200_000
+output = 64_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
