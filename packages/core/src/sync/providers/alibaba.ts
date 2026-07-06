@@ -332,9 +332,8 @@ function costFromPrices(
     // omission is intentional.
     cache_read: price(
       prices,
-      "input_token_cache",
-      "thinking_input_token_cache",
       "input_token_cache_read",
+      "thinking_input_token_cache_read",
     ),
     cache_write: price(
       prices,
