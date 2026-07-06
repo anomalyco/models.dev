@@ -4,6 +4,7 @@ import { tmpdir } from "node:os";
 import path from "node:path";
 
 import { formatToml, preserveReasoningOptions, syncProvider, type SyncProvider } from "../src/sync/index.js";
+import { buildAlibabaModel, type AlibabaModel } from "../src/sync/providers/alibaba.js";
 import {
   buildAnthropicModel,
   parseAnthropicPricing,
@@ -149,6 +150,44 @@ test("OpenAI availability sync preserves authored metadata", () => {
     { id: "gpt-5.5", object: "model", created: 1, owned_by: "system" },
     { existing: () => authored as never, authored: () => authored },
   )).toEqual({ id: "gpt-5.5", model: authored });
+});
+
+test("Alibaba sync uses explicit cache read pricing", () => {
+  const model: AlibabaModel = {
+    model: "qwen-plus",
+    name: "Qwen Plus",
+    description: "Qwen Plus",
+    features: [],
+    capabilities: ["Reasoning"],
+    provider: null,
+    published_time: "2026-01-01 00:00:00",
+    inference_metadata: {},
+    model_info: {
+      context_window: null,
+      max_input_tokens: null,
+      max_output_tokens: null,
+      max_reasoning_tokens: null,
+      reasoning_max_input_tokens: null,
+      reasoning_max_output_tokens: null,
+    },
+    prices: [{
+      range_name: "Default",
+      prices: [
+        { type: "input_token", price: "9", price_unit: "1M tokens", price_name: "Input" },
+        { type: "output_token", price: "18", price_unit: "1M tokens", price_name: "Output" },
+        { type: "input_token_cache", price: "8", price_unit: "1M tokens", price_name: "Input(Implicit Cache)" },
+        { type: "input_token_cache_read", price: "4", price_unit: "1M tokens", price_name: "Explicit Cache Read" },
+        { type: "input_token_cache_creation_5m", price: "12", price_unit: "1M tokens", price_name: "Explicit Cache Creation" },
+      ],
+    }],
+  };
+
+  expect(buildAlibabaModel(model, undefined, "alibaba/qwen-plus")).toMatchObject({
+    cost: {
+      cache_read: 4,
+      cache_write: 12,
+    },
+  });
 });
 
 test("OpenAI availability sync retains models absent from a scoped response", async () => {
