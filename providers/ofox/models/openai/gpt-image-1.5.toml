@@ -1,0 +1,10 @@
+base_model = "openai/gpt-image-1.5"
+
+[cost]
+input = 5
+output = 10
+cache_read = 1.25
+
+[provider]
+npm = "@ai-sdk/openai"
+api = "https://api.ofox.ai/v1"

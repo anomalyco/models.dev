@@ -1,0 +1,10 @@
+base_model = "openai/gpt-4.1"
+
+[cost]
+input = 2
+output = 8
+cache_read = 0.5
+
+[provider]
+npm = "@ai-sdk/openai"
+api = "https://api.ofox.ai/v1"

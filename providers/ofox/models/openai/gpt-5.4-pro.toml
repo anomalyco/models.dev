@@ -1,0 +1,11 @@
+base_model = "openai/gpt-5.4-pro"
+
+reasoning_options = []
+
+[cost]
+input = 30
+output = 180
+
+[provider]
+npm = "@ai-sdk/openai"
+api = "https://api.ofox.ai/v1"
