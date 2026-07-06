@@ -201,16 +201,11 @@ export const alibaba = {
   },
   translateModel(model, context) {
     const existing = context.existing(model.model);
-    const baseModel = existing === undefined
-      ? resolveAlibabaBaseModel(model.model)
-      : existing.base_model;
-    // Per-model skip: refuse to mint when no base-metadata match exists
-    // and there's no existing provider TOML. Required inline fields
-    // (family, temperature, open_weights, knowledge) aren't authoritatively
-    // exposed by the DashScope API, and inventing them would propagate
-    // to every downstream consumer. A base match lets those fields
-    // inherit at read time via factorBaseModel + resolveBaseModel.
-    if (existing === undefined && baseModel === undefined) return undefined;
+    const baseModel = existing?.base_model ?? resolveAlibabaBaseModel(model.model);
+    // Alibaba provider TOMLs should always use base_model syntax. If no
+    // canonical metadata exists, skip translation and retain any local file via
+    // deleteMissing: false instead of minting an incomplete inline model.
+    if (baseModel === undefined) return undefined;
     return {
       id: model.model,
       model: buildAlibabaModel(model, existing, baseModel),
@@ -444,122 +439,51 @@ function modalities(model: AlibabaModel, existing: ExistingModel | undefined) {
   };
 }
 
-function requireExisting<T>(
-  model: AlibabaModel,
-  field: string,
-  value: T | undefined,
-): T {
-  if (value === undefined) {
-    throw new Error(
-      `Alibaba model ${model.model} has incomplete local TOML metadata required for sync: ${field}`,
-    );
-  }
-  return value;
-}
-
 export function buildAlibabaModel(
   model: AlibabaModel,
   existing: ExistingModel | undefined,
-  baseModel: string | undefined = existing?.base_model ?? resolveAlibabaBaseModel(model.model),
+  baseModel: string,
 ): SyncedModel {
   const publishedDate = dateFromPublishedTime(model.published_time);
   const translatedModalities = modalities(model, existing);
   const translatedCost = cost(model, existing);
   const translatedLimit = limit(model, existing);
 
-  if (baseModel !== undefined) {
-    // Thin-stub path. Fields not supplied here are inherited at read
-    // time by resolveBaseModel in sync/index.ts — see factorBaseModel.
-    // Pass undefined (not false / 0 / "") for fields the API can't
-    // authoritatively expose so the base is the sole authority; writing
-    // false would override a base that says attachment = true.
-    // limitForOmit falls back to baseMetadata.limit when the API returns
-    // null for context_window / max_output_tokens so the stub inherits
-    // the base's limit verbatim.
-    const baseMetadata = baseModelMetadata(baseModel);
-    const baseLimit = baseMetadata.limit as
-      | SyncedFullModel["limit"]
-      | undefined;
-    const limitForOmit = (translatedLimit ??
-      baseLimit ??
-      {}) as SyncedFullModel["limit"];
-    const resolvedReasoning = existing?.reasoning
-      ?? (baseMetadata.reasoning === true);
-    return factorBaseModel(
-      baseModel,
-      {
-        name: existing?.name ?? model.name,
-        family: existing?.family,
-        release_date: existing?.release_date ?? publishedDate,
-        last_updated: existing?.last_updated ?? publishedDate,
-        attachment: existing?.attachment,
-        reasoning: resolvedReasoning,
-        // Default to [] only when the base has no reasoning_options
-        // of its own — otherwise leave undefined so the base's
-        // curated options (if any are added later) inherit.
-        reasoning_options: existing?.reasoning_options
-          ?? (resolvedReasoning && baseMetadata.reasoning_options === undefined
-            ? []
-            : undefined),
-        temperature: existing?.temperature,
-        tool_call: existing?.tool_call,
-        structured_output: existing?.structured_output,
-        knowledge: existing?.knowledge,
-        open_weights: existing?.open_weights,
-        status: existing?.status,
-        interleaved: existing?.interleaved,
-        cost: translatedCost,
-        limit: translatedLimit,
-        modalities: translatedModalities,
-      },
-      limitForOmit,
-      existing?.base_model_omit,
-    );
-  }
-  // Inline path: existing models with no base reference and no resolvable
-  // base match. translateModel skips new models without a base match,
-  // so `existing` is always defined here — requireExisting enforces it.
-  if (existing === undefined) {
-    throw new Error(
-      `Alibaba model ${model.model} reached inline path without existing TOML or base-model match`,
-    );
-  }
-  return {
-    name: existing.name ?? model.name,
-    family: requireExisting(model, "family", existing.family),
-    release_date:
-      existing.release_date ??
-      requireExisting(model, "published_time", publishedDate),
-    last_updated:
-      existing.last_updated ??
-      requireExisting(model, "published_time", publishedDate),
-    attachment:
-      existing.attachment ??
-      translatedModalities?.input.some((value) => value !== "text") ??
-      false,
-    reasoning: existing.reasoning ?? model.capabilities.includes("Reasoning"),
-    // DashScope's catalog blob exposes `capabilities: ["Reasoning"]` but no per-model
-    // reasoning controls (no enable_thinking toggle, no effort levels, no budget knob).
-    // The team hand-curates real `reasoning_options` (e.g. qwen3.5-plus) when the inference
-    // API documents the controls; otherwise default to `[]` so reasoning models still get
-    // a non-undefined `reasoning_options` block.
-    reasoning_options:
-      existing.reasoning_options ??
-      ((existing.reasoning ?? model.capabilities.includes("Reasoning"))
-        ? []
-        : undefined),
-    temperature: requireExisting(model, "temperature", existing.temperature),
-    tool_call:
-      existing.tool_call ?? model.features.includes("function-calling"),
-    structured_output:
-      existing.structured_output ??
-      model.features.includes("structured-outputs"),
-    knowledge: existing.knowledge,
-    open_weights: requireExisting(model, "open_weights", existing.open_weights),
-    status: existing.status,
-    interleaved: existing.interleaved,
-    cost: requireExisting(model, "cost", translatedCost),
-    limit: requireExisting(model, "limit", translatedLimit),
-    modalities: requireExisting(model, "modalities", translatedModalities),
-  };
+  // Fields not supplied here are inherited at read time by resolveBaseModel in
+  // sync/index.ts. Pass undefined for non-authoritative API fields so canonical
+  // model metadata remains the sole source of truth.
+  const baseMetadata = baseModelMetadata(baseModel);
+  const baseLimit = baseMetadata.limit as SyncedFullModel["limit"] | undefined;
+  const limitForOmit = (translatedLimit ?? baseLimit ?? {}) as SyncedFullModel["limit"];
+  const resolvedReasoning = existing?.reasoning ?? (baseMetadata.reasoning === true);
+
+  return factorBaseModel(
+    baseModel,
+    {
+      name: existing?.name ?? model.name,
+      family: existing?.family,
+      release_date: existing?.release_date ?? publishedDate,
+      last_updated: existing?.last_updated ?? publishedDate,
+      attachment: existing?.attachment,
+      reasoning: resolvedReasoning,
+      // Default to [] only when the base has no reasoning_options of its own —
+      // otherwise leave undefined so curated base options inherit.
+      reasoning_options: existing?.reasoning_options
+        ?? (resolvedReasoning && baseMetadata.reasoning_options === undefined
+          ? []
+          : undefined),
+      temperature: existing?.temperature,
+      tool_call: existing?.tool_call,
+      structured_output: existing?.structured_output,
+      knowledge: existing?.knowledge,
+      open_weights: existing?.open_weights,
+      status: existing?.status,
+      interleaved: existing?.interleaved,
+      cost: translatedCost,
+      limit: translatedLimit,
+      modalities: translatedModalities,
+    },
+    limitForOmit,
+    existing?.base_model_omit,
+  );
 }
