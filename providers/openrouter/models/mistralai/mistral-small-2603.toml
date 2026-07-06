@@ -1,6 +1,9 @@
 base_model = "mistral/mistral-small-2603"
 structured_output = true
-reasoning_options = []
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "high"]
 
 [cost]
 input = 0.15

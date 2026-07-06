@@ -1,15 +1,7 @@
+base_model = "openai/gpt-oss-120b"
 name = "gpt-oss-120b"
-family = "gpt-oss"
-attachment = false
-reasoning = true
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
-structured_output = true
-temperature = true
-tool_call = true
-release_date = "2025-08-05"
-last_updated = "2025-08-05"
 knowledge = "2024-06"
-open_weights = true
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
 
 [cost]
 input = 0.15
@@ -17,8 +9,3 @@ output = 0.6
 
 [limit]
 context = 131_000
-output = 32_768
-
-[modalities]
-input = ["text"]
-output = ["text"]

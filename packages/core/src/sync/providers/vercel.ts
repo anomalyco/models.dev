@@ -1,5 +1,6 @@
 import { z } from "zod";
 
+import { describeModel } from "../../describe.js";
 import { inferKimiFamily, ModelFamilyValues } from "../../family.js";
 import type { ExistingModel, SyncProvider, SyncedFullModel, SyncedModel } from "../index.js";
 import { factorBaseModel, resolveCanonicalBaseModel } from "./openrouter.js";
@@ -96,6 +97,37 @@ export function buildVercelModel(model: VercelModel, existing: ExistingModel | u
 
   const synced: SyncedFullModel = {
     name: existing?.name ?? model.name,
+    description: existing?.description ?? describeModel({
+      id: model.id,
+      name: existing?.name ?? model.name,
+      family: existing?.family ?? inferFamily(model.id, model.name),
+      reasoning: existing?.reasoning ?? tags.has("reasoning"),
+      tool_call: model.type === "language"
+        ? existing?.tool_call ?? tags.has("tool-use")
+        : tags.has("tool-use"),
+      structured_output: existing?.structured_output,
+      open_weights: existing?.open_weights ?? false,
+      limit: { context, input, output },
+      modalities: {
+        input: model.type === "transcription"
+          ? ["audio"]
+          : model.type === "realtime"
+          ? ["text", "audio"]
+          : ["text", tags.has("vision") ? "image" : undefined, tags.has("file-input") ? "pdf" : undefined]
+            .filter((value): value is "text" | "image" | "pdf" => value !== undefined),
+        output: model.type === "speech"
+          ? ["audio"]
+          : model.type === "realtime"
+          ? ["text", "audio"]
+          : model.type === "image"
+          ? ["image"]
+          : model.type === "video"
+          ? ["video"]
+          : tags.has("image-generation")
+          ? ["text", "image"]
+          : ["text"],
+      },
+    }),
     family: existing?.family ?? inferFamily(model.id, model.name),
     release_date: releaseDate,
     last_updated: existing?.last_updated ?? releaseDate,
@@ -193,6 +225,7 @@ function sameVercelModel(current: ExistingModel, desired: SyncedModel) {
     [current.base_model, desiredModel.base_model],
     [current.base_model_omit, desiredModel.base_model_omit],
     [current.name, desiredModel.name],
+    [current.description, desiredModel.description],
     [current.family, desiredModel.family],
     [current.attachment, desiredModel.attachment],
     [current.reasoning, desiredModel.reasoning],

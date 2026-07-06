@@ -188,6 +188,7 @@ export const BenchmarkResult = z
 const ModelMetadataBase = z.object({
   id: z.string(),
   name: z.string().min(1, "Model name cannot be empty"),
+  description: z.string().min(1, "Model description cannot be empty"),
   family: ModelFamily.optional(),
   attachment: z.boolean().optional(),
   reasoning: z.boolean().optional(),
@@ -213,6 +214,7 @@ export type ModelMetadata = z.infer<typeof ModelMetadata>;
 const ModelBase = z.object({
   id: z.string(),
   name: z.string().min(1, "Model name cannot be empty"),
+  description: z.string().min(1, "Model description cannot be empty"),
   family: ModelFamily.optional(),
   attachment: z.boolean(),
   reasoning: z.boolean(),
@@ -270,8 +272,30 @@ const ModelBase = z.object({
     .optional(),
 });
 
-function refineModel<T extends z.ZodTypeAny>(schema: T) {
+function refineModel<
+  Output extends z.infer<typeof ModelShape> | z.infer<typeof AuthoredModelShape>,
+  Def extends z.ZodTypeDef,
+  Input,
+>(schema: z.ZodType<Output, Def, Input>) {
   return schema
+    .refine(
+      (data) => {
+        return data.reasoning !== true || data.reasoning_options !== undefined;
+      },
+      {
+        message: "Must set reasoning_options when reasoning is true",
+        path: ["reasoning_options"],
+      },
+    )
+    .refine(
+      (data) => {
+        return data.reasoning !== false || data.reasoning_options === undefined;
+      },
+      {
+        message: "Cannot set reasoning_options when reasoning is false",
+        path: ["reasoning_options"],
+      },
+    )
     .refine(
       (data) => {
         return !(

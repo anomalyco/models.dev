@@ -1,28 +1,15 @@
-name = "GPT OSS 120B"
+base_model = "openai/gpt-oss-120b"
+last_updated = "2026-06-10"
 # Model-specific reasoning HTTP values (accessed 2026-06-25):
 # reasoning_effort = "low"|"medium"|"high"; default is "medium".
 # Sources:
 # https://inference-docs.cerebras.ai/capabilities/reasoning#gpt-oss-reasoning-effort
 # https://inference-docs.cerebras.ai/models/openai-oss
-family = "gpt-oss"
-release_date = "2025-08-05"
-last_updated = "2026-06-10"
-attachment = false
-reasoning = true
 reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
-temperature = true
-tool_call = true
-open_weights = true
-structured_output = true
 
 [cost]
 input = 0.35
 output = 0.75
 
 [limit]
-context = 131_072
 output = 40_960
-
-[modalities]
-input = ["text"]
-output = ["text"]

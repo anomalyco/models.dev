@@ -1,13 +1,5 @@
-name = "GPT OSS 120B"
-family = "gpt-oss"
-release_date = "2025-08-05"
-last_updated = "2025-08-05"
-attachment = false
-reasoning = true
-temperature = true
-tool_call = true
+base_model = "openai/gpt-oss-120b"
 knowledge = "2024-10"
-open_weights = true
 
 [[reasoning_options]]
 type = "effort"
@@ -18,9 +10,4 @@ input = 0.1
 output = 0.5
 
 [limit]
-context = 131_072
 output = 131_072
-
-[modalities]
-input = ["text"]
-output = ["text"]
