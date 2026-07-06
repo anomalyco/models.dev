@@ -1,5 +1,8 @@
 base_model = "minimax/MiniMax-M3"
 
+[[reasoning_options]]
+type = "toggle" # API: {"chat_template_kwargs": {"thinking_mode": "enabled" | "disabled"}} (default "adaptive")
+
 [cost]
 input = 0.4
 output = 2

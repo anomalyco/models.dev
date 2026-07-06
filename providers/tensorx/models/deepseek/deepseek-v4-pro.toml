@@ -1,5 +1,8 @@
 base_model = "deepseek/deepseek-v4-pro"
 
+[[reasoning_options]]
+type = "toggle" # API: {"chat_template_kwargs": {"thinking": true}} (default off)
+
 [cost]
 input = 1.75
 output = 3.5

@@ -1,5 +1,9 @@
 base_model = "nvidia/nemotron-3-super-120b-a12b"
 
+[[reasoning_options]]
+type = "effort" # API: {"reasoning_effort": <value>}; "none" disables reasoning
+values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"]
+
 [cost]
 input = 0.3
 output = 0.9

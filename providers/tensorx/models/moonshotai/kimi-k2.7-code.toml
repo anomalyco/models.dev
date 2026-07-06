@@ -1,5 +1,8 @@
 base_model = "moonshotai/kimi-k2.7-code"
 
+[[reasoning_options]]
+type = "toggle" # API: {"chat_template_kwargs": {"thinking": false}} (default on)
+
 [cost]
 input = 1.25
 output = 4.5

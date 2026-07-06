@@ -1,16 +1,8 @@
-name = "GPT-OSS 120B"
-family = "gpt-oss"
-release_date = "2025-08-05"
-last_updated = "2025-08-05"
-attachment = false
-reasoning = true
-temperature = true
-tool_call = true
+base_model = "openai/gpt-oss-120b"
 knowledge = "2024-10"
-open_weights = true
 
 [[reasoning_options]]
-type = "effort"
+type = "effort" # API: {"reasoning_effort": <value>}; reasoning is mandatory, "none" is rejected
 values = ["minimal", "low", "medium", "high", "xhigh", "max"]
 
 [cost]
@@ -18,11 +10,3 @@ input = 0.04
 output = 0.2
 cache_read = 0.01
 cache_write = 0.05
-
-[limit]
-context = 131000
-output = 32768
-
-[modalities]
-input = ["text"]
-output = ["text"]

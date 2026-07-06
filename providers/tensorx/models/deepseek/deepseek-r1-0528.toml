@@ -1,16 +1,10 @@
+base_model = "deepseek/deepseek-r1"
 name = "DeepSeek R1-0528"
-family = "deepseek-thinking"
 release_date = "2025-05-28"
 last_updated = "2025-05-28"
-attachment = false
-reasoning = true
-temperature = true
-tool_call = true
-knowledge = "2024-07"
-open_weights = true
 
 [[reasoning_options]]
-type = "effort"
+type = "effort" # API: {"reasoning_effort": <value>}; reasoning is mandatory, "none" is rejected
 values = ["minimal", "low", "medium", "high", "xhigh", "max"]
 
 [cost]
@@ -22,7 +16,3 @@ cache_write = 0.825
 [limit]
 context = 164000
 output = 8192
-
-[modalities]
-input = ["text"]
-output = ["text"]

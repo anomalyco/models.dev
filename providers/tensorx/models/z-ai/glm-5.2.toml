@@ -1,5 +1,12 @@
 base_model = "zhipuai/glm-5.2"
 
+[[reasoning_options]]
+type = "toggle" # API: {"chat_template_kwargs": {"enable_thinking": false}} (default on)
+
+[[reasoning_options]]
+type = "effort" # API: {"reasoning_effort": <value>}; "none" disables reasoning
+values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"]
+
 [cost]
 input = 1.5
 output = 4.5
