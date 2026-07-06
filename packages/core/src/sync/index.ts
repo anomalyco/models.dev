@@ -4,6 +4,7 @@ import { mergeDeep } from "remeda";
 import { z } from "zod";
 
 import { AuthoredModel, AuthoredModelShape, ModelMetadata } from "../schema.js";
+import { alibaba } from "./providers/alibaba.js";
 import { anthropic } from "./providers/anthropic.js";
 import { baseten } from "./providers/baseten.js";
 import { chutes } from "./providers/chutes.js";
@@ -87,6 +88,7 @@ export interface SyncResult {
 }
 
 export const providers: {
+  alibaba: SyncProvider<any>;
   anthropic: SyncProvider<any>;
   baseten: SyncProvider<any>;
   chutes: SyncProvider<any>;
@@ -103,6 +105,7 @@ export const providers: {
   venice: SyncProvider<any>;
   xai: SyncProvider<any>;
 } = {
+  alibaba,
   anthropic,
   baseten,
   chutes,
@@ -123,7 +126,7 @@ export const providers: {
 export const groups = {
   aggregators: ["huggingface", "llmgateway", "openrouter", "vercel"],
   cloudflare: ["cloudflare-workers-ai"],
-  direct: ["anthropic", "baseten", "chutes", "deepinfra", "digitalocean", "google", "openai", "ovhcloud", "venice", "xai"],
+  direct: ["alibaba", "anthropic", "baseten", "chutes", "deepinfra", "digitalocean", "google", "openai", "ovhcloud", "venice", "xai"],
 } as const;
 
 type ProviderID = keyof typeof providers;
