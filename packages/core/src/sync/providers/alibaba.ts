@@ -276,7 +276,9 @@ function costFromPrices(
   prices: z.infer<typeof AlibabaPrice>[],
   existing: Cost | undefined,
 ): Cost | undefined {
-  const input = price(
+  const thinkingInput = price(prices, "thinking_input_token");
+  const thinkingOutput = price(prices, "thinking_output_token");
+  const standardInput = price(
     prices,
     "input_token",
     "text_input_token",
@@ -288,7 +290,7 @@ function costFromPrices(
     // still report `text_input_token`, so this falls through cleanly for them.
     "omni_no_audio_input_token",
   );
-  const output = price(
+  const standardOutput = price(
     prices,
     "output_token",
     "purein_text_output_token",
@@ -299,6 +301,8 @@ function costFromPrices(
     // (handled below in `output_audio`).
     "omni_no_audio_output_token",
   );
+  const input = standardInput ?? thinkingInput;
+  const output = standardOutput ?? thinkingOutput;
   const imageOutput = price(
     prices,
     "image_number",
@@ -327,7 +331,9 @@ function costFromPrices(
   return {
     input: input ?? existing?.input ?? 0,
     output: output ?? existing?.output ?? 0,
-    reasoning: price(prices, "thinking_output_token") ?? existing?.reasoning,
+    reasoning: standardOutput !== undefined
+      ? thinkingOutput ?? existing?.reasoning
+      : existing?.reasoning,
     // API-only, no `?? existing` fallback: DashScope reliably exposes cache price types;
     // omission is intentional.
     cache_read: price(
