@@ -8,6 +8,7 @@ import { baseten } from "./providers/baseten.js";
 import { cloudflareWorkersAi } from "./providers/cloudflare-workers-ai.js";
 import { google } from "./providers/google.js";
 import { openrouter } from "./providers/openrouter.js";
+import { tokenmix } from "./providers/tokenmix.js";
 import { ovhcloud } from "./providers/ovhcloud.js";
 import { vercel } from "./providers/vercel.js";
 import { venice } from "./providers/venice.js";
@@ -81,6 +82,7 @@ export const providers: {
   "cloudflare-workers-ai": SyncProvider<any>;
   google: SyncProvider<any>;
   openrouter: SyncProvider<any>;
+  tokenmix: SyncProvider<any>;
   ovhcloud: SyncProvider<any>;
   vercel: SyncProvider<any>;
   venice: SyncProvider<any>;
@@ -90,6 +92,7 @@ export const providers: {
   "cloudflare-workers-ai": cloudflareWorkersAi,
   google,
   openrouter,
+  tokenmix,
   ovhcloud,
   vercel,
   venice,
@@ -97,7 +100,7 @@ export const providers: {
 };
 
 export const groups = {
-  aggregators: ["openrouter", "vercel"],
+  aggregators: ["openrouter", "tokenmix", "vercel"],
   cloudflare: ["cloudflare-workers-ai"],
   direct: ["baseten", "google", "ovhcloud", "venice", "xai"],
 } as const;

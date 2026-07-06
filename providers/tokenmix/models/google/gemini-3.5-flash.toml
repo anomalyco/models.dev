@@ -1,0 +1,21 @@
+name = "Gemini 3.5 Flash"
+release_date = "2026-05-18"
+last_updated = "2026-05-18"
+attachment = true
+reasoning = true
+tool_call = true
+structured_output = true
+open_weights = false
+reasoning_options = []
+
+[cost]
+input = 1.455
+output = 8.73
+
+[limit]
+context = 1_048_576
+output = 65_535
+
+[modalities]
+input = ["text", "image", "audio", "video", "pdf"]
+output = ["text"]

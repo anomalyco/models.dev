@@ -1,0 +1,21 @@
+name = "Claude Sonnet 4.6"
+release_date = "2026-02-16"
+last_updated = "2026-02-16"
+attachment = true
+reasoning = true
+tool_call = true
+structured_output = true
+open_weights = false
+reasoning_options = []
+
+[cost]
+input = 3
+output = 15
+
+[limit]
+context = 1_000_000
+output = 64_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

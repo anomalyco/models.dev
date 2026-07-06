@@ -1,5 +1,21 @@
 base_model = "alibaba/qwen3.7-plus"
+name = "Qwen 3.7 Plus"
+release_date = "2026-05-26"
+last_updated = "2026-05-26"
+attachment = false
+reasoning = true
+tool_call = true
+open_weights = false
+reasoning_options = []
 
 [cost]
-input = 0.2941
-output = 1.1765
+input = 0.294118
+output = 1.176471
+
+[limit]
+context = 1_000_000
+output = 65_536
+
+[modalities]
+input = ["text"]
+output = ["text"]

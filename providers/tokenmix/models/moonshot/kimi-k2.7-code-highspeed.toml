@@ -1,7 +1,6 @@
-base_model = "moonshotai/kimi-k2.6"
-name = "Kimi K2.6"
-release_date = "2026-04-20"
-last_updated = "2026-04-20"
+name = "Kimi K2.7 Code HighSpeed"
+release_date = "2026-06-30"
+last_updated = "2026-06-30"
 attachment = true
 reasoning = true
 tool_call = true
@@ -10,12 +9,12 @@ open_weights = false
 reasoning_options = []
 
 [cost]
-input = 0.860294
-output = 3.573529
+input = 1.816176
+output = 7.544118
 
 [limit]
-context = 256_000
-output = 256_000
+context = 262_144
+output = 32_768
 
 [modalities]
 input = ["text", "image", "video"]

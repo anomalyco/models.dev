@@ -1,7 +1,6 @@
-base_model = "deepseek/deepseek-v4-pro"
-name = "DeepSeek V4 Pro"
-release_date = "2026-04-24"
-last_updated = "2026-04-24"
+name = "GLM-5.2"
+release_date = "2026-06-17"
+last_updated = "2026-06-17"
 attachment = false
 reasoning = true
 tool_call = true
@@ -10,12 +9,12 @@ open_weights = false
 reasoning_options = []
 
 [cost]
-input = 0.419118
-output = 0.838235
+input = 1.117647
+output = 3.911765
 
 [limit]
 context = 1_000_000
-output = 384_000
+output = 131_072
 
 [modalities]
 input = ["text"]

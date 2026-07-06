@@ -1,5 +1,22 @@
 base_model = "deepseek/deepseek-v4-flash"
+name = "DeepSeek V4 Flash"
+release_date = "2026-04-24"
+last_updated = "2026-04-24"
+attachment = false
+reasoning = true
+tool_call = true
+structured_output = true
+open_weights = false
+reasoning_options = []
 
 [cost]
-input = 0.1324
-output = 0.2647
+input = 0.132353
+output = 0.264706
+
+[limit]
+context = 1_000_000
+output = 384_000
+
+[modalities]
+input = ["text"]
+output = ["text"]
