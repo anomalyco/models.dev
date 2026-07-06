@@ -35,11 +35,12 @@ jobs:
           OPENCODE_API_KEY: ${{ secrets.OPENCODE_API_KEY }}
           OPENCODE_PERMISSION: '{"bash":"deny"}'
         run: |
-          set -o pipefail
+          set -euo pipefail
+          EVENTS_FILE="$RUNNER_TEMP/issue-fixer-events.jsonl"
           RESPONSE_FILE="$RUNNER_TEMP/issue-fixer-response.md"
           echo "RESPONSE_FILE=$RESPONSE_FILE" >> "$GITHUB_ENV"
 
-          opencode run --agent issue-fixer -m opencode/glm-5.2 <<EOF | tee "$RESPONSE_FILE"
+          opencode run --agent issue-fixer -m opencode/glm-5.2 --format json <<EOF | tee "$EVENTS_FILE"
           A new GitHub issue was opened in anomalyco/models.dev.
 
           Issue #$ISSUE_NUMBER: $ISSUE_TITLE
@@ -53,6 +54,11 @@ jobs:
 
           If it is a feature request, a request to track a new kind of information, a question, or any miscellaneous non-catalog-data request, do not edit files. Respond briefly that it needs maintainer review and no automated fix was opened.
           EOF
+
+          if ! jq -ers 'map(select(.type == "text") | .part.text) | last | select(length > 0)' "$EVENTS_FILE" > "$RESPONSE_FILE"; then
+            echo "Issue fixer did not produce a final response." >&2
+            exit 1
+          fi
 
       - name: Check changed paths
         if: success()
@@ -69,8 +75,9 @@ jobs:
         if: success()
         env:
           BRANCH: issue-${{ github.event.issue.number }}
-          TITLE: "fix: #${{ github.event.issue.number }}"
         run: |
+          set -euo pipefail
+
           if [ -z "$(git status --porcelain)" ]; then
             if [ -s "$RESPONSE_FILE" ]; then
               gh issue comment "$ISSUE_NUMBER" --body-file "$RESPONSE_FILE"
@@ -82,7 +89,17 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git switch -c "$BRANCH"
           git add -A
+          TITLE="fix: ${ISSUE_TITLE:0:200}"
           git commit -m "$TITLE"
           git push origin "$BRANCH"
 
-          gh pr create --base dev --head "$BRANCH" --title "$TITLE" --body "Closes #$ISSUE_NUMBER"
+          PR_BODY="$RUNNER_TEMP/issue-fixer-pr-body.md"
+          {
+            cat "$RESPONSE_FILE"
+            echo
+            echo "Closes #$ISSUE_NUMBER"
+            echo
+            echo "Automated by the issue fixer: $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
+          } > "$PR_BODY"
+
+          gh pr create --base dev --head "$BRANCH" --title "$TITLE" --body-file "$PR_BODY"

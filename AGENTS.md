@@ -68,6 +68,11 @@ items are **hard blockers**; the last two are **strongly recommended** but not b
   model docs, or API reference that justifies the change in the PR body. This is highly
   recommended, not a blocker, but PRs without any sourcing should be treated with more
   scrutiny and verified before merge.
+- **In-file comments must live at the top of the file.** The daily model sync rewrites
+  synced provider TOMLs by parsing and re-serializing them, which discards every comment
+  except a leading header block. Put source citations and rationale as a comment block at
+  the very top of the file (above the first key); comments placed between sections or
+  above individual keys are silently deleted on the next sync run.
 
 ### Logo guidelines
 - File lives at `providers/<provider-id>/logo.svg`, SVG format.

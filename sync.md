@@ -15,7 +15,9 @@ The grouped sync targets are available for local convenience, but CI syncs each 
 - `bun models:sync cloudflare` syncs the Cloudflare sync group.
 - `bun models:sync direct` syncs every provider in the `direct` group.
 - `bun models:sync google` syncs only Google.
+- `bun models:sync digitalocean` syncs only DigitalOcean.
 - `bun models:sync xai` syncs only xAI.
+- `bun models:sync openai` syncs only OpenAI catalog availability.
 - `bun models:sync aggregators --dry-run` prints changes without writing model files.
 - `bun models:sync aggregators --new-only` creates new model files but skips updates and removals.
 - `bun validate` validates the generated catalog after a sync.
@@ -170,6 +172,14 @@ xAI is implemented in `packages/core/src/sync/providers/xai.ts`.
 - Existing xAI models are updated from API-authoritative fields while local metadata is preserved for fields the API does not expose, especially output token limits and some feature/capability flags.
 - New xAI API models are reported in `.sync/model-sync-report.md` but not created automatically because the API does not provide enough authoritative metadata for complete catalog entries.
 
+## OpenAI Notes
+
+- OpenAI is implemented in `packages/core/src/sync/providers/openai.ts`.
+- Source endpoint: `https://api.openai.com/v1/models`.
+- Required auth: `OPENAI_API_KEY` from an automation account with access to the full first-party catalog.
+- The endpoint is used only to monitor catalog availability. Existing TOMLs are preserved byte-for-byte, including models absent from the response, because model access can be scoped to the API project.
+- Fine-tuned and customer-owned models are excluded. Unknown first-party models are reported for manual review without changing the catalog.
+
 ## OVHcloud Notes
 
 OVHcloud AI Endpoints is implemented in `packages/core/src/sync/providers/ovhcloud.ts`.
@@ -182,6 +192,14 @@ OVHcloud AI Endpoints is implemented in `packages/core/src/sync/providers/ovhclo
 - Authored `reasoning_options` are preserved for reasoning models. `Qwen3-32B` supports toggling reasoning through OVHcloud's documented `/no_think` prompt control. Both gpt-oss models support `low`, `medium`, and `high` reasoning effort. The Qwen3.5 models support `none`, `low`, `medium`, and `high`; Qwen3.6-27B additionally supports `minimal`.
 - `attachment` is derived from non-text `input_modalities`, and `open_weights` from the presence of `hugging_face_id`.
 - `release_date`/`last_updated` default to the catalog `created` timestamp but preserve any existing hand-authored dates; `knowledge`, `family`, `status`, `interleaved`, and `limit.input` are preserved when present.
+
+## DigitalOcean Notes
+
+- DigitalOcean is implemented in `packages/core/src/sync/providers/digitalocean.ts`.
+- Source endpoints: `https://api.digitalocean.com/v2/gen-ai/models` for catalog metadata and `https://www.digitalocean.com/api/static-content/v1/products` for pricing.
+- Required auth: `DIGITALOCEAN_API_TOKEN` or `DIGITALOCEAN_ACCESS_TOKEN`; the pricing endpoint is public.
+- The sync manages text-output models. Other model types and local models absent from the API are retained for manual lifecycle review.
+- Catalog metadata updates names, modalities, limits, and end-of-life status. Pricing updates input/output and long-context rates while preserving cache, reasoning, and audio prices that the pricing API does not expose.
 
 ## Vercel Status
 
