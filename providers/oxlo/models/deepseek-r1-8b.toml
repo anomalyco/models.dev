@@ -1,0 +1,23 @@
+name = "DeepSeek R1 Distill 8B"
+description = "Efficient reasoning-focused language model optimized for fast, cost-effective problem solving and structured AI tasks."
+family = "deepseek-thinking"
+release_date = "2025-01-20"
+last_updated = "2025-01-20"
+attachment = false
+reasoning = true
+reasoning_options = []
+temperature = true
+tool_call = true
+open_weights = true
+
+[cost]
+input = 0
+output = 0
+
+[limit]
+context = 131_072
+output = 32_768
+
+[modalities]
+input = ["text"]
+output = ["text"]

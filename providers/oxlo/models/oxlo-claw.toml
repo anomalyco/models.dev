@@ -1,0 +1,21 @@
+name = "Oxlo Claw"
+description = "Premium multimodal model with advanced tool calling, vision analysis, and agentic capabilities for OpenClaw and complex workflows."
+release_date = "2026-02-24"
+last_updated = "2026-02-24"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = true
+open_weights = false
+
+[cost]
+input = 0
+output = 0
+
+[limit]
+context = 128_000
+output = 32_768
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

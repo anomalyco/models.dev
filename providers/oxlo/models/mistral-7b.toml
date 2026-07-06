@@ -1,0 +1,22 @@
+name = "Mistral 7B"
+description = "Fast multimodal language model with vision support for chat, image analysis, and reasoning."
+family = "mistral"
+release_date = "2023-09-27"
+last_updated = "2023-09-27"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = true
+open_weights = true
+
+[cost]
+input = 0
+output = 0
+
+[limit]
+context = 131_072
+output = 32_768
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
