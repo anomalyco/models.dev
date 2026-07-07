@@ -1,25 +1,26 @@
 name = "anthropic--claude-4.5-opus"
-description = "Flagship Claude model for deep reasoning, coding, and long-horizon agents"
+description = "Anthropic Claude 4.5 Opus"
 family = "claude-opus"
 release_date = "2025-11-24"
 last_updated = "2025-11-24"
 attachment = true
 reasoning = true
-reasoning_options = [{ type = "budget_tokens", min = 1_024 }]
+# Bedrock Invoke body: $.thinking = {"type":"enabled","budget_tokens":N} or {"type":"disabled"}, with N >= 1024 and N < $.max_tokens. Bedrock Converse nests that object at $.additionalModelRequestFields.thinking. https://docs.aws.amazon.com/bedrock/latest/userguide/conversation-inference.html#converse-additional-model-request-fields (accessed 2026-06-25)
+reasoning_options = [{ type = "budget_tokens", min = 1024 }]
 temperature = true
 tool_call = true
 knowledge = "2025-05"
 open_weights = false
 
 [cost]
-input = 5.00
-output = 25.00
-cache_read = 0.50
-cache_write = 6.25
+input = 3.67
+output = 18.06
+cache_read = 0.37
+cache_write = 4.59
 
 [limit]
-context = 200_000
-output = 64_000
+context = 200000
+output = 64000
 
 [modalities]
 input = ["text", "image", "pdf"]

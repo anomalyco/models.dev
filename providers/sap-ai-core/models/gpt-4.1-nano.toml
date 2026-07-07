@@ -1,0 +1,16 @@
+name = "gpt-4.1-nano"
+base_model = "openai/gpt-4.1-nano"
+last_updated = "2026-07-07"
+attachment = true
+open_weights = false
+
+[cost]
+input = 0.08
+output = 0.26
+
+[limit]
+context = 1047576
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

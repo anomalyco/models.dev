@@ -1,0 +1,16 @@
+name = "mistralai--mistral-small"
+base_model = "mistral/mistral-small-2506"
+last_updated = "2026-07-07"
+attachment = true
+open_weights = true
+
+[cost]
+input = 0.07
+output = 0.28
+
+[limit]
+context = 128000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

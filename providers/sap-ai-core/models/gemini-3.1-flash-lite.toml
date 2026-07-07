@@ -1,22 +1,18 @@
-name = "gemini-2.5-flash"
-base_model = "google/gemini-2.5-flash"
-last_updated = "2025-06-05"
+name = "gemini-3.1-flash-lite"
+base_model = "google/gemini-3.1-flash-lite"
+last_updated = "2026-07-07"
 attachment = true
 # Vertex Gemini adapter: $.generationConfig.thinkingConfig.thinkingBudget is 0 (off), -1 (dynamic), or 1..24576. https://cloud.google.com/vertex-ai/generative-ai/docs/thinking (accessed 2026-06-25)
 reasoning_options = [{ type = "toggle" }, { type = "budget_tokens", min = 0, max = 24576 }]
-tool_call = true
-structured_output = true
 open_weights = false
 
 [cost]
-input = 0.27
-output = 1.67
-cache_read = 0.03
+input = 0.2
+output = 1.08
 
 [limit]
 context = 1000000
-output = 65536
 
 [modalities]
-input = ["text", "image", "audio", "video", "pdf"]
+input = ["text", "image"]
 output = ["text"]

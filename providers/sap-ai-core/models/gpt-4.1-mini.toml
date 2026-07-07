@@ -1,24 +1,19 @@
 name = "gpt-4.1-mini"
-description = "Compact GPT model for low-latency assistance and high-volume workloads"
-family = "gpt-mini"
-release_date = "2025-04-14"
+base_model = "openai/gpt-4.1-mini"
 last_updated = "2025-04-14"
 attachment = true
-reasoning = false
-temperature = true
-knowledge = "2024-04"
 tool_call = true
 structured_output = true
 open_weights = false
 
 [cost]
-input = 0.40
-output = 1.60
-cache_read = 0.10
+input = 0.26
+output = 0.99
+cache_read = 0.07
 
 [limit]
-context = 1_047_576
-output = 32_768
+context = 1047576
+output = 32768
 
 [modalities]
 input = ["text", "image", "pdf"]

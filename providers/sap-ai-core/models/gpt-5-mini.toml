@@ -1,26 +1,21 @@
 name = "gpt-5-mini"
-description = "Compact GPT model for low-latency assistance and high-volume workloads"
-family = "gpt-mini"
-release_date = "2025-08-07"
+base_model = "openai/gpt-5-mini"
 last_updated = "2025-08-07"
 attachment = true
-reasoning = true
+# Azure OpenAI deployment adapter: raw Chat uses top-level $.reasoning_effort = "minimal"|"low"|"medium"|"high"; there is no explicit off value for original gpt-5. https://learn.microsoft.com/en-us/azure/ai-foundry/openai/how-to/reasoning (accessed 2026-06-25)
 reasoning_options = [{ type = "effort", values = ["minimal", "low", "medium", "high"] }]
-temperature = false
-knowledge = "2024-05-30"
 tool_call = true
 structured_output = true
 open_weights = false
 
 [cost]
-input = 0.25
-output = 2.00
-cache_read = 0.025
+input = 0.24
+output = 1.41
+cache_read = 0.02
 
 [limit]
-context = 400_000
-input = 272_000
-output = 128_000
+context = 272000
+output = 128000
 
 [modalities]
 input = ["text", "image"]

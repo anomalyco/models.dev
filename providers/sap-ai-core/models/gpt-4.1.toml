@@ -1,24 +1,19 @@
 name = "gpt-4.1"
-description = "GPT model for general reasoning, writing, coding, and tool-assisted tasks"
-family = "gpt"
-release_date = "2025-04-14"
+base_model = "openai/gpt-4.1"
 last_updated = "2025-04-14"
 attachment = true
-reasoning = false
-temperature = true
-knowledge = "2024-04"
 tool_call = true
 structured_output = true
 open_weights = false
 
 [cost]
-input = 2.00
-output = 8.00
-cache_read = 0.50
+input = 1.29
+output = 4.94
+cache_read = 0.32
 
 [limit]
-context = 1_047_576
-output = 32_768
+context = 1047576
+output = 32768
 
 [modalities]
 input = ["text", "image", "pdf"]

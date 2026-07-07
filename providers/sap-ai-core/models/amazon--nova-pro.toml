@@ -1,0 +1,21 @@
+name = "amazon--nova-pro"
+description = "Amazon Nova Pro model"
+release_date = "2026-07-07"
+last_updated = "2026-07-07"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = true
+open_weights = false
+
+[cost]
+input = 0.56
+output = 2.13
+
+[limit]
+context = 300000
+output = 4096
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
