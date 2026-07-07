@@ -32,6 +32,7 @@ const Capabilities = z.object({
 export const NanoGptModel = z.object({
   id: z.string().min(1),
   name: z.string().nullish(),
+  description: z.string().nullish(),
   created: z.number().nullish(),
   owned_by: z.string().nullish(),
   context_length: z.number().int().nonnegative().nullish(),
@@ -126,6 +127,7 @@ export function buildNanoGptModel(
 
   return {
     name: existing?.name ?? model.name ?? humanizeModelName(model.id),
+    description: existing?.description ?? model.description ?? `${model.name ?? humanizeModelName(model.id)} on NanoGPT.`,
     family: existing?.family ?? inferFamily(model.id, model.name ?? ""),
     release_date: existing?.release_date ?? releaseDate,
     last_updated: existing?.last_updated ?? releaseDate,

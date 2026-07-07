@@ -1,5 +1,6 @@
 import { z } from "zod";
 
+import { describeModel } from "../../describe.js";
 import type { ExistingModel, SyncProvider, SyncedModel } from "../index.js";
 
 const API_BASE = "https://api.x.ai/v1";
@@ -161,6 +162,7 @@ function cost(model: XAIModel, existing: ExistingModel) {
 
 export function buildXAIModel(model: XAIModel, existing: ExistingModel): SyncedModel {
   const name = existing.name;
+  const description = existing.description;
   const attachment = existing.attachment;
   const reasoning = existing.reasoning;
   const toolCall = existing.tool_call;
@@ -190,6 +192,21 @@ export function buildXAIModel(model: XAIModel, existing: ExistingModel): SyncedM
     base_model: existing.base_model,
     base_model_omit: existing.base_model_omit,
     name,
+    description: description ?? describeModel({
+      id: model.id,
+      name,
+      family: existing.family,
+      reasoning,
+      tool_call: toolCall,
+      structured_output: existing.structured_output,
+      open_weights: openWeights,
+      limit: {
+        input: limit.input,
+        context: model.max_prompt_length ?? limit.context,
+        output: limit.output,
+      },
+      modalities: { input, output },
+    }),
     family: existing.family,
     release_date: model.canonical_id === undefined ? created : releaseDate!,
     last_updated: model.canonical_id === undefined ? created : lastUpdated!,

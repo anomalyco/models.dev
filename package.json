@@ -18,7 +18,9 @@
     "test": "bun test",
     "validate": "bun ./packages/core/script/validate.ts",
     "compare:migrations": "bun ./packages/core/script/compare-model-migrations.ts",
+    "anthropic:sync": "bun ./packages/core/script/sync-models.ts anthropic",
     "baseten:sync": "bun ./packages/core/script/sync-models.ts baseten",
+    "deepinfra:sync": "bun ./packages/core/script/sync-models.ts deepinfra",
     "cloudflare:sync": "bun ./packages/core/script/sync-models.ts cloudflare-workers-ai",
     "chutes:sync": "bun ./packages/core/script/sync-models.ts chutes",
     "databricks:generate": "bun ./packages/core/script/generate-databricks.ts",
@@ -29,7 +31,7 @@
     "venice:sync": "bun ./packages/core/script/sync-models.ts venice",
     "vercel:generate": "bun ./packages/core/script/sync-models.ts vercel",
     "wandb:generate": "bun ./packages/core/script/generate-wandb.ts",
-    "digitalocean:generate": "bun ./packages/core/script/generate-digitalocean.ts",
+    "digitalocean:sync": "bun ./packages/core/script/sync-models.ts digitalocean",
     "ambient:generate": "bun ./packages/core/script/generate-ambient.ts",
     "models:sync": "bun ./packages/core/script/sync-models.ts"
   },

@@ -1,5 +1,6 @@
 name = "Fugu Ultra"
-reasoning_options = [{ type = "effort", values = ["max", "xhigh", "high"] }]
+description = "Quality-first multi-agent model for hard research, analysis, and competitions"
+family = "fugu"
 release_date = "2026-06-24"
 last_updated = "2026-06-24"
 attachment = true
@@ -8,6 +9,10 @@ temperature = false
 tool_call = true
 structured_output = true
 open_weights = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["max", "xhigh", "high"]
 
 [cost]
 input = 5

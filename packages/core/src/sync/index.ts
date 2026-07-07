@@ -4,13 +4,17 @@ import { mergeDeep } from "remeda";
 import { z } from "zod";
 
 import { AuthoredModel, AuthoredModelShape, ModelMetadata } from "../schema.js";
+import { anthropic } from "./providers/anthropic.js";
 import { baseten } from "./providers/baseten.js";
 import { chutes } from "./providers/chutes.js";
 import { cloudflareWorkersAi } from "./providers/cloudflare-workers-ai.js";
+import { deepinfra } from "./providers/deepinfra.js";
+import { digitalocean } from "./providers/digitalocean.js";
 import { google } from "./providers/google.js";
 import { huggingface } from "./providers/huggingface.js";
 import { llmgateway } from "./providers/llmgateway.js";
 import { nanoGpt } from "./providers/nano-gpt.js";
+import { openai } from "./providers/openai.js";
 import { openrouter } from "./providers/openrouter.js";
 import { ovhcloud } from "./providers/ovhcloud.js";
 import { vercel } from "./providers/vercel.js";
@@ -64,7 +68,10 @@ export interface SyncProvider<SourceModel> {
   parseModels(raw: unknown): SourceModel[];
   translateModel(
     model: SourceModel,
-    context: { existing(id: string): ExistingModel | undefined },
+    context: {
+      existing(id: string): ExistingModel | undefined;
+      authored(id: string): ExistingModel | undefined;
+    },
   ): { id: string; model: SyncedModel; metadata?: { id: string; model: SyncedMetadata } } | undefined;
 }
 
@@ -81,26 +88,34 @@ export interface SyncResult {
 }
 
 export const providers: {
+  anthropic: SyncProvider<any>;
   baseten: SyncProvider<any>;
   chutes: SyncProvider<any>;
   "cloudflare-workers-ai": SyncProvider<any>;
+  deepinfra: SyncProvider<any>;
+  digitalocean: SyncProvider<any>;
   google: SyncProvider<any>;
   huggingface: SyncProvider<any>;
   llmgateway: SyncProvider<any>;
   "nano-gpt": SyncProvider<any>;
+  openai: SyncProvider<any>;
   openrouter: SyncProvider<any>;
   ovhcloud: SyncProvider<any>;
   vercel: SyncProvider<any>;
   venice: SyncProvider<any>;
   xai: SyncProvider<any>;
 } = {
+  anthropic,
   baseten,
   chutes,
   "cloudflare-workers-ai": cloudflareWorkersAi,
+  deepinfra,
+  digitalocean,
   google,
   huggingface,
   llmgateway,
   "nano-gpt": nanoGpt,
+  openai,
   openrouter,
   ovhcloud,
   vercel,
@@ -111,7 +126,7 @@ export const providers: {
 export const groups = {
   aggregators: ["huggingface", "llmgateway", "nano-gpt", "openrouter", "vercel"],
   cloudflare: ["cloudflare-workers-ai"],
-  direct: ["baseten", "chutes", "google", "ovhcloud", "venice", "xai"],
+  direct: ["anthropic", "baseten", "chutes", "deepinfra", "digitalocean", "google", "openai", "ovhcloud", "venice", "xai"],
 } as const;
 
 type ProviderID = keyof typeof providers;
@@ -143,6 +158,9 @@ export async function syncProvider<SourceModel>(
     const translated = provider.translateModel(sourceModel, {
       existing(id) {
         return existing.get(`${id}.toml`)?.toml;
+      },
+      authored(id) {
+        return existing.get(`${id}.toml`)?.authored;
       },
     });
     if (translated === undefined) {
@@ -208,7 +226,7 @@ export async function syncProvider<SourceModel>(
 
     desired.set(relativePath, {
       model: parsed.data,
-      content: formatToml(parsed.data),
+      content: (existing.get(relativePath)?.header ?? "") + formatToml(parsed.data),
     });
   }
 
@@ -219,10 +237,11 @@ export async function syncProvider<SourceModel>(
   for (const [relativePath, file] of desiredMetadata) {
     const filePath = path.join(metadataDir, relativePath);
     const currentFile = Bun.file(filePath);
-    const current = await currentFile.exists()
+    const currentText = await currentFile.exists() ? await currentFile.text() : undefined;
+    const current = currentText !== undefined
       ? ModelMetadata.safeParse({
           id: relativePath.slice(0, -5),
-          ...Bun.TOML.parse(await currentFile.text()) as Record<string, unknown>,
+          ...Bun.TOML.parse(currentText) as Record<string, unknown>,
         })
       : undefined;
     if (current?.success && stable(current.data) === stable(file.model)) continue;
@@ -231,7 +250,7 @@ export async function syncProvider<SourceModel>(
       console.log(`Would ${current === undefined ? "create" : "update"} metadata ${relativePath}`);
     } else {
       await mkdir(path.dirname(filePath), { recursive: true });
-      await Bun.write(filePath, file.content);
+      await Bun.write(filePath, (currentText !== undefined ? leadingComments(currentText) : "") + file.content);
     }
   }
 
@@ -354,7 +373,12 @@ export function preserveReasoningOptions(
     const { reasoning_options: _reasoningOptions, ...withoutReasoningOptions } = model;
     return withoutReasoningOptions as SyncedModel;
   }
-  if (model.reasoning_options !== undefined || existing?.reasoning_options === undefined) return model;
+  if (model.reasoning_options !== undefined) return model;
+  if (existing?.reasoning_options === undefined) {
+    return (model.reasoning ?? resolvedReasoning) === true
+      ? { ...model, reasoning_options: [] }
+      : model;
+  }
   return {
     ...model,
     reasoning_options: existing.reasoning_options,
@@ -392,6 +416,7 @@ async function readExisting(modelsDir: string) {
   const existing = new Map<string, {
     authored: ExistingModel;
     toml: ExistingModel;
+    header: string;
     symlink: boolean;
   }>();
   const brokenSymlinks = new Set<string>();
@@ -423,7 +448,7 @@ async function readExisting(modelsDir: string) {
       ? authored
       : resolveBaseModel(authored, modelMetadata ?? {}, filePath);
 
-    existing.set(file, { authored, toml, symlink });
+    existing.set(file, { authored, toml, header: leadingComments(text), symlink });
   }
 
   return { models: existing, brokenSymlinks, modelMetadata };
@@ -673,6 +698,23 @@ function quote(value: string) {
   return `"${value.replaceAll("\\", "\\\\").replaceAll('"', '\\"')}"`;
 }
 
+// Preserve the leading comment block (header) authored at the top of a TOML file.
+// `Bun.TOML.parse` discards comments, so the serializer must re-attach them or
+// every rewrite would silently delete hand-authored documentation.
+function leadingComments(text: string) {
+  const header: string[] = [];
+  for (const line of text.split("\n")) {
+    const trimmed = line.trim();
+    if (trimmed === "" || trimmed.startsWith("#")) {
+      header.push(line);
+    } else {
+      break;
+    }
+  }
+  while (header.length > 0 && header[header.length - 1]?.trim() === "") header.pop();
+  return header.length > 0 ? `${header.join("\n")}\n` : "";
+}
+
 function formatInteger(n: number) {
   return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, "_");
 }
@@ -681,18 +723,59 @@ function formatNumber(n: number) {
   return Number.isInteger(n) ? formatInteger(n) : String(n);
 }
 
+function formatKey(value: string) {
+  return /^[A-Za-z0-9_-]+$/.test(value) ? value : quote(value);
+}
+
+function formatInlineValue(value: unknown): string {
+  if (typeof value === "string") return quote(value);
+  if (typeof value === "number") return formatNumber(value);
+  if (typeof value === "boolean") return String(value);
+  if (Array.isArray(value)) return `[${value.map(formatInlineValue).join(", ")}]`;
+  if (value !== null && typeof value === "object") {
+    const fields = Object.entries(value)
+      .filter(([, item]) => item !== undefined)
+      .map(([key, item]) => `${formatKey(key)} = ${formatInlineValue(item)}`);
+    return `{ ${fields.join(", ")} }`;
+  }
+  throw new Error("Cannot serialize null or undefined as TOML");
+}
+
 function formatReasoningValue(value: string | null) {
   return value === null ? quote("null") : quote(value);
+}
+
+const ReasoningEffortOrder = new Map<string | null, number>([
+  ["none", 0],
+  ["minimal", 1],
+  ["low", 2],
+  ["medium", 3],
+  ["high", 4],
+  ["xhigh", 5],
+  ["max", 6],
+  ["default", 7],
+  [null, 8],
+]);
+
+function sortReasoningValues(values: Array<string | null>) {
+  return [...values].sort((a, b) => {
+    const order = (ReasoningEffortOrder.get(a) ?? Number.MAX_SAFE_INTEGER)
+      - (ReasoningEffortOrder.get(b) ?? Number.MAX_SAFE_INTEGER);
+    return order || formatReasoningValue(a).localeCompare(formatReasoningValue(b));
+  });
 }
 
 export function formatToml(model: z.infer<typeof SyncedAuthoredModel>) {
   const lines: string[] = [];
 
-  if (model.base_model !== undefined) lines.push(`base_model = ${quote(model.base_model)}`);
-  if (model.base_model_omit !== undefined) {
+  if ("base_model" in model && model.base_model !== undefined) {
+    lines.push(`base_model = ${quote(model.base_model)}`);
+  }
+  if ("base_model_omit" in model && model.base_model_omit !== undefined) {
     lines.push(`base_model_omit = [${model.base_model_omit.map(quote).join(", ")}]`);
   }
   if (model.name !== undefined) lines.push(`name = ${quote(model.name)}`);
+  if (model.description !== undefined) lines.push(`description = ${quote(model.description)}`);
   if (model.family !== undefined) lines.push(`family = ${quote(model.family)}`);
   if (model.release_date !== undefined) lines.push(`release_date = ${quote(model.release_date)}`);
   if (model.last_updated !== undefined) lines.push(`last_updated = ${quote(model.last_updated)}`);
@@ -722,7 +805,8 @@ export function formatToml(model: z.infer<typeof SyncedAuthoredModel>) {
     lines.push("", "[[reasoning_options]]");
     lines.push(`type = ${quote(option.type)}`);
     if (option.type === "effort") {
-      lines.push(`values = [${option.values.map(formatReasoningValue).join(", ")}]`);
+      const values = sortReasoningValues(option.values).map(formatReasoningValue).join(", ");
+      lines.push(`values = [${values}]`);
     }
     if (option.type === "budget_tokens") {
       if (option.min !== undefined) lines.push(`min = ${formatInteger(option.min)}`);
@@ -732,8 +816,8 @@ export function formatToml(model: z.infer<typeof SyncedAuthoredModel>) {
 
   if (model.cost !== undefined) {
     lines.push("", "[cost]");
-    lines.push(`input = ${formatNumber(model.cost.input)}`);
-    lines.push(`output = ${formatNumber(model.cost.output)}`);
+    if (model.cost.input !== undefined) lines.push(`input = ${formatNumber(model.cost.input)}`);
+    if (model.cost.output !== undefined) lines.push(`output = ${formatNumber(model.cost.output)}`);
     if (model.cost.reasoning !== undefined) {
       lines.push(`reasoning = ${formatNumber(model.cost.reasoning)}`);
     }
@@ -752,9 +836,11 @@ export function formatToml(model: z.infer<typeof SyncedAuthoredModel>) {
 
     for (const tier of model.cost.tiers ?? []) {
       lines.push("", "[[cost.tiers]]");
-      lines.push(`tier = { type = ${quote(tier.tier.type ?? "context")}, size = ${formatInteger(tier.tier.size)} }`);
-      lines.push(`input = ${formatNumber(tier.input)}`);
-      lines.push(`output = ${formatNumber(tier.output)}`);
+      if (tier.tier?.size !== undefined) {
+        lines.push(`tier = { type = ${quote(tier.tier.type ?? "context")}, size = ${formatInteger(tier.tier.size)} }`);
+      }
+      if (tier.input !== undefined) lines.push(`input = ${formatNumber(tier.input)}`);
+      if (tier.output !== undefined) lines.push(`output = ${formatNumber(tier.output)}`);
       if (tier.reasoning !== undefined) lines.push(`reasoning = ${formatNumber(tier.reasoning)}`);
       if (tier.cache_read !== undefined) lines.push(`cache_read = ${formatNumber(tier.cache_read)}`);
       if (tier.cache_write !== undefined) lines.push(`cache_write = ${formatNumber(tier.cache_write)}`);
@@ -776,6 +862,21 @@ export function formatToml(model: z.infer<typeof SyncedAuthoredModel>) {
     if (model.modalities.output !== undefined) {
       lines.push(`output = [${model.modalities.output.map(quote).join(", ")}]`);
     }
+  }
+
+  if (model.provider !== undefined) {
+    lines.push("", "[provider]");
+    if (model.provider.npm !== undefined) lines.push(`npm = ${quote(model.provider.npm)}`);
+    if (model.provider.api !== undefined) lines.push(`api = ${quote(model.provider.api)}`);
+    if (model.provider.shape !== undefined) lines.push(`shape = ${quote(model.provider.shape)}`);
+    if (model.provider.body !== undefined) lines.push(`body = ${formatInlineValue(model.provider.body)}`);
+    if (model.provider.headers !== undefined) lines.push(`headers = ${formatInlineValue(model.provider.headers)}`);
+  }
+
+  for (const [name, mode] of Object.entries(model.experimental?.modes ?? {})) {
+    lines.push("", `[experimental.modes.${formatKey(name)}]`);
+    if (mode.cost !== undefined) lines.push(`cost = ${formatInlineValue(mode.cost)}`);
+    if (mode.provider !== undefined) lines.push(`provider = ${formatInlineValue(mode.provider)}`);
   }
 
   return `${lines.join("\n")}\n`;
