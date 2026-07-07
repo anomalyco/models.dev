@@ -66,8 +66,11 @@ jobs:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           BASETEN_API_KEY: ${{ secrets.BASETEN_API_KEY }}
           DEEPINFRA_API_KEY: ${{ secrets.DEEPINFRA_API_KEY }}
+          DIGITALOCEAN_API_TOKEN: ${{ secrets.DIGITALOCEAN_API_TOKEN }}
+          DIGITALOCEAN_ACCESS_TOKEN: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
           OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           VENICE_API_KEY: ${{ secrets.VENICE_API_KEY }}
           LLMGATEWAY_API_KEY: ${{ secrets.LLMGATEWAY_API_KEY }}
           GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
@@ -80,13 +83,22 @@ jobs:
       - name: Validate models
         run: bun validate
 
-      - name: Create pull request
+      - name: Report changes
         env:
           GH_TOKEN: ${{ github.token }}
           BRANCH: automation/sync-models-${{ matrix.provider }}
           LABELS: automation,model-sync,provider:${{ matrix.provider }}
           TITLE: "chore(sync): update ${{ matrix.name }} model catalog"
         run: |
+          tee -a "$GITHUB_STEP_SUMMARY" < .sync/model-sync-report.md >/dev/null
+
+          label_args=()
+          IFS=',' read -ra labels <<< "$LABELS"
+          for label in "${labels[@]}"; do
+            gh label create "$label" --color "0E8A16" --description "Automated model catalog sync" >/dev/null 2>&1 || true
+            label_args+=(--label "$label")
+          done
+
           if [ -z "$(git status --porcelain -- models providers)" ]; then
             echo "No model catalog changes found."
             exit 0
@@ -99,13 +111,6 @@ jobs:
           git add models providers
           git commit -m "$TITLE"
           git push --force-with-lease origin "$BRANCH"
-
-          label_args=()
-          IFS=',' read -ra labels <<< "$LABELS"
-          for label in "${labels[@]}"; do
-            gh label create "$label" --color "0E8A16" --description "Automated model catalog sync" >/dev/null 2>&1 || true
-            label_args+=(--label "$label")
-          done
 
           pr_number="$(gh pr list --head "$BRANCH" --base dev --json number --jq '.[0].number')"
           if [ -n "$pr_number" ]; then
