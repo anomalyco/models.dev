@@ -1,0 +1,8 @@
+base_model = "deepseek/deepseek-v4-pro"
+reasoning = true
+reasoning_options = [{ type = "toggle" }, { type = "budget_tokens", min = 1024, max = 1000000 }]
+
+[cost]
+input = 0.435
+output = 0.87
+reasoning = 0.87

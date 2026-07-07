@@ -1,0 +1,8 @@
+base_model = "deepseek/deepseek-v4-flash"
+reasoning = true
+reasoning_options = [{ type = "toggle" }, { type = "budget_tokens", min = 1024, max = 1000000 }]
+
+[cost]
+input = 0.09
+output = 0.18
+reasoning = 0.18

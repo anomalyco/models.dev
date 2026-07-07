@@ -1,0 +1,8 @@
+base_model = "moonshotai/kimi-k2.7-code"
+reasoning = true
+reasoning_options = [{ type = "toggle" }, { type = "budget_tokens", min = 1024, max = 262000 }]
+
+[cost]
+input = 0.68
+output = 3.41
+reasoning = 3.41
