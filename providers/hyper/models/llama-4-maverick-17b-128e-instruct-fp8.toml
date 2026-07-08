@@ -1,10 +1,12 @@
 base_model = "meta/llama-4-maverick-17b-instruct"
-reasoning = true
 attachment = false
-reasoning_options = [{ type = "toggle" }]
+reasoning = true
 
 [interleaved]
 field = "reasoning_content"
+
+[[reasoning_options]]
+type = "toggle"
 
 [cost]
 input = 0.274
@@ -14,7 +16,3 @@ cache_read = 0.137
 [limit]
 context = 430_000
 output = 43_000
-
-[modalities]
-input = ["text"]
-output = ["text"]

@@ -1,15 +1,17 @@
 base_model = "meta/llama-3.3-70b-instruct"
-reasoning = true
 attachment = false
-reasoning_options = [{ type = "toggle" }]
+reasoning = true
 
 [interleaved]
 field = "reasoning_content"
 
+[[reasoning_options]]
+type = "toggle"
+
 [cost]
-input = 0.5526
-output = 1.0746
-cache_read = 0.2763
+input = 0.6066
+output = 1.0386
+cache_read = 0.3033
 
 [limit]
 output = 12_800

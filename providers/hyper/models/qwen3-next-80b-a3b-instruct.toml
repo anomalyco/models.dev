@@ -1,14 +1,16 @@
 base_model = "alibaba/qwen3-next-80b-a3b-instruct"
 reasoning = true
-reasoning_options = [{ type = "toggle" }]
 
 [interleaved]
 field = "reasoning_content"
 
+[[reasoning_options]]
+type = "toggle"
+
 [cost]
-input = 0.128
-output = 1.28
-cache_read = 0.064
+input = 0.1175
+output = 1.136
+cache_read = 0.05875
 
 [limit]
 context = 262_144
