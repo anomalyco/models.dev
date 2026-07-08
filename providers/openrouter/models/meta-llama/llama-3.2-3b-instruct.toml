@@ -7,17 +7,17 @@ attachment = false
 reasoning = false
 temperature = true
 tool_call = false
-structured_output = false
+structured_output = true
 knowledge = "2023-12-31"
 open_weights = true
 
 [cost]
-input = 0.0509
-output = 0.335
+input = 0.05
+output = 0.33
 
 [limit]
-context = 80_000
-output = 80_000
+context = 131_072
+output = 131_072
 
 [modalities]
 input = ["text"]

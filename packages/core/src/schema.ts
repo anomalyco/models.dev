@@ -272,7 +272,11 @@ const ModelBase = z.object({
     .optional(),
 });
 
-function refineModel<T extends z.ZodTypeAny>(schema: T) {
+function refineModel<
+  Output extends z.infer<typeof ModelShape> | z.infer<typeof AuthoredModelShape>,
+  Def extends z.ZodTypeDef,
+  Input,
+>(schema: z.ZodType<Output, Def, Input>) {
   return schema
     .refine(
       (data) => {
