@@ -1,14 +1,9 @@
+base_model = "moonshotai/kimi-k2-thinking"
 name = "Kimi-K2-Thinking"
-description = "Kimi reasoning model for long-horizon research, planning, and tool use"
-family = "kimi-thinking"
 release_date = "2025-11-07"
 last_updated = "2025-11-07"
 attachment = true
-reasoning = true
 reasoning_options = [{ type = "toggle" }]
-temperature = true
-open_weights = true
-tool_call = true
 
 [cost]
 input = 0.6061
@@ -18,7 +13,3 @@ cache_read = 0.1515
 [limit]
 context = 256_000
 output = 100_352
-
-[modalities]
-input = ["text"]
-output = ["text"]

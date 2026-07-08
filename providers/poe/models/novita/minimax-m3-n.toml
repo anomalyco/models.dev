@@ -1,14 +1,7 @@
+base_model = "minimax/MiniMax-M3"
 name = "Minimax-M3-N"
-description = "MiniMax multimodal model for long-context coding, perception, and agent planning"
-family = "minimax"
-release_date = "2026-06-01"
 last_updated = "2026-06-25"
-attachment = true
-reasoning = true
 reasoning_options = [{ type = "toggle" }]
-temperature = true
-open_weights = true
-tool_call = true
 
 [cost]
 input = 0.303
@@ -21,4 +14,3 @@ output = 131_072
 
 [modalities]
 input = ["text", "image", "video", "pdf"]
-output = ["text"]

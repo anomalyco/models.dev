@@ -1,15 +1,7 @@
+base_model = "alibaba/qwen3.7-plus"
 name = "Qwen3.7-Plus"
-description = "Multimodal Qwen workhorse for long-context agents, visual inputs, and coding"
-family = "qwen"
-release_date = "2026-06-02"
-last_updated = "2026-06-02"
 attachment = true
-reasoning = true
 reasoning_options = [{ type = "toggle" }]
-temperature = true
-knowledge = "2025-04"
-open_weights = false
-tool_call = true
 
 [cost]
 input = 0.404
@@ -20,10 +12,5 @@ tier = { type = "context", size = 256_000 }
 input = 1.212
 output = 4.8486
 
-[limit]
-context = 1_000_000
-output = 64_000
-
 [modalities]
 input = ["text", "image", "video", "pdf"]
-output = ["text"]

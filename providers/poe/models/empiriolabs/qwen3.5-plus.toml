@@ -1,15 +1,7 @@
+base_model = "alibaba/qwen3.5-plus"
 name = "Qwen3.5-Plus"
-description = "Qwen vision-language model for visual reasoning, documents, and agent tasks"
-family = "qwen"
-release_date = "2026-02-16"
-last_updated = "2026-02-16"
 attachment = true
-reasoning = true
 reasoning_options = [{ type = "toggle" }]
-temperature = true
-knowledge = "2025-04"
-open_weights = false
-tool_call = true
 
 [cost]
 input = 0.3636
@@ -20,10 +12,5 @@ tier = { type = "context", size = 256_000 }
 input = 1.0908
 output = 6.6909
 
-[limit]
-context = 1_000_000
-output = 65_536
-
 [modalities]
 input = ["text", "image", "video", "pdf"]
-output = ["text"]

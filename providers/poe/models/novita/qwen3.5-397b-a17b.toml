@@ -1,23 +1,15 @@
+base_model = "alibaba/qwen3.5-397b-a17b"
 name = "Qwen3.5-397B-A17B"
-description = "Large open Qwen multimodal MoE for visual agents and long technical tasks"
-family = "qwen"
 release_date = "2026-02-17"
 last_updated = "2026-02-17"
-attachment = true
-reasoning = true
 reasoning_options = [{ type = "toggle" }]
-temperature = true
-open_weights = true
-tool_call = true
 
 [cost]
 input = 0.6061
 output = 3.6364
 
 [limit]
-context = 262_144
 output = 64_000
 
 [modalities]
 input = ["text", "image", "video", "pdf"]
-output = ["text"]

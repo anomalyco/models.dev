@@ -1,14 +1,7 @@
+base_model = "minimax/MiniMax-M2.5"
 name = "Minimax-M2.5"
-description = "Prior MiniMax coding model for agent workflows, office edits, and automation"
-family = "minimax"
-release_date = "2026-02-12"
-last_updated = "2026-02-12"
 attachment = true
-reasoning = true
 reasoning_options = []
-temperature = true
-open_weights = false
-tool_call = true
 
 [cost]
 input = 0.303
@@ -18,7 +11,3 @@ cache_read = 0.0303
 [limit]
 context = 205_000
 output = 131_100
-
-[modalities]
-input = ["text"]
-output = ["text"]

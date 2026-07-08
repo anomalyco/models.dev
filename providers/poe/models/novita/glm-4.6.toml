@@ -1,14 +1,6 @@
-name = "GLM-4.6"
-description = "Flagship GLM model for hybrid reasoning, coding, and agentic engineering"
-family = "glm"
-release_date = "2025-09-30"
-last_updated = "2025-09-30"
+base_model = "zhipuai/glm-4.6"
 attachment = true
-reasoning = true
 reasoning_options = [{ type = "toggle" }]
-temperature = true
-open_weights = true
-tool_call = true
 
 [cost]
 input = 0.5556
@@ -17,8 +9,6 @@ cache_read = 0.1111
 
 [limit]
 context = 205_000
-output = 131_072
 
 [modalities]
 input = ["text", "pdf"]
-output = ["text"]

@@ -1,14 +1,9 @@
+base_model = "minimax/MiniMax-M2.1"
 name = "Minimax-M2.1"
-description = "MiniMax model for chat, coding, office work, and agentic tasks"
-family = "minimax"
 release_date = "2025-12-26"
 last_updated = "2025-12-26"
 attachment = true
-reasoning = true
 reasoning_options = [{ type = "toggle" }]
-temperature = true
-open_weights = true
-tool_call = true
 
 [cost]
 input = 0.303
@@ -17,8 +12,3 @@ cache_read = 0.0303
 
 [limit]
 context = 205_000
-output = 131_072
-
-[modalities]
-input = ["text"]
-output = ["text"]

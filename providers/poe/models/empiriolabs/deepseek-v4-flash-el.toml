@@ -1,25 +1,14 @@
+base_model = "deepseek/deepseek-v4-flash"
 name = "DeepSeek-V4-Flash-EL"
-description = "Fast DeepSeek model for efficient chat, coding help, and agent loops"
-family = "deepseek-flash"
 attachment = true
-reasoning = true
 reasoning_options = [{ type = "toggle" }, { type = "budget_tokens", min = 1, max = 393_216 }]
-temperature = true
-tool_call = true
-release_date = "2026-04-24"
-last_updated = "2026-04-24"
-knowledge = "2025-05"
-open_weights = true
 
 [cost]
 input = 0.1394
 output = 0.2778
 
 [limit]
-context = 1_000_000
 input = 1_000_000
-output = 384_000
 
 [modalities]
 input = ["text", "pdf"]
-output = ["text"]
