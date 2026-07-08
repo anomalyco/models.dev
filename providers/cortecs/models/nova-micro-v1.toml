@@ -1,0 +1,13 @@
+base_model = "amazon/nova-micro-v1"
+reasoning_options = []
+
+[cost]
+input = 0.041
+output = 0.164
+
+[limit]
+context = 128000
+output = 128000
+
+[interleaved]
+field = "reasoning_content"

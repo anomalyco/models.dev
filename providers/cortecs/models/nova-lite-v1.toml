@@ -1,0 +1,13 @@
+base_model = "amazon/nova-lite-v1"
+reasoning_options = []
+
+[cost]
+input = 0.071
+output = 0.283
+
+[limit]
+context = 300000
+output = 300000
+
+[interleaved]
+field = "reasoning_content"

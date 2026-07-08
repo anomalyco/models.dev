@@ -1,0 +1,13 @@
+base_model = "alibaba/qwen3.5-9b"
+reasoning_options = []
+
+[cost]
+input = 0.114
+output = 0.172
+
+[limit]
+context = 262000
+output = 262000
+
+[interleaved]
+field = "reasoning_content"

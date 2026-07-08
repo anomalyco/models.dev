@@ -1,0 +1,13 @@
+base_model = "meta/llama-3.1-8b-instruct"
+reasoning_options = []
+
+[cost]
+input = 0.172
+output = 0.172
+
+[limit]
+context = 128000
+output = 128000
+
+[interleaved]
+field = "reasoning_content"

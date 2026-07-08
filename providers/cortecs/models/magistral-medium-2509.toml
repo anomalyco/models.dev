@@ -1,0 +1,14 @@
+base_model = "mistral/magistral-medium-2509"
+reasoning_options = []
+
+[cost]
+input = 2.29
+output = 5.724
+cache_read = 0.229
+
+[limit]
+context = 128000
+output = 128000
+
+[interleaved]
+field = "reasoning_content"

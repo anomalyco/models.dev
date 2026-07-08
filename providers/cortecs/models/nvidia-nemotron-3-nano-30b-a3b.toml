@@ -1,0 +1,13 @@
+base_model = "nvidia/nemotron-3-nano-30b-a3b"
+reasoning_options = []
+
+[cost]
+input = 0.061
+output = 0.246
+
+[limit]
+context = 128000
+output = 128000
+
+[interleaved]
+field = "reasoning_content"

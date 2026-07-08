@@ -1,0 +1,13 @@
+base_model = "google/gemma-4-31b-it"
+reasoning_options = []
+
+[cost]
+input = 0.229
+output = 0.401
+
+[limit]
+context = 128000
+output = 128000
+
+[interleaved]
+field = "reasoning_content"

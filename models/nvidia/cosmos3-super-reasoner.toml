@@ -1,0 +1,19 @@
+name = "Cosmos3 Super Reasoner"
+family = "cosmos"
+release_date = "2026-06-01"
+last_updated = "2026-06-01"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = false
+open_weights = true
+knowledge = "2026-06"
+
+[limit]
+context = 256000
+output = 256000
+
+[modalities]
+input = ["text"]
+output = ["text"]

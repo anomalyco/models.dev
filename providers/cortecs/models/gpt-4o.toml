@@ -1,0 +1,14 @@
+base_model = "openai/gpt-4o"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
+
+[cost]
+input = 2.732
+output = 10.929
+cache_read = 1.366
+
+[limit]
+context = 128000
+output = 128000
+
+[interleaved]
+field = "reasoning_content"

@@ -1,0 +1,15 @@
+base_model = "deepseek/deepseek-v3.1"
+reasoning_options = []
+
+[cost]
+input = 0.203
+output = 0.813
+cache_read = 0.051
+cache_write = 0.254
+
+[limit]
+context = 164000
+output = 164000
+
+[interleaved]
+field = "reasoning_content"

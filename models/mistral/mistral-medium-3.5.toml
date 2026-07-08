@@ -1,0 +1,23 @@
+name = "Mistral Medium 3.5"
+family = "mistral-medium"
+release_date = "2026-04-28"
+last_updated = "2026-04-28"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = false
+open_weights = true
+knowledge = "2026-04"
+
+[limit]
+context = 256000
+output = 256000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/mistralai/Mistral-Medium-3.5-128B"

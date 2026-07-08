@@ -1,0 +1,16 @@
+base_model = "google/gemini-2.5-flash"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }, { type = "budget_tokens", min = 1_024 }]
+
+[cost]
+input = 0.307
+output = 2.56
+cache_read = 0.03
+cache_write = 0.099
+input_audio = 1.024
+
+[limit]
+context = 1048576
+output = 1048576
+
+[interleaved]
+field = "reasoning_content"

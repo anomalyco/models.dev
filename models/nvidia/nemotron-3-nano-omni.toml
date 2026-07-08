@@ -1,0 +1,23 @@
+name = "Nvidia Nemotron 3 Nano Omni"
+family = "nvidia-nemotron"
+release_date = "2026-04-28"
+last_updated = "2026-04-28"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = false
+open_weights = true
+knowledge = "2026-04"
+
+[limit]
+context = 300000
+output = 300000
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/nvidia/Nemotron-3-Nano-Omni-30B-A3B-Reasoning-BF16"

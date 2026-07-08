@@ -1,0 +1,13 @@
+base_model = "hcompany/holo2-30b-a3b"
+reasoning_options = []
+
+[cost]
+input = 0.343
+output = 0.801
+
+[limit]
+context = 22000
+output = 22000
+
+[interleaved]
+field = "reasoning_content"

@@ -1,0 +1,13 @@
+base_model = "alibaba/qwen2-5-vl-72b-instruct"
+reasoning_options = []
+
+[cost]
+input = 0.256
+output = 0.768
+
+[limit]
+context = 32000
+output = 32000
+
+[interleaved]
+field = "reasoning_content"

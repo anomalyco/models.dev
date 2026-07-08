@@ -1,0 +1,13 @@
+base_model = "nvidia/llama-3.1-nemotron-ultra-253b-v1"
+reasoning_options = []
+
+[cost]
+input = 0.615
+output = 1.843
+
+[limit]
+context = 128000
+output = 128000
+
+[interleaved]
+field = "reasoning_content"

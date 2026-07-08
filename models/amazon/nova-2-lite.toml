@@ -1,0 +1,19 @@
+name = "Nova 2 Lite"
+family = "nova"
+release_date = "2025-12-02"
+last_updated = "2025-12-02"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = false
+open_weights = false
+knowledge = "2025-12"
+
+[limit]
+context = 1000000
+output = 1000000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

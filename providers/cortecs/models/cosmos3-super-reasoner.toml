@@ -1,0 +1,13 @@
+base_model = "nvidia/cosmos3-super-reasoner"
+reasoning_options = []
+
+[cost]
+input = 0.102
+output = 0.305
+
+[limit]
+context = 256000
+output = 256000
+
+[interleaved]
+field = "reasoning_content"

@@ -1,0 +1,19 @@
+name = "Nova Lite V1"
+family = "nova"
+release_date = "2024-12-05"
+last_updated = "2024-12-05"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = false
+open_weights = false
+knowledge = "2024-12"
+
+[limit]
+context = 300000
+output = 300000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

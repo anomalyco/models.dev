@@ -1,0 +1,23 @@
+name = "Holo 2 30B A3B"
+family = "holo"
+release_date = "2025-11-13"
+last_updated = "2025-11-13"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = false
+open_weights = true
+knowledge = "2025-11"
+
+[limit]
+context = 22000
+output = 22000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/Hcompany/Holo2-30B-A3B"

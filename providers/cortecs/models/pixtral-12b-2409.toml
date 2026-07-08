@@ -1,0 +1,13 @@
+base_model = "mistral/pixtral-12b-2409"
+reasoning_options = []
+
+[cost]
+input = 0.229
+output = 0.229
+
+[limit]
+context = 128000
+output = 128000
+
+[interleaved]
+field = "reasoning_content"
