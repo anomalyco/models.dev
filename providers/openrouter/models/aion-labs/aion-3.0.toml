@@ -1,18 +1,19 @@
-reasoning_options = []
-name = "Aion-1.0"
+name = "Aion-3.0"
 description = "Reasoning model for deliberate analysis, multi-step problem solving, and tool use"
-release_date = "2025-02-04"
-last_updated = "2025-02-04"
+release_date = "2026-07-07"
+last_updated = "2026-07-07"
 attachment = false
 reasoning = true
 temperature = true
-tool_call = false
+tool_call = true
 structured_output = false
 open_weights = false
+reasoning_options = []
 
 [cost]
-input = 4
-output = 8
+input = 3
+output = 6
+cache_read = 0.75
 
 [limit]
 context = 131_072
