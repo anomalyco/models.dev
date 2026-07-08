@@ -1,0 +1,13 @@
+base_model = "anthropic/claude-opus-4-8"
+structured_output = true
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
+
+[cost]
+input = 3.25
+output = 16.25
+cache_read = 0.325
+cache_write = 4.0625
+
+[provider]
+npm = "@ai-sdk/anthropic"
+api = "https://api.tokenlab.sh/v1"

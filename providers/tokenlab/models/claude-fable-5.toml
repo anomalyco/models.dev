@@ -1,0 +1,13 @@
+base_model = "anthropic/claude-fable-5"
+structured_output = true
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
+
+[cost]
+input = 6.50
+output = 32.50
+cache_read = 0.65
+cache_write = 8.125
+
+[provider]
+npm = "@ai-sdk/anthropic"
+api = "https://api.tokenlab.sh/v1"

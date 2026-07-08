@@ -1,0 +1,9 @@
+name = "TokenLab"
+env = ["TOKENLAB_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+# TokenLab exposes OpenAI-compatible Chat Completions and Responses on /v1,
+# Anthropic Messages on /v1/messages, plus native Gemini and media endpoints.
+# This catalog entry includes the models that can be represented with the
+# current models.dev provider/model schema.
+api = "https://api.tokenlab.sh/v1"
+doc = "https://docs.tokenlab.sh/api-reference/models/list-models"

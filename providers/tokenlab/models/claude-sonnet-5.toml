@@ -1,0 +1,13 @@
+base_model = "anthropic/claude-sonnet-5"
+structured_output = true
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
+
+[cost]
+input = 1.30
+output = 6.50
+cache_read = 0.13
+cache_write = 1.625
+
+[provider]
+npm = "@ai-sdk/anthropic"
+api = "https://api.tokenlab.sh/v1"

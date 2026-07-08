@@ -1,0 +1,11 @@
+base_model = "xai/grok-4-fast"
+reasoning_options = [{ type = "toggle" }]
+
+[cost]
+input = 0.20
+output = 0.50
+cache_read = 0.05
+
+[limit]
+context = 2_000_000
+output = 16_384

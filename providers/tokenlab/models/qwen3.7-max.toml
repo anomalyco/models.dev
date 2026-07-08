@@ -1,0 +1,7 @@
+base_model = "alibaba/qwen3.7-max"
+reasoning_options = [{ type = "toggle" }, { type = "budget_tokens", max = 262_144 }]
+
+[cost]
+input = 1.76470588
+output = 5.29411764
+cache_read = 0.35294117

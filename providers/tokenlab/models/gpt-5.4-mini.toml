@@ -1,0 +1,12 @@
+base_model = "openai/gpt-5.4-mini"
+reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh"] }]
+
+[cost]
+input = 0.225
+output = 1.35
+cache_read = 0.0225
+
+[provider]
+npm = "@ai-sdk/openai"
+api = "https://api.tokenlab.sh/v1"
+shape = "responses"
