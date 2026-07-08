@@ -1,23 +1,19 @@
 name = "Mistral 7B Instruct V0.3"
-family = "mistral-7b"
+description = "Mistral-7B-Instruct-v0.3 model is a fine-tuned version of the Mistral 7B base model, optimized for instruction-following tasks. Released in 2023, it is intended for demonstration purposes and does not include built-in guardrails or moderation features."
+family = "mistral"
 release_date = "2024-05-22"
 last_updated = "2024-05-22"
 attachment = false
 reasoning = false
 temperature = true
 tool_call = true
-structured_output = false
 open_weights = true
 knowledge = "2024-05"
 
 [limit]
-context = 127000
-output = 127000
+context = 127_000
+output = 127_000
 
 [modalities]
 input = ["text"]
 output = ["text"]
-
-[[weights]]
-label = "Hugging Face"
-url = "https://huggingface.co/mistralai/Mistral-7B-Instruct-v0.3"

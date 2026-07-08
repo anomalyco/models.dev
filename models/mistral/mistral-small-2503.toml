@@ -1,4 +1,5 @@
 name = "Mistral Small 2503"
+description = "Combines advanced text and vision capabilities with 24 billion parameters, supporting multilingual tasks and long contexts up to 131k tokens, making it versatile for various applications without sacrificing performance."
 family = "mistral-small"
 release_date = "2025-03-17"
 last_updated = "2025-03-17"
@@ -6,18 +7,13 @@ attachment = true
 reasoning = false
 temperature = true
 tool_call = true
-structured_output = false
 open_weights = true
 knowledge = "2025-03"
 
 [limit]
-context = 128000
-output = 128000
+context = 128_000
+output = 128_000
 
 [modalities]
 input = ["text", "image"]
 output = ["text"]
-
-[[weights]]
-label = "Hugging Face"
-url = "https://huggingface.co/mistralai/Mistral-Small-3.1-24B-Instruct-2503"

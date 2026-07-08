@@ -1,4 +1,5 @@
 name = "Pixtral 12B 2409"
+description = "Pixtral 2409 12B is a state-of-the-art multimodal model with 12B parameters and a 400M vision encoder, natively trained on interleaved text and image data. It excels in tasks spanning vision-language reasoning, instruction following, and pure text understanding, making it highly effective for real-world multimodal applications."
 family = "pixtral"
 release_date = "2024-09-17"
 last_updated = "2024-09-17"
@@ -6,18 +7,13 @@ attachment = true
 reasoning = true
 temperature = true
 tool_call = false
-structured_output = false
 open_weights = true
 knowledge = "2024-09"
 
 [limit]
-context = 128000
-output = 128000
+context = 128_000
+output = 128_000
 
 [modalities]
 input = ["text", "image"]
 output = ["text"]
-
-[[weights]]
-label = "Hugging Face"
-url = "https://huggingface.co/mistralai/Pixtral-12B-2409"

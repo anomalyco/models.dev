@@ -1,4 +1,5 @@
 name = "Nova Lite V1"
+description = "Nova Lite is a fast, low-cost multimodal foundation model capable of reasoning over text, images, and video in 200+ languages."
 family = "nova"
 release_date = "2024-12-05"
 last_updated = "2024-12-05"
@@ -6,13 +7,12 @@ attachment = true
 reasoning = true
 temperature = true
 tool_call = true
-structured_output = false
 open_weights = false
 knowledge = "2024-12"
 
 [limit]
-context = 300000
-output = 300000
+context = 300_000
+output = 300_000
 
 [modalities]
 input = ["text", "image"]

@@ -1,4 +1,5 @@
 name = "Gemma 3 27B IT"
+description = "Gemma 3 is a family of lightweight, multimodal models from Google, supporting text and image inputs, multilingual capabilities, and a 131K context window."
 family = "gemma"
 release_date = "2025-03-10"
 last_updated = "2025-03-10"
@@ -6,18 +7,13 @@ attachment = true
 reasoning = true
 temperature = true
 tool_call = true
-structured_output = false
 open_weights = true
 knowledge = "2025-03"
 
 [limit]
-context = 40000
-output = 40000
+context = 40_000
+output = 40_000
 
 [modalities]
 input = ["text", "image"]
 output = ["text"]
-
-[[weights]]
-label = "Hugging Face"
-url = "https://huggingface.co/google/gemma-3-27b-it"

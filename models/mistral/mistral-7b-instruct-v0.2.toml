@@ -1,23 +1,19 @@
 name = "Mistral 7B Instruct V0.2"
-family = "mistral-7b"
+description = "Mistral 7B Instruct is a compact, 7B parameter model optimized for fast and efficient text and code generation with a 32K token context window."
+family = "mistral"
 release_date = "2023-12-11"
 last_updated = "2023-12-11"
 attachment = false
 reasoning = false
 temperature = true
 tool_call = false
-structured_output = false
 open_weights = true
 knowledge = "2023-12"
 
 [limit]
-context = 32000
-output = 32000
+context = 32_000
+output = 32_000
 
 [modalities]
 input = ["text"]
 output = ["text"]
-
-[[weights]]
-label = "Hugging Face"
-url = "https://huggingface.co/mistralai/Mistral-7B-Instruct-v0.2"

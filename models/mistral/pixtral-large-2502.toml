@@ -1,4 +1,5 @@
 name = "Pixtral Large 2502"
+description = "Pixtral Large (25.02) is a 124B open-weight multimodal model built on Mistral Large 2, offering advanced image understanding and strong performance across text and code tasks."
 family = "pixtral"
 release_date = "2025-04-08"
 last_updated = "2025-04-08"
@@ -6,13 +7,12 @@ attachment = true
 reasoning = true
 temperature = true
 tool_call = true
-structured_output = false
 open_weights = true
 knowledge = "2025-04"
 
 [limit]
-context = 128000
-output = 128000
+context = 128_000
+output = 128_000
 
 [modalities]
 input = ["text", "image"]

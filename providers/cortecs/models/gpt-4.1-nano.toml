@@ -1,5 +1,4 @@
 base_model = "openai/gpt-4.1-nano"
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
 
 [cost]
 input = 0.114
@@ -7,8 +6,5 @@ output = 0.446
 cache_read = 0.057
 
 [limit]
-context = 1047576
-output = 1047576
-
-[interleaved]
-field = "reasoning_content"
+context = 1_047_576
+output = 1_047_576

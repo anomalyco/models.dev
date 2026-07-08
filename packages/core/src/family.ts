@@ -115,6 +115,9 @@ export const ModelFamilyValues = [
   "nemotron",
   "nemotron-free",
 
+  // NVIDIA cosmos
+  "cosmos",
+
   // AWS Titan
   "titan",
   "titan-embed",
@@ -427,6 +430,12 @@ export const ModelFamilyValues = [
 
   // Elephant
   "elephant",
+  
+  // OpenBMB
+  "minicpm",
+
+  // HCompany
+  "holo",
 ] as const;
 
 export const ModelFamily = z.enum(ModelFamilyValues);

@@ -1,4 +1,5 @@
 name = "Mistral Large 2402"
+description = "Mistral Large (24.02) is Mistral AI’s most advanced language model, built for complex multilingual reasoning, code generation, and deep text understanding."
 family = "mistral-large"
 release_date = "2024-02-26"
 last_updated = "2024-02-26"
@@ -6,13 +7,12 @@ attachment = false
 reasoning = true
 temperature = true
 tool_call = true
-structured_output = false
 open_weights = true
 knowledge = "2024-02"
 
 [limit]
-context = 32000
-output = 32000
+context = 32_000
+output = 32_000
 
 [modalities]
 input = ["text"]

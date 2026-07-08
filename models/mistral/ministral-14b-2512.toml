@@ -1,4 +1,5 @@
 name = "Ministral 14B 2512"
+description = "Ministral 3 14B is a frontier-level 14B multimodal model optimized for local deployment, delivering state-of-the-art text and vision reasoning with a 256K context window and strong agentic capabilities."
 family = "ministral"
 release_date = "2025-12-02"
 last_updated = "2025-12-02"
@@ -6,18 +7,13 @@ attachment = true
 reasoning = false
 temperature = true
 tool_call = true
-structured_output = false
 open_weights = true
 knowledge = "2025-12"
 
 [limit]
-context = 256000
-output = 256000
+context = 256_000
+output = 256_000
 
 [modalities]
 input = ["text", "image"]
 output = ["text"]
-
-[[weights]]
-label = "Hugging Face"
-url = "https://huggingface.co/mistralai/Ministral-3-14B-Instruct-2512"

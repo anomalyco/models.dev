@@ -1,4 +1,5 @@
 name = "Llama 3.1 Nemotron Ultra 253B V1"
+description = "A reasoning-optimized LLM based on Llama 3.1, Nemotron Ultra 253B delivers strong performance in tasks like RAG and tool use, with high efficiency and reduced latency."
 family = "llama"
 release_date = "2025-04-07"
 last_updated = "2025-04-07"
@@ -6,18 +7,13 @@ attachment = false
 reasoning = true
 temperature = true
 tool_call = true
-structured_output = false
 open_weights = true
 knowledge = "2025-04"
 
 [limit]
-context = 128000
-output = 128000
+context = 128_000
+output = 128_000
 
 [modalities]
 input = ["text"]
 output = ["text"]
-
-[[weights]]
-label = "Hugging Face"
-url = "https://huggingface.co/nvidia/Llama-3_1-Nemotron-Ultra-253B-v1"
