@@ -3,6 +3,10 @@ name: Test Hyper Sync (Fork)
 on:
   workflow_dispatch:
     inputs:
+      branch:
+        description: "Branch with Hyper sync code (must include packages/core/src/sync/providers/hyper.ts)"
+        type: string
+        default: feat/add-charm-models
       dry_run:
         description: "Dry run only (no file writes, no PR)"
         type: boolean
@@ -27,6 +31,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+        with:
+          ref: ${{ inputs.branch }}
 
       - name: Setup Bun
         uses: oven-sh/setup-bun@f4d14e03ff726c06358e5557344e1da148b56cf7
