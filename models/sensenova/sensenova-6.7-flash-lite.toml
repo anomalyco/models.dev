@@ -1,0 +1,18 @@
+name = "SenseNova-6.7-Flash-Lite"
+description = "Lightweight multimodal agent model designed for real-world workflows, supporting text conversation and image input understanding"
+release_date = "2026-05-08"
+last_updated = "2026-05-08"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[limit]
+context = 262_144
+output = 65_536
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
