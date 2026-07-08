@@ -1,4 +1,5 @@
 base_model = "anthropic/claude-opus-4-7"
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "medium", "high", "xhigh"] }]
 temperature = true
 
 [cost]

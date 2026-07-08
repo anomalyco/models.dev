@@ -1,3 +1,6 @@
+# OpenAI Chat endpoint: POST https://api.z.ai/api/coding/paas/v4/chat/completions.
+# GLM-5.2 maps low|medium|high to high and xhigh|max|ultracode to max.
+# https://docs.z.ai/devpack/latest-model (accessed 2026-06-25)
 name = "Z.AI Coding Plan"
 env = ["ZHIPU_API_KEY"]
 npm = "@ai-sdk/openai-compatible"

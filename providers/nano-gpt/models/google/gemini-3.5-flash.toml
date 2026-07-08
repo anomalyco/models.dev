@@ -1,9 +1,11 @@
 # Not included in subscription
 name = "Gemini 3.5 Flash"
+description = "Fast Gemini model balancing multimodal reasoning, tool use, and cost"
 release_date = "2026-05-19"
 last_updated = "2026-05-19"
 attachment = true
 reasoning = true
+reasoning_options = [{ type = "effort", values = ["minimal", "low", "medium", "high"] }]
 tool_call = true
 structured_output = true
 open_weights = false

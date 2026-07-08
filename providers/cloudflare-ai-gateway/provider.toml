@@ -1,4 +1,15 @@
 name = "Cloudflare AI Gateway"
 env = ["CLOUDFLARE_API_TOKEN", "CLOUDFLARE_ACCOUNT_ID", "CLOUDFLARE_GATEWAY_ID"]
 npm = "ai-gateway-provider"
+# Provider-native routes preserve upstream bodies: OpenAI Chat/Responses use
+# `reasoning_effort`/`reasoning.effort`; Anthropic Messages uses
+# `thinking.type`, `thinking.budget_tokens`, and `output_config.effort`.
+# https://developers.cloudflare.com/ai-gateway/usage/providers/openai/ (accessed 2026-06-25)
+# https://developers.cloudflare.com/ai-gateway/usage/providers/anthropic/ (accessed 2026-06-25)
+# Unified Workers AI and third-party routes are POST `/ai/run`,
+# `/ai/v1/chat/completions`, `/ai/v1/responses`, and `/ai/v1/messages`;
+# `/ai/run` puts each model's native input schema under `input`.
+# https://developers.cloudflare.com/ai-gateway/usage/rest-api/ (accessed 2026-06-25)
+# Workers AI model input fields are defined by each model's raw schema.
+# https://developers.cloudflare.com/workers-ai/models/ (accessed 2026-06-25)
 doc = "https://developers.cloudflare.com/ai-gateway/"

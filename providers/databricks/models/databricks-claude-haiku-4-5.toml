@@ -1,4 +1,7 @@
 base_model = "anthropic/claude-haiku-4-5"
+# Databricks' reasoning-model request table documents no toggle, effort, or
+# token-budget control for this endpoint.
+# https://docs.databricks.com/aws/en/machine-learning/model-serving/query-reason-models (accessed 2026-06-25)
 reasoning_options = []
 
 [cost]

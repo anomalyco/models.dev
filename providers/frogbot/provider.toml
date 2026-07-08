@@ -1,4 +1,11 @@
 name = "FrogBot"
+# Reasoning HTTP format (accessed 2026-06-25): POST /api/v1/chat/completions.
+# JSON reasoning_effort: "low" | "medium" | "high"; Anthropic models also
+# accept thinking = { type = "enabled", budget_tokens = N }.
+# https://docs.frogbot.ai/api-reference/chat-completions
+# Native Claude POST /api/v1/messages documents no thinking field, so the
+# Chat control's native mapping and budget bounds are undocumented.
+# https://docs.frogbot.ai/api-reference/messages
 # Token for FrogBot's OpenAI-compatible proxy
 env = ["FROGBOT_API_KEY"]
 npm = "@ai-sdk/openai-compatible"

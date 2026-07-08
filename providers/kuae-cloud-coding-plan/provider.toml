@@ -1,3 +1,6 @@
+# Raw HTTP uses POST /v1/chat/completions; the Coding Plan guide does not
+# publish effort values or a reasoning-token budget in its request surface.
+# https://docs.mthreads.com/kuaecloud/kuaecloud-doc-online/coding_plan/ (accessed 2026-06-25)
 name = "KUAE Cloud Coding Plan"
 env = ["KUAE_API_KEY"]
 npm = "@ai-sdk/openai-compatible"

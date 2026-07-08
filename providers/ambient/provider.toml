@@ -1,5 +1,11 @@
 name = "Ambient"
 env = ["AMBIENT_API_KEY"]
 npm = "@ai-sdk/openai-compatible"
+# Raw HTTP reasoning controls (sources accessed 2026-06-25):
+# POST https://api.ambient.xyz/v1/chat/completions. Ambient's developer
+# surface documents no reasoning toggle, effort, or token-budget request field.
+# A reasoning-capable model listing alone does not establish a usable control.
+# https://ambient.xyz/developers
+# https://docs.ambient.xyz
 api = "https://api.ambient.xyz/v1"
 doc = "https://ambient.xyz"

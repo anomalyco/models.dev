@@ -1,5 +1,11 @@
 name = "Inception"
 env = ["INCEPTION_API_KEY"]
 npm = "@ai-sdk/openai-compatible"
+# Reasoning HTTP format (accessed 2026-06-25): POST /v1/chat/completions accepts
+# top-level `reasoning_effort` = instant, low, medium, or high; default medium.
+# It documents no off value or numeric reasoning-token budget. `instant` is the
+# near-realtime Mercury 2 mode for low-latency turns that do not require tools.
+# https://docs.inceptionlabs.ai/api-reference/chat/create-a-chat-completion
+# https://docs.inceptionlabs.ai/capabilities/instant
 api = "https://api.inceptionlabs.ai/v1/"
 doc = "https://platform.inceptionlabs.ai/docs"

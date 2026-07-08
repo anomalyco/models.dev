@@ -2,9 +2,7 @@ base_model = "minimax/MiniMax-M3"
 release_date = "2026-06-12"
 last_updated = "2026-06-12"
 structured_output = true
-
-[[reasoning_options]]
-type = "toggle"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
 
 [interleaved]
 field = "reasoning_content"

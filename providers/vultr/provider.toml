@@ -1,4 +1,8 @@
 name = "Vultr"
+# POST /v1/chat/completions documents no reasoning request field or control.
+# Responses may contain choices[].message.reasoning; a -normalize model suffix
+# maps upstream reasoning_content to reasoning but does not control reasoning.
+# https://api.vultrinference.com/ (accessed 2026-06-25)
 npm = "@ai-sdk/openai-compatible"
 api = "https://api.vultrinference.com/v1"
 env = ["VULTR_API_KEY"]

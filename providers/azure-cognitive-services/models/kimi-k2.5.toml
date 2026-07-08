@@ -1,4 +1,7 @@
 base_model = "moonshotai/kimi-k2.5"
+# Azure documents POST /models/chat/completions and reasoning output, but no
+# toggle, effort, or budget request field for Kimi K2.5. Catalog modes are not
+# request controls. https://learn.microsoft.com/en-us/azure/ai-foundry/foundry-models/how-to/use-chat-reasoning
 reasoning_options = [{ type = "toggle" }]
 temperature = true
 interleaved = true

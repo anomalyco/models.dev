@@ -1,5 +1,12 @@
 name = "abliteration.ai"
 env = ["ABLIT_KEY"]
 npm = "@ai-sdk/openai-compatible"
+# Reasoning HTTP format (accessed 2026-06-25):
+# POST /v1/chat/completions and POST /v1/messages: top-level `thinking` is true
+# by default; false skips thinking. POST /v1/responses has no thinking toggle.
+# No effort or numeric reasoning-budget request field is documented.
+# Sources:
+# https://docs.abliteration.ai/capabilities/thinking
+# https://docs.abliteration.ai/compatibility-matrix
 api = "https://api.abliteration.ai/v1"
 doc = "https://docs.abliteration.ai/models"

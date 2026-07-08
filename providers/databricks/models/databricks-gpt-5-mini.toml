@@ -1,4 +1,6 @@
 base_model = "openai/gpt-5-mini"
+# Chat `reasoning_effort = minimal|low|medium|high`; Responses uses `reasoning.effort`.
+# https://docs.databricks.com/aws/en/machine-learning/model-serving/query-reason-models (accessed 2026-06-25)
 reasoning_options = [{ type = "effort", values = ["minimal", "low", "medium", "high"] }]
 
 [cost]

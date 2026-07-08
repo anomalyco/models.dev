@@ -1,4 +1,7 @@
 base_model = "google/gemini-2.5-flash"
+# Chat uses `thinking.budget_tokens` 0..24576; 0 disables and -1 requests dynamic
+# thinking in native Gemini, but -1 is a sentinel rather than a numeric budget.
+# https://ai.google.dev/gemini-api/docs/thinking (accessed 2026-06-25)
 reasoning_options = [{ type = "budget_tokens", min = 0, max = 24_576 }]
 
 [cost]

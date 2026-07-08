@@ -1,3 +1,7 @@
+# POST /v1/chat/completions uses $.thinking = true|false. The accepted alias
+# $.reasoning_effort = "low"|"medium"|"high" maps only to binary enablement;
+# the level is currently ignored/reserved, so it is not an effort control.
+# https://docs.mixlayer.com/reasoning (accessed 2026-06-25)
 name = "Mixlayer"
 env = ["MIXLAYER_API_KEY"]
 npm = "@ai-sdk/openai-compatible"

@@ -1,3 +1,7 @@
+# Toggle: $.chat_template_kwargs.enable_thinking = true|false (default true).
+# Effort: $.reasoning_effort or $.chat_template_kwargs.reasoning_effort is
+# "max" (default) or "high"; effort has no effect when thinking is disabled.
+# https://docs.getlilac.com/inference/chat-completions#reasoning (accessed 2026-06-25)
 base_model = "zhipuai/glm-5.2"
 name = "GLM 5.2"
 reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["high", "max"] }]
