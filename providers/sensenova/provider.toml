@@ -1,0 +1,12 @@
+# SenseNova reasoning controls (accessed 2026-07-08):
+# The API at https://token.sensenova.cn/v1 is OpenAI-compatible. Reasoning
+# effort (low/medium/high) is supported via reasoning_effort on models that
+# declare reasoning_options, with interleaved reasoning returned in the
+# reasoning_content field. sensenova-u1-fast does not support reasoning.
+# Source:
+# https://platform.sensenova.cn/en/docs
+name = "SenseNova"
+env = ["SENSENOVA_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+api = "https://token.sensenova.cn/v1"
+doc = "https://platform.sensenova.cn/en/docs"

@@ -1,0 +1,12 @@
+base_model = "sensenova/sensenova-6.7-flash-lite"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high"]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0
+output = 0
