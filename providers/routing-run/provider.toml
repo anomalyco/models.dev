@@ -2,4 +2,9 @@ name = "routing.run"
 env = ["ROUTING_RUN_API_KEY"]
 npm = "@ai-sdk/openai-compatible"
 api = "https://ai.routing.sh/v1"
+# Reasoning HTTP format (accessed 2026-06-25):
+# POST /v1/chat/completions may return message.reasoning_content, but the
+# documented request body has no reasoning toggle, effort, or token budget.
+# Source:
+# https://docs.routing.run/api-reference/openai
 doc = "https://docs.routing.run/api-reference/models"

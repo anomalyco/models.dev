@@ -1,6 +1,12 @@
 base_model = "alibaba/qwen-plus"
+reasoning_options = []
 
 [cost]
 input = 0.4
 output = 1.2
 reasoning = 4
+cache_read = 0.08
+cache_write = 0.5
+
+[limit]
+context = 131_072

@@ -1,5 +1,12 @@
 name = "Chutes"
 env = ["CHUTES_API_KEY"]
 npm = "@ai-sdk/openai-compatible"
+# Raw HTTP reasoning controls (sources accessed 2026-06-25):
+# POST https://llm.chutes.ai/v1/chat/completions. GET /v1/models marks models
+# with supported_features including "reasoning", but its advertised sampling
+# parameters contain no toggle, effort, or budget field. The reasoning guide's
+# request surface likewise documents none; reasoning capability is not control.
+# https://llm.chutes.ai/v1/models
+# https://chutes.ai/docs/guides/reasoning-models
 api = "https://llm.chutes.ai/v1"
 doc = "https://llm.chutes.ai/v1/models"

@@ -1,4 +1,13 @@
+# Subconscious serves TIM-Qwen3.6 27B as subconscious/tim-qwen3.6-27b.
+# Pricing (USD per 1M tokens): cached $0.15, input $0.30, output $3.00.
+# Reasoning controls: Anthropic Messages enables thinking with thinking.type =
+# "enabled" and thinking.budget_tokens; omit thinking to disable it. Reasoning
+# is returned in separate thinking content blocks.
+# Sources (accessed 2026-07-06):
+#   https://www.subconscious.dev/pricing
+#   https://docs.subconscious.dev/features/thinking
 name = "TIM-Qwen3.6 27B"
+description = "Reasoning model for deliberate analysis, multi-step problem solving, and tool use"
 attachment = false
 reasoning = true
 tool_call = true
@@ -7,10 +16,12 @@ temperature = true
 release_date = "2026-05-11"
 last_updated = "2026-05-11"
 open_weights = false
-interleaved = { field = "reasoning_content" }
 
 [[reasoning_options]]
-type = "toggle"
+type = "toggle" # API: omit thinking to disable; {"thinking": {"type": "enabled", "budget_tokens": <n>}} to enable
+
+[[reasoning_options]]
+type = "budget_tokens" # API: {"thinking": {"type": "enabled", "budget_tokens": <n>}}
 
 [cost]
 input = 0.30

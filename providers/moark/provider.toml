@@ -1,3 +1,6 @@
+# POST /v1/chat/completions is exposed by Moark's raw OpenAPI reference; its
+# request schema documents no toggle, effort, or reasoning-token-budget field.
+# https://moark.com/docs/openapi/v1 (accessed 2026-06-25)
 name = "Moark"
 npm = "@ai-sdk/openai-compatible"
 env = ["MOARK_API_KEY"]

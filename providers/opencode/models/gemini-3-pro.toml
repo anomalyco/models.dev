@@ -1,9 +1,11 @@
 name = "Gemini 3 Pro"
+description = "Legacy model retained for compatibility with older integrations"
 family = "gemini-pro"
 release_date = "2025-11-18"
 last_updated = "2025-11-18"
 attachment = true
 reasoning = true
+reasoning_options = [{ type = "effort", values = ["low", "high"] }]
 temperature = true
 tool_call = true
 structured_output = true

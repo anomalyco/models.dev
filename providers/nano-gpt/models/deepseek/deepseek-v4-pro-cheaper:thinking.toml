@@ -1,9 +1,11 @@
 # Included in subscription
 name = "DeepSeek V4 Pro Cheaper (Thinking)"
+description = "Flagship DeepSeek model for coding, reasoning, and agentic work"
 release_date = "2026-04-25"
 last_updated = "2026-04-25"
 attachment = false
 reasoning = true
+reasoning_options = [{ type = "effort", values = ["high", "xhigh"] }]
 tool_call = true
 structured_output = true
 open_weights = false

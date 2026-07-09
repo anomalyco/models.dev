@@ -1,20 +1,6 @@
-name = "Llama 3.3 70B"
-family = "llama"
-release_date = "2024-12-01"
-last_updated = "2024-12-01"
-attachment = false
-reasoning = false
-tool_call = false
-open_weights = true
+base_model = "meta/llama-3.3-70b-instruct"
 
 [cost]
-input = 1.18
-output = 1.18
+input = 1.15
+output = 1.15
 
-[limit]
-context = 131_072
-output = 32_768
-
-[modalities]
-input = ["text"]
-output = ["text"]

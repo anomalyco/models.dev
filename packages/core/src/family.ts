@@ -46,6 +46,9 @@ export const ModelFamilyValues = [
   // Meta Llama
   "llama",
 
+  // Meta Muse
+  "muse",
+
   // Alibaba Qwen
   "qwen",
   "qwen3.5",
@@ -53,6 +56,9 @@ export const ModelFamilyValues = [
   "qwen3.7-plus",
   "qwen3.7-max",
   "qwen-free",
+
+  // DeepReinforce
+  "ornith",
 
   // DeepSeek
   "deepseek",
@@ -346,6 +352,9 @@ export const ModelFamilyValues = [
   // Auto router
   "auto",
   "model-router",
+
+  // Conductor
+  "fugu",
 
   // V0
   "v0",

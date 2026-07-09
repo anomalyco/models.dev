@@ -1,5 +1,8 @@
 base_model = "google/gemini-2.5-flash"
 
+# Auriko derives a Gemini thinking budget from effort; "off" disables thinking.
+# Provider extension keys google/google_ai/googleai/gemini are aliases.
+# https://docs.auriko.ai/guides/extensions-and-thinking
 reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
 
 [cost]

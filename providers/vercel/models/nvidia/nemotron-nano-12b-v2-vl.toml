@@ -1,9 +1,10 @@
 base_model = "nvidia/nemotron-nano-12b-v2-vl"
-reasoning_options = [{ type = "toggle" }]
 name = "Nvidia Nemotron Nano 12B V2 VL"
-release_date = "2024-12-01"
 knowledge = "2024-10"
 open_weights = false
+
+[[reasoning_options]]
+type = "toggle"
 
 [cost]
 input = 0.2
@@ -15,4 +16,3 @@ output = 131_072
 
 [modalities]
 input = ["text", "image"]
-output = ["text"]

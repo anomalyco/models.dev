@@ -1,7 +1,8 @@
 name = "Kimi K2 Thinking"
+description = "Kimi reasoning model for long-horizon research, planning, and tool use"
 family = "kimi-thinking"
 release_date = "2025-11-07"
-last_updated = "2025-11-07"
+last_updated = "2026-06-29"
 attachment = false
 reasoning = true
 reasoning_options = []
@@ -13,6 +14,7 @@ open_weights = true
 [cost]
 input = 0.6
 output = 2.5
+cache_read = 0.15
 
 [limit]
 context = 262_144

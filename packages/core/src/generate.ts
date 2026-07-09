@@ -39,7 +39,7 @@ export async function generateModels(directory: string) {
     absolute: true,
     followSymlinks: true,
   })) {
-    const modelID = path.relative(directory, modelPath).slice(0, -5);
+    const modelID = path.relative(directory, modelPath).split(path.sep).join("/").slice(0, -5);
     const toml = await import(modelPath, {
       with: {
         type: "toml",
@@ -94,7 +94,7 @@ async function generateProviders(
       absolute: true,
       followSymlinks: true,
     })) {
-      const modelID = path.relative(modelsPath, modelPath).slice(0, -5);
+      const modelID = path.relative(modelsPath, modelPath).split(path.sep).join("/").slice(0, -5);
       const toml = await import(modelPath, {
         with: {
           type: "toml",

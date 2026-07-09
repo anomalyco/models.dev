@@ -1,5 +1,11 @@
 name = "Regolo AI"
 env = ["REGOLO_API_KEY"]
 npm = "@ai-sdk/openai-compatible"
+# Reasoning HTTP format (accessed 2026-06-25):
+# POST /v1/chat/completions uses top-level thinking = true to enable thinking
+# and reasoning_effort = "low"|"medium"|"high" (default "medium"). The
+# public guide demonstrates GPT-OSS, but does not map controls to other models.
+# Source:
+# https://docs.regolo.ai/models/features/thinking/
 doc = "https://docs.regolo.ai/"
 api = "https://api.regolo.ai/v1"

@@ -1,10 +1,14 @@
 base_model = "moonshotai/kimi-k2.7-code"
+reasoning_options = []
 temperature = true
 
 [cost]
-input = 0.612
-output = 3.069
-cache_read = 0.1296
+input = 0.74
+output = 3.5
+cache_read = 0.15
+
+[limit]
+output = 16_384
 
 [modalities]
 input = ["text", "image"]

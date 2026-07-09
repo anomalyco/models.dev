@@ -1,0 +1,12 @@
+base_model = "moonshotai/kimi-k2.7-code"
+description = "Kimi K2.7 Code is a 1T-parameter MoE model with 32B active parameters purpose-built for long-horizon agentic coding and software engineering."
+temperature = true
+reasoning_options = []
+
+[cost]
+input = 0.94
+output = 4
+cache_read = 0.19
+
+[modalities]
+input = ["text", "image"]

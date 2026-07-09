@@ -1,0 +1,11 @@
+base_model = "openai/gpt-oss-safeguard-120b"
+name = "gpt-oss-safeguard-120b"
+knowledge = "2024-06"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
+
+[cost]
+input = 0.15
+output = 0.6
+
+[limit]
+context = 131_000
