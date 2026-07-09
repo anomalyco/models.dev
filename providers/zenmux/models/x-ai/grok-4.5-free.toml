@@ -1,0 +1,12 @@
+base_model = "x-ai/grok-4.5"
+name = "Grok 4.5 (Free)"
+reasoning_options = []
+
+[cost]
+input = 0
+output = 0
+cache_read = 0
+
+[provider]
+npm = "@ai-sdk/anthropic"
+api = "https://zenmux.ai/api/anthropic/v1"

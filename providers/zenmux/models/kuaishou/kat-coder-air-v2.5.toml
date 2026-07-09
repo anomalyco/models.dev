@@ -1,0 +1,10 @@
+base_model = "kuaishou/kat-coder-air-v2.5"
+
+[cost]
+input = 0.135
+output = 0.54
+cache_read = 0.027
+
+[provider]
+npm = "@ai-sdk/anthropic"
+api = "https://zenmux.ai/api/anthropic/v1"
