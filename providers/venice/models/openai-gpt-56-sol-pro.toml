@@ -1,0 +1,27 @@
+name = "GPT-5.6 Sol Pro"
+description = "Frontier GPT model for professional reasoning, coding, and multimodal work"
+family = "gpt"
+release_date = "2026-07-09"
+last_updated = "2026-07-09"
+attachment = true
+reasoning = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "minimal", "low", "medium", "high"]
+
+[cost]
+input = 6.25
+output = 37.5
+cache_read = 0.625
+
+[limit]
+context = 1_000_000
+output = 128_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
