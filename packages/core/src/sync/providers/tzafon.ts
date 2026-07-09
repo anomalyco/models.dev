@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import type { SyncProvider } from "../index.js";
+import type { ExistingModel, SyncedFullModel, SyncProvider } from "../index.js";
 
 const API_ENDPOINT = "https://api.tzafon.ai/v1/models";
 
@@ -65,15 +65,54 @@ export const tzafon = {
 
     return {
       id: model.id,
-      model: {
-        ...existing,
-        // `created` is the only field the API is authoritative for; keep any
-        // hand-authored release_date rather than overwriting it.
-        release_date: existing.release_date ?? isoDate(model.created),
-      },
+      model: buildTzafonModel(model, existing),
     };
   },
 } satisfies SyncProvider<TzafonModel>;
+
+function buildTzafonModel(model: TzafonModel, existing: ExistingModel): SyncedFullModel {
+  const { name, description, attachment, reasoning, toolCall, openWeights, limit, modalities, lastUpdated } = {
+    name: existing.name,
+    description: existing.description,
+    attachment: existing.attachment,
+    reasoning: existing.reasoning,
+    toolCall: existing.tool_call,
+    openWeights: existing.open_weights,
+    limit: existing.limit,
+    modalities: existing.modalities,
+    lastUpdated: existing.last_updated,
+  };
+
+  if (
+    name === undefined
+    || description === undefined
+    || attachment === undefined
+    || reasoning === undefined
+    || toolCall === undefined
+    || openWeights === undefined
+    || limit === undefined
+    || modalities === undefined
+    || lastUpdated === undefined
+  ) {
+    throw new Error(`Tzafon model ${model.id} has incomplete local TOML metadata required for sync`);
+  }
+
+  return {
+    ...existing,
+    name,
+    description,
+    attachment,
+    reasoning,
+    tool_call: toolCall,
+    open_weights: openWeights,
+    limit,
+    modalities,
+    last_updated: lastUpdated,
+    // `created` is the only field the API is authoritative for; keep any
+    // hand-authored release_date rather than overwriting it.
+    release_date: existing.release_date ?? isoDate(model.created),
+  };
+}
 
 function isoDate(unixSeconds: number) {
   return new Date(unixSeconds * 1000).toISOString().slice(0, 10);
