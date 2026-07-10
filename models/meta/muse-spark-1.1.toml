@@ -1,0 +1,19 @@
+name = "Muse Spark 1.1"
+description = "Muse Spark is a natively multimodal reasoning model with support for tool-use, visual chain of thought, and multi-agent orchestration."
+family = "muse"
+release_date = "2026-04-08"
+last_updated = "2026-07-09"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[limit]
+context = 1_000_000
+output = 32_000
+
+[modalities]
+input = ["text", "image", "pdf", "video"]
+output = ["text"]

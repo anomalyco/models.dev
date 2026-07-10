@@ -1,0 +1,99 @@
+name: Test Hyper Sync (Fork)
+
+on:
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: "Branch with Hyper sync code (must include packages/core/src/sync/providers/hyper.ts)"
+        type: string
+        default: feat/add-charm-models
+      dry_run:
+        description: "Dry run only (no file writes, no PR)"
+        type: boolean
+        default: true
+      open_pr:
+        description: "Push sync branch and open/update a PR (ignored when dry_run=true)"
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency: test-hyper-sync-${{ github.ref }}
+
+jobs:
+  sync-hyper:
+    # Fork-only test workflow. Do not merge into upstream PRs.
+    if: github.repository != 'anomalyco/models.dev'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+        with:
+          ref: ${{ inputs.branch }}
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@f4d14e03ff726c06358e5557344e1da148b56cf7
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        run: bun install
+
+      - name: Sync Charm Hyper
+        run: |
+          args=(hyper)
+          if [ "${{ inputs.dry_run }}" = "true" ]; then
+            args+=(--dry-run)
+          fi
+          bun models:sync "${args[@]}"
+        env:
+          HYPER_API_KEY: ${{ secrets.HYPER_API_KEY }}
+
+      - name: Validate models
+        if: inputs.dry_run != true
+        run: bun validate
+
+      - name: Report changes
+        run: |
+          if [ -f .sync/model-sync-report.md ]; then
+            tee -a "$GITHUB_STEP_SUMMARY" < .sync/model-sync-report.md
+          fi
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "### Git diff" >> "$GITHUB_STEP_SUMMARY"
+          echo '```' >> "$GITHUB_STEP_SUMMARY"
+          git diff --stat providers/hyper models/hyper >> "$GITHUB_STEP_SUMMARY" || true
+          echo '```' >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Open test PR
+        if: inputs.dry_run != true && inputs.open_pr == true
+        env:
+          GH_TOKEN: ${{ github.token }}
+          BRANCH: test/automation-sync-hyper
+          TITLE: "test(sync): hyper catalog dry run from fork"
+        run: |
+          if [ -z "$(git status --porcelain -- models providers)" ]; then
+            echo "No model catalog changes found."
+            exit 0
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git fetch --no-tags --depth=1 origin "+refs/heads/$BRANCH:refs/remotes/origin/$BRANCH" || true
+          git checkout -B "$BRANCH"
+          git add models providers
+          git commit -m "$TITLE"
+          git push --force-with-lease origin "$BRANCH"
+
+          pr_number="$(gh pr list --head "$BRANCH" --base feat/add-charm-models --json number --jq '.[0].number')"
+          if [ -n "$pr_number" ]; then
+            gh pr edit "$pr_number" --title "$TITLE" --body-file .sync/model-sync-report.md
+          else
+            gh pr create \
+              --base feat/add-charm-models \
+              --head "$BRANCH" \
+              --title "$TITLE" \
+              --body-file .sync/model-sync-report.md
+          fi

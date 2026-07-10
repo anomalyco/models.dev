@@ -1,0 +1,23 @@
+# W&B deprecated this model on 2026-06-30 and plans to retire it on 2026-07-20.
+# https://docs.wandb.ai/inference/lifecycle
+base_model = "alibaba/qwen3.5-27b"
+name = "Qwen3.5-27B"
+description = "Qwen3.5-27B is a dense model from the Qwen3.5 family built for high performance across a large range of benchmarks."
+family = "qwen3.5"
+release_date = "2026-02-24"
+last_updated = "2026-02-24"
+status = "deprecated"
+
+[[reasoning_options]]
+type = "toggle"
+
+[cost]
+input = 0.39
+output = 3.12
+cache_read = 0.08
+
+[limit]
+output = 262_144
+
+[modalities]
+input = ["text", "image"]

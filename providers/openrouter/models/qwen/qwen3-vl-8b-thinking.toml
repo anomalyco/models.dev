@@ -1,4 +1,3 @@
-reasoning_options = []
 name = "Qwen3 VL 8B Thinking"
 description = "Qwen vision-language model for visual reasoning, documents, and agent tasks"
 family = "qwen"
@@ -10,13 +9,14 @@ temperature = true
 tool_call = true
 structured_output = true
 open_weights = true
+reasoning_options = []
 
 [cost]
 input = 0.117
 output = 1.365
 
 [limit]
-context = 131_072
+context = 256_000
 output = 32_768
 
 [modalities]
