@@ -1,10 +1,14 @@
 base_model = "alibaba/qwen3.7-max"
-reasoning_options = [{ type = "toggle" }]
+name = "Qwen3.7-Max"
+release_date = "2026-05-28"
+last_updated = "2026-07-10"
+reasoning_options = []
 
 [cost]
 input = 2.5
 output = 7.5
 cache_read = 3.125
+cache_write = 0.5
 
 [limit]
 output = 64_000

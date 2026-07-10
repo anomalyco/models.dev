@@ -1,11 +1,12 @@
 base_model = "alibaba/qwen3-next-80b-a3b-instruct"
+name = "Qwen3 Next 80B A3B Instruct"
+release_date = "2026-04-30"
+last_updated = "2026-07-10"
 reasoning = true
+reasoning_options = []
 
 [interleaved]
 field = "reasoning_content"
-
-[[reasoning_options]]
-type = "toggle"
 
 [cost]
 input = 0.1175

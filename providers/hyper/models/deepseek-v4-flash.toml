@@ -1,4 +1,6 @@
 base_model = "deepseek/deepseek-v4-flash"
+release_date = "2026-07-06"
+last_updated = "2026-07-10"
 
 [interleaved]
 field = "reasoning_content"
@@ -11,3 +13,4 @@ values = ["none", "high", "xhigh"]
 input = 0.14
 output = 0.28
 cache_read = 0.03
+cache_write = 0.03

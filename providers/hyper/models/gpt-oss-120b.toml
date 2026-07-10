@@ -1,4 +1,7 @@
 base_model = "openai/gpt-oss-120b"
+name = "gpt-oss-120b"
+release_date = "2026-04-13"
+last_updated = "2026-07-10"
 
 [interleaved]
 field = "reasoning_content"
@@ -8,9 +11,9 @@ type = "effort"
 values = ["low", "medium", "high"]
 
 [cost]
-input = 0.178
-output = 0.68
-cache_read = 0.089
+input = 0.18
+output = 0.61
+cache_read = 0.09
 
 [limit]
 output = 13_107

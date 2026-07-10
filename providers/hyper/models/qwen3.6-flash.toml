@@ -1,12 +1,14 @@
 base_model = "alibaba/qwen3.6-flash"
-
-[[reasoning_options]]
-type = "toggle"
+name = "Qwen3.6-Flash"
+release_date = "2026-05-20"
+last_updated = "2026-07-10"
+reasoning_options = []
 
 [cost]
 input = 1
 output = 4
 cache_read = 1.25
+cache_write = 0.1
 
 [limit]
 output = 64_000

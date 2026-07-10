@@ -1,11 +1,12 @@
 base_model = "alibaba/qwen3-coder-480b-a35b-instruct"
+name = "Qwen3 Coder 480B A35B Instruct INT4 Mixed AR"
+release_date = "2026-04-30"
+last_updated = "2026-07-10"
 reasoning = true
+reasoning_options = []
 
 [interleaved]
 field = "reasoning_content"
-
-[[reasoning_options]]
-type = "toggle"
 
 [cost]
 input = 0.601

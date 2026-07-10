@@ -1,13 +1,15 @@
 base_model = "alibaba/qwen3.6-plus"
+name = "Qwen3.6-Plus"
+release_date = "2026-05-20"
+last_updated = "2026-07-10"
 attachment = true
-
-[[reasoning_options]]
-type = "toggle"
+reasoning_options = []
 
 [cost]
 input = 2
 output = 6
 cache_read = 2.5
+cache_write = 0.2
 
 [limit]
 output = 64_000

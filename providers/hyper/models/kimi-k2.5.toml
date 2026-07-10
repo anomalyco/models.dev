@@ -1,15 +1,18 @@
 base_model = "moonshotai/kimi-k2.5"
+release_date = "2026-04-13"
+last_updated = "2026-07-10"
+reasoning_options = []
 
 [interleaved]
 field = "reasoning_content"
 
-[[reasoning_options]]
-type = "toggle"
-
 [cost]
-input = 0.51
-output = 2.67
-cache_read = 0.255
+input = 0.477
+output = 2.535
+cache_read = 0.2385
 
 [limit]
 output = 26_214
+
+[modalities]
+input = ["text"]
