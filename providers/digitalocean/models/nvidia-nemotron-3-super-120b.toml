@@ -1,26 +1,16 @@
-name = "Nemotron-3-Super-120B"
 base_model = "nvidia/nemotron-3-super-120b-a12b"
-family = "nemotron"
-release_date = "2026-03-11"
-last_updated = "2026-04-16"
-attachment = false
-reasoning = true
-reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "max"] }]
-temperature = true
-tool_call = true
+name = "NVIDIA Nemotron 3 Super 120B  (Public Preview)"
 structured_output = true
-knowledge = "2026-02"
-open_weights = true
 status = "beta"
 
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "max"]
+
 [cost]
-input = 0.30
+input = 0.3
 output = 0.65
 
 [limit]
-context = 256_000
+context = 1_000_000
 output = 32_768
-
-[modalities]
-input = ["text"]
-output = ["text"]

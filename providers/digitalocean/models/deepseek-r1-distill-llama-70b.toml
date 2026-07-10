@@ -5,19 +5,22 @@ release_date = "2025-01-30"
 last_updated = "2025-01-30"
 attachment = false
 reasoning = true
-reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "max"] }]
 temperature = true
 tool_call = true
 structured_output = true
 open_weights = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "max"]
 
 [cost]
 input = 0.99
 output = 0.99
 
 [limit]
-context = 131_072
-output = 32_768
+context = 32_678
+output = 16_384
 
 [modalities]
 input = ["text"]

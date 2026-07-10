@@ -1,24 +1,27 @@
-name = "gpt-oss-20b"
+name = "OpenAI GPT-oss-20b"
 description = "Open-weight GPT model for self-hosted reasoning and instruction-following workloads"
 family = "gpt-oss"
 release_date = "2025-08-05"
 last_updated = "2026-04-16"
 attachment = false
 reasoning = true
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
 temperature = true
 tool_call = true
 structured_output = true
 knowledge = "2024-06"
 open_weights = true
 
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high"]
+
 [cost]
 input = 0.05
 output = 0.45
 
 [limit]
-context = 131_072
-output = 131_072
+context = 128_000
+output = 16_384
 
 [modalities]
 input = ["text"]
