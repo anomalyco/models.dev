@@ -1,5 +1,6 @@
 import { z } from "zod";
 
+import { describeModel } from "../../describe.js";
 import { inferKimiFamily, ModelFamilyValues } from "../../family.js";
 import type { ExistingModel, SyncProvider, SyncedFullModel, SyncedModel } from "../index.js";
 import { canonicalLimit, createCanonicalBaseModelResolver, factorBaseModel } from "./openrouter.js";
@@ -122,6 +123,17 @@ export function buildNebiusModel(
       canonical,
       {
         name: existing === undefined ? name : undefined,
+        description: existing?.description ?? describeModel({
+          id: model.id,
+          name,
+          family: existing?.family,
+          reasoning,
+          tool_call: toolCall,
+          structured_output: structuredOutput,
+          open_weights: existing?.open_weights ?? true,
+          limit,
+          modalities: { input, output },
+        }),
         attachment,
         reasoning,
         // The API only exposes a boolean `reasoning` capability, not the toggle/effort
@@ -141,9 +153,22 @@ export function buildNebiusModel(
     );
   }
 
+  const family = existing?.family ?? inferFamily(model.id, name);
+
   return {
     name,
-    family: existing?.family ?? inferFamily(model.id, name),
+    description: existing?.description ?? describeModel({
+      id: model.id,
+      name,
+      family,
+      reasoning,
+      tool_call: toolCall,
+      structured_output: structuredOutput,
+      open_weights: existing?.open_weights ?? true,
+      limit,
+      modalities: { input, output },
+    }),
+    family,
     release_date: releaseDate,
     last_updated: existing?.last_updated ?? today,
     attachment,
