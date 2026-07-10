@@ -20,7 +20,7 @@ const ModelType = z.enum([
 
 const PricingTier = z.object({
   cost: z.string(),
-  min: z.number(),
+  min: z.number().optional(),
   max: z.number().optional(),
 });
 

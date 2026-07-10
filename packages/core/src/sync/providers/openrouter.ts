@@ -11,6 +11,12 @@ const MODELS_DIR = path.join(import.meta.dirname, "..", "..", "..", "..", "..", 
 const modelMetadataByID = new Map<string, Record<string, unknown>>();
 const modelMetadataFilesByProvider = new Map<string, Set<string>>();
 
+const CANONICAL_BASE_MODEL_OVERRIDES = {
+  "openai/gpt-5.6-luna-pro": "openai/gpt-5.6-luna",
+  "openai/gpt-5.6-sol-pro": "openai/gpt-5.6-sol",
+  "openai/gpt-5.6-terra-pro": "openai/gpt-5.6-terra",
+} as const;
+
 const CANONICAL_PROVIDER_PREFIXES = {
   alibaba: { provider: "alibaba", metadata: "alibaba" },
   anthropic: { provider: "anthropic", metadata: "anthropic" },
@@ -172,7 +178,7 @@ export function buildOpenRouterModel(
   const reasoning_options = existing?.reasoning_options?.length
     ? existing.reasoning_options
     : openRouterReasoningOptions(model.reasoning) ?? existing?.reasoning_options;
-  const context = model.top_provider.context_length ?? model.context_length;
+  const context = model.context_length;
   const family = inferFamily(model, name);
   const releaseDate = dateFromTimestamp(model.created);
   const familyValue = existing?.family === "o" && family !== "o"
@@ -201,10 +207,13 @@ export function buildOpenRouterModel(
   const canonical = existing?.base_model ?? baseModel ?? resolveCanonicalBaseModel(model.id);
 
   if (canonical !== undefined) {
+    const canonicalOverride = canonicalBaseModelOverride(model.id);
     return factorBaseModel(
       canonical,
       {
-        name: baseModel !== undefined || model.id.endsWith(":free") ? name : undefined,
+        name: baseModel !== undefined || model.id.endsWith(":free") || canonicalOverride === canonical
+          ? name
+          : undefined,
         description: existing?.description ?? describeModel({
           id: model.id,
           name,
@@ -288,6 +297,9 @@ function openRouterReasoningOptions(reasoning: OpenRouterModel["reasoning"]): Sy
 }
 
 export function resolveCanonicalBaseModel(openrouterID: string) {
+  const override = canonicalBaseModelOverride(openrouterID);
+  if (override !== undefined) return override;
+
   const [prefix, ...modelParts] = openrouterID.split("/");
   if (prefix === undefined || modelParts.length === 0) return undefined;
   if (openrouterID.startsWith("~/") || prefix.startsWith("~")) return undefined;
@@ -315,6 +327,12 @@ function modelMetadataExists(provider: string, modelID: string) {
     modelMetadataFilesByProvider.set(provider, files);
   }
   return files.has(`${modelID}.toml`);
+}
+
+function canonicalBaseModelOverride(openrouterID: string) {
+  return CANONICAL_BASE_MODEL_OVERRIDES[
+    openrouterID as keyof typeof CANONICAL_BASE_MODEL_OVERRIDES
+  ];
 }
 
 export function factorBaseModel(

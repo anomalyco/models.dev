@@ -1,0 +1,14 @@
+base_model = "alibaba/qwen3.6-35b-a3b"
+reasoning = true
+reasoning_options = []
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[provider]
+shape = "completions"
+
+[cost]
+input = 0.19
+output = 0.48

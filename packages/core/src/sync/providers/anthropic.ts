@@ -99,7 +99,8 @@ export const anthropic = {
   translateModel(model, context) {
     const existing = context.existing(model.id);
     if (existing !== undefined) {
-      return { id: model.id, model: buildAnthropicModel(model, existing) };
+      const baseModel = context.authored(model.id)?.base_model;
+      return { id: model.id, model: buildAnthropicModel(model, existing, baseModel) };
     }
 
     const baseModel = `anthropic/${model.id}`;

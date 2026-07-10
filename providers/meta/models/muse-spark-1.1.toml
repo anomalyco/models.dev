@@ -1,0 +1,12 @@
+# Sources:
+# https://ai.developer.meta.com/docs/getting-started/pricing-rate-limits/
+# https://developer.meta.com/ai/resources/blog/build-with-muse-spark/
+
+base_model = "meta/muse-spark-1.1"
+
+reasoning_options = [{ type = "effort", values = ["none", "minimal", "low", "medium", "high", "xhigh"] }]
+
+[cost]
+input = 1.25
+output = 4.25
+cache_read = 0.15
