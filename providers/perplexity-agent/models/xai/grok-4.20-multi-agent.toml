@@ -1,0 +1,12 @@
+# Source: https://docs.perplexity.ai/docs/agent-api/models — Perplexity Agent API pricing
+name = "Grok 4.20 (Multi-Agent)"
+base_model = "xai/grok-4.20-0309-reasoning"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high", "xhigh", "max"]
+
+[cost]
+input = 1.25
+output = 2.50
+cache_read = 0.20
