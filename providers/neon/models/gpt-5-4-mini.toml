@@ -6,6 +6,11 @@ input = 0.75
 output = 4.5
 cache_read = 0.075
 
-[experimental.modes.fast]
-cost = { input = 1.5, output = 9, cache_read = 0.15 }
-provider = { body = { service_tier = "priority" } }
+[modalities]
+input = ["text", "image"]
+output = ["text", "image"]
+
+[provider]
+npm = "@ai-sdk/openai"
+api = "${NEON_AI_GATEWAY_BASE_URL}/ai-gateway/openai/v1"
+shape = "responses"

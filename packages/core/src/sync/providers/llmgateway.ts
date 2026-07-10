@@ -15,6 +15,10 @@ const CANONICAL_FAMILY_ALIASES: Record<string, string> = {
   moonshot: "moonshotai",
 };
 
+const BASE_MODEL_ALIASES: Record<string, string> = {
+  "glm-5-2": "zhipuai/glm-5.2",
+};
+
 const Pricing = z.object({
   prompt: z.string().optional(),
   completion: z.string().optional(),
@@ -103,6 +107,8 @@ function modalities(values: string[], fallback: Modality[]): Modality[] {
 }
 
 function resolveLLMGatewayBaseModel(model: LLMGatewayModel) {
+  const alias = BASE_MODEL_ALIASES[model.id];
+  if (alias !== undefined) return alias;
   if (model.family === undefined) return undefined;
   const prefix = CANONICAL_FAMILY_ALIASES[model.family] ?? model.family;
   return resolveCanonicalBaseModel(`${prefix}/${model.id}`);
