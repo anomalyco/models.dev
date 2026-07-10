@@ -19,7 +19,6 @@ import {
   resolveDigitalOceanBaseModel,
   type DigitalOceanSourceModel,
 } from "../src/sync/providers/digitalocean.js";
-import { buildHyperModel, type HyperModel } from "../src/sync/providers/hyper.js";
 import {
   buildOpenRouterModel,
   openrouter,
@@ -31,7 +30,77 @@ import { openai, parseOpenAIModels } from "../src/sync/providers/openai.js";
 import { resolveVeniceBaseModel } from "../src/sync/providers/venice.js";
 import { buildVercelModel, vercel } from "../src/sync/providers/vercel.js";
 import { buildWandbModel, type WandbModel } from "../src/sync/providers/wandb.js";
+import { buildHyperModel, type HyperModel } from "../src/sync/providers/hyper.js";
 import { buildXAIModel } from "../src/sync/providers/xai.js";
+
+test("syncs Hyper cache read and write from provider pricing fields", () => {
+  const model = hyperModel({
+    id: "qwen3.6-flash",
+    cost_per_1m_in: 1,
+    cost_per_1m_out: 4,
+    cost_per_1m_in_cached: 1.25,
+    cost_per_1m_out_cached: 0.1,
+  });
+
+  expect(buildHyperModel(model, undefined, "alibaba/qwen3.6-flash")).toMatchObject({
+    cost: { input: 1, output: 4, cache_read: 1.25, cache_write: 0.1 },
+  });
+});
+
+test("preserves hand-authored Hyper cost fields the API does not expose", () => {
+  const existing = {
+    cost: {
+      input: 1,
+      output: 2,
+      cache_write: 0.375,
+      tiers: [{ tier: { type: "context" as const, size: 200_000 }, input: 3, output: 4 }],
+    },
+    release_date: "2026-01-01",
+    last_updated: "2026-01-01",
+  };
+
+  expect(buildHyperModel(hyperModel({
+    id: "minimax-m2.7",
+    cost_per_1m_in: 0.82,
+    cost_per_1m_out: 2.64,
+    cost_per_1m_in_cached: 0.41,
+    cost_per_1m_out_cached: 0,
+  }), existing, "minimax/MiniMax-M2.7")).toMatchObject({
+    cost: {
+      input: 0.82,
+      output: 2.64,
+      cache_read: 0.41,
+      cache_write: 0.375,
+      tiers: existing.cost.tiers,
+    },
+  });
+});
+
+test("emits text-only modalities when Hyper disables attachments", () => {
+  const built = buildHyperModel(hyperModel({
+    id: "gemma-4-26b-a4b-it",
+    supports_attachments: false,
+  }), undefined, "google/gemma-4-26b-a4b-it");
+
+  expect(built).toMatchObject({
+    attachment: false,
+    modalities: { input: ["text"] },
+  });
+});
+
+test("defaults Hyper reasoning models without effort levels to empty reasoning options", () => {
+  expect(buildHyperModel(hyperModel({ supports_reasoning_effort: false }), undefined, "minimax/MiniMax-M2.7"))
+    .toMatchObject({ reasoning_options: [] });
+});
+
+test("preserves Hyper display name overrides", () => {
+  expect(buildHyperModel(hyperModel({
+    id: "qwen3.6-max",
+    display_name: "Qwen3.6-Max",
+  }), { name: "Qwen3.6-Max" }, "alibaba/qwen3.6-max-preview")).toMatchObject({
+    name: "Qwen3.6-Max",
+  });
+});
 
 function anthropicModel(overrides: Partial<AnthropicModel> = {}): AnthropicModel {
   return {
@@ -529,47 +598,6 @@ function deepInfraModel(model_name: string, tags: string[]): DeepInfraModel {
     max_tokens: 262_144,
   };
 }
-
-test("syncs Hyper pricing from cost_per_1m fields", () => {
-  const model = hyperModel({
-    id: "minimax-m2.7",
-    cost_per_1m_in: 0.3,
-    cost_per_1m_out: 1.2,
-    cost_per_1m_in_cached: 0.06,
-  });
-
-  expect(buildHyperModel(model, undefined, "minimax/MiniMax-M2.7")).toMatchObject({
-    base_model: "minimax/MiniMax-M2.7",
-    cost: { input: 0.3, output: 1.2, cache_read: 0.06 },
-  });
-});
-
-test("syncs Hyper pricing from OpenRouter-style per-token strings", () => {
-  const model = hyperModel({
-    id: "minimax-m2.7",
-    pricing: {
-      prompt: "0.0000003",
-      completion: "0.0000012",
-      input_cache_read: "0.00000006",
-    },
-  });
-
-  expect(buildHyperModel(model, undefined, "minimax/MiniMax-M2.7")).toMatchObject({
-    cost: { input: 0.3, output: 1.2, cache_read: 0.06 },
-  });
-});
-
-test("preserves existing Hyper cost when API pricing is missing", () => {
-  const existing = {
-    cost: { input: 1, output: 2 },
-    release_date: "2026-01-01",
-    last_updated: "2026-01-01",
-  };
-
-  expect(buildHyperModel(hyperModel({ id: "minimax-m2.7" }), existing, "minimax/MiniMax-M2.7")).toMatchObject({
-    cost: { input: 1, output: 2 },
-  });
-});
 
 test("formats interleaved as a root field before reasoning option tables", () => {
   const content = formatToml({

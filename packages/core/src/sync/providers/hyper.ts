@@ -14,6 +14,8 @@ const Pricing = z.object({
   completion: PricingValue.optional(),
   input_cache_read: PricingValue.optional(),
   input_cache_reads: PricingValue.optional(),
+  input_cache_write: PricingValue.optional(),
+  input_cache_writes: PricingValue.optional(),
   internal_reasoning: PricingValue.optional(),
 }).passthrough();
 
@@ -104,14 +106,14 @@ export const hyper = {
     return HyperResponse.parse(raw).data;
   },
   translateModel(model, context) {
-    const existing = context.existing(model.id);
-    const baseModel = existing?.base_model
+    const authored = context.authored(model.id);
+    const baseModel = authored?.base_model
       ?? BASE_MODEL_ALIASES[model.id]
       ?? resolveVeniceBaseModel(model.id, model.display_name)
       ?? undefined;
     return {
       id: model.id,
-      model: buildHyperModel(model, existing, baseModel),
+      model: buildHyperModel(model, authored, baseModel),
     };
   },
 } satisfies SyncProvider<HyperModel>;
@@ -126,7 +128,8 @@ function reasoningOptions(model: HyperModel) {
     const values = model.reasoning_effort_levels?.filter(isReasoningEffort) ?? [];
     if (values.length > 0) return [{ type: "effort" as const, values }];
   }
-  return [{ type: "toggle" as const }];
+  // Hyper advertises reasoning but documents no toggle or effort control for these models.
+  return [];
 }
 
 function isReasoningEffort(value: string): value is z.infer<typeof ReasoningEffort> {
@@ -166,12 +169,17 @@ function parsePrice(value: string | number | undefined) {
     : undefined;
 }
 
+function positivePrice(value: number | undefined) {
+  return value !== undefined && value > 0 ? value : undefined;
+}
+
 function buildCost(model: HyperModel, existing: ExistingModel["cost"] | undefined) {
   const fromProviderFields = model.cost_per_1m_in !== undefined && model.cost_per_1m_out !== undefined
     ? {
         input: model.cost_per_1m_in,
         output: model.cost_per_1m_out,
         cache_read: model.cost_per_1m_in_cached,
+        cache_write: model.cost_per_1m_out_cached,
         reasoning: undefined as number | undefined,
       }
     : undefined;
@@ -182,6 +190,7 @@ function buildCost(model: HyperModel, existing: ExistingModel["cost"] | undefine
         input: parsePrice(pricing.prompt),
         output: parsePrice(pricing.completion),
         cache_read: parsePrice(pricing.input_cache_read ?? pricing.input_cache_reads),
+        cache_write: parsePrice(pricing.input_cache_write ?? pricing.input_cache_writes),
         reasoning: parsePrice(pricing.internal_reasoning),
       }
     : undefined;
@@ -192,38 +201,44 @@ function buildCost(model: HyperModel, existing: ExistingModel["cost"] | undefine
   return {
     input: resolved.input,
     output: resolved.output,
-    cache_read: resolved.cache_read !== undefined && resolved.cache_read > 0 ? resolved.cache_read : undefined,
-    reasoning: resolved.reasoning !== undefined && resolved.reasoning > 0
-      ? resolved.reasoning
-      : existing?.reasoning,
+    cache_read: positivePrice(resolved.cache_read) ?? existing?.cache_read,
+    cache_write: positivePrice(resolved.cache_write) ?? existing?.cache_write,
+    reasoning: positivePrice(resolved.reasoning) ?? existing?.reasoning,
+    input_audio: existing?.input_audio,
+    output_audio: existing?.output_audio,
+    tiers: existing?.tiers,
   };
 }
 
 export function buildHyperModel(
   model: HyperModel,
-  existing: ExistingModel | undefined,
+  authored: ExistingModel | undefined,
   baseModel: string | undefined,
   today = new Date().toISOString().slice(0, 10),
 ): SyncedModel {
   const limit = {
     context: model.context_window,
-    input: existing?.limit?.input,
+    input: authored?.limit?.input,
     output: model.max_output_tokens,
   };
   const values: Partial<SyncedFullModel> = {
+    name: authored?.name ?? model.display_name,
     attachment: model.supports_attachments,
     reasoning: model.supports_reasoning,
     reasoning_options: reasoningOptions(model),
-    release_date: existing?.release_date ?? dateFromTimestamp(model.created),
-    last_updated: existing?.last_updated ?? today,
-    interleaved: existing?.interleaved,
-    cost: buildCost(model, existing?.cost),
+    release_date: authored?.release_date ?? dateFromTimestamp(model.created),
+    last_updated: authored?.last_updated ?? today,
+    interleaved: authored?.interleaved,
+    cost: buildCost(model, authored?.cost),
     limit,
+    modalities: model.supports_attachments
+      ? authored?.modalities
+      : authored?.modalities ?? { input: ["text"], output: ["text"] },
   };
 
   if (baseModel === undefined) {
     throw new Error(`Hyper model ${model.id} has no matching base_model metadata`);
   }
 
-  return factorBaseModel(baseModel, values, limit, existing?.base_model_omit);
+  return factorBaseModel(baseModel, values, limit, authored?.base_model_omit);
 }
