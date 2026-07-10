@@ -491,5 +491,11 @@ function canonicalCandidates(provider: string, modelID: string) {
     candidates.push(modelID.replace(/^minimax-m/, "MiniMax-M"));
   }
 
+  if (provider === "alibaba") {
+    // `qwen2.5-vl-72b-instruct` predates the dotted `qwen3.5-...`/`qwen3.6-...` naming
+    // convention and is catalogued as `qwen2-5-vl-72b-instruct` instead.
+    candidates.push(modelID.replace(/(\d)\.(\d)/, "$1-$2").toLowerCase());
+  }
+
   return [...new Set(candidates)];
 }

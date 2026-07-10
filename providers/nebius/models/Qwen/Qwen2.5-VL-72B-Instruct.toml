@@ -1,15 +1,6 @@
-name = "Qwen2.5-VL-72B-Instruct"
-description = "Qwen vision-language model for visual reasoning, documents, and agent tasks"
-family = "qwen"
-release_date = "2025-01-20"
-last_updated = "2026-02-04"
+base_model = "alibaba/qwen2-5-vl-72b-instruct"
 attachment = true
-reasoning = false
-temperature = true
-tool_call = true
 structured_output = true
-knowledge = "2024-12"
-open_weights = true
 
 [cost]
 input = 0.25
@@ -21,7 +12,3 @@ cache_write = 0.31
 context = 128_000
 input = 120_000
 output = 8_192
-
-[modalities]
-input = ["text", "image"]
-output = ["text"]

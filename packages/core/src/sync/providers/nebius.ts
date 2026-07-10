@@ -161,12 +161,15 @@ export function buildNebiusModel(
         attachment,
         reasoning,
         // The models-discovery API only exposes a boolean `reasoning` capability, not the
-        // toggle/effort mechanism, even though `provider.toml` documents that the chat
-        // completions endpoint generically accepts `reasoning_effort`. Since there's no
-        // per-model signal for which reasoning models actually honor it, new reasoning
-        // models added here should get an explicit `effort` option hand-curated (matching
-        // sibling entries like gpt-oss-120b/GLM-5.2) rather than default to `[]`; this sync
-        // only preserves whatever was curated, it doesn't derive the option itself.
+        // toggle/effort mechanism. `provider.toml` documents that the chat completions
+        // endpoint generically *accepts* `reasoning_effort`, but that's a wire-level detail,
+        // not evidence a given model's backend changes behavior based on it: reasoning
+        // models already catalogued here diverge by family (GLM/gpt-oss/DeepSeek use
+        // `effort`, Qwen3.5 uses `toggle`, the Nemotron siblings use neither). A new
+        // reasoning model should only get an `effort`/`toggle` option hand-curated when a
+        // same-family sibling already on this provider demonstrates the same mechanism;
+        // otherwise leave `[]` rather than assume the provider-wide capability applies.
+        // This sync only preserves whatever was curated, it doesn't derive the option itself.
         reasoning_options: existing?.reasoning_options,
         temperature,
         tool_call: toolCall,
