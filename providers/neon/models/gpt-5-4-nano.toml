@@ -5,3 +5,12 @@ reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high
 input = 0.2
 output = 1.25
 cache_read = 0.02
+
+[modalities]
+input = ["text", "image"]
+output = ["text", "image"]
+
+[provider]
+npm = "@ai-sdk/openai"
+api = "${NEON_AI_GATEWAY_BASE_URL}/ai-gateway/openai/v1"
+shape = "responses"

@@ -29,7 +29,7 @@ const ReasoningEffortValue = z.preprocess(
   ]),
 );
 
-const ReasoningOption = z
+export const ReasoningOption = z
   .discriminatedUnion("type", [
     z
       .object({

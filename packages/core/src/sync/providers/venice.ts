@@ -78,6 +78,9 @@ const BASE_MODEL_ALIASES: Record<string, string> = {
   "claude-opus-4-6-fast": "anthropic/claude-opus-4-6",
   "claude-opus-4-7-fast": "anthropic/claude-opus-4-7",
   "claude-opus-4-8-fast": "anthropic/claude-opus-4-8",
+  "openai-gpt-56-luna-pro": "openai/gpt-5.6-luna",
+  "openai-gpt-56-sol-pro": "openai/gpt-5.6-sol",
+  "openai-gpt-56-terra-pro": "openai/gpt-5.6-terra",
 };
 
 export const venice = {
