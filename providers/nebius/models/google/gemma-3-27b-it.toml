@@ -3,11 +3,11 @@ description = "Open Gemma instruction model for efficient chat and self-hosted d
 family = "gemma"
 release_date = "2026-01-20"
 last_updated = "2026-02-04"
-attachment = false
+attachment = true
 reasoning = false
 temperature = true
 tool_call = true
-structured_output = false
+structured_output = true
 knowledge = "2025-10"
 open_weights = true
 
@@ -23,5 +23,5 @@ input = 100_000
 output = 8_192
 
 [modalities]
-input = ["text"]
+input = ["text", "image"]
 output = ["text"]

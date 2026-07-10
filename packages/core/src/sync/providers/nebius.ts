@@ -80,33 +80,57 @@ export const nebius = {
     return NebiusResponse.parse(raw).data;
   },
   translateModel(model, context) {
-    return {
-      id: model.id,
-      model: buildNebiusModel(model, context.existing(model.id)),
-    };
+    const built = buildNebiusModel(model, context.existing(model.id));
+    return built === undefined ? undefined : { id: model.id, model: built };
+  },
+  sourceID(model) {
+    return model.id;
+  },
+  skippedNotice(ids) {
+    return ids.length > 0
+      ? [
+          `Skipped ${ids.length} new model(s) with no canonical/existing reference and a ` +
+            `context_length of exactly ${KNOWN_THROTTLED_CONTEXT} (the verbose=true endpoint's ` +
+            `known-throttled default): ${ids.join(", ")}. Re-run once a working API key/tier confirms real values.`,
+        ]
+      : [];
   },
 } satisfies SyncProvider<NebiusModel>;
+
+// The `verbose=true` endpoint has been empirically observed returning exactly this value
+// for models it can't (or won't) report real context for. A brand-new model with no
+// canonical or existing entry has nothing to cross-check that against, so treat it as a
+// sentinel meaning "unverifiable" rather than shipping it as a fact.
+const KNOWN_THROTTLED_CONTEXT = 8_000;
 
 export function buildNebiusModel(
   model: NebiusModel,
   existing: ExistingModel | undefined,
   today = new Date().toISOString().slice(0, 10),
-): SyncedModel {
+): SyncedModel | undefined {
+  const canonical = existing?.base_model ?? resolveCanonicalBaseModel(model.id);
+  if (existing === undefined && canonical === undefined && model.context_length === KNOWN_THROTTLED_CONTEXT) {
+    return undefined;
+  }
+
   const features = new Set(model.supported_features ?? []);
   const samplingParameters = new Set(model.supported_sampling_parameters ?? []);
   const { input, output } = parseModality(model.architecture?.modality, existing?.modalities);
   const name = modelName(model, existing);
   const attachment = input.some((value) => value !== "text");
   const reasoning = features.has("reasoning");
-  const toolCall = features.has("tools");
-  const structuredOutput = features.has("structured_outputs");
+  // Nebius's `supported_features` sample has been seen missing capabilities (alongside the
+  // context throttling above) for models that otherwise carry them; once a capability is
+  // confirmed for an existing entry, a later sample lacking it is treated as incomplete
+  // rather than a real regression, so these only ever gain capabilities, never lose them.
+  const toolCall = features.has("tools") || existing?.tool_call === true;
+  const structuredOutput = features.has("structured_outputs") || existing?.structured_output === true;
   // Nebius omits `supported_sampling_parameters` entirely for some model families;
   // an empty list is ambiguous, so fall back to the existing flag in that case.
   const temperature = samplingParameters.size > 0
     ? samplingParameters.has("temperature")
     : existing?.temperature ?? true;
   const releaseDate = existing?.release_date ?? today;
-  const canonical = existing?.base_model ?? resolveCanonicalBaseModel(model.id);
   const context = resolveContext(
     model.context_length,
     existing?.limit,
@@ -136,8 +160,13 @@ export function buildNebiusModel(
         }),
         attachment,
         reasoning,
-        // The API only exposes a boolean `reasoning` capability, not the toggle/effort
-        // mechanism, so any reasoning_options are curated by hand and preserved as-is.
+        // The models-discovery API only exposes a boolean `reasoning` capability, not the
+        // toggle/effort mechanism, even though `provider.toml` documents that the chat
+        // completions endpoint generically accepts `reasoning_effort`. Since there's no
+        // per-model signal for which reasoning models actually honor it, new reasoning
+        // models added here should get an explicit `effort` option hand-curated (matching
+        // sibling entries like gpt-oss-120b/GLM-5.2) rather than default to `[]`; this sync
+        // only preserves whatever was curated, it doesn't derive the option itself.
         reasoning_options: existing?.reasoning_options,
         temperature,
         tool_call: toolCall,
@@ -258,7 +287,10 @@ function parseModalityPart(part: string | undefined, fallback: Modality[]): Moda
     .map((value) => (value === "embedding" ? "text" : value))
     .filter((value): value is Modality => KNOWN_MODALITIES.has(value as Modality));
 
-  return [...new Set(values.length > 0 ? values : fallback)];
+  // Union rather than replace: `architecture.modality` has been observed under-reporting
+  // (e.g. a known-multimodal model coming back as `text->text`) alongside the same
+  // endpoint's context throttling, so a smaller reported set doesn't prove a lost modality.
+  return [...new Set([...values, ...fallback])];
 }
 
 function inferFamily(id: string, name: string) {
