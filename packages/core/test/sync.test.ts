@@ -43,7 +43,7 @@ test("syncs Hyper cache read and write from provider pricing fields", () => {
   });
 
   expect(buildHyperModel(model, undefined, "alibaba/qwen3.6-flash")).toMatchObject({
-    cost: { input: 1, output: 4, cache_read: 1.25, cache_write: 0.1 },
+    cost: { input: 1, output: 4, cache_read: 0.1, cache_write: 1.25 },
   });
 });
 
@@ -69,8 +69,7 @@ test("preserves hand-authored Hyper cost fields the API does not expose", () => 
     cost: {
       input: 0.82,
       output: 2.64,
-      cache_read: 0.41,
-      cache_write: 0.375,
+      cache_write: 0.41,
       tiers: existing.cost.tiers,
     },
   });

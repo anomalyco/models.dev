@@ -178,8 +178,10 @@ function buildCost(model: HyperModel, existing: ExistingModel["cost"] | undefine
     ? {
         input: model.cost_per_1m_in,
         output: model.cost_per_1m_out,
-        cache_read: model.cost_per_1m_in_cached,
-        cache_write: model.cost_per_1m_out_cached,
+        // Hyper /provider names these fields by token direction, not catalog semantics:
+        // out_cached is the cheap cache-hit read price; in_cached is the cache-write price.
+        cache_read: model.cost_per_1m_out_cached,
+        cache_write: model.cost_per_1m_in_cached,
         reasoning: undefined as number | undefined,
       }
     : undefined;
@@ -198,11 +200,17 @@ function buildCost(model: HyperModel, existing: ExistingModel["cost"] | undefine
   const resolved = fromProviderFields ?? fromPricingObject;
   if (resolved?.input === undefined || resolved.output === undefined) return existing;
 
+  const providerPricing = fromProviderFields !== undefined;
+
   return {
     input: resolved.input,
     output: resolved.output,
-    cache_read: positivePrice(resolved.cache_read) ?? existing?.cache_read,
-    cache_write: positivePrice(resolved.cache_write) ?? existing?.cache_write,
+    cache_read: providerPricing
+      ? positivePrice(resolved.cache_read)
+      : positivePrice(resolved.cache_read) ?? existing?.cache_read,
+    cache_write: providerPricing
+      ? positivePrice(resolved.cache_write)
+      : positivePrice(resolved.cache_write) ?? existing?.cache_write,
     reasoning: positivePrice(resolved.reasoning) ?? existing?.reasoning,
     input_audio: existing?.input_audio,
     output_audio: existing?.output_audio,
