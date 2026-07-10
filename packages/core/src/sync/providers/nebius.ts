@@ -1,29 +1,27 @@
-import { readdirSync } from "node:fs";
-import path from "node:path";
 import { z } from "zod";
 
 import { inferKimiFamily, ModelFamilyValues } from "../../family.js";
 import type { ExistingModel, SyncProvider, SyncedFullModel, SyncedModel } from "../index.js";
-import { factorBaseModel } from "./openrouter.js";
+import { canonicalLimit, createCanonicalBaseModelResolver, factorBaseModel } from "./openrouter.js";
 
 const API_ENDPOINT = "https://api.tokenfactory.nebius.com/v1/models";
-const MODELS_DIR = path.join(import.meta.dirname, "..", "..", "..", "..", "..", "models");
 
 // Scoped to the orgs Nebius Token Factory currently hosts; extend as new orgs show up.
-// Maps a Nebius org prefix to the provider-agnostic namespace under `models/`.
-const NEBIUS_ORG_TO_MODEL_PROVIDER: Record<string, string | undefined> = {
-  "meta-llama": "meta",
-  Qwen: "alibaba",
-  google: "google",
-  openai: "openai",
-  nvidia: "nvidia",
-  "zai-org": "zhipuai",
-  moonshotai: "moonshotai",
-  MiniMaxAI: "minimax",
-  "deepseek-ai": "deepseek",
+// Maps a Nebius org prefix to the provider-agnostic namespace under `models/`, reusing
+// OpenRouter's shared file-scan/cache logic instead of duplicating it here.
+const NEBIUS_CANONICAL_PROVIDER_PREFIXES: Record<string, { provider: string; metadata: string }> = {
+  "meta-llama": { provider: "meta", metadata: "meta" },
+  Qwen: { provider: "alibaba", metadata: "alibaba" },
+  google: { provider: "google", metadata: "google" },
+  openai: { provider: "openai", metadata: "openai" },
+  nvidia: { provider: "nvidia", metadata: "nvidia" },
+  "zai-org": { provider: "zai", metadata: "zhipuai" },
+  moonshotai: { provider: "moonshotai", metadata: "moonshotai" },
+  MiniMaxAI: { provider: "minimax", metadata: "minimax" },
+  "deepseek-ai": { provider: "deepseek", metadata: "deepseek" },
 };
 
-const modelMetadataFilesByProvider = new Map<string, Set<string>>();
+export const resolveCanonicalBaseModel = createCanonicalBaseModelResolver(NEBIUS_CANONICAL_PROVIDER_PREFIXES);
 
 const NebiusPricing = z.object({
   prompt: z.string().optional(),
@@ -106,14 +104,18 @@ export function buildNebiusModel(
   const temperature = samplingParameters.size > 0
     ? samplingParameters.has("temperature")
     : existing?.temperature ?? true;
-  const context = model.context_length ?? existing?.limit?.context ?? 0;
+  const releaseDate = existing?.release_date ?? today;
+  const canonical = existing?.base_model ?? resolveCanonicalBaseModel(model.id);
+  const context = resolveContext(
+    model.context_length,
+    existing?.limit,
+    canonical !== undefined ? canonicalLimit(canonical) : undefined,
+  );
   const limit = {
     context,
     input: existing?.limit?.input,
     output: existing?.limit?.output,
   };
-  const releaseDate = existing?.release_date ?? today;
-  const canonical = existing?.base_model ?? resolveCanonicalBaseModel(model.id);
 
   if (canonical !== undefined) {
     return factorBaseModel(
@@ -164,6 +166,20 @@ export function buildNebiusModel(
     },
     modalities: { input, output },
   } satisfies SyncedFullModel;
+}
+
+// The `verbose=true` endpoint has been observed returning a throttled default context
+// length (seen as 8_000 across many models) instead of the model's real window. Only
+// trust the served value when it's at least as large as what's already known from the
+// existing entry or canonical metadata, and never let context fall below the input limit.
+function resolveContext(
+  apiContext: number | undefined,
+  existingLimit: ExistingModel["limit"] | undefined,
+  canonical: { context?: number; input?: number } | undefined,
+) {
+  const trustedInput = existingLimit?.input ?? canonical?.input ?? 0;
+  const trusted = Math.max(existingLimit?.context ?? 0, canonical?.context ?? 0, trustedInput);
+  return apiContext !== undefined && apiContext >= trusted ? apiContext : trusted;
 }
 
 function modelName(model: NebiusModel, existing: ExistingModel | undefined) {
@@ -234,29 +250,3 @@ function inferFamily(id: string, name: string) {
     });
 }
 
-export function resolveCanonicalBaseModel(nebiusID: string): string | undefined {
-  const [org, ...modelParts] = nebiusID.split("/");
-  if (org === undefined || modelParts.length === 0) return undefined;
-
-  const provider = NEBIUS_ORG_TO_MODEL_PROVIDER[org];
-  if (provider === undefined) return undefined;
-
-  const modelID = modelParts.join("/");
-  const candidates = [...new Set([modelID, modelID.toLowerCase()])];
-  const match = candidates.find((candidate) => modelMetadataExists(provider, candidate));
-
-  return match === undefined ? undefined : `${provider}/${match}`;
-}
-
-function modelMetadataExists(provider: string, modelID: string) {
-  let files = modelMetadataFilesByProvider.get(provider);
-  if (files === undefined) {
-    try {
-      files = new Set(readdirSync(path.join(MODELS_DIR, provider)));
-    } catch {
-      files = new Set();
-    }
-    modelMetadataFilesByProvider.set(provider, files);
-  }
-  return files.has(`${modelID}.toml`);
-}

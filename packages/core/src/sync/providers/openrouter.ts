@@ -296,27 +296,41 @@ function openRouterReasoningOptions(reasoning: OpenRouterModel["reasoning"]): Sy
   return options.length > 0 ? options : undefined;
 }
 
+// Parameterized so other sync providers (e.g. Nebius) can resolve their own org/prefix
+// namespaces against `models/` without reimplementing the file-scan/cache logic below.
+export function createCanonicalBaseModelResolver(
+  prefixes: Record<string, { provider: string; metadata: string }>,
+) {
+  return function resolveCanonicalBaseModel(sourceID: string) {
+    const [prefix, ...modelParts] = sourceID.split("/");
+    if (prefix === undefined || modelParts.length === 0) return undefined;
+    if (sourceID.startsWith("~/") || prefix.startsWith("~")) return undefined;
+
+    const canonical = prefixes[prefix];
+    if (canonical === undefined) return undefined;
+
+    const modelID = modelParts.join("/").replace(/:free$/, "");
+    const candidates = canonicalCandidates(canonical.provider, modelID);
+    const match = candidates.find((candidate) => {
+      return modelMetadataExists(canonical.metadata, candidate);
+    });
+
+    return match === undefined ? undefined : `${canonical.metadata}/${match}`;
+  };
+}
+
+const resolveCanonicalBaseModelByPrefix = createCanonicalBaseModelResolver(CANONICAL_PROVIDER_PREFIXES);
+
+// `CANONICAL_BASE_MODEL_OVERRIDES` is OpenRouter-ID-specific, so it stays out of the
+// generic factory above and is only checked by OpenRouter's own resolver.
 export function resolveCanonicalBaseModel(openrouterID: string) {
   const override = canonicalBaseModelOverride(openrouterID);
   if (override !== undefined) return override;
 
-  const [prefix, ...modelParts] = openrouterID.split("/");
-  if (prefix === undefined || modelParts.length === 0) return undefined;
-  if (openrouterID.startsWith("~/") || prefix.startsWith("~")) return undefined;
-
-  const canonical = CANONICAL_PROVIDER_PREFIXES[prefix as keyof typeof CANONICAL_PROVIDER_PREFIXES];
-  if (canonical === undefined) return undefined;
-
-  const modelID = modelParts.join("/").replace(/:free$/, "");
-  const candidates = canonicalCandidates(canonical.provider, modelID);
-  const match = candidates.find((candidate) => {
-    return modelMetadataExists(canonical.metadata, candidate);
-  });
-
-  return match === undefined ? undefined : `${canonical.metadata}/${match}`;
+  return resolveCanonicalBaseModelByPrefix(openrouterID);
 }
 
-function modelMetadataExists(provider: string, modelID: string) {
+export function modelMetadataExists(provider: string, modelID: string) {
   let files = modelMetadataFilesByProvider.get(provider);
   if (files === undefined) {
     try {
@@ -444,8 +458,20 @@ function modelMetadata(modelID: string) {
   return metadata;
 }
 
+// Exposes a canonical model's own authored limits so provider sync modules can guard
+// their served values against a canonical entry that's already known to be larger/correct.
+export function canonicalLimit(modelID: string) {
+  const limit = modelMetadata(modelID).limit;
+  if (!isPlainObject(limit)) return undefined;
+  return {
+    context: typeof limit.context === "number" ? limit.context : undefined,
+    input: typeof limit.input === "number" ? limit.input : undefined,
+    output: typeof limit.output === "number" ? limit.output : undefined,
+  };
+}
+
 function canonicalCandidates(provider: string, modelID: string) {
-  const candidates = [modelID];
+  const candidates = [modelID, modelID.toLowerCase()];
 
   if (provider === "anthropic") {
     candidates.push(modelID.replace(/(claude-(?:opus|sonnet|haiku)-\d+)\.(\d+)/, "$1-$2"));
