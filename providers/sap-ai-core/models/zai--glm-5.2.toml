@@ -1,0 +1,12 @@
+base_model = "zhipuai/glm-5.2"
+
+name = "zai--glm-5.2"
+description = "Open flagship GLM for long-horizon coding agents and million-token context work"
+reasoning_options = [{ type = "effort", values = ["high", "max"] }]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.00
+output = 0.00
