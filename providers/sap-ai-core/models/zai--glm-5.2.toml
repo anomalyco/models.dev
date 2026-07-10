@@ -7,6 +7,10 @@ reasoning_options = [{ type = "effort", values = ["high", "max"] }]
 [interleaved]
 field = "reasoning_content"
 
+[limit]
+context = 128_000
+output = 128_000
+
 [cost]
 input = 0.00
 output = 0.00
