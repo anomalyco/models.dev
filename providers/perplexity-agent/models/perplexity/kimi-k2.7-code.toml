@@ -1,9 +1,9 @@
-# Source: https://docs.perplexity.ai/docs/agent-api/models — Perplexity Agent API pricing
+# Sources:
+# - https://docs.perplexity.ai/docs/agent-api/models
+# - https://docs.perplexity.ai/api-reference/agent-post
+# - https://platform.kimi.ai/docs/guide/use-kimi-k2-thinking-model
 base_model = "moonshotai/kimi-k2.7-code"
-
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high", "xhigh", "max"]
+reasoning_options = []
 
 [cost]
 input = 0.95

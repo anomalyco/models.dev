@@ -1,9 +1,12 @@
-# Source: https://docs.perplexity.ai/docs/agent-api/models — Perplexity Agent API pricing
+# Sources:
+# - https://docs.perplexity.ai/docs/agent-api/models
+# - https://docs.perplexity.ai/api-reference/agent-post
+# - https://ai.google.dev/gemini-api/docs/whats-new-gemini-3.5
 base_model = "google/gemini-3.5-flash"
 
 [[reasoning_options]]
 type = "effort"
-values = ["low", "medium", "high", "xhigh", "max"]
+values = ["low", "medium", "high"]
 
 [cost]
 input = 1.50
