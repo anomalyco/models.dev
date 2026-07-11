@@ -1,0 +1,9 @@
+# Flat-monthly unlimited subscription (no per-token billing), so per-token
+# costs are 0 — same convention as other subscription-plan providers. An
+# Anthropic-compatible base is also available at
+# https://api.cheapestinference.com/anthropic
+name = "CheapestInference"
+env = ["CHEAPESTINFERENCE_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+doc = "https://cheapestinference.com/docs/getting-started/models/"
+api = "https://api.cheapestinference.com/v1"
