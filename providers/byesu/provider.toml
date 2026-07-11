@@ -1,0 +1,10 @@
+# Byesu is an AI API gateway offering official models with pay-as-you-go billing.
+# OpenAI-compatible Chat Completions: POST https://byesu.com/v1/chat/completions.
+# An Anthropic-native Messages API is also served from the same host:
+# POST https://byesu.com/v1/messages (same Bearer token).
+# https://docs.byesu.com/en/ (accessed 2026-07-11)
+name = "Byesu"
+env = ["BYESU_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+api = "https://byesu.com/v1"
+doc = "https://docs.byesu.com/en/"
