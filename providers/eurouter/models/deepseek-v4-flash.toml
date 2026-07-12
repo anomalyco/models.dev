@@ -1,6 +1,9 @@
 base_model = "deepseek/deepseek-v4-flash"
 description = "DeepSeek V4 Flash is a DeepSeek V4-series text model with a 1M-token context window, function calling, and optional reasoning support."
-reasoning_options = []
+
+[[reasoning_options]]
+type = "effort"
+values = ["high", "max"]
 
 [cost]
 input = 0.15

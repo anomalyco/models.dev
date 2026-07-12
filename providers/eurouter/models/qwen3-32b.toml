@@ -1,14 +1,9 @@
 base_model = "alibaba/qwen3-32b"
 description = "Qwen3 32B is Alibaba's dense multilingual model with tool calling and optional reasoning mode for math, code, and general instruction-following tasks."
 structured_output = true
-reasoning_options = []
 
-[cost]
-input = 0.08
-output = 0.23
-reasoning = 0
-cache_read = 0
-cache_write = 0
+[[reasoning_options]]
+type = "budget_tokens"
 
 [limit]
 context = 32_768

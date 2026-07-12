@@ -1,6 +1,9 @@
 base_model = "zhipuai/glm-5.2"
 description = "GLM-5.2 is Z AI's long-context model for reasoning, coding, tool use, and multilingual chat."
-reasoning_options = []
+
+[[reasoning_options]]
+type = "effort"
+values = ["high", "max"]
 
 [cost]
 input = 1.5

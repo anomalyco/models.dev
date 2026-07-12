@@ -2,13 +2,10 @@ base_model = "openai/gpt-4.1-mini"
 description = "GPT-4.1 Mini is OpenAI's smaller multimodal GPT-4.1 model for cost-efficient long-context, tool, and structured-output workloads."
 
 [cost]
-input = 0.4
-output = 1.6
-cache_read = 0
+input = 0.44
+output = 1.76
+cache_read = 0.11
 cache_write = 0
-
-[limit]
-context = 1_000_000
 
 [modalities]
 input = ["text", "image"]

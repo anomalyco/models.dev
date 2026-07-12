@@ -64,10 +64,12 @@ export const eurouter = {
   },
   skippedNotice(ids) {
     if (ids.length === 0) return [];
-    const noun = ids.length === 1 ? "model was" : "models were";
-    return [
-      `${ids.length} EUrouter ${noun} not created because ${ids.length === 1 ? "it lacks" : "they lack"} an authoritative release date and canonical metadata: ${ids.join(", ")}`,
-    ];
+    if (ids.length === 1) {
+      return [
+        `1 EUrouter model was not created because it lacks an authoritative release date and canonical metadata: ${ids[0]}`,
+      ];
+    }
+    return [`${ids.length} EUrouter models were not created because they lack an authoritative release date and canonical metadata: ${ids.join(", ")}`];
   },
   async fetchModels() {
     const headers = process.env.EUROUTER_API_KEY
@@ -230,10 +232,6 @@ export function buildEUrouterModel(
   const openWeights = Boolean(model.hugging_face_id);
   const canonical = resolveModelBase(model, existing);
   const releaseDate = model.release_date ?? existing?.release_date;
-  if (canonical === undefined && releaseDate === undefined) {
-    throw new Error(`EUrouter model has no authoritative release date: ${model.id}`);
-  }
-  const lastUpdated = model.last_updated ?? existing?.last_updated ?? releaseDate;
   const effectiveReasoning = reasoning ?? existing?.reasoning ?? baseModelReasoning(canonical);
   const cost = model.pricing?.currency === "USD" && prompt !== undefined && completion !== undefined
     ? {
@@ -288,13 +286,17 @@ export function buildEUrouterModel(
     );
   }
 
+  if (releaseDate === undefined) {
+    throw new Error(`EUrouter model has no authoritative release date: ${model.id}`);
+  }
+  const lastUpdated = model.last_updated ?? existing?.last_updated ?? releaseDate;
   const fullReasoningOptions = reasoning_options === undefined ? {} : { reasoning_options };
   return {
     name,
     description,
     family: familyValue,
-    release_date: releaseDate!,
-    last_updated: lastUpdated!,
+    release_date: releaseDate,
+    last_updated: lastUpdated,
     attachment,
     reasoning: effectiveReasoning ?? false,
     ...fullReasoningOptions,
