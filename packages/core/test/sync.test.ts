@@ -317,6 +317,63 @@ test("Alibaba sync uses explicit cache read pricing", () => {
   });
 });
 
+test("Alibaba sync maps context price ranges to cost tiers", () => {
+  const model: AlibabaModel = {
+    model: "qwen3.6-plus",
+    name: "Qwen3.6 Plus",
+    description: "Qwen3.6 Plus",
+    features: [],
+    capabilities: ["Reasoning"],
+    provider: null,
+    published_time: "2026-01-01 00:00:00",
+    inference_metadata: {},
+    model_info: {
+      context_window: 1_000_000,
+      max_input_tokens: null,
+      max_output_tokens: null,
+      max_reasoning_tokens: null,
+      reasoning_max_input_tokens: null,
+      reasoning_max_output_tokens: null,
+    },
+    prices: [
+      {
+        range_name: "Input<=256k",
+        prices: [
+          { type: "input_token", price: "0.5", price_unit: "1M tokens", price_name: "Input" },
+          { type: "output_token", price: "3", price_unit: "1M tokens", price_name: "Output" },
+          { type: "input_token_cache_read", price: "0.05", price_unit: "1M tokens", price_name: "Explicit Cache Read" },
+          { type: "input_token_cache_creation_5m", price: "0.625", price_unit: "1M tokens", price_name: "Explicit Cache Creation" },
+        ],
+      },
+      {
+        range_name: "256k<Input<=1m",
+        prices: [
+          { type: "input_token", price: "2", price_unit: "1M tokens", price_name: "Input" },
+          { type: "output_token", price: "6", price_unit: "1M tokens", price_name: "Output" },
+          { type: "input_token_cache_read", price: "0.2", price_unit: "1M tokens", price_name: "Explicit Cache Read" },
+          { type: "input_token_cache_creation_5m", price: "2.5", price_unit: "1M tokens", price_name: "Explicit Cache Creation" },
+        ],
+      },
+    ],
+  };
+
+  expect(buildAlibabaModel(model, undefined, "alibaba/qwen3.6-plus")).toMatchObject({
+    cost: {
+      input: 0.5,
+      output: 3,
+      cache_read: 0.05,
+      cache_write: 0.625,
+      tiers: [{
+        tier: { type: "context", size: 256_000 },
+        input: 2,
+        output: 6,
+        cache_read: 0.2,
+        cache_write: 2.5,
+      }],
+    },
+  });
+});
+
 test("Alibaba sync uses thinking token prices for thinking-only models", () => {
   const model: AlibabaModel = {
     model: "qwen3-next-80b-a3b-thinking",
@@ -750,7 +807,7 @@ test("xAI sync factors inherited base model fields", () => {
         input: 2,
         output: 6,
         cache_read: 0.5,
-        tiers: [{ tier: { size: 200_000 }, input: 4, output: 12, cache_read: 1 }],
+        tiers: [{ tier: { type: "context", size: 200_000 }, input: 4, output: 12, cache_read: 1 }],
       },
       limit: { context: 500_000, output: 500_000 },
       modalities: { input: ["text", "image"], output: ["text"] },
@@ -764,7 +821,7 @@ test("xAI sync factors inherited base model fields", () => {
       input: 2,
       output: 6,
       cache_read: 0.5,
-      tiers: [{ tier: { size: 200_000 }, input: 4, output: 12, cache_read: 1 }],
+      tiers: [{ tier: { type: "context", size: 200_000 }, input: 4, output: 12, cache_read: 1 }],
     },
   });
   expect(model).not.toHaveProperty("name");
@@ -1033,7 +1090,7 @@ test("DeepInfra preserves live modalities for new base models", () => {
 test("DeepInfra excludes incorrectly tagged Gemma 4 audio input", () => {
   const model = buildDeepInfraModel(
     deepInfraModel("google/gemma-4-31B-it", ["multimodal", "input-audio", "input-video"]),
-    { modalities: { input: ["text", "image", "audio", "video"] } },
+    { modalities: { input: ["text", "image", "audio", "video"], output: ["text"] } },
     "google/gemma-4-31b-it",
   );
 
@@ -1113,7 +1170,8 @@ test("formats reasoning efforts from lowest to highest", () => {
 });
 
 test("defaults new reasoning models to empty reasoning options", () => {
-  expect(preserveReasoningOptions({ reasoning: true }, undefined)).toEqual({
+  expect(preserveReasoningOptions({ base_model: "example/model", reasoning: true }, undefined)).toEqual({
+    base_model: "example/model",
     reasoning: true,
     reasoning_options: [],
   });
