@@ -1,0 +1,27 @@
+name = "Magistral Small 1.2"
+description = "Magistral Small 1.2 is Mistral AI's small reasoning model for transparent and multilingual reasoning."
+family = "magistral-small"
+release_date = "2026-01-09"
+last_updated = "2026-01-09"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = false
+reasoning_options = []
+
+[cost]
+input = 0.5
+output = 1.5
+reasoning = 0
+cache_read = 0
+cache_write = 0
+
+[limit]
+context = 40_000
+output = 40_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

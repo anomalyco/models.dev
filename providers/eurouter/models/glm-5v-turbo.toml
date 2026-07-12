@@ -1,0 +1,17 @@
+base_model = "zhipuai/glm-5v-turbo"
+description = "GLM-5V-Turbo is Z AI's API-only multimodal GLM-5-series vision model that accepts text and image input and produces text, optimized for fast agentic and vision-coding workflows with tool calling and toggleable reasoning."
+structured_output = true
+reasoning_options = []
+
+[cost]
+input = 1.2
+output = 4
+reasoning = 0
+cache_read = 0
+cache_write = 0
+
+[limit]
+context = 202_752
+
+[modalities]
+input = ["text", "image"]

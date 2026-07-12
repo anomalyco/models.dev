@@ -1,0 +1,15 @@
+base_model = "minimax/MiniMax-M2.5"
+description = "MiniMax M2.5 is a MiniMax model for agentic coding, tool use, reasoning, and high-throughput chat workloads."
+structured_output = true
+reasoning_options = []
+
+[cost]
+input = 0.25
+output = 1.2
+reasoning = 0
+cache_read = 0
+cache_write = 0
+
+[limit]
+context = 196_608
+output = 196_608

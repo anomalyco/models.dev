@@ -1,0 +1,14 @@
+base_model = "alibaba/qwen3.5-9b"
+description = "Qwen3.5 9B is Alibaba's compact Qwen3.5 model for efficient long-context chat, reasoning, and tool use."
+reasoning_options = []
+
+[cost]
+input = 0.07
+output = 0.35
+reasoning = 0
+cache_read = 0
+cache_write = 0
+
+[limit]
+context = 262_000
+output = 262_000

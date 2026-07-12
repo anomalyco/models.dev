@@ -26,6 +26,12 @@ import {
   type EmpiriolabsModel,
 } from "../src/sync/providers/empiriolabs.js";
 import {
+  buildEUrouterModel,
+  eurouter,
+  resolveEUrouterBaseModel,
+  type EUrouterModel,
+} from "../src/sync/providers/eurouter.js";
+import {
   buildOpenRouterModel,
   openrouter,
   resolveCanonicalBaseModel,
@@ -892,6 +898,135 @@ test("defaults new reasoning models to empty reasoning options", () => {
   });
 });
 
+test("parses the public EUrouter catalog response", () => {
+  expect(eurouter.parseModels({ object: "list", data: [eurouterModel()] })).toHaveLength(1);
+});
+
+test("syncs EUrouter pricing, capabilities, modalities, and reasoning controls", () => {
+  const model = buildEUrouterModel(eurouterModel(), undefined);
+
+  expect(model).toMatchObject({
+    base_model: "anthropic/claude-sonnet-5",
+    reasoning_options: [
+      { type: "effort", values: ["low", "medium", "high"] },
+      { type: "budget_tokens" },
+    ],
+    temperature: true,
+    structured_output: true,
+    cost: {
+      input: 2,
+      output: 10,
+      reasoning: 3,
+      cache_read: 0.2,
+      cache_write: 2.5,
+    },
+  });
+});
+
+test("maps EUrouter author aliases to canonical metadata", () => {
+  expect(resolveEUrouterBaseModel("zhipu/glm-5.2")).toBe("zhipuai/glm-5.2");
+  expect(resolveEUrouterBaseModel("moonshot/kimi-k2.6")).toBe("moonshotai/kimi-k2.6");
+  expect(resolveEUrouterBaseModel("minimax/minimax-m2")).toBe("minimax/MiniMax-M2");
+});
+
+test("uses EUrouter lifecycle dates instead of the catalog insertion timestamp", () => {
+  const model = buildEUrouterModel(eurouterModel({
+    id: "example-model",
+    canonical_slug: "example/example-model",
+    created: 1_799_712_000,
+    release_date: "2025-02-03",
+    last_updated: "2025-04-05",
+  }), undefined);
+
+  expect(model).toMatchObject({
+    release_date: "2025-02-03",
+    last_updated: "2025-04-05",
+  });
+});
+
+test("falls back to the EUrouter route ID when a canonical snapshot has no metadata", () => {
+  const model = buildEUrouterModel(eurouterModel({
+    id: "gpt-5.1",
+    canonical_slug: "openai/gpt-5.1-20251113",
+    author: "openai",
+    name: "GPT-5.1",
+  }), undefined);
+
+  expect(model).toMatchObject({ base_model: "openai/gpt-5.1" });
+});
+
+test("inherits canonical reasoning when EUrouter does not advertise reasoning metadata", () => {
+  const model = buildEUrouterModel(eurouterModel({
+    reasoning: undefined,
+    supported_parameters: ["tools", "response_format"],
+  }), undefined);
+
+  expect(model).toMatchObject({
+    base_model: "anthropic/claude-sonnet-5",
+    cost: { reasoning: 3 },
+  });
+  expect("reasoning" in model).toBe(false);
+});
+
+test("omits reasoning options when EUrouter explicitly reports no reasoning", () => {
+  const model = buildEUrouterModel(eurouterModel({
+    id: "example-model",
+    canonical_slug: null,
+    author: undefined,
+    reasoning: {
+      mandatory: false,
+      supported_efforts: [],
+      supports_max_tokens: false,
+    },
+    supported_parameters: ["temperature"],
+  }), undefined);
+
+  expect(model).toMatchObject({ reasoning: false });
+  expect("reasoning_options" in model).toBe(false);
+});
+
+test("preserves authored EUrouter metadata when the API is not authoritative", () => {
+  const model = buildEUrouterModel(eurouterModel({
+    id: "example-model",
+    canonical_slug: null,
+    knowledge_cutoff: null,
+    release_date: null,
+    last_updated: null,
+  }), {
+    name: "Curated name",
+    description: "Curated description",
+    family: "gpt",
+    release_date: "2025-01-01",
+    last_updated: "2025-01-02",
+    attachment: true,
+    reasoning: true,
+    reasoning_options: [{ type: "toggle" }],
+    tool_call: true,
+    interleaved: true,
+    knowledge: "2024-06",
+    open_weights: false,
+    status: "beta",
+    cost: {
+      input: 1,
+      output: 2,
+      tiers: [{ tier: { type: "context", size: 200_000 }, input: 2, output: 4 }],
+    },
+    limit: { context: 1_000_000, input: 900_000, output: 128_000 },
+    modalities: { input: ["text", "image", "pdf"], output: ["text"] },
+  });
+
+  expect(model).toMatchObject({
+    description: "Curated description",
+    release_date: "2025-01-01",
+    last_updated: "2025-01-02",
+    knowledge: "2024-06",
+    status: "beta",
+    interleaved: true,
+    limit: { input: 900_000 },
+    cost: { tiers: [{ tier: { type: "context", size: 200_000 }, input: 2, output: 4 }] },
+  });
+});
+
 test("syncs OpenRouter reasoning efforts from model metadata", () => {
   const model = buildOpenRouterModel(openRouterModel({
     reasoning: {
@@ -1319,6 +1454,43 @@ function openRouterModel(overrides: Partial<OpenRouterModel> = {}): OpenRouterMo
       max_completion_tokens: 128_000,
     },
     supported_parameters: ["include_reasoning", "reasoning", "structured_outputs", "tools"],
+    ...overrides,
+  };
+}
+
+function eurouterModel(overrides: Partial<EUrouterModel> = {}): EUrouterModel {
+  return {
+    id: "claude-sonnet-5",
+    canonical_slug: "anthropic/claude-sonnet-5",
+    name: "Claude Sonnet 5",
+    created: 1_782_777_600,
+    description: "Balanced Claude model for coding and agentic workflows",
+    hugging_face_id: null,
+    knowledge_cutoff: "2026-01-31",
+    release_date: "2026-06-30",
+    last_updated: "2026-06-30",
+    context_length: 1_000_000,
+    architecture: {
+      input_modalities: ["text", "image", "file"],
+      output_modalities: ["text"],
+    },
+    pricing: {
+      prompt: "0.000002",
+      completion: "0.00001",
+      internal_reasoning: "0.000003",
+      input_cache_read: "0.0000002",
+      input_cache_write: "0.0000025",
+    },
+    top_provider: {
+      context_length: 1_000_000,
+      max_completion_tokens: 128_000,
+    },
+    supported_parameters: ["temperature", "reasoning_effort", "response_format", "tools"],
+    reasoning: {
+      mandatory: false,
+      supported_efforts: ["low", "medium", "high"],
+      supports_max_tokens: true,
+    },
     ...overrides,
   };
 }

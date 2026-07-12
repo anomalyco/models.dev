@@ -1,0 +1,24 @@
+name = "Qwen3 VL 235B A22B Thinking"
+description = "Qwen3 VL 235B A22B Thinking is Alibaba's reasoning vision-language Mixture-of-Experts model for complex multimodal analysis."
+release_date = "2026-07-06"
+last_updated = "2026-07-06"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = true
+
+[cost]
+input = 1.08
+output = 5.38
+cache_read = 0
+cache_write = 0
+
+[limit]
+context = 262_144
+output = 262_144
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

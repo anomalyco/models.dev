@@ -1,0 +1,25 @@
+name = "Devstral Small"
+description = "Devstral-Small-2505 is a 24B agentic LLM fine-tuned from Mistral-Small-3.1 by Mistral AI and All Hands AI for software engineering. #1 open source model on SWE-bench (46.8% on Verified). Excels at codebase exploration, multi-file editing, and powering software engineering agents. Text-only (vision encoder removed)."
+family = "devstral"
+release_date = "2025-12-08"
+last_updated = "2025-12-08"
+attachment = false
+reasoning = false
+temperature = true
+tool_call = true
+structured_output = false
+open_weights = true
+
+[cost]
+input = 0.15
+output = 0.35
+cache_read = 0
+cache_write = 0
+
+[limit]
+context = 128_000
+output = 128_000
+
+[modalities]
+input = ["text"]
+output = ["text"]

@@ -1,0 +1,14 @@
+base_model = "moonshotai/kimi-k2.6"
+description = "Kimi K2.6 is Moonshot AI's open-weight reasoning model for long-horizon coding, agentic execution, and multimodal reasoning."
+reasoning_options = []
+
+[cost]
+input = 0.8
+output = 3.5
+reasoning = 0
+cache_read = 0.2
+cache_write = 0
+
+[limit]
+context = 256_000
+output = 256_000

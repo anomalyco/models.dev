@@ -1,0 +1,17 @@
+base_model = "alibaba/qwen3.6-27b"
+description = "Qwen3.6 27B is Alibaba's multimodal Qwen3.6 model for vision, chat, reasoning, and tool use."
+reasoning_options = []
+
+[cost]
+input = 0.5
+output = 2.1
+reasoning = 0
+cache_read = 0
+cache_write = 0
+
+[limit]
+context = 262_000
+output = 262_000
+
+[modalities]
+input = ["text", "image"]

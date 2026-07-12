@@ -13,6 +13,7 @@ import { crossmodel } from "./providers/crossmodel.js";
 import { deepinfra } from "./providers/deepinfra.js";
 import { digitalocean } from "./providers/digitalocean.js";
 import { empiriolabs } from "./providers/empiriolabs.js";
+import { eurouter } from "./providers/eurouter.js";
 import { google } from "./providers/google.js";
 import { huggingface } from "./providers/huggingface.js";
 import { kilo } from "./providers/kilo.js";
@@ -102,6 +103,7 @@ export const providers: {
   deepinfra: SyncProvider<any>;
   digitalocean: SyncProvider<any>;
   empiriolabs: SyncProvider<any>;
+  eurouter: SyncProvider<any>;
   google: SyncProvider<any>;
   kilo: SyncProvider<any>;
   huggingface: SyncProvider<any>;
@@ -124,6 +126,7 @@ export const providers: {
   deepinfra,
   digitalocean,
   empiriolabs,
+  eurouter,
   google,
   kilo,
   huggingface,
@@ -139,7 +142,7 @@ export const providers: {
 };
 
 export const groups = {
-  aggregators: ["crossmodel", "empiriolabs", "huggingface", "kilo", "llmgateway", "openrouter", "vercel"],
+  aggregators: ["crossmodel", "empiriolabs", "eurouter", "huggingface", "kilo", "llmgateway", "openrouter", "vercel"],
   cloudflare: ["cloudflare-workers-ai"],
   direct: ["ambient", "anthropic", "baseten", "chutes", "deepinfra", "digitalocean", "google", "openai", "ovhcloud", "pioneer", "venice", "wandb", "xai"],
 } as const;

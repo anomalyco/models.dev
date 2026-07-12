@@ -1,0 +1,15 @@
+base_model = "nvidia/llama-3.1-nemotron-ultra-253b"
+description = "NVIDIA Llama 3.1 Nemotron Ultra 253B is a reasoning-oriented model based on Llama 3.1 for chat, coding, and tool-use workloads."
+structured_output = true
+reasoning_options = []
+
+[cost]
+input = 0.6
+output = 1.8
+reasoning = 0
+cache_read = 0
+cache_write = 0
+
+[limit]
+context = 131_072
+output = 131_072

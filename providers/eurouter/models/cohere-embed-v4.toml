@@ -1,0 +1,25 @@
+name = "Cohere Embed v4"
+description = "Cohere Embed v4 is a state-of-the-art embedding model supporting 100+ languages with best-in-class retrieval performance."
+family = "cohere-embed"
+release_date = "2026-02-01"
+last_updated = "2026-02-01"
+attachment = false
+reasoning = false
+temperature = false
+tool_call = false
+structured_output = false
+open_weights = false
+
+[cost]
+input = 0.1
+output = 0
+cache_read = 0
+cache_write = 0
+
+[limit]
+context = 512
+output = 512
+
+[modalities]
+input = ["text"]
+output = ["text"]

@@ -1,0 +1,25 @@
+name = "Llama 3.1 405B Instruct"
+description = "Llama 3.1 405B Instruct is Meta's flagship 405B parameter model with a 128K context window. It delivers strong multilingual reasoning, instruction following, and tool-use capabilities at frontier scale."
+family = "llama"
+release_date = "2026-02-05"
+last_updated = "2026-02-05"
+attachment = false
+reasoning = false
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = true
+
+[cost]
+input = 1.93
+output = 1.93
+cache_read = 0
+cache_write = 0
+
+[limit]
+context = 128_000
+output = 128_000
+
+[modalities]
+input = ["text"]
+output = ["text"]

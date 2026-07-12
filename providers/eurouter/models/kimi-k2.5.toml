@@ -1,0 +1,15 @@
+base_model = "moonshotai/kimi-k2.5"
+description = "Kimi K2.5 is Moonshot AI's long-context multimodal model for coding, tool use, and general chat."
+attachment = true
+temperature = true
+reasoning_options = []
+
+[cost]
+input = 0.5
+output = 2.5
+reasoning = 0
+cache_read = 0
+cache_write = 0
+
+[modalities]
+input = ["text", "image"]

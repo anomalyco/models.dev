@@ -1,0 +1,24 @@
+name = "Qwen3 Coder 30B A3B"
+description = "Qwen3 Coder 30B A3B is Alibaba's Mixture-of-Experts coding model for software engineering and agentic code tasks."
+release_date = "2025-12-08"
+last_updated = "2025-12-08"
+attachment = false
+reasoning = false
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = true
+
+[cost]
+input = 0.06
+output = 0.22
+cache_read = 0
+cache_write = 0
+
+[limit]
+context = 262_144
+output = 262_144
+
+[modalities]
+input = ["text"]
+output = ["text"]

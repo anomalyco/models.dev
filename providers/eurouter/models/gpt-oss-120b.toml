@@ -1,0 +1,13 @@
+base_model = "openai/gpt-oss-120b"
+description = "GPT-OSS 120B is OpenAI's open-weight reasoning model for agentic, coding, and general chat workloads."
+reasoning_options = []
+
+[cost]
+input = 0.04
+output = 0.2
+reasoning = 0
+cache_read = 0
+cache_write = 0
+
+[limit]
+context = 131_000

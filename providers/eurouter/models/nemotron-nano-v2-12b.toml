@@ -1,0 +1,25 @@
+name = "Nemotron Nano V2 12B"
+description = "Compact NVIDIA model optimized for efficient reasoning, safety, and enterprise workloads."
+family = "nemotron"
+release_date = "2026-01-11"
+last_updated = "2026-01-11"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[cost]
+input = 0.07
+output = 0.2
+cache_read = 0
+cache_write = 0
+
+[limit]
+context = 32_000
+output = 32_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

@@ -1,0 +1,11 @@
+base_model = "openai/gpt-4o-mini"
+description = "GPT-4o Mini is OpenAI's compact multimodal model for low-cost chat, vision, tool use, and structured-output workloads."
+
+[cost]
+input = 0.15
+output = 0.6
+cache_read = 0
+cache_write = 0
+
+[modalities]
+input = ["text", "image"]

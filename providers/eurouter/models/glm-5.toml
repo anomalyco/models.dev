@@ -1,0 +1,15 @@
+base_model = "zhipuai/glm-5"
+description = "GLM-5 is Z AI's flagship language model for coding, reasoning, tool use, and multilingual chat."
+structured_output = true
+reasoning_options = []
+
+[cost]
+input = 1
+output = 3.2
+reasoning = 0
+cache_read = 0
+cache_write = 0
+
+[limit]
+context = 202_752
+output = 202_752

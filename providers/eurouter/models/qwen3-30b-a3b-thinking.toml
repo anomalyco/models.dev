@@ -1,0 +1,24 @@
+name = "Qwen3 30B A3B Thinking"
+description = "Mid-size Qwen thinking model delivering long reasoning chains at efficient cost."
+release_date = "2026-01-11"
+last_updated = "2026-01-11"
+attachment = false
+reasoning = false
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[cost]
+input = 0.1
+output = 0.3
+cache_read = 0
+cache_write = 0
+
+[limit]
+context = 128_000
+output = 128_000
+
+[modalities]
+input = ["text"]
+output = ["text"]

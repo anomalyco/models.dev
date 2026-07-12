@@ -1,0 +1,27 @@
+name = "Magistral Medium 1.2"
+description = "Magistral Medium 1.2 is Mistral AI's premier reasoning model for domain-specific, transparent, and multilingual reasoning."
+family = "magistral-medium"
+release_date = "2026-01-09"
+last_updated = "2026-01-09"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = false
+reasoning_options = []
+
+[cost]
+input = 2
+output = 5
+reasoning = 0
+cache_read = 0
+cache_write = 0
+
+[limit]
+context = 40_000
+output = 40_000
+
+[modalities]
+input = ["text"]
+output = ["text"]

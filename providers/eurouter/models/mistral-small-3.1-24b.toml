@@ -1,0 +1,25 @@
+name = "Mistral Small 3.1 24B"
+description = "Mistral Small 3.1 is a 24B parameter model with a 128K context window. It supports both text and image inputs (vision), features efficient inference at 150 tokens/second, and is optimized for conversational agents, function calling, and long-document comprehension."
+family = "mistral-small"
+release_date = "2025-12-06"
+last_updated = "2025-12-06"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = true
+
+[cost]
+input = 0.1
+output = 0.3
+cache_read = 0
+cache_write = 0
+
+[limit]
+context = 128_000
+output = 128_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

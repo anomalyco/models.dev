@@ -1,0 +1,25 @@
+name = "Voxtral Mini"
+description = "Low-latency speech recognition for edge and devices. Mini version of audio input model optimized for speed."
+family = "voxtral"
+release_date = "2026-01-20"
+last_updated = "2026-01-20"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[cost]
+input = 0.04
+output = 0.04
+cache_read = 0
+cache_write = 0
+
+[limit]
+context = 32_000
+output = 32_000
+
+[modalities]
+input = ["audio", "text"]
+output = ["text"]

@@ -1,0 +1,25 @@
+name = "Llama 3.1 8B Instruct"
+description = "Meta Llama 3.1 8B Instruct is a compact multilingual instruction-tuned model for chat, tool use, and efficient assistant workloads."
+family = "llama"
+release_date = "2025-12-06"
+last_updated = "2025-12-06"
+attachment = false
+reasoning = false
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = true
+
+[cost]
+input = 0.02
+output = 0.06
+cache_read = 0
+cache_write = 0
+
+[limit]
+context = 131_072
+output = 131_072
+
+[modalities]
+input = ["text"]
+output = ["text"]

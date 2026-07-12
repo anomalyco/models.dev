@@ -1,0 +1,25 @@
+name = "Amazon Nova 2 Lite"
+description = "Amazon Nova 2 Lite is a cost-efficient multimodal model for simple automation, document processing, and customer support across text, images, and video."
+family = "nova"
+release_date = "2026-04-29"
+last_updated = "2026-04-29"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = true
+structured_output = false
+open_weights = false
+
+[cost]
+input = 0.39
+output = 3.27
+cache_read = 0.0975
+cache_write = 0
+
+[limit]
+context = 1_000_000
+output = 64_000
+
+[modalities]
+input = ["text", "image", "video"]
+output = ["text"]

@@ -1,0 +1,14 @@
+base_model = "minimax/MiniMax-M2"
+description = "MiniMax M2 is a Mixture-of-Experts language model from MiniMax for coding, function calling, reasoning, and general chat."
+structured_output = true
+reasoning_options = []
+
+[cost]
+input = 0.25
+output = 1
+reasoning = 0
+cache_read = 0
+cache_write = 0
+
+[limit]
+output = 196_608

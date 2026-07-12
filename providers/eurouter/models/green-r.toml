@@ -1,0 +1,24 @@
+name = "GreenR"
+description = "Reasoning model specialized in logical reasoning and problem-solving. Ideal for complex analytical tasks and mathematical problems. Based on GPT-OSS 120B, EU-hosted."
+release_date = "2026-01-20"
+last_updated = "2026-01-20"
+attachment = false
+reasoning = false
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[cost]
+input = 0.35
+output = 0.95
+cache_read = 0
+cache_write = 0
+
+[limit]
+context = 128_000
+output = 128_000
+
+[modalities]
+input = ["text"]
+output = ["text"]

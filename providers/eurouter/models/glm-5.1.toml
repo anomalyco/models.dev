@@ -1,0 +1,14 @@
+base_model = "zhipuai/glm-5.1"
+description = "GLM-5.1 is Z AI's flagship model for long-horizon agentic engineering and advanced coding workflows."
+reasoning_options = []
+
+[cost]
+input = 1.4
+output = 4.4
+reasoning = 0
+cache_read = 0.26
+cache_write = 0
+
+[limit]
+context = 202_752
+output = 202_752

@@ -1,0 +1,15 @@
+base_model = "zhipuai/glm-4.6"
+description = "GLM-4.6 is Z AI's language model for multilingual chat, coding, reasoning, and function calling."
+structured_output = true
+reasoning_options = []
+
+[cost]
+input = 0.4
+output = 1.75
+reasoning = 0
+cache_read = 0
+cache_write = 0
+
+[limit]
+context = 203_000
+output = 131_000

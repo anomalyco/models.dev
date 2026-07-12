@@ -1,0 +1,19 @@
+name = "Amazon Titan Multimodal Embeddings"
+description = "Amazon Titan Multimodal Embeddings generates embeddings for both text and images for cross-modal search."
+family = "titan"
+release_date = "2026-02-01"
+last_updated = "2026-02-01"
+attachment = true
+reasoning = false
+temperature = false
+tool_call = false
+structured_output = false
+open_weights = false
+
+[limit]
+context = 8_000
+output = 8_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

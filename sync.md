@@ -139,6 +139,17 @@ Kilo Gateway is implemented in `packages/core/src/sync/providers/kilo.ts`.
 - Canonical Kilo model IDs should emit `base_model` references to model metadata when a matching `models/` entry exists.
 - `reasoning_options` is derived from `opencode.variants` when present.
 
+## EUrouter Notes
+
+- EUrouter is implemented in `packages/core/src/sync/providers/eurouter.ts`.
+- Source endpoint: `https://api.eurouter.ai/api/v1/models`.
+- `EUROUTER_API_KEY` is optional. The catalog is public; authenticated requests expose the same catalog and support local accounts with scoped visibility if that changes later.
+- Model IDs map directly to TOML paths under `providers/eurouter/models`.
+- API prices are per-token strings and are converted to per-1M-token catalog prices.
+- Canonical slugs and model authors are resolved against provider-agnostic metadata, including EUrouter-to-models.dev namespace aliases.
+- Modalities and capabilities come from the catalog architecture, supported parameters, and reasoning metadata. Missing reasoning metadata is preserved or inherited rather than treated as an authoritative `false`.
+- Existing descriptions, lifecycle dates, knowledge cutoffs, status, interleaving, input limits, pricing tiers, and base-model factoring are preserved when the API is not authoritative for them.
+
 ## Cloudflare Workers AI Notes
 
 Cloudflare Workers AI is implemented in `packages/core/src/sync/providers/cloudflare-workers-ai.ts`.

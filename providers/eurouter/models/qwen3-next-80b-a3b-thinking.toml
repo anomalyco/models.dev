@@ -1,0 +1,15 @@
+base_model = "alibaba/qwen3-next-80b-a3b-thinking"
+description = "Qwen3 Next 80B A3B Thinking is an Alibaba/Qwen thinking model for reasoning, code, context-augmented generation, and tool use."
+structured_output = true
+reasoning_options = []
+
+[cost]
+input = 0.15
+output = 1.2
+reasoning = 0
+cache_read = 0
+cache_write = 0
+
+[limit]
+context = 128_000
+output = 128_000

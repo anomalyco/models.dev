@@ -1,0 +1,25 @@
+name = "Mistral Small 24B Instruct"
+description = "Mistral Small 24B Instruct is a 24B parameter model with 128K context and multimodal (text + image) inputs, optimized for instruction following and long-document understanding."
+family = "mistral-small"
+release_date = "2026-02-05"
+last_updated = "2026-02-05"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = true
+
+[cost]
+input = 0.11
+output = 0.33
+cache_read = 0
+cache_write = 0
+
+[limit]
+context = 128_000
+output = 128_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

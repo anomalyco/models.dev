@@ -1,0 +1,15 @@
+base_model = "zhipuai/glm-4.7"
+description = "GLM-4.7 is Z AI's model for high-throughput chat, coding, and function-calling workloads."
+structured_output = true
+reasoning_options = []
+
+[cost]
+input = 0.6
+output = 2.2
+reasoning = 0
+cache_read = 0
+cache_write = 0
+
+[limit]
+context = 202_752
+output = 200_000

@@ -1,0 +1,19 @@
+base_model = "moonshotai/kimi-k2.7-code"
+description = "Kimi K2.7 Code is Moonshot AI's open-weight Mixture-of-Experts coding model for long-horizon agentic engineering."
+attachment = false
+temperature = true
+reasoning_options = []
+
+[cost]
+input = 0.75
+output = 3.5
+reasoning = 0
+cache_read = 0.2
+cache_write = 0
+
+[limit]
+context = 256_000
+output = 256_000
+
+[modalities]
+input = ["text"]

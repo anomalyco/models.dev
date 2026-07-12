@@ -1,0 +1,25 @@
+name = "Voxtral Small 24B"
+description = "Voxtral Small 24B is Mistral AI's open audio-capable chat model for speech understanding and text generation."
+family = "voxtral"
+release_date = "2025-12-08"
+last_updated = "2025-12-08"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = true
+
+[cost]
+input = 0.1
+output = 0.3
+cache_read = 0
+cache_write = 0
+
+[limit]
+context = 32_000
+output = 32_000
+
+[modalities]
+input = ["text", "audio"]
+output = ["text"]

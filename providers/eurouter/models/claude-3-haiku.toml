@@ -1,0 +1,25 @@
+name = "Claude 3 Haiku"
+description = "Claude 3 Haiku is the fastest and most compact model in the Claude 3 family, ideal for quick responses."
+family = "claude"
+release_date = "2026-02-01"
+last_updated = "2026-02-01"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = true
+structured_output = false
+open_weights = false
+
+[cost]
+input = 0.25
+output = 1.25
+cache_read = 0
+cache_write = 0
+
+[limit]
+context = 200_000
+output = 4_096
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

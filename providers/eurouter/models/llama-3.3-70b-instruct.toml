@@ -1,0 +1,14 @@
+base_model = "meta/llama-3.3-70b-instruct"
+description = "Llama 3.3 70B Instruct is Meta's multilingual instruction-tuned model for chat, reasoning, and tool-use workloads."
+attachment = false
+structured_output = true
+
+[cost]
+input = 0.104
+output = 0.312
+cache_read = 0
+cache_write = 0
+
+[limit]
+context = 131_000
+output = 131_000

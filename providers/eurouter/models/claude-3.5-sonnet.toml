@@ -1,0 +1,25 @@
+name = "Claude 3.5 Sonnet"
+description = "Claude 3.5 Sonnet balances intelligence and speed, excelling at complex tasks while remaining cost-effective."
+family = "claude"
+release_date = "2026-02-01"
+last_updated = "2026-02-01"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = true
+structured_output = false
+open_weights = false
+
+[cost]
+input = 3
+output = 15
+cache_read = 0
+cache_write = 0
+
+[limit]
+context = 200_000
+output = 8_192
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

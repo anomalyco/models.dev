@@ -1,0 +1,25 @@
+name = "Qwen 2.5 VL 72B Instruct"
+description = "Qwen 2.5 VL 72B Instruct is Alibaba's vision-language model for image understanding, OCR, document analysis, and multimodal instruction following."
+family = "qwen"
+release_date = "2026-01-11"
+last_updated = "2026-01-11"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = true
+
+[cost]
+input = 0.25
+output = 0.75
+cache_read = 0
+cache_write = 0
+
+[limit]
+context = 32_000
+output = 32_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

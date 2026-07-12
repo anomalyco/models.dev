@@ -1,0 +1,19 @@
+name = "BGE-EN-ICL"
+description = "Embedding model from BAAI designed for powerful in-context learning retrieval across domains. Produces 4096-dimensional embeddings optimized for semantic search with few-shot learning capabilities."
+family = "bge"
+release_date = "2026-01-09"
+last_updated = "2026-01-09"
+attachment = false
+reasoning = false
+temperature = false
+tool_call = false
+structured_output = false
+open_weights = true
+
+[limit]
+context = 33_000
+output = 33_000
+
+[modalities]
+input = ["text"]
+output = ["text"]

@@ -1,0 +1,24 @@
+name = "Multilingual E5 Large Instruct"
+description = "Multilingual E5 Large Instruct is an instruction-tuned multilingual embedding model for retrieval across ~100 languages."
+release_date = "2026-07-06"
+last_updated = "2026-07-06"
+attachment = false
+reasoning = false
+temperature = false
+tool_call = false
+structured_output = false
+open_weights = true
+
+[cost]
+input = 0.12
+output = 0.6
+cache_read = 0
+cache_write = 0
+
+[limit]
+context = 8_192
+output = 8_192
+
+[modalities]
+input = ["text"]
+output = ["text"]

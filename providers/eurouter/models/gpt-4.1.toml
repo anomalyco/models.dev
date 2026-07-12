@@ -1,0 +1,14 @@
+base_model = "openai/gpt-4.1"
+description = "GPT-4.1 is OpenAI's multimodal general-purpose model for instruction following, coding, long-context work, function calling, and structured outputs."
+
+[cost]
+input = 2
+output = 8
+cache_read = 0
+cache_write = 0
+
+[limit]
+context = 1_000_000
+
+[modalities]
+input = ["text", "image"]

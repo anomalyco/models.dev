@@ -1,0 +1,19 @@
+name = "Text Embedding 3 Large"
+description = "text-embedding-3-large is OpenAI's most capable text embedding model with up to 3,072 output dimensions."
+family = "text-embedding"
+release_date = "2026-01-09"
+last_updated = "2026-01-09"
+attachment = false
+reasoning = false
+temperature = false
+tool_call = false
+structured_output = false
+open_weights = false
+
+[limit]
+context = 8_192
+output = 8_192
+
+[modalities]
+input = ["text"]
+output = ["text"]

@@ -1,0 +1,25 @@
+name = "Claude 3 Sonnet"
+description = "Claude 3 Sonnet offers a balance of intelligence and speed for enterprise workloads."
+family = "claude"
+release_date = "2026-02-01"
+last_updated = "2026-02-01"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = true
+structured_output = false
+open_weights = false
+
+[cost]
+input = 3
+output = 15
+cache_read = 0
+cache_write = 0
+
+[limit]
+context = 200_000
+output = 4_096
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

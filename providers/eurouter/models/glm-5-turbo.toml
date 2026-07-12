@@ -1,0 +1,13 @@
+base_model = "zhipuai/glm-5-turbo"
+description = "GLM-5-Turbo is Z AI's speed-optimized, API-only GLM-5-series variant for fast, low-latency agentic workloads, with tool calling and toggleable reasoning."
+reasoning_options = []
+
+[cost]
+input = 1.2
+output = 4
+reasoning = 0
+cache_read = 0
+cache_write = 0
+
+[limit]
+context = 202_752

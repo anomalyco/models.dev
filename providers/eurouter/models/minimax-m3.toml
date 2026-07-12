@@ -1,0 +1,19 @@
+base_model = "minimax/MiniMax-M3"
+description = "MiniMax M3 is a long-context model for chat, coding, reasoning, and agentic workflows."
+attachment = false
+structured_output = true
+reasoning_options = []
+
+[cost]
+input = 0.4
+output = 2
+reasoning = 0
+cache_read = 0
+cache_write = 0
+
+[limit]
+context = 1_048_576
+output = 131_072
+
+[modalities]
+input = ["text"]

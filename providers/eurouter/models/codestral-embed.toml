@@ -1,0 +1,25 @@
+name = "Codestral Embed"
+description = "Codestral Embed is Mistral AI's code embedding model for semantic code search and retrieval."
+family = "codestral-embed"
+release_date = "2026-01-08"
+last_updated = "2026-01-08"
+attachment = false
+reasoning = false
+temperature = false
+tool_call = false
+structured_output = false
+open_weights = false
+
+[cost]
+input = 0.15
+output = 0
+cache_read = 0
+cache_write = 0
+
+[limit]
+context = 8_192
+output = 8_192
+
+[modalities]
+input = ["text"]
+output = ["text"]
