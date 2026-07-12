@@ -1,0 +1,18 @@
+name = "GreenL Raw"
+description = "Large generative model with custom system prompt support. Provides more control over model behavior and responses. EU-hosted."
+release_date = "2025-06-01"
+last_updated = "2025-06-01"
+attachment = false
+reasoning = false
+temperature = true
+tool_call = true
+structured_output = false
+open_weights = false
+
+[limit]
+context = 128_000
+output = 128_000
+
+[modalities]
+input = ["text"]
+output = ["text"]

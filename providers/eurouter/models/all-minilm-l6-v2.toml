@@ -1,0 +1,18 @@
+name = "All MiniLM L6 v2"
+description = "all-MiniLM-L6-v2 is a compact sentence-transformers embedding model for fast English sentence and paragraph retrieval."
+release_date = "2021-08-30"
+last_updated = "2021-08-30"
+attachment = false
+reasoning = false
+temperature = false
+tool_call = false
+structured_output = false
+open_weights = true
+
+[limit]
+context = 256
+output = 256
+
+[modalities]
+input = ["text"]
+output = ["text"]

@@ -1,0 +1,19 @@
+name = "Amazon Titan Embeddings v2"
+description = "Amazon Titan Embeddings v2 offers configurable embedding dimensions (256-1024) and improved multilingual support."
+family = "titan-embed"
+release_date = "2024-04-30"
+last_updated = "2024-04-30"
+attachment = false
+reasoning = false
+temperature = false
+tool_call = false
+structured_output = false
+open_weights = false
+
+[limit]
+context = 8_000
+output = 8_000
+
+[modalities]
+input = ["text"]
+output = ["text"]
