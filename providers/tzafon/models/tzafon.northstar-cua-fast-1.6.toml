@@ -1,9 +1,8 @@
 # release_date is the /v1/models `created` timestamp.
-# Pricing: https://docs.lightcone.ai/guides/pricing/ (fixed as of 2026-07-12; an earlier
-# version of the table had mislabeled Input/Output columns) now directly lists
-# `tzafon.northstar-cua-fast-1.6` at $0.50/M input, $1.50/M output.
-# Limits probed 2026-07-02 via an oversized max_completion_tokens request:
-# max_model_len=max_total_tokens=131072 (shared input+output budget).
+# Pricing: https://docs.lightcone.ai/guides/pricing/ lists `tzafon.northstar-cua-fast-1.6`
+# at $0.50/M input, $1.50/M output.
+# Limits: an oversized max_completion_tokens request against /v1/chat/completions
+# returns max_model_len=max_total_tokens=131072 (a shared input+output budget).
 
 name = "Northstar CUA Fast 1.6"
 description = "Updated computer-use agent model for browser and desktop automation via screenshot input"

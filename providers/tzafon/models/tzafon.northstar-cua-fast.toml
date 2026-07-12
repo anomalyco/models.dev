@@ -1,10 +1,10 @@
 # attachment=true: accepts screenshot/image input. structured_output covers
 # response_format (json_object / json schema). release_date is the /v1/models
 # `created` timestamp.
-# Pricing: https://docs.lightcone.ai/guides/pricing/ — "input is now $0.50/M (was
-# $1.00) and output is $1.50/M (was $5.00) — a 50-70% reduction".
-# Limits probed 2026-07-02 via an oversized max_completion_tokens request:
-# max_model_len=max_total_tokens=262144 (shared input+output budget).
+# Pricing: https://docs.lightcone.ai/guides/pricing/ lists `tzafon.northstar-cua-fast`
+# at $0.50/M input, $1.50/M output.
+# Limits: an oversized max_completion_tokens request against /v1/chat/completions
+# returns max_model_len=max_total_tokens=262144 (a shared input+output budget).
 
 name = "Northstar CUA Fast"
 description = "Computer-use agent model for browser and desktop automation via screenshot input"
