@@ -1,7 +1,10 @@
 # Served contract is a 1M context window:
 # https://cheapestinference.com/docs/models/minimax-m3/
 base_model = "minimax/MiniMax-M3"
-reasoning_options = []
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high"]
 
 [cost]
 input = 0
