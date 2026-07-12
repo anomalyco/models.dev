@@ -1,13 +1,7 @@
 # release_date is the /v1/models `created` timestamp.
-# Pricing: https://docs.lightcone.ai/guides/pricing/ (as of 2026-07-12) has a table row
-# for `tzafon.northstar-cua-fast-1.6` with a single price, $0.50/M, displayed under its
-# "Output" column header — but that header is mislabeled. The same table shows
-# `tzafon.northstar-cua-fast` with that identical $0.50/M value, which the page's own
-# callout box states is northstar-cua-fast's *input* price ($1.50/M is its output); the
-# table's description text also sits under "Input" for every row instead of a number.
-# So $0.50/M is fast-1.6's cost.input, not cost.output. cost.output is still not
-# published for fast-1.6 anywhere on the page — assumed equal to northstar-cua-fast's
-# $1.50/M pending Tzafon publishing it explicitly (and ideally fixing the table headers).
+# Pricing: https://docs.lightcone.ai/guides/pricing/ (fixed as of 2026-07-12; an earlier
+# version of the table had mislabeled Input/Output columns) now directly lists
+# `tzafon.northstar-cua-fast-1.6` at $0.50/M input, $1.50/M output.
 # Limits probed 2026-07-02 via an oversized max_completion_tokens request:
 # max_model_len=max_total_tokens=131072 (shared input+output budget).
 
