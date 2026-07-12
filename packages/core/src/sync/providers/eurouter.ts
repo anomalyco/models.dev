@@ -34,6 +34,7 @@ export const EUrouterModel = z.object({
     internal_reasoning: z.string().optional(),
     input_cache_read: z.string().optional(),
     input_cache_write: z.string().optional(),
+    currency: z.string(),
   }).passthrough().nullable().optional(),
   top_provider: z.object({
     context_length: z.number().nullable(),
@@ -58,6 +59,16 @@ export const eurouter = {
   id: "eurouter",
   name: "EUrouter",
   modelsDir: "providers/eurouter/models",
+  sourceID(model) {
+    return model.id;
+  },
+  skippedNotice(ids) {
+    if (ids.length === 0) return [];
+    const noun = ids.length === 1 ? "model was" : "models were";
+    return [
+      `${ids.length} EUrouter ${noun} not created because ${ids.length === 1 ? "it lacks" : "they lack"} an authoritative release date and canonical metadata: ${ids.join(", ")}`,
+    ];
+  },
   async fetchModels() {
     const headers = process.env.EUROUTER_API_KEY
       ? { Authorization: `Bearer ${process.env.EUROUTER_API_KEY}` }
@@ -72,18 +83,17 @@ export const eurouter = {
     return EUrouterResponse.parse(raw).data;
   },
   translateModel(model, context) {
+    const existing = context.existing(model.id);
+    const canonical = resolveModelBase(model, existing);
+    if (canonical === undefined && model.release_date == null && existing?.release_date === undefined) {
+      return undefined;
+    }
     return {
       id: model.id,
-      model: buildEUrouterModel(model, context.existing(model.id)),
+      model: buildEUrouterModel(model, existing),
     };
   },
 } satisfies SyncProvider<EUrouterModel>;
-
-function dateFromTimestamp(timestamp: number | null) {
-  return timestamp === null
-    ? undefined
-    : new Date(timestamp * 1000).toISOString().slice(0, 10);
-}
 
 function price(value: string | undefined) {
   if (value === undefined) return undefined;
@@ -136,16 +146,13 @@ function reasoningOptions(
 }
 
 function reasoningCapability(model: EUrouterModel, params: Set<string>) {
-  if (model.reasoning !== undefined) {
-    return model.reasoning.mandatory
-      || model.reasoning.supported_efforts.length > 0
-      || model.reasoning.supports_max_tokens;
-  }
-
   const hasReasoningParameter = params.has("reasoning")
     || params.has("include_reasoning")
     || params.has("reasoning_effort");
-  return hasReasoningParameter ? true : undefined;
+  const hasReasoningControls = model.reasoning?.mandatory === true
+    || (model.reasoning?.supported_efforts.length ?? 0) > 0
+    || model.reasoning?.supports_max_tokens === true;
+  return hasReasoningControls || hasReasoningParameter ? true : undefined;
 }
 
 export function resolveEUrouterBaseModel(canonicalSlug: string | null | undefined) {
@@ -188,6 +195,13 @@ function baseModelReasoning(modelID: string | undefined) {
   return reasoning;
 }
 
+function resolveModelBase(model: EUrouterModel, existing: ExistingModel | undefined) {
+  const routeCanonical = model.author === undefined ? undefined : `${model.author}/${model.id}`;
+  return existing?.base_model
+    ?? resolveEUrouterBaseModel(model.canonical_slug)
+    ?? resolveEUrouterBaseModel(routeCanonical);
+}
+
 export function buildEUrouterModel(
   model: EUrouterModel,
   existing: ExistingModel | undefined,
@@ -206,11 +220,6 @@ export function buildEUrouterModel(
     : apiReasoningOptions ?? existing?.reasoning_options ?? (reasoning === true ? [] : undefined);
   const context = model.context_length ?? model.top_provider.context_length ?? existing?.limit?.context ?? 0;
   const family = inferFamily(model, name);
-  const releaseDate = model.release_date ?? existing?.release_date ?? dateFromTimestamp(model.created);
-  if (releaseDate === undefined) {
-    throw new Error(`EUrouter model has no release date: ${model.id}`);
-  }
-  const lastUpdated = model.last_updated ?? existing?.last_updated ?? releaseDate;
   const familyValue = existing?.family === "o" && family !== "o"
     ? family
     : (existing?.family ?? family);
@@ -219,12 +228,14 @@ export function buildEUrouterModel(
   const structuredOutput = params.has("response_format") || params.has("structured_outputs");
   const knowledge = model.knowledge_cutoff?.slice(0, 10) ?? existing?.knowledge;
   const openWeights = Boolean(model.hugging_face_id);
-  const routeCanonical = model.author === undefined ? undefined : `${model.author}/${model.id}`;
-  const canonical = existing?.base_model
-    ?? resolveEUrouterBaseModel(model.canonical_slug)
-    ?? resolveEUrouterBaseModel(routeCanonical);
+  const canonical = resolveModelBase(model, existing);
+  const releaseDate = model.release_date ?? existing?.release_date;
+  if (canonical === undefined && releaseDate === undefined) {
+    throw new Error(`EUrouter model has no authoritative release date: ${model.id}`);
+  }
+  const lastUpdated = model.last_updated ?? existing?.last_updated ?? releaseDate;
   const effectiveReasoning = reasoning ?? existing?.reasoning ?? baseModelReasoning(canonical);
-  const cost = prompt !== undefined && completion !== undefined
+  const cost = model.pricing?.currency === "USD" && prompt !== undefined && completion !== undefined
     ? {
         input: prompt,
         output: completion,
@@ -282,8 +293,8 @@ export function buildEUrouterModel(
     name,
     description,
     family: familyValue,
-    release_date: releaseDate,
-    last_updated: lastUpdated,
+    release_date: releaseDate!,
+    last_updated: lastUpdated!,
     attachment,
     reasoning: effectiveReasoning ?? false,
     ...fullReasoningOptions,

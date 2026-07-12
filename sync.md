@@ -145,9 +145,10 @@ Kilo Gateway is implemented in `packages/core/src/sync/providers/kilo.ts`.
 - Source endpoint: `https://api.eurouter.ai/api/v1/models`.
 - `EUROUTER_API_KEY` is optional. The catalog is public; authenticated requests expose the same catalog and support local accounts with scoped visibility if that changes later.
 - Model IDs map directly to TOML paths under `providers/eurouter/models`.
-- API prices are per-token strings and are converted to per-1M-token catalog prices.
+- USD API prices are per-token strings and are converted to per-1M-token catalog prices. Non-USD prices are omitted because models.dev cost fields are USD-only; existing curated USD costs are preserved.
 - Canonical slugs and model authors are resolved against provider-agnostic metadata, including EUrouter-to-models.dev namespace aliases.
-- Modalities and capabilities come from the catalog architecture, supported parameters, and reasoning metadata. Missing reasoning metadata is preserved or inherited rather than treated as an authoritative `false`.
+- Modalities and capabilities come from the catalog architecture, supported parameters, and reasoning metadata. An empty reasoning-control object is treated as unknown, so canonical or authored reasoning truth is inherited rather than overwritten with `false`.
+- New standalone models without an API-provided release date are reported but not created. The API's `created` timestamp is a catalog insertion time, not a model release date.
 - Existing descriptions, lifecycle dates, knowledge cutoffs, status, interleaving, input limits, pricing tiers, and base-model factoring are preserved when the API is not authoritative for them.
 
 ## Cloudflare Workers AI Notes

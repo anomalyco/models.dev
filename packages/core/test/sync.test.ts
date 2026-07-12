@@ -968,6 +968,65 @@ test("inherits canonical reasoning when EUrouter does not advertise reasoning me
   expect("reasoning" in model).toBe(false);
 });
 
+test("inherits canonical reasoning when EUrouter reports no verified controls", () => {
+  const model = buildEUrouterModel(eurouterModel({
+    reasoning: {
+      mandatory: false,
+      supported_efforts: [],
+      supports_max_tokens: false,
+    },
+    supported_parameters: ["tools", "response_format"],
+  }), undefined);
+
+  expect(model).toMatchObject({
+    base_model: "anthropic/claude-sonnet-5",
+    cost: { reasoning: 3 },
+  });
+  expect("reasoning" in model).toBe(false);
+});
+
+test("omits non-USD EUrouter pricing instead of mislabeling it as USD", () => {
+  const model = buildEUrouterModel(eurouterModel({
+    pricing: {
+      prompt: "0.000002",
+      completion: "0.00001",
+      currency: "EUR",
+    },
+  }), undefined);
+
+  expect("cost" in model).toBe(false);
+});
+
+test("skips new standalone EUrouter models without an authoritative release date", () => {
+  const translated = eurouter.translateModel(eurouterModel({
+    id: "example-model",
+    canonical_slug: null,
+    author: undefined,
+    release_date: null,
+    last_updated: null,
+  }), {
+    existing: () => undefined,
+    authored: () => undefined,
+  });
+
+  expect(translated).toBeUndefined();
+});
+
+test("reports EUrouter models skipped for incomplete metadata", () => {
+  expect(eurouter.skippedNotice?.(["example-model"])).toEqual([
+    "1 EUrouter model was not created because it lacks an authoritative release date and canonical metadata: example-model",
+  ]);
+});
+
+test("allows factored EUrouter models to inherit a missing release date", () => {
+  const model = buildEUrouterModel(eurouterModel({
+    release_date: null,
+    last_updated: null,
+  }), undefined);
+
+  expect(model).toMatchObject({ base_model: "anthropic/claude-sonnet-5" });
+});
+
 test("omits reasoning options when EUrouter explicitly reports no reasoning", () => {
   const model = buildEUrouterModel(eurouterModel({
     id: "example-model",
@@ -992,6 +1051,12 @@ test("preserves authored EUrouter metadata when the API is not authoritative", (
     knowledge_cutoff: null,
     release_date: null,
     last_updated: null,
+    reasoning: {
+      mandatory: false,
+      supported_efforts: [],
+      supports_max_tokens: false,
+    },
+    supported_parameters: ["tools", "response_format"],
   }), {
     name: "Curated name",
     description: "Curated description",
@@ -1022,6 +1087,8 @@ test("preserves authored EUrouter metadata when the API is not authoritative", (
     knowledge: "2024-06",
     status: "beta",
     interleaved: true,
+    reasoning: true,
+    reasoning_options: [{ type: "toggle" }],
     limit: { input: 900_000 },
     cost: { tiers: [{ tier: { type: "context", size: 200_000 }, input: 2, output: 4 }] },
   });
@@ -1480,6 +1547,7 @@ function eurouterModel(overrides: Partial<EUrouterModel> = {}): EUrouterModel {
       internal_reasoning: "0.000003",
       input_cache_read: "0.0000002",
       input_cache_write: "0.0000025",
+      currency: "USD",
     },
     top_provider: {
       context_length: 1_000_000,
