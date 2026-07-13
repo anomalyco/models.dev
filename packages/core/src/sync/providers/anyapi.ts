@@ -71,16 +71,9 @@ function resolveBaseModel(apiModelID: string): string | undefined {
   if (!prefix) return undefined;
 
   loadModelMetadata();
-  const normalizedModel = normalizeModelName(provider, model);
-  const canonicalID = prefix.metadata + "/" + normalizedModel;
-
-  if (modelMetadataByID.has(canonicalID)) return canonicalID;
-
   const cleanModel = model.replace(/:free$/, "");
-  const cleanNormalized = normalizeModelName(provider, cleanModel);
-  const cleanCanonicalID = prefix.metadata + "/" + cleanNormalized;
-  if (modelMetadataByID.has(cleanCanonicalID)) return cleanCanonicalID;
 
+  // Check overrides first so explicit mappings take priority
   const overrides: Record<string, string> = {
     "anthropic/claude-3-haiku": "anthropic/claude-3-haiku-20240307",
     "anthropic/claude-3.5-haiku": "anthropic/claude-3-5-haiku-20241022",
@@ -131,6 +124,11 @@ function resolveBaseModel(apiModelID: string): string | undefined {
   const cleanID = provider + "/" + cleanModel;
   if (overrides[cleanID] && modelMetadataByID.has(overrides[cleanID])) return overrides[cleanID];
 
+  // Try direct canonical match
+  const normalizedModel = normalizeModelName(provider, cleanModel);
+  const canonicalID = prefix.metadata + "/" + normalizedModel;
+  if (modelMetadataByID.has(canonicalID)) return canonicalID;
+
   return undefined;
 }
 
@@ -154,9 +152,11 @@ export const anyapi = {
   parseModels(raw) {
     return AnyAPIResponse.parse(raw).data;
   },
-  translateModel(model, _context) {
+  translateModel(model, context) {
     const baseModel = resolveBaseModel(model.id);
     if (!baseModel) return undefined;
+
+    const existing = context.existing(model.id);
 
     const canonFile = path.join(MODELS_DIR, baseModel + ".toml");
     let hasReasoning = false;
@@ -170,8 +170,24 @@ export const anyapi = {
       base_model_omit: ["cost"],
     };
 
+    // Preserve hand-authored fields the API is not authoritative for
+    if (existing?.interleaved) {
+      result.interleaved = existing.interleaved;
+    }
+    if (existing?.experimental) {
+      result.experimental = existing.experimental;
+    }
+    if (existing?.status !== undefined) {
+      result.status = existing.status;
+    }
+
+    // Preserve existing reasoning_options, only default to [] for new models
     if (hasReasoning) {
-      result.reasoning_options = [];
+      if (existing?.reasoning_options !== undefined) {
+        result.reasoning_options = existing.reasoning_options;
+      } else {
+        result.reasoning_options = [];
+      }
     }
 
     return { id: model.id, model: result as SyncedModel };
