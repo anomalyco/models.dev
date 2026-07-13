@@ -154,6 +154,7 @@ export const anyapi = {
     if (!baseModel) return undefined;
 
     const existing = context.existing(model.id);
+    const authored = context.authored(model.id);
 
     const canonFile = path.join(MODELS_DIR, baseModel + ".toml");
     let hasReasoning = false;
@@ -176,20 +177,8 @@ export const anyapi = {
     if (existing?.status !== undefined) {
       result.status = existing.status;
     }
-    if (existing?.cost !== undefined) {
-      result.cost = existing.cost;
-    }
-    if (existing?.limit !== undefined) {
-      result.limit = existing.limit;
-    }
-    if (existing?.modalities !== undefined) {
-      result.modalities = existing.modalities;
-    }
-    if (existing?.name !== undefined) {
-      result.name = existing.name;
-    }
-    if (existing?.family !== undefined) {
-      result.family = existing.family;
+    if (authored?.cost !== undefined) {
+      result.cost = authored.cost;
     }
 
     // Preserve existing reasoning_options, only default to [] for new models
