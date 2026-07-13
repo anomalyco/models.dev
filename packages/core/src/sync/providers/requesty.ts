@@ -21,6 +21,18 @@ const MODELS_DIR = path.join(
   "models",
 );
 const metadataCache = new Map<string, Record<string, unknown>>();
+const RESPONSES_MODELS = new Map([
+  ["openai-responses/gpt-5.4-mini", "openai/gpt-5.4-mini"],
+  ["openai-responses/gpt-5.4-nano", "openai/gpt-5.4-nano"],
+  ["openai-responses/gpt-5.5", "openai/gpt-5.5"],
+  ["openai-responses/gpt-5.6-luna", "openai/gpt-5.6-luna"],
+  ["openai-responses/gpt-5.6-sol", "openai/gpt-5.6-sol"],
+  ["openai-responses/gpt-5.6-terra", "openai/gpt-5.6-terra"],
+]);
+const SKIPPED_MODELS = new Set([
+  ...RESPONSES_MODELS.values(),
+  "nvidia/nemotron-3.5-content-safety",
+]);
 
 export const RequestyModel = z.object({
   id: z.string(),
@@ -66,13 +78,14 @@ export const requesty = {
     return RequestyResponse.parse(raw).data.filter((model) => {
       if ((model.api ?? "chat") !== "chat") return false;
       if (!model.id.includes("/") || model.id.startsWith("policy/")) return false;
-      return resolveCanonicalBaseModel(model.id) !== undefined;
+      if (SKIPPED_MODELS.has(model.id)) return false;
+      return requestyBaseModel(model.id) !== undefined;
     });
   },
   translateModel(model, context) {
     const existing = context.existing(model.id);
     const authored = context.authored(model.id);
-    const canonical = authored?.base_model ?? resolveCanonicalBaseModel(model.id);
+    const canonical = authored?.base_model ?? requestyBaseModel(model.id);
     if (canonical === undefined) return undefined;
     return {
       id: model.id,
@@ -123,13 +136,17 @@ function append(values: Modality[], value: Modality, enabled: boolean | undefine
   return enabled === true && !values.includes(value) ? [...values, value] : values;
 }
 
+function requestyBaseModel(modelID: string) {
+  return RESPONSES_MODELS.get(modelID) ?? resolveCanonicalBaseModel(modelID);
+}
+
 function reasoningOptions(
   model: RequestyModel,
   reasoning: boolean,
   existing: ExistingModel | undefined,
 ): SyncedFullModel["reasoning_options"] {
   if (!reasoning) return undefined;
-  const provider = model.id.split("/")[0];
+  const provider = requestyBaseModel(model.id)?.split("/")[0];
   if (provider === "openai" || provider === "anthropic" || provider === "google") {
     return [
       { type: "effort", values: ["none", "low", "medium", "high", "max"] },
@@ -143,7 +160,7 @@ export function buildRequestyModel(
   model: RequestyModel,
   existing: ExistingModel | undefined,
   authored: ExistingModel | undefined,
-  canonical = resolveCanonicalBaseModel(model.id),
+  canonical = requestyBaseModel(model.id),
 ): SyncedModel {
   if (canonical === undefined) {
     throw new Error(`Requesty model ${model.id} does not resolve to shared metadata`);
@@ -167,9 +184,11 @@ export function buildRequestyModel(
   const intrinsicReasoning = existing?.reasoning === true
     || metadataBoolean(canonical, "reasoning") === true;
   const reasoning = intrinsicReasoning || model.supports_reasoning === true;
-  const toolCall = model.supports_tool_calling
-    ?? existing?.tool_call
-    ?? metadataBoolean(canonical, "tool_call");
+  const toolCall = model.id === "google/gemini-3.1-flash-image-preview"
+    ? false
+    : model.supports_tool_calling
+      ?? existing?.tool_call
+      ?? metadataBoolean(canonical, "tool_call");
   const reportedStructuredOutput = model.supports_output_json_schema === undefined
       && model.supports_output_json_object === undefined
     ? undefined
@@ -211,6 +230,9 @@ export function buildRequestyModel(
     structured_output: structuredOutput,
     status: existing?.status,
     interleaved: existing?.interleaved,
+    provider: RESPONSES_MODELS.has(model.id)
+      ? { npm: "@ai-sdk/openai", shape: "responses" }
+      : existing?.provider,
     cost,
     limit,
     modalities,

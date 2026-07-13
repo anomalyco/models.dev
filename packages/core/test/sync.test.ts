@@ -138,10 +138,10 @@ test("Requesty sync preserves intrinsic reasoning and declares controls", () => 
   expect(deepseek).toMatchObject({ reasoning_options: [] });
 
   const openai = buildRequestyModel(
-    requestyModel(),
+    requestyModel({ id: "openai/gpt-5.4-mini" }),
     undefined,
     undefined,
-    "openai/gpt-5.5",
+    "openai/gpt-5.4-mini",
   );
   expect(openai).toMatchObject({
     reasoning_options: [
@@ -149,6 +149,33 @@ test("Requesty sync preserves intrinsic reasoning and declares controls", () => 
       { type: "budget_tokens" },
     ],
   });
+
+  for (const [id, canonical] of [
+    ["openai-responses/gpt-5.4-mini", "openai/gpt-5.4-mini"],
+    ["openai-responses/gpt-5.4-nano", "openai/gpt-5.4-nano"],
+    ["openai-responses/gpt-5.5", "openai/gpt-5.5"],
+    ["openai-responses/gpt-5.6-luna", "openai/gpt-5.6-luna"],
+    ["openai-responses/gpt-5.6-sol", "openai/gpt-5.6-sol"],
+    ["openai-responses/gpt-5.6-terra", "openai/gpt-5.6-terra"],
+  ]) {
+    const responsesModel = buildRequestyModel(
+      requestyModel({ id }),
+      undefined,
+      undefined,
+      canonical,
+    );
+    expect(responsesModel).toMatchObject({
+      provider: { npm: "@ai-sdk/openai", shape: "responses" },
+    });
+  }
+
+  const image = buildRequestyModel(
+    requestyModel({ id: "google/gemini-3.1-flash-image-preview" }),
+    undefined,
+    undefined,
+    "google/gemini-3.1-flash-image-preview",
+  );
+  expect(image).not.toHaveProperty("tool_call");
 });
 
 test("Requesty sync updates existing provider-specific values", () => {
