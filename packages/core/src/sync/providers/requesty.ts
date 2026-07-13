@@ -146,13 +146,19 @@ function reasoningOptions(
   existing: ExistingModel | undefined,
 ): SyncedFullModel["reasoning_options"] {
   if (!reasoning) return undefined;
-  const provider = requestyBaseModel(model.id)?.split("/")[0];
-  if (provider === "openai" || provider === "anthropic" || provider === "google") {
+  const canonical = requestyBaseModel(model.id);
+  const provider = canonical?.split("/")[0];
+  if (
+    provider === "openai"
+    || provider === "anthropic"
+    || canonical?.startsWith("google/gemini-")
+  ) {
     return [
       { type: "effort", values: ["none", "low", "medium", "high", "max"] },
       { type: "budget_tokens" },
     ];
   }
+  if (canonical?.startsWith("google/gemma-")) return [];
   return existing?.reasoning_options ?? [];
 }
 

@@ -181,6 +181,20 @@ test("Requesty sync preserves intrinsic reasoning and declares controls", () => 
     "google/gemini-3.1-flash-image-preview",
   );
   expect(image).not.toHaveProperty("tool_call");
+
+  const gemma = buildRequestyModel(
+    requestyModel({ id: "google/gemma-4-31b-it" }),
+    {
+      base_model: "google/gemma-4-31b-it",
+      reasoning_options: [
+        { type: "effort", values: ["none", "low", "medium", "high", "max"] },
+        { type: "budget_tokens" },
+      ],
+    },
+    { base_model: "google/gemma-4-31b-it" },
+    "google/gemma-4-31b-it",
+  );
+  expect(gemma).toMatchObject({ reasoning_options: [] });
 });
 
 test("Requesty sync updates existing provider-specific values", () => {
