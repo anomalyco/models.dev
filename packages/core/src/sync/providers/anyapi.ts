@@ -2,6 +2,7 @@ import { z } from "zod";
 import path from "node:path";
 import { readFileSync, readdirSync } from "node:fs";
 
+import { AuthoredModel } from "../../schema.js";
 import type { ExistingModel, SyncProvider, SyncedModel } from "../index.js";
 
 const API_ENDPOINT = "https://api.anyapi.ai/v1/models";
@@ -63,6 +64,18 @@ const AnyAPIResponse = z.object({
 }).passthrough();
 
 export type AnyAPIModel = z.infer<typeof AnyAPIModel>;
+
+function preserveAuthoredModel(id: string, authored: ExistingModel): SyncedModel {
+  if (authored.base_model !== undefined) return authored as SyncedModel;
+
+  const parsed = AuthoredModel.safeParse({ id, ...authored });
+  if (!parsed.success) {
+    parsed.error.cause = { provider: "anyapi", model: id };
+    throw parsed.error;
+  }
+  const { id: _id, ...model } = parsed.data;
+  return model;
+}
 
 function resolveBaseModel(apiModelID: string): string | undefined {
   const [provider, ...modelParts] = apiModelID.split("/");
@@ -161,46 +174,8 @@ export const anyapi = {
     return AnyAPIResponse.parse(raw).data;
   },
   translateModel(model, context) {
-    const baseModel = resolveBaseModel(model.id);
-    if (!baseModel) return undefined;
-
-    const existing = context.existing(model.id);
     const authored = context.authored(model.id);
-
-    const canonFile = path.join(MODELS_DIR, baseModel + ".toml");
-    let hasReasoning = false;
-    try {
-      const content = readFileSync(canonFile, "utf8");
-      hasReasoning = /^reasoning\s*=\s*true/m.test(content);
-    } catch {}
-
-    const result: any = {
-      base_model: baseModel,
-    };
-
-    // Preserve hand-authored fields the API is not authoritative for
-    if (existing?.interleaved) {
-      result.interleaved = existing.interleaved;
-    }
-    if (existing?.experimental) {
-      result.experimental = existing.experimental;
-    }
-    if (existing?.status !== undefined) {
-      result.status = existing.status;
-    }
-    if (authored?.cost !== undefined) {
-      result.cost = authored.cost;
-    }
-
-    // Preserve existing reasoning_options. New models are skipped because the
-    // endpoint only returns IDs, so there is no provider-authoritative source
-    // for model-specific reasoning controls.
-    if (hasReasoning) {
-      if (existing?.reasoning_options !== undefined) {
-        result.reasoning_options = existing.reasoning_options;
-      }
-    }
-
-    return { id: model.id, model: result as SyncedModel };
+    if (authored === undefined) return undefined;
+    return { id: model.id, model: preserveAuthoredModel(model.id, authored) };
   },
 } satisfies SyncProvider<AnyAPIModel>;
