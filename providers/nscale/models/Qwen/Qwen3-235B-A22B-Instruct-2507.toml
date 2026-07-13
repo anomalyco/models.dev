@@ -1,0 +1,16 @@
+base_model = "alibaba/qwen3-235b-a22b"
+
+name = "Qwen3 235B A22B Instruct 2507"
+description = "Large Mixture-of-Experts instruction model for general-purpose chat and tool use"
+release_date = "2025-07-18"
+last_updated = "2025-07-18"
+reasoning = false
+structured_output = true
+
+[cost]
+input = 0.20
+output = 0.60
+
+[limit]
+input = 128_000
+output = 8_192

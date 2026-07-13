@@ -1,0 +1,12 @@
+base_model = "meta/llama-4-scout-17b-instruct"
+
+structured_output = true
+
+[cost]
+input = 0.09
+output = 0.29
+
+[limit]
+context = 131_072
+input = 128_000
+output = 8_192

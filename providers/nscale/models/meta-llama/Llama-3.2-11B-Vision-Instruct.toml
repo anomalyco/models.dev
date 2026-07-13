@@ -1,0 +1,24 @@
+name = "Llama 3.2 11B Vision Instruct"
+description = "Multimodal vision-language model for image understanding and text generation"
+attachment = true
+reasoning = false
+tool_call = true
+structured_output = true
+temperature = true
+knowledge = "2023-12"
+release_date = "2024-09-25"
+last_updated = "2024-09-25"
+open_weights = true
+
+[cost]
+input = 0.06
+output = 0.06
+
+[limit]
+context = 131_072
+input = 128_000
+output = 8_192
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

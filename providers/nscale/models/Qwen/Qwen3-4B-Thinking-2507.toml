@@ -1,0 +1,24 @@
+name = "Qwen3 4B Thinking 2507"
+description = "Compact reasoning model with multi-step thinking capabilities"
+attachment = false
+reasoning = true
+reasoning_options = []
+tool_call = true
+structured_output = true
+temperature = true
+release_date = "2025-07-18"
+last_updated = "2025-07-18"
+open_weights = true
+
+[cost]
+input = 0.01
+output = 0.03
+
+[limit]
+context = 131_072
+input = 128_000
+output = 8_192
+
+[modalities]
+input = ["text"]
+output = ["text"]

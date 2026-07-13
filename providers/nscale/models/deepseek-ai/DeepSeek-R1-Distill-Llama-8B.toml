@@ -1,0 +1,27 @@
+name = "DeepSeek R1 Distill Llama 8B"
+description = "Compact distilled reasoning model based on Llama architecture"
+attachment = false
+reasoning = true
+reasoning_options = []
+tool_call = false
+structured_output = false
+temperature = true
+release_date = "2025-01-20"
+last_updated = "2025-01-20"
+open_weights = true
+
+[cost]
+input = 0.05
+output = 0.05
+
+[limit]
+context = 131_072
+input = 128_000
+output = 8_192
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[interleaved]
+field = "reasoning_content"

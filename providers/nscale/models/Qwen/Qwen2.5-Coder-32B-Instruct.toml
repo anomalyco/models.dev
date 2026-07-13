@@ -1,0 +1,23 @@
+name = "Qwen 2.5 Coder 32B Instruct"
+description = "Large coding assistant for complex programming, refactoring, and code understanding"
+attachment = false
+reasoning = false
+tool_call = true
+structured_output = true
+temperature = true
+release_date = "2024-11-12"
+last_updated = "2024-11-12"
+open_weights = true
+
+[cost]
+input = 0.06
+output = 0.20
+
+[limit]
+context = 131_072
+input = 128_000
+output = 8_192
+
+[modalities]
+input = ["text"]
+output = ["text"]

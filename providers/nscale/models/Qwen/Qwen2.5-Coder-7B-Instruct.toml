@@ -1,0 +1,23 @@
+name = "Qwen 2.5 Coder 7B Instruct"
+description = "Mid-size coding assistant for code completion, generation, and understanding"
+attachment = false
+reasoning = false
+tool_call = true
+structured_output = true
+temperature = true
+release_date = "2024-11-12"
+last_updated = "2024-11-12"
+open_weights = true
+
+[cost]
+input = 0.01
+output = 0.03
+
+[limit]
+context = 32_768
+input = 30_000
+output = 8_192
+
+[modalities]
+input = ["text"]
+output = ["text"]

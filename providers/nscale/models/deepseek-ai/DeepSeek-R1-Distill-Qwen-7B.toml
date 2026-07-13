@@ -1,0 +1,27 @@
+name = "DeepSeek R1 Distill Qwen 7B"
+description = "Compact distilled reasoning model based on Qwen architecture optimized for math"
+attachment = false
+reasoning = true
+reasoning_options = []
+tool_call = false
+structured_output = false
+temperature = true
+release_date = "2025-01-20"
+last_updated = "2025-01-20"
+open_weights = true
+
+[cost]
+input = 0.15
+output = 0.15
+
+[limit]
+context = 131_072
+input = 128_000
+output = 8_192
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[interleaved]
+field = "reasoning_content"
