@@ -91,6 +91,11 @@ function requestyModel(overrides: Partial<RequestyModel> = {}): RequestyModel {
   };
 }
 
+test("Requesty sync includes Responses routes from the chat catalog", () => {
+  const model = requestyModel({ id: "openai-responses/gpt-5.5" });
+  expect(requesty.parseModels({ data: [model] })).toEqual([model]);
+});
+
 test("Requesty sync keeps inherited image output modalities", () => {
   const model = buildRequestyModel(
     requestyModel({
