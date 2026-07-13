@@ -132,6 +132,7 @@ export const anyapi = {
   id: "anyapi",
   name: "AnyAPI",
   modelsDir: "providers/anyapi/models",
+  deleteMissing: false,
   async fetchModels() {
     const key = process.env.ANYAPI_API_KEY;
     if (!key) {
@@ -174,6 +175,21 @@ export const anyapi = {
     }
     if (existing?.status !== undefined) {
       result.status = existing.status;
+    }
+    if (existing?.cost !== undefined) {
+      result.cost = existing.cost;
+    }
+    if (existing?.limit !== undefined) {
+      result.limit = existing.limit;
+    }
+    if (existing?.modalities !== undefined) {
+      result.modalities = existing.modalities;
+    }
+    if (existing?.name !== undefined) {
+      result.name = existing.name;
+    }
+    if (existing?.family !== undefined) {
+      result.family = existing.family;
     }
 
     // Preserve existing reasoning_options, only default to [] for new models
