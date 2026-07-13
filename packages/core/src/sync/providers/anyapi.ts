@@ -132,7 +132,18 @@ export const anyapi = {
   id: "anyapi",
   name: "AnyAPI",
   modelsDir: "providers/anyapi/models",
+  skipCreates: true,
   deleteMissing: false,
+  sourceID(model) {
+    return model.id;
+  },
+  skippedNotice(ids) {
+    if (ids.length === 0) return [];
+    return [
+      `${ids.length} AnyAPI models returned by the API were not created because the /v1/models endpoint is not authoritative beyond model IDs. Existing models are still updated while new models require hand-authored metadata.`,
+      `Skipped remote IDs: ${ids.map((id) => `\`${id}\``).join(", ")}`,
+    ];
+  },
   async fetchModels() {
     const key = process.env.ANYAPI_API_KEY;
     if (!key) {
@@ -181,12 +192,12 @@ export const anyapi = {
       result.cost = authored.cost;
     }
 
-    // Preserve existing reasoning_options, only default to [] for new models
+    // Preserve existing reasoning_options. New models are skipped because the
+    // endpoint only returns IDs, so there is no provider-authoritative source
+    // for model-specific reasoning controls.
     if (hasReasoning) {
       if (existing?.reasoning_options !== undefined) {
         result.reasoning_options = existing.reasoning_options;
-      } else {
-        result.reasoning_options = [];
       }
     }
 
