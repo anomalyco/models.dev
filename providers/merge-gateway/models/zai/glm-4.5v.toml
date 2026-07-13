@@ -1,0 +1,17 @@
+base_model = "zhipuai/glm-4.5v"
+name = "Glm 4.5V"
+structured_output = false
+reasoning_options = []
+
+[cost]
+input = 0.6
+output = 1.8
+cache_read = 0.11
+cache_write = 0
+
+[limit]
+context = 128_000
+output = 32_000
+
+[modalities]
+input = ["text", "image"]

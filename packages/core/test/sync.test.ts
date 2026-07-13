@@ -32,6 +32,14 @@ import {
   type OpenRouterModel,
 } from "../src/sync/providers/openrouter.js";
 import { buildLLMGatewayModel, type LLMGatewayModel } from "../src/sync/providers/llmgateway.js";
+import {
+  buildMergeGatewayModel,
+  fetchMergeGatewayModels,
+  mergeGateway,
+  MergeGatewayResponse,
+  selectMergeGatewayVendor,
+  type MergeGatewayModel,
+} from "../src/sync/providers/merge-gateway.js";
 import { openai, parseOpenAIModels } from "../src/sync/providers/openai.js";
 import { resolveVeniceBaseModel } from "../src/sync/providers/venice.js";
 import { buildVercelModel, vercel } from "../src/sync/providers/vercel.js";
@@ -1062,6 +1070,153 @@ test("factors aliased LLM Gateway routes against canonical metadata", () => {
   });
 });
 
+test("fetches every page of the Merge Gateway catalog", async () => {
+  const requests: string[] = [];
+  const authorizations: string[] = [];
+  const fetcher = ((input: string | URL | Request, init?: RequestInit) => {
+    const url = String(input);
+    requests.push(url);
+    authorizations.push(new Headers(init?.headers).get("Authorization") ?? "");
+    const next = url.includes("cursor=next-page");
+    return Promise.resolve(new Response(JSON.stringify({
+      object: "list",
+      data: [mergeGatewayModel({
+        model: next ? "openai/gpt-5.6-terra" : "openai/gpt-5.6-sol",
+        display_name: next ? "GPT-5.6 Terra" : "GPT-5.6 Sol",
+      })],
+      has_more: !next,
+      next_cursor: next ? null : "next-page",
+    })));
+  }) as typeof fetch;
+
+  const result = await fetchMergeGatewayModels(fetcher, "test-key");
+
+  expect(result.data.map((model) => model.model)).toEqual([
+    "openai/gpt-5.6-sol",
+    "openai/gpt-5.6-terra",
+  ]);
+  expect(requests).toHaveLength(2);
+  expect(requests[0]).toContain("limit=500");
+  expect(requests[1]).toContain("cursor=next-page");
+  expect(authorizations).toEqual(["Bearer test-key", "Bearer test-key"]);
+});
+
+test("accepts audio modalities from the Merge Gateway catalog", () => {
+  const model = mergeGatewayModel();
+  model.vendors.openai.capabilities.input.push("audio");
+
+  expect(MergeGatewayResponse.parse({
+    object: "list",
+    data: [model],
+    has_more: false,
+    next_cursor: null,
+  }).data[0]?.vendors.openai.capabilities.input).toContain("audio");
+});
+
+test("factors Merge Gateway GPT-5.6 Sol against canonical metadata", () => {
+  const model = buildMergeGatewayModel(mergeGatewayModel(), undefined);
+
+  expect(model).toEqual({
+    base_model: "openai/gpt-5.6-sol",
+    cost: {
+      input: 5,
+      output: 30,
+    },
+  });
+});
+
+test("syncs authoritative Merge Gateway cache pricing", () => {
+  const model = buildMergeGatewayModel(mergeGatewayModel({
+    vendors: {
+      openai: mergeGatewayVendor({
+        pricing: {
+          currency: "USD",
+          input_per_million: 3.75,
+          output_per_million: 22.5,
+        },
+        prompt_caching: {
+          mode: "automatic",
+          cache_read_cost_per_million: 0.375,
+        },
+      }),
+    },
+  }), {
+    base_model: "openai/gpt-5.6-sol",
+    cost: {
+      input: 5,
+      output: 30,
+      cache_read: 0.5,
+      cache_write: 6.25,
+    },
+  });
+
+  expect(model).toEqual({
+    base_model: "openai/gpt-5.6-sol",
+    cost: {
+      input: 3.75,
+      output: 22.5,
+      cache_read: 0.375,
+    },
+  });
+});
+
+test("inherits canonical names for ID-shaped Merge Gateway display names", () => {
+  const model = buildMergeGatewayModel(mergeGatewayModel({
+    model: "minimax/minimax-m2",
+    provider: "minimax",
+    display_name: "MiniMaxAI/MiniMax-M2",
+    vendors: { minimax: mergeGatewayVendor() },
+  }), undefined);
+
+  expect(model).not.toHaveProperty("name");
+});
+
+test("omits inherited input limits above the Merge Gateway context", () => {
+  const model = buildMergeGatewayModel(mergeGatewayModel({
+    model: "openai/gpt-5-chat-latest",
+    display_name: "GPT-5 Chat Latest",
+    vendors: {
+      openai: mergeGatewayVendor({
+        context_window: 128_000,
+        max_output_tokens: 16_384,
+      }),
+    },
+  }), {
+    base_model: "openai/gpt-5-chat-latest",
+    limit: {
+      context: 128_000,
+      input: 272_000,
+      output: 16_384,
+    },
+  }, {
+    base_model: "openai/gpt-5-chat-latest",
+    limit: {
+      context: 128_000,
+      output: 16_384,
+    },
+  });
+
+  expect(model).toHaveProperty("base_model_omit", ["limit.input"]);
+});
+
+test("uses the canonical Merge Gateway vendor as the catalog baseline", () => {
+  const model = mergeGatewayModel({
+    vendors: {
+      azure: mergeGatewayVendor({ context_window: 200_000 }),
+      openai: mergeGatewayVendor({ context_window: 1_050_000 }),
+    },
+  });
+
+  expect(selectMergeGatewayVendor(model)).toMatchObject({
+    id: "openai",
+    info: { context_window: 1_050_000 },
+  });
+});
+
+test("retains Merge Gateway models missing from an API-key-scoped response", () => {
+  expect(mergeGateway.deleteMissing).toBe(false);
+});
+
 test("parses Vercel pricing tiers with an implicit zero minimum", () => {
   const [model] = vercel.parseModels({
     data: [{
@@ -1292,6 +1447,44 @@ function llmGatewayModel(overrides: Partial<LLMGatewayModel> = {}): LLMGatewayMo
     context_length: 1_000_000,
     supported_parameters: ["temperature", "max_tokens", "top_p", "effort", "reasoning"],
     structured_outputs: true,
+    ...overrides,
+  };
+}
+
+function mergeGatewayVendor(
+  overrides: Partial<MergeGatewayModel["vendors"][string]> = {},
+): MergeGatewayModel["vendors"][string] {
+  return {
+    launch_date: "2026-07-09",
+    context_window: 1_050_000,
+    max_output_tokens: 128_000,
+    availability_status: "available",
+    capabilities: {
+      input: ["text", "image", "document"],
+      output: ["text", "tool_use"],
+      supports_tool_calling: true,
+      supports_tool_choice: true,
+      supports_structured_outputs: true,
+      streaming: true,
+    },
+    pricing: {
+      currency: "USD",
+      input_per_million: 5,
+      output_per_million: 30,
+    },
+    ...overrides,
+  };
+}
+
+function mergeGatewayModel(overrides: Partial<MergeGatewayModel> = {}): MergeGatewayModel {
+  return {
+    model: "openai/gpt-5.6-sol",
+    provider: "openai",
+    display_name: "GPT-5.6 Sol",
+    vendors: { openai: mergeGatewayVendor() },
+    availability_status: "available",
+    created_at: "2026-07-09T00:00:00Z",
+    updated_at: "2026-07-09T00:00:00Z",
     ...overrides,
   };
 }

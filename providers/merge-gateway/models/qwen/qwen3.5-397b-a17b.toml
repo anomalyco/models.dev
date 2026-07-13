@@ -1,0 +1,17 @@
+base_model = "alibaba/qwen3.5-397b-a17b"
+name = "Qwen3.5 397B A17B"
+attachment = false
+tool_call = false
+structured_output = false
+reasoning_options = []
+
+[cost]
+input = 0.172
+output = 1.032
+
+[limit]
+context = 131_072
+output = 32_768
+
+[modalities]
+input = ["text"]

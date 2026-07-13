@@ -17,6 +17,7 @@ import { google } from "./providers/google.js";
 import { huggingface } from "./providers/huggingface.js";
 import { kilo } from "./providers/kilo.js";
 import { llmgateway } from "./providers/llmgateway.js";
+import { mergeGateway } from "./providers/merge-gateway.js";
 import { openai } from "./providers/openai.js";
 import { openrouter } from "./providers/openrouter.js";
 import { ovhcloud } from "./providers/ovhcloud.js";
@@ -106,6 +107,7 @@ export const providers: {
   kilo: SyncProvider<any>;
   huggingface: SyncProvider<any>;
   llmgateway: SyncProvider<any>;
+  "merge-gateway": SyncProvider<any>;
   openai: SyncProvider<any>;
   openrouter: SyncProvider<any>;
   ovhcloud: SyncProvider<any>;
@@ -128,6 +130,7 @@ export const providers: {
   kilo,
   huggingface,
   llmgateway,
+  "merge-gateway": mergeGateway,
   openai,
   openrouter,
   ovhcloud,
@@ -139,7 +142,7 @@ export const providers: {
 };
 
 export const groups = {
-  aggregators: ["crossmodel", "empiriolabs", "huggingface", "kilo", "llmgateway", "openrouter", "vercel"],
+  aggregators: ["crossmodel", "empiriolabs", "huggingface", "kilo", "llmgateway", "merge-gateway", "openrouter", "vercel"],
   cloudflare: ["cloudflare-workers-ai"],
   direct: ["ambient", "anthropic", "baseten", "chutes", "deepinfra", "digitalocean", "google", "openai", "ovhcloud", "pioneer", "venice", "wandb", "xai"],
 } as const;

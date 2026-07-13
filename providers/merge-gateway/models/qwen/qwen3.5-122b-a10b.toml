@@ -1,0 +1,16 @@
+base_model = "alibaba/qwen3.5-122b-a10b"
+attachment = false
+tool_call = false
+structured_output = false
+reasoning_options = []
+
+[cost]
+input = 0.115
+output = 0.917
+
+[limit]
+context = 131_072
+output = 32_768
+
+[modalities]
+input = ["text"]

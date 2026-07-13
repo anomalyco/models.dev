@@ -1,0 +1,13 @@
+base_model = "anthropic/claude-3-7-sonnet-20250219"
+name = "Claude 3.7 Sonnet"
+structured_output = true
+reasoning_options = []
+
+[cost]
+input = 3
+output = 15
+cache_read = 0.3
+cache_write = 3.75
+
+[modalities]
+input = ["text", "image"]

@@ -1,6 +1,10 @@
 base_model = "mistral/devstral-2512"
-status = "deprecated"
+structured_output = true
 
 [cost]
 input = 0.4
 output = 2
+
+[limit]
+context = 256_000
+output = 256_000

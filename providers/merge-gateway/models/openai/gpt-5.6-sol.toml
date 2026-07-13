@@ -1,0 +1,12 @@
+# Merge Gateway catalog: GET https://api-gateway.merge.dev/v1/models
+# Reasoning controls: https://openai.com/index/gpt-5-6/ (accessed 2026-07-13)
+base_model = "openai/gpt-5.6-sol"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "xhigh", "max"]
+
+[cost]
+input = 3.75
+output = 22.5
+cache_read = 0.375

@@ -1,5 +1,14 @@
 base_model = "anthropic/claude-haiku-4-5-20251001"
-reasoning_options = [{ type = "toggle" }, { type = "budget_tokens", min = 1_024, max = 63_999 }]
+name = "Claude Haiku 4.5 (20251001)"
+structured_output = true
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "budget_tokens"
+min = 1_024
+max = 63_999
 
 [cost]
 input = 1

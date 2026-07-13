@@ -1,5 +1,9 @@
 base_model = "google/gemini-2.5-pro"
-reasoning_options = [{ type = "budget_tokens", min = 128, max = 32_768 }]
+
+[[reasoning_options]]
+type = "budget_tokens"
+min = 128
+max = 32_768
 
 [cost]
 input = 1.25
@@ -11,3 +15,6 @@ tier = { type = "context", size = 200_000 }
 input = 2.5
 output = 15
 cache_read = 0.25
+
+[modalities]
+input = ["text", "image", "audio", "pdf"]
