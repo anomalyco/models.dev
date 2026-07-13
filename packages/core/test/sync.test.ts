@@ -33,6 +33,11 @@ import {
 } from "../src/sync/providers/openrouter.js";
 import { buildLLMGatewayModel, type LLMGatewayModel } from "../src/sync/providers/llmgateway.js";
 import { openai, parseOpenAIModels } from "../src/sync/providers/openai.js";
+import {
+  buildRequestyModel,
+  requesty,
+  type RequestyModel,
+} from "../src/sync/providers/requesty.js";
 import { resolveVeniceBaseModel } from "../src/sync/providers/venice.js";
 import { buildVercelModel, vercel } from "../src/sync/providers/vercel.js";
 import { buildWandbModel, type WandbModel } from "../src/sync/providers/wandb.js";
@@ -65,6 +70,109 @@ function anthropicModel(overrides: Partial<AnthropicModel> = {}): AnthropicModel
     ...overrides,
   };
 }
+
+function requestyModel(overrides: Partial<RequestyModel> = {}): RequestyModel {
+  return {
+    id: "openai/gpt-5.5",
+    api: "chat",
+    input_price: 0.000005,
+    output_price: 0.00003,
+    cached_price: 0.0000005,
+    context_window: 1_050_000,
+    max_output_tokens: 128_000,
+    supports_caching: true,
+    supports_vision: true,
+    supports_reasoning: true,
+    supports_tool_calling: true,
+    supports_image_generation: false,
+    supports_output_json_object: true,
+    supports_output_json_schema: true,
+    ...overrides,
+  };
+}
+
+test("Requesty sync keeps inherited image output modalities", () => {
+  const model = buildRequestyModel(
+    requestyModel({
+      id: "google/gemini-3.1-flash-image-preview",
+      input_price: 0.0000005,
+      output_price: 0.000002,
+      context_window: 131_072,
+      max_output_tokens: 32_768,
+      supports_image_generation: false,
+    }),
+    {
+      base_model: "google/gemini-3.1-flash-image-preview",
+      modalities: { input: ["text"], output: ["text"] },
+    },
+    { base_model: "google/gemini-3.1-flash-image-preview" },
+    "google/gemini-3.1-flash-image-preview",
+  );
+
+  // The shared metadata already declares image output. Requesty's coarse
+  // capability flag must not replace it with a text-only modality override.
+  expect(model).not.toHaveProperty("modalities");
+});
+
+test("Requesty sync preserves intrinsic reasoning and declares controls", () => {
+  const deepseek = buildRequestyModel(
+    requestyModel({
+      id: "deepseek/deepseek-reasoner",
+      input_price: 0.00000014,
+      output_price: 0.00000028,
+      context_window: 1_000_000,
+      max_output_tokens: 384_000,
+      supports_vision: false,
+      supports_reasoning: false,
+      supports_output_json_schema: false,
+    }),
+    {
+      base_model: "deepseek/deepseek-reasoner",
+      reasoning: false,
+      reasoning_options: [],
+    },
+    { base_model: "deepseek/deepseek-reasoner", reasoning: false },
+    "deepseek/deepseek-reasoner",
+  );
+  expect(deepseek).not.toHaveProperty("reasoning");
+  expect(deepseek).toMatchObject({ reasoning_options: [] });
+
+  const openai = buildRequestyModel(
+    requestyModel(),
+    undefined,
+    undefined,
+    "openai/gpt-5.5",
+  );
+  expect(openai).toMatchObject({
+    reasoning_options: [
+      { type: "effort", values: ["none", "low", "medium", "high", "max"] },
+      { type: "budget_tokens" },
+    ],
+  });
+});
+
+test("Requesty sync updates existing provider-specific values", () => {
+  const model = buildRequestyModel(
+    requestyModel({ context_window: 900_000, max_output_tokens: 64_000 }),
+    {
+      base_model: "openai/gpt-5.5",
+      reasoning: true,
+      reasoning_options: [],
+      cost: { input: 1, output: 2 },
+      limit: { context: 400_000, output: 32_000 },
+      modalities: { input: ["text", "image"], output: ["text"] },
+    },
+    { base_model: "openai/gpt-5.5" },
+    "openai/gpt-5.5",
+  );
+
+  expect(model).toMatchObject({
+    cost: { input: 5, output: 30, cache_read: 0.5 },
+    limit: { context: 900_000, output: 64_000 },
+  });
+  expect("sameModel" in requesty).toBe(false);
+  expect(requesty.deleteMissing).toBe(false);
+});
 
 const anthropicPricingMarkdown = `
 ## Model pricing
