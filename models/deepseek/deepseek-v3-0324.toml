@@ -1,0 +1,23 @@
+name = "DeepSeek V3 0324"
+description = "March 2025 checkpoint of DeepSeek-V3 with improved reasoning and coding"
+family = "deepseek"
+release_date = "2025-03-24"
+last_updated = "2025-03-24"
+attachment = false
+reasoning = false
+temperature = true
+tool_call = true
+open_weights = true
+
+[limit]
+context = 163_840
+output = 163_840
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[[weights]]
+label = "Model weights"
+url = "https://huggingface.co/deepseek-ai/DeepSeek-V3-0324"
+format = "safetensors"
