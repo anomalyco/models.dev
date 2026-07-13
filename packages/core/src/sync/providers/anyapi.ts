@@ -99,8 +99,8 @@ function resolveBaseModel(apiModelID: string): string | undefined {
     "openai/o4-mini-high": "openai/o4-mini",
     "moonshotai/kimi-k2": "moonshotai/kimi-k2-0711",
     "moonshotai/kimi-k2-0905": "moonshotai/kimi-k2-0905",
-    "meta/llama-4-maverick": "meta/llama-4-maverick-17b-instruct",
-    "meta/llama-4-scout": "meta/llama-4-scout-17b-instruct",
+    "meta-llama/llama-4-maverick": "meta/llama-4-maverick-17b-instruct",
+    "meta-llama/llama-4-scout": "meta/llama-4-scout-17b-instruct",
     "perplexity/sonar-pro-search": "perplexity/sonar-pro",
     "mistral/codestral-2508": "mistral/codestral-latest",
     "mistral/mistral-large-2407": "mistral/mistral-large-2512",
@@ -115,7 +115,6 @@ function resolveBaseModel(apiModelID: string): string | undefined {
     "mistral/ministral-8b-2512": "mistral/ministral-8b-latest",
     "mistral/ministral-14b-2512": "mistral/ministral-8b-latest",
     "mistral/mixtral-8x22b-instruct": "mistral/open-mixtral-8x22b",
-    "upstage/solar-pro-3": "upstage/solar-pro3",
   };
 
   const cleanID = provider + "/" + cleanModel;
@@ -164,7 +163,6 @@ export const anyapi = {
 
     const result: any = {
       base_model: baseModel,
-      base_model_omit: ["cost"],
     };
 
     // Preserve hand-authored fields the API is not authoritative for
