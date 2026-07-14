@@ -214,7 +214,7 @@ export function buildKiloModel(
             : undefined,
         description:
           existing?.description ??
-          apiDescription ??
+          (apiDescription ? apiDescription : null) ??
           describeModel({
             id: model.id,
             name,
@@ -247,7 +247,7 @@ export function buildKiloModel(
     name,
     description:
       existing?.description ??
-      apiDescription ??
+      (apiDescription ? apiDescription : null) ??
       describeModel({
         id: model.id,
         name,
