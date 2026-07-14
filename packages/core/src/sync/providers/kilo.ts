@@ -316,7 +316,11 @@ function KiloReasoningOptions(
     });
     options.push({
       type: "effort",
-      values: orderedEfforts as Array<string | null>,
+      values: orderedEfforts as NonNullable<
+        SyncedFullModel["reasoning_options"]
+      >[number] extends { values?: infer V }
+        ? V
+        : never,
     });
   }
 
