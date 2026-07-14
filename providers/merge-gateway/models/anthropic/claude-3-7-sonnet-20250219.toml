@@ -1,7 +1,10 @@
+# Merge Gateway GET /v1/models?model=anthropic/claude-3-7-sonnet-20250219
+# (accessed 2026-07-14): the Bedrock route advertises configurable
+# `thinking.budget_tokens` and disable support.
 base_model = "anthropic/claude-3-7-sonnet-20250219"
 name = "Claude 3.7 Sonnet"
 structured_output = true
-reasoning_options = []
+reasoning_options = [{ type = "toggle" }, { type = "budget_tokens", min = 1_024, max = 63_999 }]
 
 [cost]
 input = 3

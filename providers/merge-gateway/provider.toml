@@ -1,20 +1,18 @@
 name = "Merge Gateway"
 env = ["MERGE_GATEWAY_API_KEY"]
 npm = "merge-gateway-ai-sdk-provider"
-# Reasoning request surfaces (sources accessed 2026-06-25):
-# - OpenAI compatibility: POST /v1/openai/chat/completions uses the native
-#   top-level `reasoning_effort`; the documented base accepts OpenAI SDK calls.
-# - Anthropic compatibility: POST /v1/anthropic/v1/messages uses native
-#   `thinking = { type = "enabled"|"disabled", budget_tokens = N }` and
-#   `output_config.effort`.
+# Reasoning request surfaces (sources accessed 2026-07-14):
+# - Reasoning support and controls are vendor-route capabilities. Use the exact
+#   model response from GET /v1/models and inspect
+#   vendors.<vendor>.capabilities.reasoning; do not infer support solely from a
+#   compatibility endpoint's request shape.
+#   https://docs.merge.dev/merge-gateway/features/reasoning
+#   https://docs.merge.dev/merge-gateway/api-overview/models/list
+# - OpenAI and Anthropic compatibility endpoints accept their native request
+#   shapes when the selected vendor route advertises the corresponding control.
 #   https://docs.merge.dev/merge-gateway/get-started
-#   https://docs.anthropic.com/en/api/messages
 # - This npm package calls POST /v1/ai-sdk/chat/completions and maps
 #   `providerOptions.mergeGateway.thinking` to
 #   `thinking = { type = "enabled"|"disabled", budget_tokens = N }`.
 #   https://github.com/merge-api/merge-gateway-ai-sdk-provider/blob/main/src/chat/index.ts
-# - Native POST /v1/responses has no reasoning field in its strict request
-#   schema. Other normalized or dynamically routed routes do not document
-#   transparent native-field passthrough; do not infer support from them.
-#   https://docs.merge.dev/merge-gateway/api-overview/responses/create
 doc = "https://docs.merge.dev/merge-gateway"

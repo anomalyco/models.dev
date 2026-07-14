@@ -1,6 +1,8 @@
+# Merge Gateway GET /v1/models?model=anthropic/claude-sonnet-5 (accessed 2026-07-14):
+# the Anthropic route advertises configurable `reasoning.effort` and disable support.
 base_model = "anthropic/claude-sonnet-5"
 structured_output = true
-reasoning_options = []
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
 
 [cost]
 input = 2
