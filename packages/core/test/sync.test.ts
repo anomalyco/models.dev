@@ -1125,7 +1125,7 @@ test("factors Merge Gateway GPT-5.6 Sol against canonical metadata", () => {
   });
 });
 
-test("syncs authoritative Merge Gateway cache pricing", () => {
+test("merges authoritative Merge Gateway cache pricing field by field", () => {
   const model = buildMergeGatewayModel(mergeGatewayModel({
     vendors: {
       openai: mergeGatewayVendor({
@@ -1156,6 +1156,32 @@ test("syncs authoritative Merge Gateway cache pricing", () => {
       input: 3.75,
       output: 22.5,
       cache_read: 0.375,
+      cache_write: 6.25,
+    },
+  });
+});
+
+test("preserves Merge Gateway cache pricing when prompt caching exposes only its mode", () => {
+  const model = buildMergeGatewayModel(mergeGatewayModel({
+    vendors: {
+      openai: mergeGatewayVendor({
+        prompt_caching: { mode: "automatic" },
+      }),
+    },
+  }), {
+    base_model: "openai/gpt-5.6-sol",
+    cost: {
+      input: 5,
+      output: 30,
+      cache_read: 0.5,
+      cache_write: 6.25,
+    },
+  });
+
+  expect(model).toMatchObject({
+    cost: {
+      cache_read: 0.5,
+      cache_write: 6.25,
     },
   });
 });

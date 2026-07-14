@@ -150,7 +150,7 @@ Merge Gateway is implemented in `packages/core/src/sync/providers/merge-gateway.
 - The canonical provider's available vendor route supplies pricing, limits, and capabilities; another available vendor is used only when the canonical route is unavailable.
 - Canonical model IDs emit `base_model` references to model metadata when a matching `models/` entry exists.
 - Existing cache pricing, tiered pricing, reasoning controls, and experimental modes are preserved because the API does not expose them.
-- When the API exposes route-level `prompt_caching` or cache pricing fields, those values authoritatively replace preserved cache prices. Cache prices curated before that API support remain in provider TOMLs and survive syncs.
+- Route-level cache prices replace curated values field by field. A cache read or write price that the API does not expose remains preserved in the provider TOML, including when `prompt_caching` exposes only its mode.
 - Local models missing from the response are retained because API-key policy can affect catalog visibility.
 
 ## Cloudflare Workers AI Notes

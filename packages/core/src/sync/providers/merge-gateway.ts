@@ -257,22 +257,13 @@ function mergeGatewayCachePricing(
 ) {
   const promptCaching = vendor.prompt_caching;
   const pricing = vendor.pricing;
-  const authoritative = promptCaching !== undefined
-    || pricing.cache_read_per_million !== undefined
-    || pricing.cache_write_per_million !== undefined;
-  if (!authoritative) {
-    return {
-      read: existing?.cost?.cache_read,
-      write: existing?.cost?.cache_write,
-    };
-  }
   return {
     read: promptCaching?.cache_read_cost_per_million
       ?? pricing.cache_read_per_million
-      ?? undefined,
+      ?? existing?.cost?.cache_read,
     write: promptCaching?.cache_write_cost_per_million
       ?? pricing.cache_write_per_million
-      ?? undefined,
+      ?? existing?.cost?.cache_write,
   };
 }
 

@@ -1,9 +1,9 @@
 # Merge Gateway GET /v1/models?model=anthropic/claude-fable-5 (accessed 2026-07-14):
-# the only available Anthropic route reports `supports_reasoning = false`, so
-# callers have no reasoning control despite the base model being reasoning-capable.
+# the only available Anthropic route reports `supports_reasoning = false`, so this
+# provider route does not expose the base model's reasoning capability.
 base_model = "anthropic/claude-fable-5"
+reasoning = false
 structured_output = true
-reasoning_options = []
 
 [cost]
 input = 10
