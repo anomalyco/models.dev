@@ -1,1 +1,5 @@
 base_model = "nvidia/nemotron-3-ultra-550b-a55b"
+# No caller-side reasoning controls are documented for Crusoe's OpenAI-compatible
+# endpoint (docs.crusoecloud.com defers to the generic OpenAI API reference; no
+# reasoning_effort / enable_thinking / thinking params documented, accessed 2026-07-14).
+reasoning_options = []
