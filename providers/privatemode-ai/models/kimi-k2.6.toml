@@ -1,10 +1,9 @@
-base_model = "moonshotai/kimi-k2.6"
-base_model_omit = ["benchmarks", "weights"]
 # Reasoning HTTP format (source accessed 2026-07-15): disable thinking by
 # extending the request body with `{"chat_template_kwargs": {"thinking": false}}`.
 # Thinking is on by default; there is no documented effort/budget control, only
 # this on/off switch.
 # https://docs.privatemode.ai/models/overview/
+base_model = "moonshotai/kimi-k2.6"
 reasoning_options = [{ type = "toggle" }]
 
 [cost]
