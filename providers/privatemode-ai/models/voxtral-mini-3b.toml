@@ -1,5 +1,12 @@
 name = "Voxtral Mini 3B"
 description = "Speech transcription model for audio-to-text and captioning workflows"
+# Unlike Voxtral Mini 3B's native chat/tool-call capabilities on other
+# providers, Privatemode only exposes it through /v1/audio/transcriptions -
+# the models overview page lists it under "Speech-to-text" with a single
+# "Audio" input and no chat/tool_call/structured_output capability, so the
+# capability profile intentionally matches whisper-large-v3.toml rather than
+# other providers' multimodal Voxtral entries.
+# https://docs.privatemode.ai/models/overview/
 family = "voxtral"
 attachment = true
 reasoning = false
