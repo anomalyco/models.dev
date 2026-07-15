@@ -1,5 +1,5 @@
 import { expect, test } from "bun:test";
-import { mkdtemp, readFile, rm } from "node:fs/promises";
+import { mkdir, mkdtemp, readFile, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 
@@ -10,6 +10,12 @@ import {
   parseAnthropicPricing,
   type AnthropicModel,
 } from "../src/sync/providers/anthropic.js";
+import {
+  buildWorkersAiModel,
+  cloudflareWorkersAi,
+  reshapeNative,
+  type NativeModel,
+} from "../src/sync/providers/cloudflare-workers-ai.js";
 import { buildDeepInfraModel, type DeepInfraModel } from "../src/sync/providers/deepinfra.js";
 import {
   buildDigitalOceanModel,
@@ -28,8 +34,8 @@ import {
 import {
   buildOpenRouterModel,
   openrouter,
+  OpenRouterModel,
   resolveCanonicalBaseModel,
-  type OpenRouterModel,
 } from "../src/sync/providers/openrouter.js";
 import { buildLLMGatewayModel, type LLMGatewayModel } from "../src/sync/providers/llmgateway.js";
 import { openai, parseOpenAIModels } from "../src/sync/providers/openai.js";
@@ -1348,3 +1354,138 @@ function openRouterModel(overrides: Partial<OpenRouterModel> = {}): OpenRouterMo
     ...overrides,
   };
 }
+
+test("reshapes all Cloudflare Workers AI native fixture records into valid models", async () => {
+  const fixture = await Bun.file(
+    path.join(import.meta.dirname, "fixtures", "cloudflare-workers-ai-native.json"),
+  ).json() as { result: NativeModel[] };
+
+  const byID = new Map<string, ReturnType<typeof buildWorkersAiModel>>();
+  let valid = 0;
+  for (const native of fixture.result) {
+    const parsed = OpenRouterModel.parse(reshapeNative(native));
+    const model = buildWorkersAiModel(parsed, undefined);
+    expect(model).toBeDefined();
+    valid++;
+    byID.set(native.name, model);
+  }
+
+  expect(valid).toBe(61);
+
+  // No native record reports open_weights; every model fakes it to false, unless a
+  // matching base_model entry (e.g. gpt-oss-120b -> openai/gpt-oss-120b) supplies
+  // the real value instead.
+  for (const id of ["@cf/baai/bge-m3", "@cf/meta/m2m100-1.2b", "@cf/openai/whisper"]) {
+    expect(byID.get(id)?.open_weights).toBe(false);
+  }
+
+  // No native record reports an output-token limit; it falls back to context when
+  // known (matching openrouter.ts's own fallback), or to 0 when context is also
+  // unknown.
+  expect(byID.get("@cf/baai/bge-m3")?.limit?.output).toBe(60_000);
+
+  // Neither model's native record reports context_window, so both fake to 0.
+  for (const id of ["@cf/openai/whisper", "@cf/meta/m2m100-1.2b"]) {
+    expect(byID.get(id)?.limit?.context).toBe(0);
+    expect(byID.get(id)?.limit?.output).toBe(0);
+  }
+});
+
+test("round-trips exact Cloudflare Workers AI native token pricing", async () => {
+  const fixture = await Bun.file(
+    path.join(import.meta.dirname, "fixtures", "cloudflare-workers-ai-native.json"),
+  ).json() as { result: NativeModel[] };
+  const byName = new Map(fixture.result.map((model) => [model.name, model]));
+
+  const gptOss120b = byName.get("@cf/openai/gpt-oss-120b");
+  const bgeM3 = byName.get("@cf/baai/bge-m3");
+  const m2m100 = byName.get("@cf/meta/m2m100-1.2b");
+  if (gptOss120b === undefined || bgeM3 === undefined || m2m100 === undefined) {
+    throw new Error("Fixture is missing an expected model");
+  }
+
+  const buildCost = (native: NativeModel) => {
+    return buildWorkersAiModel(OpenRouterModel.parse(reshapeNative(native)), undefined).cost;
+  };
+
+  expect(buildCost(gptOss120b)).toMatchObject({ input: 0.35, output: 0.75 });
+  expect(buildCost(bgeM3)).toMatchObject({ input: 0.0118 });
+  expect(buildCost(m2m100)).toMatchObject({ input: 0.342, output: 0.342 });
+});
+
+test("merges Cloudflare Workers AI openrouter and native formats, openrouter winning on overlap", async () => {
+  const fixture = await Bun.file(
+    path.join(import.meta.dirname, "fixtures", "cloudflare-workers-ai-native.json"),
+  ).json() as { result: NativeModel[] };
+
+  const nativeOnly = fixture.result.find((model) => model.name === "@cf/openai/whisper");
+  const nativeOverlap = fixture.result.find((model) => model.name === "@cf/openai/gpt-oss-120b");
+  if (nativeOnly === undefined || nativeOverlap === undefined) {
+    throw new Error("Fixture is missing an expected model");
+  }
+
+  // A richer openrouter-format record for the same id as `nativeOverlap`, carrying fields
+  // (hugging_face_id) the native format never reports.
+  const openrouterOverlap = {
+    id: "workers-ai/@cf/openai/gpt-oss-120b",
+    name: "OpenAI: gpt-oss-120b",
+    created: 1_700_000_000,
+    hugging_face_id: "openai/gpt-oss-120b",
+    context_length: 128_000,
+    max_output_length: 16_384,
+    pricing: { prompt: "0.00000035", completion: "0.00000075" },
+  };
+
+  const sourceModels = cloudflareWorkersAi.parseModels({
+    openrouter: [openrouterOverlap],
+    native: [nativeOnly, nativeOverlap],
+  });
+
+  expect(sourceModels).toHaveLength(2);
+
+  const overlap = sourceModels.find((source) => source.model.name.includes("gpt-oss-120b"));
+  const onlyNative = sourceModels.find((source) => source.format === "native" && source.model.name === "@cf/openai/whisper");
+  expect(overlap?.format).toBe("openrouter");
+  expect(onlyNative).toBeDefined();
+});
+
+test("translateModel dispatches native and openrouter source models through their respective reshape paths", () => {
+  const context = { existing: () => undefined, authored: () => undefined };
+
+  const nativeSource = {
+    format: "native" as const,
+    model: {
+      id: "11111111-1111-1111-1111-111111111111",
+      name: "@cf/baai/bge-m3",
+      description: "Embeddings model",
+      task: { name: "Text Embeddings" },
+      created_at: "2024-05-22 00:00:00.000",
+      properties: [
+        { property_id: "context_window", value: "60000" },
+        { property_id: "price", value: [{ unit: "per M input tokens", price: 0.0118, currency: "USD" }] },
+      ],
+    },
+  };
+  const nativeTranslated = cloudflareWorkersAi.translateModel(nativeSource, context);
+  expect(nativeTranslated?.id).toBe("@cf/baai/bge-m3");
+  expect(nativeTranslated?.model.cost).toMatchObject({ input: 0.0118 });
+  expect(nativeTranslated?.model.open_weights).toBe(false);
+
+  const openrouterSource = {
+    format: "openrouter" as const,
+    model: {
+      id: "workers-ai/@cf/meta/llama-3.1-8b-instruct-fp8",
+      name: "Meta: Llama 3.1 8B Instruct FP8",
+      created: 1_700_000_000,
+      hugging_face_id: null,
+      knowledge_cutoff: null,
+      context_length: 32_000,
+      architecture: { input_modalities: ["text"], output_modalities: ["text"] },
+      pricing: { prompt: "0.000000152", completion: "0.000000287" },
+      top_provider: { context_length: 32_000, max_completion_tokens: 4_096 },
+      supported_parameters: [],
+    },
+  };
+  const openrouterTranslated = cloudflareWorkersAi.translateModel(openrouterSource, context);
+  expect(openrouterTranslated?.id).toBe("@cf/meta/llama-3.1-8b-instruct-fp8");
+});
