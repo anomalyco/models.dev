@@ -209,15 +209,15 @@ export function buildKiloModel(
       canonical,
       {
         name:
-          baseModel !== undefined 
-          || model.id.endsWith(":free") 
-          || model.id.endsWith(":discounted")
-          || model.id.endsWith(":thinking")
+          baseModel !== undefined ||
+          model.id.endsWith(":free") ||
+          model.id.endsWith(":discounted") ||
+          model.id.endsWith(":thinking")
             ? name
             : undefined,
         description:
-          existing?.description ??
           (apiDescription ? apiDescription : null) ??
+          existing?.description ??
           describeModel({
             id: model.id,
             name,
@@ -249,8 +249,8 @@ export function buildKiloModel(
   return {
     name,
     description:
-      existing?.description ??
       (apiDescription ? apiDescription : null) ??
+      existing?.description ??
       describeModel({
         id: model.id,
         name,
