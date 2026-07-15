@@ -209,7 +209,10 @@ export function buildKiloModel(
       canonical,
       {
         name:
-          baseModel !== undefined || model.id.endsWith(":free")
+          baseModel !== undefined 
+          || model.id.endsWith(":free") 
+          || model.id.endsWith(":discounted")
+          || model.id.endsWith(":thinking")
             ? name
             : undefined,
         description:

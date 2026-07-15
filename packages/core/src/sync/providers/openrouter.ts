@@ -307,7 +307,10 @@ export function resolveCanonicalBaseModel(openrouterID: string) {
   const canonical = CANONICAL_PROVIDER_PREFIXES[prefix as keyof typeof CANONICAL_PROVIDER_PREFIXES];
   if (canonical === undefined) return undefined;
 
-  const modelID = modelParts.join("/").replace(/:free$/, "");
+  const modelID = modelParts.join("/")
+    .replace(/:free$/, "")
+    .replace(/:discounted$/, "")
+    .replace(/:thinking$/, "");
   const candidates = canonicalCandidates(canonical.provider, modelID);
   const match = candidates.find((candidate) => {
     return modelMetadataExists(canonical.metadata, candidate);
