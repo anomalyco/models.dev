@@ -1,13 +1,8 @@
+base_model = "moonshotai/kimi-k2.6"
 name = "Kimi K2.6 1T-32B"
 description = "Moonshot Kimi K2.6 in NVIDIA's NVFP4-quantized build for B200-class GPUs. Multimodal chat with vision via MoonViT."
 release_date = "2026-06-30"
 last_updated = "2026-06-30"
-attachment = true
-reasoning = true
-temperature = true
-tool_call = true
-structured_output = true
-open_weights = true
 
 [[reasoning_options]]
 type = "effort"
@@ -17,10 +12,5 @@ values = ["low", "medium", "high"]
 input = 2
 output = 5
 
-[limit]
-context = 262_144
-output = 262_144
-
 [modalities]
 input = ["text", "image"]
-output = ["text"]

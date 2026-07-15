@@ -1,13 +1,8 @@
+base_model = "zhipuai/glm-5.2"
 name = "GLM 5.2 744B-40B"
 description = "Z.ai GLM 5.2 chat model in an NVFP4 build for Blackwell GPUs. 744B-parameter MoE (40B active) with DeepSeek Sparse Attention; strong multilingual coverage and code."
 release_date = "2026-06-30"
 last_updated = "2026-06-30"
-attachment = false
-reasoning = true
-temperature = true
-tool_call = true
-structured_output = true
-open_weights = true
 
 [[reasoning_options]]
 type = "effort"
@@ -20,7 +15,3 @@ output = 7
 [limit]
 context = 1_048_576
 output = 1_048_576
-
-[modalities]
-input = ["text"]
-output = ["text"]

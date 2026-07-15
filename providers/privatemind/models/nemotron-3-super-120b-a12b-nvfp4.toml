@@ -1,13 +1,9 @@
+base_model = "nvidia/nemotron-3-super-120b-a12b"
 name = "Nemotron 3 Super 120B-12B"
 description = "NVIDIA Nemotron 3 Super, a 120B-A12B MoE chat model, NVFP4-quantized for B200-class GPUs. Hybrid thinking mode."
 release_date = "2026-06-30"
 last_updated = "2026-06-30"
-attachment = false
-reasoning = true
-temperature = true
-tool_call = true
 structured_output = true
-open_weights = true
 
 [[reasoning_options]]
 type = "effort"
@@ -16,11 +12,3 @@ values = ["low", "medium", "high"]
 [cost]
 input = 0.8
 output = 3
-
-[limit]
-context = 262_144
-output = 262_144
-
-[modalities]
-input = ["text"]
-output = ["text"]

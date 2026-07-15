@@ -1,13 +1,9 @@
+base_model = "mistral/mistral-medium-2604"
 name = "Mistral Medium 3.5 128B"
-description = "Mistral Medium 3.5, a 128B dense chat model. Balanced quality/speed; non-thinking instruct mode."
+description = "Mistral Medium 3.5, a 128B dense chat model. Balanced quality/speed; hybrid thinking with an optional reasoning-effort toggle."
 release_date = "2026-06-30"
 last_updated = "2026-06-30"
 attachment = false
-reasoning = true
-temperature = true
-tool_call = true
-structured_output = true
-open_weights = true
 
 [[reasoning_options]]
 type = "effort"
@@ -23,4 +19,3 @@ output = 131_072
 
 [modalities]
 input = ["text"]
-output = ["text"]

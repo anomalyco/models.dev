@@ -1,12 +1,72 @@
+import { existsSync, readdirSync } from "node:fs";
+import path from "node:path";
 import { z } from "zod";
 
 import { describeModel } from "../../describe.js";
+import { factorBaseModel } from "./openrouter.js";
 import type { SyncProvider, SyncedFullModel } from "../index.js";
 
 // PrivateMind is an OpenAI-compatible platform. Every registry entry is derived
 // entirely from /v1/models, so deploying, swapping, or retiring a model needs
 // no change here — the next sync reflects it automatically.
 const API_ENDPOINT = "https://api.privatemind.com/v1/models";
+
+const MODELS_DIR = path.join(import.meta.dirname, "..", "..", "..", "..", "..", "models");
+
+// Where a model.dev metadata file exists for the underlying model, AGENTS.md
+// requires the provider entry to use `base_model` and carry only overrides.
+// Explicit aliases cover ids whose canonical file is named by a version code
+// the id cannot be normalized to (Mistral Medium 3.5 lives at mistral-medium-2604).
+const BASE_MODEL_ALIASES: Record<string, string> = {
+  "mistral-medium-3-5-128b-nvfp4": "mistral/mistral-medium-2604",
+};
+
+// Quant-build suffixes the platform serves, stripped before matching the
+// canonical author metadata (e.g. "glm-5-2-nvfp4" -> "glm-5-2").
+const QUANT_SUFFIX = /-(nvfp4|fp8|fp4|int8|awq|gptq|w8a8)$/;
+// Vendor-rehost prefixes (an NVIDIA/RedHat rehost of another lab's weights);
+// dropped so the id matches the author's canonical file, not the rehoster's.
+const REHOST_PREFIX = /^(nvidia|unsloth|neuralmagic|redhatai)-/;
+
+const normalize = (value: string) => value.toLowerCase().replace(/[^a-z0-9]/g, "");
+
+// Punctuation-insensitive index of every models/<provider>/<model>.toml, built
+// once. Lets dash-for-dot ids ("glm-5-2" == "glm-5.2") resolve without a table.
+let metadataIndexCache: { id: string; norm: string }[] | undefined;
+function metadataIndex() {
+  if (metadataIndexCache !== undefined) return metadataIndexCache;
+  const index: { id: string; norm: string }[] = [];
+  for (const provider of readdirSync(MODELS_DIR, { withFileTypes: true })) {
+    if (!provider.isDirectory()) continue;
+    for (const file of readdirSync(path.join(MODELS_DIR, provider.name), { withFileTypes: true })) {
+      if (!file.isFile() || !file.name.endsWith(".toml")) continue;
+      const stem = file.name.slice(0, -5);
+      index.push({ id: `${provider.name}/${stem}`, norm: normalize(stem) });
+    }
+  }
+  metadataIndexCache = index;
+  return index;
+}
+
+// Resolve a PrivateMind model id to a canonical `models/<provider>/<model>` base,
+// or undefined to keep the entry full-inline (no canonical exists, e.g.
+// qwen3-vl-32b-thinking-fp8). Deterministic and on-disk guarded: a model factors
+// only once its canonical file is present, and a normalized id must match exactly
+// one file, so the sync stays self-updating and idempotent without a per-model map.
+function resolveBaseModel(id: string): string | undefined {
+  const alias = BASE_MODEL_ALIASES[id];
+  if (alias !== undefined) {
+    return existsSync(path.join(MODELS_DIR, `${alias}.toml`)) ? alias : undefined;
+  }
+  const stripped = id.replace(QUANT_SUFFIX, "");
+  const keys = new Set([normalize(stripped), normalize(stripped.replace(REHOST_PREFIX, ""))]);
+  for (const key of keys) {
+    const matches = metadataIndex().filter((entry) => entry.norm === key);
+    const [match] = matches;
+    if (matches.length === 1 && match !== undefined) return match.id;
+  }
+  return undefined;
+}
 
 // Only chat-shaped models map onto a models.dev entry; embeddings, TTS, ASR,
 // rerank, OCR and image-gen are skipped. Keys on the API's model_type, not a
@@ -65,6 +125,9 @@ export const privatemind = {
   modelsDir: "providers/privatemind/models",
   // Mirror the live fleet: drop entries for models no longer returned by the API.
   deleteMissing: true,
+  // The adapter re-derives base_model authoritatively from the API id + on-disk
+  // metadata each run, so it owns the pointer rather than freezing a prior one.
+  preserveBaseModels: false,
   async fetchModels() {
     // /v1/models is public (no API key): the endpoint returns the default
     // org's catalog to anonymous callers.
@@ -104,25 +167,25 @@ export const privatemind = {
     // the prompt; large windows are unaffected (OpenCode caps output at 32000).
     const outputLimit = context_length <= 65_536 ? Math.min(context_length, 8_192) : context_length;
 
-    // Prefer the gateway's curated blurb; fall back to a derived description
-    // only if the catalog ever ships a model without one, so the entry always
-    // satisfies the required, non-empty `description` field.
-    const apiDescription = model.description?.trim();
+    // The gateway's curated blurb is the source of truth, so it wins over any
+    // prior TOML value (edits on the platform flow through on the next sync).
+    // Fall back to the existing description, then a derived one, so the entry
+    // always satisfies the required, non-empty `description` field.
+    const apiDescription = model.description?.trim() || undefined;
     const description =
+      apiDescription ??
       existing?.description ??
-      (apiDescription
-        ? apiDescription
-        : describeModel({
-            id: model.id,
-            providerId: "privatemind",
-            name: model.model_full_name || model.id,
-            reasoning,
-            tool_call: Boolean(caps.tools),
-            structured_output: Boolean(caps.response_format),
-            open_weights: true,
-            limit: { context: context_length, output: outputLimit },
-            modalities: { input: inputModalities, output: ["text"] },
-          }));
+      describeModel({
+        id: model.id,
+        providerId: "privatemind",
+        name: model.model_full_name || model.id,
+        reasoning,
+        tool_call: Boolean(caps.tools),
+        structured_output: Boolean(caps.response_format),
+        open_weights: true,
+        limit: { context: context_length, output: outputLimit },
+        modalities: { input: inputModalities, output: ["text"] },
+      });
 
     const synced: SyncedFullModel = {
       name: model.model_full_name || model.id,
@@ -152,6 +215,17 @@ export const privatemind = {
       },
     };
 
-    return { id: model.id, model: synced };
+    // Factor onto canonical metadata when one exists (AGENTS.md hard blocker):
+    // factorBaseModel subtracts every field equal to the base, so the written
+    // TOML keeps only genuine provider overrides (cost, reasoning_options, and
+    // the NVFP4/FP8 serving deltas). No canonical -> full inline entry.
+    const baseModel = resolveBaseModel(model.id);
+    return {
+      id: model.id,
+      model:
+        baseModel === undefined
+          ? synced
+          : factorBaseModel(baseModel, synced, synced.limit),
+    };
   },
 } satisfies SyncProvider<PrivateMindModel>;
