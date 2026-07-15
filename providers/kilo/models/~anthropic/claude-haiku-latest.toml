@@ -1,9 +1,10 @@
+# Tracks the current Claude Haiku alias target on Kilo (Claude Haiku 4.5).
 name = "Anthropic: Claude Haiku Latest"
 description = "Fast Claude model for responsive assistance, classification, and lightweight agents"
-release_date = "2026-04-27"
+release_date = "2025-10-15"
 last_updated = "2026-05-01"
 attachment = true
-reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "medium", "high", "max"] }]
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "medium", "high", "max"] }, { type = "budget_tokens", min = 1_024 }]
 reasoning = true
 tool_call = true
 temperature = true

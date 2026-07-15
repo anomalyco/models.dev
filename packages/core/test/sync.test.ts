@@ -1120,12 +1120,38 @@ test("resolves Venice Pro routes to canonical OpenAI metadata", () => {
   ]);
 });
 
-test("preserves authored OpenRouter reasoning options over model metadata", () => {
+test("prefers OpenRouter API reasoning options over authored ones", () => {
   const model = buildOpenRouterModel(openRouterModel({
     reasoning: {
       mandatory: false,
       supported_efforts: ["max", "xhigh", "high", "medium", "low"],
     },
+  }), {
+    name: "Claude Sonnet 5",
+    description: "Balanced Claude model for coding and agentic workflows",
+    release_date: "2026-06-30",
+    last_updated: "2026-06-30",
+    attachment: true,
+    reasoning: true,
+    reasoning_options: [{ type: "toggle" }],
+    tool_call: true,
+    open_weights: false,
+    cost: { input: 2, output: 10 },
+    limit: { context: 1_000_000, output: 128_000 },
+    modalities: { input: ["text", "image", "pdf"], output: ["text"] },
+  });
+
+  expect(model).toMatchObject({
+    reasoning_options: [
+      { type: "effort", values: ["max", "xhigh", "high", "medium", "low"] },
+    ],
+  });
+});
+
+test("keeps authored OpenRouter reasoning options when API omits reasoning metadata", () => {
+  const model = buildOpenRouterModel(openRouterModel({
+    supported_parameters: ["tools", "tool_choice", "reasoning", "temperature"],
+    reasoning: undefined,
   }), {
     name: "Claude Sonnet 5",
     description: "Balanced Claude model for coding and agentic workflows",
