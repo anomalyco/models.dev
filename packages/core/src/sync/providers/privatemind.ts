@@ -13,25 +13,21 @@ const API_ENDPOINT = "https://api.privatemind.com/v1/models";
 
 const MODELS_DIR = path.join(import.meta.dirname, "..", "..", "..", "..", "..", "models");
 
-// Where a model.dev metadata file exists for the underlying model, AGENTS.md
-// requires the provider entry to use `base_model` and carry only overrides.
-// Explicit aliases cover ids whose canonical file is named by a version code
-// the id cannot be normalized to (Mistral Medium 3.5 lives at mistral-medium-2604).
+// Aliases for ids whose canonical file is a version code the id can't normalize
+// to (Mistral Medium 3.5 lives at mistral-medium-2604).
 const BASE_MODEL_ALIASES: Record<string, string> = {
   "mistral-medium-3-5-128b-nvfp4": "mistral/mistral-medium-2604",
 };
 
-// Quant-build suffixes the platform serves, stripped before matching the
-// canonical author metadata (e.g. "glm-5-2-nvfp4" -> "glm-5-2").
+// Stripped before matching the canonical author file: quant-build suffix and
+// vendor-rehost prefix (e.g. "nvidia-kimi-k2-6-nvfp4" -> "kimi-k2-6").
 const QUANT_SUFFIX = /-(nvfp4|fp8|fp4|int8|awq|gptq|w8a8)$/;
-// Vendor-rehost prefixes (an NVIDIA/RedHat rehost of another lab's weights);
-// dropped so the id matches the author's canonical file, not the rehoster's.
 const REHOST_PREFIX = /^(nvidia|unsloth|neuralmagic|redhatai)-/;
 
 const normalize = (value: string) => value.toLowerCase().replace(/[^a-z0-9]/g, "");
 
-// Punctuation-insensitive index of every models/<provider>/<model>.toml, built
-// once. Lets dash-for-dot ids ("glm-5-2" == "glm-5.2") resolve without a table.
+// Punctuation-insensitive index of models/*/*.toml so dashed ids match dotted
+// filenames ("glm-5-2" == "glm-5.2") without a table.
 let metadataIndexCache: { id: string; norm: string }[] | undefined;
 function metadataIndex() {
   if (metadataIndexCache !== undefined) return metadataIndexCache;
@@ -48,11 +44,8 @@ function metadataIndex() {
   return index;
 }
 
-// Resolve a PrivateMind model id to a canonical `models/<provider>/<model>` base,
-// or undefined to keep the entry full-inline (no canonical exists, e.g.
-// qwen3-vl-32b-thinking-fp8). Deterministic and on-disk guarded: a model factors
-// only once its canonical file is present, and a normalized id must match exactly
-// one file, so the sync stays self-updating and idempotent without a per-model map.
+// Canonical base for a model id, or undefined to keep it full-inline. On-disk
+// guarded and requires a unique match, so it stays self-updating and idempotent.
 function resolveBaseModel(id: string): string | undefined {
   const alias = BASE_MODEL_ALIASES[id];
   if (alias !== undefined) {
@@ -159,18 +152,12 @@ export const privatemind = {
     const existing = context.existing(model.id);
     const date = isoDate(model.created);
     const inputModalities: ("text" | "image")[] = vision ? ["text", "image"] : ["text"];
-    // vLLM serves with no output cap below the context window, so for large
-    // models the output ceiling is the context length. But OpenCode reserves
-    // the output budget from the window (usable = context - min(output, 32000)),
-    // so output == context starves a near-32K model's usable context to almost
-    // nothing. When the window is small (<= 64K) clamp output to leave room for
-    // the prompt; large windows are unaffected (OpenCode caps output at 32000).
+    // Small windows (<= 64K) clamp output so OpenCode's reserved output budget
+    // doesn't starve usable context; large windows keep the full window.
     const outputLimit = context_length <= 65_536 ? Math.min(context_length, 8_192) : context_length;
 
-    // The gateway's curated blurb is the source of truth, so it wins over any
-    // prior TOML value (edits on the platform flow through on the next sync).
-    // Fall back to the existing description, then a derived one, so the entry
-    // always satisfies the required, non-empty `description` field.
+    // API blurb is source of truth (wins over prior TOML); fall back to existing,
+    // then derived, so `description` is always non-empty.
     const apiDescription = model.description?.trim() || undefined;
     const description =
       apiDescription ??
@@ -192,9 +179,7 @@ export const privatemind = {
       description,
       attachment: vision,
       reasoning,
-      // Verified against the live API: reasoning_effort=off disables thinking
-      // and low/medium/high enable it, uniformly, with no graded distinction —
-      // an on/off toggle, not an effort scale.
+      // Verified live: reasoning_effort toggles thinking on/off (no graded effort).
       reasoning_options: reasoning ? [{ type: "toggle" }] : undefined,
       tool_call: Boolean(caps.tools),
       temperature: params.includes("temperature"),
@@ -216,10 +201,8 @@ export const privatemind = {
       },
     };
 
-    // Factor onto canonical metadata when one exists (AGENTS.md hard blocker):
-    // factorBaseModel subtracts every field equal to the base, so the written
-    // TOML keeps only genuine provider overrides (cost, reasoning_options, and
-    // the NVFP4/FP8 serving deltas). No canonical -> full inline entry.
+    // Factor onto canonical metadata when one exists (AGENTS.md hard blocker);
+    // factorBaseModel keeps only fields that differ from the base.
     const baseModel = resolveBaseModel(model.id);
     return {
       id: model.id,
