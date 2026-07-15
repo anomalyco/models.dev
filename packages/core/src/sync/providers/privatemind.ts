@@ -192,9 +192,10 @@ export const privatemind = {
       description,
       attachment: vision,
       reasoning,
-      // The gateway maps low/medium/high onto one "thinking" toggle (only
-      // off vs on is distinct), so no graded effort level is verified.
-      reasoning_options: reasoning ? [] : undefined,
+      // Verified against the live API: reasoning_effort=off disables thinking
+      // and low/medium/high enable it, uniformly, with no graded distinction —
+      // an on/off toggle, not an effort scale.
+      reasoning_options: reasoning ? [{ type: "toggle" }] : undefined,
       tool_call: Boolean(caps.tools),
       temperature: params.includes("temperature"),
       structured_output: Boolean(caps.response_format),

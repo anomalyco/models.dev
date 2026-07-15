@@ -8,7 +8,9 @@ temperature = true
 tool_call = true
 structured_output = true
 open_weights = true
-reasoning_options = []
+
+[[reasoning_options]]
+type = "toggle"
 
 [cost]
 input = 0.5
