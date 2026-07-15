@@ -1,0 +1,24 @@
+name = "Voxtral Mini 3B"
+description = "Speech transcription model for audio-to-text and captioning workflows"
+family = "voxtral"
+attachment = true
+reasoning = false
+structured_output = false
+temperature = true
+tool_call = false
+release_date = "2025-07-01"
+last_updated = "2025-07-01"
+knowledge = "2025-07"
+open_weights = true
+
+[cost]
+input = 0.00
+output = 0.00
+
+[limit]
+context = 0
+output = 4096
+
+[modalities]
+input = ["audio"]
+output = ["text"]

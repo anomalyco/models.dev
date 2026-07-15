@@ -1,0 +1,14 @@
+base_model = "moonshotai/kimi-k2.6"
+base_model_omit = ["benchmarks", "weights"]
+reasoning_options = [{ type = "toggle" }]
+
+[cost]
+input = 0.00
+output = 0.00
+
+[limit]
+output = 32_768
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
