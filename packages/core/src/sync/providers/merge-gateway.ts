@@ -14,6 +14,7 @@ const VendorCapabilities = z.object({
   supports_tool_calling: z.boolean(),
   supports_tool_choice: z.boolean().default(false),
   supports_structured_outputs: z.boolean(),
+  supports_reasoning: z.boolean().optional(),
   streaming: z.boolean(),
 }).passthrough();
 
@@ -141,13 +142,22 @@ export function selectMergeGatewayVendor(model: MergeGatewayModel) {
     return { id: model.provider, info: canonical };
   }
 
+  // Match Gateway's default resolver: when the model author's native route is
+  // unavailable, use the cheapest active route by combined input + output
+  // price. Object order is preserved for equal prices; the public API emits
+  // vendors in CMS-priority order, which is Gateway's own tiebreaker.
   const available = Object.entries(model.vendors)
-    .filter(([, info]) => info.availability_status === "available")
-    .sort(([a], [b]) => a.localeCompare(b))[0];
-  if (available !== undefined) return { id: available[0], info: available[1] };
+    .filter(([, info]) => info.availability_status === "available");
+  const selected = available.reduce<typeof available[number] | undefined>((best, candidate) => {
+    if (best === undefined) return candidate;
+    const bestCost = best[1].pricing.input_per_million + best[1].pricing.output_per_million;
+    const candidateCost = candidate[1].pricing.input_per_million + candidate[1].pricing.output_per_million;
+    return candidateCost < bestCost ? candidate : best;
+  }, undefined);
+  if (selected !== undefined) return { id: selected[0], info: selected[1] };
   if (canonical !== undefined) return { id: model.provider, info: canonical };
 
-  const fallback = Object.entries(model.vendors).sort(([a], [b]) => a.localeCompare(b))[0];
+  const fallback = Object.entries(model.vendors)[0];
   return fallback === undefined ? undefined : { id: fallback[0], info: fallback[1] };
 }
 
@@ -184,6 +194,9 @@ export function buildMergeGatewayModel(
     ? "deprecated" as const
     : undefined;
   const baseModel = existing?.base_model ?? resolveCanonicalBaseModel(model.model);
+  const routeDisablesReasoning = selected.info.capabilities.supports_reasoning === false;
+  const reasoning = routeDisablesReasoning ? false : existing?.reasoning;
+  const reasoningOptions = routeDisablesReasoning ? undefined : existing?.reasoning_options;
   const authoritative = {
     // Some catalog rows use an upstream org/model ID as display_name. Let
     // canonical metadata provide the human-readable name for factored models.
@@ -203,8 +216,8 @@ export function buildMergeGatewayModel(
       {
         ...authoritative,
         description: existing?.description,
-        reasoning: existing?.reasoning,
-        reasoning_options: existing?.reasoning_options,
+        reasoning,
+        reasoning_options: reasoningOptions,
         temperature: existing?.temperature,
         interleaved: existing?.interleaved,
         provider: existing?.provider,
@@ -230,7 +243,7 @@ export function buildMergeGatewayModel(
       id: model.model,
       name: model.display_name,
       family: existing.family,
-      reasoning: existing.reasoning,
+      reasoning,
       tool_call: selected.info.capabilities.supports_tool_calling,
       structured_output: selected.info.capabilities.supports_structured_outputs,
       open_weights: existing.open_weights,
@@ -240,8 +253,8 @@ export function buildMergeGatewayModel(
     family: existing.family,
     release_date: releaseDate,
     last_updated: lastUpdated,
-    reasoning: existing.reasoning ?? false,
-    reasoning_options: existing.reasoning_options,
+    reasoning: reasoning ?? false,
+    reasoning_options: reasoningOptions,
     temperature: existing.temperature,
     knowledge: existing.knowledge,
     open_weights: existing.open_weights ?? false,
@@ -257,6 +270,9 @@ function mergeGatewayCachePricing(
 ) {
   const promptCaching = vendor.prompt_caching;
   const pricing = vendor.pricing;
+  if (promptCaching?.mode === "none") {
+    return { read: undefined, write: undefined };
+  }
   return {
     read: promptCaching?.cache_read_cost_per_million
       ?? pricing.cache_read_per_million

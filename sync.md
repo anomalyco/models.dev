@@ -147,10 +147,12 @@ Merge Gateway is implemented in `packages/core/src/sync/providers/merge-gateway.
 - Source endpoint: `https://api-gateway.merge.dev/v1/models`.
 - Required auth: `MERGE_GATEWAY_API_KEY`.
 - The sync follows `next_cursor` until every page has been fetched.
-- The canonical provider's available vendor route supplies pricing, limits, and capabilities; another available vendor is used only when the canonical route is unavailable.
+- The canonical provider's available vendor route supplies pricing, limits, and capabilities. When it is unavailable, the sync matches Gateway's default resolver by selecting the active route with the lowest combined input and output price; the API's CMS-priority order breaks ties.
 - Canonical model IDs emit `base_model` references to model metadata when a matching `models/` entry exists.
-- Existing cache pricing, tiered pricing, reasoning controls, and experimental modes are preserved because the API does not expose them.
+- Existing cache pricing, tiered pricing, reasoning controls, and experimental modes are preserved because the public API does not currently expose the full CMS metadata. Cache prices curated from Gateway's route-level CMS remain stable across syncs until the public contract exposes them.
 - Route-level cache prices replace curated values field by field. A cache read or write price that the API does not expose remains preserved in the provider TOML, including when `prompt_caching` exposes only its mode.
+- `prompt_caching.mode = "none"` explicitly removes preserved cache read and write prices because that route does not cache prompts.
+- An explicit `supports_reasoning = false` on the selected vendor route overrides inherited reasoning metadata and removes preserved reasoning controls; supported routes retain curated controls when the API does not enumerate exact values.
 - Local models missing from the response are retained because API-key policy can affect catalog visibility.
 
 ## Cloudflare Workers AI Notes

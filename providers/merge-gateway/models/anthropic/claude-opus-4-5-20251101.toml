@@ -1,18 +1,7 @@
 base_model = "anthropic/claude-opus-4-5-20251101"
 name = "Claude Opus 4.5 (20251101)"
+reasoning = false
 structured_output = true
-
-[[reasoning_options]]
-type = "toggle"
-
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high"]
-
-[[reasoning_options]]
-type = "budget_tokens"
-min = 1_024
-max = 63_999
 
 [cost]
 input = 5

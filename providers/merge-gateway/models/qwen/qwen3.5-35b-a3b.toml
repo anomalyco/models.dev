@@ -1,13 +1,14 @@
 base_model = "alibaba/qwen3.5-35b-a3b"
 name = "Qwen3.5 35B A3B"
 attachment = false
+reasoning = false
 tool_call = false
 structured_output = false
-reasoning_options = []
 
 [cost]
 input = 0.057
 output = 0.459
+cache_read = 0.020357
 
 [limit]
 context = 131_072

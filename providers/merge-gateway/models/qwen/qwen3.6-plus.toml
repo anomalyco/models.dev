@@ -1,11 +1,12 @@
 base_model = "alibaba/qwen3.6-plus"
+reasoning = false
 tool_call = false
 structured_output = false
-reasoning_options = []
 
 [cost]
 input = 0.276
 output = 1.651
+cache_read = 0.0552
 
 [limit]
 output = 250_000

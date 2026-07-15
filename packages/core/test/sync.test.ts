@@ -962,6 +962,22 @@ test("factors OpenRouter Pro routes against canonical OpenAI metadata", () => {
   expect("release_date" in model).toBe(false);
 });
 
+test("resolves Merge Gateway provider aliases to canonical metadata", () => {
+  expect([
+    resolveCanonicalBaseModel("moonshot/kimi-k2.5"),
+    resolveCanonicalBaseModel("moonshot/kimi-k2.6"),
+    resolveCanonicalBaseModel("moonshot/kimi-k2.7-code"),
+    resolveCanonicalBaseModel("moonshot/kimi-k2.7-code-highspeed"),
+    resolveCanonicalBaseModel("sakana/fugu-ultra"),
+  ]).toEqual([
+    "moonshotai/kimi-k2.5",
+    "moonshotai/kimi-k2.6",
+    "moonshotai/kimi-k2.7-code",
+    "moonshotai/kimi-k2.7-code-highspeed",
+    "sakana/fugu-ultra",
+  ]);
+});
+
 test("resolves Venice Pro routes to canonical OpenAI metadata", () => {
   expect([
     resolveVeniceBaseModel("openai-gpt-56-luna-pro", "GPT-5.6 Luna Pro"),
@@ -1125,6 +1141,25 @@ test("factors Merge Gateway GPT-5.6 Sol against canonical metadata", () => {
   });
 });
 
+test("disables reasoning when the selected Merge Gateway route explicitly does not support it", () => {
+  const vendor = mergeGatewayVendor();
+  vendor.capabilities.supports_reasoning = false;
+  const model = buildMergeGatewayModel(mergeGatewayModel({
+    vendors: { openai: vendor },
+  }), {
+    base_model: "openai/gpt-5.6-sol",
+    reasoning: true,
+    reasoning_options: [{ type: "effort", values: ["low", "medium", "high"] }],
+    cost: { input: 5, output: 30 },
+  });
+
+  expect(model).toMatchObject({
+    base_model: "openai/gpt-5.6-sol",
+    reasoning: false,
+  });
+  expect(model).not.toHaveProperty("reasoning_options");
+});
+
 test("merges authoritative Merge Gateway cache pricing field by field", () => {
   const model = buildMergeGatewayModel(mergeGatewayModel({
     vendors: {
@@ -1186,6 +1221,30 @@ test("preserves Merge Gateway cache pricing when prompt caching exposes only its
   });
 });
 
+test("removes Merge Gateway cache pricing when prompt caching mode is none", () => {
+  const model = buildMergeGatewayModel(mergeGatewayModel({
+    vendors: {
+      openai: mergeGatewayVendor({
+        prompt_caching: { mode: "none" },
+      }),
+    },
+  }), {
+    base_model: "openai/gpt-5.6-sol",
+    cost: {
+      input: 5,
+      output: 30,
+      cache_read: 0.5,
+      cache_write: 6.25,
+    },
+  });
+
+  expect(model).toMatchObject({
+    cost: { input: 5, output: 30 },
+  });
+  expect(model.cost).not.toHaveProperty("cache_read");
+  expect(model.cost).not.toHaveProperty("cache_write");
+});
+
 test("inherits canonical names for ID-shaped Merge Gateway display names", () => {
   const model = buildMergeGatewayModel(mergeGatewayModel({
     model: "minimax/minimax-m2",
@@ -1237,6 +1296,41 @@ test("uses the canonical Merge Gateway vendor as the catalog baseline", () => {
     id: "openai",
     info: { context_window: 1_050_000 },
   });
+});
+
+test("uses Merge Gateway's cheapest fallback route when no canonical route exists", () => {
+  const model = mergeGatewayModel({
+    provider: "qwen",
+    vendors: {
+      bedrock: mergeGatewayVendor({
+        pricing: { currency: "USD", input_per_million: 0.15, output_per_million: 0.6 },
+      }),
+      alibaba: mergeGatewayVendor({
+        pricing: { currency: "USD", input_per_million: 0.287, output_per_million: 0.64 },
+      }),
+    },
+  });
+
+  expect(selectMergeGatewayVendor(model)).toMatchObject({
+    id: "bedrock",
+    info: { pricing: { input_per_million: 0.15, output_per_million: 0.6 } },
+  });
+});
+
+test("uses Merge Gateway's CMS order to break equal-cost fallback ties", () => {
+  const model = mergeGatewayModel({
+    provider: "qwen",
+    vendors: {
+      empiriolabs: mergeGatewayVendor({
+        pricing: { currency: "USD", input_per_million: 0.4, output_per_million: 1.6 },
+      }),
+      fireworks: mergeGatewayVendor({
+        pricing: { currency: "USD", input_per_million: 0.4, output_per_million: 1.6 },
+      }),
+    },
+  });
+
+  expect(selectMergeGatewayVendor(model)).toMatchObject({ id: "empiriolabs" });
 });
 
 test("retains Merge Gateway models missing from an API-key-scoped response", () => {

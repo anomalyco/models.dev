@@ -1,12 +1,13 @@
 base_model = "alibaba/qwen3.6-flash"
 attachment = false
+reasoning = false
 tool_call = false
 structured_output = false
-reasoning_options = []
 
 [cost]
 input = 0.165
 output = 0.99
+cache_read = 0.033
 
 [limit]
 output = 250_000

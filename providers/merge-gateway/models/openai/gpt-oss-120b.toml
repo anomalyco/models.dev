@@ -2,14 +2,10 @@
 # available routes either report `supports_reasoning = false` or reasoning with
 # `configurable = false` and no controls, so callers have no reasoning control.
 base_model = "openai/gpt-oss-120b"
+reasoning = false
 tool_call = false
 structured_output = false
-reasoning_options = []
 
 [cost]
-input = 0.1
-output = 0.5
-
-[limit]
-context = 128_000
-output = 32_000
+input = 0.09
+output = 0.36

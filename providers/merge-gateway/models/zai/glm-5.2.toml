@@ -1,17 +1,11 @@
 base_model = "zhipuai/glm-5.2"
+reasoning = false
 structured_output = false
 
 [interleaved]
 field = "reasoning_content"
 
-[[reasoning_options]]
-type = "toggle"
-
-[[reasoning_options]]
-type = "budget_tokens"
-min = 1
-max = 50_000
-
 [cost]
 input = 1.05
 output = 3.3
+cache_read = 0.195

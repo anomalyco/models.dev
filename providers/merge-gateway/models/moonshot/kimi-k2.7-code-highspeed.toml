@@ -1,5 +1,8 @@
 base_model = "moonshotai/kimi-k2.7-code-highspeed"
 
+[interleaved]
+field = "reasoning_content"
+
 [[reasoning_options]]
 type = "toggle"
 
@@ -8,9 +11,13 @@ type = "budget_tokens"
 min = 1
 max = 32_768
 
-[interleaved]
-field = "reasoning_content"
-
 [cost]
 input = 1.9
 output = 8
+cache_read = 0.38
+
+[limit]
+output = 32_768
+
+[modalities]
+input = ["text", "image"]
