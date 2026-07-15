@@ -6,7 +6,7 @@ attachment = true
 reasoning = true
 temperature = true
 tool_call = true
-knowledge = "2026-01-01"
+knowledge = "2026-03-01"
 open_weights = true
 
 [limit]
@@ -15,7 +15,7 @@ input = 256_000
 output = 256_000
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image", "video"]
 output = ["text"]
 
 [[weights]]
@@ -80,3 +80,24 @@ metric = "pass^3"
 version = "1.1"
 source = "https://static.stepfun.com/blog/step-3.7-flash/"
 date = "2026-05-29"
+
+[[benchmarks]]
+name = "Artificial Analysis Coding Index"
+score = 37.1
+metric = "index"
+source = "https://openrouter.ai/stepfun/step-3.7-flash/benchmarks"
+date = "2026-06-15"
+
+[[benchmarks]]
+name = "SciCode"
+score = 40.0
+metric = "percent correct"
+source = "https://openrouter.ai/stepfun/step-3.7-flash/benchmarks"
+date = "2026-06-15"
+
+[[benchmarks]]
+name = "Terminal-Bench Hard"
+score = 35.6
+metric = "success rate"
+source = "https://openrouter.ai/stepfun/step-3.7-flash/benchmarks"
+date = "2026-06-15"

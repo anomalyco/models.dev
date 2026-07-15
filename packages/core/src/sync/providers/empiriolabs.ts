@@ -11,6 +11,8 @@ const CANONICAL_BASE_MODELS: Record<string, string> = {
   "fugu-ultra": "sakana/fugu-ultra",
   "gemma-4-26b-a4b": "google/gemma-4-26b-a4b-it",
   "gemma-4-e4b": "google/gemma-4-E4B-it",
+  "mistral-medium-3": "mistral/mistral-medium-2505",
+  "mistral-small-4": "mistral/mistral-small-2603",
   "muse-spark-1-1": "meta/muse-spark-1.1",
   "qwen3-5-9b": "alibaba/qwen3.5-9b",
   "qwen3-7-max": "alibaba/qwen3.7-max",

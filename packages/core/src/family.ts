@@ -13,6 +13,9 @@ export const ModelFamilyValues = [
   "gpt-pro",
   "gpt-mini",
   "gpt-nano",
+  "gpt-sol",
+  "gpt-terra",
+  "gpt-luna",
   "gpt-oss",
   "gpt-image",
 

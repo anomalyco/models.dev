@@ -81,6 +81,7 @@ const AUTHOR_BY_VENDOR: Record<string, string> = {
   xiaomi: "xiaomi",
   minimax: "minimax",
   "z-ai": "zhipuai",
+  "x-ai": "xai",
   tencent: "tencent",
 };
 

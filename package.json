@@ -32,7 +32,7 @@
     "vercel:generate": "bun ./packages/core/script/sync-models.ts vercel",
     "wandb:generate": "bun ./packages/core/script/sync-models.ts wandb",
     "digitalocean:sync": "bun ./packages/core/script/sync-models.ts digitalocean",
-    "ambient:generate": "bun ./packages/core/script/generate-ambient.ts",
+    "ambient:sync": "bun ./packages/core/script/sync-models.ts ambient",
     "models:sync": "bun ./packages/core/script/sync-models.ts",
     "sync:models": "bun ./packages/core/script/sync-models.ts"
   },
