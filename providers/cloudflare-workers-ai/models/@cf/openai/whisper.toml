@@ -1,0 +1,24 @@
+name = "@cf/openai/whisper"
+description = "Speech transcription model for accurate audio-to-text and captioning workflows"
+family = "whisper"
+release_date = "2023-09-25"
+last_updated = "2023-09-25"
+attachment = true
+reasoning = false
+temperature = false
+tool_call = false
+structured_output = false
+open_weights = false
+
+[cost]
+input = 0
+output = 0
+input_audio = 0.000453
+
+[limit]
+context = 0
+output = 0
+
+[modalities]
+input = ["audio"]
+output = ["text"]

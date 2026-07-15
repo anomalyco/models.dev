@@ -1,0 +1,23 @@
+name = "@cf/baai/bge-base-en-v1.5"
+description = "General-purpose chat model for instruction following, writing, and analysis"
+family = "bge"
+release_date = "2023-09-25"
+last_updated = "2023-09-25"
+attachment = false
+reasoning = false
+temperature = false
+tool_call = false
+structured_output = false
+open_weights = false
+
+[cost]
+input = 0.0666
+output = 0
+
+[limit]
+context = 153_600
+output = 153_600
+
+[modalities]
+input = ["text"]
+output = ["text"]
