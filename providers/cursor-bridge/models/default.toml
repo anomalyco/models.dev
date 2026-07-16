@@ -1,0 +1,24 @@
+# Cursor Bridge's default model delegates model selection to Cursor. Capabilities
+# and conservative limits reflect the bridge rather than any one upstream model;
+# availability and billing depend on the user's Cursor plan.
+# Source (accessed 2026-07-16): https://cursorbridge.dev/docs
+name = "Cursor Default"
+description = "Uses Cursor's automatic model selection based on the models available to the authenticated Cursor account."
+family = "auto"
+release_date = "2026-07-13"
+last_updated = "2026-07-16"
+attachment = true
+reasoning = true
+reasoning_options = []
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[limit]
+context = 200_000
+output = 64_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
