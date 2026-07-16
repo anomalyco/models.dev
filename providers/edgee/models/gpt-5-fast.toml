@@ -1,4 +1,4 @@
-name = "Claude Opus 4"
+name = "GPT-5 Fast"
 release_date = "2026-06-24"
 last_updated = "2026-06-24"
 attachment = false
@@ -6,16 +6,15 @@ reasoning = false
 temperature = true
 tool_call = true
 open_weights = false
-description = "Claude Opus 4"
+description = "GPT-5 Fast, available through Cursor."
 
 [cost]
-input = 15.00
-output = 75.00
-cache_read = 1.50
-cache_write = 18.75
+input = 2.50
+output = 20.00
+cache_read = 0.25
 
 [limit]
-context = 200_000
+context = 256_000
 output = 32_768
 
 [modalities]

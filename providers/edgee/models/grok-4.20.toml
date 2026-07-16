@@ -1,4 +1,4 @@
-name = "Claude Opus 4"
+name = "Grok 4.20"
 release_date = "2026-06-24"
 last_updated = "2026-06-24"
 attachment = false
@@ -6,16 +6,15 @@ reasoning = false
 temperature = true
 tool_call = true
 open_weights = false
-description = "Claude Opus 4"
+description = "Grok 4.20, available through Cursor."
 
 [cost]
-input = 15.00
-output = 75.00
-cache_read = 1.50
-cache_write = 18.75
+input = 2.00
+output = 6.00
+cache_read = 0.20
 
 [limit]
-context = 200_000
+context = 256_000
 output = 32_768
 
 [modalities]
