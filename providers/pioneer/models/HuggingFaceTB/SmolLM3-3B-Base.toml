@@ -1,0 +1,30 @@
+name = "SmolLM3 3B Base"
+description = "Tool-capable chat model for instruction following and agentic application workflows"
+release_date = "2025-06-30"
+last_updated = "2025-06-30"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+open_weights = false
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high"]
+
+[cost]
+input = 0.15
+output = 0.15
+cache_read = 0.15
+cache_write = 0.15
+
+[limit]
+context = 32_768
+output = 32_768
+
+[modalities]
+input = ["text"]
+output = ["text"]

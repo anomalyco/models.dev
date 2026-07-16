@@ -1,7 +1,9 @@
 name = "Qwen 3.5 Flash"
+description = "Qwen vision-language model for visual reasoning, documents, and agent tasks"
 family = "qwen"
 attachment = true
 reasoning = true
+reasoning_options = [{ type = "toggle" }, { type = "budget_tokens", min = 1, max = 81_920 }]
 tool_call = true
 temperature = true
 release_date = "2026-02-24"

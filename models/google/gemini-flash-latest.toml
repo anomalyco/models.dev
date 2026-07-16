@@ -1,7 +1,9 @@
+# Tracks the current Gemini Flash release (gemini-3.5-flash).
 name = "Gemini Flash Latest"
+description = "Fast Gemini model balancing multimodal reasoning, tool use, and cost"
 family = "gemini-flash"
-release_date = "2025-09-25"
-last_updated = "2025-09-25"
+release_date = "2026-05-19"
+last_updated = "2026-05-19"
 attachment = true
 reasoning = true
 temperature = true
@@ -15,5 +17,5 @@ context = 1_048_576
 output = 65_536
 
 [modalities]
-input = ["text", "image", "audio", "video", "pdf"]
+input = ["text", "image", "video", "audio", "pdf"]
 output = ["text"]

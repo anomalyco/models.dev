@@ -1,0 +1,15 @@
+base_model = "google/gemini-omni-flash-preview"
+description = "Omni-modal model for text, vision, audio, and multimodal agent tasks"
+temperature = true
+reasoning_options = []
+
+[cost]
+input = 1.5
+output = 9
+
+[limit]
+context = 1_000_000
+
+[modalities]
+input = ["text", "image", "pdf"]
+output = ["text"]

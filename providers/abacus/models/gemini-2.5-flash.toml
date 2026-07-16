@@ -1,23 +1,25 @@
-name = "Gemini 2.5 Flash"
-family = "gemini-flash"
-release_date = "2025-03-20"
-last_updated = "2025-06-05"
-attachment = true
+# Source: https://routellm.abacus.ai/v1/models
+# RouteLLM input_modalities: ['text', 'image', 'audio']
+# RouteLLM output_modalities: ['text']
+# RouteLLM context_length: 1048576
+# RouteLLM max_completion_tokens: 65536
+# RouteLLM input_token_rate: 0.0000003
+# RouteLLM output_token_rate: 0.0000025
+# RouteLLM cached_input_token_rate: 0.00000003
+# RouteLLM thinking: True
+base_model = "google/gemini-2.5-flash"
 reasoning = true
 reasoning_options = []
-temperature = true
-tool_call = true
-knowledge = "2025-01"
-open_weights = false
 
 [cost]
-input = 0.30
-output = 2.50
+input = 0.3
+output = 2.5
+cache_read = 0.03
 
 [limit]
 context = 1_048_576
 output = 65_536
 
 [modalities]
-input = ["text", "image", "audio", "video", "pdf"]
+input = ["text", "image", "audio"]
 output = ["text"]

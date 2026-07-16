@@ -1,0 +1,68 @@
+name = "LongCat-2.0"
+description = "Meituan LongCat-2.0, a reasoning model with tool calling and a 1M-token context window"
+family = "longcat"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+release_date = "2026-06-30"
+last_updated = "2026-06-30"
+open_weights = false
+
+[limit]
+context = 1_000_000
+output = 131_072
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[[benchmarks]]
+name = "SWE-Bench Pro"
+score = 59.5
+metric = "resolve rate"
+source = "https://github.com/meituan-longcat/longcat-2.0"
+date = "2026-06-30"
+
+[[benchmarks]]
+name = "SWE-Bench Multilingual"
+score = 77.3
+metric = "resolve rate"
+source = "https://github.com/meituan-longcat/longcat-2.0"
+date = "2026-06-30"
+
+[[benchmarks]]
+name = "Terminal-Bench"
+score = 70.8
+metric = "success rate"
+version = "2.1"
+source = "https://github.com/meituan-longcat/longcat-2.0"
+date = "2026-06-30"
+
+[[benchmarks]]
+name = "GPQA Diamond"
+score = 88.9
+metric = "accuracy"
+source = "https://github.com/meituan-longcat/longcat-2.0"
+date = "2026-06-30"
+
+[[benchmarks]]
+name = "BrowseComp"
+score = 79.9
+metric = "accuracy"
+source = "https://github.com/meituan-longcat/longcat-2.0"
+date = "2026-06-30"
+
+[[benchmarks]]
+name = "IFEval"
+score = 90.0
+metric = "accuracy"
+source = "https://github.com/meituan-longcat/longcat-2.0"
+date = "2026-06-30"
+
+[[benchmarks]]
+name = "FORTE"
+score = 73.2
+metric = "success rate"
+source = "https://github.com/meituan-longcat/longcat-2.0"
+date = "2026-06-30"

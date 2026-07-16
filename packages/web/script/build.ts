@@ -1,6 +1,6 @@
 #!/usr/bin/env bun
 
-import { RenderedPages, Providers, Models } from "../src/render";
+import { RenderedPages, Providers, Models, renderDocument } from "../src/render";
 import fs from "fs/promises";
 import path from "path";
 
@@ -71,7 +71,7 @@ for (const [route, rendered] of RenderedPages) {
     : path.join("./dist", route, "index.html");
 
   await fs.mkdir(path.dirname(filePath), { recursive: true });
-  await Bun.write(filePath, template.replace("<!--static-->", rendered));
+  await Bun.write(filePath, renderDocument(template, rendered));
 }
 
 await Bun.write("./dist/api.json", JSON.stringify(Providers));

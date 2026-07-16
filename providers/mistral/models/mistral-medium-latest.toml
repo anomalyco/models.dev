@@ -1,8 +1,12 @@
-# Mistral's live API currently maps this alias to mistral-medium-2508,
-# even though Mistral Medium 3.5 is newer and exposed as mistral-medium-2604.
+# mistral-medium-latest is Mistral's alias for Mistral Medium 3.5 (mistral-medium-2604).
+# Medium 3.1 (mistral-medium-2508) was deprecated 2026-05-22, retiring 2026-08-31.
 base_model = "mistral/mistral-medium-latest"
 name = "Mistral Medium (latest)"
 
+[[reasoning_options]]
+type = "effort"
+values = ["none", "high"]
+
 [cost]
-input = 0.40
-output = 2.00
+input = 1.50
+output = 7.50

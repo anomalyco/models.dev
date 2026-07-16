@@ -1,4 +1,5 @@
 name = "Qwen3 30B A3B Instruct 2507"
+description = "Qwen instruction model for multilingual chat, reasoning, and tool use"
 family = "qwen"
 release_date = "2025-07-29"
 last_updated = "2025-07-29"
@@ -11,11 +12,11 @@ knowledge = "2025-06-30"
 open_weights = true
 
 [cost]
-input = 0.04815
-output = 0.19305
+input = 0.1
+output = 0.3
 
 [limit]
-context = 128_000
+context = 262_144
 output = 32_000
 
 [modalities]

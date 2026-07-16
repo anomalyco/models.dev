@@ -1,5 +1,6 @@
 import { z } from "zod";
 
+import { describeModel } from "../../describe.js";
 import type { ExistingModel, SyncProvider, SyncedFullModel, SyncedModel } from "../index.js";
 import { factorBaseModel, resolveCanonicalBaseModel } from "./openrouter.js";
 
@@ -125,6 +126,17 @@ export function buildBasetenModel(
   };
   const values: Partial<SyncedFullModel> = {
     name: model.name ?? existing?.name,
+    description: existing?.description ?? describeModel({
+      id: model.id,
+      name: model.name ?? existing?.name,
+      family: existing?.family,
+      reasoning: features.has("reasoning") || existing?.reasoning,
+      tool_call: features.has("tools") || existing?.tool_call,
+      structured_output: features.has("structured_outputs") || existing?.structured_output,
+      open_weights: existing?.open_weights,
+      limit,
+      modalities: { input, output },
+    }),
     family: existing?.family,
     release_date: existing?.release_date,
     last_updated: existing?.last_updated,
@@ -154,6 +166,7 @@ export function buildBasetenModel(
     name: z.string(),
     release_date: z.string(),
     last_updated: z.string(),
+    description: z.string(),
     open_weights: z.boolean(),
     cost: z.object({ input: z.number(), output: z.number() }),
   }).safeParse(values);

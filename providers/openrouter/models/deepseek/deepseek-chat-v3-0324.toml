@@ -1,4 +1,5 @@
 name = "DeepSeek V3 0324"
+description = "DeepSeek chat model for instruction following, coding, and analysis"
 family = "deepseek"
 release_date = "2025-03-24"
 last_updated = "2025-03-24"
@@ -11,13 +12,13 @@ knowledge = "2024-07-31"
 open_weights = true
 
 [cost]
-input = 0.2
-output = 0.77
+input = 0.27
+output = 1.12
 cache_read = 0.135
 
 [limit]
 context = 163_840
-output = 16_384
+output = 65_536
 
 [modalities]
 input = ["text"]

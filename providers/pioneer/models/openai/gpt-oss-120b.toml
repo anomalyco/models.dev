@@ -1,0 +1,17 @@
+base_model = "openai/gpt-oss-120b"
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high", "xhigh"]
+
+[cost]
+input = 0.15
+output = 0.6
+cache_read = 0.015
+cache_write = 0.15
+
+[limit]
+output = 131_072

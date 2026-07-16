@@ -1,5 +1,7 @@
 base_model = "anthropic/claude-sonnet-4-5-20250929"
 
+reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "max"] }, { type = "budget_tokens" }]
+
 [cost]
 input = 3
 output = 15

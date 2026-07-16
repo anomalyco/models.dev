@@ -1,12 +1,6 @@
+base_model = "poolside/laguna-m.1"
 name = "Laguna M.1 (free)"
-release_date = "2026-04-28"
-last_updated = "2026-04-28"
-attachment = false
-reasoning = true
-temperature = true
-tool_call = true
-structured_output = false
-open_weights = true
+description = "Free provider route for experiments, demos, and cost-sensitive chat workloads"
 reasoning_options = []
 
 [interleaved]
@@ -15,11 +9,3 @@ field = "reasoning_content"
 [cost]
 input = 0
 output = 0
-
-[limit]
-context = 262_144
-output = 32_768
-
-[modalities]
-input = ["text"]
-output = ["text"]

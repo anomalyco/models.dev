@@ -1,7 +1,9 @@
 name = "OpenAI: gpt-oss-20b"
+description = "Open-weight GPT model for self-hosted reasoning and instruction-following workloads"
 release_date = "2025-08-05"
 last_updated = "2025-08-05"
 attachment = false
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
 reasoning = true
 temperature = true
 tool_call = true

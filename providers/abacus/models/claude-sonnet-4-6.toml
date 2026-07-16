@@ -1,23 +1,23 @@
-name = "Claude Sonnet 4.6"
-family = "claude-sonnet"
-release_date = "2026-02-17"
-last_updated = "2026-02-17"
-attachment = true
+# Source: https://routellm.abacus.ai/v1/models
+# RouteLLM input_modalities: ['text', 'image']
+# RouteLLM output_modalities: ['text']
+# RouteLLM context_length: 1000000
+# RouteLLM max_completion_tokens: 64000
+# RouteLLM input_token_rate: 0.000003
+# RouteLLM output_token_rate: 0.000015
+# RouteLLM thinking: True
+base_model = "anthropic/claude-sonnet-4-6"
 reasoning = true
 reasoning_options = []
-temperature = true
-tool_call = true
-knowledge = "2025-08-31"
-open_weights = false
 
 [cost]
-input = 3.00
-output = 15.00
+input = 3
+output = 15
 
 [limit]
-context = 200_000
+context = 1_000_000
 output = 64_000
 
 [modalities]
-input = ["text", "image", "pdf"]
+input = ["text", "image"]
 output = ["text"]

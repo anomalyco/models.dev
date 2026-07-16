@@ -1,6 +1,8 @@
 import { z } from "zod";
 
-import type { ExistingModel, SyncProvider, SyncedModel } from "../index.js";
+import { describeModel } from "../../describe.js";
+import type { ExistingModel, SyncProvider, SyncedFullModel, SyncedModel } from "../index.js";
+import { factorBaseModel } from "./openrouter.js";
 
 const API_BASE = "https://api.x.ai/v1";
 
@@ -117,10 +119,6 @@ async function fetchTypedModels(key: string, endpoint: string) {
   return XAIModelList.parse(await response.json()).models;
 }
 
-function dateFromTimestamp(timestamp: number) {
-  return new Date(timestamp * 1000).toISOString().slice(0, 10);
-}
-
 type Modality = "text" | "audio" | "image" | "video" | "pdf";
 
 function modalities(values: string[] | undefined, fallback: Modality[]) {
@@ -161,6 +159,7 @@ function cost(model: XAIModel, existing: ExistingModel) {
 
 export function buildXAIModel(model: XAIModel, existing: ExistingModel): SyncedModel {
   const name = existing.name;
+  const description = existing.description;
   const attachment = existing.attachment;
   const reasoning = existing.reasoning;
   const toolCall = existing.tool_call;
@@ -176,23 +175,35 @@ export function buildXAIModel(model: XAIModel, existing: ExistingModel): SyncedM
     || toolCall === undefined
     || openWeights === undefined
     || limit === undefined
-    || (model.canonical_id !== undefined && releaseDate === undefined)
-    || (model.canonical_id !== undefined && lastUpdated === undefined)
+    || releaseDate === undefined
+    || lastUpdated === undefined
   ) {
     throw new Error(`xAI model ${model.id} has incomplete local TOML metadata required for sync`);
   }
 
   const input = modalities(model.input_modalities, existing.modalities?.input ?? ["text"]);
   const output = modalities(model.output_modalities, existing.modalities?.output ?? ["text"]);
-  const created = dateFromTimestamp(model.created);
 
-  return {
-    base_model: existing.base_model,
-    base_model_omit: existing.base_model_omit,
+  const values = {
     name,
+    description: description ?? describeModel({
+      id: model.id,
+      name,
+      family: existing.family,
+      reasoning,
+      tool_call: toolCall,
+      structured_output: existing.structured_output,
+      open_weights: openWeights,
+      limit: {
+        input: limit.input,
+        context: model.max_prompt_length ?? limit.context,
+        output: limit.output,
+      },
+      modalities: { input, output },
+    }),
     family: existing.family,
-    release_date: model.canonical_id === undefined ? created : releaseDate!,
-    last_updated: model.canonical_id === undefined ? created : lastUpdated!,
+    release_date: releaseDate,
+    last_updated: lastUpdated,
     attachment: input.some((value) => value !== "text"),
     reasoning,
     reasoning_options: existing.reasoning_options,
@@ -210,5 +221,9 @@ export function buildXAIModel(model: XAIModel, existing: ExistingModel): SyncedM
       output: limit.output,
     },
     modalities: { input, output },
-  };
+  } satisfies SyncedFullModel;
+
+  return existing.base_model === undefined
+    ? values
+    : factorBaseModel(existing.base_model, values, values.limit, existing.base_model_omit);
 }

@@ -1,10 +1,11 @@
 name = "GPT-5.3 Codex"
+description = "Coding-optimized GPT model for repository edits, reviews, and agentic software work"
 family = "gpt-codex"
 release_date = "2026-02-24"
 last_updated = "2026-02-24"
 attachment = true
 reasoning = true
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh"] }]
+reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh"] }]
 temperature = false
 knowledge = "2025-08-31"
 tool_call = true

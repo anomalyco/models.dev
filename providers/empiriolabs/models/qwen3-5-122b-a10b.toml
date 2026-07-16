@@ -1,0 +1,29 @@
+base_model = "alibaba/qwen3.5-122b-a10b"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "max"]
+
+[[reasoning_options]]
+type = "budget_tokens"
+min = 1
+max = 80_000
+
+[cost]
+input = 0.115
+output = 0.917
+
+[[cost.tiers]]
+tier = { type = "context", size = 128_000 }
+input = 0.287
+output = 2.294
+
+[limit]
+context = 256_000
+output = 64_000
+
+[modalities]
+input = ["text", "image", "video"]

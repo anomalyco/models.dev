@@ -2,14 +2,20 @@ import { z } from "zod";
 import { readFileSync, readdirSync } from "node:fs";
 import path from "node:path";
 
+import { describeModel } from "../../describe.js";
 import { inferKimiFamily, ModelFamilyValues } from "../../family.js";
 import type { ExistingModel, SyncProvider, SyncedFullModel, SyncedModel } from "../index.js";
 
 const API_ENDPOINT = "https://openrouter.ai/api/v1/models";
 const MODELS_DIR = path.join(import.meta.dirname, "..", "..", "..", "..", "..", "models");
-const MODEL_NAME_BLACKLIST = ["fable-5"];
 const modelMetadataByID = new Map<string, Record<string, unknown>>();
 const modelMetadataFilesByProvider = new Map<string, Set<string>>();
+
+const CANONICAL_BASE_MODEL_OVERRIDES = {
+  "openai/gpt-5.6-luna-pro": "openai/gpt-5.6-luna",
+  "openai/gpt-5.6-sol-pro": "openai/gpt-5.6-sol",
+  "openai/gpt-5.6-terra-pro": "openai/gpt-5.6-terra",
+} as const;
 
 const CANONICAL_PROVIDER_PREFIXES = {
   alibaba: { provider: "alibaba", metadata: "alibaba" },
@@ -57,6 +63,17 @@ export const OpenRouterModel = z.object({
     max_completion_tokens: z.number().nullable(),
   }),
   supported_parameters: z.array(z.string()),
+  reasoning: z
+    .object({
+      mandatory: z.boolean(),
+      supported_efforts: z
+        .array(z.enum(["max", "xhigh", "high", "medium", "low", "minimal", "none"]))
+        .nullable()
+        .optional(),
+      supports_max_tokens: z.boolean().optional(),
+    })
+    .passthrough()
+    .optional(),
 });
 
 export const OpenRouterResponse = z.object({
@@ -80,18 +97,32 @@ export const openrouter = {
     return response.json();
   },
   parseModels(raw) {
-    return OpenRouterResponse.parse(raw).data.filter((model) => {
-      const name = `${model.id} ${model.name}`.toLowerCase();
-      return MODEL_NAME_BLACKLIST.every((value) => !name.includes(value));
-    });
+    return OpenRouterResponse.parse(raw).data;
   },
   translateModel(model, context) {
+    // OpenRouter serves deprecated/unavailable routes as degraded stubs:
+    // negative pricing (`"-1"`) and an empty `supported_parameters` array. Syncing
+    // those would wrongly flip `reasoning`/`tool_call`/`structured_output` to false
+    // and strip `reasoning_options`. Leave the authored file untouched instead, and
+    // skip the model entirely when we have nothing to preserve.
+    if (isUnavailable(model)) {
+      const authored = context.authored(model.id);
+      return authored === undefined ? undefined : { id: model.id, model: authored as SyncedModel };
+    }
     return {
       id: model.id,
       model: buildOpenRouterModel(model, context.existing(model.id)),
     };
   },
 } satisfies SyncProvider<OpenRouterModel>;
+
+function isUnavailable(model: OpenRouterModel) {
+  return (
+    model.supported_parameters.length === 0 ||
+    Number(model.pricing.prompt) < 0 ||
+    Number(model.pricing.completion) < 0
+  );
+}
 
 function dateFromTimestamp(timestamp: number) {
   return new Date(timestamp * 1000).toISOString().slice(0, 10);
@@ -144,7 +175,12 @@ export function buildOpenRouterModel(
   const prompt = price(model.pricing.prompt);
   const completion = price(model.pricing.completion);
   const reasoning = params.has("reasoning") || params.has("include_reasoning");
-  const context = model.top_provider.context_length ?? model.context_length;
+  // Prefer OpenRouter's live reasoning metadata over authored options so aliases
+  // and rotated models pick up new efforts/budget support. Fall back to authored
+  // only when the API omits a reasoning object.
+  const reasoning_options = openRouterReasoningOptions(model.reasoning)
+    ?? (reasoning ? existing?.reasoning_options : undefined);
+  const context = model.context_length;
   const family = inferFamily(model, name);
   const releaseDate = dateFromTimestamp(model.created);
   const familyValue = existing?.family === "o" && family !== "o"
@@ -173,12 +209,27 @@ export function buildOpenRouterModel(
   const canonical = existing?.base_model ?? baseModel ?? resolveCanonicalBaseModel(model.id);
 
   if (canonical !== undefined) {
+    const canonicalOverride = canonicalBaseModelOverride(model.id);
     return factorBaseModel(
       canonical,
       {
-        name: baseModel !== undefined || model.id.endsWith(":free") ? name : undefined,
+        name: baseModel !== undefined || model.id.endsWith(":free") || canonicalOverride === canonical
+          ? name
+          : undefined,
+        description: existing?.description ?? describeModel({
+          id: model.id,
+          name,
+          family: familyValue,
+          reasoning,
+          tool_call: toolCall,
+          structured_output: structuredOutput,
+          open_weights: openWeights,
+          limit,
+          modalities: { input, output },
+        }),
         attachment,
         reasoning,
+        reasoning_options,
         temperature: params.has("temperature"),
         tool_call: toolCall,
         structured_output: structuredOutput,
@@ -195,11 +246,23 @@ export function buildOpenRouterModel(
 
   return {
     name,
+    description: existing?.description ?? describeModel({
+      id: model.id,
+      name,
+      family: familyValue,
+      reasoning,
+      tool_call: toolCall,
+      structured_output: structuredOutput,
+      open_weights: openWeights,
+      limit,
+      modalities: { input, output },
+    }),
     family: familyValue,
     release_date: releaseDate,
     last_updated: releaseDate,
     attachment,
     reasoning,
+    reasoning_options,
     temperature: params.has("temperature"),
     tool_call: toolCall,
     structured_output: structuredOutput,
@@ -213,7 +276,32 @@ export function buildOpenRouterModel(
   } satisfies SyncedFullModel;
 }
 
+function openRouterReasoningOptions(reasoning: OpenRouterModel["reasoning"]): SyncedFullModel["reasoning_options"] {
+  if (reasoning === undefined) return undefined;
+
+  const options: NonNullable<SyncedFullModel["reasoning_options"]> = [];
+  const efforts = reasoning.supported_efforts === null
+    ? ["max", "xhigh", "high", "medium", "low", "minimal", "none"] as const
+    : reasoning.supported_efforts;
+
+  if (efforts !== undefined) {
+    options.push({
+      type: "effort",
+      values: reasoning.mandatory ? efforts.filter((value) => value !== "none") : [...efforts],
+    });
+  }
+
+  if (reasoning.supports_max_tokens === true) {
+    options.push({ type: "budget_tokens" });
+  }
+
+  return options.length > 0 ? options : undefined;
+}
+
 export function resolveCanonicalBaseModel(openrouterID: string) {
+  const override = canonicalBaseModelOverride(openrouterID);
+  if (override !== undefined) return override;
+
   const [prefix, ...modelParts] = openrouterID.split("/");
   if (prefix === undefined || modelParts.length === 0) return undefined;
   if (openrouterID.startsWith("~/") || prefix.startsWith("~")) return undefined;
@@ -241,6 +329,12 @@ function modelMetadataExists(provider: string, modelID: string) {
     modelMetadataFilesByProvider.set(provider, files);
   }
   return files.has(`${modelID}.toml`);
+}
+
+function canonicalBaseModelOverride(openrouterID: string) {
+  return CANONICAL_BASE_MODEL_OVERRIDES[
+    openrouterID as keyof typeof CANONICAL_BASE_MODEL_OVERRIDES
+  ];
 }
 
 export function factorBaseModel(

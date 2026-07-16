@@ -1,15 +1,17 @@
 name = "Llama 4 Maverick 17B FP8"
+description = "Open multimodal Llama model for strong reasoning and fast responses"
 family = "llama"
 release_date = "2025-04-05"
 last_updated = "2025-04-05"
-attachment = false
+attachment = true
 reasoning = false
 tool_call = false
+structured_output = true
 open_weights = true
 
 [cost]
-input = 0.15
-output = 0.60
+input = 0.2
+output = 0.8
 
 [limit]
 context = 1_048_576

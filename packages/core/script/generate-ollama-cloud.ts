@@ -31,8 +31,10 @@ function modelFileName(modelName: string): string {
   return modelName + ".toml";
 }
 
-type OllamaModel = Omit<Model, "id"> & {
-  limit: Model["limit"] & { output?: number };
+type OllamaModel = Omit<Model, "id" | "description" | "release_date" | "limit"> & {
+  description?: Model["description"];
+  release_date?: Model["release_date"];
+  limit: Omit<Model["limit"], "output"> & { output?: number };
 };
 
 type ComparableModel = Pick<Model,
@@ -47,7 +49,7 @@ type ComparableModel = Pick<Model,
   limit: Pick<Model["limit"], "context">;
 };
 
-function normalizeForComparison(model: Omit<Model, "id">): ComparableModel {
+function normalizeForComparison(model: OllamaModel | Omit<Model, "id">): ComparableModel {
   return {
     name: model.name,
     attachment: model.attachment,

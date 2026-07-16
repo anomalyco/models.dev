@@ -4,7 +4,8 @@ npm = "@ai-sdk/openai-compatible"
 # Reasoning HTTP format (accessed 2026-06-25):
 # OpenAI Chat: POST /compatible-mode/v1/chat/completions; top-level
 # `enable_thinking` is true or false and `thinking_budget` is an integer token
-# cap (Qwen3 in thinking mode and Kimi only; default is the model maximum).
+# cap (Qwen3/Qwen3.5/Qwen3.6/Qwen3.7/Qwen3-VL thinking mode and Kimi;
+# public docs say the default is the model maximum but do not publish bounds).
 # Responses: POST /compatible-mode/v1/responses; `reasoning.effort` is none,
 # minimal, low, medium (default), or high; no numeric thinking budget is accepted.
 # Anthropic: POST /apps/anthropic/v1/messages; `thinking.type` is enabled or
@@ -17,4 +18,4 @@ npm = "@ai-sdk/openai-compatible"
 # https://www.alibabacloud.com/help/en/model-studio/compatibility-with-openai-responses-api
 # https://www.alibabacloud.com/help/en/model-studio/anthropic-api-messages
 doc = "https://www.alibabacloud.com/help/en/model-studio/models"
-api = "https://dashscope-intl.aliyuncs.com/compatible-mode/v1" 
+api = "https://dashscope-intl.aliyuncs.com/compatible-mode/v1"

@@ -1,4 +1,5 @@
 name = "Z.AI GLM-4.7"
+description = "Flagship GLM model for hybrid reasoning, coding, and agentic engineering"
 # Model-specific reasoning HTTP values (accessed 2026-06-25):
 # Reasoning defaults on; reasoning_effort = "none" disables it. The alternative
 # disable_reasoning = true|false is deprecated and will be removed after
@@ -20,7 +21,7 @@ status = "beta"
 [cost]
 input = 2.25
 output = 2.75
-cache_read = 0
+cache_read = 2.25
 cache_write = 0
 
 [limit]

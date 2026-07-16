@@ -1,14 +1,6 @@
-name = "MiniMax M2.5"
-family = "minimax-m2.5"
-release_date = "2026-02-12"
-last_updated = "2026-06-01"
-attachment = false
-reasoning = true
+base_model = "minimax/MiniMax-M2.5"
 reasoning_options = []
-temperature = true
-tool_call = true
-structured_output = false
-open_weights = true
+structured_output = true
 
 [cost]
 input = 0.30
@@ -16,9 +8,5 @@ output = 1.20
 cache_read = 0.03
 
 [limit]
-context = 1_000_000
-output = 131_072
-
-[modalities]
-input = ["text"]
-output = ["text"]
+context = 196_000
+output = 195_000

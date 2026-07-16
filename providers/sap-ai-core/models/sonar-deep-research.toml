@@ -1,9 +1,13 @@
+# Not all models support the full range of configuration options. Where possible, orchestration maps unsupported values to the closest equivalent.
+# Reasoning support: https://help.sap.com/docs/sap-ai-core/generative-ai/reasoning?locale=en-US (accessed 2026-07-14)
 name = "sonar-deep-research"
+description = "Sonar search model for current answers, retrieval, and citation-backed chat"
 family = "sonar-deep-research"
 release_date = "2025-02-01"
 last_updated = "2025-09-01"
 attachment = false
 reasoning = true
+reasoning_options = [{ type = "effort", values = ["minimal", "low", "medium", "high"] }]
 temperature = false
 tool_call = false
 knowledge = "2025-01"

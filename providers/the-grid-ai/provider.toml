@@ -1,14 +1,15 @@
 name = "The Grid AI"
 env = ["THEGRIDAI_API_KEY"]
 npm = "@ai-sdk/openai-compatible"
-# Reasoning HTTP format (accessed 2026-06-25):
-# POST https://api.thegrid.ai/v1/chat/completions and beta POST
-# https://messages-beta.api.thegrid.ai/v1/messages route by instrument. The
-# docs say callers choose reasoning depth through the instrument tier, not a
-# dedicated thinking configuration; Messages has no `thinking` request field.
-# The generic Chat schema lists `reasoning_effort`, but no instrument-specific
-# effect is documented, so no caller reasoning control is verified here.
-# Sources:
+# Raw HTTP reasoning controls (accessed 2026-07-06):
+# - POST https://api.thegrid.ai/v1/chat/completions routes by instrument tier
+#   and accepts `reasoning_effort = "low" | "medium" | "high" | "xhigh" | "max"`,
+#   with `low|medium|high` mandatory on `*-standard`/`*-prime` and the wider
+#   5-value set plus a caller toggle on `*-max`. Per-instrument effort enums
+#   come from the public catalog at GET https://api.thegrid.ai/v1/models.
+# - beta POST https://messages-beta.api.thegrid.ai/v1/messages is a separate
+#   Anthropic-compatible route and does not yet expose a `thinking` request
+#   field; reasoning depth on that route still follows the instrument tier.
 # https://thegrid.ai/docs/api-reference/consumption-api
 # https://thegrid.ai/docs/instrument-specifications/current-instruments
 api = "https://api.thegrid.ai/v1"

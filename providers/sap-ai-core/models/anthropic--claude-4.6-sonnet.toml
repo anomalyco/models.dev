@@ -1,25 +1,14 @@
+# Bedrock Claude 4.6 prefers $.thinking.type = "adaptive" plus $.output_config.effort = "low"|"medium"|"high"|"max"; manual enabled budget_tokens >= 1024 is deprecated. Converse prefixes both paths with $.additionalModelRequestFields. https://docs.anthropic.com/en/docs/build-with-claude/extended-thinking (accessed 2026-06-25)
+
+base_model = "anthropic/claude-sonnet-4-6"
+
 name = "anthropic--claude-4.6-sonnet"
-family = "claude-sonnet"
-release_date = "2026-02-17"
-last_updated = "2026-03-13"
-attachment = true
-reasoning = true
-# Bedrock Claude 4.6 prefers $.thinking.type = "adaptive" plus $.output_config.effort = "low"|"medium"|"high"; manual enabled budget_tokens >= 1024 is deprecated. Converse prefixes both paths with $.additionalModelRequestFields. https://docs.anthropic.com/en/docs/build-with-claude/extended-thinking (accessed 2026-06-25)
-temperature = true
-tool_call = true
+description = "Balanced Claude model for coding, analysis, agent workflows, and cost control"
 knowledge = "2025-08"
-open_weights = false
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "max"] }, { type = "budget_tokens", min = 1024 }]
 
 [cost]
 input = 3.00
 output = 15.00
-cache_read = 0.30
+cache_read = 0.3
 cache_write = 3.75
-
-[limit]
-context = 1_000_000
-output = 64_000
-
-[modalities]
-input = ["text", "image", "pdf"]
-output = ["text"]
