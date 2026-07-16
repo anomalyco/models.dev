@@ -1,7 +1,9 @@
-# Cursor Bridge's default model delegates model selection to Cursor. Capabilities
-# and conservative limits reflect the bridge rather than any one upstream model;
-# availability and billing depend on the user's Cursor plan.
-# Source (accessed 2026-07-16): https://cursorbridge.dev/docs
+# Cursor Bridge's default model delegates model selection to Cursor; availability
+# and billing depend on the user's Cursor plan.
+# Sources (accessed 2026-07-16):
+# - https://cursorbridge.dev/docs#model-metadata defines the metadata fields.
+# - https://cursorbridge.dev/v1/models/default reports the 200k context,
+#   64k output limit, and 2026-07-13 first-observed release date.
 name = "Cursor Default"
 description = "Uses Cursor's automatic model selection based on the models available to the authenticated Cursor account."
 family = "auto"
