@@ -175,9 +175,11 @@ export function buildOpenRouterModel(
   const prompt = price(model.pricing.prompt);
   const completion = price(model.pricing.completion);
   const reasoning = params.has("reasoning") || params.has("include_reasoning");
-  const reasoning_options = existing?.reasoning_options?.length
-    ? existing.reasoning_options
-    : openRouterReasoningOptions(model.reasoning) ?? existing?.reasoning_options;
+  // Prefer OpenRouter's live reasoning metadata over authored options so aliases
+  // and rotated models pick up new efforts/budget support. Fall back to authored
+  // only when the API omits a reasoning object.
+  const reasoning_options = openRouterReasoningOptions(model.reasoning)
+    ?? (reasoning ? existing?.reasoning_options : undefined);
   const context = model.context_length;
   const family = inferFamily(model, name);
   const releaseDate = dateFromTimestamp(model.created);

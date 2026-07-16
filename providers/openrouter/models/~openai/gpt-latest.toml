@@ -1,8 +1,10 @@
+# OpenRouter alias currently redirects to GPT-5.6 Sol.
+# https://openrouter.ai/~openai/gpt-latest
 name = "OpenAI GPT Latest"
 description = "GPT model for general reasoning, writing, coding, and tool-assisted tasks"
 family = "gpt"
-release_date = "2026-04-27"
-last_updated = "2026-04-27"
+release_date = "2026-07-09"
+last_updated = "2026-07-09"
 attachment = true
 reasoning = true
 temperature = false
@@ -13,7 +15,7 @@ open_weights = false
 
 [[reasoning_options]]
 type = "effort"
-values = ["none", "low", "medium", "high", "xhigh"]
+values = ["none", "low", "medium", "high", "xhigh", "max"]
 
 [cost]
 input = 5
@@ -26,5 +28,5 @@ context = 1_050_000
 output = 128_000
 
 [modalities]
-input = ["pdf", "image", "text"]
+input = ["text", "image", "pdf"]
 output = ["text"]
