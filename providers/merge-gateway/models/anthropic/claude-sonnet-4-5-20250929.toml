@@ -1,6 +1,6 @@
 base_model = "anthropic/claude-sonnet-4-5-20250929"
 name = "Claude Sonnet 4.5 (20250929)"
-reasoning = false
+reasoning_options = [{ type = "toggle" }, { type = "budget_tokens", min = 1_024, max = 63_999 }]
 structured_output = true
 
 [cost]

@@ -8,6 +8,14 @@ const API_ENDPOINT = "https://api-gateway.merge.dev/v1/models";
 
 const AvailabilityStatus = z.enum(["available", "deprecated"]);
 
+const VendorReasoning = z.object({
+  configurable: z.boolean().optional(),
+  disable_supported: z.boolean().optional(),
+  default_enabled: z.boolean().optional(),
+  controls: z.array(z.string()).optional(),
+  output_style: z.string().nullable().optional(),
+}).passthrough();
+
 const VendorCapabilities = z.object({
   input: z.array(z.enum(["text", "audio", "image", "document", "embedding"])),
   output: z.array(z.enum(["text", "audio", "tool_use", "embedding"])),
@@ -15,6 +23,7 @@ const VendorCapabilities = z.object({
   supports_tool_choice: z.boolean().default(false),
   supports_structured_outputs: z.boolean(),
   supports_reasoning: z.boolean().optional(),
+  reasoning: VendorReasoning.nullable().optional(),
   streaming: z.boolean(),
 }).passthrough();
 
@@ -194,9 +203,22 @@ export function buildMergeGatewayModel(
     ? "deprecated" as const
     : undefined;
   const baseModel = existing?.base_model ?? resolveCanonicalBaseModel(model.model);
-  const routeDisablesReasoning = selected.info.capabilities.supports_reasoning === false;
-  const reasoning = routeDisablesReasoning ? false : existing?.reasoning;
-  const reasoningOptions = routeDisablesReasoning ? undefined : existing?.reasoning_options;
+  // `supports_reasoning` is not part of the documented public schema
+  // (PublicVendorModelCapabilities) and is inconsistently populated across
+  // vendor routes: the same model can report `true` on one route and `false`
+  // on another (e.g. anthropic/claude-opus-4-6 reports `false` via `anthropic`
+  // and `true` via `bedrock`), and reasoning-only models such as
+  // deepseek/deepseek-r1 report `false` on their sole route. Treat it as a
+  // positive-only signal: `true` (always accompanied by route `reasoning`
+  // metadata) confirms the model reasons on the gateway, while `false`/absent
+  // means unknown and preserves curated reasoning metadata.
+  const routeConfirmsReasoning = Object.values(model.vendors).some(
+    (vendor) => vendor.availability_status === "available" && vendor.capabilities.supports_reasoning === true,
+  );
+  const reasoning = routeConfirmsReasoning ? true : existing?.reasoning;
+  const reasoningOptions = reasoning === true
+    ? existing?.reasoning_options ?? []
+    : existing?.reasoning_options;
   const authoritative = {
     // Some catalog rows use an upstream org/model ID as display_name. Let
     // canonical metadata provide the human-readable name for factored models.

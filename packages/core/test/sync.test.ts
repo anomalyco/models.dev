@@ -1141,7 +1141,10 @@ test("factors Merge Gateway GPT-5.6 Sol against canonical metadata", () => {
   });
 });
 
-test("disables reasoning when the selected Merge Gateway route explicitly does not support it", () => {
+test("preserves curated reasoning when Merge Gateway routes report supports_reasoning = false", () => {
+  // `supports_reasoning = false` is a positive-only signal: the field is
+  // undocumented in the public schema and inconsistently populated across
+  // vendor routes, so it must not erase curated reasoning metadata.
   const vendor = mergeGatewayVendor();
   vendor.capabilities.supports_reasoning = false;
   const model = buildMergeGatewayModel(mergeGatewayModel({
@@ -1155,8 +1158,49 @@ test("disables reasoning when the selected Merge Gateway route explicitly does n
 
   expect(model).toMatchObject({
     base_model: "openai/gpt-5.6-sol",
-    reasoning: false,
+    reasoning_options: [{ type: "effort", values: ["low", "medium", "high"] }],
   });
+  expect(model).not.toMatchObject({ reasoning: false });
+});
+
+test("confirms reasoning when any available Merge Gateway route reports supports_reasoning = true", () => {
+  const selected = mergeGatewayVendor();
+  selected.capabilities.supports_reasoning = false;
+  const confirming = mergeGatewayVendor({
+    pricing: { currency: "USD", input_per_million: 9, output_per_million: 45 },
+  });
+  confirming.capabilities.supports_reasoning = true;
+  confirming.capabilities.reasoning = {
+    configurable: false,
+    disable_supported: false,
+    default_enabled: true,
+    controls: [],
+    output_style: "reasoning_content",
+  };
+  const model = buildMergeGatewayModel(mergeGatewayModel({
+    vendors: { openai: selected, fireworks: confirming },
+  }), {
+    base_model: "openai/gpt-5.6-sol",
+    cost: { input: 5, output: 30 },
+  });
+
+  // The model reasons on the gateway with no verified caller control.
+  expect(model).toMatchObject({ reasoning_options: [] });
+  expect(model).not.toMatchObject({ reasoning: false });
+});
+
+test("ignores supports_reasoning = true on unavailable Merge Gateway routes", () => {
+  const selected = mergeGatewayVendor();
+  selected.capabilities.supports_reasoning = false;
+  const deprecated = mergeGatewayVendor({ availability_status: "deprecated" });
+  deprecated.capabilities.supports_reasoning = true;
+  const model = buildMergeGatewayModel(mergeGatewayModel({
+    vendors: { openai: selected, legacy: deprecated },
+  }), {
+    base_model: "openai/gpt-5.6-sol",
+    cost: { input: 5, output: 30 },
+  });
+
   expect(model).not.toHaveProperty("reasoning_options");
 });
 

@@ -1,6 +1,6 @@
 base_model = "anthropic/claude-opus-4-20250514"
 name = "Claude Opus 4 (20250514)"
-reasoning = false
+reasoning_options = [{ type = "toggle" }, { type = "budget_tokens", min = 1_024, max = 31_999 }]
 structured_output = true
 
 [cost]

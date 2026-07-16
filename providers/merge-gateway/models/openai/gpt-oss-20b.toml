@@ -1,8 +1,9 @@
-# Merge Gateway GET /v1/models?model=openai/gpt-oss-20b (accessed 2026-07-14):
-# available routes either report `supports_reasoning = false` or reasoning with
-# `configurable = false` and no controls, so callers have no reasoning control.
+# Merge Gateway GET /v1/models?model=openai/gpt-oss-20b (accessed 2026-07-16):
+# routes reporting `supports_reasoning = true` carry `configurable = false` and
+# no controls, so the model reasons on the gateway but callers have no
+# reasoning control.
 base_model = "openai/gpt-oss-20b"
-reasoning = false
+reasoning_options = []
 tool_call = false
 structured_output = false
 

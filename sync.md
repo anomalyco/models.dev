@@ -152,7 +152,7 @@ Merge Gateway is implemented in `packages/core/src/sync/providers/merge-gateway.
 - Existing cache pricing, tiered pricing, reasoning controls, and experimental modes are preserved because the public API does not currently expose the full CMS metadata. Cache prices curated from Gateway's route-level CMS remain stable across syncs until the public contract exposes them.
 - Route-level cache prices replace curated values field by field. A cache read or write price that the API does not expose remains preserved in the provider TOML, including when `prompt_caching` exposes only its mode.
 - `prompt_caching.mode = "none"` explicitly removes preserved cache read and write prices because that route does not cache prompts.
-- An explicit `supports_reasoning = false` on the selected vendor route overrides inherited reasoning metadata and removes preserved reasoning controls; supported routes retain curated controls when the API does not enumerate exact values.
+- `supports_reasoning` is a positive-only signal. It is absent from the documented public schema and inconsistently populated across vendor routes (the same model can report `true` on one route and `false` on another, and reasoning-only models can report `false` on their sole route). Any available route reporting `true` confirms `reasoning = true`, defaulting `reasoning_options` to `[]` when none are curated; `false` or absent is treated as unknown and preserves curated reasoning metadata.
 - Local models missing from the response are retained because API-key policy can affect catalog visibility.
 
 ## Cloudflare Workers AI Notes
