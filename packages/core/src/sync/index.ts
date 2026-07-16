@@ -7,6 +7,7 @@ import { AuthoredModel, AuthoredModelShape, ModelMetadata } from "../schema.js";
 import { openMissingModelIssues } from "./missing-issues.js";
 import { ambient } from "./providers/ambient.js";
 import { anthropic } from "./providers/anthropic.js";
+import { anyapi } from "./providers/anyapi.js";
 import { baseten } from "./providers/baseten.js";
 import { chutes } from "./providers/chutes.js";
 import { cloudflareWorkersAi } from "./providers/cloudflare-workers-ai.js";
@@ -109,6 +110,7 @@ export interface SyncResult {
 
 export const providers: {
   ambient: SyncProvider<any>;
+  anyapi: SyncProvider<any>;
   anthropic: SyncProvider<any>;
   baseten: SyncProvider<any>;
   chutes: SyncProvider<any>;
@@ -134,6 +136,7 @@ export const providers: {
   xai: SyncProvider<any>;
 } = {
   ambient,
+  anyapi,
   anthropic,
   baseten,
   chutes,
@@ -161,6 +164,7 @@ export const providers: {
 
 export const groups = {
   aggregators: [
+    "anyapi",
     "crossmodel",
     "empiriolabs",
     "huggingface",
