@@ -1,0 +1,14 @@
+# API: thinking.type = "enabled" | "disabled" | "adaptive"; in adaptive mode the
+# reasoning depth is set by output_config.effort, which only accepts "max".
+# Pricing not yet published — cost intentionally omitted.
+base_model = "moonshotai/kimi-k3"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["max"]
+
+[interleaved]
+field = "reasoning_content"
