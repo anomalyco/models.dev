@@ -1,0 +1,16 @@
+base_model = "alibaba/qwen3-max"
+reasoning = true
+structured_output = true
+reasoning_options = []
+
+[cost]
+input = 1.08
+output = 5.52
+
+[[cost.tiers]]
+tier = { type = "context", size = 128_000 }
+input = 2.7
+output = 13.8
+
+[limit]
+context = 256_000

@@ -1,21 +1,20 @@
 # Live /models (2026-06-25): low|medium|high; no dedicated reasoning budget.
 # https://api.venice.ai/api/v1/models?type=text (accessed 2026-06-25)
-
 base_model = "minimax/MiniMax-M2.5"
 name = "MiniMax M2.5"
 last_updated = "2026-06-11"
+
+[interleaved]
+field = "reasoning_content"
 
 [[reasoning_options]]
 type = "effort"
 values = ["low", "medium", "high"]
 
-[interleaved]
-field = "reasoning_content"
-
 [cost]
-input = 0.34
-output = 1.19
-cache_read = 0.04
+input = 0.27
+output = 0.95
+cache_read = 0.03
 
 [limit]
 context = 198_000

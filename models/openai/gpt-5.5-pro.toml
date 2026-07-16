@@ -19,3 +19,56 @@ output = 128_000
 [modalities]
 input = ["text", "image", "pdf"]
 output = ["text"]
+
+[[benchmarks]]
+name = "BrowseComp"
+score = 90.1
+metric = "accuracy"
+source = "https://openai.com/index/introducing-gpt-5-5/"
+date = "2026-04-23"
+
+[[benchmarks]]
+name = "Humanity's Last Exam"
+score = 43.1
+metric = "accuracy"
+variant = "no tools"
+source = "https://openai.com/index/introducing-gpt-5-5/"
+date = "2026-04-23"
+
+[[benchmarks]]
+name = "Humanity's Last Exam"
+score = 57.2
+metric = "accuracy"
+variant = "with tools"
+source = "https://openai.com/index/introducing-gpt-5-5/"
+date = "2026-04-23"
+
+[[benchmarks]]
+name = "FrontierMath"
+score = 52.4
+metric = "accuracy"
+dataset = "Tier 1-3"
+source = "https://openai.com/index/introducing-gpt-5-5/"
+date = "2026-04-23"
+
+[[benchmarks]]
+name = "FrontierMath"
+score = 39.6
+metric = "accuracy"
+dataset = "Tier 4"
+source = "https://openai.com/index/introducing-gpt-5-5/"
+date = "2026-04-23"
+
+[[benchmarks]]
+name = "GDPval"
+score = 82.3
+metric = "wins or ties"
+source = "https://openai.com/index/introducing-gpt-5-5/"
+date = "2026-04-23"
+
+[[benchmarks]]
+name = "GeneBench"
+score = 33.2
+metric = "accuracy"
+source = "https://openai.com/index/introducing-gpt-5-5/"
+date = "2026-04-23"

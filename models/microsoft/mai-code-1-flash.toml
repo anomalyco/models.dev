@@ -28,3 +28,30 @@ type = "model_card"
 label = "Announcement"
 url = "https://microsoft.ai/news/introducingmai-code-1-flash/"
 type = "announcement"
+
+[[benchmarks]]
+name = "SWE-Bench Pro"
+score = 51.2
+metric = "resolve rate"
+harness = "GitHub Copilot"
+source = "https://microsoft.ai/news/introducingmai-code-1-flash/"
+date = "2026-06-02"
+
+[[benchmarks]]
+name = "SWE-Bench Verified"
+score = 71.6
+metric = "resolved"
+source = "https://llm-stats.com/benchmarks/swe-bench-verified"
+
+[[benchmarks]]
+name = "Terminal-Bench"
+score = 54.8
+metric = "success rate"
+version = "2.0"
+source = "https://llm-stats.com/benchmarks/terminal-bench-2"
+
+[[benchmarks]]
+name = "GPQA Diamond"
+score = 84.6
+metric = "accuracy"
+source = "https://llm-stats.com/benchmarks/gpqa"

@@ -1,0 +1,14 @@
+base_model = "minimax/MiniMax-M2.7"
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high"]
+
+[cost]
+input = 0.279
+output = 1.2
+cache_read = 0.279
+cache_write = 0.279

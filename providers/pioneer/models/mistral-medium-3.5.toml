@@ -1,0 +1,17 @@
+base_model = "mistral/mistral-medium-2604"
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high"]
+
+[cost]
+input = 1.5
+output = 7.5
+cache_read = 1.5
+cache_write = 1.5
+
+[limit]
+output = 131_072

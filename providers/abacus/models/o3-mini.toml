@@ -1,19 +1,20 @@
-name = "o3-mini"
-description = "O-series reasoning model for hard analysis, math, coding, and planning"
-family = "o-mini"
-release_date = "2024-12-20"
-last_updated = "2025-01-29"
-attachment = false
+# Source: https://routellm.abacus.ai/v1/models
+# RouteLLM API does not report thinking: true for this ID.
+# RouteLLM input_modalities: ['text']
+# RouteLLM output_modalities: ['text']
+# RouteLLM context_length: 200000
+# RouteLLM max_completion_tokens: 100000
+# RouteLLM input_token_rate: 0.0000011
+# RouteLLM output_token_rate: 0.0000044
+# RouteLLM cached_input_token_rate: 0.00000055
+base_model = "openai/o3-mini"
 reasoning = true
 reasoning_options = []
-temperature = false
-knowledge = "2024-05"
-tool_call = true
-open_weights = false
 
 [cost]
-input = 1.10
-output = 4.40
+input = 1.1
+output = 4.4
+cache_read = 0.55
 
 [limit]
 context = 200_000

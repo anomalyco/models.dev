@@ -1,0 +1,15 @@
+base_model = "deepseek/deepseek-v4-pro"
+description = "DeepSeek V4-Pro is a 1.6T-parameter MoE model with 49B active parameters excelling at advanced reasoning, coding, and complex agentic workloads."
+family = "deepseek"
+
+[[reasoning_options]]
+type = "toggle"
+
+[cost]
+input = 1.74
+output = 3.48
+cache_read = 0.14
+
+[limit]
+context = 1_048_576
+output = 1_048_576

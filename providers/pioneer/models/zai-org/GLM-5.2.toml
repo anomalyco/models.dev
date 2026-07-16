@@ -1,0 +1,18 @@
+base_model = "zhipuai/glm-5.2"
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high"]
+
+[cost]
+input = 1.4
+output = 4.4
+cache_read = 0.26
+cache_write = 1.4
+
+[limit]
+context = 1_048_576
+output = 128_000

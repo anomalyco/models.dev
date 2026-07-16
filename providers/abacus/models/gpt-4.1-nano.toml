@@ -1,18 +1,18 @@
-name = "GPT-4.1 Nano"
-description = "Compact GPT model for low-latency assistance and high-volume workloads"
-family = "gpt"
-release_date = "2025-04-14"
-last_updated = "2025-04-14"
-attachment = true
+# Source: https://routellm.abacus.ai/v1/models
+# RouteLLM input_modalities: ['text', 'image']
+# RouteLLM output_modalities: ['text']
+# RouteLLM context_length: 1047576
+# RouteLLM max_completion_tokens: 32768
+# RouteLLM input_token_rate: 0.0000001
+# RouteLLM output_token_rate: 0.0000004
+# RouteLLM cached_input_token_rate: 0.000000025
+base_model = "openai/gpt-4.1-nano"
 reasoning = false
-temperature = true
-knowledge = "2024-04"
-tool_call = true
-open_weights = false
 
 [cost]
-input = 0.10
-output = 0.40
+input = 0.1
+output = 0.4
+cache_read = 0.025
 
 [limit]
 context = 1_047_576

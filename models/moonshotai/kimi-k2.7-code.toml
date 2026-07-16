@@ -22,3 +22,48 @@ output = ["text"]
 [[weights]]
 label = "Hugging Face"
 url = "https://huggingface.co/moonshotai/Kimi-K2.7-Code"
+
+[[benchmarks]]
+name = "Kimi Code Bench"
+score = 62.0
+harness = "Kimi Code CLI"
+version = "v2"
+source = "https://huggingface.co/moonshotai/Kimi-K2.7-Code"
+date = "2026-06-12"
+
+[[benchmarks]]
+name = "Program Bench"
+score = 53.6
+harness = "Kimi Code CLI"
+source = "https://huggingface.co/moonshotai/Kimi-K2.7-Code"
+date = "2026-06-12"
+
+[[benchmarks]]
+name = "MLS Bench Lite"
+score = 35.1
+harness = "Kimi Code CLI"
+source = "https://huggingface.co/moonshotai/Kimi-K2.7-Code"
+date = "2026-06-12"
+
+[[benchmarks]]
+name = "MCP Atlas"
+score = 76.0
+metric = "success rate"
+harness = "Kimi Code CLI"
+source = "https://huggingface.co/moonshotai/Kimi-K2.7-Code"
+date = "2026-06-12"
+
+[[benchmarks]]
+name = "MCP Mark Verified"
+score = 81.1
+metric = "success rate"
+harness = "Kimi Code CLI"
+source = "https://huggingface.co/moonshotai/Kimi-K2.7-Code"
+date = "2026-06-12"
+
+[[benchmarks]]
+name = "Kimi Claw 24/7 Bench"
+score = 46.9
+harness = "Kimi Code CLI"
+source = "https://huggingface.co/moonshotai/Kimi-K2.7-Code"
+date = "2026-06-12"

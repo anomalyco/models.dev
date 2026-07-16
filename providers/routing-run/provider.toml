@@ -1,10 +1,16 @@
 name = "routing.run"
 env = ["ROUTING_RUN_API_KEY"]
 npm = "@ai-sdk/openai-compatible"
-api = "https://ai.routing.sh/v1"
-# Reasoning HTTP format (accessed 2026-06-25):
-# POST /v1/chat/completions may return message.reasoning_content, but the
-# documented request body has no reasoning toggle, effort, or token budget.
-# Source:
-# https://docs.routing.run/api-reference/openai
+api = "https://api.routing.run/v1"
+# Per-model `cost` and `limit` are taken from the live catalog endpoint
+# GET https://api.routing.run/v1/models (accessed 2026-07-09), which returns
+# `pricing` (prompt/completion, per-token) and `limit` (context/output) for
+# every served model. That endpoint exposes no cache-tier pricing, so
+# `cost.cache_read` is intentionally omitted. Public pricing page:
+# https://docs.routing.run/api-reference/models
+# Reasoning HTTP format (accessed 2026-07-09):
+# POST /v1/chat/completions returns `message.reasoning_content` for
+# reasoning-capable models. The request body exposes no reasoning toggle,
+# effort, or token-budget control, so `reasoning_options = []`.
+# Source: https://docs.routing.run/api-reference/openai
 doc = "https://docs.routing.run/api-reference/models"

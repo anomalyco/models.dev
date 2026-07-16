@@ -20,3 +20,27 @@ output = ["text"]
 [[weights]]
 label = "Hugging Face"
 url = "https://huggingface.co/MiniMaxAI/MiniMax-M2.7"
+
+[[benchmarks]]
+name = "SWE-Bench Verified"
+score = 79.9
+metric = "resolved"
+harness = "Claude Code"
+source = "https://www.minimax.io/blog/minimax-m3"
+date = "2026-06-01"
+
+[[benchmarks]]
+name = "SWE-Bench Pro"
+score = 56.2
+metric = "resolve rate"
+harness = "Claude Code"
+source = "https://www.minimax.io/blog/minimax-m3"
+date = "2026-06-01"
+
+[[benchmarks]]
+name = "Terminal-Bench"
+score = 51.1
+metric = "success rate"
+version = "2.1"
+source = "https://www.minimax.io/blog/minimax-m3"
+date = "2026-06-01"

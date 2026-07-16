@@ -1,0 +1,23 @@
+# Source: https://routellm.abacus.ai/v1/models
+# RouteLLM input_modalities: ['text', 'image']
+# RouteLLM output_modalities: ['text']
+# RouteLLM context_length: 128000
+# RouteLLM max_completion_tokens: 16384
+# RouteLLM input_token_rate: 0.0000025
+# RouteLLM output_token_rate: 0.00001
+# RouteLLM cached_input_token_rate: 0.00000125
+base_model = "openai/gpt-4o"
+reasoning = false
+
+[cost]
+input = 2.5
+output = 10
+cache_read = 1.25
+
+[limit]
+context = 128_000
+output = 16_384
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

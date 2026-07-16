@@ -1,27 +1,16 @@
-name = "Kimi-K2.6"
-description = "Kimi multimodal agent model for visual understanding, coding, and planning"
-family = "kimi-k2"
-release_date = "2026-05-13"
-last_updated = "2026-06-01"
-knowledge = "2025-01"
-attachment = true
-reasoning = true
+# Sources (accessed 2026-07-11):
+# - Pricing and model details: https://app.wafer.ai/models
+# - Temperature behavior: https://docs.wafer.ai/serverless/api-reference#kimi-k26-sampling-params-are-stripped
+base_model = "moonshotai/kimi-k2.6"
+description = "Kimi K2.6 sparse MoE model with a 262K context window. Available serverless and not included in standard Wafer Pass. Non-ZDR only: requests with `Wafer-ZDR: required` are rejected."
 reasoning_options = [{ type = "toggle" }]
-temperature = true
-tool_call = true
-structured_output = true
-open_weights = true
+temperature = false
 
 [cost]
-input = 0.68
-output = 3.15
-cache_read = 0.07
+input = 1.14
+output = 4.80
+cache_read = 0.19
 cache_write = 0
 
 [limit]
-context = 262_144
 output = 65_536
-
-[modalities]
-input = ["text", "image", "video"]
-output = ["text"]
