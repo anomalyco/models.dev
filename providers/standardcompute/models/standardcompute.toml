@@ -1,0 +1,23 @@
+name = "Standard Compute (auto-route)"
+description = "Flat-rate auto-router: one model id that routes each request to a suitable frontier model, unlimited tokens at a fixed monthly price"
+family = "auto"
+release_date = "2026-03-01"
+last_updated = "2026-07-17"
+attachment = false
+reasoning = false
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[cost]
+input = 0.00
+output = 0.00
+
+[limit]
+context = 128_000
+output = 16_384
+
+[modalities]
+input = ["text"]
+output = ["text"]
