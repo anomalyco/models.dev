@@ -1,5 +1,5 @@
 # API: thinking.type = "enabled" | "disabled" | "adaptive"; in adaptive mode the
-# reasoning depth is set by output_config.effort = "low" | "high" | "max".
+# reasoning depth is set by output_config.effort, which only accepts "max".
 # Pricing: https://platform.kimi.ai/docs/pricing/chat-k3 (accessed 2026-07-17).
 base_model = "moonshotai/kimi-k3"
 
@@ -8,7 +8,7 @@ type = "toggle"
 
 [[reasoning_options]]
 type = "effort"
-values = ["low", "high", "max"]
+values = ["max"]
 
 [interleaved]
 field = "reasoning_content"
