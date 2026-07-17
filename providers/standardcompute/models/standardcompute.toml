@@ -1,3 +1,12 @@
+# tool_call and structured_output verified against the live endpoint
+# (https://api.stdcmpt.com/v1/chat/completions) on 2026-07-17.
+# release_date reflects the public launch month (March 2026) as stated by the
+# operator; the provider does not publish a launch-date page.
+# limit.context and limit.output are conservative placeholders (the router
+# fans out to frontier backends whose true limits vary per request); chosen
+# to match the floor convention used by other auto-router entries.
+# attachment/reasoning are set false pending verification, not as claims of
+# absence.
 name = "Standard Compute (auto-route)"
 description = "Flat-rate auto-router: one model id that routes each request to a suitable frontier model, unlimited tokens at a fixed monthly price"
 family = "auto"
