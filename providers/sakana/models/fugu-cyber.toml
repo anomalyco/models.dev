@@ -1,0 +1,19 @@
+base_model = "sakana/fugu-cyber"
+reasoning_options = [{ type = "effort", values = ["high", "xhigh"] }]
+
+[limit]
+output = 1_000_000
+
+[cost]
+input = 6
+output = 36
+cache_read = 0.6
+
+[[cost.tiers]]
+tier = { type = "context", size = 272_000 }
+input = 12
+output = 54
+cache_read = 1.2
+
+[provider]
+shape = "responses"

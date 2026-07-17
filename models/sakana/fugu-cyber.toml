@@ -1,0 +1,23 @@
+name = "Fugu Cyber"
+description = "The same frontier capabilities as Fugu Ultra, but with specific adaptation for cybersecurity tasks."
+family = "fugu"
+release_date = "2026-07-24"
+last_updated = "2026-07-24"
+attachment = true
+reasoning = true
+temperature = false
+tool_call = true
+structured_output = true
+open_weights = false
+
+[limit]
+context = 1_000_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[[links]]
+label = "Official model catalog"
+url = "https://raw.githubusercontent.com/SakanaAI/fugu/refs/heads/main/configs/files/fugu.json"
+type = "docs"
