@@ -1,9 +1,10 @@
-# Flat-rate unlimited gateway: per-token cost is $0 (subscription pricing,
-# $9-$399/mo tiers that differ by execution speed, not usage caps). The single
-# "standardcompute" model id routes each request to a suitable frontier model.
-# OpenAI-compatible chat completions; tool calls and structured output
-# verified 2026-07-17.
-# https://standardcompute.com/integrations (accessed 2026-07-17)
+# Flat-rate unlimited gateway: per-token cost is $0 because pricing is
+# subscription-based — tiers from $9 to $399/mo that differ by execution
+# speed, not usage caps. Pricing page: https://standardcompute.com/pricing
+# (accessed 2026-07-18). The single "standardcompute" model id routes each
+# request to a suitable frontier model. OpenAI-compatible chat completions;
+# tool calls and structured output verified against the live endpoint
+# 2026-07-17. Setup docs: https://standardcompute.com/integrations
 name = "Standard Compute"
 env = ["STANDARDCOMPUTE_API_KEY"]
 npm = "@ai-sdk/openai-compatible"
