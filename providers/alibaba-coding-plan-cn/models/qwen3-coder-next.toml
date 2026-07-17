@@ -10,6 +10,20 @@ tool_call = true
 structured_output = true
 open_weights = true
 
+[cost]
+input = 0.3
+output = 1.5
+
+[[cost.tiers]]
+tier = { size = 32_768 }
+input = 0.5
+output = 2.5
+
+[[cost.tiers]]
+tier = { size = 131_072 }
+input = 0.8
+output = 4.0
+
 [limit]
 context = 262_144
 output = 65_536
