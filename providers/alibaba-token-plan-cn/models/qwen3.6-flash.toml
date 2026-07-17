@@ -15,7 +15,12 @@ type = "budget_tokens"
 max = 81_920
 
 [cost]
-input = 0
-output = 0
-cache_read = 0
-cache_write = 0
+input = 0.25
+output = 1.5
+cache_write = 0.3125
+
+[[cost.tiers]]
+tier = { size = 256_000 }
+input = 1.0
+output = 4.0
+cache_write = 1.25

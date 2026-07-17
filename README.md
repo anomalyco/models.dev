@@ -279,6 +279,11 @@ Models must conform to the following schema, as defined in `packages/core/src/sc
 - `cost.cache_write` _(optional)_: Number — Cost per million cached write tokens (USD)
 - `cost.input_audio` _(optional)_: Number — Cost per million audio input tokens, if billed separately (USD)
 - `cost.output_audio` _(optional)_: Number — Cost per million audio output tokens, if billed separately (USD)
+
+For subscription and quota-plan providers, use the underlying model's public USD pay-as-you-go
+price rather than the plan's zero marginal charge. If no public USD per-token price exists, omit
+`cost`; use zero only when the model is genuinely free.
+
 - `limit.context`: Number — Maximum context window (tokens)
 - `limit.input`: Number — Maximum input tokens
 - `limit.output`: Number — Maximum output tokens

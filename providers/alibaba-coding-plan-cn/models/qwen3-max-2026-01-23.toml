@@ -11,10 +11,18 @@ tool_call = true
 open_weights = false
 
 [cost]
-input = 0
-output = 0
-cache_read = 0
-cache_write = 0
+input = 1.2
+output = 6.0
+
+[[cost.tiers]]
+tier = { size = 32_768 }
+input = 2.4
+output = 12.0
+
+[[cost.tiers]]
+tier = { size = 131_072 }
+input = 3.0
+output = 15.0
 
 [limit]
 context = 262_144
