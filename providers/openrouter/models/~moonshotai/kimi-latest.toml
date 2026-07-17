@@ -5,19 +5,22 @@ release_date = "2026-04-27"
 last_updated = "2026-04-27"
 attachment = true
 reasoning = true
-temperature = true
+temperature = false
 tool_call = true
 structured_output = true
 open_weights = false
-reasoning_options = []
+
+[[reasoning_options]]
+type = "effort"
+values = ["max"]
 
 [cost]
-input = 0.66
-output = 3.41
-cache_read = 0.15
+input = 3
+output = 15
+cache_read = 0.3
 
 [limit]
-context = 262_144
+context = 1_048_576
 output = 262_144
 
 [modalities]

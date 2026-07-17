@@ -15,6 +15,8 @@ const CANONICAL_BASE_MODEL_OVERRIDES = {
   "openai/gpt-5.6-luna-pro": "openai/gpt-5.6-luna",
   "openai/gpt-5.6-sol-pro": "openai/gpt-5.6-sol",
   "openai/gpt-5.6-terra-pro": "openai/gpt-5.6-terra",
+  "anthropic/claude-opus-4.7-fast": "anthropic/claude-opus-4-7",
+  "anthropic/claude-opus-4.8-fast": "anthropic/claude-opus-4-8",
 } as const;
 
 const CANONICAL_PROVIDER_PREFIXES = {
@@ -33,6 +35,7 @@ const CANONICAL_PROVIDER_PREFIXES = {
   qwen: { provider: "alibaba", metadata: "alibaba" },
   stepfun: { provider: "stepfun", metadata: "stepfun" },
   tencent: { provider: "tencent", metadata: "tencent" },
+  thinkingmachines: { provider: "thinkingmachines", metadata: "thinkingmachines" },
   "x-ai": { provider: "xai", metadata: "xai" },
   xai: { provider: "xai", metadata: "xai" },
   xiaomi: { provider: "xiaomi", metadata: "xiaomi" },
