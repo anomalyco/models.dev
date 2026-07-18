@@ -1,0 +1,11 @@
+base_model = "bottlecapai/thinkingcap-qwen3.6-27b"
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "toggle"
+
+[cost]
+input = 0.4
+output = 2.6
