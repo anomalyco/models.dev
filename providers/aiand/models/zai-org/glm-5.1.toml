@@ -1,0 +1,14 @@
+# Source: https://docs.aiand.com/models/catalog/ (accessed 2026-07-18)
+# Catalog table shows a rounded context of "203K"; exact figure not
+# obtainable without an API key, so context is left inherited from the
+# shared base model (200_000) rather than guessing the precise value.
+# reasoning_effort values per https://docs.aiand.com/api/chat-completions/
+base_model = "zhipuai/glm-5.1"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "minimal", "low", "medium", "high", "xhigh"]
+
+[cost]
+input = 1.40
+output = 4.40

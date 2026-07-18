@@ -1,0 +1,17 @@
+# Source: https://docs.aiand.com/models/catalog/ (accessed 2026-07-18)
+# ai&'s catalog table lists this model with vision + video + document
+# capabilities; the shared base model only documents image input, so video
+# is added here to match what ai& actually advertises for its deployment.
+# reasoning_effort values per https://docs.aiand.com/api/chat-completions/
+base_model = "google/gemma-4-31b-it"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "minimal", "low", "medium", "high", "xhigh"]
+
+[cost]
+input = 0.20
+output = 0.50
+
+[modalities]
+input = ["text", "image", "video"]

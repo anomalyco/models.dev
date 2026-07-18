@@ -1,0 +1,11 @@
+# Source: https://docs.aiand.com/models/catalog/ (accessed 2026-07-18)
+# reasoning_effort values per https://docs.aiand.com/api/chat-completions/
+base_model = "moonshotai/kimi-k2.7-code"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "minimal", "low", "medium", "high", "xhigh"]
+
+[cost]
+input = 0.75
+output = 3.50
