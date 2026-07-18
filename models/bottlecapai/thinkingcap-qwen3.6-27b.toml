@@ -1,0 +1,27 @@
+# Sources (accessed 2026-07-16):
+# - https://huggingface.co/bottlecapai/ThinkingCap-Qwen3.6-27B
+# - https://www.bottlecapai.com/thinkingcap-qwen3-6-27b
+
+name = "ThinkingCap Qwen3.6 27B"
+description = "Token-efficient fine-tune of Qwen3.6-27B that cuts reasoning tokens by ~50% while preserving answer quality"
+family = "qwen"
+release_date = "2026-07-06"
+last_updated = "2026-07-10"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = true
+
+[limit]
+context = 262_144
+output = 65_536
+
+[modalities]
+input = ["text", "image", "video", "audio"]
+output = ["text"]
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/bottlecapai/ThinkingCap-Qwen3.6-27B"

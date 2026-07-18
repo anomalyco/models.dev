@@ -1,0 +1,16 @@
+# Reasoning control (accessed 2026-07-17):
+# OpenAI Chat: POST https://api.sference.com/v1/chat/completions and
+# Responses: POST https://api.sference.com/v1/responses. Toggle:
+# enable_thinking = true|false (OpenAPI contract/openapi.json
+# ChatCompletionCreateRequest and ResponseCreateRequest). The catalog marks
+# thinking support via capabilities.thinking.types.enabled; no effort or
+# token-budget control is documented, so every reasoning model uses a single
+# toggle option.
+# Sources:
+# https://sference.com/docs/models
+# https://sference.com/docs/quickstart
+name = "sference"
+env = ["SFERENCE_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+api = "https://api.sference.com/v1"
+doc = "https://sference.com/docs/models"
