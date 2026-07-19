@@ -1,0 +1,14 @@
+base_model = "moonshotai/kimi-k3"
+name = "Kimi K3 (2x usage)"
+
+[[reasoning_options]]
+type = "effort"
+values = ["max"]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 3
+output = 15
+cache_read = 0.3
