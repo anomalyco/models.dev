@@ -216,7 +216,11 @@ export function buildOpenRouterModel(
     return factorBaseModel(
       canonical,
       {
-        name: baseModel !== undefined || model.id.endsWith(":free") || canonicalOverride === canonical
+        name: baseModel !== undefined
+          || model.id.endsWith(":free")
+          || model.id.endsWith(":discounted")
+          || model.id.endsWith(":thinking")
+          || canonicalOverride === canonical
           ? name
           : undefined,
         description: existing?.description ?? describeModel({
