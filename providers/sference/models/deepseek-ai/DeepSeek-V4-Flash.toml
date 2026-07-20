@@ -1,3 +1,7 @@
+# Synced from GET /v1/models. The effort option is hand-authored: the public
+# catalog only exposes enable_thinking, but the DeepSeek V4 worker also accepts
+# reasoning_effort = "high"|"max" (xhigh maps to max). See sference-platform
+# apps/inference_worker/sference_inference_worker/models/deepseek.py.
 base_model = "deepseek/deepseek-v4-flash"
 
 [interleaved]
@@ -6,10 +10,14 @@ field = "reasoning_content"
 [[reasoning_options]]
 type = "toggle"
 
+[[reasoning_options]]
+type = "effort"
+values = ["high", "max"]
+
 [cost]
-input = 0.08
-output = 0.2
-cache_read = 0.02
+input = 0.14
+output = 0.28
+cache_read = 0.03
 
 [limit]
 context = 1_048_576

@@ -104,6 +104,28 @@ test("buildSferenceModel falls back to existing cost when pricing is absent", ()
   expect(cost.output).toBe(1);
 });
 
+test("buildSferenceModel preserves hand-authored reasoning_options (effort)", () => {
+  // The API only exposes an enable_thinking toggle, not per-model effort levels
+  // (DeepSeek V4 Flash accepts reasoning_effort max/high via the worker). Since
+  // the API is not authoritative for the reasoning control surface, the sync
+  // preserves hand-authored reasoning_options instead of overwriting them.
+  const existing = {
+    reasoning_options: [
+      { type: "toggle" as const },
+      { type: "effort" as const, values: ["high", "max"] },
+    ],
+  };
+  const model = buildSferenceModel(
+    { ...baseModel(), id: "deepseek-ai/DeepSeek-V4-Flash" },
+    existing,
+    "deepseek/deepseek-v4-flash",
+  ) as Record<string, unknown>;
+  expect(model.reasoning_options).toEqual([
+    { type: "toggle" },
+    { type: "effort", values: ["high", "max"] },
+  ]);
+});
+
 test("buildSferenceModel preserves existing hand-authored metadata", () => {
   const existing = {
     name: "Qwen3.6 35B",
