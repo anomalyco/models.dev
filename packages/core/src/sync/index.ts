@@ -77,7 +77,12 @@ export interface SyncProvider<SourceModel> {
       existing(id: string): ExistingModel | undefined;
       authored(id: string): ExistingModel | undefined;
     },
-  ): { id: string; model: SyncedModel; metadata?: { id: string; model: SyncedMetadata } } | undefined;
+  ): {
+    id: string;
+    model: SyncedModel;
+    metadata?: { id: string; model: SyncedMetadata };
+    header?: string;
+  } | undefined;
 }
 
 export interface SyncResult {
@@ -165,7 +170,7 @@ export async function syncProvider<SourceModel>(
   const { models: existing, brokenSymlinks } = existingState;
   let { modelMetadata } = existingState;
   const sourceModels = provider.parseModels(await provider.fetchModels());
-  const desired = new Map<string, { model: z.infer<typeof SyncedAuthoredModel>; content: string }>();
+  const desired = new Map<string, { model: z.infer<typeof SyncedAuthoredModel>; content: string; header: string }>();
   const desiredMetadata = new Map<string, { model: z.infer<typeof ModelMetadata>; content: string }>();
   const skippedRemote: string[] = [];
 
@@ -242,9 +247,14 @@ export async function syncProvider<SourceModel>(
       throw parsed.error;
     }
 
+    // An existing file's leading comment block always wins (it may have been
+    // hand-edited); a provider-supplied header only seeds a file lacking one so it
+    // survives the next sync as that file's preserved leading comment.
+    const header = existing.get(relativePath)?.header || translated.header || "";
     desired.set(relativePath, {
       model: parsed.data,
-      content: (existing.get(relativePath)?.header ?? "") + formatToml(parsed.data),
+      content: header + formatToml(parsed.data),
+      header,
     });
   }
 
@@ -315,7 +325,11 @@ export async function syncProvider<SourceModel>(
       continue;
     }
 
-    if (!(provider.sameModel?.(current.authored, file.model) ?? sameModel(relativePath, current.authored, file.model))) {
+    // A provider-supplied header (e.g. documenting a native pricing unit) that isn't
+    // yet present on disk must be written even when the model data itself is unchanged,
+    // or the comment would never reach an existing file.
+    const headerMissing = current.header === "" && file.header !== "";
+    if (headerMissing || !(provider.sameModel?.(current.authored, file.model) ?? sameModel(relativePath, current.authored, file.model))) {
       if (options.newOnly) {
         unchanged++;
         continue;

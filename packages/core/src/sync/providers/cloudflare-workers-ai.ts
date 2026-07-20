@@ -191,31 +191,57 @@ export function reshapeNative(model: NativeModel): OpenRouterModel {
   return record;
 }
 
+// `cost.input_audio`/`cost.output_audio` are documented (README, schema.ts) as "per
+// million audio tokens", but Cloudflare's native API never reports a token count for
+// audio -- only a per-minute or per-1k-character price. Converting would require
+// fabricating a tokens-per-minute constant the API doesn't provide, so these fields
+// instead carry the true native unit, and `audioPricingHeader` documents that unit as
+// a leading TOML comment (see `providers/evroc/models/openai/whisper-large-v3-turbo.toml`
+// for the existing repo precedent of this same native-unit-with-comment pattern).
+function findAudioPrice(prices: z.infer<typeof NativePrice>[], units: readonly string[]) {
+  for (const unit of units) {
+    const entry = prices.find((price) => price.unit === unit);
+    if (entry !== undefined) return entry;
+  }
+  return undefined;
+}
+
+function audioPricingHeader(unit: string): string {
+  return `# ${unit}\n`;
+}
+
 // Audio/1k-character pricing (ASR, TTS) is outside the token-priced OpenRouter
 // shape and must be applied to the built model after `buildWorkersAiModel`.
 // Image-priced units (`per step`, `per 512 by 512 tile`, `per inference request`)
 // and no-price models are left untouched: no token cost is invented for them.
-export function applyAudioPricing(model: SyncedModel, native: NativeModel): SyncedModel {
+export function applyAudioPricing(
+  model: SyncedModel,
+  native: NativeModel,
+): { model: SyncedModel; header?: string } {
   const modalities = TASK_MODALITIES[native.task.name];
   const prices = parsePrices(flattenProperties(native).price);
-  const inputAudio = prices.find((entry) => entry.unit === "per audio minute")?.price
-    ?? prices.find((entry) => entry.unit === "per audio minute (websocket)")?.price;
-  const outputAudio = prices.find((entry) => entry.unit === "per audio minute")?.price
-    ?? prices.find((entry) => entry.unit === "per 1k characters")?.price;
+  const inputAudio = findAudioPrice(prices, ["per audio minute", "per audio minute (websocket)"]);
+  const outputAudio = findAudioPrice(prices, ["per audio minute", "per 1k characters"]);
 
   if (modalities?.input.includes("audio") && inputAudio !== undefined) {
     return {
-      ...model,
-      cost: { input: 0, output: 0, ...model.cost, input_audio: inputAudio },
-    } as SyncedModel;
+      model: {
+        ...model,
+        cost: { input: 0, output: 0, ...model.cost, input_audio: inputAudio.price },
+      } as SyncedModel,
+      header: audioPricingHeader(inputAudio.unit),
+    };
   }
   if (modalities?.output.includes("audio") && outputAudio !== undefined) {
     return {
-      ...model,
-      cost: { input: 0, output: 0, ...model.cost, output_audio: outputAudio },
-    } as SyncedModel;
+      model: {
+        ...model,
+        cost: { input: 0, output: 0, ...model.cost, output_audio: outputAudio.price },
+      } as SyncedModel,
+      header: audioPricingHeader(outputAudio.unit),
+    };
   }
-  return model;
+  return { model };
 }
 
 export const cloudflareWorkersAi = {
@@ -253,10 +279,11 @@ export const cloudflareWorkersAi = {
     if (source.format === "native") {
       const parsed = OpenRouterModel.parse(reshapeNative(source.model));
       const id = stripWorkersAiPrefix(parsed.id);
-      return {
-        id,
-        model: applyAudioPricing(buildWorkersAiModel(parsed, context.existing(id)), source.model),
-      };
+      const { model, header } = applyAudioPricing(
+        buildWorkersAiModel(parsed, context.existing(id), source.model.description.trim()),
+        source.model,
+      );
+      return { id, model, header };
     }
 
     const normalized = normalizeModel(source.model);
@@ -271,24 +298,36 @@ export const cloudflareWorkersAi = {
 export function buildWorkersAiModel(
   model: z.infer<typeof OpenRouterModel>,
   existing: ExistingModel | undefined,
+  nativeDescription?: string,
 ): SyncedModel {
+  const baseModel = existing?.base_model ?? resolveCloudflareBaseModel(model);
+
+  // Neither Cloudflare API shape reports a context window for every model (the native
+  // `ai/models/search` endpoint omits it for e.g. Whisper); `reshapeNative` fabricates
+  // `context_length = 0` rather than skip the model (see the comment there). Once a
+  // base_model resolves, that fabricated 0 must not out-compete the base metadata's
+  // real 448/448 -- so when context is unknown, don't fall back to a preserved
+  // `existing.limit.output` for `max_completion_tokens` either, since that value may
+  // itself be a fabricated 0 carried over from a prior sync round.
+  const contextKnown = model.context_length > 0;
+
   const source = {
     ...model,
     name: existing?.name ?? model.name,
     top_provider: {
       ...model.top_provider,
-      max_completion_tokens: existing?.limit?.output ?? model.top_provider.max_completion_tokens,
+      max_completion_tokens: contextKnown
+        ? existing?.limit?.output ?? model.top_provider.max_completion_tokens
+        : null,
     },
   };
   const synced = {
-    ...buildOpenRouterModel(
-      source,
-      existing,
-      existing?.base_model ?? resolveCloudflareBaseModel(model),
-    ),
+    ...buildOpenRouterModel(source, existing, baseModel, nativeDescription),
     reasoning_options: existing?.reasoning_options,
   };
-  if ("base_model" in synced) return synced;
+  if ("base_model" in synced) {
+    return contextKnown ? synced : withoutFabricatedLimits(synced);
+  }
   return {
     ...synced,
     name: existing?.name ?? synced.name,
@@ -299,6 +338,20 @@ export function buildWorkersAiModel(
       output: existing?.limit?.output ?? synced.limit.output,
     },
   };
+}
+
+// Once base_model resolves, an override `limit.context`/`limit.output` of exactly 0
+// is always a fabricated placeholder (no real model has a zero-token limit) -- drop it
+// so the field inherits the base metadata's real value instead of clobbering it.
+function withoutFabricatedLimits(synced: SyncedModel & { base_model: string }): SyncedModel {
+  if (!("limit" in synced) || synced.limit === undefined) return synced;
+
+  const limit = { ...synced.limit };
+  if (limit.context === 0) delete limit.context;
+  if (limit.output === 0) delete limit.output;
+
+  const { limit: _unused, ...rest } = synced;
+  return Object.keys(limit).length > 0 ? { ...rest, limit } : rest;
 }
 
 export function resolveCloudflareBaseModel(model: z.infer<typeof OpenRouterModel>) {
@@ -322,7 +375,33 @@ export function resolveCloudflareBaseModel(model: z.infer<typeof OpenRouterModel
 
   const identity = new Set(identityTokens(`${model.id} ${model.name}`));
   const matches = files.filter((file) => identityTokens(file).every((token) => identity.has(token)));
-  return matches.length === 1 ? `${metadataPublisher}/${matches[0]}` : undefined;
+  const match = mostSpecificMatch(matches);
+  return match === undefined ? undefined : `${metadataPublisher}/${match}`;
+}
+
+// Among subset-matching candidates (e.g. "whisper-large-v3" and "whisper-large-v3-turbo"
+// both matching "@cf/openai/whisper-large-v3-turbo"), prefer the one with the most
+// identity tokens -- the most specific match. A genuine tie keeps the prior
+// conservative behavior of returning no match.
+export function mostSpecificMatch(matches: string[]): string | undefined {
+  if (matches.length === 0) return undefined;
+  if (matches.length === 1) return matches[0];
+
+  let best: string | undefined;
+  let bestCount = -1;
+  let tied = false;
+  for (const file of matches) {
+    const count = identityTokens(file).length;
+    if (count > bestCount) {
+      best = file;
+      bestCount = count;
+      tied = false;
+    } else if (count === bestCount) {
+      tied = true;
+    }
+  }
+
+  return tied ? undefined : best;
 }
 
 function identityTokens(value: string) {

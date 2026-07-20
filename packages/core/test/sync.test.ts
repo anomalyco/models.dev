@@ -3,7 +3,7 @@ import { mkdir, mkdtemp, readFile, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 
-import { formatToml, preserveReasoningOptions, syncProvider, type SyncProvider } from "../src/sync/index.js";
+import { formatToml, preserveReasoningOptions, syncProvider, type ExistingModel, type SyncProvider } from "../src/sync/index.js";
 import {
   anthropic,
   buildAnthropicModel,
@@ -11,9 +11,12 @@ import {
   type AnthropicModel,
 } from "../src/sync/providers/anthropic.js";
 import {
+  applyAudioPricing,
   buildWorkersAiModel,
   cloudflareWorkersAi,
+  mostSpecificMatch,
   reshapeNative,
+  resolveCloudflareBaseModel,
   type NativeModel,
 } from "../src/sync/providers/cloudflare-workers-ai.js";
 import { buildDeepInfraModel, type DeepInfraModel } from "../src/sync/providers/deepinfra.js";
@@ -37,6 +40,7 @@ import {
   OpenRouterModel,
   resolveCanonicalBaseModel,
 } from "../src/sync/providers/openrouter.js";
+import { familyMatchesModalities } from "../src/family.js";
 import { buildLLMGatewayModel, type LLMGatewayModel } from "../src/sync/providers/llmgateway.js";
 import { openai, parseOpenAIModels } from "../src/sync/providers/openai.js";
 import { resolveVeniceBaseModel } from "../src/sync/providers/venice.js";
@@ -1203,6 +1207,83 @@ test("preserves the authored header comment block when rewriting a changed model
   }
 });
 
+test("writes a provider-supplied header once and preserves it on a later unrelated sync", async () => {
+  const dir = await mkdtemp(path.join(tmpdir(), "sync-header-seed-"));
+  const modelsDir = path.join(dir, "providers", "example", "models");
+  await Bun.write(path.join(modelsDir, "example-model.toml"), [
+    'name = "Example Model"',
+    'release_date = "2026-01-01"',
+    'last_updated = "2026-01-01"',
+    "attachment = false",
+    "reasoning = false",
+    "tool_call = true",
+    "open_weights = false",
+    "",
+    "[cost]",
+    "input = 1",
+    "output = 2",
+    "output_audio = 0.03",
+    "",
+    "[limit]",
+    "context = 1_000",
+    "output = 100",
+    "",
+    "[modalities]",
+    'input = ["text"]',
+    'output = ["audio"]',
+    "",
+  ].join("\n"));
+
+  const provider: SyncProvider<{ id: string }> = {
+    id: "example",
+    name: "Example",
+    modelsDir,
+    deleteMissing: false,
+    async fetchModels() {
+      return [{ id: "example-model" }];
+    },
+    parseModels(raw) {
+      return raw as { id: string }[];
+    },
+    translateModel(model) {
+      return {
+        id: model.id,
+        model: {
+          name: "Example Model",
+          description: "Example model used to verify sync header seeding behavior",
+          release_date: "2026-01-01",
+          last_updated: "2026-01-01",
+          attachment: false,
+          reasoning: false,
+          tool_call: true,
+          open_weights: false,
+          cost: { input: 1, output: 2, output_audio: 0.03 },
+          limit: { context: 1_000, output: 100 },
+          modalities: { input: ["text"], output: ["audio"] },
+        },
+        header: "# per 1k characters\n",
+      };
+    },
+  };
+
+  try {
+    const first = await syncProvider(provider);
+    expect(first.updated).toBe(1);
+    const afterFirst = await readFile(path.join(modelsDir, "example-model.toml"), "utf8");
+    expect(afterFirst).toStartWith("# per 1k characters\n");
+    expect([...afterFirst.matchAll(/# per 1k characters/g)]).toHaveLength(1);
+
+    const second = await syncProvider(provider);
+    expect(second.updated).toBe(0);
+    expect(second.unchanged).toBe(1);
+    const afterSecond = await readFile(path.join(modelsDir, "example-model.toml"), "utf8");
+    expect(afterSecond).toBe(afterFirst);
+    expect([...afterSecond.matchAll(/# per 1k characters/g)]).toHaveLength(1);
+  } finally {
+    await rm(dir, { recursive: true, force: true });
+  }
+});
+
 test("retains authored data when OpenRouter reports an unavailable stub", () => {
   const authored = {
     name: "Claude Fable Latest",
@@ -1411,6 +1492,148 @@ test("round-trips exact Cloudflare Workers AI native token pricing", async () =>
   expect(buildCost(gptOss120b)).toMatchObject({ input: 0.35, output: 0.75 });
   expect(buildCost(bgeM3)).toMatchObject({ input: 0.0118 });
   expect(buildCost(m2m100)).toMatchObject({ input: 0.342, output: 0.342 });
+});
+
+test("applyAudioPricing documents the native pricing unit as a leading-comment header", async () => {
+  const fixture = await Bun.file(
+    path.join(import.meta.dirname, "fixtures", "cloudflare-workers-ai-native.json"),
+  ).json() as { result: NativeModel[] };
+  const whisper = fixture.result.find((model) => model.name === "@cf/openai/whisper");
+  const aura1 = fixture.result.find((model) => model.name === "@cf/deepgram/aura-1");
+  if (whisper === undefined || aura1 === undefined) throw new Error("Fixture is missing an expected model");
+
+  // Cloudflare's native API reports these as "per audio minute" / "per 1k characters",
+  // never as a token count -- input_audio/output_audio carry that true native value
+  // (see cloudflare-workers-ai.ts), and applyAudioPricing must surface the exact unit
+  // string so the sync can document it instead of the schema's "per million tokens".
+  const asr = applyAudioPricing(buildWorkersAiModel(OpenRouterModel.parse(reshapeNative(whisper)), undefined), whisper);
+  expect(asr.model.cost).toMatchObject({ input_audio: 0.000453 });
+  expect(asr.header).toBe("# per audio minute\n");
+
+  const tts = applyAudioPricing(buildWorkersAiModel(OpenRouterModel.parse(reshapeNative(aura1)), undefined), aura1);
+  expect(tts.model.cost).toMatchObject({ output_audio: 0.015 });
+  expect(tts.header).toBe("# per 1k characters\n");
+});
+
+test("resolveCloudflareBaseModel prefers the most-specific subset match", () => {
+  // Both "whisper-large-v3" (4 tokens) and "whisper-large-v3-turbo" (5 tokens) subset-match
+  // @cf/openai/whisper-large-v3-turbo; the more specific one should win instead of the
+  // ambiguous match falling back to an inline definition.
+  expect(
+    resolveCloudflareBaseModel(
+      openRouterModel({ id: "workers-ai/@cf/openai/whisper-large-v3-turbo", name: "Whisper Large v3 Turbo" }),
+    ),
+  ).toBe("openai/whisper-large-v3-turbo");
+});
+
+test("mostSpecificMatch falls back to no match on a genuine tie", () => {
+  // "whisper-large-v3" (4 tokens) and "whisper-tiny-en" (3 tokens) aren't a tie -- the
+  // 4-token candidate wins.
+  expect(mostSpecificMatch(["whisper-large-v3", "whisper-tiny-en"])).toBe("whisper-large-v3");
+
+  // Two equally-specific candidates (3 tokens each); neither is more specific than the
+  // other, so the conservative no-match fallback applies.
+  expect(mostSpecificMatch(["whisper-large-v3", "whisper-large-v4"])).toBeUndefined();
+});
+
+test("buildWorkersAiModel emits whisper-large-v3-turbo as a base_model pointer", async () => {
+  const fixture = await Bun.file(
+    path.join(import.meta.dirname, "fixtures", "cloudflare-workers-ai-native.json"),
+  ).json() as { result: NativeModel[] };
+  const native = fixture.result.find((model) => model.name === "@cf/openai/whisper-large-v3-turbo");
+  if (native === undefined) throw new Error("Fixture is missing whisper-large-v3-turbo");
+
+  const model = buildWorkersAiModel(OpenRouterModel.parse(reshapeNative(native)), undefined);
+
+  expect("base_model" in model && model.base_model).toBe("openai/whisper-large-v3-turbo");
+
+  // The native record fabricates context_length=0 (Cloudflare reports no context window
+  // for Whisper) and has no real display name (its `name` is just the id slug). None of
+  // that fabricated/placeholder data should surface as an override once base_model
+  // resolves -- open_weights, limit.context, limit.output, and name must all be absent
+  // so they inherit the base metadata's true=true, 448, 448, and "Whisper Large v3 Turbo".
+  expect(model).not.toHaveProperty("open_weights");
+  expect(model).not.toHaveProperty("name");
+  expect((model as { limit?: { context?: number; output?: number } }).limit?.context).toBeUndefined();
+  expect((model as { limit?: { context?: number; output?: number } }).limit?.output).toBeUndefined();
+});
+
+test("Cloudflare Workers AI native sync prefers the native API description and never stamps an audio ASR model with an image family", async () => {
+  // Regression for @cf/deepgram/flux: its id/name contains "flux", which both
+  // describe.ts's image-model heuristic and openrouter.ts's family-name substring
+  // match used to mistake for the Black Forest Labs image model, even though flux is
+  // audio-in/text-out speech recognition. The fix threads the native API's own
+  // description through (which correctly describes it as an ASR model) and blocks a
+  // family whose name implies an image/video output modality from matching a model
+  // that doesn't declare that modality.
+  const fixture = await Bun.file(
+    path.join(import.meta.dirname, "fixtures", "cloudflare-workers-ai-native.json"),
+  ).json() as { result: NativeModel[] };
+  const flux = fixture.result.find((model) => model.name === "@cf/deepgram/flux");
+  if (flux === undefined) throw new Error("Fixture is missing @cf/deepgram/flux");
+
+  const context = { existing: () => undefined, authored: () => undefined };
+  const translated = cloudflareWorkersAi.translateModel({ format: "native", model: flux }, context);
+  if (translated === undefined) throw new Error("translateModel returned no result for flux");
+
+  expect(translated.model.description).toBe(flux.description);
+  expect(translated.model.description).not.toContain("Image model");
+  expect((translated.model as { family?: string }).family).toBeUndefined();
+});
+
+test("Cloudflare Workers AI native sync clears a previously-synced stale image family that no longer matches the model's modalities", async () => {
+  // A prior sync (before this fix) wrote family="flux" into flux.toml. Regenerating
+  // must not preserve that stale value just because it's already on the existing
+  // file -- the family-value fallback (`existing?.family ?? family`) would otherwise
+  // keep "flux" forever once it's written once.
+  const fixture = await Bun.file(
+    path.join(import.meta.dirname, "fixtures", "cloudflare-workers-ai-native.json"),
+  ).json() as { result: NativeModel[] };
+  const flux = fixture.result.find((model) => model.name === "@cf/deepgram/flux");
+  if (flux === undefined) throw new Error("Fixture is missing @cf/deepgram/flux");
+
+  const staleExisting = { family: "flux" } as ExistingModel;
+  const context = {
+    existing: (id: string) => id === "@cf/deepgram/flux" ? staleExisting : undefined,
+    authored: () => undefined,
+  };
+  const translated = cloudflareWorkersAi.translateModel({ format: "native", model: flux }, context);
+  if (translated === undefined) throw new Error("translateModel returned no result for flux");
+
+  expect((translated.model as { family?: string }).family).toBeUndefined();
+});
+
+test("Cloudflare Workers AI native sync surfaces the native description for other native models with real API text", async () => {
+  const fixture = await Bun.file(
+    path.join(import.meta.dirname, "fixtures", "cloudflare-workers-ai-native.json"),
+  ).json() as { result: NativeModel[] };
+  const byName = new Map(fixture.result.map((model) => [model.name, model]));
+  const context = { existing: () => undefined, authored: () => undefined };
+
+  for (const id of [
+    "@cf/deepgram/nova-3",
+    "@cf/deepgram/aura-1",
+    "@cf/deepgram/aura-2-en",
+    "@cf/deepgram/aura-2-es",
+    "@cf/myshell-ai/melotts",
+    "@cf/pipecat-ai/smart-turn-v2",
+    "@cf/openai/whisper",
+  ]) {
+    const native = byName.get(id);
+    if (native === undefined) throw new Error(`Fixture is missing ${id}`);
+    const translated = cloudflareWorkersAi.translateModel({ format: "native", model: native }, context);
+    if (translated === undefined) throw new Error(`translateModel returned no result for ${id}`);
+    expect(translated.model.description).toBe(native.description);
+  }
+});
+
+test("familyMatchesModalities rejects an image/video family when the model doesn't declare that output modality", () => {
+  expect(familyMatchesModalities("flux", ["text"])).toBe(false);
+  expect(familyMatchesModalities("flux", ["image"])).toBe(true);
+  expect(familyMatchesModalities("sora", ["text"])).toBe(false);
+  expect(familyMatchesModalities("sora", ["video"])).toBe(true);
+  // A non-modality-gated family (e.g. a text chat family) is unaffected.
+  expect(familyMatchesModalities("gpt", ["text"])).toBe(true);
 });
 
 test("merges Cloudflare Workers AI openrouter and native formats, openrouter winning on overlap", async () => {

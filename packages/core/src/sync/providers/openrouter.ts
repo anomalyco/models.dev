@@ -3,7 +3,7 @@ import { readFileSync, readdirSync } from "node:fs";
 import path from "node:path";
 
 import { describeModel } from "../../describe.js";
-import { inferKimiFamily, ModelFamilyValues } from "../../family.js";
+import { familyMatchesModalities, inferKimiFamily, ModelFamilyValues } from "../../family.js";
 import type { ExistingModel, SyncProvider, SyncedFullModel, SyncedModel } from "../index.js";
 
 const API_ENDPOINT = "https://openrouter.ai/api/v1/models";
@@ -150,7 +150,7 @@ function modalities(values: string[], fallback: Modality[]): Modality[] {
   return [...new Set(result.length > 0 ? result : fallback)];
 }
 
-function inferFamily(model: OpenRouterModel, name: string) {
+function inferFamily(model: OpenRouterModel, name: string, outputModalities: string[]) {
   const kimiFamily = inferKimiFamily(model.id, name);
   if (kimiFamily !== undefined) return kimiFamily;
 
@@ -158,6 +158,7 @@ function inferFamily(model: OpenRouterModel, name: string) {
   return [...ModelFamilyValues]
     .sort((a, b) => b.length - a.length)
     .find((family) => {
+      if (!familyMatchesModalities(family, outputModalities)) return false;
       const value = family.toLowerCase().replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
       if (family === "o") {
         return new RegExp(`(^|[^a-z0-9])${value}(?=\\d|$|[^a-z0-9])`).test(target);
@@ -170,6 +171,7 @@ export function buildOpenRouterModel(
   model: OpenRouterModel,
   existing: ExistingModel | undefined,
   baseModel?: string,
+  nativeDescription?: string,
 ): SyncedModel {
   const params = new Set(model.supported_parameters);
   const name = model.name.replace(/^[^:]+:\s+/, "");
@@ -184,9 +186,15 @@ export function buildOpenRouterModel(
   const reasoning_options = openRouterReasoningOptions(model.reasoning)
     ?? (reasoning ? existing?.reasoning_options : undefined);
   const context = model.context_length;
-  const family = inferFamily(model, name);
+  const family = inferFamily(model, name, output);
   const releaseDate = dateFromTimestamp(model.created);
-  const familyValue = existing?.family === "o" && family !== "o"
+  // A previously-synced family that no longer matches this model's declared output
+  // modalities (e.g. a stale "flux" on a model that doesn't output images) is not
+  // preserved -- it was wrong when it was written, and the freshly inferred family
+  // (possibly undefined) replaces it, the same way the pre-existing "o" escape hatch
+  // below lets a freshly inferred family override a stale one.
+  const staleFamily = existing?.family !== undefined && !familyMatchesModalities(existing.family, output);
+  const familyValue = staleFamily || (existing?.family === "o" && family !== "o")
     ? family
     : (existing?.family ?? family);
   const attachment = input.some((value) => value !== "text");
@@ -216,7 +224,11 @@ export function buildOpenRouterModel(
     return factorBaseModel(
       canonical,
       {
-        name: baseModel !== undefined || model.id.endsWith(":free") || canonicalOverride === canonical
+        // A caller-resolved baseModel (e.g. cloudflare-workers-ai's fuzzy identity-token
+        // match) may carry a real vendor display name worth keeping as an override --
+        // but only when it says something beyond the bare model id (native Cloudflare
+        // records have no separate display name, so their `name` is just the id slug).
+        name: (baseModel !== undefined && name !== model.id) || model.id.endsWith(":free") || canonicalOverride === canonical
           ? name
           : undefined,
         description: existing?.description ?? describeModel({
@@ -249,7 +261,15 @@ export function buildOpenRouterModel(
 
   return {
     name,
-    description: existing?.description ?? describeModel({
+    // A native-API-supplied description is provider-accurate text; it wins over both
+    // a previously synced description and the heuristic fallback (see cloudflare-workers-ai's
+    // reshapeNative, which is the only current source of nativeDescription). This is a
+    // deliberate exception to the "existing wins" convention every other provider follows:
+    // there is no hand-edit escape hatch for description on a native-sourced, non-base_model
+    // record -- the next sync always overwrites it with the API's text. Necessary because the
+    // "existing" value for these records is itself sync-generated (never hand-corrected), so
+    // existing-wins would let a wrong heuristic description win forever with no way to self-correct.
+    description: nativeDescription ?? existing?.description ?? describeModel({
       id: model.id,
       name,
       family: familyValue,

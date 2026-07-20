@@ -449,3 +449,20 @@ export function inferKimiFamily(...values: string[]): ModelFamily | undefined {
   if (/kimi[\s_-]*k3/.test(target)) return "kimi-k3";
   return undefined;
 }
+
+// Families named after image/video generators (e.g. "flux", "sora") are strictly
+// output-modality families: a name/id substring match against one of these is only
+// valid when the model's own declared output modalities agree. This stops a model
+// that merely shares a name with an image or video generator (e.g. Deepgram's ASR
+// model "flux", which outputs text) from being stamped with that generator's family.
+const IMAGE_FAMILIES = new Set<ModelFamily>([
+  "dall-e", "flux", "imagen", "recraft", "stable-diffusion", "ideogram", "dreamshaper", "gpt-image", "nano-banana",
+]);
+
+const VIDEO_FAMILIES = new Set<ModelFamily>(["sora", "veo", "runway", "dream-machine", "ray"]);
+
+export function familyMatchesModalities(family: ModelFamily, outputModalities: string[]): boolean {
+  if (IMAGE_FAMILIES.has(family)) return outputModalities.includes("image");
+  if (VIDEO_FAMILIES.has(family)) return outputModalities.includes("video");
+  return true;
+}
