@@ -1,21 +1,19 @@
 base_model = "thinkingmachines/inkling"
 description = "Multimodal reasoning model for visual analysis, planning, and tool use"
-release_date = "2026-07-16"
-last_updated = "2026-07-17"
-structured_output = true
+structured_output = false
 
 [[reasoning_options]]
 type = "effort"
-values = ["none", "low", "medium", "high"]
+values = ["none", "minimal", "low", "medium", "high", "max"]
 
 [cost]
-input = 1.25
-output = 5.0625
-cache_read = 0.2125
+input = 1
+output = 4.05
+cache_read = 0.17
 
 [limit]
-context = 1_000_000
-output = 65_536
+context = 1_048_576
+output = 1_048_576
 
 [modalities]
 input = ["text", "image", "audio"]

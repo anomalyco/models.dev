@@ -3,6 +3,8 @@
 # JSON reasoning.enabled: true | false (thinking is on by default).
 # Compatibility: chat_template_kwargs.thinking or .enable_thinking: boolean.
 # Sources: https://docs.together.ai/docs/inference/chat/reasoning#enable-and-disable-reasoning
+# Deprecated: no longer listed in the Together.ai serverless catalog (accessed 2026-07-18).
+# Source: https://docs.together.ai/docs/serverless-models
 name = "Qwen3.5 397B A17B"
 description = "Qwen vision-language model for visual reasoning, documents, and agent tasks"
 family = "qwen"
@@ -14,6 +16,7 @@ reasoning_options = [{ type = "toggle" }]
 temperature = true
 tool_call = true
 open_weights = true
+status = "deprecated"
 
 [cost]
 input = 0.60

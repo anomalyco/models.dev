@@ -1115,6 +1115,39 @@ test("parses Vercel pricing tiers with an implicit zero minimum", () => {
   });
 });
 
+test("Vercel factored models inherit temperature from base metadata", () => {
+  const [model] = vercel.parseModels({
+    data: [{
+      id: "moonshotai/kimi-k3",
+      name: "Kimi K3",
+      created: 1_784_160_000,
+      context_window: 1_000_000,
+      max_tokens: 131_072,
+      type: "language",
+      tags: ["reasoning", "tool-use", "vision"],
+      pricing: {
+        input: "0.000003",
+        output: "0.000015",
+        input_cache_read: "0.0000003",
+      },
+    }],
+  });
+
+  const synced = buildVercelModel(model!, {
+    base_model: "moonshotai/kimi-k3",
+    name: "Kimi K3",
+    description: "Kimi multimodal agent model for visual understanding, coding, and planning",
+    open_weights: false,
+    reasoning_options: [],
+    cost: { input: 3, output: 15, cache_read: 0.3 },
+    limit: { context: 1_000_000 },
+    modalities: { input: ["text", "image", "pdf"], output: ["text"] },
+  });
+
+  expect(synced).toMatchObject({ base_model: "moonshotai/kimi-k3" });
+  expect(synced).not.toHaveProperty("temperature");
+});
+
 test("skips LLM Gateway base_model factoring when no metadata entry exists", () => {
   const model = buildLLMGatewayModel(
     llmGatewayModel({ id: "claude-fable-does-not-exist" }),
