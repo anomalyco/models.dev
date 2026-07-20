@@ -1,0 +1,20 @@
+name = "Tencent: hy3"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[cost]
+input = 0.18
+output = 0.59
+cache_read = 0.059
+
+[limit]
+context = 262144
+output = 32768
+
+[modalities]
+input = ["text"]
+output = ["text"]
