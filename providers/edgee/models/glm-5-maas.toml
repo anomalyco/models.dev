@@ -1,12 +1,6 @@
-name = "GLM 5 MaaS"
-release_date = "2026-06-24"
-last_updated = "2026-06-24"
-attachment = false
-reasoning = false
-temperature = true
-tool_call = true
-open_weights = false
-description = "GLM-5 via Google Cloud Vertex AI MaaS"
+base_model = "zhipuai/glm-5"
+
+reasoning_options = []
 
 [cost]
 input = 1.00
@@ -15,8 +9,3 @@ cache_read = 0.10
 
 [limit]
 context = 200_000
-output = 32_768
-
-[modalities]
-input = ["text"]
-output = ["text"]

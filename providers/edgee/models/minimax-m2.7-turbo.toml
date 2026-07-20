@@ -1,17 +1,6 @@
-name = "MiniMax-M2.7"
-family = "minimax"
-release_date = "2026-04-12"
-last_updated = "2026-04-12"
-attachment = false
-reasoning = true
-temperature = true
-tool_call = true
-open_weights = true
-description = "MiniMax model for chat, coding, office work, and agentic tasks"
+base_model = "minimax/MiniMax-M2.7-highspeed"
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high"]
+reasoning_options = []
 
 [cost]
 input = 0.45
@@ -20,11 +9,3 @@ cache_read = 0.09
 
 [limit]
 context = 196_000
-output = 196_608
-
-[modalities]
-input = ["text"]
-output = ["text"]
-
-[interleaved]
-field = "reasoning_content"

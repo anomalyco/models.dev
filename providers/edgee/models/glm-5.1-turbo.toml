@@ -1,16 +1,6 @@
-name = "GLM 5.1 Fast"
-family = "glm"
-release_date = "2026-04-01"
-last_updated = "2026-04-01"
-attachment = false
-reasoning = true
-temperature = true
-tool_call = true
-open_weights = true
-description = "Efficient GLM model for fast reasoning, coding, and agent workflows"
+base_model = "zhipuai/glm-5.1"
 
-[[reasoning_options]]
-type = "toggle"
+reasoning_options = []
 
 [cost]
 input = 2.80
@@ -19,11 +9,3 @@ cache_read = 0.52
 
 [limit]
 context = 202_000
-output = 131_072
-
-[modalities]
-input = ["text"]
-output = ["text"]
-
-[interleaved]
-field = "reasoning_content"
