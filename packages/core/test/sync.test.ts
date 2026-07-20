@@ -32,6 +32,12 @@ import {
   type OpenRouterModel,
 } from "../src/sync/providers/openrouter.js";
 import { buildLLMGatewayModel, type LLMGatewayModel } from "../src/sync/providers/llmgateway.js";
+import {
+  buildNanoGptModel,
+  nanoGpt,
+  resolveNanoGptBaseModel,
+  type NanoGptModel,
+} from "../src/sync/providers/nano-gpt.js";
 import { openai, parseOpenAIModels } from "../src/sync/providers/openai.js";
 import { pioneer } from "../src/sync/providers/pioneer.js";
 import { google, shouldTrackGoogleModel } from "../src/sync/providers/google.js";
@@ -67,6 +73,105 @@ function anthropicModel(overrides: Partial<AnthropicModel> = {}): AnthropicModel
     ...overrides,
   };
 }
+
+function nanoGptModel(overrides: Partial<NanoGptModel> = {}): NanoGptModel {
+  return {
+    id: "example/reasoning-model",
+    name: "Example Reasoning Model",
+    description: "Example model used to test NanoGPT catalog translation",
+    created: Date.parse("2026-06-01T00:00:00Z") / 1_000,
+    owned_by: "example",
+    context_length: 500_000,
+    max_output_tokens: 64_000,
+    architecture: {
+      input_modalities: ["text"],
+      output_modalities: ["text"],
+    },
+    capabilities: {
+      reasoning: true,
+      tool_calling: true,
+      structured_output: true,
+    },
+    reasoning_efforts: ["low", "high"],
+    open_weights: true,
+    pricing: {
+      prompt: 0.42,
+      completion: 1.32,
+      cacheReadInputPer1kTokens: 0.000078,
+    },
+    ...overrides,
+  };
+}
+
+test("syncs NanoGPT's verified reasoning, pricing, limits, and open-weight metadata", () => {
+  const model = buildNanoGptModel(nanoGptModel({
+    pricing: {
+      prompt: 0.42,
+      completion: 1.32,
+      cacheReadInputPer1kTokens: null,
+    },
+  }), {
+    cost: { input: 0.9, output: 2.7, cache_read: 0.2 },
+    limit: { context: 1_000_000, input: 1_000_000, output: 128_000 },
+  });
+
+  expect(model).toMatchObject({
+    reasoning: true,
+    reasoning_options: [{ type: "effort", values: ["low", "high"] }],
+    open_weights: true,
+    cost: { input: 0.42, output: 1.32, cache_read: 0.2 },
+    limit: { context: 500_000, input: 500_000, output: 64_000 },
+  });
+});
+
+test("does not invent NanoGPT reasoning controls or zero prices", () => {
+  const fixedReasoning = buildNanoGptModel(nanoGptModel({
+    id: "example/fixed-reasoner",
+    reasoning_efforts: null,
+    open_weights: null,
+    pricing: {
+      prompt: null,
+      completion: null,
+      cacheReadInputPer1kTokens: null,
+      cacheWriteInputPer1kTokens: null,
+    },
+  }), undefined);
+  const variablePricing = buildNanoGptModel(nanoGptModel({
+    id: "example/omni-model",
+    pricing: { note: "varies_by_modality" },
+  }), undefined);
+
+  expect(fixedReasoning).toMatchObject({ reasoning: true, reasoning_options: [] });
+  expect(fixedReasoning.cost).toBeUndefined();
+  expect(variablePricing.cost).toBeUndefined();
+});
+
+test("factors NanoGPT variants against canonical models without retaining wrong intrinsic metadata", () => {
+  expect(resolveNanoGptBaseModel("zai-org/glm-5.2:thinking")).toBe("zhipuai/glm-5.2");
+  expect(resolveNanoGptBaseModel("TEE/qwen3.6-35b-a3b")).toBe("alibaba/qwen3.6-35b-a3b");
+  expect(resolveNanoGptBaseModel("TEE/deepseek-v4-flash")).toBe("deepseek/deepseek-v4-flash");
+  expect(resolveNanoGptBaseModel("cohere/north-mini-code")).toBe("cohere/north-mini-code-1-0");
+
+  const north = buildNanoGptModel(nanoGptModel({
+    id: "cohere/north-mini-code",
+    name: "North Mini Code",
+    open_weights: null,
+  }), {
+    open_weights: false,
+    limit: { context: 256_000, input: 256_000, output: 64_000 },
+  });
+
+  expect(north).toMatchObject({ base_model: "cohere/north-mini-code-1-0" });
+  expect(north).not.toHaveProperty("open_weights");
+});
+
+test("NanoGPT sync deletes missing downstream entries and never emits internal providers", () => {
+  const source = nanoGptModel({ providers: ["private-upstream"] });
+  const model = buildNanoGptModel(source, undefined);
+
+  expect(nanoGpt.deleteMissing).toBeUndefined();
+  expect(model).not.toHaveProperty("providers");
+});
 
 const anthropicPricingMarkdown = `
 ## Model pricing
