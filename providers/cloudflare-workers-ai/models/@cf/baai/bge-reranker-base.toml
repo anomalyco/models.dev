@@ -1,5 +1,5 @@
 name = "@cf/baai/bge-reranker-base"
-description = "Reranking model for improving retrieval quality in search and recommendation systems"
+description = "Different from embedding model, reranker uses question and document as input and directly output similarity instead of embedding. You can get a relevance score by inputting query and passage to the reranker. And the score can be mapped to a float value in [0,1] by sigmoid function."
 family = "bge"
 release_date = "2025-02-14"
 last_updated = "2025-02-14"
