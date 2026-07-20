@@ -135,15 +135,10 @@ export function buildSferenceModel(
   const imageInput = caps.image_input?.supported === true;
   const pdfInput = caps.pdf_input?.supported === true;
 
-  // The catalog exposes an `enable_thinking` toggle (thinking.types.enabled)
-  // but no effort or budget control, and does not surface which models
-  // accept reasoning_effort (DeepSeek V4 does, via the worker). Since the API
-  // is not authoritative for the reasoning control surface, preserve any
-  // hand-authored reasoning_options and only default new reasoning models to
-  // a toggle (the documented enable_thinking = true|false control).
-  const reasoningOptions = thinking
-    ? (existing?.reasoning_options ?? [{ type: "toggle" as const }])
-    : undefined;
+  // The only reasoning control the API accepts is the enable_thinking toggle
+  // (ingress drops unknown fields like reasoning_effort), so every reasoning
+  // model gets a single toggle option.
+  const reasoningOptions = thinking ? [{ type: "toggle" as const }] : undefined;
 
   // The public /v1/models endpoint exposes context_tokens, max_output_tokens,
   // released, and capabilities. For factored models, only API-authoritative
