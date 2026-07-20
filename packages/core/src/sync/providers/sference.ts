@@ -15,19 +15,14 @@ const API_ENDPOINT = "https://api.sference.com/v1/models";
 const MODELS_DIR = path.join(import.meta.dirname, "..", "..", "..", "..", "..", "models");
 
 // Map the org prefix in sference model IDs (e.g. "zai-org/GLM-5.2") to the
-// models.dev metadata provider namespace where the canonical entry lives.
+// models.dev metadata provider namespace where the canonical entry lives. Only
+// non-identity mappings are listed; an org absent here falls back to itself.
 const ORG_TO_MODEL_PROVIDER: Record<string, string | undefined> = {
   Qwen: "alibaba",
   "zai-org": "zhipuai",
-  thinkingmachines: "thinkingmachines",
-  bottlecapai: "bottlecapai",
-  moonshotai: "moonshotai",
   MiniMaxAI: "minimax",
   "deepseek-ai": "deepseek",
-  google: "google",
   "meta-llama": "meta",
-  nvidia: "nvidia",
-  openai: "openai",
 };
 
 const CapabilityFlag = z
@@ -141,8 +136,14 @@ export function buildSferenceModel(
   const pdfInput = caps.pdf_input?.supported === true;
 
   // The catalog exposes an `enable_thinking` toggle (thinking.types.enabled)
-  // but no effort or budget control, so reasoning is a single toggle option.
-  const reasoningOptions = thinking ? [{ type: "toggle" as const }] : undefined;
+  // but no effort or budget control, and does not surface which models
+  // accept reasoning_effort (DeepSeek V4 does, via the worker). Since the API
+  // is not authoritative for the reasoning control surface, preserve any
+  // hand-authored reasoning_options and only default new reasoning models to
+  // a toggle (the documented enable_thinking = true|false control).
+  const reasoningOptions = thinking
+    ? (existing?.reasoning_options ?? [{ type: "toggle" as const }])
+    : undefined;
 
   // The public /v1/models endpoint exposes context_tokens, max_output_tokens,
   // released, and capabilities. For factored models, only API-authoritative
@@ -253,8 +254,9 @@ export function buildSferenceModel(
 function resolveBaseModel(modelId: string): string | undefined {
   const [org, ...modelParts] = modelId.split("/");
   if (org === undefined || modelParts.length === 0) return undefined;
-  const provider = ORG_TO_MODEL_PROVIDER[org];
-  if (provider === undefined) return undefined;
+  // Use the explicit mapping when present, otherwise fall back to the org
+  // name itself (identity mapping) so unmapped orgs still resolve.
+  const provider = ORG_TO_MODEL_PROVIDER[org] ?? org;
   const lower = modelParts.join("/").toLowerCase();
   return [lower, lower.replace(/-turbo$/, "-it")]
     .map((candidate) => `${provider}/${candidate}`)
