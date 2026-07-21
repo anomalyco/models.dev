@@ -1,4 +1,3 @@
-reasoning_options = []
 name = "ERNIE 4.5 VL 424B A47B "
 description = "Multimodal reasoning model for visual analysis, planning, and tool use"
 family = "ernie"
@@ -11,13 +10,14 @@ tool_call = false
 structured_output = false
 knowledge = "2025-03-31"
 open_weights = true
+reasoning_options = []
 
 [cost]
 input = 0.42
 output = 1.25
 
 [limit]
-context = 123_000
+context = 131_072
 output = 16_000
 
 [modalities]

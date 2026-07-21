@@ -1,0 +1,17 @@
+base_model = "google/gemini-2.5-flash-lite"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high"]
+
+[cost]
+input = 0.1
+output = 0.4
+cache_read = 0.01
+cache_write = 0.1
+
+[modalities]
+input = ["text", "image", "audio", "video"]

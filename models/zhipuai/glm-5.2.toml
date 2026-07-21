@@ -21,3 +21,26 @@ output = ["text"]
 [[weights]]
 label = "Hugging Face"
 url = "https://huggingface.co/zai-org/GLM-5.2"
+
+[[benchmarks]]
+name = "SWE-Bench Pro"
+score = 62.1
+metric = "resolve rate"
+source = "https://z.ai/blog/glm-5.2"
+date = "2026-06-16"
+
+[[benchmarks]]
+name = "Terminal-Bench"
+score = 82.7
+metric = "success rate"
+harness = "Claude Code"
+version = "2.1"
+source = "https://z.ai/blog/glm-5.2"
+date = "2026-06-16"
+
+[[benchmarks]]
+name = "FrontierSWE"
+score = 74.4
+metric = "dominance"
+source = "https://z.ai/blog/glm-5.2"
+date = "2026-06-16"

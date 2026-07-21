@@ -96,3 +96,62 @@ harness = "Gemini CLI"
 variant = "high"
 version = "2.1"
 source = "https://artificialanalysis.ai/agents/coding-agents"
+
+[[benchmarks]]
+name = "GPQA Diamond"
+score = 94.3
+metric = "accuracy"
+source = "https://openai.com/index/introducing-gpt-5-5/"
+date = "2026-04-23"
+
+[[benchmarks]]
+name = "Humanity's Last Exam"
+score = 44.4
+metric = "accuracy"
+dataset = "full set, text + MM"
+source = "https://deepmind.google/models/gemini/flash/"
+date = "2026-05-19"
+
+[[benchmarks]]
+name = "ARC-AGI-2"
+score = 77.1
+metric = "accuracy"
+source = "https://deepmind.google/models/gemini/flash/"
+date = "2026-05-19"
+
+[[benchmarks]]
+name = "MMMU Pro"
+score = 80.5
+metric = "accuracy"
+variant = "no tools"
+source = "https://deepmind.google/models/gemini/flash/"
+date = "2026-05-19"
+
+[[benchmarks]]
+name = "MCP Atlas"
+score = 78.2
+metric = "success rate"
+source = "https://deepmind.google/models/gemini/flash/"
+date = "2026-05-19"
+
+[[benchmarks]]
+name = "OSWorld-Verified"
+score = 76.2
+metric = "success rate"
+source = "https://deepmind.google/models/gemini/flash/"
+date = "2026-05-19"
+
+[[benchmarks]]
+name = "CharXiv Reasoning"
+score = 83.3
+metric = "accuracy"
+variant = "no tools"
+source = "https://deepmind.google/models/gemini/flash/"
+date = "2026-05-19"
+
+[[benchmarks]]
+name = "GDPval-AA"
+score = 1314
+metric = "Elo"
+source = "https://deepmind.google/models/gemini/flash/"
+date = "2026-05-19"

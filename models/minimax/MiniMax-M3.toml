@@ -20,3 +20,48 @@ output = ["text"]
 [[weights]]
 label = "Hugging Face"
 url = "https://huggingface.co/MiniMaxAI/MiniMax-M3"
+
+[[benchmarks]]
+name = "SWE-Bench Verified"
+score = 80.5
+metric = "resolved"
+harness = "Claude Code"
+source = "https://www.minimax.io/blog/minimax-m3"
+date = "2026-06-01"
+
+[[benchmarks]]
+name = "SWE-Bench Pro"
+score = 59.0
+metric = "resolve rate"
+harness = "Claude Code"
+source = "https://www.minimax.io/blog/minimax-m3"
+date = "2026-06-01"
+
+[[benchmarks]]
+name = "Terminal-Bench"
+score = 66.0
+metric = "success rate"
+version = "2.1"
+source = "https://www.minimax.io/blog/minimax-m3"
+date = "2026-06-01"
+
+[[benchmarks]]
+name = "BrowseComp"
+score = 83.52
+metric = "accuracy"
+source = "https://www.minimax.io/blog/minimax-m3"
+date = "2026-06-01"
+
+[[benchmarks]]
+name = "MCP Atlas"
+score = 74.2
+metric = "success rate"
+source = "https://www.minimax.io/blog/minimax-m3"
+date = "2026-06-01"
+
+[[benchmarks]]
+name = "OSWorld-Verified"
+score = 70.06
+metric = "success rate"
+source = "https://www.minimax.io/blog/minimax-m3"
+date = "2026-06-01"

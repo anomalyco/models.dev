@@ -14,7 +14,10 @@ The grouped sync targets are available for local convenience, but CI syncs each 
 - `bun models:sync cloudflare` syncs the Cloudflare sync group.
 - `bun models:sync direct` syncs every provider in the `direct` group.
 - `bun models:sync google` syncs only Google.
+- `bun models:sync digitalocean` syncs only DigitalOcean.
 - `bun models:sync xai` syncs only xAI.
+- `bun models:sync kilo` syncs only Kilo.
+- `bun models:sync openai` syncs only OpenAI catalog availability.
 - `bun models:sync aggregators --dry-run` prints changes without writing model files.
 - `bun models:sync aggregators --new-only` creates new model files but skips updates and removals.
 - `bun validate` validates the generated catalog after a sync.
@@ -123,6 +126,19 @@ OpenRouter is implemented in `packages/core/src/sync/providers/openrouter.ts`.
 - Existing `status`, `interleaved`, `knowledge`, `limit.input`, and `cost.tiers` may be preserved when OpenRouter is not authoritative enough for those fields.
 - Canonical OpenRouter model IDs should emit `base_model` references to model metadata when a matching `models/` entry exists.
 
+## Kilo Gateway Notes
+
+Kilo Gateway is implemented in `packages/core/src/sync/providers/kilo.ts`.
+
+- Source endpoint: `https://api.kilo.ai/api/gateway/models`.
+- Optional auth: `KILO_API_KEY`.
+- Model IDs map directly to TOML paths under `providers/kilo/models`.
+- API prices are per-token strings and are converted to per-1M-token numbers.
+- `structured_output` comes from `supported_parameters.includes("structured_outputs")` only.
+- Existing `status`, `interleaved`, `knowledge`, `limit.input`, and `cost.tiers` may be preserved when Kilo is not authoritative enough for those fields.
+- Canonical Kilo model IDs should emit `base_model` references to model metadata when a matching `models/` entry exists.
+- `reasoning_options` is derived from `opencode.variants` when present.
+
 ## Cloudflare Workers AI Notes
 
 Cloudflare Workers AI is implemented in `packages/core/src/sync/providers/cloudflare-workers-ai.ts`.
@@ -155,6 +171,14 @@ xAI is implemented in `packages/core/src/sync/providers/xai.ts`.
 - Existing xAI models are updated from API-authoritative fields while local metadata is preserved for fields the API does not expose, especially output token limits and some feature/capability flags.
 - New xAI API models are reported in `.sync/model-sync-report.md` but not created automatically because the API does not provide enough authoritative metadata for complete catalog entries.
 
+## OpenAI Notes
+
+- OpenAI is implemented in `packages/core/src/sync/providers/openai.ts`.
+- Source endpoint: `https://api.openai.com/v1/models`.
+- Required auth: `OPENAI_API_KEY` from an automation account with access to the full first-party catalog.
+- The endpoint is used only to monitor catalog availability. Existing TOMLs are preserved byte-for-byte, including models absent from the response, because model access can be scoped to the API project.
+- Fine-tuned and customer-owned models are excluded. Unknown first-party models are reported for manual review without changing the catalog.
+
 ## OVHcloud Notes
 
 OVHcloud AI Endpoints is implemented in `packages/core/src/sync/providers/ovhcloud.ts`.
@@ -167,6 +191,14 @@ OVHcloud AI Endpoints is implemented in `packages/core/src/sync/providers/ovhclo
 - Authored `reasoning_options` are preserved for reasoning models. `Qwen3-32B` supports toggling reasoning through OVHcloud's documented `/no_think` prompt control. Both gpt-oss models support `low`, `medium`, and `high` reasoning effort. The Qwen3.5 models support `none`, `low`, `medium`, and `high`; Qwen3.6-27B additionally supports `minimal`.
 - `attachment` is derived from non-text `input_modalities`, and `open_weights` from the presence of `hugging_face_id`.
 - `release_date`/`last_updated` default to the catalog `created` timestamp but preserve any existing hand-authored dates; `knowledge`, `family`, `status`, `interleaved`, and `limit.input` are preserved when present.
+
+## DigitalOcean Notes
+
+- DigitalOcean is implemented in `packages/core/src/sync/providers/digitalocean.ts`.
+- Source endpoints: `https://api.digitalocean.com/v2/gen-ai/models` for lifecycle and reasoning metadata, and the public `https://api.digitalocean.com/v2/gen-ai/models/catalog` for availability, modalities, limits, and pricing.
+- Required auth: `DIGITALOCEAN_API_TOKEN` or `DIGITALOCEAN_ACCESS_TOKEN` for the control-plane model endpoint; the model catalog is public.
+- The sync manages serverless text-output models. Other model types, dedicated-only models, and local models absent from the API are retained for manual lifecycle review.
+- Catalog pricing updates standard, cache-read, cache-write, and extended-context rates while preserving authored reasoning and audio prices.
 
 ## Vercel Status
 

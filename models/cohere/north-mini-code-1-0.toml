@@ -18,3 +18,47 @@ output = 64_000
 [modalities]
 input = ["text"]
 output = ["text"]
+
+[[benchmarks]]
+name = "SWE-Bench Verified"
+score = 67.6
+metric = "resolved"
+harness = "SWE-agent"
+source = "https://huggingface.co/CohereLabs/North-Mini-Code-1.0"
+date = "2026-06-09"
+
+[[benchmarks]]
+name = "SWE-Bench Pro"
+score = 40.2
+metric = "resolve rate"
+harness = "SWE-agent"
+source = "https://huggingface.co/CohereLabs/North-Mini-Code-1.0"
+date = "2026-06-09"
+
+[[benchmarks]]
+name = "Artificial Analysis Intelligence Index"
+score = 27.6
+metric = "index score"
+source = "https://artificialanalysis.ai/articles/north-mini-code-cohere-s-small-coding-focused-moe-model"
+date = "2026-06-09"
+
+[[benchmarks]]
+name = "Artificial Analysis Coding Index"
+score = 33.4
+metric = "index score"
+source = "https://artificialanalysis.ai/articles/north-mini-code-cohere-s-small-coding-focused-moe-model"
+date = "2026-06-09"
+
+[[benchmarks]]
+name = "GDPval-AA"
+score = 14
+metric = "win rate"
+source = "https://artificialanalysis.ai/articles/north-mini-code-cohere-s-small-coding-focused-moe-model"
+date = "2026-06-09"
+
+[[benchmarks]]
+name = "τ²-Bench Telecom"
+score = 37
+metric = "success rate"
+source = "https://artificialanalysis.ai/articles/north-mini-code-cohere-s-small-coding-focused-moe-model"
+date = "2026-06-09"

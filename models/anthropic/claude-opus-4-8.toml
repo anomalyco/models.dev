@@ -8,6 +8,7 @@ reasoning = true
 temperature = false
 tool_call = true
 open_weights = false
+knowledge = "2026-01"
 
 [limit]
 context = 1_000_000
@@ -32,3 +33,41 @@ harness = "Terminus-2"
 version = "2.1"
 source = "https://www.anthropic.com/news/claude-opus-4-8"
 date = "2026-05-28"
+
+[[benchmarks]]
+name = "SWE-Bench Verified"
+score = 88.6
+metric = "resolved"
+source = "https://benchlm.ai/benchmarks/sweVerified"
+
+[[benchmarks]]
+name = "Humanity's Last Exam"
+score = 49.8
+metric = "accuracy"
+variant = "no tools"
+source = "https://www.anthropic.com/news/claude-fable-5-mythos-5"
+date = "2026-06-09"
+
+[[benchmarks]]
+name = "Humanity's Last Exam"
+score = 57.9
+metric = "accuracy"
+variant = "with tools"
+source = "https://www.anthropic.com/news/claude-fable-5-mythos-5"
+date = "2026-06-09"
+
+[[benchmarks]]
+name = "OSWorld-Verified"
+score = 83.4
+metric = "success rate"
+source = "https://www.anthropic.com/news/claude-fable-5-mythos-5"
+date = "2026-06-09"
+
+[[benchmarks]]
+name = "FrontierCode"
+score = 13.4
+metric = "pass rate"
+variant = "high effort"
+dataset = "Diamond"
+source = "https://www.anthropic.com/news/claude-fable-5-mythos-5"
+date = "2026-06-09"

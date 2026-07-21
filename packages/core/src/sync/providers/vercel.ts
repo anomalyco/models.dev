@@ -20,7 +20,7 @@ const ModelType = z.enum([
 
 const PricingTier = z.object({
   cost: z.string(),
-  min: z.number(),
+  min: z.number().optional(),
   max: z.number().optional(),
 });
 
@@ -134,7 +134,7 @@ export function buildVercelModel(model: VercelModel, existing: ExistingModel | u
     attachment: existing?.attachment ?? (tags.has("vision") || tags.has("file-input")),
     reasoning: existing?.reasoning ?? tags.has("reasoning"),
     reasoning_options: existing?.reasoning_options,
-    temperature: true,
+    temperature: existing?.temperature,
     tool_call: model.type === "language"
       ? existing?.tool_call ?? tags.has("tool-use")
       : tags.has("tool-use"),

@@ -1,18 +1,18 @@
-name = "GPT-4.1"
-description = "GPT model for general reasoning, writing, coding, and tool-assisted tasks"
-family = "gpt"
-release_date = "2025-04-14"
-last_updated = "2025-04-14"
-attachment = true
+# Source: https://routellm.abacus.ai/v1/models
+# RouteLLM input_modalities: ['text', 'image']
+# RouteLLM output_modalities: ['text']
+# RouteLLM context_length: 1047576
+# RouteLLM max_completion_tokens: 32768
+# RouteLLM input_token_rate: 0.000002
+# RouteLLM output_token_rate: 0.000008
+# RouteLLM cached_input_token_rate: 0.0000005
+base_model = "openai/gpt-4.1"
 reasoning = false
-temperature = true
-knowledge = "2024-04"
-tool_call = true
-open_weights = false
 
 [cost]
 input = 2.00
 output = 8.00
+cache_read = 0.5
 
 [limit]
 context = 1_047_576

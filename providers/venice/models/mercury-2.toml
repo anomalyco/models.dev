@@ -1,3 +1,6 @@
+# Live /models (2026-06-25): none|low|medium|high; no dedicated reasoning budget.
+# https://api.venice.ai/api/v1/models?type=text (accessed 2026-06-25)
+
 name = "Mercury 2"
 description = "Reasoning model for deliberate analysis, multi-step problem solving, and tool use"
 family = "mercury"
@@ -9,8 +12,6 @@ tool_call = true
 structured_output = true
 open_weights = false
 
-# Live /models (2026-06-25): none|low|medium|high; no dedicated reasoning budget.
-# https://api.venice.ai/api/v1/models?type=text (accessed 2026-06-25)
 [[reasoning_options]]
 type = "effort"
 values = ["none", "low", "medium", "high"]

@@ -13,6 +13,9 @@ export const ModelFamilyValues = [
   "gpt-pro",
   "gpt-mini",
   "gpt-nano",
+  "gpt-sol",
+  "gpt-terra",
+  "gpt-luna",
   "gpt-oss",
   "gpt-image",
 
@@ -46,6 +49,9 @@ export const ModelFamilyValues = [
   // Meta Llama
   "llama",
 
+  // Meta Muse
+  "muse",
+
   // Alibaba Qwen
   "qwen",
   "qwen3.5",
@@ -70,8 +76,12 @@ export const ModelFamilyValues = [
   // Moonshot Kimi
   "kimi",
   "kimi-k2",
+  "kimi-k3",
   "kimi-free",
   "kimi-thinking",
+
+  // Poolside Laguna
+  "laguna",
 
   // Mistral family
   "mistral",
@@ -436,5 +446,6 @@ export function inferKimiFamily(...values: string[]): ModelFamily | undefined {
   const target = values.join(" ").toLowerCase();
   if (/kimi[^a-z0-9]*k2(?:[^a-z0-9]*\d+)?[^a-z0-9]*thinking/.test(target)) return "kimi-thinking";
   if (/kimi[\s_-]*k2/.test(target)) return "kimi-k2";
+  if (/kimi[\s_-]*k3/.test(target)) return "kimi-k3";
   return undefined;
 }

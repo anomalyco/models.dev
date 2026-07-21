@@ -17,3 +17,32 @@ output = 30_000
 [modalities]
 input = ["text", "image", "pdf"]
 output = ["text"]
+
+[[benchmarks]]
+name = "Artificial Analysis Intelligence Index"
+score = 53
+metric = "index score"
+version = "4.0"
+source = "https://artificialanalysis.ai/articles/xai-launches-grok-4-3-with-improved-agentic-performance-and-lower-pricing"
+date = "2026-04-30"
+
+[[benchmarks]]
+name = "GDPval-AA"
+score = 1500
+metric = "Elo"
+source = "https://artificialanalysis.ai/articles/xai-launches-grok-4-3-with-improved-agentic-performance-and-lower-pricing"
+date = "2026-04-30"
+
+[[benchmarks]]
+name = "τ²-Bench Telecom"
+score = 98
+metric = "success rate"
+source = "https://artificialanalysis.ai/articles/xai-launches-grok-4-3-with-improved-agentic-performance-and-lower-pricing"
+date = "2026-04-30"
+
+[[benchmarks]]
+name = "IFBench"
+score = 81
+metric = "accuracy"
+source = "https://artificialanalysis.ai/articles/xai-launches-grok-4-3-with-improved-agentic-performance-and-lower-pricing"
+date = "2026-04-30"

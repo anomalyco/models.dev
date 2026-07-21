@@ -18,3 +18,80 @@ output = 65_536
 [modalities]
 input = ["text", "image", "video", "audio", "pdf"]
 output = ["text"]
+
+[[benchmarks]]
+name = "Terminal-Bench"
+score = 76.2
+metric = "success rate"
+harness = "Terminus-2"
+version = "2.1"
+source = "https://deepmind.google/models/gemini/flash/"
+date = "2026-05-19"
+
+[[benchmarks]]
+name = "SWE-Bench Pro"
+score = 55.1
+metric = "resolve rate"
+variant = "single attempt"
+dataset = "public"
+source = "https://deepmind.google/models/gemini/flash/"
+date = "2026-05-19"
+
+[[benchmarks]]
+name = "MCP Atlas"
+score = 83.6
+metric = "success rate"
+source = "https://deepmind.google/models/gemini/flash/"
+date = "2026-05-19"
+
+[[benchmarks]]
+name = "Toolathlon"
+score = 56.5
+metric = "success rate"
+source = "https://deepmind.google/models/gemini/flash/"
+date = "2026-05-19"
+
+[[benchmarks]]
+name = "OSWorld-Verified"
+score = 78.4
+metric = "success rate"
+source = "https://deepmind.google/models/gemini/flash/"
+date = "2026-05-19"
+
+[[benchmarks]]
+name = "MMMU Pro"
+score = 83.6
+metric = "accuracy"
+variant = "no tools"
+source = "https://deepmind.google/models/gemini/flash/"
+date = "2026-05-19"
+
+[[benchmarks]]
+name = "CharXiv Reasoning"
+score = 84.2
+metric = "accuracy"
+variant = "no tools"
+source = "https://deepmind.google/models/gemini/flash/"
+date = "2026-05-19"
+
+[[benchmarks]]
+name = "Humanity's Last Exam"
+score = 40.2
+metric = "accuracy"
+dataset = "full set, text + MM"
+source = "https://deepmind.google/models/gemini/flash/"
+date = "2026-05-19"
+
+[[benchmarks]]
+name = "ARC-AGI-2"
+score = 72.1
+metric = "accuracy"
+source = "https://deepmind.google/models/gemini/flash/"
+date = "2026-05-19"
+
+[[benchmarks]]
+name = "GDPval-AA"
+score = 1656
+metric = "Elo"
+source = "https://deepmind.google/models/gemini/flash/"
+date = "2026-05-19"

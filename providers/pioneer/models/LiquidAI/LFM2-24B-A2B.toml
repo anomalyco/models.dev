@@ -1,0 +1,31 @@
+name = "LFM2 24B A2B"
+description = "Open-weight instruction model for adaptable chat and self-hosted production workloads"
+family = "liquid"
+release_date = "2026-01-31"
+last_updated = "2026-02-25"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = false
+open_weights = true
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high"]
+
+[cost]
+input = 0.03
+output = 0.12
+cache_read = 0.03
+cache_write = 0.03
+
+[limit]
+context = 32_768
+output = 32_768
+
+[modalities]
+input = ["text"]
+output = ["text"]

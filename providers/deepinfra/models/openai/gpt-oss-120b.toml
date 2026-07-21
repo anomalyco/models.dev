@@ -1,10 +1,3 @@
-# https://deepinfra.com/openai/gpt-oss-120b
-# Model-specific reasoning HTTP values (accessed 2026-06-25):
-# reasoning_effort = "low"|"medium"|"high".
-# Sources:
-# https://docs.deepinfra.com/api-reference/chat-completions/openai-chat-completions
-# https://deepinfra.com/openai/gpt-oss-120b/api
-
 name = "GPT OSS 120B"
 description = "Open-weight GPT model for self-hosted reasoning and instruction-following workloads"
 family = "gpt-oss"
@@ -12,18 +5,21 @@ release_date = "2025-08-05"
 last_updated = "2025-08-05"
 attachment = false
 reasoning = true
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
 temperature = true
 tool_call = true
+structured_output = true
 open_weights = true
 
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high"]
+
 [cost]
-input = 0.039
-output = 0.19
+input = 0.037
+output = 0.17
 
 [limit]
 context = 131_072
-# https://deepinfra.com/docs/advanced/max_tokens_limit
 output = 16_384
 
 [modalities]

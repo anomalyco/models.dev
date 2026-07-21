@@ -1,8 +1,8 @@
 /** @jsx jsx */
 /** @jsxImportSource hono/jsx */
 
-import { generateCatalog } from "models.dev";
-import type { Model, ModelMetadata, Provider } from "models.dev";
+import { generateCatalog } from "@models.dev/core";
+import type { Model, ModelMetadata, Provider } from "@models.dev/core";
 import { Fragment } from "hono/jsx";
 import { renderToString } from "hono/jsx/dom/server";
 import { existsSync, readFileSync, readdirSync } from "fs";
@@ -1528,15 +1528,28 @@ function HelpDialog() {
             </a>
           </code>
         </div>
+        <h2>SDK</h2>
+        <p>
+          Use the SDK to query the API from your app. It's type-safe and
+          exports the latest snapshot for offline use.
+        </p>
+        <div class="code-block">
+          <code>
+            npm install{" "}
+            <a href="https://www.npmjs.com/package/@opencode-ai/models">
+              @opencode-ai/models
+            </a>
+          </code>
+        </div>
         <h2>Contribute</h2>
         <p>
-          The data is stored in the{" "}
+          The data is stored in{" "}
           <a
-            href="https://github.com/sst/models.dev"
+            href="https://github.com/anomalyco/models.dev"
             target="_blank"
             rel="noopener noreferrer"
           >
-            GitHub repo
+            GitHub
           </a>{" "}
           as TOML files organized by provider and canonical model.
         </p>

@@ -1,23 +1,7 @@
 # Included in subscription
-name = "Laguna M.1"
-description = "General-purpose chat model for instruction following, writing, and analysis"
-release_date = "2026-04-29"
-last_updated = "2026-04-29"
-attachment = false
-reasoning = false
-tool_call = false
-structured_output = false
-open_weights = false
+base_model = "poolside/laguna-m.1"
+reasoning_options = []
 
 [cost]
-input = 0.1
-output = 0.3
-
-[limit]
-context = 128000
-input = 128000
-output = 32768
-
-[modalities]
-input = ["text"]
-output = ["text"]
+input = 0.20
+output = 0.40

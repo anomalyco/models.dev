@@ -1,0 +1,11 @@
+# OpenAI Chat is POST `/chat/completions` with `reasoning_effort` =
+# "none"|"minimal"|"low"|"medium"|"high"|"xhigh" or a float in [0.0, 0.99].
+# Reasoning traces can be returned on `reasoning_content` via
+# `separate_reasoning` (default true).
+# https://tinker-docs.thinkingmachines.ai/tinker/compatible-apis/openai/ (accessed 2026-07-16)
+# https://tinker-docs.thinkingmachines.ai/cookbook/inkling/thinking-effort/ (accessed 2026-07-16)
+name = "Thinking Machines"
+env = ["TINKER_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+api = "https://tinker.thinkingmachines.dev/services/tinker-prod/oai/api/v1"
+doc = "https://tinker-docs.thinkingmachines.ai/tinker/compatible-apis/openai/"
