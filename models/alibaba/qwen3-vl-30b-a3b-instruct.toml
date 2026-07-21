@@ -1,0 +1,26 @@
+# Sources (accessed 2026-07-21):
+# - https://huggingface.co/Qwen/Qwen3-VL-30B-A3B-Instruct
+
+name = "Qwen3-VL 30B A3B Instruct"
+description = "Open Qwen3 vision-language MoE for visual reasoning, documents, and agent tasks"
+family = "qwen"
+release_date = "2025-09-30"
+last_updated = "2025-11-26"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = true
+
+[limit]
+context = 262_144
+output = 32_768
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/Qwen/Qwen3-VL-30B-A3B-Instruct"
