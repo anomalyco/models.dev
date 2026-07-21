@@ -962,6 +962,7 @@ test("factors OpenRouter Pro routes against canonical OpenAI metadata", () => {
   expect("release_date" in model).toBe(false);
 });
 
+// Ensures Merge Gateway namespaces reuse the matching canonical model metadata.
 test("resolves Merge Gateway provider aliases to canonical metadata", () => {
   expect([
     resolveCanonicalBaseModel("moonshot/kimi-k2.5"),
@@ -1086,6 +1087,7 @@ test("factors aliased LLM Gateway routes against canonical metadata", () => {
   });
 });
 
+// Ensures catalog pagination preserves authentication and returns every page.
 test("fetches every page of the Merge Gateway catalog", async () => {
   const requests: string[] = [];
   const authorizations: string[] = [];
@@ -1117,6 +1119,7 @@ test("fetches every page of the Merge Gateway catalog", async () => {
   expect(authorizations).toEqual(["Bearer test-key", "Bearer test-key"]);
 });
 
+// Prevents pagination overlap from publishing the same model ID twice.
 test("rejects duplicate Merge Gateway model IDs across pages", async () => {
   const fetcher = ((input: string | URL | Request) => {
     const next = String(input).includes("cursor=next-page");
@@ -1133,6 +1136,7 @@ test("rejects duplicate Merge Gateway model IDs across pages", async () => {
   );
 });
 
+// Rejects API records whose provider disagrees with the model ID namespace.
 test("rejects Merge Gateway provider and model namespace mismatches", () => {
   expect(() => MergeGatewayResponse.parse({
     object: "list",
@@ -1142,6 +1146,7 @@ test("rejects Merge Gateway provider and model namespace mismatches", () => {
   })).toThrow("Model namespace openai does not match provider anthropic");
 });
 
+// Keeps audio-capable records valid when the API advertises audio input.
 test("accepts audio modalities from the Merge Gateway catalog", () => {
   const model = mergeGatewayModel();
   model.vendors.openai.capabilities.input.push("audio");
@@ -1154,6 +1159,7 @@ test("accepts audio modalities from the Merge Gateway catalog", () => {
   }).data[0]?.vendors.openai.capabilities.input).toContain("audio");
 });
 
+// Emits only route-specific overrides when canonical metadata already matches.
 test("factors Merge Gateway GPT-5.6 Sol against canonical metadata", () => {
   const model = buildMergeGatewayModel(mergeGatewayModel(), undefined);
 
@@ -1166,6 +1172,7 @@ test("factors Merge Gateway GPT-5.6 Sol against canonical metadata", () => {
   });
 });
 
+// Protects curated reasoning metadata from an unreliable negative API signal.
 test("preserves curated reasoning when Merge Gateway routes report supports_reasoning = false", () => {
   // `supports_reasoning = false` is a positive-only signal: the field is
   // undocumented in the public schema and inconsistently populated across
@@ -1188,6 +1195,7 @@ test("preserves curated reasoning when Merge Gateway routes report supports_reas
   expect(model).not.toMatchObject({ reasoning: false });
 });
 
+// Treats a positive signal from any available route as model-level confirmation.
 test("confirms reasoning when any available Merge Gateway route reports supports_reasoning = true", () => {
   const selected = mergeGatewayVendor();
   selected.capabilities.supports_reasoning = false;
@@ -1214,6 +1222,7 @@ test("confirms reasoning when any available Merge Gateway route reports supports
   expect(model).not.toMatchObject({ reasoning: false });
 });
 
+// Publishes a toggle only when the selected route explicitly supports disabling reasoning.
 test("derives a Merge Gateway reasoning toggle when the selected route supports disabling", () => {
   const selected = mergeGatewayVendor();
   selected.capabilities.reasoning = {
@@ -1235,6 +1244,7 @@ test("derives a Merge Gateway reasoning toggle when the selected route supports 
   expect(model).toMatchObject({ reasoning_options: [{ type: "toggle" }] });
 });
 
+// Prevents deprecated routes from contributing capabilities to an available model.
 test("ignores supports_reasoning = true on unavailable Merge Gateway routes", () => {
   const selected = mergeGatewayVendor();
   selected.capabilities.supports_reasoning = false;
@@ -1250,6 +1260,7 @@ test("ignores supports_reasoning = true on unavailable Merge Gateway routes", ()
   expect(model).not.toHaveProperty("reasoning_options");
 });
 
+// Updates API-provided cache prices without discarding curated cache fields.
 test("merges authoritative Merge Gateway cache pricing field by field", () => {
   const model = buildMergeGatewayModel(mergeGatewayModel({
     vendors: {
@@ -1286,6 +1297,7 @@ test("merges authoritative Merge Gateway cache pricing field by field", () => {
   });
 });
 
+// Retains curated cache prices when the API confirms caching but omits prices.
 test("preserves Merge Gateway cache pricing when prompt caching exposes only its mode", () => {
   const model = buildMergeGatewayModel(mergeGatewayModel({
     vendors: {
@@ -1311,6 +1323,7 @@ test("preserves Merge Gateway cache pricing when prompt caching exposes only its
   });
 });
 
+// Removes inherited cache prices when the selected route explicitly disables caching.
 test("removes Merge Gateway cache pricing when prompt caching mode is none", () => {
   const model = buildMergeGatewayModel(mergeGatewayModel({
     vendors: {
@@ -1335,6 +1348,7 @@ test("removes Merge Gateway cache pricing when prompt caching mode is none", () 
   expect(model.cost).not.toHaveProperty("cache_write");
 });
 
+// Avoids overriding a curated name with a display value that is effectively an ID.
 test("inherits canonical names for ID-shaped Merge Gateway display names", () => {
   const model = buildMergeGatewayModel(mergeGatewayModel({
     model: "minimax/minimax-m2",
@@ -1346,6 +1360,7 @@ test("inherits canonical names for ID-shaped Merge Gateway display names", () =>
   expect(model).not.toHaveProperty("name");
 });
 
+// Avoids overriding a curated name with an unformatted model slug.
 test("inherits canonical names for slug-shaped Merge Gateway display names", () => {
   const model = buildMergeGatewayModel(mergeGatewayModel({
     model: "openai/gpt-oss-safeguard-120b",
@@ -1356,6 +1371,7 @@ test("inherits canonical names for slug-shaped Merge Gateway display names", () 
   expect(model).not.toHaveProperty("name");
 });
 
+// Removes a canonical input limit that exceeds the selected route's context window.
 test("omits inherited input limits above the Merge Gateway context", () => {
   const model = buildMergeGatewayModel(mergeGatewayModel({
     model: "openai/gpt-5-chat-latest",
@@ -1384,6 +1400,7 @@ test("omits inherited input limits above the Merge Gateway context", () => {
   expect(model).toHaveProperty("base_model_omit", ["limit.input"]);
 });
 
+// Prefers the model provider's own route over alternate vendors.
 test("uses the canonical Merge Gateway vendor as the catalog baseline", () => {
   const model = mergeGatewayModel({
     vendors: {
@@ -1398,6 +1415,7 @@ test("uses the canonical Merge Gateway vendor as the catalog baseline", () => {
   });
 });
 
+// Falls back to the lowest-cost available route when the canonical vendor is absent.
 test("uses Merge Gateway's cheapest fallback route when no canonical route exists", () => {
   const model = mergeGatewayModel({
     provider: "qwen",
@@ -1417,6 +1435,7 @@ test("uses Merge Gateway's cheapest fallback route when no canonical route exist
   });
 });
 
+// Keeps API insertion order deterministic when fallback routes have equal prices.
 test("uses Merge Gateway's CMS order to break equal-cost fallback ties", () => {
   const model = mergeGatewayModel({
     provider: "qwen",
@@ -1433,6 +1452,7 @@ test("uses Merge Gateway's CMS order to break equal-cost fallback ties", () => {
   expect(selectMergeGatewayVendor(model)).toMatchObject({ id: "empiriolabs" });
 });
 
+// Prevents a scoped API response from deleting catalog entries it cannot see.
 test("retains Merge Gateway models missing from an API-key-scoped response", () => {
   expect(mergeGateway.deleteMissing).toBe(false);
 });
