@@ -1,0 +1,18 @@
+# AKI.IO uses a different model name as identifier for openai chat_completions api
+# attachment are not supported on AKI.IO for security reasons and therefore are disabled
+name = "qwen3.6-35b"
+base_model = "alibaba/qwen3.6-35b-a3b"
+attachment = false
+reasoning = true
+reasoning_options = [{ type = "effort", values = ["none", "high"] }]
+
+[cost]
+input = 0.15
+output = 0.50
+
+[limit]
+context = 256_000
+output = 32_768
+
+[modalities]
+input = ["text", "image"]

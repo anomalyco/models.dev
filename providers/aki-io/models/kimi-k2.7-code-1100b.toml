@@ -1,0 +1,18 @@
+# AKI.IO uses a different model name as identifier for openai chat_completions api
+# attachment are not supported on AKI.IO for security reasons and therefore are disabled
+# AKI.IO supports a reduced input modalities, thats why they are overrides the description of the base model
+name = "kimi-k2.7-code-1100b"
+base_model = "moonshotai/kimi-k2.7-code"
+attachment = false
+reasoning_options = []
+
+[cost]
+input = 0.86
+output = 3.00
+
+[limit]
+context = 262_144
+output = 81_920
+
+[modalities]
+input = ["text", "image"]

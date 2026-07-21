@@ -1,0 +1,16 @@
+# AKI.IO uses a different model name as identifier for openai chat_completions api
+# attachment are not supported on AKI.IO for security reasons and therefore are disabled
+name = "gpt-oss-120b"
+base_model = "openai/gpt-oss-120b"
+attachment = false
+reasoning = true
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
+
+[cost]
+input = 0.15
+output = 0.55
+
+[limit]
+context = 128_000
+output = 32_768
+
