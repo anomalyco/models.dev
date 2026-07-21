@@ -1,0 +1,13 @@
+base_model = "openai/gpt-oss-safeguard-120b"
+name = "gpt-oss-safeguard-120b"
+tool_call = false
+structured_output = false
+reasoning_options = []
+
+[cost]
+input = 0.15
+output = 0.6
+
+[limit]
+context = 4_096
+output = 4_096

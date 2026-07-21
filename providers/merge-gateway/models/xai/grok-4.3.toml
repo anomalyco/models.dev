@@ -1,5 +1,5 @@
 base_model = "xai/grok-4.3"
-reasoning_options = []
+reasoning_options = [{ type = "toggle" }] # route reasoning.controls = ["reasoning.effort"], disable_supported = true; effort values not exposed
 
 [cost]
 input = 1.25

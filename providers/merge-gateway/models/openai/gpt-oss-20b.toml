@@ -3,9 +3,10 @@
 # no controls, so the model reasons on the gateway but callers have no
 # reasoning control.
 base_model = "openai/gpt-oss-20b"
-reasoning_options = []
+name = "GPT-OSS 20B"
 tool_call = false
 structured_output = false
+reasoning_options = []
 
 [cost]
 input = 0.04
