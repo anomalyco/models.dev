@@ -1117,6 +1117,31 @@ test("fetches every page of the Merge Gateway catalog", async () => {
   expect(authorizations).toEqual(["Bearer test-key", "Bearer test-key"]);
 });
 
+test("rejects duplicate Merge Gateway model IDs across pages", async () => {
+  const fetcher = ((input: string | URL | Request) => {
+    const next = String(input).includes("cursor=next-page");
+    return Promise.resolve(new Response(JSON.stringify({
+      object: "list",
+      data: [mergeGatewayModel()],
+      has_more: !next,
+      next_cursor: next ? null : "next-page",
+    })));
+  }) as typeof fetch;
+
+  expect(fetchMergeGatewayModels(fetcher, "test-key")).rejects.toThrow(
+    "Merge Gateway returned duplicate model ID: openai/gpt-5.6-sol",
+  );
+});
+
+test("rejects Merge Gateway provider and model namespace mismatches", () => {
+  expect(() => MergeGatewayResponse.parse({
+    object: "list",
+    data: [mergeGatewayModel({ provider: "anthropic" })],
+    has_more: false,
+    next_cursor: null,
+  })).toThrow("Model namespace openai does not match provider anthropic");
+});
+
 test("accepts audio modalities from the Merge Gateway catalog", () => {
   const model = mergeGatewayModel();
   model.vendors.openai.capabilities.input.push("audio");
@@ -1187,6 +1212,27 @@ test("confirms reasoning when any available Merge Gateway route reports supports
   // The model reasons on the gateway with no verified caller control.
   expect(model).toMatchObject({ reasoning_options: [] });
   expect(model).not.toMatchObject({ reasoning: false });
+});
+
+test("derives a Merge Gateway reasoning toggle when the selected route supports disabling", () => {
+  const selected = mergeGatewayVendor();
+  selected.capabilities.reasoning = {
+    configurable: true,
+    disable_supported: true,
+    default_enabled: true,
+    controls: ["thinking"],
+    output_style: "reasoning_content",
+  };
+  const model = buildMergeGatewayModel(mergeGatewayModel({
+    vendors: { openai: selected },
+  }), {
+    base_model: "openai/gpt-5.6-sol",
+    reasoning: true,
+    reasoning_options: [],
+    cost: { input: 5, output: 30 },
+  });
+
+  expect(model).toMatchObject({ reasoning_options: [{ type: "toggle" }] });
 });
 
 test("ignores supports_reasoning = true on unavailable Merge Gateway routes", () => {
@@ -1295,6 +1341,16 @@ test("inherits canonical names for ID-shaped Merge Gateway display names", () =>
     provider: "minimax",
     display_name: "MiniMaxAI/MiniMax-M2",
     vendors: { minimax: mergeGatewayVendor() },
+  }), undefined);
+
+  expect(model).not.toHaveProperty("name");
+});
+
+test("inherits canonical names for slug-shaped Merge Gateway display names", () => {
+  const model = buildMergeGatewayModel(mergeGatewayModel({
+    model: "openai/gpt-oss-safeguard-120b",
+    display_name: "gpt-oss-safeguard-120b",
+    vendors: { openai: mergeGatewayVendor() },
   }), undefined);
 
   expect(model).not.toHaveProperty("name");

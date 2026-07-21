@@ -1,10 +1,12 @@
-# Merge Gateway GET /v1/models?model=anthropic/claude-fable-5 (accessed 2026-07-16):
-# the route reports `supports_reasoning = false`, but that field is unreliable as a
-# negative signal (the same Anthropic models report `true` via bedrock routes), so
-# reasoning is inherited from base metadata with no verified gateway control.
+# Source: https://api-gateway.merge.dev/v1/models?model=anthropic%2Fclaude-fable-5 (accessed 2026-07-21)
+# The selected route advertises reasoning.effort and supports disabling reasoning;
+# exact effort values are not exposed, so only the verified toggle is listed.
+
 base_model = "anthropic/claude-fable-5"
-reasoning_options = []
 structured_output = true
+
+[[reasoning_options]]
+type = "toggle"
 
 [cost]
 input = 10

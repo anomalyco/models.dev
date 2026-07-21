@@ -1,5 +1,8 @@
+# Source: https://api-gateway.merge.dev/v1/models?model=qwen%2Fqwen3.6-plus (accessed 2026-07-21)
+# Selected route reasoning.controls = ["thinking"], disable_supported = true.
+
 base_model = "alibaba/qwen3.6-plus"
-reasoning_options = [{ type = "toggle" }] # route reasoning.controls = ["thinking"], disable_supported = true
+reasoning_options = [{ type = "toggle" }]
 tool_call = false
 structured_output = false
 

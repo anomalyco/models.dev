@@ -1,7 +1,10 @@
+# Source: https://api-gateway.merge.dev/v1/models?model=qwen%2Fqwen3.5-397b-a17b (accessed 2026-07-21)
+# Selected route reasoning.controls = ["thinking"], disable_supported = true.
+
 base_model = "alibaba/qwen3.5-397b-a17b"
 name = "Qwen3.5 397B A17B"
 attachment = false
-reasoning_options = [{ type = "toggle" }] # route reasoning.controls = ["thinking"], disable_supported = true
+reasoning_options = [{ type = "toggle" }]
 tool_call = false
 structured_output = false
 

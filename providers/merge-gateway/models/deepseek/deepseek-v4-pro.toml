@@ -1,6 +1,9 @@
+# Source: https://api-gateway.merge.dev/v1/models?model=deepseek%2Fdeepseek-v4-pro (accessed 2026-07-21)
+# Selected route reasoning.controls = ["thinking"], disable_supported = true.
+
 base_model = "deepseek/deepseek-v4-pro"
 structured_output = false
-reasoning_options = [{ type = "toggle" }] # route reasoning.controls = ["thinking"], disable_supported = true
+reasoning_options = [{ type = "toggle" }]
 
 [interleaved]
 field = "reasoning_content"

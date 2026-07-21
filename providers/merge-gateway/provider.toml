@@ -1,7 +1,4 @@
-name = "Merge Gateway"
-env = ["MERGE_GATEWAY_API_KEY"]
-npm = "merge-gateway-ai-sdk-provider"
-# Reasoning request surfaces (sources accessed 2026-07-14):
+# Reasoning request surfaces (sources accessed 2026-07-21):
 # - Reasoning support and controls are vendor-route capabilities. Use the exact
 #   model response from GET /v1/models and inspect
 #   vendors.<vendor>.capabilities.reasoning; do not infer support solely from a
@@ -15,4 +12,7 @@ npm = "merge-gateway-ai-sdk-provider"
 #   `providerOptions.mergeGateway.thinking` to
 #   `thinking = { type = "enabled"|"disabled", budget_tokens = N }`.
 #   https://github.com/merge-api/merge-gateway-ai-sdk-provider/blob/main/src/chat/index.ts
+name = "Merge Gateway"
+env = ["MERGE_GATEWAY_API_KEY"]
+npm = "merge-gateway-ai-sdk-provider"
 doc = "https://docs.merge.dev/merge-gateway"

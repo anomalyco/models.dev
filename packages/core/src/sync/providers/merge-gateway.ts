@@ -57,7 +57,16 @@ export const MergeGatewayModel = z.object({
   availability_status: AvailabilityStatus,
   created_at: z.string().nullable().optional(),
   updated_at: z.string().nullable().optional(),
-}).passthrough();
+}).passthrough().superRefine((model, context) => {
+  const namespace = model.model.split("/")[0];
+  if (namespace !== model.provider) {
+    context.addIssue({
+      code: z.ZodIssueCode.custom,
+      path: ["provider"],
+      message: `Model namespace ${namespace} does not match provider ${model.provider}`,
+    });
+  }
+});
 
 export const MergeGatewayResponse = z.object({
   object: z.literal("list").default("list"),
@@ -92,7 +101,12 @@ export async function fetchMergeGatewayModels(
     }
 
     const page = MergeGatewayResponse.parse(await response.json());
-    for (const model of page.data) models.set(model.model, model);
+    for (const model of page.data) {
+      if (models.has(model.model)) {
+        throw new Error(`Merge Gateway returned duplicate model ID: ${model.model}`);
+      }
+      models.set(model.model, model);
+    }
     if (!page.has_more) break;
     if (!page.next_cursor) throw new Error("Merge Gateway returned has_more=true without next_cursor");
     if (cursors.has(page.next_cursor)) throw new Error(`Merge Gateway repeated cursor: ${page.next_cursor}`);
@@ -216,13 +230,20 @@ export function buildMergeGatewayModel(
     (vendor) => vendor.availability_status === "available" && vendor.capabilities.supports_reasoning === true,
   );
   const reasoning = routeConfirmsReasoning ? true : existing?.reasoning;
-  const reasoningOptions = reasoning === true
-    ? existing?.reasoning_options ?? []
-    : existing?.reasoning_options;
+  const existingReasoningOptions = existing?.reasoning_options ?? [];
+  const reasoningOptions = reasoning === true && existingReasoningOptions.length === 0
+    && selected.info.capabilities.reasoning?.disable_supported === true
+    ? [{ type: "toggle" as const }]
+    : reasoning === true
+      ? existingReasoningOptions
+      : existing?.reasoning_options;
+  const modelSlug = model.model.split("/").at(-1)?.toLowerCase();
+  const displayNameIsID = model.display_name.includes("/")
+    || model.display_name.toLowerCase() === modelSlug;
   const authoritative = {
     // Some catalog rows use an upstream org/model ID as display_name. Let
     // canonical metadata provide the human-readable name for factored models.
-    name: baseModel !== undefined && model.display_name.includes("/") ? undefined : model.display_name,
+    name: baseModel !== undefined && displayNameIsID ? undefined : model.display_name,
     attachment: input.some((value) => value !== "text"),
     tool_call: selected.info.capabilities.supports_tool_calling,
     structured_output: selected.info.capabilities.supports_structured_outputs,

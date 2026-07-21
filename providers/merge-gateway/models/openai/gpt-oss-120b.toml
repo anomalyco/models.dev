@@ -1,7 +1,9 @@
+# Source: https://api-gateway.merge.dev/v1/models?model=openai%2Fgpt-oss-120b (accessed 2026-07-21)
 # Merge Gateway GET /v1/models?model=openai/gpt-oss-120b (accessed 2026-07-16):
 # parasail and fireworks routes report `supports_reasoning = true` with
 # `configurable = false` and no controls, so the model reasons on the gateway
 # but callers have no reasoning control.
+
 base_model = "openai/gpt-oss-120b"
 name = "GPT-OSS 120B"
 tool_call = false
