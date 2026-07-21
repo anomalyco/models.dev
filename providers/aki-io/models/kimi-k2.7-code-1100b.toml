@@ -1,0 +1,24 @@
+name = "kimi-k2.7-code-1100b"
+base_model = "moonshotai/kimi-k2.7-code"
+family = "kimi-k2"
+release_date = "2026-06-13"
+last_updated = "2026-06-13"
+attachment = false
+reasoning = true
+reasoning_options = [{ type = "effort", values = ["high"] }]
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = true
+
+[cost]
+input = 0.86
+output = 3.00
+
+[limit]
+context = 262_144
+output = 81_920
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

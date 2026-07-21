@@ -1,0 +1,24 @@
+name = "minimax-m2.5-230b"
+base_model = "minimax/MiniMax-M2.5"
+family = "minimax"
+release_date = "2026-02-12"
+last_updated = "2026-02-12"
+attachment = false
+reasoning = true
+reasoning_options = [{ type = "effort", values = ["high"] }]
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = true
+
+[cost]
+input = 0.25
+output = 1.20
+
+[limit]
+context = 196_608
+output = 81_920
+
+[modalities]
+input = ["text"]
+output = ["text"]
