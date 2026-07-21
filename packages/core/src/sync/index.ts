@@ -14,6 +14,7 @@ import { deepinfra } from "./providers/deepinfra.js";
 import { digitalocean } from "./providers/digitalocean.js";
 import { empiriolabs } from "./providers/empiriolabs.js";
 import { google } from "./providers/google.js";
+import { hyper } from "./providers/hyper.js";
 import { huggingface } from "./providers/huggingface.js";
 import { kilo } from "./providers/kilo.js";
 import { llmgateway } from "./providers/llmgateway.js";
@@ -103,8 +104,9 @@ export const providers: {
   digitalocean: SyncProvider<any>;
   empiriolabs: SyncProvider<any>;
   google: SyncProvider<any>;
-  kilo: SyncProvider<any>;
+  hyper: SyncProvider<any>;
   huggingface: SyncProvider<any>;
+  kilo: SyncProvider<any>;
   llmgateway: SyncProvider<any>;
   openai: SyncProvider<any>;
   openrouter: SyncProvider<any>;
@@ -125,8 +127,9 @@ export const providers: {
   digitalocean,
   empiriolabs,
   google,
-  kilo,
+  hyper,
   huggingface,
+  kilo,
   llmgateway,
   openai,
   openrouter,
@@ -141,7 +144,7 @@ export const providers: {
 export const groups = {
   aggregators: ["crossmodel", "empiriolabs", "huggingface", "kilo", "llmgateway", "openrouter", "vercel"],
   cloudflare: ["cloudflare-workers-ai"],
-  direct: ["ambient", "anthropic", "baseten", "chutes", "deepinfra", "digitalocean", "google", "openai", "ovhcloud", "pioneer", "venice", "wandb", "xai"],
+  direct: ["ambient", "anthropic", "baseten", "chutes", "deepinfra", "digitalocean", "google", "hyper", "openai", "ovhcloud", "pioneer", "venice", "wandb", "xai"],
 } as const;
 
 type ProviderID = keyof typeof providers;

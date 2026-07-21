@@ -347,7 +347,7 @@ export type Model = z.infer<typeof Model>;
 export const Provider = z
   .object({
     id: z.string(),
-    env: z.array(z.string()).min(1, "Provider env cannot be empty"),
+    env: z.array(z.string()),
     npm: z.string().min(1, "Provider npm module cannot be empty"),
     api: z.string().optional(),
     name: z.string().min(1, "Provider name cannot be empty"),

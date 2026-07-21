@@ -1,0 +1,17 @@
+base_model = "meta/llama-4-maverick-17b-instruct"
+release_date = "2026-04-30"
+last_updated = "2026-07-21"
+attachment = false
+reasoning = true
+
+[[reasoning_options]]
+type = "toggle"
+
+[cost]
+input = 0.284
+output = 0.934
+cache_write = 0.142
+
+[limit]
+context = 430_000
+output = 43_000
