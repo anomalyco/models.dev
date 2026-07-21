@@ -1,0 +1,15 @@
+name = "kimi-k2.7-code-1100b" # AKI.IO uses a different model name as identifier for openai chat_completions api
+base_model = "moonshotai/kimi-k2.7-code"
+attachment = false # not supported on AKI.IO
+
+[cost]
+input = 0.86
+output = 3.00
+
+[limit]
+context = 262_144
+output = 81_920
+
+[modalities]
+input = ["text", "image"] # only these are supported on AKI.IO
+output = ["text"]
