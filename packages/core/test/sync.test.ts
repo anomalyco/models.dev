@@ -700,20 +700,6 @@ function deepInfraModel(model_name: string, tags: string[]): DeepInfraModel {
   };
 }
 
-test("syncs Hyper pricing from cost_per_1m fields", () => {
-  const model = hyperModel({
-    id: "minimax-m2.7",
-    cost_per_1m_in: 0.3,
-    cost_per_1m_out: 1.2,
-    cost_per_1m_in_cached: 0.06,
-  });
-
-  expect(buildHyperModel(model, undefined, "minimax/MiniMax-M2.7")).toMatchObject({
-    base_model: "minimax/MiniMax-M2.7",
-    cost: { input: 0.3, output: 1.2, cache_read: 0.06 },
-  });
-});
-
 test("syncs Hyper pricing from OpenRouter-style per-token strings", () => {
   const model = hyperModel({
     id: "minimax-m2.7",

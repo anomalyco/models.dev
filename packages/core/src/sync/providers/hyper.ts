@@ -5,7 +5,6 @@ import { factorBaseModel } from "./openrouter.js";
 import { resolveVeniceBaseModel } from "./venice.js";
 
 const API_ENDPOINT = "https://hyper.charm.land/v1/models";
-const PROVIDER_ENDPOINT = "https://hyper.charm.land/v1/provider";
 
 const PricingValue = z.union([z.string(), z.number()]);
 
@@ -66,29 +65,10 @@ export const HyperModel = z.object({
   context_window: z.number(),
   max_output_tokens: z.number(),
   pricing: HyperApiPricing.optional(),
-  cost_per_1m_in: z.number().optional(),
-  cost_per_1m_out: z.number().optional(),
-  cost_per_1m_in_cached: z.number().optional(),
-  cost_per_1m_out_cached: z.number().optional(),
 }).passthrough();
 
 export const HyperResponse = z.object({
   data: z.array(HyperModel),
-}).passthrough();
-
-const HyperProviderModel = z.object({
-  id: z.string(),
-  can_reason: z.boolean().optional(),
-  reasoning_levels: z.array(z.string()).optional(),
-  supports_attachments: z.boolean().optional(),
-  cost_per_1m_in: z.number(),
-  cost_per_1m_out: z.number(),
-  cost_per_1m_in_cached: z.number().optional(),
-  cost_per_1m_out_cached: z.number().optional(),
-}).passthrough();
-
-const HyperProviderResponse = z.object({
-  models: z.array(HyperProviderModel),
 }).passthrough();
 
 export type HyperModel = z.infer<typeof HyperModel>;
@@ -106,30 +86,16 @@ export const hyper = {
   modelsDir: "providers/hyper/models",
   preserveBaseModels: false,
   async fetchModels() {
-    const [modelsResponse, providerResponse] = await Promise.all([
-      fetch(API_ENDPOINT),
-      fetch(PROVIDER_ENDPOINT),
-    ]);
-    if (!modelsResponse.ok) {
-      throw new Error(`Hyper models request failed: ${modelsResponse.status} ${modelsResponse.statusText}`);
+    const response = await fetch(API_ENDPOINT);
+    if (!response.ok) {
+      throw new Error(`Hyper models request failed: ${response.status} ${response.statusText}`);
     }
 
-    const modelsRaw = await modelsResponse.json() as Record<string, unknown> & { data?: unknown[] };
+    const modelsRaw = await response.json() as Record<string, unknown> & { data?: unknown[] };
     const parsed = HyperApiResponse.parse(modelsRaw);
-    if (!providerResponse.ok) {
-      return {
-        ...modelsRaw,
-        data: parsed.data.map((model) => normalizeModel(model, undefined)),
-      };
-    }
-
-    const providerById = new Map(
-      HyperProviderResponse.parse(await providerResponse.json()).models.map((model) => [model.id, model]),
-    );
-
     return {
       ...modelsRaw,
-      data: parsed.data.map((model) => normalizeModel(model, providerById.get(model.id))),
+      data: parsed.data.map(normalizeModel),
     };
   },
   parseModels(raw) {
@@ -165,13 +131,9 @@ function isReasoningEffort(value: string): value is z.infer<typeof ReasoningEffo
   return ReasoningEffort.safeParse(value).success;
 }
 
-function normalizeModel(
-  api: z.infer<typeof HyperApiModel>,
-  provider: z.infer<typeof HyperProviderModel> | undefined,
-): HyperModel {
-  const effortLevels = api.reasoning?.effort_levels?.map((level) => level.value)
-    ?? provider?.reasoning_levels;
-  const supportsReasoning = provider?.can_reason ?? api.reasoning !== undefined;
+function normalizeModel(api: z.infer<typeof HyperApiModel>): HyperModel {
+  const effortLevels = api.reasoning?.effort_levels?.map((level) => level.value);
+  const supportsReasoning = api.reasoning !== undefined;
   const supportsReasoningEffort = (effortLevels?.length ?? 0) > 0;
 
   return {
@@ -181,26 +143,11 @@ function normalizeModel(
     supports_reasoning: supportsReasoning,
     supports_reasoning_effort: supportsReasoningEffort,
     reasoning_effort_levels: effortLevels,
-    supports_attachments: provider?.supports_attachments ?? false,
+    supports_attachments: api.capabilities?.vision ?? false,
     context_window: api.context_window,
     max_output_tokens: api.max_output_tokens,
     pricing: api.pricing,
-    cost_per_1m_in: provider?.cost_per_1m_in,
-    cost_per_1m_out: provider?.cost_per_1m_out,
-    cost_per_1m_in_cached: provider?.cost_per_1m_in_cached,
-    cost_per_1m_out_cached: provider?.cost_per_1m_out_cached,
   };
-}
-
-function hasApiPricing(model: HyperModel) {
-  const pricing = model.pricing;
-  return (
-    pricing?.input !== undefined && pricing?.output !== undefined
-  ) || (
-    pricing?.prompt !== undefined && pricing?.completion !== undefined
-  ) || (
-    model.cost_per_1m_in !== undefined && model.cost_per_1m_out !== undefined
-  );
 }
 
 function parsePrice(value: string | number | undefined) {
@@ -219,16 +166,6 @@ function positivePrice(value: number | undefined) {
 }
 
 function buildCost(model: HyperModel, existing: ExistingModel["cost"] | undefined) {
-  const fromProviderFields = model.cost_per_1m_in !== undefined && model.cost_per_1m_out !== undefined
-    ? {
-        input: model.cost_per_1m_in,
-        output: model.cost_per_1m_out,
-        cache_read: model.cost_per_1m_in_cached,
-        cache_write: undefined as number | undefined,
-        reasoning: undefined as number | undefined,
-      }
-    : undefined;
-
   const pricing = model.pricing;
   const fromCatalogPricing = pricing?.input !== undefined && pricing?.output !== undefined
     ? {
@@ -250,7 +187,7 @@ function buildCost(model: HyperModel, existing: ExistingModel["cost"] | undefine
       }
     : undefined;
 
-  const resolved = fromCatalogPricing ?? fromProviderFields ?? fromLegacyPricing;
+  const resolved = fromCatalogPricing ?? fromLegacyPricing;
   if (resolved?.input === undefined || resolved.output === undefined) return existing;
 
   return {
