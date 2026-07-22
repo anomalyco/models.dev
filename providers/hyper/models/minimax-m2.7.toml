@@ -1,12 +1,13 @@
 # Source: https://hyper.charm.land/v1/models (accessed 2026-07-23)
 base_model = "minimax/MiniMax-M2.7"
-reasoning_options = []
-
-[limit]
-context = 204_800
-output = 20_480
+name = "MiniMax M2.7"
+reasoning = false
 
 [cost]
 input = 0.3558
 output = 1.38
-cache_read = 0.1779
+cache_read = 0
+cache_write = 0.1779
+
+[limit]
+output = 20_480

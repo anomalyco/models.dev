@@ -1,11 +1,13 @@
 # Source: https://hyper.charm.land/v1/models (accessed 2026-07-23)
 base_model = "alibaba/qwen3-coder-480b-a35b-instruct"
-
-[limit]
-context = 106_000
-output = 10_600
+name = "Qwen3 Coder 480B A35B Instruct INT4 Mixed AR"
 
 [cost]
 input = 0.601
 output = 2.085
-cache_read = 0.3005
+cache_read = 0
+cache_write = 0.3005
+
+[limit]
+context = 106_000
+output = 10_600

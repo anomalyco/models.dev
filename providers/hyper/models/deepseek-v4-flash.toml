@@ -1,12 +1,12 @@
 # Source: https://hyper.charm.land/v1/models (accessed 2026-07-23)
 base_model = "deepseek/deepseek-v4-flash"
-reasoning_options = [{ type = "effort", values = ["none", "high", "xhigh"] }]
 
-[limit]
-context = 1_000_000
-output = 384_000
+[[reasoning_options]]
+type = "effort"
+values = ["none", "high", "xhigh"]
 
 [cost]
-input = 0.2
-output = 0.4
-cache_read = 0.04
+input = 0.20000010875000002
+output = 0.40000021750000003
+cache_read = 0.039999586250000004
+cache_write = 0

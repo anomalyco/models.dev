@@ -1,16 +1,11 @@
 # Source: https://hyper.charm.land/v1/models (accessed 2026-07-23)
 base_model = "alibaba/qwen3.7-plus"
-reasoning_options = []
-
-[modalities]
-input = ["text", "image"]
-output = ["text"]
-
-[limit]
-context = 1_000_000
-output = 64_000
+name = "Qwen3.7-Plus"
+attachment = true
+reasoning = false
 
 [cost]
 input = 1.2
 output = 4.8
 cache_read = 0.24
+cache_write = 0

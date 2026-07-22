@@ -1,16 +1,13 @@
 # Source: https://hyper.charm.land/v1/models (accessed 2026-07-23)
 base_model = "alibaba/qwen3.7-max"
-reasoning_options = []
-
-[limit]
-context = 1_000_000
-output = 64_000
-
-[modalities]
-input = ["text"]
-output = ["text"]
+name = "Qwen3.7-Max"
+reasoning = false
 
 [cost]
 input = 2.5
 output = 7.5
 cache_read = 0.5
+cache_write = 0
+
+[limit]
+output = 64_000

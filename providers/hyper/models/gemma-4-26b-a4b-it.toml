@@ -1,7 +1,18 @@
 # Source: https://hyper.charm.land/v1/models (accessed 2026-07-23)
 base_model = "google/gemma-4-26b-a4b-it"
-reasoning_options = []
+name = "Gemma 4 26B A4B"
+attachment = false
+reasoning = false
+
+[cost]
+input = 0.116
+output = 0.408
+cache_read = 0
+cache_write = 0.058
 
 [limit]
 context = 256_000
 output = 25_600
+
+[modalities]
+input = ["text"]

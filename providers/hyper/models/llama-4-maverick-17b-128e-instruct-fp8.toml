@@ -1,5 +1,13 @@
 # Source: https://hyper.charm.land/v1/models (accessed 2026-07-23)
 base_model = "meta/llama-4-maverick-17b-instruct"
+name = "Llama 4 Maverick 17B 128E Instruct FP8"
+attachment = false
+
+[cost]
+input = 0.284
+output = 0.934
+cache_read = 0
+cache_write = 0.142
 
 [limit]
 context = 430_000
@@ -7,9 +15,3 @@ output = 43_000
 
 [modalities]
 input = ["text"]
-output = ["text"]
-
-[cost]
-input = 0.284
-output = 0.934
-cache_read = 0.142

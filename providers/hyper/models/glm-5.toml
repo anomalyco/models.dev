@@ -1,6 +1,12 @@
 # Source: https://hyper.charm.land/v1/models (accessed 2026-07-23)
 base_model = "zhipuai/glm-5"
-reasoning_options = []
+reasoning = false
+
+[cost]
+input = 0.83
+output = 2.558
+cache_read = 0
+cache_write = 0.415
 
 [limit]
 context = 202_752

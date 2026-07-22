@@ -1,11 +1,13 @@
 # Source: https://hyper.charm.land/v1/models (accessed 2026-07-23)
 base_model = "meta/llama-3.3-70b-instruct"
-
-[limit]
-context = 128_000
-output = 12_800
+name = "Llama 3.3 70B Instruct"
+attachment = false
 
 [cost]
 input = 0.6066
 output = 1.0386
-cache_read = 0.3033
+cache_read = 0
+cache_write = 0.3033
+
+[limit]
+output = 12_800

@@ -1,12 +1,15 @@
 # Source: https://hyper.charm.land/v1/models (accessed 2026-07-23)
 base_model = "moonshotai/kimi-k2.5"
-reasoning_options = []
-
-[limit]
-context = 262_144
-output = 26_214
+reasoning = false
 
 [cost]
 input = 0.52
 output = 2.74
-cache_read = 0.26
+cache_read = 0
+cache_write = 0.26
+
+[limit]
+output = 26_214
+
+[modalities]
+input = ["text"]
