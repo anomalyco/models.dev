@@ -1,3 +1,11 @@
+# Reasoning controls (verified 2026-07-22 against the live catalog and EUrouter's
+# OpenRouter-compatible API): routes whose catalog `reasoning` object advertises
+# `supported_efforts` accept the OpenRouter-style request field
+# `"reasoning": {"effort": "<value>"}`, and routes with `supports_max_tokens`
+# accept `"reasoning": {"max_tokens": <n>}` on /chat/completions; routes listing
+# `reasoning_effort` in `supported_parameters` also take the OpenAI-compatible
+# `reasoning_effort` parameter. Catalog reference: https://www.eurouter.ai/docs/api/models
+# (per-model `reasoning` object and `supported_parameters`).
 name = "EUrouter"
 env = ["EUROUTER_API_KEY"]
 npm = "@ai-sdk/openai-compatible"
