@@ -1,0 +1,18 @@
+name = "Cohere Rerank 4.0 Pro"
+description = "Cohere Rerank 4.0 Pro is Cohere's highest-quality multilingual cross-encoder reranker. It reorders documents by semantic relevance to a query for search and retrieval-augmented generation, handles complex reasoning-heavy queries and semi-structured data across 100+ languages, and supports a 32K context window. Available through Microsoft Foundry."
+release_date = "2026-04-06"
+last_updated = "2026-04-06"
+attachment = false
+reasoning = false
+temperature = false
+tool_call = false
+structured_output = false
+open_weights = false
+
+[limit]
+context = 32_768
+output = 32_768
+
+[modalities]
+input = ["text"]
+output = ["text"]
