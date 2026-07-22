@@ -1,14 +1,18 @@
+# DeepSeek will retire this legacy alias after 2026-07-24 15:59 UTC.
+# It currently routes to deepseek-v4-flash in non-thinking mode.
+# https://api-docs.deepseek.com/updates (accessed 2026-07-22)
 name = "DeepSeek Chat"
 description = "DeepSeek chat model for instruction following, coding, and analysis"
 family = "deepseek"
 release_date = "2025-12-01"
-last_updated = "2026-02-28"
+last_updated = "2026-04-24"
 attachment = true
 reasoning = false
 temperature = true
 knowledge = "2025-09"
 tool_call = true
 open_weights = true
+status = "deprecated"
 
 [cost]
 input = 0.14
