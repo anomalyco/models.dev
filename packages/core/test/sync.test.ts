@@ -1700,7 +1700,7 @@ function eurouterModel(overrides: Partial<EUrouterModel> = {}): EUrouterModel {
       context_length: 1_000_000,
       max_completion_tokens: 128_000,
     },
-    supported_parameters: ["temperature", "reasoning_effort", "response_format", "tools"],
+    supported_parameters: ["temperature", "reasoning_effort", "structured_outputs", "tools"],
     reasoning: {
       mandatory: false,
       supported_efforts: ["low", "medium", "high"],

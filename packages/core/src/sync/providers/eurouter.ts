@@ -288,7 +288,9 @@ export function buildEUrouterModel(
     : (existing?.family ?? family);
   const attachment = input.some((value) => value !== "text");
   const toolCall = params.has("tools") || params.has("tool_choice");
-  const structuredOutput = params.has("response_format") || params.has("structured_outputs");
+  // Only `structured_outputs` proves schema-constrained output; `response_format`
+  // alone is JSON mode (same convention as the OpenRouter-style adapters).
+  const structuredOutput = params.has("structured_outputs");
   const knowledge = model.knowledge_cutoff?.slice(0, 10) ?? existing?.knowledge;
   const openWeights = Boolean(model.hugging_face_id);
   const releaseDate = model.release_date ?? existing?.release_date;
