@@ -269,7 +269,7 @@ export function buildEUrouterModel(
   const cappedInput = canonicalInput === undefined
     ? rawInput
     : rawInput.filter((value) => canonicalInput.includes(value));
-  const input = cappedInput.length > 0 ? cappedInput : rawInput;
+  const input = cappedInput.length > 0 ? cappedInput : modalities(canonicalInput ?? [], ["text"]);
   const output = modalities(model.architecture.output_modalities, ["text"]);
   const fxRate = currencyRate(model.pricing?.currency);
   const prompt = price(model.pricing?.prompt, fxRate);

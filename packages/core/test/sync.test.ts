@@ -1044,6 +1044,21 @@ test("caps EUrouter route modalities to the base model's input surface", () => {
   expect(model.attachment ?? false).toBe(false);
 });
 
+test("keeps the canonical surface when route and base modalities do not overlap", () => {
+  const model = buildEUrouterModel(eurouterModel({
+    id: "minimax-m2.1",
+    canonical_slug: "minimax/minimax-m2.1",
+    name: "MiniMax M2.1",
+    architecture: {
+      input_modalities: ["image"],
+      output_modalities: ["text"],
+    },
+  }), undefined);
+
+  expect(model.modalities?.input?.includes("image") ?? false).toBe(false);
+  expect(model.attachment ?? false).toBe(false);
+});
+
 test("keeps the EUrouter display name when it differs from base metadata", () => {
   const renamed = buildEUrouterModel(eurouterModel({ name: "Claude Sonnet 5 (EU)" }), undefined);
   expect(renamed).toMatchObject({
