@@ -4,3 +4,12 @@ base_model = "meta/llama-4-maverick-17b-instruct"
 [limit]
 context = 430_000
 output = 43_000
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[cost]
+input = 0.284
+output = 0.934
+cache_read = 0.142

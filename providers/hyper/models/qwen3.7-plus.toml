@@ -2,6 +2,15 @@
 base_model = "alibaba/qwen3.7-plus"
 reasoning_options = []
 
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
 [limit]
 context = 1_000_000
 output = 64_000
+
+[cost]
+input = 1.2
+output = 4.8
+cache_read = 0.24

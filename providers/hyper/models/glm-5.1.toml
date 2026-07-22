@@ -1,3 +1,12 @@
 # Source: https://hyper.charm.land/v1/models (accessed 2026-07-23)
 base_model = "zhipuai/glm-5.1"
-reasoning_options = []
+reasoning_options = [{ type = "effort", values = ["high", "max"] }]
+
+[limit]
+context = 202_800
+output = 131_072
+
+[cost]
+input = 1.52425
+output = 4.7905
+cache_read = 0.283075

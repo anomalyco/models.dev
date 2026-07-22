@@ -1,7 +1,12 @@
 # Source: https://hyper.charm.land/v1/models (accessed 2026-07-23)
 base_model = "openai/gpt-oss-120b"
-reasoning_options = []
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
 
 [limit]
 context = 131_072
 output = 13_107
+
+[cost]
+input = 0.188
+output = 0.73
+cache_read = 0.094
