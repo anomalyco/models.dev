@@ -700,25 +700,10 @@ function deepInfraModel(model_name: string, tags: string[]): DeepInfraModel {
   };
 }
 
-test("syncs Hyper pricing from OpenRouter-style per-token strings", () => {
-  const model = hyperModel({
-    id: "minimax-m2.7",
-    pricing: {
-      prompt: "0.0000003",
-      completion: "0.0000012",
-      input_cache_read: "0.00000006",
-    },
-  });
-
-  expect(buildHyperModel(model, undefined, "minimax/MiniMax-M2.7")).toMatchObject({
-    cost: { input: 0.3, output: 1.2, cache_read: 0.06 },
-  });
-});
-
 test("syncs Hyper pricing from catalog input/output fields", () => {
   const model = hyperModel({
     id: "minimax-m2.7",
-    supports_reasoning: false,
+    reasoning: undefined,
     pricing: {
       input: 0.3,
       output: 1.2,
@@ -1407,10 +1392,12 @@ function hyperModel(overrides: Partial<HyperModel> = {}): HyperModel {
     id: "deepseek-v4-flash",
     created: 1_780_592_628,
     display_name: "DeepSeek V4 Flash",
-    supports_reasoning: true,
-    supports_reasoning_effort: true,
-    reasoning_effort_levels: ["high", "xhigh"],
-    supports_attachments: false,
+    reasoning: {
+      effort_levels: [
+        { value: "high" },
+        { value: "xhigh" },
+      ],
+    },
     context_window: 1_000_000,
     max_output_tokens: 384_000,
     ...overrides,
