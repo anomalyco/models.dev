@@ -1,7 +1,10 @@
+# MiniMax M2.1 is text-only upstream (see models/minimax/MiniMax-M2.1.toml and peer
+# providers); the catalog's image-input claim is a data error flagged for correction,
+# so the route publishes the canonical text-only surface. tool_call/structured_output
+# stay false because the route's supported_parameters expose neither.
 base_model = "minimax/MiniMax-M2.1"
 name = "MiniMax M2.1"
-description = "MiniMax M2.1 is a long-context Mixture-of-Experts model from MiniMax for chat, coding, reasoning, and multimodal tasks."
-attachment = true
+description = "MiniMax M2.1 is a long-context Mixture-of-Experts model from MiniMax for chat, coding, reasoning, and agentic tasks."
 tool_call = false
 structured_output = false
 reasoning_options = []
@@ -16,6 +19,3 @@ cache_write = 0
 [limit]
 context = 196_608
 output = 196_608
-
-[modalities]
-input = ["text", "image"]

@@ -1028,6 +1028,22 @@ test("omits unconvertible EUrouter pricing instead of mislabeling it as USD", ()
   expect("cost" in model).toBe(false);
 });
 
+test("caps EUrouter route modalities to the base model's input surface", () => {
+  const model = buildEUrouterModel(eurouterModel({
+    id: "minimax-m2.1",
+    canonical_slug: "minimax/minimax-m2.1",
+    name: "MiniMax M2.1",
+    architecture: {
+      input_modalities: ["text", "image"],
+      output_modalities: ["text"],
+    },
+  }), undefined);
+
+  expect(model).toMatchObject({ base_model: "minimax/MiniMax-M2.1" });
+  expect(model.modalities?.input?.includes("image") ?? false).toBe(false);
+  expect(model.attachment ?? false).toBe(false);
+});
+
 test("keeps the EUrouter display name when it differs from base metadata", () => {
   const renamed = buildEUrouterModel(eurouterModel({ name: "Claude Sonnet 5 (EU)" }), undefined);
   expect(renamed).toMatchObject({

@@ -227,6 +227,27 @@ function baseModelReasoning(modelID: string | undefined) {
   return reasoning;
 }
 
+const baseModelInputByID = new Map<string, string[] | undefined>();
+
+function baseModelInputModalities(modelID: string | undefined) {
+  if (modelID === undefined) return undefined;
+  if (baseModelInputByID.has(modelID)) return baseModelInputByID.get(modelID);
+
+  let input: string[] | undefined;
+  try {
+    const metadata = Bun.TOML.parse(
+      readFileSync(path.join(MODELS_DIR, `${modelID}.toml`), "utf8"),
+    ) as { modalities?: { input?: unknown } };
+    input = Array.isArray(metadata.modalities?.input)
+      ? metadata.modalities.input.filter((value): value is string => typeof value === "string")
+      : undefined;
+  } catch {
+    input = undefined;
+  }
+  baseModelInputByID.set(modelID, input);
+  return input;
+}
+
 function resolveModelBase(model: EUrouterModel, existing: ExistingModel | undefined) {
   const routeCanonical = model.author === undefined ? undefined : `${model.author}/${model.id}`;
   return existing?.base_model
@@ -240,14 +261,21 @@ export function buildEUrouterModel(
 ): SyncedModel {
   const params = new Set(model.supported_parameters);
   const name = model.name;
-  const input = modalities(model.architecture.input_modalities, ["text"]);
+  const canonical = resolveModelBase(model, existing);
+  // A route cannot expand its base model's input modalities; architecture-driven
+  // expansions are capped to the canonical surface (reductions are kept).
+  const canonicalInput = baseModelInputModalities(canonical);
+  const rawInput = modalities(model.architecture.input_modalities, ["text"]);
+  const cappedInput = canonicalInput === undefined
+    ? rawInput
+    : rawInput.filter((value) => canonicalInput.includes(value));
+  const input = cappedInput.length > 0 ? cappedInput : rawInput;
   const output = modalities(model.architecture.output_modalities, ["text"]);
   const fxRate = currencyRate(model.pricing?.currency);
   const prompt = price(model.pricing?.prompt, fxRate);
   const completion = price(model.pricing?.completion, fxRate);
   const advertisedReasoning = model.reasoning;
   const reasoning = reasoningCapability(model, params);
-  const canonical = resolveModelBase(model, existing);
   const effectiveReasoning = reasoning ?? existing?.reasoning ?? baseModelReasoning(canonical);
   const apiReasoningOptions = reasoningOptions(advertisedReasoning);
   const reasoning_options = existing?.reasoning_options?.length
