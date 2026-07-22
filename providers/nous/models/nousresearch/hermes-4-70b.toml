@@ -1,3 +1,4 @@
+reasoning_options = [{ type = "toggle" }]
 name = "Hermes 4 70B"
 description = "Reasoning model for deliberate analysis, multi-step problem solving, and tool use"
 family = "hermes"
@@ -11,12 +12,9 @@ structured_output = false
 knowledge = "2024-08-31"
 open_weights = true
 
-[[reasoning_options]]
-type = "toggle"
-
 [cost]
-input = 0.05
-output = 0.2
+input = 0.13
+output = 0.4
 
 [limit]
 context = 131_072
