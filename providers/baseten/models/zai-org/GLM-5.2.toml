@@ -1,6 +1,11 @@
 # Opt in with chat_template_args.enable_thinking=true. Baseten documents no
 # explicit false behavior, effort values, or reasoning-token budget.
 # https://docs.baseten.co/inference/model-apis/reasoning
+#
+# limit.input: Baseten serves this model with a prompt ceiling below the
+# advertised context window. Requests above it are rejected before inference:
+#   HTTP 400 "Input length 202935 exceeds the maximum allowed input length of
+#   202720 tokens." (observed 2026-07-22, inference.baseten.co/v1/chat/completions)
 base_model = "zhipuai/glm-5.2"
 name = "GLM 5.2"
 
@@ -17,4 +22,5 @@ cache_read = 0.3
 
 [limit]
 context = 256_000
+input = 202_720
 output = 256_000
