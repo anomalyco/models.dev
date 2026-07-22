@@ -1,6 +1,7 @@
 # The EUrouter route serves this model text-only (catalog architecture: text -> text),
 # so attachment/modalities override the multimodal base and the description says so.
 base_model = "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning"
+name = "Nemotron 3 Nano Omni"
 description = "NVIDIA Nemotron 3 Nano Omni reasoning model served as a text-only route for agentic AI, coding, tool use, and long-context workflows."
 attachment = false
 structured_output = true

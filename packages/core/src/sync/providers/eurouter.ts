@@ -299,6 +299,7 @@ export function buildEUrouterModel(
     return factorBaseModel(
       canonical,
       {
+        name,
         description,
         attachment,
         reasoning: reasoning ?? (existing?.base_model === canonical ? existing?.reasoning : undefined),

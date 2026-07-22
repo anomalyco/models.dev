@@ -1028,6 +1028,17 @@ test("omits unconvertible EUrouter pricing instead of mislabeling it as USD", ()
   expect("cost" in model).toBe(false);
 });
 
+test("keeps the EUrouter display name when it differs from base metadata", () => {
+  const renamed = buildEUrouterModel(eurouterModel({ name: "Claude Sonnet 5 (EU)" }), undefined);
+  expect(renamed).toMatchObject({
+    base_model: "anthropic/claude-sonnet-5",
+    name: "Claude Sonnet 5 (EU)",
+  });
+
+  const matching = buildEUrouterModel(eurouterModel(), undefined);
+  expect("name" in matching).toBe(false);
+});
+
 test("preserves an authored reasoning override on factored EUrouter models", () => {
   const model = buildEUrouterModel(eurouterModel({
     reasoning: undefined,
