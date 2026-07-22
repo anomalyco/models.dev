@@ -1,0 +1,19 @@
+name = "Qwen 2.5"
+family = "qwen"
+release_date = "2024-12-01"
+attachment = true
+reasoning = false
+tool_call = true
+temperature = true
+
+[cost]
+input = 0
+output = 0
+
+[limit]
+context = 32000
+output = 8192
+
+[modalities]
+input = ["text"]
+output = ["text"]
