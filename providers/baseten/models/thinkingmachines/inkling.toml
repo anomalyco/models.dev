@@ -1,0 +1,27 @@
+# Baseten documents top-level reasoning_effort for Inkling with values
+# none | minimal | low | medium | high | xhigh. Reasoning is enabled by
+# default; reasoning_effort: "none" disables it (chat_template_args
+# enable_thinking does not). No budget_tokens control.
+# https://docs.baseten.co/inference/model-apis/reasoning (accessed 2026-07-16)
+# API: {"reasoning_effort": "none"|"minimal"|"low"|"medium"|"high"|"xhigh"}
+base_model = "thinkingmachines/inkling"
+description = "Multimodal reasoning model for visual analysis, planning, and tool use"
+structured_output = true
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "minimal", "low", "medium", "high", "xhigh"]
+
+[cost]
+input = 1
+output = 4.05
+
+[limit]
+context = 1_048_576
+output = 32_768
+
+[modalities]
+input = ["text", "image"]

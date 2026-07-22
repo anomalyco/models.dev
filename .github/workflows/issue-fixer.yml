@@ -40,7 +40,7 @@ jobs:
           RESPONSE_FILE="$RUNNER_TEMP/issue-fixer-response.md"
           echo "RESPONSE_FILE=$RESPONSE_FILE" >> "$GITHUB_ENV"
 
-          opencode run --agent issue-fixer -m opencode/glm-5.2 --format json <<EOF | tee "$EVENTS_FILE"
+          opencode run --agent issue-fixer -m opencode/grok-4.5 --format json <<EOF | tee "$EVENTS_FILE"
           A new GitHub issue was opened in anomalyco/models.dev.
 
           Issue #$ISSUE_NUMBER: $ISSUE_TITLE

@@ -1168,12 +1168,38 @@ test("resolves Venice Pro routes to canonical OpenAI metadata", () => {
   ]);
 });
 
-test("preserves authored OpenRouter reasoning options over model metadata", () => {
+test("prefers OpenRouter API reasoning options over authored ones", () => {
   const model = buildOpenRouterModel(openRouterModel({
     reasoning: {
       mandatory: false,
       supported_efforts: ["max", "xhigh", "high", "medium", "low"],
     },
+  }), {
+    name: "Claude Sonnet 5",
+    description: "Balanced Claude model for coding and agentic workflows",
+    release_date: "2026-06-30",
+    last_updated: "2026-06-30",
+    attachment: true,
+    reasoning: true,
+    reasoning_options: [{ type: "toggle" }],
+    tool_call: true,
+    open_weights: false,
+    cost: { input: 2, output: 10 },
+    limit: { context: 1_000_000, output: 128_000 },
+    modalities: { input: ["text", "image", "pdf"], output: ["text"] },
+  });
+
+  expect(model).toMatchObject({
+    reasoning_options: [
+      { type: "effort", values: ["max", "xhigh", "high", "medium", "low"] },
+    ],
+  });
+});
+
+test("keeps authored OpenRouter reasoning options when API omits reasoning metadata", () => {
+  const model = buildOpenRouterModel(openRouterModel({
+    supported_parameters: ["tools", "tool_choice", "reasoning", "temperature"],
+    reasoning: undefined,
   }), {
     name: "Claude Sonnet 5",
     description: "Balanced Claude model for coding and agentic workflows",
@@ -1289,6 +1315,39 @@ test("parses Vercel pricing tiers with an implicit zero minimum", () => {
   expect(buildVercelModel(model!, undefined)).toMatchObject({
     cost: { input: 1, output: 6, cache_read: 0.1 },
   });
+});
+
+test("Vercel factored models inherit temperature from base metadata", () => {
+  const [model] = vercel.parseModels({
+    data: [{
+      id: "moonshotai/kimi-k3",
+      name: "Kimi K3",
+      created: 1_784_160_000,
+      context_window: 1_000_000,
+      max_tokens: 131_072,
+      type: "language",
+      tags: ["reasoning", "tool-use", "vision"],
+      pricing: {
+        input: "0.000003",
+        output: "0.000015",
+        input_cache_read: "0.0000003",
+      },
+    }],
+  });
+
+  const synced = buildVercelModel(model!, {
+    base_model: "moonshotai/kimi-k3",
+    name: "Kimi K3",
+    description: "Kimi multimodal agent model for visual understanding, coding, and planning",
+    open_weights: false,
+    reasoning_options: [],
+    cost: { input: 3, output: 15, cache_read: 0.3 },
+    limit: { context: 1_000_000 },
+    modalities: { input: ["text", "image", "pdf"], output: ["text"] },
+  });
+
+  expect(synced).toMatchObject({ base_model: "moonshotai/kimi-k3" });
+  expect(synced).not.toHaveProperty("temperature");
 });
 
 test("skips LLM Gateway base_model factoring when no metadata entry exists", () => {

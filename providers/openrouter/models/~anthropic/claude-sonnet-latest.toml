@@ -1,3 +1,5 @@
+# OpenRouter alias currently redirects to Claude Sonnet 5.
+# https://openrouter.ai/~anthropic/claude-sonnet-latest
 name = "Anthropic Claude Sonnet Latest"
 description = "Balanced Claude model for coding, analysis, agent workflows, and cost control"
 family = "claude-sonnet"
@@ -8,19 +10,12 @@ reasoning = true
 temperature = false
 tool_call = true
 structured_output = true
+knowledge = "2026-01-31"
 open_weights = false
 
 [[reasoning_options]]
-type = "toggle"
-
-[[reasoning_options]]
 type = "effort"
-values = ["low", "medium", "high", "max"]
-
-[[reasoning_options]]
-type = "budget_tokens"
-min = 1_024
-max = 127_999
+values = ["low", "medium", "high", "xhigh", "max"]
 
 [cost]
 input = 2

@@ -93,9 +93,12 @@ export const ambient = {
   },
   translateModel(model, context) {
     if (!model.is_ready) return undefined;
-    const built = buildOpenRouterModel(toOpenRouterShape(model), context.existing(model.id));
+    const existing = context.existing(model.id);
+    const built = buildOpenRouterModel(toOpenRouterShape(model), existing);
     const reasoning = model.supported_features.includes("reasoning");
-    const withOptions = reasoning ? { ...built, reasoning_options: [] } : built;
+    const withOptions = reasoning
+      ? { ...built, reasoning_options: existing?.reasoning_options ?? [] }
+      : built;
     const aliasName = ambientAliasName(model.id);
     return {
       id: model.id,

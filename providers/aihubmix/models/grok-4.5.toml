@@ -1,0 +1,15 @@
+base_model = "xai/grok-4.5"
+reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high"] }]
+
+[cost]
+input = 2
+output = 6
+cache_read = 0.5
+
+[limit]
+context = 1_000_000
+output = 1_000_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

@@ -1,0 +1,15 @@
+# Sources (accessed 2026-07-16):
+# - Pricing (256K): https://tinker-docs.thinkingmachines.ai/tinker/models/
+# - Reasoning: https://tinker-docs.thinkingmachines.ai/tinker/compatible-apis/openai/
+# - Effort presets: https://tinker-docs.thinkingmachines.ai/cookbook/inkling/thinking-effort/
+# API: {"reasoning_effort": "none"|"minimal"|"low"|"medium"|"high"|"xhigh"} or float [0.0, 0.99]
+base_model = "thinkingmachines/inkling"
+reasoning_options = [{ type = "effort", values = ["none", "minimal", "low", "medium", "high", "xhigh"] }]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 3.74
+output = 9.36
+cache_read = 0.748
