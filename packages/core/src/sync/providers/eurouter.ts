@@ -157,10 +157,23 @@ function reasoningCapability(model: EUrouterModel, params: Set<string>) {
   return hasReasoningControls || hasReasoningParameter ? true : undefined;
 }
 
+// EUrouter route slugs whose models/ metadata entry lives under a different id.
+// Each mapping was verified against the route's catalog identity (name, release
+// date, description) and the factoring used by other providers for the same model.
+const routeMetadataAliases: Record<string, string> = {
+  "alibaba/qwen3-coder-30b-a3b": "alibaba/qwen3-coder-30b-a3b-instruct",
+  "google/gemma-4": "google/gemma-4-31b-it",
+  "mistral/devstral-2": "mistral/devstral-2512",
+  "mistral/devstral-2-123b-instruct-2512": "mistral/devstral-2512",
+  "mistral/mistral-large-3": "mistral/mistral-large-2512",
+  "mistral/mistral-small-4": "mistral/mistral-small-2603",
+};
+
 export function resolveEUrouterBaseModel(canonicalSlug: string | null | undefined) {
   if (canonicalSlug === undefined || canonicalSlug === null) return undefined;
+  const slug = routeMetadataAliases[canonicalSlug] ?? canonicalSlug;
 
-  const [author, ...modelParts] = canonicalSlug.split("/");
+  const [author, ...modelParts] = slug.split("/");
   if (author === undefined || modelParts.length === 0) return undefined;
   const aliases: Record<string, string> = {
     mistral: "mistralai",
@@ -170,10 +183,10 @@ export function resolveEUrouterBaseModel(canonicalSlug: string | null | undefine
   const resolved = resolveCanonicalBaseModel(`${aliases[author] ?? author}/${modelParts.join("/")}`);
   if (resolved !== undefined) return resolved;
 
-  const metadataPath = path.join(MODELS_DIR, `${canonicalSlug}.toml`);
+  const metadataPath = path.join(MODELS_DIR, `${slug}.toml`);
   try {
     return readdirSync(path.dirname(metadataPath)).includes(path.basename(metadataPath))
-      ? canonicalSlug
+      ? slug
       : undefined;
   } catch {
     return undefined;
@@ -216,10 +229,12 @@ export function buildEUrouterModel(
   const completion = price(model.pricing?.completion);
   const advertisedReasoning = model.reasoning;
   const reasoning = reasoningCapability(model, params);
+  const canonical = resolveModelBase(model, existing);
+  const effectiveReasoning = reasoning ?? existing?.reasoning ?? baseModelReasoning(canonical);
   const apiReasoningOptions = reasoningOptions(advertisedReasoning);
   const reasoning_options = existing?.reasoning_options?.length
     ? existing.reasoning_options
-    : apiReasoningOptions ?? existing?.reasoning_options ?? (reasoning === true ? [] : undefined);
+    : apiReasoningOptions ?? existing?.reasoning_options ?? (effectiveReasoning === true ? [] : undefined);
   const context = model.context_length ?? model.top_provider.context_length ?? existing?.limit?.context ?? 0;
   const family = inferFamily(model, name);
   const familyValue = existing?.family === "o" && family !== "o"
@@ -230,9 +245,7 @@ export function buildEUrouterModel(
   const structuredOutput = params.has("response_format") || params.has("structured_outputs");
   const knowledge = model.knowledge_cutoff?.slice(0, 10) ?? existing?.knowledge;
   const openWeights = Boolean(model.hugging_face_id);
-  const canonical = resolveModelBase(model, existing);
   const releaseDate = model.release_date ?? existing?.release_date;
-  const effectiveReasoning = reasoning ?? existing?.reasoning ?? baseModelReasoning(canonical);
   const cost = model.pricing?.currency === "USD" && prompt !== undefined && completion !== undefined
     ? {
         input: prompt,

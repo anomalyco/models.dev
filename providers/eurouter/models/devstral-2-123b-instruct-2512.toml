@@ -1,19 +1,7 @@
-name = "Devstral 2 123B Instruct"
+base_model = "mistral/devstral-2512"
 description = "Devstral 2 123B Instruct is Mistral's long-context code model for agentic software engineering and multi-file reasoning tasks."
-family = "devstral"
-release_date = "2026-01-01"
-last_updated = "2026-01-01"
-attachment = false
-reasoning = false
-temperature = true
-tool_call = true
 structured_output = true
-open_weights = true
 
 [limit]
 context = 200_000
 output = 16_000
-
-[modalities]
-input = ["text"]
-output = ["text"]

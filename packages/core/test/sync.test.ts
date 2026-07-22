@@ -929,6 +929,15 @@ test("maps EUrouter author aliases to canonical metadata", () => {
   expect(resolveEUrouterBaseModel("minimax/minimax-m2")).toBe("minimax/MiniMax-M2");
 });
 
+test("maps EUrouter route slugs to differently named metadata entries", () => {
+  expect(resolveEUrouterBaseModel("mistral/devstral-2")).toBe("mistral/devstral-2512");
+  expect(resolveEUrouterBaseModel("mistral/devstral-2-123b-instruct-2512")).toBe("mistral/devstral-2512");
+  expect(resolveEUrouterBaseModel("mistral/mistral-large-3")).toBe("mistral/mistral-large-2512");
+  expect(resolveEUrouterBaseModel("mistral/mistral-small-4")).toBe("mistral/mistral-small-2603");
+  expect(resolveEUrouterBaseModel("google/gemma-4")).toBe("google/gemma-4-31b-it");
+  expect(resolveEUrouterBaseModel("alibaba/qwen3-coder-30b-a3b")).toBe("alibaba/qwen3-coder-30b-a3b-instruct");
+});
+
 test("uses EUrouter lifecycle dates instead of the catalog insertion timestamp", () => {
   const model = buildEUrouterModel(eurouterModel({
     id: "example-model",
@@ -963,6 +972,7 @@ test("inherits canonical reasoning when EUrouter does not advertise reasoning me
 
   expect(model).toMatchObject({
     base_model: "anthropic/claude-sonnet-5",
+    reasoning_options: [],
     cost: { reasoning: 3 },
   });
   expect("reasoning" in model).toBe(false);
@@ -980,6 +990,7 @@ test("inherits canonical reasoning when EUrouter reports no verified controls", 
 
   expect(model).toMatchObject({
     base_model: "anthropic/claude-sonnet-5",
+    reasoning_options: [],
     cost: { reasoning: 3 },
   });
   expect("reasoning" in model).toBe(false);

@@ -1,14 +1,6 @@
-name = "Mistral Small 4"
+base_model = "mistral/mistral-small-2603"
 description = "Mistral Small 4 is Mistral AI's open hybrid MoE model unifying instruct, reasoning, coding, and multimodal workloads."
-family = "mistral-small"
-release_date = "2026-03-16"
-last_updated = "2026-03-16"
-attachment = true
-reasoning = true
-temperature = true
-tool_call = true
 structured_output = true
-open_weights = true
 reasoning_options = []
 
 [cost]
@@ -21,7 +13,3 @@ cache_write = 0
 [limit]
 context = 262_144
 output = 262_144
-
-[modalities]
-input = ["text", "image"]
-output = ["text"]
