@@ -1,0 +1,13 @@
+base_model = "google/gemini-3.1-pro-preview"
+description = "Advanced Gemini model for complex reasoning, coding, and multimodal analysis"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high"]
+
+[cost]
+input = 2
+output = 12
+reasoning = 12
+cache_read = 0.2
+cache_write = 0.375

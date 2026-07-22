@@ -1,0 +1,12 @@
+base_model = "xiaomi/mimo-v2.5"
+description = "MiMo omni model for text, image, video, audio, and agents"
+structured_output = true
+reasoning_options = []
+
+[cost]
+input = 0.14
+output = 0.28
+cache_read = 0.0028
+
+[limit]
+context = 1_050_000

@@ -1,0 +1,13 @@
+base_model = "alibaba/qwen3.6-35b-a3b"
+description = "Qwen vision-language model for visual reasoning, documents, and agent tasks"
+reasoning_options = []
+
+[cost]
+input = 0.14
+output = 1
+
+[limit]
+output = 262_144
+
+[modalities]
+input = ["text", "image", "video"]

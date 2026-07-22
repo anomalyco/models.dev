@@ -1,0 +1,25 @@
+name = "Laguna S 2.1"
+description = "Free provider route for experiments, demos, and cost-sensitive chat workloads"
+family = "laguna-s"
+release_date = "2026-07-21"
+last_updated = "2026-07-21"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = false
+open_weights = true
+reasoning_options = []
+
+[cost]
+input = 0
+output = 0
+cache_read = 0
+
+[limit]
+context = 1_048_576
+output = 131_072
+
+[modalities]
+input = ["text"]
+output = ["text"]

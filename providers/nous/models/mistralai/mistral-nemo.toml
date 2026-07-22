@@ -1,0 +1,11 @@
+base_model = "mistral/mistral-nemo"
+description = "Mistral model for multilingual chat, reasoning, and tool-assisted workflows"
+structured_output = true
+
+[cost]
+input = 0.019
+output = 0.03
+
+[limit]
+context = 131_072
+output = 16_384

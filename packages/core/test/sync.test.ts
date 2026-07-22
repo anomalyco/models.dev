@@ -32,6 +32,7 @@ import {
   type OpenRouterModel,
 } from "../src/sync/providers/openrouter.js";
 import { buildLLMGatewayModel, type LLMGatewayModel } from "../src/sync/providers/llmgateway.js";
+import { nous } from "../src/sync/providers/nous.js";
 import { openai, parseOpenAIModels } from "../src/sync/providers/openai.js";
 import { resolveVeniceBaseModel } from "../src/sync/providers/venice.js";
 import { buildVercelModel, vercel } from "../src/sync/providers/vercel.js";
@@ -1015,6 +1016,53 @@ test("keeps authored OpenRouter reasoning options when API omits reasoning metad
 
   expect(model).toMatchObject({
     reasoning_options: [{ type: "toggle" }],
+  });
+});
+
+test("Nous sync excludes aliases and malformed records while preserving Hermes metadata", () => {
+  const models = nous.parseModels({
+    data: [
+      openRouterModel({
+        id: "nousresearch/hermes-4-70b",
+        name: "Nous: Hermes 4 70B",
+        hugging_face_id: "NousResearch/Hermes-4-70B",
+        pricing: { prompt: "0.0000000500", completion: "0.0000002000" },
+        reasoning: { mandatory: false },
+      }),
+      openRouterModel({ id: "~nousresearch/hermes-latest" }),
+      { id: "incomplete", architecture: {} },
+    ],
+  });
+
+  expect(models.map((model) => model.id)).toEqual(["nousresearch/hermes-4-70b"]);
+
+  const translated = nous.translateModel(models[0]!, {
+    existing: () => ({
+      name: "Hermes 4 70B",
+      description: "Reasoning model for deliberate analysis, multi-step problem solving, and tool use",
+      family: "hermes" as const,
+      release_date: "2025-08-26",
+      last_updated: "2025-08-26",
+      attachment: false,
+      reasoning: true,
+      reasoning_options: [{ type: "toggle" as const }],
+      temperature: true,
+      tool_call: false,
+      structured_output: false,
+      knowledge: "2024-08-31",
+      open_weights: true,
+      cost: { input: 0.13, output: 0.4 },
+      limit: { context: 131_072, output: 131_072 },
+      modalities: { input: ["text" as const], output: ["text" as const] },
+    }),
+    authored: () => undefined,
+  });
+
+  expect(translated?.model).toMatchObject({
+    description: "Reasoning model for deliberate analysis, multi-step problem solving, and tool use",
+    family: "hermes",
+    reasoning_options: [{ type: "toggle" }],
+    cost: { input: 0.05, output: 0.2 },
   });
 });
 

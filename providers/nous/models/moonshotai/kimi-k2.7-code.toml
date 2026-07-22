@@ -1,0 +1,12 @@
+base_model = "moonshotai/kimi-k2.7-code"
+description = "Kimi coding model for software agents, refactors, and repository reasoning"
+temperature = true
+reasoning_options = []
+
+[cost]
+input = 0.82
+output = 3.75
+cache_read = 0.16
+
+[modalities]
+input = ["text", "image"]

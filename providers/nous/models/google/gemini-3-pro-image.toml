@@ -1,0 +1,15 @@
+base_model = "google/gemini-3-pro-image"
+description = "Image model for prompt-driven generation, editing, and visual design workflows"
+tool_call = true
+structured_output = true
+reasoning_options = []
+
+[cost]
+input = 2
+output = 12
+reasoning = 12
+cache_read = 0.2
+cache_write = 0.375
+
+[limit]
+context = 131_072

@@ -1,0 +1,13 @@
+base_model = "google/gemini-2.5-flash-lite"
+description = "Low-latency Gemini model for high-volume multimodal and agent workloads"
+reasoning_options = []
+
+[cost]
+input = 0.1
+output = 0.4
+reasoning = 0.4
+cache_read = 0.01
+cache_write = 0.0833
+
+[limit]
+output = 65_535

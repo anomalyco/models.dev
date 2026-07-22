@@ -1,0 +1,11 @@
+base_model = "nvidia/nemotron-3-nano-30b-a3b"
+description = "Compact Nemotron model for efficient reasoning and deployable AI agents"
+structured_output = true
+reasoning_options = []
+
+[cost]
+input = 0.05
+output = 0.2
+
+[limit]
+output = 228_000

@@ -1,0 +1,12 @@
+base_model = "moonshotai/kimi-k2-thinking"
+description = "Kimi reasoning model for long-horizon research, planning, and tool use"
+structured_output = true
+reasoning_options = []
+
+[cost]
+input = 0.6
+output = 2.5
+cache_read = 0.15
+
+[limit]
+output = 100_352

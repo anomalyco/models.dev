@@ -1,0 +1,12 @@
+base_model = "zhipuai/glm-5.1"
+description = "Flagship GLM model for hybrid reasoning, coding, and agentic engineering"
+reasoning_options = []
+
+[cost]
+input = 0.966
+output = 3.036
+cache_read = 0.1794
+
+[limit]
+context = 204_800
+output = 128_000
