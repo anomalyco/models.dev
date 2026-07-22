@@ -1,20 +1,21 @@
-reasoning_options = [{ type = "toggle" }]
+# Source: https://inference-api.nousresearch.com/v1/models
+# Nous exposes reasoning capability but does not document a same-model reasoning control.
+# The API reports no separate completion cap; Models.dev requires an output limit, so it uses context.
+reasoning_options = []
 name = "Hermes 4 70B"
-description = "Reasoning model for deliberate analysis, multi-step problem solving, and tool use"
-family = "hermes"
+description = "Hermes 4 70B is a hybrid reasoning model from Nous Research, built on Meta-Llama-3.1-70B."
 release_date = "2025-08-26"
 last_updated = "2025-08-26"
 attachment = false
 reasoning = true
 temperature = true
 tool_call = false
-structured_output = false
 knowledge = "2024-08-31"
 open_weights = true
 
 [cost]
-input = 0.13
-output = 0.4
+input = 0.05
+output = 0.2
 
 [limit]
 context = 131_072
