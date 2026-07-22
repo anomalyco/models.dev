@@ -277,10 +277,12 @@ export function buildEUrouterModel(
   const advertisedReasoning = model.reasoning;
   const reasoning = reasoningCapability(model, params);
   const effectiveReasoning = reasoning ?? existing?.reasoning ?? baseModelReasoning(canonical);
+  // API-advertised controls win so catalog changes propagate; authored options are
+  // the fallback when the API exposes no derivable controls.
   const apiReasoningOptions = reasoningOptions(advertisedReasoning);
-  const reasoning_options = existing?.reasoning_options?.length
-    ? existing.reasoning_options
-    : apiReasoningOptions ?? existing?.reasoning_options ?? (effectiveReasoning === true ? [] : undefined);
+  const reasoning_options = apiReasoningOptions
+    ?? existing?.reasoning_options
+    ?? (effectiveReasoning === true ? [] : undefined);
   const context = model.context_length ?? model.top_provider.context_length ?? existing?.limit?.context ?? 0;
   const family = inferFamily(model, name);
   const familyValue = existing?.family === "o" && family !== "o"
