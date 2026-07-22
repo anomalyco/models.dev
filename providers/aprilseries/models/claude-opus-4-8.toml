@@ -1,0 +1,11 @@
+# Source: https://aprilseries.lat/models (accessed 2026-07-23)
+# API: /v1/messages {"thinking":{"type":"enabled","budget_tokens":<n>}}
+base_model = "anthropic/claude-opus-4-8"
+reasoning_options = [{ type = "budget_tokens", min = 1_024 }]
+
+[limit]
+context = 262_000
+
+[cost]
+input = 0.45
+output = 2.25
