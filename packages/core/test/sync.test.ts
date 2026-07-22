@@ -936,6 +936,12 @@ test("maps EUrouter route slugs to differently named metadata entries", () => {
   expect(resolveEUrouterBaseModel("mistral/mistral-small-4")).toBe("mistral/mistral-small-2603");
   expect(resolveEUrouterBaseModel("google/gemma-4")).toBe("google/gemma-4-31b-it");
   expect(resolveEUrouterBaseModel("alibaba/qwen3-coder-30b-a3b")).toBe("alibaba/qwen3-coder-30b-a3b-instruct");
+  expect(resolveEUrouterBaseModel("alibaba/qwen3.6-35b")).toBe("alibaba/qwen3.6-35b-a3b");
+  expect(resolveEUrouterBaseModel("alibaba/qwen-2.5-vl-72b-instruct")).toBe("alibaba/qwen2-5-vl-72b-instruct");
+  expect(resolveEUrouterBaseModel("nvidia/nemotron-3-nano-omni")).toBe("nvidia/nemotron-3-nano-omni-30b-a3b-reasoning");
+  expect(resolveEUrouterBaseModel("mistral/codestral")).toBe("mistral/codestral-latest");
+  expect(resolveEUrouterBaseModel("mistral/magistral-medium")).toBe("mistral/magistral-medium-latest");
+  expect(resolveEUrouterBaseModel("mistral/mistral-nemo-12b")).toBe("mistral/mistral-nemo");
 });
 
 test("uses EUrouter lifecycle dates instead of the catalog insertion timestamp", () => {

@@ -1,5 +1,8 @@
+# The EUrouter route currently exposes no tool or response_format parameters
+# (supported_parameters: temperature/top_p/max_tokens/stop only), so tool_call and
+# structured_output stay false and the description makes no tool-calling claim.
 base_model = "alibaba/qwen3-coder-480b-a35b-instruct"
-description = "Massive code-specialist model optimized for repo-scale coding, long-context understanding, and precise tool calls."
+description = "Massive code-specialist model optimized for repo-scale coding and long-context understanding."
 tool_call = false
 structured_output = false
 

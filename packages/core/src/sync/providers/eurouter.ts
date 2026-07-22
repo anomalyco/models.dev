@@ -161,12 +161,18 @@ function reasoningCapability(model: EUrouterModel, params: Set<string>) {
 // Each mapping was verified against the route's catalog identity (name, release
 // date, description) and the factoring used by other providers for the same model.
 const routeMetadataAliases: Record<string, string> = {
+  "alibaba/qwen-2.5-vl-72b-instruct": "alibaba/qwen2-5-vl-72b-instruct",
   "alibaba/qwen3-coder-30b-a3b": "alibaba/qwen3-coder-30b-a3b-instruct",
+  "alibaba/qwen3.6-35b": "alibaba/qwen3.6-35b-a3b",
   "google/gemma-4": "google/gemma-4-31b-it",
+  "mistral/codestral": "mistral/codestral-latest",
   "mistral/devstral-2": "mistral/devstral-2512",
   "mistral/devstral-2-123b-instruct-2512": "mistral/devstral-2512",
+  "mistral/magistral-medium": "mistral/magistral-medium-latest",
   "mistral/mistral-large-3": "mistral/mistral-large-2512",
+  "mistral/mistral-nemo-12b": "mistral/mistral-nemo",
   "mistral/mistral-small-4": "mistral/mistral-small-2603",
+  "nvidia/nemotron-3-nano-omni": "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning",
 };
 
 export function resolveEUrouterBaseModel(canonicalSlug: string | null | undefined) {
