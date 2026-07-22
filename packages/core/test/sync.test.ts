@@ -1002,7 +1002,7 @@ test("inherits canonical reasoning when EUrouter reports no verified controls", 
   expect("reasoning" in model).toBe(false);
 });
 
-test("omits non-USD EUrouter pricing instead of mislabeling it as USD", () => {
+test("converts EUR EUrouter pricing to USD at the pinned reference rate", () => {
   const model = buildEUrouterModel(eurouterModel({
     pricing: {
       prompt: "0.000002",
@@ -1011,7 +1011,36 @@ test("omits non-USD EUrouter pricing instead of mislabeling it as USD", () => {
     },
   }), undefined);
 
+  expect(model).toMatchObject({
+    cost: { input: 2.2816, output: 11.408 },
+  });
+});
+
+test("omits unconvertible EUrouter pricing instead of mislabeling it as USD", () => {
+  const model = buildEUrouterModel(eurouterModel({
+    pricing: {
+      prompt: "0.000002",
+      completion: "0.00001",
+      currency: "CHF",
+    },
+  }), undefined);
+
   expect("cost" in model).toBe(false);
+});
+
+test("preserves an authored reasoning override on factored EUrouter models", () => {
+  const model = buildEUrouterModel(eurouterModel({
+    reasoning: undefined,
+    supported_parameters: ["temperature", "tools"],
+  }), {
+    base_model: "anthropic/claude-sonnet-5",
+    reasoning: false,
+  });
+
+  expect(model).toMatchObject({
+    base_model: "anthropic/claude-sonnet-5",
+    reasoning: false,
+  });
 });
 
 test("skips new standalone EUrouter models without an authoritative release date", () => {

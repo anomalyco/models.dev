@@ -97,11 +97,21 @@ export const eurouter = {
   },
 } satisfies SyncProvider<EUrouterModel>;
 
-function price(value: string | undefined) {
-  if (value === undefined) return undefined;
+// Non-USD catalog prices are converted at a pinned reference rate so synced costs
+// stay deterministic between rate refreshes. ECB EUR reference rate, 2026-07-22.
+const EUR_TO_USD = 1.1408;
+
+function currencyRate(currency: string | undefined) {
+  if (currency === "USD") return 1;
+  if (currency === "EUR") return EUR_TO_USD;
+  return undefined;
+}
+
+function price(value: string | undefined, rate: number | undefined) {
+  if (value === undefined || rate === undefined) return undefined;
   const number = Number(value);
   return Number.isFinite(number) && number >= 0
-    ? Math.round(number * 1_000_000_000_000) / 1_000_000
+    ? Math.round(number * rate * 1_000_000_000_000) / 1_000_000
     : undefined;
 }
 
@@ -162,6 +172,7 @@ function reasoningCapability(model: EUrouterModel, params: Set<string>) {
 // date, description) and the factoring used by other providers for the same model.
 const routeMetadataAliases: Record<string, string> = {
   "alibaba/qwen-2.5-vl-72b-instruct": "alibaba/qwen2-5-vl-72b-instruct",
+  "alibaba/qwen3-235b-a22b-instruct": "alibaba/qwen3-235b-a22b",
   "alibaba/qwen3-coder-30b-a3b": "alibaba/qwen3-coder-30b-a3b-instruct",
   "alibaba/qwen3.6-35b": "alibaba/qwen3.6-35b-a3b",
   "google/gemma-4": "google/gemma-4-31b-it",
@@ -231,8 +242,9 @@ export function buildEUrouterModel(
   const name = model.name;
   const input = modalities(model.architecture.input_modalities, ["text"]);
   const output = modalities(model.architecture.output_modalities, ["text"]);
-  const prompt = price(model.pricing?.prompt);
-  const completion = price(model.pricing?.completion);
+  const fxRate = currencyRate(model.pricing?.currency);
+  const prompt = price(model.pricing?.prompt, fxRate);
+  const completion = price(model.pricing?.completion, fxRate);
   const advertisedReasoning = model.reasoning;
   const reasoning = reasoningCapability(model, params);
   const canonical = resolveModelBase(model, existing);
@@ -252,15 +264,15 @@ export function buildEUrouterModel(
   const knowledge = model.knowledge_cutoff?.slice(0, 10) ?? existing?.knowledge;
   const openWeights = Boolean(model.hugging_face_id);
   const releaseDate = model.release_date ?? existing?.release_date;
-  const cost = model.pricing?.currency === "USD" && prompt !== undefined && completion !== undefined
+  const cost = prompt !== undefined && completion !== undefined
     ? {
         input: prompt,
         output: completion,
         reasoning: effectiveReasoning === true
-          ? price(model.pricing?.internal_reasoning)
+          ? price(model.pricing?.internal_reasoning, fxRate)
           : undefined,
-        cache_read: price(model.pricing?.input_cache_read),
-        cache_write: price(model.pricing?.input_cache_write),
+        cache_read: price(model.pricing?.input_cache_read, fxRate),
+        cache_write: price(model.pricing?.input_cache_write, fxRate),
         tiers: existing?.cost?.tiers,
       }
     : existing?.cost;
@@ -289,7 +301,7 @@ export function buildEUrouterModel(
       {
         description,
         attachment,
-        reasoning,
+        reasoning: reasoning ?? (existing?.base_model === canonical ? existing?.reasoning : undefined),
         reasoning_options,
         temperature: params.has("temperature"),
         tool_call: toolCall,

@@ -2,5 +2,12 @@ base_model = "openai/gpt-oss-20b"
 description = "GPT-OSS 20B is OpenAI's smaller open-weight reasoning model for efficient chat, coding, and agentic workloads."
 reasoning_options = []
 
+[cost]
+input = 0.045632
+output = 0.17112
+reasoning = 0
+cache_read = 0
+cache_write = 0
+
 [limit]
 output = 131_072

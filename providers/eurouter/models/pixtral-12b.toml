@@ -2,5 +2,11 @@ base_model = "mistral/pixtral-12b"
 description = "Pixtral 12B is Mistral's multimodal model for image understanding, visual question answering, and document analysis."
 structured_output = true
 
+[cost]
+input = 0.22816
+output = 0.22816
+cache_read = 0
+cache_write = 0
+
 [limit]
 output = 4_000

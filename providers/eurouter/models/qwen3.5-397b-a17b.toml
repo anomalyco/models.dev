@@ -2,6 +2,13 @@ base_model = "alibaba/qwen3.5-397b-a17b"
 description = "Qwen3.5 397B A17B is an Alibaba/Qwen MoE model for long-context reasoning, coding, agentic tasks, tool use, and multimodal understanding."
 reasoning_options = []
 
+[cost]
+input = 0.68448
+output = 4.10688
+reasoning = 0
+cache_read = 0
+cache_write = 0
+
 [limit]
 context = 250_000
 output = 16_000

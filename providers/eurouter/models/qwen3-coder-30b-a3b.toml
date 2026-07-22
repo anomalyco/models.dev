@@ -2,5 +2,11 @@ base_model = "alibaba/qwen3-coder-30b-a3b-instruct"
 description = "Qwen3 Coder 30B A3B is Alibaba's Mixture-of-Experts coding model for software engineering and agentic code tasks."
 structured_output = true
 
+[cost]
+input = 0.068448
+output = 0.250976
+cache_read = 0
+cache_write = 0
+
 [limit]
 output = 262_144

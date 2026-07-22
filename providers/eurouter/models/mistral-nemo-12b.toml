@@ -2,6 +2,12 @@ base_model = "mistral/mistral-nemo"
 description = "Mistral Nemo 12B is Mistral AI's open multilingual model built with NVIDIA for efficient long-context text generation."
 structured_output = true
 
+[cost]
+input = 0.148304
+output = 0.148304
+cache_read = 0
+cache_write = 0
+
 [limit]
 context = 120_832
 output = 120_832
