@@ -1,0 +1,13 @@
+# Source: https://inference-api.nousresearch.com/v1/models
+# Nous advertises reasoning efforts but does not document their request syntax.
+base_model = "moonshotai/kimi-k3"
+reasoning_options = []
+
+[cost]
+input = 3
+output = 15
+cache_read = 0.3
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
