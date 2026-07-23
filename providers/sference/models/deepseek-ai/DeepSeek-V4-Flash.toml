@@ -1,3 +1,7 @@
+# Synced from GET /v1/models. The effort option is hand-authored: the API
+# accepts OpenAI reasoning_effort on chat completions and responses, and this
+# model acts on high and xhigh; lower levels enable thinking at the default
+# depth, so only high and xhigh are advertised.
 base_model = "deepseek/deepseek-v4-flash"
 
 [interleaved]
@@ -5,6 +9,10 @@ field = "reasoning_content"
 
 [[reasoning_options]]
 type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["high", "xhigh"]
 
 [cost]
 input = 0.14
