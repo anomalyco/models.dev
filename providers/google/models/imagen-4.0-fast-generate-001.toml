@@ -1,0 +1,39 @@
+# Sources:
+# https://ai.google.dev/gemini-api/docs/models/imagen
+#   - Model codes include imagen-4.0-fast-generate-001
+#   - Input: text; Output: images
+#   - Input token limit: 480; output images: 1–4
+#   - Latest update: June 2025
+#   - Imagen 4 standard/ultra/fast endpoints deprecated; shutdown August 17, 2026
+# https://ai.google.dev/gemini-api/docs/pricing
+#   - Imagen 4 Fast: $0.02 per image (paid tier; not token-billed)
+# https://cloud.google.com/gemini-enterprise-agent-platform/generative-ai/pricing
+#   - Imagen 4 Fast image generation: $0.02 per image
+# https://docs.cloud.google.com/vertex-ai/generative-ai/docs/models/imagen/4-0-generate
+#   - imagen-4.0-fast-generate-001: text → images; GA; release 2025-08-14
+#   - Max 4 output images; no image-edit/customization on Fast
+# https://developers.googleblog.com/en/announcing-imagen-4-fast-and-imagen-4-family-generally-available-in-the-gemini-api/
+#   - Gemini API GA announcement 2025-08-15; Imagen 4 Fast $0.02/image
+#
+# Note: cost is omitted because billing is per image ($0.02), not per million tokens.
+# The catalog cost schema is USD per million tokens only.
+
+name = "Imagen 4 Fast"
+description = "Image model for prompt-driven generation, editing, and visual design workflows"
+family = "imagen"
+release_date = "2025-08-14"
+last_updated = "2025-08-14"
+attachment = false
+reasoning = false
+temperature = false
+tool_call = false
+open_weights = false
+status = "deprecated"
+
+[limit]
+context = 480
+output = 0
+
+[modalities]
+input = ["text"]
+output = ["image"]
