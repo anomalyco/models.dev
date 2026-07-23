@@ -1,0 +1,24 @@
+# Sources:
+# - https://ai.google.dev/gemini-api/docs/imagen (model ID, text→image, 480 input tokens, deprecated; shutdown 2026-08-17)
+# - https://ai.google.dev/gemini-api/docs/pricing (Imagen 4 Standard $0.04/image; not token-priced)
+# - https://docs.cloud.google.com/vertex-ai/generative-ai/docs/models/imagen/4-0-generate-001 (GA 2025-08-14, deprecated)
+# Cost omitted: catalog cost fields are USD per 1M tokens; Imagen 4 is billed per image.
+name = "Imagen 4"
+description = "Image model for prompt-driven generation, editing, and visual design workflows"
+family = "imagen"
+release_date = "2025-08-14"
+last_updated = "2025-08-14"
+attachment = false
+reasoning = false
+temperature = false
+tool_call = false
+open_weights = false
+status = "deprecated"
+
+[limit]
+context = 480
+output = 0
+
+[modalities]
+input = ["text"]
+output = ["image"]
