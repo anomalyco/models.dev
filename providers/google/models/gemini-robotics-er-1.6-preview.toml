@@ -6,6 +6,9 @@
 base_model = "google/gemini-robotics-er-1.6-preview"
 
 [[reasoning_options]]
+type = "toggle" # API: thinking_config.thinking_budget = 0 disables thinking
+
+[[reasoning_options]]
 type = "budget_tokens" # API: thinking_config.thinking_budget
 min = 0
 
