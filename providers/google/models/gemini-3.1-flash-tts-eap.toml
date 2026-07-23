@@ -1,0 +1,39 @@
+# Sources:
+# - Gemini Models API lists model id `gemini-3.1-flash-tts-eap` (catalog sync missing-model report)
+# - Public product/model docs use `gemini-3.1-flash-tts-preview` (same Gemini 3.1 Flash TTS generation):
+#   https://ai.google.dev/gemini-api/docs/models/gemini-3.1-flash-tts-preview
+#   https://docs.cloud.google.com/text-to-speech/docs/gemini-tts
+# - Pricing (Gemini API paid tier; matches Cloud TTS Gemini 3.1 Flash TTS Preview):
+#   https://ai.google.dev/gemini-api/docs/pricing
+#   https://cloud.google.com/text-to-speech/pricing
+# - Speech generation capabilities (text in / audio out; no tools/thinking):
+#   https://ai.google.dev/gemini-api/docs/speech-generation
+# - Release 2026-04-15:
+#   https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-3-1-flash-tts/
+# - Knowledge cutoff January 2025:
+#   https://deepmind.google/models/gemini-audio/speech-generation/
+
+name = "Gemini 3.1 Flash TTS EAP"
+description = "Speech generation model for controllable voice, narration, and audio delivery with expressive audio tags"
+family = "gemini-flash"
+release_date = "2026-04-15"
+last_updated = "2026-04-15"
+attachment = false
+reasoning = false
+temperature = true
+tool_call = false
+knowledge = "2025-01"
+open_weights = false
+status = "alpha"
+
+[cost]
+input = 1
+output = 20
+
+[limit]
+context = 8_192
+output = 16_384
+
+[modalities]
+input = ["text"]
+output = ["audio"]
