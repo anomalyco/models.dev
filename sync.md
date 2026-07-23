@@ -62,6 +62,8 @@ Pioneer sets `trackMissingModels: false`: its API currently assigns the placehol
 
 OpenAI also sets `trackMissingModels: false`: `/v1/models` is scoped to the automation account and mixes public models with legacy, internal experiment, dated snapshot, and non-catalog IDs without lifecycle metadata. Existing OpenAI TOMLs are still preserved by the availability sync.
 
+Google sets `trackMissingModels: false`: `/v1beta/models` does not expose lifecycle metadata and can retain shut-down models, superseded snapshots, moving aliases, and EAP IDs. Existing Google TOMLs are still updated from API-authoritative fields.
+
 ## Provider Modules
 
 Provider modules live in `packages/core/src/sync/providers/`. A provider exports an object satisfying `SyncProvider<SourceModel>`:
@@ -180,7 +182,7 @@ Google is implemented in `packages/core/src/sync/providers/google.ts`.
 - Model IDs are derived from the `models/{model}` resource names.
 - The API is authoritative for display names, token limits, temperature metadata, and the `thinking` flag when present.
 - Local Google models missing from the API response are removed.
-- New Google API models are not created automatically (`skipCreates`); each missing ID opens a deduped GitHub issue for the issue fixer / maintainers.
+- New Google API models are not created automatically (`skipCreates`) and do not open missing-model issues because the endpoint is not lifecycle-authoritative.
 - Missing-model tracking is limited to recognizable public model families; opaque API codenames such as `ajax`, `perseus`, and `thorin` are ignored.
 
 ## xAI Notes

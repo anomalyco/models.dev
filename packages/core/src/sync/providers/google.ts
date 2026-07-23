@@ -48,6 +48,9 @@ export const google = {
   name: "Google",
   modelsDir: "providers/google/models",
   skipCreates: true,
+  // /v1beta/models has no lifecycle fields and can retain shut-down,
+  // superseded, moving-alias, and EAP model IDs.
+  trackMissingModels: false,
   sourceID(model) {
     const id = model.name.replace(/^models\//, "");
     return shouldTrackGoogleModel(id) ? id : undefined;

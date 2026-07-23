@@ -34,7 +34,7 @@ import {
 import { buildLLMGatewayModel, type LLMGatewayModel } from "../src/sync/providers/llmgateway.js";
 import { openai, parseOpenAIModels } from "../src/sync/providers/openai.js";
 import { pioneer } from "../src/sync/providers/pioneer.js";
-import { shouldTrackGoogleModel } from "../src/sync/providers/google.js";
+import { google, shouldTrackGoogleModel } from "../src/sync/providers/google.js";
 import { resolveVeniceBaseModel } from "../src/sync/providers/venice.js";
 import { buildVercelModel, vercel } from "../src/sync/providers/vercel.js";
 import { buildWandbModel, type WandbModel } from "../src/sync/providers/wandb.js";
@@ -251,6 +251,8 @@ test("OpenAI availability sync retains models absent from a scoped response", as
 });
 
 test("does not track unreliable remote-only models", () => {
+  expect(google.skipCreates).toBe(true);
+  expect(google.trackMissingModels).toBe(false);
   expect(openai.skipCreates).toBe(true);
   expect(openai.trackMissingModels).toBe(false);
   expect(pioneer.skipCreates).toBe(true);
