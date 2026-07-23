@@ -1,0 +1,11 @@
+# Sources:
+# - https://ai.google.dev/gemini-api/docs/models/lyria-3-pro-preview — Gemini API model id `lyria-3-pro-preview`
+# - https://ai.google.dev/gemini-api/docs/pricing — Lyria 3 Pro Preview paid tier $0.08 per song (not token-billed)
+# - https://ai.google.dev/gemini-api/docs/music-generation — generateContent / Interactions music generation
+# cost.input/output are USD per 1M tokens; per-song billing cannot be expressed in-schema, so token costs are 0.
+
+base_model = "google/lyria-3-pro-preview"
+
+[cost]
+input = 0
+output = 0
