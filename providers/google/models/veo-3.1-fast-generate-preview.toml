@@ -1,0 +1,15 @@
+# Sources:
+# - https://ai.google.dev/gemini-api/docs/veo
+#   Model code veo-3.1-fast-generate-preview; input text/image; output video with audio;
+#   text input limit 1,024 tokens; latest update January 2026. Veo 3.1 & Veo 3.1 Fast also
+#   support image/video reference inputs and video extension.
+# - https://ai.google.dev/gemini-api/docs/models/veo-3.1-generate-preview
+#   Lists veo-3.1-fast-generate-preview alongside veo-3.1-generate-preview.
+# - https://developers.googleblog.com/introducing-veo-3-1-and-new-creative-capabilities-in-the-gemini-api/
+#   Veo 3.1 and Veo 3.1 Fast paid preview released 2025-10-15.
+# - https://aistudio.google.com/models/veo-3
+#   Veo 3.1 & 3.1 Fast input modalities: text, image, video.
+# - https://cloud.google.com/vertex-ai/generative-ai/pricing
+#   Veo 3.1 Fast is billed per second of video (e.g. $0.10/s 720p video+audio), not per
+#   million tokens, so [cost] is omitted from this catalog entry.
+base_model = "google/veo-3.1-fast-generate-preview"
