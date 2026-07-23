@@ -36,6 +36,40 @@ test("buildSferenceModel factors a catalog model onto its base_model", () => {
   expect("reasoning_options" in model ? model.reasoning_options : undefined).toEqual([{ type: "toggle" }]);
 });
 
+test("buildSferenceModel overrides modalities when the catalog is narrower than base", () => {
+  // The base checkpoint metadata declares image/video/audio input, but the
+  // catalog reports image_input/pdf_input unsupported — the catalog flags are
+  // authoritative for what sference serves, so the factored model must write
+  // text-only overrides instead of inheriting the richer base arrays.
+  const model = buildSferenceModel(baseModel(), undefined, "alibaba/qwen3.6-35b-a3b") as Record<
+    string,
+    unknown
+  >;
+  expect(model.modalities).toEqual({ input: ["text"] });
+  expect(model.attachment).toBe(false);
+});
+
+test("buildSferenceModel inherits modalities when the catalog matches base", () => {
+  const model = buildSferenceModel(
+    {
+      ...baseModel(),
+      id: "Qwen/Qwen3-VL-30B-A3B-Instruct",
+      display_name: "Qwen3-VL 30B",
+      capabilities: {
+        thinking: { supported: false },
+        tools: { supported: true },
+        image_input: { supported: true },
+        pdf_input: { supported: false },
+      },
+    },
+    undefined,
+    "alibaba/qwen3-vl-30b-a3b-instruct",
+  ) as Record<string, unknown>;
+  // Base already declares text+image input and attachment, so no override.
+  expect(model.modalities).toBeUndefined();
+  expect(model.attachment).toBeUndefined();
+});
+
 test("buildSferenceModel reads the nested pricing object with cache_read", () => {
   const model = buildSferenceModel(
     {
