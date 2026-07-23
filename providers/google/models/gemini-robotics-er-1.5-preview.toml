@@ -1,0 +1,24 @@
+# Sources:
+# - Model card: https://ai.google.dev/gemini-api/docs/models/gemini-robotics-er-1.5-preview
+# - Pricing (archived 2026-03-14, while model was listed): https://web.archive.org/web/20260314054026/https://ai.google.dev/gemini-api/docs/pricing
+#   Paid standard: $0.30/1M input (text/image/video), $1.00/1M audio input, $2.50/1M output (incl. thinking). Caching not supported.
+# - Thinking budgets (archived 2026-04-07): https://web.archive.org/web/20260407081727/https://ai.google.dev/gemini-api/docs/thinking
+#   Robotics-ER 1.5 Preview: thinkingBudget 0–24576; 0 disables; -1 dynamic (default).
+# - Status: https://ai.google.dev/gemini-api/docs/changelog — shut down 2026-04-30; migrate to gemini-robotics-er-1.6-preview
+# - Launch: https://developers.googleblog.com/en/building-the-next-generation-of-physical-agents-with-gemini-robotics-er-15/ (2025-09-25)
+
+base_model = "google/gemini-robotics-er-1.5-preview"
+status = "deprecated"
+
+[[reasoning_options]]
+type = "toggle" # API: thinkingConfig.thinkingBudget = 0 disables; omit/-1 enables dynamic
+
+[[reasoning_options]]
+type = "budget_tokens" # API: generationConfig.thinkingConfig.thinkingBudget
+min = 0
+max = 24_576
+
+[cost]
+input = 0.30
+output = 2.50
+input_audio = 1.00

@@ -1,0 +1,25 @@
+# Sources:
+# - https://ai.google.dev/gemini-api/docs/models/gemini-robotics-er-1.5-preview
+# - https://developers.googleblog.com/en/building-the-next-generation-of-physical-agents-with-gemini-robotics-er-15/
+# - https://ai.google.dev/gemini-api/docs/changelog (shut down; use gemini-robotics-er-1.6-preview)
+
+name = "Gemini Robotics-ER 1.5 Preview"
+description = "Embodied-reasoning VLM for robotics spatial understanding, planning, and tool use"
+family = "gemini-robotics"
+release_date = "2025-09-25"
+last_updated = "2025-09-25"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = true
+knowledge = "2025-01"
+open_weights = false
+
+[limit]
+context = 1_048_576
+output = 65_536
+
+[modalities]
+input = ["text", "image", "video", "audio"]
+output = ["text"]
