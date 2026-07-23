@@ -1,4 +1,4 @@
-import { existsSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import path from "node:path";
 import { z } from "zod";
 
@@ -10,6 +10,13 @@ const MODELS_DIR = path.join(import.meta.dirname, "..", "..", "..", "..", "..", 
 
 function baseModelExists(modelID: string) {
   return existsSync(path.join(MODELS_DIR, `${modelID}.toml`));
+}
+
+function baseModelReasons(baseModel: string) {
+  const metadata = Bun.TOML.parse(
+    readFileSync(path.join(MODELS_DIR, `${baseModel}.toml`), "utf8"),
+  ) as { reasoning?: boolean };
+  return metadata.reasoning === true;
 }
 
 const ReasoningEffort = z.enum([
@@ -129,8 +136,12 @@ export function buildHyperModel(
   };
   const values: Partial<SyncedFullModel> = {
     attachment: model.capabilities?.vision ?? false,
-    reasoning: model.reasoning != null,
-    reasoning_options: reasoningOptions(model),
+    reasoning: model.reasoning != null ? true : undefined,
+    reasoning_options: model.reasoning != null
+      ? reasoningOptions(model)
+      : baseModelReasons(baseModel)
+        ? []
+        : undefined,
     release_date: existing?.release_date ?? dateFromTimestamp(model.created),
     last_updated: existing?.last_updated ?? today,
     interleaved: existing?.interleaved,

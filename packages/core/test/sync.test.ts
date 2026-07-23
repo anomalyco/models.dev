@@ -714,9 +714,19 @@ test("syncs Hyper pricing from catalog input/output fields", () => {
 
   expect(buildHyperModel(model, undefined, "minimax/MiniMax-M2.7")).toMatchObject({
     cost: { input: 0.3, output: 1.2, cache_read: 0.06, cache_write: 0.03 },
-    reasoning: false,
     reasoning_options: [],
   });
+  expect(buildHyperModel(model, undefined, "minimax/MiniMax-M2.7")).not.toHaveProperty("reasoning");
+});
+
+test("inherits Hyper reasoning from base model when API omits reasoning metadata", () => {
+  const model = hyperModel({ id: "llama-3.3-70b-instruct", reasoning: undefined });
+
+  expect(buildHyperModel(model, undefined, "meta/llama-3.3-70b-instruct")).toMatchObject({
+    attachment: false,
+  });
+  expect(buildHyperModel(model, undefined, "meta/llama-3.3-70b-instruct")).not.toHaveProperty("reasoning");
+  expect(buildHyperModel(model, undefined, "meta/llama-3.3-70b-instruct")).not.toHaveProperty("reasoning_options");
 });
 
 test("preserves existing Hyper cost when API pricing is missing", () => {
