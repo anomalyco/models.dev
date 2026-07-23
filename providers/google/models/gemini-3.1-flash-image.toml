@@ -1,0 +1,13 @@
+# Sources:
+# - https://ai.google.dev/gemini-api/docs/models/gemini-3.1-flash-image
+# - https://ai.google.dev/gemini-api/docs/pricing
+# - https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/thinking
+base_model = "google/gemini-3.1-flash-image"
+
+[[reasoning_options]]
+type = "effort"
+values = ["minimal", "high"]
+
+[cost]
+input = 0.5
+output = 60
