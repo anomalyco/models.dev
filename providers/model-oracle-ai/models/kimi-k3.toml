@@ -1,2 +1,10 @@
+# Model Oracle API: https://www.modeloracle.com/setup/
+# Upstream model surface: https://platform.kimi.ai/docs/guide/use-reasoning-effort
 base_model = "moonshotai/kimi-k3"
-reasoning_options = []
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[interleaved]
+field = "reasoning_content"
