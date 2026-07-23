@@ -1,4 +1,4 @@
-# Sources (accessed 2026-07-16):
+# Sources (accessed 2026-07-22):
 # - https://ai-gateway.vercel.sh/v1/models (thinkingmachines/inkling) — provider: baseten
 # - https://vercel.com/ai-gateway/models/inkling — routes to baseten
 # - https://docs.baseten.co/inference/model-apis/reasoning — Inkling reasoning_effort
@@ -10,6 +10,10 @@ reasoning_options = [{ type = "effort", values = ["none", "minimal", "low", "med
 input = 1
 output = 4.05
 cache_read = 0.17
+
+[limit]
+context = 256_000
+output = 256_000
 
 [modalities]
 input = ["text", "image", "pdf"]

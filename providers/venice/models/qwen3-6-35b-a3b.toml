@@ -3,7 +3,6 @@ name = "Qwen 3.6 35B A3B"
 description = "Qwen instruction model for multilingual chat, reasoning, and tool use"
 release_date = "2026-07-20"
 last_updated = "2026-07-22"
-attachment = false
 reasoning_options = []
 
 [cost]
@@ -15,4 +14,4 @@ cache_read = 0.05
 context = 256_000
 
 [modalities]
-input = ["text"]
+input = ["text", "image"]
