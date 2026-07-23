@@ -1,0 +1,31 @@
+# Sources:
+# https://ai.google.dev/gemini-api/docs/models/gemini-3.1-flash-tts-preview
+# https://ai.google.dev/gemini-api/docs/pricing
+# https://cloud.google.com/text-to-speech/pricing
+# https://docs.cloud.google.com/text-to-speech/docs/gemini-tts
+# https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-3-1-flash-tts/
+# https://deepmind.google/models/model-cards/gemini-3-1-flash-audio/
+
+name = "Gemini 3.1 Flash TTS Preview"
+description = "Low-latency speech generation with steerable prompts and expressive audio tags"
+family = "gemini-flash"
+release_date = "2026-04-15"
+last_updated = "2026-04-15"
+attachment = false
+reasoning = false
+temperature = true
+tool_call = false
+knowledge = "2025-01"
+open_weights = false
+
+[cost]
+input = 1
+output = 20
+
+[limit]
+context = 8_192
+output = 16_384
+
+[modalities]
+input = ["text"]
+output = ["audio"]
