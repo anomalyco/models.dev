@@ -1,0 +1,16 @@
+# Sources:
+# - https://ai.google.dev/gemini-api/docs/models/gemini-embedding-2
+#   Model ID gemini-embedding-2; input text/image/video/audio/PDF; input limit 8192;
+#   output dims 128-3072; stable; latest update April 2026
+# - https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/gemini/embedding-2
+#   GA release 2026-04-22; knowledge cutoff November 2025; multimodal inputs
+# - https://ai.google.dev/gemini-api/docs/pricing
+#   Paid standard: text $0.20, image $0.45, audio $6.50, video $12.00 per 1M tokens
+#   (catalog cost.input uses text rate; cost.input_audio uses audio rate)
+
+base_model = "google/gemini-embedding-2"
+
+[cost]
+input = 0.20
+output = 0
+input_audio = 6.50
