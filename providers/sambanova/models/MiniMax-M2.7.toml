@@ -1,0 +1,21 @@
+name = "MiniMax-M2.7"
+description = "MiniMax model for chat, coding, office work, and agentic tasks"
+family = "minimax"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+open_weights = true
+
+[cost]
+input = 0.60
+output = 2.40
+cache_read = 0.06
+
+[limit]
+context = 192_000
+output = 192_000
+
+[modalities]
+input = ["text"]
+output = ["text"]
