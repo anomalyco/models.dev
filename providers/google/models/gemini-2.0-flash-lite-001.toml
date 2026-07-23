@@ -1,0 +1,20 @@
+# Sources:
+# - https://ai.google.dev/gemini-api/docs/pricing
+#   Gemini 2.0 Flash-Lite (`gemini-2.0-flash-lite`): paid tier $0.075 input / $0.30 output per 1M tokens;
+#   deprecated and shut down June 1, 2026.
+# - https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/gemini/2-0-flash-lite
+#   Version `gemini-2.0-flash-lite-001`: release 2025-02-25, discontinued 2026-06-01;
+#   context 1,048,576; max output 8,192 (default); text/image/audio/video input, text output;
+#   structured output + function calling supported; thinking not supported.
+# - https://ai.google.dev/gemini-api/docs/models/gemini-2.0-flash-lite
+#   Stable version ID `gemini-2.0-flash-lite-001` listed as shut down with the unversioned alias.
+
+base_model = "google/gemini-2.0-flash-lite"
+name = "Gemini 2.0 Flash-Lite"
+release_date = "2025-02-25"
+last_updated = "2025-02-25"
+status = "deprecated"
+
+[cost]
+input = 0.075
+output = 0.3
