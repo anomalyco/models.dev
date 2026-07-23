@@ -1,0 +1,27 @@
+# Served via the Volcengine Ark subscription plan; usage draws on the plan quota, so
+# per-token cost is zeroed. Specs track the Doubao Seed 2.0 model surface.
+name = "Doubao Seed 2.0 Pro"
+description = "Multimodal reasoning model for visual analysis, planning, and tool use"
+release_date = "2026-02-14"
+last_updated = "2026-02-14"
+attachment = true
+reasoning = true
+reasoning_options = [{ type = "toggle" }] # API: {"thinking": {"type": "enabled"|"disabled"}}
+tool_call = true
+temperature = true
+structured_output = false
+open_weights = false
+
+[cost]
+input = 0
+output = 0
+cache_read = 0
+cache_write = 0
+
+[limit]
+context = 256_000
+output = 128_000
+
+[modalities]
+input = ["text", "image", "video"]
+output = ["text"]

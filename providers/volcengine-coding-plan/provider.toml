@@ -1,0 +1,10 @@
+# Volcengine Ark "Coding Plan" — subscription bundle (包月 / plan quota).
+# OpenAI-compatible (Responses API supported): https://ark.cn-beijing.volces.com/api/coding/v3
+# Anthropic-compatible: https://ark.cn-beijing.volces.com/api/coding
+# Do NOT use https://ark.cn-beijing.volces.com/api/v3 — that bills pay-as-you-go, not the plan.
+# Endpoints + model list verified from the Ark console (订阅 → Coding Plan), 2026-07.
+name = "Volcengine (Coding Plan)"
+env = ["ARK_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+doc = "https://www.volcengine.com/docs/82379"
+api = "https://ark.cn-beijing.volces.com/api/coding/v3"
