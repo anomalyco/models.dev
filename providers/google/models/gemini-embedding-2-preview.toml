@@ -1,0 +1,13 @@
+# Sources:
+# - https://ai.google.dev/gemini-api/docs/models/gemini-embedding-2-preview
+# - https://ai.google.dev/gemini-api/docs/pricing
+#   Paid tier (per 1M tokens): text $0.20, image $0.45, audio $6.50, video $12.00
+#   Schema only models text + input_audio; image/video rates noted above.
+# - https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/gemini/embedding-2
+# - https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-embedding-2/
+base_model = "google/gemini-embedding-2-preview"
+
+[cost]
+input = 0.20
+output = 0
+input_audio = 6.50
