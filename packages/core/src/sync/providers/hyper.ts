@@ -127,6 +127,14 @@ function buildCost(model: HyperModel, existing: ExistingModel["cost"] | undefine
   };
 }
 
+function hyperModalities(vision: boolean) {
+  const input = vision ? ["text" as const, "image" as const] : ["text" as const];
+  return {
+    input,
+    output: ["text" as const],
+  };
+}
+
 export function buildHyperModel(
   model: HyperModel,
   existing: ExistingModel | undefined,
@@ -138,8 +146,10 @@ export function buildHyperModel(
     input: existing?.limit?.input,
     output: model.max_output_tokens,
   };
+  const modalities = hyperModalities(model.capabilities?.vision ?? false);
   const values: Partial<SyncedFullModel> = {
-    attachment: model.capabilities?.vision ?? false,
+    attachment: modalities.input.some((value) => value !== "text"),
+    modalities,
     reasoning: model.reasoning != null ? true : undefined,
     reasoning_options: model.reasoning != null
       ? reasoningOptions(model)
