@@ -34,6 +34,7 @@ import {
 import { buildLLMGatewayModel, type LLMGatewayModel } from "../src/sync/providers/llmgateway.js";
 import { openai, parseOpenAIModels } from "../src/sync/providers/openai.js";
 import { pioneer } from "../src/sync/providers/pioneer.js";
+import { shouldTrackGoogleModel } from "../src/sync/providers/google.js";
 import { resolveVeniceBaseModel } from "../src/sync/providers/venice.js";
 import { buildVercelModel, vercel } from "../src/sync/providers/vercel.js";
 import { buildWandbModel, type WandbModel } from "../src/sync/providers/wandb.js";
@@ -254,6 +255,15 @@ test("does not track unreliable remote-only models", () => {
   expect(openai.trackMissingModels).toBe(false);
   expect(pioneer.skipCreates).toBe(true);
   expect(pioneer.trackMissingModels).toBe(false);
+});
+
+test("tracks public Google model families but not opaque internal IDs", () => {
+  expect(shouldTrackGoogleModel("gemini-3.1-flash-live-preview")).toBe(true);
+  expect(shouldTrackGoogleModel("imagen-4.0-generate-001")).toBe(true);
+  expect(shouldTrackGoogleModel("veo-3.1-generate-preview")).toBe(true);
+  expect(shouldTrackGoogleModel("ajax")).toBe(false);
+  expect(shouldTrackGoogleModel("perseus-2")).toBe(false);
+  expect(shouldTrackGoogleModel("thorin")).toBe(false);
 });
 
 function digitalOceanModel(overrides: Partial<DigitalOceanSourceModel> = {}): DigitalOceanSourceModel {

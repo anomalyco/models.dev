@@ -82,7 +82,8 @@ export async function openMissingModelIssues(
     try {
       const number = await createIssue(title, issueBody(provider, modelId), labels);
       existingByTitle.set(title, number);
-      const notice = `Opened GitHub issue #${number} for missing model \`${modelId}\``;
+      await dispatchIssueFixer(provider.id, number);
+      const notice = `Opened GitHub issue #${number} and dispatched the issue fixer for missing model \`${modelId}\``;
       notices.push(notice);
       console.log(notice);
     } catch (error) {
@@ -143,6 +144,29 @@ async function createIssue(title: string, body: string, labels: string[]) {
     throw new Error(`gh issue create returned no issue number: ${url}`);
   }
   return Number(number);
+}
+
+async function dispatchIssueFixer(providerId: string, issueNumber: number) {
+  const repository = process.env.GITHUB_REPOSITORY;
+  if (repository === undefined) {
+    throw new Error("GITHUB_REPOSITORY is required to dispatch the issue fixer");
+  }
+
+  const result = await runGh([
+    "api",
+    `repos/${repository}/dispatches`,
+    "--method",
+    "POST",
+    "--field",
+    "event_type=missing-model",
+    "--field",
+    `client_payload[provider]=${providerId}`,
+    "--field",
+    `client_payload[issue_number]=${issueNumber}`,
+  ]);
+  if (result.code !== 0) {
+    throw new Error(`issue fixer dispatch failed: ${result.stderr || result.stdout || `exit ${result.code}`}`);
+  }
 }
 
 async function runGh(args: string[]) {

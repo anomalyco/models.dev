@@ -51,7 +51,8 @@ Providers that cannot safely auto-create TOMLs set `skipCreates: true`. In GitHu
 1. Title: `[missing-model] <provider>: <model-id>` (stable for dedupe)
 2. Labels: `automation`, `model-sync`, `missing-model`, `provider:<id>`
 3. Lists existing issues (open **and** closed) with those labels; skips create when the title already exists
-4. If listing fails, creates nothing (fail closed)
+4. Dispatches the Issue Fixer explicitly so issues created with `GITHUB_TOKEN` can still produce PRs
+5. If listing fails, creates nothing (fail closed)
 
 Requires `GH_TOKEN` on the sync workflow step. Local runs are notice-only unless `--open-issues`. Use `--no-issues` / `--dry-run` to skip creates. Issue-fixer ignores these titles (`[missing-model]…`) — they need hand-authored metadata.
 
@@ -180,6 +181,7 @@ Google is implemented in `packages/core/src/sync/providers/google.ts`.
 - The API is authoritative for display names, token limits, temperature metadata, and the `thinking` flag when present.
 - Local Google models missing from the API response are removed.
 - New Google API models are not created automatically (`skipCreates`); each missing ID opens a deduped GitHub issue for the issue fixer / maintainers.
+- Missing-model tracking is limited to recognizable public model families; opaque API codenames such as `ajax`, `perseus`, and `thorin` are ignored.
 
 ## xAI Notes
 
