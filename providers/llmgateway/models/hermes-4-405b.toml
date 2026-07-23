@@ -2,28 +2,28 @@
 # disables non-OpenAI reasoning; this model has no documented effort tiers
 # or exact reasoning-token budget.
 # https://docs.llmgateway.io/features/reasoning (accessed 2026-07-23)
-name = "Qwen3 235B A22B Thinking (2507)"
-description = "Qwen reasoning model for deliberate problem solving, math, and coding"
-family = "qwen"
-release_date = "2025-07-08"
-last_updated = "2025-07-08"
+name = "Hermes 4 405B"
+description = "Reasoning model for deliberate analysis, multi-step problem solving, and tool use"
+family = "hermes"
+release_date = "2025-08-26"
+last_updated = "2025-08-26"
 attachment = false
 reasoning = true
 temperature = true
 tool_call = true
-structured_output = true
-open_weights = true
+structured_output = false
+open_weights = false
 
 [[reasoning_options]]
 type = "toggle" # API: {"reasoning_effort": "none"} or {"reasoning": {"effort": "none"}}
 
 [cost]
-input = 0.3
+input = 1
 output = 3
 
 [limit]
-context = 262_000
-output = 8_192
+context = 131_072
+output = 131_072
 
 [modalities]
 input = ["text"]

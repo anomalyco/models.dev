@@ -20,6 +20,8 @@ The grouped sync targets are available for local convenience, but CI syncs each 
 - `bun models:sync openai` syncs only OpenAI catalog availability.
 - `bun models:sync aggregators --dry-run` prints changes without writing model files.
 - `bun models:sync aggregators --new-only` creates new model files but skips updates and removals.
+- `bun models:sync <provider> --open-issues` opens GitHub issues for missing models (on by default only when `GITHUB_ACTIONS=true`).
+- `bun models:sync <provider> --no-issues` skips opening GitHub issues in Actions.
 - `bun validate` validates the generated catalog after a sync.
 
 Sync runs also write `.sync/model-sync-report.md` for the automation workflow PR body. Do not commit that report from local runs.
@@ -38,8 +40,22 @@ Sync runs also write `.sync/model-sync-report.md` for the automation workflow PR
 - Replaces symlinked files safely by removing the symlink before writing.
 - Removes existing files that are no longer present in the desired synced set.
 - Writes `.sync/model-sync-report.md` for GitHub Actions.
+- When `skipCreates` is set and issue opens are enabled, opens one deduped GitHub issue per remote model missing from the local catalog (via `gh`).
 
 Because the runner removes files missing from the desired set, a provider module should only skip source models when deleting existing local files for those skipped IDs is intentional.
+
+## Missing-model GitHub issues
+
+Providers that cannot safely auto-create TOMLs set `skipCreates: true`. In GitHub Actions (or with `--open-issues`), each skipped remote ID may open a GitHub issue:
+
+1. Title: `[missing-model] <provider>: <model-id>` (stable for dedupe)
+2. Labels: `automation`, `model-sync`, `missing-model`, `provider:<id>`
+3. Lists existing issues (open **and** closed) with those labels; skips create when the title already exists
+4. If listing fails, creates nothing (fail closed)
+
+Requires `GH_TOKEN` on the sync workflow step. Local runs are notice-only unless `--open-issues`. Use `--no-issues` / `--dry-run` to skip creates. Issue-fixer ignores these titles (`[missing-model]…`) — they need hand-authored metadata.
+
+The first Actions run may open a batch of issues per provider, including remote IDs the catalog intentionally omits (e.g. OpenAI whisper/tts/moderation surfaces, dated snapshots). This one-time volume is accepted by design: close unwanted issues once and the closed-title dedupe suppresses them permanently. If the dedupe list window (1000 labeled issues per provider) ever fills, the sync fails closed and creates nothing rather than risk duplicates.
 
 ## Provider Modules
 
@@ -159,7 +175,7 @@ Google is implemented in `packages/core/src/sync/providers/google.ts`.
 - Model IDs are derived from the `models/{model}` resource names.
 - The API is authoritative for display names, token limits, temperature metadata, and the `thinking` flag when present.
 - Local Google models missing from the API response are removed.
-- New Google API models are reported in `.sync/model-sync-report.md` but not created automatically because the API does not provide authoritative modalities, pricing, knowledge cutoff, release date, tool calling, or structured output metadata.
+- New Google API models are not created automatically (`skipCreates`); each missing ID opens a deduped GitHub issue for the issue fixer / maintainers.
 
 ## xAI Notes
 
@@ -169,7 +185,7 @@ xAI is implemented in `packages/core/src/sync/providers/xai.ts`.
 - Required auth: `XAI_API_KEY`.
 - The richer typed endpoints provide model IDs, creation timestamps, modalities, pricing for language models, and prompt/input limits where available.
 - Existing xAI models are updated from API-authoritative fields while local metadata is preserved for fields the API does not expose, especially output token limits and some feature/capability flags.
-- New xAI API models are reported in `.sync/model-sync-report.md` but not created automatically because the API does not provide enough authoritative metadata for complete catalog entries.
+- New xAI API models are not created automatically (`skipCreates`); each missing ID opens a deduped GitHub issue. Alias IDs of models already cataloged under their canonical ID are skipped silently and never reported as missing.
 
 ## OpenAI Notes
 
@@ -177,7 +193,7 @@ xAI is implemented in `packages/core/src/sync/providers/xai.ts`.
 - Source endpoint: `https://api.openai.com/v1/models`.
 - Required auth: `OPENAI_API_KEY` from an automation account with access to the full first-party catalog.
 - The endpoint is used only to monitor catalog availability. Existing TOMLs are preserved byte-for-byte, including models absent from the response, because model access can be scoped to the API project.
-- Fine-tuned and customer-owned models are excluded. Unknown first-party models are reported for manual review without changing the catalog.
+- Fine-tuned and customer-owned models are excluded. Unknown first-party models open deduped GitHub issues (`skipCreates`) without changing the catalog.
 
 ## OVHcloud Notes
 

@@ -5,13 +5,11 @@
 # - https://docs.poolside.ai/get-started/supported-models — thinking on or off per request
 # API: {"chat_template_kwargs": {"enable_thinking": false}}
 base_model = "poolside/laguna-s-2.1"
-name = "Laguna S 2.1"
 family = "laguna-s"
 release_date = "2026-07-20"
-last_updated = "2026-07-20"
 
 [[reasoning_options]]
-type = "toggle" # API: {"chat_template_kwargs": {"enable_thinking": false}}
+type = "toggle"
 
 [cost]
 input = 0.1

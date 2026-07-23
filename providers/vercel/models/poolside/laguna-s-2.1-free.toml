@@ -7,11 +7,9 @@ base_model = "poolside/laguna-s-2.1"
 name = "Laguna S 2.1 Free"
 description = "Free provider route for experiments, demos, and cost-sensitive chat workloads"
 family = "laguna-s"
-release_date = "2026-07-21"
-last_updated = "2026-07-21"
 
 [[reasoning_options]]
-type = "toggle" # API: {"chat_template_kwargs": {"enable_thinking": false}}
+type = "toggle"
 
 [cost]
 input = 0
@@ -19,4 +17,3 @@ output = 0
 
 [limit]
 context = 256_000
-output = 32_768

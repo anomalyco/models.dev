@@ -13,7 +13,10 @@ concurrency: issue-fixer-${{ github.event.issue.number }}
 
 jobs:
   fix:
-    if: github.repository == 'anomalyco/models.dev'
+    # Skip catalog-sync missing-model issues; those need hand-authored metadata.
+    if: >-
+      github.repository == 'anomalyco/models.dev'
+      && !startsWith(github.event.issue.title, '[missing-model]')
     runs-on: ubuntu-latest
     env:
       GH_TOKEN: ${{ github.token }}
