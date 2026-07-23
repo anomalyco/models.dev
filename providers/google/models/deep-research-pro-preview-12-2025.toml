@@ -1,0 +1,27 @@
+# Sources:
+# - https://ai.google.dev/gemini-api/docs/models/deep-research-pro-preview-12-2025
+# - https://ai.google.dev/gemini-api/docs/deep-research
+# - https://ai.google.dev/gemini-api/docs/pricing
+# - https://blog.google/innovation-and-ai/technology/developers-tools/deep-research-agent-gemini-api/
+# - https://discuss.ai.google.dev/t/google-gemini-deep-research-costs/112804
+# Accessed 2026-07-23
+#
+# Deep Research Agent via Interactions API. Inference billed at standard Gemini
+# list rates for the underlying Gemini 3.x Pro core ($2/$12 per 1M tokens, with
+# >200k tiers). Tool fees (e.g. Search grounding) are separate and not modeled here.
+# reasoning_options = []: agent reasons, but no effort/budget/toggle control is
+# documented (thinking_summaries only controls streamed thought summaries).
+
+base_model = "google/deep-research-pro-preview-12-2025"
+reasoning_options = []
+
+[cost]
+input = 2.00
+output = 12.00
+cache_read = 0.20
+
+[[cost.tiers]]
+tier = { size = 200_000 }
+input = 4.00
+output = 18.00
+cache_read = 0.40
