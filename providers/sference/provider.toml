@@ -4,7 +4,9 @@
 # enable_thinking = true|false (OpenAPI schema/openapi.json
 # ChatCompletionCreateRequest and ResponseCreateRequest). OpenAI
 # reasoning_effort (chat) / reasoning.effort (responses) is also accepted
-# (same schema, ReasoningConfig); the catalog marks thinking support via
+# (same schema, ReasoningConfig; invalid values are rejected with a 400
+# listing the accepted enum none|minimal|low|medium|high|xhigh — verified
+# live 2026-07-23); the catalog marks thinking support via
 # capabilities.thinking.types.enabled but does not surface which effort
 # levels a model acts on, so effort options are hand-authored per model
 # (DeepSeek-V4-Flash: high/xhigh; GLM-5.2: low/high). No token-budget

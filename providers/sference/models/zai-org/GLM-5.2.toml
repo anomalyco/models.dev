@@ -1,9 +1,10 @@
 # Synced from GET /v1/models. The effort option is hand-authored: the API
-# accepts OpenAI reasoning_effort on chat completions and responses
-# (OpenAPI schema/openapi.json, ChatCompletionCreateRequest and
-# ReasoningConfig), and this model resolves every accepted level onto two
-# thinking depths — low selects the lighter one, high the deeper one — so only
-# those two distinct values are advertised.
+# accepts OpenAI reasoning_effort on chat completions and responses (OpenAPI
+# schema/openapi.json; invalid values are rejected with a 400 listing the
+# accepted enum none|minimal|low|medium|high|xhigh — verified live
+# 2026-07-23, low/high probes return 200), and this model resolves every
+# accepted level onto two thinking depths — low selects the lighter one, high
+# the deeper one — so only those two distinct values are advertised.
 base_model = "zhipuai/glm-5.2"
 name = "GLM 5.2"
 
