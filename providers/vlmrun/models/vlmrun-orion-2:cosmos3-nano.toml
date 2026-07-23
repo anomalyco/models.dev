@@ -1,0 +1,16 @@
+name          = "VLM Run Orion-2 (Cosmos3 Nano)"
+description   = "VLM Run Orion-2 visual agent on NVIDIA Cosmos3 Nano."
+attachment    = true
+reasoning     = false
+tool_call     = false                      # endpoint rejects OpenAI tools (verified)
+open_weights  = false
+release_date  = "2026-05-19"
+last_updated  = "2026-05-19"
+
+[limit]
+context = 131072
+output  = 16384
+
+[modalities]
+input  = ["text", "image", "pdf"]
+output = ["text"]

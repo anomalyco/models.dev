@@ -1,0 +1,16 @@
+name          = "VLM Run Orion-2 (Kimi K2.6)"
+description   = "VLM Run Orion-2 visual agent on Kimi K2.6."
+attachment    = true
+reasoning     = false
+tool_call     = true
+open_weights  = false
+release_date  = "2026-05-19"
+last_updated  = "2026-05-19"
+
+[limit]
+context = 262144
+output  = 16384
+
+[modalities]
+input  = ["text", "image", "pdf"]
+output = ["text"]

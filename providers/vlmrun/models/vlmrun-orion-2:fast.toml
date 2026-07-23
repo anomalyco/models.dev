@@ -1,0 +1,16 @@
+name          = "VLM Run Orion-2 (fast)"
+description   = "VLM Run Orion-2 visual agent, latency-optimized routing."
+attachment    = true
+reasoning     = false
+tool_call     = true
+open_weights  = false
+release_date  = "2026-05-19"
+last_updated  = "2026-05-19"
+
+[limit]
+context = 1048576
+output  = 65536
+
+[modalities]
+input  = ["text", "image", "pdf"]
+output = ["text"]

@@ -1,0 +1,16 @@
+name          = "VLM Run Orion-2 (Grok 4.5)"
+description   = "VLM Run Orion-2 visual agent on Grok 4.5."
+attachment    = true
+reasoning     = false
+tool_call     = true
+open_weights  = false
+release_date  = "2026-05-19"
+last_updated  = "2026-05-19"
+
+[limit]
+context = 500000
+output  = 16384
+
+[modalities]
+input  = ["text", "image", "pdf"]
+output = ["text"]
