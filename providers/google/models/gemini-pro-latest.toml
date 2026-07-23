@@ -1,0 +1,25 @@
+# Alias for the current Gemini Pro release (gemini-3.1-pro-preview).
+# Keep reasoning_options and cost in sync with gemini-3.1-pro-preview.
+# Sources:
+# - https://ai.google.dev/gemini-api/docs/models (Latest alias pattern)
+# - https://ai.google.dev/gemini-api/docs/changelog (gemini-pro-latest alias updates)
+# - https://discuss.ai.google.dev/t/migrate-from-gemini-3-pro-preview-to-gemini-3-1-pro-preview-before-march-9-2026/127062
+#   (Google: 2026-03-06 -latest → gemini-3.1-pro-preview)
+# - https://ai.google.dev/gemini-api/docs/models/gemini-3.1-pro-preview
+# - https://ai.google.dev/gemini-api/docs/pricing (Gemini 3.1 Pro Preview rates)
+base_model = "google/gemini-pro-latest"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high"]
+
+[cost]
+input = 2.00
+output = 12.00
+cache_read = 0.20
+
+[[cost.tiers]]
+tier = { size = 200_000 }
+input = 4.00
+output = 18.00
+cache_read = 0.40

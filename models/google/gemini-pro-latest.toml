@@ -1,0 +1,27 @@
+# Tracks the current Gemini Pro release (gemini-3.1-pro-preview).
+# Sources:
+# - https://ai.google.dev/gemini-api/docs/models (Latest alias pattern: gemini-flash-latest / gemini-pro-latest)
+# - https://ai.google.dev/gemini-api/docs/changelog (2026-01-21: gemini-pro-latest alias; later retargets)
+# - https://discuss.ai.google.dev/t/migrate-from-gemini-3-pro-preview-to-gemini-3-1-pro-preview-before-march-9-2026/127062
+#   (Google: 2026-03-06 switch -latest alias to gemini-3.1-pro-preview)
+# - https://ai.google.dev/gemini-api/docs/models/gemini-3.1-pro-preview
+name = "Gemini Pro Latest"
+description = "Reasoning-first Gemini preview for agentic coding and complex problem solving"
+family = "gemini-pro"
+release_date = "2026-02-19"
+last_updated = "2026-02-19"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = true
+knowledge = "2025-01"
+open_weights = false
+
+[limit]
+context = 1_048_576
+output = 65_536
+
+[modalities]
+input = ["text", "image", "video", "audio", "pdf"]
+output = ["text"]
