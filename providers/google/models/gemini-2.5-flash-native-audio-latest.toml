@@ -1,0 +1,44 @@
+# Sources:
+# - https://ai.google.dev/gemini-api/docs/models/gemini-2.5-flash-native-audio-preview-12-2025
+#   (modalities, token limits, thinking/tool_call/structured_output, knowledge cutoff;
+#    gemini-2.5-flash-native-audio-latest tracks this Live API native-audio line)
+# - https://ai.google.dev/gemini-api/docs/pricing
+#   (Native Audio Live API: $0.50 text in / $3.00 audio·video in / $2.00 text out / $12.00 audio out)
+# - https://ai.google.dev/gemini-api/docs/live-api/capabilities
+#   and https://ai.google.dev/gemini-api/docs/generate-content/thinking
+#   (thinkingBudget 0–24576; budget 0 disables thinking for 2.5 Flash Live Native Audio)
+# - https://blog.google/products-and-platforms/products/gemini/gemini-audio-model-updates/
+#   (2025-12-12 release of updated Gemini 2.5 Flash Native Audio)
+name = "Gemini 2.5 Flash Native Audio Latest"
+description = "Live API native-audio model for real-time voice and video conversational agents"
+family = "gemini-flash"
+release_date = "2025-12-12"
+last_updated = "2025-12-12"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+knowledge = "2025-01"
+open_weights = false
+
+[[reasoning_options]]
+type = "toggle" # API: thinking_config.thinking_budget = 0 disables; >0 or omit enables (dynamic default)
+
+[[reasoning_options]]
+type = "budget_tokens" # API: thinking_config.thinking_budget
+min = 0
+max = 24_576
+
+[cost]
+input = 0.50
+output = 2.00
+input_audio = 3.00
+output_audio = 12.00
+
+[limit]
+context = 131_072
+output = 8_192
+
+[modalities]
+input = ["text", "audio", "video"]
+output = ["text", "audio"]
