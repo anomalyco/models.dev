@@ -1,0 +1,13 @@
+# Sources:
+# - https://ai.google.dev/gemini-api/docs/pricing (Gemini 3.5 Live Translate: $3.50 input / $21.00 output per 1M audio tokens)
+# - https://ai.google.dev/gemini-api/docs/models/gemini-3.5-live-translate-preview
+# - https://ai.google.dev/gemini-api/docs/live-api/live-translate
+# - https://deepmind.google/models/model-cards/gemini-3-5-audio/
+# - https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-live-3-5-translate/
+base_model = "google/gemini-3.5-live-translate-preview"
+
+[cost]
+input = 3.50
+output = 21.00
+input_audio = 3.50
+output_audio = 21.00
