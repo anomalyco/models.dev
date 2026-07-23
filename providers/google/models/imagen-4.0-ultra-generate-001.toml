@@ -1,0 +1,30 @@
+# Sources:
+# - https://ai.google.dev/gemini-api/docs/models/imagen
+#   Model ID imagen-4.0-ultra-generate-001; text in / image out; 480 input tokens;
+#   1–4 output images; latest update June 2025; deprecated, shutdown 2026-08-17.
+# - https://ai.google.dev/gemini-api/docs/pricing
+#   Imagen 4 Ultra $0.06 per image (paid tier). Cost omitted: schema is USD/1M tokens only.
+# - https://docs.cloud.google.com/vertex-ai/generative-ai/docs/models/imagen/4-0-generate
+#   GA release date 2025-08-14 for imagen-4.0-ultra-generate-001; text→image.
+# - https://developers.googleblog.com/announcing-imagen-4-fast-and-imagen-4-family-generally-available-in-the-gemini-api/
+#   Imagen 4 family GA in Gemini API (2025-08-15).
+
+name = "Imagen 4 Ultra"
+description = "Image model for prompt-driven generation, editing, and visual design workflows"
+family = "imagen"
+release_date = "2025-08-14"
+last_updated = "2025-08-14"
+attachment = false
+reasoning = false
+temperature = false
+tool_call = false
+open_weights = false
+status = "deprecated"
+
+[limit]
+context = 480
+output = 0
+
+[modalities]
+input = ["text"]
+output = ["image"]
