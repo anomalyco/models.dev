@@ -1,6 +1,6 @@
 import { expect, test } from "bun:test";
 
-import { formatToml } from "../src/sync/index.js";
+import { formatToml, type ExistingModel } from "../src/sync/index.js";
 import { buildSferenceModel, type SferenceModel } from "../src/sync/providers/sference.js";
 
 const baseModel = (overrides: Partial<SferenceModel> = {}): SferenceModel => ({
@@ -102,6 +102,28 @@ test("buildSferenceModel falls back to existing cost when pricing is absent", ()
   const cost = model.cost as Record<string, unknown>;
   expect(cost.input).toBe(0.14);
   expect(cost.output).toBe(1);
+});
+
+test("buildSferenceModel preserves hand-authored reasoning_options (effort)", () => {
+  // The API accepts reasoning_effort but the catalog does not surface which
+  // effort levels each model acts on, and a silently-dropped level is not a
+  // supported control. Effort is therefore hand-authored per model and the
+  // sync preserves it instead of overwriting with the default toggle.
+  const existing = {
+    reasoning_options: [
+      { type: "toggle" as const },
+      { type: "effort" as const, values: ["high", "xhigh"] as ("high" | "xhigh")[] },
+    ],
+  } as Partial<ExistingModel>;
+  const model = buildSferenceModel(
+    { ...baseModel(), id: "deepseek-ai/DeepSeek-V4-Flash" },
+    existing,
+    "deepseek/deepseek-v4-flash",
+  ) as Record<string, unknown>;
+  expect(model.reasoning_options).toEqual([
+    { type: "toggle" },
+    { type: "effort", values: ["high", "xhigh"] },
+  ]);
 });
 
 test("buildSferenceModel preserves existing hand-authored metadata", () => {
