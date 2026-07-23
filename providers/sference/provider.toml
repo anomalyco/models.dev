@@ -1,11 +1,14 @@
-# Reasoning control (accessed 2026-07-17):
+# Reasoning control (accessed 2026-07-23):
 # OpenAI Chat: POST https://api.sference.com/v1/chat/completions and
 # Responses: POST https://api.sference.com/v1/responses. Toggle:
-# enable_thinking = true|false (OpenAPI contract/openapi.json
-# ChatCompletionCreateRequest and ResponseCreateRequest). The catalog marks
-# thinking support via capabilities.thinking.types.enabled; no effort or
-# token-budget control is documented, so every reasoning model uses a single
-# toggle option.
+# enable_thinking = true|false (OpenAPI schema/openapi.json
+# ChatCompletionCreateRequest and ResponseCreateRequest). OpenAI
+# reasoning_effort (chat) / reasoning.effort (responses) is also accepted
+# (same schema, ReasoningConfig); the catalog marks thinking support via
+# capabilities.thinking.types.enabled but does not surface which effort
+# levels a model acts on, so effort options are hand-authored per model
+# (DeepSeek-V4-Flash: high/xhigh; GLM-5.2: low/high). No token-budget
+# control. Other reasoning models use the single toggle option.
 # Sources:
 # https://sference.com/docs/models
 # https://sference.com/docs/quickstart

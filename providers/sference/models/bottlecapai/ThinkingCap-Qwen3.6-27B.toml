@@ -1,4 +1,5 @@
 base_model = "bottlecapai/thinkingcap-qwen3.6-27b"
+attachment = false
 
 [interleaved]
 field = "reasoning_content"
@@ -10,3 +11,6 @@ type = "toggle"
 input = 0.4
 output = 2.6
 cache_read = 0.05
+
+[modalities]
+input = ["text"]

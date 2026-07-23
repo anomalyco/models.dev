@@ -188,10 +188,12 @@ export function buildSferenceModel(
   // per model, so inherit from existing or default to open weights.
   const openWeights = existing?.open_weights ?? true;
 
-  // /v1/models surfaces image/pdf via capabilities but not full modality arrays.
-  // For factored models the richer base metadata wins (leave input undefined so
-  // it inherits); for inline models derive what the API exposes plus any extra
-  // existing modalities.
+  // /v1/models surfaces image/pdf via capabilities but not full modality
+  // arrays. Those flags are authoritative for what sference serves, so
+  // factored models always write the derived array: factorBaseModel strips it
+  // when it matches base metadata and keeps it as an override when the base is
+  // richer (e.g. a multimodal base checkpoint served text-only here). Inline
+  // models additionally keep any hand-authored extra modalities.
   const apiInput: Modality[] = [
     "text",
     ...(imageInput ? (["image"] as Modality[]) : []),
@@ -200,10 +202,10 @@ export function buildSferenceModel(
   const inheritedInput = existing?.modalities?.input ?? [];
   const input = baseModel == null
     ? [...new Set([...apiInput, ...inheritedInput.filter((m) => m !== "text")])]
-    : undefined;
+    : apiInput;
   const attachment = baseModel == null
     ? apiInput.some((value) => value !== "text") || (existing?.attachment ?? false)
-    : existing?.attachment;
+    : apiInput.some((value) => value !== "text");
 
   // `created` is the current request time (int(time.time())), not the model
   // release date, so it is not a useful release_date source. The catalog's
