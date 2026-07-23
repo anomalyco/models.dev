@@ -1,0 +1,24 @@
+# Sources:
+# - https://ai.google.dev/gemini-api/docs/models/veo-3.1-generate-preview (model card: id, modalities, limits, last update)
+# - https://ai.google.dev/gemini-api/docs/veo (Veo 3.1 Preview capabilities; status Preview)
+# - https://ai.google.dev/gemini-api/docs/pricing (Veo 3.1 Standard per-second video pricing; not token-based)
+# - https://developers.googleblog.com/introducing-veo-3-1-and-new-creative-capabilities-in-the-gemini-api (release 2025-10-15)
+name = "Veo 3.1 Preview"
+description = "Video model for prompt-guided generation, editing, and motion workflows"
+family = "veo"
+release_date = "2025-10-15"
+last_updated = "2026-01"
+attachment = true
+reasoning = false
+temperature = false
+tool_call = false
+open_weights = false
+status = "beta"
+
+[limit]
+context = 1_024
+output = 1
+
+[modalities]
+input = ["text", "image"]
+output = ["video"]
