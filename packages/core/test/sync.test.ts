@@ -719,6 +719,21 @@ test("syncs Hyper pricing from catalog input/output fields", () => {
   expect(buildHyperModel(model, undefined, "minimax/MiniMax-M2.7")).not.toHaveProperty("reasoning");
 });
 
+test("rounds Hyper pricing to six decimal places", () => {
+  const model = hyperModel({
+    id: "deepseek-v4-flash",
+    pricing: {
+      input: 0.20000010875000002,
+      output: 0.40000021750000003,
+      cache_hit: 0.039999586250000004,
+    },
+  });
+
+  expect(buildHyperModel(model, undefined, "deepseek/deepseek-v4-flash")).toMatchObject({
+    cost: { input: 0.2, output: 0.4, cache_read: 0.04 },
+  });
+});
+
 test("inherits Hyper reasoning from base model when API omits reasoning metadata", () => {
   const model = hyperModel({ id: "llama-3.3-70b-instruct", reasoning: undefined });
 

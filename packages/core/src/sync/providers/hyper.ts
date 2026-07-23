@@ -104,8 +104,12 @@ function isReasoningEffort(value: string): value is z.infer<typeof ReasoningEffo
   return ReasoningEffort.safeParse(value).success;
 }
 
+function price(value: number) {
+  return Math.round(value * 1_000_000) / 1_000_000;
+}
+
 function positivePrice(value: number | undefined) {
-  return value !== undefined && value > 0 ? value : undefined;
+  return value !== undefined && value > 0 ? price(value) : undefined;
 }
 
 function buildCost(model: HyperModel, existing: ExistingModel["cost"] | undefined) {
@@ -113,8 +117,8 @@ function buildCost(model: HyperModel, existing: ExistingModel["cost"] | undefine
   if (pricing?.input === undefined || pricing.output === undefined) return existing;
 
   return {
-    input: pricing.input,
-    output: pricing.output,
+    input: price(pricing.input),
+    output: price(pricing.output),
     cache_read: positivePrice(pricing.cache_hit)
       ?? (pricing.cache_hit === undefined ? existing?.cache_read : undefined),
     cache_write: positivePrice(pricing.cache_create)
