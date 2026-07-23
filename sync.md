@@ -46,7 +46,7 @@ Because the runner removes files missing from the desired set, a provider module
 
 ## Missing-model GitHub issues
 
-Providers that cannot safely auto-create TOMLs set `skipCreates: true`. In GitHub Actions (or with `--open-issues`), each skipped remote ID may open a GitHub issue:
+Providers that cannot safely auto-create TOMLs set `skipCreates: true`. In GitHub Actions (or with `--open-issues`), each skipped remote ID may open a GitHub issue unless the provider sets `trackMissingModels: false`:
 
 1. Title: `[missing-model] <provider>: <model-id>` (stable for dedupe)
 2. Labels: `automation`, `model-sync`, `missing-model`, `provider:<id>`
@@ -56,6 +56,10 @@ Providers that cannot safely auto-create TOMLs set `skipCreates: true`. In GitHu
 Requires `GH_TOKEN` on the sync workflow step. Local runs are notice-only unless `--open-issues`. Use `--no-issues` / `--dry-run` to skip creates. Issue-fixer ignores these titles (`[missing-model]…`) — they need hand-authored metadata.
 
 The first Actions run may open a batch of issues per provider, including remote IDs the catalog intentionally omits (e.g. OpenAI whisper/tts/moderation surfaces, dated snapshots). This one-time volume is accepted by design: close unwanted issues once and the closed-title dedupe suppresses them permanently. If the dedupe list window (1000 labeled issues per provider) ever fills, the sync fails closed and creates nothing rather than risk duplicates.
+
+Pioneer sets `trackMissingModels: false`: its API currently assigns the placeholder creation date `2024-01-01` to every model, so neither its timestamps nor an age cutoff can identify meaningful new additions. Existing Pioneer TOMLs are still updated by the sync.
+
+OpenAI also sets `trackMissingModels: false`: `/v1/models` is scoped to the automation account and mixes public models with legacy, internal experiment, dated snapshot, and non-catalog IDs without lifecycle metadata. Existing OpenAI TOMLs are still preserved by the availability sync.
 
 ## Provider Modules
 
@@ -193,7 +197,7 @@ xAI is implemented in `packages/core/src/sync/providers/xai.ts`.
 - Source endpoint: `https://api.openai.com/v1/models`.
 - Required auth: `OPENAI_API_KEY` from an automation account with access to the full first-party catalog.
 - The endpoint is used only to monitor catalog availability. Existing TOMLs are preserved byte-for-byte, including models absent from the response, because model access can be scoped to the API project.
-- Fine-tuned and customer-owned models are excluded. Unknown first-party models open deduped GitHub issues (`skipCreates`) without changing the catalog.
+- Fine-tuned and customer-owned models are excluded. Unknown first-party models are ignored because the endpoint does not provide enough lifecycle or visibility metadata to distinguish public catalog additions.
 
 ## OVHcloud Notes
 

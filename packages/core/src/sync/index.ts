@@ -67,6 +67,8 @@ export interface SyncProvider<SourceModel> {
    * deduped GitHub issue per missing model ID.
    */
   skipCreates?: boolean;
+  /** Report remote-only models skipped by skipCreates as GitHub issues. */
+  trackMissingModels?: boolean;
   deleteMissing?: boolean;
   preserveSymlinks?: boolean;
   preserveBaseModels?: boolean;
@@ -375,6 +377,7 @@ export async function syncProvider<SourceModel>(
 
   if (
     provider.skipCreates === true
+    && provider.trackMissingModels !== false
     && skippedRemote.length > 0
     && options.openIssues === true
   ) {

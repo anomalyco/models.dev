@@ -33,6 +33,7 @@ import {
 } from "../src/sync/providers/openrouter.js";
 import { buildLLMGatewayModel, type LLMGatewayModel } from "../src/sync/providers/llmgateway.js";
 import { openai, parseOpenAIModels } from "../src/sync/providers/openai.js";
+import { pioneer } from "../src/sync/providers/pioneer.js";
 import { resolveVeniceBaseModel } from "../src/sync/providers/venice.js";
 import { buildVercelModel, vercel } from "../src/sync/providers/vercel.js";
 import { buildWandbModel, type WandbModel } from "../src/sync/providers/wandb.js";
@@ -246,6 +247,13 @@ test("OpenAI availability sync retains models absent from a scoped response", as
   } finally {
     await rm(dir, { recursive: true, force: true });
   }
+});
+
+test("does not track unreliable remote-only models", () => {
+  expect(openai.skipCreates).toBe(true);
+  expect(openai.trackMissingModels).toBe(false);
+  expect(pioneer.skipCreates).toBe(true);
+  expect(pioneer.trackMissingModels).toBe(false);
 });
 
 function digitalOceanModel(overrides: Partial<DigitalOceanSourceModel> = {}): DigitalOceanSourceModel {
