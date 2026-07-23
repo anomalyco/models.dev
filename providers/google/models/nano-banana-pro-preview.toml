@@ -1,0 +1,18 @@
+# Alias for gemini-3-pro-image-preview (Nano Banana Pro / Gemini 3 Pro Image Preview).
+# Google Models API lists models/nano-banana-pro-preview with the same displayName,
+# description, token limits, and thinking flag as models/gemini-3-pro-image-preview.
+# Sources:
+# - https://ai.google.dev/gemini-api/docs/image-generation (Nano Banana Pro = gemini-3-pro-image)
+# - https://ai.google.dev/gemini-api/docs/models/gemini-3-pro-image
+# - https://ai.google.dev/gemini-api/docs/pricing (Gemini 3 Pro Image: $2/M input, $120/M image output)
+# - https://firebase.google.com/docs/ai-logic/models (preview ID gemini-3-pro-image-preview, 2025-11-20)
+# - https://discuss.ai.google.dev/t/gemma-3-api-not-working/143737 (Models API dump including nano-banana-pro-preview)
+base_model = "google/gemini-3-pro-image-preview"
+reasoning_options = []
+
+[cost]
+input = 2
+output = 120
+
+[limit]
+context = 131_072
