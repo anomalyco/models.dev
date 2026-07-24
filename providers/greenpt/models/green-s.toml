@@ -1,7 +1,7 @@
 name = "Green S"
 description = "GreenPT speech-to-text model for pre-recorded and live transcription"
-release_date = "2023-11"
-last_updated = "2023-11"
+release_date = "2025-01"
+last_updated = "2025-01"
 attachment = false
 reasoning = false
 temperature = false
@@ -9,9 +9,13 @@ tool_call = false
 open_weights = false
 
 [cost]
-# Speech-to-text billed per minute of audio (USD). GreenPT lists EUR 0.52/hour
-# for pre-recorded ("listen") transcription; converted at 1.14 EUR->USD.
-input = 0.00988
+# Speech-to-text is billed per minute of audio (USD), converted at 1.14 EUR->USD.
+# The rate below is the promotional EUR 0.12/hour for pre-recorded ("listen")
+# transcription, running through 31 August 2026. The standard rate is
+# EUR 0.23/hour (about USD 0.00437 per minute).
+# Live transcription is priced higher and cannot be represented in this
+# single-rate field.
+input = 0.00228
 output = 0.0
 
 [limit]

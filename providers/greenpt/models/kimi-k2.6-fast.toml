@@ -1,7 +1,10 @@
 base_model = "moonshotai/kimi-k2.6"
 name = "Kimi K2.6 Fast"
-reasoning_options = []
+reasoning_options = [{ type = "effort", values = ["none", "minimal", "low", "medium", "high"] }]
 
 [cost]
-input = 1.806
-output = 9.576
+input = 1.655
+output = 8.778
+
+[modalities]
+input = ["text", "image"]

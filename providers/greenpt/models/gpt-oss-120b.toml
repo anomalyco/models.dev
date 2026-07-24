@@ -1,6 +1,10 @@
 base_model = "openai/gpt-oss-120b"
-reasoning_options = []
+attachment = true
+reasoning_options = [{ type = "effort", values = ["none", "minimal", "low", "medium", "high"] }]
 
 [cost]
 input = 0.228
 output = 0.798
+
+[modalities]
+input = ["text", "image"]
