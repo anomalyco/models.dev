@@ -961,10 +961,14 @@ test("factors OpenRouter Pro routes against canonical OpenAI metadata", () => {
     resolveCanonicalBaseModel("openai/gpt-5.6-luna-pro"),
     resolveCanonicalBaseModel("openai/gpt-5.6-sol-pro"),
     resolveCanonicalBaseModel("openai/gpt-5.6-terra-pro"),
+    resolveCanonicalBaseModel("anthropic/claude-opus-5-fast"),
+    resolveCanonicalBaseModel("anthropic/claude-opus-4.8-fast"),
   ]).toEqual([
     "openai/gpt-5.6-luna",
     "openai/gpt-5.6-sol",
     "openai/gpt-5.6-terra",
+    "anthropic/claude-opus-5",
+    "anthropic/claude-opus-4-8",
   ]);
   expect(model).toMatchObject({
     base_model: "openai/gpt-5.6-sol",
@@ -1166,6 +1170,32 @@ test("Vercel factored models inherit temperature from base metadata", () => {
 
   expect(synced).toMatchObject({ base_model: "moonshotai/kimi-k3" });
   expect(synced).not.toHaveProperty("temperature");
+});
+
+test("Vercel Claude Opus fast variants factor onto base opus metadata", () => {
+  const [model] = vercel.parseModels({
+    data: [{
+      id: "anthropic/claude-opus-5-fast",
+      name: "Claude Opus 5 (Fast)",
+      created: 1_784_937_600,
+      context_window: 1_000_000,
+      max_tokens: 128_000,
+      type: "language",
+      tags: ["tool-use", "reasoning", "vision", "file-input", "fast"],
+      pricing: {
+        input: "0.00001",
+        output: "0.00005",
+        input_cache_read: "0.000001",
+        input_cache_write: "0.0000125",
+      },
+    }],
+  });
+
+  expect(buildVercelModel(model!, undefined)).toMatchObject({
+    base_model: "anthropic/claude-opus-5",
+    name: "Claude Opus 5 (Fast)",
+    cost: { input: 10, output: 50, cache_read: 1, cache_write: 12.5 },
+  });
 });
 
 test("skips LLM Gateway base_model factoring when no metadata entry exists", () => {

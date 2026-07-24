@@ -451,10 +451,13 @@ function modelMetadata(modelID: string) {
 
 function canonicalCandidates(provider: string, modelID: string) {
   const candidates = [modelID];
+  if (modelID.endsWith("-fast")) candidates.push(modelID.slice(0, -"-fast".length));
 
   if (provider === "anthropic") {
-    candidates.push(modelID.replace(/(claude-(?:opus|sonnet|haiku)-\d+)\.(\d+)/, "$1-$2"));
-    candidates.push(modelID.replace(/^claude-3\.5-/, "claude-3-5-"));
+    for (const candidate of [...candidates]) {
+      candidates.push(candidate.replace(/(claude-(?:opus|sonnet|haiku)-\d+)\.(\d+)/, "$1-$2"));
+      candidates.push(candidate.replace(/^claude-3\.5-/, "claude-3-5-"));
+    }
   }
 
   if (provider === "llama") {

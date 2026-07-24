@@ -1,6 +1,7 @@
 base_model = "anthropic/claude-opus-5"
 description = "Flagship Claude model for deep reasoning, coding, and long-horizon agents"
-reasoning_options = []
+temperature = true
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "medium", "high", "xhigh"] }]
 
 [cost]
 input = 5
