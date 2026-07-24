@@ -1,8 +1,0 @@
-# POST /v1/chat/completions carries model-template controls under
-# $.chat_template_kwargs; keys and values are model-specific, not universal.
-# https://docs.getlilac.com/inference/chat-completions (accessed 2026-06-25)
-name = "Lilac"
-env = ["LILAC_API_KEY"]
-npm = "@ai-sdk/openai-compatible"
-api = "https://api.getlilac.com/v1"
-doc = "https://docs.getlilac.com/inference/models"

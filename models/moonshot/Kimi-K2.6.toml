@@ -1,0 +1,20 @@
+name = "Kimi-K2.6"
+family = "kimi"
+knowledge = "2025-05"
+release_date = "2025-05"
+last_updated = "2025-05"
+attachment = true
+reasoning = true
+tool_call = true
+structured_output = true
+temperature = true
+open_weights = true
+
+[limit]
+context = 256000
+input = 256000
+output = 16384
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
