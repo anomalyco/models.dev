@@ -1,22 +1,8 @@
-name = "MiMo-V2.5"
-description = "MiMo-V2.5 served through the Gondola marketplace (Venice AI supply). Price shown is the current fee-inclusive marketplace 'from' rate and floats with live supply."
-family = "mimo"
-release_date = "2026-06-11"
-last_updated = "2026-07-24"
-attachment = false
-reasoning = true
-temperature = true
-tool_call = true
-open_weights = true
+base_model = "xiaomi/mimo-v2.5"
+# Cost from Gondola's public catalog: the fee-inclusive marketplace "from" price,
+# which floats with live supply. https://api.gondola-ai.com/v1/models (accessed 2026-07-24)
+reasoning_options = []
 
 [cost]
 input = 0.067116
 output = 0.134232
-
-[limit]
-context = 1000000
-output = 65536
-
-[modalities]
-input = ["text"]
-output = ["text"]

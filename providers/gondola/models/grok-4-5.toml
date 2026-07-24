@@ -1,22 +1,8 @@
-name = "Grok 4.5"
-description = "Grok 4.5 served through the Gondola marketplace (Venice AI supply). Price shown is the current fee-inclusive marketplace 'from' rate and floats with live supply."
-family = "grok"
-release_date = "2026-07-07"
-last_updated = "2026-07-24"
-attachment = false
-reasoning = true
-temperature = true
-tool_call = true
-open_weights = false
+base_model = "xai/grok-4.5"
+# Cost from Gondola's public catalog: the fee-inclusive marketplace "from" price,
+# which floats with live supply. https://api.gondola-ai.com/v1/models (accessed 2026-07-24)
+reasoning_options = []
 
 [cost]
 input = 1.088238
 output = 3.25992
-
-[limit]
-context = 500000
-output = 32000
-
-[modalities]
-input = ["text"]
-output = ["text"]

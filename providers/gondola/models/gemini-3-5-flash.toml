@@ -1,22 +1,8 @@
-name = "Gemini 3.5 Flash"
-description = "Gemini 3.5 Flash served through the Gondola marketplace (Venice AI supply). Price shown is the current fee-inclusive marketplace 'from' rate and floats with live supply."
-family = "gemini"
-release_date = "2026-05-22"
-last_updated = "2026-07-24"
-attachment = true
-reasoning = true
-temperature = true
-tool_call = true
-open_weights = false
+base_model = "google/gemini-3.5-flash"
+# Cost from Gondola's public catalog: the fee-inclusive marketplace "from" price,
+# which floats with live supply. https://api.gondola-ai.com/v1/models (accessed 2026-07-24)
+reasoning_options = []
 
 [cost]
 input = 0.74307
 output = 4.53033
-
-[limit]
-context = 1000000
-output = 65536
-
-[modalities]
-input = ["text", "image"]
-output = ["text"]
