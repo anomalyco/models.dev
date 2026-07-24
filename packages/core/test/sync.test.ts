@@ -151,6 +151,12 @@ test("factors NanoGPT variants against canonical models without retaining wrong 
   expect(resolveNanoGptBaseModel("TEE/qwen3.6-35b-a3b")).toBe("alibaba/qwen3.6-35b-a3b");
   expect(resolveNanoGptBaseModel("TEE/deepseek-v4-flash")).toBe("deepseek/deepseek-v4-flash");
   expect(resolveNanoGptBaseModel("cohere/north-mini-code")).toBe("cohere/north-mini-code-1-0");
+  expect(resolveNanoGptBaseModel("claude-haiku-4-5-20251001-thinking"))
+    .toBe("anthropic/claude-haiku-4-5-20251001");
+  expect(resolveNanoGptBaseModel("claude-sonnet-4-thinking:8192"))
+    .toBe("anthropic/claude-sonnet-4-0");
+  expect(resolveNanoGptBaseModel("gemini-2.5-pro")).toBe("google/gemini-2.5-pro");
+  expect(resolveNanoGptBaseModel("qwen3.5-27b")).toBe("alibaba/qwen3.5-27b");
 
   const north = buildNanoGptModel(nanoGptModel({
     id: "cohere/north-mini-code",

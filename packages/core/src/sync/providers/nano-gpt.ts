@@ -89,10 +89,33 @@ const ORG_ID_NORMALIZATION: Record<string, string | undefined> = {
 };
 
 const BASE_MODEL_ALIASES: Record<string, string | undefined> = {
+  "claude-opus-4": "anthropic/claude-opus-4-0",
+  "claude-sonnet-4": "anthropic/claude-sonnet-4-0",
   "cohere/north-mini-code": "cohere/north-mini-code-1-0",
   "sakana/fugu-ultra": "sakana/fugu-ultra",
   "xiaomi/mimo-v2.5-pro-ultraspeed": "xiaomi/mimo-v2.5-pro",
 };
+
+const UNPREFIXED_CANONICAL_PREFIXES = [
+  "alibaba",
+  "anthropic",
+  "cohere",
+  "deepseek",
+  "google",
+  "meta",
+  "minimax",
+  "mistralai",
+  "moonshotai",
+  "nvidia",
+  "openai",
+  "qwen",
+  "stepfun",
+  "tencent",
+  "thinkingmachines",
+  "xai",
+  "xiaomi",
+  "z-ai",
+] as const;
 
 const KNOWN_OPEN_WEIGHT_IDS = new Set([
   "cohere/north-mini-code",
@@ -201,7 +224,9 @@ function reasoningOptions(
 }
 
 export function resolveNanoGptBaseModel(modelID: string) {
-  const normalized = normalizeModelID(modelID).replace(/:thinking$/, "");
+  const normalized = normalizeModelID(modelID)
+    .replace(/:\d+$/, "")
+    .replace(/(?::thinking|-thinking)$/, "");
   const alias = BASE_MODEL_ALIASES[normalized.toLowerCase()];
   if (alias !== undefined) return alias;
 
@@ -217,7 +242,14 @@ export function resolveNanoGptBaseModel(modelID: string) {
     if (lower.startsWith("glm")) return resolveCanonicalBaseModel(`z-ai/${model}`);
   }
 
-  return resolveCanonicalBaseModel(normalized);
+  const direct = resolveCanonicalBaseModel(normalized);
+  if (direct !== undefined || normalized.includes("/")) return direct;
+
+  const matches = UNPREFIXED_CANONICAL_PREFIXES
+    .map((prefix) => resolveCanonicalBaseModel(`${prefix}/${normalized}`))
+    .filter((candidate): candidate is string => candidate !== undefined);
+  const unique = [...new Set(matches)];
+  return unique.length === 1 ? unique[0] : undefined;
 }
 
 function normalizeModalities(values: string[]): Modality[] {
