@@ -1,3 +1,12 @@
+# Cost: converted from GreenPT's EUR list price at 1.14 USD/EUR (rate captured 2026-07-24).
+# Sources: https://docs.greenpt.ai/pricing and https://docs.greenpt.ai/model-cards
+# Speech-to-text is billed per hour of audio and converted to a per-minute USD
+# rate for this catalog. cost.input is the standard EUR 0.23/hour pre-recorded
+# rate (0.23 / 60 * 1.14 = 0.00437). A 50% promotion runs through 2026-08-31
+# (EUR 0.12/hour, about USD 0.00228/minute); the durable standard rate is
+# published here so the catalog stays correct after the promotion ends.
+# Live and multilingual tiers are priced higher and cannot be represented in
+# this single-rate field.
 name = "Green S"
 description = "GreenPT speech-to-text model for pre-recorded and live transcription"
 release_date = "2025-01"
@@ -9,13 +18,7 @@ tool_call = false
 open_weights = false
 
 [cost]
-# Speech-to-text is billed per minute of audio (USD), converted at 1.14 EUR->USD.
-# The rate below is the promotional EUR 0.12/hour for pre-recorded ("listen")
-# transcription, running through 31 August 2026. The standard rate is
-# EUR 0.23/hour (about USD 0.00437 per minute).
-# Live transcription is priced higher and cannot be represented in this
-# single-rate field.
-input = 0.00228
+input = 0.00437
 output = 0.0
 
 [limit]
