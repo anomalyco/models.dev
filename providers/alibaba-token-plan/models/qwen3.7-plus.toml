@@ -6,6 +6,9 @@ base_model = "alibaba/qwen3.7-plus"
 # structured_output: the Token Plan gateway accepts response_format json_schema
 # (probed 2026-07-24) even though the base model / console report none. Reasoning
 # streams in `reasoning_content` (hence [interleaved]).
+# Output ceiling 65,536 (probed 2026-07-24: accepts max_tokens 65,536, rejects
+# 65,537). The inherited model-metadata value is 64,000; overridden below to
+# the gateway-enforced 65,536.
 # Sources:
 # https://www.alibabacloud.com/help/en/model-studio/deep-thinking
 # https://www.alibabacloud.com/help/en/model-studio/compatibility-with-openai-responses-api
@@ -21,3 +24,6 @@ input = 0
 output = 0
 cache_read = 0
 cache_write = 0
+
+[limit]
+output = 65_536
