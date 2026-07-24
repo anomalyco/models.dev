@@ -140,7 +140,7 @@ jobs:
           Failed log excerpt:
           EOF
             cat "$LOG_FILE"
-          } | opencode run --agent ci-fixer -m opencode/glm-5.2 | tee "$RESPONSE_FILE"
+          } | opencode run --agent ci-fixer -m opencode/grok-4.5 | tee "$RESPONSE_FILE"
 
       - name: Check changed paths
         if: steps.budget.outputs.run == 'true' && steps.budget-cache.outputs.cache-hit != 'true'

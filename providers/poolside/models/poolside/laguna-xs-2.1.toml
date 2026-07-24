@@ -1,5 +1,7 @@
 base_model = "poolside/laguna-xs-2.1"
-reasoning_options = []
+
+[[reasoning_options]]
+type = "toggle" # API: {"chat_template_kwargs": {"enable_thinking": false}}
 
 [interleaved]
 field = "reasoning_content"

@@ -1,0 +1,24 @@
+# Sources:
+# - https://ai.google.dev/gemini-api/docs/models/deep-research-preview-04-2026
+# - https://ai.google.dev/gemini-api/docs/deep-research
+# - https://blog.google/innovation-and-ai/models-and-research/gemini-models/next-generation-gemini-deep-research/
+
+name = "Gemini Deep Research Preview"
+description = "Agentic model for autonomous multi-step research, synthesis, and cited reports"
+family = "gemini-pro"
+release_date = "2026-04-21"
+last_updated = "2026-04-21"
+attachment = true
+reasoning = true
+temperature = false
+tool_call = true
+knowledge = "2025-01"
+open_weights = false
+
+[limit]
+context = 1_048_576
+output = 65_536
+
+[modalities]
+input = ["text", "image", "video", "audio", "pdf"]
+output = ["text", "image"]

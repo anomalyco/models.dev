@@ -1,0 +1,22 @@
+# Fast tier of GLM 5.2: same weights/API as zai-org/GLM-5.2, dedicated
+# higher-throughput capacity. Opt in with chat_template_args.enable_thinking=true.
+# Baseten documents no explicit false behavior, effort values, or reasoning-token budget.
+# https://docs.baseten.co/inference/model-apis/overview
+# https://docs.baseten.co/inference/model-apis/reasoning
+base_model = "zhipuai/glm-5.2"
+name = "GLM 5.2 Fast"
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "toggle"
+
+[cost]
+input = 2.1
+output = 6.6
+cache_read = 0.21
+
+[limit]
+context = 524_288
+output = 524_288

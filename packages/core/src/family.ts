@@ -82,6 +82,7 @@ export const ModelFamilyValues = [
 
   // Poolside Laguna
   "laguna",
+  "laguna-s",
 
   // Mistral family
   "mistral",

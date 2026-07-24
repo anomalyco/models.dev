@@ -1,15 +1,6 @@
-name = "Nano Banana 2 Lite (Gemini 3.1 Flash Lite Image)"
+base_model = "google/gemini-3.1-flash-lite-image"
 description = "Image model for prompt-driven generation, editing, and visual design workflows"
-family = "gemini"
-release_date = "2026-06-30"
-last_updated = "2026-06-30"
-attachment = true
-reasoning = true
-temperature = true
 tool_call = false
-structured_output = false
-knowledge = "2025-01-01"
-open_weights = false
 
 [[reasoning_options]]
 type = "effort"
@@ -20,9 +11,4 @@ input = 0.25
 output = 1.5
 
 [limit]
-context = 65_536
-output = 65_536
-
-[modalities]
-input = ["image", "text"]
-output = ["image", "text"]
+output = 66_000

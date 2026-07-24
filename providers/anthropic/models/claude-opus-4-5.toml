@@ -1,8 +1,5 @@
 base_model = "anthropic/claude-opus-4-5"
-name = "Claude Opus 4.5 (latest)"
 description = "Flagship Claude model for deep reasoning, coding, and long-horizon agents"
-attachment = true
-reasoning = true
 structured_output = true
 
 [[reasoning_options]]
@@ -18,11 +15,3 @@ input = 5
 output = 25
 cache_read = 0.5
 cache_write = 6.25
-
-[limit]
-context = 200_000
-output = 64_000
-
-[modalities]
-input = ["text", "image", "pdf"]
-output = ["text"]

@@ -1,8 +1,10 @@
+# Context window: Azure Foundry serves 1M (legacy 200K cap removed).
+# https://learn.microsoft.com/en-us/azure/foundry/foundry-models/concepts/claude-models?tabs=pay-go#available-claude-models
 name = "Claude Opus 4.6"
 description = "Flagship Claude model for deep reasoning, coding, and long-horizon agents"
 family = "claude-opus"
 release_date = "2026-02-05"
-last_updated = "2026-02-05"
+last_updated = "2026-07-17"
 attachment = true
 reasoning = true
 # POST /anthropic/v1/messages supports adaptive thinking with output_config.effort
@@ -28,7 +30,7 @@ cache_read = 1.00
 cache_write = 12.50
 
 [limit]
-context = 200_000
+context = 1_000_000
 output = 128_000
 
 [modalities]

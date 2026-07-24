@@ -43,6 +43,8 @@ import {
 import { familyMatchesModalities } from "../src/family.js";
 import { buildLLMGatewayModel, type LLMGatewayModel } from "../src/sync/providers/llmgateway.js";
 import { openai, parseOpenAIModels } from "../src/sync/providers/openai.js";
+import { pioneer } from "../src/sync/providers/pioneer.js";
+import { google, shouldTrackGoogleModel } from "../src/sync/providers/google.js";
 import { resolveVeniceBaseModel } from "../src/sync/providers/venice.js";
 import { buildVercelModel, vercel } from "../src/sync/providers/vercel.js";
 import { buildWandbModel, type WandbModel } from "../src/sync/providers/wandb.js";
@@ -185,10 +187,82 @@ test("Anthropic sync preserves base model inheritance", () => {
 
   expect(translated?.model).toMatchObject({
     base_model: "anthropic/claude-opus-4-5",
-    name: "Claude Opus 4.5 (latest)",
   });
+  // Name matches models/anthropic/claude-opus-4-5.toml, so factoring omits it.
+  expect(translated?.model).not.toHaveProperty("name");
   expect(translated?.model).not.toHaveProperty("knowledge");
   expect(translated?.model).not.toHaveProperty("release_date");
+});
+
+test("Anthropic factored models omit inherited fields and keep authored fast mode", () => {
+  const model = buildAnthropicModel(
+    anthropicModel({
+      id: "claude-opus-5",
+      display_name: "Claude Opus 5",
+      created_at: "2026-07-24T00:00:00Z",
+      max_input_tokens: 1_000_000,
+      max_tokens: 128_000,
+      capabilities: {
+        effort: {
+          supported: true,
+          low: { supported: true },
+          medium: { supported: true },
+          high: { supported: true },
+          xhigh: { supported: true },
+          max: { supported: true },
+        },
+        image_input: { supported: true },
+        pdf_input: { supported: true },
+        structured_outputs: { supported: true },
+        thinking: { supported: true },
+      },
+    }),
+    {
+      base_model: "anthropic/claude-opus-5",
+      name: "Claude Opus 5",
+      description: "Strongest Claude Opus model for coding, agents, and professional work",
+      attachment: true,
+      reasoning: true,
+      reasoning_options: [{ type: "effort", values: ["low", "medium", "high", "xhigh", "max"] }],
+      structured_output: true,
+      tool_call: true,
+      open_weights: false,
+      cost: { input: 5, output: 25, cache_read: 0.5, cache_write: 6.25 },
+      limit: { context: 1_000_000, output: 128_000 },
+      modalities: { input: ["text", "image", "pdf"], output: ["text"] },
+      experimental: {
+        modes: {
+          fast: {
+            cost: { input: 10, output: 50, cache_read: 1, cache_write: 12.5 },
+            provider: {
+              body: { speed: "fast" },
+              headers: { "anthropic-beta": "fast-mode-2026-02-01" },
+            },
+          },
+        },
+      },
+    },
+    "anthropic/claude-opus-5",
+  );
+
+  expect(model).toMatchObject({
+    base_model: "anthropic/claude-opus-5",
+    structured_output: true,
+    reasoning_options: [{ type: "effort", values: ["low", "medium", "high", "xhigh", "max"] }],
+    cost: { input: 5, output: 25, cache_read: 0.5, cache_write: 6.25 },
+    experimental: {
+      modes: {
+        fast: {
+          cost: { input: 10, output: 50, cache_read: 1, cache_write: 12.5 },
+        },
+      },
+    },
+  });
+  expect(model).not.toHaveProperty("attachment");
+  expect(model).not.toHaveProperty("reasoning");
+  expect(model).not.toHaveProperty("limit");
+  expect(model).not.toHaveProperty("modalities");
+  expect(model).not.toHaveProperty("name");
 });
 
 test("filters customer-owned OpenAI models from availability tracking", () => {
@@ -256,6 +330,24 @@ test("OpenAI availability sync retains models absent from a scoped response", as
   } finally {
     await rm(dir, { recursive: true, force: true });
   }
+});
+
+test("does not track unreliable remote-only models", () => {
+  expect(google.skipCreates).toBe(true);
+  expect(google.trackMissingModels).toBe(false);
+  expect(openai.skipCreates).toBe(true);
+  expect(openai.trackMissingModels).toBe(false);
+  expect(pioneer.skipCreates).toBe(true);
+  expect(pioneer.trackMissingModels).toBe(false);
+});
+
+test("tracks public Google model families but not opaque internal IDs", () => {
+  expect(shouldTrackGoogleModel("gemini-3.1-flash-live-preview")).toBe(true);
+  expect(shouldTrackGoogleModel("imagen-4.0-generate-001")).toBe(true);
+  expect(shouldTrackGoogleModel("veo-3.1-generate-preview")).toBe(true);
+  expect(shouldTrackGoogleModel("ajax")).toBe(false);
+  expect(shouldTrackGoogleModel("perseus-2")).toBe(false);
+  expect(shouldTrackGoogleModel("thorin")).toBe(false);
 });
 
 function digitalOceanModel(overrides: Partial<DigitalOceanSourceModel> = {}): DigitalOceanSourceModel {
@@ -951,10 +1043,14 @@ test("factors OpenRouter Pro routes against canonical OpenAI metadata", () => {
     resolveCanonicalBaseModel("openai/gpt-5.6-luna-pro"),
     resolveCanonicalBaseModel("openai/gpt-5.6-sol-pro"),
     resolveCanonicalBaseModel("openai/gpt-5.6-terra-pro"),
+    resolveCanonicalBaseModel("anthropic/claude-opus-5-fast"),
+    resolveCanonicalBaseModel("anthropic/claude-opus-4.8-fast"),
   ]).toEqual([
     "openai/gpt-5.6-luna",
     "openai/gpt-5.6-sol",
     "openai/gpt-5.6-terra",
+    "anthropic/claude-opus-5",
+    "anthropic/claude-opus-4-8",
   ]);
   expect(model).toMatchObject({
     base_model: "openai/gpt-5.6-sol",
@@ -969,10 +1065,14 @@ test("resolves Venice Pro routes to canonical OpenAI metadata", () => {
     resolveVeniceBaseModel("openai-gpt-56-luna-pro", "GPT-5.6 Luna Pro"),
     resolveVeniceBaseModel("openai-gpt-56-sol-pro", "GPT-5.6 Sol Pro"),
     resolveVeniceBaseModel("openai-gpt-56-terra-pro", "GPT-5.6 Terra Pro"),
+    resolveVeniceBaseModel("claude-opus-5-fast", "Claude Opus 5 Fast"),
+    resolveVeniceBaseModel("claude-opus-4-8-fast", "Claude Opus 4.8 Fast"),
   ]).toEqual([
     "openai/gpt-5.6-luna",
     "openai/gpt-5.6-sol",
     "openai/gpt-5.6-terra",
+    "anthropic/claude-opus-5",
+    "anthropic/claude-opus-4-8",
   ]);
 });
 
@@ -1122,6 +1222,93 @@ test("parses Vercel pricing tiers with an implicit zero minimum", () => {
   expect(model).toBeDefined();
   expect(buildVercelModel(model!, undefined)).toMatchObject({
     cost: { input: 1, output: 6, cache_read: 0.1 },
+  });
+});
+
+test("Vercel factored models inherit temperature from base metadata", () => {
+  const [model] = vercel.parseModels({
+    data: [{
+      id: "moonshotai/kimi-k3",
+      name: "Kimi K3",
+      created: 1_784_160_000,
+      context_window: 1_000_000,
+      max_tokens: 131_072,
+      type: "language",
+      tags: ["reasoning", "tool-use", "vision"],
+      pricing: {
+        input: "0.000003",
+        output: "0.000015",
+        input_cache_read: "0.0000003",
+      },
+    }],
+  });
+
+  const synced = buildVercelModel(model!, {
+    base_model: "moonshotai/kimi-k3",
+    name: "Kimi K3",
+    description: "Kimi multimodal agent model for visual understanding, coding, and planning",
+    open_weights: false,
+    reasoning_options: [],
+    cost: { input: 3, output: 15, cache_read: 0.3 },
+    limit: { context: 1_000_000 },
+    modalities: { input: ["text", "image", "pdf"], output: ["text"] },
+  });
+
+  expect(synced).toMatchObject({ base_model: "moonshotai/kimi-k3" });
+  expect(synced).not.toHaveProperty("temperature");
+});
+
+test("Vercel Claude Opus fast variants factor onto base opus metadata", () => {
+  const [model] = vercel.parseModels({
+    data: [{
+      id: "anthropic/claude-opus-5-fast",
+      name: "Claude Opus 5 (Fast)",
+      created: 1_784_937_600,
+      context_window: 1_000_000,
+      max_tokens: 128_000,
+      type: "language",
+      tags: ["tool-use", "reasoning", "vision", "file-input", "fast"],
+      pricing: {
+        input: "0.00001",
+        output: "0.00005",
+        input_cache_read: "0.000001",
+        input_cache_write: "0.0000125",
+      },
+    }],
+  });
+
+  expect(buildVercelModel(model!, undefined)).toMatchObject({
+    base_model: "anthropic/claude-opus-5",
+    name: "Claude Opus 5 (Fast)",
+    cost: { input: 10, output: 50, cache_read: 1, cache_write: 12.5 },
+  });
+});
+
+test("OpenRouter Claude Opus fast variants factor onto base opus metadata", () => {
+  const model = buildOpenRouterModel(openRouterModel({
+    id: "anthropic/claude-opus-5-fast",
+    name: "Anthropic: Claude Opus 5 (Fast)",
+    context_length: 1_000_000,
+    top_provider: {
+      context_length: 1_000_000,
+      max_completion_tokens: 128_000,
+    },
+    pricing: {
+      prompt: "0.00001",
+      completion: "0.00005",
+      input_cache_read: "0.000001",
+      input_cache_write: "0.0000125",
+    },
+    reasoning: {
+      mandatory: false,
+      supported_efforts: ["low", "medium", "high", "xhigh", "max"],
+    },
+  }), undefined);
+
+  expect(model).toMatchObject({
+    base_model: "anthropic/claude-opus-5",
+    name: "Claude Opus 5 (Fast)",
+    cost: { input: 10, output: 50, cache_read: 1, cache_write: 12.5 },
   });
 });
 

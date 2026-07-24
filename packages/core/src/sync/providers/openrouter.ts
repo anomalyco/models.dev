@@ -224,11 +224,7 @@ export function buildOpenRouterModel(
     return factorBaseModel(
       canonical,
       {
-        // A caller-resolved baseModel (e.g. cloudflare-workers-ai's fuzzy identity-token
-        // match) may carry a real vendor display name worth keeping as an override --
-        // but only when it says something beyond the bare model id (native Cloudflare
-        // records have no separate display name, so their `name` is just the id slug).
-        name: (baseModel !== undefined && name !== model.id) || model.id.endsWith(":free") || canonicalOverride === canonical
+        name: shouldPreserveFactoredName(model.id, name, canonical, baseModel, canonicalOverride)
           ? name
           : undefined,
         description: existing?.description ?? describeModel({
@@ -360,6 +356,29 @@ function canonicalBaseModelOverride(openrouterID: string) {
   ];
 }
 
+function shouldPreserveFactoredName(
+  modelID: string,
+  name: string,
+  canonical: string,
+  baseModel: string | undefined,
+  canonicalOverride: string | undefined,
+) {
+  // A caller-resolved baseModel (e.g. cloudflare-workers-ai's fuzzy identity-token match)
+  // may carry a real vendor display name worth keeping as an override -- but only when it
+  // says something beyond the bare model id (native Cloudflare records have no separate
+  // display name, so their `name` is just the id slug).
+  if (baseModel !== undefined) return name !== modelID;
+  if (modelID.endsWith(":free")) return true;
+  if (canonicalOverride === canonical) return true;
+  const modelSlug = modelID.split("/").slice(1).join("/").replace(/:free$/, "");
+  const canonicalSlug = canonical.split("/").slice(1).join("/");
+  return normalizeModelSlug(modelSlug) !== normalizeModelSlug(canonicalSlug);
+}
+
+function normalizeModelSlug(value: string) {
+  return value.toLowerCase().replaceAll(/[^a-z0-9]/g, "");
+}
+
 export function factorBaseModel(
   modelID: string,
   values: Partial<SyncedFullModel>,
@@ -471,10 +490,13 @@ function modelMetadata(modelID: string) {
 
 function canonicalCandidates(provider: string, modelID: string) {
   const candidates = [modelID];
+  if (modelID.endsWith("-fast")) candidates.push(modelID.slice(0, -"-fast".length));
 
   if (provider === "anthropic") {
-    candidates.push(modelID.replace(/(claude-(?:opus|sonnet|haiku)-\d+)\.(\d+)/, "$1-$2"));
-    candidates.push(modelID.replace(/^claude-3\.5-/, "claude-3-5-"));
+    for (const candidate of [...candidates]) {
+      candidates.push(candidate.replace(/(claude-(?:opus|sonnet|haiku)-\d+)\.(\d+)/, "$1-$2"));
+      candidates.push(candidate.replace(/^claude-3\.5-/, "claude-3-5-"));
+    }
   }
 
   if (provider === "llama") {

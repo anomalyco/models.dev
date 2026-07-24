@@ -1,8 +1,5 @@
 base_model = "anthropic/claude-haiku-4-5"
-name = "Claude Haiku 4.5 (latest)"
 description = "Fast Claude lane for lightweight agents, office tasks, and responsive chat"
-attachment = true
-reasoning = true
 structured_output = true
 
 [[reasoning_options]]
@@ -14,11 +11,3 @@ input = 1
 output = 5
 cache_read = 0.1
 cache_write = 1.25
-
-[limit]
-context = 200_000
-output = 64_000
-
-[modalities]
-input = ["text", "image", "pdf"]
-output = ["text"]
