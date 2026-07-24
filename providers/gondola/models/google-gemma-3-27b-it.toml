@@ -1,11 +1,13 @@
-# Cost from Gondola's public catalog: the fee-inclusive marketplace "from" price,
-# which floats with live supply. https://api.gondola-ai.com/v1/models (accessed 2026-07-24)
+# Cost, limits and modalities reflect Gondola's Venice supply. Cost is the
+# fee-inclusive marketplace "from" price and floats with live supply.
+# https://api.gondola-ai.com/v1/models (accessed 2026-07-24); modalities/limits
+# mirror providers/venice/ for the same model.
 name = "Google Gemma 3 27B Instruct"
 description = "Google Gemma 3 27B Instruct served through the Gondola marketplace (Venice AI supply). Price shown is the current fee-inclusive marketplace 'from' rate and floats with live supply."
 family = "gemma"
 release_date = "2025-11-04"
 last_updated = "2026-07-24"
-attachment = false
+attachment = true
 reasoning = false
 temperature = true
 tool_call = true
@@ -20,5 +22,5 @@ context = 198000
 output = 16384
 
 [modalities]
-input = ["text"]
+input = ["text", "image"]
 output = ["text"]

@@ -1,8 +1,14 @@
 base_model = "minimax/MiniMax-M2.7"
-# Cost from Gondola's public catalog: the fee-inclusive marketplace "from" price,
-# which floats with live supply. https://api.gondola-ai.com/v1/models (accessed 2026-07-24)
+# Cost, limits and modalities reflect Gondola's Venice supply. Cost is the
+# fee-inclusive marketplace "from" price and floats with live supply.
+# https://api.gondola-ai.com/v1/models (accessed 2026-07-24); modalities/limits
+# mirror providers/venice/ for the same model.
 reasoning_options = []
 
 [cost]
 input = 0.179775
 output = 0.7191
+
+[limit]
+context = 198000
+output = 32768

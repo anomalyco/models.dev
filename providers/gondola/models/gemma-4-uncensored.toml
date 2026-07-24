@@ -1,11 +1,13 @@
-# Cost from Gondola's public catalog: the fee-inclusive marketplace "from" price,
-# which floats with live supply. https://api.gondola-ai.com/v1/models (accessed 2026-07-24)
+# Cost, limits and modalities reflect Gondola's Venice supply. Cost is the
+# fee-inclusive marketplace "from" price and floats with live supply.
+# https://api.gondola-ai.com/v1/models (accessed 2026-07-24); modalities/limits
+# mirror providers/venice/ for the same model.
 name = "Gemma 4 Uncensored"
 description = "Gemma 4 Uncensored served through the Gondola marketplace (Venice AI supply). Price shown is the current fee-inclusive marketplace 'from' rate and floats with live supply."
 family = "gemma"
 release_date = "2026-04-13"
 last_updated = "2026-07-24"
-attachment = false
+attachment = true
 reasoning = false
 temperature = true
 tool_call = true
@@ -20,5 +22,5 @@ context = 256000
 output = 8192
 
 [modalities]
-input = ["text"]
+input = ["text", "image"]
 output = ["text"]

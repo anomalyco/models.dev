@@ -1,8 +1,18 @@
 base_model = "anthropic/claude-opus-4-8"
-# Cost from Gondola's public catalog: the fee-inclusive marketplace "from" price,
-# which floats with live supply. https://api.gondola-ai.com/v1/models (accessed 2026-07-24)
+# Cost, limits and modalities reflect Gondola's Venice supply. Cost is the
+# fee-inclusive marketplace "from" price and floats with live supply.
+# https://api.gondola-ai.com/v1/models (accessed 2026-07-24); modalities/limits
+# mirror providers/venice/ for the same model.
 reasoning_options = []
 
 [cost]
 input = 2.8764
 output = 14.382
+
+[limit]
+context = 1000000
+output = 128000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

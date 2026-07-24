@@ -1,8 +1,14 @@
 base_model = "openai/gpt-oss-120b"
-# Cost from Gondola's public catalog: the fee-inclusive marketplace "from" price,
-# which floats with live supply. https://api.gondola-ai.com/v1/models (accessed 2026-07-24)
+# Cost, limits and modalities reflect Gondola's Venice supply. Cost is the
+# fee-inclusive marketplace "from" price and floats with live supply.
+# https://api.gondola-ai.com/v1/models (accessed 2026-07-24); modalities/limits
+# mirror providers/venice/ for the same model.
 reasoning_options = []
 
 [cost]
 input = 0.033558
 output = 0.14382
+
+[limit]
+context = 128000
+output = 16384

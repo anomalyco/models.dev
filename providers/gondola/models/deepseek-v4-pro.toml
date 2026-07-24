@@ -1,8 +1,14 @@
 base_model = "deepseek/deepseek-v4-pro"
-# Cost from Gondola's public catalog: the fee-inclusive marketplace "from" price,
-# which floats with live supply. https://api.gondola-ai.com/v1/models (accessed 2026-07-24)
+# Cost, limits and modalities reflect Gondola's Venice supply. Cost is the
+# fee-inclusive marketplace "from" price and floats with live supply.
+# https://api.gondola-ai.com/v1/models (accessed 2026-07-24); modalities/limits
+# mirror providers/venice/ for the same model.
 reasoning_options = []
 
 [cost]
 input = 0.79101
 output = 1.582499
+
+[limit]
+context = 1000000
+output = 32768
