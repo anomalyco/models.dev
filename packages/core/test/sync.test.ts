@@ -177,10 +177,82 @@ test("Anthropic sync preserves base model inheritance", () => {
 
   expect(translated?.model).toMatchObject({
     base_model: "anthropic/claude-opus-4-5",
-    name: "Claude Opus 4.5 (latest)",
   });
+  // Name matches models/anthropic/claude-opus-4-5.toml, so factoring omits it.
+  expect(translated?.model).not.toHaveProperty("name");
   expect(translated?.model).not.toHaveProperty("knowledge");
   expect(translated?.model).not.toHaveProperty("release_date");
+});
+
+test("Anthropic factored models omit inherited fields and keep authored fast mode", () => {
+  const model = buildAnthropicModel(
+    anthropicModel({
+      id: "claude-opus-5",
+      display_name: "Claude Opus 5",
+      created_at: "2026-07-24T00:00:00Z",
+      max_input_tokens: 1_000_000,
+      max_tokens: 128_000,
+      capabilities: {
+        effort: {
+          supported: true,
+          low: { supported: true },
+          medium: { supported: true },
+          high: { supported: true },
+          xhigh: { supported: true },
+          max: { supported: true },
+        },
+        image_input: { supported: true },
+        pdf_input: { supported: true },
+        structured_outputs: { supported: true },
+        thinking: { supported: true },
+      },
+    }),
+    {
+      base_model: "anthropic/claude-opus-5",
+      name: "Claude Opus 5",
+      description: "Strongest Claude Opus model for coding, agents, and professional work",
+      attachment: true,
+      reasoning: true,
+      reasoning_options: [{ type: "effort", values: ["low", "medium", "high", "xhigh", "max"] }],
+      structured_output: true,
+      tool_call: true,
+      open_weights: false,
+      cost: { input: 5, output: 25, cache_read: 0.5, cache_write: 6.25 },
+      limit: { context: 1_000_000, output: 128_000 },
+      modalities: { input: ["text", "image", "pdf"], output: ["text"] },
+      experimental: {
+        modes: {
+          fast: {
+            cost: { input: 10, output: 50, cache_read: 1, cache_write: 12.5 },
+            provider: {
+              body: { speed: "fast" },
+              headers: { "anthropic-beta": "fast-mode-2026-02-01" },
+            },
+          },
+        },
+      },
+    },
+    "anthropic/claude-opus-5",
+  );
+
+  expect(model).toMatchObject({
+    base_model: "anthropic/claude-opus-5",
+    structured_output: true,
+    reasoning_options: [{ type: "effort", values: ["low", "medium", "high", "xhigh", "max"] }],
+    cost: { input: 5, output: 25, cache_read: 0.5, cache_write: 6.25 },
+    experimental: {
+      modes: {
+        fast: {
+          cost: { input: 10, output: 50, cache_read: 1, cache_write: 12.5 },
+        },
+      },
+    },
+  });
+  expect(model).not.toHaveProperty("attachment");
+  expect(model).not.toHaveProperty("reasoning");
+  expect(model).not.toHaveProperty("limit");
+  expect(model).not.toHaveProperty("modalities");
+  expect(model).not.toHaveProperty("name");
 });
 
 test("filters customer-owned OpenAI models from availability tracking", () => {
