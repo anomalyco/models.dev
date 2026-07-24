@@ -7,5 +7,9 @@
 # - https://ai.google.dev/gemini-api/docs/pricing
 #   (Veo 3.1 Lite default video+audio: $0.05/s 720p, $0.08/s 1080p; 4k not supported.
 #    Catalog cost fields are USD per million tokens, so token cost is omitted.)
-
 base_model = "google/veo-3.1-lite-generate-preview"
+name = "Veo 3.1 lite"
+
+[limit]
+context = 480
+output = 8_192

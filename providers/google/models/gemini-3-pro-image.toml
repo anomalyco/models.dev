@@ -6,9 +6,12 @@
 base_model = "google/gemini-3-pro-image"
 
 [[reasoning_options]]
-type = "effort" # API: thinking_config.thinking_level / thinkingConfig.thinkingLevel
+type = "effort"
 values = ["low", "high"]
 
 [cost]
 input = 2
 output = 120
+
+[limit]
+context = 131_072

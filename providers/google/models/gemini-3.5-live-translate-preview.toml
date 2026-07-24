@@ -5,9 +5,14 @@
 # - https://deepmind.google/models/model-cards/gemini-3-5-audio/
 # - https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-live-3-5-translate/
 base_model = "google/gemini-3.5-live-translate-preview"
+temperature = true
 
 [cost]
-input = 3.50
-output = 21.00
-input_audio = 3.50
-output_audio = 21.00
+input = 3.5
+output = 21
+input_audio = 3.5
+output_audio = 21
+
+[limit]
+context = 16_384
+output = 32_768
