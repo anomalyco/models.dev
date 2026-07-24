@@ -1745,6 +1745,35 @@ test("buildWorkersAiModel emits whisper-large-v3-turbo as a base_model pointer",
   expect((model as { limit?: { context?: number; output?: number } }).limit?.output).toBeUndefined();
 });
 
+test("reshapeNative marks img2img/inpainting Stable Diffusion variants as image-input models", async () => {
+  // Regression: Cloudflare's native API files both under the same "Text-to-Image" task
+  // as plain text-to-image models, so TASK_MODALITIES' input: ["text"] default wrongly
+  // dropped their image input (and mask, for inpainting) -- despite each model's own
+  // synced description saying otherwise ("generate a new image from an input image",
+  // "using a mask"). The id suffix is the only signal the native API gives to tell them
+  // apart from plain text-to-image models.
+  const fixture = await Bun.file(
+    path.join(import.meta.dirname, "fixtures", "cloudflare-workers-ai-native.json"),
+  ).json() as { result: NativeModel[] };
+
+  for (const id of ["@cf/runwayml/stable-diffusion-v1-5-img2img", "@cf/runwayml/stable-diffusion-v1-5-inpainting"]) {
+    const native = fixture.result.find((model) => model.name === id);
+    if (native === undefined) throw new Error(`Fixture is missing ${id}`);
+
+    const model = buildWorkersAiModel(OpenRouterModel.parse(reshapeNative(native)), undefined);
+
+    expect(model.attachment).toBe(true);
+    expect(model.modalities).toMatchObject({ input: ["text", "image"], output: ["image"] });
+  }
+
+  // A plain text-to-image model under the same task class keeps text-only input.
+  const plain = fixture.result.find((model) => model.name === "@cf/stabilityai/stable-diffusion-xl-base-1.0");
+  if (plain === undefined) throw new Error("Fixture is missing stable-diffusion-xl-base-1.0");
+  const plainModel = buildWorkersAiModel(OpenRouterModel.parse(reshapeNative(plain)), undefined);
+  expect(plainModel.attachment).toBe(false);
+  expect(plainModel.modalities).toMatchObject({ input: ["text"], output: ["image"] });
+});
+
 test("Cloudflare Workers AI native sync prefers the native API description and never stamps an audio ASR model with an image family", async () => {
   // Regression for @cf/deepgram/flux: its id/name contains "flux", which both
   // describe.ts's image-model heuristic and openrouter.ts's family-name substring

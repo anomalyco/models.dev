@@ -137,10 +137,17 @@ function parsePrices(value: unknown): z.infer<typeof NativePrice>[] {
 
 export function reshapeNative(model: NativeModel): OpenRouterModel {
   const properties = flattenProperties(model);
-  const modalities = TASK_MODALITIES[model.task.name];
-  if (modalities === undefined) {
+  const taskModalities = TASK_MODALITIES[model.task.name];
+  if (taskModalities === undefined) {
     throw new Error(`Unknown Cloudflare Workers AI native task: ${model.task.name}`);
   }
+  // img2img/inpainting variants share the "Text-to-Image" task with plain text-to-image
+  // models, but they also take an input image (inpainting additionally takes a mask) --
+  // Cloudflare's native API has no task class or property that flags this, only the id
+  // suffix, so the modality override has to key off it.
+  const modalities = /-(?:img2img|inpainting)$/.test(model.name)
+    ? { input: [...taskModalities.input, "image"] as TaskModality[], output: taskModalities.output }
+    : taskModalities;
 
   // Neither API shape reports an output-token limit or open-weights status for any
   // model; fabricating them (0 / false) rather than skipping the model matches this

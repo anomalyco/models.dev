@@ -3,7 +3,7 @@ description = "Stable Diffusion Inpainting is a latent text-to-image diffusion m
 family = "stable-diffusion"
 release_date = "2024-02-27"
 last_updated = "2024-02-27"
-attachment = false
+attachment = true
 reasoning = false
 temperature = false
 tool_call = false
@@ -15,5 +15,5 @@ context = 0
 output = 0
 
 [modalities]
-input = ["text"]
+input = ["text", "image"]
 output = ["image"]
