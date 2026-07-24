@@ -9,6 +9,7 @@ The grouped sync targets are available for local convenience, but CI syncs each 
 ## Commands
 
 - `bun models:sync aggregators` syncs every provider in the `aggregators` group.
+- `bun models:sync airforce` syncs only Api.Airforce.
 - `bun models:sync openrouter` syncs only OpenRouter.
 - `bun models:sync cloudflare-workers-ai` syncs only Cloudflare Workers AI.
 - `bun models:sync cloudflare` syncs the Cloudflare sync group.
@@ -252,6 +253,19 @@ Venice is implemented in `packages/core/src/sync/providers/venice.ts`.
 - Models missing from the API response are removed from the Venice catalog.
 - Every Venice model uses `base_model`; flattened IDs are matched to provider-agnostic metadata before provider-specific overrides are written.
 - Every Venice model declares `reasoning_options`; models without API-provided effort levels use an empty array.
+
+## Api.Airforce Notes
+
+Api.Airforce is implemented in `packages/core/src/sync/providers/airforce.ts`.
+
+- Run it with `bun models:sync airforce`.
+- Source endpoint: `https://api.airforce/v1/models`; no auth required (the catalog is public). `AIRFORCE_API_KEY` is optional and is sent when set.
+- Only `supports_chat` models are synced; image, audio, and video models are skipped silently.
+- Model IDs map directly to TOML paths under `providers/airforce/models`.
+- Prices come from `customer_price_table.components`, which states its own unit, and fall back to the flat `*_pricepermilliontokens` fields. Both are per-1M-token quotes in micro USD and cents respectively. `cache_write` uses the 5-minute rate.
+- Every synced model uses `base_model`. `catalog_id` names the upstream model and matches `models/` paths once punctuation is normalized; it uses its own provider namespaces (`zai`, `moonshot`), so the bare Api.Airforce ID is matched as a fallback.
+- The catalog reports `context_length` and `max_output_tokens` for only part of its models and never reports release dates or capability flags, so a model with no matching `models/` entry cannot be described from the endpoint alone. Those IDs are skipped and listed in the sync notices instead of being created with invented metadata. A skipped ID that already has a hand-authored TOML is kept and only has its pricing refreshed, so hand-authored files are never removed while Api.Airforce still serves the model.
+- `limit` is only written when the API reports its own serving limits; everything else — modalities, capability flags, dates, and `reasoning_options` — is inherited from model metadata.
 
 ## Standalone Generators
 

@@ -5,6 +5,12 @@ import path from "node:path";
 
 import { formatToml, preserveReasoningOptions, syncProvider, type SyncProvider } from "../src/sync/index.js";
 import {
+  airforce,
+  buildAirforceModel,
+  resolveAirforceBaseModel,
+  type AirforceModel,
+} from "../src/sync/providers/airforce.js";
+import {
   anthropic,
   buildAnthropicModel,
   parseAnthropicPricing,
@@ -1472,6 +1478,119 @@ test("maps EmpirioLabs aliases to canonical model metadata", () => {
   expect(resolveEmpiriolabsBaseModel("fugu-ultra")).toBe("sakana/fugu-ultra");
   expect(resolveEmpiriolabsBaseModel("muse-spark-1-1")).toBe("meta/muse-spark-1.1");
   expect(resolveEmpiriolabsBaseModel("step-3-5-flash")).toBe("stepfun/step-3.5-flash");
+});
+
+function airforceModel(overrides: Partial<AirforceModel> = {}): AirforceModel {
+  return {
+    id: "claude-opus-4.6",
+    supports_chat: true,
+    catalog_id: "anthropic/claude-opus-4-6",
+    context_length: 200_000,
+    max_output_tokens: 64_000,
+    pricepermilliontokens: 285,
+    output_pricepermilliontokens: 1_425,
+    cache_read_pricepermilliontokens: 25,
+    cache_write_5m_pricepermilliontokens: 313,
+    ...overrides,
+  };
+}
+
+test("maps Api.Airforce catalog IDs to canonical model metadata", () => {
+  expect(resolveAirforceBaseModel(airforceModel())).toBe("anthropic/claude-opus-4-6");
+  expect(resolveAirforceBaseModel(airforceModel({
+    id: "gpt-5.2",
+    catalog_id: "openai/gpt-5-2",
+  }))).toBe("openai/gpt-5.2");
+  // `zai` and `moonshot` are Api.Airforce namespaces, so the bare ID resolves these.
+  expect(resolveAirforceBaseModel(airforceModel({
+    id: "glm-5.2",
+    catalog_id: "zai/glm-5-2",
+  }))).toBe("zhipuai/glm-5.2");
+  expect(resolveAirforceBaseModel(airforceModel({
+    id: "kimi-k2.6",
+    catalog_id: "moonshot/kimi-k2-6",
+  }))).toBe("moonshotai/kimi-k2.6");
+});
+
+test("converts Api.Airforce cent prices to per-1M-token USD", () => {
+  expect(buildAirforceModel(airforceModel(), undefined)).toEqual({
+    base_model: "anthropic/claude-opus-4-6",
+    base_model_omit: undefined,
+    cost: { input: 2.85, output: 14.25, cache_read: 0.25, cache_write: 3.13 },
+    limit: { context: 200_000, output: 64_000 },
+  });
+});
+
+test("prefers the Api.Airforce price table over the flat cent fields", () => {
+  const model = buildAirforceModel(airforceModel({
+    cache_write_5m_pricepermilliontokens: undefined,
+    customer_price_table: {
+      components: [
+        { mode: "input", unit: "per_1m_tokens", price_micro_usd: 2_850_000 },
+        { mode: "output", unit: "per_1m_tokens", price_micro_usd: 14_250_000 },
+        { mode: "cache_write_5m", unit: "per_1m_tokens", price_micro_usd: 3_130_000 },
+      ],
+    },
+  }), undefined);
+
+  expect(model).toMatchObject({
+    cost: { input: 2.85, output: 14.25, cache_read: 0.25, cache_write: 3.13 },
+  });
+});
+
+test("inherits Api.Airforce limits when the catalog omits them", () => {
+  const model = buildAirforceModel(airforceModel({
+    context_length: undefined,
+    max_output_tokens: undefined,
+  }), undefined);
+
+  expect(model).toMatchObject({ base_model: "anthropic/claude-opus-4-6" });
+  expect("limit" in model).toBe(false);
+});
+
+test("skips Api.Airforce models the catalog cannot describe", () => {
+  const context = { existing: () => undefined, authored: () => undefined };
+  expect(airforce.translateModel(
+    airforceModel({ id: "plutotext-r3-emotional", catalog_id: undefined }),
+    context,
+  )).toBeUndefined();
+  expect(airforce.translateModel(airforceModel({ supports_chat: false }), context)).toBeUndefined();
+  expect(airforce.sourceID?.(airforceModel({ supports_chat: false }))).toBeUndefined();
+});
+
+test("keeps a hand-authored Api.Airforce model and refreshes its pricing", () => {
+  const authored = {
+    name: "PlutoText R3 Emotional",
+    description: "Conversational model tuned for emotive replies",
+    release_date: "2026-05-01",
+    last_updated: "2026-05-01",
+    attachment: false,
+    reasoning: false,
+    tool_call: false,
+    open_weights: false,
+    cost: { input: 1, output: 1 },
+    limit: { context: 32_000, output: 8_192 },
+    modalities: { input: ["text"], output: ["text"] },
+  };
+  const translated = airforce.translateModel(airforceModel({
+    id: "plutotext-r3-emotional",
+    catalog_id: undefined,
+    context_length: undefined,
+    max_output_tokens: undefined,
+    pricepermilliontokens: 40,
+    output_pricepermilliontokens: 40,
+    cache_read_pricepermilliontokens: undefined,
+    cache_write_5m_pricepermilliontokens: undefined,
+  }), { existing: () => authored as never, authored: () => authored as never });
+
+  expect(translated).toMatchObject({
+    id: "plutotext-r3-emotional",
+    model: {
+      name: "PlutoText R3 Emotional",
+      limit: { context: 32_000, output: 8_192 },
+      cost: { input: 0.4, output: 0.4 },
+    },
+  });
 });
 
 function unavailableStub(): OpenRouterModel {

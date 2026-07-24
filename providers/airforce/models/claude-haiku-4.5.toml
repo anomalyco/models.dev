@@ -1,0 +1,11 @@
+base_model = "anthropic/claude-haiku-4-5"
+reasoning_options = []
+
+[cost]
+input = 0.5
+output = 2.5
+cache_read = 0.05
+cache_write = 0.63
+
+[limit]
+output = 32_000
