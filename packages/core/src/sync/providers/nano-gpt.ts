@@ -93,8 +93,9 @@ const BASE_MODEL_ALIASES: Record<string, string | undefined> = {
   "claude-sonnet-4": "anthropic/claude-sonnet-4-0",
   "cohere/north-mini-code": "cohere/north-mini-code-1-0",
   "sakana/fugu-ultra": "sakana/fugu-ultra",
-  "xiaomi/mimo-v2.5-pro-ultraspeed": "xiaomi/mimo-v2.5-pro",
 };
+
+const NANO_GPT_VARIANT_SUFFIX = /(?::(?:thinking|none|minimal|low|medium|high|xhigh|max|default|\d+)|-thinking)$/i;
 
 const UNPREFIXED_CANONICAL_PREFIXES = [
   "alibaba",
@@ -224,22 +225,16 @@ function reasoningOptions(
 }
 
 export function resolveNanoGptBaseModel(modelID: string) {
-  const normalized = normalizeModelID(modelID)
-    .replace(/:\d+$/, "")
-    .replace(/(?::thinking|-thinking)$/, "");
+  let normalized = stripNanoGptVariantSuffixes(normalizeModelID(modelID));
+  if (normalized.toLowerCase().startsWith("tee/")) {
+    normalized = normalizeModelID(normalized.slice("TEE/".length));
+  }
+
   const alias = BASE_MODEL_ALIASES[normalized.toLowerCase()];
   if (alias !== undefined) return alias;
 
   if (normalized.toLowerCase().startsWith("zai-org/")) {
     return resolveCanonicalBaseModel(`z-ai/${normalized.slice("zai-org/".length)}`);
-  }
-
-  if (normalized.startsWith("TEE/")) {
-    const model = normalized.slice("TEE/".length);
-    const lower = model.toLowerCase();
-    if (lower.startsWith("deepseek")) return resolveCanonicalBaseModel(`deepseek/${model}`);
-    if (lower.startsWith("qwen")) return resolveCanonicalBaseModel(`qwen/${model}`);
-    if (lower.startsWith("glm")) return resolveCanonicalBaseModel(`z-ai/${model}`);
   }
 
   const direct = resolveCanonicalBaseModel(normalized);
@@ -250,6 +245,15 @@ export function resolveNanoGptBaseModel(modelID: string) {
     .filter((candidate): candidate is string => candidate !== undefined);
   const unique = [...new Set(matches)];
   return unique.length === 1 ? unique[0] : undefined;
+}
+
+function stripNanoGptVariantSuffixes(modelID: string) {
+  let normalized = modelID;
+  while (true) {
+    const stripped = normalized.replace(NANO_GPT_VARIANT_SUFFIX, "");
+    if (stripped === normalized) return normalized;
+    normalized = stripped;
+  }
 }
 
 function normalizeModalities(values: string[]): Modality[] {

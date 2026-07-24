@@ -150,11 +150,20 @@ test("factors NanoGPT variants against canonical models without retaining wrong 
   expect(resolveNanoGptBaseModel("zai-org/glm-5.2:thinking")).toBe("zhipuai/glm-5.2");
   expect(resolveNanoGptBaseModel("TEE/qwen3.6-35b-a3b")).toBe("alibaba/qwen3.6-35b-a3b");
   expect(resolveNanoGptBaseModel("TEE/deepseek-v4-flash")).toBe("deepseek/deepseek-v4-flash");
+  expect(resolveNanoGptBaseModel("TEE/kimi-k2.5")).toBe("moonshotai/kimi-k2.5");
+  expect(resolveNanoGptBaseModel("TEE/gpt-oss-120b")).toBe("openai/gpt-oss-120b");
+  expect(resolveNanoGptBaseModel("TEE/gemma-4-31b-it")).toBe("google/gemma-4-31b-it");
   expect(resolveNanoGptBaseModel("cohere/north-mini-code")).toBe("cohere/north-mini-code-1-0");
+  expect(resolveNanoGptBaseModel("xiaomi/mimo-v2.5-pro-ultraspeed"))
+    .toBe("xiaomi/mimo-v2.5-pro-ultraspeed");
   expect(resolveNanoGptBaseModel("claude-haiku-4-5-20251001-thinking"))
     .toBe("anthropic/claude-haiku-4-5-20251001");
   expect(resolveNanoGptBaseModel("claude-sonnet-4-thinking:8192"))
     .toBe("anthropic/claude-sonnet-4-0");
+  expect(resolveNanoGptBaseModel("anthropic/claude-opus-4.6:thinking:low"))
+    .toBe("anthropic/claude-opus-4-6");
+  expect(resolveNanoGptBaseModel("anthropic/claude-opus-4.6:thinking:thinking:max"))
+    .toBe("anthropic/claude-opus-4-6");
   expect(resolveNanoGptBaseModel("gemini-2.5-pro")).toBe("google/gemini-2.5-pro");
   expect(resolveNanoGptBaseModel("qwen3.5-27b")).toBe("alibaba/qwen3.5-27b");
 
