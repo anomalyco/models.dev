@@ -2,14 +2,13 @@ import { z } from "zod";
 
 import { inferKimiFamily, ModelFamilyValues } from "../../family.js";
 import type { ExistingModel, SyncProvider, SyncedFullModel, SyncedModel } from "../index.js";
-import { factorBaseModel, resolveCanonicalBaseModel } from "./openrouter.js";
+import { factorBaseModel, resolveModelMetadataBaseModel } from "./openrouter.js";
 
 const API_ENDPOINT = "https://nano-gpt.com/api/v1/models?detailed=true";
 
-const ReasoningEffort = z.union([
-  z.null(),
-  z.enum(["none", "minimal", "low", "medium", "high", "xhigh", "max", "default"]),
-]);
+// NanoGPT accepts these exact request values, including `max`:
+// https://github.com/Nano-GPT-com/nanogpt/blob/073b25b07e9af619333c679e694de664bf1ceb30/lib/utils/reasoningInput.ts#L12-L28
+const ReasoningEffort = z.enum(["none", "minimal", "low", "medium", "high", "xhigh", "max"]);
 
 const Pricing = z.object({
   prompt: z.number().nullish(),
@@ -75,9 +74,13 @@ export const nanoGpt = {
   },
   translateModel(model, context) {
     const id = normalizeModelID(model.id);
+    const existing = context.existing(id);
+    const baseModel = existing?.base_model ?? resolveNanoGptBaseModel(model.id);
+    const translated = buildNanoGptModel(model, existing, baseModel);
+    if (translated === undefined) return undefined;
     return {
       id,
-      model: buildNanoGptModel(model, context.existing(id)),
+      model: translated,
     };
   },
 } satisfies SyncProvider<NanoGptModel>;
@@ -92,34 +95,11 @@ const BASE_MODEL_ALIASES: Record<string, string | undefined> = {
   "claude-opus-4": "anthropic/claude-opus-4-0",
   "claude-sonnet-4": "anthropic/claude-sonnet-4-0",
   "cohere/north-mini-code": "cohere/north-mini-code-1-0",
-  "sakana/fugu-ultra": "sakana/fugu-ultra",
 };
 
-const NANO_GPT_VARIANT_SUFFIX = /(?::(?:thinking|none|minimal|low|medium|high|xhigh|max|default|\d+)|-thinking)$/i;
-
-const UNPREFIXED_CANONICAL_PREFIXES = [
-  "alibaba",
-  "anthropic",
-  "cohere",
-  "deepseek",
-  "google",
-  "meta",
-  "minimax",
-  "mistralai",
-  "moonshotai",
-  "nvidia",
-  "openai",
-  "qwen",
-  "stepfun",
-  "tencent",
-  "thinkingmachines",
-  "xai",
-  "xiaomi",
-  "z-ai",
-] as const;
+const NANO_GPT_VARIANT_SUFFIX = /(?::(?:thinking|none|minimal|low|medium|high|xhigh|max|\d+)|-thinking)$/i;
 
 const KNOWN_OPEN_WEIGHT_IDS = new Set([
-  "cohere/north-mini-code",
   "nex-agi/nex-n2-pro",
 ]);
 
@@ -127,58 +107,111 @@ export function buildNanoGptModel(
   model: NanoGptModel,
   existing: ExistingModel | undefined,
   baseModel = existing?.base_model ?? resolveNanoGptBaseModel(model.id),
-  today = new Date().toISOString().slice(0, 10),
-): SyncedModel {
+): SyncedModel | undefined {
   const capabilities = model.capabilities ?? {};
-  const input = normalizeModalities([
-    ...model.architecture?.input_modalities ?? ["text"],
+  const explicitInputModalities = model.architecture?.input_modalities;
+  const hasInputCapabilityMetadata = capabilities.vision !== undefined
+    || capabilities.audio_input !== undefined
+    || capabilities.video_input !== undefined
+    || capabilities.pdf_upload !== undefined;
+  const addedInputModalities = [
     ...(capabilities.vision ? ["image"] : []),
     ...(capabilities.audio_input ? ["audio"] : []),
     ...(capabilities.video_input ? ["video"] : []),
     ...(capabilities.pdf_upload ? ["pdf"] : []),
+  ];
+  const hasInputMetadata = explicitInputModalities !== undefined || hasInputCapabilityMetadata;
+  const hasOutputMetadata = model.architecture?.output_modalities !== undefined;
+  const input = normalizeModalities([
+    ...explicitInputModalities
+      ?? (hasInputCapabilityMetadata ? ["text"] : existing?.modalities?.input)
+      ?? ["text"],
+    ...addedInputModalities,
   ]);
-  const output = normalizeModalities(model.architecture?.output_modalities ?? ["text"]);
-  const context = positive(model.context_length) ?? existing?.limit?.context ?? 0;
-  const outputLimit = positive(model.max_output_tokens) ?? existing?.limit?.output ?? 0;
-  const releaseDate = dateFromTimestamp(model.created) ?? existing?.release_date ?? today;
-  const reasoning = capabilities.reasoning ?? existing?.reasoning ?? false;
+  const output = normalizeModalities(
+    model.architecture?.output_modalities ?? existing?.modalities?.output ?? ["text"],
+  );
+  const sourceContext = positive(model.context_length);
+  const sourceOutputLimit = positive(model.max_output_tokens);
+  const context = sourceContext ?? existing?.limit?.context;
+  const inputLimit = sourceContext ?? existing?.limit?.input;
+  const outputLimit = sourceOutputLimit ?? existing?.limit?.output;
+  const releaseDate = dateFromTimestamp(model.created) ?? existing?.release_date;
+  const inferredSourceReasoning = capabilities.reasoning
+    ?? (model.reasoning_efforts != null ? true : undefined);
+  const reasoning = inferredSourceReasoning ?? existing?.reasoning ?? false;
   const cost = buildCost(model.pricing, existing);
-  const limit = {
-    context,
-    input: context,
-    output: outputLimit,
-  };
+  if (baseModel !== undefined) {
+    const preserveExistingOverrides = existing?.base_model === baseModel;
+    const factoredModalities = {
+      input: hasInputMetadata || preserveExistingOverrides ? input : undefined,
+      output: hasOutputMetadata || preserveExistingOverrides ? output : undefined,
+    };
+    const factoredLimit = {
+      context: sourceContext ?? (preserveExistingOverrides ? existing?.limit?.context : undefined),
+      input: sourceContext ?? (preserveExistingOverrides ? existing?.limit?.input : undefined),
+      output: sourceOutputLimit ?? (preserveExistingOverrides ? existing?.limit?.output : undefined),
+    };
+    const sourceReasoning = inferredSourceReasoning;
+    const sourceReasoningOptions = reasoningOptions(model, sourceReasoning, existing?.reasoning_options);
+
+    return factorBaseModel(
+      baseModel,
+      {
+        name: existing?.name ?? model.name ?? undefined,
+        description: preserveExistingOverrides ? existing?.description : undefined,
+        family: preserveExistingOverrides ? existing?.family : undefined,
+        release_date: preserveExistingOverrides ? existing?.release_date : undefined,
+        last_updated: preserveExistingOverrides ? existing?.last_updated : undefined,
+        attachment: hasInputMetadata
+          ? input.some((value) => value !== "text")
+          : preserveExistingOverrides ? existing?.attachment : undefined,
+        reasoning: sourceReasoning ?? (preserveExistingOverrides ? existing?.reasoning : undefined),
+        reasoning_options: sourceReasoningOptions,
+        temperature: preserveExistingOverrides ? existing?.temperature : undefined,
+        tool_call: capabilities.tool_calling
+          ?? (preserveExistingOverrides ? existing?.tool_call : undefined),
+        structured_output: capabilities.structured_output
+          ?? (preserveExistingOverrides ? existing?.structured_output : undefined),
+        knowledge: preserveExistingOverrides ? existing?.knowledge : undefined,
+        status: existing?.status,
+        interleaved: existing?.interleaved,
+        provider: existing?.provider,
+        experimental: existing?.experimental,
+        cost,
+        limit: factoredLimit,
+        modalities: factoredModalities,
+      },
+      factoredLimit,
+      preserveExistingOverrides ? existing?.base_model_omit : undefined,
+    );
+  }
+
+  if (context === undefined || outputLimit === undefined || releaseDate === undefined) {
+    return undefined;
+  }
+
   const values = {
     name: existing?.name ?? model.name ?? humanizeModelName(model.id),
     description: existing?.description ?? model.description ?? `${model.name ?? humanizeModelName(model.id)} on NanoGPT.`,
     family: existing?.family ?? inferFamily(model.id, model.name ?? ""),
-    release_date: existing?.release_date ?? releaseDate,
+    release_date: releaseDate,
     last_updated: existing?.last_updated ?? releaseDate,
     attachment: input.some((value) => value !== "text"),
     reasoning,
-    reasoning_options: reasoningOptions(model, reasoning),
+    reasoning_options: reasoningOptions(model, reasoning, existing?.reasoning_options),
     temperature: existing?.temperature,
     tool_call: capabilities.tool_calling ?? existing?.tool_call ?? false,
     structured_output: capabilities.structured_output ?? existing?.structured_output,
     knowledge: existing?.knowledge,
     status: existing?.status,
     interleaved: existing?.interleaved,
+    provider: existing?.provider,
+    experimental: existing?.experimental,
     cost,
-    limit,
+    limit: { context, input: inputLimit ?? context, output: outputLimit },
     modalities: { input, output },
   };
-
-  if (baseModel !== undefined) {
-    return factorBaseModel(
-      baseModel,
-      {
-        ...values,
-        open_weights: model.open_weights ?? undefined,
-      },
-      limit,
-      existing?.base_model === baseModel ? existing.base_model_omit : undefined,
-    );
-  }
 
   return {
     ...values,
@@ -193,20 +226,20 @@ function buildCost(
   existing: ExistingModel | undefined,
 ): SyncedFullModel["cost"] {
   if (pricing === undefined) return existing?.cost;
-  if (pricing.note === "varies_by_modality") return undefined;
+  if (pricing.note === "varies_by_modality") return existing?.cost;
 
   const input = pricing.input ?? pricing.prompt;
   const output = pricing.output ?? pricing.completion;
-  if (input == null || output == null) return existing?.cost;
+  if (!validPrice(input) || !validPrice(output)) return existing?.cost;
 
   return {
     input: price(input),
     output: price(output),
     reasoning: existing?.cost?.reasoning,
-    cache_read: pricing.cacheReadInputPer1kTokens == null
+    cache_read: !validPrice(pricing.cacheReadInputPer1kTokens)
       ? existing?.cost?.cache_read
       : price(pricing.cacheReadInputPer1kTokens * 1_000),
-    cache_write: pricing.cacheWriteInputPer1kTokens == null
+    cache_write: !validPrice(pricing.cacheWriteInputPer1kTokens)
       ? existing?.cost?.cache_write
       : price(pricing.cacheWriteInputPer1kTokens * 1_000),
     input_audio: existing?.cost?.input_audio,
@@ -217,34 +250,31 @@ function buildCost(
 
 function reasoningOptions(
   model: NanoGptModel,
-  reasoning: boolean,
+  reasoning: boolean | undefined,
+  existing: SyncedFullModel["reasoning_options"],
 ): SyncedFullModel["reasoning_options"] {
-  if (!reasoning) return undefined;
-  if (model.reasoning_efforts == null || model.reasoning_efforts.length === 0) return [];
+  if (reasoning === false) return undefined;
+  if (reasoning === undefined) return existing;
+  if (model.reasoning_efforts == null) return existing ?? [];
+  if (model.reasoning_efforts.length === 0) return [];
   return [{ type: "effort", values: [...model.reasoning_efforts] }];
 }
 
 export function resolveNanoGptBaseModel(modelID: string) {
-  let normalized = stripNanoGptVariantSuffixes(normalizeModelID(modelID));
+  let normalized = normalizeModelID(modelID);
   if (normalized.toLowerCase().startsWith("tee/")) {
     normalized = normalizeModelID(normalized.slice("TEE/".length));
   }
 
-  const alias = BASE_MODEL_ALIASES[normalized.toLowerCase()];
-  if (alias !== undefined) return alias;
+  const exact = resolveNanoGptCanonicalCandidate(normalized);
+  if (exact !== undefined) return exact;
 
-  if (normalized.toLowerCase().startsWith("zai-org/")) {
-    return resolveCanonicalBaseModel(`z-ai/${normalized.slice("zai-org/".length)}`);
-  }
+  const stripped = stripNanoGptVariantSuffixes(normalized);
+  return stripped === normalized ? undefined : resolveNanoGptCanonicalCandidate(stripped);
+}
 
-  const direct = resolveCanonicalBaseModel(normalized);
-  if (direct !== undefined || normalized.includes("/")) return direct;
-
-  const matches = UNPREFIXED_CANONICAL_PREFIXES
-    .map((prefix) => resolveCanonicalBaseModel(`${prefix}/${normalized}`))
-    .filter((candidate): candidate is string => candidate !== undefined);
-  const unique = [...new Set(matches)];
-  return unique.length === 1 ? unique[0] : undefined;
+function resolveNanoGptCanonicalCandidate(modelID: string) {
+  return BASE_MODEL_ALIASES[modelID.toLowerCase()] ?? resolveModelMetadataBaseModel(modelID);
 }
 
 function stripNanoGptVariantSuffixes(modelID: string) {
@@ -289,7 +319,7 @@ function inferFamily(id: string, name: string) {
     .sort((a, b) => b.length - a.length)
     .find((family) => {
       const value = family.toLowerCase().replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-      if (family === "o") return new RegExp(`(^|[^a-z0-9])${value}(?=\\d|$|[^a-z0-9])`).test(target);
+      if (family === "o") return new RegExp(`(^|[^a-z0-9])${value}(?=\\d)`).test(target);
       return new RegExp(`(^|[^a-z0-9])${value}(?=$|[^a-z0-9])`).test(target);
     });
 }
@@ -312,4 +342,8 @@ function positive(value: number | null | undefined) {
 
 function price(value: number) {
   return Math.round(value * 1_000_000) / 1_000_000;
+}
+
+function validPrice(value: number | null | undefined): value is number {
+  return value !== null && value !== undefined && value >= 0;
 }
