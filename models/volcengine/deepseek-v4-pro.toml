@@ -1,0 +1,12 @@
+name = "DeepSeek-V4-Pro"
+family = "deepseek"
+reasoning = true
+tool_call = true
+
+[limit]
+context = 1_000_000
+output = 384_000
+
+[modalities]
+input = ["text"]
+output = ["text"]
