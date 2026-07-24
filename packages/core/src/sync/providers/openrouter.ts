@@ -216,7 +216,7 @@ export function buildOpenRouterModel(
     return factorBaseModel(
       canonical,
       {
-        name: baseModel !== undefined || model.id.endsWith(":free") || canonicalOverride === canonical
+        name: shouldPreserveFactoredName(model.id, canonical, baseModel, canonicalOverride)
           ? name
           : undefined,
         description: existing?.description ?? describeModel({
@@ -338,6 +338,24 @@ function canonicalBaseModelOverride(openrouterID: string) {
   return CANONICAL_BASE_MODEL_OVERRIDES[
     openrouterID as keyof typeof CANONICAL_BASE_MODEL_OVERRIDES
   ];
+}
+
+function shouldPreserveFactoredName(
+  modelID: string,
+  canonical: string,
+  baseModel: string | undefined,
+  canonicalOverride: string | undefined,
+) {
+  if (baseModel !== undefined) return true;
+  if (modelID.endsWith(":free")) return true;
+  if (canonicalOverride === canonical) return true;
+  const modelSlug = modelID.split("/").slice(1).join("/").replace(/:free$/, "");
+  const canonicalSlug = canonical.split("/").slice(1).join("/");
+  return normalizeModelSlug(modelSlug) !== normalizeModelSlug(canonicalSlug);
+}
+
+function normalizeModelSlug(value: string) {
+  return value.toLowerCase().replaceAll(/[^a-z0-9]/g, "");
 }
 
 export function factorBaseModel(

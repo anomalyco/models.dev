@@ -983,10 +983,14 @@ test("resolves Venice Pro routes to canonical OpenAI metadata", () => {
     resolveVeniceBaseModel("openai-gpt-56-luna-pro", "GPT-5.6 Luna Pro"),
     resolveVeniceBaseModel("openai-gpt-56-sol-pro", "GPT-5.6 Sol Pro"),
     resolveVeniceBaseModel("openai-gpt-56-terra-pro", "GPT-5.6 Terra Pro"),
+    resolveVeniceBaseModel("claude-opus-5-fast", "Claude Opus 5 Fast"),
+    resolveVeniceBaseModel("claude-opus-4-8-fast", "Claude Opus 4.8 Fast"),
   ]).toEqual([
     "openai/gpt-5.6-luna",
     "openai/gpt-5.6-sol",
     "openai/gpt-5.6-terra",
+    "anthropic/claude-opus-5",
+    "anthropic/claude-opus-4-8",
   ]);
 });
 
@@ -1192,6 +1196,34 @@ test("Vercel Claude Opus fast variants factor onto base opus metadata", () => {
   });
 
   expect(buildVercelModel(model!, undefined)).toMatchObject({
+    base_model: "anthropic/claude-opus-5",
+    name: "Claude Opus 5 (Fast)",
+    cost: { input: 10, output: 50, cache_read: 1, cache_write: 12.5 },
+  });
+});
+
+test("OpenRouter Claude Opus fast variants factor onto base opus metadata", () => {
+  const model = buildOpenRouterModel(openRouterModel({
+    id: "anthropic/claude-opus-5-fast",
+    name: "Anthropic: Claude Opus 5 (Fast)",
+    context_length: 1_000_000,
+    top_provider: {
+      context_length: 1_000_000,
+      max_completion_tokens: 128_000,
+    },
+    pricing: {
+      prompt: "0.00001",
+      completion: "0.00005",
+      input_cache_read: "0.000001",
+      input_cache_write: "0.0000125",
+    },
+    reasoning: {
+      mandatory: false,
+      supported_efforts: ["low", "medium", "high", "xhigh", "max"],
+    },
+  }), undefined);
+
+  expect(model).toMatchObject({
     base_model: "anthropic/claude-opus-5",
     name: "Claude Opus 5 (Fast)",
     cost: { input: 10, output: 50, cache_read: 1, cache_write: 12.5 },
