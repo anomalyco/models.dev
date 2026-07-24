@@ -1,4 +1,9 @@
-# Source: https://docs.aiand.com/models/catalog/ (accessed 2026-07-18)
+# Source: https://docs.aiand.com/models/catalog/ (USD list prices; accessed
+# 2026-07-24). The catalog lists this model with vision + document but not
+# video, so modalities are overridden from the shared base model's
+# text+image+video. Not runtime-verified: model access is org-scoped and not
+# enabled for the contributing org; kimi-k2.7-code (same capability set) was
+# verified by direct probe — image and PDF accepted, video rejected.
 # reasoning_effort values per https://docs.aiand.com/api/chat-completions/
 base_model = "moonshotai/kimi-k2.6"
 
@@ -9,3 +14,7 @@ values = ["none", "minimal", "low", "medium", "high", "xhigh"]
 [cost]
 input = 0.85
 output = 3.50
+
+[modalities]
+input = ["text", "image", "pdf"]
+output = ["text"]

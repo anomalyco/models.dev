@@ -1,4 +1,8 @@
-# Source: https://docs.aiand.com/models/catalog/ (accessed 2026-07-18)
+# Source: https://docs.aiand.com/models/catalog/ (USD list prices; accessed
+# 2026-07-24) and live probes against api.aiand.com on the same date.
+# Verified by direct test: image and PDF (Files API, file_id) inputs are
+# accepted; video is rejected ("does not support video input"), so modalities
+# are overridden from the shared base model's text+image+video.
 # reasoning_effort values per https://docs.aiand.com/api/chat-completions/
 base_model = "moonshotai/kimi-k2.7-code"
 
@@ -9,3 +13,7 @@ values = ["none", "minimal", "low", "medium", "high", "xhigh"]
 [cost]
 input = 0.75
 output = 3.50
+
+[modalities]
+input = ["text", "image", "pdf"]
+output = ["text"]
