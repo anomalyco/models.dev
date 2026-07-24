@@ -1,0 +1,12 @@
+name = "Doubao 1.5 Vision Pro"
+family = "doubao-1.5"
+reasoning = false
+tool_call = false
+
+[limit]
+context = 128_000
+output = 16_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
