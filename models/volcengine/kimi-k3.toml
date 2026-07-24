@@ -1,0 +1,12 @@
+name = "Kimi-K3"
+family = "kimi"
+reasoning = true
+tool_call = true
+
+[limit]
+context = 1_048_576
+output = 131_072
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
