@@ -1,13 +1,16 @@
-# Source: https://docs.aiand.com/models/catalog/ (accessed 2026-07-18)
-# Catalog table shows a rounded context of "203K"; exact figure not
-# obtainable without an API key, so context is left inherited from the
-# shared base model (200_000) rather than guessing the precise value.
-# reasoning_effort values per https://docs.aiand.com/api/chat-completions/
+# Source: https://docs.aiand.com/models/catalog/ (USD list prices; accessed
+# 2026-07-24). Not runtime-verifiable: model access is org-scoped and not
+# enabled for the contributing org (it does not appear in our GET /v1/models),
+# so per-model reasoning_effort support could not be probed — the gpt-oss-120b
+# deployment proved the gateway-wide documented set is not guaranteed per
+# model, so reasoning_options is left empty rather than assumed.
+# The catalog shows a rounded context of "203K"; the exact context_window is
+# only visible via GET /v1/models for orgs with access, so context is left
+# inherited from the shared base model (200_000) rather than guessed — it may
+# understate the live window by ~3K.
 base_model = "zhipuai/glm-5.1"
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "minimal", "low", "medium", "high", "xhigh"]
+reasoning_options = []
 
 [cost]
 input = 1.40

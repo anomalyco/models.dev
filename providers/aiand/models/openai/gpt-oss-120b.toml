@@ -1,10 +1,13 @@
 # Source: https://docs.aiand.com/models/catalog/ (accessed 2026-07-18)
-# reasoning_effort values per https://docs.aiand.com/api/chat-completions/
+# reasoning_effort verified by live probe on 2026-07-24: the backend rejects
+# "none", "minimal", and "xhigh" with 400 ("Supported values are: high,
+# medium, low"), so the array is narrowed from the gateway-wide documented
+# set. Invalid values also rejected with 400 (negative control).
 base_model = "openai/gpt-oss-120b"
 
 [[reasoning_options]]
 type = "effort"
-values = ["none", "minimal", "low", "medium", "high", "xhigh"]
+values = ["low", "medium", "high"]
 
 [cost]
 input = 0.15

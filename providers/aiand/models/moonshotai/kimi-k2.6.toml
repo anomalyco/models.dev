@@ -4,12 +4,12 @@
 # text+image+video. Not runtime-verified: model access is org-scoped and not
 # enabled for the contributing org; kimi-k2.7-code (same capability set) was
 # verified by direct probe — image and PDF accepted, video rejected.
-# reasoning_effort values per https://docs.aiand.com/api/chat-completions/
+# reasoning_options is left empty rather than assumed: the gpt-oss-120b
+# deployment proved the gateway-wide documented effort set is not guaranteed
+# per model, and this model could not be probed.
 base_model = "moonshotai/kimi-k2.6"
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "minimal", "low", "medium", "high", "xhigh"]
+reasoning_options = []
 
 [cost]
 input = 0.85
