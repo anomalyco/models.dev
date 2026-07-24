@@ -154,6 +154,12 @@ function inferFamily(model: OpenRouterModel, name: string, outputModalities: str
   const kimiFamily = inferKimiFamily(model.id, name);
   if (kimiFamily !== undefined) return kimiFamily;
 
+  // Deepgram's speech models (nova, aura, flux) share bare tokens with unrelated
+  // vendor families in ModelFamilyValues -- "nova" is AWS Nova, "aura" is Stability AI,
+  // "flux" is Black Forest Labs -- so substring inference would misgroup Deepgram STT/TTS
+  // with those vendors. None of them has a family in the taxonomy, so infer none.
+  if (/(^|\/)deepgram\//.test(model.id)) return undefined;
+
   const target = `${model.id} ${name}`.toLowerCase();
   return [...ModelFamilyValues]
     .sort((a, b) => b.length - a.length)

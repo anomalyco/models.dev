@@ -166,12 +166,16 @@ Kilo Gateway is implemented in `packages/core/src/sync/providers/kilo.ts`.
 
 Cloudflare Workers AI is implemented in `packages/core/src/sync/providers/cloudflare-workers-ai.ts`.
 
-- Source endpoint: `https://api.cloudflare.com/client/v4/accounts/$CLOUDFLARE_WORKERS_AI_SYNC_ACCOUNT_ID/ai/models/search?format=openrouter`.
+- Two source endpoints, both under `https://api.cloudflare.com/client/v4/accounts/$CLOUDFLARE_WORKERS_AI_SYNC_ACCOUNT_ID/ai/models/search`, fetched together each sync:
+  - `?format=openrouter` — Cloudflare's OpenRouter-shaped Workers AI metadata.
+  - the same path with no `format` param — the native catalog, whose schema-relevant fields live in a sparse `properties[]` array (`reshapeNative` flattens them into the OpenRouter shape).
 - Required auth: `CLOUDFLARE_WORKERS_AI_SYNC_ACCOUNT_ID` and `CLOUDFLARE_WORKERS_AI_SYNC_API_TOKEN`.
 - Use a dedicated token scoped to Workers AI read access so sync automation does not share deploy credentials.
-- The endpoint is parsed as Cloudflare's OpenRouter-like Workers AI metadata.
+- The two catalogs are merged by model id (the `@cf/...` prefix is stripped to form the key); the native record is loaded first and the openrouter record overwrites it on overlap, so **openrouter wins** wherever both describe the same model. Native-only models (e.g. ASR/TTS, image, embeddings) come through the native path.
+- The native catalog carries no modality info, so `TASK_MODALITIES` maps each native `task.name` to input/output modalities. img2img/inpainting variants share the `Text-to-Image` task with plain text-to-image models and are special-cased by id suffix to add `image` input.
+- Audio-priced models (ASR/TTS) report a per-audio-minute or per-1k-character price, not a per-million-token price. `applyAudioPricing` writes that native value into `cost.input_audio`/`cost.output_audio` and emits a leading `# <unit>` comment documenting the true unit (the sync preserves leading comments). Deepgram speech models (nova, aura, flux) get no `family`, since their bare-token names collide with unrelated vendor families in the taxonomy.
 - Model IDs map directly to TOML paths under `providers/cloudflare-workers-ai/models`.
-- This sync target does not manage `providers/cloudflare-ai-gateway`, because the AI Gateway `/compat/models` endpoint does not support `format=openrouter` and does not provide enough model metadata for authoritative catalog sync.
+- `providers/cloudflare-ai-gateway/models/workers-ai/@cf` is a symlink to `providers/cloudflare-workers-ai/models/@cf`, so the AI Gateway catalog mirrors Workers AI without a separate sync target. There is no independent AI Gateway sync: the `/compat/models` endpoint does not support `format=openrouter` and does not provide enough metadata for authoritative sync, so it inherits the WAI tree through the symlink instead.
 
 ## Google Notes
 

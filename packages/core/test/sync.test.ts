@@ -1774,6 +1774,29 @@ test("reshapeNative marks img2img/inpainting Stable Diffusion variants as image-
   expect(plainModel.modalities).toMatchObject({ input: ["text"], output: ["image"] });
 });
 
+test("Cloudflare Workers AI Deepgram speech models get no family from colliding vendor tokens", async () => {
+  // Regression: Deepgram's nova/aura/flux names share bare tokens with unrelated vendor
+  // families in ModelFamilyValues ("nova" = AWS Nova, "aura" = Stability AI, "flux" =
+  // Black Forest Labs). Substring inference would misgroup Deepgram STT/TTS with those
+  // vendors, so inferFamily returns no family for any @cf/deepgram/* id.
+  const fixture = await Bun.file(
+    path.join(import.meta.dirname, "fixtures", "cloudflare-workers-ai-native.json"),
+  ).json() as { result: NativeModel[] };
+
+  for (const id of [
+    "@cf/deepgram/nova-3",
+    "@cf/deepgram/aura-1",
+    "@cf/deepgram/aura-2-en",
+    "@cf/deepgram/aura-2-es",
+    "@cf/deepgram/flux",
+  ]) {
+    const native = fixture.result.find((model) => model.name === id);
+    if (native === undefined) throw new Error(`Fixture is missing ${id}`);
+    const model = buildWorkersAiModel(OpenRouterModel.parse(reshapeNative(native)), undefined);
+    expect(model.family).toBeUndefined();
+  }
+});
+
 test("Cloudflare Workers AI native sync prefers the native API description and never stamps an audio ASR model with an image family", async () => {
   // Regression for @cf/deepgram/flux: its id/name contains "flux", which both
   // describe.ts's image-model heuristic and openrouter.ts's family-name substring
