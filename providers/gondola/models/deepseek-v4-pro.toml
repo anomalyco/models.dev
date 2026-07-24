@@ -1,0 +1,22 @@
+name = "DeepSeek V4 Pro"
+description = "DeepSeek V4 Pro served through the Gondola marketplace (Venice AI supply). Price shown is the current fee-inclusive marketplace 'from' rate and floats with live supply."
+family = "deepseek"
+release_date = "2026-04-24"
+last_updated = "2026-07-24"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+open_weights = true
+
+[cost]
+input = 0.79101
+output = 1.582499
+
+[limit]
+context = 1000000
+output = 32768
+
+[modalities]
+input = ["text"]
+output = ["text"]

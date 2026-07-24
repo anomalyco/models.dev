@@ -1,0 +1,22 @@
+name = "Gemini 3.1 Pro Preview"
+description = "Gemini 3.1 Pro Preview served through the Gondola marketplace (Venice AI supply). Price shown is the current fee-inclusive marketplace 'from' rate and floats with live supply."
+family = "gemini"
+release_date = "2026-02-19"
+last_updated = "2026-07-24"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+open_weights = false
+
+[cost]
+input = 1.1985
+output = 7.191
+
+[limit]
+context = 1000000
+output = 32768
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

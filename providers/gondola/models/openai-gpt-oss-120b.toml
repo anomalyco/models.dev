@@ -1,0 +1,22 @@
+name = "OpenAI GPT OSS 120B"
+description = "OpenAI GPT OSS 120B served through the Gondola marketplace (Venice AI supply). Price shown is the current fee-inclusive marketplace 'from' rate and floats with live supply."
+family = "gpt-oss"
+release_date = "2025-11-06"
+last_updated = "2026-07-24"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+open_weights = true
+
+[cost]
+input = 0.033558
+output = 0.14382
+
+[limit]
+context = 128000
+output = 16384
+
+[modalities]
+input = ["text"]
+output = ["text"]

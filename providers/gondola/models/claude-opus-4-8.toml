@@ -1,0 +1,22 @@
+name = "Claude Opus 4.8"
+description = "Claude Opus 4.8 served through the Gondola marketplace (Venice AI supply). Price shown is the current fee-inclusive marketplace 'from' rate and floats with live supply."
+family = "claude"
+release_date = "2026-05-28"
+last_updated = "2026-07-24"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+open_weights = false
+
+[cost]
+input = 2.8764
+output = 14.382
+
+[limit]
+context = 1000000
+output = 128000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
