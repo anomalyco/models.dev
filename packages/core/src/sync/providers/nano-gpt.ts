@@ -62,6 +62,7 @@ export const nanoGpt = {
   id: "nano-gpt",
   name: "NanoGPT",
   modelsDir: "providers/nano-gpt/models",
+  preserveDescriptions: false,
   async fetchModels() {
     const response = await fetch(process.env.NANO_GPT_MODELS_URL ?? API_ENDPOINT);
     if (!response.ok) {
@@ -142,15 +143,15 @@ export function buildNanoGptModel(
   const reasoning = inferredSourceReasoning ?? existing?.reasoning ?? false;
   const cost = buildCost(model.pricing, existing);
   if (baseModel !== undefined) {
-    const preserveExistingOverrides = existing?.base_model === baseModel;
+    const existingAlreadyFactored = existing?.base_model === baseModel;
     const factoredModalities = {
-      input: hasInputMetadata || preserveExistingOverrides ? input : undefined,
-      output: hasOutputMetadata || preserveExistingOverrides ? output : undefined,
+      input: hasInputMetadata || existing !== undefined ? input : undefined,
+      output: hasOutputMetadata || existing !== undefined ? output : undefined,
     };
     const factoredLimit = {
-      context: sourceContext ?? (preserveExistingOverrides ? existing?.limit?.context : undefined),
-      input: sourceContext ?? (preserveExistingOverrides ? existing?.limit?.input : undefined),
-      output: sourceOutputLimit ?? (preserveExistingOverrides ? existing?.limit?.output : undefined),
+      context: sourceContext ?? existing?.limit?.context,
+      input: sourceContext ?? existing?.limit?.input,
+      output: sourceOutputLimit ?? existing?.limit?.output,
     };
     const sourceReasoning = inferredSourceReasoning;
     const sourceReasoningOptions = reasoningOptions(model, sourceReasoning, existing?.reasoning_options);
@@ -159,21 +160,19 @@ export function buildNanoGptModel(
       baseModel,
       {
         name: existing?.name ?? model.name ?? undefined,
-        description: preserveExistingOverrides ? existing?.description : undefined,
-        family: preserveExistingOverrides ? existing?.family : undefined,
-        release_date: preserveExistingOverrides ? existing?.release_date : undefined,
-        last_updated: preserveExistingOverrides ? existing?.last_updated : undefined,
+        description: existingAlreadyFactored ? existing?.description : undefined,
+        family: existingAlreadyFactored ? existing?.family : undefined,
+        release_date: existingAlreadyFactored ? existing?.release_date : undefined,
+        last_updated: existingAlreadyFactored ? existing?.last_updated : undefined,
         attachment: hasInputMetadata
           ? input.some((value) => value !== "text")
-          : preserveExistingOverrides ? existing?.attachment : undefined,
-        reasoning: sourceReasoning ?? (preserveExistingOverrides ? existing?.reasoning : undefined),
+          : existing?.attachment,
+        reasoning: sourceReasoning ?? existing?.reasoning,
         reasoning_options: sourceReasoningOptions,
-        temperature: preserveExistingOverrides ? existing?.temperature : undefined,
-        tool_call: capabilities.tool_calling
-          ?? (preserveExistingOverrides ? existing?.tool_call : undefined),
-        structured_output: capabilities.structured_output
-          ?? (preserveExistingOverrides ? existing?.structured_output : undefined),
-        knowledge: preserveExistingOverrides ? existing?.knowledge : undefined,
+        temperature: existing?.temperature,
+        tool_call: capabilities.tool_calling ?? existing?.tool_call,
+        structured_output: capabilities.structured_output ?? existing?.structured_output,
+        knowledge: existing?.knowledge,
         status: existing?.status,
         interleaved: existing?.interleaved,
         provider: existing?.provider,
@@ -183,7 +182,7 @@ export function buildNanoGptModel(
         modalities: factoredModalities,
       },
       factoredLimit,
-      preserveExistingOverrides ? existing?.base_model_omit : undefined,
+      existingAlreadyFactored ? existing?.base_model_omit : undefined,
     );
   }
 

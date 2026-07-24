@@ -1,5 +1,5 @@
 import { expect, test } from "bun:test";
-import { mkdtemp, readFile, rm } from "node:fs/promises";
+import { mkdir, mkdtemp, readFile, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 
@@ -282,6 +282,29 @@ test("preserves route-specific NanoGPT names when first factoring existing model
   });
 });
 
+test("preserves API-silent NanoGPT overrides when first factoring existing models", () => {
+  const model = buildNanoGptModel(nanoGptModel({
+    id: "anthropic/claude-sonnet-4.6",
+    context_length: 1_000_000,
+    max_output_tokens: null,
+    architecture: undefined,
+    capabilities: undefined,
+    reasoning_efforts: null,
+  }), {
+    reasoning: false,
+    structured_output: true,
+    limit: { context: 1_000_000, input: 1_000_000, output: 128_000 },
+    modalities: { input: ["text", "image", "pdf"], output: ["text"] },
+  });
+
+  expect(model).toMatchObject({
+    base_model: "anthropic/claude-sonnet-4-6",
+    reasoning: false,
+    structured_output: true,
+    limit: { output: 128_000 },
+  });
+});
+
 test("preserves explicit NanoGPT route overrides while inheriting absent base fields", () => {
   const model = buildNanoGptModel(nanoGptModel({
     id: "google/gemini-2.5-pro",
@@ -371,6 +394,62 @@ test("NanoGPT sync deletes missing downstream entries and never emits internal p
 
   expect((nanoGpt as SyncProvider<NanoGptModel>).deleteMissing).toBeUndefined();
   expect(model).not.toHaveProperty("providers");
+});
+
+test("NanoGPT sync drops stale descriptions while first factoring existing models", async () => {
+  const dir = await mkdtemp(path.join(tmpdir(), "sync-nano-gpt-"));
+  const modelsDir = path.join(dir, "providers", "nano-gpt", "models");
+  const modelPath = path.join(modelsDir, "anthropic", "claude-sonnet-4.6.toml");
+  const metadataPath = path.join(dir, "models", "anthropic", "claude-sonnet-4-6.toml");
+  await mkdir(path.dirname(modelPath), { recursive: true });
+  await mkdir(path.dirname(metadataPath), { recursive: true });
+  await Bun.write(modelPath, [
+    'description = "Stale provider description"',
+    "reasoning = false",
+    "structured_output = true",
+    "",
+    "[limit]",
+    "context = 1_000_000",
+    "input = 1_000_000",
+    "output = 128_000",
+    "",
+  ].join("\n"));
+  await Bun.write(metadataPath, [
+    'description = "Canonical description"',
+    "reasoning = true",
+    "",
+    "[limit]",
+    "context = 1_000_000",
+    "output = 64_000",
+    "",
+  ].join("\n"));
+
+  try {
+    await syncProvider({
+      ...nanoGpt,
+      modelsDir,
+      async fetchModels() {
+        return {
+          data: [nanoGptModel({
+            id: "anthropic/claude-sonnet-4.6",
+            description: null,
+            max_output_tokens: null,
+            capabilities: undefined,
+            reasoning_efforts: null,
+          })],
+        };
+      },
+    });
+
+    const content = await readFile(modelPath, "utf8");
+    expect(content).toContain('base_model = "anthropic/claude-sonnet-4-6"');
+    expect(content).not.toContain("Stale provider description");
+    expect(content).toContain("reasoning = false");
+    expect(content).toContain("structured_output = true");
+    expect(content).toContain("output = 128_000");
+  } finally {
+    await rm(dir, { recursive: true, force: true });
+  }
 });
 
 const anthropicPricingMarkdown = `

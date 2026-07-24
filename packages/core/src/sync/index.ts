@@ -73,6 +73,7 @@ export interface SyncProvider<SourceModel> {
   deleteMissing?: boolean;
   preserveSymlinks?: boolean;
   preserveBaseModels?: boolean;
+  preserveDescriptions?: boolean;
   sameModel?(current: ExistingModel, desired: SyncedModel): boolean;
   missingNotice?(paths: string[]): string[];
   /**
@@ -242,16 +243,17 @@ export async function syncProvider<SourceModel>(
     } else {
       resolvedReasoning = existing.get(relativePath)?.toml.reasoning;
     }
+    const withReasoningOptions = preserveReasoningOptions(
+      translatedModel,
+      existing.get(relativePath)?.authored,
+      resolvedReasoning,
+    );
+    const withDescription = provider.preserveDescriptions === false
+      ? withReasoningOptions
+      : preserveDescription(withReasoningOptions, existing.get(relativePath)?.authored);
     const parsed = SyncedAuthoredModel.safeParse(stripUndefined({
       id: translated.id,
-      ...preserveDescription(
-        preserveReasoningOptions(
-          translatedModel,
-          existing.get(relativePath)?.authored,
-          resolvedReasoning,
-        ),
-        existing.get(relativePath)?.authored,
-      ),
+      ...withDescription,
     }));
     if (!parsed.success) {
       parsed.error.cause = { provider: provider.id, path: relativePath };
