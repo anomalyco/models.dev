@@ -74,9 +74,6 @@ export const SferenceModel = z
     context_tokens: z.number().int().nullable().optional(),
     // Per-1M-token USD pricing (nullable when a model has no list price).
     pricing: Pricing.nullable().optional(),
-    // Maximum output tokens the platform enforces (nullable when no catalog
-    // metadata); the sync writes it as an authoritative limit.output override.
-    max_output_tokens: z.number().int().nullable().optional(),
     // ISO 8601 release date (YYYY-MM-DD), curated per model; distinct from
     // `created`, which is just int(time.time()) for cache-busting.
     released: z.string().nullable().optional(),
@@ -146,26 +143,32 @@ export function buildSferenceModel(
     ? (existing?.reasoning_options ?? [{ type: "toggle" as const }])
     : undefined;
 
-  // The public /v1/models endpoint exposes context_tokens, max_output_tokens,
-  // released, and capabilities. For factored models, only API-authoritative
-  // values are written as overrides; fields the API omits (input limit, full
-  // modality arrays, knowledge) inherit from base_model metadata. Setting a
-  // field to undefined lets factorBaseModel strip it so it inherits from base.
+  // The public /v1/models endpoint exposes context_tokens, released, and
+  // capabilities. For factored models, only API-authoritative values are
+  // written as overrides; fields the API omits (input limit, full modality
+  // arrays, knowledge) inherit from base_model metadata. Setting a field to
+  // undefined lets factorBaseModel strip it so it inherits from base.
   const contextTokens = model.context_tokens ?? 0;
   const apiContext = contextTokens > 0 ? contextTokens : undefined;
-  const apiOutput = model.max_output_tokens ?? undefined;
+  // The platform publishes no per-model output cap: workers clamp max_tokens to
+  // whatever the context window leaves after the prompt (sference-platform#189)
+  // rather than enforcing a separate ceiling, so the only true output limit is
+  // the context window itself. When the API omits context, leave output unset
+  // so a factored model inherits the base checkpoint's pair instead of
+  // publishing a number no request was measured against.
+  const resolvedContext = apiContext ?? existing?.limit?.context;
   // `limit` for factorBaseModel must be a complete ProviderModelLimit; the
   // values.limit below carries only the API-authoritative overrides so missing
   // fields (output, input) inherit from base metadata instead of being zeroed.
   const limit = {
-    context: apiContext ?? existing?.limit?.context ?? 0,
+    context: resolvedContext ?? 0,
     input: existing?.limit?.input,
-    output: apiOutput ?? existing?.limit?.output ?? 0,
+    output: resolvedContext ?? 0,
   };
   const valuesLimit: Partial<SyncedFullModel["limit"]> = {
     context: apiContext,
     input: existing?.limit?.input,
-    output: apiOutput ?? existing?.limit?.output,
+    output: resolvedContext,
   };
 
   // Pricing is already per-1M-token USD — no conversion needed. A free model
