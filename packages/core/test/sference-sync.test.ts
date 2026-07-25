@@ -138,6 +138,42 @@ test("buildSferenceModel falls back to existing cost when pricing is absent", ()
   expect(cost.output).toBe(1);
 });
 
+test("buildSferenceModel sets limit.output to the context window", () => {
+  // Workers clamp max_tokens to what the context window leaves rather than
+  // enforcing a separate cap, and the catalog publishes no max-output value, so
+  // the context window is the output limit. The base checkpoint's smaller
+  // output must be overridden, not inherited.
+  const model = buildSferenceModel(
+    { ...baseModel(), context_tokens: 1_048_576, id: "zai-org/GLM-5.2" },
+    undefined,
+    "zhipuai/glm-5.2",
+  ) as Record<string, unknown>;
+  expect(model.limit).toEqual({ context: 1_048_576, output: 1_048_576 });
+});
+
+test("buildSferenceModel leaves limit unset when the catalog omits context", () => {
+  // With no context from the API and none on the existing TOML there is no
+  // measured window to publish an output cap against, so both fields inherit
+  // from the base checkpoint instead of being written as zeros.
+  const model = buildSferenceModel(
+    { ...baseModel(), context_tokens: null },
+    undefined,
+    "alibaba/qwen3.6-35b-a3b",
+  ) as Record<string, unknown>;
+  expect(model.limit).toBeUndefined();
+});
+
+test("buildSferenceModel ignores a hand-authored output that undercuts context", () => {
+  // A stale output cap on the existing TOML must not survive: the clamp makes
+  // the full window reachable, so output tracks context on every sync.
+  const model = buildSferenceModel(
+    baseModel(),
+    { limit: { context: 262_144, output: 32_768 } },
+    "alibaba/qwen3.6-35b-a3b",
+  ) as Record<string, unknown>;
+  expect((model.limit as Record<string, unknown>).output).toBe(262_144);
+});
+
 test("buildSferenceModel preserves hand-authored reasoning_options (effort)", () => {
   // The API accepts reasoning_effort but the catalog does not surface which
   // effort levels each model acts on, and a silently-dropped level is not a

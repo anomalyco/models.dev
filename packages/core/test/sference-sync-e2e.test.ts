@@ -68,10 +68,14 @@ test("syncProvider writes factored TOMLs from the public /v1/models shape", asyn
   expect(glm).toContain("input = 1.2");
   expect(glm).toContain("cache_read = 0.26");
   expect(glm).toContain("[[reasoning_options]]");
+  // Output tracks context: the catalog window overrides both base fields.
+  expect(glm).toContain("[limit]\ncontext = 1_048_576\noutput = 1_048_576");
 
   const qwen = await readFile(path.join(modelsDir, "Qwen", "Qwen3.6-35B-A3B.toml"), "utf8");
   expect(qwen).toContain("input = 0");
   expect(qwen).toContain("output = 0");
+  // Context matches base and is stripped; output still overrides base's 65_536.
+  expect(qwen).toContain("[limit]\noutput = 262_144");
 
   const ds = await readFile(path.join(modelsDir, "deepseek-ai", "DeepSeek-V4-Flash.toml"), "utf8");
   expect(ds).toContain('base_model = "deepseek/deepseek-v4-flash"');
