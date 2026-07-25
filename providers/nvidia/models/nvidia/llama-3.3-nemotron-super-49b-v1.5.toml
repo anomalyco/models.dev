@@ -1,0 +1,11 @@
+# https://docs.api.nvidia.com/nim/reference/nvidia-llama-3_3-nemotron-super-49b-v1_5-infer
+# https://build.nvidia.com/nvidia/llama-3_3-nemotron-super-49b-v1_5
+base_model = "nvidia/llama-3.3-nemotron-super-49b-v1.5"
+reasoning_options = [{ type = "toggle" }]
+
+[cost]
+input = 0.0
+output = 0.0
+
+[limit]
+output = 65_536

@@ -1,0 +1,23 @@
+# https://build.nvidia.com/nvidia/cosmos-reason2-8b
+name = "Cosmos Reason2 8B"
+description = "Vision language model for physical-world understanding with structured reasoning on video and images"
+release_date = "2025-12-01"
+last_updated = "2025-12-01"
+attachment = true
+reasoning = true
+reasoning_options = []
+temperature = true
+tool_call = true
+open_weights = true
+
+[cost]
+input = 0.0
+output = 0.0
+
+[limit]
+context = 131_072
+output = 16_384
+
+[modalities]
+input = ["text", "image", "video"]
+output = ["text"]

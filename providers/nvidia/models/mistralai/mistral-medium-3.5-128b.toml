@@ -1,0 +1,8 @@
+# https://docs.api.nvidia.com/nim/reference/mistralai-mistral-medium-3-5-128b-infer
+# https://build.nvidia.com/mistralai/mistral-medium-3.5-128b
+base_model = "mistral/mistral-medium-2604"
+reasoning_options = [{ type = "effort", values = ["none", "high"] }]
+
+[cost]
+input = 0.0
+output = 0.0

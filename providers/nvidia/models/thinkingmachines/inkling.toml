@@ -1,0 +1,11 @@
+# https://docs.api.nvidia.com/nim/reference/thinkingmachines-inkling-infer
+# https://build.nvidia.com/thinkingmachines/inkling
+base_model = "thinkingmachines/inkling"
+reasoning_options = []
+
+[cost]
+input = 0.0
+output = 0.0
+
+[limit]
+output = 16_384
