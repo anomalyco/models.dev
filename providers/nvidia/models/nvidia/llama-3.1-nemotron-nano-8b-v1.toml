@@ -1,7 +1,10 @@
 # Sources (accessed 2026-07-25):
+# - https://docs.api.nvidia.com/nim/reference/nvidia-llama-3_1-nemotron-nano-8b-v1
 # - https://docs.api.nvidia.com/nim/reference/nvidia-llama-3_1-nemotron-nano-8b-v1-infer
+# - https://huggingface.co/nvidia/Llama-3.1-Nemotron-Nano-8B-v1
 # - https://integrate.api.nvidia.com/v1/models id: nvidia/llama-3.1-nemotron-nano-8b-v1
-# No verified NIM reasoning control field for this endpoint.
+# Toggle: system message `detailed thinking on` | `detailed thinking off`.
+# Infer OpenAPI: max_tokens 1..16384.
 name = "Llama 3.1 Nemotron Nano 8B v1"
 description = "Nemotron model for efficient reasoning, coding, and specialized AI agents"
 family = "nemotron"
@@ -9,7 +12,7 @@ release_date = "2025-03-18"
 last_updated = "2025-03-18"
 attachment = false
 reasoning = true
-reasoning_options = []
+reasoning_options = [{ type = "toggle" }] # API: system "detailed thinking on|off"
 temperature = true
 tool_call = true
 open_weights = true
@@ -20,7 +23,7 @@ output = 0.0
 
 [limit]
 context = 131_072
-output = 131_072
+output = 16_384
 
 [modalities]
 input = ["text"]
