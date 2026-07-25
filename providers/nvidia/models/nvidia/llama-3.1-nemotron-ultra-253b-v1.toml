@@ -1,6 +1,9 @@
-# https://docs.api.nvidia.com/nim/reference/nvidia-llama-3_1-nemotron-ultra-253b-v1-infer
+# Sources (accessed 2026-07-25):
+# - https://docs.api.nvidia.com/nim/reference/nvidia-llama-3_1-nemotron-ultra-253b-v1-infer
+# - https://integrate.api.nvidia.com/v1/models id: nvidia/llama-3.1-nemotron-ultra-253b-v1
+# No verified NIM reasoning control field for this endpoint.
 base_model = "nvidia/llama-3.1-nemotron-ultra-253b"
-reasoning_options = [{ type = "toggle" }]
+reasoning_options = []
 
 [cost]
 input = 0.0

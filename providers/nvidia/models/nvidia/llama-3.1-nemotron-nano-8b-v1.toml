@@ -1,4 +1,7 @@
-# https://docs.api.nvidia.com/nim/reference/nvidia-llama-3_1-nemotron-nano-8b-v1-infer
+# Sources (accessed 2026-07-25):
+# - https://docs.api.nvidia.com/nim/reference/nvidia-llama-3_1-nemotron-nano-8b-v1-infer
+# - https://integrate.api.nvidia.com/v1/models id: nvidia/llama-3.1-nemotron-nano-8b-v1
+# No verified NIM reasoning control field for this endpoint.
 name = "Llama 3.1 Nemotron Nano 8B v1"
 description = "Nemotron model for efficient reasoning, coding, and specialized AI agents"
 family = "nemotron"
@@ -6,7 +9,7 @@ release_date = "2025-03-18"
 last_updated = "2025-03-18"
 attachment = false
 reasoning = true
-reasoning_options = [{ type = "toggle" }]
+reasoning_options = []
 temperature = true
 tool_call = true
 open_weights = true

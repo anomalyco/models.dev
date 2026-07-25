@@ -1,6 +1,9 @@
-# https://docs.api.nvidia.com/nim/reference/nvidia-nemotron-nano-12b-v2-vl-infer
+# Sources (accessed 2026-07-25):
+# - https://docs.api.nvidia.com/nim/reference/nvidia-nemotron-nano-12b-v2-vl-infer
+# - https://integrate.api.nvidia.com/v1/models id: nvidia/nemotron-nano-12b-v2-vl
+# No verified NIM reasoning control field for this endpoint.
 base_model = "nvidia/nemotron-nano-12b-v2-vl"
-reasoning_options = [{ type = "toggle" }]
+reasoning_options = []
 
 [cost]
 input = 0.0

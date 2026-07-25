@@ -1,5 +1,9 @@
-# https://docs.api.nvidia.com/nim/reference/thinkingmachines-inkling-infer
-# https://build.nvidia.com/thinkingmachines/inkling
+# Sources (accessed 2026-07-25):
+# - https://docs.api.nvidia.com/nim/reference/thinkingmachines-inkling-infer
+# - https://build.nvidia.com/thinkingmachines/inkling
+# - https://integrate.api.nvidia.com/v1/models id: thinkingmachines/inkling
+# NIM docs describe multimodal text+image; audio not documented on this NIM surface.
+# No verified NIM reasoning control field for this endpoint (max_tokens 1..16384).
 base_model = "thinkingmachines/inkling"
 reasoning_options = []
 
@@ -9,3 +13,7 @@ output = 0.0
 
 [limit]
 output = 16_384
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
