@@ -1,5 +1,7 @@
 base_model = "openai/gpt-5.6-luna"
 
+reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh", "max"] }]
+
 [cost]
 input = 1.05
 output = 6.3
