@@ -1,0 +1,23 @@
+name = "Qwen3 30B A3b fp8"
+description = "Qwen instruction model for multilingual chat, reasoning, and tool use"
+family = "qwen"
+attachment = false
+reasoning = true
+tool_call = true
+temperature = true
+structured_output = false
+open_weights = true
+release_date = "2025-04-30"
+last_updated = "2025-04-30"
+
+[cost]
+input = 0.0612
+output = 0.402
+
+[limit]
+context = 32768
+output = 32768
+
+[modalities]
+input = ["text"]
+output = ["text"]
