@@ -1,0 +1,20 @@
+# Effort: reasoning_effort = low|high|max (default high; always thinking, "off" returns 400)
+# https://docs.privatemind.com/chat-completions.html#reasoning-effort
+base_model = "moonshotai/kimi-k3"
+name = "Kimi K3 Chat"
+description = "Frontier chat and vision, 128K context, fast decode"
+temperature = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[cost]
+input = 4
+output = 14
+
+[limit]
+context = 131_072
+
+[modalities]
+input = ["text", "image"]
