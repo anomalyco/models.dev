@@ -1,0 +1,22 @@
+name = "Qwen3 Embedding 8B"
+description = "State-of-the-art multilingual embedding model for semantic search, retrieval, clustering, and RAG pipelines"
+family = "qwen"
+release_date = "2025-06-05"
+last_updated = "2026-07-26"
+attachment = false
+reasoning = false
+temperature = false
+tool_call = false
+open_weights = true
+
+[cost]
+input = 0.284425
+output = 0
+
+[limit]
+context = 32_768
+output = 4_096
+
+[modalities]
+input = ["text"]
+output = ["text"]

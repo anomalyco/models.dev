@@ -1,0 +1,22 @@
+name = "Green Rerank"
+description = "GreenPT's multilingual cross-encoder reranker for improving search relevance and RAG retrieval quality"
+family = "qwen"
+release_date = "2025-06"
+last_updated = "2026-07-26"
+attachment = false
+reasoning = false
+temperature = false
+tool_call = false
+open_weights = false
+
+[cost]
+input = 0.136524
+output = 0
+
+[limit]
+context = 32_768
+output = 1
+
+[modalities]
+input = ["text"]
+output = ["text"]
