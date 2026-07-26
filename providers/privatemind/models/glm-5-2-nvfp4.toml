@@ -1,0 +1,15 @@
+# Toggle: reasoning_effort = off|low|medium|high|max ("off" disables, every other value enables)
+# https://docs.privatemind.com/chat-completions.html#reasoning-effort
+base_model = "zhipuai/glm-5.2"
+name = "GLM 5.2 744B-40B"
+description = "Multilingual coding chat, NVFP4 for Blackwell"
+
+[[reasoning_options]]
+type = "toggle"
+
+[cost]
+input = 2
+output = 7
+
+[limit]
+context = 524_288

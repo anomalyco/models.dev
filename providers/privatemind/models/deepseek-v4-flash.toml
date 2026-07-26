@@ -1,0 +1,20 @@
+# Toggle: reasoning_effort = off|high|max ("off" disables, every other value enables)
+# Effort: reasoning_effort = high|max
+# https://docs.privatemind.com/chat-completions.html#reasoning-effort
+base_model = "deepseek/deepseek-v4-flash"
+name = "DeepSeek V4 284B-13B"
+description = "Fast reasoning at a fraction of Pro's cost"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["high", "max"]
+
+[cost]
+input = 0.5
+output = 1.5
+
+[limit]
+context = 393_216
