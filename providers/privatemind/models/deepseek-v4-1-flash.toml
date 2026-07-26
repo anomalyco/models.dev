@@ -1,0 +1,25 @@
+# Toggle: reasoning_effort = off|low|high|max ("off" disables thinking; any listed level enables it)
+# Effort: reasoning_effort = low|high|max (default high)
+# https://docs.privatemind.com/chat-completions.html#reasoning-effort
+schema = 2
+base_model = "deepseek/deepseek-v4.1-flash-1017"
+name = "DeepSeek V4.1 Flash 552B-16B"
+description = "Fast reasoning and coding, 500K context"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
+structured_output = true
+
+[limit]
+context = 500_000
+
+[cost.text.input]
+price = 0.33
+cache = { read = 0.033 }
+
+[cost.text.output]
+price = 1.33

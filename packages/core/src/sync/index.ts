@@ -56,6 +56,7 @@ import { openrouter } from "./providers/openrouter.js";
 import { ovhcloud } from "./providers/ovhcloud.js";
 import { pioneer } from "./providers/pioneer.js";
 import { prime } from "./providers/prime.js";
+import { privatemind } from "./providers/privatemind.js";
 import { requesty } from "./providers/requesty.js";
 import { morph } from "./providers/morph.js";
 import { tinfoil } from "./providers/tinfoil.js";
@@ -221,6 +222,7 @@ export const providers: {
   ovhcloud: SyncProvider<any>;
   pioneer: SyncProvider<any>;
   prime: SyncProvider<any>;
+  privatemind: SyncProvider<any>;
   requesty: SyncProvider<any>;
   morph: SyncProvider<any>;
   tinfoil: SyncProvider<any>;
@@ -267,6 +269,7 @@ export const providers: {
   ovhcloud,
   pioneer,
   prime,
+  privatemind,
   requesty,
   morph,
   tinfoil,
@@ -294,6 +297,7 @@ export const groups = {
     "requesty",
     "openrouter",
     "prime",
+    "privatemind",
     "vercel",
   ],
   cloudflare: ["cloudflare-ai-gateway", "cloudflare-workers-ai"],
