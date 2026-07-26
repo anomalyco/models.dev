@@ -1,0 +1,24 @@
+# Served via POST /v1/images/generations on https://openai.blueclaw.network/v1
+# No models/black-forest-labs/ metadata entry exists, so this is a full inline definition.
+# Sources: https://bfl.ai/announcing-black-forest-labs/ (FLUX.1 suite launched 2024-08-01)
+#   https://huggingface.co/black-forest-labs/FLUX.1-dev (open weights, FLUX.1 [dev]
+#   Non-Commercial License; model card usage example sets max_sequence_length=512)
+name = "FLUX.1 [dev]"
+description = "Image model for prompt-driven generation, editing, and visual design workflows"
+family = "flux"
+release_date = "2024-08-01"
+last_updated = "2024-08-01"
+attachment = false
+reasoning = false
+temperature = false
+tool_call = false
+open_weights = true
+status = "beta"
+
+[limit]
+context = 512
+output = 0
+
+[modalities]
+input = ["text"]
+output = ["image"]

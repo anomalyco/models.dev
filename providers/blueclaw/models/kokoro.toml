@@ -1,0 +1,22 @@
+# Served via POST /v1/audio/speech on https://openai.blueclaw.network/v1
+# No models/ metadata entry exists for Kokoro, so this is a full inline definition.
+# Source: https://huggingface.co/hexgrad/Kokoro-82M
+#   v0.19 released 2024-12-25, v1.0 released 2025-01-27, Apache 2.0, open weights.
+name = "Kokoro"
+description = "Speech generation model for controllable voice, narration, and audio delivery"
+release_date = "2024-12-25"
+last_updated = "2025-01-27"
+attachment = false
+reasoning = false
+temperature = false
+tool_call = false
+open_weights = true
+status = "beta"
+
+[limit]
+context = 0
+output = 0
+
+[modalities]
+input = ["text"]
+output = ["audio"]
