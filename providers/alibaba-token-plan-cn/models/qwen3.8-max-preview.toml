@@ -15,8 +15,11 @@
 # not disable thinking. API: {"reasoning_effort":"medium"} or
 # {"thinking_budget":16384}. `preserve_thinking` defaults to true, so clients must
 # replay every historical `reasoning_content` value unchanged.
+# structured_output: the gateway accepts response_format json_schema (probed
+# 2026-07-24 on the Singapore endpoint; China shares the catalogue).
 
 base_model = "alibaba/qwen3.8-max-preview"
+structured_output = true
 reasoning_options = [
   { type = "effort", values = ["low", "medium", "xhigh"] },
   { type = "budget_tokens", min = 0, max = 262_144 },

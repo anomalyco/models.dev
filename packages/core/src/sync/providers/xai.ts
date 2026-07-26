@@ -39,7 +39,10 @@ export const xai = {
   modelsDir: "providers/xai/models",
   skipCreates: true,
   sourceID(model) {
-    return model.id;
+    // Alias rows (canonical_id set) exist only to update already-cataloged
+    // alias TOMLs; the canonical row carries the missing-model signal, so
+    // skipped aliases must not be reported as missing models.
+    return model.canonical_id === undefined ? model.id : undefined;
   },
   skippedNotice(ids) {
     if (ids.length === 0) return [];
@@ -69,7 +72,10 @@ export const xai = {
     for (const model of models) {
       if (!seen.has(model.id)) {
         seen.add(model.id);
-        expanded.push(model);
+        // Strip any API-provided canonical_id: sourceID relies on it being set
+        // exclusively by the synthetic alias expansion below, so an API row
+        // carrying it must not be mistaken for an alias and silently skipped.
+        expanded.push({ ...model, canonical_id: undefined });
       }
     }
 

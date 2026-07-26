@@ -29,13 +29,31 @@ const GoogleResponse = z.object({
 
 type GoogleModel = z.infer<typeof GoogleModel>;
 
+const TrackedModelPrefixes = [
+  "deep-research-",
+  "gemini-",
+  "gemma-",
+  "imagen-",
+  "lyria-",
+  "nano-banana-",
+  "veo-",
+];
+
+export function shouldTrackGoogleModel(id: string) {
+  return TrackedModelPrefixes.some((prefix) => id.startsWith(prefix));
+}
+
 export const google = {
   id: "google",
   name: "Google",
   modelsDir: "providers/google/models",
   skipCreates: true,
+  // /v1beta/models has no lifecycle fields and can retain shut-down,
+  // superseded, moving-alias, and EAP model IDs.
+  trackMissingModels: false,
   sourceID(model) {
-    return model.name.replace(/^models\//, "");
+    const id = model.name.replace(/^models\//, "");
+    return shouldTrackGoogleModel(id) ? id : undefined;
   },
   skippedNotice(ids) {
     if (ids.length === 0) return [];
