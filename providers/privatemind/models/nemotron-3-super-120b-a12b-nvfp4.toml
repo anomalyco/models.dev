@@ -1,0 +1,11 @@
+base_model = "nvidia/nemotron-3-super-120b-a12b"
+name = "Nemotron 3 Super 120B-12B"
+description = "Reasoning and code with visible thinking"
+structured_output = true
+
+[[reasoning_options]]
+type = "toggle"
+
+[cost]
+input = 0.8
+output = 3

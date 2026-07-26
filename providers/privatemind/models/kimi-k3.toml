@@ -1,0 +1,18 @@
+base_model = "moonshotai/kimi-k3"
+name = "Kimi K3 2.8T-104B"
+description = "Frontier agentic coding, native vision, 1M context"
+temperature = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[cost]
+input = 2
+output = 7
+
+[limit]
+context = 1_000_000
+
+[modalities]
+input = ["text", "image"]

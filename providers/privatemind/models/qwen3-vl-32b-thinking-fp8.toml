@@ -1,0 +1,14 @@
+base_model = "alibaba/qwen3-vl-32b-thinking"
+name = "Qwen 3 VL Thinking 32B"
+description = "Vision reasoning with visible thinking"
+reasoning_options = []
+
+[cost]
+input = 0.5
+output = 1.1
+
+[limit]
+context = 32_768
+
+[modalities]
+input = ["text", "image"]
