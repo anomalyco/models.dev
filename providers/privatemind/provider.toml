@@ -1,0 +1,74 @@
+# Reasoning HTTP control (accessed 2026-09-27):
+# POST https://api.privatemind.com/v1/chat/completions accepts top-level
+# reasoning_effort = "off" | "low" | "medium" | "high" | "max".
+# Hybrid models (the entries here carrying [[reasoning_options]] type =
+# "toggle") accept "off", which disables thinking: the response comes back with
+# no message.reasoning, verified on both as the negative control. The other
+# levels set the depth, and they are published in
+# capabilities.reasoning_effort_levels. Measured 2026-09-27 on
+# qwen3-8-27b-nvfp4 at temperature 0, two requests each, reading
+# completion_tokens_details.reasoning_tokens: off 0, low 83, medium 88, high
+# 114. qwen3-8-flash-next-nvfp4: off 0, low 75, medium 70, high 83.
+# "max" is accepted and saturates to the same depth as "high", so it is
+# deliberately not advertised as a level of its own. "xhigh", which the lab and
+# the relay peers of these weights use as their top level, is refused at this
+# API: HTTP 400, "invalid reasoning_effort 'xhigh': expected one of off, low,
+# medium, high, max". Canonical "high" is what maps onto the template's xhigh
+# here, so the published list is the host's vocabulary rather than the lab's.
+# Thinking-only deployments publish capabilities.reasoning_mandatory = true
+# and carry type = "effort" only, with no toggle, because thinking cannot be
+# turned off. Probed 2026-09-27 on both: "off" returns HTTP 400, "invalid
+# reasoning_effort 'off' is not supported by this model (mode: thinking-only)",
+# where the same value on a hybrid here returns 200. The accepted depths are
+# listed in capabilities.reasoning_effort_levels (Kimi K3 and GLM 5.3 Flash:
+# low | high | max) and the level applied to a request that omits the field is
+# published as capabilities.reasoning_effort_default. A value outside
+# that list is accepted rather than rejected and resolves to a served depth
+# ("medium" on kimi-k3 returns 200 with the trace "low" produces).
+# A dial that lists "off" among its values carries both controls.
+# Feature-detect via supported_parameters + capabilities on GET /v1/models.
+#
+# Pricing (accessed 2026-09-27): GET /v1/models quotes list prices (USD per
+# MTok) to API-key callers only; the anonymous listing names models without
+# prices. The sync sends PRIVATEMIND_API_KEY when set and otherwise keeps
+# the authored [cost]. The anonymous and keyed listings returned the same 12
+# model ids on 2026-09-27, but the listing is scoped to the caller's
+# organisation and a deployment also leaves it while being migrated, so the
+# adapter does not delete on absence: a model that disappears is retained and
+# reported for a human to retire.
+#
+# Modalities (probed per deployment 2026-09-27, POST /v1/chat/completions):
+#   qwen3-8-27b-nvfp4         video_url -> 200, usage reports
+#                             prompt_tokens_details.multimodal_tokens.video = 80
+#   qwen3-8-flash-next-nvfp4  video_url -> 200, same 80 video tokens billed
+#   kimi-k3                   video_url -> 400 "At most 0 video(s) may be
+#                             provided in one prompt. (parameter=video)"
+#   glm-5-3-flash-nvfp4       video_url -> 400 "Failed to apply
+#                             Glm5NextProcessor on data=..."
+# So video is inherited from the lab entry on the two Qwen builds and dropped
+# on the other two. `file` is refused on all four ("Unsupported chat content
+# part type: 'file'"), so no deployment takes a document and GLM 5.3 Flash's
+# base pdf is dropped. /v1/models carries only `image_input`, so the lab entry
+# remains the source of truth for the rest.
+#
+# Prices as quoted by GET /v1/models with an API key on 2026-09-27, USD per
+# MTok, from cost.input_per_m_token / output_per_m_token / cache_read_per_m_token:
+#   kimi-k3                   4.0  / 14.0 / 0.4
+#   glm-5-3-flash-nvfp4       0.25 / 0.75 / 0.025
+#   qwen3-8-27b-nvfp4         0.4  / 3.8  / 0.04
+#   qwen3-8-flash-next-nvfp4  0.25 / 0.75 / 0.025
+# Each [cost] block is that model's row and nothing else; the anonymous
+# listing omits the field, so those four rows are the only citation there is.
+#
+# temperature (accessed 2026-09-27): a live sampling control on these
+# deployments, advertised per-model in supported_parameters. The kimi-k3
+# entry keeps temperature = true over the lab entry's false; the same
+# true-over-false override on this base is carried by aiand, arcee, baseten,
+# chutes, kilo, neon, openrouter and synthetic.
+# https://docs.privatemind.com/chat-completions.html#reasoning-effort
+# https://api.privatemind.com/v1/models
+name = "PrivateMind"
+npm = "@ai-sdk/openai-compatible"
+api = "https://api.privatemind.com/v1"
+env = ["PRIVATEMIND_API_KEY"]
+doc = "https://docs.privatemind.com"

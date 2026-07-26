@@ -1,0 +1,19 @@
+# Toggle: reasoning_effort = off|low|medium|high ("off" disables thinking; the listed levels set its depth)
+# Effort: reasoning_effort = low|medium|high
+# https://docs.privatemind.com/chat-completions.html#reasoning-effort
+# Modalities: text, image and video, inherited from the lab entry and confirmed by a `video_url` request billing video tokens. `file` is not a supported part type on this API.
+base_model = "alibaba/qwen3.8-flash-next"
+name = "Qwen 3.8 Flash Next 125B-6B"
+description = "Big-model knowledge at small-model speed: 125B MoE, 6B active"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high"]
+
+[cost]
+input = 0.25
+output = 0.75
+cache_read = 0.025
