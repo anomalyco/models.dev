@@ -354,7 +354,10 @@ function shouldPreserveFactoredName(
   if (modelID.endsWith(":discounted")) return true;
   if (modelID.endsWith(":thinking")) return true;
   if (canonicalOverride === canonical) return true;
-  const modelSlug = modelID.split("/").slice(1).join("/").replace(/:free$/, "");
+  const modelSlug = modelID.split("/").slice(1).join("/")
+    .replace(/:free$/, "")
+    .replace(/:discounted$/, "")
+    .replace(/:thinking$/, "");
   const canonicalSlug = canonical.split("/").slice(1).join("/");
   return normalizeModelSlug(modelSlug) !== normalizeModelSlug(canonicalSlug);
 }
