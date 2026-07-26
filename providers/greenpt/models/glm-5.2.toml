@@ -1,0 +1,13 @@
+base_model = "zhipuai/glm-5.2"
+reasoning_options = [{ type = "effort", values = ["none", "minimal", "low", "medium", "high"] }]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 1.501764
+output = 5.256174
+
+[limit]
+context = 1_000_000
+output = 131_072

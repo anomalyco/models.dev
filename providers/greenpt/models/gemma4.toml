@@ -1,0 +1,26 @@
+name = "Gemma 4"
+description = "GreenPT-branded long-context multimodal reasoning model"
+family = "gemma"
+release_date = "2026-01-01"
+last_updated = "2026-07-26"
+attachment = true
+reasoning = true
+reasoning_options = [{ type = "effort", values = ["none", "minimal", "low", "medium", "high"] }]
+temperature = true
+tool_call = true
+open_weights = true
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.56885
+output = 1.70655
+
+[limit]
+context = 262_144
+output = 32_768
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

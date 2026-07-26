@@ -1,0 +1,26 @@
+name = "Gemma 3 27B IT"
+description = "Multimodal instruction model for chat and image-aware tasks"
+family = "gemma"
+release_date = "2025-03-01"
+last_updated = "2026-07-26"
+attachment = true
+reasoning = true
+reasoning_options = [{ type = "effort", values = ["none", "minimal", "low", "medium", "high"] }]
+temperature = true
+tool_call = true
+open_weights = true
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.34131
+output = 0.68262
+
+[limit]
+context = 40_000
+output = 8_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

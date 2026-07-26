@@ -1,0 +1,9 @@
+name = "GreenPT"
+env = ["GREENPT_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+# Model prices are published in EUR. USD costs use the ECB reference rate
+# 1 EUR = 1.1377 USD for 2026-07-24.
+# https://docs.greenpt.ai/pricing
+# https://www.ecb.europa.eu/stats/policy_and_exchange_rates/euro_reference_exchange_rates/html/index.en.html
+api = "https://api.greenpt.ai/v1"
+doc = "https://docs.greenpt.ai"

@@ -1,0 +1,13 @@
+base_model = "minimax/MiniMax-M2.5"
+reasoning_options = [{ type = "effort", values = ["none", "minimal", "low", "medium", "high"] }]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.193409
+output = 1.126323
+
+[limit]
+context = 200_000
+output = 128_000

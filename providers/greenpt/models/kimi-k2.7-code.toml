@@ -1,0 +1,13 @@
+base_model = "moonshotai/kimi-k2.7-code"
+reasoning_options = [{ type = "effort", values = ["none", "minimal", "low", "medium", "high"] }]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.944291
+output = 4.380145
+
+[limit]
+context = 262_144
+output = 262_144
