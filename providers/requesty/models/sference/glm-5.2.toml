@@ -1,0 +1,31 @@
+name = "GLM 5.2"
+description = "GLM-5.2 is the latest model in the GLM series from Z.ai, continuing its focus on coding and long horizon agentic work. Building on GLM-5.1, it plans, executes, and iterates autonomously on extended engineering grade tasks. Served via Sference."
+family = "glm"
+release_date = "2026-07-06"
+last_updated = "2026-07-06"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "max"]
+
+[[reasoning_options]]
+type = "budget_tokens"
+
+[cost]
+input = 1.2
+output = 4.2
+cache_read = 0.26
+
+[limit]
+context = 1_048_576
+output = 131_072
+
+[modalities]
+input = ["text"]
+output = ["text"]

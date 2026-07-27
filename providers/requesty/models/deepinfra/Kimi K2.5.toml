@@ -1,0 +1,24 @@
+name = "Kimi K2.5"
+description = "Kimi K2.5 is an open-source, native multimodal agentic model built through continual pretraining on approximately 15 trillion mixed visual and text tokens atop Kimi-K2-Base. It seamlessly integrates vision and language understanding with advanced agentic capabilities, instant and thinking modes, as well as conversational and agentic paradigms."
+family = "kimi-k2"
+release_date = "2026-03-31"
+last_updated = "2026-03-31"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[cost]
+input = 0.45
+output = 2.25
+cache_read = 0.07
+
+[limit]
+context = 262_100
+output = 131_072
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

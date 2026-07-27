@@ -1,14 +1,17 @@
 base_model = "openai/gpt-5.4"
+description = "GPT-5.4 is OpenAI's latest frontier model, unifying the Codex and GPT lines into a single system. It features a 1M+ token context window (922K input, 128K output) with support for text and image inputs, enabling high-context reasoning, coding, and multimodal analysis within the same workflow. The model delivers improved performance in coding, document understanding, tool use, and instruction following, capable of generating production-quality code, synthesizing information across multiple sources, and executing complex multi-step workflows with fewer iterations and greater token efficiency."
 
-reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "max"] }, { type = "budget_tokens" }]
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "max"]
+
+[[reasoning_options]]
+type = "budget_tokens"
 
 [cost]
 input = 2.5
 output = 15
 cache_read = 0.25
 
-[[cost.tiers]]
-tier = { type = "context", size = 272_000 }
-input = 5
-output = 22.5
-cache_read = 0.5
+[modalities]
+input = ["text", "image"]

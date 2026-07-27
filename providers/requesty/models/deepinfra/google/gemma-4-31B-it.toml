@@ -1,0 +1,16 @@
+base_model = "google/gemma-4-31b-it"
+description = "Gemma is a family of open models built by Google DeepMind. Gemma 4 models are multimodal, handling text and image input and generating text output."
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "max"]
+
+[[reasoning_options]]
+type = "budget_tokens"
+
+[cost]
+input = 0.13
+output = 0.38
+
+[limit]
+output = 262_144

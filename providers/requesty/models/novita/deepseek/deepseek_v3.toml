@@ -1,0 +1,23 @@
+name = "Deepseek V3"
+description = "DeepSeek-V3 is the latest model from the DeepSeek team, building upon the instruction following and coding abilities of the previous versions. Pre-trained on nearly 15 trillion tokens, the reported evaluations reveal that the model outperforms other open-source models and rivals leading closed-source models."
+family = "deepseek"
+release_date = "2025-05-30"
+last_updated = "2025-05-30"
+attachment = false
+reasoning = false
+temperature = true
+tool_call = true
+structured_output = false
+open_weights = false
+
+[cost]
+input = 0.89
+output = 0.89
+
+[limit]
+context = 64_000
+output = 64_000
+
+[modalities]
+input = ["text"]
+output = ["text"]

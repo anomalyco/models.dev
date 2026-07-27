@@ -1,20 +1,25 @@
-name = "GPT-5.1 Chat"
-description = "Chat-tuned GPT model for conversational assistance, writing, and tool workflows"
-family = "gpt-codex"
-release_date = "2025-11-13"
-last_updated = "2025-11-13"
+name = "GPT 5.1 Chat"
+description = "GPT-5.1 Chat points to the GPT-5.1 snapshot currently used in ChatGPT. We recommend GPT-5.1 for most API usage, but feel free to use this GPT-5.1 Chat model to test our latest improvements for chat use cases."
+family = "gpt"
+release_date = "2025-12-01"
+last_updated = "2025-12-01"
 attachment = true
 reasoning = true
-reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "max"] }, { type = "budget_tokens" }]
 temperature = true
-knowledge = "2024-09-30"
 tool_call = true
 structured_output = true
 open_weights = false
 
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "max"]
+
+[[reasoning_options]]
+type = "budget_tokens"
+
 [cost]
 input = 1.25
-output = 10.00
+output = 10
 cache_read = 0.125
 
 [limit]

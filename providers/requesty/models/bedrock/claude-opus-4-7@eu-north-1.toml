@@ -1,0 +1,19 @@
+base_model = "anthropic/claude-opus-4-7"
+description = "Claude Opus 4.7 is Anthropic's most capable generally available model, advancing performance across coding, enterprise workflows, and long-running agentic tasks. Coding: Claude Opus 4.7 is built for agentic coding at scale, excelling at long-horizon projects, complex implementations, and polished UI design. It handles the full lifecycle from architecture to deployment, including design-quality UI so senior engineers can delegate complex work with confidence. Enterprise workflows: Claude Opus 4.7 sets the standard for enterprise knowledge work, carrying context across sessions to manage complex, multi-day projects end-to-end. It delivers professional polish on the documents, spreadsheets, and presentations that move work forward."
+structured_output = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "max"]
+
+[[reasoning_options]]
+type = "budget_tokens"
+
+[cost]
+input = 5.5
+output = 27.5
+cache_read = 0.55
+cache_write = 6.875
+
+[modalities]
+input = ["text", "image"]

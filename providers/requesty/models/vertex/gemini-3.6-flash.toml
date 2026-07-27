@@ -1,0 +1,20 @@
+base_model = "google/gemini-3.6-flash"
+description = "Gemini 3.6 Flash is the latest Flash model in the Gemini series, delivering frontier level intelligence at high speed and low cost. Built for the agentic era, it excels at sub agent deployment, multi step workflows, and long horizon tasks at scale."
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "max"]
+
+[[reasoning_options]]
+type = "budget_tokens"
+
+[cost]
+input = 1.5
+output = 7
+cache_read = 0.15
+
+[limit]
+output = 65_535
+
+[modalities]
+input = ["text", "image"]

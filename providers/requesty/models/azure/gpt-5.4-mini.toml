@@ -1,0 +1,31 @@
+name = "GPT 5.4 Mini"
+description = "GPT-5.4 mini brings the core capabilities of GPT-5.4 to a faster, more efficient model optimized for high-throughput workloads. It supports text and image inputs with strong performance across reasoning, coding, and tool use, while reducing latency and cost for large-scale deployments."
+family = "gpt"
+release_date = "2026-03-17"
+last_updated = "2026-03-17"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "max"]
+
+[[reasoning_options]]
+type = "budget_tokens"
+
+[cost]
+input = 0.75
+output = 4.5
+cache_read = 0.075
+
+[limit]
+context = 400_000
+output = 128_000
+
+[modalities]
+input = ["text"]
+output = ["text"]

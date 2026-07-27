@@ -1,0 +1,23 @@
+name = "Mistral Small 2503"
+description = "Mistral Small 3.1 (2503) is a powerful 24-billion parameter multimodal AI model developed by Mistral AI that processes both text and image inputs. Designed for enterprise efficiency and fast-response agents, it is highly sought after for its exceptional long-context processing, function calling, and local deployment capabilities."
+family = "mistral-small"
+release_date = "2026-06-29"
+last_updated = "2026-06-29"
+attachment = false
+reasoning = false
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[cost]
+input = 0.1
+output = 0.3
+
+[limit]
+context = 32_768
+output = 32_768
+
+[modalities]
+input = ["text"]
+output = ["text"]

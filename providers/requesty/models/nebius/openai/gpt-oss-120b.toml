@@ -1,0 +1,17 @@
+base_model = "openai/gpt-oss-120b"
+description = "Open-weight agentic model with configurable reasoning, full CoT visibility, strong tool use, and fine-tuning support."
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "max"]
+
+[[reasoning_options]]
+type = "budget_tokens"
+
+[cost]
+input = 0.15
+output = 0.6
+
+[limit]
+context = 131_000
+output = 128_000

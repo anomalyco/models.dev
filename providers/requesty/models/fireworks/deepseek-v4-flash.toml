@@ -1,0 +1,31 @@
+name = "Deepseek V4 Flash"
+description = "DeepSeek V4 Flash is a streamlined open-source Mixture-of-Experts model (284B parameters) optimized for fast, cost-efficient inference while preserving strong reasoning and coding performance at 1M token context scale. It leverages hybrid attention innovations for lower latency and higher throughput, delivering near-Pro reasoning quality ideal for interactive agents and high-volume production workloads."
+family = "deepseek"
+release_date = "2026-05-27"
+last_updated = "2026-05-27"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = false
+open_weights = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "max"]
+
+[[reasoning_options]]
+type = "budget_tokens"
+
+[cost]
+input = 0.14
+output = 0.28
+cache_read = 0.03
+
+[limit]
+context = 1_000_000
+output = 131_072
+
+[modalities]
+input = ["text"]
+output = ["text"]

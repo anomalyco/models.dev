@@ -1,0 +1,21 @@
+base_model = "google/gemini-3.5-flash"
+description = "Gemini 3.5 Flash provides sustained frontier-level intelligence optimized for real-world tasks at a higher speed and lower cost. Designed for the agentic era, it excels at sub-agent deployment, multi-step workflows, and long-horizon tasks at scale."
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "max"]
+
+[[reasoning_options]]
+type = "budget_tokens"
+
+[cost]
+input = 1.5
+output = 9
+cache_read = 0.15
+cache_write = 1.583
+
+[limit]
+output = 65_535
+
+[modalities]
+input = ["text", "image"]

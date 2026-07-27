@@ -1,0 +1,23 @@
+name = "DeepSeek R1 Distill Llama 70B"
+description = "DeepSeek-R1-Distill-Llama-70B is an open-weights, 70-billion parameter language model developed by DeepSeek. It distills the advanced mathematical, coding, and logical reasoning patterns of the flagship DeepSeek-R1 model into the highly optimized Llama-3.3-70B-Instruct architecture."
+family = "deepseek"
+release_date = "2025-01-30"
+last_updated = "2025-01-30"
+attachment = false
+reasoning = false
+temperature = true
+tool_call = false
+structured_output = false
+open_weights = false
+
+[cost]
+input = 0.23
+output = 0.69
+
+[limit]
+context = 64_000
+output = 8_192
+
+[modalities]
+input = ["text"]
+output = ["text"]

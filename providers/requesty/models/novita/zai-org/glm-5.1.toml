@@ -1,0 +1,30 @@
+name = "GLM 5.1"
+description = "GLM-5.1 is Z.AI's latest flagship model, meticulously engineered for long-horizon autonomous tasks. Capable of working continuously on a single assignment for up to 8 hours, it autonomously manages the entire workflow—from initial planning and execution to iterative optimization and the delivery of production-grade results. While its general capabilities and coding proficiency are on par with Claude Opus 4.6, GLM-5.1 excels particularly in sustained execution, complex engineering optimization, a"
+family = "glm"
+release_date = "2026-05-27"
+last_updated = "2026-05-27"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = false
+open_weights = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "max"]
+
+[[reasoning_options]]
+type = "budget_tokens"
+
+[cost]
+input = 1.38
+output = 4.4
+
+[limit]
+context = 204_800
+output = 204_800
+
+[modalities]
+input = ["text"]
+output = ["text"]

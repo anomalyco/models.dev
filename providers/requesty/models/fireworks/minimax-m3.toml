@@ -1,0 +1,24 @@
+name = "Minimax M3"
+description = "MiniMax-M3 is a native multimodal model with 512K context running ~428B parameters and ~23B activated parameters. It brings native multimodality, enabling deeper semantic fusion across text, image, and video. M3 also introduces MiniMax Sparse Attention (MSA) to improve long context efficiency, achieving frontier-level performance across long-horizon agentic benchmarks, excelling in both coding and cowork."
+family = "minimax-m3"
+release_date = "2026-06-13"
+last_updated = "2026-06-13"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = true
+structured_output = false
+open_weights = false
+
+[cost]
+input = 0.3
+output = 1.2
+cache_read = 0.06
+
+[limit]
+context = 512_000
+output = 512_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

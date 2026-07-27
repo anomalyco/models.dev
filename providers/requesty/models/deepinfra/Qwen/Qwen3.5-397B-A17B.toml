@@ -1,0 +1,20 @@
+base_model = "alibaba/qwen3.5-397b-a17b"
+description = "Qwen3.5-397B-A17B is Alibaba's most capable Qwen3.5 model, a Mixture-of-Experts architecture with 397B total parameters and 17B activated per token. It features a 262K token context window (extensible to 1M with YaRN), thinking/reasoning mode, tool calling with MCP integration, and support for 201 languages. Sets state-of-the-art results on reasoning, coding, math, and multimodal benchmarks."
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "max"]
+
+[[reasoning_options]]
+type = "budget_tokens"
+
+[cost]
+input = 0.49
+output = 3.6
+cache_read = 0.3
+
+[limit]
+output = 262_144
+
+[modalities]
+input = ["text", "image"]

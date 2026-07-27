@@ -1,0 +1,23 @@
+name = "DeepSeek V3.1"
+description = "DeepSeek-V3.1 by DeepSeek-AI is a state-of-the-art, hybrid-inference artificial intelligence model that allows users to toggle between fast conversational responses and deep logical reasoning modes within a single architecture."
+family = "deepseek"
+release_date = "2025-08-26"
+last_updated = "2025-08-26"
+attachment = false
+reasoning = false
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[cost]
+input = 0.3
+output = 1
+
+[limit]
+context = 163_840
+output = 163_840
+
+[modalities]
+input = ["text"]
+output = ["text"]

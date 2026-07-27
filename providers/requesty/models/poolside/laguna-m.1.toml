@@ -1,0 +1,30 @@
+name = "Laguna M.1"
+description = "Poolside Laguna M.1 — a mid-size code-focused LLM from Poolside, served via an OpenAI-compatible API."
+family = "laguna"
+release_date = "2026-06-09"
+last_updated = "2026-06-09"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = false
+structured_output = false
+open_weights = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "max"]
+
+[[reasoning_options]]
+type = "budget_tokens"
+
+[cost]
+input = 0
+output = 0
+
+[limit]
+context = 32_768
+output = 32_768
+
+[modalities]
+input = ["text"]
+output = ["text"]

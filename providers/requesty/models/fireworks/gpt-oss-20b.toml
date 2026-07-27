@@ -1,0 +1,31 @@
+name = "GPT Oss 20b"
+description = "GPT-OSS-20B is OpenAI's lightweight open-weight model with 21.5 billion total parameters (3.6 billion active, Mixture-of-Experts). Optimized for lower latency and local or specialized use cases including agentic tasks, chain-of-thought reasoning, and web browsing. Released under Apache 2.0 license."
+family = "gpt-oss"
+release_date = "2026-05-27"
+last_updated = "2026-05-27"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = false
+structured_output = false
+open_weights = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "max"]
+
+[[reasoning_options]]
+type = "budget_tokens"
+
+[cost]
+input = 0.07
+output = 0.3
+cache_read = 0.035
+
+[limit]
+context = 131_072
+output = 65_536
+
+[modalities]
+input = ["text"]
+output = ["text"]

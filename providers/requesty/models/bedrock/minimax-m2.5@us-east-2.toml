@@ -1,0 +1,18 @@
+base_model = "minimax/MiniMax-M2.5"
+description = "MiniMax M2.5 is MiniMax's latest large language model, delivering strong performance across reasoning, coding, and tool use with improved efficiency for production workloads."
+structured_output = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "max"]
+
+[[reasoning_options]]
+type = "budget_tokens"
+
+[cost]
+input = 0.3
+output = 1.2
+
+[limit]
+context = 128_000
+output = 16_000

@@ -1,0 +1,23 @@
+name = "Grok 3"
+description = "Excels at enterprise use cases like data extraction, coding, and text summarization. Possesses deep domain knowledge in finance, healthcare, law, and science."
+family = "grok"
+release_date = "2025-10-16"
+last_updated = "2025-10-16"
+attachment = false
+reasoning = false
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[cost]
+input = 5
+output = 25
+
+[limit]
+context = 131_072
+output = 131_072
+
+[modalities]
+input = ["text"]
+output = ["text"]

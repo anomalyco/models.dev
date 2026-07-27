@@ -1,0 +1,19 @@
+base_model = "anthropic/claude-opus-5"
+description = "Opus 5 is a workhorse model for agentic coding. It is strongest on difficult tasks, including\nmulti-file features, larger refactors, and end-to-end feature work. It also performs well on\neasier tasks like single-turn edits, though the difference from prior models is smaller. Opus\n5 completes full tasks rather than leaving stubs or placeholders."
+structured_output = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "max"]
+
+[[reasoning_options]]
+type = "budget_tokens"
+
+[cost]
+input = 5
+output = 25
+cache_read = 0.5
+cache_write = 6.25
+
+[modalities]
+input = ["text", "image"]

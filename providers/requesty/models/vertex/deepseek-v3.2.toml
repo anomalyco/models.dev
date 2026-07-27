@@ -1,0 +1,32 @@
+name = "Deepseek V3.2"
+description = "DeepSeek-V3.2 is a model that harmonizes high computational efficiency with superior reasoning and agent performance. DeepSeek's approach is built upon three key technical breakthroughs: DeepSeek Sparse Attention (DSA), scalable reinforcement learning framework, and large scale agentic task synthesis pipeline."
+family = "deepseek"
+release_date = "2026-03-19"
+last_updated = "2026-03-19"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "max"]
+
+[[reasoning_options]]
+type = "budget_tokens"
+
+[cost]
+input = 0.56
+output = 1.68
+cache_read = 0.056
+cache_write = 1.68
+
+[limit]
+context = 163_840
+output = 65_535
+
+[modalities]
+input = ["text", "image"]
+output = ["text", "image"]

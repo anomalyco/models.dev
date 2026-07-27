@@ -1,0 +1,19 @@
+base_model = "anthropic/claude-sonnet-4-5"
+description = "Anthropic's most intelligent model. The first hybrid reasoning model on the market with the highest level of intelligence and capability with toggleable extended thinking. Top-tier results in reasoning, coding, multilingual tasks, long-context handling, honesty, and image processing."
+structured_output = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "max"]
+
+[[reasoning_options]]
+type = "budget_tokens"
+
+[cost]
+input = 3.3
+output = 16.5
+cache_read = 0.3
+cache_write = 4.125
+
+[modalities]
+input = ["text", "image"]

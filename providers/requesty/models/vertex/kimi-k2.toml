@@ -1,0 +1,32 @@
+name = "Kimi K2"
+description = "Kimi K2 Thinking is an open-source model that operates as a \"thinking agent,\" reasoning step-by-step while using tools to achieve state-of-the-art performance on various benchmarks. It is capable of executing up to 200-300 sequential tool calls without human intervention, allowing it to solve complex problems across a wide range of tasks. The model uses Quantization-Aware Training (QAT) to support INT4 inference, which provides a roughly 2x improvement in generation speed."
+family = "kimi-k2"
+release_date = "2026-04-16"
+last_updated = "2026-04-16"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "max"]
+
+[[reasoning_options]]
+type = "budget_tokens"
+
+[cost]
+input = 0.6
+output = 2.5
+cache_read = 0.06
+cache_write = 2.5
+
+[limit]
+context = 262_144
+output = 262_144
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

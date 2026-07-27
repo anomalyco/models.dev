@@ -1,0 +1,21 @@
+base_model = "minimax/MiniMax-M3"
+description = "MiniMax M3 is a frontier multimodal model with a 1M-token context window built on MiniMax Sparse Attention (MSA). It reaches frontier-level performance on coding and agentic tasks, surpassing GPT-5.5 and Gemini 3.1 Pro on SWE-Bench Pro and approaching Claude Opus 4.7. It natively supports image and video input and is the first open-weight model to combine frontier coding, ultra-long context, and native multimodality."
+structured_output = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "max"]
+
+[[reasoning_options]]
+type = "budget_tokens"
+
+[cost]
+input = 0.3
+output = 1.2
+cache_read = 0.06
+
+[limit]
+context = 1_000_000
+
+[modalities]
+input = ["text", "image"]

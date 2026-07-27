@@ -1,0 +1,30 @@
+name = "GLM 5.1"
+description = "Zhipu AI flagship multimodal model with strong bilingual Chinese English reasoning, long context understanding, advanced tool use, and agent oriented capabilities."
+family = "glm"
+release_date = "2026-05-20"
+last_updated = "2026-05-20"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "max"]
+
+[[reasoning_options]]
+type = "budget_tokens"
+
+[cost]
+input = 1.4
+output = 4.4
+
+[limit]
+context = 200_000
+output = 200_000
+
+[modalities]
+input = ["text"]
+output = ["text"]

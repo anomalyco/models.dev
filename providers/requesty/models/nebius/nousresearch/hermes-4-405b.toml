@@ -1,0 +1,30 @@
+name = "Hermes 4 405b"
+description = "Hybrid reasoning model trained on verified CoT traces for strong math, coding, and step by step reliability."
+family = "nousresearch"
+release_date = "2026-05-20"
+last_updated = "2026-05-20"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "max"]
+
+[[reasoning_options]]
+type = "budget_tokens"
+
+[cost]
+input = 1
+output = 3
+
+[limit]
+context = 128_000
+output = 128_000
+
+[modalities]
+input = ["text"]
+output = ["text"]

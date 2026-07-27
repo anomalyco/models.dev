@@ -1,0 +1,31 @@
+name = "Deepseek V4 Flash"
+description = "DeepSeek V4 Flash is an efficiency optimized Mixture of Experts model from DeepSeek with 284B total parameters and 13B activated parameters, supporting a 1M token context window. It is built for fast inference and high throughput workloads while keeping strong reasoning and coding performance. The model uses hybrid attention for efficient long context processing. Reasoning efforts high and xhigh are supported, with xhigh mapping to max reasoning. It is well suited for coding assistants, chat systems, and agent workflows where responsiveness and cost efficiency matter."
+family = "deepseek"
+release_date = "2026-07-15"
+last_updated = "2026-07-15"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "max"]
+
+[[reasoning_options]]
+type = "budget_tokens"
+
+[cost]
+input = 0.15
+output = 0.3
+cache_read = 0.04
+
+[limit]
+context = 1_048_576
+output = 1_048_576
+
+[modalities]
+input = ["text"]
+output = ["text"]

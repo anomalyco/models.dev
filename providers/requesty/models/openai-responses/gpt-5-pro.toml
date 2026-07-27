@@ -1,0 +1,30 @@
+name = "GPT 5 Pro"
+description = "GPT-5 Pro is OpenAI’s extended-reasoning tier of GPT-5, built to push reliability on hard problems, long tool chains, and agentic workflows. It keeps GPT-5’s multimodal skills and very large context (API page lists up to 400K tokens) while allocating more compute to think longer and plan better, improving code generation, math, and complex writing beyond standard GPT-5/“Thinking.” OpenAI positions Pro as the version that “uses extended reasoning for even more comprehensive and accurate answers,” targeting high-stakes tasks and enterprise use."
+family = "gpt"
+release_date = "2025-10-06"
+last_updated = "2025-10-06"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "max"]
+
+[[reasoning_options]]
+type = "budget_tokens"
+
+[cost]
+input = 15
+output = 120
+
+[limit]
+context = 400_000
+output = 272_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

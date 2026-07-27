@@ -1,0 +1,23 @@
+name = "Baichuan M2 32b"
+description = "Baichuan-M2 is a medically-enhanced reasoning model specifically designed for real-world medical reasoning tasks. We begin with real-world medical questions and conduct reinforcement learning training based on a large-scale verifier system. While maintaining the model's general capabilities, the medical effectiveness of Baichuan-M2 has achieved breakthrough improvements.  Baichuan-M2 is currently the world's best open-source medical model. On the HealthBench Benchmark, it surpasses all open-sour"
+family = "baichuan"
+release_date = "2026-05-27"
+last_updated = "2026-05-27"
+attachment = false
+reasoning = false
+temperature = true
+tool_call = false
+structured_output = false
+open_weights = false
+
+[cost]
+input = 0.07
+output = 0.07
+
+[limit]
+context = 131_072
+output = 131_072
+
+[modalities]
+input = ["text"]
+output = ["text"]

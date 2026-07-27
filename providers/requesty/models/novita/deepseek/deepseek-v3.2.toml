@@ -1,0 +1,31 @@
+name = "Deepseek V3.2"
+description = "DeepSeek-V3.2 is a next-generation foundation model designed to unify high computational efficiency with state-of-the-art reasoning and agentic performance. Built upon DeepSeek Sparse Attention (DSA) for efficient long-context reasoning, a scalable reinforcement learning framework reaching frontier-level performance, and a large-scale agentic task synthesis pipeline for reliable tool-use and multi-step decision-making."
+family = "deepseek"
+release_date = "2026-02-28"
+last_updated = "2026-02-28"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = false
+open_weights = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "max"]
+
+[[reasoning_options]]
+type = "budget_tokens"
+
+[cost]
+input = 0.269
+output = 0.4
+cache_read = 0.1345
+
+[limit]
+context = 163_840
+output = 65_536
+
+[modalities]
+input = ["text"]
+output = ["text"]

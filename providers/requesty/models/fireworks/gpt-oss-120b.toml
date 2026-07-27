@@ -1,0 +1,31 @@
+name = "GPT Oss 120b"
+description = "GPT-OSS-120B is OpenAI's open-weight large language model with 116 billion total parameters (5.1 billion active, Mixture-of-Experts). Designed for high-performance reasoning, agentic tasks, function calling, and general-purpose applications. Supports configurable reasoning depth and chain-of-thought. Released under Apache 2.0 license."
+family = "gpt-oss"
+release_date = "2026-05-27"
+last_updated = "2026-05-27"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = false
+open_weights = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "max"]
+
+[[reasoning_options]]
+type = "budget_tokens"
+
+[cost]
+input = 0.15
+output = 0.6
+cache_read = 0.015
+
+[limit]
+context = 131_072
+output = 65_536
+
+[modalities]
+input = ["text"]
+output = ["text"]

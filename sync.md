@@ -149,6 +149,17 @@ OpenRouter is implemented in `packages/core/src/sync/providers/openrouter.ts`.
 - Existing `status`, `interleaved`, `knowledge`, `limit.input`, and `cost.tiers` may be preserved when OpenRouter is not authoritative enough for those fields.
 - Canonical OpenRouter model IDs should emit `base_model` references to model metadata when a matching `models/` entry exists.
 
+## Requesty Notes
+
+Requesty is implemented in `packages/core/src/sync/providers/requesty.ts`.
+
+- Source endpoint: `https://router.requesty.ai/v1/models` (public catalog only).
+- Do **not** send `REQUESTY_API_KEY` during sync: authenticated responses are user-specific routing policies, not the shared catalog.
+- Model IDs map directly to TOML paths under `providers/requesty/models` (including host prefixes like `bedrock/`, `vertex/`, `deepinfra/`, and regional `@region` / routing `:variant` suffixes).
+- API prices are USD per token and are converted to per-1M-token numbers.
+- Capability flags come from `supports_*` fields; `cached_price` / `caching_price` map to cache read/write.
+- Canonical lab IDs and host-stripped forms emit `base_model` references when a matching `models/` entry exists.
+
 ## Kilo Gateway Notes
 
 Kilo Gateway is implemented in `packages/core/src/sync/providers/kilo.ts`.

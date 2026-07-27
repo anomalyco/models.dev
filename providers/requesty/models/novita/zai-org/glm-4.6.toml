@@ -1,0 +1,23 @@
+name = "GLM 4.6"
+description = "GLM-4.6 is Z AI’s latest flagship model, designed to push agentic and coding performance further. It expands the context window from 128K to 200K tokens, improves reasoning and tool-use capabilities, and delivers stronger results in coding benchmarks and real-world development workflows. GLM-4.6 demonstrates refined writing quality, more capable agent behavior, and higher token efficiency (≈15% fewer tokens vs. GLM-4.5).\n\nEvaluations show clear gains over GLM-4.5 across reasoning, agents, and coding, reaching near parity with Claude Sonnet 4 in practical tasks while outperforming other open-source baselines. GLM-4.6 is available through the Z.ai API platform, OpenRouter, coding agents (Claude Code, Roo Code, Cline, Kilo Code), and soon as downloadable weights on HuggingFace and ModelScope."
+family = "glm"
+release_date = "2025-07-30"
+last_updated = "2025-07-30"
+attachment = false
+reasoning = false
+temperature = true
+tool_call = true
+structured_output = false
+open_weights = false
+
+[cost]
+input = 0.6
+output = 2.2
+
+[limit]
+context = 204_800
+output = 131_072
+
+[modalities]
+input = ["text"]
+output = ["text"]

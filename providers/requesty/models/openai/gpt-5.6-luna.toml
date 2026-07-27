@@ -1,0 +1,17 @@
+base_model = "openai/gpt-5.6-luna"
+description = "GPT-5.6 Luna is a fast, cost-efficient model in OpenAI's GPT-5.6 series. It is suited for high-volume, latency-sensitive tasks such as chat, classification, and lightweight agentic workflows, providing capable reasoning for its price tier."
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "max"]
+
+[[reasoning_options]]
+type = "budget_tokens"
+
+[cost]
+input = 1
+output = 6
+cache_read = 0.1
+
+[modalities]
+input = ["text", "image"]

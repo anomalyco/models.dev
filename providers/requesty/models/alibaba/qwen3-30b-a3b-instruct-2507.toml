@@ -1,0 +1,24 @@
+name = "Qwen3 30b A3b Instruct 2507"
+description = "Qwen3-30B-A3B-Instruct-2507 is a 30.5B-parameter mixture-of-experts language model from Qwen, with 3.3B active parameters per inference. It operates in non-thinking mode and is designed for high-quality instruction following, multilingual understanding, and agentic tool use. Post-trained on instruction data, it demonstrates competitive performance across reasoning (AIME, ZebraLogic), coding (MultiPL-E, LiveCodeBench), and alignment (IFEval, WritingBench) benchmarks. It outperforms its non-instruct variant on subjective and open-ended tasks while retaining strong factual and coding performance."
+release_date = "2025-07-31"
+last_updated = "2025-07-31"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[cost]
+input = 0.2
+output = 0.8
+cache_read = 0.2
+cache_write = 0.8
+
+[limit]
+context = 131_072
+output = 65_536
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

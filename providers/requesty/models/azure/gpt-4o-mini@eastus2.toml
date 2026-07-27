@@ -1,0 +1,24 @@
+name = "GPT 4o Mini"
+description = "GPT-4o mini is a fast, affordable small model for lightweight tasks. Supports vision, tools, and caching."
+family = "gpt"
+release_date = "2025-07-18"
+last_updated = "2025-07-18"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[cost]
+input = 0.15
+output = 0.6
+cache_read = 0.075
+
+[limit]
+context = 128_000
+output = 16_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

@@ -1,0 +1,31 @@
+name = "GPT 5 Nano"
+description = "GPT-5 nano is OpenAI's fastest, cheapest version of GPT-5. It's great for summarization and classification tasks."
+family = "gpt"
+release_date = "2025-08-07"
+last_updated = "2025-08-07"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "max"]
+
+[[reasoning_options]]
+type = "budget_tokens"
+
+[cost]
+input = 0.05
+output = 0.4
+cache_read = 0.005
+
+[limit]
+context = 400_000
+output = 128_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

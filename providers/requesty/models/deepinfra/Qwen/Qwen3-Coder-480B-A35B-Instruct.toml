@@ -1,0 +1,10 @@
+base_model = "alibaba/qwen3-coder-480b-a35b-instruct"
+description = "Qwen3-Coder-480B-A35B-Instruct is Alibaba’s flagship open-weight AI model designed for autonomous software development and agentic workflows. Using a sparse Mixture-of-Experts (MoE) architecture, it achieves state-of-the-art coding performance that regularly rivals or outperforms proprietary models like Claude Sonnet."
+structured_output = true
+
+[cost]
+input = 0.4
+output = 1.6
+
+[limit]
+output = 262_144

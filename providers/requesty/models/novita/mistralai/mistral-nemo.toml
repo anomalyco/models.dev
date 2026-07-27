@@ -1,0 +1,12 @@
+base_model = "mistral/mistral-nemo"
+description = "A 12B parameter model with a 128k token context length built by Mistral in collaboration with NVIDIA. The model is multilingual, supporting English, French, German, Spanish, Italian, Portuguese, Chinese, Japanese, Korean, Arabic, and Hindi. It supports function calling and is released under the Apache 2.0 license."
+tool_call = false
+structured_output = false
+
+[cost]
+input = 0.17
+output = 0.17
+
+[limit]
+context = 131_072
+output = 131_072

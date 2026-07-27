@@ -1,0 +1,17 @@
+base_model = "moonshotai/kimi-k2.6"
+description = "Kimi K2.6 is an open-source, native multimodal agentic model that advances practical capabilities in long-horizon coding, coding-driven design, proactive autonomous execution, and swarm-based task orchestration."
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "max"]
+
+[[reasoning_options]]
+type = "budget_tokens"
+
+[cost]
+input = 0.75
+output = 3.5
+cache_read = 0.15
+
+[modalities]
+input = ["text", "image"]

@@ -1,0 +1,20 @@
+base_model = "alibaba/qwen3.6-plus"
+description = "Qwen3.6-Plus is Alibaba's flagship with hybrid attention and sparse MoE architecture. Features 1M-token native context with always-on reasoning and near-frontier performance on coding and agentic benchmarks."
+attachment = false
+structured_output = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "max"]
+
+[[reasoning_options]]
+type = "budget_tokens"
+
+[cost]
+input = 0.5
+output = 3
+cache_read = 0.05
+cache_write = 0.625
+
+[modalities]
+input = ["text"]

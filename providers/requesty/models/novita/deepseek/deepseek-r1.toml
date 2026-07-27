@@ -1,0 +1,12 @@
+base_model = "deepseek/deepseek-r1"
+description = "DeepSeek R1 is the latest open-source model released by the DeepSeek team, featuring impressive reasoning capabilities, particularly achieving performance comparable to OpenAI's o1 model in mathematics, coding, and reasoning tasks."
+reasoning = false
+structured_output = false
+
+[cost]
+input = 4
+output = 4
+
+[limit]
+context = 64_000
+output = 64_000

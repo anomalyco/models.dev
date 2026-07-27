@@ -1,0 +1,19 @@
+base_model = "anthropic/claude-opus-5"
+description = "Opus 5 is the most capable model in Anthropic's Opus family, built for long running, asynchronous agents operating with full autonomy. It advances the coding and agentic strengths of Opus 4.8 with stronger planning, more reliable execution across extended multi step workflows, and better judgment on when to act and when to escalate. It excels in asynchronous agent pipelines spanning large codebases, multi stage debugging, and end to end project orchestration. Beyond coding, Opus 5 delivers frontier knowledge work, from drafting documents and building presentations to deep data analysis, and maintains coherence across very long outputs and extended sessions, making it the default choice for work that requires persistence, judgment, and follow through."
+structured_output = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "max"]
+
+[[reasoning_options]]
+type = "budget_tokens"
+
+[cost]
+input = 5.5
+output = 27.5
+cache_read = 0.55
+cache_write = 6.88
+
+[modalities]
+input = ["text", "image"]

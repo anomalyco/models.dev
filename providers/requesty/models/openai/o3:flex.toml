@@ -1,0 +1,17 @@
+base_model = "openai/o3"
+description = "O3 Flex is a cheaper version of the o3 model"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "max"]
+
+[[reasoning_options]]
+type = "budget_tokens"
+
+[cost]
+input = 1
+output = 4
+cache_read = 0.25
+
+[modalities]
+input = ["text", "image"]
