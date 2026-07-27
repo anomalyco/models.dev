@@ -1,0 +1,29 @@
+name = "Abliterated Model Large"
+description = "GLM-5.2 model abliterated and finetuned for cyber, ML red teaming, and agent testing"
+# Reasoning HTTP format (accessed 2026-07-25):
+# This model thinks by default. On POST /v1/chat/completions or /v1/messages,
+# top-level `thinking: false` skips thinking; omission keeps it enabled.
+# Sources:
+# https://docs.abliteration.ai/models
+# https://docs.abliteration.ai/capabilities/thinking
+release_date = "2026-07-25"
+last_updated = "2026-07-25"
+attachment = false
+reasoning = true
+tool_call = true
+structured_output = true
+temperature = true
+open_weights = false
+
+[cost]
+input = 5.00
+output = 5.00
+
+[limit]
+context = 250_000
+input = 250_000
+output = 32_768
+
+[modalities]
+input = ["text"]
+output = ["text"]
