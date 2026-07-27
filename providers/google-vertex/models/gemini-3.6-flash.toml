@@ -1,0 +1,11 @@
+# Sources:
+# - https://cloud.google.com/gemini-enterprise-agent-platform/generative-ai/pricing
+# - https://docs.cloud.google.com/vertex-ai/generative-ai/docs/models/gemini/3-6-flash
+base_model = "google/gemini-3.6-flash"
+reasoning_options = [{ type = "effort", values = ["minimal", "low", "medium", "high"] }]
+
+[cost]
+input = 1.5
+output = 7.5
+cache_read = 0.15
+input_audio = 1.5

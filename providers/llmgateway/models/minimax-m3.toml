@@ -1,7 +1,17 @@
+# MiniMax mapping lists $.reasoning_effort / $.reasoning.effort =
+# none|minimal|low|medium|high|xhigh|max. No exact token budget documented.
+# https://docs.llmgateway.io/features/reasoning (accessed 2026-07-23)
+# https://api.llmgateway.io/v1/models providers[].reasoning_efforts (accessed 2026-07-23)
 base_model = "minimax/MiniMax-M3"
-reasoning_options = []
+
+[[reasoning_options]]
+type = "effort" # API: {"reasoning_effort": "<v>"} or {"reasoning": {"effort": "<v>"}}
+values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"]
 
 [cost]
-input = 0.6
-output = 2.4
-cache_read = 0.12
+input = 0.3
+output = 1.2
+cache_read = 0.06
+
+[limit]
+context = 1_048_576

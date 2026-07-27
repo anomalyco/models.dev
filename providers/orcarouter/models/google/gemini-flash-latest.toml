@@ -1,8 +1,9 @@
+# Alias for the current Gemini Flash release (gemini-3.5-flash).
 base_model = "google/gemini-flash-latest"
-reasoning_options = []
+reasoning_options = [{ type = "effort", values = ["minimal", "low", "medium", "high"] }]
 
 [cost]
-input = 0.5
-output = 3
-cache_read = 0.075
-input_audio = 1
+input = 1.5
+output = 9
+cache_read = 0.15
+input_audio = 1.5

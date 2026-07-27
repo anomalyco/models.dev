@@ -1,0 +1,24 @@
+# Sources:
+# - https://ai.google.dev/gemini-api/docs/models/gemini-3.1-flash-live-preview
+# - https://blog.google/innovation-and-ai/technology/developers-tools/build-with-gemini-3-1-flash-live/
+# - https://deepmind.google/models/model-cards/gemini-3-1-flash-audio/
+name = "Gemini 3.1 Flash Live Preview"
+description = "High-quality, low-latency Live API model for real-time dialogue and voice-first AI applications"
+family = "gemini-flash"
+release_date = "2026-03-26"
+last_updated = "2026-03-26"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = false
+knowledge = "2025-01"
+open_weights = false
+
+[limit]
+context = 131_072
+output = 65_536
+
+[modalities]
+input = ["text", "image", "video", "audio"]
+output = ["text", "audio"]

@@ -60,7 +60,7 @@ jobs:
           RESPONSE_FILE="$RUNNER_TEMP/pr-reviewer-response.md"
           echo "RESPONSE_FILE=$RESPONSE_FILE" >> "$GITHUB_ENV"
 
-          opencode run --agent pr-reviewer -m opencode/glm-5.2 --format json <<'EOF' | tee "$EVENTS_FILE"
+          opencode run --agent pr-reviewer -m opencode/grok-4.5 --format json <<'EOF' | tee "$EVENTS_FILE"
           Review this pull request using the trusted reviewer instructions. Start with `.pr-review/pull-request.json`, `.pr-review/diff.patch`, `AGENTS.md`, and the contributing guidance in `README.md`. Read `sync.md`, the reasoning-options audit guide, schema code, and nearby base-revision files when relevant to the changed files. Use only the read, glob, and grep tools. Return only the final review comment in the agent's required output format. Never include progress narration or passed-check summaries.
           EOF
 
