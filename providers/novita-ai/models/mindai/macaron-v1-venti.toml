@@ -1,0 +1,11 @@
+base_model = "mindlab/macaron-v1-venti"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "high", "max"]
+
+[cost]
+# free till 2026-08-07
+input = 0
+output = 0
+cache_read = 0
