@@ -1,0 +1,14 @@
+base_model = "moonshotai/kimi-k3"
+description = "Kimi multimodal agent model for visual understanding, coding, and planning"
+temperature = true
+reasoning_options = []
+
+[cost]
+input = 3
+output = 15
+
+[limit]
+output = 1_048_576
+
+[modalities]
+input = ["text", "image"]
