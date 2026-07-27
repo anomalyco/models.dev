@@ -1,0 +1,23 @@
+name = "Macaron-V1-Venti"
+description = "Mixture of LoRA (MoL) architecture on top of GLM-5.2 by Zhipu AI"
+family = "glm"
+release_date = "2026-07-21"
+last_updated = "2026-07-21"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = true
+
+[limit]
+context = 1_048_576
+output = 131_072
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/mindlab-research/Macaron-V1-Venti"
