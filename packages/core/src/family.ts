@@ -438,6 +438,9 @@ export const ModelFamilyValues = [
 
   // Elephant
   "elephant",
+
+  // Celeris Labs
+  "celeris",
 ] as const;
 
 export const ModelFamily = z.enum(ModelFamilyValues);

@@ -1,0 +1,11 @@
+name = "Celeris"
+env = ["CELERIS_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+# Celeris namespaces the base URL per model: https://inference.celeris.ai/<model>/v1
+# `celeris-1` is the only served model today, so the base URL is pinned to it.
+# API exception (accessed 2026-07-26): POST /chat/completions requires `max_tokens`
+# to be 1 (warm ping) or a positive multiple of 256; any other value returns 400.
+# Prompt + max_tokens must also stay within the 8,192-token window.
+# https://docs.celeris.ai/api-reference
+api = "https://inference.celeris.ai/celeris-1/v1/"
+doc = "https://docs.celeris.ai"
