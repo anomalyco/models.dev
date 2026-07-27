@@ -13,6 +13,10 @@ structured_output = false
 open_weights = false
 
 [cost]
+# Pay-as-you-go rates, USD per million tokens, from the vendor's pricing page
+# (accessed 2026-07-26): https://celeris.ai/pricing.html
+# "$2 / M input tokens", "$6 / M output tokens". Input and output are metered
+# separately; no cache pricing is published.
 input = 2.0
 output = 6.0
 
