@@ -1,12 +1,5 @@
 base_model = "google/gemini-3-flash-preview"
-description = "Gemini 3 Flash Preview is designed to deliver strong agentic capabilities (near-Pro level) at substantial speed and value. Making it perfect for engaging multi-turn chats, and collaborating back and forth with your coding agent without getting out of flow. Compared to 2.5 Flash it delivers significant improvements across the board."
-
-[[reasoning_options]]
-type = "effort"
-values = ["none", "low", "medium", "high", "max"]
-
-[[reasoning_options]]
-type = "budget_tokens"
+reasoning_options = []
 
 [cost]
 input = 0.25
@@ -16,6 +9,3 @@ cache_write = 0.5
 
 [limit]
 output = 65_535
-
-[modalities]
-input = ["text", "image"]

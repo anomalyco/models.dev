@@ -1,12 +1,5 @@
 base_model = "google/gemini-3.1-pro-preview"
-description = "Gemini 3.1 Pro is the next iteration in the Gemini 3 series of models, a suite of highly capable, natively multimodal reasoning models. As of this model card’s date of publication, Gemini 3.1 Pro is Google’s most advanced model for complex tasks. Geminin 3.1 Pro can comprehend vast datasets and challenging problems from massively multimodal information sources, including text, audio, images, video, and entire code repositories."
-
-[[reasoning_options]]
-type = "effort"
-values = ["none", "low", "medium", "high", "max"]
-
-[[reasoning_options]]
-type = "budget_tokens"
+reasoning_options = []
 
 [cost]
 input = 2
@@ -16,6 +9,3 @@ cache_write = 4.5
 
 [limit]
 output = 65_535
-
-[modalities]
-input = ["text", "image"]

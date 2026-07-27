@@ -1,12 +1,5 @@
 base_model = "openai/gpt-5-mini"
-description = "GPT-5 mini is a faster, more cost-efficient version of GPT-5. It's great for well-defined tasks and precise prompts."
-
-[[reasoning_options]]
-type = "effort"
-values = ["none", "low", "medium", "high", "max"]
-
-[[reasoning_options]]
-type = "budget_tokens"
+reasoning_options = []
 
 [cost]
 input = 0.125

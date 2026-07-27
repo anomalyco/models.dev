@@ -1,14 +1,5 @@
 base_model = "minimax/MiniMax-M2.5"
-description = "MiniMax-M2.5 is a SOTA large language model designed for real-world productivity. Trained in a diverse range of complex real-world digital working environments, M2.5 builds upon the coding expertise of M2.1 to extend into general office work, reaching fluency in generating and operating Word, Excel, and Powerpoint files, context switching between diverse software environments, and working across different agent and human teams. Scoring 80.2% on SWE-Bench Verified, 51.3% on Multi-SWE-Bench, and 76.3% on BrowseComp, M2.5 is also more token efficient than previous generations, having been trained to optimize its actions and output through planning."
-attachment = true
-structured_output = true
-
-[[reasoning_options]]
-type = "effort"
-values = ["none", "low", "medium", "high", "max"]
-
-[[reasoning_options]]
-type = "budget_tokens"
+reasoning_options = []
 
 [cost]
 input = 0.3
@@ -19,6 +10,3 @@ cache_write = 1.2
 [limit]
 context = 200_000
 output = 128_000
-
-[modalities]
-input = ["text", "image"]

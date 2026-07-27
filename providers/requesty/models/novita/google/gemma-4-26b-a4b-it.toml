@@ -1,13 +1,5 @@
 base_model = "google/gemma-4-26b-a4b-it"
-description = "Gemma 4 26B A4B is a Mixture of Experts model from Google DeepMind built for scalable performance with a 256K context window. Supports text and image input, native thinking mode, function calling, structured output, and 140+ languages. Ideal for long context RAG, agentic workflows, coding, and multimodal understanding."
-structured_output = false
-
-[[reasoning_options]]
-type = "effort"
-values = ["none", "low", "medium", "high", "max"]
-
-[[reasoning_options]]
-type = "budget_tokens"
+reasoning_options = []
 
 [cost]
 input = 0.13

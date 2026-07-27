@@ -1,6 +1,5 @@
 base_model = "google/gemini-3.1-flash-lite"
-description = "Gemini 3.1 Flash Lite Preview is the most cost-efficient model in the Gemini family, optimized for high-volume, low-latency tasks. It delivers fast responses with solid quality for everyday use cases including summarization, classification, and simple reasoning."
-reasoning = false
+reasoning_options = []
 
 [cost]
 input = 0.25
@@ -9,6 +8,3 @@ cache_read = 0.025
 
 [limit]
 output = 65_535
-
-[modalities]
-input = ["text", "image"]

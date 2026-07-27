@@ -1,12 +1,5 @@
 base_model = "google/gemini-2.5-flash"
-description = "Google's first hybrid reasoning model which supports a 1M token context window and has thinking budgets. Most balanced Gemini model, optimized for low latency use cases."
-
-[[reasoning_options]]
-type = "effort"
-values = ["none", "low", "medium", "high", "max"]
-
-[[reasoning_options]]
-type = "budget_tokens"
+reasoning_options = []
 
 [cost]
 input = 0.3
@@ -16,6 +9,3 @@ cache_write = 0.55
 
 [limit]
 output = 65_535
-
-[modalities]
-input = ["text", "image"]

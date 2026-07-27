@@ -1,13 +1,5 @@
 base_model = "alibaba/qwen3-32b"
-description = "Generalist model offering strong multilingual reasoning, coding, and long-context performance at mid scale."
-structured_output = true
-
-[[reasoning_options]]
-type = "effort"
-values = ["none", "low", "medium", "high", "max"]
-
-[[reasoning_options]]
-type = "budget_tokens"
+reasoning_options = []
 
 [cost]
 input = 0.1

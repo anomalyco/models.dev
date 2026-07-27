@@ -1,17 +1,7 @@
 base_model = "openai/gpt-5.6-sol"
-description = "GPT-5.6 Sol is the flagship model in OpenAI's GPT-5.6 series. It is suited for complex reasoning, coding, and agentic workflows, and is particularly strong at command-line and multi-step coding tasks and long-horizon problem solving."
-
-[[reasoning_options]]
-type = "effort"
-values = ["none", "low", "medium", "high", "max"]
-
-[[reasoning_options]]
-type = "budget_tokens"
+reasoning_options = []
 
 [cost]
 input = 5
 output = 30
 cache_read = 0.5
-
-[modalities]
-input = ["text", "image"]

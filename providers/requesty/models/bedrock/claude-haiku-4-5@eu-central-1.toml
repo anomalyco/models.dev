@@ -1,13 +1,8 @@
 base_model = "anthropic/claude-haiku-4-5"
-description = "Claude Haiku 4.5 is Anthropic's fastest and most cost-effective AI model, offering near-frontier intelligence. It matches the coding and computer-use performance of older flagship models like Sonnet 4, but runs at a fraction of the price."
-reasoning = false
-structured_output = true
+reasoning_options = []
 
 [cost]
 input = 1.1
 output = 5.5
 cache_read = 0.11
 cache_write = 1.375
-
-[modalities]
-input = ["text", "image"]

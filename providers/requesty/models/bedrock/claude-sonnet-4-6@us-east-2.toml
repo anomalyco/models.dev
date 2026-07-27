@@ -1,19 +1,8 @@
 base_model = "anthropic/claude-sonnet-4-6"
-description = "Claude Sonnet 4.6 is Anthropic's best coding model in the world, leading on SWE-bench Verified (77.2%) and OSWorld (61.4%). It delivers sustained autonomous performance on complex tasks for over 30 hours—up from seven hours for Opus 4—maintaining focus and reliability throughout the entire software development lifecycle, with enhanced capabilities in tool handling, memory management, and context processing that make it the strongest model for building complex agents."
-structured_output = true
-
-[[reasoning_options]]
-type = "effort"
-values = ["none", "low", "medium", "high", "max"]
-
-[[reasoning_options]]
-type = "budget_tokens"
+reasoning_options = []
 
 [cost]
 input = 3.3
 output = 16.5
 cache_read = 0.3
 cache_write = 4.125
-
-[modalities]
-input = ["text", "image"]

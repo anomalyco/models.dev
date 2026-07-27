@@ -1,13 +1,5 @@
 base_model = "anthropic/claude-sonnet-4-6"
-description = "Sonnet 4.6 is Anthropic's most capable Sonnet-class model yet, with frontier performance across coding, agents, and professional work. It excels at iterative development, complex codebase navigation, end-to-end project management with memory, polished document creation, and confident computer use for web QA and workflow automation"
-structured_output = true
-
-[[reasoning_options]]
-type = "effort"
-values = ["none", "low", "medium", "high", "max"]
-
-[[reasoning_options]]
-type = "budget_tokens"
+reasoning_options = []
 
 [cost]
 input = 3
@@ -17,6 +9,3 @@ cache_write = 3.75
 
 [limit]
 output = 128_000
-
-[modalities]
-input = ["text", "image"]

@@ -1,13 +1,5 @@
 base_model = "alibaba/qwen3-next-80b-a3b-thinking"
-description = "Qwen thinking-optimized 80B model designed for sustained multi-step reasoning, structured deliberation, and high-precision problem-solving across math, code, and complex planning tasks."
-structured_output = true
-
-[[reasoning_options]]
-type = "effort"
-values = ["none", "low", "medium", "high", "max"]
-
-[[reasoning_options]]
-type = "budget_tokens"
+reasoning_options = []
 
 [cost]
 input = 0.15

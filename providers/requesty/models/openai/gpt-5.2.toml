@@ -1,12 +1,5 @@
 base_model = "openai/gpt-5.2"
-description = "The best model for coding and agentic tasks across industries"
-
-[[reasoning_options]]
-type = "effort"
-values = ["none", "low", "medium", "high", "max"]
-
-[[reasoning_options]]
-type = "budget_tokens"
+reasoning_options = []
 
 [cost]
 input = 1.75

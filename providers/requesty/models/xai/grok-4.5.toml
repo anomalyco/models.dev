@@ -1,12 +1,5 @@
 base_model = "xai/grok-4.5"
-description = "Grok 4.5 is xAI's frontier multimodal model for advanced coding, knowledge work, STEM reasoning, and agentic workflows. It supports text and image inputs with text output, tool calling, structured outputs, web search, and extended reasoning. Pricing is tiered: requests exceeding 200k total tokens are billed at a higher rate."
-
-[[reasoning_options]]
-type = "effort"
-values = ["none", "low", "medium", "high", "max"]
-
-[[reasoning_options]]
-type = "budget_tokens"
+reasoning_options = []
 
 [cost]
 input = 2

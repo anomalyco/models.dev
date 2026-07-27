@@ -1,19 +1,8 @@
 base_model = "anthropic/claude-sonnet-5"
-description = "Claude Sonnet 5 is the latest model in the Sonnet family and an upgrade to Sonnet 4.6, with gains in agentic coding and professional work. It delivers top-tier intelligence at Sonnet pricing, well suited to production agents, high-volume pipelines, and everyday professional work like document drafting, spreadsheet analysis, and presentations."
-structured_output = true
-
-[[reasoning_options]]
-type = "effort"
-values = ["none", "low", "medium", "high", "max"]
-
-[[reasoning_options]]
-type = "budget_tokens"
+reasoning_options = []
 
 [cost]
 input = 2
 output = 10
 cache_read = 0.2
 cache_write = 2.5
-
-[modalities]
-input = ["text", "image"]

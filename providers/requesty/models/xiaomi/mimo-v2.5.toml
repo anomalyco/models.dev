@@ -1,12 +1,7 @@
 base_model = "xiaomi/mimo-v2.5"
-description = "Xiaomi MiMo v2.5. Native omni-modal model: text, image, video, and audio input, text output. 1M context window for multimodal agent scenarios. OpenAI-compatible."
-reasoning = false
-structured_output = false
+reasoning_options = []
 
 [cost]
 input = 0.14
 output = 0.28
 cache_read = 0.0028
-
-[modalities]
-input = ["text", "image"]

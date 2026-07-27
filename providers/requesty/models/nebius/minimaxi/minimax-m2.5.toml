@@ -1,13 +1,5 @@
 base_model = "minimax/MiniMax-M2.5"
-description = "Open-source agentic coding model built for polyglot development and precision refactoring, using interleaved-thinking tool calls to reliably execute long, multi-step coding and office workflows."
-structured_output = true
-
-[[reasoning_options]]
-type = "effort"
-values = ["none", "low", "medium", "high", "max"]
-
-[[reasoning_options]]
-type = "budget_tokens"
+reasoning_options = []
 
 [cost]
 input = 0.3

@@ -1,7 +1,5 @@
 base_model = "alibaba/qwen3.7-plus"
-description = "Qwen3.7-Plus is a cost-effective model in Alibaba's Qwen3.7 series. It supports text and image input with text output, building on the series' text capabilities with a comprehensive upgrade to its vision-language abilities while retaining full-stack, agent-level intelligence for coding, tool use, and productivity workflows. Its distinguishing trait is multi-modal interactive hybrid agent capability: it can perceive real-world scenes, read screens and interact with GUIs, generate code from visual references, and perform end-to-end navigation within mobile apps."
-reasoning = false
-structured_output = true
+reasoning_options = []
 
 [cost]
 input = 0.32
@@ -12,6 +10,3 @@ cache_write = 0.4
 [limit]
 context = 1_048_576
 output = 65_536
-
-[modalities]
-input = ["text", "image"]

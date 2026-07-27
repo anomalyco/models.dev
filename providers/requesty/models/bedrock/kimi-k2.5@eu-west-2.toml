@@ -1,12 +1,5 @@
 base_model = "moonshotai/kimi-k2.5"
-description = "Kimi K2.5 is an open-source, native multimodal agentic model built through continual pretraining on approximately 15 trillion mixed visual and text tokens atop Kimi-K2-Base. It seamlessly integrates vision and language understanding with advanced agentic capabilities, instant and thinking modes, as well as conversational and agentic paradigms."
-
-[[reasoning_options]]
-type = "effort"
-values = ["none", "low", "medium", "high", "max"]
-
-[[reasoning_options]]
-type = "budget_tokens"
+reasoning_options = []
 
 [cost]
 input = 0.72
@@ -17,6 +10,3 @@ cache_write = 0.72
 [limit]
 context = 128_000
 output = 16_000
-
-[modalities]
-input = ["text", "image"]

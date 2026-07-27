@@ -1,12 +1,5 @@
 base_model = "moonshotai/kimi-k3"
-description = "Kimi K3 is Kimi’s most capable model to date, with 2.8 trillion parameters. Built on Kimi Delta Attention, a hybrid linear attention mechanism, and Attention Residuals, it offers native visual understanding and a 1M-token context window for frontier intelligence scenarios such as software engineering, knowledge work, and deep reasoning."
-
-[[reasoning_options]]
-type = "effort"
-values = ["none", "low", "medium", "high", "max"]
-
-[[reasoning_options]]
-type = "budget_tokens"
+reasoning_options = []
 
 [cost]
 input = 3
@@ -16,6 +9,3 @@ cache_write = 15
 
 [limit]
 output = 1_048_576
-
-[modalities]
-input = ["text", "image"]

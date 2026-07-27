@@ -1,12 +1,5 @@
 base_model = "xai/grok-4.3"
-description = "Grok 4.3 is a reasoning model from xAI. It accepts text and image inputs with text output, and is suited for agentic workflows, instruction-following tasks, and applications requiring high factual accuracy. Reasoning is always active and cannot be disabled or configured by effort level. It supports a 1 million token context window with no output token limit, making it well-suited for long-document analysis, deep research, and multi-step agentic tasks. Pricing is tiered: requests exceeding 200k total tokens are billed at a higher rate."
-
-[[reasoning_options]]
-type = "effort"
-values = ["none", "low", "medium", "high", "max"]
-
-[[reasoning_options]]
-type = "budget_tokens"
+reasoning_options = []
 
 [cost]
 input = 1.25
@@ -16,6 +9,3 @@ cache_write = 1.25
 
 [limit]
 output = 1_000_000
-
-[modalities]
-input = ["text", "image"]

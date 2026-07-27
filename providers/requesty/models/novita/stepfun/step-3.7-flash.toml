@@ -1,15 +1,6 @@
 base_model = "stepfun/step-3.7-flash"
 base_model_omit = ["limit.input"]
-description = "Step 3.7 Flash is a fast reasoning model from StepFun with a 256K context window, supporting function calling and structured output for high volume agentic workloads."
-attachment = false
-structured_output = false
-
-[[reasoning_options]]
-type = "effort"
-values = ["none", "low", "medium", "high", "max"]
-
-[[reasoning_options]]
-type = "budget_tokens"
+reasoning_options = []
 
 [cost]
 input = 0.2
@@ -18,6 +9,3 @@ cache_read = 0.04
 
 [limit]
 context = 262_144
-
-[modalities]
-input = ["text"]

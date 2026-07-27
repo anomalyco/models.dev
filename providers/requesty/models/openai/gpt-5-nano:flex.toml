@@ -1,12 +1,5 @@
 base_model = "openai/gpt-5-nano"
-description = "GPT-5 nano is OpenAI's fastest, cheapest version of GPT-5. It's great for summarization and classification tasks."
-
-[[reasoning_options]]
-type = "effort"
-values = ["none", "low", "medium", "high", "max"]
-
-[[reasoning_options]]
-type = "budget_tokens"
+reasoning_options = []
 
 [cost]
 input = 0.025

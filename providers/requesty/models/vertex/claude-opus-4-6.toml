@@ -1,19 +1,8 @@
 base_model = "anthropic/claude-opus-4-6"
-description = "Claude Opus 4.6 is Anthropic's most powerful model yet and the best coding model in the world."
-structured_output = true
-
-[[reasoning_options]]
-type = "effort"
-values = ["none", "low", "medium", "high", "max"]
-
-[[reasoning_options]]
-type = "budget_tokens"
+reasoning_options = []
 
 [cost]
 input = 5
 output = 25
 cache_read = 0.5
 cache_write = 6.25
-
-[modalities]
-input = ["text", "image"]

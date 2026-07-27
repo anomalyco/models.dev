@@ -1,12 +1,5 @@
 base_model = "alibaba/qwen3.5-397b-a17b"
-description = "Multimodal model featuring a Hybrid Mixture-of-Experts architecture, designed for state-of-the-art performance across chat, retrieval-augmented generation, vision-language understanding, video understanding, and agentic workflows."
-
-[[reasoning_options]]
-type = "effort"
-values = ["none", "low", "medium", "high", "max"]
-
-[[reasoning_options]]
-type = "budget_tokens"
+reasoning_options = []
 
 [cost]
 input = 0.6
@@ -15,6 +8,3 @@ output = 3.6
 [limit]
 context = 128_000
 output = 128_000
-
-[modalities]
-input = ["text", "image"]

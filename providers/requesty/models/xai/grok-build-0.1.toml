@@ -1,12 +1,7 @@
 base_model = "xai/grok-build-0.1"
-description = "Grok Build 0.1 is xAI's dedicated coding model optimized for software engineering tasks including code generation, review, debugging, and technical problem solving."
-attachment = false
-reasoning = false
+reasoning_options = []
 
 [cost]
 input = 1
 output = 2
 cache_read = 0.1
-
-[modalities]
-input = ["text"]

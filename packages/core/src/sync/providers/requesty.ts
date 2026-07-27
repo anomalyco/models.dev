@@ -276,14 +276,52 @@ export function buildRequestyModel(
       }
     : existing?.cost;
 
-  const reasoning = model.supports_reasoning ?? existing?.reasoning ?? false;
-  const toolCall = model.supports_tool_calling ?? existing?.tool_call ?? false;
-  const structuredOutput = model.supports_output_json_schema
-    ?? existing?.structured_output
-    ?? false;
-  // Requesty normalizes reasoning_effort (none|min|low|medium|high|max) and
-  // decimal budget strings across upstream labs. Prefer curated options when
-  // present; otherwise surface the gateway controls for reasoning models.
+  // Requesty's supports_* flags are incomplete (false negatives for Haiku,
+  // DeepSeek R1, MiniMax-M2, etc.). Never let them clobber models/ metadata.
+  // For factored rows only cost/limit/status are gateway-authoritative.
+  const status = isRetired(model)
+    ? "deprecated" as const
+    : existing?.status === "deprecated"
+      ? undefined
+      : existing?.status;
+
+  const baseModel = existing?.base_model ?? resolveRequestyBaseModel(id);
+
+  if (baseModel !== undefined) {
+    // Inherit name/description/reasoning/tool_call/modalities/attachment from
+    // models/<base>. Only write gateway-volatile cost + served limits.
+    return factorBaseModel(
+      baseModel,
+      {
+        status,
+        interleaved: existing?.interleaved,
+        knowledge: existing?.knowledge,
+        // reasoning_options is provider-specific (not inherited). Prefer a prior
+        // hand-authored value; otherwise leave unset so the runner can emit []
+        // when the base model reasons.
+        reasoning_options: existing?.reasoning_options,
+        limit,
+        cost,
+      },
+      limit,
+      existing?.base_model === baseModel ? existing.base_model_omit : undefined,
+    );
+  }
+
+  // Full standalone definition when no models/ metadata match exists.
+  if (cost === undefined) return undefined;
+
+  // API true is trustworthy enough to turn capabilities on; API false is not
+  // (many reasoning models are mis-tagged). Fall back to existing, then false.
+  const reasoning = model.supports_reasoning === true
+    ? true
+    : existing?.reasoning ?? false;
+  const toolCall = model.supports_tool_calling === true
+    ? true
+    : existing?.tool_call ?? false;
+  const structuredOutput = model.supports_output_json_schema === true
+    ? true
+    : existing?.structured_output ?? false;
   // Source: https://docs.requesty.ai/features/reasoning
   const reasoningOptions = existing?.reasoning_options
     ?? (reasoning
@@ -318,57 +356,11 @@ export function buildRequestyModel(
   const family = existing?.family ?? inferFamily(id, name);
   const releaseDate = existing?.release_date ?? dateFromTimestamp(model.created);
   const lastUpdated = existing?.last_updated ?? releaseDate;
-  const status = isRetired(model)
-    ? "deprecated" as const
-    : existing?.status === "deprecated"
-      ? undefined
-      : existing?.status;
-
-  const baseModel = existing?.base_model ?? resolveRequestyBaseModel(id);
-
-  if (baseModel !== undefined) {
-    return factorBaseModel(
-      baseModel,
-      {
-        name: existing?.name !== undefined && existing.name !== name ? existing.name : undefined,
-        description: existing?.description
-          ?? (model.description?.trim() || undefined)
-          ?? describeModel({
-            id,
-            name,
-            family,
-            reasoning,
-            tool_call: toolCall,
-            structured_output: structuredOutput,
-            open_weights: existing?.open_weights,
-            limit,
-            modalities,
-          }),
-        attachment,
-        reasoning,
-        reasoning_options: reasoningOptions,
-        temperature: existing?.temperature,
-        tool_call: toolCall,
-        structured_output: structuredOutput,
-        status,
-        interleaved: existing?.interleaved,
-        knowledge: existing?.knowledge,
-        limit,
-        modalities,
-        cost,
-      },
-      limit,
-      existing?.base_model === baseModel ? existing.base_model_omit : undefined,
-    );
-  }
-
-  // Full standalone definition when no models/ metadata match exists.
-  if (cost === undefined) return undefined;
 
   return {
     name,
+    // Prefer curated/short describeModel text over Requesty's long marketing copy.
     description: existing?.description
-      ?? (model.description?.trim() || undefined)
       ?? describeModel({
         id,
         name,
