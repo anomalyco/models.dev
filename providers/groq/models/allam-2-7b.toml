@@ -1,1 +1,7 @@
 base_model = "sdaia/allam-2-7b"
+
+[cost]
+# No pricing returned by Groq API; assumed free tier/preview.
+# Reference: https://console.groq.com/docs/models
+input = 0
+output = 0
