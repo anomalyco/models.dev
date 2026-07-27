@@ -1,23 +1,30 @@
-name = "Ministral 8B"
-description = "Compact 8B Mistral model for fast, low-cost text tasks"
+# No models/mistral/ministral-8b-latest.toml metadata entry exists, so this stays inline.
+# Eden AI's live /v3/models entry for "mistral/ministral-8b-latest" (context_length=262144,
+# input_modalities=["text","image"], pricing $0.15/$0.15 per million tokens, verified
+# 2026-07-28) matches providers/openrouter/models/mistralai/ministral-8b-2512.toml, i.e.
+# this is Ministral 3 8B (2512), not the original 2024 Ministral 8B. Facts below are
+# aligned to that revision instead of mixing the two, and attachment now matches
+# modalities.input (both previously claimed image support inconsistently).
+name = "Ministral 8B (latest)"
+description = "Compact Mistral model for edge, latency-sensitive, and cost-efficient workloads"
 family = "ministral"
-release_date = "2024-10-16"
-last_updated = "2026-06-30"
-knowledge = "2024-10"
+release_date = "2025-12-02"
+last_updated = "2025-12-02"
 attachment = true
 reasoning = false
 temperature = true
 tool_call = true
-open_weights = false
+structured_output = true
+open_weights = true
 
 [cost]
 input = 0.15
 output = 0.15
 
 [limit]
-context = 262144
-output = 8192
+context = 262_144
+output = 262_144
 
 [modalities]
-input = ["text"]
+input = ["text", "image"]
 output = ["text"]

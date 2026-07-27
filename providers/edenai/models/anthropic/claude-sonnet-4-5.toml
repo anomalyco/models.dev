@@ -8,9 +8,6 @@ base_model = "anthropic/claude-sonnet-4-5"
 input = 3
 output = 15
 
-[modalities]
-input = ["text", "image"]
-
 [[reasoning_options]]
 type = "effort"
 values = ["low", "medium", "high"]
