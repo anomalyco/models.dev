@@ -4,10 +4,14 @@
 # invalid values 422 with the exact accepted literal list below; valid values visibly change
 # reasoning_content length (low=20 chars, high=199 chars, max=2470 chars on the same prompt).
 base_model = "moonshotai/kimi-k3"
+attachment = false
 
 [[reasoning_options]]
 type = "effort" # API: {"reasoning_effort": "low" | "medium" | ...}
 values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"]
+
+[interleaved]
+field = "reasoning_content"
 
 [cost]
 input = 3
