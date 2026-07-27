@@ -3,8 +3,11 @@
 # Source accessed 2026-07-27:
 # https://aihubmix.com/model/kimi-k3
 
-base_model = "moonshot-kimi-k3"
+base_model = "moonshotai/kimi-k3"
 last_updated = "2026-07-27"
+
+[interleaved]
+field = "reasoning_content"
 
 [[reasoning_options]]
 type = "toggle"
