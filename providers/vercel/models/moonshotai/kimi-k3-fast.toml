@@ -1,0 +1,17 @@
+base_model = "moonshotai/kimi-k3"
+name = "Kimi K3 Fast"
+description = "Kimi multimodal agent model for visual understanding, coding, and planning"
+release_date = "2026-07-27"
+open_weights = false
+reasoning_options = []
+
+[cost]
+input = 4.5
+output = 22.5
+cache_read = 0.45
+
+[limit]
+context = 1_000_000
+
+[modalities]
+input = ["text", "image", "pdf"]
