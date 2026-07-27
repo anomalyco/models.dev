@@ -1,0 +1,23 @@
+# Sources:
+# - https://tokenfactory.nebius.com/ (model catalog)
+# - https://tokenfactory.nebius.com/api/public/models_info (pricing, context, max length)
+# - https://tokenfactory.nebius.com/model-catalog.md
+# Accessed 2026-07-27.
+base_model = "moonshotai/kimi-k3"
+attachment = false
+reasoning_options = []
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 3
+output = 15
+
+[limit]
+context = 1_048_576
+output = 8_000
+
+[modalities]
+input = ["text"]
+output = ["text"]
