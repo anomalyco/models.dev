@@ -1,9 +1,18 @@
+# Vercel AI Gateway chat (POST https://ai-gateway.vercel.sh/v1/chat/completions)
+# model = "moonshotai/kimi-k3-fast" (Fireworks-backed fast tier of Kimi K3).
+# Always-on reasoning; effort via reasoning.effort / reasoning_effort = "low"|"high"|"max".
+# No thinking toggle — K3 always returns reasoning content.
+# https://vercel.com/ai-gateway/models/kimi-k3-fast
+# https://platform.kimi.ai/docs/guide/use-reasoning-effort
 base_model = "moonshotai/kimi-k3"
 name = "Kimi K3 Fast"
 description = "Kimi multimodal agent model for visual understanding, coding, and planning"
 release_date = "2026-07-27"
 open_weights = false
-reasoning_options = []
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
 
 [cost]
 input = 4.5
