@@ -1,0 +1,19 @@
+# Ollama Cloud direct API model id verified from https://ollama.com/api/tags.
+# Library page documents Kimi K3 as a cloud thinking model with 1M context,
+# text/image input in the model table, and extra-high usage.
+# Sources accessed 2026-07-27:
+# https://ollama.com/library/kimi-k3
+# https://ollama.com/library/kimi-k3:cloud
+# https://docs.ollama.com/cloud
+# https://docs.ollama.com/capabilities/thinking
+# https://docs.ollama.com/openai
+
+base_model = "moonshotai/kimi-k3"
+name = "kimi-k3"
+last_updated = "2026-07-27"
+temperature = true
+
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "medium", "high", "max"] }]
+
+[modalities]
+input = ["text", "image"]
