@@ -1,0 +1,10 @@
+# Cost and limit sourced from Eden AI's live /v3/models endpoint, verified 2026-07-28.
+base_model = "cohere/command-a-03-2025"
+
+[cost]
+input = 2.5
+output = 10
+
+[limit]
+context = 288_000
+output = 8_192

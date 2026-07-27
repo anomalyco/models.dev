@@ -1,0 +1,16 @@
+# Cost sourced from Eden AI's live /v3/models endpoint, verified 2026-07-28.
+# reasoning_effort verified live via /v3/chat/completions on a 3-clue logic puzzle:
+# reasoning_tokens scaled with effort (low 271 -> high 311), confirming Eden forwards
+# and honors the parameter (translated to Claude's extended-thinking budget).
+base_model = "anthropic/claude-sonnet-4-5"
+
+[cost]
+input = 3
+output = 15
+
+[modalities]
+input = ["text", "image"]
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high"]

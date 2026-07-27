@@ -1,0 +1,9 @@
+# Cost and output limit sourced from Eden AI's live /v3/models endpoint, verified 2026-07-28.
+base_model = "mistral/codestral-latest"
+
+[cost]
+input = 1
+output = 3
+
+[limit]
+output = 8_192

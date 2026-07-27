@@ -1,0 +1,17 @@
+# Cost and output limit sourced from Eden AI's live /v3/models endpoint, verified 2026-07-28.
+# mistral-medium-latest now aliases Mistral Medium 3.5 (see models/mistral/mistral-medium-latest.toml),
+# which reasons -- inherited via base_model instead of the stale reasoning=false this entry
+# previously hardcoded for an older Medium generation.
+# reasoning_options verified empty: at low/medium/high effort, Eden's response carries no
+# completion_tokens_details (null) and completion length does not scale monotonically with
+# effort (626 -> 533 tokens from low to high on a logic puzzle), so there is no verified
+# reasoning control surface for this model through Eden's gateway.
+base_model = "mistral/mistral-medium-latest"
+reasoning_options = []
+
+[cost]
+input = 0.4
+output = 2
+
+[limit]
+output = 8_192

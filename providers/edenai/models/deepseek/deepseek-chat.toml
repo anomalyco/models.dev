@@ -1,0 +1,15 @@
+# Cost and limit sourced from Eden AI's live /v3/models endpoint, verified 2026-07-28.
+# attachment verified live: sending an image_url content block to deepseek/deepseek-chat
+# via Eden AI returns a text response saying it cannot see images, confirming this
+# model has no vision capability through Eden's gateway (deviates from the base
+# model's canonical attachment=true, which reflects DeepSeek's native API).
+base_model = "deepseek/deepseek-chat"
+attachment = false
+
+[cost]
+input = 0.28
+output = 0.42
+
+[limit]
+context = 131_072
+output = 8_192

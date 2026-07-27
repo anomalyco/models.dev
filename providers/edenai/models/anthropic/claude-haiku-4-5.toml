@@ -1,0 +1,18 @@
+# Cost sourced from Eden AI's live /v3/models endpoint, verified 2026-07-28.
+# reasoning_effort verified live via /v3/chat/completions on a 3-clue logic puzzle:
+# reasoning_tokens stayed in a narrow band across low/medium/high (251, 253, 260 on one
+# run; 303 vs 279 on another) -- the parameter is accepted and forwarded (extended
+# thinking runs, non-zero reasoning_tokens returned) but does not clearly scale with
+# effort for this model at these prompt sizes, unlike Sonnet/Gemini below.
+base_model = "anthropic/claude-haiku-4-5"
+
+[cost]
+input = 1
+output = 5
+
+[modalities]
+input = ["text", "image"]
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high"]

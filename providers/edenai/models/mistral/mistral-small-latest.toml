@@ -1,0 +1,14 @@
+# Cost and output limit sourced from Eden AI's live /v3/models endpoint, verified 2026-07-28.
+# reasoning_options verified empty: at low/medium/high effort, Eden's response carries no
+# completion_tokens_details (null) and completion length does not scale monotonically with
+# effort (626 -> 533 tokens from low to high on a logic puzzle), so there is no verified
+# reasoning control surface for this model through Eden's gateway.
+base_model = "mistral/mistral-small-latest"
+reasoning_options = []
+
+[cost]
+input = 0.06
+output = 0.18
+
+[limit]
+output = 8_192

@@ -1,0 +1,11 @@
+# Cost and output limit sourced from Eden AI's live /v3/models endpoint, verified 2026-07-28.
+# Same underlying model as mistral/mistral-nemo; Eden AI's own routing id keeps the
+# "open-mistral-nemo" name, so the filename is unchanged, only base_model is added.
+base_model = "mistral/mistral-nemo"
+
+[cost]
+input = 0.3
+output = 0.3
+
+[limit]
+output = 8_192

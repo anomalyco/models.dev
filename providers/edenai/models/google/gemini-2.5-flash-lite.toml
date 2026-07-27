@@ -1,0 +1,15 @@
+# Cost sourced from Eden AI's live /v3/models endpoint, verified 2026-07-28.
+# reasoning_effort verified live via /v3/chat/completions on a 3-clue logic puzzle:
+# reasoning_tokens scaled with effort (low 789 -> high 1667).
+base_model = "google/gemini-2.5-flash-lite"
+
+[cost]
+input = 0.1
+output = 0.4
+
+[modalities]
+input = ["text", "image"]
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high"]

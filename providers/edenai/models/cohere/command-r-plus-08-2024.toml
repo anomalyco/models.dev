@@ -1,0 +1,9 @@
+# Cost and output limit sourced from Eden AI's live /v3/models endpoint, verified 2026-07-28.
+base_model = "cohere/command-r-plus-08-2024"
+
+[cost]
+input = 2.5
+output = 10
+
+[limit]
+output = 4_096
