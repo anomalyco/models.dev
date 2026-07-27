@@ -2,11 +2,13 @@
 # - https://docs.perplexity.ai/docs/agent-api/models
 # - https://docs.perplexity.ai/api-reference/agent-post
 # - https://docs.z.ai/guides/capabilities/thinking
+# GLM-5.2 effort has two effective levels: high|max. Perplexity's low/medium
+# map to high and xhigh maps to max upstream, so only high|max are distinct.
 base_model = "zhipuai/glm-5.2"
 
 [[reasoning_options]]
 type = "effort"
-values = ["low", "medium", "high", "xhigh", "max"]
+values = ["high", "max"]
 
 [cost]
 input = 1.40

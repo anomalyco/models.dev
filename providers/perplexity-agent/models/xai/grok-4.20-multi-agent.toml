@@ -2,8 +2,12 @@
 # - https://docs.perplexity.ai/docs/agent-api/models
 # - https://docs.perplexity.ai/api-reference/agent-post
 # - https://docs.x.ai/developers/model-capabilities/text/multi-agent
+# Multi-agent is a distinct SKU from the reasoning base: it does not support
+# tool calling, and reasoning.effort selects agent count (4 or 16), not depth.
 name = "Grok 4.20 (Multi-Agent)"
+description = "Grok model for agentic tool use, reasoning, coding, and live assistance"
 base_model = "xai/grok-4.20-0309-reasoning"
+tool_call = false
 
 [[reasoning_options]]
 type = "effort"
