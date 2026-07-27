@@ -1,0 +1,26 @@
+name = "Hy3"
+description = "Tencent Hy reasoning model for coding, instruction following, and agent tasks"
+family = "hy3"
+release_date = "2026-07-06"
+last_updated = "2026-07-06"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+open_weights = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high"]
+
+[cost]
+input = 0.18
+output = 0.59
+
+[limit]
+context = 262_144
+output = 128_000
+
+[modalities]
+input = ["text"]
+output = ["text"]
