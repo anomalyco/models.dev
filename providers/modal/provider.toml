@@ -1,0 +1,9 @@
+# Modal Endpoints serve the OpenAI Chat Completions API at the endpoint URL.
+# Proxy tokens can be combined as `wk-....ws-...` for bearer authentication.
+# https://modal.com/docs/guide/endpoints
+# https://modal.com/docs/guide/webhook-proxy-auth
+name = "Modal"
+env = ["MODAL_PROXY_TOKEN", "MODAL_ENDPOINT_HOST"]
+npm = "@ai-sdk/openai-compatible"
+api = "https://${MODAL_ENDPOINT_HOST}/v1"
+doc = "https://modal.com/docs/guide/endpoints"
