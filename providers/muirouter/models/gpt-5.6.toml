@@ -1,27 +1,10 @@
+base_model = "openai/gpt-5.6-sol"
 name = "GPT-5.6"
-description = "Frontier GPT-5.6 model for complex professional work, coding, and agentic workflows"
-family = "gpt-sol"
-attachment = true
-reasoning = true
+
 reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh", "max"] }]
-tool_call = true
-temperature = false
-structured_output = true
-open_weights = false
-knowledge = "2026-02-16"
-release_date = "2026-07-09"
-last_updated = "2026-07-09"
 
 [cost]
 input = 5.25
 output = 31.5
 cache_read = 0.525
 cache_write = 6.5625
-
-[limit]
-context = 1050000
-output = 128000
-
-[modalities]
-input = ["text", "image", "pdf"]
-output = ["text"]
