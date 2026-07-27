@@ -3,9 +3,12 @@
 # - https://tokenfactory.nebius.com/api/public/models_info (pricing, context, max length)
 # - https://tokenfactory.nebius.com/model-catalog.md
 # Accessed 2026-07-27.
+# reasoning_effort verified live against api.tokenfactory.nebius.com/v1/chat/completions:
+# invalid values 422 with the exact accepted literal list below; valid values visibly change
+# reasoning_content length (low=20 chars, high=199 chars, max=2470 chars on the same prompt).
 base_model = "moonshotai/kimi-k3"
 attachment = false
-reasoning_options = []
+reasoning_options = [{ type = "effort", values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"] }]
 
 [interleaved]
 field = "reasoning_content"
