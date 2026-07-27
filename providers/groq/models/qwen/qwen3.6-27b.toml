@@ -1,0 +1,15 @@
+base_model = "alibaba/qwen3.6-27b"
+reasoning_options = [{ type = "effort", values = ["none", "default"] }]
+
+[cost]
+input = 0.60
+output = 3.00
+cache_read = 0.30
+
+[limit]
+context = 131_072
+output = 16_384
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
