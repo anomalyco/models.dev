@@ -3,12 +3,13 @@
 # - https://tokenfactory.nebius.com/api/public/models_info (pricing, context, max length)
 # - https://tokenfactory.nebius.com/model-catalog.md
 # Accessed 2026-07-27.
-# reasoning_effort verified live against api.tokenfactory.nebius.com/v1/chat/completions:
-# invalid values 422 with the exact accepted literal list below; valid values visibly change
-# reasoning_content length (low=20 chars, high=199 chars, max=2470 chars on the same prompt).
+# reasoning_effort verified live against api.tokenfactory.nebius.com/v1/chat/completions.
+# The gateway's generic schema accepts none/minimal/low/medium/high/xhigh/max (422 on other
+# input), but the model backend itself (sglang) rejects "minimal" and "xhigh" with a 400:
+# "Input should be 'none', 'low', 'medium', 'high' or 'max'". Only those 5 actually work.
 base_model = "moonshotai/kimi-k3"
 attachment = false
-reasoning_options = [{ type = "effort", values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"] }]
+reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "max"] }]
 
 [interleaved]
 field = "reasoning_content"
