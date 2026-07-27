@@ -22,6 +22,7 @@ import { openai } from "./providers/openai.js";
 import { openrouter } from "./providers/openrouter.js";
 import { ovhcloud } from "./providers/ovhcloud.js";
 import { pioneer } from "./providers/pioneer.js";
+import { tzafon } from "./providers/tzafon.js";
 import { vercel } from "./providers/vercel.js";
 import { venice } from "./providers/venice.js";
 import { wandb } from "./providers/wandb.js";
@@ -121,6 +122,7 @@ export const providers: {
   openrouter: SyncProvider<any>;
   ovhcloud: SyncProvider<any>;
   pioneer: SyncProvider<any>;
+  tzafon: SyncProvider<any>;
   vercel: SyncProvider<any>;
   venice: SyncProvider<any>;
   wandb: SyncProvider<any>;
@@ -143,6 +145,7 @@ export const providers: {
   openrouter,
   ovhcloud,
   pioneer,
+  tzafon,
   vercel,
   venice,
   wandb,
@@ -152,7 +155,7 @@ export const providers: {
 export const groups = {
   aggregators: ["crossmodel", "empiriolabs", "huggingface", "kilo", "llmgateway", "openrouter", "vercel"],
   cloudflare: ["cloudflare-workers-ai"],
-  direct: ["ambient", "anthropic", "baseten", "chutes", "deepinfra", "digitalocean", "google", "openai", "ovhcloud", "pioneer", "venice", "wandb", "xai"],
+  direct: ["ambient", "anthropic", "baseten", "chutes", "deepinfra", "digitalocean", "google", "openai", "ovhcloud", "pioneer", "tzafon", "venice", "wandb", "xai"],
 } as const;
 
 type ProviderID = keyof typeof providers;
