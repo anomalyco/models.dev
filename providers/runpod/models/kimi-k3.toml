@@ -1,5 +1,11 @@
+# Runpod documents the model, its 1M context, and pricing at:
+# https://docs.runpod.io/public-endpoints/models/moonshot-kimi
+# API verified 2026-07-27: `reasoning_effort` accepts "low", "high", and "max".
 base_model = "moonshotai/kimi-k3"
-reasoning_options = [{ type = "toggle" }]
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
 
 [interleaved]
 field = "reasoning_content"
