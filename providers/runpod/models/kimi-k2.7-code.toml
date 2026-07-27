@@ -1,0 +1,12 @@
+base_model = "moonshotai/kimi-k2.7-code"
+reasoning_options = []
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.95
+output = 4.0
+
+[provider]
+api = "https://api.runpod.ai/v2/moonshot-kimi/openai/v1"
