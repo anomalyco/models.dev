@@ -1,6 +1,15 @@
+# HF router chat completions (POST https://router.huggingface.co/v1/chat/completions)
+# model = "moonshotai/Kimi-K3" (Together-backed).
+# Always-on reasoning; effort via top-level reasoning_effort = "low"|"high"|"max" (default max).
+# No thinking toggle — K3 always returns reasoning_content.
+# https://huggingface.co/moonshotai/Kimi-K3 (accessed 2026-07-27)
+# https://platform.kimi.ai/docs/guide/use-reasoning-effort
 base_model = "moonshotai/kimi-k3"
 description = "Kimi multimodal agent model for visual understanding, coding, and planning"
-reasoning_options = []
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
 
 [cost]
 input = 3
