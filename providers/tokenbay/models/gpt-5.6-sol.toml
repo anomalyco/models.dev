@@ -1,0 +1,17 @@
+base_model = "openai/gpt-5.6-sol"
+reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh", "max"] }]
+
+[cost]
+input = 4.25
+output = 25.50
+cache_read = 0.425
+
+[[cost.tiers]]
+tier = { size = 272_000 }
+input = 8.50
+output = 38.25
+cache_read = 0.85
+
+[provider]
+npm = "@ai-sdk/openai"
+shape = "responses"

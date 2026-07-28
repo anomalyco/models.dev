@@ -1,0 +1,20 @@
+base_model = "alibaba/qwen3.7-plus"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "budget_tokens"
+
+[cost]
+input = 0.34
+output = 1.36
+cache_read = 0.068
+cache_write = 0.425
+
+[[cost.tiers]]
+tier = { size = 256_000 }
+input = 1.02
+output = 4.08
+cache_read = 0.204
+cache_write = 1.275
