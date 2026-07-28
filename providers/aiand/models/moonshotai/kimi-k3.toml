@@ -1,0 +1,22 @@
+# Source: GET https://api.aiand.com/v1/models (USD list prices; accessed
+# 2026-07-28). Pricing is aiand-specific: $3.00 input, $0.50 cache_read,
+# $12.50 output (differs from Moonshot official rates).
+# Modalities: text + image accepted; video rejected ("does not support video
+# input"); document capability from /v1/models — overridden from shared base
+# text+image+video. No [interleaved] block (matches other aiand entries).
+# reasoning_effort verified live: gateway schema accepts
+# none/minimal/low/medium/high/xhigh/max, but the K3 backend only accepts
+# none/low/high/max (minimal/medium/xhigh rejected). Invalid values rejected
+# with 400 (negative control).
+base_model = "moonshotai/kimi-k3"
+
+reasoning_options = [{ type = "effort", values = ["none", "low", "high", "max"] }]
+
+[cost]
+input = 3.00
+cache_read = 0.50
+output = 12.50
+
+[modalities]
+input = ["text", "image", "pdf"]
+output = ["text"]
