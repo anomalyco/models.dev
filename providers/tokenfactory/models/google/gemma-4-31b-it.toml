@@ -1,0 +1,14 @@
+# Source: Token Factory catalog (https://tokenfactory.iamsaif.ai, /api/portal/v1/models), read 2026-07-28.
+# Metadata inherited via base_model; Token Factory overrides pricing and limits.
+# reasoning_options: toggle, per existing models.dev entries for this model.
+base_model = "google/gemma-4-31b-it"
+last_updated = "2026-07-28"
+reasoning_options = [{ type = "toggle" }]
+
+[cost]
+input = 0.10
+output = 0.20
+
+[limit]
+context = 131_072
+output = 32_768

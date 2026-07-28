@@ -1,0 +1,23 @@
+# Source: Token Factory catalog (https://tokenfactory.iamsaif.ai, /api/portal/v1/models), read 2026-07-28.
+# No models/ metadata entry exists for this model; standalone definition. Output cap estimated.
+name = "Qwen3-Omni 30B"
+description = "Open-weight Qwen3-Omni mixture-of-experts model (30B total, 3B active) for text generation and agentic use"
+attachment = false
+reasoning = false
+temperature = true
+tool_call = false
+release_date = "2026-07-28"
+last_updated = "2026-07-28"
+open_weights = true
+
+[cost]
+input = 0.25
+output = 0.97
+
+[limit]
+context = 131_072
+output = 32_768
+
+[modalities]
+input = ["text"]
+output = ["text"]

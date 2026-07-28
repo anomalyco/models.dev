@@ -1,0 +1,15 @@
+# Source: Token Factory catalog (https://tokenfactory.iamsaif.ai, /api/portal/v1/models), read 2026-07-28.
+# Same underlying model as zhipuai/glm-5.2; inherited via base_model. TF overrides display name, pricing, limits.
+# Output cap is estimated (Token Factory does not publish max output). reasoning_options mirror an existing repo entry for this model.
+base_model = "zhipuai/glm-5.2"
+name = "GLM 5.2"
+last_updated = "2026-07-28"
+reasoning_options = [{ type = "effort", values = ["none", "high", "xhigh"] }]
+
+[cost]
+input = 0.40
+output = 4.00
+
+[limit]
+context = 450_000
+output = 32_768

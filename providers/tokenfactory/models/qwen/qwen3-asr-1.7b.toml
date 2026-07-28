@@ -1,0 +1,23 @@
+# Source: Token Factory catalog (https://tokenfactory.iamsaif.ai, /api/portal/v1/models), read 2026-07-28.
+# No models/ metadata entry exists for this model; standalone definition. Output cap estimated.
+name = "Qwen3-ASR 1.7B"
+description = "Open-weight Qwen3 1.7B automatic speech recognition model for audio-to-text transcription"
+attachment = false
+reasoning = false
+temperature = false
+tool_call = false
+release_date = "2026-07-28"
+last_updated = "2026-07-28"
+open_weights = true
+
+[cost]
+input = 0.06
+output = 0.00
+
+[limit]
+context = 32_768
+output = 8_192
+
+[modalities]
+input = ["audio"]
+output = ["text"]
