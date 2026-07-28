@@ -1,0 +1,17 @@
+base_model = "google/gemma-4-31b-it"
+last_updated = "2026-07-01"
+status = "beta"
+# Model-specific reasoning HTTP values (accessed 2026-07-01):
+# reasoning_effort = "none" (default) | "low"|"medium"|"high" (enable reasoning).
+# Sources:
+# https://inference-docs.cerebras.ai/capabilities/reasoning#gemma-4-31b-reasoning_effort
+# https://inference-docs.cerebras.ai/models/gemma-4-31b
+reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high"] }]
+
+[cost]
+input = 0.99
+output = 1.49
+
+[limit]
+context = 131_072
+output = 40_960

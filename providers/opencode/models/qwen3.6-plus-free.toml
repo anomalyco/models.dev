@@ -1,16 +1,16 @@
 name = "Qwen3.6 Plus Free"
+description = "Legacy model retained for compatibility with older integrations"
 family = "qwen-free"
-release_date = "2026-03-30"
-last_updated = "2026-03-30"
-attachment = false
+release_date = "2026-04-02"
+last_updated = "2026-04-02"
+attachment = true
 reasoning = true
+reasoning_options = [{ type = "toggle" }, { type = "budget_tokens", max = 81_920 }]
 temperature = true
 tool_call = true
-knowledge = "2024-12"
+knowledge = "2025-04"
 open_weights = false
-
-[interleaved]
-field = "reasoning_content"
+status = "deprecated"
 
 [cost]
 input = 0
@@ -18,9 +18,12 @@ output = 0
 cache_read = 0
 
 [limit]
-context = 1_048_576
-output = 64_000
+context = 262_144
+output = 65_536
 
 [modalities]
-input = ["text"]
+input = ["text", "image", "video"]
 output = ["text"]
+
+[provider]
+npm = "@ai-sdk/anthropic"

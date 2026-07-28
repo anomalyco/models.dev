@@ -1,5 +1,6 @@
 name = "Kimi K2.5"
-family = "kimi"
+description = "Earlier Kimi frontier model for long-context agents, coding, and multimodal work"
+family = "kimi-k2"
 release_date = "2026-01"
 last_updated = "2026-01"
 attachment = false
@@ -12,6 +13,9 @@ open_weights = true
 
 [interleaved]
 field = "reasoning_content"
+
+[[reasoning_options]]
+type = "toggle"
 
 [cost]
 input = 0.6

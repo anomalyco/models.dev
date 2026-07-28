@@ -1,7 +1,9 @@
 name = "Mercury 2"
+description = "Reasoning model for deliberate analysis, multi-step problem solving, and tool use"
 family = "mercury"
 attachment = false
 reasoning = true
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
 tool_call = true
 temperature = true
 release_date = "2026-02-24"

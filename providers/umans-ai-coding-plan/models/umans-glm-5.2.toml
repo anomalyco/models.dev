@@ -1,0 +1,20 @@
+base_model = "zhipuai/glm-5.2"
+name = "GLM 5.2"
+# Live metadata: levels none/high/max, default high, and `can_disable=true`
+# (accessed 2026-06-25): https://api.code.umans.ai/v1/models/info
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["high", "max"] }]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0
+output = 0
+cache_read = 0
+cache_write = 0
+
+[limit]
+context = 405_504
+
+[modalities]
+input = ["text", "image"]

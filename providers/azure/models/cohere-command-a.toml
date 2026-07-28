@@ -1,9 +1,11 @@
 name = "Command A"
+description = "Cohere command model for multilingual enterprise agents, tools, and chat"
 family = "command-a"
 release_date = "2025-03-13"
 last_updated = "2025-03-13"
 attachment = false
 reasoning = true
+reasoning_options = []
 temperature = true
 knowledge = "2024-06-01"
 tool_call = true
@@ -14,8 +16,8 @@ input = 2.50
 output = 10.00
 
 [limit]
-context = 256_000
-output = 8_000
+context = 131_072
+output = 8_192
 
 [modalities]
 input = ["text"]

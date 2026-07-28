@@ -1,0 +1,15 @@
+base_model = "openai/gpt-oss-120b"
+release_date = "2026-04-13"
+last_updated = "2026-07-22"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high"]
+
+[cost]
+input = 0.178
+output = 0.68
+cache_write = 0.089
+
+[limit]
+output = 13_107

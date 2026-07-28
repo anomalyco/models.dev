@@ -1,0 +1,14 @@
+base_model = "zhipuai/glm-5.2"
+name = "GLM 5.2 Nitro"
+reasoning_options = []
+
+[cost]
+input = 0.80
+output = 2.40
+
+[limit]
+context = 200_000
+output = 32_000
+
+[interleaved]
+field = "reasoning_content"

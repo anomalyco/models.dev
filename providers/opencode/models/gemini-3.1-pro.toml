@@ -1,9 +1,11 @@
 name = "Gemini 3.1 Pro Preview"
+description = "Advanced Gemini model for complex reasoning, coding, and multimodal analysis"
 family = "gemini-pro"
 release_date = "2026-02-19"
 last_updated = "2026-02-19"
 attachment = true
 reasoning = true
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
 temperature = true
 tool_call = true
 structured_output = true
@@ -15,7 +17,8 @@ input = 2.00
 output = 12.00
 cache_read = 0.20
 
-[cost.context_over_200k]
+[[cost.tiers]]
+tier = { size = 200_000 }
 input = 4.00
 output = 18.00
 cache_read = 0.40

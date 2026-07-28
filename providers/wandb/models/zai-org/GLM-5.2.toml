@@ -1,0 +1,17 @@
+base_model = "zhipuai/glm-5.2"
+name = "GLM 5.2"
+description = "GLM-5.2 is a Mixture-of-Experts language model featuring 40 billion activated parameters and a total of 744 billion parameters."
+release_date = "2026-06-16"
+last_updated = "2026-06-16"
+
+[[reasoning_options]]
+type = "toggle"
+
+[cost]
+input = 0.76
+output = 2.42
+cache_read = 0.14
+
+[limit]
+context = 262_144
+output = 262_144

@@ -4,6 +4,8 @@ import { mkdir } from "node:fs/promises";
 import path from "node:path";
 import { z } from "zod";
 
+import { inferKimiFamily } from "../src/family.js";
+
 // Friendli API endpoint
 const API_ENDPOINT = "https://api.friendli.ai/serverless/v1/models";
 
@@ -43,9 +45,6 @@ const FriendliResponse = z.object({
 
 // Family inference patterns
 const familyPatterns: [RegExp, string][] = [
-  [/llama-3\.3/i, "llama-3.3"],
-  [/llama-3\.1/i, "llama-3.1"],
-  [/llama-4/i, "llama-4"],
   [/qwen3/i, "qwen3"],
   [/deepseek-r1/i, "deepseek-r1"],
   [/glm-4/i, "glm-4"],
@@ -53,6 +52,9 @@ const familyPatterns: [RegExp, string][] = [
 ];
 
 function inferFamily(modelId: string, modelName: string): string | undefined {
+  const kimiFamily = inferKimiFamily(modelId, modelName);
+  if (kimiFamily !== undefined) return kimiFamily;
+
   for (const [pattern, family] of familyPatterns) {
     if (pattern.test(modelId) || pattern.test(modelName)) {
       return family;
@@ -72,9 +74,7 @@ function extractModelName(fullName: string): string {
 
 // TODO: Replace with functionality.parse_reasoning from API when available
 function isReasoningModel(modelId: string): boolean {
-  // Non-reasoning: Llama 3.x Instruct, Qwen3 Instruct
   const nonReasoningPatterns = [
-    /llama-3\.\d.*instruct/i,
     /qwen3.*instruct/i,
   ];
 

@@ -1,7 +1,9 @@
 name = "OpenAI: o4 Mini High"
+description = "O-series reasoning model for hard analysis, math, coding, and planning"
 release_date = "2025-04-17"
 last_updated = "2026-03-15"
 attachment = true
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "medium", "high", "xhigh"] }]
 reasoning = true
 tool_call = true
 open_weights = false

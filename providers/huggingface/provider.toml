@@ -1,5 +1,11 @@
 name = "Hugging Face"
 env = ["HF_TOKEN"]
 npm = "@ai-sdk/openai-compatible"
+# Reasoning HTTP format (accessed 2026-06-25): POST /v1/chat/completions accepts
+# top-level `reasoning_effort`; common values are none, minimal, low, medium,
+# high, and xhigh. Support, defaults, and meaningful values depend on both the
+# selected model and the inference provider chosen by HF routing. No shared
+# toggle field or numeric reasoning-budget field is documented.
+# https://huggingface.co/docs/inference-providers/en/tasks/chat-completion
 api = "https://router.huggingface.co/v1"
 doc = "https://huggingface.co/docs/inference-providers"

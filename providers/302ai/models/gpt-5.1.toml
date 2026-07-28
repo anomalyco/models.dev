@@ -1,12 +1,16 @@
 name = "gpt-5.1"
+description = "GPT model for general reasoning, writing, coding, and tool-assisted tasks"
+family = "gpt"
 release_date = "2025-11-14"
 last_updated = "2025-11-14"
 attachment = true
-reasoning = false
-temperature = true
+reasoning = true
+reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high"] }]
+temperature = false
 tool_call = true
+structured_output = true
 open_weights = false
-knowledge = "2024-10"
+knowledge = "2024-09-30"
 
 [cost]
 input = 1.250
@@ -14,6 +18,7 @@ output = 10.000
 
 [limit]
 context = 400_000
+input = 272_000
 output = 128_000
 
 [modalities]

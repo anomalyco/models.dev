@@ -1,0 +1,25 @@
+# Source: https://routellm.abacus.ai/v1/models
+# RouteLLM input_modalities: ['text', 'image', 'audio']
+# RouteLLM output_modalities: ['text']
+# RouteLLM context_length: 1048576
+# RouteLLM max_completion_tokens: 65536
+# RouteLLM input_token_rate: 0.00000025
+# RouteLLM output_token_rate: 0.0000015
+# RouteLLM cached_input_token_rate: 0.000000025
+# RouteLLM thinking: True
+base_model = "google/gemini-3.1-flash-lite"
+reasoning = true
+reasoning_options = []
+
+[cost]
+input = 0.25
+output = 1.5
+cache_read = 0.025
+
+[limit]
+context = 1_048_576
+output = 65_536
+
+[modalities]
+input = ["text", "image", "audio"]
+output = ["text"]

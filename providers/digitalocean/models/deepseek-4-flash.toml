@@ -1,0 +1,18 @@
+name = "Deepseek V4 Flash"
+description = "Fast DeepSeek model for efficient chat, coding help, and agent loops"
+family = "deepseek"
+release_date = "2026-05-27"
+last_updated = "2026-05-29"
+attachment = false
+reasoning = false
+temperature = true
+tool_call = true
+open_weights = false
+
+[limit]
+context = 262_144
+output = 8_192
+
+[modalities]
+input = ["text"]
+output = ["text"]

@@ -54,6 +54,19 @@ const HeliconeResponse = z
   })
   .passthrough();
 
+interface ExistingModel {
+  base_model?: string;
+  base_model_omit?: string[];
+}
+
+async function loadExistingModel(filePath: string): Promise<ExistingModel | undefined> {
+  const file = Bun.file(filePath);
+  if (!(await file.exists())) return undefined;
+  return await import(filePath, { with: { type: "toml" } }).then(
+    (mod) => mod.default as ExistingModel,
+  );
+}
+
 function pickEndpoint(m: z.infer<typeof ModelItem>) {
   if (!m.endpoints || m.endpoints.length === 0) return undefined;
   // Prefer endpoint that matches author if available
@@ -77,7 +90,7 @@ function sanitizeModalities(values: string[] | undefined): string[] {
   return out.length > 0 ? out : ["text"];
 }
 
-function formatToml(model: z.infer<typeof ModelItem>) {
+function formatToml(model: z.infer<typeof ModelItem>, existing: ExistingModel | undefined) {
   const ep = pickEndpoint(model);
   const pricing = ep?.pricing;
 
@@ -103,6 +116,14 @@ function formatToml(model: z.infer<typeof ModelItem>) {
   const outputMods = sanitizeModalities(model.outputModalities);
 
   const lines: string[] = [];
+  if (existing?.base_model !== undefined) {
+    lines.push(`base_model = "${existing.base_model}"`);
+  }
+  if (existing?.base_model_omit !== undefined) {
+    lines.push(
+      `base_model_omit = [${existing.base_model_omit.map((item) => `"${item}"`).join(", ")}]`,
+    );
+  }
   lines.push(`name = "${model.name.replaceAll('"', '\\"')}"`);
   lines.push(`release_date = "${releaseDate}"`);
   lines.push(`last_updated = "${lastUpdated}"`);
@@ -178,9 +199,15 @@ async function main() {
   }
 
   const models = parsed.data.data.models;
+  const existing = new Map<string, ExistingModel>();
+  await mkdir(outDir, { recursive: true });
+  for await (const file of new Bun.Glob("**/*.toml").scan({ cwd: outDir })) {
+    const filePath = path.join(outDir, file);
+    const model = await loadExistingModel(filePath);
+    if (model !== undefined) existing.set(file, model);
+  }
 
   // Clean output directory: remove subfolders and existing TOML files
-  await mkdir(outDir, { recursive: true });
   for (const entry of await readdir(outDir)) {
     const p = path.join(outDir, entry);
     const st = await stat(p);
@@ -195,7 +222,7 @@ async function main() {
   for (const m of models) {
     const fileSafeId = m.id.replaceAll("/", "-");
     const filePath = path.join(outDir, `${fileSafeId}.toml`);
-    const toml = formatToml(m);
+    const toml = formatToml(m, existing.get(`${fileSafeId}.toml`));
     await Bun.write(filePath, toml);
     created++;
   }

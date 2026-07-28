@@ -1,21 +1,23 @@
-name = "Gemma 3 12b It"
-attachment = false
+# https://build.nvidia.com/google/gemma-3-12b-it
+name = "Gemma 3 12B IT"
+description = "Open Gemma instruction model for efficient chat and self-hosted deployments"
+family = "gemma"
+release_date = "2025-03-12"
+last_updated = "2025-03-12"
+attachment = true
 reasoning = false
 temperature = true
 tool_call = true
-structured_output = true
-release_date = "2025-03-01"
-last_updated = "2025-03-01"
 open_weights = true
 
 [cost]
-input = 0.00
-output = 0.00
+input = 0.0
+output = 0.0
 
 [limit]
-context = 128000
-output = 4096
+context = 131_072
+output = 16_384
 
 [modalities]
-input = ["text"]
+input = ["text", "image"]
 output = ["text"]

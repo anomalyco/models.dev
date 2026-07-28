@@ -1,23 +1,8 @@
-name = "Claude Opus 4.1"
-family = "claude"
-release_date = "2025-08-05"
-last_updated = "2025-08-05"
-attachment = true
-reasoning = true
-temperature = true
-tool_call = true
-structured_output = true
-open_weights = false
+base_model = "anthropic/claude-opus-4-1-20250805"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh"] }, { type = "budget_tokens", min = 1_024, max = 31_999 }]
 
 [cost]
-input = 15.00
-output = 75.00
-cache_read = 1.50
-
-[limit]
-context = 200_000
-output = 32_000
-
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+input = 15
+output = 75
+cache_read = 1.5
+cache_write = 18.75

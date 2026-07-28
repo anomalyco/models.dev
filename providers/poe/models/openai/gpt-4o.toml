@@ -1,4 +1,5 @@
 name = "GPT-4o"
+description = "GPT model for general reasoning, writing, coding, and tool-assisted tasks"
 family = "gpt"
 release_date = "2024-05-13"
 last_updated = "2024-05-13"
@@ -10,7 +11,7 @@ tool_call = true
 
 [limit]
 context = 128_000
-output = 8192
+output = 8_192
 
 [modalities]
 input = ["text", "image"]

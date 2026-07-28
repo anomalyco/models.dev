@@ -1,0 +1,14 @@
+base_model = "cohere/north-mini-code-1-0"
+name = "North Mini Code Free"
+family = "north-free"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "high"]
+
+[cost]
+input = 0.00
+output = 0.00
+
+[interleaved]
+field = "reasoning_content"

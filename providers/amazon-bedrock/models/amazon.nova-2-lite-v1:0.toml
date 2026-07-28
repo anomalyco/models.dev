@@ -1,9 +1,11 @@
 name = "Nova 2 Lite"
+description = "Multimodal reasoning model for visual analysis, planning, and tool use"
 family = "nova"
 release_date = "2024-12-01"
 last_updated = "2024-12-01"
 attachment = false
-reasoning = false
+reasoning = true
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "medium", "high"] }]
 temperature = true
 tool_call = true
 open_weights = false

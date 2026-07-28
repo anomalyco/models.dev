@@ -7,15 +7,13 @@ Prerequisites
 - (Optional) Venice API key with alpha access to retrieve alpha models
 
 Commands
-- Generate/update files: `bun run venice:generate`
-- Dry run (preview changes): `bun run venice:generate --dry-run`
-- With API key: `bun run venice:generate --api-key=YOUR_KEY`
+- Sync files: `bun run venice:sync`
+- Dry run (preview changes): `bun run venice:sync --dry-run`
+- With API key: `VENICE_API_KEY=YOUR_KEY bun run venice:sync`
 
 API Key
 The script can include alpha models when provided with a Venice API key with alpha access.
-Key can be provided via:
-1. CLI argument: `--api-key=YOUR_KEY` or `--api-key YOUR_KEY`
-2. Environment variable: `VENICE_API_KEY`
+Provide the key through the `VENICE_API_KEY` environment variable.
 
 Details
 - Source endpoint: `https://api.venice.ai/api/v1/models?type=text`
@@ -32,6 +30,6 @@ Preserved Fields (manual input)
 - PDF in `modalities.input`: Not auto-added, preserved if exists
 
 Notes
-- The generator merges with existing files rather than replacing them
-- Orphaned files (not in API) are warned about but not deleted
+- The sync updates existing files and skips E2EE models, which require unsupported client-side encryption
+- Provider files missing from the API are deleted
 - Run with `--dry-run` to preview changes before applying

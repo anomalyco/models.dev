@@ -1,0 +1,18 @@
+name = "Fusion"
+description = "General-purpose chat model for instruction following, writing, and analysis"
+release_date = "2026-06-13"
+last_updated = "2026-06-13"
+attachment = false
+reasoning = false
+temperature = false
+tool_call = false
+structured_output = false
+open_weights = false
+
+[limit]
+context = 1_000_000
+output = 128_000
+
+[modalities]
+input = ["text"]
+output = ["text"]

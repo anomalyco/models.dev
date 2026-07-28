@@ -1,0 +1,16 @@
+base_model = "google/gemma-4-26b-a4b-it"
+attachment = false
+reasoning = false
+open_weights = false
+
+[cost]
+input = 0.12
+output = 0.40
+
+[limit]
+context = 262_144
+output = 262_144
+
+[modalities]
+input = ["text"]
+output = ["text"]

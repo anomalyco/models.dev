@@ -1,22 +1,9 @@
-name = "Sonar Reasoning Pro"
-family = "sonar"
-release_date = "2025-03-07"
-last_updated = "2025-03-07"
-attachment = false
-reasoning = true
-temperature = true
-tool_call = false
-structured_output = true
-open_weights = false
+# This model is restricted here to $.reasoning_effort or $.reasoning.effort
+# = "low"|"medium"|"high"; no exact token budget is documented for it.
+# https://docs.llmgateway.io/features/reasoning (accessed 2026-06-25)
+base_model = "perplexity/sonar-reasoning-pro"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
 
 [cost]
-input = 2.00
-output = 8.00
-
-[limit]
-context = 128_000
-output = 16_384
-
-[modalities]
-input = ["text"]
-output = ["text"]
+input = 2
+output = 8

@@ -1,27 +1,15 @@
-name = "GLM-4.7-Flash"
-family = "glm"
-release_date = "2026-01-19"
-last_updated = "2026-01-19"
-attachment = false
-reasoning = true
-temperature = true
-tool_call = true
+base_model = "zhipuai/glm-4.7-flash"
 structured_output = true
-open_weights = true
+reasoning_options = []
 
 [interleaved]
 field = "reasoning_details"
 
-
-
 [cost]
-input = 0.07
+input = 0.06
 output = 0.4
+cache_read = 0.01
 
 [limit]
-context = 200_000
-output = 65_535
-
-[modalities]
-input = ["text"]
-output = ["text"]
+context = 202_752
+output = 16_384

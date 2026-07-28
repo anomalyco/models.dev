@@ -1,0 +1,25 @@
+base_model = "moonshotai/kimi-k3"
+release_date = "2026-07-27"
+last_updated = "2026-07-27"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high", "max"]
+
+[[reasoning_options]]
+type = "budget_tokens"
+min = 1_024
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 3.0
+output = 15.0
+cache_read = 0.3
+
+[modalities]
+input = ["text", "image"]

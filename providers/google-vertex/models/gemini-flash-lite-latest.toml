@@ -1,23 +1,10 @@
-name = "Gemini Flash-Lite Latest"
-family = "gemini-flash-lite"
-release_date = "2025-09-25"
-last_updated = "2025-09-25"
-attachment = true
-reasoning = true
-temperature = true
-knowledge = "2025-01"
-tool_call = true
-open_weights = false
+# Alias for the current Gemini Flash-Lite release (gemini-3.1-flash-lite).
+base_model = "google/gemini-flash-lite-latest"
+base_model_omit = ["structured_output"]
+reasoning_options = [{ type = "effort", values = ["minimal", "low", "medium", "high"] }]
 
 [cost]
-input = 0.10
-output = 0.40
+input = 0.25
+output = 1.5
 cache_read = 0.025
-
-[limit]
-context = 1_048_576
-output = 65_536
-
-[modalities]
-input = ["text", "image", "audio", "video", "pdf"]
-output = ["text"]
+input_audio = 0.5

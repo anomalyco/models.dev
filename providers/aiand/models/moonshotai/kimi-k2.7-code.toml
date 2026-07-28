@@ -1,0 +1,20 @@
+# Source: https://docs.aiand.com/models/catalog/ (USD list prices; accessed
+# 2026-07-24) and live probes against api.aiand.com on the same date.
+# Verified by direct test: image and PDF (Files API, file_id) inputs are
+# accepted; video is rejected ("does not support video input"), so modalities
+# are overridden from the shared base model's text+image+video.
+# reasoning_effort verified by live probe on 2026-07-24: all six documented
+# values accepted; invalid values rejected with 400 (negative control).
+base_model = "moonshotai/kimi-k2.7-code"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "minimal", "low", "medium", "high", "xhigh"]
+
+[cost]
+input = 0.75
+output = 3.50
+
+[modalities]
+input = ["text", "image", "pdf"]
+output = ["text"]

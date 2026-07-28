@@ -1,0 +1,16 @@
+# Sources (accessed 2026-07-25):
+# - https://docs.api.nvidia.com/nim/reference/mistralai-mistral-medium-3-5-128b-infer
+# - https://integrate.api.nvidia.com/v1/models id: mistralai/mistral-medium-3.5-128b
+base_model = "mistral/mistral-medium-2604"
+
+# NIM Chat schema: top-level `reasoning_effort = none|high` (`none` disables).
+[[reasoning_options]]
+type = "effort"
+values = ["none", "high"]
+
+[cost]
+input = 0.0
+output = 0.0
+
+[limit]
+output = 32_768

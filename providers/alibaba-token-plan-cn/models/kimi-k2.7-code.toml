@@ -1,0 +1,22 @@
+base_model = "moonshotai/kimi-k2.7-code"
+# Reasoning HTTP format (accessed 2026-06-25):
+# Thinking-only model: `enable_thinking` defaults to true and cannot disable
+# thinking. `thinking_budget` is an integer token cap; no bounds are documented.
+# structured_output: gateway accepts response_format json_schema (probed
+# 2026-07-24: a strict schema request returned {"name":"Alice","age":30} with
+# finish_reason=stop and no "json" keyword needed), so the earlier
+# base_model_omit was wrong and is dropped.
+# Sources:
+# https://www.alibabacloud.com/help/en/model-studio/kimi-api
+# https://www.alibabacloud.com/help/en/model-studio/deep-thinking
+family = "kimi-k2"
+reasoning_options = [{ type = "toggle" }, { type = "budget_tokens" }]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0
+output = 0
+cache_read = 0
+cache_write = 0

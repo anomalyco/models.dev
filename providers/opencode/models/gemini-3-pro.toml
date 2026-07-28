@@ -1,9 +1,11 @@
 name = "Gemini 3 Pro"
+description = "Legacy model retained for compatibility with older integrations"
 family = "gemini-pro"
 release_date = "2025-11-18"
 last_updated = "2025-11-18"
 attachment = true
 reasoning = true
+reasoning_options = [{ type = "effort", values = ["low", "high"] }]
 temperature = true
 tool_call = true
 structured_output = true
@@ -16,7 +18,8 @@ input = 2.00
 output = 12.00
 cache_read = 0.20
 
-[cost.context_over_200k]
+[[cost.tiers]]
+tier = { size = 200_000 }
 input = 4.00
 output = 18.00
 cache_read = 0.40

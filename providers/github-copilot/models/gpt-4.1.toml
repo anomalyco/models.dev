@@ -1,23 +1,11 @@
-name = "GPT-4.1"
-family = "gpt"
-release_date = "2025-04-14"
-last_updated = "2025-04-14"
-attachment = true
-reasoning = false
-temperature = true
-knowledge = "2024-04"
-tool_call = true
-open_weights = false
+base_model = "openai/gpt-4.1"
 
 [cost]
-input = 0
-output = 0
+input = 2
+output = 8
+cache_read = 0.5
 
 [limit]
 context = 128_000
+input = 128_000
 output = 16_384
-input = 64_000
-
-[modalities]
-input = ["text", "image"]
-output = ["text"]
