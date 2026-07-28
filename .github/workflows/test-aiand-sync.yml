@@ -1,25 +1,23 @@
-# Fork-only test workflow — remove before/after upstream PR merges.
-# Runs the aiand provider sync manually against the live API so the
-# adapter can be verified on the fork without touching anomalyco/models.dev.
+# Fork-only full-fledged test workflow for the ai& provider sync.
+# Mirrors sync-models.yml exactly but removes the repo guard so it runs on this fork.
+# Opens a PR into feat/aiand-sync for review, just like the real sync workflow.
+# Remove this file before the upstream PR is merged.
 name: Test ai& Sync (fork only)
 
 on:
+  schedule:
+    - cron: "17 * * * *"
   workflow_dispatch:
-    inputs:
-      dry_run:
-        description: 'Dry run (no files written)'
-        required: false
-        default: 'true'
-        type: choice
-        options:
-          - 'true'
-          - 'false'
 
 permissions:
   contents: write
+  issues: write
+  pull-requests: write
+
+concurrency: ${{ github.workflow }}-${{ github.ref }}
 
 jobs:
-  test-aiand:
+  sync:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout branch
@@ -35,18 +33,50 @@ jobs:
       - name: Install dependencies
         run: bun install
 
-      - name: Run aiand sync
-        run: |
-          if [ "${{ inputs.dry_run }}" = "true" ]; then
-            bun models:sync aiand --dry-run
-          else
-            bun models:sync aiand
-          fi
+      - name: Sync ai& model catalogs
+        run: bun models:sync aiand
         env:
+          GH_TOKEN: ${{ github.token }}
           AIAND_API_KEY: ${{ secrets.AIAND_API_KEY }}
 
-      - name: Validate catalog
+      - name: Validate models
         run: bun validate
 
-      - name: Show changed files
-        run: git status --short -- providers/aiand
+      - name: Report changes and open PR
+        env:
+          GH_TOKEN: ${{ github.token }}
+          BRANCH: automation/sync-models-aiand
+          LABELS: automation,model-sync,provider:aiand
+          TITLE: "chore(sync): update ai& model catalog"
+        run: |
+          tee -a "$GITHUB_STEP_SUMMARY" < .sync/model-sync-report.md >/dev/null
+
+          label_args=()
+          IFS=',' read -ra labels <<< "$LABELS"
+          for label in "${labels[@]}"; do
+            gh label create "$label" --color "0E8A16" --description "Automated model catalog sync" >/dev/null 2>&1 || true
+            label_args+=(--label "$label")
+          done
+
+          if [ -z "$(git status --porcelain -- models providers)" ]; then
+            echo "No model catalog changes found."
+            exit 0
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git fetch --no-tags --depth=1 origin "+refs/heads/$BRANCH:refs/remotes/origin/$BRANCH" || true
+          git checkout -B "$BRANCH"
+          git add models providers
+          git commit -m "$TITLE"
+          git push --force-with-lease origin "$BRANCH"
+
+          pr_number="$(gh pr list --head "$BRANCH" --base feat/aiand-sync --json number --jq '.[0].number')"
+          if [ -n "$pr_number" ]; then
+            gh pr edit "$pr_number" --title "$TITLE" --body-file .sync/model-sync-report.md
+            for label in "${labels[@]}"; do
+              gh pr edit "$pr_number" --add-label "$label"
+            done
+          else
+            gh pr create --base feat/aiand-sync --head "$BRANCH" --title "$TITLE" --body-file .sync/model-sync-report.md "${label_args[@]}"
+          fi
