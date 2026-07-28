@@ -1,19 +1,64 @@
+import { readFileSync } from "node:fs";
+import path from "node:path";
+
 import { z } from "zod";
 
 import { describeModel } from "../../describe.js";
 import type { ExistingModel, SyncProvider, SyncedFullModel, SyncedModel } from "../index.js";
 import { factorBaseModel } from "./openrouter.js";
 
+const MODELS_DIR = path.join(import.meta.dirname, "..", "..", "..", "..", "..", "models");
+const baseModelReasoningCache = new Map<string, boolean>();
+
+/** Whether the base model's authored metadata declares it a reasoning model. */
+function baseModelReasoning(modelID: string): boolean {
+  let value = baseModelReasoningCache.get(modelID);
+  if (value === undefined) {
+    const parsed = Bun.TOML.parse(
+      readFileSync(path.join(MODELS_DIR, `${modelID}.toml`), "utf8"),
+    ) as Record<string, unknown>;
+    value = parsed.reasoning === true;
+    baseModelReasoningCache.set(modelID, value);
+  }
+  return value;
+}
+
 const API_ENDPOINT = "https://api.pioneer.ai/v1/models";
 
 const BaseModels: Record<string, string> = {
+  "Qwen/Qwen2.5-Coder-0.5B": "alibaba/qwen2.5-coder-0.5b",
+  "Qwen/Qwen3-235B-A22B-Instruct-2507": "alibaba/qwen3-235b-a22b-instruct-2507",
   "Qwen/Qwen3.5-9B": "alibaba/qwen3.5-9b",
+  "deepseek-ai/DeepSeek-V3": "deepseek/deepseek-v3",
+  "deepseek-ai/DeepSeek-V3.1": "deepseek/deepseek-v3.1",
+  "meta-llama/Llama-3.2-1B": "meta/llama-3.2-1b",
+  "meta-llama/Llama-3.2-3B": "meta/llama-3.2-3b",
+  "mistralai/Codestral-22B-v0.1": "mistral/codestral-22b-v0.1",
+  "mistralai/Magistral-Small-2506": "mistral/magistral-small-2506",
+  "mistralai/Ministral-8B-Instruct-2410": "mistral/ministral-8b-instruct-2410",
+  "claude-3-7-sonnet-latest": "anthropic/claude-3-7-sonnet-20250219",
+  "claude-fable-5": "anthropic/claude-fable-5",
+  "claude-opus-5": "anthropic/claude-opus-5",
+  "claude-sonnet-5": "anthropic/claude-sonnet-5",
+  "devstral-2": "mistral/devstral-2512",
+  "gemini-3.1-flash-lite": "google/gemini-3.1-flash-lite",
+  "gemini-3.5-flash-lite": "google/gemini-3.5-flash-lite",
+  "gemini-3.6-flash": "google/gemini-3.6-flash",
   "google/gemma-4-E2B-it": "google/gemma-4-E2B-it",
   "google/gemma-4-E4B-it": "google/gemma-4-E4B-it",
+  "gpt-5.6-luna": "openai/gpt-5.6-luna",
+  "gpt-5.6-sol": "openai/gpt-5.6-sol",
+  "gpt-5.6-terra": "openai/gpt-5.6-terra",
+  "grok-4.5": "xai/grok-4.5",
+  "meta/muse-spark-1.1": "meta/muse-spark-1.1",
+  "mistral-large-3": "mistral/mistral-large-2512",
   "mistral-medium-3.5": "mistral/mistral-medium-2604",
+  "mistralai/Pixtral-12B-2409": "mistral/pixtral-12b",
   "moonshotai/Kimi-K2.7-Code": "moonshotai/kimi-k2.7-code",
+  "moonshotai/Kimi-K3": "moonshotai/kimi-k3",
   "openai/gpt-oss-120b": "openai/gpt-oss-120b",
   "openai/gpt-oss-20b": "openai/gpt-oss-20b",
+  "poolside/laguna-s-2.1": "poolside/laguna-s-2.1",
   "sakana/fugu-ultra": "sakana/fugu-ultra",
   "zai-org/GLM-5.2": "zhipuai/glm-5.2",
 };
@@ -63,6 +108,10 @@ const PioneerServedModel = z
     max_input_tokens: z.number().int().nonnegative(),
     max_tokens: z.number().int().nonnegative(),
     deprecated: z.boolean().optional(),
+    input_price_per_million: z.number().nonnegative().optional(),
+    output_price_per_million: z.number().nonnegative().optional(),
+    cache_read_price_per_million: z.number().nonnegative().optional(),
+    cache_write_price_per_million: z.number().nonnegative().optional(),
     capabilities: z
       .object({
         image_input: Capability.optional(),
@@ -106,10 +155,16 @@ export const pioneer = {
   parseModels(raw) {
     const parsed = PioneerResponse.parse(raw);
     const metadata = new Map(parsed.models.map((model) => [model.slug, model]));
-    return parsed.data.map((model) => ({
-      ...model,
-      metadata: metadata.get(model.id),
-    }));
+    // Pioneer /v1/models returns each served model twice: once under its real
+    // id (e.g. "gpt-4o") and once under a duplicate "anthropic/pioneer/<id>"
+    // alias. The aliased entries are not real catalog models; drop them so the
+    // sync does not author phantom "anthropic/pioneer/*" TOMLs.
+    return parsed.data
+      .filter((model) => !model.id.startsWith("anthropic/pioneer/"))
+      .map((model) => ({
+        ...model,
+        metadata: metadata.get(model.id),
+      }));
   },
   translateModel(model, context) {
     return {
@@ -162,6 +217,28 @@ function pioneerReasoningOptions(model: PioneerModel): SyncedFullModel["reasonin
   return values.length > 0 ? [{ type: "effort", values }] : undefined;
 }
 
+function pioneerCost(
+  model: PioneerModel,
+  existing: ExistingModel | undefined,
+): SyncedFullModel["cost"] {
+  // Preserve any hand-authored cost; otherwise derive from the API's
+  // per-1M-token prices (which are already in the catalog's per-1M unit).
+  if (existing?.cost !== undefined) return existing.cost;
+  if (model.input_price_per_million === undefined || model.output_price_per_million === undefined) {
+    return undefined;
+  }
+  return {
+    input: model.input_price_per_million,
+    output: model.output_price_per_million,
+    ...(model.cache_read_price_per_million !== undefined
+      ? { cache_read: model.cache_read_price_per_million }
+      : {}),
+    ...(model.cache_write_price_per_million !== undefined
+      ? { cache_write: model.cache_write_price_per_million }
+      : {}),
+  };
+}
+
 function buildPioneerModel(
   model: PioneerModel,
   existing: ExistingModel | undefined,
@@ -179,12 +256,19 @@ function buildPioneerModel(
       input: existing?.limit?.input,
       output: model.max_tokens,
     };
+    // Pioneer reports identical boilerplate reasoning levels for every model,
+    // so it is not a reliable reasoning signal. Trust the base model's authored
+    // metadata: only mark reasoning / attach reasoning_options when the base
+    // model is genuinely a reasoning model.
+    const baseReasoning = baseModelReasoning(baseModel);
     return factorBaseModel(baseModel, {
-      cost: existing?.cost,
-      reasoning: apiReasoningOptions !== undefined ? true : undefined,
-      reasoning_options: reasoningOptions,
+      cost: pioneerCost(model, existing),
+      reasoning: undefined,
+      reasoning_options: baseReasoning
+        ? (apiReasoningOptions ?? existing?.reasoning_options)
+        : undefined,
       status,
-      interleaved,
+      interleaved: baseReasoning ? interleaved : undefined,
       limit,
     }, limit, existing?.base_model_omit);
   }
@@ -221,7 +305,7 @@ function buildPioneerModel(
     open_weights: existing?.open_weights ?? false,
     status,
     interleaved,
-    cost: existing?.cost,
+    cost: pioneerCost(model, existing),
     limit: {
       context: model.max_input_tokens,
       input: existing?.limit?.input,
