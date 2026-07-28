@@ -10,3 +10,11 @@ reasoning_options = []
 input = 1.87
 output = 4.68
 cache_read = 0.374
+
+# The base model omits limit.output because it varies per host, so every provider entry
+# supplies its own. Impossibl serves this model through Thinking Machines' own Tinker API,
+# so their published served limits apply verbatim (providers/thinkingmachines/models/
+# thinkingmachines/Inkling.toml, sourced from https://tinker-docs.thinkingmachines.ai/tinker/models/).
+[limit]
+context = 65_536
+output = 65_536
