@@ -1,0 +1,12 @@
+# Price metadata is the trailing-30-day p90 of settled daily VWAPs:
+# https://api.omnious.xyz/v1/market/candles?window_ms=2592000000&bucket_ms=86400000
+# Snapshot generated 2026-07-29 from 13 daily samples.
+base_model = "zhipuai/glm-5.2"
+reasoning_options = [{ type = "effort", values = ["high", "max"] }]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 1.141015
+output = 3.309797
