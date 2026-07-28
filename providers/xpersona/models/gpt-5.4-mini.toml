@@ -1,5 +1,5 @@
 base_model = "openai/gpt-5.4-mini"
-base_model_omit = ["limit.context", "limit.input"]
+base_model_omit = ["limit.input"]
 interleaved = { field = "reasoning_content" }
 
 [[reasoning_options]]
