@@ -244,28 +244,33 @@ export function buildAiandModel(
     } satisfies SyncedFullModel;
   }
 
+  // New model (no existing TOML). Require usable input+output pricing before
+  // any create — factored or standalone. Writing a row without [cost] would
+  // publish an unpriced catalog entry; matches deepinfra/baseten/huggingface.
+  if (prompt === undefined || completion === undefined) return undefined;
+
   // New model: attempt to factor against canonical base.
-  // Skip if there is no usable context — writing limit.context = 0 would
+  // Also skip if there is no usable context — writing limit.context = 0 would
   // override any valid context inherited from the base model.
   const canonical = resolveAiandBaseModel(model);
   if (canonical !== undefined) {
     if (context === 0) return undefined;
     const factoredLimit = { context, input: undefined, output: undefined };
-    return factorBaseModel(canonical, { limit: factoredLimit, cost }, factoredLimit);
+    // [fix] When the API signals reasoning_effort, pass it through so the
+    // created row does not inherit an incorrect reasoning=false from the base.
+    // reasoning_options is left as [] — exact effort values need hand-authoring.
+    const factoredOverrides: Parameters<typeof factorBaseModel>[1] = {
+      limit: factoredLimit,
+      cost,
+      ...(reasoning ? { reasoning: true, reasoning_options: [] } : {}),
+    };
+    return factorBaseModel(canonical, factoredOverrides, factoredLimit);
   }
 
   // Brand-new model with no existing TOML and no canonical base.
-  // Guard: skip creates that are missing the fields required for a valid entry.
-  // Matching the deepinfra/baseten/huggingface pattern of skipping incomplete
-  // remote rows rather than writing broken or zero-valued catalog entries.
-  if (
-    context === 0
-    || prompt === undefined
-    || completion === undefined
-    || model.created === undefined
-  ) {
-    return undefined;
-  }
+  // Guard: skip creates that are missing context or created timestamp.
+  // (pricing guard already applied above)
+  if (context === 0 || model.created === undefined) return undefined;
 
   // reasoning_options is deliberately left as [] — the allowed effort values
   // vary per model and must be verified by a live probe before publishing.
@@ -315,6 +320,17 @@ export const aiand = {
     return [
       `${paths.length} local ai& model(s) were absent from GET /v1/models and were retained for manual lifecycle review.`,
       `Retained: ${paths.map((p) => `\`${p}\``).join(", ")}`,
+    ];
+  },
+  // Surface skipped remote models in sync PR notices so maintainers can tell
+  // which API rows were withheld (missing pricing/context) vs genuinely absent.
+  // Matches the sourceID + skippedNotice pattern in baseten/deepinfra.
+  sourceID: (model: AiandModel) => model.id,
+  skippedNotice(ids: string[]) {
+    if (ids.length === 0) return [];
+    return [
+      `${ids.length} ai& model(s) from GET /v1/models were skipped (missing pricing, context, or created timestamp) and were not written to the catalog.`,
+      `Skipped: ${ids.map((id) => `\`${id}\``).join(", ")}`,
     ];
   },
   async fetchModels() {
