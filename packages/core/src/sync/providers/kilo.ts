@@ -211,6 +211,7 @@ export function buildKiloModel(
         name:
           baseModel !== undefined ||
           model.id.endsWith(":free") ||
+          model.id.endsWith(":batch") ||
           model.id.endsWith(":discounted") ||
           model.id.endsWith(":thinking")
             ? name
