@@ -1,13 +1,10 @@
+# Reasoning surface verified against https://dev.synthetic.new/docs/openai/chat-completions
+# (accessed 2026-07-27): `reasoning_effort` accepts low | medium | high for thinking
+# models; no reasoning on/off toggle or disable sentinel is documented.
 base_model = "moonshotai/kimi-k3"
 last_updated = "2026-07-27"
 temperature = true
-
-[[reasoning_options]]
-type = "toggle"
-
-[[reasoning_options]]
-type = "effort"
-values = ["low", "high", "max"]
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
 
 [interleaved]
 field = "reasoning_content"
