@@ -1,0 +1,11 @@
+base_model = "mistral/devstral-2512"
+
+[cost]
+input = 0.4
+output = 2
+cache_read = 0.4
+cache_write = 0.4
+
+[limit]
+context = 256_000
+output = 131_072

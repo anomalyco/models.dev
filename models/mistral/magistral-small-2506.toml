@@ -1,0 +1,23 @@
+name = "Magistral Small"
+description = "Open Mistral reasoning model for transparent step-by-step problem solving"
+family = "magistral"
+release_date = "2025-06-10"
+last_updated = "2025-06-10"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+open_weights = true
+license = "Apache 2.0"
+
+[limit]
+context = 131_072
+output = 8_192
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/mistralai/Magistral-Small-2506"
