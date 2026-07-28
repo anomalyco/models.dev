@@ -1,0 +1,17 @@
+# Mixlayer model ID and pricing: https://www.mixlayer.com/ (accessed 2026-07-28)
+# Kimi K2.7 Code forces thinking, so Mixlayer exposes no reasoning control:
+# https://huggingface.co/moonshotai/Kimi-K2.7-Code (accessed 2026-07-28)
+base_model = "moonshotai/kimi-k2.7-code"
+reasoning_options = []
+temperature = true
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.75
+output = 3.5
+
+[modalities]
+input = ["text"]
+output = ["text"]
