@@ -1,0 +1,23 @@
+# Source: Token Factory catalog (https://tokenfactory.iamsaif.ai, /api/portal/v1/models), read 2026-07-28.
+# Same public weights as alibaba/qwen3.6-27b (HF: Qwen/Qwen3.6-27B); inherited via base_model, so open_weights (true) is inherited.
+# Token Factory serves a text-only preview, so modalities/attachment are overridden. Output cap estimated.
+base_model = "alibaba/qwen3.6-27b"
+name = "Qwen3.6-27B (Preview)"
+description = "Text-only preview of the Qwen3.6-27B model on Token Factory"
+attachment = false
+reasoning = false
+tool_call = false
+status = "beta"
+last_updated = "2026-07-28"
+
+[cost]
+input = 0.30
+output = 3.20
+
+[limit]
+context = 262_144
+output = 32_768
+
+[modalities]
+input = ["text"]
+output = ["text"]
