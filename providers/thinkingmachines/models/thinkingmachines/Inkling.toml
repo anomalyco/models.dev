@@ -1,0 +1,20 @@
+# Sources (accessed 2026-07-22):
+# - API and exact model ID: https://tinker-docs.thinkingmachines.ai/tinker/compatible-apis/anthropic/
+# - Pricing and served context: https://tinker-docs.thinkingmachines.ai/tinker/models/
+# API: {"output_config":{"effort":"low"|"medium"|"high"|"xhigh"|"max"}}
+# Disable reasoning with {"thinking":{"type":"disabled"}}.
+base_model = "thinkingmachines/inkling"
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
+
+[cost]
+input = 1.87
+output = 4.68
+cache_read = 0.374
+
+[limit]
+context = 65_536
+output = 65_536
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

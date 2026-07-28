@@ -1,0 +1,26 @@
+# AIHubMix model page documents Kimi K3 pricing, supported input modalities
+# (text, vision, video), and a 1M-token context window.
+# Source accessed 2026-07-27:
+# https://aihubmix.com/model/kimi-k3
+
+base_model = "moonshotai/kimi-k3"
+last_updated = "2026-07-27"
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[cost]
+input = 3.00
+output = 15.00
+cache_read = 0.30
+
+[modalities]
+input = ["text", "image", "video"]
+output = ["text"]

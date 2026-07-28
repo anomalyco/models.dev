@@ -1,10 +1,11 @@
-# Gateway-wide $.reasoning_effort = "none" disables non-OpenAI reasoning;
-# this model has no documented effort tiers or exact reasoning-token budget.
-# https://docs.llmgateway.io/features/reasoning (accessed 2026-06-25)
+# Gateway-wide $.reasoning_effort = "none" (or $.reasoning.effort = "none")
+# disables non-OpenAI reasoning; this model has no documented effort tiers
+# or exact reasoning-token budget.
+# https://docs.llmgateway.io/features/reasoning (accessed 2026-07-23)
 base_model = "nvidia/nemotron-3-ultra-550b-a55b"
 
 [[reasoning_options]]
-type = "toggle"
+type = "toggle" # API: {"reasoning_effort": "none"} or {"reasoning": {"effort": "none"}}
 
 [cost]
 input = 0.5
@@ -12,4 +13,4 @@ output = 2.5
 cache_read = 0.15
 
 [limit]
-context = 262_144
+context = 1_048_576

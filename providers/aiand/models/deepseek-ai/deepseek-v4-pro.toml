@@ -1,0 +1,19 @@
+# Source: https://docs.aiand.com/models/catalog/ (USD list prices; accessed
+# 2026-07-24). GET /v1/models reports context_window = 1048576 (the catalog
+# rounds this to "1M" and the shared base model to 1_000_000), so the exact
+# figure is overridden here.
+# reasoning_effort verified by live probe on 2026-07-24: all six documented
+# values accepted; invalid values rejected with 400 (negative control).
+base_model = "deepseek/deepseek-v4-pro"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "minimal", "low", "medium", "high", "xhigh"]
+
+[cost]
+input = 1.00
+output = 2.50
+
+[limit]
+context = 1_048_576
+output = 384_000

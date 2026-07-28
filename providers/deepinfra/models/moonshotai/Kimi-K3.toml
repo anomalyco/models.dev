@@ -1,0 +1,20 @@
+# DeepInfra OpenAI chat (POST https://api.deepinfra.com/v1/openai/chat/completions)
+# model = "moonshotai/Kimi-K3".
+# Always-on reasoning; effort via top-level reasoning_effort = "low"|"high"|"max" (default max).
+# No thinking toggle — K3 always returns reasoning_content.
+# DeepInfra OpenAPI accepts max among effort values; model-native values are low/high/max.
+# https://docs.deepinfra.com/api-reference/chat-completions/openai-chat-completions
+# https://platform.kimi.ai/docs/guide/use-reasoning-effort
+base_model = "moonshotai/kimi-k3"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[cost]
+input = 2.7
+output = 13.5
+cache_read = 0.27
+
+[modalities]
+input = ["text", "image"]

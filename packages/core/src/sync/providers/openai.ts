@@ -56,6 +56,9 @@ export const openai = {
   name: "OpenAI",
   modelsDir: "providers/openai/models",
   skipCreates: true,
+  // /v1/models is account-scoped and includes legacy, internal, and
+  // non-catalog surfaces without authoritative lifecycle metadata.
+  trackMissingModels: false,
   deleteMissing: false,
   sourceID(model) {
     return model.id;

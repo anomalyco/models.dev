@@ -100,7 +100,8 @@ export const openrouter = {
     return response.json();
   },
   parseModels(raw) {
-    return OpenRouterResponse.parse(raw).data;
+    // Temporarily skip batch routes (`*:batch`) — they are not catalog targets.
+    return OpenRouterResponse.parse(raw).data.filter((model) => !model.id.endsWith(":batch"));
   },
   translateModel(model, context) {
     // OpenRouter serves deprecated/unavailable routes as degraded stubs:
@@ -216,7 +217,7 @@ export function buildOpenRouterModel(
     return factorBaseModel(
       canonical,
       {
-        name: baseModel !== undefined || model.id.endsWith(":free") || canonicalOverride === canonical
+        name: shouldPreserveFactoredName(model.id, canonical, baseModel, canonicalOverride)
           ? name
           : undefined,
         description: existing?.description ?? describeModel({
@@ -340,6 +341,24 @@ function canonicalBaseModelOverride(openrouterID: string) {
   ];
 }
 
+function shouldPreserveFactoredName(
+  modelID: string,
+  canonical: string,
+  baseModel: string | undefined,
+  canonicalOverride: string | undefined,
+) {
+  if (baseModel !== undefined) return true;
+  if (modelID.endsWith(":free")) return true;
+  if (canonicalOverride === canonical) return true;
+  const modelSlug = modelID.split("/").slice(1).join("/").replace(/:free$/, "");
+  const canonicalSlug = canonical.split("/").slice(1).join("/");
+  return normalizeModelSlug(modelSlug) !== normalizeModelSlug(canonicalSlug);
+}
+
+function normalizeModelSlug(value: string) {
+  return value.toLowerCase().replaceAll(/[^a-z0-9]/g, "");
+}
+
 export function factorBaseModel(
   modelID: string,
   values: Partial<SyncedFullModel>,
@@ -451,10 +470,13 @@ function modelMetadata(modelID: string) {
 
 function canonicalCandidates(provider: string, modelID: string) {
   const candidates = [modelID];
+  if (modelID.endsWith("-fast")) candidates.push(modelID.slice(0, -"-fast".length));
 
   if (provider === "anthropic") {
-    candidates.push(modelID.replace(/(claude-(?:opus|sonnet|haiku)-\d+)\.(\d+)/, "$1-$2"));
-    candidates.push(modelID.replace(/^claude-3\.5-/, "claude-3-5-"));
+    for (const candidate of [...candidates]) {
+      candidates.push(candidate.replace(/(claude-(?:opus|sonnet|haiku)-\d+)\.(\d+)/, "$1-$2"));
+      candidates.push(candidate.replace(/^claude-3\.5-/, "claude-3-5-"));
+    }
   }
 
   if (provider === "llama") {

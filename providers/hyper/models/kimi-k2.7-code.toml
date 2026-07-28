@@ -1,0 +1,16 @@
+base_model = "moonshotai/kimi-k2.7-code"
+release_date = "2026-07-03"
+last_updated = "2026-07-22"
+reasoning = false
+
+[cost]
+input = 0.95
+output = 4
+cache_read = 0.19
+
+[limit]
+context = 256_000
+output = 16_000
+
+[modalities]
+input = ["text", "image"]
