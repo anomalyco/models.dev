@@ -1,9 +1,17 @@
+# Sources (accessed 2026-07-28):
+# - Model card, limits (1M context, 999,990 max output), capabilities, GLM-5.2 base:
+#   https://docs.abliteration.ai/models
+# - Reasoning effort ladder and per-endpoint request fields:
+#   https://docs.abliteration.ai/capabilities/thinking
+# - Pricing ($5 per 1M tokens, flat input + output):
+#   https://docs.abliteration.ai/pricing
+#   https://abliteration.ai/pricing#api-pricing
+# - Launch announcement (base model, fine-tuning, benchmarks):
+#   https://abliteration.ai/blog/introducing-abliterated-model-large
 name = "Abliterated Model Large"
-# https://docs.abliteration.ai/models
-# https://docs.abliteration.ai/api-reference/chat-completions/create-a-chat-completion
 description = "GLM-5.2 model abliterated and finetuned for cyber, ML red teaming, and agent testing"
 release_date = "2026-07-25"
-last_updated = "2026-07-25"
+last_updated = "2026-07-28"
 attachment = false
 reasoning = true
 tool_call = true
@@ -11,9 +19,14 @@ structured_output = true
 temperature = true
 open_weights = false
 
-reasoning_options = [{ type = "effort", values = ["none", "high", "max"] }]
+# Accepts the full ladder but maps it to two modes: minimal-high -> high, xhigh-max -> max.
+[[reasoning_options]]
+type = "effort" # API: {"reasoning_effort": "<value>"} on /v1/chat/completions
+values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"]
 
-# https://abliteration.ai/pricing#api-pricing
+[[reasoning_options]]
+type = "toggle" # API: {"thinking": false} on /v1/messages (legacy alias on /v1/chat/completions)
+
 [cost]
 input = 5.00
 output = 5.00
@@ -21,7 +34,7 @@ output = 5.00
 [limit]
 context = 1_000_000
 input = 1_000_000
-output = 32_768
+output = 999_990
 
 [modalities]
 input = ["text"]
