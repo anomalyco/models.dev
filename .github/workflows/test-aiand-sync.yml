@@ -1,0 +1,52 @@
+# Fork-only test workflow — remove before/after upstream PR merges.
+# Runs the aiand provider sync manually against the live API so the
+# adapter can be verified on the fork without touching anomalyco/models.dev.
+name: Test ai& Sync (fork only)
+
+on:
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Dry run (no files written)'
+        required: false
+        default: 'true'
+        type: choice
+        options:
+          - 'true'
+          - 'false'
+
+permissions:
+  contents: write
+
+jobs:
+  test-aiand:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+        with:
+          ref: feat/aiand-sync
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@f4d14e03ff726c06358e5557344e1da148b56cf7
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        run: bun install
+
+      - name: Run aiand sync
+        run: |
+          if [ "${{ inputs.dry_run }}" = "true" ]; then
+            bun models:sync aiand --dry-run
+          else
+            bun models:sync aiand
+          fi
+        env:
+          AIAND_API_KEY: ${{ secrets.AIAND_API_KEY }}
+
+      - name: Validate catalog
+        run: bun validate
+
+      - name: Show changed files
+        run: git status --short -- providers/aiand
