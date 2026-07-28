@@ -190,11 +190,21 @@ export function buildAiandModel(
       }
     : existing?.cost;
 
+  // [fix 1] The ai& API has no dedicated output-limit field, so do NOT fall
+  // back to `context` — that was overwriting hand-authored output limits
+  // (e.g. deepseek-v4-flash: 384_000, glm-5.2: 131_072). Strictly preserve
+  // the existing hand-authored value. Mirrors the Kilo adapter pattern.
   const limit = {
     context,
     input: existing?.limit?.input,
-    output: existing?.limit?.output ?? context,
+    output: existing?.limit?.output,
   };
+
+  // [fix 2] Always resolve modalities from the API response so the output
+  // modality is never dropped. Previously, factored models passed
+  // `existing.modalities` which is undefined when only `modalities.input` is
+  // set in the TOML, causing the entire block to be removed on every sync run.
+  const apiModalities = defaultModalities(model);
 
   // Existing factored model: refresh cost + limit, preserve authored overrides.
   if (existing?.base_model !== undefined) {
@@ -210,7 +220,9 @@ export function buildAiandModel(
         status: existing.status,
         interleaved: existing.interleaved,
         knowledge: existing.knowledge,
-        modalities: existing.modalities,
+        // [fix 2] Use API-resolved modalities instead of existing.modalities
+        // so output: ["text"] is never silently dropped for factored models.
+        modalities: existing.modalities ?? apiModalities,
         limit,
         cost,
       },
@@ -240,7 +252,8 @@ export function buildAiandModel(
       interleaved: existing.interleaved,
       cost,
       limit,
-      modalities: existing.modalities ?? defaultModalities(model),
+      // [fix 2] Fall back to API-resolved modalities for full models too.
+      modalities: existing.modalities ?? apiModalities,
     } satisfies SyncedFullModel;
   }
 
@@ -275,7 +288,7 @@ export function buildAiandModel(
   // reasoning_options is deliberately left as [] — the allowed effort values
   // vary per model and must be verified by a live probe before publishing.
   // (e.g. gpt-oss-120b: low|medium|high; kimi-k3: none|low|high|max)
-  const { input, output } = defaultModalities(model);
+  const { input, output } = apiModalities;
   return {
     name: model.name,
     description: describeModel({
