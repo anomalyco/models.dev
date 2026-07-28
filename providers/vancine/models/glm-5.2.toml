@@ -1,0 +1,20 @@
+# Vancine public pricing for glm-5.2 (accessed 2026-07-28).
+# Sources:
+# - https://vancine.com/api/pricing
+# - https://vancine.com/pricing/glm-5.2
+# Formula (USD / 1M tokens, group_ratio.default = 1.5):
+#   input = model_ratio × 2 × group_ratio.default
+#   output = input × completion_ratio
+#   cache_read = input × cache_ratio
+# Inputs: model_ratio = 0.55, completion_ratio = 3.491525423729,
+# cache_ratio = 0.25
+# Result: input = 1.65, output = 5.761016949153, cache_read = 0.4125
+# reasoning_options is empty: no free, publicly verified Vancine per-model
+# reasoning control syntax is available for this endpoint.
+base_model = "zhipuai/glm-5.2"
+reasoning_options = []
+
+[cost]
+input = 1.65
+output = 5.761016949153
+cache_read = 0.4125
