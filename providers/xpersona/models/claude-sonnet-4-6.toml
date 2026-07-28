@@ -1,0 +1,19 @@
+base_model = "anthropic/claude-sonnet-4-6"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high", "xhigh", "max"]
+
+[cost]
+input = 0.90
+output = 5.55
+reasoning = 5.55
+cache_read = 0.09
+
+[limit]
+context = 200_000
+output = 128_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
