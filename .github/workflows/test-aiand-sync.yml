@@ -1,6 +1,7 @@
 # Fork-only full-fledged test workflow for the ai& provider sync.
 # Mirrors sync-models.yml exactly but removes the repo guard so it runs on this fork.
-# Opens a PR into feat/aiand-sync for review, just like the real sync workflow.
+# Checks out dev (latest TOMLs) and opens a PR back into dev, just like
+# the real sync workflow does on anomalyco/models.dev.
 # Remove this file before the upstream PR is merged.
 name: Test ai& Sync (fork only)
 
@@ -23,7 +24,7 @@ jobs:
       - name: Checkout branch
         uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
         with:
-          ref: feat/aiand-sync
+          ref: dev
 
       - name: Setup Bun
         uses: oven-sh/setup-bun@f4d14e03ff726c06358e5557344e1da148b56cf7
@@ -71,12 +72,12 @@ jobs:
           git commit -m "$TITLE"
           git push --force-with-lease origin "$BRANCH"
 
-          pr_number="$(gh pr list --head "$BRANCH" --base feat/aiand-sync --json number --jq '.[0].number')"
+          pr_number="$(gh pr list --head "$BRANCH" --base dev --json number --jq '.[0].number')"
           if [ -n "$pr_number" ]; then
             gh pr edit "$pr_number" --title "$TITLE" --body-file .sync/model-sync-report.md
             for label in "${labels[@]}"; do
               gh pr edit "$pr_number" --add-label "$label"
             done
           else
-            gh pr create --base feat/aiand-sync --head "$BRANCH" --title "$TITLE" --body-file .sync/model-sync-report.md "${label_args[@]}"
+            gh pr create --base dev --head "$BRANCH" --title "$TITLE" --body-file .sync/model-sync-report.md "${label_args[@]}"
           fi
