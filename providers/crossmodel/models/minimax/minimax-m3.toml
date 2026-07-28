@@ -1,0 +1,21 @@
+base_model = "minimax/MiniMax-M3"
+
+[[reasoning_options]]
+type = "toggle"
+
+[cost]
+input = 0.33
+output = 1.32
+cache_read = 0.066
+cache_write = 0.33
+
+[[cost.tiers]]
+tier = { type = "context", size = 512_000 }
+input = 0.66
+output = 2.63
+cache_read = 0.132
+cache_write = 0.66
+
+[limit]
+context = 1_024_000
+output = 512_000

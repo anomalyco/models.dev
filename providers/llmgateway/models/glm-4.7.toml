@@ -1,23 +1,11 @@
-name = "GLM-4.7"
-family = "glm"
-release_date = "2025-12-22"
-last_updated = "2025-12-22"
-attachment = false
-reasoning = true
-temperature = true
-tool_call = true
-structured_output = true
-open_weights = false
+base_model = "zhipuai/glm-4.7"
+reasoning_options = [{ type = "toggle" }]
+
+[interleaved]
+field = "reasoning_content"
 
 [cost]
-input = 0.60
-output = 2.20
-cache_read = 0.11
-
-[limit]
-context = 200_000
-output = 128_000
-
-[modalities]
-input = ["text"]
-output = ["text"]
+input = 0.38
+output = 1.98
+cache_read = 0.19
+cache_write = 0

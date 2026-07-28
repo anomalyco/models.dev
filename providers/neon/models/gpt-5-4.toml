@@ -1,0 +1,22 @@
+base_model = "openai/gpt-5.4"
+reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh"] }]
+
+[cost]
+input = 2.5
+output = 15
+cache_read = 0.25
+
+[[cost.tiers]]
+tier = { type = "context", size = 272_000 }
+input = 5
+output = 22.5
+cache_read = 0.5
+
+[modalities]
+input = ["text", "image", "pdf"]
+output = ["text", "image"]
+
+[provider]
+npm = "@ai-sdk/openai"
+api = "${NEON_AI_GATEWAY_BASE_URL}/ai-gateway/openai/v1"
+shape = "responses"

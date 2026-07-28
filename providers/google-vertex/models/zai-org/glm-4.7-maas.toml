@@ -1,14 +1,20 @@
 name = "GLM-4.7"
+description = "GLM vision model for visual reasoning, documents, and multimodal agents"
+# POST .../endpoints/openapi/chat/completions; toggle with
+# $.chat_template_kwargs.enable_thinking = true | false.
+# https://cloud.google.com/vertex-ai/generative-ai/docs/maas/capabilities/thinking (accessed 2026-06-25)
 family = "glm"
 release_date = "2026-01-06"
 last_updated = "2026-01-06"
 attachment = false
 reasoning = true
+reasoning_options = [{ type = "toggle" }]
 temperature = true
 tool_call = true
 structured_output = true
 knowledge = "2025-04"
 open_weights = true
+status = "deprecated"
 
 [interleaved]
 field = "reasoning_content"

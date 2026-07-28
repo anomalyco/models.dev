@@ -1,22 +1,13 @@
-name = "GLM-5"
-family = "glm"
-attachment = false
-reasoning = true
-tool_call = true
-temperature = true
-release_date = "2026-02-12"
-last_updated = "2026-02-19"
-open_weights = true
+base_model = "zhipuai/glm-5"
+
+[[reasoning_options]]
+type = "toggle"
 
 [cost]
-input = 1
-output = 3.20
-cache_read = 0.20
+input = 0.95
+output = 3.15
+cache_read = 0.2
 
 [limit]
 context = 202_800
-output = 131_072
-
-[modalities]
-input = ["text"]
-output = ["text"]
+output = 131_100

@@ -1,27 +1,14 @@
-name = "MiniMax M2"
-family = "minimax"
-attachment = false
-reasoning = true
-tool_call = true
+base_model = "minimax/MiniMax-M2"
 structured_output = true
-temperature = true
-release_date = "2025-10-23"
-last_updated = "2025-10-23"
-open_weights = true
+reasoning_options = []
 
 [interleaved]
 field = "reasoning_details"
 
 [cost]
-input = 0.28
-output = 1.15
-cache_read = 0.28
-cache_write = 1.15
+input = 0.255
+output = 1.02
 
 [limit]
-context = 196_600
-output = 118_000
-
-[modalities]
-input = ["text"]
-output = ["text"]
+context = 204_800
+output = 131_072

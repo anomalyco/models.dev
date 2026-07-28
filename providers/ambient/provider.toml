@@ -1,0 +1,14 @@
+# Ambient's OpenAPI schema exposes reasoning.enabled, reasoning.effort, and
+# reasoning.max_tokens. Model-specific options follow each model's supported
+# reasoning modes (sources accessed 2026-07-17).
+# https://api.ambient.xyz/openapi.json
+# https://docs.z.ai/guides/capabilities/thinking
+# https://api-docs.deepseek.com/guides/thinking_mode/
+# https://platform.xiaomimimo.com/docs/en-US/api/chat/openai-api
+# https://platform.stepfun.ai/docs/en/guides/models/step-3.7-flash
+# https://platform.kimi.ai/docs/guide/use-kimi-k2-thinking-model
+name = "Ambient"
+env = ["AMBIENT_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+api = "https://api.ambient.xyz/v1"
+doc = "https://ambient.xyz"

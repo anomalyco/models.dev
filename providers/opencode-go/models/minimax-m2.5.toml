@@ -1,16 +1,16 @@
-name = "MiniMax M2.5"
+name = "MiniMax-M2.5"
+description = "Legacy model retained for compatibility with older integrations"
 family = "minimax-m2.5"
 release_date = "2026-02-12"
 last_updated = "2026-02-12"
 attachment = false
 reasoning = true
+reasoning_options = []
 temperature = true
 tool_call = true
 knowledge = "2025-01"
 open_weights = true
-
-[interleaved]
-field = "reasoning_content"
+status = "deprecated"
 
 [cost]
 input = 0.3
@@ -19,8 +19,11 @@ cache_read = 0.03
 
 [limit]
 context = 204_800
-output = 131_072
+output = 65_536
 
 [modalities]
 input = ["text"]
 output = ["text"]
+
+[provider]
+npm = "@ai-sdk/anthropic"

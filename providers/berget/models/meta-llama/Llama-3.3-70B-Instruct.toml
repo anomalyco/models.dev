@@ -1,9 +1,13 @@
 name = "Llama 3.3 70B Instruct"
+description = "Open Llama instruction model for multilingual chat, reasoning, and coding"
 family = "llama"
 release_date = "2025-04-27"
 last_updated = "2025-04-27"
 attachment = false
 reasoning = true
+# Berget documents no meaningful toggle, effort subset, or budget for this model.
+# https://api.berget.ai/openapi.json
+reasoning_options = []
 temperature = true
 knowledge = "2023-12"
 tool_call = true
@@ -11,8 +15,8 @@ structured_output = true
 open_weights = true
 
 [cost]
-input = 0.9
-output = 0.9
+input = 0.99
+output = 0.99
 
 [limit]
 context = 128_000

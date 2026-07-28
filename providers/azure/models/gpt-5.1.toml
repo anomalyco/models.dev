@@ -1,9 +1,11 @@
 name = "GPT-5.1"
+description = "Speech generation model for controllable voice, narration, and audio delivery"
 family = "gpt"
 release_date = "2025-11-14"
 last_updated = "2025-11-14"
 attachment = true
 reasoning = true
+reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high"] }]
 temperature = false
 knowledge = "2024-09-30"
 tool_call = true
@@ -16,7 +18,8 @@ output = 10.00
 cache_read = 0.125
 
 [limit]
-context = 272_000
+context = 400_000
+input = 272_000
 output = 128_000
 
 [modalities]

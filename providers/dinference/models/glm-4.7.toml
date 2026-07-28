@@ -1,13 +1,5 @@
-name = "GLM-4.7"
-family = "glm"
-release_date = "2025-12"
-last_updated = "2025-12"
-attachment = false
-reasoning = true
-temperature = true
-tool_call = true
-knowledge = "2025-04"
-open_weights = true
+reasoning_options = []
+base_model = "zhipuai/glm-4.7"
 
 [interleaved]
 field = "reasoning_content"
@@ -19,7 +11,3 @@ output = 1.65
 [limit]
 context = 200_000
 output = 128_000
-
-[modalities]
-input = ["text"]
-output = ["text"]

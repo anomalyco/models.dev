@@ -1,0 +1,8 @@
+base_model = "google/gemini-3-flash-preview"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
+
+[cost]
+input = 0.5
+output = 3
+cache_read = 0.05
+input_audio = 1

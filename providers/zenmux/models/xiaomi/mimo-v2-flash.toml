@@ -1,22 +1,7 @@
-name = "MiMo-V2-Flash"
-release_date = "2025-12-17"
-last_updated = "2025-12-17"
-attachment = false
-reasoning = true
-temperature = true
-tool_call = true
-knowledge = "2025-01-01"
-open_weights = false
+base_model = "xiaomi/mimo-v2-flash"
+reasoning_options = [{ type = "toggle" }]
 
 [cost]
-input = 0.10
-output = 0.30
+input = 0.1
+output = 0.3
 cache_read = 0.01
-
-[limit]
-context = 262_000
-output = 64_000
-
-[modalities]
-input = ["text"]
-output = ["text"]

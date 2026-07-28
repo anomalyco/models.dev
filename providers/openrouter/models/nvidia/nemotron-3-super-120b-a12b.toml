@@ -1,22 +1,17 @@
-name = "Nemotron 3 Super"
-family = "nemotron"
-attachment = false
-reasoning = true
-tool_call = true
-temperature = true
-knowledge = "2024-04"
-release_date = "2026-03-11"
-last_updated = "2026-03-11"
-open_weights = true
+base_model = "nvidia/nemotron-3-super-120b-a12b"
+structured_output = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium"]
+
+[[reasoning_options]]
+type = "budget_tokens"
 
 [cost]
-input = 0.10
-output = 0.50
+input = 0.085
+output = 0.4
 
 [limit]
-context = 262144
-output = 262144
-
-[modalities]
-input = ["text"]
-output = ["text"]
+context = 1_000_000
+output = 16_384

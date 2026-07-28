@@ -1,3 +1,9 @@
+# Native POST /api/v1/chat: $.reasoning = "off"|"low"|"medium"|"high"|"on".
+# OpenAI POST /v1/responses: $.reasoning.effort (the example uses "low").
+# The published POST /v1/chat/completions payload list has no reasoning field.
+# https://lmstudio.ai/docs/developer/rest/chat (accessed 2026-06-25)
+# https://lmstudio.ai/docs/developer/openai-compat/responses (accessed 2026-06-25)
+# https://lmstudio.ai/docs/developer/openai-compat/chat-completions (accessed 2026-06-25)
 name = "LMStudio"
 env = ["LMSTUDIO_API_KEY"]
 npm = "@ai-sdk/openai-compatible"

@@ -1,22 +1,16 @@
-name = "Llama-3.1-Nemotron-Ultra-253B-v1"
-family = "llama"
-release_date = "2024-07-01"
-last_updated = "2025-09-05"
-attachment = false
-reasoning = true
-temperature = true
-knowledge = "2024-07"
-tool_call = true
-open_weights = false
+# Sources (accessed 2026-07-25):
+# - https://docs.api.nvidia.com/nim/reference/nvidia-llama-3_1-nemotron-ultra-253b-v1
+# - https://docs.api.nvidia.com/nim/reference/nvidia-llama-3_1-nemotron-ultra-253b-v1-infer
+# - https://huggingface.co/nvidia/Llama-3_1-Nemotron-Ultra-253B-v1
+# - https://integrate.api.nvidia.com/v1/models id: nvidia/llama-3.1-nemotron-ultra-253b-v1
+# Toggle: system message `detailed thinking on` | `detailed thinking off`.
+# Infer OpenAPI: max_tokens 1..16384.
+base_model = "nvidia/llama-3.1-nemotron-ultra-253b"
+reasoning_options = [{ type = "toggle" }] # API: system "detailed thinking on|off"
 
 [cost]
 input = 0.0
 output = 0.0
 
 [limit]
-context = 131_072
-output = 8_192
-
-[modalities]
-input = ["text"]
-output = ["text"]
+output = 16_384

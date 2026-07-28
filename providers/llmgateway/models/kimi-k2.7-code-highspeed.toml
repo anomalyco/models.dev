@@ -1,0 +1,13 @@
+# This model is restricted here to $.reasoning_effort or $.reasoning.effort
+# = "low"|"medium"|"high"; no exact token budget is documented for it.
+# https://docs.llmgateway.io/features/reasoning (accessed 2026-06-25)
+base_model = "moonshotai/kimi-k2.7-code-highspeed"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 1.9
+output = 8
+cache_read = 0.38

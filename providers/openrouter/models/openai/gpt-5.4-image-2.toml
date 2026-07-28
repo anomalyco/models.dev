@@ -1,0 +1,28 @@
+name = "GPT-5.4 Image 2"
+description = "Image model for prompt-driven generation, editing, and visual design workflows"
+family = "gpt"
+release_date = "2026-04-21"
+last_updated = "2026-04-21"
+attachment = true
+reasoning = true
+temperature = false
+tool_call = false
+structured_output = true
+open_weights = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "xhigh"]
+
+[cost]
+input = 8
+output = 15
+cache_read = 2
+
+[limit]
+context = 272_000
+output = 128_000
+
+[modalities]
+input = ["image", "text", "pdf"]
+output = ["image", "text"]

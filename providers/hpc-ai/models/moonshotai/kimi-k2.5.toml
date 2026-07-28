@@ -1,0 +1,20 @@
+base_model = "moonshotai/kimi-k2.5"
+attachment = true
+reasoning_options = [{ type = "toggle" }]
+temperature = true
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.60
+output = 3.00
+cache_read = 0.10
+
+[limit]
+context = 256_000
+output = 256_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

@@ -1,9 +1,11 @@
 name = "Claude Haiku 4.5 (US)"
+description = "Fast Claude model for responsive assistance, classification, and lightweight agents"
 family = "claude-haiku"
 release_date = "2025-10-15"
 last_updated = "2025-10-15"
 attachment = true
 reasoning = true
+reasoning_options = [{ type = "budget_tokens", min = 1_024 }]
 temperature = true
 tool_call = true
 structured_output = true

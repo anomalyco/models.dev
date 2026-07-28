@@ -1,20 +1,17 @@
 name = "Text Multilingual Embedding 002"
+description = "Embedding model for semantic search, retrieval, clustering, and ranking pipelines"
 family = "text-embedding"
-release_date = "2024-03"
+release_date = "2024-03-01"
 last_updated = "2024-03"
 attachment = false
 reasoning = false
-temperature = false
+temperature = true
 tool_call = false
 open_weights = false
 
-[cost]
-input = 0.03
-output = 0
-
 [limit]
-context = 8192
-output = 1536
+context = 8_192
+output = 1_536
 
 [modalities]
 input = ["text"]

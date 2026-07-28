@@ -1,20 +1,14 @@
-name = "GPT OSS 20B"
-release_date = "2025-08-05"
-last_updated = "2025-08-05"
-attachment = false
-reasoning = false
-temperature = true
-tool_call = false
-open_weights = false
+# Native `/ai/run` schema has no reasoning control, and no model-specific
+# OpenAI-compatible reasoning field was verified. No token budget is documented.
+# https://developers.cloudflare.com/workers-ai/models/gpt-oss-20b/sync-input.json (accessed 2026-06-25)
+base_model = "openai/gpt-oss-20b"
+description = "Open-weight GPT model for self-hosted reasoning and instruction-following workloads"
+reasoning_options = []
 
 [cost]
 input = 0.2
 output = 0.3
 
 [limit]
-context = 128000
-output = 16384
-
-[modalities]
-input = ["text"]
-output = ["text"]
+context = 128_000
+output = 16_384

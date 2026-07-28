@@ -1,22 +1,5 @@
-name = "Sonar Pro"
-family = "sonar"
-release_date = "2025-03-07"
-last_updated = "2025-03-07"
-attachment = false
-reasoning = false
-temperature = true
-tool_call = false
-structured_output = true
-open_weights = false
+base_model = "perplexity/sonar-pro"
 
 [cost]
-input = 3.00
-output = 15.00
-
-[limit]
-context = 200_000
-output = 16_384
-
-[modalities]
-input = ["text"]
-output = ["text"]
+input = 3
+output = 15

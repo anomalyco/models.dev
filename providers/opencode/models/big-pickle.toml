@@ -1,13 +1,19 @@
 name = "Big Pickle"
+description = "Reasoning model for deliberate analysis, multi-step problem solving, and tool use"
 family = "big-pickle"
 release_date = "2025-10-17"
 last_updated = "2025-10-17"
 attachment = false
 reasoning = true
+reasoning_options = []
 temperature = true
-tool_call = true
 knowledge = "2025-01"
+tool_call = true
+structured_output = true
 open_weights = false
+
+[interleaved]
+field = "reasoning_content"
 
 [cost]
 input = 0.0
@@ -17,11 +23,9 @@ cache_write = 0.0
 
 [limit]
 context = 200_000
-output = 128_000
+input = 160_000
+output = 32_000
 
 [modalities]
 input = ["text"]
 output = ["text"]
-
-[provider]
-npm = "@ai-sdk/anthropic"

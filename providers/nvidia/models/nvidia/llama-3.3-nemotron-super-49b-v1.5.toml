@@ -1,21 +1,15 @@
-name = "Llama 3.3 Nemotron Super 49b V1.5"
-attachment = false
-reasoning = false
-temperature = true
-tool_call = false
-structured_output = false
-release_date = "2025-03-16"
-last_updated = "2025-03-16"
-open_weights = false
+# Sources (accessed 2026-07-25):
+# - https://docs.api.nvidia.com/nim/reference/nvidia-llama-3_3-nemotron-super-49b-v1_5
+# - https://docs.api.nvidia.com/nim/reference/nvidia-llama-3_3-nemotron-super-49b-v1_5-infer
+# - https://integrate.api.nvidia.com/v1/models id: nvidia/llama-3.3-nemotron-super-49b-v1.5
+# Toggle: empty system prompt = reasoning ON; system content `/no_think` = OFF.
+# Infer OpenAPI: max_tokens 1..65536 (no JSON reasoning field; control is system prompt).
+base_model = "nvidia/llama-3.3-nemotron-super-49b-v1.5"
+reasoning_options = [{ type = "toggle" }] # API: system message "/no_think" vs default empty
 
 [cost]
-input = 0.00
-output = 0.00
+input = 0.0
+output = 0.0
 
 [limit]
-context = 128000
-output = 4096
-
-[modalities]
-input = ["text"]
-output = ["text"]
+output = 65_536

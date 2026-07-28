@@ -1,0 +1,10 @@
+base_model = "mistral/mistral-nemo"
+structured_output = true
+
+[cost]
+input = 0.019
+output = 0.03
+
+[limit]
+context = 131_072
+output = 16_384

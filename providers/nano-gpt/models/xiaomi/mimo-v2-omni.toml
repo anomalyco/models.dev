@@ -1,0 +1,25 @@
+# Not included in subscription
+name = "MiMo V2 Omni"
+description = "MiMo omni model for text, image, video, audio, and agents"
+release_date = "2026-03-19"
+last_updated = "2026-03-19"
+attachment = true
+reasoning = true
+reasoning_options = [{ type = "toggle" }]
+tool_call = true
+structured_output = false
+open_weights = false
+
+[cost]
+input = 0.4
+output = 2
+cache_read = 0.08
+
+[limit]
+context = 262144
+input = 262144
+output = 65536
+
+[modalities]
+input = ["text", "image", "video", "audio"]
+output = ["text"]

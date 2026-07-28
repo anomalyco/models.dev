@@ -1,4 +1,5 @@
 name = "Deepseek V3.2 Exp"
+description = "DeepSeek chat model for instruction following, coding, and analysis"
 release_date = "2025-09-29"
 last_updated = "2025-09-29"
 attachment = false
@@ -7,6 +8,9 @@ temperature = true
 tool_call = true
 structured_output = true
 open_weights = true
+
+[[reasoning_options]]
+type = "toggle"
 
 [cost]
 input = 0.27

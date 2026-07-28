@@ -1,4 +1,5 @@
 name = "gpt-4.1-mini"
+description = "Compact GPT model for low-latency assistance and high-volume workloads"
 family = "gpt-mini"
 release_date = "2025-04-14"
 last_updated = "2025-04-14"
@@ -6,6 +7,7 @@ attachment = true
 reasoning = false
 temperature = true
 tool_call = true
+structured_output = true
 open_weights = false
 knowledge = "2024-04"
 
@@ -14,9 +16,9 @@ input = 0.400
 output = 1.600
 
 [limit]
-context = 1_000_000
+context = 1_047_576
 output = 32_768
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image", "pdf"]
 output = ["text"]

@@ -1,27 +1,14 @@
-name = "GLM-5-Turbo"
-family = "glm"
-release_date = "2026-03-16"
-last_updated = "2026-03-16"
-attachment = false
-reasoning = true
-temperature = true
-tool_call = true
-structured_output = true
-open_weights = false
+base_model = "zhipuai/glm-5-turbo"
+structured_output = false
+reasoning_options = []
 
 [interleaved]
 field = "reasoning_content"
 
 [cost]
-input = 1.20
-output = 4.00
+input = 1.2
+output = 4
 cache_read = 0.24
-cache_write = 0
 
 [limit]
-context = 200_000
-output = 131_072
-
-[modalities]
-input = ["text"]
-output = ["text"]
+context = 202_752

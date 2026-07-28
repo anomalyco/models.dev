@@ -1,21 +1,12 @@
-name = "Llama 3.3 70B Instruct FP8 Fast"
-family = "llama"
-release_date = "2025-04-03"
-last_updated = "2025-04-03"
+base_model = "meta/llama-3.3-70b-instruct"
+name = "Llama 3.3 70B Instruct fp8 Fast"
 attachment = false
-reasoning = false
-temperature = true
-tool_call = false
-open_weights = false
+structured_output = false
 
 [cost]
-input = 0.29
-output = 2.25
+input = 0.293
+output = 2.253
 
 [limit]
-context = 128000
-output = 16384
-
-[modalities]
-input = ["text"]
-output = ["text"]
+context = 24_000
+output = 24_000

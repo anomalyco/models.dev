@@ -1,20 +1,17 @@
 name = "voyage-3.5-lite"
+description = "Efficient model for low-latency assistance, extraction, and routine automation"
 family = "voyage"
 release_date = "2025-05-20"
 last_updated = "2025-05-20"
 attachment = false
 reasoning = false
-temperature = false
+temperature = true
 tool_call = false
 open_weights = false
 
-[cost]
-input = 0.02
-output = 0
-
 [limit]
-context = 8192
-output = 1536
+context = 8_192
+output = 1_536
 
 [modalities]
 input = ["text"]

@@ -1,17 +1,20 @@
-name = "GPT-5 Nano"
-family = "gpt-nano"
-release_date = "2025-08-07"
-last_updated = "2025-08-07"
-attachment = true
+# Source: https://routellm.abacus.ai/v1/models
+# RouteLLM API does not report thinking: true for this ID.
+# RouteLLM input_modalities: ['text', 'image']
+# RouteLLM output_modalities: ['text']
+# RouteLLM context_length: 400000
+# RouteLLM max_completion_tokens: 128000
+# RouteLLM input_token_rate: 0.00000005
+# RouteLLM output_token_rate: 0.0000004
+# RouteLLM cached_input_token_rate: 0.000000005
+base_model = "openai/gpt-5-nano"
 reasoning = true
-temperature = false
-knowledge = "2024-05-30"
-tool_call = true
-open_weights = false
+reasoning_options = []
 
 [cost]
 input = 0.05
-output = 0.40
+output = 0.4
+cache_read = 0.005
 
 [limit]
 context = 400_000

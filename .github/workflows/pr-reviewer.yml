@@ -1,0 +1,76 @@
+name: PR Reviewer
+
+on:
+  pull_request_target:
+    branches: [dev]
+    types: [opened, reopened, synchronize, ready_for_review]
+
+permissions:
+  contents: read
+  pull-requests: write
+
+concurrency:
+  group: pr-reviewer-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  review:
+    if: |
+      github.repository == 'anomalyco/models.dev' &&
+      !github.event.pull_request.draft &&
+      !startsWith(github.event.pull_request.head.ref, 'automation/sync-models-')
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout trusted base revision
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+        with:
+          ref: ${{ github.event.pull_request.base.sha }}
+          persist-credentials: false
+
+      - name: Install opencode
+        run: curl -fsSL https://opencode.ai/install | bash
+
+      - name: Prepare pull request context
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          set -euo pipefail
+          mkdir .pr-review
+
+          jq '{
+            number: .pull_request.number,
+            title: .pull_request.title,
+            body: .pull_request.body,
+            author: .pull_request.user.login,
+            base: .pull_request.base.ref,
+            head: .pull_request.head.ref
+          }' "$GITHUB_EVENT_PATH" > .pr-review/pull-request.json
+
+          gh pr diff "$PR_NUMBER" --repo "$GITHUB_REPOSITORY" --patch --color never > .pr-review/diff.patch
+
+      - name: Run pull request reviewer
+        env:
+          OPENCODE_API_KEY: ${{ secrets.OPENCODE_API_KEY }}
+          OPENCODE_PERMISSION: '{"*":"deny","read":"allow","glob":"allow","grep":"allow","external_directory":"deny"}'
+        run: |
+          set -euo pipefail
+          EVENTS_FILE="$RUNNER_TEMP/pr-reviewer-events.jsonl"
+          RESPONSE_FILE="$RUNNER_TEMP/pr-reviewer-response.md"
+          echo "RESPONSE_FILE=$RESPONSE_FILE" >> "$GITHUB_ENV"
+
+          opencode run --agent pr-reviewer -m opencode/grok-4.5 --format json <<'EOF' | tee "$EVENTS_FILE"
+          Review this pull request using the trusted reviewer instructions. Start with `.pr-review/pull-request.json`, `.pr-review/diff.patch`, `AGENTS.md`, and the contributing guidance in `README.md`. Read `sync.md`, the reasoning-options audit guide, schema code, and nearby base-revision files when relevant to the changed files. Use only the read, glob, and grep tools. Return only the final review comment in the agent's required output format. Never include progress narration or passed-check summaries.
+          EOF
+
+          if ! jq -ers 'map(select(.type == "text") | .part.text) | last | select(length > 0)' "$EVENTS_FILE" > "$RESPONSE_FILE"; then
+            echo "Pull request reviewer did not produce a final response." >&2
+            exit 1
+          fi
+
+      - name: Post review comment
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: gh pr comment "$PR_NUMBER" --repo "$GITHUB_REPOSITORY" --body-file "$RESPONSE_FILE"

@@ -1,7 +1,9 @@
 name = "OpenAI: o4 Mini Deep Research"
+description = "Research model for long-horizon investigation, synthesis, and analytical reports"
 release_date = "2024-06-26"
 last_updated = "2026-03-15"
 attachment = true
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "medium", "high", "xhigh"] }]
 reasoning = true
 temperature = true
 tool_call = true

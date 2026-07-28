@@ -1,0 +1,6 @@
+base_model = "anthropic/claude-sonnet-4-6"
+reasoning_options = [{ type = "budget_tokens", min = 1_024, max = 32_000 }]
+
+[cost]
+input = 3
+output = 15

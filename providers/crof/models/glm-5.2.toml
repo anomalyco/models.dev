@@ -1,0 +1,16 @@
+base_model = "zhipuai/glm-5.2"
+reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high"] }]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.5
+output = 2.2
+cache_read = 0.08
+
+[limit]
+output = 131_072
+
+[provider]
+npm = "@ai-sdk/openai-compatible"

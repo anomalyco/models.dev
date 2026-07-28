@@ -1,4 +1,5 @@
 name = "Qwen3-Omni Flash"
+description = "Qwen omni model for text, vision, audio, and multimodal agent tasks"
 family = "qwen"
 release_date = "2025-09-15"
 last_updated = "2025-09-15"
@@ -8,6 +9,9 @@ temperature = true
 knowledge = "2024-04"
 tool_call = true
 open_weights = false
+
+[[reasoning_options]]
+type = "toggle"
 
 [cost]
 input = 0.43

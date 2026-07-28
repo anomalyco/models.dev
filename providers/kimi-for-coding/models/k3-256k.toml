@@ -1,0 +1,25 @@
+# k3-256k is the 256K-context variant of Kimi K3 on the Kimi For Coding
+# endpoint. Unlike full K3 it accepts no video input (image only).
+# reasoning_options per the Kimi Code docs:
+#   reasoning_effort = "low" | "high" | "max" (default "high")
+# Cost is zeroed per this provider's subscription convention.
+base_model = "moonshotai/kimi-k3"
+name = "Kimi K3-256K"
+description = "256K-context version of Kimi K3, reducing token consumption for shorter coding sessions"
+attachment = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[cost]
+input = 0
+output = 0
+cache_read = 0
+cache_write = 0
+
+[limit]
+context = 262_144
+
+[modalities]
+input = ["text", "image"]

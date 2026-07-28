@@ -1,0 +1,16 @@
+# This route maps effort through top-level `verbosity`, not `reasoning.effort`.
+# https://openrouter.ai/docs/api/reference/parameters#verbosity (accessed 2026-06-25)
+base_model = "anthropic/claude-opus-4-8"
+name = "Claude Opus 4.8 (Fast)"
+description = "Flagship Claude model for deep reasoning, coding, and long-horizon agents"
+structured_output = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high", "xhigh", "max"]
+
+[cost]
+input = 10
+output = 50
+cache_read = 1
+cache_write = 12.5

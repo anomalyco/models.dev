@@ -1,9 +1,11 @@
 name = "gemini-2.5-pro"
+description = "Advanced Gemini model for complex reasoning, coding, and multimodal analysis"
 family = "gemini-pro"
 release_date = "2026-01"
 last_updated = "2026-01"
 attachment = true
-reasoning = false
+reasoning = true
+reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high"] }]
 temperature = true
 tool_call = true
 structured_output = true
