@@ -11,7 +11,9 @@
 # (Inkling:peft:262144, 3.74/9.36), not this route. The base model omits limit.output
 # because the served cap varies by host (16_384 NVIDIA, 32_768 Baseten, 1_048_576
 # OpenRouter), so each provider entry supplies its own; context is overridden for the
-# same reason.
+# same reason. modalities follow the same first-party entry: Tinker serves this route as
+# text+image, dropping the base model's audio input, so it is overridden here rather than
+# advertising an input the route may reject.
 #
 # reasoning_options: Tinker documents its effort control only on the ANTHROPIC-compatible
 # surface — {"output_config":{"effort":"low"|"medium"|"high"|"xhigh"|"max"}}, with
@@ -32,3 +34,7 @@ cache_read = 0.374
 [limit]
 context = 65_536
 output = 65_536
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
