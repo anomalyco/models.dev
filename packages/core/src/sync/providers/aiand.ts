@@ -7,10 +7,12 @@ import { factorBaseModel, resolveCanonicalBaseModel } from "./openrouter.js";
 
 const API_ENDPOINT = "https://api.aiand.com/v1/models";
 
-// Maps ai& org prefixes to the canonical org prefix used by resolveCanonicalBaseModel.
-const CANONICAL_ORG_ALIASES: Record<string, string> = {
-  "zai-org": "zhipuai",
-  "moonshotai": "moonshotai",
+// Maps ai& org prefixes to the canonical metadata prefixes understood by
+// resolveCanonicalBaseModel. Mirrors CANONICAL_ORG_PREFIXES in huggingface.ts.
+const CANONICAL_ORG_PREFIXES: Record<string, string> = {
+  "deepseek-ai": "deepseek",
+  moonshotai: "moonshotai",
+  "zai-org": "zai",
 };
 
 const AiandPricing = z.object({
@@ -42,7 +44,6 @@ export const AiandResponse = z.object({
 export type AiandModel = z.infer<typeof AiandModel>;
 
 // ai& model IDs use the form "org/model-id" (e.g. "zai-org/glm-5.2").
-// Split into [org, modelId] parts.
 function splitModelId(id: string): { org: string; modelId: string } | undefined {
   const slash = id.indexOf("/");
   if (slash === -1) return undefined;
@@ -52,7 +53,7 @@ function splitModelId(id: string): { org: string; modelId: string } | undefined 
 function resolveAiandBaseModel(model: AiandModel): string | undefined {
   const parts = splitModelId(model.id);
   if (parts === undefined) return undefined;
-  const canonicalOrg = CANONICAL_ORG_ALIASES[parts.org] ?? parts.org;
+  const canonicalOrg = CANONICAL_ORG_PREFIXES[parts.org] ?? parts.org;
   return resolveCanonicalBaseModel(`${canonicalOrg}/${parts.modelId}`);
 }
 
@@ -107,20 +108,6 @@ function inferFamily(model: AiandModel, name: string) {
       }
       return new RegExp(`(^|[^a-z0-9])${value}(?=$|[^a-z0-9])`).test(target);
     });
-}
-
-// ai& documents reasoning_effort with values: none | minimal | low | medium | high | xhigh.
-// When the API lists "reasoning_effort" in supported_parameters we emit this option list.
-const AIAND_REASONING_EFFORT_VALUES = ["none", "minimal", "low", "medium", "high", "xhigh"] as const;
-
-function buildReasoningOptions(supportedParams: string[]) {
-  if (!supportedParams.includes("reasoning_effort")) return undefined;
-  return [
-    {
-      type: "effort" as const,
-      values: [...AIAND_REASONING_EFFORT_VALUES],
-    },
-  ];
 }
 
 export function buildAiandModel(
@@ -208,21 +195,14 @@ export function buildAiandModel(
   const canonical = resolveAiandBaseModel(model);
   if (canonical !== undefined) {
     const factoredLimit = { context, input: undefined, output: undefined };
-    const factoredModel = factorBaseModel(canonical, { limit: factoredLimit, cost }, factoredLimit);
-    // Attach reasoning_options when the live API signals reasoning_effort support.
-    if (reasoning && !Array.isArray((factoredModel as any).reasoning_options)) {
-      return {
-        ...factoredModel,
-        reasoning: true,
-        reasoning_options: buildReasoningOptions(params),
-      };
-    }
-    return factoredModel;
+    return factorBaseModel(canonical, { limit: factoredLimit, cost }, factoredLimit);
   }
 
   // Brand-new model with no canonical base: best-effort standalone entry.
+  // reasoning_options is deliberately left as [] — the allowed effort values
+  // vary per model and must be verified by a live probe before publishing.
+  // (e.g. gpt-oss-120b: low|medium|high; kimi-k3: none|low|high|max)
   const { input, output } = defaultModalities(model);
-  const reasoningOptions = buildReasoningOptions(params);
   return {
     name: model.name,
     description: describeModel({
@@ -241,6 +221,8 @@ export function buildAiandModel(
     last_updated: model.created ? dateFromTimestamp(model.created) : undefined,
     attachment: input.some((v) => v !== "text"),
     reasoning,
+    // Safe placeholder — per-model effort values must be probed and hand-authored.
+    reasoning_options: reasoning ? [] : undefined,
     temperature: params.includes("temperature"),
     tool_call: params.includes("tools") || params.includes("tool_choice"),
     structured_output: model.structured_outputs ?? false,
@@ -248,7 +230,6 @@ export function buildAiandModel(
     cost,
     limit,
     modalities: { input, output },
-    ...(reasoningOptions ? { reasoning_options: reasoningOptions } : {}),
   } satisfies SyncedFullModel;
 }
 
@@ -256,6 +237,18 @@ export const aiand = {
   id: "aiand",
   name: "ai&",
   modelsDir: "providers/aiand/models",
+  // Do not auto-delete local TOMLs absent from GET /v1/models. The ai& catalog
+  // is account/org-scoped — a model absent from the automation key's view may
+  // still be live for other orgs or curated by hand (e.g. glm-5.1, kimi-k2.6).
+  // Matches the pattern used by openai, deepinfra, baseten, huggingface.
+  deleteMissing: false,
+  missingNotice(paths) {
+    if (paths.length === 0) return [];
+    return [
+      `${paths.length} local ai& model(s) were absent from GET /v1/models and were retained for manual lifecycle review.`,
+      `Retained: ${paths.map((p) => `\`${p}\``).join(", ")}`,
+    ];
+  },
   async fetchModels() {
     const apiKey = process.env.AIAND_API_KEY;
     if (!apiKey) {
