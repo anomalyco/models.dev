@@ -2,19 +2,19 @@
 # Sources:
 # - https://vancine.com/api/pricing
 # - https://vancine.com/pricing/kimi-k3
-# Formula (USD / 1M tokens, group_ratio.default = 1.5):
+# Formula (USD / 1M tokens, group_ratio.default = 1):
 #   input = model_ratio × 2 × group_ratio.default
 #   output = input × completion_ratio
 #   cache_read = input × cache_ratio
 # Inputs: model_ratio = 1.475, completion_ratio = 5.003389830508,
 # cache_ratio = 0.101694915254
-# Result: input = 4.425, output = 22.14, cache_read = 0.45
+# Result: input = 2.95, output = 14.76, cache_read = 0.30
 # reasoning_options is empty: no free, publicly verified Vancine per-model
 # reasoning control syntax is available for this endpoint.
 base_model = "moonshotai/kimi-k3"
 reasoning_options = []
 
 [cost]
-input = 4.425
-output = 22.14
-cache_read = 0.45
+input = 2.95
+output = 14.76
+cache_read = 0.30

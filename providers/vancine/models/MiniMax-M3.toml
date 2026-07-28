@@ -2,13 +2,13 @@
 # Sources:
 # - https://vancine.com/api/pricing
 # - https://vancine.com/pricing/MiniMax-M3
-# Formula (USD / 1M tokens, group_ratio.default = 1.5):
+# Formula (USD / 1M tokens, group_ratio.default = 1):
 #   input = model_ratio × 2 × group_ratio.default
 #   output = input × completion_ratio
 #   cache_read = input × cache_ratio
 # Inputs: model_ratio = 0.31, completion_ratio = 4,
 # cache_ratio = 0.193548387097
-# Result: input = 0.93, output = 3.72, cache_read = 0.18
+# Result: input = 0.62, output = 2.48, cache_read = 0.12
 # Vancine public catalog marks this model with 1M context, so limit is
 # overridden below (base metadata uses 512K context).
 # reasoning_options is empty: no free, publicly verified Vancine per-model
@@ -17,9 +17,9 @@ base_model = "minimax/MiniMax-M3"
 reasoning_options = []
 
 [cost]
-input = 0.93
-output = 3.72
-cache_read = 0.18
+input = 0.62
+output = 2.48
+cache_read = 0.12
 
 [limit]
 context = 1_000_000
