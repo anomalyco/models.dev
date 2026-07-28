@@ -1,7 +1,6 @@
 name = "Requesty"
 env = ["REQUESTY_API_KEY"]
-npm = "@ai-sdk/openai-compatible"
-api = "https://router.requesty.ai/v1"
+npm = "@requesty/ai-sdk"
 # Reasoning HTTP format (accessed 2026-06-25):
 # POST /v1/chat/completions uses top-level reasoning_effort as an effort string
 # or decimal budget string. OpenAI: low|medium|high pass through, max -> high,
