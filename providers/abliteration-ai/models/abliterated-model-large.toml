@@ -19,10 +19,11 @@ structured_output = true
 temperature = true
 open_weights = false
 
-# Accepts the full ladder but maps it to two modes: minimal-high -> high, xhigh-max -> max.
+# Two distinct reasoning depths: high and max. The API also accepts the other
+# ladder values as aliases, mapping minimal-high -> high and xhigh-max -> max.
 [[reasoning_options]]
 type = "effort" # API: {"reasoning_effort": "<value>"} on /v1/chat/completions
-values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"]
+values = ["none", "high", "max"]
 
 [[reasoning_options]]
 type = "toggle" # API: {"thinking": false} on /v1/messages (legacy alias on /v1/chat/completions)
