@@ -1,5 +1,7 @@
 base_model = "deepseek/deepseek-v4-pro"
 
+# TokenBay Chat Completions documents reasoning_effort but not thinking.type.
+# https://www.tokenbay.com/docs/reference/text/openai/chat-completions
 [[reasoning_options]]
 type = "effort"
 values = ["high", "max"]
