@@ -1,8 +1,13 @@
 # Token Factory catalog (https://tokenfactory.iamsaif.ai/api/portal/v1/models), read 2026-07-28.
-# All model metadata inherited from models/zhipuai/glm-5.2; only Token Factory pricing is overridden.
+# Metadata inherited from models/zhipuai/glm-5.2; Token Factory serves a 450,000-token context and prices as below.
+# reasoning_options left empty until the exact thinking-control request field is verified on api.tokenfactory.iamsaif.ai.
 base_model = "zhipuai/glm-5.2"
-reasoning_options = [{ type = "effort", values = ["none", "high", "xhigh"] }]
+reasoning_options = []
 
 [cost]
 input = 0.40
 output = 4.00
+
+[limit]
+context = 450_000
+output = 32_768

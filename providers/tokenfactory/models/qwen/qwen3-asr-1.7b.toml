@@ -1,5 +1,5 @@
 # Token Factory catalog (https://tokenfactory.iamsaif.ai/api/portal/v1/models), read 2026-07-28.
-# No models/ metadata entry exists; standalone. Specs from the Qwen3-ASR model card.
+# No models/ metadata entry exists; standalone. Limits per Token Factory catalog; release/knowledge from the Qwen3-ASR model card.
 name = "Qwen3-ASR 1.7B"
 description = "Open-weight Qwen3 speech-recognition model for audio-to-text transcription"
 attachment = false
@@ -16,8 +16,8 @@ input = 0.06
 output = 0.00
 
 [limit]
-context = 53_248
-output = 4_096
+context = 32_768
+output = 8_192
 
 [modalities]
 input = ["audio"]
