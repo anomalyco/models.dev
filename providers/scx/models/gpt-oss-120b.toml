@@ -1,9 +1,8 @@
-base_model = "minimax/MiniMax-M2.7"
-structured_output = true
+base_model = "openai/gpt-oss-120b"
 # SCX validates reasoning_effort server-side; /v1/chat/completions rejects any
 # other value with 400 "must be one of 'low', 'medium', 'high'".
 reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
 
 [limit]
-context = 192_000
-output = 4_096
+context = 131_072
+output = 131_072
