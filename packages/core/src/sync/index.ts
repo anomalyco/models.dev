@@ -400,6 +400,9 @@ export async function syncProvider<SourceModel>(
       const notice = `Failed to open missing-model GitHub issues: ${message}`;
       notices.push(notice);
       console.error(notice);
+      // Surface as a workflow annotation: on no-change hours the notice never
+      // reaches a PR body, so a broken token or full dedupe window would
+      // otherwise disable issue opens silently while runs stay green.
       if (process.env.GITHUB_ACTIONS === "true") console.log(`::error::${provider.id}: ${notice}`);
     }
   }
@@ -771,6 +774,9 @@ function quote(value: string) {
     .replaceAll("\t", "\\t")}"`;
 }
 
+// Preserve the leading comment block (header) authored at the top of a TOML file.
+// `Bun.TOML.parse` discards comments, so the serializer must re-attach them or
+// every rewrite would silently delete hand-authored documentation.
 function leadingComments(text: string) {
   const header: string[] = [];
   for (const line of text.split("\n")) {
@@ -975,6 +981,7 @@ export async function main(args = process.argv.slice(2)) {
   const results = await syncTargets(target, {
     dryRun: args.includes("--dry-run"),
     newOnly: args.includes("--new-only"),
+    // Only GitHub Actions opens issues by default; local needs --open-issues.
     openIssues: args.includes("--open-issues")
       || (process.env.GITHUB_ACTIONS === "true" && !args.includes("--no-issues")),
   });
