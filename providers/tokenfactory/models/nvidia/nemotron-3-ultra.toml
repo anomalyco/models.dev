@@ -1,15 +1,8 @@
-# Source: Token Factory catalog (https://tokenfactory.iamsaif.ai, /api/portal/v1/models), read 2026-07-28.
-# Assumed same underlying model as nvidia/nemotron-3-ultra-550b-a55b (identity inferred from name; please verify).
-# Inherited via base_model; TF overrides display name, pricing, and limits. Output cap estimated.
+# Token Factory catalog (https://tokenfactory.iamsaif.ai/api/portal/v1/models), read 2026-07-28.
+# All model metadata inherited from models/nvidia/nemotron-3-ultra-550b-a55b; only Token Factory pricing is overridden.
 base_model = "nvidia/nemotron-3-ultra-550b-a55b"
-name = "Nemotron 3 Ultra"
-last_updated = "2026-07-28"
 reasoning_options = []
 
 [cost]
 input = 0.60
 output = 2.50
-
-[limit]
-context = 131_072
-output = 32_768

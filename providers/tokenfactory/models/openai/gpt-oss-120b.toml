@@ -1,14 +1,9 @@
-# Source: Token Factory catalog (https://tokenfactory.iamsaif.ai, /api/portal/v1/models), read 2026-07-28.
-# Metadata inherited via base_model; Token Factory overrides pricing and limits.
-# reasoning_options mirror the gpt-oss effort control used by existing models.dev entries.
+# Token Factory catalog (https://tokenfactory.iamsaif.ai/api/portal/v1/models), read 2026-07-28.
+# All model metadata inherited from models/openai/gpt-oss-120b; only Token Factory pricing is overridden.
+# reasoning_options reflect the gpt-oss reasoning-effort control.
 base_model = "openai/gpt-oss-120b"
-last_updated = "2026-07-28"
 reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
 
 [cost]
 input = 0.15
 output = 0.60
-
-[limit]
-context = 65_536
-output = 32_768
