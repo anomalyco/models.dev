@@ -1,9 +1,11 @@
 # Source: GET https://api.aiand.com/v1/models (USD list prices; accessed
 # 2026-07-28). Pricing is aiand-specific: $3.00 input, $0.50 cache_read,
 # $12.50 output (differs from Moonshot official rates).
-# Modalities: text + image accepted; video rejected ("does not support video
-# input"); pdf removed — overridden from shared base text+image+video to
-# match other providers serving K3 (fireworks, ollama-cloud).
+# Modalities: text + image + pdf accepted per GET /v1/models; video rejected
+# ("does not support video input") — overridden from shared base
+# text+image+video. PDF kept: sibling aiand Moonshot entries (kimi-k2.6,
+# kimi-k2.7-code) include pdf after catalog/probe evidence; aiand treats
+# PDF as a provider-level Files API modality.
 # reasoning_effort verified live: gateway schema accepts
 # none/minimal/low/medium/high/xhigh/max, but the K3 backend only accepts
 # none/low/high/max (minimal/medium/xhigh rejected). Invalid values rejected
@@ -18,5 +20,5 @@ cache_read = 0.50
 output = 12.50
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image", "pdf"]
 output = ["text"]
