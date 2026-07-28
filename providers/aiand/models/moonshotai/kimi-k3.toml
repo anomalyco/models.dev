@@ -9,8 +9,12 @@
 # "Unsupported thinking_effort=...; supported values are ['high', 'low', 'max']".
 # none/low/high/max accepted; none emits no reasoning tokens.
 # Interleaved field is "reasoning" (not reasoning_content) on this gateway.
-# Capabilities from /v1/models: reasoning, tool_calling, vision, document
-# (no video) — modalities overridden from shared base text+image+video.
+# Modalities verified live 2026-07-28 (max_tokens=8, reasoning_effort=none):
+# text accepted; image_url (1x1 PNG data URL) accepted; video_url rejected
+# with "does not support video input". /v1/models lists vision+document (no
+# video); Files API uploads were blocked for this key so PDF not runtime-
+# exercised — document capability maps to pdf like kimi-k2.7-code.
+# Modalities overridden from shared base text+image+video.
 base_model = "moonshotai/kimi-k3"
 
 reasoning_options = [{ type = "effort", values = ["none", "low", "high", "max"] }]
