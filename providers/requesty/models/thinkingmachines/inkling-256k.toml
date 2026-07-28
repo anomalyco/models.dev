@@ -1,0 +1,13 @@
+base_model = "thinkingmachines/inkling"
+name = "Inkling 256K"
+description = "Extended-context Inkling variant with a 256K window for long multimodal runs"
+reasoning_options = []
+
+[cost]
+input = 1.87
+output = 4.68
+cache_read = 0.374
+
+[limit]
+context = 262_144
+output = 32_768

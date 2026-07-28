@@ -1,0 +1,27 @@
+name = "ThinkingCap Qwen3.6 27B"
+description = "Reasoning-tuned Qwen3.6 27B from BottlecapAI with tool calling and 256K context"
+family = "qwen"
+release_date = "2026-07-11"
+last_updated = "2026-07-11"
+attachment = false
+reasoning = true
+reasoning_options = []
+temperature = true
+tool_call = true
+open_weights = true
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.40
+output = 3.00
+cache_read = 0.26
+
+[limit]
+context = 262_144
+output = 32_768
+
+[modalities]
+input = ["text"]
+output = ["text"]

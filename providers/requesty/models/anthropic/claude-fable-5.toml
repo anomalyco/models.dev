@@ -1,0 +1,9 @@
+base_model = "anthropic/claude-fable-5"
+structured_output = true
+reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "max"] }, { type = "budget_tokens" }]
+
+[cost]
+input = 10.00
+output = 50.00
+cache_read = 1.00
+cache_write = 12.50

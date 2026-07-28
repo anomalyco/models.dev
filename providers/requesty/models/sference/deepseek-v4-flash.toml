@@ -1,0 +1,14 @@
+base_model = "deepseek/deepseek-v4-flash"
+reasoning_options = []
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.14
+output = 0.28
+cache_read = 0.07
+
+[limit]
+context = 1_048_576
+output = 131_072
