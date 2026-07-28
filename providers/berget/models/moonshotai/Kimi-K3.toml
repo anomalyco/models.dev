@@ -1,5 +1,7 @@
-# Kimi K3 always thinks; reasoning_effort controls depth. The Berget API
-# accepts none/low/medium/high/max and maps onto K3's native low/high/max.
+# Kimi K3 always thinks and cannot disable it; reasoning_effort only controls
+# depth. K3's native levels are low/high/max (default max). The Berget API also
+# accepts the other OpenAI effort levels for compatibility and clamps them onto
+# these three, but only the three distinct levels are advertised here.
 # Reasoning is returned in message.reasoning_content, the answer in
 # message.content.
 # https://api.berget.ai/openapi.json
@@ -7,7 +9,7 @@ base_model = "moonshotai/kimi-k3"
 release_date = "2026-07-27"
 last_updated = "2026-07-28"
 
-reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "max"] }]
+reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]
 
 [interleaved]
 field = "reasoning_content"
