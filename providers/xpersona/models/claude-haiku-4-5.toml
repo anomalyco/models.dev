@@ -1,15 +1,18 @@
-base_model = "anthropic/claude-fable-5"
-interleaved = { field = "reasoning_content" }
+base_model = "anthropic/claude-haiku-4-5"
 
 [[reasoning_options]]
 type = "effort"
 values = ["low", "medium", "high", "xhigh", "max"]
 
 [cost]
-input = 3.00
-output = 18.50
-reasoning = 18.50
-cache_read = 0.30
+input = 0.60
+output = 3.70
+reasoning = 3.70
+cache_read = 0.06
+
+[limit]
+context = 200_000
+output = 128_000
 
 [modalities]
 input = ["text", "image"]

@@ -1,15 +1,18 @@
-base_model = "anthropic/claude-fable-5"
-interleaved = { field = "reasoning_content" }
+base_model = "openai/gpt-5.4"
 
 [[reasoning_options]]
 type = "effort"
 values = ["low", "medium", "high", "xhigh", "max"]
 
 [cost]
-input = 3.00
-output = 18.50
-reasoning = 18.50
-cache_read = 0.30
+input = 0.75
+output = 6.00
+reasoning = 6.00
+cache_read = 0.075
+
+[limit]
+context = 1_050_000
+output = 128_000
 
 [modalities]
 input = ["text", "image"]
