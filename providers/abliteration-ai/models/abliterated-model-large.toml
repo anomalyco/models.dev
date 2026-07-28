@@ -1,4 +1,6 @@
 name = "Abliterated Model Large"
+# https://docs.abliteration.ai/models
+# https://docs.abliteration.ai/api-reference/chat-completions/create-a-chat-completion
 description = "GLM-5.2 model abliterated and finetuned for cyber, ML red teaming, and agent testing"
 release_date = "2026-07-25"
 last_updated = "2026-07-25"
@@ -9,15 +11,16 @@ structured_output = true
 temperature = true
 open_weights = false
 
-reasoning_options = [{ type = "reasoning_effort", values = ["none", "high", "max"] }]
+reasoning_options = [{ type = "effort", values = ["none", "high", "max"] }]
 
+# https://abliteration.ai/pricing#api-pricing
 [cost]
 input = 5.00
 output = 5.00
 
 [limit]
-context = 250_000
-input = 250_000
+context = 1_000_000
+input = 1_000_000
 output = 32_768
 
 [modalities]
