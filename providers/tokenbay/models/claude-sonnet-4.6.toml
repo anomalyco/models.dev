@@ -5,10 +5,6 @@ structured_output = true
 type = "effort"
 values = ["low", "medium", "high", "max"]
 
-[[reasoning_options]]
-type = "budget_tokens"
-min = 1_024
-
 [limit]
 output = 128_000
 
@@ -20,3 +16,6 @@ cache_write = 3.1875
 
 [provider]
 npm = "@ai-sdk/anthropic"
+# Anthropic Messages: POST https://api.tokenbay.com/v1/messages
+# https://www.tokenbay.com/docs/reference/text/anthropic/messages
+api = "https://api.tokenbay.com/v1"
