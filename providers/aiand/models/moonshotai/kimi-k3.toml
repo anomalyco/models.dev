@@ -2,8 +2,8 @@
 # 2026-07-28). Pricing is aiand-specific: $3.00 input, $0.50 cache_read,
 # $12.50 output (differs from Moonshot official rates).
 # Modalities: text + image accepted; video rejected ("does not support video
-# input"); document capability from /v1/models — overridden from shared base
-# text+image+video. No [interleaved] block (matches other aiand entries).
+# input"); pdf removed — overridden from shared base text+image+video to
+# match other providers serving K3 (fireworks, ollama-cloud).
 # reasoning_effort verified live: gateway schema accepts
 # none/minimal/low/medium/high/xhigh/max, but the K3 backend only accepts
 # none/low/high/max (minimal/medium/xhigh rejected). Invalid values rejected
@@ -18,5 +18,5 @@ cache_read = 0.50
 output = 12.50
 
 [modalities]
-input = ["text", "image", "pdf"]
+input = ["text", "image"]
 output = ["text"]
