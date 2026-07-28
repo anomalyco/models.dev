@@ -5,6 +5,7 @@ import { z } from "zod";
 
 import { AuthoredModel, AuthoredModelShape, ModelMetadata } from "../schema.js";
 import { openMissingModelIssues } from "./missing-issues.js";
+import { aiand } from "./providers/aiand.js";
 import { ambient } from "./providers/ambient.js";
 import { anthropic } from "./providers/anthropic.js";
 import { baseten } from "./providers/baseten.js";
@@ -105,6 +106,7 @@ export interface SyncResult {
 }
 
 export const providers: {
+  aiand: SyncProvider<any>;
   ambient: SyncProvider<any>;
   anthropic: SyncProvider<any>;
   baseten: SyncProvider<any>;
@@ -128,6 +130,7 @@ export const providers: {
   wandb: SyncProvider<any>;
   xai: SyncProvider<any>;
 } = {
+  aiand,
   ambient,
   anthropic,
   baseten,
@@ -155,7 +158,7 @@ export const providers: {
 export const groups = {
   aggregators: ["crossmodel", "empiriolabs", "huggingface", "kilo", "llmgateway", "openrouter", "vercel"],
   cloudflare: ["cloudflare-workers-ai"],
-  direct: ["ambient", "anthropic", "baseten", "chutes", "deepinfra", "digitalocean", "google", "hyper", "openai", "ovhcloud", "pioneer", "venice", "wandb", "xai"],
+  direct: ["aiand", "ambient", "anthropic", "baseten", "chutes", "deepinfra", "digitalocean", "google", "hyper", "openai", "ovhcloud", "pioneer", "venice", "wandb", "xai"],
 } as const;
 
 type ProviderID = keyof typeof providers;
@@ -397,9 +400,6 @@ export async function syncProvider<SourceModel>(
       const notice = `Failed to open missing-model GitHub issues: ${message}`;
       notices.push(notice);
       console.error(notice);
-      // Surface as a workflow annotation: on no-change hours the notice never
-      // reaches a PR body, so a broken token or full dedupe window would
-      // otherwise disable issue opens silently while runs stay green.
       if (process.env.GITHUB_ACTIONS === "true") console.log(`::error::${provider.id}: ${notice}`);
     }
   }
@@ -771,9 +771,6 @@ function quote(value: string) {
     .replaceAll("\t", "\\t")}"`;
 }
 
-// Preserve the leading comment block (header) authored at the top of a TOML file.
-// `Bun.TOML.parse` discards comments, so the serializer must re-attach them or
-// every rewrite would silently delete hand-authored documentation.
 function leadingComments(text: string) {
   const header: string[] = [];
   for (const line of text.split("\n")) {
@@ -978,7 +975,6 @@ export async function main(args = process.argv.slice(2)) {
   const results = await syncTargets(target, {
     dryRun: args.includes("--dry-run"),
     newOnly: args.includes("--new-only"),
-    // Only GitHub Actions opens issues by default; local needs --open-issues.
     openIssues: args.includes("--open-issues")
       || (process.env.GITHUB_ACTIONS === "true" && !args.includes("--no-issues")),
   });
