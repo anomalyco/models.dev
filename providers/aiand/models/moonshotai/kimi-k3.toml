@@ -1,16 +1,28 @@
-# Source: https://docs.aiand.com/models/catalog/ (USD list prices; accessed
-# 2026-07-28). Pricing is aiand-specific: $3.00 input, $0.50 cache_read,
-# $12.50 output (differs from Moonshot official rates).
-# reasoning_options verified: supported values are low, high, max only.
-# 'medium' is NOT supported on this provider/endpoint.
+# Source: GET https://api.aiand.com/v1/models (USD list prices; accessed
+# 2026-07-28). Pricing is aiand-specific: input=$3.00, cache_read=$0.50,
+# output=$12.50 per 1M (differs from Moonshot official $3/$0.30/$15).
+# Docs catalog does not yet list this org-scoped model; API is the source of
+# truth per https://docs.aiand.com/models/catalog/.
+# reasoning_effort verified live against api.aiand.com on 2026-07-28:
+# gateway schema accepts none/minimal/low/medium/high/xhigh/max (400 on other
+# input), but the model backend rejects minimal/medium/xhigh with 500:
+# "Unsupported thinking_effort=...; supported values are ['high', 'low', 'max']".
+# none/low/high/max accepted; none emits no reasoning tokens.
+# Interleaved field is "reasoning" (not reasoning_content) on this gateway.
+# Capabilities from /v1/models: reasoning, tool_calling, vision, document
+# (no video) — modalities overridden from shared base text+image+video.
 base_model = "moonshotai/kimi-k3"
 
-reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]
+reasoning_options = [{ type = "effort", values = ["none", "low", "high", "max"] }]
 
 [interleaved]
-field = "reasoning_content"
+field = "reasoning"
 
 [cost]
 input = 3.00
 cache_read = 0.50
 output = 12.50
+
+[modalities]
+input = ["text", "image", "pdf"]
+output = ["text"]
