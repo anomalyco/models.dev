@@ -15,25 +15,46 @@ const CANONICAL_ORG_PREFIXES: Record<string, string> = {
   "zai-org": "zai",
 };
 
+// ai& /v1/models pricing block. The API has been observed shipping both
+// OpenRouter-style keys (prompt/completion) and OpenAI-style keys
+// (input/output) — accept both so the adapter is not broken by a rename.
 const AiandPricing = z.object({
+  // input token price
   prompt: z.string().optional(),
+  input: z.string().optional(),
+  // output token price
   completion: z.string().optional(),
+  output: z.string().optional(),
+  // reasoning / cache fields (stable across naming conventions)
   internal_reasoning: z.string().optional(),
   input_cache_read: z.string().optional(),
   input_cache_write: z.string().optional(),
-});
+}).passthrough();
+
+// ai& /v1/models architecture block. Accept both naming styles for modalities.
+const AiandArchitecture = z.object({
+  // OpenRouter-style
+  input_modalities: z.array(z.string()).optional(),
+  output_modalities: z.array(z.string()).optional(),
+  // alternate style observed in some providers
+  inputs: z.array(z.string()).optional(),
+  outputs: z.array(z.string()).optional(),
+}).passthrough();
 
 export const AiandModel = z.object({
   id: z.string(),
   name: z.string(),
   created: z.number().optional(),
-  architecture: z.object({
-    input_modalities: z.array(z.string()),
-    output_modalities: z.array(z.string()),
-  }).optional(),
+  architecture: AiandArchitecture.optional(),
   pricing: AiandPricing.optional(),
+  // The live API field is `context_window` (documented in hand-authored TOMLs,
+  // e.g. glm-5.1: "exact context_window is only visible via GET /v1/models").
+  // Accept `context_length` as a fallback in case the key is ever normalised.
+  context_window: z.number().optional(),
   context_length: z.number().optional(),
+  // Accept both naming conventions for the capability list.
   supported_parameters: z.array(z.string()).optional(),
+  parameters: z.array(z.string()).optional(),
   structured_outputs: z.boolean().optional(),
 }).passthrough();
 
@@ -86,11 +107,39 @@ function modalities(values: string[], fallback: Modality[]): Modality[] {
 }
 
 function defaultModalities(model: AiandModel) {
-  const input = model.architecture?.input_modalities ?? ["text"];
-  const output = model.architecture?.output_modalities ?? ["text"];
+  // Accept both naming conventions; prefer the OpenRouter-style keys.
+  const input = model.architecture?.input_modalities
+    ?? model.architecture?.inputs
+    ?? ["text"];
+  const output = model.architecture?.output_modalities
+    ?? model.architecture?.outputs
+    ?? ["text"];
   return {
     input: modalities(input, ["text"]),
     output: modalities(output, ["text"]),
+  };
+}
+
+// Resolve the effective parameter list regardless of naming convention.
+function resolveParams(model: AiandModel): string[] {
+  return model.supported_parameters ?? model.parameters ?? [];
+}
+
+// Resolve the context window from whichever field the API ships.
+// `context_window` is the documented live field (per hand-authored TOML
+// comments); `context_length` is accepted as a fallback.
+function resolveContext(model: AiandModel): number {
+  return model.context_window ?? model.context_length ?? 0;
+}
+
+// Resolve input/output token prices accepting both naming styles.
+function resolvePricing(model: AiandModel) {
+  return {
+    prompt: model.pricing?.prompt ?? model.pricing?.input,
+    completion: model.pricing?.completion ?? model.pricing?.output,
+    internal_reasoning: model.pricing?.internal_reasoning,
+    input_cache_read: model.pricing?.input_cache_read,
+    input_cache_write: model.pricing?.input_cache_write,
   };
 }
 
@@ -113,26 +162,30 @@ function inferFamily(model: AiandModel, name: string) {
 export function buildAiandModel(
   model: AiandModel,
   existing: ExistingModel | undefined,
-): SyncedModel {
-  const params = model.supported_parameters ?? [];
+): SyncedModel | undefined {
+  const params = resolveParams(model);
   const reasoning = params.includes("reasoning_effort");
-  const contextLength = model.context_length ?? 0;
-  const context = contextLength > 0
-    ? contextLength
-    : existing?.limit?.context ?? contextLength;
+  const pricing = resolvePricing(model);
 
-  const prompt = price(model.pricing?.prompt);
-  const completion = price(model.pricing?.completion);
+  // Resolve context: prefer context_window (real API field), fall back to
+  // context_length, then fall back to the existing curated value.
+  const rawContext = resolveContext(model);
+  const context = rawContext > 0
+    ? rawContext
+    : existing?.limit?.context ?? 0;
+
+  const prompt = price(pricing.prompt);
+  const completion = price(pricing.completion);
 
   const cost = prompt !== undefined && completion !== undefined
     ? {
         input: prompt,
         output: completion,
         reasoning: reasoning
-          ? nonZeroPrice(model.pricing?.internal_reasoning) ?? existing?.cost?.reasoning
+          ? nonZeroPrice(pricing.internal_reasoning) ?? existing?.cost?.reasoning
           : existing?.cost?.reasoning,
-        cache_read: nonZeroPrice(model.pricing?.input_cache_read) ?? existing?.cost?.cache_read,
-        cache_write: nonZeroPrice(model.pricing?.input_cache_write) ?? existing?.cost?.cache_write,
+        cache_read: nonZeroPrice(pricing.input_cache_read) ?? existing?.cost?.cache_read,
+        cache_write: nonZeroPrice(pricing.input_cache_write) ?? existing?.cost?.cache_write,
         tiers: existing?.cost?.tiers,
       }
     : existing?.cost;
@@ -192,13 +245,28 @@ export function buildAiandModel(
   }
 
   // New model: attempt to factor against canonical base.
+  // Skip if there is no usable context — writing limit.context = 0 would
+  // override any valid context inherited from the base model.
   const canonical = resolveAiandBaseModel(model);
   if (canonical !== undefined) {
+    if (context === 0) return undefined;
     const factoredLimit = { context, input: undefined, output: undefined };
     return factorBaseModel(canonical, { limit: factoredLimit, cost }, factoredLimit);
   }
 
-  // Brand-new model with no canonical base: best-effort standalone entry.
+  // Brand-new model with no existing TOML and no canonical base.
+  // Guard: skip creates that are missing the fields required for a valid entry.
+  // Matching the deepinfra/baseten/huggingface pattern of skipping incomplete
+  // remote rows rather than writing broken or zero-valued catalog entries.
+  if (
+    context === 0
+    || prompt === undefined
+    || completion === undefined
+    || model.created === undefined
+  ) {
+    return undefined;
+  }
+
   // reasoning_options is deliberately left as [] — the allowed effort values
   // vary per model and must be verified by a live probe before publishing.
   // (e.g. gpt-oss-120b: low|medium|high; kimi-k3: none|low|high|max)
@@ -217,8 +285,8 @@ export function buildAiandModel(
       modalities: { input, output },
     }),
     family: inferFamily(model, model.name),
-    release_date: model.created ? dateFromTimestamp(model.created) : undefined,
-    last_updated: model.created ? dateFromTimestamp(model.created) : undefined,
+    release_date: dateFromTimestamp(model.created),
+    last_updated: dateFromTimestamp(model.created),
     attachment: input.some((v) => v !== "text"),
     reasoning,
     // Safe placeholder — per-model effort values must be probed and hand-authored.
@@ -263,15 +331,17 @@ export const aiand = {
     return response.json();
   },
   parseModels(raw) {
+    // Only sync text-output models. Accept both modality naming conventions.
     return AiandResponse.parse(raw).data.filter((model) => {
-      const output = model.architecture?.output_modalities ?? ["text"];
+      const output = model.architecture?.output_modalities
+        ?? model.architecture?.outputs
+        ?? ["text"];
       return output.includes("text");
     });
   },
   translateModel(model, context) {
-    return {
-      id: model.id,
-      model: buildAiandModel(model, context.existing(model.id)),
-    };
+    const built = buildAiandModel(model, context.existing(model.id));
+    if (built === undefined) return undefined;
+    return { id: model.id, model: built };
   },
 } satisfies SyncProvider<AiandModel>;
