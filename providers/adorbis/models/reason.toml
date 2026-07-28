@@ -1,19 +1,19 @@
-name = "Adorbis Quick"
+name = "Adorbis Reason"
 attachment = false
-reasoning = false
 release_date = "2024-01-01"
 last_updated = "2026-06-01"
-temperature = true
+temperature = false
 tool_call = true
+reasoning = true
 open_weights = false
 
 [cost]
-input = 0.10
-output = 0.30
+input = 0.50
+output = 2.00
 
 [limit]
-context = 32_000
-output = 8_000
+context = 128_000
+output = 32_000
 
 [modalities]
 input = ["text"]
