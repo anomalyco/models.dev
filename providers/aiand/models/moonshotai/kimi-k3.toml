@@ -1,9 +1,8 @@
 # Source: https://docs.aiand.com/models/catalog/ (USD list prices; accessed
-# 2026-07-28). The catalog lists moonshotai/kimi-k3 with the same
-# reasoning support as the base model. Not runtime-verified: model access
-# is org-scoped. Pricing follows official Moonshot AI rates ($3/$15/$0.30)
-# consistent with other providers. reasoning_options follows the
-# verified effort set from the base model (low/high/max).
+# 2026-07-28). Pricing is aiand-specific: $3.00 input, $0.50 cache_read,
+# $12.50 output (differs from Moonshot official rates).
+# reasoning_options verified: supported values are low, high, max only.
+# 'medium' is NOT supported on this provider/endpoint.
 base_model = "moonshotai/kimi-k3"
 
 reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]
@@ -13,5 +12,5 @@ field = "reasoning_content"
 
 [cost]
 input = 3.00
-cache_read = 0.30
-output = 15.00
+cache_read = 0.50
+output = 12.50
