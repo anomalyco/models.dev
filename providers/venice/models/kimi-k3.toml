@@ -1,0 +1,15 @@
+base_model = "moonshotai/kimi-k3"
+description = "Kimi multimodal agent model for visual understanding, coding, and planning"
+last_updated = "2026-07-17"
+reasoning_options = []
+
+[cost]
+input = 4.6875
+output = 23.4375
+cache_read = 0.46875
+
+[limit]
+context = 1_000_000
+
+[modalities]
+input = ["text", "image"]

@@ -19,6 +19,7 @@ import {
   resolveDigitalOceanBaseModel,
   type DigitalOceanSourceModel,
 } from "../src/sync/providers/digitalocean.js";
+import { buildHyperModel, type HyperModel } from "../src/sync/providers/hyper.js";
 import {
   buildEmpiriolabsModel,
   empiriolabs,
@@ -41,6 +42,8 @@ import {
   type MergeGatewayModel,
 } from "../src/sync/providers/merge-gateway.js";
 import { openai, parseOpenAIModels } from "../src/sync/providers/openai.js";
+import { pioneer } from "../src/sync/providers/pioneer.js";
+import { google, shouldTrackGoogleModel } from "../src/sync/providers/google.js";
 import { resolveVeniceBaseModel } from "../src/sync/providers/venice.js";
 import { buildVercelModel, vercel } from "../src/sync/providers/vercel.js";
 import { buildWandbModel, type WandbModel } from "../src/sync/providers/wandb.js";
@@ -183,10 +186,82 @@ test("Anthropic sync preserves base model inheritance", () => {
 
   expect(translated?.model).toMatchObject({
     base_model: "anthropic/claude-opus-4-5",
-    name: "Claude Opus 4.5 (latest)",
   });
+  // Name matches models/anthropic/claude-opus-4-5.toml, so factoring omits it.
+  expect(translated?.model).not.toHaveProperty("name");
   expect(translated?.model).not.toHaveProperty("knowledge");
   expect(translated?.model).not.toHaveProperty("release_date");
+});
+
+test("Anthropic factored models omit inherited fields and keep authored fast mode", () => {
+  const model = buildAnthropicModel(
+    anthropicModel({
+      id: "claude-opus-5",
+      display_name: "Claude Opus 5",
+      created_at: "2026-07-24T00:00:00Z",
+      max_input_tokens: 1_000_000,
+      max_tokens: 128_000,
+      capabilities: {
+        effort: {
+          supported: true,
+          low: { supported: true },
+          medium: { supported: true },
+          high: { supported: true },
+          xhigh: { supported: true },
+          max: { supported: true },
+        },
+        image_input: { supported: true },
+        pdf_input: { supported: true },
+        structured_outputs: { supported: true },
+        thinking: { supported: true },
+      },
+    }),
+    {
+      base_model: "anthropic/claude-opus-5",
+      name: "Claude Opus 5",
+      description: "Strongest Claude Opus model for coding, agents, and professional work",
+      attachment: true,
+      reasoning: true,
+      reasoning_options: [{ type: "effort", values: ["low", "medium", "high", "xhigh", "max"] }],
+      structured_output: true,
+      tool_call: true,
+      open_weights: false,
+      cost: { input: 5, output: 25, cache_read: 0.5, cache_write: 6.25 },
+      limit: { context: 1_000_000, output: 128_000 },
+      modalities: { input: ["text", "image", "pdf"], output: ["text"] },
+      experimental: {
+        modes: {
+          fast: {
+            cost: { input: 10, output: 50, cache_read: 1, cache_write: 12.5 },
+            provider: {
+              body: { speed: "fast" },
+              headers: { "anthropic-beta": "fast-mode-2026-02-01" },
+            },
+          },
+        },
+      },
+    },
+    "anthropic/claude-opus-5",
+  );
+
+  expect(model).toMatchObject({
+    base_model: "anthropic/claude-opus-5",
+    structured_output: true,
+    reasoning_options: [{ type: "effort", values: ["low", "medium", "high", "xhigh", "max"] }],
+    cost: { input: 5, output: 25, cache_read: 0.5, cache_write: 6.25 },
+    experimental: {
+      modes: {
+        fast: {
+          cost: { input: 10, output: 50, cache_read: 1, cache_write: 12.5 },
+        },
+      },
+    },
+  });
+  expect(model).not.toHaveProperty("attachment");
+  expect(model).not.toHaveProperty("reasoning");
+  expect(model).not.toHaveProperty("limit");
+  expect(model).not.toHaveProperty("modalities");
+  expect(model).not.toHaveProperty("name");
 });
 
 test("filters customer-owned OpenAI models from availability tracking", () => {
@@ -254,6 +329,24 @@ test("OpenAI availability sync retains models absent from a scoped response", as
   } finally {
     await rm(dir, { recursive: true, force: true });
   }
+});
+
+test("does not track unreliable remote-only models", () => {
+  expect(google.skipCreates).toBe(true);
+  expect(google.trackMissingModels).toBe(false);
+  expect(openai.skipCreates).toBe(true);
+  expect(openai.trackMissingModels).toBe(false);
+  expect(pioneer.skipCreates).toBe(true);
+  expect(pioneer.trackMissingModels).toBe(false);
+});
+
+test("tracks public Google model families but not opaque internal IDs", () => {
+  expect(shouldTrackGoogleModel("gemini-3.1-flash-live-preview")).toBe(true);
+  expect(shouldTrackGoogleModel("imagen-4.0-generate-001")).toBe(true);
+  expect(shouldTrackGoogleModel("veo-3.1-generate-preview")).toBe(true);
+  expect(shouldTrackGoogleModel("ajax")).toBe(false);
+  expect(shouldTrackGoogleModel("perseus-2")).toBe(false);
+  expect(shouldTrackGoogleModel("thorin")).toBe(false);
 });
 
 function digitalOceanModel(overrides: Partial<DigitalOceanSourceModel> = {}): DigitalOceanSourceModel {
@@ -707,6 +800,66 @@ function deepInfraModel(model_name: string, tags: string[]): DeepInfraModel {
   };
 }
 
+test("syncs Hyper pricing from catalog input/output fields", () => {
+  const model = hyperModel({
+    id: "minimax-m2.7",
+    reasoning: undefined,
+    pricing: {
+      input: 0.3,
+      output: 1.2,
+      cache_hit: 0.06,
+      cache_create: 0.03,
+    },
+  });
+
+  expect(buildHyperModel(model, undefined, "minimax/MiniMax-M2.7")).toMatchObject({
+    cost: { input: 0.3, output: 1.2, cache_read: 0.06, cache_write: 0.03 },
+    reasoning: false,
+  });
+  expect(buildHyperModel(model, undefined, "minimax/MiniMax-M2.7")).not.toHaveProperty("reasoning_options");
+});
+
+test("rounds Hyper pricing to six decimal places", () => {
+  const model = hyperModel({
+    id: "deepseek-v4-flash",
+    pricing: {
+      input: 0.20000010875000002,
+      output: 0.40000021750000003,
+      cache_hit: 0.039999586250000004,
+    },
+  });
+
+  expect(buildHyperModel(model, undefined, "deepseek/deepseek-v4-flash")).toMatchObject({
+    cost: { input: 0.2, output: 0.4, cache_read: 0.04 },
+  });
+});
+
+test("sets Hyper reasoning false when API omits reasoning metadata", () => {
+  const model = hyperModel({ id: "llama-3.3-70b-instruct", reasoning: undefined });
+
+  expect(buildHyperModel(model, undefined, "meta/llama-3.3-70b-instruct")).toMatchObject({
+    attachment: false,
+  });
+  expect(buildHyperModel(model, undefined, "meta/llama-3.3-70b-instruct")).not.toHaveProperty("reasoning");
+  expect(buildHyperModel(model, undefined, "meta/llama-3.3-70b-instruct")).not.toHaveProperty("reasoning_options");
+
+  expect(buildHyperModel(hyperModel({ id: "minimax-m2.7", reasoning: undefined }), undefined, "minimax/MiniMax-M2.7")).toMatchObject({
+    reasoning: false,
+  });
+});
+
+test("preserves existing Hyper cost when API pricing is missing", () => {
+  const existing = {
+    cost: { input: 1, output: 2 },
+    release_date: "2026-01-01",
+    last_updated: "2026-01-01",
+  };
+
+  expect(buildHyperModel(hyperModel({ id: "minimax-m2.7" }), existing, "minimax/MiniMax-M2.7")).toMatchObject({
+    cost: { input: 1, output: 2 },
+  });
+});
+
 test("formats interleaved as a root field before reasoning option tables", () => {
   const content = formatToml({
     id: "example/model",
@@ -949,10 +1102,14 @@ test("factors OpenRouter Pro routes against canonical OpenAI metadata", () => {
     resolveCanonicalBaseModel("openai/gpt-5.6-luna-pro"),
     resolveCanonicalBaseModel("openai/gpt-5.6-sol-pro"),
     resolveCanonicalBaseModel("openai/gpt-5.6-terra-pro"),
+    resolveCanonicalBaseModel("anthropic/claude-opus-5-fast"),
+    resolveCanonicalBaseModel("anthropic/claude-opus-4.8-fast"),
   ]).toEqual([
     "openai/gpt-5.6-luna",
     "openai/gpt-5.6-sol",
     "openai/gpt-5.6-terra",
+    "anthropic/claude-opus-5",
+    "anthropic/claude-opus-4-8",
   ]);
   expect(model).toMatchObject({
     base_model: "openai/gpt-5.6-sol",
@@ -984,19 +1141,49 @@ test("resolves Venice Pro routes to canonical OpenAI metadata", () => {
     resolveVeniceBaseModel("openai-gpt-56-luna-pro", "GPT-5.6 Luna Pro"),
     resolveVeniceBaseModel("openai-gpt-56-sol-pro", "GPT-5.6 Sol Pro"),
     resolveVeniceBaseModel("openai-gpt-56-terra-pro", "GPT-5.6 Terra Pro"),
+    resolveVeniceBaseModel("claude-opus-5-fast", "Claude Opus 5 Fast"),
+    resolveVeniceBaseModel("claude-opus-4-8-fast", "Claude Opus 4.8 Fast"),
   ]).toEqual([
     "openai/gpt-5.6-luna",
     "openai/gpt-5.6-sol",
     "openai/gpt-5.6-terra",
+    "anthropic/claude-opus-5",
+    "anthropic/claude-opus-4-8",
   ]);
 });
 
-test("preserves authored OpenRouter reasoning options over model metadata", () => {
+test("prefers OpenRouter API reasoning options over authored ones", () => {
   const model = buildOpenRouterModel(openRouterModel({
     reasoning: {
       mandatory: false,
       supported_efforts: ["max", "xhigh", "high", "medium", "low"],
     },
+  }), {
+    name: "Claude Sonnet 5",
+    description: "Balanced Claude model for coding and agentic workflows",
+    release_date: "2026-06-30",
+    last_updated: "2026-06-30",
+    attachment: true,
+    reasoning: true,
+    reasoning_options: [{ type: "toggle" }],
+    tool_call: true,
+    open_weights: false,
+    cost: { input: 2, output: 10 },
+    limit: { context: 1_000_000, output: 128_000 },
+    modalities: { input: ["text", "image", "pdf"], output: ["text"] },
+  });
+
+  expect(model).toMatchObject({
+    reasoning_options: [
+      { type: "effort", values: ["max", "xhigh", "high", "medium", "low"] },
+    ],
+  });
+});
+
+test("keeps authored OpenRouter reasoning options when API omits reasoning metadata", () => {
+  const model = buildOpenRouterModel(openRouterModel({
+    supported_parameters: ["tools", "tool_choice", "reasoning", "temperature"],
+    reasoning: undefined,
   }), {
     name: "Claude Sonnet 5",
     description: "Balanced Claude model for coding and agentic workflows",
@@ -1484,6 +1671,93 @@ test("parses Vercel pricing tiers with an implicit zero minimum", () => {
   });
 });
 
+test("Vercel factored models inherit temperature from base metadata", () => {
+  const [model] = vercel.parseModels({
+    data: [{
+      id: "moonshotai/kimi-k3",
+      name: "Kimi K3",
+      created: 1_784_160_000,
+      context_window: 1_000_000,
+      max_tokens: 131_072,
+      type: "language",
+      tags: ["reasoning", "tool-use", "vision"],
+      pricing: {
+        input: "0.000003",
+        output: "0.000015",
+        input_cache_read: "0.0000003",
+      },
+    }],
+  });
+
+  const synced = buildVercelModel(model!, {
+    base_model: "moonshotai/kimi-k3",
+    name: "Kimi K3",
+    description: "Kimi multimodal agent model for visual understanding, coding, and planning",
+    open_weights: false,
+    reasoning_options: [],
+    cost: { input: 3, output: 15, cache_read: 0.3 },
+    limit: { context: 1_000_000 },
+    modalities: { input: ["text", "image", "pdf"], output: ["text"] },
+  });
+
+  expect(synced).toMatchObject({ base_model: "moonshotai/kimi-k3" });
+  expect(synced).not.toHaveProperty("temperature");
+});
+
+test("Vercel Claude Opus fast variants factor onto base opus metadata", () => {
+  const [model] = vercel.parseModels({
+    data: [{
+      id: "anthropic/claude-opus-5-fast",
+      name: "Claude Opus 5 (Fast)",
+      created: 1_784_937_600,
+      context_window: 1_000_000,
+      max_tokens: 128_000,
+      type: "language",
+      tags: ["tool-use", "reasoning", "vision", "file-input", "fast"],
+      pricing: {
+        input: "0.00001",
+        output: "0.00005",
+        input_cache_read: "0.000001",
+        input_cache_write: "0.0000125",
+      },
+    }],
+  });
+
+  expect(buildVercelModel(model!, undefined)).toMatchObject({
+    base_model: "anthropic/claude-opus-5",
+    name: "Claude Opus 5 (Fast)",
+    cost: { input: 10, output: 50, cache_read: 1, cache_write: 12.5 },
+  });
+});
+
+test("OpenRouter Claude Opus fast variants factor onto base opus metadata", () => {
+  const model = buildOpenRouterModel(openRouterModel({
+    id: "anthropic/claude-opus-5-fast",
+    name: "Anthropic: Claude Opus 5 (Fast)",
+    context_length: 1_000_000,
+    top_provider: {
+      context_length: 1_000_000,
+      max_completion_tokens: 128_000,
+    },
+    pricing: {
+      prompt: "0.00001",
+      completion: "0.00005",
+      input_cache_read: "0.000001",
+      input_cache_write: "0.0000125",
+    },
+    reasoning: {
+      mandatory: false,
+      supported_efforts: ["low", "medium", "high", "xhigh", "max"],
+    },
+  }), undefined);
+
+  expect(model).toMatchObject({
+    base_model: "anthropic/claude-opus-5",
+    name: "Claude Opus 5 (Fast)",
+    cost: { input: 10, output: 50, cache_read: 1, cache_write: 12.5 },
+  });
+});
+
 test("skips LLM Gateway base_model factoring when no metadata entry exists", () => {
   const model = buildLLMGatewayModel(
     llmGatewayModel({ id: "claude-fable-does-not-exist" }),
@@ -1725,6 +1999,23 @@ function mergeGatewayModel(overrides: Partial<MergeGatewayModel> = {}): MergeGat
     availability_status: "available",
     created_at: "2026-07-09T00:00:00Z",
     updated_at: "2026-07-09T00:00:00Z",
+    ...overrides,
+  };
+}
+
+function hyperModel(overrides: Partial<HyperModel> = {}): HyperModel {
+  return {
+    id: "deepseek-v4-flash",
+    created: 1_780_592_628,
+    display_name: "DeepSeek V4 Flash",
+    reasoning: {
+      effort_levels: [
+        { value: "high" },
+        { value: "xhigh" },
+      ],
+    },
+    context_window: 1_000_000,
+    max_output_tokens: 384_000,
     ...overrides,
   };
 }

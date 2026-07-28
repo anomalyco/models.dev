@@ -15,6 +15,8 @@ const CANONICAL_BASE_MODEL_OVERRIDES = {
   "openai/gpt-5.6-luna-pro": "openai/gpt-5.6-luna",
   "openai/gpt-5.6-sol-pro": "openai/gpt-5.6-sol",
   "openai/gpt-5.6-terra-pro": "openai/gpt-5.6-terra",
+  "anthropic/claude-opus-4.7-fast": "anthropic/claude-opus-4-7",
+  "anthropic/claude-opus-4.8-fast": "anthropic/claude-opus-4-8",
 } as const;
 
 const CANONICAL_PROVIDER_PREFIXES = {
@@ -35,6 +37,7 @@ const CANONICAL_PROVIDER_PREFIXES = {
   sakana: { provider: "sakana", metadata: "sakana" },
   stepfun: { provider: "stepfun", metadata: "stepfun" },
   tencent: { provider: "tencent", metadata: "tencent" },
+  thinkingmachines: { provider: "thinkingmachines", metadata: "thinkingmachines" },
   "x-ai": { provider: "xai", metadata: "xai" },
   xai: { provider: "xai", metadata: "xai" },
   xiaomi: { provider: "xiaomi", metadata: "xiaomi" },
@@ -177,9 +180,11 @@ export function buildOpenRouterModel(
   const prompt = price(model.pricing.prompt);
   const completion = price(model.pricing.completion);
   const reasoning = params.has("reasoning") || params.has("include_reasoning");
-  const reasoning_options = existing?.reasoning_options?.length
-    ? existing.reasoning_options
-    : openRouterReasoningOptions(model.reasoning) ?? existing?.reasoning_options;
+  // Prefer OpenRouter's live reasoning metadata over authored options so aliases
+  // and rotated models pick up new efforts/budget support. Fall back to authored
+  // only when the API omits a reasoning object.
+  const reasoning_options = openRouterReasoningOptions(model.reasoning)
+    ?? (reasoning ? existing?.reasoning_options : undefined);
   const context = model.context_length;
   const family = inferFamily(model, name);
   const releaseDate = dateFromTimestamp(model.created);
@@ -213,7 +218,7 @@ export function buildOpenRouterModel(
     return factorBaseModel(
       canonical,
       {
-        name: baseModel !== undefined || model.id.endsWith(":free") || canonicalOverride === canonical
+        name: shouldPreserveFactoredName(model.id, canonical, baseModel, canonicalOverride)
           ? name
           : undefined,
         description: existing?.description ?? describeModel({
@@ -337,6 +342,24 @@ function canonicalBaseModelOverride(openrouterID: string) {
   ];
 }
 
+function shouldPreserveFactoredName(
+  modelID: string,
+  canonical: string,
+  baseModel: string | undefined,
+  canonicalOverride: string | undefined,
+) {
+  if (baseModel !== undefined) return true;
+  if (modelID.endsWith(":free")) return true;
+  if (canonicalOverride === canonical) return true;
+  const modelSlug = modelID.split("/").slice(1).join("/").replace(/:free$/, "");
+  const canonicalSlug = canonical.split("/").slice(1).join("/");
+  return normalizeModelSlug(modelSlug) !== normalizeModelSlug(canonicalSlug);
+}
+
+function normalizeModelSlug(value: string) {
+  return value.toLowerCase().replaceAll(/[^a-z0-9]/g, "");
+}
+
 export function factorBaseModel(
   modelID: string,
   values: Partial<SyncedFullModel>,
@@ -448,10 +471,13 @@ function modelMetadata(modelID: string) {
 
 function canonicalCandidates(provider: string, modelID: string) {
   const candidates = [modelID];
+  if (modelID.endsWith("-fast")) candidates.push(modelID.slice(0, -"-fast".length));
 
   if (provider === "anthropic") {
-    candidates.push(modelID.replace(/(claude-(?:opus|sonnet|haiku)-\d+)\.(\d+)/, "$1-$2"));
-    candidates.push(modelID.replace(/^claude-3\.5-/, "claude-3-5-"));
+    for (const candidate of [...candidates]) {
+      candidates.push(candidate.replace(/(claude-(?:opus|sonnet|haiku)-\d+)\.(\d+)/, "$1-$2"));
+      candidates.push(candidate.replace(/^claude-3\.5-/, "claude-3-5-"));
+    }
   }
 
   if (provider === "llama") {

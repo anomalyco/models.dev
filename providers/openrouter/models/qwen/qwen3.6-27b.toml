@@ -4,12 +4,9 @@ base_model = "alibaba/qwen3.6-27b"
 type = "toggle"
 
 [cost]
-input = 0.285
-output = 2.4
+input = 0.3
+output = 2
 cache_read = 0.15
-
-[limit]
-output = 262_140
 
 [modalities]
 input = ["text", "image", "video"]

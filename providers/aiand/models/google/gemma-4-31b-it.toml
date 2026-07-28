@@ -1,0 +1,22 @@
+# Source: https://docs.aiand.com/models/catalog/ (USD list prices; accessed
+# 2026-07-24) and live probes against api.aiand.com on the same date.
+# Verified by direct test: image (data URL), video (video_url), and PDF
+# (Files API purpose="document", referenced by file_id) inputs all accepted.
+# ai& converts PDFs to per-page images at upload, so "pdf" is a provider
+# input modality here even though the base model itself is not PDF-native.
+# reasoning_effort verified by live probe on 2026-07-24: all six documented
+# values accepted ("none" produces no reasoning content, "high" does);
+# invalid values rejected with 400 (negative control).
+base_model = "google/gemma-4-31b-it"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "minimal", "low", "medium", "high", "xhigh"]
+
+[cost]
+input = 0.20
+output = 0.50
+
+[modalities]
+input = ["text", "image", "video", "pdf"]
+output = ["text"]

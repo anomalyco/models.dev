@@ -1,0 +1,16 @@
+# attachment are not supported on AKI.IO for security reasons and therefore are disabled
+# AKI.IO supports a reduced set of input modalities, thats why the description of the base model are overridden
+base_model = "moonshotai/kimi-k2.7-code"
+attachment = false
+reasoning_options = []
+
+[cost]
+input = 0.86
+output = 3.00
+
+[limit]
+context = 262_144
+output = 81_920
+
+[modalities]
+input = ["text", "image"]
