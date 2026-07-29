@@ -1,15 +1,15 @@
 base_model = "moonshotai/kimi-k3"
+name = "Kimi K3 TEE"
 description = "Kimi multimodal agent model for visual understanding, coding, and planning"
-last_updated = "2026-07-17"
+release_date = "2026-07-29"
+last_updated = "2026-07-29"
+temperature = true
 reasoning_options = []
 
 [cost]
-input = 3.75
-output = 18.75
-cache_read = 0.375
+input = 3
+output = 15
+cache_read = 1.5
 
 [limit]
-context = 1_000_000
-
-[modalities]
-input = ["text", "image"]
+output = 65_535
