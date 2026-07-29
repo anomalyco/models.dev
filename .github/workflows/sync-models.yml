@@ -35,7 +35,11 @@ jobs:
       - name: List sync providers
         id: providers
         run: |
-          matrix="$(bun models:sync --list-providers)"
+          if [ "${{ github.repository }}" = "fenilmodi00/models.dev" ]; then
+            matrix='{"include":[{"provider":"aiand","name":"ai&"}]}'
+          else
+            matrix="$(bun models:sync --list-providers)"
+          fi
           echo "matrix=$matrix" >> "$GITHUB_OUTPUT"
 
   sync:
