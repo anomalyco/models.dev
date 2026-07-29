@@ -1565,7 +1565,7 @@ test("preserves authored ai& limits and reasoning options on factored models", (
   });
 });
 
-test("merges ai& API capabilities onto authored modalities without dropping curated inputs", () => {
+test("preserves authored ai& modalities and attachment when API capability tags differ", () => {
   const model = buildAiandModel(aiandModel({
     id: "moonshotai/kimi-k2.7-code",
     provider: "moonshotai",

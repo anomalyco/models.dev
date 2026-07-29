@@ -172,10 +172,9 @@ export function buildAiandModel(
 
   const releaseDate = dateFromTimestamp(model.created);
 
-  // Modalities are model-intrinsic. For existing routes merge API capability
-  // tags onto curated inputs so missing tags do not wipe probe-verified image,
-  // video, or pdf support. For routes factored onto shared metadata, leave
-  // modalities unset so they inherit from the canonical base model.
+  // Modalities are model-intrinsic and the ai& capability tags are too thin
+  // to be additive authority. Preserve authored/existing values exactly; only
+  // use API-derived modalities for brand-new standalone models.
   const { modalities: resolvedModalities, attachment: resolvedAttachment } = resolveModalities(
     existing,
     apiModalities,
@@ -310,19 +309,17 @@ function resolveModalities(
   apiAttachment: boolean,
   canonical: string | undefined,
 ): { modalities?: { input: Modality[]; output: Modality[] }; attachment?: boolean } {
-  if (existing?.modalities !== undefined) {
-    const merged = {
-      input: [...new Set([...existing.modalities.input, ...apiModalities.input])],
-      output: existing.modalities.output,
-    };
+  if (existing !== undefined) {
+    // context.existing() returns the base-resolved model, so modalities and
+    // attachment are always present. Pass them through unchanged; factorBaseModel
+    // will strip values that match the shared metadata.
     return {
-      modalities: merged,
-      attachment: merged.input.some((value) => value !== "text"),
+      modalities: existing.modalities,
+      attachment: existing.attachment,
     };
   }
-  // Factored routes inherit modalities from the shared base model; do not
-  // override them with thin API capability tags.
-  if (existing?.base_model !== undefined || canonical !== undefined) {
+  // Factored routes inherit modalities from the shared base model.
+  if (canonical !== undefined) {
     return {};
   }
   return {
