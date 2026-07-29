@@ -1,0 +1,13 @@
+# Pricing and reasoning effort values from OpenAI's published price list and
+# model pages: https://developers.openai.com/api/docs/pricing
+# The model page does not state accepted reasoning effort values, so
+# reasoning_options is left empty per the contribution guidelines.
+
+base_model = "openai/gpt-5-chat-latest"
+
+reasoning_options = []
+
+[cost]
+input = 1.25
+output = 10.00
+cache_read = 0.125
