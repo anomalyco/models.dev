@@ -315,7 +315,6 @@ export function resolveCanonicalBaseModel(openrouterID: string) {
 
   const modelID = modelParts.join("/")
     .replace(/:free$/, "")
-    .replace(/:batch$/, "")
     .replace(/:discounted$/, "")
     .replace(/:thinking$/, "");
   const candidates = canonicalCandidates(canonical.provider, modelID);
@@ -353,13 +352,11 @@ function shouldPreserveFactoredName(
 ) {
   if (baseModel !== undefined) return true;
   if (modelID.endsWith(":free")) return true;
-  if (modelID.endsWith(":batch")) return true;
   if (modelID.endsWith(":discounted")) return true;
   if (modelID.endsWith(":thinking")) return true;
   if (canonicalOverride === canonical) return true;
   const modelSlug = modelID.split("/").slice(1).join("/")
     .replace(/:free$/, "")
-    .replace(/:batch$/, "")
     .replace(/:discounted$/, "")
     .replace(/:thinking$/, "");
   const canonicalSlug = canonical.split("/").slice(1).join("/");

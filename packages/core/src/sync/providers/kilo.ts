@@ -82,7 +82,8 @@ export const kilo = {
     return response.json();
   },
   parseModels(raw) {
-    return KiloResponse.parse(raw).data;
+    // Temporarily skip batch routes (`*:batch`) — they are not catalog targets.
+    return KiloResponse.parse(raw).data.filter((model) => !model.id.endsWith(":batch"));
   },
   translateModel(model, context) {
     // Kilo serves deprecated/unavailable routes as degraded stubs:
@@ -211,7 +212,6 @@ export function buildKiloModel(
         name:
           baseModel !== undefined ||
           model.id.endsWith(":free") ||
-          model.id.endsWith(":batch") ||
           model.id.endsWith(":discounted") ||
           model.id.endsWith(":thinking")
             ? name
