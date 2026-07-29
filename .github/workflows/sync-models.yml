@@ -64,6 +64,7 @@ jobs:
         run: bun models:sync ${{ matrix.provider }}
         env:
           GH_TOKEN: ${{ github.token }}
+          AIAND_API_KEY: ${{ secrets.AIAND_API_KEY }}
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           BASETEN_API_KEY: ${{ secrets.BASETEN_API_KEY }}
           DEEPINFRA_API_KEY: ${{ secrets.DEEPINFRA_API_KEY }}
