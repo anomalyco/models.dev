@@ -61,9 +61,17 @@ export const aiand = {
     return AiandResponse.parse(raw).data;
   },
   translateModel(model, context) {
+    const existing = context.existing(model.id);
+    // ai&'s API is not rich enough to author complete standalone catalog rows
+    // (no output limit, open_weights, temperature, structured_output, or full
+    // reasoning controls). Only update existing routes or create factored routes
+    // against known model metadata.
+    if (existing === undefined && resolveAiandBaseModel(model) === undefined) {
+      return undefined;
+    }
     return {
       id: model.id,
-      model: buildAiandModel(model, context.existing(model.id)),
+      model: buildAiandModel(model, existing),
     };
   },
 } satisfies SyncProvider<AiandModel>;
@@ -131,11 +139,12 @@ export function buildAiandModel(
   existing: ExistingModel | undefined,
 ): SyncedModel {
   const capabilities = new Set(model.capabilities.map((value) => value.toLowerCase()));
-  const { input, output } = modalities(capabilities);
+  const apiModalities = modalities(capabilities);
+  const apiAttachment = apiModalities.input.some((value) => value !== "text");
   const reasoning = capabilities.has("reasoning");
   const toolCall = capabilities.has("tool_calling");
   const context = model.context_window;
-  const attachment = input.some((value) => value !== "text");
+  const canonical = resolveAiandBaseModel(model);
 
   // ai& reports prices in the org's billing currency. Only trust USD figures;
   // preserve existing cost for any other currency.
@@ -163,13 +172,23 @@ export function buildAiandModel(
 
   const releaseDate = dateFromTimestamp(model.created);
 
-  // Existing factored model: refresh cost, context, and API-derived
-  // capabilities; keep curated metadata overrides.
+  // Modalities are model-intrinsic. For existing routes merge API capability
+  // tags onto curated inputs so missing tags do not wipe probe-verified image,
+  // video, or pdf support. For routes factored onto shared metadata, leave
+  // modalities unset so they inherit from the canonical base model.
+  const { modalities: resolvedModalities, attachment: resolvedAttachment } = resolveModalities(
+    existing,
+    apiModalities,
+    apiAttachment,
+    canonical,
+  );
+
+  // Existing factored model: refresh cost and context only; keep all curated
+  // capability/metadata overrides.
   if (existing?.base_model !== undefined) {
     return factorBaseModel(
       existing.base_model,
       {
-        attachment,
         description: existing.description ?? describeModel({
           id: model.id,
           name: existing.name ?? humanizeName(model),
@@ -179,7 +198,7 @@ export function buildAiandModel(
           structured_output: existing.structured_output,
           open_weights: existing.open_weights,
           limit,
-          modalities: { input, output },
+          modalities: resolvedModalities ?? apiModalities,
         }),
         reasoning: existing.reasoning,
         reasoning_options: existing.reasoning_options,
@@ -189,17 +208,20 @@ export function buildAiandModel(
         status: existing.status,
         interleaved: existing.interleaved,
         knowledge: existing.knowledge,
-        modalities: { input, output },
         limit,
         cost,
+        ...(resolvedModalities !== undefined && {
+          attachment: resolvedAttachment,
+          modalities: resolvedModalities,
+        }),
       },
       limit,
       existing.base_model_omit,
     );
   }
 
-  // Existing full model: refresh cost, context, and API-derived capabilities;
-  // preserve curated metadata.
+  // Existing full model: refresh cost and context; preserve all curated
+  // capability/metadata, but merge API capability tags onto authored modalities.
   if (existing !== undefined) {
     return {
       name: existing.name ?? humanizeName(model),
@@ -212,42 +234,43 @@ export function buildAiandModel(
         structured_output: existing.structured_output,
         open_weights: existing.open_weights,
         limit,
-        modalities: { input, output },
+        modalities: resolvedModalities ?? apiModalities,
       }),
       family: existing.family,
       release_date: existing.release_date ?? releaseDate,
       last_updated: existing.last_updated ?? releaseDate,
-      attachment,
-      reasoning: existing.reasoning ?? reasoning,
-      reasoning_options: existing.reasoning_options ?? (reasoning ? [] : undefined),
-      temperature: existing.temperature ?? false,
-      tool_call: existing.tool_call ?? toolCall,
+      attachment: resolvedAttachment ?? apiAttachment,
+      reasoning: existing.reasoning,
+      reasoning_options: existing.reasoning_options,
+      temperature: existing.temperature,
+      tool_call: existing.tool_call,
       structured_output: existing.structured_output,
       knowledge: existing.knowledge,
-      open_weights: existing.open_weights ?? false,
+      open_weights: existing.open_weights,
       status: existing.status,
       interleaved: existing.interleaved,
       cost,
       limit,
-      modalities: { input, output },
+      modalities: resolvedModalities ?? apiModalities,
     } satisfies SyncedFullModel;
   }
 
   // New model with a reviewed metadata entry: factor it against the canonical
-  // base so capability/name/description facts inherit from models/, but let
-  // the API override capabilities when it differs from the shared base model.
-  const canonical = resolveAiandBaseModel(model);
+  // base so name/family/capability facts inherit from models/. Only cost and
+  // context come from the API; everything else stays with the shared metadata.
   if (canonical !== undefined) {
     const factoredLimit = { context, input: undefined, output: undefined };
     return factorBaseModel(
       canonical,
-      { limit: factoredLimit, cost, modalities: { input, output }, attachment },
+      { limit: factoredLimit, cost },
       factoredLimit,
     );
   }
 
-  // Brand-new model: best-effort translation from the API. Capability data is
-  // limited, so this should be hand-reviewed.
+  // Best-effort fallback for unknown standalone models. This path is only
+  // reachable in tests or manual calls; translateModel skips remote IDs with
+  // no local file and no resolvable base_model so the hourly sync does not
+  // author incomplete rows.
   return {
     name: humanizeName(model),
     description: model.description ?? describeModel({
@@ -259,12 +282,12 @@ export function buildAiandModel(
       structured_output: false,
       open_weights: false,
       limit,
-      modalities: { input, output },
+      modalities: apiModalities,
     }),
     family: inferFamily(model),
     release_date: releaseDate,
     last_updated: releaseDate,
-    attachment,
+    attachment: apiAttachment,
     reasoning,
     reasoning_options: reasoning ? [] : undefined,
     temperature: false,
@@ -277,8 +300,35 @@ export function buildAiandModel(
     // satisfies AuthoredModel / ProviderModelLimit; this should be reviewed and
     // corrected by hand when the real output limit is known.
     limit: { ...limit, output: limit.output ?? context },
-    modalities: { input, output },
+    modalities: apiModalities,
   } satisfies SyncedFullModel;
+}
+
+function resolveModalities(
+  existing: ExistingModel | undefined,
+  apiModalities: { input: Modality[]; output: Modality[] },
+  apiAttachment: boolean,
+  canonical: string | undefined,
+): { modalities?: { input: Modality[]; output: Modality[] }; attachment?: boolean } {
+  if (existing?.modalities !== undefined) {
+    const merged = {
+      input: [...new Set([...existing.modalities.input, ...apiModalities.input])],
+      output: existing.modalities.output,
+    };
+    return {
+      modalities: merged,
+      attachment: merged.input.some((value) => value !== "text"),
+    };
+  }
+  // Factored routes inherit modalities from the shared base model; do not
+  // override them with thin API capability tags.
+  if (existing?.base_model !== undefined || canonical !== undefined) {
+    return {};
+  }
+  return {
+    modalities: apiModalities,
+    attachment: apiAttachment,
+  };
 }
 
 function humanizeName(model: AiandModel) {
