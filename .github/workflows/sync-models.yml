@@ -92,7 +92,8 @@ jobs:
 
       - name: Report changes
         env:
-          GH_TOKEN: ${{ github.token }}
+          GITHUB_TOKEN: ${{ github.token }}
+          UPSTREAM_PR_TOKEN: ${{ secrets.UPSTREAM_PR_TOKEN }}
           BRANCH: automation/sync-models-${{ matrix.provider }}
           LABELS: automation,model-sync,provider:${{ matrix.provider }}
           TITLE: "chore(sync): update ${{ matrix.name }} model catalog"
@@ -119,12 +120,27 @@ jobs:
           git commit -m "$TITLE"
           git push --force-with-lease origin "$BRANCH"
 
-          pr_number="$(gh pr list --head "$BRANCH" --base dev --json number --jq '.[0].number')"
+          # On the fork, open/update the PR against the upstream repo.
+          # This requires UPSTREAM_PR_TOKEN with repo scope for anomalyco/models.dev.
+          if [ "${{ github.repository }}" = "fenilmodi00/models.dev" ]; then
+            UPSTREAM_REPO="anomalyco/models.dev"
+            UPSTREAM_HEAD="fenilmodi00:${BRANCH}"
+            PR_TOKEN="${UPSTREAM_PR_TOKEN:-$GITHUB_TOKEN}"
+          else
+            UPSTREAM_REPO="${{ github.repository }}"
+            UPSTREAM_HEAD="${BRANCH}"
+            PR_TOKEN="$GITHUB_TOKEN"
+          fi
+
+          pr_number="$(GH_TOKEN="$PR_TOKEN" gh pr list --repo "$UPSTREAM_REPO" --head "$UPSTREAM_HEAD" --base dev --json number --jq '.[0].number')"
           if [ -n "$pr_number" ]; then
-            gh pr edit "$pr_number" --title "$TITLE" --body-file .sync/model-sync-report.md
+            GH_TOKEN="$PR_TOKEN" gh pr edit --repo "$UPSTREAM_REPO" "$pr_number" --title "$TITLE" --body-file .sync/model-sync-report.md
             for label in "${labels[@]}"; do
-              gh pr edit "$pr_number" --add-label "$label"
+              GH_TOKEN="$PR_TOKEN" gh pr edit --repo "$UPSTREAM_REPO" "$pr_number" --add-label "$label" >/dev/null 2>&1 || true
             done
           else
-            gh pr create --base dev --head "$BRANCH" --title "$TITLE" --body-file .sync/model-sync-report.md "${label_args[@]}"
+            # Try with labels first; fall back to label-less PR if upstream labels cannot be applied.
+            if ! GH_TOKEN="$PR_TOKEN" gh pr create --repo "$UPSTREAM_REPO" --base dev --head "$UPSTREAM_HEAD" --title "$TITLE" --body-file .sync/model-sync-report.md "${label_args[@]}"; then
+              GH_TOKEN="$PR_TOKEN" gh pr create --repo "$UPSTREAM_REPO" --base dev --head "$UPSTREAM_HEAD" --title "$TITLE" --body-file .sync/model-sync-report.md
+            fi
           fi
