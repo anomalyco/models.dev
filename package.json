@@ -17,6 +17,7 @@
   "scripts": {
     "test": "bun test",
     "validate": "bun ./packages/core/script/validate.ts",
+    "aiand:sync": "bun ./packages/core/script/sync-models.ts aiand",
     "compare:migrations": "bun ./packages/core/script/compare-model-migrations.ts",
     "anthropic:sync": "bun ./packages/core/script/sync-models.ts anthropic",
     "baseten:sync": "bun ./packages/core/script/sync-models.ts baseten",
