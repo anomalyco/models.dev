@@ -272,7 +272,11 @@ export function buildAiandModel(
     structured_output: false,
     open_weights: false,
     cost,
-    limit,
+    // The API only exposes a combined context window, so new models have no
+    // authoritative output limit. Fall back to the context window so the model
+    // satisfies AuthoredModel / ProviderModelLimit; this should be reviewed and
+    // corrected by hand when the real output limit is known.
+    limit: { ...limit, output: limit.output ?? context },
     modalities: { input, output },
   } satisfies SyncedFullModel;
 }

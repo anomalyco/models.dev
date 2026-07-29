@@ -148,6 +148,6 @@ test("builds best-effort ai& model when no canonical metadata exists", () => {
     reasoning_options: undefined,
     tool_call: true,
     attachment: false,
-    limit: { context: 1_048_576 },
+    limit: { context: 1_048_576, output: 1_048_576 },
   });
 });
