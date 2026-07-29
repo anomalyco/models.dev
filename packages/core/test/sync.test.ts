@@ -19,6 +19,7 @@ import {
   resolveDigitalOceanBaseModel,
   type DigitalOceanSourceModel,
 } from "../src/sync/providers/digitalocean.js";
+import { buildHyperModel, type HyperModel } from "../src/sync/providers/hyper.js";
 import {
   buildEmpiriolabsModel,
   empiriolabs,
@@ -791,6 +792,66 @@ function deepInfraModel(model_name: string, tags: string[]): DeepInfraModel {
   };
 }
 
+test("syncs Hyper pricing from catalog input/output fields", () => {
+  const model = hyperModel({
+    id: "minimax-m2.7",
+    reasoning: undefined,
+    pricing: {
+      input: 0.3,
+      output: 1.2,
+      cache_hit: 0.06,
+      cache_create: 0.03,
+    },
+  });
+
+  expect(buildHyperModel(model, undefined, "minimax/MiniMax-M2.7")).toMatchObject({
+    cost: { input: 0.3, output: 1.2, cache_read: 0.06, cache_write: 0.03 },
+    reasoning: false,
+  });
+  expect(buildHyperModel(model, undefined, "minimax/MiniMax-M2.7")).not.toHaveProperty("reasoning_options");
+});
+
+test("rounds Hyper pricing to six decimal places", () => {
+  const model = hyperModel({
+    id: "deepseek-v4-flash",
+    pricing: {
+      input: 0.20000010875000002,
+      output: 0.40000021750000003,
+      cache_hit: 0.039999586250000004,
+    },
+  });
+
+  expect(buildHyperModel(model, undefined, "deepseek/deepseek-v4-flash")).toMatchObject({
+    cost: { input: 0.2, output: 0.4, cache_read: 0.04 },
+  });
+});
+
+test("sets Hyper reasoning false when API omits reasoning metadata", () => {
+  const model = hyperModel({ id: "llama-3.3-70b-instruct", reasoning: undefined });
+
+  expect(buildHyperModel(model, undefined, "meta/llama-3.3-70b-instruct")).toMatchObject({
+    attachment: false,
+  });
+  expect(buildHyperModel(model, undefined, "meta/llama-3.3-70b-instruct")).not.toHaveProperty("reasoning");
+  expect(buildHyperModel(model, undefined, "meta/llama-3.3-70b-instruct")).not.toHaveProperty("reasoning_options");
+
+  expect(buildHyperModel(hyperModel({ id: "minimax-m2.7", reasoning: undefined }), undefined, "minimax/MiniMax-M2.7")).toMatchObject({
+    reasoning: false,
+  });
+});
+
+test("preserves existing Hyper cost when API pricing is missing", () => {
+  const existing = {
+    cost: { input: 1, output: 2 },
+    release_date: "2026-01-01",
+    last_updated: "2026-01-01",
+  };
+
+  expect(buildHyperModel(hyperModel({ id: "minimax-m2.7" }), existing, "minimax/MiniMax-M2.7")).toMatchObject({
+    cost: { input: 1, output: 2 },
+  });
+});
+
 test("formats interleaved as a root field before reasoning option tables", () => {
   const content = formatToml({
     id: "example/model",
@@ -1505,6 +1566,23 @@ function llmGatewayModel(overrides: Partial<LLMGatewayModel> = {}): LLMGatewayMo
     context_length: 1_000_000,
     supported_parameters: ["temperature", "max_tokens", "top_p", "effort", "reasoning"],
     structured_outputs: true,
+    ...overrides,
+  };
+}
+
+function hyperModel(overrides: Partial<HyperModel> = {}): HyperModel {
+  return {
+    id: "deepseek-v4-flash",
+    created: 1_780_592_628,
+    display_name: "DeepSeek V4 Flash",
+    reasoning: {
+      effort_levels: [
+        { value: "high" },
+        { value: "xhigh" },
+      ],
+    },
+    context_window: 1_000_000,
+    max_output_tokens: 384_000,
     ...overrides,
   };
 }

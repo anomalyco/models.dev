@@ -100,7 +100,8 @@ export const openrouter = {
     return response.json();
   },
   parseModels(raw) {
-    return OpenRouterResponse.parse(raw).data;
+    // Temporarily skip batch routes (`*:batch`) — they are not catalog targets.
+    return OpenRouterResponse.parse(raw).data.filter((model) => !model.id.endsWith(":batch"));
   },
   translateModel(model, context) {
     // OpenRouter serves deprecated/unavailable routes as degraded stubs:

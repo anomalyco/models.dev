@@ -1,0 +1,16 @@
+# Sources (accessed 2026-07-25):
+# - https://docs.api.nvidia.com/nim/reference/nvidia-llama-3_3-nemotron-super-49b-v1
+# - https://docs.api.nvidia.com/nim/reference/nvidia-llama-3_3-nemotron-super-49b-v1-infer
+# - https://huggingface.co/nvidia/Llama-3_3-Nemotron-Super-49B-v1
+# - https://integrate.api.nvidia.com/v1/models id: nvidia/llama-3.3-nemotron-super-49b-v1
+# Toggle: system message `detailed thinking on` | `detailed thinking off`.
+# Infer OpenAPI: max_tokens 1..65536.
+base_model = "nvidia/llama-3.3-nemotron-super-49b-v1"
+reasoning_options = [{ type = "toggle" }] # API: system "detailed thinking on|off"
+
+[cost]
+input = 0.0
+output = 0.0
+
+[limit]
+output = 65_536
