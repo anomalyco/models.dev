@@ -1,0 +1,68 @@
+name: Fork ai& Sync → Upstream PR
+
+# This workflow only runs on the fenilmodi00/models.dev fork.
+# It is intentionally separate from the upstream sync-models.yml so that
+# upstream PRs from this fork do not contain fork-specific automation.
+on:
+  schedule:
+    - cron: "17 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency: ${{ github.workflow }}-${{ github.ref }}
+
+jobs:
+  sync:
+    if: github.repository == 'fenilmodi00/models.dev'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+        with:
+          ref: dev
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@f4d14e03ff726c06358e5557344e1da148b56cf7
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        run: bun install
+
+      - name: Sync ai& catalog
+        run: bun models:sync aiand
+        env:
+          AIAND_API_KEY: ${{ secrets.AIAND_API_KEY }}
+
+      - name: Validate models
+        run: bun validate
+
+      - name: Report changes upstream
+        env:
+          PR_TOKEN: ${{ secrets.UPSTREAM_PR_TOKEN }}
+          BRANCH: automation/sync-models-aiand
+          UPSTREAM_REPO: anomalyco/models.dev
+          TITLE: "chore(sync): update ai& model catalog"
+        run: |
+          if [ -z "$(git status --porcelain -- models providers)" ]; then
+            echo "No model catalog changes found."
+            exit 0
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git fetch --no-tags --depth=1 origin "+refs/heads/$BRANCH:refs/remotes/origin/$BRANCH" || true
+          git checkout -B "$BRANCH"
+          git add models providers
+          git commit -m "$TITLE"
+          git push --force-with-lease origin "$BRANCH"
+
+          pr_number="$(GH_TOKEN="$PR_TOKEN" gh pr list --repo "$UPSTREAM_REPO" --head "fenilmodi00:${BRANCH}" --base dev --json number --jq '.[0].number')"
+          if [ -n "$pr_number" ]; then
+            GH_TOKEN="$PR_TOKEN" gh pr edit --repo "$UPSTREAM_REPO" "$pr_number" --title "$TITLE" --body-file .sync/model-sync-report.md
+          else
+            GH_TOKEN="$PR_TOKEN" gh pr create --repo "$UPSTREAM_REPO" --base dev --head "fenilmodi00:${BRANCH}" --title "$TITLE" --body-file .sync/model-sync-report.md || true
+          fi
