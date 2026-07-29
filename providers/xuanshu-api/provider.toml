@@ -1,0 +1,19 @@
+# XuanShu API (玄枢API) is an OpenAI/Anthropic/Gemini-compatible relay.
+# Registered as @ai-sdk/anthropic: the Messages surface is the one its own docs
+# lead with for coding agents. The SDK appends /messages to `api`.
+# The same host also serves OpenAI Responses and Chat Completions at
+# https://www.xuanshuapi.com/v1 and Gemini native at
+# https://www.xuanshuapi.com/v1beta, which this entry does not model.
+# Note: Claude Code is documented against the ROOT host with no /v1 path;
+# the /v1 value below is the AI SDK baseURL, not the Claude Code Base URL.
+# https://www.xuanshuapi.com/en/docs/claude-code
+# https://www.xuanshuapi.com/en/docs/model-capabilities (accessed 2026-07-29)
+#
+# Costs are omitted deliberately: pricing is a per-group multiplier applied to
+# upstream rates and is set in the operator console, so there is no single
+# public per-model rate to cite.
+name = "XuanShu API"
+env = ["XUANSHU_API_KEY"]
+npm = "@ai-sdk/anthropic"
+api = "https://www.xuanshuapi.com/v1"
+doc = "https://www.xuanshuapi.com/en/docs/models"
