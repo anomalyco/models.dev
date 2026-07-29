@@ -1111,6 +1111,53 @@ test("factors OpenRouter Pro routes against canonical OpenAI metadata", () => {
   expect("release_date" in model).toBe(false);
 });
 
+test("strips :free / :discounted / :thinking suffixes when resolving canonical base model", () => {
+  expect([
+    resolveCanonicalBaseModel("anthropic/claude-opus-4-6:free"),
+    resolveCanonicalBaseModel("anthropic/claude-opus-4-6:discounted"),
+    resolveCanonicalBaseModel("anthropic/claude-opus-4-6:thinking"),
+    resolveCanonicalBaseModel("openai/gpt-4o:free"),
+    resolveCanonicalBaseModel("openai/gpt-4o:discounted"),
+    resolveCanonicalBaseModel("openai/gpt-4o:thinking"),
+  ]).toEqual([
+    "anthropic/claude-opus-4-6",
+    "anthropic/claude-opus-4-6",
+    "anthropic/claude-opus-4-6",
+    "openai/gpt-4o",
+    "openai/gpt-4o",
+    "openai/gpt-4o",
+  ]);
+});
+
+test("preserves variant display name for :free / :discounted / :thinking when factored", () => {
+  const freeModel = buildOpenRouterModel(openRouterModel({
+    id: "anthropic/claude-opus-4-6:free",
+    name: "Anthropic: Claude Opus 4.6 (free)",
+  }), undefined);
+  expect(freeModel).toMatchObject({
+    base_model: "anthropic/claude-opus-4-6",
+    name: "Claude Opus 4.6 (free)",
+  });
+
+  const discountedModel = buildOpenRouterModel(openRouterModel({
+    id: "anthropic/claude-opus-4-6:discounted",
+    name: "Anthropic: Claude Opus 4.6 (discounted)",
+  }), undefined);
+  expect(discountedModel).toMatchObject({
+    base_model: "anthropic/claude-opus-4-6",
+    name: "Claude Opus 4.6 (discounted)",
+  });
+
+  const thinkingModel = buildOpenRouterModel(openRouterModel({
+    id: "anthropic/claude-opus-4-6:thinking",
+    name: "Anthropic: Claude Opus 4.6 (thinking)",
+  }), undefined);
+  expect(thinkingModel).toMatchObject({
+    base_model: "anthropic/claude-opus-4-6",
+    name: "Claude Opus 4.6 (thinking)",
+  });
+});
+
 test("resolves Venice Pro routes to canonical OpenAI metadata", () => {
   expect([
     resolveVeniceBaseModel("openai-gpt-56-luna-pro", "GPT-5.6 Luna Pro"),
