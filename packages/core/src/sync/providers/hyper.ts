@@ -2,14 +2,21 @@ import { existsSync } from "node:fs";
 import path from "node:path";
 import { z } from "zod";
 
+import { describeModel } from "../../describe.js";
 import type { ExistingModel, SyncProvider, SyncedFullModel, SyncedModel } from "../index.js";
-import { factorBaseModel } from "./openrouter.js";
+import { factorBaseModel, resolveModelMetadataBaseModel } from "./openrouter.js";
 
 const API_ENDPOINT = "https://hyper.charm.land/v1/models";
 const MODELS_DIR = path.join(import.meta.dirname, "..", "..", "..", "..", "..", "models");
 
 function baseModelExists(modelID: string) {
   return existsSync(path.join(MODELS_DIR, `${modelID}.toml`));
+}
+
+function resolveHyperBaseModel(modelID: string, existingBase: string | undefined) {
+  if (existingBase !== undefined && baseModelExists(existingBase)) return existingBase;
+  const resolved = resolveModelMetadataBaseModel(modelID);
+  return resolved !== undefined && baseModelExists(resolved) ? resolved : undefined;
 }
 
 const ReasoningEffort = z.enum([
@@ -72,11 +79,9 @@ export const hyper = {
   },
   translateModel(model, context) {
     const existing = context.existing(model.id);
-    const baseModel = existing?.base_model;
-    if (baseModel === undefined || !baseModelExists(baseModel)) return undefined;
     return {
       id: model.id,
-      model: buildHyperModel(model, existing, baseModel),
+      model: buildHyperModel(model, existing),
     };
   },
 } satisfies SyncProvider<HyperModel>;
@@ -131,7 +136,7 @@ function hyperModalities(vision: boolean) {
 export function buildHyperModel(
   model: HyperModel,
   existing: ExistingModel | undefined,
-  baseModel: string,
+  baseModel = existing?.base_model,
   today = new Date().toISOString().slice(0, 10),
 ): SyncedModel {
   const limit = {
@@ -140,17 +145,53 @@ export function buildHyperModel(
     output: model.max_output_tokens,
   };
   const modalities = hyperModalities(model.capabilities?.vision ?? false);
+  const reasoning = model.reasoning != null;
+  const releaseDate = existing?.release_date ?? dateFromTimestamp(model.created);
   const values: Partial<SyncedFullModel> = {
     attachment: modalities.input.some((value) => value !== "text"),
     modalities,
-    reasoning: model.reasoning != null,
-    reasoning_options: model.reasoning != null ? reasoningOptions(model) : undefined,
-    release_date: existing?.release_date ?? dateFromTimestamp(model.created),
+    reasoning,
+    release_date: releaseDate,
     last_updated: existing?.last_updated ?? today,
     interleaved: existing?.interleaved,
     cost: buildCost(model, existing?.cost),
     limit,
   };
+  if (reasoning) values.reasoning_options = reasoningOptions(model);
 
-  return factorBaseModel(baseModel, values, limit, existing?.base_model_omit);
+  const resolvedBase = resolveHyperBaseModel(model.id, baseModel);
+  if (resolvedBase !== undefined) {
+    return factorBaseModel(
+      resolvedBase,
+      values,
+      limit,
+      existing?.base_model === resolvedBase ? existing.base_model_omit : undefined,
+    );
+  }
+
+  const name = existing?.name ?? model.display_name;
+  return {
+    name,
+    description: existing?.description ?? describeModel({
+      id: model.id,
+      name,
+      family: existing?.family,
+      reasoning,
+      tool_call: existing?.tool_call ?? true,
+      structured_output: existing?.structured_output,
+      open_weights: existing?.open_weights ?? false,
+      limit,
+      modalities,
+    }),
+    family: existing?.family,
+    ...values,
+    temperature: existing?.temperature,
+    tool_call: existing?.tool_call ?? true,
+    structured_output: existing?.structured_output,
+    knowledge: existing?.knowledge,
+    open_weights: existing?.open_weights ?? false,
+    status: existing?.status,
+    provider: existing?.provider,
+    experimental: existing?.experimental,
+  };
 }

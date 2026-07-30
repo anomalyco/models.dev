@@ -1244,6 +1244,41 @@ test("preserves existing Hyper cost when API pricing is missing", () => {
   });
 });
 
+test("creates a full Hyper model when no base_model metadata exists", () => {
+  const model = hyperModel({
+    id: "qwen3.7-flash",
+    display_name: "Qwen3.7-Flash",
+    reasoning: undefined,
+    capabilities: { vision: true },
+    pricing: {
+      input: 0.2,
+      output: 0.8,
+      cache_hit: 0.04,
+      cache_create: 0,
+    },
+  });
+
+  expect(buildHyperModel(model, undefined)).toMatchObject({
+    name: "Qwen3.7-Flash",
+    attachment: true,
+    reasoning: false,
+    tool_call: true,
+    open_weights: false,
+    cost: { input: 0.2, output: 0.8, cache_read: 0.04 },
+    limit: { context: 1_000_000, output: 384_000 },
+    modalities: { input: ["text", "image"], output: ["text"] },
+  });
+  expect(buildHyperModel(model, undefined)).not.toHaveProperty("base_model");
+  expect(buildHyperModel(model, undefined)).not.toHaveProperty("reasoning_options");
+});
+
+test("factors new Hyper models against unique models/ metadata", () => {
+  expect(buildHyperModel(hyperModel({ id: "kimi-k3", reasoning: undefined }), undefined)).toMatchObject({
+    base_model: "moonshotai/kimi-k3",
+    reasoning: false,
+  });
+});
+
 test("formats interleaved as a root field before reasoning option tables", () => {
   const content = formatToml({
     id: "example/model",
