@@ -1,7 +1,7 @@
 base_model = "thinkingmachines/inkling"
 description = "Multimodal model for analyzing text, images, documents, and rich media"
 structured_output = true
-reasoning_options = []
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
 
 [cost]
 input = 1
