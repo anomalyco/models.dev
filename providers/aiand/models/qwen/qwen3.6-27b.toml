@@ -1,6 +1,7 @@
-# Source: https://docs.aiand.com/models/catalog/ (USD list prices; accessed
-# 2026-07-24) and live probes against api.aiand.com on the same date.
-# Listed as free ("no charges, ideal for evals") in the catalog's Quick picks.
+# Source: GET https://api.aiand.com/v1/models (USD list prices; accessed
+# 2026-07-28). The catalog Quick-picks section still lists this model as free,
+# but the live endpoint reports input = $0.32 / output = $3.20 per 1M tokens,
+# so pricing is taken from the API.
 # ai&'s deployment rejects image input ("does not support image input") and
 # the catalog lists no vision/video/audio capability, so modalities are
 # overridden from the shared base model's text+image+video+audio to text-only,
@@ -8,7 +9,6 @@
 # reasoning_effort verified by live probe on 2026-07-24: all six documented
 # values accepted; invalid values rejected with 400 (negative control).
 base_model = "alibaba/qwen3.6-27b"
-
 attachment = false
 
 [[reasoning_options]]
@@ -16,9 +16,8 @@ type = "effort"
 values = ["none", "minimal", "low", "medium", "high", "xhigh"]
 
 [cost]
-input = 0
-output = 0
+input = 0.32
+output = 3.2
 
 [modalities]
 input = ["text"]
-output = ["text"]

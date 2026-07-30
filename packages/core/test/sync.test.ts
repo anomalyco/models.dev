@@ -45,6 +45,7 @@ import { pioneer } from "../src/sync/providers/pioneer.js";
 import { google, shouldTrackGoogleModel } from "../src/sync/providers/google.js";
 import { resolveVeniceBaseModel } from "../src/sync/providers/venice.js";
 import { buildVercelModel, vercel } from "../src/sync/providers/vercel.js";
+import { aiand, buildAiandModel, type AiandModel } from "../src/sync/providers/aiand.js";
 import { buildWandbModel, type WandbModel } from "../src/sync/providers/wandb.js";
 import { buildXAIModel } from "../src/sync/providers/xai.js";
 
@@ -1918,6 +1919,104 @@ test("maps EmpirioLabs aliases to canonical model metadata", () => {
   expect(resolveEmpiriolabsBaseModel("muse-spark-1-1")).toBe("meta/muse-spark-1.1");
   expect(resolveEmpiriolabsBaseModel("step-3-5-flash")).toBe("stepfun/step-3.5-flash");
 });
+
+test("syncs ai& pricing and context from the OpenAI-shaped models endpoint", () => {
+  const model = buildAiandModel(aiandModel(), undefined);
+
+  expect(model).toMatchObject({
+    base_model: "zhipuai/glm-5.2",
+    cost: { input: 1, output: 4 },
+    limit: { context: 1_048_576 },
+  });
+  expect("name" in model).toBe(false);
+});
+
+test("preserves authored ai& limits and reasoning options on factored models", () => {
+  const model = buildAiandModel(aiandModel({ context_window: 999_000 }), {
+    base_model: "zhipuai/glm-5.2",
+    reasoning: true,
+    reasoning_options: [{ type: "effort", values: ["low", "medium", "high"] }],
+    cost: { input: 0.5, output: 2 },
+    limit: { context: 1_048_576, output: 131_072 },
+    modalities: { input: ["text", "image", "pdf"], output: ["text"] },
+    attachment: true,
+  });
+
+  expect(model).toMatchObject({
+    base_model: "zhipuai/glm-5.2",
+    reasoning_options: [{ type: "effort", values: ["low", "medium", "high"] }],
+    limit: { context: 999_000 },
+  });
+});
+
+test("preserves authored ai& modalities and attachment when API capability tags differ", () => {
+  const model = buildAiandModel(aiandModel({
+    id: "moonshotai/kimi-k2.7-code",
+    provider: "moonshotai",
+    capabilities: ["reasoning", "tool_calling"],
+  }), {
+    name: "Kimi K2.7 Code",
+    release_date: "2026-01-01",
+    last_updated: "2026-01-01",
+    attachment: true,
+    reasoning: true,
+    tool_call: true,
+    open_weights: false,
+    cost: { input: 0.75, output: 3.5 },
+    limit: { context: 262_144, output: 262_144 },
+    modalities: { input: ["text", "image", "pdf"], output: ["text"] },
+  });
+
+  expect(model).toMatchObject({
+    attachment: true,
+    modalities: { input: ["text", "image", "pdf"], output: ["text"] },
+  });
+});
+
+test("skips ai& remote-only models with no local file and no resolvable base model", () => {
+  const translated = aiand.translateModel(aiandModel({
+    id: "custom-org/custom-model",
+    provider: "custom-org",
+  }), {
+    existing: () => undefined,
+    authored: () => undefined,
+  });
+
+  expect(translated).toBeUndefined();
+});
+
+test("falls back ai& output limit to context for brand-new models", () => {
+  const model = buildAiandModel(aiandModel({
+    id: "custom-org/custom-model",
+    provider: "custom-org",
+    capabilities: ["tool_calling"],
+  }), undefined);
+
+  expect(model).toMatchObject({
+    name: "Custom Model",
+    tool_call: true,
+    attachment: false,
+    limit: { context: 1_048_576, output: 1_048_576 },
+  });
+});
+
+function aiandModel(overrides: Partial<AiandModel> = {}): AiandModel {
+  return {
+    id: "zai-org/glm-5.2",
+    object: "model",
+    name: "zai-org/glm-5.2",
+    owned_by: "ai&",
+    provider: "zai-org",
+    context_window: 1_048_576,
+    capabilities: ["reasoning", "tool_calling"],
+    description: "Zhipu GLM 5.2",
+    currency: "usd",
+    input_per_1m: "1.000000",
+    output_per_1m: "4.000000",
+    created: 1_780_963_200,
+    ...overrides,
+  };
+}
 
 function unavailableStub(): OpenRouterModel {
   return openRouterModel({
