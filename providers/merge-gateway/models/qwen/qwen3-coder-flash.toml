@@ -1,0 +1,13 @@
+# Source: https://api-gateway.merge.dev/v1/models?model=qwen%2Fqwen3-coder-flash (accessed 2026-07-21)
+
+base_model = "alibaba/qwen3-coder-flash"
+tool_call = false
+structured_output = false
+
+[cost]
+input = 0.144
+output = 0.574
+cache_read = 0.0288
+
+[limit]
+output = 250_000

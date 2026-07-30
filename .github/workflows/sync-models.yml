@@ -63,6 +63,7 @@ jobs:
       - name: Sync model catalogs
         run: bun models:sync ${{ matrix.provider }}
         env:
+          GH_TOKEN: ${{ github.token }}
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           BASETEN_API_KEY: ${{ secrets.BASETEN_API_KEY }}
           DEEPINFRA_API_KEY: ${{ secrets.DEEPINFRA_API_KEY }}
@@ -73,6 +74,7 @@ jobs:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           VENICE_API_KEY: ${{ secrets.VENICE_API_KEY }}
           LLMGATEWAY_API_KEY: ${{ secrets.LLMGATEWAY_API_KEY }}
+          MERGE_GATEWAY_API_KEY: ${{ secrets.MERGE_GATEWAY_API_KEY }}
           KILO_API_KEY: ${{ secrets.KILO_API_KEY }}
           GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}

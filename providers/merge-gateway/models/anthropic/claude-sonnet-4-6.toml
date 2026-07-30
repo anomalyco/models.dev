@@ -1,5 +1,8 @@
+# Source: https://api-gateway.merge.dev/v1/models?model=anthropic%2Fclaude-sonnet-4-6 (accessed 2026-07-21)
+
 base_model = "anthropic/claude-sonnet-4-6"
 reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "medium", "high", "max"] }, { type = "budget_tokens", min = 1_024, max = 63_999 }]
+structured_output = true
 
 [cost]
 input = 3

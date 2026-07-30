@@ -119,6 +119,9 @@ items are **hard blockers**; the last two are **strongly recommended** but not b
 - Latest/undated models: `@default` (`claude-opus-4-6@default.toml`)
 
 ### Cost Schema
+- **All `cost` values are USD per million tokens.** Never publish EUR, CNY, or other currencies.
+  If a provider API or pricing page quotes another currency, convert to USD before writing the
+  TOML and note the source rate/date in a top-of-file comment.
 - `cost.context_over_200k` is a nested `Cost` object for >200K token pricing
 - Cache pricing ratios: standard models use 10%/125% (read/write), regional variants may use 30%/375%
 

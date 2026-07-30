@@ -1,8 +1,20 @@
+# Source: https://api-gateway.merge.dev/v1/models?model=google%2Fgemini-2.5-flash (accessed 2026-07-21)
+
 base_model = "google/gemini-2.5-flash"
-reasoning_options = [{ type = "toggle" }, { type = "budget_tokens", min = 0, max = 24_576 }]
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "budget_tokens"
+min = 0
+max = 24_576
 
 [cost]
 input = 0.3
 output = 2.5
 cache_read = 0.03
 input_audio = 1
+
+[modalities]
+input = ["text", "image", "audio", "pdf"]

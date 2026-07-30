@@ -1,17 +1,25 @@
+# Z.AI mapping lists $.reasoning_effort / $.reasoning.effort = high|max.
+# Gateway-wide $.reasoning_effort = "none" (or $.reasoning.effort = "none")
+# disables non-OpenAI reasoning.
+# https://docs.llmgateway.io/features/reasoning (accessed 2026-07-23)
+# https://api.llmgateway.io/v1/models providers[].reasoning_efforts (accessed 2026-07-23)
 base_model = "zhipuai/glm-5.2"
 
 [interleaved]
 field = "reasoning_content"
 
 [[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
 type = "effort"
-values = ["none", "low", "medium", "high", "xhigh", "max"]
+values = ["high", "max"]
 
 [cost]
-input = 1.26
-output = 3.96
-cache_read = 0.234
+input = 0.8
+output = 2.55
+cache_read = 0.16
 cache_write = 0
 
 [limit]
-context = 1_024_000
+context = 1_048_576

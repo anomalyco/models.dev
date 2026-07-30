@@ -1,0 +1,15 @@
+# Cortecs lists EUR 2.693 input and EUR 13.464 output per million tokens.
+# Converted at 1 EUR = 1.114 USD and rounded to the provider's displayed USD rates.
+# https://api.cortecs.ai/v1/models (accessed 2026-07-29)
+base_model = "moonshotai/kimi-k3"
+reasoning_options = []
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 3
+output = 15
+
+[modalities]
+input = ["text", "image"]

@@ -1,0 +1,13 @@
+# Sources:
+# - https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-3-6-flash-3-5-flash-lite-3-5-flash-cyber/
+# - https://ai.google.dev/gemini-api/docs/pricing
+base_model = "google/gemini-3.5-flash-lite"
+
+[[reasoning_options]]
+type = "effort"
+values = ["minimal", "low", "medium", "high"]
+
+[cost]
+input = 0.30
+output = 2.50
+cache_read = 0.03

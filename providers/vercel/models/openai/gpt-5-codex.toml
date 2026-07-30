@@ -1,1 +1,12 @@
-../../../openai/models/gpt-5-codex.toml
+base_model = "openai/gpt-5-codex"
+family = "gpt"
+attachment = true
+reasoning_options = []
+
+[cost]
+input = 1.25
+output = 10
+cache_read = 0.13
+
+[modalities]
+input = ["text", "image", "pdf"]
