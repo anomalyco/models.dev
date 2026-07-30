@@ -49,7 +49,6 @@ export default $config({
         hostname: "models.opencode.ai",
         service: worker.nodes.worker.scriptName,
         zoneId: zone.zoneId,
-        zoneName: zone.name,
       });
     }
 
