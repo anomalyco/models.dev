@@ -9,14 +9,6 @@ structured_output = true
 temperature = true
 open_weights = false
 
-[[reasoning_options]]
-type = "toggle" # API: {"chat_template_kwargs": {"enable_thinking": true}}
-
-[[reasoning_options]]
-type = "budget_tokens" # API: {"thinking": {"type": "enabled", "budget_tokens": <n>}}
-min = 1_024
-max = 65_536
-
 [cost]
 input = 0
 output = 0
@@ -28,3 +20,13 @@ output = 65_536
 [modalities]
 input = ["text", "image"]
 output = ["text"]
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "toggle" # API: {"chat_template_kwargs": {"enable_thinking": true}}
+
+[[reasoning_options]]
+type = "budget_tokens" # API: {"thinking": {"type": "enabled", "budget_tokens": <n>}}
+min = 1_024
+max = 65_536
