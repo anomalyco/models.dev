@@ -3,7 +3,7 @@ import { mkdir, mkdtemp, readFile, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 
-import { formatToml, preserveReasoningOptions, syncProvider, type SyncProvider } from "../src/sync/index.js";
+import { formatToml, preserveReasoningOptions, syncProvider, type ExistingModel, type SyncProvider } from "../src/sync/index.js";
 import {
   anthropic,
   buildAnthropicModel,
@@ -51,6 +51,7 @@ import {
 import { openai, parseOpenAIModels } from "../src/sync/providers/openai.js";
 import { pioneer } from "../src/sync/providers/pioneer.js";
 import { google, shouldTrackGoogleModel } from "../src/sync/providers/google.js";
+import { buildTinfoilModel, tinfoil, type TinfoilModel } from "../src/sync/providers/tinfoil.js";
 import { resolveVeniceBaseModel } from "../src/sync/providers/venice.js";
 import { buildVercelModel, vercel } from "../src/sync/providers/vercel.js";
 import { buildWandbModel, type WandbModel } from "../src/sync/providers/wandb.js";
@@ -731,6 +732,96 @@ test("tracks public Google model families but not opaque internal IDs", () => {
   expect(shouldTrackGoogleModel("ajax")).toBe(false);
   expect(shouldTrackGoogleModel("perseus-2")).toBe(false);
   expect(shouldTrackGoogleModel("thorin")).toBe(false);
+});
+
+function tinfoilModel(overrides: Partial<TinfoilModel> = {}): TinfoilModel {
+  return {
+    id: "glm-5-2",
+    object: "model",
+    owned_by: "tinfoil",
+    name: "GLM-5.2",
+    created: 1_775_088_000,
+    context_window: 384_000,
+    pricing: {
+      inputTokenPricePer1M: 1.5,
+      outputTokenPricePer1M: 5.25,
+      cachedInputTokenPricePer1M: 0.375,
+      requestPrice: 0,
+    },
+    reasoning: true,
+    tool_calling: true,
+    multimodal: false,
+    type: "chat",
+    ...overrides,
+  };
+}
+
+const existingTinfoilGLM: ExistingModel = {
+  base_model: "zhipuai/glm-5.2",
+  name: "GLM-5.2",
+  description: "Flagship GLM model for agentic engineering and coding",
+  family: "glm",
+  release_date: "2026-04-02",
+  last_updated: "2026-04-02",
+  attachment: false,
+  reasoning: true,
+  reasoning_options: [{
+    type: "effort",
+    values: ["none", "minimal", "low", "medium", "high", "xhigh", "max"],
+  }],
+  temperature: true,
+  tool_call: true,
+  structured_output: true,
+  open_weights: true,
+  cost: { input: 1.5, output: 5.25 },
+  limit: { context: 384_000, output: 131_072 },
+  modalities: { input: ["text"], output: ["text"] },
+};
+
+test("syncs Tinfoil cached-input pricing from the public model catalog", () => {
+  const model = buildTinfoilModel(tinfoilModel(), existingTinfoilGLM);
+
+  expect(model).toMatchObject({
+    base_model: "zhipuai/glm-5.2",
+    cost: {
+      input: 1.5,
+      output: 5.25,
+      cache_read: 0.375,
+    },
+    limit: { context: 384_000 },
+  });
+});
+
+test("removes stale Tinfoil cache pricing when the public catalog omits it", () => {
+  const model = buildTinfoilModel(tinfoilModel({
+    pricing: {
+      inputTokenPricePer1M: 1.5,
+      outputTokenPricePer1M: 5.25,
+      requestPrice: 0,
+    },
+  }), {
+    ...existingTinfoilGLM,
+    cost: { input: 1.5, output: 5.25, cache_read: 0.375 },
+  });
+
+  expect(model).toMatchObject({
+    cost: { input: 1.5, output: 5.25 },
+  });
+  expect(model.cost).not.toHaveProperty("cache_read");
+});
+
+test("tracks new token-priced Tinfoil models but ignores per-request services", () => {
+  expect(tinfoil.sourceID(tinfoilModel({ id: "new-chat-model" }))).toBe("new-chat-model");
+  expect(tinfoil.sourceID(tinfoilModel({
+    id: "websearch",
+    context_window: undefined,
+    type: "tool",
+    pricing: {
+      inputTokenPricePer1M: 0,
+      outputTokenPricePer1M: 0,
+      requestPrice: 0.05,
+    },
+  }))).toBeUndefined();
 });
 
 function digitalOceanModel(overrides: Partial<DigitalOceanSourceModel> = {}): DigitalOceanSourceModel {
