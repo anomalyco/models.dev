@@ -1,5 +1,5 @@
 import { expect, test } from "bun:test";
-import { mkdtemp, readFile, rm } from "node:fs/promises";
+import { mkdir, mkdtemp, readFile, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 
@@ -41,6 +41,13 @@ import {
   selectMergeGatewayVendor,
   type MergeGatewayModel,
 } from "../src/sync/providers/merge-gateway.js";
+import {
+  buildNanoGptModel,
+  nanoGpt,
+  NanoGptResponse,
+  resolveNanoGptBaseModel,
+  type NanoGptModel,
+} from "../src/sync/providers/nano-gpt.js";
 import { openai, parseOpenAIModels } from "../src/sync/providers/openai.js";
 import { pioneer } from "../src/sync/providers/pioneer.js";
 import { google, shouldTrackGoogleModel } from "../src/sync/providers/google.js";
@@ -76,6 +83,383 @@ function anthropicModel(overrides: Partial<AnthropicModel> = {}): AnthropicModel
     ...overrides,
   };
 }
+
+function nanoGptModel(overrides: Partial<NanoGptModel> = {}): NanoGptModel {
+  return {
+    id: "example/reasoning-model",
+    name: "Example Reasoning Model",
+    description: "Example model used to test NanoGPT catalog translation",
+    created: Date.parse("2026-06-01T00:00:00Z") / 1_000,
+    owned_by: "example",
+    context_length: 500_000,
+    max_output_tokens: 64_000,
+    architecture: {
+      input_modalities: ["text"],
+      output_modalities: ["text"],
+    },
+    capabilities: {
+      reasoning: true,
+      tool_calling: true,
+      structured_output: true,
+    },
+    reasoning_efforts: ["low", "high"],
+    open_weights: true,
+    pricing: {
+      prompt: 0.42,
+      completion: 1.32,
+      cacheReadInputPer1kTokens: 0.000078,
+    },
+    ...overrides,
+  };
+}
+
+test("syncs NanoGPT's verified reasoning, pricing, limits, and open-weight metadata", () => {
+  const model = buildNanoGptModel(nanoGptModel({
+    pricing: {
+      prompt: 0.42,
+      completion: 1.32,
+      cacheReadInputPer1kTokens: null,
+    },
+  }), {
+    cost: { input: 0.9, output: 2.7, cache_read: 0.2 },
+    limit: { context: 1_000_000, input: 1_000_000, output: 128_000 },
+  });
+
+  expect(model).toMatchObject({
+    reasoning: true,
+    reasoning_options: [{ type: "effort", values: ["low", "high"] }],
+    open_weights: true,
+    cost: { input: 0.42, output: 1.32, cache_read: 0.2 },
+    limit: { context: 500_000, input: 500_000, output: 64_000 },
+  });
+});
+
+test("does not invent NanoGPT reasoning controls or absent prices", () => {
+  const fixedReasoning = buildNanoGptModel(nanoGptModel({
+    id: "example/fixed-reasoner",
+    reasoning_efforts: null,
+    open_weights: null,
+    pricing: {
+      prompt: null,
+      completion: null,
+      cacheReadInputPer1kTokens: null,
+      cacheWriteInputPer1kTokens: null,
+    },
+  }), undefined);
+  const variablePricing = buildNanoGptModel(nanoGptModel({
+    id: "example/omni-model",
+    pricing: { note: "varies_by_modality" },
+  }), undefined);
+  const free = buildNanoGptModel(nanoGptModel({
+    id: "example/free-model",
+    pricing: { prompt: 0, completion: 0 },
+  }), undefined);
+  const invalid = buildNanoGptModel(nanoGptModel({
+    id: "example/invalid-pricing",
+    pricing: { prompt: -1, completion: 1, cacheReadInputPer1kTokens: -1 },
+  }), { cost: { input: 0.9, output: 2.7, cache_read: 0.2 } });
+
+  expect(fixedReasoning).toMatchObject({ reasoning: true, reasoning_options: [] });
+  expect(fixedReasoning?.cost).toBeUndefined();
+  expect(variablePricing?.cost).toBeUndefined();
+  expect(free?.cost).toEqual({ input: 0, output: 0 });
+  expect(invalid?.cost).toEqual({ input: 0.9, output: 2.7, cache_read: 0.2 });
+});
+
+test("accepts only NanoGPT's supported reasoning effort values", () => {
+  expect(NanoGptResponse.safeParse({
+    data: [nanoGptModel({ reasoning_efforts: ["none", "max"] })],
+  }).success).toBe(true);
+  expect(NanoGptResponse.safeParse({
+    data: [{ ...nanoGptModel(), reasoning_efforts: ["low", null] }],
+  }).success).toBe(false);
+  expect(NanoGptResponse.safeParse({
+    data: [{ ...nanoGptModel(), reasoning_efforts: ["default"] }],
+  }).success).toBe(false);
+});
+
+test("factors NanoGPT variants against canonical models without retaining wrong intrinsic metadata", () => {
+  expect(resolveNanoGptBaseModel("zai-org/glm-5.2:thinking")).toBe("zhipuai/glm-5.2");
+  expect(resolveNanoGptBaseModel("TEE/qwen3.6-35b-a3b")).toBe("alibaba/qwen3.6-35b-a3b");
+  expect(resolveNanoGptBaseModel("TEE/deepseek-v4-flash")).toBe("deepseek/deepseek-v4-flash");
+  expect(resolveNanoGptBaseModel("TEE/kimi-k2.5")).toBe("moonshotai/kimi-k2.5");
+  expect(resolveNanoGptBaseModel("TEE/gpt-oss-120b")).toBe("openai/gpt-oss-120b");
+  expect(resolveNanoGptBaseModel("TEE/gemma-4-31b-it")).toBe("google/gemma-4-31b-it");
+  expect(resolveNanoGptBaseModel("cohere/north-mini-code")).toBe("cohere/north-mini-code-1-0");
+  expect(resolveNanoGptBaseModel("xiaomi/mimo-v2.5-pro-ultraspeed"))
+    .toBe("xiaomi/mimo-v2.5-pro-ultraspeed");
+  expect(resolveNanoGptBaseModel("claude-haiku-4-5-20251001-thinking"))
+    .toBe("anthropic/claude-haiku-4-5-20251001");
+  expect(resolveNanoGptBaseModel("claude-sonnet-4-thinking:8192"))
+    .toBe("anthropic/claude-sonnet-4-0");
+  expect(resolveNanoGptBaseModel("anthropic/claude-opus-4.6:thinking:low"))
+    .toBe("anthropic/claude-opus-4-6");
+  expect(resolveNanoGptBaseModel("anthropic/claude-opus-4.6:thinking:thinking:max"))
+    .toBe("anthropic/claude-opus-4-6");
+  expect(resolveNanoGptBaseModel("gemini-2.5-pro")).toBe("google/gemini-2.5-pro");
+  expect(resolveNanoGptBaseModel("qwen3.5-27b")).toBe("alibaba/qwen3.5-27b");
+  expect(resolveNanoGptBaseModel("moonshotai/kimi-k2-thinking"))
+    .toBe("moonshotai/kimi-k2-thinking");
+  expect(resolveNanoGptBaseModel("qwen/qwen3-next-80b-a3b-thinking"))
+    .toBe("alibaba/qwen3-next-80b-a3b-thinking");
+
+  const additionalCanonicalIDs = new Map([
+    ["poolside/laguna-s-2.1", "poolside/laguna-s-2.1"],
+    ["poolside/laguna-s-2.1:thinking", "poolside/laguna-s-2.1"],
+    ["longcat-2.0", "meituan/longcat-2.0"],
+    ["longcat-2.0:thinking", "meituan/longcat-2.0"],
+    ["stepfun-ai/step-3.5-flash-2603", "stepfun/step-3.5-flash-2603"],
+    ["stepfun-ai/step-3.5-flash", "stepfun/step-3.5-flash"],
+    ["Qwen/Qwen3-Next-80B-A3B-Instruct", "alibaba/qwen3-next-80b-a3b-instruct"],
+    ["Qwen/Qwen3.6-35B-A3B", "alibaba/qwen3.6-35b-a3b"],
+    ["Qwen/Qwen3.6-35B-A3B:thinking", "alibaba/qwen3.6-35b-a3b"],
+    ["sonar-pro", "perplexity/sonar-pro"],
+    ["sonar-reasoning-pro", "perplexity/sonar-reasoning-pro"],
+    ["sonar", "perplexity/sonar"],
+    ["zai-org/GLM-4.5:thinking", "zhipuai/glm-4.5"],
+    ["zai-org/GLM-4.5-Air", "zhipuai/glm-4.5-air"],
+    ["zai-org/GLM-4.5-Air:thinking", "zhipuai/glm-4.5-air"],
+    ["poolside/laguna-m.1", "poolside/laguna-m.1"],
+    ["nvidia/Llama-3.3-Nemotron-Super-49B-v1", "nvidia/llama-3.3-nemotron-super-49b-v1"],
+    ["sarvam-30b", "sarvam/sarvam-30b"],
+    ["sarvam-105b", "sarvam/sarvam-105b"],
+  ]);
+  for (const [id, canonical] of additionalCanonicalIDs) {
+    expect(resolveNanoGptBaseModel(id)).toBe(canonical);
+  }
+
+  const north = buildNanoGptModel(nanoGptModel({
+    id: "cohere/north-mini-code",
+    name: "North Mini Code",
+    open_weights: null,
+  }), {
+    open_weights: false,
+    limit: { context: 256_000, input: 256_000, output: 64_000 },
+  });
+
+  expect(north).toMatchObject({ base_model: "cohere/north-mini-code-1-0" });
+  expect(north).not.toHaveProperty("open_weights");
+});
+
+test("factored NanoGPT models inherit missing intrinsic metadata without zero overrides", () => {
+  const sparse = buildNanoGptModel(nanoGptModel({
+    id: "google/gemini-2.5-pro",
+    name: null,
+    description: null,
+    created: null,
+    context_length: null,
+    max_output_tokens: null,
+    architecture: undefined,
+    capabilities: undefined,
+    reasoning_efforts: null,
+    open_weights: false,
+    pricing: undefined,
+  }), undefined);
+
+  expect(sparse).toMatchObject({ base_model: "google/gemini-2.5-pro" });
+  expect(sparse).not.toHaveProperty("name");
+  expect(sparse).not.toHaveProperty("family");
+  expect(sparse).not.toHaveProperty("release_date");
+  expect(sparse).not.toHaveProperty("attachment");
+  expect(sparse).not.toHaveProperty("reasoning");
+  expect(sparse).not.toHaveProperty("tool_call");
+  expect(sparse).not.toHaveProperty("open_weights");
+  expect(sparse).not.toHaveProperty("limit");
+  expect(sparse).not.toHaveProperty("modalities");
+});
+
+test("preserves route-specific NanoGPT names when first factoring existing models", () => {
+  const thinking = buildNanoGptModel(nanoGptModel({
+    id: "claude-opus-4-thinking:8192",
+    name: "Claude 4 Opus Thinking (8K)",
+  }), {
+    name: "Claude 4 Opus Thinking (8K)",
+    limit: { context: 200_000, input: 200_000, output: 32_000 },
+  });
+  const tee = buildNanoGptModel(nanoGptModel({
+    id: "TEE/glm-5",
+    name: "GLM 5 TEE",
+  }), undefined);
+
+  expect(thinking).toMatchObject({
+    base_model: "anthropic/claude-opus-4-0",
+    name: "Claude 4 Opus Thinking (8K)",
+  });
+  expect(tee).toMatchObject({
+    base_model: "zhipuai/glm-5",
+    name: "GLM 5 TEE",
+  });
+});
+
+test("preserves API-silent NanoGPT overrides when first factoring existing models", () => {
+  const model = buildNanoGptModel(nanoGptModel({
+    id: "anthropic/claude-sonnet-4.6",
+    context_length: 1_000_000,
+    max_output_tokens: null,
+    architecture: undefined,
+    capabilities: undefined,
+    reasoning_efforts: null,
+  }), {
+    reasoning: false,
+    structured_output: true,
+    limit: { context: 1_000_000, input: 1_000_000, output: 128_000 },
+    modalities: { input: ["text", "image", "pdf"], output: ["text"] },
+  });
+
+  expect(model).toMatchObject({
+    base_model: "anthropic/claude-sonnet-4-6",
+    reasoning: false,
+    structured_output: true,
+    limit: { output: 128_000 },
+  });
+});
+
+test("preserves explicit NanoGPT route overrides while inheriting absent base fields", () => {
+  const model = buildNanoGptModel(nanoGptModel({
+    id: "google/gemini-2.5-pro",
+    context_length: 500_000,
+    max_output_tokens: null,
+    architecture: { input_modalities: ["text", "image"] },
+    capabilities: { tool_calling: false },
+    open_weights: false,
+  }), {
+    provider: { body: { route: "secure" } },
+    experimental: {
+      modes: { fast: { provider: { body: { speed: "fast" } } } },
+    },
+  });
+
+  expect(model).toMatchObject({
+    base_model: "google/gemini-2.5-pro",
+    tool_call: false,
+    provider: { body: { route: "secure" } },
+    experimental: {
+      modes: { fast: { provider: { body: { speed: "fast" } } } },
+    },
+    limit: { context: 500_000, input: 500_000 },
+    modalities: { input: ["text", "image"] },
+  });
+  expect(model).not.toHaveProperty("limit.output");
+  expect(model).not.toHaveProperty("modalities.output");
+  expect(model).not.toHaveProperty("open_weights");
+
+  const textOnly = buildNanoGptModel(nanoGptModel({
+    id: "google/gemini-2.5-pro",
+    architecture: undefined,
+    capabilities: { vision: false },
+  }), undefined);
+  expect(textOnly).toMatchObject({
+    base_model: "google/gemini-2.5-pro",
+    attachment: false,
+    modalities: { input: ["text"] },
+  });
+});
+
+test("preserves standalone modalities and skips incomplete new standalone models", () => {
+  const existing = buildNanoGptModel(nanoGptModel({
+    id: "example/sparse-existing",
+    created: null,
+    context_length: null,
+    max_output_tokens: null,
+    architecture: undefined,
+    capabilities: undefined,
+    pricing: undefined,
+  }), {
+    release_date: "2026-01-01",
+    last_updated: "2026-01-01",
+    attachment: true,
+    provider: { body: { route: "secure" } },
+    experimental: {
+      modes: { fast: { provider: { body: { speed: "fast" } } } },
+    },
+    limit: { context: 100_000, input: 90_000, output: 10_000 },
+    modalities: { input: ["text", "image", "pdf"], output: ["text"] },
+  });
+  const missing = buildNanoGptModel(nanoGptModel({
+    id: "example/sparse-new",
+    created: null,
+    context_length: null,
+    max_output_tokens: null,
+    architecture: undefined,
+    capabilities: undefined,
+    pricing: undefined,
+  }), undefined);
+
+  expect(existing).toMatchObject({
+    attachment: true,
+    provider: { body: { route: "secure" } },
+    experimental: {
+      modes: { fast: { provider: { body: { speed: "fast" } } } },
+    },
+    limit: { context: 100_000, input: 90_000, output: 10_000 },
+    modalities: { input: ["text", "image", "pdf"], output: ["text"] },
+  });
+  expect(missing).toBeUndefined();
+});
+
+test("NanoGPT sync deletes missing downstream entries and never emits internal providers", () => {
+  const source = nanoGptModel({ providers: ["private-upstream"] });
+  const model = buildNanoGptModel(source, undefined);
+
+  expect((nanoGpt as SyncProvider<NanoGptModel>).deleteMissing).toBeUndefined();
+  expect(model).not.toHaveProperty("providers");
+});
+
+test("NanoGPT sync drops stale descriptions while first factoring existing models", async () => {
+  const dir = await mkdtemp(path.join(tmpdir(), "sync-nano-gpt-"));
+  const modelsDir = path.join(dir, "providers", "nano-gpt", "models");
+  const modelPath = path.join(modelsDir, "anthropic", "claude-sonnet-4.6.toml");
+  const metadataPath = path.join(dir, "models", "anthropic", "claude-sonnet-4-6.toml");
+  await mkdir(path.dirname(modelPath), { recursive: true });
+  await mkdir(path.dirname(metadataPath), { recursive: true });
+  await Bun.write(modelPath, [
+    'description = "Stale provider description"',
+    "reasoning = false",
+    "structured_output = true",
+    "",
+    "[limit]",
+    "context = 1_000_000",
+    "input = 1_000_000",
+    "output = 128_000",
+    "",
+  ].join("\n"));
+  await Bun.write(metadataPath, [
+    'description = "Canonical description"',
+    "reasoning = true",
+    "",
+    "[limit]",
+    "context = 1_000_000",
+    "output = 64_000",
+    "",
+  ].join("\n"));
+
+  try {
+    await syncProvider({
+      ...nanoGpt,
+      modelsDir,
+      async fetchModels() {
+        return {
+          data: [nanoGptModel({
+            id: "anthropic/claude-sonnet-4.6",
+            description: null,
+            max_output_tokens: null,
+            capabilities: undefined,
+            reasoning_efforts: null,
+          })],
+        };
+      },
+    });
+
+    const content = await readFile(modelPath, "utf8");
+    expect(content).toContain('base_model = "anthropic/claude-sonnet-4-6"');
+    expect(content).not.toContain("Stale provider description");
+    expect(content).toContain("reasoning = false");
+    expect(content).toContain("structured_output = true");
+    expect(content).toContain("output = 128_000");
+  } finally {
+    await rm(dir, { recursive: true, force: true });
+  }
+});
 
 const anthropicPricingMarkdown = `
 ## Model pricing
