@@ -2,6 +2,7 @@ import { z } from "zod";
 import { readFileSync, readdirSync } from "node:fs";
 import path from "node:path";
 
+import { describeModel } from "../../describe.js";
 import { inferKimiFamily, ModelFamilyValues } from "../../family.js";
 import type { ExistingModel, SyncProvider, SyncedFullModel, SyncedModel } from "../index.js";
 
@@ -9,6 +10,15 @@ const API_ENDPOINT = "https://openrouter.ai/api/v1/models";
 const MODELS_DIR = path.join(import.meta.dirname, "..", "..", "..", "..", "..", "models");
 const modelMetadataByID = new Map<string, Record<string, unknown>>();
 const modelMetadataFilesByProvider = new Map<string, Set<string>>();
+let allModelMetadataIDs: string[] | undefined;
+
+const CANONICAL_BASE_MODEL_OVERRIDES = {
+  "openai/gpt-5.6-luna-pro": "openai/gpt-5.6-luna",
+  "openai/gpt-5.6-sol-pro": "openai/gpt-5.6-sol",
+  "openai/gpt-5.6-terra-pro": "openai/gpt-5.6-terra",
+  "anthropic/claude-opus-4.7-fast": "anthropic/claude-opus-4-7",
+  "anthropic/claude-opus-4.8-fast": "anthropic/claude-opus-4-8",
+} as const;
 
 const CANONICAL_PROVIDER_PREFIXES = {
   alibaba: { provider: "alibaba", metadata: "alibaba" },
@@ -20,17 +30,22 @@ const CANONICAL_PROVIDER_PREFIXES = {
   "meta-llama": { provider: "llama", metadata: "meta" },
   minimax: { provider: "minimax", metadata: "minimax" },
   mistralai: { provider: "mistral", metadata: "mistral" },
+  moonshot: { provider: "moonshotai", metadata: "moonshotai" },
   moonshotai: { provider: "moonshotai", metadata: "moonshotai" },
   openai: { provider: "openai", metadata: "openai" },
   nvidia: { provider: "nvidia", metadata: "nvidia" },
   qwen: { provider: "alibaba", metadata: "alibaba" },
+  sakana: { provider: "sakana", metadata: "sakana" },
   stepfun: { provider: "stepfun", metadata: "stepfun" },
+  "stepfun-ai": { provider: "stepfun", metadata: "stepfun" },
   tencent: { provider: "tencent", metadata: "tencent" },
+  thinkingmachines: { provider: "thinkingmachines", metadata: "thinkingmachines" },
   "x-ai": { provider: "xai", metadata: "xai" },
   xai: { provider: "xai", metadata: "xai" },
   xiaomi: { provider: "xiaomi", metadata: "xiaomi" },
   zai: { provider: "zai", metadata: "zhipuai" },
   "z-ai": { provider: "zai", metadata: "zhipuai" },
+  "zai-org": { provider: "zai", metadata: "zhipuai" },
 } as const;
 
 export const OpenRouterModel = z.object({
@@ -56,6 +71,17 @@ export const OpenRouterModel = z.object({
     max_completion_tokens: z.number().nullable(),
   }),
   supported_parameters: z.array(z.string()),
+  reasoning: z
+    .object({
+      mandatory: z.boolean(),
+      supported_efforts: z
+        .array(z.enum(["max", "xhigh", "high", "medium", "low", "minimal", "none"]))
+        .nullable()
+        .optional(),
+      supports_max_tokens: z.boolean().optional(),
+    })
+    .passthrough()
+    .optional(),
 });
 
 export const OpenRouterResponse = z.object({
@@ -79,15 +105,33 @@ export const openrouter = {
     return response.json();
   },
   parseModels(raw) {
-    return OpenRouterResponse.parse(raw).data;
+    // Temporarily skip batch routes (`*:batch`) — they are not catalog targets.
+    return OpenRouterResponse.parse(raw).data.filter((model) => !model.id.endsWith(":batch"));
   },
   translateModel(model, context) {
+    // OpenRouter serves deprecated/unavailable routes as degraded stubs:
+    // negative pricing (`"-1"`) and an empty `supported_parameters` array. Syncing
+    // those would wrongly flip `reasoning`/`tool_call`/`structured_output` to false
+    // and strip `reasoning_options`. Leave the authored file untouched instead, and
+    // skip the model entirely when we have nothing to preserve.
+    if (isUnavailable(model)) {
+      const authored = context.authored(model.id);
+      return authored === undefined ? undefined : { id: model.id, model: authored as SyncedModel };
+    }
     return {
       id: model.id,
       model: buildOpenRouterModel(model, context.existing(model.id)),
     };
   },
 } satisfies SyncProvider<OpenRouterModel>;
+
+function isUnavailable(model: OpenRouterModel) {
+  return (
+    model.supported_parameters.length === 0 ||
+    Number(model.pricing.prompt) < 0 ||
+    Number(model.pricing.completion) < 0
+  );
+}
 
 function dateFromTimestamp(timestamp: number) {
   return new Date(timestamp * 1000).toISOString().slice(0, 10);
@@ -140,7 +184,12 @@ export function buildOpenRouterModel(
   const prompt = price(model.pricing.prompt);
   const completion = price(model.pricing.completion);
   const reasoning = params.has("reasoning") || params.has("include_reasoning");
-  const context = model.top_provider.context_length ?? model.context_length;
+  // Prefer OpenRouter's live reasoning metadata over authored options so aliases
+  // and rotated models pick up new efforts/budget support. Fall back to authored
+  // only when the API omits a reasoning object.
+  const reasoning_options = openRouterReasoningOptions(model.reasoning)
+    ?? (reasoning ? existing?.reasoning_options : undefined);
+  const context = model.context_length;
   const family = inferFamily(model, name);
   const releaseDate = dateFromTimestamp(model.created);
   const familyValue = existing?.family === "o" && family !== "o"
@@ -169,12 +218,27 @@ export function buildOpenRouterModel(
   const canonical = existing?.base_model ?? baseModel ?? resolveCanonicalBaseModel(model.id);
 
   if (canonical !== undefined) {
+    const canonicalOverride = canonicalBaseModelOverride(model.id);
     return factorBaseModel(
       canonical,
       {
-        name: baseModel !== undefined || model.id.endsWith(":free") ? name : undefined,
+        name: shouldPreserveFactoredName(model.id, canonical, baseModel, canonicalOverride)
+          ? name
+          : undefined,
+        description: existing?.description ?? describeModel({
+          id: model.id,
+          name,
+          family: familyValue,
+          reasoning,
+          tool_call: toolCall,
+          structured_output: structuredOutput,
+          open_weights: openWeights,
+          limit,
+          modalities: { input, output },
+        }),
         attachment,
         reasoning,
+        reasoning_options,
         temperature: params.has("temperature"),
         tool_call: toolCall,
         structured_output: structuredOutput,
@@ -191,11 +255,23 @@ export function buildOpenRouterModel(
 
   return {
     name,
+    description: existing?.description ?? describeModel({
+      id: model.id,
+      name,
+      family: familyValue,
+      reasoning,
+      tool_call: toolCall,
+      structured_output: structuredOutput,
+      open_weights: openWeights,
+      limit,
+      modalities: { input, output },
+    }),
     family: familyValue,
     release_date: releaseDate,
     last_updated: releaseDate,
     attachment,
     reasoning,
+    reasoning_options,
     temperature: params.has("temperature"),
     tool_call: toolCall,
     structured_output: structuredOutput,
@@ -209,24 +285,69 @@ export function buildOpenRouterModel(
   } satisfies SyncedFullModel;
 }
 
+function openRouterReasoningOptions(reasoning: OpenRouterModel["reasoning"]): SyncedFullModel["reasoning_options"] {
+  if (reasoning === undefined) return undefined;
+
+  const options: NonNullable<SyncedFullModel["reasoning_options"]> = [];
+  const efforts = reasoning.supported_efforts === null
+    ? ["max", "xhigh", "high", "medium", "low", "minimal", "none"] as const
+    : reasoning.supported_efforts;
+
+  if (efforts !== undefined) {
+    options.push({
+      type: "effort",
+      values: reasoning.mandatory ? efforts.filter((value) => value !== "none") : [...efforts],
+    });
+  }
+
+  if (reasoning.supports_max_tokens === true) {
+    options.push({ type: "budget_tokens" });
+  }
+
+  return options.length > 0 ? options : undefined;
+}
+
 export function resolveCanonicalBaseModel(openrouterID: string) {
+  const override = canonicalBaseModelOverride(openrouterID);
+  if (override !== undefined) return override;
+
   const [prefix, ...modelParts] = openrouterID.split("/");
   if (prefix === undefined || modelParts.length === 0) return undefined;
   if (openrouterID.startsWith("~/") || prefix.startsWith("~")) return undefined;
 
-  const canonical = CANONICAL_PROVIDER_PREFIXES[prefix as keyof typeof CANONICAL_PROVIDER_PREFIXES];
+  const canonical = CANONICAL_PROVIDER_PREFIXES[
+    prefix.toLowerCase() as keyof typeof CANONICAL_PROVIDER_PREFIXES
+  ];
   if (canonical === undefined) return undefined;
 
   const modelID = modelParts.join("/").replace(/:free$/, "");
   const candidates = canonicalCandidates(canonical.provider, modelID);
-  const match = candidates.find((candidate) => {
-    return modelMetadataExists(canonical.metadata, candidate);
-  });
+  const match = matchingModelMetadataFile(canonical.metadata, candidates);
 
   return match === undefined ? undefined : `${canonical.metadata}/${match}`;
 }
 
-function modelMetadataExists(provider: string, modelID: string) {
+/**
+ * Resolve provider IDs that are not OpenRouter-shaped against the same canonical
+ * metadata tree. Exact paths win; bare IDs only resolve when their filename is
+ * unique across every metadata provider.
+ */
+export function resolveModelMetadataBaseModel(modelID: string) {
+  const routed = resolveCanonicalBaseModel(modelID);
+  if (routed !== undefined) return routed;
+
+  const normalized = modelID.replace(/:free$/, "");
+  const ids = modelMetadataIDs();
+  const exact = ids.find((candidate) => candidate.toLowerCase() === normalized.toLowerCase());
+  if (exact !== undefined) return exact;
+  if (normalized.includes("/")) return undefined;
+
+  const lower = normalized.toLowerCase();
+  const matches = ids.filter((candidate) => candidate.split("/").at(-1)?.toLowerCase() === lower);
+  return matches.length === 1 ? matches[0] : undefined;
+}
+
+function matchingModelMetadataFile(provider: string, candidates: string[]) {
   let files = modelMetadataFilesByProvider.get(provider);
   if (files === undefined) {
     try {
@@ -236,13 +357,68 @@ function modelMetadataExists(provider: string, modelID: string) {
     }
     modelMetadataFilesByProvider.set(provider, files);
   }
-  return files.has(`${modelID}.toml`);
+
+  for (const candidate of candidates) {
+    const expected = `${candidate}.toml`.toLowerCase();
+    const match = [...files].find((file) => file.toLowerCase() === expected);
+    if (match !== undefined) return match.slice(0, -".toml".length);
+  }
+  return undefined;
 }
+
+function modelMetadataIDs() {
+  if (allModelMetadataIDs !== undefined) return allModelMetadataIDs;
+
+  try {
+    allModelMetadataIDs = readdirSync(MODELS_DIR, { withFileTypes: true })
+      .filter((entry) => entry.isDirectory())
+      .flatMap((entry) => {
+        return readdirSync(path.join(MODELS_DIR, entry.name))
+          .filter((file) => file.endsWith(".toml"))
+          .map((file) => `${entry.name}/${file.slice(0, -".toml".length)}`);
+      });
+  } catch {
+    allModelMetadataIDs = [];
+  }
+  return allModelMetadataIDs;
+}
+
+function canonicalBaseModelOverride(openrouterID: string) {
+  return CANONICAL_BASE_MODEL_OVERRIDES[
+    openrouterID as keyof typeof CANONICAL_BASE_MODEL_OVERRIDES
+  ];
+}
+
+function shouldPreserveFactoredName(
+  modelID: string,
+  canonical: string,
+  baseModel: string | undefined,
+  canonicalOverride: string | undefined,
+) {
+  if (baseModel !== undefined) return true;
+  if (modelID.endsWith(":free")) return true;
+  if (canonicalOverride === canonical) return true;
+  const modelSlug = modelID.split("/").slice(1).join("/").replace(/:free$/, "");
+  const canonicalSlug = canonical.split("/").slice(1).join("/");
+  return normalizeModelSlug(modelSlug) !== normalizeModelSlug(canonicalSlug);
+}
+
+function normalizeModelSlug(value: string) {
+  return value.toLowerCase().replaceAll(/[^a-z0-9]/g, "");
+}
+
+type BaseModelOverrides = Omit<Partial<SyncedFullModel>, "limit" | "modalities"> & {
+  limit?: Partial<SyncedFullModel["limit"]>;
+  modalities?: {
+    input?: SyncedFullModel["modalities"]["input"];
+    output?: SyncedFullModel["modalities"]["output"];
+  };
+};
 
 export function factorBaseModel(
   modelID: string,
-  values: Partial<SyncedFullModel>,
-  limit: SyncedFullModel["limit"],
+  values: BaseModelOverrides,
+  limit?: Partial<SyncedFullModel["limit"]>,
   existingOmit?: string[],
 ): SyncedModel {
   return {
@@ -254,14 +430,16 @@ export function factorBaseModel(
 
 function baseModelOmit(
   modelID: string,
-  limit: SyncedFullModel["limit"],
+  limit: Partial<SyncedFullModel["limit"]> | undefined,
 ) {
+  if (limit === undefined) return undefined;
   const metadata = modelMetadata(modelID);
   const omit: string[] = [];
   const baseLimit = metadata.limit;
   if (
     isPlainObject(baseLimit) &&
     baseLimit.input !== undefined &&
+    limit.context !== undefined &&
     limit.input === undefined &&
     baseLimit.context !== limit.context
   ) {
@@ -273,7 +451,7 @@ function baseModelOmit(
 
 function baseModelOverrides(
   modelID: string,
-  values: Partial<SyncedFullModel>,
+  values: BaseModelOverrides,
 ) {
   const metadata = modelMetadata(modelID);
   const result: Record<string, unknown> = {};
@@ -350,10 +528,13 @@ function modelMetadata(modelID: string) {
 
 function canonicalCandidates(provider: string, modelID: string) {
   const candidates = [modelID];
+  if (modelID.endsWith("-fast")) candidates.push(modelID.slice(0, -"-fast".length));
 
   if (provider === "anthropic") {
-    candidates.push(modelID.replace(/(claude-(?:opus|sonnet|haiku)-\d+)\.(\d+)/, "$1-$2"));
-    candidates.push(modelID.replace(/^claude-3\.5-/, "claude-3-5-"));
+    for (const candidate of [...candidates]) {
+      candidates.push(candidate.replace(/(claude-(?:opus|sonnet|haiku)-\d+)\.(\d+)/, "$1-$2"));
+      candidates.push(candidate.replace(/^claude-3\.5-/, "claude-3-5-"));
+    }
   }
 
   if (provider === "llama") {

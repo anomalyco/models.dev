@@ -1,0 +1,15 @@
+# Source: https://api-gateway.merge.dev/v1/models?model=qwen%2Fqwen3-vl-plus (accessed 2026-07-21)
+
+base_model = "alibaba/qwen3-vl-plus"
+attachment = true
+reasoning_options = []
+tool_call = false
+structured_output = false
+
+[cost]
+input = 0.143
+output = 1.434
+cache_read = 0.0286
+
+[limit]
+output = 65_536

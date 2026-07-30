@@ -1,4 +1,5 @@
 base_model = "google/gemini-3-pro-preview"
+reasoning_options = [{ type = "effort", values = ["low", "high"] }]
 
 [cost]
 input = 2

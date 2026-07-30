@@ -1,6 +1,16 @@
+# Gateway-wide $.reasoning_effort = "none" (or $.reasoning.effort = "none")
+# disables non-OpenAI reasoning; this model has no documented effort tiers
+# or exact reasoning-token budget.
+# https://docs.llmgateway.io/features/reasoning (accessed 2026-07-23)
 base_model = "alibaba/qwen3-32b"
 
+[[reasoning_options]]
+type = "toggle" # API: {"reasoning_effort": "none"} or {"reasoning": {"effort": "none"}}
+
 [cost]
-input = 0.7
-output = 2.8
+input = 0.1
+output = 0.3
 reasoning = 8.4
+
+[limit]
+context = 40_960

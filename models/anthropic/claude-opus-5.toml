@@ -1,0 +1,19 @@
+name = "Claude Opus 5"
+description = "Strongest Claude Opus model for coding, agents, and professional work"
+family = "claude-opus"
+release_date = "2026-07-24"
+last_updated = "2026-07-24"
+attachment = true
+reasoning = true
+temperature = false
+tool_call = true
+open_weights = false
+knowledge = "2026-05"
+
+[limit]
+context = 1_000_000
+output = 128_000
+
+[modalities]
+input = ["text", "image", "pdf"]
+output = ["text"]

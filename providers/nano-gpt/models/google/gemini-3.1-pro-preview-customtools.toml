@@ -1,9 +1,11 @@
 # Not included in subscription
 name = "Gemini 3.1 Pro (Preview Custom Tools)"
+description = "Advanced Gemini model for complex reasoning, coding, and multimodal analysis"
 release_date = "2026-02-27"
 last_updated = "2026-02-27"
 attachment = true
 reasoning = true
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
 tool_call = true
 structured_output = true
 open_weights = false

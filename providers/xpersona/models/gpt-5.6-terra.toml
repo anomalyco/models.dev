@@ -1,0 +1,21 @@
+base_model = "openai/gpt-5.6-terra"
+base_model_omit = ["limit.input"]
+interleaved = { field = "reasoning_content" }
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high", "xhigh", "max"]
+
+[cost]
+input = 1.50
+output = 2.00
+reasoning = 2.00
+cache_read = 0.15
+
+[limit]
+context = 372_000
+output = 128_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

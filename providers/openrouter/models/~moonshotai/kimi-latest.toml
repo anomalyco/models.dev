@@ -1,4 +1,5 @@
 name = "MoonshotAI Kimi Latest"
+description = "Kimi multimodal agent model for visual understanding, coding, and planning"
 family = "kimi"
 release_date = "2026-04-27"
 last_updated = "2026-04-27"
@@ -8,16 +9,19 @@ temperature = true
 tool_call = true
 structured_output = true
 open_weights = false
-reasoning_options = []
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
 
 [cost]
-input = 0.68
-output = 3.41
-cache_read = 0.34
+input = 3
+output = 15
+cache_read = 0.3
 
 [limit]
-context = 262_142
-output = 262_142
+context = 1_048_576
+output = 1_048_576
 
 [modalities]
 input = ["text", "image"]

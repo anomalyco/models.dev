@@ -1,3 +1,22 @@
+# Reasoning HTTP format (accessed 2026-07-20):
+# The OpenAI plan base .../compatible-mode/v1 uses POST /chat/completions.
+# Hybrid-thinking models use top-level `enable_thinking` and `thinking_budget`.
+# qwen3.8-max-preview is always thinking and instead accepts either the canonical
+# `reasoning_effort` values low, medium, and xhigh or `thinking_budget` from 0 to
+# 262144. The two controls are mutually exclusive; zero maps to low effort and
+# does not disable thinking.
+# POST /responses uses `reasoning.effort`: none, minimal, low, medium, or high;
+# `thinking_budget` is not accepted there. Anthropic plan base .../apps/anthropic
+# uses POST /v1/messages with `thinking.type`: enabled or disabled, integer
+# `thinking.budget_tokens`, and DeepSeek V4-only `reasoning_effort`: high or max.
+# Sources:
+# https://platform.qianwenai.com/docs/api-reference/chat/openai-chat
+# https://platform.qianwenai.com/docs/developer-guides/text-generation/thinking
+# https://help.aliyun.com/zh/model-studio/token-plan-quickstart
+# https://help.aliyun.com/zh/model-studio/deep-thinking
+# https://help.aliyun.com/zh/model-studio/compatibility-with-openai-responses-api
+# https://www.alibabacloud.com/help/en/model-studio/anthropic-api-messages
+
 name = "Alibaba Token Plan (China)"
 env = ["ALIBABA_TOKEN_PLAN_API_KEY"]
 npm = "@ai-sdk/openai-compatible"

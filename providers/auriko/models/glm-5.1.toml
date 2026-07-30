@@ -1,5 +1,8 @@
 base_model = "zhipuai/glm-5.1"
 
+# Auriko's schema accepts reasoning_effort, but its provider support table gives
+# no GLM 5.1 mapping; no meaningful toggle, effort, or budget is documented.
+# https://docs.auriko.ai/guides/extensions-and-thinking
 reasoning_options = []
 
 [interleaved]

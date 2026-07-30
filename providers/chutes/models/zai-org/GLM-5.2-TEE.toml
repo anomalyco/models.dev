@@ -1,0 +1,15 @@
+base_model = "zhipuai/glm-5.2"
+name = "GLM 5.2 TEE"
+reasoning_options = []
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 1.25
+output = 3.95
+cache_read = 0.625
+
+[limit]
+context = 1_048_576
+output = 65_535

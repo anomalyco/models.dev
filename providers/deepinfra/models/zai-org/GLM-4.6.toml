@@ -1,23 +1,26 @@
-# https://deepinfra.com/zai-org/GLM-4.6
 name = "GLM-4.6"
+description = "Flagship GLM model for hybrid reasoning, coding, and agentic engineering"
 family = "glm"
 release_date = "2025-09-30"
 last_updated = "2025-09-30"
-knowledge = "2025-04"
 attachment = false
 reasoning = true
-reasoning_options = [{ type = "toggle" }]
 temperature = true
 tool_call = true
+structured_output = true
+knowledge = "2025-04"
 open_weights = true
 
 [interleaved]
 field = "reasoning_content"
 
+[[reasoning_options]]
+type = "toggle"
+
 [cost]
-input = 0.43
-output = 1.74
-cache_read = 0.08
+input = 0.5
+output = 2
+cache_read = 0.1
 
 [limit]
 context = 202_752

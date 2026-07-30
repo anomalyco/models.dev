@@ -1,4 +1,5 @@
 name = "Claude Sonnet 4.6"
+description = "Claude workhorse for coding agents, careful analysis, and production cost control"
 family = "claude-sonnet"
 release_date = "2026-02-17"
 last_updated = "2026-03-13"
@@ -71,3 +72,35 @@ harness = "Claude Code"
 variant = "medium"
 version = "2.1"
 source = "https://artificialanalysis.ai/agents/coding-agents"
+
+[[benchmarks]]
+name = "Terminal-Bench"
+score = 67.0
+metric = "success rate"
+harness = "Terminus-2"
+version = "2.1"
+source = "https://www.anthropic.com/news/claude-sonnet-5"
+date = "2026-06-30"
+
+[[benchmarks]]
+name = "Humanity's Last Exam"
+score = 34.6
+metric = "accuracy"
+variant = "no tools"
+source = "https://www.anthropic.com/news/claude-sonnet-5"
+date = "2026-06-30"
+
+[[benchmarks]]
+name = "Humanity's Last Exam"
+score = 46.8
+metric = "accuracy"
+variant = "with tools"
+source = "https://www.anthropic.com/news/claude-sonnet-5"
+date = "2026-06-30"
+
+[[benchmarks]]
+name = "OSWorld-Verified"
+score = 78.5
+metric = "success rate"
+source = "https://www.anthropic.com/news/claude-sonnet-5"
+date = "2026-06-30"

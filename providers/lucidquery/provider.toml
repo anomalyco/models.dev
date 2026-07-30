@@ -1,5 +1,9 @@
-name = "LucidQuery AI"
+# POST /v1/chat/completions enables a trace with $.thinking = true; aliases are
+# $.include_reasoning and $.reasoning.enabled = true. The published request
+# schema gives no false value, effort enum, or reasoning-token budget.
+# https://lucidquery.com/docs#reasoning (accessed 2026-06-25)
+name = "LucidQuery"
 env = ["LUCIDQUERY_API_KEY"]
 npm = "@ai-sdk/openai-compatible"
-api = "https://lucidquery.com/api/v1"
-doc = "https://lucidquery.com/api/docs"
+api = "https://api.lucidquery.com/v1"
+doc = "https://lucidquery.com/docs"

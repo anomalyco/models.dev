@@ -1,12 +1,7 @@
-name = "Laguna M.1"
-release_date = "2026-04-28"
-last_updated = "2026-06-13"
-attachment = false
-reasoning = true
-reasoning_options = [{ type = "effort", values = ["none", "minimal", "low", "medium", "high", "xhigh"] }]
-temperature = true
-tool_call = true
-open_weights = false
+base_model = "poolside/laguna-m.1"
+
+[[reasoning_options]]
+type = "toggle" # API: {"chat_template_kwargs": {"enable_thinking": false}}
 
 [interleaved]
 field = "reasoning_content"
@@ -16,11 +11,3 @@ input = 0.0
 output = 0.0
 cache_read = 0.0
 cache_write = 0.0
-
-[limit]
-context = 262_144
-output = 32_768
-
-[modalities]
-input = ["text"]
-output = ["text"]

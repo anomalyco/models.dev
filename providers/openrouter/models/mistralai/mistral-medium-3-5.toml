@@ -1,5 +1,5 @@
-reasoning_options = []
 name = "Mistral Medium 3.5"
+description = "Mistral model for multilingual chat, reasoning, and tool-assisted workflows"
 family = "mistral-medium"
 release_date = "2026-04-30"
 last_updated = "2026-04-30"
@@ -9,6 +9,10 @@ temperature = true
 tool_call = true
 structured_output = true
 open_weights = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "high"]
 
 [cost]
 input = 1.5

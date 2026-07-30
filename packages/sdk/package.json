@@ -1,0 +1,68 @@
+{
+  "$schema": "https://json.schemastore.org/package.json",
+  "name": "@opencode-ai/models",
+  "version": "0.0.0",
+  "description": "Official typed client for the models.dev API \u2014 an open database of AI model capabilities, pricing, and limits",
+  "type": "module",
+  "sideEffects": false,
+  "license": "MIT",
+  "homepage": "https://models.dev",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/anomalyco/models.dev.git",
+    "directory": "packages/sdk"
+  },
+  "keywords": [
+    "ai",
+    "llm",
+    "models",
+    "pricing",
+    "context-window",
+    "openai",
+    "anthropic",
+    "effect"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./effect": {
+      "types": "./dist/effect.d.ts",
+      "default": "./dist/effect.js"
+    },
+    "./snapshot": {
+      "types": "./dist/snapshot.d.ts",
+      "default": "./dist/snapshot.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "generate": "bun script/generate.ts",
+    "build": "bun script/build.ts",
+    "prepack": "bun run build",
+    "typecheck": "tsc --noEmit",
+    "test": "bun run generate && bun run typecheck && bun test"
+  },
+  "peerDependencies": {
+    "effect": "4.0.0-beta.83"
+  },
+  "peerDependenciesMeta": {
+    "effect": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@models.dev/core": "workspace:*",
+    "@tsconfig/bun": "catalog:",
+    "@types/bun": "catalog:",
+    "effect": "4.0.0-beta.83",
+    "typescript": "catalog:",
+    "zod": "catalog:"
+  }
+}

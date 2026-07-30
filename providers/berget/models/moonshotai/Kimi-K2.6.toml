@@ -1,4 +1,7 @@
 base_model = "moonshotai/kimi-k2.6"
+# Kimi K2.6 can disable reasoning with reasoning_effort="none" or
+# thinking.type="disabled"; enabled/adaptive are also schema-accepted.
+# https://api.berget.ai/openapi.json
 reasoning_options = [{ type = "toggle" }]
 release_date = "2026-05-07"
 last_updated = "2026-05-07"

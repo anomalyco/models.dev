@@ -1,4 +1,5 @@
 name = "Grok 4.20 Multi-Agent"
+description = "Grok model for agentic tool use, reasoning, coding, and live assistance"
 family = "grok"
 release_date = "2026-03-31"
 last_updated = "2026-03-31"
@@ -12,7 +13,7 @@ open_weights = false
 
 [[reasoning_options]]
 type = "effort"
-values = ["low", "high"]
+values = ["low", "medium", "high", "xhigh"]
 
 [cost]
 input = 1.25

@@ -1,16 +1,26 @@
 import { z } from "zod";
 
+import { describeModel } from "../../describe.js";
 import { inferKimiFamily, ModelFamilyValues } from "../../family.js";
 import type { ExistingModel, SyncProvider, SyncedFullModel, SyncedModel } from "../index.js";
 import { factorBaseModel, resolveCanonicalBaseModel } from "./openrouter.js";
 
 const API_ENDPOINT = "https://ai-gateway.vercel.sh/v1/models";
 
-const ModelType = z.enum(["language", "embedding", "image", "video", "reranking"]);
+const ModelType = z.enum([
+  "language",
+  "embedding",
+  "image",
+  "video",
+  "reranking",
+  "transcription",
+  "speech",
+  "realtime",
+]);
 
 const PricingTier = z.object({
   cost: z.string(),
-  min: z.number(),
+  min: z.number().optional(),
   max: z.number().optional(),
 });
 
@@ -30,8 +40,8 @@ export const VercelModel = z.object({
   name: z.string(),
   created: z.number(),
   released: z.number().optional(),
-  context_window: z.number(),
-  max_tokens: z.number(),
+  context_window: z.number().optional().default(0),
+  max_tokens: z.number().optional().default(0),
   type: ModelType,
   tags: z.array(z.string()).optional().default([]),
   pricing: Pricing.optional(),
@@ -87,13 +97,44 @@ export function buildVercelModel(model: VercelModel, existing: ExistingModel | u
 
   const synced: SyncedFullModel = {
     name: existing?.name ?? model.name,
+    description: existing?.description ?? describeModel({
+      id: model.id,
+      name: existing?.name ?? model.name,
+      family: existing?.family ?? inferFamily(model.id, model.name),
+      reasoning: existing?.reasoning ?? tags.has("reasoning"),
+      tool_call: model.type === "language"
+        ? existing?.tool_call ?? tags.has("tool-use")
+        : tags.has("tool-use"),
+      structured_output: existing?.structured_output,
+      open_weights: existing?.open_weights ?? false,
+      limit: { context, input, output },
+      modalities: {
+        input: model.type === "transcription"
+          ? ["audio"]
+          : model.type === "realtime"
+          ? ["text", "audio"]
+          : ["text", tags.has("vision") ? "image" : undefined, tags.has("file-input") ? "pdf" : undefined]
+            .filter((value): value is "text" | "image" | "pdf" => value !== undefined),
+        output: model.type === "speech"
+          ? ["audio"]
+          : model.type === "realtime"
+          ? ["text", "audio"]
+          : model.type === "image"
+          ? ["image"]
+          : model.type === "video"
+          ? ["video"]
+          : tags.has("image-generation")
+          ? ["text", "image"]
+          : ["text"],
+      },
+    }),
     family: existing?.family ?? inferFamily(model.id, model.name),
     release_date: releaseDate,
     last_updated: existing?.last_updated ?? releaseDate,
     attachment: existing?.attachment ?? (tags.has("vision") || tags.has("file-input")),
     reasoning: existing?.reasoning ?? tags.has("reasoning"),
     reasoning_options: existing?.reasoning_options,
-    temperature: true,
+    temperature: existing?.temperature,
     tool_call: model.type === "language"
       ? existing?.tool_call ?? tags.has("tool-use")
       : tags.has("tool-use"),
@@ -107,9 +148,17 @@ export function buildVercelModel(model: VercelModel, existing: ExistingModel | u
     cost,
     limit: { context, input, output },
     modalities: {
-      input: ["text", tags.has("vision") ? "image" : undefined, tags.has("file-input") ? "pdf" : undefined]
-        .filter((value): value is "text" | "image" | "pdf" => value !== undefined),
-      output: model.type === "image"
+      input: model.type === "transcription"
+        ? ["audio"]
+        : model.type === "realtime"
+        ? ["text", "audio"]
+        : ["text", tags.has("vision") ? "image" : undefined, tags.has("file-input") ? "pdf" : undefined]
+          .filter((value): value is "text" | "image" | "pdf" => value !== undefined),
+      output: model.type === "speech"
+        ? ["audio"]
+        : model.type === "realtime"
+        ? ["text", "audio"]
+        : model.type === "image"
         ? ["image"]
         : model.type === "video"
         ? ["video"]
@@ -176,6 +225,7 @@ function sameVercelModel(current: ExistingModel, desired: SyncedModel) {
     [current.base_model, desiredModel.base_model],
     [current.base_model_omit, desiredModel.base_model_omit],
     [current.name, desiredModel.name],
+    [current.description, desiredModel.description],
     [current.family, desiredModel.family],
     [current.attachment, desiredModel.attachment],
     [current.reasoning, desiredModel.reasoning],

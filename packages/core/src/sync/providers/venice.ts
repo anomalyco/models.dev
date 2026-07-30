@@ -2,6 +2,7 @@ import { readdirSync } from "node:fs";
 import path from "node:path";
 import { z } from "zod";
 
+import { describeModel } from "../../describe.js";
 import { inferKimiFamily, ModelFamilyValues } from "../../family.js";
 import type { ExistingModel, SyncProvider, SyncedFullModel, SyncedModel } from "../index.js";
 import { factorBaseModel } from "./openrouter.js";
@@ -77,6 +78,9 @@ const BASE_MODEL_ALIASES: Record<string, string> = {
   "claude-opus-4-6-fast": "anthropic/claude-opus-4-6",
   "claude-opus-4-7-fast": "anthropic/claude-opus-4-7",
   "claude-opus-4-8-fast": "anthropic/claude-opus-4-8",
+  "openai-gpt-56-luna-pro": "openai/gpt-5.6-luna",
+  "openai-gpt-56-sol-pro": "openai/gpt-5.6-sol",
+  "openai-gpt-56-terra-pro": "openai/gpt-5.6-terra",
 };
 
 export const venice = {
@@ -169,6 +173,19 @@ export function buildVeniceModel(
   const releaseDate = new Date(model.created * 1000).toISOString().slice(0, 10);
   const values: SyncedFullModel = {
     ...authoritative,
+    description: existing?.description ?? describeModel({
+      id: model.id,
+      name: spec.name,
+      family: baseModel == null ? inferFamily(model.id, spec.name) ?? existing?.family : existing?.family,
+      reasoning: capabilities.supportsReasoning === true,
+      tool_call: capabilities.supportsFunctionCalling === true,
+      structured_output: capabilities.supportsResponseSchema === true ? true : undefined,
+      open_weights: spec.modelSource?.toLowerCase().includes("huggingface")
+        ?? existing?.open_weights
+        ?? false,
+      limit,
+      modalities: authoritative.modalities,
+    }),
     family: baseModel == null ? inferFamily(model.id, spec.name) ?? existing?.family : existing?.family,
     release_date: releaseDate,
     last_updated: existing?.last_updated ?? today,
@@ -189,14 +206,26 @@ export function resolveVeniceBaseModel(id: string, name: string) {
   const alias = BASE_MODEL_ALIASES[id];
   if (alias !== undefined) return alias;
   const entries = getMetadataEntries();
-  const normalizedID = normalize(id);
-  const normalizedName = normalize(name);
-  const ranked = [
-    entries.filter((entry) => entry.normalizedFull === normalizedID),
-    entries.filter((entry) => entry.normalizedFilename === normalizedID),
-    entries.filter((entry) => entry.normalizedFilename === normalizedName),
-  ];
-  return ranked.find((matches) => matches.length === 1)?.[0]?.id;
+  for (const candidate of veniceBaseModelCandidates(id, name)) {
+    const normalized = normalize(candidate);
+    const ranked = [
+      entries.filter((entry) => entry.normalizedFull === normalized),
+      entries.filter((entry) => entry.normalizedFilename === normalized),
+    ];
+    const match = ranked.find((matches) => matches.length === 1)?.[0]?.id;
+    if (match !== undefined) return match;
+  }
+  return undefined;
+}
+
+function veniceBaseModelCandidates(id: string, name: string) {
+  const candidates = [id, name];
+  for (const value of [id, name]) {
+    if (value.toLowerCase().endsWith("-fast")) candidates.push(value.slice(0, -"-fast".length));
+    const withoutFastLabel = value.replace(/\s*\(?\s*fast\s*\)?\s*$/i, "").trim();
+    if (withoutFastLabel !== "" && withoutFastLabel !== value) candidates.push(withoutFastLabel);
+  }
+  return [...new Set(candidates)];
 }
 
 function getMetadataEntries() {

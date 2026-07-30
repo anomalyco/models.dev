@@ -1,9 +1,11 @@
 name = "zai-org/GLM-5.1"
+description = "Flagship GLM model for hybrid reasoning, coding, and agentic engineering"
 family = "glm"
 release_date = "2026-04-08"
 last_updated = "2026-04-08"
 attachment = false
 reasoning = true
+reasoning_options = [{ type = "budget_tokens", min = 128, max = 32_768 }]
 temperature = true
 tool_call = true
 structured_output = true

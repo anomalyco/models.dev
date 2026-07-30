@@ -1,0 +1,26 @@
+# Cost: converted from GreenPT's EUR list price at 1.14 USD/EUR (rate captured 2026-07-24).
+# Sources: https://docs.greenpt.ai/pricing and https://docs.greenpt.ai/model-cards
+name = "Qwen3 235B A22B Instruct 2507"
+description = "Qwen3 235B MoE instruct model for long-context multilingual chat and reasoning"
+family = "qwen"
+release_date = "2025-07-21"
+last_updated = "2025-07-21"
+attachment = false
+reasoning = false
+temperature = true
+knowledge = "2025-04"
+tool_call = true
+structured_output = true
+open_weights = true
+
+[cost]
+input = 1.026
+output = 3.078
+
+[limit]
+context = 262_144
+output = 16_384
+
+[modalities]
+input = ["text"]
+output = ["text"]

@@ -1,12 +1,9 @@
-name = "Gemini Embedding 2"
+base_model = "google/gemini-embedding-2"
+description = "Embedding model for semantic search, retrieval, clustering, and ranking pipelines"
 family = "gemini-embedding"
-attachment = false
-reasoning = false
-tool_call = false
-temperature = true
 release_date = "2026-03-10"
-last_updated = "2026-03-23"
-open_weights = false
+attachment = false
+temperature = true
 
 [limit]
 context = 0
@@ -14,4 +11,3 @@ output = 0
 
 [modalities]
 input = ["text"]
-output = ["text"]

@@ -1,0 +1,14 @@
+base_model = "alibaba/qwen3.6-plus"
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high"]
+
+[cost]
+input = 0.325
+output = 1.95
+cache_read = 0.065
+cache_write = 0.40625

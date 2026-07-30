@@ -1,7 +1,10 @@
 base_model = "alibaba/qwen3.6-35b-a3b"
 name = "Qwen3.6 35B A3B"
 temperature = false
-reasoning_options = [{ type = "toggle" }]
+# Live metadata: levels none/low/medium/high, default medium, and
+# `can_disable=true` (accessed 2026-06-25).
+# https://api.code.umans.ai/v1/models/info
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "medium", "high"] }]
 
 [interleaved]
 field = "reasoning_content"

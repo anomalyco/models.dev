@@ -1,6 +1,9 @@
 base_model = "google/gemini-3.1-pro-preview"
 family = "gemini"
-release_date = "2025-11-18"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high"]
 
 [cost]
 input = 2
@@ -13,4 +16,3 @@ output = 64_000
 
 [modalities]
 input = ["text", "image", "pdf"]
-output = ["text"]

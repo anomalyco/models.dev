@@ -1,4 +1,10 @@
+# Source: https://api-gateway.merge.dev/v1/models?model=google%2Fgemini-3.1-pro-preview (accessed 2026-07-21)
+
 base_model = "google/gemini-3.1-pro-preview"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high"]
 
 [cost]
 input = 2
@@ -10,3 +16,6 @@ tier = { type = "context", size = 200_000 }
 input = 4
 output = 18
 cache_read = 0.4
+
+[modalities]
+input = ["text", "image", "audio", "pdf"]

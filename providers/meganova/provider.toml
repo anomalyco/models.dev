@@ -1,3 +1,6 @@
+# POST /v1/chat/completions publishes messages, model, max_tokens, temperature,
+# top_p, and stream; no toggle, effort, or reasoning-token budget is listed.
+# https://docs.meganova.ai/inference-models/text-generation.md (accessed 2026-06-25)
 name = "Meganova"
 env = ["MEGANOVA_API_KEY"]
 npm = "@ai-sdk/openai-compatible"

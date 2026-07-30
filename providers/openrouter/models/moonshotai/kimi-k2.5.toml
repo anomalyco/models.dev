@@ -1,5 +1,4 @@
 base_model = "moonshotai/kimi-k2.5"
-attachment = true
 temperature = true
 reasoning_options = []
 
@@ -7,11 +6,9 @@ reasoning_options = []
 field = "reasoning_details"
 
 [cost]
-input = 0.375
-output = 2.025
-
-[limit]
-context = 256_000
+input = 0.57
+output = 2.85
+cache_read = 0.095
 
 [modalities]
 input = ["text", "image"]

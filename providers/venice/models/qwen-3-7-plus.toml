@@ -1,7 +1,8 @@
+# Live metadata: reasoning only; no effort control or dedicated budget (2026-06-25).
+# https://api.venice.ai/api/v1/models?type=text
 base_model = "alibaba/qwen3.7-plus"
 name = "Qwen 3.7 Plus"
 last_updated = "2026-06-11"
-attachment = true
 structured_output = true
 reasoning_options = []
 
@@ -20,6 +21,3 @@ cache_write = 1.875
 
 [limit]
 output = 65_536
-
-[modalities]
-input = ["text", "image", "video"]

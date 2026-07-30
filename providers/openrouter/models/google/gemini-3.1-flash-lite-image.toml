@@ -1,0 +1,14 @@
+base_model = "google/gemini-3.1-flash-lite-image"
+description = "Image model for prompt-driven generation, editing, and visual design workflows"
+tool_call = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["minimal", "high"]
+
+[cost]
+input = 0.25
+output = 1.5
+
+[limit]
+output = 66_000

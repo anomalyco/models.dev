@@ -1,0 +1,13 @@
+# Sources (accessed 2026-07-15):
+# Model overview & reasoning toggle: https://docs.privatemode.ai/models/overview/#kimi-k26
+# Added in v1.40.0 (default model): https://docs.privatemode.ai/release/#v1400
+# Reasoning control: $.chat_template_kwargs.thinking = true|false (default true).
+base_model = "moonshotai/kimi-k2.6"
+reasoning_options = [{ type = "toggle" }]
+
+[modalities]
+input = ["text", "image"]
+
+[cost]
+input = 0.00
+output = 0.00

@@ -1,4 +1,11 @@
 base_model = "minimax/MiniMax-M2.5"
+# Reasoning HTTP format (accessed 2026-06-25):
+# Alibaba-deployed MiniMax-M2.5 is thinking-only. No toggle, effort, or numeric
+# reasoning-budget request field is documented for this model.
+# Output ceiling 32,768 (probed 2026-07-24: accepts max_tokens 32,768, rejects
+# 32,769); the prior 24,576 was wrong.
+# Sources:
+# https://help.aliyun.com/zh/model-studio/deep-thinking
 reasoning_options = []
 
 [interleaved]
@@ -13,4 +20,4 @@ cache_write = 0
 [limit]
 context = 196_608
 input = 196_601
-output = 24_576
+output = 32_768

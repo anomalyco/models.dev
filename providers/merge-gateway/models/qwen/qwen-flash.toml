@@ -1,0 +1,16 @@
+# Source: https://api-gateway.merge.dev/v1/models?model=qwen%2Fqwen-flash (accessed 2026-07-21)
+
+base_model = "alibaba/qwen-flash"
+tool_call = false
+structured_output = false
+
+[[reasoning_options]]
+type = "toggle"
+
+[cost]
+input = 0.022
+output = 0.216
+cache_read = 0.0044
+
+[limit]
+output = 250_000

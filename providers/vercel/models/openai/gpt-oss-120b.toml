@@ -1,25 +1,13 @@
-name = "GPT OSS 120B"
-family = "gpt-oss"
-release_date = "2025-08-05"
-last_updated = "2025-08-05"
-attachment = false
-reasoning = true
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
-temperature = true
-tool_call = true
+base_model = "openai/gpt-oss-120b"
 knowledge = "2024-10"
-open_weights = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high"]
 
 [cost]
-input = 0.35
-output = 0.75
-cache_read = 0.25
+input = 0.1
+output = 0.5
 
 [limit]
-context = 131_072
-input = 72
-output = 131_000
-
-[modalities]
-input = ["text"]
-output = ["text"]
+output = 131_072

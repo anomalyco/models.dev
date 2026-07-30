@@ -1,4 +1,8 @@
+# Chat `reasoning_effort` and Messages `output_config.effort` accept low/high
+# (accessed 2026-06-25).
+# https://platform.stepfun.com/docs/zh/guides/models/step-3.5-flash
 name = "Step 3.5 Flash 2603"
+description = "StepFun flash model for efficient multimodal reasoning, coding, and tool use"
 release_date = "2026-04-02"
 last_updated = "2026-04-02"
 attachment = false
@@ -11,6 +15,9 @@ open_weights = true
 [[reasoning_options]]
 type = "effort"
 values = ["low", "high"]
+
+[interleaved]
+field = "reasoning_content"
 
 [cost]
 input = 0.10

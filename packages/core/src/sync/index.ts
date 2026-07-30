@@ -4,13 +4,30 @@ import { mergeDeep } from "remeda";
 import { z } from "zod";
 
 import { AuthoredModel, AuthoredModelShape, ModelMetadata } from "../schema.js";
+import { openMissingModelIssues } from "./missing-issues.js";
+import { ambient } from "./providers/ambient.js";
+import { anthropic } from "./providers/anthropic.js";
 import { baseten } from "./providers/baseten.js";
+import { chutes } from "./providers/chutes.js";
 import { cloudflareWorkersAi } from "./providers/cloudflare-workers-ai.js";
+import { crossmodel } from "./providers/crossmodel.js";
+import { deepinfra } from "./providers/deepinfra.js";
+import { digitalocean } from "./providers/digitalocean.js";
+import { empiriolabs } from "./providers/empiriolabs.js";
 import { google } from "./providers/google.js";
+import { hyper } from "./providers/hyper.js";
+import { huggingface } from "./providers/huggingface.js";
+import { kilo } from "./providers/kilo.js";
+import { llmgateway } from "./providers/llmgateway.js";
+import { mergeGateway } from "./providers/merge-gateway.js";
+import { nanoGpt } from "./providers/nano-gpt.js";
+import { openai } from "./providers/openai.js";
 import { openrouter } from "./providers/openrouter.js";
 import { ovhcloud } from "./providers/ovhcloud.js";
+import { pioneer } from "./providers/pioneer.js";
 import { vercel } from "./providers/vercel.js";
 import { venice } from "./providers/venice.js";
+import { wandb } from "./providers/wandb.js";
 import { xai } from "./providers/xai.js";
 
 const ExistingModelType = AuthoredModelShape.partial()
@@ -48,19 +65,33 @@ export interface SyncProvider<SourceModel> {
   name: string;
   modelsDir: string;
   metadataNamespace?: string;
+  /**
+   * Do not create new local TOMLs for remote-only models. Instead open one
+   * deduped GitHub issue per missing model ID.
+   */
   skipCreates?: boolean;
+  /** Report remote-only models skipped by skipCreates as GitHub issues. */
+  trackMissingModels?: boolean;
   deleteMissing?: boolean;
   preserveSymlinks?: boolean;
   preserveBaseModels?: boolean;
+  preserveDescriptions?: boolean;
   sameModel?(current: ExistingModel, desired: SyncedModel): boolean;
   missingNotice?(paths: string[]): string[];
-  sourceID?(model: SourceModel): string;
+  /**
+   * Remote ID to report when translateModel skips a source model. Return
+   * undefined to skip silently (no notice, no missing-model issue).
+   */
+  sourceID?(model: SourceModel): string | undefined;
   skippedNotice?(ids: string[]): string[];
   fetchModels(): Promise<unknown>;
   parseModels(raw: unknown): SourceModel[];
   translateModel(
     model: SourceModel,
-    context: { existing(id: string): ExistingModel | undefined },
+    context: {
+      existing(id: string): ExistingModel | undefined;
+      authored(id: string): ExistingModel | undefined;
+    },
   ): { id: string; model: SyncedModel; metadata?: { id: string; model: SyncedMetadata } } | undefined;
 }
 
@@ -77,35 +108,78 @@ export interface SyncResult {
 }
 
 export const providers: {
+  ambient: SyncProvider<any>;
+  anthropic: SyncProvider<any>;
   baseten: SyncProvider<any>;
+  chutes: SyncProvider<any>;
   "cloudflare-workers-ai": SyncProvider<any>;
+  crossmodel: SyncProvider<any>;
+  deepinfra: SyncProvider<any>;
+  digitalocean: SyncProvider<any>;
+  empiriolabs: SyncProvider<any>;
   google: SyncProvider<any>;
+  hyper: SyncProvider<any>;
+  huggingface: SyncProvider<any>;
+  kilo: SyncProvider<any>;
+  llmgateway: SyncProvider<any>;
+  "merge-gateway": SyncProvider<any>;
+  "nano-gpt": SyncProvider<any>;
+  openai: SyncProvider<any>;
   openrouter: SyncProvider<any>;
   ovhcloud: SyncProvider<any>;
+  pioneer: SyncProvider<any>;
   vercel: SyncProvider<any>;
   venice: SyncProvider<any>;
+  wandb: SyncProvider<any>;
   xai: SyncProvider<any>;
 } = {
+  ambient,
+  anthropic,
   baseten,
+  chutes,
   "cloudflare-workers-ai": cloudflareWorkersAi,
+  crossmodel,
+  deepinfra,
+  digitalocean,
+  empiriolabs,
   google,
+  hyper,
+  huggingface,
+  kilo,
+  llmgateway,
+  "merge-gateway": mergeGateway,
+  "nano-gpt": nanoGpt,
+  openai,
   openrouter,
   ovhcloud,
+  pioneer,
   vercel,
   venice,
+  wandb,
   xai,
 };
 
 export const groups = {
-  aggregators: ["openrouter", "vercel"],
+  aggregators: [
+    "crossmodel",
+    "empiriolabs",
+    "huggingface",
+    "kilo",
+    "llmgateway",
+    "merge-gateway",
+    "nano-gpt",
+    "openrouter",
+    "vercel",
+  ],
   cloudflare: ["cloudflare-workers-ai"],
-  direct: ["baseten", "google", "ovhcloud", "venice", "xai"],
+  direct: ["ambient", "anthropic", "baseten", "chutes", "deepinfra", "digitalocean", "google", "hyper", "openai", "ovhcloud", "pioneer", "venice", "wandb", "xai"],
 } as const;
 
 type ProviderID = keyof typeof providers;
 
 interface SyncOptions {
   dryRun?: boolean;
+  openIssues?: boolean;
   newOnly?: boolean;
 }
 
@@ -132,14 +206,18 @@ export async function syncProvider<SourceModel>(
       existing(id) {
         return existing.get(`${id}.toml`)?.toml;
       },
+      authored(id) {
+        return existing.get(`${id}.toml`)?.authored;
+      },
     });
     if (translated === undefined) {
-      if (provider.sourceID !== undefined) skippedRemote.push(provider.sourceID(sourceModel));
+      const skippedID = provider.sourceID?.(sourceModel);
+      if (skippedID !== undefined) skippedRemote.push(skippedID);
       continue;
     }
 
     const relativePath = `${translated.id}.toml`;
-    if (provider.skipCreates && !existing.has(relativePath)) {
+    if (provider.skipCreates === true && !existing.has(relativePath)) {
       skippedRemote.push(translated.id);
       continue;
     }
@@ -181,13 +259,17 @@ export async function syncProvider<SourceModel>(
     } else {
       resolvedReasoning = existing.get(relativePath)?.toml.reasoning;
     }
+    const withReasoningOptions = preserveReasoningOptions(
+      translatedModel,
+      existing.get(relativePath)?.authored,
+      resolvedReasoning,
+    );
+    const withDescription = provider.preserveDescriptions === false
+      ? withReasoningOptions
+      : preserveDescription(withReasoningOptions, existing.get(relativePath)?.authored);
     const parsed = SyncedAuthoredModel.safeParse(stripUndefined({
       id: translated.id,
-      ...preserveReasoningOptions(
-        translatedModel,
-        existing.get(relativePath)?.authored,
-        resolvedReasoning,
-      ),
+      ...withDescription,
     }));
     if (!parsed.success) {
       parsed.error.cause = { provider: provider.id, path: relativePath };
@@ -196,7 +278,7 @@ export async function syncProvider<SourceModel>(
 
     desired.set(relativePath, {
       model: parsed.data,
-      content: formatToml(parsed.data),
+      content: (existing.get(relativePath)?.header ?? "") + formatToml(parsed.data),
     });
   }
 
@@ -207,10 +289,11 @@ export async function syncProvider<SourceModel>(
   for (const [relativePath, file] of desiredMetadata) {
     const filePath = path.join(metadataDir, relativePath);
     const currentFile = Bun.file(filePath);
-    const current = await currentFile.exists()
+    const currentText = await currentFile.exists() ? await currentFile.text() : undefined;
+    const current = currentText !== undefined
       ? ModelMetadata.safeParse({
           id: relativePath.slice(0, -5),
-          ...Bun.TOML.parse(await currentFile.text()) as Record<string, unknown>,
+          ...Bun.TOML.parse(currentText) as Record<string, unknown>,
         })
       : undefined;
     if (current?.success && stable(current.data) === stable(file.model)) continue;
@@ -219,7 +302,7 @@ export async function syncProvider<SourceModel>(
       console.log(`Would ${current === undefined ? "create" : "update"} metadata ${relativePath}`);
     } else {
       await mkdir(path.dirname(filePath), { recursive: true });
-      await Bun.write(filePath, file.content);
+      await Bun.write(filePath, (currentText !== undefined ? leadingComments(currentText) : "") + file.content);
     }
   }
 
@@ -229,7 +312,7 @@ export async function syncProvider<SourceModel>(
     }
     const namespaceDir = path.join(metadataDir, provider.metadataNamespace);
     for (const { file } of await tomlFiles(namespaceDir)) {
-      const relativePath = path.join(provider.metadataNamespace, file);
+      const relativePath = path.join(provider.metadataNamespace, file).split(path.sep).join("/");
       if (desiredMetadata.has(relativePath) || provider.deleteMissing === false) continue;
       if (options.newOnly) {
         console.log(`Skipping metadata removal in new-only mode: ${relativePath}`);
@@ -308,10 +391,38 @@ export async function syncProvider<SourceModel>(
     }
   }
 
-  const result = summarize(provider, files, unchanged, [
+  const notices = [
     ...provider.skippedNotice?.(skippedRemote) ?? [],
     ...provider.missingNotice?.(missingLocal) ?? [],
-  ]);
+  ];
+
+  if (
+    provider.skipCreates === true
+    && provider.trackMissingModels !== false
+    && skippedRemote.length > 0
+    && options.openIssues === true
+  ) {
+    try {
+      notices.push(
+        ...await openMissingModelIssues(
+          { id: provider.id, name: provider.name, modelsDir: provider.modelsDir },
+          skippedRemote,
+          { dryRun: options.dryRun },
+        ),
+      );
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+      const notice = `Failed to open missing-model GitHub issues: ${message}`;
+      notices.push(notice);
+      console.error(notice);
+      // Surface as a workflow annotation: on no-change hours the notice never
+      // reaches a PR body, so a broken token or full dedupe window would
+      // otherwise disable issue opens silently while runs stay green.
+      if (process.env.GITHUB_ACTIONS === "true") console.log(`::error::${provider.id}: ${notice}`);
+    }
+  }
+
+  const result = summarize(provider, files, unchanged, notices);
   console.log(
     `${options.dryRun ? "Dry run: " : ""}${result.created} created, ${result.updated} updated, ${result.deleted} removed, ${result.unchanged} unchanged`,
   );
@@ -333,6 +444,12 @@ export function preserveBaseModel(model: SyncedModel, existing: ExistingModel | 
   };
 }
 
+export function preserveDescription(model: SyncedModel, existing: ExistingModel | undefined): SyncedModel {
+  if (model.description !== undefined) return model;
+  if (existing?.description === undefined) return model;
+  return { ...model, description: existing.description } as SyncedModel;
+}
+
 export function preserveReasoningOptions(
   model: SyncedModel,
   existing: ExistingModel | undefined,
@@ -342,7 +459,12 @@ export function preserveReasoningOptions(
     const { reasoning_options: _reasoningOptions, ...withoutReasoningOptions } = model;
     return withoutReasoningOptions as SyncedModel;
   }
-  if (model.reasoning_options !== undefined || existing?.reasoning_options === undefined) return model;
+  if (model.reasoning_options !== undefined) return model;
+  if (existing?.reasoning_options === undefined) {
+    return (model.reasoning ?? resolvedReasoning) === true
+      ? { ...model, reasoning_options: [] }
+      : model;
+  }
   return {
     ...model,
     reasoning_options: existing.reasoning_options,
@@ -380,6 +502,7 @@ async function readExisting(modelsDir: string) {
   const existing = new Map<string, {
     authored: ExistingModel;
     toml: ExistingModel;
+    header: string;
     symlink: boolean;
   }>();
   const brokenSymlinks = new Set<string>();
@@ -411,7 +534,7 @@ async function readExisting(modelsDir: string) {
       ? authored
       : resolveBaseModel(authored, modelMetadata ?? {}, filePath);
 
-    existing.set(file, { authored, toml, symlink });
+    existing.set(file, { authored, toml, header: leadingComments(text), symlink });
   }
 
   return { models: existing, brokenSymlinks, modelMetadata };
@@ -435,7 +558,7 @@ async function readModelMetadata(modelsDir: string) {
     absolute: true,
     followSymlinks: true,
   })) {
-    const modelID = path.relative(metadataDir, modelPath).slice(0, -5);
+    const modelID = path.relative(metadataDir, modelPath).split(path.sep).join("/").slice(0, -5);
     const toml = Bun.TOML.parse(
       await Bun.file(modelPath).text(),
     ) as Record<string, unknown>;
@@ -544,7 +667,7 @@ async function tomlFiles(root: string, dir = "") {
   const result: Array<{ file: string; symlink: boolean }> = [];
 
   for (const entry of await readdir(path.join(root, dir), { withFileTypes: true })) {
-    const file = path.join(dir, entry.name);
+    const file = path.join(dir, entry.name).split(path.sep).join("/");
     if (entry.isDirectory()) {
       result.push(...await tomlFiles(root, file));
     } else if (entry.name.endsWith(".toml") && (entry.isFile() || entry.isSymbolicLink())) {
@@ -658,7 +781,29 @@ async function writeReport(target: string, results: SyncResult[]) {
 }
 
 function quote(value: string) {
-  return `"${value.replaceAll("\\", "\\\\").replaceAll('"', '\\"')}"`;
+  return `"${value
+    .replaceAll("\\", "\\\\")
+    .replaceAll('"', '\\"')
+    .replaceAll("\n", "\\n")
+    .replaceAll("\r", "\\r")
+    .replaceAll("\t", "\\t")}"`;
+}
+
+// Preserve the leading comment block (header) authored at the top of a TOML file.
+// `Bun.TOML.parse` discards comments, so the serializer must re-attach them or
+// every rewrite would silently delete hand-authored documentation.
+function leadingComments(text: string) {
+  const header: string[] = [];
+  for (const line of text.split("\n")) {
+    const trimmed = line.trim();
+    if (trimmed === "" || trimmed.startsWith("#")) {
+      header.push(line);
+    } else {
+      break;
+    }
+  }
+  while (header.length > 0 && header[header.length - 1]?.trim() === "") header.pop();
+  return header.length > 0 ? `${header.join("\n")}\n` : "";
 }
 
 function formatInteger(n: number) {
@@ -669,18 +814,59 @@ function formatNumber(n: number) {
   return Number.isInteger(n) ? formatInteger(n) : String(n);
 }
 
+function formatKey(value: string) {
+  return /^[A-Za-z0-9_-]+$/.test(value) ? value : quote(value);
+}
+
+function formatInlineValue(value: unknown): string {
+  if (typeof value === "string") return quote(value);
+  if (typeof value === "number") return formatNumber(value);
+  if (typeof value === "boolean") return String(value);
+  if (Array.isArray(value)) return `[${value.map(formatInlineValue).join(", ")}]`;
+  if (value !== null && typeof value === "object") {
+    const fields = Object.entries(value)
+      .filter(([, item]) => item !== undefined)
+      .map(([key, item]) => `${formatKey(key)} = ${formatInlineValue(item)}`);
+    return `{ ${fields.join(", ")} }`;
+  }
+  throw new Error("Cannot serialize null or undefined as TOML");
+}
+
 function formatReasoningValue(value: string | null) {
   return value === null ? quote("null") : quote(value);
 }
 
-function formatToml(model: z.infer<typeof SyncedAuthoredModel>) {
+const ReasoningEffortOrder = new Map<string | null, number>([
+  ["none", 0],
+  ["minimal", 1],
+  ["low", 2],
+  ["medium", 3],
+  ["high", 4],
+  ["xhigh", 5],
+  ["max", 6],
+  ["default", 7],
+  [null, 8],
+]);
+
+function sortReasoningValues(values: Array<string | null>) {
+  return [...values].sort((a, b) => {
+    const order = (ReasoningEffortOrder.get(a) ?? Number.MAX_SAFE_INTEGER)
+      - (ReasoningEffortOrder.get(b) ?? Number.MAX_SAFE_INTEGER);
+    return order || formatReasoningValue(a).localeCompare(formatReasoningValue(b));
+  });
+}
+
+export function formatToml(model: z.infer<typeof SyncedAuthoredModel>) {
   const lines: string[] = [];
 
-  if (model.base_model !== undefined) lines.push(`base_model = ${quote(model.base_model)}`);
-  if (model.base_model_omit !== undefined) {
+  if ("base_model" in model && model.base_model !== undefined) {
+    lines.push(`base_model = ${quote(model.base_model)}`);
+  }
+  if ("base_model_omit" in model && model.base_model_omit !== undefined) {
     lines.push(`base_model_omit = [${model.base_model_omit.map(quote).join(", ")}]`);
   }
   if (model.name !== undefined) lines.push(`name = ${quote(model.name)}`);
+  if (model.description !== undefined) lines.push(`description = ${quote(model.description)}`);
   if (model.family !== undefined) lines.push(`family = ${quote(model.family)}`);
   if (model.release_date !== undefined) lines.push(`release_date = ${quote(model.release_date)}`);
   if (model.last_updated !== undefined) lines.push(`last_updated = ${quote(model.last_updated)}`);
@@ -694,22 +880,7 @@ function formatToml(model: z.infer<typeof SyncedAuthoredModel>) {
   if (model.knowledge !== undefined) lines.push(`knowledge = ${quote(model.knowledge)}`);
   if (model.open_weights !== undefined) lines.push(`open_weights = ${model.open_weights}`);
   if (model.status !== undefined) lines.push(`status = ${quote(model.status)}`);
-
-  if (model.reasoning_options?.length === 0) {
-    lines.push("reasoning_options = []");
-  } else {
-    for (const option of model.reasoning_options ?? []) {
-      lines.push("", "[[reasoning_options]]");
-      lines.push(`type = ${quote(option.type)}`);
-      if (option.type === "effort") {
-        lines.push(`values = [${option.values.map(formatReasoningValue).join(", ")}]`);
-      }
-      if (option.type === "budget_tokens") {
-        if (option.min !== undefined) lines.push(`min = ${formatInteger(option.min)}`);
-        if (option.max !== undefined) lines.push(`max = ${formatInteger(option.max)}`);
-      }
-    }
-  }
+  if (model.reasoning_options?.length === 0) lines.push("reasoning_options = []");
 
   if (model.interleaved !== undefined) {
     lines.push("");
@@ -721,10 +892,23 @@ function formatToml(model: z.infer<typeof SyncedAuthoredModel>) {
     }
   }
 
+  for (const option of model.reasoning_options ?? []) {
+    lines.push("", "[[reasoning_options]]");
+    lines.push(`type = ${quote(option.type)}`);
+    if (option.type === "effort") {
+      const values = sortReasoningValues(option.values).map(formatReasoningValue).join(", ");
+      lines.push(`values = [${values}]`);
+    }
+    if (option.type === "budget_tokens") {
+      if (option.min !== undefined) lines.push(`min = ${formatInteger(option.min)}`);
+      if (option.max !== undefined) lines.push(`max = ${formatInteger(option.max)}`);
+    }
+  }
+
   if (model.cost !== undefined) {
     lines.push("", "[cost]");
-    lines.push(`input = ${formatNumber(model.cost.input)}`);
-    lines.push(`output = ${formatNumber(model.cost.output)}`);
+    if (model.cost.input !== undefined) lines.push(`input = ${formatNumber(model.cost.input)}`);
+    if (model.cost.output !== undefined) lines.push(`output = ${formatNumber(model.cost.output)}`);
     if (model.cost.reasoning !== undefined) {
       lines.push(`reasoning = ${formatNumber(model.cost.reasoning)}`);
     }
@@ -743,9 +927,11 @@ function formatToml(model: z.infer<typeof SyncedAuthoredModel>) {
 
     for (const tier of model.cost.tiers ?? []) {
       lines.push("", "[[cost.tiers]]");
-      lines.push(`tier = { type = ${quote(tier.tier.type ?? "context")}, size = ${formatInteger(tier.tier.size)} }`);
-      lines.push(`input = ${formatNumber(tier.input)}`);
-      lines.push(`output = ${formatNumber(tier.output)}`);
+      if (tier.tier?.size !== undefined) {
+        lines.push(`tier = { type = ${quote(tier.tier.type ?? "context")}, size = ${formatInteger(tier.tier.size)} }`);
+      }
+      if (tier.input !== undefined) lines.push(`input = ${formatNumber(tier.input)}`);
+      if (tier.output !== undefined) lines.push(`output = ${formatNumber(tier.output)}`);
       if (tier.reasoning !== undefined) lines.push(`reasoning = ${formatNumber(tier.reasoning)}`);
       if (tier.cache_read !== undefined) lines.push(`cache_read = ${formatNumber(tier.cache_read)}`);
       if (tier.cache_write !== undefined) lines.push(`cache_write = ${formatNumber(tier.cache_write)}`);
@@ -767,6 +953,21 @@ function formatToml(model: z.infer<typeof SyncedAuthoredModel>) {
     if (model.modalities.output !== undefined) {
       lines.push(`output = [${model.modalities.output.map(quote).join(", ")}]`);
     }
+  }
+
+  if (model.provider !== undefined) {
+    lines.push("", "[provider]");
+    if (model.provider.npm !== undefined) lines.push(`npm = ${quote(model.provider.npm)}`);
+    if (model.provider.api !== undefined) lines.push(`api = ${quote(model.provider.api)}`);
+    if (model.provider.shape !== undefined) lines.push(`shape = ${quote(model.provider.shape)}`);
+    if (model.provider.body !== undefined) lines.push(`body = ${formatInlineValue(model.provider.body)}`);
+    if (model.provider.headers !== undefined) lines.push(`headers = ${formatInlineValue(model.provider.headers)}`);
+  }
+
+  for (const [name, mode] of Object.entries(model.experimental?.modes ?? {})) {
+    lines.push("", `[experimental.modes.${formatKey(name)}]`);
+    if (mode.cost !== undefined) lines.push(`cost = ${formatInlineValue(mode.cost)}`);
+    if (mode.provider !== undefined) lines.push(`provider = ${formatInlineValue(mode.provider)}`);
   }
 
   return `${lines.join("\n")}\n`;
@@ -795,6 +996,9 @@ export async function main(args = process.argv.slice(2)) {
   const results = await syncTargets(target, {
     dryRun: args.includes("--dry-run"),
     newOnly: args.includes("--new-only"),
+    // Only GitHub Actions opens issues by default; local needs --open-issues.
+    openIssues: args.includes("--open-issues")
+      || (process.env.GITHUB_ACTIONS === "true" && !args.includes("--no-issues")),
   });
 
   await writeReport(target, results);
