@@ -1765,6 +1765,49 @@ test("accepts audio modalities from the Merge Gateway catalog", () => {
   }).data[0]?.vendors.openai.capabilities.input).toContain("audio");
 });
 
+// Prevents a valid multimodal route from rejecting the entire live catalog.
+test("accepts video modalities from the Merge Gateway catalog", () => {
+  const model = mergeGatewayModel();
+  model.vendors.openai.capabilities.input.push("video");
+
+  const parsed = MergeGatewayResponse.parse({
+    object: "list",
+    data: [model],
+    has_more: false,
+    next_cursor: null,
+  }).data[0]!;
+
+  expect(parsed.vendors.openai.capabilities.input).toContain("video");
+  expect(buildMergeGatewayModel(parsed, undefined)).toMatchObject({
+    modalities: {
+      input: ["text", "image", "pdf", "video"],
+    },
+  });
+});
+
+// Keeps the API boundary forward-compatible while output normalization remains strict.
+test("filters unknown Merge Gateway modalities without rejecting the catalog", () => {
+  const model = mergeGatewayModel();
+  model.vendors.openai.capabilities.input.push("future_modality");
+  model.vendors.openai.capabilities.output.push("future_output_modality");
+
+  const parsed = MergeGatewayResponse.parse({
+    object: "list",
+    data: [model],
+    has_more: false,
+    next_cursor: null,
+  }).data[0]!;
+  const synced = buildMergeGatewayModel(parsed, undefined);
+
+  expect(synced).toEqual({
+    base_model: "openai/gpt-5.6-sol",
+    cost: {
+      input: 5,
+      output: 30,
+    },
+  });
+});
+
 // Emits only route-specific overrides when canonical metadata already matches.
 test("factors Merge Gateway GPT-5.6 Sol against canonical metadata", () => {
   const model = buildMergeGatewayModel(mergeGatewayModel(), undefined);

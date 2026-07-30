@@ -17,8 +17,10 @@ const VendorReasoning = z.object({
 }).passthrough();
 
 const VendorCapabilities = z.object({
-  input: z.array(z.enum(["text", "audio", "image", "document", "embedding"])),
-  output: z.array(z.enum(["text", "audio", "tool_use", "embedding"])),
+  // Keep the API boundary forward-compatible; `modalities()` filters the
+  // evolving Gateway vocabulary to values supported by models.dev.
+  input: z.array(z.string()),
+  output: z.array(z.string()),
   supports_tool_calling: z.boolean(),
   supports_tool_choice: z.boolean().default(false),
   supports_structured_outputs: z.boolean(),
