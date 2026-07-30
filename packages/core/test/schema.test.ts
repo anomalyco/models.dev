@@ -5,6 +5,8 @@ import { AuthoredModel } from "../src/index.js";
 
 type AuthoredModelData = z.infer<typeof AuthoredModel>;
 
+const dateFields = ["knowledge", "release_date", "last_updated"] as const;
+
 describe("model schema", () => {
   test("requires reasoning_options when reasoning is true", () => {
     const model = baseModel({ reasoning: true });
@@ -28,6 +30,44 @@ describe("model schema", () => {
     });
 
     expect(AuthoredModel.safeParse(model).success).toBe(false);
+  });
+
+  test("accepts calendar-valid model dates", () => {
+    for (const field of dateFields) {
+      for (const value of [
+        "2026-02",
+        "2024-02-29",
+        "2000-02-29",
+        "2026-12-31",
+      ]) {
+        expect(
+          AuthoredModel.safeParse({
+            ...baseModel({}),
+            [field]: value,
+          }).success,
+        ).toBe(true);
+      }
+    }
+  });
+
+  test("rejects impossible model dates", () => {
+    for (const field of dateFields) {
+      for (const value of [
+        "2026-00",
+        "2026-13",
+        "2025-02-29",
+        "1900-02-29",
+        "2026-02-30",
+        "2026-04-31",
+      ]) {
+        expect(
+          AuthoredModel.safeParse({
+            ...baseModel({}),
+            [field]: value,
+          }).success,
+        ).toBe(false);
+      }
+    }
   });
 });
 

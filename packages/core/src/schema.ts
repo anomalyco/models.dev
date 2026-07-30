@@ -110,9 +110,41 @@ const OutputCost = Cost.extend({
   tiers: z.array(CostTier).optional(),
 });
 
-const DateString = z.string().regex(/^\d{4}-\d{2}(-\d{2})?$/, {
-  message: "Must be in YYYY-MM or YYYY-MM-DD format",
-});
+const DateString = z
+  .string()
+  .regex(/^\d{4}-\d{2}(-\d{2})?$/, {
+    message: "Must be in YYYY-MM or YYYY-MM-DD format",
+  })
+  .refine(
+    (value) => {
+      const [year, month, day] = value.split("-").map(Number);
+      if (month === undefined || month < 1 || month > 12) return false;
+      if (day === undefined) return true;
+
+      const leapYear =
+        year !== undefined &&
+        year % 4 === 0 &&
+        (year % 100 !== 0 || year % 400 === 0);
+      const daysInMonth = [
+        31,
+        leapYear ? 29 : 28,
+        31,
+        30,
+        31,
+        30,
+        31,
+        31,
+        30,
+        31,
+        30,
+        31,
+      ];
+      return day >= 1 && day <= daysInMonth[month - 1]!;
+    },
+    {
+      message: "Must be a valid calendar date",
+    },
+  );
 
 const Modality = z.enum(["text", "audio", "image", "video", "pdf"]);
 
@@ -232,12 +264,7 @@ const ModelBase = z.object({
     .optional(),
   structured_output: z.boolean().optional(),
   temperature: z.boolean().optional(),
-  knowledge: z
-    .string()
-    .regex(/^\d{4}-\d{2}(-\d{2})?$/, {
-      message: "Must be in YYYY-MM or YYYY-MM-DD format",
-    })
-    .optional(),
+  knowledge: DateString.optional(),
   release_date: DateString,
   last_updated: DateString,
   modalities: Modalities,
