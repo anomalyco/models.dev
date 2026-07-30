@@ -26,6 +26,7 @@ import { ofox } from "./providers/ofox.js";
 import { openrouter } from "./providers/openrouter.js";
 import { ovhcloud } from "./providers/ovhcloud.js";
 import { pioneer } from "./providers/pioneer.js";
+import { requesty } from "./providers/requesty.js";
 import { tinfoil } from "./providers/tinfoil.js";
 import { vercel } from "./providers/vercel.js";
 import { venice } from "./providers/venice.js";
@@ -131,6 +132,7 @@ export const providers: {
   openrouter: SyncProvider<any>;
   ovhcloud: SyncProvider<any>;
   pioneer: SyncProvider<any>;
+  requesty: SyncProvider<any>;
   tinfoil: SyncProvider<any>;
   vercel: SyncProvider<any>;
   venice: SyncProvider<any>;
@@ -158,6 +160,7 @@ export const providers: {
   openrouter,
   ovhcloud,
   pioneer,
+  requesty,
   tinfoil,
   vercel,
   venice,
@@ -175,6 +178,7 @@ export const groups = {
     "merge-gateway",
     "nano-gpt",
     "ofox",
+    "requesty",
     "openrouter",
     "vercel",
   ],

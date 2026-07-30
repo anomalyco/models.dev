@@ -266,6 +266,18 @@ Chutes is implemented in `packages/core/src/sync/providers/chutes.ts`.
 - `attachment` is derived from non-text `input_modalities`, and all models are `open_weights`.
 - `release_date`/`last_updated` default to the API `created` timestamp but preserve existing hand-authored dates; `knowledge`, `family`, `status`, `interleaved`, and `limit.input` are preserved when present.
 
+## Requesty Notes
+
+Requesty is implemented in `packages/core/src/sync/providers/requesty.ts`.
+
+- Run it with `bun models:sync requesty` or `bun requesty:sync`.
+- Source endpoint: `https://router.requesty.ai/v1/models/managed`; no auth required (the managed catalog is public).
+- The endpoint is the sole source of truth. `preserveBaseModels` and `preserveDescriptions` are both `false` so an upstream correction always wins over a previously committed value; local TOMLs are never read back into the translation.
+- Managed IDs are bare (`claude-opus-4-7`) or region-pinned (`gpt-5.4@eu`) rather than OpenRouter-shaped, so they resolve through `resolveModelMetadataBaseModel` after the `@<region>` qualifier is stripped. Every model emits `base_model` plus provider-specific overrides only.
+- Anthropic files `.0` releases with an explicit `-0` (`claude-sonnet-4-0.toml`) while later point releases drop it, so bare `claude-<tier>-<major>` IDs retry against the `-0` filename.
+- Region variants are written as separate models: `gpt-5.4` and `gpt-5.4@eu` are distinct files that share a `base_model` and differ only in served pricing and limits.
+- Prices are per-token USD and are converted to per-1M-token numbers. `pricing[]` bands become `cost.tiers`, with the first band as the flat `cost`. Price fields are nullable upstream, so a route quoting no prices gets no `[cost]` section rather than a fabricated zero.
+
 ## Venice Notes
 
 Venice is implemented in `packages/core/src/sync/providers/venice.ts`.
