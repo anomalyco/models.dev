@@ -1183,6 +1183,167 @@ test("xAI sync factors inherited base model fields", () => {
   expect(model).not.toHaveProperty("limit");
 });
 
+test("xAI sync maps long-context API pricing into cost tiers", () => {
+  const model = buildXAIModel(
+    {
+      id: "grok-4.5",
+      created: Date.parse("2026-06-29T00:00:00Z") / 1000,
+      input_modalities: ["text", "image"],
+      output_modalities: ["text"],
+      prompt_text_token_price: 20_000,
+      cached_prompt_text_token_price: 3_000,
+      completion_text_token_price: 60_000,
+      prompt_text_token_price_long_context: 40_000,
+      cached_prompt_text_token_price_long_context: 6_000,
+      completion_text_token_price_long_context: 120_000,
+      long_context_threshold: 200_000,
+      max_prompt_length: 500_000,
+    },
+    {
+      base_model: "xai/grok-4.5",
+      name: "Grok 4.5",
+      family: "grok",
+      release_date: "2026-07-08",
+      last_updated: "2026-07-08",
+      attachment: true,
+      reasoning: true,
+      tool_call: true,
+      open_weights: false,
+      cost: {
+        input: 2,
+        output: 6,
+        cache_read: 0.3,
+        // Stale hand-authored tier must be overwritten by API long-context rates.
+        tiers: [{ tier: { size: 200_000 }, input: 4, output: 12, cache_read: 1 }],
+      },
+      limit: { context: 500_000, output: 500_000 },
+      modalities: { input: ["text", "image"], output: ["text"] },
+    },
+  );
+
+  expect(model).toMatchObject({
+    cost: {
+      input: 2,
+      output: 6,
+      cache_read: 0.3,
+      tiers: [{
+        tier: { type: "context", size: 200_000 },
+        input: 4,
+        output: 12,
+        cache_read: 0.6,
+      }],
+    },
+  });
+});
+
+test("xAI sync clears cost tiers when API reports no long-context band", () => {
+  const model = buildXAIModel(
+    {
+      id: "grok-code-fast-1",
+      created: Date.parse("2025-01-01T00:00:00Z") / 1000,
+      input_modalities: ["text"],
+      output_modalities: ["text"],
+      prompt_text_token_price: 2_000,
+      cached_prompt_text_token_price: 200,
+      completion_text_token_price: 15_000,
+      prompt_text_token_price_long_context: 0,
+      cached_prompt_text_token_price_long_context: 0,
+      completion_text_token_price_long_context: 0,
+      long_context_threshold: 0,
+      max_prompt_length: 256_000,
+    },
+    {
+      name: "Grok Code Fast 1",
+      family: "grok",
+      release_date: "2025-01-01",
+      last_updated: "2025-01-01",
+      attachment: false,
+      reasoning: true,
+      tool_call: true,
+      open_weights: false,
+      cost: {
+        input: 0.2,
+        output: 1.5,
+        cache_read: 0.02,
+        tiers: [{ tier: { size: 200_000 }, input: 0.4, output: 3 }],
+      },
+      limit: { context: 256_000, output: 256_000 },
+      modalities: { input: ["text"], output: ["text"] },
+    },
+  );
+
+  expect(model).toMatchObject({
+    cost: {
+      input: 0.2,
+      output: 1.5,
+      cache_read: 0.02,
+    },
+  });
+  expect(model.cost?.tiers).toBeUndefined();
+});
+
+test("OpenRouter sync maps pricing.overrides into cost tiers", () => {
+  const model = buildOpenRouterModel(openRouterModel({
+    id: "x-ai/grok-4.5",
+    name: "xAI: Grok 4.5",
+    pricing: {
+      prompt: "0.000002",
+      completion: "0.000006",
+      input_cache_read: "0.0000003",
+      overrides: [{
+        min_prompt_tokens: 200_000,
+        prompt: "0.000004",
+        completion: "0.000012",
+        input_cache_read: "0.0000006",
+      }],
+    },
+  }), {
+    cost: {
+      input: 2,
+      output: 6,
+      cache_read: 0.3,
+      tiers: [{ tier: { size: 200_000 }, input: 4, output: 12, cache_read: 1 }],
+    },
+  });
+
+  expect(model).toMatchObject({
+    cost: {
+      input: 2,
+      output: 6,
+      cache_read: 0.3,
+      tiers: [{
+        tier: { type: "context", size: 200_000 },
+        input: 4,
+        output: 12,
+        cache_read: 0.6,
+      }],
+    },
+  });
+});
+
+test("OpenRouter sync keeps authored tiers when API omits overrides", () => {
+  const model = buildOpenRouterModel(openRouterModel({
+    pricing: {
+      prompt: "0.000002",
+      completion: "0.00001",
+      input_cache_read: "0.0000002",
+      input_cache_write: "0.0000025",
+    },
+  }), {
+    cost: {
+      input: 3,
+      output: 15,
+      tiers: [{ tier: { size: 200_000 }, input: 6, output: 22.5 }],
+    },
+  });
+
+  expect(model).toMatchObject({
+    cost: {
+      tiers: [{ tier: { size: 200_000 }, input: 6, output: 22.5 }],
+    },
+  });
+});
+
 test("skips new DigitalOcean models with incomplete pricing or limits", () => {
   const translated = digitalocean.translateModel(
     digitalOceanModel({ pricing: undefined }),

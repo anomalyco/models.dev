@@ -16,6 +16,10 @@ const XAIModel = z.object({
   prompt_text_token_price: z.number().int().nonnegative().optional(),
   cached_prompt_text_token_price: z.number().int().nonnegative().optional(),
   completion_text_token_price: z.number().int().nonnegative().optional(),
+  prompt_text_token_price_long_context: z.number().int().nonnegative().optional(),
+  cached_prompt_text_token_price_long_context: z.number().int().nonnegative().optional(),
+  completion_text_token_price_long_context: z.number().int().nonnegative().optional(),
+  long_context_threshold: z.number().int().nonnegative().optional(),
   max_prompt_length: z.number().int().nonnegative().optional(),
 }).passthrough();
 
@@ -141,9 +145,41 @@ function tokenPrice(value: number | undefined) {
   return value / 10_000;
 }
 
-function preservedCostTiers(existing: ExistingModel) {
-  // The xAI models API exposes base pricing only; long-context tiers are curated from xAI docs/console.
-  return existing.cost?.tiers;
+function longContextPrice(value: number | undefined, fallback: number | undefined) {
+  // xAI sends 0 when the long-context rate equals the base rate (or is unused).
+  if (value === undefined) return undefined;
+  if (value > 0) return tokenPrice(value);
+  return fallback;
+}
+
+function costTiers(model: XAIModel, existing: ExistingModel) {
+  const threshold = model.long_context_threshold;
+  // Image/video endpoints omit these fields — keep any hand-authored tiers.
+  if (threshold === undefined) return existing.cost?.tiers;
+  // threshold 0 means the model has no long-context pricing band.
+  if (threshold === 0) return undefined;
+
+  const input = longContextPrice(
+    model.prompt_text_token_price_long_context,
+    tokenPrice(model.prompt_text_token_price),
+  );
+  const output = longContextPrice(
+    model.completion_text_token_price_long_context,
+    tokenPrice(model.completion_text_token_price),
+  );
+  if (input === undefined || output === undefined) return existing.cost?.tiers;
+
+  const cacheRead = longContextPrice(
+    model.cached_prompt_text_token_price_long_context,
+    tokenPrice(model.cached_prompt_text_token_price),
+  );
+
+  return [{
+    tier: { type: "context" as const, size: threshold },
+    input,
+    output,
+    ...(cacheRead === undefined ? {} : { cache_read: cacheRead }),
+  }];
 }
 
 function cost(model: XAIModel, existing: ExistingModel) {
@@ -159,7 +195,7 @@ function cost(model: XAIModel, existing: ExistingModel) {
     cache_write: existing.cost?.cache_write,
     input_audio: existing.cost?.input_audio,
     output_audio: existing.cost?.output_audio,
-    tiers: preservedCostTiers(existing),
+    tiers: costTiers(model, existing),
   };
 }
 
