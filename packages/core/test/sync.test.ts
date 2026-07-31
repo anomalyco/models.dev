@@ -1236,6 +1236,47 @@ test("xAI sync maps long-context API pricing into cost tiers", () => {
   });
 });
 
+test("xAI sync keeps authored tiers when long-context rates are omitted", () => {
+  const model = buildXAIModel(
+    {
+      id: "grok-4.5",
+      created: Date.parse("2026-06-29T00:00:00Z") / 1000,
+      input_modalities: ["text"],
+      output_modalities: ["text"],
+      prompt_text_token_price: 20_000,
+      cached_prompt_text_token_price: 3_000,
+      completion_text_token_price: 60_000,
+      // Positive threshold without long-context rates must not invent a base-priced tier.
+      long_context_threshold: 200_000,
+      max_prompt_length: 500_000,
+    },
+    {
+      name: "Grok 4.5",
+      family: "grok",
+      release_date: "2026-07-08",
+      last_updated: "2026-07-08",
+      attachment: false,
+      reasoning: true,
+      tool_call: true,
+      open_weights: false,
+      cost: {
+        input: 2,
+        output: 6,
+        cache_read: 0.3,
+        tiers: [{ tier: { size: 200_000 }, input: 4, output: 12, cache_read: 0.6 }],
+      },
+      limit: { context: 500_000, output: 500_000 },
+      modalities: { input: ["text"], output: ["text"] },
+    },
+  );
+
+  expect(model).toMatchObject({
+    cost: {
+      tiers: [{ tier: { size: 200_000 }, input: 4, output: 12, cache_read: 0.6 }],
+    },
+  });
+});
+
 test("xAI sync clears cost tiers when API reports no long-context band", () => {
   const model = buildXAIModel(
     {

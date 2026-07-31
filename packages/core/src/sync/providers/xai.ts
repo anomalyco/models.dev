@@ -147,13 +147,17 @@ function tokenPrice(value: number | undefined) {
 
 function costTiers(model: XAIModel, existing: ExistingModel) {
   // 0 = no long-context band; omitted (image/video) = keep authored tiers.
-  // Long-context fields are 0 when they match the base rate.
+  // Long-context prices: 0 = same as base; undefined = field omitted, keep authored.
   const size = model.long_context_threshold;
   if (size === undefined) return existing.cost?.tiers;
   if (size === 0) return undefined;
 
-  const input = tokenPrice(model.prompt_text_token_price_long_context || model.prompt_text_token_price);
-  const output = tokenPrice(model.completion_text_token_price_long_context || model.completion_text_token_price);
+  const longInput = model.prompt_text_token_price_long_context;
+  const longOutput = model.completion_text_token_price_long_context;
+  if (longInput === undefined || longOutput === undefined) return existing.cost?.tiers;
+
+  const input = tokenPrice(longInput || model.prompt_text_token_price);
+  const output = tokenPrice(longOutput || model.completion_text_token_price);
   if (input === undefined || output === undefined) return existing.cost?.tiers;
 
   return [{
