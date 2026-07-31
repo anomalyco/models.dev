@@ -71,7 +71,7 @@ jobs:
       - name: Sync model catalogs
         run: bun models:sync ${{ matrix.provider }}
         env:
-          GH_TOKEN: ${{ steps.committer.outputs.token }}
+          GH_TOKEN: ${{ github.token }}
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           BASETEN_API_KEY: ${{ secrets.BASETEN_API_KEY }}
           DEEPINFRA_API_KEY: ${{ secrets.DEEPINFRA_API_KEY }}
