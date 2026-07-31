@@ -1,8 +1,5 @@
 base_model = "moonshotai/kimi-k3"
 name = "Kimi K3"
-# Prerelease: seat-gated through Umans Labs (free during the experiment
-# window); the cost below is the GA pricing (Moonshot-list-anchored).
-status = "beta"
 # Live metadata: levels none/low/high/max, default max, and `can_disable=true`
 # (accessed 2026-07-28): https://api.code.umans.ai/v1/models/info
 reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "high", "max"] }]
