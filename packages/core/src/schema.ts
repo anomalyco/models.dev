@@ -90,6 +90,7 @@ const Cost = z
       .number()
       .min(0, "Audio output price cannot be negative")
       .optional(),
+    image: z.number().min(0, "Image price cannot be negative").optional(),
   })
   .strict();
 
