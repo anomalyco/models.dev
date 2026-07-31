@@ -1,17 +1,18 @@
 name = "Lumimaid v0.2"
 description = "Open Llama instruction model for multilingual chat, reasoning, and coding"
 family = "llama"
-release_date = "2024-07-01"
+release_date = "2024-01-01"
 last_updated = "2024-07-01"
 attachment = false
 reasoning = false
 tool_call = false
 structured_output = false
-open_weights = false
+open_weights = true
 
 [cost]
-input = 1.00
+input = 1
 output = 1.5
+cache_read = 0.5
 
 [limit]
 context = 16_384

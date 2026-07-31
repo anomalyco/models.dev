@@ -1,6 +1,7 @@
 name = "Yi Medium 200k"
 description = "Compact GPT model for low-latency assistance and high-volume workloads"
-release_date = "2024-03-01"
+family = "yi"
+release_date = "2024-01-01"
 last_updated = "2024-03-01"
 attachment = false
 reasoning = false
@@ -11,6 +12,7 @@ open_weights = false
 [cost]
 input = 2.499
 output = 2.499
+cache_read = 1.2495
 
 [limit]
 context = 200_000

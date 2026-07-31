@@ -1,0 +1,28 @@
+name = "Nex N2 Pro"
+description = "Nex AGI's open-source agentic reasoning model, post-trained on Qwen3.5-397B-A17B. It is built for agentic coding, software engineering, deep research, tool use, and long-horizon tasks with a 256K context window."
+family = "agi"
+release_date = "2026-06-04"
+last_updated = "2026-06-04"
+attachment = true
+reasoning = true
+tool_call = true
+structured_output = true
+open_weights = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "minimal", "low", "medium", "high", "xhigh"]
+
+[cost]
+input = 0.5
+output = 2.5
+cache_read = 0.25
+
+[limit]
+context = 262_144
+input = 262_144
+output = 262_144
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

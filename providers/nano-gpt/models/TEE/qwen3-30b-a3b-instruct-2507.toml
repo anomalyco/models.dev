@@ -1,17 +1,18 @@
 name = "Qwen3 30B A3B Instruct 2507 TEE"
 description = "Qwen instruction model for multilingual chat, reasoning, and tool use"
 family = "qwen"
-release_date = "2025-07-29"
+release_date = "2024-01-01"
 last_updated = "2025-07-29"
 attachment = false
 reasoning = false
 tool_call = false
 structured_output = false
-open_weights = false
+open_weights = true
 
 [cost]
 input = 0.15
-output = 0.44999999999999996
+output = 0.45
+cache_read = 0.075
 
 [limit]
 context = 262_000

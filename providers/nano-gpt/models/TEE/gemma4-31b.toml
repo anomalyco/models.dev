@@ -1,22 +1,24 @@
 # Not included in subscription
 name = "Gemma 4 31B"
 description = "Open Gemma instruction model for efficient chat and self-hosted deployments"
+family = "gemma"
 release_date = "2026-04-04"
 last_updated = "2026-04-04"
 attachment = false
 reasoning = false
 tool_call = false
 structured_output = true
-open_weights = false
+open_weights = true
 
 [cost]
 input = 0.45
 output = 1
+cache_read = 0.45
 
 [limit]
-context = 262144
-input = 262144
-output = 131072
+context = 262_144
+input = 262_144
+output = 131_072
 
 [modalities]
 input = ["text"]

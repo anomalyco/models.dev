@@ -1,23 +1,14 @@
 # Included in subscription
-name = "Qwen3 Max"
-description = "Flagship Qwen model for complex reasoning, coding, and agentic workflows"
-release_date = "2025-09-05"
-last_updated = "2025-09-05"
-attachment = false
-reasoning = false
+base_model = "alibaba/qwen3-max"
 tool_call = false
 structured_output = false
-open_weights = false
 
 [cost]
-input = 1.08018
-output = 5.4009
+input = 1.2002
+output = 6.001
+cache_read = 0.6001
 
 [limit]
-context = 256000
-input = 256000
-output = 32768
-
-[modalities]
-input = ["text"]
-output = ["text"]
+context = 256_000
+input = 256_000
+output = 32_768

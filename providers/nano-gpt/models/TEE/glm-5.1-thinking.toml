@@ -1,14 +1,7 @@
 # Not included in subscription
+base_model = "zhipuai/glm-5.1"
 name = "GLM 5.1 Thinking TEE"
-description = "Flagship GLM model for hybrid reasoning, coding, and agentic engineering"
-release_date = "2026-04-20"
-last_updated = "2026-04-20"
-attachment = false
-reasoning = true
 reasoning_options = []
-tool_call = true
-structured_output = true
-open_weights = false
 
 [cost]
 input = 1.5
@@ -16,10 +9,6 @@ output = 5.25
 cache_read = 0.3
 
 [limit]
-context = 202752
-input = 202752
-output = 65535
-
-[modalities]
-input = ["text"]
-output = ["text"]
+context = 202_752
+input = 202_752
+output = 65_535

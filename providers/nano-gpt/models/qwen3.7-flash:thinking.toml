@@ -1,0 +1,25 @@
+name = "Qwen3.7 Flash Thinking"
+description = "Qwen3.7 Flash with thinking enabled for deeper multimodal reasoning, coding, search and computer-use agents, spatial reasoning, and multi-step task execution."
+release_date = "2026-07-25"
+last_updated = "2026-07-25"
+attachment = true
+reasoning = true
+tool_call = true
+structured_output = true
+open_weights = false
+reasoning_options = []
+
+[cost]
+input = 0.03
+output = 0.13
+cache_read = 0.006
+cache_write = 0.038
+
+[limit]
+context = 983_616
+input = 983_616
+output = 65_536
+
+[modalities]
+input = ["text", "image", "video"]
+output = ["text"]

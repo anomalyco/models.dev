@@ -1,6 +1,7 @@
 name = "Azure o1"
 description = "O-series reasoning model for hard analysis, math, coding, and planning"
-release_date = "2024-12-17"
+family = "o"
+release_date = "2024-01-01"
 last_updated = "2024-12-17"
 attachment = false
 reasoning = false
@@ -9,8 +10,9 @@ structured_output = false
 open_weights = false
 
 [cost]
-input = 14.994
-output = 59.993
+input = 15
+output = 60
+cache_read = 7.5
 
 [limit]
 context = 200_000

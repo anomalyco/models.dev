@@ -1,6 +1,7 @@
 name = "GLM-4 Air"
 description = "Compact GPT model for low-latency assistance and high-volume workloads"
-release_date = "2024-06-05"
+family = "glm"
+release_date = "2024-01-01"
 last_updated = "2024-06-05"
 attachment = false
 reasoning = false
@@ -11,6 +12,7 @@ open_weights = false
 [cost]
 input = 0.2006
 output = 0.2006
+cache_read = 0.1003
 
 [limit]
 context = 128_000

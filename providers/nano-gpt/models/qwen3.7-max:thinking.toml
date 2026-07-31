@@ -1,25 +1,19 @@
 # Not included in subscription
+base_model = "alibaba/qwen3.7-max"
 name = "Qwen3.7 Max Thinking"
-description = "Compact GPT model for low-latency assistance and high-volume workloads"
-release_date = "2026-05-21"
-last_updated = "2026-05-21"
-attachment = false
-reasoning = true
-reasoning_options = [{ type = "budget_tokens", min = 1_024, max = 262_144 }]
 tool_call = false
 structured_output = false
-open_weights = false
+
+[[reasoning_options]]
+type = "budget_tokens"
+min = 1_024
+max = 262_144
 
 [cost]
 input = 2.5
 output = 7.5
-cache_read = 0.25
+cache_read = 0.5
+cache_write = 3.125
 
 [limit]
-context = 1000000
-input = 1000000
-output = 65536
-
-[modalities]
-input = ["text"]
-output = ["text"]
+input = 1_000_000

@@ -1,22 +1,24 @@
 # Included in subscription
 name = "Qwen 3 Coder 480B"
 description = "Qwen coding model for software agents, repository edits, and code reasoning"
+family = "qwen"
 release_date = "2026-03-17"
 last_updated = "2026-03-17"
 attachment = false
 reasoning = false
 tool_call = true
 structured_output = true
-open_weights = false
+open_weights = true
 
 [cost]
 input = 0.13
 output = 0.5
+cache_read = 0.065
 
 [limit]
-context = 262000
-input = 262000
-output = 65536
+context = 262_000
+input = 262_000
+output = 65_536
 
 [modalities]
 input = ["text"]
