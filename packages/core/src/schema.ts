@@ -92,7 +92,7 @@ const Cost = z
       .optional(),
     image: z.number().min(0, "Image price cannot be negative").optional(),
   })
-  .strict();
+  .strip();
 
 const CostTier = Cost.extend({
   tier: z
