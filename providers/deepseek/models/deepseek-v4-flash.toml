@@ -1,3 +1,6 @@
+# Reasoning tokens are billed at the output rate (no separate CoT price).
+# `completion_tokens_details.reasoning_tokens` is a subset of completion_tokens.
+# https://api-docs.deepseek.com/quick_start/pricing/ (accessed 2026-07-31)
 name = "DeepSeek V4 Flash"
 description = "Fast DeepSeek V4 lane for economical reasoning, coding, and long-context work"
 # OpenAI: `thinking.type = enabled|disabled`, `reasoning_effort = high|max`.
