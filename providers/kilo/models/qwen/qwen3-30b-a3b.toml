@@ -1,22 +1,25 @@
 name = "Qwen: Qwen3 30B A3B"
 description = "Qwen instruction model for multilingual chat, reasoning, and tool use"
-release_date = "2025-04"
-last_updated = "2026-03-15"
+family = "qwen"
+release_date = "2025-04-28"
+last_updated = "2025-04-28"
 attachment = false
-reasoning_options = [{ type = "toggle" }]
 reasoning = true
 temperature = true
 tool_call = true
-open_weights = true
+structured_output = false
+open_weights = false
+
+[[reasoning_options]]
+type = "toggle"
 
 [cost]
-input = 0.08
-output = 0.28
-cache_read = 0.03
+input = 0.13
+output = 0.52
 
 [limit]
-context = 40960
-output = 40960
+context = 40_960
+output = 16_384
 
 [modalities]
 input = ["text"]

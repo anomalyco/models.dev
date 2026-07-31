@@ -1,21 +1,25 @@
 name = "DeepSeek: DeepSeek V3.2 Exp"
 description = "DeepSeek chat model for instruction following, coding, and analysis"
-release_date = "2025-01-01"
+family = "deepseek"
+release_date = "2025-09-29"
 last_updated = "2025-09-29"
 attachment = false
-reasoning_options = [{ type = "toggle" }]
 reasoning = true
 temperature = true
 tool_call = true
-open_weights = true
+structured_output = true
+open_weights = false
+
+[[reasoning_options]]
+type = "toggle"
 
 [cost]
 input = 0.27
 output = 0.41
 
 [limit]
-context = 163840
-output = 65536
+context = 163_840
+output = 65_536
 
 [modalities]
 input = ["text"]

@@ -1,20 +1,24 @@
-name = "OpenAI: GPT-5.3 Chat"
+name = "OpenAI: GPT-5.3 Chat (retires Aug 10)"
 description = "Chat-tuned GPT model for conversational assistance, writing, and tool workflows"
-release_date = "2026-03-04"
-last_updated = "2026-03-15"
+family = "gpt"
+release_date = "2026-03-03"
+last_updated = "2026-03-03"
 attachment = true
 reasoning = false
+temperature = false
 tool_call = true
+structured_output = true
 open_weights = false
 
 [cost]
 input = 1.75
 output = 14
+cache_read = 0.175
 
 [limit]
-context = 128000
-output = 16384
+context = 128_000
+output = 16_384
 
 [modalities]
-input = ["image", "pdf", "text"]
+input = ["text", "image", "pdf"]
 output = ["text"]

@@ -1,22 +1,27 @@
 name = "Qwen: Qwen3 VL 235B A22B Thinking"
 description = "Qwen vision-language model for visual reasoning, documents, and agent tasks"
-release_date = "2025-09-24"
-last_updated = "2026-03-15"
+family = "qwen"
+release_date = "2025-09-23"
+last_updated = "2025-09-23"
 attachment = true
-reasoning_options = []
 reasoning = true
 temperature = true
 tool_call = true
-open_weights = true
+structured_output = true
+open_weights = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "high"]
 
 [cost]
-input = 0.26
-output = 2.6
+input = 0.4
+output = 4
 
 [limit]
-context = 131072
-output = 32768
+context = 131_072
+output = 32_768
 
 [modalities]
-input = ["image", "text"]
+input = ["text", "image"]
 output = ["text"]

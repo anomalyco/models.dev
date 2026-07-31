@@ -1,24 +1,30 @@
 # Tracks the current GPT frontier alias target on Kilo (GPT-5.5).
-name = "OpenAI: GPT Latest"
+name = "OpenAI GPT Latest"
 description = "GPT model for general reasoning, writing, coding, and tool-assisted tasks"
-release_date = "2026-04-24"
-last_updated = "2026-05-01"
+family = "gpt"
+release_date = "2026-04-27"
+last_updated = "2026-04-27"
 attachment = true
-reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh"] }]
 reasoning = true
-tool_call = true
 temperature = false
+tool_call = true
+structured_output = true
 open_weights = false
 
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "xhigh"]
+
 [cost]
-input = 5.0
-output = 30.0
+input = 5
+output = 30
 cache_read = 0.5
+cache_write = 6.25
 
 [limit]
-context = 1050000
-output = 128000
+context = 1_050_000
+output = 128_000
 
 [modalities]
-input = ["text", "image", "pdf"]
+input = ["pdf", "image", "text"]
 output = ["text"]

@@ -1,22 +1,25 @@
 name = "Nous: Hermes 4 70B"
 description = "Reasoning model for deliberate analysis, multi-step problem solving, and tool use"
-release_date = "2025-08-25"
-last_updated = "2026-03-15"
+family = "nousresearch"
+release_date = "2025-08-26"
+last_updated = "2025-08-26"
 attachment = false
-reasoning_options = [{ type = "toggle" }]
 reasoning = true
 temperature = true
 tool_call = false
-open_weights = true
+structured_output = false
+open_weights = false
+
+[[reasoning_options]]
+type = "toggle"
 
 [cost]
 input = 0.13
 output = 0.4
-cache_read = 0.055
 
 [limit]
-context = 131072
-output = 131072
+context = 131_072
+output = 131_072
 
 [modalities]
 input = ["text"]

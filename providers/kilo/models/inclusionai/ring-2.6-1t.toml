@@ -1,22 +1,24 @@
 name = "inclusionAI: Ring-2.6-1T"
 description = "Reasoning model for deliberate analysis, multi-step problem solving, and tool use"
+family = "ring"
 release_date = "2026-05-08"
-last_updated = "2026-05-16"
+last_updated = "2026-05-08"
 attachment = false
-reasoning_options = []
 reasoning = true
-tool_call = true
 temperature = true
+tool_call = true
+structured_output = false
 open_weights = false
+reasoning_options = []
 
 [cost]
-input = 0.075
-output = 0.625
-cache_read = 0.015
+input = 0.3
+output = 2.5
+cache_read = 0.06
 
 [limit]
-context = 262144
-output = 65536
+context = 262_144
+output = 65_536
 
 [modalities]
 input = ["text"]

@@ -1,21 +1,28 @@
 name = "Qwen: Qwen Plus 0728 (thinking)"
 description = "Qwen reasoning model for deliberate problem solving, math, and coding"
-release_date = "2025-09-09"
-last_updated = "2026-03-15"
+family = "qwen"
+release_date = "2025-09-08"
+last_updated = "2025-09-08"
 attachment = false
-reasoning_options = [{ type = "budget_tokens", min = 1, max = 81_920 }]
 reasoning = true
 temperature = true
 tool_call = true
-open_weights = true
+structured_output = true
+open_weights = false
+
+[[reasoning_options]]
+type = "budget_tokens"
+min = 1
+max = 81_920
 
 [cost]
-input = 0.26
-output = 0.78
+input = 0.4
+output = 1.2
+cache_write = 0.5
 
 [limit]
-context = 1000000
-output = 32768
+context = 1_000_000
+output = 32_768
 
 [modalities]
 input = ["text"]

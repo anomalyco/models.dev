@@ -1,0 +1,13 @@
+base_model = "google/gemini-3.6-flash"
+description = "Gemini 3.6 Flash is a high-efficiency model from Google for coding, agentic workflows, and web and app development. It is designed to produce polished outputs with fewer unnecessary edits and..."
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high", "xhigh"]
+
+[cost]
+input = 1.5
+output = 7.5
+reasoning = 7.5
+cache_read = 0.15
+cache_write = 0.083333

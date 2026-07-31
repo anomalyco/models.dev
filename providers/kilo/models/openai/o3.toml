@@ -1,23 +1,11 @@
-name = "OpenAI: o3"
+base_model = "openai/o3"
 description = "O-series reasoning model for hard analysis, math, coding, and planning"
-release_date = "2025-04-16"
-last_updated = "2026-03-15"
-attachment = true
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
-reasoning = true
-temperature = false
-tool_call = true
-open_weights = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high"]
 
 [cost]
 input = 2
 output = 8
 cache_read = 0.5
-
-[limit]
-context = 200000
-output = 100000
-
-[modalities]
-input = ["image", "pdf", "text"]
-output = ["text"]

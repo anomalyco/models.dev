@@ -1,21 +1,23 @@
 name = "Perplexity: Sonar Reasoning Pro"
 description = "Web-grounded reasoning model for multi-step research and cited answers"
-release_date = "2024-01-01"
-last_updated = "2025-09-01"
+family = "sonar-reasoning"
+release_date = "2025-03-07"
+last_updated = "2025-03-07"
 attachment = true
-reasoning_options = []
 reasoning = true
 temperature = true
 tool_call = false
+structured_output = false
 open_weights = false
+reasoning_options = []
 
 [cost]
-input = 2.0
-output = 8.0
+input = 2
+output = 8
 
 [limit]
-context = 128000
-output = 25600
+context = 128_000
+output = 25_600
 
 [modalities]
 input = ["text", "image"]

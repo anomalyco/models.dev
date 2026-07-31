@@ -1,23 +1,16 @@
-name = "Tencent: Hy3 Preview"
+base_model = "tencent/hy3-preview"
 description = "Tencent Hy reasoning model for coding, instruction following, and agent tasks"
-release_date = "2026-04-22"
-last_updated = "2026-05-16"
-attachment = false
-reasoning_options = [{ type = "effort", values = ["none", "low", "high"] }]
-reasoning = true
-tool_call = true
-temperature = true
-open_weights = false
+structured_output = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "high"]
 
 [cost]
-input = 0.066
-output = 0.26
-cache_read = 0.029
+input = 0.18
+output = 0.6
+cache_read = 0.06
 
 [limit]
-context = 262144
-output = 262144
-
-[modalities]
-input = ["text"]
-output = ["text"]
+context = 262_144
+output = 262_144
