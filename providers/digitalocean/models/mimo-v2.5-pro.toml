@@ -1,0 +1,23 @@
+name = "MiMo V2.5 Pro"
+description = "MiMo pro model for strong multimodal reasoning and agent execution"
+family = "mimo-v2.5-pro"
+release_date = "2026-06-17"
+last_updated = "2026-06-17"
+attachment = false
+reasoning = false
+temperature = true
+tool_call = true
+open_weights = false
+
+[cost]
+input = 0.6
+output = 3
+cache_read = 0.16
+
+[limit]
+context = 262_144
+output = 52_429
+
+[modalities]
+input = ["text"]
+output = ["text"]

@@ -1,19 +1,22 @@
-name = "Claude Opus 4.8"
+name = "Anthropic Claude Opus 4.8"
 description = "Flagship Claude model for deep reasoning, coding, and long-horizon agents"
 family = "claude-opus"
 release_date = "2026-05-28"
 last_updated = "2026-05-29"
 attachment = true
 reasoning = true
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh"] }]
 temperature = true
 tool_call = true
 open_weights = false
 
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high", "max"]
+
 [cost]
-input = 5.00
-output = 25.00
-cache_read = 0.50
+input = 5
+output = 25
+cache_read = 0.5
 cache_write = 6.25
 
 [limit]

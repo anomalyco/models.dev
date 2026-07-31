@@ -1,4 +1,4 @@
-name = "GPT Image 1.5"
+name = "OpenAI GPT Image 1.5"
 description = "Image model for prompt-driven generation, editing, and visual design workflows"
 family = "gpt-image"
 release_date = "2025-11-25"
@@ -10,14 +10,14 @@ tool_call = false
 open_weights = false
 
 [cost]
-input = 5.00
-output = 10.00
-cache_read = 1.00
+input = 5
+output = 10
+cache_read = 1
 
 [limit]
 context = 0
-output = 0
+output = 16_384
 
 [modalities]
 input = ["text", "image"]
-output = ["image"]
+output = ["image", "text"]
