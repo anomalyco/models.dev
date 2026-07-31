@@ -3,7 +3,7 @@ import { Effect, Layer } from "effect"
 import { FetchHttpClient } from "effect/unstable/http"
 import { Models, ModelsDevError } from "../src/effect.js"
 
-function stubResponse(body: BodyInit | null, init?: ResponseInit) {
+function stubResponse(body: string | null, init?: ResponseInit) {
   const requests: Request[] = []
   const fetch = (async (input: Parameters<typeof globalThis.fetch>[0], requestInit?: RequestInit) => {
     requests.push(new Request(input instanceof URL ? input.href : (input as string), requestInit))
@@ -17,7 +17,7 @@ function stubResponse(body: BodyInit | null, init?: ResponseInit) {
 }
 
 function stub(data: unknown, init?: ResponseInit) {
-  return stubResponse(JSON.stringify(data), init)
+  return stubResponse(JSON.stringify(data) ?? null, init)
 }
 
 test("providers() succeeds through an injected transport", async () => {
