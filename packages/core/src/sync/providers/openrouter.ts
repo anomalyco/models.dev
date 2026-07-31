@@ -66,10 +66,9 @@ export const OpenRouterModel = z.object({
     input_cache_read: z.string().optional(),
     input_cache_write: z.string().optional(),
     overrides: z.array(z.object({
-      min_prompt_tokens: z.number().int().nonnegative(),
+      min_prompt_tokens: z.number(),
       prompt: z.string().optional(),
       completion: z.string().optional(),
-      internal_reasoning: z.string().optional(),
       input_cache_read: z.string().optional(),
       input_cache_write: z.string().optional(),
     }).passthrough()).optional(),
@@ -154,32 +153,20 @@ function price(value: string | undefined) {
 }
 
 function costTiers(model: OpenRouterModel, existing: ExistingModel | undefined) {
-  // OpenRouter exposes long-context (and other threshold) rates via pricing.overrides.
-  // When present, map them to [[cost.tiers]] so stale hand-authored tiers self-heal.
-  // When absent, keep existing tiers — not every route reports overrides yet.
-  const overrides = model.pricing.overrides;
-  if (overrides === undefined || overrides.length === 0) return existing?.cost?.tiers;
-
-  const tiers = [...overrides]
-    .sort((a, b) => a.min_prompt_tokens - b.min_prompt_tokens)
-    .map((override) => {
-      const input = price(override.prompt);
-      const output = price(override.completion);
-      if (input === undefined || output === undefined) return undefined;
-      const cacheRead = price(override.input_cache_read);
-      const cacheWrite = price(override.input_cache_write);
-      const reasoning = price(override.internal_reasoning);
-      return {
-        tier: { type: "context" as const, size: override.min_prompt_tokens },
+  const tiers = (model.pricing.overrides ?? [])
+    .flatMap((o) => {
+      const input = price(o.prompt);
+      const output = price(o.completion);
+      if (input === undefined || output === undefined) return [];
+      return [{
+        tier: { type: "context" as const, size: o.min_prompt_tokens },
         input,
         output,
-        ...(reasoning === undefined ? {} : { reasoning }),
-        ...(cacheRead === undefined ? {} : { cache_read: cacheRead }),
-        ...(cacheWrite === undefined ? {} : { cache_write: cacheWrite }),
-      };
+        cache_read: price(o.input_cache_read),
+        cache_write: price(o.input_cache_write),
+      }];
     })
-    .filter((tier): tier is NonNullable<typeof tier> => tier !== undefined);
-
+    .sort((a, b) => a.tier.size - b.tier.size);
   return tiers.length > 0 ? tiers : existing?.cost?.tiers;
 }
 

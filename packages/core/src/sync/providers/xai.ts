@@ -145,40 +145,24 @@ function tokenPrice(value: number | undefined) {
   return value / 10_000;
 }
 
-function longContextPrice(value: number | undefined, fallback: number | undefined) {
-  // xAI sends 0 when the long-context rate equals the base rate (or is unused).
-  if (value === undefined) return undefined;
-  if (value > 0) return tokenPrice(value);
-  return fallback;
-}
-
 function costTiers(model: XAIModel, existing: ExistingModel) {
-  const threshold = model.long_context_threshold;
-  // Image/video endpoints omit these fields — keep any hand-authored tiers.
-  if (threshold === undefined) return existing.cost?.tiers;
-  // threshold 0 means the model has no long-context pricing band.
-  if (threshold === 0) return undefined;
+  // 0 = no long-context band; omitted (image/video) = keep authored tiers.
+  // Long-context fields are 0 when they match the base rate.
+  const size = model.long_context_threshold;
+  if (size === undefined) return existing.cost?.tiers;
+  if (size === 0) return undefined;
 
-  const input = longContextPrice(
-    model.prompt_text_token_price_long_context,
-    tokenPrice(model.prompt_text_token_price),
-  );
-  const output = longContextPrice(
-    model.completion_text_token_price_long_context,
-    tokenPrice(model.completion_text_token_price),
-  );
+  const input = tokenPrice(model.prompt_text_token_price_long_context || model.prompt_text_token_price);
+  const output = tokenPrice(model.completion_text_token_price_long_context || model.completion_text_token_price);
   if (input === undefined || output === undefined) return existing.cost?.tiers;
 
-  const cacheRead = longContextPrice(
-    model.cached_prompt_text_token_price_long_context,
-    tokenPrice(model.cached_prompt_text_token_price),
-  );
-
   return [{
-    tier: { type: "context" as const, size: threshold },
+    tier: { type: "context" as const, size },
     input,
     output,
-    ...(cacheRead === undefined ? {} : { cache_read: cacheRead }),
+    cache_read: tokenPrice(
+      model.cached_prompt_text_token_price_long_context || model.cached_prompt_text_token_price,
+    ),
   }];
 }
 
