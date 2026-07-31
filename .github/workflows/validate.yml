@@ -24,6 +24,10 @@ jobs:
       - name: Run validation script
         run: bun validate
 
+      - name: Core tests
+        run: bun test
+        working-directory: packages/core
+
       - name: SDK tests
         run: bun run test
         working-directory: packages/sdk

@@ -4,7 +4,7 @@
 - **Validate**: `bun validate` - Validates all provider/model configurations
 - **Build web**: `cd packages/web && bun run build` - Builds the web interface
 - **Dev server**: `cd packages/web && bun run dev` - Runs development server
-- **No test framework** - No dedicated test commands found
+- **Test**: `bun test` - Runs the core catalog tests (`packages/core/test`, includes repository-wide data invariants) and SDK unit tests; `cd packages/sdk && bun run test` additionally runs SDK codegen + typecheck
 
 ## Code Style
 - **Runtime**: Bun with TypeScript ESM modules
