@@ -3,17 +3,21 @@ import { Effect, Layer } from "effect"
 import { FetchHttpClient } from "effect/unstable/http"
 import { Models, ModelsDevError } from "../src/effect.js"
 
-function stub(data: unknown, init?: ResponseInit) {
+function stubResponse(body: BodyInit | null, init?: ResponseInit) {
   const requests: Request[] = []
   const fetch = (async (input: Parameters<typeof globalThis.fetch>[0], requestInit?: RequestInit) => {
     requests.push(new Request(input instanceof URL ? input.href : (input as string), requestInit))
-    return new Response(JSON.stringify(data), {
+    return new Response(body, {
       headers: { "content-type": "application/json" },
       ...init,
     })
   }) as typeof globalThis.fetch
   const layer = FetchHttpClient.layer.pipe(Layer.provide(Layer.succeed(FetchHttpClient.Fetch)(fetch)))
   return { requests, layer }
+}
+
+function stub(data: unknown, init?: ResponseInit) {
+  return stubResponse(JSON.stringify(data), init)
 }
 
 test("providers() succeeds through an injected transport", async () => {
@@ -54,6 +58,17 @@ test("custom headers are sent", async () => {
 
 test("non-2xx fails with ModelsDevError in the error channel", async () => {
   const { layer } = stub({ error: "down" }, { status: 503 })
+  const program = Effect.gen(function* () {
+    const client = yield* Models.make()
+    return yield* client.providers()
+  })
+  const error = await program.pipe(Effect.flip, Effect.provide(layer), Effect.runPromise)
+  expect(error).toBeInstanceOf(ModelsDevError)
+  expect(error._tag).toBe("ModelsDevError")
+})
+
+test("empty body fails with ModelsDevError", async () => {
+  const { layer } = stubResponse("")
   const program = Effect.gen(function* () {
     const client = yield* Models.make()
     return yield* client.providers()

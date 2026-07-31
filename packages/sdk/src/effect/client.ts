@@ -33,9 +33,17 @@ export const make = (options?: ClientOptions) =>
         })
         .pipe(
           Effect.flatMap(HttpClientResponse.filterStatusOk),
-          Effect.flatMap((response) => response.json),
-          Effect.map((data) => data as A),
+          Effect.flatMap((response) => response.text),
           Effect.mapError((cause) => new ModelsDevError({ cause })),
+          Effect.flatMap((text) =>
+            Effect.try({
+              try: () => {
+                if (text === "") throw new SyntaxError("Unexpected end of JSON input")
+                return JSON.parse(text) as A
+              },
+              catch: (cause) => new ModelsDevError({ cause }),
+            }),
+          ),
         )
 
     return {
