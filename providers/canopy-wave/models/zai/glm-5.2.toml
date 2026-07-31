@@ -1,6 +1,9 @@
+# Source: Canopy Wave API catalog - https://inference.canopywave.io/v1/models (2026-07-31)
+# API returns prices as cents-per-million-tokens; converted to USD-per-million (/100). Only active models included.
 base_model = "zhipuai/glm-5.2"
 reasoning_options = []
 
 [cost]
 input = 1.40
 output = 4.40
+cache_read = 0.26

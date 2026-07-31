@@ -1,10 +1,9 @@
 # Source: Canopy Wave API catalog - https://inference.canopywave.io/v1/models (2026-07-31)
 # API returns prices as cents-per-million-tokens; converted to USD-per-million (/100). Only active models included.
-base_model = "xiaomi/mimo-v2.5"
+base_model = "moonshotai/kimi-k3"
 reasoning_options = []
 
 [cost]
-input = 0.14
-output = 0.28
-cache_read = 0.07
-
+input = 3.00
+output = 15.00
+cache_read = 0.30
