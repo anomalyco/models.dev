@@ -29,6 +29,45 @@ describe("model schema", () => {
 
     expect(AuthoredModel.safeParse(model).success).toBe(false);
   });
+  test("rejects unknown nested model configuration fields", () => {
+    const result = AuthoredModel.safeParse({
+      ...baseModel({}),
+      cost: {
+        input: 1,
+        output: 2,
+        cache_reed: 0.1,
+      },
+      provider: {
+        npm: "example-sdk",
+        typo: true,
+      },
+      experimental: {
+        modes: {
+          fast: {
+            cost: {
+              input: 2,
+              output: 4,
+              cache_writ: 5,
+            },
+            provider: {
+              typo: true,
+            },
+          },
+        },
+      },
+    });
+
+    expect(result.success).toBe(false);
+    if (result.success) return;
+    expect(result.error.issues.map((issue) => issue.path.join("."))).toEqual(
+      expect.arrayContaining([
+        "cost",
+        "provider",
+        "experimental.modes.fast.cost",
+        "experimental.modes.fast.provider",
+      ]),
+    );
+  });
 });
 
 function baseModel(overrides: Partial<AuthoredModelData>) {

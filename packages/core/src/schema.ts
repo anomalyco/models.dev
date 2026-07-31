@@ -69,27 +69,29 @@ export const ReasoningOption = z
     },
   );
 
-const Cost = z.object({
-  input: z.number().min(0, "Input price cannot be negative"),
-  output: z.number().min(0, "Output price cannot be negative"),
-  reasoning: z.number().min(0, "Reasoning price cannot be negative").optional(),
-  cache_read: z
-    .number()
-    .min(0, "Cache read price cannot be negative")
-    .optional(),
-  cache_write: z
-    .number()
-    .min(0, "Cache write price cannot be negative")
-    .optional(),
-  input_audio: z
-    .number()
-    .min(0, "Audio input price cannot be negative")
-    .optional(),
-  output_audio: z
-    .number()
-    .min(0, "Audio output price cannot be negative")
-    .optional(),
-});
+const Cost = z
+  .object({
+    input: z.number().min(0, "Input price cannot be negative"),
+    output: z.number().min(0, "Output price cannot be negative"),
+    reasoning: z.number().min(0, "Reasoning price cannot be negative").optional(),
+    cache_read: z
+      .number()
+      .min(0, "Cache read price cannot be negative")
+      .optional(),
+    cache_write: z
+      .number()
+      .min(0, "Cache write price cannot be negative")
+      .optional(),
+    input_audio: z
+      .number()
+      .min(0, "Audio input price cannot be negative")
+      .optional(),
+    output_audio: z
+      .number()
+      .min(0, "Audio output price cannot be negative")
+      .optional(),
+  })
+  .strict();
 
 const CostTier = Cost.extend({
   tier: z
@@ -248,18 +250,22 @@ const ModelBase = z.object({
     .object({
       modes: z
         .record(
-          z.object({
-            cost: Cost.optional(),
-            provider: z
-              .object({
-                body: z.record(JsonValue).optional(),
-                headers: z.record(z.string()).optional(),
-              })
-              .optional(),
-          }),
+          z
+            .object({
+              cost: Cost.optional(),
+              provider: z
+                .object({
+                  body: z.record(JsonValue).optional(),
+                  headers: z.record(z.string()).optional(),
+                })
+                .strict()
+                .optional(),
+            })
+            .strict(),
         )
         .optional(),
     })
+    .strict()
     .optional(),
   provider: z
     .object({
@@ -269,6 +275,7 @@ const ModelBase = z.object({
       body: z.record(JsonValue).optional(),
       headers: z.record(z.string()).optional(),
     })
+    .strict()
     .optional(),
 });
 
