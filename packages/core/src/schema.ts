@@ -355,6 +355,11 @@ export const ModelShape = z
   .object({
     ...ModelBase.shape,
     cost: OutputCost.optional(),
+    // Canonical models/ registry id this offering inherits from, retained from
+    // the provider TOML's base_model ref so API consumers can group offerings
+    // by underlying model. Output-only: authored TOMLs declare base_model via
+    // the BaseModel wrapper in generate.ts, not through this shape.
+    base_model: z.string().optional(),
   })
   .strict();
 

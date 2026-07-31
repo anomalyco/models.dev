@@ -27,7 +27,7 @@ const Catalog = await generateCatalog(root);
 export const Models = Catalog.models;
 export const Providers = Catalog.providers;
 
-const BaseModelRefs = await loadProviderBaseModelRefs(root);
+const BaseModelRefs = collectBaseModelRefs(Providers);
 const LabMetadata = loadLabMetadata(root);
 const ProviderLogoSvgs = new Map<string, string>();
 const LabLogoSvgs = new Map<string, string>();
@@ -146,31 +146,14 @@ export function renderDocument(template: string, page: RenderedPage) {
     .replace("<!--static-->", page.html);
 }
 
-async function loadProviderBaseModelRefs(root: string) {
+function collectBaseModelRefs(providers: Record<string, Provider>) {
   const refs = new Map<string, string>();
-  const providersDirectory = path.join(root, "providers");
-  if (!existsSync(providersDirectory)) return refs;
 
-  for await (const modelPath of new Bun.Glob("*/models/**/*.toml").scan({
-    cwd: providersDirectory,
-    absolute: true,
-    followSymlinks: true,
-  })) {
-    const parts = path.relative(providersDirectory, modelPath).split(path.sep);
-    const [providerId, modelsSegment, ...modelParts] = parts;
-    if (!providerId || modelsSegment !== "models" || modelParts.length === 0) {
-      continue;
-    }
-
-    const modelId = modelParts.join("/").slice(0, -5);
-    const toml = await import(modelPath, {
-      with: {
-        type: "toml",
-      },
-    }).then((mod) => mod.default as { base_model?: unknown });
-
-    if (typeof toml.base_model === "string") {
-      refs.set(`${providerId}/${modelId}`, toml.base_model);
+  for (const [providerId, provider] of Object.entries(providers)) {
+    for (const [modelId, model] of Object.entries(provider.models)) {
+      if (model.base_model !== undefined) {
+        refs.set(`${providerId}/${modelId}`, model.base_model);
+      }
     }
   }
 
