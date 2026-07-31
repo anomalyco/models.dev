@@ -6,29 +6,6 @@ import { AuthoredModel } from "../src/index.js";
 type AuthoredModelData = z.infer<typeof AuthoredModel>;
 
 describe("model schema", () => {
-  test("requires reasoning_options when reasoning is true", () => {
-    const model = baseModel({ reasoning: true });
-
-    expect(AuthoredModel.safeParse(model).success).toBe(false);
-  });
-
-  test("accepts empty reasoning_options when reasoning is true", () => {
-    const model = baseModel({
-      reasoning: true,
-      reasoning_options: [],
-    });
-
-    expect(AuthoredModel.safeParse(model).success).toBe(true);
-  });
-
-  test("rejects reasoning_options when reasoning is false", () => {
-    const model = baseModel({
-      reasoning: false,
-      reasoning_options: [],
-    });
-
-    expect(AuthoredModel.safeParse(model).success).toBe(false);
-  });
   test("rejects unknown nested model configuration fields", () => {
     const result = AuthoredModel.safeParse({
       ...baseModel({}),
@@ -67,6 +44,30 @@ describe("model schema", () => {
         "experimental.modes.fast.provider",
       ]),
     );
+  });
+
+  test("requires reasoning_options when reasoning is true", () => {
+    const model = baseModel({ reasoning: true });
+
+    expect(AuthoredModel.safeParse(model).success).toBe(false);
+  });
+
+  test("accepts empty reasoning_options when reasoning is true", () => {
+    const model = baseModel({
+      reasoning: true,
+      reasoning_options: [],
+    });
+
+    expect(AuthoredModel.safeParse(model).success).toBe(true);
+  });
+
+  test("rejects reasoning_options when reasoning is false", () => {
+    const model = baseModel({
+      reasoning: false,
+      reasoning_options: [],
+    });
+
+    expect(AuthoredModel.safeParse(model).success).toBe(false);
   });
 });
 
