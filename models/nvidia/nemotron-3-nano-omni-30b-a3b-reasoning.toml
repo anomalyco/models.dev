@@ -16,3 +16,7 @@ output = 65_536
 [modalities]
 input = ["text", "image", "video", "audio"]
 output = ["text"]
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/nvidia/Nemotron-3-Nano-Omni-30B-A3B-Reasoning-BF16"

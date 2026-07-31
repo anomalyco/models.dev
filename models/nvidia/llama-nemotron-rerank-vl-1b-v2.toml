@@ -16,3 +16,7 @@ output = 4_096
 [modalities]
 input = ["text", "image"]
 output = ["text"]
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/nvidia/llama-nemotron-rerank-vl-1b-v2"

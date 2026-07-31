@@ -1,3 +1,6 @@
+# open_weights corrected to false: weights are not publicly downloadable — access is an
+# application-only Early Access Program (https://developer.nvidia.com/nemotron-voicechat-early-access)
+# and no Hugging Face repo exists. Revisit if NVIDIA opens general access.
 name = "Nemotron VoiceChat"
 description = "Nemotron multimodal model for visual reasoning and agentic AI workflows"
 family = "nemotron"
@@ -7,7 +10,7 @@ attachment = true
 reasoning = false
 temperature = true
 tool_call = true
-open_weights = true
+open_weights = false
 
 [limit]
 context = 128_000

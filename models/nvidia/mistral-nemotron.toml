@@ -1,3 +1,6 @@
+# open_weights corrected to false: no public weights exist — nvidia/Mistral-Nemotron is
+# not on Hugging Face (the nvidia org has no *istral* repo) and the model is served
+# API-only via NVIDIA NIM (https://docs.api.nvidia.com/nim/reference/mistralai-mistral-nemotron).
 name = "Mistral Nemotron"
 description = "Mistral model for multilingual chat, reasoning, and tool-assisted workflows"
 family = "nemotron"
@@ -7,7 +10,7 @@ attachment = false
 reasoning = false
 temperature = true
 tool_call = true
-open_weights = true
+open_weights = false
 
 [limit]
 context = 128_000
