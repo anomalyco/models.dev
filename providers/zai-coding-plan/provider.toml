@@ -1,6 +1,7 @@
 # OpenAI Chat endpoint: POST https://api.z.ai/api/coding/paas/v4/chat/completions.
+# Coding Plan models currently available: glm-5.2, glm-5-turbo only.
 # GLM-5.2 maps low|medium|high to high and xhigh|max|ultracode to max.
-# https://docs.z.ai/devpack/latest-model (accessed 2026-06-25)
+# https://docs.z.ai/devpack/overview (accessed 2026-07-31)
 name = "Z.AI Coding Plan"
 env = ["ZHIPU_API_KEY"]
 npm = "@ai-sdk/openai-compatible"
