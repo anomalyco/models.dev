@@ -168,9 +168,11 @@ export const digitalocean = {
         || outputLimit <= 0
       )
     ) return undefined;
-    const baseModel = existing === undefined
-      ? resolveDigitalOceanBaseModel(model.id)
-      : existing.base_model;
+    // Only auto-resolve base_model for newly created files. Existing full
+    // definitions stay hand-authored unless they already declare base_model.
+    const baseModel = existing !== undefined
+      ? existing.base_model
+      : resolveDigitalOceanBaseModel(model.id);
     return {
       id: model.id,
       model: buildDigitalOceanModel(model, existing, baseModel),
@@ -341,6 +343,23 @@ function normalizeModalities(values: string[], fallback: Modality[]): Modality[]
   return [...new Set(normalized.length > 0 ? normalized : fallback)];
 }
 
+function unionModalities(remote: Modality[], existing: Modality[] | undefined): Modality[] {
+  // Catalog rows often omit PDF/image even when the endpoint accepts them.
+  // Union with authored modalities so sync never silently drops capabilities.
+  return [...new Set([...(existing ?? []), ...remote])];
+}
+
+function isTextOnly(input: Modality[], output: Modality[]) {
+  return input.every((value) => value === "text") && output.every((value) => value === "text");
+}
+
+function normalizeEffortToken(value: string): string {
+  const normalized = value.trim().toLowerCase().replaceAll("_", "-");
+  if (normalized === "x-high" || normalized === "xhigh") return "xhigh";
+  if (normalized === "null") return "null";
+  return normalized;
+}
+
 function number(value: string | number | undefined) {
   if (value === undefined) return undefined;
   const parsed = typeof value === "number" ? value : Number.parseInt(value, 10);
@@ -360,12 +379,21 @@ function reasoningOptionsFor(
   model: DigitalOceanSourceModel,
   existing: ExistingModel | undefined,
 ): ExistingModel["reasoning_options"] {
-  if (model.reasoning_efforts === undefined) return existing?.reasoning_options;
-  const values = model.reasoning_efforts
-    .map((value) => value === "null" ? null : value)
+  if (model.reasoning_efforts === undefined || model.reasoning_efforts.length === 0) {
+    return existing?.reasoning_options;
+  }
+  const remoteValues = model.reasoning_efforts
+    .map((value) => {
+      const normalized = normalizeEffortToken(value);
+      return normalized === "null" ? null : normalized;
+    })
     .filter(isReasoningEffort);
   const preserved = existing?.reasoning_options?.filter((option) => option.type !== "effort") ?? [];
-  return values.length > 0 ? [...preserved, { type: "effort", values }] : preserved;
+  const existingEffort = existing?.reasoning_options?.find((option) => option.type === "effort");
+  const existingValues = existingEffort?.type === "effort" ? existingEffort.values : [];
+  // Merge so incomplete catalog effort lists cannot drop curated values (e.g. none/xhigh).
+  const values = [...new Set([...remoteValues, ...existingValues])];
+  return values.length > 0 ? [...preserved, { type: "effort", values }] : preserved.length > 0 ? preserved : existing?.reasoning_options;
 }
 
 function isReasoningEffort(value: string | null): value is ReasoningEffort {
@@ -383,11 +411,33 @@ function isReasoningEffort(value: string | null): value is ReasoningEffort {
 function status(
   lifecycleStatus: string,
   existing: ExistingModel["status"],
+  name?: string,
 ): ExistingModel["status"] {
   const lifecycle = lifecycleStatus.toLowerCase().replaceAll("_", "-");
   if (lifecycle === "deprecated" || lifecycle === "end-of-life") return "deprecated";
-  if (lifecycle === "public-preview") return "beta";
+  if (
+    lifecycle === "public-preview"
+    || lifecycle === "preview"
+    || name?.toLowerCase().includes("public preview") === true
+  ) {
+    return "beta";
+  }
   return existing === "deprecated" || existing === "beta" ? undefined : existing;
+}
+
+function resolveReasoning(
+  model: DigitalOceanSourceModel,
+  existing: ExistingModel | undefined,
+  textOutput: boolean,
+): boolean | undefined {
+  if (!textOutput) return existing?.reasoning ?? false;
+  // `thinking: true` is the only positive-authoritative DO signal. Catalog rows
+  // sometimes attach generic reasoning_efforts to non-reasoning chat models
+  // (e.g. gpt-4o-mini); never flip curated reasoning=false from efforts alone.
+  if (model.thinking === true) return true;
+  if (existing?.reasoning !== undefined) return existing.reasoning;
+  if ((model.reasoning_efforts?.length ?? 0) > 0) return true;
+  return undefined;
 }
 
 function cost(model: DigitalOceanSourceModel, existing: ExistingModel | undefined) {
@@ -430,15 +480,19 @@ function cost(model: DigitalOceanSourceModel, existing: ExistingModel | undefine
 export function buildDigitalOceanModel(
   model: DigitalOceanSourceModel,
   existing: ExistingModel | undefined,
-  baseModel = existing === undefined ? resolveDigitalOceanBaseModel(model.id) : existing.base_model,
+  baseModel = existing !== undefined
+    ? existing.base_model
+    : resolveDigitalOceanBaseModel(model.id),
 ): SyncedModel {
-  const input = normalizeModalities(
-    model.modalities?.input ?? [],
-    existing?.modalities?.input ?? ["text"],
+  const remoteInput = normalizeModalities(model.modalities?.input ?? [], []);
+  const remoteOutput = normalizeModalities(model.modalities?.output ?? [], []);
+  const input = unionModalities(
+    remoteInput.length > 0 ? remoteInput : ["text"],
+    existing?.modalities?.input,
   );
-  const output = normalizeModalities(
-    model.modalities?.output ?? [],
-    existing?.modalities?.output ?? ["text"],
+  const output = unionModalities(
+    remoteOutput.length > 0 ? remoteOutput : ["text"],
+    existing?.modalities?.output,
   );
   const context = number(model.context_window) ?? existing?.limit?.context ?? 0;
   const maxTokens = number(model.max_output_tokens ?? undefined);
@@ -448,13 +502,12 @@ export function buildDigitalOceanModel(
     output: maxTokens ?? existing?.limit?.output ?? 0,
   };
   const textOutput = output.includes("text") && !output.includes("image") && !output.includes("video");
-  const remoteReasoning = textOutput
-    && ((model.thinking ?? false) || (model.reasoning_efforts?.length ?? 0) > 0);
-  const providerReasoning = remoteReasoning ? true : existing?.reasoning;
+  const providerReasoning = resolveReasoning(model, existing, textOutput);
   const reasoning = providerReasoning ?? false;
-  const reasoningOptions = reasoning ? reasoningOptionsFor(model, existing) : undefined;
-  const modelStatus = status(model.lifecycle_status, existing?.status);
+  const reasoningOptions = reasoning === true ? reasoningOptionsFor(model, existing) : undefined;
+  const modelStatus = status(model.lifecycle_status, existing?.status, model.name);
   const releaseDate = existing?.release_date ?? model.created_at?.slice(0, 10) ?? new Date().toISOString().slice(0, 10);
+  const attachment = input.some((value) => value !== "text");
   const values: Partial<SyncedFullModel> = {
     name: model.name,
     description: existing?.description ?? describeModel({
@@ -471,7 +524,7 @@ export function buildDigitalOceanModel(
     family: existing?.family ?? inferFamily(model.id, model.name),
     release_date: releaseDate,
     last_updated: existing?.last_updated ?? releaseDate,
-    attachment: existing?.attachment ?? input.some((value) => value !== "text"),
+    attachment: attachment || existing?.attachment === true,
     reasoning,
     reasoning_options: reasoningOptions,
     temperature: existing?.temperature ?? true,
@@ -489,10 +542,21 @@ export function buildDigitalOceanModel(
   };
 
   if (baseModel !== undefined) {
+    // Incomplete catalog rows are often text-only. Do not clobber base-model
+    // vision/PDF/attachment facts unless the catalog reports non-text modalities.
+    const remoteIsTextOnly = isTextOnly(
+      remoteInput.length > 0 ? remoteInput : ["text"],
+      remoteOutput.length > 0 ? remoteOutput : ["text"],
+    );
     return factorBaseModel(baseModel, {
       name: model.name,
       description: existing?.description,
-      attachment: input.some((value) => value !== "text"),
+      ...(remoteIsTextOnly
+        ? {}
+        : {
+            attachment,
+            modalities: { input, output },
+          }),
       reasoning: providerReasoning,
       reasoning_options: reasoningOptions,
       temperature: existing?.temperature,
@@ -502,7 +566,6 @@ export function buildDigitalOceanModel(
       interleaved: existing?.interleaved,
       cost: cost(model, existing),
       limit,
-      modalities: { input, output },
       provider: existing?.provider,
       experimental: existing?.experimental,
     }, limit, existing?.base_model_omit);
@@ -537,15 +600,30 @@ export function resolveDigitalOceanBaseModel(id: string) {
   if (id.startsWith("glm-")) candidates.push(`zai/${id}`);
   if (id.startsWith("kimi-")) candidates.push(`moonshotai/${id}`);
   if (id.startsWith("minimax-")) candidates.push(`minimax/${id}`);
+  if (id.startsWith("mimo-")) {
+    const normalized = id.replace(/^mimo-v(\d+)-(\d+)/, "mimo-v$1.$2");
+    candidates.push(`xiaomi/${id}`);
+    candidates.push(`xiaomi/${normalized}`);
+  }
   if (id.startsWith("nvidia-")) candidates.push(`nvidia/${id.slice("nvidia-".length)}`);
   if (id.startsWith("alibaba-")) candidates.push(`qwen/${id.slice("alibaba-".length)}`);
   if (id.startsWith("qwen")) candidates.push(`qwen/${id}`);
   if (id.startsWith("llama")) candidates.push(`meta/${id}`);
   if (id.startsWith("mistral") || id.startsWith("ministral")) candidates.push(`mistralai/${id}`);
+  if (id.startsWith("gemma")) candidates.push(`google/${id}`);
 
-  const anthropic = id.match(/^anthropic-claude-(\d+(?:\.\d+)?)-(opus|sonnet|haiku)$/);
-  if (anthropic !== null) {
-    candidates.push(`anthropic/claude-${anthropic[2]}-${anthropic[1]}`);
+  // anthropic-claude-5-sonnet → anthropic/claude-sonnet-5
+  const anthropicSwapped = id.match(/^anthropic-claude-(\d+(?:\.\d+)?)-(opus|sonnet|haiku)$/);
+  if (anthropicSwapped !== null) {
+    candidates.push(`anthropic/claude-${anthropicSwapped[2]}-${anthropicSwapped[1]}`);
+  }
+  // anthropic-claude-opus-5 → anthropic/claude-opus-5
+  // also normalize dotted versions: anthropic-claude-opus-4.6 → anthropic/claude-opus-4-6
+  const anthropicFamily = id.match(/^anthropic-claude-(opus|sonnet|haiku)-(\d+(?:\.\d+)?)$/);
+  if (anthropicFamily !== null) {
+    const version = anthropicFamily[2].replaceAll(".", "-");
+    candidates.push(`anthropic/claude-${anthropicFamily[1]}-${anthropicFamily[2]}`);
+    candidates.push(`anthropic/claude-${anthropicFamily[1]}-${version}`);
   }
   if (id.startsWith("anthropic-")) candidates.push(`anthropic/${id.slice("anthropic-".length)}`);
 

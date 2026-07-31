@@ -1076,7 +1076,7 @@ test("maps DigitalOcean 1M catalog pricing to its 200K threshold", () => {
 test("syncs DigitalOcean reasoning capability, efforts, and lifecycle status", () => {
   const model = buildDigitalOceanModel(digitalOceanModel({
     lifecycle_status: "deprecated",
-    thinking: false,
+    thinking: true,
     reasoning_efforts: ["none", "low", "medium", "high", "max", "unsupported"],
   }), {
     name: "Claude Sonnet 4.6",
@@ -1103,9 +1103,139 @@ test("syncs DigitalOcean reasoning capability, efforts, and lifecycle status", (
   });
 });
 
+test("does not flip curated non-reasoning DigitalOcean models from generic efforts", () => {
+  const model = buildDigitalOceanModel(digitalOceanModel({
+    id: "openai-gpt-4o-mini",
+    name: "OpenAI GPT-4o mini",
+    thinking: false,
+    reasoning_efforts: ["low", "medium", "high"],
+    context_window: 128_000,
+    max_output_tokens: 16_384,
+    modalities: { input: ["text", "image"], output: ["text"] },
+    pricing: { input: 0.15, output: 0.6, cacheRead: 0.075 },
+  }), {
+    name: "GPT-4o mini",
+    description: "Compact GPT model",
+    family: "gpt-mini",
+    release_date: "2024-07-18",
+    last_updated: "2024-07-18",
+    attachment: true,
+    reasoning: false,
+    temperature: true,
+    tool_call: true,
+    open_weights: false,
+    cost: { input: 0.15, output: 0.6, cache_read: 0.075 },
+    limit: { context: 128_000, output: 16_384 },
+    modalities: { input: ["text", "image", "pdf"], output: ["text"] },
+  });
+
+  expect(model).toMatchObject({
+    reasoning: false,
+    modalities: { input: ["text", "image", "pdf"], output: ["text"] },
+  });
+  expect(model.reasoning_options).toBeUndefined();
+  expect(model).not.toHaveProperty("base_model");
+});
+
+test("merges incomplete DigitalOcean effort lists with curated values", () => {
+  const model = buildDigitalOceanModel(digitalOceanModel({
+    id: "openai-gpt-5.2",
+    name: "OpenAI GPT-5.2",
+    thinking: true,
+    reasoning_efforts: ["minimal", "low", "medium", "high"],
+    context_window: 400_000,
+    max_output_tokens: 128_000,
+    modalities: { input: ["text", "image"], output: ["text"] },
+    pricing: { input: 1.75, output: 14, cacheRead: 0.175 },
+  }), {
+    name: "GPT-5.2",
+    description: "GPT model",
+    family: "gpt",
+    release_date: "2025-12-11",
+    last_updated: "2025-12-11",
+    attachment: true,
+    reasoning: true,
+    reasoning_options: [{ type: "effort", values: ["none", "low", "medium", "high", "xhigh"] }],
+    temperature: false,
+    tool_call: true,
+    open_weights: false,
+    cost: { input: 1.75, output: 14, cache_read: 0.175 },
+    limit: { context: 400_000, output: 128_000 },
+    modalities: { input: ["text", "image"], output: ["text"] },
+  });
+
+  expect(model).toMatchObject({
+    reasoning: true,
+    reasoning_options: [{
+      type: "effort",
+      values: ["minimal", "low", "medium", "high", "none", "xhigh"],
+    }],
+  });
+  expect(model).not.toHaveProperty("base_model");
+});
+
+test("normalizes DigitalOcean x-high effort tokens and keeps public-preview status", () => {
+  const model = buildDigitalOceanModel(digitalOceanModel({
+    name: "Nemotron Super (Public Preview)",
+    lifecycle_status: "active",
+    thinking: true,
+    reasoning_efforts: ["low", "x-high", "max"],
+  }), {
+    name: "Nemotron Super",
+    description: "Nemotron model",
+    family: "nemotron",
+    release_date: "2026-03-11",
+    last_updated: "2026-04-16",
+    attachment: false,
+    reasoning: true,
+    temperature: true,
+    tool_call: true,
+    open_weights: true,
+    status: "beta",
+    cost: { input: 0.3, output: 0.65 },
+    limit: { context: 256_000, output: 32_768 },
+    modalities: { input: ["text"], output: ["text"] },
+  });
+
+  expect(model).toMatchObject({
+    status: "beta",
+    reasoning_options: [{ type: "effort", values: ["low", "xhigh", "max"] }],
+  });
+});
+
+test("new DigitalOcean base models do not clobber multimodal metadata with text-only catalog rows", () => {
+  const model = buildDigitalOceanModel(
+    digitalOceanModel({
+      id: "anthropic-claude-5-sonnet",
+      name: "Anthropic Claude Sonnet 5",
+      thinking: true,
+      reasoning_efforts: ["low", "medium", "high", "max", "x-high"],
+      modalities: { input: ["text"], output: ["text"] },
+      context_window: 1_000_000,
+      max_output_tokens: 128_000,
+      pricing: { input: 2, output: 10, cacheRead: 0.2, cacheWrite: 2.5 },
+    }),
+    undefined,
+  );
+
+  expect(model).toMatchObject({
+    base_model: "anthropic/claude-sonnet-5",
+    name: "Anthropic Claude Sonnet 5",
+    reasoning_options: [{ type: "effort", values: ["low", "medium", "high", "max", "xhigh"] }],
+  });
+  expect(model).not.toHaveProperty("attachment");
+  expect(model).not.toHaveProperty("modalities");
+  // reasoning=true matches base metadata, so factorBaseModel omits it
+  expect(model).not.toHaveProperty("reasoning");
+});
+
 test("resolves DigitalOcean IDs to canonical model metadata", () => {
   expect(resolveDigitalOceanBaseModel("openai-gpt-5.5")).toBe("openai/gpt-5.5");
   expect(resolveDigitalOceanBaseModel("deepseek-v4-pro")).toBe("deepseek/deepseek-v4-pro");
+  expect(resolveDigitalOceanBaseModel("mimo-v2.5-pro")).toBe("xiaomi/mimo-v2.5-pro");
+  expect(resolveDigitalOceanBaseModel("anthropic-claude-5-sonnet")).toBe("anthropic/claude-sonnet-5");
+  expect(resolveDigitalOceanBaseModel("anthropic-claude-opus-5")).toBe("anthropic/claude-opus-5");
+  expect(resolveDigitalOceanBaseModel("openai-gpt-5.6-luna")).toBe("openai/gpt-5.6-luna");
 });
 
 test("new DigitalOcean base models inherit intrinsic capabilities", () => {
@@ -1127,6 +1257,31 @@ test("new DigitalOcean base models inherit intrinsic capabilities", () => {
   expect(model).not.toHaveProperty("knowledge");
   expect(model).not.toHaveProperty("reasoning");
   expect(model).not.toHaveProperty("temperature");
+});
+
+test("new DigitalOcean MiMo models factor xiaomi base metadata", () => {
+  const model = buildDigitalOceanModel(
+    digitalOceanModel({
+      id: "mimo-v2.5-pro",
+      name: "MiMo V2.5 Pro",
+      thinking: undefined,
+      reasoning_efforts: undefined,
+      modalities: { input: ["text"], output: ["text"] },
+      pricing: { input: 0.6, output: 3, cacheRead: 0.16 },
+      context_window: 262_144,
+      max_output_tokens: 52_429,
+    }),
+    undefined,
+  );
+
+  expect(model).toMatchObject({
+    base_model: "xiaomi/mimo-v2.5-pro",
+    name: "MiMo V2.5 Pro",
+    cost: { input: 0.6, output: 3, cache_read: 0.16 },
+    limit: { context: 262_144, output: 52_429 },
+  });
+  expect(model).not.toHaveProperty("reasoning");
+  expect(model).not.toHaveProperty("open_weights");
 });
 
 test("xAI sync factors inherited base model fields", () => {
