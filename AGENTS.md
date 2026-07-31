@@ -100,7 +100,7 @@ items are **hard blockers**; the last two are **strongly recommended** but not b
   base_model_omit = ["limit.input"] # optional, dot-path strings
   ```
   Example: `base_model = "anthropic/claude-opus-4-6"`
-- Resolved at parse time in `generate()`; the final provider JSON output contains **no** `base_model` or `base_model_omit` fields
+- Resolved at parse time in `generate()`; the resolved `base_model` ref is **retained** on the emitted provider model (served in `api.json`/`catalog.json` so consumers can group offerings by underlying model), while `base_model_omit` is authoring-only and never appears in output
 - Merge semantics:
   - Plain objects from metadata and provider TOML (`[limit]`, `[modalities]`, …) are **deep-merged**
   - Arrays (e.g. `modalities.input`) and primitives are **replaced** wholesale by the child
