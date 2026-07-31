@@ -16,7 +16,7 @@ export default {
     const country = request.headers.get("cf-ipcountry") ?? undefined;
     const agent = request.headers.get("user-agent") ?? undefined;
     const time = new Date().toISOString();
-    if (agent?.includes("opencode") || agent?.includes("bun")) {
+    if (isInferenceClient(agent)) {
       ctx.waitUntil(
         fetch("https://us.i.posthog.com/i/v0/e/", {
           method: "POST",
@@ -142,6 +142,10 @@ export default {
     });
   },
 };
+
+export function isInferenceClient(agent: string | undefined) {
+  return /(?:^|[\s;(])(?:opencode|bun)(?:[/\s;)]|$)/i.test(agent ?? "");
+}
 
 function isHtmlRoute(pathname: string) {
   return (
