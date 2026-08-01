@@ -1,14 +1,12 @@
 base_model = "moonshotai/kimi-k3"
 last_updated = "2026-08-01"
+open_weights = false
 reasoning_options = []
 
 [cost]
 input = 3
 output = 15
 cache_read = 0.3
-
-[limit]
-output = 1_048_576
 
 [modalities]
 input = ["text", "image"]

@@ -2,6 +2,7 @@ base_model = "mistral/mistral-small-latest"
 release_date = "2026-01-06"
 last_updated = "2026-08-01"
 structured_output = true
+open_weights = false
 reasoning_options = []
 
 [cost]
@@ -10,4 +11,3 @@ output = 0.18
 
 [limit]
 context = 262_144
-output = 262_144

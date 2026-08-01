@@ -1,14 +1,12 @@
 base_model = "alibaba/qwen3.6-27b"
 release_date = "2026-04-27"
 last_updated = "2026-08-01"
+open_weights = false
 reasoning_options = []
 
 [cost]
 input = 0.39
 output = 2.34
-
-[limit]
-output = 262_144
 
 [modalities]
 input = ["text", "image", "video"]

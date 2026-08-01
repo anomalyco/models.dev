@@ -33,15 +33,6 @@ const DIRECT_METADATA_PROVIDER: Record<string, string> = {
   xai: "xai",
 };
 
-const OPEN_WEIGHT_OWNERS = new Set([
-  "bytedance",
-  "deepseek",
-  "minimax",
-  "mistral",
-  "moonshot",
-  "qwen",
-]);
-
 const Pricing = z
   .object({
     input_cost_per_token: z.number().optional(),
@@ -251,13 +242,15 @@ export function buildEdenAIModel(
     caps.supports_function_calling === true || caps.supports_tool_choice === true;
   const structuredOutput = caps.supports_response_schema === true;
   const attachment = input.some((value) => value !== "text");
-  const openWeights =
-    existing?.open_weights ?? OPEN_WEIGHT_OWNERS.has(model.owned_by);
+  const openWeights = existing?.open_weights ?? false;
   const context = model.context_length ?? 0;
+  // Eden's /v3/models does not return max output tokens. Leave output undefined
+  // for factored files so base_model inheritance provides the authoritative
+  // value; inline files fall back to `context` below to satisfy the schema.
   const limit = {
     context,
     input: existing?.limit?.input,
-    output: existing?.limit?.output ?? context,
+    output: existing?.limit?.output,
   };
   const releaseDate =
     existing?.release_date ?? dateFromTimestamp(model.created) ?? today;
@@ -318,6 +311,7 @@ export function buildEdenAIModel(
     description,
     family: existing?.family,
     ...values,
+    limit: { ...limit, output: limit.output ?? context },
     provider: existing?.provider,
     experimental: existing?.experimental,
   } satisfies SyncedFullModel;

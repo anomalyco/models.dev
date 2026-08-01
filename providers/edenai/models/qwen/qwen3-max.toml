@@ -2,7 +2,6 @@ base_model = "alibaba/qwen3-max"
 last_updated = "2026-08-01"
 reasoning = true
 structured_output = true
-open_weights = true
 reasoning_options = []
 
 [cost]
@@ -10,6 +9,3 @@ input = 0.78
 output = 3.9
 cache_read = 0.156
 cache_write = 0.975
-
-[limit]
-output = 262_144

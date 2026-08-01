@@ -2,10 +2,8 @@ base_model = "mistral/codestral-latest"
 release_date = "2026-06-05"
 last_updated = "2026-08-01"
 structured_output = true
+open_weights = false
 
 [cost]
 input = 1
 output = 3
-
-[limit]
-output = 256_000

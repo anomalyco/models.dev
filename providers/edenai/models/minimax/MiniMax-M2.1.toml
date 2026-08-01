@@ -1,12 +1,10 @@
 base_model = "minimax/MiniMax-M2.1"
 last_updated = "2026-08-01"
 structured_output = true
+open_weights = false
 reasoning_options = []
 
 [cost]
 input = 0.3
 output = 1.2
 cache_read = 0.03
-
-[limit]
-output = 204_800
