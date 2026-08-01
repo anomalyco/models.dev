@@ -189,8 +189,9 @@ Any provider model with `reasoning = true` **must** set `reasoning_options` for 
    reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
    ```
 3. Do **not** use `[]` because you could not re-prove every value on this host. Empty means **no caller control**, not uncertainty.
-4. Add `none` / `minimal` / `xhigh` / `max` / `toggle` only with extra evidence (docs, live effect, clear same-surface peers).
-5. Do **not** invent `budget_tokens` unless this host has a real reasoning-budget field for that model.
+4. Add `none` / `minimal` / `xhigh` / `max` only with extra evidence. If `none` is added **with** graded efforts, do **not** also add `toggle` (see Toggle).
+5. Add `toggle` only for binary on/off (or `none` with **no** graded efforts), with a top-of-file wire comment.
+6. Do **not** invent `budget_tokens` unless this host has a real reasoning-budget field for that model.
 
 ### Native providers
 
@@ -208,13 +209,27 @@ Reasoning-token budget only — **not** `max_tokens` / output length. Typical le
 
 Same model ID, on and off, via a known request field. Separate `-thinking` / instruct IDs are not a toggle.
 
-```toml
-[[reasoning_options]]
-type = "toggle" # API: {"enable_thinking": false}
+**`none` vs `toggle` — pick one shape:**
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high"]
+| Host control | Author |
+| --- | --- |
+| Effort levels include `none` **and** other levels (`low` / `medium` / `high` / …) | **Only** `type = "effort"` with `none` in `values`. Do **not** also add `type = "toggle"`. |
+| Disable is `none` (or equivalent) but there are **no** graded efforts | `type = "toggle"` is OK |
+| Explicit boolean / enabled-disabled field (not effort enum) | `type = "toggle"` |
+
+Whenever `toggle` is present, put a **leading top-of-file comment** (above the first key) that states the exact wire path and on/off values. Mid-file comments are stripped by sync.
+
+```toml
+# Toggle: extra_body.enable_thinking true|false
+# (or: reasoning_effort "none" = off; any other value / omit = on — only if no graded efforts)
+base_model = "alibaba/qwen3.5-plus"
+reasoning_options = [{ type = "toggle" }]
+```
+
+```toml
+# Graded effort including off — no separate toggle
+base_model = "openai/gpt-5.4"
+reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh"] }]
 ```
 
 ## Platform naming quirks

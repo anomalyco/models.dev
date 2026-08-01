@@ -117,12 +117,35 @@ Only add `toggle` if all are true:
 - Same provider model ID runs with reasoning on and off.
 - Caller controls it through a documented or reproduced request.
 - Exact field and values are known.
+- Disable is **not** already modeled as `effort` value `none` alongside other graded efforts (see below).
+
+### `none` effort vs `toggle` (do not double-count)
+
+| Situation | Correct shape |
+| --- | --- |
+| `none` **and** graded efforts (`low` / `medium` / `high` / …) | `type = "effort"` only, with `none` in `values`. **Never** also add `type = "toggle"`. |
+| Off is `none` (or only on/off) and **no** graded efforts | `type = "toggle"` OK (or effort `["none", …]` only if that is the real API) |
+| Explicit boolean / `enabled`\|`disabled` field | `type = "toggle"` |
+
+`none` inside an effort enum **is** the off switch. Adding `toggle` next to `none`+`low`+`medium`+`high` is wrong.
+
+### Top-of-file comment required for toggle
+
+If the file claims `type = "toggle"`, the TOML **must** start with a leading comment block (above the first key) that states how toggle works on the wire, e.g.:
+
+```toml
+# Toggle: {"thinking":{"type":"enabled"|"disabled"}}
+# Toggle: extra_body.enable_thinking true|false
+# Toggle: reasoning_effort "none" = off; omit or any other value = on (no graded efforts)
+```
+
+Sync strips mid-file comments — top-only.
 
 Complete before accepting:
 
 > `<provider model ID>` toggles reasoning with `<request path>` set to `<enabled>` or `<disabled>`.
 
-Not toggle: split model IDs; omit-budget ⇒ auto budget; `effort=low` unless docs say it disables; hybrid marketing copy; UI-only switches.
+Not toggle: split model IDs; omit-budget ⇒ auto budget; `effort=low` unless docs say it disables; hybrid marketing copy; UI-only switches; pairing `toggle` with effort that already includes `none`.
 
 ## Effort verification
 
