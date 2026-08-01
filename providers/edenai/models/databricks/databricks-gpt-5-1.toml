@@ -1,0 +1,21 @@
+name = "databricks-gpt-5-1"
+description = "GPT-5.1 is a general purpose large language model with reasoning capabilities developed by OpenAI. This model features both Instant and Thinking modes for fast conversation or deep reasoning, automatically adjusting for simple or complex tasks. The model excels at content creation, tutoring, technical support, and coding, with less reliance on strict prompt engineering than prior versions. It supports multimodal inputs and features a 128K token context window. This endpoint is hosted by Databricks."
+release_date = "2026-01-27"
+last_updated = "2026-08-01"
+attachment = true
+reasoning = false
+tool_call = true
+structured_output = false
+open_weights = false
+
+[cost]
+input = 2.49998
+output = 9.99999
+
+[limit]
+context = 272_000
+output = 272_000
+
+[modalities]
+input = ["text", "image", "pdf"]
+output = ["text"]

@@ -1,0 +1,21 @@
+name = "qwen-mt-lite"
+description = "Qwen-MT-Lite is a large language model of the Qwen model series that specializes in multi-lingual translation. It provides high-quality and rapid translation services across 32 languages at a cost-effective price. It offers features such as terminology intervention, format preservation, and domain-specific translation to cater to the diverse needs of various applications, ensuring both efficiency and performance."
+release_date = "2026-07-30"
+last_updated = "2026-08-01"
+attachment = false
+reasoning = false
+tool_call = false
+structured_output = false
+open_weights = true
+
+[cost]
+input = 0.078
+output = 0.234
+
+[limit]
+context = 16_384
+output = 16_384
+
+[modalities]
+input = ["text"]
+output = ["text"]

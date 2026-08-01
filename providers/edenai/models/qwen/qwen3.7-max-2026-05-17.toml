@@ -1,0 +1,22 @@
+name = "qwen3.7-max-2026-05-17"
+description = "The early version of the Max model in the Qwen3.7 series supports only the reasoning mode and makes its plain-text capabilities available for experimentation. Qwen3.7 is a next‑generation flagship model designed for the agent‑centric era, with major improvements in coding and agent‑level capabilities. This release is a snapshot as of May 17, 2026."
+release_date = "2026-05-21"
+last_updated = "2026-08-01"
+attachment = false
+reasoning = true
+tool_call = true
+structured_output = true
+open_weights = true
+reasoning_options = []
+
+[cost]
+input = 1.625
+output = 4.875
+
+[limit]
+context = 1_000_000
+output = 1_000_000
+
+[modalities]
+input = ["text"]
+output = ["text"]

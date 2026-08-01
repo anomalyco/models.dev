@@ -1,0 +1,16 @@
+base_model = "openai/o3-mini"
+release_date = "2025-01-31"
+last_updated = "2026-08-01"
+attachment = true
+reasoning_options = []
+
+[cost]
+input = 1.1
+output = 4.4
+cache_read = 0.55
+
+[limit]
+output = 200_000
+
+[modalities]
+input = ["text", "pdf"]

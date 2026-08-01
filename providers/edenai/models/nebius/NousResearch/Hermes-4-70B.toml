@@ -1,0 +1,22 @@
+name = "NousResearch/Hermes-4-70B"
+description = "Hermes 4 70B is a hybrid reasoning model from Nous Research, built on Meta-Llama-3.1-70B. It introduces the same hybrid mode as the larger 405B release, allowing the model to either..."
+release_date = "2025-08-26"
+last_updated = "2026-08-01"
+attachment = false
+reasoning = true
+tool_call = true
+structured_output = true
+open_weights = false
+reasoning_options = []
+
+[cost]
+input = 0.13
+output = 0.4
+
+[limit]
+context = 131_072
+output = 131_072
+
+[modalities]
+input = ["text"]
+output = ["text"]

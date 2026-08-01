@@ -1,0 +1,13 @@
+base_model = "openai/o3-pro"
+last_updated = "2026-08-01"
+reasoning_options = []
+
+[cost]
+input = 20
+output = 80
+
+[limit]
+output = 200_000
+
+[modalities]
+input = ["text", "pdf", "image"]

@@ -1,0 +1,14 @@
+base_model = "anthropic/claude-sonnet-4-5-20250929"
+last_updated = "2026-08-01"
+structured_output = true
+reasoning_options = []
+
+[cost]
+input = 3
+output = 15
+cache_read = 0.3
+cache_write = 3.75
+
+[limit]
+context = 1_000_000
+output = 1_000_000

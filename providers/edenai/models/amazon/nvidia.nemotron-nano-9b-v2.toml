@@ -1,0 +1,21 @@
+name = "nvidia.nemotron-nano-9b-v2"
+description = "Compact Nemotron model for efficient reasoning and deployable AI agents"
+release_date = "2026-01-06"
+last_updated = "2026-08-01"
+attachment = false
+reasoning = false
+tool_call = false
+structured_output = false
+open_weights = false
+
+[cost]
+input = 0.06
+output = 0.23
+
+[limit]
+context = 128_000
+output = 128_000
+
+[modalities]
+input = ["text"]
+output = ["text"]

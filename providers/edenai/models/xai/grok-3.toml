@@ -1,0 +1,22 @@
+name = "grok-3"
+description = "Grok 3 is the latest model from xAI. It's their flagship model that excels at enterprise use cases like data extraction, coding, and text summarization. Possesses deep domain knowledge in..."
+release_date = "2025-06-10"
+last_updated = "2026-08-01"
+attachment = false
+reasoning = false
+tool_call = true
+structured_output = false
+open_weights = false
+
+[cost]
+input = 3
+output = 15
+cache_read = 0.75
+
+[limit]
+context = 131_072
+output = 131_072
+
+[modalities]
+input = ["text"]
+output = ["text"]

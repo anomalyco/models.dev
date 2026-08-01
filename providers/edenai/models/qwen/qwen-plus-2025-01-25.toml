@@ -1,0 +1,22 @@
+name = "qwen-plus-2025-01-25"
+description = "The Qwen series of models, which are well-balanced in capabilities, offer reasoning performance and speed that fall between Qwen-Max and Qwen-Turbo, making them suitable for moderately complex tasks. Compared to previous versions, it shows significant improvements in both Chinese and English code generation, logical reasoning, and multilingual abilities. The response style has been greatly adjusted to align with human preferences, with noticeable enhancements in the level of detail and clarity of responses. Specialized improvements have been made in creative writing, adherence to JSON formatting, and role-playing abilities."
+release_date = "2025-09-08"
+last_updated = "2026-08-01"
+attachment = false
+reasoning = true
+tool_call = true
+structured_output = true
+open_weights = true
+reasoning_options = []
+
+[cost]
+input = 0.26
+output = 0.78
+
+[limit]
+context = 131_072
+output = 131_072
+
+[modalities]
+input = ["text"]
+output = ["text"]

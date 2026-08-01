@@ -1,0 +1,22 @@
+name = "qwen3.6-plus-2026-04-02"
+description = "The Qwen3.6 native vision-language Plus series models demonstrate exceptional performance on par with the current state-of-the-art models, with a significant improvement in overall results compared to the 3.5 series. The models have been markedly enhanced in code-related capabilities such as agentic coding, front-end programming, and Vibe coding, as well as in multi-modal general object recognition, OCR, and object localization.This version is a snapshot as of April 2, 2026."
+release_date = "2026-04-02"
+last_updated = "2026-08-01"
+attachment = true
+reasoning = true
+tool_call = true
+structured_output = true
+open_weights = true
+reasoning_options = []
+
+[cost]
+input = 0.325
+output = 1.95
+
+[limit]
+context = 1_000_000
+output = 1_000_000
+
+[modalities]
+input = ["text", "image", "video"]
+output = ["text"]

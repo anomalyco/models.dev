@@ -1,0 +1,22 @@
+name = "o3-pro-2025-06-10"
+description = "O-series reasoning model for hard analysis, math, coding, and planning"
+release_date = "2025-06-10"
+last_updated = "2026-08-01"
+attachment = true
+reasoning = true
+tool_call = true
+structured_output = true
+open_weights = false
+reasoning_options = []
+
+[cost]
+input = 20
+output = 80
+
+[limit]
+context = 200_000
+output = 200_000
+
+[modalities]
+input = ["text", "pdf", "image"]
+output = ["text"]

@@ -1,0 +1,23 @@
+name = "grok-4-1-fast"
+description = "Grok 4.1 Fast is xAI's best agentic tool calling model that shines in real-world use cases like customer support and deep research. 2M context window. Reasoning can be enabled/disabled using..."
+release_date = "2025-11-19"
+last_updated = "2026-08-01"
+attachment = true
+reasoning = true
+tool_call = true
+structured_output = true
+open_weights = false
+reasoning_options = []
+
+[cost]
+input = 0.2
+output = 0.5
+cache_read = 0.05
+
+[limit]
+context = 2_000_000
+output = 2_000_000
+
+[modalities]
+input = ["audio", "image", "text"]
+output = ["text"]

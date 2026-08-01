@@ -1,0 +1,23 @@
+name = "qwen3.5-plus-2026-04-20"
+description = "The Qwen3.5 native vision-language series Plus model has seen a substantial improvement in agentic coding capabilities compared to the February 15th snapshot. Inference speed has also been significantly enhanced, while its knowledge retention, reasoning ability, and long-context processing remain at a high level, making it well-suited for complex agent-based tasks. It is ideal for applications such as coding agents, production workflows, and high-throughput scenarios. This version is based on a snapshot taken on April 20, 2026."
+release_date = "2026-04-27"
+last_updated = "2026-08-01"
+attachment = true
+reasoning = true
+tool_call = true
+structured_output = true
+open_weights = true
+reasoning_options = []
+
+[cost]
+input = 0.26
+output = 1.56
+cache_write = 0.325
+
+[limit]
+context = 1_000_000
+output = 1_000_000
+
+[modalities]
+input = ["text", "image", "video"]
+output = ["text"]

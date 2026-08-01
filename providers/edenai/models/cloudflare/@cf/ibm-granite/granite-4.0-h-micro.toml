@@ -1,0 +1,21 @@
+name = "@cf/ibm-granite/granite-4.0-h-micro"
+description = "Granite-4.0-H-Micro is a 3B parameter from the Granite 4 family of models. These models are the latest in a series of models released by IBM. They are fine-tuned for long..."
+release_date = "2025-10-20"
+last_updated = "2026-08-01"
+attachment = false
+reasoning = false
+tool_call = true
+structured_output = true
+open_weights = false
+
+[cost]
+input = 0.017
+output = 0.112
+
+[limit]
+context = 131_000
+output = 131_000
+
+[modalities]
+input = ["text"]
+output = ["text"]

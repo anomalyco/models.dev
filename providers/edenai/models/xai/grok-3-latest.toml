@@ -1,0 +1,22 @@
+name = "grok-3-latest"
+description = "Grok model for agentic tool use, reasoning, coding, and live assistance"
+release_date = "2026-01-06"
+last_updated = "2026-08-01"
+attachment = false
+reasoning = false
+tool_call = true
+structured_output = false
+open_weights = false
+
+[cost]
+input = 3
+output = 15
+cache_read = 0.75
+
+[limit]
+context = 131_072
+output = 131_072
+
+[modalities]
+input = ["text"]
+output = ["text"]

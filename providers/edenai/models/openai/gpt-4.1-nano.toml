@@ -1,0 +1,13 @@
+base_model = "openai/gpt-4.1-nano"
+last_updated = "2026-08-01"
+
+[cost]
+input = 0.1
+output = 0.4
+cache_read = 0.025
+
+[limit]
+output = 1_047_576
+
+[modalities]
+input = ["image", "text", "pdf"]

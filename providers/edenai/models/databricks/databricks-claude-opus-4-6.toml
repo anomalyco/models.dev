@@ -1,0 +1,22 @@
+name = "databricks-claude-opus-4-6"
+description = "Claude Opus 4.6 is Anthropic's most capable hybrid reasoning model with adaptive thinking capabilities. This model introduces a new max effort level for the most demanding tasks, with high effort set as the default for optimal performance. Claude Opus 4.6 excels at complex reasoning, deep analysis, code generation, research, and sophisticated multi-step workflows. It features a 1 million token context window, making it ideal for enterprise applications that require both extensive analysis and comprehensive outputs. This endpoint is hosted by Databricks."
+release_date = "2026-06-08"
+last_updated = "2026-08-01"
+attachment = true
+reasoning = true
+tool_call = true
+structured_output = true
+open_weights = false
+reasoning_options = []
+
+[cost]
+input = 5.00003
+output = 25.00001
+
+[limit]
+context = 1_000_000
+output = 1_000_000
+
+[modalities]
+input = ["text", "image", "pdf"]
+output = ["text"]

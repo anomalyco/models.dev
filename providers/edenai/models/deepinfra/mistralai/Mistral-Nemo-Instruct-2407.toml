@@ -1,0 +1,21 @@
+name = "mistralai/Mistral-Nemo-Instruct-2407"
+description = "Mistral model for multilingual chat, reasoning, and tool-assisted workflows"
+release_date = "2026-01-06"
+last_updated = "2026-08-01"
+attachment = false
+reasoning = false
+tool_call = true
+structured_output = false
+open_weights = false
+
+[cost]
+input = 0.019
+output = 0.03
+
+[limit]
+context = 131_072
+output = 131_072
+
+[modalities]
+input = ["text"]
+output = ["text"]

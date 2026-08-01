@@ -1,0 +1,21 @@
+name = "openbmb/MiniCPM-V-4_5"
+description = "Multimodal model for analyzing text, images, documents, and rich media"
+release_date = "2026-06-22"
+last_updated = "2026-08-01"
+attachment = true
+reasoning = false
+tool_call = false
+structured_output = true
+open_weights = false
+
+[cost]
+input = 0.658
+output = 1.11
+
+[limit]
+context = 32_000
+output = 32_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

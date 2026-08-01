@@ -1,0 +1,21 @@
+name = "arize-ai/qwen-2-1.5b-instruct"
+description = "Qwen instruction model for multilingual chat, reasoning, and tool use"
+release_date = "2026-06-05"
+last_updated = "2026-08-01"
+attachment = false
+reasoning = false
+tool_call = false
+structured_output = false
+open_weights = false
+
+[cost]
+input = 0.1
+output = 0.1
+
+[limit]
+context = 32_768
+output = 32_768
+
+[modalities]
+input = ["text"]
+output = ["text"]

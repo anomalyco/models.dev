@@ -1,0 +1,23 @@
+name = "nvidia/NVIDIA-Nemotron-3-Ultra-550B-A55B-BF16"
+description = "Nemotron multimodal model for visual reasoning and agentic AI workflows"
+release_date = "2026-06-22"
+last_updated = "2026-08-01"
+attachment = true
+reasoning = true
+tool_call = false
+structured_output = false
+open_weights = false
+reasoning_options = []
+
+[cost]
+input = 1
+output = 5
+cache_read = 0.3
+
+[limit]
+context = 262_144
+output = 262_144
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

@@ -1,0 +1,21 @@
+name = "qwen3-30b-a3b-instruct-2507"
+description = "Open-source Qwen3 non-thinking model; compared to the previous version (Qwen3-30B-A3B) shows major improvements in Chinese, English, and overall multilingual general capabilities. Optimized for subjective open-ended tasks, delivering responses significantly more aligned with user preferences and more helpful."
+release_date = "2025-07-29"
+last_updated = "2026-08-01"
+attachment = false
+reasoning = false
+tool_call = true
+structured_output = true
+open_weights = true
+
+[cost]
+input = 0.13
+output = 0.52
+
+[limit]
+context = 131_072
+output = 131_072
+
+[modalities]
+input = ["text"]
+output = ["text"]

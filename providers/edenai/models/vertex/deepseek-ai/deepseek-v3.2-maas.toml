@@ -1,0 +1,22 @@
+name = "deepseek-ai/deepseek-v3.2-maas"
+description = "DeepSeek-V3.2 is a large language model designed to harmonize high computational efficiency with strong reasoning and agentic tool-use performance. It introduces DeepSeek Sparse Attention (DSA), a fine-grained sparse attention mechanism..."
+release_date = "2025-12-01"
+last_updated = "2026-08-01"
+attachment = false
+reasoning = true
+tool_call = true
+structured_output = true
+open_weights = false
+reasoning_options = []
+
+[cost]
+input = 0.56
+output = 1.68
+
+[limit]
+context = 163_840
+output = 163_840
+
+[modalities]
+input = ["text"]
+output = ["text"]

@@ -1,0 +1,21 @@
+name = "gpt-4-0613"
+description = "GPT model for general reasoning, writing, coding, and tool-assisted tasks"
+release_date = "2026-06-05"
+last_updated = "2026-08-01"
+attachment = false
+reasoning = false
+tool_call = true
+structured_output = false
+open_weights = false
+
+[cost]
+input = 30
+output = 60
+
+[limit]
+context = 8_192
+output = 8_192
+
+[modalities]
+input = ["text"]
+output = ["text"]

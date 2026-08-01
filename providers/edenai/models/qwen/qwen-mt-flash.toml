@@ -1,0 +1,21 @@
+name = "qwen-mt-flash"
+description = "Qwen-MT-Flash, a large language model from the Qwen series, has been fully upgraded with the Qwen 3 architecture for significantly enhanced performance and translation quality. It provides rapid, cost-effective translation across 92 languages, while supporting advanced features such as terminology intervention, format preservation, and domain-specific adaptation. It is the ideal choice for applications requiring a powerful balance of speed, quality, and cost."
+release_date = "2026-07-30"
+last_updated = "2026-08-01"
+attachment = false
+reasoning = false
+tool_call = false
+structured_output = false
+open_weights = true
+
+[cost]
+input = 0.104
+output = 0.3185
+
+[limit]
+context = 16_384
+output = 16_384
+
+[modalities]
+input = ["text"]
+output = ["text"]

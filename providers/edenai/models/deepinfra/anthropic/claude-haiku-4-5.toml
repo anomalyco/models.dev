@@ -1,0 +1,16 @@
+base_model = "anthropic/claude-haiku-4-5"
+release_date = "2026-06-22"
+last_updated = "2026-08-01"
+tool_call = false
+structured_output = false
+reasoning_options = []
+
+[cost]
+input = 1
+output = 5
+
+[limit]
+output = 200_000
+
+[modalities]
+input = ["text", "image"]

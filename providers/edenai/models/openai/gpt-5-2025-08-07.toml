@@ -1,0 +1,23 @@
+name = "gpt-5-2025-08-07"
+description = "GPT-5 is OpenAI’s most advanced model, offering major improvements in reasoning, code quality, and user experience. It is optimized for complex tasks that require step-by-step reasoning, instruction following, and accuracy..."
+release_date = "2025-08-07"
+last_updated = "2026-08-01"
+attachment = true
+reasoning = true
+tool_call = true
+structured_output = true
+open_weights = false
+reasoning_options = []
+
+[cost]
+input = 1.25
+output = 10
+cache_read = 0.125
+
+[limit]
+context = 400_000
+output = 400_000
+
+[modalities]
+input = ["text", "image", "pdf"]
+output = ["text"]

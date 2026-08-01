@@ -1,0 +1,22 @@
+name = "openai/gpt-oss-120b-Ultra"
+description = "Open-weight GPT model for self-hosted reasoning and instruction-following workloads"
+release_date = "2026-07-28"
+last_updated = "2026-08-01"
+attachment = false
+reasoning = true
+tool_call = false
+structured_output = false
+open_weights = false
+reasoning_options = []
+
+[cost]
+input = 0.2
+output = 0.95
+
+[limit]
+context = 131_072
+output = 131_072
+
+[modalities]
+input = ["text"]
+output = ["text"]

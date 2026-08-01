@@ -1,0 +1,21 @@
+name = "@cf/meta/llama-3.2-1b-instruct"
+description = "Open Llama instruction model for multilingual chat, reasoning, and coding"
+release_date = "2024-09-25"
+last_updated = "2026-08-01"
+attachment = false
+reasoning = false
+tool_call = false
+structured_output = false
+open_weights = false
+
+[cost]
+input = 0.027
+output = 0.201
+
+[limit]
+context = 60_000
+output = 60_000
+
+[modalities]
+input = ["text"]
+output = ["text"]

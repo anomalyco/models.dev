@@ -1,0 +1,22 @@
+name = "deepseek.v3.2"
+description = "DeepSeek chat model for instruction following, coding, and analysis"
+release_date = "2026-02-13"
+last_updated = "2026-08-01"
+attachment = false
+reasoning = true
+tool_call = true
+structured_output = false
+open_weights = false
+reasoning_options = []
+
+[cost]
+input = 0.74
+output = 2.22
+
+[limit]
+context = 163_840
+output = 163_840
+
+[modalities]
+input = ["text"]
+output = ["text"]

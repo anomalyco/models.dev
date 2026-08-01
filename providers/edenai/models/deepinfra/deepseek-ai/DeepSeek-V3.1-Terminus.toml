@@ -1,0 +1,23 @@
+name = "deepseek-ai/DeepSeek-V3.1-Terminus"
+description = "DeepSeek-V3.1 Terminus is an update to [DeepSeek V3.1](/deepseek/deepseek-chat-v3.1) that maintains the model's original capabilities while addressing issues reported by users, including language consistency and agent capabilities, further optimizing the model's..."
+release_date = "2025-09-22"
+last_updated = "2026-08-01"
+attachment = false
+reasoning = true
+tool_call = true
+structured_output = true
+open_weights = false
+reasoning_options = []
+
+[cost]
+input = 0.27
+output = 0.95
+cache_read = 0.13
+
+[limit]
+context = 163_840
+output = 163_840
+
+[modalities]
+input = ["text"]
+output = ["text"]

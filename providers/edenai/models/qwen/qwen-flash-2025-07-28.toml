@@ -1,0 +1,22 @@
+name = "qwen-flash-2025-07-28"
+description = "The Qwen3 Flash model (snapshot 2025-07-28) offers a powerful fusion of thinking and non-thinking modes with dynamic in-conversation switching, excelling in complex reasoning while showing significant gains in instruction following and text comprehension. It supports a 1M context length and is billed on a tiered model corresponding to context usage."
+release_date = "2026-07-30"
+last_updated = "2026-08-01"
+attachment = false
+reasoning = true
+tool_call = false
+structured_output = true
+open_weights = true
+reasoning_options = []
+
+[cost]
+input = 0.0325
+output = 0.26
+
+[limit]
+context = 1_000_000
+output = 1_000_000
+
+[modalities]
+input = ["text"]
+output = ["text"]

@@ -1,0 +1,22 @@
+name = "qwen.qwen3-32b-v1:0"
+description = "Qwen instruction model for multilingual chat, reasoning, and tool use"
+release_date = "2026-01-06"
+last_updated = "2026-08-01"
+attachment = false
+reasoning = true
+tool_call = true
+structured_output = false
+open_weights = false
+reasoning_options = []
+
+[cost]
+input = 0.15
+output = 0.6
+
+[limit]
+context = 131_072
+output = 131_072
+
+[modalities]
+input = ["text"]
+output = ["text"]

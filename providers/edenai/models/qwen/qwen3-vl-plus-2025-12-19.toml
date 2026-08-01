@@ -1,0 +1,22 @@
+name = "qwen3-vl-plus-2025-12-19"
+description = "The Qwen3 series of visual understanding models effectively integrates thinking and non-thinking modes. Compared to the snapshot released on September 23, this version delivers superior performance in reasoning and analysis tasks as well as style control, while also offering lower latency and faster response speeds. This version is based on a snapshot taken on December 19, 2025."
+release_date = "2026-07-30"
+last_updated = "2026-08-01"
+attachment = true
+reasoning = true
+tool_call = false
+structured_output = true
+open_weights = true
+reasoning_options = []
+
+[cost]
+input = 0.13
+output = 1.04
+
+[limit]
+context = 262_144
+output = 262_144
+
+[modalities]
+input = ["text", "image", "video"]
+output = ["text"]

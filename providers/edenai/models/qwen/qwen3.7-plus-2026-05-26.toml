@@ -1,0 +1,24 @@
+name = "qwen3.7-plus-2026-05-26"
+description = "Among the Qwen3.7 series, the cost-effective Plus model builds on its robust text capabilities while delivering a comprehensive upgrade to its vision‑language abilities, all while preserving its full‑stack agent‑level intelligence for coding, tool use, and productivity workflows. Its key distinguishing feature is multi‑modal interactive hybrid agent capabilities, enabling it to perceive real‑world scenes, read screens and interact with GUIs, generate code based on visual references, and perform end‑to‑end navigation within mobile apps.This version is a snapshot as of May 26, 2026."
+release_date = "2026-06-03"
+last_updated = "2026-08-01"
+attachment = true
+reasoning = true
+tool_call = true
+structured_output = true
+open_weights = true
+reasoning_options = []
+
+[cost]
+input = 0.26
+output = 1.04
+cache_read = 0.052
+cache_write = 0.325
+
+[limit]
+context = 1_000_000
+output = 1_000_000
+
+[modalities]
+input = ["text", "image", "video"]
+output = ["text"]

@@ -1,0 +1,15 @@
+base_model = "alibaba/qwen3-coder-plus"
+release_date = "2025-09-23"
+last_updated = "2026-08-01"
+structured_output = true
+open_weights = true
+
+[cost]
+input = 0.65
+output = 3.25
+cache_read = 0.13
+cache_write = 0.8125
+
+[limit]
+context = 1_000_000
+output = 1_000_000

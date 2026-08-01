@@ -1,0 +1,17 @@
+base_model = "xai/grok-4.20-0309-reasoning"
+release_date = "2026-04-19"
+last_updated = "2026-08-01"
+structured_output = false
+reasoning_options = []
+
+[cost]
+input = 1.25
+output = 2.5
+cache_read = 0.2
+
+[limit]
+context = 2_000_000
+output = 2_000_000
+
+[modalities]
+input = ["text", "image"]

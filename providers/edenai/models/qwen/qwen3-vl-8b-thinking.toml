@@ -1,0 +1,22 @@
+name = "qwen3-vl-8b-thinking"
+description = "The Thinking version of the 8B Dense model in the Qwen3-VL series consumes less GPU memory and is capable of performing multimodal understanding and reasoning. It supports extremely long contexts such as lengthy videos and documents, 2D/3D visual localization, and features comprehensively upgraded image/video understanding, spatial awareness, and object recognition abilities."
+release_date = "2025-10-14"
+last_updated = "2026-08-01"
+attachment = true
+reasoning = true
+tool_call = true
+structured_output = true
+open_weights = true
+reasoning_options = []
+
+[cost]
+input = 0.117
+output = 1.365
+
+[limit]
+context = 131_072
+output = 131_072
+
+[modalities]
+input = ["image", "text", "video"]
+output = ["text"]

@@ -1,0 +1,17 @@
+base_model = "alibaba/qwen3.6-35b-a3b"
+release_date = "2026-05-07"
+last_updated = "2026-08-01"
+structured_output = false
+open_weights = false
+reasoning_options = []
+
+[cost]
+input = 0.287125
+output = 1.72275
+
+[limit]
+context = 256_000
+output = 256_000
+
+[modalities]
+input = ["text", "image"]

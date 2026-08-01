@@ -1,0 +1,12 @@
+base_model = "mistral/mistral-large-latest"
+release_date = "2024-02-26"
+last_updated = "2026-08-01"
+structured_output = true
+
+[cost]
+input = 2
+output = 6
+cache_read = 0.2
+
+[modalities]
+input = ["text", "image", "pdf"]

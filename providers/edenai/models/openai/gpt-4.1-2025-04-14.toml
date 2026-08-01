@@ -1,0 +1,22 @@
+name = "gpt-4.1-2025-04-14"
+description = "GPT model for general reasoning, writing, coding, and tool-assisted tasks"
+release_date = "2025-04-14"
+last_updated = "2026-08-01"
+attachment = true
+reasoning = false
+tool_call = true
+structured_output = true
+open_weights = false
+
+[cost]
+input = 2
+output = 8
+cache_read = 0.5
+
+[limit]
+context = 1_047_576
+output = 1_047_576
+
+[modalities]
+input = ["image", "text", "pdf"]
+output = ["text"]

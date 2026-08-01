@@ -1,0 +1,14 @@
+base_model = "openai/gpt-4o"
+release_date = "2026-07-24"
+last_updated = "2026-08-01"
+
+[cost]
+input = 2.5
+output = 10
+cache_read = 1.25
+
+[limit]
+output = 128_000
+
+[modalities]
+input = ["text", "image"]

@@ -1,0 +1,22 @@
+name = "deepseek.r1-v1:0"
+description = "DeepSeek reasoning model for multi-step analysis, math, coding, and tools"
+release_date = "2026-06-18"
+last_updated = "2026-08-01"
+attachment = false
+reasoning = true
+tool_call = false
+structured_output = false
+open_weights = false
+reasoning_options = []
+
+[cost]
+input = 1.35
+output = 5.4
+
+[limit]
+context = 128_000
+output = 128_000
+
+[modalities]
+input = ["text"]
+output = ["text"]

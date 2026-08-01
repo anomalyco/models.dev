@@ -1,0 +1,22 @@
+name = "qwen-plus-character"
+description = "The role-playing model of the Qwen series. This is a dynamically updated version, and notifications will be provided in advance for any model updates. It is suitable for anthropomorphic role-playing and has optimized capabilities in following predefined character instructions, advancing conversations, and demonstrating active listening and empathy. Additionally, it supports the deep restoration of personalized characters."
+release_date = "2026-07-30"
+last_updated = "2026-08-01"
+attachment = false
+reasoning = false
+tool_call = false
+structured_output = true
+open_weights = true
+
+[cost]
+input = 0.325
+output = 0.91
+cache_read = 0.065
+
+[limit]
+context = 32_768
+output = 32_768
+
+[modalities]
+input = ["text"]
+output = ["text"]

@@ -1,0 +1,21 @@
+name = "meta-llama/Llama-Guard-3-8B"
+description = "Safety model for policy screening, moderation, and risk-aware routing workflows"
+release_date = "2026-06-02"
+last_updated = "2026-08-01"
+attachment = false
+reasoning = false
+tool_call = false
+structured_output = false
+open_weights = false
+
+[cost]
+input = 0.055
+output = 0.055
+
+[limit]
+context = 131_072
+output = 131_072
+
+[modalities]
+input = ["text"]
+output = ["text"]

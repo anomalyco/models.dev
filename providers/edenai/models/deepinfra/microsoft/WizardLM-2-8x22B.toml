@@ -1,0 +1,21 @@
+name = "microsoft/WizardLM-2-8x22B"
+description = "General-purpose chat model for instruction following, writing, and analysis"
+release_date = "2026-06-02"
+last_updated = "2026-08-01"
+attachment = false
+reasoning = false
+tool_call = false
+structured_output = false
+open_weights = false
+
+[cost]
+input = 0.48
+output = 0.48
+
+[limit]
+context = 65_536
+output = 65_536
+
+[modalities]
+input = ["text"]
+output = ["text"]

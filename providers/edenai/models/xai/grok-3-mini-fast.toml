@@ -1,0 +1,23 @@
+name = "grok-3-mini-fast"
+description = "Fast Grok model for responsive chat, reasoning, and tool-assisted work"
+release_date = "2026-01-06"
+last_updated = "2026-08-01"
+attachment = false
+reasoning = true
+tool_call = true
+structured_output = false
+open_weights = false
+reasoning_options = []
+
+[cost]
+input = 0.6
+output = 4
+cache_read = 0.15
+
+[limit]
+context = 131_072
+output = 131_072
+
+[modalities]
+input = ["text"]
+output = ["text"]

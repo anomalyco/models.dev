@@ -1,0 +1,15 @@
+base_model = "google/gemma-4-26b-a4b-it"
+release_date = "2026-04-03"
+last_updated = "2026-08-01"
+open_weights = false
+reasoning_options = []
+
+[cost]
+input = 0.07
+output = 0.34
+
+[limit]
+output = 262_144
+
+[modalities]
+input = ["image", "text", "video"]

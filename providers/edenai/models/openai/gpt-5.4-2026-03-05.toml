@@ -1,0 +1,23 @@
+name = "gpt-5.4-2026-03-05"
+description = "GPT-5.4 is OpenAI’s latest frontier model, unifying the Codex and GPT lines into a single system. It features a 1M+ token context window (922K input, 128K output) with support for..."
+release_date = "2026-03-05"
+last_updated = "2026-08-01"
+attachment = true
+reasoning = true
+tool_call = true
+structured_output = true
+open_weights = false
+reasoning_options = []
+
+[cost]
+input = 2.5
+output = 15
+cache_read = 0.25
+
+[limit]
+context = 1_050_000
+output = 1_050_000
+
+[modalities]
+input = ["text", "image", "pdf"]
+output = ["text"]

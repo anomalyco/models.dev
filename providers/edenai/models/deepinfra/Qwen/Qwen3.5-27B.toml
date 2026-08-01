@@ -1,0 +1,15 @@
+base_model = "alibaba/qwen3.5-27b"
+release_date = "2026-02-25"
+last_updated = "2026-08-01"
+open_weights = false
+reasoning_options = []
+
+[cost]
+input = 0.26
+output = 2.6
+
+[limit]
+output = 262_144
+
+[modalities]
+input = ["text", "image", "video"]

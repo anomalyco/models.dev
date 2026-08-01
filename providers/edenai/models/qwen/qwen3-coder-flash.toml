@@ -1,0 +1,14 @@
+base_model = "alibaba/qwen3-coder-flash"
+release_date = "2025-09-17"
+last_updated = "2026-08-01"
+structured_output = true
+open_weights = true
+
+[cost]
+input = 0.195
+output = 0.975
+cache_read = 0.039
+cache_write = 0.24375
+
+[limit]
+output = 1_000_000

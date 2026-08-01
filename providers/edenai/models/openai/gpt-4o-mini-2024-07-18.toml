@@ -1,0 +1,22 @@
+name = "gpt-4o-mini-2024-07-18"
+description = "GPT-4o mini is OpenAI's newest model after [GPT-4 Omni](/models/openai/gpt-4o), supporting both text and image inputs with text outputs. As their most advanced small model, it is many multiples more affordable..."
+release_date = "2024-07-18"
+last_updated = "2026-08-01"
+attachment = true
+reasoning = false
+tool_call = true
+structured_output = true
+open_weights = false
+
+[cost]
+input = 0.15
+output = 0.6
+cache_read = 0.075
+
+[limit]
+context = 128_000
+output = 128_000
+
+[modalities]
+input = ["text", "image", "pdf"]
+output = ["text"]

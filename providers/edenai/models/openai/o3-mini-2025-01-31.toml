@@ -1,0 +1,23 @@
+name = "o3-mini-2025-01-31"
+description = "OpenAI o3-mini is a cost-efficient language model optimized for STEM reasoning tasks, particularly excelling in science, mathematics, and coding. This model supports the `reasoning_effort` parameter, which can be set to..."
+release_date = "2025-01-31"
+last_updated = "2026-08-01"
+attachment = true
+reasoning = true
+tool_call = true
+structured_output = true
+open_weights = false
+reasoning_options = []
+
+[cost]
+input = 1.1
+output = 4.4
+cache_read = 0.55
+
+[limit]
+context = 200_000
+output = 200_000
+
+[modalities]
+input = ["text", "pdf"]
+output = ["text"]

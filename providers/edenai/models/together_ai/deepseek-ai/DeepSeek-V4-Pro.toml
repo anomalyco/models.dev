@@ -1,0 +1,23 @@
+name = "deepseek-ai/DeepSeek-V4-Pro"
+description = "Flagship DeepSeek model for coding, reasoning, and agentic work"
+release_date = "2026-04-24"
+last_updated = "2026-08-01"
+attachment = false
+reasoning = true
+tool_call = true
+structured_output = true
+open_weights = false
+reasoning_options = []
+
+[cost]
+input = 1.74
+output = 3.48
+cache_read = 0.2
+
+[limit]
+context = 512_000
+output = 512_000
+
+[modalities]
+input = ["text"]
+output = ["text"]

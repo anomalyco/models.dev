@@ -1,0 +1,22 @@
+name = "gpt-4o-search-preview"
+description = "GPT model for general reasoning, writing, coding, and tool-assisted tasks"
+release_date = "2025-03-12"
+last_updated = "2026-08-01"
+attachment = true
+reasoning = false
+tool_call = true
+structured_output = true
+open_weights = false
+
+[cost]
+input = 2.5
+output = 10
+cache_read = 1.25
+
+[limit]
+context = 128_000
+output = 128_000
+
+[modalities]
+input = ["text", "image", "pdf"]
+output = ["text"]

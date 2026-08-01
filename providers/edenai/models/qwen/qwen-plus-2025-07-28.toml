@@ -1,0 +1,23 @@
+name = "qwen-plus-2025-07-28"
+description = "Qwen3 series Plus model, integrates thinking and non-thinking modes and can switch modes during dialogue. Compared to the prior version, adds dedicated enhancements for Chinese & English capabilities and tool calling. This is a snapshot from 28 July, 2025; first to support 1 M context length, and uses tiered pricing."
+release_date = "2025-09-08"
+last_updated = "2026-08-01"
+attachment = false
+reasoning = true
+tool_call = true
+structured_output = true
+open_weights = true
+reasoning_options = []
+
+[cost]
+input = 0.26
+output = 0.78
+reasoning = 2.6
+
+[limit]
+context = 1_000_000
+output = 1_000_000
+
+[modalities]
+input = ["text"]
+output = ["text"]

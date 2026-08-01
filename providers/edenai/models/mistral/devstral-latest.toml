@@ -1,0 +1,21 @@
+name = "devstral-latest"
+description = "Mistral coding agent model for repository tasks and software engineering workflows"
+release_date = "2026-02-20"
+last_updated = "2026-08-01"
+attachment = false
+reasoning = false
+tool_call = true
+structured_output = true
+open_weights = true
+
+[cost]
+input = 0.4
+output = 2
+
+[limit]
+context = 262_144
+output = 262_144
+
+[modalities]
+input = ["text"]
+output = ["text"]

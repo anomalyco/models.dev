@@ -1,0 +1,22 @@
+name = "databricks-gpt-5-5"
+description = "GPT-5.5 is OpenAI's strongest frontier model for agentic work in enterprise, complex document reasoning, and long-horizon coding agents. GPT-5.5 also now powers Codex, OpenAI's coding agent. This model supports multimodal inputs and features a 400K total token context window with 128K maximum output tokens. This endpoint is hosted by Databricks."
+release_date = "2026-06-10"
+last_updated = "2026-08-01"
+attachment = true
+reasoning = true
+tool_call = true
+structured_output = true
+open_weights = false
+reasoning_options = []
+
+[cost]
+input = 12.50004
+output = 44.99999
+
+[limit]
+context = 1_050_000
+output = 1_050_000
+
+[modalities]
+input = ["pdf", "image", "text"]
+output = ["text"]

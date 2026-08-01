@@ -1,0 +1,16 @@
+base_model = "perplexity/sonar"
+release_date = "2025-01-27"
+last_updated = "2026-08-01"
+attachment = true
+structured_output = false
+
+[cost]
+input = 1
+output = 1
+
+[limit]
+context = 127_072
+output = 127_072
+
+[modalities]
+input = ["text", "image"]

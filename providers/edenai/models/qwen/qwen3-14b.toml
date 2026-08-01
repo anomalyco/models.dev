@@ -1,0 +1,23 @@
+name = "qwen3-14b"
+description = "Achieves effective integration of thinking and non-thinking modes, allowing mode switching during conversations. Its reasoning capability reaches the SOTA level in the same scale industry, and its general capability significantly surpasses Qwen2.5-14B."
+release_date = "2025-04-28"
+last_updated = "2026-08-01"
+attachment = false
+reasoning = true
+tool_call = true
+structured_output = true
+open_weights = true
+reasoning_options = []
+
+[cost]
+input = 0.2275
+output = 0.91
+reasoning = 2.73
+
+[limit]
+context = 131_072
+output = 131_072
+
+[modalities]
+input = ["text"]
+output = ["text"]

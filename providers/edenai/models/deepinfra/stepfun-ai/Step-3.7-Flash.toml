@@ -1,0 +1,16 @@
+base_model = "stepfun/step-3.7-flash"
+base_model_omit = ["limit.input"]
+release_date = "2026-05-28"
+last_updated = "2026-08-01"
+structured_output = false
+open_weights = false
+reasoning_options = []
+
+[cost]
+input = 0.2
+output = 1.15
+cache_read = 0.04
+
+[limit]
+context = 262_144
+output = 262_144

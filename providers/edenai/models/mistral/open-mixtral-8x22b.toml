@@ -1,0 +1,21 @@
+name = "open-mixtral-8x22b"
+description = "Mistral model for multilingual chat, reasoning, and tool-assisted workflows"
+release_date = "2026-04-28"
+last_updated = "2026-08-01"
+attachment = false
+reasoning = false
+tool_call = true
+structured_output = true
+open_weights = true
+
+[cost]
+input = 2
+output = 6
+
+[limit]
+context = 65_336
+output = 65_336
+
+[modalities]
+input = ["text"]
+output = ["text"]

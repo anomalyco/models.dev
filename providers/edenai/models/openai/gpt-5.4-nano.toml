@@ -1,0 +1,14 @@
+base_model = "openai/gpt-5.4-nano"
+last_updated = "2026-08-01"
+reasoning_options = []
+
+[cost]
+input = 0.2
+output = 1.25
+cache_read = 0.02
+
+[limit]
+output = 400_000
+
+[modalities]
+input = ["pdf", "image", "text"]

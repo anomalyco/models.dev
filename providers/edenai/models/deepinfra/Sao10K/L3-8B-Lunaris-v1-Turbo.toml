@@ -1,0 +1,21 @@
+name = "Sao10K/L3-8B-Lunaris-v1-Turbo"
+description = "Efficient model for low-latency assistance, extraction, and routine automation"
+release_date = "2026-01-06"
+last_updated = "2026-08-01"
+attachment = false
+reasoning = false
+tool_call = false
+structured_output = false
+open_weights = false
+
+[cost]
+input = 0.04
+output = 0.05
+
+[limit]
+context = 8_192
+output = 8_192
+
+[modalities]
+input = ["text"]
+output = ["text"]

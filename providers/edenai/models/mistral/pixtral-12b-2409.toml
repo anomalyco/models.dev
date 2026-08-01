@@ -1,0 +1,21 @@
+name = "pixtral-12b-2409"
+description = "Mistral vision-language model for image understanding and multimodal chat"
+release_date = "2026-04-28"
+last_updated = "2026-08-01"
+attachment = true
+reasoning = false
+tool_call = true
+structured_output = true
+open_weights = true
+
+[cost]
+input = 0.15
+output = 0.15
+
+[limit]
+context = 128_000
+output = 128_000
+
+[modalities]
+input = ["image", "text"]
+output = ["text"]

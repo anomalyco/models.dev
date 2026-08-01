@@ -1,0 +1,23 @@
+name = "qwen3-max-preview"
+description = "A preview version of the Max model in the Qwen 3 series, achieving an effective integration of thinking and non-thinking modes. In thinking mode, there is a significant enhancement in capabilities such as intelligent agent programming, common-sense reasoning, and reasoning across mathematics, science, and general domains."
+release_date = "2025-09-23"
+last_updated = "2026-08-01"
+attachment = false
+reasoning = true
+tool_call = true
+structured_output = true
+open_weights = true
+reasoning_options = []
+
+[cost]
+input = 0.78
+output = 3.9
+cache_read = 0.156
+
+[limit]
+context = 262_144
+output = 262_144
+
+[modalities]
+input = ["text"]
+output = ["text"]

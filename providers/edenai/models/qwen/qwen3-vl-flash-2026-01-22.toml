@@ -1,0 +1,21 @@
+name = "qwen3-vl-flash-2026-01-22"
+description = "The Qwen3 series of small-sized visual understanding models effectively integrates thinking and non-thinking modes. Compared with the snapshot taken on October 15, 2025, the overall performance of the model has improved significantly: it delivers enhanced capabilities in general visual recognition and reasoning, and shows marked improvements in recognition accuracy across various business scenarios such as security, in-store inspections, equipment monitoring, and photo-based problem solving. This version is a snapshot as of January 22, 2026."
+release_date = "2026-07-30"
+last_updated = "2026-08-01"
+attachment = true
+reasoning = false
+tool_call = false
+structured_output = false
+open_weights = true
+
+[cost]
+input = 0.0325
+output = 0.26
+
+[limit]
+context = 262_144
+output = 262_144
+
+[modalities]
+input = ["text", "image", "video"]
+output = ["text"]

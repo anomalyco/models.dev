@@ -1,0 +1,23 @@
+name = "accounts/fireworks/models/minimax-m3"
+description = "MiniMax multimodal coding model for long-context reasoning and agent tasks"
+release_date = "2026-07-29"
+last_updated = "2026-08-01"
+attachment = true
+reasoning = true
+tool_call = true
+structured_output = true
+open_weights = false
+reasoning_options = []
+
+[cost]
+input = 0.3
+output = 1.2
+cache_read = 0.06
+
+[limit]
+context = 512_000
+output = 512_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

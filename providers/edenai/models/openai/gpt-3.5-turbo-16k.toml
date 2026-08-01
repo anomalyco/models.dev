@@ -1,0 +1,21 @@
+name = "gpt-3.5-turbo-16k"
+description = "This model offers four times the context length of gpt-3.5-turbo, allowing it to support approximately 20 pages of text in a single request at a higher cost. Training data: up..."
+release_date = "2023-08-28"
+last_updated = "2026-08-01"
+attachment = false
+reasoning = false
+tool_call = true
+structured_output = true
+open_weights = false
+
+[cost]
+input = 3
+output = 4
+
+[limit]
+context = 16_385
+output = 16_385
+
+[modalities]
+input = ["text"]
+output = ["text"]

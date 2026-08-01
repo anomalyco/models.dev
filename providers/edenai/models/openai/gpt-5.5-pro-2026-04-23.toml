@@ -1,0 +1,23 @@
+name = "gpt-5.5-pro-2026-04-23"
+description = "GPT-5.5 Pro is OpenAI’s high-capability model optimized for deep reasoning and accuracy on complex, high-stakes workloads. It features a 1M+ token context window (922K input, 128K output) with support for..."
+release_date = "2026-04-24"
+last_updated = "2026-08-01"
+attachment = true
+reasoning = true
+tool_call = true
+structured_output = true
+open_weights = false
+reasoning_options = []
+
+[cost]
+input = 30
+output = 180
+cache_read = 3
+
+[limit]
+context = 1_050_000
+output = 1_050_000
+
+[modalities]
+input = ["pdf", "image", "text"]
+output = ["text"]

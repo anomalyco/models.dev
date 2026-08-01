@@ -1,0 +1,23 @@
+name = "Qwen/Qwen3-Max-Thinking"
+description = "Qwen reasoning model for deliberate problem solving, math, and coding"
+release_date = "2026-06-22"
+last_updated = "2026-08-01"
+attachment = false
+reasoning = true
+tool_call = false
+structured_output = false
+open_weights = false
+reasoning_options = []
+
+[cost]
+input = 1.2
+output = 6
+cache_read = 0.24
+
+[limit]
+context = 256_000
+output = 256_000
+
+[modalities]
+input = ["text"]
+output = ["text"]

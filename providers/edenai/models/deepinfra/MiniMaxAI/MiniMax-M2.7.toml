@@ -1,0 +1,23 @@
+name = "MiniMaxAI/MiniMax-M2.7"
+description = "MiniMax-M2.7 is a next-generation large language model designed for autonomous, real-world productivity and continuous improvement. Built to actively participate in its own evolution, M2.7 integrates advanced agentic capabilities through multi-agent..."
+release_date = "2026-03-18"
+last_updated = "2026-08-01"
+attachment = false
+reasoning = true
+tool_call = true
+structured_output = true
+open_weights = false
+reasoning_options = []
+
+[cost]
+input = 0.25
+output = 1
+cache_read = 0.05
+
+[limit]
+context = 196_608
+output = 196_608
+
+[modalities]
+input = ["text"]
+output = ["text"]

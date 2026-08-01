@@ -1,0 +1,21 @@
+name = "qwen3-vl-30b-a3b-instruct"
+description = "The Instruct version of the second-largest MoE model in the Qwen3-VL series offers rapid response speeds and supports extremely long contexts like lengthy videos and documents. It includes comprehensively upgraded image/video understanding, spatial awareness, and object recognition capabilities, as well as 2D/3D visual localization, enabling it to handle intricate real-world challenges."
+release_date = "2025-10-06"
+last_updated = "2026-08-01"
+attachment = true
+reasoning = false
+tool_call = true
+structured_output = true
+open_weights = true
+
+[cost]
+input = 0.13
+output = 0.52
+
+[limit]
+context = 131_072
+output = 131_072
+
+[modalities]
+input = ["text", "image", "video"]
+output = ["text"]

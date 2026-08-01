@@ -1,0 +1,21 @@
+name = "Meta-Llama-3_3-70B-Instruct"
+description = "Open Llama instruction model for multilingual chat, reasoning, and coding"
+release_date = "2026-01-27"
+last_updated = "2026-08-01"
+attachment = false
+reasoning = false
+tool_call = true
+structured_output = true
+open_weights = false
+
+[cost]
+input = 0.74
+output = 0.74
+
+[limit]
+context = 131_072
+output = 131_072
+
+[modalities]
+input = ["text"]
+output = ["text"]

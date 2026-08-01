@@ -1,0 +1,22 @@
+name = "@cf/google/gemma-4-26b-a4b-it"
+description = "Gemma 4 26B A4B IT is an instruction-tuned Mixture-of-Experts (MoE) model from Google DeepMind. Despite 25.2B total parameters, only 3.8B activate per token during inference — delivering near-31B quality at..."
+release_date = "2026-04-03"
+last_updated = "2026-08-01"
+attachment = true
+reasoning = true
+tool_call = true
+structured_output = true
+open_weights = false
+reasoning_options = []
+
+[cost]
+input = 0.1
+output = 0.3
+
+[limit]
+context = 256_000
+output = 256_000
+
+[modalities]
+input = ["image", "text", "video"]
+output = ["text"]

@@ -1,0 +1,21 @@
+name = "qwen3-coder-flash-2025-07-28"
+description = "Based on Qwen3, this code generation model inherits the coding agent capabilities of Qwen3-Coder-Plus and supports multi-turn tool interaction. It features focused optimizations on repository-level understanding and enhanced tool-calling stability. This version is a snapshot dated July 28, 2025."
+release_date = "2025-09-17"
+last_updated = "2026-08-01"
+attachment = false
+reasoning = false
+tool_call = true
+structured_output = true
+open_weights = true
+
+[cost]
+input = 0.195
+output = 0.975
+
+[limit]
+context = 1_000_000
+output = 1_000_000
+
+[modalities]
+input = ["text"]
+output = ["text"]

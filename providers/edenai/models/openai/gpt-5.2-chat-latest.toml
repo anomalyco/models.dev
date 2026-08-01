@@ -1,0 +1,15 @@
+base_model = "openai/gpt-5.2-chat-latest"
+release_date = "2025-12-10"
+last_updated = "2026-08-01"
+reasoning_options = []
+
+[cost]
+input = 1.75
+output = 14
+cache_read = 0.175
+
+[limit]
+output = 128_000
+
+[modalities]
+input = ["pdf", "image", "text"]

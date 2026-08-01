@@ -1,0 +1,22 @@
+name = "databricks-claude-haiku-4-5"
+description = "Claude Haiku 4.5 is Anthropic's fastest and most cost efficient hybrid reasoning model, optimized for real-time use and high-volume workloads. It features two modes: quick responses for time-sensitive interactions and extended reasoning for complex problem-solving. Haiku 4.5 excels in environments like coding assistance, automated agent workflows, and enterprise-scale analysis. This endpoint is hosted by Databricks."
+release_date = "2026-01-27"
+last_updated = "2026-08-01"
+attachment = true
+reasoning = true
+tool_call = true
+structured_output = false
+open_weights = false
+reasoning_options = []
+
+[cost]
+input = 1.00002
+output = 5.00003
+
+[limit]
+context = 200_000
+output = 200_000
+
+[modalities]
+input = ["text", "image", "pdf"]
+output = ["text"]

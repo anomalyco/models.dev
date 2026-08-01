@@ -1,0 +1,21 @@
+name = "mistral-tiny-latest"
+description = "Mistral model for multilingual chat, reasoning, and tool-assisted workflows"
+release_date = "2026-06-05"
+last_updated = "2026-08-01"
+attachment = false
+reasoning = false
+tool_call = true
+structured_output = true
+open_weights = true
+
+[cost]
+input = 0.25
+output = 0.25
+
+[limit]
+context = 131_072
+output = 131_072
+
+[modalities]
+input = ["text"]
+output = ["text"]

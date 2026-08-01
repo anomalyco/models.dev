@@ -1,0 +1,23 @@
+name = "qwen-plus-2025-07-14"
+description = "The Plus model of the Qwen3 Series, achieving effective integration of thinking mode and non-thinking mode, allows switching modes during conversations. This is a snapshot from July 14, 2025. Compared to the previous version, there has been a significant improvement in both Chinese and English capabilities under non-thinking mode, with enhanced tool-calling abilities."
+release_date = "2025-09-08"
+last_updated = "2026-08-01"
+attachment = false
+reasoning = true
+tool_call = true
+structured_output = true
+open_weights = true
+reasoning_options = []
+
+[cost]
+input = 0.26
+output = 0.78
+reasoning = 2.6
+
+[limit]
+context = 131_072
+output = 131_072
+
+[modalities]
+input = ["text"]
+output = ["text"]

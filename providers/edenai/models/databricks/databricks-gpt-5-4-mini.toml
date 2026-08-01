@@ -1,0 +1,22 @@
+name = "databricks-gpt-5-4-mini"
+description = "GPT-5.4 Mini is a cost-optimized large language model developed by OpenAI. This endpoint is hosted by Databricks."
+release_date = "2026-06-10"
+last_updated = "2026-08-01"
+attachment = true
+reasoning = true
+tool_call = true
+structured_output = true
+open_weights = false
+reasoning_options = []
+
+[cost]
+input = 1.49996
+output = 9.00004
+
+[limit]
+context = 400_000
+output = 400_000
+
+[modalities]
+input = ["pdf", "image", "text"]
+output = ["text"]

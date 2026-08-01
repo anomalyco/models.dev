@@ -1,0 +1,21 @@
+name = "anthropic/claude-4-opus"
+description = "Flagship Claude model for deep reasoning, coding, and long-horizon agents"
+release_date = "2026-01-06"
+last_updated = "2026-08-01"
+attachment = false
+reasoning = false
+tool_call = true
+structured_output = false
+open_weights = false
+
+[cost]
+input = 16.5
+output = 82.5
+
+[limit]
+context = 200_000
+output = 200_000
+
+[modalities]
+input = ["text"]
+output = ["text"]

@@ -1,0 +1,21 @@
+name = "gpt-3.5-turbo-0125"
+description = "Compact GPT model for low-latency assistance and high-volume workloads"
+release_date = "2026-01-06"
+last_updated = "2026-08-01"
+attachment = false
+reasoning = false
+tool_call = true
+structured_output = false
+open_weights = false
+
+[cost]
+input = 0.5
+output = 1.5
+
+[limit]
+context = 16_385
+output = 16_385
+
+[modalities]
+input = ["text"]
+output = ["text"]

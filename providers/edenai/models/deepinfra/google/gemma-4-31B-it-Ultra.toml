@@ -1,0 +1,22 @@
+name = "google/gemma-4-31B-it-Ultra"
+description = "Open Gemma instruction model for efficient chat and self-hosted deployments"
+release_date = "2026-07-28"
+last_updated = "2026-08-01"
+attachment = true
+reasoning = true
+tool_call = false
+structured_output = false
+open_weights = false
+reasoning_options = []
+
+[cost]
+input = 0.27
+output = 0.76
+
+[limit]
+context = 131_072
+output = 131_072
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

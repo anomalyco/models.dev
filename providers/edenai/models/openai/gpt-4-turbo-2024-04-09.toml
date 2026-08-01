@@ -1,0 +1,21 @@
+name = "gpt-4-turbo-2024-04-09"
+description = "Compact GPT model for low-latency assistance and high-volume workloads"
+release_date = "2024-04-09"
+last_updated = "2026-08-01"
+attachment = true
+reasoning = false
+tool_call = true
+structured_output = true
+open_weights = false
+
+[cost]
+input = 10
+output = 30
+
+[limit]
+context = 128_000
+output = 128_000
+
+[modalities]
+input = ["text", "image", "pdf"]
+output = ["text"]

@@ -1,0 +1,21 @@
+name = "@cf/qwen/qwen2.5-coder-32b-instruct"
+description = "Qwen coding model for software agents, repository edits, and code reasoning"
+release_date = "2024-11-11"
+last_updated = "2026-08-01"
+attachment = false
+reasoning = false
+tool_call = false
+structured_output = false
+open_weights = false
+
+[cost]
+input = 0.66
+output = 1
+
+[limit]
+context = 32_768
+output = 32_768
+
+[modalities]
+input = ["text"]
+output = ["text"]

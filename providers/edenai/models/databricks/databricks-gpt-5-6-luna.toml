@@ -1,0 +1,22 @@
+name = "databricks-gpt-5-6-luna"
+description = "GPT-5.6 Luna is the fast, cost-efficient model in OpenAI's GPT-5.6 family, bringing strong reasoning and agentic capability at the lowest cost in the lineup. This model supports multimodal (text and image) inputs and a long context window. This endpoint is hosted by Databricks."
+release_date = "2026-07-09"
+last_updated = "2026-08-01"
+attachment = true
+reasoning = true
+tool_call = true
+structured_output = true
+open_weights = false
+reasoning_options = []
+
+[cost]
+input = 1.00002
+output = 8.99997
+
+[limit]
+context = 1_050_000
+output = 1_050_000
+
+[modalities]
+input = ["pdf", "image", "text"]
+output = ["text"]

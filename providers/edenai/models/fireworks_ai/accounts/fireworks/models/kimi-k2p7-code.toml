@@ -1,0 +1,23 @@
+name = "accounts/fireworks/models/kimi-k2p7-code"
+description = "Kimi coding model for software agents, refactors, and repository reasoning"
+release_date = "2026-07-29"
+last_updated = "2026-08-01"
+attachment = true
+reasoning = true
+tool_call = true
+structured_output = true
+open_weights = false
+reasoning_options = []
+
+[cost]
+input = 0.95
+output = 4
+cache_read = 0.19
+
+[limit]
+context = 262_144
+output = 262_144
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

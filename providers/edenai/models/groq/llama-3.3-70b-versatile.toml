@@ -1,0 +1,22 @@
+name = "llama-3.3-70b-versatile"
+description = "Open Llama instruction model for multilingual chat, reasoning, and coding"
+release_date = "2026-01-06"
+last_updated = "2026-08-01"
+attachment = false
+reasoning = false
+tool_call = true
+structured_output = true
+open_weights = false
+
+[cost]
+input = 0.59
+output = 0.79
+cache_read = 0.295
+
+[limit]
+context = 131_072
+output = 131_072
+
+[modalities]
+input = ["text"]
+output = ["text"]

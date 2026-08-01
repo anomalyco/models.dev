@@ -1,0 +1,14 @@
+base_model = "zhipuai/glm-4.7-flash"
+last_updated = "2026-08-01"
+structured_output = true
+open_weights = false
+reasoning_options = []
+
+[cost]
+input = 0.06
+output = 0.4
+cache_read = 0.01
+
+[limit]
+context = 202_752
+output = 202_752

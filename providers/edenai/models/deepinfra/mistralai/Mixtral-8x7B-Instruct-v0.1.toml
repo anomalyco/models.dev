@@ -1,0 +1,21 @@
+name = "mistralai/Mixtral-8x7B-Instruct-v0.1"
+description = "Tool-capable chat model for instruction following and agentic application workflows"
+release_date = "2026-01-06"
+last_updated = "2026-08-01"
+attachment = false
+reasoning = false
+tool_call = true
+structured_output = false
+open_weights = false
+
+[cost]
+input = 0.4
+output = 0.4
+
+[limit]
+context = 32_768
+output = 32_768
+
+[modalities]
+input = ["text"]
+output = ["text"]

@@ -1,0 +1,21 @@
+name = "mistral.voxtral-mini-3b-2507"
+description = "Efficient Mistral model for fast chat, extraction, and production assistants"
+release_date = "2026-01-06"
+last_updated = "2026-08-01"
+attachment = true
+reasoning = false
+tool_call = false
+structured_output = false
+open_weights = false
+
+[cost]
+input = 0.04
+output = 0.04
+
+[limit]
+context = 128_000
+output = 128_000
+
+[modalities]
+input = ["text", "audio"]
+output = ["text"]

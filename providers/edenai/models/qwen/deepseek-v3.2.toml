@@ -1,0 +1,24 @@
+name = "deepseek-v3.2"
+description = "DeepSeek-V3.2 is the official release of a model that incorporates DeepSeek Sparse Attention—a sparse attention mechanism. It’s also the first model launched by DeepSeek that integrates reasoning into tool usage, supporting both reasoning-enabled and non-reasoning tool calls."
+release_date = "2025-12-01"
+last_updated = "2026-08-01"
+attachment = false
+reasoning = true
+tool_call = true
+structured_output = true
+open_weights = true
+reasoning_options = []
+
+[cost]
+input = 0.3705
+output = 1.1115
+cache_read = 0.0741
+cache_write = 0.46345
+
+[limit]
+context = 131_072
+output = 131_072
+
+[modalities]
+input = ["text"]
+output = ["text"]

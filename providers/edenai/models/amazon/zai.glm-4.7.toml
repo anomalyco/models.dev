@@ -1,0 +1,22 @@
+name = "zai.glm-4.7"
+description = "Flagship GLM model for hybrid reasoning, coding, and agentic engineering"
+release_date = "2026-02-13"
+last_updated = "2026-08-01"
+attachment = false
+reasoning = true
+tool_call = true
+structured_output = false
+open_weights = false
+reasoning_options = []
+
+[cost]
+input = 0.6
+output = 2.2
+
+[limit]
+context = 200_000
+output = 200_000
+
+[modalities]
+input = ["text"]
+output = ["text"]

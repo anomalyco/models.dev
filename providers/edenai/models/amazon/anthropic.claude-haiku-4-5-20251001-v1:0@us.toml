@@ -1,0 +1,24 @@
+name = "anthropic.claude-haiku-4-5-20251001-v1:0"
+description = "Fast Claude model for responsive assistance, classification, and lightweight agents"
+release_date = "2026-06-18"
+last_updated = "2026-08-01"
+attachment = true
+reasoning = true
+tool_call = true
+structured_output = true
+open_weights = false
+reasoning_options = []
+
+[cost]
+input = 1.1
+output = 5.5
+cache_read = 0.11
+cache_write = 1.375
+
+[limit]
+context = 200_000
+output = 200_000
+
+[modalities]
+input = ["text", "image", "pdf"]
+output = ["text"]

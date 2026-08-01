@@ -1,0 +1,21 @@
+name = "nvidia.nemotron-nano-3-30b"
+description = "Compact Nemotron model for efficient reasoning and deployable AI agents"
+release_date = "2026-02-13"
+last_updated = "2026-08-01"
+attachment = false
+reasoning = false
+tool_call = true
+structured_output = false
+open_weights = false
+
+[cost]
+input = 0.06
+output = 0.24
+
+[limit]
+context = 262_144
+output = 262_144
+
+[modalities]
+input = ["text"]
+output = ["text"]

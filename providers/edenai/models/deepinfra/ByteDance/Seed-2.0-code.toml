@@ -1,0 +1,23 @@
+name = "ByteDance/Seed-2.0-code"
+description = "Coding model for repository understanding, refactors, and agentic engineering tasks"
+release_date = "2026-06-22"
+last_updated = "2026-08-01"
+attachment = true
+reasoning = true
+tool_call = false
+structured_output = false
+open_weights = false
+reasoning_options = []
+
+[cost]
+input = 0.5
+output = 3
+cache_read = 0.1
+
+[limit]
+context = 256_000
+output = 256_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

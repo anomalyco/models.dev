@@ -1,0 +1,24 @@
+name = "anthropic.claude-sonnet-4-5-20250929-v1:0"
+description = "Balanced Claude model for coding, analysis, agent workflows, and cost control"
+release_date = "2026-06-18"
+last_updated = "2026-08-01"
+attachment = true
+reasoning = true
+tool_call = true
+structured_output = true
+open_weights = false
+reasoning_options = []
+
+[cost]
+input = 3.3
+output = 16.5
+cache_read = 0.33
+cache_write = 4.125
+
+[limit]
+context = 200_000
+output = 200_000
+
+[modalities]
+input = ["text", "image", "pdf"]
+output = ["text"]

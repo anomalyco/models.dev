@@ -1,0 +1,22 @@
+name = "databricks-claude-opus-4-8"
+description = "Claude Opus 4.8 is Anthropic's next-generation Opus model, hosted by Databricks."
+release_date = "2026-06-08"
+last_updated = "2026-08-01"
+attachment = true
+reasoning = true
+tool_call = true
+structured_output = true
+open_weights = false
+reasoning_options = []
+
+[cost]
+input = 5.00003
+output = 25.00001
+
+[limit]
+context = 1_000_000
+output = 1_000_000
+
+[modalities]
+input = ["text", "image", "pdf"]
+output = ["text"]

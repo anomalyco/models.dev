@@ -1,0 +1,16 @@
+base_model = "alibaba/qwen-plus"
+release_date = "2025-09-08"
+last_updated = "2026-08-01"
+structured_output = true
+open_weights = true
+reasoning_options = []
+
+[cost]
+input = 0.26
+output = 0.78
+reasoning = 2.6
+cache_read = 0.052
+cache_write = 0.325
+
+[limit]
+output = 1_000_000
