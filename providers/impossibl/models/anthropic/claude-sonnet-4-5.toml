@@ -8,8 +8,8 @@ cache_read = 0.30
 cache_write = 3.75
 
 [[reasoning_options]]
-type = "toggle" # API: {"thinking":{"type":"enabled"|"disabled"}} on POST /v1/messages
+type = "toggle" # API: {"thinking":{"type":"disabled"}}
 
 [[reasoning_options]]
-type = "budget_tokens" # API: {"thinking":{"type":"enabled","budget_tokens":<n>}} on POST /v1/messages
+type = "budget_tokens" # API: {"thinking":{"type":"enabled","budget_tokens":<n>}}
 min = 1024

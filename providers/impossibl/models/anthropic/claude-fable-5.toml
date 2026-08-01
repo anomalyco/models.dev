@@ -8,8 +8,8 @@ cache_read = 1.00
 cache_write = 12.50
 
 [[reasoning_options]]
-type = "toggle" # API: {"thinking":{"type":"adaptive"|"disabled"}} on POST /v1/messages
+type = "toggle" # API: {"thinking":{"type":"disabled"}}
 
 [[reasoning_options]]
-type = "effort" # API: {"output_config":{"effort":"<value>"}} on POST /v1/messages
+type = "effort" # API: {"output_config":{"effort":"high"}}
 values = ["low", "medium", "high", "xhigh", "max"]
