@@ -1,14 +1,8 @@
+base_model = "deepseek/deepseek-v4-flash"
 name = "DeepSeek V4 Flash 0731"
-description = "Fast DeepSeek model for efficient chat, coding help, and agent loops"
-family = "deepseek"
+description = "DeepSeek-V4-Flash-0731 is the official release of DeepSeek-V4-Flash, superseding the preview version, with substantially enhanced agentic capabilities. It has the same model structure as DeepSeek-V4-Flash-DSpark, i.e. it comes with a speculative decoding module attached."
 release_date = "2026-07-31"
 last_updated = "2026-07-31"
-attachment = false
-reasoning = true
-temperature = true
-tool_call = true
-structured_output = false
-open_weights = true
 
 [[reasoning_options]]
 type = "toggle"
@@ -24,11 +18,3 @@ field = "reasoning_content"
 input = 0.14
 output = 0.28
 cache_read = 0.028
-
-[limit]
-context = 1_048_576
-output = 384_000
-
-[modalities]
-input = ["text"]
-output = ["text"]
