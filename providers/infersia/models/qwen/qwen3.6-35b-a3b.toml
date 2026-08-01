@@ -1,0 +1,36 @@
+# Infersia serving details for Qwen3.6 35B-A3B.
+#
+# Sources:
+#   Pricing   https://infersia.com/models/qwen/qwen3.6-35b-a3b
+#   Limits    https://api.infersia.com/v1/models (context_length, max_completion_tokens)
+#
+# Served AWQ int4 with an fp8 KV cache. The 262K context is the model's native
+# window, not a YaRN extension.
+
+base_model = "alibaba/qwen3.6-35b-a3b"
+reasoning = true
+
+# Qwen3 hybrid thinking. Infersia defaults it off, so an ordinary chat turn does
+# not spend 500-1500 unrequested reasoning tokens; send the kwarg to turn it on.
+[[reasoning_options]]
+type = "toggle" # API: {"chat_template_kwargs": {"enable_thinking": true}}
+
+# Overrides the base entry's 65_536 output ceiling — Infersia caps completions
+# at 32_768 tokens.
+[limit]
+context = 262_144
+output = 32_768
+
+# Text and image only. The base entry also lists video and audio: the weights
+# support both, this endpoint accepts neither.
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[provider]
+shape = "completions"
+
+[cost]
+input = 0.10
+output = 0.90
+cache_read = 0.025

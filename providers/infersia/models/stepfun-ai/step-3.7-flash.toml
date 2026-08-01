@@ -1,0 +1,56 @@
+# Infersia serving details for StepFun Step 3.7 Flash.
+#
+# Sources:
+#   Pricing   https://infersia.com/models/stepfun-ai/step-3.7-flash
+#   Limits    https://api.infersia.com/v1/models (context_length, max_completion_tokens)
+#
+# Served as StepFun's own NVFP4 release on a single B200 — not a quantisation
+# we produced. StepFun publish no NVFP4-vs-BF16 quality delta, so this is not
+# claimed as full-precision parity.
+#
+# The directory is `stepfun-ai/` because a provider file's path is that
+# provider's own API id and we serve this as `stepfun-ai/step-3.7-flash`. The
+# shared entry it inherits from is keyed by lab, at models/stepfun/.
+
+base_model = "stepfun/step-3.7-flash"
+# The shared entry sets limit.input = 256_000 alongside its 256_000 context.
+# [limit] deep-merges, so overriding only `context` and `output` below would
+# leave input = 256_000 against a context of 131_072 — an input ceiling larger
+# than the whole window. Dropping the inherited field is what the other
+# providers of this model do rather than asserting a second number, because the
+# real constraint is the single 131_072 window shared between prompt and
+# completion, not a separate input cap.
+base_model_omit = ["limit.input"]
+structured_output = true
+reasoning = true
+
+# Three depths, set per request. Infersia defaults to "medium" when the caller
+# sends none — the template only emits its reasoning instruction when the
+# variable is defined, and left undefined the model will occasionally deliberate
+# until it hits the token ceiling and returns nothing.
+[[reasoning_options]]
+type = "effort" # API: {"chat_template_kwargs": {"reasoning_effort": "low"}}
+values = ["low", "medium", "high"]
+
+# The model's full context, served on a single B200. Output is capped at 32_768,
+# which is the only field below the shared entry.
+[limit]
+context = 262_144
+output = 32_768
+
+# Text and image. The shared entry also lists video: the weights support it,
+# this endpoint does not accept it. Image input is verified end to end — base64
+# data URIs and remote URLs, single and multiple images per prompt.
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[provider]
+shape = "completions"
+
+# Under StepFun's own published rates ($0.20 / $1.15 / $0.04), which are also
+# the median across the providers listed for this model.
+[cost]
+input = 0.18
+output = 1.05
+cache_read = 0.036

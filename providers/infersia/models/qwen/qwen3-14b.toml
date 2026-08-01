@@ -1,0 +1,32 @@
+# Infersia serving details for Qwen3 14B.
+#
+# Sources:
+#   Pricing   https://infersia.com/models/qwen/qwen3-14b
+#   Limits    https://api.infersia.com/v1/models (context_length, max_completion_tokens)
+#
+# Served AWQ int4 with an fp8 KV cache. The 131_072 window is reached with YaRN
+# (factor 4.0 over the model's native 32_768) and is verified in service.
+
+base_model = "alibaba/qwen3-14b"
+reasoning = true
+
+# Qwen3 hybrid thinking. Infersia defaults it off, so an ordinary chat turn does
+# not spend 500-1500 unrequested reasoning tokens; send the kwarg to turn it on.
+[[reasoning_options]]
+type = "toggle" # API: {"chat_template_kwargs": {"enable_thinking": true}}
+
+[limit]
+context = 131_072
+output = 16_384
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[provider]
+shape = "completions"
+
+[cost]
+input = 0.09
+output = 0.22
+cache_read = 0.0225

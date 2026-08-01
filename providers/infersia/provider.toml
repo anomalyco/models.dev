@@ -1,0 +1,7 @@
+name = "Infersia"
+env = ["INFERSIA_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+api = "https://api.infersia.com/v1"
+# The catalogue rather than /docs: the schema asks for the page "where models
+# are listed", and /docs is the API reference — it never names a model.
+doc = "https://infersia.com/models"
