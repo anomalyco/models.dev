@@ -1,0 +1,13 @@
+# Cost: converted from GreenPT's EUR list price at 1.14 USD/EUR (rate captured 2026-08-01).
+# Sources: https://docs.greenpt.ai/pricing and https://docs.greenpt.ai/model-cards
+# cache_read: discounted rate for cached prompt tokens. Cache writes are not
+# charged. See https://docs.greenpt.ai/prompt-caching
+base_model = "zhipuai/glm-5.2"
+name = "GLM-5.2 Honey Lite"
+description = "glm-5.2 carrying a built-in ruleset that compresses both generated code and prose. The gentlest tier: it cuts filler only and keeps the explanation intact. Same upstream model and price per token as glm-5.2, with fewer output tokens."
+reasoning_options = []
+
+[cost]
+input = 1.254
+cache_read = 0.3135
+output = 5.016
