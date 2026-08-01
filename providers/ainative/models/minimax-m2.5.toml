@@ -1,0 +1,22 @@
+name = "MiniMax M2.5"
+description = "MiniMax M2.5, served by AINative Studio for coding and agentic tasks via an OpenAI-compatible endpoint."
+family = "minimax"
+release_date = "2026-08-01"
+last_updated = "2026-08-01"
+attachment = false
+reasoning = false
+temperature = true
+tool_call = true
+open_weights = true
+
+[cost]
+input = 0.30
+output = 1.20
+
+[limit]
+context = 131_072
+output = 8_192
+
+[modalities]
+input = ["text"]
+output = ["text"]
