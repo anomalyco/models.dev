@@ -1,0 +1,14 @@
+# Cost: converted from GreenPT's EUR list price at 1.14 USD/EUR (rate captured 2026-08-01).
+# Sources: https://docs.greenpt.ai/pricing and https://docs.greenpt.ai/model-cards
+# cache_read: discounted rate for cached prompt tokens. Cache writes are not
+# charged. See https://docs.greenpt.ai/prompt-caching
+base_model = "moonshotai/kimi-k3"
+reasoning_options = []
+
+[cost]
+input = 3.762
+cache_read = 0.9405
+output = 18.81
+
+[modalities]
+input = ["text", "image"]
