@@ -69,30 +69,28 @@ export const ReasoningOption = z
     },
   );
 
-const Cost = z
-  .object({
-    input: z.number().min(0, "Input price cannot be negative"),
-    output: z.number().min(0, "Output price cannot be negative"),
-    reasoning: z.number().min(0, "Reasoning price cannot be negative").optional(),
-    cache_read: z
-      .number()
-      .min(0, "Cache read price cannot be negative")
-      .optional(),
-    cache_write: z
-      .number()
-      .min(0, "Cache write price cannot be negative")
-      .optional(),
-    input_audio: z
-      .number()
-      .min(0, "Audio input price cannot be negative")
-      .optional(),
-    output_audio: z
-      .number()
-      .min(0, "Audio output price cannot be negative")
-      .optional(),
-    image: z.number().min(0, "Image price cannot be negative").optional(),
-  })
-  .strip();
+const Cost = z.object({
+  input: z.number().min(0, "Input price cannot be negative"),
+  output: z.number().min(0, "Output price cannot be negative"),
+  reasoning: z.number().min(0, "Reasoning price cannot be negative").optional(),
+  cache_read: z
+    .number()
+    .min(0, "Cache read price cannot be negative")
+    .optional(),
+  cache_write: z
+    .number()
+    .min(0, "Cache write price cannot be negative")
+    .optional(),
+  input_audio: z
+    .number()
+    .min(0, "Audio input price cannot be negative")
+    .optional(),
+  output_audio: z
+    .number()
+    .min(0, "Audio output price cannot be negative")
+    .optional(),
+  image: z.number().min(0, "Image price cannot be negative").optional(),
+});
 
 const CostTier = Cost.extend({
   tier: z
