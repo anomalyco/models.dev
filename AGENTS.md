@@ -47,21 +47,87 @@ items are **hard blockers**; the last two are **strongly recommended** but not b
 - **Must use `base_model` when a `models/` metadata entry exists** for the underlying model.
   Do not duplicate provider-agnostic facts inline when they can be inherited. Only write a
   full inline definition when no matching `models/<provider>/<model>.toml` exists.
+- **`base_model` files must be override-only.** After `base_model = "…"`, write **only**
+  fields that are provider-specific or that **differ** from the inherited metadata. Never
+  restate identical values. Common mistakes (all blockers when unchanged from base):
+  - `name`, `description`, `family`, `release_date`, `knowledge`, `open_weights`
+  - `attachment`, `reasoning`, `tool_call`, `temperature`, `structured_output`
+  - full `[modalities]` / `[limit]` copies that match the base
+  - any other field copied “for completeness”
+  Allowed without matching the base: `cost`, `reasoning_options`, `interleaved`, `status`,
+  `provider`, `experimental`, and real overrides (e.g. provider context is smaller, PDF-only
+  input, different display `name`). Use `base_model_omit` to drop inherited keys you must not
+  keep — do not re-declare them to the same value.
 - **Reasoning models must declare `reasoning_options`.** Any model with `reasoning = true`
-  needs a `reasoning_options` array reflecting the provider's actual API surface (see the
-  audit-reasoning-options skill). For niche providers that document a budget or toggle
-  control, express the exact API request syntax the provider expects as a TOML comment next
-  to the option, e.g.:
-  ```toml
-  [[reasoning_options]]
-  type = "toggle" # API: {"chat_template_kwargs": {"enable_thinking": false}}
+  needs a `reasoning_options` array for **this provider's** request surface (see
+  **Reasoning options policy** below and the audit-reasoning-options skill).
 
-  [[reasoning_options]]
-  type = "budget_tokens" # API: {"thinking": {"budget_tokens": <n>}}
-  min = 1_024
-  max = 32_000
-  ```
-  Use `reasoning_options = []` when the model reasons but exposes no verified control.
+### Reasoning options policy
+
+`reasoning_options` are **provider** controls (what callers send on this API), not generic
+model facts. Most new providers are OpenAI-compatible gateways — use the gateway rules first.
+
+#### OpenAI-compatible gateways (default case)
+
+When `npm` is `@ai-sdk/openai-compatible` (or the provider is otherwise a chat-completions
+passthrough of `reasoning_effort` / equivalent):
+
+1. **Look up the underlying model** via `base_model`, `models/`, the native provider entry,
+   and peer OpenAI-compatible hosts of the **same** model.
+2. If that model is a reasoning model whose native or well-established gateway surface uses
+   discrete effort levels, **default to**:
+   ```toml
+   reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
+   ```
+   Do **not** use `reasoning_options = []` only because you could not re-prove every value on
+   this exact host. Empty means “no caller control,” not “I was uncertain.”
+3. **Extend beyond the baseline only with extra evidence** (provider docs, OpenAPI, live API
+   with a meaningful effect, or clear same-surface peer precedent):
+   - `none` / `minimal` / `xhigh` / `max` / `null` / `default` on `effort`
+   - `type = "toggle"` (explicit on/off for the same model ID)
+4. **Do not invent `budget_tokens` on gateways** unless this host documents a real
+   reasoning-token budget field for that model (see budget rules below).
+
+#### Native / non-gateway providers
+
+Match the provider's real API (Anthropic thinking/effort, Google thinking config, DeepSeek
+`thinking.type`, Alibaba `enable_thinking`, etc.). Compare with that provider's existing
+entries for the same model generation. Do not copy OpenAI gateway enums onto a native SDK
+route or the reverse.
+
+#### When `reasoning_options = []` is correct
+
+Use an empty array only when the model **does** reason and the provider **exposes no**
+user-selectable control (always-on thinking, separate think/non-think model IDs only, or
+verified absence of effort/toggle/budget). Uncertainty is not a reason for `[]` on an
+OpenAI-compatible host of a known effort model.
+
+#### `budget_tokens` is narrow / mostly legacy
+
+`budget_tokens` is a **reasoning-token** budget, **not** `max_tokens` / output length.
+
+Use it only for families that actually expose a reasoning budget, typically:
+- older Anthropic extended-thinking models (`thinking.budget_tokens`)
+- some Alibaba/Qwen thinking-budget controls
+- some older Google Gemini thinking-budget controls
+
+Do **not** add `budget_tokens` for modern effort-only models (GPT-5.x effort, Claude 4.7+
+adaptive effort, DeepSeek V4 effort, most MoE “reasoning” gateways, etc.). Never set
+`min`/`max` from `limit.output` or context size. Omit unverified bounds.
+
+#### Toggle
+
+Only claim `toggle` when the **same** provider model ID can run with reasoning on and off
+via a known request field/value. Separate `-thinking` vs instruct IDs are not a toggle.
+Prefer documenting the wire shape next to the option when non-obvious:
+```toml
+[[reasoning_options]]
+type = "toggle" # API: {"chat_template_kwargs": {"enable_thinking": false}}
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high"]
+```
 
 ### Citations (recommended)
 - **PRs that change data should cite their sources.** Link to the provider's pricing page,

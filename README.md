@@ -204,6 +204,7 @@ Use `base_model` when the provider serves the same underlying model and only pro
 
 ```toml
 base_model = "anthropic/claude-opus-4-6"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "max"] }]
 
 [cost]
 input = 5.00
@@ -213,10 +214,14 @@ output = 25.00
 Rules:
 
 - `base_model` must point to a TOML file in `models/` using `<provider>/<model-id>`.
-- You can override any top-level model field locally.
-- If you override a nested table like `[cost]`, `[limit]`, or `[modalities]`, include the full values needed for that table.
+- **Override-only:** after `base_model`, write only provider-specific fields and values that **differ** from the base. Do not restate the same `description`, `structured_output`, `modalities`, `tool_call`, dates, etc.
+- You may override any top-level model field when the provider actually differs.
+- If you override a nested table like `[cost]`, `[limit]`, or `[modalities]`, include the full values needed for that table (arrays/primitives replace; plain objects deep-merge).
 - `base_model_omit` is optional and removes inherited model metadata fields after local overrides are merged. Use dot-path strings, for example `base_model_omit = ["limit.input"]`.
+- Provider-specific fields (`cost`, `reasoning_options`, `interleaved`, `status`, `provider`, `experimental`) belong on the provider model when needed.
 - `id` still comes from the filename; do not add it to the TOML.
+
+**Reasoning options (short):** most hosts are OpenAI-compatible gateways — for effort-style reasoners default to `low`/`medium`/`high` from upstream/peers; do not use `[]` just because you could not re-test every value. Add `none`/`toggle`/extra efforts only with more evidence. `budget_tokens` is a reasoning budget (legacy Anthropic / some Qwen / some older Gemini), not `max_tokens`. Full policy: `AGENTS.md`.
 
 Use `base_model` when the wrapper model is materially the same as the source model and only differs by provider-specific pricing, limits, modalities, provider request shape, or lifecycle flags.
 

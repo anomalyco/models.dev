@@ -9,6 +9,8 @@ Use this workflow to add or review `reasoning_options` for a specific provider. 
 
 Provider capability means the inference service's accepted HTTP request surface. It does not mean the controls exposed by the repository's configured npm package, a preferred SDK, or a typed client wrapper.
 
+`AGENTS.md` **Reasoning options policy** is authoritative. This skill is the detailed workflow.
+
 ## Available Options
 
 The schema in `packages/core/src/schema.ts` supports:
@@ -28,137 +30,141 @@ max = 32_000
 ```
 
 - `toggle`: The provider offers an explicit way to switch reasoning on and off for the same model ID.
-- `effort`: The provider accepts one or more discrete effort values. Schema values are `null`, `none`, `minimal`, `low`, `medium`, `high`, `xhigh`, `max`, and `default`.
-- `budget_tokens`: The provider accepts a numeric reasoning-token budget. `min` and `max` are optional and must only be included when verified.
-- `reasoning_options = []`: The model reasons, but no user-selectable control was verified through this provider.
-- Omitted `reasoning_options`: No provider-specific claim has been authored. Do not treat omission as equivalent to an audited empty list.
+- `effort`: Discrete effort values. Schema allows `null`, `none`, `minimal`, `low`, `medium`, `high`, `xhigh`, `max`, and `default`. Do not dump the full enum.
+- `budget_tokens`: Numeric **reasoning-token** budget only. `min`/`max` optional and only when verified. Not `max_tokens`.
+- `reasoning_options = []`: Model reasons; provider exposes **no** user-selectable control.
+- Omitted `reasoning_options`: No provider claim authored yet (invalid once `reasoning = true` is set).
 
-An option describes a control exposed to a caller. Do not add an option merely because a model reasons internally or another provider exposes that control.
+## Classify the provider first
 
-## Evidence Standard
+1. Read `providers/<id>/provider.toml` (`npm`, `api`, `doc`).
+2. Note any per-model `[provider]` overrides.
+3. Classify the request surface:
+   - **OpenAI-compatible gateway** — `@ai-sdk/openai-compatible` or chat-completions passthrough of `reasoning_effort` / similar.
+   - **Native provider** — Anthropic, Google, OpenAI first-party, DeepSeek, Alibaba, etc. with that lab's request shape.
+   - **Multi-surface** — e.g. Anthropic Messages + OpenAI compat; audit the surface this model ID actually uses.
+
+Never treat a native Anthropic route and an OpenAI gateway as interchangeable.
+
+## OpenAI-compatible gateway defaults (most PRs)
+
+Vast majority of new providers are OpenAI-compatible gateways.
+
+| Situation | What to author |
+| --- | --- |
+| Reasoning model; upstream/native or established same-surface peers use effort | **Baseline:** `effort` `low`, `medium`, `high` |
+| Extra levels (`none`, `minimal`, `xhigh`, `max`, …) documented or live-proven on this host or clear peers | Add only those extra values |
+| Explicit on/off on the **same** model ID | Add `toggle` (with wire path) |
+| Always-on thinking; only separate think/instruct IDs; verified no control | `reasoning_options = []` |
+| Author “could not re-prove every value” on this host | **Still use baseline effort** if upstream/peers support it — do **not** collapse to `[]` |
+
+### How to establish the baseline
+
+1. Resolve `base_model` / underlying model id.
+2. Read native provider TOML for that model (e.g. `providers/openai`, `providers/anthropic`, `providers/deepseek`).
+3. Sample 2–3 established OpenAI-compatible peers hosting the same model (OpenRouter, etc.).
+4. If those surfaces use discrete effort, author at least `low`/`medium`/`high` unless this provider documents a **narrower** set or rejects them.
+5. If native is toggle-only (e.g. many Qwen/GLM hosts) and peers use toggle via `extra_body` / `enable_thinking`, prefer `toggle` over inventing effort.
+6. If native is always-on (`[]`) and peers are `[]`, keep `[]`.
+
+Upstream and same-surface peers are **valid positive evidence for the baseline** on gateways. They are not a license to copy exotic values or `budget_tokens` without gateway-appropriate evidence.
+
+## Native provider rules
+
+Match the lab API and existing same-provider entries for that generation:
+
+- Modern Claude (4.6/4.7+ effort / adaptive): effort values as documented — **not** blanket legacy `budget_tokens` on 4.7+.
+- Older Claude extended thinking: `budget_tokens` (and effort only if that generation has it).
+- OpenAI GPT-5.x: effort including `none`/`xhigh` when that model supports them first-party.
+- DeepSeek V4: typically `toggle` + `effort` `high`/`max` (not `xhigh`, not budget).
+- Do not paste OpenAI gateway enums onto native SDKs.
+
+## Evidence standard
 
 Use evidence in this order:
 
-1. The provider's current API reference or model documentation.
-2. The provider's raw OpenAPI schema, compatibility endpoint documentation, model endpoint metadata, or playground request payload.
-3. A reproducible request against the provider API, including a negative control with an invalid value where practical.
-4. The provider's official SDK source, but only as positive evidence for requests it emits.
-5. The upstream model developer's documentation.
-6. High-quality secondary sources only as supporting context.
+1. Provider API reference / model docs for **this** host.
+2. Provider OpenAPI, endpoint metadata, playground payloads.
+3. Reproducible request on this host (plus invalid value when practical).
+4. Official SDK **emitting** a field (positive only).
+5. **Same-surface peer** provider entries for the same model (especially OpenAI gateways).
+6. Upstream/native model documentation and native provider TOMLs.
+7. Secondary sources as supporting context only.
 
-Provider documentation proves what the provider accepts. Upstream documentation proves what the model can support, but cannot by itself prove that a gateway forwards or exposes the control.
-
-An SDK can prove support when it emits a field. An SDK's omission, type restriction, or missing convenience option does not prove the inference API rejects that field. Before removing a control because an SDK cannot express it, inspect raw HTTP docs, compatibility base URLs, passthrough guarantees, migration guides, and direct API behavior.
-
-Prefer versioned or model-specific documentation over generic examples. Record the access date when a page is mutable or unversioned.
-
-## Audit Workflow
-
-1. Read the provider configuration to identify the API base URL and protocol. Record the SDK only as one possible client.
-2. Inspect the PR diff and list every changed model with its exact proposed options.
-3. Group models by API family or request adapter, not only by model developer.
-4. Locate provider documentation for reasoning request fields and model-specific restrictions.
-5. Check every raw compatibility endpoint the inference provider advertises, such as OpenAI-, Anthropic-, or provider-compatible base URLs. Existing calls working unchanged is positive evidence that native reasoning fields are accepted.
-6. Cross-check upstream model documentation for supported values and ranges after establishing provider passthrough or translation.
-7. Test the provider API when credentials are already available and documentation is incomplete. Never print credentials.
-8. Compare each TOML claim independently: toggle, each effort value, budget support, minimum, and maximum.
-9. Remove any claim that lacks inference-provider evidence. Do not remove it merely because one SDK lacks a type or helper.
-10. Run `bun validate` and `git diff --check`.
-11. Update the PR body with citations, request-field details, audit conclusions, and validation commands.
-
-## Toggle Verification
-
-Only add `toggle` if all of these are true:
-
-- The same provider model ID can run with reasoning enabled and disabled.
-- The caller controls the state through a documented or reproduced request.
-- The exact field and values are known.
-
-Examples of possible controls include `thinking.type = "enabled" | "disabled"`, `enable_thinking = true | false`, a documented `reasoning` object, or a provider-defined prompt switch such as `/think` and `/no_think`.
-
-The following do not prove a toggle:
-
-- Separate thinking and non-thinking model IDs.
-- Omitting a reasoning budget when omission selects an automatic budget.
-- Setting effort to `low` unless the provider says it disables reasoning.
-- A model card saying the model is hybrid without provider request documentation.
-- A provider UI switch when its API payload cannot be identified.
-
-For every proposed toggle, write this sentence before accepting it:
-
-> `<provider model ID>` toggles reasoning with `<request path>` set to `<enabled value>` or `<disabled value>`.
-
-If that sentence cannot be completed and cited or reproduced, do not claim `toggle`.
-
-## Effort Verification
-
-Verify every value separately. Do not copy the schema's full enum into a model.
-
-- For an OpenAI-compatible API, `low`, `medium`, and `high` are a useful investigation baseline, not proof.
-- Require explicit evidence for `null`, `none`, `minimal`, `xhigh`, `max`, and `default`.
-- Check model-specific differences. A generic gateway enum may be rejected or ignored by some routed models.
-- Distinguish accepted values from meaningful values. If the gateway silently ignores a field, it is not a supported control.
-- Preserve JSON `null` as TOML `null`, not the string `"null"`, when evidence requires a null value.
-
-When practical, send one valid request per claimed value and one invalid value. A structured `400` for the invalid value makes silent field dropping less likely.
-
-## Budget Verification
-
-`budget_tokens` is an abstract models.dev capability; providers may spell it `reasoning.max_tokens`, `thinking.budget_tokens`, `thinkingBudget`, or another field.
-
-- Cite the provider's actual request path.
-- Verify that the field controls reasoning tokens rather than total output tokens.
-- Do not infer `max` from `limit.output`, context length, or an upstream provider's limit.
-- Do not infer a provider minimum from an SDK default.
-- Omit unverified bounds while retaining verified budget support.
-- Check whether zero or a negative sentinel disables reasoning. If so, verify whether this also proves `toggle` for that model.
-- Check constraints relating budget to `max_tokens` or total output.
-
-## API Testing
-
-Use existing credentials only when permitted and necessary. Keep secrets out of commands, logs, files, PR bodies, and chat output.
-
-For each control, prefer this matrix:
-
-| Request | Expected evidence |
+| Claim | Evidence bar |
 | --- | --- |
-| No reasoning field | Establishes default behavior |
-| Each claimed valid value | Successful response or documented acceptance |
-| Explicit disabled value | Proves toggle-off behavior |
-| One invalid value | Structured rejection rather than silent dropping |
-| Boundary and adjacent value | Supports a claimed minimum or maximum |
+| Gateway baseline `low`/`medium`/`high` | Upstream or same-surface peers sufficient unless this host contradicts |
+| Extra effort values, `toggle` | This host docs/test or strong same-surface peer + no contradiction |
+| `budget_tokens` + bounds | This host (or native API this host clearly proxies) must expose a **reasoning** budget; bounds verified — never from `limit.output` |
+| `reasoning_options = []` | Affirmative “no control” (always-on / split IDs / documented absence) — not uncertainty |
 
-Acceptance alone is weak when an OpenAI-compatible gateway ignores unknown fields. Inspect returned metadata, reasoning content, usage fields, or error behavior where available.
+An SDK missing a helper does not prove the HTTP API rejects a field.
+
+## Anti-patterns (reject in review / fix when authoring)
+
+- `reasoning_options = []` on an OpenAI gateway solely because live proof was incomplete.
+- Copying the **full** effort schema enum into a model.
+- `budget_tokens` on GPT-5.x, Claude 4.7+, DeepSeek V4, or random MoE gateways without a real reasoning-budget API.
+- `budget_tokens.max` taken from context or `limit.output`.
+- `toggle` because a UI has a switch, or because `-thinking` and instruct are different IDs.
+- Claiming gateway options from a **native-only** control shape without passthrough evidence (or the reverse).
+- Treating output/`max_tokens` limits as reasoning budgets.
+
+## Toggle verification
+
+Only add `toggle` if all are true:
+
+- Same provider model ID runs with reasoning on and off.
+- Caller controls it through a documented or reproduced request.
+- Exact field and values are known.
+
+Complete before accepting:
+
+> `<provider model ID>` toggles reasoning with `<request path>` set to `<enabled>` or `<disabled>`.
+
+Not toggle: split model IDs; omit-budget ⇒ auto budget; `effort=low` unless docs say it disables; hybrid marketing copy; UI-only switches.
+
+## Effort verification
+
+- Gateways: start from baseline `low`/`medium`/`high` when applicable (see above).
+- Verify exotic values individually before adding.
+- Prefer meaningful effect over mere HTTP 200 (gateways often ignore unknown fields).
+- Preserve JSON `null` as TOML `null`, not `"null"`.
+
+## Budget verification
+
+- Reasoning tokens only, not total output.
+- Cite real request path (`thinking.budget_tokens`, `thinking_budget`, `reasoning.max_tokens`, …).
+- Typical legitimate families: older Anthropic extended thinking, some Alibaba/Qwen budgets, some older Gemini budgets.
+- Omit unverified min/max; never infer from output/context limits.
+- If `0` disables thinking, that may also support `toggle` — verify separately.
+
+## Audit workflow
+
+1. Classify provider surface (`provider.toml` + model overrides).
+2. List every changed model and proposed options.
+3. Group by API family / adapter.
+4. For each model: resolve underlying model, native entry, same-surface peers.
+5. Apply gateway baseline vs native rules above.
+6. Strip exotic claims without evidence; **restore** baseline effort when `[]` was used incorrectly on a gateway.
+7. Confirm no bogus `budget_tokens`.
+8. Run `bun validate` and `git diff --check` when authoring.
+9. PR body: citations, wire fields, and why baseline vs `[]` vs extras.
 
 ## Citations
 
-Put citations in the PR body, not TOML comments. TOML model files should remain data-only unless the repository establishes another convention.
+Prefer PR body for sources. Leading TOML comment blocks are OK for durable URLs (sync strips mid-file comments). Short adjacent comments for exact API syntax of a reasoning option are encouraged when non-obvious.
 
-Use direct links to the narrowest authoritative section. For each link, state exactly what it proves:
+## PR audit output
 
-```markdown
-## Evidence
-
-- [Provider reasoning API](https://example.com/api/reasoning) documents
-  `reasoning_effort` values `low`, `medium`, and `high`.
-- [Provider model page](https://example.com/models/foo) documents that
-  `thinking.type = "disabled"` turns reasoning off for `foo`.
-- [Upstream model documentation](https://example.com/upstream/foo) confirms
-  the model-native budget range; provider requests at both boundaries succeeded.
-```
-
-Do not cite a search-results page, an AI-generated summary, or a generic upstream page for a provider-specific claim. If evidence comes from authenticated endpoint metadata or testing, describe the endpoint, date, request field, result, and negative control without including credentials or sensitive response data.
-
-## PR Audit Output
-
-For each audited PR, report:
+Report:
 
 - Models and proposed options.
-- Verdict for every option: verified, corrected, or removed.
-- Exact toggle mechanism, when applicable.
-- Provider-level citations and what each proves.
-- Upstream citations used only for model-specific constraints.
-- Tests performed and their limitations.
-- Final validation result.
+- Surface classification (gateway vs native).
+- Verdict per option: verified, corrected (note from→to), or removed.
+- Toggle wire path when applicable.
+- When baseline effort was inferred from upstream/peers, say so explicitly.
+- Tests and limits.
+- Validation result.
 
-If documentation is ambiguous, state the ambiguity and use the least permissive metadata supported by evidence.
+When ambiguous: keep gateway **baseline** effort if the model is an effort model on comparable surfaces; drop only unverified **extras**. Use `[]` only for true no-control cases.

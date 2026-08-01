@@ -25,13 +25,15 @@ Do not make code, schema, UI, documentation, or workflow changes. If the issue i
 
 When you do make a fix:
 
-- Follow `AGENTS.md` and the existing TOML conventions exactly.
+- Follow `AGENTS.md` and the existing TOML conventions exactly (including **Reasoning options policy** and override-only `base_model`).
 - Prefer the smallest correct change.
 - Verify every changed factual value against authoritative sources. Prefer first-party provider documentation, pricing pages, API references, model cards, or live provider catalog responses. Treat the issue as a lead, not sufficient verification by itself.
 - Do not broaden the issue's scope unless the additional changes are required for internal consistency and each one is independently verified.
 - Edit only `models/` and `providers/` TOML files.
-- Use `base_model` when appropriate instead of duplicating provider-agnostic metadata.
-- Preserve provider-specific fields in provider TOMLs.
+- Use `base_model` when a `models/` entry exists; write **only** provider-specific fields and real overrides — never restate identical description/modalities/structured_output/etc.
+- For OpenAI-compatible gateways, default reasoning effort models to `low`/`medium`/`high` from upstream/peers; do not use `[]` from uncertainty. Add `none`/`toggle`/extras/`budget_tokens` only per `AGENTS.md` (budget is legacy/narrow).
+- Preserve provider-specific fields in provider TOMLs (`cost`, `reasoning_options`, `interleaved`, `status`, `provider`).
+- Costs are USD per million tokens; convert other currencies and note rate/date in a leading comment.
 - Put durable source URLs in a leading TOML comment block when adding or changing factual data. Never put source comments between TOML sections because sync serialization removes them.
 - Do not run shell commands or use Bash. The workflow handles commits and pull request creation after you finish. Do not claim validation unless you actually performed it.
 
