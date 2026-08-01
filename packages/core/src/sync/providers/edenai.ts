@@ -134,6 +134,26 @@ function stripRegion(value: string): string {
   return value.replace(/@[a-z0-9-]+$/i, "");
 }
 
+// Bedrock/gateway names bury the underlying model under provider prefixes and
+// version suffixes: `anthropic.claude-opus-4-6-v1`, `meta.llama3-70b-instruct-v1:0`.
+// Emit progressively-stripped candidates so resolveModelMetadataBaseModel can
+// match the canonical `<lab>/<model>` id.
+function normalizeGatewayName(name: string): string[] {
+  const out = new Set<string>([name]);
+  let s = name.replace(/:\d+$/, "");
+  s = s.replace(/-v\d+$/, "");
+  if (s !== name) out.add(s);
+
+  for (const current of [...out]) {
+    const dotted = current.match(/^([a-z][a-z0-9-]*)\.(.+)$/);
+    if (dotted) {
+      out.add(`${dotted[1]}/${dotted[2]}`);
+      out.add(dotted[2]!);
+    }
+  }
+  return [...out];
+}
+
 function candidateBaseModels(model: EdenAIModel): string[] {
   const cleanModelName = stripRegion(model.model_name);
   const cleanID = stripRegion(model.id);
@@ -141,15 +161,24 @@ function candidateBaseModels(model: EdenAIModel): string[] {
     ? cleanID.slice(model.owned_by.length + 1)
     : cleanID;
 
-  const candidates: string[] = [];
+  const candidates = new Set<string>();
   const directMeta = DIRECT_METADATA_PROVIDER[model.owned_by];
   if (directMeta !== undefined) {
-    candidates.push(`${directMeta}/${cleanModelName}`);
-    candidates.push(`${directMeta}/${suffix}`);
+    candidates.add(`${directMeta}/${cleanModelName}`);
+    candidates.add(`${directMeta}/${suffix}`);
   }
-  candidates.push(cleanModelName);
-  candidates.push(suffix);
-  return [...new Set(candidates)];
+  candidates.add(cleanModelName);
+  candidates.add(suffix);
+
+  for (const base of [cleanModelName, suffix]) {
+    for (const normalized of normalizeGatewayName(base)) {
+      candidates.add(normalized);
+      if (directMeta !== undefined) {
+        candidates.add(`${directMeta}/${normalized}`);
+      }
+    }
+  }
+  return [...candidates];
 }
 
 function resolveEdenBaseModel(
@@ -237,12 +266,16 @@ export function buildEdenAIModel(
   const caps = model.capabilities;
   const input = inputModalitiesFromCapabilities(caps);
   const output = normalizeModalities(caps.output_modalities ?? [], ["text"]);
+  const reasoningReported = typeof caps.supports_reasoning === "boolean";
   const reasoning = caps.supports_reasoning === true;
+  const toolCallReported =
+    typeof caps.supports_function_calling === "boolean" ||
+    typeof caps.supports_tool_choice === "boolean";
   const toolCall =
     caps.supports_function_calling === true || caps.supports_tool_choice === true;
+  const structuredOutputReported = typeof caps.supports_response_schema === "boolean";
   const structuredOutput = caps.supports_response_schema === true;
   const attachment = input.some((value) => value !== "text");
-  const openWeights = existing?.open_weights ?? false;
   const context = model.context_length ?? 0;
   // Eden's /v3/models does not return max output tokens. Leave output undefined
   // for factored files so base_model inheritance provides the authoritative
@@ -256,40 +289,42 @@ export function buildEdenAIModel(
     existing?.release_date ?? dateFromTimestamp(model.created) ?? today;
   const cost = buildCost(model, reasoning, existing?.cost);
 
-  const values: Partial<SyncedFullModel> = {
-    attachment,
-    modalities: { input, output },
-    reasoning,
-    release_date: releaseDate,
-    last_updated: existing?.last_updated ?? today,
-    tool_call: toolCall,
-    structured_output: structuredOutput,
-    temperature: existing?.temperature,
-    knowledge: existing?.knowledge,
-    open_weights: openWeights,
-    status: existing?.status,
-    interleaved: existing?.interleaved,
-    cost,
-    limit,
-  };
-  // Eden's API reports reasoning support but not the control surface
-  // (effort levels / budget tokens). Preserve any authored options; otherwise
-  // emit an empty array per AGENTS.md guidance for reasoning models with no
-  // verified control.
-  if (reasoning) {
-    values.reasoning_options = existing?.reasoning_options ?? [];
-  }
-
   const resolvedBase = resolveEdenBaseModel(model, existing?.base_model);
   if (resolvedBase !== undefined) {
+    // Factored: only override cost/limit/modalities/timestamps. Leave
+    // capability booleans and open_weights unset so `base_model` inheritance
+    // from `models/` provides the authoritative values (matches DeepInfra /
+    // LLM Gateway patterns; AGENTS.md merge rules).
+    const factored: Partial<SyncedFullModel> = {
+      release_date: releaseDate,
+      last_updated: existing?.last_updated ?? today,
+      status: existing?.status,
+      interleaved: existing?.interleaved,
+      cost,
+      limit,
+      modalities: { input, output },
+    };
+    // reasoning_options is provider-specific and never inherited; declare it
+    // when the model reasons (empty array = no verified control surface).
+    if (reasoning || existing?.reasoning_options !== undefined) {
+      factored.reasoning_options = existing?.reasoning_options ?? [];
+    }
     return factorBaseModel(
       resolvedBase,
-      values,
+      factored,
       limit,
       existing?.base_model === resolvedBase ? existing.base_model_omit : undefined,
     );
   }
 
+  // Inline: schema requires the capability booleans, open_weights, and
+  // limit.output. Fall back to safe defaults when Eden is silent.
+  const inlineReasoning = reasoningReported ? reasoning : existing?.reasoning ?? false;
+  const inlineToolCall = toolCallReported ? toolCall : existing?.tool_call ?? false;
+  const inlineStructuredOutput = structuredOutputReported
+    ? structuredOutput
+    : existing?.structured_output;
+  const openWeights = existing?.open_weights ?? false;
   const name = existing?.name ?? model.model_name;
   const description =
     existing?.description ??
@@ -298,9 +333,9 @@ export function buildEdenAIModel(
         id: model.id,
         name,
         family: existing?.family,
-        reasoning,
-        tool_call: toolCall,
-        structured_output: structuredOutput,
+        reasoning: inlineReasoning,
+        tool_call: inlineToolCall,
+        structured_output: inlineStructuredOutput,
         open_weights: openWeights,
         limit,
         modalities: { input, output },
@@ -310,7 +345,22 @@ export function buildEdenAIModel(
     name,
     description,
     family: existing?.family,
-    ...values,
+    attachment,
+    modalities: { input, output },
+    reasoning: inlineReasoning,
+    reasoning_options: inlineReasoning
+      ? existing?.reasoning_options ?? []
+      : undefined,
+    tool_call: inlineToolCall,
+    structured_output: inlineStructuredOutput,
+    temperature: existing?.temperature,
+    knowledge: existing?.knowledge,
+    open_weights: openWeights,
+    release_date: releaseDate,
+    last_updated: existing?.last_updated ?? today,
+    status: existing?.status,
+    interleaved: existing?.interleaved,
+    cost,
     limit: { ...limit, output: limit.output ?? context },
     provider: existing?.provider,
     experimental: existing?.experimental,
