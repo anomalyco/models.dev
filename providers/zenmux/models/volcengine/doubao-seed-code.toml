@@ -1,14 +1,13 @@
+base_model = "bytedance/doubao-seed-code"
 name = "Doubao-Seed-Code"
-description = "Coding model for repository understanding, refactors, and agentic engineering tasks"
-release_date = "2025-11-11"
-last_updated = "2025-11-11"
-attachment = true
-reasoning = true
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
-temperature = true
-tool_call = true
 knowledge = "2025-01-01"
-open_weights = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["minimal", "low", "medium", "high"]
+
+[interleaved]
+field = "reasoning_content"
 
 [cost]
 input = 0.17
@@ -16,9 +15,4 @@ output = 1.12
 cache_read = 0.03
 
 [limit]
-context = 256_000
 output = 64_000
-
-[modalities]
-input = ["text", "image"]
-output = ["text"]

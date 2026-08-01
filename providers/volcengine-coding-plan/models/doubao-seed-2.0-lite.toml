@@ -1,15 +1,17 @@
 base_model = "bytedance/doubao-seed-2.0-lite"
-structured_output = false
 
 [[reasoning_options]]
 type = "toggle"
 
 [[reasoning_options]]
 type = "effort"
-values = ["low", "medium", "high"]
+values = ["minimal", "low", "medium", "high"]
 
 [interleaved]
 field = "reasoning_content"
 
-[limit]
-output = 32_000
+[cost]
+input = 0
+output = 0
+cache_read = 0
+cache_write = 0

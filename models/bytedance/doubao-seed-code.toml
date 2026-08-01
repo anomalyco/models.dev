@@ -1,0 +1,18 @@
+name = "Doubao Seed Code"
+description = "ByteDance coding model for precise code generation, task scheduling, and logical coordination"
+family = "seed"
+release_date = "2025-11-11"
+last_updated = "2025-11-11"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+open_weights = false
+
+[limit]
+context = 256_000
+output = 32_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
