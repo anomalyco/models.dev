@@ -1,0 +1,21 @@
+# Baseten overview documents DeepSeek V4 Flash 0731 reasoning as "Enabled by
+# default"; the reasoning page does not list this model, so no toggle, effort,
+# or budget request field is documented for it.
+# https://docs.baseten.co/inference/model-apis/overview (accessed 2026-08-01)
+# https://docs.baseten.co/inference/model-apis/reasoning (accessed 2026-08-01)
+
+base_model = "deepseek/deepseek-v4-flash"
+name = "DeepSeek V4 Flash 0731"
+reasoning_options = []
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.13
+output = 0.26
+cache_read = 0.028
+
+[limit]
+context = 1_048_576
+output = 1_048_576
