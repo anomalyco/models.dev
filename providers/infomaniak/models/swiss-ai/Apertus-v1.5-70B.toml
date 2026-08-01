@@ -1,28 +1,26 @@
 # Pricing note: Infomaniak bills in CHF; USD prices below are converted at
 # 1 CHF ≈ 1.24 USD (mid-market rate, checked 2026-08-01). Infomaniak-listed
-# price: CHF 0.30 input / CHF 0.40 output per 1M tokens.
-name = "Ministral 3 14B Instruct"
-description = "Compact Mistral model for edge, latency-sensitive, and cost-efficient workloads"
-family = "ministral"
-release_date = "2025-12-15"
+# price: CHF 0.70 input / CHF 2.50 output per 1M tokens.
+name = "Apertus v1.5 70B"
+description = "Open, ethically-sourced Swiss AI model for multilingual, multimodal chat and instruction following"
+release_date = "2026-07-24"
 last_updated = "2026-08-01"
-status = "beta"
 attachment = true
 reasoning = false
 temperature = true
 tool_call = true
-structured_output = true
 open_weights = true
+status = "beta"
 
 [cost]
-input = 0.37
-output = 0.50
+input = 0.87
+output = 3.10
 
 [limit]
 context = 100_000
 input = 100_000
-output = 25_600
+output = 8_192
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image", "audio"]
 output = ["text"]

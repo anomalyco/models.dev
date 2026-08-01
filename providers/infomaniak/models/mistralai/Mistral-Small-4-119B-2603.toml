@@ -1,17 +1,22 @@
+# Pricing note: Infomaniak bills in CHF; USD prices below are converted at
+# 1 CHF ≈ 1.24 USD (mid-market rate, checked 2026-08-01). Infomaniak-listed
+# price: CHF 0.20 input / CHF 0.75 output per 1M tokens.
 base_model = "mistral/mistral-small-2603"
-last_updated = "2026-06-28"
-# Reasoning verified live against the Infomaniak API on 2026-06-28: Mistral accepts
-# `reasoning_effort` of only "none" or "high" ("low"/"medium" -> HTTP 400). "high" enables
-# thinking and returns it in `message.reasoning`; the reliable "off" is to omit the field, as
-# an explicit "none" currently 400s server-side ("chat_template is not supported for Mistral
-# tokenizers"). The effect is binary, so `type = "toggle"`; reasoning text -> `interleaved = true`.
+last_updated = "2026-08-01"
+# Reasoning verified live against the Infomaniak API on 2026-06-28: an explicit "none" 400s
+# server-side ("chat_template is not supported for Mistral tokenizers") and omitting the field
+# leaves thinking on by default, so there is no verified way to disable it -> no reliable toggle.
+# Infomaniak's own API docs confirm mistral3-family models are excluded from reasoning_effort
+# support ("neither apertus-ai/Apertus-v1.5-70B nor mistral3 support it"). "high" does enable
+# thinking and return it in `message.reasoning`, so reasoning/interleaved stay on, but no
+# reasoning_options are exposed since there's no confirmed control over it.
 # Source: https://developer.infomaniak.com/docs/api/post/2/ai/{product_id}/openai/v1/chat/completions
-reasoning_options = [{ type = "toggle" }]
+reasoning_options = []
 interleaved = true
 
 [cost]
-input = 0.20
-output = 0.75
+input = 0.25
+output = 0.93
 
 [limit]
 context = 256_000

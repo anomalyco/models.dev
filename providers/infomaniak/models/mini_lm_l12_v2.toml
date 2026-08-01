@@ -1,8 +1,13 @@
-name = "Paraphrase Multilingual MiniLM L12 v2"
+# Identity corrected 2026-08-01: Infomaniak's catalog lists 33M parameters for this model,
+# matching sentence-transformers/all-MiniLM-L12-v2 (33.36M params, English-only), not
+# sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2 (117.65M params, 50+ languages),
+# which this entry was previously named after.
+# Source: https://huggingface.co/api/models/sentence-transformers/all-MiniLM-L12-v2
+name = "All-MiniLM-L12-v2"
 description = "Embedding model for semantic search, retrieval, clustering, and ranking pipelines"
 family = "text-embedding"
 release_date = "2021-08-30"
-last_updated = "2026-05-06"
+last_updated = "2026-08-01"
 attachment = false
 reasoning = false
 temperature = false
@@ -14,8 +19,8 @@ input = 0.00
 output = 0.00
 
 [limit]
-context = 512
-input = 512
+context = 128
+input = 128
 output = 384
 
 [modalities]
