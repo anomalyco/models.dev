@@ -57,6 +57,10 @@ export interface Cost {
   output_audio?: number
   /** Image generation price. */
   image?: number
+  /** Citation price. */
+  citation?: number
+  /** Request price. */
+  request?: number
 }
 
 /** Pricing that applies from a given context size upward. */

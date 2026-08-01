@@ -90,6 +90,8 @@ const Cost = z.object({
     .min(0, "Audio output price cannot be negative")
     .optional(),
   image: z.number().min(0, "Image price cannot be negative").optional(),
+  citation: z.number().min(0, "Citation price cannot be negative").optional(),
+  request: z.number().min(0, "Request price cannot be negative").optional(),
 }).strict();
 
 const CostTier = Cost.extend({

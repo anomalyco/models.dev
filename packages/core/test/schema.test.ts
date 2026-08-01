@@ -6,13 +6,15 @@ import { AuthoredModel } from "../src/index.js";
 type AuthoredModelData = z.infer<typeof AuthoredModel>;
 
 describe("model schema", () => {
-  test("preserves image cost", () => {
+  test("preserves non-token costs", () => {
     const result = AuthoredModel.safeParse(
       baseModel({
         cost: {
           input: 1,
           output: 2,
           image: 120,
+          citation: 2,
+          request: 5,
         },
       }),
     );
@@ -20,6 +22,8 @@ describe("model schema", () => {
     expect(result.success).toBe(true);
     if (!result.success) return;
     expect(result.data.cost?.image).toBe(120);
+    expect(result.data.cost?.citation).toBe(2);
+    expect(result.data.cost?.request).toBe(5);
   });
 
   test("rejects unknown nested model configuration fields", () => {
