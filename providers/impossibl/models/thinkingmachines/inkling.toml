@@ -1,14 +1,20 @@
-# Source for every value below: https://api.impossibl.com/v1/models (accessed 2026-08-01),
-# which reports a 65_536 context window, text+image input, and 1.87 / 4.68 / 0.374 pricing
-# for this model.
+# Pricing: https://api.impossibl.com/v1/models
+# Sources (accessed 2026-07-28):
+# - https://tinker-docs.thinkingmachines.ai/tinker/models/ (served context + pricing)
+# - https://tinker-docs.thinkingmachines.ai/tinker/compatible-apis/openai/ (the surface this
+#   route uses; reasoning_effort evidence is in the PR body, not this page)
 #
-# limit: the base model declares 1_048_576 / 1_048_576 — the largest window any host offers.
-# The served window is 65_536, so context is overridden down to it rather than inherited, and
-# output is capped at the same figure since a response cannot exceed the served context.
-#
-# modalities: the base model additionally declares audio input, which is not served for this
-# model, so input is overridden to text+image rather than advertising an input that would be
-# rejected.
+# limit: unlike Impossibl's other entries this route is FIXED to a single upstream —
+# Thinking Machines' own Tinker API — so the served window is Tinker's 64K tier. That
+# matches the first-party entry in this repo (providers/thinkingmachines/models/
+# thinkingmachines/Inkling.toml), which publishes the same 65_536/65_536 limits and the
+# same 1.87/4.68/0.374 pricing. Tinker's 256K window is a separately priced tier
+# (Inkling:peft:262144, 3.74/9.36), not this route. The base model declares
+# 1_048_576/1_048_576 (the largest host's cap), so BOTH limit.context and limit.output are
+# overridden down to what this route actually serves rather than inherited.
+# modalities follow the same first-party entry: Tinker serves this route as
+# text+image, dropping the base model's audio input, so it is overridden here rather than
+# advertising an input the route may reject.
 base_model = "thinkingmachines/inkling"
 
 [cost]
