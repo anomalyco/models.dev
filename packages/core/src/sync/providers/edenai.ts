@@ -294,7 +294,10 @@ export function buildEdenAIModel(
     // Factored: only override cost/limit/modalities/timestamps. Leave
     // capability booleans and open_weights unset so `base_model` inheritance
     // from `models/` provides the authoritative values (matches DeepInfra /
-    // LLM Gateway patterns; AGENTS.md merge rules).
+    // LLM Gateway patterns; AGENTS.md merge rules). `attachment` is always
+    // written alongside `modalities` so the two stay in sync — writing
+    // `modalities` alone can leave inherited `attachment` disagreeing with
+    // the overridden input list.
     const factored: Partial<SyncedFullModel> = {
       release_date: releaseDate,
       last_updated: existing?.last_updated ?? today,
@@ -303,6 +306,7 @@ export function buildEdenAIModel(
       cost,
       limit,
       modalities: { input, output },
+      attachment,
     };
     // reasoning_options is provider-specific and never inherited; declare it
     // when the model reasons (empty array = no verified control surface).
