@@ -55,12 +55,6 @@ export interface Cost {
   input_audio?: number
   /** Audio output price, USD per 1M tokens. */
   output_audio?: number
-  /** Image generation price. */
-  image?: number
-  /** Citation price. */
-  citation?: number
-  /** Request price. */
-  request?: number
 }
 
 /** Pricing that applies from a given context size upward. */
