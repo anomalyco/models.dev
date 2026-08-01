@@ -1,13 +1,15 @@
 # Pricing: https://api.impossibl.com/v1/models
-# reasoning_options: Impossibl forwards reasoning_effort verbatim to whichever upstream
-# serves the model; it is not validated or mapped per model, so the values a request
-# happens to be accepted with describe the serving host request validator, not this model.
-# No per-model control set can be asserted from this API surface (verified 2026-07-28).
 base_model = "anthropic/claude-sonnet-5"
-reasoning_options = []
 
 [cost]
 input = 2.00
 output = 10.00
 cache_read = 0.20
 cache_write = 2.50
+
+[[reasoning_options]]
+type = "toggle" # API: {"thinking":{"type":"adaptive"|"disabled"}} on POST /v1/messages
+
+[[reasoning_options]]
+type = "effort" # API: {"output_config":{"effort":"<value>"}} on POST /v1/messages
+values = ["low", "medium", "high", "xhigh", "max"]

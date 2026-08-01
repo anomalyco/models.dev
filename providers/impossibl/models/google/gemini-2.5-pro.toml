@@ -1,12 +1,18 @@
 # Pricing: https://api.impossibl.com/v1/models
-# reasoning_options: Impossibl forwards reasoning_effort verbatim to whichever upstream
-# serves the model; it is not validated or mapped per model, so the values a request
-# happens to be accepted with describe the serving host request validator, not this model.
-# No per-model control set can be asserted from this API surface (verified 2026-07-28).
 base_model = "google/gemini-2.5-pro"
-reasoning_options = []
 
 [cost]
 input = 1.25
 output = 10.00
 cache_read = 0.125
+
+[[cost.tiers]]
+tier = { size = 200_000 }
+input = 2.50
+output = 15.00
+cache_read = 0.25
+
+[[reasoning_options]]
+type = "budget_tokens" # API: {"generationConfig":{"thinkingConfig":{"thinkingBudget":<n>}}}
+min = 128
+max = 32768

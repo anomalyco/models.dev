@@ -1,30 +1,21 @@
 # Pricing: https://api.impossibl.com/v1/models
 # Sources (accessed 2026-07-28):
 # - https://tinker-docs.thinkingmachines.ai/tinker/models/ (served context + pricing)
-# - https://tinker-docs.thinkingmachines.ai/tinker/compatible-apis/anthropic/ (effort control)
+# - https://tinker-docs.thinkingmachines.ai/tinker/compatible-apis/openai/ (the surface this
+#   route uses; reasoning_effort evidence is in the PR body, not this page)
 #
 # limit: unlike Impossibl's other entries this route is FIXED to a single upstream —
 # Thinking Machines' own Tinker API — so the served window is Tinker's 64K tier. That
 # matches the first-party entry in this repo (providers/thinkingmachines/models/
 # thinkingmachines/Inkling.toml), which publishes the same 65_536/65_536 limits and the
 # same 1.87/4.68/0.374 pricing. Tinker's 256K window is a separately priced tier
-# (Inkling:peft:262144, 3.74/9.36), not this route. The base model omits limit.output
-# because the served cap varies by host (16_384 NVIDIA, 32_768 Baseten, 1_048_576
-# OpenRouter), so each provider entry supplies its own; context is overridden for the
-# same reason. modalities follow the same first-party entry: Tinker serves this route as
+# (Inkling:peft:262144, 3.74/9.36), not this route. The base model declares
+# 1_048_576/1_048_576 (the largest host's cap), so BOTH limit.context and limit.output are
+# overridden down to what this route actually serves rather than inherited.
+# modalities follow the same first-party entry: Tinker serves this route as
 # text+image, dropping the base model's audio input, so it is overridden here rather than
 # advertising an input the route may reject.
-#
-# reasoning_options: Tinker documents its effort control only on the ANTHROPIC-compatible
-# surface — {"output_config":{"effort":"low"|"medium"|"high"|"xhigh"|"max"}}, with
-# {"thinking":{"type":"disabled"}} to turn reasoning off. Impossibl reaches Tinker over its
-# OPENAI-compatible endpoint (/oai/api/v1), for which no reasoning control is documented,
-# so none is asserted here. Compare providers/nvidia, which publishes [] for the same
-# reason. The differing ladders other hosts publish for this one model (xhigh but no max on
-# Baseten, max but no xhigh on OpenRouter, four rungs on Venice) describe each host's
-# surface rather than Inkling itself.
 base_model = "thinkingmachines/inkling"
-reasoning_options = []
 
 [cost]
 input = 1.87
@@ -38,3 +29,7 @@ output = 65_536
 [modalities]
 input = ["text", "image"]
 output = ["text"]
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "minimal", "low", "medium", "high", "xhigh"]
