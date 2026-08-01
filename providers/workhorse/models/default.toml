@@ -1,3 +1,5 @@
+# Workhorse default route does not charge per-token pricing (cost = 0).
+# API docs: https://aiwork.horse/api-docs/  Pricing: https://aiwork.horse/request/
 name = "Default"
 description = "Your chosen default model (user controlled)."
 release_date = "2026-06-01"
@@ -10,7 +12,7 @@ temperature = true
 open_weights = false
 
 [[reasoning_options]]
-type = "toggle"
+type = "toggle" # API: {"chat_template_kwargs": {"enable_thinking": false}}
 
 [interleaved]
 field = "reasoning_content"
@@ -22,3 +24,7 @@ output = 6_000
 [modalities]
 input = ["text"]
 output = ["text"]
+
+[cost]
+input = 0
+output = 0
