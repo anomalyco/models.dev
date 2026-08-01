@@ -221,7 +221,7 @@ Rules:
 - Provider-specific fields (`cost`, `reasoning_options`, `interleaved`, `status`, `provider`, `experimental`) belong on the provider model when needed.
 - `id` still comes from the filename; do not add it to the TOML.
 
-**Reasoning options (short):** most hosts are OpenAI-compatible gateways — for effort-style reasoners default to `low`/`medium`/`high` from upstream/peers; do not use `[]` just because you could not re-test every value. Add `none`/`toggle`/extra efforts only with more evidence. `budget_tokens` is a reasoning budget (legacy Anthropic / some Qwen / some older Gemini), not `max_tokens`. Full policy: `AGENTS.md`.
+**Reasoning options (short):** classify first-party lab vs multi-model relay (not by npm). Copy the underlying model’s controls from the lab entry and same-surface peers — often `low`/`medium`/`high` on GPT-style relays, but DeepSeek V4 is `toggle`+`high`/`max`, etc. Do not use `[]` from uncertainty on relays. Full policy: `AGENTS.md`.
 
 Use `base_model` when the wrapper model is materially the same as the source model and only differs by provider-specific pricing, limits, modalities, provider request shape, or lifecycle flags.
 

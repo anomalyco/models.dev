@@ -182,58 +182,44 @@ Sync re-serializes many provider files and **drops every comment except a leadin
 
 Any provider model with `reasoning = true` **must** set `reasoning_options` for **this host’s** API. Details: `.opencode/skills/audit-reasoning-options/SKILL.md`.
 
-### OpenAI-compatible gateways (most providers)
+### 1. Classify the host (not the npm package)
 
-`npm = "@ai-sdk/openai-compatible"` or chat-completions passthrough of `reasoning_effort`:
+| Host kind | Who | How to pick options |
+| --- | --- | --- |
+| **First-party lab** | Provider **is** the lab (OpenAI, Anthropic, DeepSeek, Alibaba, Google, …) | Match that lab’s real API and existing `providers/<lab>/` entries for the same generation. |
+| **Multi-model relay / gateway** | Hosts many labs’ models (OpenRouter, Bedrock-as-relay, random OpenAI-compat aggregators, …) | Copy the **underlying model’s** controls from the lab entry + established same-surface peers. |
 
-1. Resolve the underlying model (`base_model`, lab metadata, native provider, peers).
-2. If it is an effort-style reasoner, **default to**:
-   ```toml
-   reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
-   ```
-3. Do **not** use `[]` because you could not re-prove every value on this host. Empty means **no caller control**, not uncertainty.
-4. Add `none` / `minimal` / `xhigh` / `max` only with extra evidence (see Toggle for how `none` interacts with `toggle`).
-5. `toggle` may sit **beside** graded `effort` when off is a **separate** wire control (boolean / enabled-disabled), not `effort=none`. Top-of-file wire comment required whenever `toggle` is present.
-6. Do **not** invent `budget_tokens` unless this host has a real reasoning-budget field for that model.
+**`npm = "@ai-sdk/openai-compatible"` does not mean “gateway.”** DeepSeek and Alibaba are first-party labs that use that package with **lab-specific** fields (`thinking.type`, `enable_thinking`, `thinking_budget`, …). Classify by **who runs the API**, not by the AI SDK package name.
 
-### Native providers
+### 2. Baseline effort = native / peer set (not a fixed enum)
 
-Match that lab’s API (Anthropic effort/thinking, Google thinking config, DeepSeek `thinking.type`, Alibaba `enable_thinking`, …). Compare existing same-provider entries. Do not paste OpenAI gateway enums onto a native SDK route or the reverse.
+Do **not** invent a universal `low`/`medium`/`high` for every reasoner.
 
-### When `[]` is correct
+1. Open `providers/<lab>/models/…` for the underlying model (and 1–2 solid peers on the same kind of host).
+2. Author **that** effort list (and toggle/budget if those entries have them and this host exposes the same kind of control).
+3. Common cases:
+   - GPT-style on relays → often `low` / `medium` / `high` (add `none` / `xhigh` only if native/peers have them)
+   - DeepSeek V4 → `toggle` + `high` / `max` (not L/M/H; lab maps low/medium→high)
+   - Always-on / no control → `[]`
+4. On relays: **do not** use `[]` just because you could not re-test this host. Empty means **no caller control**, not uncertainty.
+5. Never invent `budget_tokens` unless this host (or the lab API it clearly proxies) has a real **reasoning** budget field. Not `max_tokens`.
 
-Model reasons, but this provider exposes no user-selectable control (always-on thinking, or only separate think vs instruct model IDs).
-
-### `budget_tokens` is narrow
-
-Reasoning-token budget only — **not** `max_tokens` / output length. Typical legitimate cases: older Anthropic extended thinking, some Alibaba/Qwen budgets, some older Gemini budgets. Never set min/max from `limit.output` or context size.
-
-### Toggle
+### 3. Toggle
 
 Same model ID, on and off, via a known request field. Separate `-thinking` / instruct IDs are not a toggle.
 
-**When `toggle` and `effort` may both appear:**
-
 | Host control | Author |
 | --- | --- |
-| Effort includes `none` **and** graded levels (`low` / `medium` / `high` / …) | **Only** `type = "effort"` with `none` in `values`. Do **not** also add `type = "toggle"` — `none` already is off. |
-| Explicit boolean / enabled-disabled (or equivalent) **and** graded efforts | `toggle` **+** `effort` (`low`/`medium`/`high`/…) — both OK |
-| Binary on/off only (no graded efforts), including off-via-`none` with no other levels | `type = "toggle"` alone is OK |
+| Effort includes `none` **and** other graded levels | **Only** `effort` with `none` in `values` — **no** `toggle` |
+| Separate on/off control **and** graded effort (no `none` in effort) | `toggle` **+** `effort` with the **actual** levels |
+| Binary on/off only | `toggle` alone |
 
-Exclusivity is **only** “do not pair `toggle` with effort that already contains `none`.” A distinct on/off wire path plus graded effort (DeepSeek `thinking.type` + `reasoning_effort`, many Qwen `enable_thinking` + effort, etc.) is valid.
-
-Whenever `toggle` is present, put a **leading top-of-file comment** (above the first key) with the exact wire path and on/off values. Mid-file comments are stripped by sync.
+Every `toggle` needs a **leading top-of-file comment** with the exact wire path (sync strips mid-file comments).
 
 ```toml
-# Toggle: extra_body.enable_thinking true|false
-base_model = "alibaba/qwen3.5-plus"
-reasoning_options = [{ type = "toggle" }]
-```
-
-```toml
-# Toggle: thinking.type enabled|disabled (separate from effort)
-# Effort: reasoning_effort high|max
-base_model = "deepseek/deepseek-v4-pro"
+# Toggle: thinking.type = enabled|disabled
+# Effort: reasoning_effort = high|max
+name = "DeepSeek V4 Pro"
 reasoning_options = [
   { type = "toggle" },
   { type = "effort", values = ["high", "max"] },
@@ -241,7 +227,17 @@ reasoning_options = [
 ```
 
 ```toml
-# Graded effort including off as none — no separate toggle
+# Toggle: enable_thinking true|false
+# Budget: thinking_budget (integer reasoning tokens)
+name = "Qwen3.5 Plus"
+reasoning_options = [
+  { type = "toggle" },
+  { type = "budget_tokens" },
+]
+```
+
+```toml
+# Off is effort=none; graded levels — no toggle
 base_model = "openai/gpt-5.4"
 reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh"] }]
 ```

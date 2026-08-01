@@ -5,15 +5,11 @@ description: Audit or write models.dev reasoning_options in provider TOML files 
 
 # Audit Reasoning Options
 
-Use this workflow to add or review `reasoning_options` for a specific provider. Treat these fields as provider capabilities, not provider-agnostic model facts.
+`AGENTS.md` → **Reasoning options** is authoritative. This skill is the workflow.
 
-Provider capability means the inference service's accepted HTTP request surface. It does not mean the controls exposed by the repository's configured npm package, a preferred SDK, or a typed client wrapper.
+Provider capability = this host’s HTTP request surface (not the npm package, SDK types, or UI).
 
-`AGENTS.md` section **Reasoning options** is authoritative. This skill is the detailed workflow.
-
-## Available Options
-
-The schema in `packages/core/src/schema.ts` supports:
+## Schema shapes
 
 ```toml
 [[reasoning_options]]
@@ -29,166 +25,111 @@ min = 1_024
 max = 32_000
 ```
 
-- `toggle`: The provider offers an explicit way to switch reasoning on and off for the same model ID.
-- `effort`: Discrete effort values. Schema allows `null`, `none`, `minimal`, `low`, `medium`, `high`, `xhigh`, `max`, and `default`. Do not dump the full enum.
-- `budget_tokens`: Numeric **reasoning-token** budget only. `min`/`max` optional and only when verified. Not `max_tokens`.
-- `reasoning_options = []`: Model reasons; provider exposes **no** user-selectable control.
-- Omitted `reasoning_options`: No provider claim authored yet (invalid once `reasoning = true` is set).
+- `effort` values may include `null`, `none`, `minimal`, `low`, `medium`, `high`, `xhigh`, `max`, `default` — **never dump the full enum**.
+- `budget_tokens` = reasoning tokens only, not `max_tokens`. Bounds only when verified.
+- `[]` = model reasons, **no** caller control. Omitted = not authored (invalid once `reasoning = true`).
 
-## Classify the provider first
+## Step 1 — classify the host (role, not npm)
 
-1. Read `providers/<id>/provider.toml` (`npm`, `api`, `doc`).
-2. Note any per-model `[provider]` overrides.
-3. Classify the request surface:
-   - **OpenAI-compatible gateway** — `@ai-sdk/openai-compatible` or chat-completions passthrough of `reasoning_effort` / similar.
-   - **Native provider** — Anthropic, Google, OpenAI first-party, DeepSeek, Alibaba, etc. with that lab's request shape.
-   - **Multi-surface** — e.g. Anthropic Messages + OpenAI compat; audit the surface this model ID actually uses.
+| Kind | Definition | Options source |
+| --- | --- | --- |
+| **First-party lab** | `providers/<id>` **is** the model creator (OpenAI, Anthropic, DeepSeek, Alibaba, Google, …) | That lab’s docs + existing `providers/<lab>/` entries |
+| **Multi-model relay** | Hosts many labs (OpenRouter, aggregators, most new “OpenAI-compatible” startups) | Lab entry for the underlying model + same-surface relay peers |
 
-Never treat a native Anthropic route and an OpenAI gateway as interchangeable.
+**Critical:** `npm = "@ai-sdk/openai-compatible"` is used by **both** labs (DeepSeek, Alibaba) and relays. It does **not** mean “apply GPT L/M/H gateway defaults.”
 
-## OpenAI-compatible gateway defaults (most PRs)
+- DeepSeek first-party: `thinking.type` + `reasoning_effort` `high`|`max`
+- Alibaba first-party: `enable_thinking` + often `thinking_budget`; Responses API may use `reasoning.effort`
+- A random relay of GPT-5.4: usually passthrough `reasoning_effort` with GPT-like levels
 
-Vast majority of new providers are OpenAI-compatible gateways.
+Never compare a native Anthropic Messages route to an OpenAI chat-completions relay as if they shared one control surface.
 
-| Situation | What to author |
+## Step 2 — establish options
+
+1. Resolve underlying model (`base_model` / lab id).
+2. Read **first-party** `providers/<lab>/models/…` for that model.
+3. If authoring a **relay**, also sample 1–2 established relays of the same model.
+4. Copy the **intersection that this host can actually expose**:
+   - Effort values from native/peers (may be `high`/`max` only, or `low`/`medium`/`high`, or include `none`/`xhigh`, …)
+   - Toggle if native/peers have a real on/off **and** this host forwards it
+   - Budget only if a reasoning-budget field exists on this path
+5. On relays: if native/peers have caller controls, **do not** write `[]` from uncertainty.
+6. On labs: match that lab; do not paste another lab’s enum.
+
+### What “baseline” means
+
+**Baseline = the effort (and toggle/budget) set used by the lab and/or same-surface peers for this model.**
+
+It is **not** “always `low`/`medium`/`high`.” That triple is only the usual GPT-style relay case.
+
+| Example | Typical options |
 | --- | --- |
-| Reasoning model; upstream/native or established same-surface peers use effort | **Baseline:** `effort` `low`, `medium`, `high` |
-| Extra levels (`none`, `minimal`, `xhigh`, `max`, …) documented or live-proven on this host or clear peers | Add only those extra values |
-| Explicit on/off on the **same** model ID | Add `toggle` (with wire path) |
-| Always-on thinking; only separate think/instruct IDs; verified no control | `reasoning_options = []` |
-| Author “could not re-prove every value” on this host | **Still use baseline effort** if upstream/peers support it — do **not** collapse to `[]` |
+| GPT-5.4 on a relay | `effort` `none`/`low`/`medium`/`high`/`xhigh` as peers/native show |
+| DeepSeek V4 on DeepSeek or a faithful relay | `toggle` + `effort` `high`/`max` |
+| Qwen3.5 Plus on Alibaba | `toggle` + `budget_tokens` (chat path) |
+| Always-on thinking model | `[]` |
 
-### How to establish the baseline
+## Step 3 — toggle rules
 
-1. Resolve `base_model` / underlying model id.
-2. Read native provider TOML for that model (e.g. `providers/openai`, `providers/anthropic`, `providers/deepseek`).
-3. Sample 2–3 established OpenAI-compatible peers hosting the same model (OpenRouter, etc.).
-4. If those surfaces use discrete effort, author at least `low`/`medium`/`high` unless this provider documents a **narrower** set or rejects them.
-5. If native is toggle-only (e.g. many Qwen/GLM hosts) and peers use toggle via `extra_body` / `enable_thinking`, prefer `toggle` over inventing effort.
-6. If native is always-on (`[]`) and peers are `[]`, keep `[]`.
-
-Upstream and same-surface peers are **valid positive evidence for the baseline** on gateways. They are not a license to copy exotic values or `budget_tokens` without gateway-appropriate evidence.
-
-## Native provider rules
-
-Match the lab API and existing same-provider entries for that generation:
-
-- Modern Claude (4.6/4.7+ effort / adaptive): effort values as documented — **not** blanket legacy `budget_tokens` on 4.7+.
-- Older Claude extended thinking: `budget_tokens` (and effort only if that generation has it).
-- OpenAI GPT-5.x: effort including `none`/`xhigh` when that model supports them first-party.
-- DeepSeek V4: typically `toggle` + `effort` `high`/`max` (not `xhigh`, not budget).
-- Do not paste OpenAI gateway enums onto native SDKs.
-
-## Evidence standard
-
-Use evidence in this order:
-
-1. Provider API reference / model docs for **this** host.
-2. Provider OpenAPI, endpoint metadata, playground payloads.
-3. Reproducible request on this host (plus invalid value when practical).
-4. Official SDK **emitting** a field (positive only).
-5. **Same-surface peer** provider entries for the same model (especially OpenAI gateways).
-6. Upstream/native model documentation and native provider TOMLs.
-7. Secondary sources as supporting context only.
-
-| Claim | Evidence bar |
+| Situation | Shape |
 | --- | --- |
-| Gateway baseline `low`/`medium`/`high` | Upstream or same-surface peers sufficient unless this host contradicts |
-| Extra effort values, `toggle` | This host docs/test or strong same-surface peer + no contradiction |
-| `budget_tokens` + bounds | This host (or native API this host clearly proxies) must expose a **reasoning** budget; bounds verified — never from `limit.output` |
-| `reasoning_options = []` | Affirmative “no control” (always-on / split IDs / documented absence) — not uncertainty |
+| `none` ∈ effort **and** other graded levels | `effort` only — **no** `toggle` |
+| Separate on/off field + graded effort (no `none` in effort) | `toggle` + `effort` |
+| Binary on/off only | `toggle` |
 
-An SDK missing a helper does not prove the HTTP API rejects a field.
-
-## Anti-patterns (reject in review / fix when authoring)
-
-- `reasoning_options = []` on an OpenAI gateway solely because live proof was incomplete.
-- Copying the **full** effort schema enum into a model.
-- `budget_tokens` on GPT-5.x, Claude 4.7+, DeepSeek V4, or random MoE gateways without a real reasoning-budget API.
-- `budget_tokens.max` taken from context or `limit.output`.
-- `toggle` because a UI has a switch, or because `-thinking` and instruct are different IDs.
-- Claiming gateway options from a **native-only** control shape without passthrough evidence (or the reverse).
-- Treating output/`max_tokens` limits as reasoning budgets.
-
-## Toggle verification
-
-Only add `toggle` if all are true:
-
-- Same provider model ID runs with reasoning on and off.
-- Caller controls it through a documented or reproduced request.
-- Exact field and values are known.
-- Disable is **not** already modeled as `effort` value `none` alongside other graded efforts (see below).
-
-### `none` effort vs `toggle` (do not double-count off)
-
-| Situation | Correct shape |
-| --- | --- |
-| `none` **and** graded efforts (`low` / `medium` / `high` / …) | `type = "effort"` only, with `none` in `values`. **Never** also add `type = "toggle"`. |
-| Explicit boolean / `enabled`\|`disabled` (or equivalent) **plus** graded efforts | `toggle` **+** `effort` — both OK (DeepSeek, many Qwen/GLM hosts, etc.) |
-| Off is binary only (no graded efforts), including off-via-`none` alone | `type = "toggle"` OK |
-
-`none` inside a graded effort enum **is** the off switch — do not also claim `toggle`.  
-`toggle` + graded effort **without** `none` is valid when off is a **separate** wire control.
-
-### Top-of-file comment required for toggle
-
-If the file claims `type = "toggle"`, the TOML **must** start with a leading comment block (above the first key) that states how toggle works on the wire, e.g.:
+Toggle requires a **leading top-of-file** wire comment, e.g.:
 
 ```toml
-# Toggle: {"thinking":{"type":"enabled"|"disabled"}}
-# Toggle: extra_body.enable_thinking true|false
-# Toggle: reasoning_effort "none" = off; omit or any other value = on (no graded efforts)
+# Toggle: thinking.type = enabled|disabled
+# Effort: reasoning_effort = high|max
 ```
 
-Sync strips mid-file comments — top-only.
+```toml
+# Toggle: enable_thinking true|false
+# Budget: thinking_budget
+```
 
-Complete before accepting:
+Not toggle: split model IDs; UI-only; `effort=low` as “off”; pairing `toggle` with effort that already includes `none`.
 
-> `<provider model ID>` toggles reasoning with `<request path>` set to `<enabled>` or `<disabled>`.
+## Step 4 — budget rules
 
-Not toggle: split model IDs; omit-budget ⇒ auto budget; `effort=low` unless docs say it disables; hybrid marketing copy; UI-only switches; pairing `toggle` with an `effort` list that already includes `none`.
+- Reasoning-token budget only.
+- Legitimate families: older Anthropic extended thinking, some Alibaba/Qwen `thinking_budget`, some older Gemini budgets.
+- Not for GPT-5.x effort-only, Claude 4.7+ adaptive effort, DeepSeek V4, or random MoE relays without a budget API.
+- Never derive min/max from `limit.output` or context.
 
-## Effort verification
+## Evidence bar
 
-- Gateways: start from baseline `low`/`medium`/`high` when applicable (see above).
-- Verify exotic values individually before adding.
-- Prefer meaningful effect over mere HTTP 200 (gateways often ignore unknown fields).
-- Preserve JSON `null` as TOML `null`, not `"null"`.
+| Claim | Bar |
+| --- | --- |
+| Effort/toggle/budget matching first-party lab entry on that lab | Lab docs or existing lab TOML |
+| Same options on a relay | Lab + peer relays, or this host docs/test; no contradiction |
+| Extra levels beyond lab/peers | This host docs or live meaningful effect |
+| `[]` | Affirmative no control — not “I didn’t check” |
 
-## Budget verification
+## Anti-patterns
 
-- Reasoning tokens only, not total output.
-- Cite real request path (`thinking.budget_tokens`, `thinking_budget`, `reasoning.max_tokens`, …).
-- Typical legitimate families: older Anthropic extended thinking, some Alibaba/Qwen budgets, some older Gemini budgets.
-- Omit unverified min/max; never infer from output/context limits.
-- If `0` disables thinking, that may also support `toggle` — verify separately.
+- Treating every `@ai-sdk/openai-compatible` host as a GPT L/M/H gateway
+- Forcing `low`/`medium`/`high` onto DeepSeek V4 (or any narrower native set)
+- `[]` on a relay of a controlled reasoner from uncertainty
+- Full schema effort enum dumps
+- Bogus `budget_tokens` / bounds from output limits
+- `toggle` + `none` inside the same effort list
+- Wrong wire comments in examples or files
 
 ## Audit workflow
 
-1. Classify provider surface (`provider.toml` + model overrides).
-2. List every changed model and proposed options.
-3. Group by API family / adapter.
-4. For each model: resolve underlying model, native entry, same-surface peers.
-5. Apply gateway baseline vs native rules above.
-6. Strip exotic claims without evidence; **restore** baseline effort when `[]` was used incorrectly on a gateway.
-7. Confirm no bogus `budget_tokens`.
-8. Run `bun validate` and `git diff --check` when authoring.
-9. PR body: citations, wire fields, and why baseline vs `[]` vs extras.
-
-## Citations
-
-Prefer PR body for sources. Leading TOML comment blocks are OK for durable URLs (sync strips mid-file comments). Short adjacent comments for exact API syntax of a reasoning option are encouraged when non-obvious.
+1. Classify host: first-party lab vs multi-model relay.
+2. List changed models and proposed options.
+3. For each: lab entry + peers → expected shape.
+4. Fix invented L/M/H, false `[]`, dual none+toggle, bad budgets.
+5. `bun validate` when authoring.
+6. PR body: host kind, wire fields, why this option set.
 
 ## PR audit output
 
-Report:
-
-- Models and proposed options.
-- Surface classification (gateway vs native).
-- Verdict per option: verified, corrected (note from→to), or removed.
-- Toggle wire path when applicable.
-- When baseline effort was inferred from upstream/peers, say so explicitly.
-- Tests and limits.
-- Validation result.
-
-When ambiguous: keep gateway **baseline** effort if the model is an effort model on comparable surfaces; drop only unverified **extras**. Use `[]` only for true no-control cases.
+- Host classification per provider
+- Models and options; verdict per option
+- Toggle wire path when present
+- Whether baseline was copied from lab vs peers
+- Validation result
