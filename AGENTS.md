@@ -108,25 +108,68 @@ If the provider has a rich catalog API that can populate model data or authorita
 
 ## Model fields
 
-### Required (on lab metadata and on fully inline provider models)
+### Required on lab metadata (`models/`)
 
 | Field | Notes |
 | --- | --- |
-| `name`, `release_date`, `last_updated` | Human-readable metadata |
+| `name`, `description` | Always required |
+| `release_date`, `last_updated` | Best practice; set them on new entries |
+| `attachment`, `reasoning`, `tool_call`, `open_weights` | Best practice booleans — set explicitly |
+| `limit`, `modalities` | Best practice — set so hosts can inherit |
+
+### Required on resolved provider models
+
+After `base_model` merge (or full inline), the provider model must have:
+
+| Field | Notes |
+| --- | --- |
+| `name`, `description` | From base or local |
 | `attachment`, `reasoning`, `tool_call`, `open_weights` | Booleans |
-| `cost`, `limit`, `modalities` | Objects with their own required keys (`cost` is provider-side when using `base_model`) |
+| `release_date`, `last_updated` | Dates |
+| `modalities`, `limit` | `limit.context` + `limit.output` required on providers |
+| `cost` | Provider-side (unless intentionally request-only / no public price) |
+| `reasoning_options` | **Required when `reasoning = true`** |
 
-### Optional
+With `base_model`, do not restate fields already correct on the lab entry. Still author `cost` and (if reasoning) `reasoning_options` on the provider file.
 
-`family`, `knowledge`, `temperature`, `structured_output`, `status` (`alpha` / `beta` / `deprecated`), `description`, weights, benchmarks, links, …
+### Strongly recommended (not schema-required)
 
-With `base_model`, required lab fields come from `models/`; the provider file still needs `cost` (unless request-only) and `reasoning_options` when `reasoning = true`.
+| Field | Notes |
+| --- | --- |
+| `family` | Model family slug — set when known |
+| `knowledge` | Knowledge cutoff (`YYYY-MM` or `YYYY-MM-DD`) |
+| `temperature` | Whether temperature is respected |
+| `structured_output` | Whether structured/JSON output is supported |
+| `interleaved` | When reasoning is returned in a side channel (`reasoning_content` / `reasoning_details`, or `true`) |
+
+### Truly optional
+
+| Field | Notes |
+| --- | --- |
+| `status` | Only when needed: `alpha`, `beta`, or `deprecated` |
+| `provider`, `experimental` | Request-shape overrides / experimental modes |
+| `license`, `links`, `weights`, `benchmarks` | Enrichment on lab metadata |
 
 ### Cost (always USD)
 
 - **All `cost` values are USD per million tokens.** Never publish EUR, CNY, CHF, etc. as if they were USD.
 - Convert other currencies and note rate/date in a **top-of-file** comment.
-- `cost.context_over_200k` is a nested cost object for >200K pricing when applicable.
+- Optional keys on cost: `reasoning`, `cache_read`, `cache_write`, `input_audio`, `output_audio`.
+- **Context-based pricing → `[[cost.tiers]]`**, not `context_over_200k`.
+
+```toml
+[cost]
+input = 2.50
+output = 15.00
+
+[[cost.tiers]]
+tier = { type = "context", size = 200_000 }
+input = 5.00
+output = 22.50
+```
+
+- `cost.context_over_200k` is **legacy output-only**. Do **not** author it in TOML (schema rejects it on write). The generator may emit it for old consumers when a single 200k-style tier exists; **always author tiers**.
+- Tier `size` is the context threshold where that band starts. No duplicate sizes.
 
 ### Comments in TOML
 
