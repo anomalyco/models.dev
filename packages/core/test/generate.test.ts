@@ -4,7 +4,7 @@ import { existsSync } from "node:fs";
 import { mkdir, mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 
-import { generate, generateCatalog } from "../src/index.js";
+import { generate, generateCatalog, generateModels } from "../src/index.js";
 
 async function withFixture<T>(callback: (root: string) => Promise<T>) {
   const root = await mkdtemp(path.join(tmpdir(), "models-dev-test-"));
@@ -35,7 +35,7 @@ function stable(value: unknown): string {
 }
 
 describe("catalog generation", () => {
-  test("base_model can factor metadata without changing provider JSON", async () => {
+  test("base_model factors metadata and retains the ref on provider JSON", async () => {
     await withFixture(async (root) => {
       await write(root, "providers/direct/provider.toml", providerToml("Direct"));
       await write(root, "providers/factored/provider.toml", providerToml("Factored"));
@@ -86,12 +86,10 @@ cache_read = 0.125
         },
       ]);
 
-      expect(catalog.providers.factored?.models.model).toEqual(
-        catalog.providers.direct?.models.model,
-      );
-      expect(catalog.providers.factored?.models.model).not.toHaveProperty(
-        "base_model",
-      );
+      expect(catalog.providers.factored?.models.model).toEqual({
+        ...catalog.providers.direct?.models.model,
+        base_model: "lab/model",
+      });
       expect(catalog.providers.factored?.models.model).not.toHaveProperty(
         "benchmarks",
       );
@@ -183,21 +181,29 @@ input = ["text"]
     expect(matches).toEqual([]);
   });
 
-  test("repository provider JSON strips authored metadata pointers", async () => {
+  test("repository provider JSON strips base_model_omit and serves resolvable base_model refs", async () => {
     const root = path.join(import.meta.dirname, "..", "..", "..");
+    const models = await generateModels(path.join(root, "models"));
     const providers = await generate(path.join(root, "providers"));
     const leaked: string[] = [];
+    const unresolvable: string[] = [];
 
     for (const [providerID, provider] of Object.entries(providers)) {
       for (const [modelID, model] of Object.entries(provider.models)) {
-        const encoded = stable(model);
-        if (encoded.includes("base_model") || encoded.includes("base_model_omit")) {
+        // base_model is deliberately retained on provider JSON so consumers
+        // can group offerings by underlying model; base_model_omit is an
+        // authoring-only directive and must never be served.
+        if (stable(model).includes("base_model_omit")) {
           leaked.push(`${providerID}/${modelID}`);
+        }
+        if (model.base_model !== undefined && models[model.base_model] === undefined) {
+          unresolvable.push(`${providerID}/${modelID} -> ${model.base_model}`);
         }
       }
     }
 
     expect(leaked).toEqual([]);
+    expect(unresolvable).toEqual([]);
   });
 
   test("repository provider JSON excludes model-only metadata", async () => {

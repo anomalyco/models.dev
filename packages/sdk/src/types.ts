@@ -208,6 +208,13 @@ export interface Model {
   name: string
   description: string
   family?: ModelFamily
+  /**
+   * Canonical `models/` registry ID this offering inherits from (its
+   * provider TOML's `base_model` ref), e.g. "anthropic/claude-opus-4-6".
+   * Group offerings by this ID to identify the same underlying model
+   * across providers. Absent when the offering has no registry link.
+   */
+  base_model?: string
   /** Supports file attachments. */
   attachment: boolean
   /** Is a reasoning model. */
