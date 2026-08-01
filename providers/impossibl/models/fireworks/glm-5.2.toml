@@ -1,11 +1,8 @@
 # Pricing: https://api.impossibl.com/v1/models
 base_model = "zhipuai/glm-5.2"
+reasoning_options = []
 
 [cost]
 input = 1.40
 output = 4.40
 cache_read = 0.14
-
-[[reasoning_options]]
-type = "effort"
-values = ["none", "low", "medium", "high", "xhigh"]
