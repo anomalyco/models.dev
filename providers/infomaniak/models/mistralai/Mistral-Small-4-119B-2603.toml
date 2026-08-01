@@ -1,16 +1,25 @@
-# Pricing note: Infomaniak bills in CHF; USD prices below are converted at
-# 1 CHF ≈ 1.24 USD (mid-market rate, checked 2026-08-01). Infomaniak-listed
-# price: CHF 0.20 input / CHF 0.75 output per 1M tokens.
+# Model id matches Infomaniak's API model name exactly: `mistralai/Mistral-Small-4-119B-2603`.
+# Pricing: Infomaniak bills in CHF; the USD values below are converted at
+# 1 CHF = 1.24 USD (mid-market, checked 2026-08-01; live rate 1.2374).
+# Infomaniak-listed price: CHF 0.20 input / CHF 0.75 output per 1M tokens.
+# Catalog: Image-Text to Text, max input 256'000, not flagged beta.
+# Reasoning: no verified control, hence `reasoning_options = []` (not a toggle).
+# Live probe 2026-06-28: an explicit {"reasoning_effort": "none"} 400s server-side
+# ("chat_template is not supported for Mistral tokenizers"), and omitting the field leaves
+# thinking on by default — there is no reachable "off" state, so claiming a toggle would be false.
+# Infomaniak's docs list `mistral3` among the models that do not support `reasoning_effort`;
+# `mistral3` is this model's transformers `model_type` (HF config), so the doc and the 400 agree
+# that the *parameter* is unsupported here. They do not agree on the rest: the doc phrases it as
+# thinking being unsupported, whereas the probe shows thinking runs by default and its output is
+# returned in `message.reasoning`. The observed behaviour is what is encoded — `reasoning`
+# (inherited true) plus bare `interleaved`, with no reasoning_options.
+# Sources:
+#   https://www.infomaniak.com/en/hosting/ai-services/open-source-models
+#   https://www.infomaniak.com/en/hosting/ai-services/prices
+#   https://developer.infomaniak.com/docs/api/post/2/ai/{product_id}/openai/v1/chat/completions
+#   https://huggingface.co/mistralai/Mistral-Small-4-119B-2603 (config.json "model_type": "mistral3")
 base_model = "mistral/mistral-small-2603"
 last_updated = "2026-08-01"
-# Reasoning verified live against the Infomaniak API on 2026-06-28: an explicit "none" 400s
-# server-side ("chat_template is not supported for Mistral tokenizers") and omitting the field
-# leaves thinking on by default, so there is no verified way to disable it -> no reliable toggle.
-# Infomaniak's own API docs confirm mistral3-family models are excluded from reasoning_effort
-# support ("neither apertus-ai/Apertus-v1.5-70B nor mistral3 support it"). "high" does enable
-# thinking and return it in `message.reasoning`, so reasoning/interleaved stay on, but no
-# reasoning_options are exposed since there's no confirmed control over it.
-# Source: https://developer.infomaniak.com/docs/api/post/2/ai/{product_id}/openai/v1/chat/completions
 reasoning_options = []
 interleaved = true
 

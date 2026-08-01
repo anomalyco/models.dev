@@ -1,16 +1,24 @@
-# Pricing note: Infomaniak bills in CHF; USD prices below are converted at
-# 1 CHF ≈ 1.24 USD (mid-market rate, checked 2026-08-01). Infomaniak-listed
-# price: CHF 0.20 input / CHF 0.40 output per 1M tokens.
-base_model = "google/gemma-4-31b-it"
-last_updated = "2026-08-01"
+# Model id matches Infomaniak's catalog/pricing string exactly: `google/gemma-4-31B-it`.
+# Pricing: Infomaniak bills in CHF; the USD values below are converted at
+# 1 CHF = 1.24 USD (mid-market, checked 2026-08-01; live rate 1.2374).
+# Infomaniak-listed price: CHF 0.20 input / CHF 0.40 output per 1M tokens.
+# Modality: Infomaniak serves this model text-only — the catalog row reads
+# "Text-to-Text (optimised for learning)" (EN) / "Text-to-Text (optimisé pour
+# l'instruction)" (FR), max input 100'000 — so image input and `attachment` are
+# overridden off even though the base model is multimodal.
 # Reasoning checked live against the Infomaniak API on 2026-06-28: gemma-4-31B-it ignores
 # `reasoning_effort` (none/low/high produce identical output) and never populates
-# `message.reasoning` — any step-by-step text stays inline in `content`. The model still reasons
-# internally: Infomaniak's API docs say thinking is enabled by default on most models, and
-# gemma-4 is not among the listed exceptions (apertus-ai/Apertus-v1.5-70B, mistral3). The
-# provider just exposes no control and no separate reasoning field, so reasoning stays true
-# (inherited from base_model) with no reasoning_options.
-# Source: https://developer.infomaniak.com/docs/api/post/2/ai/{product_id}/openai/v1/chat/completions
+# `message.reasoning` — any step-by-step text stays inline in `content`. The model still
+# reasons internally (the API docs say thinking is enabled by default on most models, and
+# gemma-4 is not among the listed exceptions, `apertus-ai/Apertus-v1.5-70B` and `mistral3`),
+# so `reasoning` stays true (inherited) with no verified control -> `reasoning_options = []`.
+# Sources:
+#   https://www.infomaniak.com/en/hosting/ai-services/open-source-models
+#   https://www.infomaniak.com/en/hosting/ai-services/prices
+#   https://developer.infomaniak.com/docs/api/post/2/ai/{product_id}/openai/v1/chat/completions
+base_model = "google/gemma-4-31b-it"
+last_updated = "2026-08-01"
+attachment = false
 reasoning_options = []
 
 [cost]
@@ -20,4 +28,6 @@ output = 0.50
 [limit]
 context = 100_000
 input = 100_000
-output = 8_192
+
+[modalities]
+input = ["text"]

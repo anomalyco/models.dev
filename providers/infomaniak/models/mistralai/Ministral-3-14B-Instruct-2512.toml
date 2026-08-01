@@ -1,10 +1,26 @@
-# Pricing note: Infomaniak bills in CHF; USD prices below are converted at
-# 1 CHF ≈ 1.24 USD (mid-market rate, checked 2026-08-01). Infomaniak-listed
-# price: CHF 0.30 input / CHF 0.40 output per 1M tokens.
+# Model id matches Infomaniak's API model name exactly: `mistralai/Ministral-3-14B-Instruct-2512`.
+# Defined inline (no `base_model`) because models/ has no ministral-3-14b metadata entry.
+# Pricing: Infomaniak bills in CHF; the USD values below are converted at
+# 1 CHF = 1.24 USD (mid-market, checked 2026-08-01; live rate 1.2374).
+# Infomaniak-listed price: CHF 0.30 input / CHF 0.40 output per 1M tokens.
+# Catalog: Image-Text to Text, max input 100'000, flagged Beta.
+# Reasoning: `reasoning = false`. Infomaniak's chat/completions docs list `mistral3` among the
+# models that do not support `reasoning_effort`, and `mistral3` is this model's transformers
+# `model_type` (HF config). All five other provider entries for Ministral 3 14B in this repo
+# (openrouter, kilo, nvidia, nano-gpt, digitalocean) also declare `reasoning = false`.
+# limit.output = 25_600 is an estimate: Infomaniak publishes only a max *input* cap, and the
+# schema requires limit.output on provider models that have no models/ base entry.
+# release_date follows the repo's majority for this model (2025-12-02, used by openrouter,
+# kilo and nano-gpt); HF createdAt is 2025-10-31 (pre-release repo creation).
+# Sources:
+#   https://www.infomaniak.com/en/hosting/ai-services/open-source-models
+#   https://www.infomaniak.com/en/hosting/ai-services/prices
+#   https://developer.infomaniak.com/docs/api/post/2/ai/{product_id}/openai/v1/chat/completions
+#   https://huggingface.co/mistralai/Ministral-3-14B-Instruct-2512
 name = "Ministral 3 14B Instruct"
 description = "Compact Mistral model for edge, latency-sensitive, and cost-efficient workloads"
 family = "ministral"
-release_date = "2025-12-15"
+release_date = "2025-12-02"
 last_updated = "2026-08-01"
 status = "beta"
 attachment = true

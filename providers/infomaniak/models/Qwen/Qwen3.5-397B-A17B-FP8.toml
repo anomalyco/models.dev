@@ -1,18 +1,25 @@
-# Pricing note: Infomaniak bills in CHF; USD prices below are converted at
-# 1 CHF ≈ 1.24 USD (mid-market rate, checked 2026-08-01). Infomaniak-listed
-# price: CHF 0.80 input / CHF 3.60 output per 1M tokens.
+# Model id matches Infomaniak's API model name exactly: `Qwen/Qwen3.5-397B-A17B-FP8`.
+# Pricing: Infomaniak bills in CHF; the USD values below are converted at
+# 1 CHF = 1.24 USD (mid-market, checked 2026-08-01; live rate 1.2374).
+# Infomaniak-listed price: CHF 0.80 input / CHF 3.60 output per 1M tokens.
+# Catalog: Image-Text to Text, max input 200'000, flagged Beta.
+# Reasoning: toggles reasoning with `reasoning_effort` set to "none" (off) or
+# "low"/"medium"/"high" (on) — API: {"reasoning_effort": "none"}. Infomaniak documents the
+# field as binary rather than graded effort ("it only allows to enable/disable the thinking:
+# `none` disables the thinking, any other value enables the thinking"), and thinking is on by
+# default when the field is omitted. Confirmed live on 2026-06-28: response `reasoning` is null
+# with "none", populated otherwise. The reasoning text arrives in `message.reasoning`, so
+# `interleaved` is set bare — the schema's field enum only covers reasoning_content/
+# reasoning_details.
+# Sources:
+#   https://www.infomaniak.com/en/hosting/ai-services/open-source-models
+#   https://www.infomaniak.com/en/hosting/ai-services/prices
+#   https://developer.infomaniak.com/docs/api/post/2/ai/{product_id}/openai/v1/chat/completions
 base_model = "alibaba/qwen3.5-397b-a17b"
 name = "Qwen3.5 397B-A17B FP8"
 last_updated = "2026-08-01"
 status = "beta"
-# Reasoning verified live against the Infomaniak API on 2026-06-28: the OpenAI-compatible
-# `reasoning_effort` field is an on/off toggle, not graded effort — "none" disables thinking
-# (response `reasoning` is null); any other value (e.g. "low") or omitting the field enables
-# it, and thinking is on by default. Reasoning text is returned in the `message.reasoning`
-# field, so `interleaved = true` is set without a field name (the schema's reasoning_content/
-# reasoning_details enum does not cover `reasoning`).
-# Source: https://developer.infomaniak.com/docs/api/post/2/ai/{product_id}/openai/v1/chat/completions
-reasoning_options = [{ type = "toggle" }]
+reasoning_options = [{ type = "toggle" }] # API: {"reasoning_effort": "none"} off | "low"|"medium"|"high" on
 interleaved = true
 
 [cost]

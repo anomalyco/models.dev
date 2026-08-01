@@ -1,10 +1,21 @@
-# Pricing note: Infomaniak bills in CHF; USD prices below are converted at
-# 1 CHF ≈ 1.24 USD (mid-market rate, checked 2026-08-01). Infomaniak-listed
-# price: CHF 0.065 input / CHF 0.00 output per 1M tokens.
+# Model id matches Infomaniak's API model name exactly: `bge_multilingual_gemma2`
+# (snake_case, as used in the /v1/embeddings `model` field and returned by GET /1/ai/models).
+# Pricing: Infomaniak bills in CHF; the USD values below are converted at
+# 1 CHF = 1.24 USD (mid-market, checked 2026-08-01; live rate 1.2374).
+# Infomaniak-listed price: CHF 0.065 input / CHF 0.00 output per 1M tokens.
+# Limits: Infomaniak's catalog row gives "Max. input tokens 8'000" (below the 8'192 the upstream
+# model supports) and "Dimensions 3584"; `limit.output` carries the embedding dimension, per the
+# repo convention for embedding models (cf. providers/openai/models/text-embedding-3-large.toml).
+# release_date is BAAI/bge-multilingual-gemma2's Hugging Face creation date.
+# Sources:
+#   https://www.infomaniak.com/en/hosting/ai-services/open-source-models
+#   https://www.infomaniak.com/en/hosting/ai-services/prices
+#   https://developer.infomaniak.com/docs/api/post/2/ai/{product_id}/openai/v1/embeddings
+#   https://huggingface.co/BAAI/bge-multilingual-gemma2
 name = "BGE Multilingual Gemma2"
 description = "Embedding model for semantic search, retrieval, clustering, and ranking pipelines"
 family = "text-embedding"
-release_date = "2024-07-30"
+release_date = "2024-07-25"
 last_updated = "2026-08-01"
 attachment = false
 reasoning = false
@@ -17,8 +28,8 @@ input = 0.08
 output = 0.00
 
 [limit]
-context = 8_192
-input = 8_192
+context = 8_000
+input = 8_000
 output = 3_584
 
 [modalities]
