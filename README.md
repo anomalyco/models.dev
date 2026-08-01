@@ -141,7 +141,7 @@ If the provider isn't already in `providers/`:
    api = "https://api.example.com/v1" # Required with openai-compatible
    ```
 
-#### 2. Add a Logo (optional)
+#### 2. Add a Logo (required for new providers)
 
 To add a logo for the provider:
 
@@ -204,7 +204,7 @@ Use `base_model` when the provider serves the same underlying model and only pro
 
 ```toml
 base_model = "anthropic/claude-opus-4-6"
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "max"] }]
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
 
 [cost]
 input = 5.00

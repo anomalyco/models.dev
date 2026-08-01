@@ -9,7 +9,7 @@ Use this workflow to add or review `reasoning_options` for a specific provider. 
 
 Provider capability means the inference service's accepted HTTP request surface. It does not mean the controls exposed by the repository's configured npm package, a preferred SDK, or a typed client wrapper.
 
-`AGENTS.md` **Reasoning options policy** is authoritative. This skill is the detailed workflow.
+`AGENTS.md` section **Reasoning options** is authoritative. This skill is the detailed workflow.
 
 ## Available Options
 

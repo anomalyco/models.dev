@@ -25,15 +25,15 @@ Do not make code, schema, UI, documentation, or workflow changes. If the issue i
 
 When you do make a fix:
 
-- Follow `AGENTS.md` and the existing TOML conventions exactly (including **Reasoning options policy** and override-only `base_model`).
+- Follow `AGENTS.md` exactly (lab vs provider, **When to use `base_model`**, **Model fields**, **Reasoning options**, override-only hosts).
 - Prefer the smallest correct change.
 - Verify every changed factual value against authoritative sources. Prefer first-party provider documentation, pricing pages, API references, model cards, or live provider catalog responses. Treat the issue as a lead, not sufficient verification by itself.
 - Do not broaden the issue's scope unless the additional changes are required for internal consistency and each one is independently verified.
 - Edit only `models/` and `providers/` TOML files.
-- Use `base_model` when a `models/` entry exists; write **only** provider-specific fields and real overrides — never restate identical description/modalities/structured_output/etc.
-- For OpenAI-compatible gateways, default reasoning effort models to `low`/`medium`/`high` from upstream/peers; do not use `[]` from uncertainty. Add `none`/`toggle`/extras/`budget_tokens` only per `AGENTS.md` (budget is legacy/narrow).
+- If the host did not create the model: identify the lab model, **add** `models/<lab>/<model>.toml` when missing, then use `base_model`. Provider files are override-only — never restate identical description/modalities/structured_output/etc. Full inline only for first-party lab hosts or unique-to-host aliases per `AGENTS.md`.
+- For OpenAI-compatible gateways, default effort models to `low`/`medium`/`high` from upstream/peers; do not use `[]` from uncertainty. If `none` is included with graded efforts, do **not** also add `toggle`. Binary on/off may use `toggle` only with a **leading top-of-file** wire-path comment. Extras/`budget_tokens` only per `AGENTS.md` (budget is legacy/narrow).
 - Preserve provider-specific fields in provider TOMLs (`cost`, `reasoning_options`, `interleaved`, `status`, `provider`).
-- Costs are USD per million tokens; convert other currencies and note rate/date in a leading comment.
+- Costs are USD per million tokens; convert other currencies and note rate/date in a leading comment. Context bands use `[[cost.tiers]]`, never authored `context_over_200k`.
 - Put durable source URLs in a leading TOML comment block when adding or changing factual data. Never put source comments between TOML sections because sync serialization removes them.
 - Do not run shell commands or use Bash. The workflow handles commits and pull request creation after you finish. Do not claim validation unless you actually performed it.
 
