@@ -90,7 +90,7 @@ const Cost = z.object({
     .min(0, "Audio output price cannot be negative")
     .optional(),
   image: z.number().min(0, "Image price cannot be negative").optional(),
-});
+}).strict();
 
 const CostTier = Cost.extend({
   tier: z
@@ -104,12 +104,12 @@ const CostTier = Cost.extend({
 const AuthoredCost = Cost.extend({
   context_over_200k: z.never().optional(),
   tiers: z.array(CostTier).optional(),
-});
+}).strict();
 
 const OutputCost = Cost.extend({
   context_over_200k: Cost.optional(),
   tiers: z.array(CostTier).optional(),
-});
+}).strict();
 
 const DateString = z.string().regex(/^\d{4}-\d{2}(-\d{2})?$/, {
   message: "Must be in YYYY-MM or YYYY-MM-DD format",

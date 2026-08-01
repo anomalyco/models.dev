@@ -22,9 +22,14 @@ describe("model schema", () => {
     expect(result.data.cost?.image).toBe(120);
   });
 
-  test("rejects unknown nested provider configuration fields", () => {
+  test("rejects unknown nested model configuration fields", () => {
     const result = AuthoredModel.safeParse({
       ...baseModel({}),
+      cost: {
+        input: 1,
+        output: 2,
+        cache_reed: 0.1,
+      },
       provider: {
         npm: "example-sdk",
         typo: true,
@@ -46,6 +51,7 @@ describe("model schema", () => {
     if (result.success) return;
     expect(result.error.issues.map((issue) => issue.path.join("."))).toEqual(
       expect.arrayContaining([
+        "cost",
         "provider",
         "experimental",
         "experimental.modes.fast",
