@@ -16,7 +16,7 @@ Run this after every catalog change. It must pass before a PR is mergeable.
 | --- | --- | --- |
 | **What** | Provider-agnostic facts about a model the lab built | How a specific API host serves that model |
 | **Where** | `models/<lab-id>/<model-id>.toml` | `providers/<provider-id>/models/.../<id>.toml` |
-| **Examples** | `models/anthropic/claude-opus-4-6.toml`, `models/openai/gpt-5.4.toml` | `providers/openrouter/models/anthropic/claude-opus-4-6.toml` |
+| **Examples** | `models/anthropic/claude-opus-4-6.toml`, `models/openai/gpt-5.4.toml` | `providers/openrouter/models/anthropic/claude-opus-4.6.toml` |
 | **Contains** | name, description, capabilities, modalities, limits, weights, … | `cost`, `reasoning_options`, `status`, request shape, and **only real overrides** |
 
 - **Labs** create models (Anthropic, OpenAI, Google, DeepSeek, Alibaba, …).

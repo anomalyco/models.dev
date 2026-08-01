@@ -204,7 +204,11 @@ Use `base_model` when the provider serves the same underlying model and only pro
 
 ```toml
 base_model = "anthropic/claude-opus-4-6"
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
+# Match lab/peer controls for this model (not a stripped L/M/H guess)
+reasoning_options = [
+  { type = "effort", values = ["low", "medium", "high", "max"] },
+  { type = "budget_tokens", min = 1_024 },
+]
 
 [cost]
 input = 5.00
