@@ -119,15 +119,16 @@ Only add `toggle` if all are true:
 - Exact field and values are known.
 - Disable is **not** already modeled as `effort` value `none` alongside other graded efforts (see below).
 
-### `none` effort vs `toggle` (do not double-count)
+### `none` effort vs `toggle` (do not double-count off)
 
 | Situation | Correct shape |
 | --- | --- |
 | `none` **and** graded efforts (`low` / `medium` / `high` / …) | `type = "effort"` only, with `none` in `values`. **Never** also add `type = "toggle"`. |
-| Off is `none` (or only on/off) and **no** graded efforts | `type = "toggle"` OK (or effort `["none", …]` only if that is the real API) |
-| Explicit boolean / `enabled`\|`disabled` field | `type = "toggle"` |
+| Explicit boolean / `enabled`\|`disabled` (or equivalent) **plus** graded efforts | `toggle` **+** `effort` — both OK (DeepSeek, many Qwen/GLM hosts, etc.) |
+| Off is binary only (no graded efforts), including off-via-`none` alone | `type = "toggle"` OK |
 
-`none` inside an effort enum **is** the off switch. Adding `toggle` next to `none`+`low`+`medium`+`high` is wrong.
+`none` inside a graded effort enum **is** the off switch — do not also claim `toggle`.  
+`toggle` + graded effort **without** `none` is valid when off is a **separate** wire control.
 
 ### Top-of-file comment required for toggle
 
@@ -145,7 +146,7 @@ Complete before accepting:
 
 > `<provider model ID>` toggles reasoning with `<request path>` set to `<enabled>` or `<disabled>`.
 
-Not toggle: split model IDs; omit-budget ⇒ auto budget; `effort=low` unless docs say it disables; hybrid marketing copy; UI-only switches; pairing `toggle` with effort that already includes `none`.
+Not toggle: split model IDs; omit-budget ⇒ auto budget; `effort=low` unless docs say it disables; hybrid marketing copy; UI-only switches; pairing `toggle` with an `effort` list that already includes `none`.
 
 ## Effort verification
 

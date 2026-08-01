@@ -112,10 +112,12 @@ If the provider has a rich catalog API that can populate model data or authorita
 
 | Field | Notes |
 | --- | --- |
-| `name`, `description` | Always required |
-| `release_date`, `last_updated` | Best practice; set them on new entries |
-| `attachment`, `reasoning`, `tool_call`, `open_weights` | Best practice booleans — set explicitly |
-| `limit`, `modalities` | Best practice — set so hosts can inherit |
+| `name`, `description` | Schema-required |
+| `release_date`, `last_updated` | **Required on new lab entries** (hosts inherit these) |
+| `attachment`, `reasoning`, `tool_call`, `open_weights` | **Required on new lab entries** |
+| `limit`, `modalities` | **Required on new lab entries** — providers must resolve `limit.context` + `limit.output` |
+
+When you create `models/<lab>/<model>.toml` so a third-party host can `base_model` it, author a **complete** lab file (all rows above). Do not ship name/description-only lab stubs and expect an “override-only” host of just `cost` + `reasoning_options` to validate — missing inherited required fields fail `bun validate`.
 
 ### Required on resolved provider models
 
@@ -132,7 +134,7 @@ After `base_model` merge (or full inline), the provider model must have:
 
 With `base_model`, do not restate fields already correct on the lab entry. Still author `cost` and (if reasoning) `reasoning_options` on the provider file.
 
-### Strongly recommended (not schema-required)
+### Strongly recommended on lab metadata
 
 | Field | Notes |
 | --- | --- |
@@ -140,15 +142,16 @@ With `base_model`, do not restate fields already correct on the lab entry. Still
 | `knowledge` | Knowledge cutoff (`YYYY-MM` or `YYYY-MM-DD`) |
 | `temperature` | Whether temperature is respected |
 | `structured_output` | Whether structured/JSON output is supported |
-| `interleaved` | When reasoning is returned in a side channel (`reasoning_content` / `reasoning_details`, or `true`) |
+| `license`, `links`, `weights`, `benchmarks` | Enrichment |
 
-### Truly optional
+### Provider-only (never put these under `models/`)
 
 | Field | Notes |
 | --- | --- |
-| `status` | Only when needed: `alpha`, `beta`, or `deprecated` |
+| `cost`, `reasoning_options` | Host pricing and API controls |
+| `interleaved` | Reasoning side channel on **this** API (`reasoning_content` / `reasoning_details`, or `true`) |
+| `status` | Lifecycle on **this** host: `alpha` / `beta` / `deprecated` |
 | `provider`, `experimental` | Request-shape overrides / experimental modes |
-| `license`, `links`, `weights`, `benchmarks` | Enrichment on lab metadata |
 
 ### Cost (always USD)
 
@@ -189,8 +192,8 @@ Any provider model with `reasoning = true` **must** set `reasoning_options` for 
    reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
    ```
 3. Do **not** use `[]` because you could not re-prove every value on this host. Empty means **no caller control**, not uncertainty.
-4. Add `none` / `minimal` / `xhigh` / `max` only with extra evidence. If `none` is added **with** graded efforts, do **not** also add `toggle` (see Toggle).
-5. Add `toggle` only for binary on/off (or `none` with **no** graded efforts), with a top-of-file wire comment.
+4. Add `none` / `minimal` / `xhigh` / `max` only with extra evidence (see Toggle for how `none` interacts with `toggle`).
+5. `toggle` may sit **beside** graded `effort` when off is a **separate** wire control (boolean / enabled-disabled), not `effort=none`. Top-of-file wire comment required whenever `toggle` is present.
 6. Do **not** invent `budget_tokens` unless this host has a real reasoning-budget field for that model.
 
 ### Native providers
@@ -209,25 +212,36 @@ Reasoning-token budget only — **not** `max_tokens` / output length. Typical le
 
 Same model ID, on and off, via a known request field. Separate `-thinking` / instruct IDs are not a toggle.
 
-**`none` vs `toggle` — pick one shape:**
+**When `toggle` and `effort` may both appear:**
 
 | Host control | Author |
 | --- | --- |
-| Effort levels include `none` **and** other levels (`low` / `medium` / `high` / …) | **Only** `type = "effort"` with `none` in `values`. Do **not** also add `type = "toggle"`. |
-| Disable is `none` (or equivalent) but there are **no** graded efforts | `type = "toggle"` is OK |
-| Explicit boolean / enabled-disabled field (not effort enum) | `type = "toggle"` |
+| Effort includes `none` **and** graded levels (`low` / `medium` / `high` / …) | **Only** `type = "effort"` with `none` in `values`. Do **not** also add `type = "toggle"` — `none` already is off. |
+| Explicit boolean / enabled-disabled (or equivalent) **and** graded efforts | `toggle` **+** `effort` (`low`/`medium`/`high`/…) — both OK |
+| Binary on/off only (no graded efforts), including off-via-`none` with no other levels | `type = "toggle"` alone is OK |
 
-Whenever `toggle` is present, put a **leading top-of-file comment** (above the first key) that states the exact wire path and on/off values. Mid-file comments are stripped by sync.
+Exclusivity is **only** “do not pair `toggle` with effort that already contains `none`.” A distinct on/off wire path plus graded effort (DeepSeek `thinking.type` + `reasoning_effort`, many Qwen `enable_thinking` + effort, etc.) is valid.
+
+Whenever `toggle` is present, put a **leading top-of-file comment** (above the first key) with the exact wire path and on/off values. Mid-file comments are stripped by sync.
 
 ```toml
 # Toggle: extra_body.enable_thinking true|false
-# (or: reasoning_effort "none" = off; any other value / omit = on — only if no graded efforts)
 base_model = "alibaba/qwen3.5-plus"
 reasoning_options = [{ type = "toggle" }]
 ```
 
 ```toml
-# Graded effort including off — no separate toggle
+# Toggle: thinking.type enabled|disabled (separate from effort)
+# Effort: reasoning_effort high|max
+base_model = "deepseek/deepseek-v4-pro"
+reasoning_options = [
+  { type = "toggle" },
+  { type = "effort", values = ["high", "max"] },
+]
+```
+
+```toml
+# Graded effort including off as none — no separate toggle
 base_model = "openai/gpt-5.4"
 reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh"] }]
 ```
@@ -250,8 +264,8 @@ reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high
 ### Blockers
 
 - [ ] New provider has compliant `logo.svg`
-- [ ] Non-lab hosts use `base_model`; missing lab metadata was **added** under `models/` when needed
-- [ ] Provider `base_model` files are override-only (no duplicated identical fields)
+- [ ] Non-lab hosts use `base_model`; missing lab metadata was **added** under `models/` when needed (complete lab file, not a stub)
+- [ ] Provider `base_model` files are override-only (no duplicated identical fields; no provider-only keys under `models/`)
 - [ ] `reasoning = true` ⇒ `reasoning_options` set per policy above
 - [ ] Costs are USD/MTok
 - [ ] `bun validate` passes
