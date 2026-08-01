@@ -9,6 +9,7 @@ const API_ENDPOINT = "https://api.empiriolabs.ai/v1/models";
 
 const CANONICAL_BASE_MODELS: Record<string, string> = {
   "fugu-ultra": "sakana/fugu-ultra",
+  "deepseek-v4-flash-0731": "deepseek/deepseek-v4-flash",
   "gemma-4-26b-a4b": "google/gemma-4-26b-a4b-it",
   "gemma-4-e4b": "google/gemma-4-E4B-it",
   "mistral-medium-3": "mistral/mistral-medium-2505",
