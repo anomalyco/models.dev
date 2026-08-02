@@ -1251,6 +1251,52 @@ test("normalizes DigitalOcean x-high effort tokens and uses lifecycle status", (
   expect(model.status).toBeUndefined();
 });
 
+test("preserves DigitalOcean status when lifecycle metadata is blank", () => {
+  const model = buildDigitalOceanModel(digitalOceanModel({
+    lifecycle_status: "  ",
+  }), {
+    name: "Preview model",
+    description: "Curated model",
+    release_date: "2026-01-01",
+    last_updated: "2026-01-01",
+    attachment: false,
+    reasoning: true,
+    reasoning_options: [{ type: "effort", values: ["low", "high"] }],
+    tool_call: true,
+    open_weights: false,
+    status: "beta",
+    cost: { input: 1, output: 2 },
+    limit: { context: 128_000, output: 32_000 },
+    modalities: { input: ["text"], output: ["text"] },
+  });
+
+  expect(model.status).toBe("beta");
+});
+
+test("explicit DigitalOcean text-only modalities clear standalone attachment support", () => {
+  const model = buildDigitalOceanModel(digitalOceanModel({
+    modalities: { input: ["text"], output: ["text"] },
+  }), {
+    name: "Multimodal model",
+    description: "Curated model",
+    release_date: "2026-01-01",
+    last_updated: "2026-01-01",
+    attachment: true,
+    reasoning: true,
+    reasoning_options: [{ type: "effort", values: ["low", "high"] }],
+    tool_call: true,
+    open_weights: false,
+    cost: { input: 1, output: 2 },
+    limit: { context: 128_000, output: 32_000 },
+    modalities: { input: ["text", "image"], output: ["text"] },
+  });
+
+  expect(model).toMatchObject({
+    attachment: false,
+    modalities: { input: ["text"], output: ["text"] },
+  });
+});
+
 test("new DigitalOcean base models use explicit text-only catalog modalities", () => {
   const model = buildDigitalOceanModel(
     digitalOceanModel({

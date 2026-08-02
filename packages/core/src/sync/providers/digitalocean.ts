@@ -404,7 +404,8 @@ function status(
   lifecycleStatus: string,
   existing: ExistingModel["status"],
 ): ExistingModel["status"] {
-  const lifecycle = lifecycleStatus.toLowerCase().replaceAll("_", "-");
+  const lifecycle = lifecycleStatus.trim().toLowerCase().replaceAll("_", "-");
+  if (lifecycle.length === 0) return existing;
   if (lifecycle === "deprecated" || lifecycle === "end-of-life") return "deprecated";
   if (lifecycle === "public-preview" || lifecycle === "preview") return "beta";
   return existing === "deprecated" || existing === "beta" ? undefined : existing;
@@ -495,7 +496,7 @@ export function buildDigitalOceanModel(
     family: existing?.family ?? inferFamily(model.id, model.name),
     release_date: releaseDate,
     last_updated: existing?.last_updated ?? releaseDate,
-    attachment: attachment || existing?.attachment === true,
+    attachment,
     reasoning,
     reasoning_options: reasoningOptions,
     temperature: existing?.temperature ?? true,
