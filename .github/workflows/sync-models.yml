@@ -95,6 +95,7 @@ jobs:
         run: bun validate
 
       - name: Report changes
+        id: report
         env:
           GH_TOKEN: ${{ steps.committer.outputs.token }}
           BRANCH: automation/sync-models-${{ matrix.provider }}
@@ -119,6 +120,8 @@ jobs:
           git checkout -B "$BRANCH"
           git add models providers
           git commit -m "$TITLE"
+          bun sync:auto-merge HEAD^ HEAD
+          safe="$(sed -n 's/^safe=//p' "$GITHUB_OUTPUT" | tail -1)"
           git push --force-with-lease origin "$BRANCH"
 
           pr_number="$(gh pr list --head "$BRANCH" --base dev --json number --jq '.[0].number')"
@@ -129,4 +132,11 @@ jobs:
             done
           else
             gh pr create --base dev --head "$BRANCH" --title "$TITLE" --body-file .sync/model-sync-report.md "${label_args[@]}"
+            pr_number="$(gh pr list --head "$BRANCH" --base dev --json number --jq '.[0].number')"
+          fi
+
+          if [ "$safe" = "true" ]; then
+            gh pr merge "$pr_number" --auto --squash
+          else
+            gh pr merge "$pr_number" --disable-auto || true
           fi
