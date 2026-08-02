@@ -10,5 +10,11 @@ input = 5
 output = 30
 cache_read = 0.5
 
+[[cost.tiers]]
+tier = { type = "context", size = 272_000 }
+input = 10
+output = 45
+cache_read = 1
+
 [limit]
 output = 128_000

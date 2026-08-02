@@ -19,6 +19,16 @@ max = 81_920
 input = 0.78
 output = 3.9
 
+[[cost.tiers]]
+tier = { type = "context", size = 32_000 }
+input = 1.56
+output = 7.8
+
+[[cost.tiers]]
+tier = { type = "context", size = 128_000 }
+input = 1.95
+output = 9.75
+
 [limit]
 context = 262_144
 output = 65_536
