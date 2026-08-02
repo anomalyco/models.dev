@@ -1137,6 +1137,54 @@ test("uses DigitalOcean reasoning efforts over curated capability metadata", () 
   expect(model).not.toHaveProperty("base_model");
 });
 
+test("preserves DigitalOcean reasoning metadata when efforts are empty", () => {
+  const model = buildDigitalOceanModel(digitalOceanModel({
+    thinking: undefined,
+    reasoning_efforts: [],
+  }), {
+    name: "Reasoning model",
+    description: "Curated model",
+    release_date: "2026-01-01",
+    last_updated: "2026-01-01",
+    attachment: false,
+    reasoning: true,
+    reasoning_options: [{ type: "effort", values: ["low", "high"] }],
+    tool_call: true,
+    open_weights: false,
+    cost: { input: 1, output: 2 },
+    limit: { context: 128_000, output: 32_000 },
+    modalities: { input: ["text"], output: ["text"] },
+  });
+
+  expect(model).toMatchObject({
+    reasoning: true,
+    reasoning_options: [{ type: "effort", values: ["low", "high"] }],
+  });
+});
+
+test("uses explicit DigitalOcean thinking false when efforts are empty", () => {
+  const model = buildDigitalOceanModel(digitalOceanModel({
+    thinking: false,
+    reasoning_efforts: [],
+  }), {
+    name: "Reasoning model",
+    description: "Curated model",
+    release_date: "2026-01-01",
+    last_updated: "2026-01-01",
+    attachment: false,
+    reasoning: true,
+    reasoning_options: [{ type: "effort", values: ["low", "high"] }],
+    tool_call: true,
+    open_weights: false,
+    cost: { input: 1, output: 2 },
+    limit: { context: 128_000, output: 32_000 },
+    modalities: { input: ["text"], output: ["text"] },
+  });
+
+  expect(model.reasoning).toBe(false);
+  expect(model.reasoning_options).toBeUndefined();
+});
+
 test("uses DigitalOcean effort lists over curated values", () => {
   const model = buildDigitalOceanModel(digitalOceanModel({
     id: "openai-gpt-5.2",

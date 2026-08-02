@@ -372,16 +372,20 @@ function reasoningOptionsFor(
   if (model.reasoning_efforts === undefined || model.reasoning_efforts.length === 0) {
     return existing?.reasoning_options;
   }
-  const remoteValues = model.reasoning_efforts
+  const remoteValues = reasoningEfforts(model);
+  const preserved = existing?.reasoning_options?.filter((option) => option.type !== "effort") ?? [];
+  return remoteValues.length > 0
+    ? [...preserved, { type: "effort", values: remoteValues }]
+    : existing?.reasoning_options;
+}
+
+function reasoningEfforts(model: DigitalOceanSourceModel) {
+  return (model.reasoning_efforts ?? [])
     .map((value) => {
       const normalized = normalizeEffortToken(value);
       return normalized === "null" ? null : normalized;
     })
     .filter(isReasoningEffort);
-  const preserved = existing?.reasoning_options?.filter((option) => option.type !== "effort") ?? [];
-  return remoteValues.length > 0
-    ? [...preserved, { type: "effort", values: remoteValues }]
-    : existing?.reasoning_options;
 }
 
 function isReasoningEffort(value: string | null): value is ReasoningEffort {
@@ -462,9 +466,13 @@ export function buildDigitalOceanModel(
     output: maxTokens ?? existing?.limit?.output ?? 0,
   };
   const textOutput = output.includes("text") && !output.includes("image") && !output.includes("video");
-  const hasRemoteReasoning = model.thinking !== undefined || model.reasoning_efforts !== undefined;
-  const providerReasoning = textOutput && hasRemoteReasoning
-    ? model.thinking === true || (model.reasoning_efforts?.length ?? 0) > 0
+  const remoteEfforts = reasoningEfforts(model);
+  const providerReasoning = !textOutput
+    ? existing?.reasoning
+    : model.thinking === true || remoteEfforts.length > 0
+    ? true
+    : model.thinking === false
+    ? false
     : existing?.reasoning;
   const reasoning = providerReasoning ?? false;
   const reasoningOptions = reasoning === true ? reasoningOptionsFor(model, existing) : undefined;
