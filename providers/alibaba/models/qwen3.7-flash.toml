@@ -1,0 +1,30 @@
+# CNY→USD rate: 6.4, 2026-07-27, source: https://help.aliyun.com/zh/model-studio/model-pricing
+# International deployment pricing (CNY): 0.225/0.974 (≤32K), 0.749/2.998 (≤256K), 1.499/5.995 (≤1M)
+base_model = "alibaba/qwen3.7-flash"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "budget_tokens"
+max = 262_144
+
+[cost]
+input = 0.035
+output = 0.152
+cache_read = 0.0035
+cache_write = 0.04375
+
+[[cost.tiers]]
+tier = { type = "context", size = 32_000 }
+input = 0.117
+output = 0.468
+cache_read = 0.0117
+cache_write = 0.14625
+
+[[cost.tiers]]
+tier = { type = "context", size = 256_000 }
+input = 0.234
+output = 0.937
+cache_read = 0.0234
+cache_write = 0.2925
