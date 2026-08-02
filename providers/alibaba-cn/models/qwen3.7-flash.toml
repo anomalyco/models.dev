@@ -1,0 +1,30 @@
+# CNY→USD rate: 6.4, 2026-07-27, source: https://help.aliyun.com/zh/model-studio/model-pricing
+# Beijing region pricing (CNY): 0.2/0.8 (≤32K), 0.6/2.4 (≤256K), 1.2/4.8 (≤1M)
+base_model = "alibaba/qwen3.7-flash"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "budget_tokens"
+max = 262_144
+
+[cost]
+input = 0.03125
+output = 0.125
+cache_read = 0.003125
+cache_write = 0.0390625
+
+[[cost.tiers]]
+tier = { type = "context", size = 32_000 }
+input = 0.09375
+output = 0.375
+cache_read = 0.009375
+cache_write = 0.1171875
+
+[[cost.tiers]]
+tier = { type = "context", size = 256_000 }
+input = 0.1875
+output = 0.75
+cache_read = 0.01875
+cache_write = 0.234375
