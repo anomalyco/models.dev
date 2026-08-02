@@ -1,0 +1,57 @@
+# Infersia serving details for DeepSeek V4 Flash 0731.
+#
+# Sources:
+#   Pricing   https://infersia.com/models/deepseek/deepseek-v4-flash-0731
+#   Limits    https://api.infersia.com/v1/models (context_length, max_completion_tokens)
+#
+# Served as DeepSeek's own MXFP4 release — not a quantisation we produced. The
+# KV cache is fp8 in DeepSeek's sparse-MLA layout, which is what makes the full
+# 1M window practical to serve rather than nominal.
+#
+# The directory is `deepseek/` because a provider file's path is that provider's
+# own API id and we serve this as `deepseek/deepseek-v4-flash-0731`.
+
+base_model = "deepseek/deepseek-v4-flash"
+name = "DeepSeek V4 Flash 0731"
+description = "The official release of DeepSeek-V4-Flash, superseding the preview, with substantially enhanced agentic capabilities. Same structure as DeepSeek-V4-Flash-DSpark — it ships with a speculative decoding module attached."
+release_date = "2026-07-31"
+last_updated = "2026-07-31"
+interleaved = true
+
+# Verified against the live endpoint, not transcribed from docs. Thinking
+# defaults OFF (280 completion tokens on a short prompt); the toggle turns it
+# on, and depth is set with the TOP-LEVEL OpenAI `reasoning_effort` field — not
+# a template kwarg. Only the values that verifiably do something are listed:
+# `none` forces thinking off even when the toggle is on, and `max` injects the
+# deepest deliberation prompt (7,972 tokens on the same short prompt).
+# DeepSeek's docs also name low/high, but the serving engine accepts those as
+# no-ops, and a level that changes nothing is not a level.
+#
+# Deliberation is returned in the message field `reasoning` — vLLM's name, not
+# DeepSeek's `reasoning_content`. That is why `interleaved` is the bare flag
+# below rather than a field declaration: the schema can only name
+# reasoning_content or reasoning_details, and claiming either would point
+# clients at an empty key. Returned on both the streaming and non-streaming
+# paths, billed as completion tokens.
+[[reasoning_options]]
+type = "toggle" # API: {"chat_template_kwargs": {"enable_thinking": true}}
+
+[[reasoning_options]]
+type = "effort" # API: top-level {"reasoning_effort": "max"}
+values = ["none", "max"]
+
+# Both fields differ from the base entry, in opposite directions. The context is
+# larger — 1_048_576 is the model's full window and what we serve, against the
+# base entry's rounded 1_000_000 — while completions are capped at 32_768 rather
+# than 384_000.
+[limit]
+context = 1_048_576
+output = 32_768
+
+[provider]
+shape = "completions"
+
+[cost]
+input = 0.14
+output = 0.28
+cache_read = 0.035

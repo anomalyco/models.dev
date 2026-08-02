@@ -4,9 +4,9 @@
 #   Pricing   https://infersia.com/models/stepfun-ai/step-3.7-flash
 #   Limits    https://api.infersia.com/v1/models (context_length, max_completion_tokens)
 #
-# Served as StepFun's own NVFP4 release on a single B200 — not a quantisation
-# we produced. StepFun publish no NVFP4-vs-BF16 quality delta, so this is not
-# claimed as full-precision parity.
+# Served as StepFun's own NVFP4 release — not a quantisation we produced.
+# StepFun publish no NVFP4-vs-BF16 quality delta, so this is not claimed as
+# full-precision parity.
 #
 # The directory is `stepfun-ai/` because a provider file's path is that
 # provider's own API id and we serve this as `stepfun-ai/step-3.7-flash`. The
@@ -15,11 +15,11 @@
 base_model = "stepfun/step-3.7-flash"
 # The shared entry sets limit.input = 256_000 alongside its 256_000 context.
 # [limit] deep-merges, so overriding only `context` and `output` below would
-# leave input = 256_000 against a context of 131_072 — an input ceiling larger
-# than the whole window. Dropping the inherited field is what the other
-# providers of this model do rather than asserting a second number, because the
-# real constraint is the single 131_072 window shared between prompt and
-# completion, not a separate input cap.
+# carry that 256_000 input ceiling onto our 262_144 window and understate what
+# a caller may send. Dropping the inherited field is what the other providers
+# of this model do rather than asserting a second number, because the real
+# constraint is the single 262_144 window shared between prompt and completion,
+# not a separate input cap.
 base_model_omit = ["limit.input"]
 structured_output = true
 reasoning = true
@@ -32,8 +32,8 @@ reasoning = true
 type = "effort" # API: {"chat_template_kwargs": {"reasoning_effort": "low"}}
 values = ["low", "medium", "high"]
 
-# The model's full context, served on a single B200. Output is capped at 32_768,
-# which is the only field below the shared entry.
+# The model's full context. Output is capped at 32_768, which is the only field
+# below the shared entry.
 [limit]
 context = 262_144
 output = 32_768
