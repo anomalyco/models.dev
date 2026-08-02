@@ -1229,6 +1229,41 @@ test("new DigitalOcean base models do not clobber multimodal metadata with text-
   expect(model).not.toHaveProperty("reasoning");
 });
 
+test("existing DigitalOcean base models preserve provider modality subsets from text-only catalog rows", () => {
+  const model = buildDigitalOceanModel(
+    digitalOceanModel({
+      id: "nemotron-nano-12b-v2-vl",
+      name: "Nemotron Nano 12B v2 VL",
+      modalities: { input: ["text"], output: ["text"] },
+      context_window: 128_000,
+      max_output_tokens: 16_384,
+      pricing: { input: 0.2, output: 0.6 },
+    }),
+    {
+      base_model: "nvidia/nemotron-nano-12b-v2-vl",
+      name: "Nemotron Nano 12B v2 VL",
+      description: "Nemotron vision-language model",
+      family: "nemotron",
+      release_date: "2025-12-01",
+      last_updated: "2026-04-30",
+      attachment: true,
+      reasoning: true,
+      reasoning_options: [{ type: "effort", values: ["none", "low", "medium", "high", "max"] }],
+      temperature: true,
+      tool_call: true,
+      open_weights: true,
+      cost: { input: 0.2, output: 0.6 },
+      limit: { context: 128_000, output: 16_384 },
+      modalities: { input: ["text", "image"], output: ["text"] },
+    },
+  );
+
+  expect(model).toMatchObject({
+    base_model: "nvidia/nemotron-nano-12b-v2-vl",
+    modalities: { input: ["text", "image"] },
+  });
+});
+
 test("resolves DigitalOcean IDs to canonical model metadata", () => {
   expect(resolveDigitalOceanBaseModel("openai-gpt-5.5")).toBe("openai/gpt-5.5");
   expect(resolveDigitalOceanBaseModel("deepseek-v4-pro")).toBe("deepseek/deepseek-v4-pro");

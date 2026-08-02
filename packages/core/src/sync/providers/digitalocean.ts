@@ -551,7 +551,7 @@ export function buildDigitalOceanModel(
     return factorBaseModel(baseModel, {
       name: model.name,
       description: existing?.description,
-      ...(remoteIsTextOnly
+      ...(remoteIsTextOnly && existing === undefined
         ? {}
         : {
             attachment,
