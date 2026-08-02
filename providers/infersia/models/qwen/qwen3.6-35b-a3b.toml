@@ -6,9 +6,10 @@
 #
 # Served AWQ int4 with an fp8 KV cache. The 262K context is the model's native
 # window, not a YaRN extension.
+#
+# Toggle: chat_template_kwargs.enable_thinking = true|false (default false)
 
 base_model = "alibaba/qwen3.6-35b-a3b"
-reasoning = true
 
 # Qwen3 hybrid thinking. Infersia defaults it off, so an ordinary chat turn does
 # not spend 500-1500 unrequested reasoning tokens; send the kwarg to turn it on.
@@ -16,9 +17,8 @@ reasoning = true
 type = "toggle" # API: {"chat_template_kwargs": {"enable_thinking": true}}
 
 # Overrides the base entry's 65_536 output ceiling — Infersia caps completions
-# at 32_768 tokens.
+# at 32_768 tokens. Context is inherited unchanged.
 [limit]
-context = 262_144
 output = 32_768
 
 # Text and image only. The base entry also lists video and audio: the weights

@@ -6,22 +6,20 @@
 #
 # Served AWQ int4 with an fp8 KV cache. The 131_072 window is reached with YaRN
 # (factor 4.0 over the model's native 32_768) and is verified in service.
+#
+# Toggle: chat_template_kwargs.enable_thinking = true|false (default false)
 
 base_model = "alibaba/qwen3-14b"
-reasoning = true
 
 # Qwen3 hybrid thinking. Infersia defaults it off, so an ordinary chat turn does
 # not spend 500-1500 unrequested reasoning tokens; send the kwarg to turn it on.
 [[reasoning_options]]
 type = "toggle" # API: {"chat_template_kwargs": {"enable_thinking": true}}
 
+# Only the output ceiling differs from the base entry; context and modalities
+# are inherited unchanged.
 [limit]
-context = 131_072
 output = 16_384
-
-[modalities]
-input = ["text"]
-output = ["text"]
 
 [provider]
 shape = "completions"

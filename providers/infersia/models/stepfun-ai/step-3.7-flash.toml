@@ -11,6 +11,9 @@
 # The directory is `stepfun-ai/` because a provider file's path is that
 # provider's own API id and we serve this as `stepfun-ai/step-3.7-flash`. The
 # shared entry it inherits from is keyed by lab, at models/stepfun/.
+#
+# Effort: chat_template_kwargs.reasoning_effort = "low"|"medium"|"high"
+# (Infersia defaults to "medium" when the caller sends none)
 
 base_model = "stepfun/step-3.7-flash"
 # The shared entry sets limit.input = 256_000 alongside its 256_000 context.
@@ -22,7 +25,6 @@ base_model = "stepfun/step-3.7-flash"
 # not a separate input cap.
 base_model_omit = ["limit.input"]
 structured_output = true
-reasoning = true
 
 # Three depths, set per request. Infersia defaults to "medium" when the caller
 # sends none — the template only emits its reasoning instruction when the
@@ -48,8 +50,9 @@ output = ["text"]
 [provider]
 shape = "completions"
 
-# Under StepFun's own published rates ($0.20 / $1.15 / $0.04), which are also
-# the median across the providers listed for this model.
+# Infersia's rates, authored below. Deliberately under StepFun's own published
+# $0.20 / $1.15 / $0.04, which is also the median across the providers listed
+# for this model.
 [cost]
 input = 0.18
 output = 1.05
