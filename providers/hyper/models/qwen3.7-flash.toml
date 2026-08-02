@@ -1,11 +1,8 @@
-name = "Qwen3.7-Flash"
+base_model = "alibaba/qwen3.7-flash"
 description = "Efficient model for low-latency assistance, extraction, and routine automation"
 release_date = "2026-07-27"
 last_updated = "2026-07-30"
-attachment = true
 reasoning = false
-tool_call = true
-open_weights = false
 
 [cost]
 input = 0.2
@@ -13,9 +10,7 @@ output = 0.8
 cache_read = 0.04
 
 [limit]
-context = 1_000_000
 output = 64_000
 
 [modalities]
 input = ["text", "image"]
-output = ["text"]

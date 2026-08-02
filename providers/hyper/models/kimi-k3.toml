@@ -1,7 +1,10 @@
 base_model = "moonshotai/kimi-k3"
 release_date = "2026-07-27"
 last_updated = "2026-07-30"
-reasoning = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
 
 [cost]
 input = 3.2664
