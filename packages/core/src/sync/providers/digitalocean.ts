@@ -343,16 +343,6 @@ function normalizeModalities(values: string[], fallback: Modality[]): Modality[]
   return [...new Set(normalized.length > 0 ? normalized : fallback)];
 }
 
-function unionModalities(remote: Modality[], existing: Modality[] | undefined): Modality[] {
-  // Catalog rows often omit PDF/image even when the endpoint accepts them.
-  // Union with authored modalities so sync never silently drops capabilities.
-  return [...new Set([...(existing ?? []), ...remote])];
-}
-
-function isTextOnly(input: Modality[], output: Modality[]) {
-  return input.every((value) => value === "text") && output.every((value) => value === "text");
-}
-
 function normalizeEffortToken(value: string): string {
   const normalized = value.trim().toLowerCase().replaceAll("_", "-");
   if (normalized === "x-high" || normalized === "xhigh") return "xhigh";
@@ -389,11 +379,9 @@ function reasoningOptionsFor(
     })
     .filter(isReasoningEffort);
   const preserved = existing?.reasoning_options?.filter((option) => option.type !== "effort") ?? [];
-  const existingEffort = existing?.reasoning_options?.find((option) => option.type === "effort");
-  const existingValues = existingEffort?.type === "effort" ? existingEffort.values : [];
-  // Merge so incomplete catalog effort lists cannot drop curated values (e.g. none/xhigh).
-  const values = [...new Set([...remoteValues, ...existingValues])];
-  return values.length > 0 ? [...preserved, { type: "effort", values }] : preserved.length > 0 ? preserved : existing?.reasoning_options;
+  return remoteValues.length > 0
+    ? [...preserved, { type: "effort", values: remoteValues }]
+    : existing?.reasoning_options;
 }
 
 function isReasoningEffort(value: string | null): value is ReasoningEffort {
@@ -411,33 +399,11 @@ function isReasoningEffort(value: string | null): value is ReasoningEffort {
 function status(
   lifecycleStatus: string,
   existing: ExistingModel["status"],
-  name?: string,
 ): ExistingModel["status"] {
   const lifecycle = lifecycleStatus.toLowerCase().replaceAll("_", "-");
   if (lifecycle === "deprecated" || lifecycle === "end-of-life") return "deprecated";
-  if (
-    lifecycle === "public-preview"
-    || lifecycle === "preview"
-    || name?.toLowerCase().includes("public preview") === true
-  ) {
-    return "beta";
-  }
+  if (lifecycle === "public-preview" || lifecycle === "preview") return "beta";
   return existing === "deprecated" || existing === "beta" ? undefined : existing;
-}
-
-function resolveReasoning(
-  model: DigitalOceanSourceModel,
-  existing: ExistingModel | undefined,
-  textOutput: boolean,
-): boolean | undefined {
-  if (!textOutput) return existing?.reasoning ?? false;
-  // `thinking: true` is the only positive-authoritative DO signal. Catalog rows
-  // sometimes attach generic reasoning_efforts to non-reasoning chat models
-  // (e.g. gpt-4o-mini); never flip curated reasoning=false from efforts alone.
-  if (model.thinking === true) return true;
-  if (existing?.reasoning !== undefined) return existing.reasoning;
-  if ((model.reasoning_efforts?.length ?? 0) > 0) return true;
-  return undefined;
 }
 
 function cost(model: DigitalOceanSourceModel, existing: ExistingModel | undefined) {
@@ -486,14 +452,8 @@ export function buildDigitalOceanModel(
 ): SyncedModel {
   const remoteInput = normalizeModalities(model.modalities?.input ?? [], []);
   const remoteOutput = normalizeModalities(model.modalities?.output ?? [], []);
-  const input = unionModalities(
-    remoteInput.length > 0 ? remoteInput : ["text"],
-    existing?.modalities?.input,
-  );
-  const output = unionModalities(
-    remoteOutput.length > 0 ? remoteOutput : ["text"],
-    existing?.modalities?.output,
-  );
+  const input = remoteInput.length > 0 ? remoteInput : existing?.modalities?.input ?? ["text"];
+  const output = remoteOutput.length > 0 ? remoteOutput : existing?.modalities?.output ?? ["text"];
   const context = number(model.context_window) ?? existing?.limit?.context ?? 0;
   const maxTokens = number(model.max_output_tokens ?? undefined);
   const limit = {
@@ -502,10 +462,13 @@ export function buildDigitalOceanModel(
     output: maxTokens ?? existing?.limit?.output ?? 0,
   };
   const textOutput = output.includes("text") && !output.includes("image") && !output.includes("video");
-  const providerReasoning = resolveReasoning(model, existing, textOutput);
+  const hasRemoteReasoning = model.thinking !== undefined || model.reasoning_efforts !== undefined;
+  const providerReasoning = textOutput && hasRemoteReasoning
+    ? model.thinking === true || (model.reasoning_efforts?.length ?? 0) > 0
+    : existing?.reasoning;
   const reasoning = providerReasoning ?? false;
   const reasoningOptions = reasoning === true ? reasoningOptionsFor(model, existing) : undefined;
-  const modelStatus = status(model.lifecycle_status, existing?.status, model.name);
+  const modelStatus = status(model.lifecycle_status, existing?.status);
   const releaseDate = existing?.release_date ?? model.created_at?.slice(0, 10) ?? new Date().toISOString().slice(0, 10);
   const attachment = input.some((value) => value !== "text");
   const values: Partial<SyncedFullModel> = {
@@ -542,21 +505,11 @@ export function buildDigitalOceanModel(
   };
 
   if (baseModel !== undefined) {
-    // Incomplete catalog rows are often text-only. Do not clobber base-model
-    // vision/PDF/attachment facts unless the catalog reports non-text modalities.
-    const remoteIsTextOnly = isTextOnly(
-      remoteInput.length > 0 ? remoteInput : ["text"],
-      remoteOutput.length > 0 ? remoteOutput : ["text"],
-    );
     return factorBaseModel(baseModel, {
       name: model.name,
       description: existing?.description,
-      ...(remoteIsTextOnly && existing === undefined
-        ? {}
-        : {
-            attachment,
-            modalities: { input, output },
-          }),
+      attachment,
+      modalities: { input, output },
       reasoning: providerReasoning,
       reasoning_options: reasoningOptions,
       temperature: existing?.temperature,

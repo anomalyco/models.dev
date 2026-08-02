@@ -1103,7 +1103,7 @@ test("syncs DigitalOcean reasoning capability, efforts, and lifecycle status", (
   });
 });
 
-test("does not flip curated non-reasoning DigitalOcean models from generic efforts", () => {
+test("uses DigitalOcean reasoning efforts over curated capability metadata", () => {
   const model = buildDigitalOceanModel(digitalOceanModel({
     id: "openai-gpt-4o-mini",
     name: "OpenAI GPT-4o mini",
@@ -1130,14 +1130,14 @@ test("does not flip curated non-reasoning DigitalOcean models from generic effor
   });
 
   expect(model).toMatchObject({
-    reasoning: false,
-    modalities: { input: ["text", "image", "pdf"], output: ["text"] },
+    reasoning: true,
+    reasoning_options: [{ type: "effort", values: ["low", "medium", "high"] }],
+    modalities: { input: ["text", "image"], output: ["text"] },
   });
-  expect(model.reasoning_options).toBeUndefined();
   expect(model).not.toHaveProperty("base_model");
 });
 
-test("merges incomplete DigitalOcean effort lists with curated values", () => {
+test("uses DigitalOcean effort lists over curated values", () => {
   const model = buildDigitalOceanModel(digitalOceanModel({
     id: "openai-gpt-5.2",
     name: "OpenAI GPT-5.2",
@@ -1168,13 +1168,13 @@ test("merges incomplete DigitalOcean effort lists with curated values", () => {
     reasoning: true,
     reasoning_options: [{
       type: "effort",
-      values: ["minimal", "low", "medium", "high", "none", "xhigh"],
+      values: ["minimal", "low", "medium", "high"],
     }],
   });
   expect(model).not.toHaveProperty("base_model");
 });
 
-test("normalizes DigitalOcean x-high effort tokens and keeps public-preview status", () => {
+test("normalizes DigitalOcean x-high effort tokens and uses lifecycle status", () => {
   const model = buildDigitalOceanModel(digitalOceanModel({
     name: "Nemotron Super (Public Preview)",
     lifecycle_status: "active",
@@ -1198,12 +1198,12 @@ test("normalizes DigitalOcean x-high effort tokens and keeps public-preview stat
   });
 
   expect(model).toMatchObject({
-    status: "beta",
     reasoning_options: [{ type: "effort", values: ["low", "xhigh", "max"] }],
   });
+  expect(model.status).toBeUndefined();
 });
 
-test("new DigitalOcean base models do not clobber multimodal metadata with text-only catalog rows", () => {
+test("new DigitalOcean base models use explicit text-only catalog modalities", () => {
   const model = buildDigitalOceanModel(
     digitalOceanModel({
       id: "anthropic-claude-5-sonnet",
@@ -1223,13 +1223,15 @@ test("new DigitalOcean base models do not clobber multimodal metadata with text-
     name: "Anthropic Claude Sonnet 5",
     reasoning_options: [{ type: "effort", values: ["low", "medium", "high", "max", "xhigh"] }],
   });
-  expect(model).not.toHaveProperty("attachment");
-  expect(model).not.toHaveProperty("modalities");
+  expect(model).toMatchObject({
+    attachment: false,
+    modalities: { input: ["text"] },
+  });
   // reasoning=true matches base metadata, so factorBaseModel omits it
   expect(model).not.toHaveProperty("reasoning");
 });
 
-test("existing DigitalOcean base models preserve provider modality subsets from text-only catalog rows", () => {
+test("existing DigitalOcean base models use explicit text-only catalog modalities", () => {
   const model = buildDigitalOceanModel(
     digitalOceanModel({
       id: "nemotron-nano-12b-v2-vl",
@@ -1260,7 +1262,8 @@ test("existing DigitalOcean base models preserve provider modality subsets from 
 
   expect(model).toMatchObject({
     base_model: "nvidia/nemotron-nano-12b-v2-vl",
-    modalities: { input: ["text", "image"] },
+    attachment: false,
+    modalities: { input: ["text"] },
   });
 });
 
