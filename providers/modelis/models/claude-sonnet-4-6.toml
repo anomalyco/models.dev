@@ -1,11 +1,11 @@
-# reasoning_effort verified live on 2026-08-02: all six values accepted and
-# reflected in usage.completion_tokens_details.reasoning_tokens.
-# API: {"reasoning_effort": "minimal"|"low"|"medium"|"high"|"xhigh"|"max"}
 base_model = "anthropic/claude-sonnet-4-6"
 
 [[reasoning_options]]
-type = "effort"
+type = "effort" # API: {"reasoning_effort": "<value>"}
 values = ["minimal", "low", "medium", "high", "xhigh", "max"]
+
+[[reasoning_options]]
+type = "toggle" # API: {"reasoning": {"enabled": true|false}}
 
 [cost]
 input = 3
