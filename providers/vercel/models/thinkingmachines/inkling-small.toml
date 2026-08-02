@@ -3,16 +3,13 @@
 # - https://docs.baseten.co/inference/model-apis/reasoning — Inkling Small reasoning_effort
 # - https://thinkingmachines.ai/news/inkling-small/ — variable thinking effort
 # API: {"reasoning_effort": "none"|"minimal"|"low"|"medium"|"high"|"xhigh"|"max"}
-name = "Inkling Small"
+base_model = "thinkingmachines/inkling-small"
 description = "Multimodal reasoning model for visual analysis, planning, and tool use"
-family = "ling"
-release_date = "2026-07-30"
-last_updated = "2026-07-30"
-attachment = true
-reasoning = true
-tool_call = true
 open_weights = false
-reasoning_options = [{ type = "effort", values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"] }]
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"]
 
 [cost]
 input = 0.5
@@ -25,4 +22,3 @@ output = 1_000_000
 
 [modalities]
 input = ["text", "image", "pdf"]
-output = ["text"]
