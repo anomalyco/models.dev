@@ -1,14 +1,18 @@
+# Reasoning controls verified against https://modelishub.com/v1 on 2026-08-02.
+#   Effort:        {"reasoning_effort": "<value>"}
+#   Toggle:        {"reasoning": {"enabled": true|false}}
+#   Budget tokens: {"reasoning": {"max_tokens": <n>}}
 base_model = "google/gemini-2.5-flash"
 
 [[reasoning_options]]
-type = "effort" # API: {"reasoning_effort": "<value>"}
+type = "effort"
 values = ["minimal", "low", "medium", "high", "xhigh", "max"]
 
 [[reasoning_options]]
-type = "toggle" # API: {"reasoning": {"enabled": true|false}}
+type = "toggle"
 
 [[reasoning_options]]
-type = "budget_tokens" # API: {"reasoning": {"max_tokens": <n>}}
+type = "budget_tokens"
 
 [cost]
 input = 0.3

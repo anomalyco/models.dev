@@ -1,7 +1,9 @@
+# Reasoning controls verified against https://modelishub.com/v1 on 2026-08-02.
+#   Toggle:        {"reasoning_effort": "none"} to disable; omit to enable
 base_model = "deepseek/deepseek-v4-pro"
 
 [[reasoning_options]]
-type = "toggle" # API: {"reasoning_effort": "none"} disables; omit to enable
+type = "toggle"
 
 [cost]
 input = 0.435
