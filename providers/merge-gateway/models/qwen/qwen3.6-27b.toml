@@ -1,17 +1,17 @@
 # Source: https://api-gateway.merge.dev/v1/models?model=qwen%2Fqwen3.6-27b (accessed 2026-07-21)
-
 base_model = "alibaba/qwen3.6-27b"
-reasoning_options = []
-tool_call = false
-structured_output = false
+attachment = false
+
+[[reasoning_options]]
+type = "toggle"
 
 [cost]
-input = 0.4126
-output = 2.4754
+input = 0.289
+output = 2.4
 
 [limit]
-context = 256_000
-output = 64_000
+context = 131_072
+output = 32_768
 
 [modalities]
-input = ["text", "image"]
+input = ["text"]
