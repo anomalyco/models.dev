@@ -1,6 +1,11 @@
+# reasoning_effort verified live on 2026-08-02: all six values accepted and
+# reflected in usage.completion_tokens_details.reasoning_tokens.
+# API: {"reasoning_effort": "minimal"|"low"|"medium"|"high"|"xhigh"|"max"}
 base_model = "alibaba/qwen3.7-max"
 
-reasoning_options = []
+[[reasoning_options]]
+type = "effort"
+values = ["minimal", "low", "medium", "high", "xhigh", "max"]
 
 [cost]
 input = 3
