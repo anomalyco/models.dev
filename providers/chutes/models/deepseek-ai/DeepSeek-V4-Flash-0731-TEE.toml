@@ -1,14 +1,6 @@
+base_model = "deepseek/deepseek-v4-flash-0731"
 name = "DeepSeek V4 Flash 0731 TEE"
-description = "Fast DeepSeek model for efficient chat, coding help, and agent loops"
-family = "deepseek"
-release_date = "2026-08-02"
 last_updated = "2026-08-02"
-attachment = false
-reasoning = true
-temperature = true
-tool_call = true
-structured_output = true
-open_weights = true
 reasoning_options = []
 
 [cost]
@@ -19,7 +11,3 @@ cache_read = 0.07
 [limit]
 context = 1_048_576
 output = 131_072
-
-[modalities]
-input = ["text"]
-output = ["text"]
