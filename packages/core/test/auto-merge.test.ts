@@ -31,7 +31,7 @@ test("requires manual review for bulk additions", async () => {
   expect(decision.reasons).toContain("11 models created (limit 10)");
 });
 
-test("requires explicit provider reasoning options", async () => {
+test("requires manual review for reasoning provider models", async () => {
   const withoutOptions = await classifyAutoMerge(
     [{ status: "updated", path: "providers/test/models/reasoner.toml" }],
     async () => fullModel(true),
@@ -42,7 +42,16 @@ test("requires explicit provider reasoning options", async () => {
   );
 
   expect(withoutOptions.safe).toBe(false);
-  expect(withOptions.safe).toBe(true);
+  expect(withOptions.safe).toBe(false);
+});
+
+test("allows reviewed providers with explicit reasoning options", async () => {
+  const decision = await classifyAutoMerge(
+    [{ status: "updated", path: "providers/openrouter/models/reasoner.toml" }],
+    async () => fullModel(true, "reasoning_options = []"),
+  );
+
+  expect(decision.safe).toBe(true);
 });
 
 test("resolves reasoning from base model", async () => {
@@ -60,5 +69,13 @@ test("parses additions, modifications, and deletions", () => {
       { status: "created", path: "models/a.toml" },
       { status: "updated", path: "models/b.toml" },
       { status: "deleted", path: "models/c.toml" },
+    ]);
+});
+
+test("counts unexpected renames as a deletion and creation", () => {
+  expect(parseNameStatus("R100\tmodels/old.toml\tmodels/new.toml\n"))
+    .toEqual([
+      { status: "deleted", path: "models/old.toml" },
+      { status: "created", path: "models/new.toml" },
     ]);
 });

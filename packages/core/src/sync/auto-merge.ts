@@ -3,6 +3,7 @@ import { readFile } from "node:fs/promises";
 export const MAX_CREATED_MODELS = 10;
 export const MAX_DELETED_MODELS = 10;
 export const MAX_MODEL_CHURN = 15;
+const REVIEWED_REASONING_PROVIDERS = new Set(["openrouter"]);
 
 export interface CatalogChange {
   status: "created" | "updated" | "deleted";
@@ -51,8 +52,12 @@ export async function classifyAutoMerge(
       reasoning = base.reasoning;
     }
 
-    if (reasoning === true && !Object.hasOwn(model, "reasoning_options")) {
-      reasons.push(`${change.path} is a reasoning model without explicit reasoning_options`);
+    if (reasoning === true) {
+      if (!Object.hasOwn(model, "reasoning_options")) {
+        reasons.push(`${change.path} is a reasoning model without explicit reasoning_options`);
+      } else if (!REVIEWED_REASONING_PROVIDERS.has(change.path.split("/")[1]!)) {
+        reasons.push(`${change.path} is a reasoning model that requires manual review`);
+      }
     }
   }
 
@@ -60,10 +65,17 @@ export async function classifyAutoMerge(
 }
 
 export function parseNameStatus(output: string): CatalogChange[] {
-  return output.trim().split("\n").filter(Boolean).map((line) => {
+  return output.trim().split("\n").filter(Boolean).flatMap((line) => {
     const [code, ...paths] = line.split("\t");
     const path = paths.at(-1);
     if (!code || !path) throw new Error(`Invalid git diff entry: ${line}`);
+    if (code.startsWith("R")) {
+      if (paths.length !== 2) throw new Error(`Invalid git rename entry: ${line}`);
+      return [
+        { status: "deleted", path: paths[0]! },
+        { status: "created", path: paths[1]! },
+      ];
+    }
     return {
       status: code.startsWith("A") ? "created" : code.startsWith("D") ? "deleted" : "updated",
       path,
