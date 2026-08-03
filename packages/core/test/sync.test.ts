@@ -32,7 +32,12 @@ import {
   resolveCanonicalBaseModel,
   type OpenRouterModel,
 } from "../src/sync/providers/openrouter.js";
-import { buildLLMGatewayModel, type LLMGatewayModel } from "../src/sync/providers/llmgateway.js";
+import {
+  buildLLMGatewayMappedModel,
+  buildLLMGatewayModel,
+  llmgatewayProviders,
+  type LLMGatewayModel,
+} from "../src/sync/providers/llmgateway.js";
 import {
   buildMergeGatewayModel,
   fetchMergeGatewayModels,
@@ -2298,6 +2303,93 @@ test("factors aliased LLM Gateway routes against canonical metadata", () => {
   });
 });
 
+test("factors mapped LLM Gateway entries against the root model metadata", () => {
+  const model = buildLLMGatewayMappedModel(llmGatewayMappedModel(), undefined);
+
+  expect(model).toEqual({
+    base_model: "anthropic/claude-fable-5",
+    name: "Claude Fable 5 (Anthropic)",
+    reasoning_options: [{ type: "effort", values: ["low", "medium", "high", "xhigh", "max"] }],
+    structured_output: true,
+    cost: {
+      input: 10,
+      output: 50,
+      cache_read: 1,
+      cache_write: 12.5,
+    },
+  });
+});
+
+test("applies deployment capability flags on mapped factored entries", () => {
+  const model = buildLLMGatewayMappedModel(llmGatewayMappedModel({
+    providers: [{ providerId: "anthropic", vision: false, tools: false, reasoning: false }],
+    max_output: 64_000,
+  }), undefined);
+
+  expect(model).toEqual({
+    base_model: "anthropic/claude-fable-5",
+    name: "Claude Fable 5 (Anthropic)",
+    attachment: false,
+    reasoning: false,
+    tool_call: false,
+    structured_output: true,
+    limit: {
+      output: 64_000,
+    },
+    cost: {
+      input: 10,
+      output: 50,
+      cache_read: 1,
+      cache_write: 12.5,
+    },
+  });
+});
+
+test("prefers the gateway max_output over authored output on mapped resyncs", () => {
+  const model = buildLLMGatewayMappedModel(llmGatewayMappedModel({ max_output: 32_000 }), {
+    base_model: "anthropic/claude-fable-5",
+    name: "Claude Fable 5 (Anthropic)",
+    description: "Claude Fable 5 served by Anthropic",
+    limit: { output: 64_000 },
+  });
+
+  expect(model).toEqual({
+    base_model: "anthropic/claude-fable-5",
+    name: "Claude Fable 5 (Anthropic)",
+    description: "Claude Fable 5 served by Anthropic",
+    limit: {
+      output: 32_000,
+    },
+    cost: {
+      input: 10,
+      output: 50,
+      cache_read: 1,
+      cache_write: 12.5,
+    },
+  });
+});
+
+test("refuses aggregated responses in the mapped LLM Gateway sync", () => {
+  expect(() => llmgatewayProviders.parseModels({ data: [llmGatewayModel()] }))
+    .toThrow("mapped view unavailable");
+});
+
+test("filters pseudo and non-text entries from the mapped LLM Gateway sync", () => {
+  const parsed = llmgatewayProviders.parseModels({
+    data: [
+      llmGatewayMappedModel(),
+      llmGatewayMappedModel({ id: "llmgateway/auto", name: "Auto Route (LLM Gateway)" }),
+      llmGatewayMappedModel({
+        id: "openai/sora-2",
+        name: "Sora 2 (OpenAI)",
+        architecture: { input_modalities: ["text"], output_modalities: ["video"] },
+      }),
+    ],
+  });
+
+  expect(parsed.map((model) => model.id)).toEqual(["anthropic/claude-fable-5"]);
+});
+
 // Ensures catalog pagination preserves authentication and returns every page.
 test("fetches every page of the Merge Gateway catalog", async () => {
   const requests: string[] = [];
@@ -3030,6 +3122,22 @@ function llmGatewayModel(overrides: Partial<LLMGatewayModel> = {}): LLMGatewayMo
     structured_outputs: true,
     ...overrides,
   };
+}
+
+function llmGatewayMappedModel(overrides: Partial<LLMGatewayModel> = {}): LLMGatewayModel {
+  return llmGatewayModel({
+    id: "anthropic/claude-fable-5",
+    name: "Claude Fable 5 (Anthropic)",
+    providers: [{
+      providerId: "anthropic",
+      vision: true,
+      tools: true,
+      reasoning: true,
+      reasoning_efforts: ["low", "medium", "high", "xhigh", "max"],
+    }],
+    max_output: 128_000,
+    ...overrides,
+  });
 }
 
 function mergeGatewayVendor(

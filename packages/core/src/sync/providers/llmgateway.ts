@@ -1,4 +1,6 @@
 import { z } from "zod";
+import { existsSync, readFileSync } from "node:fs";
+import path from "node:path";
 
 import { describeModel } from "../../describe.js";
 import { inferKimiFamily, ModelFamilyValues } from "../../family.js";
@@ -42,6 +44,9 @@ export const LLMGatewayModel = z.object({
       vision: z.boolean().optional(),
       tools: z.boolean().optional(),
       reasoning: z.boolean().optional(),
+      reasoning_efforts: z.array(
+        z.enum(["none", "minimal", "low", "medium", "high", "xhigh", "max"]),
+      ).optional(),
     }).passthrough(),
   ).optional(),
   pricing: Pricing,
@@ -153,6 +158,22 @@ function modalities(values: string[], fallback: Modality[]): Modality[] {
     .map((value) => (value === "file" ? "pdf" : value))
     .filter((value): value is Modality => allowed.has(value as Modality));
   return [...new Set(result.length > 0 ? result : fallback)];
+}
+
+const MODELS_DIR = path.join(import.meta.dirname, "..", "..", "..", "..", "..", "models");
+const canonicalOutputLimitByID = new Map<string, number | undefined>();
+
+// Whether the canonical metadata declares limit.output; factored entries can
+// only omit their own output override when the base has one to inherit.
+function canonicalOutputLimit(modelID: string) {
+  if (!canonicalOutputLimitByID.has(modelID)) {
+    const filePath = path.join(MODELS_DIR, `${modelID}.toml`);
+    const metadata = existsSync(filePath)
+      ? Bun.TOML.parse(readFileSync(filePath, "utf8")) as { limit?: { output?: number } }
+      : undefined;
+    canonicalOutputLimitByID.set(modelID, metadata?.limit?.output);
+  }
+  return canonicalOutputLimitByID.get(modelID);
 }
 
 function resolveLLMGatewayBaseModel(model: LLMGatewayModel, modelID = model.id) {
@@ -337,6 +358,10 @@ export function buildLLMGatewayMappedModel(
   const reasoning = mapping?.reasoning
     ?? (model.supported_parameters.includes("reasoning")
       || model.supported_parameters.includes("include_reasoning"));
+  // The exact reasoning_effort values this deployment accepts.
+  const reasoningOptions = mapping?.reasoning_efforts?.length
+    ? [{ type: "effort" as const, values: mapping.reasoning_efforts }]
+    : undefined;
   const reported = model.context_length ?? 0;
   const context = reported > 0 ? reported : existing?.limit?.context ?? reported;
 
@@ -350,10 +375,12 @@ export function buildLLMGatewayMappedModel(
         tiers: existing?.cost?.tiers,
       }
     : existing?.cost;
+  // The gateway's max_output is the deployment's real served limit, so it wins
+  // over inherited/authored values, unlike the aggregated view.
   const limit = {
     context,
     input: existing?.limit?.input,
-    output: existing?.limit?.output ?? model.max_output ?? context,
+    output: model.max_output ?? existing?.limit?.output ?? context,
   };
 
   // Existing factored model: refresh cost + limit, keep every authored override
@@ -430,12 +457,29 @@ export function buildLLMGatewayMappedModel(
   // Brand-new model with a reviewed metadata entry: factor against the
   // canonical base. The mapped ID is `serving-provider/model-id` and the
   // serving provider is unrelated to the originating lab, so resolve the base
-  // from the root model ID + family, and keep the disambiguating name.
+  // from the root model ID + family, and keep the disambiguating name. The
+  // mapping's own capability flags describe this specific deployment, so they
+  // go in as overrides (factorBaseModel drops the ones equal to the base).
   const rootID = model.id.split("/").slice(1).join("/");
   const canonical = resolveLLMGatewayBaseModel(model, rootID);
   if (canonical !== undefined) {
-    const factoredLimit = { context, input: undefined, output: model.max_output ?? context };
-    return factorBaseModel(canonical, { name: model.name, limit: factoredLimit, cost }, factoredLimit);
+    const factoredLimit = {
+      context,
+      input: undefined,
+      // Without a served limit, inherit the base's output; only fall back to
+      // context when the base declares none (output is required downstream).
+      output: model.max_output ?? (canonicalOutputLimit(canonical) !== undefined ? undefined : context),
+    };
+    return factorBaseModel(canonical, {
+      name: model.name,
+      attachment: mapping?.vision,
+      reasoning: mapping?.reasoning,
+      reasoning_options: reasoningOptions,
+      tool_call: mapping?.tools,
+      structured_output: model.structured_outputs,
+      limit: factoredLimit,
+      cost,
+    }, factoredLimit);
   }
 
   // Brand-new model without metadata: best-effort translation. The mapping's
@@ -459,6 +503,7 @@ export function buildLLMGatewayMappedModel(
     last_updated: dateFromTimestamp(model.created),
     attachment: mapping?.vision ?? input.some((value) => value !== "text"),
     reasoning,
+    reasoning_options: reasoningOptions,
     temperature: model.supported_parameters.includes("temperature"),
     tool_call: mapping?.tools ?? false,
     structured_output: model.structured_outputs ?? false,
