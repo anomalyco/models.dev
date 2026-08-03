@@ -89,6 +89,11 @@ async function generateProviders(
     }
 
     const modelsPath = path.join(directory, providerID, "models");
+    if (!existsSync(modelsPath)) {
+      throw new Error(`Provider "${providerID}" has no models`, {
+        cause: { providerPath },
+      });
+    }
     for await (const modelPath of new Bun.Glob("**/*.toml").scan({
       cwd: modelsPath,
       absolute: true,
@@ -123,6 +128,11 @@ async function generateProviders(
         throw model.error;
       }
       provider.data.models[modelID] = normalizeModelCost(model.data);
+    }
+    if (Object.keys(provider.data.models).length === 0) {
+      throw new Error(`Provider "${providerID}" has no models`, {
+        cause: { providerPath },
+      });
     }
     result[providerID] = provider.data;
   }
