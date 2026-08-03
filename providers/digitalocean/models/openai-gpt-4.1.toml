@@ -1,4 +1,4 @@
-name = "GPT-4.1"
+name = "OpenAI GPT-4.1"
 description = "GPT model for general reasoning, writing, coding, and tool-assisted tasks"
 family = "gpt"
 release_date = "2025-04-14"
@@ -12,14 +12,14 @@ knowledge = "2024-04"
 open_weights = false
 
 [cost]
-input = 2.00
-output = 8.00
-cache_read = 0.50
+input = 2
+output = 8
+cache_read = 0.5
 
 [limit]
 context = 1_047_576
 output = 32_768
 
 [modalities]
-input = ["text", "image", "pdf"]
+input = ["text", "image"]
 output = ["text"]

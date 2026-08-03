@@ -5,10 +5,19 @@ release_date = "2026-06-09"
 last_updated = "2026-06-12"
 attachment = true
 reasoning = true
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh"] }]
 temperature = false
 tool_call = true
 open_weights = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high", "xhigh", "max"]
+
+[cost]
+input = 10
+output = 50
+cache_read = 1
+cache_write = 12.5
 
 [limit]
 context = 1_000_000
