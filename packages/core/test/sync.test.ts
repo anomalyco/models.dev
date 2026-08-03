@@ -177,6 +177,30 @@ test("accepts only NanoGPT's supported reasoning effort values", () => {
   expect(NanoGptResponse.safeParse({
     data: [{ ...nanoGptModel(), reasoning_efforts: ["default"] }],
   }).success).toBe(false);
+  expect(NanoGptResponse.safeParse({ data: [] }).success).toBe(false);
+});
+
+test("normalizes authoritative NanoGPT reasoning efforts and preserves incomplete controls", () => {
+  const contradictory = buildNanoGptModel(nanoGptModel({
+    capabilities: { reasoning: false },
+    reasoning_efforts: ["high", "low", "high"],
+  }), undefined);
+  const incomplete = buildNanoGptModel(nanoGptModel({
+    capabilities: { reasoning: true },
+    reasoning_efforts: [],
+  }), {
+    reasoning: true,
+    reasoning_options: [{ type: "toggle" }, { type: "budget_tokens" }],
+  });
+
+  expect(contradictory).toMatchObject({
+    reasoning: true,
+    reasoning_options: [{ type: "effort", values: ["low", "high"] }],
+  });
+  expect(incomplete).toMatchObject({
+    reasoning: true,
+    reasoning_options: [{ type: "toggle" }, { type: "budget_tokens" }],
+  });
 });
 
 test("factors NanoGPT variants against canonical models without retaining wrong intrinsic metadata", () => {
