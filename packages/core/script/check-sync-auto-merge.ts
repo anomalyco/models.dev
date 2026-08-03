@@ -2,7 +2,7 @@ import { classifyAutoMerge, parseNameStatus } from "../src/sync/auto-merge.js";
 
 const base = process.argv[2] ?? "HEAD^";
 const head = process.argv[3] ?? "HEAD";
-const diff = Bun.spawnSync(["git", "diff", "--name-status", "--find-renames", base, head], {
+const diff = Bun.spawnSync(["git", "diff", "--name-status", base, head], {
   stdout: "pipe",
   stderr: "inherit",
 });

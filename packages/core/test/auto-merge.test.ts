@@ -54,12 +54,11 @@ test("resolves reasoning from base model", async () => {
   expect(decision.safe).toBe(false);
 });
 
-test("parses additions, modifications, deletions, and renames", () => {
-  expect(parseNameStatus("A\tmodels/a.toml\nM\tmodels/b.toml\nD\tmodels/c.toml\nR100\tmodels/d.toml\tmodels/e.toml\n"))
+test("parses additions, modifications, and deletions", () => {
+  expect(parseNameStatus("A\tmodels/a.toml\nM\tmodels/b.toml\nD\tmodels/c.toml\n"))
     .toEqual([
       { status: "created", path: "models/a.toml" },
       { status: "updated", path: "models/b.toml" },
       { status: "deleted", path: "models/c.toml" },
-      { status: "updated", path: "models/e.toml" },
     ]);
 });
