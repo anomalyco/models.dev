@@ -18,3 +18,75 @@ output = 65_536
 [modalities]
 input = ["text", "image", "video", "audio", "pdf"]
 output = ["text"]
+
+[[benchmarks]]
+name = "SWE-Bench Pro"
+score = 54.2
+metric = "resolve rate"
+source = "https://deepmind.google/models/model-cards/gemini-3-5-flash-lite/"
+date = "2026-07-21"
+
+[[benchmarks]]
+name = "Terminal-Bench"
+score = 54.0
+metric = "accuracy"
+harness = "Terminus 2"
+version = "2.1"
+source = "https://deepmind.google/models/model-cards/gemini-3-5-flash-lite/"
+date = "2026-07-21"
+
+[[benchmarks]]
+name = "MLE-Bench"
+score = 39.2
+metric = "average position score"
+source = "https://deepmind.google/models/model-cards/gemini-3-5-flash-lite/"
+date = "2026-07-21"
+
+[[benchmarks]]
+name = "GDPval-AA"
+score = 1140
+metric = "Elo"
+version = "v2"
+source = "https://deepmind.google/models/model-cards/gemini-3-5-flash-lite/"
+date = "2026-07-21"
+
+[[benchmarks]]
+name = "OSWorld-Verified"
+score = 74.0
+metric = "success rate"
+source = "https://deepmind.google/models/model-cards/gemini-3-5-flash-lite/"
+date = "2026-07-21"
+
+[[benchmarks]]
+name = "CharXiv Reasoning"
+score = 74.5
+metric = "accuracy"
+variant = "no tools"
+source = "https://deepmind.google/models/model-cards/gemini-3-5-flash-lite/"
+date = "2026-07-21"
+
+[[benchmarks]]
+name = "CharXiv Reasoning"
+score = 76.5
+metric = "accuracy"
+variant = "with tools"
+source = "https://deepmind.google/models/model-cards/gemini-3-5-flash-lite/"
+date = "2026-07-21"
+
+[[benchmarks]]
+name = "GDM-MRCR"
+score = 72.2
+metric = "accuracy"
+variant = "128k average, 8-needle"
+version = "v2"
+source = "https://deepmind.google/models/model-cards/gemini-3-5-flash-lite/"
+date = "2026-07-21"
+
+[[benchmarks]]
+name = "GDM-MRCR"
+score = 21.3
+metric = "accuracy"
+variant = "1M pointwise, 8-needle"
+version = "v2"
+source = "https://deepmind.google/models/model-cards/gemini-3-5-flash-lite/"
+date = "2026-07-21"
