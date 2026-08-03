@@ -15,11 +15,7 @@
 # Effort: top-level reasoning_effort = "max" (deepest; "low"/"high" are
 # accepted by the engine but do not change depth, so they are not listed)
 
-base_model = "deepseek/deepseek-v4-flash"
-name = "DeepSeek V4 Flash 0731"
-description = "The official release of DeepSeek-V4-Flash, superseding the preview, with substantially enhanced agentic capabilities. Same structure as DeepSeek-V4-Flash-DSpark — it ships with a speculative decoding module attached."
-release_date = "2026-07-31"
-last_updated = "2026-07-31"
+base_model = "deepseek/deepseek-v4-flash-0731"
 interleaved = true
 
 # Verified against the live endpoint, not transcribed from docs. Thinking
@@ -27,11 +23,12 @@ interleaved = true
 # on, and `reasoning_effort = "max"` injects the deepest deliberation prompt
 # (7,972 tokens on the same short prompt). Off is the toggle, not an effort
 # level, so `none` is not listed; DeepSeek's documented low/high are accepted
-# by the engine as no-ops and a level that changes nothing is not a level.
+# by the engine as no-ops on this stack, and a level that changes nothing is
+# not a level.
 #
 # Deliberation is returned in the message field `reasoning` — vLLM's name, not
 # DeepSeek's `reasoning_content`. That is why `interleaved` is the bare flag
-# below rather than a field declaration: the schema can only name
+# above rather than a field declaration: the schema can only name
 # reasoning_content or reasoning_details, and claiming either would point
 # clients at an empty key. Returned on both the streaming and non-streaming
 # paths, billed as completion tokens.
@@ -42,10 +39,9 @@ type = "toggle" # API: {"chat_template_kwargs": {"enable_thinking": true}}
 type = "effort" # API: top-level {"reasoning_effort": "max"}
 values = ["max"]
 
-# Both fields differ from the base entry, in opposite directions. The context is
-# larger — 1_048_576 is the model's full window and what we serve, against the
-# base entry's rounded 1_000_000 — while completions are capped at 32_768 rather
-# than 384_000.
+# Both differ from the canonical entry, in opposite directions: 1_048_576 is
+# the model's full window and what we serve, against a rounded 1_000_000, while
+# completions are capped at 32_768 rather than 384_000.
 [limit]
 context = 1_048_576
 output = 32_768
