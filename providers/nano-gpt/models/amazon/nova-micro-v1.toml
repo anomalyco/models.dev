@@ -1,7 +1,7 @@
 name = "Amazon Nova Micro 1.0"
 description = "Efficient model for low-latency assistance, extraction, and routine automation"
 family = "nova-micro"
-release_date = "2024-12-03"
+release_date = "2024-01-01"
 last_updated = "2024-12-03"
 attachment = false
 reasoning = false
@@ -12,6 +12,7 @@ open_weights = false
 [cost]
 input = 0.0357
 output = 0.1394
+cache_read = 0.01785
 
 [limit]
 context = 128_000

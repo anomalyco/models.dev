@@ -1,6 +1,7 @@
 name = "Azure o3-mini"
 description = "O-series reasoning model for hard analysis, math, coding, and planning"
-release_date = "2025-01-31"
+family = "o"
+release_date = "2024-01-01"
 last_updated = "2025-01-31"
 attachment = false
 reasoning = false
@@ -9,8 +10,9 @@ structured_output = false
 open_weights = false
 
 [cost]
-input = 1.088
-output = 4.3996
+input = 1.1
+output = 4.4
+cache_read = 0.55
 
 [limit]
 context = 200_000

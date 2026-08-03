@@ -5,19 +5,20 @@ release_date = "2026-05-11"
 last_updated = "2026-05-11"
 attachment = false
 reasoning = true
-reasoning_options = []
 tool_call = true
 structured_output = true
 open_weights = false
+reasoning_options = []
 
 [cost]
-input = 0.3
-output = 1.2
+input = 0.315
+output = 1.26
+cache_read = 0.1575
 
 [limit]
-context = 204800
-input = 204800
-output = 131072
+context = 204_800
+input = 204_800
+output = 131_072
 
 [modalities]
 input = ["text"]

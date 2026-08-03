@@ -1,11 +1,9 @@
 base_model = "deepseek/deepseek-v4-flash-0731"
-# Reasoning HTTP format (accessed 2026-08-03):
+# Reasoning HTTP format (accessed 2026-06-25):
 # This model toggles with `enable_thinking`: true or false. Chat Completions
 # `reasoning_effort` accepts high (default) or max; low/medium map to high and
 # xhigh maps to max. Anthropic Messages defaults `reasoning_effort` to max.
-# Model availability: Token Plan Individual supported-models allowlist.
 # Sources:
-# https://docs.qwencloud.com/token-plan/personal/token-plan-personal-overview
 # https://www.alibabacloud.com/help/en/model-studio/deepseek-api
 # https://www.alibabacloud.com/help/en/model-studio/anthropic-api-messages
 

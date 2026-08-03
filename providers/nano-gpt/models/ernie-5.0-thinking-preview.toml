@@ -1,17 +1,19 @@
 name = "Ernie 5.0 Thinking Preview"
 description = "Compact GPT model for low-latency assistance and high-volume workloads"
+family = "ernie"
 release_date = "2025-11-18"
 last_updated = "2025-11-18"
 attachment = true
 reasoning = true
-reasoning_options = []
 tool_call = false
 structured_output = false
 open_weights = false
+reasoning_options = []
 
 [cost]
-input = 1.1
-output = 2.00
+input = 1
+output = 3.5
+cache_read = 0.5
 
 [limit]
 context = 128_000

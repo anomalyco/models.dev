@@ -1,23 +1,18 @@
 # Included in subscription
+base_model = "zhipuai/glm-4.6v"
 name = "GLM 4.6V"
-description = "GLM vision model for visual reasoning, documents, and multimodal agents"
-release_date = "2025-12-11"
-last_updated = "2025-12-11"
-attachment = true
 reasoning = false
 tool_call = false
 structured_output = false
-open_weights = false
 
 [cost]
 input = 0.3
 output = 0.9
+cache_read = 0.15
 
 [limit]
-context = 128000
-input = 128000
-output = 24000
+input = 128_000
+output = 24_000
 
 [modalities]
 input = ["text", "image"]
-output = ["text"]

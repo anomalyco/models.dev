@@ -1,25 +1,27 @@
 # Not included in subscription
 name = "Hermes Low"
 description = "Compact GPT model for low-latency assistance and high-volume workloads"
+family = "hermes"
 release_date = "2026-05-11"
 last_updated = "2026-05-11"
 attachment = true
 reasoning = true
-reasoning_options = []
 tool_call = true
 structured_output = true
 open_weights = false
+reasoning_options = []
 
 [cost]
 input = 0.25
 output = 1.5
 cache_read = 0.025
+cache_write = 0.08333
 
 [limit]
-context = 1048576
-input = 1048576
-output = 65536
+context = 1_048_576
+input = 1_048_576
+output = 65_536
 
 [modalities]
-input = ["text", "image", "pdf"]
+input = ["text", "image", "video", "pdf"]
 output = ["text"]

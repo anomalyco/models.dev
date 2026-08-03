@@ -1,23 +1,17 @@
 # Not included in subscription
+base_model = "alibaba/qwen3.5-27b"
 name = "Qwen3.5 27B TEE"
-description = "Multimodal model for analyzing text, images, documents, and rich media"
-release_date = "2026-03-13"
-last_updated = "2026-03-13"
-attachment = true
 reasoning = false
 tool_call = false
 structured_output = false
-open_weights = false
 
 [cost]
 input = 0.3
 output = 2.4
+cache_read = 0.15
 
 [limit]
-context = 262144
-input = 262144
-output = 65536
+input = 262_144
 
 [modalities]
 input = ["text", "image", "video"]
-output = ["text"]

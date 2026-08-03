@@ -1,0 +1,28 @@
+name = "DeepSeek V4 Flash Latest"
+description = "Compatibility alias that routes to the newest dated DeepSeek V4 Flash release. Currently routes to DeepSeek V4 Flash 0731. ⚠️ This route goes directly to DeepSeek, so privacy and logging guarantees are limited."
+family = "deepseek"
+release_date = "2026-08-02"
+last_updated = "2026-08-02"
+attachment = false
+reasoning = true
+tool_call = true
+structured_output = true
+open_weights = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "high", "max"]
+
+[cost]
+input = 0.14
+output = 0.28
+cache_read = 0.0028
+
+[limit]
+context = 1_048_576
+input = 1_048_576
+output = 384_000
+
+[modalities]
+input = ["text"]
+output = ["text"]

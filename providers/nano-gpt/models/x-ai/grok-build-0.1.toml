@@ -1,14 +1,9 @@
 # Not included in subscription
-name = "Grok Build 0.1"
-description = "Grok coding model for agentic engineering, edits, and codebase workflows"
-release_date = "2026-05-20"
-last_updated = "2026-05-20"
-attachment = true
-reasoning = true
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
-tool_call = true
-structured_output = true
-open_weights = false
+base_model = "xai/grok-build-0.1"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high"]
 
 [cost]
 input = 1
@@ -16,10 +11,7 @@ output = 2
 cache_read = 0.2
 
 [limit]
-context = 256000
-input = 256000
-output = 256000
+input = 256_000
 
 [modalities]
 input = ["text", "image"]
-output = ["text"]

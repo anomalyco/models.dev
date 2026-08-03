@@ -1,24 +1,14 @@
 # Not included in subscription
+base_model = "minimax/MiniMax-M2.5"
 name = "MiniMax M2.5 TEE"
-description = "MiniMax model for chat, coding, office work, and agentic tasks"
-release_date = "2026-04-20"
-last_updated = "2026-04-20"
-attachment = false
-reasoning = true
-reasoning_options = []
-tool_call = true
 structured_output = true
-open_weights = false
+reasoning_options = []
 
 [cost]
 input = 0.2
 output = 1.38
+cache_read = 0.1
 
 [limit]
-context = 196608
-input = 196608
-output = 131072
-
-[modalities]
-input = ["text"]
-output = ["text"]
+context = 196_608
+input = 196_608
