@@ -1,6 +1,8 @@
 base_model = "deepseek/deepseek-v4-flash-0731"
-description = "Fast DeepSeek model for efficient chat, coding help, and agent loops"
-reasoning_options = []
+reasoning_options = [{ type = "effort", values = ["high", "max"] }]
+
+[interleaved]
+field = "reasoning_content"
 
 [cost]
 input = 0.14
