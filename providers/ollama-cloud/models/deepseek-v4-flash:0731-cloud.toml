@@ -1,9 +1,9 @@
 # OpenAI POST /v1/chat/completions: top-level `reasoning_effort` or
-# `reasoning.effort` with "high"|"max"; "none" disables reasoning (toggle).
+# `reasoning.effort` with "none"|"high"|"max"; "none" disables reasoning.
 base_model = "deepseek/deepseek-v4-flash-0731"
 name = "deepseek-v4-flash:0731-cloud"
 
-reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["high", "max"] }]
+reasoning_options = [{ type = "effort", values = ["none", "high", "max"] }]
 
 [limit]
 context = 1048576
