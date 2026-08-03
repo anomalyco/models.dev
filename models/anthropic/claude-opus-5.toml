@@ -17,3 +17,156 @@ output = 128_000
 [modalities]
 input = ["text", "image", "pdf"]
 output = ["text"]
+
+[[benchmarks]]
+name = "SWE-Bench Verified"
+score = 96.0
+metric = "resolved"
+source = "https://www.anthropic.com/claude-opus-5-system-card"
+date = "2026-07-24"
+
+[[benchmarks]]
+name = "SWE-Bench Pro"
+score = 79.2
+metric = "resolve rate"
+source = "https://www.anthropic.com/claude-opus-5-system-card"
+date = "2026-07-24"
+
+[[benchmarks]]
+name = "SWE-Bench Multilingual"
+score = 89.5
+metric = "resolve rate"
+source = "https://www.anthropic.com/claude-opus-5-system-card"
+date = "2026-07-24"
+
+[[benchmarks]]
+name = "SWE-Bench Multimodal"
+score = 59.4
+metric = "resolve rate"
+source = "https://www.anthropic.com/claude-opus-5-system-card"
+date = "2026-07-24"
+
+[[benchmarks]]
+name = "DeepSWE"
+score = 68.8
+metric = "resolve rate"
+version = "1.1"
+source = "https://www.anthropic.com/claude-opus-5-system-card"
+date = "2026-07-24"
+
+[[benchmarks]]
+name = "FrontierCode"
+score = 53.4
+metric = "mean@5"
+variant = "medium effort"
+dataset = "Main"
+version = "1.1"
+source = "https://www.anthropic.com/claude-opus-5-system-card"
+date = "2026-07-24"
+
+[[benchmarks]]
+name = "Frontier-Bench"
+score = 43.3
+metric = "mean reward"
+variant = "max effort"
+harness = "mini-SWE-agent"
+version = "v0.1"
+source = "https://www.anthropic.com/claude-opus-5-system-card"
+date = "2026-07-24"
+
+[[benchmarks]]
+name = "BrowseComp"
+score = 90.8
+metric = "accuracy"
+variant = "single agent"
+source = "https://www.anthropic.com/claude-opus-5-system-card"
+date = "2026-07-24"
+
+[[benchmarks]]
+name = "Humanity's Last Exam"
+score = 56.3
+metric = "accuracy"
+variant = "no tools"
+source = "https://www.anthropic.com/claude-opus-5-system-card"
+date = "2026-07-24"
+
+[[benchmarks]]
+name = "Humanity's Last Exam"
+score = 64.7
+metric = "accuracy"
+variant = "with tools"
+source = "https://www.anthropic.com/claude-opus-5-system-card"
+date = "2026-07-24"
+
+[[benchmarks]]
+name = "DeepSearchQA"
+score = 95.0
+metric = "F1"
+variant = "max effort"
+source = "https://www.anthropic.com/news/claude-opus-5"
+date = "2026-07-24"
+
+[[benchmarks]]
+name = "OSWorld"
+score = 70.6
+metric = "success rate"
+version = "2.0"
+source = "https://www.anthropic.com/claude-opus-5-system-card"
+date = "2026-07-24"
+
+[[benchmarks]]
+name = "GDPval-AA"
+score = 1861
+metric = "Elo"
+variant = "max effort"
+version = "v2"
+source = "https://www.anthropic.com/claude-opus-5-system-card"
+date = "2026-07-24"
+
+[[benchmarks]]
+name = "AA-Briefcase"
+score = 1720
+metric = "Elo"
+variant = "max effort"
+source = "https://www.anthropic.com/claude-opus-5-system-card"
+date = "2026-07-24"
+
+[[benchmarks]]
+name = "AutomationBench"
+score = 26.0
+metric = "success rate"
+variant = "max effort"
+source = "https://www.anthropic.com/claude-opus-5-system-card"
+date = "2026-07-24"
+
+[[benchmarks]]
+name = "ARC-AGI-1"
+score = 97.5
+metric = "accuracy"
+variant = "max effort"
+source = "https://www.anthropic.com/claude-opus-5-system-card"
+date = "2026-07-24"
+
+[[benchmarks]]
+name = "ARC-AGI-2"
+score = 90.4
+metric = "accuracy"
+variant = "max effort"
+source = "https://www.anthropic.com/claude-opus-5-system-card"
+date = "2026-07-24"
+
+[[benchmarks]]
+name = "ARC-AGI-3"
+score = 30.2
+metric = "RHAE"
+variant = "high effort"
+source = "https://www.anthropic.com/claude-opus-5-system-card"
+date = "2026-07-24"
+
+[[benchmarks]]
+name = "HealthBench Professional"
+score = 59.8
+metric = "score"
+variant = "max effort"
+source = "https://www.anthropic.com/claude-opus-5-system-card"
+date = "2026-07-24"
