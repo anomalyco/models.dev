@@ -1,11 +1,13 @@
 name = "OpenAI: GPT Audio"
 description = "Speech generation model for controllable voice, narration, and audio delivery"
-release_date = "2026-01-20"
-last_updated = "2026-03-15"
-attachment = false
+family = "gpt"
+release_date = "2026-01-19"
+last_updated = "2026-01-19"
+attachment = true
 reasoning = false
 temperature = true
-tool_call = false
+tool_call = true
+structured_output = true
 open_weights = false
 
 [cost]
@@ -13,9 +15,9 @@ input = 2.5
 output = 10
 
 [limit]
-context = 128000
-output = 16384
+context = 128_000
+output = 16_384
 
 [modalities]
-input = ["audio", "text"]
-output = ["audio", "text"]
+input = ["text", "audio", "pdf"]
+output = ["text", "audio"]

@@ -1,21 +1,25 @@
 name = "Baidu: ERNIE 4.5 VL 424B A47B "
 description = "Multimodal reasoning model for visual analysis, planning, and tool use"
+family = "ernie"
 release_date = "2025-06-30"
-last_updated = "2026-01"
+last_updated = "2025-06-30"
 attachment = true
-reasoning_options = [{ type = "toggle" }]
 reasoning = true
 temperature = true
 tool_call = false
-open_weights = true
+structured_output = false
+open_weights = false
+
+[[reasoning_options]]
+type = "toggle"
 
 [cost]
 input = 0.42
 output = 1.25
 
 [limit]
-context = 123000
-output = 16000
+context = 123_000
+output = 16_000
 
 [modalities]
 input = ["image", "text"]

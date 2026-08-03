@@ -1,11 +1,16 @@
+# Toggle: chat_template_kwargs.enable_thinking = true|false
+# Source: https://huggingface.co/Qwen/Qwen3.6-27B (chat template exposes enable_thinking)
+# Verified live on POST https://llm.chutes.ai/v1/chat/completions: reasoning_content present when on, absent when off
 base_model = "alibaba/qwen3.6-27b"
 name = "Qwen3.6 27B TEE"
-reasoning_options = []
+
+[[reasoning_options]]
+type = "toggle"
 
 [cost]
 input = 0.3
 output = 2
-cache_read = 0.15
+cache_read = 0.029999999999999992
 
 [modalities]
 input = ["text", "image"]

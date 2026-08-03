@@ -1,27 +1,16 @@
-name = "Inkling Small"
+base_model = "thinkingmachines/inkling-small"
 description = "Multimodal reasoning model for visual analysis, planning, and tool use"
-release_date = "2026-07-30"
-last_updated = "2026-07-30"
-attachment = true
-reasoning = true
-temperature = true
-tool_call = false
 structured_output = false
-open_weights = true
 
 [[reasoning_options]]
 type = "effort"
 values = ["none", "minimal", "low", "medium", "high", "max"]
 
 [cost]
-input = 0.58
-output = 1.44
-cache_read = 0.116
+input = 0.5
+output = 1.2
+cache_read = 0.1
 
 [limit]
 context = 524_288
 output = 262_144
-
-[modalities]
-input = ["text", "image", "audio"]
-output = ["text"]

@@ -1,24 +1,16 @@
+base_model = "openai/gpt-5-mini"
 name = "GPT 5 Mini"
-description = "Compact GPT model for low-latency assistance and high-volume workloads"
-family = "gpt-mini"
-release_date = "2025-08-07"
-last_updated = "2025-08-07"
-attachment = true
-reasoning = true
-reasoning_options = [{ type = "effort", values = ["minimal", "low", "medium", "high"] }]
 tool_call = false
 structured_output = false
-open_weights = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["minimal", "low", "medium", "high"]
 
 [cost]
 input = 0.25
-output = 2.00
+output = 2
+cache_read = 0.025
 
 [limit]
-context = 400_000
 input = 400_000
-output = 128_000
-
-[modalities]
-input = ["text", "image"]
-output = ["text"]

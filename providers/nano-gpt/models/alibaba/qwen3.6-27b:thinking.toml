@@ -1,24 +1,22 @@
 # Included in subscription
+base_model = "alibaba/qwen3.6-27b"
 name = "Qwen3.6 27B Thinking"
-description = "Qwen vision-language model for visual reasoning, documents, and agent tasks"
-release_date = "2026-04-23"
-last_updated = "2026-04-23"
-attachment = true
-reasoning = true
-reasoning_options = [{ type = "budget_tokens", min = 1_024, max = 131_072 }]
 tool_call = false
 structured_output = false
-open_weights = false
+
+[[reasoning_options]]
+type = "budget_tokens"
+min = 1_024
+max = 131_072
 
 [cost]
 input = 0.203
 output = 2.24
+cache_read = 0.1015
 
 [limit]
-context = 260096
-input = 260096
-output = 65536
+context = 260_096
+input = 260_096
 
 [modalities]
 input = ["text", "image", "video"]
-output = ["text"]

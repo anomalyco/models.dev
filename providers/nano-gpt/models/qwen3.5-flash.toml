@@ -1,6 +1,7 @@
 # Not included in subscription
 name = "Qwen3.5 Flash"
 description = "Compact GPT model for low-latency assistance and high-volume workloads"
+family = "qwen3.5"
 release_date = "2026-02-24"
 last_updated = "2026-02-24"
 attachment = true
@@ -10,13 +11,14 @@ structured_output = false
 open_weights = false
 
 [cost]
-input = 0.09
-output = 0.36
+input = 0.1
+output = 0.4
+cache_read = 0.05
 
 [limit]
-context = 991808
-input = 991808
-output = 65536
+context = 991_808
+input = 991_808
+output = 65_536
 
 [modalities]
 input = ["text", "image", "video"]

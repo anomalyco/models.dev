@@ -1,0 +1,21 @@
+# Toggle: reasoning.enabled = true|false
+# Effort: reasoning.effort = high|max
+base_model = "deepseek/deepseek-v4-flash-0731"
+description = "Fast DeepSeek model for efficient chat, coding help, and agent loops"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["high", "max"]
+
+[cost]
+input = 0.14
+output = 0.28
+cache_read = 0.028
+cache_write = 0
+
+[limit]
+context = 1_048_576
+output = 1_048_576

@@ -89,7 +89,7 @@ const Cost = z.object({
     .number()
     .min(0, "Audio output price cannot be negative")
     .optional(),
-});
+}).strict();
 
 const CostTier = Cost.extend({
   tier: z
@@ -103,12 +103,12 @@ const CostTier = Cost.extend({
 const AuthoredCost = Cost.extend({
   context_over_200k: z.never().optional(),
   tiers: z.array(CostTier).optional(),
-});
+}).strict();
 
 const OutputCost = Cost.extend({
   context_over_200k: Cost.optional(),
   tiers: z.array(CostTier).optional(),
-});
+}).strict();
 
 const DateString = z
   .string()
@@ -275,18 +275,22 @@ const ModelBase = z.object({
     .object({
       modes: z
         .record(
-          z.object({
-            cost: Cost.optional(),
-            provider: z
-              .object({
-                body: z.record(JsonValue).optional(),
-                headers: z.record(z.string()).optional(),
-              })
-              .optional(),
-          }),
+          z
+            .object({
+              cost: Cost.optional(),
+              provider: z
+                .object({
+                  body: z.record(JsonValue).optional(),
+                  headers: z.record(z.string()).optional(),
+                })
+                .strict()
+                .optional(),
+            })
+            .strict(),
         )
         .optional(),
     })
+    .strict()
     .optional(),
   provider: z
     .object({
@@ -296,6 +300,7 @@ const ModelBase = z.object({
       body: z.record(JsonValue).optional(),
       headers: z.record(z.string()).optional(),
     })
+    .strict()
     .optional(),
 });
 

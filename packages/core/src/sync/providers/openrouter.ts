@@ -541,7 +541,7 @@ function isPlainObject(value: unknown): value is Record<string, unknown> {
   return value !== null && typeof value === "object" && !Array.isArray(value);
 }
 
-function modelMetadata(modelID: string) {
+export function modelMetadata(modelID: string) {
   let metadata = modelMetadataByID.get(modelID);
   if (metadata === undefined) {
     const filePath = path.join(MODELS_DIR, `${modelID}.toml`);

@@ -1,0 +1,13 @@
+base_model = "anthropic/claude-fable-5"
+description = "Claude Fable 5 is a Mythos-class model from Anthropic, built for autonomous knowledge work and coding. It supports text, image, and file inputs with text output, with reasoning support and..."
+structured_output = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "xhigh"]
+
+[cost]
+input = 10
+output = 50
+cache_read = 1
+cache_write = 12.5

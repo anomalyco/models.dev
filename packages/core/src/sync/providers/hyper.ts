@@ -4,7 +4,7 @@ import { z } from "zod";
 
 import { describeModel } from "../../describe.js";
 import type { ExistingModel, SyncProvider, SyncedFullModel, SyncedModel } from "../index.js";
-import { factorBaseModel, resolveModelMetadataBaseModel } from "./openrouter.js";
+import { factorBaseModel, modelMetadata, resolveModelMetadataBaseModel } from "./openrouter.js";
 
 const API_ENDPOINT = "https://hyper.charm.land/v1/models";
 const MODELS_DIR = path.join(import.meta.dirname, "..", "..", "..", "..", "..", "models");
@@ -145,7 +145,16 @@ export function buildHyperModel(
     output: model.max_output_tokens,
   };
   const modalities = hyperModalities(model.capabilities?.vision ?? false);
-  const reasoning = model.reasoning != null;
+  const resolvedBase = resolveHyperBaseModel(model.id, baseModel);
+  const advertisedReasoning = model.reasoning != null;
+  // An omitted reasoning object means Hyper advertises no controls, not that a
+  // canonical model's reasoning capability is disabled.
+  const reasoning = resolvedBase !== undefined && !advertisedReasoning
+    ? undefined
+    : advertisedReasoning;
+  const inheritedReasoning = resolvedBase === undefined
+    ? false
+    : modelMetadata(resolvedBase).reasoning === true;
   const releaseDate = existing?.release_date ?? dateFromTimestamp(model.created);
   const values: Partial<SyncedFullModel> = {
     attachment: modalities.input.some((value) => value !== "text"),
@@ -157,9 +166,12 @@ export function buildHyperModel(
     cost: buildCost(model, existing?.cost),
     limit,
   };
-  if (reasoning) values.reasoning_options = reasoningOptions(model);
+  if (advertisedReasoning) {
+    values.reasoning_options = reasoningOptions(model);
+  } else if (inheritedReasoning) {
+    values.reasoning_options = [];
+  }
 
-  const resolvedBase = resolveHyperBaseModel(model.id, baseModel);
   if (resolvedBase !== undefined) {
     return factorBaseModel(
       resolvedBase,

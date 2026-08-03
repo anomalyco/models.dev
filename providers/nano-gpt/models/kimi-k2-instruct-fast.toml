@@ -1,16 +1,18 @@
 name = "Kimi K2 0711 Fast"
 description = "Compact GPT model for low-latency assistance and high-volume workloads"
-release_date = "2025-07-15"
+family = "kimi-k2"
+release_date = "2025-12-15"
 last_updated = "2025-07-15"
 attachment = true
 reasoning = false
 tool_call = false
 structured_output = false
-open_weights = false
+open_weights = true
 
 [cost]
-input = 0.1
-output = 2.00
+input = 0.4
+output = 1.8
+cache_read = 0.2
 
 [limit]
 context = 131_072

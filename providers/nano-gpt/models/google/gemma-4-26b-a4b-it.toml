@@ -1,24 +1,16 @@
 # Included in subscription
+base_model = "google/gemma-4-26b-a4b-it"
 name = "Gemma 4 26B A4B"
-description = "Open Gemma instruction model for efficient chat and self-hosted deployments"
-release_date = "2026-04-02"
-last_updated = "2026-04-02"
-attachment = true
-reasoning = true
-reasoning_options = [{ type = "toggle" }]
 tool_call = false
-structured_output = true
-open_weights = false
+
+[[reasoning_options]]
+type = "toggle"
 
 [cost]
 input = 0.13
 output = 0.4
+cache_read = 0.065
 
 [limit]
-context = 262144
-input = 262144
-output = 131072
-
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+input = 262_144
+output = 131_072

@@ -22,6 +22,7 @@ import { llmgateway } from "./providers/llmgateway.js";
 import { mergeGateway } from "./providers/merge-gateway.js";
 import { nanoGpt } from "./providers/nano-gpt.js";
 import { openai } from "./providers/openai.js";
+import { ofox } from "./providers/ofox.js";
 import { openrouter } from "./providers/openrouter.js";
 import { ovhcloud } from "./providers/ovhcloud.js";
 import { pioneer } from "./providers/pioneer.js";
@@ -125,6 +126,7 @@ export const providers: {
   llmgateway: SyncProvider<any>;
   "merge-gateway": SyncProvider<any>;
   "nano-gpt": SyncProvider<any>;
+  ofox: SyncProvider<any>;
   openai: SyncProvider<any>;
   openrouter: SyncProvider<any>;
   ovhcloud: SyncProvider<any>;
@@ -151,6 +153,7 @@ export const providers: {
   llmgateway,
   "merge-gateway": mergeGateway,
   "nano-gpt": nanoGpt,
+  ofox,
   openai,
   openrouter,
   ovhcloud,
@@ -171,6 +174,7 @@ export const groups = {
     "llmgateway",
     "merge-gateway",
     "nano-gpt",
+    "ofox",
     "openrouter",
     "vercel",
   ],

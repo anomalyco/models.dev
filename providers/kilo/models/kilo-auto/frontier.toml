@@ -1,22 +1,27 @@
-name = "Kilo Auto Frontier"
+name = "Auto Frontier"
 description = "Automatic model router for matching prompts to suitable backends and budgets"
-release_date = "2026-03-15"
-last_updated = "2026-03-15"
+family = "auto"
+release_date = "1970-01-01"
+last_updated = "1970-01-01"
 attachment = true
-reasoning_options = []
 reasoning = true
 temperature = true
 tool_call = true
+structured_output = false
 open_weights = false
+reasoning_options = []
 
 [cost]
 input = 5
 output = 25
+reasoning = 0
+cache_read = 0.5
+cache_write = 6.25
 
 [limit]
-context = 1000000
-output = 128000
+context = 1_000_000
+output = 128_000
 
 [modalities]
-input = ["image", "text"]
+input = ["text", "image", "pdf"]
 output = ["text"]

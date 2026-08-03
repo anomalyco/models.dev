@@ -1,0 +1,28 @@
+name = "DeepSeek V4 Flash Latest"
+description = "This model always redirects to the latest model in the DeepSeek V4 Flash family."
+family = "deepseek"
+release_date = "2026-08-01"
+last_updated = "2026-08-01"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "high", "xhigh"]
+
+[cost]
+input = 0.09
+output = 0.18
+cache_read = 0.018
+
+[limit]
+context = 1_048_576
+output = 65_536
+
+[modalities]
+input = ["text"]
+output = ["text"]

@@ -1,23 +1,15 @@
 # Included in subscription
+base_model = "alibaba/qwen3-next-80b-a3b-thinking"
 name = "Qwen3 Next 80B A3B (Thinking)"
-description = "Qwen reasoning model for deliberate problem solving, math, and coding"
-release_date = "2024-01-01"
-last_updated = "2024-01-01"
-attachment = false
 reasoning = false
 tool_call = false
 structured_output = false
-open_weights = false
 
 [cost]
 input = 0.15
 output = 0.65
+cache_read = 0.075
 
 [limit]
-context = 256000
-input = 256000
-output = 32768
-
-[modalities]
-input = ["text"]
-output = ["text"]
+context = 256_000
+input = 256_000

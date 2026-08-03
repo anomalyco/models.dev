@@ -1,0 +1,27 @@
+name = "Auto Efficient"
+description = "Routes each request to the cheapest model that gets the job done, based on continuously benchmarked accuracy and cost."
+family = "auto"
+release_date = "1970-01-01"
+last_updated = "1970-01-01"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = false
+open_weights = false
+reasoning_options = []
+
+[cost]
+input = 0.325
+output = 1.95
+reasoning = 0
+cache_read = 0.0325
+cache_write = 0.40625
+
+[limit]
+context = 1_000_000
+output = 65_536
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

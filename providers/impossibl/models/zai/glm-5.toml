@@ -1,0 +1,10 @@
+# Pricing: https://api.impossibl.com/v1/models
+base_model = "zhipuai/glm-5"
+
+[cost]
+input = 1.00
+output = 3.20
+cache_read = 0.20
+
+[[reasoning_options]]
+type = "toggle" # API: {"reasoning_effort":"none"}

@@ -1,16 +1,18 @@
 name = "DeepSeek Chat 0324"
 description = "Chat-tuned GPT model for conversational assistance, writing, and tool workflows"
-release_date = "2025-03-24"
+family = "deepseek"
+release_date = "2024-01-01"
 last_updated = "2025-03-24"
 attachment = false
 reasoning = false
 tool_call = true
 structured_output = true
-open_weights = false
+open_weights = true
 
 [cost]
-input = 0.25
-output = 0.7
+input = 0.2
+output = 0.77
+cache_read = 0.135
 
 [limit]
 context = 128_000

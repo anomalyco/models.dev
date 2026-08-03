@@ -5,13 +5,14 @@ release_date = "2025-09-05"
 last_updated = "2025-09-05"
 attachment = true
 reasoning = false
-tool_call = true
+tool_call = false
 structured_output = true
-open_weights = false
+open_weights = true
 
 [cost]
-input = 0.18000000000000002
-output = 0.8
+input = 0.15
+output = 0.6
+cache_read = 0.075
 
 [limit]
 context = 1_048_576

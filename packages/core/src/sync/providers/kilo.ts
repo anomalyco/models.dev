@@ -1,17 +1,10 @@
 import { z } from "zod";
-import { readFileSync, readdirSync } from "node:fs";
-import path from "node:path";
-
 import { describeModel } from "../../describe.js";
 import { inferKimiFamily, ModelFamilyValues } from "../../family.js";
 import type { ExistingModel, SyncProvider, SyncedFullModel, SyncedModel } from "../index.js";
 import { factorBaseModel, resolveCanonicalBaseModel } from "./openrouter.js";
 
 const API_ENDPOINT = "https://api.kilo.ai/api/gateway/models";
-const MODELS_DIR = path.join(import.meta.dirname, "..", "..", "..", "..", "..", "models");
-const modelMetadataByID = new Map<string, Record<string, unknown>>();
-const modelMetadataFilesByProvider = new Map<string, Set<string>>();
-
 
 export const KiloModel = z.object({
   id: z.string(),
@@ -158,9 +151,9 @@ export function buildKiloModel(
   const prompt = price(model.pricing.prompt);
   const completion = price(model.pricing.completion);
   const reasoning = params.has("reasoning") || params.has("include_reasoning");
-  const reasoning_options = existing?.reasoning_options?.length
-    ? existing.reasoning_options
-    : KiloReasoningOptions(model.opencode) ?? existing?.reasoning_options;
+  const reasoning_options = reasoning
+    ? KiloReasoningOptions(model.opencode) ?? existing?.reasoning_options
+    : undefined;
   const context = model.top_provider.context_length ?? model.context_length;
   const family = inferFamily(model, name);
   const releaseDate = dateFromTimestamp(model.created);
@@ -277,7 +270,7 @@ function KiloReasoningOptions(opencode: KiloModel["opencode"]): SyncedFullModel[
     .map(([, variant]) => variant.reasoning?.effort)
     .filter((effort): effort is string => effort !== undefined);
   const hasNone = variants.some(([, variant]) => variant.reasoning?.enabled === false);
-  const allEfforts = hasNone ? [...efforts, "none"] : [...efforts];
+  const allEfforts = [...new Set(hasNone ? [...efforts, "none"] : efforts)];
 
   if (allEfforts.length > 0) {
     const orderedEfforts = allEfforts.sort((a, b) => {
@@ -292,137 +285,4 @@ function KiloReasoningOptions(opencode: KiloModel["opencode"]): SyncedFullModel[
   }
 
   return options.length > 0 ? options : undefined;
-}
-
-function modelMetadataExists(provider: string, modelID: string) {
-  let files = modelMetadataFilesByProvider.get(provider);
-  if (files === undefined) {
-    try {
-      files = new Set(readdirSync(path.join(MODELS_DIR, provider)));
-    } catch {
-      files = new Set();
-    }
-    modelMetadataFilesByProvider.set(provider, files);
-  }
-  return files.has(`${modelID}.toml`);
-}
-
-function baseModelOmit(
-  modelID: string,
-  limit: SyncedFullModel["limit"],
-) {
-  const metadata = modelMetadata(modelID);
-  const omit: string[] = [];
-  const baseLimit = metadata.limit;
-  if (
-    isPlainObject(baseLimit) &&
-    baseLimit.input !== undefined &&
-    limit.input === undefined &&
-    baseLimit.context !== limit.context
-  ) {
-    omit.push("limit.input");
-  }
-
-  return omit.length > 0 ? omit : undefined;
-}
-
-function baseModelOverrides(
-  modelID: string,
-  values: Partial<SyncedFullModel>,
-) {
-  const metadata = modelMetadata(modelID);
-  const result: Record<string, unknown> = {};
-
-  for (const [key, value] of Object.entries(values)) {
-    const override = inheritedOverride(value, metadata[key]);
-    if (override !== undefined) result[key] = override;
-  }
-
-  return result;
-}
-
-function inheritedOverride(value: unknown, inherited: unknown): unknown {
-  if (value === undefined) return undefined;
-  if (sameInheritedValue(value, inherited)) return undefined;
-  if (isPlainObject(value) && isPlainObject(inherited)) {
-    const overrides = Object.fromEntries(
-      Object.entries(value)
-        .map(([key, item]) => [key, inheritedOverride(item, inherited[key])])
-        .filter(([, item]) => item !== undefined),
-    );
-    return Object.keys(overrides).length > 0 ? overrides : undefined;
-  }
-  return stripUndefined(value);
-}
-
-function stripUndefined(value: unknown): unknown {
-  if (Array.isArray(value)) return value.map(stripUndefined);
-  if (isPlainObject(value)) {
-    return Object.fromEntries(
-      Object.entries(value)
-        .filter(([, item]) => item !== undefined)
-        .map(([key, item]) => [key, stripUndefined(item)]),
-    );
-  }
-  return value;
-}
-
-function sameInheritedValue(value: unknown, inherited: unknown) {
-  return stableInheritedValue(value) === stableInheritedValue(inherited);
-}
-
-function stableInheritedValue(value: unknown): string {
-  if (Array.isArray(value)) {
-    const items = value.map(stableInheritedValue);
-    const ordered = value.every((item) => item === null || typeof item !== "object")
-      ? items.sort()
-      : items;
-    return `[${ordered.join(",")}]`;
-  }
-  if (isPlainObject(value)) {
-    return `{${Object.entries(value)
-      .filter(([, item]) => item !== undefined)
-      .sort(([a], [b]) => a.localeCompare(b))
-      .map(([key, item]) => `${JSON.stringify(key)}:${stableInheritedValue(item)}`)
-      .join(",")}}`;
-  }
-  return JSON.stringify(value);
-}
-
-function isPlainObject(value: unknown): value is Record<string, unknown> {
-  return value !== null && typeof value === "object" && !Array.isArray(value);
-}
-
-function modelMetadata(modelID: string) {
-  let metadata = modelMetadataByID.get(modelID);
-  if (metadata === undefined) {
-    const filePath = path.join(MODELS_DIR, `${modelID}.toml`);
-    metadata = Bun.TOML.parse(readFileSync(filePath, "utf8")) as Record<string, unknown>;
-    modelMetadataByID.set(modelID, metadata);
-  }
-  return metadata;
-}
-
-function canonicalCandidates(provider: string, modelID: string) {
-  const candidates = [modelID];
-
-  if (provider === "anthropic") {
-    candidates.push(modelID.replace(/(claude-(?:opus|sonnet|haiku)-\d+)\.(\d+)/, "$1-$2"));
-    candidates.push(modelID.replace(/^claude-3\.5-/, "claude-3-5-"));
-  }
-
-  if (provider === "llama") {
-    candidates.push(modelID.replace(/^llama-(\d+)-(\d+)/, "llama-$1.$2"));
-    candidates.push(modelID.replace(/^llama-(4)-(maverick|scout)$/, "llama-$1-$2-17b"));
-  }
-
-  if (provider === "mistral") {
-    candidates.push(modelID.replace(/-latest$/, ""));
-  }
-
-  if (provider === "minimax") {
-    candidates.push(modelID.replace(/^minimax-m/, "MiniMax-M"));
-  }
-
-  return [...new Set(candidates)];
 }

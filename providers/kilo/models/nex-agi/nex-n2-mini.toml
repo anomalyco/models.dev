@@ -1,0 +1,25 @@
+name = "Nex AGI: Nex-N2-Mini"
+description = "Nex-N2-Mini is an open-source agentic mixture-of-experts model from Nex AGI, the smaller sibling in the Nex-N2 series. It accepts text and image input and is built for coding, tool use,..."
+family = "agi"
+release_date = "2026-06-24"
+last_updated = "2026-06-24"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = false
+reasoning_options = []
+
+[cost]
+input = 0.025
+output = 0.1
+cache_read = 0.0025
+
+[limit]
+context = 262_144
+output = 262_144
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

@@ -1,0 +1,28 @@
+name = "Ling 3.0 Flash Thinking"
+description = "Ling-3.0-flash Thinking enables visible reasoning on inclusionAI's token-efficient 124B-parameter Mixture-of-Experts model for harder coding, tool use, planning, and production-scale agent workflows."
+family = "ling"
+release_date = "2026-07-23"
+last_updated = "2026-07-23"
+attachment = false
+reasoning = true
+tool_call = true
+structured_output = false
+open_weights = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "minimal", "low", "medium", "high", "xhigh"]
+
+[cost]
+input = 0.06
+output = 0.18
+cache_read = 0.012
+
+[limit]
+context = 262_144
+input = 262_144
+output = 32_768
+
+[modalities]
+input = ["text"]
+output = ["text"]

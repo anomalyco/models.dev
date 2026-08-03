@@ -1,17 +1,18 @@
 name = "Llama 3.3 70B Euryale"
 description = "Open Llama instruction model for multilingual chat, reasoning, and coding"
 family = "llama"
-release_date = "2024-12-06"
+release_date = "2024-01-01"
 last_updated = "2024-12-06"
 attachment = false
 reasoning = false
 tool_call = false
 structured_output = false
-open_weights = false
+open_weights = true
 
 [cost]
-input = 0.49299999999999994
-output = 0.49299999999999994
+input = 0.493
+output = 0.493
+cache_read = 0.2465
 
 [limit]
 context = 20_480

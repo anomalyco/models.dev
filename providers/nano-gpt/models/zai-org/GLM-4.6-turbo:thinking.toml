@@ -1,23 +1,25 @@
 # Not included in subscription
 name = "GLM 4.6 Turbo (Thinking)"
 description = "Efficient GLM model for fast reasoning, coding, and agent workflows"
+family = "glm"
 release_date = "2025-10-02"
 last_updated = "2025-10-02"
 attachment = false
 reasoning = true
-reasoning_options = []
 tool_call = false
 structured_output = false
-open_weights = false
+open_weights = true
+reasoning_options = []
 
 [cost]
 input = 1
 output = 3
+cache_read = 0.5
 
 [limit]
-context = 200000
-input = 200000
-output = 204800
+context = 200_000
+input = 200_000
+output = 204_800
 
 [modalities]
 input = ["text"]

@@ -1,21 +1,26 @@
 name = "MiniMax: MiniMax M1"
 description = "MiniMax model for chat, coding, office work, and agentic tasks"
+family = "minimax"
 release_date = "2025-06-17"
 last_updated = "2025-06-17"
 attachment = false
-reasoning_options = []
 reasoning = true
 temperature = true
 tool_call = true
-open_weights = true
+structured_output = false
+open_weights = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "high"]
 
 [cost]
 input = 0.4
 output = 2.2
 
 [limit]
-context = 1000000
-output = 40000
+context = 1_000_000
+output = 40_000
 
 [modalities]
 input = ["text"]

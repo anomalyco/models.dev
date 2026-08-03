@@ -1,7 +1,6 @@
 # Source: https://api-gateway.merge.dev/v1/models?model=openai%2Fgpt-5.6-sol (accessed 2026-07-21)
 # Merge Gateway catalog: GET https://api-gateway.merge.dev/v1/models
 # Reasoning controls: https://openai.com/index/gpt-5-6/ (accessed 2026-07-13)
-
 base_model = "openai/gpt-5.6-sol"
 
 [[reasoning_options]]
@@ -9,6 +8,6 @@ type = "effort"
 values = ["none", "low", "medium", "high", "xhigh", "max"]
 
 [cost]
-input = 3.75
-output = 22.5
-cache_read = 0.375
+input = 5
+output = 30
+cache_read = 0.5

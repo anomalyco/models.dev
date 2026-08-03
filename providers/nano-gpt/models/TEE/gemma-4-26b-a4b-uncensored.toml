@@ -1,22 +1,24 @@
 # Not included in subscription
 name = "Gemma 4 26B A4B Uncensored TEE"
 description = "Open Gemma instruction model for efficient chat and self-hosted deployments"
+family = "gemma"
 release_date = "2026-05-23"
 last_updated = "2026-05-23"
 attachment = true
 reasoning = false
 tool_call = true
 structured_output = true
-open_weights = false
+open_weights = true
 
 [cost]
 input = 0.15
 output = 0.7
+cache_read = 0.075
 
 [limit]
-context = 65536
-input = 65536
-output = 65536
+context = 65_536
+input = 65_536
+output = 65_536
 
 [modalities]
 input = ["text", "image"]

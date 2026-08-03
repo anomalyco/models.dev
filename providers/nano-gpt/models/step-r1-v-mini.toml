@@ -1,6 +1,7 @@
 name = "Step R1 V Mini"
 description = "Compact GPT model for low-latency assistance and high-volume workloads"
-release_date = "2025-04-08"
+family = "step"
+release_date = "2024-01-01"
 last_updated = "2025-04-08"
 attachment = false
 reasoning = false
@@ -10,7 +11,8 @@ open_weights = false
 
 [cost]
 input = 2.5
-output = 11.00
+output = 11
+cache_read = 1.25
 
 [limit]
 context = 128_000

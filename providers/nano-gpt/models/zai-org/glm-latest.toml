@@ -1,24 +1,28 @@
 # Included in subscription (uses 2x input tokens)
 name = "GLM Latest"
 description = "Flagship GLM model for hybrid reasoning, coding, and agentic engineering"
+family = "glm"
 release_date = "2026-05-03"
 last_updated = "2026-05-03"
 attachment = false
 reasoning = true
-reasoning_options = [{ type = "effort", values = ["high", "xhigh"] }]
 tool_call = true
 structured_output = true
-open_weights = false
+open_weights = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["high", "xhigh"]
 
 [cost]
-input = 0.75
-output = 2.6
-cache_read = 0.15
+input = 0.42
+output = 1.32
+cache_read = 0.078
 
 [limit]
-context = 200000
-input = 200000
-output = 131072
+context = 1_048_576
+input = 1_048_576
+output = 131_072
 
 [modalities]
 input = ["text"]

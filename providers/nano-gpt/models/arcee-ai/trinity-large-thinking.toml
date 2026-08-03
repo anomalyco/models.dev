@@ -1,23 +1,25 @@
 # Not included in subscription
 name = "Trinity Large Thinking"
 description = "Flagship model for demanding analysis, coding, and production agent workflows"
+family = "trinity"
 release_date = "2026-04-01"
 last_updated = "2026-04-01"
 attachment = false
 reasoning = true
-reasoning_options = []
 tool_call = true
 structured_output = false
-open_weights = false
+open_weights = true
+reasoning_options = []
 
 [cost]
 input = 0.25
 output = 0.9
+cache_read = 0.125
 
 [limit]
-context = 262144
-input = 262144
-output = 80000
+context = 262_144
+input = 262_144
+output = 80_000
 
 [modalities]
 input = ["text"]

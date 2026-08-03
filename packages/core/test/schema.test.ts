@@ -8,6 +8,44 @@ type AuthoredModelData = z.infer<typeof AuthoredModel>;
 const dateFields = ["knowledge", "release_date", "last_updated"] as const;
 
 describe("model schema", () => {
+  test("rejects unknown nested model configuration fields", () => {
+    const result = AuthoredModel.safeParse({
+      ...baseModel({}),
+      cost: {
+        input: 1,
+        output: 2,
+        cache_reed: 0.1,
+      },
+      provider: {
+        npm: "example-sdk",
+        typo: true,
+      },
+      experimental: {
+        typo: true,
+        modes: {
+          fast: {
+            typo: true,
+            provider: {
+              typo: true,
+            },
+          },
+        },
+      },
+    });
+
+    expect(result.success).toBe(false);
+    if (result.success) return;
+    expect(result.error.issues.map((issue) => issue.path.join("."))).toEqual(
+      expect.arrayContaining([
+        "cost",
+        "provider",
+        "experimental",
+        "experimental.modes.fast",
+        "experimental.modes.fast.provider",
+      ]),
+    );
+  });
+
   test("requires reasoning_options when reasoning is true", () => {
     const model = baseModel({ reasoning: true });
 

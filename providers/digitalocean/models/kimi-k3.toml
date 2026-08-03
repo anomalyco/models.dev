@@ -1,0 +1,19 @@
+# DigitalOcean exposes Kimi K3 as serverless with text/image input and $3/$15/$0.30 pricing,
+# but currently omits context and output limits; those inherit from canonical metadata.
+# https://api.digitalocean.com/v2/gen-ai/models/catalog (accessed 2026-08-02)
+base_model = "moonshotai/kimi-k3"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 3.0
+output = 15.0
+cache_read = 0.3
+
+[modalities]
+input = ["text", "image"]

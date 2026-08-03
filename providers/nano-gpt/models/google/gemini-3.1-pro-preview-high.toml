@@ -1,25 +1,27 @@
 # Not included in subscription
 name = "Gemini 3.1 Pro (Preview High)"
 description = "Advanced Gemini model for complex reasoning, coding, and multimodal analysis"
+family = "gemini"
 release_date = "2026-02-21"
 last_updated = "2026-02-21"
 attachment = true
 reasoning = true
-reasoning_options = []
 tool_call = true
 structured_output = true
 open_weights = false
+reasoning_options = []
 
 [cost]
 input = 2
 output = 12
 cache_read = 0.2
+cache_write = 0.375
 
 [limit]
-context = 1048756
-input = 1048756
-output = 65536
+context = 1_048_756
+input = 1_048_756
+output = 65_536
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image", "audio"]
 output = ["text"]
