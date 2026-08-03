@@ -1,0 +1,38 @@
+# Sources (accessed 2026-08-03):
+# https://docs.qwencloud.com/token-plan/personal/token-plan-personal-overview
+# https://help.aliyun.com/en/model-studio/token-plan-personal-overview
+# https://docs.qwencloud.com/developer-guides/clients-and-developer-tools/opencode
+# https://docs.qwencloud.com/developer-guides/text-generation/thinking
+# https://docs.qwencloud.com/api-reference/chat/openai-chat
+# https://www.qwencloud.com/models/qwen3.8-max
+# Toggle: enable_thinking true|false (hybrid; unlike always-on qwen3.8-max-preview)
+# Effort: reasoning_effort = low|medium|xhigh (default xhigh); high is accepted as
+# an alias and maps to xhigh on the OpenAI-compatible Chat API.
+# Budget: thinking_budget (0..262144) cannot be combined with reasoning_effort.
+# A zero budget maps to low effort; it does not disable thinking.
+# API: {"enable_thinking":true,"reasoning_effort":"medium"} or
+# {"enable_thinking":true,"thinking_budget":16384}.
+# In thinking mode, temperature defaults to 0.6 and values below 0.6 are raised
+# to 0.6. `preserve_thinking` defaults to true for this model, so clients must
+# replay every historical `reasoning_content` value unchanged.
+# structured_output: gateway accepts response_format json_schema (same Token Plan
+# surface as qwen3.8-max-preview; model page lists Structured Outputs).
+# OpenCode guide configures a 99072-token thinking budget for the international
+# endpoint. Cost is Credits-subscription (no public USD per-token rate).
+
+base_model = "alibaba/qwen3.8-max"
+structured_output = true
+reasoning_options = [
+  { type = "toggle" },
+  { type = "effort", values = ["low", "medium", "xhigh"] },
+  { type = "budget_tokens", min = 0, max = 262_144 },
+]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0
+output = 0
+cache_read = 0
+cache_write = 0

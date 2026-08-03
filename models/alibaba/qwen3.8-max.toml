@@ -1,0 +1,30 @@
+# Sources (accessed 2026-08-03):
+# https://www.qwencloud.com/models/qwen3.8-max
+# https://www.qianwenai.com/models/qwen3.8-max
+# https://docs.qwencloud.com/token-plan/personal/token-plan-personal-overview
+# https://help.aliyun.com/zh/model-studio/token-plan-personal-overview
+# https://help.aliyun.com/en/model-studio/token-plan-personal-overview
+# https://docs.qwencloud.com/developer-guides/getting-started/text-generation-models
+# https://docs.qwencloud.com/developer-guides/text-generation/thinking
+# https://docs.qwencloud.com/developer-guides/clients-and-developer-tools/opencode
+# https://platform.qianwenai.com/docs/developer-guides/clients-and-developer-tools/opencode
+# https://qwen.ai/blog?id=qwen3.8
+
+name = "Qwen3.8 Max"
+description = "2.4-trillion-parameter MoE flagship for coding, professional work, multimodal understanding, and long-horizon agentic workflows"
+family = "qwen"
+release_date = "2026-08-03"
+last_updated = "2026-08-03"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+open_weights = false
+
+[limit]
+context = 1_000_000
+output = 131_072
+
+[modalities]
+input = ["text", "image", "video"]
+output = ["text"]
