@@ -5,7 +5,6 @@ release_date = "2026-01"
 last_updated = "2026-04-16"
 attachment = false
 reasoning = true
-reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high"] }]
 temperature = false
 tool_call = true
 structured_output = true
@@ -15,14 +14,19 @@ open_weights = true
 [interleaved]
 field = "reasoning_content"
 
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high"]
+
 [cost]
-input = 0.50
-output = 2.70
+input = 0.375
+output = 2.025
+cache_read = 0.203
 
 [limit]
 context = 262_144
-output = 32_768
+output = 52_429
 
 [modalities]
-input = ["text"]
+input = ["text", "image"]
 output = ["text"]
