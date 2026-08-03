@@ -1,0 +1,26 @@
+name = "Qwen3.8 Max"
+description = "Multimodal reasoning model for visual analysis, planning, and tool use"
+family = "qwen3.8-max"
+release_date = "2026-08-02"
+last_updated = "2026-08-02"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = false
+open_weights = false
+reasoning_options = []
+
+[cost]
+input = 2
+output = 6
+cache_read = 0.25
+cache_write = 2.5
+
+[limit]
+context = 1_000_000
+output = 1_000_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
