@@ -261,7 +261,7 @@ Chutes is implemented in `packages/core/src/sync/providers/chutes.ts`.
 - Source endpoint: `https://llm.chutes.ai/v1/models`; no auth required (the model list is public).
 - Model IDs map directly to TOML paths under `providers/chutes/models`.
 - `reasoning`, `tool_call`, and `structured_output` come from `supported_features`; `temperature` comes from `supported_sampling_parameters`.
-- `reasoning_options` is always an empty array: the API advertises a `reasoning` capability but exposes no toggle or effort parameter, so there is no provider evidence for a reasoning option.
+- `reasoning_options` is hand-authored, not derived: the API advertises a `reasoning` capability but no toggle or effort parameter, while the models accept a `chat_template_kwargs` thinking switch (`enable_thinking` for Qwen/Gemma, `thinking` for Kimi/GLM/DeepSeek). The sync leaves the field unset so authored options survive; new reasoners without an entry still default to an empty array.
 - TEE model IDs emit `base_model` references to matching `models/` metadata; checkpoints without a canonical entry (e.g. `Qwen3-235B-A22B-Thinking-2507`, `DeepSeek-V3.2`) are written inline.
 - `attachment` is derived from non-text `input_modalities`, and all models are `open_weights`.
 - `release_date`/`last_updated` default to the API `created` timestamp but preserve existing hand-authored dates; `knowledge`, `family`, `status`, `interleaved`, and `limit.input` are preserved when present.
