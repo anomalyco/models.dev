@@ -1,0 +1,9 @@
+base_model = "google/gemini-3-pro-image"
+reasoning_options = [{ type = "effort", values = ["low", "high"] }]
+
+[cost]
+input = 2
+output = 12
+
+[limit]
+context = 131_072

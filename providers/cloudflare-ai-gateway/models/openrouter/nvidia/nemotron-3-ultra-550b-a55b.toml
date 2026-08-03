@@ -1,0 +1,10 @@
+base_model = "nvidia/nemotron-3-ultra-550b-a55b"
+reasoning_options = [{ type = "effort", values = ["medium", "high"] }, { type = "budget_tokens" }]
+
+[cost]
+input = 0.5
+output = 2.2
+
+[limit]
+context = 512_288
+output = 16_384

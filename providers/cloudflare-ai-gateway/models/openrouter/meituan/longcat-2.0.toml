@@ -1,0 +1,10 @@
+base_model = "meituan/longcat-2.0"
+reasoning_options = [{ type = "budget_tokens" }]
+
+[cost]
+input = 0.3
+output = 1.2
+
+[limit]
+context = 1_048_756
+output = 262_144

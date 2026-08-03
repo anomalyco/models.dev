@@ -1,0 +1,10 @@
+base_model = "thinkingmachines/inkling"
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
+
+[cost]
+input = 0
+output = 0
+
+[limit]
+context = 65_536
+output = 65_536

@@ -1,0 +1,9 @@
+base_model = "sakana/fugu-ultra"
+reasoning_options = [{ type = "effort", values = ["high", "xhigh", "max"] }]
+
+[cost]
+input = 5
+output = 30
+
+[limit]
+output = 128_000
