@@ -18,7 +18,7 @@ import { google } from "./providers/google.js";
 import { hyper } from "./providers/hyper.js";
 import { huggingface } from "./providers/huggingface.js";
 import { kilo } from "./providers/kilo.js";
-import { llmgateway } from "./providers/llmgateway.js";
+import { llmgateway, llmgatewayProviders } from "./providers/llmgateway.js";
 import { mergeGateway } from "./providers/merge-gateway.js";
 import { nanoGpt } from "./providers/nano-gpt.js";
 import { openai } from "./providers/openai.js";
@@ -124,6 +124,7 @@ export const providers: {
   huggingface: SyncProvider<any>;
   kilo: SyncProvider<any>;
   llmgateway: SyncProvider<any>;
+  "llmgateway-providers": SyncProvider<any>;
   "merge-gateway": SyncProvider<any>;
   "nano-gpt": SyncProvider<any>;
   ofox: SyncProvider<any>;
@@ -151,6 +152,7 @@ export const providers: {
   huggingface,
   kilo,
   llmgateway,
+  "llmgateway-providers": llmgatewayProviders,
   "merge-gateway": mergeGateway,
   "nano-gpt": nanoGpt,
   ofox,
@@ -172,6 +174,7 @@ export const groups = {
     "huggingface",
     "kilo",
     "llmgateway",
+    "llmgateway-providers",
     "merge-gateway",
     "nano-gpt",
     "ofox",

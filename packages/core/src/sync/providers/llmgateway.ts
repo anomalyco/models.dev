@@ -36,8 +36,19 @@ export const LLMGatewayModel = z.object({
     input_modalities: z.array(z.string()),
     output_modalities: z.array(z.string()),
   }),
+  providers: z.array(
+    z.object({
+      providerId: z.string(),
+      vision: z.boolean().optional(),
+      tools: z.boolean().optional(),
+      reasoning: z.boolean().optional(),
+    }).passthrough(),
+  ).optional(),
   pricing: Pricing,
-  context_length: z.number(),
+  // Absent for pseudo-models (custom/auto) and some non-text mappings; text
+  // models always report it.
+  context_length: z.number().optional(),
+  max_output: z.number().optional(),
   supported_parameters: z.array(z.string()),
   structured_outputs: z.boolean().optional(),
 }).passthrough();
@@ -48,30 +59,68 @@ export const LLMGatewayResponse = z.object({
 
 export type LLMGatewayModel = z.infer<typeof LLMGatewayModel>;
 
+async function fetchLLMGatewayModels(url: string) {
+  const headers = process.env.LLMGATEWAY_API_KEY
+    ? { Authorization: `Bearer ${process.env.LLMGATEWAY_API_KEY}` }
+    : undefined;
+  const response = await fetch(url, { headers });
+  if (!response.ok) {
+    throw new Error(`LLM Gateway request failed: ${response.status} ${response.statusText}`);
+  }
+  return response.json();
+}
+
+function textOnly(model: LLMGatewayModel) {
+  const output = model.architecture.output_modalities;
+  return output.length === 1 && output[0] === "text";
+}
+
+// The DevPass (LLM Gateway) provider: the gateway's aggregated catalog of root
+// model IDs, auto-routed across upstream providers.
 export const llmgateway = {
   id: "llmgateway",
-  name: "LLM Gateway",
+  name: "DevPass (LLM Gateway)",
   modelsDir: "providers/llmgateway/models",
   async fetchModels() {
-    const headers = process.env.LLMGATEWAY_API_KEY
-      ? { Authorization: `Bearer ${process.env.LLMGATEWAY_API_KEY}` }
-      : undefined;
-    const response = await fetch(API_ENDPOINT, { headers });
-    if (!response.ok) {
-      throw new Error(`LLM Gateway request failed: ${response.status} ${response.statusText}`);
-    }
-    return response.json();
+    return fetchLLMGatewayModels(API_ENDPOINT);
   },
   parseModels(raw) {
-    return LLMGatewayResponse.parse(raw).data.filter((model) => {
-      const output = model.architecture.output_modalities;
-      return output.length === 1 && output[0] === "text";
-    });
+    return LLMGatewayResponse.parse(raw).data.filter(textOnly);
   },
   translateModel(model, context) {
     return {
       id: model.id,
       model: buildLLMGatewayModel(model, context.existing(model.id)),
+    };
+  },
+} satisfies SyncProvider<LLMGatewayModel>;
+
+// The LLM Gateway provider: one entry per upstream provider mapping, addressed
+// the way the gateway accepts provider-pinned requests (`provider/model-id`).
+export const llmgatewayProviders = {
+  id: "llmgateway-providers",
+  name: "LLM Gateway",
+  modelsDir: "providers/llmgateway-providers/models",
+  async fetchModels() {
+    return fetchLLMGatewayModels(`${API_ENDPOINT}?mapped=true`);
+  },
+  parseModels(raw) {
+    const data = LLMGatewayResponse.parse(raw).data;
+    // A deployment without the mapped view ignores the query param and returns
+    // aggregated root IDs (no provider prefix); syncing those here would wipe
+    // the provider-pinned catalog, so refuse to proceed.
+    if (!data.every((model) => model.id.includes("/"))) {
+      throw new Error("LLM Gateway mapped view unavailable: response contains unprefixed model ids");
+    }
+    // llmgateway/custom is the BYO-model placeholder and llmgateway/auto the
+    // auto-router; pinning either to a provider is meaningless in this catalog
+    // (the aggregated llmgateway provider carries `auto`).
+    return data.filter((model) => !model.id.startsWith("llmgateway/") && textOnly(model));
+  },
+  translateModel(model, context) {
+    return {
+      id: model.id,
+      model: buildLLMGatewayMappedModel(model, context.existing(model.id)),
     };
   },
 } satisfies SyncProvider<LLMGatewayModel>;
@@ -106,12 +155,12 @@ function modalities(values: string[], fallback: Modality[]): Modality[] {
   return [...new Set(result.length > 0 ? result : fallback)];
 }
 
-function resolveLLMGatewayBaseModel(model: LLMGatewayModel) {
-  const alias = BASE_MODEL_ALIASES[model.id];
+function resolveLLMGatewayBaseModel(model: LLMGatewayModel, modelID = model.id) {
+  const alias = BASE_MODEL_ALIASES[modelID];
   if (alias !== undefined) return alias;
   if (model.family === undefined) return undefined;
   const prefix = CANONICAL_FAMILY_ALIASES[model.family] ?? model.family;
-  return resolveCanonicalBaseModel(`${prefix}/${model.id}`);
+  return resolveCanonicalBaseModel(`${prefix}/${modelID}`);
 }
 
 function inferFamily(model: LLMGatewayModel, name: string) {
@@ -138,9 +187,8 @@ export function buildLLMGatewayModel(
   const completion = price(model.pricing.completion);
   const reasoning = model.supported_parameters.includes("reasoning")
     || model.supported_parameters.includes("include_reasoning");
-  const context = model.context_length > 0
-    ? model.context_length
-    : existing?.limit?.context ?? model.context_length;
+  const reported = model.context_length ?? 0;
+  const context = reported > 0 ? reported : existing?.limit?.context ?? reported;
 
   // The gateway is authoritative for the volatile, gateway-specific data — cost
   // and served limits. Its supported_parameters / modalities are too noisy to
@@ -268,6 +316,151 @@ export function buildLLMGatewayModel(
     temperature: model.supported_parameters.includes("temperature"),
     tool_call: model.supported_parameters.includes("tools")
       || model.supported_parameters.includes("tool_choice"),
+    structured_output: model.structured_outputs ?? false,
+    open_weights: false,
+    cost,
+    limit,
+    modalities: { input, output },
+  } satisfies SyncedFullModel;
+}
+
+export function buildLLMGatewayMappedModel(
+  model: LLMGatewayModel,
+  existing: ExistingModel | undefined,
+): SyncedModel {
+  // Mapped entries carry exactly one provider mapping; its capability flags
+  // describe that specific deployment, unlike the aggregated view where
+  // supported_parameters are too noisy to trust.
+  const mapping = model.providers?.[0];
+  const prompt = price(model.pricing.prompt);
+  const completion = price(model.pricing.completion);
+  const reasoning = mapping?.reasoning
+    ?? (model.supported_parameters.includes("reasoning")
+      || model.supported_parameters.includes("include_reasoning"));
+  const reported = model.context_length ?? 0;
+  const context = reported > 0 ? reported : existing?.limit?.context ?? reported;
+
+  const cost = prompt !== undefined && completion !== undefined
+    ? {
+        input: prompt,
+        output: completion,
+        reasoning: reasoning ? nonZeroPrice(model.pricing.internal_reasoning) ?? existing?.cost?.reasoning : existing?.cost?.reasoning,
+        cache_read: nonZeroPrice(model.pricing.input_cache_read) ?? existing?.cost?.cache_read,
+        cache_write: nonZeroPrice(model.pricing.input_cache_write) ?? existing?.cost?.cache_write,
+        tiers: existing?.cost?.tiers,
+      }
+    : existing?.cost;
+  const limit = {
+    context,
+    input: existing?.limit?.input,
+    output: existing?.limit?.output ?? model.max_output ?? context,
+  };
+
+  // Existing factored model: refresh cost + limit, keep every authored override
+  // as-is. Unlike the aggregated provider, the name override must be carried
+  // forward: mapped names disambiguate deployments of the same model (e.g.
+  // "GPT-5.5 (Azure)" vs "GPT-5.5 (OpenAI)") and must not collapse back to the
+  // base metadata name.
+  if (existing?.base_model !== undefined) {
+    return factorBaseModel(
+      existing.base_model,
+      {
+        name: existing.name ?? model.name,
+        attachment: existing.attachment,
+        description: existing.description ?? describeModel({
+          id: model.id,
+          name: existing.name ?? model.name,
+          family: existing.family,
+          reasoning: existing.reasoning,
+          tool_call: existing.tool_call,
+          structured_output: existing.structured_output,
+          open_weights: existing.open_weights,
+          limit,
+          modalities: existing.modalities,
+        }),
+        reasoning: existing.reasoning,
+        temperature: existing.temperature,
+        tool_call: existing.tool_call,
+        structured_output: existing.structured_output,
+        status: existing.status,
+        interleaved: existing.interleaved,
+        knowledge: existing.knowledge,
+        modalities: existing.modalities,
+        limit,
+        cost,
+      },
+      limit,
+      existing.base_model_omit,
+    );
+  }
+
+  // Existing full model: refresh cost + limit, preserve curated metadata.
+  if (existing !== undefined) {
+    return {
+      name: existing.name ?? model.name,
+      description: existing.description ?? describeModel({
+        id: model.id,
+        name: existing.name ?? model.name,
+        family: existing.family,
+        reasoning: existing.reasoning,
+        tool_call: existing.tool_call,
+        structured_output: existing.structured_output,
+        open_weights: existing.open_weights,
+        limit,
+        modalities: existing.modalities ?? defaultModalities(model),
+      }),
+      family: existing.family,
+      release_date: existing.release_date ?? dateFromTimestamp(model.created),
+      last_updated: existing.last_updated ?? dateFromTimestamp(model.created),
+      attachment: existing.attachment ?? mapping?.vision ?? false,
+      reasoning: existing.reasoning ?? reasoning,
+      temperature: existing.temperature ?? false,
+      tool_call: existing.tool_call ?? mapping?.tools ?? false,
+      structured_output: existing.structured_output ?? model.structured_outputs,
+      knowledge: existing.knowledge,
+      open_weights: existing.open_weights ?? false,
+      status: existing.status,
+      interleaved: existing.interleaved,
+      cost,
+      limit,
+      modalities: existing.modalities ?? defaultModalities(model),
+    } satisfies SyncedFullModel;
+  }
+
+  // Brand-new model with a reviewed metadata entry: factor against the
+  // canonical base. The mapped ID is `serving-provider/model-id` and the
+  // serving provider is unrelated to the originating lab, so resolve the base
+  // from the root model ID + family, and keep the disambiguating name.
+  const rootID = model.id.split("/").slice(1).join("/");
+  const canonical = resolveLLMGatewayBaseModel(model, rootID);
+  if (canonical !== undefined) {
+    const factoredLimit = { context, input: undefined, output: model.max_output ?? context };
+    return factorBaseModel(canonical, { name: model.name, limit: factoredLimit, cost }, factoredLimit);
+  }
+
+  // Brand-new model without metadata: best-effort translation. The mapping's
+  // own capability flags are reliable here; modalities mirror the mapping too.
+  const { input, output } = defaultModalities(model);
+  return {
+    name: model.name,
+    description: describeModel({
+      id: model.id,
+      name: model.name,
+      family: inferFamily(model, model.name),
+      reasoning,
+      tool_call: mapping?.tools ?? false,
+      structured_output: model.structured_outputs ?? false,
+      open_weights: false,
+      limit,
+      modalities: { input, output },
+    }),
+    family: inferFamily(model, model.name),
+    release_date: dateFromTimestamp(model.created),
+    last_updated: dateFromTimestamp(model.created),
+    attachment: mapping?.vision ?? input.some((value) => value !== "text"),
+    reasoning,
+    temperature: model.supported_parameters.includes("temperature"),
+    tool_call: mapping?.tools ?? false,
     structured_output: model.structured_outputs ?? false,
     open_weights: false,
     cost,

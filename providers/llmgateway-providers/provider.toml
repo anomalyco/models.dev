@@ -1,3 +1,9 @@
+# The provider-pinned LLM Gateway catalog: one entry per upstream provider
+# mapping, addressed as `provider/model-id` — the format the gateway accepts to
+# pin a request to a specific upstream provider. The aggregated, auto-routed
+# catalog of root model IDs lives in the `llmgateway` provider
+# ("DevPass (LLM Gateway)"). Both are served by the same endpoint and API key.
+#
 # POST /v1/chat/completions accepts $.reasoning_effort = none|minimal|low|
 # medium|high|xhigh|max. Its raw schema lists $.reasoning.effort = low|medium|
 # high; the two effort paths are mutually exclusive. $.reasoning.max_tokens
@@ -6,7 +12,7 @@
 # $.output_config.effort controls adaptive depth on Opus 4.7+.
 # https://docs.llmgateway.io/features/reasoning (accessed 2026-06-25)
 # https://docs.llmgateway.io/v1_messages (accessed 2026-06-25)
-name = "DevPass (LLM Gateway)"
+name = "LLM Gateway"
 env = ["LLMGATEWAY_API_KEY"]
 npm = "@ai-sdk/openai-compatible"
 doc = "https://llmgateway.io/docs"
