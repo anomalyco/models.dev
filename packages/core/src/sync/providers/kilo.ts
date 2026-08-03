@@ -270,7 +270,7 @@ function KiloReasoningOptions(opencode: KiloModel["opencode"]): SyncedFullModel[
     .map(([, variant]) => variant.reasoning?.effort)
     .filter((effort): effort is string => effort !== undefined);
   const hasNone = variants.some(([, variant]) => variant.reasoning?.enabled === false);
-  const allEfforts = hasNone ? [...efforts, "none"] : [...efforts];
+  const allEfforts = [...new Set(hasNone ? [...efforts, "none"] : efforts)];
 
   if (allEfforts.length > 0) {
     const orderedEfforts = allEfforts.sort((a, b) => {
