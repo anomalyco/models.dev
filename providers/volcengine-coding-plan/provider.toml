@@ -1,0 +1,17 @@
+# OpenAI-compatible coding plan endpoint: POST
+# https://ark.cn-beijing.volces.com/api/coding/v3/chat/completions (a Responses
+# surface is also served). Deep thinking is toggled with top-level
+# `thinking.type` = enabled|disabled and is returned as `reasoning_content` on
+# the message or streamed delta. An Anthropic-compatible surface for
+# Claude-style clients lives at /api/coding. Subscription usage must go through
+# /api/coding/*; the pay-as-you-go /api/v3 endpoint bills separately. The plan
+# bundles ByteDance Doubao Seed models plus DeepSeek, GLM, Kimi, and MiniMax.
+# Sources:
+# https://www.volcengine.com/docs/82379/1925114
+# https://www.volcengine.com/docs/82379/2556056
+# https://www.volcengine.com/activity/codingplan
+name = "Volcengine Coding Plan (China)"
+env = ["ARK_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+doc = "https://www.volcengine.com/docs/82379/1925114"
+api = "https://ark.cn-beijing.volces.com/api/coding/v3"

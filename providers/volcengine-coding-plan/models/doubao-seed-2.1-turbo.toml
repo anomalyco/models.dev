@@ -1,0 +1,34 @@
+# ByteDance first-party coding model on its own Ark platform. Deep thinking is
+# toggled with top-level `thinking.type` = enabled|disabled and returned as
+# `reasoning_content`. Turbo tier of the Doubao Seed 2.1 coding family.
+# Sources (accessed 2026-08-03):
+# https://www.volcengine.com/docs/82379/1925114
+# https://www.volcengine.com/docs/82379/1449737
+name = "Doubao Seed 2.1 Turbo"
+description = "ByteDance Doubao Seed 2.1 turbo coding model for low-latency agentic software engineering"
+family = "seed"
+release_date = "2026-05"
+last_updated = "2026-05"
+attachment = false
+reasoning = true
+reasoning_options = [{ type = "toggle" }]
+temperature = true
+tool_call = true
+open_weights = false
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0
+output = 0
+cache_read = 0
+cache_write = 0
+
+[limit]
+context = 256_000
+output = 32_768
+
+[modalities]
+input = ["text"]
+output = ["text"]

@@ -1,0 +1,15 @@
+# Toggle: thinking.type = enabled|disabled
+# Coding Plan deep thinking is toggled with top-level `thinking.type` and
+# returned as `reasoning_content`.
+# https://www.volcengine.com/docs/82379/1925114 (accessed 2026-08-03)
+base_model = "deepseek/deepseek-v4-pro"
+reasoning_options = [{ type = "toggle" }]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0
+output = 0
+cache_read = 0
+cache_write = 0
