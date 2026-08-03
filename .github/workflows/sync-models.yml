@@ -122,9 +122,18 @@ jobs:
           git commit -m "$TITLE"
           bun sync:auto-merge HEAD^ HEAD
           safe="$(sed -n 's/^safe=//p' "$GITHUB_OUTPUT" | tail -1)"
-          git push --force-with-lease origin "$BRANCH"
 
           pr_number="$(gh pr list --head "$BRANCH" --base dev --json number --jq '.[0].number')"
+          if [ "$safe" != "true" ] && [ -n "$pr_number" ]; then
+            gh pr merge "$pr_number" --disable-auto || true
+            if [ "$(gh pr view "$pr_number" --json autoMergeRequest --jq '.autoMergeRequest == null')" != "true" ]; then
+              echo "Failed to disable auto-merge for unsafe sync PR #$pr_number."
+              exit 1
+            fi
+          fi
+
+          git push --force-with-lease origin "$BRANCH"
+
           if [ -n "$pr_number" ]; then
             gh pr edit "$pr_number" --title "$TITLE" --body-file .sync/model-sync-report.md
             for label in "${labels[@]}"; do
@@ -137,6 +146,7 @@ jobs:
 
           if [ "$safe" = "true" ]; then
             gh pr merge "$pr_number" --auto --squash
-          else
-            gh pr merge "$pr_number" --disable-auto || true
+          elif [ "$(gh pr view "$pr_number" --json autoMergeRequest --jq '.autoMergeRequest == null')" != "true" ]; then
+            echo "Unsafe sync PR #$pr_number still has auto-merge enabled."
+            exit 1
           fi
