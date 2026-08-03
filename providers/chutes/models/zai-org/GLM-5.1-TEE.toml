@@ -1,9 +1,14 @@
+# Toggle: chat_template_kwargs.thinking = true|false
+# Source: https://huggingface.co/zai-org/GLM-5.1 (chat template exposes thinking)
+# Verified live on POST https://llm.chutes.ai/v1/chat/completions: reasoning_content present when on, absent when off
 base_model = "zhipuai/glm-5.1"
 name = "GLM 5.1 TEE"
-reasoning_options = []
 
 [interleaved]
 field = "reasoning_content"
+
+[[reasoning_options]]
+type = "toggle"
 
 [cost]
 input = 0.98

@@ -1,6 +1,11 @@
+# Toggle: chat_template_kwargs.enable_thinking = true|false
+# Source: https://huggingface.co/google/gemma-4-31b-it (chat template exposes enable_thinking)
+# Verified live on POST https://llm.chutes.ai/v1/chat/completions: reasoning_content present when on, absent when off
 base_model = "google/gemma-4-31b-it"
 name = "gemma 4 31B turbo TEE"
-reasoning_options = []
+
+[[reasoning_options]]
+type = "toggle"
 
 [cost]
 input = 0.12
