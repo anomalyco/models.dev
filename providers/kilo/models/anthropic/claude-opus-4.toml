@@ -1,13 +1,18 @@
-name = "Anthropic: Claude Opus 4"
+name = "Anthropic: Claude Opus 4 ($$$$)"
 description = "Flagship Claude model for deep reasoning, coding, and long-horizon agents"
+family = "claude-opus"
 release_date = "2025-05-22"
-last_updated = "2026-03-15"
+last_updated = "2025-05-22"
 attachment = true
-reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }, { type = "budget_tokens", min = 1_024 }]
 reasoning = true
 temperature = true
 tool_call = true
+structured_output = false
 open_weights = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "xhigh", "xhigh"]
 
 [cost]
 input = 15
@@ -16,9 +21,9 @@ cache_read = 1.5
 cache_write = 18.75
 
 [limit]
-context = 200000
-output = 32000
+context = 200_000
+output = 32_000
 
 [modalities]
-input = ["image", "pdf", "text"]
+input = ["image", "text", "pdf"]
 output = ["text"]

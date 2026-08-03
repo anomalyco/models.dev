@@ -1,23 +1,14 @@
-name = "OpenAI: GPT-5.4 Nano"
+base_model = "openai/gpt-5.4-nano"
 description = "Compact GPT model for low-latency assistance and high-volume workloads"
-release_date = "2026-03-17"
-last_updated = "2026-04-11"
-attachment = true
-reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh"] }]
-reasoning = true
-temperature = false
-tool_call = true
-open_weights = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "xhigh", "max"]
 
 [cost]
 input = 0.2
 output = 1.25
 cache_read = 0.02
 
-[limit]
-context = 400000
-output = 128000
-
 [modalities]
-input = ["image", "pdf", "text"]
-output = ["text"]
+input = ["pdf", "image", "text"]

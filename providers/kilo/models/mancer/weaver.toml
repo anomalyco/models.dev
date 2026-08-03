@@ -1,20 +1,22 @@
 name = "Mancer: Weaver (alpha)"
 description = "General-purpose chat model for instruction following, writing, and analysis"
+family = "alpha"
 release_date = "2023-08-02"
-last_updated = "2026-03-15"
+last_updated = "2023-08-02"
 attachment = false
 reasoning = false
 temperature = true
 tool_call = false
+structured_output = true
 open_weights = false
 
 [cost]
-input = 0.75
-output = 1
+input = 0.5
+output = 0.75
 
 [limit]
-context = 8000
-output = 2000
+context = 8_000
+output = 2_000
 
 [modalities]
 input = ["text"]

@@ -1,21 +1,26 @@
 name = "Qwen: Qwen3 Max Thinking"
 description = "Qwen reasoning model for deliberate problem solving, math, and coding"
-release_date = "2026-01-23"
-last_updated = "2026-03-15"
+family = "qwen"
+release_date = "2026-02-09"
+last_updated = "2026-02-09"
 attachment = false
-reasoning_options = [{ type = "budget_tokens", min = 1, max = 81_920 }]
 reasoning = true
 temperature = true
 tool_call = true
+structured_output = true
 open_weights = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "high"]
 
 [cost]
 input = 0.78
 output = 3.9
 
 [limit]
-context = 262144
-output = 32768
+context = 262_144
+output = 65_536
 
 [modalities]
 input = ["text"]

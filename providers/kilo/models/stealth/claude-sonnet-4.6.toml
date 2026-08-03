@@ -1,24 +1,30 @@
 name = "Stealth: Claude Sonnet 4.6 (20% off)"
 description = "Balanced Claude model for coding, analysis, agent workflows, and cost control"
-release_date = "2026-02-17"
-last_updated = "2026-05-27"
+family = "claude-sonnet"
+release_date = "2025-08-26"
+last_updated = "2025-08-26"
 attachment = true
-reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "medium", "high", "max"] }]
 reasoning = true
-tool_call = true
 temperature = true
+tool_call = true
+structured_output = false
 open_weights = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "xhigh", "xhigh"]
 
 [cost]
 input = 2.4
-output = 12.0
+output = 12
+reasoning = 0
 cache_read = 0.24
-cache_write = 3.0
+cache_write = 3
 
 [limit]
-context = 1000000
-output = 64000
+context = 1_000_000
+output = 64_000
 
 [modalities]
-input = ["image", "pdf", "text"]
+input = ["text", "image", "pdf"]
 output = ["text"]

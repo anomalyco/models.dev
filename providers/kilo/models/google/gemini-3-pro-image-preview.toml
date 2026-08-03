@@ -1,23 +1,17 @@
-name = "Google: Nano Banana Pro (Gemini 3 Pro Image Preview)"
+base_model = "google/gemini-3-pro-image-preview"
 description = "Image model for prompt-driven generation, editing, and visual design workflows"
-release_date = "2025-11-20"
-last_updated = "2026-03-15"
-attachment = true
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh"] }]
-reasoning = true
-temperature = true
-tool_call = false
-open_weights = false
+structured_output = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high", "xhigh"]
 
 [cost]
 input = 2
 output = 12
 reasoning = 12
-
-[limit]
-context = 65536
-output = 32768
+cache_read = 0.2
+cache_write = 0.375
 
 [modalities]
-input = ["image", "text"]
-output = ["image", "text"]
+input = ["image", "text", "pdf"]

@@ -1,22 +1,16 @@
-name = "OpenAI: GPT-5 Pro"
+base_model = "openai/gpt-5-pro"
 description = "Frontier GPT model for professional reasoning, coding, and multimodal work"
-release_date = "2025-10-06"
-last_updated = "2026-03-15"
-attachment = true
-reasoning_options = [{ type = "effort", values = ["high"] }]
-reasoning = true
-temperature = false
-tool_call = true
-open_weights = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "xhigh", "max"]
 
 [cost]
 input = 15
 output = 120
 
 [limit]
-context = 400000
-output = 128000
+output = 128_000
 
 [modalities]
-input = ["image", "pdf", "text"]
-output = ["text"]
+input = ["image", "text", "pdf"]

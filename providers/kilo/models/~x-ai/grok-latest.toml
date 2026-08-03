@@ -1,0 +1,25 @@
+name = "xAI: Grok Latest"
+description = "This model always redirects to the latest Grok model from xAI."
+family = "grok"
+release_date = "2026-07-08"
+last_updated = "2026-07-08"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = false
+reasoning_options = []
+
+[cost]
+input = 2
+output = 6
+cache_read = 0.3
+
+[limit]
+context = 500_000
+output = 500_000
+
+[modalities]
+input = ["text", "image", "pdf"]
+output = ["text"]

@@ -1,22 +1,15 @@
-name = "Z.ai: GLM 4.6V"
+base_model = "zhipuai/glm-4.6v"
 description = "GLM vision model for visual reasoning, documents, and multimodal agents"
-release_date = "2025-09-30"
-last_updated = "2026-01-10"
-attachment = true
-reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["high", "xhigh"] }]
-reasoning = true
-temperature = true
-tool_call = true
-open_weights = true
+structured_output = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "high", "xhigh"]
 
 [cost]
 input = 0.3
 output = 0.9
+cache_read = 0.055
 
 [limit]
-context = 131072
-output = 131072
-
-[modalities]
-input = ["image", "text", "video"]
-output = ["text"]
+context = 131_072

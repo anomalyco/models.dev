@@ -1,0 +1,18 @@
+base_model = "google/gemini-3-pro-image"
+description = "Nano Banana Pro is Google’s most advanced image-generation and editing model, built on Gemini 3 Pro. It extends the original Nano Banana with significantly improved multimodal reasoning, real-world grounding, and..."
+tool_call = true
+structured_output = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high", "xhigh"]
+
+[cost]
+input = 2
+output = 12
+reasoning = 12
+cache_read = 0.2
+cache_write = 0.375
+
+[modalities]
+input = ["image", "text", "pdf"]

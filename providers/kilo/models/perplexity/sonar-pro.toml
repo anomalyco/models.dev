@@ -1,20 +1,22 @@
 name = "Perplexity: Sonar Pro"
 description = "Advanced Sonar search model for deeper research and cited synthesis"
-release_date = "2024-01-01"
-last_updated = "2025-09-01"
+family = "sonar-pro"
+release_date = "2025-03-07"
+last_updated = "2025-03-07"
 attachment = true
 reasoning = false
 temperature = true
 tool_call = false
+structured_output = false
 open_weights = false
 
 [cost]
-input = 3.0
-output = 15.0
+input = 3
+output = 15
 
 [limit]
-context = 200000
-output = 8000
+context = 200_000
+output = 8_000
 
 [modalities]
 input = ["text", "image"]
