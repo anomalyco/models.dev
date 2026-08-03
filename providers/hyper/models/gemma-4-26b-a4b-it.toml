@@ -1,0 +1,17 @@
+base_model = "google/gemma-4-26b-a4b-it"
+release_date = "2026-04-30"
+last_updated = "2026-07-22"
+attachment = false
+reasoning = false
+
+[cost]
+input = 0.13
+output = 0.43
+cache_write = 0.065
+
+[limit]
+context = 256_000
+output = 25_600
+
+[modalities]
+input = ["text"]

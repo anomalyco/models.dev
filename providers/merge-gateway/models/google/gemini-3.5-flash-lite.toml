@@ -1,0 +1,10 @@
+base_model = "google/gemini-3.5-flash-lite"
+name = "Gemini 3.5 Flash-Lite"
+
+[[reasoning_options]]
+type = "toggle"
+
+[cost]
+input = 0.3
+output = 2.5
+cache_read = 0.03

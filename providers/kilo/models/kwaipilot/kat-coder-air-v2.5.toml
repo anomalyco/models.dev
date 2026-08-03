@@ -1,0 +1,24 @@
+name = "Kwaipilot: KAT-Coder-Air V2.5"
+description = "KAT-Coder-Air V2.5 is a flagship-level Agentic Coding model that can directly hand over an entire issue or an entire business workflow to it, allowing it to autonomously locate and make..."
+family = "kat-coder"
+release_date = "2026-07-10"
+last_updated = "2026-07-10"
+attachment = false
+reasoning = false
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[cost]
+input = 0.15
+output = 0.6
+cache_read = 0.03
+
+[limit]
+context = 256_000
+output = 80_000
+
+[modalities]
+input = ["text"]
+output = ["text"]

@@ -5,7 +5,7 @@ release_date = "2026-04-27"
 last_updated = "2026-04-27"
 attachment = true
 reasoning = true
-temperature = false
+temperature = true
 tool_call = true
 structured_output = true
 open_weights = false
@@ -15,13 +15,13 @@ type = "effort"
 values = ["low", "high", "max"]
 
 [cost]
-input = 3
-output = 15
-cache_read = 0.3
+input = 2.9
+output = 14
+cache_read = 0.29
 
 [limit]
 context = 1_048_576
-output = 262_144
+output = 1_048_576
 
 [modalities]
 input = ["text", "image"]

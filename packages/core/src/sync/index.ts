@@ -15,13 +15,17 @@ import { deepinfra } from "./providers/deepinfra.js";
 import { digitalocean } from "./providers/digitalocean.js";
 import { empiriolabs } from "./providers/empiriolabs.js";
 import { google } from "./providers/google.js";
+import { hyper } from "./providers/hyper.js";
 import { huggingface } from "./providers/huggingface.js";
 import { kilo } from "./providers/kilo.js";
 import { llmgateway } from "./providers/llmgateway.js";
+import { mergeGateway } from "./providers/merge-gateway.js";
+import { nanoGpt } from "./providers/nano-gpt.js";
 import { openai } from "./providers/openai.js";
 import { openrouter } from "./providers/openrouter.js";
 import { ovhcloud } from "./providers/ovhcloud.js";
 import { pioneer } from "./providers/pioneer.js";
+import { tinfoil } from "./providers/tinfoil.js";
 import { vercel } from "./providers/vercel.js";
 import { venice } from "./providers/venice.js";
 import { wandb } from "./providers/wandb.js";
@@ -72,6 +76,7 @@ export interface SyncProvider<SourceModel> {
   deleteMissing?: boolean;
   preserveSymlinks?: boolean;
   preserveBaseModels?: boolean;
+  preserveDescriptions?: boolean;
   sameModel?(current: ExistingModel, desired: SyncedModel): boolean;
   missingNotice?(paths: string[]): string[];
   /**
@@ -114,13 +119,17 @@ export const providers: {
   digitalocean: SyncProvider<any>;
   empiriolabs: SyncProvider<any>;
   google: SyncProvider<any>;
-  kilo: SyncProvider<any>;
+  hyper: SyncProvider<any>;
   huggingface: SyncProvider<any>;
+  kilo: SyncProvider<any>;
   llmgateway: SyncProvider<any>;
+  "merge-gateway": SyncProvider<any>;
+  "nano-gpt": SyncProvider<any>;
   openai: SyncProvider<any>;
   openrouter: SyncProvider<any>;
   ovhcloud: SyncProvider<any>;
   pioneer: SyncProvider<any>;
+  tinfoil: SyncProvider<any>;
   vercel: SyncProvider<any>;
   venice: SyncProvider<any>;
   wandb: SyncProvider<any>;
@@ -136,13 +145,17 @@ export const providers: {
   digitalocean,
   empiriolabs,
   google,
-  kilo,
+  hyper,
   huggingface,
+  kilo,
   llmgateway,
+  "merge-gateway": mergeGateway,
+  "nano-gpt": nanoGpt,
   openai,
   openrouter,
   ovhcloud,
   pioneer,
+  tinfoil,
   vercel,
   venice,
   wandb,
@@ -150,9 +163,19 @@ export const providers: {
 };
 
 export const groups = {
-  aggregators: ["crossmodel", "empiriolabs", "huggingface", "kilo", "llmgateway", "openrouter", "vercel"],
+  aggregators: [
+    "crossmodel",
+    "empiriolabs",
+    "huggingface",
+    "kilo",
+    "llmgateway",
+    "merge-gateway",
+    "nano-gpt",
+    "openrouter",
+    "vercel",
+  ],
   cloudflare: ["cloudflare-workers-ai"],
-  direct: ["ambient", "anthropic", "baseten", "chutes", "deepinfra", "digitalocean", "google", "openai", "ovhcloud", "pioneer", "venice", "wandb", "xai"],
+  direct: ["ambient", "anthropic", "baseten", "chutes", "deepinfra", "digitalocean", "google", "hyper", "openai", "ovhcloud", "pioneer", "tinfoil", "venice", "wandb", "xai"],
 } as const;
 
 type ProviderID = keyof typeof providers;
@@ -239,16 +262,17 @@ export async function syncProvider<SourceModel>(
     } else {
       resolvedReasoning = existing.get(relativePath)?.toml.reasoning;
     }
+    const withReasoningOptions = preserveReasoningOptions(
+      translatedModel,
+      existing.get(relativePath)?.authored,
+      resolvedReasoning,
+    );
+    const withDescription = provider.preserveDescriptions === false
+      ? withReasoningOptions
+      : preserveDescription(withReasoningOptions, existing.get(relativePath)?.authored);
     const parsed = SyncedAuthoredModel.safeParse(stripUndefined({
       id: translated.id,
-      ...preserveDescription(
-        preserveReasoningOptions(
-          translatedModel,
-          existing.get(relativePath)?.authored,
-          resolvedReasoning,
-        ),
-        existing.get(relativePath)?.authored,
-      ),
+      ...withDescription,
     }));
     if (!parsed.success) {
       parsed.error.cause = { provider: provider.id, path: relativePath };

@@ -2,11 +2,11 @@ name = "Agent Max"
 description = "Frontier models for autonomous research, deep multi-step tool chains, and complex long-horizon tasks. Any model that meets the contract spec can serve your request."
 # contract spec: https://thegrid.ai/docs/instrument-specifications/current-instruments
 release_date = "2026-05-04"
-last_updated = "2026-07-06"
-attachment = false
+last_updated = "2026-07-24"
+attachment = true
 reasoning = true
 reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
-temperature = true
+temperature = false
 tool_call = true
 structured_output = true
 status = "beta"

@@ -1,0 +1,25 @@
+name = "Meituan: LongCat 2.0"
+description = "LongCat 2.0 is a sparse mixture-of-experts language model from Meituan, with 48B active parameters out of 1.6T total. It is suited for coding, repository-level changes, long-horizon problem solving, and agentic..."
+family = "longcat"
+release_date = "2026-07-20"
+last_updated = "2026-07-20"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = false
+open_weights = false
+reasoning_options = []
+
+[cost]
+input = 0.75
+output = 3
+cache_read = 0.015
+
+[limit]
+context = 1_048_756
+output = 262_144
+
+[modalities]
+input = ["text"]
+output = ["text"]

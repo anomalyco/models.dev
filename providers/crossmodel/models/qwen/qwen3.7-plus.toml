@@ -7,14 +7,14 @@ type = "toggle"
 type = "budget_tokens"
 
 [cost]
-input = 0.32
-output = 1.25
-cache_read = 0.032
-cache_write = 0.4
+input = 0.288
+output = 1.125
+cache_read = 0.0288
+cache_write = 0.36
 
 [[cost.tiers]]
 tier = { type = "context", size = 256_000 }
-input = 0.96
-output = 3.75
-cache_read = 0.096
-cache_write = 1.2
+input = 0.864
+output = 3.375
+cache_read = 0.0864
+cache_write = 1.08

@@ -1,0 +1,18 @@
+base_model = "moonshotai/kimi-k3"
+description = "Kimi K3 is a 2.8T parameter open-weight multimodal reasoning model from Moonshot AI. It is suited for complex coding, knowledge work, and long-horizon agentic workflows, and is particularly strong at..."
+temperature = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[cost]
+input = 3
+output = 15
+cache_read = 0.3
+
+[limit]
+output = 1_048_576
+
+[modalities]
+input = ["text", "image"]

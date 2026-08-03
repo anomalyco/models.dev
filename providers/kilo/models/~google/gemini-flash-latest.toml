@@ -1,25 +1,31 @@
 # Tracks the current Gemini Flash alias target (Gemini 3.5 Flash).
-name = "Google: Gemini Flash Latest"
+name = "Google Gemini Flash Latest"
 description = "Fast Gemini model balancing multimodal reasoning, tool use, and cost"
-release_date = "2026-05-19"
-last_updated = "2026-05-19"
+family = "gemini-flash"
+release_date = "2026-04-27"
+last_updated = "2026-04-27"
 attachment = true
-reasoning_options = [{ type = "effort", values = ["minimal", "low", "medium", "high"] }]
 reasoning = true
-tool_call = true
 temperature = true
+tool_call = true
+structured_output = true
 open_weights = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["minimal", "low", "medium", "high"]
 
 [cost]
 input = 1.5
-output = 9.0
+output = 7.5
+reasoning = 7.5
 cache_read = 0.15
-cache_write = 0.08333333333333334
+cache_write = 0.083333
 
 [limit]
-context = 1048576
-output = 65536
+context = 1_048_576
+output = 65_536
 
 [modalities]
-input = ["text", "image", "audio", "video", "pdf"]
+input = ["text", "image", "video", "pdf", "audio"]
 output = ["text"]

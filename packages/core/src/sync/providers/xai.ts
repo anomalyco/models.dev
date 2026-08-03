@@ -16,6 +16,10 @@ const XAIModel = z.object({
   prompt_text_token_price: z.number().int().nonnegative().optional(),
   cached_prompt_text_token_price: z.number().int().nonnegative().optional(),
   completion_text_token_price: z.number().int().nonnegative().optional(),
+  prompt_text_token_price_long_context: z.number().int().nonnegative().optional(),
+  cached_prompt_text_token_price_long_context: z.number().int().nonnegative().optional(),
+  completion_text_token_price_long_context: z.number().int().nonnegative().optional(),
+  long_context_threshold: z.number().int().nonnegative().optional(),
   max_prompt_length: z.number().int().nonnegative().optional(),
 }).passthrough();
 
@@ -141,9 +145,29 @@ function tokenPrice(value: number | undefined) {
   return value / 10_000;
 }
 
-function preservedCostTiers(existing: ExistingModel) {
-  // The xAI models API exposes base pricing only; long-context tiers are curated from xAI docs/console.
-  return existing.cost?.tiers;
+function costTiers(model: XAIModel, existing: ExistingModel) {
+  // 0 = no long-context band; omitted (image/video) = keep authored tiers.
+  // Long-context prices: 0 = same as base; undefined = field omitted, keep authored.
+  const size = model.long_context_threshold;
+  if (size === undefined) return existing.cost?.tiers;
+  if (size === 0) return undefined;
+
+  const longInput = model.prompt_text_token_price_long_context;
+  const longOutput = model.completion_text_token_price_long_context;
+  if (longInput === undefined || longOutput === undefined) return existing.cost?.tiers;
+
+  const input = tokenPrice(longInput || model.prompt_text_token_price);
+  const output = tokenPrice(longOutput || model.completion_text_token_price);
+  if (input === undefined || output === undefined) return existing.cost?.tiers;
+
+  return [{
+    tier: { type: "context" as const, size },
+    input,
+    output,
+    cache_read: tokenPrice(
+      model.cached_prompt_text_token_price_long_context || model.cached_prompt_text_token_price,
+    ),
+  }];
 }
 
 function cost(model: XAIModel, existing: ExistingModel) {
@@ -159,7 +183,7 @@ function cost(model: XAIModel, existing: ExistingModel) {
     cache_write: existing.cost?.cache_write,
     input_audio: existing.cost?.input_audio,
     output_audio: existing.cost?.output_audio,
-    tiers: preservedCostTiers(existing),
+    tiers: costTiers(model, existing),
   };
 }
 

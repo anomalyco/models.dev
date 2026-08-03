@@ -1,22 +1,11 @@
-name = "OpenAI: o1"
+base_model = "openai/o1"
 description = "O-series reasoning model for hard analysis, math, coding, and planning"
-release_date = "2024-12-05"
-last_updated = "2026-03-15"
-attachment = true
-reasoning = false
-temperature = false
-tool_call = true
-open_weights = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "xhigh", "max"]
 
 [cost]
 input = 15
 output = 60
 cache_read = 7.5
-
-[limit]
-context = 200000
-output = 100000
-
-[modalities]
-input = ["image", "pdf", "text"]
-output = ["text"]

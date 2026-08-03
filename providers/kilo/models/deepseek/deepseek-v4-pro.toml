@@ -1,23 +1,14 @@
-name = "DeepSeek: DeepSeek V4 Pro"
+base_model = "deepseek/deepseek-v4-pro"
 description = "Flagship DeepSeek model for coding, reasoning, and agentic work"
-release_date = "2026-04-24"
-last_updated = "2026-05-01"
-attachment = false
-reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["high", "xhigh"] }]
-reasoning = true
-tool_call = true
-temperature = true
-open_weights = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "high", "xhigh"]
 
 [cost]
-input = 0.435
-output = 0.87
-cache_read = 0.003625
+input = 1.6
+output = 3.2
+cache_read = 0.135
 
 [limit]
-context = 1048576
-output = 384000
-
-[modalities]
-input = ["text"]
-output = ["text"]
+context = 1_048_576

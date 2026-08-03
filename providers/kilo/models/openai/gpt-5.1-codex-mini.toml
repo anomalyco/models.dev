@@ -1,23 +1,14 @@
-name = "OpenAI: GPT-5.1-Codex-Mini"
+base_model = "openai/gpt-5.1-codex-mini"
 description = "Coding-optimized GPT model for repository edits, reviews, and agentic software work"
-release_date = "2025-11-13"
-last_updated = "2025-11-13"
-attachment = true
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
-reasoning = true
-temperature = false
-tool_call = true
-open_weights = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high", "xhigh"]
 
 [cost]
 input = 0.25
 output = 2
-cache_read = 0.025
-
-[limit]
-context = 400000
-output = 100000
+cache_read = 0.03
 
 [modalities]
-input = ["image", "text"]
-output = ["text"]
+input = ["image", "text", "pdf"]

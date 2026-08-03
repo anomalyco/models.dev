@@ -5,3 +5,9 @@ reasoning_options = []
 input = 1
 output = 2
 cache_read = 0.2
+
+[[cost.tiers]]
+tier = { type = "context", size = 200_000 }
+input = 2
+output = 4
+cache_read = 0.4

@@ -1,0 +1,24 @@
+# Sources (accessed 2026-07-31):
+# - https://ai-gateway.vercel.sh/v1/models (thinkingmachines/inkling-small)
+# - https://docs.baseten.co/inference/model-apis/reasoning — Inkling Small reasoning_effort
+# - https://thinkingmachines.ai/news/inkling-small/ — variable thinking effort
+# API: {"reasoning_effort": "none"|"minimal"|"low"|"medium"|"high"|"xhigh"|"max"}
+base_model = "thinkingmachines/inkling-small"
+description = "Multimodal reasoning model for visual analysis, planning, and tool use"
+open_weights = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"]
+
+[cost]
+input = 0.5
+output = 1.2
+cache_read = 0.1
+
+[limit]
+context = 1_000_000
+output = 1_000_000
+
+[modalities]
+input = ["text", "image", "pdf"]

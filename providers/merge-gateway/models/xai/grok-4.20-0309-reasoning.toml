@@ -1,4 +1,7 @@
+# Source: https://api-gateway.merge.dev/v1/models?model=xai%2Fgrok-4.20-0309-reasoning (accessed 2026-07-21)
+
 base_model = "xai/grok-4.20-0309-reasoning"
+name = "Grok 4.20"
 reasoning_options = []
 
 [cost]
@@ -11,3 +14,9 @@ tier = { type = "context", size = 200_000 }
 input = 2.5
 output = 5
 cache_read = 0.4
+
+[limit]
+output = 1_000_000
+
+[modalities]
+input = ["text", "image"]

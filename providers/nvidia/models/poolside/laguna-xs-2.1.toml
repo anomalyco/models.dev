@@ -1,0 +1,13 @@
+# Sources (accessed 2026-07-25):
+# - https://docs.api.nvidia.com/nim/reference/poolside-laguna-xs-2-1-infer
+# - https://integrate.api.nvidia.com/v1/models id: poolside/laguna-xs-2.1
+# NIM Chat schema exposes no reasoning control field (only temperature/top_p/max_tokens).
+base_model = "poolside/laguna-xs-2.1"
+reasoning_options = []
+
+[cost]
+input = 0.0
+output = 0.0
+
+[limit]
+output = 16_384

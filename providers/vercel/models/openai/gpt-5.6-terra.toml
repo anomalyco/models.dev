@@ -2,10 +2,13 @@ base_model = "openai/gpt-5.6-terra"
 name = "GPT 5.6 Terra"
 description = "GPT model for general reasoning, writing, coding, and tool-assisted tasks"
 temperature = true
-reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh", "max"] }]
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "xhigh", "max"]
 
 [cost]
-input = 2.5
-output = 15
-cache_read = 0.25
-cache_write = 3.125
+input = 2
+output = 12
+cache_read = 0.2
+cache_write = 2.5

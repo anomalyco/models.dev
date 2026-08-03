@@ -1,5 +1,9 @@
+# Source: https://api-gateway.merge.dev/v1/models?model=anthropic%2Fclaude-opus-4-20250514 (accessed 2026-07-21)
+
 base_model = "anthropic/claude-opus-4-20250514"
+name = "Claude Opus 4 (20250514)"
 reasoning_options = [{ type = "toggle" }, { type = "budget_tokens", min = 1_024, max = 31_999 }]
+structured_output = true
 
 [cost]
 input = 15

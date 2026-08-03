@@ -1,0 +1,22 @@
+base_model = "alibaba/qwen3.6-35b-a3b"
+name = "Qwen3.6 35B A3B"
+attachment = false
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "max"]
+
+[cost]
+input = 0.07
+output = 0.42
+cache_read = 0.035
+
+[limit]
+context = 131_072
+output = 16_384
+
+[modalities]
+input = ["text"]

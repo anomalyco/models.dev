@@ -1,13 +1,18 @@
 name = "Inception: Mercury 2"
 description = "Reasoning model for deliberate analysis, multi-step problem solving, and tool use"
-release_date = "2026-02-24"
-last_updated = "2026-02-24"
+family = "mercury"
+release_date = "2026-03-04"
+last_updated = "2026-03-04"
 attachment = false
-reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "medium", "high"] }]
 reasoning = true
 temperature = true
 tool_call = true
+structured_output = true
 open_weights = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high"]
 
 [cost]
 input = 0.25
@@ -15,8 +20,8 @@ output = 0.75
 cache_read = 0.025
 
 [limit]
-context = 128000
-output = 50000
+context = 128_000
+output = 50_000
 
 [modalities]
 input = ["text"]
