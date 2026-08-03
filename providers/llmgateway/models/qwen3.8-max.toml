@@ -1,9 +1,11 @@
 base_model = "alibaba/qwen3.8-max-preview"
-name = "Qwen3.8 Max"
-reasoning_options = [
-  { type = "effort", values = ["low", "medium", "xhigh"] },
-  { type = "budget_tokens" },
-]
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "xhigh"]
+
+[[reasoning_options]]
+type = "budget_tokens"
 
 [cost]
 input = 2
