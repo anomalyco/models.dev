@@ -1,16 +1,13 @@
 # Toggle: thinking.type = enabled|disabled
 # Effort: reasoning_effort = low|high|max
-base_model = "moonshotai/kimi-k3"
-name = "Kimi K3"
 # Live metadata: levels none/low/high/max, default max, and `can_disable=true`
 # (accessed 2026-07-28): https://api.code.umans.ai/v1/models/info
+base_model = "moonshotai/kimi-k3"
 reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "high", "max"] }]
 
 [interleaved]
 field = "reasoning_content"
 
-# Cost is zeroed per this provider's subscription (flat-fee coding plan)
-# convention.
 [cost]
 input = 0
 output = 0

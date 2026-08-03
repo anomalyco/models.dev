@@ -1,16 +1,14 @@
 # Toggle: thinking.type = enabled|disabled
 # Effort: reasoning_effort = low|high|max
-base_model = "deepseek/deepseek-v4-flash-0731"
-name = "DeepSeek V4 Flash"
 # Live metadata: levels none/low/high/max, default low, and `can_disable=true`
 # (accessed 2026-08-03): https://api.code.umans.ai/v1/models/info
+base_model = "deepseek/deepseek-v4-flash-0731"
+name = "DeepSeek V4 Flash"
 reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "high", "max"] }]
 
 [interleaved]
 field = "reasoning_content"
 
-# Cost is zeroed per this provider's subscription (flat-fee coding plan)
-# convention.
 [cost]
 input = 0
 output = 0
