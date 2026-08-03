@@ -1,0 +1,30 @@
+# Sources (accessed 2026-08-03):
+# https://docs.qwencloud.com/token-plan/personal/token-plan-personal-overview
+# https://platform.qianwenai.com/docs/token-plan/personal/token-plan-personal-overview
+# https://docs.qwencloud.com/developer-guides/getting-started/text-generation-models
+# https://platform.qianwenai.com/docs/developer-guides/getting-started/text-generation-models
+# https://docs.qwencloud.com/developer-guides/clients-and-developer-tools/opencode
+# https://platform.qianwenai.com/docs/developer-guides/clients-and-developer-tools/opencode
+# https://docs.qwencloud.com/developer-guides/clients-and-developer-tools/kilo-cli
+# https://platform.qianwenai.com/docs/developer-guides/clients-and-developer-tools/kilo-cli
+# https://github.com/QwenLM/qwen-code/issues/7198
+# https://github.com/QwenLM/qwen-code/pull/7199
+
+name = "Qwen3.8 Max"
+description = "Qwen flagship for million-token multimodal reasoning and long-horizon agentic workflows"
+family = "qwen"
+release_date = "2026-08-03"
+last_updated = "2026-08-03"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+open_weights = false
+
+[limit]
+context = 1_000_000
+output = 131_072
+
+[modalities]
+input = ["text", "image", "video"]
+output = ["text"]
