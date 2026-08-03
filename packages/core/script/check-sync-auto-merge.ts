@@ -1,3 +1,5 @@
+import { appendFile } from "node:fs/promises";
+
 import { classifyAutoMerge, parseNameStatus } from "../src/sync/auto-merge.js";
 
 const base = process.argv[2] ?? "HEAD^";
@@ -7,7 +9,7 @@ const diff = Bun.spawnSync(["git", "diff", "--name-status", "--no-renames", base
   stderr: "inherit",
 });
 
-if (diff.exitCode !== 0) process.exit(diff.exitCode);
+if (diff.exitCode !== 0) process.exit(diff.exitCode ?? 1);
 
 const decision = await classifyAutoMerge(parseNameStatus(diff.stdout.toString()));
 const summary = decision.safe
@@ -16,5 +18,5 @@ const summary = decision.safe
 
 console.log(summary);
 if (process.env.GITHUB_OUTPUT) {
-  await Bun.write(Bun.file(process.env.GITHUB_OUTPUT), `safe=${decision.safe}\nsummary=${summary}\n`, { createPath: true });
+  await appendFile(process.env.GITHUB_OUTPUT, `safe=${decision.safe}\nsummary=${summary}\n`);
 }
