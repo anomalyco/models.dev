@@ -28,14 +28,23 @@ jobs:
     runs-on: ubuntu-latest
     env:
       GH_REPO: ${{ github.repository }}
-      GH_TOKEN: ${{ github.token }}
       FAILED_RUN_ID: ${{ github.event.workflow_run.id }}
       FAILED_RUN_URL: ${{ github.event.workflow_run.html_url }}
       FAILED_WORKFLOW: ${{ github.event.workflow_run.name }}
 
     steps:
+      - name: Create app token
+        id: apptoken
+        uses: actions/create-github-app-token@fee1f7d63c2ff003460e3d139729b119787bc349 # v2.2.2
+        with:
+          app-id: ${{ vars.OPENCODE_APP_ID }}
+          private-key: ${{ secrets.OPENCODE_APP_SECRET }}
+          owner: ${{ github.repository_owner }}
+
       - name: Check run budget
         id: budget
+        env:
+          GH_TOKEN: ${{ steps.apptoken.outputs.token }}
         run: |
           set -euo pipefail
 
@@ -92,6 +101,15 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: dev
+          persist-credentials: false
+
+      - name: Setup git committer
+        id: committer
+        if: steps.budget.outputs.run == 'true' && steps.budget-cache.outputs.cache-hit != 'true'
+        uses: ./.github/actions/setup-git-committer
+        with:
+          opencode-app-id: ${{ vars.OPENCODE_APP_ID }}
+          opencode-app-secret: ${{ secrets.OPENCODE_APP_SECRET }}
 
       - name: Install opencode
         if: steps.budget.outputs.run == 'true' && steps.budget-cache.outputs.cache-hit != 'true'
@@ -99,6 +117,8 @@ jobs:
 
       - name: Collect failed logs
         if: steps.budget.outputs.run == 'true' && steps.budget-cache.outputs.cache-hit != 'true'
+        env:
+          GH_TOKEN: ${{ steps.committer.outputs.token }}
         run: |
           set -euo pipefail
           LOG_FILE="$RUNNER_TEMP/dev-ci-failure.log"
@@ -140,7 +160,7 @@ jobs:
           Failed log excerpt:
           EOF
             cat "$LOG_FILE"
-          } | opencode run --agent ci-fixer -m opencode/glm-5.2 | tee "$RESPONSE_FILE"
+          } | opencode run --agent ci-fixer -m opencode/grok-4.5 | tee "$RESPONSE_FILE"
 
       - name: Check changed paths
         if: steps.budget.outputs.run == 'true' && steps.budget-cache.outputs.cache-hit != 'true'
@@ -159,6 +179,7 @@ jobs:
       - name: Create pull request
         if: steps.budget.outputs.run == 'true' && steps.budget-cache.outputs.cache-hit != 'true'
         env:
+          GH_TOKEN: ${{ steps.committer.outputs.token }}
           BRANCH: ci-fixer-${{ github.event.workflow_run.id || github.run_id }}
           TITLE: "fix: dev CI failure"
         run: |
@@ -169,8 +190,6 @@ jobs:
             exit 0
           fi
 
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git switch -c "$BRANCH"
           git add -A
           git commit -m "$TITLE"

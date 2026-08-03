@@ -1,0 +1,16 @@
+# Source: https://api-gateway.merge.dev/v1/models?model=openai%2Fgpt-oss-20b (accessed 2026-07-21)
+# Merge Gateway GET /v1/models?model=openai/gpt-oss-20b (accessed 2026-07-16):
+# routes reporting `supports_reasoning = true` carry `configurable = false` and
+# no controls, so the model reasons on the gateway but callers have no
+# reasoning control.
+
+base_model = "openai/gpt-oss-20b"
+name = "GPT-OSS 20B"
+tool_call = false
+structured_output = false
+reasoning_options = []
+
+[cost]
+input = 0.04
+output = 0.2
+cache_read = 0.02

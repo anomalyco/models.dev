@@ -4,6 +4,7 @@ import { mergeDeep } from "remeda";
 import { z } from "zod";
 
 import { AuthoredModel, AuthoredModelShape, ModelMetadata } from "../schema.js";
+import { openMissingModelIssues } from "./missing-issues.js";
 import { ambient } from "./providers/ambient.js";
 import { anthropic } from "./providers/anthropic.js";
 import { baseten } from "./providers/baseten.js";
@@ -14,13 +15,17 @@ import { deepinfra } from "./providers/deepinfra.js";
 import { digitalocean } from "./providers/digitalocean.js";
 import { empiriolabs } from "./providers/empiriolabs.js";
 import { google } from "./providers/google.js";
+import { hyper } from "./providers/hyper.js";
 import { huggingface } from "./providers/huggingface.js";
 import { kilo } from "./providers/kilo.js";
 import { llmgateway } from "./providers/llmgateway.js";
+import { mergeGateway } from "./providers/merge-gateway.js";
+import { nanoGpt } from "./providers/nano-gpt.js";
 import { openai } from "./providers/openai.js";
 import { openrouter } from "./providers/openrouter.js";
 import { ovhcloud } from "./providers/ovhcloud.js";
 import { pioneer } from "./providers/pioneer.js";
+import { tinfoil } from "./providers/tinfoil.js";
 import { vercel } from "./providers/vercel.js";
 import { venice } from "./providers/venice.js";
 import { wandb } from "./providers/wandb.js";
@@ -61,13 +66,24 @@ export interface SyncProvider<SourceModel> {
   name: string;
   modelsDir: string;
   metadataNamespace?: string;
+  /**
+   * Do not create new local TOMLs for remote-only models. Instead open one
+   * deduped GitHub issue per missing model ID.
+   */
   skipCreates?: boolean;
+  /** Report remote-only models skipped by skipCreates as GitHub issues. */
+  trackMissingModels?: boolean;
   deleteMissing?: boolean;
   preserveSymlinks?: boolean;
   preserveBaseModels?: boolean;
+  preserveDescriptions?: boolean;
   sameModel?(current: ExistingModel, desired: SyncedModel): boolean;
   missingNotice?(paths: string[]): string[];
-  sourceID?(model: SourceModel): string;
+  /**
+   * Remote ID to report when translateModel skips a source model. Return
+   * undefined to skip silently (no notice, no missing-model issue).
+   */
+  sourceID?(model: SourceModel): string | undefined;
   skippedNotice?(ids: string[]): string[];
   fetchModels(): Promise<unknown>;
   parseModels(raw: unknown): SourceModel[];
@@ -103,13 +119,17 @@ export const providers: {
   digitalocean: SyncProvider<any>;
   empiriolabs: SyncProvider<any>;
   google: SyncProvider<any>;
-  kilo: SyncProvider<any>;
+  hyper: SyncProvider<any>;
   huggingface: SyncProvider<any>;
+  kilo: SyncProvider<any>;
   llmgateway: SyncProvider<any>;
+  "merge-gateway": SyncProvider<any>;
+  "nano-gpt": SyncProvider<any>;
   openai: SyncProvider<any>;
   openrouter: SyncProvider<any>;
   ovhcloud: SyncProvider<any>;
   pioneer: SyncProvider<any>;
+  tinfoil: SyncProvider<any>;
   vercel: SyncProvider<any>;
   venice: SyncProvider<any>;
   wandb: SyncProvider<any>;
@@ -125,13 +145,17 @@ export const providers: {
   digitalocean,
   empiriolabs,
   google,
-  kilo,
+  hyper,
   huggingface,
+  kilo,
   llmgateway,
+  "merge-gateway": mergeGateway,
+  "nano-gpt": nanoGpt,
   openai,
   openrouter,
   ovhcloud,
   pioneer,
+  tinfoil,
   vercel,
   venice,
   wandb,
@@ -139,15 +163,26 @@ export const providers: {
 };
 
 export const groups = {
-  aggregators: ["crossmodel", "empiriolabs", "huggingface", "kilo", "llmgateway", "openrouter", "vercel"],
+  aggregators: [
+    "crossmodel",
+    "empiriolabs",
+    "huggingface",
+    "kilo",
+    "llmgateway",
+    "merge-gateway",
+    "nano-gpt",
+    "openrouter",
+    "vercel",
+  ],
   cloudflare: ["cloudflare-workers-ai"],
-  direct: ["ambient", "anthropic", "baseten", "chutes", "deepinfra", "digitalocean", "google", "openai", "ovhcloud", "pioneer", "venice", "wandb", "xai"],
+  direct: ["ambient", "anthropic", "baseten", "chutes", "deepinfra", "digitalocean", "google", "hyper", "openai", "ovhcloud", "pioneer", "tinfoil", "venice", "wandb", "xai"],
 } as const;
 
 type ProviderID = keyof typeof providers;
 
 interface SyncOptions {
   dryRun?: boolean;
+  openIssues?: boolean;
   newOnly?: boolean;
 }
 
@@ -179,12 +214,13 @@ export async function syncProvider<SourceModel>(
       },
     });
     if (translated === undefined) {
-      if (provider.sourceID !== undefined) skippedRemote.push(provider.sourceID(sourceModel));
+      const skippedID = provider.sourceID?.(sourceModel);
+      if (skippedID !== undefined) skippedRemote.push(skippedID);
       continue;
     }
 
     const relativePath = `${translated.id}.toml`;
-    if (provider.skipCreates && !existing.has(relativePath)) {
+    if (provider.skipCreates === true && !existing.has(relativePath)) {
       skippedRemote.push(translated.id);
       continue;
     }
@@ -226,16 +262,17 @@ export async function syncProvider<SourceModel>(
     } else {
       resolvedReasoning = existing.get(relativePath)?.toml.reasoning;
     }
+    const withReasoningOptions = preserveReasoningOptions(
+      translatedModel,
+      existing.get(relativePath)?.authored,
+      resolvedReasoning,
+    );
+    const withDescription = provider.preserveDescriptions === false
+      ? withReasoningOptions
+      : preserveDescription(withReasoningOptions, existing.get(relativePath)?.authored);
     const parsed = SyncedAuthoredModel.safeParse(stripUndefined({
       id: translated.id,
-      ...preserveDescription(
-        preserveReasoningOptions(
-          translatedModel,
-          existing.get(relativePath)?.authored,
-          resolvedReasoning,
-        ),
-        existing.get(relativePath)?.authored,
-      ),
+      ...withDescription,
     }));
     if (!parsed.success) {
       parsed.error.cause = { provider: provider.id, path: relativePath };
@@ -357,10 +394,38 @@ export async function syncProvider<SourceModel>(
     }
   }
 
-  const result = summarize(provider, files, unchanged, [
+  const notices = [
     ...provider.skippedNotice?.(skippedRemote) ?? [],
     ...provider.missingNotice?.(missingLocal) ?? [],
-  ]);
+  ];
+
+  if (
+    provider.skipCreates === true
+    && provider.trackMissingModels !== false
+    && skippedRemote.length > 0
+    && options.openIssues === true
+  ) {
+    try {
+      notices.push(
+        ...await openMissingModelIssues(
+          { id: provider.id, name: provider.name, modelsDir: provider.modelsDir },
+          skippedRemote,
+          { dryRun: options.dryRun },
+        ),
+      );
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+      const notice = `Failed to open missing-model GitHub issues: ${message}`;
+      notices.push(notice);
+      console.error(notice);
+      // Surface as a workflow annotation: on no-change hours the notice never
+      // reaches a PR body, so a broken token or full dedupe window would
+      // otherwise disable issue opens silently while runs stay green.
+      if (process.env.GITHUB_ACTIONS === "true") console.log(`::error::${provider.id}: ${notice}`);
+    }
+  }
+
+  const result = summarize(provider, files, unchanged, notices);
   console.log(
     `${options.dryRun ? "Dry run: " : ""}${result.created} created, ${result.updated} updated, ${result.deleted} removed, ${result.unchanged} unchanged`,
   );
@@ -934,6 +999,9 @@ export async function main(args = process.argv.slice(2)) {
   const results = await syncTargets(target, {
     dryRun: args.includes("--dry-run"),
     newOnly: args.includes("--new-only"),
+    // Only GitHub Actions opens issues by default; local needs --open-issues.
+    openIssues: args.includes("--open-issues")
+      || (process.env.GITHUB_ACTIONS === "true" && !args.includes("--no-issues")),
   });
 
   await writeReport(target, results);

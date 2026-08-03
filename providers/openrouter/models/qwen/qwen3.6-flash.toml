@@ -12,3 +12,9 @@ max = 81_920
 input = 0.1875
 output = 1.125
 cache_write = 0.234375
+
+[[cost.tiers]]
+tier = { type = "context", size = 256_000 }
+input = 0.75
+output = 3
+cache_write = 0.9375

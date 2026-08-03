@@ -1,0 +1,33 @@
+name = "DeepSeek V4 Flash 0731"
+description = "Official DeepSeek V4 Flash release with enhanced agentic capabilities and integrated DSpark speculative decoding"
+family = "deepseek-flash"
+release_date = "2026-07-31"
+last_updated = "2026-07-31"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = true
+knowledge = "2025-05"
+open_weights = true
+license = "MIT"
+
+[limit]
+context = 1_000_000
+output = 384_000
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/deepseek-ai/DeepSeek-V4-Flash-0731"
+
+[[benchmarks]]
+name = "Terminal-Bench"
+score = 82.7
+metric = "pass@1"
+variant = "max"
+version = "2.1"
+source = "https://huggingface.co/deepseek-ai/DeepSeek-V4-Flash-0731"

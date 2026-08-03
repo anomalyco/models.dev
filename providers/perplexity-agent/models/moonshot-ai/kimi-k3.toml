@@ -1,0 +1,24 @@
+# Perplexity Agent API pricing scraped from
+# https://docs.perplexity.ai/docs/agent-api/models (accessed 2026-07-30).
+# Kimi K3 capability confirmation sourced from
+# https://huggingface.co/moonshotai/Kimi-K3 and https://platform.kimi.ai/docs/overview.
+# Perplexity docs note that Kimi K3 accepts minimal, low, medium, high, xhigh,
+# and max reasoning effort (minimal = low; xhigh and max = max effort) and that
+# reasoning tokens are billed at the output-token rate.
+
+base_model = "moonshotai/kimi-k3"
+last_updated = "2026-07-30"
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "effort"
+values = ["minimal", "low", "medium", "high", "xhigh", "max"]
+# Perplexity docs: minimal/low/medium select low effort; xhigh/max select max effort.
+# Reasoning tokens are billed at the output-token rate.
+
+[cost]
+input = 3.00
+output = 15.00
+cache_read = 0.30

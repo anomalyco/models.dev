@@ -1,0 +1,14 @@
+# Reasoning controls verified against https://modelishub.com/v1 on 2026-08-02.
+#   Toggle:        {"reasoning": {"enabled": true|false}}
+#   Budget tokens: {"reasoning": {"max_tokens": <n>}}
+base_model = "alibaba/qwen3.7-plus"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "budget_tokens"
+
+[cost]
+input = 0.768
+output = 3.072

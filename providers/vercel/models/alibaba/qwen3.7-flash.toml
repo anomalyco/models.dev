@@ -1,0 +1,19 @@
+base_model = "alibaba/qwen3.7-flash"
+base_model_omit = ["limit.input"]
+name = "Qwen 3.7 Flash"
+description = "Qwen vision-language model for visual reasoning, documents, and agent tasks"
+release_date = "2026-07-28"
+reasoning_options = []
+
+[cost]
+input = 0.03
+output = 0.13
+cache_read = 0.006
+cache_write = 0.038
+
+[limit]
+context = 991_000
+output = 64_000
+
+[modalities]
+input = ["text", "image", "pdf"]

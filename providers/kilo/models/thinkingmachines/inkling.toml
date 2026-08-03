@@ -1,0 +1,13 @@
+base_model = "thinkingmachines/inkling"
+description = "Inkling is an open-weight multimodal mixture-of-experts model from Thinking Machines Lab, with 41B active parameters out of 975B total. It is designed for general-purpose reasoning, coding, agentic and tool-use systems,..."
+structured_output = false
+reasoning_options = []
+
+[cost]
+input = 0.95
+output = 4.05
+cache_read = 0.16
+
+[limit]
+context = 524_288
+output = 524_288

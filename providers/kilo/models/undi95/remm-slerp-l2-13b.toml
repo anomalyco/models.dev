@@ -1,20 +1,21 @@
 name = "ReMM SLERP 13B"
 description = "Open-weight instruction model for adaptable chat and self-hosted production workloads"
 release_date = "2023-07-22"
-last_updated = "2026-03-15"
+last_updated = "2023-07-22"
 attachment = false
 reasoning = false
 temperature = true
 tool_call = false
-open_weights = true
+structured_output = true
+open_weights = false
 
 [cost]
 input = 0.45
 output = 0.65
 
 [limit]
-context = 6144
-output = 4096
+context = 6_144
+output = 2_048
 
 [modalities]
 input = ["text"]

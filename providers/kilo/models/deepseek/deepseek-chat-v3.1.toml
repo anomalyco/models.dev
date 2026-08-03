@@ -1,21 +1,27 @@
 name = "DeepSeek: DeepSeek V3.1"
 description = "DeepSeek chat model for instruction following, coding, and analysis"
+family = "deepseek"
 release_date = "2025-08-21"
 last_updated = "2025-08-21"
 attachment = false
-reasoning_options = [{ type = "toggle" }]
 reasoning = true
 temperature = true
 tool_call = true
-open_weights = true
+structured_output = true
+open_weights = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "high", "xhigh"]
 
 [cost]
-input = 0.15
-output = 0.75
+input = 0.27
+output = 1
+cache_read = 0.135
 
 [limit]
-context = 32768
-output = 7168
+context = 163_840
+output = 32_768
 
 [modalities]
 input = ["text"]

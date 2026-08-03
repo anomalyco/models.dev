@@ -3,8 +3,8 @@
 name = "OpenAI GPT Latest"
 description = "GPT model for general reasoning, writing, coding, and tool-assisted tasks"
 family = "gpt"
-release_date = "2026-07-09"
-last_updated = "2026-07-09"
+release_date = "2026-04-27"
+last_updated = "2026-04-27"
 attachment = true
 reasoning = true
 temperature = false
@@ -23,10 +23,17 @@ output = 30
 cache_read = 0.5
 cache_write = 6.25
 
+[[cost.tiers]]
+tier = { type = "context", size = 272_000 }
+input = 10
+output = 45
+cache_read = 1
+cache_write = 12.5
+
 [limit]
 context = 1_050_000
 output = 128_000
 
 [modalities]
-input = ["text", "image", "pdf"]
+input = ["pdf", "image", "text"]
 output = ["text"]

@@ -1,0 +1,11 @@
+# Cost: converted from GreenPT's EUR list price at 1.14 USD/EUR (rate captured 2026-07-24).
+# Sources: https://docs.greenpt.ai/pricing and https://docs.greenpt.ai/model-cards
+# reasoning_effort: thinking is enabled by default, "none" disables it, and
+# minimal/low/medium/high are accepted. See https://docs.greenpt.ai/chat-completion
+base_model = "google/gemma-4-26b-a4b-it"
+name = "gemma4"
+reasoning_options = [{ type = "effort", values = ["none", "minimal", "low", "medium", "high"] }]
+
+[cost]
+input = 0.57
+output = 1.71

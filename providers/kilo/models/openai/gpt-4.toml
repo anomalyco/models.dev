@@ -1,21 +1,14 @@
-name = "OpenAI: GPT-4"
+base_model = "openai/gpt-4"
 description = "GPT model for general reasoning, writing, coding, and tool-assisted tasks"
-release_date = "2023-03-14"
-last_updated = "2024-04-09"
-attachment = false
-reasoning = false
-temperature = true
-tool_call = true
-open_weights = false
+structured_output = true
 
 [cost]
-input = 30.0
-output = 60.0
+input = 30
+output = 60
 
 [limit]
-context = 8191
-output = 4096
+context = 8_191
+output = 4_096
 
 [modalities]
-input = ["text"]
-output = ["text"]
+input = ["text", "pdf"]

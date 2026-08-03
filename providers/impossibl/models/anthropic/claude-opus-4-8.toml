@@ -1,0 +1,15 @@
+# Pricing: https://api.impossibl.com/v1/models
+base_model = "anthropic/claude-opus-4-8"
+
+[cost]
+input = 5.00
+output = 25.00
+cache_read = 0.50
+cache_write = 6.25
+
+[[reasoning_options]]
+type = "toggle" # API: {"thinking":{"type":"disabled"}}
+
+[[reasoning_options]]
+type = "effort" # API: {"output_config":{"effort":"high"}}
+values = ["low", "medium", "high", "xhigh", "max"]

@@ -17,9 +17,13 @@ The grouped sync targets are available for local convenience, but CI syncs each 
 - `bun models:sync digitalocean` syncs only DigitalOcean.
 - `bun models:sync xai` syncs only xAI.
 - `bun models:sync kilo` syncs only Kilo.
+- `bun models:sync merge-gateway` syncs only Merge Gateway.
 - `bun models:sync openai` syncs only OpenAI catalog availability.
+- `bun models:sync tinfoil` syncs only Tinfoil.
 - `bun models:sync aggregators --dry-run` prints changes without writing model files.
 - `bun models:sync aggregators --new-only` creates new model files but skips updates and removals.
+- `bun models:sync <provider> --open-issues` opens GitHub issues for missing models (on by default only when `GITHUB_ACTIONS=true`).
+- `bun models:sync <provider> --no-issues` skips opening GitHub issues in Actions.
 - `bun validate` validates the generated catalog after a sync.
 
 Sync runs also write `.sync/model-sync-report.md` for the automation workflow PR body. Do not commit that report from local runs.
@@ -38,8 +42,29 @@ Sync runs also write `.sync/model-sync-report.md` for the automation workflow PR
 - Replaces symlinked files safely by removing the symlink before writing.
 - Removes existing files that are no longer present in the desired synced set.
 - Writes `.sync/model-sync-report.md` for GitHub Actions.
+- When `skipCreates` is set and issue opens are enabled, opens one deduped GitHub issue per remote model missing from the local catalog (via `gh`).
 
 Because the runner removes files missing from the desired set, a provider module should only skip source models when deleting existing local files for those skipped IDs is intentional.
+
+## Missing-model GitHub issues
+
+Providers that cannot safely auto-create TOMLs set `skipCreates: true`. In GitHub Actions (or with `--open-issues`), each skipped remote ID may open a GitHub issue unless the provider sets `trackMissingModels: false`:
+
+1. Title: `[missing-model] <provider>: <model-id>` (stable for dedupe)
+2. Labels: `automation`, `model-sync`, `missing-model`, `provider:<id>`
+3. Lists existing issues (open **and** closed) with those labels; skips create when the title already exists
+4. Dispatches the Issue Fixer explicitly so issues created with `GITHUB_TOKEN` can still produce PRs
+5. If listing fails, creates nothing (fail closed)
+
+Requires `GH_TOKEN` on the sync workflow step. Local runs are notice-only unless `--open-issues`. Use `--no-issues` / `--dry-run` to skip creates. Issue-fixer ignores these titles (`[missing-model]…`) — they need hand-authored metadata.
+
+The first Actions run may open a batch of issues per provider, including remote IDs the catalog intentionally omits (e.g. OpenAI whisper/tts/moderation surfaces, dated snapshots). This one-time volume is accepted by design: close unwanted issues once and the closed-title dedupe suppresses them permanently. If the dedupe list window (1000 labeled issues per provider) ever fills, the sync fails closed and creates nothing rather than risk duplicates.
+
+Pioneer sets `trackMissingModels: false`: its API currently assigns the placeholder creation date `2024-01-01` to every model, so neither its timestamps nor an age cutoff can identify meaningful new additions. Existing Pioneer TOMLs are still updated by the sync.
+
+OpenAI also sets `trackMissingModels: false`: `/v1/models` is scoped to the automation account and mixes public models with legacy, internal experiment, dated snapshot, and non-catalog IDs without lifecycle metadata. Existing OpenAI TOMLs are still preserved by the availability sync.
+
+Google sets `trackMissingModels: false`: `/v1beta/models` does not expose lifecycle metadata and can retain shut-down models, superseded snapshots, moving aliases, and EAP IDs. Existing Google TOMLs are still updated from API-authoritative fields.
 
 ## Provider Modules
 
@@ -139,6 +164,17 @@ Kilo Gateway is implemented in `packages/core/src/sync/providers/kilo.ts`.
 - Canonical Kilo model IDs should emit `base_model` references to model metadata when a matching `models/` entry exists.
 - `reasoning_options` is derived from `opencode.variants` when present.
 
+## Merge Gateway Notes
+
+Merge Gateway is implemented in `packages/core/src/sync/providers/merge-gateway.ts`.
+
+- Source endpoint: `https://api-gateway.merge.dev/v1/models`.
+- Required auth: `MERGE_GATEWAY_API_KEY`.
+- The sync follows `next_cursor` until every page has been fetched.
+- The canonical provider's available vendor route supplies pricing, limits, and capabilities. When it is unavailable, the sync matches Gateway's default resolver by selecting the active route with the lowest combined input and output price; the API's CMS-priority order breaks ties.
+- Canonical model IDs emit `base_model` references to model metadata when a matching `models/` entry exists.
+- Local models missing from the response are retained because API-key policy can affect catalog visibility.
+
 ## Cloudflare Workers AI Notes
 
 Cloudflare Workers AI is implemented in `packages/core/src/sync/providers/cloudflare-workers-ai.ts`.
@@ -159,7 +195,8 @@ Google is implemented in `packages/core/src/sync/providers/google.ts`.
 - Model IDs are derived from the `models/{model}` resource names.
 - The API is authoritative for display names, token limits, temperature metadata, and the `thinking` flag when present.
 - Local Google models missing from the API response are removed.
-- New Google API models are reported in `.sync/model-sync-report.md` but not created automatically because the API does not provide authoritative modalities, pricing, knowledge cutoff, release date, tool calling, or structured output metadata.
+- New Google API models are not created automatically (`skipCreates`) and do not open missing-model issues because the endpoint is not lifecycle-authoritative.
+- Missing-model tracking is limited to recognizable public model families; opaque API codenames such as `ajax`, `perseus`, and `thorin` are ignored.
 
 ## xAI Notes
 
@@ -169,7 +206,17 @@ xAI is implemented in `packages/core/src/sync/providers/xai.ts`.
 - Required auth: `XAI_API_KEY`.
 - The richer typed endpoints provide model IDs, creation timestamps, modalities, pricing for language models, and prompt/input limits where available.
 - Existing xAI models are updated from API-authoritative fields while local metadata is preserved for fields the API does not expose, especially output token limits and some feature/capability flags.
-- New xAI API models are reported in `.sync/model-sync-report.md` but not created automatically because the API does not provide enough authoritative metadata for complete catalog entries.
+- New xAI API models are not created automatically (`skipCreates`); each missing ID opens a deduped GitHub issue. Alias IDs of models already cataloged under their canonical ID are skipped silently and never reported as missing.
+
+## Tinfoil Notes
+
+- Tinfoil is implemented in `packages/core/src/sync/providers/tinfoil.ts`.
+- Source endpoint: `https://inference.tinfoil.sh/v1/models`.
+- No authentication is required; the catalog is public.
+- Existing Tinfoil models are updated from API-authoritative input, output, cached-input pricing, context windows, and catalog availability.
+- Provider-specific metadata that the endpoint does not expose, including exact modalities, output limits, reasoning controls, and lifecycle status, remains hand-authored.
+- New token-priced chat, safety, and embedding models are not created automatically (`skipCreates`); each missing ID opens a deduped GitHub issue for hand-authored metadata.
+- Per-request tool, TTS, transcription, realtime, and document-processing services are ignored because their pricing cannot be represented by the token-cost schema.
 
 ## OpenAI Notes
 
@@ -177,7 +224,7 @@ xAI is implemented in `packages/core/src/sync/providers/xai.ts`.
 - Source endpoint: `https://api.openai.com/v1/models`.
 - Required auth: `OPENAI_API_KEY` from an automation account with access to the full first-party catalog.
 - The endpoint is used only to monitor catalog availability. Existing TOMLs are preserved byte-for-byte, including models absent from the response, because model access can be scoped to the API project.
-- Fine-tuned and customer-owned models are excluded. Unknown first-party models are reported for manual review without changing the catalog.
+- Fine-tuned and customer-owned models are excluded. Unknown first-party models are ignored because the endpoint does not provide enough lifecycle or visibility metadata to distinguish public catalog additions.
 
 ## OVHcloud Notes
 

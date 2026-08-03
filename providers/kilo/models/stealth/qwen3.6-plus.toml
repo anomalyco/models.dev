@@ -1,0 +1,30 @@
+name = "Stealth: Qwen3.6 Plus (50% off)"
+description = "Your prompts and completions may be retained and used to train or improve the provider's services. This third-party-served variant of Qwen3.6 Plus is offered at 50% lower cost than standard Qwen3.6 Plus pricing and is not served by Alibaba or Kilo Code. Note: a surcharge applies to long-context workloads exceeding 256K input tokens."
+family = "qwen3.6"
+release_date = "2025-08-26"
+last_updated = "2025-08-26"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = false
+open_weights = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "high"]
+
+[cost]
+input = 0.25
+output = 1.5
+reasoning = 0
+cache_read = 0.025
+cache_write = 0.3125
+
+[limit]
+context = 1_000_000
+output = 65_536
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

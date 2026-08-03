@@ -18,6 +18,11 @@ values = ["minimal", "low", "medium", "high"]
 input = 0.25
 output = 2
 
+[[cost.tiers]]
+tier = { type = "context", size = 128_000 }
+input = 0.5
+output = 4
+
 [limit]
 context = 262_144
 output = 131_072

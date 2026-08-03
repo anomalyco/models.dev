@@ -1,21 +1,23 @@
 name = "Deep Cogito: Cogito v2.1 671B"
 description = "Reasoning model for deliberate analysis, multi-step problem solving, and tool use"
-release_date = "2025-11-14"
-last_updated = "2026-03-15"
+family = "cogito"
+release_date = "2025-11-13"
+last_updated = "2025-11-13"
 attachment = false
-reasoning_options = []
 reasoning = true
 temperature = true
 tool_call = false
-open_weights = true
+structured_output = true
+open_weights = false
+reasoning_options = []
 
 [cost]
 input = 1.25
 output = 1.25
 
 [limit]
-context = 128000
-output = 32768
+context = 128_000
+output = 32_768
 
 [modalities]
 input = ["text"]

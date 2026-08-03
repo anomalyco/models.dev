@@ -15,11 +15,13 @@ max = 80_000
 [cost]
 input = 0.057
 output = 0.459
+cache_read = 0.057
 
 [[cost.tiers]]
 tier = { type = "context", size = 128_000 }
 input = 0.229
 output = 1.835
+cache_read = 0.229
 
 [limit]
 context = 256_000

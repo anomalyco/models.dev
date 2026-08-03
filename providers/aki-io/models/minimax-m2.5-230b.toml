@@ -1,0 +1,12 @@
+# attachment are not supported on AKI.IO for security reasons and therefore are disabled
+base_model = "minimax/MiniMax-M2.5"
+attachment = false 
+reasoning_options = []
+
+[cost]
+input = 0.25
+output = 1.20
+
+[limit]
+context = 196_608
+output = 65_536
