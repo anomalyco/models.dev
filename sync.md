@@ -184,7 +184,8 @@ Cloudflare Workers AI is implemented in `packages/core/src/sync/providers/cloudf
 - Use a dedicated token scoped to Workers AI read access so sync automation does not share deploy credentials.
 - The endpoint is parsed as Cloudflare's OpenRouter-like Workers AI metadata.
 - Model IDs map directly to TOML paths under `providers/cloudflare-workers-ai/models`.
-- This sync target does not manage `providers/cloudflare-ai-gateway`, because the AI Gateway `/compat/models` endpoint does not support `format=openrouter` and does not provide enough model metadata for authoritative catalog sync.
+- The same source synchronizes the Workers AI routes under `providers/cloudflare-ai-gateway/models/workers-ai` via the `cloudflare-ai-gateway-workers-ai` target.
+- The AI Gateway `/compat/models` endpoint does not support `format=openrouter` and does not provide enough model metadata for authoritative catalog sync. Other AI Gateway routes remain hand-authored.
 
 ## Google Notes
 

@@ -21,6 +21,10 @@ import {
 } from "../src/sync/providers/digitalocean.js";
 import { buildHyperModel, type HyperModel } from "../src/sync/providers/hyper.js";
 import {
+  cloudflareAiGatewayWorkersAi,
+  cloudflareWorkersAi,
+} from "../src/sync/providers/cloudflare-workers-ai.js";
+import {
   buildEmpiriolabsModel,
   empiriolabs,
   resolveEmpiriolabsBaseModel,
@@ -113,6 +117,13 @@ function nanoGptModel(overrides: Partial<NanoGptModel> = {}): NanoGptModel {
     ...overrides,
   };
 }
+
+test("scopes Cloudflare sync targets to independent model trees", () => {
+  expect(cloudflareWorkersAi.modelsDir).toBe("providers/cloudflare-workers-ai/models");
+  expect(cloudflareAiGatewayWorkersAi.modelsDir).toBe(
+    "providers/cloudflare-ai-gateway/models/workers-ai",
+  );
+});
 
 test("syncs NanoGPT's verified reasoning, pricing, limits, and open-weight metadata", () => {
   const model = buildNanoGptModel(nanoGptModel({

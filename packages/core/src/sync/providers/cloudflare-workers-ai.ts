@@ -58,10 +58,15 @@ const CloudflareResponse = z.object({
 
 type CloudflareModel = z.infer<typeof CloudflareModel>;
 
-export const cloudflareWorkersAi = {
-  id: "cloudflare-workers-ai",
-  name: "Cloudflare Workers AI",
-  modelsDir: "providers/cloudflare-workers-ai/models",
+function createCloudflareWorkersAiSync(
+  id: string,
+  name: string,
+  modelsDir: string,
+): SyncProvider<CloudflareModel> {
+  return {
+  id,
+  name,
+  modelsDir,
   async fetchModels() {
     const accountID = process.env.CLOUDFLARE_WORKERS_AI_SYNC_ACCOUNT_ID;
     const token = process.env.CLOUDFLARE_WORKERS_AI_SYNC_API_TOKEN;
@@ -94,7 +99,20 @@ export const cloudflareWorkersAi = {
       model: buildWorkersAiModel(normalized, context.existing(id)),
     };
   },
-} satisfies SyncProvider<CloudflareModel>;
+  };
+}
+
+export const cloudflareWorkersAi = createCloudflareWorkersAiSync(
+  "cloudflare-workers-ai",
+  "Cloudflare Workers AI",
+  "providers/cloudflare-workers-ai/models",
+);
+
+export const cloudflareAiGatewayWorkersAi = createCloudflareWorkersAiSync(
+  "cloudflare-ai-gateway-workers-ai",
+  "Cloudflare AI Gateway Workers AI",
+  "providers/cloudflare-ai-gateway/models/workers-ai",
+);
 
 export function buildWorkersAiModel(
   model: z.infer<typeof OpenRouterModel>,
