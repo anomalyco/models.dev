@@ -1,0 +1,21 @@
+name = "Qwen3.8-Max"
+description = "Flagship model for demanding analysis, coding, and production agent workflows"
+release_date = "2026-08-03"
+last_updated = "2026-08-03"
+attachment = false
+reasoning = false
+tool_call = true
+open_weights = false
+
+[cost]
+input = 2
+output = 6
+cache_read = 0.25
+
+[limit]
+context = 1_000_000
+output = 65_536
+
+[modalities]
+input = ["text"]
+output = ["text"]
