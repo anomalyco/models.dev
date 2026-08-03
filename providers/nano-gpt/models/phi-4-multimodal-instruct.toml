@@ -1,16 +1,18 @@
 name = "Phi 4 Multimodal"
 description = "Compact GPT model for low-latency assistance and high-volume workloads"
+family = "phi"
 release_date = "2025-07-26"
 last_updated = "2025-07-26"
 attachment = false
 reasoning = false
 tool_call = false
 structured_output = false
-open_weights = false
+open_weights = true
 
 [cost]
 input = 0.07
 output = 0.11
+cache_read = 0.035
 
 [limit]
 context = 128_000

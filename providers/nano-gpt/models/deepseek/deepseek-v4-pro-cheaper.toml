@@ -1,14 +1,18 @@
 # Included in subscription
 name = "DeepSeek V4 Pro Cheaper"
 description = "Flagship DeepSeek model for coding, reasoning, and agentic work"
+family = "deepseek"
 release_date = "2026-04-25"
 last_updated = "2026-04-25"
 attachment = false
 reasoning = true
-reasoning_options = [{ type = "effort", values = ["none", "high", "xhigh"] }]
 tool_call = true
 structured_output = true
-open_weights = false
+open_weights = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "high", "max"]
 
 [cost]
 input = 0.435
@@ -16,9 +20,9 @@ output = 0.87
 cache_read = 0.003625
 
 [limit]
-context = 1048576
-input = 1048576
-output = 384000
+context = 1_048_576
+input = 1_048_576
+output = 384_000
 
 [modalities]
 input = ["text"]

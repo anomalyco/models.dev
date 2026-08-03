@@ -1,0 +1,24 @@
+name = "KAT Coder Pro V2.5"
+description = "Higher-capability KAT Coder model for complex code generation, repository-scale editing, debugging, and agentic software-development workflows."
+family = "kat-coder"
+release_date = "2026-07-14"
+last_updated = "2026-07-14"
+attachment = false
+reasoning = false
+tool_call = true
+structured_output = true
+open_weights = false
+
+[cost]
+input = 0.74
+output = 2.96
+cache_read = 0.15
+
+[limit]
+context = 256_000
+input = 256_000
+output = 80_000
+
+[modalities]
+input = ["text"]
+output = ["text"]

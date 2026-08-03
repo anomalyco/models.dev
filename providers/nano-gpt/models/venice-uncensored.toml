@@ -1,16 +1,18 @@
 name = "Venice Uncensored"
 description = "Compact GPT model for low-latency assistance and high-volume workloads"
-release_date = "2025-02-24"
+family = "venice"
+release_date = "2025-10-01"
 last_updated = "2025-02-24"
 attachment = false
 reasoning = false
 tool_call = false
 structured_output = false
-open_weights = false
+open_weights = true
 
 [cost]
 input = 0.4
 output = 0.4
+cache_read = 0.2
 
 [limit]
 context = 128_000

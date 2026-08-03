@@ -1,6 +1,7 @@
 name = "Qwen Long 10M"
 description = "Compact GPT model for low-latency assistance and high-volume workloads"
-release_date = "2025-01-25"
+family = "qwen"
+release_date = "2024-08-01"
 last_updated = "2025-01-25"
 attachment = true
 reasoning = false
@@ -11,6 +12,7 @@ open_weights = false
 [cost]
 input = 0.1003
 output = 0.408
+cache_read = 0.05015
 
 [limit]
 context = 10_000_000

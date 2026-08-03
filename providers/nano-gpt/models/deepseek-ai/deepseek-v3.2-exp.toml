@@ -1,17 +1,18 @@
 name = "DeepSeek V3.2 Exp"
 description = "DeepSeek chat model for instruction following, coding, and analysis"
 family = "deepseek"
-release_date = "2025-09-29"
+release_date = "2024-01-01"
 last_updated = "2025-09-29"
 attachment = false
 reasoning = false
 tool_call = false
 structured_output = false
-open_weights = false
+open_weights = true
 
 [cost]
-input = 0.27999999999999997
-output = 0.42000000000000004
+input = 0.28
+output = 0.42
+cache_read = 0.14
 
 [limit]
 context = 163_840

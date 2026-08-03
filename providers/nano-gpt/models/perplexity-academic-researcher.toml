@@ -1,0 +1,24 @@
+name = "Perplexity Academic Researcher"
+description = "Sonar Reasoning Pro with Perplexity's academic search mode. Prioritizes scholarly and peer-reviewed sources from academic repositories and returns cited research synthesis."
+release_date = "2026-07-10"
+last_updated = "2026-07-10"
+attachment = false
+reasoning = true
+tool_call = false
+structured_output = false
+open_weights = false
+reasoning_options = []
+
+[cost]
+input = 2
+output = 8
+cache_read = 1
+
+[limit]
+context = 127_000
+input = 127_000
+output = 128_000
+
+[modalities]
+input = ["text"]
+output = ["text"]

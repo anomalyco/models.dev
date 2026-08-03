@@ -1,0 +1,15 @@
+base_model = "moonshotai/kimi-k3"
+name = "Kimi K3 TEE"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[cost]
+input = 3
+output = 15
+cache_read = 1.5
+
+[limit]
+input = 1_048_576
+output = 65_535

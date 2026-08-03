@@ -1,0 +1,28 @@
+name = "Fugu Ultra v1.1"
+description = "Sakana AI's upgraded Fugu Ultra release with stronger coding, agentic task execution, and advanced reasoning through dynamic orchestration of frontier models."
+family = "fugu"
+release_date = "2026-07-24"
+last_updated = "2026-07-24"
+attachment = true
+reasoning = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["high", "xhigh", "max"]
+
+[cost]
+input = 5.25
+output = 31.5
+cache_read = 0.525
+
+[limit]
+context = 1_000_000
+input = 1_000_000
+output = 16_384
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

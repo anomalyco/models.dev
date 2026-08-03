@@ -1,14 +1,15 @@
 # Included in subscription
 name = "Gemma 4 31B Claude 4.6 Opus Reasoning Distilled"
 description = "O-series reasoning model for hard analysis, math, coding, and planning"
+family = "claude"
 release_date = "2026-05-01"
 last_updated = "2026-05-01"
 attachment = true
 reasoning = true
-reasoning_options = []
 tool_call = false
 structured_output = false
-open_weights = false
+open_weights = true
+reasoning_options = []
 
 [cost]
 input = 0.306
@@ -16,10 +17,10 @@ output = 0.306
 cache_read = 0.0306
 
 [limit]
-context = 262144
-input = 262144
-output = 16384
+context = 262_144
+input = 262_144
+output = 16_384
 
 [modalities]
-input = ["text", "image", "video"]
+input = ["text", "image"]
 output = ["text"]

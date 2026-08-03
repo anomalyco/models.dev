@@ -1,23 +1,14 @@
-name = "Nvidia Nemotron 3 Nano 30B"
 base_model = "nvidia/nemotron-3-nano-30b-a3b"
-family = "nemotron"
-release_date = "2025-12-15"
-last_updated = "2025-12-15"
-attachment = false
+name = "Nvidia Nemotron 3 Nano 30B"
 reasoning = false
 tool_call = false
 structured_output = false
-open_weights = false
 
 [cost]
 input = 0.17
 output = 0.68
+cache_read = 0.085
 
 [limit]
 context = 256_000
 input = 256_000
-output = 262_144
-
-[modalities]
-input = ["text"]
-output = ["text"]

@@ -1,22 +1,12 @@
+base_model = "anthropic/claude-opus-4-1-20250805"
 name = "Claude 4.1 Opus"
-description = "Compact GPT model for low-latency assistance and high-volume workloads"
-release_date = "2025-08-05"
-last_updated = "2025-08-05"
-attachment = true
 reasoning = false
-tool_call = true
 structured_output = true
-open_weights = false
 
 [cost]
-input = 14.994
-output = 75.004
+input = 15
+output = 75
+cache_read = 1.5
 
 [limit]
-context = 200_000
 input = 200_000
-output = 32_000
-
-[modalities]
-input = ["text", "image", "pdf"]
-output = ["text"]

@@ -1,6 +1,6 @@
 name = "DeepClaude"
 description = "Compact GPT model for low-latency assistance and high-volume workloads"
-release_date = "2025-02-01"
+release_date = "2025-03-10"
 last_updated = "2025-02-01"
 attachment = true
 reasoning = false
@@ -9,8 +9,9 @@ structured_output = false
 open_weights = false
 
 [cost]
-input = 3.00
-output = 15.00
+input = 3
+output = 15
+cache_read = 0.3
 
 [limit]
 context = 128_000

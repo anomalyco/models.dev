@@ -1,0 +1,17 @@
+base_model = "tencent/hy3"
+name = "Tencent Hy3"
+structured_output = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "high"]
+
+[cost]
+input = 0.066
+output = 0.26
+cache_read = 0.029
+
+[limit]
+context = 262_144
+input = 262_144
+output = 262_144
