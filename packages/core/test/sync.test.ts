@@ -2473,6 +2473,60 @@ test("keeps inheriting base output on factored resyncs without max_output", () =
   });
 });
 
+test("skips unfactorable LLM Gateway creates without a served context", () => {
+  // Unknown family, so no canonical base to inherit a context from.
+  const mapped = buildLLMGatewayMappedModel(llmGatewayMappedModel({
+    id: "acme/mystery-model",
+    name: "Mystery Model (Acme)",
+    family: undefined,
+    context_length: undefined,
+  }), undefined);
+  expect(mapped).toBeUndefined();
+
+  const aggregated = buildLLMGatewayModel(llmGatewayModel({
+    id: "mystery-model",
+    name: "Mystery Model",
+    family: undefined,
+    context_length: undefined,
+  }), undefined);
+  expect(aggregated).toBeUndefined();
+});
+
+test("leaves context unset on mapped factored creates without a served context", () => {
+  const model = buildLLMGatewayMappedModel(llmGatewayMappedModel({
+    context_length: undefined,
+    max_output: undefined,
+  }), undefined);
+
+  // Everything limit-related inherits from the base; no zero is authored.
+  expect(model).toBeDefined();
+  expect("limit" in model!).toBe(false);
+});
+
+test("strips image input when the deployment has no vision", () => {
+  // The model-level architecture still claims image input; the deployment
+  // flag must win on both the factored and the unfactored path.
+  const factored = buildLLMGatewayMappedModel(llmGatewayMappedModel({
+    providers: [{ providerId: "anthropic", vision: false, tools: true, reasoning: false }],
+  }), undefined);
+  expect(factored).toMatchObject({
+    base_model: "anthropic/claude-fable-5",
+    attachment: false,
+    modalities: { input: ["text"] },
+  });
+
+  const full = buildLLMGatewayMappedModel(llmGatewayMappedModel({
+    id: "acme/mystery-model",
+    name: "Mystery Model (Acme)",
+    family: undefined,
+    providers: [{ providerId: "acme", vision: false, tools: true, reasoning: false }],
+  }), undefined);
+  expect(full).toMatchObject({
+    attachment: false,
+    modalities: { input: ["text"], output: ["text"] },
+  });
+});
+
 test("refuses empty responses in both LLM Gateway syncs", () => {
   expect(() => llmgateway.parseModels({ data: [] })).toThrow("no text models");
   expect(() => llmgatewayProviders.parseModels({ data: [] })).toThrow("mapped view unavailable");

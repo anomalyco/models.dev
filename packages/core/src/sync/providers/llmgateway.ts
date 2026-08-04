@@ -99,10 +99,14 @@ export const llmgateway = {
     return data;
   },
   translateModel(model, context) {
-    return {
-      id: model.id,
-      model: buildLLMGatewayModel(model, context.existing(model.id)),
-    };
+    const translated = buildLLMGatewayModel(model, context.existing(model.id));
+    if (translated === undefined) {
+      return undefined;
+    }
+    return { id: model.id, model: translated };
+  },
+  sourceID(model) {
+    return model.id;
   },
 } satisfies SyncProvider<LLMGatewayModel>;
 
@@ -135,10 +139,14 @@ export const llmgatewayProviders = {
     return mapped;
   },
   translateModel(model, context) {
-    return {
-      id: model.id,
-      model: buildLLMGatewayMappedModel(model, context.existing(model.id)),
-    };
+    const translated = buildLLMGatewayMappedModel(model, context.existing(model.id));
+    if (translated === undefined) {
+      return undefined;
+    }
+    return { id: model.id, model: translated };
+  },
+  sourceID(model) {
+    return model.id;
   },
 } satisfies SyncProvider<LLMGatewayModel>;
 
@@ -170,6 +178,21 @@ function modalities(values: string[], fallback: Modality[]): Modality[] {
     .map((value) => (value === "file" ? "pdf" : value))
     .filter((value): value is Modality => allowed.has(value as Modality));
   return [...new Set(result.length > 0 ? result : fallback)];
+}
+
+// Modalities as served by a specific deployment: a mapping without vision must
+// not carry image/pdf input, regardless of what the model-level architecture
+// claims — attachment=false with image input is contradictory.
+function deploymentModalities(model: LLMGatewayModel, vision: boolean | undefined) {
+  const base = defaultModalities(model);
+  if (vision !== false) {
+    return base;
+  }
+  const input = base.input.filter((value) => value !== "image" && value !== "pdf");
+  return {
+    input: input.length > 0 ? input : (["text"] satisfies Modality[]),
+    output: base.output,
+  };
 }
 
 const MODELS_DIR = path.join(import.meta.dirname, "..", "..", "..", "..", "..", "models");
@@ -242,13 +265,17 @@ function inferFamily(model: LLMGatewayModel, name: string) {
 export function buildLLMGatewayModel(
   model: LLMGatewayModel,
   existing: ExistingModel | undefined,
-): SyncedModel {
+): SyncedModel | undefined {
   const prompt = price(model.pricing.prompt);
   const completion = price(model.pricing.completion);
   const reasoning = model.supported_parameters.includes("reasoning")
     || model.supported_parameters.includes("include_reasoning");
   const reported = model.context_length ?? 0;
-  const context = reported > 0 ? reported : existing?.limit?.context ?? reported;
+  // A missing/zero context must never be authored as limit.context = 0:
+  // factored entries leave it unset and inherit the base, and unfactored
+  // creates are skipped entirely.
+  const servedContext = reported > 0 ? reported : undefined;
+  const context = servedContext ?? existing?.limit?.context;
 
   // The gateway is authoritative for the volatile, gateway-specific data — cost
   // and served limits. Its supported_parameters / modalities are too noisy to
@@ -267,14 +294,19 @@ export function buildLLMGatewayModel(
       }
     : existing?.cost;
   const limit = {
-    context,
+    context: context ?? reported,
     input: existing?.limit?.input,
-    output: existing?.limit?.output ?? context,
+    output: existing?.limit?.output ?? context ?? reported,
   };
 
   // Existing factored model: refresh cost + limit, keep every authored override
   // as-is (undefined fields keep inheriting the base model).
   if (existing?.base_model !== undefined) {
+    const factoredLimit = {
+      context,
+      input: existing.limit?.input,
+      output: existing.limit?.output ?? context,
+    };
     return factorBaseModel(
       existing.base_model,
       {
@@ -287,7 +319,7 @@ export function buildLLMGatewayModel(
           tool_call: existing.tool_call,
           structured_output: existing.structured_output,
           open_weights: existing.open_weights,
-          limit,
+          limit: factoredLimit,
           modalities: existing.modalities,
         }),
         reasoning: existing.reasoning,
@@ -298,10 +330,10 @@ export function buildLLMGatewayModel(
         interleaved: existing.interleaved,
         knowledge: existing.knowledge,
         modalities: existing.modalities,
-        limit,
+        limit: factoredLimit,
         cost,
       },
-      limit,
+      factoredLimit,
       existing.base_model_omit,
     );
   }
@@ -352,7 +384,11 @@ export function buildLLMGatewayModel(
   }
 
   // Brand-new model: best-effort translation from the gateway. Capability and
-  // modality data are unreliable here and should be hand-reviewed.
+  // modality data are unreliable here and should be hand-reviewed. Without a
+  // positive served context there is nothing usable to author, so skip.
+  if (servedContext === undefined) {
+    return undefined;
+  }
   const { input, output } = defaultModalities(model);
   return {
     name: model.name,
@@ -387,7 +423,7 @@ export function buildLLMGatewayModel(
 export function buildLLMGatewayMappedModel(
   model: LLMGatewayModel,
   existing: ExistingModel | undefined,
-): SyncedModel {
+): SyncedModel | undefined {
   // Mapped entries carry exactly one provider mapping; its capability flags
   // describe that specific deployment, unlike the aggregated view where
   // supported_parameters are too noisy to trust.
@@ -421,7 +457,10 @@ export function buildLLMGatewayMappedModel(
     ? existing?.interleaved ?? sibling.interleaved
     : undefined;
   const reported = model.context_length ?? 0;
-  const context = reported > 0 ? reported : existing?.limit?.context ?? reported;
+  // Same zero-context rule as the aggregated builder: never author 0, inherit
+  // on factored entries, skip unfactored creates.
+  const servedContext = reported > 0 ? reported : undefined;
+  const context = servedContext ?? existing?.limit?.context;
 
   const cost = prompt !== undefined && completion !== undefined
     ? {
@@ -437,9 +476,9 @@ export function buildLLMGatewayMappedModel(
   // over inherited/authored values, unlike the aggregated view.
   const servedOutput = model.max_output ?? existing?.limit?.output;
   const limit = {
-    context,
+    context: context ?? reported,
     input: existing?.limit?.input,
-    output: servedOutput ?? context,
+    output: servedOutput ?? context ?? reported,
   };
 
   // Existing factored model: refresh cost + limit, keep every authored override
@@ -501,7 +540,7 @@ export function buildLLMGatewayMappedModel(
         structured_output: existing.structured_output,
         open_weights: existing.open_weights,
         limit,
-        modalities: existing.modalities ?? defaultModalities(model),
+        modalities: existing.modalities ?? deploymentModalities(model, mapping?.vision),
       }),
       family: existing.family,
       release_date: existing.release_date ?? dateFromTimestamp(model.created),
@@ -518,7 +557,7 @@ export function buildLLMGatewayMappedModel(
       interleaved,
       cost,
       limit,
-      modalities: existing.modalities ?? defaultModalities(model),
+      modalities: existing.modalities ?? deploymentModalities(model, mapping?.vision),
     } satisfies SyncedFullModel;
   }
 
@@ -547,7 +586,7 @@ export function buildLLMGatewayMappedModel(
       structured_output: model.structured_outputs,
       // A deployment without vision must not inherit image/pdf inputs from
       // the base — attachment=false with image input is contradictory.
-      modalities: mapping?.vision === false ? defaultModalities(model) : undefined,
+      modalities: mapping?.vision === false ? deploymentModalities(model, false) : undefined,
       limit: factoredLimit,
       cost,
     }, factoredLimit);
@@ -555,7 +594,11 @@ export function buildLLMGatewayMappedModel(
 
   // Brand-new model without metadata: best-effort translation. The mapping's
   // own capability flags are reliable here; modalities mirror the mapping too.
-  const { input, output } = defaultModalities(model);
+  // Without a positive served context there is nothing usable to author.
+  if (servedContext === undefined) {
+    return undefined;
+  }
+  const { input, output } = deploymentModalities(model, mapping?.vision);
   return {
     name: model.name,
     description: describeModel({
