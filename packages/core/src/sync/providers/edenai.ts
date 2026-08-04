@@ -298,11 +298,13 @@ export function buildEdenAIModel(
       interleaved: existing?.interleaved,
       cost,
       limit,
-      modalities: { input, output },
-      attachment,
     };
-    if (reasoning || existing?.reasoning_options !== undefined) {
-      factored.reasoning_options = existing?.reasoning_options ?? [];
+    if (existing?.modalities !== undefined) {
+      factored.modalities = existing.modalities;
+      factored.attachment = existing.attachment;
+    }
+    if (existing?.reasoning_options !== undefined) {
+      factored.reasoning_options = existing.reasoning_options;
     }
     return factorBaseModel(
       resolvedBase,
@@ -343,9 +345,7 @@ export function buildEdenAIModel(
     attachment,
     modalities: { input, output },
     reasoning: inlineReasoning,
-    reasoning_options: inlineReasoning
-      ? existing?.reasoning_options ?? []
-      : undefined,
+    reasoning_options: inlineReasoning ? existing?.reasoning_options : undefined,
     tool_call: inlineToolCall,
     structured_output: inlineStructuredOutput,
     temperature: existing?.temperature,
