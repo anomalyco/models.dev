@@ -1,8 +1,10 @@
-# Not reachable with the sync key (403, models=['public']), so nothing below
-# could be measured against this host. Controls are carried from the lab/peer
-# baseline; [interleaved] is deliberately omitted rather than assumed, even
-# though all 18 reachable models here stream reasoning_content.
-# No lab or peer entry authors reasoning options, so the list is left as-is.
+# Not reachable with the sync key (403, models=['public']), so nothing here
+# could be measured against this host. providers/openrouter/models/deepseek/
+# deepseek-chat-v3.1.toml authors a toggle, so that control shape is copied
+# rather than keeping a full effort enum.
+# Toggle: chat_template_kwargs.thinking = true|false — the path every reachable
+# DeepSeek model on this host uses, but unverified for this ID.
+# [interleaved] is omitted rather than assumed, for the same reason.
 name = "DeepSeek Chat V3.1"
 description = "DeepSeek chat model for instruction following, coding, and analysis"
 family = "deepseek"
@@ -16,8 +18,7 @@ knowledge = "2024-11"
 open_weights = true
 
 [[reasoning_options]]
-type = "effort"
-values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"]
+type = "toggle"
 
 [cost]
 input = 0.2

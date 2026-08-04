@@ -1,13 +1,14 @@
-# Not reachable with the sync key (403, models=['public']), so nothing below
-# could be measured against this host. Controls are carried from the lab/peer
-# baseline; [interleaved] is deliberately omitted rather than assumed, even
-# though all 18 reachable models here stream reasoning_content.
-# No lab or peer entry authors reasoning options, so the list is left as-is.
+# Not reachable with the sync key (403, models=['public']), so nothing here
+# could be measured against this host. First-party providers/nvidia/models/
+# nvidia/nemotron-3-super-120b-a12b.toml authors a toggle, so that control
+# shape is copied rather than keeping a full effort enum.
+# Toggle: wire path is neither documented by the lab entry nor verifiable with
+# this key — confirm it before relying on it.
+# [interleaved] is omitted rather than assumed, for the same reason.
 base_model = "nvidia/nemotron-3-super-120b-a12b"
 
 [[reasoning_options]]
-type = "effort"
-values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"]
+type = "toggle"
 
 [cost]
 input = 0.3
