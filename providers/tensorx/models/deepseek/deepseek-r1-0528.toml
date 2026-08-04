@@ -1,12 +1,11 @@
-# Effort: reasoning_effort = <value>; reasoning is mandatory, "none" is rejected
+# reasoning_effort is accepted but does not grade depth on this host, and none
+# is rejected (400), so reasoning is always on. Matches the OpenRouter entry for
+# this model.
 base_model = "deepseek/deepseek-r1"
 name = "DeepSeek R1-0528"
 release_date = "2025-05-28"
 last_updated = "2025-05-28"
-
-[[reasoning_options]]
-type = "effort"
-values = ["minimal", "low", "medium", "high", "xhigh", "max"]
+reasoning_options = []
 
 [interleaved]
 field = "reasoning_content"
