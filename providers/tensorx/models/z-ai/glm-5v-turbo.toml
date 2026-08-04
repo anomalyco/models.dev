@@ -1,6 +1,9 @@
-# Toggle: chat_template_kwargs.enable_thinking = true|false (default on)
-# No reasoning tokens were observed on this host under any setting, so the
-# toggle is carried from first-party z.ai rather than verified here.
+# Toggle: chat_template_kwargs.enable_thinking = true|false (default on).
+# Verified: false empties reasoning_content, true and the default fill it.
+# This host streams reasoning into reasoning_content but does not count it in
+# usage.reasoning_tokens, which reads 0 even while reasoning runs — measure
+# the field, not the token count. reasoning_effort = none also suppresses it,
+# but no graded level was separable, so only on/off is published.
 base_model = "zhipuai/glm-5v-turbo"
 
 [[reasoning_options]]
