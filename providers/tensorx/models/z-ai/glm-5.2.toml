@@ -1,11 +1,14 @@
-# Off is effort=none; chat_template_kwargs.enable_thinking also toggles, but
-# `none` already expresses it, so effort is the single declared control.
-# Effort: reasoning_effort = none|minimal|low|medium|high|xhigh|max (verified; others rejected 400)
+# Toggle: chat_template_kwargs.enable_thinking = true|false (default on)
+# Effort: reasoning_effort = high|max — z.ai maps none|minimal to off,
+# low|medium to high and xhigh to max, so high|max are the effective levels.
 base_model = "zhipuai/glm-5.2"
 
 [[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
 type = "effort"
-values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"]
+values = ["high", "max"]
 
 [interleaved]
 field = "reasoning_content"

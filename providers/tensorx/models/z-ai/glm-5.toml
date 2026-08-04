@@ -1,9 +1,11 @@
-# Effort: reasoning_effort = <value>; "none" disables reasoning
+# Effort: reasoning_effort = none|high|max; none verified to disable reasoning.
+# chat_template_kwargs.enable_thinking is accepted but not honored here, and
+# the graded levels were not separable, so only z.ai's effective levels list.
 base_model = "zhipuai/glm-5"
 
 [[reasoning_options]]
 type = "effort"
-values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"]
+values = ["none", "high", "max"]
 
 [interleaved]
 field = "reasoning_content"

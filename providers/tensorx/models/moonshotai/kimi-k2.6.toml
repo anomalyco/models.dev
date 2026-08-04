@@ -1,4 +1,6 @@
 # Toggle: chat_template_kwargs.thinking = true|false (default on)
+# reasoning_effort is accepted but not honored here — an invalid value and
+# none both leave the reasoning-token count unchanged — so this is toggle-only.
 base_model = "moonshotai/kimi-k2.6"
 
 [[reasoning_options]]

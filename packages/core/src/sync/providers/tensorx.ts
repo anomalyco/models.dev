@@ -103,10 +103,8 @@ export const tensorx = {
     // hand-authoring instead of being invented.
     if (baseModel === undefined && existing === undefined) return undefined;
 
-    return {
-      id: model.model_name,
-      model: buildTensorXModel(model, baseModel, existing),
-    };
+    const built = buildTensorXModel(model, baseModel, existing);
+    return built === undefined ? undefined : { id: model.model_name, model: built };
   },
 } satisfies SyncProvider<TensorXModel>;
 
@@ -114,7 +112,7 @@ function buildTensorXModel(
   model: TensorXModel,
   baseModel: string | undefined,
   existing: ExistingModel | undefined,
-): SyncedModel {
+): SyncedModel | undefined {
   const info = model.model_info;
 
   const limit = {
@@ -122,16 +120,26 @@ function buildTensorXModel(
     output: info.max_output_tokens ?? existing?.limit?.output,
   };
 
-  const cost = {
-    ...existing?.cost,
-    input: perMillion(info.input_cost_per_token) ?? existing?.cost?.input,
-    output: perMillion(info.output_cost_per_token) ?? existing?.cost?.output,
-    cache_read: perMillion(info.cache_read_input_token_cost) ?? existing?.cost?.cache_read,
-    // cache_creation_input_token_cost is null for every model in the catalog, so
-    // a null is "not published" rather than "not charged". Keep the authored
-    // price; it publishes real values as soon as TensorX fills the field in.
-    cache_write: perMillion(info.cache_creation_input_token_cost) ?? existing?.cost?.cache_write,
-  };
+  const input = perMillion(info.input_cost_per_token) ?? existing?.cost?.input;
+  const output = perMillion(info.output_cost_per_token) ?? existing?.cost?.output;
+  // Pricing is published only as a complete pair. A base_model file validates
+  // against a deepPartial schema, so a half-resolved cost would be written out
+  // as real pricing rather than rejected; a full model would abort the sync.
+  const cost = input === undefined || output === undefined
+    ? existing?.cost
+    : {
+      ...existing?.cost,
+      input,
+      output,
+      cache_read: perMillion(info.cache_read_input_token_cost) ?? existing?.cost?.cache_read,
+      // cache_creation_input_token_cost is null for every model in the catalog,
+      // so a null is "not published" rather than "not charged". Keep the
+      // authored price; real values publish as soon as TensorX fills it in.
+      cache_write: perMillion(info.cache_creation_input_token_cost) ?? existing?.cost?.cache_write,
+    };
+
+  // Never bring a brand-new model into the catalog without real pricing.
+  if (existing === undefined && cost === undefined) return undefined;
 
   const toolFlags = [info.supports_tool_choice, info.supports_function_calling]
     .filter((flag) => flag !== null && flag !== undefined);

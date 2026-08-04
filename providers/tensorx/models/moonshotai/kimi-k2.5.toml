@@ -1,8 +1,8 @@
-# Toggle: chat_template_kwargs.thinking = true|false (default on)
+# Neither control is honored here: chat_template_kwargs.thinking and
+# reasoning_effort (including none, and an invalid value) all leave the
+# reasoning-token count unchanged over 8 runs. Reasoning is always on.
 base_model = "moonshotai/kimi-k2.5"
-
-[[reasoning_options]]
-type = "toggle"
+reasoning_options = []
 
 [interleaved]
 field = "reasoning_content"

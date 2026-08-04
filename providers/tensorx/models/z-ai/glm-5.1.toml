@@ -1,11 +1,10 @@
-# Off is effort=none; chat_template_kwargs.enable_thinking also toggles, but
-# `none` already expresses it, so effort is the single declared control.
-# Effort: reasoning_effort = none|low|medium|high|max (verified; others rejected 400)
+# Toggle: chat_template_kwargs.enable_thinking = true|false (default on)
+# reasoning_effort is accepted but its graded levels were not separable here;
+# first-party z.ai exposes only the toggle, so that is the declared control.
 base_model = "zhipuai/glm-5.1"
 
 [[reasoning_options]]
-type = "effort"
-values = ["none", "low", "medium", "high", "max"]
+type = "toggle"
 
 [interleaved]
 field = "reasoning_content"
