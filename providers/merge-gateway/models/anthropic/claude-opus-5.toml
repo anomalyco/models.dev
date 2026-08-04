@@ -1,8 +1,8 @@
+# Source: https://api-gateway.merge.dev/v1/models?model=anthropic%2Fclaude-opus-5 (accessed 2026-08-04)
+
 base_model = "anthropic/claude-opus-5"
 structured_output = true
-
-[[reasoning_options]]
-type = "toggle"
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
 
 [cost]
 input = 5

@@ -2559,6 +2559,69 @@ test("derives a Merge Gateway reasoning toggle when the selected route supports 
   expect(model).toMatchObject({ reasoning_options: [{ type: "toggle" }] });
 });
 
+// Effort control yields toggle + effort, not a bare toggle (claude-opus-5 regression).
+test("derives Merge Gateway toggle + effort from an effort control", () => {
+  const selected = mergeGatewayVendor({
+    pricing: { currency: "USD", input_per_million: 5, output_per_million: 25 },
+  });
+  selected.capabilities.reasoning = {
+    configurable: true,
+    disable_supported: true,
+    default_enabled: true,
+    controls: ["reasoning.effort"],
+    effort_values: ["low", "medium", "high", "xhigh", "max"],
+    output_style: "hidden",
+  };
+  const model = buildMergeGatewayModel(mergeGatewayModel({
+    model: "anthropic/claude-opus-5",
+    provider: "anthropic",
+    display_name: "Claude Opus 5",
+    vendors: { anthropic: selected },
+  }), {
+    base_model: "anthropic/claude-opus-5",
+    reasoning: true,
+    reasoning_options: [],
+    cost: { input: 5, output: 25 },
+  });
+
+  expect(model).toMatchObject({
+    reasoning_options: [
+      { type: "toggle" },
+      { type: "effort", values: ["low", "medium", "high", "xhigh", "max"] },
+    ],
+  });
+});
+
+// Effort control without disable support yields effort only.
+test("derives Merge Gateway effort without a toggle when disable is unsupported", () => {
+  const selected = mergeGatewayVendor({
+    pricing: { currency: "USD", input_per_million: 5, output_per_million: 25 },
+  });
+  selected.capabilities.reasoning = {
+    configurable: true,
+    disable_supported: false,
+    default_enabled: true,
+    controls: ["reasoning.effort"],
+    effort_values: ["low", "medium", "high", "xhigh", "max"],
+    output_style: "hidden",
+  };
+  const model = buildMergeGatewayModel(mergeGatewayModel({
+    model: "anthropic/claude-sonnet-5",
+    provider: "anthropic",
+    display_name: "Claude Sonnet 5",
+    vendors: { anthropic: selected },
+  }), {
+    base_model: "anthropic/claude-sonnet-5",
+    reasoning: true,
+    reasoning_options: [],
+    cost: { input: 3, output: 15 },
+  });
+
+  expect(model).toMatchObject({
+    reasoning_options: [{ type: "effort", values: ["low", "medium", "high", "xhigh", "max"] }],
+  });
+});
+
 // Prevents deprecated routes from contributing capabilities to an available model.
 test("ignores supports_reasoning = true on unavailable Merge Gateway routes", () => {
   const selected = mergeGatewayVendor();
