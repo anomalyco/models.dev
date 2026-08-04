@@ -1,0 +1,14 @@
+# Omnious serves an OpenAI-compatible endpoint over a live per-request auction:
+# providers bid to serve each call and the winner is paid a second-score price
+# capped by a genuine rival, so a model's served price moves with the book
+# rather than sitting on a rate card. `GET /v1/models` is public (no key) and
+# reports the current best bid per model class as `best_in` / `best_out`, in
+# USDC base units per 1M tokens — that endpoint is what the sync module reads,
+# which keeps [cost] here tracking the market instead of freezing at the value
+# it had the day this landed.
+# https://api.omnious.xyz/v1/models (accessed 2026-08-04)
+name = "Omnious"
+env = ["OMNIOUS_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+doc = "https://omnious.xyz/prices"
+api = "https://api.omnious.xyz/v1"
