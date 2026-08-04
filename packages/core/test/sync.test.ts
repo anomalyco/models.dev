@@ -39,6 +39,7 @@ import {
 import {
   buildLLMGatewayMappedModel,
   buildLLMGatewayModel,
+  llmgateway,
   llmgatewayProviders,
   type LLMGatewayModel,
 } from "../src/sync/providers/llmgateway.js";
@@ -2389,6 +2390,7 @@ test("factors mapped LLM Gateway entries against the root model metadata", () =>
 test("applies deployment capability flags on mapped factored entries", () => {
   const model = buildLLMGatewayMappedModel(llmGatewayMappedModel({
     providers: [{ providerId: "anthropic", vision: false, tools: false, reasoning: false }],
+    architecture: { input_modalities: ["text"], output_modalities: ["text"] },
     max_output: 64_000,
   }), undefined);
 
@@ -2399,6 +2401,9 @@ test("applies deployment capability flags on mapped factored entries", () => {
     reasoning: false,
     tool_call: false,
     structured_output: true,
+    modalities: {
+      input: ["text"],
+    },
     limit: {
       output: 64_000,
     },
@@ -2466,6 +2471,11 @@ test("keeps inheriting base output on factored resyncs without max_output", () =
       cache_write: 12.5,
     },
   });
+});
+
+test("refuses empty responses in both LLM Gateway syncs", () => {
+  expect(() => llmgateway.parseModels({ data: [] })).toThrow("no text models");
+  expect(() => llmgatewayProviders.parseModels({ data: [] })).toThrow("mapped view unavailable");
 });
 
 test("refuses aggregated responses in the mapped LLM Gateway sync", () => {

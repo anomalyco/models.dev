@@ -1,7 +1,15 @@
+# Toggle: $.reasoning_effort = "none" disables thinking via Together's
+# thinking switch. Together accepts any other effort string without validating
+# it and no tier changes reasoning length, so on/off is the only real control;
+# thinking streams back in reasoning_content.
+# https://api.llmgateway.io/v1/models?mapped=true providers[].reasoning_efforts (accessed 2026-08-04)
 base_model = "moonshotai/kimi-k2.6"
 name = "Kimi K2.6 (Together AI)"
 tool_call = false
 structured_output = false
+
+[interleaved]
+field = "reasoning_content"
 
 [[reasoning_options]]
 type = "toggle"

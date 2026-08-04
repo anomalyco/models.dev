@@ -90,7 +90,13 @@ export const llmgateway = {
     return fetchLLMGatewayModels(API_ENDPOINT);
   },
   parseModels(raw) {
-    return LLMGatewayResponse.parse(raw).data.filter(textOnly);
+    const data = LLMGatewayResponse.parse(raw).data.filter(textOnly);
+    // An empty catalog is an upstream fault; syncing it would delete every
+    // model file, so fail loudly instead.
+    if (data.length === 0) {
+      throw new Error("LLM Gateway returned no text models");
+    }
+    return data;
   },
   translateModel(model, context) {
     return {
@@ -113,14 +119,20 @@ export const llmgatewayProviders = {
     const data = LLMGatewayResponse.parse(raw).data;
     // A deployment without the mapped view ignores the query param and returns
     // aggregated root IDs (no provider prefix); syncing those here would wipe
-    // the provider-pinned catalog, so refuse to proceed.
-    if (!data.every((model) => model.id.includes("/"))) {
-      throw new Error("LLM Gateway mapped view unavailable: response contains unprefixed model ids");
+    // the provider-pinned catalog, so refuse to proceed. An empty response (or
+    // one left empty after filtering) would silently do the same via the
+    // delete-missing pass, so it is equally fatal.
+    if (data.length === 0 || !data.every((model) => model.id.includes("/"))) {
+      throw new Error("LLM Gateway mapped view unavailable: response is empty or contains unprefixed model ids");
     }
     // llmgateway/custom is the BYO-model placeholder and llmgateway/auto the
     // auto-router; pinning either to a provider is meaningless in this catalog
     // (the aggregated llmgateway provider carries `auto`).
-    return data.filter((model) => !model.id.startsWith("llmgateway/") && textOnly(model));
+    const mapped = data.filter((model) => !model.id.startsWith("llmgateway/") && textOnly(model));
+    if (mapped.length === 0) {
+      throw new Error("LLM Gateway mapped view returned no text models");
+    }
+    return mapped;
   },
   translateModel(model, context) {
     return {
@@ -163,23 +175,31 @@ function modalities(values: string[], fallback: Modality[]): Modality[] {
 const MODELS_DIR = path.join(import.meta.dirname, "..", "..", "..", "..", "..", "models");
 const AGGREGATED_MODELS_DIR = path.join(import.meta.dirname, "..", "..", "..", "..", "..", "providers", "llmgateway", "models");
 const canonicalOutputLimitByID = new Map<string, number | undefined>();
-const siblingReasoningOptionsByID = new Map<string, SyncedFullModel["reasoning_options"]>();
 
-// The aggregated llmgateway catalog curates reasoning controls for the same
-// gateway surface; mapped deployments of the same root model reuse them when
-// they do not declare their own effort values.
-function siblingReasoningOptions(rootID: string) {
-  if (!siblingReasoningOptionsByID.has(rootID)) {
+interface SiblingCuration {
+  reasoning_options?: SyncedFullModel["reasoning_options"];
+  interleaved?: SyncedFullModel["interleaved"];
+}
+
+const siblingCurationByID = new Map<string, SiblingCuration>();
+
+// The aggregated llmgateway catalog curates reasoning controls and the
+// reasoning side-channel for the same gateway surface; mapped deployments of
+// the same root model reuse them when the deployment does not declare its own.
+function siblingCuration(rootID: string): SiblingCuration {
+  let curation = siblingCurationByID.get(rootID);
+  if (curation === undefined) {
     const filePath = path.join(AGGREGATED_MODELS_DIR, `${rootID}.toml`);
     const authored = existsSync(filePath)
-      ? Bun.TOML.parse(readFileSync(filePath, "utf8")) as { reasoning_options?: SyncedFullModel["reasoning_options"] }
+      ? Bun.TOML.parse(readFileSync(filePath, "utf8")) as SiblingCuration
       : undefined;
-    siblingReasoningOptionsByID.set(
-      rootID,
-      authored?.reasoning_options?.length ? authored.reasoning_options : undefined,
-    );
+    curation = {
+      reasoning_options: authored?.reasoning_options?.length ? authored.reasoning_options : undefined,
+      interleaved: authored?.interleaved,
+    };
+    siblingCurationByID.set(rootID, curation);
   }
-  return siblingReasoningOptionsByID.get(rootID);
+  return curation;
 }
 
 // Whether the canonical metadata declares limit.output; factored entries can
@@ -389,11 +409,16 @@ export function buildLLMGatewayMappedModel(
   // Deployment-declared efforts win; then non-empty curation on this file;
   // then the aggregated llmgateway catalog's curated controls for the same
   // root model on the same gateway surface. A curated [] counts as unknown so
-  // a bad first stamp is not sticky. Non-reasoning deployments carry none.
+  // a bad first stamp is not sticky. Non-reasoning deployments carry none;
+  // the same applies to the interleaved reasoning side-channel.
+  const sibling = siblingCuration(rootID);
   const reasoningOptions = reasoning
     ? deploymentOptions
       ?? (existing?.reasoning_options?.length ? existing.reasoning_options : undefined)
-      ?? siblingReasoningOptions(rootID)
+      ?? sibling.reasoning_options
+    : undefined;
+  const interleaved = reasoning
+    ? existing?.interleaved ?? sibling.interleaved
     : undefined;
   const reported = model.context_length ?? 0;
   const context = reported > 0 ? reported : existing?.limit?.context ?? reported;
@@ -452,7 +477,7 @@ export function buildLLMGatewayMappedModel(
         tool_call: existing.tool_call,
         structured_output: existing.structured_output,
         status: existing.status,
-        interleaved: existing.interleaved,
+        interleaved,
         knowledge: existing.knowledge,
         modalities: existing.modalities,
         limit: factoredLimit,
@@ -490,7 +515,7 @@ export function buildLLMGatewayMappedModel(
       knowledge: existing.knowledge,
       open_weights: existing.open_weights ?? false,
       status: existing.status,
-      interleaved: existing.interleaved,
+      interleaved,
       cost,
       limit,
       modalities: existing.modalities ?? defaultModalities(model),
@@ -517,8 +542,12 @@ export function buildLLMGatewayMappedModel(
       attachment: mapping?.vision,
       reasoning: mapping?.reasoning,
       reasoning_options: reasoningOptions,
+      interleaved,
       tool_call: mapping?.tools,
       structured_output: model.structured_outputs,
+      // A deployment without vision must not inherit image/pdf inputs from
+      // the base — attachment=false with image input is contradictory.
+      modalities: mapping?.vision === false ? defaultModalities(model) : undefined,
       limit: factoredLimit,
       cost,
     }, factoredLimit);
@@ -546,6 +575,7 @@ export function buildLLMGatewayMappedModel(
     attachment: mapping?.vision ?? input.some((value) => value !== "text"),
     reasoning,
     reasoning_options: reasoningOptions,
+    interleaved,
     temperature: model.supported_parameters.includes("temperature"),
     tool_call: mapping?.tools ?? false,
     structured_output: model.structured_outputs ?? false,
