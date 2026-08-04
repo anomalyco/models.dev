@@ -1,10 +1,10 @@
-# Not reachable with the sync key (403, models=['public']), so nothing here
-# could be measured against this host. First-party providers/nvidia/models/
-# nvidia/nemotron-3-super-120b-a12b.toml authors a toggle, so that control
-# shape is copied rather than keeping a full effort enum.
-# Toggle: wire path is neither documented by the lab entry nor verifiable with
-# this key — confirm it before relying on it.
-# [interleaved] is omitted rather than assumed, for the same reason.
+# Toggle: chat_template_kwargs.enable_thinking = true|false
+# Documented for this model by Workers AI, another OpenAI-compatible host:
+# https://developers.cloudflare.com/workers-ai/models/nemotron-3-120b-a12b/sync-input.json
+# It is also the field every GLM model on this host uses. Not reachable with the
+# sync key (403, models=['public']), so it could not be confirmed here; the
+# control shape follows first-party providers/nvidia/models/nvidia/
+# nemotron-3-super-120b-a12b.toml. [interleaved] is omitted rather than assumed.
 base_model = "nvidia/nemotron-3-super-120b-a12b"
 
 [[reasoning_options]]

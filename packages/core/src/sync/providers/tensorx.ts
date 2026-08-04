@@ -151,10 +151,10 @@ function buildTensorXModel(
     .filter((flag) => flag !== null && flag !== undefined);
 
   // supports_vision is the only modality signal the catalog carries, so
-  // `attachment` and `modalities.input` move together. Authoring one without the
-  // other would publish `attachment = true` beside a text-only modality list, or
-  // `attachment = false` while image input stays inherited. Only `image` is
-  // touched — the flag says nothing about video or pdf.
+  // `attachment` and `modalities.input` move together. Only `image` is edited —
+  // the flag says nothing about video or pdf — and `attachment` is then read
+  // back off the resulting list rather than off the flag, so a model that keeps
+  // video after losing image stays `attachment = true`.
   const vision = info.supports_vision;
   const inheritedInput = existing?.modalities?.input;
   const modalities = vision === null || vision === undefined || inheritedInput === undefined
@@ -165,12 +165,16 @@ function buildTensorXModel(
         ? (inheritedInput.includes("image") ? inheritedInput : [...inheritedInput, "image"])
         : inheritedInput.filter((modality) => modality !== "image"),
     };
+  const resolvedInput = modalities?.input;
+  const attachment = vision === null || vision === undefined || resolvedInput === undefined
+    ? existing?.attachment
+    : resolvedInput.some((modality) => modality !== "text");
 
   // `existing` is the base-model-resolved view, so factorBaseModel drops every
   // field that still matches the lab entry and keeps only the real deltas.
   const values: Record<string, unknown> = {
     ...existing,
-    attachment: vision ?? existing?.attachment,
+    attachment,
     reasoning: info.supports_reasoning ?? existing?.reasoning,
     tool_call: toolFlags.length > 0 ? toolFlags.some(Boolean) : existing?.tool_call,
     cost,
