@@ -1,0 +1,27 @@
+# Sources (accessed 2026-08-04):
+# https://www.qianwenai.com/models/qwen3.8-max
+# https://help.aliyun.com/zh/model-studio/model-pricing (Beijing: qwen3.8-max ¥12/¥36)
+# https://platform.qianwenai.com/docs/developer-guides/text-generation/thinking
+# CNY list: input ¥12, output ¥36, implicit cache hit ¥1.5, explicit cache create ¥15,
+# explicit cache read ¥1 (per 1M tokens). USD via Alibaba EN Beijing parity for the
+# same CNY list as qwen3.7-max ($1.65/$4.951 for ¥12/¥36); cache scaled from CNY ratios.
+# Toggle: enable_thinking true|false (hybrid)
+# Effort: reasoning_effort = low|medium|xhigh (default xhigh); high accepted as alias → xhigh
+# Budget: thinking_budget (0..262144) cannot be combined with reasoning_effort
+# Pay-as-you-go on DashScope CN / 千问AI (not Token Plan only).
+base_model = "alibaba/qwen3.8-max"
+structured_output = true
+reasoning_options = [
+  { type = "toggle" },
+  { type = "effort", values = ["low", "medium", "xhigh"] },
+  { type = "budget_tokens", min = 0, max = 262_144 },
+]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 1.65
+output = 4.951
+cache_read = 0.206
+cache_write = 2.0625
