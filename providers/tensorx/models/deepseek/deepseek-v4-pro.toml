@@ -1,7 +1,8 @@
 # Toggle: chat_template_kwargs.thinking = true|false (default off)
-# reasoning_effort is accepted here but not honored: low/high/max and an
-# invalid value all produce the same reasoning-token distribution, so this
-# host is toggle-only despite the lab exposing effort high|max.
+# reasoning_effort is accepted but not honored. Measured by reasoning_content
+# length — not usage.reasoning_tokens, which this host under-reports — low,
+# high, max and an invalid value all fall in the same range, so this host is
+# toggle-only despite the lab exposing effort high|max.
 base_model = "deepseek/deepseek-v4-pro"
 
 [[reasoning_options]]

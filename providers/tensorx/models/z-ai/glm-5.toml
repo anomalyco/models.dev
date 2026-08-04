@@ -1,7 +1,8 @@
-# Toggle: reasoning_effort = none turns reasoning off (verified: 0 reasoning
-# tokens); any other accepted value leaves it on. chat_template_kwargs.
-# enable_thinking is accepted but is a no-op here, and no graded level was
-# separable from another, so only on/off is published. First-party z.ai is
+# Toggle: reasoning_effort = none turns reasoning off — verified by
+# reasoning_content going empty, not by usage.reasoning_tokens, which this
+# host under-reports. Any other accepted value leaves it on.
+# chat_template_kwargs.enable_thinking is accepted but is a no-op here, and no
+# graded level was separable, so only on/off is published. First-party z.ai is
 # likewise toggle-only for GLM-5.
 base_model = "zhipuai/glm-5"
 

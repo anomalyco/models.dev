@@ -1,6 +1,7 @@
-# Neither control is honored here: chat_template_kwargs.thinking and
-# reasoning_effort (including none, and an invalid value) all leave the
-# reasoning-token count unchanged over 8 runs. Reasoning is always on.
+# No caller control. Measured by reasoning_content length over 6 runs each,
+# chat_template_kwargs.thinking = false and reasoning_effort = none both leave
+# reasoning_content filled (0/6 empty). usage.reasoning_tokens is not the
+# signal here because this host under-reports it. Reasoning is always on.
 base_model = "moonshotai/kimi-k2.5"
 reasoning_options = []
 

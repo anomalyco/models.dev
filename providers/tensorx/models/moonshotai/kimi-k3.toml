@@ -1,15 +1,14 @@
 # AI SDK auto-discovers native IDs via /v1/models — field values map those IDs
-# Toggle: chat_template_kwargs.thinking = true|false (default on)
-# Effort: reasoning_effort = low|high|max; invalid values return 400 and low
-# measurably lowers the reasoning-token count. Matches first-party Moonshot.
+# Effort: reasoning_effort = none|low|high|max, measured by reasoning_content
+# length. none empties it in 9/9 runs and depth grows low < high < max;
+# invalid values return 400. chat_template_kwargs.thinking = false is
+# unreliable here (reasoning still streamed in 3/9 runs), so none is the
+# published off switch and no toggle is declared.
 base_model = "moonshotai/kimi-k3"
 
 [[reasoning_options]]
-type = "toggle"
-
-[[reasoning_options]]
 type = "effort"
-values = ["low", "high", "max"]
+values = ["none", "low", "high", "max"]
 
 [interleaved]
 field = "reasoning_content"
