@@ -10,6 +10,7 @@ const API_ENDPOINT = "https://openrouter.ai/api/v1/models";
 const MODELS_DIR = path.join(import.meta.dirname, "..", "..", "..", "..", "..", "models");
 const modelMetadataByID = new Map<string, Record<string, unknown>>();
 const modelMetadataFilesByProvider = new Map<string, Set<string>>();
+let allModelMetadataIDs: string[] | undefined;
 
 const CANONICAL_BASE_MODEL_OVERRIDES = {
   "openai/gpt-5.6-luna-pro": "openai/gpt-5.6-luna",
@@ -29,11 +30,14 @@ const CANONICAL_PROVIDER_PREFIXES = {
   "meta-llama": { provider: "llama", metadata: "meta" },
   minimax: { provider: "minimax", metadata: "minimax" },
   mistralai: { provider: "mistral", metadata: "mistral" },
+  moonshot: { provider: "moonshotai", metadata: "moonshotai" },
   moonshotai: { provider: "moonshotai", metadata: "moonshotai" },
   openai: { provider: "openai", metadata: "openai" },
   nvidia: { provider: "nvidia", metadata: "nvidia" },
   qwen: { provider: "alibaba", metadata: "alibaba" },
+  sakana: { provider: "sakana", metadata: "sakana" },
   stepfun: { provider: "stepfun", metadata: "stepfun" },
+  "stepfun-ai": { provider: "stepfun", metadata: "stepfun" },
   tencent: { provider: "tencent", metadata: "tencent" },
   thinkingmachines: { provider: "thinkingmachines", metadata: "thinkingmachines" },
   "x-ai": { provider: "xai", metadata: "xai" },
@@ -41,6 +45,7 @@ const CANONICAL_PROVIDER_PREFIXES = {
   xiaomi: { provider: "xiaomi", metadata: "xiaomi" },
   zai: { provider: "zai", metadata: "zhipuai" },
   "z-ai": { provider: "zai", metadata: "zhipuai" },
+  "zai-org": { provider: "zai", metadata: "zhipuai" },
 } as const;
 
 export const OpenRouterModel = z.object({
@@ -60,6 +65,13 @@ export const OpenRouterModel = z.object({
     internal_reasoning: z.string().optional(),
     input_cache_read: z.string().optional(),
     input_cache_write: z.string().optional(),
+    overrides: z.array(z.object({
+      min_prompt_tokens: z.number(),
+      prompt: z.string().optional(),
+      completion: z.string().optional(),
+      input_cache_read: z.string().optional(),
+      input_cache_write: z.string().optional(),
+    }).passthrough()).optional(),
   }),
   top_provider: z.object({
     context_length: z.number().nullable(),
@@ -100,7 +112,8 @@ export const openrouter = {
     return response.json();
   },
   parseModels(raw) {
-    return OpenRouterResponse.parse(raw).data;
+    // Temporarily skip batch routes (`*:batch`) — they are not catalog targets.
+    return OpenRouterResponse.parse(raw).data.filter((model) => !model.id.endsWith(":batch"));
   },
   translateModel(model, context) {
     // OpenRouter serves deprecated/unavailable routes as degraded stubs:
@@ -137,6 +150,24 @@ function price(value: string | undefined) {
   return Number.isFinite(number) && number >= 0
     ? Math.round(number * 1_000_000_000_000) / 1_000_000
     : undefined;
+}
+
+function costTiers(model: OpenRouterModel, existing: ExistingModel | undefined) {
+  const tiers = (model.pricing.overrides ?? [])
+    .flatMap((o) => {
+      const input = price(o.prompt);
+      const output = price(o.completion);
+      if (input === undefined || output === undefined) return [];
+      return [{
+        tier: { type: "context" as const, size: o.min_prompt_tokens },
+        input,
+        output,
+        cache_read: price(o.input_cache_read),
+        cache_write: price(o.input_cache_write),
+      }];
+    })
+    .sort((a, b) => a.tier.size - b.tier.size);
+  return tiers.length > 0 ? tiers : existing?.cost?.tiers;
 }
 
 type Modality = "text" | "audio" | "image" | "video" | "pdf";
@@ -201,7 +232,7 @@ export function buildOpenRouterModel(
         reasoning: reasoning ? price(model.pricing.internal_reasoning) : undefined,
         cache_read: price(model.pricing.input_cache_read),
         cache_write: price(model.pricing.input_cache_write),
-        tiers: existing?.cost?.tiers,
+        tiers: costTiers(model, existing),
       }
     : existing?.cost;
   const limit = {
@@ -216,7 +247,7 @@ export function buildOpenRouterModel(
     return factorBaseModel(
       canonical,
       {
-        name: baseModel !== undefined || model.id.endsWith(":free") || canonicalOverride === canonical
+        name: shouldPreserveFactoredName(model.id, canonical, baseModel, canonicalOverride)
           ? name
           : undefined,
         description: existing?.description ?? describeModel({
@@ -309,19 +340,39 @@ export function resolveCanonicalBaseModel(openrouterID: string) {
   if (prefix === undefined || modelParts.length === 0) return undefined;
   if (openrouterID.startsWith("~/") || prefix.startsWith("~")) return undefined;
 
-  const canonical = CANONICAL_PROVIDER_PREFIXES[prefix as keyof typeof CANONICAL_PROVIDER_PREFIXES];
+  const canonical = CANONICAL_PROVIDER_PREFIXES[
+    prefix.toLowerCase() as keyof typeof CANONICAL_PROVIDER_PREFIXES
+  ];
   if (canonical === undefined) return undefined;
 
   const modelID = modelParts.join("/").replace(/:free$/, "");
   const candidates = canonicalCandidates(canonical.provider, modelID);
-  const match = candidates.find((candidate) => {
-    return modelMetadataExists(canonical.metadata, candidate);
-  });
+  const match = matchingModelMetadataFile(canonical.metadata, candidates);
 
   return match === undefined ? undefined : `${canonical.metadata}/${match}`;
 }
 
-function modelMetadataExists(provider: string, modelID: string) {
+/**
+ * Resolve provider IDs that are not OpenRouter-shaped against the same canonical
+ * metadata tree. Exact paths win; bare IDs only resolve when their filename is
+ * unique across every metadata provider.
+ */
+export function resolveModelMetadataBaseModel(modelID: string) {
+  const routed = resolveCanonicalBaseModel(modelID);
+  if (routed !== undefined) return routed;
+
+  const normalized = modelID.replace(/:free$/, "");
+  const ids = modelMetadataIDs();
+  const exact = ids.find((candidate) => candidate.toLowerCase() === normalized.toLowerCase());
+  if (exact !== undefined) return exact;
+  if (normalized.includes("/")) return undefined;
+
+  const lower = normalized.toLowerCase();
+  const matches = ids.filter((candidate) => candidate.split("/").at(-1)?.toLowerCase() === lower);
+  return matches.length === 1 ? matches[0] : undefined;
+}
+
+function matchingModelMetadataFile(provider: string, candidates: string[]) {
   let files = modelMetadataFilesByProvider.get(provider);
   if (files === undefined) {
     try {
@@ -331,7 +382,30 @@ function modelMetadataExists(provider: string, modelID: string) {
     }
     modelMetadataFilesByProvider.set(provider, files);
   }
-  return files.has(`${modelID}.toml`);
+
+  for (const candidate of candidates) {
+    const expected = `${candidate}.toml`.toLowerCase();
+    const match = [...files].find((file) => file.toLowerCase() === expected);
+    if (match !== undefined) return match.slice(0, -".toml".length);
+  }
+  return undefined;
+}
+
+function modelMetadataIDs() {
+  if (allModelMetadataIDs !== undefined) return allModelMetadataIDs;
+
+  try {
+    allModelMetadataIDs = readdirSync(MODELS_DIR, { withFileTypes: true })
+      .filter((entry) => entry.isDirectory())
+      .flatMap((entry) => {
+        return readdirSync(path.join(MODELS_DIR, entry.name))
+          .filter((file) => file.endsWith(".toml"))
+          .map((file) => `${entry.name}/${file.slice(0, -".toml".length)}`);
+      });
+  } catch {
+    allModelMetadataIDs = [];
+  }
+  return allModelMetadataIDs;
 }
 
 function canonicalBaseModelOverride(openrouterID: string) {
@@ -340,10 +414,36 @@ function canonicalBaseModelOverride(openrouterID: string) {
   ];
 }
 
+function shouldPreserveFactoredName(
+  modelID: string,
+  canonical: string,
+  baseModel: string | undefined,
+  canonicalOverride: string | undefined,
+) {
+  if (baseModel !== undefined) return true;
+  if (modelID.endsWith(":free")) return true;
+  if (canonicalOverride === canonical) return true;
+  const modelSlug = modelID.split("/").slice(1).join("/").replace(/:free$/, "");
+  const canonicalSlug = canonical.split("/").slice(1).join("/");
+  return normalizeModelSlug(modelSlug) !== normalizeModelSlug(canonicalSlug);
+}
+
+function normalizeModelSlug(value: string) {
+  return value.toLowerCase().replaceAll(/[^a-z0-9]/g, "");
+}
+
+type BaseModelOverrides = Omit<Partial<SyncedFullModel>, "limit" | "modalities"> & {
+  limit?: Partial<SyncedFullModel["limit"]>;
+  modalities?: {
+    input?: SyncedFullModel["modalities"]["input"];
+    output?: SyncedFullModel["modalities"]["output"];
+  };
+};
+
 export function factorBaseModel(
   modelID: string,
-  values: Partial<SyncedFullModel>,
-  limit: SyncedFullModel["limit"],
+  values: BaseModelOverrides,
+  limit?: Partial<SyncedFullModel["limit"]>,
   existingOmit?: string[],
 ): SyncedModel {
   return {
@@ -355,14 +455,16 @@ export function factorBaseModel(
 
 function baseModelOmit(
   modelID: string,
-  limit: SyncedFullModel["limit"],
+  limit: Partial<SyncedFullModel["limit"]> | undefined,
 ) {
+  if (limit === undefined) return undefined;
   const metadata = modelMetadata(modelID);
   const omit: string[] = [];
   const baseLimit = metadata.limit;
   if (
     isPlainObject(baseLimit) &&
     baseLimit.input !== undefined &&
+    limit.context !== undefined &&
     limit.input === undefined &&
     baseLimit.context !== limit.context
   ) {
@@ -374,7 +476,7 @@ function baseModelOmit(
 
 function baseModelOverrides(
   modelID: string,
-  values: Partial<SyncedFullModel>,
+  values: BaseModelOverrides,
 ) {
   const metadata = modelMetadata(modelID);
   const result: Record<string, unknown> = {};
@@ -439,7 +541,7 @@ function isPlainObject(value: unknown): value is Record<string, unknown> {
   return value !== null && typeof value === "object" && !Array.isArray(value);
 }
 
-function modelMetadata(modelID: string) {
+export function modelMetadata(modelID: string) {
   let metadata = modelMetadataByID.get(modelID);
   if (metadata === undefined) {
     const filePath = path.join(MODELS_DIR, `${modelID}.toml`);
@@ -451,10 +553,13 @@ function modelMetadata(modelID: string) {
 
 function canonicalCandidates(provider: string, modelID: string) {
   const candidates = [modelID];
+  if (modelID.endsWith("-fast")) candidates.push(modelID.slice(0, -"-fast".length));
 
   if (provider === "anthropic") {
-    candidates.push(modelID.replace(/(claude-(?:opus|sonnet|haiku)-\d+)\.(\d+)/, "$1-$2"));
-    candidates.push(modelID.replace(/^claude-3\.5-/, "claude-3-5-"));
+    for (const candidate of [...candidates]) {
+      candidates.push(candidate.replace(/(claude-(?:opus|sonnet|haiku)-\d+)\.(\d+)/, "$1-$2"));
+      candidates.push(candidate.replace(/^claude-3\.5-/, "claude-3-5-"));
+    }
   }
 
   if (provider === "llama") {

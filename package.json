@@ -28,13 +28,17 @@
     "huggingface:sync": "bun ./packages/core/script/sync-models.ts huggingface",
     "kilo:sync": "bun ./packages/core/script/sync-models.ts kilo",
     "llmgateway:sync": "bun ./packages/core/script/sync-models.ts llmgateway",
+    "merge-gateway:sync": "bun ./packages/core/script/sync-models.ts merge-gateway",
+    "nano-gpt:sync": "bun ./packages/core/script/sync-models.ts nano-gpt",
     "venice:sync": "bun ./packages/core/script/sync-models.ts venice",
+    "tinfoil:sync": "bun ./packages/core/script/sync-models.ts tinfoil",
     "vercel:generate": "bun ./packages/core/script/sync-models.ts vercel",
     "wandb:generate": "bun ./packages/core/script/sync-models.ts wandb",
     "digitalocean:sync": "bun ./packages/core/script/sync-models.ts digitalocean",
     "ambient:sync": "bun ./packages/core/script/sync-models.ts ambient",
     "models:sync": "bun ./packages/core/script/sync-models.ts",
-    "sync:models": "bun ./packages/core/script/sync-models.ts"
+    "sync:models": "bun ./packages/core/script/sync-models.ts",
+    "sync:auto-merge": "bun ./packages/core/script/check-sync-auto-merge.ts"
   },
   "dependencies": {
     "@cloudflare/workers-types": "^4.20260424.1",

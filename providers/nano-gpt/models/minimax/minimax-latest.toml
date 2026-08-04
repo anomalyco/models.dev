@@ -1,14 +1,17 @@
 # Included in subscription
 name = "MiniMax Latest"
 description = "MiniMax multimodal coding model for long-context reasoning and agent tasks"
+family = "minimax"
 release_date = "2026-05-03"
 last_updated = "2026-05-03"
 attachment = true
 reasoning = true
-reasoning_options = [{ type = "toggle" }]
 tool_call = true
 structured_output = true
-open_weights = false
+open_weights = true
+
+[[reasoning_options]]
+type = "toggle"
 
 [cost]
 input = 0.3
@@ -16,9 +19,9 @@ output = 1.2
 cache_read = 0.06
 
 [limit]
-context = 512000
-input = 512000
-output = 80000
+context = 512_000
+input = 512_000
+output = 80_000
 
 [modalities]
 input = ["text", "image"]

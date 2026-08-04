@@ -1,0 +1,17 @@
+# Toggle: chat_template_kwargs.thinking = true|false
+# Verified live on POST https://llm.chutes.ai/v1/chat/completions: reasoning_content present when on, absent when off
+base_model = "deepseek/deepseek-v4-flash-0731"
+name = "DeepSeek V4 Flash 0731 TEE"
+last_updated = "2026-08-02"
+
+[[reasoning_options]]
+type = "toggle"
+
+[cost]
+input = 0.14
+output = 0.28
+cache_read = 0.013999999999999999
+
+[limit]
+context = 1_048_576
+output = 131_072

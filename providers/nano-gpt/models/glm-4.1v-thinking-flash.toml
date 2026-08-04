@@ -1,5 +1,6 @@
 name = "GLM 4.1V Thinking Flash"
 description = "Compact GPT model for low-latency assistance and high-volume workloads"
+family = "glm"
 release_date = "2025-07-09"
 last_updated = "2025-07-09"
 attachment = true
@@ -11,6 +12,7 @@ open_weights = false
 [cost]
 input = 0.3
 output = 0.3
+cache_read = 0.15
 
 [limit]
 context = 64_000

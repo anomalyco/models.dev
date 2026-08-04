@@ -1,0 +1,21 @@
+base_model = "openai/gpt-5.4-mini"
+base_model_omit = ["limit.input"]
+interleaved = { field = "reasoning_content" }
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high", "xhigh", "max"]
+
+[cost]
+input = 0.375
+output = 4.00
+reasoning = 4.00
+cache_read = 0.0375
+
+[limit]
+context = 272_000
+output = 128_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

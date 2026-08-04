@@ -1,24 +1,14 @@
+base_model = "zhipuai/glm-5"
 name = "GLM 5 Thinking"
-description = "Flagship GLM model for hybrid reasoning, coding, and agentic engineering"
-family = "glm"
-release_date = "2026-02-11"
-last_updated = "2026-02-11"
-attachment = false
-reasoning = true
-reasoning_options = []
-tool_call = true
 structured_output = true
-open_weights = true
+reasoning_options = []
 
 [cost]
-input = 0.3
+input = 0.5
 output = 2.55
+cache_read = 0.13
 
 [limit]
 context = 200_000
 input = 200_000
 output = 128_000
-
-[modalities]
-input = ["text"]
-output = ["text"]

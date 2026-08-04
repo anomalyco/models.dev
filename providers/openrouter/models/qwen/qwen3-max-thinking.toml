@@ -1,4 +1,3 @@
-reasoning_options = [{ type = "budget_tokens", min = 1, max = 81920 }]
 name = "Qwen3 Max Thinking"
 description = "Qwen reasoning model for deliberate problem solving, math, and coding"
 family = "qwen"
@@ -11,13 +10,28 @@ tool_call = true
 structured_output = true
 open_weights = false
 
+[[reasoning_options]]
+type = "budget_tokens"
+min = 1
+max = 81_920
+
 [cost]
 input = 0.78
 output = 3.9
 
+[[cost.tiers]]
+tier = { type = "context", size = 32_000 }
+input = 1.56
+output = 7.8
+
+[[cost.tiers]]
+tier = { type = "context", size = 128_000 }
+input = 1.95
+output = 9.75
+
 [limit]
 context = 262_144
-output = 32_768
+output = 65_536
 
 [modalities]
 input = ["text"]

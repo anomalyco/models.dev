@@ -1,21 +1,24 @@
 name = "Upstage: Solar Pro 3"
 description = "Flagship model for demanding analysis, coding, and production agent workflows"
+family = "solar-pro"
 release_date = "2026-01-27"
-last_updated = "2026-03-15"
+last_updated = "2026-01-27"
 attachment = false
-reasoning_options = []
 reasoning = true
 temperature = true
 tool_call = true
+structured_output = true
 open_weights = false
+reasoning_options = []
 
 [cost]
 input = 0.15
 output = 0.6
+cache_read = 0.015
 
 [limit]
-context = 128000
-output = 32768
+context = 128_000
+output = 32_768
 
 [modalities]
 input = ["text"]

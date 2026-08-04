@@ -1,23 +1,14 @@
 # Included in subscription
+base_model = "zhipuai/glm-4.5-air"
 name = "GLM 4.5 Air"
-description = "Efficient GLM model for fast reasoning, coding, and agent workflows"
-release_date = "2025-04-15"
-last_updated = "2025-04-15"
-attachment = false
 reasoning = false
-tool_call = true
 structured_output = true
-open_weights = false
 
 [cost]
 input = 0.12
 output = 0.8
+cache_read = 0.06
 
 [limit]
-context = 128000
-input = 128000
-output = 98304
-
-[modalities]
-input = ["text"]
-output = ["text"]
+context = 128_000
+input = 128_000

@@ -1,27 +1,31 @@
-name = "DeepSeek V4 Pro"
+name = "Deepseek V4 Pro"
 description = "Flagship DeepSeek model for coding, reasoning, and agentic work"
 family = "deepseek-thinking"
 release_date = "2026-04-24"
 last_updated = "2026-04-24"
 attachment = false
 reasoning = true
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh"] }]
 temperature = true
-knowledge = "2025-05"
 tool_call = true
 structured_output = true
+knowledge = "2025-05"
 open_weights = true
 
 [interleaved]
 field = "reasoning_content"
 
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high", "xhigh"]
+
 [cost]
-input = 1.74
-output = 3.48
+input = 1.392
+output = 2.784
+cache_read = 0.348
 
 [limit]
-context = 1_048_576
-output = 393_216
+context = 262_144
+output = 52_429
 
 [modalities]
 input = ["text"]

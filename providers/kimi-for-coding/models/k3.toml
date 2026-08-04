@@ -1,6 +1,6 @@
 # reasoning_options mirror the Moonshot AI platform API surface:
 #   thinking.type = "enabled" | "disabled" | "adaptive"
-#   output_config.effort accepts only "max"
+#   output_config.effort = "low" | "high" | "max"
 # Cost is zeroed per this provider's subscription convention.
 base_model = "moonshotai/kimi-k3"
 attachment = false
@@ -10,7 +10,7 @@ type = "toggle"
 
 [[reasoning_options]]
 type = "effort"
-values = ["max"]
+values = ["low", "high", "max"]
 
 [cost]
 input = 0

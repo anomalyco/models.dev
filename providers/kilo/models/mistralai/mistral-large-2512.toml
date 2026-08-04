@@ -1,21 +1,14 @@
-name = "Mistral: Mistral Large 3 2512"
+base_model = "mistral/mistral-large-2512"
 description = "Flagship Mistral model for advanced reasoning, coding, and multilingual work"
-release_date = "2024-11-01"
-last_updated = "2025-12-16"
-attachment = true
-reasoning = false
-temperature = true
-tool_call = true
-open_weights = true
+structured_output = true
 
 [cost]
 input = 0.5
 output = 1.5
+cache_read = 0.05
 
 [limit]
-context = 262144
-output = 52429
+output = 52_429
 
 [modalities]
-input = ["text", "image"]
-output = ["text"]
+input = ["text", "image", "pdf"]

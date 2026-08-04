@@ -1,0 +1,16 @@
+base_model = "alibaba/qwen3.7-flash"
+name = "Qwen3.7 Flash Thinking"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "high"]
+
+[cost]
+input = 0.03
+output = 0.13
+cache_read = 0.006
+cache_write = 0.038
+
+[limit]
+context = 983_616
+input = 983_616

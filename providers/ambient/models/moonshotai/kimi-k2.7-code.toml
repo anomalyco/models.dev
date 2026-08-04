@@ -1,9 +1,11 @@
+# Kimi K2.7 Code always reasons; disabling thinking is rejected and it exposes
+# no effort or budget control. https://platform.kimi.ai/docs/guide/use-kimi-k2-thinking-model
 base_model = "moonshotai/kimi-k2.7-code"
 temperature = true
 reasoning_options = []
 
 [cost]
-input = 0.75
+input = 0.73
 output = 3.5
-cache_read = 0.16
+cache_read = 0.15
 cache_write = 0

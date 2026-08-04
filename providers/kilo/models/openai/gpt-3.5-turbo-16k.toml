@@ -1,11 +1,13 @@
 name = "OpenAI: GPT-3.5 Turbo 16k"
 description = "Compact GPT model for low-latency assistance and high-volume workloads"
+family = "gpt"
 release_date = "2023-08-28"
-last_updated = "2026-03-15"
-attachment = false
+last_updated = "2023-08-28"
+attachment = true
 reasoning = false
 temperature = true
 tool_call = true
+structured_output = true
 open_weights = false
 
 [cost]
@@ -13,9 +15,9 @@ input = 3
 output = 4
 
 [limit]
-context = 16385
-output = 4096
+context = 16_385
+output = 4_096
 
 [modalities]
-input = ["text"]
+input = ["text", "pdf"]
 output = ["text"]

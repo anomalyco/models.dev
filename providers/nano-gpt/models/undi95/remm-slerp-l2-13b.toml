@@ -1,17 +1,18 @@
 name = "ReMM SLERP 13B"
 description = "Open Llama multimodal model for image understanding and text reasoning"
 family = "llama"
-release_date = "2025-01-01"
+release_date = "2024-01-01"
 last_updated = "2025-01-01"
 attachment = true
 reasoning = false
 tool_call = false
 structured_output = false
-open_weights = false
+open_weights = true
 
 [cost]
-input = 0.7989999999999999
-output = 1.2069999999999999
+input = 0.799
+output = 1.207
+cache_read = 0.3995
 
 [limit]
 context = 6_144

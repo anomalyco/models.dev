@@ -1,0 +1,16 @@
+base_model = "moonshotai/kimi-k2.7-code-highspeed"
+name = "Kimi K2.7 Code High-Speed"
+structured_output = false
+reasoning_options = []
+
+[cost]
+input = 1.9
+output = 8
+cache_read = 0.32
+
+[limit]
+input = 262_144
+output = 65_536
+
+[modalities]
+input = ["text", "image"]

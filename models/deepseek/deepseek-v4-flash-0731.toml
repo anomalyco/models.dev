@@ -1,0 +1,105 @@
+name = "DeepSeek V4 Flash 0731"
+description = "Official DeepSeek V4 Flash release with enhanced agentic capabilities and integrated DSpark speculative decoding"
+family = "deepseek-flash"
+release_date = "2026-07-31"
+last_updated = "2026-07-31"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = true
+knowledge = "2025-05"
+open_weights = true
+license = "MIT"
+
+[limit]
+context = 1_000_000
+output = 384_000
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/deepseek-ai/DeepSeek-V4-Flash-0731"
+
+[[benchmarks]]
+name = "Terminal-Bench"
+score = 82.7
+metric = "pass@1"
+variant = "max"
+version = "2.1"
+source = "https://huggingface.co/deepseek-ai/DeepSeek-V4-Flash-0731"
+
+[[benchmarks]]
+name = "NL2Repo"
+score = 54.2
+metric = "resolve rate"
+variant = "max effort"
+harness = "DeepSeek Harness minimal mode"
+source = "https://api-docs.deepseek.com/updates/"
+date = "2026-07-31"
+
+[[benchmarks]]
+name = "CyberGym"
+score = 76.7
+metric = "score"
+variant = "max effort"
+harness = "DeepSeek Harness minimal mode"
+source = "https://api-docs.deepseek.com/updates/"
+date = "2026-07-31"
+
+[[benchmarks]]
+name = "DeepSWE"
+score = 54.4
+metric = "resolve rate"
+variant = "max effort"
+harness = "DeepSeek Harness minimal mode"
+source = "https://api-docs.deepseek.com/updates/"
+date = "2026-07-31"
+
+[[benchmarks]]
+name = "Toolathlon-Verified"
+score = 70.3
+metric = "score"
+variant = "max effort"
+harness = "DeepSeek Harness minimal mode"
+source = "https://api-docs.deepseek.com/updates/"
+date = "2026-07-31"
+
+[[benchmarks]]
+name = "Agents' Last Exam"
+score = 25.2
+metric = "score"
+variant = "max effort"
+harness = "DeepSeek Harness minimal mode"
+source = "https://api-docs.deepseek.com/updates/"
+date = "2026-07-31"
+
+[[benchmarks]]
+name = "AutomationBench"
+score = 25.1
+metric = "success rate"
+variant = "max effort"
+dataset = "public"
+source = "https://api-docs.deepseek.com/updates/"
+date = "2026-07-31"
+
+[[benchmarks]]
+name = "DSBench-FullStack"
+score = 68.7
+metric = "score"
+variant = "max effort"
+dataset = "internal"
+source = "https://api-docs.deepseek.com/updates/"
+date = "2026-07-31"
+
+[[benchmarks]]
+name = "DSBench-Hard"
+score = 59.6
+metric = "score"
+variant = "max effort"
+dataset = "internal"
+source = "https://api-docs.deepseek.com/updates/"
+date = "2026-07-31"

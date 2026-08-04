@@ -1,0 +1,25 @@
+# Source: https://api-gateway.merge.dev/v1/models?model=writer%2Fpalmyra-x4 (accessed 2026-07-21)
+
+name = "Palmyra X4"
+description = "Enterprise language model for writing, analysis, and tool-assisted workflows"
+family = "palmyra"
+release_date = "2024-10-09"
+last_updated = "2024-10-09"
+attachment = false
+reasoning = false
+temperature = true
+tool_call = true
+structured_output = false
+open_weights = false
+
+[cost]
+input = 2.5
+output = 10
+
+[limit]
+context = 128_000
+output = 32_000
+
+[modalities]
+input = ["text"]
+output = ["text"]

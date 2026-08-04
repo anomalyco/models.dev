@@ -1,0 +1,21 @@
+# Moonshot mapping lists $.reasoning_effort / $.reasoning.effort =
+# none|minimal|low|medium|high|xhigh|max. Effort is sent as
+# {"reasoning_effort": "<v>"} or {"reasoning": {"effort": "<v>"}}.
+# Verified 2026-07-29: every value is accepted and returns a thinking trace
+# in $.choices[].message.reasoning; depth scales low < medium < high ~= max.
+# There is NO working off switch: "none", reasoning.enabled=false,
+# thinking.type=disabled, and reasoning.exclude=true all still reason, so
+# "none" is not listed and no toggle is declared (the model always thinks on
+# this gateway).
+# https://docs.llmgateway.io/features/reasoning
+# https://api.llmgateway.io/v1/models providers[].reasoning_efforts
+base_model = "moonshotai/kimi-k3"
+
+[[reasoning_options]]
+type = "effort"
+values = ["minimal", "low", "medium", "high", "xhigh", "max"]
+
+[cost]
+input = 3
+output = 15
+cache_read = 0.3

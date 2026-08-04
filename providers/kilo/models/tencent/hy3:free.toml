@@ -1,0 +1,15 @@
+base_model = "tencent/hy3"
+name = "Tencent: Hy3 (free)"
+description = "Hy3 is a 295B-parameter Mixture-of-Experts model from Tencent, activating 21B parameters per token. It supports configurable reasoning effort, agentic workflows, reliable tool calling, and long-context tasks across coding, document processing, financial analysis, and frontend development."
+structured_output = false
+reasoning_options = []
+
+[cost]
+input = 0
+output = 0
+reasoning = 0
+cache_read = 0
+
+[limit]
+context = 262_144
+output = 128_000

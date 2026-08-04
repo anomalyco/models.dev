@@ -1,0 +1,16 @@
+# Pricing: https://api.impossibl.com/v1/models
+base_model = "alibaba/qwen3.6-flash"
+
+[cost]
+input = 0.25
+output = 1.50
+cache_read = 0.05
+
+[[cost.tiers]]
+tier = { size = 262_144 }
+input = 1.00
+output = 4.00
+cache_read = 0.20
+
+[[reasoning_options]]
+type = "toggle" # API: {"reasoning_effort":"none"}

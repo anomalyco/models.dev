@@ -1,0 +1,15 @@
+# Pricing: https://api.impossibl.com/v1/models
+base_model = "anthropic/claude-fable-5"
+
+[cost]
+input = 10.00
+output = 50.00
+cache_read = 1.00
+cache_write = 12.50
+
+[[reasoning_options]]
+type = "toggle" # API: {"thinking":{"type":"disabled"}}
+
+[[reasoning_options]]
+type = "effort" # API: {"output_config":{"effort":"high"}}
+values = ["low", "medium", "high", "xhigh", "max"]

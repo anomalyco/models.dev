@@ -1,0 +1,24 @@
+name = "Gemma 4 12B Instruct"
+description = "Google's Gemma 4 12B Instruct is an open-weight multimodal model for text, image, audio, and video understanding, with tool calling and structured output support."
+family = "gemma"
+release_date = "2026-08-01"
+last_updated = "2026-08-01"
+attachment = true
+reasoning = false
+tool_call = true
+structured_output = true
+open_weights = true
+
+[cost]
+input = 0.06
+output = 0.3
+cache_read = 0.03
+
+[limit]
+context = 262_144
+input = 262_144
+output = 32_768
+
+[modalities]
+input = ["text", "image", "video", "audio"]
+output = ["text"]

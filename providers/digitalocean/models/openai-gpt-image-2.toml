@@ -1,4 +1,4 @@
-name = "GPT Image 2"
+name = "OpenAI GPT Image 2"
 description = "Image model for prompt-driven generation, editing, and visual design workflows"
 family = "gpt-image"
 release_date = "2025-04-24"
@@ -9,10 +9,14 @@ temperature = false
 tool_call = false
 open_weights = false
 
+[cost]
+input = 8
+output = 30
+
 [limit]
 context = 0
-output = 0
+output = 16_384
 
 [modalities]
 input = ["text", "image"]
-output = ["image"]
+output = ["image", "text"]

@@ -1,13 +1,15 @@
+# Pricing: https://docs.github.com/en/copilot/reference/copilot-billing/models-and-pricing
+# GPT-5.6 Luna reduced rates (matches OpenAI 2026-07-30 cut); long-context threshold >200K
 base_model = "openai/gpt-5.6-luna"
 reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh", "max"] }]
 
 [cost]
-input = 1
-output = 6
-cache_read = 0.1
+input = 0.20
+output = 1.20
+cache_read = 0.02
 
 [[cost.tiers]]
 tier = { type = "context", size = 200_000 }
-input = 2
-output = 9
-cache_read = 0.2
+input = 0.40
+output = 1.80
+cache_read = 0.04

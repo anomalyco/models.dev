@@ -1,23 +1,16 @@
-name = "Z.ai: GLM 4.7 Flash"
+base_model = "zhipuai/glm-4.7-flash"
 description = "Efficient GLM model for fast reasoning, coding, and agent workflows"
-release_date = "2026-01-19"
-last_updated = "2026-01-19"
-attachment = false
-reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["high", "xhigh"] }]
-reasoning = true
-temperature = true
-tool_call = true
-open_weights = true
+structured_output = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "high", "xhigh"]
 
 [cost]
-input = 0.06
+input = 0.07
 output = 0.4
 cache_read = 0.01
 
 [limit]
-context = 202752
-output = 40551
-
-[modalities]
-input = ["text"]
-output = ["text"]
+context = 202_752
+output = 16_384
