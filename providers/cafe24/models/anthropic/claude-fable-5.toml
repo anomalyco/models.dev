@@ -1,3 +1,9 @@
+# KRW list price W14,300/W71,500 per MTok input/output (https://llm-router.cafe24.com/models, captured 2026-08-04).
+# The site prices at a fixed W1,430/USD rate -> USD $10/50 per MTok.
+# Reasoning controls verified empirically on 2026-08-04 against the live gateway:
+# OpenAI-style `reasoning_effort` and Anthropic-style `thinking` are accepted but not
+# forwarded (no reasoning-token accounting, no output differential) -> affirmatively no
+# caller-controllable reasoning surface; hence `reasoning_options = []`.
 base_model = "anthropic/claude-fable-5"
 reasoning_options = []
 

@@ -1,5 +1,9 @@
+# KRW list price W115/W401 per MTok input/output (https://llm-router.cafe24.com/models, captured 2026-08-04).
+# The site prices at a fixed W1,430/USD rate -> USD $0.08/0.28 per MTok.
+# Thinking toggle verified forwarded on 2026-08-04 via `chat_template_kwargs.enable_thinking`:
+# default(thinking)=320 completion tokens vs enable_thinking=false -> 2 tokens on an identical prompt.
 base_model = "alibaba/qwen3-32b"
-reasoning_options = []
+reasoning_options = [{ type = "toggle" }]
 
 [cost]
 input = 0.08

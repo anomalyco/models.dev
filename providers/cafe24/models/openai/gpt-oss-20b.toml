@@ -1,5 +1,12 @@
+# KRW list price W43/W201 per MTok input/output (https://llm-router.cafe24.com/models, captured 2026-08-04).
+# The site prices at a fixed W1,430/USD rate -> USD $0.03/0.14 per MTok.
+# `reasoning_effort` verified forwarded on 2026-08-04: completion tokens scale with
+# effort (high=76 vs low=22 on an identical prompt).
 base_model = "openai/gpt-oss-20b"
-reasoning_options = []
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high"]
 
 [cost]
 input = 0.03
