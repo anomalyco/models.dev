@@ -55,7 +55,10 @@ export const CrossModelModel = z
       .object({ input: z.array(z.string()), output: z.array(z.string()) })
       .optional(),
     capabilities: z
-      .object({ reasoning: ReasoningCapability.optional() })
+      .object({
+        json: z.boolean().optional(),
+        reasoning: ReasoningCapability.optional(),
+      })
       .passthrough()
       .nullable()
       .optional(),
@@ -186,7 +189,7 @@ function reasoningOptions(model: CrossModelModel): SyncedModel["reasoning_option
   return options;
 }
 
-function buildCrossModel(
+export function buildCrossModel(
   model: CrossModelModel,
   existing: ExistingModel | undefined,
 ): SyncedModel | undefined {
@@ -247,7 +250,7 @@ function buildCrossModel(
       reasoning: existing?.reasoning,
       temperature: existing?.temperature,
       tool_call: existing?.tool_call,
-      structured_output: existing?.structured_output,
+      structured_output: model.capabilities?.json ?? existing?.structured_output,
       knowledge: existing?.knowledge,
       modalities: modality,
       reasoning_options,

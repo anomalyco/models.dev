@@ -139,6 +139,15 @@ CI automatically picks up providers registered in `providers` in `packages/core/
 
 Actions are pinned by commit SHA. Keep new workflow actions pinned the same way.
 
+## CrossModel Notes
+
+CrossModel is implemented in `packages/core/src/sync/providers/crossmodel.ts`.
+
+- Source endpoint: `https://www.crossmodel.ai/api/models`.
+- Pricing, context/output limits, modalities, and reasoning controls come from CrossModel's public catalog.
+- `structured_output` comes from `capabilities.json`; when that field is absent, the sync preserves an existing authored override.
+- Other intrinsic model facts remain inherited from the canonical `base_model` metadata.
+
 ## OpenRouter Notes
 
 OpenRouter is implemented in `packages/core/src/sync/providers/openrouter.ts`.

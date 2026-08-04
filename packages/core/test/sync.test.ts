@@ -10,6 +10,10 @@ import {
   parseAnthropicPricing,
   type AnthropicModel,
 } from "../src/sync/providers/anthropic.js";
+import {
+  buildCrossModel,
+  type CrossModelModel,
+} from "../src/sync/providers/crossmodel.js";
 import { buildDeepInfraModel, type DeepInfraModel } from "../src/sync/providers/deepinfra.js";
 import {
   buildDigitalOceanModel,
@@ -113,6 +117,63 @@ function nanoGptModel(overrides: Partial<NanoGptModel> = {}): NanoGptModel {
     ...overrides,
   };
 }
+
+function crossModelModel(overrides: Partial<CrossModelModel> = {}): CrossModelModel {
+  return {
+    id: "qwen/qwen3.8-max",
+    vendor_code: "qwen",
+    display_name: "Qwen3.8 Max",
+    context_window_tokens: 1_000_000,
+    max_output_tokens: 131_072,
+    modalities: { input: ["text", "image", "video"], output: ["text"] },
+    capabilities: {
+      json: true,
+      reasoning: { toggle: true },
+    },
+    currency: "USD",
+    pricing: {
+      tiers: [
+        {
+          threshold: 0,
+          input_micro_per_1m: 1_880_000,
+          output_micro_per_1m: 5_630_000,
+        },
+      ],
+    },
+    ...overrides,
+  };
+}
+
+test("syncs CrossModel's structured-output capability", () => {
+  const supported = buildCrossModel(crossModelModel(), undefined);
+  const unsupported = buildCrossModel(
+    crossModelModel({
+      id: "qwen/qwen3.7-flash",
+      capabilities: { json: false, reasoning: { toggle: true } },
+    }),
+    undefined,
+  );
+  const preserved = buildCrossModel(
+    crossModelModel({ capabilities: { reasoning: { toggle: true } } }),
+    {
+      base_model: "alibaba/qwen3.8-max",
+      structured_output: true,
+    },
+  );
+
+  expect(supported).toMatchObject({
+    base_model: "alibaba/qwen3.8-max",
+    structured_output: true,
+  });
+  expect(unsupported).toMatchObject({
+    base_model: "alibaba/qwen3.7-flash",
+    structured_output: false,
+  });
+  expect(preserved).toMatchObject({
+    base_model: "alibaba/qwen3.8-max",
+    structured_output: true,
+  });
+});
 
 test("syncs NanoGPT's verified reasoning, pricing, limits, and open-weight metadata", () => {
   const model = buildNanoGptModel(nanoGptModel({
