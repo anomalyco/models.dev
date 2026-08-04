@@ -2143,6 +2143,11 @@ test("defaults new reasoning models to empty reasoning options", () => {
   });
 });
 
+test("inherits base reasoning options instead of stamping empty ones", () => {
+  expect(preserveReasoningOptions({ reasoning: true }, undefined, undefined, [{ type: "toggle" }]))
+    .toEqual({ reasoning: true });
+});
+
 test("syncs OpenRouter reasoning efforts from model metadata", () => {
   const model = buildOpenRouterModel(openRouterModel({
     reasoning: {
@@ -2418,9 +2423,42 @@ test("prefers the gateway max_output over authored output on mapped resyncs", ()
     base_model: "anthropic/claude-fable-5",
     name: "Claude Fable 5 (Anthropic)",
     description: "Claude Fable 5 served by Anthropic",
+    reasoning_options: [{ type: "effort", values: ["low", "medium", "high", "xhigh", "max"] }],
     limit: {
       output: 32_000,
     },
+    cost: {
+      input: 10,
+      output: 50,
+      cache_read: 1,
+      cache_write: 12.5,
+    },
+  });
+});
+
+test("translates a none-only effort list into a reasoning toggle", () => {
+  const model = buildLLMGatewayMappedModel(llmGatewayMappedModel({
+    providers: [{ providerId: "anthropic", vision: true, tools: true, reasoning: true, reasoning_efforts: ["none"] }],
+  }), undefined);
+
+  expect(model).toMatchObject({
+    base_model: "anthropic/claude-fable-5",
+    reasoning_options: [{ type: "toggle" }],
+  });
+});
+
+test("keeps inheriting base output on factored resyncs without max_output", () => {
+  const model = buildLLMGatewayMappedModel(llmGatewayMappedModel({ max_output: undefined }), {
+    base_model: "anthropic/claude-fable-5",
+    name: "Claude Fable 5 (Anthropic)",
+    description: "Claude Fable 5 served by Anthropic",
+  });
+
+  expect(model).toEqual({
+    base_model: "anthropic/claude-fable-5",
+    name: "Claude Fable 5 (Anthropic)",
+    description: "Claude Fable 5 served by Anthropic",
+    reasoning_options: [{ type: "effort", values: ["low", "medium", "high", "xhigh", "max"] }],
     cost: {
       input: 10,
       output: 50,

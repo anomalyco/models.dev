@@ -262,13 +262,16 @@ export async function syncProvider<SourceModel>(
       : preserveBaseModel(translated.model, existing.get(relativePath)?.authored);
     const translatedBase = "base_model" in translatedModel ? translatedModel.base_model : undefined;
     let resolvedReasoning: boolean | undefined;
+    let baseReasoningOptions: unknown;
     if (translatedBase !== undefined) {
       if (translated.metadata?.id === translatedBase) {
         resolvedReasoning = translated.metadata.model.reasoning;
+        baseReasoningOptions = translated.metadata.model.reasoning_options;
       } else {
         modelMetadata ??= await readModelMetadata(provider.modelsDir);
         const canonicalReasoning = modelMetadata[translatedBase]?.reasoning;
         resolvedReasoning = typeof canonicalReasoning === "boolean" ? canonicalReasoning : undefined;
+        baseReasoningOptions = modelMetadata[translatedBase]?.reasoning_options;
       }
     } else {
       resolvedReasoning = existing.get(relativePath)?.toml.reasoning;
@@ -277,6 +280,7 @@ export async function syncProvider<SourceModel>(
       translatedModel,
       existing.get(relativePath)?.authored,
       resolvedReasoning,
+      baseReasoningOptions,
     );
     const withDescription = provider.preserveDescriptions === false
       ? withReasoningOptions
@@ -468,6 +472,7 @@ export function preserveReasoningOptions(
   model: SyncedModel,
   existing: ExistingModel | undefined,
   resolvedReasoning: boolean | undefined = existing?.reasoning,
+  baseReasoningOptions: unknown = undefined,
 ): SyncedModel {
   if ((model.reasoning ?? resolvedReasoning) === false) {
     const { reasoning_options: _reasoningOptions, ...withoutReasoningOptions } = model;
@@ -475,7 +480,10 @@ export function preserveReasoningOptions(
   }
   if (model.reasoning_options !== undefined) return model;
   if (existing?.reasoning_options === undefined) {
-    return (model.reasoning ?? resolvedReasoning) === true
+    // When the base model already declares reasoning_options, leave the field
+    // unset so the factored file inherits them — stamping [] here would
+    // shadow the base's real controls with "no controls".
+    return (model.reasoning ?? resolvedReasoning) === true && baseReasoningOptions === undefined
       ? { ...model, reasoning_options: [] }
       : model;
   }

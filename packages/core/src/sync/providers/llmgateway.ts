@@ -161,7 +161,26 @@ function modalities(values: string[], fallback: Modality[]): Modality[] {
 }
 
 const MODELS_DIR = path.join(import.meta.dirname, "..", "..", "..", "..", "..", "models");
+const AGGREGATED_MODELS_DIR = path.join(import.meta.dirname, "..", "..", "..", "..", "..", "providers", "llmgateway", "models");
 const canonicalOutputLimitByID = new Map<string, number | undefined>();
+const siblingReasoningOptionsByID = new Map<string, SyncedFullModel["reasoning_options"]>();
+
+// The aggregated llmgateway catalog curates reasoning controls for the same
+// gateway surface; mapped deployments of the same root model reuse them when
+// they do not declare their own effort values.
+function siblingReasoningOptions(rootID: string) {
+  if (!siblingReasoningOptionsByID.has(rootID)) {
+    const filePath = path.join(AGGREGATED_MODELS_DIR, `${rootID}.toml`);
+    const authored = existsSync(filePath)
+      ? Bun.TOML.parse(readFileSync(filePath, "utf8")) as { reasoning_options?: SyncedFullModel["reasoning_options"] }
+      : undefined;
+    siblingReasoningOptionsByID.set(
+      rootID,
+      authored?.reasoning_options?.length ? authored.reasoning_options : undefined,
+    );
+  }
+  return siblingReasoningOptionsByID.get(rootID);
+}
 
 // Whether the canonical metadata declares limit.output; factored entries can
 // only omit their own output override when the base has one to inherit.
@@ -353,14 +372,28 @@ export function buildLLMGatewayMappedModel(
   // describe that specific deployment, unlike the aggregated view where
   // supported_parameters are too noisy to trust.
   const mapping = model.providers?.[0];
+  const rootID = model.id.split("/").slice(1).join("/");
   const prompt = price(model.pricing.prompt);
   const completion = price(model.pricing.completion);
   const reasoning = mapping?.reasoning
     ?? (model.supported_parameters.includes("reasoning")
       || model.supported_parameters.includes("include_reasoning"));
-  // The exact reasoning_effort values this deployment accepts.
-  const reasoningOptions = mapping?.reasoning_efforts?.length
-    ? [{ type: "effort" as const, values: mapping.reasoning_efforts }]
+  // The exact reasoning_effort values this deployment accepts. A deployment
+  // whose only accepted effort is "none" exposes a plain on/off switch (the
+  // gateway honours it through the thinking toggle), not effort tiers.
+  const deploymentOptions = mapping?.reasoning_efforts?.length
+    ? mapping.reasoning_efforts.length === 1 && mapping.reasoning_efforts[0] === "none"
+      ? [{ type: "toggle" as const }]
+      : [{ type: "effort" as const, values: mapping.reasoning_efforts }]
+    : undefined;
+  // Deployment-declared efforts win; then non-empty curation on this file;
+  // then the aggregated llmgateway catalog's curated controls for the same
+  // root model on the same gateway surface. A curated [] counts as unknown so
+  // a bad first stamp is not sticky. Non-reasoning deployments carry none.
+  const reasoningOptions = reasoning
+    ? deploymentOptions
+      ?? (existing?.reasoning_options?.length ? existing.reasoning_options : undefined)
+      ?? siblingReasoningOptions(rootID)
     : undefined;
   const reported = model.context_length ?? 0;
   const context = reported > 0 ? reported : existing?.limit?.context ?? reported;
@@ -377,10 +410,11 @@ export function buildLLMGatewayMappedModel(
     : existing?.cost;
   // The gateway's max_output is the deployment's real served limit, so it wins
   // over inherited/authored values, unlike the aggregated view.
+  const servedOutput = model.max_output ?? existing?.limit?.output;
   const limit = {
     context,
     input: existing?.limit?.input,
-    output: model.max_output ?? existing?.limit?.output ?? context,
+    output: servedOutput ?? context,
   };
 
   // Existing factored model: refresh cost + limit, keep every authored override
@@ -389,6 +423,13 @@ export function buildLLMGatewayMappedModel(
   // "GPT-5.5 (Azure)" vs "GPT-5.5 (OpenAI)") and must not collapse back to the
   // base metadata name.
   if (existing?.base_model !== undefined) {
+    // Mirror the brand-new factored path: without a served or authored output,
+    // keep inheriting the base's output rather than stamping context over it.
+    const factoredLimit = {
+      context,
+      input: existing.limit?.input,
+      output: servedOutput ?? (canonicalOutputLimit(existing.base_model) !== undefined ? undefined : context),
+    };
     return factorBaseModel(
       existing.base_model,
       {
@@ -402,10 +443,11 @@ export function buildLLMGatewayMappedModel(
           tool_call: existing.tool_call,
           structured_output: existing.structured_output,
           open_weights: existing.open_weights,
-          limit,
+          limit: factoredLimit,
           modalities: existing.modalities,
         }),
         reasoning: existing.reasoning,
+        reasoning_options: reasoningOptions,
         temperature: existing.temperature,
         tool_call: existing.tool_call,
         structured_output: existing.structured_output,
@@ -413,10 +455,10 @@ export function buildLLMGatewayMappedModel(
         interleaved: existing.interleaved,
         knowledge: existing.knowledge,
         modalities: existing.modalities,
-        limit,
+        limit: factoredLimit,
         cost,
       },
-      limit,
+      factoredLimit,
       existing.base_model_omit,
     );
   }
@@ -441,6 +483,7 @@ export function buildLLMGatewayMappedModel(
       last_updated: existing.last_updated ?? dateFromTimestamp(model.created),
       attachment: existing.attachment ?? mapping?.vision ?? false,
       reasoning: existing.reasoning ?? reasoning,
+      reasoning_options: reasoningOptions,
       temperature: existing.temperature ?? false,
       tool_call: existing.tool_call ?? mapping?.tools ?? false,
       structured_output: existing.structured_output ?? model.structured_outputs,
@@ -460,7 +503,6 @@ export function buildLLMGatewayMappedModel(
   // from the root model ID + family, and keep the disambiguating name. The
   // mapping's own capability flags describe this specific deployment, so they
   // go in as overrides (factorBaseModel drops the ones equal to the base).
-  const rootID = model.id.split("/").slice(1).join("/");
   const canonical = resolveLLMGatewayBaseModel(model, rootID);
   if (canonical !== undefined) {
     const factoredLimit = {
