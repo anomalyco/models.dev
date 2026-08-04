@@ -1,0 +1,26 @@
+name = "Celeris-1"
+description = "Diffusion language model for ultra-low-latency classification, extraction, judging, query rewriting, and other short structured responses"
+family = "celeris"
+release_date = "2026-07-25"
+last_updated = "2026-08-04"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = true
+structured_output = false
+open_weights = false
+
+[limit]
+context = 131_072
+output = 131_072
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[[benchmarks]]
+name = "MMLU-Pro"
+score = 75.9
+metric = "percent correct"
+source = "https://celeris.ai/"
+date = "2026-07-25"

@@ -225,6 +225,9 @@ export const ModelFamilyValues = [
   // Mercury
   "mercury",
 
+  // Celeris
+  "celeris",
+
   // Cogito
   "cogito",
 

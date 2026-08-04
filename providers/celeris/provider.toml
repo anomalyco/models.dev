@@ -1,0 +1,8 @@
+# OpenAI-compatible; model is selected via the base URL path segment
+# (https://inference.celeris.ai/<model>/v1), which must match the request `model` field.
+# https://docs.celeris.ai/models
+name = "Celeris"
+env = ["CELERIS_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+api = "https://inference.celeris.ai/celeris-1/v1"
+doc = "https://docs.celeris.ai"
