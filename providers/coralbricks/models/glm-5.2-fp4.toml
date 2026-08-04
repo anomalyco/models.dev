@@ -1,11 +1,8 @@
 base_model = "zhipuai/glm-5.2"
+name = "GLM 5.2 FP4"
 
 reasoning_options = []
 interleaved = true
-
-[cost]
-input = 1.40
-output = 4.40
 
 [limit]
 context = 1_048_576
