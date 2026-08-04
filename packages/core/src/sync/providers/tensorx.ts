@@ -42,6 +42,12 @@ export const tensorx = {
   id: "tensorx",
   name: "TensorX",
   modelsDir: "providers/tensorx/models",
+  // /v1/model/info carries no reasoning controls and no side-channel field, so
+  // a created reasoner would be published with the runner's fallback
+  // `reasoning_options = []` — an assertion of "no caller control" that nothing
+  // here backs — and no `interleaved`. New IDs are reported for hand-authoring
+  // instead; updates to existing TOMLs are unaffected.
+  skipCreates: true,
   preserveBaseModels: false,
   // /v1/model/info returns a per-key view: a key scoped to a model group sees
   // only that group, and chat requests for the rest fail with 403 rather than
@@ -56,8 +62,8 @@ export const tensorx = {
   skippedNotice(ids) {
     if (ids.length === 0) return [];
     return [
-      `${ids.length} TensorX chat models were not created because /v1/model/info publishes no name, description, or release date to author a model from.`,
-      `Add the lab entry under \`models/\` (or hand-author the provider file) first. Skipped remote IDs: ${ids.map((id) => `\`${id}\``).join(", ")}`,
+      `${ids.length} TensorX chat models were not created: /v1/model/info publishes no name, description, or release date, and no reasoning controls or side-channel field, so a complete model cannot be authored safely.`,
+      `Add the lab entry under \`models/\` and hand-author \`reasoning_options\` / \`interleaved\` against the live API. Skipped remote IDs: ${ids.map((id) => `\`${id}\``).join(", ")}`,
     ];
   },
   missingNotice(paths) {
