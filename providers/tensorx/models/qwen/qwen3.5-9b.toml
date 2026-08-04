@@ -1,8 +1,8 @@
+# Effort: reasoning_effort = <value>; "none" disables reasoning
 base_model = "alibaba/qwen3.5-9b"
 
-
 [[reasoning_options]]
-type = "effort" # API: {"reasoning_effort": <value>}; "none" disables reasoning
+type = "effort"
 values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"]
 
 [cost]

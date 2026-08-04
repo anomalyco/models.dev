@@ -1,3 +1,4 @@
+# Effort: reasoning_effort = <value>; "none" disables reasoning
 name = "DeepSeek Chat V3.1"
 description = "DeepSeek chat model for instruction following, coding, and analysis"
 family = "deepseek"
@@ -10,9 +11,8 @@ tool_call = true
 knowledge = "2024-11"
 open_weights = true
 
-
 [[reasoning_options]]
-type = "effort" # API: {"reasoning_effort": <value>}; "none" disables reasoning
+type = "effort"
 values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"]
 
 [cost]

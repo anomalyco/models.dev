@@ -1,10 +1,12 @@
+# Toggle: chat_template_kwargs.enable_thinking = true|false (default on)
+# Effort: reasoning_effort = <value>; "none" disables reasoning
 base_model = "zhipuai/glm-5.1"
 
 [[reasoning_options]]
-type = "toggle" # API: {"chat_template_kwargs": {"enable_thinking": false}} (default on)
+type = "toggle"
 
 [[reasoning_options]]
-type = "effort" # API: {"reasoning_effort": <value>}; "none" disables reasoning
+type = "effort"
 values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"]
 
 [cost]

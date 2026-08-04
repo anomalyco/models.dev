@@ -1,7 +1,8 @@
+# Effort: reasoning_effort = <value>; reasoning is mandatory, "none" is rejected
 base_model = "minimax/MiniMax-M2.5"
 
 [[reasoning_options]]
-type = "effort" # API: {"reasoning_effort": <value>}; reasoning is mandatory, "none" is rejected
+type = "effort"
 values = ["minimal", "low", "medium", "high", "xhigh", "max"]
 
 [cost]
