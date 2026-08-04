@@ -285,21 +285,14 @@ export function buildEdenAIModel(
     input: existing?.limit?.input,
     output: existing?.limit?.output,
   };
-  const releaseDate =
+  const inlineReleaseDate =
     existing?.release_date ?? dateFromTimestamp(model.created) ?? today;
   const cost = buildCost(model, reasoning, existing?.cost);
 
   const resolvedBase = resolveEdenBaseModel(model, existing?.base_model);
   if (resolvedBase !== undefined) {
-    // Factored: only override cost/limit/modalities/timestamps. Leave
-    // capability booleans and open_weights unset so `base_model` inheritance
-    // from `models/` provides the authoritative values (matches DeepInfra /
-    // LLM Gateway patterns; AGENTS.md merge rules). `attachment` is always
-    // written alongside `modalities` so the two stay in sync — writing
-    // `modalities` alone can leave inherited `attachment` disagreeing with
-    // the overridden input list.
     const factored: Partial<SyncedFullModel> = {
-      release_date: releaseDate,
+      release_date: existing?.release_date,
       last_updated: existing?.last_updated ?? today,
       status: existing?.status,
       interleaved: existing?.interleaved,
@@ -308,8 +301,6 @@ export function buildEdenAIModel(
       modalities: { input, output },
       attachment,
     };
-    // reasoning_options is provider-specific and never inherited; declare it
-    // when the model reasons (empty array = no verified control surface).
     if (reasoning || existing?.reasoning_options !== undefined) {
       factored.reasoning_options = existing?.reasoning_options ?? [];
     }
@@ -360,7 +351,7 @@ export function buildEdenAIModel(
     temperature: existing?.temperature,
     knowledge: existing?.knowledge,
     open_weights: openWeights,
-    release_date: releaseDate,
+    release_date: inlineReleaseDate,
     last_updated: existing?.last_updated ?? today,
     status: existing?.status,
     interleaved: existing?.interleaved,
