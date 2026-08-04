@@ -61,9 +61,9 @@ export async function classifyAutoMerge(
   };
 
   for (const change of models) {
-    if (!isProviderModel(change.path)) continue;
+    if (change.status === "deleted" || !isProviderModel(change.path)) continue;
 
-    const current = change.status === "deleted" ? undefined : await reasoningMetadata(change.path, load);
+    const current = await reasoningMetadata(change.path, load);
     const previous = change.status === "created" ? undefined : await reasoningMetadata(change.path, loadPrevious);
     const reasoningChanged = !current || !previous || !isDeepStrictEqual(current, previous);
     if (!reasoningChanged) continue;

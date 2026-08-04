@@ -67,14 +67,18 @@ test("requires manual review when reasoning options change", async () => {
   expect(decision.safe).toBe(false);
 });
 
-test("requires manual review when a reasoning model is deleted", async () => {
+test("does not inspect deleted models", async () => {
   const decision = await classifyAutoMerge(
     [{ status: "deleted", path: "providers/test/models/reasoner.toml" }],
-    async () => "",
-    async () => fullModel(true, "reasoning_options = []"),
+    async () => {
+      throw new Error("deleted model should not be loaded");
+    },
+    async () => {
+      throw new Error("deleted model should not be loaded");
+    },
   );
 
-  expect(decision.safe).toBe(false);
+  expect(decision.safe).toBe(true);
 });
 
 test("allows reviewed providers with explicit reasoning options", async () => {
