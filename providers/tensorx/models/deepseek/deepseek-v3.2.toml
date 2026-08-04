@@ -1,4 +1,8 @@
-# Effort: reasoning_effort = <value>; "none" disables reasoning
+# Effort: reasoning_effort = none|high. This host does not reason by default —
+# reasoning_content is empty unless an effort value is sent — and none keeps it
+# off. chat_template_kwargs.enable_thinking and thinking are no-ops. Measured
+# by reasoning_content length; invalid values return 400 and no graded level
+# was separable, so one on level is published.
 name = "DeepSeek V3.2"
 description = "DeepSeek chat model for instruction following, coding, and analysis"
 family = "deepseek"
@@ -13,7 +17,7 @@ open_weights = true
 
 [[reasoning_options]]
 type = "effort"
-values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"]
+values = ["none", "high"]
 
 [interleaved]
 field = "reasoning_content"
