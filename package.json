@@ -29,6 +29,7 @@
     "kilo:sync": "bun ./packages/core/script/sync-models.ts kilo",
     "llmgateway:sync": "bun ./packages/core/script/sync-models.ts llmgateway",
     "llmgateway-providers:sync": "bun ./packages/core/script/sync-models.ts llmgateway-providers",
+    "requesty:sync": "bun ./packages/core/script/sync-models.ts requesty",
     "merge-gateway:sync": "bun ./packages/core/script/sync-models.ts merge-gateway",
     "nano-gpt:sync": "bun ./packages/core/script/sync-models.ts nano-gpt",
     "venice:sync": "bun ./packages/core/script/sync-models.ts venice",
@@ -38,7 +39,8 @@
     "digitalocean:sync": "bun ./packages/core/script/sync-models.ts digitalocean",
     "ambient:sync": "bun ./packages/core/script/sync-models.ts ambient",
     "models:sync": "bun ./packages/core/script/sync-models.ts",
-    "sync:models": "bun ./packages/core/script/sync-models.ts"
+    "sync:models": "bun ./packages/core/script/sync-models.ts",
+    "sync:auto-merge": "bun ./packages/core/script/check-sync-auto-merge.ts"
   },
   "dependencies": {
     "@cloudflare/workers-types": "^4.20260424.1",

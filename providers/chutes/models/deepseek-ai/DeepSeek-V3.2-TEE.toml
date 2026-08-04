@@ -1,3 +1,6 @@
+# Toggle: chat_template_kwargs.thinking = true|false
+# Source: https://huggingface.co/deepseek-ai/DeepSeek-V3.2-Exp (chat template exposes thinking)
+# Verified live on POST https://llm.chutes.ai/v1/chat/completions: reasoning_content present when on, absent when off
 name = "DeepSeek V3.2 TEE"
 description = "DeepSeek chat model for instruction following, coding, and analysis"
 family = "deepseek"
@@ -9,15 +12,17 @@ temperature = true
 tool_call = true
 structured_output = true
 open_weights = true
-reasoning_options = []
 
 [interleaved]
 field = "reasoning_content"
 
+[[reasoning_options]]
+type = "toggle"
+
 [cost]
 input = 1
 output = 1
-cache_read = 0.5
+cache_read = 0.09999999999999998
 
 [limit]
 context = 131_072

@@ -1,0 +1,16 @@
+# Cost: converted from GreenPT's EUR list price at 1.14 USD/EUR (rate captured 2026-08-01).
+# Sources: https://docs.greenpt.ai/pricing and https://docs.greenpt.ai/model-cards
+# reasoning_effort: thinking is enabled by default and "none" disables it.
+# Values verified against the production API. See https://docs.greenpt.ai/chat-completion
+# cache_read: discounted rate for cached prompt tokens. Cache writes are not
+# charged. See https://docs.greenpt.ai/prompt-caching
+base_model = "moonshotai/kimi-k3"
+reasoning_options = [{ type = "effort", values = ["none", "minimal", "low", "medium", "high"] }]
+
+[cost]
+input = 3.762
+cache_read = 0.9405
+output = 18.81
+
+[modalities]
+input = ["text", "image"]

@@ -1,0 +1,26 @@
+base_model = "anthropic/claude-sonnet-4-5"
+name = "Claude Sonnet 4.5 (latest) (EU)"
+structured_output = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "max"]
+
+[[reasoning_options]]
+type = "budget_tokens"
+
+[cost]
+input = 3.3
+output = 16.5
+cache_read = 0.3
+cache_write = 4.125
+
+[[cost.tiers]]
+tier = { type = "context", size = 200_000 }
+input = 6.6
+output = 24.75
+cache_read = 0.6
+cache_write = 8.25
+
+[limit]
+context = 1_000_000
