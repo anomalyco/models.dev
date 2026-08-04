@@ -5,6 +5,9 @@ base_model = "minimax/MiniMax-M2.5"
 type = "effort"
 values = ["minimal", "low", "medium", "high", "xhigh", "max"]
 
+[interleaved]
+field = "reasoning_content"
+
 [cost]
 input = 0.3
 output = 1.2
