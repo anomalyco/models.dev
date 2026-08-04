@@ -1,13 +1,11 @@
-# Toggle: chat_template_kwargs.enable_thinking = true|false (default on)
-# Effort: reasoning_effort = <value>; "none" disables reasoning
+# Off is effort=none; chat_template_kwargs.enable_thinking also toggles, but
+# `none` already expresses it, so effort is the single declared control.
+# Effort: reasoning_effort = none|low|medium|high (verified; others rejected 400)
 base_model = "zhipuai/glm-5-turbo"
 
 [[reasoning_options]]
-type = "toggle"
-
-[[reasoning_options]]
 type = "effort"
-values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"]
+values = ["none", "low", "medium", "high"]
 
 [interleaved]
 field = "reasoning_content"

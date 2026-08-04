@@ -60,6 +60,13 @@ export const tensorx = {
       `Add the lab entry under \`models/\` (or hand-author the provider file) first. Skipped remote IDs: ${ids.map((id) => `\`${id}\``).join(", ")}`,
     ];
   },
+  missingNotice(paths) {
+    if (paths.length === 0) return [];
+    return [
+      `${paths.length} local TensorX models were absent from /v1/model/info and were retained for manual lifecycle review.`,
+      `That endpoint is a per-key view, so absence can mean the sync key lacks access rather than the model being retired: ${paths.map((path) => `\`${path}\``).join(", ")}`,
+    ];
+  },
   async fetchModels() {
     const apiKey = process.env.TENSORX_API_KEY;
     if (!apiKey) {
@@ -86,7 +93,11 @@ export const tensorx = {
     if (model.model_info.mode !== "chat") return undefined;
 
     const existing = context.existing(model.model_name);
-    const baseModel = resolveBaseModel(model.model_name);
+    // A base_model already authored locally wins over re-derivation. With
+    // preserveBaseModels false the runner will not put it back, so a resolution
+    // miss here (dropped alias, renamed lab entry, ID drift) would otherwise
+    // flatten the inherited lab fields into the provider TOML.
+    const baseModel = existing?.base_model ?? resolveBaseModel(model.model_name);
     // Nothing in this catalog can stand in for lab metadata — no display name,
     // no description, no release date — so an unknown model is reported for
     // hand-authoring instead of being invented.
