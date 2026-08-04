@@ -1,9 +1,13 @@
-# Effort: reasoning_effort = <value>; "none" disables reasoning
+# Effort: reasoning_effort = none|high. Off is the effort value none, not a
+# boolean field: chat_template_kwargs.enable_thinking and thinking are no-ops
+# here. Measured by reasoning_content length; none empties it, invalid values
+# return 400, and over 4 runs each low/medium/high/max overlap entirely
+# (means within 60 chars), so one on level is published.
 base_model = "alibaba/qwen3.5-9b"
 
 [[reasoning_options]]
 type = "effort"
-values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"]
+values = ["none", "high"]
 
 [interleaved]
 field = "reasoning_content"

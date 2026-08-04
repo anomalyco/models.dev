@@ -1,10 +1,14 @@
-# Effort: reasoning_effort = <value>; reasoning is mandatory, "none" is rejected
+# Not reachable with the sync key (403, models=['public']), so nothing below
+# could be measured against this host. Controls are carried from the lab/peer
+# baseline; [interleaved] is deliberately omitted rather than assumed, even
+# though all 18 reachable models here stream reasoning_content.
+# OpenRouter, the closest same-surface peer, exposes low|medium|high.
 base_model = "openai/gpt-oss-120b"
 knowledge = "2024-10"
 
 [[reasoning_options]]
 type = "effort"
-values = ["minimal", "low", "medium", "high", "xhigh", "max"]
+values = ["low", "medium", "high"]
 
 [cost]
 input = 0.04

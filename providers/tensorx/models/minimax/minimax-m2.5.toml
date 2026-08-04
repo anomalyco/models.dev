@@ -1,9 +1,9 @@
-# Effort: reasoning_effort = <value>; reasoning is mandatory, "none" is rejected
+# No caller control. reasoning_effort = none is rejected (400), low/medium/
+# high/max overlap entirely over 4 runs each, and chat_template_kwargs
+# enable_thinking and thinking are both no-ops. Measured by reasoning_content
+# length. Reasoning is always on, matching the lab and OpenRouter entries.
 base_model = "minimax/MiniMax-M2.5"
-
-[[reasoning_options]]
-type = "effort"
-values = ["minimal", "low", "medium", "high", "xhigh", "max"]
+reasoning_options = []
 
 [interleaved]
 field = "reasoning_content"

@@ -1,9 +1,13 @@
-# Effort: reasoning_effort = <value>; "none" disables reasoning
+# Not reachable with the sync key (403, models=['public']), so nothing below
+# could be measured against this host. Controls are carried from the lab/peer
+# baseline; [interleaved] is deliberately omitted rather than assumed, even
+# though all 18 reachable models here stream reasoning_content.
+# First-party z.ai GLM-4.7 is toggle-only.
+# Toggle: chat_template_kwargs.enable_thinking = true|false
 base_model = "zhipuai/glm-4.7"
 
 [[reasoning_options]]
-type = "effort"
-values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"]
+type = "toggle"
 
 [cost]
 input = 0.6
