@@ -1,4 +1,5 @@
 import { readFile } from "node:fs/promises";
+import { isDeepStrictEqual } from "node:util";
 
 export const MAX_CREATED_MODELS = 10;
 export const MAX_DELETED_MODELS = 10;
@@ -29,6 +30,7 @@ function isProviderModel(path: string) {
 export async function classifyAutoMerge(
   changes: CatalogChange[],
   load = (path: string) => readFile(path, "utf8"),
+  loadPrevious = load,
 ): Promise<AutoMergeDecision> {
   const models = changes.filter((change) => isModel(change.path));
   const created = models.filter((change) => change.status === "created").length;
@@ -42,18 +44,34 @@ export async function classifyAutoMerge(
     reasons.push(`${created + deleted} models created or deleted (limit ${MAX_MODEL_CHURN})`);
   }
 
-  for (const change of models) {
-    if (change.status === "deleted" || !isProviderModel(change.path)) continue;
-
-    const model = Bun.TOML.parse(await load(change.path)) as Record<string, unknown>;
+  const reasoningMetadata = async (path: string, loader: typeof load) => {
+    const model = Bun.TOML.parse(await loader(path)) as Record<string, unknown>;
     let reasoning = model.reasoning;
     if (reasoning === undefined && typeof model.base_model === "string") {
-      const base = Bun.TOML.parse(await load(`models/${model.base_model}.toml`)) as Record<string, unknown>;
+      const base = Bun.TOML.parse(await loader(`models/${model.base_model}.toml`)) as Record<string, unknown>;
       reasoning = base.reasoning;
     }
 
-    if (reasoning === true) {
-      if (!Object.hasOwn(model, "reasoning_options")) {
+    return {
+      reasoning,
+      reasoning_options: model.reasoning_options,
+      interleaved: model.interleaved,
+      base_model: model.base_model,
+    };
+  };
+
+  for (const change of models) {
+    if (!isProviderModel(change.path)) continue;
+
+    const current = change.status === "deleted" ? undefined : await reasoningMetadata(change.path, load);
+    const previous = change.status === "created" ? undefined : await reasoningMetadata(change.path, loadPrevious);
+    const reasoningChanged = !current || !previous || !isDeepStrictEqual(current, previous);
+    if (!reasoningChanged) continue;
+
+    const reasoning = current?.reasoning === true || previous?.reasoning === true;
+
+    if (reasoning) {
+      if (current?.reasoning === true && current.reasoning_options === undefined) {
         reasons.push(`${change.path} is a reasoning model without explicit reasoning_options`);
       } else if (!REVIEWED_REASONING_PROVIDERS.has(change.path.split("/")[1]!)) {
         reasons.push(`${change.path} is a reasoning model that requires manual review`);

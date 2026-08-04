@@ -31,13 +31,13 @@ test("requires manual review for bulk additions", async () => {
   expect(decision.reasons).toContain("11 models created (limit 10)");
 });
 
-test("requires manual review for reasoning provider models", async () => {
+test("requires manual review for added reasoning provider models", async () => {
   const withoutOptions = await classifyAutoMerge(
-    [{ status: "updated", path: "providers/test/models/reasoner.toml" }],
+    [{ status: "created", path: "providers/test/models/reasoner.toml" }],
     async () => fullModel(true),
   );
   const withOptions = await classifyAutoMerge(
-    [{ status: "updated", path: "providers/test/models/reasoner.toml" }],
+    [{ status: "created", path: "providers/test/models/reasoner.toml" }],
     async () => fullModel(true, "reasoning_options = []"),
   );
 
@@ -45,9 +45,42 @@ test("requires manual review for reasoning provider models", async () => {
   expect(withOptions.safe).toBe(false);
 });
 
+test("allows cost and limit updates to existing reasoning models", async () => {
+  const current = `${fullModel(true, "reasoning_options = []")}\n[cost]\ninput = 1\n[limit]\noutput = 100\n`;
+  const previous = `${fullModel(true, "reasoning_options = []")}\n[cost]\ninput = 2\n[limit]\noutput = 50\n`;
+  const decision = await classifyAutoMerge(
+    [{ status: "updated", path: "providers/test/models/reasoner.toml" }],
+    async () => current,
+    async () => previous,
+  );
+
+  expect(decision.safe).toBe(true);
+});
+
+test("requires manual review when reasoning options change", async () => {
+  const decision = await classifyAutoMerge(
+    [{ status: "updated", path: "providers/test/models/reasoner.toml" }],
+    async () => fullModel(true, 'reasoning_options = [{ type = "toggle" }]'),
+    async () => fullModel(true, "reasoning_options = []"),
+  );
+
+  expect(decision.safe).toBe(false);
+});
+
+test("requires manual review when a reasoning model is deleted", async () => {
+  const decision = await classifyAutoMerge(
+    [{ status: "deleted", path: "providers/test/models/reasoner.toml" }],
+    async () => "",
+    async () => fullModel(true, "reasoning_options = []"),
+  );
+
+  expect(decision.safe).toBe(false);
+});
+
 test("allows reviewed providers with explicit reasoning options", async () => {
   const decision = await classifyAutoMerge(
     [{ status: "updated", path: "providers/openrouter/models/reasoner.toml" }],
+    async () => fullModel(true, 'reasoning_options = [{ type = "toggle" }]'),
     async () => fullModel(true, "reasoning_options = []"),
   );
 
