@@ -1,7 +1,10 @@
 # Cost: converted from GreenPT's EUR list price at 1.14 USD/EUR (rate captured 2026-07-24).
 # Sources: https://docs.greenpt.ai/pricing and https://docs.greenpt.ai/model-cards
+# reasoning_effort: this endpoint accepts only the values below; the remaining
+# documented values are rejected with a 400. Verified against the production API.
+# See https://docs.greenpt.ai/chat-completion
 base_model = "mistral/mistral-medium-2604"
-reasoning_options = []
+reasoning_options = [{ type = "effort", values = ["none", "high"] }]
 
 [cost]
 input = 2.052
