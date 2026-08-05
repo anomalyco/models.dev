@@ -341,7 +341,9 @@ function buildFriendliModel(
   // omit the override so lab metadata (e.g. gemma vision) is inherited.
   const apiInput = model.input_modalities !== undefined ? translateModalities(model.input_modalities) : undefined;
   const apiOutput = model.output_modalities !== undefined ? translateModalities(model.output_modalities) : undefined;
-  const attachment = apiInput !== undefined && apiInput.some((value) => value !== "text");
+  // undefined when the API omits input_modalities so factorBaseModel
+  // inherits the lab attachment; only override when explicitly provided.
+  const attachment = apiInput !== undefined ? apiInput.some((value) => value !== "text") : undefined;
   const limit = {
     context: model.context_length,
     input: existing?.limit?.input,
@@ -393,7 +395,9 @@ function buildFriendliModel(
         modalities: apiInput !== undefined || apiOutput !== undefined ? { input: apiInput ?? [], output: apiOutput ?? [] } : undefined,
       }),
     family: existing?.family ?? inferFamily(model.id, name),
-    attachment,
+    // Full-inline has no lab to inherit from; default text-only when the
+    // API omits modalities. Earlier `attachment` is undefined in that case.
+    attachment: attachment ?? false,
     reasoning,
     reasoning_options: reasoningOptions,
     tool_call: model.functionality.tool_call,
