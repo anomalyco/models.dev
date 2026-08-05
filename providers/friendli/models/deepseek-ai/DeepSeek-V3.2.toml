@@ -1,11 +1,22 @@
-base_model = "deepseek/deepseek-chat"
+name = "DeepSeek-V3.2"
 description = "DeepSeek chat model for instruction following, coding, and analysis"
+family = "deepseek"
+release_date = "2026-03-07"
+last_updated = "2026-08-05"
 attachment = false
 reasoning = true
+temperature = true
+tool_call = true
 structured_output = true
+open_weights = true
 
 [[reasoning_options]]
 type = "toggle"
+
+[[reasoning_options]]
+type = "budget_tokens"
+min = -1
+max = 163_840
 
 [cost]
 input = 0.5
@@ -15,3 +26,7 @@ cache_read = 0.25
 [limit]
 context = 163_840
 output = 163_840
+
+[modalities]
+input = ["text"]
+output = ["text"]

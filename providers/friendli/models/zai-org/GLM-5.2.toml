@@ -14,6 +14,11 @@ type = "toggle"
 type = "effort"
 values = ["high", "max"]
 
+[[reasoning_options]]
+type = "budget_tokens"
+min = -1
+max = 1_048_576
+
 [cost]
 input = 1.4
 output = 4.4

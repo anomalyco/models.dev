@@ -6,6 +6,11 @@ field = "reasoning_content"
 [[reasoning_options]]
 type = "toggle"
 
+[[reasoning_options]]
+type = "budget_tokens"
+min = -1
+max = 262_144
+
 [cost]
 input = 0.14
 output = 0.4
