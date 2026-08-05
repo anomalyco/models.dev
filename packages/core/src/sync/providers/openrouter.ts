@@ -34,7 +34,6 @@ const CANONICAL_PROVIDER_PREFIXES = {
   moonshotai: { provider: "moonshotai", metadata: "moonshotai" },
   openai: { provider: "openai", metadata: "openai" },
   nvidia: { provider: "nvidia", metadata: "nvidia" },
-  perplexity: { provider: "perplexity", metadata: "perplexity" },
   qwen: { provider: "alibaba", metadata: "alibaba" },
   sakana: { provider: "sakana", metadata: "sakana" },
   stepfun: { provider: "stepfun", metadata: "stepfun" },

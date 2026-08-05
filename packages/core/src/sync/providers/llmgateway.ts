@@ -5,13 +5,16 @@ import path from "node:path";
 import { describeModel } from "../../describe.js";
 import { inferKimiFamily, ModelFamilyValues } from "../../family.js";
 import type { ExistingModel, SyncProvider, SyncedFullModel, SyncedModel } from "../index.js";
-import { factorBaseModel, resolveCanonicalBaseModel } from "./openrouter.js";
+import { factorBaseModel, resolveModelMetadataBaseModel } from "./openrouter.js";
 
 const API_ENDPOINT = "https://api.llmgateway.io/v1/models";
 
 // LLM Gateway names the originating lab in `family`; most already match the
-// canonical prefixes understood by resolveCanonicalBaseModel. Alias the few that
-// spell the lab differently. (Mirrors huggingface's CANONICAL_ORG_PREFIXES.)
+// canonical prefixes understood by resolveModelMetadataBaseModel, and labs
+// outside that shared table (e.g. perplexity) resolve through its exact
+// `models/` path match without widening the OpenRouter prefix map for every
+// other provider. Alias the few that spell the lab differently. (Mirrors
+// huggingface's CANONICAL_ORG_PREFIXES.)
 const CANONICAL_FAMILY_ALIASES: Record<string, string> = {
   mistral: "mistralai",
   moonshot: "moonshotai",
@@ -271,7 +274,7 @@ function resolveLLMGatewayBaseModel(model: LLMGatewayModel, modelID = model.id) 
   if (alias !== undefined) return alias;
   if (model.family === undefined) return undefined;
   const prefix = CANONICAL_FAMILY_ALIASES[model.family] ?? model.family;
-  return resolveCanonicalBaseModel(`${prefix}/${modelID}`);
+  return resolveModelMetadataBaseModel(`${prefix}/${modelID}`);
 }
 
 function inferFamily(model: LLMGatewayModel, name: string) {
@@ -301,9 +304,10 @@ export function buildLLMGatewayModel(
   const reported = model.context_length ?? 0;
   // A missing/zero context must never be authored as limit.context = 0:
   // factored entries leave it unset and inherit the base, and unfactored
-  // creates are skipped entirely.
+  // creates are skipped entirely. An authored 0 on the existing file is
+  // equally unusable and must not be re-stamped.
   const servedContext = reported > 0 ? reported : undefined;
-  const context = servedContext ?? existing?.limit?.context;
+  const context = servedContext ?? (existing?.limit?.context || undefined);
 
   // The gateway is authoritative for the volatile, gateway-specific data — cost
   // and served limits. Its supported_parameters / modalities are too noisy to
@@ -321,11 +325,15 @@ export function buildLLMGatewayModel(
         tiers: existing?.cost?.tiers,
       }
     : existing?.cost;
-  const limit = {
-    context: context ?? reported,
-    input: existing?.limit?.input,
-    output: existing?.limit?.output ?? context ?? reported,
-  };
+  // Authored limits carry only known-positive values — never the zero/absent
+  // `reported` fallback.
+  const limit = context !== undefined
+    ? {
+        context,
+        input: existing?.limit?.input,
+        output: (existing?.limit?.output || undefined) ?? context,
+      }
+    : undefined;
 
   // Existing factored model: refresh cost + limit, keep every authored override
   // as-is (undefined fields keep inheriting the base model).
@@ -368,6 +376,12 @@ export function buildLLMGatewayModel(
 
   // Existing full model: refresh cost + limit, preserve curated metadata.
   if (existing !== undefined) {
+    // With no usable context from the API or the file there is nothing valid
+    // to author, and skipping would hand the file to the delete-missing pass —
+    // fail loudly rather than write limit.context = 0.
+    if (limit === undefined) {
+      throw new Error(`LLM Gateway entry ${model.id} has no usable context to author`);
+    }
     return {
       name: existing.name ?? model.name,
       description: existing.description ?? describeModel({
@@ -417,6 +431,7 @@ export function buildLLMGatewayModel(
   if (servedContext === undefined) {
     return undefined;
   }
+  const createdLimit = limit ?? { context: servedContext, input: undefined, output: servedContext };
   const { input, output } = defaultModalities(model);
   return {
     name: model.name,
@@ -429,7 +444,7 @@ export function buildLLMGatewayModel(
         || model.supported_parameters.includes("tool_choice"),
       structured_output: model.structured_outputs ?? false,
       open_weights: false,
-      limit,
+      limit: createdLimit,
       modalities: { input, output },
     }),
     family: inferFamily(model, model.name),
@@ -443,7 +458,7 @@ export function buildLLMGatewayModel(
     structured_output: model.structured_outputs ?? false,
     open_weights: false,
     cost,
-    limit,
+    limit: createdLimit,
     modalities: { input, output },
   } satisfies SyncedFullModel;
 }
@@ -491,9 +506,10 @@ export function buildLLMGatewayMappedModel(
     : undefined;
   const reported = model.context_length ?? 0;
   // Same zero-context rule as the aggregated builder: never author 0, inherit
-  // on factored entries, skip unfactored creates.
+  // on factored entries, skip unfactored creates. An authored 0 on the
+  // existing file is equally unusable.
   const servedContext = reported > 0 ? reported : undefined;
-  const context = servedContext ?? existing?.limit?.context;
+  const context = servedContext ?? (existing?.limit?.context || undefined);
 
   const cost = prompt !== undefined && completion !== undefined
     ? {
@@ -507,12 +523,16 @@ export function buildLLMGatewayMappedModel(
     : existing?.cost;
   // The gateway's max_output is the deployment's real served limit, so it wins
   // over inherited/authored values, unlike the aggregated view.
-  const servedOutput = model.max_output ?? existing?.limit?.output;
-  const limit = {
-    context: context ?? reported,
-    input: existing?.limit?.input,
-    output: servedOutput ?? context ?? reported,
-  };
+  const servedOutput = (model.max_output || undefined) ?? (existing?.limit?.output || undefined);
+  // Authored limits carry only known-positive values — never the zero/absent
+  // `reported` fallback.
+  const limit = context !== undefined
+    ? {
+        context,
+        input: existing?.limit?.input,
+        output: servedOutput ?? context,
+      }
+    : undefined;
 
   // Existing factored model: refresh cost + limit, keep every authored override
   // as-is. Unlike the aggregated provider, the name override must be carried
@@ -568,6 +588,12 @@ export function buildLLMGatewayMappedModel(
   // Capability flags follow the same rule as the factored path above: the
   // deployment mapping wins, curation fills the gaps.
   if (existing !== undefined) {
+    // With no usable context from the API or the file there is nothing valid
+    // to author, and skipping would hand the file to the delete-missing pass —
+    // fail loudly rather than write limit.context = 0.
+    if (limit === undefined) {
+      throw new Error(`LLM Gateway mapped entry ${model.id} has no usable context to author`);
+    }
     const resolved = {
       attachment: mapping?.vision ?? existing.attachment ?? false,
       tool_call: mapping?.tools ?? existing.tool_call ?? false,
@@ -648,6 +674,7 @@ export function buildLLMGatewayMappedModel(
   if (servedContext === undefined) {
     return undefined;
   }
+  const createdLimit = limit ?? { context: servedContext, input: undefined, output: servedOutput ?? servedContext };
   const { input, output } = deploymentModalities(model, mapping?.vision);
   return {
     name: model.name,
@@ -659,7 +686,7 @@ export function buildLLMGatewayMappedModel(
       tool_call: mapping?.tools ?? false,
       structured_output: model.structured_outputs ?? false,
       open_weights: false,
-      limit,
+      limit: createdLimit,
       modalities: { input, output },
     }),
     family: inferFamily(model, model.name),
@@ -674,7 +701,7 @@ export function buildLLMGatewayMappedModel(
     structured_output: model.structured_outputs ?? false,
     open_weights: false,
     cost,
-    limit,
+    limit: createdLimit,
     modalities: { input, output },
   } satisfies SyncedFullModel;
 }

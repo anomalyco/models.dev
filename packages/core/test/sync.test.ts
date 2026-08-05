@@ -2592,6 +2592,46 @@ test("skips unfactorable LLM Gateway creates without a served context", () => {
   expect(aggregated).toBeUndefined();
 });
 
+test("factors perplexity entries without widening the shared prefix map", () => {
+  // The perplexity family resolves through resolveModelMetadataBaseModel's
+  // exact models/ path match; CANONICAL_PROVIDER_PREFIXES stays untouched so
+  // other hosts' standalone perplexity files keep their current behavior.
+  const model = buildLLMGatewayMappedModel(llmGatewayMappedModel({
+    id: "perplexity/sonar-pro",
+    name: "Sonar Pro (Perplexity)",
+    family: "perplexity",
+  }), undefined);
+
+  expect(model).toMatchObject({ base_model: "perplexity/sonar-pro" });
+});
+
+test("refuses to author a zero context on full LLM Gateway resyncs", () => {
+  // Existing full rows (no base to inherit from) with nothing usable from the
+  // API or the file must fail loudly instead of being rewritten with
+  // limit.context = 0.
+  expect(() => buildLLMGatewayMappedModel(llmGatewayMappedModel({
+    context_length: undefined,
+    max_output: undefined,
+  }), {
+    name: "Claude Fable 5 (Anthropic)",
+  })).toThrow("no usable context");
+
+  // An authored 0 on disk is as unusable as an absent context.
+  expect(() => buildLLMGatewayMappedModel(llmGatewayMappedModel({
+    context_length: 0,
+    max_output: undefined,
+  }), {
+    name: "Claude Fable 5 (Anthropic)",
+    limit: { context: 0 },
+  })).toThrow("no usable context");
+
+  expect(() => buildLLMGatewayModel(llmGatewayModel({
+    context_length: undefined,
+  }), {
+    name: "Claude Fable 5",
+  })).toThrow("no usable context");
+});
+
 test("leaves context unset on mapped factored creates without a served context", () => {
   const model = buildLLMGatewayMappedModel(llmGatewayMappedModel({
     context_length: undefined,
