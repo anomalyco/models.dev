@@ -190,6 +190,7 @@ export const friendli = {
     return FriendliResponse.parse(raw).data;
   },
   translateModel(model: FriendliModel, context) {
+    if (isDeprecated(model)) return undefined;
     return {
       id: model.id,
       model: buildFriendliModel(
@@ -198,6 +199,15 @@ export const friendli = {
         resolveLabModelSync(model),
       ),
     };
+  },
+  sourceID(model: FriendliModel) {
+    return model.id;
+  },
+  skippedNotice(ids: string[]) {
+    if (ids.length === 0) return [];
+    return [
+      `${ids.length} deprecated model(s) skipped (deprecation_date passed): ${ids.join(", ")}`,
+    ];
   },
   missingNotice(paths: string[]) {
     if (paths.length === 0) return [];
@@ -221,6 +231,14 @@ function translateModalities(values: string[] | undefined): Modality[] {
 
 function dateFromTimestamp(timestamp: number): string {
   return new Date(timestamp * 1000).toISOString().slice(0, 10);
+}
+
+// Skip models whose deprecation_date has passed. Friendli returns an ISO
+// timestamp (e.g. "2026-08-20T00:00:00Z"); we compare against now at sync time.
+function isDeprecated(model: FriendliModel): boolean {
+  if (model.deprecation_date === undefined || model.deprecation_date === null) return false;
+  const dep = Date.parse(model.deprecation_date);
+  return Number.isFinite(dep) && dep <= Date.now();
 }
 
 function perMillion(value: string | number | undefined): number | undefined {
