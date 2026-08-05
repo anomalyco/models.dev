@@ -1,0 +1,13 @@
+# Served only on the Responses API: /v1/chat/completions returns
+# `model "gpt-5-5-pro" is not available on the chat_completions endpoint`.
+base_model = "openai/gpt-5.5-pro"
+reasoning_options = [{ type = "effort", values = ["medium", "high", "xhigh"] }]
+
+[modalities]
+input = ["text", "image", "pdf"]
+output = ["text", "image"]
+
+[provider]
+npm = "@ai-sdk/openai"
+api = "${NEON_AI_GATEWAY_BASE_URL}/ai-gateway/openai/v1"
+shape = "responses"

@@ -1,0 +1,5 @@
+base_model = "thinkingmachines/inkling"
+reasoning_options = [
+  { type = "toggle" },                                                              # API: {"thinking": {"type": "enabled"|"disabled"}}
+  { type = "effort", values = ["none", "minimal", "low", "medium", "high", "max"] }, # API: {"reasoning_effort": <v>}
+]

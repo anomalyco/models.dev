@@ -1,0 +1,11 @@
+base_model = "anthropic/claude-opus-5"
+reasoning_options = [
+  { type = "toggle" },                                                   # API: {"thinking": {"type": "adaptive"|"disabled"}}
+  { type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }, # API: {"thinking": {"type": "adaptive"}, "output_config": {"effort": <v>}}
+]
+
+[cost]
+input = 5
+output = 25
+cache_read = 0.5
+cache_write = 6.25

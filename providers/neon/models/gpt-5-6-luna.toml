@@ -1,0 +1,22 @@
+base_model = "openai/gpt-5.6-luna"
+reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh", "max"] }]
+
+[cost]
+input = 1
+output = 6
+cache_read = 0.1
+
+[[cost.tiers]]
+tier = { type = "context", size = 272_000 }
+input = 2
+output = 9
+cache_read = 0.2
+
+[modalities]
+input = ["text", "image", "pdf"]
+output = ["text", "image"]
+
+[provider]
+npm = "@ai-sdk/openai"
+api = "${NEON_AI_GATEWAY_BASE_URL}/ai-gateway/openai/v1"
+shape = "responses"

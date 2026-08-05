@@ -1,0 +1,12 @@
+# No toggle: "thinking.type.disabled" is rejected for this model, which defaults to
+# adaptive thinking, so effort is the only control the gateway exposes.
+base_model = "anthropic/claude-fable-5"
+reasoning_options = [
+  { type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }, # API: {"thinking": {"type": "adaptive"}, "output_config": {"effort": <v>}}
+]
+
+[cost]
+input = 10
+output = 50
+cache_read = 1
+cache_write = 12.5

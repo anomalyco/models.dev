@@ -1,0 +1,10 @@
+base_model = "zhipuai/glm-5.2"
+reasoning_options = [
+  { type = "toggle" },                                                              # API: {"thinking": {"type": "enabled"|"disabled"}}
+  { type = "effort", values = ["none", "minimal", "low", "medium", "high", "max"] }, # API: {"reasoning_effort": <v>}
+]
+
+[cost]
+input = 1.4
+output = 4.4
+cache_read = 0.26
