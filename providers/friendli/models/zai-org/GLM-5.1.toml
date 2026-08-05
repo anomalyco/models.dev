@@ -1,12 +1,15 @@
 base_model = "zhipuai/glm-5.1"
-name = "GLM-5.1"
-release_date = "2026-04-07"
-last_updated = "2026-04-07"
-structured_output = true
-reasoning_options = []
 
 [interleaved]
 field = "reasoning_content"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "budget_tokens"
+min = -1
+max = 202_752
 
 [cost]
 input = 1.4

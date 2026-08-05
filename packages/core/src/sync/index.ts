@@ -14,6 +14,7 @@ import { crossmodel } from "./providers/crossmodel.js";
 import { deepinfra } from "./providers/deepinfra.js";
 import { digitalocean } from "./providers/digitalocean.js";
 import { empiriolabs } from "./providers/empiriolabs.js";
+import { friendli } from "./providers/friendli.js";
 import { google } from "./providers/google.js";
 import { hyper } from "./providers/hyper.js";
 import { huggingface } from "./providers/huggingface.js";
@@ -120,6 +121,7 @@ export const providers: {
   deepinfra: SyncProvider<any>;
   digitalocean: SyncProvider<any>;
   empiriolabs: SyncProvider<any>;
+  friendli: SyncProvider<any>;
   google: SyncProvider<any>;
   hyper: SyncProvider<any>;
   huggingface: SyncProvider<any>;
@@ -148,6 +150,7 @@ export const providers: {
   deepinfra,
   digitalocean,
   empiriolabs,
+  friendli,
   google,
   hyper,
   huggingface,
@@ -183,7 +186,7 @@ export const groups = {
     "vercel",
   ],
   cloudflare: ["cloudflare-workers-ai"],
-  direct: ["ambient", "anthropic", "baseten", "chutes", "deepinfra", "digitalocean", "google", "hyper", "openai", "ovhcloud", "pioneer", "tinfoil", "venice", "wandb", "xai"],
+  direct: ["ambient", "anthropic", "baseten", "chutes", "deepinfra", "digitalocean", "friendli", "google", "hyper", "openai", "ovhcloud", "pioneer", "tinfoil", "venice", "wandb", "xai"],
 } as const;
 
 type ProviderID = keyof typeof providers;
