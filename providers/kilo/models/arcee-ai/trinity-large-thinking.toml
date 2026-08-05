@@ -1,14 +1,6 @@
+base_model = "arcee-ai/trinity-large-thinking"
 name = "Arcee AI: Trinity Large Thinking"
-description = "Flagship model for demanding analysis, coding, and production agent workflows"
-family = "trinity"
-release_date = "2026-04-01"
-last_updated = "2026-04-01"
-attachment = false
-reasoning = true
-temperature = true
-tool_call = true
 structured_output = true
-open_weights = false
 
 [[reasoning_options]]
 type = "effort"
@@ -22,7 +14,3 @@ cache_read = 0.06
 [limit]
 context = 262_144
 output = 262_144
-
-[modalities]
-input = ["text"]
-output = ["text"]
