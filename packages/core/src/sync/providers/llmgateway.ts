@@ -459,7 +459,12 @@ export function buildLLMGatewayMappedModel(
   const rootID = model.id.split("/").slice(1).join("/");
   const prompt = price(model.pricing.prompt);
   const completion = price(model.pricing.completion);
+  // The mapping's flag stays authoritative on resyncs too, so the written
+  // reasoning boolean and the reasoning_options derived from it always move
+  // together; prior curation only fills in when the mapping is silent, then
+  // the noisy supported_parameters signal as a last resort.
   const reasoning = mapping?.reasoning
+    ?? existing?.reasoning
     ?? (model.supported_parameters.includes("reasoning")
       || model.supported_parameters.includes("include_reasoning"));
   // The exact reasoning_effort values this deployment accepts. A deployment
@@ -522,24 +527,28 @@ export function buildLLMGatewayMappedModel(
       input: existing.limit?.input,
       output: servedOutput ?? (canonicalOutputLimit(existing.base_model) !== undefined ? undefined : context),
     };
+    // Deployment capability flags keep their create-path authority on
+    // resyncs: a mapping that gains or loses reasoning/vision/tools/structured
+    // outputs realigns the written flags together with the reasoning_options
+    // computed from them, instead of freezing stale curation forever.
     return factorBaseModel(
       existing.base_model,
       {
         name: existing.name ?? model.name,
-        attachment: existing.attachment,
+        attachment: mapping?.vision ?? existing.attachment,
         // No describeModel fallback: synthesizing a description here would
         // stamp a sticky generic override on every name-pinned factored entry;
         // leaving it unset keeps inheriting the lab text from the base.
         description: existing.description,
-        reasoning: existing.reasoning,
+        reasoning: mapping?.reasoning ?? existing.reasoning,
         reasoning_options: reasoningOptions,
         temperature: existing.temperature,
-        tool_call: existing.tool_call,
-        structured_output: existing.structured_output,
+        tool_call: mapping?.tools ?? existing.tool_call,
+        structured_output: model.structured_outputs ?? existing.structured_output,
         status: existing.status,
         interleaved,
         knowledge: existing.knowledge,
-        modalities: existing.modalities,
+        modalities: mapping?.vision === false ? deploymentModalities(model, false) : existing.modalities,
         limit: factoredLimit,
         cost,
       },
@@ -549,36 +558,46 @@ export function buildLLMGatewayMappedModel(
   }
 
   // Existing full model: refresh cost + limit, preserve curated metadata.
+  // Capability flags follow the same rule as the factored path above: the
+  // deployment mapping wins, curation fills the gaps.
   if (existing !== undefined) {
+    const resolved = {
+      attachment: mapping?.vision ?? existing.attachment ?? false,
+      tool_call: mapping?.tools ?? existing.tool_call ?? false,
+      structured_output: model.structured_outputs ?? existing.structured_output,
+      modalities: mapping?.vision === false
+        ? deploymentModalities(model, false)
+        : existing.modalities ?? deploymentModalities(model, mapping?.vision),
+    };
     return {
       name: existing.name ?? model.name,
       description: existing.description ?? describeModel({
         id: model.id,
         name: existing.name ?? model.name,
         family: existing.family,
-        reasoning: existing.reasoning,
-        tool_call: existing.tool_call,
-        structured_output: existing.structured_output,
+        reasoning,
+        tool_call: resolved.tool_call,
+        structured_output: resolved.structured_output,
         open_weights: existing.open_weights,
         limit,
-        modalities: existing.modalities ?? deploymentModalities(model, mapping?.vision),
+        modalities: resolved.modalities,
       }),
       family: existing.family,
       release_date: existing.release_date ?? dateFromTimestamp(model.created),
       last_updated: existing.last_updated ?? dateFromTimestamp(model.created),
-      attachment: existing.attachment ?? mapping?.vision ?? false,
-      reasoning: existing.reasoning ?? reasoning,
+      attachment: resolved.attachment,
+      reasoning,
       reasoning_options: reasoningOptions,
       temperature: existing.temperature ?? false,
-      tool_call: existing.tool_call ?? mapping?.tools ?? false,
-      structured_output: existing.structured_output ?? model.structured_outputs,
+      tool_call: resolved.tool_call,
+      structured_output: resolved.structured_output,
       knowledge: existing.knowledge,
       open_weights: existing.open_weights ?? false,
       status: existing.status,
       interleaved,
       cost,
       limit,
-      modalities: existing.modalities ?? deploymentModalities(model, mapping?.vision),
+      modalities: resolved.modalities,
     } satisfies SyncedFullModel;
   }
 

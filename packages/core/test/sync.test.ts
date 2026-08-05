@@ -2451,6 +2451,7 @@ test("prefers the gateway max_output over authored output on mapped resyncs", ()
     name: "Claude Fable 5 (Anthropic)",
     description: "Claude Fable 5 served by Anthropic",
     reasoning_options: [{ type: "effort", values: ["low", "medium", "high", "xhigh", "max"] }],
+    structured_output: true,
     limit: {
       output: 32_000,
     },
@@ -2472,6 +2473,27 @@ test("translates a none-only effort list into a reasoning toggle", () => {
     base_model: "anthropic/claude-fable-5",
     reasoning_options: [{ type: "toggle" }],
   });
+});
+
+test("realigns capability flags from the mapping on mapped factored resyncs", () => {
+  // The deployment dropped reasoning and gained tools since the file was
+  // written: the resync must move the booleans and the reasoning controls
+  // together instead of clearing options under a frozen reasoning = true.
+  const model = buildLLMGatewayMappedModel(llmGatewayMappedModel({
+    providers: [{ providerId: "anthropic", vision: true, tools: true, reasoning: false }],
+  }), {
+    base_model: "anthropic/claude-fable-5",
+    name: "Claude Fable 5 (Anthropic)",
+    reasoning: true,
+    reasoning_options: [{ type: "toggle" }],
+    tool_call: false,
+  });
+
+  expect(model).toMatchObject({ reasoning: false });
+  expect(model!.reasoning_options).toBeUndefined();
+  // Realigned to the mapping and now equal to the base, the stale
+  // tool_call = false override is dropped and inherits the base again.
+  expect(model!.tool_call).toBeUndefined();
 });
 
 test("never synthesizes a description on mapped factored resyncs", () => {
@@ -2513,6 +2535,7 @@ test("keeps inheriting base output on factored resyncs without max_output", () =
     name: "Claude Fable 5 (Anthropic)",
     description: "Claude Fable 5 served by Anthropic",
     reasoning_options: [{ type: "effort", values: ["low", "medium", "high", "xhigh", "max"] }],
+    structured_output: true,
     cost: {
       input: 10,
       output: 50,
