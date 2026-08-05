@@ -4,6 +4,7 @@ import { z } from "zod";
 
 import { describeModel } from "../../describe.js";
 import { inferKimiFamily, ModelFamilyValues } from "../../family.js";
+import { ReasoningOption } from "../../schema.js";
 import type { ExistingModel, SyncProvider, SyncedFullModel, SyncedModel } from "../index.js";
 import { factorBaseModel } from "./openrouter.js";
 
@@ -13,31 +14,7 @@ const MODELS_DIR = path.join(import.meta.dirname, "..", "..", "..", "..", "..", 
 // Friendli catalog pricing is USD per-token; catalog cost is USD per-million.
 const PER_TOKEN_TO_PER_MILLION = 1_000_000;
 
-const ReasoningEffortValues = [
-  "none",
-  "minimal",
-  "low",
-  "medium",
-  "high",
-  "xhigh",
-  "max",
-  "default",
-] as const;
-const ReasoningEfforts = new Set<string>(ReasoningEffortValues);
-
 const InterleavedField = z.enum(["reasoning_content", "reasoning_details"]);
-
-const FriendliReasoningOption = z.discriminatedUnion("type", [
-  z.object({ type: z.literal("toggle") }).passthrough(),
-  z.object({ type: z.literal("effort"), values: z.array(z.string()) }).passthrough(),
-  z
-    .object({
-      type: z.literal("budget_tokens"),
-      min: z.number().optional(),
-      max: z.number().optional(),
-    })
-    .passthrough(),
-]);
 
 export const FriendliModel = z
   .object({
@@ -72,7 +49,9 @@ export const FriendliModel = z
     policy: z.string().nullable().optional(),
     deprecation_date: z.string().nullable().optional(),
     reasoning: z.boolean().optional(),
-    reasoning_options: z.array(FriendliReasoningOption).optional(),
+    // Friendli emits the catalog reasoning-option shape directly; reuse the
+    // canonical schema rather than redefining it here.
+    reasoning_options: z.array(ReasoningOption).optional(),
     interleaved: z.union([InterleavedField, z.boolean()]).optional(),
     input_modalities: z.array(z.string()).optional(),
     output_modalities: z.array(z.string()).optional(),
@@ -207,7 +186,7 @@ function perMillion(value: string | number | undefined): number | undefined {
 function buildCost(
   model: FriendliModel,
   existing: ExistingModel["cost"] | undefined,
-): ExistingModel["cost"] | NonNullable<ExistingModel["cost"]> | undefined {
+): NonNullable<ExistingModel["cost"]> | undefined {
   const input = perMillion(model.pricing.input);
   const output = perMillion(model.pricing.output);
   if (input === undefined || output === undefined) return existing;
@@ -217,33 +196,6 @@ function buildCost(
     cache_read: perMillion(model.pricing.input_cache_read) ?? existing?.cache_read,
     cache_write: perMillion(model.pricing.input_cache_write) ?? existing?.cache_write,
   };
-}
-
-function translateReasoningOptions(
-  api: FriendliModel["reasoning_options"],
-): NonNullable<SyncedFullModel["reasoning_options"]> | undefined {
-  if (api === undefined || api.length === 0) return undefined;
-  const options: NonNullable<SyncedFullModel["reasoning_options"]> = [];
-  for (const option of api) {
-    if (option.type === "toggle") {
-      options.push({ type: "toggle" });
-    } else if (option.type === "effort") {
-      const values = [...new Set((option.values ?? []).filter(isReasoningEffort))];
-      if (values.length > 0) options.push({ type: "effort", values });
-    } else if (option.type === "budget_tokens") {
-      const entry: { type: "budget_tokens"; min?: number; max?: number } = {
-        type: "budget_tokens",
-      };
-      if (option.min !== undefined) entry.min = option.min;
-      if (option.max !== undefined) entry.max = option.max;
-      options.push(entry);
-    }
-  }
-  return options.length > 0 ? options : undefined;
-}
-
-function isReasoningEffort(value: string): value is (typeof ReasoningEffortValues)[number] {
-  return ReasoningEfforts.has(value);
 }
 
 function translateInterleaved(
@@ -292,7 +244,10 @@ function buildFriendliModel(
     output: model.max_completion_tokens,
   };
   const reasoning = model.reasoning === true;
-  const reasoningOptions = translateReasoningOptions(model.reasoning_options);
+  // The catalog schema already validates the shape; pass through directly.
+  const reasoningOptions = model.reasoning_options === undefined || model.reasoning_options.length === 0
+    ? undefined
+    : model.reasoning_options;
   const interleaved = translateInterleaved(model.interleaved);
   const structuredOutput = model.functionality.structured_output;
   const cost = buildCost(model, existing?.cost);
