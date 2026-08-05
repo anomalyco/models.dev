@@ -2575,6 +2575,41 @@ test("filters pseudo and non-text entries from the mapped LLM Gateway sync", () 
   expect(parsed.map((model) => model.id)).toEqual(["anthropic/claude-fable-5"]);
 });
 
+test("refuses mapped LLM Gateway entries without exactly one provider mapping", () => {
+  expect(() => llmgatewayProviders.parseModels({
+    data: [llmGatewayMappedModel({ providers: undefined })],
+  })).toThrow("without exactly one provider mapping");
+
+  expect(() => llmgatewayProviders.parseModels({
+    data: [llmGatewayMappedModel({ providers: [] })],
+  })).toThrow("without exactly one provider mapping");
+
+  expect(() => llmgatewayProviders.parseModels({
+    data: [
+      llmGatewayMappedModel(),
+      llmGatewayMappedModel({
+        id: "azure/gpt-5.5",
+        name: "GPT-5.5 (Azure)",
+        providers: [{ providerId: "azure" }, { providerId: "openai" }],
+      }),
+    ],
+  })).toThrow("azure/gpt-5.5");
+
+  // Entries the sync drops anyway (pseudo-models, non-text) may lack a
+  // mapping without tripping the guard.
+  const parsed = llmgatewayProviders.parseModels({
+    data: [
+      llmGatewayMappedModel(),
+      llmGatewayMappedModel({
+        id: "llmgateway/auto",
+        name: "Auto Route (LLM Gateway)",
+        providers: undefined,
+      }),
+    ],
+  });
+  expect(parsed.map((model) => model.id)).toEqual(["anthropic/claude-fable-5"]);
+});
+
 // Ensures catalog pagination preserves authentication and returns every page.
 test("fetches every page of the Merge Gateway catalog", async () => {
   const requests: string[] = [];

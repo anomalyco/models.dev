@@ -136,6 +136,18 @@ export const llmgatewayProviders = {
     if (mapped.length === 0) {
       throw new Error("LLM Gateway mapped view returned no text models");
     }
+    // Every mapped entry is one specific provider deployment whose single
+    // providers[] mapping drives capabilities and reasoning controls. A kept
+    // entry with zero or several mappings would make the builder silently fall
+    // back to noisy supported_parameters / sibling defaults, so fail loudly.
+    const malformed = mapped.filter((model) => model.providers?.length !== 1);
+    if (malformed.length > 0) {
+      throw new Error(
+        `LLM Gateway mapped view returned entries without exactly one provider mapping: ${
+          malformed.map((model) => model.id).join(", ")
+        }`,
+      );
+    }
     return mapped;
   },
   translateModel(model, context) {
