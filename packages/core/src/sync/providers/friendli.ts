@@ -337,9 +337,11 @@ function buildFriendliModel(
   // the lab's [[weights]] table (handles slug mismatches like
   // deepseek-ai/DeepSeek-V3.2 → deepseek/deepseek-chat).
 
-  const input = translateModalities(model.input_modalities);
-  const output = translateModalities(model.output_modalities);
-  const attachment = input.some((value) => value !== "text");
+  // Only override modalities when the API explicitly provides them; otherwise
+  // omit the override so lab metadata (e.g. gemma vision) is inherited.
+  const apiInput = model.input_modalities !== undefined ? translateModalities(model.input_modalities) : undefined;
+  const apiOutput = model.output_modalities !== undefined ? translateModalities(model.output_modalities) : undefined;
+  const attachment = apiInput !== undefined && apiInput.some((value) => value !== "text");
   const limit = {
     context: model.context_length,
     input: existing?.limit?.input,
@@ -365,7 +367,7 @@ function buildFriendliModel(
         structured_output: structuredOutput,
         description: model.description,
         limit,
-        modalities: { input, output },
+        modalities: apiInput !== undefined || apiOutput !== undefined ? { input: apiInput ?? [], output: apiOutput ?? [] } : undefined,
         cost,
       },
       limit,
@@ -388,7 +390,7 @@ function buildFriendliModel(
         tool_call: model.functionality.tool_call,
         structured_output: structuredOutput,
         open_weights: Boolean(model.hugging_face_url),
-        modalities: { input, output },
+        modalities: apiInput !== undefined || apiOutput !== undefined ? { input: apiInput ?? [], output: apiOutput ?? [] } : undefined,
       }),
     family: existing?.family ?? inferFamily(model.id, name),
     attachment,
@@ -404,7 +406,7 @@ function buildFriendliModel(
     knowledge: existing?.knowledge,
     cost,
     limit: { context: model.context_length, output: model.max_completion_tokens },
-    modalities: { input, output },
+    modalities: { input: apiInput ?? ["text"], output: apiOutput ?? ["text"] },
     status: existing?.status,
   };
 }
