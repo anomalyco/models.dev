@@ -1,0 +1,17 @@
+base_model = "moonshotai/kimi-k3"
+name = "Kimi K3 Fast"
+description = "Kimi K3 with thinking disabled for low-latency tool calling, vision, and JSON work"
+reasoning = false
+
+[cost]
+input = 3.0
+output = 15.0
+cache_read = 0.3
+
+[limit]
+context = 1_048_560
+output = 1_048_560
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
