@@ -1,0 +1,28 @@
+name = "Muse Spark 1.2"
+description = "Open Llama multimodal model for image understanding and text reasoning"
+family = "muse"
+release_date = "2026-08-05"
+last_updated = "2026-08-05"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["minimal", "low", "medium", "high", "xhigh"]
+
+[cost]
+input = 1.25
+output = 4.25
+cache_read = 0.15
+
+[limit]
+context = 1_048_576
+output = 1_048_576
+
+[modalities]
+input = ["text", "image", "video", "pdf", "audio"]
+output = ["text"]
