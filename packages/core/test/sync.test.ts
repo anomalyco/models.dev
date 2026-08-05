@@ -10,6 +10,7 @@ import {
   parseAnthropicPricing,
   type AnthropicModel,
 } from "../src/sync/providers/anthropic.js";
+import { buildCortecsModel, type CortecsModel } from "../src/sync/providers/cortecs.js";
 import {
   buildCrossModel,
   type CrossModelModel,
@@ -2149,6 +2150,27 @@ test("inherits base reasoning options instead of stamping empty ones", () => {
     .toEqual({ reasoning: true });
 });
 
+test("preserves authored Cortecs reasoning options missing from the API", () => {
+  const model: CortecsModel = {
+    id: "deepseek-v4-flash-0731",
+    created: 1_775_088_000,
+    pricing: { currency: "EUR", input_token: 0.224, output_token: 0.269 },
+    context_size: 1_048_576,
+    input_modalities: ["text"],
+    output_modalities: ["text"],
+    supported_features: ["reasoning", "tools"],
+  };
+  const existing: ExistingModel = {
+    base_model: "deepseek/deepseek-v4-flash-0731",
+    reasoning: true,
+    reasoning_options: [{ type: "effort", values: ["low", "medium", "high"] }],
+  };
+
+  expect(buildCortecsModel(model, existing, existing)).toMatchObject({
+    reasoning_options: [{ type: "effort", values: ["low", "medium", "high"] }],
+  });
+});
+
 test("syncs OpenRouter reasoning efforts from model metadata", () => {
   const model = buildOpenRouterModel(openRouterModel({
     reasoning: {
@@ -2751,6 +2773,69 @@ test("derives a Merge Gateway reasoning toggle when the selected route supports 
   });
 
   expect(model).toMatchObject({ reasoning_options: [{ type: "toggle" }] });
+});
+
+// Effort control yields toggle + effort, not a bare toggle (claude-opus-5 regression).
+test("derives Merge Gateway toggle + effort from an effort control", () => {
+  const selected = mergeGatewayVendor({
+    pricing: { currency: "USD", input_per_million: 5, output_per_million: 25 },
+  });
+  selected.capabilities.reasoning = {
+    configurable: true,
+    disable_supported: true,
+    default_enabled: true,
+    controls: ["reasoning.effort"],
+    effort_values: ["low", "medium", "high", "xhigh", "max"],
+    output_style: "hidden",
+  };
+  const model = buildMergeGatewayModel(mergeGatewayModel({
+    model: "anthropic/claude-opus-5",
+    provider: "anthropic",
+    display_name: "Claude Opus 5",
+    vendors: { anthropic: selected },
+  }), {
+    base_model: "anthropic/claude-opus-5",
+    reasoning: true,
+    reasoning_options: [],
+    cost: { input: 5, output: 25 },
+  });
+
+  expect(model).toMatchObject({
+    reasoning_options: [
+      { type: "toggle" },
+      { type: "effort", values: ["low", "medium", "high", "xhigh", "max"] },
+    ],
+  });
+});
+
+// Effort control without disable support yields effort only.
+test("derives Merge Gateway effort without a toggle when disable is unsupported", () => {
+  const selected = mergeGatewayVendor({
+    pricing: { currency: "USD", input_per_million: 5, output_per_million: 25 },
+  });
+  selected.capabilities.reasoning = {
+    configurable: true,
+    disable_supported: false,
+    default_enabled: true,
+    controls: ["reasoning.effort"],
+    effort_values: ["low", "medium", "high", "xhigh", "max"],
+    output_style: "hidden",
+  };
+  const model = buildMergeGatewayModel(mergeGatewayModel({
+    model: "anthropic/claude-sonnet-5",
+    provider: "anthropic",
+    display_name: "Claude Sonnet 5",
+    vendors: { anthropic: selected },
+  }), {
+    base_model: "anthropic/claude-sonnet-5",
+    reasoning: true,
+    reasoning_options: [],
+    cost: { input: 3, output: 15 },
+  });
+
+  expect(model).toMatchObject({
+    reasoning_options: [{ type: "effort", values: ["low", "medium", "high", "xhigh", "max"] }],
+  });
 });
 
 // Prevents deprecated routes from contributing capabilities to an available model.

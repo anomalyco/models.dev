@@ -1,0 +1,16 @@
+base_model = "openai/gpt-5.6-luna"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high"]
+
+[cost]
+input = 1.1
+output = 6.599
+cache_read = 0.11
+
+[limit]
+output = 1_050_000
+
+[modalities]
+input = ["text", "image"]

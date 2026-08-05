@@ -1,7 +1,10 @@
 base_model = "mistral/mistral-small-2603"
 description = "Efficient Mistral model for fast chat, extraction, and production assistants"
 structured_output = true
-reasoning_options = []
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "high"]
 
 [cost]
 input = 0.15

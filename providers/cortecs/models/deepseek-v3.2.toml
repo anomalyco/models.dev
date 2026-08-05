@@ -3,17 +3,22 @@ description = "DeepSeek chat model for instruction following, coding, and analys
 family = "deepseek"
 release_date = "2025-12-01"
 last_updated = "2025-12-01"
-knowledge = "2024-07"
 attachment = false
 reasoning = true
-reasoning_options = []
-tool_call = true
 temperature = true
+tool_call = true
+structured_output = true
+knowledge = "2024-07"
 open_weights = true
 
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high"]
+
 [cost]
-input = 0.266
-output = 0.444
+input = 0.296
+output = 0.495
+cache_read = 0.075
 
 [limit]
 context = 163_840

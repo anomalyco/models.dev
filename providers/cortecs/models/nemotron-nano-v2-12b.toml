@@ -1,0 +1,23 @@
+name = "nemotron-nano-v2-12b"
+description = "NVIDIA Nemotron Nano v2 12B is a 12-billion-parameter multimodal reasoning model designed for advanced video understanding, document intelligence, and visual reasoning, built with a hybrid Transformer-Mamba architecture for high efficiency and low latency."
+release_date = "2025-10-31"
+last_updated = "2025-10-31"
+attachment = true
+reasoning = true
+temperature = false
+tool_call = true
+structured_output = true
+open_weights = false
+reasoning_options = []
+
+[cost]
+input = 0.24
+output = 0.707
+
+[limit]
+context = 128_000
+output = 128_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

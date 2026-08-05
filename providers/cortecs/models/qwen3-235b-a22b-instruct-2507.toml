@@ -3,20 +3,22 @@ description = "Qwen instruction model for multilingual chat, reasoning, and tool
 family = "qwen"
 release_date = "2025-07-23"
 last_updated = "2025-07-23"
-knowledge = "2025-04"
 attachment = false
 reasoning = true
-reasoning_options = []
-tool_call = true
 temperature = true
+tool_call = true
+structured_output = true
+knowledge = "2025-04"
 open_weights = true
+reasoning_options = []
 
 [cost]
-input = 0.062
-output = 0.408
+input = 0.069
+output = 0.455
+cache_read = 0.018
 
 [limit]
-context = 131_000
+context = 262_000
 output = 131_000
 
 [modalities]

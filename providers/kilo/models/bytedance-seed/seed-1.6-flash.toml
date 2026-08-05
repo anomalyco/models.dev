@@ -11,11 +11,8 @@ structured_output = true
 open_weights = false
 
 [[reasoning_options]]
-type = "toggle"
-
-[[reasoning_options]]
 type = "effort"
-values = ["minimal", "low", "medium", "high"]
+values = ["none", "high"]
 
 [cost]
 input = 0.075

@@ -13,6 +13,7 @@ const VendorReasoning = z.object({
   disable_supported: z.boolean().optional(),
   default_enabled: z.boolean().optional(),
   controls: z.array(z.string()).optional(),
+  effort_values: z.array(z.string()).optional(),
   output_style: z.string().nullable().optional(),
 }).passthrough();
 
@@ -161,6 +162,28 @@ export const mergeGateway = {
   },
 } satisfies SyncProvider<MergeGatewayModel>;
 
+export function mergeGatewayReasoningOptions(
+  reasoning: MergeGatewayVendor["capabilities"]["reasoning"],
+): NonNullable<SyncedFullModel["reasoning_options"]> | undefined {
+  if (reasoning === undefined) return undefined;
+  const options: NonNullable<SyncedFullModel["reasoning_options"]> = [];
+
+  if (reasoning.disable_supported === true) {
+    options.push({ type: "toggle" as const });
+  }
+
+  const controls = (reasoning.controls ?? []).map((control) => control.toLowerCase());
+  const effortValues = reasoning.effort_values ?? [];
+  if (
+    (controls.includes("reasoning.effort") || controls.includes("reasoning_effort"))
+    && effortValues.length > 0
+  ) {
+    options.push({ type: "effort" as const, values: [...effortValues] });
+  }
+
+  return options;
+}
+
 export function selectMergeGatewayVendor(model: MergeGatewayModel) {
   const canonical = model.vendors[model.provider];
   if (canonical?.availability_status === "available") {
@@ -234,8 +257,8 @@ export function buildMergeGatewayModel(
   const reasoning = routeConfirmsReasoning ? true : existing?.reasoning;
   const existingReasoningOptions = existing?.reasoning_options ?? [];
   const reasoningOptions = reasoning === true && existingReasoningOptions.length === 0
-    && selected.info.capabilities.reasoning?.disable_supported === true
-    ? [{ type: "toggle" as const }]
+    ? mergeGatewayReasoningOptions(selected.info.capabilities.reasoning)
+      ?? existingReasoningOptions
     : reasoning === true
       ? existingReasoningOptions
       : existing?.reasoning_options;

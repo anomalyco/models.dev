@@ -1,0 +1,39 @@
+# Model id matches Infomaniak's API model name exactly: `mini_lm_l12_v2`
+# (snake_case; Infomaniak's display label is "All MiniLM L12 v2").
+# Identity corrected 2026-08-01: this is sentence-transformers/all-MiniLM-L12-v2, not
+# sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2, which this entry was previously named
+# after. The decisive evidence is Infomaniak's own spec row — "Parameters 33 M" — which matches
+# all-MiniLM-L12-v2 (33.36M) and rules out the multilingual variant (117.65M). Dimensions (384) and
+# max sequence length (128) are identical across both, so they cannot discriminate. Neither can the
+# catalog blurb about "a model published by Microsoft": both descend from a Microsoft MiniLM.
+# Limits: Infomaniak's catalog row gives max input 128 and Dimensions 384; `limit.output` carries
+# the embedding dimension, per the repo convention for embedding models
+# (cf. providers/digitalocean/models/all-mini-lm-l6-v2.toml).
+# Pricing: free on Infomaniak (the pricing page lists "Free" for this model).
+# Sources:
+#   https://huggingface.co/sentence-transformers/all-MiniLM-L12-v2
+#   https://www.infomaniak.com/en/hosting/ai-services/open-source-models
+#   https://www.infomaniak.com/en/hosting/ai-services/prices
+name = "All-MiniLM-L12-v2"
+description = "Embedding model for semantic search, retrieval, clustering, and ranking pipelines"
+family = "text-embedding"
+release_date = "2021-08-30"
+last_updated = "2026-08-01"
+attachment = false
+reasoning = false
+temperature = false
+tool_call = false
+open_weights = true
+
+[cost]
+input = 0.00
+output = 0.00
+
+[limit]
+context = 128
+input = 128
+output = 384
+
+[modalities]
+input = ["text"]
+output = ["text"]

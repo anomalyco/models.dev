@@ -3,10 +3,8 @@ name = "NVIDIA: Nemotron 3 Nano Omni (free)"
 structured_output = false
 
 [[reasoning_options]]
-type = "toggle"
-
-[[reasoning_options]]
-type = "budget_tokens"
+type = "effort"
+values = ["none", "high"]
 
 [cost]
 input = 0

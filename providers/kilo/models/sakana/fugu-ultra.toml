@@ -1,6 +1,9 @@
 base_model = "sakana/fugu-ultra"
 description = "Fugu Ultra is the higher-performance model in Sakana AI's Fugu family. Rather than a single monolithic model, Fugu is a learned multi-agent orchestration system: a language model trained to route..."
-reasoning_options = []
+
+[[reasoning_options]]
+type = "effort"
+values = ["high", "xhigh", "max"]
 
 [cost]
 input = 5

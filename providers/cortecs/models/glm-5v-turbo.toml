@@ -1,8 +1,16 @@
 base_model = "zhipuai/glm-5v-turbo"
+structured_output = true
 reasoning_options = []
 
 [cost]
-input = 1.235
-output = 4.118
-cache_read = 0.308
+input = 1.186
+output = 3.955
+cache_read = 0.296
 cache_write = 1.544
+
+[limit]
+context = 202_752
+output = 202_752
+
+[modalities]
+input = ["text", "image"]

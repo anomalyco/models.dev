@@ -1,0 +1,13 @@
+base_model = "alibaba/qwen3.6-35b-a3b"
+reasoning_options = []
+
+[cost]
+input = 0.167
+output = 0.557
+
+[limit]
+context = 262_000
+output = 262_000
+
+[modalities]
+input = ["text", "image"]

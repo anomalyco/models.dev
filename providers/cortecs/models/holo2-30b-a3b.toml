@@ -1,0 +1,23 @@
+name = "holo2-30b-a3b"
+description = "Holo2 30B A3B is a text-and-vision model optimized for analyzing graphical user interfaces, including web, desktop, and mobile, and enabling agents to interpret interfaces, reason over content, and take actions."
+release_date = "2025-12-10"
+last_updated = "2025-12-10"
+attachment = true
+reasoning = true
+temperature = false
+tool_call = true
+structured_output = true
+open_weights = false
+reasoning_options = []
+
+[cost]
+input = 0.334
+output = 0.78
+
+[limit]
+context = 22_000
+output = 22_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

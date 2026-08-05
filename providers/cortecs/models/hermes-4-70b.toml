@@ -2,17 +2,17 @@ name = "Hermes 4 70B"
 description = "Reasoning model for deliberate analysis, multi-step problem solving, and tool use"
 release_date = "2025-08-26"
 last_updated = "2025-08-26"
-knowledge = "2023-12"
 attachment = false
-reasoning = true
-reasoning_options = []
-tool_call = true
+reasoning = false
 temperature = true
+tool_call = true
+structured_output = true
+knowledge = "2023-12"
 open_weights = true
 
 [cost]
-input = 0.116
-output = 0.358
+input = 0.129
+output = 0.399
 
 [limit]
 context = 128_000

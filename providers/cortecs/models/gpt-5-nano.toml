@@ -1,0 +1,14 @@
+base_model = "openai/gpt-5-nano"
+structured_output = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high"]
+
+[cost]
+input = 0.06
+output = 0.439
+cache_read = 0.019
+
+[limit]
+output = 400_000

@@ -1,16 +1,18 @@
 base_model = "deepseek/deepseek-v4-flash"
-# Cortecs Chat maps `reasoning_effort = low|medium|high`; no budget is exposed.
-# https://api.cortecs.ai/v1/models (accessed 2026-06-25)
 base_model_omit = ["structured_output"]
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
 
 [interleaved]
 field = "reasoning_content"
 
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high"]
+
 [cost]
-input = 0.133
-output = 0.266
-cache_read = 0.0028
+input = 0.148
+output = 0.296
+cache_read = 0.037
 
 [limit]
 context = 1_048_576
+output = 1_048_576
