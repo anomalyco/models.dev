@@ -1,0 +1,18 @@
+# Prices listed in EUR on Regolo; converted to USD at 1 EUR = 1.1537 USD (2026-08-05)
+base_model = "alibaba/qwen3.6-27b"
+
+# Toggle: thinking = true|false
+# Effort: reasoning_effort = low|medium|high
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "medium", "high"] }]
+
+[cost]
+input = 0.58
+output = 2.42
+
+[limit]
+context = 120_000
+output = 120_000
+
+[modalities]
+input = ["text", "image", "video"]
+output = ["text"]
