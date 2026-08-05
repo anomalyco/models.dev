@@ -1,9 +1,9 @@
 # Prices listed in EUR on Regolo; converted to USD at 1 EUR = 1.1537 USD (2026-08-05)
+# Effort: reasoning_effort = high|max (lab maps low/medium→high, xhigh→max; none skips thinking)
+# Source: https://docs.bigmodel.cn/cn/guide/capabilities/thinking (accessed 2026-06-25)
 base_model = "zhipuai/glm-5.2"
 
-# Toggle: thinking = true|false
-# Effort: reasoning_effort = low|medium|high
-reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "medium", "high"] }]
+reasoning_options = [{ type = "effort", values = ["high", "max"] }]
 
 [cost]
 input = 2.31

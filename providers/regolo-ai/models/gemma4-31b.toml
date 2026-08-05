@@ -1,9 +1,8 @@
 # Prices listed in EUR on Regolo; converted to USD at 1 EUR = 1.1537 USD (2026-08-05)
+# Toggle: thinking = true|false
 base_model = "google/gemma-4-31b-it"
 
-# Toggle: thinking = true|false
-# Effort: reasoning_effort = low|medium|high
-reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "medium", "high"] }]
+reasoning_options = [{ type = "toggle" }]
 
 [cost]
 input = 0.46
