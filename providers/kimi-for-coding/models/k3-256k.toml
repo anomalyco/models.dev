@@ -2,7 +2,9 @@
 # endpoint. Unlike full K3 it accepts no video input (image only).
 # reasoning_options per the Kimi Code docs:
 #   reasoning_effort = "low" | "high" | "max" (default "high")
-# Cost is zeroed per this provider's subscription convention.
+# Kimi For Coding is a fixed-fee subscription plan. The cost is inherited
+# from the base model and is the *indicative* pay-per-token equivalent, for
+# usage tracking only, not the actual billing rate.
 base_model = "moonshotai/kimi-k3"
 name = "Kimi K3-256K"
 description = "256K-context version of Kimi K3, reducing token consumption for shorter coding sessions"
@@ -11,12 +13,6 @@ attachment = false
 [[reasoning_options]]
 type = "effort"
 values = ["low", "high", "max"]
-
-[cost]
-input = 0
-output = 0
-cache_read = 0
-cache_write = 0
 
 [limit]
 context = 262_144

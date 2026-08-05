@@ -1,7 +1,9 @@
 # reasoning_options mirror the Moonshot AI platform API surface:
 #   thinking.type = "enabled" | "disabled" | "adaptive"
 #   output_config.effort = "low" | "high" | "max"
-# Cost is zeroed per this provider's subscription convention.
+# Kimi For Coding is a fixed-fee subscription plan. The cost is inherited
+# from the base model and is the *indicative* pay-per-token equivalent, for
+# usage tracking only, not the actual billing rate.
 base_model = "moonshotai/kimi-k3"
 attachment = false
 
@@ -11,9 +13,3 @@ type = "toggle"
 [[reasoning_options]]
 type = "effort"
 values = ["low", "high", "max"]
-
-[cost]
-input = 0
-output = 0
-cache_read = 0
-cache_write = 0
