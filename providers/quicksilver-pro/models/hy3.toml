@@ -1,0 +1,13 @@
+# Retail price charged to the caller, in USD per million tokens.
+# Verified against https://api.quicksilverpro.io/v1/models and billed
+# usage on 2026-08-05.
+# reasoning_effort is accepted but has no observable
+# effect on this endpoint, so no caller control is published.
+base_model = "tencent/hy3"
+reasoning_options = []
+structured_output = true
+
+[cost]
+input = 0.1056
+output = 0.4224
+cache_read = 0.0264

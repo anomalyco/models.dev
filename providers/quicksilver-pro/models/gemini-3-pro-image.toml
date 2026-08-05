@@ -1,0 +1,11 @@
+# Retail price charged to the caller, in USD per million tokens.
+# Verified against https://api.quicksilverpro.io/v1/models and billed
+# usage on 2026-08-05.
+# Effort: reasoning_effort = none|minimal|low|medium|high.
+# xhigh and max are NOT accepted on this endpoint.
+base_model = "google/gemini-3-pro-image"
+reasoning_options = [{ type = "effort", values = ["none", "minimal", "low", "medium", "high"] }]
+
+[cost]
+input = 1.7
+output = 102.0

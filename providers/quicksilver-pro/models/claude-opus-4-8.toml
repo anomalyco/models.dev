@@ -1,0 +1,13 @@
+# Retail price charged to the caller, in USD per million tokens.
+# Verified against https://api.quicksilverpro.io/v1/models and billed
+# usage on 2026-08-05.
+# reasoning_effort is accepted but has no observable
+# effect on this endpoint, so no caller control is published.
+# response_format json_schema is accepted (HTTP 200) but not enforced - the reply comes back as prose. Hence structured_output = false.
+base_model = "anthropic/claude-opus-4-8"
+reasoning_options = []
+structured_output = false
+
+[cost]
+input = 4.0
+output = 20.0

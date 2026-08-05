@@ -1,0 +1,14 @@
+# Retail price charged to the caller, in USD per million tokens.
+# Verified against https://api.quicksilverpro.io/v1/models and billed
+# usage on 2026-08-05.
+# Toggle: reasoning_effort = none disables reasoning on this endpoint
+# (reasoning_tokens drops to 0). The graded effort levels are accepted
+# but produced no separable effect when measured, so only the on/off
+# control is published.
+base_model = "deepseek/deepseek-v4-pro"
+reasoning_options = [{ type = "toggle" }]
+
+[cost]
+input = 0.348
+output = 0.696
+cache_read = 0.002784

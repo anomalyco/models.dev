@@ -1,0 +1,12 @@
+# Retail price charged to the caller, in USD per million tokens.
+# Verified against https://api.quicksilverpro.io/v1/models and billed
+# usage on 2026-08-05.
+# reasoning_effort is accepted but has no observable
+# effect on this endpoint, so no caller control is published.
+base_model = "zhipuai/glm-5.2"
+reasoning_options = []
+
+[cost]
+input = 1.12
+output = 3.52
+cache_read = 0.208

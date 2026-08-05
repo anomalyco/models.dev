@@ -1,0 +1,11 @@
+# QuickSilver Pro — OpenAI-compatible inference API.
+# Base URL and auth: https://quicksilverpro.io/docs
+# Model list and prices (live): https://api.quicksilverpro.io/v1/models
+# Prices below are the published retail per-million-token rates charged to the
+# caller, verified against the live /v1/models payload and billed usage on
+# 2026-08-05.
+name = "QuickSilver Pro"
+env = ["QSP_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+api = "https://api.quicksilverpro.io/v1"
+doc = "https://quicksilverpro.io/docs"

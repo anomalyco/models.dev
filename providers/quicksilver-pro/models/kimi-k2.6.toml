@@ -1,0 +1,15 @@
+# Retail price charged to the caller, in USD per million tokens.
+# Verified against https://api.quicksilverpro.io/v1/models and billed
+# usage on 2026-08-05.
+# reasoning_effort is accepted but has no observable
+# effect on this endpoint, so no caller control is published.
+base_model = "moonshotai/kimi-k2.6"
+reasoning_options = []
+
+[cost]
+input = 0.5472
+output = 2.728
+cache_read = 0.292
+
+[limit]
+context = 256_000

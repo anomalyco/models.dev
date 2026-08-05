@@ -1,0 +1,18 @@
+# Retail price charged to the caller, in USD per million tokens.
+# Verified against https://api.quicksilverpro.io/v1/models and billed
+# usage on 2026-08-05.
+# reasoning_effort is accepted but has no observable
+# effect on this endpoint, so no caller control is published.
+# Image input is not served on this endpoint: an image payload returns HTTP 200 but the model does not receive it, so modalities.input is text-only here.
+base_model = "minimax/MiniMax-M3"
+reasoning_options = []
+structured_output = true
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[cost]
+input = 0.24
+output = 0.96
+cache_read = 0.048
