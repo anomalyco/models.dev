@@ -2474,6 +2474,33 @@ test("translates a none-only effort list into a reasoning toggle", () => {
   });
 });
 
+test("never synthesizes a description on mapped factored resyncs", () => {
+  const model = buildLLMGatewayMappedModel(llmGatewayMappedModel(), {
+    base_model: "anthropic/claude-fable-5",
+    name: "Claude Fable 5 (Anthropic)",
+  });
+
+  // An unset description must keep inheriting the base's lab text instead of
+  // being stamped with a sticky synthesized override on the first resync.
+  expect(model).toBeDefined();
+  expect(model!.description).toBeUndefined();
+});
+
+test("authors the toggle wire-path header on mapped sync creates", () => {
+  const context = { existing: () => undefined, authored: () => undefined };
+
+  const toggle = llmgatewayProviders.translateModel(llmGatewayMappedModel({
+    providers: [{ providerId: "anthropic", vision: true, tools: true, reasoning: true, reasoning_efforts: ["none"] }],
+  }), context);
+  expect(toggle?.header).toStartWith("# Toggle: $.reasoning_effort");
+
+  const effort = llmgatewayProviders.translateModel(llmGatewayMappedModel(), context);
+  expect(effort?.model).toMatchObject({
+    reasoning_options: [{ type: "effort", values: ["low", "medium", "high", "xhigh", "max"] }],
+  });
+  expect(effort?.header).toBeUndefined();
+});
+
 test("keeps inheriting base output on factored resyncs without max_output", () => {
   const model = buildLLMGatewayMappedModel(llmGatewayMappedModel({ max_output: undefined }), {
     base_model: "anthropic/claude-fable-5",

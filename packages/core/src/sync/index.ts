@@ -96,7 +96,17 @@ export interface SyncProvider<SourceModel> {
       existing(id: string): ExistingModel | undefined;
       authored(id: string): ExistingModel | undefined;
     },
-  ): { id: string; model: SyncedModel; metadata?: { id: string; model: SyncedMetadata } } | undefined;
+  ): {
+    id: string;
+    model: SyncedModel;
+    metadata?: { id: string; model: SyncedMetadata };
+    /**
+     * Leading comment block for the written file when it has none of its own
+     * (e.g. the wire-path header every toggle reasoning control requires). A
+     * header already present on the existing file always wins.
+     */
+    header?: string;
+  } | undefined;
 }
 
 export interface SyncResult {
@@ -299,7 +309,7 @@ export async function syncProvider<SourceModel>(
 
     desired.set(relativePath, {
       model: parsed.data,
-      content: (existing.get(relativePath)?.header ?? "") + formatToml(parsed.data),
+      content: ((existing.get(relativePath)?.header || translated.header) ?? "") + formatToml(parsed.data),
     });
   }
 

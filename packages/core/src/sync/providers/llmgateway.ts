@@ -110,6 +110,22 @@ export const llmgateway = {
   },
 } satisfies SyncProvider<LLMGatewayModel>;
 
+// Every toggle reasoning control requires a leading wire-path comment, and the
+// sync runner only carries over headers that already exist on disk. Files this
+// sync writes with a toggle get the gateway-wide default; a hand-written
+// header on the existing file always wins.
+const TOGGLE_HEADER = `# Toggle: $.reasoning_effort = "none" disables thinking; any other accepted
+# value (or omitting the field) leaves it on. The gateway maps it to the
+# deployment's thinking switch.
+# https://docs.llmgateway.io/features/reasoning
+`;
+
+function toggleHeader(model: SyncedModel) {
+  return model.reasoning_options?.some((option) => option.type === "toggle")
+    ? TOGGLE_HEADER
+    : undefined;
+}
+
 // The LLM Gateway provider: one entry per upstream provider mapping, addressed
 // the way the gateway accepts provider-pinned requests (`provider/model-id`).
 export const llmgatewayProviders = {
@@ -155,7 +171,7 @@ export const llmgatewayProviders = {
     if (translated === undefined) {
       return undefined;
     }
-    return { id: model.id, model: translated };
+    return { id: model.id, model: translated, header: toggleHeader(translated) };
   },
   sourceID(model) {
     return model.id;
@@ -511,17 +527,10 @@ export function buildLLMGatewayMappedModel(
       {
         name: existing.name ?? model.name,
         attachment: existing.attachment,
-        description: existing.description ?? describeModel({
-          id: model.id,
-          name: existing.name ?? model.name,
-          family: existing.family,
-          reasoning: existing.reasoning,
-          tool_call: existing.tool_call,
-          structured_output: existing.structured_output,
-          open_weights: existing.open_weights,
-          limit: factoredLimit,
-          modalities: existing.modalities,
-        }),
+        // No describeModel fallback: synthesizing a description here would
+        // stamp a sticky generic override on every name-pinned factored entry;
+        // leaving it unset keeps inheriting the lab text from the base.
+        description: existing.description,
         reasoning: existing.reasoning,
         reasoning_options: reasoningOptions,
         temperature: existing.temperature,
