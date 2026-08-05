@@ -233,23 +233,28 @@ const canonicalOutputLimitByID = new Map<string, number | undefined>();
 interface SiblingCuration {
   reasoning_options?: SyncedFullModel["reasoning_options"];
   interleaved?: SyncedFullModel["interleaved"];
+  cost_tiers?: NonNullable<SyncedFullModel["cost"]>["tiers"];
 }
 
 const siblingCurationByID = new Map<string, SiblingCuration>();
 
-// The aggregated llmgateway catalog curates reasoning controls and the
-// reasoning side-channel for the same gateway surface; mapped deployments of
-// the same root model reuse them when the deployment does not declare its own.
+// The aggregated llmgateway catalog curates reasoning controls, the reasoning
+// side-channel, and context pricing tiers for the same gateway surface; mapped
+// deployments of the same root model reuse them when the deployment does not
+// declare its own.
 function siblingCuration(rootID: string): SiblingCuration {
   let curation = siblingCurationByID.get(rootID);
   if (curation === undefined) {
     const filePath = path.join(AGGREGATED_MODELS_DIR, `${rootID}.toml`);
     const authored = existsSync(filePath)
-      ? Bun.TOML.parse(readFileSync(filePath, "utf8")) as SiblingCuration
+      ? Bun.TOML.parse(readFileSync(filePath, "utf8")) as SiblingCuration & {
+          cost?: { tiers?: NonNullable<SyncedFullModel["cost"]>["tiers"] };
+        }
       : undefined;
     curation = {
       reasoning_options: authored?.reasoning_options?.length ? authored.reasoning_options : undefined,
       interleaved: authored?.interleaved,
+      cost_tiers: authored?.cost?.tiers,
     };
     siblingCurationByID.set(rootID, curation);
   }
@@ -490,16 +495,24 @@ export function buildLLMGatewayMappedModel(
       ? [{ type: "toggle" as const }]
       : [{ type: "effort" as const, values: mapping.reasoning_efforts }]
     : undefined;
-  // Deployment-declared efforts win; then non-empty curation on this file;
-  // then the aggregated llmgateway catalog's curated controls for the same
-  // root model on the same gateway surface. A curated [] counts as unknown so
-  // a bad first stamp is not sticky. Non-reasoning deployments carry none;
-  // the same applies to the interleaved reasoning side-channel.
+  // Deployment-declared efforts own the effort/toggle surface; curation falls
+  // back from non-empty options on this file to the aggregated llmgateway
+  // catalog's controls for the same root model on the same gateway surface.
+  // Curated non-effort controls (e.g. budget_tokens for $.reasoning.max_tokens,
+  // which this host serves regardless of the effort list) survive alongside
+  // deployment efforts instead of being wiped by them. A curated [] counts as
+  // unknown so a bad first stamp is not sticky. Non-reasoning deployments
+  // carry none; the same applies to the interleaved reasoning side-channel.
   const sibling = siblingCuration(rootID);
+  const curatedOptions = (existing?.reasoning_options?.length ? existing.reasoning_options : undefined)
+    ?? sibling.reasoning_options;
   const reasoningOptions = reasoning
-    ? deploymentOptions
-      ?? (existing?.reasoning_options?.length ? existing.reasoning_options : undefined)
-      ?? sibling.reasoning_options
+    ? deploymentOptions !== undefined
+      ? [
+          ...(curatedOptions ?? []).filter((option) => option.type !== "effort" && option.type !== "toggle"),
+          ...deploymentOptions,
+        ]
+      : curatedOptions
     : undefined;
   const interleaved = reasoning
     ? existing?.interleaved ?? sibling.interleaved
@@ -518,7 +531,10 @@ export function buildLLMGatewayMappedModel(
         reasoning: reasoning ? nonZeroPrice(model.pricing.internal_reasoning) ?? existing?.cost?.reasoning : existing?.cost?.reasoning,
         cache_read: nonZeroPrice(model.pricing.input_cache_read) ?? existing?.cost?.cache_read,
         cache_write: nonZeroPrice(model.pricing.input_cache_write) ?? existing?.cost?.cache_write,
-        tiers: existing?.cost?.tiers,
+        // The gateway API does not expose context pricing tiers, so authored
+        // tiers stick and new files seed from the aggregated sibling's curated
+        // tiers rather than silently under-stating long-context pricing.
+        tiers: existing?.cost?.tiers ?? sibling.cost_tiers,
       }
     : existing?.cost;
   // The gateway's max_output is the deployment's real served limit, so it wins

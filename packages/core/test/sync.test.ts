@@ -2592,6 +2592,49 @@ test("skips unfactorable LLM Gateway creates without a served context", () => {
   expect(aggregated).toBeUndefined();
 });
 
+test("keeps curated budget controls under deployment efforts", () => {
+  // Deployment efforts own only the effort/toggle surface: the hand-authored
+  // budget_tokens control (this host's $.reasoning.max_tokens path) survives
+  // the resync, while the stale effort list is replaced.
+  const model = buildLLMGatewayMappedModel(llmGatewayMappedModel(), {
+    base_model: "anthropic/claude-fable-5",
+    name: "Claude Fable 5 (Anthropic)",
+    reasoning_options: [
+      { type: "effort", values: ["low", "high"] },
+      { type: "budget_tokens", min: 1_024, max: 63_999 },
+    ],
+  });
+  expect(model!.reasoning_options).toEqual([
+    { type: "budget_tokens", min: 1_024, max: 63_999 },
+    { type: "effort", values: ["low", "medium", "high", "xhigh", "max"] },
+  ]);
+
+  // Same merge on creates, with the budget coming from the aggregated
+  // sibling's curation for the same root model.
+  const seeded = buildLLMGatewayMappedModel(llmGatewayMappedModel({
+    id: "anthropic/claude-sonnet-4-6",
+    name: "Claude Sonnet 4.6 (Anthropic)",
+  }), undefined);
+  expect(seeded!.reasoning_options).toEqual([
+    { type: "budget_tokens", min: 1_024, max: 63_999 },
+    { type: "effort", values: ["low", "medium", "high", "xhigh", "max"] },
+  ]);
+});
+
+test("seeds context pricing tiers from the aggregated sibling on creates", () => {
+  // The gateway API carries no tier pricing; without the sibling's curated
+  // tiers the bulk sync would author tiered models at flat long-context rates.
+  const model = buildLLMGatewayMappedModel(llmGatewayMappedModel({
+    id: "openai/gpt-5.5",
+    name: "GPT-5.5 (OpenAI)",
+    family: "openai",
+  }), undefined);
+
+  expect(model!.cost?.tiers).toEqual([
+    { tier: { type: "context", size: 272_000 }, input: 10, output: 45, cache_read: 1 },
+  ]);
+});
+
 test("factors perplexity entries without widening the shared prefix map", () => {
   // The perplexity family resolves through resolveModelMetadataBaseModel's
   // exact models/ path match; CANONICAL_PROVIDER_PREFIXES stays untouched so
