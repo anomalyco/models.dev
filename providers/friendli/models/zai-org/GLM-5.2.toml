@@ -1,3 +1,7 @@
+# Friendli documents chat_template_kwargs.enable_thinking = true | false for
+# this model, and the API also advertises effort values "high" and "max".
+# No reasoning-token budget field is documented.
+# https://friendli.ai/docs/guides/reasoning (accessed 2026-08-05)
 base_model = "zhipuai/glm-5.2"
 
 [interleaved]
@@ -9,11 +13,6 @@ type = "toggle"
 [[reasoning_options]]
 type = "effort"
 values = ["high", "max"]
-
-[[reasoning_options]]
-type = "budget_tokens"
-min = -1
-max = 1_048_576
 
 [cost]
 input = 1.4

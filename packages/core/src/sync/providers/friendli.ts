@@ -1,4 +1,4 @@
-import { readdirSync } from "node:fs";
+import { readFileSync, readdirSync } from "node:fs";
 import path from "node:path";
 import { z } from "zod";
 
@@ -15,6 +15,25 @@ const MODELS_DIR = path.join(import.meta.dirname, "..", "..", "..", "..", "..", 
 const PER_TOKEN_TO_PER_MILLION = 1_000_000;
 
 const InterleavedField = z.enum(["reasoning_content", "reasoning_details"]);
+
+// Raw API reasoning_options shape — stripped of budget_tokens (the API derives
+// max from max_completion_tokens, which is not a real reasoning budget control
+// on this host; provider.toml documents only enable_thinking as a toggle).
+const FriendliReasoningOption = z
+  .discriminatedUnion("type", [
+    z.object({ type: z.literal("toggle") }).passthrough(),
+    z
+      .object({ type: z.literal("effort"), values: z.array(z.string()) })
+      .passthrough(),
+    z
+      .object({
+        type: z.literal("budget_tokens"),
+        min: z.number().optional(),
+        max: z.number().optional(),
+      })
+      .passthrough(),
+  ])
+  .optional();
 
 export const FriendliModel = z
   .object({
@@ -49,9 +68,7 @@ export const FriendliModel = z
     policy: z.string().nullable().optional(),
     deprecation_date: z.string().nullable().optional(),
     reasoning: z.boolean().optional(),
-    // Friendli emits the catalog reasoning-option shape directly; reuse the
-    // canonical schema rather than redefining it here.
-    reasoning_options: z.array(ReasoningOption).optional(),
+    reasoning_options: z.array(FriendliReasoningOption).optional(),
     interleaved: z.union([InterleavedField, z.boolean()]).optional(),
     input_modalities: z.array(z.string()).optional(),
     output_modalities: z.array(z.string()).optional(),
@@ -68,29 +85,76 @@ export const FriendliResponse = z
 
 export type FriendliModel = z.infer<typeof FriendliModel>;
 
+// HuggingFace-style API orgs that are not catalog lab ids. Map them onto the
+// catalog metadata tree so self-referential or HF-style base_model values
+// resolve to the right lab directory.
+const LAB_PREFIX_MAP: Record<string, string> = {
+  "deepseek-ai": "deepseek",
+  "zai-org": "zhipuai",
+  "LGAI-EXAONE": "lgai-exaone",
+  "MiniMaxAI": "minimax",
+  "meta-llama": "meta",
+  "mistralai": "mistral",
+  "moonshotai": "moonshotai",
+  "Qwen": "alibaba",
+};
+
+// Friendli HF ids that resolve to a catalog lab file with a different slug.
+// The weights URL alone is ambiguous when a single HF repo backs multiple
+// catalog entries (DeepSeek V3.2 ships chat + reasoner under one repo), so
+// pin these explicitly instead of scanning by URL.
+const CATALOG_SLUG_ALIAS: Record<string, string> = {
+  "deepseek-ai/DeepSeek-V3.2": "deepseek/deepseek-chat",
+};
+
 // Resolve an API `base_model` id to the on-disk `models/<lab>/<file>.toml` id.
 // Friendli declares a base_model for every entry, but only models with an
 // existing lab metadata file can be factored (override-only). Self-referential
-// base_model values (==id) or labs we have no metadata for fall through to
-// undefined → full inline provider model.
+// base_model values (==id) resolve to the model's own lab id when a metadata
+// file exists under the mapped lab prefix.
 //
-// Case-insensitive lookup is required: the API lowercases ids (e.g.
-// "minimax/minimax-m2.5") that exist on disk as mixed-case
-// ("minimax/MiniMax-M2.5.toml"). On macOS `existsSync` happily matches the
-// wrong case, so we never trust a raw API id and always read the directory.
+// Case-insensitive lookup: the API lowercases ids (e.g. "minimax/minimax-m2.5")
+// that exist on disk as mixed-case ("minimax/MiniMax-M2.5.toml"). On macOS
+// existsSync is case-insensitive, so we never trust a raw API id and always
+// read the directory.
 const baseModelCache = new Map<string, string | null>();
+const hfURLCache = new Map<string, string | null>();
 
 function resolveBaseModelID(baseModel: string | undefined): string | undefined {
   if (baseModel === undefined || baseModel.length === 0) return undefined;
   const cached = baseModelCache.get(baseModel);
   if (cached !== undefined) return cached ?? undefined;
 
+  let resolved = lookupLabFile(baseModel);
+  if (resolved === undefined) {
+    const [org, ...parts] = baseModel.split("/");
+    const mapped = org !== undefined ? LAB_PREFIX_MAP[org] : undefined;
+    if (mapped !== undefined && parts.length > 0) {
+      resolved = lookupLabFile(`${mapped}/${parts.join("/")}`);
+    }
+  }
+
+  baseModelCache.set(baseModel, resolved ?? null);
+  return resolved;
+}
+
+// Resolve a Friendli entry to its catalog lab metadata id.
+// 1) explicit alias (handles HF id → catalog slug mismatches)
+// 2) slug lookup against the models tree
+// 3) HF-URL scan against the lab [[weights]] table as a last resort
+function resolveLabModelSync(model: FriendliModel): string | undefined {
+  if (model.base_model !== undefined && CATALOG_SLUG_ALIAS[model.base_model] !== undefined) {
+    return CATALOG_SLUG_ALIAS[model.base_model];
+  }
+  const slug = resolveBaseModelID(model.base_model);
+  if (slug !== undefined) return slug;
+  return resolveByHFURL(model.base_model, model.hugging_face_url ?? model.hugging_face_id);
+}
+
+function lookupLabFile(baseModel: string): string | undefined {
   const [lab, ...modelParts] = baseModel.split("/");
   const modelSlug = modelParts.join("/");
-  if (lab === undefined || modelSlug.length === 0) {
-    baseModelCache.set(baseModel, null);
-    return undefined;
-  }
+  if (lab === undefined || modelSlug.length === 0) return undefined;
 
   let labDir: string | undefined;
   try {
@@ -99,13 +163,9 @@ function resolveBaseModelID(baseModel: string | undefined): string | undefined {
       .map((entry) => entry.name);
     labDir = dirs.find((dir) => dir.toLowerCase() === lab.toLowerCase());
   } catch {
-    baseModelCache.set(baseModel, null);
     return undefined;
   }
-  if (labDir === undefined) {
-    baseModelCache.set(baseModel, null);
-    return undefined;
-  }
+  if (labDir === undefined) return undefined;
 
   const expected = `${modelSlug}.toml`.toLowerCase();
   let fileMatch: string | undefined;
@@ -116,13 +176,80 @@ function resolveBaseModelID(baseModel: string | undefined): string | undefined {
   } catch {
     // fall through
   }
-  if (fileMatch === undefined) {
-    baseModelCache.set(baseModel, null);
+  if (fileMatch === undefined) return undefined;
+
+  return `${labDir}/${fileMatch.slice(0, -".toml".length)}`;
+}
+
+// Match an API entry to its lab metadata file when the slug differs from the
+// HF id (e.g. deepseek-ai/DeepSeek-V3.2 → deepseek/deepseek-chat). Scan the
+// mapped lab directory for a weights/HF URL matching the API hugging_face_url.
+function resolveByHFURL(
+  baseModel: string | undefined,
+  hfURL: string | undefined,
+): string | undefined {
+  if (baseModel === undefined || hfURL === undefined) return undefined;
+  const cached = hfURLCache.get(hfURL);
+  if (cached !== undefined) return cached ?? undefined;
+
+  const [org, ...parts] = baseModel.split("/");
+  const mapped = org !== undefined ? LAB_PREFIX_MAP[org] : undefined;
+  const lab = mapped ?? org;
+  if (lab === undefined || parts.length === 0) {
+    hfURLCache.set(hfURL, null);
     return undefined;
   }
 
-  const resolved = `${labDir}/${fileMatch.slice(0, -".toml".length)}`;
-  baseModelCache.set(baseModel, resolved);
+  let labDir: string | undefined;
+  try {
+    labDir = readdirSync(MODELS_DIR, { withFileTypes: true })
+      .filter((e) => e.isDirectory())
+      .map((e) => e.name)
+      .find((d) => d.toLowerCase() === lab!.toLowerCase());
+  } catch {
+    labDir = undefined;
+  }
+  if (labDir === undefined) {
+    hfURLCache.set(hfURL, null);
+    return undefined;
+  }
+
+  const target = hfURL.toLowerCase();
+  let match: string | undefined;
+  try {
+    const files = readdirSync(path.join(MODELS_DIR, labDir)).filter((f) =>
+      f.endsWith(".toml"),
+    );
+    for (const file of files) {
+      try {
+        const parsed = Bun.TOML.parse(
+          readFileSync(path.join(MODELS_DIR, labDir!, file), "utf8"),
+        ) as Record<string, unknown>;
+        const weights = parsed.weights;
+        if (Array.isArray(weights)) {
+          for (const w of weights) {
+            const url = w && typeof w === "object" ? (w as { url?: unknown }).url : undefined;
+            if (typeof url === "string" && url.toLowerCase() === target) {
+              match = file;
+              break;
+            }
+          }
+        }
+        if (match !== undefined) break;
+      } catch {
+        // skip unreadable
+      }
+    }
+  } catch {
+    // fall through
+  }
+
+  if (match === undefined) {
+    hfURLCache.set(hfURL, null);
+    return undefined;
+  }
+  const resolved = `${labDir}/${match.slice(0, -".toml".length)}`;
+  hfURLCache.set(hfURL, resolved);
   return resolved;
 }
 
@@ -148,7 +275,11 @@ export const friendli = {
   translateModel(model: FriendliModel, context) {
     return {
       id: model.id,
-      model: buildFriendliModel(model, context.existing(model.id)),
+      model: buildFriendliModel(
+        model,
+        context.existing(model.id),
+        resolveLabModelSync(model),
+      ),
     };
   },
   missingNotice(paths: string[]) {
@@ -198,10 +329,37 @@ function buildCost(
   };
 }
 
+// Translate API reasoning_options into host-accurate catalog options.
+// The API always emits a budget_tokens entry derived from max_completion_tokens
+// (min=-1 "unlimited", max=completion cap). That is not a real reasoning-budget
+// wire field on Friendli (provider.toml documents only enable_thinking as a
+// toggle), so we strip it. On a relay, keep effort only when the API reports it
+// verbatim AND the lab/peers use it on this host; toggle is preserved.
+function translateReasoningOptions(
+  api: FriendliModel["reasoning_options"],
+): NonNullable<SyncedFullModel["reasoning_options"]> {
+  if (api === undefined) return [];
+  const options: NonNullable<SyncedFullModel["reasoning_options"]> = [];
+  for (const option of api) {
+    if (option === undefined) continue;
+    if (option.type === "toggle") {
+      options.push({ type: "toggle" });
+    } else if (option.type === "effort") {
+      const parsed = ReasoningOption.safeParse(option);
+      if (parsed.success) options.push(parsed.data as NonNullable<SyncedFullModel["reasoning_options"]>[number]);
+    }
+    // budget_tokens intentionally dropped — not a real Friendli wire field.
+  }
+  return options;
+}
+
 function translateInterleaved(
   value: FriendliModel["interleaved"],
+  existing: ExistingModel["interleaved"],
 ): SyncedFullModel["interleaved"] {
-  if (value === undefined || value === false) return undefined;
+  if (value === undefined) return existing;
+  // API false may be under-reporting; preserve hand-authored interleaved on relays.
+  if (value === false) return existing;
   if (value === true) return true;
   return { field: value };
 }
@@ -228,12 +386,12 @@ function displayModelName(apiName: string): string {
 function buildFriendliModel(
   model: FriendliModel,
   existing: ExistingModel | undefined,
+  factorBase: string | undefined,
 ): SyncedModel {
-  // base_model is only factored when it points at a real, distinct lab metadata
-  // file. Self-referential base_model (== id) with no lab metadata → full inline.
-  const resolvedBase = resolveBaseModelID(model.base_model);
-  const baseModel =
-    resolvedBase !== undefined && resolvedBase !== model.id ? resolvedBase : undefined;
+  // factorBase is pre-resolved by translateModel: looks up the lab metadata
+  // file by slug first, then by matching the API hugging_face_url against
+  // the lab's [[weights]] table (handles slug mismatches like
+  // deepseek-ai/DeepSeek-V3.2 → deepseek/deepseek-chat).
 
   const input = translateModalities(model.input_modalities);
   const output = translateModalities(model.output_modalities);
@@ -244,20 +402,17 @@ function buildFriendliModel(
     output: model.max_completion_tokens,
   };
   const reasoning = model.reasoning === true;
-  // The catalog schema already validates the shape; pass through directly.
-  const reasoningOptions = model.reasoning_options === undefined || model.reasoning_options.length === 0
-    ? undefined
-    : model.reasoning_options;
-  const interleaved = translateInterleaved(model.interleaved);
+  const reasoningOptions = reasoning ? translateReasoningOptions(model.reasoning_options) : undefined;
+  const interleaved = translateInterleaved(model.interleaved, existing?.interleaved);
   const structuredOutput = model.functionality.structured_output;
   const cost = buildCost(model, existing?.cost);
   const releaseDate = existing?.release_date ?? dateFromTimestamp(model.created);
   const today = new Date().toISOString().slice(0, 10);
   const lastUpdated = existing?.last_updated ?? today;
 
-  if (baseModel !== undefined) {
+  if (factorBase !== undefined) {
     return factorBaseModel(
-      baseModel,
+      factorBase,
       {
         attachment,
         reasoning,
@@ -270,7 +425,7 @@ function buildFriendliModel(
         cost,
       },
       limit,
-      existing?.base_model === baseModel ? existing.base_model_omit : undefined,
+      existing?.base_model === factorBase ? existing.base_model_omit : undefined,
     );
   }
 

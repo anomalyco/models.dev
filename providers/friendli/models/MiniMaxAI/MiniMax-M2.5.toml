@@ -1,13 +1,9 @@
 base_model = "minimax/MiniMax-M2.5"
 structured_output = true
+reasoning_options = []
 
 [interleaved]
 field = "reasoning_content"
-
-[[reasoning_options]]
-type = "budget_tokens"
-min = -1
-max = 196_608
 
 [cost]
 input = 0.3
