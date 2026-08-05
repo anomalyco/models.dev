@@ -177,6 +177,11 @@ export const friendli = {
   // Friendli's catalog describes real reasoning controls and limits directly;
   // do not carry over a stale base_model when a model switches lab → full inline.
   preserveBaseModels: false,
+  // The runner's default preserveDescription re-injects the
+  // resolved base description when the translator omits it, recreating an
+  // identical override. Friendli descriptions come from the API verbatim and
+  // match the lab's, so drop the re-injection.
+  preserveDescriptions: false,
   async fetchModels() {
     const response = await fetch(API_ENDPOINT);
     if (!response.ok) {
@@ -214,6 +219,15 @@ export const friendli = {
     return [
       `${paths.length} local model(s) retained after being removed from the Friendli API: ${paths.join(", ")}`,
     ];
+  },
+  newFileHeader(model, content) {
+    // Toggle is the only documented reasoning control on Friendli
+    // (chat_template_kwargs.enable_thinking = true | false). Any toggle-bearing
+    // file written by the sync gets a leading wire-path comment so the
+    // rationale is not lost when there is no existing header.
+    if (model.reasoning !== true) return undefined;
+    if (!/^\[\[reasoning_options\]\]\n.*type = "toggle"/m.test(content)) return undefined;
+    return "# Toggle: chat_template_kwargs.enable_thinking = true | false\n# https://friendli.ai/docs/guides/reasoning\n";
   },
 } satisfies SyncProvider<FriendliModel>;
 
@@ -288,11 +302,8 @@ function translateReasoningOptions(
 
 function translateInterleaved(
   value: FriendliModel["interleaved"],
-  existing: ExistingModel["interleaved"],
 ): SyncedFullModel["interleaved"] {
-  if (value === undefined) return existing;
-  // API false may be under-reporting; preserve hand-authored interleaved on relays.
-  if (value === false) return existing;
+  if (value === undefined || value === false) return undefined;
   if (value === true) return true;
   return { field: value };
 }
@@ -336,7 +347,7 @@ function buildFriendliModel(
   };
   const reasoning = model.reasoning === true;
   const reasoningOptions = reasoning ? translateReasoningOptions(model.reasoning_options) : undefined;
-  const interleaved = translateInterleaved(model.interleaved, existing?.interleaved);
+  const interleaved = translateInterleaved(model.interleaved);
   const structuredOutput = model.functionality.structured_output;
   const cost = buildCost(model, existing?.cost);
   const releaseDate = existing?.release_date ?? dateFromTimestamp(model.created);

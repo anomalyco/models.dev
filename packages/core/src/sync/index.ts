@@ -88,6 +88,11 @@ export interface SyncProvider<SourceModel> {
    */
   sourceID?(model: SourceModel): string | undefined;
   skippedNotice?(ids: string[]): string[];
+  /**
+   * Leading comment block for newly created files. Existing files keep their
+   * authored headers; this only applies when there is no existing header.
+   */
+  newFileHeader?(model: SourceModel, content: string): string | undefined;
   fetchModels(): Promise<unknown>;
   parseModels(raw: unknown): SourceModel[];
   translateModel(
@@ -292,7 +297,9 @@ export async function syncProvider<SourceModel>(
 
     desired.set(relativePath, {
       model: parsed.data,
-      content: (existing.get(relativePath)?.header ?? "") + formatToml(parsed.data),
+      content: (existing.get(relativePath)?.header
+        ?? provider.newFileHeader?.(sourceModel, formatToml(parsed.data))
+        ?? "") + formatToml(parsed.data),
     });
   }
 
