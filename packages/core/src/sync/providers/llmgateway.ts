@@ -548,7 +548,14 @@ export function buildLLMGatewayMappedModel(
         status: existing.status,
         interleaved,
         knowledge: existing.knowledge,
-        modalities: mapping?.vision === false ? deploymentModalities(model, false) : existing.modalities,
+        // Vision realigns modalities in both directions: false strips
+        // image/pdf, true clears any stale stripped override so the base's
+        // richer inputs inherit again; only a silent mapping keeps curation.
+        modalities: mapping?.vision === undefined
+          ? existing.modalities
+          : mapping.vision
+            ? undefined
+            : deploymentModalities(model, false),
         limit: factoredLimit,
         cost,
       },
@@ -565,9 +572,12 @@ export function buildLLMGatewayMappedModel(
       attachment: mapping?.vision ?? existing.attachment ?? false,
       tool_call: mapping?.tools ?? existing.tool_call ?? false,
       structured_output: model.structured_outputs ?? existing.structured_output,
-      modalities: mapping?.vision === false
-        ? deploymentModalities(model, false)
-        : existing.modalities ?? deploymentModalities(model, mapping?.vision),
+      // Same bidirectional vision rule as the factored path; with no base to
+      // inherit from, a declared vision recomputes from the served
+      // architecture instead of clearing.
+      modalities: mapping?.vision === undefined
+        ? existing.modalities ?? deploymentModalities(model, undefined)
+        : deploymentModalities(model, mapping.vision),
     };
     return {
       name: existing.name ?? model.name,

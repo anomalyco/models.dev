@@ -2496,6 +2496,34 @@ test("realigns capability flags from the mapping on mapped factored resyncs", ()
   expect(model!.tool_call).toBeUndefined();
 });
 
+test("restores image input when vision returns on mapped resyncs", () => {
+  // The file was written while the deployment had no vision (text-only
+  // stripped modalities); vision is back, so the stale override must clear.
+  const factored = buildLLMGatewayMappedModel(llmGatewayMappedModel(), {
+    base_model: "anthropic/claude-fable-5",
+    name: "Claude Fable 5 (Anthropic)",
+    attachment: false,
+    modalities: { input: ["text"] },
+  });
+  expect(factored!.modalities).toBeUndefined();
+  expect(factored!.attachment).toBeUndefined();
+
+  const full = buildLLMGatewayMappedModel(llmGatewayMappedModel({
+    id: "acme/mystery-model",
+    name: "Mystery Model (Acme)",
+    family: undefined,
+    providers: [{ providerId: "acme", vision: true, tools: true, reasoning: false }],
+  }), {
+    name: "Mystery Model (Acme)",
+    attachment: false,
+    modalities: { input: ["text"], output: ["text"] },
+  });
+  expect(full).toMatchObject({
+    attachment: true,
+    modalities: { input: ["text", "image"], output: ["text"] },
+  });
+});
+
 test("never synthesizes a description on mapped factored resyncs", () => {
   const model = buildLLMGatewayMappedModel(llmGatewayMappedModel(), {
     base_model: "anthropic/claude-fable-5",
