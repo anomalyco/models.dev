@@ -1,13 +1,4 @@
-name = "Muse Spark 1.2"
-description = "Meta's Muse Spark 1.2 is a multimodal reasoning model for complex agentic and coding tasks, with tool calling, structured output, and a one-million-token context window."
-family = "muse"
-release_date = "2026-08-05"
-last_updated = "2026-08-05"
-attachment = true
-reasoning = true
-tool_call = true
-structured_output = true
-open_weights = false
+base_model = "meta/muse-spark-1.2"
 reasoning_options = []
 
 [cost]
@@ -19,7 +10,3 @@ cache_read = 0.15
 context = 1_000_000
 input = 1_000_000
 output = 65_536
-
-[modalities]
-input = ["text", "image", "video", "audio", "pdf"]
-output = ["text"]
