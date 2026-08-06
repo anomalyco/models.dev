@@ -1,0 +1,16 @@
+# Sources:
+# - https://ofox.ai/models/z-ai/glm-4.7-flashx (pricing, context 200K, max output 128K)
+# - https://api.ofox.ai/v1/models/z-ai/glm-4.7-flashx (catalog pricing/limits; supported_parameters includes reasoning)
+# - https://docs.z.ai/guides/capabilities/thinking (thinking.type enabled|disabled for GLM-4.7 series)
+# - https://docs.z.ai/guides/overview/pricing (lab list price reference)
+# Toggle: thinking.type = enabled|disabled
+base_model = "zhipuai/glm-4.7-flashx"
+reasoning_options = [{ type = "toggle" }]
+
+[cost]
+input = 0.072
+output = 0.43
+cache_read = 0.015
+
+[limit]
+output = 128_000
