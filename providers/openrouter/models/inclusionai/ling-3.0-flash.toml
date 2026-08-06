@@ -1,4 +1,4 @@
-name = "Ling-3.0-flash (free)"
+name = "Ling-3.0-flash"
 description = "Efficient model for low-latency assistance, extraction, and routine automation"
 family = "ling"
 release_date = "2026-07-23"
@@ -9,18 +9,16 @@ temperature = true
 tool_call = true
 structured_output = false
 open_weights = true
-
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high"]
+reasoning_options = []
 
 [cost]
-input = 0
-output = 0
+input = 0.075
+output = 0.22
+cache_read = 0.015
 
 [limit]
-context = 262_144
-output = 32_768
+context = 131_072
+output = 16_384
 
 [modalities]
 input = ["text"]
