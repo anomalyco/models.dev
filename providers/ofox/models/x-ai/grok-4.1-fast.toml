@@ -1,0 +1,10 @@
+# Ofox: x-ai/grok-4.1-fast → non-reasoning Grok 4.1 Fast.
+# Sources:
+# - https://api.ofox.ai/v1/models/x-ai/grok-4.1-fast (prompt $0.20/M, completion $0.50/M, cache_read $0.05/M; no reasoning param)
+# - https://ofox.ai/models/x-ai/grok-4.1-fast
+base_model = "xai/grok-4.1-fast"
+
+[cost]
+input = 0.2
+output = 0.5
+cache_read = 0.05
