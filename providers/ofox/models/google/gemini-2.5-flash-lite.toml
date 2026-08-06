@@ -1,0 +1,16 @@
+# https://ofox.ai/en/models/google/gemini-2.5-flash-lite
+# Toggle/budget (Gemini native): generationConfig.thinkingConfig.thinkingBudget
+# 0 disables; enabled manual budgets 512..24576
+# https://ai.google.dev/gemini-api/docs/thinking
+base_model = "google/gemini-2.5-flash-lite"
+reasoning_options = [
+  { type = "toggle" },
+  { type = "budget_tokens", min = 512, max = 24_576 },
+]
+
+[cost]
+input = 0.1
+output = 0.4
+cache_read = 0.025
+cache_write = 1
+input_audio = 0.3
