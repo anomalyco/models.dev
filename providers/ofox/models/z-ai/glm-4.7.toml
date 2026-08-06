@@ -1,0 +1,9 @@
+# https://ofox.ai/models/z-ai/glm-4.7
+# Toggle: thinking.type = enabled|disabled (Z.AI first-party / peers)
+base_model = "zhipuai/glm-4.7"
+reasoning_options = [{ type = "toggle" }]
+
+[cost]
+input = 0.4
+output = 2
+cache_read = 0.08
