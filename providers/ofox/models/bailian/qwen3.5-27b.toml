@@ -1,0 +1,11 @@
+# Sources:
+# - https://ofox.ai/en/models/bailian/qwen3.5-27b (pricing, context, capabilities; accessed 2026-08-06)
+# Toggle: enable_thinking true|false (Alibaba/Bailian chat path; matches providers/alibaba qwen3.5-27b)
+# Budget: thinking_budget
+base_model = "alibaba/qwen3.5-27b"
+reasoning_options = [{ type = "toggle" }, { type = "budget_tokens" }]
+
+[cost]
+input = 0.29
+output = 2.05
+cache_read = 0.29
