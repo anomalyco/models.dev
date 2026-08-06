@@ -1,11 +1,12 @@
 name = "Neon"
 npm = "@ai-sdk/openai-compatible"
 # Unified Chat is POST `/v1/chat/completions`. Native routes are POST
-# `/ai-gateway/anthropic/v1/messages` (`thinking.type`,
-# `thinking.budget_tokens`), POST `/openai/v1/responses`
-# (`reasoning.effort`), and POST
-# `/ai-gateway/gemini/v1beta/models/{model}:generateContent`
-# (`generationConfig.thinkingConfig`).
+# `/anthropic/v1/messages` (`thinking.type`, `thinking.budget_tokens`), POST
+# `/openai/v1/responses` (`reasoning.effort`), and POST
+# `/v1/gemini/v1beta/models/{model}:generateContent`
+# (`generationConfig.thinkingConfig`). Each also has an equivalent longer
+# `/ai-gateway/<dialect>/...` form; the short paths above are the documented
+# default. Verified 2026-08-05.
 # https://neon.com/docs/ai-gateway/chat-completions
 # https://neon.com/docs/ai-gateway/anthropic-messages
 # https://neon.com/docs/ai-gateway/openai-responses
