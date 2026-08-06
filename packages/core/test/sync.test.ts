@@ -1,5 +1,5 @@
 import { expect, test } from "bun:test";
-import { mkdir, mkdtemp, readFile, rm } from "node:fs/promises";
+import { copyFile, mkdir, mkdtemp, readFile, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 
@@ -29,6 +29,13 @@ import {
   type DigitalOceanSourceModel,
 } from "../src/sync/providers/digitalocean.js";
 import { buildHyperModel, type HyperModel } from "../src/sync/providers/hyper.js";
+import {
+  buildInceptronModel,
+  parseInceptronModels,
+  perTokenToPerMillion,
+  type InceptronModel,
+  type ReadyInceptronModel,
+} from "../src/sync/providers/inceptron.js";
 import {
   buildEmpiriolabsModel,
   empiriolabs,
@@ -149,6 +156,252 @@ function crossModelModel(overrides: Partial<CrossModelModel> = {}): CrossModelMo
     ...overrides,
   };
 }
+
+function inceptronModel(overrides: Partial<InceptronModel> = {}): InceptronModel {
+  return {
+    id: "zai-org/GLM-5.2",
+    name: "GLM 5.2",
+    context_length: 1_048_576,
+    max_output_length: 1_048_576,
+    input_modalities: ["text"],
+    output_modalities: ["text"],
+    supported_features: ["chat", "tools", "reasoning", "structured_outputs"],
+    supported_sampling_parameters: ["temperature", "reasoning_effort"],
+    pricing: {
+      prompt: "0.00000075",
+      completion: "0.0000029",
+      input_cache_reads: "0.00000017",
+      input_cache_writes: "0",
+    },
+    models_dev: {
+      base_model: "zhipuai/glm-5.2",
+      reasoning_options: [{ type: "effort", values: ["high", "max"] }],
+      interleaved: { field: "reasoning_content" },
+      status: "alpha",
+    },
+    ...overrides,
+  };
+}
+
+function readyInceptronModel(overrides: Partial<InceptronModel> = {}): ReadyInceptronModel {
+  return parseInceptronModels({
+    object: "list",
+    data: [inceptronModel(overrides)],
+  })[0]!;
+}
+
+test("builds current Inceptron models from explicit base metadata", () => {
+  const models = parseInceptronModels({
+    object: "list",
+    data: [
+      inceptronModel({
+        id: "MiniMaxAI/MiniMax-M2.5",
+        name: "MiniMax M2.5",
+        context_length: 196_608,
+        max_output_length: 196_608,
+        pricing: { prompt: "0.00000022", completion: "0.0000009" },
+        models_dev: {
+          base_model: "minimax/MiniMax-M2.5",
+          reasoning_options: [{ type: "effort", values: ["low", "medium", "high"] }],
+        },
+      }),
+      inceptronModel(),
+      inceptronModel({
+        id: "moonshotai/Kimi-K2.6",
+        name: "Kimi K2.6",
+        context_length: 262_144,
+        max_output_length: 262_144,
+        input_modalities: ["text", "image"],
+        supported_sampling_parameters: ["temperature"],
+        pricing: { prompt: "0.0000006", completion: "0.00000341" },
+        models_dev: {
+          base_model: "moonshotai/kimi-k2.6",
+          reasoning_options: [],
+          interleaved: { field: "reasoning_content" },
+        },
+      }),
+      inceptronModel({
+        id: "moonshotai/Kimi-K2.7-Code",
+        name: "Kimi K2.7 Code",
+        context_length: 262_144,
+        max_output_length: 262_144,
+        input_modalities: ["text", "image"],
+        supported_sampling_parameters: ["temperature"],
+        pricing: { prompt: "0.0000007", completion: "0.0000035" },
+        models_dev: {
+          base_model: "moonshotai/kimi-k2.7-code",
+          reasoning_options: [],
+          interleaved: { field: "reasoning_content" },
+        },
+      }),
+      inceptronModel({
+        id: "deepseek-ai/DeepSeek-V4-Flash-0731",
+        name: "DeepSeek V4 Flash 0731",
+        context_length: 1_048_576,
+        max_output_length: 1_048_576,
+        pricing: {
+          prompt: "0.00000013",
+          completion: "0.00000028",
+          input_cache_reads: "0.00000003",
+          input_cache_writes: "0",
+        },
+        models_dev: {
+          base_model: "deepseek/deepseek-v4-flash-0731",
+          reasoning_options: [{ type: "effort", values: ["high", "max"] }],
+          interleaved: { field: "reasoning_content" },
+        },
+      }),
+    ],
+  });
+
+  const built = models.map(buildInceptronModel);
+  expect(built.map((model) => "base_model" in model ? model.base_model : undefined)).toEqual([
+    "minimax/MiniMax-M2.5",
+    "zhipuai/glm-5.2",
+    "moonshotai/kimi-k2.6",
+    "moonshotai/kimi-k2.7-code",
+    "deepseek/deepseek-v4-flash-0731",
+  ]);
+  expect(built[0]).toMatchObject({
+    reasoning_options: [{ type: "effort", values: ["low", "medium", "high"] }],
+    cost: { input: 0.22, output: 0.9 },
+  });
+  expect(built[1]).toMatchObject({
+    name: "GLM 5.2",
+    reasoning_options: [{ type: "effort", values: ["high", "max"] }],
+    interleaved: { field: "reasoning_content" },
+    status: "alpha",
+    cost: { input: 0.75, output: 2.9, cache_read: 0.17, cache_write: 0 },
+    limit: { context: 1_048_576, output: 1_048_576 },
+  });
+  expect(built[2]).toMatchObject({
+    reasoning_options: [],
+    interleaved: { field: "reasoning_content" },
+    modalities: { input: ["text", "image"] },
+  });
+  expect(built[3]).toMatchObject({
+    reasoning_options: [],
+    interleaved: { field: "reasoning_content" },
+  });
+  expect(built[4]).toMatchObject({
+    reasoning_options: [{ type: "effort", values: ["high", "max"] }],
+    interleaved: { field: "reasoning_content" },
+    cost: { input: 0.13, output: 0.28, cache_read: 0.03, cache_write: 0 },
+    limit: { context: 1_048_576, output: 1_048_576 },
+  });
+});
+
+test("converts Inceptron per-token decimal prices exactly", () => {
+  expect(perTokenToPerMillion("0")).toBe(0);
+  expect(perTokenToPerMillion("0.00000005")).toBe(0.05);
+  expect(perTokenToPerMillion("0.00000341")).toBe(3.41);
+  expect(perTokenToPerMillion("1.25")).toBe(1_250_000);
+});
+
+test("rejects incomplete or contradictory ready Inceptron catalogs", () => {
+  expect(() =>
+    parseInceptronModels({ object: "list", data: [inceptronModel({ models_dev: undefined })] })
+  ).toThrow("missing models_dev metadata");
+  expect(() =>
+    parseInceptronModels({
+      object: "list",
+      data: [inceptronModel(), inceptronModel()],
+    })
+  ).toThrow("Duplicate ready Inceptron model ID");
+  expect(() =>
+    readyInceptronModel({
+      models_dev: { base_model: "zhipuai/not-a-real-model", reasoning_options: [] },
+      supported_sampling_parameters: [],
+    })
+  ).toThrow("missing base model");
+  expect(() =>
+    readyInceptronModel({ pricing: { prompt: "1e-6", completion: "0.1" } })
+  ).toThrow("Invalid Inceptron per-token price");
+  expect(() => readyInceptronModel({ input_modalities: ["text", "binary"] }))
+    .toThrow("unsupported input modality");
+  expect(() =>
+    readyInceptronModel({
+      models_dev: { base_model: "zhipuai/glm-5.2", reasoning_options: [] },
+    })
+  ).toThrow("reasoning_effort exactly when effort options are exposed");
+});
+
+test("ignores not-ready Inceptron models while validating every ready model", () => {
+  const ready = inceptronModel();
+  const notReady = inceptronModel({
+    id: "staged/model",
+    is_ready: false,
+    models_dev: undefined,
+    input_modalities: ["unsupported-but-ignored"],
+    pricing: { prompt: "malformed", completion: "malformed" },
+  });
+  expect(parseInceptronModels({ object: "list", data: [ready, notReady] })).toHaveLength(1);
+
+  expect(() =>
+    parseInceptronModels({
+      object: "list",
+      data: [ready, inceptronModel({ id: "ready/model", models_dev: undefined })],
+    })
+  ).toThrow("missing models_dev metadata");
+});
+
+test("syncs authoritative Inceptron additions, updates, and removals", async () => {
+  const root = await mkdtemp(path.join(tmpdir(), "models-dev-inceptron-"));
+  const modelsDir = path.join(root, "providers", "inceptron", "models");
+  await mkdir(modelsDir, { recursive: true });
+  for (const base of ["zhipuai/glm-5.2", "moonshotai/kimi-k2.6"]) {
+    const destination = path.join(root, "models", `${base}.toml`);
+    await mkdir(path.dirname(destination), { recursive: true });
+    await copyFile(path.join(import.meta.dirname, "..", "..", "..", "models", `${base}.toml`), destination);
+  }
+
+  let source: ReadyInceptronModel[] = [
+    readyInceptronModel(),
+    readyInceptronModel({
+      id: "moonshotai/Kimi-K2.6",
+      name: "Kimi K2.6",
+      context_length: 262_144,
+      max_output_length: 262_144,
+      input_modalities: ["text", "image"],
+      supported_sampling_parameters: ["temperature"],
+      models_dev: {
+        base_model: "moonshotai/kimi-k2.6",
+        reasoning_options: [],
+        interleaved: true,
+      },
+    }),
+  ];
+  const provider: SyncProvider<ReadyInceptronModel> = {
+    id: "inceptron-test",
+    name: "Inceptron test",
+    modelsDir,
+    async fetchModels() {
+      return source;
+    },
+    parseModels(raw) {
+      return raw as ReadyInceptronModel[];
+    },
+    translateModel(model) {
+      return { id: model.id, model: buildInceptronModel(model) };
+    },
+  };
+
+  try {
+    const initial = await syncProvider(provider);
+    expect(initial).toMatchObject({ created: 2, updated: 0, deleted: 0 });
+
+    source = [readyInceptronModel({
+      pricing: { prompt: "0.0000008", completion: "0.0000029" },
+    })];
+    const changed = await syncProvider(provider);
+    expect(changed).toMatchObject({ created: 0, updated: 1, deleted: 1 });
+
+    const unchanged = await syncProvider(provider);
+    expect(unchanged).toMatchObject({ created: 0, updated: 0, deleted: 0, unchanged: 1 });
+  } finally {
+    await rm(root, { recursive: true, force: true });
+  }
+});
 
 test("syncs CrossModel's structured-output capability", () => {
   const supported = buildCrossModel(crossModelModel(), undefined);
