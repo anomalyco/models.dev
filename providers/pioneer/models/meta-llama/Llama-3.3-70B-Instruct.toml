@@ -1,12 +1,4 @@
 base_model = "meta/llama-3.3-70b-instruct"
-reasoning = true
-
-[interleaved]
-field = "reasoning_content"
-
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high"]
 
 [cost]
 input = 0.9
