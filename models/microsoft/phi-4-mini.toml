@@ -1,0 +1,30 @@
+name = "Phi-4-mini"
+description = "Compact Microsoft instruction model tuned for efficient coding assistance, reasoning, and low-latency agent tasks"
+family = "phi"
+release_date = "2024-12-11"
+last_updated = "2024-12-11"
+attachment = false
+reasoning = false
+temperature = true
+tool_call = true
+knowledge = "2023-10"
+open_weights = true
+
+[limit]
+context = 128_000
+output = 4_096
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[[links]]
+label = "Weights"
+url = "https://huggingface.co/microsoft/Phi-4-mini-instruct"
+type = "weights"
+
+[[benchmarks]]
+name = "MMLU"
+score = 67.3
+metric = "accuracy"
+source = "https://huggingface.co/microsoft/Phi-4-mini-instruct/resolve/main/README.md"
