@@ -54,13 +54,14 @@ import {
   type NanoGptModel,
 } from "../src/sync/providers/nano-gpt.js";
 import { openai, parseOpenAIModels } from "../src/sync/providers/openai.js";
+import { ofox } from "../src/sync/providers/ofox.js";
 import { pioneer } from "../src/sync/providers/pioneer.js";
 import { google, shouldTrackGoogleModel } from "../src/sync/providers/google.js";
 import { buildTinfoilModel, tinfoil, type TinfoilModel } from "../src/sync/providers/tinfoil.js";
 import { resolveVeniceBaseModel } from "../src/sync/providers/venice.js";
 import { buildVercelModel, vercel } from "../src/sync/providers/vercel.js";
 import { buildWandbModel, type WandbModel } from "../src/sync/providers/wandb.js";
-import { buildXAIModel } from "../src/sync/providers/xai.js";
+import { buildXAIModel, xai } from "../src/sync/providers/xai.js";
 
 function anthropicModel(overrides: Partial<AnthropicModel> = {}): AnthropicModel {
   return {
@@ -802,13 +803,19 @@ test("OpenAI availability sync retains models absent from a scoped response", as
   }
 });
 
-test("does not track unreliable remote-only models", () => {
+test("tracks missing models except for unreliable first-party inventories", () => {
   expect(google.skipCreates).toBe(true);
   expect(google.trackMissingModels).toBe(false);
   expect(openai.skipCreates).toBe(true);
   expect(openai.trackMissingModels).toBe(false);
   expect(pioneer.skipCreates).toBe(true);
-  expect(pioneer.trackMissingModels).toBe(false);
+  expect(pioneer.trackMissingModels).toBe(true);
+  expect(ofox.skipCreates).toBe(true);
+  expect(ofox.trackMissingModels).toBe(true);
+  expect(tinfoil.skipCreates).toBe(true);
+  expect(tinfoil.trackMissingModels).not.toBe(false);
+  expect(xai.skipCreates).toBe(true);
+  expect(xai.trackMissingModels).not.toBe(false);
 });
 
 test("tracks public Google model families but not opaque internal IDs", () => {

@@ -141,9 +141,7 @@ export const pioneer = {
   name: "Pioneer",
   modelsDir: "providers/pioneer/models",
   skipCreates: true,
-  // Pioneer reports 2024-01-01 for every model, so its creation dates cannot
-  // support a meaningful age cutoff for remote-only model notifications.
-  trackMissingModels: false,
+  trackMissingModels: true,
   deleteMissing: false,
   async fetchModels() {
     const response = await fetch(API_ENDPOINT);

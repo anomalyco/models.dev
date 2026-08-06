@@ -55,8 +55,11 @@ export const ofox = {
   name: "Ofox",
   modelsDir: "providers/ofox/models",
   skipCreates: true,
-  trackMissingModels: false,
+  trackMissingModels: true,
   deleteMissing: false,
+  sourceID(model) {
+    return model.mode === "chat" ? model.id : undefined;
+  },
   missingNotice(paths) {
     return paths.map(
       (file) => `Ofox catalog no longer lists ${file}; review for manual deprecation or removal.`,
