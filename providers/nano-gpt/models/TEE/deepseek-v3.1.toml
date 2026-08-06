@@ -1,13 +1,8 @@
+base_model = "deepseek/deepseek-v3.1"
 name = "DeepSeek V3.1 TEE"
-description = "DeepSeek chat model for instruction following, coding, and analysis"
-family = "deepseek"
-release_date = "2024-01-01"
-last_updated = "2025-08-21"
-attachment = false
 reasoning = false
 tool_call = false
 structured_output = false
-open_weights = true
 
 [cost]
 input = 1
@@ -17,8 +12,3 @@ cache_read = 0.5
 [limit]
 context = 164_000
 input = 164_000
-output = 8_192
-
-[modalities]
-input = ["text"]
-output = ["text"]

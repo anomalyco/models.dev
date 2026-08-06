@@ -1,14 +1,7 @@
 # Included in subscription
+base_model = "alibaba/qwen3-235b-a22b-instruct-2507"
 name = "Qwen 3 235b A22B 2507"
-description = "Qwen instruction model for multilingual chat, reasoning, and tool use"
-family = "qwen"
-release_date = "2025-07-25"
-last_updated = "2025-07-25"
-attachment = false
-reasoning = false
-tool_call = true
 structured_output = true
-open_weights = true
 
 [cost]
 input = 0.13
@@ -19,7 +12,3 @@ cache_read = 0.065
 context = 256_000
 input = 256_000
 output = 262_144
-
-[modalities]
-input = ["text"]
-output = ["text"]
