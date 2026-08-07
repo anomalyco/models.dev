@@ -1,0 +1,10 @@
+base_model = "moonshotai/kimi-k3"
+reasoning_options = [
+  { type = "toggle" },                                                              # API: {"thinking": {"type": "enabled"|"disabled"}}
+  { type = "effort", values = ["none", "minimal", "low", "medium", "high", "max"] }, # API: {"reasoning_effort": <v>}
+]
+
+[cost]
+input = 3
+output = 15
+cache_read = 0.3
