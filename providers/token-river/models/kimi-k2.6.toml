@@ -1,0 +1,21 @@
+base_model = "moonshotai/kimi-k2.6"
+name = "Kimi K2.6"
+description = "Kimi K2.6 - versatile coding and reasoning model"
+attachment = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[cost]
+input = 0
+output = 0
+cache_read = 0
+cache_write = 0
+
+[limit]
+context = 256_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

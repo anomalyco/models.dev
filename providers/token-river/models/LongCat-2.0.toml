@@ -1,0 +1,21 @@
+base_model = "meituan/longcat-2.0"
+name = "LongCat 2.0"
+description = "Meituan LongCat 2.0 - long-context model"
+attachment = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[cost]
+input = 0
+output = 0
+cache_read = 0
+cache_write = 0
+
+[limit]
+context = 256_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

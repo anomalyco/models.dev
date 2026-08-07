@@ -1,0 +1,21 @@
+base_model = "tencent/hy3-preview"
+name = "HunYuan 3 Preview"
+description = "Tencent HunYuan 3 Preview - early access"
+attachment = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[cost]
+input = 0
+output = 0
+cache_read = 0
+cache_write = 0
+
+[limit]
+context = 256_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

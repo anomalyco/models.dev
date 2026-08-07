@@ -1,0 +1,25 @@
+name = "DeepSeek R1 (ARK)"
+description = "DeepSeek R1 hosted on Volcano Engine ARK - powerful reasoning model with transparent chain-of-thought"
+family = "deepseek"
+release_date = "2026-05-15"
+last_updated = "2026-07-01"
+attachment = true
+reasoning = true
+reasoning_options = []
+temperature = true
+tool_call = true
+open_weights = false
+
+[cost]
+input = 0
+output = 0
+cache_read = 0
+cache_write = 0
+
+[limit]
+context = 65_536
+output = 16_384
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

@@ -1,0 +1,21 @@
+base_model = "deepseek/deepseek-v4-flash"
+name = "DeepSeek V4 Flash"
+description = "DeepSeek V4 Flash - fast lightweight reasoning"
+attachment = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[cost]
+input = 0
+output = 0
+cache_read = 0
+cache_write = 0
+
+[limit]
+context = 256_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

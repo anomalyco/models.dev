@@ -1,0 +1,21 @@
+base_model = "alibaba/qwen3.8-max"
+name = "Qwen 3.8 Max"
+description = "Alibaba Qwen 3.8 Max - latest flagship"
+attachment = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[cost]
+input = 0
+output = 0
+cache_read = 0
+cache_write = 0
+
+[limit]
+context = 256_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
