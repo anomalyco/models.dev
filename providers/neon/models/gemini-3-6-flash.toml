@@ -1,4 +1,9 @@
 base_model = "google/gemini-3.6-flash"
+# Google's own API takes temperature; the Neon gateway does not, and answers
+# `BAD_REQUEST: Model gemini-3.6-flash does not support the temperature
+# parameter`. Measured 2026-08-07. Inheriting the base value would advertise a
+# parameter every caller gets a 400 for.
+temperature = false
 reasoning_options = [{ type = "effort", values = ["minimal", "low", "medium", "high"] }]
 
 [cost]
