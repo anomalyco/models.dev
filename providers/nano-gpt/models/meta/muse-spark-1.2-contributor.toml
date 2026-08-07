@@ -8,7 +8,10 @@ reasoning = true
 tool_call = true
 structured_output = true
 open_weights = false
-reasoning_options = []
+
+[[reasoning_options]]
+type = "effort"
+values = ["minimal", "low", "medium", "high", "xhigh"]
 
 [cost]
 input = 0.1
