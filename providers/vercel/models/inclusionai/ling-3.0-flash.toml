@@ -1,8 +1,8 @@
 name = "Ling 3.0 Flash"
 description = "Efficient model for low-latency assistance, extraction, and routine automation"
 family = "ling"
-release_date = "2026-07-23"
-last_updated = "2026-07-23"
+release_date = "2026-08-06"
+last_updated = "2026-08-06"
 attachment = false
 reasoning = true
 tool_call = true
@@ -10,12 +10,13 @@ open_weights = false
 reasoning_options = []
 
 [cost]
-input = 0
-output = 0
+input = 0.06
+output = 0.18
+cache_read = 0.012
 
 [limit]
 context = 256_000
-output = 256_000
+output = 32_000
 
 [modalities]
 input = ["text"]
