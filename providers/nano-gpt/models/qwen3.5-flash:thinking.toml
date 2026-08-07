@@ -1,14 +1,8 @@
 # Not included in subscription
+base_model = "alibaba/qwen3.5-flash"
 name = "Qwen3.5 Flash Thinking"
-description = "Compact GPT model for low-latency assistance and high-volume workloads"
-family = "qwen3.5"
-release_date = "2026-02-24"
-last_updated = "2026-02-24"
-attachment = true
-reasoning = true
 tool_call = false
 structured_output = false
-open_weights = false
 
 [[reasoning_options]]
 type = "budget_tokens"
@@ -23,8 +17,3 @@ cache_read = 0.05
 [limit]
 context = 991_808
 input = 991_808
-output = 65_536
-
-[modalities]
-input = ["text", "image", "video"]
-output = ["text"]
