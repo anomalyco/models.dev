@@ -1,16 +1,5 @@
-name = "Qwen3 Coder Next 80B"
+base_model = "alibaba/qwen3-coder-next"
 description = "Qwen coding model for software agents, repository edits, and code reasoning"
-family = "qwen"
-release_date = "2026-02-04"
-last_updated = "2026-02-04"
-attachment = false
-reasoning = true
-temperature = true
-tool_call = true
-structured_output = true
-knowledge = "2025-04"
-open_weights = true
-reasoning_options = []
 
 [cost]
 input = 0.167
@@ -18,8 +7,3 @@ output = 0.891
 
 [limit]
 context = 256_000
-output = 65_536
-
-[modalities]
-input = ["text"]
-output = ["text"]
