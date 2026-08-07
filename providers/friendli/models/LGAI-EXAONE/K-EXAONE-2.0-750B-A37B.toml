@@ -1,0 +1,22 @@
+# Toggle: chat_template_kwargs.enable_thinking = true | false
+# https://friendli.ai/docs/guides/reasoning
+base_model = "lgai-exaone/k-exaone-2.0-750b-a37b"
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "budget_tokens"
+min = -1
+max = 262_144
+
+[cost]
+input = 0.6
+output = 2.4
+cache_read = 0.12
+
+[limit]
+output = 262_144
