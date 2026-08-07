@@ -1,4 +1,7 @@
 base_model = "openai/gpt-5.4-mini"
+# The Neon gateway accepts `temperature` on this model; the base entry says
+# otherwise because the upstream provider rejects it. Measured 2026-08-07.
+temperature = true
 reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh"] }]
 
 [cost]

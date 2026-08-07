@@ -1,4 +1,7 @@
 base_model = "moonshotai/kimi-k3"
+# The Neon gateway accepts `temperature` on this model; the base entry says
+# otherwise because the upstream provider rejects it. Measured 2026-08-07.
+temperature = true
 reasoning_options = [
   { type = "toggle" },                                                              # API: {"thinking": {"type": "enabled"|"disabled"}}
   { type = "effort", values = ["none", "minimal", "low", "medium", "high", "max"] }, # API: {"reasoning_effort": <v>}
