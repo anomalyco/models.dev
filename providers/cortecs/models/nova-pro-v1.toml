@@ -3,17 +3,18 @@ description = "Flagship model for demanding analysis, coding, and production age
 family = "nova-pro"
 release_date = "2024-12-03"
 last_updated = "2024-12-03"
-knowledge = "2024-04"
-attachment = false
-reasoning = false
-tool_call = true
+attachment = true
+reasoning = true
 temperature = true
+tool_call = true
+structured_output = true
+knowledge = "2024-04"
 open_weights = false
-
+reasoning_options = []
 
 [cost]
-input = 1.016
-output = 4.061
+input = 0.918
+output = 3.671
 
 [limit]
 context = 300_000

@@ -1,0 +1,18 @@
+name = "Ling 3.0 Tiny (Free)"
+description = "Free provider route for experiments, demos, and cost-sensitive chat workloads"
+family = "ling"
+release_date = "2026-08-06"
+last_updated = "2026-08-06"
+attachment = false
+reasoning = true
+tool_call = true
+open_weights = false
+reasoning_options = []
+
+[limit]
+context = 256_000
+output = 32_000
+
+[modalities]
+input = ["text"]
+output = ["text"]

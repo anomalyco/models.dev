@@ -1,0 +1,15 @@
+# https://ofox.ai/en/models/anthropic/claude-opus-4.5 — Ofox model id, pricing, context/output
+# https://docs.anthropic.com/en/docs/about-claude/models/overview — Opus 4.5 extended thinking
+# Reasoning: Anthropic-native path; effort + budget_tokens match providers/anthropic/models/claude-opus-4-5.toml
+base_model = "anthropic/claude-opus-4-5"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }, { type = "budget_tokens", min = 1_024 }]
+
+[cost]
+input = 5
+output = 25
+cache_read = 0.5
+cache_write = 6.25
+
+[provider]
+npm = "@ai-sdk/anthropic"
+api = "https://api.ofox.ai/anthropic/v1"

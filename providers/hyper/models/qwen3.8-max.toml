@@ -1,5 +1,4 @@
 base_model = "alibaba/qwen3.8-max-preview"
-attachment = false
 reasoning_options = []
 
 [cost]
@@ -11,4 +10,4 @@ cache_read = 0.25
 output = 65_536
 
 [modalities]
-input = ["text"]
+input = ["text", "image"]

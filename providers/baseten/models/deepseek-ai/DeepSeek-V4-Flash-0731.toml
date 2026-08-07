@@ -1,16 +1,15 @@
-# Baseten overview documents DeepSeek V4 Flash 0731 reasoning as "Enabled by
-# default". Mirroring the DeepSeek V4 Pro entry, reasoning_effort accepts
-# low | medium | high | xhigh; no toggle or budget field is documented.
-# https://docs.baseten.co/inference/model-apis/overview (accessed 2026-08-01)
+# Baseten's model matrix documents DeepSeek V4 Flash 0731 reasoning as "Enabled
+# by default", but the model is absent from the "Control reasoning depth" table
+# on the reasoning page, and that page warns that models outside it accept
+# reasoning_effort and ignore it. So it reasons with no addressable depth.
+# https://docs.baseten.co/inference/model-apis/overview
+# https://docs.baseten.co/inference/model-apis/reasoning
 base_model = "deepseek/deepseek-v4-flash-0731"
 name = "Deepseek V4 Flash 0731"
+reasoning_options = []
 
 [interleaved]
 field = "reasoning_content"
-
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high", "xhigh"]
 
 [cost]
 input = 0.13

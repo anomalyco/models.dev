@@ -1,0 +1,25 @@
+name = "Muse Spark 1.2 Contributor (Data Used for Training)"
+description = "A much cheaper opt-in version of Muse Spark 1.2 with the same multimodal coding and agentic capabilities. Prompts and outputs sent to this Contributor model may be used by Meta for training and to improve its products; use the standard Muse Spark 1.2 model if you do not want your data used for training."
+family = "muse"
+release_date = "2026-08-05"
+last_updated = "2026-08-05"
+attachment = true
+reasoning = true
+tool_call = true
+structured_output = true
+open_weights = false
+reasoning_options = []
+
+[cost]
+input = 0.1
+output = 0.2
+cache_read = 0.002
+
+[limit]
+context = 1_000_000
+input = 1_000_000
+output = 65_536
+
+[modalities]
+input = ["text", "image", "video", "audio", "pdf"]
+output = ["text"]

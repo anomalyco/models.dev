@@ -1,6 +1,9 @@
 base_model = "xai/grok-build-0.1"
 description = "Grok coding model for agentic engineering, edits, and codebase workflows"
-reasoning_options = []
+
+[[reasoning_options]]
+type = "effort"
+values = ["high"]
 
 [cost]
 input = 1

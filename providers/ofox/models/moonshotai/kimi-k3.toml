@@ -1,0 +1,12 @@
+# Sources:
+# https://ofox.ai/models/moonshotai/kimi-k3 (pricing; accessed 2026-08-06)
+# https://platform.kimi.ai/docs/pricing/chat-k3 (official $3/$15/$0.30)
+# https://platform.kimi.ai/docs/guide/use-reasoning-effort (reasoning_effort = low|high|max; always on)
+# Effort: reasoning_effort = low|high|max
+base_model = "moonshotai/kimi-k3"
+reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]
+
+[cost]
+input = 3
+output = 15
+cache_read = 0.3

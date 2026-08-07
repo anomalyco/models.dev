@@ -1,5 +1,7 @@
-# Opt in with chat_template_args.enable_thinking=true. Baseten documents no
-# explicit false behavior, effort values, or reasoning-token budget.
+# Opt in with chat_template_args.enable_thinking=true. Baseten now documents
+# reasoning_effort = none | high | max for GLM 5.2, and returns a 400 for any
+# value outside that set. GLM 5.2 honors reasoning_effort both top-level and
+# inside chat_template_args. No reasoning-token budget is documented.
 # https://docs.baseten.co/inference/model-apis/reasoning
 base_model = "zhipuai/glm-5.2"
 name = "GLM 5.2"
@@ -8,7 +10,8 @@ name = "GLM 5.2"
 field = "reasoning_content"
 
 [[reasoning_options]]
-type = "toggle"
+type = "effort"
+values = ["none", "high", "max"]
 
 [cost]
 input = 1.4

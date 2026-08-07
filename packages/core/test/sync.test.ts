@@ -10,6 +10,7 @@ import {
   parseAnthropicPricing,
   type AnthropicModel,
 } from "../src/sync/providers/anthropic.js";
+import { buildCortecsModel, type CortecsModel } from "../src/sync/providers/cortecs.js";
 import {
   buildCrossModel,
   type CrossModelModel,
@@ -53,13 +54,14 @@ import {
   type NanoGptModel,
 } from "../src/sync/providers/nano-gpt.js";
 import { openai, parseOpenAIModels } from "../src/sync/providers/openai.js";
+import { ofox } from "../src/sync/providers/ofox.js";
 import { pioneer } from "../src/sync/providers/pioneer.js";
 import { google, shouldTrackGoogleModel } from "../src/sync/providers/google.js";
 import { buildTinfoilModel, tinfoil, type TinfoilModel } from "../src/sync/providers/tinfoil.js";
 import { resolveVeniceBaseModel } from "../src/sync/providers/venice.js";
 import { buildVercelModel, vercel } from "../src/sync/providers/vercel.js";
 import { buildWandbModel, type WandbModel } from "../src/sync/providers/wandb.js";
-import { buildXAIModel } from "../src/sync/providers/xai.js";
+import { buildXAIModel, xai } from "../src/sync/providers/xai.js";
 
 function anthropicModel(overrides: Partial<AnthropicModel> = {}): AnthropicModel {
   return {
@@ -801,13 +803,19 @@ test("OpenAI availability sync retains models absent from a scoped response", as
   }
 });
 
-test("does not track unreliable remote-only models", () => {
+test("tracks missing models except for unreliable first-party inventories", () => {
   expect(google.skipCreates).toBe(true);
   expect(google.trackMissingModels).toBe(false);
   expect(openai.skipCreates).toBe(true);
   expect(openai.trackMissingModels).toBe(false);
   expect(pioneer.skipCreates).toBe(true);
-  expect(pioneer.trackMissingModels).toBe(false);
+  expect(pioneer.trackMissingModels).toBe(true);
+  expect(ofox.skipCreates).toBe(true);
+  expect(ofox.trackMissingModels).toBe(true);
+  expect(tinfoil.skipCreates).toBe(true);
+  expect(tinfoil.trackMissingModels).not.toBe(false);
+  expect(xai.skipCreates).toBe(true);
+  expect(xai.trackMissingModels).not.toBe(false);
 });
 
 test("tracks public Google model families but not opaque internal IDs", () => {
@@ -2135,6 +2143,27 @@ test("defaults new reasoning models to empty reasoning options", () => {
   expect(preserveReasoningOptions({ reasoning: true }, undefined)).toEqual({
     reasoning: true,
     reasoning_options: [],
+  });
+});
+
+test("preserves authored Cortecs reasoning options missing from the API", () => {
+  const model: CortecsModel = {
+    id: "deepseek-v4-flash-0731",
+    created: 1_775_088_000,
+    pricing: { currency: "EUR", input_token: 0.224, output_token: 0.269 },
+    context_size: 1_048_576,
+    input_modalities: ["text"],
+    output_modalities: ["text"],
+    supported_features: ["reasoning", "tools"],
+  };
+  const existing: ExistingModel = {
+    base_model: "deepseek/deepseek-v4-flash-0731",
+    reasoning: true,
+    reasoning_options: [{ type: "effort", values: ["low", "medium", "high"] }],
+  };
+
+  expect(buildCortecsModel(model, existing, existing)).toMatchObject({
+    reasoning_options: [{ type: "effort", values: ["low", "medium", "high"] }],
   });
 });
 
