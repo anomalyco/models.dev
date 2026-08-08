@@ -145,30 +145,25 @@ export function buildSferenceModel(
 
   // The public /v1/models endpoint exposes context_tokens, released, and
   // capabilities. For factored models, only API-authoritative values are
-  // written as overrides; fields the API omits (input limit, full modality
-  // arrays, knowledge) inherit from base_model metadata. Setting a field to
-  // undefined lets factorBaseModel strip it so it inherits from base.
+  // written as overrides; fields the API omits (input limit, output limit, full
+  // modality arrays, knowledge) inherit from base_model metadata. Setting a
+  // field to undefined lets factorBaseModel strip it so it inherits from base.
   const contextTokens = model.context_tokens ?? 0;
   const apiContext = contextTokens > 0 ? contextTokens : undefined;
   // The platform publishes no per-model output cap: workers clamp max_tokens to
   // whatever the context window leaves after the prompt (sference-platform#189)
-  // rather than enforcing a separate ceiling, so the only true output limit is
-  // the context window itself. When the API omits context, leave output unset
-  // so a factored model inherits the base checkpoint's pair instead of
-  // publishing a number no request was measured against.
-  const resolvedContext = apiContext ?? existing?.limit?.context;
-  // `limit` for factorBaseModel must be a complete ProviderModelLimit; the
-  // values.limit below carries only the API-authoritative overrides so missing
-  // fields (output, input) inherit from base metadata instead of being zeroed.
+  // rather than enforcing a separate ceiling. Computing context - input here is
+  // not practical (input depends on the request), and callers can set arbitrary
+  // max_tokens anyway, so output is left unset and factored models inherit the
+  // base checkpoint's output limit instead of publishing a misleading number.
   const limit = {
-    context: resolvedContext ?? 0,
+    context: apiContext ?? existing?.limit?.context ?? 0,
     input: existing?.limit?.input,
-    output: resolvedContext ?? 0,
+    output: existing?.limit?.output ?? 0,
   };
   const valuesLimit: Partial<SyncedFullModel["limit"]> = {
     context: apiContext,
     input: existing?.limit?.input,
-    output: resolvedContext,
   };
 
   // Pricing is already per-1M-token USD — no conversion needed. A free model

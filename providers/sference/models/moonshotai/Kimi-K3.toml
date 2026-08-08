@@ -1,6 +1,5 @@
-base_model = "alibaba/qwen3.6-35b-a3b"
-name = "Qwen3.6 35B"
-release_date = "2026-04-01"
+base_model = "moonshotai/kimi-k3"
+release_date = "2026-07-27"
 attachment = false
 
 [interleaved]
@@ -10,9 +9,9 @@ field = "reasoning_content"
 type = "toggle"
 
 [cost]
-input = 0.2
-output = 1.25
-cache_read = 0.05
+input = 2.25
+output = 11.25
+cache_read = 0.225
 
 [modalities]
 input = ["text"]
