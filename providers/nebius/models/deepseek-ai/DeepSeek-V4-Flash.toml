@@ -6,12 +6,18 @@
 # max_tokens has no documented ceiling other than the context window, so output
 # is set to the context size (same as the other Nebius base_model entries).
 # https://docs.tokenfactory.nebius.com/api-reference/inference/create-chat-completion
-# The gateway's generic schema accepts reasoning_effort =
-# none/minimal/low/medium/high/xhigh/max; the sglang backend rejects "minimal"
-# and "xhigh" (see the Kimi-K3 entry), so only the five below are authored.
+# Reasoning controls are DeepSeek V4's, matching the lab entry for this model and
+# the Nebius DeepSeek-V4-Pro peer; Nebius's request schema permits additional
+# properties, so the model-native fields pass through.
+# Toggle: thinking.type = enabled|disabled
+# Effort: reasoning_effort = low|high|max (Flash maps low->low, unlike Pro)
+# https://api-docs.deepseek.com/guides/thinking_mode/
 # models_info exposes no cache pricing for this model, so no cache rates are set.
 base_model = "deepseek/deepseek-v4-flash"
-reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "max"] }]
+reasoning_options = [
+  { type = "toggle" },
+  { type = "effort", values = ["low", "high", "max"] },
+]
 
 [interleaved]
 field = "reasoning_content"
