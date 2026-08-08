@@ -4,3 +4,8 @@ attachment = false
 [cost]
 input = 0.5
 output = 1.5
+
+# The Neon gateway serves more than the upstream entry claims: this is the
+# largest accepted `max_tokens`. Measured at the boundary 2026-08-08.
+[limit]
+output = 8_192
