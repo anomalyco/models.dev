@@ -19,7 +19,11 @@
 # No toggle: `none` is the off switch, and DeepSeek's native
 # `thinking.type = disabled` is accepted but ignored here (reasoning_content
 # still comes back), so it is not a real caller control on this host.
-# models_info exposes no cache pricing for this model, so no cache rates are set.
+# Nebius has no discounted prompt-cache tier for this model: models_info exposes
+# no cache fields, and cached and fresh input tokens are billed identically at the
+# full input rate. cache_read is therefore set equal to input rather than left
+# unset, which downstream consumers (e.g. opencode) treat as $0/M. Same reasoning
+# as PR #3956 for Kimi-K3.
 base_model = "deepseek/deepseek-v4-flash"
 reasoning_options = [{ type = "effort", values = ["none", "low", "high", "max"] }]
 
@@ -29,6 +33,7 @@ field = "reasoning_content"
 [cost]
 input = 0.14
 output = 0.28
+cache_read = 0.14
 
 [limit]
 context = 131_072
