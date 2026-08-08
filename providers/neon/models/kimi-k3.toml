@@ -11,3 +11,8 @@ reasoning_options = [
 input = 3
 output = 15
 cache_read = 0.3
+
+# The Neon gateway caps output below the upstream entry: `max_tokens` one above
+# 65_536 returns 400. Measured at the boundary 2026-08-08. `context` is inherited.
+[limit]
+output = 65_536

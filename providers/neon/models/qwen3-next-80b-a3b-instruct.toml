@@ -3,3 +3,8 @@ base_model = "alibaba/qwen3-next-80b-a3b-instruct"
 [cost]
 input = 0.15
 output = 1.2
+
+# The Neon gateway caps output below the upstream entry: `max_tokens` one above
+# 10_000 returns 400. Measured at the boundary 2026-08-08. `context` is inherited.
+[limit]
+output = 10_000
