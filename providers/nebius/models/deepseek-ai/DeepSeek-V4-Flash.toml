@@ -6,18 +6,22 @@
 # max_tokens has no documented ceiling other than the context window, so output
 # is set to the context size (same as the other Nebius base_model entries).
 # https://docs.tokenfactory.nebius.com/api-reference/inference/create-chat-completion
-# Reasoning controls are DeepSeek V4's, matching the lab entry for this model and
-# the Nebius DeepSeek-V4-Pro peer; Nebius's request schema permits additional
-# properties, so the model-native fields pass through.
-# Toggle: thinking.type = enabled|disabled
-# Effort: reasoning_effort = low|high|max (Flash maps low->low, unlike Pro)
-# https://api-docs.deepseek.com/guides/thinking_mode/
+# Effort: reasoning_effort. Verified live against
+# api.tokenfactory.nebius.com/v1/chat/completions on 2026-08-09, temperature 0,
+# two prompts. The gateway accepts all seven documented values, but only four
+# distinct behaviours exist on this model, and they line up with lab Flash's
+# low/high/max (https://api-docs.deepseek.com/guides/thinking_mode/) plus a
+# Nebius-side off switch:
+#   none                  -> reasoning_tokens 0, no reasoning_content
+#   minimal = low = medium -> identical output (677 / 133 reasoning tokens)
+#   high = xhigh          -> identical output (490 / 138 reasoning tokens)
+#   max                   -> distinct        (1102 / 154 reasoning tokens)
+# No toggle: `none` is the off switch, and DeepSeek's native
+# `thinking.type = disabled` is accepted but ignored here (reasoning_content
+# still comes back), so it is not a real caller control on this host.
 # models_info exposes no cache pricing for this model, so no cache rates are set.
 base_model = "deepseek/deepseek-v4-flash"
-reasoning_options = [
-  { type = "toggle" },
-  { type = "effort", values = ["low", "high", "max"] },
-]
+reasoning_options = [{ type = "effort", values = ["none", "low", "high", "max"] }]
 
 [interleaved]
 field = "reasoning_content"
