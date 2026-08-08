@@ -6,6 +6,7 @@
 # xhigh; lower levels enable thinking at the default depth, so only high and
 # xhigh are advertised.
 base_model = "deepseek/deepseek-v4-flash"
+release_date = "2026-06-20"
 
 [interleaved]
 field = "reasoning_content"
@@ -24,4 +25,3 @@ cache_read = 0.07
 
 [limit]
 context = 1_048_576
-output = 1_048_576

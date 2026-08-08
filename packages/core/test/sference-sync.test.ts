@@ -138,23 +138,23 @@ test("buildSferenceModel falls back to existing cost when pricing is absent", ()
   expect(cost.output).toBe(1);
 });
 
-test("buildSferenceModel sets limit.output to the context window", () => {
-  // Workers clamp max_tokens to what the context window leaves rather than
-  // enforcing a separate cap, and the catalog publishes no max-output value, so
-  // the context window is the output limit. The base checkpoint's smaller
-  // output must be overridden, not inherited.
+test("buildSferenceModel writes context but lets output inherit from base", () => {
+  // The platform publishes no per-model output cap (workers clamp max_tokens
+  // to context - prompt), and computing context - input here is not practical.
+  // Output is therefore left unset so factored models inherit the base
+  // checkpoint's output limit instead of publishing a misleading number.
   const model = buildSferenceModel(
     { ...baseModel(), context_tokens: 1_048_576, id: "zai-org/GLM-5.2" },
     undefined,
     "zhipuai/glm-5.2",
   ) as Record<string, unknown>;
-  expect(model.limit).toEqual({ context: 1_048_576, output: 1_048_576 });
+  expect(model.limit).toEqual({ context: 1_048_576 });
 });
 
 test("buildSferenceModel leaves limit unset when the catalog omits context", () => {
   // With no context from the API and none on the existing TOML there is no
-  // measured window to publish an output cap against, so both fields inherit
-  // from the base checkpoint instead of being written as zeros.
+  // measured window, so limit inherits entirely from the base checkpoint
+  // instead of being written with zeros.
   const model = buildSferenceModel(
     { ...baseModel(), context_tokens: null },
     undefined,
@@ -163,15 +163,17 @@ test("buildSferenceModel leaves limit unset when the catalog omits context", () 
   expect(model.limit).toBeUndefined();
 });
 
-test("buildSferenceModel ignores a hand-authored output that undercuts context", () => {
-  // A stale output cap on the existing TOML must not survive: the clamp makes
-  // the full window reachable, so output tracks context on every sync.
+test("buildSferenceModel ignores a stale hand-authored output and inherits from base", () => {
+  // A stale output cap on the existing TOML must not survive: the sync never
+  // writes output (the platform has no per-model cap), so it inherits from
+  // base metadata regardless of what the existing TOML says.
   const model = buildSferenceModel(
     baseModel(),
     { limit: { context: 262_144, output: 32_768 } },
     "alibaba/qwen3.6-35b-a3b",
   ) as Record<string, unknown>;
-  expect((model.limit as Record<string, unknown>).output).toBe(262_144);
+  // Context matches base (262_144) so it is stripped; output is never written.
+  expect(model.limit).toBeUndefined();
 });
 
 test("buildSferenceModel preserves hand-authored reasoning_options (effort)", () => {
