@@ -1,4 +1,8 @@
 base_model = "thinkingmachines/inkling"
+# The gateway does not honour response_format json_schema here: it answers
+# 200 with finish_reason "abort" and empty content, with strict true or
+# false, at any token budget. Plain requests work. Measured 2026-08-08.
+structured_output = false
 reasoning_options = [
   { type = "toggle" },                                                              # API: {"thinking": {"type": "enabled"|"disabled"}}
   { type = "effort", values = ["none", "minimal", "low", "medium", "high", "max"] }, # API: {"reasoning_effort": <v>}
