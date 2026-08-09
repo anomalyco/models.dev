@@ -1,0 +1,16 @@
+# Self-hosted through longwire: inference runs on the user's own hardware, so
+# there is no per-token price (longwire itself charges nothing per request).
+# Exact model ids vary by serving engine (ollama tags like "gemma4:e4b", HF
+# repo paths on vLLM/sglang) — GET /v1/models returns the account's real ids.
+# Limits/modalities inherit from the base model; engine quantization and
+# --max-model-len can lower the effective context on a given machine.
+# Reasoning control depends on the engine serving this model on the user's
+# machine (ollama `think`, vLLM/sglang reasoning parsers); longwire forwards
+# request fields verbatim, so a plain on/off toggle is the portable surface.
+reasoning_options = [{ type = "toggle" }]
+
+base_model = "deepseek/deepseek-v4-flash-0731"
+
+[cost]
+input = 0
+output = 0
