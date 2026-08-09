@@ -1,22 +1,7 @@
+base_model = "inclusionai/ling-3.0-flash"
 name = "Ling 3.0 Flash (Free)"
-description = "Efficient model for low-latency assistance, extraction, and routine automation"
-family = "ling"
-attachment = false
-reasoning = true
-tool_call = true
-release_date = "2026-07-23"
-last_updated = "2026-07-23"
-open_weights = true
 reasoning_options = []
 
 [cost]
 input = 0
 output = 0
-
-[limit]
-context = 262_144
-output = 32_768
-
-[modalities]
-input = ["text"]
-output = ["text"]
