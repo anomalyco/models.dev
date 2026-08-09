@@ -2589,6 +2589,23 @@ test("confirms reasoning when any available Merge Gateway route reports supports
   expect(model).not.toMatchObject({ reasoning: false });
 });
 
+// The live catalog emits reasoning: null on some routes even when
+// supports_reasoning is true. Treat that as unknown controls, not a crash.
+test("tolerates a null Merge Gateway reasoning object when reasoning is confirmed", () => {
+  const selected = mergeGatewayVendor();
+  selected.capabilities.supports_reasoning = true;
+  selected.capabilities.reasoning = null;
+  const model = buildMergeGatewayModel(mergeGatewayModel({
+    vendors: { openai: selected },
+  }), {
+    base_model: "openai/gpt-5.6-sol",
+    cost: { input: 5, output: 30 },
+  });
+
+  expect(model).toMatchObject({ reasoning_options: [] });
+  expect(model).not.toMatchObject({ reasoning: false });
+});
+
 // Publishes a toggle only when the selected route explicitly supports disabling reasoning.
 test("derives a Merge Gateway reasoning toggle when the selected route supports disabling", () => {
   const selected = mergeGatewayVendor();
