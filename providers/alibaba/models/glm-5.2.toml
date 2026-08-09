@@ -2,14 +2,10 @@
 # https://www.alibabacloud.com/help/en/model-studio/glm
 # https://www.alibabacloud.com/help/en/model-studio/model-pricing (Singapore list)
 # https://www.qwencloud.com/models/glm-5.2 (implicit cache price)
-# Toggle: enable_thinking true|false
-# Effort: reasoning_effort none|minimal skip thinking, low|medium map to high,
-# xhigh maps to max; effective levels are high|max (default: max).
+# Effort: reasoning_effort = none|minimal|low|medium|high|xhigh|max
+# (none disables reasoning, so a separate toggle is not needed).
 base_model = "zhipuai/glm-5.2"
-reasoning_options = [
-  { type = "toggle" },
-  { type = "effort", values = ["high", "max"] },
-]
+reasoning_options = [{ type = "effort", values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"] }]
 
 [interleaved]
 field = "reasoning_content"
