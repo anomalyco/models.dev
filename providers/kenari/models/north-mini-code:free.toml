@@ -1,3 +1,10 @@
+# Sources (accessed 2026-08-09):
+# - https://kenari.id/v1/models (north-mini-code:free), public and keyless: publishes
+#   "reasoning_toggle": false and no reasoning_options for this model.
+# Kenari only emits a reasoning disable shape for a backend configured with one, and
+# this model's backend has none, so a caller's reasoning_effort "none" is stripped from
+# the request and nothing replaces it. The [] below is the host's own answer that it
+# exposes no caller control, not an unfilled catalog field.
 base_model = "cohere/north-mini-code-1-0"
 name = "North Mini Code (Free)"
 reasoning_options = []

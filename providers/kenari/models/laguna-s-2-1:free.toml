@@ -1,3 +1,11 @@
+# Sources (accessed 2026-08-09):
+# - https://kenari.id/v1/models (laguna-s-2-1:free), public and keyless: publishes
+#   "reasoning_toggle": false for this model.
+# The lab control (chat_template_kwargs.enable_thinking) is not reachable through this
+# host. Kenari implements that shape, but only emits it for a backend configured with
+# one; this model's backend has none, so a caller's reasoning_effort "none" is stripped
+# from the request and nothing replaces it. The [] below is the host's own answer that
+# it exposes no on/off control, not an unfilled catalog field.
 base_model = "poolside/laguna-s-2.1"
 name = "Laguna S 2.1 (Free)"
 reasoning_options = []
