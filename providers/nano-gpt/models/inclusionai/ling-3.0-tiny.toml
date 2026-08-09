@@ -1,0 +1,24 @@
+name = "Ling 3.0 Tiny"
+description = "Ling 3.0 Tiny is a compact 7.9B-parameter Mixture-of-Experts model with 1.3B parameters active per token. It is designed for responsive agents, reliable instruction following, natural multi-turn conversations, long-context work, and function calling at low inference cost."
+family = "ling"
+release_date = "2026-08-09"
+last_updated = "2026-08-09"
+attachment = false
+reasoning = false
+tool_call = true
+structured_output = false
+open_weights = false
+
+[cost]
+input = 0.1
+output = 0.2
+cache_read = 0.01
+
+[limit]
+context = 262_144
+input = 262_144
+output = 32_768
+
+[modalities]
+input = ["text"]
+output = ["text"]
