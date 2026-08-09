@@ -1,0 +1,28 @@
+name = "Kimi K3"
+description = "Long-context general model with 1M context (TEE-backed)"
+family = "kimi"
+release_date = "2026-07-01"
+last_updated = "2026-08-10"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+open_weights = false
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "toggle"
+
+[cost]
+input = 3.00
+output = 15.00
+
+[limit]
+context = 1_048_576
+output = 65_536
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
