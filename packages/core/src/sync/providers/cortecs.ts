@@ -101,7 +101,7 @@ export function buildCortecsModel(
     return factorBaseModel(canonical, {
       description: existing?.description,
       attachment: input.some((value) => value !== "text"),
-      reasoning: undefined,
+      reasoning,
       reasoning_options: reasoningOptions,
       temperature: existing?.temperature,
       tool_call: features.has("tools"),

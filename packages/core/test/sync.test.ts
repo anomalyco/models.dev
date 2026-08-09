@@ -2167,6 +2167,29 @@ test("preserves authored Cortecs reasoning options missing from the API", () => 
   });
 });
 
+test("overrides canonical metadata with Cortecs reasoning support", () => {
+  const model: CortecsModel = {
+    id: "apertus-70b",
+    created: 1_775_088_000,
+    pricing: { currency: "EUR", input_token: 1.25, output_token: 2 },
+    context_size: 65_536,
+    input_modalities: ["text"],
+    output_modalities: ["text"],
+    supported_features: ["reasoning", "tools"],
+  };
+  const existing: ExistingModel = {
+    base_model: "swiss-ai/apertus-70b",
+    reasoning: true,
+    reasoning_options: [],
+  };
+
+  expect(buildCortecsModel(model, existing, existing)).toMatchObject({
+    base_model: "swiss-ai/apertus-70b",
+    reasoning: true,
+    reasoning_options: [],
+  });
+});
+
 test("syncs OpenRouter reasoning efforts from model metadata", () => {
   const model = buildOpenRouterModel(openRouterModel({
     reasoning: {
