@@ -1,0 +1,17 @@
+base_model = "anthropic/claude-sonnet-5"
+name = "Claude Sonnet 5"
+description = "Balanced Claude for coding, planning, and long-context agents"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high", "xhigh", "max"]
+
+[cost]
+input = 2
+output = 10
+
+[limit]
+context = 1_000_000

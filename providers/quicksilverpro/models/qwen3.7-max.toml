@@ -1,0 +1,17 @@
+base_model = "alibaba/qwen3.7-max"
+name = "Qwen3.7 Max"
+description = "Qwen 3.7 Max — strong coding and reasoning at low cost"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "budget_tokens"
+
+[cost]
+input = 1.25
+output = 3.75
+cache_read = 0.25
+
+[limit]
+context = 1_048_576

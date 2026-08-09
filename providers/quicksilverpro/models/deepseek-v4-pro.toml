@@ -1,0 +1,21 @@
+base_model = "deepseek/deepseek-v4-pro"
+name = "DeepSeek V4 Pro"
+description = "DeepSeek V4 Pro — frontier reasoning and coding, 1M context"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["high", "max"]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.348
+output = 0.696
+cache_read = 0.002784
+
+[limit]
+context = 1_048_576

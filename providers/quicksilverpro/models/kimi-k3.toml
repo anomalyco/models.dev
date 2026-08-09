@@ -1,0 +1,21 @@
+base_model = "moonshotai/kimi-k3"
+name = "Kimi K3"
+description = "Moonshot Kimi K3 — agentic coding and tool use, 1M context"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 2.4
+output = 12
+cache_read = 0.24
+
+[limit]
+context = 1_048_576

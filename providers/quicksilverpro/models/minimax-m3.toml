@@ -1,0 +1,14 @@
+base_model = "minimax/MiniMax-M3"
+name = "MiniMax M3"
+description = "MiniMax M3 — efficient long-context agent model"
+
+[[reasoning_options]]
+type = "toggle"
+
+[cost]
+input = 0.24
+output = 0.96
+cache_read = 0.048
+
+[limit]
+context = 1_048_576

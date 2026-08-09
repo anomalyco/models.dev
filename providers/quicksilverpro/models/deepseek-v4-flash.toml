@@ -1,0 +1,21 @@
+base_model = "deepseek/deepseek-v4-flash"
+name = "DeepSeek V4 Flash"
+description = "DeepSeek V4 Flash — lowest-cost agent model, 1M context"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.112
+output = 0.224
+cache_read = 0.0144
+
+[limit]
+context = 1_048_576
