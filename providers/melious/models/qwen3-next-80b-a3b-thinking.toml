@@ -1,0 +1,12 @@
+# Cost: converted from Melious's EUR list price for the default `balanced`
+# route at 1.1535 USD/EUR (ECB euro reference rate, 2026-08-07).
+# Sources: https://melious.ai/hub/models/qwen3-next-80b-a3b-thinking and https://melious.ai/pricing
+base_model = "alibaba/qwen3-next-80b-a3b-thinking"
+reasoning_options = []
+
+[cost]
+input = 0.173
+output = 1.3842
+
+[limit]
+context = 262_144

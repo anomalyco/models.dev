@@ -1,0 +1,30 @@
+name = "Gemma 3 27B IT"
+description = "Open Gemma 3 instruction model with vision input and a long multilingual context"
+family = "gemma"
+release_date = "2025-03-12"
+last_updated = "2025-03-12"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = true
+structured_output = true
+knowledge = "2024-08"
+open_weights = true
+license = "Gemma"
+
+[limit]
+context = 131_072
+output = 8_192
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/google/gemma-3-27b-it"
+
+[[links]]
+label = "Model card"
+url = "https://ai.google.dev/gemma/docs/core/model_card_3"
+type = "model_card"
