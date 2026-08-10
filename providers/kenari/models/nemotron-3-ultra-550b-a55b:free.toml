@@ -1,9 +1,15 @@
+# Sources (accessed 2026-08-10):
+# - https://kenari.id/v1/models (nemotron-3-ultra-550b-a55b:free), public and keyless:
+#   publishes no reasoning_options for this model.
+# - the nvidia provider slice in this repo, which publishes [{"type":"toggle"}] for
+#   nvidia/nemotron-3-ultra-550b-a55b: a reasoning on/off control and no effort levels.
+# An earlier revision of this file carried effort ["medium","high"], copied from the host
+# while it was deriving effort metadata from the openrouter slice rather than from the
+# model's author. The host corrected that, so the [] below is NVIDIA's own answer that the
+# model exposes no effort control, not an unfilled catalog field.
 base_model = "nvidia/nemotron-3-ultra-550b-a55b"
 name = "Nemotron 3 Ultra 550B A55B (Free)"
-
-[[reasoning_options]]
-type = "effort"
-values = ["medium", "high"]
+reasoning_options = []
 
 [cost]
 input = 0
