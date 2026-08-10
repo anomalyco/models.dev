@@ -1,0 +1,28 @@
+name = "Muse Glimmer 30B"
+description = "Open Llama multimodal model for image understanding and text reasoning"
+family = "muse"
+release_date = "2026-08-09"
+last_updated = "2026-08-09"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high", "xhigh"]
+
+[cost]
+input = 0.35
+output = 1.5
+cache_read = 0.04
+
+[limit]
+context = 131_072
+output = 131_072
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
