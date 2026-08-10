@@ -48,6 +48,7 @@ const AlibabaPrice = z
     price: z.string(),
     price_unit: z.string(),
     price_name: z.string(),
+    time_band: z.string().nullable().optional(),
   })
   .passthrough();
 
@@ -88,6 +89,14 @@ const AlibabaModel = z
     published_time: z.string(),
     inference_metadata: AlibabaInferenceMetadata,
     model_info: AlibabaModelInfo,
+    inference_offline_info: z
+      .object({
+        announceUrl: z.string().optional(),
+        offlineTime: z.string().optional(),
+      })
+      .passthrough()
+      .nullable()
+      .optional(),
   })
   .passthrough();
 
@@ -248,10 +257,18 @@ async function fetchModelsPage(
   return page;
 }
 
-function price(prices: z.infer<typeof AlibabaPrice>[], ...types: string[]) {
+function hasPriceType(prices: z.infer<typeof AlibabaPrice>[], ...types: string[]) {
+  return types.some((type) => prices.some((price) => price.type === type));
+}
+
+function tokenPrice(prices: z.infer<typeof AlibabaPrice>[], ...types: string[]) {
   for (const type of types) {
     const value = prices.find((price) => price.type === type);
-    if (value !== undefined) return Number(value.price);
+    if (value === undefined) continue;
+    if (!/1\s*m\s*tokens/i.test(value.price_unit)) continue;
+    const amount = Number(value.price);
+    if (!Number.isFinite(amount) || amount < 0) continue;
+    return amount;
   }
   return undefined;
 }
@@ -276,55 +293,33 @@ function costFromPrices(
   prices: z.infer<typeof AlibabaPrice>[],
   existing: Cost | undefined,
 ): Cost | undefined {
-  const thinkingInput = price(prices, "thinking_input_token");
-  const thinkingOutput = price(prices, "thinking_output_token");
-  const standardInput = price(
+  const thinkingInput = tokenPrice(prices, "thinking_input_token");
+  const thinkingOutput = tokenPrice(prices, "thinking_output_token");
+  const standardInput = tokenPrice(
     prices,
     "input_token",
     "text_input_token",
     "vision_input_token",
     "translate_vision_input_token",
     "embedding_token",
-    // DashScope renamed the text/image/video input bucket to `omni_no_audio_input_token`
-    // in the qwen3.5 omni series (qwen3.5-omni-{flash,plus} + realtime). Old omni models
-    // still report `text_input_token`, so this falls through cleanly for them.
     "omni_no_audio_input_token",
   );
-  const standardOutput = price(
+  const standardOutput = tokenPrice(
     prices,
     "output_token",
     "purein_text_output_token",
     "multiin_text_output_token",
     "translate_multi_text_output_token",
-    // DashScope renamed the text-only output bucket to `omni_no_audio_output_token`
-    // in the qwen3.5 omni series. The audio-only output bucket is `omni_audio_output_token`
-    // (handled below in `output_audio`).
     "omni_no_audio_output_token",
   );
   const input = standardInput ?? thinkingInput;
   const output = standardOutput ?? thinkingOutput;
-  const imageOutput = price(
-    prices,
-    "image_number",
-    "image_standard",
-    "image_thinking",
-  );
-  const duration = price(prices, "content_duration");
-  const tts = price(prices, "cosy_tts_number");
-  // Guard-only: imageOutput/duration/tts are never written — the Cost schema is
-  // token-centric and has no field for per-image (`image_number`), per-second
-  // (`content_duration`), or per-char TTS (`cosy_tts_number`) pricing. They exist
-  // solely to suppress this early-return so the `?? existing` fallback below can
-  // preserve the hand-curated token cost for non-token-priced models. Without
-  // them, e.g. qwen3-asr-flash (API: `content_duration` only) returns undefined
-  // → requireExisting("cost") throws → sync crashes.
-  if (
-    input === undefined &&
-    output === undefined &&
-    imageOutput === undefined &&
-    duration === undefined &&
-    tts === undefined
-  ) {
+  if (input === undefined && output === undefined) {
+    if (
+      hasPriceType(prices, "image_number", "image_standard", "image_thinking", "content_duration", "cosy_tts_number")
+    ) {
+      return existing;
+    }
     return undefined;
   }
 
@@ -334,21 +329,18 @@ function costFromPrices(
     reasoning: standardOutput !== undefined
       ? thinkingOutput ?? existing?.reasoning
       : existing?.reasoning,
-    // API-only, no `?? existing` fallback: DashScope reliably exposes cache price types;
-    // omission is intentional.
-    cache_read: price(
+    cache_read: tokenPrice(
       prices,
       "input_token_cache_read",
       "thinking_input_token_cache_read",
     ),
-    cache_write: price(
+    cache_write: tokenPrice(
       prices,
       "input_token_cache_creation_5m",
       "thinking_input_token_cache_creation_5m",
     ),
-    // audio price-type names vary across omni generations.
     input_audio:
-      price(
+      tokenPrice(
         prices,
         "audio_input_token",
         "omni_audio_input_token",
@@ -356,7 +348,7 @@ function costFromPrices(
         "thinking_audio_input_token",
       ) ?? existing?.input_audio,
     output_audio:
-      price(
+      tokenPrice(
         prices,
         "multi_output_token",
         "omni_audio_output_token",
@@ -410,24 +402,17 @@ function cost(model: AlibabaModel, existing: ExistingModel | undefined) {
 }
 
 function limit(model: AlibabaModel, existing: ExistingModel | undefined) {
-  if (existing?.limit === undefined) return undefined;
-
-  return {
-    input: existing.limit.input,
-    context: model.model_info.context_window ?? existing.limit.context,
-    output: model.model_info.max_output_tokens ?? existing.limit.output,
-  };
+  const context = model.model_info.context_window ?? existing?.limit?.context;
+  const output = model.model_info.max_output_tokens ?? existing?.limit?.output;
+  const input = model.model_info.max_input_tokens ?? existing?.limit?.input;
+  if (context === undefined && output === undefined && input === undefined) {
+    return existing?.limit;
+  }
+  return { context, output, input };
 }
 
 function modalities(model: AlibabaModel, existing: ExistingModel | undefined) {
-  if (existing?.modalities === undefined) return undefined;
-
   const input = normalizedModalities(model.inference_metadata.request_modality);
-  // DashScope does not surface `pdf` in `inference_metadata.request_modality`,
-  // but vision-understanding models accept PDF inputs (the underlying VL
-  // stack parses document pages as images). `VU` is broad but undocumented;
-  // the `vl` segment catches qwen3-vl-32b-* where live intl API omits VU.
-  // See: https://www.alibabacloud.com/help/en/model-studio/vision-model/?spm=a2c63.p38356.help-menu-2400256.d_0_3_1.46b16feaB6sCxE
   const isVision = model.capabilities.includes("VU")
     || /(^|[-_.])vl([-_.]|$)/i.test(model.model);
   if (isVision && !input.includes("pdf")) {
@@ -438,10 +423,20 @@ function modalities(model: AlibabaModel, existing: ExistingModel | undefined) {
     model.inference_metadata.response_modality,
   );
 
+  if (input.length === 0 && output.length === 0) return existing?.modalities;
+
   return {
-    input: input.length > 0 ? input : existing.modalities.input,
-    output: output.length > 0 ? output : existing.modalities.output,
+    input: input.length > 0 ? input : existing?.modalities?.input ?? ["text"],
+    output: output.length > 0 ? output : existing?.modalities?.output ?? ["text"],
   };
+}
+
+function status(model: AlibabaModel, existing: ExistingModel | undefined) {
+  const offline = dateFromPublishedTime(model.inference_offline_info?.offlineTime ?? "");
+  if (offline !== undefined && offline <= new Date().toISOString().slice(0, 10)) {
+    return "deprecated" as const;
+  }
+  return existing?.status;
 }
 
 export function buildAlibabaModel(
@@ -453,14 +448,12 @@ export function buildAlibabaModel(
   const translatedModalities = modalities(model, existing);
   const translatedCost = cost(model, existing);
   const translatedLimit = limit(model, existing);
+  const reasoning = model.capabilities.includes("Reasoning");
+  const input = translatedModalities?.input ?? existing?.modalities?.input;
 
-  // Fields not supplied here are inherited at read time by resolveBaseModel in
-  // sync/index.ts. Pass undefined for non-authoritative API fields so canonical
-  // model metadata remains the sole source of truth.
   const baseMetadata = baseModelMetadata(baseModel);
   const baseLimit = baseMetadata.limit as SyncedFullModel["limit"] | undefined;
   const limitForOmit = (translatedLimit ?? baseLimit ?? {}) as SyncedFullModel["limit"];
-  const resolvedReasoning = existing?.reasoning ?? (baseMetadata.reasoning === true);
 
   return factorBaseModel(
     baseModel,
@@ -469,20 +462,19 @@ export function buildAlibabaModel(
       family: existing?.family,
       release_date: existing?.release_date ?? publishedDate,
       last_updated: existing?.last_updated ?? publishedDate,
-      attachment: existing?.attachment,
-      reasoning: resolvedReasoning,
-      // Default to [] only when the base has no reasoning_options of its own —
-      // otherwise leave undefined so curated base options inherit.
-      reasoning_options: existing?.reasoning_options
-        ?? (resolvedReasoning && baseMetadata.reasoning_options === undefined
-          ? []
-          : undefined),
+      attachment: existing?.attachment ?? input?.some((value) => value !== "text"),
+      reasoning,
+      reasoning_options: existing?.reasoning_options,
       temperature: existing?.temperature,
-      tool_call: existing?.tool_call,
-      structured_output: existing?.structured_output,
+      tool_call: model.features.includes("function-calling")
+        ? true
+        : existing?.tool_call,
+      structured_output: model.features.includes("structured-outputs")
+        ? true
+        : existing?.structured_output,
       knowledge: existing?.knowledge,
       open_weights: existing?.open_weights,
-      status: existing?.status,
+      status: status(model, existing),
       interleaved: existing?.interleaved,
       cost: translatedCost,
       limit: translatedLimit,

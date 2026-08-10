@@ -152,7 +152,9 @@ Alibaba is implemented in `packages/core/src/sync/providers/alibaba.ts`.
 - Existing local files missing from the international API source are retained because the provider directory may contain deprecated or region-specific entries.
 - New API models require a matching `models/alibaba/<id>.toml` base-metadata file before the sync mints a thin provider stub.
 - Canonical Alibaba model IDs should emit `base_model` references to model metadata when a matching `models/` entry exists.
-- Existing `family`, `temperature`, `open_weights`, `knowledge`, `status`, `interleaved`, and some non-authoritative capability fields may be preserved when the API is not authoritative enough for those fields.
+- Existing `family`, `temperature`, `open_weights`, `knowledge`, `interleaved`, and authored `reasoning_options` are preserved. New reasoners with no authored options get `[]` from the runner (the API has no effort/toggle/budget fields).
+- `reasoning` comes from `capabilities` (`Reasoning`). `tool_call` / `structured_output` come from `features` when present.
+- `limit.input` comes from `max_input_tokens`. Past `inference_offline_info.offlineTime` sets `status = deprecated`.
 
 ## CrossModel Notes
 
