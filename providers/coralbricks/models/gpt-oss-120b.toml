@@ -1,6 +1,7 @@
 base_model = "openai/gpt-oss-120b"
 
-reasoning_options = []
+reasoning = true
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["minimal", "low", "medium", "high"] }]
 interleaved = true
 
 [cost]
