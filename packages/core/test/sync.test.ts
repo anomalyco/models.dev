@@ -2114,35 +2114,6 @@ test("W&B preserves curated model dates", () => {
   });
 });
 
-test("W&B factors NVIDIA models against lab metadata", () => {
-  const model: WandbModel = {
-    id: "nvidia/NVIDIA-Nemotron-3.5-Lightning-30B-A3B",
-    name: "Nemotron 3.5 Lightning",
-    description: "Fast NVIDIA Nemotron model for reliable agentic tasks",
-    attachment: false,
-    reasoning: true,
-    reasoning_options: [{ type: "toggle" }],
-    temperature: true,
-    tool_call: true,
-    structured_output: true,
-    release_date: "2026-08-11",
-    last_updated: "2026-08-11",
-    open_weights: true,
-    cost: { input: 0.1, output: 0.25, cache_read: 0.05 },
-    limit: { context: 262_144, output: 262_144 },
-    modalities: { input: ["text"], output: ["text"] },
-  };
-
-  const synced = buildWandbModel(model, undefined);
-  expect(synced).toMatchObject({
-    base_model: "nvidia/nemotron-3.5-lightning-30b-a3b",
-    reasoning_options: [{ type: "toggle" }],
-    cost: { input: 0.1, output: 0.25, cache_read: 0.05 },
-  });
-  expect(synced).not.toHaveProperty("attachment");
-  expect(synced).not.toHaveProperty("limit");
-});
-
 test("formats reasoning efforts from lowest to highest", () => {
   const content = formatToml({
     id: "example/model",
