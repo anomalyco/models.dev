@@ -160,9 +160,9 @@ export const alibaba = {
     ];
   },
   async fetchModels() {
-    const apiKey = process.env.DASHSCOPE_API_KEY;
+    const apiKey = process.env.ALIBABA_API_KEY;
     if (apiKey === undefined || apiKey.length === 0) {
-      throw new Error("DASHSCOPE_API_KEY is required to sync Alibaba models");
+      throw new Error("ALIBABA_API_KEY is required to sync Alibaba models");
     }
 
     const first = await fetchModelsPage(INTL_API_ENDPOINT, apiKey, 1);

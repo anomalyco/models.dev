@@ -145,7 +145,7 @@ Actions are pinned by commit SHA. Keep new workflow actions pinned the same way.
 Alibaba is implemented in `packages/core/src/sync/providers/alibaba.ts`.
 
 - Source endpoint: `https://dashscope-intl.aliyuncs.com/api/v1/models`.
-- Required auth: `DASHSCOPE_API_KEY`.
+- Required auth: `ALIBABA_API_KEY`.
 - Model IDs map directly to TOML paths under `providers/alibaba/models`.
 - The API is paginated and duplicate model IDs are deduped before translation.
 - API prices are per-1M-token numbers; context tiers are derived from DashScope price ranges.
