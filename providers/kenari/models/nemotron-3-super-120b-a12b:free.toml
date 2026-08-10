@@ -1,9 +1,11 @@
+# Sources (accessed 2026-08-10):
+# - https://kenari.id/v1/models (nemotron-3-super-120b-a12b:free), public and keyless:
+#   publishes "reasoning_toggle": false and no reasoning_options, same as the paid row.
+# See nemotron-3-super-120b-a12b.toml for the host-control reading and for why the
+# earlier effort ["low","medium"] was wrong.
 base_model = "nvidia/nemotron-3-super-120b-a12b"
 name = "Nemotron 3 Super 120B A12B (Free)"
-
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium"]
+reasoning_options = []
 
 [cost]
 input = 0

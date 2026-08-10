@@ -1,3 +1,12 @@
+# Sources (accessed 2026-08-10):
+# - https://kenari.id/v1/models (qwen3-7-flash), public and keyless: publishes
+#   "reasoning_toggle": false and no reasoning_options for this model.
+# The [] below is this host's own answer that it exposes NO caller control, effort,
+# budget or on/off, not an unfilled catalog field. Alibaba's first-party paths carry a
+# toggle and budget_tokens, but Kenari emits a disable shape only for a backend
+# configured with one, and this model's backend has none, so a caller's control is
+# stripped from the request and nothing replaces it. Same reading as laguna-s-2-1:free
+# and longcat-2-0:free here.
 base_model = "alibaba/qwen3.7-flash"
 reasoning_options = []
 

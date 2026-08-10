@@ -1,8 +1,15 @@
+# Sources (accessed 2026-08-10):
+# - https://kenari.id/v1/models (nemotron-3-super-120b-a12b), public and keyless:
+#   publishes "reasoning_toggle": false and no reasoning_options.
+# The [] below is this host's own answer that it exposes NO caller control, effort or
+# on/off. NVIDIA's lab entry carries a first-party toggle, but Kenari emits a disable
+# shape only for a backend configured with one, and this model's backend has none.
+#
+# The earlier effort ["low","medium"] came from the same host defect described in
+# nemotron-3-ultra-550b-a55b.toml: effort metadata derived from the openrouter slice
+# rather than from the model's author.
 base_model = "nvidia/nemotron-3-super-120b-a12b"
-
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium"]
+reasoning_options = []
 
 [cost]
 input = 0

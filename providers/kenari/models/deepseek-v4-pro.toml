@@ -1,10 +1,14 @@
+# Sources (accessed 2026-08-10):
+# - https://kenari.id/v1/models (deepseek-v4-pro), public and keyless: publishes
+#   effort ["high","max"].
+# See deepseek-v4-flash.toml for why the earlier ["high","xhigh"] was wrong. DeepSeek's
+# own slice in this repo says high, max for this model.
 base_model = "deepseek/deepseek-v4-pro"
 
 [[reasoning_options]]
 type = "effort"
-values = ["high", "xhigh"]
+values = ["high", "max"]
 
 [cost]
 input = 0
 output = 0
-

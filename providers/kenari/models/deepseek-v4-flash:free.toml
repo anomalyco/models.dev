@@ -1,9 +1,13 @@
+# Sources (accessed 2026-08-10):
+# - https://kenari.id/v1/models (deepseek-v4-flash:free), public and keyless: publishes
+#   effort ["low","high","max"], same as the paid row.
+# See deepseek-v4-flash.toml for why the earlier ["high","xhigh"] was wrong.
 base_model = "deepseek/deepseek-v4-flash"
 name = "DeepSeek V4 Flash (Free)"
 
 [[reasoning_options]]
 type = "effort"
-values = ["high", "xhigh"]
+values = ["low", "high", "max"]
 
 [cost]
 input = 0
