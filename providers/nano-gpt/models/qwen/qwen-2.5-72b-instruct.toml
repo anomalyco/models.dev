@@ -1,22 +1,24 @@
 # Included in subscription
 name = "Qwen2.5 72B"
 description = "Qwen instruction model for multilingual chat, reasoning, and tool use"
+family = "qwen"
 release_date = "2025-07-03"
 last_updated = "2025-07-03"
 attachment = false
 reasoning = false
 tool_call = false
 structured_output = false
-open_weights = false
+open_weights = true
 
 [cost]
 input = 0.357
 output = 0.408
+cache_read = 0.1785
 
 [limit]
-context = 131072
-input = 131072
-output = 8192
+context = 131_072
+input = 131_072
+output = 8_192
 
 [modalities]
 input = ["text"]

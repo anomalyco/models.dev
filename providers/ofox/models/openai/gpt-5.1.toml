@@ -1,0 +1,12 @@
+# https://ofox.ai/models/openai/gpt-5.1 — input $1.25/M, output $10/M, cache_read $0.13/M
+base_model = "openai/gpt-5.1"
+reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high"] }]
+
+[cost]
+input = 1.25
+output = 10
+cache_read = 0.13
+
+[provider]
+npm = "@ai-sdk/openai"
+api = "https://api.ofox.ai/v1"

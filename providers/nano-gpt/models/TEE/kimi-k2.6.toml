@@ -1,13 +1,8 @@
 # Not included in subscription
+base_model = "moonshotai/kimi-k2.6"
 name = "Kimi K2.6 TEE"
-description = "Kimi multimodal agent model for visual understanding, coding, and planning"
-release_date = "2026-04-21"
-last_updated = "2026-04-21"
-attachment = true
 reasoning = false
-tool_call = true
 structured_output = false
-open_weights = false
 
 [cost]
 input = 1.5
@@ -15,10 +10,8 @@ output = 5.25
 cache_read = 0.375
 
 [limit]
-context = 262144
-input = 262144
-output = 65536
+input = 262_144
+output = 65_536
 
 [modalities]
 input = ["text", "image"]
-output = ["text"]

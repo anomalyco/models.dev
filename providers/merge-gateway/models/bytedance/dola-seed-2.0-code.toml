@@ -1,0 +1,25 @@
+# Source: https://api-gateway.merge.dev/v1/models?model=bytedance%2Fdola-seed-2.0-code (accessed 2026-07-21)
+
+name = "Seed 2.0 Code"
+description = "Coding model for repository understanding, refactors, and agentic engineering tasks"
+family = "seed"
+release_date = "2026-02-14"
+last_updated = "2026-02-14"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = false
+structured_output = false
+open_weights = false
+
+[cost]
+input = 0.4
+output = 2.4
+
+[limit]
+context = 256_000
+output = 128_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

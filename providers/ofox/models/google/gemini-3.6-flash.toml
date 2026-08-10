@@ -1,0 +1,15 @@
+# Sources:
+# - https://ofox.ai/en/models/google/gemini-3.6-flash
+# - https://api.ofox.ai/v2/models/catalog?include=provider_price&limit=500
+# - https://ai.google.dev/gemini-api/docs/pricing (lab parity for effort levels)
+base_model = "google/gemini-3.6-flash"
+
+[[reasoning_options]]
+type = "effort"
+values = ["minimal", "low", "medium", "high"]
+
+[cost]
+input = 1.5
+output = 7.5
+cache_read = 0.15
+cache_write = 0.083

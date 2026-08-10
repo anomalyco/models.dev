@@ -1,24 +1,30 @@
-name = "Google: Gemini Pro Latest"
+name = "Google Gemini Pro Latest"
 description = "Advanced Gemini model for complex reasoning, coding, and multimodal analysis"
+family = "gemini-pro"
 release_date = "2026-04-27"
-last_updated = "2026-05-01"
+last_updated = "2026-04-27"
 attachment = true
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
 reasoning = true
-tool_call = true
 temperature = true
+tool_call = true
+structured_output = true
 open_weights = false
 
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high"]
+
 [cost]
-input = 2.0
-output = 12.0
+input = 2
+output = 12
+reasoning = 12
 cache_read = 0.2
 cache_write = 0.375
 
 [limit]
-context = 1048576
-output = 65536
+context = 1_048_576
+output = 65_536
 
 [modalities]
-input = ["text", "image", "audio", "video", "pdf"]
+input = ["audio", "pdf", "image", "text", "video"]
 output = ["text"]

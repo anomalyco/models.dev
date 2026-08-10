@@ -9,9 +9,14 @@ temperature = true
 tool_call = true
 open_weights = false
 
+[cost]
+input = 0.0679
+output = 0.168
+cache_read = 0.0168
+
 [limit]
-context = 262_144
-output = 8_192
+context = 1_048_576
+output = 384_000
 
 [modalities]
 input = ["text"]

@@ -1,23 +1,13 @@
+base_model = "cohere/command-r-plus-08-2024"
 name = "Cohere: Command R+"
-description = "Cohere retrieval model for long-context chat and enterprise RAG workflows"
-family = "command-r"
-release_date = "2024-08-30"
-last_updated = "2024-08-30"
-attachment = false
-reasoning = false
-tool_call = true
+tool_call = false
 structured_output = false
-open_weights = false
 
 [cost]
 input = 2.856
 output = 14.246
+cache_read = 1.428
 
 [limit]
-context = 128_000
 input = 128_000
 output = 4_096
-
-[modalities]
-input = ["text"]
-output = ["text"]

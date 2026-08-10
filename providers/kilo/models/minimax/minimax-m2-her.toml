@@ -1,20 +1,23 @@
 name = "MiniMax: MiniMax M2-her"
 description = "MiniMax model for chat, coding, office work, and agentic tasks"
+family = "minimax"
 release_date = "2026-01-23"
-last_updated = "2026-03-15"
+last_updated = "2026-01-23"
 attachment = false
 reasoning = false
 temperature = true
 tool_call = false
-open_weights = true
+structured_output = false
+open_weights = false
 
 [cost]
 input = 0.3
 output = 1.2
+cache_read = 0.03
 
 [limit]
-context = 65536
-output = 2048
+context = 65_536
+output = 2_048
 
 [modalities]
 input = ["text"]

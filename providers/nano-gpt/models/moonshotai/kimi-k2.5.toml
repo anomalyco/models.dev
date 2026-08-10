@@ -1,17 +1,11 @@
-name = "Kimi K2.5"
-description = "Kimi multimodal agent model for visual understanding, coding, and planning"
-family = "kimi-k2"
-release_date = "2026-01-26"
-last_updated = "2026-01-26"
-attachment = true
+base_model = "moonshotai/kimi-k2.5"
 reasoning = false
-tool_call = true
 structured_output = false
-open_weights = false
 
 [cost]
 input = 0.3
 output = 1.9
+cache_read = 0.15
 
 [limit]
 context = 256_000
@@ -20,4 +14,3 @@ output = 65_536
 
 [modalities]
 input = ["text", "image"]
-output = ["text"]

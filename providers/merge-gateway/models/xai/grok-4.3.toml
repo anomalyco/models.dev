@@ -1,5 +1,8 @@
+# Source: https://api-gateway.merge.dev/v1/models?model=xai%2Fgrok-4.3 (accessed 2026-07-21)
+# Selected route reasoning.controls = ["reasoning.effort"], disable_supported = true; effort values not exposed.
+
 base_model = "xai/grok-4.3"
-reasoning_options = []
+reasoning_options = [{ type = "toggle" }]
 
 [cost]
 input = 1.25
@@ -11,3 +14,9 @@ tier = { type = "context", size = 200_000 }
 input = 2.5
 output = 5
 cache_read = 0.4
+
+[limit]
+output = 1_000_000
+
+[modalities]
+input = ["text", "image"]

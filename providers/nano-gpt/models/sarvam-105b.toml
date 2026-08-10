@@ -1,14 +1,10 @@
 # Not included in subscription
-name = "Sarvam 105B"
-description = "Compact GPT model for low-latency assistance and high-volume workloads"
-release_date = "2026-05-12"
-last_updated = "2026-05-12"
-attachment = false
-reasoning = true
-reasoning_options = []
-tool_call = true
+base_model = "sarvam/sarvam-105b"
 structured_output = false
-open_weights = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high"]
 
 [cost]
 input = 0.045
@@ -16,10 +12,5 @@ output = 0.177
 cache_read = 0.028
 
 [limit]
-context = 131072
-input = 131072
-output = 4096
-
-[modalities]
-input = ["text"]
-output = ["text"]
+input = 131_072
+output = 4_096

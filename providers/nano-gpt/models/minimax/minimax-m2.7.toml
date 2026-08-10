@@ -1,24 +1,12 @@
+base_model = "minimax/MiniMax-M2.7"
 name = "MiniMax M2.7"
-description = "MiniMax model for chat, coding, office work, and agentic tasks"
-family = "minimax"
-release_date = "2026-03-18"
-last_updated = "2026-03-18"
-attachment = false
-reasoning = true
-reasoning_options = []
-tool_call = true
 structured_output = true
-open_weights = false
+reasoning_options = []
 
 [cost]
-input = 0.3
-output = 1.2
+input = 0.315
+output = 1.26
+cache_read = 0.1575
 
 [limit]
-context = 204_800
 input = 204_800
-output = 131_072
-
-[modalities]
-input = ["text"]
-output = ["text"]

@@ -1,16 +1,18 @@
 name = "Qwen: QvQ Max"
 description = "Compact GPT model for low-latency assistance and high-volume workloads"
+family = "qwen"
 release_date = "2025-03-28"
 last_updated = "2025-03-28"
 attachment = true
 reasoning = false
 tool_call = false
 structured_output = false
-open_weights = false
+open_weights = true
 
 [cost]
-input = 1.4
-output = 5.3
+input = 1.2
+output = 4.8
+cache_read = 0.6
 
 [limit]
 context = 128_000

@@ -1,0 +1,12 @@
+# Sources:
+# - https://ofox.ai/models/z-ai/glm-5 (Ofox pricing: $1/$3.2/M, cache read $0.2/M)
+# - https://docs.z.ai/guides/overview/pricing (Z.AI list: $1/$3.2/M, cached input $0.2/M)
+# - https://docs.z.ai/api-reference/llm/chat-completion (thinking.type enabled|disabled; reasoning_effort is GLM-5.2+)
+# Toggle: thinking.type = enabled|disabled
+base_model = "zhipuai/glm-5"
+reasoning_options = [{ type = "toggle" }]
+
+[cost]
+input = 1.0
+output = 3.2
+cache_read = 0.2

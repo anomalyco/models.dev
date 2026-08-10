@@ -1,22 +1,24 @@
 # Included in subscription
 name = "Ling 2.6 Flash"
 description = "Efficient model for low-latency assistance, extraction, and routine automation"
+family = "ling"
 release_date = "2026-04-21"
 last_updated = "2026-04-21"
 attachment = false
 reasoning = false
 tool_call = true
 structured_output = true
-open_weights = false
+open_weights = true
 
 [cost]
-input = 0.08
-output = 0.24
+input = 0.1
+output = 0.3
+cache_read = 0.02
 
 [limit]
-context = 262144
-input = 262144
-output = 32768
+context = 262_144
+input = 262_144
+output = 32_768
 
 [modalities]
 input = ["text"]

@@ -1,0 +1,18 @@
+base_model = "minimax/MiniMax-M3"
+release_date = "2026-07-30"
+last_updated = "2026-07-31"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high"]
+
+[cost]
+input = 0.32664
+output = 1.30656
+cache_read = 0.064239
+
+[limit]
+output = 512_000
+
+[modalities]
+input = ["text", "image"]

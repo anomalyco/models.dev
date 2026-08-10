@@ -1,10 +1,10 @@
-# Sources (accessed 2026-07-22):
+# Sources (accessed 2026-07-31):
 # - https://ai-gateway.vercel.sh/v1/models (thinkingmachines/inkling) — provider: baseten
 # - https://vercel.com/ai-gateway/models/inkling — routes to baseten
 # - https://docs.baseten.co/inference/model-apis/reasoning — Inkling reasoning_effort
-# API: {"reasoning_effort": "none"|"minimal"|"low"|"medium"|"high"|"xhigh"}
+# API: {"reasoning_effort": "none"|"minimal"|"low"|"medium"|"high"|"xhigh"|"max"}
 base_model = "thinkingmachines/inkling"
-reasoning_options = [{ type = "effort", values = ["none", "minimal", "low", "medium", "high", "xhigh"] }]
+reasoning_options = [{ type = "effort", values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"] }]
 
 [cost]
 input = 1

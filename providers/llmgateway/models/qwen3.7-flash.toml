@@ -1,0 +1,25 @@
+name = "Qwen3.7 Flash"
+description = "Multimodal reasoning model for visual analysis, planning, and tool use"
+release_date = "2026-07-27"
+last_updated = "2026-07-27"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = false
+open_weights = false
+reasoning_options = []
+
+[cost]
+input = 0.03
+output = 0.13
+cache_read = 0.006
+cache_write = 0.0375
+
+[limit]
+context = 1_000_000
+output = 1_000_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

@@ -1,23 +1,20 @@
 # Included in subscription
+base_model = "alibaba/qwen3-32b"
 name = "Qwen 3 32b"
-description = "Qwen vision-language model for visual reasoning, documents, and agent tasks"
-release_date = "2024-01-01"
-last_updated = "2024-01-01"
 attachment = true
 reasoning = false
 tool_call = false
 structured_output = false
-open_weights = false
 
 [cost]
 input = 0.1
 output = 0.3
+cache_read = 0.05
 
 [limit]
-context = 41000
-input = 41000
-output = 32768
+context = 41_000
+input = 41_000
+output = 32_768
 
 [modalities]
 input = ["text", "pdf"]
-output = ["text"]

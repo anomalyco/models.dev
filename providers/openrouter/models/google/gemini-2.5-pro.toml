@@ -11,3 +11,9 @@ output = 10
 reasoning = 10
 cache_read = 0.125
 cache_write = 0.375
+
+[[cost.tiers]]
+tier = { type = "context", size = 200_000 }
+input = 2.5
+output = 15
+cache_read = 0.25

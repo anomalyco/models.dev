@@ -1,8 +1,24 @@
+# Source: https://api-gateway.merge.dev/v1/models?model=anthropic%2Fclaude-sonnet-4-6 (accessed 2026-07-21)
 base_model = "anthropic/claude-sonnet-4-6"
-reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "medium", "high", "max"] }, { type = "budget_tokens", min = 1_024, max = 63_999 }]
+structured_output = true
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high", "max"]
+
+[[reasoning_options]]
+type = "budget_tokens"
+min = 1_024
+max = 63_999
 
 [cost]
 input = 3
 output = 15
 cache_read = 0.3
 cache_write = 3.75
+
+[limit]
+output = 128_000

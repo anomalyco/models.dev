@@ -1,24 +1,18 @@
-name = "Nemotron Nano 3 Omni"
 base_model = "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning"
-family = "nemotron"
-release_date = "2026-04-28"
-last_updated = "2026-04-30"
-attachment = true
-reasoning = true
-reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "max"] }]
-temperature = true
-tool_call = true
+name = "Nemotron 3 Nano Omni"
 structured_output = true
-open_weights = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "max"]
 
 [cost]
-input = 0.50
-output = 0.90
+input = 0.5
+output = 0.9
 
 [limit]
 context = 65_536
-output = 65_536
+output = 13_107
 
 [modalities]
-input = ["text", "image", "video", "audio"]
-output = ["text"]
+input = ["text", "image", "video"]

@@ -1,28 +1,15 @@
-name = "GLM-5.1"
+base_model = "zhipuai/glm-5.1"
 description = "Flagship GLM model for hybrid reasoning, coding, and agentic engineering"
-family = "glm"
-release_date = "2026-04-14"
-last_updated = "2026-04-14"
-attachment = false
-reasoning = true
 reasoning_options = []
-structured_output = true
-temperature = true
-tool_call = true
-open_weights = true
 
 [interleaved]
 field = "reasoning_content"
 
 [cost]
-input = 1.31
-output = 4.10
-cache_read = 0.24
+input = 1.384
+output = 4.348
+cache_read = 0.346
 
 [limit]
-context = 204_800
-output = 131_072
-
-[modalities]
-input = ["text"]
-output = ["text"]
+context = 202_752
+output = 202_752

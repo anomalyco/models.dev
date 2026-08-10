@@ -1,24 +1,26 @@
-name = "Trinity Large Thinking"
+name = "Arcee Trinity Large Thinking (Public Preview)"
 description = "Flagship model for demanding analysis, coding, and production agent workflows"
 family = "trinity"
 release_date = "2026-04-02"
 last_updated = "2026-04-16"
 attachment = false
 reasoning = true
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
-tool_call = true
 temperature = true
+tool_call = true
 open_weights = true
-status = "beta"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high"]
 
 [cost]
 input = 0.25
-output = 0.90
+output = 0.9
 cache_read = 0.06
 
 [limit]
-context = 256_000
-output = 128_000
+context = 128_000
+output = 32_000
 
 [modalities]
 input = ["text"]

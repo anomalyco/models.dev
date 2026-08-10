@@ -1,11 +1,22 @@
 base_model = "anthropic/claude-opus-4-8"
-# Cortecs maps `reasoning_effort = low|medium|high` to
-# `output_config.effort`; no explicit budget is exposed for this model.
-# https://api.cortecs.ai/v1/models (accessed 2026-06-25)
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
+structured_output = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high"]
+
+[[reasoning_options]]
+type = "budget_tokens"
+min = 1_024
 
 [cost]
-input = 5.64
-output = 28.198
-cache_read = 0.563
-cache_write = 7.049
+input = 5.437
+output = 27.186
+cache_read = 0.544
+cache_write = 6.797
+
+[limit]
+output = 1_000_000
+
+[modalities]
+input = ["text", "image"]

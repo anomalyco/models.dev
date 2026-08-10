@@ -1,5 +1,4 @@
 base_model = "alibaba/qwen3.5-9b"
-attachment = true
 
 [[reasoning_options]]
 type = "toggle"
@@ -20,6 +19,3 @@ cache_read = 0.045
 
 [limit]
 output = 32_768
-
-[modalities]
-input = ["text", "image", "video"]

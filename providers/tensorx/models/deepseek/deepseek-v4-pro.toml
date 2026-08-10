@@ -1,0 +1,13 @@
+base_model = "deepseek/deepseek-v4-pro"
+
+[[reasoning_options]]
+type = "toggle" # API: {"chat_template_kwargs": {"thinking": true}} (default off)
+
+[cost]
+input = 1.75
+output = 3.5
+cache_read = 0.4375
+cache_write = 2.185
+
+[limit]
+context = 1048576

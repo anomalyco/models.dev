@@ -1,0 +1,15 @@
+base_model = "zhipuai/glm-5"
+
+[[reasoning_options]]
+type = "effort" # API: {"reasoning_effort": <value>}; "none" disables reasoning
+values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"]
+
+[cost]
+input = 1
+output = 3.2
+cache_read = 0.25
+cache_write = 1.25
+
+[limit]
+context = 202752
+output = 202752

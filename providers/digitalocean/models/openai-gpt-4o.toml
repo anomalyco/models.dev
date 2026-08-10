@@ -1,4 +1,4 @@
-name = "GPT-4o"
+name = "OpenAI GPT-4o"
 description = "GPT model for general reasoning, writing, coding, and tool-assisted tasks"
 family = "gpt"
 release_date = "2024-05-13"
@@ -12,8 +12,8 @@ knowledge = "2023-09"
 open_weights = false
 
 [cost]
-input = 2.50
-output = 10.00
+input = 2.5
+output = 10
 cache_read = 1.25
 
 [limit]
@@ -21,5 +21,5 @@ context = 128_000
 output = 16_384
 
 [modalities]
-input = ["text", "image", "pdf"]
+input = ["text", "image"]
 output = ["text"]

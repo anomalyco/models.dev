@@ -2,24 +2,26 @@
 # `reasoning.effort = none|low|medium|high|xhigh`.
 # https://docs.digitalocean.com/products/inference/details/models/index.html.md (accessed 2026-06-25)
 # https://developers.openai.com/api/docs/models/gpt-5.4-mini (accessed 2026-06-25)
-
-name = "GPT-5.4 mini"
+name = "OpenAI GPT-5.4 Mini"
 description = "Compact GPT model for low-latency assistance and high-volume workloads"
 family = "gpt-mini"
 release_date = "2026-03-17"
 last_updated = "2026-03-17"
 attachment = true
 reasoning = true
-reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh"] }]
 temperature = false
 tool_call = true
 structured_output = true
 knowledge = "2025-08-31"
 open_weights = false
 
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "xhigh"]
+
 [cost]
 input = 0.75
-output = 4.50
+output = 4.5
 cache_read = 0.075
 
 [limit]

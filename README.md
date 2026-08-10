@@ -141,7 +141,7 @@ If the provider isn't already in `providers/`:
    api = "https://api.example.com/v1" # Required with openai-compatible
    ```
 
-#### 2. Add a Logo (optional)
+#### 2. Add a Logo (required for new providers)
 
 To add a logo for the provider:
 
@@ -204,6 +204,11 @@ Use `base_model` when the provider serves the same underlying model and only pro
 
 ```toml
 base_model = "anthropic/claude-opus-4-6"
+# Match lab/peer controls for this model (not a stripped L/M/H guess)
+reasoning_options = [
+  { type = "effort", values = ["low", "medium", "high", "max"] },
+  { type = "budget_tokens", min = 1_024 },
+]
 
 [cost]
 input = 5.00
@@ -213,10 +218,14 @@ output = 25.00
 Rules:
 
 - `base_model` must point to a TOML file in `models/` using `<provider>/<model-id>`.
-- You can override any top-level model field locally.
-- If you override a nested table like `[cost]`, `[limit]`, or `[modalities]`, include the full values needed for that table.
+- **Override-only:** after `base_model`, write only provider-specific fields and values that **differ** from the base. Do not restate the same `description`, `structured_output`, `modalities`, `tool_call`, dates, etc.
+- You may override any top-level model field when the provider actually differs.
+- If you override a nested table like `[cost]`, `[limit]`, or `[modalities]`, include the full values needed for that table (arrays/primitives replace; plain objects deep-merge).
 - `base_model_omit` is optional and removes inherited model metadata fields after local overrides are merged. Use dot-path strings, for example `base_model_omit = ["limit.input"]`.
+- Provider-specific fields (`cost`, `reasoning_options`, `interleaved`, `status`, `provider`, `experimental`) belong on the provider model when needed.
 - `id` still comes from the filename; do not add it to the TOML.
+
+**Reasoning options (short):** classify first-party lab vs multi-model relay (not by npm). Copy the underlying model’s controls from the lab entry and same-surface peers — often `low`/`medium`/`high` on GPT-style relays, but DeepSeek V4 is `toggle`+`high`/`max`, etc. Do not use `[]` from uncertainty on relays. Full policy: `AGENTS.md`.
 
 Use `base_model` when the wrapper model is materially the same as the source model and only differs by provider-specific pricing, limits, modalities, provider request shape, or lifecycle flags.
 

@@ -1,20 +1,22 @@
 name = "Perplexity: Sonar"
 description = "Sonar search model for current answers, retrieval, and citation-backed chat"
-release_date = "2024-01-01"
-last_updated = "2025-09-01"
+family = "sonar"
+release_date = "2025-01-27"
+last_updated = "2025-01-27"
 attachment = true
 reasoning = false
 temperature = true
 tool_call = false
+structured_output = false
 open_weights = false
 
 [cost]
-input = 1.0
-output = 1.0
+input = 1
+output = 1
 
 [limit]
-context = 127072
-output = 25415
+context = 127_072
+output = 25_415
 
 [modalities]
 input = ["text", "image"]

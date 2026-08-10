@@ -1,0 +1,16 @@
+base_model = "thinkingmachines/inkling-small"
+reasoning = false
+structured_output = false
+
+[cost]
+input = 0.5
+output = 1.2
+cache_read = 0.1
+
+[limit]
+context = 524_288
+input = 524_288
+output = 32_768
+
+[modalities]
+input = ["text", "image"]

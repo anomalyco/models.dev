@@ -1,5 +1,6 @@
 name = "Gemini 2.0 Pro 0205"
 description = "Compact GPT model for low-latency assistance and high-volume workloads"
+family = "gemini"
 release_date = "2025-02-05"
 last_updated = "2025-02-05"
 attachment = true
@@ -11,6 +12,7 @@ open_weights = false
 [cost]
 input = 1.989
 output = 7.956
+cache_read = 0.49725
 
 [limit]
 context = 2_097_152
@@ -18,5 +20,5 @@ input = 2_097_152
 output = 8_192
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image", "audio"]
 output = ["text"]

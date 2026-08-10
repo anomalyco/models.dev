@@ -1,17 +1,18 @@
 name = "Qwen2.5 VL 72B TEE"
 description = "Qwen vision-language model for visual reasoning, documents, and agent tasks"
 family = "qwen"
-release_date = "2025-02-01"
+release_date = "2024-01-01"
 last_updated = "2025-02-01"
 attachment = true
 reasoning = false
 tool_call = false
 structured_output = false
-open_weights = false
+open_weights = true
 
 [cost]
 input = 0.7
 output = 0.7
+cache_read = 0.35
 
 [limit]
 context = 65_536

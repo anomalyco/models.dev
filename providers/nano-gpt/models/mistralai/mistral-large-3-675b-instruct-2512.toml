@@ -1,17 +1,18 @@
 name = "Mistral Large 3 675B"
 description = "Flagship Mistral model for advanced reasoning, coding, and multilingual work"
 family = "mistral-large"
-release_date = "2025-12-02"
+release_date = "2025-12-25"
 last_updated = "2025-12-02"
 attachment = true
 reasoning = false
 tool_call = false
 structured_output = false
-open_weights = false
+open_weights = true
 
 [cost]
-input = 1.00
-output = 3.00
+input = 1
+output = 3
+cache_read = 0.5
 
 [limit]
 context = 262_144

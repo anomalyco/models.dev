@@ -1,24 +1,19 @@
 # Not included in subscription
-name = "Qwen3.7 Plus"
-description = "Compact GPT model for low-latency assistance and high-volume workloads"
-release_date = "2026-06-01"
-last_updated = "2026-06-01"
-attachment = true
-reasoning = false
+base_model = "alibaba/qwen3.7-plus"
 tool_call = false
 structured_output = false
-open_weights = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "high"]
 
 [cost]
 input = 0.4
 output = 1.6
-cache_read = 0.04
+cache_read = 0.08
+cache_write = 0.5
 
 [limit]
-context = 991808
-input = 991808
-output = 65536
-
-[modalities]
-input = ["text", "image", "video"]
-output = ["text"]
+context = 991_808
+input = 991_808
+output = 65_536

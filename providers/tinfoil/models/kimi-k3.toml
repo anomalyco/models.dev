@@ -1,0 +1,14 @@
+# Sources (accessed 2026-08-08):
+# - https://inference.tinfoil.sh/v1/models (id kimi-k3; context 256000; input $2/MTok; output $6/MTok; reasoning true)
+# - https://docs.tinfoil.sh/guides/reasoning.md (reasoning_effort on OpenAI-compatible chat; standard scale none…max for Tinfoil chat reasoners)
+# Effort values mirror providers/tinfoil/models/kimi-k2-6.toml and glm-5-2/gemma4-31b peers on this host.
+
+base_model = "moonshotai/kimi-k3"
+reasoning_options = [{ type = "effort", values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"] }]
+
+[cost]
+input = 2.0
+output = 6.0
+
+[limit]
+context = 256_000

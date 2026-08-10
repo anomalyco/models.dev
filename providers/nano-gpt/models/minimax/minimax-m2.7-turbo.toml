@@ -1,23 +1,25 @@
 # Not included in subscription
 name = "MiniMax M2.7 Turbo"
 description = "Efficient MiniMax model for quick assistance, coding, and routine automation"
+family = "minimax-m2.7"
 release_date = "2026-03-18"
 last_updated = "2026-03-18"
 attachment = false
 reasoning = true
-reasoning_options = []
 tool_call = true
 structured_output = true
-open_weights = false
+open_weights = true
+reasoning_options = []
 
 [cost]
 input = 0.6
 output = 2.4
+cache_read = 0.3
 
 [limit]
-context = 204800
-input = 204800
-output = 131072
+context = 204_800
+input = 204_800
+output = 131_072
 
 [modalities]
 input = ["text"]

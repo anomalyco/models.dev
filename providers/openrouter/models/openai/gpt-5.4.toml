@@ -8,3 +8,9 @@ values = ["none", "low", "medium", "high", "xhigh"]
 input = 2.5
 output = 15
 cache_read = 0.25
+
+[[cost.tiers]]
+tier = { type = "context", size = 272_000 }
+input = 5
+output = 22.5
+cache_read = 0.5

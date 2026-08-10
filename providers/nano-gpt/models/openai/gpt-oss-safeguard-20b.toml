@@ -1,14 +1,17 @@
 name = "GPT OSS Safeguard 20B"
 description = "Safety model for policy screening, moderation, and risk-aware routing workflows"
 family = "gpt-oss"
-release_date = "2025-10-29"
+release_date = "2026-02-23"
 last_updated = "2025-10-29"
 attachment = false
 reasoning = true
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
 tool_call = false
 structured_output = false
-open_weights = false
+open_weights = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high"]
 
 [cost]
 input = 0.075

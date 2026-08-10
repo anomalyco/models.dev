@@ -1,21 +1,24 @@
 name = "Mistral: Mixtral 8x22B Instruct"
 description = "Mistral model for multilingual chat, reasoning, and tool-assisted workflows"
+family = "mistral"
 release_date = "2024-04-17"
 last_updated = "2024-04-17"
-attachment = false
+attachment = true
 reasoning = false
 temperature = true
 tool_call = true
-open_weights = true
+structured_output = true
+open_weights = false
 
 [cost]
-input = 2.0
-output = 6.0
+input = 2
+output = 6
+cache_read = 0.2
 
 [limit]
-context = 65536
-output = 13108
+context = 65_536
+output = 13_108
 
 [modalities]
-input = ["text"]
+input = ["text", "pdf"]
 output = ["text"]

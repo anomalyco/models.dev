@@ -1,22 +1,24 @@
 # Included in subscription
 name = "Qwen 2.5 Coder 32b"
 description = "Qwen coding model for software agents, repository edits, and code reasoning"
+family = "qwen"
 release_date = "2025-07-03"
 last_updated = "2025-07-03"
 attachment = false
 reasoning = false
 tool_call = false
 structured_output = false
-open_weights = false
+open_weights = true
 
 [cost]
 input = 0.2006
 output = 0.2006
+cache_read = 0.1003
 
 [limit]
-context = 32000
-input = 32000
-output = 8192
+context = 32_000
+input = 32_000
+output = 8_192
 
 [modalities]
 input = ["text"]

@@ -1,28 +1,20 @@
-name = "Fugu Ultra"
+base_model = "sakana/fugu-ultra"
 description = "Quality-first multi-agent model for hard research, analysis, and competitions"
-family = "fugu"
-release_date = "2026-06-24"
-last_updated = "2026-06-24"
-attachment = true
-reasoning = true
-temperature = false
-tool_call = true
-structured_output = true
-open_weights = false
 
 [[reasoning_options]]
 type = "effort"
-values = ["max", "xhigh", "high"]
+values = ["high", "xhigh", "max"]
 
 [cost]
 input = 5
 output = 30
 cache_read = 0.5
 
-[limit]
-context = 1_000_000
-output = 128_000
+[[cost.tiers]]
+tier = { type = "context", size = 272_000 }
+input = 10
+output = 45
+cache_read = 1
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[limit]
+output = 128_000

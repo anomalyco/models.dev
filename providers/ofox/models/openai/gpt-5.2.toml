@@ -1,0 +1,15 @@
+# Sources:
+# https://ofox.ai/models/openai/gpt-5.2 (input $1.75/M, output $14/M, cache read $0.18/M)
+# https://api.ofox.ai/v2/models/catalog (remote model id openai/gpt-5.2)
+# Reasoning: OpenAI first-party gpt-5.2 + ofox openai/gpt-5.5 peer
+base_model = "openai/gpt-5.2"
+reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh"] }]
+
+[cost]
+input = 1.75
+output = 14
+cache_read = 0.18
+
+[provider]
+npm = "@ai-sdk/openai"
+api = "https://api.ofox.ai/v1"

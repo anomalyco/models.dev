@@ -1,24 +1,24 @@
 name = "OpenAI: GPT Chat Latest"
 description = "Chat-tuned GPT model for conversational assistance, writing, and tool workflows"
+family = "gpt"
 release_date = "2026-05-05"
-last_updated = "2026-05-07"
+last_updated = "2026-05-05"
 attachment = true
-reasoning_options = []
-reasoning = true
+reasoning = false
 temperature = false
 tool_call = true
 structured_output = true
 open_weights = false
 
 [cost]
-input = 5.0
-output = 30.0
+input = 5
+output = 30
 cache_read = 0.5
 
 [limit]
-context = 400000
-output = 128000
+context = 400_000
+output = 128_000
 
 [modalities]
-input = ["image", "pdf", "text"]
+input = ["text", "image", "pdf"]
 output = ["text"]

@@ -1,24 +1,28 @@
 # Included in subscription
 name = "Gemma 4 31B Garnet V2"
 description = "Compact GPT model for low-latency assistance and high-volume workloads"
+family = "gemma"
 release_date = "2026-05-01"
 last_updated = "2026-05-01"
 attachment = true
 reasoning = true
-reasoning_options = [{ type = "toggle" }]
 tool_call = false
 structured_output = false
-open_weights = false
+open_weights = true
+
+[[reasoning_options]]
+type = "toggle"
 
 [cost]
 input = 0.306
 output = 0.306
+cache_read = 0.153
 
 [limit]
-context = 262144
-input = 262144
-output = 16384
+context = 262_144
+input = 262_144
+output = 16_384
 
 [modalities]
-input = ["text", "image", "video"]
+input = ["text", "image"]
 output = ["text"]

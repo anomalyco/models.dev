@@ -1,5 +1,6 @@
 name = "ERNIE X1.1"
 description = "Compact GPT model for low-latency assistance and high-volume workloads"
+family = "ernie"
 release_date = "2025-09-10"
 last_updated = "2025-09-10"
 attachment = true
@@ -11,6 +12,7 @@ open_weights = false
 [cost]
 input = 0.15
 output = 0.6
+cache_read = 0.075
 
 [limit]
 context = 64_000

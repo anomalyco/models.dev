@@ -1,23 +1,20 @@
-name = "Gemini 2.5 Pro"
-description = "Compact GPT model for low-latency assistance and high-volume workloads"
-release_date = "2025-06-05"
-last_updated = "2025-06-05"
-attachment = true
-reasoning = true
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
+base_model = "google/gemini-2.5-pro"
 tool_call = false
 structured_output = false
-open_weights = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high"]
 
 [cost]
-input = 2.5
-output = 10.00
+input = 1.25
+output = 10
+cache_read = 0.125
+cache_write = 0.375
 
 [limit]
 context = 1_048_756
 input = 1_048_756
-output = 65_536
 
 [modalities]
-input = ["text", "image"]
-output = ["text"]
+input = ["text", "image", "audio"]

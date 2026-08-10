@@ -7,16 +7,17 @@ attachment = true
 reasoning = false
 tool_call = false
 structured_output = false
-open_weights = false
+open_weights = true
 
 [cost]
 input = 0.493
 output = 0.493
+cache_read = 0.2465
 
 [limit]
-context = 32768
-input = 32768
-output = 8192
+context = 8_192
+input = 8_192
+output = 8_192
 
 [modalities]
 input = ["text", "pdf"]

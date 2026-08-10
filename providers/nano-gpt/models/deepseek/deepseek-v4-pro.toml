@@ -1,14 +1,9 @@
 # Included in subscription (uses 2x input tokens)
-name = "DeepSeek V4 Pro"
-description = "Flagship DeepSeek model for coding, reasoning, and agentic work"
-release_date = "2026-04-24"
-last_updated = "2026-04-24"
-attachment = false
-reasoning = true
-reasoning_options = [{ type = "effort", values = ["none", "high", "xhigh"] }]
-tool_call = true
-structured_output = true
-open_weights = false
+base_model = "deepseek/deepseek-v4-pro"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "high", "max"]
 
 [cost]
 input = 1.1
@@ -16,10 +11,5 @@ output = 2.2
 cache_read = 0.11
 
 [limit]
-context = 1048576
-input = 1048576
-output = 384000
-
-[modalities]
-input = ["text"]
-output = ["text"]
+context = 1_048_576
+input = 1_048_576

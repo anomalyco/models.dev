@@ -1,17 +1,13 @@
+base_model = "perplexity/sonar-reasoning-pro"
 name = "Perplexity Reasoning Pro"
-description = "O-series reasoning model for hard analysis, math, coding, and planning"
-release_date = "2025-02-19"
-last_updated = "2025-02-19"
 attachment = false
-reasoning = true
-reasoning_options = []
-tool_call = false
 structured_output = false
-open_weights = false
+reasoning_options = []
 
 [cost]
-input = 2.006
-output = 7.9985
+input = 2
+output = 8
+cache_read = 1
 
 [limit]
 context = 127_000
@@ -20,4 +16,3 @@ output = 128_000
 
 [modalities]
 input = ["text"]
-output = ["text"]

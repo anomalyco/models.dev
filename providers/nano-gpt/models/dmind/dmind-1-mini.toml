@@ -1,7 +1,7 @@
 name = "DMind-1-Mini"
 description = "Compact GPT model for low-latency assistance and high-volume workloads"
 family = "gpt"
-release_date = "2025-06-01"
+release_date = "2024-01-01"
 last_updated = "2025-06-01"
 attachment = false
 reasoning = false
@@ -12,6 +12,7 @@ open_weights = false
 [cost]
 input = 0.2
 output = 0.4
+cache_read = 0.1
 
 [limit]
 context = 32_768

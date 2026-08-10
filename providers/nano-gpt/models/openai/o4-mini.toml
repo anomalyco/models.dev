@@ -1,24 +1,18 @@
+base_model = "openai/o4-mini"
 name = "OpenAI o4-mini"
-description = "O-series reasoning model for hard analysis, math, coding, and planning"
-family = "o-mini"
-release_date = "2025-04-16"
-last_updated = "2025-04-16"
 attachment = false
-reasoning = true
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
-tool_call = true
-structured_output = true
-open_weights = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high"]
 
 [cost]
 input = 1.1
 output = 4.4
+cache_read = 0.55
 
 [limit]
-context = 200_000
 input = 200_000
-output = 100_000
 
 [modalities]
 input = ["text"]
-output = ["text"]
