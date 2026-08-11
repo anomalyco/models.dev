@@ -1,0 +1,16 @@
+# Kimi K3; exposes reasoning_effort = low|high|max (no off level).
+# Limits 1M context / 1M output. Pricing: https://zro.moonmath.ai/pricing
+base_model = "moonshotai/kimi-k3"
+reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 2.50
+output = 12.00
+cache_read = 0.45
+
+[limit]
+context = 1_048_576
+output = 1_048_576
