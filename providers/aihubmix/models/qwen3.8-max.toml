@@ -1,0 +1,24 @@
+base_model = "alibaba/qwen3.8-max"
+attachment = false
+structured_output = true
+reasoning_options = [
+  { type = "toggle" },
+  { type = "effort", values = ["low", "medium", "xhigh"] },
+]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 1.69
+output = 5.07
+cache_read = 0.169
+cache_write = 2.1125
+
+[limit]
+context = 991_000
+output = 128_000
+
+[modalities]
+input = ["text"]
+output = ["text"]
