@@ -14,6 +14,7 @@ import { cortecs } from "./providers/cortecs.js";
 import { crossmodel } from "./providers/crossmodel.js";
 import { deepinfra } from "./providers/deepinfra.js";
 import { digitalocean } from "./providers/digitalocean.js";
+import { edenai } from "./providers/edenai.js";
 import { empiriolabs } from "./providers/empiriolabs.js";
 import { google } from "./providers/google.js";
 import { hyper } from "./providers/hyper.js";
@@ -121,6 +122,7 @@ export const providers: {
   crossmodel: SyncProvider<any>;
   deepinfra: SyncProvider<any>;
   digitalocean: SyncProvider<any>;
+  edenai: SyncProvider<any>;
   empiriolabs: SyncProvider<any>;
   google: SyncProvider<any>;
   hyper: SyncProvider<any>;
@@ -150,6 +152,7 @@ export const providers: {
   crossmodel,
   deepinfra,
   digitalocean,
+  edenai,
   empiriolabs,
   google,
   hyper,
@@ -174,6 +177,7 @@ export const providers: {
 export const groups = {
   aggregators: [
     "crossmodel",
+    "edenai",
     "empiriolabs",
     "huggingface",
     "kilo",

@@ -24,6 +24,13 @@ import {
   resolveDigitalOceanBaseModel,
   type DigitalOceanSourceModel,
 } from "../src/sync/providers/digitalocean.js";
+import {
+  buildEdenAIModel,
+  collectFirstPartyBaseModels,
+  reasoningOptionsFor,
+  resolveEdenAIBaseModel,
+  type EdenAIModel,
+} from "../src/sync/providers/edenai.js";
 import { buildHyperModel, type HyperModel } from "../src/sync/providers/hyper.js";
 import {
   buildEmpiriolabsModel,
@@ -1953,6 +1960,171 @@ test("factors new Hyper models against unique models/ metadata", () => {
   });
 });
 
+test("factors Eden AI models onto lab metadata and prices from list_pricing", () => {
+  const model = edenAIModel({
+    id: "openai/gpt-5.6-terra",
+    model_name: "gpt-5.6-terra",
+    owned_by: "openai",
+    pricing: { input_cost_per_token: 0.0000013, output_cost_per_token: 0.0000078 },
+    list_pricing: {
+      input_cost_per_token: 0.000002,
+      output_cost_per_token: 0.000012,
+      cache_read_input_token_cost: 0.0000002,
+    },
+  });
+
+  expect(buildEdenAIModel(model)).toMatchObject({
+    base_model: "openai/gpt-5.6-terra",
+    cost: { input: 2, output: 12, cache_read: 0.2 },
+    reasoning_options: [
+      { type: "effort", values: ["none", "low", "medium", "high", "xhigh", "max"] },
+    ],
+  });
+  expect(buildEdenAIModel(model)).not.toHaveProperty("reasoning");
+});
+
+test("takes Eden AI reasoning options from the model's own lab entry", () => {
+  expect(reasoningOptionsFor("deepseek/deepseek-v4-pro")).toEqual([
+    { type: "effort", values: ["none", "high", "max"] },
+  ]);
+  expect(reasoningOptionsFor("openai/o1")).toEqual([
+    { type: "effort", values: ["low", "medium", "high"] },
+  ]);
+});
+
+test("skips Eden AI models whose reasoning control has no effort equivalent", () => {
+  // Lab and OpenRouter both expose these through budget_tokens, which Eden AI
+  // has no request field for.
+  expect(reasoningOptionsFor("google/gemini-2.5-pro")).toBeUndefined();
+  expect(
+    buildEdenAIModel(
+      edenAIModel({
+        id: "google/gemini-2.5-pro",
+        model_name: "gemini-2.5-pro",
+        owned_by: "google",
+      }),
+    ),
+  ).toBeUndefined();
+});
+
+test("omits Eden AI reasoning options for non-reasoning models", () => {
+  const model = edenAIModel({
+    id: "openai/gpt-4o-mini",
+    model_name: "gpt-4o-mini",
+    owned_by: "openai",
+    context_length: 128_000,
+  });
+
+  const built = buildEdenAIModel(model);
+  expect(built).toMatchObject({ base_model: "openai/gpt-4o-mini" });
+  expect(built).not.toHaveProperty("reasoning_options");
+});
+
+test("skips Eden AI models without lab metadata", () => {
+  expect(
+    buildEdenAIModel(
+      edenAIModel({
+        id: "deepinfra/acme/Not-A-Real-Model",
+        model_name: "acme/Not-A-Real-Model",
+        owned_by: "deepinfra",
+      }),
+    ),
+  ).toBeUndefined();
+});
+
+test("names Eden AI regional deployments after the canonical model", () => {
+  expect(
+    buildEdenAIModel(
+      edenAIModel({
+        id: "amazon/anthropic.claude-opus-5@eu",
+        model_name: "anthropic.claude-opus-5",
+        owned_by: "amazon",
+      }),
+    ),
+  ).toMatchObject({
+    base_model: "anthropic/claude-opus-5",
+    name: "Claude Opus 5 (EU)",
+  });
+});
+
+test("builds Eden AI context tiers without reading time-based cache keys", () => {
+  const model = edenAIModel({
+    id: "openai/gpt-5.6-terra",
+    model_name: "gpt-5.6-terra",
+    owned_by: "openai",
+    list_pricing: {
+      input_cost_per_token: 0.000002,
+      output_cost_per_token: 0.000012,
+      input_cost_per_token_above_272k_tokens: 0.000004,
+      output_cost_per_token_above_272k_tokens: 0.000018,
+      cache_creation_input_token_cost_above_1hr: 0.000009,
+      cache_creation_input_token_cost_above_1hr_above_272k_tokens: 0.00001,
+    },
+  });
+
+  expect(buildEdenAIModel(model)).toMatchObject({
+    cost: {
+      input: 2,
+      output: 12,
+      tiers: [{ tier: { type: "context", size: 272_000 }, input: 4, output: 18 }],
+    },
+  });
+  expect(
+    (buildEdenAIModel(model) as { cost: { tiers: Array<Record<string, unknown>> } }).cost.tiers[0],
+  ).not.toHaveProperty("cache_write");
+});
+
+test("keeps only the first-party Eden AI route when the lab's own API is relayed", () => {
+  const bedrock = edenAIModel({
+    id: "amazon/anthropic.claude-opus-5",
+    model_name: "anthropic.claude-opus-5",
+    owned_by: "amazon",
+  });
+  const direct = edenAIModel({
+    id: "anthropic/claude-opus-5",
+    model_name: "claude-opus-5",
+    owned_by: "anthropic",
+  });
+
+  const firstParty = collectFirstPartyBaseModels([bedrock, direct]);
+  expect(firstParty).toEqual(new Set(["anthropic/claude-opus-5"]));
+  expect(buildEdenAIModel(bedrock, firstParty)).toBeUndefined();
+  expect(buildEdenAIModel(direct, firstParty)).toMatchObject({
+    base_model: "anthropic/claude-opus-5",
+  });
+});
+
+test("keeps every Eden AI route for models with no first-party relay", () => {
+  const models = ["deepinfra", "groq", "cerebras"].map((owner) =>
+    edenAIModel({
+      id: `${owner}/openai/gpt-oss-120b`,
+      model_name: "openai/gpt-oss-120b",
+      owned_by: owner,
+    }),
+  );
+
+  const firstParty = collectFirstPartyBaseModels(models);
+  expect(firstParty.size).toBe(0);
+  for (const model of models) {
+    expect(buildEdenAIModel(model, firstParty)).toMatchObject({
+      base_model: "openai/gpt-oss-120b",
+    });
+  }
+});
+
+test("resolves Eden AI aliases to the model they point at", () => {
+  expect(
+    resolveEdenAIBaseModel(
+      edenAIModel({
+        id: "anthropic/claude-opus-latest",
+        model_name: "claude-opus-latest",
+        owned_by: "anthropic",
+        alias_of: "anthropic/claude-opus-5",
+      }),
+    ),
+  ).toBe("anthropic/claude-opus-5");
+});
+
 test("formats interleaved as a root field before reasoning option tables", () => {
   const content = formatToml({
     id: "example/model",
@@ -3261,6 +3433,26 @@ function mergeGatewayModel(overrides: Partial<MergeGatewayModel> = {}): MergeGat
     availability_status: "available",
     created_at: "2026-07-09T00:00:00Z",
     updated_at: "2026-07-09T00:00:00Z",
+    ...overrides,
+  };
+}
+
+function edenAIModel(overrides: Partial<EdenAIModel> = {}): EdenAIModel {
+  return {
+    id: "openai/gpt-5.6-terra",
+    owned_by: "openai",
+    model_name: "gpt-5.6-terra",
+    context_length: 1_050_000,
+    capabilities: {
+      input_modalities: ["text", "image"],
+      output_modalities: ["text"],
+      supports_function_calling: true,
+      supports_response_schema: true,
+    },
+    list_pricing: {
+      input_cost_per_token: 0.000002,
+      output_cost_per_token: 0.000012,
+    },
     ...overrides,
   };
 }
