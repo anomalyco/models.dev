@@ -1,0 +1,20 @@
+name = "Agnes 2.5 Flash"
+description = "Fast general chat model served by InferenceSaver over an OpenAI-compatible API."
+release_date = "2026-08-11"
+last_updated = "2026-08-11"
+attachment = false
+reasoning = false
+tool_call = true
+open_weights = false
+
+[cost]
+input = 0
+output = 0
+
+[limit]
+context = 200_000
+output = 16_384
+
+[modalities]
+input = ["text"]
+output = ["text"]
