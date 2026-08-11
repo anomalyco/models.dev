@@ -30,6 +30,7 @@ export const ModelFamilyValues = [
   "claude-sonnet",
   "claude-opus",
   "claude-fable",
+  "claude-mythos",
 
   // Gemini style
   "gemini",

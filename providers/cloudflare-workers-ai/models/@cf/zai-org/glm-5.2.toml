@@ -2,7 +2,13 @@
 # https://developers.cloudflare.com/workers-ai/models/glm-5.2/
 base_model = "zhipuai/glm-5.2"
 name = "Glm 5.2"
-reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "medium", "high"] }]
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high"]
 
 [cost]
 input = 1.4
@@ -10,5 +16,5 @@ output = 4.4
 cache_read = 0.26
 
 [limit]
-context = 256_000
+context = 262_144
 output = 256_000

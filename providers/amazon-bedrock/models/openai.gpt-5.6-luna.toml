@@ -1,9 +1,10 @@
 # Bedrock model IDs and reasoning support: https://github.com/openai/codex/pull/30285
+# Bedrock context window: https://developers.openai.com/api/docs/guides/amazon-bedrock
 # In-region on-demand pricing (US East N. Virginia & Ohio; also US West Oregon): https://aws.amazon.com/bedrock/pricing/
 # Columns: input / 30m cache write / cache read / output (USD per 1M tokens)
 base_model = "openai/gpt-5.6-luna"
 reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh", "max"] }]
-base_model_omit = ["cost.tiers", "cost.context_over_200k", "experimental.modes.fast", "limit.input"]
+base_model_omit = ["cost.context_over_200k", "experimental.modes.fast"]
 
 [cost]
 input = 0.22
@@ -11,9 +12,12 @@ output = 1.32
 cache_read = 0.022
 cache_write = 0.275
 
-[limit]
-context = 272_000
-output = 128_000
+[[cost.tiers]]
+tier = { size = 272_000 }
+input = 0.44
+output = 1.98
+cache_read = 0.044
+cache_write = 0.55
 
 [provider]
 npm = "@ai-sdk/amazon-bedrock/mantle"
