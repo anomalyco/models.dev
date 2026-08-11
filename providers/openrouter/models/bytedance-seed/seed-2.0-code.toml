@@ -1,5 +1,11 @@
+# Toggle: reasoning.enabled = true|false
+# Effort: reasoning.effort = low|medium|high
+# https://openrouter.ai/docs/guides/best-practices/reasoning-tokens
 base_model = "bytedance-seed/seed-2.0-code"
 description = "Coding model for repository understanding, refactors, and agentic engineering tasks"
+
+[[reasoning_options]]
+type = "toggle"
 
 [[reasoning_options]]
 type = "effort"
