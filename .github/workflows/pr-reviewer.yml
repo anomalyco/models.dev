@@ -67,7 +67,7 @@ jobs:
       - name: Run pull request reviewer
         env:
           OPENCODE_API_KEY: ${{ secrets.OPENCODE_API_KEY }}
-          OPENCODE_PERMISSION: '{"*":"deny","read":"allow","glob":"allow","grep":"allow","external_directory":"deny"}'
+          OPENCODE_PERMISSION: '{"*":"deny","read":"allow","glob":"allow","grep":"allow","mark-pr-ready":"allow","external_directory":"deny"}'
         run: |
           set -euo pipefail
           EVENTS_FILE="$RUNNER_TEMP/pr-reviewer-events.jsonl"
