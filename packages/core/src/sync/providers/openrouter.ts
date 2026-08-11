@@ -319,6 +319,9 @@ function openRouterReasoningOptions(reasoning: OpenRouterModel["reasoning"]): Sy
     : reasoning.supported_efforts;
 
   if (efforts !== undefined) {
+    if (!reasoning.mandatory && !efforts.includes("none")) {
+      options.push({ type: "toggle" });
+    }
     options.push({
       type: "effort",
       values: reasoning.mandatory ? efforts.filter((value) => value !== "none") : [...efforts],
