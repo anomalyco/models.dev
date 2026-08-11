@@ -1,0 +1,28 @@
+name = "Solar Pro 4 Thinking"
+description = "Upstage's Solar Pro 4 with reasoning enabled for harder agentic workflows, document-intensive work, coding, planning, and analysis across a 524K-token context window."
+family = "solar"
+release_date = "2026-08-11"
+last_updated = "2026-08-11"
+attachment = false
+reasoning = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high"]
+
+[cost]
+input = 0.03
+output = 0.12
+cache_read = 0.006
+
+[limit]
+context = 524_288
+input = 524_288
+output = 131_072
+
+[modalities]
+input = ["text"]
+output = ["text"]
