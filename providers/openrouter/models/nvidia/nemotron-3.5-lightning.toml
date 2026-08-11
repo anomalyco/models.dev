@@ -1,13 +1,9 @@
 base_model = "nvidia/nemotron-3.5-lightning"
-name = "Nemotron 3.5 Lightning (free)"
 description = "Nemotron model for efficient reasoning, coding, and specialized AI agents"
-structured_output = false
+tool_call = false
 reasoning_options = []
 
 [cost]
-input = 0
-output = 0
-
-[limit]
-context = 1_000_000
-output = 65_536
+input = 0.1
+output = 0.25
+cache_read = 0.05
