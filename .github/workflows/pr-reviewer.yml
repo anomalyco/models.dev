@@ -72,10 +72,14 @@ jobs:
           set -euo pipefail
           EVENTS_FILE="$RUNNER_TEMP/pr-reviewer-events.jsonl"
           RESPONSE_FILE="$RUNNER_TEMP/pr-reviewer-response.md"
+          PR_REVIEW_READY_FILE="$RUNNER_TEMP/pr-reviewer-ready"
           echo "RESPONSE_FILE=$RESPONSE_FILE" >> "$GITHUB_ENV"
+          echo "PR_REVIEW_READY_FILE=$PR_REVIEW_READY_FILE" >> "$GITHUB_ENV"
+          export PR_REVIEW_READY_FILE
+          rm -f "$PR_REVIEW_READY_FILE"
 
           opencode run --agent pr-reviewer -m opencode/grok-4.5 --format json <<'EOF' | tee "$EVENTS_FILE"
-          Review this pull request using the trusted reviewer instructions. Start with `.pr-review/pull-request.json`, `.pr-review/diff.patch`, `AGENTS.md`, and the contributing guidance in `README.md`. Read `sync.md`, the reasoning-options audit guide, schema code, and nearby base-revision files when relevant to the changed files. Use only the read, glob, and grep tools. Return only the final review comment in the agent's required output format. Never include progress narration or passed-check summaries.
+          Review this pull request using the trusted reviewer instructions. Start with `.pr-review/pull-request.json`, `.pr-review/diff.patch`, `AGENTS.md`, and the contributing guidance in `README.md`. Read `sync.md`, the reasoning-options audit guide, schema code, and nearby base-revision files when relevant to the changed files. Use only the read, glob, grep, and mark-pr-ready tools. Return only the final review comment in the agent's required output format. Never include progress narration or passed-check summaries.
           EOF
 
           if ! jq -ers 'map(select(.type == "text") | .part.text) | last | select(length > 0)' "$EVENTS_FILE" > "$RESPONSE_FILE"; then
@@ -90,6 +94,6 @@ jobs:
           READY_LABEL: "reviewer: ready"
         run: |
           gh pr comment "$PR_NUMBER" --repo "$GITHUB_REPOSITORY" --body-file "$RESPONSE_FILE"
-          if grep -Fxq "No actionable findings." "$RESPONSE_FILE"; then
+          if [[ -f "$PR_REVIEW_READY_FILE" ]]; then
             gh pr edit "$PR_NUMBER" --repo "$GITHUB_REPOSITORY" --add-label "$READY_LABEL"
           fi

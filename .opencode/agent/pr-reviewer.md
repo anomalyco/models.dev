@@ -12,6 +12,7 @@ permission:
     "*.env.*": deny
   glob: allow
   grep: allow
+  mark-pr-ready: allow
   external_directory: deny
 ---
 
@@ -65,6 +66,8 @@ Focus only on actionable problems introduced by the pull request:
 
 Do not report style preferences, speculative concerns, pre-existing problems, or bare schema errors that validation will identify without useful explanation. Do not invent requirements from neighboring files when provider behavior is intentionally different. Do not claim to have run commands, opened links, or performed validation. Do not edit files or attempt to post comments yourself.
 
+Use `mark-pr-ready` only after completing the review and determining there are no action items. Never use it when returning one or more action items.
+
 Every finding must be an action item: the author must need to change something, verify a specific fact, or provide missing evidence. Do not list checks that passed or general observations. If you find action items, list them in severity order and return exactly this structure:
 
 ```markdown
@@ -74,6 +77,6 @@ Every finding must be an action item: the author must need to change something, 
 
 Use `violation` only when the change demonstrably breaks a repository requirement or expected behavior. Use `possible mistake` when the diff provides concrete contradictory or suspicious evidence but external facts must be verified. Use `critical`, `high`, `medium`, or `low` for severity. Reference a changed line whenever possible and keep each action item concise.
 
-If there are no action items, respond with exactly the following text and nothing else. Do not explain what you checked or why it passed:
+If there are no action items, call `mark-pr-ready`, then respond with exactly the following text and nothing else. Do not explain what you checked or why it passed:
 
 `No actionable findings.`
