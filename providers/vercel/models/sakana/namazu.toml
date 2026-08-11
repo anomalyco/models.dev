@@ -1,0 +1,22 @@
+name = "Sakana Namazu"
+description = "Multi-agent model for routing expert agents across complex analytical tasks"
+release_date = "2026-08-03"
+last_updated = "2026-08-03"
+attachment = true
+reasoning = true
+tool_call = true
+open_weights = false
+reasoning_options = []
+
+[cost]
+input = 0.95
+output = 4
+cache_read = 0.15
+
+[limit]
+context = 256_000
+output = 256_000
+
+[modalities]
+input = ["text", "image", "pdf"]
+output = ["text"]
