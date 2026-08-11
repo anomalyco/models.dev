@@ -8,6 +8,7 @@ import { factorBaseModel, resolveCanonicalBaseModel } from "./openrouter.js";
 const API_ENDPOINT = "https://api.empiriolabs.ai/v1/models";
 
 const CANONICAL_BASE_MODELS: Record<string, string> = {
+  "seed-2-0-code": "bytedance-seed/seed-2.0-code",
   "fugu-ultra": "sakana/fugu-ultra",
   "deepseek-v4-flash-0731": "deepseek/deepseek-v4-flash-0731",
   "gemma-4-26b-a4b": "google/gemma-4-26b-a4b-it",

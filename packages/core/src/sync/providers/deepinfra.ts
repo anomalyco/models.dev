@@ -372,6 +372,7 @@ export function buildDeepInfraModel(
 // catalog's canonical metadata namespace so new models can inherit via
 // `base_model` whenever a `models/` entry already exists.
 const DEEPINFRA_PREFIXES: Record<string, string> = {
+  ByteDance: "bytedance-seed",
   "deepseek-ai": "deepseek",
   "meta-llama": "meta",
   google: "google",

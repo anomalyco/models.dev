@@ -13,6 +13,7 @@ const modelMetadataFilesByProvider = new Map<string, Set<string>>();
 let allModelMetadataIDs: string[] | undefined;
 
 const CANONICAL_BASE_MODEL_OVERRIDES = {
+  "bytedance/dola-seed-2.0-code": "bytedance-seed/seed-2.0-code",
   "openai/gpt-5.6-luna-pro": "openai/gpt-5.6-luna",
   "openai/gpt-5.6-sol-pro": "openai/gpt-5.6-sol",
   "openai/gpt-5.6-terra-pro": "openai/gpt-5.6-terra",

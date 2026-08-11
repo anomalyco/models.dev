@@ -15,7 +15,11 @@ import {
   buildCrossModel,
   type CrossModelModel,
 } from "../src/sync/providers/crossmodel.js";
-import { buildDeepInfraModel, type DeepInfraModel } from "../src/sync/providers/deepinfra.js";
+import {
+  buildDeepInfraModel,
+  resolveDeepInfraBaseModel,
+  type DeepInfraModel,
+} from "../src/sync/providers/deepinfra.js";
 import {
   buildDigitalOceanModel,
   digitalocean,
@@ -274,6 +278,8 @@ test("factors NanoGPT variants against canonical models without retaining wrong 
   expect(resolveNanoGptBaseModel("TEE/gpt-oss-120b")).toBe("openai/gpt-oss-120b");
   expect(resolveNanoGptBaseModel("TEE/gemma-4-31b-it")).toBe("google/gemma-4-31b-it");
   expect(resolveNanoGptBaseModel("cohere/north-mini-code")).toBe("cohere/north-mini-code-1-0");
+  expect(resolveNanoGptBaseModel("doubao-seed-2-0-code-preview-260215"))
+    .toBe("bytedance-seed/seed-2.0-code");
   expect(resolveNanoGptBaseModel("xiaomi/mimo-v2.5-pro-ultraspeed"))
     .toBe("xiaomi/mimo-v2.5-pro-ultraspeed");
   expect(resolveNanoGptBaseModel("claude-haiku-4-5-20251001-thinking"))
@@ -2044,6 +2050,11 @@ test("formats provider overrides and experimental modes", () => {
   });
 });
 
+test("resolves DeepInfra ByteDance IDs to canonical metadata", () => {
+  expect(resolveDeepInfraBaseModel("ByteDance/Seed-2.0-code"))
+    .toBe("bytedance-seed/seed-2.0-code");
+});
+
 test("DeepInfra preserves live modalities for new base models", () => {
   const model = buildDeepInfraModel(
     deepInfraModel("Qwen/Qwen3.5-9B", ["multimodal", "input-video"]),
@@ -2260,6 +2271,7 @@ test("factors OpenRouter Pro routes against canonical OpenAI metadata", () => {
 test("resolves Merge Gateway provider aliases to canonical metadata", () => {
   expect([
     resolveCanonicalBaseModel("bytedance-seed/seed-2.0-code"),
+    resolveCanonicalBaseModel("bytedance/dola-seed-2.0-code"),
     resolveCanonicalBaseModel("moonshot/kimi-k2.5"),
     resolveCanonicalBaseModel("moonshot/kimi-k2.6"),
     resolveCanonicalBaseModel("moonshot/kimi-k2.7-code"),
@@ -2267,6 +2279,7 @@ test("resolves Merge Gateway provider aliases to canonical metadata", () => {
     resolveCanonicalBaseModel("sakana/fugu-ultra"),
     resolveCanonicalBaseModel("meta/muse-glimmer-30b"),
   ]).toEqual([
+    "bytedance-seed/seed-2.0-code",
     "bytedance-seed/seed-2.0-code",
     "moonshotai/kimi-k2.5",
     "moonshotai/kimi-k2.6",
@@ -3190,6 +3203,7 @@ test("syncs EmpirioLabs pricing tiers and reasoning controls", () => {
 
 test("maps EmpirioLabs aliases to canonical model metadata", () => {
   expect(resolveEmpiriolabsBaseModel("fugu-ultra")).toBe("sakana/fugu-ultra");
+  expect(resolveEmpiriolabsBaseModel("seed-2-0-code")).toBe("bytedance-seed/seed-2.0-code");
   expect(resolveEmpiriolabsBaseModel("muse-spark-1-1")).toBe("meta/muse-spark-1.1");
   expect(resolveEmpiriolabsBaseModel("step-3-5-flash")).toBe("stepfun/step-3.5-flash");
 });
