@@ -1,0 +1,12 @@
+# Source: gm live /v1/models catalog 2026-08-07 (USD/MTok).
+base_model = "google/gemini-2.5-pro"
+
+[[reasoning_options]]
+type = "budget_tokens"
+min = 128
+max = 32_768
+
+[cost]
+input = 1.25
+output = 10.00
+cache_read = 0.125

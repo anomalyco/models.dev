@@ -1,0 +1,16 @@
+# Source: gm live /v1/models catalog 2026-08-07 (USD/MTok).
+# Toggle: thinking budget 0 disables thinking (Google thinkingConfig.thinkingBudget)
+base_model = "google/gemini-2.5-flash-lite"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "budget_tokens"
+min = 512
+max = 24_576
+
+[cost]
+input = 0.10
+output = 0.40
+cache_read = 0.01

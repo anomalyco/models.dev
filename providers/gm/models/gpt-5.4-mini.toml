@@ -1,0 +1,11 @@
+# Source: gm live /v1/models catalog 2026-08-07 (USD/MTok).
+base_model = "openai/gpt-5.4-mini"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "xhigh"]
+
+[cost]
+input = 0.75
+output = 4.50
+cache_read = 0.075
