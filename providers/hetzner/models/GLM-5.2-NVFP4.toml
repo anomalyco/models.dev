@@ -1,6 +1,6 @@
 name = "GLM-5.2 NVFP4"
 base_model = "zhipuai/glm-5.2"
-reasoning_options = []
+reasoning_options = [{ type = "effort", values = ["none", "high", "max"] }]
 status = "beta"
 
 [cost]
