@@ -1,5 +1,6 @@
-# Azure catalog: https://ai.azure.com/catalog/models/claude-fable-5
-base_model = "anthropic/claude-fable-5"
+# Azure catalog: https://ai.azure.com/catalog/models/claude-mythos-5
+# Effort: output_config.effort = low|medium|high|xhigh|max; thinking is always on.
+base_model = "anthropic/claude-mythos-5"
 reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
 status = "beta"
 

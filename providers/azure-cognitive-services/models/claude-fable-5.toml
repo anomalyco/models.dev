@@ -1,4 +1,5 @@
 # Azure catalog: https://ai.azure.com/catalog/models/claude-fable-5
+# Effort: output_config.effort = low|medium|high|xhigh|max; thinking is always on.
 base_model = "anthropic/claude-fable-5"
 reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
 status = "beta"
@@ -11,4 +12,4 @@ cache_write = 12.50
 
 [provider]
 npm = "@ai-sdk/anthropic"
-api = "https://${AZURE_RESOURCE_NAME}.services.ai.azure.com/anthropic/v1"
+api = "https://${AZURE_COGNITIVE_SERVICES_RESOURCE_NAME}.services.ai.azure.com/anthropic/v1"

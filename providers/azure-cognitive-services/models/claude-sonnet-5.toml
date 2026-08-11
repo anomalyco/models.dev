@@ -1,34 +1,16 @@
-name = "Claude Sonnet 5"
-description = "Balanced Claude model for coding, analysis, agent workflows, and cost control"
-family = "claude-sonnet"
-release_date = "2026-06-30"
-last_updated = "2026-06-30"
-attachment = true
-reasoning = true
-# Sonnet 5 deprecates temperature settings in favor of effort
-# https://platform.claude.com/docs/en/about-claude/models/whats-new-sonnet-5
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
-temperature = false
-knowledge = "2026-01-31"
-tool_call = true
+# Azure catalog and pricing: https://ai.azure.com/catalog/models/claude-sonnet-5
+# Introductory pricing is in effect through August 31, 2026.
+# Toggle: thinking.type = adaptive|disabled
+# Effort: output_config.effort = low|medium|high|xhigh|max
+base_model = "anthropic/claude-sonnet-5"
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
 structured_output = true
-open_weights = false
 
-# 30% off promotional pricing till August 31, 2026
-# https://ai.azure.com/catalog/models/claude-sonnet-5
 [cost]
 input = 2.00
 output = 10.00
-cache_read = 0.30
-cache_write = 3.75
-
-[limit]
-context = 1_000_000
-output = 128_000
-
-[modalities]
-input = ["text", "image", "pdf"]
-output = ["text"]
+cache_read = 0.20
+cache_write = 2.50
 
 [provider]
 npm = "@ai-sdk/anthropic"
