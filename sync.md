@@ -150,8 +150,9 @@ Alibaba is implemented in `packages/core/src/sync/providers/alibaba.ts`.
 - The API is paginated and duplicate model IDs are deduped before translation.
 - API prices are per-1M-token numbers; context tiers are derived from DashScope price ranges.
 - Existing local files missing from the international API source are retained because the provider directory may contain deprecated or region-specific entries.
-- New API models require a matching `models/alibaba/<id>.toml` base-metadata file before the sync mints a thin provider stub.
-- Canonical Alibaba model IDs should emit `base_model` references to model metadata when a matching `models/` entry exists.
+- `skipCreates` is on: new remote IDs open missing-model GitHub issues instead of minting TOMLs. The API does not provide `family`, `temperature`, `open_weights`, `knowledge`, or reasoning controls.
+- Existing local files are always updated from API-authoritative fields, even without a `models/` lab file.
+- Canonical Alibaba model IDs emit `base_model` when a matching `models/` entry exists.
 - Existing `family`, `temperature`, `open_weights`, `knowledge`, `interleaved`, and authored `reasoning_options` are preserved. New reasoners with no authored options get `[]` from the runner (the API has no effort/toggle/budget fields).
 - `reasoning` comes from `capabilities` (`Reasoning`). `tool_call` / `structured_output` come from `features` when present.
 - `limit.input` comes from `max_input_tokens`. Past `inference_offline_info.offlineTime` sets `status = deprecated`.

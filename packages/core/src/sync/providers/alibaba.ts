@@ -146,9 +146,7 @@ export const alibaba = {
   id: "alibaba",
   name: "Alibaba",
   modelsDir: "providers/alibaba/models",
-  // skipCreates stays false: new models with a matching
-  // models/alibaba/<id>.toml base file are auto-minted as thin
-  // stubs. Models without a base match are skipped by translateModel.
+  skipCreates: true,
   deleteMissing: false,
   sourceID(model) {
     return model.model;
@@ -156,7 +154,7 @@ export const alibaba = {
   skippedNotice(ids) {
     if (ids.length === 0) return [];
     return [
-      `${ids.length} Alibaba models returned by the source were not created because no matching \`models/alibaba/<id>.toml\` base-metadata file exists for them. The DashScope API does not authoritatively expose \`family\`, \`temperature\`, \`open_weights\`, or \`knowledge\`, so a base-metadata file is required to mint a thin provider stub via inheritance. Add the file to enable auto-creation. Existing models are still updated from source-authoritative fields.`,
+      `${ids.length} Alibaba models returned by the source were not created because the DashScope catalog does not provide enough metadata to mint a complete TOML (\`family\`, \`temperature\`, \`open_weights\`, \`knowledge\`, and reasoning controls). Existing local files are still updated from API-authoritative fields. Missing IDs are reported as GitHub issues.`,
       "Skipped remote IDs:",
       ...ids.map((id) => `\`${id}\``),
     ];
@@ -210,11 +208,9 @@ export const alibaba = {
   },
   translateModel(model, context) {
     const existing = context.existing(model.model);
-    const baseModel = existing?.base_model ?? resolveAlibabaBaseModel(model.model);
-    // Alibaba provider TOMLs should always use base_model syntax. If no
-    // canonical metadata exists, skip translation and retain any local file via
-    // deleteMissing: false instead of minting an incomplete inline model.
-    if (baseModel === undefined) return undefined;
+    const baseModel = context.authored(model.model)?.base_model
+      ?? resolveAlibabaBaseModel(model.model);
+    if (existing === undefined && baseModel === undefined) return undefined;
     return {
       id: model.model,
       model: buildAlibabaModel(model, existing, baseModel),
@@ -442,7 +438,7 @@ function status(model: AlibabaModel, existing: ExistingModel | undefined) {
 export function buildAlibabaModel(
   model: AlibabaModel,
   existing: ExistingModel | undefined,
-  baseModel: string,
+  baseModel?: string,
 ): SyncedModel {
   const publishedDate = dateFromPublishedTime(model.published_time);
   const translatedModalities = modalities(model, existing);
@@ -450,37 +446,54 @@ export function buildAlibabaModel(
   const translatedLimit = limit(model, existing);
   const reasoning = model.capabilities.includes("Reasoning");
   const input = translatedModalities?.input ?? existing?.modalities?.input;
+  const values = {
+    name: existing?.name ?? model.name,
+    description: existing?.description ?? model.description,
+    family: existing?.family,
+    release_date: existing?.release_date ?? publishedDate,
+    last_updated: existing?.last_updated ?? publishedDate,
+    attachment: existing?.attachment ?? input?.some((value) => value !== "text"),
+    reasoning,
+    reasoning_options: existing?.reasoning_options,
+    temperature: existing?.temperature,
+    tool_call: model.features.includes("function-calling")
+      ? true
+      : existing?.tool_call,
+    structured_output: model.features.includes("structured-outputs")
+      ? true
+      : existing?.structured_output,
+    knowledge: existing?.knowledge,
+    open_weights: existing?.open_weights,
+    status: status(model, existing),
+    interleaved: existing?.interleaved,
+    cost: translatedCost,
+    limit: translatedLimit,
+    modalities: translatedModalities,
+  };
 
-  const baseMetadata = baseModelMetadata(baseModel);
-  const baseLimit = baseMetadata.limit as SyncedFullModel["limit"] | undefined;
-  const limitForOmit = (translatedLimit ?? baseLimit ?? {}) as SyncedFullModel["limit"];
+  if (baseModel !== undefined) {
+    const baseMetadata = baseModelMetadata(baseModel);
+    const baseLimit = baseMetadata.limit as SyncedFullModel["limit"] | undefined;
+    const limitForOmit = (translatedLimit ?? baseLimit ?? {}) as SyncedFullModel["limit"];
+    const { description: _description, ...overrides } = values;
+    return factorBaseModel(baseModel, overrides, limitForOmit, existing?.base_model_omit);
+  }
 
-  return factorBaseModel(
-    baseModel,
-    {
-      name: existing?.name ?? model.name,
-      family: existing?.family,
-      release_date: existing?.release_date ?? publishedDate,
-      last_updated: existing?.last_updated ?? publishedDate,
-      attachment: existing?.attachment ?? input?.some((value) => value !== "text"),
-      reasoning,
-      reasoning_options: existing?.reasoning_options,
-      temperature: existing?.temperature,
-      tool_call: model.features.includes("function-calling")
-        ? true
-        : existing?.tool_call,
-      structured_output: model.features.includes("structured-outputs")
-        ? true
-        : existing?.structured_output,
-      knowledge: existing?.knowledge,
-      open_weights: existing?.open_weights,
-      status: status(model, existing),
-      interleaved: existing?.interleaved,
-      cost: translatedCost,
-      limit: translatedLimit,
-      modalities: translatedModalities,
-    },
-    limitForOmit,
-    existing?.base_model_omit,
-  );
+  if (
+    existing === undefined
+    || values.name === undefined
+    || values.release_date === undefined
+    || values.last_updated === undefined
+    || values.attachment === undefined
+    || values.tool_call === undefined
+    || values.open_weights === undefined
+    || values.limit?.context === undefined
+    || values.limit.output === undefined
+    || values.modalities === undefined
+    || values.cost === undefined
+  ) {
+    throw new Error(`Alibaba model ${model.model} has incomplete local TOML metadata required for sync`);
+  }
+
+  return values as SyncedFullModel;
 }

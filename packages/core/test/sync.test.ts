@@ -4,7 +4,7 @@ import { tmpdir } from "node:os";
 import path from "node:path";
 
 import { formatToml, preserveReasoningOptions, syncProvider, type ExistingModel, type SyncProvider } from "../src/sync/index.js";
-import { buildAlibabaModel, type AlibabaModel } from "../src/sync/providers/alibaba.js";
+import { alibaba, buildAlibabaModel, type AlibabaModel } from "../src/sync/providers/alibaba.js";
 import {
   anthropic,
   buildAnthropicModel,
@@ -993,6 +993,56 @@ test("Alibaba sync maps API modalities and past offline time", () => {
   });
 });
 
+test("Alibaba sync updates existing models that have no lab base file", () => {
+  const model: AlibabaModel = {
+    model: "qwen3-asr-flash",
+    name: "Qwen3-ASR Flash",
+    description: "ASR",
+    features: [],
+    capabilities: ["ASR"],
+    provider: null,
+    published_time: "2025-09-08 00:00:00",
+    inference_metadata: {
+      request_modality: ["Audio"],
+      response_modality: ["Text"],
+    },
+    model_info: {
+      context_window: 53_248,
+      max_input_tokens: 49_152,
+      max_output_tokens: 4_096,
+      max_reasoning_tokens: null,
+      reasoning_max_input_tokens: null,
+      reasoning_max_output_tokens: null,
+    },
+    prices: [{
+      range_name: "Default",
+      prices: [
+        { type: "content_duration", price: "0.00022", price_unit: "Per second", price_name: "Audio" },
+      ],
+    }],
+  };
+
+  expect(buildAlibabaModel(model, {
+    name: "Qwen3-ASR Flash",
+    description: "Speech transcription model",
+    release_date: "2025-09-08",
+    last_updated: "2025-09-08",
+    attachment: false,
+    reasoning: false,
+    tool_call: false,
+    open_weights: false,
+    cost: { input: 0.035, output: 0.035 },
+    limit: { context: 53_248, output: 4_096 },
+    modalities: { input: ["audio"], output: ["text"] },
+  })).toMatchObject({
+    name: "Qwen3-ASR Flash",
+    reasoning: false,
+    cost: { input: 0.035, output: 0.035 },
+    limit: { context: 53_248, input: 49_152, output: 4_096 },
+    modalities: { input: ["audio"], output: ["text"] },
+  });
+});
+
 test("OpenAI availability sync retains models absent from a scoped response", async () => {
   const dir = await mkdtemp(path.join(tmpdir(), "sync-openai-"));
   const modelsDir = path.join(dir, "providers", "openai", "models");
@@ -1039,6 +1089,8 @@ test("OpenAI availability sync retains models absent from a scoped response", as
 });
 
 test("tracks missing models except for unreliable first-party inventories", () => {
+  expect(alibaba.skipCreates).toBe(true);
+  expect(alibaba.trackMissingModels).not.toBe(false);
   expect(google.skipCreates).toBe(true);
   expect(google.trackMissingModels).toBe(false);
   expect(openai.skipCreates).toBe(true);
