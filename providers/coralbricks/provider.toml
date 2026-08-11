@@ -1,15 +1,3 @@
-# Reasoning HTTP format (accessed 2026-08-04):
-# OpenAI Chat: POST https://inference.coralbricks.ai/v1/chat/completions.
-# Reasoning models stream interleaved thinking via a `reasoning` delta field
-# (OpenRouter-style). Request-side reasoning control is NOT declared: the
-# gateway serves each request from local capacity or a vendor relay, and the
-# `reasoning` request field (enabled/effort) is honored only on the relay path
-# while local serving rejects it (400 "Extra inputs are not permitted";
-# verified 2026-08-04 against both paths). No toggle/effort until the gateway
-# normalizes this. Token budget: not documented. Streaming always returns
-# usage in the final chunk.
-# Sources:
-# https://www.coralbricks.ai/docs
 name = "CoralBricks"
 env = ["CORAL_API_KEY"]
 npm = "@ai-sdk/openai-compatible"
