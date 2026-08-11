@@ -1,5 +1,5 @@
-# Source: SayGM live /v1/models catalog 2026-08-07 (USD/MTok).
 base_model = "anthropic/claude-sonnet-4-6"
+base_model_omit = ["cost"]
 
 [[reasoning_options]]
 type = "effort"
@@ -8,11 +8,6 @@ values = ["low", "medium", "high", "max"]
 [[reasoning_options]]
 type = "budget_tokens"
 min = 1_024
-
-[cost]
-input = 3.00
-output = 10.00
-cache_read = 0.30
 
 [provider]
 npm = "@ai-sdk/anthropic"
