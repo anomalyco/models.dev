@@ -1,0 +1,16 @@
+# GLM-5.2; exposes reasoning_effort = none|high|max (none disables; high/max tiers).
+# Pricing: https://zro.moonmath.ai/pricing
+base_model = "zhipuai/glm-5.2"
+reasoning_options = [{ type = "effort", values = ["none", "high", "max"] }]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 1.10
+output = 4.00
+cache_read = 0.20
+
+[limit]
+context = 524_288
+output = 64_000

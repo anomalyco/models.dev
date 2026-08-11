@@ -1,0 +1,15 @@
+# DeepSeek V4 Flash; exposes reasoning_effort = none|high (none disables; high is the only tier).
+# Limits 1M context / 384K output. Pricing: https://zro.moonmath.ai/pricing
+base_model = "deepseek/deepseek-v4-flash-0731"
+reasoning_options = [{ type = "effort", values = ["none", "high"] }]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.14
+output = 0.28
+cache_read = 0.0028
+
+[limit]
+context = 1_048_576
