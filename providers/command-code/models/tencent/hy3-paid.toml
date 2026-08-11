@@ -1,0 +1,13 @@
+# Toggle: thinking.type = enabled|disabled
+# Effort: reasoning_effort = low|medium|high
+base_model = "tencent/hy3"
+name = "Tencent Hy3"
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "medium", "high"] }]
+
+[cost]
+input = 0.14
+output = 0.58
+cache_read = 0.035
+
+[limit]
+context = 262_144

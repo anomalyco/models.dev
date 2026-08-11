@@ -1,0 +1,23 @@
+# Fast serving tier of GLM-5.2 (same weights, low-latency serving).
+# Sources (accessed 2026-08-11):
+# https://commandcode.ai/docs/resources/pricing-limits
+# https://docs.z.ai/guides/overview/pricing
+name = "GLM-5.2 Fast"
+description = "Fast serving tier of GLM-5.2 for long-horizon coding agents and million-token context work"
+family = "glm"
+release_date = "2026-06-17"
+last_updated = "2026-06-17"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = true
+
+[limit]
+context = 1_000_000
+output = 131_072
+
+[modalities]
+input = ["text"]
+output = ["text"]

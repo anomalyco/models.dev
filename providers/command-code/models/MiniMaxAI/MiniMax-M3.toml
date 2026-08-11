@@ -1,0 +1,14 @@
+# Toggle: thinking.type = enabled|disabled
+# Permanent 50% off list price reflected below.
+# https://commandcode.ai/docs/resources/pricing-limits#minimax-m3-2x-usage
+base_model = "minimax/MiniMax-M3"
+name = "MiniMax M3"
+reasoning_options = [{ type = "toggle" }]
+
+[cost]
+input = 0.3
+output = 1.2
+cache_read = 0.06
+
+[limit]
+context = 1_000_000
