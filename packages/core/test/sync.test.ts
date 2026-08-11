@@ -2259,6 +2259,7 @@ test("factors OpenRouter Pro routes against canonical OpenAI metadata", () => {
 // Ensures Merge Gateway namespaces reuse the matching canonical model metadata.
 test("resolves Merge Gateway provider aliases to canonical metadata", () => {
   expect([
+    resolveCanonicalBaseModel("bytedance-seed/seed-2.0-code"),
     resolveCanonicalBaseModel("moonshot/kimi-k2.5"),
     resolveCanonicalBaseModel("moonshot/kimi-k2.6"),
     resolveCanonicalBaseModel("moonshot/kimi-k2.7-code"),
@@ -2266,6 +2267,7 @@ test("resolves Merge Gateway provider aliases to canonical metadata", () => {
     resolveCanonicalBaseModel("sakana/fugu-ultra"),
     resolveCanonicalBaseModel("meta/muse-glimmer-30b"),
   ]).toEqual([
+    "bytedance-seed/seed-2.0-code",
     "moonshotai/kimi-k2.5",
     "moonshotai/kimi-k2.6",
     "moonshotai/kimi-k2.7-code",

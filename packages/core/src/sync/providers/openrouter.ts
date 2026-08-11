@@ -23,6 +23,7 @@ const CANONICAL_BASE_MODEL_OVERRIDES = {
 const CANONICAL_PROVIDER_PREFIXES = {
   alibaba: { provider: "alibaba", metadata: "alibaba" },
   anthropic: { provider: "anthropic", metadata: "anthropic" },
+  "bytedance-seed": { provider: "bytedance-seed", metadata: "bytedance-seed" },
   cohere: { provider: "cohere", metadata: "cohere" },
   deepseek: { provider: "deepseek", metadata: "deepseek" },
   google: { provider: "google", metadata: "google" },
