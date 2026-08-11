@@ -1,14 +1,6 @@
+base_model = "nvidia/nemotron-3.5-lightning-30b-a3b"
 name = "Nemotron 3.5 Lightning"
 description = "Nemotron 3.5 Lightning is an MoE model built for fast, reliable agentic tasks across use cases such as financial services, cybersecurity, telecom, and retail."
-family = "nemotron"
-release_date = "2026-08-11"
-last_updated = "2026-08-11"
-attachment = false
-reasoning = true
-temperature = true
-tool_call = true
-structured_output = true
-open_weights = true
 
 [[reasoning_options]]
 type = "toggle"
@@ -17,11 +9,3 @@ type = "toggle"
 input = 0.1
 output = 0.25
 cache_read = 0.05
-
-[limit]
-context = 262_144
-output = 262_144
-
-[modalities]
-input = ["text"]
-output = ["text"]
