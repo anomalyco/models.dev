@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import type { SyncProvider, SyncedFullModel, SyncedModel } from "../index.js";
+import type { ExistingModel, SyncProvider, SyncedFullModel, SyncedModel } from "../index.js";
 import { factorBaseModel } from "./openrouter.js";
 
 // ========================================
@@ -87,6 +87,7 @@ const BASE_MODELS: Record<string, string> = {
   "grok-4.5": "xai/grok-4.5",
   "grok-imagine-video": "xai/grok-imagine-video-1.5",
   "kimi-k3": "moonshotai/kimi-k3",
+  "mimo-v2.5-tts": "xiaomi/mimo-v2.5-tts",
   "Nano-Banana": "google/gemini-2.5-flash-image",
   "nano-banana-2": "google/gemini-3.1-flash-image",
   "veo-3.1": "google/veo-3.1-generate-preview",
@@ -100,18 +101,14 @@ const BASE_MODELS: Record<string, string> = {
 // toggles via enable_thinking plus effort.
 const REASONING_OPTIONS: Record<string, NonNullable<SyncedFullModel["reasoning_options"]>> = {
   "claude-fable-5": [{ type: "effort", values: ["low", "medium", "high", "xhigh", "max"] }],
-  "claude-haiku-4-5-20251001": [{ type: "budget_tokens", min: 1_024 }],
-  "claude-opus-4-6": [
-    { type: "effort", values: ["low", "medium", "high", "max"] },
-    { type: "budget_tokens", min: 1_024 },
-  ],
+  // OpenAI-compatible surface: no proven budget field on this API path, so
+  // match same-surface peers (llmgateway) — effort-only / no controls.
+  "claude-haiku-4-5-20251001": [],
+  "claude-opus-4-6": [{ type: "effort", values: ["low", "medium", "high", "max"] }],
   "claude-opus-4-7": [{ type: "effort", values: ["low", "medium", "high", "xhigh", "max"] }],
   "claude-opus-4-8": [{ type: "effort", values: ["low", "medium", "high", "xhigh", "max"] }],
   "claude-opus-5": [{ type: "effort", values: ["low", "medium", "high", "xhigh", "max"] }],
-  "claude-sonnet-4-6": [
-    { type: "effort", values: ["low", "medium", "high", "max"] },
-    { type: "budget_tokens", min: 1_024 },
-  ],
+  "claude-sonnet-4-6": [{ type: "effort", values: ["low", "medium", "high", "max"] }],
   "claude-sonnet-5": [{ type: "effort", values: ["low", "medium", "high", "xhigh", "max"] }],
   "deepseek-v4-flash": [
     { type: "toggle" },
@@ -142,7 +139,6 @@ const UNIQUE_MODELS: Record<string, { name: string; description: string; family?
   "agnes-image-2.1-flash": { name: "Agnes Image 2.1 Flash", description: "Image generation model served by InferenceSaver over an OpenAI-compatible API." },
   "agnes-video-v2.0": { name: "Agnes Video 2.0", description: "Video generation model served by InferenceSaver over an OpenAI-compatible API." },
   "Hunyuan-MT": { name: "Hunyuan MT", description: "Multilingual chat model served by InferenceSaver over an OpenAI-compatible API.", family: "hunyuan" },
-  "mimo-v2.5-tts": { name: "MiMo 2.5 TTS", description: "Text-to-speech model served by InferenceSaver over an OpenAI-compatible API.", family: "mimo" },
   "music-2.6": { name: "Music 2.6", description: "Music generation model served by InferenceSaver over an OpenAI-compatible API." },
   "music-2.6-free": { name: "Music 2.6 Free", description: "Music generation model served by InferenceSaver over an OpenAI-compatible API." },
   "music-cover": { name: "Music Cover", description: "Music cover generation model served by InferenceSaver over an OpenAI-compatible API." },
@@ -185,7 +181,8 @@ export async function fetchInferenceSaverCatalog(
 
 export function buildInferenceSaverModel(
   model: InferenceSaverModel,
-  releaseDate: string,
+  existing: ExistingModel | undefined,
+  today = new Date().toISOString().slice(0, 10),
 ): SyncedModel {
   const base = BASE_MODELS[model.rawName];
   const capability = model.capability ?? "chat";
@@ -211,9 +208,17 @@ export function buildInferenceSaverModel(
     // for many models (image/video generation included). When it matches
     // that filler exactly, the lab metadata is authoritative, so omit the
     // limit override and let the lab limit inherit.
+    // The catalog's contextWindow for GPT models (272k/400k) matches the
+    // pricing-tier input band (e.g. gpt-5.4-mini lab input = 272_000), not
+    // the full context the lab publishes (1.05M / 400k mini). Treat those as
+    // non-authoritative and let the lab limits inherit, per the sync review.
     const isFillerLimit =
       model.contextWindow === FILLER_CONTEXT && model.maxOutputTokens === FILLER_OUTPUT;
-    const limit = isFillerLimit
+    const isGPTInputBand =
+      model.rawName.startsWith("gpt-5.4") ||
+      model.rawName.startsWith("gpt-5.5") ||
+      model.rawName.startsWith("gpt-5.6");
+    const limit = isFillerLimit || isGPTInputBand
       ? undefined
       : {
           ...(model.contextWindow !== undefined ? { context: model.contextWindow } : {}),
@@ -238,14 +243,11 @@ export function buildInferenceSaverModel(
     throw new Error(`No models.dev definition for ${model.rawName}; add it to BASE_MODELS or UNIQUE_MODELS`);
   }
   const defaults = CAPABILITY_MODALITIES[capability] ?? CAPABILITY_MODALITIES.chat;
-  // Chat uniques keep the catalog's limits; generation uniques are
-  // non-token endpoints so 0/0 mirrors same-surface peers.
-  const limit = defaults.generation
-    ? { context: 0, output: 0 }
-    : {
-        ...(model.contextWindow !== undefined ? { context: model.contextWindow } : {}),
-        ...(model.maxOutputTokens !== undefined ? { output: model.maxOutputTokens } : {}),
-      };
+  // The catalog reports the same 200k/16k pair for every unique chat model,
+  // which is a placeholder, not a measured host window. Unique models have
+  // no lab entry to inherit from, so serialize the non-token 0/0 default
+  // (same convention as generation uniques) instead of the filler.
+  const limit = { context: 0, output: 0 };
   return {
     name: facts.name,
     description: facts.description,
@@ -253,8 +255,8 @@ export function buildInferenceSaverModel(
     attachment: defaults.attachment,
     reasoning: false,
     tool_call: defaults.tool_call,
-    release_date: releaseDate,
-    last_updated: releaseDate,
+    release_date: existing?.release_date ?? today,
+    last_updated: existing?.last_updated ?? existing?.release_date ?? today,
     open_weights: false,
     ...(Object.keys(cost).length > 0 ? { cost } : {}),
     limit,
@@ -277,9 +279,11 @@ export const inferencesaver = {
   parseModels(raw) {
     return InferenceSaverResponse.parse(raw);
   },
-  translateModel(model) {
-    const releaseDate = new Date().toISOString().slice(0, 10);
-    return { id: model.rawName, model: buildInferenceSaverModel(model, releaseDate) };
+  translateModel(model, context) {
+    return {
+      id: model.rawName,
+      model: buildInferenceSaverModel(model, context.existing(model.rawName)),
+    };
   },
 } satisfies SyncProvider<InferenceSaverModel>;
 
