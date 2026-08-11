@@ -1,14 +1,5 @@
-name = "Meta: Muse Glimmer 30B"
+base_model = "meta/muse-glimmer-30b"
 description = "Muse Glimmer 30B is a dense, open-weight multimodal model from Meta Superintelligence Labs, distilled from Muse Spark and optimized for autonomous agents on consumer hardware. It is suited for long-horizon..."
-family = "muse"
-release_date = "2026-08-09"
-last_updated = "2026-08-09"
-attachment = true
-reasoning = true
-temperature = true
-tool_call = true
-structured_output = true
-open_weights = false
 
 [[reasoning_options]]
 type = "effort"
@@ -19,10 +10,5 @@ input = 0.35
 output = 1.5
 cache_read = 0.04
 
-[limit]
-context = 131_072
-output = 131_072
-
 [modalities]
 input = ["text", "image", "pdf"]
-output = ["text"]
