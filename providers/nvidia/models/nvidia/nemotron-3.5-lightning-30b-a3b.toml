@@ -1,0 +1,11 @@
+# Sources (accessed 2026-08-11):
+# - https://build.nvidia.com/nvidia/nemotron-3.5-lightning-30b-a3b
+# - https://integrate.api.nvidia.com/v1/models
+# Toggle: chat_template_kwargs.enable_thinking = true|false
+# https://huggingface.co/nvidia/NVIDIA-Nemotron-3.5-Lightning-30B-A3B-NVFP4
+base_model = "nvidia/nemotron-3.5-lightning-30b-a3b"
+reasoning_options = [{ type = "toggle" }]
+
+[cost]
+input = 0.0
+output = 0.0
