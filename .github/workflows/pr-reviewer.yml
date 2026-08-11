@@ -7,6 +7,7 @@ on:
 
 permissions:
   contents: read
+  issues: write
   pull-requests: write
 
 concurrency:
@@ -22,6 +23,19 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Clear ready label
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          READY_LABEL: "reviewer: ready"
+        run: |
+          set -euo pipefail
+          gh label create "$READY_LABEL" --repo "$GITHUB_REPOSITORY" --color "0E8A16" --description "Automated review found no actionable items" --force
+          labels="$(gh pr view "$PR_NUMBER" --repo "$GITHUB_REPOSITORY" --json labels --jq '.labels[].name')"
+          if grep -Fxq "$READY_LABEL" <<< "$labels"; then
+            gh pr edit "$PR_NUMBER" --repo "$GITHUB_REPOSITORY" --remove-label "$READY_LABEL"
+          fi
+
       - name: Checkout trusted base revision
         uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
         with:
@@ -73,4 +87,9 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           PR_NUMBER: ${{ github.event.pull_request.number }}
-        run: gh pr comment "$PR_NUMBER" --repo "$GITHUB_REPOSITORY" --body-file "$RESPONSE_FILE"
+          READY_LABEL: "reviewer: ready"
+        run: |
+          gh pr comment "$PR_NUMBER" --repo "$GITHUB_REPOSITORY" --body-file "$RESPONSE_FILE"
+          if grep -Fxq "No actionable findings." "$RESPONSE_FILE"; then
+            gh pr edit "$PR_NUMBER" --repo "$GITHUB_REPOSITORY" --add-label "$READY_LABEL"
+          fi
