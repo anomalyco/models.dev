@@ -2264,12 +2264,14 @@ test("resolves Merge Gateway provider aliases to canonical metadata", () => {
     resolveCanonicalBaseModel("moonshot/kimi-k2.7-code"),
     resolveCanonicalBaseModel("moonshot/kimi-k2.7-code-highspeed"),
     resolveCanonicalBaseModel("sakana/fugu-ultra"),
+    resolveCanonicalBaseModel("meta/muse-glimmer-30b"),
   ]).toEqual([
     "moonshotai/kimi-k2.5",
     "moonshotai/kimi-k2.6",
     "moonshotai/kimi-k2.7-code",
     "moonshotai/kimi-k2.7-code-highspeed",
     "sakana/fugu-ultra",
+    "meta/muse-glimmer-30b",
   ]);
 });
 
