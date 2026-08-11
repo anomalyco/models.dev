@@ -1,5 +1,7 @@
+# Reasoning toggle wire path: OpenAI-compatible `reasoning = { enabled = true|false }`.
+# Verified live 2026-08-11 on api.quicksilverpro.io: enabled=false -> no reasoning
+# tokens; enabled=true -> reasoning_content + usage reasoning_tokens.
 base_model = "deepseek/deepseek-v4-pro"
-name = "DeepSeek V4 Pro"
 description = "DeepSeek V4 Pro — frontier reasoning and coding, 1M context"
 
 [[reasoning_options]]
@@ -16,6 +18,3 @@ field = "reasoning_content"
 input = 0.348
 output = 0.696
 cache_read = 0.002784
-
-[limit]
-context = 1_048_576

@@ -1,5 +1,4 @@
 base_model = "anthropic/claude-opus-5"
-name = "Claude Opus 5"
 description = "Anthropic flagship — deepest reasoning and agentic coding"
 
 [[reasoning_options]]
@@ -9,6 +8,3 @@ values = ["low", "medium", "high", "xhigh", "max"]
 [cost]
 input = 4
 output = 20
-
-[limit]
-context = 1_000_000

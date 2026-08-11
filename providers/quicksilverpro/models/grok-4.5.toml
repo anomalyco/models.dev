@@ -1,5 +1,4 @@
 base_model = "xai/grok-4.5"
-name = "Grok 4.5"
 description = "xAI Grok 4.5 — reasoning with real-time knowledge"
 
 [[reasoning_options]]
@@ -10,6 +9,3 @@ values = ["low", "medium", "high"]
 input = 1.6
 output = 4.8
 cache_read = 0.4
-
-[limit]
-context = 500_000

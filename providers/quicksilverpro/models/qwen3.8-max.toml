@@ -1,18 +1,12 @@
-base_model = "alibaba/qwen3.8-max-preview"
-name = "Qwen3.8 Max"
+# Reasoning toggle wire path: `enable_thinking = true|false` (DashScope-compatible
+# passthrough; same control the lab documents). Verified live 2026-08-11 on
+# api.quicksilverpro.io: default/false -> no reasoning tokens; true ->
+# reasoning_content + usage reasoning_tokens.
+base_model = "alibaba/qwen3.8-max"
 description = "Flagship Qwen — autonomous coding and long-horizon agents"
 
 [[reasoning_options]]
 type = "toggle"
-
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "xhigh"]
-
-[[reasoning_options]]
-type = "budget_tokens"
-min = 0
-max = 262144
 
 [interleaved]
 field = "reasoning_content"
@@ -21,6 +15,3 @@ field = "reasoning_content"
 input = 2
 output = 6
 cache_read = 0.25
-
-[limit]
-context = 1_048_576
