@@ -1,0 +1,16 @@
+base_model = "deepseek/deepseek-v4-flash-0731"
+name = "DeepSeek-V4-Flash-0731"
+description = "DeepSeek-V4-Flash-0731 is DeepSeek's fast, cost-efficient 1M-context model, retaining the Preview model's architecture and size while receiving additional post-training for substantially improved agent capabilities."
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "high", "max"]
+
+[cost]
+input = 0.4
+output = 0.8
+cache_read = 0.08
+
+[limit]
+context = 256_000
+output = 32_768
