@@ -1,14 +1,14 @@
-# Source: gm live /v1/models catalog 2026-08-07 (USD/MTok).
-base_model = "anthropic/claude-opus-4-8"
+# Source: SayGM live /v1/models catalog 2026-08-07 (USD/MTok).
+base_model = "anthropic/claude-fable-5"
 
 [[reasoning_options]]
 type = "effort"
 values = ["low", "medium", "high", "xhigh", "max"]
 
 [cost]
-input = 5.00
-output = 25.00
-cache_read = 0.50
+input = 10.00
+output = 50.00
+cache_read = 1.00
 
 [provider]
 npm = "@ai-sdk/anthropic"
