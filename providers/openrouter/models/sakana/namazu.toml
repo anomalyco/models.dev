@@ -1,0 +1,27 @@
+name = "Namazu"
+description = "Multi-agent model for routing expert agents across complex analytical tasks"
+release_date = "2026-08-11"
+last_updated = "2026-08-11"
+attachment = true
+reasoning = true
+temperature = false
+tool_call = true
+structured_output = true
+open_weights = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "high"]
+
+[cost]
+input = 0.95
+output = 4
+cache_read = 0.15
+
+[limit]
+context = 262_144
+output = 65_536
+
+[modalities]
+input = ["text", "image", "pdf"]
+output = ["text"]
