@@ -1,0 +1,11 @@
+base_model = "moonshotai/kimi-k3"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[modalities]
+input = ["text", "image"]

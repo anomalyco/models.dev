@@ -1,0 +1,16 @@
+# OpenAI-compatible Chat Completions pass-through router.
+# Reasoning controls follow the upstream OpenAI-compatible surface per family:
+#   - Anthropic: reasoning.enabled / reasoning.effort / reasoning.budget_tokens (OpenAI-compat)
+#   - DeepSeek: thinking.type = enabled|disabled; reasoning_effort = high|max
+#   - OpenAI / o-series / Grok: reasoning_effort = none|minimal|low|medium|high|xhigh|max
+#   - Google Gemini: thinking = enabled|disabled; thinking_budget (OpenAI-compat)
+#   - Moonshot Kimi / Zhipu GLM / Alibaba Qwen: enable_thinking true|false
+#   - MiniMax / DeepSeek distill / QwQ: no caller controls (host decides)
+# Live catalog: GET /v1/models is public (no key). Prices are Console-only, so
+# no [cost] is authored (request-only).
+# https://router.nexforce.ai/docs (accessed 2026-08-12)
+name = "Nexforce"
+env = ["NEXFORCE_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+api = "https://router.nexforce.ai/v1"
+doc = "https://router.nexforce.ai/docs"

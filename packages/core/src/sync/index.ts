@@ -24,6 +24,7 @@ import { kilo } from "./providers/kilo.js";
 import { llmgateway } from "./providers/llmgateway.js";
 import { mergeGateway } from "./providers/merge-gateway.js";
 import { nanoGpt } from "./providers/nano-gpt.js";
+import { nexforce } from "./providers/nexforce.js";
 import { openai } from "./providers/openai.js";
 import { ofox } from "./providers/ofox.js";
 import { openrouter } from "./providers/openrouter.js";
@@ -133,6 +134,7 @@ export const providers: {
   llmgateway: SyncProvider<any>;
   "merge-gateway": SyncProvider<any>;
   "nano-gpt": SyncProvider<any>;
+  nexforce: SyncProvider<any>;
   ofox: SyncProvider<any>;
   openai: SyncProvider<any>;
   openrouter: SyncProvider<any>;
@@ -164,6 +166,7 @@ export const providers: {
   llmgateway,
   "merge-gateway": mergeGateway,
   "nano-gpt": nanoGpt,
+  nexforce,
   ofox,
   openai,
   openrouter,
@@ -188,6 +191,7 @@ export const groups = {
     "llmgateway",
     "merge-gateway",
     "nano-gpt",
+    "nexforce",
     "ofox",
     "requesty",
     "openrouter",

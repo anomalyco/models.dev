@@ -287,6 +287,18 @@ Requesty is implemented in `packages/core/src/sync/providers/requesty.ts`.
 - Region variants are written as separate models: `gpt-5.4` and `gpt-5.4@eu` are distinct files that share a `base_model` and differ only in served pricing and limits.
 - Prices are per-token USD and are converted to per-1M-token numbers. `pricing[]` bands become `cost.tiers`, with the first band as the flat `cost`. Price fields are nullable upstream, so a route quoting no prices gets no `[cost]` section rather than a fabricated zero.
 
+## Nexforce Notes
+
+Nexforce is implemented in `packages/core/src/sync/providers/nexforce.ts`.
+
+- Run it with `bun models:sync nexforce` or `bun nexforce:sync`.
+- Source endpoint: `https://router.nexforce.ai/v1/models`; no auth required (the public list needs no key, and a valid key only narrows it to that key's allowed models).
+- Only `kind == "chat"` models are synced; `kind == "embedding"` models are served on a separate endpoint and stay out of the provider catalog.
+- Catalog IDs map onto canonical `models/` metadata through `resolveModelMetadataBaseModel`; branded/streamlined IDs that resolve to a differently named canonical file use `NEXFORCE_BASE_MODEL_OVERRIDES`.
+- API-authoritative fields: display `name`, `context_length`, `max_output_tokens`, and `architecture` modalities. Models without a canonical entry (e.g. the host-only `nexforce/smart-route` alias) remain hand-authored and are preserved as-is.
+- `reasoning_options` is authored from a curated per-model map mirroring each model's OpenAI-compatible surface (first-party lab entries plus OpenRouter and FastRouter relays); authored options are preserved on re-sync.
+- No `[cost]` is authored: the API does not expose prices (they live in the Console), so all entries are request-only. `base_model_omit` is not needed for pricing.
+
 ## Venice Notes
 
 Venice is implemented in `packages/core/src/sync/providers/venice.ts`.
