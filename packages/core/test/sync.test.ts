@@ -13,6 +13,7 @@ import {
 import { buildCortecsModel, type CortecsModel } from "../src/sync/providers/cortecs.js";
 import {
   buildCrossModel,
+  CrossModelResponse,
   type CrossModelModel,
 } from "../src/sync/providers/crossmodel.js";
 import { buildDeepInfraModel, type DeepInfraModel } from "../src/sync/providers/deepinfra.js";
@@ -174,6 +175,31 @@ test("syncs CrossModel's structured-output capability", () => {
   expect(preserved).toMatchObject({
     base_model: "alibaba/qwen3.8-max",
     structured_output: true,
+  });
+});
+
+test("parses CrossModel's nullable reasoning controls", () => {
+  const parsed = CrossModelResponse.parse({
+    data: [
+      {
+        ...crossModelModel(),
+        capabilities: {
+          reasoning: {
+            supported: true,
+            toggle: null,
+            effort: null,
+            budget_tokens: null,
+          },
+        },
+      },
+    ],
+  });
+
+  expect(parsed.data[0]?.capabilities?.reasoning).toEqual({
+    supported: true,
+    toggle: undefined,
+    effort: undefined,
+    budget_tokens: undefined,
   });
 });
 
