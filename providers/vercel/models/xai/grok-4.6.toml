@@ -1,7 +1,7 @@
 base_model = "xai/grok-4.6"
 description = "Grok model for agentic tool use, reasoning, coding, and live assistance"
 attachment = false
-reasoning_options = []
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh"] }]
 
 [cost]
 input = 2
