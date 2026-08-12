@@ -1,0 +1,12 @@
+# Toggle: enable_thinking true|false
+# Effort: reasoning_effort = low|medium|xhigh (high accepted as alias to xhigh)
+# Budget: thinking_budget (0..262144), cannot be combined with reasoning_effort
+base_model = "alibaba/qwen3.8-max"
+name = "Qwen 3.8 Max"
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "medium", "xhigh"] }, { type = "budget_tokens", min = 0, max = 262_144 }]
+
+[cost]
+input = 2
+output = 6
+cache_read = 0.25
+cache_write = 2.5

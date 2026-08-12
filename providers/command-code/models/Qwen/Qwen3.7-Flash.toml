@@ -1,0 +1,11 @@
+# Toggle: enable_thinking true|false
+# Budget: thinking_budget (max 262144)
+base_model = "alibaba/qwen3.7-flash"
+name = "Qwen 3.7 Flash"
+reasoning_options = [{ type = "toggle" }, { type = "budget_tokens", max = 262_144 }]
+
+[cost]
+input = 0.03
+output = 0.13
+cache_read = 0.006
+cache_write = 0.038
