@@ -78,13 +78,17 @@ jobs:
 
           git add "$CATALOG_PATH"
           git commit -m "$TITLE"
+          commit_sha="$(git rev-parse HEAD)"
 
-          push_token="${PR_TOKEN:-$GH_TOKEN}"
-          if [ -z "$push_token" ]; then
-            echo "No push token available."
-            exit 1
+          # Push catalog branch to the fork with GITHUB_TOKEN (not PR_TOKEN).
+          # PR_TOKEN is only for opening/updating the upstream PR.
+          if GH_TOKEN="$GH_TOKEN" gh api "repos/${FORK_REPO}/git/ref/heads/${BRANCH}" --jq .object.sha >/dev/null 2>&1; then
+            GH_TOKEN="$GH_TOKEN" gh api "repos/${FORK_REPO}/git/refs/heads/${BRANCH}" \
+              -X PATCH -f sha="$commit_sha" -F force=true
+          else
+            GH_TOKEN="$GH_TOKEN" gh api "repos/${FORK_REPO}/git/refs" \
+              -f ref="refs/heads/${BRANCH}" -f sha="$commit_sha"
           fi
-          git push --force "https://x-access-token:${push_token}@github.com/${FORK_REPO}.git" "HEAD:refs/heads/$BRANCH"
 
           if [ -z "$PR_TOKEN" ]; then
             echo "UPSTREAM_PR_TOKEN is not set; branch pushed but upstream PR was not opened."
