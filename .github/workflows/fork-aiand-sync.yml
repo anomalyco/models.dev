@@ -120,10 +120,11 @@ jobs:
 
           pr_number="$(GH_TOKEN="$PR_TOKEN" gh pr list --repo "$UPSTREAM_REPO" --head "fenilmodi00:${BRANCH}" --base dev --state open --json number --jq '.[0].number' || true)"
           if [ -n "$pr_number" ]; then
-            pr_url="$(GH_TOKEN="$PR_TOKEN" gh pr view --repo "$UPSTREAM_REPO" "$pr_number" --json url --jq .url)"
             GH_TOKEN="$PR_TOKEN" gh pr edit --repo "$UPSTREAM_REPO" "$pr_number" --title "$TITLE" --body-file /tmp/model-sync-report.md
           else
-            pr_url="$(GH_TOKEN="$PR_TOKEN" gh pr create --repo "$UPSTREAM_REPO" --base dev --head "fenilmodi00:${BRANCH}" --title "$TITLE" --body-file /tmp/model-sync-report.md --json url --jq .url)"
+            GH_TOKEN="$PR_TOKEN" gh pr create --repo "$UPSTREAM_REPO" --base dev --head "fenilmodi00:${BRANCH}" --title "$TITLE" --body-file /tmp/model-sync-report.md
           fi
+
+          pr_url="$(GH_TOKEN="$PR_TOKEN" gh pr list --repo "$UPSTREAM_REPO" --head "fenilmodi00:${BRANCH}" --base dev --state open --json url --jq '.[0].url')"
           echo "Upstream PR: $pr_url"
           echo "Upstream PR: $pr_url" >> "$GITHUB_STEP_SUMMARY"
