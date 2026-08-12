@@ -1,0 +1,14 @@
+base_model = "nvidia/nemotron-3-ultra-550b-a55b"
+release_date = "2026-06-04"
+last_updated = "2026-06-04"
+
+[[reasoning_options]]
+type = "toggle"
+
+[cost]
+input = 0.60
+output = 2.40
+cache_read = 0.12
+
+[limit]
+context = 262_144
