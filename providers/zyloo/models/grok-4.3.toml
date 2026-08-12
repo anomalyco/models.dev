@@ -1,0 +1,24 @@
+name = "Grok 4.3"
+description = "Frontier reasoning model from xAI built for real-time synthesis and reasoning"
+family = "grok"
+release_date = "2026-03-12"
+last_updated = "2026-03-12"
+attachment = true
+reasoning = true
+reasoning_options = [{ type = "toggle" }]
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[cost]
+input = 2.00
+output = 10.00
+
+[limit]
+context = 262_144
+output = 16_384
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

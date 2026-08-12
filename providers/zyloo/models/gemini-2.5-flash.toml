@@ -1,0 +1,26 @@
+name = "Gemini 2.5 Flash"
+description = "Fast, efficient multimodal model for high-volume tasks and quick reasoning"
+family = "gemini-flash"
+release_date = "2025-06-17"
+last_updated = "2025-06-17"
+attachment = true
+reasoning = true
+reasoning_options = [{ type = "toggle" }]
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = false
+knowledge = "2025-01"
+
+[cost]
+input = 0.15
+output = 0.60
+cache_read = 0.0375
+
+[limit]
+context = 1_048_576
+output = 65_536
+
+[modalities]
+input = ["text", "image", "audio", "video", "pdf"]
+output = ["text"]

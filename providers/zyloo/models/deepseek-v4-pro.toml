@@ -1,0 +1,25 @@
+name = "DeepSeek V4 Pro"
+description = "Advanced open-architecture model for math, coding, and reasoning tasks"
+family = "deepseek"
+release_date = "2026-03-24"
+last_updated = "2026-03-24"
+attachment = false
+reasoning = true
+reasoning_options = [{ type = "toggle" }]
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = false
+knowledge = "2025-11"
+
+[cost]
+input = 0.40
+output = 1.60
+
+[limit]
+context = 262_144
+output = 32_768
+
+[modalities]
+input = ["text"]
+output = ["text"]
