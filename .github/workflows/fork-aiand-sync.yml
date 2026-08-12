@@ -60,9 +60,14 @@ jobs:
           git commit -m "$TITLE"
           git push --force-with-lease origin "$BRANCH"
 
-          pr_number="$(GH_TOKEN="$PR_TOKEN" gh pr list --repo "$UPSTREAM_REPO" --head "fenilmodi00:${BRANCH}" --base dev --json number --jq '.[0].number')"
+          if [ -z "$PR_TOKEN" ]; then
+            echo "UPSTREAM_PR_TOKEN is not set; branch pushed but upstream PR was not opened."
+            exit 0
+          fi
+
+          pr_number="$(GH_TOKEN="$PR_TOKEN" gh pr list --repo "$UPSTREAM_REPO" --head "fenilmodi00:${BRANCH}" --base dev --json number --jq '.[0].number' || true)"
           if [ -n "$pr_number" ]; then
-            GH_TOKEN="$PR_TOKEN" gh pr edit --repo "$UPSTREAM_REPO" "$pr_number" --title "$TITLE" --body-file .sync/model-sync-report.md
+            GH_TOKEN="$PR_TOKEN" gh pr edit --repo "$UPSTREAM_REPO" "$pr_number" --title "$TITLE" --body-file .sync/model-sync-report.md || true
           else
             GH_TOKEN="$PR_TOKEN" gh pr create --repo "$UPSTREAM_REPO" --base dev --head "fenilmodi00:${BRANCH}" --title "$TITLE" --body-file .sync/model-sync-report.md || true
           fi
