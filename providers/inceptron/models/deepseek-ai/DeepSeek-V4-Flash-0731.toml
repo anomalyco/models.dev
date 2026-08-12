@@ -1,6 +1,4 @@
-base_model = "zhipuai/glm-5.2"
-name = "GLM 5.2"
-status = "alpha"
+base_model = "deepseek/deepseek-v4-flash-0731"
 
 [interleaved]
 field = "reasoning_content"
@@ -10,9 +8,9 @@ type = "effort"
 values = ["high", "max"]
 
 [cost]
-input = 0.75
-output = 2.9
-cache_read = 0.17
+input = 0.13
+output = 0.28
+cache_read = 0.03
 cache_write = 0
 
 [limit]
