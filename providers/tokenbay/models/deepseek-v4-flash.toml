@@ -1,10 +1,11 @@
-# TokenBay Chat Completions documents reasoning_effort but not thinking.type.
+# TokenBay Chat Completions documents reasoning_effort = low|high|max but not
+# thinking.type.
 # https://www.tokenbay.com/docs/reference/text/openai/chat-completions
 base_model = "deepseek/deepseek-v4-flash"
 
 [[reasoning_options]]
 type = "effort"
-values = ["high", "max"]
+values = ["low", "high", "max"]
 
 [interleaved]
 field = "reasoning_content"

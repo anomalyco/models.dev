@@ -1,5 +1,8 @@
+# Toggle: chat_template_kwargs.thinking_mode = enabled|disabled
 base_model = "minimax/MiniMax-M3"
-reasoning_options = []
+
+[[reasoning_options]]
+type = "toggle"
 
 [limit]
 context = 1_000_000
