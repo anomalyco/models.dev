@@ -91,14 +91,17 @@ test("allows reviewed providers with explicit reasoning options", async () => {
   expect(decision.safe).toBe(true);
 });
 
-test("allows Inceptron reasoning updates with explicit endpoint metadata", async () => {
+test("requires manual review for Inceptron reasoning updates", async () => {
   const decision = await classifyAutoMerge(
     [{ status: "updated", path: "providers/inceptron/models/reasoner.toml" }],
     async () => fullModel(true, 'reasoning_options = [{ type = "effort", values = ["high"] }]'),
     async () => fullModel(true, "reasoning_options = []"),
   );
 
-  expect(decision.safe).toBe(true);
+  expect(decision.safe).toBe(false);
+  expect(decision.reasons).toContain(
+    "providers/inceptron/models/reasoner.toml is a reasoning model that requires manual review",
+  );
 });
 
 test("resolves reasoning from base model", async () => {
