@@ -11,6 +11,7 @@ on:
 permissions:
   contents: write
   pull-requests: write
+  workflows: write
 
 concurrency: ${{ github.workflow }}-${{ github.ref }}
 
@@ -42,7 +43,9 @@ jobs:
 
       - name: Report changes upstream
         env:
+          GH_TOKEN: ${{ github.token }}
           PR_TOKEN: ${{ secrets.UPSTREAM_PR_TOKEN }}
+          FORK_REPO: fenilmodi00/models.dev
           BRANCH: automation/sync-models-aiand
           UPSTREAM_REPO: anomalyco/models.dev
           TITLE: "chore(sync): update ai& model catalog"
@@ -56,28 +59,29 @@ jobs:
           cp .sync/model-sync-report.md /tmp/model-sync-report.md
           catalog_backup="$(mktemp -d)"
           cp -a "$CATALOG_PATH/." "$catalog_backup/"
-          git checkout -- "$CATALOG_PATH"
-          git clean -fd -- "$CATALOG_PATH"
+
+          upstream_dir="$(mktemp -d)"
+          git clone --depth 1 --branch dev "https://github.com/$UPSTREAM_REPO.git" "$upstream_dir"
+          cd "$upstream_dir"
 
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -B "$BRANCH"
 
-          # Upstream PRs must be based on anomalyco/dev with catalog-only diffs.
-          # Never branch from fork dev — it carries fork-only workflow/sync commits.
-          git fetch --no-tags --depth=1 "https://github.com/$UPSTREAM_REPO.git" dev:refs/remotes/upstream/dev
-          git checkout -B "$BRANCH" upstream/dev
           mkdir -p "$CATALOG_PATH"
           cp -a "$catalog_backup/." "$CATALOG_PATH/"
           rm -rf "$catalog_backup"
 
           if [ -z "$(git status --porcelain -- "$CATALOG_PATH")" ]; then
-            echo "No ai& catalog changes after rebasing onto upstream dev."
+            echo "No ai& catalog changes relative to upstream dev."
             exit 0
           fi
 
           git add "$CATALOG_PATH"
           git commit -m "$TITLE"
-          git push --force-with-lease origin "$BRANCH"
+
+          push_token="${PR_TOKEN:-$GH_TOKEN}"
+          git push --force "https://x-access-token:${push_token}@github.com/${FORK_REPO}.git" "HEAD:refs/heads/$BRANCH"
 
           if [ -z "$PR_TOKEN" ]; then
             echo "UPSTREAM_PR_TOKEN is not set; branch pushed but upstream PR was not opened."
