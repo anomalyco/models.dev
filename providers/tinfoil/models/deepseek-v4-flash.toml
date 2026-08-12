@@ -8,9 +8,11 @@
 # (providers/deepseek/models/deepseek-v4-flash.toml). Tinfoil documents only
 # reasoning_effort (no separate thinking.type toggle), matching other Tinfoil
 # reasoners that author effort-only options.
-
 base_model = "deepseek/deepseek-v4-flash-0731"
-reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
 
 [cost]
 input = 0.7
@@ -18,4 +20,4 @@ output = 1.9
 cache_read = 0.125
 
 [limit]
-context = 1_000_000
+context = 1_048_576
