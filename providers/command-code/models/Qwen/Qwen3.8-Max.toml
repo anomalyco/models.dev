@@ -4,6 +4,7 @@
 base_model = "alibaba/qwen3.8-max"
 name = "Qwen 3.8 Max"
 reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "medium", "xhigh"] }, { type = "budget_tokens", min = 0, max = 262_144 }]
+interleaved = { field = "reasoning_content" }
 
 [cost]
 input = 2

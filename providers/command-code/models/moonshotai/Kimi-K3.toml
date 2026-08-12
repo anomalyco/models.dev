@@ -2,6 +2,7 @@
 # Effort: output_config.effort = low|high|max
 base_model = "moonshotai/kimi-k3"
 reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "high", "max"] }]
+interleaved = { field = "reasoning_content" }
 
 [cost]
 input = 3

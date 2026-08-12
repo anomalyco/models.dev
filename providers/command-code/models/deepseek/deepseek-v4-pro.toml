@@ -1,7 +1,9 @@
 # Toggle: thinking.type = enabled|disabled
 # Effort: reasoning_effort = high|max
 base_model = "deepseek/deepseek-v4-pro"
+name = "DeepSeek V4 Pro (latest)"
 reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["high", "max"] }]
+interleaved = { field = "reasoning_content" }
 
 [cost]
 input = 0.435

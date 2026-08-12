@@ -1,6 +1,7 @@
 # Always-on reasoning; API accepts only thinking.type = "enabled".
 base_model = "moonshotai/kimi-k2.7-code"
 reasoning_options = []
+interleaved = { field = "reasoning_content" }
 
 [cost]
 input = 0.95
