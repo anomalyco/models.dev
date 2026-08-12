@@ -59,7 +59,6 @@ jobs:
             exit 1
           fi
 
-          cp .sync/model-sync-report.md /tmp/model-sync-report.md
           catalog_backup="$(mktemp -d)"
           cp -a "$CATALOG_PATH/." "$catalog_backup/"
 
@@ -83,14 +82,48 @@ jobs:
               -c user.email="41898282+github-actions[bot]@users.noreply.github.com" \
               commit -m "$TITLE"
 
+          created=0
+          updated=0
+          deleted=0
+          changed_files=""
+          while IFS=$'\t' read -r status path; do
+            case "$status" in
+              A) created=$((created + 1)); label=created ;;
+              M) updated=$((updated + 1)); label=updated ;;
+              D) deleted=$((deleted + 1)); label=deleted ;;
+              *) label="$status" ;;
+            esac
+            changed_files="${changed_files}- ${label}: \`${path}\`"$'\n'
+          done < <(git diff --name-status HEAD^ HEAD -- "$CATALOG_PATH")
+
+          {
+            echo "Updates model TOMLs for the \`aiand\` sync target."
+            echo ""
+            echo "| Provider | Status | Created | Updated | Deleted |"
+            echo "| --- | --- | ---: | ---: | ---: |"
+            echo "| ai& | changed | ${created} | ${updated} | ${deleted} |"
+            echo ""
+            echo "<details><summary>ai& changed files</summary>"
+            echo ""
+            printf '%s' "$changed_files"
+            echo "</details>"
+            echo ""
+            echo "This PR was created automatically by the daily model sync workflow."
+          } > /tmp/model-sync-report.md
+
+          tee -a "$GITHUB_STEP_SUMMARY" < /tmp/model-sync-report.md
+
           if ! git push --force "https://x-access-token:${PR_TOKEN}@github.com/${FORK_REPO}.git" "HEAD:refs/heads/$BRANCH"; then
             echo "::error::Failed to push $BRANCH. Regenerate UPSTREAM_PR_TOKEN (classic PAT with repo scope)."
             exit 1
           fi
 
-          pr_number="$(GH_TOKEN="$PR_TOKEN" gh pr list --repo "$UPSTREAM_REPO" --head "fenilmodi00:${BRANCH}" --base dev --json number --jq '.[0].number' || true)"
+          pr_number="$(GH_TOKEN="$PR_TOKEN" gh pr list --repo "$UPSTREAM_REPO" --head "fenilmodi00:${BRANCH}" --base dev --state open --json number --jq '.[0].number' || true)"
           if [ -n "$pr_number" ]; then
+            pr_url="$(GH_TOKEN="$PR_TOKEN" gh pr view --repo "$UPSTREAM_REPO" "$pr_number" --json url --jq .url)"
             GH_TOKEN="$PR_TOKEN" gh pr edit --repo "$UPSTREAM_REPO" "$pr_number" --title "$TITLE" --body-file /tmp/model-sync-report.md
           else
-            GH_TOKEN="$PR_TOKEN" gh pr create --repo "$UPSTREAM_REPO" --base dev --head "fenilmodi00:${BRANCH}" --title "$TITLE" --body-file /tmp/model-sync-report.md
+            pr_url="$(GH_TOKEN="$PR_TOKEN" gh pr create --repo "$UPSTREAM_REPO" --base dev --head "fenilmodi00:${BRANCH}" --title "$TITLE" --body-file /tmp/model-sync-report.md --json url --jq .url)"
           fi
+          echo "Upstream PR: $pr_url"
+          echo "Upstream PR: $pr_url" >> "$GITHUB_STEP_SUMMARY"
