@@ -1,0 +1,23 @@
+name = "NVIDIA Nemotron 3.5 Lightning 30B"
+description = "Nemotron model for efficient reasoning, coding, and specialized AI agents"
+family = "nemotron"
+release_date = "2026-08-12"
+last_updated = "2026-08-12"
+attachment = false
+reasoning = true
+tool_call = true
+structured_output = true
+open_weights = true
+reasoning_options = []
+
+[cost]
+input = 0.1
+output = 0.25
+
+[limit]
+context = 1_000_000
+output = 32_768
+
+[modalities]
+input = ["text"]
+output = ["text"]
