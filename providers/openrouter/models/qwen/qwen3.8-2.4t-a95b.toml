@@ -1,0 +1,28 @@
+name = "Qwen3.8 2.4T A95B"
+description = "Qwen instruction model for multilingual chat, reasoning, and tool use"
+family = "qwen"
+release_date = "2026-08-12"
+last_updated = "2026-08-12"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["minimal", "low", "medium", "high", "xhigh"]
+
+[cost]
+input = 2
+output = 6
+cache_read = 0.2
+
+[limit]
+context = 262_144
+output = 52_429
+
+[modalities]
+input = ["text"]
+output = ["text"]
