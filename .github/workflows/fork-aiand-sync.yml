@@ -118,21 +118,23 @@ jobs:
             exit 1
           fi
 
+          label_args=()
+          for label in automation model-sync provider:aiand; do
+            GH_TOKEN="$PR_TOKEN" gh label create "$label" --repo "$UPSTREAM_REPO" --color "0E8A16" --description "Automated model catalog sync" >/dev/null 2>&1 || true
+            label_args+=(--label "$label")
+          done
+
           pr_number="$(GH_TOKEN="$PR_TOKEN" gh pr list --repo "$UPSTREAM_REPO" --head "fenilmodi00:${BRANCH}" --base dev --state open --json number --jq '.[0].number' || true)"
           if [ -n "$pr_number" ]; then
             GH_TOKEN="$PR_TOKEN" gh pr edit --repo "$UPSTREAM_REPO" "$pr_number" --title "$TITLE" --body-file /tmp/model-sync-report.md
-          elif ! GH_TOKEN="$PR_TOKEN" gh pr create --repo "$UPSTREAM_REPO" --base dev --head "fenilmodi00:${BRANCH}" --title "$TITLE" --body-file /tmp/model-sync-report.md; then
-            pr_number="$(GH_TOKEN="$PR_TOKEN" gh pr list --repo "$UPSTREAM_REPO" --head "fenilmodi00:${BRANCH}" --base dev --state all --json number --jq '.[0].number' || true)"
-            if [ -z "$pr_number" ]; then
-              echo "::error::Failed to create or find upstream PR."
-              exit 1
-            fi
-            GH_TOKEN="$PR_TOKEN" gh pr edit --repo "$UPSTREAM_REPO" "$pr_number" --title "$TITLE" --body-file /tmp/model-sync-report.md
+            for label in automation model-sync provider:aiand; do
+              GH_TOKEN="$PR_TOKEN" gh pr edit --repo "$UPSTREAM_REPO" "$pr_number" --add-label "$label" || true
+            done
+          else
+            GH_TOKEN="$PR_TOKEN" gh pr create --repo "$UPSTREAM_REPO" --base dev --head "fenilmodi00:${BRANCH}" --title "$TITLE" --body-file /tmp/model-sync-report.md "${label_args[@]}"
+            pr_number="$(GH_TOKEN="$PR_TOKEN" gh pr list --repo "$UPSTREAM_REPO" --head "fenilmodi00:${BRANCH}" --base dev --state open --json number --jq '.[0].number')"
           fi
 
-          pr_url="$(GH_TOKEN="$PR_TOKEN" gh pr list --repo "$UPSTREAM_REPO" --head "fenilmodi00:${BRANCH}" --base dev --state open --json url --jq '.[0].url' || true)"
-          if [ -z "$pr_url" ]; then
-            pr_url="$(GH_TOKEN="$PR_TOKEN" gh pr list --repo "$UPSTREAM_REPO" --head "fenilmodi00:${BRANCH}" --base dev --state all --json url --jq '.[0].url' || true)"
-          fi
+          pr_url="https://github.com/${UPSTREAM_REPO}/pull/${pr_number}"
           echo "Upstream PR: $pr_url"
           echo "Upstream PR: $pr_url" >> "$GITHUB_STEP_SUMMARY"
