@@ -11,7 +11,6 @@ on:
 permissions:
   contents: write
   pull-requests: write
-  actions: write
 
 concurrency: ${{ github.workflow }}-${{ github.ref }}
 
@@ -63,10 +62,8 @@ jobs:
           upstream_dir="$(mktemp -d)"
           git clone --depth 1 --branch dev "https://github.com/$UPSTREAM_REPO.git" "$upstream_dir"
           cd "$upstream_dir"
-
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git checkout -B "$BRANCH"
+          upstream_sha="$(git rev-parse HEAD)"
+          base_tree="$(GH_TOKEN="$GH_TOKEN" gh api "repos/${UPSTREAM_REPO}/git/commits/${upstream_sha}" --jq .tree.sha)"
 
           mkdir -p "$CATALOG_PATH"
           cp -a "$catalog_backup/." "$CATALOG_PATH/"
@@ -77,11 +74,35 @@ jobs:
             exit 0
           fi
 
-          git add "$CATALOG_PATH"
-          git commit -m "$TITLE"
+          # GITHUB_TOKEN cannot git-push upstream trees (workflow file restriction).
+          # Build the branch on the fork via the Git API instead.
+          GH_TOKEN="$GH_TOKEN" gh api "repos/${FORK_REPO}/git/refs" \
+            -f ref="refs/heads/_sync-base-upstream-dev" -f sha="$upstream_sha" 2>/dev/null || true
 
-          # Upload commit objects to the fork (API ref update alone fails: objects are local-only).
-          git push --force "https://x-access-token:${GH_TOKEN}@github.com/${FORK_REPO}.git" "HEAD:refs/heads/$BRANCH"
+          tree_json='[]'
+          while IFS= read -r line; do
+            file_path="$(echo "$line" | awk '{print $2}')"
+            blob_sha="$(jq -n --rawfile content "$file_path" '{content: $content, encoding: "utf-8"}' | \
+              GH_TOKEN="$GH_TOKEN" gh api "repos/${FORK_REPO}/git/blobs" --input - --jq .sha)"
+            tree_json="$(jq --arg path "$file_path" --arg sha "$blob_sha" \
+              '. + [{path: $path, mode: "100644", type: "blob", sha: $sha}]' <<< "$tree_json")"
+          done < <(git status --porcelain -- "$CATALOG_PATH" | awk '{print $2}')
+
+          new_tree="$(jq -n --arg base "$base_tree" --argjson tree "$tree_json" \
+            '{base_tree: $base, tree: $tree}' | \
+            GH_TOKEN="$GH_TOKEN" gh api "repos/${FORK_REPO}/git/trees" --input - --jq .sha)"
+
+          new_commit="$(jq -n --arg msg "$TITLE" --arg tree "$new_tree" --arg parent "$upstream_sha" \
+            '{message: $msg, tree: $tree, parents: [$parent]}' | \
+            GH_TOKEN="$GH_TOKEN" gh api "repos/${FORK_REPO}/git/commits" --input - --jq .sha)"
+
+          if GH_TOKEN="$GH_TOKEN" gh api "repos/${FORK_REPO}/git/ref/heads/${BRANCH}" --jq .object.sha >/dev/null 2>&1; then
+            GH_TOKEN="$GH_TOKEN" gh api "repos/${FORK_REPO}/git/refs/heads/${BRANCH}" \
+              -X PATCH -f sha="$new_commit" -F force=true
+          else
+            GH_TOKEN="$GH_TOKEN" gh api "repos/${FORK_REPO}/git/refs" \
+              -f ref="refs/heads/${BRANCH}" -f sha="$new_commit"
+          fi
 
           if [ -z "$PR_TOKEN" ]; then
             echo "UPSTREAM_PR_TOKEN is not set; branch pushed but upstream PR was not opened."
