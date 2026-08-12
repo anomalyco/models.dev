@@ -47,8 +47,8 @@ export const aiand = {
   name: "ai&",
   modelsDir: "providers/aiand/models",
   async fetchModels() {
-    const key = process.env.AIAND_API_KEY;
-    if (key === undefined) throw new Error("ai& sync requires AIAND_API_KEY");
+    const key = process.env.AIAND_API_KEY?.trim();
+    if (!key) throw new Error("ai& sync requires AIAND_API_KEY");
     const response = await fetch(API_ENDPOINT, {
       headers: { Authorization: `Bearer ${key}` },
     });
@@ -154,11 +154,13 @@ export function buildAiandModel(
     : existing?.cost;
 
   // The API only exposes a combined context window. Never infer input/output
-  // limits from it; preserve authored values so we do not wipe output limits.
+  // limits from it for existing models so we do not wipe authored output
+  // limits. New models still need a ProviderModelLimit.output, so fall back to
+  // context_window (same provisional default as openrouter/llmgateway).
   const limit = {
     context,
     input: existing?.limit?.input,
-    output: existing?.limit?.output,
+    output: existing?.limit?.output ?? (existing === undefined ? context : undefined),
   };
 
   const releaseDate = dateFromTimestamp(model.created);

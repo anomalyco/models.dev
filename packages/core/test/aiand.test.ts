@@ -148,6 +148,29 @@ test("builds best-effort ai& model when no canonical metadata exists", () => {
     reasoning_options: undefined,
     tool_call: true,
     attachment: false,
-    limit: { context: 1_048_576 },
+    // Provider models require limit.output; API only has context_window.
+    limit: { context: 1_048_576, output: 1_048_576 },
+  });
+});
+
+test("does not invent output limits for existing full ai& models", () => {
+  const model = buildAiandModel(aiandModel({
+    id: "custom-org/custom-model",
+    provider: "custom-org",
+  }), {
+    name: "Custom Model",
+    release_date: "2026-01-01",
+    last_updated: "2026-01-01",
+    attachment: false,
+    reasoning: false,
+    tool_call: true,
+    open_weights: false,
+    cost: { input: 1, output: 4 },
+    limit: { context: 128_000, output: 8_192 },
+    modalities: { input: ["text"], output: ["text"] },
+  });
+
+  expect(model).toMatchObject({
+    limit: { context: 1_048_576, output: 8_192 },
   });
 });
