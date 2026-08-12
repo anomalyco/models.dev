@@ -89,6 +89,36 @@ const Cost = z.object({
     .number()
     .min(0, "Audio output price cannot be negative")
     .optional(),
+  /**
+   * Fraction the prices above are already discounted by (0.25 = 25% off), for
+   * providers quoting a promotional rate. Every other price in this table is the
+   * discounted one actually billed, not the pre-discount rate.
+   */
+  discount: z
+    .number()
+    .min(0, "Discount cannot be negative")
+    .lt(1, "Discount must be below 1")
+    .optional(),
+  /**
+   * The provider's standard rates before `discount` was applied. Only set
+   * alongside a discount, so a price drop can be told apart from a promotion.
+   */
+  input_list: z
+    .number()
+    .min(0, "List input price cannot be negative")
+    .optional(),
+  output_list: z
+    .number()
+    .min(0, "List output price cannot be negative")
+    .optional(),
+  cache_read_list: z
+    .number()
+    .min(0, "List cache read price cannot be negative")
+    .optional(),
+  cache_write_list: z
+    .number()
+    .min(0, "List cache write price cannot be negative")
+    .optional(),
 }).strict();
 
 const CostTier = Cost.extend({
