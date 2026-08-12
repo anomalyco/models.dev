@@ -2,6 +2,7 @@ import { z } from "zod";
 
 import { describeModel } from "../../describe.js";
 import { inferKimiFamily, ModelFamilyValues } from "../../family.js";
+import { ReasoningOption } from "../../schema.js";
 import type { ExistingModel, SyncProvider, SyncedFullModel, SyncedModel } from "../index.js";
 import { factorBaseModel, resolveCanonicalBaseModel } from "./openrouter.js";
 
@@ -29,6 +30,21 @@ const Pricing = z.object({
   input_cache_write: z.string().optional(),
 });
 
+const LLMGatewayProvider = z.object({
+  reasoning_efforts: z.array(z.string()).optional(),
+}).passthrough();
+
+const ReasoningEffortOrder = new Map([
+  "none",
+  "minimal",
+  "low",
+  "medium",
+  "high",
+  "xhigh",
+  "max",
+  "default",
+].map((effort, index) => [effort, index]));
+
 export const LLMGatewayModel = z.object({
   id: z.string(),
   name: z.string(),
@@ -39,6 +55,7 @@ export const LLMGatewayModel = z.object({
     output_modalities: z.array(z.string()),
   }),
   pricing: Pricing,
+  providers: z.array(LLMGatewayProvider),
   context_length: z.number(),
   supported_parameters: z.array(z.string()),
   structured_outputs: z.boolean().optional(),
@@ -140,12 +157,14 @@ export function buildLLMGatewayModel(
   const completion = price(model.pricing.completion);
   const reasoning = model.supported_parameters.includes("reasoning")
     || model.supported_parameters.includes("include_reasoning");
+  const reasoningOptions = llmGatewayReasoningOptions(model, existing);
   const context = model.context_length > 0
     ? model.context_length
     : existing?.limit?.context ?? model.context_length;
 
-  // The gateway is authoritative for the volatile, gateway-specific data — cost
-  // and served limits. Its supported_parameters / modalities are too noisy to
+  // The gateway is authoritative for the volatile, gateway-specific data — cost,
+  // served limits, and explicitly advertised reasoning efforts. Its
+  // supported_parameters / modalities are too noisy to
   // drive capability fields (it omits "tools" for flagship models yet lists
   // "temperature" for ones the catalog deliberately marks temperature=false),
   // so those stay curated: preserved from the existing entry (which, for a
@@ -185,6 +204,7 @@ export function buildLLMGatewayModel(
           modalities: existing.modalities,
         }),
         reasoning: existing.reasoning,
+        reasoning_options: reasoningOptions,
         temperature: existing.temperature,
         tool_call: existing.tool_call,
         structured_output: existing.structured_output,
@@ -220,6 +240,7 @@ export function buildLLMGatewayModel(
       last_updated: existing.last_updated ?? dateFromTimestamp(model.created),
       attachment: existing.attachment ?? false,
       reasoning: existing.reasoning ?? false,
+      reasoning_options: reasoningOptions,
       temperature: existing.temperature ?? false,
       tool_call: existing.tool_call ?? false,
       structured_output: existing.structured_output,
@@ -242,7 +263,11 @@ export function buildLLMGatewayModel(
   const canonical = resolveLLMGatewayBaseModel(model);
   if (canonical !== undefined) {
     const factoredLimit = { context, input: undefined, output: undefined };
-    return factorBaseModel(canonical, { limit: factoredLimit, cost }, factoredLimit);
+    return factorBaseModel(canonical, {
+      reasoning_options: reasoningOptions,
+      limit: factoredLimit,
+      cost,
+    }, factoredLimit);
   }
 
   // Brand-new model: best-effort translation from the gateway. Capability and
@@ -267,6 +292,7 @@ export function buildLLMGatewayModel(
     last_updated: dateFromTimestamp(model.created),
     attachment: input.some((value) => value !== "text"),
     reasoning,
+    reasoning_options: reasoningOptions,
     temperature: model.supported_parameters.includes("temperature"),
     tool_call: model.supported_parameters.includes("tools")
       || model.supported_parameters.includes("tool_choice"),
@@ -276,6 +302,27 @@ export function buildLLMGatewayModel(
     limit,
     modalities: { input, output },
   } satisfies SyncedFullModel;
+}
+
+function llmGatewayReasoningOptions(
+  model: LLMGatewayModel,
+  existing: ExistingModel | undefined,
+): SyncedFullModel["reasoning_options"] {
+  const advertised = new Set(model.providers.flatMap((provider) => provider.reasoning_efforts ?? []));
+  if (advertised.size === 0) return undefined;
+
+  const efforts = [...advertised].sort((a, b) => {
+    const order = (ReasoningEffortOrder.get(a) ?? Number.MAX_SAFE_INTEGER)
+      - (ReasoningEffortOrder.get(b) ?? Number.MAX_SAFE_INTEGER);
+    return order || a.localeCompare(b);
+  });
+  const preserved = existing?.reasoning_options?.filter((option) =>
+    option.type !== "effort" && !(option.type === "toggle" && advertised.has("none"))
+  ) ?? [];
+  return [
+    ...preserved,
+    ReasoningOption.parse({ type: "effort", values: efforts }),
+  ];
 }
 
 function defaultModalities(model: LLMGatewayModel) {

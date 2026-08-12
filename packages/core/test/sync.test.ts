@@ -2856,6 +2856,62 @@ test("factors new LLM Gateway models against the canonical base metadata", () =>
   expect("modalities" in model).toBe(false);
 });
 
+test("syncs explicitly advertised LLM Gateway reasoning efforts", () => {
+  const model = buildLLMGatewayModel(llmGatewayModel({
+    id: "seed-2-1-turbo",
+    name: "Seed 2.1 Turbo",
+    family: "bytedance",
+    providers: [{
+      reasoning_efforts: ["high", "none", "max", "low", "xhigh", "minimal", "medium"],
+    }],
+  }), undefined);
+
+  expect(model).toMatchObject({
+    reasoning_options: [{
+      type: "effort",
+      values: ["none", "minimal", "low", "medium", "high", "xhigh", "max"],
+    }],
+  });
+});
+
+test("unions LLM Gateway reasoning efforts in canonical order", () => {
+  const model = buildLLMGatewayModel(llmGatewayModel({
+    id: "unreviewed-reasoner",
+    providers: [
+      { reasoning_efforts: ["high", "low"] },
+      { reasoning_efforts: ["none", "low", "xhigh"] },
+    ],
+  }), undefined);
+
+  expect(model).toMatchObject({
+    reasoning_options: [{
+      type: "effort",
+      values: ["none", "low", "high", "xhigh"],
+    }],
+  });
+});
+
+test("keeps non-effort LLM Gateway controls when syncing efforts", () => {
+  const model = buildLLMGatewayModel(llmGatewayModel({
+    providers: [{ reasoning_efforts: ["none", "low", "high"] }],
+  }), {
+    name: "Claude Fable 5",
+    reasoning: true,
+    reasoning_options: [
+      { type: "toggle" },
+      { type: "budget_tokens", min: 1024 },
+      { type: "effort", values: ["low"] },
+    ],
+  });
+
+  expect(model).toMatchObject({
+    reasoning_options: [
+      { type: "budget_tokens", min: 1024 },
+      { type: "effort", values: ["none", "low", "high"] },
+    ],
+  });
+});
+
 test("factors aliased LLM Gateway routes against canonical metadata", () => {
   const model = buildLLMGatewayModel(llmGatewayModel({
     id: "glm-5-2",
@@ -3713,6 +3769,7 @@ function llmGatewayModel(overrides: Partial<LLMGatewayModel> = {}): LLMGatewayMo
       input_cache_write: "12.5e-6",
       internal_reasoning: "0",
     },
+    providers: [{}],
     context_length: 1_000_000,
     supported_parameters: ["temperature", "max_tokens", "top_p", "effort", "reasoning"],
     structured_outputs: true,
