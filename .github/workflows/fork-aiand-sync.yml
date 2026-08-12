@@ -121,10 +121,18 @@ jobs:
           pr_number="$(GH_TOKEN="$PR_TOKEN" gh pr list --repo "$UPSTREAM_REPO" --head "fenilmodi00:${BRANCH}" --base dev --state open --json number --jq '.[0].number' || true)"
           if [ -n "$pr_number" ]; then
             GH_TOKEN="$PR_TOKEN" gh pr edit --repo "$UPSTREAM_REPO" "$pr_number" --title "$TITLE" --body-file /tmp/model-sync-report.md
-          else
-            GH_TOKEN="$PR_TOKEN" gh pr create --repo "$UPSTREAM_REPO" --base dev --head "fenilmodi00:${BRANCH}" --title "$TITLE" --body-file /tmp/model-sync-report.md
+          elif ! GH_TOKEN="$PR_TOKEN" gh pr create --repo "$UPSTREAM_REPO" --base dev --head "fenilmodi00:${BRANCH}" --title "$TITLE" --body-file /tmp/model-sync-report.md; then
+            pr_number="$(GH_TOKEN="$PR_TOKEN" gh pr list --repo "$UPSTREAM_REPO" --head "fenilmodi00:${BRANCH}" --base dev --state all --json number --jq '.[0].number' || true)"
+            if [ -z "$pr_number" ]; then
+              echo "::error::Failed to create or find upstream PR."
+              exit 1
+            fi
+            GH_TOKEN="$PR_TOKEN" gh pr edit --repo "$UPSTREAM_REPO" "$pr_number" --title "$TITLE" --body-file /tmp/model-sync-report.md
           fi
 
-          pr_url="$(GH_TOKEN="$PR_TOKEN" gh pr list --repo "$UPSTREAM_REPO" --head "fenilmodi00:${BRANCH}" --base dev --state open --json url --jq '.[0].url')"
+          pr_url="$(GH_TOKEN="$PR_TOKEN" gh pr list --repo "$UPSTREAM_REPO" --head "fenilmodi00:${BRANCH}" --base dev --state open --json url --jq '.[0].url' || true)"
+          if [ -z "$pr_url" ]; then
+            pr_url="$(GH_TOKEN="$PR_TOKEN" gh pr list --repo "$UPSTREAM_REPO" --head "fenilmodi00:${BRANCH}" --base dev --state all --json url --jq '.[0].url' || true)"
+          fi
           echo "Upstream PR: $pr_url"
           echo "Upstream PR: $pr_url" >> "$GITHUB_STEP_SUMMARY"
