@@ -54,16 +54,19 @@ jobs:
           fi
 
           cp .sync/model-sync-report.md /tmp/model-sync-report.md
+          catalog_backup="$(mktemp -d)"
+          cp -a "$CATALOG_PATH/." "$catalog_backup/"
 
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
           # Upstream PRs must be based on anomalyco/dev with catalog-only diffs.
           # Never branch from fork dev — it carries fork-only workflow/sync commits.
-          git stash push -u -m "aiand-catalog" -- "$CATALOG_PATH"
           git fetch --no-tags --depth=1 "https://github.com/$UPSTREAM_REPO.git" dev:refs/remotes/upstream/dev
           git checkout -B "$BRANCH" upstream/dev
-          git stash pop
+          mkdir -p "$CATALOG_PATH"
+          cp -a "$catalog_backup/." "$CATALOG_PATH/"
+          rm -rf "$catalog_backup"
 
           if [ -z "$(git status --porcelain -- "$CATALOG_PATH")" ]; then
             echo "No ai& catalog changes after rebasing onto upstream dev."
