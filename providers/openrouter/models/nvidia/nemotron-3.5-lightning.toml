@@ -3,9 +3,14 @@
 base_model = "nvidia/nemotron-3.5-lightning"
 description = "Nemotron model for efficient reasoning, coding, and specialized AI agents"
 tool_call = false
-reasoning_options = [{ type = "toggle" }]
+
+[[reasoning_options]]
+type = "toggle"
 
 [cost]
 input = 0.1
 output = 0.25
 cache_read = 0.05
+
+[limit]
+context = 1_000_000
