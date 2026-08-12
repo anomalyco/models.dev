@@ -1,3 +1,5 @@
+# Anthropic Messages: POST https://api.tokenbay.com/v1/messages
+# https://www.tokenbay.com/docs/reference/text/anthropic/messages
 base_model = "anthropic/claude-sonnet-4-6"
 structured_output = true
 
@@ -20,6 +22,4 @@ cache_write = 3.1875
 
 [provider]
 npm = "@ai-sdk/anthropic"
-# Anthropic Messages: POST https://api.tokenbay.com/v1/messages
-# https://www.tokenbay.com/docs/reference/text/anthropic/messages
 api = "https://api.tokenbay.com/v1"
