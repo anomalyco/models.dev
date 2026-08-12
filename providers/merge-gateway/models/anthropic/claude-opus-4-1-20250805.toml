@@ -1,12 +1,21 @@
 # Source: https://api-gateway.merge.dev/v1/models?model=anthropic%2Fclaude-opus-4-1-20250805 (accessed 2026-07-21)
-
 base_model = "anthropic/claude-opus-4-1-20250805"
 name = "Claude Opus 4.1 (20250805)"
-reasoning_options = [{ type = "toggle" }, { type = "budget_tokens", min = 1_024, max = 31_999 }]
 structured_output = true
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "budget_tokens"
+min = 1_024
+max = 31_999
 
 [cost]
 input = 15
 output = 75
 cache_read = 1.5
 cache_write = 18.75
+
+[modalities]
+input = ["text", "image"]
