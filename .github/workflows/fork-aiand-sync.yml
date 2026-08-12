@@ -46,17 +46,31 @@ jobs:
           BRANCH: automation/sync-models-aiand
           UPSTREAM_REPO: anomalyco/models.dev
           TITLE: "chore(sync): update ai& model catalog"
+          CATALOG_PATH: providers/aiand/models
         run: |
-          if [ -z "$(git status --porcelain -- models providers)" ]; then
-            echo "No model catalog changes found."
+          if [ -z "$(git status --porcelain -- "$CATALOG_PATH")" ]; then
+            echo "No ai& catalog changes found."
             exit 0
           fi
 
+          cp .sync/model-sync-report.md /tmp/model-sync-report.md
+
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git fetch --no-tags --depth=1 origin "+refs/heads/$BRANCH:refs/remotes/origin/$BRANCH" || true
-          git checkout -B "$BRANCH"
-          git add models providers
+
+          # Upstream PRs must be based on anomalyco/dev with catalog-only diffs.
+          # Never branch from fork dev — it carries fork-only workflow/sync commits.
+          git stash push -u -m "aiand-catalog" -- "$CATALOG_PATH"
+          git fetch --no-tags --depth=1 "https://github.com/$UPSTREAM_REPO.git" dev:refs/remotes/upstream/dev
+          git checkout -B "$BRANCH" upstream/dev
+          git stash pop
+
+          if [ -z "$(git status --porcelain -- "$CATALOG_PATH")" ]; then
+            echo "No ai& catalog changes after rebasing onto upstream dev."
+            exit 0
+          fi
+
+          git add "$CATALOG_PATH"
           git commit -m "$TITLE"
           git push --force-with-lease origin "$BRANCH"
 
@@ -67,7 +81,7 @@ jobs:
 
           pr_number="$(GH_TOKEN="$PR_TOKEN" gh pr list --repo "$UPSTREAM_REPO" --head "fenilmodi00:${BRANCH}" --base dev --json number --jq '.[0].number' || true)"
           if [ -n "$pr_number" ]; then
-            GH_TOKEN="$PR_TOKEN" gh pr edit --repo "$UPSTREAM_REPO" "$pr_number" --title "$TITLE" --body-file .sync/model-sync-report.md || true
+            GH_TOKEN="$PR_TOKEN" gh pr edit --repo "$UPSTREAM_REPO" "$pr_number" --title "$TITLE" --body-file /tmp/model-sync-report.md || true
           else
-            GH_TOKEN="$PR_TOKEN" gh pr create --repo "$UPSTREAM_REPO" --base dev --head "fenilmodi00:${BRANCH}" --title "$TITLE" --body-file .sync/model-sync-report.md || true
+            GH_TOKEN="$PR_TOKEN" gh pr create --repo "$UPSTREAM_REPO" --base dev --head "fenilmodi00:${BRANCH}" --title "$TITLE" --body-file /tmp/model-sync-report.md || true
           fi
