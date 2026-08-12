@@ -1,6 +1,10 @@
-# TokenBay Chat Completions documents reasoning_effort but not thinking.type.
+# Toggle: thinking.type = enabled|disabled
+# Effort: reasoning_effort = high|max
 # https://www.tokenbay.com/docs/reference/text/openai/chat-completions
 base_model = "deepseek/deepseek-v4-pro"
+
+[[reasoning_options]]
+type = "toggle"
 
 [[reasoning_options]]
 type = "effort"
