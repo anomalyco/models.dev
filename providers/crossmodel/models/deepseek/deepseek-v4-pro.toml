@@ -5,13 +5,10 @@ type = "toggle"
 
 [[reasoning_options]]
 type = "effort"
-values = ["high", "xhigh"]
+values = ["high", "max"]
 
 [cost]
 input = 0.47
 output = 0.94
 cache_read = 0.005
 cache_write = 0.47
-
-[limit]
-output = 65_000
