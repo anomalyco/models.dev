@@ -2856,6 +2856,29 @@ test("factors aliased LLM Gateway routes against canonical metadata", () => {
   });
 });
 
+test("factors Grok LLM Gateway routes against xAI metadata", () => {
+  const model = buildLLMGatewayModel(llmGatewayModel({
+    id: "grok-4-6",
+    name: "Grok 4.6",
+    family: "grok",
+    context_length: 500_000,
+    pricing: {
+      prompt: "2e-6",
+      completion: "6e-6",
+      input_cache_read: "0.5e-6",
+    },
+  }), undefined);
+
+  expect(model).toEqual({
+    base_model: "xai/grok-4.6",
+    cost: {
+      input: 2,
+      output: 6,
+      cache_read: 0.5,
+    },
+  });
+});
+
 // Ensures catalog pagination preserves authentication and returns every page.
 test("fetches every page of the Merge Gateway catalog", async () => {
   const requests: string[] = [];

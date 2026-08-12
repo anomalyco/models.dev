@@ -11,12 +11,14 @@ const API_ENDPOINT = "https://api.llmgateway.io/v1/models";
 // canonical prefixes understood by resolveCanonicalBaseModel. Alias the few that
 // spell the lab differently. (Mirrors huggingface's CANONICAL_ORG_PREFIXES.)
 const CANONICAL_FAMILY_ALIASES: Record<string, string> = {
+  grok: "xai",
   mistral: "mistralai",
   moonshot: "moonshotai",
 };
 
 const BASE_MODEL_ALIASES: Record<string, string> = {
   "glm-5-2": "zhipuai/glm-5.2",
+  "grok-4-6": "xai/grok-4.6",
 };
 
 const Pricing = z.object({
