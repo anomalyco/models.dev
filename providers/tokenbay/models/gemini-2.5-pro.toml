@@ -1,3 +1,4 @@
+# Native Gemini: POST https://api.tokenbay.com/v1beta/models/{model}:generateContent
 # Budget: generationConfig.thinkingConfig.thinkingBudget = 128..32_768.
 base_model = "google/gemini-2.5-pro"
 
@@ -16,3 +17,7 @@ tier = { type = "context", size = 200_000 }
 input = 2.50
 output = 15.00
 cache_read = 0.25
+
+[provider]
+npm = "@ai-sdk/google"
+api = "https://api.tokenbay.com/v1beta"
