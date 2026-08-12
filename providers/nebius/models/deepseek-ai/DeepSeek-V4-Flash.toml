@@ -1,0 +1,23 @@
+# Sources:
+# - https://tokenfactory.nebius.com/endpoints?modals=endpoint-details&model-id=deepseek-ai/DeepSeek-V4-Flash
+#   (model ID, pricing, 1,024K context, text-to-text, tool calling, reasoning)
+# - https://huggingface.co/deepseek-ai/DeepSeek-V4-Flash-0731
+#   (canonical model and output-limit metadata)
+# Accessed 2026-08-12.
+#
+# The previous entry incorrectly described this Nebius endpoint as having a
+# 131K context window. Nebius lists the endpoint as a 1,024K-context model.
+# Nebius' endpoint properties do not publish a cache-read price, so no
+# cache_read value is declared here.
+base_model = "deepseek/deepseek-v4-flash"
+reasoning_options = [{ type = "effort", values = ["none", "low", "high", "max"] }]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.14
+output = 0.28
+
+[limit]
+context = 1_048_576
