@@ -1,7 +1,6 @@
-# Toggle: thinking.type = disabled
-# Effort: output_config.effort = low|medium|high|xhigh|max
+# Effort: reasoning_effort = none|minimal|low|medium|high|xhigh|max
 base_model = "thinkingmachines/inkling-small"
-reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
+reasoning_options = [{ type = "effort", values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"] }]
 
 [cost]
 input = 0.5
