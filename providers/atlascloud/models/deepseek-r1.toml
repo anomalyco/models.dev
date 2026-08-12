@@ -1,0 +1,19 @@
+name = "DeepSeek R1"
+family = "deepseek-thinking"
+release_date = "2025-01-20"
+attachment = true
+reasoning = true
+tool_call = true
+temperature = true
+
+[cost]
+input = 0
+output = 0
+
+[limit]
+context = 64000
+output = 8192
+
+[modalities]
+input = ["text"]
+output = ["text"]

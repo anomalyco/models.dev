@@ -1,0 +1,19 @@
+name = "DeepSeek V3"
+family = "deepseek"
+release_date = "2024-12-26"
+attachment = true
+reasoning = false
+tool_call = true
+temperature = true
+
+[cost]
+input = 0
+output = 0
+
+[limit]
+context = 64000
+output = 8192
+
+[modalities]
+input = ["text"]
+output = ["text"]
