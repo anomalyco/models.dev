@@ -1,0 +1,11 @@
+# Bitdeer AI Inference (POST https://api-inference.bitdeer.ai/v1/chat/completions)
+# model = "Qwen/Qwen3-235B-A22B"
+# Pricing source: https://www.bitdeer.ai/en/pricing/ai-models (accessed 2026-08-12)
+base_model = "alibaba/qwen3-235b-a22b"
+
+[[reasoning_options]]
+type = "toggle"
+
+[cost]
+input = 0.20
+output = 0.60
