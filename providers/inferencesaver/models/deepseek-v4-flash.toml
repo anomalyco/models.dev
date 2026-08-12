@@ -1,0 +1,20 @@
+# Toggle: OpenAI-compatible `enable_thinking` true/false disables/enables
+# chain-of-thought; `reasoning_effort` accepts low/high/max (per DeepSeek
+# Chat Completions API, same as alibaba-token-plan peer).
+base_model = "deepseek/deepseek-v4-flash"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[cost]
+input = 0.25
+output = 0.5
+cache_read = 0.05
+
+[limit]
+context = 128_000
+output = 16_384
