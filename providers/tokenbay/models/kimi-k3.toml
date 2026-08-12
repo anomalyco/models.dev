@@ -1,7 +1,11 @@
+# Toggle: thinking.type = enabled|disabled
 # TokenBay Chat Completions: reasoning_effort = low|high|max
 # Responses: message.reasoning_content carries the reasoning side channel.
 # https://www.tokenbay.com/docs/reference/text/openai/chat-completions
 base_model = "moonshotai/kimi-k3"
+
+[[reasoning_options]]
+type = "toggle"
 
 [[reasoning_options]]
 type = "effort"
