@@ -12,13 +12,14 @@
 # with 400 (negative control).
 base_model = "moonshotai/kimi-k3"
 
-reasoning_options = [{ type = "effort", values = ["none", "low", "high", "max"] }]
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "high", "max"]
 
 [cost]
-input = 3.00
-cache_read = 0.50
-output = 12.50
+input = 3
+output = 12.5
+cache_read = 0.5
 
 [modalities]
 input = ["text", "image", "pdf"]
-output = ["text"]

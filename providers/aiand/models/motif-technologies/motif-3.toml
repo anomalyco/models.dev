@@ -1,0 +1,23 @@
+name = "Motif 3"
+description = "Reasoning model for deliberate analysis, multi-step problem solving, and tool use"
+release_date = "2026-08-12"
+last_updated = "2026-08-12"
+attachment = false
+reasoning = true
+temperature = false
+tool_call = false
+structured_output = false
+open_weights = false
+reasoning_options = []
+
+[cost]
+input = 0.5
+output = 2
+
+[limit]
+context = 262_144
+output = 262_144
+
+[modalities]
+input = ["text"]
+output = ["text"]
