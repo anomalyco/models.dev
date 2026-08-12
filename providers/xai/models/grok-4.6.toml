@@ -1,9 +1,9 @@
-# Sources: https://docs.x.ai/developers/models/grok-4.6 and https://docs.x.ai/developers/pricing
+# Sources: https://docs.x.ai/developers/models/grok-4.6, https://docs.x.ai/developers/pricing, and https://docs.x.ai/developers/model-capabilities/text/reasoning
 base_model = "xai/grok-4.6"
 
 [[reasoning_options]]
 type = "effort"
-values = ["low", "medium", "high"]
+values = ["low", "medium", "high", "xhigh"]
 
 [experimental.modes.fast]
 provider = { body = { service_tier = "priority" } }
