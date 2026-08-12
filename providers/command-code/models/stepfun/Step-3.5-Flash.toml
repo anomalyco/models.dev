@@ -1,3 +1,6 @@
+# Served context from GET /provider/v1/models (accessed 2026-08-13): 1_000_000.
+# Command Code compacts sessions, so the effective window exceeds the model's
+# native 256K per-request caps (inherited input/output stay 256K).
 # Effort: reasoning_effort = low|high
 base_model = "stepfun/step-3.5-flash"
 reasoning_options = [{ type = "effort", values = ["low", "high"] }]

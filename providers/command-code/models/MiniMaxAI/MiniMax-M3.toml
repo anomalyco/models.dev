@@ -1,9 +1,10 @@
-# Toggle: thinking.type = enabled|disabled
+# Always-on reasoning; OpenAI-compatible peers expose no documented on/off
+# control (the first-party toggle lives on MiniMax's Anthropic Messages API).
 # Permanent 50% off list price reflected below.
 # https://commandcode.ai/docs/resources/pricing-limits#minimax-m3-2x-usage
 base_model = "minimax/MiniMax-M3"
 name = "MiniMax M3"
-reasoning_options = [{ type = "toggle" }]
+reasoning_options = []
 
 [cost]
 input = 0.3
