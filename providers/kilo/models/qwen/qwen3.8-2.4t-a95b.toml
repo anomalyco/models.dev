@@ -1,0 +1,28 @@
+name = "Qwen: Qwen3.8 2.4T A95B"
+description = "Qwen3.8 2.4T A95B is an open-weight sparse mixture-of-experts model from Qwen and the open-weight variant of [Qwen3.8 Max](/qwen/qwen3.8-max), with 95 billion active parameters out of 2.4 trillion total. It is..."
+family = "qwen"
+release_date = "2026-08-12"
+last_updated = "2026-08-12"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["minimal", "low", "medium", "high", "xhigh"]
+
+[cost]
+input = 2
+output = 6
+cache_read = 0.2
+
+[limit]
+context = 262_144
+output = 52_429
+
+[modalities]
+input = ["text"]
+output = ["text"]
