@@ -12,12 +12,12 @@ open_weights = true
 
 [[reasoning_options]]
 type = "effort"
-values = ["none", "high", "max"]
+values = ["none", "low", "high", "max"]
 
 [cost]
-input = 1.1
-output = 2.2
-cache_read = 0.11
+input = 0.435
+output = 0.87
+cache_read = 0.003625
 
 [limit]
 context = 1_048_576
