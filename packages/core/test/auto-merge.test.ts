@@ -82,13 +82,15 @@ test("does not inspect deleted models", async () => {
 });
 
 test("allows reviewed providers with explicit reasoning options", async () => {
-  const decision = await classifyAutoMerge(
-    [{ status: "updated", path: "providers/openrouter/models/reasoner.toml" }],
-    async () => fullModel(true, 'reasoning_options = [{ type = "toggle" }]'),
-    async () => fullModel(true, "reasoning_options = []"),
-  );
+  for (const provider of ["kilo", "merge-gateway", "nano-gpt", "openrouter"]) {
+    const decision = await classifyAutoMerge(
+      [{ status: "updated", path: `providers/${provider}/models/reasoner.toml` }],
+      async () => fullModel(true, 'reasoning_options = [{ type = "toggle" }]'),
+      async () => fullModel(true, "reasoning_options = []"),
+    );
 
-  expect(decision.safe).toBe(true);
+    expect(decision.safe).toBe(true);
+  }
 });
 
 test("requires manual review for Inceptron reasoning updates", async () => {
