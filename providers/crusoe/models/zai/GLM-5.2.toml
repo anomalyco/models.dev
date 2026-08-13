@@ -8,3 +8,9 @@
 base_model = "zhipuai/glm-5.2"
 reasoning_options = [{ type = "toggle" }]
 interleaved = true
+
+# Pricing: https://www.crusoe.ai/cloud/pricing (accessed 2026-08-13)
+[cost]
+input = 1.40
+output = 4.40
+cache_read = 0.26

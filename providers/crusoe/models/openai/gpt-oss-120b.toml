@@ -6,3 +6,9 @@
 base_model = "openai/gpt-oss-120b"
 reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
 interleaved = true
+
+# Pricing: https://www.crusoe.ai/cloud/pricing (accessed 2026-08-13)
+[cost]
+input = 0.05
+output = 0.20
+cache_read = 0.05

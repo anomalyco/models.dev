@@ -7,3 +7,9 @@
 base_model = "moonshotai/kimi-k2.6"
 reasoning_options = [{ type = "toggle" }]
 interleaved = true
+
+# Pricing: https://www.crusoe.ai/cloud/pricing (accessed 2026-08-13)
+[cost]
+input = 0.70
+output = 3.50
+cache_read = 0.35

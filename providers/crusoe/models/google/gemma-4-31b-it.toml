@@ -7,3 +7,9 @@
 # tool_calls without reasoning text, so no interleaved claim is made.
 base_model = "google/gemma-4-31b-it"
 reasoning_options = [{ type = "toggle" }]
+
+# Pricing: https://www.crusoe.ai/cloud/pricing (accessed 2026-08-13)
+[cost]
+input = 0.14
+output = 0.40
+cache_read = 0.14
