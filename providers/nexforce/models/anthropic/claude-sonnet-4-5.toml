@@ -1,0 +1,8 @@
+base_model = "anthropic/claude-sonnet-4-5"
+
+[[reasoning_options]]
+type = "budget_tokens"
+min = 1_024
+
+[limit]
+context = 1_000_000

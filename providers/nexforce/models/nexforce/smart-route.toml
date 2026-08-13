@@ -1,0 +1,22 @@
+# Host-only routing alias: Nexforce picks an equivalent model per request,
+# preserving required capabilities (tools, vision). Unique to the Nexforce
+# catalog, so this is authored inline. Served model is reported via
+# X-Nexforce-Served-Model response header.
+# https://router.nexforce.ai/docs (accessed 2026-08-12)
+name = "Nexforce Smart Route"
+description = "Routing alias that lets the Nexforce router pick an equivalent model per request, preserving required capabilities (tools, vision)"
+release_date = "2026-08-12"
+last_updated = "2026-08-12"
+attachment = false
+reasoning = false
+tool_call = true
+temperature = true
+open_weights = false
+
+[limit]
+context = 1_000_000
+output = 128_000
+
+[modalities]
+input = ["text", "image", "pdf"]
+output = ["text"]

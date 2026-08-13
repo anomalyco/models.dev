@@ -1,0 +1,11 @@
+base_model = "minimax/MiniMax-M3"
+name = "MiniMax M3"
+
+[[reasoning_options]]
+type = "toggle"
+
+[limit]
+context = 1_000_000
+
+[modalities]
+input = ["text"]

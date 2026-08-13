@@ -1,0 +1,24 @@
+name = "Llama-3.1-8B"
+description = "Compact open Llama instruction model for efficient chat and on-device workloads"
+family = "llama"
+release_date = "2024-07-23"
+last_updated = "2024-07-23"
+attachment = false
+reasoning = false
+temperature = true
+tool_call = true
+knowledge = "2024-03"
+open_weights = true
+license = "Llama 3.1 Community License"
+
+[limit]
+context = 131_072
+output = 8_192
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/meta-llama/Llama-3.1-8B-Instruct"
