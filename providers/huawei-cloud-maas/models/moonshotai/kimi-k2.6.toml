@@ -1,5 +1,8 @@
 # Pricing: CNY 6.50 input / 27.00 output per 1M tokens (converted at ~6.74 CNY/USD)
 # Source: https://support.huaweicloud.com/price-maas/price-maas-0002.html (2026-08-13)
+# Huawei MaaS documents "深度思考（可开关）" but does not expose a specific
+# reasoning_effort or enable_thinking parameter for Kimi K2.6 on this host.
+# Matches OpenRouter peer: reasoning_options = [].
 base_model = "moonshotai/kimi-k2.6"
 reasoning_options = []
 

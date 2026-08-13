@@ -1,13 +1,11 @@
 # Pricing: CNY 8.00 input / 28.00 output per 1M tokens (converted at ~6.74 CNY/USD)
 # Source: https://support.huaweicloud.com/price-maas/price-maas-0002.html (2026-08-13)
+# Effort: reasoning_effort = high|max (none/minimal skip thinking; xhigh→max)
 base_model = "zhipuai/glm-5.2"
 
 [[reasoning_options]]
-type = "toggle"
-
-[[reasoning_options]]
 type = "effort"
-values = ["high", "xhigh"]
+values = ["high", "max"]
 
 [interleaved]
 field = "reasoning_content"
