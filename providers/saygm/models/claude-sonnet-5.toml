@@ -1,0 +1,20 @@
+# Toggle: thinking.type = enabled|disabled (Anthropic Messages wire; SayGM mirrors upstream)
+# Effort: output_config.effort = low|medium|high|xhigh|max
+base_model = "anthropic/claude-sonnet-5"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high", "xhigh", "max"]
+
+[cost]
+input = 3
+output = 10
+cache_read = 0.3
+cache_write = 3.75
+
+[provider]
+npm = "@ai-sdk/anthropic"
+api = "https://api.saygm.com/v1"

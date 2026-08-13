@@ -82,6 +82,13 @@ import {
 import { openai, parseOpenAIModels } from "../src/sync/providers/openai.js";
 import { ofox } from "../src/sync/providers/ofox.js";
 import { pioneer } from "../src/sync/providers/pioneer.js";
+import {
+  buildSaygmModel,
+  saygm,
+  SaygmResponse,
+  type SaygmModel,
+  usdPerMtok,
+} from "../src/sync/providers/saygm.js";
 import { google, shouldTrackGoogleModel } from "../src/sync/providers/google.js";
 import { buildTinfoilModel, tinfoil, type TinfoilModel } from "../src/sync/providers/tinfoil.js";
 import { resolveVeniceBaseModel } from "../src/sync/providers/venice.js";
@@ -204,6 +211,109 @@ function readyInceptronModel(overrides: Partial<InceptronModel> = {}): ReadyInce
     data: [inceptronModel(overrides)],
   })[0]!;
 }
+
+function saygmModel(overrides: Partial<SaygmModel> = {}): SaygmModel {
+  return {
+    id: "gpt-5.4",
+    object: "model",
+    available: true,
+    api_shapes: ["chat.completions", "responses"],
+    price_range: {
+      unit: "ndollars_per_mtok",
+      currency: "USD",
+      ceiling: {
+        basis: "published_retail",
+        dimensions: {
+          input_per_mtok_ndollars: 2_500_000_000,
+          output_per_mtok_ndollars: 15_000_000_000,
+          cache_read_per_mtok_ndollars: 250_000_000,
+          long_context_threshold_tokens: 272_000,
+          long_context_input_per_mtok_ndollars: 5_000_000_000,
+          long_context_output_per_mtok_ndollars: 22_500_000_000,
+        },
+      },
+    },
+    ...overrides,
+  };
+}
+
+test("converts SayGM retail nanodollars into models.dev USD per Mtok costs", () => {
+  const built = buildSaygmModel(saygmModel(), {
+    base_model: "openai/gpt-5.4",
+    reasoning_options: [{ type: "effort", values: ["none", "low", "high"] }],
+  });
+
+  expect(built).toMatchObject({
+    base_model: "openai/gpt-5.4",
+    cost: {
+      input: 2.5,
+      output: 15,
+      cache_read: 0.25,
+      tiers: [{ tier: { type: "context", size: 272_000 }, input: 5, output: 22.5 }],
+    },
+  });
+  expect(usdPerMtok(1)).toBe(0.000000001);
+});
+
+test("uses SayGM's five-minute cache-write rate for models.dev", () => {
+  const built = buildSaygmModel(saygmModel({
+    id: "claude-haiku-4-5",
+    api_shapes: ["messages"],
+    price_range: {
+      unit: "ndollars_per_mtok",
+      currency: "USD",
+      ceiling: {
+        basis: "published_retail",
+        dimensions: {
+          input_per_mtok_ndollars: 1_000_000_000,
+          output_per_mtok_ndollars: 5_000_000_000,
+          cache_read_per_mtok_ndollars: 100_000_000,
+          cache_write_5m_per_mtok_ndollars: 1_250_000_000,
+          cache_write_1h_per_mtok_ndollars: 2_000_000_000,
+        },
+      },
+    },
+  }), { base_model: "anthropic/claude-haiku-4-5" });
+
+  expect(built).toMatchObject({
+    cost: { input: 1, output: 5, cache_read: 0.1, cache_write: 1.25 },
+  });
+});
+
+test("retains reviewed SayGM pricing when the live ceiling is unavailable", () => {
+  const existing = {
+    base_model: "openai/gpt-5.4",
+    cost: { input: 2.5, output: 15, cache_read: 0.25 },
+  };
+
+  const built = buildSaygmModel(saygmModel({ price_range: undefined }), existing);
+
+  expect(built).toEqual(existing);
+});
+
+test("rejects incomplete or non-retail SayGM pricing", () => {
+  const valid = saygmModel();
+  const missingLongOutput = structuredClone(valid);
+  delete missingLongOutput.price_range!.ceiling.dimensions.long_context_output_per_mtok_ndollars;
+  expect(() => SaygmResponse.parse({ object: "list", data: [missingLongOutput] })).toThrow(
+    "Long-context pricing requires a threshold plus input and output prices",
+  );
+
+  const floorOnly = {
+    ...valid,
+    price_range: {
+      ...valid.price_range!,
+      ceiling: { ...valid.price_range!.ceiling, basis: "cheapest_eligible_offer" },
+    },
+  };
+  expect(() => SaygmResponse.parse({ object: "list", data: [floorOnly] })).toThrow();
+});
+
+test("keeps SayGM model lifecycle changes review-only", () => {
+  expect(saygm.skipCreates).toBe(true);
+  expect(saygm.deleteMissing).toBe(false);
+  expect(saygm.trackMissingModels).toBe(false);
+});
 
 test("builds current Inceptron models from explicit base metadata", () => {
   const models = parseInceptronModels({
