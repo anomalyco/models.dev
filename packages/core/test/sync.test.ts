@@ -233,13 +233,11 @@ function saygmModel(overrides: Partial<SaygmModel> = {}): SaygmModel {
 test("converts SayGM retail nanodollars into models.dev USD per Mtok costs", () => {
   const built = buildSaygmModel(saygmModel(), {
     base_model: "openai/gpt-5.4",
-    base_model_omit: ["cost"],
     reasoning_options: [{ type: "effort", values: ["none", "low", "high"] }],
   });
 
   expect(built).toMatchObject({
     base_model: "openai/gpt-5.4",
-    base_model_omit: ["cost"],
     cost: {
       input: 2.5,
       output: 15,
@@ -268,7 +266,7 @@ test("uses SayGM's five-minute cache-write rate for models.dev", () => {
         },
       },
     },
-  }), { base_model: "anthropic/claude-haiku-4-5", base_model_omit: ["cost"] });
+  }), { base_model: "anthropic/claude-haiku-4-5" });
 
   expect(built).toMatchObject({
     cost: { input: 1, output: 5, cache_read: 0.1, cache_write: 1.25 },
