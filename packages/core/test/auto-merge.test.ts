@@ -82,7 +82,7 @@ test("does not inspect deleted models", async () => {
 });
 
 test("allows reviewed providers with explicit reasoning options", async () => {
-  for (const provider of ["kilo", "merge-gateway", "nano-gpt", "openrouter"]) {
+  for (const provider of ["kilo", "llmgateway", "merge-gateway", "nano-gpt", "openrouter"]) {
     const decision = await classifyAutoMerge(
       [{ status: "updated", path: `providers/${provider}/models/reasoner.toml` }],
       async () => fullModel(true, 'reasoning_options = [{ type = "toggle" }]'),
