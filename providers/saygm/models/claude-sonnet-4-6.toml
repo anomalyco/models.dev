@@ -9,6 +9,12 @@ values = ["low", "medium", "high", "max"]
 type = "budget_tokens"
 min = 1_024
 
+[cost]
+input = 3
+output = 10
+cache_read = 0.3
+cache_write = 3.75
+
 [provider]
 npm = "@ai-sdk/anthropic"
 api = "https://api.saygm.com/v1"

@@ -6,6 +6,11 @@ base_model_omit = ["cost"]
 type = "effort"
 values = ["medium", "high", "xhigh"]
 
+[cost]
+input = 30
+output = 180
+cache_read = 3
+
 [provider]
 npm = "@ai-sdk/openai"
 api = "https://api.saygm.com/v1"
