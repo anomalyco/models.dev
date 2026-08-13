@@ -1,7 +1,7 @@
-# Effort: reasoning_effort = low|medium|high|xhigh|max (lab effort set; the
-# Anthropic-Messages thinking.type toggle does not apply to this chat route).
+# Effort: reasoning_effort = none|low|medium|high|xhigh|max (off = none; graded
+# levels per TM lab set; minimal not authored — no host evidence it is accepted).
 base_model = "thinkingmachines/inkling-small"
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
+reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh", "max"] }]
 
 [cost]
 input = 0.5
