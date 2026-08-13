@@ -1,5 +1,7 @@
-# Effort: reasoning_effort = none|low|medium|high|xhigh|max (off = none; graded
-# levels per TM lab set; minimal not authored — no host evidence it is accepted).
+# Effort: reasoning_effort = none|low|medium|high|xhigh|max.
+# Graded levels per TM lab set; off = none per established OpenAI-surface peers
+# (baseten, vercel, openrouter, kilo) — the Anthropic thinking.type toggle does
+# not apply to this host's chat-completions route. minimal not authored.
 base_model = "thinkingmachines/inkling-small"
 reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh", "max"] }]
 
