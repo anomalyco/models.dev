@@ -1,8 +1,8 @@
-name = "InclusionAI Ling 3.0 Flash"
+name = "Seed 2.1 Turbo"
 description = "Efficient model for low-latency assistance, extraction, and routine automation"
-family = "ling"
-release_date = "2026-08-02"
-last_updated = "2026-08-02"
+family = "seed"
+release_date = "2026-08-10"
+last_updated = "2026-08-10"
 attachment = false
 reasoning = true
 temperature = true
@@ -12,12 +12,11 @@ open_weights = false
 
 [[reasoning_options]]
 type = "effort"
-values = ["none"]
+values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"]
 
 [cost]
-input = 0.06
-output = 0.18
-cache_read = 0.012
+input = 0.5
+output = 2.5
 
 [limit]
 context = 262_144

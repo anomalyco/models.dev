@@ -4,11 +4,14 @@ release_date = "2026-06-22"
 last_updated = "2026-06-22"
 attachment = true
 reasoning = true
-reasoning_options = []
 temperature = true
 tool_call = true
 structured_output = false
 open_weights = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["high", "xhigh", "max"]
 
 [cost]
 input = 5
