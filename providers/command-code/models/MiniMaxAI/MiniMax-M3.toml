@@ -1,10 +1,11 @@
-# Always-on reasoning; OpenAI-compatible peers expose no documented on/off
-# control (the first-party toggle lives on MiniMax's Anthropic Messages API).
+# Toggle: MiniMax M3 exposes an on/off thinking control (first-party API and
+# OpenAI-compatible relays such as NVIDIA both author it). Command Code docs do
+# not specify the forwarded chat-completions field.
 # Permanent 50% off list price reflected below.
 # https://commandcode.ai/docs/resources/pricing-limits#minimax-m3-2x-usage
 base_model = "minimax/MiniMax-M3"
 name = "MiniMax M3"
-reasoning_options = []
+reasoning_options = [{ type = "toggle" }]
 
 [cost]
 input = 0.3
