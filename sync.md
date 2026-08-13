@@ -20,6 +20,7 @@ The grouped sync targets are available for local convenience, but CI syncs each 
 - `bun models:sync merge-gateway` syncs only Merge Gateway.
 - `bun models:sync openai` syncs only OpenAI catalog availability.
 - `bun models:sync tinfoil` syncs only Tinfoil.
+- `bun models:sync nebius` syncs only Nebius Token Factory.
 - `bun models:sync aggregators --dry-run` prints changes without writing model files.
 - `bun models:sync aggregators --new-only` creates new model files but skips updates and removals.
 - `bun models:sync <provider> --open-issues` opens GitHub issues for missing models (on by default only when `GITHUB_ACTIONS=true`).
@@ -216,6 +217,18 @@ xAI is implemented in `packages/core/src/sync/providers/xai.ts`.
 - The richer typed endpoints provide model IDs, creation timestamps, modalities, pricing for language models, and prompt/input limits where available.
 - Existing xAI models are updated from API-authoritative fields while local metadata is preserved for fields the API does not expose, especially output token limits and some feature/capability flags.
 - New xAI API models are not created automatically (`skipCreates`); each missing ID opens a deduped GitHub issue. Alias IDs of models already cataloged under their canonical ID are skipped silently and never reported as missing.
+
+## Nebius Notes
+
+Nebius Token Factory is implemented in `packages/core/src/sync/providers/nebius.ts`.
+
+- Source endpoint: `https://tokenfactory.nebius.com/api/public/models_info`, the credential-free machine-readable source linked from Nebius's public model catalog.
+- Active first-party flavor IDs map directly to TOML paths under `providers/nebius/models`.
+- The sync treats the public catalog as authoritative for model availability and per-million-token input/output pricing.
+- Positive `image2text`, reasoning, and function-calling declarations may add capabilities, but missing declarations never remove curated capabilities or reasoning controls.
+- A reported `max_model_len` of 8,000 is treated as a serving/configuration sentinel and never overwrites a larger curated context window. Other exact context changes are applied only when they do not contradict curated input/output limits.
+- New models are not created automatically (`skipCreates`); each missing active first-party ID opens a deduped issue so complete canonical metadata can be researched without inferring unsupported fields.
+- No API secret is required for the hourly sync.
 
 ## Tinfoil Notes
 
