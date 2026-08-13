@@ -1,5 +1,4 @@
 base_model = "xai/grok-4.6"
-attachment = false
 
 [[reasoning_options]]
 type = "effort"
@@ -9,6 +8,3 @@ values = ["low", "medium", "high", "xhigh"]
 input = 1.5
 output = 4.5
 cache_read = 0.5
-
-[modalities]
-input = ["text"]
