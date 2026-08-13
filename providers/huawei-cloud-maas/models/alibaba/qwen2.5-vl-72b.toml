@@ -1,6 +1,10 @@
-# Pricing: Not specified in pricing page
-# Source: https://support.huaweicloud.com/model-call-maas/usermanual_maas_0008.html (2026-08-10)
+# Pricing: CNY 16.00 input / 48.00 output per 1M tokens (converted at ~6.74 CNY/USD)
+# Source: https://support.huaweicloud.com/price-maas/price-maas-0005.html (2026-08-10)
 base_model = "alibaba/qwen2-5-vl-72b-instruct"
+
+[cost]
+input = 2.37
+output = 7.12
 
 [limit]
 context = 48_000
