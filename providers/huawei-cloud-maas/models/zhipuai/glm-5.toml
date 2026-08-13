@@ -4,6 +4,16 @@
 # Source: https://support.huaweicloud.com/price-maas/price-maas-0002.html (2026-08-13)
 base_model = "zhipuai/glm-5"
 
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["high", "xhigh"]
+
+[interleaved]
+field = "reasoning_content"
+
 [cost]
 input = 0.59
 output = 2.67
