@@ -1,0 +1,29 @@
+# The gateway enforces no separate output cap; output is bounded only by the
+# served context window, hence output = context (matches the kimi-k3 entry).
+# Flex tier: async/queued processing at a 0.65 pricing multiplier (35% off) vs kimi-k3.
+# Requires stream = true (non-streaming requests fall through to standard tier).
+# Reasoning toggle wire syntax: {"chat_template_kwargs": {"enable_thinking": false}}.
+base_model = "moonshotai/kimi-k3"
+name = "Kimi K3 Flex"
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[cost]
+input = 1.95
+output = 9.75
+cache_read = 0.195
+
+[limit]
+context = 1_048_560
+output = 1_048_560
+
+[modalities]
+input = ["text", "image"]

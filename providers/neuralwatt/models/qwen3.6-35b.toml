@@ -1,0 +1,23 @@
+# The gateway enforces no separate output cap; output is bounded only by the
+# served context window, hence output = context.
+# Neuralwatt serves a 131k context window, text and image input only.
+base_model = "alibaba/qwen3.6-35b-a3b"
+name = "Qwen3.6 35B"
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "toggle"
+
+[cost]
+input = 0.29
+output = 1.15
+cache_read = 0.029
+
+[limit]
+context = 131_056
+output = 131_056
+
+[modalities]
+input = ["text", "image"]
