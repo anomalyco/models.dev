@@ -1,0 +1,15 @@
+# Pricing: CNY 0.80 input / 1.60 output per 1M tokens
+# Cache hit: CNY 0.20 input per 1M tokens
+# Converted at ~6.74 CNY/USD
+# Source: https://support.huaweicloud.com/price-maas/price-maas-0002.html (2026-08-13)
+base_model = "huawei/openpangu-2.0-flash"
+
+[cost]
+input = 0.12
+output = 0.24
+cache_read = 0.03
+
+[limit]
+context = 512_000
+input = 500_000
+output = 128_000
