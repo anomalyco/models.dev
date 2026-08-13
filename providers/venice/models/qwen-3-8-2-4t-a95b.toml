@@ -1,0 +1,23 @@
+name = "Qwen 3.8 2.4T"
+description = "Qwen instruction model for multilingual chat, reasoning, and tool use"
+family = "qwen"
+release_date = "2026-08-12"
+last_updated = "2026-08-13"
+attachment = false
+reasoning = true
+tool_call = false
+open_weights = true
+reasoning_options = []
+
+[cost]
+input = 2.5
+output = 7.5
+cache_read = 0.3125
+
+[limit]
+context = 262_144
+output = 65_536
+
+[modalities]
+input = ["text"]
+output = ["text"]
