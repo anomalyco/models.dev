@@ -5,11 +5,11 @@
 # mirror providers/venice/. https://api.gondola-ai.com/v1/models (accessed 2026-08-14)
 base_model = "anthropic/claude-opus-5"
 name = "Claude Opus 5 (Fast)"
-reasoning_options = []
 
 [cost]
 input = 3.672
 output = 18.36
+cache_read = 0.3672
 
 [limit]
 context = 1000000

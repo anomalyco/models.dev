@@ -4,11 +4,15 @@
 # that multiple floats over time as supply shifts. Limits from /v1/models; modalities
 # mirror providers/venice/. https://api.gondola-ai.com/v1/models (accessed 2026-08-14)
 base_model = "xai/grok-4.5"
-reasoning_options = []
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high"]
 
 [cost]
 input = 0.69462
 output = 2.0808
+cache_read = 0.10404
 
 [limit]
 context = 500000
