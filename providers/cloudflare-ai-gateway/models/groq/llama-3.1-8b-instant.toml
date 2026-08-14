@@ -1,0 +1,11 @@
+base_model = "meta/llama-3.1-8b-instruct"
+name = "Llama 3.1 8B"
+description = "Compact Llama instruction model for fast chat and local deployment"
+
+[cost]
+input = 0.05
+output = 0.08
+
+[limit]
+context = 131072
+output = 131072

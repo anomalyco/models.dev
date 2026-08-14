@@ -1,0 +1,24 @@
+# Reasoning tokens are billed at the output rate (no separate CoT price).
+# `completion_tokens_details.reasoning_tokens` is a subset of completion_tokens.
+# https://api-docs.deepseek.com/quick_start/pricing/ (accessed 2026-08-12)
+base_model = "deepseek/deepseek-v4-pro-0813"
+name = "DeepSeek V4 Pro"
+# OpenAI: `thinking.type = enabled|disabled`, `reasoning_effort = high|max`.
+# Anthropic: `thinking.type`, `output_config.effort = high|max`; budget ignored.
+# https://api-docs.deepseek.com/api/create-chat-completion (accessed 2026-06-25)
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["high", "max"]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.435
+output = 0.87
+reasoning = 0.87
+cache_read = 0.003625

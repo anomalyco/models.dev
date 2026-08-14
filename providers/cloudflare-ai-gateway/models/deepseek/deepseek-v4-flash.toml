@@ -1,0 +1,25 @@
+# Reasoning tokens are billed at the output rate (no separate CoT price).
+# `completion_tokens_details.reasoning_tokens` is a subset of completion_tokens.
+# https://api-docs.deepseek.com/quick_start/pricing/ (accessed 2026-07-31)
+# OpenAI: `thinking.type = enabled|disabled`, `reasoning_effort = low|high|max`.
+# Anthropic: `thinking.type`, `output_config.effort = low|high|max`; budget ignored.
+# Flash maps requested low→low (unlike Pro, which maps low→high). xhigh→high.
+# https://api-docs.deepseek.com/guides/thinking_mode/ (accessed 2026-08-02)
+base_model = "deepseek/deepseek-v4-flash-0731"
+name = "DeepSeek V4 Flash"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.14
+output = 0.28
+reasoning = 0.28
+cache_read = 0.0028
