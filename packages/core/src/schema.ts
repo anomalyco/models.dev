@@ -397,6 +397,7 @@ export const Provider = z
       const isOpenAI = data.npm === "@ai-sdk/openai";
       const isOpenAIcompatible = data.npm === "@ai-sdk/openai-compatible";
       const isOpenrouter = data.npm === "@openrouter/ai-sdk-provider";
+      const isMergeGateway = data.npm === "merge-gateway-ai-sdk-provider";
       const isAnthropic = data.npm === "@ai-sdk/anthropic";
       const isKiro = data.npm === "kiro-acp-ai-provider";
       const hasApi = data.api !== undefined;
@@ -406,6 +407,8 @@ export const Provider = z
         (isOpenAIcompatible && hasApi) ||
         // openrouter: must have api
         (isOpenrouter && hasApi) ||
+        // Merge Gateway: native provider with an OpenAI-compatible fallback
+        (isMergeGateway && hasApi) ||
         // anthropic: api optional (always allowed)
         isAnthropic ||
         // openai: api optional (always allowed)
@@ -416,6 +419,7 @@ export const Provider = z
         (!isOpenAI &&
           !isOpenAIcompatible &&
           !isOpenrouter &&
+          !isMergeGateway &&
           !isAnthropic &&
           !isKiro &&
           !hasApi)
@@ -423,7 +427,7 @@ export const Provider = z
     },
     {
       message:
-        "'api' is required for openai-compatible and openrouter, optional for anthropic, openai, and kiro, forbidden otherwise",
+        "'api' is required for openai-compatible, openrouter, and Merge Gateway; optional for anthropic, openai, and kiro; forbidden otherwise",
       path: ["api"],
     },
   );

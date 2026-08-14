@@ -1,14 +1,14 @@
 # Sources (accessed 2026-08-10):
-# Model overview (preview, ID deepseek-ocr-2, 8192 context, text+image):
-#   https://docs.privatemode.ai/models/overview/#deepseek-ocr-2
+# Model overview (preview): https://docs.privatemode.ai/models/overview/
+# Pricing (EUR): https://docs.privatemode.ai/pricing/
 # Added in v1.51.0: https://docs.privatemode.ai/release/#v1510
-# Pricing (EUR per 1M tokens): https://docs.privatemode.ai/pricing/
-# Cost converted EUR→USD at 1 EUR = 1.1554 USD (mid-market 2026-08-10).
-# EUR list: input €0.77 / output €1.27 / cached input €0.08 per MTok.
+# Upstream: https://huggingface.co/deepseek-ai/DeepSeek-OCR-2
+# Cost: EUR list prices converted at 1 EUR = 1.1555 USD (Frankfurter 2026-08-10).
+# EUR/MTok: input 0.77 / output 1.27 / cached input 0.08
 base_model = "deepseek/deepseek-ocr-2"
 status = "beta"
 
 [cost]
-input = 0.89
-output = 1.47
-cache_read = 0.09
+input = 0.8897
+output = 1.4675
+cache_read = 0.0924

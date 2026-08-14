@@ -1,14 +1,6 @@
 # Not included in subscription
-name = "Trinity Large Thinking"
-description = "Flagship model for demanding analysis, coding, and production agent workflows"
-family = "trinity"
-release_date = "2026-04-01"
-last_updated = "2026-04-01"
-attachment = false
-reasoning = true
-tool_call = true
+base_model = "arcee-ai/trinity-large-thinking"
 structured_output = false
-open_weights = true
 reasoning_options = []
 
 [cost]
@@ -20,7 +12,3 @@ cache_read = 0.125
 context = 262_144
 input = 262_144
 output = 80_000
-
-[modalities]
-input = ["text"]
-output = ["text"]

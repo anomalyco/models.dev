@@ -1,0 +1,15 @@
+# Baseten documents top-level reasoning_effort = none | minimal | low |
+# medium (default) | high | xhigh | max for DeepSeek V4 Pro.
+# https://docs.baseten.co/inference/model-apis/reasoning
+
+base_model = "deepseek/deepseek-v4-pro-0813"
+name = "Deepseek V4 Pro 0813"
+description = "Flagship DeepSeek model for coding, reasoning, and agentic work"
+reasoning_options = [{ type = "effort", values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"] }]
+
+[cost]
+input = 1.32
+output = 3.96
+
+[limit]
+output = 262_144

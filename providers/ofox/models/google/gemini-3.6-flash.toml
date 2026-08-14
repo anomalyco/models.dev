@@ -12,4 +12,9 @@ values = ["minimal", "low", "medium", "high"]
 input = 1.5
 output = 7.5
 cache_read = 0.15
+input_audio = 1.5
 cache_write = 0.083
+
+[provider]
+npm = "@ai-sdk/google"
+api = "https://api.ofox.ai/gemini/v1beta"

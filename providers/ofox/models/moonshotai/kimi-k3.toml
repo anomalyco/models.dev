@@ -1,10 +1,13 @@
+# OpenAI-compatible: `thinking.type = enabled|disabled` (verified: reasoning_tokens
+# 118 vs none on toggle, 2026-08-04). Graded effort is not available on this host:
+# `thinking.type = adaptive` is rejected outright ("invalid value for thinking type"),
+# and `output_config.effort` / `reasoning_effort` probed low-vs-max on hard prompts show
+# no graded reasoning_tokens effect, so only the toggle is declared.
 # Sources:
 # https://ofox.ai/models/moonshotai/kimi-k3 (pricing; accessed 2026-08-06)
 # https://platform.kimi.ai/docs/pricing/chat-k3 (official $3/$15/$0.30)
-# https://platform.kimi.ai/docs/guide/use-reasoning-effort (reasoning_effort = low|high|max; always on)
-# Effort: reasoning_effort = low|high|max
 base_model = "moonshotai/kimi-k3"
-reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]
+reasoning_options = [{ type = "toggle" }]
 
 [cost]
 input = 3

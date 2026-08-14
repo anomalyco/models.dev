@@ -4,7 +4,14 @@ import { isDeepStrictEqual } from "node:util";
 export const MAX_CREATED_MODELS = 10;
 export const MAX_DELETED_MODELS = 10;
 export const MAX_MODEL_CHURN = 15;
-const REVIEWED_REASONING_PROVIDERS = new Set(["openrouter"]);
+const REVIEWED_REASONING_PROVIDERS = new Set([
+  "kilo",
+  "llmgateway",
+  "merge-gateway",
+  "nano-gpt",
+  "openrouter",
+  "venice",
+]);
 
 export interface CatalogChange {
   status: "created" | "updated" | "deleted";

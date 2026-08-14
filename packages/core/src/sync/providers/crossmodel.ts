@@ -24,11 +24,13 @@ const API_ENDPOINT = process.env.CROSSMODEL_MODELS_URL ?? "https://www.crossmode
 
 const ReasoningCapability = z
   .object({
-    toggle: z.boolean().optional(),
-    effort: z.array(z.string()).optional(),
+    supported: z.boolean().optional(),
+    toggle: z.boolean().nullish().transform((value) => value ?? undefined),
+    effort: z.array(z.string()).nullish().transform((value) => value ?? undefined),
     budget_tokens: z
       .object({ min: z.number().optional(), max: z.number().optional() })
-      .optional(),
+      .nullish()
+      .transform((value) => value ?? undefined),
   })
   .passthrough();
 
@@ -173,7 +175,7 @@ function isReasoningEffort(value: string): value is ReasoningEffort {
 //   otherwise         -> toggle / effort / budget_tokens entries
 function reasoningOptions(model: CrossModelModel): SyncedModel["reasoning_options"] {
   const reasoning = model.capabilities?.reasoning;
-  if (reasoning === undefined) return undefined;
+  if (reasoning === undefined || reasoning.supported === false) return undefined;
   const options: NonNullable<SyncedModel["reasoning_options"]> = [];
   if (reasoning.toggle === true) options.push({ type: "toggle" });
   if (reasoning.effort !== undefined) {

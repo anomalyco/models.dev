@@ -1,21 +1,11 @@
 # Reasoning tokens are billed at the output rate (no separate CoT price).
 # `completion_tokens_details.reasoning_tokens` is a subset of completion_tokens.
-# https://api-docs.deepseek.com/quick_start/pricing/ (accessed 2026-07-31)
+# https://api-docs.deepseek.com/quick_start/pricing/ (accessed 2026-08-12)
+base_model = "deepseek/deepseek-v4-pro-0813"
 name = "DeepSeek V4 Pro"
-description = "Open MoE flagship with million-token context for coding and long agent runs"
 # OpenAI: `thinking.type = enabled|disabled`, `reasoning_effort = high|max`.
 # Anthropic: `thinking.type`, `output_config.effort = high|max`; budget ignored.
 # https://api-docs.deepseek.com/api/create-chat-completion (accessed 2026-06-25)
-family = "deepseek-thinking"
-release_date = "2026-04-24"
-last_updated = "2026-04-24"
-attachment = false
-reasoning = true
-temperature = true
-knowledge = "2025-05"
-tool_call = true
-structured_output = true
-open_weights = true
 
 [[reasoning_options]]
 type = "toggle"
@@ -32,11 +22,3 @@ input = 0.435
 output = 0.87
 reasoning = 0.87
 cache_read = 0.003625
-
-[limit]
-context = 1_000_000
-output = 384_000
-
-[modalities]
-input = ["text"]
-output = ["text"]

@@ -13,6 +13,7 @@ const modelMetadataFilesByProvider = new Map<string, Set<string>>();
 let allModelMetadataIDs: string[] | undefined;
 
 const CANONICAL_BASE_MODEL_OVERRIDES = {
+  "bytedance/dola-seed-2.0-code": "bytedance-seed/seed-2.0-code",
   "openai/gpt-5.6-luna-pro": "openai/gpt-5.6-luna",
   "openai/gpt-5.6-sol-pro": "openai/gpt-5.6-sol",
   "openai/gpt-5.6-terra-pro": "openai/gpt-5.6-terra",
@@ -23,6 +24,7 @@ const CANONICAL_BASE_MODEL_OVERRIDES = {
 const CANONICAL_PROVIDER_PREFIXES = {
   alibaba: { provider: "alibaba", metadata: "alibaba" },
   anthropic: { provider: "anthropic", metadata: "anthropic" },
+  "bytedance-seed": { provider: "bytedance-seed", metadata: "bytedance-seed" },
   cohere: { provider: "cohere", metadata: "cohere" },
   deepseek: { provider: "deepseek", metadata: "deepseek" },
   google: { provider: "google", metadata: "google" },
@@ -319,6 +321,9 @@ function openRouterReasoningOptions(reasoning: OpenRouterModel["reasoning"]): Sy
     : reasoning.supported_efforts;
 
   if (efforts !== undefined) {
+    if (!reasoning.mandatory && !efforts.includes("none")) {
+      options.push({ type: "toggle" });
+    }
     options.push({
       type: "effort",
       values: reasoning.mandatory ? efforts.filter((value) => value !== "none") : [...efforts],

@@ -1,14 +1,7 @@
+base_model = "nvidia/nemotron-3.5-lightning"
 name = "NVIDIA: Nemotron 3.5 Lightning (free)"
 description = "NVIDIA Nemotron 3.5 Lightning is an open mixture-of-experts model from NVIDIA, with 3B active parameters out of 30B total. It is suited for high-throughput agentic workloads and specialized tasks that... **Terms of service** For NVIDIA free endpoints (Super/Ultra/etc): Trial use only - do not submit personal or confidential data. Your use is logged for security purposes and to improve NVIDIA products and services. The logged session data for improvement purposes is not linked to your identity or any persistent identifier. For more information about our data processing practices, see our [Privacy Policy](https://www.nvidia.com/en-us/about-nvidia/privacy-policy/). By interacting with this endpoint, you consent to our collection, recording, and use of such information and the [NVIDIA API Trial Terms of Service](https://assets.ngc.nvidia.com/products/api-catalog/legal/NVIDIA%20API%20Trial%20Terms%20of%20Service.pdf)."
-family = "nemotron"
-release_date = "2026-08-11"
-last_updated = "2026-08-11"
-attachment = false
-reasoning = true
-temperature = true
-tool_call = true
 structured_output = false
-open_weights = false
 
 [[reasoning_options]]
 type = "effort"
@@ -21,7 +14,3 @@ output = 0
 [limit]
 context = 1_000_000
 output = 65_536
-
-[modalities]
-input = ["text"]
-output = ["text"]

@@ -1,15 +1,10 @@
+# Toggle: reasoning.enabled = true|false
+# https://openrouter.ai/docs/guides/best-practices/reasoning-tokens
+base_model = "nvidia/nemotron-3.5-lightning"
 name = "Nemotron 3.5 Lightning (free)"
 description = "Nemotron model for efficient reasoning, coding, and specialized AI agents"
-family = "nemotron"
-release_date = "2026-08-11"
-last_updated = "2026-08-11"
-attachment = false
-reasoning = true
-temperature = true
-tool_call = true
 structured_output = false
-open_weights = true
-reasoning_options = []
+reasoning_options = [{ type = "toggle" }]
 
 [cost]
 input = 0
@@ -18,7 +13,3 @@ output = 0
 [limit]
 context = 1_000_000
 output = 65_536
-
-[modalities]
-input = ["text"]
-output = ["text"]
