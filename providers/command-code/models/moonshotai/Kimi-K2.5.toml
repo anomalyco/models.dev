@@ -1,8 +1,7 @@
 # Effort: reasoning_effort = low|medium|high|xhigh|max (gateway-validated enum, 2026-08-14).
-# No reasoning emission observed in probes; side channel kept as relay-declared.
+# No reasoning emission observed on this host across probes — no side channel authored.
 base_model = "moonshotai/kimi-k2.5"
 reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
-interleaved = { field = "reasoning_content" }
 
 [cost]
 input = 0.6

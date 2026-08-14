@@ -1,5 +1,6 @@
-# Toggle: thinking.type = enabled|disabled (verified on V4 Flash, same surface, 2026-08-14).
-# Effort: reasoning_effort = low|medium|high|xhigh|max (gateway-validated enum).
+# Toggle: thinking.type = enabled|disabled (live-verified 2026-08-14: rtok 600→99 when disabled).
+# Effort: reasoning_effort = low|medium|high|xhigh|max — beyond the lab set, but every level
+# measured distinct on this host (rtok 205/142/24/257/600, 2026-08-14).
 # Emits reasoning via reasoning / reasoning_details.
 base_model = "deepseek/deepseek-v4-pro"
 name = "DeepSeek V4 Pro (latest)"

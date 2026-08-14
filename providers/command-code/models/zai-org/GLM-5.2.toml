@@ -1,6 +1,8 @@
-# Effort: reasoning_effort = low|medium|high|xhigh|max (live-probed 2026-08-14; low|xhigh accepted, host 400s minimal).
+# Effort: reasoning_effort = high|max (Zhipu maps low|medium→high, xhigh→max).
+# Accepted values low|medium|xhigh measured indistinguishable from high on this host
+# (identical saturated rtok, 2026-08-14) — aliases not authored.
 base_model = "zhipuai/glm-5.2"
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
+reasoning_options = [{ type = "effort", values = ["high", "max"] }]
 interleaved = { field = "reasoning_content" }
 
 [cost]

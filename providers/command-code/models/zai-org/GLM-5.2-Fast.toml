@@ -1,8 +1,9 @@
 # Fast serving tier of GLM-5.2 (same weights, low-latency serving).
-# Effort: reasoning_effort = low|medium|high|xhigh|max (gateway-validated enum, 2026-08-14).
+# Effort: reasoning_effort = high|max (Zhipu maps lower values to these; probes show no
+# distinct behavior for low|medium|xhigh on this host — aliases not authored).
 base_model = "zhipuai/glm-5.2"
 name = "GLM-5.2 Fast"
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
+reasoning_options = [{ type = "effort", values = ["high", "max"] }]
 interleaved = { field = "reasoning_content" }
 
 [cost]
