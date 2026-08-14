@@ -1,9 +1,8 @@
 # Served context from GET /provider/v1/models (accessed 2026-08-13): 200_000.
-# Effort: reasoning_effort = low|medium|high|xhigh|max (gateway-standard enum, 2026-08-14;
-# enable_thinking=false did not suppress reasoning, thinking_budget=48 ignored — falsified).
+# Model reasons but no verified caller control on this host (2026-08-14: enable_thinking/thinking_budget no-ops; effort low=828/high=742 non-monotonic; max 400-rejected).
 base_model = "alibaba/qwen3.6-plus"
 name = "Qwen 3.6 Plus"
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
+reasoning_options = []
 interleaved = { field = "reasoning_content" }
 
 [cost]

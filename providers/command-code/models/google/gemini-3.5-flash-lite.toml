@@ -1,6 +1,6 @@
-# Effort: reasoning_effort = low|medium|high|xhigh|max (live-probed 2026-08-14; host 400s minimal).
+# Effort: reasoning_effort = low|medium|high (lab baseline; minimal 400-rejected by gateway; xhigh|max not probed — plan-gated).
 base_model = "google/gemini-3.5-flash-lite"
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
 
 [cost]
 input = 0.3

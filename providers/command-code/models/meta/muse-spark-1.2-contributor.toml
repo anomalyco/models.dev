@@ -1,8 +1,8 @@
 # Contributor tier prompts and completions may be used to improve Meta's products.
-# Effort: reasoning_effort = low|medium|high|xhigh|max (live-probed 2026-08-14; host 400s minimal).
+# Effort: reasoning_effort = low|medium|high|xhigh (lab set; minimal 400-rejected; max dropped — high=max saturated in probes, 2026-08-14).
 base_model = "meta/muse-spark-1.2"
 name = "Muse Spark 1.2 Contributor"
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh"] }]
 
 [cost]
 input = 0.1

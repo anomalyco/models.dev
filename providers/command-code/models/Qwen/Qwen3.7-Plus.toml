@@ -1,9 +1,7 @@
-# Effort: reasoning_effort = low|medium|high|xhigh (live-probed 2026-08-14: gateway
-# 400s none|minimal, upstream 400s max, same as Qwen3.7-Max).
-# Emits reasoning via reasoning_content.
+# Model reasons but no verified caller control (2026-08-14: effort low=222/high=213 flat; max 400-rejected).
 base_model = "alibaba/qwen3.7-plus"
 name = "Qwen 3.7 Plus"
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh"] }]
+reasoning_options = []
 interleaved = { field = "reasoning_content" }
 
 [cost]

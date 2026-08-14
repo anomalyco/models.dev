@@ -1,9 +1,7 @@
-# Effort: reasoning_effort = low|medium|high|xhigh|max (live-probed 2026-08-14:
-# no reasoning at default, effort=max induces it — "always-on" falsified).
-# Emits reasoning via reasoning / reasoning_details.
+# Model reasons but no verified caller control (2026-08-14: effort low=261/high=187/max=211 non-monotonic).
 base_model = "minimax/MiniMax-M2.7"
 name = "MiniMax M2.7"
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
+reasoning_options = []
 interleaved = { field = "reasoning_details" }
 
 [cost]

@@ -1,9 +1,7 @@
-# Effort: reasoning_effort = low|medium|high|xhigh|max (live-probed 2026-08-14; effort=max accepted).
-# enable_thinking / thinking_budget are accepted but no-ops on this host.
-# Emits reasoning via reasoning / reasoning_details.
+# Model reasons but no verified caller control (2026-08-14: effort low=660/high=646/max=652 flat; lab toggle/budget no-ops).
 base_model = "alibaba/qwen3.6-max-preview"
 name = "Qwen 3.6 Max Preview"
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
+reasoning_options = []
 interleaved = { field = "reasoning_details" }
 
 [cost]

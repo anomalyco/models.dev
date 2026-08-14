@@ -1,5 +1,6 @@
-# Always-on reasoning; no caller control verified on this host (2026-08-14: no reasoning
-# tokens emitted at default or effort=max; chat_template_kwargs toggle unverifiable).
+# No reasoning emission observed on this host (2026-08-14: rtok=0, no reasoning_content,
+# no reasoning_details at default, effort=max, or chat_template_kwargs.enable_thinking=true).
+# Gateway validates the effort enum but it has no observable effect — no control authored.
 base_model = "nvidia/nemotron-3-ultra-550b-a55b"
 name = "Nemotron 3 Ultra"
 reasoning_options = []

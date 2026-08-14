@@ -1,9 +1,7 @@
-# Effort: reasoning_effort = low|medium|high|xhigh (live-probed 2026-08-14: gateway
-# 400s none|minimal, upstream 400s max — supports the Anthropic-style enum upstream).
-# Emits reasoning via reasoning_content.
+# Model reasons but no verified caller control (2026-08-14: effort low=1097/high=1084 flat; max 400-rejected).
 base_model = "alibaba/qwen3.7-max"
 name = "Qwen 3.7 Max"
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh"] }]
+reasoning_options = []
 interleaved = { field = "reasoning_content" }
 
 [cost]

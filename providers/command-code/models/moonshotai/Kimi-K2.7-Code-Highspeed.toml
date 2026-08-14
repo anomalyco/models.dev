@@ -1,9 +1,9 @@
-# Effort: reasoning_effort = low|medium|high|xhigh|max (live-probed 2026-08-14:
-# effort=max accepted — "always-on" falsified).
+# Model reasons but no verified graded control (2026-08-14: effort low=39/high=79/max=86
+# marginal; "always-on" falsified but levels too close to distinguish).
 # Emits reasoning via reasoning / reasoning_details.
 base_model = "moonshotai/kimi-k2.7-code-highspeed"
 name = "Kimi K2.7 Code HighSpeed"
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
+reasoning_options = []
 interleaved = { field = "reasoning_details" }
 
 [cost]

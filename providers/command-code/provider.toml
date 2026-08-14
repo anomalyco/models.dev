@@ -4,15 +4,15 @@
 # Request schema accepts text + image parts only — audio/file/document parts are
 # rejected, so models carry [modalities] overrides where the lab allows more.
 # Reasoning (live-probed via API key 2026-08-14): the gateway validates
-# reasoning_effort against its own per-upstream enum. Host-wide floor/cap:
-# "none"/"minimal" 400 everywhere. Most models: low|medium|high|xhigh|max.
-# Kimi K2.7 Code and Qwen 3.7 Max/Plus 400 on max upstream — usable set there is
-# low|medium|high|xhigh (their gateway error names none|minimal|… but the gateway
-# layer rejects none|minimal first, so those values are authored nowhere).
-# Lab-native knobs (enable_thinking, thinking_budget, chat_template_kwargs) are
-# silently ignored; thinking.type verified effective only on DeepSeek and MiMo.
-# Reasoning responses come back as reasoning_content (Qwen 3.6+, GLM-5.2,
-# Kimi K3/K2.7-Code) or reasoning + reasoning_details (most others).
+# reasoning_effort against its own per-upstream enum (low|medium|high|xhigh|max
+# on most models; none|minimal 400 everywhere). But gateway acceptance ≠ graded
+# control: per-level rtok probes showed many models have flat or erratic effort
+# response, so those are authored as [] or reverted to lab baselines. Only models
+# with verified distinct per-level behavior keep the expanded enum. Lab-native
+# knobs (enable_thinking, thinking_budget, chat_template_kwargs) are silently
+# ignored; thinking.type verified effective only on DeepSeek and MiMo.
+# Reasoning emission: reasoning_content (Qwen, GLM-5.2, Kimi K3/K2.7-Code) or
+# reasoning + reasoning_details (most others). See per-file comments for evidence.
 # Live model list: GET /provider/v1/models (accessed 2026-08-14) — serves a
 # time-varying subset; Pricing & Limits is the authoritative full catalog.
 # Pricing (USD/MTok): https://commandcode.ai/docs/resources/pricing-limits (accessed 2026-08-14)

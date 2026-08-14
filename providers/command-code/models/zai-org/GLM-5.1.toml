@@ -1,8 +1,6 @@
-# Effort: reasoning_effort = low|medium|high|xhigh|max (gateway-validated enum;
-# thinking.type toggle falsified on GLM-5, same surface, 2026-08-14).
-# Emits reasoning via reasoning / reasoning_details.
+# Model reasons but no verified caller control (2026-08-14: effort low=424/high=475/max=445 flat).
 base_model = "zhipuai/glm-5.1"
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
+reasoning_options = []
 interleaved = { field = "reasoning_details" }
 
 [cost]

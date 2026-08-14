@@ -1,11 +1,8 @@
-# Effort: reasoning_effort = low|medium|high|xhigh|max (live-probed 2026-08-14:
-# gateway-normalized — beyond first-party xAI's low|medium|high|xhigh set).
+# Effort: reasoning_effort = low|medium|high|xhigh (first-party xAI baseline; max dropped — flat in probes, 2026-08-14).
 # Served context from GET /provider/v1/models: 500_000 (probed 2026-08-14);
 # xAI's 200K context tier is not assumed to pass through.
-# Emits reasoning via reasoning / reasoning_details.
 base_model = "xai/grok-4.6"
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
-interleaved = { field = "reasoning_details" }
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh"] }]
 
 [cost]
 input = 2

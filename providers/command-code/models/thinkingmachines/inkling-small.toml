@@ -1,7 +1,6 @@
-# Effort: reasoning_effort = low|medium|high|xhigh|max (live-probed 2026-08-14; host 400s none|minimal).
-# Emits reasoning via reasoning / reasoning_details.
+# Effort: reasoning_effort = low|medium|high|xhigh (max dropped — 70/302/174 non-monotonic, 2026-08-14).
 base_model = "thinkingmachines/inkling-small"
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh"] }]
 interleaved = { field = "reasoning_details" }
 
 [cost]

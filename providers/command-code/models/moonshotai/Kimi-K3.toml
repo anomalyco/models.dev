@@ -1,5 +1,6 @@
-# Effort: output_config.effort = low|high|max (max live-verified 2026-08-14: reasoning_content
-# emitted). thinking.type toggle unverified on this host — dropped per review.
+# Effort: output_config.effort = low|high|max (live-verified 2026-08-14: reasoning_content
+# emitted, max produces rtok). thinking.type toggle is a no-op on this host — disabled,
+# enabled, and adaptive all produce equivalent rtok (250/165/175 vs baseline 238); not authored.
 base_model = "moonshotai/kimi-k3"
 reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]
 interleaved = { field = "reasoning_content" }

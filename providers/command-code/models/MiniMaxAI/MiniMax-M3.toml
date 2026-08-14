@@ -1,12 +1,9 @@
-# Effort: reasoning_effort = low|medium|high|xhigh|max (live-probed 2026-08-14:
-# effort=max induces reasoning; thinking.type / enable_thinking /
-# chat_template_kwargs.enable_thinking all accepted but no-ops).
-# Emits reasoning via reasoning / reasoning_details.
+# Model reasons but no verified caller control (2026-08-14: effort low=31/high=22/max=38 erratic; thinking.type/enable_thinking no-ops).
 # Permanent 50% off list price reflected below.
 # https://commandcode.ai/docs/resources/pricing-limits#minimax-m3-2x-usage
 base_model = "minimax/MiniMax-M3"
 name = "MiniMax M3"
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
+reasoning_options = []
 interleaved = { field = "reasoning_details" }
 
 [cost]

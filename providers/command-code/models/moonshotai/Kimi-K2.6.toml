@@ -1,7 +1,6 @@
-# Effort: reasoning_effort = low|medium|high|xhigh|max (live-probed 2026-08-14).
-# Emits reasoning via reasoning / reasoning_details.
+# Model reasons but no verified caller control (2026-08-14: effort low=371/high=395/max=238 non-monotonic).
 base_model = "moonshotai/kimi-k2.6"
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
+reasoning_options = []
 interleaved = { field = "reasoning_details" }
 
 [cost]
