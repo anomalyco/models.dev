@@ -1,15 +1,8 @@
-name = "Deepseek V4 Pro 0813"
-description = "Flagship DeepSeek model for coding, reasoning, and agentic work"
-family = "deepseek"
-release_date = "2026-08-13"
-last_updated = "2026-08-13"
-attachment = false
-reasoning = true
-temperature = true
-tool_call = true
-structured_output = true
-open_weights = true
-reasoning_options = []
+# Toggle: thinking.type = enabled|disabled.
+# Effort: reasoning_effort = high|max.
+base_model = "deepseek/deepseek-v4-pro-0813"
+
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["high", "max"] }]
 
 [cost]
 input = 1.32
@@ -19,7 +12,3 @@ cache_read = 0.044
 [limit]
 context = 1_048_576
 output = 1_048_576
-
-[modalities]
-input = ["text"]
-output = ["text"]
