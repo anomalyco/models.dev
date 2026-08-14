@@ -10,6 +10,7 @@ const REVIEWED_REASONING_PROVIDERS = new Set([
   "merge-gateway",
   "nano-gpt",
   "openrouter",
+  "venice",
 ]);
 
 export interface CatalogChange {
