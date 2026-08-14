@@ -1,11 +1,11 @@
-name = "GPT-5.2"
-description = "Reliable GPT generation for broad coding, writing, and tool-assisted product work"
-family = "gpt"
+name = "GPT-5.2 Chat"
+description = "Chat-tuned GPT model for conversational assistance, writing, and tool workflows"
+family = "gpt-codex"
 release_date = "2025-12-11"
 last_updated = "2025-12-11"
 attachment = true
 reasoning = true
-reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh"] }]
+reasoning_options = [{ type = "effort", values = ["medium"] }]
 temperature = false
 knowledge = "2025-08-31"
 tool_call = true
@@ -18,9 +18,8 @@ output = 14.00
 cache_read = 0.175
 
 [limit]
-context = 400_000
-input = 272_000
-output = 128_000
+context = 128_000
+output = 16_384
 
 [modalities]
 input = ["text", "image"]

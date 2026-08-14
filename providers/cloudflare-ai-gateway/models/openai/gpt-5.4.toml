@@ -1,5 +1,5 @@
 name = "GPT-5.4"
-description = "Frontier GPT model for professional reasoning, coding, and multimodal work"
+description = "Agent-ready GPT for coding and computer-use workflows at a lower cost"
 family = "gpt"
 release_date = "2026-03-05"
 last_updated = "2026-03-05"
@@ -13,9 +13,15 @@ structured_output = true
 open_weights = false
 
 [cost]
-input = 2.5
+input = 2.50
 output = 15.00
 cache_read = 0.25
+
+[[cost.tiers]]
+tier = { size = 272_000 }
+input = 5.00
+output = 22.50
+cache_read = 0.50
 
 [limit]
 context = 1_050_000
@@ -25,6 +31,10 @@ output = 128_000
 [modalities]
 input = ["text", "image", "pdf"]
 output = ["text"]
+
+[experimental.modes.fast]
+cost = { input = 5.00, output = 30.00, cache_read = 0.50 }
+provider = { body = { service_tier = "priority" } }
 
 [provider]
 npm = "ai-gateway-provider"

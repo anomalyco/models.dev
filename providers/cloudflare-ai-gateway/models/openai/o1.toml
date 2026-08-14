@@ -11,6 +11,7 @@ knowledge = "2023-09"
 tool_call = true
 structured_output = true
 open_weights = false
+status = "deprecated"
 
 [cost]
 input = 15.00
@@ -22,5 +23,5 @@ context = 200_000
 output = 100_000
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image", "pdf"]
 output = ["text"]
