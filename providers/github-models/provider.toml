@@ -1,9 +1,0 @@
-name = "GitHub Models"
-# Reasoning HTTP format (accessed 2026-06-25): POST /inference/chat/completions.
-# GitHub's request schema has no toggle, effort, or budget property; therefore
-# the raw reasoning-control format for listed reasoning models is undocumented.
-# https://docs.github.com/en/rest/models/inference
-env = ["GITHUB_TOKEN"]
-npm = "@ai-sdk/openai-compatible"
-doc = "https://docs.github.com/en/github-models"
-api = "https://models.github.ai/inference"

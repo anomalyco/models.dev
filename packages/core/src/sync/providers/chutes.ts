@@ -134,9 +134,11 @@ export function buildChutesModel(
     last_updated: existing?.last_updated ?? today,
     attachment,
     reasoning,
-    // Chutes' /v1/models advertises `reasoning` as a capability but exposes no parameter
-    // to toggle or set its effort, so there is no provider evidence for a reasoning option.
-    reasoning_options: [],
+    // Chutes' /v1/models advertises `reasoning` as a capability but lists no sampling
+    // parameter for it, so the endpoint alone cannot describe the control. The real
+    // control is `chat_template_kwargs`, which is hand-authored per model. Leaving this
+    // field unset lets preserveReasoningOptions keep those authored options and default
+    // only new, unannotated reasoners to an empty list.
     temperature,
     tool_call: toolCall,
     structured_output: structuredOutput ? true : undefined,

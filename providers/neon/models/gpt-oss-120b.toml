@@ -4,3 +4,8 @@ reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
 [cost]
 input = 0.072
 output = 0.28
+
+# The Neon gateway caps output below the upstream entry: `max_tokens` one above
+# 25_000 returns 400. Measured at the boundary 2026-08-08. `context` is inherited.
+[limit]
+output = 25_000

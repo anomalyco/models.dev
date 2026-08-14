@@ -19,3 +19,135 @@ output = 128_000
 [modalities]
 input = ["text", "image"]
 output = ["text"]
+
+[[benchmarks]]
+name = "SWE-Bench Pro"
+score = 54.4
+metric = "resolve rate"
+variant = "reasoning effort xhigh"
+source = "https://openai.com/index/introducing-gpt-5-4-mini-and-nano/"
+date = "2026-03-17"
+
+[[benchmarks]]
+name = "Terminal-Bench"
+score = 60.0
+metric = "accuracy"
+variant = "reasoning effort xhigh"
+version = "2.0"
+source = "https://openai.com/index/introducing-gpt-5-4-mini-and-nano/"
+date = "2026-03-17"
+
+[[benchmarks]]
+name = "MCP Atlas"
+score = 57.7
+metric = "score"
+variant = "reasoning effort xhigh"
+source = "https://openai.com/index/introducing-gpt-5-4-mini-and-nano/"
+date = "2026-03-17"
+
+[[benchmarks]]
+name = "Toolathlon"
+score = 42.9
+metric = "score"
+variant = "reasoning effort xhigh"
+source = "https://openai.com/index/introducing-gpt-5-4-mini-and-nano/"
+date = "2026-03-17"
+
+[[benchmarks]]
+name = "τ²-Bench Telecom"
+score = 93.4
+metric = "accuracy"
+variant = "reasoning effort xhigh"
+source = "https://openai.com/index/introducing-gpt-5-4-mini-and-nano/"
+date = "2026-03-17"
+
+[[benchmarks]]
+name = "GPQA Diamond"
+score = 88.0
+metric = "accuracy"
+variant = "reasoning effort xhigh"
+source = "https://openai.com/index/introducing-gpt-5-4-mini-and-nano/"
+date = "2026-03-17"
+
+[[benchmarks]]
+name = "Humanity's Last Exam"
+score = 41.5
+metric = "accuracy"
+variant = "with tools"
+source = "https://openai.com/index/introducing-gpt-5-4-mini-and-nano/"
+date = "2026-03-17"
+
+[[benchmarks]]
+name = "Humanity's Last Exam"
+score = 28.2
+metric = "accuracy"
+variant = "without tools"
+source = "https://openai.com/index/introducing-gpt-5-4-mini-and-nano/"
+date = "2026-03-17"
+
+[[benchmarks]]
+name = "OSWorld-Verified"
+score = 72.1
+metric = "success rate"
+variant = "reasoning effort xhigh"
+source = "https://openai.com/index/introducing-gpt-5-4-mini-and-nano/"
+date = "2026-03-17"
+
+[[benchmarks]]
+name = "MMMU Pro"
+score = 78.0
+metric = "accuracy"
+variant = "with Python"
+source = "https://openai.com/index/introducing-gpt-5-4-mini-and-nano/"
+date = "2026-03-17"
+
+[[benchmarks]]
+name = "MMMU Pro"
+score = 76.6
+metric = "accuracy"
+variant = "without tools"
+source = "https://openai.com/index/introducing-gpt-5-4-mini-and-nano/"
+date = "2026-03-17"
+
+[[benchmarks]]
+name = "OmniDocBench"
+score = 0.1263
+metric = "overall edit distance"
+variant = "reasoning effort none"
+version = "1.5"
+source = "https://openai.com/index/introducing-gpt-5-4-mini-and-nano/"
+date = "2026-03-17"
+
+[[benchmarks]]
+name = "OpenAI MRCR"
+score = 47.7
+metric = "accuracy"
+variant = "8-needle, 64K-128K"
+version = "v2"
+source = "https://openai.com/index/introducing-gpt-5-4-mini-and-nano/"
+date = "2026-03-17"
+
+[[benchmarks]]
+name = "OpenAI MRCR"
+score = 33.6
+metric = "accuracy"
+variant = "8-needle, 128K-256K"
+version = "v2"
+source = "https://openai.com/index/introducing-gpt-5-4-mini-and-nano/"
+date = "2026-03-17"
+
+[[benchmarks]]
+name = "Graphwalks"
+score = 76.3
+metric = "accuracy"
+variant = "BFS, 0-128K"
+source = "https://openai.com/index/introducing-gpt-5-4-mini-and-nano/"
+date = "2026-03-17"
+
+[[benchmarks]]
+name = "Graphwalks"
+score = 71.5
+metric = "accuracy"
+variant = "parents, 0-128K"
+source = "https://openai.com/index/introducing-gpt-5-4-mini-and-nano/"
+date = "2026-03-17"

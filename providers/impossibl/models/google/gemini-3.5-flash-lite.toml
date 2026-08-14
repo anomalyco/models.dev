@@ -1,0 +1,11 @@
+# Pricing: https://api.impossibl.com/v1/models
+base_model = "google/gemini-3.5-flash-lite"
+
+[cost]
+input = 0.30
+output = 2.50
+cache_read = 0.03
+
+[[reasoning_options]]
+type = "effort" # API: {"generationConfig":{"thinkingConfig":{"thinkingLevel":"low"}}}
+values = ["minimal", "low", "medium", "high"]

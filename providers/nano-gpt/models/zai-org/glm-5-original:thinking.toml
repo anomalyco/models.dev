@@ -1,14 +1,15 @@
 # Not included in subscription
 name = "GLM 5 Original Thinking"
 description = "Flagship GLM model for hybrid reasoning, coding, and agentic engineering"
+family = "glm"
 release_date = "2026-02-11"
 last_updated = "2026-02-11"
 attachment = false
 reasoning = true
-reasoning_options = []
 tool_call = true
 structured_output = true
-open_weights = false
+open_weights = true
+reasoning_options = []
 
 [cost]
 input = 1
@@ -16,9 +17,9 @@ output = 3.2
 cache_read = 0.2
 
 [limit]
-context = 200000
-input = 200000
-output = 128000
+context = 200_000
+input = 200_000
+output = 128_000
 
 [modalities]
 input = ["text"]

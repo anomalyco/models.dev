@@ -1,0 +1,40 @@
+# Sources:
+# - https://tokenfactory.nebius.com/api/public/models_info (pricing, 131K context)
+# - https://tokenfactory.nebius.com/model-catalog.md
+# Accessed 2026-08-09.
+# Nebius truncates the 1M-context base model to a 131K window.
+# max_tokens has no documented ceiling other than the context window, so output
+# is set to the context size (same as the other Nebius base_model entries).
+# https://docs.tokenfactory.nebius.com/api-reference/inference/create-chat-completion
+# Effort: reasoning_effort. Verified live against
+# api.tokenfactory.nebius.com/v1/chat/completions on 2026-08-09, temperature 0,
+# two prompts. The gateway accepts all seven documented values, but only four
+# distinct behaviours exist on this model, and they line up with lab Flash's
+# low/high/max (https://api-docs.deepseek.com/guides/thinking_mode/) plus a
+# Nebius-side off switch:
+#   none                  -> reasoning_tokens 0, no reasoning_content
+#   minimal = low = medium -> identical output (677 / 133 reasoning tokens)
+#   high = xhigh          -> identical output (490 / 138 reasoning tokens)
+#   max                   -> distinct        (1102 / 154 reasoning tokens)
+# No toggle: `none` is the off switch, and DeepSeek's native
+# `thinking.type = disabled` is accepted but ignored here (reasoning_content
+# still comes back), so it is not a real caller control on this host.
+# Nebius has no discounted prompt-cache tier for this model: models_info exposes
+# no cache fields, and cached and fresh input tokens are billed identically at the
+# full input rate. cache_read is therefore set equal to input rather than left
+# unset, which downstream consumers (e.g. opencode) treat as $0/M. Same reasoning
+# as PR #3956 for Kimi-K3.
+base_model = "deepseek/deepseek-v4-flash"
+reasoning_options = [{ type = "effort", values = ["none", "low", "high", "max"] }]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.14
+output = 0.28
+cache_read = 0.14
+
+[limit]
+context = 131_072
+output = 131_072

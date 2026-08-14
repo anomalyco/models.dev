@@ -1,5 +1,6 @@
 name = "GLM 4 Plus 0111"
 description = "Compact GPT model for low-latency assistance and high-volume workloads"
+family = "glm"
 release_date = "2025-02-19"
 last_updated = "2025-02-19"
 attachment = false
@@ -11,6 +12,7 @@ open_weights = false
 [cost]
 input = 9.996
 output = 9.996
+cache_read = 4.998
 
 [limit]
 context = 128_000

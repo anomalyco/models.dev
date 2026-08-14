@@ -1,0 +1,14 @@
+base_model = "google/gemini-2.5-flash"
+reasoning_options = []
+
+[cost]
+input = 0.299
+output = 2.491
+cache_read = 0.029
+cache_write = 0.097
+
+[limit]
+output = 1_048_576
+
+[modalities]
+input = ["text", "image", "audio"]

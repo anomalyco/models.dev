@@ -1,5 +1,6 @@
 name = "Baichuan 4 Turbo"
 description = "Compact GPT model for low-latency assistance and high-volume workloads"
+family = "baichuan"
 release_date = "2025-08-19"
 last_updated = "2025-08-19"
 attachment = false
@@ -11,6 +12,7 @@ open_weights = false
 [cost]
 input = 2.42
 output = 2.42
+cache_read = 1.21
 
 [limit]
 context = 128_000

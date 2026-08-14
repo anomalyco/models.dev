@@ -1,5 +1,13 @@
+# Source: https://api-gateway.merge.dev/v1/models?model=mistral%2Fmistral-medium-2505 (accessed 2026-07-21)
+
 base_model = "mistral/mistral-medium-2505"
+structured_output = true
 
 [cost]
 input = 0.4
 output = 2
+cache_read = 0.04
+
+[limit]
+context = 128_000
+output = 128_000

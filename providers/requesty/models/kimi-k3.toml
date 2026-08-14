@@ -1,0 +1,16 @@
+base_model = "moonshotai/kimi-k3"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "max"]
+
+[[reasoning_options]]
+type = "budget_tokens"
+
+[cost]
+input = 2.25
+output = 11.25
+cache_read = 0.225
+
+[limit]
+output = 262_144

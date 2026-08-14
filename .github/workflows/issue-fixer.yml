@@ -18,9 +18,7 @@ jobs:
     if: >-
       github.repository == 'anomalyco/models.dev'
       && !contains(github.event.issue.labels.*.name, 'provider:openai')
-      && !contains(github.event.issue.labels.*.name, 'provider:pioneer')
       && github.event.client_payload.provider != 'openai'
-      && github.event.client_payload.provider != 'pioneer'
     runs-on: ubuntu-latest
     env:
       GH_TOKEN: ${{ github.token }}

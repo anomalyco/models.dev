@@ -1,0 +1,23 @@
+name = "qwen3-30b-a3b-instruct-2507"
+description = "Qwen3-30B-A3B-Instruct-2507 is an advanced Mixture-of-Experts model optimized for reasoning, coding, and multilingual instruction following."
+release_date = "2025-07-28"
+last_updated = "2025-07-28"
+attachment = false
+reasoning = true
+temperature = false
+tool_call = true
+structured_output = true
+open_weights = false
+reasoning_options = []
+
+[cost]
+input = 0.099
+output = 0.299
+
+[limit]
+context = 262_000
+output = 262_000
+
+[modalities]
+input = ["text"]
+output = ["text"]

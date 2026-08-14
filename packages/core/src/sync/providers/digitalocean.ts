@@ -168,9 +168,11 @@ export const digitalocean = {
         || outputLimit <= 0
       )
     ) return undefined;
-    const baseModel = existing === undefined
-      ? resolveDigitalOceanBaseModel(model.id)
-      : existing.base_model;
+    // Only auto-resolve base_model for newly created files. Existing full
+    // definitions stay hand-authored unless they already declare base_model.
+    const baseModel = existing !== undefined
+      ? existing.base_model
+      : resolveDigitalOceanBaseModel(model.id);
     return {
       id: model.id,
       model: buildDigitalOceanModel(model, existing, baseModel),
@@ -341,6 +343,13 @@ function normalizeModalities(values: string[], fallback: Modality[]): Modality[]
   return [...new Set(normalized.length > 0 ? normalized : fallback)];
 }
 
+function normalizeEffortToken(value: string): string {
+  const normalized = value.trim().toLowerCase().replaceAll("_", "-");
+  if (normalized === "x-high" || normalized === "xhigh") return "xhigh";
+  if (normalized === "null") return "null";
+  return normalized;
+}
+
 function number(value: string | number | undefined) {
   if (value === undefined) return undefined;
   const parsed = typeof value === "number" ? value : Number.parseInt(value, 10);
@@ -360,12 +369,23 @@ function reasoningOptionsFor(
   model: DigitalOceanSourceModel,
   existing: ExistingModel | undefined,
 ): ExistingModel["reasoning_options"] {
-  if (model.reasoning_efforts === undefined) return existing?.reasoning_options;
-  const values = model.reasoning_efforts
-    .map((value) => value === "null" ? null : value)
-    .filter(isReasoningEffort);
+  if (model.reasoning_efforts === undefined || model.reasoning_efforts.length === 0) {
+    return existing?.reasoning_options;
+  }
+  const remoteValues = reasoningEfforts(model);
   const preserved = existing?.reasoning_options?.filter((option) => option.type !== "effort") ?? [];
-  return values.length > 0 ? [...preserved, { type: "effort", values }] : preserved;
+  return remoteValues.length > 0
+    ? [...preserved, { type: "effort", values: remoteValues }]
+    : existing?.reasoning_options;
+}
+
+function reasoningEfforts(model: DigitalOceanSourceModel) {
+  return (model.reasoning_efforts ?? [])
+    .map((value) => {
+      const normalized = normalizeEffortToken(value);
+      return normalized === "null" ? null : normalized;
+    })
+    .filter(isReasoningEffort);
 }
 
 function isReasoningEffort(value: string | null): value is ReasoningEffort {
@@ -384,9 +404,10 @@ function status(
   lifecycleStatus: string,
   existing: ExistingModel["status"],
 ): ExistingModel["status"] {
-  const lifecycle = lifecycleStatus.toLowerCase().replaceAll("_", "-");
+  const lifecycle = lifecycleStatus.trim().toLowerCase().replaceAll("_", "-");
+  if (lifecycle.length === 0) return existing;
   if (lifecycle === "deprecated" || lifecycle === "end-of-life") return "deprecated";
-  if (lifecycle === "public-preview") return "beta";
+  if (lifecycle === "public-preview" || lifecycle === "preview") return "beta";
   return existing === "deprecated" || existing === "beta" ? undefined : existing;
 }
 
@@ -430,16 +451,14 @@ function cost(model: DigitalOceanSourceModel, existing: ExistingModel | undefine
 export function buildDigitalOceanModel(
   model: DigitalOceanSourceModel,
   existing: ExistingModel | undefined,
-  baseModel = existing === undefined ? resolveDigitalOceanBaseModel(model.id) : existing.base_model,
+  baseModel = existing !== undefined
+    ? existing.base_model
+    : resolveDigitalOceanBaseModel(model.id),
 ): SyncedModel {
-  const input = normalizeModalities(
-    model.modalities?.input ?? [],
-    existing?.modalities?.input ?? ["text"],
-  );
-  const output = normalizeModalities(
-    model.modalities?.output ?? [],
-    existing?.modalities?.output ?? ["text"],
-  );
+  const remoteInput = normalizeModalities(model.modalities?.input ?? [], []);
+  const remoteOutput = normalizeModalities(model.modalities?.output ?? [], []);
+  const input = remoteInput.length > 0 ? remoteInput : existing?.modalities?.input ?? ["text"];
+  const output = remoteOutput.length > 0 ? remoteOutput : existing?.modalities?.output ?? ["text"];
   const context = number(model.context_window) ?? existing?.limit?.context ?? 0;
   const maxTokens = number(model.max_output_tokens ?? undefined);
   const limit = {
@@ -448,13 +467,19 @@ export function buildDigitalOceanModel(
     output: maxTokens ?? existing?.limit?.output ?? 0,
   };
   const textOutput = output.includes("text") && !output.includes("image") && !output.includes("video");
-  const remoteReasoning = textOutput
-    && ((model.thinking ?? false) || (model.reasoning_efforts?.length ?? 0) > 0);
-  const providerReasoning = remoteReasoning ? true : existing?.reasoning;
+  const remoteEfforts = reasoningEfforts(model);
+  const providerReasoning = !textOutput
+    ? existing?.reasoning
+    : model.thinking === true || remoteEfforts.length > 0
+    ? true
+    : model.thinking === false
+    ? false
+    : existing?.reasoning;
   const reasoning = providerReasoning ?? false;
-  const reasoningOptions = reasoning ? reasoningOptionsFor(model, existing) : undefined;
+  const reasoningOptions = reasoning === true ? reasoningOptionsFor(model, existing) : undefined;
   const modelStatus = status(model.lifecycle_status, existing?.status);
   const releaseDate = existing?.release_date ?? model.created_at?.slice(0, 10) ?? new Date().toISOString().slice(0, 10);
+  const attachment = input.some((value) => value !== "text");
   const values: Partial<SyncedFullModel> = {
     name: model.name,
     description: existing?.description ?? describeModel({
@@ -471,7 +496,7 @@ export function buildDigitalOceanModel(
     family: existing?.family ?? inferFamily(model.id, model.name),
     release_date: releaseDate,
     last_updated: existing?.last_updated ?? releaseDate,
-    attachment: existing?.attachment ?? input.some((value) => value !== "text"),
+    attachment,
     reasoning,
     reasoning_options: reasoningOptions,
     temperature: existing?.temperature ?? true,
@@ -492,7 +517,8 @@ export function buildDigitalOceanModel(
     return factorBaseModel(baseModel, {
       name: model.name,
       description: existing?.description,
-      attachment: input.some((value) => value !== "text"),
+      attachment,
+      modalities: { input, output },
       reasoning: providerReasoning,
       reasoning_options: reasoningOptions,
       temperature: existing?.temperature,
@@ -502,7 +528,6 @@ export function buildDigitalOceanModel(
       interleaved: existing?.interleaved,
       cost: cost(model, existing),
       limit,
-      modalities: { input, output },
       provider: existing?.provider,
       experimental: existing?.experimental,
     }, limit, existing?.base_model_omit);
@@ -537,15 +562,30 @@ export function resolveDigitalOceanBaseModel(id: string) {
   if (id.startsWith("glm-")) candidates.push(`zai/${id}`);
   if (id.startsWith("kimi-")) candidates.push(`moonshotai/${id}`);
   if (id.startsWith("minimax-")) candidates.push(`minimax/${id}`);
+  if (id.startsWith("mimo-")) {
+    const normalized = id.replace(/^mimo-v(\d+)-(\d+)/, "mimo-v$1.$2");
+    candidates.push(`xiaomi/${id}`);
+    candidates.push(`xiaomi/${normalized}`);
+  }
   if (id.startsWith("nvidia-")) candidates.push(`nvidia/${id.slice("nvidia-".length)}`);
   if (id.startsWith("alibaba-")) candidates.push(`qwen/${id.slice("alibaba-".length)}`);
   if (id.startsWith("qwen")) candidates.push(`qwen/${id}`);
   if (id.startsWith("llama")) candidates.push(`meta/${id}`);
   if (id.startsWith("mistral") || id.startsWith("ministral")) candidates.push(`mistralai/${id}`);
+  if (id.startsWith("gemma")) candidates.push(`google/${id}`);
 
-  const anthropic = id.match(/^anthropic-claude-(\d+(?:\.\d+)?)-(opus|sonnet|haiku)$/);
-  if (anthropic !== null) {
-    candidates.push(`anthropic/claude-${anthropic[2]}-${anthropic[1]}`);
+  // anthropic-claude-5-sonnet → anthropic/claude-sonnet-5
+  const anthropicSwapped = id.match(/^anthropic-claude-(\d+(?:\.\d+)?)-(opus|sonnet|haiku)$/);
+  if (anthropicSwapped !== null) {
+    candidates.push(`anthropic/claude-${anthropicSwapped[2]}-${anthropicSwapped[1]}`);
+  }
+  // anthropic-claude-opus-5 → anthropic/claude-opus-5
+  // also normalize dotted versions: anthropic-claude-opus-4.6 → anthropic/claude-opus-4-6
+  const anthropicFamily = id.match(/^anthropic-claude-(opus|sonnet|haiku)-(\d+(?:\.\d+)?)$/);
+  if (anthropicFamily !== null) {
+    const version = anthropicFamily[2].replaceAll(".", "-");
+    candidates.push(`anthropic/claude-${anthropicFamily[1]}-${anthropicFamily[2]}`);
+    candidates.push(`anthropic/claude-${anthropicFamily[1]}-${version}`);
   }
   if (id.startsWith("anthropic-")) candidates.push(`anthropic/${id.slice("anthropic-".length)}`);
 

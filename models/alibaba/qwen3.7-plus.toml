@@ -3,7 +3,7 @@ description = "Multimodal Qwen workhorse for long-context agents, visual inputs,
 family = "qwen"
 release_date = "2026-06-02"
 last_updated = "2026-06-02"
-attachment = false
+attachment = true
 reasoning = true
 temperature = true
 tool_call = true
@@ -15,5 +15,5 @@ context = 1_000_000
 output = 64_000
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image", "video"]
 output = ["text"]

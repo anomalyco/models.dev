@@ -1,20 +1,22 @@
 name = "Qwen: Qwen2.5 7B Instruct"
 description = "Qwen instruction model for multilingual chat, reasoning, and tool use"
-release_date = "2024-09"
-last_updated = "2025-04-16"
+family = "qwen"
+release_date = "2024-10-16"
+last_updated = "2024-10-16"
 attachment = false
 reasoning = false
 temperature = true
 tool_call = true
-open_weights = true
+structured_output = true
+open_weights = false
 
 [cost]
-input = 0.04
-output = 0.1
+input = 0.1
+output = 0.2
 
 [limit]
-context = 32768
-output = 6554
+context = 32_768
+output = 32_768
 
 [modalities]
 input = ["text"]

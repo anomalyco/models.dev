@@ -1,0 +1,26 @@
+# Cost: converted from GreenPT's EUR list price at 1.14 USD/EUR (rate captured 2026-07-24).
+# Sources: https://docs.greenpt.ai/pricing and https://docs.greenpt.ai/model-cards
+name = "Gemma 3 27B"
+description = "Google Gemma 3 multimodal model for chat, reasoning, and image understanding"
+family = "gemma"
+release_date = "2025-03-12"
+last_updated = "2025-03-12"
+attachment = true
+reasoning = false
+temperature = true
+knowledge = "2024-08"
+tool_call = true
+structured_output = true
+open_weights = true
+
+[cost]
+input = 0.342
+output = 0.684
+
+[limit]
+context = 40_000
+output = 8_192
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

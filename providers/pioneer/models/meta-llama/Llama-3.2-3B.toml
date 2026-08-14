@@ -1,0 +1,10 @@
+base_model = "meta/llama-3.2-3b"
+
+[cost]
+input = 0.1
+output = 0.1
+cache_read = 0.1
+cache_write = 0.1
+
+[limit]
+output = 131_072

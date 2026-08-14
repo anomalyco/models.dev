@@ -1,0 +1,13 @@
+# Sources:
+# - https://ofox.ai/models/bailian/qwen3.6-max-preview (Ofox model page: $2/$12 per 1M, cache read $0.2, cache write $2; 256K/64K; reasoning)
+# - https://ofox.ai/en/models (catalog listing for bailian/qwen3.6-max-preview)
+# Toggle: enable_thinking true|false (Alibaba Bailian chat path; matches lab + ofox bailian/qwen3.7-max)
+# Budget: thinking_budget
+base_model = "alibaba/qwen3.6-max-preview"
+reasoning_options = [{ type = "toggle" }, { type = "budget_tokens" }]
+
+[cost]
+input = 2
+output = 12
+cache_read = 0.2
+cache_write = 2

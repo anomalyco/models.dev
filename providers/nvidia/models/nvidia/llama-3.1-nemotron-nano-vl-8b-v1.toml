@@ -1,0 +1,27 @@
+# Sources (accessed 2026-07-25):
+# - https://docs.api.nvidia.com/nim/reference/nvidia-llama-3_1-nemotron-nano-vl-8b-v1-infer
+# - https://integrate.api.nvidia.com/v1/models id: nvidia/llama-3.1-nemotron-nano-vl-8b-v1
+# No first-party NIM reasoning ON/OFF control found for this VLM endpoint.
+name = "Llama 3.1 Nemotron Nano VL 8B v1"
+description = "Nemotron multimodal model for visual reasoning and agentic AI workflows"
+family = "nemotron"
+release_date = "2025-04-10"
+last_updated = "2025-04-10"
+attachment = true
+reasoning = true
+reasoning_options = []
+temperature = true
+tool_call = true
+open_weights = true
+
+[cost]
+input = 0.0
+output = 0.0
+
+[limit]
+context = 32_768
+output = 16_384
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

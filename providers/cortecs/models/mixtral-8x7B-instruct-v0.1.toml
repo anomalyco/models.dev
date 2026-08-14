@@ -2,17 +2,18 @@ name = "Mixtral 8x7B Instruct v0.1"
 description = "Reasoning model for deliberate analysis, multi-step problem solving, and tool use"
 release_date = "2023-12-11"
 last_updated = "2023-12-11"
-knowledge = "2023-09"
 attachment = false
 reasoning = true
-reasoning_options = []
-tool_call = false
 temperature = true
+tool_call = false
+structured_output = true
+knowledge = "2023-09"
 open_weights = true
+reasoning_options = []
 
 [cost]
-input = 0.438
-output = 0.68
+input = 0.488
+output = 0.758
 
 [limit]
 context = 32_000

@@ -1,0 +1,23 @@
+name = "Llama-3.1-8B-Instruct"
+description = "Compact open Llama model for lightweight chat, drafting, and self-hosting"
+family = "llama"
+release_date = "2024-07-23"
+last_updated = "2024-07-23"
+attachment = false
+reasoning = false
+temperature = true
+tool_call = true
+knowledge = "2023-12"
+open_weights = true
+
+[limit]
+context = 128_000
+output = 4_096
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/meta-llama/Llama-3.1-8B-Instruct"

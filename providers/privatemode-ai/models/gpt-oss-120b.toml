@@ -1,14 +1,18 @@
+# Sources (accessed 2026-08-10):
+# Model overview: https://docs.privatemode.ai/models/overview/
+# Pricing (EUR): https://docs.privatemode.ai/pricing/
+# Upstream: https://huggingface.co/openai/gpt-oss-120b
+# Cost: EUR list prices converted at 1 EUR = 1.1555 USD (Frankfurter 2026-08-10).
+# EUR/MTok: input 0.43 / output 1.70 / cached input 0.04
+# Effort: OpenAI-style reasoning_effort on this host (low|medium|high).
 base_model = "openai/gpt-oss-120b"
 name = "gpt-oss-120b"
-release_date = "2025-08-04"
-last_updated = "2025-08-14"
-knowledge = "2025-08"
 reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
 
 [cost]
-input = 0.00
-output = 0.00
+input = 0.4969
+output = 1.9644
+cache_read = 0.0462
 
 [limit]
 context = 128_000
-output = 128_000

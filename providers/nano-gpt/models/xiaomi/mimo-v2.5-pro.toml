@@ -1,25 +1,17 @@
 # Included in subscription
+base_model = "xiaomi/mimo-v2.5-pro"
 name = "MiMo V2.5 Pro"
-description = "MiMo pro model for strong multimodal reasoning and agent execution"
-release_date = "2026-04-22"
-last_updated = "2026-04-22"
-attachment = false
-reasoning = true
-reasoning_options = [{ type = "toggle" }]
-tool_call = true
 structured_output = true
-open_weights = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "high"]
 
 [cost]
 input = 0.435
 output = 0.87
 cache_read = 0.0036
+cache_write = 0
 
 [limit]
-context = 1048576
-input = 1048576
-output = 131072
-
-[modalities]
-input = ["text"]
-output = ["text"]
+input = 1_048_576

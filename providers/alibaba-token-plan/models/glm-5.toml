@@ -1,5 +1,8 @@
 base_model = "zhipuai/glm-5"
+# structured_output: the Token Plan gateway accepts response_format json_schema
+# (probed 2026-07-24) even though the base model and console report none.
 open_weights = false
+structured_output = true
 reasoning_options = [{ type = "toggle" }]
 
 [interleaved]

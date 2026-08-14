@@ -89,7 +89,7 @@ const Cost = z.object({
     .number()
     .min(0, "Audio output price cannot be negative")
     .optional(),
-});
+}).strict();
 
 const CostTier = Cost.extend({
   tier: z
@@ -103,16 +103,48 @@ const CostTier = Cost.extend({
 const AuthoredCost = Cost.extend({
   context_over_200k: z.never().optional(),
   tiers: z.array(CostTier).optional(),
-});
+}).strict();
 
 const OutputCost = Cost.extend({
   context_over_200k: Cost.optional(),
   tiers: z.array(CostTier).optional(),
-});
+}).strict();
 
-const DateString = z.string().regex(/^\d{4}-\d{2}(-\d{2})?$/, {
-  message: "Must be in YYYY-MM or YYYY-MM-DD format",
-});
+const DateString = z
+  .string()
+  .regex(/^\d{4}-\d{2}(-\d{2})?$/, {
+    message: "Must be in YYYY-MM or YYYY-MM-DD format",
+  })
+  .refine(
+    (value) => {
+      const [year, month, day] = value.split("-").map(Number);
+      if (month === undefined || month < 1 || month > 12) return false;
+      if (day === undefined) return true;
+
+      const leapYear =
+        year !== undefined &&
+        year % 4 === 0 &&
+        (year % 100 !== 0 || year % 400 === 0);
+      const daysInMonth = [
+        31,
+        leapYear ? 29 : 28,
+        31,
+        30,
+        31,
+        30,
+        31,
+        31,
+        30,
+        31,
+        30,
+        31,
+      ];
+      return day >= 1 && day <= daysInMonth[month - 1]!;
+    },
+    {
+      message: "Must be a valid calendar date",
+    },
+  );
 
 const Modality = z.enum(["text", "audio", "image", "video", "pdf"]);
 
@@ -232,12 +264,7 @@ const ModelBase = z.object({
     .optional(),
   structured_output: z.boolean().optional(),
   temperature: z.boolean().optional(),
-  knowledge: z
-    .string()
-    .regex(/^\d{4}-\d{2}(-\d{2})?$/, {
-      message: "Must be in YYYY-MM or YYYY-MM-DD format",
-    })
-    .optional(),
+  knowledge: DateString.optional(),
   release_date: DateString,
   last_updated: DateString,
   modalities: Modalities,
@@ -248,18 +275,22 @@ const ModelBase = z.object({
     .object({
       modes: z
         .record(
-          z.object({
-            cost: Cost.optional(),
-            provider: z
-              .object({
-                body: z.record(JsonValue).optional(),
-                headers: z.record(z.string()).optional(),
-              })
-              .optional(),
-          }),
+          z
+            .object({
+              cost: Cost.optional(),
+              provider: z
+                .object({
+                  body: z.record(JsonValue).optional(),
+                  headers: z.record(z.string()).optional(),
+                })
+                .strict()
+                .optional(),
+            })
+            .strict(),
         )
         .optional(),
     })
+    .strict()
     .optional(),
   provider: z
     .object({
@@ -269,6 +300,7 @@ const ModelBase = z.object({
       body: z.record(JsonValue).optional(),
       headers: z.record(z.string()).optional(),
     })
+    .strict()
     .optional(),
 });
 
@@ -365,6 +397,7 @@ export const Provider = z
       const isOpenAI = data.npm === "@ai-sdk/openai";
       const isOpenAIcompatible = data.npm === "@ai-sdk/openai-compatible";
       const isOpenrouter = data.npm === "@openrouter/ai-sdk-provider";
+      const isMergeGateway = data.npm === "merge-gateway-ai-sdk-provider";
       const isAnthropic = data.npm === "@ai-sdk/anthropic";
       const isKiro = data.npm === "kiro-acp-ai-provider";
       const hasApi = data.api !== undefined;
@@ -374,6 +407,8 @@ export const Provider = z
         (isOpenAIcompatible && hasApi) ||
         // openrouter: must have api
         (isOpenrouter && hasApi) ||
+        // Merge Gateway: native provider with an OpenAI-compatible fallback
+        (isMergeGateway && hasApi) ||
         // anthropic: api optional (always allowed)
         isAnthropic ||
         // openai: api optional (always allowed)
@@ -384,6 +419,7 @@ export const Provider = z
         (!isOpenAI &&
           !isOpenAIcompatible &&
           !isOpenrouter &&
+          !isMergeGateway &&
           !isAnthropic &&
           !isKiro &&
           !hasApi)
@@ -391,7 +427,7 @@ export const Provider = z
     },
     {
       message:
-        "'api' is required for openai-compatible and openrouter, optional for anthropic, openai, and kiro, forbidden otherwise",
+        "'api' is required for openai-compatible, openrouter, and Merge Gateway; optional for anthropic, openai, and kiro; forbidden otherwise",
       path: ["api"],
     },
   );

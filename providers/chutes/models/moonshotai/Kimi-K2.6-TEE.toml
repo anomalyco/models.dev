@@ -1,15 +1,20 @@
+# Toggle: chat_template_kwargs.thinking = true|false
+# Source: https://huggingface.co/moonshotai/Kimi-K2.6 (chat template exposes thinking)
+# Verified live on POST https://llm.chutes.ai/v1/chat/completions: reasoning_content present when on, absent when off
 base_model = "moonshotai/kimi-k2.6"
 name = "Kimi K2.6 TEE"
 knowledge = "2025-12"
-reasoning_options = []
 
 [interleaved]
 field = "reasoning_content"
 
+[[reasoning_options]]
+type = "toggle"
+
 [cost]
-input = 0.66
-output = 3.5
-cache_read = 0.33
+input = 0.58
+output = 3.4
+cache_read = 0.05799999999999998
 
 [limit]
 output = 65_535

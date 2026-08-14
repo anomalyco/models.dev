@@ -1,5 +1,6 @@
 name = "Hunyuan Turbo S"
 description = "Compact GPT model for low-latency assistance and high-volume workloads"
+family = "hunyuan"
 release_date = "2025-02-27"
 last_updated = "2025-02-27"
 attachment = false
@@ -11,6 +12,7 @@ open_weights = false
 [cost]
 input = 0.187
 output = 0.374
+cache_read = 0.0935
 
 [limit]
 context = 24_000

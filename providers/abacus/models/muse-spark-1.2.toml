@@ -1,0 +1,20 @@
+# Source: https://routellm.abacus.ai/v1/models
+# RouteLLM input_modalities: ['text', 'image', 'audio', 'video']
+# RouteLLM output_modalities: ['text']
+# RouteLLM context_length: 1048576
+# RouteLLM max_completion_tokens: 131072
+# RouteLLM input_token_rate: 0.00000125
+# RouteLLM output_token_rate: 0.00000425
+# RouteLLM cached_input_token_rate: 0.00000015
+# RouteLLM thinking: True
+base_model = "meta/muse-spark-1.2"
+reasoning_options = []
+
+[cost]
+input = 1.25
+output = 4.25
+cache_read = 0.15
+
+[modalities]
+input = ["text", "image", "audio", "video"]
+output = ["text"]

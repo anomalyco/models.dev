@@ -1,0 +1,23 @@
+name = "Celeris 1"
+description = "Celeris 1 is a diffusion language model built for ultra-low-latency classification, extraction, judging, query rewriting, and other short structured responses."
+release_date = "2026-07-25"
+last_updated = "2026-07-25"
+attachment = false
+reasoning = false
+tool_call = false
+structured_output = false
+open_weights = false
+
+[cost]
+input = 2
+output = 6
+cache_read = 1
+
+[limit]
+context = 8_192
+input = 8_192
+output = 8_192
+
+[modalities]
+input = ["text"]
+output = ["text"]

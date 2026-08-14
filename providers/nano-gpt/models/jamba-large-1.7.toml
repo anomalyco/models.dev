@@ -1,5 +1,6 @@
 name = "Jamba Large 1.7"
 description = "Compact GPT model for low-latency assistance and high-volume workloads"
+family = "jamba"
 release_date = "2025-07-09"
 last_updated = "2025-07-09"
 attachment = false
@@ -11,6 +12,7 @@ open_weights = false
 [cost]
 input = 1.989
 output = 7.99
+cache_read = 0.9945
 
 [limit]
 context = 256_000

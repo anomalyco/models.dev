@@ -1,14 +1,15 @@
 # Not included in subscription
 name = "ERNIE 5.1 Thinking"
 description = "Compact GPT model for low-latency assistance and high-volume workloads"
+family = "ernie"
 release_date = "2026-05-10"
 last_updated = "2026-05-10"
-attachment = true
+attachment = false
 reasoning = true
-reasoning_options = []
 tool_call = false
 structured_output = false
 open_weights = false
+reasoning_options = []
 
 [cost]
 input = 0.75
@@ -16,10 +17,10 @@ output = 3
 cache_read = 0.75
 
 [limit]
-context = 119000
-input = 119000
-output = 64000
+context = 119_000
+input = 119_000
+output = 64_000
 
 [modalities]
-input = ["text", "image", "video"]
+input = ["text"]
 output = ["text"]

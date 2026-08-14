@@ -1,22 +1,13 @@
-name = "Qwen: Qwen3.5-27B"
+base_model = "alibaba/qwen3.5-27b"
 description = "Qwen vision-language model for visual reasoning, documents, and agent tasks"
-release_date = "2026-02-26"
-last_updated = "2026-03-15"
-attachment = true
-reasoning_options = [{ type = "toggle" }]
-reasoning = true
-temperature = true
-tool_call = true
-open_weights = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "high"]
 
 [cost]
 input = 0.195
 output = 1.56
 
-[limit]
-context = 262144
-output = 65536
-
 [modalities]
-input = ["image", "text", "video"]
-output = ["text"]
+input = ["text", "image", "video"]

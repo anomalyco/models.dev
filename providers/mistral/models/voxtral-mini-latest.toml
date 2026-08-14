@@ -1,0 +1,33 @@
+# Sources :
+#   GET https://api.mistral.ai/v1/models  (source d'autorite pour l'id courant)
+#   https://docs.mistral.ai/models/model-cards/voxtral-mini-transcribe-25-07
+#   https://mistral.ai/news/voxtral-transcribe-2/  ($0.003 per minute)
+#
+# `voxtral-mini-latest` resout vers `voxtral-mini-2602` et n'expose que la
+# capacite `audio_transcription`. A ne PAS confondre avec les poids ouverts
+# Voxtral Mini 3B, servis en instruct par d'autres providers (cf.
+# providers/amazon-bedrock/models/mistral.voxtral-mini-3b-2507.toml) : meme
+# lignee, surface produit differente. La fiche liee ci-dessus documente la
+# lignee Transcribe, Mistral n'en publiant pas pour la revision 2602.
+#
+# Le bloc [cost] est volontairement absent : la transcription se facture à la
+# MINUTE d'audio ($0.003/min) et non au token, comme les entrées Whisper déjà
+# présentes au catalogue (cf. providers/groq/models/whisper-large-v3-turbo.toml).
+name = "Voxtral Mini (latest)"
+description = "Speech transcription model for accurate audio-to-text and captioning workflows"
+family = "voxtral"
+release_date = "2026-02-01"
+last_updated = "2026-02-01"
+attachment = false
+reasoning = false
+temperature = false
+tool_call = false
+open_weights = false
+
+[limit]
+context = 0
+output = 0
+
+[modalities]
+input = ["audio"]
+output = ["text"]

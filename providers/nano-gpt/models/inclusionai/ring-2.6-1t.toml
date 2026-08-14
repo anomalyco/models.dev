@@ -1,23 +1,25 @@
 # Included in subscription
 name = "Ring 2.6 1T"
 description = "Reasoning model for deliberate analysis, multi-step problem solving, and tool use"
+family = "ring"
 release_date = "2026-05-08"
 last_updated = "2026-05-08"
 attachment = false
 reasoning = true
-reasoning_options = []
 tool_call = true
 structured_output = true
 open_weights = false
+reasoning_options = []
 
 [cost]
-input = 1
-output = 3
+input = 0.3
+output = 2.5
+cache_read = 0.06
 
 [limit]
-context = 262144
-input = 262144
-output = 65536
+context = 262_144
+input = 262_144
+output = 65_536
 
 [modalities]
 input = ["text"]

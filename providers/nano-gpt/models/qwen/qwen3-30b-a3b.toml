@@ -1,23 +1,15 @@
 # Included in subscription
-name = "Qwen3 30B A3B"
-description = "Qwen instruction model for multilingual chat, reasoning, and tool use"
-release_date = "2025-02-27"
-last_updated = "2025-02-27"
-attachment = false
+base_model = "alibaba/qwen3-30b-a3b"
 reasoning = false
 tool_call = false
 structured_output = false
-open_weights = false
 
 [cost]
 input = 0.1
 output = 0.3
+cache_read = 0.05
 
 [limit]
-context = 41000
-input = 41000
-output = 32768
-
-[modalities]
-input = ["text"]
-output = ["text"]
+context = 41_000
+input = 41_000
+output = 32_768

@@ -1,0 +1,26 @@
+# AIHubMix OpenAI-compatible /v1/chat/completions: $.enable_thinking = true|false (toggle) and $.reasoning_effort = "low"|"medium"|"xhigh"; verified live 2026-08-11. https://docs.aihubmix.com/cn/api/unified-inference
+# AIHubMix Models API (queried 2026-08-11T09:45:11Z): input 1.69, output 5.07, cache_read 0.169, cache_write 2.1125 USD/MTok. https://aihubmix.com/api/v1/models?model=qwen3.8-max
+base_model = "alibaba/qwen3.8-max"
+attachment = false
+structured_output = true
+reasoning_options = [
+  { type = "toggle" },
+  { type = "effort", values = ["low", "medium", "xhigh"] },
+]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 1.69
+output = 5.07
+cache_read = 0.169
+cache_write = 2.1125
+
+[limit]
+context = 991_000
+output = 128_000
+
+[modalities]
+input = ["text"]
+output = ["text"]

@@ -1,24 +1,15 @@
+base_model = "zhipuai/glm-4.7-flash"
 name = "GLM 4.7 Flash"
-description = "Efficient GLM model for fast reasoning, coding, and agent workflows"
-family = "glm-flash"
-release_date = "2026-01-19"
-last_updated = "2026-01-19"
-attachment = false
-reasoning = true
-reasoning_options = [{ type = "toggle" }]
-tool_call = true
 structured_output = true
-open_weights = true
+
+[[reasoning_options]]
+type = "toggle"
 
 [cost]
 input = 0.07
-output = 0.40
+output = 0.4
+cache_read = 0.035
 
 [limit]
-context = 200_000
 input = 200_000
 output = 128_000
-
-[modalities]
-input = ["text"]
-output = ["text"]

@@ -1,17 +1,18 @@
 name = "NemoMix 12B Unleashed"
 description = "Mistral model for multilingual chat, reasoning, and tool-assisted workflows"
 family = "mistral-nemo"
-release_date = "2024-07-01"
+release_date = "2024-01-01"
 last_updated = "2024-07-01"
 attachment = false
 reasoning = false
 tool_call = false
 structured_output = false
-open_weights = false
+open_weights = true
 
 [cost]
-input = 0.49299999999999994
-output = 0.49299999999999994
+input = 0.493
+output = 0.493
+cache_read = 0.2465
 
 [limit]
 context = 32_768

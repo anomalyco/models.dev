@@ -1,7 +1,7 @@
 name = "Hunyuan MT 7B"
 description = "Translation model for multilingual conversion, localization, and cross-language workflows"
 family = "hunyuan"
-release_date = "2025-09-18"
+release_date = "2025-08-15"
 last_updated = "2025-09-18"
 attachment = false
 reasoning = false
@@ -10,8 +10,9 @@ structured_output = false
 open_weights = false
 
 [cost]
-input = 10.00
-output = 20.00
+input = 10
+output = 20
+cache_read = 5
 
 [limit]
 context = 8_192

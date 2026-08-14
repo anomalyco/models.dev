@@ -1,0 +1,17 @@
+base_model = "deepseek/deepseek-v4-flash-0731"
+name = "DeepSeek V4 Flash (New)"
+reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high"] }]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.12
+output = 0.21
+cache_read = 0.003
+
+[limit]
+output = 131_072
+
+[provider]
+npm = "@ai-sdk/openai-compatible"

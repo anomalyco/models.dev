@@ -1,0 +1,22 @@
+name = "mistral-7b-instruct-v0.3"
+description = "Mistral-7B-Instruct-v0.3 model is a fine-tuned version of the Mistral 7B base model, optimized for instruction-following tasks. Released in 2023, it is intended for demonstration purposes and does not include built-in guardrails or moderation features."
+release_date = "2025-05-26"
+last_updated = "2025-05-26"
+attachment = false
+reasoning = false
+temperature = false
+tool_call = true
+structured_output = true
+open_weights = false
+
+[cost]
+input = 0.111
+output = 0.111
+
+[limit]
+context = 127_000
+output = 127_000
+
+[modalities]
+input = ["text"]
+output = ["text"]

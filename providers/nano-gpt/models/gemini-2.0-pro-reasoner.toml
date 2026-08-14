@@ -1,8 +1,9 @@
 name = "Gemini 2.0 Pro Reasoner"
 description = "Compact GPT model for low-latency assistance and high-volume workloads"
-release_date = "2025-02-05"
+family = "gemini"
+release_date = "2024-01-01"
 last_updated = "2025-02-05"
-attachment = false
+attachment = true
 reasoning = false
 tool_call = false
 structured_output = false
@@ -11,6 +12,7 @@ open_weights = false
 [cost]
 input = 1.292
 output = 4.998
+cache_read = 0.323
 
 [limit]
 context = 128_000
@@ -18,5 +20,5 @@ input = 128_000
 output = 65_536
 
 [modalities]
-input = ["text"]
+input = ["text", "audio"]
 output = ["text"]

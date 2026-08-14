@@ -1,23 +1,31 @@
+# Sources (accessed 2026-07-28):
+# - Model card and capabilities: https://docs.abliteration.ai/models
+# - Reasoning effort ladder and per-endpoint request fields (reasoning on by
+#   default; "none" disables; top-level thinking:false disables on
+#   /v1/messages and as a legacy alias on /v1/chat/completions):
+#   https://docs.abliteration.ai/capabilities/thinking
 name = "Abliterated Model"
 description = "Multimodal model for analyzing text, images, documents, and rich media"
-# Reasoning HTTP format (accessed 2026-06-25):
-# This model thinks by default. On POST /v1/chat/completions or /v1/messages,
-# top-level `thinking: false` skips thinking; omission keeps it enabled.
-# Sources:
-# https://docs.abliteration.ai/models
-# https://docs.abliteration.ai/capabilities/thinking
 release_date = "2026-01-06"
-last_updated = "2026-01-06"
+last_updated = "2026-07-28"
 attachment = true
-reasoning = false
+reasoning = true
 tool_call = true
 structured_output = false
 temperature = true
 open_weights = true
 
+[[reasoning_options]]
+type = "effort" # API: {"reasoning_effort": "<value>"} on /v1/chat/completions
+values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"]
+
+[[reasoning_options]]
+type = "toggle" # API: {"thinking": false} on /v1/messages (legacy alias on /v1/chat/completions)
+
 [cost]
 input = 3.00
 output = 3.00
+cache_read = 0.30
 
 [limit]
 context = 150_000

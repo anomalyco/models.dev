@@ -1,0 +1,14 @@
+base_model = "anthropic/claude-opus-5"
+description = "Flagship Claude model for deep reasoning, coding, and long-horizon agents"
+release_date = "2026-07-23"
+structured_output = true
+reasoning_options = []
+
+[cost]
+input = 6
+output = 30
+cache_read = 0.6
+cache_write = 7.5
+
+[modalities]
+input = ["text", "image"]

@@ -18,3 +18,86 @@ output = 65_536
 [modalities]
 input = ["text", "image", "video", "audio", "pdf"]
 output = ["text"]
+
+[[benchmarks]]
+name = "SWE-Bench Pro"
+score = 58.7
+metric = "resolve rate"
+harness = "Antigravity"
+source = "https://deepmind.google/models/evals-methodology/gemini-3-6-flash/"
+date = "2026-07-21"
+
+[[benchmarks]]
+name = "DeepSWE"
+score = 49.0
+metric = "resolve rate"
+variant = "high reasoning"
+version = "1.1"
+source = "https://deepmind.google/models/evals-methodology/gemini-3-6-flash/"
+date = "2026-07-21"
+
+[[benchmarks]]
+name = "Terminal-Bench"
+score = 78.0
+metric = "accuracy"
+harness = "Terminus 2"
+version = "2.1"
+source = "https://deepmind.google/models/evals-methodology/gemini-3-6-flash/"
+date = "2026-07-21"
+
+[[benchmarks]]
+name = "MLE-Bench"
+score = 63.9
+metric = "average position score"
+dataset = "Partial 30"
+source = "https://deepmind.google/models/evals-methodology/gemini-3-6-flash/"
+date = "2026-07-21"
+
+[[benchmarks]]
+name = "GDPval-AA"
+score = 1421
+metric = "Elo"
+version = "v2"
+source = "https://deepmind.google/models/evals-methodology/gemini-3-6-flash/"
+date = "2026-07-21"
+
+[[benchmarks]]
+name = "OSWorld-Verified"
+score = 83.0
+metric = "success rate"
+source = "https://deepmind.google/models/evals-methodology/gemini-3-6-flash/"
+date = "2026-07-21"
+
+[[benchmarks]]
+name = "CharXiv Reasoning"
+score = 85.2
+metric = "accuracy"
+variant = "no tools"
+source = "https://deepmind.google/models/evals-methodology/gemini-3-6-flash/"
+date = "2026-07-21"
+
+[[benchmarks]]
+name = "CharXiv Reasoning"
+score = 89.4
+metric = "accuracy"
+variant = "with tools"
+source = "https://deepmind.google/models/evals-methodology/gemini-3-6-flash/"
+date = "2026-07-21"
+
+[[benchmarks]]
+name = "GDM-MRCR"
+score = 91.8
+metric = "accuracy"
+variant = "128k average, 8-needle"
+version = "v2"
+source = "https://deepmind.google/models/evals-methodology/gemini-3-6-flash/"
+date = "2026-07-21"
+
+[[benchmarks]]
+name = "GDM-MRCR"
+score = 54.0
+metric = "accuracy"
+variant = "1M pointwise, 8-needle"
+version = "v2"
+source = "https://deepmind.google/models/evals-methodology/gemini-3-6-flash/"
+date = "2026-07-21"

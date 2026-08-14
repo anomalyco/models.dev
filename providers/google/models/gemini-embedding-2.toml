@@ -7,10 +7,12 @@
 # - https://ai.google.dev/gemini-api/docs/pricing
 #   Paid standard: text $0.20, image $0.45, audio $6.50, video $12.00 per 1M tokens
 #   (catalog cost.input uses text rate; cost.input_audio uses audio rate)
-
 base_model = "google/gemini-embedding-2"
 
 [cost]
-input = 0.20
+input = 0.2
 output = 0
-input_audio = 6.50
+input_audio = 6.5
+
+[limit]
+output = 1

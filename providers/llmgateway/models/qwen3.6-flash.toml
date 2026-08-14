@@ -1,10 +1,11 @@
 base_model = "alibaba/qwen3.6-flash"
-reasoning_options = []
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"]
 
 [cost]
-input = 0.15
-output = 0.9
-cache_read = 0.015
-
-[limit]
-context = 262_144
+input = 0.25
+output = 1.5
+cache_read = 0.05
+cache_write = 0.3125

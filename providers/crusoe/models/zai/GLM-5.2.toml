@@ -1,0 +1,16 @@
+# Probed live endpoint 2026-08-13 (POST /v1/chat/completions, temperature 0):
+# reasoning is on by default; reasoning_effort "none" disables it
+# (0 reasoning tokens); low/medium/high are accepted but do not scale
+# reasoning length, so this is encoded as a toggle (matches the zai lab
+# GLM entries). usage.completion_tokens_details.reasoning_tokens is
+# reported. Reasoning text arrives interleaved with tool_calls, in the
+# message field named "reasoning" (not "reasoning_content").
+base_model = "zhipuai/glm-5.2"
+reasoning_options = [{ type = "toggle" }]
+interleaved = true
+
+# Pricing: https://www.crusoe.ai/cloud/pricing (accessed 2026-08-13)
+[cost]
+input = 1.40
+output = 4.40
+cache_read = 0.26

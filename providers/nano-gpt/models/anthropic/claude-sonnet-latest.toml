@@ -1,24 +1,29 @@
 # Not included in subscription
 name = "Claude Sonnet Latest"
 description = "Balanced Claude model for coding, analysis, agent workflows, and cost control"
+family = "claude-sonnet"
 release_date = "2026-03-01"
 last_updated = "2026-03-01"
 attachment = true
 reasoning = true
-reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh"] }, { type = "budget_tokens", min = 1_024, max = 63_999 }]
 tool_call = true
 structured_output = true
 open_weights = false
 
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high", "xhigh", "max"]
+
 [cost]
-input = 2.992
-output = 14.994
-cache_read = 0.2992
+input = 2
+output = 10
+cache_read = 0.2
+cache_write = 2.5
 
 [limit]
-context = 1000000
-input = 1000000
-output = 128000
+context = 1_000_000
+input = 1_000_000
+output = 128_000
 
 [modalities]
 input = ["text", "image", "pdf"]

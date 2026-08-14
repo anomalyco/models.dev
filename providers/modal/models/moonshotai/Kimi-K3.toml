@@ -1,0 +1,22 @@
+# Modal Shared API model ID: moonshotai/Kimi-K3.
+# Pricing is USD per 1M tokens: prompt $3.00, cached prompt $0.30,
+# completion $15.00, and reasoning $15.00.
+# Modal documents text and native vision through its OpenAI-compatible Shared API.
+# No Modal-documented reasoning control surface has been verified.
+# https://modal.com/library/moonshot/kimi-k3
+# https://modal.com/blog/kimi-k3-by-moonshot-now-available-on-modal
+# https://modal.com/docs/guide/endpoints
+base_model = "moonshotai/kimi-k3"
+reasoning_options = []
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 3.0
+output = 15.0
+cache_read = 0.3
+reasoning = 15.0
+
+[modalities]
+input = ["text", "image"]

@@ -1,23 +1,28 @@
 # Included in subscription
 name = "Mistral Small 4 119B Thinking"
 description = "Efficient Mistral model for fast chat, extraction, and production assistants"
+family = "mistral-small"
 release_date = "2026-03-17"
 last_updated = "2026-03-17"
 attachment = true
 reasoning = true
-reasoning_options = []
 tool_call = true
 structured_output = true
-open_weights = false
+open_weights = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "high"]
 
 [cost]
 input = 0.4
 output = 1.4
+cache_read = 0.2
 
 [limit]
-context = 262144
-input = 262144
-output = 16384
+context = 262_144
+input = 262_144
+output = 16_384
 
 [modalities]
 input = ["text", "image"]

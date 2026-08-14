@@ -1,23 +1,15 @@
+base_model = "minimax/MiniMax-M2"
 name = "MiniMax M2"
-description = "Compact GPT model for low-latency assistance and high-volume workloads"
-release_date = "2025-10-25"
-last_updated = "2025-10-25"
-attachment = false
-reasoning = true
-reasoning_options = []
 tool_call = false
 structured_output = false
-open_weights = false
+reasoning_options = []
 
 [cost]
 input = 0.17
 output = 1.53
+cache_read = 0.085
 
 [limit]
 context = 200_000
 input = 200_000
 output = 131_072
-
-[modalities]
-input = ["text"]
-output = ["text"]

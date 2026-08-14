@@ -15,6 +15,11 @@ open_weights = false
 input = 0.26
 output = 0.78
 
+[[cost.tiers]]
+tier = { type = "context", size = 256_000 }
+input = 0.78
+output = 2.34
+
 [limit]
 context = 1_000_000
 output = 32_768

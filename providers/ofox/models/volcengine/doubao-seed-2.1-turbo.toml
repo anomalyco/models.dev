@@ -1,0 +1,10 @@
+# Source: https://api.ofox.ai/v2/models/catalog?include=provider_price&limit=500
+# Toggle: thinking.type = enabled|disabled (Volcengine Ark chat path)
+base_model = "bytedance-seed/seed-2.1-turbo"
+reasoning_options = [{ type = "toggle" }]
+
+[cost]
+input = 0.442
+output = 2.212
+cache_read = 0.085
+cache_write = 0.0024

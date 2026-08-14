@@ -1,0 +1,12 @@
+base_model = "mistral/mistral-small-2603"
+structured_output = true
+reasoning_options = []
+
+[cost]
+input = 0.143
+output = 0.568
+cache_read = 0.014
+
+[limit]
+context = 262_144
+output = 262_144

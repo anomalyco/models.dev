@@ -1,7 +1,7 @@
 name = "Amazon Nova 2 Lite"
 description = "Efficient model for low-latency assistance, extraction, and routine automation"
 family = "nova"
-release_date = "2024-12-03"
+release_date = "2024-01-01"
 last_updated = "2024-12-03"
 attachment = false
 reasoning = false
@@ -10,8 +10,9 @@ structured_output = false
 open_weights = false
 
 [cost]
-input = 0.5099999999999999
+input = 0.51
 output = 4.25
+cache_read = 0.255
 
 [limit]
 context = 1_000_000

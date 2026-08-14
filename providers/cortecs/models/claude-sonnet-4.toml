@@ -1,24 +1,23 @@
-name = "Claude Sonnet 4"
+base_model = "anthropic/claude-sonnet-4-0"
 description = "Balanced Claude model for coding, analysis, agent workflows, and cost control"
-family = "claude-sonnet"
-release_date = "2025-05-22"
-last_updated = "2025-05-22"
-knowledge = "2025-03"
-attachment = false
-reasoning = false
-tool_call = true
-temperature = true
-open_weights = false
+structured_output = true
 
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high"]
+
+[[reasoning_options]]
+type = "budget_tokens"
+min = 1_024
 
 [cost]
-input = 3.307
-output = 16.536
+input = 2.898
+output = 14.493
+cache_read = 0.29
+cache_write = 3.624
 
 [limit]
-context = 200_000
-output = 64_000
+output = 200_000
 
 [modalities]
-input = ["text", "image", "pdf"]
-output = ["text"]
+input = ["text", "image"]

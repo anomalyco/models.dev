@@ -1,6 +1,7 @@
 name = "Yi Large"
 description = "Compact GPT model for low-latency assistance and high-volume workloads"
-release_date = "2024-05-13"
+family = "yi"
+release_date = "2024-01-01"
 last_updated = "2024-05-13"
 attachment = false
 reasoning = false
@@ -11,6 +12,7 @@ open_weights = false
 [cost]
 input = 3.196
 output = 3.196
+cache_read = 1.598
 
 [limit]
 context = 32_000

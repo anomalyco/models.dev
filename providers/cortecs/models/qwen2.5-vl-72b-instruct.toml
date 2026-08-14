@@ -1,0 +1,23 @@
+name = "qwen2.5-vl-72b-instruct"
+description = "Qwen2.5-VL is a powerful vision-language model with advanced capabilities in visual understanding, long video reasoning, and structured output generation."
+release_date = "2025-01-27"
+last_updated = "2025-01-27"
+attachment = true
+reasoning = true
+temperature = false
+tool_call = false
+structured_output = true
+open_weights = false
+reasoning_options = []
+
+[cost]
+input = 0.25
+output = 0.747
+
+[limit]
+context = 32_000
+output = 32_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

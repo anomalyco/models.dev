@@ -1,29 +1,16 @@
-name = "DeepSeek V4 Flash"
-description = "Fast DeepSeek model for efficient chat, coding help, and agent loops"
-family = "deepseek-flash"
-release_date = "2026-04-24"
-last_updated = "2026-04-24"
-attachment = false
-reasoning = true
-reasoning_options = [{ type = "effort", values = ["high", "max"] }]
-temperature = true
-knowledge = "2025-05"
-tool_call = true
-structured_output = true
-open_weights = true
+# Effort: reasoning_effort = low|high|max (DeepSeek flash maps low→low; xhigh→high)
+# https://api-docs.deepseek.com/guides/thinking_mode/ (accessed 2026-08-02)
+base_model = "deepseek/deepseek-v4-flash-0731"
+name = "DeepSeek V4 Flash (2x usage)"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
 
 [interleaved]
 field = "reasoning_content"
 
 [cost]
-input = 0.14
-output = 0.28
-cache_read = 0.0028
-
-[limit]
-context = 1_000_000
-output = 384_000
-
-[modalities]
-input = ["text"]
-output = ["text"]
+input = 0.07
+output = 0.14
+cache_read = 0.0014

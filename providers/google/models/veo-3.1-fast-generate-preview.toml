@@ -13,3 +13,8 @@
 #   Veo 3.1 Fast is billed per second of video (e.g. $0.10/s 720p video+audio), not per
 #   million tokens, so [cost] is omitted from this catalog entry.
 base_model = "google/veo-3.1-fast-generate-preview"
+name = "Veo 3.1 fast"
+
+[limit]
+context = 480
+output = 8_192

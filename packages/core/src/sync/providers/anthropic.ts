@@ -2,7 +2,8 @@ import path from "node:path";
 import { existsSync } from "node:fs";
 import { z } from "zod";
 
-import type { ExistingModel, SyncProvider, SyncedModel } from "../index.js";
+import type { ExistingModel, SyncProvider, SyncedFullModel, SyncedModel } from "../index.js";
+import { factorBaseModel } from "./openrouter.js";
 
 const API_ENDPOINT = "https://api.anthropic.com/v1/models";
 const PRICING_ENDPOINT = "https://platform.claude.com/docs/en/about-claude/pricing";
@@ -310,20 +311,42 @@ export function buildAnthropicModel(
   const output = model.max_tokens > 0 ? model.max_tokens : existing?.limit?.output;
   const cost = syncedCost(model, existing);
   const options = reasoningOptions(model, existing);
+  // Models API has no fast-mode surface; preserve authored experimental/provider config.
+  const experimental = existing?.experimental;
+  const provider = existing?.provider;
+  const status = model.pricing?.deprecated ? "deprecated" as const : existing?.status;
+  const structured_output = model.capabilities.structured_outputs?.supported
+    ?? existing?.structured_output;
+  const limit = context !== undefined || output !== undefined || existing?.limit !== undefined
+    ? {
+        context: context ?? existing?.limit?.context ?? 0,
+        input: existing?.limit?.input,
+        output: output ?? existing?.limit?.output ?? 0,
+      }
+    : undefined;
+  const modalities = { input, output: ["text" as const] };
 
   if (baseModel !== undefined) {
-    return {
-      base_model: baseModel,
+    const overrides: Partial<SyncedFullModel> = {
       name: model.canonical_id === undefined ? undefined : name,
       attachment: input.length > 1,
       reasoning,
       reasoning_options: options,
-      structured_output: model.capabilities.structured_outputs?.supported,
-      status: model.pricing?.deprecated ? "deprecated" : undefined,
+      structured_output,
+      status,
+      interleaved: existing?.interleaved,
+      experimental,
+      provider,
       cost,
-      limit: context !== undefined && output !== undefined ? { context, output } : undefined,
-      modalities: { input, output: ["text"] },
+      limit,
+      modalities,
     };
+    return factorBaseModel(
+      baseModel,
+      overrides,
+      limit ?? { context: 0, output: 0 },
+      existing?.base_model_omit,
+    );
   }
 
   if (
@@ -349,15 +372,15 @@ export function buildAnthropicModel(
     reasoning_options: options,
     temperature: existing.temperature,
     tool_call: existing.tool_call,
-    structured_output: model.capabilities.structured_outputs?.supported ?? existing.structured_output,
+    structured_output,
     knowledge: existing.knowledge,
     open_weights: existing.open_weights,
-    status: model.pricing?.deprecated ? "deprecated" : existing.status,
+    status,
     interleaved: existing.interleaved,
-    experimental: existing.experimental,
-    provider: existing.provider,
+    experimental,
+    provider,
     cost,
     limit: { context, input: existing.limit?.input, output },
-    modalities: { input, output: ["text"] },
+    modalities,
   };
 }

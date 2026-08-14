@@ -5,16 +5,19 @@ release_date = "2025-02-19"
 last_updated = "2025-02-19"
 attachment = false
 reasoning = true
-reasoning_options = [{ type = "effort", values = ["minimal", "low", "medium", "high"] }]
 temperature = true
 tool_call = false
 knowledge = "2025-09"
 open_weights = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["minimal", "low", "medium", "high"]
 
 [limit]
 context = 127_000
 output = 8_000
 
 [modalities]
-input = ["text"]
+input = ["text", "image"]
 output = ["text"]

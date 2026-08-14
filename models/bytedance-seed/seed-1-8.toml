@@ -1,0 +1,21 @@
+# Sources (accessed 2026-08-14):
+# - https://seed.bytedance.com/en/seed2
+# - https://www.volcengine.com/docs/82379/1330310
+name = "Seed 1.8"
+description = "ByteDance Seed model for multimodal reasoning, long-context analysis, and agent workflows"
+family = "seed"
+release_date = "2025-12-28"
+last_updated = "2025-12-28"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+open_weights = false
+
+[limit]
+context = 256_000
+output = 64_000
+
+[modalities]
+input = ["text"]
+output = ["text"]

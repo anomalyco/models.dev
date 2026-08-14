@@ -1,29 +1,23 @@
-name = "Claude Opus 4.7"
+base_model = "anthropic/claude-opus-4-7"
 description = "Flagship Claude model for deep reasoning, coding, and long-horizon agents"
-# Cortecs maps `reasoning_effort = low|medium|high` to
-# `output_config.effort`; no explicit budget is exposed for this model.
-# https://api.cortecs.ai/v1/models (accessed 2026-06-25)
-family = "claude-opus"
-release_date = "2026-04-16"
-last_updated = "2026-04-16"
-attachment = true
-reasoning = true
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
-temperature = false
-tool_call = true
-knowledge = "2026-01-31"
-open_weights = false
+structured_output = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high"]
+
+[[reasoning_options]]
+type = "budget_tokens"
+min = 1_024
 
 [cost]
-input = 5.60
-output = 27.99
-cache_read = 0.56
-cache_write = 6.99
+input = 5.437
+output = 27.186
+cache_read = 0.544
+cache_write = 6.797
 
 [limit]
-context = 1_000_000
-output = 128_000
+output = 1_000_000
 
 [modalities]
-input = ["text", "image", "pdf"]
-output = ["text"]
+input = ["text", "image"]

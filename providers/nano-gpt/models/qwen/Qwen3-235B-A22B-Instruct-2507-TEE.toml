@@ -1,22 +1,24 @@
 # Included in subscription
 name = "Qwen 3 235b A22B 2507 (TEE)"
 description = "Qwen instruction model for multilingual chat, reasoning, and tool use"
+family = "qwen"
 release_date = "2025-07-25"
 last_updated = "2025-07-25"
 attachment = false
 reasoning = false
 tool_call = true
 structured_output = true
-open_weights = false
+open_weights = true
 
 [cost]
 input = 0.13
 output = 0.5
+cache_read = 0.065
 
 [limit]
-context = 256000
-input = 256000
-output = 262144
+context = 256_000
+input = 256_000
+output = 262_144
 
 [modalities]
 input = ["text"]

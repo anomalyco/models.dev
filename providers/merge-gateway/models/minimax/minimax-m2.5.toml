@@ -1,4 +1,8 @@
+# Source: https://api-gateway.merge.dev/v1/models?model=minimax%2Fminimax-m2.5 (accessed 2026-07-21)
+
 base_model = "minimax/MiniMax-M2.5"
+name = "MiniMax M2.5"
+structured_output = false
 reasoning_options = []
 
 [cost]
@@ -6,3 +10,6 @@ input = 0.3
 output = 1.2
 cache_read = 0.03
 cache_write = 0.375
+
+[limit]
+output = 8_192

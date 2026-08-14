@@ -1,7 +1,7 @@
 name = "QwenLong L1 32B"
 description = "Qwen instruction model for multilingual chat, reasoning, and tool use"
 family = "qwen"
-release_date = "2025-01-25"
+release_date = "2024-01-01"
 last_updated = "2025-01-25"
 attachment = false
 reasoning = false
@@ -10,8 +10,9 @@ structured_output = false
 open_weights = false
 
 [cost]
-input = 0.13999999999999999
+input = 0.14
 output = 0.6
+cache_read = 0.07
 
 [limit]
 context = 128_000

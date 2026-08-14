@@ -1,0 +1,23 @@
+# Sources:
+# https://research.meta.ai/blog/introducing-muse-code-and-muse-spark-1-2
+# https://dev.meta.ai/docs/getting-started/models
+
+name = "Muse Spark 1.2"
+description = "Muse Spark 1.2 is a coding-focused update to Muse Spark 1.1 with improvements in code generation, complex debugging, codebase understanding, and end-to-end developer workflows."
+family = "muse"
+release_date = "2026-08-05"
+last_updated = "2026-08-05"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[limit]
+context = 1_048_576
+output = 131_072
+
+[modalities]
+input = ["text", "image", "video", "pdf", "audio"]
+output = ["text"]

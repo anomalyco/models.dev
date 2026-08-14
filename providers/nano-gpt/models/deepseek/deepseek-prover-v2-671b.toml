@@ -1,17 +1,18 @@
 name = "DeepSeek Prover v2 671B"
 description = "Flagship DeepSeek model for coding, reasoning, and agentic work"
 family = "deepseek"
-release_date = "2025-04-30"
+release_date = "2025-11-15"
 last_updated = "2025-04-30"
 attachment = false
 reasoning = false
 tool_call = false
 structured_output = false
-open_weights = false
+open_weights = true
 
 [cost]
-input = 1.00
+input = 1
 output = 2.5
+cache_read = 0.5
 
 [limit]
 context = 160_000

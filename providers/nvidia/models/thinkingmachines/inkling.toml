@@ -1,0 +1,17 @@
+# Sources (accessed 2026-07-25):
+# - https://docs.api.nvidia.com/nim/reference/thinkingmachines-inkling
+# - https://docs.api.nvidia.com/nim/reference/thinkingmachines-inkling-infer
+# - https://thinkingmachines.ai/model-card/inkling/
+# - https://integrate.api.nvidia.com/v1/models id: thinkingmachines/inkling
+# NVIDIA model card Input Types: Text, Image, Audio (WAV 16 kHz).
+# Infer OpenAPI: max_tokens 1..16384; no documented reasoning control field on NIM.
+# Upstream evals use continuous effort (e.g. effort=0.99); not mapped to discrete NIM enum.
+base_model = "thinkingmachines/inkling"
+reasoning_options = []
+
+[cost]
+input = 0.0
+output = 0.0
+
+[limit]
+output = 16_384
