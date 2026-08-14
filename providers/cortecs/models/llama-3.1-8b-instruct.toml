@@ -1,13 +1,8 @@
-name = "llama-3.1-8b-instruct"
+base_model = "meta/llama-3.1-8b-instruct"
 description = "Optimized for dialogue, this LLM by Meta outperforms other open-source chat models in benchmarks while prioritizing helpfulness and safety."
-release_date = "2024-04-09"
-last_updated = "2024-04-09"
-attachment = false
 reasoning = true
 temperature = false
-tool_call = true
 structured_output = true
-open_weights = false
 reasoning_options = []
 
 [cost]
@@ -15,9 +10,4 @@ input = 0.167
 output = 0.167
 
 [limit]
-context = 128_000
 output = 128_000
-
-[modalities]
-input = ["text"]
-output = ["text"]
