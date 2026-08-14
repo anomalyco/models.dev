@@ -1,22 +1,23 @@
 # Cost is USD per 1M tokens, matching the SCX rates carried in
 # theopenco/llmgateway (packages/models/src/models/alibaba.ts).
 # Limits and capabilities verified directly against https://api.scx.ai/v1:
-# max_tokens is hard-capped at 131072 by the API, context is 1M, and image
-# input was confirmed with a live request. reasoning_effort enum returned by
-# the API: none, minimal, low, medium, high, xhigh, max.
-# The API canonicalises the model id to "Qwen3.8-Max" (lowercase also accepted).
+# max_tokens is hard-capped at 131072 by the API ("Range of max_tokens should be
+# [1, 131072]"), context is 1M, and image input was confirmed with a live
+# request. The API canonicalises the model id to "Qwen3.8-Max" (lowercase is
+# also accepted and normalises to the same id).
+# Wire control: `reasoning_effort` in the request body; thinking is returned as
+# `reasoning_content` on the message. SCX's validator accepts none/minimal/low/
+# medium/high/xhigh/max, but only the values below are distinct here (n=4 per
+# level, same prompt, measured as reasoning_content length): `none` returns 0
+# reasoning characters, minimal/low/medium are one indistinguishable band
+# (medians 339/361/380), and xhigh is clearly higher (1128). This keeps the
+# Alibaba effective set low/medium/xhigh plus the verified `none` off control.
+# No toggle or budget_tokens option is declared: SCX accepts a `thinking` object
+# in the body but there is no evidence it forwards it.
 base_model = "alibaba/qwen3.8-max"
 structured_output = true
 reasoning_options = [
-  { type = "effort", values = [
-    "none",
-    "minimal",
-    "low",
-    "medium",
-    "high",
-    "xhigh",
-    "max",
-  ] },
+  { type = "effort", values = ["none", "low", "medium", "xhigh"] },
 ]
 
 [cost]

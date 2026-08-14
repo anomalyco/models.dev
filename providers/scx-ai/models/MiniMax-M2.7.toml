@@ -1,10 +1,14 @@
 # Cost is USD per 1M tokens, matching the SCX rates carried in
 # theopenco/llmgateway (packages/models/src/models/minimax.ts).
-# Limits and capabilities verified directly against https://api.scx.ai/v1:
-# SCX enforces a single context budget (prompt + max_tokens <= context) with no
-# separate output cap; the measured context ceiling is 196608. Output is held at
-# the SCX-supported 64000. Do not trust max_output_length from /v1/models -- it
-# reports a placeholder 4096 for most models.
+# Limits and capabilities verified directly against https://api.scx.ai/v1.
+# `context` is the enforced ceiling: SCX applies a single budget
+# (prompt + max_tokens <= context) and rejects above 196608 with "This model's
+# maximum context length is 196608 tokens".
+# `output` is deliberately lower than that ceiling. The endpoint will accept a
+# larger max_tokens because it only checks the shared budget, but 64000 is the
+# output length SCX supports for this model, so that is what is published here.
+# Do not trust max_output_length from /v1/models -- it reports a placeholder
+# 4096 for most models.
 base_model = "minimax/MiniMax-M2.7"
 structured_output = true
 reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
