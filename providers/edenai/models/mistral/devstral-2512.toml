@@ -1,0 +1,10 @@
+base_model = "mistral/devstral-2512"
+attachment = true
+structured_output = true
+
+[cost]
+input = 0.4
+output = 2
+
+[modalities]
+input = ["text", "pdf"]
