@@ -1,0 +1,19 @@
+name = "GLM-5.3"
+description = "Flagship GLM model for long-horizon coding, agents, and complex project delivery"
+family = "glm"
+release_date = "2026-08-14"
+last_updated = "2026-08-14"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[limit]
+context = 1_000_000
+output = 131_072
+
+[modalities]
+input = ["text"]
+output = ["text"]
