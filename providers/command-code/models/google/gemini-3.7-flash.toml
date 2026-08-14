@@ -1,19 +1,16 @@
+# Price mirrors Google's launch discount (50% off list, ends 2026-12-31).
 # Effort: reasoning_effort = low|medium|high|xhigh|max (live-probed 2026-08-14:
-# effort=max accepted — "always-on" falsified).
+# gateway-normalized on this host — first-party lab set is low|medium|high).
+# Served context from GET /provider/v1/models: 1_048_576 (probed 2026-08-14).
 # Emits reasoning via reasoning / reasoning_details.
-base_model = "moonshotai/kimi-k2.7-code-highspeed"
-name = "Kimi K2.7 Code HighSpeed"
+base_model = "google/gemini-3.7-flash"
 reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
 interleaved = { field = "reasoning_details" }
 
 [cost]
-input = 1.9
-output = 8
-cache_read = 0.38
-
-[limit]
-context = 262_000
-output = 262_000
+input = 0.75
+output = 3.75
+cache_read = 0.075
 
 [modalities]
 input = ["text", "image"]

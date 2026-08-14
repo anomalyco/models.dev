@@ -1,9 +1,10 @@
+# Effort: reasoning_effort = low|medium|high|xhigh|max (gateway-validated enum, live-probed 2026-08-14; none|minimal 400-rejected).
 # Served context from GET /provider/v1/models (accessed 2026-08-13): 200_000
 # (below OpenAI's 272_000 tier threshold, so no context tiers; input cap
 # dropped rather than inferred).
 base_model = "openai/gpt-5.5"
 base_model_omit = ["limit.input"]
-reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh"] }]
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
 
 [cost]
 input = 5
@@ -12,3 +13,6 @@ cache_read = 0.5
 
 [limit]
 context = 200_000
+
+[modalities]
+input = ["text", "image"]

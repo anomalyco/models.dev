@@ -1,9 +1,10 @@
-# Toggle: thinking.type = enabled|disabled
-# Effort: reasoning_effort = low|high|max
+# Toggle: thinking.type = enabled|disabled (live-verified 2026-08-14: reasoning tokens drop to ~10% when disabled).
+# Effort: reasoning_effort = low|medium|high|xhigh|max (gateway-validated enum).
+# Emits reasoning via reasoning / reasoning_details.
 base_model = "deepseek/deepseek-v4-flash"
 name = "DeepSeek V4 Flash (latest)"
-reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "high", "max"] }]
-interleaved = { field = "reasoning_content" }
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
+interleaved = { field = "reasoning_details" }
 
 [cost]
 input = 0.14

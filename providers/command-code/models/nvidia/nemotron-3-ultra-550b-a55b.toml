@@ -1,7 +1,8 @@
-# Toggle: chat_template_kwargs.enable_thinking = false
+# Effort: reasoning_effort = low|medium|high|xhigh|max (gateway-validated enum, 2026-08-14;
+# no reasoning emission observed in probes; ctk toggle unverifiable — dropped).
 base_model = "nvidia/nemotron-3-ultra-550b-a55b"
 name = "Nemotron 3 Ultra"
-reasoning_options = [{ type = "toggle" }]
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
 
 [cost]
 input = 0.6

@@ -1,9 +1,10 @@
-# Toggle: thinking.type = enabled|disabled
-# Effort: reasoning_effort = high|max
+# Toggle: thinking.type = enabled|disabled (verified on V4 Flash, same surface, 2026-08-14).
+# Effort: reasoning_effort = low|medium|high|xhigh|max (gateway-validated enum).
+# Emits reasoning via reasoning / reasoning_details.
 base_model = "deepseek/deepseek-v4-pro"
 name = "DeepSeek V4 Pro (latest)"
-reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["high", "max"] }]
-interleaved = { field = "reasoning_content" }
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
+interleaved = { field = "reasoning_details" }
 
 [cost]
 input = 0.435

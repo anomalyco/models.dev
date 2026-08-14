@@ -1,6 +1,7 @@
+# Effort: reasoning_effort = low|medium|high|xhigh|max (live-probed 2026-08-14; host 400s minimal).
 # Served context from GET /provider/v1/models (accessed 2026-08-13): 1_048_576.
 base_model = "meta/muse-spark-1.1"
-reasoning_options = [{ type = "effort", values = ["minimal", "low", "medium", "high", "xhigh"] }]
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
 
 [cost]
 input = 1.25
@@ -9,3 +10,6 @@ cache_read = 0.15
 
 [limit]
 context = 1_048_576
+
+[modalities]
+input = ["text", "image"]

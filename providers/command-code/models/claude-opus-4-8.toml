@@ -1,3 +1,4 @@
+# Effort: output_config.effort = low|medium|high|xhigh|max (Anthropic Messages route).
 base_model = "anthropic/claude-opus-4-8"
 reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
 
@@ -6,6 +7,9 @@ input = 5
 output = 25
 cache_read = 0.5
 cache_write = 6.25
+
+[modalities]
+input = ["text", "image"]
 
 [provider]
 npm = "@ai-sdk/anthropic"

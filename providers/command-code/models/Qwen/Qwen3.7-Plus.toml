@@ -1,11 +1,16 @@
-# Toggle: enable_thinking true|false
-# Budget: thinking_budget
+# Effort: reasoning_effort = low|medium|high|xhigh (live-probed 2026-08-14: gateway
+# 400s none|minimal, upstream 400s max, same as Qwen3.7-Max).
+# Emits reasoning via reasoning_content.
 base_model = "alibaba/qwen3.7-plus"
 name = "Qwen 3.7 Plus"
-reasoning_options = [{ type = "toggle" }, { type = "budget_tokens" }]
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh"] }]
+interleaved = { field = "reasoning_content" }
 
 [cost]
 input = 0.4
 output = 1.6
 cache_read = 0.08
 cache_write = 0.5
+
+[modalities]
+input = ["text", "image"]

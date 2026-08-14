@@ -1,8 +1,10 @@
-# Toggle: enable_thinking true|false
-# Budget: thinking_budget
+# Effort: reasoning_effort = low|medium|high|xhigh|max (live-probed 2026-08-14; effort=max accepted).
+# enable_thinking / thinking_budget are accepted but no-ops on this host.
+# Emits reasoning via reasoning / reasoning_details.
 base_model = "alibaba/qwen3.6-max-preview"
 name = "Qwen 3.6 Max Preview"
-reasoning_options = [{ type = "toggle" }, { type = "budget_tokens" }]
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
+interleaved = { field = "reasoning_details" }
 
 [cost]
 input = 1.3

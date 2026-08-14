@@ -1,11 +1,16 @@
-# Toggle: enable_thinking true|false
-# Budget: thinking_budget (max 262144)
+# Effort: reasoning_effort = low|medium|high|xhigh|max (gateway-validated enum, 2026-08-14;
+# enable_thinking=false did not suppress reasoning — falsified).
+# Emits reasoning via reasoning / reasoning_details.
 base_model = "alibaba/qwen3.7-flash"
 name = "Qwen 3.7 Flash"
-reasoning_options = [{ type = "toggle" }, { type = "budget_tokens", max = 262_144 }]
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
+interleaved = { field = "reasoning_details" }
 
 [cost]
 input = 0.03
 output = 0.13
 cache_read = 0.006
 cache_write = 0.038
+
+[modalities]
+input = ["text", "image"]

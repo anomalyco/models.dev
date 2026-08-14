@@ -1,12 +1,16 @@
 # Budget: thinking.budget_tokens (min 1024, Anthropic Messages route).
-base_model = "anthropic/claude-haiku-4-5-20251001"
+# Served context per pricing page (accessed 2026-08-14): 1_000_000; lab default is 200K.
+base_model = "anthropic/claude-sonnet-4-5"
 reasoning_options = [{ type = "budget_tokens", min = 1_024 }]
 
 [cost]
-input = 1
-output = 5
-cache_read = 0.1
-cache_write = 1.25
+input = 3
+output = 15
+cache_read = 0.3
+cache_write = 3.75
+
+[limit]
+context = 1_000_000
 
 [modalities]
 input = ["text", "image"]

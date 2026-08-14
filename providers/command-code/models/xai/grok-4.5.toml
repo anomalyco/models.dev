@@ -1,7 +1,10 @@
+# Effort: reasoning_effort = low|medium|high|xhigh|max (live-probed 2026-08-14; xhigh|max accepted).
+# Emits reasoning via reasoning / reasoning_details.
 # Command Code publishes flat rates here (cache_read differs from xAI list),
 # so xAI's 200K context tier is not assumed to pass through.
 base_model = "xai/grok-4.5"
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
+interleaved = { field = "reasoning_details" }
 
 [cost]
 input = 2

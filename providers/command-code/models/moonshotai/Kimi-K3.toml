@@ -1,5 +1,7 @@
 # Toggle: thinking.type = enabled|disabled|adaptive
-# Effort: output_config.effort = low|high|max
+# Effort: output_config.effort = low|high|max (max verified live 2026-08-14; gateway also
+# validates reasoning_effort = low|medium|high|xhigh|max on this model).
+# Emits reasoning via reasoning_content.
 base_model = "moonshotai/kimi-k3"
 reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "high", "max"] }]
 interleaved = { field = "reasoning_content" }
@@ -11,3 +13,6 @@ cache_read = 0.3
 
 [limit]
 context = 1_000_000
+
+[modalities]
+input = ["text", "image"]

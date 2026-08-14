@@ -1,9 +1,10 @@
 # Served context from GET /provider/v1/models (accessed 2026-08-13): 200_000.
-# Toggle: enable_thinking true|false
-# Budget: thinking_budget
+# Effort: reasoning_effort = low|medium|high|xhigh|max (gateway-standard enum, 2026-08-14;
+# enable_thinking=false did not suppress reasoning, thinking_budget=48 ignored — falsified).
 base_model = "alibaba/qwen3.6-plus"
 name = "Qwen 3.6 Plus"
-reasoning_options = [{ type = "toggle" }, { type = "budget_tokens" }]
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
+interleaved = { field = "reasoning_content" }
 
 [cost]
 input = 0.5
@@ -12,3 +13,6 @@ cache_read = 0.1
 
 [limit]
 context = 200_000
+
+[modalities]
+input = ["text", "image"]
