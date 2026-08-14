@@ -1,0 +1,18 @@
+# Beta catalog and pricing: https://www.arcee.ai/blog/open-models-api-beta
+# Cached input pricing: https://docs.arcee.ai/get-started/pricing.md
+# Effort: reasoning_effort = high|max
+base_model = "deepseek/deepseek-v4-flash"
+name = "DeepSeek V4 Flash Latest"
+status = "beta"
+reasoning_options = [{ type = "effort", values = ["high", "max"] }]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.14
+output = 0.28
+cache_read = 0.28
+
+[limit]
+context = 1_048_576
