@@ -16,9 +16,9 @@ const BASE_MODEL_ALIASES: Record<string, string> = {
   "Nemotron-3-120B": "nvidia/nemotron-3-super-120b-a12b",
 };
 
-// Openference's model listing does not distinguish toggle-capable models from
-// always-on reasoners when supported_efforts is omitted. Keep the documented
-// always-on models explicit so they do not receive a false thinking toggle.
+// Openference's catalog docs distinguish always-on from toggle-only models by
+// name even when supported_efforts is omitted. Keep the documented always-on
+// models explicit here so they do not receive a false thinking toggle.
 const ALWAYS_ON_REASONING_MODELS = new Set(["Kimi K2.7 Code", "MiMo-V2.5"]);
 
 const OpenferencePricing = z.object({
@@ -140,6 +140,44 @@ function buildModel(
   );
 }
 
+// Host-unique models without a canonical base_model (e.g. the Auto router)
+// still need API-authoritative pricing and limits refreshed onto the
+// hand-authored file. Overlay only the fields /v1/models is authoritative for;
+// preserve everything else from the authored TOML.
+function buildAuthoredOnlyModel(
+  model: OpenferenceModel,
+  authored: ExistingModel,
+): SyncedModel {
+  const { id: _authoredID, ...preserved } = authored;
+  const apiCost = buildCost(model.pricing);
+  const cost = apiCost !== undefined
+    ? {
+        ...authored.cost,
+        input: apiCost.input,
+        output: apiCost.output,
+        ...(apiCost.cache_read !== undefined ? { cache_read: apiCost.cache_read } : {}),
+      }
+    : authored.cost;
+  const limit = {
+    ...authored.limit,
+    context: model.context_length,
+    ...(model.max_output_tokens !== undefined ? { output: model.max_output_tokens } : {}),
+  };
+  const reasoning = model.reasoning.supported;
+  const apiOptions = reasoningOptions(model);
+  const interleaved = reasoning
+    ? authored.interleaved ?? { field: "reasoning_content" as const }
+    : undefined;
+  return {
+    ...preserved,
+    reasoning,
+    cost,
+    limit,
+    ...(apiOptions !== undefined ? { reasoning_options: apiOptions } : {}),
+    interleaved,
+  } as SyncedModel;
+}
+
 export const openference = {
   id: "openference",
   name: "Openference",
@@ -159,12 +197,12 @@ export const openference = {
   translateModel(model, context) {
     const base = resolveBaseModel(model.id);
     if (base === undefined) {
-      // No canonical lab model — preserve a hand-authored file (e.g. the
-      // host's own "Auto" router) and skip models with no metadata at all.
+      // No canonical lab model — refresh API-authoritative fields onto a
+      // hand-authored file (e.g. the host's own "Auto" router) and skip
+      // models with no authored file at all.
       const authored = context.authored(model.id);
-      return authored === undefined
-        ? undefined
-        : { id: model.id, model: authored as SyncedModel };
+      if (authored === undefined) return undefined;
+      return { id: model.id, model: buildAuthoredOnlyModel(model, authored) };
     }
     return { id: model.id, model: buildModel(model, base, context.existing(model.id)) };
   },

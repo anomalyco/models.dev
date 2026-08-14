@@ -3741,6 +3741,57 @@ test("converts Openference per-token cache pricing", () => {
   });
 });
 
+test("refreshes API pricing and limits for Openference host-unique models", () => {
+  const authored = {
+    name: "Auto",
+    description: "Openference's auto-routing model",
+    release_date: "2026-07-12",
+    last_updated: "2026-07-12",
+    attachment: false,
+    reasoning: true,
+    temperature: true,
+    tool_call: true,
+    open_weights: false,
+    reasoning_options: [{ type: "toggle" }, { type: "effort", values: ["high"] }],
+    interleaved: { field: "reasoning_content" as const },
+    cost: {
+      input: 0.35,
+      output: 1.0,
+      tiers: [{ tier: { type: "context" as const, size: 200_000 }, input: 0.5, output: 1.5 }],
+    },
+    limit: { context: 250_000, output: 131_072 },
+    modalities: { input: ["text"], output: ["text"] },
+  };
+  const translated = openference.translateModel(
+    openferenceModel("Auto", ["high"]),
+    { existing: () => authored as never, authored: () => authored },
+  );
+
+  expect(translated).toEqual({
+    id: "Auto",
+    model: {
+      name: "Auto",
+      description: "Openference's auto-routing model",
+      release_date: "2026-07-12",
+      last_updated: "2026-07-12",
+      attachment: false,
+      reasoning: true,
+      temperature: true,
+      tool_call: true,
+      open_weights: false,
+      interleaved: { field: "reasoning_content" },
+      cost: {
+        input: 1,
+        output: 2,
+        tiers: authored.cost.tiers,
+      },
+      limit: { context: 128_000, output: 16_384 },
+      reasoning_options: [{ type: "toggle" }, { type: "effort", values: ["high"] }],
+      modalities: { input: ["text"], output: ["text"] },
+    },
+  });
+});
+
 test("parses nullable EmpirioLabs release dates", () => {
   expect(empiriolabs.parseModels({
     data: [{ id: "unknown-text-model", category: "text", model_released_at: null }],
