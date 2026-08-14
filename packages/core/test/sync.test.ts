@@ -3676,7 +3676,11 @@ test("skips an unavailable OpenRouter stub with no authored file", () => {
   expect(translated).toBeUndefined();
 });
 
-function openferenceModel(id: string, supported_efforts?: string[]): OpenferenceModel {
+function openferenceModel(
+  id: string,
+  supported_efforts?: string[],
+  cache_read?: string,
+): OpenferenceModel {
   return {
     id,
     object: "model",
@@ -3685,7 +3689,11 @@ function openferenceModel(id: string, supported_efforts?: string[]): Openference
     permission: [],
     root: id,
     parent: null,
-    pricing: { prompt: "0.000001", completion: "0.000002" },
+    pricing: {
+      prompt: "0.000001",
+      completion: "0.000002",
+      ...(cache_read === undefined ? {} : { cache_read }),
+    },
     context_length: 128_000,
     max_output_tokens: 16_384,
     reasoning: { supported: true, supported_efforts },
@@ -3695,15 +3703,41 @@ function openferenceModel(id: string, supported_efforts?: string[]): Openference
 test("classifies Openference always-on and toggle-only reasoning models", () => {
   const context = { existing: () => undefined, authored: () => undefined };
   const alwaysOn = openference.translateModel(openferenceModel("Kimi K2.7 Code"), context);
+  const alwaysOnMiMo = openference.translateModel(openferenceModel("MiMo-V2.5"), context);
   const toggleOnly = openference.translateModel(openferenceModel("MiniMax M3"), context);
+  const effortWithNone = openference.translateModel(
+    openferenceModel("GLM-5", ["high", "none", "low"]),
+    context,
+  );
 
   expect(alwaysOn?.model).toMatchObject({
     base_model: "moonshotai/kimi-k2.7-code",
     reasoning_options: [],
   });
+  expect(alwaysOnMiMo?.model).toMatchObject({
+    base_model: "xiaomi/mimo-v2.5",
+    reasoning_options: [],
+  });
   expect(toggleOnly?.model).toMatchObject({
     base_model: "minimax/MiniMax-M3",
     reasoning_options: [{ type: "toggle" }],
+  });
+  expect(effortWithNone?.model).toMatchObject({
+    base_model: "zhipuai/glm-5",
+    reasoning_options: [{ type: "effort", values: ["none", "low", "high"] }],
+  });
+});
+
+test("converts Openference per-token cache pricing", () => {
+  const context = { existing: () => undefined, authored: () => undefined };
+  const translated = openference.translateModel(
+    openferenceModel("DeepSeek-V4-Pro-0813", ["high"], "0.000000145"),
+    context,
+  );
+
+  expect(translated?.model).toMatchObject({
+    base_model: "deepseek/deepseek-v4-pro-0813",
+    cost: { input: 1, output: 2, cache_read: 0.145 },
   });
 });
 

@@ -103,7 +103,10 @@ function reasoningOptions(
       (ReasoningEffortOrder.get(b) ?? Number.MAX_SAFE_INTEGER);
     return order || a.localeCompare(b);
   });
-  return [...toggle, ReasoningOption.parse({ type: "effort", values: sorted })];
+  return [
+    ...(sorted.includes("none") ? [] : toggle),
+    ReasoningOption.parse({ type: "effort", values: sorted }),
+  ];
 }
 
 function resolveBaseModel(id: string) {
