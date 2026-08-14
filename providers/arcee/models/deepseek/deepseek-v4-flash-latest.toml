@@ -1,5 +1,5 @@
 # Beta catalog and pricing: https://www.arcee.ai/blog/open-models-api-beta
-# Cached input pricing: https://docs.arcee.ai/get-started/pricing.md
+# Cache hit: $0.028/MTok (Arcee correction, 2026-08-14).
 # Effort: reasoning_effort = high|max
 base_model = "deepseek/deepseek-v4-flash"
 name = "DeepSeek V4 Flash Latest"
@@ -12,7 +12,7 @@ field = "reasoning_content"
 [cost]
 input = 0.14
 output = 0.28
-cache_read = 0.28
+cache_read = 0.028
 
 [limit]
 context = 1_048_576
