@@ -1,0 +1,21 @@
+# Sources:
+# - https://github.blog/changelog/2026-08-14-grok-4-6-is-now-available-in-github-copilot/
+# - https://docs.x.ai/developers/pricing
+base_model = "xai/grok-4.6"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
+
+[cost]
+input = 2
+output = 6
+cache_read = 0.5
+
+[[cost.tiers]]
+tier = { type = "context", size = 200_000 }
+input = 4
+output = 12
+cache_read = 1
+
+[limit]
+context = 500_000
+input = 372_000
+output = 128_000
