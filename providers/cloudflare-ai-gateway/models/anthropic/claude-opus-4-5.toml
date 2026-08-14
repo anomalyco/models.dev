@@ -1,5 +1,4 @@
 base_model = "anthropic/claude-opus-4-5"
-description = "Flagship Claude model for deep reasoning, coding, and long-horizon agents"
 structured_output = true
 
 [[reasoning_options]]
@@ -8,7 +7,7 @@ values = ["low", "medium", "high"]
 
 [[reasoning_options]]
 type = "budget_tokens"
-min = 1_024
+min = 1024
 
 [cost]
 input = 5
