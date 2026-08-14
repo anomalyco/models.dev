@@ -1,0 +1,31 @@
+name = "GLM-5.3"
+description = "Frontier Coding with Emergent Cyber Capabilities"
+family = "glm"
+release_date = "2026-08-14"
+last_updated = "2026-08-14"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+open_weights = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["low, ""high", "max"]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0
+output = 0
+cache_read = 0
+cache_write = 0
+
+[limit]
+context = 200000
+output = 131072
+
+[modalities]
+input = ["text"]
+output = ["text"]
