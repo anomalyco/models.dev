@@ -4,7 +4,6 @@
 # that multiple floats over time as supply shifts. Limits from /v1/models; modalities
 # mirror providers/venice/. https://api.gondola-ai.com/v1/models (accessed 2026-08-14)
 base_model = "mistral/mistral-small-2506"
-attachment = false
 
 [cost]
 input = 0.028687
@@ -12,7 +11,6 @@ output = 0.0765
 
 [limit]
 context = 256000
-output = 16384
 
 [modalities]
 input = ["text"]

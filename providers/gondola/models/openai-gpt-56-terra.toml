@@ -4,6 +4,7 @@
 # that multiple floats over time as supply shifts. Limits from /v1/models; modalities
 # mirror providers/venice/. https://api.gondola-ai.com/v1/models (accessed 2026-08-14)
 base_model = "openai/gpt-5.6-terra"
+base_model_omit = ["limit.input"]
 
 [[reasoning_options]]
 type = "effort"
