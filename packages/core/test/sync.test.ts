@@ -56,6 +56,7 @@ import {
   resolveCanonicalBaseModel,
   type OpenRouterModel,
 } from "../src/sync/providers/openrouter.js";
+import { openference, type OpenferenceModel } from "../src/sync/providers/openference.js";
 import { buildLLMGatewayModel, type LLMGatewayModel } from "../src/sync/providers/llmgateway.js";
 import {
   buildMergeGatewayModel,
@@ -3673,6 +3674,37 @@ test("skips an unavailable OpenRouter stub with no authored file", () => {
   });
 
   expect(translated).toBeUndefined();
+});
+
+function openferenceModel(id: string, supported_efforts?: string[]): OpenferenceModel {
+  return {
+    id,
+    object: "model",
+    created: 0,
+    owned_by: "openference",
+    permission: [],
+    root: id,
+    parent: null,
+    pricing: { prompt: "0.000001", completion: "0.000002" },
+    context_length: 128_000,
+    max_output_tokens: 16_384,
+    reasoning: { supported: true, supported_efforts },
+  };
+}
+
+test("classifies Openference always-on and toggle-only reasoning models", () => {
+  const context = { existing: () => undefined, authored: () => undefined };
+  const alwaysOn = openference.translateModel(openferenceModel("Kimi K2.7 Code"), context);
+  const toggleOnly = openference.translateModel(openferenceModel("MiniMax M3"), context);
+
+  expect(alwaysOn?.model).toMatchObject({
+    base_model: "moonshotai/kimi-k2.7-code",
+    reasoning_options: [],
+  });
+  expect(toggleOnly?.model).toMatchObject({
+    base_model: "minimax/MiniMax-M3",
+    reasoning_options: [{ type: "toggle" }],
+  });
 });
 
 test("parses nullable EmpirioLabs release dates", () => {

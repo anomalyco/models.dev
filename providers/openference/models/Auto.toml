@@ -1,0 +1,36 @@
+# Toggle: thinking.type = enabled|disabled
+# Effort: reasoning_effort = high
+# Openference's auto-routing model: no underlying lab identity, so this is a
+# standalone entry rather than a `base_model` override.
+# https://api.openference.com/v1/models (accessed 2026-08-13)
+name = "Auto"
+description = "Automatically selects the optimal model based on performance and speed."
+release_date = "2026-07-12"
+last_updated = "2026-07-12"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+open_weights = false
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["high"]
+
+[cost]
+input = 0.35
+output = 1.00
+
+[limit]
+context = 250_000
+output = 131_072
+
+[modalities]
+input = ["text"]
+output = ["text"]

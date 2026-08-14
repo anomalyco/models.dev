@@ -26,6 +26,7 @@ import { mergeGateway } from "./providers/merge-gateway.js";
 import { nanoGpt } from "./providers/nano-gpt.js";
 import { openai } from "./providers/openai.js";
 import { ofox } from "./providers/ofox.js";
+import { openference } from "./providers/openference.js";
 import { openrouter } from "./providers/openrouter.js";
 import { ovhcloud } from "./providers/ovhcloud.js";
 import { pioneer } from "./providers/pioneer.js";
@@ -135,6 +136,7 @@ export const providers: {
   "nano-gpt": SyncProvider<any>;
   ofox: SyncProvider<any>;
   openai: SyncProvider<any>;
+  openference: SyncProvider<any>;
   openrouter: SyncProvider<any>;
   ovhcloud: SyncProvider<any>;
   pioneer: SyncProvider<any>;
@@ -166,6 +168,7 @@ export const providers: {
   "nano-gpt": nanoGpt,
   ofox,
   openai,
+  openference,
   openrouter,
   ovhcloud,
   pioneer,
@@ -189,6 +192,7 @@ export const groups = {
     "merge-gateway",
     "nano-gpt",
     "ofox",
+    "openference",
     "requesty",
     "openrouter",
     "vercel",

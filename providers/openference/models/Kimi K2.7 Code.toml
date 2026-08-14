@@ -1,0 +1,15 @@
+# Always-on reasoning: no toggle or effort params (per Openference docs).
+# https://api.openference.com/v1/models (accessed 2026-08-13)
+base_model = "moonshotai/kimi-k2.7-code"
+reasoning_options = []
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.95
+output = 4
+cache_read = 0.19
+
+[limit]
+output = 131_072

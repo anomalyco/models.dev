@@ -287,6 +287,18 @@ Requesty is implemented in `packages/core/src/sync/providers/requesty.ts`.
 - Region variants are written as separate models: `gpt-5.4` and `gpt-5.4@eu` are distinct files that share a `base_model` and differ only in served pricing and limits.
 - Prices are per-token USD and are converted to per-1M-token numbers. `pricing[]` bands become `cost.tiers`, with the first band as the flat `cost`. Price fields are nullable upstream, so a route quoting no prices gets no `[cost]` section rather than a fabricated zero.
 
+## Openference Notes
+
+Openference is implemented in `packages/core/src/sync/providers/openference.ts`.
+
+- Run it with `bun models:sync openference`.
+- Source endpoint: `https://api.openference.com/v1/models`; no auth required (the catalog is public).
+- Model IDs are Openference's exact wire IDs (e.g. `DeepSeek-V4-Pro`, `MiniMax M3`, `Qwen3.7 Plus`) and map directly to TOML paths under `providers/openference/models`.
+- Bare wire IDs resolve to canonical lab metadata through `resolveModelMetadataBaseModel` after spaces are normalized to hyphens. `Nemotron-3-120B` aliases to `nvidia/nemotron-3-super-120b-a12b` — Openference's name for NVIDIA's Nemotron 3 Super 120B A12B tier. The host's own `Auto` router has no lab match and is preserved as a hand-authored file.
+- Prices are per-token USD and are converted to per-1M-token numbers. `cost.{input,output,cache_read}` come from `pricing.{prompt,completion,cache_read}`; `limit.context` / `limit.output` come from `context_length` / `max_output_tokens`. Values are authored verbatim and omitted when equal to the lab default.
+- Reasoning models with a documented on/off control accept `thinking.type = enabled|disabled`; always-on models such as `Kimi K2.7 Code` and `MiMo-V2.5` expose no caller control. `reasoning_options` is authored as a `toggle` plus an `effort` option derived from `reasoning.supported_efforts` when present; always-on models get `[]` and toggle-only models get just the `toggle`.
+- Reasoning is delivered in the `reasoning_content` field, so `interleaved` defaults to `reasoning_content` for reasoning models while preserving any existing authored override.
+
 ## Venice Notes
 
 Venice is implemented in `packages/core/src/sync/providers/venice.ts`.
