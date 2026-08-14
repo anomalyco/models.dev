@@ -3792,6 +3792,68 @@ test("refreshes API pricing and limits for Openference host-unique models", () =
   });
 });
 
+test("falls back to context when Openference API omits max_output_tokens", () => {
+  const model: OpenferenceModel = {
+    id: "Nemotron-3-120B",
+    object: "model",
+    created: 0,
+    owned_by: "openference",
+    permission: [],
+    root: "Nemotron-3-120B",
+    parent: null,
+    pricing: { prompt: "0.0000005", completion: "0.0000015" },
+    context_length: 256_000,
+    reasoning: { supported: true, supported_efforts: ["high", "medium", "low"] },
+  };
+  const translated = openference.translateModel(model, {
+    existing: () => undefined,
+    authored: () => undefined,
+  });
+
+  expect(translated?.model).toMatchObject({
+    base_model: "nvidia/nemotron-3-super-120b-a12b",
+    limit: { context: 256_000, output: 256_000 },
+  });
+});
+
+test("falls back to context for authored-only models when API omits max_output_tokens", () => {
+  const authored = {
+    name: "Auto",
+    description: "Openference's auto-routing model",
+    release_date: "2026-07-12",
+    last_updated: "2026-07-12",
+    attachment: false,
+    reasoning: true,
+    temperature: true,
+    tool_call: true,
+    open_weights: false,
+    interleaved: { field: "reasoning_content" as const },
+    cost: { input: 1, output: 2 },
+    limit: { context: 64_000 },
+    modalities: { input: ["text"], output: ["text"] },
+  };
+  const model: OpenferenceModel = {
+    id: "Auto",
+    object: "model",
+    created: 0,
+    owned_by: "openference",
+    permission: [],
+    root: "Auto",
+    parent: null,
+    pricing: { prompt: "0.000001", completion: "0.000002" },
+    context_length: 128_000,
+    reasoning: { supported: true, supported_efforts: ["high"] },
+  };
+  const translated = openference.translateModel(model, {
+    existing: () => authored as never,
+    authored: () => authored,
+  });
+
+  expect(translated?.model).toMatchObject({
+    limit: { context: 128_000, output: 128_000 },
+  });
+});
+
 test("parses nullable EmpirioLabs release dates", () => {
   expect(empiriolabs.parseModels({
     data: [{ id: "unknown-text-model", category: "text", model_released_at: null }],

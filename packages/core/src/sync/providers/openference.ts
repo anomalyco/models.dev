@@ -123,7 +123,7 @@ function buildModel(
   const reasoning = model.reasoning.supported;
   const limit = {
     context: model.context_length,
-    output: model.max_output_tokens,
+    output: model.max_output_tokens ?? existing?.limit?.output ?? model.context_length,
   };
   const interleaved = reasoning
     ? existing?.interleaved ?? { field: "reasoning_content" as const }
@@ -161,7 +161,7 @@ function buildAuthoredOnlyModel(
   const limit = {
     ...authored.limit,
     context: model.context_length,
-    ...(model.max_output_tokens !== undefined ? { output: model.max_output_tokens } : {}),
+    output: model.max_output_tokens ?? authored.limit?.output ?? model.context_length,
   };
   const reasoning = model.reasoning.supported;
   const apiOptions = reasoningOptions(model);
