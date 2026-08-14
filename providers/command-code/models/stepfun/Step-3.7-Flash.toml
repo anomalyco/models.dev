@@ -1,7 +1,7 @@
-# Effort: reasoning_effort = low|medium|high|xhigh|max (live-probed 2026-08-14; xhigh|max accepted).
+# Effort: reasoning_effort = low|medium|high (lab baseline; xhigh|max not graded-probed, 2026-08-14).
 # Emits reasoning via reasoning / reasoning_details.
 base_model = "stepfun/step-3.7-flash"
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
 interleaved = { field = "reasoning_details" }
 
 [cost]

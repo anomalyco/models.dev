@@ -1,11 +1,8 @@
 # Price mirrors Google's launch discount (50% off list, ends 2026-12-31).
-# Effort: reasoning_effort = low|medium|high|xhigh|max (live-probed 2026-08-14:
-# gateway-normalized on this host — first-party lab set is low|medium|high).
+# Effort: reasoning_effort = low|medium|high (lab baseline; xhigh|max not graded-probed — plan-gated).
 # Served context from GET /provider/v1/models: 1_048_576 (probed 2026-08-14).
-# Emits reasoning via reasoning / reasoning_details.
 base_model = "google/gemini-3.7-flash"
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
-interleaved = { field = "reasoning_details" }
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
 
 [cost]
 input = 0.75

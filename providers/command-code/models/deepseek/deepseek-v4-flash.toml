@@ -1,10 +1,10 @@
 # Toggle: thinking.type = enabled|disabled (live-verified 2026-08-14: rtok 181→18 when disabled).
-# Effort: reasoning_effort = low|medium|high|xhigh|max — beyond the lab set, but every level
-# measured distinct on this host (rtok 66/275/139/513/600, 2026-08-14).
+# Effort: reasoning_effort = low|high|max (lab baseline; medium|xhigh produce non-monotonic
+# rtok 275/513 — not graded control, 2026-08-14).
 # Emits reasoning via reasoning / reasoning_details.
 base_model = "deepseek/deepseek-v4-flash"
 name = "DeepSeek V4 Flash (latest)"
-reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "high", "max"] }]
 interleaved = { field = "reasoning_details" }
 
 [cost]

@@ -1,9 +1,9 @@
-# Effort: reasoning_effort = low|medium|high|xhigh|max (live-probed 2026-08-14;
-# chat_template_kwargs.reasoning_effort = no_think did NOT suppress reasoning — falsified).
+# Model reasons but no verified graded control (2026-08-14: effort low=111/high=364/max=309
+# non-monotonic; chat_template_kwargs.reasoning_effort = no_think did not suppress reasoning).
 # Emits reasoning via reasoning / reasoning_details.
 base_model = "tencent/hy3"
 name = "Tencent Hy3"
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
+reasoning_options = []
 interleaved = { field = "reasoning_details" }
 
 [cost]
