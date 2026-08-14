@@ -1,23 +1,23 @@
-[model]
-id = "kimi-k3"
-name = "Kimi K3"
-description = "Moonshot AI's Kimi K3 model"
-provider = "moonshotai"
-family = "kimi"
+# Source: GET https://api.aiand.com/v1/models (USD list prices; accessed
+# 2026-07-28). Pricing is aiand-specific: $3.00 input, $0.50 cache_read,
+# $12.50 output (differs from Moonshot official rates).
+# Modalities: text + image + pdf accepted per GET /v1/models; video rejected
+# ("does not support video input") — overridden from shared base
+# text+image+video. PDF kept: sibling aiand Moonshot entries (kimi-k2.6,
+# kimi-k2.7-code) include pdf after catalog/probe evidence; aiand treats
+# none/minimal/low/medium/high/xhigh/max, but the K3 backend only accepts
+# none/low/high/max (minimal/medium/xhigh rejected). Invalid values rejected
+# with 400 (negative control).
+base_model = "moonshotai/kimi-k3"
 
-[capabilities]
-reasoning = true
-vision = false
-tool_use = true
-
-[parameters.reasoning_effort]
-type = "enum"
-default = "low"
+[[reasoning_options]]
+type = "effort"
 values = ["low", "high", "max"]
-description = "Controls the reasoning effort level. Kimi K3 only supports low, high, and max."
 
-[pricing]
-input = 0.00
-output = 0.00
-currency = "USD"
-unit = "1K tokens"
+[cost]
+input = 3
+output = 12.5
+cache_read = 0.5
+
+[modalities]
+input = ["text", "image", "pdf"]
