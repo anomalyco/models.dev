@@ -2,14 +2,14 @@
 # lender's uniform pricing factor (a fraction of Venice list, applied to every model)
 # + a 2% platform fee. So each model is the same multiple of Venice list right now;
 # that multiple floats over time as supply shifts. Limits from /v1/models; modalities
-# mirror providers/venice/. https://api.gondola-ai.com/v1/models (accessed 2026-07-24)
+# mirror providers/venice/. https://api.gondola-ai.com/v1/models (accessed 2026-08-14)
 base_model = "meta/llama-3.3-70b-instruct"
 family = "llama"
 attachment = false
 
 [cost]
-input = 0.33558
-output = 1.34232
+input = 0.2142
+output = 0.8568
 
 [limit]
 context = 128000

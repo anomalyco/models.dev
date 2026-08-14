@@ -2,12 +2,12 @@
 # lender's uniform pricing factor (a fraction of Venice list, applied to every model)
 # + a 2% platform fee. So each model is the same multiple of Venice list right now;
 # that multiple floats over time as supply shifts. Limits from /v1/models; modalities
-# mirror providers/venice/. https://api.gondola-ai.com/v1/models (accessed 2026-07-24)
+# mirror providers/venice/. https://api.gondola-ai.com/v1/models (accessed 2026-08-14)
 name = "Mistral Small 3.2 24B Instruct"
 description = "Mistral Small 3.2 24B Instruct served through the Gondola marketplace on Venice supply. Cost is a live fee-inclusive 'from' quote (a uniform multiple of Venice list plus the platform fee)."
 family = "mistral-small"
 release_date = "2026-01-15"
-last_updated = "2026-07-24"
+last_updated = "2026-08-14"
 attachment = false
 reasoning = false
 temperature = true
@@ -15,8 +15,8 @@ tool_call = true
 open_weights = true
 
 [cost]
-input = 0.044944
-output = 0.11985
+input = 0.028687
+output = 0.0765
 
 [limit]
 context = 256000

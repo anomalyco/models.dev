@@ -2,13 +2,13 @@
 # lender's uniform pricing factor (a fraction of Venice list, applied to every model)
 # + a 2% platform fee. So each model is the same multiple of Venice list right now;
 # that multiple floats over time as supply shifts. Limits from /v1/models; modalities
-# mirror providers/venice/. https://api.gondola-ai.com/v1/models (accessed 2026-07-24)
+# mirror providers/venice/. https://api.gondola-ai.com/v1/models (accessed 2026-08-14)
 base_model = "minimax/MiniMax-M2.7"
 reasoning_options = []
 
 [cost]
-input = 0.179775
-output = 0.7191
+input = 0.11475
+output = 0.459
 
 [limit]
 context = 198000

@@ -2,14 +2,14 @@
 # lender's uniform pricing factor (a fraction of Venice list, applied to every model)
 # + a 2% platform fee. So each model is the same multiple of Venice list right now;
 # that multiple floats over time as supply shifts. Limits from /v1/models; modalities
-# mirror providers/venice/. https://api.gondola-ai.com/v1/models (accessed 2026-07-24)
+# mirror providers/venice/. https://api.gondola-ai.com/v1/models (accessed 2026-08-14)
 base_model = "deepseek/deepseek-v4-flash"
 family = "deepseek"
 reasoning_options = []
 
 [cost]
-input = 0.066157
-output = 0.131835
+input = 0.042228
+output = 0.08415
 
 [limit]
 context = 1000000

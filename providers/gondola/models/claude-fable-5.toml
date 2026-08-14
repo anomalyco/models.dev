@@ -3,18 +3,17 @@
 # + a 2% platform fee. So each model is the same multiple of Venice list right now;
 # that multiple floats over time as supply shifts. Limits from /v1/models; modalities
 # mirror providers/venice/. https://api.gondola-ai.com/v1/models (accessed 2026-08-14)
-base_model = "google/gemini-3.5-flash"
-family = "gemini"
+base_model = "anthropic/claude-fable-5"
 reasoning_options = []
 
 [cost]
-input = 0.4743
-output = 2.8917
+input = 3.672
+output = 18.36
 
 [limit]
 context = 1000000
 output = 32768
 
 [modalities]
-input = ["text", "image", "audio", "video"]
+input = ["text", "image"]
 output = ["text"]
