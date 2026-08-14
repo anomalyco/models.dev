@@ -1,0 +1,19 @@
+# Source: https://api.ofox.ai/v2/models/catalog?include=provider_price&limit=500
+name = "Doubao Seed 1.6"
+description = "ByteDance Doubao Seed 1.6 via Volcengine. Latest generation model with 128K context, enhanced reasoning, and improved capabilities."
+family = "seed"
+release_date = "2025-10-15"
+last_updated = "2025-10-15"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+open_weights = false
+
+[limit]
+context = 256_000
+output = 64_000
+
+[modalities]
+input = ["text"]
+output = ["text"]

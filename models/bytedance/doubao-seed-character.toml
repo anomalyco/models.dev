@@ -1,0 +1,19 @@
+# Source: https://api.ofox.ai/v2/models/catalog?include=provider_price&limit=500
+name = "Doubao Seed Character"
+description = "火山引擎豆包 Seed Character 角色对话模型。仅 OpenAI 协议 (Anthropic messages_api 火山侧未授权, 见 issue 2026-06-24)。ARK 真实 id doubao-seed-character-260628。"
+family = "seed"
+release_date = "2026-06-23"
+last_updated = "2026-06-23"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+open_weights = false
+
+[limit]
+context = 256_000
+output = 256_000
+
+[modalities]
+input = ["text", "image", "video"]
+output = ["text"]
