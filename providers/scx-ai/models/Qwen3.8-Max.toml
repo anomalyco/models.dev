@@ -1,0 +1,25 @@
+# Cost is USD per 1M tokens, matching the SCX rates carried in
+# theopenco/llmgateway (packages/models/src/models/alibaba.ts).
+# Limits and capabilities verified directly against https://api.scx.ai/v1:
+# max_tokens is hard-capped at 131072 by the API, context is 1M, and image
+# input was confirmed with a live request. reasoning_effort enum returned by
+# the API: none, minimal, low, medium, high, xhigh, max.
+# The API canonicalises the model id to "Qwen3.8-Max" (lowercase also accepted).
+base_model = "alibaba/qwen3.8-max"
+structured_output = true
+reasoning_options = [
+  { type = "effort", values = [
+    "none",
+    "minimal",
+    "low",
+    "medium",
+    "high",
+    "xhigh",
+    "max",
+  ] },
+]
+
+[cost]
+input = 1.815
+output = 5.4461
+cache_read = 0.17

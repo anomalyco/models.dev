@@ -1,0 +1,24 @@
+# Cost is USD per 1M tokens, matching the SCX rates carried in
+# theopenco/llmgateway (packages/models/src/models/zai.ts).
+# Limits and capabilities verified directly against https://api.scx.ai/v1:
+# max_tokens is hard-capped at 131072 by the API and context is 1M, which
+# already matches the zhipuai/glm-5.2 base entry, so no [limit] override.
+# reasoning_effort enum returned by the API: none, minimal, low, medium, high,
+# xhigh, max.
+base_model = "zhipuai/glm-5.2"
+reasoning_options = [
+  { type = "effort", values = [
+    "none",
+    "minimal",
+    "low",
+    "medium",
+    "high",
+    "xhigh",
+    "max",
+  ] },
+]
+
+[cost]
+input = 0.55
+output = 1.784
+cache_read = 0.111
