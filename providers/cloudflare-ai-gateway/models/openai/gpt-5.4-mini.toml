@@ -8,7 +8,3 @@ values = ["none", "low", "medium", "high", "xhigh"]
 input = 0.75
 output = 4.5
 cache_read = 0.075
-
-[experimental.modes.fast]
-cost = { input = 1.50, output = 9.00, cache_read = 0.15 }
-provider = { body = { service_tier = "priority" } }

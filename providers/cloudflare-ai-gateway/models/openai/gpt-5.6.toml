@@ -14,10 +14,3 @@ input = 10.00
 output = 45.00
 cache_read = 1.00
 cache_write = 12.50
-
-[experimental.modes.fast]
-cost = { input = 10.00, output = 60.00, cache_read = 1.00, cache_write = 12.50 }
-provider = { body = { service_tier = "priority" } }
-
-[experimental.modes.pro]
-provider = { body = { reasoning = { mode = "pro" } } }
