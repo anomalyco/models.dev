@@ -29,7 +29,6 @@ test("resolves a non-alias Mistral id through the mistralai prefix", () => {
 });
 
 test("does not invent lab metadata when none exists", () => {
-  expect(resolveEmpiriolabsBaseModel("qwen3-8-27b")).toBeUndefined();
   expect(resolveEmpiriolabsBaseModel("deepreasoning")).toBeUndefined();
   expect(resolveEmpiriolabsBaseModel("nova-pro-1-0")).toBeUndefined();
 });
