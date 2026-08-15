@@ -338,6 +338,9 @@ export const ModelFamilyValues = [
   // Osmosis
   "osmosis",
 
+  // Schematron
+  "schematron",
+
   // Parakeet
   "parakeet",
 
