@@ -1,0 +1,11 @@
+# Source: Poe GET /v1/models (accessed 2026-08-16).
+# Toggle: extra_body.enable_thinking true|false
+# Costs are USD/MTok from Poe pricing fields * 1e6.
+base_model = "deepseek/deepseek-v4-pro"
+name = "DeepSeek-V4-Pro"
+reasoning_options = [{ type = "toggle" }]
+
+[cost]
+input = 1.7576
+output = 3.5152
+cache_read = 0.1465
