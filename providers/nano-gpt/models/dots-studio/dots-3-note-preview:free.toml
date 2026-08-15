@@ -1,0 +1,26 @@
+name = "Dots3-Note Preview"
+description = "Dots Studio's open-weight multimodal Mixture-of-Experts model activates 16B of 280B parameters for long-context reasoning, coding, visual and document understanding, tool use, and long-horizon agent workflows."
+release_date = "2026-08-15"
+last_updated = "2026-08-15"
+attachment = true
+reasoning = true
+tool_call = true
+structured_output = true
+open_weights = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "minimal", "low", "medium", "high", "xhigh"]
+
+[cost]
+input = 0
+output = 0
+
+[limit]
+context = 512_000
+input = 512_000
+output = 512_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
