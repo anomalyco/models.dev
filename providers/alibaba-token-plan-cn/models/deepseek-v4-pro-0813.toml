@@ -6,11 +6,10 @@ base_model = "deepseek/deepseek-v4-pro-0813"
 # Model availability: authenticated Alibaba Token Plan model selector.
 # Sources:
 # https://help.aliyun.com/zh/model-studio/token-plan-overview
-# https://www.alibabacloud.com/help/en/model-studio/deepseek-api
+# https://platform.qianwenai.com/docs/api-reference/chat/openai-chat
 # https://www.alibabacloud.com/help/en/model-studio/anthropic-api-messages
 
-[[reasoning_options]]
-type = "toggle"
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["high", "max"] }]
 
 [interleaved]
 field = "reasoning_content"
