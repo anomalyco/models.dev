@@ -1,14 +1,15 @@
 name = "DeepSeek V4 Pro 0813"
-description = "DeepSeek V4 Pro snapshot with million-token context and support for thinking and non-thinking modes"
+description = "The official release of DeepSeek V4 Pro, superseding the preview: the flagship open coding and reasoning MoE (1.6T total, 49B active) with million-token context, thinking and non-thinking modes, and substantially stronger agentic performance"
 family = "deepseek-thinking"
 release_date = "2026-08-12"
-last_updated = "2026-08-12"
+last_updated = "2026-08-15"
 attachment = false
 reasoning = true
 temperature = true
 tool_call = true
 structured_output = true
-open_weights = false
+open_weights = true
+license = "MIT"
 
 [limit]
 context = 1_000_000
@@ -17,3 +18,38 @@ output = 384_000
 [modalities]
 input = ["text"]
 output = ["text"]
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/deepseek-ai/DeepSeek-V4-Pro-0813"
+
+[[benchmarks]]
+name = "SWE-Bench Verified"
+score = 80.6
+metric = "resolved"
+source = "https://huggingface.co/deepseek-ai/DeepSeek-V4-Pro-0813"
+
+[[benchmarks]]
+name = "Terminal-Bench"
+score = 67.9
+metric = "accuracy"
+version = "2.0"
+source = "https://huggingface.co/deepseek-ai/DeepSeek-V4-Pro-0813"
+
+[[benchmarks]]
+name = "GPQA Diamond"
+score = 90.1
+metric = "pass@1"
+source = "https://huggingface.co/deepseek-ai/DeepSeek-V4-Pro-0813"
+
+[[benchmarks]]
+name = "LiveCodeBench"
+score = 93.5
+metric = "pass@1"
+source = "https://huggingface.co/deepseek-ai/DeepSeek-V4-Pro-0813"
+
+[[benchmarks]]
+name = "Humanity's Last Exam"
+score = 37.7
+metric = "pass@1"
+source = "https://huggingface.co/deepseek-ai/DeepSeek-V4-Pro-0813"
