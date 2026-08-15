@@ -24,6 +24,10 @@ test("keeps true filename aliases", () => {
   expect(resolveEmpiriolabsBaseModel("mistral-small-4")).toBe("mistral/mistral-small-2603");
 });
 
+test("resolves a non-alias Mistral id through the mistralai prefix", () => {
+  expect(resolveEmpiriolabsBaseModel("mistral-small-2603")).toBe("mistral/mistral-small-2603");
+});
+
 test("does not invent lab metadata when none exists", () => {
   expect(resolveEmpiriolabsBaseModel("qwen3-8-27b")).toBeUndefined();
   expect(resolveEmpiriolabsBaseModel("deepreasoning")).toBeUndefined();

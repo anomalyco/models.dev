@@ -249,7 +249,7 @@ function prefixesFor(id: string) {
   if (id.startsWith("fugu-")) return ["sakana"];
   if (id.startsWith("gemma-")) return ["google"];
   if (id.startsWith("step") && !id.startsWith("stepaudio")) return ["stepfun"];
-  if (id.startsWith("mistral-")) return ["mistral"];
+  if (id.startsWith("mistral-")) return ["mistralai"];
   return [];
 }
 
