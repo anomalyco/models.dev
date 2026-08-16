@@ -1,0 +1,11 @@
+# Hand-authored from LLMTR's public catalog https://llmtr.com/api/models (accessed 2026-08-16).
+# reasoning_options measured against POST https://llmtr.com/v1/chat/completions (2026-08-16).
+base_model = "alibaba/qwen3.5-397b-a17b"
+reasoning_options = []
+
+[cost]
+input = 0.6
+output = 3.6
+
+[limit]
+context = 256_000

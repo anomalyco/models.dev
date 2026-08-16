@@ -1,0 +1,10 @@
+# Hand-authored from LLMTR's public catalog https://llmtr.com/api/models (accessed 2026-08-16).
+# reasoning_options measured against POST https://llmtr.com/v1/chat/completions (2026-08-16).
+base_model = "alibaba/qwen3-coder-plus"
+
+[cost]
+input = 1
+output = 5
+
+[limit]
+context = 1_000_000

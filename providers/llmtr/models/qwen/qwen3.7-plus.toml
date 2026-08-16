@@ -1,0 +1,11 @@
+# Hand-authored from LLMTR's public catalog https://llmtr.com/api/models (accessed 2026-08-16).
+# reasoning_options measured against POST https://llmtr.com/v1/chat/completions (2026-08-16).
+base_model = "alibaba/qwen3.7-plus"
+
+[cost]
+input = 0.4
+output = 1.6
+
+[[reasoning_options]]
+# API: $.reasoning = true|false (suffix aliases :think|:fast)
+type = "toggle"
