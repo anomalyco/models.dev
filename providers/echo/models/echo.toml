@@ -1,0 +1,31 @@
+# Sources (accessed 2026-08-16):
+# - API and authentication: https://echo.tracerml.ai/docs/api
+# - Coding-agent setup: https://echo.tracerml.ai/code
+# Echo selects an internal compute level per request. Public rates range from
+# $3/$15 (Quick) to $10/$50 (Deep) per million input/output tokens. Models.dev
+# has no route-based cost shape, so the catalog uses the conservative Deep-rate
+# ceiling instead of incorrectly presenting dynamically routed calls as free.
+name = "Echo"
+description = "Adaptive model for coding, reasoning, and tool-driven agent workflows through one OpenAI-compatible endpoint"
+release_date = "2026-07-19"
+last_updated = "2026-08-16"
+attachment = false
+reasoning = true
+reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high"] }]
+temperature = true
+tool_call = true
+structured_output = false
+open_weights = false
+status = "beta"
+
+[cost]
+input = 10
+output = 50
+
+[limit]
+context = 262_144
+output = 65_536
+
+[modalities]
+input = ["text"]
+output = ["text"]
