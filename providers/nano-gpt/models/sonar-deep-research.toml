@@ -1,13 +1,7 @@
+base_model = "perplexity/sonar-deep-research"
 name = "Perplexity Deep Research"
-description = "Research model for long-horizon investigation, synthesis, and analytical reports"
-family = "sonar-deep-research"
-release_date = "2025-02-25"
-last_updated = "2025-02-25"
-attachment = false
 reasoning = false
-tool_call = false
 structured_output = false
-open_weights = false
 
 [cost]
 input = 3.4
@@ -18,7 +12,3 @@ cache_read = 1.7
 context = 60_000
 input = 60_000
 output = 128_000
-
-[modalities]
-input = ["text"]
-output = ["text"]
