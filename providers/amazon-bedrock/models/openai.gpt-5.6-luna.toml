@@ -1,6 +1,6 @@
+# Mantle in-region only in us-east-1/us-east-2/us-west-2; pin us-east-1 so non-US AWS_REGION does not 404.
+# Model card (regions, mantle URL, in-region pricing): https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-openai-gpt-56-luna.html
 # Bedrock model IDs and reasoning support: https://github.com/openai/codex/pull/30285
-# Bedrock context window: https://developers.openai.com/api/docs/guides/amazon-bedrock
-# In-region on-demand pricing (US East N. Virginia & Ohio; also US West Oregon): https://aws.amazon.com/bedrock/pricing/
 # Columns: input / 30m cache write / cache read / output (USD per 1M tokens)
 base_model = "openai/gpt-5.6-luna"
 reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh", "max"] }]
@@ -21,5 +21,5 @@ cache_write = 0.55
 
 [provider]
 npm = "@ai-sdk/amazon-bedrock/mantle"
-api = "https://bedrock-mantle.${AWS_REGION}.api.aws/openai/v1"
+api = "https://bedrock-mantle.us-east-1.api.aws/openai/v1"
 shape = "responses"

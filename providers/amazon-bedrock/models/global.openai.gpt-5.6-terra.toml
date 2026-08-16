@@ -1,0 +1,19 @@
+# bedrock-runtime global CRIS ID (not Mantle). Model card: https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-openai-gpt-56-terra.html
+# Global CRIS pricing (USD per 1M tokens): short ≤272K / long >272K — input / 30m cache write / cache read / output
+base_model = "openai/gpt-5.6-terra"
+reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh", "max"] }]
+base_model_omit = ["cost.context_over_200k", "experimental.modes.fast"]
+name = "GPT-5.6 Terra (Global)"
+
+[cost]
+input = 2.00
+output = 12.00
+cache_read = 0.20
+cache_write = 2.50
+
+[[cost.tiers]]
+tier = { size = 272_000 }
+input = 4.00
+output = 18.00
+cache_read = 0.40
+cache_write = 5.00

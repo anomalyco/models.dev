@@ -1,3 +1,5 @@
+# Mantle in-region only in us-east-1/us-east-2/us-west-2; pin us-east-1 so non-US AWS_REGION does not 404.
+# Model card: https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-xai-grok-4-3.html
 base_model = "xai/grok-4.3"
 reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high"] }]
 last_updated = "2026-06-28"
@@ -16,5 +18,5 @@ input = ["text", "image"]
 
 [provider]
 npm = "@ai-sdk/amazon-bedrock/mantle"
-api = "https://bedrock-mantle.${AWS_REGION}.api.aws/openai/v1"
+api = "https://bedrock-mantle.us-east-1.api.aws/openai/v1"
 shape = "responses"

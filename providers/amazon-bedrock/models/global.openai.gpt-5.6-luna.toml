@@ -1,0 +1,19 @@
+# bedrock-runtime global CRIS ID (not Mantle). Model card: https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-openai-gpt-56-luna.html
+# Global CRIS pricing (USD per 1M tokens): short ≤272K / long >272K — input / 30m cache write / cache read / output
+base_model = "openai/gpt-5.6-luna"
+reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh", "max"] }]
+base_model_omit = ["cost.context_over_200k", "experimental.modes.fast"]
+name = "GPT-5.6 Luna (Global)"
+
+[cost]
+input = 0.20
+output = 1.20
+cache_read = 0.02
+cache_write = 0.25
+
+[[cost.tiers]]
+tier = { size = 272_000 }
+input = 0.40
+output = 1.80
+cache_read = 0.04
+cache_write = 0.50
