@@ -1,5 +1,6 @@
 # Hand-authored from LLMTR's public catalog https://llmtr.com/api/models (accessed 2026-08-16).
 # reasoning_options measured against POST https://llmtr.com/v1/chat/completions (2026-08-16).
+# Toggle: $.reasoning = true|false (model-id suffix aliases :think|:fast)
 base_model = "alibaba/qwen3.6-flash"
 
 [cost]
@@ -7,5 +8,4 @@ input = 0.25
 output = 1.5
 
 [[reasoning_options]]
-# API: $.reasoning = true|false (suffix aliases :think|:fast)
 type = "toggle"
