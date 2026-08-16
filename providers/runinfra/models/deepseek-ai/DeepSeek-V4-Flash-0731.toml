@@ -1,0 +1,20 @@
+# Source: https://runinfra.ai/inference-api/deepseek-v4-flash
+# Reasoning toggle wire field: reasoning_effort = "none" disables reasoning (verified live
+# 2026-08-16: completion fell from 35 tokens with reasoning to 3 without); any other value or
+# omitting the field leaves reasoning on. Intermediate effort values are accepted but have no
+# measured effect, and enable_thinking / chat_template_kwargs / thinking_budget are ignored,
+# so the control is a toggle, not an effort ladder
+# cache_read is the cached input price
+base_model = "deepseek/deepseek-v4-flash-0731"
+
+[[reasoning_options]]
+type = "toggle"
+
+[cost]
+input = 0.13
+output = 0.27
+cache_read = 0.01
+
+[limit]
+context = 1_048_576
+output = 32_768
