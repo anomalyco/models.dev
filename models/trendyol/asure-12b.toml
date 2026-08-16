@@ -1,0 +1,30 @@
+# Sources:
+# https://huggingface.co/Trendyol/Trendyol-LLM-Asure-12B
+# https://huggingface.co/api/models/Trendyol/Trendyol-LLM-Asure-12B (createdAt, license, base_model)
+# https://huggingface.co/Trendyol/Trendyol-LLM-Asure-12B/raw/main/config.json (max_position_embeddings)
+# `reasoning` and `tool_call` are not stated on the model card; both were
+# measured against a host serving these weights (llmtr.com, 2026-08-16):
+# a request carrying `tools` returns no tool_calls, and no reasoning output
+# is produced.
+name = "Trendyol Asure 12B"
+description = "Turkish-language multimodal instruct model built on Gemma 3 12B for e-commerce text, chat, and image-text tasks"
+family = "gemma"
+release_date = "2026-02-19"
+last_updated = "2026-02-20"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = false
+open_weights = true
+license = "Gemma"
+
+[limit]
+context = 131_072
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/Trendyol/Trendyol-LLM-Asure-12B"
