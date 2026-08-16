@@ -1,14 +1,9 @@
-name = "Qwen: Qwen3.8 2.4T A95B"
-description = "Qwen3.8 2.4T A95B is an open-weight sparse mixture-of-experts model from Qwen and the open-weight variant of [Qwen3.8 Max](/qwen/qwen3.8-max), with 95 billion active parameters out of 2.4 trillion total. It is..."
-family = "qwen"
-release_date = "2026-08-12"
-last_updated = "2026-08-12"
-attachment = false
-reasoning = true
-temperature = true
-tool_call = true
-structured_output = true
-open_weights = false
+# Sources (accessed 2026-08-16):
+# https://huggingface.co/Qwen/Qwen3.8-2.4T-A95B
+# https://openrouter.ai/qwen/qwen3.8-2.4t-a95b
+# Kilo host pricing retained from prior catalog entry; lab metadata via base_model.
+
+base_model = "alibaba/qwen3.8-2.4t-a95b"
 
 [[reasoning_options]]
 type = "effort"
@@ -23,7 +18,3 @@ cache_write = 2.5
 [limit]
 context = 1_000_000
 output = 262_144
-
-[modalities]
-input = ["text"]
-output = ["text"]

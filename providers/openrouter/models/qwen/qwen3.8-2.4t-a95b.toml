@@ -1,14 +1,12 @@
-name = "Qwen3.8 2.4T A95B"
-description = "Qwen instruction model for multilingual chat, reasoning, and tool use"
-family = "qwen"
-release_date = "2026-08-12"
-last_updated = "2026-08-12"
-attachment = false
-reasoning = true
-temperature = true
-tool_call = true
-structured_output = true
-open_weights = true
+# Sources (accessed 2026-08-16):
+# https://openrouter.ai/qwen/qwen3.8-2.4t-a95b
+# https://openrouter.ai/api/v1/models (id qwen/qwen3.8-2.4t-a95b)
+# https://huggingface.co/Qwen/Qwen3.8-2.4T-A95B
+# Pricing: $2 / $6 per 1M (cache_read $0.25). Context up to 1_048_576;
+# top_provider max_completion_tokens 262_144. Text-only (not multimodal Max).
+# Reasoning mandatory; efforts low|medium|xhigh (no toggle / no none).
+
+base_model = "alibaba/qwen3.8-2.4t-a95b"
 
 [[reasoning_options]]
 type = "effort"
@@ -22,7 +20,3 @@ cache_read = 0.25
 [limit]
 context = 1_048_576
 output = 262_144
-
-[modalities]
-input = ["text"]
-output = ["text"]
