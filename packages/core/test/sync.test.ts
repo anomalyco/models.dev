@@ -2034,6 +2034,33 @@ test("OpenRouter sync maps pricing.overrides into cost tiers", () => {
   });
 });
 
+test("OpenRouter sync ignores time-window pricing overrides", () => {
+  const source = openRouterModel({
+    pricing: {
+      prompt: "0.00000132",
+      completion: "0.00000396",
+      overrides: [{
+        utc_start: 1_000,
+        utc_end: 100,
+        prompt: "0.00000066",
+        completion: "0.00000198",
+      }],
+    },
+  });
+  const [parsed] = openrouter.parseModels({ data: [source] });
+  const model = buildOpenRouterModel(parsed!, {
+    cost: {
+      input: 1.32,
+      output: 3.96,
+      tiers: [{ tier: { type: "context", size: 200_000 }, input: 2.64, output: 7.92 }],
+    },
+  });
+
+  expect(model.cost?.tiers).toEqual([
+    { tier: { type: "context", size: 200_000 }, input: 2.64, output: 7.92 },
+  ]);
+});
+
 test("OpenRouter sync keeps authored tiers when API omits overrides", () => {
   const model = buildOpenRouterModel(openRouterModel({
     pricing: {
