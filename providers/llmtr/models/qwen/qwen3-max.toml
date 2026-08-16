@@ -1,11 +1,9 @@
 # Hand-authored from LLMTR's public catalog https://llmtr.com/api/models (accessed 2026-08-16).
 # reasoning_options measured against POST https://llmtr.com/v1/chat/completions (2026-08-16).
 # Toggle: $.enable_thinking = true|false (Alibaba native field, forwarded by the gateway).
-# reasoning is overridden to true: this route does emit reasoning on demand even though the base
-# entry has reasoning = false. Measured 2026-08-16 - default and enable_thinking=false emit no
-# reasoning_content, enable_thinking=true emits ~256-286 reasoning tokens (reproduced 3x).
-# reasoning_effort is rejected here with "does not expose a thinking mode", which is exactly why
-# an effort-only probe missed this control.
+# Budget: $.thinking_budget (integer reasoning tokens).
+# Measured: `thinking_budget` is honoured as a cap: 64 -> 64 reasoning tokens; at 600 the model used 452.
+# The bare `$.reasoning` boolean is inert on this route (no reasoning output with it set); `enable_thinking` is the control that works.
 base_model = "alibaba/qwen3-max"
 reasoning = true
 
@@ -18,3 +16,6 @@ context = 256_000
 
 [[reasoning_options]]
 type = "toggle"
+
+[[reasoning_options]]
+type = "budget_tokens"
