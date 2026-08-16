@@ -1,0 +1,27 @@
+# Replaces the earlier `trendyol-7b` entry: that identifier is now only a
+# migration alias and resolves to this model. Limits, modalities and pricing
+# from https://llmtr.com/api/models (accessed 2026-08-16). Tool calling
+# verified absent against POST /v1/chat/completions on the same date.
+name = "Trendyol Asure 12B"
+description = "Turkey-hosted vision-capable model for Turkish chat, RAG, and e-commerce text"
+family = "qwen"
+release_date = "2026-08-14"
+last_updated = "2026-08-16"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = false
+open_weights = true
+
+[cost]
+input = 0.1
+output = 0.5
+cache_read = 0.025
+
+[limit]
+context = 40_960
+output = 40_960
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
