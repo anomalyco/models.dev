@@ -18,8 +18,14 @@ values = ["low", "high", "max"]
 [interleaved]
 field = "reasoning_content"
 
+# DeepSeek moved V4 to peak/off-peak billing on 2026-08-16 16:00 UTC. Peak hours
+# are 01:00-04:00 and 06:00-10:00 UTC; every other hour is off-peak at half the
+# peak rate (input 0.22, output 0.66, cache_read 0.007). The schema has no time
+# dimension, so `[cost]` carries the peak rate, which the docs present as the
+# list price and off-peak as the discount off it.
+# https://api-docs.deepseek.com/quick_start/pricing/ (accessed 2026-08-17)
 [cost]
-input = 0.14
-output = 0.28
-reasoning = 0.28
-cache_read = 0.0028
+input = 0.44
+output = 1.32
+reasoning = 1.32
+cache_read = 0.014
