@@ -4,6 +4,8 @@
 # Disable: reasoning_effort = none
 # Enable/effort: reasoning_effort = low|medium|high
 # Tool-call reasoning is returned and replayed in reasoning_content.
+# Context: inherits the canonical 262,144-token text context; Kosmik's
+# serving layer enforces 131,072 tokens for multimodal requests.
 
 base_model = "alibaba/qwen3.8-27b"
 description = "Dense 27B vision-language model for coding, agent tasks, and image understanding"
@@ -19,11 +21,6 @@ field = "reasoning_content"
 input = 0.35
 output = 2.20
 cache_read = 0.09
-
-# Full 262,144-token text-only context; the serving router enforces the
-# 131,072-token limit for multimodal requests.
-[limit]
-context = 262_144
 
 [modalities]
 input = ["text", "image"]
