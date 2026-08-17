@@ -280,6 +280,43 @@ test("uses SayGM's five-minute cache-write rate for models.dev", () => {
   });
 });
 
+test("retains authored SayGM cost fields the live ceiling omits", () => {
+  const existing = {
+    base_model: "openai/gpt-5.4",
+    cost: {
+      input: 2,
+      output: 12,
+      cache_read: 0.2,
+      cache_write: 2.5,
+      tiers: [{ tier: { type: "context" as const, size: 272_000 }, input: 4, output: 20 }],
+    },
+  };
+
+  const built = buildSaygmModel(saygmModel({
+    price_range: {
+      unit: "ndollars_per_mtok",
+      currency: "USD",
+      ceiling: {
+        basis: "published_retail",
+        dimensions: {
+          input_per_mtok_ndollars: 2_500_000_000,
+          output_per_mtok_ndollars: 15_000_000_000,
+        },
+      },
+    },
+  }), existing);
+
+  expect(built).toMatchObject({
+    cost: {
+      input: 2.5,
+      output: 15,
+      cache_read: 0.2,
+      cache_write: 2.5,
+      tiers: existing.cost.tiers,
+    },
+  });
+});
+
 test("retains reviewed SayGM pricing when the live ceiling is unavailable", () => {
   const existing = {
     base_model: "openai/gpt-5.4",

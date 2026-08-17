@@ -121,15 +121,21 @@ export function buildSaygmModel(model: SaygmModel, existing: ExistingModel): Syn
   }
 
   const dimensions = ceiling.dimensions;
+  // The API has no explicit "no such price" signal, so an omitted optional
+  // dimension keeps the authored value (same as the xAI sync) rather than
+  // clearing a reviewed one.
   const cost: NonNullable<ExistingModel["cost"]> = {
+    ...existing.cost,
     input: usdPerMtok(dimensions.input_per_mtok_ndollars),
     output: usdPerMtok(dimensions.output_per_mtok_ndollars),
-    cache_read: optionalUsdPerMtok(dimensions.cache_read_per_mtok_ndollars),
+    cache_read: optionalUsdPerMtok(dimensions.cache_read_per_mtok_ndollars) ?? existing.cost?.cache_read,
     // models.dev has one cache-write field; its provider catalogs conventionally
     // use Anthropic's standard five-minute write rate.
-    cache_write: optionalUsdPerMtok(dimensions.cache_write_5m_per_mtok_ndollars),
-    input_audio: optionalUsdPerMtok(dimensions.audio_input_per_mtok_ndollars),
-    output_audio: optionalUsdPerMtok(dimensions.audio_output_per_mtok_ndollars),
+    cache_write:
+      optionalUsdPerMtok(dimensions.cache_write_5m_per_mtok_ndollars) ?? existing.cost?.cache_write,
+    input_audio: optionalUsdPerMtok(dimensions.audio_input_per_mtok_ndollars) ?? existing.cost?.input_audio,
+    output_audio:
+      optionalUsdPerMtok(dimensions.audio_output_per_mtok_ndollars) ?? existing.cost?.output_audio,
   };
 
   if (dimensions.long_context_threshold_tokens !== undefined) {
