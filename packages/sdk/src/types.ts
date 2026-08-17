@@ -70,7 +70,9 @@ export interface TimeTier {
   /**
    * UTC `HH:MM-HH:MM` ranges, start inclusive and end exclusive. An end that
    * precedes its start wraps past midnight. The model's base cost applies
-   * outside every window.
+   * outside every window. When a context tier and a time tier both match a
+   * request, the context tier wins — tiers replace the base cost, they never
+   * compose.
    */
   windows: string[]
 }

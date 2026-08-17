@@ -114,6 +114,10 @@ const TimeWindow = z
 // Time-of-day pricing: the tier's rates apply inside `windows`, and the base
 // cost applies outside all of them. Providers that bill peak/off-peak (DeepSeek
 // V4 since 2026-08-16) put the peak rate here and the off-peak rate in `[cost]`.
+// When a context tier and a time tier both match a request, the context tier
+// wins and the time tier is ignored — tiers replace the base cost, they never
+// compose. A provider that charges a combined long-context peak rate cannot be
+// expressed with one tier of each kind.
 const TimeTier = z
   .object({
     type: z.literal("time"),
