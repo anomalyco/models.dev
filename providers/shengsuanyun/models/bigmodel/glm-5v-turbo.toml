@@ -1,0 +1,13 @@
+base_model = "zhipuai/glm-5v-turbo"
+reasoning_options = []
+
+[cost]
+input = 0.7142
+output = 3.1428
+cache_read = 0.1714
+
+[limit]
+output = 128_000
+
+[modalities]
+input = ["text", "video", "image"]

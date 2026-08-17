@@ -1,0 +1,15 @@
+base_model = "minimax/MiniMax-M2.7-highspeed"
+attachment = true
+reasoning_options = []
+
+[cost]
+input = 0.5999
+output = 2.3999
+cache_read = 0.0599
+
+[limit]
+context = 200_000
+output = 131_000
+
+[modalities]
+input = ["text", "image"]

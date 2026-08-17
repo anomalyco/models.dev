@@ -1,0 +1,23 @@
+name = "ERNIE-4.5-Turbo-VL-Preview"
+description = "Efficient model for low-latency assistance, extraction, and routine automation"
+family = "ernie"
+release_date = "2026-08-17"
+last_updated = "2026-08-17"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = true
+open_weights = false
+
+[cost]
+input = 0.4285
+output = 1.2857
+cache_read = 0.1071
+
+[limit]
+context = 128_000
+output = 123_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

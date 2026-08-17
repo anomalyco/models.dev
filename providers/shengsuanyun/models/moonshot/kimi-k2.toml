@@ -1,0 +1,23 @@
+name = "Kimi K2 0905"
+description = "Kimi multimodal agent model for visual understanding, coding, and planning"
+family = "kimi-k2"
+release_date = "2026-08-17"
+last_updated = "2026-08-17"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = true
+open_weights = false
+
+[cost]
+input = 0.5714
+output = 2.2857
+cache_read = 0.1428
+
+[limit]
+context = 256_000
+output = 32_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

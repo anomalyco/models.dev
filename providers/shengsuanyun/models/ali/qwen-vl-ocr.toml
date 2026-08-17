@@ -1,0 +1,22 @@
+name = "Qwen-VL-OCR"
+description = "OCR model for extracting structured text from documents and screenshots"
+family = "qwen"
+release_date = "2026-08-17"
+last_updated = "2026-08-17"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = true
+open_weights = false
+
+[cost]
+input = 0.0428
+output = 0.0714
+
+[limit]
+context = 32_000
+output = 8_192
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

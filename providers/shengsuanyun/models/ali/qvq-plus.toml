@@ -1,0 +1,22 @@
+name = "QVQ-Plus"
+description = "Tool-capable chat model for instruction following and agentic application workflows"
+family = "qvq"
+release_date = "2026-08-17"
+last_updated = "2026-08-17"
+attachment = false
+reasoning = false
+temperature = true
+tool_call = true
+open_weights = false
+
+[cost]
+input = 0.2857
+output = 0.7142
+
+[limit]
+context = 131_072
+output = 8_192
+
+[modalities]
+input = ["text"]
+output = ["text"]
