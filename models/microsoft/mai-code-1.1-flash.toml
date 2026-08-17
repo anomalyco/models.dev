@@ -1,0 +1,23 @@
+name = "MAI-Code-1.1-Flash"
+description = "Microsoft coding model with native vision support, optimized for fast and efficient software development"
+family = "mai"
+release_date = "2026-08-11"
+last_updated = "2026-08-11"
+attachment = true
+reasoning = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[limit]
+context = 256_000
+output = 128_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[[links]]
+label = "Announcement"
+url = "https://microsoft.ai/news/mai-code-1-1-flash-br-better-faster-at-a-quarter-of-the-cost/"
+type = "announcement"

@@ -14,10 +14,12 @@ import { cortecs } from "./providers/cortecs.js";
 import { crossmodel } from "./providers/crossmodel.js";
 import { deepinfra } from "./providers/deepinfra.js";
 import { digitalocean } from "./providers/digitalocean.js";
+import { edenai } from "./providers/edenai.js";
 import { empiriolabs } from "./providers/empiriolabs.js";
 import { google } from "./providers/google.js";
 import { hyper } from "./providers/hyper.js";
 import { huggingface } from "./providers/huggingface.js";
+import { inceptron } from "./providers/inceptron.js";
 import { kilo } from "./providers/kilo.js";
 import { llmgateway } from "./providers/llmgateway.js";
 import { mergeGateway } from "./providers/merge-gateway.js";
@@ -121,10 +123,12 @@ export const providers: {
   crossmodel: SyncProvider<any>;
   deepinfra: SyncProvider<any>;
   digitalocean: SyncProvider<any>;
+  edenai: SyncProvider<any>;
   empiriolabs: SyncProvider<any>;
   google: SyncProvider<any>;
   hyper: SyncProvider<any>;
   huggingface: SyncProvider<any>;
+  inceptron: SyncProvider<any>;
   kilo: SyncProvider<any>;
   llmgateway: SyncProvider<any>;
   "merge-gateway": SyncProvider<any>;
@@ -150,10 +154,12 @@ export const providers: {
   crossmodel,
   deepinfra,
   digitalocean,
+  edenai,
   empiriolabs,
   google,
   hyper,
   huggingface,
+  inceptron,
   kilo,
   llmgateway,
   "merge-gateway": mergeGateway,
@@ -174,8 +180,10 @@ export const providers: {
 export const groups = {
   aggregators: [
     "crossmodel",
+    "edenai",
     "empiriolabs",
     "huggingface",
+    "inceptron",
     "kilo",
     "llmgateway",
     "merge-gateway",

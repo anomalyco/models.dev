@@ -1,0 +1,40 @@
+# Source: https://huggingface.co/arcee-ai/Trinity-Large-Thinking
+name = "Trinity Large Thinking"
+description = "Reasoning-optimized 398B MoE agent model with extended thinking for long-horizon and multi-turn tool use"
+family = "trinity"
+release_date = "2026-04-01"
+last_updated = "2026-05-28"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+open_weights = true
+license = "OpenMDW-1.1"
+
+[limit]
+context = 524_288
+output = 262_144
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/arcee-ai/Trinity-Large-Thinking"
+format = "safetensors"
+
+[[links]]
+label = "Model card"
+url = "https://huggingface.co/arcee-ai/Trinity-Large-Thinking"
+type = "model_card"
+
+[[links]]
+label = "Announcement"
+url = "https://www.arcee.ai/blog/trinity-large-thinking"
+type = "announcement"
+
+[[links]]
+label = "License"
+url = "https://huggingface.co/arcee-ai/Trinity-Large-Thinking/blob/main/LICENSE"
+type = "license"

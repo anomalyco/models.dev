@@ -1,0 +1,13 @@
+base_model = "meta/muse-glimmer-30b"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "max"]
+
+[cost]
+input = 0.2
+output = 0.8
+cache_read = 0.05
+
+[limit]
+output = 32_768

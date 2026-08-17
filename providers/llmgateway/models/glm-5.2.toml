@@ -9,16 +9,13 @@ base_model = "zhipuai/glm-5.2"
 field = "reasoning_content"
 
 [[reasoning_options]]
-type = "toggle"
-
-[[reasoning_options]]
 type = "effort"
-values = ["high", "max"]
+values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"]
 
 [cost]
 input = 0.55
-output = 1.9255
-cache_read = 0.1375
+output = 1.784
+cache_read = 0.111
 cache_write = 0
 
 [limit]

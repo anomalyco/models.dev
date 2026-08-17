@@ -1,0 +1,13 @@
+base_model = "nvidia/nemotron-3-super-120b-a12b"
+structured_output = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium"]
+
+[cost]
+input = 0.3
+output = 0.9
+
+[limit]
+context = 8_000

@@ -1,11 +1,11 @@
 base_model = "google/gemini-3.5-flash"
-reasoning_options = []
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
 
 [cost]
-input = 1.483
-output = 8.898
-cache_read = 0.148
-cache_write = 0.988
+input = 1.649
+output = 9.899
+cache_read = 0.165
+cache_write = 1
 
 [limit]
 output = 1_048_576

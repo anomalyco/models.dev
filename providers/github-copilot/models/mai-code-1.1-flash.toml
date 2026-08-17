@@ -1,0 +1,15 @@
+# Pricing: https://docs.github.com/en/copilot/reference/copilot-billing/models-and-pricing
+# Capabilities and limits verified against the GitHub Copilot /models API on 2026-08-12.
+base_model = "microsoft/mai-code-1.1-flash"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
+
+[cost]
+input = 0.20
+output = 1.20
+cache_read = 0.02
+
+[limit]
+input = 128_000
+
+[modalities]
+input = ["text", "image", "pdf"]

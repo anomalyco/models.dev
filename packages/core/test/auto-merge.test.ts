@@ -82,13 +82,28 @@ test("does not inspect deleted models", async () => {
 });
 
 test("allows reviewed providers with explicit reasoning options", async () => {
+  for (const provider of ["edenai", "empiriolabs", "hyper", "kilo", "llmgateway", "merge-gateway", "nano-gpt", "openrouter", "venice"]) {
+    const decision = await classifyAutoMerge(
+      [{ status: "updated", path: `providers/${provider}/models/reasoner.toml` }],
+      async () => fullModel(true, 'reasoning_options = [{ type = "toggle" }]'),
+      async () => fullModel(true, "reasoning_options = []"),
+    );
+
+    expect(decision.safe).toBe(true);
+  }
+});
+
+test("requires manual review for Inceptron reasoning updates", async () => {
   const decision = await classifyAutoMerge(
-    [{ status: "updated", path: "providers/openrouter/models/reasoner.toml" }],
-    async () => fullModel(true, 'reasoning_options = [{ type = "toggle" }]'),
+    [{ status: "updated", path: "providers/inceptron/models/reasoner.toml" }],
+    async () => fullModel(true, 'reasoning_options = [{ type = "effort", values = ["high"] }]'),
     async () => fullModel(true, "reasoning_options = []"),
   );
 
-  expect(decision.safe).toBe(true);
+  expect(decision.safe).toBe(false);
+  expect(decision.reasons).toContain(
+    "providers/inceptron/models/reasoner.toml is a reasoning model that requires manual review",
+  );
 });
 
 test("resolves reasoning from base model", async () => {

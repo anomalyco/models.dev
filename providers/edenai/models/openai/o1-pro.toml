@@ -1,0 +1,12 @@
+base_model = "openai/o1-pro"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high"]
+
+[cost]
+input = 150
+output = 600
+
+[modalities]
+input = ["text", "image", "pdf"]

@@ -2,10 +2,13 @@
 # = "low"|"medium"|"high"; no exact token budget is documented for it.
 # https://docs.llmgateway.io/features/reasoning (accessed 2026-06-25)
 base_model = "moonshotai/kimi-k2.7-code"
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
 
 [interleaved]
 field = "reasoning_content"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high", "xhigh", "max"]
 
 [cost]
 input = 0.95

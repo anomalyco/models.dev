@@ -1,0 +1,13 @@
+base_model = "perplexity/sonar"
+attachment = true
+structured_output = false
+
+[cost]
+input = 1
+output = 1
+
+[limit]
+context = 127_072
+
+[modalities]
+input = ["text", "image"]

@@ -1,0 +1,24 @@
+# Sources (accessed 2026-08-16):
+#   https://docs.mistral.ai/models/model-cards/voxtral-small-25-07
+#   https://mistral.ai/news/voxtral/
+# Field values mirror Mistral's own first-party host entry in this repo
+# (providers/mistral/models/voxtral-small-latest.toml); host-scoped keys
+# (cost, status) are intentionally left to the provider files.
+name = "Voxtral Small (latest)"
+description = "Instruct model with native audio input for speech understanding and tool use"
+family = "voxtral"
+release_date = "2025-07-15"
+last_updated = "2025-07-15"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = true
+open_weights = true
+
+[limit]
+context = 32_000
+output = 32_000
+
+[modalities]
+input = ["text", "audio"]
+output = ["text"]

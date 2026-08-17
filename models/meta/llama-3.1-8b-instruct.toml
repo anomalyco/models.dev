@@ -1,5 +1,5 @@
-name = "Llama 3.1 8B Instruct"
-description = "Small open Llama 3.1 instruct model for cheap multilingual chat and self-hosting"
+name = "Llama-3.1-8B-Instruct"
+description = "Compact open Llama model for lightweight chat, drafting, and self-hosting"
 family = "llama"
 release_date = "2024-07-23"
 last_updated = "2024-07-23"
@@ -9,10 +9,9 @@ temperature = true
 tool_call = true
 knowledge = "2023-12"
 open_weights = true
-license = "Llama 3.1 Community License"
 
 [limit]
-context = 131_072
+context = 128_000
 output = 4_096
 
 [modalities]

@@ -1,22 +1,14 @@
-name = "QwQ 32B"
+base_model = "alibaba/qwq-32b"
+name = "Qwq 32B"
 description = "Qwen reasoning model for deliberate problem solving, math, and coding"
-family = "qwen"
-release_date = "2025-04-11"
-last_updated = "2025-04-11"
-attachment = false
-reasoning = false
-temperature = true
 tool_call = false
-open_weights = false
+structured_output = false
+reasoning_options = []
 
 [cost]
 input = 0.66
 output = 1
 
 [limit]
-context = 128000
-output = 16384
-
-[modalities]
-input = ["text"]
-output = ["text"]
+context = 24000
+output = 24000

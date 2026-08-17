@@ -1,0 +1,25 @@
+name = "ByteDance Seed 2.1 Turbo"
+description = "ByteDance Seed 2.1 Turbo is a multimodal model for coding and long-horizon agent workflows, including end-to-end software delivery and multi-step task execution. It supports text, image, and video input with a 262k context window."
+family = "seed"
+release_date = "2026-08-12"
+last_updated = "2026-08-12"
+attachment = true
+reasoning = true
+tool_call = true
+structured_output = true
+open_weights = false
+reasoning_options = []
+
+[cost]
+input = 0.5
+output = 2.5
+cache_read = 0.25
+
+[limit]
+context = 262_144
+input = 262_144
+output = 262_144
+
+[modalities]
+input = ["text", "image", "video"]
+output = ["text"]

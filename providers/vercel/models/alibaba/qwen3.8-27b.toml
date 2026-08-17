@@ -1,0 +1,12 @@
+# Reasoning effort: reasoning.effort = none|low|medium|xhigh
+# Source: https://huggingface.co/Qwen/Qwen3.8-27B
+base_model = "alibaba/qwen3.8-27b"
+description = "Qwen vision-language model for visual reasoning, documents, and agent tasks"
+open_weights = false
+reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "xhigh"] }]
+
+[limit]
+output = 262_133
+
+[modalities]
+input = ["text", "image"]

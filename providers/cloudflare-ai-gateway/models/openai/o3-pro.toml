@@ -1,25 +1,9 @@
-name = "o3-pro"
-description = "O-series reasoning model for hard analysis, math, coding, and planning"
-family = "o-pro"
-release_date = "2025-06-10"
-last_updated = "2025-06-10"
-attachment = true
-reasoning = true
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
-temperature = false
-knowledge = "2024-05"
-tool_call = true
-structured_output = true
-open_weights = false
+base_model = "openai/o3-pro"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high"]
 
 [cost]
-input = 20.00
-output = 80.00
-
-[limit]
-context = 200_000
-output = 100_000
-
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+input = 20
+output = 80

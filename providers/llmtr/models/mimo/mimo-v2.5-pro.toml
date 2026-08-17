@@ -1,0 +1,16 @@
+# Hand-authored from LLMTR's public catalog https://llmtr.com/api/models (accessed 2026-08-16).
+# reasoning_options measured against POST https://llmtr.com/v1/chat/completions (2026-08-16).
+# No caller-facing thinking control on this route. Measured 2026-08-16:
+#   reasoning_effort -> 400 "does not expose a thinking mode"; reasoning true|false, :think,
+#   :fast, reasoning.max_tokens, enable_thinking and thinking.type all return no
+#   reasoning_content and no usage.completion_tokens_details.reasoning_tokens.
+# Xiaomi's first-party host exposes a toggle; this gateway does not forward it.
+base_model = "xiaomi/mimo-v2.5-pro"
+reasoning_options = []
+
+[cost]
+input = 0.435
+output = 0.87
+
+[limit]
+context = 1_000_000

@@ -1,0 +1,13 @@
+base_model = "moonshotai/kimi-k2.6"
+reasoning_options = []
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0
+output = 0
+cache_read = 0
+
+[modalities]
+input = ["text", "image"]

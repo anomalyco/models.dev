@@ -11,17 +11,20 @@ structured_output = true
 open_weights = false
 
 [[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
 type = "effort"
 values = ["low", "high", "max"]
 
 [cost]
-input = 0.079996
-output = 0.252
-cache_read = 0.0252
+input = 0.078596
+output = 0.157192
+cache_read = 0.015719
 
 [limit]
-context = 1_048_576
-output = 131_072
+context = 1_310_720
+output = 384_000
 
 [modalities]
 input = ["text"]

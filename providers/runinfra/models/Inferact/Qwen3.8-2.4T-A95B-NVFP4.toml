@@ -1,0 +1,25 @@
+# Source: https://runinfra.ai/inference-api/qwen3-8-2-4t-a95b
+# This served checkpoint is Inferact's NVFP4 packaging of Qwen/Qwen3.8-2.4T-A95B
+# (https://huggingface.co/Inferact/Qwen3.8-2.4T-A95B-NVFP4); the lab entry is the Qwen base model
+# Reasoning control, verified live 2026-08-16 (temperature 0, fixed prompt, two identical runs
+# per level): reasoning_effort is a graded dial with the wire values below, each reproducibly
+# distinct (completion tokens 113 low, 140 medium, 89 xhigh which equals the omitted default).
+# Reasoning cannot be turned off: reasoning_effort = "none" is rejected with HTTP 400
+# "Disabling thinking is not supported." enable_thinking / chat_template_kwargs /
+# thinking_budget are accepted but have no effect.
+# cache_read is the cached input price; JSON mode is not available
+name = "Qwen3.8 2.4T A95B (NVFP4)"
+base_model = "alibaba/qwen3.8-2.4t-a95b"
+structured_output = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "xhigh"]
+
+[cost]
+input = 2.00
+output = 6.00
+cache_read = 0.20
+
+[limit]
+output = 32_768

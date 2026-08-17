@@ -1,0 +1,11 @@
+base_model = "deepseek/deepseek-chat"
+attachment = false
+structured_output = true
+
+[cost]
+input = 0.28
+output = 0.42
+cache_read = 0.028
+
+[limit]
+context = 131_072

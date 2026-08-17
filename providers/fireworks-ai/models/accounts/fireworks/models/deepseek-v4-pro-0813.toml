@@ -1,0 +1,20 @@
+# Toggle: thinking.type = enabled|disabled (reasoning_effort = none|false also disables)
+# Effort: reasoning_effort = high|max; low/medium promote to high, xhigh to max
+# Reasoning: https://docs.fireworks.ai/api-reference/post-chatcompletions (accessed 2026-08-14)
+# Pricing: https://fireworks.ai/models/deepseek-ai/deepseek-v4-pro-0813 (accessed 2026-08-14)
+base_model = "deepseek/deepseek-v4-pro-0813"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["high", "max"]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 1.32
+output = 3.96
+cache_read = 0.044
