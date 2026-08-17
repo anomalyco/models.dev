@@ -1,0 +1,512 @@
+# Cloudflare AI Gateway model overrides (human-curated).
+#
+# Consumed by: bun run cloudflare-ai-gateway:generate
+#
+# Each [models."<canonical id>"] entry carries the base_model target and any fields the
+# Cloudflare catalog API cannot supply. cost_source = "catalog" pulls pricing from
+# ai/catalog/models each run; "manual" keeps the cost inlined here (hosted @cf/* pricing,
+# tiered pricing, and lab/deprecated rates the proxied catalog does not express).
+
+# Catalog Text-Generation models intentionally not published yet.
+# To publish one: add a [models."<id>"] entry below and remove it from this list.
+skip = [
+  "alibaba/qwen3-max",
+  "alibaba/qwen3.5-397b-a17b",
+  "alibaba/qwen3.7-max",
+  "alibaba/qwen3.7-plus",
+  "alibaba/qwen3.8-max",
+  "deepseek/deepseek-v4-pro",
+  "google/gemini-2.5-flash",
+  "google/gemini-2.5-flash-lite",
+  "google/gemini-2.5-pro",
+  "google/gemini-3-flash",
+  "google/gemini-3.1-flash-lite",
+  "google/gemini-3.1-pro",
+  "google/gemini-3.5-flash",
+  "google/gemini-3.5-flash-lite",
+  "google/gemini-3.6-flash",
+  "google/gemini-3.7-flash",
+  "minimax/m2.7",
+  "minimax/m3",
+  "moonshotai/kimi-k3",
+  "thinkingmachines/inkling",
+  "thinkingmachines/inkling-256k",
+  "workers-ai/@cf/deepseek-ai/deepseek-v4-flash-0731",
+  "workers-ai/@cf/deepseek-ai/deepseek-v4-pro-0813",
+  "workers-ai/@cf/google/gemma-2b-it-lora",
+  "workers-ai/@cf/google/gemma-7b-it-lora",
+  "workers-ai/@cf/meta-llama/llama-2-7b-chat-hf-lora",
+  "workers-ai/@cf/mistral/mistral-7b-instruct-v0.2-lora",
+  "xai/grok-4.20-0309-non-reasoning",
+  "xai/grok-4.20-0309-reasoning",
+  "xai/grok-4.20-multi-agent-0309",
+  "xai/grok-4.3",
+  "xai/grok-4.5",
+  "xai/grok-4.6",
+]
+
+[models."anthropic/claude-fable-5"]
+base_model = "anthropic/claude-fable-5"
+cost_source = "catalog"
+release_date = "2026-06-07"
+structured_output = true
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
+
+[models."anthropic/claude-haiku-4.5"]
+base_model = "anthropic/claude-haiku-4-5"
+cost_source = "catalog"
+structured_output = true
+reasoning_options = [{ type = "budget_tokens", min = 1024 }]
+
+[models."anthropic/claude-opus-4.5"]
+base_model = "anthropic/claude-opus-4-5"
+cost_source = "catalog"
+structured_output = true
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }, { type = "budget_tokens", min = 1024 }]
+
+[models."anthropic/claude-opus-4.6"]
+base_model = "anthropic/claude-opus-4-6"
+cost_source = "catalog"
+release_date = "2026-02-04"
+structured_output = true
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "max"] }, { type = "budget_tokens", min = 1024 }]
+
+[models."anthropic/claude-opus-4.7"]
+base_model = "anthropic/claude-opus-4-7"
+cost_source = "catalog"
+release_date = "2026-04-14"
+structured_output = true
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
+provider = { npm = "@ai-sdk/anthropic" }
+
+[models."anthropic/claude-opus-4.8"]
+base_model = "anthropic/claude-opus-4-8"
+cost_source = "catalog"
+structured_output = true
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
+
+[models."anthropic/claude-opus-5"]
+base_model = "anthropic/claude-opus-5"
+cost_source = "catalog"
+structured_output = true
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
+
+[models."anthropic/claude-sonnet-4.5"]
+base_model = "anthropic/claude-sonnet-4-5"
+cost_source = "catalog"
+structured_output = true
+reasoning_options = [{ type = "budget_tokens", min = 1024 }]
+limit = { context = 1000000 }
+
+[models."anthropic/claude-sonnet-4.6"]
+base_model = "anthropic/claude-sonnet-4-6"
+cost_source = "catalog"
+structured_output = true
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "max"] }, { type = "budget_tokens", min = 1024 }]
+limit = { context = 1000000, output = 128000 }
+provider = { npm = "ai-gateway-provider" }
+
+[models."anthropic/claude-sonnet-5"]
+base_model = "anthropic/claude-sonnet-5"
+cost_source = "catalog"
+release_date = "2026-06-29"
+structured_output = true
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
+
+[models."openai/gpt-3.5-turbo"]
+base_model = "openai/gpt-3.5-turbo"
+cost_source = "manual"
+status = "deprecated"
+cost = { input = 0.5, output = 1.5, cache_read = 0 }
+
+[models."openai/gpt-4"]
+base_model = "openai/gpt-4"
+cost_source = "manual"
+status = "deprecated"
+cost = { input = 30, output = 60 }
+
+[models."openai/gpt-4-turbo"]
+base_model = "openai/gpt-4-turbo"
+cost_source = "manual"
+status = "deprecated"
+cost = { input = 10, output = 30 }
+
+[models."openai/gpt-4.1"]
+base_model = "openai/gpt-4.1"
+cost_source = "catalog"
+
+[models."openai/gpt-4.1-mini"]
+base_model = "openai/gpt-4.1-mini"
+cost_source = "catalog"
+
+[models."openai/gpt-4.1-nano"]
+base_model = "openai/gpt-4.1-nano"
+cost_source = "catalog"
+status = "deprecated"
+
+[models."openai/gpt-4o"]
+base_model = "openai/gpt-4o"
+cost_source = "catalog"
+
+[models."openai/gpt-4o-mini"]
+base_model = "openai/gpt-4o-mini"
+cost_source = "catalog"
+
+[models."openai/gpt-5"]
+base_model = "openai/gpt-5"
+cost_source = "catalog"
+reasoning_options = [{ type = "effort", values = ["minimal", "low", "medium", "high"] }]
+
+[models."openai/gpt-5-mini"]
+base_model = "openai/gpt-5-mini"
+cost_source = "catalog"
+reasoning_options = [{ type = "effort", values = ["minimal", "low", "medium", "high"] }]
+
+[models."openai/gpt-5-nano"]
+base_model = "openai/gpt-5-nano"
+cost_source = "catalog"
+reasoning_options = [{ type = "effort", values = ["minimal", "low", "medium", "high"] }]
+
+[models."openai/gpt-5-pro"]
+base_model = "openai/gpt-5-pro"
+cost_source = "manual"
+reasoning_options = [{ type = "effort", values = ["high"] }]
+cost = { input = 15, output = 120 }
+
+[models."openai/gpt-5.1"]
+base_model = "openai/gpt-5.1"
+cost_source = "catalog"
+reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high"] }]
+
+[models."openai/gpt-5.2"]
+base_model = "openai/gpt-5.2"
+cost_source = "manual"
+reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh"] }]
+cost = { input = 1.75, output = 14, cache_read = 0.175 }
+
+[models."openai/gpt-5.2-chat-latest"]
+base_model = "openai/gpt-5.2-chat-latest"
+cost_source = "manual"
+reasoning_options = [{ type = "effort", values = ["medium"] }]
+cost = { input = 1.75, output = 14, cache_read = 0.175 }
+
+[models."openai/gpt-5.2-pro"]
+base_model = "openai/gpt-5.2-pro"
+cost_source = "manual"
+reasoning_options = [{ type = "effort", values = ["medium", "high", "xhigh"] }]
+cost = { input = 21, output = 168 }
+
+[models."openai/gpt-5.3-chat-latest"]
+base_model = "openai/gpt-5.3-chat-latest"
+cost_source = "manual"
+cost = { input = 1.75, output = 14, cache_read = 0.175 }
+
+[models."openai/gpt-5.3-codex"]
+base_model = "openai/gpt-5.3-codex"
+cost_source = "manual"
+reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh"] }]
+provider = { npm = "ai-gateway-provider" }
+cost = { input = 1.75, output = 14, cache_read = 0.175 }
+
+[models."openai/gpt-5.3-codex-spark"]
+base_model = "openai/gpt-5.3-codex-spark"
+cost_source = "manual"
+reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh"] }]
+cost = { input = 1.75, output = 14, cache_read = 0.175 }
+
+[models."openai/gpt-5.4"]
+base_model = "openai/gpt-5.4"
+cost_source = "manual"
+reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh"] }]
+provider = { npm = "ai-gateway-provider" }
+cost = { input = 2.5, output = 15, cache_read = 0.25, tiers = [{ tier = { size = 272000 }, input = 5, output = 22.5, cache_read = 0.5 }] }
+
+[models."openai/gpt-5.4-mini"]
+base_model = "openai/gpt-5.4-mini"
+cost_source = "catalog"
+reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh"] }]
+
+[models."openai/gpt-5.4-nano"]
+base_model = "openai/gpt-5.4-nano"
+cost_source = "catalog"
+reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh"] }]
+
+[models."openai/gpt-5.4-pro"]
+base_model = "openai/gpt-5.4-pro"
+cost_source = "manual"
+reasoning_options = [{ type = "effort", values = ["medium", "high", "xhigh"] }]
+cost = { input = 30, output = 180, tiers = [{ tier = { size = 272000 }, input = 60, output = 270 }] }
+
+[models."openai/gpt-5.5"]
+base_model = "openai/gpt-5.5"
+cost_source = "manual"
+reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh"] }]
+cost = { input = 5, output = 30, cache_read = 0.5, tiers = [{ tier = { size = 272000 }, input = 10, output = 45, cache_read = 1 }] }
+
+[models."openai/gpt-5.5-pro"]
+base_model = "openai/gpt-5.5-pro"
+cost_source = "manual"
+reasoning_options = [{ type = "effort", values = ["medium", "high", "xhigh"] }]
+cost = { input = 30, output = 180, tiers = [{ tier = { size = 272000 }, input = 60, output = 270 }] }
+
+[models."openai/gpt-5.6"]
+base_model = "openai/gpt-5.6-sol"
+cost_source = "manual"
+name = "GPT-5.6"
+reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh", "max"] }]
+cost = { input = 5, output = 30, cache_read = 0.5, cache_write = 6.25, tiers = [{ tier = { size = 272000 }, input = 10, output = 45, cache_read = 1, cache_write = 12.5 }] }
+
+[models."openai/gpt-5.6-luna"]
+base_model = "openai/gpt-5.6-luna"
+cost_source = "manual"
+reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh", "max"] }]
+cost = { input = 0.2, output = 1.2, cache_read = 0.02, cache_write = 0.25, tiers = [{ tier = { size = 272000 }, input = 0.4, output = 1.8, cache_read = 0.04, cache_write = 0.5 }] }
+
+[models."openai/gpt-5.6-sol"]
+base_model = "openai/gpt-5.6-sol"
+cost_source = "manual"
+reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh", "max"] }]
+cost = { input = 5, output = 30, cache_read = 0.5, cache_write = 6.25, tiers = [{ tier = { size = 272000 }, input = 10, output = 45, cache_read = 1, cache_write = 12.5 }] }
+
+[models."openai/gpt-5.6-terra"]
+base_model = "openai/gpt-5.6-terra"
+cost_source = "manual"
+reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh", "max"] }]
+cost = { input = 2, output = 12, cache_read = 0.2, cache_write = 2.5, tiers = [{ tier = { size = 272000 }, input = 4, output = 18, cache_read = 0.4, cache_write = 5 }] }
+
+[models."openai/o1"]
+base_model = "openai/o1"
+cost_source = "manual"
+status = "deprecated"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
+cost = { input = 15, output = 60, cache_read = 7.5 }
+
+[models."openai/o1-pro"]
+base_model = "openai/o1-pro"
+cost_source = "manual"
+status = "deprecated"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
+cost = { input = 150, output = 600 }
+
+[models."openai/o3"]
+base_model = "openai/o3"
+cost_source = "catalog"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
+
+[models."openai/o3-mini"]
+base_model = "openai/o3-mini"
+cost_source = "catalog"
+status = "deprecated"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
+
+[models."openai/o3-pro"]
+base_model = "openai/o3-pro"
+cost_source = "manual"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
+cost = { input = 20, output = 80 }
+
+[models."openai/o4-mini"]
+base_model = "openai/o4-mini"
+cost_source = "catalog"
+status = "deprecated"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
+
+[models."workers-ai/@cf/aisingapore/gemma-sea-lion-v4-27b-it"]
+base_model = "aisingapore/gemma-sea-lion-v4-27b-it"
+cost_source = "manual"
+name = "Gemma Sea Lion V4 27B It"
+description = "Open Gemma instruction model for efficient chat and self-hosted deployments"
+structured_output = false
+cost = { input = 0.351, output = 0.555 }
+
+[models."workers-ai/@cf/deepseek-ai/deepseek-r1-distill-qwen-32b"]
+base_model = "deepseek/deepseek-r1-distill-qwen-32b"
+cost_source = "manual"
+name = "Deepseek R1 Distill Qwen 32B"
+structured_output = false
+reasoning_options = []
+limit = { context = 80000, output = 80000 }
+cost = { input = 0.497, output = 4.881 }
+
+[models."workers-ai/@cf/google/gemma-4-26b-a4b-it"]
+base_model = "google/gemma-4-26b-a4b-it"
+cost_source = "manual"
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "medium", "high"] }]
+interleaved = true
+limit = { context = 256000, output = 16384 }
+cost = { input = 0.1, output = 0.3 }
+
+[models."workers-ai/@cf/ibm-granite/granite-4.0-h-micro"]
+base_model = "ibm/granite-4-h-micro"
+cost_source = "manual"
+name = "Granite 4.0 H Micro"
+description = "Efficient model for low-latency assistance, extraction, and routine automation"
+structured_output = false
+limit = { context = 131000, output = 131000 }
+cost = { input = 0.017, output = 0.112 }
+
+[models."workers-ai/@cf/meta/llama-3.1-8b-instruct-fp8"]
+base_model = "meta/llama-3.1-8b-instruct"
+cost_source = "manual"
+name = "Llama 3.1 8B Instruct fp8"
+description = "Open Llama instruction model for multilingual chat, reasoning, and coding"
+structured_output = false
+tool_call = false
+limit = { context = 32000, output = 32000 }
+cost = { input = 0.152, output = 0.287 }
+
+[models."workers-ai/@cf/meta/llama-3.2-11b-vision-instruct"]
+base_model = "meta/llama-3.2-11b-vision-instruct"
+cost_source = "manual"
+name = "Llama 3.2 11B Vision Instruct"
+description = "Open Llama multimodal model for image understanding and text reasoning"
+structured_output = false
+tool_call = false
+limit = { context = 128000, output = 128000 }
+cost = { input = 0.0485, output = 0.676 }
+
+[models."workers-ai/@cf/meta/llama-3.2-1b-instruct"]
+base_model = "meta/llama-3.2-1b"
+cost_source = "manual"
+name = "Llama 3.2 1B Instruct"
+description = "Open Llama instruction model for multilingual chat, reasoning, and coding"
+structured_output = false
+limit = { context = 60000, output = 60000 }
+cost = { input = 0.027, output = 0.201 }
+
+[models."workers-ai/@cf/meta/llama-3.2-3b-instruct"]
+base_model = "meta/llama-3.2-3b"
+cost_source = "manual"
+name = "Llama 3.2 3B Instruct"
+description = "Open Llama instruction model for multilingual chat, reasoning, and coding"
+structured_output = false
+limit = { context = 80000, output = 80000 }
+cost = { input = 0.0509, output = 0.335 }
+
+[models."workers-ai/@cf/meta/llama-3.3-70b-instruct-fp8-fast"]
+base_model = "meta/llama-3.3-70b-instruct"
+cost_source = "manual"
+name = "Llama 3.3 70B Instruct fp8 Fast"
+structured_output = false
+attachment = false
+limit = { context = 24000, output = 24000 }
+cost = { input = 0.293, output = 2.253 }
+
+[models."workers-ai/@cf/meta/llama-4-scout-17b-16e-instruct"]
+base_model = "meta/llama-4-scout-17b-instruct"
+cost_source = "manual"
+name = "Llama 4 Scout 17B 16E Instruct"
+structured_output = false
+limit = { context = 131000 }
+cost = { input = 0.27, output = 0.85 }
+
+[models."workers-ai/@cf/meta/llama-guard-3-8b"]
+base_model = "meta/llama-guard-3-8b"
+cost_source = "manual"
+name = "Llama Guard 3 8B"
+description = "Safety model for policy screening, moderation, and risk-aware routing workflows"
+structured_output = false
+limit = { context = 131072, output = 131072 }
+cost = { input = 0.484, output = 0.03 }
+
+[models."workers-ai/@cf/mistralai/mistral-small-3.1-24b-instruct"]
+base_model = "mistral/mistral-small-3-1-24b-instruct-2503"
+cost_source = "manual"
+name = "Mistral Small 3.1 24B Instruct"
+description = "Efficient Mistral model for fast chat, extraction, and production assistants"
+structured_output = false
+attachment = false
+limit = { context = 128000, output = 128000 }
+modalities = { input = ["text"], output = ["text"] }
+cost = { input = 0.351, output = 0.555 }
+
+[models."workers-ai/@cf/moonshotai/kimi-k2.6"]
+base_model = "moonshotai/kimi-k2.6"
+cost_source = "manual"
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "medium", "high"] }]
+interleaved = { field = "reasoning_content" }
+limit = { output = 256000 }
+modalities = { input = ["text", "image"] }
+cost = { input = 0.95, output = 4, cache_read = 0.16 }
+
+[models."workers-ai/@cf/moonshotai/kimi-k2.7-code"]
+base_model = "moonshotai/kimi-k2.7-code"
+cost_source = "manual"
+temperature = true
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "medium", "high"] }]
+modalities = { input = ["text", "image"] }
+cost = { input = 0.95, output = 4, cache_read = 0.19 }
+
+[models."workers-ai/@cf/nvidia/nemotron-3-120b-a12b"]
+base_model = "nvidia/nemotron-3-super-120b-a12b"
+cost_source = "manual"
+name = "Nemotron 3 Super 120B"
+structured_output = true
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "medium", "high"] }]
+interleaved = true
+limit = { context = 256000, output = 256000 }
+cost = { input = 0.5, output = 1.5 }
+
+[models."workers-ai/@cf/openai/gpt-oss-120b"]
+base_model = "openai/gpt-oss-120b"
+cost_source = "manual"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
+limit = { context = 128000, output = 16384 }
+cost = { input = 0.35, output = 0.75 }
+
+[models."workers-ai/@cf/openai/gpt-oss-20b"]
+base_model = "openai/gpt-oss-20b"
+cost_source = "manual"
+description = "Open-weight GPT model for self-hosted reasoning and instruction-following workloads"
+reasoning_options = []
+limit = { context = 128000, output = 16384 }
+cost = { input = 0.2, output = 0.3 }
+
+[models."workers-ai/@cf/qwen/qwen2.5-coder-32b-instruct"]
+base_model = "alibaba/qwen2.5-coder-32b-instruct"
+cost_source = "manual"
+name = "Qwen2.5 Coder 32B Instruct"
+description = "Qwen coding model for software agents, repository edits, and code reasoning"
+structured_output = false
+tool_call = false
+limit = { context = 32768, output = 32768 }
+cost = { input = 0.66, output = 1 }
+
+[models."workers-ai/@cf/qwen/qwen3-30b-a3b-fp8"]
+base_model = "alibaba/qwen3-30b-a3b"
+cost_source = "manual"
+name = "Qwen3 30B A3b fp8"
+description = "Qwen instruction model for multilingual chat, reasoning, and tool use"
+structured_output = false
+reasoning_options = []
+limit = { context = 32768, output = 32768 }
+cost = { input = 0.0509, output = 0.335 }
+
+[models."workers-ai/@cf/qwen/qwq-32b"]
+base_model = "alibaba/qwq-32b"
+cost_source = "manual"
+name = "Qwq 32B"
+description = "Qwen reasoning model for deliberate problem solving, math, and coding"
+structured_output = false
+tool_call = false
+reasoning_options = []
+limit = { context = 24000, output = 24000 }
+cost = { input = 0.66, output = 1 }
+
+[models."workers-ai/@cf/zai-org/glm-4.7-flash"]
+base_model = "zhipuai/glm-4.7-flash"
+cost_source = "manual"
+description = "Efficient GLM model for fast reasoning, coding, and agent workflows"
+structured_output = true
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "medium", "high"] }]
+interleaved = { field = "reasoning_content" }
+limit = { context = 131072, output = 131072 }
+cost = { input = 0.0605, output = 0.4 }
+
+[models."workers-ai/@cf/zai-org/glm-5.2"]
+base_model = "zhipuai/glm-5.2"
+cost_source = "manual"
+name = "Glm 5.2"
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "medium", "high"] }]
+limit = { context = 262144, output = 256000 }
+cost = { input = 1.4, output = 4.4, cache_read = 0.26 }

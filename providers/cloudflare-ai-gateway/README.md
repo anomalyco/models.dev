@@ -1,255 +1,108 @@
 # Cloudflare AI Gateway Provider
 
-This provider enables model management for Cloudflare AI Gateway, which acts as a unified proxy for multiple AI providers (OpenAI, Anthropic, Workers AI, Replicate, etc.).
+Cloudflare AI Gateway is a unified proxy that relays models from many labs (Anthropic,
+OpenAI, Workers AI, and more) through a single OpenAI-compatible endpoint. This provider's
+model files are generated from Cloudflare's canonical catalog and a small human-curated
+overrides file.
 
-## Overview
+## How it works
 
-Cloudflare AI Gateway provides a compatibility layer that allows you to access models from various providers through a single endpoint. This provider automatically fetches available models from the Cloudflare API and generates TOML configuration files for use in the models.dev system.
+One command regenerates every model TOML:
 
-## Directory Structure
-
-```
-cloudflare-ai-gateway/
-├── data/
-│   ├── api_response.json    # Cached API response from Cloudflare
-│   └── model_names.json     # Human-readable name mappings
-├── models/                   # Generated TOML files
-│   ├── anthropic/
-│   ├── openai/
-│   ├── replicate/
-│   └── workers-ai/
-├── scripts/
-│   ├── 01_fetch_model_data.sh      # Fetches models from Cloudflare API
-│   ├── 02_generate_model_names.sh  # Updates model name mappings
-│   ├── 03_generate_model_toml.sh   # Generates TOML files
-│   └── utils.sh                     # Shared utility functions
-├── provider.toml            # Provider configuration
-└── README.md                # This file
+```bash
+CLOUDFLARE_API_TOKEN=xxx CLOUDFLARE_ACCOUNT_ID=xxx bun run cloudflare-ai-gateway:generate
 ```
 
-## How It Works
+It reads two authoritative Cloudflare sources and one local overrides file:
 
-### 1. Model Fetching (01_fetch_model_data.sh)
+- **Proxied catalog** — `GET /accounts/{id}/ai/catalog/models`. The source of truth for
+  proxied models: one canonical (dotted) `model_id` per model, plus pricing. This is why
+  ids look like `anthropic/claude-haiku-4.5`, not `claude-haiku-4-5`.
+- **Hosted models** — `GET /accounts/{id}/ai/models/search`. The native `@cf/*` Workers AI
+  models, with pricing under `properties[].price`.
+- **`overrides.toml`** — the only hand-authored file. Each entry maps a catalog id to a
+  `base_model` and carries anything the catalog can't express.
 
-This script fetches the list of available models from the Cloudflare AI Gateway API:
+The generator emits override-only `base_model` stubs (see the repo `AGENTS.md`): the lab
+metadata lives under `models/<lab>/`, and each provider file only records real deltas.
 
-- **API Endpoint**: `https://gateway.ai.cloudflare.com/v1/{ACCOUNT_ID}/{GATEWAY_ID}/compat/models`
-- **Authentication**: Uses `CLOUDFLARE_API_TOKEN` for authorization
-- **Output**: Saves the API response to `data/api_response.json`
+### `--check`
 
-The API returns model data including:
-- Model ID (e.g., `openai/gpt-4o`, `anthropic/claude-3.5-sonnet`)
-- Cost per token (input and output)
-- Creation timestamp
-- Other metadata
+```bash
+bun run cloudflare-ai-gateway:generate --check
+```
 
-### 2. Model Name Generation (02_generate_model_names.sh)
+Exits non-zero if the committed TOMLs are out of date with the catalog + overrides. Useful
+in CI.
 
-This script manages the `data/model_names.json` file, which maps model IDs to human-readable names:
+### Offline / fixtures
 
-- Reads from `data/api_response.json`
-- Adds new model IDs to `model_names.json` (if not already present)
-- Preserves existing name mappings
-- Filters models based on configuration in `utils.sh`
+Set `CF_AIG_FIXTURE_DIR` to a directory of cached `catalog*.json` / `hosted*.json` API
+responses to run without network access (used in tests).
 
-**Model Filtering**:
-- Includes ALL models from: `workers-ai`, `replicate`
-- Includes ONLY well-known models from: `openai`, `anthropic`
-- Skips namespaces: `replicate/replicate-internal`
-- Skips specific models: `aura-1`, `whisper`
+## overrides.toml
 
-### 3. TOML Generation (03_generate_model_toml.sh)
-
-This script generates TOML configuration files for each model:
-
-**Two Generation Strategies**:
-
-1. **Cross-referencing** (for OpenAI and Anthropic):
-   - Copies TOML files from the source provider directories
-   - Maps Cloudflare model names to canonical provider names
-   - Example: `anthropic/claude-3.5-sonnet` → `../../anthropic/models/claude-3-5-sonnet-20241022.toml`
-
-2. **Auto-generation** (for Workers AI and Replicate):
-   - Generates TOML files with default values
-   - Uses cost and metadata from the API response
-   - Converts cost per token → cost per million tokens
-   - Sets default capabilities (context length, modalities, etc.)
-
-**Generated TOML Structure**:
 ```toml
-name = "Model Name"
-release_date = "2024-01-01"
-last_updated = "2024-01-01"
-attachment = false
-reasoning = false
-temperature = true
-tool_call = false
-open_weights = false
+# ids we intentionally don't publish yet (must cover every catalog Text-Generation model
+# that has no [models] entry, or the generator hard-fails)
+skip = ["google/gemini-3.1-pro", "xai/grok-4.6", ...]
 
-[cost]
-input = 0.15      # USD per 1M input tokens
-output = 0.60     # USD per 1M output tokens
+[models."anthropic/claude-haiku-4.5"]
+base_model = "anthropic/claude-haiku-4-5"   # required; must resolve under models/
+cost_source = "catalog"                      # pull pricing from ai/catalog/models each run
+structured_output = true
+reasoning_options = [{ type = "budget_tokens", min = 1024 }]
 
-[limit]
-context = 128000   # Max context tokens
-output = 16384     # Max output tokens
-
-[modalities]
-input = ["text"]
-output = ["text"]
+[models."workers-ai/@cf/qwen/qwq-32b"]
+base_model = "alibaba/qwq-32b"
+cost_source = "manual"                        # keep the cost below (hosted/hand-tuned)
+name = "Qwq 32B"
+structured_output = false
+reasoning_options = []
+cost = { input = 0.66, output = 1 }
+limit = { context = 24000, output = 24000 }
 ```
 
-### 4. Utilities (utils.sh)
+### `cost_source`
 
-Shared configuration and helper functions:
+- `catalog` — pricing is pulled from `ai/catalog/models` on every run. Use for proxied
+  models whose full price the catalog supplies (most Anthropic/OpenAI text models).
+- `manual` — the `cost` in the override is kept verbatim. Use for Workers AI (`@cf/*`)
+  models (priced via the hosted feed), tiered pricing, and any lab/deprecated rate the
+  proxied catalog doesn't express.
 
-**Configuration**:
-- `INCLUDE_ALL_PROVIDERS`: Providers to include all models from
-- `CROSS_REFERENCE_PROVIDERS`: Providers to copy from source directories
-- `WELL_KNOWN_MODELS`: Regex patterns for specific models to include
-- `SKIP_NAMESPACES`: Namespaces to exclude
-- `SKIP_MODELS`: Specific models to exclude
+### Adding a model
 
-**Helper Functions**:
-- `should_include_model()`: Determines if a model should be included
-- `get_mapped_name()`: Maps Cloudflare names to source provider names
-- `find_source_file()`: Locates source TOML files for cross-referencing
+1. Confirm it appears in `ai/catalog/models` (proxied) or `ai/models/search` (hosted).
+2. If missing, add the lab metadata under `models/<lab>/<model>.toml`.
+3. Add a `[models."<id>"]` entry and remove the id from `skip`.
+4. Run the generator; `bun validate` must pass.
 
-## Usage
+## Fields the generator preserves
 
-### Prerequisites
+`base_model`, `name`, `description`, `release_date`, `last_updated`, `status`,
+`structured_output`, `temperature`, `tool_call`, `attachment`, `reasoning_options`,
+`interleaved`, `limit`, `modalities`, `provider`, and (for `cost_source = "manual"`)
+`cost`.
 
-- Cloudflare account with AI Gateway configured
-- Required environment variables:
-  - `CLOUDFLARE_API_TOKEN`: Your Cloudflare API token
-  - `CLOUDFLARE_ACCOUNT_ID`: Your Cloudflare account ID
-  - `CLOUDFLARE_GATEWAY_ID`: Your AI Gateway name/ID
+Everything else — `family`, capability booleans, knowledge cutoff, and matching
+limits/modalities — is inherited from the `base_model` and should not be restated here.
 
-### Running the Scripts
+## Provider configuration
 
-Run scripts individually or in sequence:
-
-```bash
-# Step 1: Fetch model data from Cloudflare API
-cd scripts
-CLOUDFLARE_API_TOKEN=xxx \
-CLOUDFLARE_ACCOUNT_ID=xxx \
-CLOUDFLARE_GATEWAY_ID=xxx \
-./01_fetch_model_data.sh
-
-# Step 2: Update model name mappings
-./02_generate_model_names.sh
-
-# Step 3: Generate TOML files
-./03_generate_model_toml.sh
-```
-
-### Configuration
-
-Edit `scripts/utils.sh` to customize:
-
-1. **Add a provider to include all models**:
-```bash
-INCLUDE_ALL_PROVIDERS="workers-ai replicate my-new-provider"
-```
-
-2. **Add a well-known model**:
-```bash
-WELL_KNOWN_MODELS=(
-  # ... existing patterns ...
-  "openai/gpt-5$"
-)
-```
-
-3. **Skip a namespace**:
-```bash
-SKIP_NAMESPACES="replicate/replicate-internal my-provider/internal"
-```
-
-4. **Cross-reference a provider**:
-```bash
-CROSS_REFERENCE_PROVIDERS="openai anthropic google"
-```
-
-### Model Name Mappings
-
-Edit `data/model_names.json` to provide human-readable names:
-
-```json
-{
-  "workers-ai/llama-3-8b-instruct": "Llama 3 8B Instruct",
-  "openai/gpt-4o": "GPT-4o",
-  "anthropic/claude-3.5-sonnet": "Claude 3.5 Sonnet"
-}
-```
-
-## Model ID Format
-
-Cloudflare uses BOTH dots and hyphens in model IDs (the API returns both formats):
-- **OpenAI**: `openai/gpt-5.1` OR `openai/gpt-5-1`, `openai/gpt-3.5-turbo` OR `openai/gpt-3-5-turbo`
-- **Anthropic**: `anthropic/claude-3.5-sonnet` OR `anthropic/claude-3-5-sonnet`, `anthropic/claude-haiku-4-5`
-- **Workers AI**: `workers-ai/@cf/meta/llama-3-8b-instruct`
-- **Replicate**: `replicate/meta/meta-llama-3-70b-instruct`
-
-**Important**: The API returns duplicate models with different naming conventions (dots vs hyphens). The WELL_KNOWN_MODELS patterns handle both formats using `[\.-]` regex to match either a dot or hyphen.
-
-**File Path Conversion**:
-- Dots are preserved in filenames: `openai/gpt-5.1.toml`
-- Workers AI special handling: `workers-ai/@cf/meta/llama` → `workers-ai/llama.toml`
-
-## Cross-Referencing Logic
-
-For OpenAI and Anthropic models, the scripts map Cloudflare model IDs to canonical provider filenames:
-
-**Anthropic Mappings**:
-- `claude-3.5-sonnet` → `claude-3-5-sonnet-20241022.toml`
-- `claude-3.5-haiku` → `claude-3-5-haiku-latest.toml`
-- `claude-3-opus` → `claude-3-opus-20240229.toml`
-
-**OpenAI Mappings**:
-- `gpt-5.1` → `gpt-5.1.toml`
-- `gpt-3.5-turbo` → `gpt-3.5-turbo.toml`
-
-This ensures consistency with the canonical provider definitions while supporting Cloudflare's naming conventions.
-
-## Cleanup
-
-The TOML generation script automatically:
-- Removes models that are no longer in the API response
-- Cleans up empty directories
-- Maintains a clean models directory
-
-## Troubleshooting
-
-**API errors**:
-- Verify environment variables are set correctly
-- Check API token has necessary permissions
-- Ensure Gateway ID matches your Cloudflare configuration
-
-**Missing models**:
-- Check if the model is filtered by `utils.sh` configuration
-- Review `WELL_KNOWN_MODELS` patterns
-- Verify the model exists in `data/api_response.json`
-
-**Cross-referencing failures**:
-- Ensure source provider directories exist (e.g., `../openai/models/`)
-- Check model name mappings in `get_mapped_name()`
-- Verify source TOML files exist with correct names
-
-## Provider Configuration
-
-The `provider.toml` file defines how OpenCode connects to Cloudflare AI Gateway:
+`provider.toml` defines how models.dev connects to the gateway:
 
 ```toml
 name = "Cloudflare AI Gateway"
 env = ["CLOUDFLARE_API_TOKEN", "CLOUDFLARE_ACCOUNT_ID", "CLOUDFLARE_GATEWAY_ID"]
-npm = "@ai-sdk/openai-compatible"
-api = "https://gateway.ai.cloudflare.com/v1/${CLOUDFLARE_ACCOUNT_ID}/${CLOUDFLARE_GATEWAY_ID}/compat/"
+npm = "ai-gateway-provider"
 doc = "https://developers.cloudflare.com/ai-gateway/"
 ```
 
-## Additional Resources
+It is hand-authored and not touched by the generator.
 
-- [Cloudflare AI Gateway Documentation](https://developers.cloudflare.com/ai-gateway/)
-- [OpenAI Compatibility API](https://developers.cloudflare.com/ai-gateway/providers/openai/)
-- [Vercel AI SDK](https://sdk.vercel.ai/)
+## Known limitations
+
+- Leading source-citation comments on hand-authored files are not yet preserved through
+  regeneration. Modeling these as a structured `notes` field in `overrides.toml` is a
+  planned follow-up.
