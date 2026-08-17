@@ -3,7 +3,9 @@
 # Limits and capabilities verified directly against https://api.scx.ai/v1:
 # max_tokens is hard-capped at 131072 by the API ("Range of max_tokens should be
 # [1, 131072]") and context is 1M, which already matches the zhipuai/glm-5.2
-# base entry, so no [limit] override.
+# base entry, so no [limit] override. The enforced input ceiling is
+# "Range of input length should be [1, 1048576]", which is above the published
+# 1M context, so the inherited limits stand.
 # Wire control: `reasoning_effort` in the request body; thinking is returned as
 # `reasoning_content` on the message. SCX's validator accepts none/minimal/low/
 # medium/high/xhigh/max, but only the values below are distinct here (n=4 per
@@ -14,6 +16,9 @@
 # inventing extra levels.
 base_model = "zhipuai/glm-5.2"
 reasoning_options = [{ type = "effort", values = ["none", "high", "max"] }]
+
+[interleaved]
+field = "reasoning_content"
 
 [cost]
 input = 0.55
