@@ -1,0 +1,20 @@
+# Cost is USD per 1M tokens, matching the SCX rates carried in
+# theopenco/llmgateway (packages/models/src/models/openai.ts).
+# Limits and capabilities verified directly against https://api.scx.ai/v1:
+# SCX enforces a single context budget (prompt + max_tokens <= context) with no
+# separate output cap, so output equals context. Do not trust max_output_length
+# from /v1/models -- it reports a placeholder 4096 for most models.
+# Thinking is returned as `reasoning_content` on the message.
+base_model = "openai/gpt-oss-120b"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.17
+output = 0.55
+
+[limit]
+context = 131_072
+output = 131_072
