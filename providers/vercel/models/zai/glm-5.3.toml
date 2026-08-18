@@ -1,6 +1,6 @@
 base_model = "zhipuai/glm-5.3"
 name = "GLM 5.3"
-reasoning_options = []
+reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]
 
 [cost]
 input = 1.4
