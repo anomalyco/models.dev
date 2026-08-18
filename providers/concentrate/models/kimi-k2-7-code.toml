@@ -1,0 +1,17 @@
+base_model = "moonshotai/kimi-k2.7-code"
+temperature = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "xhigh", "max"]
+
+[cost]
+input = 0.68
+output = 3.4
+cache_read = 0.136
+
+[limit]
+output = 16_384
+
+[modalities]
+input = ["text", "image", "pdf"]

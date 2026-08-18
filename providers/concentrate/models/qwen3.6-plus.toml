@@ -1,0 +1,16 @@
+base_model = "alibaba/qwen3.6-plus"
+structured_output = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "medium"]
+
+[cost]
+input = 0.276
+output = 1.651
+
+[limit]
+output = 64_000
+
+[modalities]
+input = ["text", "image", "pdf"]

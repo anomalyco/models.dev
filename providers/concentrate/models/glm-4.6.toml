@@ -1,0 +1,19 @@
+base_model = "zhipuai/glm-4.6"
+attachment = true
+structured_output = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"]
+
+[cost]
+input = 0.5
+output = 2
+cache_read = 0.1
+
+[limit]
+context = 202_752
+output = 32_768
+
+[modalities]
+input = ["text", "pdf"]

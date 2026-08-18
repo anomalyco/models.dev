@@ -1,0 +1,21 @@
+base_model = "moonshotai/kimi-k2-thinking"
+attachment = true
+structured_output = true
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["high"]
+
+[cost]
+input = 0.6
+output = 2.5
+cache_read = 0.15
+
+[limit]
+output = 98_304
+
+[modalities]
+input = ["text", "pdf"]

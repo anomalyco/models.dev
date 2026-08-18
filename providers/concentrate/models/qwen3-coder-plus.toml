@@ -1,0 +1,34 @@
+base_model = "alibaba/qwen3-coder-plus"
+attachment = true
+tool_call = false
+structured_output = true
+
+[cost]
+input = 0.574
+output = 2.294
+cache_read = 0.115
+
+[[cost.tiers]]
+tier = { type = "context", size = 256_000 }
+input = 2.868
+output = 28.671
+cache_read = 0.574
+
+[[cost.tiers]]
+tier = { type = "context", size = 128_000 }
+input = 1.434
+output = 5.735
+cache_read = 0.287
+
+[[cost.tiers]]
+tier = { type = "context", size = 32_000 }
+input = 0.861
+output = 3.441
+cache_read = 0.173
+
+[limit]
+context = 1_000_000
+output = 64_000
+
+[modalities]
+input = ["text", "pdf"]

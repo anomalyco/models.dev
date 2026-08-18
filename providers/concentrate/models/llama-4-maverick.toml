@@ -1,0 +1,14 @@
+base_model = "meta/llama-4-maverick-17b-instruct"
+tool_call = false
+structured_output = true
+
+[cost]
+input = 0.2
+output = 0.8
+
+[limit]
+context = 1_048_576
+output = 32_768
+
+[modalities]
+input = ["text", "image", "pdf"]

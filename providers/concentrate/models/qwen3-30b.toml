@@ -1,0 +1,18 @@
+base_model = "alibaba/qwen3-30b-a3b"
+attachment = true
+structured_output = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high"]
+
+[cost]
+input = 0.0509
+output = 0.335
+
+[limit]
+context = 32_768
+output = 8_192
+
+[modalities]
+input = ["text", "pdf"]

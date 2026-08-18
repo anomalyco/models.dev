@@ -1,0 +1,15 @@
+base_model = "xiaomi/mimo-v2.5-pro"
+attachment = true
+structured_output = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"]
+
+[cost]
+input = 0.522
+output = 1.044
+cache_read = 0.0043
+
+[modalities]
+input = ["text", "pdf"]

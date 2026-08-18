@@ -1,0 +1,15 @@
+base_model = "meta/llama-3.2-1b"
+attachment = true
+tool_call = true
+structured_output = true
+
+[cost]
+input = 0.027
+output = 0.201
+
+[limit]
+context = 60_000
+output = 2_048
+
+[modalities]
+input = ["text", "pdf"]

@@ -1,0 +1,14 @@
+base_model = "cohere/command-a-03-2025"
+attachment = true
+structured_output = true
+
+[cost]
+input = 2.5
+output = 10
+cache_read = 0
+
+[limit]
+output = 8_192
+
+[modalities]
+input = ["text", "pdf"]

@@ -1,0 +1,15 @@
+base_model = "alibaba/qwen3.6-27b"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"]
+
+[cost]
+input = 0.32
+output = 3.2
+
+[limit]
+output = 32_768
+
+[modalities]
+input = ["text", "image", "pdf"]

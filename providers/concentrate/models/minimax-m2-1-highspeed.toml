@@ -1,0 +1,14 @@
+base_model = "minimax/MiniMax-M2.1"
+attachment = true
+reasoning = false
+structured_output = true
+
+[cost]
+input = 0.3
+output = 1.2
+
+[limit]
+output = 8_192
+
+[modalities]
+input = ["text", "pdf"]

@@ -1,0 +1,21 @@
+base_model = "alibaba/qwen3.8-max"
+structured_output = true
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["minimal", "low", "medium", "high", "xhigh", "max"]
+
+[cost]
+input = 1.65
+output = 4.951
+cache_read = 0.206
+
+[limit]
+context = 256_000
+output = 32_768
+
+[modalities]
+input = ["text", "image", "pdf"]

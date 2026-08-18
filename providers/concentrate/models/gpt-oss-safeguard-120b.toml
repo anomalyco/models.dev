@@ -1,0 +1,15 @@
+base_model = "openai/gpt-oss-safeguard-120b"
+attachment = true
+reasoning = false
+tool_call = false
+
+[cost]
+input = 0.15
+output = 0.6
+
+[limit]
+context = 128_000
+output = 128_000
+
+[modalities]
+input = ["text", "pdf"]

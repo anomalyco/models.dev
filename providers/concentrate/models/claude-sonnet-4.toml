@@ -1,0 +1,14 @@
+base_model = "anthropic/claude-sonnet-4-20250514"
+reasoning = false
+structured_output = false
+
+[cost]
+input = 3
+output = 15
+cache_read = 0.3
+
+[[cost.tiers]]
+tier = { type = "context", size = 200_000 }
+input = 6
+output = 22.5
+cache_read = 0.6
