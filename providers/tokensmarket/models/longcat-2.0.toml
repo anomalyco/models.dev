@@ -1,9 +1,11 @@
 # SiliconFlow.cn channel. The adapter maps effort "none" to
-# `enable_thinking = false` and forwards `reasoning.budget_tokens` as
-# `thinking_budget` (range 128-32,768). Upstream LongCat-2.0 exposes only an
-# enabled/disabled thinking switch, so no effort ladder is listed.
+# `enable_thinking = false` and otherwise `enable_thinking = true`. First-party
+# LongCat-2.0 documents only `{"thinking": {"type": "enabled"|"disabled"}}` — no
+# reasoning budget for this model. `thinking_budget` (128-32,768) is a channel-wide
+# dialect field the adapter also supports, but no LongCat-specific evidence backs
+# it, so it's left out here.
 base_model = "meituan/longcat-2.0"
-reasoning_options = [{ type = "toggle" }, { type = "budget_tokens", min = 128, max = 32_768 }]
+reasoning_options = [{ type = "toggle" }]
 
 [interleaved]
 field = "reasoning_content"

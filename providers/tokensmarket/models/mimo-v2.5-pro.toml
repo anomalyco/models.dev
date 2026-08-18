@@ -1,9 +1,11 @@
 # Servable on GET /v1/models but not yet listed in the public pricing catalog,
 # so [cost] is omitted rather than guessed.
-# The channel is OpenAI-compatible: thinking can be turned on or off, and no
-# graded effort semantics are claimed beyond the upstream model surface.
+# The channel is generic OpenAI-compatible: the adapter only forwards whatever
+# `reasoning_effort` the client sends and removes `reasoning`. It projects no
+# dedicated toggle field, and no upstream MiMo docs are available to confirm an
+# effort ladder, so no reasoning_options are declared.
 base_model = "xiaomi/mimo-v2.5-pro"
-reasoning_options = [{ type = "toggle" }]
+reasoning_options = []
 
 [interleaved]
 field = "reasoning_content"

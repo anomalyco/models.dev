@@ -1,6 +1,7 @@
-# Alibaba Cloud (DashScope) channel. The adapter maps effort "none" to
-# `enable_thinking = false` and otherwise forwards `reasoning_effort`, so Kimi
-# K3's toggle plus low/high/max effort ladder is reachable.
+# Alibaba Cloud (DashScope) channel.
+# Toggle: `enable_thinking = false` (effort "none") | `enable_thinking = true`.
+# Effort: `reasoning_effort = high | max`; low/medium collapse to high and xhigh
+# collapses to max on this channel, so only two levels are distinctly reachable.
 base_model = "moonshotai/kimi-k3"
 
 [[reasoning_options]]
@@ -8,7 +9,7 @@ type = "toggle"
 
 [[reasoning_options]]
 type = "effort"
-values = ["low", "high", "max"]
+values = ["high", "max"]
 
 [interleaved]
 field = "reasoning_content"

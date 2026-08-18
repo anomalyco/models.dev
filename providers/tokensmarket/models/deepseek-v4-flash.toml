@@ -1,7 +1,8 @@
-# Alibaba Cloud (DashScope) channel. The adapter turns effort "none" into
-# `enable_thinking = false` and otherwise forwards `reasoning_effort`, so the
-# upstream DeepSeek toggle plus effort ladder is reachable. `thinking_budget` is
-# projected for the Qwen family only, so no budget_tokens option here.
+# Alibaba Cloud (DashScope) channel.
+# Toggle: `enable_thinking = false` (effort "none") | `enable_thinking = true`.
+# Effort: `reasoning_effort = high | max`; low/medium collapse to high and xhigh
+# collapses to max on this channel, so only two levels are distinctly reachable.
+# `thinking_budget` is projected for the Qwen family only, so no budget_tokens here.
 base_model = "deepseek/deepseek-v4-flash"
 
 [[reasoning_options]]
@@ -9,7 +10,7 @@ type = "toggle"
 
 [[reasoning_options]]
 type = "effort"
-values = ["low", "high", "max"]
+values = ["high", "max"]
 
 [interleaved]
 field = "reasoning_content"

@@ -1,6 +1,9 @@
 # Claude Hub channel: raw passthrough to Anthropic /v1/messages, so the upstream
 # reasoning surface survives unchanged. Modalities follow Token Market's own
 # catalog, which lists text and image input only.
+# Toggle: `thinking.type = "adaptive"` (on, budget managed by Anthropic) |
+# `thinking.type = "disabled"`. claude-sonnet-5 rejects manually-set extended
+# thinking and sampling controls, so no budget_tokens option is listed.
 base_model = "anthropic/claude-sonnet-5"
 structured_output = true
 
