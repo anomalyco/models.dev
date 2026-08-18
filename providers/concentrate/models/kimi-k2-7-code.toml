@@ -1,9 +1,6 @@
 base_model = "moonshotai/kimi-k2.7-code"
-temperature = true
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "low", "medium", "high", "xhigh", "max"]
+reasoning_options = []
 
 [cost]
 input = 0.68

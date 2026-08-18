@@ -2,11 +2,8 @@ base_model = "openai/gpt-oss-120b"
 attachment = true
 
 [[reasoning_options]]
-type = "toggle"
-
-[[reasoning_options]]
 type = "effort"
-values = ["low", "medium", "high", "xhigh", "max"]
+values = ["low", "medium", "high"]
 
 [cost]
 input = 0

@@ -1,9 +1,7 @@
 base_model = "anthropic/claude-opus-4-1"
 structured_output = true
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "low", "medium", "high"]
+reasoning_options = []
 
 [cost]
 input = 15

@@ -2,9 +2,7 @@ base_model = "alibaba/qwen3.5-plus"
 attachment = true
 structured_output = true
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "medium"]
+reasoning_options = []
 
 [cost]
 input = 0.115

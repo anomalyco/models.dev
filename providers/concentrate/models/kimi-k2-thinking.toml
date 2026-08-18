@@ -2,12 +2,7 @@ base_model = "moonshotai/kimi-k2-thinking"
 attachment = true
 structured_output = true
 
-[[reasoning_options]]
-type = "toggle"
-
-[[reasoning_options]]
-type = "effort"
-values = ["high"]
+reasoning_options = []
 
 [cost]
 input = 0.6

@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import type { ExistingModel, SyncProvider, SyncedFullModel, SyncedModel } from "../index.js";
+import type { ExistingModel, SyncProvider, SyncedModel } from "../index.js";
 import { factorBaseModel, resolveCanonicalBaseModel } from "./openrouter.js";
 
 const API_ENDPOINT = "https://api.concentrate.ai/v1/models";
@@ -173,6 +173,10 @@ export const concentrate = {
   id: "concentrate",
   name: "Concentrate",
   modelsDir: "providers/concentrate/models",
+  // Concentrate normalizes reasoning effort across upstreams and may degrade
+  // unsupported controls. New files need a lab/peer baseline before publishing
+  // exact caller-visible reasoning options.
+  skipCreates: true,
   sourceID(model) {
     return model.summary.id;
   },
@@ -265,8 +269,6 @@ export function buildConcentrateModel(
       ? ["pdf" as const]
       : []),
   ];
-  const reasoning = model.summary.capabilities.effort.supported
-    || model.summary.capabilities.thinking.supported;
   const limit = {
     context: route.context_window,
     output: route.max_output_tokens,
@@ -288,9 +290,13 @@ export function buildConcentrateModel(
 
   return factorBaseModel(baseModel, {
     attachment: input.some((value) => value !== "text"),
-    reasoning,
-    reasoning_options: reasoning ? reasoningOptions(model, route) : undefined,
-    temperature: route.supports.temperature,
+    // Concentrate documents only reasoning.effort / reasoning_effort and may
+    // bump unsupported levels to the closest supported effort. Preserve the
+    // reviewed lab/peer intersection authored in each provider TOML rather than
+    // treating the gateway's normalization enum as native model support.
+    // https://concentrate.ai/docs/api-reference/endpoint/request-parameters
+    // https://concentrate.ai/docs/api-reference/endpoint/chat-completions
+    reasoning_options: existing?.reasoning_options,
     tool_call: route.supports.tools?.function_calling,
     structured_output: route.supports.text?.format?.json_schema === true
       || route.supports.text?.format?.json_object === true
@@ -299,32 +305,6 @@ export function buildConcentrateModel(
     limit,
     modalities: { input, output: ["text"] },
   }, limit, existing?.base_model_omit);
-}
-
-function reasoningOptions(
-  model: ConcentrateModel,
-  route: ConcentrateRoute,
-): NonNullable<SyncedFullModel["reasoning_options"]> {
-  const advertised = model.summary.capabilities.effort;
-  const routeEfforts = route.supports.reasoning?.effort;
-  const efforts = [
-    ["none", advertised.none],
-    ["minimal", advertised.minimal],
-    ["low", advertised.low],
-    ["medium", advertised.medium],
-    ["high", advertised.high],
-    ["xhigh", advertised.xhigh],
-    ["max", advertised.max],
-  ] as const;
-  const supportedEfforts = efforts
-    .filter(([effort, summary]) => routeEfforts?.[effort] === true || summary?.supported === true)
-    .map(([effort]) => effort);
-  const toggle = model.summary.capabilities.thinking.types.enabled?.supported === true
-    && !supportedEfforts.includes("none");
-  return [
-    ...(toggle ? [{ type: "toggle" as const }] : []),
-    ...(supportedEfforts.length > 0 ? [{ type: "effort" as const, values: supportedEfforts }] : []),
-  ];
 }
 
 function supported(value: boolean | Record<string, boolean> | undefined) {

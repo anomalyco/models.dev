@@ -1,9 +1,7 @@
 base_model = "alibaba/qwen3.7-plus"
 structured_output = true
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "medium"]
+reasoning_options = []
 
 [cost]
 input = 0.276

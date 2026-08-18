@@ -33,16 +33,17 @@ describe("Concentrate sync", () => {
       .toBe("openai/gpt-5.6-terra");
   });
 
-  test("selects the cheapest route and authors gateway-specific overrides", () => {
+  test("selects the cheapest route and preserves curated reasoning controls", () => {
     const model = concentrateModel();
     const selected = selectConcentrateRoute(model);
     expect(selected?.id).toBe("openai");
     expect(selected?.route.context_window).toBe(1_050_000);
 
-    const translated = buildConcentrateModel(model, undefined);
+    const reasoningOptions = [{ type: "effort" as const, values: ["low" as const, "high" as const] }];
+    const translated = buildConcentrateModel(model, { reasoning_options: reasoningOptions });
     expect(translated).toMatchObject({
       base_model: "openai/gpt-5.6-terra",
-      reasoning_options: [{ type: "effort", values: ["none", "low", "high"] }],
+      reasoning_options: reasoningOptions,
       cost: {
         input: 2,
         output: 12,
@@ -55,6 +56,13 @@ describe("Concentrate sync", () => {
         }],
       },
     });
+    expect(translated).not.toHaveProperty("reasoning");
+    expect(translated).not.toHaveProperty("temperature");
+  });
+
+  test("does not invent reasoning controls from Concentrate's normalization enum", () => {
+    const translated = buildConcentrateModel(concentrateModel(), undefined);
+    expect(translated).not.toHaveProperty("reasoning_options");
   });
 });
 

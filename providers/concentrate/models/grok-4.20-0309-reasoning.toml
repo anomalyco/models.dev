@@ -1,11 +1,6 @@
 base_model = "xai/grok-4.20-0309-reasoning"
 
-[[reasoning_options]]
-type = "toggle"
-
-[[reasoning_options]]
-type = "effort"
-values = ["medium"]
+reasoning_options = []
 
 [cost]
 input = 2
