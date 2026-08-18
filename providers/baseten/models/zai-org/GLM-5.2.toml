@@ -5,6 +5,7 @@
 # https://docs.baseten.co/inference/model-apis/reasoning
 base_model = "zhipuai/glm-5.2"
 name = "GLM 5.2"
+attachment = true
 
 [interleaved]
 field = "reasoning_content"
@@ -21,3 +22,6 @@ cache_read = 0.3
 [limit]
 context = 1_048_576
 output = 262_144
+
+[modalities]
+input = ["text", "image"]

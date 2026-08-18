@@ -2,8 +2,15 @@
 # Source: https://huggingface.co/Qwen/Qwen3.8-27B
 base_model = "alibaba/qwen3.8-27b"
 description = "Qwen vision-language model for visual reasoning, documents, and agent tasks"
-open_weights = false
-reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "xhigh"] }]
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "xhigh"]
+
+[cost]
+input = 0.1
+output = 0.4
+cache_read = 0.01
 
 [limit]
 output = 262_133

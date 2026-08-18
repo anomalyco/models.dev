@@ -2,7 +2,6 @@
 # medium (default) | high | xhigh | max for DeepSeek V4 Pro; no toggle or
 # reasoning-token budget field is documented.
 # https://docs.baseten.co/inference/model-apis/reasoning
-
 base_model = "deepseek/deepseek-v4-pro"
 name = "Deepseek V4 Pro"
 
@@ -19,5 +18,5 @@ output = 3.48
 cache_read = 0.145
 
 [limit]
-context = 262_144
+context = 1_048_576
 output = 262_144
