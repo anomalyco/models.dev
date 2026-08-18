@@ -1,0 +1,12 @@
+# Cost: converted from Arka AI's RUB list price at 82.9977 RUB/USD (CBR rate captured 2026-08-13).
+# Sources: https://arka-ai.ru (pricing) and https://api.arka-ai.ru/v1/models.
+
+base_model = "alibaba/qwen3.7-max"
+reasoning_options = [
+  { type = "toggle" },
+  { type = "budget_tokens" },
+]
+
+[cost]
+input = 2.13877
+output = 6.41631

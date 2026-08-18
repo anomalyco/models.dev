@@ -1,0 +1,15 @@
+# Cost: converted from Arka AI's RUB list price at 82.9977 RUB/USD (CBR rate captured 2026-08-13).
+# Sources: https://arka-ai.ru (pricing) and https://api.arka-ai.ru/v1/models.
+
+base_model = "moonshotai/kimi-k3"
+reasoning_options = [
+  { type = "toggle" },
+  { type = "effort", values = ["low", "high", "max"] },
+]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 3.564617
+output = 17.823084
