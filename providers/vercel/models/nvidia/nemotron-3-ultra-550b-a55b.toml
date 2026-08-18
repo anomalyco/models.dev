@@ -1,7 +1,8 @@
 base_model = "nvidia/nemotron-3-ultra-550b-a55b"
-reasoning_options = [{ type = "toggle" }]
 name = "Nemotron 3 Ultra"
-open_weights = false
+
+[[reasoning_options]]
+type = "toggle"
 
 [cost]
 input = 0.6

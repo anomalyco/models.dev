@@ -6,10 +6,9 @@
 # API: {"chat_template_kwargs": {"reasoning_effort": "no_think"|"low"|"high"}}
 # mapped: no_think → none
 base_model = "tencent/hy3"
-family = "hy3"
 
 [[reasoning_options]]
-type = "effort" # API: {"chat_template_kwargs": {"reasoning_effort": "no_think"|"low"|"high"}}
+type = "effort"
 values = ["none", "low", "high"]
 
 [cost]
