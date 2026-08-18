@@ -187,7 +187,7 @@ export function buildKiloModel(
       canonical,
       {
         name: baseModel !== undefined || model.id.endsWith(":free") ? name : undefined,
-        description: existing?.description ?? apiDescription ?? describeModel({
+        description: apiDescription ?? existing?.description ?? describeModel({
           id: model.id,
           name,
           family: familyValue,
