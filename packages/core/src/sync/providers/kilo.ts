@@ -180,7 +180,8 @@ export function buildKiloModel(
     input: existing?.limit?.input,
     output: model.top_provider.max_completion_tokens ?? existing?.limit?.output ?? context,
   };
-  const canonical = existing?.base_model ?? baseModel ?? resolveCanonicalBaseModel(model.id);
+  const modelId = model.id.replace(/:discounted$/, "");
+  const canonical = existing?.base_model ?? baseModel ?? resolveCanonicalBaseModel(modelId);
 
   if (canonical !== undefined) {
     return factorBaseModel(
