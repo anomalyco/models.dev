@@ -82,7 +82,6 @@ export function buildShengSuanYunModel(
   existing: ExistingModel | undefined,
   today = new Date().toISOString().slice(0, 10),
 ): SyncedModel {
-  const reasoning = VARIANT_SUFFIX.test(model.id);
   const name = existing?.name ?? cleanName(model.name);
   const hasInputArchitecture = Boolean(model.architecture?.input);
   const hasOutputArchitecture = Boolean(model.architecture?.output);
@@ -110,8 +109,8 @@ export function buildShengSuanYunModel(
       }
     : existing?.cost;
 
-  const reasoningOptions = reasoning ? (existing?.reasoning_options ?? []) : undefined;
-
+  const reasoningOptions = getReasoningOptions(model.id);
+  const reasoning = reasoningOptions ? true : false;
   if (baseModel !== undefined) {
     return factorBaseModel(
       baseModel,
@@ -119,8 +118,8 @@ export function buildShengSuanYunModel(
         name: existing?.name,
         description: existing?.description,
         attachment: hasInputArchitecture ? attachment : existing?.attachment,
-        reasoning: reasoning || undefined,
-        reasoning_options: reasoningOptions,
+        reasoning: reasoning,
+        reasoning_options: reasoningOptions? existing?.reasoning_options : undefined,
         status: existing?.status,
         interleaved: existing?.interleaved,
         limit,
@@ -257,3 +256,52 @@ function inferFamily(id: string, name: string) {
       return new RegExp(`(^|[^a-z0-9])${value}(?=$|[^a-z0-9])`).test(target);
     });
 }
+
+type ReasoningOption =
+  | { type: "toggle" }
+  | { type: "effort"; values: ("none" | "minimal" | "low" | "medium" | "high" | "xhigh" | "max" | "default" | null)[] }
+  | { type: "budget_tokens"; max?: number; min?: number };
+
+function getReasoningOptions(id: string): ReasoningOption[] | undefined {
+  const exist: Record<string, ReasoningOption[]> = {
+    "deepseek/deepseek-v4": [
+      { type: "toggle" },
+      { type: "effort", values: ["none", "low", "high", "max"] }
+    ],
+    "deepseek/deepseek-v3": [
+      { type: "toggle" },
+      { type: "effort", values: ["none", "low", "high", "max"] }
+    ],
+    "openai/gpt-5.": [
+      {
+        type: "effort",
+        values: ["none", "low", "medium", "high", "xhigh", "max"]
+      }
+    ],
+    "ali/qwen3": [{ type: "toggle" }, { type: "budget_tokens" }],
+    "bigmodel/glm-4.7": [{ type: "toggle" }],
+    "bigmodel/glm-5": [{ type: "toggle" }],
+    "moonshot/kimi": [
+      {
+        type: "effort",
+        values: ["low", "high", "max"]
+      }
+    ],
+    "openai/o": [{ type: "effort", values: ["low", "medium", "high"] }],
+    "anthropic/claude": [
+      { type: "budget_tokens", "min": 1024 },
+      {
+        type: "effort",
+        values: ["none", "low", "medium", "high", "xhigh", "max"]
+      }
+    ]
+  };
+
+  for (const key in exist) {
+    if (id.startsWith(key)) {
+      return exist[key];
+    }
+  }
+  return undefined;
+}
+
