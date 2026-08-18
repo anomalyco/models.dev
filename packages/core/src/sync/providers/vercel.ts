@@ -69,9 +69,15 @@ export const vercel = {
     return VercelResponse.parse(raw).data;
   },
   translateModel(model, context) {
+    const existing = context.existing(model.id);
+    const baseModel = existing?.base_model ?? resolveCanonicalBaseModel(model.id);
     return {
       id: model.id,
-      model: buildVercelModel(model, context.existing(model.id)),
+      model: buildVercelModel(
+        model,
+        existing,
+        baseModel === undefined || baseModel === model.id ? undefined : context.existing(baseModel),
+      ),
     };
   },
   sameModel(current, desired) {
@@ -79,7 +85,11 @@ export const vercel = {
   },
 } satisfies SyncProvider<VercelModel>;
 
-export function buildVercelModel(model: VercelModel, existing: ExistingModel | undefined): SyncedModel {
+export function buildVercelModel(
+  model: VercelModel,
+  existing: ExistingModel | undefined,
+  base: ExistingModel | undefined = undefined,
+): SyncedModel {
   const tags = new Set(model.tags);
   const releaseDate = model.released
     ? dateFromTimestamp(model.released)
@@ -133,7 +143,7 @@ export function buildVercelModel(model: VercelModel, existing: ExistingModel | u
     last_updated: existing?.last_updated ?? releaseDate,
     attachment: existing?.attachment ?? (tags.has("vision") || tags.has("file-input")),
     reasoning: existing?.reasoning ?? tags.has("reasoning"),
-    reasoning_options: existing?.reasoning_options,
+    reasoning_options: existing?.reasoning_options ?? base?.reasoning_options,
     temperature: existing?.temperature,
     tool_call: model.type === "language"
       ? existing?.tool_call ?? tags.has("tool-use")
@@ -171,8 +181,22 @@ export function buildVercelModel(model: VercelModel, existing: ExistingModel | u
   const baseModel = existing?.base_model ?? resolveCanonicalBaseModel(model.id);
   if (baseModel === undefined) return synced;
 
-  const { last_updated: _lastUpdated, ...overrides } = synced;
-  return factorBaseModel(baseModel, overrides, synced.limit, existing?.base_model_omit);
+  return factorBaseModel(baseModel, {
+    name: synced.name,
+    attachment: synced.attachment,
+    reasoning: synced.reasoning,
+    reasoning_options: synced.reasoning_options,
+    temperature: synced.temperature,
+    tool_call: synced.tool_call,
+    structured_output: synced.structured_output,
+    status: synced.status,
+    interleaved: synced.interleaved,
+    experimental: synced.experimental,
+    provider: synced.provider,
+    cost: synced.cost,
+    limit: synced.limit,
+    modalities: synced.modalities,
+  }, synced.limit, existing?.base_model_omit);
 }
 
 function dateFromTimestamp(timestamp: number) {

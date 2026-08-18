@@ -366,6 +366,9 @@ export const ModelFamilyValues = [
   // Conductor
   "fugu",
 
+  // Sakana Namazu
+  "sakana-namazu",
+
   // V0
   "v0",
 

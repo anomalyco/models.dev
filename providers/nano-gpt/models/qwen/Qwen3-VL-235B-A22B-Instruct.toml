@@ -1,14 +1,7 @@
 # Included in subscription
-name = "Qwen3 VL 235B A22B Instruct"
-description = "Qwen vision-language model for visual reasoning, documents, and agent tasks"
-family = "qwen"
-release_date = "2024-01-01"
-last_updated = "2024-01-01"
-attachment = true
-reasoning = false
+base_model = "alibaba/qwen3-vl-235b-a22b-instruct"
 tool_call = false
 structured_output = false
-open_weights = true
 
 [cost]
 input = 0.3
@@ -19,7 +12,3 @@ cache_read = 0.15
 context = 128_000
 input = 128_000
 output = 262_144
-
-[modalities]
-input = ["text", "image"]
-output = ["text"]

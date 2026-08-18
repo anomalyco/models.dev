@@ -1,0 +1,19 @@
+# Workers AI exposes `reasoning_effort` and `chat_template_kwargs`; Qwen supports
+# enable_thinking plus low|medium|xhigh effort levels.
+# https://developers.cloudflare.com/workers-ai/models/qwen3.8-27b/ (accessed 2026-08-18)
+# https://huggingface.co/Qwen/Qwen3.8-27B (accessed 2026-08-18)
+
+base_model = "alibaba/qwen3.8-27b"
+description = "Qwen vision-language model for visual reasoning, documents, and agent tasks"
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "medium", "xhigh"] }]
+
+[cost]
+input = 0.45
+output = 3.2
+cache_read = 0.05
+
+[limit]
+output = 262_144
+
+[modalities]
+input = ["text", "image"]

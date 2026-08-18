@@ -3560,11 +3560,26 @@ test("Vercel Claude Opus fast variants factor onto base opus metadata", () => {
     }],
   });
 
-  expect(buildVercelModel(model!, undefined)).toMatchObject({
+  const translated = vercel.translateModel(model!, {
+    existing(id) {
+      return id === "anthropic/claude-opus-5"
+        ? { reasoning_options: [{ type: "effort", values: ["low", "medium", "high", "xhigh", "max"] }] }
+        : undefined;
+    },
+    authored() {
+      return undefined;
+    },
+  });
+  const synced = translated?.model;
+
+  expect(synced).toMatchObject({
     base_model: "anthropic/claude-opus-5",
     name: "Claude Opus 5 (Fast)",
+    reasoning_options: [{ type: "effort", values: ["low", "medium", "high", "xhigh", "max"] }],
     cost: { input: 10, output: 50, cache_read: 1, cache_write: 12.5 },
   });
+  expect(synced).not.toHaveProperty("description");
+  expect(synced).not.toHaveProperty("family");
 });
 
 test("OpenRouter Claude Opus fast variants factor onto base opus metadata", () => {
