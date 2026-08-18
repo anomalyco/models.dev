@@ -1,9 +1,8 @@
 # Cost: converted from Melious's EUR list price for the default `balanced`
 # route at 1.1535 USD/EUR (ECB euro reference rate, 2026-08-07).
 # Sources: https://melious.ai/hub/models/hermes-4-405b and https://melious.ai/pricing
-# Hermes 4 hybrid reasoning is steered by the system prompt, not a request field.
 base_model = "nousresearch/hermes-4-405b"
-reasoning_options = []
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
 
 [cost]
 input = 1.0958

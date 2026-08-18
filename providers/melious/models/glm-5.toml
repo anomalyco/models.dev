@@ -3,7 +3,7 @@
 # Sources: https://melious.ai/hub/models/glm-5 and https://melious.ai/pricing
 base_model = "zhipuai/glm-5"
 structured_output = true
-reasoning_options = [{ type = "effort", values = ["none", "high"] }]
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
 
 [cost]
 input = 1.0958

@@ -3,7 +3,7 @@
 # Sources: https://melious.ai/hub/models/mistral-small-4-119b-instruct and https://melious.ai/pricing
 base_model = "mistral/mistral-small-2603"
 structured_output = true
-reasoning_options = [{ type = "effort", values = ["none", "high"] }]
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
 
 [cost]
 input = 0.173
