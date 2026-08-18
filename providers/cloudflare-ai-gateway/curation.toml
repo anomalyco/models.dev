@@ -1,0 +1,247 @@
+# Cloudflare AI Gateway - human curation layer.
+#
+# The generator derives id, name, description, cost, limits, tool_call, attachment,
+# and hosted @cf reasoning_options from the Cloudflare catalog + Workers-AI docs.
+# This file holds only what those sources cannot express:
+#   - base_model: hosted @cf vendor->lab mapping (not algorithmic), and any proxied
+#     id whose canonical file name differs from its catalog id.
+#   - structured_output: a quality judgement. Cloudflare advertises response_format for
+#     nearly every model, but several do not honour it (verified live: qwq-32b, qwen2.5-
+#     coder, gemma-sea-lion return non-conforming output), so this stays hand-set.
+#   - reasoning_options: proxied only (the catalog has no reasoning schema).
+#   - limit: proxied context/output that deliberately differ from the catalog.
+# Consumed by: bun run cloudflare-ai-gateway:generate
+
+# Proxied Text-Generation catalog ids with no lab file under models/ (cannot publish yet).
+skip = [
+  "google/gemini-3-flash",
+  "google/gemini-3.1-pro",
+  "xai/grok-4.20-multi-agent-0309",
+  "thinkingmachines/inkling-256k",
+  "minimax/m2.7",
+  "minimax/m3",
+]
+
+[models."anthropic/claude-fable-5"]
+structured_output = true
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
+
+[models."anthropic/claude-haiku-4.5"]
+structured_output = true
+reasoning_options = [{ type = "budget_tokens", min = 1024 }]
+
+[models."anthropic/claude-opus-4.5"]
+structured_output = true
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }, { type = "budget_tokens", min = 1024 }]
+
+[models."anthropic/claude-opus-4.6"]
+structured_output = true
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "max"] }, { type = "budget_tokens", min = 1024 }]
+
+[models."anthropic/claude-opus-4.7"]
+structured_output = true
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
+
+[models."anthropic/claude-opus-4.8"]
+structured_output = true
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
+
+[models."anthropic/claude-opus-5"]
+structured_output = true
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
+
+[models."anthropic/claude-sonnet-4.5"]
+structured_output = true
+limit = { context = 1000000 }
+reasoning_options = [{ type = "budget_tokens", min = 1024 }]
+
+[models."anthropic/claude-sonnet-4.6"]
+structured_output = true
+limit = { context = 1000000, output = 128000 }
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "max"] }, { type = "budget_tokens", min = 1024 }]
+
+[models."anthropic/claude-sonnet-5"]
+structured_output = true
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
+
+[models."openai/gpt-5"]
+reasoning_options = [{ type = "effort", values = ["minimal", "low", "medium", "high"] }]
+
+[models."openai/gpt-5-mini"]
+reasoning_options = [{ type = "effort", values = ["minimal", "low", "medium", "high"] }]
+
+[models."openai/gpt-5-nano"]
+reasoning_options = [{ type = "effort", values = ["minimal", "low", "medium", "high"] }]
+
+[models."openai/gpt-5.1"]
+reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high"] }]
+
+[models."openai/gpt-5.4"]
+reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh"] }]
+
+[models."openai/gpt-5.4-mini"]
+reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh"] }]
+
+[models."openai/gpt-5.4-nano"]
+reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh"] }]
+
+[models."openai/gpt-5.4-pro"]
+reasoning_options = [{ type = "effort", values = ["medium", "high", "xhigh"] }]
+
+[models."openai/gpt-5.5"]
+reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh"] }]
+
+[models."openai/gpt-5.5-pro"]
+reasoning_options = [{ type = "effort", values = ["medium", "high", "xhigh"] }]
+
+[models."openai/gpt-5.6-luna"]
+reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh", "max"] }]
+
+[models."openai/gpt-5.6-sol"]
+reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh", "max"] }]
+
+[models."openai/gpt-5.6-terra"]
+reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh", "max"] }]
+
+[models."openai/o3"]
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
+
+[models."openai/o3-mini"]
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
+
+[models."openai/o4-mini"]
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
+
+# Proxied reasoning models whose reasoning shape the Cloudflare catalog schema does not
+# expose (native-format providers). Values mirror models.dev's merge-gateway provider, which
+# proxies the same upstreams. Google uses thinkingConfig.thinkingBudget / thinking_level.
+[models."deepseek/deepseek-v4-pro"]
+reasoning_options = [{ type = "toggle" }]
+
+[models."google/gemini-2.5-pro"]
+reasoning_options = [{ type = "budget_tokens", min = 128, max = 32_768 }]
+
+[models."google/gemini-2.5-flash"]
+reasoning_options = [{ type = "toggle" }, { type = "budget_tokens", min = 0, max = 24_576 }]
+
+[models."google/gemini-2.5-flash-lite"]
+reasoning_options = [{ type = "toggle" }, { type = "budget_tokens", min = 512, max = 24_576 }]
+
+[models."google/gemini-3.1-flash-lite"]
+reasoning_options = [{ type = "effort", values = ["minimal", "low", "medium", "high"] }]
+
+[models."google/gemini-3.5-flash"]
+reasoning_options = [{ type = "effort", values = ["minimal", "low", "medium", "high"] }]
+
+[models."google/gemini-3.5-flash-lite"]
+reasoning_options = [{ type = "toggle" }]
+
+[models."google/gemini-3.6-flash"]
+reasoning_options = [{ type = "toggle" }]
+
+[models."google/gemini-3.7-flash"]
+reasoning_options = []
+
+[models."moonshotai/kimi-k3"]
+reasoning_options = [{ type = "toggle" }]
+
+[models."thinkingmachines/inkling"]
+reasoning_options = []
+
+[models."workers-ai/@cf/aisingapore/gemma-sea-lion-v4-27b-it"]
+base_model = "aisingapore/gemma-sea-lion-v4-27b-it"
+structured_output = false
+
+[models."workers-ai/@cf/deepseek-ai/deepseek-r1-distill-qwen-32b"]
+base_model = "deepseek/deepseek-r1-distill-qwen-32b"
+structured_output = false
+# Always-on reasoner with no user-facing knob; docs schema exposes no reasoning parameter.
+reasoning_options = []
+
+[models."workers-ai/@cf/deepseek-ai/deepseek-v4-flash-0731"]
+base_model = "deepseek/deepseek-v4-flash-0731"
+
+[models."workers-ai/@cf/deepseek-ai/deepseek-v4-pro-0813"]
+base_model = "deepseek/deepseek-v4-pro-0813"
+
+[models."workers-ai/@cf/google/gemma-4-26b-a4b-it"]
+base_model = "google/gemma-4-26b-a4b-it"
+
+[models."workers-ai/@cf/ibm-granite/granite-4.0-h-micro"]
+base_model = "ibm/granite-4-h-micro"
+structured_output = false
+
+[models."workers-ai/@cf/meta/llama-3.1-8b-instruct-fp8"]
+base_model = "meta/llama-3.1-8b-instruct"
+structured_output = false
+
+[models."workers-ai/@cf/meta/llama-3.2-11b-vision-instruct"]
+base_model = "meta/llama-3.2-11b-vision-instruct"
+structured_output = false
+
+[models."workers-ai/@cf/meta/llama-3.2-1b-instruct"]
+base_model = "meta/llama-3.2-1b"
+structured_output = false
+
+[models."workers-ai/@cf/meta/llama-3.2-3b-instruct"]
+base_model = "meta/llama-3.2-3b"
+structured_output = false
+
+[models."workers-ai/@cf/meta/llama-3.3-70b-instruct-fp8-fast"]
+base_model = "meta/llama-3.3-70b-instruct"
+structured_output = false
+
+[models."workers-ai/@cf/meta/llama-4-scout-17b-16e-instruct"]
+base_model = "meta/llama-4-scout-17b-instruct"
+structured_output = false
+
+[models."workers-ai/@cf/meta/llama-guard-3-8b"]
+base_model = "meta/llama-guard-3-8b"
+structured_output = false
+
+[models."workers-ai/@cf/mistralai/mistral-small-3.1-24b-instruct"]
+base_model = "mistral/mistral-small-3-1-24b-instruct-2503"
+structured_output = false
+
+[models."workers-ai/@cf/moonshotai/kimi-k2.6"]
+base_model = "moonshotai/kimi-k2.6"
+
+[models."workers-ai/@cf/moonshotai/kimi-k2.7-code"]
+base_model = "moonshotai/kimi-k2.7-code"
+
+[models."workers-ai/@cf/nvidia/nemotron-3-120b-a12b"]
+base_model = "nvidia/nemotron-3-super-120b-a12b"
+structured_output = true
+
+[models."workers-ai/@cf/openai/gpt-oss-120b"]
+base_model = "openai/gpt-oss-120b"
+
+[models."workers-ai/@cf/openai/gpt-oss-20b"]
+base_model = "openai/gpt-oss-20b"
+
+[models."workers-ai/@cf/qwen/qwen2.5-coder-32b-instruct"]
+base_model = "alibaba/qwen2.5-coder-32b-instruct"
+structured_output = false
+
+[models."workers-ai/@cf/qwen/qwen3-30b-a3b-fp8"]
+base_model = "alibaba/qwen3-30b-a3b"
+structured_output = false
+reasoning_options = []
+
+[models."workers-ai/@cf/qwen/qwq-32b"]
+base_model = "alibaba/qwq-32b"
+structured_output = false
+reasoning_options = []
+
+# structured_output inherited (base=true, verified live: honours response_format json_schema);
+# reasoning_options (toggle + effort) derived from the docs input schema.
+[models."workers-ai/@cf/qwen/qwen3.8-27b"]
+base_model = "alibaba/qwen3.8-27b"
+
+[models."workers-ai/@cf/zai-org/glm-4.7-flash"]
+base_model = "zhipuai/glm-4.7-flash"
+structured_output = true
+
+[models."workers-ai/@cf/zai-org/glm-5.2"]
+base_model = "zhipuai/glm-5.2"
+

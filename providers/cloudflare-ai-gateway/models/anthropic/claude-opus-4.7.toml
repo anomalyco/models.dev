@@ -1,5 +1,4 @@
 base_model = "anthropic/claude-opus-4-7"
-release_date = "2026-04-14"
 structured_output = true
 
 [[reasoning_options]]
@@ -12,5 +11,6 @@ output = 25
 cache_read = 0.5
 cache_write = 6.25
 
-[provider]
-npm = "@ai-sdk/anthropic"
+[limit]
+context = 1_000_000
+output = 128_000

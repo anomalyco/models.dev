@@ -1,5 +1,6 @@
 base_model = "moonshotai/kimi-k2.7-code"
-temperature = true
+attachment = true
+tool_call = true
 
 [[reasoning_options]]
 type = "toggle"
@@ -13,5 +14,5 @@ input = 0.95
 output = 4
 cache_read = 0.19
 
-[modalities]
-input = ["text", "image"]
+[limit]
+context = 262_144

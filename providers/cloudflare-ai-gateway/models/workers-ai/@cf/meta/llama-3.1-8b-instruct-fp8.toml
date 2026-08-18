@@ -1,13 +1,9 @@
 base_model = "meta/llama-3.1-8b-instruct"
-name = "Llama 3.1 8B Instruct fp8"
-description = "Open Llama instruction model for multilingual chat, reasoning, and coding"
-tool_call = false
 structured_output = false
 
 [cost]
-input = 0.152
-output = 0.287
+input = 0.15
+output = 0.29
 
 [limit]
 context = 32_000
-output = 32_000

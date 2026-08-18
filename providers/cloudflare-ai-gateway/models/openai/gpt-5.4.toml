@@ -9,11 +9,6 @@ input = 2.5
 output = 15
 cache_read = 0.25
 
-[[cost.tiers]]
-tier = { type = "context", size = 272_000 }
-input = 5
-output = 22.5
-cache_read = 0.5
-
-[provider]
-npm = "ai-gateway-provider"
+[limit]
+context = 1_000_000
+output = 16_384

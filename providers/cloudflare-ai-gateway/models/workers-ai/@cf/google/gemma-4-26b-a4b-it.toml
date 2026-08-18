@@ -1,6 +1,6 @@
 base_model = "google/gemma-4-26b-a4b-it"
-
-interleaved = true
+attachment = true
+tool_call = true
 
 [[reasoning_options]]
 type = "toggle"
@@ -15,4 +15,3 @@ output = 0.3
 
 [limit]
 context = 256_000
-output = 16_384

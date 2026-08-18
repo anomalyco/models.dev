@@ -1,12 +1,9 @@
 base_model = "meta/llama-guard-3-8b"
-name = "Llama Guard 3 8B"
-description = "Safety model for policy screening, moderation, and risk-aware routing workflows"
 structured_output = false
 
 [cost]
-input = 0.484
+input = 0.48
 output = 0.03
 
 [limit]
 context = 131_072
-output = 131_072

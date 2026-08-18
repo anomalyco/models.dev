@@ -1,5 +1,5 @@
 base_model = "zhipuai/glm-5.2"
-name = "Glm 5.2"
+tool_call = true
 
 [[reasoning_options]]
 type = "toggle"
@@ -15,4 +15,3 @@ cache_read = 0.26
 
 [limit]
 context = 262_144
-output = 256_000

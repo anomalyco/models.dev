@@ -1,23 +1,34 @@
 #!/usr/bin/env bun
 //
-// Regenerate the cloudflare-ai-gateway provider model TOMLs from Cloudflare's canonical
-// catalog, using providers/cloudflare-ai-gateway/overrides.toml as the sole human-curation
-// layer. Single command; replaces the legacy 01/02/03 bash pipeline.
+// Regenerate the cloudflare-ai-gateway provider model TOMLs from Cloudflare's own sources,
+// with human curation reduced to providers/cloudflare-ai-gateway/curation.toml.
 //
-// Sources of truth:
-//   - Proxied catalog:  GET /accounts/{id}/ai/catalog/models   (canonical dotted model_id + pricing)
-//   - Hosted (@cf/*):   GET /accounts/{id}/ai/models/search    (name @cf/..., properties[].price)
-// overrides.toml supplies base_model targets + every field the catalog cannot express.
+// Sources of truth (all live):
+//   - Proxied models:  GET /accounts/{id}/ai/catalog/models
+//       canonical dotted model_id, name, description, context_length, max_output_tokens,
+//       and pricing (flat or context-tiered).
+//   - Hosted @cf set:  GET /accounts/{id}/ai/models/search   (discovery only: which @cf
+//       Text-Generation models exist).
+//   - Hosted @cf data: raw.githubusercontent.com/cloudflare/cloudflare-docs/production/
+//       src/content/workers-ai-models/<model>.json  (name, description, context_window,
+//       price, function_calling, vision, and schema.input from which reasoning_options
+//       are derived).
+//
+// curation.toml holds only what those sources cannot express: hosted base_model mappings,
+// structured_output (a quality judgement — Cloudflare advertises response_format broadly but
+// several models do not honour it), proxied reasoning_options, proxied limit divergences, and
+// a skip list for catalog ids with no lab file.
 //
 // Env: CLOUDFLARE_API_TOKEN, CLOUDFLARE_ACCOUNT_ID
-//      CF_AIG_FIXTURE_DIR (optional) — read cached catalog*/hosted* JSON instead of the network.
+//      CF_AIG_FIXTURE_DIR (optional) — read cached catalog*/hosted* JSON and docs/<model>.json
+//      instead of the network.
 //
 // Usage:
 //   CLOUDFLARE_API_TOKEN=… CLOUDFLARE_ACCOUNT_ID=… bun run cloudflare-ai-gateway:generate
 //   bun run cloudflare-ai-gateway:generate --check     # fail if the tree would change
 
 import path from "node:path";
-import { readdirSync, statSync } from "node:fs";
+import { readdirSync, readFileSync, statSync, existsSync, rmSync } from "node:fs";
 import { z } from "zod";
 import { formatToml } from "../src/sync/index.ts";
 
@@ -25,45 +36,35 @@ const PROVIDER_DIR = path.join(
   import.meta.dirname, "..", "..", "..", "providers", "cloudflare-ai-gateway",
 );
 const MODELS_DIR = path.join(PROVIDER_DIR, "models");
-const OVERRIDES_PATH = path.join(PROVIDER_DIR, "overrides.toml");
+const MODELS_ROOT = path.join(import.meta.dirname, "..", "..", "..", "models");
+const CURATION_PATH = path.join(PROVIDER_DIR, "curation.toml");
 
 const TEXT_GENERATION = "Text Generation";
+const DOCS_BASE =
+  "https://raw.githubusercontent.com/cloudflare/cloudflare-docs/production/src/content/workers-ai-models";
 
 // ---------------------------------------------------------------------------
-// overrides.toml schema
+// curation.toml schema
 // ---------------------------------------------------------------------------
-const Override = z
+const ReasoningOption = z.record(z.any());
+const CuratedModel = z
   .object({
-    base_model: z.string().min(1),
-    cost_source: z.enum(["catalog", "manual"]),
-    base_model_omit: z.array(z.string()).optional(),
-    name: z.string().optional(),
-    description: z.string().optional(),
-    release_date: z.string().optional(),
-    last_updated: z.string().optional(),
-    status: z.enum(["alpha", "beta", "deprecated"]).optional(),
+    base_model: z.string().min(1).optional(),
     structured_output: z.boolean().optional(),
-    temperature: z.boolean().optional(),
-    tool_call: z.boolean().optional(),
-    attachment: z.boolean().optional(),
-    reasoning_options: z.array(z.any()).optional(),
-    interleaved: z.any().optional(),
-    limit: z.any().optional(),
-    modalities: z.any().optional(),
-    provider: z.any().optional(),
-    cost: z.any().optional(),
+    reasoning_options: z.array(ReasoningOption).optional(),
+    limit: z.record(z.number()).optional(),
   })
   .strict();
 
-const Overrides = z
+const Curation = z
   .object({
     skip: z.array(z.string()).default([]),
-    models: z.record(Override),
+    models: z.record(CuratedModel).default({}),
   })
   .strict();
 
 // ---------------------------------------------------------------------------
-// Cloudflare API fetch (with fixture fallback)
+// Fetch (with fixture fallback)
 // ---------------------------------------------------------------------------
 async function fetchAllPages(url: string, token: string, perPage: number) {
   const out: any[] = [];
@@ -71,9 +72,7 @@ async function fetchAllPages(url: string, token: string, perPage: number) {
     const res = await fetch(`${url}?page=${page}&per_page=${perPage}`, {
       headers: { Authorization: `Bearer ${token}` },
     });
-    if (!res.ok) {
-      throw new Error(`Fetch failed ${res.status} ${res.statusText} for ${url}`);
-    }
+    if (!res.ok) throw new Error(`Fetch failed ${res.status} ${res.statusText} for ${url}`);
     const json: any = await res.json();
     out.push(...(json.result ?? []));
     const total = json.result_info?.total_count ?? out.length;
@@ -82,21 +81,56 @@ async function fetchAllPages(url: string, token: string, perPage: number) {
   return out;
 }
 
-function loadFixture(dir: string, prefix: string): any[] {
-  const out: any[] = [];
-  for (const f of readdirSync(dir).filter((f) => f.startsWith(prefix) && f.endsWith(".json"))) {
-    const j = JSON.parse(require("node:fs").readFileSync(path.join(dir, f), "utf8"));
-    out.push(...(j.result ?? []));
+// Fetch with retry on 429/5xx. raw.githubusercontent.com rate-limits bursts, so honour
+// Retry-After when present and otherwise back off exponentially. Returns the Response;
+// callers decide how to treat a final !ok (throw vs. tolerate).
+async function fetchWithRetry(url: string, init?: RequestInit, tries = 5): Promise<Response> {
+  let delay = 500;
+  for (let attempt = 1; ; attempt++) {
+    const res = await fetch(url, init);
+    if (res.ok || (res.status !== 429 && res.status < 500) || attempt >= tries) return res;
+    const retryAfter = Number(res.headers.get("retry-after"));
+    const wait = Number.isFinite(retryAfter) && retryAfter > 0 ? retryAfter * 1000 : delay;
+    await new Promise((r) => setTimeout(r, wait));
+    delay = Math.min(delay * 2, 8000);
   }
-  return out;
 }
 
-async function loadCatalogAndHosted() {
+// Run async tasks with bounded concurrency to avoid tripping rate limits.
+async function mapLimit<T, R>(items: T[], limit: number, fn: (item: T) => Promise<R>): Promise<R[]> {
+  const results = new Array<R>(items.length);
+  let next = 0;
+  const workers = Array.from({ length: Math.min(limit, items.length) }, async () => {
+    while (true) {
+      const i = next++;
+      if (i >= items.length) break;
+      results[i] = await fn(items[i]!);
+    }
+  });
+  await Promise.all(workers);
+  return results;
+}
+
+// Load rows from every fixture file whose name starts with prefix, de-duplicated by their
+// natural id (model_id for catalog, name for hosted). Dedup guards against overlapping
+// snapshot files inflating or conflicting the model set.
+function loadFixtureRows(dir: string, prefix: string): any[] {
+  const byId = new Map<string, any>();
+  for (const f of readdirSync(dir).filter((f) => f.startsWith(prefix) && f.endsWith(".json"))) {
+    for (const row of JSON.parse(readFileSync(path.join(dir, f), "utf8")).result ?? []) {
+      const key = row.model_id ?? row.name ?? JSON.stringify(row);
+      byId.set(key, row);
+    }
+  }
+  return [...byId.values()];
+}
+
+async function loadProxiedAndHostedSet() {
   const fixtureDir = process.env.CF_AIG_FIXTURE_DIR;
   if (fixtureDir) {
     return {
-      proxied: loadFixture(fixtureDir, "catalog"),
-      hosted: loadFixture(fixtureDir, "hosted"),
+      proxied: loadFixtureRows(fixtureDir, "catalog"),
+      hostedSet: loadFixtureRows(fixtureDir, "hosted"),
     };
   }
   const token = process.env.CLOUDFLARE_API_TOKEN;
@@ -107,15 +141,60 @@ async function loadCatalogAndHosted() {
     );
   }
   const base = `https://api.cloudflare.com/client/v4/accounts/${account}/ai`;
-  const [proxied, hosted] = await Promise.all([
+  const [proxied, hostedSet] = await Promise.all([
     fetchAllPages(`${base}/catalog/models`, token, 50),
     fetchAllPages(`${base}/models/search`, token, 100),
   ]);
-  return { proxied, hosted };
+  return { proxied, hostedSet };
+}
+
+// Load a docs JSON for a hosted @cf model by its last path segment.
+async function loadDocs(cfId: string): Promise<any> {
+  const segment = cfId.split("/").pop()!;
+  const fixtureDir = process.env.CF_AIG_FIXTURE_DIR;
+  if (fixtureDir) {
+    const p = path.join(fixtureDir, "docs", `${segment}.json`);
+    if (!existsSync(p)) throw new Error(`Missing docs fixture for ${cfId} (${p})`);
+    return JSON.parse(readFileSync(p, "utf8"));
+  }
+  const res = await fetchWithRetry(`${DOCS_BASE}/${segment}.json`);
+  if (!res.ok) throw new Error(`Docs fetch failed ${res.status} for ${cfId} (${segment}.json)`);
+  return res.json();
+}
+
+// Load the per-model catalog schema for a proxied model. The list endpoint omits `schema`;
+// the single-model schema endpoint returns schema.input, from which reasoning_options are
+// derivable for OpenAI-compatible providers (xai, alibaba, openai). Providers whose schema
+// is their native shape (google, anthropic, deepseek, moonshotai) return no reasoning
+// property — those fall back to curation.toml. Returns schema.input or undefined.
+async function loadCatalogSchemaInput(id: string): Promise<unknown> {
+  const fixtureDir = process.env.CF_AIG_FIXTURE_DIR;
+  if (fixtureDir) {
+    const p = path.join(fixtureDir, "schema", `${id.replace(/\//g, "_")}.json`);
+    if (!existsSync(p)) return undefined; // schema is optional per-model
+    return JSON.parse(readFileSync(p, "utf8")).result?.schema?.input;
+  }
+  const token = process.env.CLOUDFLARE_API_TOKEN!;
+  const account = process.env.CLOUDFLARE_ACCOUNT_ID!;
+  const res = await fetchWithRetry(
+    `https://api.cloudflare.com/client/v4/accounts/${account}/ai/catalog/models/${id}/schema`,
+    { headers: { Authorization: `Bearer ${token}` } },
+  );
+  if (!res.ok) return undefined; // treat missing schema as "not derivable"
+  return ((await res.json()) as any).result?.schema?.input;
+}
+
+// Read the `reasoning` flag from a base lab file (models/<base>.toml). A base model that
+// declares reasoning=true MUST carry reasoning_options in the provider file (schema validates
+// this), so we hard-fail when neither the catalog schema nor curation can supply them.
+function baseReasoning(base: string): boolean {
+  const p = path.join(MODELS_ROOT, `${base}.toml`);
+  if (!existsSync(p)) return false;
+  return (Bun.TOML.parse(readFileSync(p, "utf8")) as any).reasoning === true;
 }
 
 // ---------------------------------------------------------------------------
-// Pricing → schema cost
+// Pricing → cost
 // ---------------------------------------------------------------------------
 const FLAT_KEYS: Record<string, string> = {
   "Input tokens (per 1M)": "input",
@@ -123,7 +202,6 @@ const FLAT_KEYS: Record<string, string> = {
   "Cached input tokens (per 1M)": "cache_read",
   "Cache creation tokens (per 1M)": "cache_write",
 };
-// tiered: "Input <=200k (per 1M)" / "Input >200k (per 1M)" etc.
 const TIER_RE = /^(Input|Output|Cached input)\s*(<=?|>=?)\s*(\d+)k\s*\(per 1M\)$/;
 const TIER_FIELD: Record<string, string> = {
   Input: "input",
@@ -131,10 +209,9 @@ const TIER_FIELD: Record<string, string> = {
   "Cached input": "cache_read",
 };
 
-function proxiedCost(pricing: Record<string, number>, id: string) {
+function proxiedCost(pricing: Record<string, number>, id: string, warnings: string[]) {
   const base: Record<string, number> = {};
   const tiers = new Map<number, Record<string, number>>();
-  const warnings: string[] = [];
   for (const [key, value] of Object.entries(pricing)) {
     if (FLAT_KEYS[key]) {
       base[FLAT_KEYS[key]] = value;
@@ -145,9 +222,8 @@ function proxiedCost(pricing: Record<string, number>, id: string) {
       const [, label, op, sizeK] = m;
       const size = Number(sizeK) * 1000;
       const field = TIER_FIELD[label!]!;
-      if (op!.startsWith("<")) {
-        base[field] = value; // base band = lower context
-      } else {
+      if (op!.startsWith("<")) base[field] = value; // lower band = base
+      else {
         const t = tiers.get(size) ?? {};
         t[field] = value;
         tiers.set(size, t);
@@ -162,79 +238,82 @@ function proxiedCost(pricing: Record<string, number>, id: string) {
       .sort((a, b) => a[0] - b[0])
       .map(([size, band]) => ({ tier: { type: "context", size }, ...band }));
   }
-  return { cost, warnings };
+  return cost;
 }
 
-function hostedPrice(properties: any[]): Record<string, number> | undefined {
-  const price = properties?.find((p) => p.property_id === "price")?.value;
+function hostedCost(docs: any): Record<string, number> | undefined {
+  const price = (docs.properties ?? []).find((p: any) => p.property_id === "price")?.value;
   if (!Array.isArray(price)) return undefined;
   const cost: Record<string, number> = {};
   for (const row of price) {
     if (row.unit === "per M input tokens") cost.input = row.price;
     else if (row.unit === "per M output tokens") cost.output = row.price;
+    else if (row.unit === "per M cached input tokens") cost.cache_read = row.price;
   }
   return Object.keys(cost).length ? cost : undefined;
 }
 
-// ---------------------------------------------------------------------------
-// Build one model object for formatToml
-// ---------------------------------------------------------------------------
-function buildModel(
-  id: string,
-  ov: z.infer<typeof Override>,
-  proxiedById: Map<string, any>,
-  hostedByName: Map<string, any>,
-  errors: string[],
-  warnings: string[],
-) {
-  const model: Record<string, unknown> = { base_model: ov.base_model };
-  if (ov.base_model_omit) model.base_model_omit = ov.base_model_omit;
-  for (const k of ["name", "description", "release_date", "last_updated", "status",
-                   "structured_output", "temperature", "tool_call", "attachment"] as const) {
-    if (ov[k] !== undefined) model[k] = ov[k];
-  }
-  if (ov.reasoning_options !== undefined) model.reasoning_options = ov.reasoning_options;
-  if (ov.interleaved !== undefined) model.interleaved = ov.interleaved;
+function hostedProp(docs: any, id: string): string | undefined {
+  return (docs.properties ?? []).find((p: any) => p.property_id === id)?.value;
+}
 
-  // cost
-  if (ov.cost_source === "manual") {
-    if (ov.cost === undefined) {
-      errors.push(`${id}: cost_source="manual" but no [cost] in overrides`);
-    } else {
-      model.cost = ov.cost;
+// Derive reasoning_options from a docs schema.input by walking every named property.
+function deriveReasoningOptions(schemaInput: unknown): Array<Record<string, unknown>> {
+  let hasToggle = false;
+  let effortValues: string[] | undefined;
+
+  const visit = (node: unknown) => {
+    if (Array.isArray(node)) {
+      node.forEach(visit);
+      return;
     }
-  } else {
-    // catalog
-    const proxied = proxiedById.get(id);
-    if (proxied) {
-      const { cost, warnings: w } = proxiedCost(proxied.pricing ?? {}, id);
-      warnings.push(...w);
-      if (Object.keys(cost).length === 0) {
-        errors.push(`${id}: cost_source="catalog" but catalog pricing is empty`);
-      }
-      model.cost = cost;
-    } else {
-      const hosted = hostedByName.get(id.replace(/^workers-ai\//, ""));
-      const cost = hosted ? hostedPrice(hosted.properties) : undefined;
-      if (!cost) {
-        errors.push(`${id}: cost_source="catalog" but id not found in catalog or hosted feed`);
+    if (!node || typeof node !== "object") return;
+    for (const [key, value] of Object.entries(node as Record<string, unknown>)) {
+      if (key === "properties" && value && typeof value === "object") {
+        for (const [propName, propSchema] of Object.entries(value as Record<string, any>)) {
+          if (propName === "enable_thinking" || propName === "thinking") hasToggle = true;
+          if (propName === "effort" || propName === "reasoning_effort") {
+            let enumVals: string[] | undefined = propSchema?.enum;
+            if (!enumVals) {
+              for (const branch of [...(propSchema?.anyOf ?? []), ...(propSchema?.oneOf ?? [])]) {
+                if (Array.isArray(branch?.enum)) enumVals = branch.enum;
+              }
+            }
+            if (enumVals) effortValues = enumVals;
+          }
+          visit(propSchema);
+        }
       } else {
-        model.cost = cost;
+        visit(value);
       }
     }
-  }
+  };
+  visit(schemaInput);
 
-  if (ov.limit !== undefined) model.limit = ov.limit;
-  if (ov.modalities !== undefined) model.modalities = ov.modalities;
-  if (ov.provider !== undefined) model.provider = ov.provider;
-  return model;
+  const opts: Array<Record<string, unknown>> = [];
+  if (hasToggle) opts.push({ type: "toggle" });
+  if (effortValues) opts.push({ type: "effort", values: effortValues });
+  return opts;
+}
+
+// ---------------------------------------------------------------------------
+// base_model resolution
+// ---------------------------------------------------------------------------
+function labFileExists(id: string): boolean {
+  return existsSync(path.join(MODELS_ROOT, `${id}.toml`));
+}
+function autoResolveBase(catalogId: string): string | null {
+  if (labFileExists(catalogId)) return catalogId;
+  const dashed = catalogId.replace(/\./g, "-");
+  if (labFileExists(dashed)) return dashed;
+  return null;
 }
 
 // ---------------------------------------------------------------------------
 // Main
 // ---------------------------------------------------------------------------
 function walkToml(dir: string): string[] {
-  if (!require("node:fs").existsSync(dir)) return [];
+  if (!existsSync(dir)) return [];
   return readdirSync(dir).flatMap((e) => {
     const p = path.join(dir, e);
     return statSync(p).isDirectory() ? walkToml(p) : p.endsWith(".toml") ? [p] : [];
@@ -244,48 +323,135 @@ function walkToml(dir: string): string[] {
 async function main() {
   const check = process.argv.includes("--check");
 
-  const overridesRaw = Bun.TOML.parse(
-    require("node:fs").readFileSync(OVERRIDES_PATH, "utf8"),
-  );
-  const parsed = Overrides.safeParse(overridesRaw);
+  const parsed = Curation.safeParse(Bun.TOML.parse(readFileSync(CURATION_PATH, "utf8")));
   if (!parsed.success) {
-    console.error("Invalid overrides.toml:", parsed.error.issues);
+    console.error("Invalid curation.toml:", parsed.error.issues);
     process.exit(1);
   }
-  const overrides = parsed.data;
-
-  const { proxied, hosted } = await loadCatalogAndHosted();
-  const proxiedById = new Map(proxied.map((m) => [m.model_id, m]));
-  const hostedByName = new Map(hosted.map((m) => [m.name, m]));
-
-  // Inclusion set: proxied Text Generation + hosted @cf Text Generation
-  const catalogTextGen = new Set<string>();
-  for (const m of proxied) if (m.task === TEXT_GENERATION) catalogTextGen.add(m.model_id);
-  for (const m of hosted) {
-    if (m.task?.name === TEXT_GENERATION) catalogTextGen.add(`workers-ai/${m.name}`);
-  }
-
-  const skip = new Set(overrides.skip);
+  const curation = parsed.data;
+  const skip = new Set(curation.skip);
   const errors: string[] = [];
   const warnings: string[] = [];
 
-  // Hard-fail: a Text-Generation catalog model that is neither mapped nor skipped.
-  for (const id of catalogTextGen) {
-    if (!overrides.models[id] && !skip.has(id)) {
-      errors.push(`Unmapped catalog Text-Generation model: ${id} (add to [models] or skip)`);
+  const { proxied, hostedSet } = await loadProxiedAndHostedSet();
+  const proxiedTextGen = proxied.filter((m) => m.task === TEXT_GENERATION);
+  const hostedTextGen = hostedSet.filter((m) => m.task?.name === TEXT_GENERATION);
+
+  const wanted = new Map<string, string>(); // absolute path -> content
+
+  // Fetch per-model schemas up front for the proxied models we'll actually emit, with bounded
+  // concurrency so the catalog/docs endpoints don't rate-limit us.
+  const proxiedEmit = proxiedTextGen.filter((m) => !skip.has(m.model_id));
+  const schemaInputs = new Map<string, unknown>();
+  await mapLimit(proxiedEmit, 6, async (m) => {
+    schemaInputs.set(m.model_id, await loadCatalogSchemaInput(m.model_id));
+  });
+
+  // --- proxied models ---
+  for (const m of proxiedTextGen) {
+    const id: string = m.model_id;
+    if (skip.has(id)) continue;
+    const cur = curation.models[id] ?? {};
+    const base = cur.base_model ?? autoResolveBase(id);
+    if (!base) {
+      errors.push(`proxied ${id}: no lab file and no curation base_model (add to skip or map it)`);
+      continue;
     }
-  }
-  // Warn: an override id absent from the live catalog (possible delisting).
-  for (const id of Object.keys(overrides.models)) {
-    if (!catalogTextGen.has(id)) warnings.push(`override id not in live catalog: ${id}`);
+    // name/description are inherited from base_model (models.dev's canonical copy);
+    // the catalog only carries Cloudflare's own casing/marketing variants.
+    const model: Record<string, unknown> = { base_model: base };
+    if (cur.structured_output !== undefined) model.structured_output = cur.structured_output;
+
+    // reasoning_options: only meaningful when the base actually reasons. The catalog schema
+    // advertises reasoning_effort for some non-reasoning models (gpt-4.1, gpt-4o) — schema
+    // acceptance is not capability, so gate on the base's reasoning flag. When the base does
+    // reason, prefer the per-model catalog schema, then curation, and fail loudly if neither
+    // supplies a shape (the schema requires reasoning_options whenever reasoning=true).
+    if (baseReasoning(base)) {
+      const derivedRo = deriveReasoningOptions(schemaInputs.get(id));
+      if (cur.reasoning_options !== undefined) model.reasoning_options = cur.reasoning_options;
+      else if (derivedRo.length > 0) model.reasoning_options = derivedRo;
+      else {
+        errors.push(
+          `proxied ${id}: base ${base} has reasoning=true but no reasoning_options ` +
+          `(catalog schema exposes none; add reasoning_options to curation.toml)`,
+        );
+        continue;
+      }
+    }
+
+    const cost = proxiedCost(m.pricing ?? {}, id, warnings);
+    if (Object.keys(cost).length === 0) errors.push(`proxied ${id}: catalog pricing empty`);
+    model.cost = cost;
+
+    const limit: Record<string, number> = {};
+    if (cur.limit) Object.assign(limit, cur.limit);
+    else {
+      if (m.context_length != null) limit.context = m.context_length;
+      if (m.max_output_tokens != null) limit.output = m.max_output_tokens;
+    }
+    if (Object.keys(limit).length) model.limit = limit;
+
+    wanted.set(path.join(MODELS_DIR, `${id}.toml`), formatToml(model as any));
   }
 
-  // Build files
-  const wanted = new Map<string, string>(); // absolute path -> content
-  for (const [id, ov] of Object.entries(overrides.models)) {
-    const model = buildModel(id, ov, proxiedById, hostedByName, errors, warnings);
-    const content = formatToml(model as any);
-    wanted.set(path.join(MODELS_DIR, `${id}.toml`), content);
+  // --- hosted @cf models ---
+  const docsList = await mapLimit(hostedTextGen, 6, async (m) => ({
+    cfId: m.name as string,
+    docs: await loadDocs(m.name),
+  }));
+  for (const { cfId, docs } of docsList) {
+    const id = `workers-ai/${cfId}`;
+    if (skip.has(id)) continue;
+    // LoRA adapters are fine-tuning scaffolds, not standalone models. Skip unless a
+    // curation entry explicitly maps one.
+    if (hostedProp(docs, "lora") === "true" && !curation.models[id]) continue;
+    const cur = curation.models[id];
+    if (!cur?.base_model) {
+      errors.push(`hosted ${id}: missing base_model in curation.toml`);
+      continue;
+    }
+    // name/description inherit from base_model; docs only expose the raw @cf id as "name".
+    const model: Record<string, unknown> = { base_model: cur.base_model };
+
+    if (hostedProp(docs, "function_calling") === "true") model.tool_call = true;
+    if (hostedProp(docs, "vision") === "true") model.attachment = true;
+    if (cur.structured_output !== undefined) model.structured_output = cur.structured_output;
+
+    // reasoning_options: only when the base reasons (schema forbids them otherwise). Derived
+    // from the docs input schema; curation may override for the rare model whose docs schema
+    // does not describe the reasoning knob.
+    if (baseReasoning(cur.base_model)) {
+      const ro =
+        cur.reasoning_options !== undefined
+          ? cur.reasoning_options
+          : deriveReasoningOptions(docs.schema?.input);
+      if (ro.length === 0 && cur.reasoning_options === undefined) {
+        errors.push(
+          `hosted ${id}: base ${cur.base_model} has reasoning=true but docs schema exposes ` +
+          `no reasoning knob (add reasoning_options to curation.toml)`,
+        );
+        continue;
+      }
+      model.reasoning_options = ro;
+    }
+
+    const cost = hostedCost(docs);
+    if (cost) model.cost = cost;
+
+    const context = hostedProp(docs, "context_window");
+    if (context != null) model.limit = { context: Number(context) };
+
+    wanted.set(path.join(MODELS_DIR, `workers-ai/${cfId}.toml`), formatToml(model as any));
+  }
+
+  // Guards: a curation model id that no longer appears in the live feeds (warn only).
+  const liveIds = new Set<string>([
+    ...proxiedTextGen.map((m) => m.model_id),
+    ...hostedTextGen.map((m) => `workers-ai/${m.name}`),
+  ]);
+  for (const id of Object.keys(curation.models)) {
+    if (!liveIds.has(id)) warnings.push(`curation id not in live feed: ${id}`);
   }
 
   if (errors.length > 0) {
@@ -294,19 +460,14 @@ async function main() {
   }
   for (const w of warnings) console.warn(`warning: ${w}`);
 
-  // Determine current on-disk generator-owned files
   const existing = new Set(walkToml(MODELS_DIR));
   const wantedPaths = new Set(wanted.keys());
-
-  let changed = 0;
   const toRemove = [...existing].filter((p) => !wantedPaths.has(p));
 
   if (check) {
-    // report-only
+    let changed = 0;
     for (const [p, content] of wanted) {
-      const cur = existing.has(p)
-        ? require("node:fs").readFileSync(p, "utf8")
-        : undefined;
+      const cur = existing.has(p) ? readFileSync(p, "utf8") : undefined;
       if (cur !== content) { console.error(`would change: ${path.relative(MODELS_DIR, p)}`); changed++; }
     }
     for (const p of toRemove) { console.error(`would remove: ${path.relative(MODELS_DIR, p)}`); changed++; }
@@ -315,15 +476,17 @@ async function main() {
     return;
   }
 
+  let changed = 0;
   for (const [p, content] of wanted) {
-    const cur = existing.has(p) ? require("node:fs").readFileSync(p, "utf8") : undefined;
+    const cur = existing.has(p) ? readFileSync(p, "utf8") : undefined;
     if (cur !== content) { await Bun.write(p, content); changed++; }
   }
-  for (const p of toRemove) { require("node:fs").rmSync(p); changed++; }
+  for (const p of toRemove) { rmSync(p); changed++; }
 
   console.log(
-    `cloudflare-ai-gateway: ${wanted.size} model(s) (${changed} written/removed, ` +
-    `${skip.size} skipped, ${warnings.length} warning(s)).`,
+    `cloudflare-ai-gateway: ${wanted.size} model(s) ` +
+    `(${proxiedTextGen.length} proxied catalog, ${hostedTextGen.length} hosted @cf; ` +
+    `${changed} written/removed, ${skip.size} skipped, ${warnings.length} warning(s)).`,
   );
 }
 

@@ -1,7 +1,6 @@
 base_model = "moonshotai/kimi-k2.6"
-
-[interleaved]
-field = "reasoning_content"
+attachment = true
+tool_call = true
 
 [[reasoning_options]]
 type = "toggle"
@@ -16,7 +15,4 @@ output = 4
 cache_read = 0.16
 
 [limit]
-output = 256_000
-
-[modalities]
-input = ["text", "image"]
+context = 262_144
