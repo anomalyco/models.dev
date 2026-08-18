@@ -1,0 +1,14 @@
+# SiliconFlow.cn channel. The adapter maps effort "none" to
+# `enable_thinking = false` and forwards `reasoning.budget_tokens` as
+# `thinking_budget` (range 128-32,768). Upstream LongCat-2.0 exposes only an
+# enabled/disabled thinking switch, so no effort ladder is listed.
+base_model = "meituan/longcat-2.0"
+reasoning_options = [{ type = "toggle" }, { type = "budget_tokens", min = 128, max = 32_768 }]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.75
+output = 2.95
+cache_read = 0.015

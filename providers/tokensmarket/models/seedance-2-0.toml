@@ -1,0 +1,26 @@
+# BytePlus channel. Video generation billed per million output tokens on a
+# resolution tier ($4.30 at 480p/720p, $4.70 at 1080p, $2.40 at 4K for the
+# variable-length tiers). The [cost] schema has no resolution dimension, so the
+# 1080p rate is recorded as the representative output price.
+name = "Seedance 2.0"
+description = "Video model for prompt-guided generation, editing, and motion workflows"
+family = "seed"
+release_date = "2026-04-14"
+last_updated = "2026-04-14"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = false
+open_weights = false
+
+[cost]
+input = 0
+output = 4.70
+
+[limit]
+context = 0
+output = 0
+
+[modalities]
+input = ["text", "image", "video"]
+output = ["video"]

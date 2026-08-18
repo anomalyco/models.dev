@@ -1,0 +1,11 @@
+# Alibaba Cloud (DashScope) channel. For MiniMax models the adapter sets
+# `thinking.type` to adaptive/disabled from the effort value and does not forward
+# an effort ladder upstream, so the surface is a plain toggle.
+base_model = "minimax/MiniMax-M2.1"
+reasoning_options = [{ type = "toggle" }]
+
+[cost]
+input = 0.248
+output = 0.992
+cache_read = 0.024
+cache_write = 0.312

@@ -1,0 +1,20 @@
+# BytePlus channel. Billed per generated image ($0.04), a unit the per-token
+# [cost] schema cannot express, so [cost] is omitted rather than misstated.
+name = "Seedream 4.5"
+description = "Image model for prompt-driven generation, editing, and visual design workflows"
+family = "seed"
+release_date = "2025-12-03"
+last_updated = "2025-12-03"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = false
+open_weights = false
+
+[limit]
+context = 0
+output = 0
+
+[modalities]
+input = ["text", "image"]
+output = ["image"]

@@ -1,0 +1,11 @@
+# Tencent Cloud channel. The adapter is a plain OpenAI-compatible passthrough
+# that forwards `reasoning_effort` and does not project onto Tencent's
+# `thinking.type`, so only the effort ladder (low|medium|high) is reachable.
+# https://cloud.tencent.com/document/product/1823/131208
+base_model = "tencent/hy3"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
+
+[cost]
+input = 0.147
+output = 0.588
+cache_read = 0.037

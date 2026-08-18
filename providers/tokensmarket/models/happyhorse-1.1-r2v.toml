@@ -1,0 +1,24 @@
+# Alibaba Cloud channel. HappyHorse 1.1 reference-to-video, served on the async
+# video-synthesis endpoint rather than /v1/chat/completions: POST with header
+# `X-DashScope-Async: enable`, then poll the returned task id.
+# Billed per video-second by resolution ($0.03641 at 480p, $0.07282 at 720p,
+# $0.097075 at 1080p), which the per-token [cost] schema cannot express, so
+# [cost] is omitted rather than misstated.
+# https://www.alibabacloud.com/help/en/model-studio/video-generation
+name = "HappyHorse 1.1 Reference-to-Video"
+description = "Video model for reference-guided video generation"
+release_date = "2026-07-17"
+last_updated = "2026-07-17"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = false
+open_weights = false
+
+[limit]
+context = 0
+output = 0
+
+[modalities]
+input = ["image", "text"]
+output = ["video"]

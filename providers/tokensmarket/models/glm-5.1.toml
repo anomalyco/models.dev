@@ -1,0 +1,13 @@
+# Alibaba Cloud (DashScope) channel. The adapter maps effort "none" to
+# `enable_thinking = false`, which is the toggle. GLM-5.1 on Model Studio
+# documents no effort ladder (unlike 5.2), so only the toggle is exposed.
+base_model = "zhipuai/glm-5.1"
+reasoning_options = [{ type = "toggle" }]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.88
+output = 3.53
+cache_read = 0.19

@@ -1,0 +1,13 @@
+# Alibaba Cloud (DashScope) channel, which accepts the full
+# reasoning_effort enum for GLM-5.2 ("none" disables reasoning, so no separate
+# toggle is needed).
+base_model = "zhipuai/glm-5.2"
+reasoning_options = [{ type = "effort", values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"] }]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.944
+output = 3.296
+cache_read = 0.232
