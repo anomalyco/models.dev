@@ -1,9 +1,9 @@
 # Servable on GET /v1/models but not yet listed in the public pricing catalog,
 # so [cost] is omitted rather than guessed.
-# The channel is OpenAI-compatible, which forwards `reasoning_effort` and maps
-# effort "none" onto disabling thinking.
+# The channel is OpenAI-compatible: thinking can be turned on or off, and no
+# graded effort semantics are claimed beyond the upstream model surface.
 base_model = "xiaomi/mimo-v2.5-pro"
-reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high"] }]
+reasoning_options = [{ type = "toggle" }]
 
 [interleaved]
 field = "reasoning_content"

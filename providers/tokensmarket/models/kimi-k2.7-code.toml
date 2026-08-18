@@ -2,7 +2,6 @@
 # `enable_thinking = false` and forwards `reasoning.budget_tokens` as
 # `thinking_budget`; Model Studio documents no bounds for the budget on Kimi.
 base_model = "moonshotai/kimi-k2.7-code"
-family = "kimi-k2"
 reasoning_options = [{ type = "toggle" }, { type = "budget_tokens" }]
 
 [interleaved]
