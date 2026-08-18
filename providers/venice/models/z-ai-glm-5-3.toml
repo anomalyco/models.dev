@@ -1,0 +1,14 @@
+base_model = "zhipuai/glm-5.3"
+name = "GLM 5.3"
+description = "Flagship GLM model for hybrid reasoning, coding, and agentic engineering"
+release_date = "2026-08-18"
+last_updated = "2026-08-18"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[cost]
+input = 1.75
+output = 5.5
+cache_read = 0.325
