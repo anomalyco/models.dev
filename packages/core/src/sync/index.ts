@@ -10,6 +10,7 @@ import { anthropic } from "./providers/anthropic.js";
 import { baseten } from "./providers/baseten.js";
 import { chutes } from "./providers/chutes.js";
 import { cloudflareWorkersAi } from "./providers/cloudflare-workers-ai.js";
+import { concentrate } from "./providers/concentrate.js";
 import { cortecs } from "./providers/cortecs.js";
 import { crossmodel } from "./providers/crossmodel.js";
 import { deepinfra } from "./providers/deepinfra.js";
@@ -119,6 +120,7 @@ export const providers: {
   baseten: SyncProvider<any>;
   chutes: SyncProvider<any>;
   "cloudflare-workers-ai": SyncProvider<any>;
+  concentrate: SyncProvider<any>;
   cortecs: SyncProvider<any>;
   crossmodel: SyncProvider<any>;
   deepinfra: SyncProvider<any>;
@@ -150,6 +152,7 @@ export const providers: {
   baseten,
   chutes,
   "cloudflare-workers-ai": cloudflareWorkersAi,
+  concentrate,
   cortecs,
   crossmodel,
   deepinfra,
@@ -179,6 +182,7 @@ export const providers: {
 
 export const groups = {
   aggregators: [
+    "concentrate",
     "crossmodel",
     "edenai",
     "empiriolabs",

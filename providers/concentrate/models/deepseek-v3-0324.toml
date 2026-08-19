@@ -1,0 +1,16 @@
+# PDF input is a genuine host delta rather than an inherited lab capability:
+# Concentrate reports pdf_input.supported = true for this ID and its deepinfra
+# route accepts file.pdf, while the crusoe route does not. Image input stays off,
+# matching the lab surface.
+# https://concentrate.ai/models/deepseek-v3-0324
+base_model = "deepseek/deepseek-v3-0324"
+attachment = true
+structured_output = true
+
+[cost]
+input = 0.24
+output = 0.9
+cache_read = 0.135
+
+[modalities]
+input = ["text", "pdf"]
