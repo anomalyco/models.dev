@@ -1,0 +1,19 @@
+base_model = "google/gemini-3.1-flash-image"
+tool_call = true
+structured_output = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "max"]
+
+[[reasoning_options]]
+type = "budget_tokens"
+
+[cost]
+input = 0.5
+output = 2
+
+[[cost.tiers]]
+tier = { type = "context", size = 200_000 }
+input = 0.5
+output = 2

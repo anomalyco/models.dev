@@ -1,0 +1,16 @@
+base_model = "alibaba/qwen3.8-27b"
+description = "Qwen3.8-27B is a dense multimodal model suited for coding, research, multimodal interaction, and long-running agent tasks."
+
+[[reasoning_options]]
+type = "toggle"
+
+[cost]
+input = 0.4
+output = 3
+cache_read = 0.15
+
+[limit]
+output = 262_144
+
+[modalities]
+input = ["text", "image"]

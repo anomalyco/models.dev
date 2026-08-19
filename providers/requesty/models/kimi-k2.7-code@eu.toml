@@ -1,0 +1,14 @@
+base_model = "moonshotai/kimi-k2.7-code"
+name = "Kimi K2.7 Code (EU)"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "max"]
+
+[[reasoning_options]]
+type = "budget_tokens"
+
+[cost]
+input = 1.25
+output = 4.5
+cache_read = 0.31

@@ -1,8 +1,13 @@
 base_model = "alibaba/qwen3.6-27b"
-reasoning_options = [{ type = "toggle" }, { type = "budget_tokens", min = 1, max = 131_072 }]
 name = "Qwen 3.6 27B"
-family = "qwen3.6"
-open_weights = false
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "budget_tokens"
+min = 1
+max = 131_072
 
 [cost]
 input = 0.6
@@ -14,4 +19,3 @@ output = 256_000
 
 [modalities]
 input = ["text", "image", "pdf"]
-output = ["text"]
