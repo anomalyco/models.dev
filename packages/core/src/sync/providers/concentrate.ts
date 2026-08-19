@@ -203,10 +203,10 @@ export function resolveConcentrateBaseModel(model: ConcentrateModel) {
   return resolveCanonicalBaseModel(`${prefix}/${model.summary.id}`);
 }
 
-export function selectConcentrateRoute(model: ConcentrateModel) {
+export function selectConcentratePricingRoute(model: ConcentrateModel) {
   // Concentrate can serve one model through several upstreams. Its catalog UI
-  // presents the lowest available token price, so use that route as the stable
-  // models.dev baseline while runtime routing remains configurable by users.
+  // presents the lowest available token price. Select that route for cost only;
+  // gateway-wide capabilities and limits come from aggregate list/detail data.
   return Object.entries(model.detail.providers).reduce<
     { id: string; route: ConcentrateRoute; cost: number } | undefined
   >((best, [id, route]) => {
@@ -216,30 +216,43 @@ export function selectConcentrateRoute(model: ConcentrateModel) {
   }, undefined);
 }
 
+export function concentrateSurface(model: ConcentrateModel) {
+  const routes = Object.values(model.detail.providers);
+  return {
+    input: [
+      "text" as const,
+      ...(model.summary.capabilities.image_input.supported
+        || routes.some((route) => supported(route.supports.input?.image))
+        ? ["image" as const]
+        : []),
+      ...(model.summary.capabilities.pdf_input.supported
+        || routes.some((route) => supported(route.supports.input?.file))
+        ? ["pdf" as const]
+        : []),
+    ],
+    limit: {
+      context: model.summary.max_input_tokens,
+      output: model.summary.max_tokens,
+    },
+    tool_call: routes.some((route) => route.supports.tools?.function_calling === true),
+    structured_output: model.summary.capabilities.structured_outputs.supported
+      || routes.some((route) => route.supports.text?.format?.json_schema === true
+        || route.supports.text?.format?.json_object === true),
+  };
+}
+
 export function buildConcentrateModel(
   model: ConcentrateModel,
   existing: ExistingModel | undefined,
 ): SyncedModel | undefined {
   const baseModel = existing?.base_model ?? resolveConcentrateBaseModel(model);
   if (baseModel === undefined) return undefined;
-  const selected = selectConcentrateRoute(model);
+  const selected = selectConcentratePricingRoute(model);
   if (selected === undefined) return undefined;
 
-  const route = selected.route;
-  const input = [
-    "text" as const,
-    ...(supported(route.supports.input?.image) || model.summary.capabilities.image_input.supported
-      ? ["image" as const]
-      : []),
-    ...(supported(route.supports.input?.file) || model.summary.capabilities.pdf_input.supported
-      ? ["pdf" as const]
-      : []),
-  ];
-  const limit = {
-    context: route.context_window,
-    output: route.max_output_tokens,
-  };
-  const tokens = route.pricing.tokens;
+  const pricingRoute = selected.route;
+  const surface = concentrateSurface(model);
+  const tokens = pricingRoute.pricing.tokens;
   const cost = {
     input: money(tokens.input),
     output: money(tokens.output),
@@ -255,7 +268,7 @@ export function buildConcentrateModel(
   };
 
   return factorBaseModel(baseModel, {
-    attachment: input.some((value) => value !== "text"),
+    attachment: surface.input.some((value) => value !== "text"),
     // Concentrate Chat exposes reasoning_effort and reports model-specific
     // support per upstream route. Preserve the reviewed lab/peer intersection
     // authored in each provider TOML rather than treating the gateway's full
@@ -263,14 +276,12 @@ export function buildConcentrateModel(
     // https://concentrate.ai/docs/api-reference/endpoint/chat-completions
     // https://concentrate.ai/docs/api-reference/endpoint/get-model
     reasoning_options: existing?.reasoning_options,
-    tool_call: route.supports.tools?.function_calling,
-    structured_output: route.supports.text?.format?.json_schema === true
-      || route.supports.text?.format?.json_object === true
-      || model.summary.capabilities.structured_outputs.supported,
+    tool_call: surface.tool_call,
+    structured_output: surface.structured_output,
     cost,
-    limit,
-    modalities: { input, output: ["text"] },
-  }, limit, existing?.base_model_omit);
+    limit: surface.limit,
+    modalities: { input: surface.input, output: ["text"] },
+  }, surface.limit, existing?.base_model_omit);
 }
 
 function supported(value: boolean | Record<string, boolean> | undefined) {

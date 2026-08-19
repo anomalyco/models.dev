@@ -3,10 +3,11 @@ import { describe, expect, test } from "bun:test";
 import {
   buildConcentrateModel,
   concentrate,
+  concentrateSurface,
   type ConcentrateModel,
   fetchConcentrateModels,
   resolveConcentrateBaseModel,
-  selectConcentrateRoute,
+  selectConcentratePricingRoute,
 } from "../src/sync/providers/concentrate.js";
 
 describe("Concentrate sync", () => {
@@ -40,9 +41,9 @@ describe("Concentrate sync", () => {
       .toBe("openai/gpt-5.6-terra");
   });
 
-  test("selects the cheapest route and preserves curated reasoning controls", () => {
+  test("uses the cheapest route only for pricing and preserves curated reasoning controls", () => {
     const model = concentrateModel();
-    const selected = selectConcentrateRoute(model);
+    const selected = selectConcentratePricingRoute(model);
     expect(selected?.id).toBe("openai");
     expect(selected?.route.context_window).toBe(1_050_000);
 
@@ -65,6 +66,36 @@ describe("Concentrate sync", () => {
     });
     expect(translated).not.toHaveProperty("reasoning");
     expect(translated).not.toHaveProperty("temperature");
+  });
+
+  test("uses aggregate limits and capabilities when the cheapest route is capability-thin", () => {
+    const model = concentrateModel();
+    model.detail.providers.free = {
+      ...model.detail.providers.openai,
+      provider_slug: "free",
+      pricing: {
+        tokens: {
+          input: { price: { USD: 0 }, units: 1_000_000 },
+          output: { price: { USD: 0 }, units: 1_000_000 },
+        },
+      },
+      context_window: 16_384,
+      max_output_tokens: 4_096,
+      supports: {
+        input: { text: true },
+        tools: { function_calling: false },
+      },
+    };
+
+    const translated = buildConcentrateModel(model, undefined);
+    expect(selectConcentratePricingRoute(model)?.id).toBe("free");
+    expect(translated).toMatchObject({ cost: { input: 0, output: 0 } });
+    expect(concentrateSurface(model)).toEqual({
+      input: ["text", "image", "pdf"],
+      limit: { context: 1_050_000, output: 128_000 },
+      tool_call: true,
+      structured_output: true,
+    });
   });
 
   test("does not invent reasoning controls from Concentrate's normalization enum", () => {

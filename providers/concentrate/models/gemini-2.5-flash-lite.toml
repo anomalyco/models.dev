@@ -1,20 +1,17 @@
 # Concentrate Chat uses `reasoning_effort`; live probes on 2026-08-19 confirmed
-# `none` disables thinking and `high` enables it on this route.
+# none/minimal/low/medium/high/xhigh work; max is rejected by AI Studio.
 # https://concentrate.ai/docs/api-reference/endpoint/chat-completions
 # https://api.concentrate.ai/v1/models/gemini-2.5-flash-lite
 base_model = "google/gemini-2.5-flash-lite"
 
 [[reasoning_options]]
 type = "effort"
-values = ["none", "high"]
+values = ["none", "minimal", "low", "medium", "high", "xhigh"]
 
 [cost]
 input = 0.1
 output = 0.4
 cache_read = 0.01
-
-[limit]
-output = 65_535
 
 [modalities]
 input = ["text", "image", "pdf"]
