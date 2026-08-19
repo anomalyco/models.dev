@@ -1,12 +1,12 @@
 base_model = "anthropic/claude-opus-5"
 
-attachment = false
-
+# reasoning: `reasoning` request field, effort ladder; `none` disables.
 reasoning_options = [
-  { type = "toggle" },
   { type = "effort", values = ["none", "minimal", "low", "medium", "high", "max"] },
-  { type = "budget_tokens" },
 ]
+
+[modalities]
+input = ["text", "image"]
 
 [cost]
 input = 5

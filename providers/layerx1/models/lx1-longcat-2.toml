@@ -1,9 +1,8 @@
 base_model = "meituan/longcat-2.0"
 
+# reasoning: `reasoning` request field, effort ladder; `none` disables.
 reasoning_options = [
-  { type = "toggle" },
   { type = "effort", values = ["none", "minimal", "low", "medium", "high", "max"] },
-  { type = "budget_tokens" },
 ]
 
 [cost]

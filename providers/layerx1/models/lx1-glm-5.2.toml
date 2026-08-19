@@ -1,9 +1,8 @@
 base_model = "zhipuai/glm-5.2"
 
+# reasoning: `reasoning` request field, effort ladder; `none` disables.
 reasoning_options = [
-  { type = "toggle" },
   { type = "effort", values = ["none", "minimal", "low", "medium", "high", "max"] },
-  { type = "budget_tokens" },
 ]
 
 [cost]

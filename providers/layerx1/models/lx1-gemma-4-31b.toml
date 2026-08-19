@@ -2,10 +2,9 @@ base_model = "google/gemma-4-31b-it"
 
 attachment = false
 
+# reasoning: `reasoning` request field, effort ladder; `none` disables.
 reasoning_options = [
-  { type = "toggle" },
   { type = "effort", values = ["none", "minimal", "low", "medium", "high", "max"] },
-  { type = "budget_tokens" },
 ]
 
 [modalities]

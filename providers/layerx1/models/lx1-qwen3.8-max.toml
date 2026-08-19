@@ -1,12 +1,12 @@
 base_model = "alibaba/qwen3.8-max"
 
-attachment = false
-
+# reasoning: `reasoning` request field, effort ladder; `none` disables.
 reasoning_options = [
-  { type = "toggle" },
   { type = "effort", values = ["none", "minimal", "low", "medium", "high", "max"] },
-  { type = "budget_tokens" },
 ]
+
+[modalities]
+input = ["text", "image", "video"]
 
 [cost]
 input = 2
