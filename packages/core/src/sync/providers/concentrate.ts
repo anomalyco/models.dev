@@ -142,6 +142,7 @@ export const concentrate = {
   // exact caller-visible reasoning options.
   skipCreates: true,
   trackMissingModels: false,
+  deleteMissing: false,
   sourceID(model) {
     return model.summary.id;
   },

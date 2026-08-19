@@ -10,9 +10,10 @@ import {
 } from "../src/sync/providers/concentrate.js";
 
 describe("Concentrate sync", () => {
-  test("does not open missing-model issues for the deliberately partial catalog", () => {
+  test("preserves the deliberately partial catalog without opening missing-model issues", () => {
     expect(concentrate.skipCreates).toBe(true);
     expect(concentrate.trackMissingModels).toBe(false);
+    expect(concentrate.deleteMissing).toBe(false);
   });
 
   test("fetches and joins the public list with model details", async () => {

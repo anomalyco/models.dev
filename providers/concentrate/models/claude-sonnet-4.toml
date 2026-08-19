@@ -1,3 +1,8 @@
+# Concentrate's only route reports every Chat `reasoning_effort` value as
+# unsupported. Live probes on 2026-08-19 returned reasoning content for both
+# `none` and `high`, so this route reasons without a caller-visible control.
+# https://concentrate.ai/docs/api-reference/endpoint/chat-completions
+# https://api.concentrate.ai/v1/models/claude-sonnet-4
 base_model = "anthropic/claude-sonnet-4-20250514"
 structured_output = false
 
