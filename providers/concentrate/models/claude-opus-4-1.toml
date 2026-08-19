@@ -1,9 +1,14 @@
+# Concentrate Chat exposes normalized `reasoning_effort`; live probes on
+# 2026-08-19 confirmed `none` disables thinking and low, medium, and high return
+# reasoning payloads on this route.
+# https://concentrate.ai/docs/api-reference/endpoint/chat-completions
+# https://api.concentrate.ai/v1/models/claude-opus-4-1
 base_model = "anthropic/claude-opus-4-1"
 structured_output = true
 
 [[reasoning_options]]
 type = "effort"
-values = ["none", "high"]
+values = ["none", "low", "medium", "high"]
 
 [cost]
 input = 15

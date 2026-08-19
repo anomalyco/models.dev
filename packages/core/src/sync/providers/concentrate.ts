@@ -128,8 +128,6 @@ const BASE_MODEL_ALIASES: Record<string, string> = {
   "gemma-4-e4b": "google/gemma-4-E4B-it",
   "gemma-4-31b": "google/gemma-4-31b-it",
   "grok-4.20-non-reasoning": "xai/grok-4.20-0309-non-reasoning",
-  "deepseek-r1-0528": "deepseek/deepseek-r1",
-  "deepseek-r1-distill-32b": "deepseek/deepseek-r1-distill-qwen-32b",
   "deepseek-v3-1": "deepseek/deepseek-v3.1",
   "deepseek-v3-2": "deepseek/deepseek-v3.2",
   "deepseek-v4-flash-0423": "deepseek/deepseek-v4-flash",
@@ -143,6 +141,7 @@ export const concentrate = {
   // unsupported controls. New files need a lab/peer baseline before publishing
   // exact caller-visible reasoning options.
   skipCreates: true,
+  trackMissingModels: false,
   sourceID(model) {
     return model.summary.id;
   },

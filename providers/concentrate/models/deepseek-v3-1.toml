@@ -1,10 +1,14 @@
+# Concentrate Chat uses `reasoning_effort`; live probes on 2026-08-19 confirmed
+# `none` disables thinking and `high` returns a reasoning payload on this route.
+# https://concentrate.ai/docs/api-reference/endpoint/chat-completions
+# https://api.concentrate.ai/v1/models/deepseek-v3-1
 base_model = "deepseek/deepseek-v3.1"
 attachment = true
 structured_output = true
 
 [[reasoning_options]]
 type = "effort"
-values = ["none", "low", "medium", "high", "xhigh"]
+values = ["none", "high"]
 
 [cost]
 input = 0.25

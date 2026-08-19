@@ -2,6 +2,7 @@ import { describe, expect, test } from "bun:test";
 
 import {
   buildConcentrateModel,
+  concentrate,
   type ConcentrateModel,
   fetchConcentrateModels,
   resolveConcentrateBaseModel,
@@ -9,6 +10,11 @@ import {
 } from "../src/sync/providers/concentrate.js";
 
 describe("Concentrate sync", () => {
+  test("does not open missing-model issues for the deliberately partial catalog", () => {
+    expect(concentrate.skipCreates).toBe(true);
+    expect(concentrate.trackMissingModels).toBe(false);
+  });
+
   test("fetches and joins the public list with model details", async () => {
     const model = concentrateModel();
     const urls: string[] = [];
