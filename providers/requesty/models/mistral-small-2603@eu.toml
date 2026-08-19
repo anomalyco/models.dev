@@ -1,0 +1,15 @@
+base_model = "mistral/mistral-small-2603"
+name = "Mistral Small 4 (EU)"
+structured_output = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "max"]
+
+[[reasoning_options]]
+type = "budget_tokens"
+
+[cost]
+input = 0.165
+output = 0.66
+cache_read = 0.165

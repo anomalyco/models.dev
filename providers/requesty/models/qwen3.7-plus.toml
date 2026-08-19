@@ -1,0 +1,19 @@
+base_model = "alibaba/qwen3.7-plus"
+structured_output = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "max"]
+
+[[reasoning_options]]
+type = "budget_tokens"
+
+[cost]
+input = 0.32
+output = 1.28
+cache_read = 0.032
+cache_write = 0.4
+
+[limit]
+context = 1_048_576
+output = 131_072

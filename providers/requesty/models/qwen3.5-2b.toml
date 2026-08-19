@@ -1,0 +1,29 @@
+name = "qwen3.5-2b"
+description = "Qwen3.5-2B is a compact yet capable model from Alibaba's Qwen3.5 series. It features a 262K token context window, support for 201 languages, thinking/reasoning mode, and tool calling for agentic workflows. A strong choice for prototyping, fine-tuning, and efficient multilingual deployments."
+family = "qwen3.5"
+release_date = "2026-03-10"
+last_updated = "2026-03-10"
+attachment = true
+reasoning = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "max"]
+
+[[reasoning_options]]
+type = "budget_tokens"
+
+[cost]
+input = 0.02
+output = 0.1
+
+[limit]
+context = 262_144
+output = 262_144
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
