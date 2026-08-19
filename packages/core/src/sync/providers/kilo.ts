@@ -180,6 +180,7 @@ export function buildKiloModel(
     input: existing?.limit?.input,
     output: model.top_provider.max_completion_tokens ?? existing?.limit?.output ?? context,
   };
+  const isRouteVariant = model.id.endsWith(":free") || model.id.endsWith(":discounted");
   const modelId = model.id.replace(/:discounted$/, "");
   const canonical = existing?.base_model ?? baseModel ?? resolveCanonicalBaseModel(modelId);
 
@@ -187,7 +188,7 @@ export function buildKiloModel(
     return factorBaseModel(
       canonical,
       {
-        name: baseModel !== undefined || model.id.endsWith(":free") ? name : undefined,
+        name: baseModel !== undefined || isRouteVariant ? name : undefined,
         description: existing?.description ?? apiDescription ?? describeModel({
           id: model.id,
           name,
