@@ -1,0 +1,25 @@
+# Sources (accessed 2026-08-19):
+# - https://api.pioneer.ai/base-models (id=nvidia/NVIDIA-Nemotron-3.5-Lightning-30B-A3B-BF16)
+# - https://api.pioneer.ai/v1/models
+# - https://huggingface.co/nvidia/NVIDIA-Nemotron-3.5-Lightning-30B-A3B-BF16
+# - https://agent.pioneer.ai/llms-full.txt#reasoning--thinking-controls
+# Effort: reasoning.effort via Pioneer unified reasoning object (low|medium|high),
+# matching other Pioneer Nemotron entries; reasoning traces on reasoning_content.
+base_model = "nvidia/nemotron-3.5-lightning"
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high"]
+
+[cost]
+input = 0.5
+output = 0.5
+cache_read = 0.5
+cache_write = 0.5
+
+[limit]
+context = 8_192
+output = 4_096
