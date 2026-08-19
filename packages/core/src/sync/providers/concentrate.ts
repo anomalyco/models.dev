@@ -183,8 +183,8 @@ export const concentrate = {
   skippedNotice(ids) {
     if (ids.length === 0) return [];
     return [
-      `${ids.length} Concentrate models were skipped because models.dev has no canonical metadata for them yet.`,
-      `Skipped remote IDs: ${ids.map((id) => `\`${id}\``).join(", ")}`,
+      `${ids.length} Concentrate models were not added automatically because relay reasoning controls require per-model review.`,
+      `Remote IDs not currently curated: ${ids.map((id) => `\`${id}\``).join(", ")}`,
     ];
   },
   fetchModels() {
