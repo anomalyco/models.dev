@@ -1,0 +1,17 @@
+# Concentrate Chat uses `reasoning_effort`; `none` is the off value on this route.
+# It does not expose a separate thinking toggle or reasoning-token budget field.
+# https://concentrate.ai/docs/api-reference/endpoint/chat-completions
+# https://api.concentrate.ai/v1/models/deepseek-v4-pro-0813 (accessed 2026-08-19)
+base_model = "deepseek/deepseek-v4-pro-0813"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "high", "max"]
+
+[cost]
+input = 0.66
+output = 1.98
+cache_read = 0.022
+
+[limit]
+context = 1_048_576

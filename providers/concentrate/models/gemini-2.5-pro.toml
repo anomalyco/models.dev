@@ -1,0 +1,25 @@
+# Concentrate Chat has no reasoning-budget field and `none` is rejected because
+# Gemini 2.5 Pro always thinks. Repeated low/high probes on 2026-08-19 showed no
+# stable token-budget separation, so no caller-selectable control is published.
+# https://concentrate.ai/docs/api-reference/endpoint/chat-completions
+# https://api.concentrate.ai/v1/models/gemini-2.5-pro
+base_model = "google/gemini-2.5-pro"
+
+reasoning_options = []
+
+[cost]
+input = 1.25
+output = 10
+cache_read = 0.125
+
+[[cost.tiers]]
+tier = { type = "context", size = 200_000 }
+input = 2.5
+output = 15
+cache_read = 0.25
+
+[limit]
+context = 1_000_000
+
+[modalities]
+input = ["text", "image", "pdf"]

@@ -1,0 +1,29 @@
+# Concentrate Chat exposes normalized `reasoning_effort` over Anthropic's budget
+# API, and the graded tiers have verified distinct effect here -- they are not a
+# relabelled on/off toggle. Live probes on 2026-08-19 (identical prompt,
+# max_tokens 20000 so nothing truncated) returned reasoning lengths of 6_555
+# chars at low, 5_372 at medium, and 17_039 at high, with high consuming 13_638
+# completion tokens against 5_573 at low. `none` returns an empty reasoning
+# payload, i.e. thinking genuinely off. Sampling here was one run per level, so
+# low and medium sit within run-to-run noise of each other; the high tier is the
+# decisively separated one. Peer relays for this base model publish only a
+# toggle plus budget_tokens because they expose Anthropic's native surface,
+# whereas Concentrate normalizes that budget into OpenAI-style effort names.
+#
+# structured_output is false because Concentrate itself reports
+# structured_outputs.supported = false for this ID. Its anthropic route still
+# advertises text.format.json_schema, but the relay does not expose it, and the
+# OpenRouter peer for this base model publishes false as well.
+# https://concentrate.ai/docs/api-reference/endpoint/chat-completions
+# https://api.concentrate.ai/v1/models/claude-opus-4-1
+base_model = "anthropic/claude-opus-4-1"
+structured_output = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high"]
+
+[cost]
+input = 15
+output = 75
+cache_read = 1.5

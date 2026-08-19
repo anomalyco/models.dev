@@ -1,0 +1,20 @@
+# Concentrate reports max_input_tokens = 1_000_000 for this ID, the round
+# 1M window rather than the lab's 1_048_576. The override records the host's
+# own figure; it is not a trimmed lab value.
+# https://api.concentrate.ai/v1/models/gemini-3-flash-preview (accessed 2026-08-19)
+base_model = "google/gemini-3-flash-preview"
+
+[[reasoning_options]]
+type = "effort"
+values = ["minimal", "low", "medium", "high"]
+
+[cost]
+input = 0.5
+output = 3
+cache_read = 0.05
+
+[limit]
+context = 1_000_000
+
+[modalities]
+input = ["text", "image", "pdf"]

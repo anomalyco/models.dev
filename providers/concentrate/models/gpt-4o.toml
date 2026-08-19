@@ -1,0 +1,12 @@
+# Cache reads bill at $0.125/M on this gateway, 5% of the $2.50 input rate
+# rather than the 50% ratio OpenAI and most relays apply to GPT-4o. The rate is
+# identical on the openai and azure routes, and gpt-4o-mini keeps the
+# conventional 50% ratio ($0.075/M on $0.15 input), so this is per-model pricing
+# rather than a scaling error on a shared formula.
+# https://concentrate.ai/models/gpt-4o
+base_model = "openai/gpt-4o"
+
+[cost]
+input = 2.5
+output = 10
+cache_read = 0.125

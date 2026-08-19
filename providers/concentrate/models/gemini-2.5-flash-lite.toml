@@ -1,0 +1,18 @@
+# Concentrate Chat exposes no toggle or reasoning budget. Live probes on
+# 2026-08-19 confirmed `reasoning_effort = none` removes hidden reasoning and
+# `high` returns it, so only the verified binary surface is published.
+# https://concentrate.ai/docs/api-reference/endpoint/chat-completions
+# https://api.concentrate.ai/v1/models/gemini-2.5-flash-lite
+base_model = "google/gemini-2.5-flash-lite"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "high"]
+
+[cost]
+input = 0.1
+output = 0.4
+cache_read = 0.01
+
+[modalities]
+input = ["text", "image", "pdf"]

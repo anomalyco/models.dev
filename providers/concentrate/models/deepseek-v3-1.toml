@@ -1,0 +1,23 @@
+# Concentrate Chat exposes no separate toggle. Live probes on 2026-08-19
+# confirmed `reasoning_effort = none` disables thinking and `high` enables it,
+# so these two effort values represent DeepSeek V3.1's hybrid on/off surface.
+# https://concentrate.ai/docs/api-reference/endpoint/chat-completions
+# https://api.concentrate.ai/v1/models/deepseek-v3-1
+base_model = "deepseek/deepseek-v3.1"
+attachment = true
+structured_output = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "high"]
+
+[cost]
+input = 0.25
+output = 0.95
+cache_read = 0.13
+
+[limit]
+context = 163_840
+
+[modalities]
+input = ["text", "pdf"]

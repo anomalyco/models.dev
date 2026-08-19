@@ -1,0 +1,29 @@
+# The base model is a reasoner, but Concentrate's deployment of it exposes no
+# caller-visible reasoning control: the list capabilities report
+# effort.supported = false with every effort value false, and thinking.supported
+# = false for both adaptive and enabled. Its single bedrock route likewise
+# reports every reasoning.effort value false.
+#
+# This is specific to the safeguard ID rather than a blanket cut: the sibling
+# gpt-oss-120b and gpt-oss-20b entries report effort and thinking as supported
+# and do publish low/medium/high here. Peers that expose low/medium/high for
+# this model (Tinfoil, Cortecs) serve it from their own stacks, while relays
+# that front a single restricted route publish no controls either -- Merge
+# Gateway also carries reasoning_options = [] and tool_call = false for it.
+# `[]` therefore records verified absence of a control, not an unverified gap.
+# https://concentrate.ai/docs/api-reference/endpoint/chat-completions
+# https://api.concentrate.ai/v1/models/gpt-oss-safeguard-120b (accessed 2026-08-19)
+base_model = "openai/gpt-oss-safeguard-120b"
+attachment = true
+tool_call = false
+reasoning_options = []
+
+[cost]
+input = 0.15
+output = 0.6
+
+[limit]
+context = 128_000
+
+[modalities]
+input = ["text", "pdf"]

@@ -1,0 +1,22 @@
+# Concentrate Chat uses `reasoning_effort`: `none` is off and the DeepSeek
+# baseline supplies high|max. Live low/high probes did not show a distinct low
+# tier, so low is intentionally omitted.
+# https://concentrate.ai/docs/api-reference/endpoint/chat-completions
+# https://api.concentrate.ai/v1/models/deepseek-v4-flash-0423 (accessed 2026-08-19)
+base_model = "deepseek/deepseek-v4-flash"
+attachment = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "high", "max"]
+
+[cost]
+input = 0.09
+output = 0.18
+cache_read = 0.018
+
+[limit]
+context = 1_048_576
+
+[modalities]
+input = ["text", "pdf"]

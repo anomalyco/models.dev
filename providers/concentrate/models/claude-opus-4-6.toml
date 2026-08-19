@@ -1,0 +1,19 @@
+# The 200k context override is host-true, not an understatement of the lab
+# model: Concentrate reports max_input_tokens = 200_000 for this ID in the model
+# list and context_window = 200_000 on every one of its four routes (anthropic,
+# vertex, azure, bedrock). Anthropic's 1M window is not served through this relay.
+# https://api.concentrate.ai/v1/models/claude-opus-4-6 (accessed 2026-08-19)
+base_model = "anthropic/claude-opus-4-6"
+structured_output = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high", "max"]
+
+[cost]
+input = 5
+output = 25
+cache_read = 0.5
+
+[limit]
+context = 200_000

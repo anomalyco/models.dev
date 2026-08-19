@@ -1,0 +1,17 @@
+# Concentrate Chat exposes no separate toggle. Live probes on 2026-08-19
+# confirmed `reasoning_effort = none` removes hidden reasoning and `high`
+# returns it, so these values represent Gemma's binary thinking surface.
+# https://concentrate.ai/docs/api-reference/endpoint/chat-completions
+# https://api.concentrate.ai/v1/models/gemma-4-26b
+base_model = "google/gemma-4-26b-a4b-it"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "high"]
+
+[cost]
+input = 0.1
+output = 0.3
+
+[modalities]
+input = ["text", "image", "pdf"]

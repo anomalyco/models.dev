@@ -1,0 +1,18 @@
+# Concentrate advertises a $0 Blue Lobster route for this ID, but live requests
+# on 2026-08-19 relayed through Fireworks and returned non-zero billed cost, so
+# the Fireworks route is the honest baseline ($0.07/M in, $0.30/M out).
+# https://api.concentrate.ai/v1/models/gpt-oss-20b
+base_model = "openai/gpt-oss-20b"
+attachment = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high"]
+
+[cost]
+input = 0.07
+output = 0.3
+cache_read = 0.035
+
+[modalities]
+input = ["text", "pdf"]

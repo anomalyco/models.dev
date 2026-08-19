@@ -1,0 +1,25 @@
+# Concentrate Chat exposes normalized `reasoning_effort` over Anthropic's budget
+# API, and the graded tiers have verified distinct effect here -- they are not a
+# relabelled on/off toggle. Live probes on 2026-08-19 (identical prompt, 2 runs
+# per level, max_tokens 20000 so nothing truncated) produced mean reasoning
+# lengths of 4_306 chars at low, 5_270 at medium, and 7_820 at high, with
+# completion tokens rising ~5.0k -> ~7.0k -> ~9.6k. `none` returns an empty
+# reasoning payload, i.e. thinking genuinely off.
+#
+# No [[cost.tiers]] entry: Concentrate carries Anthropic's long-context band at
+# above = 200_000 while capping this ID's window at 200_000 on every route, so
+# the band can never be entered and publishing it would advertise a price no
+# caller can be charged. Peers that serve a 1M window do publish that tier.
+# https://concentrate.ai/docs/api-reference/endpoint/chat-completions
+# https://api.concentrate.ai/v1/models/claude-sonnet-4-5
+base_model = "anthropic/claude-sonnet-4-5"
+structured_output = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high"]
+
+[cost]
+input = 3
+output = 15
+cache_read = 0.3

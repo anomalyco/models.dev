@@ -1,0 +1,22 @@
+# This ID is the always-reasoning half of the grok-4.20 pair (the other is
+# grok-4.20-0309-non-reasoning), and Concentrate exposes no graded control over
+# it: its single xai route accepts `medium` and rejects every other effort value,
+# so there is one accepted value and therefore no caller-selectable tier. The xai
+# lab entry publishes reasoning_options = [] for the same reason, and `[]` is kept
+# here rather than authoring a single-value effort set that implies a choice.
+# https://api.concentrate.ai/v1/models/grok-4.20-0309-reasoning (accessed 2026-08-19)
+base_model = "xai/grok-4.20-0309-reasoning"
+reasoning_options = []
+
+[cost]
+input = 2
+output = 6
+cache_read = 0.2
+
+[[cost.tiers]]
+tier = { type = "context", size = 200_000 }
+input = 4
+output = 12
+
+[limit]
+context = 2_000_000

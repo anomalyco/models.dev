@@ -1,0 +1,20 @@
+# Concentrate exposes no caller-visible reasoning control for this ID: the list
+# capabilities report effort.supported = false with every effort value false and
+# thinking.supported = false, and its single xai route accepts only `none`.
+# The xai lab entry likewise publishes reasoning_options = [], so `[]` records
+# verified absence of a control rather than an unverified gap.
+# https://api.concentrate.ai/v1/models/grok-build-0.1 (accessed 2026-08-19)
+base_model = "xai/grok-build-0.1"
+
+reasoning_options = []
+
+[cost]
+input = 1
+output = 2
+cache_read = 0.2
+
+[[cost.tiers]]
+tier = { type = "context", size = 200_000 }
+input = 2
+output = 4
+cache_read = 0.4
