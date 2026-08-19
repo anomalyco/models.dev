@@ -1,0 +1,12 @@
+# Cost: converted from Melious's EUR list price for the default `balanced`
+# route at 1.1535 USD/EUR (ECB euro reference rate, 2026-08-07).
+# Sources: https://melious.ai/hub/models/kimi-k2.7-code and https://melious.ai/pricing
+# Reasoning: always-on. First-party providers/moonshotai/models/kimi-k2.7-code.toml
+# authors [], so there is no caller-side control to forward here.
+base_model = "moonshotai/kimi-k2.7-code"
+reasoning_options = []
+
+[cost]
+input = 0.8074
+output = 4.0373
+cache_read = 0.2307

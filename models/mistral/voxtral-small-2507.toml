@@ -1,0 +1,23 @@
+name = "Voxtral Small 24B 2507"
+description = "Open Mistral speech-understanding model for transcription, audio Q&A, and summarisation"
+family = "voxtral"
+release_date = "2025-07-15"
+last_updated = "2025-07-15"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = false
+open_weights = true
+license = "Apache-2.0"
+
+[limit]
+context = 32_000
+output = 4_096
+
+[modalities]
+input = ["text", "audio"]
+output = ["text"]
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/mistralai/Voxtral-Small-24B-2507"

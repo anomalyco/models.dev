@@ -1,0 +1,15 @@
+# Cost: converted from Melious's EUR list price for the default `balanced`
+# route at 1.1535 USD/EUR (ECB euro reference rate, 2026-08-07).
+# Sources: https://melious.ai/hub/models/mistral-medium-3.5-128b and https://melious.ai/pricing
+# Limit: the hub states a 256000 served context but publishes no parameters.max_tokens,
+# so output is capped at the served context rather than inheriting the lab's larger value.
+base_model = "mistral/mistral-medium-2604"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
+
+[cost]
+input = 1.7302
+output = 5.7675
+
+[limit]
+context = 256_000
+output = 256_000

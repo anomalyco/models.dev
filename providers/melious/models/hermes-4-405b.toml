@@ -1,0 +1,11 @@
+# Cost: converted from Melious's EUR list price for the default `balanced`
+# route at 1.1535 USD/EUR (ECB euro reference rate, 2026-08-07).
+# Sources: https://melious.ai/hub/models/hermes-4-405b and https://melious.ai/pricing
+# Reasoning: Hermes 4's hybrid thinking is steered by the system prompt. OpenRouter
+# models it as a toggle, which Melious has no wire field for, so no caller control.
+base_model = "nousresearch/hermes-4-405b"
+reasoning_options = []
+
+[cost]
+input = 1.0958
+output = 3.2875

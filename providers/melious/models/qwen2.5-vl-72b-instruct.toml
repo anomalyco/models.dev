@@ -1,0 +1,13 @@
+# Cost: converted from Melious's EUR list price for the default `balanced`
+# route at 1.1535 USD/EUR (ECB euro reference rate, 2026-08-07).
+# Sources: https://melious.ai/hub/models/qwen2.5-vl-72b-instruct and https://melious.ai/pricing
+base_model = "alibaba/qwen2-5-vl-72b-instruct"
+attachment = true
+tool_call = false
+
+[cost]
+input = 0.2884
+output = 0.8651
+
+[limit]
+context = 32_768

@@ -1,0 +1,16 @@
+# Cost: converted from Melious's EUR list price for the default `balanced`
+# route at 1.1535 USD/EUR (ECB euro reference rate, 2026-08-07).
+# Sources: https://melious.ai/hub/models/nemotron-3-nano-30b-a3b and https://melious.ai/pricing
+# Limit: context and max output are the hub's served values for this deployment
+# (parameters.context_window = 128000, parameters.max_tokens = 8192).
+base_model = "nvidia/nemotron-3-nano-30b-a3b"
+structured_output = true
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
+
+[cost]
+input = 0.0692
+output = 0.2768
+
+[limit]
+context = 128_000
+output = 8_192

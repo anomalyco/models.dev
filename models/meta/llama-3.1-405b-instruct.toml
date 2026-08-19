@@ -1,0 +1,30 @@
+name = "Llama 3.1 405B Instruct"
+description = "Largest open Llama 3.1 instruct model for multilingual chat, reasoning, and coding"
+family = "llama"
+release_date = "2024-07-23"
+last_updated = "2024-07-23"
+attachment = false
+reasoning = false
+temperature = true
+tool_call = true
+structured_output = true
+knowledge = "2023-12"
+open_weights = true
+license = "Llama 3.1 Community License"
+
+[limit]
+context = 128_000
+output = 4_096
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/meta-llama/Llama-3.1-405B-Instruct"
+
+[[links]]
+label = "Model card"
+url = "https://github.com/meta-llama/llama-models/blob/main/models/llama3_1/MODEL_CARD.md"
+type = "model_card"
