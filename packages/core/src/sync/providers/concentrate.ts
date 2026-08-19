@@ -133,40 +133,6 @@ const BASE_MODEL_ALIASES: Record<string, string> = {
   "deepseek-v3-1": "deepseek/deepseek-v3.1",
   "deepseek-v3-2": "deepseek/deepseek-v3.2",
   "deepseek-v4-flash-0423": "deepseek/deepseek-v4-flash",
-  "qwen3-235b-a22b-instruct": "alibaba/qwen3-235b-a22b-instruct-2507",
-  "qwen3-235b-a22b-thinking": "alibaba/qwen3-235b-a22b",
-  "qwen3-max-thinking": "alibaba/qwen3-max",
-  "qwen3-coder-480b-a35b": "alibaba/qwen3-coder-480b-a35b-instruct",
-  "qwen3-30b": "alibaba/qwen3-30b-a3b",
-  "qwen3.6-35b": "alibaba/qwen3.6-35b-a3b",
-  "qwen3-coder-30b-a3b": "alibaba/qwen3-coder-30b-a3b-instruct",
-  "qwen3-next-80b-a3b": "alibaba/qwen3-next-80b-a3b-instruct",
-  "qwen3-vl-235b-a22b": "alibaba/qwen3-vl-235b-a22b-instruct",
-  "kimi-k2-7-code": "moonshotai/kimi-k2.7-code",
-  "kimi-k2-6": "moonshotai/kimi-k2.6",
-  "kimi-k2-5": "moonshotai/kimi-k2.5",
-  "minimax-m2-7-highspeed": "minimax/MiniMax-M2.7-highspeed",
-  "minimax-m2-7": "minimax/MiniMax-M2.7",
-  "minimax-m2-5-highspeed": "minimax/MiniMax-M2.5-highspeed",
-  "minimax-m2-5": "minimax/MiniMax-M2.5",
-  "minimax-m2-1-highspeed": "minimax/MiniMax-M2.1",
-  "minimax-m2-1": "minimax/MiniMax-M2.1",
-  "nemotron-3-nano-30b": "nvidia/nemotron-3-nano-30b-a3b",
-  "nemotron-3-nano-omni": "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning",
-  "nemotron-3-ultra-nvfp4": "nvidia/nemotron-3-ultra-550b-a55b",
-  "step-3-7-flash": "stepfun/step-3.7-flash",
-  "llama-4-maverick": "meta/llama-4-maverick-17b-instruct",
-  "llama-4-scout": "meta/llama-4-scout-17b-instruct",
-  "llama-3.2-3b-instruct": "meta/llama-3.2-3b",
-  "llama-3.2-1b-instruct": "meta/llama-3.2-1b",
-  "mistral-large-3": "mistral/mistral-large-2512",
-  "mistral-medium-3": "mistral/mistral-medium-2505",
-  "mistral-small-3.1": "mistral/mistral-small-3-1-24b-instruct-2503",
-  "mistral-small-3.2": "mistral/mistral-small-2506",
-  "devstral-2": "mistral/devstral-2512",
-  "codestral": "mistral/codestral-latest",
-  "command-a": "cohere/command-a-03-2025",
-  "command-a-vision": "cohere/command-a-vision-07-2025",
 };
 
 export const concentrate = {
@@ -290,12 +256,12 @@ export function buildConcentrateModel(
 
   return factorBaseModel(baseModel, {
     attachment: input.some((value) => value !== "text"),
-    // Concentrate documents only reasoning.effort / reasoning_effort and may
-    // bump unsupported levels to the closest supported effort. Preserve the
-    // reviewed lab/peer intersection authored in each provider TOML rather than
-    // treating the gateway's normalization enum as native model support.
-    // https://concentrate.ai/docs/api-reference/endpoint/request-parameters
+    // Concentrate Chat exposes reasoning_effort and reports model-specific
+    // support per upstream route. Preserve the reviewed lab/peer intersection
+    // authored in each provider TOML rather than treating the gateway's full
+    // normalization enum as native support for every model.
     // https://concentrate.ai/docs/api-reference/endpoint/chat-completions
+    // https://concentrate.ai/docs/api-reference/endpoint/get-model
     reasoning_options: existing?.reasoning_options,
     tool_call: route.supports.tools?.function_calling,
     structured_output: route.supports.text?.format?.json_schema === true

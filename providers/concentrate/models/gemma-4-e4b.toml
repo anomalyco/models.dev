@@ -1,7 +1,9 @@
 base_model = "google/gemma-4-E4B-it"
 structured_output = false
 
-reasoning_options = []
+[[reasoning_options]]
+type = "effort"
+values = ["none", "high"]
 
 [cost]
 input = 0.02

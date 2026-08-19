@@ -3,7 +3,9 @@ attachment = true
 tool_call = false
 structured_output = false
 
-reasoning_options = []
+[[reasoning_options]]
+type = "effort"
+values = ["high"]
 
 [cost]
 input = 1.35
