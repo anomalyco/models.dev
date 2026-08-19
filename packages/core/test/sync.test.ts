@@ -3541,6 +3541,44 @@ test("Vercel factored models inherit temperature from base metadata", () => {
   expect(synced).not.toHaveProperty("temperature");
 });
 
+test("Vercel free routes factor onto the canonical non-free model", () => {
+  const [model] = vercel.parseModels({
+    data: [{
+      id: "zai/glm-4.6v-flash-free",
+      name: "GLM-4.6V-Flash (Free)",
+      created: 1_765_152_000,
+      released: 1_765_152_000,
+      context_window: 128_000,
+      max_tokens: 24_000,
+      type: "language",
+      tags: ["reasoning", "tool-use", "vision", "file-input"],
+      pricing: { input: "0", output: "0" },
+    }],
+  });
+
+  const translated = vercel.translateModel(model!, {
+    existing(id) {
+      return id === "zai/glm-4.6v-flash"
+        ? { reasoning_options: [{ type: "toggle" }] }
+        : undefined;
+    },
+    authored() {
+      return undefined;
+    },
+  });
+
+  expect(translated?.model).toMatchObject({
+    base_model: "zhipuai/glm-4.6v-flash",
+    name: "GLM-4.6V-Flash (Free)",
+    reasoning_options: [{ type: "toggle" }],
+    cost: { input: 0, output: 0 },
+    limit: { output: 24_000 },
+    modalities: { input: ["text", "image", "pdf"] },
+  });
+  expect(translated?.model).not.toHaveProperty("description");
+  expect(translated?.model).not.toHaveProperty("family");
+});
+
 test("Vercel Claude Opus fast variants factor onto base opus metadata", () => {
   const [model] = vercel.parseModels({
     data: [{
