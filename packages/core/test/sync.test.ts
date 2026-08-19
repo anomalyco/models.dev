@@ -10,7 +10,7 @@ import {
   parseAnthropicPricing,
   type AnthropicModel,
 } from "../src/sync/providers/anthropic.js";
-import { buildCortecsModel, type CortecsModel } from "../src/sync/providers/cortecs.js";
+import { buildCortecsModel, cortecs, type CortecsModel } from "../src/sync/providers/cortecs.js";
 import {
   buildCrossModel,
   CrossModelResponse,
@@ -2673,6 +2673,22 @@ test("defaults new reasoning models to empty reasoning options", () => {
     reasoning: true,
     reasoning_options: [],
   });
+});
+
+test("normalizes Cortecs file modalities to pdf", () => {
+  const [model] = cortecs.parseModels({
+    object: "list",
+    data: [{
+      id: "document-model",
+      created: 1_775_088_000,
+      pricing: { currency: "EUR", input_token: 1, output_token: 2 },
+      context_size: 65_536,
+      input_modalities: ["text", "file"],
+      output_modalities: ["text"],
+    }],
+  });
+
+  expect(model.input_modalities).toEqual(["text", "pdf"]);
 });
 
 test("preserves authored Cortecs reasoning options missing from the API", () => {
