@@ -467,6 +467,46 @@ test("parses CrossModel's nullable reasoning controls", () => {
   });
 });
 
+test("syncs CrossModel's explicit reasoning controls", () => {
+  const model = buildCrossModel(
+    crossModelModel({
+      capabilities: {
+        json: true,
+        reasoning: {
+          supported: true,
+          toggle: true,
+          effort: ["low", "high", "max"],
+          budget_tokens: { min: 1_024, max: 32_000 },
+        },
+      },
+    }),
+    undefined,
+  );
+
+  expect(model).toMatchObject({
+    reasoning_options: [
+      { type: "toggle" },
+      { type: "effort", values: ["low", "high", "max"] },
+      { type: "budget_tokens", min: 1_024, max: 32_000 },
+    ],
+  });
+});
+
+test("rejects unknown CrossModel reasoning efforts", () => {
+  expect(() =>
+    CrossModelResponse.parse({
+      data: [
+        {
+          ...crossModelModel(),
+          capabilities: {
+            reasoning: { supported: true, effort: ["unexpected"] },
+          },
+        },
+      ],
+    })
+  ).toThrow();
+});
+
 test("syncs NanoGPT's verified reasoning, pricing, limits, and open-weight metadata", () => {
   const model = buildNanoGptModel(nanoGptModel({
     pricing: {
