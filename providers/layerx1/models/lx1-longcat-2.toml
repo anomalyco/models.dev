@@ -1,0 +1,12 @@
+base_model = "meituan/longcat-2.0"
+
+reasoning_options = [
+  { type = "toggle" },
+  { type = "effort", values = ["none", "minimal", "low", "medium", "high", "max"] },
+  { type = "budget_tokens" },
+]
+
+[cost]
+input = 0.75
+output = 2.95
+cache_read = 0.015

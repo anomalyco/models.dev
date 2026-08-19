@@ -1,0 +1,19 @@
+base_model = "google/gemma-4-31b-it"
+
+attachment = false
+
+reasoning_options = [
+  { type = "toggle" },
+  { type = "effort", values = ["none", "minimal", "low", "medium", "high", "max"] },
+  { type = "budget_tokens" },
+]
+
+[modalities]
+input = ["text"]
+
+[cost]
+input = 0.14
+output = 0.4
+
+[limit]
+context = 256_000

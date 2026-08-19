@@ -1,0 +1,14 @@
+base_model = "zhipuai/glm-5"
+
+reasoning_options = [
+  { type = "toggle" },
+  { type = "effort", values = ["none", "minimal", "low", "medium", "high", "max"] },
+  { type = "budget_tokens" },
+]
+
+[cost]
+input = 1
+output = 3.2
+
+[limit]
+context = 200_000

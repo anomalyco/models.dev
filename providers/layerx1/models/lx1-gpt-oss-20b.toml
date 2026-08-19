@@ -1,0 +1,14 @@
+base_model = "openai/gpt-oss-20b"
+
+reasoning_options = [
+  { type = "toggle" },
+  { type = "effort", values = ["none", "minimal", "low", "medium", "high", "max"] },
+  { type = "budget_tokens" },
+]
+
+[cost]
+input = 0.2
+output = 0.3
+
+[limit]
+context = 128_000

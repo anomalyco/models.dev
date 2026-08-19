@@ -1,0 +1,20 @@
+base_model = "xai/grok-4.3"
+
+attachment = false
+
+reasoning_options = [
+  { type = "toggle" },
+  { type = "effort", values = ["none", "minimal", "low", "medium", "high", "max"] },
+  { type = "budget_tokens" },
+]
+
+[modalities]
+input = ["text"]
+
+[cost]
+input = 1.25
+output = 2.5
+cache_read = 0.2
+
+[limit]
+output = 32_000

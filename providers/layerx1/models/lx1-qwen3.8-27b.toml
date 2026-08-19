@@ -1,0 +1,13 @@
+base_model = "alibaba/qwen3.8-27b"
+
+attachment = false
+
+reasoning_options = [
+  { type = "toggle" },
+  { type = "effort", values = ["none", "minimal", "low", "medium", "high", "max"] },
+  { type = "budget_tokens" },
+]
+
+[cost]
+input = 0.45
+output = 3.2

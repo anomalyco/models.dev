@@ -1,0 +1,11 @@
+base_model = "moonshotai/kimi-k2-thinking"
+
+reasoning_options = [
+  { type = "toggle" },
+  { type = "effort", values = ["none", "minimal", "low", "medium", "high", "max"] },
+  { type = "budget_tokens" },
+]
+
+[cost]
+input = 0.6
+output = 2.5

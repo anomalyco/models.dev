@@ -1,0 +1,14 @@
+base_model = "anthropic/claude-sonnet-5"
+
+attachment = false
+
+reasoning_options = [
+  { type = "toggle" },
+  { type = "effort", values = ["none", "minimal", "low", "medium", "high", "max"] },
+  { type = "budget_tokens" },
+]
+
+[cost]
+input = 3
+output = 15
+cache_read = 0.3

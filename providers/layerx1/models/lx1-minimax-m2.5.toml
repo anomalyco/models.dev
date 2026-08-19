@@ -1,0 +1,15 @@
+base_model = "minimax/MiniMax-M2.5"
+
+reasoning_options = [
+  { type = "toggle" },
+  { type = "effort", values = ["none", "minimal", "low", "medium", "high", "max"] },
+  { type = "budget_tokens" },
+]
+
+[cost]
+input = 0.3
+output = 1.2
+
+[limit]
+context = 196_608
+output = 8_192

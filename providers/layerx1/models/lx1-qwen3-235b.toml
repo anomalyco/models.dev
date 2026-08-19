@@ -1,0 +1,15 @@
+base_model = "alibaba/qwen3-235b-a22b"
+
+reasoning_options = [
+  { type = "toggle" },
+  { type = "effort", values = ["none", "minimal", "low", "medium", "high", "max"] },
+  { type = "budget_tokens" },
+]
+
+[cost]
+input = 0.22
+output = 0.88
+cache_read = 0.022
+
+[limit]
+context = 262_144
