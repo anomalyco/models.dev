@@ -103,9 +103,9 @@ export function buildShengSuanYunModel(
   const cache = model.pricing?.cache;
   const cost = prompt !== undefined && completion !== undefined
     ? {
-        input: prompt / 10_000,
-        output: completion / 10_000,
-        cache_read: cache !== undefined && cache > 0 ? cache / 10_000 : undefined,
+        input: prompt/6.7,
+        output: completion/6.7,
+        cache_read: cache !== undefined && cache > 0 ? cache/6.7 : undefined,
       }
     : existing?.cost;
 
