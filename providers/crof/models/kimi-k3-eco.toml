@@ -1,9 +1,12 @@
 base_model = "moonshotai/kimi-k3"
 name = "Kimi K3 Eco"
-reasoning_options = [{ type = "effort", values = ["none", "low", "high", "max"] }]
 
 [interleaved]
 field = "reasoning_content"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "high", "max"]
 
 [cost]
 input = 1
@@ -12,7 +15,6 @@ cache_read = 0.1
 
 [limit]
 context = 1_000_000
-output = 131_072
 
 [provider]
 npm = "@ai-sdk/openai-compatible"

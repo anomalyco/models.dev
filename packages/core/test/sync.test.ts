@@ -11,6 +11,7 @@ import {
   type AnthropicModel,
 } from "../src/sync/providers/anthropic.js";
 import { buildCortecsModel, type CortecsModel } from "../src/sync/providers/cortecs.js";
+import { buildCrofModel, CrofResponse, type CrofModel } from "../src/sync/providers/crof.js";
 import {
   buildCrossModel,
   CrossModelResponse,
@@ -2676,6 +2677,69 @@ test("overrides canonical metadata with Cortecs reasoning support", () => {
     base_model: "swiss-ai/apertus-70b",
     reasoning: true,
     reasoning_options: [],
+  });
+});
+
+test("parses CrofAI string prices as per-million numbers", () => {
+  const parsed = CrofResponse.parse({
+    data: [{
+      id: "glm-5.2",
+      name: "Z.ai: GLM 5.2",
+      created: 1_781_650_191,
+      context_length: 1_000_000,
+      max_completion_tokens: 131_072,
+      custom_reasoning: true,
+      reasoning_effort: true,
+      pricing: {
+        prompt: "0.15",
+        completion: "0.52",
+        cache_prompt: "0.02",
+        discount: 50,
+      },
+    }],
+  });
+
+  expect(parsed.data[0]?.pricing).toMatchObject({
+    prompt: 0.15,
+    completion: 0.52,
+    cache_prompt: 0.02,
+    discount: 50,
+  });
+});
+
+test("updates CrofAI authoritative pricing and limits while preserving local metadata", () => {
+  const model: CrofModel = {
+    id: "glm-5.2",
+    name: "Z.ai: GLM 5.2",
+    created: 1_781_650_191,
+    context_length: 1_000_000,
+    max_completion_tokens: 131_072,
+    custom_reasoning: true,
+    reasoning_effort: true,
+    pricing: { prompt: 0.15, completion: 0.52, cache_prompt: 0.02, discount: 50 },
+  };
+  const existing: ExistingModel = {
+    name: "GLM 5.2",
+    description: "Preserved description",
+    release_date: "2026-06-15",
+    last_updated: "2026-06-15",
+    attachment: false,
+    reasoning: true,
+    reasoning_options: [{ type: "effort", values: ["none", "low", "medium", "high"] }],
+    temperature: true,
+    tool_call: true,
+    open_weights: true,
+    cost: { input: 0.3, output: 1.05, cache_read: 0.05, cache_write: 0 },
+    limit: { context: 202_752, output: 202_752 },
+    modalities: { input: ["text"], output: ["text"] },
+  };
+
+  expect(buildCrofModel(model, existing, undefined)).toMatchObject({
+    name: "GLM 5.2",
+    description: "Preserved description",
+    reasoning_options: [{ type: "effort", values: ["none", "low", "medium", "high"] }],
+    cost: { input: 0.15, output: 0.52, cache_read: 0.02, cache_write: 0 },
+    limit: { context: 1_000_000, output: 131_072 },
   });
 });
 

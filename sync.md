@@ -297,6 +297,14 @@ Venice is implemented in `packages/core/src/sync/providers/venice.ts`.
 - Every Venice model uses `base_model`; flattened IDs are matched to provider-agnostic metadata before provider-specific overrides are written.
 - Every Venice model declares `reasoning_options`; models without API-provided effort levels use an empty array.
 
+## CrofAI Notes
+
+- CrofAI is implemented in `packages/core/src/sync/providers/crof.ts` and uses the public `https://crof.ai/v1/models` endpoint.
+- Run it with `bun models:sync crof` or `bun crof:sync`.
+- Pricing, context limits, output limits, and reasoning availability are synchronized from the API for existing models.
+- Local metadata is retained for fields the API does not expose, including descriptions, modalities, model capabilities, and reasoning option values.
+- Models removed from the API are removed locally. New API models are reported but not created automatically because the endpoint does not expose enough metadata for complete catalog entries.
+
 ## Standalone Generators
 
 Some provider scripts in `packages/core/script/generate-*.ts` are not wired into `bun models:sync`. When updating those scripts, preserve existing `base_model` and `base_model_omit` fields for generated TOMLs that already use model metadata inheritance. New inheritance-aware output should use `base_model`; do not reintroduce legacy `[extends]` syntax.
