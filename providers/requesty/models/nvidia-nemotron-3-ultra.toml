@@ -1,0 +1,29 @@
+name = "nvidia-nemotron-3-ultra"
+description = "NVIDIA Nemotron 3 Ultra is NVIDIA's strongest open-weights reasoning model, positioned near GPT-5.4 Mini (xhigh) and ahead of DeepSeek V4-Flash and Qwen3.5-397B-A17B."
+family = "nemotron"
+release_date = "2026-06-23"
+last_updated = "2026-06-23"
+attachment = false
+reasoning = true
+tool_call = false
+structured_output = false
+open_weights = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "max"]
+
+[[reasoning_options]]
+type = "budget_tokens"
+
+[cost]
+input = 0.5
+output = 2.5
+
+[limit]
+context = 262_144
+output = 131_072
+
+[modalities]
+input = ["text"]
+output = ["text"]

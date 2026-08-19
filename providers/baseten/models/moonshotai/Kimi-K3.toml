@@ -1,11 +1,14 @@
 # Baseten documents Kimi K3 reasoning as enabled by default, with top-level
 # reasoning_effort = none | low | high | max (default). It also accepts
 # chat_template_args.enable_thinking=false. No reasoning-token budget is
-# documented.
+# documented. Reasoning output is returned in reasoning_content.
 # https://docs.baseten.co/inference/model-apis/reasoning
 base_model = "moonshotai/kimi-k3"
 description = "Kimi multimodal agent model for visual understanding, coding, and planning"
 temperature = true
+
+[interleaved]
+field = "reasoning_content"
 
 [[reasoning_options]]
 type = "effort"

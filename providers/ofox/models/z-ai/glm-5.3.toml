@@ -1,0 +1,13 @@
+# Sources:
+# - https://ofox.ai/en/models/z-ai/glm-5.3 (Ofox: $1.4/$4.4/M, cache read $0.26/M; 1M context; always-on thinking with low/high/max effort)
+# - https://docs.z.ai/guides/overview/pricing (Z.AI list: GLM-5.3 $1.4/$4.4/M, cached input $0.26/M)
+# - https://docs.z.ai/guides/capabilities/thinking-mode (GLM-5.3 forced thinking; cannot disable)
+# - https://docs.z.ai/devpack/latest-model (effective effort levels: low|high|max; default max)
+# Effort: reasoning_effort = low|high|max (thinking always on; disable maps to low)
+base_model = "zhipuai/glm-5.3"
+reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]
+
+[cost]
+input = 1.4
+output = 4.4
+cache_read = 0.26

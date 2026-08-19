@@ -1,0 +1,19 @@
+base_model = "minimax/MiniMax-M3"
+name = "MiniMax-M3 (EU)"
+structured_output = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "max"]
+
+[[reasoning_options]]
+type = "budget_tokens"
+
+[cost]
+input = 0.4
+output = 2
+cache_read = 0.1
+
+[limit]
+context = 1_048_576
+output = 1_048_576
