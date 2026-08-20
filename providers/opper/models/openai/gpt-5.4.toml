@@ -6,3 +6,9 @@ reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high
 input = 2.5
 output = 15
 cache_read = 0.25
+
+[[cost.tiers]]
+tier = { size = 272_000 }
+input = 5.00
+output = 22.50
+cache_read = 0.50
