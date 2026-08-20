@@ -1,12 +1,8 @@
 base_model = "minimax/MiniMax-M3"
 
-[[reasoning_options]]
-type = "toggle"
+reasoning_options = []
 
 [cost]
 input = 0.6
 output = 2.4
 cache_read = 0.12
-
-[limit]
-context = 1048576

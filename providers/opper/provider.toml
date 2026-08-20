@@ -7,7 +7,7 @@ api = "https://api.opper.ai/v3/compat"
 # upstream model API unchanged, so each model accepts its native set (Anthropic:
 # low|medium|high|max; OpenAI GPT-5.x: none|low|medium|high|xhigh and max where the
 # model supports it; Gemini: minimal|low|medium|high). Budget-token values are not
-# accepted on this surface. Models with no upstream effort control accept the
+# accepted on this surface, and no separate reasoning on/off toggle is exposed. Models with no upstream effort control accept the
 # parameter without effect, so those entries use reasoning_options = [].
 # Pricing is mirrored from GET /v3/compat/models (USD per token, no gateway markup).
 doc = "https://opper.ai/models"
