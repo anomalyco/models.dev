@@ -310,6 +310,12 @@ export function buildConcentrateModel(
     // https://concentrate.ai/docs/api-reference/endpoint/chat-completions
     // https://concentrate.ai/docs/api-reference/endpoint/get-model
     reasoning_options: existing?.reasoning_options,
+    // interleaved isn't reported by the API either — it's a hand-authored
+    // reading of which field (reasoning_content vs reasoning_details) a
+    // model's route actually streams reasoning through. Preserve it the
+    // same way reasoning_options is preserved above, or the next sync drops
+    // every model's [interleaved] block silently.
+    interleaved: existing?.interleaved,
     tool_call: surface.tool_call,
     structured_output: surface.structured_output,
     cost,

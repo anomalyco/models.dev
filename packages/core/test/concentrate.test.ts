@@ -177,6 +177,20 @@ describe("Concentrate sync", () => {
     const translated = buildConcentrateModel(concentrateModel(), undefined);
     expect(translated).not.toHaveProperty("reasoning_options");
   });
+
+  test("preserves a hand-authored interleaved field across sync", () => {
+    const translated = buildConcentrateModel(concentrateModel(), {
+      interleaved: { field: "reasoning_content" },
+    });
+    expect(translated).toMatchObject({
+      interleaved: { field: "reasoning_content" },
+    });
+  });
+
+  test("does not invent an interleaved field when none is authored", () => {
+    const translated = buildConcentrateModel(concentrateModel(), undefined);
+    expect(translated).not.toHaveProperty("interleaved");
+  });
 });
 
 function concentrateModel(overrides: { id?: string; owner?: string } = {}): ConcentrateModel {
