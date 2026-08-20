@@ -1,0 +1,23 @@
+name = "Tencent: Hy-MT2-30B-A3B"
+description = "Hy-MT2-30B-A3B is Tencent's flagship translation model in the Hy-MT2 family. It supports 33 language pairs and five Chinese dialect and minority-language pairs, with workflows for structured, delimiter-based, contextual, glossary-based, and..."
+family = "Hy"
+release_date = "2026-08-20"
+last_updated = "2026-08-20"
+attachment = false
+reasoning = false
+temperature = true
+tool_call = false
+structured_output = false
+open_weights = false
+
+[cost]
+input = 0.074
+output = 0.295
+
+[limit]
+context = 8_192
+output = 4_096
+
+[modalities]
+input = ["text"]
+output = ["text"]
