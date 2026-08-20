@@ -143,7 +143,10 @@ function specialDescription(context: SpecialDescriptionContext) {
   if (has(target, /\b(tts|speech|voice|voiceclone|voicedesign)\b/) || (input.includes("text") && output.includes("audio"))) {
     return "Speech generation model for controllable voice, narration, and audio delivery";
   }
-  if (has(target, /\b(image|imagine|imagen|flux|sdxl|stable-diffusion)\b/) || output.includes("image")) {
+  if (
+    !output.includes("video")
+    && (has(target, /\b(image|imagine|imagen|flux|sdxl|stable-diffusion)\b/) || output.includes("image"))
+  ) {
     return "Image model for prompt-driven generation, editing, and visual design workflows";
   }
   if (has(target, /\b(video|veo|sora|ray|hailuo|kling)\b/) || output.includes("video")) {
