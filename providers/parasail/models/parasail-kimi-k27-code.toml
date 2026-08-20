@@ -1,10 +1,4 @@
-# Toggle: long_thinking = true|false
-# Effort: reasoning_effort = low|high|max
+# Always-on reasoning via thinking.type = enabled on this host
 base_model = "moonshotai/kimi-k2.7-code"
 
-[[reasoning_options]]
-type = "toggle"
-
-[[reasoning_options]]
-type = "effort"
-values = ["low", "high", "max"]
+reasoning_options = []
