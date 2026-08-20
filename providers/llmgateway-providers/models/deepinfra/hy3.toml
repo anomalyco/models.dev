@@ -1,0 +1,16 @@
+base_model = "tencent/hy3"
+name = "Hy3 (DeepInfra)"
+structured_output = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "high"]
+
+[cost]
+input = 0.14
+output = 0.58
+cache_read = 0.035
+
+[limit]
+context = 262_144
+output = 131_072

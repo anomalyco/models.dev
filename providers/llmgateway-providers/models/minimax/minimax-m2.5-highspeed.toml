@@ -1,0 +1,15 @@
+base_model = "minimax/MiniMax-M2.5-highspeed"
+name = "MiniMax M2.5 Highspeed (MiniMax)"
+structured_output = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high", "xhigh", "max"]
+
+[cost]
+input = 0.6
+output = 2.4
+cache_read = 0.03
+
+[limit]
+output = 131_100

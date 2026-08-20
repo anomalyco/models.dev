@@ -1,0 +1,22 @@
+base_model = "moonshotai/kimi-k2.6"
+name = "Kimi K2.6 (Gonka24)"
+attachment = false
+structured_output = false
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"]
+
+[cost]
+input = 0.22
+output = 1.137
+cache_read = 0.048
+
+[limit]
+output = 98_304
+
+[modalities]
+input = ["text"]

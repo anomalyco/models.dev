@@ -1,0 +1,19 @@
+base_model = "google/gemini-2.5-flash"
+name = "Gemini 2.5 Flash (Google Vertex AI)"
+
+[[reasoning_options]]
+type = "budget_tokens"
+min = 1
+max = 24_576
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high"]
+
+[cost]
+input = 0.3
+output = 2.5
+cache_read = 0.03
+
+[limit]
+output = 65_535

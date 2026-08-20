@@ -1,0 +1,19 @@
+base_model = "zhipuai/glm-5.1"
+name = "GLM-5.1 (DeepInfra)"
+structured_output = false
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"]
+
+[cost]
+input = 1.05
+output = 3.5
+cache_read = 0.205
+
+[limit]
+context = 198_000
+output = 65_536
