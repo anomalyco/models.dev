@@ -1,22 +1,7 @@
-name = "Cydonia 24B v4.1"
-description = "Cydonia 24B v4.1 served by Parasail"
-release_date = "2025-09-12"
-last_updated = "2025-09-12"
-attachment = false
-reasoning = false
-temperature = true
-tool_call = false
-open_weights = true
+base_model = "the-drummer/cydonia-24b-v4.1"
 
 [cost]
 input = 0.3
 output = 0.5
 cache_read = 0.15
 
-[limit]
-context = 131072
-output = 131072
-
-[modalities]
-input = ["text"]
-output = ["text"]

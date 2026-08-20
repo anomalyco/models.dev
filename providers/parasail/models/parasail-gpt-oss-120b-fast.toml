@@ -1,25 +1,8 @@
-name = "GPT-OSS 120B Fast"
-description = "Fast open-weight GPT reasoning model for lower-latency inference"
-release_date = "2025-08-05"
-last_updated = "2025-08-05"
-attachment = false
-reasoning = true
-temperature = true
-tool_call = false
-structured_output = true
-open_weights = true
+# Effort: reasoning_effort = low|medium|high
 
-[[reasoning_options]]
-type = "budget_tokens"
+base_model = "openai/gpt-oss-120b"
+name = "GPT OSS 120B Fast"
 
 [[reasoning_options]]
 type = "effort"
 values = ["low", "medium", "high"]
-
-[limit]
-context = 131072
-output = 131072
-
-[modalities]
-input = ["text"]
-output = ["text"]

@@ -1,18 +1,1 @@
-name = "Unslopnemo 12 B"
-description = "Unslopnemo 12 B served by Parasail"
-release_date = "2026-08-20"
-last_updated = "2026-08-20"
-attachment = false
-reasoning = false
-temperature = true
-tool_call = false
-structured_output = false
-open_weights = true
-
-[limit]
-context = 131072
-output = 32768
-
-[modalities]
-input = ["text"]
-output = ["text"]
+base_model = "mlabonne/unslopnemo-12b"

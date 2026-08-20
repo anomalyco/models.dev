@@ -1,8 +1,11 @@
+# Toggle: enable_thinking true|false
 base_model = "zhipuai/glm-5.1"
 
+[[reasoning_options]]
+type = "toggle"
 
-reasoning_options = []
 [cost]
 input = 1.4
 output = 4.4
 cache_read = 0.26
+

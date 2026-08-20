@@ -1,18 +1,1 @@
-name = "Googlegemma 3 4 B It"
-description = "Googlegemma 3 4 B It served by Parasail"
-release_date = "2026-08-20"
-last_updated = "2026-08-20"
-attachment = false
-reasoning = false
-temperature = true
-tool_call = false
-structured_output = false
-open_weights = true
-
-[limit]
-context = 131072
-output = 32768
-
-[modalities]
-input = ["text"]
-output = ["text"]
+base_model = "google/gemma-3-4b-it"
