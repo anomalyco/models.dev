@@ -316,6 +316,13 @@ export function buildConcentrateModel(
     // same way reasoning_options is preserved above, or the next sync drops
     // every model's [interleaved] block silently.
     interleaved: existing?.interleaved,
+    // status/provider/experimental are never derived from Concentrate's
+    // catalog either — same peer pattern as openrouter.ts/nano-gpt.ts, so a
+    // curator marking a model deprecated, or adding a per-model request
+    // override, survives the next sync instead of being silently dropped.
+    status: existing?.status,
+    provider: existing?.provider,
+    experimental: existing?.experimental,
     tool_call: surface.tool_call,
     structured_output: surface.structured_output,
     cost,

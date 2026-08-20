@@ -2,6 +2,8 @@
 # https://concentrate.ai/models/o3
 base_model = "openai/o3"
 
+interleaved = true
+
 [[reasoning_options]]
 type = "effort"
 values = ["low", "medium", "high"]
@@ -10,6 +12,3 @@ values = ["low", "medium", "high"]
 input = 2
 output = 8
 cache_read = 0.5
-
-[interleaved]
-field = "reasoning_content"

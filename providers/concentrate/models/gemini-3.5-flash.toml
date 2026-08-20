@@ -2,6 +2,8 @@
 # https://concentrate.ai/models/gemini-3.5-flash
 base_model = "google/gemini-3.5-flash"
 
+interleaved = true
+
 [[reasoning_options]]
 type = "effort"
 values = ["minimal", "low", "medium", "high"]
@@ -13,6 +15,3 @@ cache_read = 0.15
 
 [modalities]
 input = ["text", "image", "pdf"]
-
-[interleaved]
-field = "reasoning_content"

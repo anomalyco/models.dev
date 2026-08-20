@@ -180,16 +180,34 @@ describe("Concentrate sync", () => {
 
   test("preserves a hand-authored interleaved field across sync", () => {
     const translated = buildConcentrateModel(concentrateModel(), {
-      interleaved: { field: "reasoning_content" },
+      interleaved: true,
     });
-    expect(translated).toMatchObject({
-      interleaved: { field: "reasoning_content" },
-    });
+    expect(translated).toMatchObject({ interleaved: true });
   });
 
   test("does not invent an interleaved field when none is authored", () => {
     const translated = buildConcentrateModel(concentrateModel(), undefined);
     expect(translated).not.toHaveProperty("interleaved");
+  });
+
+  test("preserves hand-authored status/provider/experimental across sync", () => {
+    const translated = buildConcentrateModel(concentrateModel(), {
+      status: "deprecated",
+      provider: { npm: "@ai-sdk/openai-compatible", shape: "completions" },
+      experimental: { modes: { fast: { cost: { input: 1, output: 2 } } } },
+    });
+    expect(translated).toMatchObject({
+      status: "deprecated",
+      provider: { npm: "@ai-sdk/openai-compatible", shape: "completions" },
+      experimental: { modes: { fast: { cost: { input: 1, output: 2 } } } },
+    });
+  });
+
+  test("does not invent status/provider/experimental when none is authored", () => {
+    const translated = buildConcentrateModel(concentrateModel(), undefined);
+    expect(translated).not.toHaveProperty("status");
+    expect(translated).not.toHaveProperty("provider");
+    expect(translated).not.toHaveProperty("experimental");
   });
 });
 
