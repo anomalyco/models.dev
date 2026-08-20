@@ -1,17 +1,13 @@
-name = "Grok 4.20 Multi-Agent"
+name = "Grok 4.20 Beta Reasoning"
 description = "Grok model for agentic tool use, reasoning, coding, and live assistance"
 family = "grok"
-release_date = "2026-03-10"
-last_updated = "2026-03-23"
-attachment = false
+release_date = "2026-03-11"
+last_updated = "2026-03-11"
+attachment = true
 reasoning = true
-temperature = true
 tool_call = true
 open_weights = false
-
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high", "xhigh"]
+reasoning_options = []
 
 [cost]
 input = 1.25

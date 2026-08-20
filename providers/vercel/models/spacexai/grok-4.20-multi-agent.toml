@@ -1,18 +1,18 @@
-name = "Grok 4.20 Beta Non-Reasoning"
+name = "Grok 4.20 Multi-Agent"
 description = "Grok model for agentic tool use, reasoning, coding, and live assistance"
 family = "grok"
-release_date = "2026-03-11"
-last_updated = "2026-03-13"
+release_date = "2026-03-10"
+last_updated = "2026-03-10"
 attachment = true
-reasoning = false
-temperature = true
+reasoning = true
 tool_call = true
 open_weights = false
+reasoning_options = []
 
 [cost]
 input = 1.25
 output = 2.5
-cache_read = 0.4
+cache_read = 0.2
 
 [limit]
 context = 2_000_000
