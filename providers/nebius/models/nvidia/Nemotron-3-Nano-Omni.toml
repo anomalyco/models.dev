@@ -1,15 +1,15 @@
-name = "Nemotron-3-Nano-Omni"
 base_model = "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning"
-attachment = false
-reasoning = true
-reasoning_options = []
-tool_call = true
-structured_output = true
-temperature = true
-knowledge = "2025-01"
+name = "Nemotron-3-Nano-Omni"
 release_date = "2025-01-20"
 last_updated = "2026-05-07"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = true
+knowledge = "2025-01"
 open_weights = true
+reasoning_options = []
 
 [cost]
 input = 0.06
@@ -18,7 +18,7 @@ cache_read = 0.006
 cache_write = 0.075
 
 [limit]
-context = 65_536
+context = 262_144
 input = 60_000
 output = 8_192
 
