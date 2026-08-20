@@ -56,6 +56,7 @@ import {
   resolveCanonicalBaseModel,
   type OpenRouterModel,
 } from "../src/sync/providers/openrouter.js";
+import { openference, type OpenferenceModel } from "../src/sync/providers/openference.js";
 import { buildLLMGatewayModel, type LLMGatewayModel } from "../src/sync/providers/llmgateway.js";
 import {
   buildMergeGatewayModel,
@@ -3809,6 +3810,184 @@ test("skips an unavailable OpenRouter stub with no authored file", () => {
   });
 
   expect(translated).toBeUndefined();
+});
+
+function openferenceModel(
+  id: string,
+  supported_efforts?: string[],
+  cache_read?: string,
+): OpenferenceModel {
+  return {
+    id,
+    object: "model",
+    created: 0,
+    owned_by: "openference",
+    permission: [],
+    root: id,
+    parent: null,
+    pricing: {
+      prompt: "0.000001",
+      completion: "0.000002",
+      ...(cache_read === undefined ? {} : { cache_read }),
+    },
+    context_length: 128_000,
+    max_output_tokens: 16_384,
+    reasoning: { supported: true, supported_efforts },
+  };
+}
+
+test("classifies Openference always-on and toggle-only reasoning models", () => {
+  const context = { existing: () => undefined, authored: () => undefined };
+  const alwaysOn = openference.translateModel(openferenceModel("Kimi K2.7 Code"), context);
+  const alwaysOnMiMo = openference.translateModel(openferenceModel("MiMo-V2.5"), context);
+  const toggleOnly = openference.translateModel(openferenceModel("MiniMax M3"), context);
+  const effortWithNone = openference.translateModel(
+    openferenceModel("GLM-5", ["high", "none", "low"]),
+    context,
+  );
+
+  expect(alwaysOn?.model).toMatchObject({
+    base_model: "moonshotai/kimi-k2.7-code",
+    reasoning_options: [],
+  });
+  expect(alwaysOnMiMo?.model).toMatchObject({
+    base_model: "xiaomi/mimo-v2.5",
+    reasoning_options: [],
+  });
+  expect(toggleOnly?.model).toMatchObject({
+    base_model: "minimax/MiniMax-M3",
+    reasoning_options: [{ type: "toggle" }],
+  });
+  expect(effortWithNone?.model).toMatchObject({
+    base_model: "zhipuai/glm-5",
+    reasoning_options: [{ type: "effort", values: ["none", "low", "high"] }],
+  });
+});
+
+test("converts Openference per-token cache pricing", () => {
+  const context = { existing: () => undefined, authored: () => undefined };
+  const translated = openference.translateModel(
+    openferenceModel("DeepSeek-V4-Pro-0813", ["high"], "0.000000145"),
+    context,
+  );
+
+  expect(translated?.model).toMatchObject({
+    base_model: "deepseek/deepseek-v4-pro-0813",
+    cost: { input: 1, output: 2, cache_read: 0.145 },
+  });
+});
+
+test("refreshes API pricing and limits for Openference host-unique models", () => {
+  const authored = {
+    name: "Auto",
+    description: "Openference's auto-routing model",
+    release_date: "2026-07-12",
+    last_updated: "2026-07-12",
+    attachment: false,
+    reasoning: true,
+    temperature: true,
+    tool_call: true,
+    open_weights: false,
+    reasoning_options: [{ type: "toggle" }, { type: "effort", values: ["high"] }],
+    interleaved: { field: "reasoning_content" as const },
+    cost: {
+      input: 0.35,
+      output: 1.0,
+      tiers: [{ tier: { type: "context" as const, size: 200_000 }, input: 0.5, output: 1.5 }],
+    },
+    limit: { context: 250_000, output: 131_072 },
+    modalities: { input: ["text"], output: ["text"] },
+  };
+  const translated = openference.translateModel(
+    openferenceModel("Auto", ["high"]),
+    { existing: () => authored as never, authored: () => authored },
+  );
+
+  expect(translated).toEqual({
+    id: "Auto",
+    model: {
+      name: "Auto",
+      description: "Openference's auto-routing model",
+      release_date: "2026-07-12",
+      last_updated: "2026-07-12",
+      attachment: false,
+      reasoning: true,
+      temperature: true,
+      tool_call: true,
+      open_weights: false,
+      interleaved: { field: "reasoning_content" },
+      cost: {
+        input: 1,
+        output: 2,
+        tiers: authored.cost.tiers,
+      },
+      limit: { context: 128_000, output: 16_384 },
+      reasoning_options: [{ type: "toggle" }, { type: "effort", values: ["high"] }],
+      modalities: { input: ["text"], output: ["text"] },
+    },
+  });
+});
+
+test("falls back to context when Openference API omits max_output_tokens", () => {
+  const model: OpenferenceModel = {
+    id: "Nemotron-3-120B",
+    object: "model",
+    created: 0,
+    owned_by: "openference",
+    permission: [],
+    root: "Nemotron-3-120B",
+    parent: null,
+    pricing: { prompt: "0.0000005", completion: "0.0000015" },
+    context_length: 256_000,
+    reasoning: { supported: true, supported_efforts: ["high", "medium", "low"] },
+  };
+  const translated = openference.translateModel(model, {
+    existing: () => undefined,
+    authored: () => undefined,
+  });
+
+  expect(translated?.model).toMatchObject({
+    base_model: "nvidia/nemotron-3-super-120b-a12b",
+    limit: { context: 256_000, output: 256_000 },
+  });
+});
+
+test("falls back to context for authored-only models when API omits max_output_tokens", () => {
+  const authored = {
+    name: "Auto",
+    description: "Openference's auto-routing model",
+    release_date: "2026-07-12",
+    last_updated: "2026-07-12",
+    attachment: false,
+    reasoning: true,
+    temperature: true,
+    tool_call: true,
+    open_weights: false,
+    interleaved: { field: "reasoning_content" as const },
+    cost: { input: 1, output: 2 },
+    limit: { context: 64_000 },
+    modalities: { input: ["text"], output: ["text"] },
+  };
+  const model: OpenferenceModel = {
+    id: "Auto",
+    object: "model",
+    created: 0,
+    owned_by: "openference",
+    permission: [],
+    root: "Auto",
+    parent: null,
+    pricing: { prompt: "0.000001", completion: "0.000002" },
+    context_length: 128_000,
+    reasoning: { supported: true, supported_efforts: ["high"] },
+  };
+  const translated = openference.translateModel(model, {
+    existing: () => authored as never,
+    authored: () => authored,
+  });
+
+  expect(translated?.model).toMatchObject({
+    limit: { context: 128_000, output: 128_000 },
+  });
 });
 
 test("parses nullable EmpirioLabs release dates", () => {
