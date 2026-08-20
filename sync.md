@@ -297,6 +297,18 @@ Venice is implemented in `packages/core/src/sync/providers/venice.ts`.
 - Every Venice model uses `base_model`; flattened IDs are matched to provider-agnostic metadata before provider-specific overrides are written.
 - Every Venice model declares `reasoning_options`; models without API-provided effort levels use an empty array.
 
+## RunInfra Notes
+
+- RunInfra is implemented in `packages/core/src/sync/providers/runinfra.ts`.
+- Source endpoint: `https://api.runinfra.ai/v1/models`.
+- Required auth: `RUNINFRA_API_KEY`, with `RUNINFRA_GATEWAY_KEY` accepted for local use.
+- Remote IDs are product slugs. Each local TOML declares its slug in a leading `# Source: https://runinfra.ai/inference-api/<slug>` comment, which is the join key.
+- The API is authoritative for standing input, output, and cached-input pricing in USD per 1M tokens, served context, and the enforced output ceiling.
+- Reasoning controls, modalities, capability overrides, descriptions, and `base_model` pointers stay hand-authored.
+- New remote models are not created automatically. A missing slug is reported so a human authors probe evidence first.
+- Local models absent from the response are retained because a capacity pause can temporarily delist a real hosted model.
+- Entries without a `pricing` object are workspace deployments and are skipped.
+
 ## Standalone Generators
 
 Some provider scripts in `packages/core/script/generate-*.ts` are not wired into `bun models:sync`. When updating those scripts, preserve existing `base_model` and `base_model_omit` fields for generated TOMLs that already use model metadata inheritance. New inheritance-aware output should use `base_model`; do not reintroduce legacy `[extends]` syntax.
