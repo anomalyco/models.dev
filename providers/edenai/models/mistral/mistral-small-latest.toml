@@ -1,0 +1,13 @@
+base_model = "mistral/mistral-small-latest"
+structured_output = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "high"]
+
+[cost]
+input = 0.06
+output = 0.18
+
+[limit]
+context = 262_144

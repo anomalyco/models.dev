@@ -1,3 +1,4 @@
+# Source: https://cloud.google.com/gemini-enterprise-agent-platform/generative-ai/pricing
 name = "GLM-4.7"
 description = "GLM vision model for visual reasoning, documents, and multimodal agents"
 # POST .../endpoints/openapi/chat/completions; toggle with
@@ -22,6 +23,7 @@ field = "reasoning_content"
 [cost]
 input = 0.60
 output = 2.20
+cache_read = 0.06
 
 [limit]
 context = 200_000

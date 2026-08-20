@@ -1,3 +1,4 @@
+# Source: https://cloud.google.com/gemini-enterprise-agent-platform/generative-ai/pricing
 name = "Kimi K2 Thinking"
 description = "Kimi reasoning model for long-horizon research, planning, and tool use"
 # POST .../endpoints/openapi/chat/completions; this is always-thinking, and
@@ -22,6 +23,7 @@ field = "reasoning_content"
 [cost]
 input = 0.60
 output = 2.50
+cache_read = 0.06
 
 [limit]
 context = 262_144

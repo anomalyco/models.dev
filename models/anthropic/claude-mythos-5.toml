@@ -1,0 +1,23 @@
+# Sources:
+# https://platform.claude.com/docs/en/about-claude/models/introducing-claude-fable-5-and-claude-mythos-5
+# https://www.anthropic.com/claude/mythos
+name = "Claude Mythos 5"
+description = "Restricted Claude model for advanced cybersecurity and biology research workflows"
+family = "claude-mythos"
+release_date = "2026-06-09"
+last_updated = "2026-06-09"
+attachment = true
+reasoning = true
+temperature = false
+tool_call = true
+structured_output = true
+knowledge = "2026-01-31"
+open_weights = false
+
+[limit]
+context = 1_000_000
+output = 128_000
+
+[modalities]
+input = ["text", "image", "pdf"]
+output = ["text"]

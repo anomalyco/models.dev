@@ -1,26 +1,11 @@
-name = "o1"
-description = "O-series reasoning model for hard analysis, math, coding, and planning"
-family = "o"
-release_date = "2024-12-05"
-last_updated = "2024-12-05"
-attachment = true
-reasoning = true
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
-temperature = false
-knowledge = "2023-09"
-tool_call = true
-structured_output = true
-open_weights = false
+base_model = "openai/o1"
+status = "deprecated"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high"]
 
 [cost]
-input = 15.00
-output = 60.00
-cache_read = 7.50
-
-[limit]
-context = 200_000
-output = 100_000
-
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+input = 15
+output = 60
+cache_read = 7.5

@@ -1,8 +1,8 @@
 base_model = "minimax/MiniMax-M3"
-reasoning_options = [{ type = "toggle" }]
 name = "MiniMax M3"
-family = "minimax-m3"
-release_date = "2026-05-31"
+
+[[reasoning_options]]
+type = "toggle"
 
 [cost]
 input = 0.3
@@ -15,4 +15,3 @@ output = 1_000_000
 
 [modalities]
 input = ["text", "image", "pdf"]
-output = ["text"]

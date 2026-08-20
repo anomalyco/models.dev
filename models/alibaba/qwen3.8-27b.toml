@@ -1,0 +1,36 @@
+# Sources (accessed 2026-08-15):
+# https://huggingface.co/Qwen/Qwen3.8-27B
+# https://huggingface.co/api/models/Qwen/Qwen3.8-27B
+# https://qwen.ai/blog?id=qwen3.8
+# Hub lastModified 2026-08-14T15:00:01Z is the open-weight drop.
+# Do not use Hub createdAt 2026-08-05 (staged countdown page).
+
+name = "Qwen3.8 27B"
+description = "Dense 27B vision-language model for coding, agent tasks, and image and video understanding"
+family = "qwen"
+release_date = "2026-08-14"
+last_updated = "2026-08-14"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = true
+
+[limit]
+context = 262_144
+output = 32_768
+
+[modalities]
+input = ["text", "image", "video"]
+output = ["text"]
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/Qwen/Qwen3.8-27B"
+
+[[benchmarks]]
+name = "SWE-bench Pro"
+score = 61.7
+metric = "resolved"
+source = "https://huggingface.co/Qwen/Qwen3.8-27B"

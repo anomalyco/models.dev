@@ -1,13 +1,8 @@
-name = "Seed 2.1 Turbo"
+base_model = "bytedance-seed/seed-2.1-turbo"
 description = "Multimodal reasoning model for visual analysis, planning, and tool use"
-family = "seed"
 release_date = "2026-06-28"
 last_updated = "2026-07-24"
-attachment = true
-reasoning = true
-tool_call = true
 structured_output = true
-open_weights = false
 reasoning_options = []
 
 [cost]
@@ -16,9 +11,4 @@ output = 3.125
 cache_read = 0.125
 
 [limit]
-context = 256_000
 output = 65_536
-
-[modalities]
-input = ["text", "image", "video"]
-output = ["text"]

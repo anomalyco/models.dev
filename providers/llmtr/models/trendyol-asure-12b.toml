@@ -1,0 +1,15 @@
+# Turkey-hosted deployment. Replaces the earlier `trendyol-7b` entry: that id
+# is now only a migration alias and resolves to this model.
+# Pricing and the served window from https://llmtr.com/api/models
+# (accessed 2026-08-16); this host serves a smaller window than the model's
+# native 131,072.
+base_model = "trendyol/asure-12b"
+
+[cost]
+input = 0.1
+output = 0.5
+cache_read = 0.025
+
+[limit]
+context = 40_960
+output = 40_960

@@ -1,0 +1,15 @@
+base_model = "bytedance-seed/seed-2.0-mini"
+tool_call = false
+structured_output = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "minimal", "low", "medium", "high"]
+
+[cost]
+input = 0.1
+output = 0.4
+cache_read = 0.02
+
+[modalities]
+input = ["text", "image"]

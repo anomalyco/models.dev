@@ -1,0 +1,15 @@
+# Source: https://routellm.abacus.ai/v1/models
+# RouteLLM input_modalities: ['text', 'image', 'video']
+# RouteLLM output_modalities: ['text']
+# RouteLLM context_length: 1048576
+# RouteLLM max_completion_tokens: 131072
+# RouteLLM input_token_rate: 0.000003
+# RouteLLM output_token_rate: 0.000015
+# RouteLLM cached_input_token_rate: 0.0000003
+base_model = "moonshotai/kimi-k3"
+reasoning_options = []
+
+[cost]
+input = 3
+output = 15
+cache_read = 0.3

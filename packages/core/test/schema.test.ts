@@ -1,7 +1,7 @@
 import { describe, expect, test } from "bun:test";
 import { z } from "zod";
 
-import { AuthoredModel } from "../src/index.js";
+import { AuthoredModel, Provider } from "../src/index.js";
 
 type AuthoredModelData = z.infer<typeof AuthoredModel>;
 
@@ -106,6 +106,28 @@ describe("model schema", () => {
         ).toBe(false);
       }
     }
+  });
+});
+
+describe("provider schema", () => {
+  const mergeGatewayProvider = {
+    id: "merge-gateway",
+    name: "Merge Gateway",
+    env: ["MERGE_GATEWAY_API_KEY"],
+    npm: "merge-gateway-ai-sdk-provider",
+    api: "https://api-gateway.merge.dev/v1/ai-sdk",
+    doc: "https://docs.merge.dev/merge-gateway",
+    models: {},
+  };
+
+  test("accepts Merge Gateway's native package with its OpenAI-compatible API", () => {
+    expect(Provider.safeParse(mergeGatewayProvider).success).toBe(true);
+  });
+
+  test("requires the compatibility API for the Merge Gateway package", () => {
+    const { api: _api, ...providerWithoutApi } = mergeGatewayProvider;
+
+    expect(Provider.safeParse(providerWithoutApi).success).toBe(false);
   });
 });
 

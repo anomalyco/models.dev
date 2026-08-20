@@ -30,6 +30,7 @@ export const ModelFamilyValues = [
   "claude-sonnet",
   "claude-opus",
   "claude-fable",
+  "claude-mythos",
 
   // Gemini style
   "gemini",
@@ -51,6 +52,7 @@ export const ModelFamilyValues = [
 
   // Meta Muse
   "muse",
+  "muse-free",
 
   // Alibaba Qwen
   "qwen",
@@ -364,6 +366,9 @@ export const ModelFamilyValues = [
 
   // Conductor
   "fugu",
+
+  // Sakana Namazu
+  "sakana-namazu",
 
   // V0
   "v0",

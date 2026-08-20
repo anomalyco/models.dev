@@ -1,0 +1,19 @@
+name = "Nemotron 3.5 Lightning 30B A3B"
+description = "Fast NVIDIA Nemotron MoE for reliable agentic tasks across enterprise workloads"
+family = "nemotron"
+release_date = "2026-08-11"
+last_updated = "2026-08-11"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = true
+
+[limit]
+context = 262_144
+output = 262_144
+
+[modalities]
+input = ["text"]
+output = ["text"]

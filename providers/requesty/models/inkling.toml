@@ -1,0 +1,18 @@
+base_model = "thinkingmachines/inkling"
+structured_output = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "max"]
+
+[[reasoning_options]]
+type = "budget_tokens"
+
+[cost]
+input = 1.87
+output = 4.68
+cache_read = 0.374
+
+[limit]
+context = 65_536
+output = 32_768

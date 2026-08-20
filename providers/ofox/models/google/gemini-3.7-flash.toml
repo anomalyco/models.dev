@@ -1,0 +1,21 @@
+# Sources:
+# - https://ofox.ai/en/models/google/gemini-3.7-flash
+# - https://api.ofox.ai/v1/models/google/gemini-3.7-flash (pricing; accessed 2026-08-18)
+# Reasoning: multi-model relay — copy lab/peer effort set (low/medium/high)
+# from providers/google/models/gemini-3.7-flash.toml and openrouter/vercel/kilo peers.
+base_model = "google/gemini-3.7-flash"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high"]
+
+[cost]
+input = 1.5
+output = 7.5
+cache_read = 0.15
+input_audio = 1.5
+cache_write = 0.083
+
+[provider]
+npm = "@ai-sdk/google"
+api = "https://api.ofox.ai/gemini/v1beta"

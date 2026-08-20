@@ -1,0 +1,14 @@
+# Probed live endpoint 2026-08-13 (POST /v1/chat/completions, temperature 0):
+# reasoning_effort low/medium/high accepted and scale reasoning length
+# (26/58/174 chars on the same prompt); "none" and "max" return HTTP 400.
+# Reasoning text arrives interleaved with tool_calls, in the message field
+# named "reasoning" (not "reasoning_content"), hence the boolean form below.
+base_model = "openai/gpt-oss-120b"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
+interleaved = true
+
+# Pricing: https://www.crusoe.ai/cloud/pricing (accessed 2026-08-13)
+[cost]
+input = 0.05
+output = 0.20
+cache_read = 0.05

@@ -1,0 +1,10 @@
+base_model = "moonshotai/kimi-k3"
+
+reasoning = true
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["minimal", "low", "medium", "high"] }]
+interleaved = true
+
+[cost]
+input = 3.0
+output = 15.0
+cache_read = 0

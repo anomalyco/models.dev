@@ -1,14 +1,10 @@
 # Not included in subscription
+base_model = "bytedance-seed/seed-2.0-lite"
 name = "ByteDance Seed 2.0 Lite"
-description = "Efficient model for low-latency assistance, extraction, and routine automation"
-family = "seed"
-release_date = "2026-03-10"
-last_updated = "2026-03-10"
 attachment = false
 reasoning = false
 tool_call = false
 structured_output = true
-open_weights = false
 
 [cost]
 input = 0.25
@@ -22,4 +18,3 @@ output = 131_072
 
 [modalities]
 input = ["text"]
-output = ["text"]

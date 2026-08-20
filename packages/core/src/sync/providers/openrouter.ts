@@ -13,6 +13,7 @@ const modelMetadataFilesByProvider = new Map<string, Set<string>>();
 let allModelMetadataIDs: string[] | undefined;
 
 const CANONICAL_BASE_MODEL_OVERRIDES = {
+  "bytedance/dola-seed-2.0-code": "bytedance-seed/seed-2.0-code",
   "openai/gpt-5.6-luna-pro": "openai/gpt-5.6-luna",
   "openai/gpt-5.6-sol-pro": "openai/gpt-5.6-sol",
   "openai/gpt-5.6-terra-pro": "openai/gpt-5.6-terra",
@@ -23,6 +24,7 @@ const CANONICAL_BASE_MODEL_OVERRIDES = {
 const CANONICAL_PROVIDER_PREFIXES = {
   alibaba: { provider: "alibaba", metadata: "alibaba" },
   anthropic: { provider: "anthropic", metadata: "anthropic" },
+  "bytedance-seed": { provider: "bytedance-seed", metadata: "bytedance-seed" },
   cohere: { provider: "cohere", metadata: "cohere" },
   deepseek: { provider: "deepseek", metadata: "deepseek" },
   google: { provider: "google", metadata: "google" },
@@ -66,7 +68,7 @@ export const OpenRouterModel = z.object({
     input_cache_read: z.string().optional(),
     input_cache_write: z.string().optional(),
     overrides: z.array(z.object({
-      min_prompt_tokens: z.number(),
+      min_prompt_tokens: z.number().optional(),
       prompt: z.string().optional(),
       completion: z.string().optional(),
       input_cache_read: z.string().optional(),
@@ -157,7 +159,7 @@ function costTiers(model: OpenRouterModel, existing: ExistingModel | undefined) 
     .flatMap((o) => {
       const input = price(o.prompt);
       const output = price(o.completion);
-      if (input === undefined || output === undefined) return [];
+      if (o.min_prompt_tokens === undefined || input === undefined || output === undefined) return [];
       return [{
         tier: { type: "context" as const, size: o.min_prompt_tokens },
         input,
@@ -319,6 +321,9 @@ function openRouterReasoningOptions(reasoning: OpenRouterModel["reasoning"]): Sy
     : reasoning.supported_efforts;
 
   if (efforts !== undefined) {
+    if (!reasoning.mandatory && !efforts.includes("none")) {
+      options.push({ type: "toggle" });
+    }
     options.push({
       type: "effort",
       values: reasoning.mandatory ? efforts.filter((value) => value !== "none") : [...efforts],

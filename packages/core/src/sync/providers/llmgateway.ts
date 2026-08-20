@@ -4,6 +4,7 @@ import path from "node:path";
 
 import { describeModel } from "../../describe.js";
 import { inferKimiFamily, ModelFamilyValues } from "../../family.js";
+import { ReasoningOption } from "../../schema.js";
 import type { ExistingModel, SyncProvider, SyncedFullModel, SyncedModel } from "../index.js";
 import { factorBaseModel, resolveModelMetadataBaseModel } from "./openrouter.js";
 
@@ -16,12 +17,14 @@ const API_ENDPOINT = "https://api.llmgateway.io/v1/models";
 // other provider. Alias the few that spell the lab differently. (Mirrors
 // huggingface's CANONICAL_ORG_PREFIXES.)
 const CANONICAL_FAMILY_ALIASES: Record<string, string> = {
+  grok: "xai",
   mistral: "mistralai",
   moonshot: "moonshotai",
 };
 
 const BASE_MODEL_ALIASES: Record<string, string> = {
   "glm-5-2": "zhipuai/glm-5.2",
+  "grok-4-6": "xai/grok-4.6",
 };
 
 const Pricing = z.object({
@@ -31,6 +34,17 @@ const Pricing = z.object({
   input_cache_read: z.string().optional(),
   input_cache_write: z.string().optional(),
 });
+
+const ReasoningEffortOrder = new Map([
+  "none",
+  "minimal",
+  "low",
+  "medium",
+  "high",
+  "xhigh",
+  "max",
+  "default",
+].map((effort, index) => [effort, index]));
 
 export const LLMGatewayModel = z.object({
   id: z.string(),
@@ -43,12 +57,12 @@ export const LLMGatewayModel = z.object({
   }),
   providers: z.array(
     z.object({
-      providerId: z.string(),
+      providerId: z.string().optional(),
       vision: z.boolean().optional(),
       tools: z.boolean().optional(),
       reasoning: z.boolean().optional(),
       reasoning_efforts: z.array(
-        z.enum(["none", "minimal", "low", "medium", "high", "xhigh", "max"]),
+        z.enum(["none", "minimal", "low", "medium", "high", "xhigh", "max", "default"]),
       ).optional(),
     }).passthrough(),
   ).optional(),
@@ -306,6 +320,7 @@ export function buildLLMGatewayModel(
   const completion = price(model.pricing.completion);
   const reasoning = model.supported_parameters.includes("reasoning")
     || model.supported_parameters.includes("include_reasoning");
+  const reasoningOptions = llmGatewayReasoningOptions(model, existing);
   const reported = model.context_length ?? 0;
   // A missing/zero context must never be authored as limit.context = 0:
   // factored entries leave it unset and inherit the base, and unfactored
@@ -314,8 +329,9 @@ export function buildLLMGatewayModel(
   const servedContext = reported > 0 ? reported : undefined;
   const context = servedContext ?? (existing?.limit?.context || undefined);
 
-  // The gateway is authoritative for the volatile, gateway-specific data — cost
-  // and served limits. Its supported_parameters / modalities are too noisy to
+  // The gateway is authoritative for the volatile, gateway-specific data — cost,
+  // served limits, and explicitly advertised reasoning efforts. Its
+  // supported_parameters / modalities are too noisy to
   // drive capability fields (it omits "tools" for flagship models yet lists
   // "temperature" for ones the catalog deliberately marks temperature=false),
   // so those stay curated: preserved from the existing entry (which, for a
@@ -364,6 +380,7 @@ export function buildLLMGatewayModel(
           modalities: existing.modalities,
         }),
         reasoning: existing.reasoning,
+        reasoning_options: reasoningOptions,
         temperature: existing.temperature,
         tool_call: existing.tool_call,
         structured_output: existing.structured_output,
@@ -405,6 +422,7 @@ export function buildLLMGatewayModel(
       last_updated: existing.last_updated ?? dateFromTimestamp(model.created),
       attachment: existing.attachment ?? false,
       reasoning: existing.reasoning ?? false,
+      reasoning_options: reasoningOptions,
       temperature: existing.temperature ?? false,
       tool_call: existing.tool_call ?? false,
       structured_output: existing.structured_output,
@@ -427,7 +445,11 @@ export function buildLLMGatewayModel(
   const canonical = resolveLLMGatewayBaseModel(model);
   if (canonical !== undefined) {
     const factoredLimit = { context, input: undefined, output: undefined };
-    return factorBaseModel(canonical, { limit: factoredLimit, cost }, factoredLimit);
+    return factorBaseModel(canonical, {
+      reasoning_options: reasoningOptions,
+      limit: factoredLimit,
+      cost,
+    }, factoredLimit);
   }
 
   // Brand-new model: best-effort translation from the gateway. Capability and
@@ -457,6 +479,7 @@ export function buildLLMGatewayModel(
     last_updated: dateFromTimestamp(model.created),
     attachment: input.some((value) => value !== "text"),
     reasoning,
+    reasoning_options: reasoningOptions,
     temperature: model.supported_parameters.includes("temperature"),
     tool_call: model.supported_parameters.includes("tools")
       || model.supported_parameters.includes("tool_choice"),
@@ -720,6 +743,27 @@ export function buildLLMGatewayMappedModel(
     limit: createdLimit,
     modalities: { input, output },
   } satisfies SyncedFullModel;
+}
+
+function llmGatewayReasoningOptions(
+  model: LLMGatewayModel,
+  existing: ExistingModel | undefined,
+): SyncedFullModel["reasoning_options"] {
+  const advertised = new Set((model.providers ?? []).flatMap((provider) => provider.reasoning_efforts ?? []));
+  if (advertised.size === 0) return undefined;
+
+  const efforts = [...advertised].sort((a, b) => {
+    const order = (ReasoningEffortOrder.get(a) ?? Number.MAX_SAFE_INTEGER)
+      - (ReasoningEffortOrder.get(b) ?? Number.MAX_SAFE_INTEGER);
+    return order || a.localeCompare(b);
+  });
+  const preserved = existing?.reasoning_options?.filter((option) =>
+    option.type !== "effort" && !(option.type === "toggle" && advertised.has("none"))
+  ) ?? [];
+  return [
+    ...preserved,
+    ReasoningOption.parse({ type: "effort", values: efforts }),
+  ];
 }
 
 function defaultModalities(model: LLMGatewayModel) {

@@ -1,0 +1,12 @@
+# Source: https://api.ofox.ai/v2/models/catalog?include=provider_price&limit=500
+base_model = "openai/gpt-5.4"
+reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh"] }]
+
+[cost]
+input = 2.5
+output = 15
+cache_read = 0.25
+
+[provider]
+npm = "@ai-sdk/openai"
+api = "https://api.ofox.ai/v1"

@@ -96,6 +96,7 @@ const BASE_MODEL_ALIASES: Record<string, string | undefined> = {
   "claude-opus-4": "anthropic/claude-opus-4-0",
   "claude-sonnet-4": "anthropic/claude-sonnet-4-0",
   "cohere/north-mini-code": "cohere/north-mini-code-1-0",
+  "doubao-seed-2-0-code-preview-260215": "bytedance-seed/seed-2.0-code",
 };
 
 const NANO_GPT_VARIANT_SUFFIX = /(?::(?:thinking|none|minimal|low|medium|high|xhigh|max|\d+)|-thinking)$/i;

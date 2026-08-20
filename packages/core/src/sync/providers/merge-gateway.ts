@@ -165,7 +165,7 @@ export const mergeGateway = {
 export function mergeGatewayReasoningOptions(
   reasoning: MergeGatewayVendor["capabilities"]["reasoning"],
 ): NonNullable<SyncedFullModel["reasoning_options"]> | undefined {
-  if (reasoning === undefined) return undefined;
+  if (reasoning == null) return undefined;
   const options: NonNullable<SyncedFullModel["reasoning_options"]> = [];
 
   if (reasoning.disable_supported === true) {

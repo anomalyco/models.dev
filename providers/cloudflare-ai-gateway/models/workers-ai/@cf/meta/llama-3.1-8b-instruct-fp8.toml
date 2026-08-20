@@ -1,22 +1,13 @@
-name = "Llama 3.1 8B Instruct FP8"
+base_model = "meta/llama-3.1-8b-instruct"
+name = "Llama 3.1 8B Instruct fp8"
 description = "Open Llama instruction model for multilingual chat, reasoning, and coding"
-family = "llama"
-release_date = "2025-04-03"
-last_updated = "2025-04-03"
-attachment = false
-reasoning = false
-temperature = true
 tool_call = false
-open_weights = false
+structured_output = false
 
 [cost]
-input = 0.15
-output = 0.29
+input = 0.152
+output = 0.287
 
 [limit]
-context = 128000
-output = 16384
-
-[modalities]
-input = ["text"]
-output = ["text"]
+context = 32000
+output = 32000

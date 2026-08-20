@@ -1,0 +1,25 @@
+name = "Qwen3.5 4B"
+description = "Qwen3.5 4B is a compact open-weight multimodal model from Alibaba for reasoning, coding, visual understanding, tool use, and structured output."
+family = "qwen3.5"
+release_date = "2026-08-16"
+last_updated = "2026-08-16"
+attachment = true
+reasoning = true
+tool_call = true
+structured_output = true
+open_weights = true
+reasoning_options = []
+
+[cost]
+input = 0.1
+output = 0.2
+cache_read = 0.05
+
+[limit]
+context = 262_144
+input = 262_144
+output = 32_768
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

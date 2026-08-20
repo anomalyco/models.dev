@@ -4,7 +4,7 @@ temperature = true
 
 [[reasoning_options]]
 type = "effort"
-values = ["none", "low", "high", "max"]
+values = ["low", "high", "max"]
 
 [cost]
 input = 3
@@ -13,6 +13,3 @@ cache_read = 0.3
 
 [limit]
 output = 1_048_576
-
-[modalities]
-input = ["text", "image"]

@@ -1,5 +1,8 @@
 base_model = "tencent/hy3"
-reasoning_options = []
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "high"]
 
 [cost]
 input = 0.14

@@ -1,0 +1,17 @@
+base_model = "deepseek/deepseek-v4-flash-0731"
+name = "DeepSeek V4 Flash 0731 Fast"
+description = "Fast DeepSeek model for efficient chat, coding help, and agent loops"
+release_date = "2026-08-09"
+last_updated = "2026-08-11"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "high", "max"]
+
+[cost]
+input = 0.35
+output = 0.7
+cache_read = 0.0875
+
+[limit]
+output = 32_768

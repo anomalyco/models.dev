@@ -1,16 +1,6 @@
-name = "Qwen3 235B A22B Instruct 2507"
+base_model = "alibaba/qwen3-235b-a22b-instruct-2507"
 description = "Qwen instruction model for multilingual chat, reasoning, and tool use"
-family = "qwen"
-release_date = "2025-07-23"
-last_updated = "2025-07-23"
-attachment = false
-reasoning = true
-temperature = true
-tool_call = true
 structured_output = true
-knowledge = "2025-04"
-open_weights = true
-reasoning_options = []
 
 [cost]
 input = 0.069
@@ -20,7 +10,3 @@ cache_read = 0.018
 [limit]
 context = 262_000
 output = 131_000
-
-[modalities]
-input = ["text"]
-output = ["text"]

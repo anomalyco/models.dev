@@ -1,6 +1,10 @@
-# Sources (accessed 2026-08-03):
+# Sources (accessed 2026-08-06):
 # https://www.qwencloud.com/models/qwen3.8-max
 # https://www.qianwenai.com/models/qwen3.8-max
+# https://help.aliyun.com/zh/model-studio/qwen3-8-max
+# https://www.alibabacloud.com/help/en/model-studio/qwen3-8-max
+# https://help.aliyun.com/zh/model-studio/pdf-understanding
+# https://platform.qianwenai.com/docs/developer-guides/tool-calling/pdf-understanding
 # https://docs.qwencloud.com/token-plan/personal/token-plan-personal-overview
 # https://help.aliyun.com/zh/model-studio/token-plan-personal-overview
 # https://help.aliyun.com/en/model-studio/token-plan-personal-overview
@@ -9,6 +13,10 @@
 # https://docs.qwencloud.com/developer-guides/clients-and-developer-tools/opencode
 # https://platform.qianwenai.com/docs/developer-guides/clients-and-developer-tools/opencode
 # https://qwen.ai/blog?id=qwen3.8
+# PDF input: Model Studio / 千问AI docs list only qwen3.8-max under PDF理解
+# (type:file / file_url|file_data). Model pages list Image/Text/Video badges
+# and separately list PDF理解 as a Completions built-in tool. Beijing-region
+# availability note on help.aliyun.com; lab capability still includes pdf.
 
 name = "Qwen3.8 Max"
 description = "2.4-trillion-parameter MoE flagship for coding, professional work, multimodal understanding, and long-horizon agentic workflows"
@@ -26,5 +34,5 @@ context = 1_000_000
 output = 131_072
 
 [modalities]
-input = ["text", "image", "video"]
+input = ["text", "image", "video", "pdf"]
 output = ["text"]

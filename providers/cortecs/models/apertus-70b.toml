@@ -1,13 +1,8 @@
-name = "apertus-70b"
+base_model = "swiss-ai/apertus-70b"
 description = "Apertus 70B is an open, multilingual language model designed for research, long-context reasoning, and sovereignty-focused AI systems."
-release_date = "2026-07-08"
-last_updated = "2026-07-08"
-attachment = false
 reasoning = true
 temperature = false
-tool_call = true
 structured_output = false
-open_weights = false
 reasoning_options = []
 
 [cost]
@@ -15,9 +10,4 @@ input = 1.393
 output = 2.228
 
 [limit]
-context = 65_536
 output = 65_536
-
-[modalities]
-input = ["text"]
-output = ["text"]

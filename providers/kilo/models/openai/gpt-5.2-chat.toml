@@ -1,4 +1,4 @@
-name = "OpenAI: GPT-5.2 Chat (retires Aug 10)"
+name = "OpenAI: GPT-5.2 Chat"
 description = "Chat-tuned GPT model for conversational assistance, writing, and tool workflows"
 family = "gpt"
 release_date = "2025-12-10"
@@ -17,7 +17,7 @@ cache_read = 0.175
 
 [limit]
 context = 128_000
-output = 16_384
+output = 32_000
 
 [modalities]
 input = ["pdf", "image", "text"]

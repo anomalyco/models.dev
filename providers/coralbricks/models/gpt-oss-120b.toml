@@ -1,0 +1,10 @@
+base_model = "openai/gpt-oss-120b"
+
+reasoning = true
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["minimal", "low", "medium", "high"] }]
+interleaved = true
+
+[cost]
+input = 0.12
+output = 0.6
+cache_read = 0

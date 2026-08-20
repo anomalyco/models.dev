@@ -1,0 +1,21 @@
+# Sources (accessed 2026-08-10):
+# Alias routes to the latest available Kimi model (currently Kimi K2.6):
+# https://docs.privatemode.ai/models/overview/#kimi-k26
+# Pricing (EUR): https://docs.privatemode.ai/pricing/
+# Toggle: chat_template_kwargs.thinking = true|false (default true / reasoning on).
+# Cost: EUR list prices converted at 1 EUR = 1.1555 USD (Frankfurter 2026-08-10).
+# EUR/MTok: input 1.55 / output 7.74 / cached input 0.15
+base_model = "moonshotai/kimi-k2.6"
+name = "Kimi (latest)"
+reasoning_options = [{ type = "toggle" }]
+
+[modalities]
+input = ["text", "image"]
+
+[cost]
+input = 1.7910
+output = 8.9436
+cache_read = 0.1733
+
+[limit]
+context = 256_000

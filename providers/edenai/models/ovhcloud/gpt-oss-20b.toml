@@ -1,0 +1,10 @@
+base_model = "openai/gpt-oss-20b"
+tool_call = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high"]
+
+[cost]
+input = 0.05
+output = 0.18

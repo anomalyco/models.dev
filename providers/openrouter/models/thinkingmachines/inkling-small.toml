@@ -1,13 +1,13 @@
 base_model = "thinkingmachines/inkling-small"
 description = "Multimodal reasoning model for visual analysis, planning, and tool use"
-structured_output = false
+structured_output = true
 
 [[reasoning_options]]
 type = "effort"
 values = ["none", "minimal", "low", "medium", "high", "max"]
 
 [cost]
-input = 0.5
+input = 0.45
 output = 1.2
 cache_read = 0.1
 

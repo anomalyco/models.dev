@@ -1,6 +1,21 @@
+# Reasoning controls verified against the Neuralwatt live API on 2026-08-05.
+# Toggle: chat_template_kwargs.enable_thinking = true|false — setting false on
+# kimi-k3 drops reasoning to zero chars on a proof task (vs ~1,900 at max).
+# Effort: reasoning_effort = low|high|max — max produces deep reasoning while
+# low/high produce minimal reasoning; matches first-party moonshotai baseline.
+# thinking_token_budget is documented but rejected by the current vLLM V2
+# runner ("not yet supported by the V2 model runner"), so it is not declared.
+# Sources:
+# https://portal.neuralwatt.com/docs/api/chat-completions
+# https://platform.kimi.ai/docs/guide/use-reasoning-effort
 base_model = "moonshotai/kimi-k3"
-name = "Kimi K3"
-reasoning_options = [{ type = "toggle" }]
+
+[[reasoning_options]]
+type = "toggle" # API: {"chat_template_kwargs": {"enable_thinking": false}}
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
 
 [interleaved]
 field = "reasoning_content"

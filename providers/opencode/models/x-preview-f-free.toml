@@ -1,0 +1,27 @@
+name = "Ox Alpha Free"
+description = "Stealth reasoning model for coding, agentic tasks, and tool use"
+release_date = "2026-08-21"
+last_updated = "2026-08-21"
+attachment = true
+reasoning = true
+reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0
+output = 0
+cache_read = 0
+
+[limit]
+context = 1_000_000
+output = 131_072
+
+[modalities]
+input = ["text", "image", "video"]
+output = ["text"]
