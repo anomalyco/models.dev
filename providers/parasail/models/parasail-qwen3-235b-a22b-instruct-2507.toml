@@ -1,7 +1,13 @@
 base_model = "alibaba/qwen3-235b-a22b"
 
 
-reasoning_options = []
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "budget_tokens"
+
 [cost]
 input = 0.14
 output = 0.8
