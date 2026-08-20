@@ -1,0 +1,16 @@
+base_model = "deepseek/deepseek-v4-pro-0813"
+release_date = "2026-08-14"
+last_updated = "2026-08-14"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "high", "xhigh"]
+
+[cost]
+input = 1.437216
+output = 4.311648
+cache_read = 0.047907
+
+[limit]
+context = 1_048_576
+output = 262_144

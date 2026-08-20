@@ -1,0 +1,19 @@
+# Source: https://runinfra.ai/inference-api/nemotron-3-5-lightning-30b
+# Reasoning toggle wire field: reasoning_effort = "none" disables reasoning (verified live
+# 2026-08-16: completion fell from 335 tokens with reasoning to 5 without); any other value or
+# omitting the field leaves reasoning on. Intermediate effort levels were probed live the same
+# day (temperature 0, fixed prompt, repeated): observed differences stayed within this model's
+# own run-to-run variance (baseline 570/642 tokens across repeats, medium 588/642), so no graded
+# control is claimed. enable_thinking / chat_template_kwargs / thinking_budget are accepted but
+# have no effect. The control is a toggle.
+base_model = "nvidia/nemotron-3.5-lightning"
+
+[[reasoning_options]]
+type = "toggle"
+
+[cost]
+input = 0.05
+output = 0.15
+
+[limit]
+output = 32_768

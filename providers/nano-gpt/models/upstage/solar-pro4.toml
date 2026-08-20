@@ -1,13 +1,5 @@
-name = "Solar Pro 4"
-description = "Upstage's Solar Pro 4 is a long-context language model for agentic workflows, office productivity, document-intensive work, and coding. This variant keeps reasoning disabled for faster direct responses."
-family = "solar"
-release_date = "2026-08-11"
-last_updated = "2026-08-11"
-attachment = false
+base_model = "upstage/solar-pro4"
 reasoning = false
-tool_call = true
-structured_output = true
-open_weights = false
 
 [cost]
 input = 0.03
@@ -15,10 +7,4 @@ output = 0.12
 cache_read = 0.006
 
 [limit]
-context = 524_288
 input = 524_288
-output = 131_072
-
-[modalities]
-input = ["text"]
-output = ["text"]

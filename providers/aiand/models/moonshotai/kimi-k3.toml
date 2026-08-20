@@ -6,15 +6,16 @@
 # text+image+video. PDF kept: sibling aiand Moonshot entries (kimi-k2.6,
 # kimi-k2.7-code) include pdf after catalog/probe evidence; aiand treats
 # PDF as a provider-level Files API modality.
-# reasoning_effort verified live: gateway schema accepts
-# none/minimal/low/medium/high/xhigh/max, but the K3 backend only accepts
-# none/low/high/max (minimal/medium/xhigh rejected). Invalid values rejected
-# with 400 (negative control).
+# reasoning_effort: K3 backend accepts only low/high/max per official docs
+# (https://platform.kimi.ai/docs/guide/kimi-k3-quickstart). The aiand gateway
+# schema lists none/minimal/low/medium/high/xhigh/max but K3 rejects
+# none/minimal/medium/xhigh with 400. aiand does not expose a separate off
+# toggle; K3 always reasons.
 base_model = "moonshotai/kimi-k3"
 
 [[reasoning_options]]
 type = "effort"
-values = ["none", "low", "high", "max"]
+values = ["low", "high", "max"]
 
 [cost]
 input = 3

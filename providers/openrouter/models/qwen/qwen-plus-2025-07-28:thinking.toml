@@ -17,15 +17,13 @@ min = 1
 max = 81_920
 
 [cost]
-input = 0.4
-output = 1.2
-cache_write = 0.5
+input = 0.26
+output = 0.78
 
 [[cost.tiers]]
 tier = { type = "context", size = 256_000 }
-input = 1.2
-output = 3.6
-cache_write = 1.5
+input = 0.78
+output = 2.34
 
 [limit]
 context = 1_000_000

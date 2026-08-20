@@ -1,7 +1,7 @@
 # Effort: reasoning_effort = low|high|max (DeepSeek flash maps low→low; xhigh→high)
 # https://api-docs.deepseek.com/guides/thinking_mode/ (accessed 2026-08-02)
 base_model = "deepseek/deepseek-v4-flash-0731"
-name = "DeepSeek V4 Flash (2x usage)"
+name = "DeepSeek V4 Flash"
 
 [[reasoning_options]]
 type = "effort"
@@ -11,6 +11,6 @@ values = ["low", "high", "max"]
 field = "reasoning_content"
 
 [cost]
-input = 0.07
-output = 0.14
-cache_read = 0.0014
+input = 0.22
+output = 0.66
+cache_read = 0.007

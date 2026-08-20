@@ -1,0 +1,20 @@
+base_model = "bytedance-seed/seed-2.0-pro"
+structured_output = true
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high"]
+
+[cost]
+input = 0.63
+output = 3.79
+cache_read = 0.63
+
+[[cost.tiers]]
+tier = { type = "context", size = 128_000 }
+input = 1.26
+output = 7.58
+cache_read = 1.26

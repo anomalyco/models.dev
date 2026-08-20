@@ -1,27 +1,18 @@
 import { z } from "zod";
 
 import type { ExistingModel, SyncProvider, SyncedFullModel, SyncedModel } from "../index.js";
-import { factorBaseModel, resolveCanonicalBaseModel } from "./openrouter.js";
+import { factorBaseModel, resolveCanonicalBaseModel, resolveModelMetadataBaseModel } from "./openrouter.js";
 
 // EmpirioLabs exposes a public, unauthenticated OpenAI-compatible model
 // catalog, so no API key is needed or used for this sync.
 const API_ENDPOINT = "https://api.empiriolabs.ai/v1/models";
 
+// Keep this for slugs that cannot be derived from a lab filename.
+// Family prefixes, version-dot slugs, unique filenames, and dated/version
+// suffixes are resolved automatically by resolveEmpiriolabsBaseModel.
 const CANONICAL_BASE_MODELS: Record<string, string> = {
-  "seed-2-0-code": "bytedance-seed/seed-2.0-code",
-  "fugu-ultra": "sakana/fugu-ultra",
-  "deepseek-v4-flash-0731": "deepseek/deepseek-v4-flash-0731",
-  "gemma-4-26b-a4b": "google/gemma-4-26b-a4b-it",
-  "gemma-4-e4b": "google/gemma-4-E4B-it",
   "mistral-medium-3": "mistral/mistral-medium-2505",
   "mistral-small-4": "mistral/mistral-small-2603",
-  "muse-spark-1-1": "meta/muse-spark-1.1",
-  "qwen3-5-9b": "alibaba/qwen3.5-9b",
-  "qwen3-7-max": "alibaba/qwen3.7-max",
-  "qwen3-7-plus": "alibaba/qwen3.7-plus",
-  "step-3-5-flash": "stepfun/step-3.5-flash",
-  "step-3-5-flash-2603": "stepfun/step-3.5-flash-2603",
-  "step-3-7-flash": "stepfun/step-3.7-flash",
 };
 
 const EmpiriolabsParameter = z
@@ -210,55 +201,75 @@ function parameterOutputLimit(model: EmpiriolabsModel) {
   return parameter?.max !== undefined && parameter.max > 0 ? parameter.max : undefined;
 }
 
+function applyVersionDots(id: string) {
+  return id
+    .replace(/^(qwen\d+)-(\d+)/, "$1.$2")
+    .replace(/^(seed-\d+)-(\d+)/, "$1.$2")
+    .replace(/^(muse-[a-z]+)-(\d+)-(\d+)$/, "$1-$2.$3")
+    .replace(/^(glm-\d+)-(\d+)/, "$1.$2")
+    .replace(/^(kimi-k\d+)-(\d+)/, "$1.$2")
+    .replace(/^(minimax-m\d+)-(\d+)/, "$1.$2")
+    .replace(/^(mimo-v\d+)-(\d+)/, "$1.$2")
+    .replace(/^(deepseek-v\d+)-(\d+)/, "$1.$2")
+    .replace(/^(step-\d+)-(\d+)/, "$1.$2");
+}
+
+function stripProductSuffixes(id: string) {
+  const out: string[] = [];
+  if (/-v\d+(-\d+)?$/.test(id)) {
+    const dropPatch = id.replace(/-\d+$/, "");
+    if (dropPatch !== id) out.push(dropPatch);
+    out.push(id.replace(/-v\d+(-\d+)?$/, ""));
+  }
+  if (/-\d{4}$/.test(id)) out.push(id.replace(/-\d{4}$/, ""));
+  return out;
+}
+
+function idVariants(id: string) {
+  const variants = [id];
+  const dotted = applyVersionDots(id);
+  if (dotted !== id) variants.push(dotted);
+  for (const stripped of stripProductSuffixes(id)) {
+    if (!variants.includes(stripped)) variants.push(stripped);
+    const strippedDotted = applyVersionDots(stripped);
+    if (!variants.includes(strippedDotted)) variants.push(strippedDotted);
+  }
+  return variants;
+}
+
+function prefixesFor(id: string) {
+  if (id.startsWith("deepseek-")) return ["deepseek"];
+  if (id.startsWith("glm-")) return ["z-ai"];
+  if (id.startsWith("kimi-")) return ["moonshotai"];
+  if (id.startsWith("minimax-")) return ["minimax"];
+  if (id.startsWith("mimo-")) return ["xiaomi"];
+  if (id.startsWith("qwen")) return ["qwen"];
+  if (id.startsWith("muse-")) return ["meta"];
+  if (id.startsWith("seed-")) return ["bytedance-seed"];
+  if (id.startsWith("fugu-")) return ["sakana"];
+  if (id.startsWith("gemma-")) return ["google"];
+  if (id.startsWith("step") && !id.startsWith("stepaudio")) return ["stepfun"];
+  if (id.startsWith("mistral-")) return ["mistralai"];
+  return [];
+}
+
 export function resolveEmpiriolabsBaseModel(id: string) {
   const explicit = CANONICAL_BASE_MODELS[id];
   if (explicit !== undefined) return explicit;
-  return canonicalCandidates(id)
-    .map((candidate) => resolveCanonicalBaseModel(candidate))
-    .find((candidate) => candidate !== undefined);
-}
 
-function canonicalCandidates(id: string) {
-  const candidates: string[] = [];
-
-  if (id.startsWith("deepseek-")) {
-    candidates.push(`deepseek/${id}`);
-    candidates.push(`deepseek/${id.replace(/^deepseek-v(\d+)-(\d+)/, "deepseek-v$1.$2")}`);
+  for (const variant of idVariants(id)) {
+    for (const prefix of prefixesFor(variant)) {
+      const resolved = resolveCanonicalBaseModel(`${prefix}/${variant}`);
+      if (resolved !== undefined) return resolved;
+      if (prefix === "google" && !variant.endsWith("-it")) {
+        const instruct = resolveCanonicalBaseModel(`${prefix}/${variant}-it`);
+        if (instruct !== undefined) return instruct;
+      }
+    }
+    const unique = resolveModelMetadataBaseModel(variant);
+    if (unique !== undefined) return unique;
   }
-
-  if (id.startsWith("glm-")) {
-    const normalized = id
-      .replace(/^glm-(\d+)-(\d+)/, "glm-$1.$2")
-      .replace(/^glm-(\d+)-(\d+)v/, "glm-$1.$2v");
-    candidates.push(`z-ai/${id}`);
-    candidates.push(`z-ai/${normalized}`);
-  }
-
-  if (id.startsWith("kimi-")) {
-    const normalized = id.replace(/^(kimi-k\d+)-(\d+)/, "$1.$2");
-    candidates.push(`moonshotai/${id}`);
-    candidates.push(`moonshotai/${normalized}`);
-  }
-
-  if (id.startsWith("minimax-")) {
-    const normalized = id.replace(/^minimax-m(\d+)-(\d+)/, "minimax-m$1.$2");
-    candidates.push(`minimax/${id}`);
-    candidates.push(`minimax/${normalized}`);
-  }
-
-  if (id.startsWith("mimo-")) {
-    const normalized = id.replace(/^mimo-v(\d+)-(\d+)/, "mimo-v$1.$2");
-    candidates.push(`xiaomi/${id}`);
-    candidates.push(`xiaomi/${normalized}`);
-  }
-
-  if (id.startsWith("qwen")) {
-    const normalized = id.replace(/^(qwen\d+)-(\d+)/, "$1.$2");
-    candidates.push(`qwen/${id}`);
-    candidates.push(`qwen/${normalized}`);
-  }
-
-  return [...new Set(candidates)];
+  return undefined;
 }
 
 export function buildEmpiriolabsModel(

@@ -1,5 +1,8 @@
 base_model = "minimax/MiniMax-M2"
-reasoning_options = []
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high", "xhigh", "max"]
 
 [cost]
 input = 0.2

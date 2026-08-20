@@ -5,14 +5,6 @@ base_model = "xai/grok-4.6"
 type = "effort"
 values = ["low", "medium", "high", "xhigh"]
 
-[experimental.modes.fast]
-provider = { body = { service_tier = "priority" } }
-
-[experimental.modes.fast.cost]
-input = 4
-output = 12
-cache_read = 1
-
 [cost]
 input = 2
 output = 6

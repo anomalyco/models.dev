@@ -5,10 +5,16 @@ export const MAX_CREATED_MODELS = 10;
 export const MAX_DELETED_MODELS = 10;
 export const MAX_MODEL_CHURN = 15;
 const REVIEWED_REASONING_PROVIDERS = new Set([
+  "crossmodel",
+  "edenai",
+  "empiriolabs",
+  "hyper",
   "kilo",
+  "llmgateway",
   "merge-gateway",
   "nano-gpt",
   "openrouter",
+  "venice",
 ]);
 
 export interface CatalogChange {

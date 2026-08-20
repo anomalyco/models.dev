@@ -1,0 +1,18 @@
+base_model = "moonshotai/kimi-k2.6"
+name = "Kimi K2.6 (EU)"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "max"]
+
+[[reasoning_options]]
+type = "budget_tokens"
+
+[cost]
+input = 0.95
+output = 4
+cache_read = 0.95
+
+[limit]
+context = 256_000
+output = 128_000

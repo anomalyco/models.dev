@@ -68,7 +68,7 @@ export const OpenRouterModel = z.object({
     input_cache_read: z.string().optional(),
     input_cache_write: z.string().optional(),
     overrides: z.array(z.object({
-      min_prompt_tokens: z.number(),
+      min_prompt_tokens: z.number().optional(),
       prompt: z.string().optional(),
       completion: z.string().optional(),
       input_cache_read: z.string().optional(),
@@ -159,7 +159,7 @@ function costTiers(model: OpenRouterModel, existing: ExistingModel | undefined) 
     .flatMap((o) => {
       const input = price(o.prompt);
       const output = price(o.completion);
-      if (input === undefined || output === undefined) return [];
+      if (o.min_prompt_tokens === undefined || input === undefined || output === undefined) return [];
       return [{
         tier: { type: "context" as const, size: o.min_prompt_tokens },
         input,

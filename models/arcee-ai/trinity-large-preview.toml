@@ -1,0 +1,40 @@
+# Source: https://huggingface.co/arcee-ai/Trinity-Large-Preview
+name = "Trinity Large Preview"
+description = "Lightly post-trained 398B MoE chat model for creative work, long-context prompts, and tool-using agents"
+family = "trinity"
+release_date = "2026-01-27"
+last_updated = "2026-05-28"
+attachment = false
+reasoning = false
+temperature = true
+tool_call = true
+open_weights = true
+license = "OpenMDW-1.1"
+
+[limit]
+context = 524_288
+output = 262_144
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/arcee-ai/Trinity-Large-Preview"
+format = "safetensors"
+
+[[links]]
+label = "Model card"
+url = "https://huggingface.co/arcee-ai/Trinity-Large-Preview"
+type = "model_card"
+
+[[links]]
+label = "Announcement"
+url = "https://www.arcee.ai/blog/trinity-large"
+type = "announcement"
+
+[[links]]
+label = "License"
+url = "https://huggingface.co/arcee-ai/Trinity-Large-Preview/blob/main/LICENSE"
+type = "license"

@@ -1,0 +1,19 @@
+# Source: https://api.ofox.ai/v2/models/catalog?include=provider_price&limit=500
+name = "MiniMax-M2 Her"
+description = "MiniMax M2 variant tuned for conversational and character-driven agent interactions"
+family = "minimax"
+release_date = "2026-01-23"
+last_updated = "2026-01-23"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+open_weights = false
+
+[limit]
+context = 200_000
+output = 131_000
+
+[modalities]
+input = ["text"]
+output = ["text"]

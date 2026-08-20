@@ -1,0 +1,23 @@
+name = "Dots3-Note Preview (free)"
+description = "Multimodal reasoning model for visual analysis, planning, and tool use"
+release_date = "2026-08-14"
+last_updated = "2026-08-14"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = false
+reasoning_options = []
+
+[cost]
+input = 0
+output = 0
+
+[limit]
+context = 512_000
+output = 512_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

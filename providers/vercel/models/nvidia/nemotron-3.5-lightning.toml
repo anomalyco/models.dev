@@ -1,0 +1,16 @@
+# Toggle: reasoning.enabled = true|false
+# Source: https://build.nvidia.com/nvidia/nemotron-3.5-lightning-30b-a3b
+base_model = "nvidia/nemotron-3.5-lightning"
+name = "Nemotron 3.5 Lightning 30B"
+description = "Nemotron model for efficient reasoning, coding, and specialized AI agents"
+
+[[reasoning_options]]
+type = "toggle"
+
+[cost]
+input = 0.05
+output = 0.2
+cache_read = 0.01
+
+[limit]
+output = 131_072

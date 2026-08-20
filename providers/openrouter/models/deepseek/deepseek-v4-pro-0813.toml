@@ -1,5 +1,4 @@
 base_model = "deepseek/deepseek-v4-pro-0813"
-structured_output = false
 
 [[reasoning_options]]
 type = "toggle"
@@ -9,9 +8,9 @@ type = "effort"
 values = ["low", "high", "max"]
 
 [cost]
-input = 0.435
-output = 0.87
-cache_read = 0.003625
+input = 1.188
+output = 3.564
+cache_read = 0.0396
 
 [limit]
 context = 1_048_576

@@ -1,0 +1,14 @@
+# Toggle: thinking.type = enabled|disabled.
+# Effort: reasoning_effort = high|max.
+base_model = "deepseek/deepseek-v4-pro-0813"
+
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["high", "max"] }]
+
+[cost]
+input = 1.32
+output = 3.96
+cache_read = 0.044
+
+[limit]
+context = 1_048_576
+output = 1_048_576
