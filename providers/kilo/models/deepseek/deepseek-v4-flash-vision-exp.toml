@@ -1,0 +1,28 @@
+name = "DeepSeek: DeepSeek V4 Flash Vision Exp"
+description = "DeepSeek V4 Flash Vision Exp is an experimental vision-enabled version of [DeepSeek V4 Flash 0731](https://openrouter.ai/deepseek/deepseek-v4-flash-0731) from DeepSeek, adding image understanding while matching the base model on text capabilities including agents,..."
+family = "deepseek"
+release_date = "2026-08-21"
+last_updated = "2026-08-21"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = false
+open_weights = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "high", "max"]
+
+[cost]
+input = 0.22
+output = 0.66
+cache_read = 0.007
+
+[limit]
+context = 1_048_576
+output = 384_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
