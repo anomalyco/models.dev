@@ -1,5 +1,6 @@
-# Toggle wire path: the Portal relays third-party models through OpenRouter, so
-# reasoning is controlled via OpenRouter's reasoning.budget_tokens field.
+# Reasoning budget wire path: the Portal relays third-party models through
+# OpenRouter, so the budget is set via the reasoning.max_tokens request field
+# (OpenAI-compatible chat convention).
 base_model = "meituan/longcat-2.0"
 name = "LongCat-2.0 (free)"
 
