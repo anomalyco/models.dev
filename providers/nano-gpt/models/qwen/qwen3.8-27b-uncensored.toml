@@ -1,0 +1,24 @@
+name = "Qwen 3.8 27B Uncensored"
+description = "Qwen 3.8 27B Uncensored is an FP8 open-weight multimodal model tuned for fewer refusals across chat, coding, tool use, and long-context work."
+family = "qwen"
+release_date = "2026-08-21"
+last_updated = "2026-08-21"
+attachment = true
+reasoning = false
+tool_call = true
+structured_output = true
+open_weights = true
+
+[cost]
+input = 0.18
+output = 0.5
+cache_read = 0.075
+
+[limit]
+context = 131_072
+input = 131_072
+output = 32_768
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

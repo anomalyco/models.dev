@@ -11,6 +11,7 @@ const REVIEWED_REASONING_PROVIDERS = new Set([
   "hyper",
   "kilo",
   "llmgateway",
+  "llmgateway-providers",
   "merge-gateway",
   "nano-gpt",
   "openrouter",
