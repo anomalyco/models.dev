@@ -2,6 +2,7 @@
 # Effort: reasoning.effort (top-level reasoning_effort is an alias)
 # Budget: reasoning.max_tokens (integer reasoning tokens)
 base_model = "moonshotai/kimi-k2.5"
+temperature = true
 
 [interleaved]
 field = "reasoning_details"
@@ -13,3 +14,6 @@ type = "toggle"
 input = 0.51273
 output = 2.56365
 cache_read = 0.079758
+
+[modalities]
+input = ["text", "image"]

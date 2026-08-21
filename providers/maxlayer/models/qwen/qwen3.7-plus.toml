@@ -2,6 +2,7 @@
 # Effort: reasoning.effort (top-level reasoning_effort is an alias)
 # Budget: reasoning.max_tokens (integer reasoning tokens)
 base_model = "alibaba/qwen3.7-plus"
+structured_output = true
 
 [[reasoning_options]]
 type = "toggle"
@@ -19,3 +20,6 @@ cache_write = 0.45576
 
 [limit]
 output = 131_072
+
+[modalities]
+input = ["text", "image"]

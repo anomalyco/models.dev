@@ -1,4 +1,5 @@
 base_model = "openai/o3-mini"
+attachment = true
 
 [[reasoning_options]]
 type = "effort"
@@ -8,3 +9,6 @@ values = ["low", "medium", "high"]
 input = 1.25334
 output = 5.01336
 cache_read = 0.62667
+
+[modalities]
+input = ["text", "pdf"]
