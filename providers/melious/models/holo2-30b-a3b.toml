@@ -1,0 +1,37 @@
+# Cost: Melious lists EUR; converted at 1.17 USD/EUR (ECB reference rate, captured 2026-08-20).
+# Sources: https://melious.ai/hub/models and
+# GET https://api.melious.ai/v1/models?include_meta=true
+# Weights: https://huggingface.co/Hcompany/Holo2-30B-A3B
+# limit.output: no published cap; max_tokens = 32_768 is accepted on
+# this host, verified against the live API (bisected to +/-1024).
+# Reasoning: the catalog calls this non_reasoning, but the live endpoint returns
+# chain-of-thought in message.reasoning_content, so it is recorded as a reasoner.
+# Effort: reasoning_effort = low|medium|high
+# (https://melious.ai/docs/reference/chat-completions). No off state: an explicit
+# "none" still returns reasoning, so this host exposes no toggle.
+# Reasoning text comes back in message.reasoning_content.
+name = "Holo2 30B A3B"
+description = "H Company Holo2 vision model for GUI navigation and computer-use agents"
+release_date = "2025-11-10"
+last_updated = "2025-11-10"
+attachment = true
+reasoning = true
+tool_call = true
+temperature = true
+open_weights = true
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
+
+[cost]
+input = 0.351
+output = 0.819
+
+[limit]
+context = 131_072
+output = 32_768
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[interleaved]
+field = "reasoning_content"

@@ -1,0 +1,18 @@
+# Cost: Melious lists EUR; converted at 1.17 USD/EUR (ECB reference rate, captured 2026-08-20).
+# Sources: https://melious.ai/hub/models and
+# GET https://api.melious.ai/v1/models?include_meta=true
+# limit.output: no published cap. Output shares a 131_072 window with
+# the prompt on this host - max_tokens is accepted up to that window minus the prompt,
+# bisected against the live API to +/-1024.
+# Attachment: image input verified live on this host with an image_url request.
+base_model = "mistral/mistral-small-2506"
+structured_output = true
+attachment = true
+
+[cost]
+input = 0.117
+output = 0.351
+
+[limit]
+context = 131_072
+output = 131_072

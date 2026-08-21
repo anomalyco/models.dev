@@ -1,0 +1,11 @@
+# Cost: Melious lists EUR; converted at 1.17 USD/EUR (ECB reference rate, captured 2026-08-20).
+# Sources: https://melious.ai/hub/models and
+# GET https://api.melious.ai/v1/models?include_meta=true
+base_model = "alibaba/qwen3-vl-235b-a22b-instruct"
+
+[cost]
+input = 0.234
+output = 2.106
+
+[limit]
+context = 131_000

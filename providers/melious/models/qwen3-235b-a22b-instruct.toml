@@ -1,0 +1,17 @@
+# Cost: Melious lists EUR; converted at 1.17 USD/EUR (ECB reference rate, captured 2026-08-20).
+# Sources: https://melious.ai/hub/models and
+# GET https://api.melious.ai/v1/models?include_meta=true
+# limit.output: no published cap. Output shares a 262_144 window with
+# the prompt on this host - max_tokens is accepted up to that window minus the prompt,
+# bisected against the live API to +/-1024.
+# cache_read: transparent prefix caching, reported back as usage.cached_tokens.
+base_model = "alibaba/qwen3-235b-a22b-instruct-2507"
+structured_output = true
+
+[cost]
+input = 0.0819
+cache_read = 0.0234
+output = 0.4914
+
+[limit]
+output = 262_144
