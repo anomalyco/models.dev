@@ -104,15 +104,36 @@ export const maxlayer = {
     const canonical = existing?.base_model ?? resolveCanonicalBaseModel(model.id);
     if (canonical === undefined) return undefined;
 
+    const translated = buildMaxlayerModel(model, canonical, existing);
     return {
       id: model.id,
-      model: buildMaxlayerModel(model, canonical, existing),
+      model: translated,
+      header: toggleHeader(translated),
     };
   },
 } satisfies SyncProvider<MaxlayerModel>;
 
 function isCatalogTarget(model: MaxlayerModel) {
   return model.billing_mode === "token" && model.category === "text";
+}
+
+// Every toggle needs the wire path on the file, and sync keeps only a leading
+// block. The controls are OpenRouter's because that is the API a Maxlayer
+// request reaches: the body is forwarded unchanged, so the field names a caller
+// sends here are the ones OpenRouter documents. A hand-written header on an
+// existing file always wins over this.
+const TOGGLE_HEADER = `# Reasoning is controlled with OpenRouter's fields — Maxlayer forwards the
+# request body unchanged.
+# Toggle: reasoning.enabled = true|false
+# Effort: reasoning.effort (top-level reasoning_effort is an alias)
+# Budget: reasoning.max_tokens (integer reasoning tokens)
+# https://openrouter.ai/docs/guides/best-practices/reasoning-tokens
+`;
+
+function toggleHeader(model: SyncedModel) {
+  return model.reasoning_options?.some((option) => option.type === "toggle")
+    ? TOGGLE_HEADER
+    : undefined;
 }
 
 /**
