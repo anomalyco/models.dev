@@ -2,7 +2,8 @@ base_model = "openai/o3-mini"
 attachment = true
 
 [[reasoning_options]]
-type = "toggle"
+type = "effort"
+values = ["low", "medium", "high"]
 
 [cost]
 input = 1.1

@@ -1,3 +1,4 @@
+reasoning_options = [{ type = "toggle" }, { type = "budget_tokens", min = 1, max = 81920 }]
 name = "Qwen3.5-Flash"
 description = "Qwen vision-language model for visual reasoning, documents, and agent tasks"
 family = "qwen"
@@ -9,9 +10,6 @@ temperature = true
 tool_call = true
 structured_output = true
 open_weights = false
-
-[[reasoning_options]]
-type = "toggle"
 
 [cost]
 input = 0.065

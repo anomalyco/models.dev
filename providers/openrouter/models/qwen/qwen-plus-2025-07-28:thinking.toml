@@ -12,7 +12,9 @@ knowledge = "2025-03-31"
 open_weights = false
 
 [[reasoning_options]]
-type = "toggle"
+type = "budget_tokens"
+min = 1
+max = 81_920
 
 [cost]
 input = 0.26

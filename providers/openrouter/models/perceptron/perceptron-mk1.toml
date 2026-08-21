@@ -1,3 +1,4 @@
+reasoning_options = []
 name = "Perceptron Mk1"
 description = "Multimodal reasoning model for visual analysis, planning, and tool use"
 release_date = "2026-05-12"
@@ -8,9 +9,6 @@ temperature = true
 tool_call = false
 structured_output = true
 open_weights = false
-
-[[reasoning_options]]
-type = "toggle"
 
 [cost]
 input = 0.15

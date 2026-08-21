@@ -1,3 +1,4 @@
+reasoning_options = []
 name = "Sonar Deep Research"
 description = "Sonar search model for current answers, retrieval, and citation-backed chat"
 family = "sonar-deep-research"
@@ -9,9 +10,6 @@ temperature = true
 tool_call = false
 structured_output = false
 open_weights = false
-
-[[reasoning_options]]
-type = "toggle"
 
 [cost]
 input = 2

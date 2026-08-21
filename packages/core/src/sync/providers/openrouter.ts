@@ -328,13 +328,6 @@ function openRouterReasoningOptions(reasoning: OpenRouterModel["reasoning"]): Sy
       type: "effort",
       values: reasoning.mandatory ? efforts.filter((value) => value !== "none") : [...efforts],
     });
-  } else if (!reasoning.mandatory) {
-    // Graded effort is not the only control. A model that publishes no efforts
-    // and no budget still answers to `reasoning.enabled` whenever reasoning is
-    // not mandatory, so it has an on/off switch and the file should say so.
-    // Reading only the effort branch left these as `reasoning_options = []`,
-    // which asserts the opposite: that a caller has no control at all.
-    options.push({ type: "toggle" });
   }
 
   if (reasoning.supports_max_tokens === true) {

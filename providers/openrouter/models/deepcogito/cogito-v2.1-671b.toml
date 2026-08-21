@@ -1,3 +1,4 @@
+reasoning_options = []
 name = "Cogito v2.1 671B"
 description = "Reasoning model for deliberate analysis, multi-step problem solving, and tool use"
 family = "cogito"
@@ -9,9 +10,6 @@ temperature = true
 tool_call = false
 structured_output = true
 open_weights = false
-
-[[reasoning_options]]
-type = "toggle"
 
 [cost]
 input = 1.25
