@@ -1,6 +1,10 @@
+# Toggle wire path: the Portal relays third-party models through OpenRouter, so
+# reasoning is controlled via OpenRouter's reasoning.budget_tokens field.
 base_model = "meituan/longcat-2.0"
 name = "LongCat-2.0 (free)"
-reasoning_options = [{ type = "toggle" }]
+
+[[reasoning_options]]
+type = "budget_tokens"
 
 [cost]
 input = 0
