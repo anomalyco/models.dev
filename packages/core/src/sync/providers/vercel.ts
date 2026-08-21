@@ -70,13 +70,15 @@ export const vercel = {
   },
   translateModel(model, context) {
     const existing = context.existing(model.id);
-    const baseModel = existing?.base_model ?? resolveCanonicalBaseModel(model.id);
+    const routeBase = freeRouteBase(model.id);
+    const baseModel = existing?.base_model ?? resolveVercelBaseModel(model.id);
+    const inherited = routeBase === undefined ? undefined : context.existing(routeBase);
     return {
       id: model.id,
       model: buildVercelModel(
         model,
         existing,
-        baseModel === undefined || baseModel === model.id ? undefined : context.existing(baseModel),
+        inherited ?? (baseModel === undefined || baseModel === model.id ? undefined : context.existing(baseModel)),
       ),
     };
   },
@@ -178,7 +180,7 @@ export function buildVercelModel(
     },
   };
 
-  const baseModel = existing?.base_model ?? resolveCanonicalBaseModel(model.id);
+  const baseModel = existing?.base_model ?? resolveVercelBaseModel(model.id);
   if (baseModel === undefined) return synced;
 
   return factorBaseModel(baseModel, {
@@ -197,6 +199,16 @@ export function buildVercelModel(
     limit: synced.limit,
     modalities: synced.modalities,
   }, synced.limit, existing?.base_model_omit);
+}
+
+function resolveVercelBaseModel(modelID: string) {
+  const routeBase = freeRouteBase(modelID);
+  return resolveCanonicalBaseModel(modelID)
+    ?? (routeBase === undefined ? undefined : resolveCanonicalBaseModel(routeBase));
+}
+
+function freeRouteBase(modelID: string) {
+  return modelID.endsWith("-free") ? modelID.slice(0, -"-free".length) : undefined;
 }
 
 function dateFromTimestamp(timestamp: number) {

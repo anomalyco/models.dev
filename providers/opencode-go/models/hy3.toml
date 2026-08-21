@@ -1,10 +1,11 @@
 base_model = "tencent/hy3"
+name = "Hy3 (8x usage)"
 
 [[reasoning_options]]
 type = "effort"
 values = ["none", "low", "high"]
 
 [cost]
-input = 0.14
-output = 0.58
-cache_read = 0.035
+input = 0.0175
+output = 0.0725
+cache_read = 0.004375

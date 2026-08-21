@@ -1,0 +1,11 @@
+base_model = "alibaba/qwen3.6-35b-a3b"
+name = "Qwen3.6 35B A3B (Alibaba Cloud)"
+structured_output = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"]
+
+[cost]
+input = 0.248
+output = 1.485

@@ -3,7 +3,6 @@
 # https://openrouter.ai/api/v1/models/meta/muse-glimmer-30b/endpoints
 # Effort: reasoning_effort = low|medium|high|xhigh
 # https://huggingface.co/meta-models/Muse-Glimmer-30B
-
 base_model = "meta/muse-glimmer-30b"
 
 [[reasoning_options]]
@@ -11,6 +10,6 @@ type = "effort"
 values = ["low", "medium", "high", "xhigh"]
 
 [cost]
-input = 0.35
-output = 1.5
+input = 0.3
+output = 1.1
 cache_read = 0.04

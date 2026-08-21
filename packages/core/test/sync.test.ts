@@ -10,7 +10,7 @@ import {
   parseAnthropicPricing,
   type AnthropicModel,
 } from "../src/sync/providers/anthropic.js";
-import { buildCortecsModel, type CortecsModel } from "../src/sync/providers/cortecs.js";
+import { buildCortecsModel, cortecs, type CortecsModel } from "../src/sync/providers/cortecs.js";
 import {
   buildCrossModel,
   CrossModelResponse,
@@ -56,7 +56,13 @@ import {
   resolveCanonicalBaseModel,
   type OpenRouterModel,
 } from "../src/sync/providers/openrouter.js";
-import { buildLLMGatewayModel, type LLMGatewayModel } from "../src/sync/providers/llmgateway.js";
+import {
+  buildLLMGatewayMappedModel,
+  buildLLMGatewayModel,
+  llmgateway,
+  llmgatewayProviders,
+  type LLMGatewayModel,
+} from "../src/sync/providers/llmgateway.js";
 import {
   buildMergeGatewayModel,
   fetchMergeGatewayModels,
@@ -465,6 +471,46 @@ test("parses CrossModel's nullable reasoning controls", () => {
     effort: undefined,
     budget_tokens: undefined,
   });
+});
+
+test("syncs CrossModel's explicit reasoning controls", () => {
+  const model = buildCrossModel(
+    crossModelModel({
+      capabilities: {
+        json: true,
+        reasoning: {
+          supported: true,
+          toggle: true,
+          effort: ["low", "high", "max"],
+          budget_tokens: { min: 1_024, max: 32_000 },
+        },
+      },
+    }),
+    undefined,
+  );
+
+  expect(model).toMatchObject({
+    reasoning_options: [
+      { type: "toggle" },
+      { type: "effort", values: ["low", "high", "max"] },
+      { type: "budget_tokens", min: 1_024, max: 32_000 },
+    ],
+  });
+});
+
+test("rejects unknown CrossModel reasoning efforts", () => {
+  expect(() =>
+    CrossModelResponse.parse({
+      data: [
+        {
+          ...crossModelModel(),
+          capabilities: {
+            reasoning: { supported: true, effort: ["unexpected"] },
+          },
+        },
+      ],
+    })
+  ).toThrow();
 });
 
 test("syncs NanoGPT's verified reasoning, pricing, limits, and open-weight metadata", () => {
@@ -2635,6 +2681,27 @@ test("defaults new reasoning models to empty reasoning options", () => {
   });
 });
 
+test("inherits base reasoning options instead of stamping empty ones", () => {
+  expect(preserveReasoningOptions({ reasoning: true }, undefined, undefined, [{ type: "toggle" }]))
+    .toEqual({ reasoning: true });
+});
+
+test("normalizes Cortecs file modalities to pdf", () => {
+  const [model] = cortecs.parseModels({
+    object: "list",
+    data: [{
+      id: "document-model",
+      created: 1_775_088_000,
+      pricing: { currency: "EUR", input_token: 1, output_token: 2 },
+      context_size: 65_536,
+      input_modalities: ["text", "file"],
+      output_modalities: ["text"],
+    }],
+  });
+
+  expect(model.input_modalities).toEqual(["text", "pdf"]);
+});
+
 test("preserves authored Cortecs reasoning options missing from the API", () => {
   const model: CortecsModel = {
     id: "deepseek-v4-flash-0731",
@@ -2965,6 +3032,52 @@ test("factors aliased LLM Gateway routes against canonical metadata", () => {
   });
 });
 
+test("factors mapped LLM Gateway entries against the root model metadata", () => {
+  const model = buildLLMGatewayMappedModel(llmGatewayMappedModel(), undefined);
+
+  expect(model).toEqual({
+    base_model: "anthropic/claude-fable-5",
+    name: "Claude Fable 5 (Anthropic)",
+    reasoning_options: [{ type: "effort", values: ["low", "medium", "high", "xhigh", "max"] }],
+    structured_output: true,
+    cost: {
+      input: 10,
+      output: 50,
+      cache_read: 1,
+      cache_write: 12.5,
+    },
+  });
+});
+
+test("applies deployment capability flags on mapped factored entries", () => {
+  const model = buildLLMGatewayMappedModel(llmGatewayMappedModel({
+    providers: [{ providerId: "anthropic", vision: false, tools: false, reasoning: false }],
+    architecture: { input_modalities: ["text"], output_modalities: ["text"] },
+    max_output: 64_000,
+  }), undefined);
+
+  expect(model).toEqual({
+    base_model: "anthropic/claude-fable-5",
+    name: "Claude Fable 5 (Anthropic)",
+    attachment: false,
+    reasoning: false,
+    tool_call: false,
+    structured_output: true,
+    modalities: {
+      input: ["text"],
+    },
+    limit: {
+      output: 64_000,
+    },
+    cost: {
+      input: 10,
+      output: 50,
+      cache_read: 1,
+      cache_write: 12.5,
+    },
+  });
+});
+
 test("factors Grok LLM Gateway routes against xAI metadata", () => {
   const model = buildLLMGatewayModel(llmGatewayModel({
     id: "grok-4-6",
@@ -2986,6 +3099,339 @@ test("factors Grok LLM Gateway routes against xAI metadata", () => {
       cache_read: 0.5,
     },
   });
+});
+
+test("prefers the gateway max_output over authored output on mapped resyncs", () => {
+  const model = buildLLMGatewayMappedModel(llmGatewayMappedModel({ max_output: 32_000 }), {
+    base_model: "anthropic/claude-fable-5",
+    name: "Claude Fable 5 (Anthropic)",
+    description: "Claude Fable 5 served by Anthropic",
+    limit: { output: 64_000 },
+  });
+
+  expect(model).toEqual({
+    base_model: "anthropic/claude-fable-5",
+    name: "Claude Fable 5 (Anthropic)",
+    description: "Claude Fable 5 served by Anthropic",
+    reasoning_options: [{ type: "effort", values: ["low", "medium", "high", "xhigh", "max"] }],
+    structured_output: true,
+    limit: {
+      output: 32_000,
+    },
+    cost: {
+      input: 10,
+      output: 50,
+      cache_read: 1,
+      cache_write: 12.5,
+    },
+  });
+});
+
+test("translates a none-only effort list into a reasoning toggle", () => {
+  const model = buildLLMGatewayMappedModel(llmGatewayMappedModel({
+    providers: [{ providerId: "anthropic", vision: true, tools: true, reasoning: true, reasoning_efforts: ["none"] }],
+  }), undefined);
+
+  expect(model).toMatchObject({
+    base_model: "anthropic/claude-fable-5",
+    reasoning_options: [{ type: "toggle" }],
+  });
+});
+
+test("realigns capability flags from the mapping on mapped factored resyncs", () => {
+  // The deployment dropped reasoning and gained tools since the file was
+  // written: the resync must move the booleans and the reasoning controls
+  // together instead of clearing options under a frozen reasoning = true.
+  const model = buildLLMGatewayMappedModel(llmGatewayMappedModel({
+    providers: [{ providerId: "anthropic", vision: true, tools: true, reasoning: false }],
+  }), {
+    base_model: "anthropic/claude-fable-5",
+    name: "Claude Fable 5 (Anthropic)",
+    reasoning: true,
+    reasoning_options: [{ type: "toggle" }],
+    tool_call: false,
+  });
+
+  expect(model).toMatchObject({ reasoning: false });
+  expect(model!.reasoning_options).toBeUndefined();
+  // Realigned to the mapping and now equal to the base, the stale
+  // tool_call = false override is dropped and inherits the base again.
+  expect(model!.tool_call).toBeUndefined();
+});
+
+test("restores image input when vision returns on mapped resyncs", () => {
+  // The file was written while the deployment had no vision (text-only
+  // stripped modalities); vision is back, so the stale override must clear.
+  const factored = buildLLMGatewayMappedModel(llmGatewayMappedModel(), {
+    base_model: "anthropic/claude-fable-5",
+    name: "Claude Fable 5 (Anthropic)",
+    attachment: false,
+    modalities: { input: ["text"] },
+  });
+  expect(factored!.modalities).toBeUndefined();
+  expect(factored!.attachment).toBeUndefined();
+
+  const full = buildLLMGatewayMappedModel(llmGatewayMappedModel({
+    id: "acme/mystery-model",
+    name: "Mystery Model (Acme)",
+    family: undefined,
+    providers: [{ providerId: "acme", vision: true, tools: true, reasoning: false }],
+  }), {
+    name: "Mystery Model (Acme)",
+    attachment: false,
+    modalities: { input: ["text"], output: ["text"] },
+  });
+  expect(full).toMatchObject({
+    attachment: true,
+    modalities: { input: ["text", "image"], output: ["text"] },
+  });
+});
+
+test("never synthesizes a description on mapped factored resyncs", () => {
+  const model = buildLLMGatewayMappedModel(llmGatewayMappedModel(), {
+    base_model: "anthropic/claude-fable-5",
+    name: "Claude Fable 5 (Anthropic)",
+  });
+
+  // An unset description must keep inheriting the base's lab text instead of
+  // being stamped with a sticky synthesized override on the first resync.
+  expect(model).toBeDefined();
+  expect(model!.description).toBeUndefined();
+});
+
+test("authors the toggle wire-path header on mapped sync creates", () => {
+  const context = { existing: () => undefined, authored: () => undefined };
+
+  const toggle = llmgatewayProviders.translateModel(llmGatewayMappedModel({
+    providers: [{ providerId: "anthropic", vision: true, tools: true, reasoning: true, reasoning_efforts: ["none"] }],
+  }), context);
+  expect(toggle?.header).toStartWith("# Toggle: $.reasoning_effort");
+
+  const effort = llmgatewayProviders.translateModel(llmGatewayMappedModel(), context);
+  expect(effort?.model).toMatchObject({
+    reasoning_options: [{ type: "effort", values: ["low", "medium", "high", "xhigh", "max"] }],
+  });
+  expect(effort?.header).toBeUndefined();
+});
+
+test("keeps inheriting base output on factored resyncs without max_output", () => {
+  const model = buildLLMGatewayMappedModel(llmGatewayMappedModel({ max_output: undefined }), {
+    base_model: "anthropic/claude-fable-5",
+    name: "Claude Fable 5 (Anthropic)",
+    description: "Claude Fable 5 served by Anthropic",
+  });
+
+  expect(model).toEqual({
+    base_model: "anthropic/claude-fable-5",
+    name: "Claude Fable 5 (Anthropic)",
+    description: "Claude Fable 5 served by Anthropic",
+    reasoning_options: [{ type: "effort", values: ["low", "medium", "high", "xhigh", "max"] }],
+    structured_output: true,
+    cost: {
+      input: 10,
+      output: 50,
+      cache_read: 1,
+      cache_write: 12.5,
+    },
+  });
+});
+
+test("skips unfactorable LLM Gateway creates without a served context", () => {
+  // Unknown family, so no canonical base to inherit a context from.
+  const mapped = buildLLMGatewayMappedModel(llmGatewayMappedModel({
+    id: "acme/mystery-model",
+    name: "Mystery Model (Acme)",
+    family: undefined,
+    context_length: undefined,
+  }), undefined);
+  expect(mapped).toBeUndefined();
+
+  const aggregated = buildLLMGatewayModel(llmGatewayModel({
+    id: "mystery-model",
+    name: "Mystery Model",
+    family: undefined,
+    context_length: undefined,
+  }), undefined);
+  expect(aggregated).toBeUndefined();
+});
+
+test("keeps curated budget controls under deployment efforts", () => {
+  // Deployment efforts own only the effort/toggle surface: the hand-authored
+  // budget_tokens control (this host's $.reasoning.max_tokens path) survives
+  // the resync, while the stale effort list is replaced.
+  const model = buildLLMGatewayMappedModel(llmGatewayMappedModel(), {
+    base_model: "anthropic/claude-fable-5",
+    name: "Claude Fable 5 (Anthropic)",
+    reasoning_options: [
+      { type: "effort", values: ["low", "high"] },
+      { type: "budget_tokens", min: 1_024, max: 63_999 },
+    ],
+  });
+  expect(model!.reasoning_options).toEqual([
+    { type: "budget_tokens", min: 1_024, max: 63_999 },
+    { type: "effort", values: ["low", "medium", "high", "xhigh", "max"] },
+  ]);
+
+  // Same merge on creates, with the budget coming from the aggregated
+  // sibling's curation for the same root model.
+  const seeded = buildLLMGatewayMappedModel(llmGatewayMappedModel({
+    id: "anthropic/claude-sonnet-4-6",
+    name: "Claude Sonnet 4.6 (Anthropic)",
+  }), undefined);
+  expect(seeded!.reasoning_options).toEqual([
+    { type: "budget_tokens", min: 1_024, max: 63_999 },
+    { type: "effort", values: ["low", "medium", "high", "xhigh", "max"] },
+  ]);
+});
+
+test("seeds context pricing tiers from the aggregated sibling on creates", () => {
+  // The gateway API carries no tier pricing; without the sibling's curated
+  // tiers the bulk sync would author tiered models at flat long-context rates.
+  const model = buildLLMGatewayMappedModel(llmGatewayMappedModel({
+    id: "openai/gpt-5.5",
+    name: "GPT-5.5 (OpenAI)",
+    family: "openai",
+  }), undefined);
+
+  expect(model!.cost?.tiers).toEqual([
+    { tier: { type: "context", size: 272_000 }, input: 10, output: 45, cache_read: 1 },
+  ]);
+});
+
+test("factors perplexity entries without widening the shared prefix map", () => {
+  // The perplexity family resolves through resolveModelMetadataBaseModel's
+  // exact models/ path match; CANONICAL_PROVIDER_PREFIXES stays untouched so
+  // other hosts' standalone perplexity files keep their current behavior.
+  const model = buildLLMGatewayMappedModel(llmGatewayMappedModel({
+    id: "perplexity/sonar-pro",
+    name: "Sonar Pro (Perplexity)",
+    family: "perplexity",
+  }), undefined);
+
+  expect(model).toMatchObject({ base_model: "perplexity/sonar-pro" });
+});
+
+test("refuses to author a zero context on full LLM Gateway resyncs", () => {
+  // Existing full rows (no base to inherit from) with nothing usable from the
+  // API or the file must fail loudly instead of being rewritten with
+  // limit.context = 0.
+  expect(() => buildLLMGatewayMappedModel(llmGatewayMappedModel({
+    context_length: undefined,
+    max_output: undefined,
+  }), {
+    name: "Claude Fable 5 (Anthropic)",
+  })).toThrow("no usable context");
+
+  // An authored 0 on disk is as unusable as an absent context.
+  expect(() => buildLLMGatewayMappedModel(llmGatewayMappedModel({
+    context_length: 0,
+    max_output: undefined,
+  }), {
+    name: "Claude Fable 5 (Anthropic)",
+    limit: { context: 0 },
+  })).toThrow("no usable context");
+
+  expect(() => buildLLMGatewayModel(llmGatewayModel({
+    context_length: undefined,
+  }), {
+    name: "Claude Fable 5",
+  })).toThrow("no usable context");
+});
+
+test("leaves context unset on mapped factored creates without a served context", () => {
+  const model = buildLLMGatewayMappedModel(llmGatewayMappedModel({
+    context_length: undefined,
+    max_output: undefined,
+  }), undefined);
+
+  // Everything limit-related inherits from the base; no zero is authored.
+  expect(model).toBeDefined();
+  expect("limit" in model!).toBe(false);
+});
+
+test("strips image input when the deployment has no vision", () => {
+  // The model-level architecture still claims image input; the deployment
+  // flag must win on both the factored and the unfactored path.
+  const factored = buildLLMGatewayMappedModel(llmGatewayMappedModel({
+    providers: [{ providerId: "anthropic", vision: false, tools: true, reasoning: false }],
+  }), undefined);
+  expect(factored).toMatchObject({
+    base_model: "anthropic/claude-fable-5",
+    attachment: false,
+    modalities: { input: ["text"] },
+  });
+
+  const full = buildLLMGatewayMappedModel(llmGatewayMappedModel({
+    id: "acme/mystery-model",
+    name: "Mystery Model (Acme)",
+    family: undefined,
+    providers: [{ providerId: "acme", vision: false, tools: true, reasoning: false }],
+  }), undefined);
+  expect(full).toMatchObject({
+    attachment: false,
+    modalities: { input: ["text"], output: ["text"] },
+  });
+});
+
+test("refuses empty responses in both LLM Gateway syncs", () => {
+  expect(() => llmgateway.parseModels({ data: [] })).toThrow("no text models");
+  expect(() => llmgatewayProviders.parseModels({ data: [] })).toThrow("mapped view unavailable");
+});
+
+test("refuses aggregated responses in the mapped LLM Gateway sync", () => {
+  expect(() => llmgatewayProviders.parseModels({ data: [llmGatewayModel()] }))
+    .toThrow("mapped view unavailable");
+});
+
+test("filters pseudo and non-text entries from the mapped LLM Gateway sync", () => {
+  const parsed = llmgatewayProviders.parseModels({
+    data: [
+      llmGatewayMappedModel(),
+      llmGatewayMappedModel({ id: "llmgateway/auto", name: "Auto Route (LLM Gateway)" }),
+      llmGatewayMappedModel({
+        id: "openai/sora-2",
+        name: "Sora 2 (OpenAI)",
+        architecture: { input_modalities: ["text"], output_modalities: ["video"] },
+      }),
+    ],
+  });
+
+  expect(parsed.map((model) => model.id)).toEqual(["anthropic/claude-fable-5"]);
+});
+
+test("refuses mapped LLM Gateway entries without exactly one provider mapping", () => {
+  expect(() => llmgatewayProviders.parseModels({
+    data: [llmGatewayMappedModel({ providers: undefined })],
+  })).toThrow("without exactly one provider mapping");
+
+  expect(() => llmgatewayProviders.parseModels({
+    data: [llmGatewayMappedModel({ providers: [] })],
+  })).toThrow("without exactly one provider mapping");
+
+  expect(() => llmgatewayProviders.parseModels({
+    data: [
+      llmGatewayMappedModel(),
+      llmGatewayMappedModel({
+        id: "azure/gpt-5.5",
+        name: "GPT-5.5 (Azure)",
+        providers: [{ providerId: "azure" }, { providerId: "openai" }],
+      }),
+    ],
+  })).toThrow("azure/gpt-5.5");
+
+  // Entries the sync drops anyway (pseudo-models, non-text) may lack a
+  // mapping without tripping the guard.
+  const parsed = llmgatewayProviders.parseModels({
+    data: [
+      llmGatewayMappedModel(),
+      llmGatewayMappedModel({
+        id: "llmgateway/auto",
+        name: "Auto Route (LLM Gateway)",
+        providers: undefined,
+      }),
+    ],
+  });
+  expect(parsed.map((model) => model.id)).toEqual(["anthropic/claude-fable-5"]);
 });
 
 // Ensures catalog pagination preserves authentication and returns every page.
@@ -3541,6 +3987,44 @@ test("Vercel factored models inherit temperature from base metadata", () => {
   expect(synced).not.toHaveProperty("temperature");
 });
 
+test("Vercel free routes factor onto the canonical non-free model", () => {
+  const [model] = vercel.parseModels({
+    data: [{
+      id: "zai/glm-4.6v-flash-free",
+      name: "GLM-4.6V-Flash (Free)",
+      created: 1_765_152_000,
+      released: 1_765_152_000,
+      context_window: 128_000,
+      max_tokens: 24_000,
+      type: "language",
+      tags: ["reasoning", "tool-use", "vision", "file-input"],
+      pricing: { input: "0", output: "0" },
+    }],
+  });
+
+  const translated = vercel.translateModel(model!, {
+    existing(id) {
+      return id === "zai/glm-4.6v-flash"
+        ? { reasoning_options: [{ type: "toggle" }] }
+        : undefined;
+    },
+    authored() {
+      return undefined;
+    },
+  });
+
+  expect(translated?.model).toMatchObject({
+    base_model: "zhipuai/glm-4.6v-flash",
+    name: "GLM-4.6V-Flash (Free)",
+    reasoning_options: [{ type: "toggle" }],
+    cost: { input: 0, output: 0 },
+    limit: { output: 24_000 },
+    modalities: { input: ["text", "image", "pdf"] },
+  });
+  expect(translated?.model).not.toHaveProperty("description");
+  expect(translated?.model).not.toHaveProperty("family");
+});
+
 test("Vercel Claude Opus fast variants factor onto base opus metadata", () => {
   const [model] = vercel.parseModels({
     data: [{
@@ -3817,6 +4301,22 @@ function llmGatewayModel(overrides: Partial<LLMGatewayModel> = {}): LLMGatewayMo
     structured_outputs: true,
     ...overrides,
   };
+}
+
+function llmGatewayMappedModel(overrides: Partial<LLMGatewayModel> = {}): LLMGatewayModel {
+  return llmGatewayModel({
+    id: "anthropic/claude-fable-5",
+    name: "Claude Fable 5 (Anthropic)",
+    providers: [{
+      providerId: "anthropic",
+      vision: true,
+      tools: true,
+      reasoning: true,
+      reasoning_efforts: ["low", "medium", "high", "xhigh", "max"],
+    }],
+    max_output: 128_000,
+    ...overrides,
+  });
 }
 
 function mergeGatewayVendor(

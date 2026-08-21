@@ -1,0 +1,16 @@
+base_model = "alibaba/qwen3.8-max"
+name = "Qwen3.8 Max (SCX.ai)"
+structured_output = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "xhigh"]
+
+[[reasoning_options]]
+type = "budget_tokens"
+
+[cost]
+input = 1.815
+output = 5.4461
+cache_read = 0.21
+cache_write = 2.5

@@ -1,0 +1,14 @@
+# Source: https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-xai-grok-4-6.html
+base_model = "xai/grok-4.6"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh"] }]
+last_updated = "2026-08-18"
+
+[cost]
+input = 2.20
+output = 6.60
+cache_read = 0.55
+
+[provider]
+npm = "@ai-sdk/amazon-bedrock/mantle"
+api = "https://bedrock-mantle.${AWS_REGION}.api.aws/openai/v1"
+shape = "responses"

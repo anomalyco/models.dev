@@ -1,0 +1,16 @@
+base_model = "alibaba/qwen3.7-plus"
+name = "Qwen3.7 Plus (Alibaba Cloud)"
+structured_output = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"]
+
+[cost]
+input = 0.4
+output = 1.6
+cache_read = 0.08
+cache_write = 0.5
+
+[limit]
+output = 65_536

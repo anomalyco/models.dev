@@ -5,9 +5,12 @@
 # - https://docs.z.ai/devpack/latest-model (effective effort levels: low|high|max; default max)
 # Effort: reasoning_effort = low|high|max (thinking always on; disable maps to low)
 base_model = "zhipuai/glm-5.3"
-reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
 
 [cost]
-input = 1.4
-output = 4.4
-cache_read = 0.26
+input = 1.26
+output = 3.96
+cache_read = 0.234
