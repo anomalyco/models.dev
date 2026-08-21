@@ -1,6 +1,5 @@
 base_model = "alibaba/qwen3.8-max"
 name = "Qwen3.8-2.4T-A95B"
-attachment = false
 
 [[reasoning_options]]
 type = "effort"
@@ -16,4 +15,4 @@ context = 262_144
 output = 262_144
 
 [modalities]
-input = ["text"]
+input = ["text", "image", "video"]
