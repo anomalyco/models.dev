@@ -1,0 +1,23 @@
+# https://api-docs.deepseek.com/
+# https://api-docs.deepseek.com/quick_start/pricing/
+# https://api-docs.deepseek.com/guides/vision
+name = "DeepSeek V4 Flash Vision Exp"
+description = "Experimental multimodal DeepSeek V4 Flash variant with image understanding; text capabilities match V4 Flash on a 1M-token context"
+family = "deepseek-flash"
+release_date = "2026-08-21"
+last_updated = "2026-08-21"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = true
+knowledge = "2025-05"
+open_weights = false
+
+[limit]
+context = 1_000_000
+output = 384_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
