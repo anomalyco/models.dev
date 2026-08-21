@@ -1,5 +1,10 @@
+# Toggle: reasoning.enabled = true|false
+# Effort: reasoning.effort (top-level reasoning_effort is an alias)
+# Budget: reasoning.max_tokens (integer reasoning tokens)
 base_model = "openai/o1-pro"
-reasoning_options = []
+
+[[reasoning_options]]
+type = "toggle"
 
 [cost]
 input = 170.91

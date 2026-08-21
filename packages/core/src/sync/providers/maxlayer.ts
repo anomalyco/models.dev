@@ -230,7 +230,12 @@ export function buildMaxlayerModel(
         cache_write: price(model.pricing?.cache_write_per_million_tokens),
       },
       limit,
-      reasoning_options: existing?.reasoning_options ?? sibling.reasoning_options,
+      // An empty array is what the runner backfills when nothing supplied
+      // controls, not something anyone authored, so it must not outrank a
+      // sibling that has since learned the real ones.
+      reasoning_options: existing?.reasoning_options?.length
+        ? existing.reasoning_options
+        : sibling.reasoning_options,
       interleaved: existing?.interleaved ?? sibling.interleaved,
     },
     limit,

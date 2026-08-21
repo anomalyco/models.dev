@@ -1,8 +1,13 @@
+# Toggle: reasoning.enabled = true|false
+# Effort: reasoning.effort (top-level reasoning_effort is an alias)
+# Budget: reasoning.max_tokens (integer reasoning tokens)
 base_model = "moonshotai/kimi-k2.5"
-reasoning_options = []
 
 [interleaved]
 field = "reasoning_details"
+
+[[reasoning_options]]
+type = "toggle"
 
 [cost]
 input = 0.51273
