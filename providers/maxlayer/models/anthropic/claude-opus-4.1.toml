@@ -1,0 +1,15 @@
+base_model = "anthropic/claude-opus-4-1"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "budget_tokens"
+min = 1_024
+max = 31_999
+
+[cost]
+input = 17.091
+output = 85.455
+cache_read = 1.7091
+cache_write = 21.36375

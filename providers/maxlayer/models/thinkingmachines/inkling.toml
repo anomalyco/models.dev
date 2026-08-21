@@ -1,0 +1,13 @@
+base_model = "thinkingmachines/inkling"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "minimal", "low", "medium", "high", "max"]
+
+[cost]
+input = 1.08243
+output = 4.61457
+cache_read = 0.182304
+
+[limit]
+output = 262_144

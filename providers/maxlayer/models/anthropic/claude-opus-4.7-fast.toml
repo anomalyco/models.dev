@@ -1,0 +1,14 @@
+base_model = "anthropic/claude-opus-4-7"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high", "xhigh", "max"]
+
+[cost]
+input = 34.182
+output = 170.91
+cache_read = 3.4182
+cache_write = 42.7275

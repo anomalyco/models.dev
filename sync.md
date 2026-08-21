@@ -17,6 +17,7 @@ The grouped sync targets are available for local convenience, but CI syncs each 
 - `bun models:sync digitalocean` syncs only DigitalOcean.
 - `bun models:sync xai` syncs only xAI.
 - `bun models:sync kilo` syncs only Kilo.
+- `bun models:sync maxlayer` syncs only Maxlayer.
 - `bun models:sync merge-gateway` syncs only Merge Gateway.
 - `bun models:sync openai` syncs only OpenAI catalog availability.
 - `bun models:sync tinfoil` syncs only Tinfoil.

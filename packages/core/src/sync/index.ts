@@ -22,6 +22,7 @@ import { huggingface } from "./providers/huggingface.js";
 import { inceptron } from "./providers/inceptron.js";
 import { kilo } from "./providers/kilo.js";
 import { llmgateway, llmgatewayProviders } from "./providers/llmgateway.js";
+import { maxlayer } from "./providers/maxlayer.js";
 import { mergeGateway } from "./providers/merge-gateway.js";
 import { nanoGpt } from "./providers/nano-gpt.js";
 import { openai } from "./providers/openai.js";
@@ -142,6 +143,7 @@ export const providers: {
   kilo: SyncProvider<any>;
   llmgateway: SyncProvider<any>;
   "llmgateway-providers": SyncProvider<any>;
+  maxlayer: SyncProvider<any>;
   "merge-gateway": SyncProvider<any>;
   "nano-gpt": SyncProvider<any>;
   ofox: SyncProvider<any>;
@@ -174,6 +176,7 @@ export const providers: {
   kilo,
   llmgateway,
   "llmgateway-providers": llmgatewayProviders,
+  maxlayer,
   "merge-gateway": mergeGateway,
   "nano-gpt": nanoGpt,
   ofox,
@@ -199,6 +202,7 @@ export const groups = {
     "kilo",
     "llmgateway",
     "llmgateway-providers",
+    "maxlayer",
     "merge-gateway",
     "nano-gpt",
     "ofox",

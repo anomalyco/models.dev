@@ -1,0 +1,13 @@
+base_model = "nvidia/nemotron-3.5-lightning"
+
+[[reasoning_options]]
+type = "toggle"
+
+[cost]
+input = 0.091152
+output = 0.22788
+cache_read = 0.045576
+
+[limit]
+context = 1_000_000
+output = 131_072

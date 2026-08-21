@@ -1,0 +1,10 @@
+name = "Maxlayer"
+env = ["MAXLAYER_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+# Maxlayer publishes no SDK of its own; the endpoint is OpenAI-compatible and
+# documented against the `openai` client with `base_url` pointed here.
+# Routes: POST /v1/chat/completions, /v1/embeddings, /v1/images, /v1/videos,
+# and GET /v1/models (unauthenticated). No /v1/responses or /messages.
+# Keys are organization keys prefixed `mxl_`, sent as `Authorization: Bearer`.
+api = "https://inference.maxlayer.cloud/v1"
+doc = "https://maxlayer.cloud/docs/inference"
