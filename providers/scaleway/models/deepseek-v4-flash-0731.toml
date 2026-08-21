@@ -4,8 +4,7 @@ base_model = "deepseek/deepseek-v4-flash-0731"
 reasoning_options = [{ type = "effort", values = ["none", "low", "high", "max"] }]
 status = "beta"
 
-[interleaved]
-field = "reasoning"
+interleaved = true
 
 [cost]
 # Scaleway pricing: https://www.scaleway.com/en/pricing/model-as-a-service/ (accessed 2026-08-21)
@@ -15,6 +14,7 @@ field = "reasoning"
 # chain-of-thought in `reasoning` and counts it inside completion_tokens.
 input = 0.468
 output = 0.936
+reasoning = 0.936
 cache_read = 0.0936
 
 [limit]
