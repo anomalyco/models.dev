@@ -1,13 +1,8 @@
-# Toggle: reasoning.enabled = true|false
-# Effort: reasoning.effort (top-level reasoning_effort is an alias)
-# Budget: reasoning.max_tokens (integer reasoning tokens)
 base_model = "zhipuai/glm-5.1"
+reasoning_options = []
 
 [interleaved]
 field = "reasoning_content"
-
-[[reasoning_options]]
-type = "toggle"
 
 [cost]
 input = 1.100661
