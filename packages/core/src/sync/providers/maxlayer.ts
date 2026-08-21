@@ -118,16 +118,12 @@ function isCatalogTarget(model: MaxlayerModel) {
 }
 
 // Every toggle needs the wire path on the file, and sync keeps only a leading
-// block. The controls are OpenRouter's because that is the API a Maxlayer
-// request reaches: the body is forwarded unchanged, so the field names a caller
-// sends here are the ones OpenRouter documents. A hand-written header on an
-// existing file always wins over this.
-const TOGGLE_HEADER = `# Reasoning is controlled with OpenRouter's fields — Maxlayer forwards the
-# request body unchanged.
-# Toggle: reasoning.enabled = true|false
+// block. Just the fields: what a caller sends is the catalog's business, where
+// the request goes after that is not. A hand-written header on an existing file
+// always wins over this.
+const TOGGLE_HEADER = `# Toggle: reasoning.enabled = true|false
 # Effort: reasoning.effort (top-level reasoning_effort is an alias)
 # Budget: reasoning.max_tokens (integer reasoning tokens)
-# https://openrouter.ai/docs/guides/best-practices/reasoning-tokens
 `;
 
 function toggleHeader(model: SyncedModel) {

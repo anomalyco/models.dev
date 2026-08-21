@@ -1,9 +1,6 @@
-# Reasoning is controlled with OpenRouter's fields — Maxlayer forwards the
-# request body unchanged.
 # Toggle: reasoning.enabled = true|false
 # Effort: reasoning.effort (top-level reasoning_effort is an alias)
 # Budget: reasoning.max_tokens (integer reasoning tokens)
-# https://openrouter.ai/docs/guides/best-practices/reasoning-tokens
 base_model = "alibaba/qwen3.5-9b"
 
 [[reasoning_options]]
