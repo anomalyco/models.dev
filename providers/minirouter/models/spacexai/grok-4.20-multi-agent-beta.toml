@@ -1,10 +1,7 @@
 base_model = "xai/grok-4.20-multi-agent"
 name = "Grok 4.20 Multi Agent Beta"
 tool_call = true
-
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high", "xhigh"]
+reasoning_options = []
 
 [cost]
 input = 1.3125
