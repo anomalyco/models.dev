@@ -1,7 +1,7 @@
 base_model = "zhipuai/glm-4.5v"
-reasoning_options = [{ type = "toggle" }]
 name = "GLM 4.5V"
 knowledge = "2025-08"
+reasoning_options = []
 
 [cost]
 input = 0.63
@@ -9,9 +9,8 @@ output = 1.89
 cache_read = 0.1155
 
 [limit]
-context = 66000
-output = 16000
+context = 66_000
+output = 16_000
 
 [modalities]
 input = ["text", "image"]
-output = ["text"]

@@ -1,6 +1,9 @@
 base_model = "zhipuai/glm-5.2"
-reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["high", "xhigh"] }]
 name = "GLM 5.2"
+
+[[reasoning_options]]
+type = "effort"
+values = ["high", "xhigh"]
 
 [cost]
 input = 0.84
@@ -8,4 +11,4 @@ output = 2.6775
 cache_read = 0.168
 
 [limit]
-output = 128000
+output = 128_000

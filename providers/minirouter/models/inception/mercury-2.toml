@@ -1,24 +1,13 @@
-name = "Mercury 2"
-description = "Reasoning model for deliberate analysis, multi-step problem solving, and tool use"
-family = "mercury"
-attachment = false
-reasoning = true
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
-tool_call = true
-temperature = true
-release_date = "2026-02-24"
-last_updated = "2026-03-06"
-open_weights = false
+base_model = "inception/mercury-2"
 
-[limit]
-context = 128_000
-output = 128_000
-
-[modalities]
-input = ["text"]
-output = ["text"]
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high"]
 
 [cost]
 input = 0.2625
 output = 0.7875
 cache_read = 0.02625
+
+[limit]
+output = 128_000

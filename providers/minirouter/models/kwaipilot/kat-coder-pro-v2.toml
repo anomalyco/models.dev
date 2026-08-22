@@ -1,22 +1,5 @@
-name = "Kat Coder Pro V2"
-description = "Coding model for repository understanding, refactors, and agentic engineering tasks"
-family = "kat-coder"
-attachment = false
-reasoning = true
+base_model = "kwaipilot/kat-coder-pro-v2"
 reasoning_options = []
-tool_call = true
-temperature = true
-release_date = "2026-03-27"
-last_updated = "2026-03-30"
-open_weights = false
-
-[limit]
-context = 256_000
-output = 256_000
-
-[modalities]
-input = ["text"]
-output = ["text"]
 
 [cost]
 input = 0.315

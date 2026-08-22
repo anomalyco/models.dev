@@ -1,12 +1,12 @@
 base_model = "nvidia/nemotron-3-super-120b-a12b"
-reasoning_options = [{ type = "toggle" }]
 name = "NVIDIA Nemotron 3 Super 120B A12B"
 tool_call = false
+reasoning_options = []
 
 [cost]
 input = 0.1575
 output = 0.6825
 
 [limit]
-context = 256000
-output = 32000
+context = 256_000
+output = 32_000

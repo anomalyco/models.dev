@@ -1,0 +1,20 @@
+# Source: https://ai-gateway.vercel.sh/v1/models (accessed 2026-08-22)
+name = "Devstral Small 2"
+description = "Our open source model that excels at using tools to explore codebases, editing multiple files, and powering software engineering agents."
+family = "devstral"
+release_date = "2025-12-09"
+last_updated = "2025-12-09"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = true
+knowledge = "2024-10"
+open_weights = true
+
+[limit]
+context = 256_000
+output = 256_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

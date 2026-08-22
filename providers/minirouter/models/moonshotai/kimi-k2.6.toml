@@ -1,5 +1,5 @@
 base_model = "moonshotai/kimi-k2.6"
-reasoning_options = [{ type = "toggle" }]
+reasoning_options = []
 
 [cost]
 input = 0.9975
@@ -7,8 +7,8 @@ output = 4.2
 cache_read = 0.168
 
 [limit]
-context = 262000
-output = 262000
+context = 262_000
+output = 262_000
 
 [modalities]
 input = ["text", "image"]

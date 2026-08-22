@@ -1,7 +1,7 @@
 base_model = "moonshotai/kimi-k2.7-code-highspeed"
-reasoning_options = []
 name = "Kimi K2.7 Code High Speed"
 temperature = true
+reasoning_options = []
 
 [cost]
 input = 1.995
@@ -9,7 +9,7 @@ output = 8.4
 cache_read = 0.399
 
 [limit]
-output = 32768
+output = 32_768
 
 [modalities]
 input = ["text", "image", "pdf"]

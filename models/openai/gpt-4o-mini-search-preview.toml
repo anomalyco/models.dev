@@ -1,0 +1,22 @@
+# Source: https://ai-gateway.vercel.sh/v1/models (accessed 2026-08-22)
+name = "GPT 4o Mini Search Preview"
+description = "GPT-4o mini Search Preview is a specialized model trained to understand and execute web search queries with the Chat Completions API. In addition to token fees, web search queries have a fee per tool call."
+family = "gpt-mini"
+release_date = "2025-03-12"
+last_updated = "2025-03-12"
+attachment = false
+reasoning = false
+temperature = true
+tool_call = false
+structured_output = false
+knowledge = "2023-09"
+open_weights = false
+
+[limit]
+context = 128_000
+input = 111_616
+output = 16_384
+
+[modalities]
+input = ["text"]
+output = ["text"]

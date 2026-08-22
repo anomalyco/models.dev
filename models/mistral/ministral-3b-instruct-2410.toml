@@ -1,0 +1,20 @@
+# Source: https://ai-gateway.vercel.sh/v1/models (accessed 2026-08-22)
+name = "Ministral 3B"
+description = "A compact, efficient model for on-device tasks like smart assistants and local analytics, offering low-latency performance."
+family = "ministral"
+release_date = "2024-10-16"
+last_updated = "2024-10-16"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = true
+knowledge = "2024-10"
+open_weights = true
+
+[limit]
+context = 128_000
+output = 4_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

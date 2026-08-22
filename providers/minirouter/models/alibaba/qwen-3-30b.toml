@@ -1,24 +1,10 @@
+base_model = "alibaba/qwen3-30b-a3b"
 name = "Qwen3-30B-A3B"
-description = "Qwen instruction model for multilingual chat, reasoning, and tool use"
-family = "qwen"
-release_date = "2025-04-28"
-last_updated = "2025-04"
-attachment = false
-reasoning = true
-reasoning_options = [{ type = "toggle" }]
-temperature = true
-tool_call = true
-knowledge = "2025-04"
-open_weights = false
-
-[limit]
-context = 40_960
-output = 16_384
-
-[modalities]
-input = ["text"]
-output = ["text"]
+reasoning_options = []
 
 [cost]
 input = 0.126
 output = 0.525
+
+[limit]
+context = 40_960

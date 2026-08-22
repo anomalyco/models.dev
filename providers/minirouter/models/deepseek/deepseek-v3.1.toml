@@ -1,6 +1,6 @@
 base_model = "deepseek/deepseek-v3.1"
-reasoning_options = [{ type = "toggle" }]
 description = "DeepSeek chat model for instruction following, coding, and analysis"
+reasoning_options = []
 
 [cost]
 input = 0.2625
@@ -8,5 +8,5 @@ output = 0.9975
 cache_read = 0.1365
 
 [limit]
-context = 163840
-output = 128000
+context = 163_840
+output = 128_000

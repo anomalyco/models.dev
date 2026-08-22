@@ -1,6 +1,9 @@
 base_model = "openai/o4-mini"
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
 name = "o4-mini (Fast)"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high"]
 
 [cost]
 input = 2.1

@@ -1,6 +1,6 @@
 base_model = "minimax/MiniMax-M3"
-reasoning_options = [{ type = "toggle" }]
 name = "MiniMax M3"
+reasoning_options = []
 
 [cost]
 input = 0.315
@@ -8,8 +8,8 @@ output = 1.26
 cache_read = 0.063
 
 [limit]
-context = 1000000
-output = 1000000
+context = 1_000_000
+output = 1_000_000
 
 [modalities]
 input = ["text", "image", "pdf"]

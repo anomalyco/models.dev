@@ -1,7 +1,7 @@
 base_model = "xiaomi/mimo-v2.5-pro"
-reasoning_options = [{ type = "toggle" }]
 name = "MiMo V2.5 Pro"
 attachment = true
+reasoning_options = []
 
 [cost]
 input = 0.45675
@@ -9,5 +9,5 @@ output = 0.9135
 cache_read = 0.00378
 
 [limit]
-context = 1050000
-output = 131000
+context = 1_050_000
+output = 131_000

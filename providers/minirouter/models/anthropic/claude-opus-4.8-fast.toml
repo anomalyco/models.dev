@@ -1,7 +1,10 @@
 base_model = "anthropic/claude-opus-4-8"
-reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "medium", "high", "xhigh"] }]
 name = "Claude Opus 4.8 (Fast)"
 temperature = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high", "xhigh"]
 
 [cost]
 input = 10.5

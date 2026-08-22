@@ -1,24 +1,11 @@
 base_model = "openai/o3-mini"
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
-name = "o3-mini"
-description = "Smaller o-series reasoner for economical coding, math, and planning tasks"
-family = "o-mini"
-release_date = "2024-12-20"
-last_updated = "2025-01-29"
-attachment = false
-reasoning = true
-temperature = false
-knowledge = "2024-05"
-tool_call = true
-structured_output = true
-open_weights = false
 status = "deprecated"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high"]
 
 [cost]
 input = 1.155
 output = 4.62
 cache_read = 0.5775
-
-[modalities]
-input = ["text"]
-output = ["text"]

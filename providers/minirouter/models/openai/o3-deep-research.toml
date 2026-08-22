@@ -1,6 +1,9 @@
 base_model = "openai/o3-deep-research"
-reasoning_options = [{ type = "effort", values = ["medium"] }]
 temperature = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["medium"]
 
 [cost]
 input = 10.5

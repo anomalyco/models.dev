@@ -1,0 +1,19 @@
+# Source: https://ai-gateway.vercel.sh/v1/models (accessed 2026-08-22)
+name = "Tencent Hy-MT2-Lite"
+description = "Hy-MT2-Lite is Tencent Cloud Hunyuan’s lightweight 1.8B translation model, combining efficient performance with an 8K-token context window and broad multilingual coverage. It supports translation across 33 languages and five ethnic Chinese and dialect variants, delivering strong results on benchmarks including FLORES-200 and WMT25. Designed for professional and real-world business use, it reliably follows instructions for structured, delimiter-preserving, context-aware, glossary-guided, and style-specific translation."
+family = "Hy"
+release_date = "2026-06-12"
+last_updated = "2026-06-12"
+attachment = false
+reasoning = false
+temperature = true
+tool_call = false
+open_weights = false
+
+[limit]
+context = 8_000
+output = 4_000
+
+[modalities]
+input = ["text"]
+output = ["text"]

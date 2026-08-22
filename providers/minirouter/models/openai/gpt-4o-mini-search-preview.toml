@@ -1,24 +1,4 @@
-name = "GPT 4o Mini Search Preview"
-description = "Compact GPT model for low-latency assistance and high-volume workloads"
-family = "gpt-mini"
-release_date = "2025-03-12"
-last_updated = "2025-01"
-attachment = false
-reasoning = false
-temperature = true
-tool_call = false
-structured_output = false
-knowledge = "2023-09"
-open_weights = false
-
-[limit]
-context = 128_000
-input = 111_616
-output = 16_384
-
-[modalities]
-input = ["text"]
-output = ["text"]
+base_model = "openai/gpt-4o-mini-search-preview"
 
 [cost]
 input = 0.1575

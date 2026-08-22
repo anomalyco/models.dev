@@ -1,6 +1,9 @@
 base_model = "deepseek/deepseek-v4-pro-0813"
-reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["high", "xhigh"] }]
 description = "Flagship DeepSeek model for coding, reasoning, and agentic work"
+
+[[reasoning_options]]
+type = "effort"
+values = ["high", "max"]
 
 [cost]
 input = 1.386

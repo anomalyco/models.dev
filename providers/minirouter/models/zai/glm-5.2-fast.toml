@@ -1,7 +1,10 @@
 base_model = "zhipuai/glm-5.2"
-reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["high", "xhigh"] }]
 name = "GLM 5.2 Fast"
 description = "Efficient GLM model for fast reasoning, coding, and agent workflows"
+
+[[reasoning_options]]
+type = "effort"
+values = ["high", "xhigh"]
 
 [cost]
 input = 2.205
@@ -9,4 +12,4 @@ output = 6.93
 cache_read = 0.2205
 
 [limit]
-output = 128000
+output = 128_000

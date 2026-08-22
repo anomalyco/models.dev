@@ -1,22 +1,11 @@
+base_model = "xai/grok-4.20-0309-non-reasoning"
 name = "Grok 4.20 Beta Non-Reasoning"
-description = "Grok model for agentic tool use, reasoning, coding, and live assistance"
-family = "grok"
-release_date = "2026-03-11"
-last_updated = "2026-03-11"
-attachment = true
-reasoning = false
-tool_call = true
-open_weights = false
-
-[limit]
-context = 2_000_000
-output = 2_000_000
-
-[modalities]
-input = ["text", "image", "pdf"]
-output = ["text"]
 
 [cost]
 input = 1.3125
 output = 2.625
 cache_read = 0.21
+
+[limit]
+context = 2_000_000
+output = 2_000_000

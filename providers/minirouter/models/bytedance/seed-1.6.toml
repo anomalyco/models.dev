@@ -1,27 +1,14 @@
-name = "Seed 1.6"
-description = "Multimodal reasoning model for visual analysis, planning, and tool use"
-family = "seed"
-release_date = "2025-09-01"
-last_updated = "2025-09"
-attachment = false
-reasoning = true
-temperature = true
-tool_call = true
-knowledge = "2024-10"
-open_weights = false
-
-[[reasoning_options]]
-type = "toggle"
-
-[limit]
-context = 256_000
-output = 32_000
-
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+base_model = "bytedance-seed/seed-1-6"
+attachment = true
+reasoning_options = []
 
 [cost]
 input = 0.2625
 output = 2.1
 cache_read = 0.0525
+
+[limit]
+output = 32_000
+
+[modalities]
+input = ["text", "image"]
