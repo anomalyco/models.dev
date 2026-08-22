@@ -1,11 +1,8 @@
 base_model = "moonshotai/kimi-k2.5"
 temperature = true
+reasoning_options = []
 
 interleaved = true
-
-[[reasoning_options]]
-type = "effort"
-values = ["none"]
 
 [cost]
 input = 0.63

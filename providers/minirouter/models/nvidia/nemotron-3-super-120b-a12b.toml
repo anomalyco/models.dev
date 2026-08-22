@@ -1,10 +1,7 @@
 base_model = "nvidia/nemotron-3-super-120b-a12b"
 name = "NVIDIA Nemotron 3 Super 120B A12B"
 tool_call = false
-
-[[reasoning_options]]
-type = "effort"
-values = ["none"]
+reasoning_options = []
 
 [cost]
 input = 0.1575
