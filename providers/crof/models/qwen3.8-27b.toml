@@ -1,13 +1,13 @@
-base_model = "moonshotai/kimi-k2.5"
+base_model = "alibaba/qwen3.8-27b"
 reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high"] }]
 
-[interleaved]
-field = "reasoning_content"
-
 [cost]
-input = 0.35
-output = 1.7
-cache_read = 0.07
+input = 0.25
+output = 2.1
+cache_read = 0.06
+
+[limit]
+output = 262_144
 
 [provider]
 npm = "@ai-sdk/openai-compatible"
