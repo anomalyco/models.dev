@@ -1,3 +1,7 @@
+# Native `/ai/run` accepts `reasoning_effort = low|medium|high` and
+# `enable_thinking = true|false`; no budget is documented.
+# https://developers.cloudflare.com/workers-ai/models/glm-4.7-flash/sync-input.json
+
 base_model = "zhipuai/glm-4.7-flash"
 tool_call = true
 structured_output = true

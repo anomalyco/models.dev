@@ -1,3 +1,6 @@
+# Toggle: enable_thinking true|false.
+# Effort: reasoning_effort = low|medium|xhigh.
+
 base_model = "alibaba/qwen3.8-27b"
 attachment = true
 tool_call = true
@@ -7,7 +10,7 @@ type = "toggle"
 
 [[reasoning_options]]
 type = "effort"
-values = ["low", "medium", "high"]
+values = ["low", "medium", "xhigh"]
 
 [cost]
 input = 0.45

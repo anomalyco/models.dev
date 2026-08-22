@@ -69,6 +69,7 @@ reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "max"
 
 [models."anthropic/claude-sonnet-5"]
 structured_output = true
+note = ["Toggle: thinking.type = adaptive|disabled.", "Effort: output_config.effort = low|medium|high|xhigh|max."]
 reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
 
 [models."openai/gpt-5"]
@@ -138,18 +139,48 @@ reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["high", "
 note = ["Toggle: enable_thinking true|false.", "Budget: thinking_budget (integer reasoning tokens)."]
 reasoning_options = [{ type = "toggle" }, { type = "budget_tokens" }]
 
+[models."alibaba/qwen3.5-397b-a17b"]
+note = ["Toggle: enable_thinking true|false.", "Budget: thinking_budget (integer reasoning tokens)."]
+reasoning_options = [{ type = "toggle" }, { type = "budget_tokens" }]
+
+[models."alibaba/qwen3.7-max"]
+note = ["Toggle: enable_thinking true|false.", "Budget: thinking_budget (integer reasoning tokens)."]
+reasoning_options = [{ type = "toggle" }, { type = "budget_tokens" }]
+
+# providers/alibaba/models/qwen3.8-max.toml: hybrid toggle, low|medium|xhigh effort (high
+# aliases to xhigh), and a 0..262144 budget that cannot combine with effort.
+[models."alibaba/qwen3.8-max"]
+note = [
+  "Toggle: enable_thinking true|false (hybrid).",
+  "Effort: reasoning_effort = low|medium|xhigh (default xhigh); high accepted as alias -> xhigh.",
+  "Budget: thinking_budget (0..262144) cannot be combined with reasoning_effort.",
+]
+interleaved = { field = "reasoning_content" }
+reasoning_options = [
+  { type = "toggle" },
+  { type = "effort", values = ["low", "medium", "xhigh"] },
+  { type = "budget_tokens", min = 0, max = 262_144 },
+]
+
 # First-party xAI Grok 4.6 (providers/xai/models/grok-4.6.toml) includes xhigh; the catalog
 # schema enum is missing it.
 [models."xai/grok-4.6"]
 reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh"] }]
 
+# First-party xAI Grok 4.20 (Reasoning) is always-on with no caller control
+# (providers/xai/models/grok-4.20-0309-reasoning.toml: reasoning_options = []).
+[models."xai/grok-4.20-0309-reasoning"]
+reasoning_options = []
+
 [models."google/gemini-2.5-pro"]
 reasoning_options = [{ type = "budget_tokens", min = 128, max = 32_768 }]
 
 [models."google/gemini-2.5-flash"]
+note = ["Budget: generationConfig.thinkingConfig.thinkingBudget; 0 disables (toggle-off), -1 is dynamic, manual range 0..24576."]
 reasoning_options = [{ type = "toggle" }, { type = "budget_tokens", min = 0, max = 24_576 }]
 
 [models."google/gemini-2.5-flash-lite"]
+note = ["Budget: generationConfig.thinkingConfig.thinkingBudget; 0 disables (toggle-off), -1 is dynamic, manual range 512..24576."]
 reasoning_options = [{ type = "toggle" }, { type = "budget_tokens", min = 512, max = 24_576 }]
 
 [models."google/gemini-3.1-flash-lite"]
@@ -158,17 +189,25 @@ reasoning_options = [{ type = "effort", values = ["minimal", "low", "medium", "h
 [models."google/gemini-3.5-flash"]
 reasoning_options = [{ type = "effort", values = ["minimal", "low", "medium", "high"] }]
 
+# gemini-3.5-flash-lite/3.6-flash/3.7-flash previously mirrored merge-gateway's toggle-only/[]
+# shapes, but merge-gateway cites no host-specific evidence for that narrowing (unlike its
+# DeepSeek entry, which documents a live-tested selected route) — so it's not proof Cloudflare
+# behaves the same way. Match the lab's graded effort per AGENTS.md absent contrary evidence.
 [models."google/gemini-3.5-flash-lite"]
-reasoning_options = [{ type = "toggle" }]
+reasoning_options = [{ type = "effort", values = ["minimal", "low", "medium", "high"] }]
 
 [models."google/gemini-3.6-flash"]
-reasoning_options = [{ type = "toggle" }]
+reasoning_options = [{ type = "effort", values = ["minimal", "low", "medium", "high"] }]
 
 [models."google/gemini-3.7-flash"]
-reasoning_options = []
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
 
 [models."moonshotai/kimi-k3"]
-reasoning_options = [{ type = "toggle" }]
+note = [
+  "API: thinking.type = enabled|disabled|adaptive; in adaptive mode the",
+  "reasoning depth is set by output_config.effort = low|high|max.",
+]
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "high", "max"] }]
 
 [models."thinkingmachines/inkling"]
 reasoning_options = []
@@ -184,8 +223,13 @@ structured_output = false
 reasoning_options = []
 limit = { output = 80_000 }
 
+# Same @cf id, same hosted deployment as cloudflare-workers-ai's own curated entry, which
+# verified toggle + high|max (not the lab's general low|high|max — Workers AI narrows it on
+# this specific deployment). That same-surface peer outweighs the general lab shape here.
 [models."workers-ai/@cf/deepseek-ai/deepseek-v4-flash-0731"]
 base_model = "deepseek/deepseek-v4-flash-0731"
+note = ["Toggle: thinking.type = enabled|disabled.", "Effort: reasoning_effort = high|max."]
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["high", "max"] }]
 
 [models."workers-ai/@cf/deepseek-ai/deepseek-v4-pro-0813"]
 base_model = "deepseek/deepseek-v4-pro-0813"
@@ -256,8 +300,12 @@ note = [
 interleaved = { field = "reasoning_content" }
 limit = { output = 256_000 }
 
+# First-party providers/moonshotai/models/kimi-k2.7-code.toml is reasoning_options = []
+# (always-on, no caller control) — no docs-verified evidence of a real @cf-side knob here
+# (unlike kimi-k2.6, whose docs schema explicitly documents reasoning_effort + thinking).
 [models."workers-ai/@cf/moonshotai/kimi-k2.7-code"]
 base_model = "moonshotai/kimi-k2.7-code"
+reasoning_options = []
 
 [models."workers-ai/@cf/nvidia/nemotron-3-120b-a12b"]
 base_model = "nvidia/nemotron-3-super-120b-a12b"
@@ -307,19 +355,35 @@ structured_output = false
 reasoning_options = []
 limit = { output = 24_000 }
 
-# structured_output inherited (base=true, verified live: honours response_format json_schema);
-# reasoning_options (toggle + effort) derived from the docs input schema.
+# structured_output inherited (base=true, verified live: honours response_format json_schema).
+# No first-party Alibaba file exists for this id; nearest verified peer is the OpenRouter
+# proxy (toggle + low|medium|xhigh), matching the qwen3.8-max family's low|medium|xhigh
+# convention rather than a generic L/M/H guess.
 [models."workers-ai/@cf/qwen/qwen3.8-27b"]
 base_model = "alibaba/qwen3.8-27b"
+note = ["Toggle: enable_thinking true|false.", "Effort: reasoning_effort = low|medium|xhigh."]
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "medium", "xhigh"] }]
 
+# cloudflare-workers-ai's own curated peer cites a docs-verified wire shape here (Native
+# `/ai/run` accepts reasoning_effort=low|medium|high + enable_thinking toggle) that contradicts
+# the lab's toggle-only default — a documented same-surface host delta outweighs the lab default.
 [models."workers-ai/@cf/zai-org/glm-4.7-flash"]
 base_model = "zhipuai/glm-4.7-flash"
 structured_output = true
+note = [
+  "Native `/ai/run` accepts `reasoning_effort = low|medium|high` and",
+  "`enable_thinking = true|false`; no budget is documented.",
+  "https://developers.cloudflare.com/workers-ai/models/glm-4.7-flash/sync-input.json",
+]
 interleaved = { field = "reasoning_content" }
 limit = { output = 131_072 }
 
+# Unlike glm-4.7-flash's peer, this file's header only verifies limits, not reasoning — so
+# there's no host-specific evidence to override the lab shape here: effort high|max, no toggle.
 [models."workers-ai/@cf/zai-org/glm-5.2"]
 base_model = "zhipuai/glm-5.2"
 note = ["Context and output limits verified against Cloudflare Workers AI's OpenAI-compatible endpoint."]
+interleaved = { field = "reasoning_content" }
+reasoning_options = [{ type = "effort", values = ["high", "max"] }]
 limit = { output = 256_000 }
 
