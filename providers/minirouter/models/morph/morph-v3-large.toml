@@ -2,10 +2,10 @@
 # Source: https://api.minirouter.sh/v1/models (accessed 2026-08-22)
 base_model = "morph/morph-v3-large"
 
-[cost]
-input = 0.945
-output = 1.995
-
 [limit]
 context = 81_920
 output = 16_384
+
+[cost]
+input = 0.945
+output = 1.995
