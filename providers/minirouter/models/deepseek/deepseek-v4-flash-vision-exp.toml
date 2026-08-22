@@ -1,11 +1,11 @@
-# MiniRouter forwards this request to Vercel AI Gateway; its same-surface
-# DeepSeek peer exposes high|xhigh, with effort=none as the mapped off path.
+# MiniRouter forwards this request to Vercel AI Gateway. Keep the graded
+# effort values from that same-surface peer; MiniRouter rejects its toggle field.
 # https://vercel.com/docs/ai-gateway/models-and-providers/reasoning
 base_model = "deepseek/deepseek-v4-flash-vision-exp"
 
 [[reasoning_options]]
 type = "effort"
-values = ["none", "high", "xhigh"]
+values = ["high", "xhigh"]
 
 [cost]
 input = 0.231

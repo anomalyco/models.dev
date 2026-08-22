@@ -10,8 +10,8 @@
 # https://github.com/SolWorks-Dev/minirouter/blob/401f445fe23e94e21a6cb921c7c855296732ee27/services/edge/src/relay.ts#L846-L850
 # https://vercel.com/docs/ai-gateway/models-and-providers/reasoning
 # The closed request schema rejects reasoning.enabled and enable_thinking, so
-# no toggle is advertised. For Vercel toggle peers, reasoning.effort=none is
-# MiniRouter's admitted off-path mapping; omit reasoning for the model default.
+# no toggle is advertised. Options preserve the same-surface Vercel intersection:
+# toggle-only peers have no representable caller control and therefore use [].
 name = "minirouter"
 env = ["MINIROUTER_API_KEY"]
 npm = "@ai-sdk/openai-compatible"
