@@ -1,8 +1,11 @@
-# Reasoning controls for POST /v1/chat/completions:
+# MiniRouter source of truth for POST /v1/chat/completions reasoning controls:
+# https://github.com/SolWorks-Dev/minirouter/blob/401f445fe23e94e21a6cb921c7c855296732ee27/packages/pricing/src/admission-bound.ts#L520-L538
+# Accepted object keys: reasoning.effort, reasoning.max_tokens, reasoning.exclude
 # Effort: reasoning.effort = none|minimal|low|medium|high|xhigh|max
 # Budget: reasoning.max_tokens = positive integer
-# MiniRouter rejects reasoning.enabled, so no toggle is advertised; omit the
-# reasoning object to use the selected model's default behavior.
+# Response exclusion: reasoning.exclude = boolean
+# The closed request schema rejects reasoning.enabled and enable_thinking, so
+# no toggle is advertised. Omit reasoning to use the model's default behavior.
 name = "minirouter"
 env = ["MINIROUTER_API_KEY"]
 npm = "@ai-sdk/openai-compatible"

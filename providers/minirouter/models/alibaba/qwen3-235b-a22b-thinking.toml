@@ -1,5 +1,4 @@
 base_model = "alibaba/qwen3-235b-a22b-thinking-2507"
-attachment = true
 
 [[reasoning_options]]
 type = "budget_tokens"
@@ -12,6 +11,3 @@ output = 4.2
 
 [limit]
 context = 131_072
-
-[modalities]
-input = ["text", "image", "pdf"]
