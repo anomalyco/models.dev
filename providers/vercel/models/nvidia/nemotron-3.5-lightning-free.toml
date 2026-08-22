@@ -1,0 +1,13 @@
+base_model = "nvidia/nemotron-3.5-lightning"
+name = "Nemotron 3.5 Lightning 30B (Free)"
+
+[[reasoning_options]]
+type = "toggle"
+
+[cost]
+input = 0
+output = 0
+
+[limit]
+context = 1_000_000
+output = 32_768
