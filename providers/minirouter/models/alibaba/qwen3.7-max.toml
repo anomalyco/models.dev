@@ -3,6 +3,10 @@ name = "Qwen 3.7 Max"
 attachment = true
 
 [[reasoning_options]]
+type = "effort"
+values = ["none"]
+
+[[reasoning_options]]
 type = "budget_tokens"
 min = 1
 max = 262_144

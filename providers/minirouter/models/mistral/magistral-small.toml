@@ -1,6 +1,4 @@
-base_model = "mistral/magistral-small-2506"
-name = "Magistral Small 2509"
-attachment = true
+base_model = "mistral/magistral-small-2509"
 reasoning_options = []
 
 [cost]
@@ -8,8 +6,4 @@ input = 0.525
 output = 1.575
 
 [limit]
-context = 128_000
 output = 64_000
-
-[modalities]
-input = ["text", "image"]

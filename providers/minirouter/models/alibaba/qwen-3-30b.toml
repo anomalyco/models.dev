@@ -1,6 +1,9 @@
 base_model = "alibaba/qwen3-30b-a3b"
 name = "Qwen3-30B-A3B"
-reasoning_options = []
+
+[[reasoning_options]]
+type = "effort"
+values = ["none"]
 
 [cost]
 input = 0.126
