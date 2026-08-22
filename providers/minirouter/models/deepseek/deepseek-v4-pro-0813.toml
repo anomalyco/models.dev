@@ -1,3 +1,6 @@
+# MiniRouter accepts reasoning.effort=none as the off path; the DeepSeek lab
+# constrains enabled effort to high|max. Wire source: provider.toml.
+# https://github.com/SolWorks-Dev/minirouter/blob/401f445fe23e94e21a6cb921c7c855296732ee27/packages/pricing/src/admission-bound.ts#L520-L538
 base_model = "deepseek/deepseek-v4-pro-0813"
 description = "Flagship DeepSeek model for coding, reasoning, and agentic work"
 

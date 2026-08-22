@@ -1,10 +1,7 @@
 base_model = "nvidia/nemotron-3.5-lightning"
 name = "Nemotron 3.5 Lightning 30B"
 description = "Nemotron model for efficient reasoning, coding, and specialized AI agents"
-
-[[reasoning_options]]
-type = "effort"
-values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"]
+reasoning_options = []
 
 [cost]
 input = 0.0525
