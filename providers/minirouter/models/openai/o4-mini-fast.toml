@@ -1,0 +1,11 @@
+base_model = "openai/o4-mini"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
+name = "o4-mini (Fast)"
+
+[cost]
+input = 2.1
+output = 8.4
+cache_read = 0.525
+
+[modalities]
+input = ["text", "image", "pdf"]

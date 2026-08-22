@@ -1,0 +1,17 @@
+base_model = "alibaba/qwen3.7-flash"
+reasoning_options = []
+name = "Qwen 3.7 Flash"
+description = "Qwen vision-language model for visual reasoning, documents, and agent tasks"
+
+[cost]
+input = 0.0315
+output = 0.1365
+cache_read = 0.0063
+cache_write = 0.0399
+
+[limit]
+context = 991000
+output = 64000
+
+[modalities]
+input = ["text", "image", "pdf"]

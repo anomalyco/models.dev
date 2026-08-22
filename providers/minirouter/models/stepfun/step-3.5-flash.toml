@@ -1,0 +1,15 @@
+base_model = "stepfun/step-3.5-flash"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
+name = "StepFun 3.5 Flash"
+
+[cost]
+input = 0.0945
+output = 0.315
+cache_read = 0.021
+
+[limit]
+context = 262114
+output = 262114
+
+[modalities]
+input = ["text", "image"]

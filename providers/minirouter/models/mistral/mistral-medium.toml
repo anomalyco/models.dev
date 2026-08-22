@@ -1,0 +1,23 @@
+name = "Mistral Medium 3.1"
+description = "Mistral model for multilingual chat, reasoning, and tool-assisted workflows"
+family = "mistral-medium"
+release_date = "2025-05-07"
+last_updated = "2025-05-07"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = true
+open_weights = false
+knowledge = "2024-10"
+
+[limit]
+context = 128000
+output = 64000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[cost]
+input = 0.42
+output = 2.1

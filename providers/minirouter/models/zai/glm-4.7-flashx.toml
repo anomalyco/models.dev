@@ -1,0 +1,13 @@
+base_model = "zhipuai/glm-4.7-flashx"
+reasoning_options = [{ type = "toggle" }]
+name = "GLM 4.7 FlashX"
+knowledge = "2025-01"
+interleaved = true
+
+[cost]
+input = 0.063
+output = 0.42
+cache_read = 0.0105
+
+[limit]
+output = 128000

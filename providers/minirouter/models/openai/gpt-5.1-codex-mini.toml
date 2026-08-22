@@ -1,0 +1,11 @@
+base_model = "openai/gpt-5.1-codex-mini"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
+temperature = true
+
+[cost]
+input = 0.2625
+output = 2.1
+cache_read = 0.0315
+
+[modalities]
+input = ["text", "image", "pdf"]

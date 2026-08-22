@@ -1,0 +1,24 @@
+base_model = "openai/o4-mini"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
+name = "o4-mini"
+description = "Fast o-series model for compact reasoning, coding, and tool use"
+family = "o-mini"
+release_date = "2025-04-16"
+last_updated = "2025-04-16"
+attachment = true
+reasoning = true
+temperature = false
+knowledge = "2024-05"
+tool_call = true
+structured_output = true
+open_weights = false
+status = "deprecated"
+
+[cost]
+input = 1.155
+output = 4.62
+cache_read = 0.28875
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

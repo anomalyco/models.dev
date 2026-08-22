@@ -1,0 +1,22 @@
+name = "Interfaze Beta"
+description = "Multimodal reasoning model for visual analysis, planning, and tool use"
+release_date = "2025-10-07"
+last_updated = "2026-04-29"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = false
+open_weights = false
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
+
+[limit]
+context = 1_000_000
+output = 32_000
+
+[modalities]
+input = ["text", "image", "pdf"]
+output = ["text"]
+
+[cost]
+input = 1.575
+output = 3.675

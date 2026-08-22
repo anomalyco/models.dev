@@ -1,0 +1,14 @@
+base_model = "meta/muse-spark-1.2"
+reasoning_options = []
+description = "Open Llama multimodal model for image understanding and text reasoning"
+
+[cost]
+input = 1.3125
+output = 4.4625
+cache_read = 0.1575
+
+[limit]
+output = 1048576
+
+[modalities]
+input = ["text", "image", "pdf"]

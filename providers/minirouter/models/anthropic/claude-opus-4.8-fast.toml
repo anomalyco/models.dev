@@ -1,0 +1,10 @@
+base_model = "anthropic/claude-opus-4-8"
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "medium", "high", "xhigh"] }]
+name = "Claude Opus 4.8 (Fast)"
+temperature = true
+
+[cost]
+input = 10.5
+output = 52.5
+cache_read = 1.05
+cache_write = 13.125

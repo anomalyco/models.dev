@@ -1,0 +1,11 @@
+base_model = "poolside/laguna-s-2.1"
+reasoning_options = [{ type = "toggle" }]
+
+[cost]
+input = 0.105
+output = 0.21
+cache_read = 0.0105
+
+[limit]
+context = 1000000
+output = 131072

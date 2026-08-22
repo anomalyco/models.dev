@@ -1,0 +1,24 @@
+base_model = "deepseek/deepseek-r1"
+reasoning_options = []
+name = "DeepSeek-R1"
+description = "DeepSeek reasoning model for multi-step analysis, math, coding, and tools"
+family = "deepseek-thinking"
+release_date = "2025-01-20"
+last_updated = "2025-05-29"
+attachment = false
+reasoning = true
+temperature = true
+knowledge = "2024-07"
+tool_call = true
+open_weights = false
+
+[cost]
+input = 1.4175
+output = 5.67
+
+[limit]
+output = 8192
+
+[modalities]
+input = ["text"]
+output = ["text"]

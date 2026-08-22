@@ -1,0 +1,13 @@
+base_model = "zhipuai/glm-5.1"
+reasoning_options = [{ type = "toggle" }]
+name = "GLM 5.1"
+attachment = true
+
+[cost]
+input = 1.47
+output = 4.62
+cache_read = 0.273
+
+[limit]
+context = 202800
+output = 64000

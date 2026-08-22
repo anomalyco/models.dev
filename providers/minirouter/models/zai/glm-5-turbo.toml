@@ -1,0 +1,12 @@
+base_model = "zhipuai/glm-5-turbo"
+reasoning_options = [{ type = "toggle" }]
+name = "GLM 5 Turbo"
+
+[cost]
+input = 1.26
+output = 4.2
+cache_read = 0.252
+
+[limit]
+context = 202800
+output = 131100

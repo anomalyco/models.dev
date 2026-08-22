@@ -1,0 +1,12 @@
+base_model = "sakana/fugu-ultra"
+reasoning_options = []
+description = "Quality-first multi-agent model for hard research, analysis, and competitions"
+temperature = true
+
+[cost]
+input = 5.25
+output = 31.5
+cache_read = 0.525
+
+[limit]
+output = 1000000

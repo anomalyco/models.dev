@@ -1,0 +1,12 @@
+base_model = "openai/o3-pro"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
+name = "o3 Pro"
+temperature = true
+knowledge = "2024-10"
+
+[cost]
+input = 21
+output = 84
+
+[modalities]
+input = ["text", "image", "pdf"]

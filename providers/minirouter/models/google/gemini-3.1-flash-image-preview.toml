@@ -1,0 +1,15 @@
+base_model = "google/gemini-3.1-flash-image-preview"
+reasoning_options = [{ type = "effort", values = ["minimal", "high"] }]
+name = "Gemini 3.1 Flash Image Preview (Nano Banana 2)"
+
+[cost]
+input = 0.525
+output = 3.15
+cache_read = 0.0525
+
+[limit]
+context = 131072
+output = 32768
+
+[modalities]
+input = ["text", "image"]

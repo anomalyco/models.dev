@@ -1,0 +1,16 @@
+base_model = "alibaba/qwen3.5-flash"
+reasoning_options = [{ type = "toggle" }, { type = "budget_tokens", min = 1, max = 81920 }]
+name = "Qwen 3.5 Flash"
+description = "Qwen vision-language model for visual reasoning, documents, and agent tasks"
+
+[cost]
+input = 0.105
+output = 0.42
+cache_read = 0.00105
+cache_write = 0.13125
+
+[limit]
+output = 64000
+
+[modalities]
+input = ["text", "image", "pdf"]

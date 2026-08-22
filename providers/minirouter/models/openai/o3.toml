@@ -1,0 +1,23 @@
+base_model = "openai/o3"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
+name = "o3"
+description = "Deliberate o-series reasoner for hard math, coding, and multi-step analysis"
+family = "o"
+release_date = "2025-04-16"
+last_updated = "2025-04-16"
+attachment = true
+reasoning = true
+temperature = false
+knowledge = "2024-05"
+tool_call = true
+structured_output = true
+open_weights = false
+
+[cost]
+input = 2.1
+output = 8.4
+cache_read = 0.525
+
+[modalities]
+input = ["text", "image", "pdf"]
+output = ["text"]

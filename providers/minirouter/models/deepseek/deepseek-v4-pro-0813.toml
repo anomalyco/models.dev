@@ -1,0 +1,8 @@
+base_model = "deepseek/deepseek-v4-pro-0813"
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["high", "xhigh"] }]
+description = "Flagship DeepSeek model for coding, reasoning, and agentic work"
+
+[cost]
+input = 1.386
+output = 4.158
+cache_read = 0.1386

@@ -1,0 +1,12 @@
+base_model = "zhipuai/glm-4.5-air"
+reasoning_options = [{ type = "toggle" }]
+name = "GLM 4.5 Air"
+
+[cost]
+input = 0.21
+output = 1.155
+cache_read = 0.0315
+
+[limit]
+context = 128000
+output = 96000

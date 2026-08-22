@@ -1,0 +1,15 @@
+base_model = "moonshotai/kimi-k3"
+reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]
+name = "Kimi K3 Fast"
+description = "Kimi multimodal agent model for visual understanding, coding, and planning"
+
+[cost]
+input = 4.725
+output = 23.625
+cache_read = 0.4725
+
+[limit]
+context = 1000000
+
+[modalities]
+input = ["text", "image", "pdf"]

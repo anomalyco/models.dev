@@ -1,0 +1,22 @@
+base_model = "openai/gpt-4o-mini"
+name = "GPT-4o mini"
+description = "Small omni GPT for cheap multimodal assistance and production-scale traffic"
+family = "gpt-mini"
+release_date = "2024-07-18"
+last_updated = "2024-07-18"
+attachment = true
+reasoning = false
+temperature = true
+knowledge = "2023-09"
+tool_call = true
+structured_output = true
+open_weights = false
+
+[cost]
+input = 0.1575
+output = 0.63
+cache_read = 0.07875
+
+[modalities]
+input = ["text", "image", "pdf"]
+output = ["text"]
