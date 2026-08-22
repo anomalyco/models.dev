@@ -1,9 +1,12 @@
+# Toggle: reasoning.effort=none (off); omit reasoning or use non-none effort (on).
 base_model = "zhipuai/glm-4.5"
 name = "GLM 4.5"
 knowledge = "2025-07"
-reasoning_options = []
 
 interleaved = true
+
+[[reasoning_options]]
+type = "toggle"
 
 [cost]
 input = 0.63

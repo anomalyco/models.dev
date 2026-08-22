@@ -1,6 +1,9 @@
+# Toggle: reasoning.effort=none (off); omit reasoning or use non-none effort (on).
 base_model = "zhipuai/glm-5-turbo"
 name = "GLM 5 Turbo"
-reasoning_options = []
+
+[[reasoning_options]]
+type = "toggle"
 
 [cost]
 input = 1.26

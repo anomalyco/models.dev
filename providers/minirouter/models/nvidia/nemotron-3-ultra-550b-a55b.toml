@@ -1,6 +1,9 @@
+# Toggle: reasoning.effort=none (off); omit reasoning or use non-none effort (on).
 base_model = "nvidia/nemotron-3-ultra-550b-a55b"
 name = "Nemotron 3 Ultra"
-reasoning_options = []
+
+[[reasoning_options]]
+type = "toggle"
 
 [cost]
 input = 0.63

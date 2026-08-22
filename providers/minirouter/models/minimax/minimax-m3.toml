@@ -1,6 +1,9 @@
+# Toggle: reasoning.effort=none (off); omit reasoning or use non-none effort (on).
 base_model = "minimax/MiniMax-M3"
 name = "MiniMax M3"
-reasoning_options = []
+
+[[reasoning_options]]
+type = "toggle"
 
 [cost]
 input = 0.315
