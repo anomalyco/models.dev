@@ -1,7 +1,11 @@
+# Toggle: reasoning.effort=none (off); omit reasoning or use non-none effort (on).
 base_model = "anthropic/claude-haiku-4-5"
 name = "Claude Haiku 4.5"
 
 interleaved = true
+
+[[reasoning_options]]
+type = "toggle"
 
 [[reasoning_options]]
 type = "budget_tokens"
