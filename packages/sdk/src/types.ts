@@ -68,7 +68,16 @@ export interface CostTier extends Cost {
 
 /** Pricing for a provider's model, including context-size tiers. */
 export interface ModelCost extends Cost {
-  /** Legacy compatibility field: pricing applied beyond 200K context. Prefer `tiers`. */
+  /**
+   * Legacy compatibility field. **The threshold is not always 200K.** The generator emits this
+   * for any single context tier starting at 200K *or above*, so it carries the 272K rate for
+   * `gpt-5.5`, the 256K rate for `qwen3.6-plus` and the 512K rate for `MiniMax-M3`. Applying
+   * it from 200K upward over-prices every request between 200K and the real threshold - for
+   * `MiniMax-M3` that is a 312K-token band billed at 2x.
+   *
+   * Read `tiers[].tier.size` for the threshold that actually applies. This field exists only
+   * for consumers that predate `tiers`.
+   */
   context_over_200k?: Cost
   /** Context-size-based pricing tiers. */
   tiers?: CostTier[]
