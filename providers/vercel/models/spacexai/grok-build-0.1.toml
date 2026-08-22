@@ -1,0 +1,23 @@
+name = "Grok Build 0.1"
+description = "Grok coding model for agentic engineering, edits, and codebase workflows"
+family = "grok-build"
+release_date = "2026-05-20"
+last_updated = "2026-05-20"
+attachment = true
+reasoning = true
+tool_call = true
+open_weights = false
+reasoning_options = []
+
+[cost]
+input = 1
+output = 2
+cache_read = 0.2
+
+[limit]
+context = 256_000
+output = 256_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

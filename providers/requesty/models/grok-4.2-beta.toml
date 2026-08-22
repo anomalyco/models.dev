@@ -1,0 +1,38 @@
+name = "grok-4.2-beta"
+description = "Grok 4.20 Beta is xAI's newest flagship model with industry-leading speed and agentic tool calling capabilities. It combines the lowest hallucination rate on the market with strict prompt adherance, delivering consistently precise and truthful responses."
+family = "grok"
+release_date = "2026-03-19"
+last_updated = "2026-03-19"
+attachment = true
+reasoning = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "max"]
+
+[[reasoning_options]]
+type = "budget_tokens"
+
+[cost]
+input = 1.8
+output = 5.4
+cache_read = 0.18
+cache_write = 1.8
+
+[[cost.tiers]]
+tier = { type = "context", size = 200_000 }
+input = 3.6
+output = 10.8
+cache_read = 0.36
+cache_write = 3.6
+
+[limit]
+context = 2_000_000
+output = 2_000_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

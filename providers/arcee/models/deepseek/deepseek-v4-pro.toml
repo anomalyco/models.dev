@@ -1,0 +1,18 @@
+# Beta catalog and pricing: https://www.arcee.ai/blog/open-models-api-beta
+# Cached input pricing: https://docs.arcee.ai/get-started/pricing.md
+# No toggle: thinking.type=enabled|disabled is rejected by the live API.
+# Effort: reasoning_effort = high|max
+base_model = "deepseek/deepseek-v4-pro"
+status = "beta"
+reasoning_options = [{ type = "effort", values = ["high", "max"] }]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 1.74
+output = 3.48
+cache_read = 0.20
+
+[limit]
+context = 512_000

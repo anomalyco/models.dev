@@ -1,0 +1,23 @@
+# DeepSeek-V4-Flash-Vision-Exp is priced the same as DeepSeek V4 Flash.
+# https://api-docs.deepseek.com/quick_start/pricing/ (accessed 2026-08-22)
+# https://api-docs.deepseek.com/guides/vision (accessed 2026-08-22)
+# OpenAI: `thinking.type = enabled|disabled`, `reasoning_effort = low|high|max`.
+# Anthropic: `thinking.type`, `output_config.effort = low|high|max`; budget ignored.
+base_model = "deepseek/deepseek-v4-flash-vision-exp"
+status = "beta"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.14
+output = 0.28
+reasoning = 0.28
+cache_read = 0.0028

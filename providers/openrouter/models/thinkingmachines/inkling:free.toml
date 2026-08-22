@@ -1,0 +1,16 @@
+base_model = "thinkingmachines/inkling"
+name = "Inkling (free)"
+description = "Multimodal reasoning model for visual analysis, planning, and tool use"
+structured_output = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "minimal", "low", "medium", "high", "max"]
+
+[cost]
+input = 0
+output = 0
+
+[limit]
+context = 262_144
+output = 262_144

@@ -1,0 +1,12 @@
+base_model = "alibaba/qwen-omni-turbo"
+name = "Qwen Omni Turbo (Alibaba Cloud)"
+attachment = true
+tool_call = false
+structured_output = false
+
+[cost]
+input = 0.2
+output = 0.8
+
+[limit]
+output = 8_192

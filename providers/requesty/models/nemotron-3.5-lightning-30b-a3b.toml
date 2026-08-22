@@ -1,0 +1,29 @@
+name = "nemotron-3.5-lightning-30b-a3b"
+description = "NVIDIA Nemotron 3.5 Lightning 30B-A3B is a hybrid Mamba-2 + MoE + Attention model with 30B total and 3B active parameters, pre-trained on over 20T tokens with an NVFP4 recipe and Multi-Token Prediction for fast generation. Up to 1M token context for long-running autonomous agents, sub-agent workhorse deployments, and agentic workflows. Supports reasoning and tool calling. English and coding languages plus Spanish, French, German, Italian, and Japanese. Open weights under the OpenMDW License Agreement v1.1. Part of the NVIDIA Nemotron family."
+family = "nemotron"
+release_date = "2026-08-11"
+last_updated = "2026-08-11"
+attachment = false
+reasoning = true
+tool_call = true
+structured_output = false
+open_weights = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "max"]
+
+[[reasoning_options]]
+type = "budget_tokens"
+
+[cost]
+input = 0
+output = 0
+
+[limit]
+context = 1_048_576
+output = 65_536
+
+[modalities]
+input = ["text"]
+output = ["text"]

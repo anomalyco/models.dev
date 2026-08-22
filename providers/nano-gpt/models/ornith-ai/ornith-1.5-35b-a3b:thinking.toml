@@ -1,0 +1,25 @@
+name = "Ornith 1.5 35B Thinking"
+description = "Ornith 1.5 35B A3B is an open-weight mixture-of-experts model for agentic coding, reasoning, tool use, image understanding, and long-context work. This variant enables thinking by default."
+family = "ornith"
+release_date = "2026-08-20"
+last_updated = "2026-08-20"
+attachment = true
+reasoning = true
+tool_call = true
+structured_output = true
+open_weights = true
+reasoning_options = []
+
+[cost]
+input = 0.1
+output = 0.4
+cache_read = 0.01
+
+[limit]
+context = 262_144
+input = 262_144
+output = 32_768
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

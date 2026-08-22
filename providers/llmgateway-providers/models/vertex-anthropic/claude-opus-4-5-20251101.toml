@@ -1,0 +1,20 @@
+base_model = "anthropic/claude-opus-4-5-20251101"
+name = "Claude Opus 4.5 (Vertex AI (Anthropic))"
+structured_output = true
+
+[[reasoning_options]]
+type = "budget_tokens"
+min = 1_024
+max = 31_999
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high", "xhigh", "max"]
+
+[cost]
+input = 5
+output = 25
+cache_read = 0.5
+
+[limit]
+output = 32_000

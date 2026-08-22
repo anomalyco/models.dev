@@ -1,0 +1,16 @@
+# Toggle: chat_template_kwargs.thinking true|false
+# Pricing: Jalapeno Cloud USD per million tokens (marketplace / plugin catalog)
+# Limits: GET https://api.jalapeno-cloud.ai/v1/models id=MiniMax-M3 (2026-08-17)
+base_model = "minimax/MiniMax-M3"
+reasoning_options = [{ type = "toggle" }]
+structured_output = true
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.30
+output = 1.20
+
+[limit]
+context = 524_288

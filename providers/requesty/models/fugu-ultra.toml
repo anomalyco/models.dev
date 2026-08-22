@@ -1,0 +1,18 @@
+base_model = "sakana/fugu-ultra"
+reasoning = false
+structured_output = false
+
+[cost]
+input = 4.5
+output = 27
+cache_read = 0.45
+
+[[cost.tiers]]
+tier = { type = "context", size = 272_000 }
+input = 9
+output = 40.5
+cache_read = 0.9
+
+[limit]
+context = 1_048_576
+output = 131_072

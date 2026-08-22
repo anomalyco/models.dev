@@ -1,0 +1,23 @@
+name = "Mistral: Ministral 8B"
+description = "Ministral 8B is an 8B parameter model featuring a unique interleaved sliding-window attention pattern for faster, memory-efficient inference. Designed for edge use cases, it supports up to 128k context length..."
+family = "ministral"
+release_date = "2024-10-17"
+last_updated = "2024-10-17"
+attachment = false
+reasoning = false
+temperature = true
+tool_call = false
+structured_output = true
+open_weights = false
+
+[cost]
+input = 0.11
+output = 0.11
+
+[limit]
+context = 128_000
+output = 128_000
+
+[modalities]
+input = ["text"]
+output = ["text"]
