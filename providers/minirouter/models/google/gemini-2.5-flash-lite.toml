@@ -2,6 +2,10 @@ base_model = "google/gemini-2.5-flash-lite"
 name = "Gemini 2.5 Flash Lite"
 
 [[reasoning_options]]
+type = "effort"
+values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"]
+
+[[reasoning_options]]
 type = "budget_tokens"
 min = 512
 max = 24_576

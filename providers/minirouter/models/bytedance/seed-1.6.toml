@@ -1,6 +1,9 @@
 base_model = "bytedance-seed/seed-1-6"
 attachment = true
-reasoning_options = []
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"]
 
 [cost]
 input = 0.2625

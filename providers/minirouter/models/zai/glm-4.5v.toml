@@ -1,7 +1,10 @@
 base_model = "zhipuai/glm-4.5v"
 name = "GLM 4.5V"
 knowledge = "2025-08"
-reasoning_options = []
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"]
 
 [cost]
 input = 0.63

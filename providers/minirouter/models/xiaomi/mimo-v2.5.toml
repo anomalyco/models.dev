@@ -1,6 +1,9 @@
 base_model = "xiaomi/mimo-v2.5"
 name = "MiMo M2.5"
-reasoning_options = []
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"]
 
 [cost]
 input = 0.147
