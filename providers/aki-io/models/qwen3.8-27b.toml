@@ -2,9 +2,9 @@
 # AKI.IO uses the reasoning_option 'none' to disable reasoning
 base_model = "alibaba/qwen3.8-27b"
 attachment = false
-reasoning = true
 reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "xhigh"] }]
 
+# cost as described on the AKI.IO pricing page at https://aki.io/#pricing
 [cost]
 input = 0.30
 output = 2.20
