@@ -8,8 +8,15 @@
 #   - structured_output: a quality judgement. Cloudflare advertises response_format for
 #     nearly every model, but several do not honour it (verified live: qwq-32b, qwen2.5-
 #     coder, gemma-sea-lion return non-conforming output), so this stays hand-set.
-#   - reasoning_options: proxied only (the catalog has no reasoning schema).
-#   - limit: proxied context/output that deliberately differ from the catalog.
+#   - reasoning_options: proxied (catalog has no reasoning schema) and any hosted @cf model
+#     whose docs schema doesn't describe its real reasoning knob (native, non-graded, etc.).
+#   - interleaved: whether a wire returns reasoning content as a separate field. Never
+#     inheritable from base_model (this deployment's wire format can differ from the lab's).
+#   - limit.output: neither the catalog's max_output_tokens nor the docs schema is a reliable
+#     ceiling (both verified wrong against lab/first-party for several models), so output is
+#     always hand-curated; only limit.context is auto-derived.
+#   - note: leading `#` comment lines (wire-path docs, source citations) that would otherwise
+#     be lost on every regeneration.
 # Consumed by: bun run cloudflare-ai-gateway:generate
 
 # Proxied Text-Generation catalog ids with no lab file under models/ (cannot publish yet).
@@ -115,8 +122,26 @@ reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
 # Proxied reasoning models whose reasoning shape the Cloudflare catalog schema does not
 # expose (native-format providers). Values mirror models.dev's merge-gateway provider, which
 # proxies the same upstreams. Google uses thinkingConfig.thinkingBudget / thinking_level.
+#
+# DeepSeek: toggle-only would only be correct if AI Gateway drops the effort field on this
+# route (merge-gateway's own toggle-only shape is backed by a live-tested selected-route
+# comment specific to *their* relay, not evidence about Cloudflare's). Absent host-specific
+# proof that Cloudflare strips it, match the lab + Workers AI baseline: toggle + high/max.
 [models."deepseek/deepseek-v4-pro"]
-reasoning_options = [{ type = "toggle" }]
+note = ["Toggle: thinking.type = enabled|disabled.", "Effort: reasoning_effort = high|max."]
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["high", "max"] }]
+
+# Alibaba is a first-party lab; the catalog's OpenAI-compat schema exposes a generic
+# `reasoning_effort` enum, but Alibaba's real API (see providers/alibaba/models/qwen3.7-plus.toml)
+# is toggle + budget_tokens, not graded effort. Match the lab shape per AGENTS.md.
+[models."alibaba/qwen3.7-plus"]
+note = ["Toggle: enable_thinking true|false.", "Budget: thinking_budget (integer reasoning tokens)."]
+reasoning_options = [{ type = "toggle" }, { type = "budget_tokens" }]
+
+# First-party xAI Grok 4.6 (providers/xai/models/grok-4.6.toml) includes xhigh; the catalog
+# schema enum is missing it.
+[models."xai/grok-4.6"]
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh"] }]
 
 [models."google/gemini-2.5-pro"]
 reasoning_options = [{ type = "budget_tokens", min = 128, max = 32_768 }]
@@ -157,39 +182,55 @@ base_model = "deepseek/deepseek-r1-distill-qwen-32b"
 structured_output = false
 # Always-on reasoner with no user-facing knob; docs schema exposes no reasoning parameter.
 reasoning_options = []
+limit = { output = 80_000 }
 
 [models."workers-ai/@cf/deepseek-ai/deepseek-v4-flash-0731"]
 base_model = "deepseek/deepseek-v4-flash-0731"
 
 [models."workers-ai/@cf/deepseek-ai/deepseek-v4-pro-0813"]
 base_model = "deepseek/deepseek-v4-pro-0813"
+note = ["Toggle: thinking.type = enabled|disabled.", "Effort: reasoning_effort = high|max."]
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["high", "max"] }]
 
 [models."workers-ai/@cf/google/gemma-4-26b-a4b-it"]
 base_model = "google/gemma-4-26b-a4b-it"
+note = [
+  "Native `/ai/run` accepts `reasoning_effort = low|medium|high` and",
+  "`chat_template_kwargs.enable_thinking = true|false`; no budget is documented.",
+  "https://developers.cloudflare.com/workers-ai/models/gemma-4-26b-a4b-it/sync-input.json (accessed 2026-06-25)",
+]
+interleaved = true
+limit = { output = 16_384 }
 
 [models."workers-ai/@cf/ibm-granite/granite-4.0-h-micro"]
 base_model = "ibm/granite-4-h-micro"
 structured_output = false
+limit = { output = 131_000 }
 
 [models."workers-ai/@cf/meta/llama-3.1-8b-instruct-fp8"]
 base_model = "meta/llama-3.1-8b-instruct"
 structured_output = false
+limit = { output = 32_000 }
 
 [models."workers-ai/@cf/meta/llama-3.2-11b-vision-instruct"]
 base_model = "meta/llama-3.2-11b-vision-instruct"
 structured_output = false
+limit = { output = 128_000 }
 
 [models."workers-ai/@cf/meta/llama-3.2-1b-instruct"]
 base_model = "meta/llama-3.2-1b"
 structured_output = false
+limit = { output = 60_000 }
 
 [models."workers-ai/@cf/meta/llama-3.2-3b-instruct"]
 base_model = "meta/llama-3.2-3b"
 structured_output = false
+limit = { output = 80_000 }
 
 [models."workers-ai/@cf/meta/llama-3.3-70b-instruct-fp8-fast"]
 base_model = "meta/llama-3.3-70b-instruct"
 structured_output = false
+limit = { output = 24_000 }
 
 [models."workers-ai/@cf/meta/llama-4-scout-17b-16e-instruct"]
 base_model = "meta/llama-4-scout-17b-instruct"
@@ -198,13 +239,22 @@ structured_output = false
 [models."workers-ai/@cf/meta/llama-guard-3-8b"]
 base_model = "meta/llama-guard-3-8b"
 structured_output = false
+limit = { output = 131_072 }
 
 [models."workers-ai/@cf/mistralai/mistral-small-3.1-24b-instruct"]
 base_model = "mistral/mistral-small-3-1-24b-instruct-2503"
 structured_output = false
+limit = { output = 128_000 }
 
 [models."workers-ai/@cf/moonshotai/kimi-k2.6"]
 base_model = "moonshotai/kimi-k2.6"
+note = [
+  "Native `/ai/run` accepts `reasoning_effort = low|medium|high` and",
+  "`chat_template_kwargs.thinking = true|false`; no budget is documented.",
+  "https://developers.cloudflare.com/workers-ai/models/kimi-k2.6/sync-input.json (accessed 2026-06-25)",
+]
+interleaved = { field = "reasoning_content" }
+limit = { output = 256_000 }
 
 [models."workers-ai/@cf/moonshotai/kimi-k2.7-code"]
 base_model = "moonshotai/kimi-k2.7-code"
@@ -212,26 +262,50 @@ base_model = "moonshotai/kimi-k2.7-code"
 [models."workers-ai/@cf/nvidia/nemotron-3-120b-a12b"]
 base_model = "nvidia/nemotron-3-super-120b-a12b"
 structured_output = true
+note = [
+  "Native `/ai/run` accepts `reasoning_effort = low|medium|high` and",
+  "`chat_template_kwargs.enable_thinking = true|false`; no budget is documented.",
+  "https://developers.cloudflare.com/workers-ai/models/nemotron-3-120b-a12b/sync-input.json (accessed 2026-06-25)",
+]
+interleaved = true
+limit = { output = 256_000 }
 
 [models."workers-ai/@cf/openai/gpt-oss-120b"]
 base_model = "openai/gpt-oss-120b"
+note = [
+  "Native `/ai/run` schema has no reasoning control, and no model-specific",
+  "OpenAI-compatible reasoning field was verified. No token budget is documented.",
+  "https://developers.cloudflare.com/workers-ai/models/gpt-oss-120b/sync-input.json (accessed 2026-06-25)",
+]
+reasoning_options = []
+limit = { output = 16_384 }
 
 [models."workers-ai/@cf/openai/gpt-oss-20b"]
 base_model = "openai/gpt-oss-20b"
+note = [
+  "Native `/ai/run` schema has no reasoning control, and no model-specific",
+  "OpenAI-compatible reasoning field was verified. No token budget is documented.",
+  "https://developers.cloudflare.com/workers-ai/models/gpt-oss-20b/sync-input.json (accessed 2026-06-25)",
+]
+reasoning_options = []
+limit = { output = 16_384 }
 
 [models."workers-ai/@cf/qwen/qwen2.5-coder-32b-instruct"]
 base_model = "alibaba/qwen2.5-coder-32b-instruct"
 structured_output = false
+limit = { output = 32_768 }
 
 [models."workers-ai/@cf/qwen/qwen3-30b-a3b-fp8"]
 base_model = "alibaba/qwen3-30b-a3b"
 structured_output = false
 reasoning_options = []
+limit = { output = 32_768 }
 
 [models."workers-ai/@cf/qwen/qwq-32b"]
 base_model = "alibaba/qwq-32b"
 structured_output = false
 reasoning_options = []
+limit = { output = 24_000 }
 
 # structured_output inherited (base=true, verified live: honours response_format json_schema);
 # reasoning_options (toggle + effort) derived from the docs input schema.
@@ -241,7 +315,11 @@ base_model = "alibaba/qwen3.8-27b"
 [models."workers-ai/@cf/zai-org/glm-4.7-flash"]
 base_model = "zhipuai/glm-4.7-flash"
 structured_output = true
+interleaved = { field = "reasoning_content" }
+limit = { output = 131_072 }
 
 [models."workers-ai/@cf/zai-org/glm-5.2"]
 base_model = "zhipuai/glm-5.2"
+note = ["Context and output limits verified against Cloudflare Workers AI's OpenAI-compatible endpoint."]
+limit = { output = 256_000 }
 

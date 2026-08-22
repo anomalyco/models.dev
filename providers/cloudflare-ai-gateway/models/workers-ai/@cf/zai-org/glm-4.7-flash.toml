@@ -2,6 +2,9 @@ base_model = "zhipuai/glm-4.7-flash"
 tool_call = true
 structured_output = true
 
+[interleaved]
+field = "reasoning_content"
+
 [[reasoning_options]]
 type = "toggle"
 
@@ -15,3 +18,4 @@ output = 0.4
 
 [limit]
 context = 131_072
+output = 131_072

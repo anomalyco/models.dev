@@ -53,6 +53,13 @@ const CuratedModel = z
     structured_output: z.boolean().optional(),
     reasoning_options: z.array(ReasoningOption).optional(),
     limit: z.record(z.number()).optional(),
+    interleaved: z
+      .union([z.literal(true), z.object({ field: z.enum(["reasoning_content", "reasoning_details"]) }).strict()])
+      .optional(),
+    // Leading `#` comment lines, e.g. a toggle/effort wire-path note (AGENTS.md requires one
+    // for every `toggle` reasoning option) or a source citation. Rendered verbatim above the
+    // generated fields so hand-verified host behavior survives every regeneration.
+    note: z.array(z.string()).optional(),
   })
   .strict();
 
@@ -296,6 +303,14 @@ function deriveReasoningOptions(schemaInput: unknown): Array<Record<string, unkn
   return opts;
 }
 
+// Prepend curated leading `#` comment lines (a toggle/effort wire-path note, a source
+// citation, etc.) above the generated content. AGENTS.md requires one for every `toggle`
+// reasoning option since sync strips mid-file comments on every regeneration.
+function withNote(note: string[] | undefined, content: string): string {
+  if (!note || note.length === 0) return content;
+  return `${note.map((line) => `# ${line}`).join("\n")}\n\n${content}`;
+}
+
 // ---------------------------------------------------------------------------
 // base_model resolution
 // ---------------------------------------------------------------------------
@@ -361,6 +376,7 @@ async function main() {
     // the catalog only carries Cloudflare's own casing/marketing variants.
     const model: Record<string, unknown> = { base_model: base };
     if (cur.structured_output !== undefined) model.structured_output = cur.structured_output;
+    if (cur.interleaved !== undefined) model.interleaved = cur.interleaved;
 
     // reasoning_options: only meaningful when the base actually reasons. The catalog schema
     // advertises reasoning_effort for some non-reasoning models (gpt-4.1, gpt-4o) — schema
@@ -384,15 +400,16 @@ async function main() {
     if (Object.keys(cost).length === 0) errors.push(`proxied ${id}: catalog pricing empty`);
     model.cost = cost;
 
+    // limit.output: the catalog's max_output_tokens is not a reliable ceiling — verified wrong
+    // against lab/first-party for gpt-5, gpt-5.5, and claude-haiku-4.5 (all understated by
+    // 4-8x). Only context_length has checked out, so that's all we auto-derive; output is
+    // either curated explicitly or left to inherit from base_model.
     const limit: Record<string, number> = {};
     if (cur.limit) Object.assign(limit, cur.limit);
-    else {
-      if (m.context_length != null) limit.context = m.context_length;
-      if (m.max_output_tokens != null) limit.output = m.max_output_tokens;
-    }
+    else if (m.context_length != null) limit.context = m.context_length;
     if (Object.keys(limit).length) model.limit = limit;
 
-    wanted.set(path.join(MODELS_DIR, `${id}.toml`), formatToml(model as any));
+    wanted.set(path.join(MODELS_DIR, `${id}.toml`), withNote(cur.note, formatToml(model as any)));
   }
 
   // --- hosted @cf models ---
@@ -417,6 +434,10 @@ async function main() {
     if (hostedProp(docs, "function_calling") === "true") model.tool_call = true;
     if (hostedProp(docs, "vision") === "true") model.attachment = true;
     if (cur.structured_output !== undefined) model.structured_output = cur.structured_output;
+    // interleaved: whether this @cf deployment returns reasoning content as a separate wire
+    // field. Not part of the docs schema and not inheritable from base_model (the lab's own
+    // API frequently differs), so it only ever comes from curation.
+    if (cur.interleaved !== undefined) model.interleaved = cur.interleaved;
 
     // reasoning_options: only when the base reasons (schema forbids them otherwise). Derived
     // from the docs input schema; curation may override for the rare model whose docs schema
@@ -439,10 +460,20 @@ async function main() {
     const cost = hostedCost(docs);
     if (cost) model.cost = cost;
 
+    // limit.output: the docs schema does not expose a hosted output ceiling, and Workers AI's
+    // own deployment cap is frequently lower than the lab's SaaS limit (e.g. gpt-oss-20b caps
+    // at 16_384 here vs 32_768 for the lab API) — inheriting from base_model would overstate
+    // it. Only curation (hand-verified per model) can supply it.
     const context = hostedProp(docs, "context_window");
-    if (context != null) model.limit = { context: Number(context) };
+    const limit: Record<string, number> = {};
+    if (context != null) limit.context = Number(context);
+    if (cur.limit) Object.assign(limit, cur.limit);
+    if (Object.keys(limit).length) model.limit = limit;
 
-    wanted.set(path.join(MODELS_DIR, `workers-ai/${cfId}.toml`), formatToml(model as any));
+    wanted.set(
+      path.join(MODELS_DIR, `workers-ai/${cfId}.toml`),
+      withNote(cur.note, formatToml(model as any)),
+    );
   }
 
   // Guards: a curation model id that no longer appears in the live feeds (warn only).
