@@ -10,8 +10,8 @@
 # https://github.com/SolWorks-Dev/minirouter/blob/401f445fe23e94e21a6cb921c7c855296732ee27/services/edge/src/relay.ts#L846-L850
 # https://vercel.com/docs/ai-gateway/models-and-providers/reasoning
 # The closed request schema rejects reasoning.enabled and enable_thinking, so
-# no toggle is advertised. Toggle-only peers use [] because no on path remains.
-# When effort or budget remains, reasoning.effort=none preserves the peer off path.
+# no toggle is advertised. Toggle-only peers use []; budget peers keep only budget.
+# On graded-effort peers, effort=none preserves off beside the verified on levels.
 name = "minirouter"
 env = ["MINIROUTER_API_KEY"]
 npm = "@ai-sdk/openai-compatible"
