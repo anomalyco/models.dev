@@ -1,0 +1,24 @@
+name = "Gemma 4 26B A4B Uncensored"
+description = "Gemma 4 26B A4B Uncensored is an NVFP4 open-weight multimodal mixture-of-experts model tuned for fewer refusals across chat, coding, tool use, and long-context work."
+family = "gemma"
+release_date = "2026-08-22"
+last_updated = "2026-08-22"
+attachment = true
+reasoning = false
+tool_call = true
+structured_output = true
+open_weights = true
+
+[cost]
+input = 0.08
+output = 0.33
+cache_read = 0.04
+
+[limit]
+context = 131_072
+input = 131_072
+output = 32_768
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
