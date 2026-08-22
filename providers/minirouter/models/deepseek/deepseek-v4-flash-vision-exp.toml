@@ -1,11 +1,11 @@
-# MiniRouter accepts reasoning.effort=none as the off path; the DeepSeek lab
-# constrains enabled effort to high|max. Wire source: provider.toml.
-# https://github.com/SolWorks-Dev/minirouter/blob/401f445fe23e94e21a6cb921c7c855296732ee27/packages/pricing/src/admission-bound.ts#L520-L538
+# MiniRouter forwards this request to Vercel AI Gateway; its same-surface
+# DeepSeek peer exposes high|xhigh, with effort=none as the mapped off path.
+# https://vercel.com/docs/ai-gateway/models-and-providers/reasoning
 base_model = "deepseek/deepseek-v4-flash-vision-exp"
 
 [[reasoning_options]]
 type = "effort"
-values = ["none", "high", "max"]
+values = ["none", "high", "xhigh"]
 
 [cost]
 input = 0.231
