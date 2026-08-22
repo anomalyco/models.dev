@@ -1,6 +1,6 @@
 base_model = "nvidia/nemotron-3-ultra-550b-a55b"
 name = "Nemotron 3 Ultra"
-reasoning_options = []
+reasoning_options = [{ type = "effort", values = ["none"] }]
 
 [cost]
 input = 0.63
