@@ -4,6 +4,10 @@ name = "Claude Haiku 4.5"
 interleaved = true
 
 [[reasoning_options]]
+type = "effort"
+values = ["none"]
+
+[[reasoning_options]]
 type = "budget_tokens"
 min = 1_024
 

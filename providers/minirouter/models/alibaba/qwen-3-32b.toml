@@ -2,6 +2,10 @@ base_model = "alibaba/qwen3-32b"
 name = "Qwen 3 32B"
 
 [[reasoning_options]]
+type = "effort"
+values = ["none"]
+
+[[reasoning_options]]
 type = "budget_tokens"
 min = 1
 max = 38_912
