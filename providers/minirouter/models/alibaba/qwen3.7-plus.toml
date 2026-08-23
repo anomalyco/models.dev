@@ -1,9 +1,10 @@
-# Toggle: reasoning.effort=none (off); omit reasoning or use non-none effort (on).
+# Off: reasoning.effort=none; omit reasoning to use the model default/on mode.
 base_model = "alibaba/qwen3.7-plus"
 name = "Qwen 3.7 Plus"
 
 [[reasoning_options]]
-type = "toggle"
+type = "effort"
+values = ["none"]
 
 [[reasoning_options]]
 type = "budget_tokens"

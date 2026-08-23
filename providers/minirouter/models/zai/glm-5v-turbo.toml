@@ -1,9 +1,10 @@
-# Toggle: reasoning.effort=none (off); omit reasoning or use non-none effort (on).
+# Off: reasoning.effort=none; omit reasoning to use the model default/on mode.
 base_model = "zhipuai/glm-5v-turbo"
 name = "GLM 5V Turbo"
 
 [[reasoning_options]]
-type = "toggle"
+type = "effort"
+values = ["none"]
 
 [cost]
 input = 1.26

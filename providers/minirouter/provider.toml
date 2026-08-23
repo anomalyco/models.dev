@@ -10,8 +10,8 @@
 # https://github.com/SolWorks-Dev/minirouter/blob/401f445fe23e94e21a6cb921c7c855296732ee27/services/edge/src/relay.ts#L846-L850
 # https://vercel.com/docs/ai-gateway/models-and-providers/reasoning
 # Chat Completions forwards the admitted reasoning object to Vercel unchanged.
-# Toggle-only entries use reasoning.effort=none for off and omission/default for on,
-# matching MiniRouter's frozen catalog and Vercel's provider-agnostic mapping.
+# Binary off controls are encoded as effort=[none], not toggle, because the
+# wire path is reasoning.effort=none; omission/default selects the on mode.
 name = "minirouter"
 env = ["MINIROUTER_API_KEY"]
 npm = "@ai-sdk/openai-compatible"
