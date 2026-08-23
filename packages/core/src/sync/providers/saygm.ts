@@ -33,8 +33,14 @@ const PriceDimensions = z.object({
   }
 });
 
-const RetailCeiling = z.object({
-  basis: z.literal("published_retail"),
+// `pricing.basis` is one of two things: the cheapest currently routable
+// miner offer, or (when nothing is routable) gm's published retail cap as a
+// fallback. Both are valid API responses, so both must parse — but only the
+// first is a price to publish; see `buildSaygmModel`. Anything outside these
+// two literals is a schema change models.dev has not reviewed and must fail
+// the sync loudly rather than silently publish an unknown basis.
+const Pricing = z.object({
+  basis: z.enum(["cheapest_eligible_offer", "published_retail"]),
   dimensions: PriceDimensions,
 }).passthrough();
 
@@ -43,11 +49,7 @@ export const SaygmModel = z.object({
   object: z.literal("model"),
   available: z.boolean(),
   api_shapes: z.array(z.string().min(1)),
-  price_range: z.object({
-    unit: z.literal("ndollars_per_mtok"),
-    currency: z.literal("USD"),
-    ceiling: RetailCeiling,
-  }).passthrough().optional(),
+  pricing: Pricing.optional(),
 }).passthrough();
 
 export const SaygmResponse = z.object({
@@ -61,9 +63,15 @@ export const saygm = {
   id: "saygm",
   name: "SayGM",
   modelsDir: "providers/saygm/models",
-  // The live inventory can change with miner supply. Until the API publishes
-  // durable supply depth, only update models that were reviewed into the
-  // catalog and retain them through temporary outages.
+  // SayGM's discount over each lab's own price is the whole reason to route
+  // through it, so this catalog publishes the current cheapest eligible
+  // miner offer rather than gm's published retail cap. That number moves
+  // with live miner supply and can be a cent or two stale between hourly
+  // syncs — accepted, because a number that is usually right beats a stable
+  // one that is permanently uncompetitive. The live inventory can also change
+  // with miner supply for other reasons (a model can stop being served
+  // entirely), so this sync only ever updates models that were reviewed into
+  // the catalog and retains them through temporary outages.
   skipCreates: true,
   deleteMissing: false,
   trackMissingModels: false,
@@ -112,15 +120,18 @@ export async function fetchSaygmModels(fetcher: typeof fetch = fetch) {
 }
 
 export function buildSaygmModel(model: SaygmModel, existing: ExistingModel): SyncedModel {
-  const ceiling = model.price_range?.ceiling;
-  if (ceiling === undefined) {
-    // A partial catalogue response must not make the hourly update discard or
-    // block a reviewed model. Keep its last reviewed price until SayGM
-    // publishes a complete retail ceiling again.
+  const pricing = model.pricing;
+  if (pricing === undefined || pricing.basis !== "cheapest_eligible_offer") {
+    // No live miner offer right now: either the field is absent from a
+    // partial response, or the API itself fell back to publishing the
+    // retail cap because nothing is currently routable. Neither is a
+    // cheapest-eligible price, so this must not adopt the retail number
+    // under a stale "current price" label, write a zero, or block the
+    // hourly update — keep the last reviewed price instead.
     return existing as SyncedModel;
   }
 
-  const dimensions = ceiling.dimensions;
+  const dimensions = pricing.dimensions;
   // The API has no explicit "no such price" signal, so an omitted optional
   // dimension keeps the authored value (same as the xAI sync) rather than
   // clearing a reviewed one.
