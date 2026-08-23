@@ -4,7 +4,7 @@
 # Reasoning control, verified live 2026-08-16 (temperature 0, fixed prompt, two identical runs
 # per level): reasoning_effort is a graded dial with the wire values below, each reproducibly
 # distinct (completion tokens 113 low, 140 medium, 89 xhigh which equals the omitted default).
-# Since 2026-08-23 the gateway also ACCEPTS "high" and folds it to "xhigh" before dispatch.
+# Since 2026-08-21 the gateway also ACCEPTS "high" and folds it to "xhigh" before dispatch.
 # It is not published as a separate rung because it is not a distinct behaviour, only the
 # OpenAI ladder's word for the maximum, and this serve's maximum is "xhigh". Callers that
 # send "high" are served rather than refused.
