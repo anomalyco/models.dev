@@ -1,8 +1,9 @@
-# MiniRouter's frozen exact-ID record has no reasoning tag, option, or request
-# parameter, so this host inherits the non-reasoning shared lab capability.
-# Source: https://github.com/SolWorks-Dev/minirouter/blob/35ac01a7b87b5feec3984c49c1eb995d74f0ae23/parity/snapshots/2026-08-06/artifacts/models.json
+# MiniRouter's immutable and live exact-ID catalog rows expose tools but no
+# reasoning tag or reasoning request parameter. This host therefore keeps the
+# shared lab's non-reasoning capability despite a differently classified peer.
+# Frozen source: https://github.com/SolWorks-Dev/minirouter/blob/35ac01a7b87b5feec3984c49c1eb995d74f0ae23/parity/snapshots/2026-08-06/artifacts/models.json
+# Live catalog: https://api.minirouter.sh/v1/models
 base_model = "alibaba/qwen3-coder-next"
-
 
 [cost]
 input = 0.525
