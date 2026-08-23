@@ -1,0 +1,15 @@
+base_model = "moonshotai/kimi-k2.6"
+name = "Kimi K2.6 (Baidu)"
+structured_output = false
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"]
+
+[cost]
+input = 0.95
+output = 4
+cache_read = 0.16

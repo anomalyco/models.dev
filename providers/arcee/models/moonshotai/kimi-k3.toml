@@ -1,0 +1,19 @@
+# Beta catalog and pricing: https://www.arcee.ai/blog/open-models-api-beta
+# Cached input pricing: https://docs.arcee.ai/get-started/pricing.md
+# Effort: reasoning_effort = low|high|max
+base_model = "moonshotai/kimi-k3"
+attachment = false
+temperature = true
+status = "beta"
+reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 3.00
+output = 15.00
+cache_read = 0.30
+
+[modalities]
+input = ["text"]

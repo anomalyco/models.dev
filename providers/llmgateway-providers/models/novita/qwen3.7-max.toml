@@ -1,0 +1,12 @@
+base_model = "alibaba/qwen3.7-max"
+name = "Qwen3.7 Max (NovitaAI)"
+structured_output = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"]
+
+[cost]
+input = 1.25
+output = 3.75
+cache_read = 0.25

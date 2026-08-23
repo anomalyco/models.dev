@@ -7,10 +7,12 @@
 # Reasoning cannot be turned off: reasoning_effort = "none" is rejected with HTTP 400
 # "Disabling thinking is not supported." enable_thinking / chat_template_kwargs /
 # thinking_budget are accepted but have no effect.
-# cache_read is the cached input price; JSON mode is not available
+# cache_read is the cached input price. JSON mode went live on this host 2026-08-17,
+# verified on the public path: 3 of 3 json_object responses parsed and 3 of 3 strict
+# json_schema responses validated, at 0.35x baseline latency, so structured_output now
+# inherits true from the lab entry
 name = "Qwen3.8 2.4T A95B (NVFP4)"
 base_model = "alibaba/qwen3.8-2.4t-a95b"
-structured_output = false
 
 [[reasoning_options]]
 type = "effort"

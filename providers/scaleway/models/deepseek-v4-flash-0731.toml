@@ -1,0 +1,22 @@
+# see: https://www.scaleway.com/en/docs/generative-apis/reference-content/supported-models/#deepseek-v4-flash-0731
+# last update: 2026-08-21
+base_model = "deepseek/deepseek-v4-flash-0731"
+reasoning_options = [{ type = "effort", values = ["none", "low", "high", "max"] }]
+status = "beta"
+
+interleaved = true
+
+[cost]
+# Scaleway pricing: https://www.scaleway.com/en/pricing/model-as-a-service/ (accessed 2026-08-21)
+# Billed in EUR: €0.40 input / €0.08 cached input / €0.80 output per 1M tokens.
+# Converted at 1 EUR = 1.17 USD on 2026-08-21 (models.dev publishes USD).
+# Reasoning tokens bill as output: verified empirically — the API returns
+# chain-of-thought in `reasoning` and counts it inside completion_tokens.
+input = 0.468
+output = 0.936
+reasoning = 0.936
+cache_read = 0.0936
+
+[limit]
+context = 256_000
+output = 16_384

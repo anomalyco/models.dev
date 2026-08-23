@@ -22,11 +22,13 @@ function baseModelExists(modelID: string): boolean {
 // CROSSMODEL_MODELS_URL overrides the endpoint (e.g. a local backend) for testing.
 const API_ENDPOINT = process.env.CROSSMODEL_MODELS_URL ?? "https://www.crossmodel.ai/api/models";
 
+const REASONING_EFFORTS = ["none", "minimal", "low", "medium", "high", "xhigh", "max", "default"] as const;
+
 const ReasoningCapability = z
   .object({
     supported: z.boolean().optional(),
     toggle: z.boolean().nullish().transform((value) => value ?? undefined),
-    effort: z.array(z.string()).nullish().transform((value) => value ?? undefined),
+    effort: z.array(z.enum(REASONING_EFFORTS)).nullish().transform((value) => value ?? undefined),
     budget_tokens: z
       .object({ min: z.number().optional(), max: z.number().optional() })
       .nullish()
@@ -160,15 +162,6 @@ function modalities(values: string[] | undefined, fallback: Modality[]): Modalit
   return [...new Set(result.length > 0 ? result : fallback)];
 }
 
-// models.dev's reasoning_options effort enum (schema.ts ReasoningEffortValue).
-// Guarding against it means an unexpected upstream value is dropped instead of
-// silently producing a TOML that fails `validate`.
-const REASONING_EFFORTS = ["none", "minimal", "low", "medium", "high", "xhigh", "max", "default"] as const;
-type ReasoningEffort = (typeof REASONING_EFFORTS)[number];
-function isReasoningEffort(value: string): value is ReasoningEffort {
-  return (REASONING_EFFORTS as readonly string[]).includes(value);
-}
-
 // Project CrossModel's capabilities.reasoning onto models.dev reasoning_options.
 //   reasoning absent  -> undefined (non-reasoning model; option omitted)
 //   reasoning === {}  -> [] (model reasons, no verified user-selectable control)
@@ -179,8 +172,7 @@ function reasoningOptions(model: CrossModelModel): SyncedModel["reasoning_option
   const options: NonNullable<SyncedModel["reasoning_options"]> = [];
   if (reasoning.toggle === true) options.push({ type: "toggle" });
   if (reasoning.effort !== undefined) {
-    const values = reasoning.effort.filter(isReasoningEffort);
-    if (values.length > 0) options.push({ type: "effort", values });
+    if (reasoning.effort.length > 0) options.push({ type: "effort", values: reasoning.effort });
   }
   if (reasoning.budget_tokens !== undefined) {
     const budget: { type: "budget_tokens"; min?: number; max?: number } = { type: "budget_tokens" };

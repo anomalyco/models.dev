@@ -1,0 +1,29 @@
+name = "Meituan: LongCat 2.0 (free)"
+description = "LongCat 2.0 is a sparse mixture-of-experts language model from Meituan, with 48B active parameters out of 1.6T total. It is suited for coding, repository-level changes, long-horizon problem solving, and agentic workflows. Available free in Kilo for a limited time."
+family = "longcat"
+release_date = "2025-08-26"
+last_updated = "2025-08-26"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = false
+open_weights = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "high"]
+
+[cost]
+input = 0
+output = 0
+reasoning = 0
+cache_read = 0
+
+[limit]
+context = 1_048_756
+output = 131_072
+
+[modalities]
+input = ["text"]
+output = ["text"]

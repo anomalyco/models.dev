@@ -2,7 +2,12 @@
 # Effort: reasoning_effort = high|max.
 base_model = "deepseek/deepseek-v4-flash-0731"
 
-reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["high", "max"] }]
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["high", "max"]
 
 [cost]
 input = 0.44
@@ -10,5 +15,5 @@ output = 1.32
 cache_read = 0.014
 
 [limit]
-context = 1_048_576
+context = 1_310_720
 output = 1_048_576

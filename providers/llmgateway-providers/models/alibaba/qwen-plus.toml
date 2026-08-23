@@ -1,0 +1,14 @@
+base_model = "alibaba/qwen-plus"
+name = "Qwen Plus (Alibaba Cloud)"
+reasoning = false
+structured_output = false
+
+[cost]
+input = 0.4
+output = 1.2
+cache_read = 0.08
+cache_write = 0.5
+
+[limit]
+context = 131_072
+output = 32_000

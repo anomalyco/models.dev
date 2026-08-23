@@ -1,22 +1,16 @@
 # Not included in subscription
 # Tracks Gemini 3.5 Flash (current flash-latest target).
 base_model = "google/gemini-flash-latest"
-tool_call = false
-structured_output = false
 
 [[reasoning_options]]
 type = "effort"
 values = ["minimal", "low", "medium", "high"]
 
 [cost]
-input = 0.75
-output = 3.75
-cache_read = 0.075
-cache_write = 0.041667
+input = 0.375
+output = 1.875
+cache_read = 0.0375
+cache_write = 0.020833
 
 [limit]
-context = 1_048_756
-input = 1_048_756
-
-[modalities]
-input = ["text", "image", "audio"]
+input = 1_048_576
