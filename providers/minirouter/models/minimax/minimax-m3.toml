@@ -1,9 +1,8 @@
-# Off: reasoning.effort=none; omit reasoning to use the model default/on mode.
+# Toggle: reasoning.effort = none (off); omit reasoning (on).
 base_model = "minimax/MiniMax-M3"
 
 [[reasoning_options]]
-type = "effort"
-values = ["none"]
+type = "toggle"
 
 [cost]
 input = 0.315

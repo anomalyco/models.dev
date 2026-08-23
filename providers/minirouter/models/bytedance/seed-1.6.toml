@@ -1,4 +1,4 @@
-# Off: reasoning.effort=none; omit reasoning to use the model default/on mode.
+# Toggle: reasoning.effort = none (off); omit reasoning (on).
 # MiniRouter's exact Seed 1.6 row combines the reasoning tag with image+text
 # input. The separate vision lab identity is non-reasoning, so the reasoning
 # Seed 1.6 base plus attachment/modalities is the accurate host composition.
@@ -7,8 +7,7 @@ base_model = "bytedance-seed/seed-1-6"
 attachment = true
 
 [[reasoning_options]]
-type = "effort"
-values = ["none"]
+type = "toggle"
 
 [cost]
 input = 0.2625
