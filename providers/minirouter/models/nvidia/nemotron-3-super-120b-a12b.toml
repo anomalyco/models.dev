@@ -1,10 +1,11 @@
-# Toggle: reasoning.effort=none (off); omit reasoning (on).
+# Off: reasoning.effort=none; omit reasoning to use the model default/on mode.
 base_model = "nvidia/nemotron-3-super-120b-a12b"
 name = "NVIDIA Nemotron 3 Super 120B A12B"
 tool_call = false
 
 [[reasoning_options]]
-type = "toggle"
+type = "effort"
+values = ["none"]
 
 [cost]
 input = 0.1575

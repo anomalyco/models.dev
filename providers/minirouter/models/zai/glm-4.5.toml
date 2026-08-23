@@ -1,11 +1,12 @@
-# Toggle: reasoning.effort=none (off); omit reasoning (on).
+# Off: reasoning.effort=none; omit reasoning to use the model default/on mode.
 base_model = "zhipuai/glm-4.5"
 knowledge = "2025-07"
 
 interleaved = true
 
 [[reasoning_options]]
-type = "toggle"
+type = "effort"
+values = ["none"]
 
 [cost]
 input = 0.63

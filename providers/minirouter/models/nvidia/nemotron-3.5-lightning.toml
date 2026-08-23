@@ -1,9 +1,10 @@
-# Toggle: reasoning.effort=none (off); omit reasoning (on).
+# Off: reasoning.effort=none; omit reasoning to use the model default/on mode.
 base_model = "nvidia/nemotron-3.5-lightning"
 name = "Nemotron 3.5 Lightning 30B"
 
 [[reasoning_options]]
-type = "toggle"
+type = "effort"
+values = ["none"]
 
 [cost]
 input = 0.0525
