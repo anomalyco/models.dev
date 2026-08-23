@@ -1,4 +1,4 @@
-# Off: reasoning.effort=none; omit reasoning to use the model default/on mode.
+# Toggle: reasoning.effort=none (off); omit reasoning (on).
 # MiniRouter's exact-ID snapshot records image+text input on the reasoning Seed
 # 1.6 model; attachment/modalities are the host delta from the shared text lab row.
 # Source: https://github.com/SolWorks-Dev/minirouter/blob/35ac01a7b87b5feec3984c49c1eb995d74f0ae23/parity/snapshots/2026-08-06/artifacts/models.json
@@ -6,8 +6,7 @@ base_model = "bytedance-seed/seed-1-6"
 attachment = true
 
 [[reasoning_options]]
-type = "effort"
-values = ["none"]
+type = "toggle"
 
 [cost]
 input = 0.2625

@@ -1,10 +1,9 @@
-# The same-ID Vercel peer on MiniRouter's default upstream is reasoning-capable;
-# MiniRouter forwards that upstream surface but exposes no caller control here.
+# MiniRouter's frozen exact-ID record has no reasoning tag, option, or request
+# parameter, so this host inherits the non-reasoning shared lab capability.
+# Source: https://github.com/SolWorks-Dev/minirouter/blob/35ac01a7b87b5feec3984c49c1eb995d74f0ae23/parity/snapshots/2026-08-06/artifacts/models.json
 base_model = "alibaba/qwen3-coder-30b-a3b-instruct"
 name = "Qwen 3 Coder 30B A3B Instruct"
 
-reasoning = true
-reasoning_options = []
 
 [cost]
 input = 0.1575
