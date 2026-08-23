@@ -1,6 +1,6 @@
 name = "Bee Swarm 1.0"
 description = "Premium reasoning, multi-model cloud execution, large-document analysis, and high-value technical work. Includes the evolution engine and stronger eval gates by default."
-attachment = false
+attachment = true
 reasoning = true
 reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
 tool_call = false
@@ -10,7 +10,7 @@ release_date = "2026-07-10"
 last_updated = "2026-08-23"
 
 [modalities]
-input = ["text"]
+input = ["text", "image"]
 output = ["text"]
 
 [limit]
