@@ -2,7 +2,7 @@ name = "Bee Comb 1.0"
 description = "Team multimodal workhorse - 3 seats, workstation-grade reasoning."
 attachment = true
 reasoning = true
-reasoning_options = [{ type = "toggle" }]
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
 tool_call = true
 structured_output = true
 temperature = true

@@ -2,7 +2,7 @@ name = "Bee Hive 1.0"
 description = "Frontier multimodal - text, image, voice in/out - 10 seats. Premium tier."
 attachment = true
 reasoning = true
-reasoning_options = [{ type = "toggle" }]
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
 tool_call = true
 structured_output = true
 temperature = true

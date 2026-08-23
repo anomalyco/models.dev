@@ -2,7 +2,7 @@ name = "Bee Brood 1.0"
 description = "Cost-efficient multimodal reasoning for longer, thoughtful work."
 attachment = true
 reasoning = true
-reasoning_options = [{ type = "toggle" }]
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
 tool_call = true
 structured_output = false
 temperature = true
