@@ -1,8 +1,13 @@
+# Toggle: reasoning.enabled true|false (OpenRouter-style `reasoning` object,
+# forwarded to the seller unchanged); effort: reasoning_effort.
+# Controls mirror the same canonical model's OpenRouter entry.
 base_model = "minimax/MiniMax-M3"
 name = "MiniMax M3"
 attachment = false
 structured_output = true
-reasoning_options = []
+
+[[reasoning_options]]
+type = "toggle"
 
 [limit]
 context = 200_000

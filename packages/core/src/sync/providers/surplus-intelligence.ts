@@ -94,6 +94,38 @@ const INLINE_OPEN_WEIGHTS: Record<string, boolean> = {
   "mistral-large": true,
 };
 
+// Canonical models whose controls cannot be found mechanically: the peer
+// entry lives under an alias/dated ID with no key back to the canonical, or
+// no relay peer exists and the family control is documented on siblings.
+const AUTHORED_REASONING_OPTIONS: Record<string, NonNullable<SyncedFullModel["reasoning_options"]>> = {
+  // OpenRouter's deepseek-chat-v3.1 (same model, alias ID) authors a toggle.
+  "deepseek/deepseek-v3.1": [{ type: "toggle" }],
+  // No relay peer serves E2B; every other Gemma 4 entry (lab + relays)
+  // exposes the same thinking toggle.
+  "google/gemma-4-E2B-it": [{ type: "toggle" }],
+  // Matches gpt-oss-safeguard-20b here and on OpenRouter, and
+  // safeguard-120b on Cortecs/Tinfoil.
+  "openai/gpt-oss-safeguard-120b": [{ type: "effort", values: ["low", "medium", "high"] }],
+};
+
+// Maps models/ metadata directories to the lab's own first-party provider
+// directory, the most authoritative source for a lab model's controls when
+// no OpenRouter peer file keys the canonical ID.
+const FIRST_PARTY_PROVIDERS: Record<string, string> = {
+  alibaba: "alibaba",
+  anthropic: "anthropic",
+  deepseek: "deepseek",
+  google: "google",
+  minimax: "minimax",
+  mistral: "mistral",
+  moonshotai: "moonshotai",
+  nvidia: "nvidia",
+  openai: "openai",
+  tencent: "tencent",
+  xai: "xai",
+  zhipuai: "zai",
+};
+
 // Maps providers/openrouter/models subdirectories to models/ metadata
 // directories so reasoning_options authored for the same canonical model on
 // OpenRouter (the established same-surface relay peer) can be mirrored here.
@@ -198,17 +230,19 @@ function buildSurplusModel(model: SurplusModel, existing: ExistingModel | undefi
   const input = modalities(model.architecture.input_modalities, ["text"]);
   const output = modalities(model.architecture.output_modalities, ["text"]);
   const canonical = existing?.base_model ?? resolveSurplusBaseModel(model);
-  // Surplus's catalog omits the reasoning feature/params on some lab
-  // reasoners (e.g. gpt-oss routes advertise it on the e2ee variants only).
-  // A pass-through marketplace cannot strip a lab reasoner, so a missing
-  // flag is a catalog gap, not a capability change: never author
-  // `reasoning = false` onto a canonical model whose lab entry says true.
-  const reasoning =
-    features.has("reasoning") ||
-    params.has("reasoning") ||
-    params.has("include_reasoning") ||
-    params.has("reasoning_effort") ||
-    (canonical !== undefined && labReasoning(canonical));
+  // Surplus's catalog is unreliable about reasoning in both directions: it
+  // omits the feature on some lab reasoners (gpt-oss routes advertise it on
+  // the e2ee variants only) and blanket-lists reasoning params on lab
+  // non-reasoners (the instruct-2507 checkpoint). A pass-through marketplace
+  // can neither strip nor add reasoning, so lab identity is authoritative
+  // for canonical models; Surplus's own signals apply only to
+  // marketplace-only inline routes.
+  const reasoning = canonical !== undefined
+    ? labReasoning(canonical)
+    : features.has("reasoning") ||
+      params.has("reasoning") ||
+      params.has("include_reasoning") ||
+      params.has("reasoning_effort");
   const toolCall = features.has("tools") || params.has("tools") || params.has("tool_choice");
   const structuredOutput = params.has("structured_outputs");
   const attachment = input.some((value) => value !== "text");
@@ -359,12 +393,17 @@ let reasoningOptionsByCanonical: Map<string, SyncedFullModel["reasoning_options"
 
 // Surplus is a pass-through relay ("the marketplace passes through all
 // parameters to the provider unchanged"), so per policy the underlying
-// model's controls are copied from the same canonical model as authored on
-// OpenRouter, the established peer with the same surface. Models without a
-// peer entry fall back to the runner's empty-array default.
+// model's controls are copied from the lab + same-surface peers, in order:
+// vetted authored overrides for alias/orphan IDs, the same canonical
+// model's OpenRouter entry (exact key, then with dated ID suffixes
+// stripped), and the lab's own first-party provider file. Models with no
+// source anywhere fall back to the runner's empty-array default.
 function mirroredReasoningOptions(canonical: string) {
+  const authored = AUTHORED_REASONING_OPTIONS[canonical];
+  if (authored !== undefined) return authored;
   if (reasoningOptionsByCanonical === undefined) {
     reasoningOptionsByCanonical = new Map();
+    const relaxed = new Map<string, SyncedFullModel["reasoning_options"]>();
     for (const entry of walkTOMLFiles(OPENROUTER_MODELS_DIR)) {
       let parsed: Record<string, unknown>;
       try {
@@ -375,11 +414,42 @@ function mirroredReasoningOptions(canonical: string) {
       const options = parsed.reasoning_options as SyncedFullModel["reasoning_options"] | undefined;
       if (options === undefined || options.length === 0) continue;
       const key = canonicalKeyForOpenRouterFile(entry, parsed);
-      if (key === undefined || reasoningOptionsByCanonical.has(key)) continue;
-      reasoningOptionsByCanonical.set(key, options);
+      if (key === undefined) continue;
+      if (!reasoningOptionsByCanonical.has(key)) reasoningOptionsByCanonical.set(key, options);
+      // Dated peer IDs (`alibaba/qwen3.5-plus-02-15`) also register their
+      // undated canonical (`alibaba/qwen3.5-plus`); exact keys win.
+      const undated = key.replace(/-(?:\d{2}-\d{2}|\d{4}|\d{8})$/, "");
+      if (undated !== key && !relaxed.has(undated)) relaxed.set(undated, options);
+    }
+    for (const [key, options] of relaxed) {
+      if (!reasoningOptionsByCanonical.has(key)) reasoningOptionsByCanonical.set(key, options);
     }
   }
-  return reasoningOptionsByCanonical.get(canonical);
+  return reasoningOptionsByCanonical.get(canonical) ?? firstPartyReasoningOptions(canonical);
+}
+
+function firstPartyReasoningOptions(canonical: string) {
+  const [metadataDir, ...rest] = canonical.split("/");
+  const providerDir = metadataDir === undefined ? undefined : FIRST_PARTY_PROVIDERS[metadataDir];
+  if (providerDir === undefined || rest.length === 0) return undefined;
+  const file = path.join(
+    OPENROUTER_MODELS_DIR,
+    "..",
+    "..",
+    providerDir,
+    "models",
+    `${rest.join("/")}.toml`,
+  );
+  return tomlReasoningOptions(file);
+}
+
+function tomlReasoningOptions(file: string) {
+  try {
+    const parsed = Bun.TOML.parse(readFileSync(file, "utf8")) as Record<string, unknown>;
+    return parsed.reasoning_options as SyncedFullModel["reasoning_options"] | undefined;
+  } catch {
+    return undefined;
+  }
 }
 
 function canonicalKeyForOpenRouterFile(file: string, parsed: Record<string, unknown>) {

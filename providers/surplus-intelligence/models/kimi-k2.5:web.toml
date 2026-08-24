@@ -1,8 +1,13 @@
+# Toggle: reasoning.enabled true|false (OpenRouter-style `reasoning` object,
+# forwarded to the seller unchanged); effort: reasoning_effort.
+# Controls mirror the same canonical model's OpenRouter entry.
 base_model = "moonshotai/kimi-k2.5"
 name = "Kimi K2.5 (Morpheus Web)"
 attachment = false
 temperature = true
-reasoning_options = []
+
+[[reasoning_options]]
+type = "toggle"
 
 [limit]
 context = 256_000
