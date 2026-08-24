@@ -1,6 +1,5 @@
-# Toggle: reasoning.enabled = true|false
-# Effort: reasoning.effort (top-level reasoning_effort is an alias)
-# Budget: reasoning.max_tokens (integer reasoning tokens)
+# Toggle: reasoning_effort = none disables reasoning
+# Effort: reasoning_effort = minimal|low|medium|high
 base_model = "google/gemini-3.1-flash-lite"
 
 [[reasoning_options]]
