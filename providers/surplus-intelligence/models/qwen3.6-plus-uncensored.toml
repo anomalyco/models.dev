@@ -1,3 +1,6 @@
+# Toggle: reasoning.enabled true|false (OpenRouter-style `reasoning` object,
+# forwarded to the seller unchanged); effort: reasoning_effort.
+# Controls mirror the same canonical model's OpenRouter entry.
 name = "Qwen 3.6 Plus Uncensored"
 description = "Qwen vision-language model for visual reasoning, documents, and agent tasks"
 family = "qwen3.6"
@@ -9,7 +12,14 @@ temperature = true
 tool_call = true
 structured_output = true
 open_weights = false
-reasoning_options = []
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "budget_tokens"
+min = 1
+max = 81_920
 
 [limit]
 context = 1_000_000

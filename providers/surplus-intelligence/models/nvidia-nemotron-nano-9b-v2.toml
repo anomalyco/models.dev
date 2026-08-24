@@ -1,7 +1,12 @@
+# Toggle: reasoning.enabled true|false (OpenRouter-style `reasoning` object,
+# forwarded to the seller unchanged); effort: reasoning_effort.
+# Controls mirror the same canonical model's OpenRouter entry.
 base_model = "nvidia/nemotron-nano-9b-v2"
 name = "NVIDIA Nemotron Nano 9B v2"
 structured_output = true
-reasoning_options = []
+
+[[reasoning_options]]
+type = "toggle"
 
 [limit]
 context = 128_000

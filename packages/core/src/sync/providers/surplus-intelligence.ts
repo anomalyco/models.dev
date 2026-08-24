@@ -8,17 +8,8 @@ import type { ExistingModel, SyncProvider, SyncedFullModel, SyncedModel } from "
 import { factorBaseModel, modelMetadata, resolveCanonicalBaseModel, resolveModelMetadataBaseModel } from "./openrouter.js";
 
 const API_ENDPOINT = "https://api.surplusintelligence.ai/v1/models";
-const OPENROUTER_MODELS_DIR = path.join(
-  import.meta.dirname,
-  "..",
-  "..",
-  "..",
-  "..",
-  "..",
-  "providers",
-  "openrouter",
-  "models",
-);
+const PROVIDERS_DIR = path.join(import.meta.dirname, "..", "..", "..", "..", "..", "providers");
+const OPENROUTER_MODELS_DIR = path.join(PROVIDERS_DIR, "openrouter", "models");
 
 // Surplus's `provider` field names the lab that built the model. Mapped to
 // OpenRouter-shaped prefixes so resolveCanonicalBaseModel's candidate rules
@@ -45,7 +36,9 @@ const LAB_PREFIXES: Record<string, string> = {
 
 // Surplus IDs that do not resolve mechanically against models/ metadata.
 // Keys are normalized IDs (`:web` route suffix and `e2ee-`/`-p` wrappers
-// stripped); every target must exist under models/.
+// stripped); every target must exist under models/. Kept in the module
+// (rather than relying only on committed provider files) so a delist/relist
+// cycle or from-scratch regeneration cannot silently lose the mapping.
 const BASE_MODEL_OVERRIDES: Record<string, string> = {
   "qwen3-coder": "alibaba/qwen3-coder-480b-a35b-instruct",
   "qwen3-coder-turbo": "alibaba/qwen3-coder-480b-a35b-instruct",
@@ -60,38 +53,41 @@ const BASE_MODEL_OVERRIDES: Record<string, string> = {
   "ministral-3-14b-instruct": "mistral/ministral-14b-2512",
   "nvidia-nemotron-3-super-120b": "nvidia/nemotron-3-super-120b-a12b",
   "nvidia-nemotron-nano-12b-v2": "nvidia/nemotron-nano-12b-v2-vl",
+  "gemini-3-5-flash": "google/gemini-3.5-flash",
   "gemini-3.1-pro": "google/gemini-3.1-pro-preview",
   "glm-4.7-thinking": "zhipuai/glm-4.7",
   "glm-5.1-non-thinking": "zhipuai/glm-5.1",
   "grok-4.20-beta": "xai/grok-4.20-0309-reasoning",
+  "grok-build-0-1": "xai/grok-build-0.1",
   "hy3-free": "tencent/hy3",
   "hermes-3-llama-3.1-405b": "nousresearch/hermes-3-llama-3.1-405b",
   "mercury-2": "inception/mercury-2",
   "aion-labs.aion-2-0": "aion-labs/aion-2.0",
 };
 
-// Surplus reports a placeholder `created` timestamp (2025-01-01) for its
-// marketplace-only routes. Real ship dates for the ones documented elsewhere
-// in this repo: Venice house models from providers/venice/models, the Grok
-// 4.20 beta from the OpenRouter grok-4.20 entry.
-const INLINE_DATES: Record<string, string> = {
-  "gemma-4-uncensored": "2026-04-13",
-  "venice-uncensored-1.2": "2026-04-01",
-  "venice-uncensored-role-play": "2026-02-20",
-  "grok-4.20-multi-agent-beta": "2026-03-31",
-};
-
 // Marketplace routes with no shared lab identity (uncensored/"heretic"
-// finetunes, Venice house models, beta aliases) are written inline; this maps
-// the ones whose weights are known to be public.
-const INLINE_OPEN_WEIGHTS: Record<string, boolean> = {
-  "gemma-4-uncensored": true,
-  "glm-4.7-flash-heretic": true,
-  "venice-uncensored": true,
-  "venice-uncensored-1.2": true,
-  "venice-uncensored-role-play": true,
-  "e2ee-venice-uncensored-24b-p": true,
-  "mistral-large": true,
+// finetunes, Venice house models, beta aliases). Inline full definitions are
+// a decision, not a fallback: only IDs listed here are written inline, and a
+// new unresolved ID is skipped with a notice instead (see skippedNotice).
+// Fields carry per-route judgment the API cannot provide: public weights,
+// and real ship dates where documented elsewhere in this repo (Venice house
+// models from providers/venice/models, the Grok 4.20 beta from the
+// OpenRouter grok-4.20 entry) — Surplus reports a placeholder `created`
+// timestamp (2025-01-01) for these routes, which remains the fallback where
+// no documented date exists.
+const INLINE_ROUTES: Record<string, { open_weights?: boolean; release_date?: string }> = {
+  "e2ee-gemma-4-26b-a4b-uncensored-p": {},
+  "e2ee-qwen3-6-35b-a3b-uncensored-p": {},
+  "e2ee-venice-uncensored-24b-p": { open_weights: true },
+  "gemma-4-uncensored": { open_weights: true, release_date: "2026-04-13" },
+  "glm-4.7-flash-heretic": { open_weights: true },
+  "grok-4.20-multi-agent-beta": { release_date: "2026-03-31" },
+  "mistral-large": { open_weights: true },
+  "palmyra-vision-7b": {},
+  "qwen3.6-plus-uncensored": {},
+  "venice-uncensored": { open_weights: true },
+  "venice-uncensored-1.2": { open_weights: true, release_date: "2026-04-01" },
+  "venice-uncensored-role-play": { open_weights: true, release_date: "2026-02-20" },
 };
 
 // Canonical models whose controls cannot be found mechanically: the peer
@@ -203,7 +199,17 @@ export const surplusIntelligence = {
     );
   },
   translateModel(model, context) {
-    const translated = buildSurplusModel(model, context.existing(model.id));
+    const existing = context.existing(model.id);
+    const canonical = existing?.base_model ?? resolveSurplusBaseModel(model);
+    // Inline creation is allowlist-only: an unknown ID that resolves to no
+    // canonical metadata is skipped (and reported via skippedNotice) instead
+    // of silently becoming a standalone inline model. A hand-authored local
+    // file for such an ID is preserved untouched.
+    if (canonical === undefined && !(model.id in INLINE_ROUTES)) {
+      const authored = context.authored(model.id);
+      return authored === undefined ? undefined : { id: model.id, model: authored as SyncedModel };
+    }
+    const translated = buildSurplusModel(model, existing);
     return {
       id: model.id,
       model: translated,
@@ -211,6 +217,15 @@ export const surplusIntelligence = {
         ? TOGGLE_HEADER
         : undefined,
     };
+  },
+  sourceID(model) {
+    return model.id;
+  },
+  skippedNotice(ids) {
+    if (ids.length === 0) return [];
+    return [
+      `${ids.length} chat model(s) resolve to no canonical metadata and are not in the inline-route allowlist; add models/ metadata or an INLINE_ROUTES entry before cataloging: ${ids.join(", ")}`,
+    ];
   },
 } satisfies SyncProvider<SurplusModel>;
 
@@ -224,7 +239,7 @@ const TOGGLE_HEADER = [
   "",
 ].join("\n");
 
-function buildSurplusModel(model: SurplusModel, existing: ExistingModel | undefined): SyncedModel {
+export function buildSurplusModel(model: SurplusModel, existing: ExistingModel | undefined): SyncedModel {
   const params = new Set(model.supported_parameters);
   const features = new Set(model.supported_features);
   const input = modalities(model.architecture.input_modalities, ["text"]);
@@ -253,8 +268,13 @@ function buildSurplusModel(model: SurplusModel, existing: ExistingModel | undefi
     input: existing?.limit?.input,
     output: model.top_provider?.max_completion_tokens ?? existing?.limit?.output ?? contextLength,
   };
+  // A non-empty hand-authored local value wins; an empty or missing one is
+  // treated as unresolved so peer/lab mirroring can improve it on re-sync
+  // (an authored `[]` must not permanently shadow later-found controls).
+  const authoredOptions = existing?.reasoning_options?.length ? existing.reasoning_options : undefined;
   const reasoningOptions = reasoning
-    ? (existing?.reasoning_options ?? (canonical === undefined ? undefined : mirroredReasoningOptions(canonical)))
+    ? authoredOptions ??
+      (canonical !== undefined ? mirroredReasoningOptions(canonical) : inlineParentReasoningOptions(model))
     : undefined;
 
   if (canonical !== undefined) {
@@ -279,6 +299,7 @@ function buildSurplusModel(model: SurplusModel, existing: ExistingModel | undefi
   }
 
   const releaseDate = dateFromTimestamp(model.created);
+  const route = INLINE_ROUTES[model.id];
   const family = inferFamily(model.id, model.name);
   return {
     name: model.name,
@@ -290,13 +311,13 @@ function buildSurplusModel(model: SurplusModel, existing: ExistingModel | undefi
         reasoning,
         tool_call: toolCall,
         structured_output: structuredOutput,
-        open_weights: existing?.open_weights ?? INLINE_OPEN_WEIGHTS[model.id] ?? false,
+        open_weights: existing?.open_weights ?? route?.open_weights ?? false,
         limit,
         modalities: { input, output },
       }),
     family,
-    release_date: existing?.release_date ?? INLINE_DATES[model.id] ?? releaseDate,
-    last_updated: existing?.last_updated ?? INLINE_DATES[model.id] ?? releaseDate,
+    release_date: existing?.release_date ?? route?.release_date ?? releaseDate,
+    last_updated: existing?.last_updated ?? route?.release_date ?? releaseDate,
     attachment,
     reasoning,
     reasoning_options: reasoningOptions,
@@ -304,7 +325,7 @@ function buildSurplusModel(model: SurplusModel, existing: ExistingModel | undefi
     tool_call: toolCall,
     structured_output: structuredOutput,
     knowledge: existing?.knowledge,
-    open_weights: existing?.open_weights ?? INLINE_OPEN_WEIGHTS[model.id] ?? false,
+    open_weights: existing?.open_weights ?? route?.open_weights ?? false,
     status: existing?.status,
     interleaved: existing?.interleaved,
     limit,
@@ -352,8 +373,6 @@ function candidateIDs(id: string) {
     // Qwen point releases are dotted in models/ (`qwen3-5-9b` → `qwen3.5-9b`,
     // `qwen-3-7-plus` → `qwen3.7-plus`).
     candidates.push(base.replace(/^qwen-?(\d)[-.](\d)/, "qwen$1.$2"));
-    // Generic dashed point release (`grok-build-0-1` → `grok-build-0.1`).
-    candidates.push(base.replace(/(\d)-(\d)/g, "$1.$2"));
   }
   return [...new Set(candidates)];
 }
@@ -390,6 +409,7 @@ function inferFamily(id: string, name: string) {
 }
 
 let reasoningOptionsByCanonical: Map<string, SyncedFullModel["reasoning_options"]> | undefined;
+const firstPartyOptionsByProvider = new Map<string, Map<string, NonNullable<SyncedFullModel["reasoning_options"]>>>();
 
 // Surplus is a pass-through relay ("the marketplace passes through all
 // parameters to the provider unchanged"), so per policy the underlying
@@ -398,7 +418,7 @@ let reasoningOptionsByCanonical: Map<string, SyncedFullModel["reasoning_options"
 // model's OpenRouter entry (exact key, then with dated ID suffixes
 // stripped), and the lab's own first-party provider file. Models with no
 // source anywhere fall back to the runner's empty-array default.
-function mirroredReasoningOptions(canonical: string) {
+export function mirroredReasoningOptions(canonical: string) {
   const authored = AUTHORED_REASONING_OPTIONS[canonical];
   if (authored !== undefined) return authored;
   if (reasoningOptionsByCanonical === undefined) {
@@ -428,19 +448,44 @@ function mirroredReasoningOptions(canonical: string) {
   return reasoningOptionsByCanonical.get(canonical) ?? firstPartyReasoningOptions(canonical);
 }
 
+// Marketplace-only finetune routes (`-uncensored`, `-heretic`) forward the
+// parent model's parameters like every other route, so their reasoning
+// controls come from the parent canonical when it resolves.
+function inlineParentReasoningOptions(model: SurplusModel) {
+  const routeID = unwrapE2EE(model.id.replace(/:web$/, ""));
+  const parentID = routeID.replace(/-(?:uncensored|heretic)(?=-|$)/g, "");
+  if (parentID === routeID) return undefined;
+  const parent = resolveSurplusBaseModel({ ...model, id: parentID });
+  return parent === undefined ? undefined : mirroredReasoningOptions(parent);
+}
+
+// First-party layouts differ: most labs keep flat files under
+// providers/<lab>/models, while NVIDIA nests per-org subdirectories
+// (providers/nvidia/models/nvidia/…) and sometimes repeats the lab name in
+// the filename. Index the lab's own subtree plus the flat root by basename,
+// with the lab-name prefix stripped as an alternate key.
 function firstPartyReasoningOptions(canonical: string) {
   const [metadataDir, ...rest] = canonical.split("/");
   const providerDir = metadataDir === undefined ? undefined : FIRST_PARTY_PROVIDERS[metadataDir];
   if (providerDir === undefined || rest.length === 0) return undefined;
-  const file = path.join(
-    OPENROUTER_MODELS_DIR,
-    "..",
-    "..",
-    providerDir,
-    "models",
-    `${rest.join("/")}.toml`,
-  );
-  return tomlReasoningOptions(file);
+
+  let index = firstPartyOptionsByProvider.get(providerDir);
+  if (index === undefined) {
+    index = new Map();
+    const root = path.join(PROVIDERS_DIR, providerDir, "models");
+    const files = [...walkTOMLFiles(path.join(root, providerDir)), ...flatTOMLFiles(root)];
+    for (const file of files) {
+      const options = tomlReasoningOptions(file);
+      if (options === undefined || options.length === 0) continue;
+      const basename = path.basename(file, ".toml").toLowerCase();
+      for (const key of new Set([basename, basename.replace(new RegExp(`^${providerDir}-`), "")])) {
+        if (!index.has(key)) index.set(key, options);
+      }
+    }
+    firstPartyOptionsByProvider.set(providerDir, index);
+  }
+
+  return index.get(rest.join("/").toLowerCase());
 }
 
 function tomlReasoningOptions(file: string) {
@@ -474,4 +519,16 @@ function walkTOMLFiles(dir: string): string[] {
     if (entry.isDirectory()) return walkTOMLFiles(full);
     return entry.name.endsWith(".toml") ? [full] : [];
   });
+}
+
+function flatTOMLFiles(dir: string): string[] {
+  let entries;
+  try {
+    entries = readdirSync(dir, { withFileTypes: true });
+  } catch {
+    return [];
+  }
+  return entries
+    .filter((entry) => !entry.isDirectory() && entry.name.endsWith(".toml"))
+    .map((entry) => path.join(dir, entry.name));
 }
