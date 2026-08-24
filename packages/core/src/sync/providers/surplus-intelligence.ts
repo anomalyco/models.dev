@@ -58,6 +58,7 @@ const BASE_MODEL_OVERRIDES: Record<string, string> = {
   "glm-4.7-thinking": "zhipuai/glm-4.7",
   "glm-5.1-non-thinking": "zhipuai/glm-5.1",
   "grok-4.20-beta": "xai/grok-4.20-0309-reasoning",
+  "grok-4.20-multi-agent-beta": "xai/grok-4.20-multi-agent-0309",
   "grok-build-0-1": "xai/grok-build-0.1",
   "hy3-free": "tencent/hy3",
   // Moonshot has no undated K2 API ID (first-party routes are
@@ -70,15 +71,14 @@ const BASE_MODEL_OVERRIDES: Record<string, string> = {
 };
 
 // Marketplace routes with no shared lab identity (uncensored/"heretic"
-// finetunes, Venice house models, beta aliases). Inline full definitions are
-// a decision, not a fallback: only IDs listed here are written inline, and a
-// new unresolved ID is skipped with a notice instead (see skippedNotice).
+// finetunes, Venice house models). Inline full definitions are a decision,
+// not a fallback: only IDs listed here are written inline, and a new
+// unresolved ID is skipped with a notice instead (see skippedNotice).
 // Fields carry per-route judgment the API cannot provide: public weights,
 // and real ship dates where documented elsewhere in this repo (Venice house
-// models from providers/venice/models, the Grok 4.20 beta from the
-// OpenRouter grok-4.20 entry) — Surplus reports a placeholder `created`
-// timestamp (2025-01-01) for these routes, which remains the fallback where
-// no documented date exists.
+// models from providers/venice/models) — Surplus reports a placeholder
+// `created` timestamp (2025-01-01) for these routes, which remains the
+// fallback where no documented date exists.
 const INLINE_ROUTES: Record<
   string,
   {
@@ -87,27 +87,35 @@ const INLINE_ROUTES: Record<
     family?: string;
     description?: string;
     reasoning?: boolean;
-    reasoning_options?: NonNullable<SyncedFullModel["reasoning_options"]>;
   }
 > = {
   "e2ee-gemma-4-26b-a4b-uncensored-p": {},
   // Live probe 2026-08-23: reasons on every request; both off-switches
   // ignored (see ROUTE_HEADERS).
-  "e2ee-qwen3-6-35b-a3b-uncensored-p": { reasoning: true, reasoning_options: [] },
+  "e2ee-qwen3-6-35b-a3b-uncensored-p": { reasoning: true },
   "e2ee-venice-uncensored-24b-p": { open_weights: true },
   "gemma-4-uncensored": { open_weights: true, release_date: "2026-04-13" },
   "glm-4.7-flash-heretic": { open_weights: true },
-  "grok-4.20-multi-agent-beta": { release_date: "2026-03-31" },
   "mistral-large": {
     open_weights: true,
     family: "venice",
     description: "Venice-branded Mistral-family chat model for general assistant workloads",
   },
-  "palmyra-vision-7b": {},
   "qwen3.6-plus-uncensored": {},
   "venice-uncensored": { open_weights: true },
   "venice-uncensored-1.2": { open_weights: true, release_date: "2026-04-01" },
   "venice-uncensored-role-play": { open_weights: true, release_date: "2026-02-20" },
+};
+
+// Live-probed control surfaces that override what the canonical model's lab
+// and relay peers author. Surplus normally forwards reasoning parameters to
+// the winning seller unchanged, so peers are the right default — but where a
+// probe showed the sellers ignoring every documented control, the tested
+// result wins for that route (see ROUTE_HEADERS for the evidence). Keyed by
+// route ID so it applies to base_model and inline routes alike.
+const ROUTE_REASONING_OPTIONS: Record<string, NonNullable<SyncedFullModel["reasoning_options"]>> = {
+  "e2ee-qwen3-6-35b-a3b-uncensored-p": [],
+  "grok-4.20-multi-agent-beta": [],
 };
 
 const E2EE_GLM_HEADER = [
@@ -370,7 +378,7 @@ export function buildSurplusModel(model: SurplusModel, existing: ExistingModel |
   // (an authored `[]` must not permanently shadow later-found controls).
   const authoredOptions = existing?.reasoning_options?.length ? existing.reasoning_options : undefined;
   const reasoningOptions = reasoning
-    ? route?.reasoning_options ??
+    ? ROUTE_REASONING_OPTIONS[model.id] ??
       authoredOptions ??
       (canonical !== undefined ? mirroredReasoningOptions(canonical) : inlineParentReasoningOptions(model))
     : undefined;
