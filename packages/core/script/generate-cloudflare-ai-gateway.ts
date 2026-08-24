@@ -43,6 +43,22 @@ const TEXT_GENERATION = "Text Generation";
 const DOCS_BASE =
   "https://raw.githubusercontent.com/cloudflare/cloudflare-docs/production/src/content/workers-ai-models";
 
+// Proxied providers that Cloudflare fronts with a *native* passthrough route rather than the
+// gateway's generic OpenAI-compatible transform: Anthropic keeps the Messages API, OpenAI keeps
+// the Responses API. Advertise each model's native SDK so consumers route to the endpoint that
+// serves it best instead of falling back to the provider default (ai-gateway-provider). Everything
+// else (Workers AI's own @cf models, and third-party providers Cloudflare only exposes over the
+// compat route) inherits that default.
+// https://developers.cloudflare.com/ai-gateway/usage/providers/anthropic/
+// https://developers.cloudflare.com/ai-gateway/usage/providers/openai/
+const NATIVE_NPM: Record<string, string> = {
+  anthropic: "@ai-sdk/anthropic",
+  openai: "@ai-sdk/openai",
+};
+function nativeNpm(id: string): string | undefined {
+  return NATIVE_NPM[id.split("/")[0]!];
+}
+
 // ---------------------------------------------------------------------------
 // curation.toml schema
 // ---------------------------------------------------------------------------
@@ -408,6 +424,9 @@ async function main() {
     if (cur.limit) Object.assign(limit, cur.limit);
     else if (m.context_length != null) limit.context = m.context_length;
     if (Object.keys(limit).length) model.limit = limit;
+
+    const npm = nativeNpm(id);
+    if (npm) model.provider = { npm };
 
     wanted.set(path.join(MODELS_DIR, `${id}.toml`), withNote(cur.note, formatToml(model as any)));
   }
