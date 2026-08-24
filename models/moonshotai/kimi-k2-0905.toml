@@ -1,10 +1,9 @@
-# Undated Kimi K2 Instruct line; tracks the current checkpoint (0905) like
-# other undated lab entries — see kimi-k2-0711 / kimi-k2-0905 for the dated
-# checkpoints. Hosts pinned to 0711 override [limit] locally.
-name = "Kimi K2"
+# Kimi K2 Instruct, September 2025 refresh: context raised to 256K, improved
+# coding and tool use.
+name = "Kimi K2 0905"
 description = "Kimi model for long-context chat, coding, and agentic reasoning"
 family = "kimi-k2"
-release_date = "2025-07-11"
+release_date = "2025-09-05"
 last_updated = "2025-09-05"
 attachment = false
 reasoning = false
@@ -23,9 +22,5 @@ input = ["text"]
 output = ["text"]
 
 [[weights]]
-label = "Hugging Face (0905)"
+label = "Hugging Face"
 url = "https://huggingface.co/moonshotai/Kimi-K2-Instruct-0905"
-
-[[weights]]
-label = "Hugging Face (0711)"
-url = "https://huggingface.co/moonshotai/Kimi-K2-Instruct"
