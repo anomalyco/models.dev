@@ -3,25 +3,22 @@
 // Regenerate the cloudflare-ai-gateway provider model TOMLs from Cloudflare's own sources,
 // with human curation reduced to providers/cloudflare-ai-gateway/curation.toml.
 //
-// Sources of truth (all live):
-//   - Proxied models:  GET /accounts/{id}/ai/catalog/models
-//       canonical dotted model_id, name, description, context_length, max_output_tokens,
-//       and pricing (flat or context-tiered).
-//   - Hosted @cf set:  GET /accounts/{id}/ai/models/search   (discovery only: which @cf
-//       Text-Generation models exist).
-//   - Hosted @cf data: raw.githubusercontent.com/cloudflare/cloudflare-docs/production/
-//       src/content/workers-ai-models/<model>.json  (name, description, context_window,
-//       price, function_calling, vision, and schema.input from which reasoning_options
-//       are derived).
+// Scope: proxied third-party models only (anthropic, openai, google, xai, alibaba, deepseek,
+// moonshotai, …). Cloudflare's own Workers AI (@cf/...) models are a different pathway — hosted
+// on Cloudflare, CF-token auth, model agreements — and live in their own provider,
+// providers/cloudflare-workers-ai, so they are deliberately not mirrored here.
 //
-// curation.toml holds only what those sources cannot express: hosted base_model mappings,
-// structured_output (a quality judgement — Cloudflare advertises response_format broadly but
-// several models do not honour it), proxied reasoning_options, proxied limit divergences, and
-// a skip list for catalog ids with no lab file.
+// Source of truth (live):
+//   - GET /accounts/{id}/ai/catalog/models — canonical dotted model_id, name, description,
+//       context_length, max_output_tokens, and pricing (flat or context-tiered).
+//
+// curation.toml holds only what that source cannot express: structured_output (a quality
+// judgement — Cloudflare advertises response_format broadly but several models do not honour
+// it), reasoning_options (the catalog has no reasoning schema), limit divergences, and a skip
+// list for catalog ids with no lab file (or not reachable via unified billing).
 //
 // Env: CLOUDFLARE_API_TOKEN, CLOUDFLARE_ACCOUNT_ID
-//      CF_AIG_FIXTURE_DIR (optional) — read cached catalog*/hosted* JSON and docs/<model>.json
-//      instead of the network.
+//      CF_AIG_FIXTURE_DIR (optional) — read cached catalog* JSON instead of the network.
 //
 // Usage:
 //   CLOUDFLARE_API_TOKEN=… CLOUDFLARE_ACCOUNT_ID=… bun run cloudflare-ai-gateway:generate
@@ -40,15 +37,12 @@ const MODELS_ROOT = path.join(import.meta.dirname, "..", "..", "..", "models");
 const CURATION_PATH = path.join(PROVIDER_DIR, "curation.toml");
 
 const TEXT_GENERATION = "Text Generation";
-const DOCS_BASE =
-  "https://raw.githubusercontent.com/cloudflare/cloudflare-docs/production/src/content/workers-ai-models";
 
 // Proxied providers that Cloudflare fronts with a *native* passthrough route rather than the
 // gateway's generic OpenAI-compatible transform: Anthropic keeps the Messages API, OpenAI keeps
 // the Responses API. Advertise each model's native SDK so consumers route to the endpoint that
-// serves it best instead of falling back to the provider default (ai-gateway-provider). Everything
-// else (Workers AI's own @cf models, and third-party providers Cloudflare only exposes over the
-// compat route) inherits that default.
+// serves it best instead of falling back to the provider default (ai-gateway-provider). Other
+// third-party providers Cloudflare only exposes over the compat route inherit that default.
 // https://developers.cloudflare.com/ai-gateway/usage/providers/anthropic/
 // https://developers.cloudflare.com/ai-gateway/usage/providers/openai/
 const NATIVE_NPM: Record<string, string> = {
@@ -67,16 +61,6 @@ const CuratedModel = z
   .object({
     base_model: z.string().min(1).optional(),
     structured_output: z.boolean().optional(),
-    // Host-specific capability deltas the docs/catalog cannot express as a negative: a @cf
-    // deployment often disables tool calling or vision that the lab model supports, and the
-    // docs only ever advertise capabilities as `true` (absence != false). Curation carries the
-    // verified host disable so it survives regeneration instead of re-inheriting the lab value.
-    tool_call: z.boolean().optional(),
-    attachment: z.boolean().optional(),
-    modalities: z
-      .object({ input: z.array(z.string()).optional(), output: z.array(z.string()).optional() })
-      .strict()
-      .optional(),
     reasoning_options: z.array(ReasoningOption).optional(),
     limit: z.record(z.number()).optional(),
     interleaved: z
@@ -145,8 +129,7 @@ async function mapLimit<T, R>(items: T[], limit: number, fn: (item: T) => Promis
 }
 
 // Load rows from every fixture file whose name starts with prefix, de-duplicated by their
-// natural id (model_id for catalog, name for hosted). Dedup guards against overlapping
-// snapshot files inflating or conflicting the model set.
+// catalog model_id. Dedup guards against overlapping snapshot files inflating the model set.
 function loadFixtureRows(dir: string, prefix: string): any[] {
   const byId = new Map<string, any>();
   for (const f of readdirSync(dir).filter((f) => f.startsWith(prefix) && f.endsWith(".json"))) {
@@ -158,14 +141,9 @@ function loadFixtureRows(dir: string, prefix: string): any[] {
   return [...byId.values()];
 }
 
-async function loadProxiedAndHostedSet() {
+async function loadProxied() {
   const fixtureDir = process.env.CF_AIG_FIXTURE_DIR;
-  if (fixtureDir) {
-    return {
-      proxied: loadFixtureRows(fixtureDir, "catalog"),
-      hostedSet: loadFixtureRows(fixtureDir, "hosted"),
-    };
-  }
+  if (fixtureDir) return loadFixtureRows(fixtureDir, "catalog");
   const token = process.env.CLOUDFLARE_API_TOKEN;
   const account = process.env.CLOUDFLARE_ACCOUNT_ID;
   if (!token || !account) {
@@ -174,25 +152,7 @@ async function loadProxiedAndHostedSet() {
     );
   }
   const base = `https://api.cloudflare.com/client/v4/accounts/${account}/ai`;
-  const [proxied, hostedSet] = await Promise.all([
-    fetchAllPages(`${base}/catalog/models`, token, 50),
-    fetchAllPages(`${base}/models/search`, token, 100),
-  ]);
-  return { proxied, hostedSet };
-}
-
-// Load a docs JSON for a hosted @cf model by its last path segment.
-async function loadDocs(cfId: string): Promise<any> {
-  const segment = cfId.split("/").pop()!;
-  const fixtureDir = process.env.CF_AIG_FIXTURE_DIR;
-  if (fixtureDir) {
-    const p = path.join(fixtureDir, "docs", `${segment}.json`);
-    if (!existsSync(p)) throw new Error(`Missing docs fixture for ${cfId} (${p})`);
-    return JSON.parse(readFileSync(p, "utf8"));
-  }
-  const res = await fetchWithRetry(`${DOCS_BASE}/${segment}.json`);
-  if (!res.ok) throw new Error(`Docs fetch failed ${res.status} for ${cfId} (${segment}.json)`);
-  return res.json();
+  return fetchAllPages(`${base}/catalog/models`, token, 50);
 }
 
 // Load the per-model catalog schema for a proxied model. The list endpoint omits `schema`;
@@ -261,22 +221,6 @@ function proxiedCost(pricing: Record<string, number>, id: string, warnings: stri
     warnings.push(`${id}: unmapped pricing key "${key}"`);
   }
   return { ...base };
-}
-
-function hostedCost(docs: any): Record<string, number> | undefined {
-  const price = (docs.properties ?? []).find((p: any) => p.property_id === "price")?.value;
-  if (!Array.isArray(price)) return undefined;
-  const cost: Record<string, number> = {};
-  for (const row of price) {
-    if (row.unit === "per M input tokens") cost.input = row.price;
-    else if (row.unit === "per M output tokens") cost.output = row.price;
-    else if (row.unit === "per M cached input tokens") cost.cache_read = row.price;
-  }
-  return Object.keys(cost).length ? cost : undefined;
-}
-
-function hostedProp(docs: any, id: string): string | undefined {
-  return (docs.properties ?? []).find((p: any) => p.property_id === id)?.value;
 }
 
 // Derive reasoning_options from a docs schema.input by walking every named property.
@@ -363,9 +307,8 @@ async function main() {
   const errors: string[] = [];
   const warnings: string[] = [];
 
-  const { proxied, hostedSet } = await loadProxiedAndHostedSet();
+  const proxied = await loadProxied();
   const proxiedTextGen = proxied.filter((m) => m.task === TEXT_GENERATION);
-  const hostedTextGen = hostedSet.filter((m) => m.task?.name === TEXT_GENERATION);
 
   const wanted = new Map<string, string>(); // absolute path -> content
 
@@ -430,80 +373,8 @@ async function main() {
     wanted.set(path.join(MODELS_DIR, `${id}.toml`), withNote(cur.note, formatToml(model as any)));
   }
 
-  // --- hosted @cf models ---
-  const docsList = await mapLimit(hostedTextGen, 6, async (m) => ({
-    cfId: m.name as string,
-    docs: await loadDocs(m.name),
-  }));
-  for (const { cfId, docs } of docsList) {
-    const id = `workers-ai/${cfId}`;
-    if (skip.has(id)) continue;
-    // LoRA adapters are fine-tuning scaffolds, not standalone models. Skip unless a
-    // curation entry explicitly maps one.
-    if (hostedProp(docs, "lora") === "true" && !curation.models[id]) continue;
-    const cur = curation.models[id];
-    if (!cur?.base_model) {
-      errors.push(`hosted ${id}: missing base_model in curation.toml`);
-      continue;
-    }
-    // name/description inherit from base_model; docs only expose the raw @cf id as "name".
-    const model: Record<string, unknown> = { base_model: cur.base_model };
-
-    // Docs advertise capabilities only as `true` (absence != false), so a curated explicit value
-    // — typically a verified host disable the same @cf peer marks false — overrides the docs.
-    if (cur.tool_call !== undefined) model.tool_call = cur.tool_call;
-    else if (hostedProp(docs, "function_calling") === "true") model.tool_call = true;
-    if (cur.attachment !== undefined) model.attachment = cur.attachment;
-    else if (hostedProp(docs, "vision") === "true") model.attachment = true;
-    if (cur.modalities !== undefined) model.modalities = cur.modalities;
-    if (cur.structured_output !== undefined) model.structured_output = cur.structured_output;
-    // interleaved: whether this @cf deployment returns reasoning content as a separate wire
-    // field. Not part of the docs schema and not inheritable from base_model (the lab's own
-    // API frequently differs), so it only ever comes from curation.
-    if (cur.interleaved !== undefined) model.interleaved = cur.interleaved;
-
-    // reasoning_options: only when the base reasons (schema forbids them otherwise). Derived
-    // from the docs input schema; curation may override for the rare model whose docs schema
-    // does not describe the reasoning knob.
-    if (baseReasoning(cur.base_model)) {
-      const ro =
-        cur.reasoning_options !== undefined
-          ? cur.reasoning_options
-          : deriveReasoningOptions(docs.schema?.input);
-      if (ro.length === 0 && cur.reasoning_options === undefined) {
-        errors.push(
-          `hosted ${id}: base ${cur.base_model} has reasoning=true but docs schema exposes ` +
-          `no reasoning knob (add reasoning_options to curation.toml)`,
-        );
-        continue;
-      }
-      model.reasoning_options = ro;
-    }
-
-    const cost = hostedCost(docs);
-    if (cost) model.cost = cost;
-
-    // limit.output: the docs schema does not expose a hosted output ceiling, and Workers AI's
-    // own deployment cap is frequently lower than the lab's SaaS limit (e.g. gpt-oss-20b caps
-    // at 16_384 here vs 32_768 for the lab API) — inheriting from base_model would overstate
-    // it. Only curation (hand-verified per model) can supply it.
-    const context = hostedProp(docs, "context_window");
-    const limit: Record<string, number> = {};
-    if (context != null) limit.context = Number(context);
-    if (cur.limit) Object.assign(limit, cur.limit);
-    if (Object.keys(limit).length) model.limit = limit;
-
-    wanted.set(
-      path.join(MODELS_DIR, `workers-ai/${cfId}.toml`),
-      withNote(cur.note, formatToml(model as any)),
-    );
-  }
-
-  // Guards: a curation model id that no longer appears in the live feeds (warn only).
-  const liveIds = new Set<string>([
-    ...proxiedTextGen.map((m) => m.model_id),
-    ...hostedTextGen.map((m) => `workers-ai/${m.name}`),
-  ]);
+  // Guards: a curation model id that no longer appears in the live feed (warn only).
+  const liveIds = new Set<string>(proxiedTextGen.map((m) => m.model_id));
   for (const id of Object.keys(curation.models)) {
     if (!liveIds.has(id)) warnings.push(`curation id not in live feed: ${id}`);
   }
@@ -538,9 +409,8 @@ async function main() {
   for (const p of toRemove) { rmSync(p); changed++; }
 
   console.log(
-    `cloudflare-ai-gateway: ${wanted.size} model(s) ` +
-    `(${proxiedTextGen.length} proxied catalog, ${hostedTextGen.length} hosted @cf; ` +
-    `${changed} written/removed, ${skip.size} skipped, ${warnings.length} warning(s)).`,
+    `cloudflare-ai-gateway: ${wanted.size} proxied model(s) ` +
+    `(${changed} written/removed, ${skip.size} skipped, ${warnings.length} warning(s)).`,
   );
 }
 
