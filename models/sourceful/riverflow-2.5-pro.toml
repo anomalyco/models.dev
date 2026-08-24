@@ -1,0 +1,33 @@
+# Sources:
+# - https://www.riverflow.ai/research/introducing-riverflow-2-5
+# - https://runware.ai/docs/models/sourceful-riverflow-2-5-pro
+# - https://replicate.com/sourceful/riverflow-v2.5-pro
+
+name = "Riverflow 2.5 Pro"
+description = "Sourceful's highest-capability Riverflow 2.5 image generation and editing model, with multi-step reasoning, candidate scoring, adjustable thinking effort, and production-focused brand controls"
+release_date = "2026-06-05"
+last_updated = "2026-06-05"
+attachment = true
+reasoning = true
+temperature = false
+tool_call = false
+structured_output = false
+open_weights = false
+
+[limit]
+context = 32_768
+output = 0
+
+[modalities]
+input = ["text", "image"]
+output = ["image"]
+
+[[links]]
+label = "Announcement"
+url = "https://www.riverflow.ai/research/introducing-riverflow-2-5"
+type = "announcement"
+
+[[links]]
+label = "API documentation"
+url = "https://runware.ai/docs/models/sourceful-riverflow-2-5-pro"
+type = "docs"
