@@ -244,7 +244,6 @@ const TIER_FIELD: Record<string, string> = {
 
 function proxiedCost(pricing: Record<string, number>, id: string, warnings: string[]) {
   const base: Record<string, number> = {};
-  const tiers = new Map<number, Record<string, number>>();
   for (const [key, value] of Object.entries(pricing)) {
     if (FLAT_KEYS[key]) {
       base[FLAT_KEYS[key]] = value;
@@ -252,26 +251,16 @@ function proxiedCost(pricing: Record<string, number>, id: string, warnings: stri
     }
     const m = key.match(TIER_RE);
     if (m) {
-      const [, label, op, sizeK] = m;
-      const size = Number(sizeK) * 1000;
+      const [, label, op] = m;
       const field = TIER_FIELD[label!]!;
-      if (op!.startsWith("<")) base[field] = value; // lower band = base
-      else {
-        const t = tiers.get(size) ?? {};
-        t[field] = value;
-        tiers.set(size, t);
-      }
+      // Cloudflare AI Gateway entries don't carry tiered pricing (unsupported here). Fold the
+      // lower/default-context band (op "<") into the flat rate and drop the higher-context bands.
+      if (op!.startsWith("<")) base[field] = value;
       continue;
     }
     warnings.push(`${id}: unmapped pricing key "${key}"`);
   }
-  const cost: Record<string, unknown> = { ...base };
-  if (tiers.size > 0) {
-    cost.tiers = [...tiers.entries()]
-      .sort((a, b) => a[0] - b[0])
-      .map(([size, band]) => ({ tier: { type: "context", size }, ...band }));
-  }
-  return cost;
+  return { ...base };
 }
 
 function hostedCost(docs: any): Record<string, number> | undefined {
