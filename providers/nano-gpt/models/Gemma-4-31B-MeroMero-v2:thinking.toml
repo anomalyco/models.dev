@@ -1,0 +1,25 @@
+name = "Gemma 4 31B MeroMero v2 Thinking"
+description = "Gemma 4 31B MeroMero v2 with thinking enabled for more deliberate emotive dialogue, relationship scenes, creative writing, and multimodal roleplay."
+family = "gemma"
+release_date = "2026-08-24"
+last_updated = "2026-08-24"
+attachment = true
+reasoning = true
+tool_call = true
+structured_output = false
+open_weights = true
+reasoning_options = []
+
+[cost]
+input = 0.08
+output = 0.33
+cache_read = 0.04
+
+[limit]
+context = 65_536
+input = 65_536
+output = 32_768
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
