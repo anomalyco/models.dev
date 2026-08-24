@@ -1,7 +1,12 @@
+# Toggle: reasoning.enabled true|false (OpenRouter-style `reasoning` object,
+# forwarded to the seller unchanged); effort: reasoning_effort.
+# Controls mirror the same canonical model's OpenRouter entry.
 base_model = "google/gemma-4-31b-it"
 name = "Gemma 4 31B (E2EE)"
 attachment = false
-reasoning = false
+
+[[reasoning_options]]
+type = "toggle"
 
 [limit]
 output = 131_072

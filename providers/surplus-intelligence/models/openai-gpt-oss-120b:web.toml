@@ -1,7 +1,10 @@
 base_model = "openai/gpt-oss-120b"
 name = "OpenAI GPT OSS 120B (Morpheus Web)"
-reasoning = false
 structured_output = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high"]
 
 [limit]
 context = 128_000

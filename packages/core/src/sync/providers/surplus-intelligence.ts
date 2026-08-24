@@ -5,7 +5,7 @@ import { z } from "zod";
 import { describeModel } from "../../describe.js";
 import { inferKimiFamily, ModelFamilyValues } from "../../family.js";
 import type { ExistingModel, SyncProvider, SyncedFullModel, SyncedModel } from "../index.js";
-import { factorBaseModel, resolveCanonicalBaseModel, resolveModelMetadataBaseModel } from "./openrouter.js";
+import { factorBaseModel, modelMetadata, resolveCanonicalBaseModel, resolveModelMetadataBaseModel } from "./openrouter.js";
 
 const API_ENDPOINT = "https://api.surplusintelligence.ai/v1/models";
 const OPENROUTER_MODELS_DIR = path.join(
@@ -68,6 +68,17 @@ const BASE_MODEL_OVERRIDES: Record<string, string> = {
   "hermes-3-llama-3.1-405b": "nousresearch/hermes-3-llama-3.1-405b",
   "mercury-2": "inception/mercury-2",
   "aion-labs.aion-2-0": "aion-labs/aion-2.0",
+};
+
+// Surplus reports a placeholder `created` timestamp (2025-01-01) for its
+// marketplace-only routes. Real ship dates for the ones documented elsewhere
+// in this repo: Venice house models from providers/venice/models, the Grok
+// 4.20 beta from the OpenRouter grok-4.20 entry.
+const INLINE_DATES: Record<string, string> = {
+  "gemma-4-uncensored": "2026-04-13",
+  "venice-uncensored-1.2": "2026-04-01",
+  "venice-uncensored-role-play": "2026-02-20",
+  "grok-4.20-multi-agent-beta": "2026-03-31",
 };
 
 // Marketplace routes with no shared lab identity (uncensored/"heretic"
@@ -186,7 +197,18 @@ function buildSurplusModel(model: SurplusModel, existing: ExistingModel | undefi
   const features = new Set(model.supported_features);
   const input = modalities(model.architecture.input_modalities, ["text"]);
   const output = modalities(model.architecture.output_modalities, ["text"]);
-  const reasoning = features.has("reasoning");
+  const canonical = existing?.base_model ?? resolveSurplusBaseModel(model);
+  // Surplus's catalog omits the reasoning feature/params on some lab
+  // reasoners (e.g. gpt-oss routes advertise it on the e2ee variants only).
+  // A pass-through marketplace cannot strip a lab reasoner, so a missing
+  // flag is a catalog gap, not a capability change: never author
+  // `reasoning = false` onto a canonical model whose lab entry says true.
+  const reasoning =
+    features.has("reasoning") ||
+    params.has("reasoning") ||
+    params.has("include_reasoning") ||
+    params.has("reasoning_effort") ||
+    (canonical !== undefined && labReasoning(canonical));
   const toolCall = features.has("tools") || params.has("tools") || params.has("tool_choice");
   const structuredOutput = params.has("structured_outputs");
   const attachment = input.some((value) => value !== "text");
@@ -197,7 +219,6 @@ function buildSurplusModel(model: SurplusModel, existing: ExistingModel | undefi
     input: existing?.limit?.input,
     output: model.top_provider?.max_completion_tokens ?? existing?.limit?.output ?? contextLength,
   };
-  const canonical = existing?.base_model ?? resolveSurplusBaseModel(model);
   const reasoningOptions = reasoning
     ? (existing?.reasoning_options ?? (canonical === undefined ? undefined : mirroredReasoningOptions(canonical)))
     : undefined;
@@ -240,8 +261,8 @@ function buildSurplusModel(model: SurplusModel, existing: ExistingModel | undefi
         modalities: { input, output },
       }),
     family,
-    release_date: existing?.release_date ?? releaseDate,
-    last_updated: existing?.last_updated ?? releaseDate,
+    release_date: existing?.release_date ?? INLINE_DATES[model.id] ?? releaseDate,
+    last_updated: existing?.last_updated ?? INLINE_DATES[model.id] ?? releaseDate,
     attachment,
     reasoning,
     reasoning_options: reasoningOptions,
@@ -270,6 +291,14 @@ export function resolveSurplusBaseModel(model: SurplusModel) {
     if (resolved !== undefined) return resolved;
   }
   return undefined;
+}
+
+function labReasoning(canonical: string) {
+  try {
+    return modelMetadata(canonical).reasoning === true;
+  } catch {
+    return false;
+  }
 }
 
 function unwrapE2EE(id: string) {
