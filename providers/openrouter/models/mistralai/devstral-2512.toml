@@ -1,0 +1,12 @@
+base_model = "mistral/devstral-2512"
+description = "Mistral coding agent model for repository tasks and software engineering workflows"
+attachment = true
+structured_output = true
+
+[cost]
+input = 0.44
+output = 2.2
+cache_read = 0.044
+
+[modalities]
+input = ["text", "pdf"]
