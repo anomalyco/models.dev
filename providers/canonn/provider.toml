@@ -1,0 +1,9 @@
+name = "Canonn"
+env = ["CANONN_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+# OpenAI-compatible surface (verified 2026-08-24): GET /v1/models returns the
+# served model, POST /v1/chat/completions streams. A public, unauthenticated
+# catalog at https://api.canonn.ai/v1/models/catalog carries pricing, limits
+# and supported sampling parameters, and is the source for the model file.
+doc = "https://canonn.ai/docs/"
+api = "https://api.canonn.ai/v1"
