@@ -1,10 +1,10 @@
-# Toggle: reasoning.enabled true|false (OpenRouter-style `reasoning` object,
-# forwarded to the seller unchanged); effort: reasoning_effort.
-# Controls mirror the canonical model's lab + same-surface relay peers.
+# Live probes 2026-08-23: no reasoning side-channel and ~zero reasoning
+# tokens across pinned sellers (default route, InferHub,
+# OpenRouter/StreamLake), on easy and hard prompts alike, with
+# reasoning.enabled=true and enable_thinking=true both ignored (the model
+# deliberates in-band in content). OpenRouter peer likewise authors [].
 base_model = "moonshotai/kimi-k2.6"
-
-[[reasoning_options]]
-type = "toggle"
+reasoning_options = []
 
 [limit]
 context = 256_000

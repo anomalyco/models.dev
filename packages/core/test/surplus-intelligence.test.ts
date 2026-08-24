@@ -75,10 +75,11 @@ test("a peer's affirmative [] wins when the host advertises no reasoning control
   }
 });
 
-test("host-advertised reasoning params override a peer's [] toward lab controls", () => {
-  // Surplus advertises `reasoning`/`include_reasoning` for this route, so the
-  // pass-through exposes the lab control surface even though OpenRouter's
-  // own translator authors [] for the same canonical model.
+test("a peer's affirmative [] wins even when the host advertises reasoning params", () => {
+  // Live probes (2026-08-23) showed routes that advertise reasoning params
+  // still ignore both OpenRouter-style and lab-native controls (kimi-k2.6
+  // returned no reasoning at all; glm-4.7 ignored both off-switches), so the
+  // OpenRouter peer's [] is authoritative despite the advertised params.
   const built = buildSurplusModel(
     surplusModel({
       id: "kimi-k2.6",
@@ -88,18 +89,25 @@ test("host-advertised reasoning params override a peer's [] toward lab controls"
     }),
     undefined,
   );
-  expect(built.reasoning_options?.length).toBeGreaterThan(0);
+  expect(built.reasoning_options).toEqual([]);
+});
+
+test("live-probed inline route overrides win over catalog signals", () => {
+  // e2ee-qwen3-6-35b-a3b-uncensored-p returned reasoning content on every
+  // probe (both off-switches ignored) although the catalog marks it
+  // non-reasoning; the allowlist entry pins reasoning = true with [].
+  const built = buildSurplusModel(
+    surplusModel({ id: "e2ee-qwen3-6-35b-a3b-uncensored-p", provider: "Alibaba" }),
+    undefined,
+  );
+  expect(built.reasoning).toBe(true);
+  expect(built.reasoning_options).toEqual([]);
 });
 
 test("an authored empty reasoning_options does not shadow peer controls", () => {
   const built = buildSurplusModel(
-    surplusModel({
-      id: "kimi-k2.6",
-      provider: "Moonshot",
-      supported_parameters: ["temperature", "reasoning", "include_reasoning"],
-      supported_features: ["streaming", "reasoning", "tools"],
-    }),
-    { base_model: "moonshotai/kimi-k2.6", reasoning_options: [] },
+    surplusModel({ id: "qwen3.5-plus", provider: "Alibaba Cloud" }),
+    { base_model: "alibaba/qwen3.5-plus", reasoning_options: [] },
   );
   expect(built.reasoning_options?.length).toBeGreaterThan(0);
 });
@@ -122,6 +130,8 @@ test("lab identity decides reasoning for canonical models", () => {
 });
 
 test("marketplace finetunes inherit the parent route's reasoning controls", () => {
+  // The parent canonical zhipuai/glm-4.7-flash's OpenRouter peer authors []
+  // (no caller control), so the heretic finetune inherits exactly that.
   const built = buildSurplusModel(
     surplusModel({
       id: "glm-4.7-flash-heretic",
@@ -131,5 +141,5 @@ test("marketplace finetunes inherit the parent route's reasoning controls", () =
     }),
     undefined,
   );
-  expect(built.reasoning_options?.some((option) => option.type === "toggle")).toBe(true);
+  expect(built.reasoning_options).toEqual([]);
 });

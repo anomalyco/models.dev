@@ -1,6 +1,3 @@
-# Toggle: reasoning.enabled true|false (OpenRouter-style `reasoning` object,
-# forwarded to the seller unchanged); effort: reasoning_effort.
-# Controls mirror the canonical model's lab + same-surface relay peers.
 name = "GLM 4.7 Flash Heretic"
 description = "Efficient GLM model for fast reasoning, coding, and agent workflows"
 family = "glm"
@@ -12,9 +9,7 @@ temperature = true
 tool_call = true
 structured_output = true
 open_weights = true
-
-[[reasoning_options]]
-type = "toggle"
+reasoning_options = []
 
 [limit]
 context = 200_000

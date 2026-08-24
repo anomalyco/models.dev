@@ -75,35 +75,109 @@ const BASE_MODEL_OVERRIDES: Record<string, string> = {
 // OpenRouter grok-4.20 entry) — Surplus reports a placeholder `created`
 // timestamp (2025-01-01) for these routes, which remains the fallback where
 // no documented date exists.
-const INLINE_ROUTES: Record<string, { open_weights?: boolean; release_date?: string; header?: string }> = {
-  "e2ee-gemma-4-26b-a4b-uncensored-p": {
-    header: [
-      "# Surplus marks this uncensored E2EE route non-reasoning (no reasoning",
-      "# feature or params) while flagging its reasoning-capable e2ee siblings;",
-      "# parent google/gemma-4-26b-a4b-it reasons. Kept non-reasoning per the",
-      "# host catalog until testable.",
-      "",
-    ].join("\n"),
-  },
-  "e2ee-qwen3-6-35b-a3b-uncensored-p": {
-    header: [
-      "# Surplus marks this uncensored E2EE route non-reasoning (no reasoning",
-      "# feature or params) while flagging its reasoning-capable e2ee siblings;",
-      "# parent alibaba/qwen3.6-35b-a3b reasons. Kept non-reasoning per the",
-      "# host catalog until testable.",
-      "",
-    ].join("\n"),
-  },
+const INLINE_ROUTES: Record<
+  string,
+  {
+    open_weights?: boolean;
+    release_date?: string;
+    family?: string;
+    description?: string;
+    reasoning?: boolean;
+    reasoning_options?: NonNullable<SyncedFullModel["reasoning_options"]>;
+  }
+> = {
+  "e2ee-gemma-4-26b-a4b-uncensored-p": {},
+  // Live probe 2026-08-23: reasons on every request; both off-switches
+  // ignored (see ROUTE_HEADERS).
+  "e2ee-qwen3-6-35b-a3b-uncensored-p": { reasoning: true, reasoning_options: [] },
   "e2ee-venice-uncensored-24b-p": { open_weights: true },
   "gemma-4-uncensored": { open_weights: true, release_date: "2026-04-13" },
   "glm-4.7-flash-heretic": { open_weights: true },
   "grok-4.20-multi-agent-beta": { release_date: "2026-03-31" },
-  "mistral-large": { open_weights: true },
+  "mistral-large": {
+    open_weights: true,
+    family: "venice",
+    description: "Venice-branded Mistral-family chat model for general assistant workloads",
+  },
   "palmyra-vision-7b": {},
   "qwen3.6-plus-uncensored": {},
   "venice-uncensored": { open_weights: true },
   "venice-uncensored-1.2": { open_weights: true, release_date: "2026-04-01" },
   "venice-uncensored-role-play": { open_weights: true, release_date: "2026-02-20" },
+};
+
+const E2EE_GLM_HEADER = [
+  "# Catalog lists no reasoning params for this E2EE route and a live probe",
+  "# found no active sellers (2026-08-23); controls mirror the OpenRouter",
+  "# peer's [] until testable.",
+  "",
+].join("\n");
+
+// Evidence headers from live probes against the marketplace (2026-08-23,
+// one short prompt per request, both OpenRouter-style and lab-native wire
+// formats). These document why specific routes diverge from what a peer or
+// the route name would suggest.
+const ROUTE_HEADERS: Record<string, string> = {
+  "kimi-k2.6": [
+    "# Live probes 2026-08-23: no reasoning side-channel and ~zero reasoning",
+    "# tokens across pinned sellers (default route, InferHub,",
+    "# OpenRouter/StreamLake), on easy and hard prompts alike, with",
+    "# reasoning.enabled=true and enable_thinking=true both ignored (the model",
+    "# deliberates in-band in content). OpenRouter peer likewise authors [].",
+    "",
+  ].join("\n"),
+  "glm-4.7": [
+    "# Live probes 2026-08-23: reasoning always returned; reasoning.enabled=false",
+    "# and thinking.type=disabled both ignored, including on a provider-pinned",
+    "# first-party Z.ai offer — no caller control, matching the OpenRouter",
+    "# peer's [].",
+    "",
+  ].join("\n"),
+  "glm-5.1-non-thinking": [
+    "# Despite the route name, live probes 2026-08-23 returned reasoning",
+    "# content on every request (thinking.type=disabled ignored); kept on the",
+    "# glm-5.1 base with no caller control.",
+    "",
+  ].join("\n"),
+  "glm-5.1-non-thinking:web": [
+    "# Despite the route name, live probes 2026-08-23 of the bare route",
+    "# returned reasoning content on every request; kept on the glm-5.1 base",
+    "# with no caller control.",
+    "",
+  ].join("\n"),
+  "grok-4.20-multi-agent-beta": [
+    "# Live probes 2026-08-23: the default seller exposed ~7k chars of",
+    "# reasoning identically at reasoning.effort=low, xhigh, and",
+    "# reasoning_effort=low; an OpenRouter-pinned (xAI-served) seller exposed",
+    "# none at any effort. Effort is not honored either way, so no caller",
+    "# control is cataloged despite the OpenRouter peer's effort list.",
+    "",
+  ].join("\n"),
+  "e2ee-qwen3-6-35b-a3b-uncensored-p": [
+    "# Live probes 2026-08-23: reasoning content returned on every request",
+    "# across two pinned providers (Venice AI, Mordiem);",
+    "# reasoning.enabled=false and enable_thinking=false both ignored —",
+    "# always-on with no caller control.",
+    "",
+  ].join("\n"),
+  "e2ee-gemma-4-26b-a4b-uncensored-p": [
+    "# Live probes 2026-08-23: no reasoning content on easy or hard prompts,",
+    "# even with reasoning.enabled=true; the catalog also lists no reasoning",
+    "# feature or params for this route, unlike its reasoning-capable e2ee",
+    "# siblings.",
+    "",
+  ].join("\n"),
+  "mistral-large": [
+    "# Venice-branded route: the ID claims Mistral Large, Venice names it",
+    "# Venice Medium, and a live identity probe (2026-08-23) self-reported",
+    '# "Mistral-7B" — no confident lab checkpoint, so kept inline without',
+    "# implying Mistral Large.",
+    "",
+  ].join("\n"),
+  "e2ee-glm-4.7": E2EE_GLM_HEADER,
+  "e2ee-glm-4.7-flash": E2EE_GLM_HEADER,
+  "e2ee-glm-5": E2EE_GLM_HEADER,
+  "e2ee-glm-5.1": E2EE_GLM_HEADER,
 };
 
 // Canonical models whose controls cannot be found mechanically: the peer
@@ -229,7 +303,7 @@ export const surplusIntelligence = {
     return {
       id: model.id,
       model: translated,
-      header: (canonical === undefined ? INLINE_ROUTES[model.id]?.header : undefined) ??
+      header: ROUTE_HEADERS[model.id] ??
         (translated.reasoning_options?.some((option) => option.type === "toggle")
           ? TOGGLE_HEADER
           : undefined),
@@ -262,19 +336,21 @@ export function buildSurplusModel(model: SurplusModel, existing: ExistingModel |
   const input = modalities(model.architecture.input_modalities, ["text"]);
   const output = modalities(model.architecture.output_modalities, ["text"]);
   const canonical = existing?.base_model ?? resolveSurplusBaseModel(model);
+  const route = INLINE_ROUTES[model.id];
   // Surplus's catalog is unreliable about reasoning in both directions: it
   // omits the feature on some lab reasoners (gpt-oss routes advertise it on
   // the e2ee variants only) and blanket-lists reasoning params on lab
   // non-reasoners (the instruct-2507 checkpoint). A pass-through marketplace
   // can neither strip nor add reasoning, so lab identity is authoritative
-  // for canonical models; Surplus's own signals apply only to
-  // marketplace-only inline routes.
+  // for canonical models; Surplus's own signals (or live-probe overrides on
+  // the allowlist entry) apply only to marketplace-only inline routes.
   const reasoning = canonical !== undefined
     ? labReasoning(canonical)
-    : features.has("reasoning") ||
-      params.has("reasoning") ||
-      params.has("include_reasoning") ||
-      params.has("reasoning_effort");
+    : route?.reasoning ??
+      (features.has("reasoning") ||
+        params.has("reasoning") ||
+        params.has("include_reasoning") ||
+        params.has("reasoning_effort"));
   const toolCall = features.has("tools") || params.has("tools") || params.has("tool_choice");
   const structuredOutput = params.has("structured_outputs");
   const attachment = input.some((value) => value !== "text");
@@ -285,20 +361,14 @@ export function buildSurplusModel(model: SurplusModel, existing: ExistingModel |
     input: existing?.limit?.input,
     output: model.top_provider?.max_completion_tokens ?? existing?.limit?.output ?? contextLength,
   };
-  // The host's own catalog claiming reasoning params for a route is the
-  // tiebreaker when peer sources conflict about caller control (see
-  // mirroredReasoningOptions).
-  const hostClaimsControl =
-    params.has("reasoning") || params.has("include_reasoning") || params.has("reasoning_effort");
   // A non-empty hand-authored local value wins; an empty or missing one is
   // treated as unresolved so peer/lab mirroring can improve it on re-sync
   // (an authored `[]` must not permanently shadow later-found controls).
   const authoredOptions = existing?.reasoning_options?.length ? existing.reasoning_options : undefined;
   const reasoningOptions = reasoning
-    ? authoredOptions ??
-      (canonical !== undefined
-        ? mirroredReasoningOptions(canonical, hostClaimsControl)
-        : inlineParentReasoningOptions(model, hostClaimsControl))
+    ? route?.reasoning_options ??
+      authoredOptions ??
+      (canonical !== undefined ? mirroredReasoningOptions(canonical) : inlineParentReasoningOptions(model))
     : undefined;
 
   if (canonical !== undefined) {
@@ -323,11 +393,11 @@ export function buildSurplusModel(model: SurplusModel, existing: ExistingModel |
   }
 
   const releaseDate = dateFromTimestamp(model.created);
-  const route = INLINE_ROUTES[model.id];
-  const family = inferFamily(model.id, model.name);
+  const family = route?.family ?? inferFamily(model.id, model.name);
   return {
     name: model.name,
-    description: existing?.description ??
+    description: route?.description ??
+      existing?.description ??
       describeModel({
         id: model.id,
         name: model.name,
@@ -441,12 +511,13 @@ const firstPartyOptionsByProvider = new Map<string, Map<string, NonNullable<Sync
 // vetted authored overrides for alias/orphan IDs, the same canonical
 // model's OpenRouter entry (exact key, then with dated ID suffixes
 // stripped), and the lab's own first-party provider file. A peer's authored
-// `[]` is an affirmative "no caller control" and normally wins; but when
-// Surplus's own catalog advertises reasoning params for the route, the host
-// claims a control surface the peer's translator lacks, so the lab /
-// first-party set applies instead. Models with no source anywhere fall back
-// to the runner's empty-array default.
-export function mirroredReasoningOptions(canonical: string, hostClaimsControl: boolean) {
+// `[]` is an affirmative "no caller control" and wins — live probes
+// (2026-08-23) confirmed that routes whose catalog advertises reasoning
+// params still ignore both OpenRouter-style and lab-native controls, so the
+// host's advertised params are not evidence of a working control surface.
+// Models with no source anywhere fall back to the runner's empty-array
+// default.
+export function mirroredReasoningOptions(canonical: string) {
   const authored = AUTHORED_REASONING_OPTIONS[canonical];
   if (authored !== undefined) return authored;
   if (reasoningOptionsByCanonical === undefined) {
@@ -473,24 +544,18 @@ export function mirroredReasoningOptions(canonical: string, hostClaimsControl: b
       if (!reasoningOptionsByCanonical.has(key)) reasoningOptionsByCanonical.set(key, options);
     }
   }
-  const peer = reasoningOptionsByCanonical.get(canonical);
-  if (peer !== undefined) {
-    if (peer.length > 0) return peer;
-    if (!hostClaimsControl) return peer;
-    return firstPartyReasoningOptions(canonical) ?? peer;
-  }
-  return firstPartyReasoningOptions(canonical);
+  return reasoningOptionsByCanonical.get(canonical) ?? firstPartyReasoningOptions(canonical);
 }
 
 // Marketplace-only finetune routes (`-uncensored`, `-heretic`) forward the
 // parent model's parameters like every other route, so their reasoning
 // controls come from the parent canonical when it resolves.
-function inlineParentReasoningOptions(model: SurplusModel, hostClaimsControl: boolean) {
+function inlineParentReasoningOptions(model: SurplusModel) {
   const routeID = unwrapE2EE(model.id.replace(/:web$/, ""));
   const parentID = routeID.replace(/-(?:uncensored|heretic)(?=-|$)/g, "");
   if (parentID === routeID) return undefined;
   const parent = resolveSurplusBaseModel({ ...model, id: parentID });
-  return parent === undefined ? undefined : mirroredReasoningOptions(parent, hostClaimsControl);
+  return parent === undefined ? undefined : mirroredReasoningOptions(parent);
 }
 
 // First-party layouts differ: most labs keep flat files under
