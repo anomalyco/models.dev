@@ -1,8 +1,11 @@
+# Toggle: chat_template_kwargs.thinking = true|false (default true)
 base_model = "moonshotai/kimi-k2.6"
-reasoning_options = []
 
 [interleaved]
 field = "reasoning_details"
+
+[[reasoning_options]]
+type = "toggle"
 
 [cost]
 input = 1.08243
