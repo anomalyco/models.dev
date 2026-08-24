@@ -75,9 +75,25 @@ const BASE_MODEL_OVERRIDES: Record<string, string> = {
 // OpenRouter grok-4.20 entry) — Surplus reports a placeholder `created`
 // timestamp (2025-01-01) for these routes, which remains the fallback where
 // no documented date exists.
-const INLINE_ROUTES: Record<string, { open_weights?: boolean; release_date?: string }> = {
-  "e2ee-gemma-4-26b-a4b-uncensored-p": {},
-  "e2ee-qwen3-6-35b-a3b-uncensored-p": {},
+const INLINE_ROUTES: Record<string, { open_weights?: boolean; release_date?: string; header?: string }> = {
+  "e2ee-gemma-4-26b-a4b-uncensored-p": {
+    header: [
+      "# Surplus marks this uncensored E2EE route non-reasoning (no reasoning",
+      "# feature or params) while flagging its reasoning-capable e2ee siblings;",
+      "# parent google/gemma-4-26b-a4b-it reasons. Kept non-reasoning per the",
+      "# host catalog until testable.",
+      "",
+    ].join("\n"),
+  },
+  "e2ee-qwen3-6-35b-a3b-uncensored-p": {
+    header: [
+      "# Surplus marks this uncensored E2EE route non-reasoning (no reasoning",
+      "# feature or params) while flagging its reasoning-capable e2ee siblings;",
+      "# parent alibaba/qwen3.6-35b-a3b reasons. Kept non-reasoning per the",
+      "# host catalog until testable.",
+      "",
+    ].join("\n"),
+  },
   "e2ee-venice-uncensored-24b-p": { open_weights: true },
   "gemma-4-uncensored": { open_weights: true, release_date: "2026-04-13" },
   "glm-4.7-flash-heretic": { open_weights: true },
@@ -213,9 +229,10 @@ export const surplusIntelligence = {
     return {
       id: model.id,
       model: translated,
-      header: translated.reasoning_options?.some((option) => option.type === "toggle")
-        ? TOGGLE_HEADER
-        : undefined,
+      header: (canonical === undefined ? INLINE_ROUTES[model.id]?.header : undefined) ??
+        (translated.reasoning_options?.some((option) => option.type === "toggle")
+          ? TOGGLE_HEADER
+          : undefined),
     };
   },
   sourceID(model) {
@@ -235,7 +252,7 @@ export const surplusIntelligence = {
 const TOGGLE_HEADER = [
   "# Toggle: reasoning.enabled true|false (OpenRouter-style `reasoning` object,",
   "# forwarded to the seller unchanged); effort: reasoning_effort.",
-  "# Controls mirror the same canonical model's OpenRouter entry.",
+  "# Controls mirror the canonical model's lab + same-surface relay peers.",
   "",
 ].join("\n");
 
@@ -268,13 +285,20 @@ export function buildSurplusModel(model: SurplusModel, existing: ExistingModel |
     input: existing?.limit?.input,
     output: model.top_provider?.max_completion_tokens ?? existing?.limit?.output ?? contextLength,
   };
+  // The host's own catalog claiming reasoning params for a route is the
+  // tiebreaker when peer sources conflict about caller control (see
+  // mirroredReasoningOptions).
+  const hostClaimsControl =
+    params.has("reasoning") || params.has("include_reasoning") || params.has("reasoning_effort");
   // A non-empty hand-authored local value wins; an empty or missing one is
   // treated as unresolved so peer/lab mirroring can improve it on re-sync
   // (an authored `[]` must not permanently shadow later-found controls).
   const authoredOptions = existing?.reasoning_options?.length ? existing.reasoning_options : undefined;
   const reasoningOptions = reasoning
     ? authoredOptions ??
-      (canonical !== undefined ? mirroredReasoningOptions(canonical) : inlineParentReasoningOptions(model))
+      (canonical !== undefined
+        ? mirroredReasoningOptions(canonical, hostClaimsControl)
+        : inlineParentReasoningOptions(model, hostClaimsControl))
     : undefined;
 
   if (canonical !== undefined) {
@@ -416,15 +440,19 @@ const firstPartyOptionsByProvider = new Map<string, Map<string, NonNullable<Sync
 // model's controls are copied from the lab + same-surface peers, in order:
 // vetted authored overrides for alias/orphan IDs, the same canonical
 // model's OpenRouter entry (exact key, then with dated ID suffixes
-// stripped), and the lab's own first-party provider file. Models with no
-// source anywhere fall back to the runner's empty-array default.
-export function mirroredReasoningOptions(canonical: string) {
+// stripped), and the lab's own first-party provider file. A peer's authored
+// `[]` is an affirmative "no caller control" and normally wins; but when
+// Surplus's own catalog advertises reasoning params for the route, the host
+// claims a control surface the peer's translator lacks, so the lab /
+// first-party set applies instead. Models with no source anywhere fall back
+// to the runner's empty-array default.
+export function mirroredReasoningOptions(canonical: string, hostClaimsControl: boolean) {
   const authored = AUTHORED_REASONING_OPTIONS[canonical];
   if (authored !== undefined) return authored;
   if (reasoningOptionsByCanonical === undefined) {
     reasoningOptionsByCanonical = new Map();
     const relaxed = new Map<string, SyncedFullModel["reasoning_options"]>();
-    for (const entry of walkTOMLFiles(OPENROUTER_MODELS_DIR)) {
+    for (const entry of walkTOMLFiles(OPENROUTER_MODELS_DIR).sort()) {
       let parsed: Record<string, unknown>;
       try {
         parsed = Bun.TOML.parse(readFileSync(entry, "utf8")) as Record<string, unknown>;
@@ -432,7 +460,7 @@ export function mirroredReasoningOptions(canonical: string) {
         continue;
       }
       const options = parsed.reasoning_options as SyncedFullModel["reasoning_options"] | undefined;
-      if (options === undefined || options.length === 0) continue;
+      if (options === undefined) continue;
       const key = canonicalKeyForOpenRouterFile(entry, parsed);
       if (key === undefined) continue;
       if (!reasoningOptionsByCanonical.has(key)) reasoningOptionsByCanonical.set(key, options);
@@ -445,18 +473,24 @@ export function mirroredReasoningOptions(canonical: string) {
       if (!reasoningOptionsByCanonical.has(key)) reasoningOptionsByCanonical.set(key, options);
     }
   }
-  return reasoningOptionsByCanonical.get(canonical) ?? firstPartyReasoningOptions(canonical);
+  const peer = reasoningOptionsByCanonical.get(canonical);
+  if (peer !== undefined) {
+    if (peer.length > 0) return peer;
+    if (!hostClaimsControl) return peer;
+    return firstPartyReasoningOptions(canonical) ?? peer;
+  }
+  return firstPartyReasoningOptions(canonical);
 }
 
 // Marketplace-only finetune routes (`-uncensored`, `-heretic`) forward the
 // parent model's parameters like every other route, so their reasoning
 // controls come from the parent canonical when it resolves.
-function inlineParentReasoningOptions(model: SurplusModel) {
+function inlineParentReasoningOptions(model: SurplusModel, hostClaimsControl: boolean) {
   const routeID = unwrapE2EE(model.id.replace(/:web$/, ""));
   const parentID = routeID.replace(/-(?:uncensored|heretic)(?=-|$)/g, "");
   if (parentID === routeID) return undefined;
   const parent = resolveSurplusBaseModel({ ...model, id: parentID });
-  return parent === undefined ? undefined : mirroredReasoningOptions(parent);
+  return parent === undefined ? undefined : mirroredReasoningOptions(parent, hostClaimsControl);
 }
 
 // First-party layouts differ: most labs keep flat files under
@@ -464,7 +498,7 @@ function inlineParentReasoningOptions(model: SurplusModel) {
 // (providers/nvidia/models/nvidia/…) and sometimes repeats the lab name in
 // the filename. Index the lab's own subtree plus the flat root by basename,
 // with the lab-name prefix stripped as an alternate key.
-function firstPartyReasoningOptions(canonical: string) {
+export function firstPartyReasoningOptions(canonical: string) {
   const [metadataDir, ...rest] = canonical.split("/");
   const providerDir = metadataDir === undefined ? undefined : FIRST_PARTY_PROVIDERS[metadataDir];
   if (providerDir === undefined || rest.length === 0) return undefined;
@@ -474,9 +508,9 @@ function firstPartyReasoningOptions(canonical: string) {
     index = new Map();
     const root = path.join(PROVIDERS_DIR, providerDir, "models");
     const files = [...walkTOMLFiles(path.join(root, providerDir)), ...flatTOMLFiles(root)];
-    for (const file of files) {
+    for (const file of files.sort()) {
       const options = tomlReasoningOptions(file);
-      if (options === undefined || options.length === 0) continue;
+      if (options === undefined) continue;
       const basename = path.basename(file, ".toml").toLowerCase();
       for (const key of new Set([basename, basename.replace(new RegExp(`^${providerDir}-`), "")])) {
         if (!index.has(key)) index.set(key, options);

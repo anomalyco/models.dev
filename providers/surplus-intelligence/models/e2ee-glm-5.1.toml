@@ -1,11 +1,6 @@
-# Toggle: reasoning.enabled true|false (OpenRouter-style `reasoning` object,
-# forwarded to the seller unchanged); effort: reasoning_effort.
-# Controls mirror the same canonical model's OpenRouter entry.
 base_model = "zhipuai/glm-5.1"
 name = "GLM 5.1 E2EE"
-
-[[reasoning_options]]
-type = "toggle"
+reasoning_options = []
 
 [limit]
 output = 24_000

@@ -2,6 +2,7 @@ import { expect, test } from "bun:test";
 
 import {
   buildSurplusModel,
+  firstPartyReasoningOptions,
   resolveSurplusBaseModel,
   SurplusModel,
 } from "../src/sync/providers/surplus-intelligence.js";
@@ -55,19 +56,52 @@ test("does not invent canonical metadata for marketplace-only routes", () => {
 test("finds first-party reasoning controls in NVIDIA's nested provider layout", () => {
   // Regression: providers/nvidia/models nests per-org subdirectories and
   // sometimes repeats the lab name in the filename; a flat path lookup
-  // missed both and every NVIDIA reasoner degraded to [].
-  for (const id of ["nvidia-nemotron-nano-9b-v2", "nvidia-nemotron-3-nano-30b-a3b"]) {
-    const built = buildSurplusModel(surplusModel({ id, provider: "NVIDIA" }), undefined);
-    expect(built.reasoning_options).toEqual([{ type: "toggle" }]);
+  // missed both.
+  expect(firstPartyReasoningOptions("nvidia/nemotron-nano-9b-v2")).toEqual([{ type: "toggle" }]);
+  expect(firstPartyReasoningOptions("nvidia/nemotron-3-nano-30b-a3b")).toEqual([{ type: "toggle" }]);
+});
+
+test("a peer's affirmative [] wins when the host advertises no reasoning control", () => {
+  // OpenRouter authors reasoning_options = [] for these models and Surplus's
+  // own catalog lists no reasoning params for the routes, so "no caller
+  // control" is the agreed answer even though the lab entries carry toggles.
+  for (const [id, provider] of [
+    ["nvidia-nemotron-3-nano-30b-a3b", "NVIDIA"],
+    ["nvidia-nemotron-nano-9b-v2", "NVIDIA"],
+    ["minimax-m3", "MiniMax"],
+  ] as const) {
+    const built = buildSurplusModel(surplusModel({ id, provider }), undefined);
+    expect(built.reasoning_options).toEqual([]);
   }
 });
 
+test("host-advertised reasoning params override a peer's [] toward lab controls", () => {
+  // Surplus advertises `reasoning`/`include_reasoning` for this route, so the
+  // pass-through exposes the lab control surface even though OpenRouter's
+  // own translator authors [] for the same canonical model.
+  const built = buildSurplusModel(
+    surplusModel({
+      id: "kimi-k2.6",
+      provider: "Moonshot",
+      supported_parameters: ["temperature", "reasoning", "include_reasoning"],
+      supported_features: ["streaming", "reasoning", "tools"],
+    }),
+    undefined,
+  );
+  expect(built.reasoning_options?.length).toBeGreaterThan(0);
+});
+
 test("an authored empty reasoning_options does not shadow peer controls", () => {
-  const built = buildSurplusModel(surplusModel({ id: "nvidia-nemotron-nano-9b-v2", provider: "NVIDIA" }), {
-    base_model: "nvidia/nemotron-nano-9b-v2",
-    reasoning_options: [],
-  });
-  expect(built.reasoning_options).toEqual([{ type: "toggle" }]);
+  const built = buildSurplusModel(
+    surplusModel({
+      id: "kimi-k2.6",
+      provider: "Moonshot",
+      supported_parameters: ["temperature", "reasoning", "include_reasoning"],
+      supported_features: ["streaming", "reasoning", "tools"],
+    }),
+    { base_model: "moonshotai/kimi-k2.6", reasoning_options: [] },
+  );
+  expect(built.reasoning_options?.length).toBeGreaterThan(0);
 });
 
 test("lab identity decides reasoning for canonical models", () => {
@@ -92,6 +126,7 @@ test("marketplace finetunes inherit the parent route's reasoning controls", () =
     surplusModel({
       id: "glm-4.7-flash-heretic",
       provider: "Zhipu AI",
+      supported_parameters: ["temperature", "reasoning", "include_reasoning"],
       supported_features: ["streaming", "reasoning"],
     }),
     undefined,
