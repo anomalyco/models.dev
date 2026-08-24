@@ -60,6 +60,10 @@ const BASE_MODEL_OVERRIDES: Record<string, string> = {
   "grok-4.20-beta": "xai/grok-4.20-0309-reasoning",
   "grok-build-0-1": "xai/grok-build-0.1",
   "hy3-free": "tencent/hy3",
+  // Moonshot has no undated K2 API ID (first-party routes are
+  // kimi-k2-0711-preview / kimi-k2-0905-preview); the marketplace route's
+  // 256K context matches the 0905 checkpoint.
+  "kimi-k2": "moonshotai/kimi-k2-0905",
   "hermes-3-llama-3.1-405b": "nousresearch/hermes-3-llama-3.1-405b",
   "mercury-2": "inception/mercury-2",
   "aion-labs.aion-2-0": "aion-labs/aion-2.0",
