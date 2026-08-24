@@ -1,0 +1,16 @@
+base_model = "alibaba/qwen3.6-27b"
+
+# Hybrid reasoning; Pendra exposes no configurable effort/budget control.
+reasoning_options = []
+
+# Pendra serves Qwen3.6 27B with text + image input (no audio/video).
+attachment = true
+
+# Self-hosted on your own workers — no per-token charge at the API.
+[cost]
+input = 0
+output = 0
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
