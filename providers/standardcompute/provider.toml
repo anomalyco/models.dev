@@ -6,10 +6,13 @@
 # Reasoning HTTP format (accessed 2026-08-24):
 # POST /v1/chat/completions accepts the OpenRouter-style `reasoning` object
 # ({enabled = bool} | {effort = "minimal"|"low"|"medium"|"high"} |
-# {max_tokens = N}) and top-level `reasoning_effort`; both pass through to
-# the routed model. Requests without reasoning fields use the per-model
-# defaults saved in the customer dashboard. Responses return `reasoning`
-# plus OpenRouter-shape `reasoning_details` (streaming included).
+# {max_tokens = N}) and top-level `reasoning_effort`; all pass through to
+# the routed model. Only `enabled` has a guaranteed effect on every catalog
+# backend; `effort` and `max_tokens` have backend-dependent effect, so the
+# model entry lists only the toggle in reasoning_options. Requests without
+# reasoning fields use the per-model defaults saved in the customer
+# dashboard. Responses return `reasoning` plus OpenRouter-shape
+# `reasoning_details` (streaming included).
 name = "Standard Compute"
 env = ["STANDARDCOMPUTE_API_KEY"]
 npm = "@ai-sdk/openai-compatible"
