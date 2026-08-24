@@ -1,5 +1,14 @@
+# Tinker's Anthropic-compatible route: thinking.type = adaptive|disabled toggles reasoning;
+# output_config.effort = low|medium|high|xhigh|max sets effort.
+
 base_model = "thinkingmachines/inkling"
-reasoning_options = []
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high", "xhigh", "max"]
 
 [cost]
 input = 1.87
@@ -9,3 +18,4 @@ cache_write = 1.87
 
 [limit]
 context = 64_000
+output = 65_536

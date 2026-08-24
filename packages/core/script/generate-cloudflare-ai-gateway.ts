@@ -67,6 +67,16 @@ const CuratedModel = z
   .object({
     base_model: z.string().min(1).optional(),
     structured_output: z.boolean().optional(),
+    // Host-specific capability deltas the docs/catalog cannot express as a negative: a @cf
+    // deployment often disables tool calling or vision that the lab model supports, and the
+    // docs only ever advertise capabilities as `true` (absence != false). Curation carries the
+    // verified host disable so it survives regeneration instead of re-inheriting the lab value.
+    tool_call: z.boolean().optional(),
+    attachment: z.boolean().optional(),
+    modalities: z
+      .object({ input: z.array(z.string()).optional(), output: z.array(z.string()).optional() })
+      .strict()
+      .optional(),
     reasoning_options: z.array(ReasoningOption).optional(),
     limit: z.record(z.number()).optional(),
     interleaved: z
@@ -421,8 +431,8 @@ async function main() {
     // 4-8x). Only context_length has checked out, so that's all we auto-derive; output is
     // either curated explicitly or left to inherit from base_model.
     const limit: Record<string, number> = {};
-    if (cur.limit) Object.assign(limit, cur.limit);
-    else if (m.context_length != null) limit.context = m.context_length;
+    if (m.context_length != null) limit.context = m.context_length;
+    if (cur.limit) Object.assign(limit, cur.limit); // curation overrides/adds (e.g. served output)
     if (Object.keys(limit).length) model.limit = limit;
 
     const npm = nativeNpm(id);
@@ -450,8 +460,13 @@ async function main() {
     // name/description inherit from base_model; docs only expose the raw @cf id as "name".
     const model: Record<string, unknown> = { base_model: cur.base_model };
 
-    if (hostedProp(docs, "function_calling") === "true") model.tool_call = true;
-    if (hostedProp(docs, "vision") === "true") model.attachment = true;
+    // Docs advertise capabilities only as `true` (absence != false), so a curated explicit value
+    // — typically a verified host disable the same @cf peer marks false — overrides the docs.
+    if (cur.tool_call !== undefined) model.tool_call = cur.tool_call;
+    else if (hostedProp(docs, "function_calling") === "true") model.tool_call = true;
+    if (cur.attachment !== undefined) model.attachment = cur.attachment;
+    else if (hostedProp(docs, "vision") === "true") model.attachment = true;
+    if (cur.modalities !== undefined) model.modalities = cur.modalities;
     if (cur.structured_output !== undefined) model.structured_output = cur.structured_output;
     // interleaved: whether this @cf deployment returns reasoning content as a separate wire
     // field. Not part of the docs schema and not inheritable from base_model (the lab's own

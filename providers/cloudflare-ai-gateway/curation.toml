@@ -210,7 +210,12 @@ note = [
 reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "high", "max"] }]
 
 [models."thinkingmachines/inkling"]
-reasoning_options = []
+note = [
+  "Tinker's Anthropic-compatible route: thinking.type = adaptive|disabled toggles reasoning;",
+  "output_config.effort = low|medium|high|xhigh|max sets effort.",
+]
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
+limit = { output = 65_536 }
 
 [models."workers-ai/@cf/aisingapore/gemma-sea-lion-v4-27b-it"]
 base_model = "aisingapore/gemma-sea-lion-v4-27b-it"
@@ -253,11 +258,13 @@ limit = { output = 131_000 }
 
 [models."workers-ai/@cf/meta/llama-3.1-8b-instruct-fp8"]
 base_model = "meta/llama-3.1-8b-instruct"
+tool_call = false
 structured_output = false
 limit = { output = 32_000 }
 
 [models."workers-ai/@cf/meta/llama-3.2-11b-vision-instruct"]
 base_model = "meta/llama-3.2-11b-vision-instruct"
+tool_call = false
 structured_output = false
 limit = { output = 128_000 }
 
@@ -273,6 +280,7 @@ limit = { output = 80_000 }
 
 [models."workers-ai/@cf/meta/llama-3.3-70b-instruct-fp8-fast"]
 base_model = "meta/llama-3.3-70b-instruct"
+attachment = false
 structured_output = false
 limit = { output = 24_000 }
 
@@ -287,6 +295,8 @@ limit = { output = 131_072 }
 
 [models."workers-ai/@cf/mistralai/mistral-small-3.1-24b-instruct"]
 base_model = "mistral/mistral-small-3-1-24b-instruct-2503"
+attachment = false
+modalities = { input = ["text"], output = ["text"] }
 structured_output = false
 limit = { output = 128_000 }
 
@@ -340,6 +350,7 @@ limit = { output = 16_384 }
 
 [models."workers-ai/@cf/qwen/qwen2.5-coder-32b-instruct"]
 base_model = "alibaba/qwen2.5-coder-32b-instruct"
+tool_call = false
 structured_output = false
 limit = { output = 32_768 }
 
@@ -351,6 +362,7 @@ limit = { output = 32_768 }
 
 [models."workers-ai/@cf/qwen/qwq-32b"]
 base_model = "alibaba/qwq-32b"
+tool_call = false
 structured_output = false
 reasoning_options = []
 limit = { output = 24_000 }
