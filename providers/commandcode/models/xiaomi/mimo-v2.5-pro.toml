@@ -1,0 +1,11 @@
+base_model = "xiaomi/mimo-v2.5-pro"
+description = "MiMo pro model for strong multimodal reasoning and agent execution"
+release_date = "2026-08-24"
+last_updated = "2026-08-24"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high"]
+
+[limit]
+context = 1_000_000

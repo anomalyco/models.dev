@@ -1,0 +1,7 @@
+name = "Command Code"
+env = ["COMMAND_CODE_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+# Reasoning effort is controlled via the `reasoning_effort` request body field
+# (low | medium | high). The model list endpoint is public and requires no key.
+api = "https://api.commandcode.ai/provider/v1"
+doc = "https://commandcode.ai/docs/reference/cli/models"

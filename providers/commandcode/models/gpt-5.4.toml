@@ -1,0 +1,12 @@
+base_model = "openai/gpt-5.4"
+base_model_omit = ["limit.input"]
+description = "Frontier GPT model for professional reasoning, coding, and multimodal work"
+release_date = "2026-08-24"
+last_updated = "2026-08-24"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high"]
+
+[limit]
+context = 400_000

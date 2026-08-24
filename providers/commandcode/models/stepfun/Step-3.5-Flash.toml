@@ -1,0 +1,12 @@
+base_model = "stepfun/step-3.5-flash"
+base_model_omit = ["limit.input"]
+description = "StepFun flash model for efficient multimodal reasoning, coding, and tool use"
+release_date = "2026-08-24"
+last_updated = "2026-08-24"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high"]
+
+[limit]
+context = 1_000_000
