@@ -1,9 +1,6 @@
-# Toggle: reasoning.enabled = true|false
 base_model = "zhipuai/glm-5v-turbo"
 structured_output = false
-
-[[reasoning_options]]
-type = "toggle"
+reasoning_options = []
 
 [cost]
 input = 1.36728
