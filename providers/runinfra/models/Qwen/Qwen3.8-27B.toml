@@ -1,15 +1,22 @@
 # Source: https://runinfra.ai/inference-api/qwen3-8-27b
-# Served text in, text out only on this host
+# IMAGE INPUT went live on this host 2026-08-18, so the earlier text-only declaration is
+# corrected. modalities.input is still overridden rather than deleted because the host accepts
+# text and image and does NOT serve video, which the base model declares. `attachment` is
+# dropped because it now matches the base model. Confirmed on our own published provider feed,
+# which derives the accepted set from the same registry the gateway enforces:
+# https://runinfra.ai/api/providers/openrouter/models reports text+image for this model.
 # Reasoning control via the reasoning_effort wire field, verified live 2026-08-16 (temperature 0,
 # fixed prompt, three runs per level): "none" disables reasoning (67 to 5 completion tokens);
 # "low" is reproducibly distinct (123/123/123 vs an omitted baseline of 94/101/101); "medium"
-# is distinct (123/139/139); "xhigh" equals the omitted default (101/98/101). "high" and "max"
-# are REJECTED with HTTP 400 "Unexpected reasoning effort high. Supported types are xhigh
-# (default), medium, and low.", so they are not published. enable_thinking /
+# is distinct (123/139/139); "xhigh" equals the omitted default (101/98/101).
+# Since 2026-08-23 the gateway ACCEPTS "high" and folds it to "xhigh" before dispatch; it is
+# not published as a separate rung because it is the OpenAI ladder's word for the maximum and
+# this serve's maximum is "xhigh", so it is a synonym rather than a distinct behaviour. The
+# earlier note here said "high" was rejected with HTTP 400, which stopped being true with that
+# change. "max" is still rejected and is still not published. enable_thinking /
 # chat_template_kwargs / thinking_budget are accepted but have no effect.
 # cache_read is the cached input price, verified live on 2026-08-16
 base_model = "alibaba/qwen3.8-27b"
-attachment = false
 
 [[reasoning_options]]
 type = "effort"
@@ -21,4 +28,4 @@ output = 0.40
 cache_read = 0.01
 
 [modalities]
-input = ["text"]
+input = ["text", "image"]

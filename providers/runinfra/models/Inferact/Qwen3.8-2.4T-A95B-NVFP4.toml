@@ -4,8 +4,14 @@
 # Reasoning control, verified live 2026-08-16 (temperature 0, fixed prompt, two identical runs
 # per level): reasoning_effort is a graded dial with the wire values below, each reproducibly
 # distinct (completion tokens 113 low, 140 medium, 89 xhigh which equals the omitted default).
+# Since 2026-08-21 the gateway also ACCEPTS "high" and folds it to "xhigh" before dispatch.
+# It is not published as a separate rung because it is not a distinct behaviour, only the
+# OpenAI ladder's word for the maximum, and this serve's maximum is "xhigh". Callers that
+# send "high" are served rather than refused.
 # Reasoning cannot be turned off: reasoning_effort = "none" is rejected with HTTP 400
-# "Disabling thinking is not supported." enable_thinking / chat_template_kwargs /
+# "Disabling thinking is not supported." That refusal is deliberate and is NOT folded, so a
+# caller asking to switch reasoning off learns the model has no off switch instead of being
+# silently charged the most expensive setting. enable_thinking / chat_template_kwargs /
 # thinking_budget are accepted but have no effect.
 # cache_read is the cached input price. JSON mode went live on this host 2026-08-17,
 # verified on the public path: 3 of 3 json_object responses parsed and 3 of 3 strict

@@ -1,0 +1,25 @@
+name = "Ornith 1.5 9B"
+description = "Ornith 1.5 9B is an FP8 dense open-weight reasoning model built for agentic coding, tool use, visual understanding, and efficient long-context work."
+family = "ornith"
+release_date = "2026-08-23"
+last_updated = "2026-08-23"
+attachment = true
+reasoning = true
+tool_call = true
+structured_output = true
+open_weights = true
+reasoning_options = []
+
+[cost]
+input = 0.05
+output = 0.1
+cache_read = 0.025
+
+[limit]
+context = 131_072
+input = 131_072
+output = 32_768
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

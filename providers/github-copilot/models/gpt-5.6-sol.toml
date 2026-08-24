@@ -1,15 +1,19 @@
+# Source: https://docs.github.com/en/copilot/reference/copilot-billing/models-and-pricing
+# GPT-5.6 Sol promotional pricing (50% off standard rates) through September 3, 2026.
+# Default ≤272K: $2.50 / $0.25 / $3.125 / $15.00 (input / cache_read / cache_write / output)
+# Long context >272K: $5.00 / $0.50 / $6.25 / $22.50
 base_model = "openai/gpt-5.6-sol"
 reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh", "max"] }]
 
 [cost]
-input = 5
-output = 30
-cache_read = 0.5
-cache_write = 6.25
+input = 2.5
+output = 15
+cache_read = 0.25
+cache_write = 3.125
 
 [[cost.tiers]]
 tier = { type = "context", size = 272_000 }
-input = 10
-output = 45
-cache_read = 1
-cache_write = 12.5
+input = 5
+output = 22.5
+cache_read = 0.5
+cache_write = 6.25

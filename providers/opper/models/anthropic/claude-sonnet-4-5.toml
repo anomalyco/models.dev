@@ -1,0 +1,13 @@
+base_model = "anthropic/claude-sonnet-4-5"
+structured_output = true
+
+reasoning_options = []
+
+[cost]
+input = 3
+output = 15
+cache_read = 0.3
+cache_write = 3.75
+
+[interleaved]
+field = "reasoning_content"

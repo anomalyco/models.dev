@@ -5,7 +5,6 @@
 # Pricing: $2 / $6 per 1M (cache_read $0.25). Context up to 1_048_576;
 # top_provider max_completion_tokens 262_144. Text-only (not multimodal Max).
 # Reasoning mandatory; efforts low|medium|xhigh (no toggle / no none).
-
 base_model = "alibaba/qwen3.8-2.4t-a95b"
 
 [[reasoning_options]]
@@ -19,4 +18,3 @@ cache_read = 0.25
 
 [limit]
 context = 1_048_576
-output = 262_144
