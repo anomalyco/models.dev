@@ -1,0 +1,19 @@
+name = "Palmyra Vision 7B"
+description = "Multimodal model for analyzing text, images, documents, and rich media"
+family = "palmyra"
+release_date = "2025-01-01"
+last_updated = "2025-01-01"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[limit]
+context = 4_000
+output = 4_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

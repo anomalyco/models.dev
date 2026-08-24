@@ -1,0 +1,10 @@
+base_model = "google/gemma-4-E2B-it"
+name = "Gemma 4 E2B"
+reasoning = false
+
+[limit]
+context = 128_000
+output = 128_000
+
+[modalities]
+input = ["text", "image"]

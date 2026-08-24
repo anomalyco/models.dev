@@ -1,0 +1,12 @@
+base_model = "alibaba/qwen3.7-plus"
+name = "Qwen 3.7 Plus"
+attachment = false
+reasoning = false
+structured_output = true
+
+[limit]
+context = 256_000
+output = 32_768
+
+[modalities]
+input = ["text"]

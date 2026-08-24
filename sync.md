@@ -20,6 +20,7 @@ The grouped sync targets are available for local convenience, but CI syncs each 
 - `bun models:sync merge-gateway` syncs only Merge Gateway.
 - `bun models:sync openai` syncs only OpenAI catalog availability.
 - `bun models:sync tinfoil` syncs only Tinfoil.
+- `bun models:sync surplus-intelligence` syncs only Surplus Intelligence.
 - `bun models:sync aggregators --dry-run` prints changes without writing model files.
 - `bun models:sync aggregators --new-only` creates new model files but skips updates and removals.
 - `bun models:sync <provider> --open-issues` opens GitHub issues for missing models (on by default only when `GITHUB_ACTIONS=true`).
@@ -296,6 +297,19 @@ Venice is implemented in `packages/core/src/sync/providers/venice.ts`.
 - Models missing from the API response are removed from the Venice catalog.
 - Every Venice model uses `base_model`; flattened IDs are matched to provider-agnostic metadata before provider-specific overrides are written.
 - Every Venice model declares `reasoning_options`; models without API-provided effort levels use an empty array.
+
+## Surplus Intelligence Notes
+
+Surplus Intelligence is implemented in `packages/core/src/sync/providers/surplus-intelligence.ts`.
+
+- Source endpoint: `https://api.surplusintelligence.ai/v1/models`; no auth required (the catalog is public and OpenRouter-shaped).
+- Model IDs map directly to TOML paths under `providers/surplus-intelligence/models`, including `:web` route variants and `e2ee-…-p` encrypted wrappers.
+- **No `[cost]` is written.** Surplus is a marketplace: each request routes to the cheapest seller, so realized prices float continuously at or below a per-model reference price and depend on per-key routing preferences (trusted-domain sellers by default; untrusted sellers opt-in). The API's pricing fields are reference prices, not what buyers pay, so costs are intentionally omitted rather than cataloged wrong.
+- Canonical IDs resolve to `base_model` metadata by synthesizing OpenRouter-shaped IDs from the API's lab `provider` field plus candidate transforms (`e2ee-`/`-p` unwrap, `:web` strip, `-it`/`-instruct` variants, dotted point releases); irregular IDs use an explicit override map. Marketplace-only routes (uncensored/"heretic" finetunes, Venice house models, beta aliases) are written inline.
+- `reasoning`, `tool_call` come from `supported_features`; `structured_output` from `supported_parameters.includes("structured_outputs")`; `temperature` from `supported_parameters`.
+- `reasoning_options` mirror the same canonical model's authored OpenRouter entry (Surplus forwards request parameters to the seller unchanged, so the peer relay's controls apply); authored local options win, and reasoners with no peer entry default to an empty array. Toggle-bearing files get a wire-path header emitted by the sync.
+- Image/video/music/TTS/STT marketplace services are excluded: they are priced per request or media unit and cannot be represented by the token-cost schema.
+- `release_date`/`last_updated` default to the API `created` timestamp but preserve existing hand-authored dates; `knowledge`, `status`, `interleaved`, `limit.input`, and inline `open_weights` corrections are preserved when present.
 
 ## Standalone Generators
 

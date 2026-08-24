@@ -1,0 +1,20 @@
+name = "Grok 4.20 Multi-Agent Beta"
+description = "Grok model for agentic tool use, reasoning, coding, and live assistance"
+family = "grok"
+release_date = "2025-01-01"
+last_updated = "2025-01-01"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = false
+structured_output = true
+open_weights = false
+reasoning_options = []
+
+[limit]
+context = 2_000_000
+output = 128_000
+
+[modalities]
+input = ["text"]
+output = ["text"]
