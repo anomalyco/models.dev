@@ -4,7 +4,7 @@ last_updated = "2026-07-22"
 
 [[reasoning_options]]
 type = "effort"
-values = ["low", "medium", "high"]
+values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"]
 
 [cost]
 input = 0.178
@@ -12,4 +12,5 @@ output = 0.68
 cache_write = 0.089
 
 [limit]
+context = 128_072
 output = 13_107
