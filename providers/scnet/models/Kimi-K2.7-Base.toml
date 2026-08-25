@@ -1,9 +1,10 @@
-base_model = "moonshotai/kimi-k2.7-code"
-name = "Kimi-K2.7-Base"
-attachment = false
+base_model = "moonshotai/kimi-k2.7-base"
 # SCNet documents enable_thinking only for Qwen3 and DeepSeek-V4; this model has no caller-controlled reasoning option.
 # https://www.scnet.cn/ac/openapi/doc/2.0/moduleapi/api/chat.html
 reasoning_options = []
+
+[interleaved]
+field = "reasoning_content"
 
 [cost]
 input = 0.4834375
@@ -12,6 +13,3 @@ cache_read = 0.0966875
 
 [limit]
 context = 131_072
-
-[modalities]
-input = ["text"]

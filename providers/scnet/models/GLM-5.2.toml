@@ -3,6 +3,9 @@ base_model = "zhipuai/glm-5.2"
 # https://www.scnet.cn/ac/openapi/doc/2.0/moduleapi/api/chat.html
 reasoning_options = []
 
+[interleaved]
+field = "reasoning_content"
+
 [cost]
 input = 1.19
 output = 4.165
