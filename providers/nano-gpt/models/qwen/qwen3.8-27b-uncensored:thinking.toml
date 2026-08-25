@@ -1,0 +1,25 @@
+name = "Qwen 3.8 27B Uncensored Thinking"
+description = "Qwen 3.8 27B Uncensored with thinking enabled for more deliberate creative work, coding, multimodal analysis, tool use, and long-context problem solving."
+family = "qwen"
+release_date = "2026-08-25"
+last_updated = "2026-08-25"
+attachment = true
+reasoning = true
+tool_call = true
+structured_output = true
+open_weights = true
+reasoning_options = []
+
+[cost]
+input = 0.18
+output = 0.5
+cache_read = 0.075
+
+[limit]
+context = 262_144
+input = 262_144
+output = 32_768
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
