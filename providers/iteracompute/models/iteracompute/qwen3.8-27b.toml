@@ -6,9 +6,9 @@
 # IteraCompute serves Qwen3.8 27B through its OpenAI-compatible API.
 # Model capabilities, limits, and modalities are inherited from
 # models/alibaba/qwen3.8-27b.toml. Prices are in USD per million tokens.
-# This API does not expose caller-selectable reasoning controls for this model.
+# Effort: reasoning_effort = none|low|medium|xhigh (xhigh is the default).
 base_model = "alibaba/qwen3.8-27b"
-reasoning_options = []
+reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "xhigh"] }]
 
 [cost]
 input = 0.35
