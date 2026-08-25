@@ -1,11 +1,8 @@
+# Toggle: chat_template_kwargs: enable_thinking true|false
+# Effort: reasoning_effort = high|max
 base_model = "zhipuai/glm-5.2"
 
-[[reasoning_options]]
-type = "toggle" # API: {"chat_template_kwargs": {"enable_thinking": false}}
-
-[[reasoning_options]]
-type = "effort" # API: {"reasoning_effort": "none"|"high"|"max"}; "none" disables thinking
-values = ["none", "high", "max"]
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["high", "max"] }]
 
 [cost]
 input = 1.4375
