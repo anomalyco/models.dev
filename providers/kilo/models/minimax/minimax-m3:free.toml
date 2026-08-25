@@ -1,0 +1,16 @@
+base_model = "minimax/MiniMax-M3"
+name = "MiniMax: MiniMax M3 (free)"
+description = "MiniMax-M3 is a multimodal foundation model from MiniMax. It supports text, image, and video inputs with text output, a 1M-token context window, and is suited for long-horizon agentic work, coding,..."
+structured_output = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "high"]
+
+[cost]
+input = 0
+output = 0
+
+[limit]
+context = 1_048_576
+output = 1_048_576
