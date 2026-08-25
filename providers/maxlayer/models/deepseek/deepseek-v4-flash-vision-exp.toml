@@ -1,0 +1,19 @@
+# Toggle: reasoning.enabled = true|false
+# Effort: reasoning.effort = low|high|max
+base_model = "deepseek/deepseek-v4-flash-vision-exp"
+structured_output = false
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[cost]
+input = 0.250668
+output = 0.752004
+cache_read = 0.007976
+
+[limit]
+context = 1_048_576
