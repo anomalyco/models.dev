@@ -1,10 +1,22 @@
 import { z } from "zod";
 
 import { describeModel } from "../../describe.js";
-import type { ExistingModel, SyncProvider, SyncedFullModel, SyncedModel } from "../index.js";
-import { factorBaseModel, resolveCanonicalBaseModel } from "./openrouter.js";
+import { inferKimiFamily, ModelFamilyValues } from "../../family.js";
+import type { ExistingModel, SyncProvider, SyncedFullModel, SyncedMetadata, SyncedModel } from "../index.js";
+import { factorBaseModel, resolveModelMetadataBaseModel } from "./openrouter.js";
 
 const API_ENDPOINT = "https://api-gateway.merge.dev/v1/models";
+
+// Merge's public model IDs use routing namespaces. Shared models.dev metadata
+// uses the model author's namespace, which differs for a few labs.
+const CANONICAL_METADATA_NAMESPACES: Record<string, string> = {
+  "arcee-ai": "arcee",
+  bytedance: "bytedance-seed",
+  moonshot: "moonshotai",
+  qwen: "alibaba",
+  xiaomimimo: "xiaomi",
+  zai: "zhipuai",
+};
 
 const AvailabilityStatus = z.enum(["available", "deprecated"]);
 
@@ -56,6 +68,8 @@ export const MergeGatewayModel = z.object({
   model: z.string().min(1),
   provider: z.string().min(1),
   display_name: z.string().min(1),
+  release_date: z.string().nullable().optional(),
+  open_weights: z.boolean().nullable().optional(),
   vendors: z.record(VendorInfo),
   availability_status: AvailabilityStatus,
   created_at: z.string().nullable().optional(),
@@ -138,7 +152,7 @@ export const mergeGateway = {
   skippedNotice(ids) {
     if (ids.length === 0) return [];
     return [
-      `${ids.length} Merge Gateway models were skipped because they are not text models or lack canonical metadata.`,
+      `${ids.length} Merge Gateway models were skipped because they do not produce text or lack canonical release-date/open-weight metadata.`,
       `Skipped remote IDs: ${ids.map((id) => `\`${id}\``).join(", ")}`,
     ];
   },
@@ -158,9 +172,124 @@ export const mergeGateway = {
   translateModel(model, context) {
     const existing = context.existing(model.model);
     const translated = buildMergeGatewayModel(model, existing, context.authored(model.model));
-    return translated === undefined ? undefined : { id: model.model, model: translated };
+    if (translated !== undefined) return { id: model.model, model: translated };
+
+    const generated = buildMergeGatewayCanonicalFallback(model);
+    return generated === undefined
+      ? undefined
+      : {
+          id: model.model,
+          model: generated.provider,
+          metadata: { id: generated.id, model: generated.metadata },
+        };
   },
 } satisfies SyncProvider<MergeGatewayModel>;
+
+/**
+ * Fallback for a text model that has no reviewed models.dev metadata yet. The
+ * shared metadata contains stable model facts; the Merge
+ * provider record contains only route-specific cost and reasoning controls.
+ *
+ * A release date is deliberately required. Guessing it would make the output
+ * look complete while publishing a false canonical fact.
+ */
+export function buildMergeGatewayCanonicalFallback(model: MergeGatewayModel): {
+  id: string;
+  metadata: SyncedMetadata;
+  provider: SyncedModel;
+} | undefined {
+  const selected = selectMergeGatewayVendor(model);
+  if (selected === undefined || !selected.info.capabilities.output.includes("text")) return undefined;
+
+  const releaseDate = model.release_date;
+  if (releaseDate == null || model.open_weights == null) return undefined;
+  const input = modalities(selected.info.capabilities.input);
+  const output = modalities(selected.info.capabilities.output);
+  const limit = {
+    context: selected.info.context_window,
+    output: selected.info.max_output_tokens || selected.info.context_window,
+  };
+  const routeConfirmsReasoning = Object.values(model.vendors).some(
+    (vendor) => vendor.availability_status === "available" && vendor.capabilities.supports_reasoning === true,
+  );
+  const reasoning = routeConfirmsReasoning || inferReasoning(model);
+  const family = inferFamily(model);
+  const metadataID = canonicalMetadataID(model.model);
+  const metadata = {
+    name: model.display_name,
+    description: describeModel({
+      id: metadataID,
+      name: model.display_name,
+      family,
+      reasoning,
+      tool_call: selected.info.capabilities.supports_tool_calling,
+      structured_output: selected.info.capabilities.supports_structured_outputs,
+      open_weights: model.open_weights,
+      limit,
+      modalities: { input, output },
+    }),
+    family,
+    release_date: releaseDate,
+    attachment: input.some((value) => value !== "text"),
+    reasoning,
+    tool_call: selected.info.capabilities.supports_tool_calling,
+    structured_output: selected.info.capabilities.supports_structured_outputs,
+    open_weights: model.open_weights,
+    limit,
+    modalities: { input, output },
+  } satisfies SyncedMetadata;
+  const cachePricing = mergeGatewayCachePricing(selected.info, undefined);
+  const cost = {
+    input: selected.info.pricing.input_per_million,
+    output: selected.info.pricing.output_per_million,
+    cache_read: cachePricing.read,
+    cache_write: cachePricing.write,
+  };
+  const status = model.availability_status === "deprecated" || selected.info.availability_status === "deprecated"
+    ? "deprecated" as const
+    : undefined;
+  const reasoningOptions = reasoning
+    ? mergeGatewayReasoningOptions(selected.info.capabilities.reasoning) ?? []
+    : undefined;
+
+  return {
+    id: metadataID,
+    metadata,
+    provider: {
+      base_model: metadataID,
+      status,
+      cost,
+      reasoning_options: reasoningOptions,
+    },
+  };
+}
+
+export function canonicalMetadataID(modelID: string) {
+  const [namespace, ...modelParts] = modelID.split("/");
+  if (namespace === undefined || modelParts.length === 0) return modelID;
+  return `${CANONICAL_METADATA_NAMESPACES[namespace] ?? namespace}/${modelParts.join("/")}`;
+}
+
+function inferFamily(model: MergeGatewayModel) {
+  const kimiFamily = inferKimiFamily(model.model, model.display_name);
+  if (kimiFamily !== undefined) return kimiFamily;
+
+  const target = `${model.model} ${model.display_name}`.toLowerCase();
+  return [...ModelFamilyValues]
+    .sort((a, b) => b.length - a.length)
+    .find((family) => {
+      const value = family.toLowerCase().replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+      if (family === "o") {
+        return new RegExp(`(^|[^a-z0-9])${value}(?=\\d|$|[^a-z0-9])`).test(target);
+      }
+      return new RegExp(`(^|[^a-z0-9])${value}(?=$|[^a-z0-9])`).test(target);
+    });
+}
+
+function inferReasoning(model: MergeGatewayModel) {
+  const target = `${model.model} ${model.display_name}`.toLowerCase();
+  return /(^|[-_/ ])(?:r1|reasoning|thinking|think)(?=$|[-_/ .0-9])/.test(target);
+}
 
 export function mergeGatewayReasoningOptions(
   reasoning: MergeGatewayVendor["capabilities"]["reasoning"],
@@ -241,7 +370,7 @@ export function buildMergeGatewayModel(
   const status = model.availability_status === "deprecated" || selected.info.availability_status === "deprecated"
     ? "deprecated" as const
     : undefined;
-  const baseModel = existing?.base_model ?? resolveCanonicalBaseModel(model.model);
+  const baseModel = existing?.base_model ?? resolveModelMetadataBaseModel(model.model);
   // `supports_reasoning` is not part of the documented public schema
   // (PublicVendorModelCapabilities) and is inconsistently populated across
   // vendor routes: the same model can report `true` on one route and `false`

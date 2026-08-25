@@ -3,6 +3,7 @@ import { copyFile, mkdir, mkdtemp, readFile, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 
+import { classifyAutoMerge } from "../src/sync/auto-merge.js";
 import { formatToml, preserveReasoningOptions, syncProvider, type ExistingModel, type SyncProvider } from "../src/sync/index.js";
 import {
   anthropic,
@@ -64,7 +65,9 @@ import {
   type LLMGatewayModel,
 } from "../src/sync/providers/llmgateway.js";
 import {
+  buildMergeGatewayCanonicalFallback,
   buildMergeGatewayModel,
+  canonicalMetadataID,
   fetchMergeGatewayModels,
   mergeGateway,
   MergeGatewayResponse,
@@ -3549,6 +3552,162 @@ test("filters unknown Merge Gateway modalities without rejecting the catalog", (
   });
 });
 
+// Lets a Gateway-only text model enter the catalog without violating the
+// provider/base-model split required by models.dev.
+test("generates canonical metadata for an unconfigured Merge Gateway text model", () => {
+  const parsed = MergeGatewayResponse.parse({
+    object: "list",
+    data: [mergeGatewayModel({
+      model: "google/gemma-3-12b-it",
+      provider: "google",
+      display_name: "Gemma 3 12B",
+      release_date: "2025-03-12",
+      open_weights: true,
+      vendors: { bedrock: mergeGatewayVendor({ launch_date: "2025-04-08" }) },
+    })],
+  }).data[0]!;
+  const generated = buildMergeGatewayCanonicalFallback(parsed);
+
+  expect(generated).toEqual({
+    id: "google/gemma-3-12b-it",
+    metadata: {
+      name: "Gemma 3 12B",
+      description: "Open Gemma instruction model for efficient chat and self-hosted deployments",
+      family: "gemma",
+      release_date: "2025-03-12",
+      attachment: true,
+      reasoning: false,
+      tool_call: true,
+      structured_output: true,
+      open_weights: true,
+      limit: { context: 1_050_000, output: 128_000 },
+      modalities: {
+        input: ["text", "image", "pdf"],
+        output: ["text"],
+      },
+    },
+    provider: {
+      base_model: "google/gemma-3-12b-it",
+      status: undefined,
+      cost: {
+        input: 5,
+        output: 30,
+        cache_read: undefined,
+        cache_write: undefined,
+      },
+      reasoning_options: undefined,
+    },
+  });
+});
+
+test("maps Merge routing namespaces to canonical metadata namespaces", () => {
+  expect(canonicalMetadataID("qwen/qwen3-vl-8b-instruct")).toBe("alibaba/qwen3-vl-8b-instruct");
+  expect(canonicalMetadataID("moonshot/kimi-k2")).toBe("moonshotai/kimi-k2");
+  expect(canonicalMetadataID("zai/glm-5")).toBe("zhipuai/glm-5");
+});
+
+// A generated canonical record must not invent an upstream release date.
+test("does not generate canonical metadata without a Merge Gateway release date", () => {
+  const generated = buildMergeGatewayCanonicalFallback(mergeGatewayModel({
+    model: "qwen/qwen3-14b",
+    provider: "qwen",
+    display_name: "Qwen3 14B",
+    release_date: null,
+    // A vendor onboarding date is not evidence of the upstream release date.
+    vendors: { qwen: mergeGatewayVendor({ launch_date: "2025-06-01" }) },
+  }));
+
+  expect(generated).toBeUndefined();
+});
+
+test("does not generate canonical metadata without explicit Merge Gateway open-weight status", () => {
+  const generated = buildMergeGatewayCanonicalFallback(mergeGatewayModel({
+    model: "qwen/qwen3-14b",
+    provider: "qwen",
+    display_name: "Qwen3 14B",
+    open_weights: null,
+  }));
+
+  expect(generated).toBeUndefined();
+});
+
+test("does not generate canonical metadata for non-text Merge Gateway models", () => {
+  const vendor = mergeGatewayVendor();
+  vendor.capabilities.output = ["image"];
+  const generated = buildMergeGatewayCanonicalFallback(mergeGatewayModel({
+    model: "openai/gpt-image-2",
+    display_name: "GPT Image 2",
+    vendors: { openai: vendor },
+  }));
+
+  expect(generated).toBeUndefined();
+});
+
+test("Merge Gateway sync creates canonical and provider files from discovery metadata", async () => {
+  const root = await mkdtemp(path.join(tmpdir(), "sync-merge-gateway-"));
+  const modelsDir = path.join(root, "providers", "merge-gateway", "models");
+  const response = {
+    object: "list" as const,
+    data: [mergeGatewayModel({
+      model: "qwen/qwen3-14b",
+      provider: "qwen",
+      display_name: "Qwen3 14B",
+      release_date: "2025-04-29",
+      open_weights: true,
+    })],
+    has_more: false,
+    next_cursor: null,
+  };
+  const provider: SyncProvider<MergeGatewayModel> = {
+    ...mergeGateway,
+    id: "merge-gateway-test",
+    name: "Merge Gateway test",
+    modelsDir,
+    async fetchModels() {
+      return response;
+    },
+  };
+
+  try {
+    await mkdir(modelsDir, { recursive: true });
+    const result = await syncProvider(provider);
+    expect(result).toMatchObject({ created: 2, updated: 0, deleted: 0 });
+
+    const metadata = await readFile(
+      path.join(root, "models", "alibaba", "qwen3-14b.toml"),
+      "utf8",
+    );
+    expect(metadata).toContain('release_date = "2025-04-29"');
+    expect(metadata).toContain("open_weights = true");
+
+    const providerModel = await readFile(
+      path.join(modelsDir, "qwen", "qwen3-14b.toml"),
+      "utf8",
+    );
+    expect(providerModel).toContain('base_model = "alibaba/qwen3-14b"');
+
+    const decision = await classifyAutoMerge(
+      [
+        { status: "created", path: "models/alibaba/qwen3-14b.toml" },
+        {
+          status: "created",
+          path: "providers/merge-gateway/models/qwen/qwen3-14b.toml",
+        },
+      ],
+      (relativePath) => readFile(path.join(root, relativePath), "utf8"),
+    );
+    expect(decision).toEqual({
+      safe: true,
+      created: 2,
+      updated: 0,
+      deleted: 0,
+      reasons: [],
+    });
+  } finally {
+    await rm(root, { recursive: true, force: true });
+  }
+});
+
 // Emits only route-specific overrides when canonical metadata already matches.
 test("factors Merge Gateway GPT-5.6 Sol against canonical metadata", () => {
   const model = buildMergeGatewayModel(mergeGatewayModel(), undefined);
@@ -4349,6 +4508,8 @@ function mergeGatewayModel(overrides: Partial<MergeGatewayModel> = {}): MergeGat
     model: "openai/gpt-5.6-sol",
     provider: "openai",
     display_name: "GPT-5.6 Sol",
+    release_date: "2026-07-08",
+    open_weights: false,
     vendors: { openai: mergeGatewayVendor() },
     availability_status: "available",
     created_at: "2026-07-09T00:00:00Z",
