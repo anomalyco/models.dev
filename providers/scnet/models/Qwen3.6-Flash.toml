@@ -5,9 +5,6 @@ base_model = "alibaba/qwen3.6-flash"
 attachment = false
 reasoning_options = [{ type = "toggle" }]
 
-[interleaved]
-field = "reasoning_content"
-
 [cost]
 input = 0.714
 output = 4.284
