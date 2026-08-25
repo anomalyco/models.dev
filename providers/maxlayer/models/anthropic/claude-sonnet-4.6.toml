@@ -1,14 +1,15 @@
-# Toggle: thinking.type = enabled|disabled
 # Effort: output_config.effort = low|medium|high|max
+# Budget: thinking.budget_tokens (integer reasoning tokens)
 base_model = "anthropic/claude-sonnet-4-6"
 structured_output = true
 
 [[reasoning_options]]
-type = "toggle"
-
-[[reasoning_options]]
 type = "effort"
 values = ["low", "medium", "high", "max"]
+
+[[reasoning_options]]
+type = "budget_tokens"
+min = 1_024
 
 [cost]
 input = 3.4182
