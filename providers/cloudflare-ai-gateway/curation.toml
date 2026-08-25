@@ -25,6 +25,14 @@ skip = [
   "minimax/m2.7",
   "minimax/m3",
   "thinkingmachines/inkling",
+  "google/gemini-2.5-flash-lite",
+  "google/gemini-2.5-flash",
+  "google/gemini-2.5-pro",
+  "google/gemini-3.1-flash-lite",
+  "google/gemini-3.5-flash-lite",
+  "google/gemini-3.5-flash",
+  "google/gemini-3.6-flash",
+  "google/gemini-3.7-flash",
 ]
 
 [models."anthropic/claude-fable-5"]
@@ -170,36 +178,6 @@ reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
 # (providers/xai/models/grok-4.20-0309-reasoning.toml: reasoning_options = []).
 [models."xai/grok-4.20-0309-reasoning"]
 reasoning_options = []
-
-[models."google/gemini-2.5-pro"]
-reasoning_options = [{ type = "budget_tokens", min = 128, max = 32_768 }]
-
-[models."google/gemini-2.5-flash"]
-note = ["Budget: generationConfig.thinkingConfig.thinkingBudget; 0 disables (toggle-off), -1 is dynamic, manual range 0..24576."]
-reasoning_options = [{ type = "toggle" }, { type = "budget_tokens", min = 0, max = 24_576 }]
-
-[models."google/gemini-2.5-flash-lite"]
-note = ["Budget: generationConfig.thinkingConfig.thinkingBudget; 0 disables (toggle-off), -1 is dynamic, manual range 512..24576."]
-reasoning_options = [{ type = "toggle" }, { type = "budget_tokens", min = 512, max = 24_576 }]
-
-[models."google/gemini-3.1-flash-lite"]
-reasoning_options = [{ type = "effort", values = ["minimal", "low", "medium", "high"] }]
-
-[models."google/gemini-3.5-flash"]
-reasoning_options = [{ type = "effort", values = ["minimal", "low", "medium", "high"] }]
-
-# gemini-3.5-flash-lite/3.6-flash/3.7-flash previously mirrored merge-gateway's toggle-only/[]
-# shapes, but merge-gateway cites no host-specific evidence for that narrowing (unlike its
-# DeepSeek entry, which documents a live-tested selected route) — so it's not proof Cloudflare
-# behaves the same way. Match the lab's graded effort per AGENTS.md absent contrary evidence.
-[models."google/gemini-3.5-flash-lite"]
-reasoning_options = [{ type = "effort", values = ["minimal", "low", "medium", "high"] }]
-
-[models."google/gemini-3.6-flash"]
-reasoning_options = [{ type = "effort", values = ["minimal", "low", "medium", "high"] }]
-
-[models."google/gemini-3.7-flash"]
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
 
 [models."moonshotai/kimi-k3"]
 note = [
