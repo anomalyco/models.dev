@@ -1,0 +1,16 @@
+base_model = "minimax/MiniMax-M2.7"
+name = "MiniMax: MiniMax M2.7 (free)"
+description = "MiniMax-M2.7 is a next-generation large language model designed for autonomous, real-world productivity and continuous improvement. Built to actively participate in its own evolution, M2.7 integrates advanced agentic capabilities through multi-agent..."
+structured_output = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["high"]
+
+[cost]
+input = 0
+output = 0
+
+[limit]
+context = 196_608
+output = 196_608
