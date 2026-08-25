@@ -3,7 +3,10 @@ name = "Kimi K3 Fast"
 description = "Kimi multimodal agent model for visual understanding, coding, and planning"
 release_date = "2026-08-03"
 last_updated = "2026-08-03"
-reasoning_options = []
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "high", "max"]
 
 [cost]
 input = 4.5
