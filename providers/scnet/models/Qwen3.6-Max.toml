@@ -1,6 +1,5 @@
 # Toggle: enable_thinking = true|false
 base_model = "alibaba/qwen3.6-max-preview"
-attachment = false
 name = "Qwen3.6-Max"
 reasoning_options = [{ type = "toggle" }]
 
@@ -11,5 +10,3 @@ field = "reasoning_content"
 input = 2.23125
 output = 13.3875
 
-[modalities]
-input = ["text"]
