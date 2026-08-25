@@ -1,0 +1,21 @@
+name = "DeepSeek Reasoner"
+description = "DeepSeek reasoning model for complex tasks"
+family = "deepseek"
+release_date = "2025-01-01"
+attachment = true
+reasoning = true
+temperature = false
+tool_call = true
+open_weights = true
+
+[cost]
+input = 0.0
+output = 0.0
+
+[limit]
+context = 128000
+output = 4096
+
+[modalities]
+input = ["text"]
+output = ["text"]
