@@ -2,6 +2,9 @@
 base_model = "zhipuai/glm-5v-turbo"
 structured_output = false
 
+[interleaved]
+field = "reasoning_content"
+
 [[reasoning_options]]
 type = "toggle"
 

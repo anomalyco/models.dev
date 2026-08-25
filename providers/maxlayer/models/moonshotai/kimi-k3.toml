@@ -1,7 +1,9 @@
 # Toggle: thinking.type = enabled|disabled|adaptive
 # Effort: output_config.effort = low|high|max
 base_model = "moonshotai/kimi-k3"
-temperature = true
+
+[interleaved]
+field = "reasoning_content"
 
 [[reasoning_options]]
 type = "toggle"
