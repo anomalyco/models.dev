@@ -1,23 +1,10 @@
-# Toggle: enable_thinking true|false
-# Effort: reasoning_effort = low|medium|xhigh
-# Budget: thinking_budget (integer reasoning tokens)
+# Effort: reasoning.effort = minimal|low|medium|high|xhigh
 base_model = "alibaba/qwen3.8-max"
 structured_output = true
 
-[interleaved]
-field = "reasoning_content"
-
-[[reasoning_options]]
-type = "toggle"
-
 [[reasoning_options]]
 type = "effort"
-values = ["low", "medium", "xhigh"]
-
-[[reasoning_options]]
-type = "budget_tokens"
-min = 0
-max = 262_144
+values = ["minimal", "low", "medium", "high", "xhigh"]
 
 [cost]
 input = 2.2788

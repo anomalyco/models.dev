@@ -1,7 +1,11 @@
-# Effort: output_config.effort = low|medium|high|xhigh|max
+# Toggle: reasoning.enabled = true|false
+# Effort: reasoning.effort = low|medium|high|xhigh|max
 base_model = "anthropic/claude-opus-5"
 name = "Claude Opus 5 (Fast)"
 structured_output = true
+
+[[reasoning_options]]
+type = "toggle"
 
 [[reasoning_options]]
 type = "effort"

@@ -1,5 +1,9 @@
-# Effort: reasoning_effort = minimal|low|medium|high
+# Toggle: reasoning.enabled = true|false
+# Effort: reasoning.effort = minimal|low|medium|high
 base_model = "google/gemini-3.1-flash-lite"
+
+[[reasoning_options]]
+type = "toggle"
 
 [[reasoning_options]]
 type = "effort"

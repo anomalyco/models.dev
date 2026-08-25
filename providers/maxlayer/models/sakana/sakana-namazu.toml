@@ -1,8 +1,9 @@
-# Toggle: chat_template_kwargs.thinking = true|false
+# Effort: reasoning.effort = none|high
 base_model = "sakana/sakana-namazu"
 
 [[reasoning_options]]
-type = "toggle"
+type = "effort"
+values = ["none", "high"]
 
 [cost]
 input = 1.08243

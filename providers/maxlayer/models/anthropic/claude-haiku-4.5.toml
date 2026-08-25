@@ -1,10 +1,15 @@
-# Budget: thinking.budget_tokens (integer reasoning tokens)
+# Toggle: reasoning.enabled = true|false
+# Budget: reasoning.max_tokens (integer reasoning tokens)
 base_model = "anthropic/claude-haiku-4-5"
 structured_output = true
 
 [[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
 type = "budget_tokens"
-min = 1_024
+min = 1024
+max = 63_999
 
 [cost]
 input = 1.1394

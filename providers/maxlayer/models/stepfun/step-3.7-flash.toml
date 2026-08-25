@@ -1,9 +1,7 @@
+# Effort: reasoning.effort = low|medium|high
 base_model = "stepfun/step-3.7-flash"
 base_model_omit = ["limit.input"]
 structured_output = true
-
-[interleaved]
-field = "reasoning_content"
 
 [[reasoning_options]]
 type = "effort"

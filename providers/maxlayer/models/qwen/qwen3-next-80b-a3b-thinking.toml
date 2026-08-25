@@ -1,9 +1,7 @@
-# Budget: thinking_budget (integer reasoning tokens)
 base_model = "alibaba/qwen3-next-80b-a3b-thinking"
 structured_output = true
 
-[[reasoning_options]]
-type = "budget_tokens"
+reasoning_options = []
 
 [cost]
 input = 0.17091

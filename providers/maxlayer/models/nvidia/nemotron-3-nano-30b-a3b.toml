@@ -1,9 +1,7 @@
-# Toggle: reasoning.enabled = true|false
 base_model = "nvidia/nemotron-3-nano-30b-a3b"
 structured_output = true
 
-[[reasoning_options]]
-type = "toggle"
+reasoning_options = []
 
 [cost]
 input = 0.05697

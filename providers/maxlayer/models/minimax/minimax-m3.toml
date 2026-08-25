@@ -1,9 +1,7 @@
-# Toggle: chat_template_kwargs.thinking_mode = "enabled"|"disabled" (default "adaptive")
 base_model = "minimax/MiniMax-M3"
 structured_output = true
 
-[[reasoning_options]]
-type = "toggle"
+reasoning_options = []
 
 [cost]
 input = 0.34182
