@@ -160,10 +160,11 @@ reasoning_options = [
   { type = "budget_tokens", min = 0, max = 262_144 },
 ]
 
-# First-party xAI Grok 4.6 (providers/xai/models/grok-4.6.toml) includes xhigh; the catalog
-# schema enum is missing it.
+# xAI Grok 4.6: the first-party API (providers/xai/models/grok-4.6.toml) includes xhigh, but
+# Cloudflare's gateway route rejects it (verified live: reasoning_effort accepts only
+# low|medium|high, code 7003) — a host delta, so match what the CF route actually accepts.
 [models."xai/grok-4.6"]
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh"] }]
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
 
 # First-party xAI Grok 4.20 (Reasoning) is always-on with no caller control
 # (providers/xai/models/grok-4.20-0309-reasoning.toml: reasoning_options = []).
