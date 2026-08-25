@@ -1,8 +1,12 @@
 # Toggle: enable_thinking true|false
+# Budget: thinking_budget (integer reasoning tokens)
 base_model = "alibaba/qwen3.5-122b-a10b"
 
 [[reasoning_options]]
 type = "toggle"
+
+[[reasoning_options]]
+type = "budget_tokens"
 
 [cost]
 input = 0.296244
