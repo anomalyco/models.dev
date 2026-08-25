@@ -1,0 +1,18 @@
+base_model = "moonshotai/kimi-k2.7-code"
+name = "Kimi-K2.7-Base"
+attachment = false
+reasoning_options = []
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.4834375
+output = 2.008125
+cache_read = 0.0966875
+
+[limit]
+context = 131_072
+
+[modalities]
+input = ["text"]

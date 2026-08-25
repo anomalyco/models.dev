@@ -1,0 +1,14 @@
+base_model = "zhipuai/glm-5"
+name = "GLM-5-Base"
+reasoning_options = []
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.44625
+output = 1.63625
+cache_read = 0.1115625
+
+[limit]
+context = 131_072
