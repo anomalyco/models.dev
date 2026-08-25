@@ -156,6 +156,10 @@ def markdown(report: dict[str, Any]) -> str:
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--model", action="append", dest="models")
+    parser.add_argument(
+        "--case", action="append", choices=[name for name, _ in CASES],
+        help="Run only selected case names; repeat for multiple cases.",
+    )
     parser.add_argument("--json-out", type=Path)
     parser.add_argument("--md-out", type=Path)
     args = parser.parse_args()
@@ -167,6 +171,9 @@ def main() -> int:
     base = os.environ.get("SCNET_API_BASE_URL", "https://api.scnet.cn/api/llm/v1")
     endpoint = base.rstrip("/") + "/chat/completions"
     models = args.models or DEFAULT_MODELS
+    selected_cases = [
+        case for case in CASES if not args.case or case[0] in args.case
+    ]
 
     report: dict[str, Any] = {
         "timestamp": datetime.now(timezone.utc).isoformat(),
@@ -175,7 +182,7 @@ def main() -> int:
     }
     for model in models:
         entry = {"model": model, "cases": []}
-        for case_name, parameters in CASES:
+        for case_name, parameters in selected_cases:
             result = request(endpoint, api_key, model, parameters)
             result["case"] = case_name
             entry["cases"].append(result)
