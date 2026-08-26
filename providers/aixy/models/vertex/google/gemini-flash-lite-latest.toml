@@ -1,5 +1,6 @@
 # Alias for the current Gemini Flash-Lite release (gemini-3.1-flash-lite).
 base_model = "google/gemini-flash-lite-latest"
+base_model_omit = ["structured_output"]
 
 [[reasoning_options]]
 type = "effort"
