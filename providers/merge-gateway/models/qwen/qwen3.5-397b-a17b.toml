@@ -1,12 +1,5 @@
 # Source: https://api-gateway.merge.dev/v1/models?model=qwen%2Fqwen3.5-397b-a17b (accessed 2026-07-21)
 # Selected route reasoning.controls = ["thinking"], disable_supported = true.
-# The qwen route is Alibaba Cloud Model Studio US (Virginia), global scope, whose
-# published rate is tiered on input tokens per request: 0<Token<=128K bills at
-# 0.172/1.032 and 128K<Token<=256K at 0.43/2.58, with every token in a request
-# billed at its tier's unit price. The gateway API exposes only the first band.
-# https://www.alibabacloud.com/help/en/model-studio/model-pricing (accessed 2026-08-26)
-# No cache-read price is published for the upper band; the base cache_read comes
-# from the gateway route and is deliberately not restated on the tier.
 base_model = "alibaba/qwen3.5-397b-a17b"
 name = "Qwen3.5 397B A17B"
 structured_output = false
@@ -18,11 +11,6 @@ type = "toggle"
 input = 0.172
 output = 1.032
 cache_read = 0.0344
-
-[[cost.tiers]]
-tier = { type = "context", size = 128_000 }
-input = 0.43
-output = 2.58
 
 [limit]
 context = 256_000
