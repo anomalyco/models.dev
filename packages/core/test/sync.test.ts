@@ -32,6 +32,7 @@ import {
 import {
   buildEdenAIModel,
   collectFirstPartyBaseModels,
+  edenai,
   reasoningOptionsFor,
   resolveEdenAIBaseModel,
   type EdenAIModel,
@@ -2316,6 +2317,32 @@ test("factors new Hyper models against unique models/ metadata", () => {
     base_model: "moonshotai/kimi-k3",
     reasoning_options: [],
   });
+});
+
+test("deduplicates Eden AI case-only IDs without losing context metadata", () => {
+  const lowercase = edenAIModel({
+    id: "flexai/deepseek-v4-flash-0731",
+    model_name: "deepseek-v4-flash-0731",
+    owned_by: "flexai",
+    context_length: null,
+  });
+  const uppercase = edenAIModel({
+    ...lowercase,
+    id: "flexai/DeepSeek-V4-Flash-0731",
+    model_name: "DeepSeek-V4-Flash-0731",
+    context_length: 786_432,
+  });
+
+  for (const data of [[lowercase, uppercase], [uppercase, lowercase]]) {
+    const models = edenai.parseModels({ object: "list", data });
+    expect(models).toEqual([{ ...lowercase, context_length: 786_432 }]);
+    expect(edenai.translateModel(models[0]!)).toMatchObject({
+      id: lowercase.id,
+      model: { base_model: "deepseek/deepseek-v4-flash-0731", limit: { context: 786_432 } },
+    });
+  }
+
+  expect(edenai.parseModels({ object: "list", data: [uppercase] })).toEqual([uppercase]);
 });
 
 test("factors Eden AI models onto lab metadata and prices from list_pricing", () => {

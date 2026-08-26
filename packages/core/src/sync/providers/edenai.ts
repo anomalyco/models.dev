@@ -494,7 +494,19 @@ export const edenai = {
     return response.json();
   },
   parseModels(raw) {
-    const models = EdenAIResponse.parse(raw).data;
+    const unique = new Map<string, EdenAIModel>();
+    for (const model of EdenAIResponse.parse(raw).data) {
+      const key = model.id.toLowerCase();
+      const previous = unique.get(key);
+      // Eden AI publishes case-only duplicates that collide on macOS. Keep the
+      // lowercase API ID, but retain context metadata supplied by its duplicate.
+      const preferred = model.id === key ? model : previous ?? model;
+      unique.set(key, {
+        ...preferred,
+        context_length: preferred.context_length ?? previous?.context_length ?? model.context_length,
+      });
+    }
+    const models = [...unique.values()];
     firstPartyBaseModels = collectFirstPartyBaseModels(models);
     return models;
   },
