@@ -1,0 +1,14 @@
+# Synthorai's `deepseek-v4-pro` alias currently routes to the upstream
+# deepseek-v4-pro-0813 snapshot. Pricing shown is the peak-hour rate;
+# off-peak (22:00-08:00 Asia/Shanghai) is half these numbers.
+base_model = "deepseek/deepseek-v4-pro-0813"
+reasoning_options = [{ type = "toggle" }]
+
+[cost]
+input = 1.32
+output = 3.96
+cache_read = 0.132
+
+[modalities]
+input = ["text"]
+output = ["text"]
