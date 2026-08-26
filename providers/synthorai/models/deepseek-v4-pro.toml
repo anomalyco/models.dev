@@ -1,14 +1,18 @@
-# Synthorai's `deepseek-v4-pro` alias currently routes to the upstream
-# deepseek-v4-pro-0813 snapshot. Pricing shown is the peak-hour rate;
-# off-peak (22:00-08:00 Asia/Shanghai) is half these numbers.
+# Synthorai's `deepseek-v4-pro` alias routes to the deepseek-v4-pro-0813
+# snapshot upstream. Pricing below is the peak-hour rate; the upstream also runs
+# a half-price off-peak window (22:00-08:00 Asia/Shanghai) which this schema has
+# no field for, so the dearer band is listed — never under-quote.
+# Toggle: thinking.type = "enabled"|"disabled" (verified 2026-08-26 to drive
+# reasoning_tokens 24 -> absent). Effort values are not guessed: the upstream
+# enumerates them itself, reasoning_effort="minimal" is rejected with
+# 400 "'reasoning_effort' must be one of: 'low', 'medium', 'high', 'xhigh', 'max'".
 base_model = "deepseek/deepseek-v4-pro-0813"
-reasoning_options = [{ type = "toggle" }]
+reasoning_options = [
+  { type = "toggle" },
+  { type = "effort", values = ["low", "medium", "high", "xhigh", "max"] },
+]
 
 [cost]
 input = 1.32
 output = 3.96
 cache_read = 0.132
-
-[modalities]
-input = ["text"]
-output = ["text"]
