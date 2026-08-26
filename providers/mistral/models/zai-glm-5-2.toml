@@ -1,0 +1,12 @@
+# Source: https://docs.mistral.ai/models/zai-glm-5-2 (accessed 2026-08-26)
+base_model = "zhipuai/glm-5.2"
+status = "beta"
+
+[[reasoning_options]]
+type = "effort"
+values = ["high", "max"]
+
+[cost]
+input = 1.40
+output = 4.40
+cache_read = 0.14
