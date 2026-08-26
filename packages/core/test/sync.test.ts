@@ -4268,7 +4268,6 @@ test("syncs EmpirioLabs pricing tiers and reasoning controls", () => {
     base_model: "minimax/MiniMax-M3",
     structured_output: true,
     reasoning_options: [
-      { type: "toggle" },
       { type: "effort", values: ["none", "low", "medium", "high", "max"] },
       { type: "budget_tokens", min: 1_024, max: 32_768 },
     ],
