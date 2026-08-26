@@ -1,5 +1,4 @@
 base_model = "minimax/MiniMax-M3"
-attachment = false
 # SCNet documents enable_thinking only for Qwen3 and DeepSeek-V4; this model has no caller-controlled reasoning option.
 # https://www.scnet.cn/ac/openapi/doc/2.0/moduleapi/api/chat.html
 reasoning_options = []
@@ -15,5 +14,3 @@ cache_read = 0.12495
 [limit]
 context = 1_048_576
 
-[modalities]
-input = ["text"]
