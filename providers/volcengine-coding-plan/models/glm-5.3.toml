@@ -1,13 +1,13 @@
 # Coding Plan model name from https://www.volcengine.com/docs/82379/1928261
 # (accessed 2026-08-26). Subscription tier: no per-token price.
+# Effort: reasoning_effort = low|medium|high|xhigh|max, POST /api/coding/v3/chat/completions.
+# No toggle: both reasoning_effort=none|minimal and thinking.type=disabled are
+# rejected with 'not supported by this model'.
 base_model = "zhipuai/glm-5.3"
 
 [[reasoning_options]]
-type = "toggle"
-
-[[reasoning_options]]
 type = "effort"
-values = ["minimal", "low", "medium", "high"]
+values = ["low", "medium", "high", "xhigh", "max"]
 
 [interleaved]
 field = "reasoning_content"

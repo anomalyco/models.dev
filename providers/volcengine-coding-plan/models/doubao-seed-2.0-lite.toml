@@ -1,13 +1,13 @@
 # Coding Plan model name from https://www.volcengine.com/docs/82379/1928261
 # (accessed 2026-08-26). Subscription tier: no per-token price.
+# Effort: reasoning_effort = none|minimal|low|medium|high|xhigh|max,
+# POST /api/coding/v3/chat/completions. No separate toggle: 'none'/'minimal'
+# already return reasoning_tokens = 0, making thinking.type redundant.
 base_model = "bytedance-seed/seed-2.0-lite"
 
 [[reasoning_options]]
-type = "toggle"
-
-[[reasoning_options]]
 type = "effort"
-values = ["minimal", "low", "medium", "high"]
+values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"]
 
 [interleaved]
 field = "reasoning_content"
