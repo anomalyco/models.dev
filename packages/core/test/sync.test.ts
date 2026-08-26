@@ -2790,6 +2790,45 @@ test("syncs OpenRouter reasoning efforts from model metadata", () => {
   });
 });
 
+test("syncs OpenRouter toggles without an effort selector", () => {
+  for (const supports_max_tokens of [undefined, true]) {
+    const source = openRouterModel({
+      reasoning: { mandatory: false, supports_max_tokens },
+    });
+    const translated = openrouter.translateModel(source, {
+      existing: () => undefined,
+      authored: () => undefined,
+    });
+    expect(translated?.model.reasoning_options).toEqual([
+      { type: "toggle" },
+      ...(supports_max_tokens ? [{ type: "budget_tokens" }] : []),
+    ]);
+    expect(translated?.header).toStartWith("# Toggle: reasoning.enabled = true|false\n");
+  }
+});
+
+test("does not derive OpenRouter controls for non-reasoning models", () => {
+  const model = buildOpenRouterModel(openRouterModel({
+    supported_parameters: ["temperature"],
+    reasoning: { mandatory: false, supports_max_tokens: true },
+  }), { reasoning_options: [{ type: "toggle" }] });
+  expect(model.reasoning).toBe(false);
+  expect(model.reasoning_options).toBeUndefined();
+});
+
+test("does not add OpenRouter toggles to mandatory or effort-none models", () => {
+  for (const reasoning of [
+    { mandatory: true, supports_max_tokens: true },
+    { mandatory: true, supported_efforts: ["none", "high"] as const },
+    { mandatory: false, supported_efforts: ["none", "high"] as const },
+    { mandatory: false, supported_efforts: null },
+  ]) {
+    const [source] = openrouter.parseModels({ data: [{ ...openRouterModel(), reasoning }] });
+    const model = buildOpenRouterModel(source!, undefined);
+    expect(model.reasoning_options?.some((option) => option.type === "toggle")).toBe(false);
+  }
+});
+
 test("uses OpenRouter model context when top provider reports a shorter context", () => {
   const model = buildOpenRouterModel(openRouterModel({
     context_length: 1_048_576,
