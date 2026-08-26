@@ -1,8 +1,7 @@
-# Effort: reasoning_effort = low|high|max
-# SCNet probe 2026-08-26: use the published GLM-5.3 effort levels on this relay.
+# SCNet does not document a GLM-5.3 reasoning control on this relay; reasoning is treated as always-on.
 # https://www.scnet.cn/ac/openapi/doc/2.0/moduleapi/api/chat.html
 base_model = "zhipuai/glm-5.3"
-reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]
+reasoning_options = []
 
 [interleaved]
 field = "reasoning_content"

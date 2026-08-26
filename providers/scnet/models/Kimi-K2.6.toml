@@ -1,9 +1,8 @@
-# Toggle: thinking.type = enabled|disabled
-# SCNet probe 2026-08-26: use the Kimi thinking toggle on this relay.
+# SCNet probe set did not establish a working caller switch for Kimi K2.6; this relay entry is treated as always-on.
 # https://www.scnet.cn/ac/openapi/doc/2.0/moduleapi/api/chat.html
 # SCNet probe 2026-08-26: image_url request returned HTTP 200; image input is supported on this host.
 base_model = "moonshotai/kimi-k2.6"
-reasoning_options = [{ type = "toggle" }]
+reasoning_options = []
 
 [interleaved]
 field = "reasoning_content"

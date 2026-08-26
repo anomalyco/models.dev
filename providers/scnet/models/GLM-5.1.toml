@@ -1,8 +1,7 @@
-# Toggle: thinking.type = enabled|disabled
-# SCNet probe 2026-08-26: use the GLM thinking toggle on this relay.
+# SCNet relay has no confirmed caller switch for this GLM-5.1 entry; reasoning is treated as always-on.
 # https://www.scnet.cn/ac/openapi/doc/2.0/moduleapi/api/chat.html
 base_model = "zhipuai/glm-5.1"
-reasoning_options = [{ type = "toggle" }]
+reasoning_options = []
 
 [interleaved]
 field = "reasoning_content"

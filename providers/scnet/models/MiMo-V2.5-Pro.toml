@@ -1,8 +1,7 @@
-# Toggle: enable_thinking = true|false
-# SCNet probe 2026-08-26: the thinking toggle is supported on this host.
+# SCNet probe set did not establish a working caller switch for MiMo-V2.5-Pro; this relay entry is treated as always-on.
 # https://www.scnet.cn/ac/openapi/doc/2.0/moduleapi/api/chat.html
 base_model = "xiaomi/mimo-v2.5-pro"
-reasoning_options = [{ type = "toggle" }]
+reasoning_options = []
 
 [interleaved]
 field = "reasoning_content"
