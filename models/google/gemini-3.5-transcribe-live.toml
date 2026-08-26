@@ -1,0 +1,19 @@
+# Source: https://vercel.com/ai-gateway/models/gemini-3.5-transcribe-live
+# Live transcription has no token context/output window; zero denotes not applicable.
+name = "Gemini 3.5 Transcribe Live"
+description = "Speech transcription model for accurate audio-to-text and captioning workflows"
+family = "gemini"
+release_date = "2026-08-26"
+last_updated = "2026-08-26"
+attachment = false
+reasoning = false
+tool_call = false
+open_weights = false
+
+[limit]
+context = 0
+output = 0
+
+[modalities]
+input = ["audio"]
+output = ["text"]
