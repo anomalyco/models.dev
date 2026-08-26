@@ -1,8 +1,8 @@
 # Preview rollout: deepseek-v4-pro is in private preview on Neuralwatt —
 # visible to paid users after requesting access per model card, per the
-# Preview Models guide. Pricing from the portal model card (USD/MTok); V4-Pro
-# is not yet listed in the public token-pricing table, and no cache-read rate
-# is published for it.
+# Preview Models guide. Pricing, output cap, and cache-read from the
+# authenticated GET /v1/models metadata (checked 2026-08-27); V4-Pro is not
+# yet in the public catalog or token-pricing table.
 # Reasoning per the chat-completions per-model table (docs verified against
 # the live API on 2026-08-26): reasoning_effort accepts none|low|high|max as
 # distinct levels with low as the default (reasoning on by default); aliases
@@ -30,6 +30,8 @@ field = "reasoning_content"
 [cost]
 input = 1.0
 output = 3.0
+cache_read = 0.1
 
 [limit]
 context = 1_048_560
+output = 393_216
