@@ -1,8 +1,9 @@
-# SCNet probe 2026-08-26: no stable caller-controlled reasoning control was confirmed; keeping reasoning_options = [] pending a successful toggle test.
+# Effort: reasoning_effort = high|max
+# SCNet probe 2026-08-26: use the GLM-5.2 effort levels on this relay.
 # https://www.scnet.cn/ac/openapi/doc/2.0/moduleapi/api/chat.html
 base_model = "zhipuai/glm-5.2"
 name = "GLM-5.2-Base"
-reasoning_options = []
+reasoning_options = [{ type = "effort", values = ["high", "max"] }]
 
 [interleaved]
 field = "reasoning_content"

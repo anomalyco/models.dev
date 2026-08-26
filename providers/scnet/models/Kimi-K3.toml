@@ -1,8 +1,10 @@
-# SCNet probe 2026-08-26: no stable caller-controlled reasoning control was confirmed; keeping reasoning_options = [] pending a successful toggle test.
+# Toggle: enable_thinking = true|false
+# Effort: reasoning_effort = high
+# SCNet probe 2026-08-26: toggle and high effort were accepted by this host.
 # https://www.scnet.cn/ac/openapi/doc/2.0/moduleapi/api/chat.html
 # SCNet probe 2026-08-26: image_url request returned HTTP 200; image input is supported on this host.
 base_model = "moonshotai/kimi-k3"
-reasoning_options = []
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["high"] }]
 
 [interleaved]
 field = "reasoning_content"

@@ -1,8 +1,9 @@
-# SCNet probe 2026-08-26: no stable caller-controlled reasoning control was confirmed; keeping reasoning_options = [] pending a successful toggle test.
+# Toggle: thinking.type = enabled|disabled
+# SCNet probe 2026-08-26: use the Kimi thinking toggle on this relay.
 # https://www.scnet.cn/ac/openapi/doc/2.0/moduleapi/api/chat.html
 # SCNet probe 2026-08-26: image_url request returned HTTP 200; image input is supported on this host.
 base_model = "moonshotai/kimi-k2.6"
-reasoning_options = []
+reasoning_options = [{ type = "toggle" }]
 
 [interleaved]
 field = "reasoning_content"
