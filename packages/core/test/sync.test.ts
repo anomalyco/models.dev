@@ -474,7 +474,13 @@ test("parses CrossModel's nullable reasoning controls", () => {
   });
 });
 
-test("syncs CrossModel's explicit reasoning controls", () => {
+test("preserves CrossModel's toggle-only reasoning control", () => {
+  const model = buildCrossModel(crossModelModel(), undefined);
+  expect(model?.reasoning_options).toEqual([{ type: "toggle" }]);
+});
+
+test.each([{ off: false }, { off: true }])("syncs CrossModel's reasoning controls (effort includes none: $off)", ({ off }) => {
+  const effort = off ? ["none", "low", "high", "max"] as const : ["low", "high", "max"] as const;
   const model = buildCrossModel(
     crossModelModel({
       capabilities: {
@@ -482,7 +488,7 @@ test("syncs CrossModel's explicit reasoning controls", () => {
         reasoning: {
           supported: true,
           toggle: true,
-          effort: ["low", "high", "max"],
+          effort: [...effort],
           budget_tokens: { min: 1_024, max: 32_000 },
         },
       },
@@ -492,8 +498,8 @@ test("syncs CrossModel's explicit reasoning controls", () => {
 
   expect(model).toMatchObject({
     reasoning_options: [
-      { type: "toggle" },
-      { type: "effort", values: ["low", "high", "max"] },
+      ...off ? [] : [{ type: "toggle" }],
+      { type: "effort", values: effort },
       { type: "budget_tokens", min: 1_024, max: 32_000 },
     ],
   });

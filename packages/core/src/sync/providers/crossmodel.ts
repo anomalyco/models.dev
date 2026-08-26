@@ -180,6 +180,9 @@ function reasoningOptions(model: CrossModelModel): SyncedModel["reasoning_option
     if (reasoning.budget_tokens.max !== undefined) budget.max = reasoning.budget_tokens.max;
     options.push(budget);
   }
+  if (options.some((option) => option.type === "effort" && option.values.includes("none"))) {
+    return options.filter((option) => option.type !== "toggle");
+  }
   return options;
 }
 
