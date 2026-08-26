@@ -1,5 +1,6 @@
 # Pricing per the public pricing page (accessed 2026-08-27); previously
-# listed here at $0.104/$0.207/$0.026.
+# listed here at $0.104/$0.207/$0.026. Cached input is the page's explicit
+# per-model rate ($0.03), not the 10%-of-input platform default.
 # Effort: reasoning_effort = none|high|max (default none, reasoning off by
 # default; aliases low/minimal/medium -> high, xhigh -> max) per the
 # chat-completions per-model table, verified against the live API on
@@ -16,7 +17,7 @@ values = ["none", "high", "max"]
 [cost]
 input = 0.14
 output = 0.28
-cache_read = 0.028
+cache_read = 0.03
 
 [limit]
 context = 1_048_560

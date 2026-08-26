@@ -3,7 +3,7 @@
 # `-flex` model ID or service_tier="flex" and requires stream=true
 # (non-streaming requests fall through to the standard tier).
 # Cost is the flex rate: 0.65x of standard pricing (35% off) per the flex-tier
-# guide, applied to the current standard rates $0.14/$0.28/$0.028 (accessed
+# guide, applied to the current standard rates $0.14/$0.28/$0.03 (accessed
 # 2026-08-27).
 # Reasoning matches the standard tier: reasoning_effort = none|high|max
 # (default none, reasoning off by default; aliases low/minimal/medium -> high,
@@ -21,7 +21,7 @@ values = ["none", "high", "max"]
 [cost]
 input = 0.091
 output = 0.182
-cache_read = 0.0182
+cache_read = 0.0195
 
 [limit]
 context = 1_048_560

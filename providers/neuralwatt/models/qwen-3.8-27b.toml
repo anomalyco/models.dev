@@ -7,8 +7,9 @@
 # 2026-08-26). Off is effort=none, so no separate toggle.
 # Budget: thinking_token_budget (integer reasoning tokens) is accepted on this
 # model.
-# Neuralwatt serves text+image input only (lab metadata also lists video).
-# Pricing, context, and output cap from the model page (accessed 2026-08-27):
+# Neuralwatt serves text+image input only (lab metadata also lists video) and
+# publishes no output cap for this alias, so the lab default is inherited.
+# Pricing, context, and effort ladder from the model page (accessed 2026-08-27):
 # https://portal.neuralwatt.com/models/qwen-3.8-27b
 # https://portal.neuralwatt.com/docs/api/chat-completions
 # https://portal.neuralwatt.com/docs/guides/preview-models
@@ -32,7 +33,6 @@ cache_read = 0.25
 
 [limit]
 context = 262_128
-output = 65_536
 
 [modalities]
 input = ["text", "image"]
