@@ -1,10 +1,14 @@
 name = "Volcengine Ark Coding Plan"
-env = ["ARK_API_KEY"]
+env = ["ARK_CODING_PLAN_API_KEY"]
 npm = "@ai-sdk/openai-compatible"
 # Coding Plan is a subscription tier with its own base URL. Volcengine warns that
 # calling the pay-as-you-go https://ark.cn-beijing.volces.com/api/v3 with a Coding
 # Plan key does NOT draw down the subscription and bills separately, so the two
 # providers must stay distinct.
+# The env var is deliberately not ARK_API_KEY: /api/coding/v3 does not check which
+# plan a key belongs to, so a pay-as-you-go key reaches it and bills per token.
+# Sharing ARK_API_KEY would light up both providers at once and let a user pick a
+# Coding Plan entry while silently paying pay-as-you-go rates.
 # Reasoning HTTP format (accessed 2026-08-26):
 # OpenAI Chat: POST /api/coding/v3/chat/completions; `thinking.type` = enabled or
 # disabled (`auto` is rejected on most models); `reasoning_effort` = minimal, low,
