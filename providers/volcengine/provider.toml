@@ -2,7 +2,9 @@ name = "Volcengine Ark"
 env = ["ARK_API_KEY"]
 npm = "@ai-sdk/openai-compatible"
 # Reasoning HTTP format (accessed 2026-08-26):
-# OpenAI Chat: POST /api/v3/chat/completions; `thinking.type` = enabled|disabled|auto,
+# OpenAI Chat: POST /api/v3/chat/completions; `thinking.type` = enabled|disabled
+# (`auto` is documented but rejected with "Unsupported thinking type for the
+# current model" on every model here except doubao-seed-1-6-flash),
 # `reasoning_effort` = minimal|low|medium|high. Plaintext reasoning is in
 # `choices[].message.reasoning_content`, encrypted block is in
 # `choices[].message.encrypted_content` (returned by default).
