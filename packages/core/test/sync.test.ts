@@ -1224,6 +1224,31 @@ test("syncs Tinfoil cached-input pricing from the public model catalog", () => {
   });
 });
 
+test.each([undefined, "zhipuai/glm-5.2"])("syncs Tinfoil reasoning with base model %s", (base_model) => {
+  const existing = { ...existingTinfoilGLM, base_model };
+  const enabled = buildTinfoilModel(tinfoilModel(), { ...existing, reasoning: false });
+  expect(enabled.reasoning_options).toEqual(existing.reasoning_options);
+  // Factored models inherit true from the lab; standalone models must author it.
+  expect(enabled.reasoning).toBe(base_model === undefined ? true : undefined);
+
+  const disabled = buildTinfoilModel(tinfoilModel({ reasoning: false }), existing);
+  expect(disabled.reasoning).toBe(false);
+  expect(disabled.reasoning_options).toBeUndefined();
+});
+
+test("requires authored Tinfoil controls instead of inventing an empty set", () => {
+  expect(() => buildTinfoilModel(tinfoilModel(), {
+    ...existingTinfoilGLM,
+    reasoning_options: undefined,
+  })).toThrow("requires hand-authored reasoning_options");
+
+  const model = buildTinfoilModel(tinfoilModel(), {
+    ...existingTinfoilGLM,
+    reasoning_options: [],
+  });
+  expect(model.reasoning_options).toEqual([]);
+});
+
 test("removes stale Tinfoil cache pricing when the public catalog omits it", () => {
   const model = buildTinfoilModel(tinfoilModel({
     pricing: {

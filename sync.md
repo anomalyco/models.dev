@@ -222,8 +222,9 @@ xAI is implemented in `packages/core/src/sync/providers/xai.ts`.
 - Tinfoil is implemented in `packages/core/src/sync/providers/tinfoil.ts`.
 - Source endpoint: `https://inference.tinfoil.sh/v1/models`.
 - No authentication is required; the catalog is public.
-- Existing Tinfoil models are updated from API-authoritative input, output, cached-input pricing, context windows, and catalog availability.
+- Existing Tinfoil models are updated from API-authoritative input, output, cached-input pricing, context windows, reasoning capability, and catalog availability.
 - Provider-specific metadata that the endpoint does not expose, including exact modalities, output limits, reasoning controls, and lifecycle status, remains hand-authored.
+- Reasoning controls are preserved for reasoners and removed when the API reports `reasoning: false`. A reasoner without authored controls fails sync for manual review rather than inventing an empty control set.
 - New token-priced chat, safety, and embedding models are not created automatically (`skipCreates`); each missing ID opens a deduped GitHub issue for hand-authored metadata.
 - Per-request tool, TTS, transcription, realtime, and document-processing services are ignored because their pricing cannot be represented by the token-cost schema.
 

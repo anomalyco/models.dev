@@ -1,18 +1,14 @@
-# Sources (accessed 2026-08-12):
-# - https://inference.tinfoil.sh/v1/models (id deepseek-v4-flash; context 1000000;
-#   input $0.7/MTok; output $1.9/MTok; cachedInput $0.125/MTok; reasoning true)
-# - https://docs.tinfoil.sh/models/chat.md (weights deepseek-ai/DeepSeek-V4-Flash-0731; 1M context)
-# - https://docs.tinfoil.sh/guides/reasoning.md (OpenAI-compatible reasoning_effort; response message.reasoning)
-# - https://docs.tinfoil.sh/resources/changelog.md (August 2026: added deepseek-v4-flash)
-# Effort: lab DeepSeek V4 Flash OpenAI path uses reasoning_effort low|high|max
-# (providers/deepseek/models/deepseek-v4-flash.toml). Tinfoil documents only
-# reasoning_effort (no separate thinking.type toggle), matching other Tinfoil
-# reasoners that author effort-only options.
+# Sources (accessed 2026-08-26):
+# - https://inference.tinfoil.sh/v1/models
+# - https://docs.tinfoil.sh/models/chat.md (weights deepseek-ai/DeepSeek-V4-Flash-0731)
+# - https://docs.tinfoil.sh/guides/reasoning.md
+# Effort: reasoning_effort = none|minimal|low|medium|high|xhigh|max on Tinfoil.
+# Off is reasoning_effort=none; no separate toggle.
 base_model = "deepseek/deepseek-v4-flash-0731"
 
 [[reasoning_options]]
 type = "effort"
-values = ["low", "high", "max"]
+values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"]
 
 [cost]
 input = 0.3
