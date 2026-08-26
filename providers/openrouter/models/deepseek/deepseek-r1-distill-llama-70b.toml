@@ -1,3 +1,5 @@
+# Toggle: reasoning.enabled = true|false
+# https://openrouter.ai/docs/guides/best-practices/reasoning-tokens
 name = "R1 Distill Llama 70B"
 description = "DeepSeek reasoning model for multi-step analysis, math, coding, and tools"
 family = "deepseek-thinking"
@@ -10,7 +12,9 @@ tool_call = false
 structured_output = false
 knowledge = "2024-07-31"
 open_weights = true
-reasoning_options = []
+
+[[reasoning_options]]
+type = "toggle"
 
 [cost]
 input = 0.8

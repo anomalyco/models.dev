@@ -1,3 +1,5 @@
+# Toggle: reasoning.enabled = true|false
+# https://openrouter.ai/docs/guides/best-practices/reasoning-tokens
 name = "Seed 2.1 Turbo"
 description = "Multimodal reasoning model for visual analysis, planning, and tool use"
 family = "seed"
@@ -9,7 +11,9 @@ temperature = true
 tool_call = true
 structured_output = true
 open_weights = false
-reasoning_options = []
+
+[[reasoning_options]]
+type = "toggle"
 
 [cost]
 input = 0.5

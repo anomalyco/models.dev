@@ -1,8 +1,12 @@
+# Toggle: reasoning.enabled = true|false
+# https://openrouter.ai/docs/guides/best-practices/reasoning-tokens
 base_model = "minimax/MiniMax-M3"
 name = "MiniMax M3 (free)"
 description = "MiniMax multimodal coding model for long-context reasoning and agent tasks"
 structured_output = false
-reasoning_options = []
+
+[[reasoning_options]]
+type = "toggle"
 
 [cost]
 input = 0

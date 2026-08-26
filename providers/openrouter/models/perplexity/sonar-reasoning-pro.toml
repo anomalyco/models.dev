@@ -1,3 +1,5 @@
+# Toggle: reasoning.enabled = true|false
+# https://openrouter.ai/docs/guides/best-practices/reasoning-tokens
 name = "Sonar Reasoning Pro"
 description = "Web-grounded reasoning model for multi-step research and cited answers"
 family = "sonar-reasoning"
@@ -9,7 +11,9 @@ temperature = true
 tool_call = false
 structured_output = false
 open_weights = false
-reasoning_options = []
+
+[[reasoning_options]]
+type = "toggle"
 
 [cost]
 input = 2
