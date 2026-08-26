@@ -1,0 +1,22 @@
+# Reasoning HTTP format (accessed 2026-06-25):
+# POST https://api.together.ai/v1/chat/completions
+# Together's current reasoning model table does not list Kimi K2.5; raw HTTP
+# reasoning.enabled: true | false acceptance remains unresolved.
+# Sources: https://docs.together.ai/docs/inference/chat/reasoning#supported-models
+base_model = "moonshotai/kimi-k2.5"
+description = "Legacy model retained for compatibility with older integrations"
+attachment = false
+temperature = true
+status = "deprecated"
+
+interleaved = true
+
+[[reasoning_options]]
+type = "toggle"
+
+[cost]
+input = 0.5
+output = 2.8
+
+[modalities]
+input = ["text", "image"]

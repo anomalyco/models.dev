@@ -1,0 +1,21 @@
+# Aixy forwards this route to togetherai without translating the model payload.
+# Reasoning controls mirror providers/togetherai/models/deepseek-ai/DeepSeek-V4-Pro-0813.toml.
+base_model = "deepseek/deepseek-v4-pro-0813"
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[cost]
+input = 1.32
+output = 3.96
+cache_read = 0.13
+
+[limit]
+context = 1_048_576

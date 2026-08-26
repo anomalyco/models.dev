@@ -1,0 +1,17 @@
+# Reasoning HTTP format (accessed 2026-06-25):
+# POST https://api.together.ai/v1/chat/completions
+# JSON reasoning_effort: "low" | "medium" | "high".
+# Sources: https://docs.together.ai/docs/inference/chat/reasoning#reasoning-effort
+base_model = "openai/gpt-oss-120b"
+description = "Open-weight GPT model for self-hosted reasoning and instruction-following workloads"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high"]
+
+[cost]
+input = 0.15
+output = 0.6
+
+[limit]
+output = 131_072

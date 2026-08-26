@@ -1,0 +1,25 @@
+# Context window: Azure Foundry serves 1M (legacy 200K cap removed).
+# https://learn.microsoft.com/en-us/azure/foundry/foundry-models/concepts/claude-models?tabs=pay-go#available-claude-models
+base_model = "anthropic/claude-opus-4-6"
+description = "Flagship Claude model for deep reasoning, coding, and long-horizon agents"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high", "max"]
+
+[[reasoning_options]]
+type = "budget_tokens"
+min = 1_024
+
+[cost]
+input = 5
+output = 25
+cache_read = 0.5
+cache_write = 6.25
+
+[[cost.tiers]]
+tier = { type = "context", size = 200_000 }
+input = 10
+output = 37.5
+cache_read = 1
+cache_write = 12.5

@@ -1,0 +1,12 @@
+base_model = "meta/muse-glimmer-30b"
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "minimal", "low", "medium", "high", "max"]
+
+[cost]
+input = 0
+output = 0

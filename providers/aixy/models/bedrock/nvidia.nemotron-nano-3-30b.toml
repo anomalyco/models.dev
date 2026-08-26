@@ -1,0 +1,12 @@
+base_model = "nvidia/nemotron-3-nano-30b-a3b"
+name = "NVIDIA Nemotron Nano 3 30B"
+structured_output = true
+reasoning_options = []
+
+[cost]
+input = 0.06
+output = 0.24
+
+[limit]
+context = 128_000
+output = 4_096

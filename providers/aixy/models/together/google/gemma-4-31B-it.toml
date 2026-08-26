@@ -1,0 +1,15 @@
+# Reasoning HTTP format (accessed 2026-06-25):
+# POST https://api.together.ai/v1/chat/completions
+# Together's reasoning guide does not document toggle, effort, or budget controls.
+# Sources: https://docs.together.ai/docs/inference/chat/reasoning#supported-models
+base_model = "google/gemma-4-31b-it"
+name = "Gemma 4 31B Instruct"
+description = "Open Gemma instruction model for efficient chat and self-hosted deployments"
+reasoning_options = []
+
+[cost]
+input = 0.39
+output = 0.97
+
+[limit]
+output = 131_072

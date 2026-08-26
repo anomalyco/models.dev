@@ -1,0 +1,15 @@
+base_model = "nvidia/nemotron-nano-12b-v2-vl"
+name = "NVIDIA Nemotron Nano 12B v2 VL BF16"
+attachment = false
+reasoning = false
+structured_output = true
+
+[cost]
+input = 0.2
+output = 0.6
+
+[limit]
+output = 4_096
+
+[modalities]
+input = ["text", "image"]

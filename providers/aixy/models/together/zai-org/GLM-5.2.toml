@@ -1,0 +1,22 @@
+# Aixy forwards this route to togetherai without translating the model payload.
+# Reasoning controls mirror providers/togetherai/models/zai-org/GLM-5.2.toml.
+base_model = "zhipuai/glm-5.2"
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["high", "max"]
+
+[cost]
+input = 1.4
+output = 4.4
+cache_read = 0.26
+
+[limit]
+context = 512_000
+output = 164_000

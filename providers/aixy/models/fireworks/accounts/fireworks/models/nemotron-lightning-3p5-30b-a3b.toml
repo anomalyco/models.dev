@@ -1,0 +1,11 @@
+# Aixy forwards this route to fireworks-ai without translating the model payload.
+# Reasoning controls mirror providers/fireworks-ai/models/accounts/fireworks/models/nemotron-lightning-3p5-30b-a3b.toml.
+base_model = "nvidia/nemotron-3.5-lightning"
+
+[[reasoning_options]]
+type = "toggle"
+
+[cost]
+input = 0.05
+output = 0.2
+cache_read = 0.01

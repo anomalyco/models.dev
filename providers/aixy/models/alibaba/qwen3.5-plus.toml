@@ -1,0 +1,14 @@
+# Aixy forwards this route to alibaba without translating the model payload.
+# Reasoning controls mirror providers/alibaba/models/qwen3.5-plus.toml.
+base_model = "alibaba/qwen3.5-plus"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "budget_tokens"
+
+[cost]
+input = 0.4
+output = 2.4
+reasoning = 2.4

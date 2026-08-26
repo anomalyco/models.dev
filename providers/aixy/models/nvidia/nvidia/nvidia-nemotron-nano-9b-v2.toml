@@ -1,0 +1,11 @@
+# Aixy forwards this route to nvidia without translating the model payload.
+# Reasoning controls mirror providers/nvidia/models/nvidia/nvidia-nemotron-nano-9b-v2.toml.
+base_model = "nvidia/nemotron-nano-9b-v2"
+name = "nvidia-nemotron-nano-9b-v2"
+
+[[reasoning_options]]
+type = "toggle"
+
+[cost]
+input = 0
+output = 0

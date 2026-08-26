@@ -1,0 +1,17 @@
+# Aixy forwards this route to nvidia without translating the model payload.
+# Reasoning controls mirror providers/nvidia/models/nvidia/nemotron-3-nano-omni-30b-a3b-reasoning.toml.
+base_model = "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning"
+name = "Nemotron 3 Nano Omni"
+structured_output = true
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "budget_tokens"
+min = -1
+max = 32_768
+
+[cost]
+input = 0
+output = 0

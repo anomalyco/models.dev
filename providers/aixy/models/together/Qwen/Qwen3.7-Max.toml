@@ -1,0 +1,11 @@
+base_model = "alibaba/qwen3.7-max"
+description = "Flagship Qwen model for complex reasoning, coding, and agentic workflows"
+reasoning = false
+
+[cost]
+input = 1.25
+output = 3.75
+cache_read = 0.125
+
+[limit]
+output = 500_000

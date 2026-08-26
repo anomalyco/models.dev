@@ -1,0 +1,14 @@
+# Aixy forwards this route to fireworks-ai without translating the model payload.
+# Reasoning controls mirror providers/fireworks-ai/models/accounts/fireworks/models/nemotron-3-ultra-nvfp4.toml.
+base_model = "nvidia/nemotron-3-ultra-550b-a55b"
+
+[[reasoning_options]]
+type = "toggle"
+
+[cost]
+input = 0.6
+output = 2.4
+cache_read = 0.119
+
+[limit]
+context = 262_144

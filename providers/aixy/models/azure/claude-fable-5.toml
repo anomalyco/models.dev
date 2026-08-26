@@ -1,0 +1,13 @@
+# Azure catalog: https://ai.azure.com/catalog/models/claude-fable-5
+base_model = "anthropic/claude-fable-5"
+status = "beta"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high", "xhigh", "max"]
+
+[cost]
+input = 10
+output = 50
+cache_read = 1
+cache_write = 12.5

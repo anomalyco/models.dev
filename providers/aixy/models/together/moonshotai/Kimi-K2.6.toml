@@ -1,0 +1,17 @@
+# Reasoning HTTP format (accessed 2026-06-25):
+# POST https://api.together.ai/v1/chat/completions
+# JSON reasoning.enabled: true | false (thinking is on by default).
+# Sources: https://docs.together.ai/docs/inference/chat/reasoning#enable-and-disable-reasoning
+base_model = "moonshotai/kimi-k2.6"
+description = "Kimi multimodal agent model for visual understanding, coding, and planning"
+
+[[reasoning_options]]
+type = "toggle"
+
+[cost]
+input = 1.2
+output = 4.5
+cache_read = 0.2
+
+[limit]
+output = 131_000

@@ -1,0 +1,14 @@
+# Aixy forwards this route to nvidia without translating the model payload.
+# Reasoning controls mirror providers/nvidia/models/minimaxai/minimax-m3.toml.
+base_model = "minimax/MiniMax-M3"
+
+[[reasoning_options]]
+type = "toggle"
+
+[cost]
+input = 0
+output = 0
+
+[limit]
+context = 1_000_000
+output = 16_384

@@ -1,0 +1,15 @@
+base_model = "mistral/magistral-small-2506"
+name = "Magistral Small 2506"
+description = "Mistral reasoning model for transparent analysis, math, and complex decisions"
+reasoning = false
+tool_call = false
+structured_output = false
+
+[cost]
+input = 0
+output = 0
+
+[limit]
+context = 32_768
+input = 32_768
+output = 32_768

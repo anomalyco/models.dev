@@ -1,0 +1,18 @@
+# Direct endpoint: POST /models/chat/completions?api-version=2024-05-01-preview.
+# Its published request schema documents no toggle, effort, or reasoning budget.
+# https://learn.microsoft.com/en-us/rest/api/microsoftfoundry/model-inference/get-chat-completions/get-chat-completions (accessed 2026-06-25)
+base_model = "moonshotai/kimi-k2.6"
+description = "Kimi multimodal agent model for visual understanding, coding, and planning"
+attachment = false
+
+interleaved = true
+
+[[reasoning_options]]
+type = "toggle"
+
+[cost]
+input = 0.95
+output = 4
+
+[modalities]
+input = ["text", "image"]

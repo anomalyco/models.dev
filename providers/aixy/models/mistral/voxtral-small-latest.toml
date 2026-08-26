@@ -1,0 +1,10 @@
+# Sources :
+#   https://docs.mistral.ai/models/model-cards/voxtral-small-25-07
+#   https://mistral.ai/news/voxtral/
+# Le bloc [cost] ne porte que le texte ($0.10 / $0.30 per 1M tokens) : l'audio en
+# entrée se facture à la MINUTE ($0.004/min), unité que le schéma ne modélise pas.
+base_model = "mistral/voxtral-small-latest"
+
+[cost]
+input = 0.1
+output = 0.3

@@ -1,0 +1,18 @@
+# Aixy forwards this route to fireworks-ai without translating the model payload.
+# Reasoning controls mirror providers/fireworks-ai/models/accounts/fireworks/models/deepseek-v4-pro.toml.
+base_model = "deepseek/deepseek-v4-pro"
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["high", "max"]
+
+[cost]
+input = 1.74
+output = 3.48
+cache_read = 0.145

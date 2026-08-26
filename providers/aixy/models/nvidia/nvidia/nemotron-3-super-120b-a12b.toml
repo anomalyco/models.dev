@@ -1,0 +1,11 @@
+# Aixy forwards this route to nvidia without translating the model payload.
+# Reasoning controls mirror providers/nvidia/models/nvidia/nemotron-3-super-120b-a12b.toml.
+base_model = "nvidia/nemotron-3-super-120b-a12b"
+name = "Nemotron 3 Super"
+
+[[reasoning_options]]
+type = "toggle"
+
+[cost]
+input = 0.2
+output = 0.8

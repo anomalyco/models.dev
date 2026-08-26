@@ -1,0 +1,12 @@
+base_model = "alibaba/qwen2.5-coder-32b-instruct"
+name = "Qwen2.5 Coder 32b Instruct"
+description = "Qwen coding model for software agents, repository edits, and code reasoning"
+structured_output = true
+
+[cost]
+input = 0
+output = 0
+
+[limit]
+context = 128_000
+output = 4_096
