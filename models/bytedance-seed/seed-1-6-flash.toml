@@ -6,7 +6,7 @@ description = "Low-latency ByteDance Seed model for high-throughput chat, extrac
 family = "seed"
 release_date = "2025-08-28"
 last_updated = "2025-08-28"
-attachment = false
+attachment = true
 reasoning = false
 temperature = true
 tool_call = true
@@ -17,5 +17,5 @@ context = 256_000
 output = 32_000
 
 [modalities]
-input = ["text"]
+input = ["text", "image"]
 output = ["text"]
