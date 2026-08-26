@@ -1,0 +1,19 @@
+base_model = "zhipuai/glm-5.3-flash"
+name = "GLM 5.3 Flash"
+description = "GLM vision model for visual reasoning, documents, and multimodal agents"
+release_date = "2026-08-21"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high"]
+
+[cost]
+input = 0.09375
+output = 0.3125
+cache_read = 0.01875
+
+[limit]
+context = 1_048_576
+
+[modalities]
+input = ["text", "image", "video"]
