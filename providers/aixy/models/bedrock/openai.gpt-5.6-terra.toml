@@ -3,6 +3,7 @@
 # In-region on-demand pricing (US East N. Virginia & Ohio; also US West Oregon): https://aws.amazon.com/bedrock/pricing/
 # Columns: input / 30m cache write / cache read / output (USD per 1M tokens)
 base_model = "openai/gpt-5.6-terra"
+base_model_omit = ["cost.context_over_200k", "experimental.modes.fast"]
 
 [[reasoning_options]]
 type = "effort"

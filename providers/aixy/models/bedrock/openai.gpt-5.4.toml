@@ -1,5 +1,5 @@
 base_model = "openai/gpt-5.4"
-base_model_omit = ["limit.input"]
+base_model_omit = ["cost.tiers", "cost.context_over_200k", "experimental.modes.fast", "limit.input"]
 
 [[reasoning_options]]
 type = "effort"
