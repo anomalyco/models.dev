@@ -1,7 +1,10 @@
-base_model = "moonshotai/kimi-k2.5"
-# SCNet documents enable_thinking only for Qwen3 and DeepSeek-V4; this model has no caller-controlled reasoning option.
+# SCNet probe 2026-08-26: image_url request returned HTTP 200; image input is supported on this host.
+# Toggle: enable_thinking = true|false
+# Effort: reasoning_effort = high
+# SCNet OpenAI Chat API source:
 # https://www.scnet.cn/ac/openapi/doc/2.0/moduleapi/api/chat.html
-reasoning_options = []
+base_model = "moonshotai/kimi-k2.5"
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["high"] }]
 
 [interleaved]
 field = "reasoning_content"

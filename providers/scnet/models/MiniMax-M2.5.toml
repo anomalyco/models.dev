@@ -1,6 +1,6 @@
-base_model = "minimax/MiniMax-M2.5"
-# SCNet documents enable_thinking only for Qwen3 and DeepSeek-V4; this model has no caller-controlled reasoning option.
+# SCNet probe 2026-08-26: no stable caller-controlled reasoning control was confirmed; keeping reasoning_options = [] pending a successful toggle test.
 # https://www.scnet.cn/ac/openapi/doc/2.0/moduleapi/api/chat.html
+base_model = "minimax/MiniMax-M2.5"
 reasoning_options = []
 
 [interleaved]
