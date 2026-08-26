@@ -4,6 +4,7 @@ import { tmpdir } from "node:os";
 import path from "node:path";
 
 import { formatToml, preserveReasoningOptions, syncProvider, type ExistingModel, type SyncProvider } from "../src/sync/index.js";
+import { alibaba, buildAlibabaModel, type AlibabaModel } from "../src/sync/providers/alibaba.js";
 import {
   anthropic,
   buildAnthropicModel,
@@ -1103,6 +1104,290 @@ test("OpenAI availability sync preserves authored metadata", () => {
   )).toEqual({ id: "gpt-5.5", model: authored });
 });
 
+test("Alibaba sync uses explicit cache read pricing", () => {
+  const model: AlibabaModel = {
+    model: "qwen-plus",
+    name: "Qwen Plus",
+    description: "Qwen Plus",
+    features: [],
+    capabilities: ["Reasoning"],
+    provider: null,
+    published_time: "2026-01-01 00:00:00",
+    inference_metadata: {},
+    model_info: {
+      context_window: null,
+      max_input_tokens: null,
+      max_output_tokens: null,
+      max_reasoning_tokens: null,
+      reasoning_max_input_tokens: null,
+      reasoning_max_output_tokens: null,
+    },
+    prices: [{
+      range_name: "Default",
+      prices: [
+        { type: "input_token", price: "9", price_unit: "1M tokens", price_name: "Input" },
+        { type: "output_token", price: "18", price_unit: "1M tokens", price_name: "Output" },
+        { type: "input_token_cache", price: "8", price_unit: "1M tokens", price_name: "Input(Implicit Cache)" },
+        { type: "input_token_cache_read", price: "4", price_unit: "1M tokens", price_name: "Explicit Cache Read" },
+        { type: "input_token_cache_creation_5m", price: "12", price_unit: "1M tokens", price_name: "Explicit Cache Creation" },
+      ],
+    }],
+  };
+
+  expect(buildAlibabaModel(model, undefined, "alibaba/qwen-plus")).toMatchObject({
+    cost: {
+      cache_read: 4,
+      cache_write: 12,
+    },
+  });
+});
+
+test("Alibaba sync maps context price ranges to cost tiers", () => {
+  const model: AlibabaModel = {
+    model: "qwen3.6-plus",
+    name: "Qwen3.6 Plus",
+    description: "Qwen3.6 Plus",
+    features: [],
+    capabilities: ["Reasoning"],
+    provider: null,
+    published_time: "2026-01-01 00:00:00",
+    inference_metadata: {},
+    model_info: {
+      context_window: 1_000_000,
+      max_input_tokens: null,
+      max_output_tokens: null,
+      max_reasoning_tokens: null,
+      reasoning_max_input_tokens: null,
+      reasoning_max_output_tokens: null,
+    },
+    prices: [
+      {
+        range_name: "Input<=256k",
+        prices: [
+          { type: "input_token", price: "0.5", price_unit: "1M tokens", price_name: "Input" },
+          { type: "output_token", price: "3", price_unit: "1M tokens", price_name: "Output" },
+          { type: "input_token_cache_read", price: "0.05", price_unit: "1M tokens", price_name: "Explicit Cache Read" },
+          { type: "input_token_cache_creation_5m", price: "0.625", price_unit: "1M tokens", price_name: "Explicit Cache Creation" },
+        ],
+      },
+      {
+        range_name: "256k<Input<=1m",
+        prices: [
+          { type: "input_token", price: "2", price_unit: "1M tokens", price_name: "Input" },
+          { type: "output_token", price: "6", price_unit: "1M tokens", price_name: "Output" },
+          { type: "input_token_cache_read", price: "0.2", price_unit: "1M tokens", price_name: "Explicit Cache Read" },
+          { type: "input_token_cache_creation_5m", price: "2.5", price_unit: "1M tokens", price_name: "Explicit Cache Creation" },
+        ],
+      },
+    ],
+  };
+
+  expect(buildAlibabaModel(model, undefined, "alibaba/qwen3.6-plus")).toMatchObject({
+    cost: {
+      input: 0.5,
+      output: 3,
+      cache_read: 0.05,
+      cache_write: 0.625,
+      tiers: [{
+        tier: { type: "context", size: 256_000 },
+        input: 2,
+        output: 6,
+        cache_read: 0.2,
+        cache_write: 2.5,
+      }],
+    },
+  });
+});
+
+test("Alibaba sync uses thinking token prices for thinking-only models", () => {
+  const model: AlibabaModel = {
+    model: "qwen3-next-80b-a3b-thinking",
+    name: "Qwen3-Next 80B-A3B Thinking",
+    description: "Qwen3-Next 80B-A3B Thinking",
+    features: [],
+    capabilities: ["Reasoning"],
+    provider: null,
+    published_time: "2026-01-01 00:00:00",
+    inference_metadata: {},
+    model_info: {
+      context_window: null,
+      max_input_tokens: null,
+      max_output_tokens: null,
+      max_reasoning_tokens: null,
+      reasoning_max_input_tokens: null,
+      reasoning_max_output_tokens: null,
+    },
+    prices: [{
+      range_name: "Default",
+      prices: [
+        { type: "thinking_input_token", price: "0.15", price_unit: "1M tokens", price_name: "Input(Thinking)" },
+        { type: "thinking_output_token", price: "1.2", price_unit: "1M tokens", price_name: "Output(Thinking)" },
+      ],
+    }],
+  };
+
+  expect(buildAlibabaModel(model, undefined, "alibaba/qwen3-next-80b-a3b-thinking")).toMatchObject({
+    cost: {
+      input: 0.15,
+      output: 1.2,
+    },
+  });
+});
+
+test("Alibaba sync preserves authored reasoning options", () => {
+  const model: AlibabaModel = {
+    model: "qwen-plus",
+    name: "Qwen Plus",
+    description: "Qwen Plus",
+    features: ["function-calling", "structured-outputs"],
+    capabilities: ["Reasoning"],
+    provider: null,
+    published_time: "2026-01-01 00:00:00",
+    inference_metadata: { request_modality: ["Text"], response_modality: ["Text"] },
+    model_info: {
+      context_window: 1_000_000,
+      max_input_tokens: 991_808,
+      max_output_tokens: 32_768,
+      max_reasoning_tokens: null,
+      reasoning_max_input_tokens: null,
+      reasoning_max_output_tokens: null,
+    },
+    prices: [{
+      range_name: "Default",
+      prices: [
+        { type: "input_token", price: "0.4", price_unit: "Per 1M tokens", price_name: "Input" },
+        { type: "output_token", price: "1.2", price_unit: "Per 1M tokens", price_name: "Output" },
+      ],
+    }],
+  };
+
+  expect(buildAlibabaModel(model, {
+    reasoning_options: [{ type: "toggle" }, { type: "budget_tokens" }],
+  }, "alibaba/qwen-plus")).toMatchObject({
+    reasoning_options: [{ type: "toggle" }, { type: "budget_tokens" }],
+    structured_output: true,
+    limit: { input: 991_808 },
+  });
+});
+
+test("Alibaba sync does not invent reasoning options for new reasoners", () => {
+  const model: AlibabaModel = {
+    model: "qwen-plus",
+    name: "Qwen Plus",
+    description: "Qwen Plus",
+    features: [],
+    capabilities: ["Reasoning"],
+    provider: null,
+    published_time: "2026-01-01 00:00:00",
+    inference_metadata: {},
+    model_info: {
+      context_window: null,
+      max_input_tokens: null,
+      max_output_tokens: null,
+      max_reasoning_tokens: null,
+      reasoning_max_input_tokens: null,
+      reasoning_max_output_tokens: null,
+    },
+    prices: [{
+      range_name: "Default",
+      prices: [
+        { type: "input_token", price: "0.4", price_unit: "Per 1M tokens", price_name: "Input" },
+        { type: "output_token", price: "1.2", price_unit: "Per 1M tokens", price_name: "Output" },
+      ],
+    }],
+  };
+
+  expect(buildAlibabaModel(model, undefined, "alibaba/qwen-plus")).not.toHaveProperty("reasoning_options");
+});
+
+test("Alibaba sync maps API modalities and past offline time", () => {
+  const model: AlibabaModel = {
+    model: "qwen3.6-plus",
+    name: "Qwen3.6 Plus",
+    description: "Qwen3.6 Plus",
+    features: [],
+    capabilities: ["Reasoning", "VU"],
+    provider: null,
+    published_time: "2026-01-01 00:00:00",
+    inference_metadata: {
+      request_modality: ["Text", "Image", "Video"],
+      response_modality: ["Text"],
+    },
+    model_info: {
+      context_window: 1_000_000,
+      max_input_tokens: 991_808,
+      max_output_tokens: 65_536,
+      max_reasoning_tokens: null,
+      reasoning_max_input_tokens: null,
+      reasoning_max_output_tokens: null,
+    },
+    prices: [{
+      range_name: "Default",
+      prices: [
+        { type: "input_token", price: "0.5", price_unit: "Per 1M tokens", price_name: "Input" },
+        { type: "output_token", price: "3", price_unit: "Per 1M tokens", price_name: "Output" },
+      ],
+    }],
+    inference_offline_info: { offlineTime: "2020-01-01 00:00:00" },
+  };
+
+  expect(buildAlibabaModel(model, undefined, "alibaba/qwen3.6-plus")).toMatchObject({
+    status: "deprecated",
+    modalities: { input: ["text", "image", "video", "pdf"] },
+    limit: { input: 991_808 },
+  });
+});
+
+test("Alibaba sync updates existing models that have no lab base file", () => {
+  const model: AlibabaModel = {
+    model: "qwen3-asr-flash",
+    name: "Qwen3-ASR Flash",
+    description: "ASR",
+    features: [],
+    capabilities: ["ASR"],
+    provider: null,
+    published_time: "2025-09-08 00:00:00",
+    inference_metadata: {
+      request_modality: ["Audio"],
+      response_modality: ["Text"],
+    },
+    model_info: {
+      context_window: 53_248,
+      max_input_tokens: 49_152,
+      max_output_tokens: 4_096,
+      max_reasoning_tokens: null,
+      reasoning_max_input_tokens: null,
+      reasoning_max_output_tokens: null,
+    },
+    prices: [{
+      range_name: "Default",
+      prices: [
+        { type: "content_duration", price: "0.00022", price_unit: "Per second", price_name: "Audio" },
+      ],
+    }],
+  };
+
+  expect(buildAlibabaModel(model, {
+    name: "Qwen3-ASR Flash",
+    description: "Speech transcription model",
+    release_date: "2025-09-08",
+    last_updated: "2025-09-08",
+    attachment: false,
+    reasoning: false,
+    tool_call: false,
+    open_weights: false,
+    cost: { input: 0.035, output: 0.035 },
+    limit: { context: 53_248, output: 4_096 },
+    modalities: { input: ["audio"], output: ["text"] },
+  })).toMatchObject({
+    name: "Qwen3-ASR Flash",
+    reasoning: false,
+    cost: { input: 0.035, output: 0.035 },
+    limit: { context: 53_248, input: 49_152, output: 4_096 },
+    modalities: { input: ["audio"], output: ["text"] },
+  });
+});
+
 test("OpenAI availability sync retains models absent from a scoped response", async () => {
   const dir = await mkdtemp(path.join(tmpdir(), "sync-openai-"));
   const modelsDir = path.join(dir, "providers", "openai", "models");
@@ -1149,6 +1434,8 @@ test("OpenAI availability sync retains models absent from a scoped response", as
 });
 
 test("tracks missing models except for unreliable first-party inventories", () => {
+  expect(alibaba.skipCreates).toBe(true);
+  expect(alibaba.trackMissingModels).not.toBe(false);
   expect(google.skipCreates).toBe(true);
   expect(google.trackMissingModels).toBe(false);
   expect(openai.skipCreates).toBe(true);

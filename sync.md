@@ -9,6 +9,7 @@ The grouped sync targets are available for local convenience, but CI syncs each 
 ## Commands
 
 - `bun models:sync aggregators` syncs every provider in the `aggregators` group.
+- `bun models:sync alibaba` syncs only Alibaba.
 - `bun models:sync openrouter` syncs only OpenRouter.
 - `bun models:sync cloudflare-workers-ai` syncs only Cloudflare Workers AI.
 - `bun models:sync cloudflare` syncs the Cloudflare sync group.
@@ -138,6 +139,23 @@ Each provider job checks out `dev` and writes to a fixed provider branch like `a
 CI automatically picks up providers registered in `providers` in `packages/core/src/sync/index.ts`. Adding a new sync provider there is enough to get an hourly provider-specific sync job, branch, labels, title, and PR naming convention. The workflow only needs manual updates when a new provider requires new secrets or other environment variables.
 
 Actions are pinned by commit SHA. Keep new workflow actions pinned the same way.
+
+## Alibaba Notes
+
+Alibaba is implemented in `packages/core/src/sync/providers/alibaba.ts`.
+
+- Source endpoint: `https://dashscope-intl.aliyuncs.com/api/v1/models`.
+- Required auth: `ALIBABA_API_KEY`.
+- Model IDs map directly to TOML paths under `providers/alibaba/models`.
+- The API is paginated and duplicate model IDs are deduped before translation.
+- API prices are per-1M-token numbers; context tiers are derived from DashScope price ranges.
+- Existing local files missing from the international API source are retained because the provider directory may contain deprecated or region-specific entries.
+- `skipCreates` is on: new remote IDs open missing-model GitHub issues instead of minting TOMLs. The API does not provide `family`, `temperature`, `open_weights`, `knowledge`, or reasoning controls.
+- Existing local files are always updated from API-authoritative fields, even without a `models/` lab file.
+- Canonical Alibaba model IDs emit `base_model` when a matching `models/` entry exists.
+- Existing `family`, `temperature`, `open_weights`, `knowledge`, `interleaved`, and authored `reasoning_options` are preserved. New reasoners with no authored options get `[]` from the runner (the API has no effort/toggle/budget fields).
+- `reasoning` comes from `capabilities` (`Reasoning`). `tool_call` / `structured_output` come from `features` when present.
+- `limit.input` comes from `max_input_tokens`. Past `inference_offline_info.offlineTime` sets `status = deprecated`.
 
 ## CrossModel Notes
 
