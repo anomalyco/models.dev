@@ -2,6 +2,7 @@
 # Selected route reasoning.controls = ["thinking"], disable_supported = true.
 base_model = "alibaba/qwen3.5-397b-a17b"
 name = "Qwen3.5 397B A17B"
+attachment = false
 structured_output = false
 
 [[reasoning_options]]
@@ -13,8 +14,8 @@ output = 1.032
 cache_read = 0.0344
 
 [limit]
-context = 256_000
-output = 64_000
+context = 131_072
+output = 32_768
 
 [modalities]
-input = ["text", "image"]
+input = ["text"]
