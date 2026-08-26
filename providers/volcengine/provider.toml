@@ -1,0 +1,19 @@
+name = "Volcengine Ark"
+env = ["ARK_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+# Reasoning HTTP format (accessed 2026-08-26):
+# OpenAI Chat: POST /api/v3/chat/completions; `thinking.type` = enabled|disabled|auto,
+# `reasoning_effort` = minimal|low|medium|high. Plaintext reasoning is in
+# `choices[].message.reasoning_content`, encrypted block is in
+# `choices[].message.encrypted_content` (returned by default).
+# Responses: POST /api/v3/responses; `reasoning.effort`; encrypted block requires
+# explicit `include = ["reasoning.encrypted_content"]`.
+# Anthropic: POST /api/v3/compatible/v1/messages; `thinking.type`,
+# `output_config.effort` = low|high|max; plaintext thinking is in
+# `content[thinking].thinking`, signature in `content[thinking].signature` (returned by default).
+# Sources:
+# https://www.volcengine.com/docs/82379/1298459
+# https://www.volcengine.com/docs/82379/1330310
+# https://www.volcengine.com/docs/82379/2636748
+doc = "https://www.volcengine.com/docs/82379/1330310"
+api = "https://ark.cn-beijing.volces.com/api/v3"
