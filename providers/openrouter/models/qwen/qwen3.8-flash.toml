@@ -1,0 +1,16 @@
+# Toggle: reasoning.enabled = true|false
+# https://openrouter.ai/docs/guides/best-practices/reasoning-tokens
+base_model = "alibaba/qwen3.8-flash"
+temperature = true
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "budget_tokens"
+
+[cost]
+input = 0.16
+output = 0.47
+cache_read = 0.016
+cache_write = 0.2
