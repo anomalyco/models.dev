@@ -1,0 +1,28 @@
+name = "Qwen3.8 Flash"
+description = "Qwen3.8 Flash is Alibaba's latest fast multimodal model, with a million-token context window for coding, agentic workflows, visual understanding, long documents, codebases, and videos."
+release_date = "2026-08-26"
+last_updated = "2026-08-26"
+attachment = true
+reasoning = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "high"]
+
+[cost]
+input = 0.16
+output = 0.47
+cache_read = 0.016
+cache_write = 0.2
+
+[limit]
+context = 991_808
+input = 991_808
+output = 131_072
+
+[modalities]
+input = ["text", "image", "video"]
+output = ["text"]
