@@ -1,0 +1,22 @@
+name = "Volcengine Ark Coding Plan"
+env = ["ARK_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+# Coding Plan is a subscription tier with its own base URL. Volcengine warns that
+# calling the pay-as-you-go https://ark.cn-beijing.volces.com/api/v3 with a Coding
+# Plan key does NOT draw down the subscription and bills separately, so the two
+# providers must stay distinct.
+# Reasoning HTTP format (accessed 2026-08-26):
+# OpenAI Chat: POST /api/coding/v3/chat/completions; `thinking.type` = enabled or
+# disabled (`auto` is rejected on most models); `reasoning_effort` = minimal, low,
+# medium, or high. Plaintext reasoning is in `choices[].message.reasoning_content`
+# and the encrypted block in `choices[].message.encrypted_content`.
+# Anthropic: base https://ark.cn-beijing.volces.com/api/coding, POST /v1/messages
+# with `thinking.type` and `output_config.effort`.
+# Model names on this plan are the short console labels (doubao-seed-2.1-turbo),
+# not the dated IDs the pay-as-you-go endpoint requires. `ark-code-latest` follows
+# whichever model is selected in the console.
+# Sources:
+# https://www.volcengine.com/docs/82379/1928261
+# https://www.volcengine.com/docs/82379/2546386
+doc = "https://www.volcengine.com/docs/82379/1928261"
+api = "https://ark.cn-beijing.volces.com/api/coding/v3"
