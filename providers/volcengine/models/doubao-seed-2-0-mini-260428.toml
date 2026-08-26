@@ -1,16 +1,14 @@
 # Model ID verified against POST /api/v3/chat/completions (2026-08-26): `doubao-seed-2-0-mini-260428`
 # CNY→USD rate: 6.737012, 2026-08-26, source: https://open.er-api.com/v6/latest/USD
 # CNY list price source: https://www.volcengine.com/docs/82379/1544106
-# Toggle: thinking.type = enabled|disabled
-# Effort: reasoning_effort = minimal|low|medium|high
+# Effort: reasoning_effort = none|minimal|low|medium|high|xhigh|max
+# none/minimal disable thinking, so no separate toggle: sending effort alone
+# already enables it, and thinking.type=disabled + a graded effort is rejected.
 base_model = "bytedance-seed/seed-2.0-mini"
 
 [[reasoning_options]]
-type = "toggle"
-
-[[reasoning_options]]
 type = "effort"
-values = ["minimal", "low", "medium", "high"]
+values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"]
 
 [interleaved]
 field = "reasoning_content"

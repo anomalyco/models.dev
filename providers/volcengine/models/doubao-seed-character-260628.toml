@@ -2,7 +2,8 @@
 # CNY→USD rate: 6.737012, 2026-08-26, source: https://open.er-api.com/v6/latest/USD
 # CNY list price source: https://www.volcengine.com/docs/82379/1544106
 # Toggle: thinking.type = enabled|disabled
-# Effort: reasoning_effort = minimal|low|medium|high
+# Effort: reasoning_effort = minimal|low|medium|high|xhigh|max (no none: this
+# model defaults thinking off, so thinking.type is the real switch here)
 base_model = "bytedance-seed/seed-character"
 
 [[reasoning_options]]
@@ -10,7 +11,7 @@ type = "toggle"
 
 [[reasoning_options]]
 type = "effort"
-values = ["minimal", "low", "medium", "high"]
+values = ["minimal", "low", "medium", "high", "xhigh", "max"]
 
 [interleaved]
 field = "reasoning_content"
