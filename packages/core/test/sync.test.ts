@@ -3678,6 +3678,56 @@ test("derives a Merge Gateway reasoning toggle when the selected route supports 
   expect(model).toMatchObject({ reasoning_options: [{ type: "toggle" }] });
 });
 
+test("syncs Merge Gateway explicitly advertised thinking budgets", () => {
+  const selected = mergeGatewayVendor();
+  selected.capabilities.supports_reasoning = true;
+  selected.capabilities.reasoning = {
+    configurable: true,
+    disable_supported: true,
+    default_enabled: false,
+    controls: ["thinking.budget_tokens"],
+    output_style: "reasoning_content",
+  };
+  const source = mergeGatewayModel({ vendors: { openai: selected } });
+  const translated = mergeGateway.translateModel(source, {
+    existing: () => ({ reasoning: true, reasoning_options: [] }),
+    authored: () => undefined,
+  });
+  expect(translated?.model.reasoning_options).toEqual([
+    { type: "toggle" },
+    { type: "budget_tokens" },
+  ]);
+  expect(translated?.header).toStartWith('# Toggle: thinking.type = "enabled"|"disabled"');
+
+  selected.capabilities.reasoning.disable_supported = false;
+  expect(buildMergeGatewayModel(source, { reasoning: true })?.reasoning_options).toEqual([
+    { type: "budget_tokens" },
+  ]);
+});
+
+test("does not infer Merge Gateway budgets from other controls or output limits", () => {
+  for (const controls of [undefined, [], ["thinking"], ["max_tokens"], ["reasoning.effort"]]) {
+    const selected = mergeGatewayVendor();
+    selected.capabilities.reasoning = { configurable: true, controls };
+    const model = buildMergeGatewayModel(mergeGatewayModel({ vendors: { openai: selected } }), {
+      reasoning: true,
+      reasoning_options: [],
+    });
+    expect(model?.reasoning_options).toEqual([]);
+  }
+});
+
+test("preserves curated Merge Gateway controls when a budget is advertised", () => {
+  const selected = mergeGatewayVendor();
+  selected.capabilities.reasoning = { controls: ["thinking.budget_tokens"] };
+  const reasoning_options = [{ type: "effort" as const, values: ["high"] }];
+  const model = buildMergeGatewayModel(mergeGatewayModel({ vendors: { openai: selected } }), {
+    reasoning: true,
+    reasoning_options,
+  });
+  expect(model?.reasoning_options).toEqual(reasoning_options);
+});
+
 // Effort control yields toggle + effort, not a bare toggle (claude-opus-5 regression).
 test("derives Merge Gateway toggle + effort from an effort control", () => {
   const selected = mergeGatewayVendor({
