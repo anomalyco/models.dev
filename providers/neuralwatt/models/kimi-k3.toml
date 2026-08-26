@@ -10,19 +10,19 @@
 # https://platform.kimi.ai/docs/guide/use-reasoning-effort
 base_model = "moonshotai/kimi-k3"
 
+[interleaved]
+field = "reasoning_content"
+
 [[reasoning_options]]
-type = "toggle" # API: {"chat_template_kwargs": {"enable_thinking": false}}
+type = "toggle"
 
 [[reasoning_options]]
 type = "effort"
 values = ["low", "high", "max"]
 
-[interleaved]
-field = "reasoning_content"
-
 [cost]
-input = 3.0
-output = 15.0
+input = 3
+output = 15
 cache_read = 0.3
 
 [limit]
@@ -31,4 +31,3 @@ output = 1_048_560
 
 [modalities]
 input = ["text", "image"]
-output = ["text"]

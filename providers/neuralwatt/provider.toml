@@ -7,8 +7,8 @@ npm = "@ai-sdk/openai-compatible"
 # accepts `reasoning_effort`, with the model-specific normalization documented.
 # Flex tier uses either a `-flex` model ID or `service_tier = "flex"` and
 # requires `stream = true`; non-streaming requests fall through to the standard
-# tier. The official Energy Methodology docs currently state a 0.5 flex pricing
-# multiplier.
+# tier. The flex tier is billed at a 0.65 pricing multiplier (35% off standard);
+# see the Flex Tier guide.
 # https://portal.neuralwatt.com/docs/api/chat-completions (accessed 2026-06-25)
 # https://portal.neuralwatt.com/docs/guides/flex-tier
 # https://portal.neuralwatt.com/docs/energy-methodology (accessed 2026-06-28)

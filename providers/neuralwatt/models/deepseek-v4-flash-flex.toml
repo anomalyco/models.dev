@@ -1,16 +1,20 @@
 # Reasoning is off by default and controlled by reasoning_effort alone;
 # "none" disables thinking (aliases: xhigh->max, medium->high, low->high,
 # minimal->high).
+# Flex tier: async/queued processing at a 0.65 pricing multiplier (35% off) vs
+# deepseek-v4-flash. Requires stream = true (non-streaming requests fall
+# through to the standard tier).
 base_model = "deepseek/deepseek-v4-flash-0731"
+name = "DeepSeek V4 Flash Flex"
 
 [[reasoning_options]]
 type = "effort"
 values = ["none", "high", "max"]
 
 [cost]
-input = 0.14
-output = 0.28
-cache_read = 0.028
+input = 0.091
+output = 0.182
+cache_read = 0.0182
 
 [limit]
 context = 1_048_560

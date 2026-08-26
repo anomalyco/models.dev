@@ -1,0 +1,16 @@
+# Fast tier: low-latency serving with a minimal thinking budget
+# (thinking_token_budget = 64 injected server-side).
+base_model = "moonshotai/kimi-k2.7-code"
+name = "Kimi K2.7 Code Fast"
+reasoning_options = []
+
+[cost]
+input = 0.95
+output = 4
+cache_read = 0.095
+
+[limit]
+context = 262_128
+
+[modalities]
+input = ["text", "image"]
