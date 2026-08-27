@@ -1,0 +1,15 @@
+# Toggle: enable_thinking = true|false
+# Aixy forwards this route to alibaba without translating the model payload.
+# Reasoning controls mirror providers/alibaba/models/qwen3.6-flash.toml.
+base_model = "alibaba/qwen3.6-flash"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "budget_tokens"
+
+[cost]
+input = 0.1875
+output = 1.125
+cache_write = 0.234375

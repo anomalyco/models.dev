@@ -1,0 +1,15 @@
+# Sources:
+# - https://blog.google/innovation-and-ai/models-and-research/gemini-models/introducing-gemini-3-7-flash/
+# - https://ai.google.dev/gemini-api/docs/pricing
+# - https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/thinking
+base_model = "google/gemini-3.7-flash"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high"]
+
+[cost]
+input = 0.75
+output = 3.75
+cache_read = 0.075
+input_audio = 0.75
