@@ -1,0 +1,37 @@
+# Preview rollout: deepseek-v4-pro is in private preview on Neuralwatt —
+# visible to paid users after requesting access per model card, per the
+# Preview Models guide. Pricing, output cap, and cache-read from the
+# authenticated GET /v1/models metadata (checked 2026-08-27); V4-Pro is not
+# yet in the public catalog or token-pricing table.
+# Reasoning per the chat-completions per-model table (docs verified against
+# the live API on 2026-08-26): reasoning_effort accepts none|low|high|max as
+# distinct levels with low as the default (reasoning on by default); aliases
+# medium/minimal map to low and xhigh maps to high. thinking_token_budget is
+# accepted on this model (unlike deepseek-v4-flash, which rejects it); no
+# bounds or disable sentinel documented.
+# https://portal.neuralwatt.com/docs/api/chat-completions
+# https://portal.neuralwatt.com/docs/guides/preview-models
+base_model = "deepseek/deepseek-v4-pro"
+status = "beta"
+
+# Effort: reasoning_effort = none|low|high|max (off is effort=none; aliases
+# medium/minimal -> low, xhigh -> high)
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "high", "max"]
+
+# Budget: thinking_token_budget (integer reasoning tokens)
+[[reasoning_options]]
+type = "budget_tokens"
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 1.0
+output = 3.0
+cache_read = 0.1
+
+[limit]
+context = 1_048_560
+output = 393_216

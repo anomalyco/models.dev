@@ -8,7 +8,8 @@ values = ["medium", "high", "xhigh"]
 input = 30
 output = 180
 
-[[cost.tiers]]
-tier = { size = 272000 }
-input = 60
-output = 270
+[limit]
+context = 1_000_000
+
+[provider]
+npm = "@ai-sdk/openai"

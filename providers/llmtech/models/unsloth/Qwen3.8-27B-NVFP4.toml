@@ -1,0 +1,23 @@
+# Reasoning wire (OpenAI-compatible chat completions at https://api.llmtech.eu/v1):
+# Toggle: chat_template_kwargs.enable_thinking = true | false.
+# Effort: chat_template_kwargs.reasoning_effort = "low" | "medium" | "xhigh".
+# Non-streaming responses carry reasoning text in the `reasoning` field;
+# streaming deltas use `reasoning_content`.
+
+base_model = "alibaba/qwen3.8-27b"
+attachment = false
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "xhigh"]
+
+[cost]
+input = 0.25
+output = 2.09
+cache_read = 0.04
+
+[modalities]
+input = ["text"]

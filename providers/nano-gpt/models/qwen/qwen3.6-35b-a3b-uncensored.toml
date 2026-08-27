@@ -4,10 +4,11 @@ family = "qwen3.6"
 release_date = "2026-08-21"
 last_updated = "2026-08-21"
 attachment = true
-reasoning = false
+reasoning = true
 tool_call = true
 structured_output = true
 open_weights = true
+reasoning_options = []
 
 [cost]
 input = 0.15
@@ -15,8 +16,8 @@ output = 0.5
 cache_read = 0.075
 
 [limit]
-context = 65_536
-input = 65_536
+context = 262_144
+input = 262_144
 output = 32_768
 
 [modalities]

@@ -8,3 +8,9 @@ values = ["none", "low", "medium", "high", "xhigh"]
 input = 0.75
 output = 4.5
 cache_read = 0.075
+
+[limit]
+context = 128_000
+
+[provider]
+npm = "@ai-sdk/openai"

@@ -1,0 +1,40 @@
+# Preview rollout: qwen-3.8-27b is in preview on Neuralwatt — early-access
+# program, granted via the portal enroll page; absent from the public
+# /v1/models catalog until access is granted.
+# Effort: reasoning_effort = none|low|medium|xhigh (default xhigh, reasoning
+# on by default); aliases max/xhigh/high -> xhigh and minimal -> low, per the
+# chat-completions per-model table (docs verified against the live API on
+# 2026-08-26). Off is effort=none, so no separate toggle.
+# Budget: thinking_token_budget (integer reasoning tokens) is accepted on this
+# model.
+# Neuralwatt serves text+image input only (lab metadata also lists video).
+# Pricing, context, output cap, and effort ladder from the model page and the
+# authenticated GET /v1/models metadata (checked 2026-08-27):
+# https://portal.neuralwatt.com/models/qwen-3.8-27b
+# https://portal.neuralwatt.com/docs/api/chat-completions
+# https://portal.neuralwatt.com/docs/guides/preview-models
+base_model = "alibaba/qwen3.8-27b"
+status = "beta"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "xhigh"]
+
+[[reasoning_options]]
+type = "budget_tokens"
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.45
+output = 3.2
+cache_read = 0.25
+
+[limit]
+context = 262_128
+output = 65_536
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

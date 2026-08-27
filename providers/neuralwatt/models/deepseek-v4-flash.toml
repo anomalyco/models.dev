@@ -1,14 +1,24 @@
+# Pricing from GET /v1/models metadata.pricing, the effective billed rate
+# (checked 2026-08-27); the pricing page shows the same rates with cached
+# input rounded to $0.03. Previously listed here at $0.104/$0.207/$0.026.
+# Effort: reasoning_effort = none|high|max (default none, reasoning off by
+# default; aliases low/minimal/medium -> high, xhigh -> max) per the
+# chat-completions per-model table, verified against the live API on
+# 2026-08-26. Off is effort=none, so no separate toggle. thinking_token_budget
+# is rejected with a 400 on this model, so it is not declared.
+# https://portal.neuralwatt.com/docs/api/models
+# https://portal.neuralwatt.com/pricing
+# https://portal.neuralwatt.com/docs/api/chat-completions
 base_model = "deepseek/deepseek-v4-flash"
-name = "DeepSeek V4 Flash"
 
 [[reasoning_options]]
 type = "effort"
-values = ["high", "max"]
+values = ["none", "high", "max"]
 
 [cost]
-input = 0.104
-output = 0.207
-cache_read = 0.026
+input = 0.14
+output = 0.28
+cache_read = 0.028
 
 [limit]
 context = 1_048_560

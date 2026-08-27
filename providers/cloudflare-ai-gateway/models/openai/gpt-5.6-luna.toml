@@ -1,16 +1,17 @@
-# Pricing: https://developers.openai.com/api/docs/pricing (Terra/Luna cut 2026-07-30)
 base_model = "openai/gpt-5.6-luna"
-reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh", "max"] }]
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "xhigh", "max"]
 
 [cost]
-input = 0.20
-output = 1.20
+input = 0.2
+output = 1.2
 cache_read = 0.02
 cache_write = 0.25
 
-[[cost.tiers]]
-tier = { size = 272_000 }
-input = 0.40
-output = 1.80
-cache_read = 0.04
-cache_write = 0.50
+[limit]
+context = 1_050_000
+
+[provider]
+npm = "@ai-sdk/openai"

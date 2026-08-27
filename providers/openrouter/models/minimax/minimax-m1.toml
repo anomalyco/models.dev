@@ -1,3 +1,5 @@
+# Toggle: reasoning.enabled = true|false
+# https://openrouter.ai/docs/guides/best-practices/reasoning-tokens
 name = "MiniMax M1"
 description = "MiniMax model for chat, coding, office work, and agentic tasks"
 family = "minimax"
@@ -10,7 +12,9 @@ tool_call = true
 structured_output = false
 knowledge = "2024-06-30"
 open_weights = false
-reasoning_options = []
+
+[[reasoning_options]]
+type = "toggle"
 
 [cost]
 input = 0.55

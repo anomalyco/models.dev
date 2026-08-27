@@ -1,0 +1,21 @@
+# Model ID verified against POST /api/v3/chat/completions (2026-08-27): `deepseek-v4-flash-ga-260731`
+# CNY→USD rate: 6.737012, 2026-08-26, source: https://open.er-api.com/v6/latest/USD
+# CNY list price source: https://www.volcengine.com/docs/82379/1544106
+# Toggle: thinking.type = enabled|disabled
+# Effort: reasoning_effort = minimal|low|medium|high
+base_model = "deepseek/deepseek-v4-flash-0731"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["minimal", "low", "medium", "high"]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.4453
+output = 1.3359
+cache_read = 0.01484

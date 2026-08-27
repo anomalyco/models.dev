@@ -32,6 +32,7 @@ import {
 import {
   buildEdenAIModel,
   collectFirstPartyBaseModels,
+  edenai,
   reasoningOptionsFor,
   resolveEdenAIBaseModel,
   type EdenAIModel,
@@ -473,7 +474,13 @@ test("parses CrossModel's nullable reasoning controls", () => {
   });
 });
 
-test("syncs CrossModel's explicit reasoning controls", () => {
+test("preserves CrossModel's toggle-only reasoning control", () => {
+  const model = buildCrossModel(crossModelModel(), undefined);
+  expect(model?.reasoning_options).toEqual([{ type: "toggle" }]);
+});
+
+test.each([{ off: false }, { off: true }])("syncs CrossModel's reasoning controls (effort includes none: $off)", ({ off }) => {
+  const effort = off ? ["none", "low", "high", "max"] as const : ["low", "high", "max"] as const;
   const model = buildCrossModel(
     crossModelModel({
       capabilities: {
@@ -481,7 +488,7 @@ test("syncs CrossModel's explicit reasoning controls", () => {
         reasoning: {
           supported: true,
           toggle: true,
-          effort: ["low", "high", "max"],
+          effort: [...effort],
           budget_tokens: { min: 1_024, max: 32_000 },
         },
       },
@@ -491,8 +498,8 @@ test("syncs CrossModel's explicit reasoning controls", () => {
 
   expect(model).toMatchObject({
     reasoning_options: [
-      { type: "toggle" },
-      { type: "effort", values: ["low", "high", "max"] },
+      ...off ? [] : [{ type: "toggle" }],
+      { type: "effort", values: effort },
       { type: "budget_tokens", min: 1_024, max: 32_000 },
     ],
   });
@@ -1221,6 +1228,31 @@ test("syncs Tinfoil cached-input pricing from the public model catalog", () => {
     },
     limit: { context: 384_000 },
   });
+});
+
+test.each([undefined, "zhipuai/glm-5.2"])("syncs Tinfoil reasoning with base model %s", (base_model) => {
+  const existing = { ...existingTinfoilGLM, base_model };
+  const enabled = buildTinfoilModel(tinfoilModel(), { ...existing, reasoning: false });
+  expect(enabled.reasoning_options).toEqual(existing.reasoning_options);
+  // Factored models inherit true from the lab; standalone models must author it.
+  expect(enabled.reasoning).toBe(base_model === undefined ? true : undefined);
+
+  const disabled = buildTinfoilModel(tinfoilModel({ reasoning: false }), existing);
+  expect(disabled.reasoning).toBe(false);
+  expect(disabled.reasoning_options).toBeUndefined();
+});
+
+test("requires authored Tinfoil controls instead of inventing an empty set", () => {
+  expect(() => buildTinfoilModel(tinfoilModel(), {
+    ...existingTinfoilGLM,
+    reasoning_options: undefined,
+  })).toThrow("requires hand-authored reasoning_options");
+
+  const model = buildTinfoilModel(tinfoilModel(), {
+    ...existingTinfoilGLM,
+    reasoning_options: [],
+  });
+  expect(model.reasoning_options).toEqual([]);
 });
 
 test("removes stale Tinfoil cache pricing when the public catalog omits it", () => {
@@ -2318,6 +2350,32 @@ test("factors new Hyper models against unique models/ metadata", () => {
   });
 });
 
+test("deduplicates Eden AI case-only IDs without losing context metadata", () => {
+  const lowercase = edenAIModel({
+    id: "flexai/deepseek-v4-flash-0731",
+    model_name: "deepseek-v4-flash-0731",
+    owned_by: "flexai",
+    context_length: null,
+  });
+  const uppercase = edenAIModel({
+    ...lowercase,
+    id: "flexai/DeepSeek-V4-Flash-0731",
+    model_name: "DeepSeek-V4-Flash-0731",
+    context_length: 786_432,
+  });
+
+  for (const data of [[lowercase, uppercase], [uppercase, lowercase]]) {
+    const models = edenai.parseModels({ object: "list", data });
+    expect(models).toEqual([{ ...lowercase, context_length: 786_432 }]);
+    expect(edenai.translateModel(models[0]!, { existing: () => undefined, authored: () => undefined })).toMatchObject({
+      id: lowercase.id,
+      model: { base_model: "deepseek/deepseek-v4-flash-0731", limit: { context: 786_432 } },
+    });
+  }
+
+  expect(edenai.parseModels({ object: "list", data: [uppercase] })).toEqual([uppercase]);
+});
+
 test("factors Eden AI models onto lab metadata and prices from list_pricing", () => {
   const model = edenAIModel({
     id: "openai/gpt-5.6-terra",
@@ -2350,9 +2408,8 @@ test("takes Eden AI reasoning options from the model's own lab entry", () => {
   ]);
 });
 
-test("skips Eden AI models whose reasoning control has no effort equivalent", () => {
-  // Lab and OpenRouter both expose these through budget_tokens, which Eden AI
-  // has no request field for.
+test("skips new Eden AI models whose reasoning control has no effort equivalent", () => {
+  // The sync does not yet map this route's budget control to Eden AI's API.
   expect(reasoningOptionsFor("google/gemini-2.5-pro")).toBeUndefined();
   expect(
     buildEdenAIModel(
@@ -2363,6 +2420,102 @@ test("skips Eden AI models whose reasoning control has no effort equivalent", ()
       }),
     ),
   ).toBeUndefined();
+});
+
+test("Eden AI preserves authored controls when reasoning mapping is unresolved", () => {
+  const authored: NonNullable<ExistingModel["reasoning_options"]>[] = [
+    [],
+    [{ type: "toggle" }],
+    [{ type: "effort", values: ["high"] }],
+    [{ type: "toggle" }, { type: "budget_tokens" }],
+  ];
+  for (const [id, base] of [
+    ["zai/glm-5", "zhipuai/glm-5"],
+    ["moonshot/kimi-k2.6", "moonshotai/kimi-k2.6"],
+    ["minimax/MiniMax-M3", "minimax/MiniMax-M3"],
+    ["deepinfra/nvidia/Nemotron-3-Nano-30B-A3B", "nvidia/nemotron-3-nano-30b-a3b"],
+    ["google/gemini-2.5-pro", "google/gemini-2.5-pro"],
+  ] as const) {
+    const model = edenAIModel({
+      id,
+      owned_by: id.slice(0, id.indexOf("/")),
+      model_name: id.slice(id.indexOf("/") + 1),
+    });
+    expect(buildEdenAIModel(model)).toBeUndefined();
+    for (const reasoning_options of authored) {
+      expect(buildEdenAIModel(model, { base_model: base, reasoning_options })).toMatchObject({
+        base_model: base,
+        reasoning_options,
+      });
+    }
+  }
+});
+
+test("Eden AI sync keeps listed models with unresolved reasoning controls", async () => {
+  const root = await mkdtemp(path.join(tmpdir(), "sync-edenai-"));
+  const modelsDir = path.join(root, "providers", "edenai", "models");
+  const repo = path.join(import.meta.dirname, "..", "..", "..");
+  const files = [
+    ["openai/gpt-4o-mini", "openai/gpt-4o-mini"],
+    ["zai/glm-5", "zhipuai/glm-5"],
+    ["retired/model", "openai/gpt-4o-mini"],
+  ] as const;
+
+  try {
+    for (const [id, base] of files) {
+      const destination = path.join(modelsDir, `${id}.toml`);
+      const metadata = path.join(root, "models", `${base}.toml`);
+      await mkdir(path.dirname(destination), { recursive: true });
+      await mkdir(path.dirname(metadata), { recursive: true });
+      await copyFile(path.join(repo, "models", `${base}.toml`), metadata);
+      await copyFile(
+        path.join(repo, "providers", "edenai", "models", `${id === "retired/model" ? "openai/gpt-4o-mini" : id}.toml`),
+        destination,
+      );
+    }
+    const glmPath = path.join(modelsDir, "zai/glm-5.toml");
+    const authored = (await readFile(glmPath, "utf8")).replace(
+      "reasoning_options = []",
+      'reasoning_options = [{ type = "toggle" }]',
+    );
+    const header = "# Toggle: extra_body.thinking.type = enabled|disabled\n";
+    await Bun.write(glmPath, header + authored);
+    const supported = edenAIModel({
+      id: "openai/gpt-4o-mini",
+      model_name: "gpt-4o-mini",
+      owned_by: "openai",
+      list_pricing: { input_cost_per_token: 0.000123, output_cost_per_token: 0.000456 },
+    });
+    const unresolved = edenAIModel({ id: "zai/glm-5", model_name: "glm-5", owned_by: "zai" });
+    const provider = {
+      ...edenai,
+      modelsDir,
+      async fetchModels() {
+        return { object: "list", data: [
+          supported,
+          { ...supported, id: "openai/gpt-4o-mini@us" },
+          unresolved,
+          { ...unresolved, id: "zai/glm-5@us" },
+        ] };
+      },
+    };
+
+    const result = await syncProvider(provider);
+    expect(result).toMatchObject({ created: 1, deleted: 1 });
+    expect(result.files.filter((file) => file.status === "deleted").map((file) => file.path)).toEqual([
+      path.join(modelsDir, "retired/model.toml"),
+    ]);
+    const content = await readFile(glmPath, "utf8");
+    expect(content).toStartWith(header);
+    expect(Bun.TOML.parse(content)).toMatchObject({
+      base_model: "zhipuai/glm-5",
+      reasoning_options: [{ type: "toggle" }],
+    });
+    expect(await Bun.file(path.join(modelsDir, "zai/glm-5@us.toml")).exists()).toBe(false);
+    expect(await Bun.file(path.join(modelsDir, "openai/gpt-4o-mini@us.toml")).exists()).toBe(true);
+  } finally {
+    await rm(root, { recursive: true, force: true });
+  }
 });
 
 test("omits Eden AI reasoning options for non-reasoning models", () => {
@@ -2446,8 +2599,8 @@ test("keeps only the first-party Eden AI route when the lab's own API is relayed
 
   const firstParty = collectFirstPartyBaseModels([bedrock, direct]);
   expect(firstParty).toEqual(new Set(["anthropic/claude-opus-5"]));
-  expect(buildEdenAIModel(bedrock, firstParty)).toBeUndefined();
-  expect(buildEdenAIModel(direct, firstParty)).toMatchObject({
+  expect(buildEdenAIModel(bedrock, undefined, firstParty)).toBeUndefined();
+  expect(buildEdenAIModel(direct, undefined, firstParty)).toMatchObject({
     base_model: "anthropic/claude-opus-5",
   });
 });
@@ -2464,7 +2617,7 @@ test("keeps every Eden AI route for models with no first-party relay", () => {
   const firstParty = collectFirstPartyBaseModels(models);
   expect(firstParty.size).toBe(0);
   for (const model of models) {
-    expect(buildEdenAIModel(model, firstParty)).toMatchObject({
+    expect(buildEdenAIModel(model, undefined, firstParty)).toMatchObject({
       base_model: "openai/gpt-oss-120b",
     });
   }
@@ -2763,6 +2916,45 @@ test("syncs OpenRouter reasoning efforts from model metadata", () => {
   });
 });
 
+test("syncs OpenRouter toggles without an effort selector", () => {
+  for (const supports_max_tokens of [undefined, true]) {
+    const source = openRouterModel({
+      reasoning: { mandatory: false, supports_max_tokens },
+    });
+    const translated = openrouter.translateModel(source, {
+      existing: () => undefined,
+      authored: () => undefined,
+    });
+    expect(translated?.model.reasoning_options).toEqual([
+      { type: "toggle" },
+      ...(supports_max_tokens ? [{ type: "budget_tokens" }] : []),
+    ]);
+    expect(translated?.header).toStartWith("# Toggle: reasoning.enabled = true|false\n");
+  }
+});
+
+test("does not derive OpenRouter controls for non-reasoning models", () => {
+  const model = buildOpenRouterModel(openRouterModel({
+    supported_parameters: ["temperature"],
+    reasoning: { mandatory: false, supports_max_tokens: true },
+  }), { reasoning_options: [{ type: "toggle" }] });
+  expect(model.reasoning).toBe(false);
+  expect(model.reasoning_options).toBeUndefined();
+});
+
+test("does not add OpenRouter toggles to mandatory or effort-none models", () => {
+  for (const reasoning of [
+    { mandatory: true, supports_max_tokens: true },
+    { mandatory: true, supported_efforts: ["none", "high"] as const },
+    { mandatory: false, supported_efforts: ["none", "high"] as const },
+    { mandatory: false, supported_efforts: null },
+  ]) {
+    const [source] = openrouter.parseModels({ data: [{ ...openRouterModel(), reasoning }] });
+    const model = buildOpenRouterModel(source!, undefined);
+    expect(model.reasoning_options?.some((option) => option.type === "toggle")).toBe(false);
+  }
+});
+
 test("uses OpenRouter model context when top provider reports a shorter context", () => {
   const model = buildOpenRouterModel(openRouterModel({
     context_length: 1_048_576,
@@ -2811,6 +3003,10 @@ test("factors OpenRouter Pro routes against canonical OpenAI metadata", () => {
   });
   expect("family" in model).toBe(false);
   expect("release_date" in model).toBe(false);
+});
+
+test("resolves SpaceXAI provider IDs to canonical xAI metadata", () => {
+  expect(resolveCanonicalBaseModel("spacexai/grok-4.5")).toBe("xai/grok-4.5");
 });
 
 // Ensures Merge Gateway namespaces reuse the matching canonical model metadata.
@@ -3651,6 +3847,56 @@ test("derives a Merge Gateway reasoning toggle when the selected route supports 
   expect(model).toMatchObject({ reasoning_options: [{ type: "toggle" }] });
 });
 
+test("syncs Merge Gateway explicitly advertised thinking budgets", () => {
+  const selected = mergeGatewayVendor();
+  selected.capabilities.supports_reasoning = true;
+  selected.capabilities.reasoning = {
+    configurable: true,
+    disable_supported: true,
+    default_enabled: false,
+    controls: ["thinking.budget_tokens"],
+    output_style: "reasoning_content",
+  };
+  const source = mergeGatewayModel({ vendors: { openai: selected } });
+  const translated = mergeGateway.translateModel(source, {
+    existing: () => ({ reasoning: true, reasoning_options: [] }),
+    authored: () => undefined,
+  });
+  expect(translated?.model.reasoning_options).toEqual([
+    { type: "toggle" },
+    { type: "budget_tokens" },
+  ]);
+  expect(translated?.header).toStartWith('# Toggle: thinking.type = "enabled"|"disabled"');
+
+  selected.capabilities.reasoning.disable_supported = false;
+  expect(buildMergeGatewayModel(source, { reasoning: true })?.reasoning_options).toEqual([
+    { type: "budget_tokens" },
+  ]);
+});
+
+test("does not infer Merge Gateway budgets from other controls or output limits", () => {
+  for (const controls of [undefined, [], ["thinking"], ["max_tokens"], ["reasoning.effort"]]) {
+    const selected = mergeGatewayVendor();
+    selected.capabilities.reasoning = { configurable: true, controls };
+    const model = buildMergeGatewayModel(mergeGatewayModel({ vendors: { openai: selected } }), {
+      reasoning: true,
+      reasoning_options: [],
+    });
+    expect(model?.reasoning_options).toEqual([]);
+  }
+});
+
+test("preserves curated Merge Gateway controls when a budget is advertised", () => {
+  const selected = mergeGatewayVendor();
+  selected.capabilities.reasoning = { controls: ["thinking.budget_tokens"] };
+  const reasoning_options = [{ type: "effort" as const, values: ["high"] }];
+  const model = buildMergeGatewayModel(mergeGatewayModel({ vendors: { openai: selected } }), {
+    reasoning: true,
+    reasoning_options,
+  });
+  expect(model?.reasoning_options).toEqual(reasoning_options);
+});
+
 // Effort control yields toggle + effort, not a bare toggle (claude-opus-5 regression).
 test("derives Merge Gateway toggle + effort from an effort control", () => {
   const selected = mergeGatewayVendor({
@@ -4066,6 +4312,72 @@ test("Vercel Claude Opus fast variants factor onto base opus metadata", () => {
   expect(synced).not.toHaveProperty("family");
 });
 
+test("Vercel empty existing reasoning_options falls back to the route base menu", () => {
+  const [model] = vercel.parseModels({
+    data: [{
+      id: "minimax/minimax-m2.7-free",
+      name: "MiniMax M2.7 (Free)",
+      created: 1_784_160_000,
+      context_window: 200_000,
+      max_tokens: 128_000,
+      type: "language",
+      tags: ["reasoning", "tool-use"],
+      pricing: { input: "0", output: "0" },
+    }],
+  });
+
+  const translated = vercel.translateModel(model!, {
+    existing(id) {
+      if (id === "minimax/minimax-m2.7-free") return { reasoning_options: [] };
+      if (id === "minimax/minimax-m2.7") {
+        return { reasoning_options: [{ type: "effort", values: ["low", "high"] }] };
+      }
+      return undefined;
+    },
+    authored() {
+      return undefined;
+    },
+  });
+
+  expect(translated?.model).toMatchObject({
+    reasoning_options: [{ type: "effort", values: ["low", "high"] }],
+  });
+});
+
+test("Vercel preserves a non-empty existing reasoning_options over the base menu", () => {
+  const [model] = vercel.parseModels({
+    data: [{
+      id: "minimax/minimax-m2.7-free",
+      name: "MiniMax M2.7 (Free)",
+      created: 1_784_160_000,
+      context_window: 200_000,
+      max_tokens: 128_000,
+      type: "language",
+      tags: ["reasoning", "tool-use"],
+      pricing: { input: "0", output: "0" },
+    }],
+  });
+
+  const translated = vercel.translateModel(model!, {
+    existing(id) {
+      if (id === "minimax/minimax-m2.7-free") {
+        return { reasoning_options: [{ type: "toggle" }] };
+      }
+      if (id === "minimax/minimax-m2.7") {
+        return { reasoning_options: [{ type: "effort", values: ["low", "high"] }] };
+      }
+      return undefined;
+    },
+    authored() {
+      return undefined;
+    },
+  });
+
+  expect(translated?.model).toMatchObject({
+    reasoning_options: [{ type: "toggle" }],
+  });
+});
+
 test("OpenRouter Claude Opus fast variants factor onto base opus metadata", () => {
   const model = buildOpenRouterModel(openRouterModel({
     id: "anthropic/claude-opus-5-fast",
@@ -4241,7 +4553,6 @@ test("syncs EmpirioLabs pricing tiers and reasoning controls", () => {
     base_model: "minimax/MiniMax-M3",
     structured_output: true,
     reasoning_options: [
-      { type: "toggle" },
       { type: "effort", values: ["none", "low", "medium", "high", "max"] },
       { type: "budget_tokens", min: 1_024, max: 32_768 },
     ],

@@ -1,8 +1,15 @@
+# Toggle: reasoning.enabled = true|false
+# https://openrouter.ai/docs/guides/best-practices/reasoning-tokens
 base_model = "zhipuai/glm-4.6"
 structured_output = true
-reasoning_options = []
+
+[[reasoning_options]]
+type = "toggle"
 
 [cost]
-input = 0.5
-output = 2
-cache_read = 0.1
+input = 0.43
+output = 1.75
+cache_read = 0.08
+
+[limit]
+output = 16_384

@@ -145,7 +145,9 @@ export function buildVercelModel(
     last_updated: existing?.last_updated ?? releaseDate,
     attachment: existing?.attachment ?? (tags.has("vision") || tags.has("file-input")),
     reasoning: existing?.reasoning ?? tags.has("reasoning"),
-    reasoning_options: existing?.reasoning_options ?? base?.reasoning_options,
+    reasoning_options: existing?.reasoning_options?.length
+      ? existing.reasoning_options
+      : base?.reasoning_options,
     temperature: existing?.temperature,
     tool_call: model.type === "language"
       ? existing?.tool_call ?? tags.has("tool-use")

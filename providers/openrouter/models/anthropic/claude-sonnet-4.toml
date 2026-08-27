@@ -1,4 +1,5 @@
-reasoning_options = [{ type = "toggle" }, { type = "budget_tokens", min = 1024, max = 63999 }]
+# Toggle: reasoning.enabled = true|false
+# https://openrouter.ai/docs/guides/best-practices/reasoning-tokens
 name = "Claude Sonnet 4"
 description = "Balanced Claude model for coding, analysis, agent workflows, and cost control"
 family = "claude-sonnet"
@@ -11,6 +12,9 @@ tool_call = true
 structured_output = false
 knowledge = "2025-01-31"
 open_weights = false
+
+[[reasoning_options]]
+type = "toggle"
 
 [cost]
 input = 3

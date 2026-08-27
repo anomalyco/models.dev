@@ -4,3 +4,9 @@ base_model = "openai/gpt-4.1"
 input = 2
 output = 8
 cache_read = 0.5
+
+[limit]
+context = 1_047_576
+
+[provider]
+npm = "@ai-sdk/openai"

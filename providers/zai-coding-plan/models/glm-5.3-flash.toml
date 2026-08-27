@@ -1,0 +1,17 @@
+base_model = "zhipuai/glm-5.3-flash"
+# Effort levels mirror the base GLM-5.3-Flash (low, high, max).
+# Included in the GLM Coding Lite plan and billed against plan credits, so no
+# per-token cost (verified against https://api.z.ai/api/coding/paas/v4 2026-08-26).
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0
+output = 0
+cache_read = 0
+cache_write = 0

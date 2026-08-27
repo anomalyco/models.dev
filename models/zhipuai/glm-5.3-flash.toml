@@ -1,0 +1,19 @@
+name = "GLM-5.3-Flash"
+description = "Native multimodal GLM model for efficient coding and long-horizon agent tasks"
+family = "glm"
+release_date = "2026-08-26"
+last_updated = "2026-08-26"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[limit]
+context = 1_000_000
+output = 131_072
+
+[modalities]
+input = ["text", "image", "video", "pdf"]
+output = ["text"]

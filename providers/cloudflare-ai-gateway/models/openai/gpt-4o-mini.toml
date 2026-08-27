@@ -4,3 +4,9 @@ base_model = "openai/gpt-4o-mini"
 input = 0.075
 output = 0.3
 cache_read = 0.0375
+
+[limit]
+context = 128_000
+
+[provider]
+npm = "@ai-sdk/openai"

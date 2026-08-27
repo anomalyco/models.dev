@@ -3,10 +3,16 @@ structured_output = true
 
 [[reasoning_options]]
 type = "budget_tokens"
-min = 1024
+min = 1_024
 
 [cost]
 input = 1
 output = 5
 cache_read = 0.1
 cache_write = 1.25
+
+[limit]
+context = 200_000
+
+[provider]
+npm = "@ai-sdk/anthropic"

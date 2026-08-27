@@ -1,0 +1,28 @@
+# Flex-tier variant of deepseek-v4-flash: same model, context window
+# (1,048,560), and output cap (65,536) as the standard tier; requested via the
+# `-flex` model ID or service_tier="flex" and requires stream=true
+# (non-streaming requests fall through to the standard tier).
+# Cost is the flex rate: 0.65x of standard pricing (35% off) per the flex-tier
+# guide, applied to the standard rates advertised by GET /v1/models
+# ($0.14/$0.28/$0.028, checked 2026-08-27).
+# Reasoning matches the standard tier: reasoning_effort = none|high|max
+# (default none, reasoning off by default; aliases low/minimal/medium -> high,
+# xhigh -> max). thinking_token_budget is rejected with a 400 on V4-Flash
+# (and -flex), so it is not declared.
+# https://portal.neuralwatt.com/docs/guides/flex-tier
+# https://portal.neuralwatt.com/docs/api/chat-completions
+base_model = "deepseek/deepseek-v4-flash"
+name = "DeepSeek V4 Flash Flex"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "high", "max"]
+
+[cost]
+input = 0.091
+output = 0.182
+cache_read = 0.0182
+
+[limit]
+context = 1_048_560
+output = 65_536

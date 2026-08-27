@@ -1,4 +1,5 @@
 base_model = "openai/gpt-oss-120b"
+tool_call = false
 structured_output = false
 
 [[reasoning_options]]
@@ -6,8 +7,8 @@ type = "effort"
 values = ["low", "medium", "high"]
 
 [cost]
-input = 0.175485
-output = 0.70194
+input = 0.175035
+output = 0.70014
 
 [limit]
 context = 128_000

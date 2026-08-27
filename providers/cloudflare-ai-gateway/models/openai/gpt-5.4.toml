@@ -9,11 +9,8 @@ input = 2.5
 output = 15
 cache_read = 0.25
 
-[[cost.tiers]]
-tier = { size = 272000 }
-input = 5
-output = 22.5
-cache_read = 0.5
+[limit]
+context = 1_000_000
 
 [provider]
-npm = "ai-gateway-provider"
+npm = "@ai-sdk/openai"
