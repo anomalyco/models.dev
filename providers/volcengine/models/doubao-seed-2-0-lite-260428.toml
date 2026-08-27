@@ -4,7 +4,14 @@
 # Effort: reasoning_effort = none|minimal|low|medium|high|xhigh|max
 # none/minimal disable thinking, so no separate toggle: sending effort alone
 # already enables it, and thinking.type=disabled + a graded effort is rejected.
+# Output limit: the lab default is 32_000, but this host accepts up to 131_072
+# (verified 2026-08-27: max_tokens=131072 -> 200, 132000 -> 400 invalid), matching
+# what openrouter/kilo/nano-gpt already declare for this model. Overridden below.
 base_model = "bytedance-seed/seed-2.0-lite"
+
+[limit]
+context = 256_000
+output = 131_072
 
 [[reasoning_options]]
 type = "effort"
