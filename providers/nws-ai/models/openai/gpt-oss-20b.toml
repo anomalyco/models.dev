@@ -1,0 +1,15 @@
+# Price: served at no cost on this host, per the endpoints doc below.
+# Limits: output as confirmed by the endpoint operator for this deployment; context
+# matches the base model.
+# Sources (accessed 2026-09-01):
+# https://docs.nws.netways.de/en/ai/getting-started/endpoints/
+# https://docs.nws.netways.de/en/ai/reference/faq/
+base_model = "openai/gpt-oss-20b"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
+
+[cost]
+input = 0
+output = 0
+
+[limit]
+output = 131_072
