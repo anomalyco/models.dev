@@ -1,0 +1,59 @@
+name = "Ornith 1.5 35B A3B"
+description = "Open-weight 35B mixture-of-experts reasoning model (~3B active parameters per token) for agentic coding, tool use, and image understanding, from the Ornith-1.5 end-to-end self-improvement line"
+family = "ornith"
+release_date = "2026-08-20"
+last_updated = "2026-08-20"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = true
+license = "MIT"
+
+[limit]
+context = 262_144
+output = 131_072
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/ornith-ai/Ornith-1.5-35B-A3B"
+
+[[links]]
+label = "Model card"
+url = "https://huggingface.co/ornith-ai/Ornith-1.5-35B-A3B"
+type = "model_card"
+
+[[links]]
+label = "Announcement"
+url = "https://ornith.ai/ornith_1_5.html"
+type = "announcement"
+
+[[benchmarks]]
+name = "SWE-Bench Verified"
+score = 79.0
+metric = "percent resolved"
+source = "https://huggingface.co/ornith-ai/Ornith-1.5-35B-A3B"
+
+[[benchmarks]]
+name = "SWE-Bench Pro"
+score = 59.6
+metric = "percent resolved"
+source = "https://huggingface.co/ornith-ai/Ornith-1.5-35B-A3B"
+
+[[benchmarks]]
+name = "Terminal-Bench 2.1"
+score = 67.8
+metric = "percent resolved"
+variant = "Terminus-2"
+source = "https://huggingface.co/ornith-ai/Ornith-1.5-35B-A3B"
+
+[[benchmarks]]
+name = "GPQA Diamond"
+score = 89.2
+metric = "percent resolved"
+source = "https://huggingface.co/ornith-ai/Ornith-1.5-35B-A3B"
