@@ -80,9 +80,6 @@ export const baseten = {
     return {
       id: model.id,
       model: buildBasetenModel(model, existing, baseModel, authored),
-      header: model.id === "zai-org/GLM-5.3-Flash"
-        ? "# Effort: reasoning_effort = low|high|max; reasoning cannot be disabled.\n# https://docs.baseten.co/inference/model-apis/reasoning\n"
-        : undefined,
     };
   },
 } satisfies SyncProvider<BasetenModel>;
@@ -114,9 +111,6 @@ export function buildBasetenModel(
   baseModel = existing === undefined ? resolveBasetenBaseModel(model.id) : existing.base_model,
   authored?: ExistingModel,
 ): SyncedModel {
-  // Baseten documents these controls separately from its catalog capability flag.
-  // https://docs.baseten.co/inference/model-apis/reasoning
-  const glmFlash = model.id === "zai-org/GLM-5.3-Flash";
   const features = new Set(model.supported_features);
   const samplingParameters = new Set(model.supported_sampling_parameters);
   const input = modalities(model.input_modalities, existing?.modalities?.input ?? ["text"]);
@@ -158,16 +152,14 @@ export function buildBasetenModel(
     last_updated: existing?.last_updated,
     attachment: input.some((value) => value !== "text"),
     reasoning: features.has("reasoning") || existing?.reasoning,
-    reasoning_options: glmFlash
-      ? [{ type: "effort", values: ["low", "high", "max"] }]
-      : existing?.reasoning_options,
+    reasoning_options: existing?.reasoning_options,
     temperature: samplingParameters.has("temperature"),
     tool_call: features.has("tools") || existing?.tool_call,
     structured_output: features.has("structured_outputs") || existing?.structured_output,
     knowledge: existing?.knowledge,
     open_weights: existing?.open_weights,
     status: existing?.status,
-    interleaved: glmFlash ? { field: "reasoning_content" } : existing?.interleaved,
+    interleaved: existing?.interleaved,
     cost,
     limit,
     modalities: { input, output },
