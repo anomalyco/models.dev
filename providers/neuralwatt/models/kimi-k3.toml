@@ -9,13 +9,11 @@
 # https://portal.neuralwatt.com/docs/api/chat-completions
 # https://platform.kimi.ai/docs/guide/use-reasoning-effort
 base_model = "moonshotai/kimi-k3"
-
-[[reasoning_options]]
-type = "toggle" # API: {"chat_template_kwargs": {"enable_thinking": false}}
-
-[[reasoning_options]]
-type = "effort"
-values = ["low", "high", "max"]
+# Budget: thinking_token_budget (integer reasoning tokens)
+reasoning_options = [
+  { type = "effort", values = ["none", "low", "high", "max"] },
+  { type = "budget_tokens" },
+]
 
 [interleaved]
 field = "reasoning_content"

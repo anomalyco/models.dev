@@ -1,6 +1,10 @@
 base_model = "alibaba/qwen3.6-35b-a3b"
 name = "Qwen3.6 35B"
-reasoning_options = [{ type = "effort", values = ["none", "high"] }]
+# Budget: thinking_token_budget (integer reasoning tokens)
+reasoning_options = [
+  { type = "effort", values = ["none", "high"] },
+  { type = "budget_tokens" },
+]
 
 [interleaved]
 field = "reasoning_content"

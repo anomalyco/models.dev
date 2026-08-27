@@ -1,7 +1,11 @@
 base_model = "moonshotai/kimi-k3"
 name = "Kimi K3 Flex"
 description = "Kimi K3 on the flex tier: discounted, best-effort latency, requests may be held under load"
-reasoning_options = [{ type = "effort", values = ["none", "low", "high", "max"] }]
+# Budget: thinking_token_budget (integer reasoning tokens)
+reasoning_options = [
+  { type = "effort", values = ["none", "low", "high", "max"] },
+  { type = "budget_tokens" },
+]
 
 [interleaved]
 field = "reasoning_content"
