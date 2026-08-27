@@ -1,10 +1,7 @@
+# Always-on thinking; no TokenGo on/off or effort field (same as typical MiniMax-M2.5 peers).
 # Pricing (USD/MTok, accessed 2026-08-27):
 # - Public hub $0.30/$1.20: https://www.tokengo.com/models
 # - Exact console rates incl. cache $0.30/$1.20/$0.03 (TokenGo model table ratios)
-# Reasoning: TokenGo Quick Start does not document thinking controls
-# (https://www.tokengo.com/docs/documentation/getting-started/quickstart).
-# Copied lab ∩ openai-compat peers: always-on, no caller control ([])
-# Lab: MiniMax-M2.5 first-party (providers/minimax/models/MiniMax-M2.5.toml)
 base_model = "minimax/MiniMax-M2.5"
 reasoning_options = []
 

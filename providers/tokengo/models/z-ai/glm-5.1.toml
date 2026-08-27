@@ -1,10 +1,8 @@
+# Toggle: thinking.type = enabled|disabled
 # Pricing (USD/MTok, accessed 2026-08-27):
 # - Public hub $1.40/$4.40: https://www.tokengo.com/models
 # - Exact console rates incl. cache $1.40/$4.40/$0.26 (TokenGo model table ratios)
-# Reasoning: TokenGo Quick Start does not document a toggle
-# (https://www.tokengo.com/docs/documentation/getting-started/quickstart).
-# Copied lab ∩ openai-compat peers: thinking.type = enabled|disabled (no graded effort)
-# Lab: https://docs.z.ai/api-reference/llm/chat-completion
+# TokenGo OpenAI-compatible extra_body; same on/off as typical GLM-5.1 openai-compat peers.
 base_model = "zhipuai/glm-5.1"
 
 [[reasoning_options]]

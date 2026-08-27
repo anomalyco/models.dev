@@ -1,10 +1,8 @@
+# Toggle: thinking.type = enabled|disabled
 # Pricing (USD/MTok, accessed 2026-08-27):
 # - Public hub $0.95/$4.00: https://www.tokengo.com/models
 # - Exact console rates incl. cache $0.95/$4.00/$0.16 (TokenGo model table ratios)
-# Reasoning: TokenGo Quick Start does not document a toggle
-# (https://www.tokengo.com/docs/documentation/getting-started/quickstart).
-# Copied lab ∩ openai-compat peers: thinking.type = enabled|disabled (no graded effort)
-# Lab: https://platform.kimi.ai/docs/pricing/chat-k3
+# TokenGo OpenAI-compatible extra_body; same on/off as typical Kimi K2.6 openai-compat peers.
 base_model = "moonshotai/kimi-k2.6"
 
 [[reasoning_options]]

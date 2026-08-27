@@ -1,11 +1,9 @@
+# Toggle: enable_thinking true|false
 # Pricing (USD/MTok, accessed 2026-08-27):
 # - Public hub $0.40/$2.65: https://www.tokengo.com/models
 # - Exact console rates incl. cache $0.40/$2.65/$0.20 (TokenGo model table ratios)
-# Reasoning: TokenGo Quick Start does not document enable_thinking or thinking_budget
-# (https://www.tokengo.com/docs/documentation/getting-started/quickstart).
-# Toggle only — same-surface generic openai-compat relays (OpenRouter, Novita).
-# Dropped thinking_budget (DashScope-native; not documented on TokenGo).
-# Lab: https://www.alibabacloud.com/help/en/model-studio/model-pricing
+# TokenGo OpenAI-compatible extra_body; same on/off control as typical Qwen relays.
+# No thinking_budget on this host (generic relays omit DashScope budget).
 base_model = "alibaba/qwen3.5-397b-a17b"
 
 [[reasoning_options]]
