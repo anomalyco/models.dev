@@ -1,3 +1,7 @@
+# Chinese mainland deployment is tiered on input tokens per request; every
+# token in a request bills at its tier's unit price. The 0.86/3.15 previously
+# published here is the 32K<Token<=166K band, not the model's entry rate.
+# https://www.alibabacloud.com/help/en/model-studio/model-pricing (accessed 2026-08-26)
 name = "GLM-5"
 description = "Flagship GLM model for hybrid reasoning, coding, and agentic engineering"
 family = "glm"
@@ -20,8 +24,13 @@ max = 32_768
 field = "reasoning_content"
 
 [cost]
+input = 0.573
+output = 2.58
+
+[[cost.tiers]]
+tier = { type = "context", size = 32_000 }
 input = 0.86
-output = 3.15
+output = 3.154
 
 [limit]
 context = 202_752
