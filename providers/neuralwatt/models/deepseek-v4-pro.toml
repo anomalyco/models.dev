@@ -13,10 +13,9 @@
 # https://portal.neuralwatt.com/docs/guides/preview-models
 base_model = "deepseek/deepseek-v4-pro"
 status = "beta"
-
-# Effort: reasoning_effort = none|low|high|max (off is effort=none; aliases
 interleaved = true
 
+# Effort: reasoning_effort = none|low|high|max (off is effort=none; aliases
 # medium/minimal -> low, xhigh -> high)
 [[reasoning_options]]
 type = "effort"
