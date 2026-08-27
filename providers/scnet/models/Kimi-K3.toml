@@ -1,8 +1,10 @@
-# SCNet probe set did not establish a working off path for Kimi K3; this relay entry is treated as always-on.
+# Toggle: enable_thinking = true|false
+# Effort: reasoning_effort = low|high|max
+# SCNet probe 2026-08-26 accepted the toggle and effort request shape; use the established relay controls.
 # https://www.scnet.cn/ac/openapi/doc/2.0/moduleapi/api/chat.html
 # SCNet probe 2026-08-26: image_url request returned HTTP 200; image input is supported on this host.
 base_model = "moonshotai/kimi-k3"
-reasoning_options = []
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "high", "max"] }]
 
 [interleaved]
 field = "reasoning_content"
