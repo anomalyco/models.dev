@@ -2367,7 +2367,7 @@ test("deduplicates Eden AI case-only IDs without losing context metadata", () =>
   for (const data of [[lowercase, uppercase], [uppercase, lowercase]]) {
     const models = edenai.parseModels({ object: "list", data });
     expect(models).toEqual([{ ...lowercase, context_length: 786_432 }]);
-    expect(edenai.translateModel(models[0]!)).toMatchObject({
+    expect(edenai.translateModel(models[0]!, { existing: () => undefined, authored: () => undefined })).toMatchObject({
       id: lowercase.id,
       model: { base_model: "deepseek/deepseek-v4-flash-0731", limit: { context: 786_432 } },
     });
@@ -2409,8 +2409,7 @@ test("takes Eden AI reasoning options from the model's own lab entry", () => {
 });
 
 test("skips Eden AI models whose reasoning control has no effort equivalent", () => {
-  // Lab and OpenRouter both expose these through budget_tokens, which Eden AI
-  // has no request field for.
+  // The sync does not yet map this route's budget control to Eden AI's API.
   expect(reasoningOptionsFor("google/gemini-2.5-pro")).toBeUndefined();
   expect(
     buildEdenAIModel(
@@ -2421,6 +2420,86 @@ test("skips Eden AI models whose reasoning control has no effort equivalent", ()
       }),
     ),
   ).toBeUndefined();
+});
+
+test("Eden AI distinguishes unresolved existing reasoning controls from unsupported new models", () => {
+  for (const [id, base] of [
+    ["zai/glm-5", "zhipuai/glm-5"],
+    ["moonshot/kimi-k2.6", "moonshotai/kimi-k2.6"],
+    ["minimax/MiniMax-M3", "minimax/MiniMax-M3"],
+    ["deepinfra/nvidia/Nemotron-3-Nano-30B-A3B", "nvidia/nemotron-3-nano-30b-a3b"],
+    ["google/gemini-2.5-pro", "google/gemini-2.5-pro"],
+  ] as const) {
+    const model = edenAIModel({
+      id,
+      owned_by: id.slice(0, id.indexOf("/")),
+      model_name: id.slice(id.indexOf("/") + 1),
+    });
+    expect(buildEdenAIModel(model, undefined, new Set())).toBeUndefined();
+    expect(() => buildEdenAIModel(model, { base_model: base, reasoning_options: [] }, new Set())).toThrow(
+      `Eden AI model "${id}" is still listed, but reasoning controls cannot be resolved for "${base}"`,
+    );
+  }
+});
+
+test("Eden AI sync refuses to delete listed models with unresolved reasoning controls", async () => {
+  const root = await mkdtemp(path.join(tmpdir(), "sync-edenai-"));
+  const modelsDir = path.join(root, "providers", "edenai", "models");
+  const repo = path.join(import.meta.dirname, "..", "..", "..");
+  const files = [
+    ["openai/gpt-4o-mini", "openai/gpt-4o-mini"],
+    ["zai/glm-5", "zhipuai/glm-5"],
+    ["retired/model", "openai/gpt-4o-mini"],
+  ] as const;
+
+  try {
+    for (const [id, base] of files) {
+      const destination = path.join(modelsDir, `${id}.toml`);
+      const metadata = path.join(root, "models", `${base}.toml`);
+      await mkdir(path.dirname(destination), { recursive: true });
+      await mkdir(path.dirname(metadata), { recursive: true });
+      await copyFile(path.join(repo, "models", `${base}.toml`), metadata);
+      await copyFile(
+        path.join(repo, "providers", "edenai", "models", `${id === "retired/model" ? "openai/gpt-4o-mini" : id}.toml`),
+        destination,
+      );
+    }
+    const before = await Promise.all(files.map(([id]) => readFile(path.join(modelsDir, `${id}.toml`), "utf8")));
+    const supported = edenAIModel({
+      id: "openai/gpt-4o-mini",
+      model_name: "gpt-4o-mini",
+      owned_by: "openai",
+      list_pricing: { input_cost_per_token: 0.000123, output_cost_per_token: 0.000456 },
+    });
+    const unresolved = edenAIModel({ id: "zai/glm-5", model_name: "glm-5", owned_by: "zai" });
+    const provider = {
+      ...edenai,
+      modelsDir,
+      async fetchModels() {
+        return { object: "list", data: [supported, { ...supported, id: "openai/gpt-4o-mini@us" }, unresolved] };
+      },
+    };
+
+    for (const dryRun of [true, false]) {
+      await expect(syncProvider(provider, { dryRun })).rejects.toThrow(
+        'Eden AI model "zai/glm-5" is still listed, but reasoning controls cannot be resolved for "zhipuai/glm-5"',
+      );
+      expect(await Promise.all(files.map(([id]) => readFile(path.join(modelsDir, `${id}.toml`), "utf8")))).toEqual(before);
+      expect(await Bun.file(path.join(modelsDir, "openai/gpt-4o-mini@us.toml")).exists()).toBe(false);
+    }
+
+    // Once the unresolved route really disappears upstream, normal updates,
+    // creates, and removals must still work.
+    const result = await syncProvider({
+      ...provider,
+      async fetchModels() {
+        return { object: "list", data: [supported, { ...supported, id: "openai/gpt-4o-mini@us" }] };
+      },
+    });
+    expect(result).toMatchObject({ created: 1, updated: 1, deleted: 2 });
+  } finally {
+    await rm(root, { recursive: true, force: true });
+  }
 });
 
 test("omits Eden AI reasoning options for non-reasoning models", () => {
@@ -2504,8 +2583,8 @@ test("keeps only the first-party Eden AI route when the lab's own API is relayed
 
   const firstParty = collectFirstPartyBaseModels([bedrock, direct]);
   expect(firstParty).toEqual(new Set(["anthropic/claude-opus-5"]));
-  expect(buildEdenAIModel(bedrock, firstParty)).toBeUndefined();
-  expect(buildEdenAIModel(direct, firstParty)).toMatchObject({
+  expect(buildEdenAIModel(bedrock, {}, firstParty)).toBeUndefined();
+  expect(buildEdenAIModel(direct, {}, firstParty)).toMatchObject({
     base_model: "anthropic/claude-opus-5",
   });
 });
@@ -2522,7 +2601,7 @@ test("keeps every Eden AI route for models with no first-party relay", () => {
   const firstParty = collectFirstPartyBaseModels(models);
   expect(firstParty.size).toBe(0);
   for (const model of models) {
-    expect(buildEdenAIModel(model, firstParty)).toMatchObject({
+    expect(buildEdenAIModel(model, undefined, firstParty)).toMatchObject({
       base_model: "openai/gpt-oss-120b",
     });
   }

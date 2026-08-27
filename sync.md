@@ -139,6 +139,13 @@ CI automatically picks up providers registered in `providers` in `packages/core/
 
 Actions are pinned by commit SHA. Keep new workflow actions pinned the same way.
 
+## Eden AI Notes
+
+- Source endpoint: `https://api.edenai.run/v3/models`; no authentication required.
+- Reasoning effort options are derived from the lab's provider entry or OpenRouter. A toggle-only or budget-only control is not an effort list; do not invent effort levels or replace unknown controls with `[]`.
+- If a still-listed, already-cataloged model's reasoning controls can no longer be translated, the sync fails before writing or deleting any files. Review that route's Eden AI controls and update the translator before retrying; missing reasoning metadata is not evidence that the model was removed upstream.
+- New models without translatable reasoning controls remain skipped. Intentional route deduplication and removal of IDs absent from the upstream catalog are unchanged.
+
 ## CrossModel Notes
 
 CrossModel is implemented in `packages/core/src/sync/providers/crossmodel.ts`.
