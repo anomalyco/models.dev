@@ -1,10 +1,6 @@
+# reasoning wire path: chat_template_args.enable_thinking (bool)
 base_model = "alibaba/qwen3-235b-a22b"
-
-[[reasoning_options]]
-type = "toggle"
-
-[[reasoning_options]]
-type = "budget_tokens"
+reasoning_options = [{ type = "toggle" }]
 
 [cost]
 input = 0.211

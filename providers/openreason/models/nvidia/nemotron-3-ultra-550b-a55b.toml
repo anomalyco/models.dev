@@ -1,6 +1,10 @@
+# reasoning wire path: chat_template_args.thinking (bool)
 base_model = "nvidia/nemotron-3-ultra-550b-a55b"
 reasoning_options = [{ type = "toggle" }]
 
 [cost]
 input = 0.633
 output = 2.532
+
+[interleaved]
+field = "reasoning_content"

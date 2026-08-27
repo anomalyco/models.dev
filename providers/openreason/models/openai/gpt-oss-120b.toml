@@ -1,14 +1,9 @@
-# Baseten now documents top-level reasoning_effort = none | minimal | low |
-# medium (default) | high | xhigh | max for GPT OSS 120B; reasoning is
-# otherwise enabled by default. No toggle or budget exists. Reasoning output is
-# returned in reasoning_content.
-# https://docs.baseten.co/inference/model-apis/reasoning
 base_model = "openai/gpt-oss-120b"
-
-[[reasoning_options]]
-type = "effort"
-values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"]
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
 
 [cost]
 input = 0.1055
 output = 0.422
+
+[interleaved]
+field = "reasoning_content"

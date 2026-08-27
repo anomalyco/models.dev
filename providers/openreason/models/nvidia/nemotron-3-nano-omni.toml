@@ -1,6 +1,10 @@
+# reasoning wire path: chat_template_args.thinking (bool)
 base_model = "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning"
 reasoning_options = [{ type = "toggle" }, { type = "budget_tokens", min = -1, max = 32768 }]
 
 [cost]
 input = 0.0633
 output = 0.2532
+
+[interleaved]
+field = "reasoning_content"
