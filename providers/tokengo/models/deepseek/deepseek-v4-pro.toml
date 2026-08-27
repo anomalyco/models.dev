@@ -1,7 +1,11 @@
-# TokenGo list price for deepseek/deepseek-v4-pro (USD/MTok).
-# Toggle: thinking.type = enabled|disabled
-# Effort: reasoning_effort = high|max, matching first-party DeepSeek V4 Pro (lab maps low/medium→high).
-# https://tokengo.com/docs
+# Pricing (USD/MTok, accessed 2026-08-27):
+# - Public hub (rounded $0.43/$0.87): https://www.tokengo.com/models
+# - Exact console rates $0.435/$0.87 (no cache ratio listed)
+# Reasoning: TokenGo Quick Start does not document thinking/effort
+# (https://www.tokengo.com/docs/documentation/getting-started/quickstart).
+# Copied lab ∩ openai-compat peers: thinking.type = enabled|disabled;
+# reasoning_effort = high|max
+# Lab: https://api-docs.deepseek.com/api/create-chat-completion
 base_model = "deepseek/deepseek-v4-pro"
 
 [[reasoning_options]]

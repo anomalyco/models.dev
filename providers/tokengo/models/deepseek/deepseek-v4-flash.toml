@@ -1,7 +1,11 @@
-# TokenGo list price for deepseek/deepseek-v4-flash (USD/MTok).
-# Toggle: thinking.type = enabled|disabled
-# Effort: reasoning_effort = low|high|max, matching first-party DeepSeek V4 Flash and openai-compat peers.
-# https://tokengo.com/docs
+# Pricing (USD/MTok, accessed 2026-08-27):
+# - Public hub (rounded $0.10/$0.20): https://www.tokengo.com/models
+# - Exact console rates incl. cache $0.098/$0.196/$0.028 (TokenGo model table ratios)
+# Reasoning: TokenGo Quick Start does not document thinking/effort
+# (https://www.tokengo.com/docs/documentation/getting-started/quickstart).
+# Copied lab ∩ openai-compat peers: thinking.type = enabled|disabled;
+# reasoning_effort = low|high|max
+# Lab: https://api-docs.deepseek.com/guides/thinking_mode/
 base_model = "deepseek/deepseek-v4-flash"
 
 [[reasoning_options]]

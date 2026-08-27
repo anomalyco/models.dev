@@ -1,7 +1,11 @@
-# TokenGo list price for moonshotai/kimi-k3 (USD/MTok).
-# Toggle: thinking.type = enabled|disabled
-# Effort: reasoning_effort = low|high|max, matching first-party Kimi K3 and relay peers.
-# https://tokengo.com/docs
+# Pricing (USD/MTok, accessed 2026-08-27):
+# - Public hub $3.00/$15.00: https://www.tokengo.com/models
+# - Exact console rates incl. cache $3.00/$15.00/$0.30 (TokenGo model table ratios)
+# Reasoning: TokenGo Quick Start does not document thinking/effort
+# (https://www.tokengo.com/docs/documentation/getting-started/quickstart).
+# Copied lab ∩ openai-compat peers: thinking.type = enabled|disabled;
+# reasoning_effort = low|high|max
+# Lab: https://platform.kimi.ai/docs/pricing/chat-k3
 base_model = "moonshotai/kimi-k3"
 
 [[reasoning_options]]

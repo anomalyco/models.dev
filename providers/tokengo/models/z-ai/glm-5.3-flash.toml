@@ -1,6 +1,10 @@
-# TokenGo list price for z-ai/glm-5.3-flash (USD/MTok).
-# Effort: reasoning_effort = low|high|max, matching first-party GLM-5.3-Flash and relay peers.
-# https://tokengo.com/docs
+# Pricing (USD/MTok, accessed 2026-08-27):
+# - Public hub (rounded $0.07/$0.01): https://www.tokengo.com/models
+# - Exact console rates incl. cache $0.075/$0.025/$0.015 (TokenGo model table ratios)
+# Reasoning: TokenGo Quick Start does not document effort
+# (https://www.tokengo.com/docs/documentation/getting-started/quickstart).
+# Copied lab ∩ openai-compat peers: reasoning_effort = low|high|max
+# Lab: https://docs.z.ai/guides/llm/glm-5.3-flash
 base_model = "zhipuai/glm-5.3-flash"
 
 [[reasoning_options]]
@@ -9,5 +13,5 @@ values = ["low", "high", "max"]
 
 [cost]
 input = 0.075
-output = 0.015
-cache_read = 0.025
+output = 0.025
+cache_read = 0.015

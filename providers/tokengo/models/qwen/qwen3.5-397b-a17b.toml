@@ -1,15 +1,15 @@
-# TokenGo list price for qwen/qwen3.5-397b-a17b (USD/MTok).
-# Toggle: enable_thinking true|false
-# Budget: thinking_budget (integer reasoning tokens)
-# Matches first-party Alibaba Qwen3.5 397B-A17B and openai-compat DashScope-style peers.
-# https://tokengo.com/docs
+# Pricing (USD/MTok, accessed 2026-08-27):
+# - Public hub $0.40/$2.65: https://www.tokengo.com/models
+# - Exact console rates incl. cache $0.40/$2.65/$0.20 (TokenGo model table ratios)
+# Reasoning: TokenGo Quick Start does not document enable_thinking or thinking_budget
+# (https://www.tokengo.com/docs/documentation/getting-started/quickstart).
+# Toggle only — same-surface generic openai-compat relays (OpenRouter, Novita).
+# Dropped thinking_budget (DashScope-native; not documented on TokenGo).
+# Lab: https://www.alibabacloud.com/help/en/model-studio/model-pricing
 base_model = "alibaba/qwen3.5-397b-a17b"
 
 [[reasoning_options]]
 type = "toggle"
-
-[[reasoning_options]]
-type = "budget_tokens"
 
 [cost]
 input = 0.4

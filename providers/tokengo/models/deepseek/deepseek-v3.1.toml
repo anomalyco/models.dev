@@ -1,7 +1,10 @@
-# TokenGo list price for deepseek/deepseek-v3.1 (USD/MTok).
-# Toggle: thinking.type = enabled|disabled
-# Hybrid thinking on/off only — V3.1 has no graded effort on first-party-style openai-compat peers.
-# https://tokengo.com/docs
+# Pricing (USD/MTok, accessed 2026-08-27):
+# - Public hub $0.19/$0.71: https://www.tokengo.com/models
+# - Exact console rates incl. cache $0.19/$0.71/$0.06 (TokenGo model table ratios)
+# Reasoning: TokenGo Quick Start does not document a toggle
+# (https://www.tokengo.com/docs/documentation/getting-started/quickstart).
+# Copied lab ∩ openai-compat peers: thinking.type = enabled|disabled (hybrid on/off)
+# Lab: https://huggingface.co/deepseek-ai/DeepSeek-V3.1
 base_model = "deepseek/deepseek-v3.1"
 
 [[reasoning_options]]

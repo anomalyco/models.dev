@@ -1,7 +1,10 @@
-# TokenGo list price for z-ai/glm-5 (USD/MTok).
-# Toggle: thinking.type = enabled|disabled
-# Binary thinking on/off only — first-party GLM-5 and openai-compat peers have no graded effort.
-# https://tokengo.com/docs
+# Pricing (USD/MTok, accessed 2026-08-27):
+# - Public hub $0.89/$3.26: https://www.tokengo.com/models
+# - Exact console rates incl. cache $0.89/$3.2647/$0.2226 (TokenGo model table ratios)
+# Reasoning: TokenGo Quick Start does not document a toggle
+# (https://www.tokengo.com/docs/documentation/getting-started/quickstart).
+# Copied lab ∩ openai-compat peers: thinking.type = enabled|disabled (no graded effort)
+# Lab: https://docs.z.ai/api-reference/llm/chat-completion
 base_model = "zhipuai/glm-5"
 
 [[reasoning_options]]
