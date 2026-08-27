@@ -4731,3 +4731,58 @@ function openRouterModel(overrides: Partial<OpenRouterModel> = {}): OpenRouterMo
     ...overrides,
   };
 }
+
+function caseFoldProvider(modelsDir: string, ids: string[]): SyncProvider<string> {
+  return {
+    id: "case-fold-test",
+    name: "Case fold test",
+    modelsDir,
+    async fetchModels() {
+      return ids;
+    },
+    parseModels(raw) {
+      return raw as string[];
+    },
+    translateModel(id) {
+      return {
+        id,
+        model: {
+          name: id,
+          description: "Case-fold guard test model.",
+          release_date: "2026-08-14",
+          last_updated: "2026-08-14",
+          attachment: false,
+          reasoning: false,
+          tool_call: false,
+          open_weights: false,
+          cost: { input: 1, output: 2 },
+          limit: { context: 8_192, output: 4_096 },
+          modalities: { input: ["text"], output: ["text"] },
+        },
+      };
+    },
+  };
+}
+
+test("rejects synced model paths that differ only in case", async () => {
+  const root = await mkdtemp(path.join(tmpdir(), "models-dev-case-fold-"));
+  const modelsDir = path.join(root, "providers", "case-fold-test", "models");
+  await mkdir(modelsDir, { recursive: true });
+
+  try {
+    await expect(
+      syncProvider(caseFoldProvider(modelsDir, ["Alpha", "alpha"])),
+    ).rejects.toThrow(/differ only in case/u);
+
+    await expect(
+      syncProvider(caseFoldProvider(modelsDir, ["beta", "beta"])),
+    ).rejects.toThrow(/Duplicate synced model path/u);
+
+    const clean = await syncProvider(
+      caseFoldProvider(modelsDir, ["Gamma", "delta"]),
+    );
+    expect(clean).toMatchObject({ created: 2, updated: 0, deleted: 0 });
+  } finally {
+    await rm(root, { recursive: true, force: true });
+  }
+});

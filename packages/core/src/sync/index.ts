@@ -233,6 +233,7 @@ export async function syncProvider<SourceModel>(
   let { modelMetadata } = existingState;
   const sourceModels = provider.parseModels(await provider.fetchModels());
   const desired = new Map<string, { model: z.infer<typeof SyncedAuthoredModel>; content: string }>();
+  const caseNormalizedDesiredPaths = new Map<string, string>();
   const desiredMetadata = new Map<string, { model: z.infer<typeof ModelMetadata>; content: string }>();
   const skippedRemote: string[] = [];
 
@@ -257,9 +258,15 @@ export async function syncProvider<SourceModel>(
       continue;
     }
 
-    if (desired.has(relativePath)) {
-      throw new Error(`Duplicate synced model path: ${provider.id}/${relativePath}`);
+    const collidingPath = caseNormalizedDesiredPaths.get(relativePath.toLowerCase());
+    if (collidingPath !== undefined) {
+      throw new Error(
+        collidingPath === relativePath
+          ? `Duplicate synced model path: ${provider.id}/${relativePath}`
+          : `Synced model paths differ only in case: ${provider.id}/${collidingPath} and ${provider.id}/${relativePath}`,
+      );
     }
+    caseNormalizedDesiredPaths.set(relativePath.toLowerCase(), relativePath);
 
     if (translated.metadata !== undefined) {
       const parsedMetadata = ModelMetadata.safeParse({
