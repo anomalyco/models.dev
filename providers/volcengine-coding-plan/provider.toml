@@ -28,9 +28,13 @@ npm = "@ai-sdk/openai-compatible"
 # and the encrypted block in `choices[].message.encrypted_content`.
 # Anthropic: base https://ark.cn-beijing.volces.com/api/coding, POST /v1/messages
 # with `thinking.type` and `output_config.effort`.
-# Model names on this plan are the short console labels (doubao-seed-2.1-turbo),
-# not the dated IDs the pay-as-you-go endpoint requires. `ark-code-latest` follows
-# whichever model is selected in the console.
+# Model names here are the short console labels (doubao-seed-2.1-turbo). This
+# endpoint is the more permissive of the two: it accepts the dated IDs as well
+# (verified 2026-08-27 - doubao-seed-2-1-turbo-260628, doubao-seed-2-0-lite-260428
+# and glm-5-3-260930 all resolve here), whereas the pay-as-you-go /api/v3 accepts
+# only the dated form and 404s on a short label. The short labels are used because
+# they are what the Coding Plan console shows. `ark-code-latest` follows whichever
+# model is selected in the console.
 # Sources:
 # https://www.volcengine.com/docs/82379/1928261
 # https://www.volcengine.com/docs/82379/2546386
