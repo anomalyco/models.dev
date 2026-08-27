@@ -30,6 +30,7 @@ import { openrouter } from "./providers/openrouter.js";
 import { ovhcloud } from "./providers/ovhcloud.js";
 import { pioneer } from "./providers/pioneer.js";
 import { requesty } from "./providers/requesty.js";
+import { sference } from "./providers/sference.js";
 import { tinfoil } from "./providers/tinfoil.js";
 import { vercel } from "./providers/vercel.js";
 import { venice } from "./providers/venice.js";
@@ -150,6 +151,7 @@ export const providers: {
   ovhcloud: SyncProvider<any>;
   pioneer: SyncProvider<any>;
   requesty: SyncProvider<any>;
+  sference: SyncProvider<any>;
   tinfoil: SyncProvider<any>;
   vercel: SyncProvider<any>;
   venice: SyncProvider<any>;
@@ -182,6 +184,7 @@ export const providers: {
   ovhcloud,
   pioneer,
   requesty,
+  sference,
   tinfoil,
   vercel,
   venice,
@@ -207,7 +210,7 @@ export const groups = {
     "vercel",
   ],
   cloudflare: ["cloudflare-workers-ai"],
-  direct: ["ambient", "anthropic", "baseten", "chutes", "cortecs", "deepinfra", "digitalocean", "google", "hyper", "openai", "ovhcloud", "pioneer", "tinfoil", "venice", "wandb", "xai"],
+  direct: ["ambient", "anthropic", "baseten", "chutes", "cortecs", "deepinfra", "digitalocean", "google", "hyper", "openai", "ovhcloud", "pioneer", "sference", "tinfoil", "venice", "wandb", "xai"],
 } as const;
 
 type ProviderID = keyof typeof providers;

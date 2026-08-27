@@ -1,0 +1,17 @@
+base_model = "bottlecapai/thinkingcap-qwen3.6-27b"
+release_date = "2026-07-13"
+attachment = false
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "toggle"
+
+[cost]
+input = 0.4
+output = 2.6
+cache_read = 0.05
+
+[modalities]
+input = ["text"]
