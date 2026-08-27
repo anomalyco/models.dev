@@ -1,8 +1,9 @@
-# SCNet probe set did not establish a working caller switch for MiniMax-M3; this relay entry is treated as always-on.
+# Toggle: thinking.type = disabled|adaptive
+# SCNet probe 2026-08-27: thinking.type=disabled removed reasoning content; baseline/adaptive retained it.
 # https://www.scnet.cn/ac/openapi/doc/2.0/moduleapi/api/chat.html
-# SCNet probe 2026-08-26: image_url request returned HTTP 200; image input is supported on this host.
+# SCNet probe 2026-08-27: image input was positively confirmed with a semantic red-image probe.
 base_model = "minimax/MiniMax-M3"
-reasoning_options = []
+reasoning_options = [{ type = "toggle" }]
 
 [interleaved]
 field = "reasoning_content"

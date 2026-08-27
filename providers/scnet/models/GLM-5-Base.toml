@@ -1,8 +1,11 @@
-# SCNet relay follows the GLM-5 surface; reasoning is treated as always-on with no caller control.
+# Toggle: thinking.type = enabled|disabled
+# SCNet probe 2026-08-27: GLM-5 thinking.type disabled/enabled changed reasoning presence on this host.
+# SCNet probe 2026-08-27: image input was positively confirmed with a semantic red-image probe.
 # https://www.scnet.cn/ac/openapi/doc/2.0/moduleapi/api/chat.html
+attachment = true
 base_model = "zhipuai/glm-5"
 name = "GLM-5-Base"
-reasoning_options = []
+reasoning_options = [{ type = "toggle" }]
 
 [interleaved]
 field = "reasoning_content"
@@ -14,3 +17,6 @@ cache_read = 0.1115625
 
 [limit]
 context = 131_072
+
+[modalities]
+input = ["text", "image"]

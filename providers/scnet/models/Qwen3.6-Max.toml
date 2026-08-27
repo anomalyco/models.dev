@@ -1,8 +1,9 @@
-# SCNet probe 2026-08-26: image_url request returned HTTP 200; image input is supported on this host.
+# SCNet probe 2026-08-27: image input was positively confirmed with a semantic red-image probe.
 # Toggle: enable_thinking = true|false
 # SCNet API docs expose the thinking toggle; no separate budget or effort control is documented for this host.
 # SCNet OpenAI Chat API source:
 # https://www.scnet.cn/ac/openapi/doc/2.0/moduleapi/api/chat.html
+attachment = true
 base_model = "alibaba/qwen3.6-max-preview"
 name = "Qwen3.6-Max"
 reasoning_options = [{ type = "toggle" }]
@@ -13,3 +14,6 @@ field = "reasoning_content"
 [cost]
 input = 2.23125
 output = 13.3875
+
+[modalities]
+input = ["text", "image"]

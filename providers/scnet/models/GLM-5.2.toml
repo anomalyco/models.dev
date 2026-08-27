@@ -1,6 +1,8 @@
 # Effort: reasoning_effort = high|max
 # SCNet probe 2026-08-26 accepted the published GLM-5.2 effort request shape on this host.
+# SCNet probe 2026-08-27: image input was positively confirmed with a semantic red-image probe.
 # https://www.scnet.cn/ac/openapi/doc/2.0/moduleapi/api/chat.html
+attachment = true
 base_model = "zhipuai/glm-5.2"
 reasoning_options = [{ type = "effort", values = ["high", "max"] }]
 
@@ -14,3 +16,6 @@ cache_read = 0.2975
 
 [limit]
 context = 1_048_576
+
+[modalities]
+input = ["text", "image"]

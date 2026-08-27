@@ -1,8 +1,8 @@
 # Toggle: enable_thinking = true|false
 # Effort: reasoning_effort = low|high|max
-# SCNet probe 2026-08-26 accepted the toggle and effort request shape; use the established relay controls.
+# SCNet probe 2026-08-27: enable_thinking off/on changed reasoning; low/high/max effort produced distinct reasoning lengths.
 # https://www.scnet.cn/ac/openapi/doc/2.0/moduleapi/api/chat.html
-# SCNet probe 2026-08-26: image_url request returned HTTP 200; image input is supported on this host.
+# SCNet probe 2026-08-27: image input was positively confirmed with a semantic red-image probe.
 base_model = "moonshotai/kimi-k3"
 reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "high", "max"] }]
 
