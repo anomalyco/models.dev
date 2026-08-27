@@ -1,0 +1,17 @@
+# TokenGo list price for moonshotai/kimi-k3 (USD/MTok).
+# Toggle: thinking.type = enabled|disabled
+# Effort: reasoning_effort = low|high|max, matching first-party Kimi K3 and relay peers.
+# https://tokengo.com/docs
+base_model = "moonshotai/kimi-k3"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[cost]
+input = 3.0
+output = 15.0
+cache_read = 0.3

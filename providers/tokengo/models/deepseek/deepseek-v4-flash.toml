@@ -1,0 +1,17 @@
+# TokenGo list price for deepseek/deepseek-v4-flash (USD/MTok).
+# Toggle: thinking.type = enabled|disabled
+# Effort: reasoning_effort = low|high|max, matching first-party DeepSeek V4 Flash and openai-compat peers.
+# https://tokengo.com/docs
+base_model = "deepseek/deepseek-v4-flash"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[cost]
+input = 0.098
+output = 0.196
+cache_read = 0.028

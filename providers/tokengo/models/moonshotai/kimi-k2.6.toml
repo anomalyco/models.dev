@@ -1,0 +1,13 @@
+# TokenGo list price for moonshotai/kimi-k2.6 (USD/MTok).
+# Toggle: thinking.type = enabled|disabled
+# Binary thinking on/off only — first-party Kimi K2.6 and relay peers have no graded effort.
+# https://tokengo.com/docs
+base_model = "moonshotai/kimi-k2.6"
+
+[[reasoning_options]]
+type = "toggle"
+
+[cost]
+input = 0.95
+output = 4.0
+cache_read = 0.16

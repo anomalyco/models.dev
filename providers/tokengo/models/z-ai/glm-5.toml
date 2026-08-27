@@ -1,0 +1,13 @@
+# TokenGo list price for z-ai/glm-5 (USD/MTok).
+# Toggle: thinking.type = enabled|disabled
+# Binary thinking on/off only — first-party GLM-5 and openai-compat peers have no graded effort.
+# https://tokengo.com/docs
+base_model = "zhipuai/glm-5"
+
+[[reasoning_options]]
+type = "toggle"
+
+[cost]
+input = 0.89
+output = 3.2647
+cache_read = 0.2226

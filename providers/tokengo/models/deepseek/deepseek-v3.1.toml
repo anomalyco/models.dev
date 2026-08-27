@@ -1,0 +1,13 @@
+# TokenGo list price for deepseek/deepseek-v3.1 (USD/MTok).
+# Toggle: thinking.type = enabled|disabled
+# Hybrid thinking on/off only — V3.1 has no graded effort on first-party-style openai-compat peers.
+# https://tokengo.com/docs
+base_model = "deepseek/deepseek-v3.1"
+
+[[reasoning_options]]
+type = "toggle"
+
+[cost]
+input = 0.19
+output = 0.71
+cache_read = 0.06

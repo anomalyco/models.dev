@@ -1,0 +1,17 @@
+# TokenGo list price for qwen/qwen3.5-397b-a17b (USD/MTok).
+# Toggle: enable_thinking true|false
+# Budget: thinking_budget (integer reasoning tokens)
+# Matches first-party Alibaba Qwen3.5 397B-A17B and openai-compat DashScope-style peers.
+# https://tokengo.com/docs
+base_model = "alibaba/qwen3.5-397b-a17b"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "budget_tokens"
+
+[cost]
+input = 0.4
+output = 2.65
+cache_read = 0.2

@@ -1,0 +1,13 @@
+# TokenGo list price for z-ai/glm-5.3 (USD/MTok).
+# Effort: reasoning_effort = low|high|max, matching first-party GLM-5.3 and relay peers.
+# https://tokengo.com/docs
+base_model = "zhipuai/glm-5.3"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[cost]
+input = 1.4
+output = 4.4
+cache_read = 0.26
