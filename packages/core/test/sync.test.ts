@@ -79,6 +79,13 @@ import {
   resolveNanoGptBaseModel,
   type NanoGptModel,
 } from "../src/sync/providers/nano-gpt.js";
+import {
+  buildNebiusModel,
+  fetchNebiusModels,
+  nebius,
+  parseNebiusModels,
+  type NebiusModel,
+} from "../src/sync/providers/nebius.js";
 import { openai, parseOpenAIModels } from "../src/sync/providers/openai.js";
 import { ofox } from "../src/sync/providers/ofox.js";
 import { pioneer } from "../src/sync/providers/pioneer.js";
@@ -1159,8 +1166,134 @@ test("tracks missing models except for unreliable first-party inventories", () =
   expect(ofox.trackMissingModels).toBe(true);
   expect(tinfoil.skipCreates).toBe(true);
   expect(tinfoil.trackMissingModels).not.toBe(false);
+  expect(nebius.skipCreates).toBe(true);
+  expect(nebius.trackMissingModels).not.toBe(false);
   expect(xai.skipCreates).toBe(true);
   expect(xai.trackMissingModels).not.toBe(false);
+});
+
+function nebiusModel(overrides: Partial<NebiusModel> = {}): NebiusModel {
+  return {
+    catalog_status: "active",
+    catalog_type: "text2text",
+    catalog_use_cases: ["text", "reasoning", "function_calling"],
+    external_provider: false,
+    input_price_per_million_tokens: 0.14,
+    max_model_len: 1_048_576,
+    model_id: "deepseek-ai/DeepSeek-V4-Flash",
+    model_name: "DeepSeek-V4-Flash",
+    model_type: "text2text",
+    output_price_per_million_tokens: 0.28,
+    use_cases: ["text", "reasoning", "function_calling"],
+    ...overrides,
+  };
+}
+
+function nebiusResponse(flavor: Partial<NebiusModel> = {}) {
+  const model = nebiusModel(flavor);
+  return [{
+    name: model.model_name,
+    status: model.catalog_status,
+    type: model.catalog_type,
+    use_cases: model.catalog_use_cases,
+    flavors: [{
+      external_provider: model.external_provider,
+      input_price_per_million_tokens: model.input_price_per_million_tokens,
+      max_model_len: model.max_model_len,
+      model_id: model.model_id,
+      model_name: model.model_name,
+      model_type: model.model_type,
+      output_price_per_million_tokens: model.output_price_per_million_tokens,
+      use_cases: model.use_cases,
+    }],
+  }];
+}
+
+test("parses the credential-free Nebius public catalog and rejects duplicate IDs", async () => {
+  let requestedURL = "";
+  const fetcher = ((input: string | URL | Request) => {
+    requestedURL = input.toString();
+    return Promise.resolve(new Response(JSON.stringify(nebiusResponse())));
+  }) as typeof fetch;
+
+  const raw = await fetchNebiusModels(fetcher);
+  expect(requestedURL).toBe("https://tokenfactory.nebius.com/api/public/models_info");
+  expect(parseNebiusModels(raw)).toEqual([nebiusModel()]);
+
+  expect(() => parseNebiusModels([...nebiusResponse(), ...nebiusResponse()]))
+    .toThrow("Duplicate Nebius public catalog model ID");
+});
+
+test("tracks only active first-party Nebius IDs for lifecycle sync", () => {
+  expect(nebius.sourceID(nebiusModel())).toBe("deepseek-ai/DeepSeek-V4-Flash");
+  expect(nebius.sourceID(nebiusModel({ catalog_status: "deprecated" }))).toBeUndefined();
+  expect(nebius.sourceID(nebiusModel({ external_provider: true }))).toBeUndefined();
+});
+
+test("syncs authoritative Nebius pricing and positive capabilities without inventing controls", () => {
+  const authored: ExistingModel = {
+    base_model: "moonshotai/kimi-k3",
+    attachment: false,
+    reasoning_options: [{ type: "effort", values: ["none", "low", "high", "max"] }],
+    cost: { input: 3, output: 15, cache_read: 3 },
+    limit: { context: 1_048_576, output: 8_000 },
+    modalities: { input: ["text"], output: ["text"] },
+  };
+  const existing: ExistingModel = {
+    ...authored,
+    name: "Kimi K3",
+    description: "Kimi model",
+    reasoning: true,
+    tool_call: true,
+    open_weights: true,
+  };
+
+  const built = buildNebiusModel(nebiusModel({
+    catalog_type: "image2text",
+    model_type: "image2text",
+    max_model_len: 8_000,
+    input_price_per_million_tokens: 4,
+    output_price_per_million_tokens: 16,
+  }), existing, authored);
+
+  expect(built).toMatchObject({
+    base_model: "moonshotai/kimi-k3",
+    attachment: true,
+    reasoning_options: [{ type: "effort", values: ["none", "low", "high", "max"] }],
+    cost: { input: 4, output: 16, cache_read: 3 },
+    limit: { context: 1_048_576, output: 8_000 },
+    modalities: { input: ["text", "image"], output: ["text"] },
+  });
+  expect(built.reasoning).toBeUndefined();
+  expect(built.tool_call).toBeUndefined();
+});
+
+test("only applies exact Nebius context changes that preserve valid curated limits", () => {
+  const authored: ExistingModel = {
+    name: "Example",
+    description: "Example model",
+    release_date: "2026-01-01",
+    last_updated: "2026-01-01",
+    attachment: false,
+    reasoning: false,
+    tool_call: false,
+    open_weights: true,
+    cost: { input: 1, output: 2 },
+    limit: { context: 128_000, input: 120_000, output: 8_192 },
+    modalities: { input: ["text"], output: ["text"] },
+  };
+
+  const expanded = buildNebiusModel(nebiusModel({ max_model_len: 262_144 }), authored, authored);
+  expect(expanded).toMatchObject({
+    reasoning: true,
+    tool_call: true,
+    limit: { context: 262_144, input: 120_000, output: 8_192 },
+  });
+
+  const contradictory = buildNebiusModel(nebiusModel({ max_model_len: 32_000 }), authored, authored);
+  expect(contradictory).toMatchObject({
+    limit: { context: 128_000, input: 120_000, output: 8_192 },
+  });
 });
 
 test("tracks public Google model families but not opaque internal IDs", () => {

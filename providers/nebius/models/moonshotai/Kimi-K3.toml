@@ -14,11 +14,14 @@
 # tokens are billed identically, instead of leaving it unset (which downstream consumers
 # such as opencode were treating as $0/M, undercounting cost by ~18x on cache-heavy sessions).
 base_model = "moonshotai/kimi-k3"
-attachment = false
-reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "max"] }]
+attachment = true
 
 [interleaved]
 field = "reasoning_content"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "max"]
 
 [cost]
 input = 3
@@ -30,5 +33,5 @@ context = 1_048_576
 output = 8_000
 
 [modalities]
-input = ["text"]
+input = ["text", "image"]
 output = ["text"]

@@ -1,10 +1,11 @@
 name = "Nebius Token Factory"
 env = ["NEBIUS_API_KEY"]
 npm = "@ai-sdk/openai-compatible"
-# Raw HTTP is POST `/v1/chat/completions`; the generic request schema accepts
-# `reasoning_effort = "low"|"medium"|"high"`. Model-native controls may also
-# pass through because the request permits additional properties.
+# Raw HTTP routes include POST `/v1/chat/completions` and `/v1/responses`;
+# Responses uses nested `reasoning.effort`, while Chat Completions accepts
+# `reasoning_effort`. Actual support remains model-specific.
 # https://docs.tokenfactory.nebius.com/api-reference/inference/create-chat-completion
-# (accessed 2026-06-25)
+# https://docs.tokenfactory.nebius.com/api-reference/inference/create-a-response
+# (accessed 2026-08-13)
 api = "https://api.tokenfactory.nebius.com/v1"
 doc = "https://docs.tokenfactory.nebius.com/"
