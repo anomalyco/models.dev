@@ -1,4 +1,5 @@
-base_model = "nvidia/nemotron-3-super-120b-a12b"
+base_model = "zhipuai/glm-4.7-flash"
+name = "Synthetic Small Text"
 structured_output = true
 reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high"] }]
 
@@ -6,10 +7,11 @@ reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high
 field = "reasoning_content"
 
 [cost]
-input = 0.3
-output = 1
-cache_read = 0.06
+input = 0.1
+output = 0.5
+cache_read = 0.02
 cache_write = 0
 
 [limit]
+context = 196_608
 output = 65_536

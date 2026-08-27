@@ -1,7 +1,6 @@
 base_model = "zhipuai/glm-4.7-flash"
-
-[[reasoning_options]]
-type = "toggle"
+structured_output = true
+reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high"] }]
 
 [interleaved]
 field = "reasoning_content"
@@ -9,7 +8,8 @@ field = "reasoning_content"
 [cost]
 input = 0.1
 output = 0.5
-cache_read = 0.1
+cache_read = 0.02
+cache_write = 0
 
 [limit]
 context = 196_608
