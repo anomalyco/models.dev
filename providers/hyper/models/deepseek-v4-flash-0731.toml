@@ -1,7 +1,10 @@
 base_model = "deepseek/deepseek-v4-flash-0731"
 release_date = "2026-08-02"
 last_updated = "2026-08-02"
-reasoning_options = []
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "high", "max"]
 
 [cost]
 input = 0.44
