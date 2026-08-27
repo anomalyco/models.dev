@@ -1,0 +1,18 @@
+# OpenReason routes openai/gpt-oss-120b across multiple upstream inference
+# providers (Baseten, Nscale, Nebius, Scaleway). OpenReason forwards top-level
+# `reasoning_effort` verbatim; the published values are the safe intersection
+# accepted at every routed endpoint (`low | medium | high`). Baseten's own
+# endpoint additionally accepts `none | minimal | xhigh | max` — customers
+# pinning `@baseten-us` may send those values, but OpenReason does not
+# advertise them as universally accepted. Reasoning output is returned in
+# the `reasoning_content` field.
+# https://openreason.app
+base_model = "openai/gpt-oss-120b"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
+
+[cost]
+input = 0.1055
+output = 0.422
+
+[interleaved]
+field = "reasoning_content"
