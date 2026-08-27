@@ -1,12 +1,9 @@
-name = "GPT OSS 20B"
+# Toggle: $.reasoning.enabled = true|false
+base_model = "openai/gpt-oss-20b"
 description = "Open-weight GPT reasoning model for self-hosted agents and controllable deployments"
-family = "gpt-oss"
-attachment = false
-reasoning = true
-tool_call = true
-release_date = "2025-08-05"
-last_updated = "2025-08-05"
-open_weights = true
+
+[[reasoning_options]]
+type = "toggle"
 
 [[reasoning_options]]
 type = "effort"
@@ -15,11 +12,3 @@ values = ["low", "medium", "high"]
 [cost]
 input = 0
 output = 0
-
-[limit]
-context = 131_072
-output = 32_768
-
-[modalities]
-input = ["text"]
-output = ["text"]
