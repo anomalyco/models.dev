@@ -1,16 +1,20 @@
 # Synthorai's `deepseek-v4-pro` alias routes to the deepseek-v4-pro-0813
 # snapshot upstream. Pricing below is the peak-hour rate; the upstream also runs
 # a half-price off-peak window (22:00-08:00 Asia/Shanghai) which this schema has
-# no field for, so the dearer band is listed — never under-quote.
-# Toggle: thinking.type = "enabled"|"disabled" (verified 2026-08-26 to drive
-# reasoning_tokens 24 -> absent). Effort values are not guessed: the upstream
-# enumerates them itself, reasoning_effort="minimal" is rejected with
-# 400 "'reasoning_effort' must be one of: 'low', 'medium', 'high', 'xhigh', 'max'".
+# no field for, so the dearer band is listed rather than under-quoting.
+#
+# Toggle: thinking.type = "enabled"|"disabled". Probed 2026-08-26 on
+# POST https://synthorai.io/v1/chat/completions: the toggle really switches
+# reasoning off (reasoning_tokens 24 -> absent).
+#
+# Effort is accepted but not graded, so only the toggle is claimed. The upstream
+# does enumerate five values in its own 400 ("'reasoning_effort' must be one of:
+# 'low', 'medium', 'high', 'xhigh', 'max'"), but an accepted enum is not the same
+# thing as distinct effective grades, and the probe did not show grading. Listing
+# all five would advertise knobs that do not move anything - the same call made
+# for glm-5.2 in this PR, applied consistently here.
 base_model = "deepseek/deepseek-v4-pro-0813"
-reasoning_options = [
-  { type = "toggle" },
-  { type = "effort", values = ["low", "medium", "high", "xhigh", "max"] },
-]
+reasoning_options = [{ type = "toggle" }]
 
 [cost]
 input = 1.32
