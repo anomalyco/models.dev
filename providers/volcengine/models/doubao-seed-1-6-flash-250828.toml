@@ -10,6 +10,7 @@
 # high 599/502/586/837, max 575/863/714/598 -- fully overlapping, and 'none' does not
 # even switch thinking off here, so thinking.type is the only real control.
 base_model = "bytedance-seed/seed-1-6-flash"
+reasoning = true
 
 [[reasoning_options]]
 type = "toggle"
