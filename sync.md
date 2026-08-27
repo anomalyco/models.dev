@@ -143,8 +143,8 @@ Actions are pinned by commit SHA. Keep new workflow actions pinned the same way.
 
 - Source endpoint: `https://api.edenai.run/v3/models`; no authentication required.
 - Reasoning effort options are derived from the lab's provider entry or OpenRouter. A toggle-only or budget-only control is not an effort list; do not invent effort levels.
-- Models with unresolved reasoning controls are kept with `reasoning_options = []` instead of being skipped or stopping the sync. Here the empty array is a manual-review placeholder, not a verified claim that the route has no caller controls.
-- Any added or updated Eden AI reasoning model with empty options requires manual review, even if only its pricing changed. The auto-merge gate conservatively includes known always-on models because they use the same empty-array representation. Resolved nonempty controls and non-reasoning models remain eligible under the existing checks.
+- When the effort mapper cannot resolve controls, preserve the existing route's authored `reasoning_options` while syncing other authoritative fields. Do not replace authored toggle, effort, or budget controls with `[]`.
+- New reasoning models with neither a resolved mapping nor authored controls remain skipped for manual authoring. No empty placeholder is generated, so the normal auto-merge policy remains unchanged; legitimate always-on `[]` entries are not blanket-blocked.
 - Intentional route deduplication and removal of IDs absent from the upstream catalog are unchanged.
 
 ## CrossModel Notes

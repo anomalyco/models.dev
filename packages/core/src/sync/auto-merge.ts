@@ -76,17 +76,6 @@ export async function classifyAutoMerge(
     if (change.status === "deleted" || !isProviderModel(change.path)) continue;
 
     const current = await reasoningMetadata(change.path, load);
-    // Eden uses [] for unresolved controls as well as always-on reasoning.
-    // Review either case, including price-only updates with unchanged controls.
-    if (
-      change.path.startsWith("providers/edenai/") &&
-      current.reasoning === true &&
-      Array.isArray(current.reasoning_options) &&
-      current.reasoning_options.length === 0
-    ) {
-      reasons.push(`${change.path} has empty Eden AI reasoning_options and requires manual review`);
-      continue;
-    }
     const previous = change.status === "created" ? undefined : await reasoningMetadata(change.path, loadPrevious);
     const reasoningChanged = !current || !previous || !isDeepStrictEqual(current, previous);
     if (!reasoningChanged) continue;

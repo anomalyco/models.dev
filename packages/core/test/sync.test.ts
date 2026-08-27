@@ -2367,7 +2367,7 @@ test("deduplicates Eden AI case-only IDs without losing context metadata", () =>
   for (const data of [[lowercase, uppercase], [uppercase, lowercase]]) {
     const models = edenai.parseModels({ object: "list", data });
     expect(models).toEqual([{ ...lowercase, context_length: 786_432 }]);
-    expect(edenai.translateModel(models[0]!)).toMatchObject({
+    expect(edenai.translateModel(models[0]!, { existing: () => undefined, authored: () => undefined })).toMatchObject({
       id: lowercase.id,
       model: { base_model: "deepseek/deepseek-v4-flash-0731", limit: { context: 786_432 } },
     });
@@ -2408,7 +2408,7 @@ test("takes Eden AI reasoning options from the model's own lab entry", () => {
   ]);
 });
 
-test("keeps Eden AI models whose reasoning control has no effort equivalent", () => {
+test("skips new Eden AI models whose reasoning control has no effort equivalent", () => {
   // The sync does not yet map this route's budget control to Eden AI's API.
   expect(reasoningOptionsFor("google/gemini-2.5-pro")).toBeUndefined();
   expect(
@@ -2419,10 +2419,16 @@ test("keeps Eden AI models whose reasoning control has no effort equivalent", ()
         owned_by: "google",
       }),
     ),
-  ).toMatchObject({ base_model: "google/gemini-2.5-pro", reasoning_options: [] });
+  ).toBeUndefined();
 });
 
-test("Eden AI defaults unresolved reasoning controls to an empty array", () => {
+test("Eden AI preserves authored controls when reasoning mapping is unresolved", () => {
+  const authored: NonNullable<ExistingModel["reasoning_options"]>[] = [
+    [],
+    [{ type: "toggle" }],
+    [{ type: "effort", values: ["high"] }],
+    [{ type: "toggle" }, { type: "budget_tokens" }],
+  ];
   for (const [id, base] of [
     ["zai/glm-5", "zhipuai/glm-5"],
     ["moonshot/kimi-k2.6", "moonshotai/kimi-k2.6"],
@@ -2435,7 +2441,13 @@ test("Eden AI defaults unresolved reasoning controls to an empty array", () => {
       owned_by: id.slice(0, id.indexOf("/")),
       model_name: id.slice(id.indexOf("/") + 1),
     });
-    expect(buildEdenAIModel(model)).toMatchObject({ base_model: base, reasoning_options: [] });
+    expect(buildEdenAIModel(model)).toBeUndefined();
+    for (const reasoning_options of authored) {
+      expect(buildEdenAIModel(model, { base_model: base, reasoning_options })).toMatchObject({
+        base_model: base,
+        reasoning_options,
+      });
+    }
   }
 });
 
@@ -2461,6 +2473,13 @@ test("Eden AI sync keeps listed models with unresolved reasoning controls", asyn
         destination,
       );
     }
+    const glmPath = path.join(modelsDir, "zai/glm-5.toml");
+    const authored = (await readFile(glmPath, "utf8")).replace(
+      "reasoning_options = []",
+      'reasoning_options = [{ type = "toggle" }]',
+    );
+    const header = "# Toggle: extra_body.thinking.type = enabled|disabled\n";
+    await Bun.write(glmPath, header + authored);
     const supported = edenAIModel({
       id: "openai/gpt-4o-mini",
       model_name: "gpt-4o-mini",
@@ -2472,7 +2491,12 @@ test("Eden AI sync keeps listed models with unresolved reasoning controls", asyn
       ...edenai,
       modelsDir,
       async fetchModels() {
-        return { object: "list", data: [supported, { ...supported, id: "openai/gpt-4o-mini@us" }, unresolved] };
+        return { object: "list", data: [
+          supported,
+          { ...supported, id: "openai/gpt-4o-mini@us" },
+          unresolved,
+          { ...unresolved, id: "zai/glm-5@us" },
+        ] };
       },
     };
 
@@ -2481,8 +2505,13 @@ test("Eden AI sync keeps listed models with unresolved reasoning controls", asyn
     expect(result.files.filter((file) => file.status === "deleted").map((file) => file.path)).toEqual([
       path.join(modelsDir, "retired/model.toml"),
     ]);
-    const kept = Bun.TOML.parse(await readFile(path.join(modelsDir, "zai/glm-5.toml"), "utf8"));
-    expect(kept).toMatchObject({ base_model: "zhipuai/glm-5", reasoning_options: [] });
+    const content = await readFile(glmPath, "utf8");
+    expect(content).toStartWith(header);
+    expect(Bun.TOML.parse(content)).toMatchObject({
+      base_model: "zhipuai/glm-5",
+      reasoning_options: [{ type: "toggle" }],
+    });
+    expect(await Bun.file(path.join(modelsDir, "zai/glm-5@us.toml")).exists()).toBe(false);
     expect(await Bun.file(path.join(modelsDir, "openai/gpt-4o-mini@us.toml")).exists()).toBe(true);
   } finally {
     await rm(root, { recursive: true, force: true });
@@ -2570,8 +2599,8 @@ test("keeps only the first-party Eden AI route when the lab's own API is relayed
 
   const firstParty = collectFirstPartyBaseModels([bedrock, direct]);
   expect(firstParty).toEqual(new Set(["anthropic/claude-opus-5"]));
-  expect(buildEdenAIModel(bedrock, firstParty)).toBeUndefined();
-  expect(buildEdenAIModel(direct, firstParty)).toMatchObject({
+  expect(buildEdenAIModel(bedrock, undefined, firstParty)).toBeUndefined();
+  expect(buildEdenAIModel(direct, undefined, firstParty)).toMatchObject({
     base_model: "anthropic/claude-opus-5",
   });
 });
@@ -2588,7 +2617,7 @@ test("keeps every Eden AI route for models with no first-party relay", () => {
   const firstParty = collectFirstPartyBaseModels(models);
   expect(firstParty.size).toBe(0);
   for (const model of models) {
-    expect(buildEdenAIModel(model, firstParty)).toMatchObject({
+    expect(buildEdenAIModel(model, undefined, firstParty)).toMatchObject({
       base_model: "openai/gpt-oss-120b",
     });
   }
