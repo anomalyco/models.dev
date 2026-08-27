@@ -1,11 +1,10 @@
-# SCNet probe 2026-08-26: image input was not confirmed; keep this host entry text-only until verified.
-# Toggle: enable_thinking = true|false
+# SCNet probe 2026-08-27: image input succeeded on this host.
+# SCNet probe 2026-08-27: reasoning content remained present in baseline and both tested enable_thinking modes; no distinct off behavior was confirmed.
 # SCNet API docs expose the thinking toggle; no separate budget or effort control is documented for this host.
 # SCNet OpenAI Chat API source:
 # https://www.scnet.cn/ac/openapi/doc/2.0/moduleapi/api/chat.html
 base_model = "alibaba/qwen3.5-122b-a10b"
-attachment = false
-reasoning_options = [{ type = "toggle" }]
+reasoning_options = []
 
 [interleaved]
 field = "reasoning_content"
@@ -16,6 +15,3 @@ output = 0.952
 
 [limit]
 context = 102_400
-
-[modalities]
-input = ["text"]
