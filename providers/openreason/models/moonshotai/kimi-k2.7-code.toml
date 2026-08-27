@@ -1,9 +1,12 @@
+# Baseten documents opt-in via chat_template_args.enable_thinking=true, but no
+# explicit false behavior, effort values, or reasoning-token budget. Reasoning
+# output is returned in reasoning_content.
+# https://docs.baseten.co/inference/model-apis/reasoning
 base_model = "moonshotai/kimi-k2.7-code"
-reasoning_options = []
+
+[[reasoning_options]]
+type = "toggle"
 
 [cost]
 input = 1.0022
 output = 4.22
-
-[modalities]
-input = ["text", "image"]

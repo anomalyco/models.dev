@@ -1,5 +1,5 @@
 base_model = "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning"
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
+reasoning_options = [{ type = "toggle" }, { type = "budget_tokens", min = -1, max = 32768 }]
 
 [cost]
 input = 0.0633

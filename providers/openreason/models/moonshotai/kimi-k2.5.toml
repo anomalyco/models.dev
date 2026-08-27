@@ -1,5 +1,10 @@
+# Opt in with chat_template_args.enable_thinking=true. Baseten documents no
+# explicit false behavior, effort values, or reasoning-token budget.
+# https://docs.baseten.co/inference/model-apis/reasoning
 base_model = "moonshotai/kimi-k2.5"
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
+
+[[reasoning_options]]
+type = "toggle"
 
 [cost]
 input = 0.4748
