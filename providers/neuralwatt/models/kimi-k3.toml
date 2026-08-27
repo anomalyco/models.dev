@@ -5,9 +5,7 @@ reasoning_options = [
   { type = "effort", values = ["none", "low", "high", "max"] },
   { type = "budget_tokens" },
 ]
-
-[interleaved]
-field = "reasoning_content"
+interleaved = true
 
 [cost]
 input = 3.0

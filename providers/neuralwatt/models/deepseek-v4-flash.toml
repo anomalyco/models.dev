@@ -11,6 +11,8 @@
 # https://portal.neuralwatt.com/docs/api/chat-completions
 base_model = "deepseek/deepseek-v4-flash"
 
+interleaved = true
+
 [[reasoning_options]]
 type = "effort"
 values = ["none", "high", "max"]

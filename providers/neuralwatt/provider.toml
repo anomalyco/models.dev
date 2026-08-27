@@ -8,8 +8,10 @@ npm = "@ai-sdk/openai-compatible"
 # Flex tier uses either a `-flex` model ID or `service_tier = "flex"` and
 # requires `stream = true`; non-streaming requests fall through to the standard
 # tier. The flex-tier guide states a 0.65 pricing multiplier (35% off), applied
-# to token billing and energy billing alike (accessed 2026-08-27); earlier
-# flex entries predate the move from 0.5.
+# to token billing and energy billing alike (accessed 2026-08-27).
+# The reasoning trace comes back on a `reasoning` field, streaming and
+# non-streaming alike, never `reasoning_content`/`reasoning_details`, so
+# `interleaved` is the bare boolean rather than a field name.
 # https://portal.neuralwatt.com/docs/api/chat-completions (accessed 2026-06-25)
 # https://portal.neuralwatt.com/docs/guides/flex-tier (accessed 2026-08-27)
 # https://portal.neuralwatt.com/docs/energy-methodology (accessed 2026-06-28)

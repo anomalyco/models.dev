@@ -15,6 +15,8 @@ base_model = "deepseek/deepseek-v4-pro"
 status = "beta"
 
 # Effort: reasoning_effort = none|low|high|max (off is effort=none; aliases
+interleaved = true
+
 # medium/minimal -> low, xhigh -> high)
 [[reasoning_options]]
 type = "effort"
@@ -23,9 +25,6 @@ values = ["none", "low", "high", "max"]
 # Budget: thinking_token_budget (integer reasoning tokens)
 [[reasoning_options]]
 type = "budget_tokens"
-
-[interleaved]
-field = "reasoning_content"
 
 [cost]
 input = 1.0

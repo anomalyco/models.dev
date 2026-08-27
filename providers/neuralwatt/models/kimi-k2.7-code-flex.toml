@@ -2,6 +2,7 @@ base_model = "moonshotai/kimi-k2.7-code"
 name = "Kimi K2.7 Code Flex"
 # Budget: thinking_token_budget (integer reasoning tokens)
 reasoning_options = [{ type = "budget_tokens" }]
+interleaved = true
 
 [cost]
 input = 0.6175
