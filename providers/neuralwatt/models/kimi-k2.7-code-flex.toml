@@ -1,11 +1,16 @@
+# Flex rate: 0.65x of standard pricing per the flex-tier guide, applied to
+# the standard rates advertised by GET /v1/models (checked 2026-08-27).
 base_model = "moonshotai/kimi-k2.7-code"
 name = "Kimi K2.7 Code Flex"
 reasoning_options = []
 
+[limit]
+context = 262_128
+
 [cost]
-input = 0.475
-output = 2
-cache_read = 0.11875
+input = 0.6175
+output = 2.6
+cache_read = 0.06175
 
 [modalities]
 input = ["text", "image"]
