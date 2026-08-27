@@ -1,0 +1,18 @@
+# Source: https://runinfra.ai/inference-api/glm-5-3-flash
+# Reasoning control, verified live 2026-08-27 (temperature 0, fixed prompt): reasoning_effort is a
+# graded dial — low and high switch reasoning off for trivial prompts while any other value is
+# treated as maximum effort (completion tokens 3 low, 3 high, 32 default, 64+ max on identical
+# prompts). reasoning_effort = "none" is rejected with HTTP 400 "GLM 5.3 Flash cannot disable
+# thinking", so there is no off switch — effort only, no toggle.
+# Reasoning text arrives on the message `reasoning` field (OpenRouter-style string).
+# cache_read is the cached input price (standing rate; prefix caching best effort on GPU).
+base_model = "zhipuai/glm-5.3-flash"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[cost]
+input = 0.10
+output = 0.40
+cache_read = 0.01

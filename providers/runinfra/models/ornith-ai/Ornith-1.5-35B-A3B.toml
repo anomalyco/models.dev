@@ -1,0 +1,15 @@
+# Source: https://runinfra.ai/inference-api/ornith-1-5-35b
+# Reasoning control, verified live 2026-08-27 (temperature 0, fixed prompt): reasoning is always
+# on — enable_thinking=false, thinking.type=disabled and reasoning_effort=low are all accepted but
+# leave the response unchanged (identical reasoning_content trace and completion tokens), so this
+# host exposes no caller control over thinking.
+# Reasoning text arrives on the message reasoning_content field.
+# cache_read is the cached input price (standing rate; prefix caching best effort on GPU).
+base_model = "ornith-ai/ornith-1.5-35b-a3b"
+
+reasoning_options = []
+
+[cost]
+input = 0.10
+output = 0.40
+cache_read = 0.01

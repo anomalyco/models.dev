@@ -11,9 +11,11 @@ base_model = "nvidia/nemotron-3.5-lightning"
 [[reasoning_options]]
 type = "toggle"
 
+# cache_read is the cached input price (standing rate; prefix caching best effort on GPU).
 [cost]
 input = 0.05
 output = 0.15
+cache_read = 0.01
 
 [limit]
 output = 32_768
