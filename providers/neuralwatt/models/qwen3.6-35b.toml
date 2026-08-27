@@ -24,8 +24,11 @@ input = 0.29
 output = 1.15
 cache_read = 0.029
 
+# No explicit output cap published: metadata.limits.max_output_tokens is
+# null, so output is bounded by the context window (matches the fast alias).
 [limit]
 context = 131_056
+output = 131_056
 
 [modalities]
 input = ["text", "image"]
