@@ -1,7 +1,9 @@
 base_model = "moonshotai/kimi-k3"
 description = "Kimi K3 is a 2.8T-parameter multimodal MoE model with 104B active parameters built for long-horizon coding and agentic workflows."
 temperature = true
-reasoning_options = []
+
+[[reasoning_options]]
+type = "toggle"
 
 [cost]
 input = 3
