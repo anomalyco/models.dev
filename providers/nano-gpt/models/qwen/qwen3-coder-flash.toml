@@ -1,0 +1,13 @@
+# Not included in subscription
+base_model = "alibaba/qwen3-coder-flash"
+tool_call = false
+structured_output = false
+
+[cost]
+input = 0.3
+output = 1.5
+cache_read = 0.15
+
+[limit]
+context = 128_000
+input = 128_000

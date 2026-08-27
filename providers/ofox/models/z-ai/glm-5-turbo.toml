@@ -1,0 +1,11 @@
+# Sources:
+# - https://ofox.ai/models/z-ai/glm-5-turbo (pricing $1.2/$4 per MTok, cache_read $0.24; context 200K; output 128K)
+# - https://docs.z.ai/guides/overview/concept-param (thinking.type for GLM-5-Turbo; reasoning_effort only GLM-5.2+)
+# Toggle: thinking.type = enabled|disabled
+base_model = "zhipuai/glm-5-turbo"
+reasoning_options = [{ type = "toggle" }]
+
+[cost]
+input = 1.2
+output = 4
+cache_read = 0.24

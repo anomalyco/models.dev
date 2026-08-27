@@ -1,0 +1,12 @@
+base_model = "moonshotai/kimi-k2.7-code"
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "toggle"
+
+[cost]
+input = 0.68
+output = 3.4
+cache_read = 0.136

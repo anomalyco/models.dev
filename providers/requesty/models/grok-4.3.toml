@@ -1,0 +1,24 @@
+base_model = "xai/grok-4.3"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "max"]
+
+[[reasoning_options]]
+type = "budget_tokens"
+
+[cost]
+input = 1.125
+output = 2.25
+cache_read = 0.18
+cache_write = 1.125
+
+[[cost.tiers]]
+tier = { type = "context", size = 200_000 }
+input = 2.25
+output = 4.5
+cache_read = 0.36
+cache_write = 2.25
+
+[limit]
+output = 1_000_000

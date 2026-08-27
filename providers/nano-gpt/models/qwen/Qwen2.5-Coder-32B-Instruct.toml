@@ -1,0 +1,14 @@
+# Included in subscription
+base_model = "alibaba/qwen2.5-coder-32b-instruct"
+name = "Qwen 2.5 Coder 32b"
+tool_call = false
+structured_output = false
+
+[cost]
+input = 0.2006
+output = 0.2006
+cache_read = 0.1003
+
+[limit]
+context = 32_000
+input = 32_000

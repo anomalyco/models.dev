@@ -1,0 +1,16 @@
+base_model = "google/gemini-2.5-flash"
+description = "Fast Gemini model balancing multimodal reasoning, tool use, and cost"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "high"]
+
+[cost]
+input = 0.3
+output = 2.5
+reasoning = 2.5
+cache_read = 0.03
+cache_write = 0.083333
+
+[limit]
+output = 65_535

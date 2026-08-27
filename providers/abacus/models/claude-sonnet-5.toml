@@ -1,0 +1,23 @@
+# Source: https://routellm.abacus.ai/v1/models
+# RouteLLM input_modalities: ['text', 'image']
+# RouteLLM output_modalities: ['text']
+# RouteLLM context_length: 1000000
+# RouteLLM max_completion_tokens: 64000
+# RouteLLM input_token_rate: 0.000003
+# RouteLLM output_token_rate: 0.000015
+# RouteLLM thinking: True
+base_model = "anthropic/claude-sonnet-5"
+reasoning = true
+reasoning_options = []
+
+[cost]
+input = 3
+output = 15
+
+[limit]
+context = 1_000_000
+output = 64_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

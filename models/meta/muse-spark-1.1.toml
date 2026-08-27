@@ -1,0 +1,100 @@
+name = "Muse Spark 1.1"
+description = "Muse Spark is a natively multimodal reasoning model with support for tool-use, visual chain of thought, and multi-agent orchestration."
+family = "muse"
+release_date = "2026-04-08"
+last_updated = "2026-07-09"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[limit]
+context = 1_000_000
+output = 32_000
+
+[modalities]
+input = ["text", "image", "pdf", "video"]
+output = ["text"]
+
+[[benchmarks]]
+name = "SWE-Bench Pro"
+score = 61.5
+metric = "resolve rate"
+source = "https://ai.meta.com/blog/introducing-muse-spark-meta-model-api/"
+date = "2026-07-09"
+
+[[benchmarks]]
+name = "Terminal-Bench"
+score = 80.0
+metric = "success rate"
+version = "2.1"
+source = "https://ai.meta.com/blog/introducing-muse-spark-meta-model-api/"
+date = "2026-07-09"
+
+[[benchmarks]]
+name = "DeepSWE"
+score = 53.3
+metric = "resolve rate"
+version = "1.1"
+source = "https://ai.meta.com/blog/introducing-muse-spark-meta-model-api/"
+date = "2026-07-09"
+
+[[benchmarks]]
+name = "MCP Atlas"
+score = 88.1
+metric = "success rate"
+source = "https://ai.meta.com/blog/introducing-muse-spark-meta-model-api/"
+date = "2026-07-09"
+
+[[benchmarks]]
+name = "JobBench"
+score = 54.7
+metric = "success rate"
+source = "https://ai.meta.com/blog/introducing-muse-spark-meta-model-api/"
+date = "2026-07-09"
+
+[[benchmarks]]
+name = "Toolathlon-Verified"
+score = 75.6
+metric = "success rate"
+source = "https://ai.meta.com/blog/introducing-muse-spark-meta-model-api/"
+date = "2026-07-09"
+
+[[benchmarks]]
+name = "Humanity's Last Exam"
+score = 62.1
+metric = "accuracy"
+variant = "with tools"
+source = "https://ai.meta.com/blog/introducing-muse-spark-meta-model-api/"
+date = "2026-07-09"
+
+[[benchmarks]]
+name = "OSWorld-Verified"
+score = 80.8
+metric = "success rate"
+source = "https://ai.meta.com/blog/introducing-muse-spark-meta-model-api/"
+date = "2026-07-09"
+
+[[benchmarks]]
+name = "Finance Agent"
+score = 57.2
+metric = "accuracy"
+version = "v2"
+source = "https://ai.meta.com/blog/introducing-muse-spark-meta-model-api/"
+date = "2026-07-09"
+
+[[benchmarks]]
+name = "CharXiv Reasoning"
+score = 88.4
+metric = "accuracy"
+source = "https://ai.meta.com/blog/introducing-muse-spark-meta-model-api/"
+date = "2026-07-09"
+
+[[benchmarks]]
+name = "BabyVision"
+score = 76.3
+metric = "accuracy"
+source = "https://ai.meta.com/blog/introducing-muse-spark-meta-model-api/"
+date = "2026-07-09"

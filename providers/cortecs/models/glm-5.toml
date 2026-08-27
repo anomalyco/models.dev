@@ -1,0 +1,16 @@
+base_model = "zhipuai/glm-5"
+description = "Flagship GLM model for hybrid reasoning, coding, and agentic engineering"
+structured_output = true
+reasoning_options = []
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.988
+output = 3.164
+cache_read = 0.247
+
+[limit]
+context = 202_752
+output = 202_752

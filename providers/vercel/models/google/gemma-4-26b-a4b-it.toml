@@ -1,0 +1,13 @@
+base_model = "google/gemma-4-26b-a4b-it"
+reasoning_options = []
+
+[cost]
+input = 0.15
+output = 0.6
+cache_read = 0.015
+
+[limit]
+output = 131_072
+
+[modalities]
+input = ["text", "image", "pdf"]

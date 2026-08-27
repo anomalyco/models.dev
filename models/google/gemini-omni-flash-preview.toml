@@ -1,0 +1,24 @@
+name = "Gemini Omni Flash Preview"
+description = "Video generation and editing model for fast, conversational text- and image-to-video workflows"
+family = "gemini"
+release_date = "2026-06-30"
+last_updated = "2026-06-30"
+attachment = true
+reasoning = true
+tool_call = false
+open_weights = false
+
+[limit]
+context = 1_048_576
+output = 57_920
+
+[modalities]
+input = ["text", "image", "video"]
+output = ["video"]
+
+[[benchmarks]]
+name = "LMArena Text-to-Video Arena"
+score = 1527
+metric = "Elo"
+source = "https://venturebeat.com/technology/googles-gemini-omni-flash-hits-the-api-turning-enterprise-video-production-into-a-conversation"
+date = "2026-06-30"

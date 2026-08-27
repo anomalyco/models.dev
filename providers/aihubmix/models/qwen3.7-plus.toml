@@ -1,0 +1,20 @@
+base_model = "alibaba/qwen3.7-plus"
+structured_output = true
+reasoning_options = [{ type = "toggle" }, { type = "budget_tokens", max = 262_144 }]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.282
+output = 1.128
+cache_read = 0.0564
+cache_write = 0.3525
+
+[limit]
+context = 991_000
+output = 64_000
+
+[modalities]
+input = ["text"]
+output = ["text"]

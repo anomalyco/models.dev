@@ -1,0 +1,11 @@
+base_model = "alibaba/qwen3.6-flash"
+description = "Qwen vision-language model for visual reasoning, documents, and agent tasks"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "high"]
+
+[cost]
+input = 0.1875
+output = 1.125
+cache_write = 0.234375

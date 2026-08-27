@@ -1,0 +1,12 @@
+base_model = "openai/o1"
+name = "o1 (Azure)"
+tool_call = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high"]
+
+[cost]
+input = 15
+output = 60
+cache_read = 7.5

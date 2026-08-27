@@ -1,0 +1,13 @@
+# Included in subscription
+base_model = "google/gemma-4-31b-it"
+name = "Gemma 4 31B Thinking"
+reasoning_options = []
+
+[cost]
+input = 0.1
+output = 0.35
+cache_read = 0.05
+
+[limit]
+input = 262_144
+output = 131_072

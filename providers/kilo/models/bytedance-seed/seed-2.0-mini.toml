@@ -1,0 +1,15 @@
+base_model = "bytedance-seed/seed-2.0-mini"
+description = "Multimodal reasoning model for visual analysis, planning, and tool use"
+structured_output = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "minimal", "low", "medium", "high"]
+
+[cost]
+input = 0.1
+output = 0.4
+
+[limit]
+context = 262_144
+output = 131_072

@@ -1,0 +1,26 @@
+# Not included in subscription
+name = "Gemma 4 31B Thinking TEE"
+description = "Open Gemma instruction model for efficient chat and self-hosted deployments"
+family = "gemma"
+release_date = "2026-05-02"
+last_updated = "2026-05-02"
+attachment = true
+reasoning = true
+tool_call = true
+structured_output = true
+open_weights = true
+reasoning_options = []
+
+[cost]
+input = 0.4
+output = 1
+cache_read = 0.4
+
+[limit]
+context = 262_144
+input = 262_144
+output = 131_072
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

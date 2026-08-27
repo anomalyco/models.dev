@@ -1,0 +1,11 @@
+base_model = "meta/llama-3.1-8b-instruct"
+description = "Open Llama instruction model for multilingual chat, reasoning, and coding"
+structured_output = true
+
+[cost]
+input = 0.02
+output = 0.04
+
+[limit]
+context = 131_072
+output = 117_964

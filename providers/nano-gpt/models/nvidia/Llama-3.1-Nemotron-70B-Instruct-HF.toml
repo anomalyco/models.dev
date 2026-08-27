@@ -1,0 +1,13 @@
+base_model = "nvidia/llama-3.1-nemotron-70b-instruct"
+name = "Nvidia Nemotron 70b"
+tool_call = false
+structured_output = false
+
+[cost]
+input = 0.357
+output = 0.408
+cache_read = 0.1785
+
+[limit]
+context = 16_384
+input = 16_384

@@ -1,0 +1,13 @@
+base_model = "nvidia/nemotron-nano-12b-v2-vl"
+name = "Nemotron-nano 12b v2-vl"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "max"]
+
+[cost]
+input = 0.2
+output = 0.6
+
+[limit]
+output = 16_384

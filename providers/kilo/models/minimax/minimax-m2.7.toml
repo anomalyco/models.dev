@@ -1,0 +1,16 @@
+base_model = "minimax/MiniMax-M2.7"
+description = "MiniMax model for chat, coding, office work, and agentic tasks"
+structured_output = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["high"]
+
+[cost]
+input = 0.3
+output = 1.2
+cache_read = 0.06
+
+[limit]
+context = 196_608
+output = 176_947

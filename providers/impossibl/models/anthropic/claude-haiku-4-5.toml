@@ -1,0 +1,15 @@
+# Pricing: https://api.impossibl.com/v1/models
+base_model = "anthropic/claude-haiku-4-5"
+
+[cost]
+input = 1.00
+output = 5.00
+cache_read = 0.10
+cache_write = 1.25
+
+[[reasoning_options]]
+type = "toggle" # API: {"thinking":{"type":"disabled"}}
+
+[[reasoning_options]]
+type = "budget_tokens" # API: {"thinking":{"type":"enabled","budget_tokens":<n>}}
+min = 1024

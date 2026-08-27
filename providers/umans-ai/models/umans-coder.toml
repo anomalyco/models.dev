@@ -1,0 +1,21 @@
+base_model = "moonshotai/kimi-k2.7-code"
+name = "Umans Coder"
+temperature = false
+# This alias currently routes to Kimi K2.7 Code: reasoning is always on
+# (`can_disable=false`) with no effort levels (accessed 2026-06-25).
+# https://api.code.umans.ai/v1/models/info
+reasoning_options = []
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.95
+output = 4.00
+cache_read = 0.19
+
+[limit]
+output = 32_768
+
+[modalities]
+input = ["text", "image"]

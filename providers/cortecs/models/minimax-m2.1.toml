@@ -1,0 +1,15 @@
+base_model = "minimax/MiniMax-M2.1"
+description = "MiniMax model for chat, coding, office work, and agentic tasks"
+structured_output = true
+reasoning_options = []
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.359
+output = 1.435
+
+[limit]
+context = 196_000
+output = 196_000

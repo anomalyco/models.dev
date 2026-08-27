@@ -1,0 +1,11 @@
+base_model = "google/gemini-embedding-2"
+description = "Embedding model for semantic search, retrieval, clustering, and ranking pipelines"
+attachment = false
+temperature = true
+
+[limit]
+context = 0
+output = 0
+
+[modalities]
+input = ["text"]

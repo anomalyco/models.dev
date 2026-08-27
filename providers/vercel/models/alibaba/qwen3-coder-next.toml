@@ -1,0 +1,12 @@
+base_model = "alibaba/qwen3-coder-next"
+description = "Qwen coding model for software agents, repository edits, and code reasoning"
+reasoning = true
+reasoning_options = []
+
+[cost]
+input = 0.5
+output = 1.2
+
+[limit]
+context = 256_000
+output = 256_000

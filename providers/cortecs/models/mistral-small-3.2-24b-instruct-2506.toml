@@ -1,0 +1,22 @@
+name = "mistral-small-3.2-24b-instruct-2506"
+description = "Mistral-Small-3.2-24B-Instruct-2506 is a 24B parameter instruction-tuned model with enhanced long-context support (128k) and state-of-the-art vision understanding."
+release_date = "2025-05-26"
+last_updated = "2025-05-26"
+attachment = true
+reasoning = false
+temperature = false
+tool_call = true
+structured_output = true
+open_weights = false
+
+[cost]
+input = 0.1
+output = 0.312
+
+[limit]
+context = 131_000
+output = 131_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

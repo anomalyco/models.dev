@@ -1,0 +1,22 @@
+# Included in subscription
+base_model = "alibaba/qwen3.5-122b-a10b"
+name = "Qwen3.5 122B A10B Thinking"
+attachment = false
+
+[[reasoning_options]]
+type = "budget_tokens"
+min = 1_024
+max = 81_920
+
+[cost]
+input = 0.437
+output = 3.496
+cache_read = 0.103788
+
+[limit]
+context = 131_072
+input = 131_072
+output = 32_768
+
+[modalities]
+input = ["text"]

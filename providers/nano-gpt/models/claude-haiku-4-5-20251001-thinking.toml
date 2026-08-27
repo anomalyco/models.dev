@@ -1,0 +1,13 @@
+# Not included in subscription
+base_model = "anthropic/claude-haiku-4-5-20251001"
+name = "Claude Haiku 4.5 Thinking"
+structured_output = true
+reasoning_options = []
+
+[cost]
+input = 1
+output = 5
+cache_read = 0.1
+
+[limit]
+input = 200_000

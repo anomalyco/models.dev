@@ -1,0 +1,215 @@
+name = "GPT-5.4"
+description = "Agent-ready GPT for coding and computer-use workflows at a lower cost"
+family = "gpt"
+release_date = "2026-03-05"
+last_updated = "2026-03-05"
+attachment = true
+reasoning = true
+temperature = false
+tool_call = true
+structured_output = true
+knowledge = "2025-08-31"
+open_weights = false
+
+[limit]
+context = 1_050_000
+input = 922_000
+output = 128_000
+
+[modalities]
+input = ["text", "image", "pdf"]
+output = ["text"]
+
+[[benchmarks]]
+name = "SWE-Bench Pro"
+score = 59.1
+metric = "resolve rate"
+dataset = "public"
+source = "https://labs.scale.com/leaderboard/swe_bench_pro_public"
+
+[[benchmarks]]
+name = "SWE-Atlas Codebase QnA"
+score = 40.8
+metric = "score"
+harness = "Codex"
+source = "https://labs.scale.com/leaderboard/sweatlas-qna"
+
+[[benchmarks]]
+name = "SWE-Atlas Codebase QnA"
+score = 36.3
+metric = "score"
+harness = "Mini-SWE-Agent"
+source = "https://labs.scale.com/leaderboard/sweatlas-qna"
+
+[[benchmarks]]
+name = "SWE-Atlas Refactoring"
+score = 44.29
+metric = "score"
+harness = "Codex"
+source = "https://labs.scale.com/leaderboard/sweatlas-refactoring"
+
+[[benchmarks]]
+name = "SWE-Atlas Test Writing"
+score = 44.36
+metric = "score"
+harness = "Codex CLI"
+source = "https://labs.scale.com/leaderboard/sweatlas-tw"
+
+[[benchmarks]]
+name = "SWE-Atlas Test Writing"
+score = 40
+metric = "score"
+harness = "Mini-SWE-Agent"
+source = "https://labs.scale.com/leaderboard/sweatlas-tw"
+
+[[benchmarks]]
+name = "Artificial Analysis Coding Agent Index"
+score = 53.6
+metric = "average pass@1"
+harness = "Codex"
+variant = "medium"
+source = "https://artificialanalysis.ai/agents/coding-agents"
+
+[[benchmarks]]
+name = "SWE-Atlas Codebase QnA"
+score = 72.4
+metric = "pass@1"
+harness = "Codex"
+variant = "medium"
+source = "https://artificialanalysis.ai/agents/coding-agents"
+
+[[benchmarks]]
+name = "SWE-Bench Pro"
+score = 18.4
+metric = "pass@1"
+harness = "Codex"
+variant = "medium"
+dataset = "hard-aa"
+source = "https://artificialanalysis.ai/agents/coding-agents"
+
+[[benchmarks]]
+name = "Terminal-Bench"
+score = 69.8
+metric = "pass@1"
+harness = "Codex"
+variant = "medium"
+version = "2.1"
+source = "https://artificialanalysis.ai/agents/coding-agents"
+
+[[benchmarks]]
+name = "Artificial Analysis Coding Agent Index"
+score = 52.2
+metric = "average pass@1"
+harness = "Cursor CLI"
+variant = "medium"
+source = "https://artificialanalysis.ai/agents/coding-agents"
+
+[[benchmarks]]
+name = "SWE-Atlas Codebase QnA"
+score = 72.9
+metric = "pass@1"
+harness = "Cursor CLI"
+variant = "medium"
+source = "https://artificialanalysis.ai/agents/coding-agents"
+
+[[benchmarks]]
+name = "SWE-Bench Pro"
+score = 18.9
+metric = "pass@1"
+harness = "Cursor CLI"
+variant = "medium"
+dataset = "hard-aa"
+source = "https://artificialanalysis.ai/agents/coding-agents"
+
+[[benchmarks]]
+name = "Terminal-Bench"
+score = 64.7
+metric = "pass@1"
+harness = "Cursor CLI"
+variant = "medium"
+version = "2.1"
+source = "https://artificialanalysis.ai/agents/coding-agents"
+
+[[benchmarks]]
+name = "Terminal-Bench"
+score = 75.1
+metric = "success rate"
+version = "2.0"
+source = "https://openai.com/index/introducing-gpt-5-5/"
+date = "2026-04-23"
+
+[[benchmarks]]
+name = "GPQA Diamond"
+score = 92.8
+metric = "accuracy"
+source = "https://openai.com/index/introducing-gpt-5-5/"
+date = "2026-04-23"
+
+[[benchmarks]]
+name = "Humanity's Last Exam"
+score = 39.8
+metric = "accuracy"
+variant = "no tools"
+source = "https://openai.com/index/introducing-gpt-5-5/"
+date = "2026-04-23"
+
+[[benchmarks]]
+name = "Humanity's Last Exam"
+score = 52.1
+metric = "accuracy"
+variant = "with tools"
+source = "https://openai.com/index/introducing-gpt-5-5/"
+date = "2026-04-23"
+
+[[benchmarks]]
+name = "OSWorld-Verified"
+score = 75.0
+metric = "success rate"
+source = "https://openai.com/index/introducing-gpt-5-5/"
+date = "2026-04-23"
+
+[[benchmarks]]
+name = "BrowseComp"
+score = 82.7
+metric = "accuracy"
+source = "https://openai.com/index/introducing-gpt-5-5/"
+date = "2026-04-23"
+
+[[benchmarks]]
+name = "GDPval"
+score = 83.0
+metric = "wins or ties"
+source = "https://openai.com/index/introducing-gpt-5-5/"
+date = "2026-04-23"
+
+[[benchmarks]]
+name = "ARC-AGI-2"
+score = 73.3
+metric = "accuracy"
+variant = "Verified"
+source = "https://openai.com/index/introducing-gpt-5-5/"
+date = "2026-04-23"
+
+[[benchmarks]]
+name = "FrontierMath"
+score = 47.6
+metric = "accuracy"
+dataset = "Tier 1-3"
+source = "https://openai.com/index/introducing-gpt-5-5/"
+date = "2026-04-23"
+
+[[benchmarks]]
+name = "FrontierMath"
+score = 27.1
+metric = "accuracy"
+dataset = "Tier 4"
+source = "https://openai.com/index/introducing-gpt-5-5/"
+date = "2026-04-23"
+
+[[benchmarks]]
+name = "MMMU Pro"
+score = 81.2
+metric = "accuracy"
+variant = "no tools"
+source = "https://openai.com/index/introducing-gpt-5-5/"
+date = "2026-04-23"

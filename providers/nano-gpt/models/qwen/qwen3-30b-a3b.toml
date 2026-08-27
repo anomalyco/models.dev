@@ -1,0 +1,15 @@
+# Included in subscription
+base_model = "alibaba/qwen3-30b-a3b"
+reasoning = false
+tool_call = false
+structured_output = false
+
+[cost]
+input = 0.1
+output = 0.3
+cache_read = 0.05
+
+[limit]
+context = 41_000
+input = 41_000
+output = 32_768

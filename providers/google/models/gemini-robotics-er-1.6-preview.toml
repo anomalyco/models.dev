@@ -1,0 +1,18 @@
+# Sources:
+# - https://ai.google.dev/gemini-api/docs/pricing (Gemini Robotics-ER 1.6 Preview)
+# - https://ai.google.dev/gemini-api/docs/robotics-overview (thinking_budget)
+# - https://ai.google.dev/gemini-api/docs/models/gemini-robotics-er-1.6-preview
+
+base_model = "google/gemini-robotics-er-1.6-preview"
+
+[[reasoning_options]]
+type = "toggle" # API: thinking_config.thinking_budget = 0 disables thinking
+
+[[reasoning_options]]
+type = "budget_tokens" # API: thinking_config.thinking_budget
+min = 0
+
+[cost]
+input = 1.0
+output = 5.0
+input_audio = 2.0

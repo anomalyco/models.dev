@@ -1,0 +1,30 @@
+base_model = "zhipuai/glm-5.1"
+name = "GLM 5.1"
+last_updated = "2026-06-12"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "max"]
+
+[[reasoning_options]]
+type = "budget_tokens"
+min = 1
+max = 38_912
+
+[cost]
+input = 0.825
+output = 3.301
+cache_read = 0.165
+
+[[cost.tiers]]
+tier = { type = "context", size = 32_000 }
+input = 1.1
+output = 3.851
+cache_read = 0.22
+
+[limit]
+context = 202_000
+output = 128_000

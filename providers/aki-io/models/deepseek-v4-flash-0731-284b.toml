@@ -1,0 +1,13 @@
+# attachment are not supported on AKI.IO for security reasons and therefore are disabled
+base_model = "deepseek/deepseek-v4-flash-0731"
+reasoning_options = [{ type = "effort", values = ["none", "low", "high", "max"] }]
+
+# cost as described on the AKI.IO pricing page at https://aki.io/#pricing
+[cost]
+input = 0.20
+output = 0.50
+cache_read = 0.10
+
+[limit]
+context = 1_048_576
+output = 81_920

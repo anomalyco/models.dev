@@ -1,0 +1,11 @@
+# Pricing and endpoint support: https://daoxe.com/api/pricing (accessed 2026-07-11)
+# USD quota basis: https://daoxe.com/api/status (accessed 2026-07-11)
+base_model = "xai/grok-4.3"
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high"]
+
+[cost]
+input = 1.25
+output = 2.5
+cache_read = 0.2

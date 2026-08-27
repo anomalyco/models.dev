@@ -1,0 +1,27 @@
+name = "Qwen: Qwen3 14B"
+description = "Qwen instruction model for multilingual chat, reasoning, and tool use"
+family = "qwen"
+release_date = "2025-04-28"
+last_updated = "2025-04-28"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "high"]
+
+[cost]
+input = 0.2275
+output = 0.91
+
+[limit]
+context = 40_960
+output = 16_384
+
+[modalities]
+input = ["text"]
+output = ["text"]

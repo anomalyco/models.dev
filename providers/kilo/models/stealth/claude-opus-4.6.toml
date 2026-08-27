@@ -1,0 +1,30 @@
+name = "Stealth: Claude Opus 4.6 (20% off)"
+description = "Flagship Claude model for deep reasoning, coding, and long-horizon agents"
+family = "claude-opus"
+release_date = "2025-08-26"
+last_updated = "2025-08-26"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = false
+open_weights = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "xhigh", "max"]
+
+[cost]
+input = 4
+output = 20
+reasoning = 0
+cache_read = 0.4
+cache_write = 5
+
+[limit]
+context = 1_000_000
+output = 128_000
+
+[modalities]
+input = ["text", "image", "pdf"]
+output = ["text"]

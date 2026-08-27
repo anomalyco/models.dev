@@ -1,0 +1,15 @@
+base_model = "arcee-ai/trinity-large-thinking"
+name = "Arcee Trinity Large Thinking (Public Preview)"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high"]
+
+[cost]
+input = 0.25
+output = 0.9
+cache_read = 0.06
+
+[limit]
+context = 128_000
+output = 32_000

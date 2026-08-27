@@ -1,0 +1,10 @@
+# Sources:
+# - https://ofox.ai/models/bailian/qwen3-coder-plus (Ofox model page: pricing, context 1M, output 64K)
+# - Lab metadata: models/alibaba/qwen3-coder-plus.toml
+base_model = "alibaba/qwen3-coder-plus"
+
+[cost]
+input = 1.8
+output = 9
+cache_read = 0.2
+cache_write = 1

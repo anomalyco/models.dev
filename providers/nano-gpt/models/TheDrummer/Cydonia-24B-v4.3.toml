@@ -1,0 +1,24 @@
+# Included in subscription
+name = "The Drummer Cydonia 24B v4.3"
+description = "General-purpose chat model for instruction following, writing, and analysis"
+release_date = "2025-12-25"
+last_updated = "2025-12-25"
+attachment = false
+reasoning = false
+tool_call = false
+structured_output = false
+open_weights = true
+
+[cost]
+input = 0.12
+output = 0.15
+cache_read = 0.06
+
+[limit]
+context = 32_768
+input = 32_768
+output = 32_768
+
+[modalities]
+input = ["text"]
+output = ["text"]

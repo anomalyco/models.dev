@@ -1,0 +1,13 @@
+base_model = "openai/gpt-4o"
+structured_output = false
+
+[cost]
+input = 2.5
+output = 10
+cache_read = 1.25
+
+[limit]
+input = 128_000
+
+[modalities]
+input = ["text", "image"]

@@ -1,0 +1,16 @@
+base_model = "alibaba/qwen3.5-397b-a17b"
+name = "Qwen3.5 397B A17B"
+reasoning = false
+structured_output = false
+
+[cost]
+input = 0.6
+output = 3.6
+cache_read = 0.3
+
+[limit]
+context = 258_048
+input = 258_048
+
+[modalities]
+input = ["text", "image", "video"]

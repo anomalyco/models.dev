@@ -1,0 +1,17 @@
+base_model = "tencent/hy3-preview"
+name = "Hy3 Preview"
+structured_output = true
+reasoning_options = [{ type = "effort", values = ["none", "low", "high"] }]
+
+[cost]
+input = 0.17
+output = 0.566661
+cache_read = 0.051
+
+[limit]
+context = 256_000
+output = 128_000
+
+[modalities]
+input = ["text"]
+output = ["text"]

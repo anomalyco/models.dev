@@ -1,0 +1,25 @@
+name = "DeepSeek V3.2 Exp Thinking"
+description = "DeepSeek chat model for instruction following, coding, and analysis"
+family = "deepseek-thinking"
+release_date = "2024-01-01"
+last_updated = "2025-09-29"
+attachment = false
+reasoning = true
+tool_call = false
+structured_output = false
+open_weights = true
+reasoning_options = []
+
+[cost]
+input = 0.28
+output = 0.42
+cache_read = 0.14
+
+[limit]
+context = 163_840
+input = 163_840
+output = 65_536
+
+[modalities]
+input = ["text"]
+output = ["text"]

@@ -1,0 +1,20 @@
+base_model = "anthropic/claude-sonnet-4-6"
+description = "Balanced Claude model for coding, analysis, agent workflows, and cost control"
+structured_output = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high"]
+
+[[reasoning_options]]
+type = "budget_tokens"
+min = 1_024
+
+[cost]
+input = 3.196
+output = 15.94
+cache_read = 0.32
+cache_write = 3.999
+
+[limit]
+output = 1_000_000

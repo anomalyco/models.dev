@@ -1,0 +1,12 @@
+base_model = "anthropic/claude-opus-4-6"
+name = "Claude 4.6 Opus Thinking Max"
+structured_output = true
+reasoning_options = []
+
+[cost]
+input = 5
+output = 25
+cache_read = 0.5
+
+[limit]
+input = 1_000_000

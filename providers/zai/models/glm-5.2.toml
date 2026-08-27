@@ -1,0 +1,17 @@
+base_model = "zhipuai/glm-5.2"
+# `reasoning_effort`: none|minimal skip thinking, low|medium map to high,
+# and xhigh maps to max; effective levels are high|max (default: max).
+# https://docs.z.ai/api-reference/llm/chat-completion (accessed 2026-06-25)
+
+[[reasoning_options]]
+type = "effort"
+values = ["high", "max"]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 1.4
+output = 4.4
+cache_read = 0.26
+cache_write = 0

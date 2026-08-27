@@ -1,0 +1,16 @@
+# Reasoning controls for the whole API surface (verified 2026-07-28):
+# https://docs.abliteration.ai/capabilities/thinking
+# Both models reason by default. Effort ladder, least to most:
+# none (disables reasoning), minimal, low, medium, high, xhigh, max.
+# Request field per endpoint:
+# - POST /v1/chat/completions: top-level "reasoning_effort": "<level>"
+#   (legacy top-level "thinking": false also disables reasoning)
+# - POST /v1/responses: "reasoning": { "effort": "<level>" }
+# - POST /v1/messages: "output_config": { "effort": "<level>" } or
+#   "thinking": { "type": "enabled", "budget_tokens": <n> };
+#   "thinking": false disables reasoning
+name = "abliteration.ai"
+env = ["ABLIT_KEY"]
+npm = "@ai-sdk/openai-compatible"
+api = "https://api.abliteration.ai/v1"
+doc = "https://docs.abliteration.ai/models"

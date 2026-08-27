@@ -1,0 +1,17 @@
+base_model = "moonshotai/kimi-k2.6"
+description = "Kimi multimodal agent model for visual understanding, coding, and planning"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "high"]
+
+[cost]
+input = 0.8
+output = 3.4
+cache_read = 0.16
+
+[limit]
+output = 235_929
+
+[modalities]
+input = ["text", "image"]

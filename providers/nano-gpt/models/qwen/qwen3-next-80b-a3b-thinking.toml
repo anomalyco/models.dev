@@ -1,0 +1,15 @@
+# Included in subscription
+base_model = "alibaba/qwen3-next-80b-a3b-thinking"
+name = "Qwen3 Next 80B A3B (Thinking)"
+reasoning = false
+tool_call = false
+structured_output = false
+
+[cost]
+input = 0.15
+output = 0.65
+cache_read = 0.075
+
+[limit]
+context = 256_000
+input = 256_000

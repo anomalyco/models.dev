@@ -1,0 +1,7 @@
+base_model = "google/gemini-3.1-flash-lite"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
+
+[cost]
+input = 0.25
+output = 1.50
+cache_read = 0.025

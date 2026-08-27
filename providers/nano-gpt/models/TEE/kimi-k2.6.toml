@@ -1,0 +1,17 @@
+# Not included in subscription
+base_model = "moonshotai/kimi-k2.6"
+name = "Kimi K2.6 TEE"
+reasoning = false
+structured_output = false
+
+[cost]
+input = 1.5
+output = 5.25
+cache_read = 0.375
+
+[limit]
+input = 262_144
+output = 65_536
+
+[modalities]
+input = ["text", "image"]

@@ -1,0 +1,15 @@
+base_model = "alibaba/qwen3.5-397b-a17b"
+base_model_omit = ["structured_output"]
+attachment = false
+reasoning_options = []
+
+[cost]
+input = 0.668
+output = 4.01
+
+[limit]
+context = 262_000
+output = 250_000
+
+[modalities]
+input = ["text"]

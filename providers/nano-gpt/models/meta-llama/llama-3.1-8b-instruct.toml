@@ -1,0 +1,14 @@
+base_model = "meta/llama-3.1-8b-instruct"
+name = "Llama 3.1 8b Instruct"
+tool_call = false
+structured_output = false
+
+[cost]
+input = 0.0544
+output = 0.085
+cache_read = 0.0272
+
+[limit]
+context = 131_072
+input = 131_072
+output = 16_384

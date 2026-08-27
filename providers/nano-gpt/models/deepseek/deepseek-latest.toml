@@ -1,0 +1,29 @@
+# Included in subscription (uses 2x input tokens)
+name = "DeepSeek Latest"
+description = "DeepSeek chat model for instruction following, coding, and analysis"
+family = "deepseek"
+release_date = "2026-05-03"
+last_updated = "2026-05-03"
+attachment = false
+reasoning = true
+tool_call = true
+structured_output = true
+open_weights = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "high", "max"]
+
+[cost]
+input = 1.1
+output = 2.5
+cache_read = 0.04
+
+[limit]
+context = 1_048_576
+input = 1_048_576
+output = 384_000
+
+[modalities]
+input = ["text"]
+output = ["text"]

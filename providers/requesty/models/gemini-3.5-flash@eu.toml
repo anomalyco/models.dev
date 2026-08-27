@@ -1,0 +1,18 @@
+base_model = "google/gemini-3.5-flash"
+name = "Gemini 3.5 Flash (EU)"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "max"]
+
+[[reasoning_options]]
+type = "budget_tokens"
+
+[cost]
+input = 1.485
+output = 8.91
+cache_read = 0.1485
+cache_write = 1.56717
+
+[limit]
+output = 65_535

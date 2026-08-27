@@ -1,0 +1,12 @@
+base_model = "zhipuai/glm-5"
+
+[[reasoning_options]]
+type = "toggle"
+
+[cost]
+input = 1
+output = 3.2
+
+[limit]
+context = 202_800
+output = 131_100

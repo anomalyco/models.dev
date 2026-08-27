@@ -1,0 +1,17 @@
+# Not included in subscription
+base_model = "alibaba/qwen3.5-27b"
+name = "Qwen3.5 27B TEE"
+reasoning = false
+tool_call = false
+structured_output = false
+
+[cost]
+input = 0.3
+output = 2.4
+cache_read = 0.15
+
+[limit]
+input = 262_144
+
+[modalities]
+input = ["text", "image", "video"]

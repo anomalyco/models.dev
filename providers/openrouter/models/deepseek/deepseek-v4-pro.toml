@@ -1,0 +1,19 @@
+base_model = "deepseek/deepseek-v4-pro"
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["high", "xhigh"]
+
+[cost]
+input = 0.572808
+output = 1.145616
+cache_read = 0.047734
+
+[limit]
+context = 1_048_576

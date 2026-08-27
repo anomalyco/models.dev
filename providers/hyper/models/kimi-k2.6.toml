@@ -1,0 +1,19 @@
+base_model = "moonshotai/kimi-k2.6"
+release_date = "2026-07-03"
+last_updated = "2026-07-22"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high"]
+
+[cost]
+input = 1.03436
+output = 4.3552
+cache_read = 0.174208
+
+[limit]
+context = 262_000
+output = 26_214
+
+[modalities]
+input = ["text", "image"]

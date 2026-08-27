@@ -1,0 +1,10 @@
+base_model = "alibaba/qwen3-coder-30b-a3b-instruct"
+structured_output = true
+
+[cost]
+input = 0.067
+output = 0.245
+cache_read = 0.014
+
+[limit]
+output = 262_000

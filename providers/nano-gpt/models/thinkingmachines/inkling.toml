@@ -1,0 +1,13 @@
+base_model = "thinkingmachines/inkling"
+reasoning = false
+structured_output = true
+
+[cost]
+input = 1
+output = 4.05
+cache_read = 0.17
+
+[limit]
+context = 1_048_000
+input = 1_048_000
+output = 32_768

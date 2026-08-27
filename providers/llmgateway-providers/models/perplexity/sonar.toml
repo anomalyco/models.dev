@@ -1,0 +1,10 @@
+base_model = "perplexity/sonar"
+name = "Sonar (Perplexity)"
+structured_output = true
+
+[cost]
+input = 1
+output = 1
+
+[limit]
+context = 130_000

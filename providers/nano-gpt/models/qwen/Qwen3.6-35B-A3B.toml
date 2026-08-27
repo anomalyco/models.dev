@@ -1,0 +1,17 @@
+# Included in subscription
+base_model = "alibaba/qwen3.6-35b-a3b"
+name = "Qwen3.6 35B A3B"
+reasoning = false
+structured_output = false
+
+[cost]
+input = 0.112
+output = 0.8
+cache_read = 0.056
+
+[limit]
+input = 262_144
+output = 16_384
+
+[modalities]
+input = ["text", "image", "video"]

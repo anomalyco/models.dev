@@ -1,0 +1,29 @@
+# Toggle: $.reasoning_effort = "none" disables thinking; any other accepted
+# value (or omitting the field) leaves it on. The gateway maps it to the
+# deployment's thinking switch.
+# https://docs.llmgateway.io/features/reasoning
+name = "Cosmos 3 Super Reasoner (Nebius AI)"
+description = "Multimodal reasoning model for visual analysis, planning, and tool use"
+release_date = "2026-06-01"
+last_updated = "2026-06-01"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = false
+open_weights = false
+
+[[reasoning_options]]
+type = "toggle"
+
+[cost]
+input = 0.1
+output = 0.3
+
+[limit]
+context = 262_144
+output = 262_144
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

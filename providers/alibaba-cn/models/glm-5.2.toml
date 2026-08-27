@@ -1,0 +1,22 @@
+base_model = "zhipuai/glm-5.2"
+
+reasoning_options = []
+
+[interleaved]
+field = "reasoning_content"
+
+# First party price citation here
+# https://bailian.console.alibabacloud.com/cn-beijing?tab=model#/model-market/detail/glm-5.2?serviceSite=asia-pacific-china
+[cost]
+input = 1.1
+output = 3.851
+cache_read = 0.275
+cache_write = 0
+
+[limit]
+context = 1000000
+output = 128_000
+
+[modalities]
+input = ["text"]
+output = ["text"]

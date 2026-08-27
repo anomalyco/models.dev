@@ -1,0 +1,21 @@
+# Sources (accessed 2026-08-14):
+# - https://seed.bytedance.com/en/seed2
+# - https://www.volcengine.com/docs/82379/1330310
+name = "Seed 1.6 Vision"
+description = "ByteDance Seed multimodal model for image understanding, visual reasoning, and tool-assisted tasks"
+family = "seed"
+release_date = "2025-08-15"
+last_updated = "2025-08-15"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = true
+open_weights = false
+
+[limit]
+context = 256_000
+output = 32_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

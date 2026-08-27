@@ -1,0 +1,20 @@
+# Not included in subscription
+base_model = "bytedance-seed/seed-2.0-lite"
+name = "ByteDance Seed 2.0 Lite"
+attachment = false
+reasoning = false
+tool_call = false
+structured_output = true
+
+[cost]
+input = 0.25
+output = 2
+cache_read = 0.125
+
+[limit]
+context = 262_144
+input = 262_144
+output = 131_072
+
+[modalities]
+input = ["text"]

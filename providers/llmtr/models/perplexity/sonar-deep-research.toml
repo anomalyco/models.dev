@@ -1,0 +1,15 @@
+# Hand-authored from LLMTR's public catalog https://llmtr.com/api/models (accessed 2026-08-16).
+# reasoning_options measured against POST https://llmtr.com/v1/chat/completions (2026-08-16).
+# No caller-facing thinking control on this route. Measured 2026-08-16:
+#   reasoning_effort is rejected with "does not expose a thinking mode" for a junk value and
+#   for the documented "high" alike, so the gateway does not forward Perplexity's effort field.
+# The model-id suffixes low|medium|high|fast|pro|auto are search controls, not reasoning: the
+# gateway names the parameter in its own rejection (search_type) and the vocabulary is
+# identical for every perplexity route.
+base_model = "perplexity/sonar-deep-research"
+reasoning_options = []
+
+[cost]
+input = 2
+output = 8
+reasoning = 3

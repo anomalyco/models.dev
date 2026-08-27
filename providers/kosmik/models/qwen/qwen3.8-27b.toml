@@ -1,0 +1,28 @@
+# Sources (accessed 2026-08-17):
+# https://api.koscompute.com/v1/models
+# https://api.koscompute.com/openapi.json
+# Pricing USD/MTok: GET /v1/models -> data[id="qwen/qwen3.8-27b"].pricing
+# (input=0.35, output=2.20, cache_read=0.09).
+# Disable: reasoning_effort = none
+# Enable/effort: reasoning_effort = low|medium|xhigh
+# Tool-call reasoning is returned and replayed in reasoning_content.
+# Context: inherits the canonical 262,144-token text context; Kosmik's
+# serving layer enforces 131,072 tokens for multimodal requests.
+
+base_model = "alibaba/qwen3.8-27b"
+description = "Dense 27B vision-language model for coding, agent tasks, and image understanding"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "xhigh"]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.35
+output = 2.20
+cache_read = 0.09
+
+[modalities]
+input = ["text", "image"]

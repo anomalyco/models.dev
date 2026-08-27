@@ -1,0 +1,17 @@
+base_model = "google/gemma-4-31b-it"
+description = "Open Gemma instruction model for efficient chat and self-hosted deployments"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "high"]
+
+[cost]
+input = 0.08
+output = 0.35
+cache_read = 0.01
+
+[limit]
+output = 235_929
+
+[modalities]
+input = ["image", "text", "video"]

@@ -1,0 +1,14 @@
+base_model = "nvidia/nemotron-3.5-lightning"
+description = "NVIDIA Nemotron 3.5 Lightning is an open mixture-of-experts model from NVIDIA, with 3B active parameters out of 30B total. It is suited for high-throughput agentic workloads and specialized tasks that..."
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "high"]
+
+[cost]
+input = 0.08
+output = 0.2
+cache_read = 0.04
+
+[limit]
+output = 131_072

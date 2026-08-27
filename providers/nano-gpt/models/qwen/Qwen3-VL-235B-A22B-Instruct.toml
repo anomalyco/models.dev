@@ -1,0 +1,14 @@
+# Included in subscription
+base_model = "alibaba/qwen3-vl-235b-a22b-instruct"
+tool_call = false
+structured_output = false
+
+[cost]
+input = 0.3
+output = 1.2
+cache_read = 0.15
+
+[limit]
+context = 128_000
+input = 128_000
+output = 262_144

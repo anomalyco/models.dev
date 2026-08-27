@@ -1,0 +1,13 @@
+# Sources:
+# - https://ofox.ai/models/bailian/qwen3.6-flash (pricing, context, capabilities)
+# - https://ofox.ai/models/bailian (catalog listing)
+# Toggle: enable_thinking true|false (Alibaba/DashScope hybrid; Ofox OpenAI-compatible path)
+# Budget: thinking_budget
+base_model = "alibaba/qwen3.6-flash"
+reasoning_options = [{ type = "toggle" }, { type = "budget_tokens" }]
+
+[cost]
+input = 0.25
+output = 1.5
+cache_read = 0.025
+cache_write = 0.31

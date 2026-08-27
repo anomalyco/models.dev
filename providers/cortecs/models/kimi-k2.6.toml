@@ -1,0 +1,19 @@
+base_model = "moonshotai/kimi-k2.6"
+description = "Kimi reasoning model for long-horizon research, planning, and tool use"
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "toggle"
+
+[cost]
+input = 0.773
+output = 3.38
+cache_read = 0.193
+
+[limit]
+output = 256_000
+
+[modalities]
+input = ["text", "image", "pdf"]

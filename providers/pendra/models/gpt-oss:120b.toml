@@ -1,0 +1,11 @@
+base_model = "openai/gpt-oss-120b"
+
+# gpt-oss honours OpenAI-style `reasoning_effort` (low|medium|high), which
+# Pendra forwards on POST /api/v1/chat/completions.
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
+
+# Pendra serves models on your own workers — there is no per-token charge at
+# the API. Billing is by GPU/plan, so token costs are zero here.
+[cost]
+input = 0
+output = 0

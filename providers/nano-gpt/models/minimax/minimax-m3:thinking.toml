@@ -1,0 +1,17 @@
+# Included in subscription
+base_model = "minimax/MiniMax-M3"
+name = "MiniMax M3 Thinking"
+structured_output = true
+reasoning_options = []
+
+[cost]
+input = 0.3
+output = 1.2
+cache_read = 0.06
+
+[limit]
+input = 512_000
+output = 80_000
+
+[modalities]
+input = ["text", "image"]

@@ -1,0 +1,31 @@
+# mistral-medium-latest is Mistral's alias for Mistral Medium 3.5 (mistral-medium-2604).
+# Medium 3.1 (mistral-medium-2508) was deprecated 2026-05-22, retiring 2026-08-31.
+name = "Mistral Medium (latest)"
+description = "Balanced Mistral model for enterprise assistants, multilingual work, and tools"
+family = "mistral-medium"
+release_date = "2026-04-29"
+last_updated = "2026-04-29"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = true
+
+[limit]
+context = 262_144
+output = 262_144
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/mistralai/Mistral-Medium-3.5-128B"
+
+[[benchmarks]]
+name = "SWE-Bench Verified"
+score = 77.6
+metric = "resolved"
+source = "https://huggingface.co/mistralai/Mistral-Medium-3.5-128B"

@@ -1,0 +1,9 @@
+# Modal serves the OpenAI Chat Completions API through its inference gateway.
+# Proxy tokens can be combined as `wk-....ws-...` for bearer authentication.
+# https://modal.com/docs/guide/endpoints
+# https://modal.com/docs/guide/webhook-proxy-auth
+name = "Modal"
+env = ["MODAL_PROXY_TOKEN"]
+npm = "@ai-sdk/openai-compatible"
+api = "https://inference.us-west.modal.direct/v1"
+doc = "https://modal.com/docs/guide/endpoints"

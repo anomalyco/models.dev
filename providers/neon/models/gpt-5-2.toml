@@ -1,0 +1,19 @@
+base_model = "openai/gpt-5.2"
+# The Neon gateway accepts `temperature` on this model; the base entry says
+# otherwise because the upstream provider rejects it. Measured 2026-08-07.
+temperature = true
+reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh"] }]
+
+[cost]
+input = 1.75
+output = 14
+cache_read = 0.175
+
+[modalities]
+input = ["text", "image"]
+output = ["text", "image"]
+
+[provider]
+npm = "@ai-sdk/openai"
+api = "${NEON_AI_GATEWAY_BASE_URL}/openai/v1"
+shape = "responses"

@@ -1,0 +1,14 @@
+base_model = "cohere/command-a-reasoning-08-2025"
+name = "Cohere Command A (08/2025)"
+reasoning = false
+tool_call = false
+structured_output = false
+
+[cost]
+input = 2.5
+output = 10
+cache_read = 1.25
+
+[limit]
+input = 256_000
+output = 8_192

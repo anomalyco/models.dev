@@ -1,0 +1,13 @@
+# Not included in subscription
+base_model = "alibaba/qwen3-coder-plus"
+tool_call = false
+structured_output = false
+
+[cost]
+input = 1
+output = 5
+cache_read = 0.5
+
+[limit]
+context = 128_000
+input = 128_000

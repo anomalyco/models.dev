@@ -1,0 +1,14 @@
+# Azure catalog: https://ai.azure.com/catalog/models/claude-sonnet-4-6
+base_model = "anthropic/claude-sonnet-4-6"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "max"] }, { type = "budget_tokens", min = 1_024 }]
+structured_output = true
+
+[cost]
+input = 3.00
+output = 15.00
+cache_read = 0.30
+cache_write = 3.75
+
+[provider]
+npm = "@ai-sdk/anthropic"
+api = "https://${AZURE_COGNITIVE_SERVICES_RESOURCE_NAME}.services.ai.azure.com/anthropic/v1"

@@ -1,0 +1,13 @@
+base_model = "openai/o3-pro"
+description = "O-series reasoning model for hard analysis, math, coding, and planning"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "high"]
+
+[cost]
+input = 20
+output = 80
+
+[modalities]
+input = ["text", "pdf", "image"]

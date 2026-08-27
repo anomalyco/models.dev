@@ -1,0 +1,21 @@
+# Included in subscription
+base_model = "alibaba/qwen3.5-397b-a17b"
+name = "Qwen3.5 397B A17B Thinking"
+structured_output = false
+
+[[reasoning_options]]
+type = "budget_tokens"
+min = 1_024
+max = 81_920
+
+[cost]
+input = 0.6
+output = 3.6
+cache_read = 0.3
+
+[limit]
+context = 258_048
+input = 258_048
+
+[modalities]
+input = ["text", "image", "video"]

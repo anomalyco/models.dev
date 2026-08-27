@@ -1,0 +1,25 @@
+# Sources :
+#   https://mistral.ai/news/voxtral-tts/  ($0.016 per 1k characters)
+#   https://docs.mistral.ai/capabilities/audio/text_to_speech
+# Le bloc [cost] est volontairement absent : la synthèse se facture au CARACTÈRE
+# ($16 per 1M characters) et non au token, unité que le schéma ne modélise pas.
+# Modèle de 4 milliards de paramètres, neuf langues, clonage de voix zero-shot à
+# partir de deux à trois secondes d'audio de référence.
+name = "Voxtral Mini TTS (latest)"
+description = "Multilingual text-to-speech model with zero-shot voice cloning"
+family = "voxtral"
+release_date = "2026-03-01"
+last_updated = "2026-03-01"
+attachment = false
+reasoning = false
+temperature = false
+tool_call = false
+open_weights = false
+
+[limit]
+context = 0
+output = 0
+
+[modalities]
+input = ["text"]
+output = ["audio"]

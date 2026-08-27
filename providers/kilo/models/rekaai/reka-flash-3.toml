@@ -1,0 +1,27 @@
+name = "Reka Flash 3"
+description = "Efficient model for low-latency assistance, extraction, and routine automation"
+family = "reka"
+release_date = "2025-03-12"
+last_updated = "2025-03-12"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = false
+structured_output = true
+open_weights = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["high"]
+
+[cost]
+input = 0.1
+output = 0.2
+
+[limit]
+context = 65_536
+output = 58_982
+
+[modalities]
+input = ["text"]
+output = ["text"]

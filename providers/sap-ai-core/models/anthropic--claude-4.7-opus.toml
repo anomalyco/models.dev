@@ -1,0 +1,13 @@
+# Bedrock Claude 4.7 uses $.thinking.type = "adaptive" and $.output_config.effort = "low"|"medium"|"high"|"xhigh"|"max"; manual budget_tokens is rejected. Converse prefixes both paths with $.additionalModelRequestFields. https://docs.anthropic.com/en/docs/build-with-claude/extended-thinking (accessed 2026-06-25)
+
+base_model = "anthropic/claude-opus-4-7"
+
+name = "anthropic--claude-4.7-opus"
+description = "Flagship Claude model for deep reasoning, coding, and long-horizon agents"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
+
+[cost]
+input = 5.00
+output = 25.00
+cache_read = 0.5
+cache_write = 6.25

@@ -1,0 +1,11 @@
+# Hand-authored from LLMTR's public catalog https://llmtr.com/api/models (accessed 2026-08-16).
+# reasoning_options measured against POST https://llmtr.com/v1/chat/completions (2026-08-16).
+# limit.context is inherited (32K, per Mistral's Voxtral Small model card) rather than the
+# 128K our own catalog currently advertises for this route; the catalog value is being corrected.
+# Audio input is billed per minute upstream ($0.004/min), a unit the cost schema cannot express;
+# [cost] therefore carries the text-token price only.
+base_model = "mistral/voxtral-small-latest"
+
+[cost]
+input = 0.1
+output = 0.3

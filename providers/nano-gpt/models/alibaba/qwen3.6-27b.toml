@@ -1,0 +1,16 @@
+# Included in subscription
+base_model = "alibaba/qwen3.6-27b"
+reasoning = false
+structured_output = false
+
+[cost]
+input = 0.203
+output = 2.24
+cache_read = 0.1015
+
+[limit]
+context = 260_096
+input = 260_096
+
+[modalities]
+input = ["text", "image", "video"]

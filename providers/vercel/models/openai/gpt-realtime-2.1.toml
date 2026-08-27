@@ -1,0 +1,18 @@
+base_model = "openai/gpt-realtime-2.1"
+name = "gpt-realtime-2.1"
+description = "Speech generation model for controllable voice, narration, and audio delivery"
+attachment = false
+temperature = true
+tool_call = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["minimal", "low", "medium", "high", "xhigh"]
+
+[cost]
+input = 4
+output = 24
+cache_read = 0.4
+
+[modalities]
+input = ["text", "audio"]

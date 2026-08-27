@@ -1,0 +1,15 @@
+base_model = "zhipuai/glm-4.7-flash"
+description = "Efficient GLM model for fast reasoning, coding, and agent workflows"
+structured_output = true
+reasoning_options = []
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.08
+output = 0.478
+
+[limit]
+context = 203_000
+output = 203_000

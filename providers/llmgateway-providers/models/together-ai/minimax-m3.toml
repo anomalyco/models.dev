@@ -1,0 +1,24 @@
+# Toggle: $.reasoning_effort = "none" disables thinking; any other accepted
+# value (or omitting the field) leaves it on. The gateway maps it to the
+# deployment's thinking switch.
+# https://docs.llmgateway.io/features/reasoning
+base_model = "minimax/MiniMax-M3"
+name = "MiniMax M3 (Together AI)"
+attachment = false
+tool_call = false
+structured_output = true
+
+[[reasoning_options]]
+type = "toggle"
+
+[cost]
+input = 0.3
+output = 1.2
+cache_read = 0.06
+
+[limit]
+context = 524_288
+output = 131_072
+
+[modalities]
+input = ["text"]

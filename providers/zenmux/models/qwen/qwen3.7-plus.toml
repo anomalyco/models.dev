@@ -1,0 +1,15 @@
+base_model = "alibaba/qwen3.7-plus"
+reasoning_options = [{ type = "toggle" }]
+
+[cost]
+input = 0.40
+output = 1.60
+cache_read = 0.08
+cache_write = 0.50
+
+[[cost.tiers]]
+tier = { size = 256_000 }
+input = 1.20
+output = 4.80
+cache_read = 0.24
+cache_write = 1.50

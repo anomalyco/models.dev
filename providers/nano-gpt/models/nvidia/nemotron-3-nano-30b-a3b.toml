@@ -1,0 +1,14 @@
+base_model = "nvidia/nemotron-3-nano-30b-a3b"
+name = "Nvidia Nemotron 3 Nano 30B"
+reasoning = false
+tool_call = false
+structured_output = false
+
+[cost]
+input = 0.17
+output = 0.68
+cache_read = 0.085
+
+[limit]
+context = 256_000
+input = 256_000

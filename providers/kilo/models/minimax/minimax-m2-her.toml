@@ -1,0 +1,14 @@
+base_model = "minimax/MiniMax-M2-Her"
+description = "MiniMax model for chat, coding, office work, and agentic tasks"
+reasoning = false
+tool_call = false
+structured_output = false
+
+[cost]
+input = 0.3
+output = 1.2
+cache_read = 0.03
+
+[limit]
+context = 65_536
+output = 2_048

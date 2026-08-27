@@ -1,0 +1,14 @@
+base_model = "meta/muse-spark-1.2"
+description = "Muse Spark 1.2 is a reasoning model from Meta, designed for complex agentic tasks. It accepts text, images, video, audio, and PDF documents, returns text, and offers a 1M-token context..."
+
+[[reasoning_options]]
+type = "effort"
+values = ["minimal", "low", "medium", "high", "xhigh"]
+
+[cost]
+input = 1.25
+output = 4.25
+cache_read = 0.15
+
+[limit]
+output = 943_718

@@ -1,0 +1,15 @@
+# Source: https://api-gateway.merge.dev/v1/models?model=anthropic%2Fclaude-opus-4-6 (accessed 2026-07-21)
+
+base_model = "anthropic/claude-opus-4-6"
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "medium", "high", "max"] }, { type = "budget_tokens", min = 1_024, max = 127_999 }]
+structured_output = true
+
+[cost]
+input = 5
+output = 25
+cache_read = 0.5
+cache_write = 6.25
+
+[experimental.modes.fast]
+cost = { input = 30, output = 150, cache_read = 3, cache_write = 37.5 }
+provider = { body = { speed = "fast" }, headers = { anthropic-beta = "fast-mode-2026-02-01" } }

@@ -1,0 +1,12 @@
+base_model = "openai/gpt-4.1-mini"
+
+[cost]
+input = 0.4
+output = 1.6
+cache_read = 0.1
+
+[limit]
+context = 1_047_576
+
+[provider]
+npm = "@ai-sdk/openai"

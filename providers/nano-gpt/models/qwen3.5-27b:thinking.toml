@@ -1,0 +1,21 @@
+# Included in subscription
+base_model = "alibaba/qwen3.5-27b"
+name = "Qwen3.5 27B Thinking"
+structured_output = false
+
+[[reasoning_options]]
+type = "budget_tokens"
+min = 1_024
+max = 81_920
+
+[cost]
+input = 0.27
+output = 2.16
+cache_read = 0.135
+
+[limit]
+context = 260_096
+input = 260_096
+
+[modalities]
+input = ["text", "image", "video"]

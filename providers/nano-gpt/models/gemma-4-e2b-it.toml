@@ -1,0 +1,15 @@
+base_model = "google/gemma-4-E2B-it"
+name = "Gemma 4 E2B Instruct"
+reasoning = false
+
+[cost]
+input = 0.02
+output = 0.1
+cache_read = 0.01
+
+[limit]
+input = 131_072
+output = 16_384
+
+[modalities]
+input = ["text", "image", "video", "audio"]

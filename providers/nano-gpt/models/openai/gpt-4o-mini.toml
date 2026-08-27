@@ -1,0 +1,14 @@
+base_model = "openai/gpt-4o-mini"
+tool_call = false
+structured_output = false
+
+[cost]
+input = 0.15
+output = 0.6
+cache_read = 0.075
+
+[limit]
+input = 128_000
+
+[modalities]
+input = ["text", "image"]

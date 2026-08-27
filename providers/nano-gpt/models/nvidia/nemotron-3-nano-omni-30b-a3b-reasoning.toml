@@ -1,0 +1,16 @@
+# Included in subscription
+base_model = "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning"
+name = "Nvidia Nemotron 3 Nano Omni"
+structured_output = false
+reasoning_options = []
+
+[cost]
+input = 0.105
+output = 0.42
+cache_read = 0.0525
+
+[limit]
+input = 256_000
+
+[modalities]
+input = ["text", "image"]

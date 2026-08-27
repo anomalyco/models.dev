@@ -1,0 +1,82 @@
+name = "Qwen3.7 Max"
+description = "Qwen frontier model tuned for agent frameworks, coding assistants, and long tasks"
+family = "qwen"
+release_date = "2026-05-21"
+last_updated = "2026-05-21"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+open_weights = false
+
+[limit]
+context = 1_000_000
+output = 65_536
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[[benchmarks]]
+name = "SWE-Bench Verified"
+score = 80.4
+metric = "resolved"
+source = "https://qwen.ai/blog?id=qwen3.7"
+date = "2026-05-19"
+
+[[benchmarks]]
+name = "SWE-Bench Pro"
+score = 60.6
+metric = "resolve rate"
+source = "https://qwen.ai/blog?id=qwen3.7"
+date = "2026-05-19"
+
+[[benchmarks]]
+name = "SWE-Bench Multilingual"
+score = 78.3
+metric = "resolve rate"
+source = "https://qwen.ai/blog?id=qwen3.7"
+date = "2026-05-19"
+
+[[benchmarks]]
+name = "Terminal-Bench"
+score = 69.7
+metric = "success rate"
+harness = "Terminus-2"
+version = "2.0"
+source = "https://qwen.ai/blog?id=qwen3.7"
+date = "2026-05-19"
+
+[[benchmarks]]
+name = "GPQA Diamond"
+score = 92.4
+metric = "accuracy"
+source = "https://qwen.ai/blog?id=qwen3.7"
+date = "2026-05-19"
+
+[[benchmarks]]
+name = "Humanity's Last Exam"
+score = 41.4
+metric = "accuracy"
+source = "https://qwen.ai/blog?id=qwen3.7"
+date = "2026-05-19"
+
+[[benchmarks]]
+name = "SciCode"
+score = 53.5
+source = "https://qwen.ai/blog?id=qwen3.7"
+date = "2026-05-19"
+
+[[benchmarks]]
+name = "MCP Atlas"
+score = 76.4
+metric = "success rate"
+source = "https://qwen.ai/blog?id=qwen3.7"
+date = "2026-05-19"
+
+[[benchmarks]]
+name = "NL2Repo"
+score = 47.2
+harness = "Claude Code"
+source = "https://qwen.ai/blog?id=qwen3.7"
+date = "2026-05-19"

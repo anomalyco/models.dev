@@ -1,0 +1,20 @@
+base_model = "xiaomi/mimo-v2.5-pro"
+attachment = true
+structured_output = true
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "toggle"
+
+[cost]
+input = 1
+output = 3
+cache_read = 0.2
+
+[limit]
+output = 16_384
+
+[modalities]
+input = ["text", "audio"]

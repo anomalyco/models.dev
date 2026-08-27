@@ -1,0 +1,17 @@
+base_model = "nvidia/llama-3.3-nemotron-super-49b-v1"
+name = "Nvidia Nemotron Super 49B"
+release_date = "2025-08-08"
+last_updated = "2025-08-08"
+reasoning = false
+tool_call = false
+structured_output = false
+
+[cost]
+input = 0.15
+output = 0.15
+cache_read = 0.075
+
+[limit]
+context = 128_000
+input = 128_000
+output = 16_384

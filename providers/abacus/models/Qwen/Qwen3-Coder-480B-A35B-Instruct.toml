@@ -1,0 +1,21 @@
+# Source: https://routellm.abacus.ai/v1/models
+# RouteLLM input_modalities: ['text']
+# RouteLLM output_modalities: ['text']
+# RouteLLM context_length: 262144
+# RouteLLM max_completion_tokens: 16384
+# RouteLLM input_token_rate: 0.00000029
+# RouteLLM output_token_rate: 0.0000012
+base_model = "alibaba/qwen3-coder-480b-a35b-instruct"
+reasoning = false
+
+[cost]
+input = 0.29
+output = 1.2
+
+[limit]
+context = 262_144
+output = 16_384
+
+[modalities]
+input = ["text"]
+output = ["text"]

@@ -1,0 +1,22 @@
+# context = 8_192 per https://docs.api.nvidia.com/nim/reference/nvidia-llama-3_2-nv-embedqa-1b-v2 (accessed 2026-07-14)
+name = "nvidia--llama-3.2-nv-embedqa-1b"
+description = "Embedding model for semantic search, retrieval, clustering, and ranking pipelines"
+release_date = "2024-09-25"
+last_updated = "2024-09-25"
+attachment = false
+reasoning = false
+temperature = false
+tool_call = false
+open_weights = false
+
+[cost]
+input = 0.07
+output = 0
+
+[limit]
+context = 8_192
+output = 4_096
+
+[modalities]
+input = ["text"]
+output = ["text"]

@@ -1,0 +1,12 @@
+base_model = "sakana/sakana-namazu"
+description = "Sakana Namazu is a Japanese-specialized reasoning model from Sakana AI, based on Kimi K2.6 with additional training for Japanese language and business contexts. It is suited for Japanese instruction following,..."
+temperature = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "high"]
+
+[cost]
+input = 0.95
+output = 4
+cache_read = 0.15

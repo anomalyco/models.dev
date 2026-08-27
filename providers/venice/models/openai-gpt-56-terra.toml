@@ -1,0 +1,19 @@
+base_model = "openai/gpt-5.6-terra"
+base_model_omit = ["limit.input"]
+description = "GPT model for general reasoning, writing, coding, and tool-assisted tasks"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "xhigh", "max"]
+
+[cost]
+input = 3.125
+output = 18.75
+cache_read = 0.3125
+cache_write = 3.90625
+
+[limit]
+context = 1_000_000
+
+[modalities]
+input = ["text", "image"]

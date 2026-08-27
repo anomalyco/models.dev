@@ -1,0 +1,15 @@
+# Sources:
+# - https://ofox.ai/en/models/openai/gpt-5.2-codex (list pricing)
+# - https://api.ofox.ai/v1/models/openai/gpt-5.2-codex (prompt/completion/cache_read per-token)
+# - https://developers.openai.com/api/docs/models/gpt-5.2-codex (effort: low|medium|high|xhigh)
+base_model = "openai/gpt-5.2-codex"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh"] }]
+
+[cost]
+input = 1.75
+output = 14
+cache_read = 0.18
+
+[provider]
+npm = "@ai-sdk/openai"
+api = "https://api.ofox.ai/v1"

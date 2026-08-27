@@ -1,0 +1,11 @@
+base_model = "meta/muse-glimmer-30b"
+tool_call = false
+structured_output = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high", "xhigh"]
+
+[cost]
+input = 0.3
+output = 1.2

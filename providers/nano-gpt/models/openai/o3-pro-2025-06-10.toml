@@ -1,0 +1,28 @@
+name = "OpenAI o3-pro (2025-06-10)"
+description = "O-series reasoning model for hard analysis, math, coding, and planning"
+family = "o-pro"
+release_date = "2024-01-01"
+last_updated = "2025-06-10"
+attachment = false
+reasoning = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high"]
+
+[cost]
+input = 22
+output = 88
+cache_read = 11
+
+[limit]
+context = 200_000
+input = 200_000
+output = 100_000
+
+[modalities]
+input = ["text"]
+output = ["text"]

@@ -1,0 +1,14 @@
+# Always-on thinking on this host: dedicated *-Thinking ID still emits
+# reasoning_content when chat_template_kwargs.thinking=false (live-checked 2026-08-17).
+# Pricing: Jalapeno Cloud USD per million tokens (marketplace / plugin catalog)
+# Limits: GET https://api.jalapeno-cloud.ai/v1/models id=Qwen3-Next-80B-A3B-Thinking (2026-08-17)
+base_model = "alibaba/qwen3-next-80b-a3b-thinking"
+reasoning_options = []
+structured_output = true
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.15
+output = 1.50

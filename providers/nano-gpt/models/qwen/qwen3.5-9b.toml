@@ -1,0 +1,23 @@
+# Included in subscription
+base_model = "alibaba/qwen3.5-9b"
+structured_output = false
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "budget_tokens"
+min = 1_024
+max = 81_920
+
+[cost]
+input = 0.05
+output = 0.15
+cache_read = 0.025
+
+[limit]
+context = 256_000
+input = 256_000
+
+[modalities]
+input = ["text", "image"]

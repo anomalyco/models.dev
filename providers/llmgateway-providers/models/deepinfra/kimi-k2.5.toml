@@ -1,0 +1,19 @@
+base_model = "moonshotai/kimi-k2.5"
+name = "Kimi K2.5 (DeepInfra)"
+structured_output = false
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"]
+
+[cost]
+input = 0.45
+output = 2.25
+cache_read = 0.07
+
+[limit]
+context = 256_000
+output = 131_072

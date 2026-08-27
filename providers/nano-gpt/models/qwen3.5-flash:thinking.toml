@@ -1,0 +1,19 @@
+# Not included in subscription
+base_model = "alibaba/qwen3.5-flash"
+name = "Qwen3.5 Flash Thinking"
+tool_call = false
+structured_output = false
+
+[[reasoning_options]]
+type = "budget_tokens"
+min = 1_024
+max = 81_920
+
+[cost]
+input = 0.1
+output = 0.4
+cache_read = 0.05
+
+[limit]
+context = 991_808
+input = 991_808

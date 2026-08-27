@@ -1,0 +1,16 @@
+base_model = "deepseek/deepseek-chat"
+name = "DeepSeek V3/Deepseek Chat"
+structured_output = true
+
+[cost]
+input = 0.1
+output = 0.425
+cache_read = 0.05
+
+[limit]
+context = 128_000
+input = 128_000
+output = 8_192
+
+[modalities]
+input = ["text", "pdf"]

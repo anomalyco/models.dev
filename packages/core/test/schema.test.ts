@@ -1,0 +1,159 @@
+import { describe, expect, test } from "bun:test";
+import { z } from "zod";
+
+import { AuthoredModel, Provider } from "../src/index.js";
+
+type AuthoredModelData = z.infer<typeof AuthoredModel>;
+
+const dateFields = ["knowledge", "release_date", "last_updated"] as const;
+
+describe("model schema", () => {
+  test("rejects unknown nested model configuration fields", () => {
+    const result = AuthoredModel.safeParse({
+      ...baseModel({}),
+      cost: {
+        input: 1,
+        output: 2,
+        cache_reed: 0.1,
+      },
+      provider: {
+        npm: "example-sdk",
+        typo: true,
+      },
+      experimental: {
+        typo: true,
+        modes: {
+          fast: {
+            typo: true,
+            provider: {
+              typo: true,
+            },
+          },
+        },
+      },
+    });
+
+    expect(result.success).toBe(false);
+    if (result.success) return;
+    expect(result.error.issues.map((issue) => issue.path.join("."))).toEqual(
+      expect.arrayContaining([
+        "cost",
+        "provider",
+        "experimental",
+        "experimental.modes.fast",
+        "experimental.modes.fast.provider",
+      ]),
+    );
+  });
+
+  test("requires reasoning_options when reasoning is true", () => {
+    const model = baseModel({ reasoning: true });
+
+    expect(AuthoredModel.safeParse(model).success).toBe(false);
+  });
+
+  test("accepts empty reasoning_options when reasoning is true", () => {
+    const model = baseModel({
+      reasoning: true,
+      reasoning_options: [],
+    });
+
+    expect(AuthoredModel.safeParse(model).success).toBe(true);
+  });
+
+  test("rejects reasoning_options when reasoning is false", () => {
+    const model = baseModel({
+      reasoning: false,
+      reasoning_options: [],
+    });
+
+    expect(AuthoredModel.safeParse(model).success).toBe(false);
+  });
+
+  test("accepts calendar-valid model dates", () => {
+    for (const field of dateFields) {
+      for (const value of [
+        "2026-02",
+        "2024-02-29",
+        "2000-02-29",
+        "2026-12-31",
+      ]) {
+        expect(
+          AuthoredModel.safeParse({
+            ...baseModel({}),
+            [field]: value,
+          }).success,
+        ).toBe(true);
+      }
+    }
+  });
+
+  test("rejects impossible model dates", () => {
+    for (const field of dateFields) {
+      for (const value of [
+        "2026-00",
+        "2026-13",
+        "2025-02-29",
+        "1900-02-29",
+        "2026-02-30",
+        "2026-04-31",
+      ]) {
+        expect(
+          AuthoredModel.safeParse({
+            ...baseModel({}),
+            [field]: value,
+          }).success,
+        ).toBe(false);
+      }
+    }
+  });
+});
+
+describe("provider schema", () => {
+  const mergeGatewayProvider = {
+    id: "merge-gateway",
+    name: "Merge Gateway",
+    env: ["MERGE_GATEWAY_API_KEY"],
+    npm: "merge-gateway-ai-sdk-provider",
+    api: "https://api-gateway.merge.dev/v1/ai-sdk",
+    doc: "https://docs.merge.dev/merge-gateway",
+    models: {},
+  };
+
+  test("accepts Merge Gateway's native package with its OpenAI-compatible API", () => {
+    expect(Provider.safeParse(mergeGatewayProvider).success).toBe(true);
+  });
+
+  test("requires the compatibility API for the Merge Gateway package", () => {
+    const { api: _api, ...providerWithoutApi } = mergeGatewayProvider;
+
+    expect(Provider.safeParse(providerWithoutApi).success).toBe(false);
+  });
+});
+
+function baseModel(overrides: Partial<AuthoredModelData>) {
+  return {
+    id: "example/model",
+    name: "Example Model",
+    description: "Example model for schema validation and regression tests",
+    attachment: false,
+    reasoning: false,
+    tool_call: true,
+    release_date: "2026-01-01",
+    last_updated: "2026-01-01",
+    modalities: {
+      input: ["text"],
+      output: ["text"],
+    },
+    open_weights: false,
+    limit: {
+      context: 1_000,
+      output: 100,
+    },
+    cost: {
+      input: 1,
+      output: 2,
+    },
+    ...overrides,
+  };
+}

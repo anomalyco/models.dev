@@ -1,0 +1,18 @@
+# Not included in subscription
+base_model = "alibaba/qwen3.7-plus"
+structured_output = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "high"]
+
+[cost]
+input = 0.4
+output = 1.6
+cache_read = 0.08
+cache_write = 0.5
+
+[limit]
+context = 991_808
+input = 991_808
+output = 65_536

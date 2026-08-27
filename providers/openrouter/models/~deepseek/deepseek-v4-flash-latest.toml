@@ -1,0 +1,31 @@
+name = "DeepSeek V4 Flash Latest"
+description = "Fast DeepSeek model for efficient chat, coding help, and agent loops"
+family = "deepseek"
+release_date = "2026-08-01"
+last_updated = "2026-08-01"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[cost]
+input = 0.035
+output = 0.1
+cache_read = 0.008
+
+[limit]
+context = 1_310_720
+output = 943_718
+
+[modalities]
+input = ["text"]
+output = ["text"]

@@ -1,0 +1,12 @@
+base_model = "alibaba/qwen3-235b-a22b-instruct-2507"
+description = "Qwen instruction model for multilingual chat, reasoning, and tool use"
+structured_output = true
+
+[cost]
+input = 0.069
+output = 0.455
+cache_read = 0.018
+
+[limit]
+context = 262_000
+output = 131_000
