@@ -1,0 +1,33 @@
+# Served under the canonical id qwen3.6-35b (HuggingFace-style ids are not
+# exposed on the API). Reasoning per GET /v1/models metadata.reasoning
+# (checked 2026-08-27): supported_efforts none|high with high as the default
+# (reasoning on by default); every non-none value maps to high. Off is
+# effort=none, so no separate toggle. thinking_token_budget is accepted on
+# Qwen3.6. Neuralwatt serves text+image input (lab metadata also lists
+# video/audio). Pricing from GET /v1/models metadata.pricing.
+# https://portal.neuralwatt.com/docs/api/models
+# https://portal.neuralwatt.com/docs/api/chat-completions
+base_model = "alibaba/qwen3.6-35b-a3b"
+name = "Qwen3.6 35B"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "high"]
+
+[[reasoning_options]]
+type = "budget_tokens"
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.29
+output = 1.15
+cache_read = 0.029
+
+[limit]
+context = 131_056
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

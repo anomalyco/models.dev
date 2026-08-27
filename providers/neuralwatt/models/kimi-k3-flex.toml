@@ -1,0 +1,35 @@
+# Flex-tier variant of kimi-k3: same model and reasoning contract as the
+# standard alias per GET /v1/models (checked 2026-08-27); reasoning controls
+# verified against the Neuralwatt live API on 2026-08-05 (see kimi-k3.toml):
+# chat_template_kwargs.enable_thinking toggle and reasoning_effort = low|high|max.
+# thinking_token_budget is documented but rejected by the current vLLM V2
+# runner, so it is not declared.
+# Cost is the flex rate: 0.65x of standard pricing ($3.0/$15.0/$0.3) per the
+# flex-tier guide (checked 2026-08-27).
+# https://portal.neuralwatt.com/docs/api/models
+# https://portal.neuralwatt.com/docs/guides/flex-tier
+base_model = "moonshotai/kimi-k3"
+name = "Kimi K3 Flex"
+
+[[reasoning_options]]
+type = "toggle" # API: {"chat_template_kwargs": {"enable_thinking": false}}
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 1.95
+output = 9.75
+cache_read = 0.195
+
+[limit]
+context = 1_048_560
+output = 1_048_560
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

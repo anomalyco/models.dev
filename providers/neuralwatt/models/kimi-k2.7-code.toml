@@ -1,0 +1,24 @@
+# Reasoning contract per GET /v1/models (checked 2026-08-27) and the
+# chat-completions docs: metadata.reasoning is null and
+# capabilities.reasoning_effort is false — the model produces reasoning
+# traces but publishes no effort ladder, so it is treated as
+# reasoning-always-on with no dial. Pricing from metadata.pricing
+# (cached input at the 10% platform default). Neuralwatt serves text+image
+# input (lab metadata also lists video).
+# https://portal.neuralwatt.com/docs/api/models
+# https://portal.neuralwatt.com/docs/api/chat-completions
+base_model = "moonshotai/kimi-k2.7-code"
+
+reasoning_options = []
+
+[cost]
+input = 0.95
+output = 4.0
+cache_read = 0.095
+
+[limit]
+context = 262_128
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
