@@ -2,6 +2,7 @@
 # Toggle: enable_thinking = true|false
 # SCNet OpenAI Chat API source:
 # https://www.scnet.cn/ac/openapi/doc/2.0/moduleapi/api/chat.html
+attachment = true
 base_model = "moonshotai/kimi-k2.5"
 reasoning_options = [{ type = "toggle" }]
 
@@ -12,3 +13,6 @@ field = "reasoning_content"
 input = 0.595
 output = 3.12375
 cache_read = 0.104125
+
+[modalities]
+input = ["text", "image"]

@@ -2,6 +2,7 @@
 # SCNet probe 2026-08-27: thinking.type=disabled removed reasoning content; baseline/adaptive retained it.
 # https://www.scnet.cn/ac/openapi/doc/2.0/moduleapi/api/chat.html
 # SCNet probe 2026-08-27: image input was positively confirmed with a semantic red-image probe.
+attachment = true
 base_model = "minimax/MiniMax-M3"
 reasoning_options = [{ type = "toggle" }]
 
@@ -15,3 +16,6 @@ cache_read = 0.12495
 
 [limit]
 context = 1_048_576
+
+[modalities]
+input = ["text", "image"]

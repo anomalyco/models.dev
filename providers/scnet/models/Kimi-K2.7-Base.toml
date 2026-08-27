@@ -1,7 +1,17 @@
-# SCNet catalog exposes no caller-controlled reasoning option for this Base SKU.
-# https://www.scnet.cn/ac/openapi/doc/2.0/moduleapi/api/chat.html
+# SCNet Console Model List identifies Kimi K2.7 Base as a SCNet catalog SKU; no first-party Moonshot model source was established.
 # SCNet probe 2026-08-27: image input was positively confirmed with a semantic red-image probe.
-base_model = "moonshotai/kimi-k2.7-base"
+name = "Kimi K2.7 Base"
+description = "General-purpose Kimi K2.7 base model served as a SCNet catalog SKU."
+family = "kimi-k2"
+release_date = "2026-06-12"
+last_updated = "2026-08-27"
+attachment = true
+reasoning = true
+temperature = false
+tool_call = true
+structured_output = true
+open_weights = true
+knowledge = "2025-01"
 reasoning_options = []
 
 [interleaved]
@@ -14,3 +24,8 @@ cache_read = 0.0966875
 
 [limit]
 context = 131_072
+output = 262_144
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

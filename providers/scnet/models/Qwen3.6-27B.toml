@@ -3,6 +3,7 @@
 # SCNet API docs expose the thinking toggle; no separate budget or effort control is documented for this host.
 # SCNet OpenAI Chat API source:
 # https://www.scnet.cn/ac/openapi/doc/2.0/moduleapi/api/chat.html
+attachment = true
 base_model = "alibaba/qwen3.6-27b"
 reasoning_options = [{ type = "toggle" }]
 
@@ -12,3 +13,6 @@ field = "reasoning_content"
 [cost]
 input = 0.44625
 output = 2.6775
+
+[modalities]
+input = ["text", "image"]
