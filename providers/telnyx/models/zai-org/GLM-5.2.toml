@@ -1,0 +1,16 @@
+# Pricing: https://telnyx.com/pricing/inference-api (accessed 2026-08-19)
+# Models: https://developers.telnyx.com/docs/inference/models
+# Reasoning side channel: reasoning_content field
+# Effort: reasoning_effort = high|max
+# https://developers.telnyx.com/docs/inference/getting-started
+base_model = "zhipuai/glm-5.2"
+interleaved = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["high", "max"]
+
+[cost]
+input = 1
+output = 4
+cache_read = 0.2
