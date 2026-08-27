@@ -106,6 +106,38 @@ test("requires manual review for Inceptron reasoning updates", async () => {
   );
 });
 
+test("requires manual review for empty Eden AI controls even on price-only updates", async () => {
+  const path = "providers/edenai/models/zai/glm-5.toml";
+  for (const status of ["created", "updated"] as const) {
+    for (const previousOptions of ["[]", '[{ type = "toggle" }]']) {
+      const decision = await classifyAutoMerge(
+        [{ status, path }],
+        async (file) => file.startsWith("models/")
+          ? fullModel(true)
+          : 'base_model = "zhipuai/glm-5"\nreasoning_options = []\n[cost]\ninput = 1\n',
+        async (file) => file.startsWith("models/")
+          ? fullModel(true)
+          : `base_model = "zhipuai/glm-5"\nreasoning_options = ${previousOptions}\n[cost]\ninput = 2\n`,
+      );
+      expect(decision.safe).toBe(false);
+      expect(decision.reasons).toContain(`${path} has empty Eden AI reasoning_options and requires manual review`);
+    }
+  }
+});
+
+test("still allows Eden AI models with resolved effort controls or no reasoning", async () => {
+  for (const model of [
+    fullModel(true, 'reasoning_options = [{ type = "effort", values = ["high"] }]'),
+    fullModel(false),
+  ]) {
+    const decision = await classifyAutoMerge(
+      [{ status: "created", path: "providers/edenai/models/resolved.toml" }],
+      async () => model,
+    );
+    expect(decision.safe).toBe(true);
+  }
+});
+
 test("resolves reasoning from base model", async () => {
   const decision = await classifyAutoMerge(
     [{ status: "created", path: "providers/test/models/reasoner.toml" }],

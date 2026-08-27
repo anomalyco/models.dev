@@ -142,9 +142,10 @@ Actions are pinned by commit SHA. Keep new workflow actions pinned the same way.
 ## Eden AI Notes
 
 - Source endpoint: `https://api.edenai.run/v3/models`; no authentication required.
-- Reasoning effort options are derived from the lab's provider entry or OpenRouter. A toggle-only or budget-only control is not an effort list; do not invent effort levels or replace unknown controls with `[]`.
-- If a still-listed, already-cataloged model's reasoning controls can no longer be translated, the sync fails before writing or deleting any files. Review that route's Eden AI controls and update the translator before retrying; missing reasoning metadata is not evidence that the model was removed upstream.
-- New models without translatable reasoning controls remain skipped. Intentional route deduplication and removal of IDs absent from the upstream catalog are unchanged.
+- Reasoning effort options are derived from the lab's provider entry or OpenRouter. A toggle-only or budget-only control is not an effort list; do not invent effort levels.
+- Models with unresolved reasoning controls are kept with `reasoning_options = []` instead of being skipped or stopping the sync. Here the empty array is a manual-review placeholder, not a verified claim that the route has no caller controls.
+- Any added or updated Eden AI reasoning model with empty options requires manual review, even if only its pricing changed. The auto-merge gate conservatively includes known always-on models because they use the same empty-array representation. Resolved nonempty controls and non-reasoning models remain eligible under the existing checks.
+- Intentional route deduplication and removal of IDs absent from the upstream catalog are unchanged.
 
 ## CrossModel Notes
 

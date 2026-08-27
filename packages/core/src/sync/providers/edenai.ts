@@ -3,7 +3,7 @@ import path from "node:path";
 
 import { z } from "zod";
 
-import type { ExistingModel, SyncProvider, SyncedFullModel, SyncedModel } from "../index.js";
+import type { SyncProvider, SyncedFullModel, SyncedModel } from "../index.js";
 import {
   factorBaseModel,
   modelMetadata,
@@ -232,7 +232,8 @@ function regionVariantName(model: EdenAIModel, baseModel: string) {
 
 // This sync currently maps only `reasoning_effort`, using the effort list the
 // lab entry (or an established relay peer) documents. Toggle / budget controls
-// need route-specific mappings; an unresolved mapping is not model removal.
+// need route-specific mappings. Unresolved controls use [] and require manual
+// review in the auto-merge gate, not removal from the catalog.
 function effortValues(options: unknown): string[] | "always-on" | undefined {
   if (!Array.isArray(options)) return undefined;
   if (options.length === 0) return "always-on";
@@ -424,7 +425,6 @@ function mapModalities(values: readonly string[] | null | undefined) {
 
 export function buildEdenAIModel(
   model: EdenAIModel,
-  existing?: ExistingModel,
   firstParty: ReadonlySet<string> = firstPartyBaseModels,
 ): SyncedModel | undefined {
   const baseModel = resolveEdenAIBaseModel(model);
@@ -449,17 +449,8 @@ export function buildEdenAIModel(
   // the lab entry owns it and only the effort controls are authored here.
   const reasoning = modelMetadata(baseModel).reasoning === true;
   const reasoningOptions = reasoning
-    ? reasoningOptionsFor(baseModel)
+    ? reasoningOptionsFor(baseModel) ?? []
     : undefined;
-  if (reasoning && reasoningOptions === undefined) {
-    if (existing !== undefined) {
-      throw new Error(
-        `Eden AI model "${model.id}" is still listed, but reasoning controls cannot be resolved for "${baseModel}". ` +
-        "Verify this route's controls and update the Eden AI sync mapping before retrying.",
-      );
-    }
-    return undefined;
-  }
 
   const limit =
     model.context_length != null && model.context_length > 0
@@ -518,8 +509,8 @@ export const edenai = {
     firstPartyBaseModels = collectFirstPartyBaseModels(models);
     return models;
   },
-  translateModel(model, context) {
-    const built = buildEdenAIModel(model, context.existing(model.id));
+  translateModel(model) {
+    const built = buildEdenAIModel(model);
     if (built === undefined) return undefined;
     return { id: model.id, model: built };
   },
