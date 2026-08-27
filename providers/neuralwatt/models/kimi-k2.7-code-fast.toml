@@ -4,10 +4,13 @@
 # reasoning-always-on with no dial. Pricing identical to the standard alias.
 # https://portal.neuralwatt.com/docs/api/models
 # https://portal.neuralwatt.com/docs/api/chat-completions
+# Interleaved: gateway emits reasoning under a top-level `reasoning` field, not reasoning_content (verified live 2026-08-27, streaming and non-streaming).
 base_model = "moonshotai/kimi-k2.7-code"
 name = "Kimi K2.7 Code Fast"
 
 reasoning_options = []
+
+interleaved = true
 
 [cost]
 input = 0.95

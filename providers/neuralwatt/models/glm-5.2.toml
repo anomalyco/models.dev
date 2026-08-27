@@ -1,4 +1,5 @@
 # Prices per GET /v1/models metadata.pricing (checked 2026-08-27).
+# Interleaved: gateway emits reasoning under a top-level `reasoning` field, not reasoning_content (verified live 2026-08-27, streaming and non-streaming).
 name = "GLM 5.2"
 description = "Flagship GLM model for hybrid reasoning, coding, and agentic engineering"
 family = "glm"
@@ -13,6 +14,8 @@ reasoning_options = [
 temperature = true
 tool_call = true
 open_weights = true
+
+interleaved = true
 
 [cost]
 input = 1.45

@@ -13,7 +13,9 @@
 # https://portal.neuralwatt.com/models/qwen-3.8-27b
 # https://portal.neuralwatt.com/docs/api/chat-completions
 # https://portal.neuralwatt.com/docs/guides/preview-models
+# Interleaved: gateway emits reasoning under a top-level `reasoning` field, not reasoning_content (verified live 2026-08-27, streaming and non-streaming).
 base_model = "alibaba/qwen3.8-27b"
+interleaved = true
 status = "beta"
 
 [[reasoning_options]]
@@ -22,9 +24,6 @@ values = ["none", "low", "medium", "xhigh"]
 
 [[reasoning_options]]
 type = "budget_tokens"
-
-[interleaved]
-field = "reasoning_content"
 
 [cost]
 input = 0.45

@@ -8,7 +8,9 @@
 # flex-tier guide (checked 2026-08-27).
 # https://portal.neuralwatt.com/docs/api/models
 # https://portal.neuralwatt.com/docs/guides/flex-tier
+# Interleaved: gateway emits reasoning under a top-level `reasoning` field, not reasoning_content (verified live 2026-08-27, streaming and non-streaming).
 base_model = "moonshotai/kimi-k3"
+interleaved = true
 name = "Kimi K3 Flex"
 
 [[reasoning_options]]
@@ -17,9 +19,6 @@ type = "toggle" # API: {"chat_template_kwargs": {"enable_thinking": false}}
 [[reasoning_options]]
 type = "effort"
 values = ["low", "high", "max"]
-
-[interleaved]
-field = "reasoning_content"
 
 [cost]
 input = 1.95

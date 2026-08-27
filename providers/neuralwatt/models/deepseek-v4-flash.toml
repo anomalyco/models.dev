@@ -9,7 +9,9 @@
 # https://portal.neuralwatt.com/docs/api/models
 # https://portal.neuralwatt.com/pricing
 # https://portal.neuralwatt.com/docs/api/chat-completions
+# Interleaved: gateway emits reasoning under a top-level `reasoning` field, not reasoning_content (verified live 2026-08-27, streaming and non-streaming).
 base_model = "deepseek/deepseek-v4-flash"
+interleaved = true
 
 [[reasoning_options]]
 type = "effort"

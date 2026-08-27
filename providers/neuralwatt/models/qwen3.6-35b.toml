@@ -7,7 +7,9 @@
 # video/audio). Pricing from GET /v1/models metadata.pricing.
 # https://portal.neuralwatt.com/docs/api/models
 # https://portal.neuralwatt.com/docs/api/chat-completions
+# Interleaved: gateway emits reasoning under a top-level `reasoning` field, not reasoning_content (verified live 2026-08-27, streaming and non-streaming).
 base_model = "alibaba/qwen3.6-35b-a3b"
+interleaved = true
 name = "Qwen3.6 35B"
 
 [[reasoning_options]]
@@ -16,9 +18,6 @@ values = ["none", "high"]
 
 [[reasoning_options]]
 type = "budget_tokens"
-
-[interleaved]
-field = "reasoning_content"
 
 [cost]
 input = 0.29

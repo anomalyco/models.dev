@@ -1,14 +1,14 @@
-# Prices per GET /v1/models metadata.pricing (checked 2026-08-27).
+# Fast alias of qwen3.6-35b with thinking pinned off through the chat
+# template: every reasoning_effort value collapses to none and cannot be
+# overridden (capabilities.reasoning = false, supported_efforts ["none"]),
+# per GET /v1/models and the chat-completions per-model table (checked
+# 2026-08-27). Pricing from metadata.pricing (cached input at the 10%
+# platform default).
+# https://portal.neuralwatt.com/docs/api/models
+# https://portal.neuralwatt.com/docs/api/chat-completions
+base_model = "alibaba/qwen3.6-35b-a3b"
 name = "Qwen3.6 35B Fast"
-description = "Efficient model for low-latency assistance, extraction, and routine automation"
-family = "qwen3.6"
-release_date = "2026-04-01"
-last_updated = "2026-04-01"
-attachment = true
 reasoning = false
-temperature = true
-tool_call = true
-open_weights = true
 
 [cost]
 input = 0.29

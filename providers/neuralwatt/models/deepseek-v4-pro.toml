@@ -12,6 +12,7 @@
 # https://portal.neuralwatt.com/docs/api/chat-completions
 # https://portal.neuralwatt.com/docs/guides/preview-models
 base_model = "deepseek/deepseek-v4-pro"
+interleaved = true
 status = "beta"
 
 # Effort: reasoning_effort = none|low|high|max (off is effort=none; aliases
@@ -21,11 +22,9 @@ type = "effort"
 values = ["none", "low", "high", "max"]
 
 # Budget: thinking_token_budget (integer reasoning tokens)
+# Interleaved: gateway emits reasoning under a top-level `reasoning` field, not reasoning_content (verified live 2026-08-27, streaming and non-streaming).
 [[reasoning_options]]
 type = "budget_tokens"
-
-[interleaved]
-field = "reasoning_content"
 
 [cost]
 input = 1.0

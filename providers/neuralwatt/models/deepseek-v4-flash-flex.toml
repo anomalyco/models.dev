@@ -11,7 +11,9 @@
 # (and -flex), so it is not declared.
 # https://portal.neuralwatt.com/docs/guides/flex-tier
 # https://portal.neuralwatt.com/docs/api/chat-completions
+# Interleaved: gateway emits reasoning under a top-level `reasoning` field, not reasoning_content (verified live 2026-08-27, streaming and non-streaming).
 base_model = "deepseek/deepseek-v4-flash"
+interleaved = true
 name = "DeepSeek V4 Flash Flex"
 
 [[reasoning_options]]
