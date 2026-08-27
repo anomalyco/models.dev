@@ -1,5 +1,9 @@
+# Toggle: thinking true|false
 base_model = "deepseek/deepseek-v4-pro"
-reasoning_options = []
+reasoning_options = [
+  { type = "toggle" },
+  { type = "effort", values = ["high", "max"] },
+]
 
 [interleaved]
 field = "reasoning_content"
