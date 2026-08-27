@@ -9,6 +9,9 @@ base_model = "deepreinforce/ornith-1.5-35b-a3b"
 
 reasoning_options = []
 
+[limit]
+output = 262_144
+
 [cost]
 input = 0.10
 output = 0.40
