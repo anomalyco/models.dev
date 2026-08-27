@@ -11,11 +11,20 @@ npm = "@ai-sdk/openai-compatible"
 # Coding Plan entry while silently paying pay-as-you-go rates.
 # Reasoning HTTP format (accessed 2026-08-26):
 # OpenAI Chat: POST /api/coding/v3/chat/completions; `thinking.type` = enabled or
-# disabled (`auto` is rejected on most models); `reasoning_effort` is per-model —
-# the Doubao entries take none through max, glm-5.3 rejects none and minimal
-# outright, and minimax-m3 tolerates none but still spends reasoning tokens on it,
-# so each model declares only the levels it honours (verified 2026-08-27 against
-# this endpoint). Plaintext reasoning is in `choices[].message.reasoning_content`
+# disabled (`auto` is rejected on most models); `reasoning_effort` is accepted on
+# every model but only some values have effect, so each file declares just the
+# levels it honours, measured on this endpoint (n=4-6 per level, 2026-08-27):
+#   doubao-seed-2.1-turbo / 2.0-lite / evolving -> none|low|high
+#       (medium overlaps low, xhigh and max overlap high rather than exceeding it)
+#   glm-5.3                                     -> low|high|max
+#       (rejects none and minimal outright; medium aliases low, xhigh aliases max)
+#   deepseek-v4-flash / -pro                    -> toggle only
+#       (graded values fully overlap; on Flash 'high' lands below 'low')
+#   kimi-k2.7-code                              -> no controls
+#   minimax-m3                                  -> toggle only
+#       (tolerates none but still spends reasoning tokens on it, so it is not an
+#        off switch there; thinking.type is)
+# Plaintext reasoning is in `choices[].message.reasoning_content`
 # and the encrypted block in `choices[].message.encrypted_content`.
 # Anthropic: base https://ark.cn-beijing.volces.com/api/coding, POST /v1/messages
 # with `thinking.type` and `output_config.effort`.
