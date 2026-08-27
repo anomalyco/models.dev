@@ -1,0 +1,22 @@
+# Ollama Cloud model ID verified from https://ollama.com/api/tags (2026-08-27).
+# Library: 1M context, vision + tools + thinking, Text/Image input; reasoning
+# always on with effort low|high|max.
+# https://ollama.com/library/glm-5.3-flash
+# https://ollama.com/library/glm-5.3-flash:cloud
+# https://docs.ollama.com/capabilities/thinking
+# Open weights (MIT): https://huggingface.co/zai-org/GLM-5.3-Flash
+# No public per-token USD price (Ollama Cloud plan/usage tiers).
+
+base_model = "zhipuai/glm-5.3-flash"
+open_weights = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[interleaved]
+field = "reasoning_content"
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
