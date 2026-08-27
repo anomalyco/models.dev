@@ -1,0 +1,19 @@
+name = "Ox Alpha"
+description = "Anonymous frontier reasoning model with strong agentic coding performance"
+family = "alpha"
+release_date = "2026-08-20"
+last_updated = "2026-08-20"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[limit]
+context = 1_048_576
+output = 131_072
+
+[modalities]
+input = ["text", "image", "video"]
+output = ["text"]

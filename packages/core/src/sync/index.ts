@@ -9,6 +9,7 @@ import { ambient } from "./providers/ambient.js";
 import { anthropic } from "./providers/anthropic.js";
 import { baseten } from "./providers/baseten.js";
 import { chutes } from "./providers/chutes.js";
+import { commandcode } from "./providers/commandcode.js";
 import { cloudflareWorkersAi } from "./providers/cloudflare-workers-ai.js";
 import { cortecs } from "./providers/cortecs.js";
 import { crossmodel } from "./providers/crossmodel.js";
@@ -27,6 +28,7 @@ import { nanoGpt } from "./providers/nano-gpt.js";
 import { openai } from "./providers/openai.js";
 import { ofox } from "./providers/ofox.js";
 import { openrouter } from "./providers/openrouter.js";
+import { openstarry } from "./providers/openstarry.js";
 import { ovhcloud } from "./providers/ovhcloud.js";
 import { pioneer } from "./providers/pioneer.js";
 import { requesty } from "./providers/requesty.js";
@@ -128,6 +130,7 @@ export const providers: {
   anthropic: SyncProvider<any>;
   baseten: SyncProvider<any>;
   chutes: SyncProvider<any>;
+  commandcode: SyncProvider<any>;
   "cloudflare-workers-ai": SyncProvider<any>;
   cortecs: SyncProvider<any>;
   crossmodel: SyncProvider<any>;
@@ -147,6 +150,7 @@ export const providers: {
   ofox: SyncProvider<any>;
   openai: SyncProvider<any>;
   openrouter: SyncProvider<any>;
+  openstarry: SyncProvider<any>;
   ovhcloud: SyncProvider<any>;
   pioneer: SyncProvider<any>;
   requesty: SyncProvider<any>;
@@ -160,6 +164,7 @@ export const providers: {
   anthropic,
   baseten,
   chutes,
+  commandcode,
   "cloudflare-workers-ai": cloudflareWorkersAi,
   cortecs,
   crossmodel,
@@ -179,6 +184,7 @@ export const providers: {
   ofox,
   openai,
   openrouter,
+  openstarry,
   ovhcloud,
   pioneer,
   requesty,
@@ -207,7 +213,7 @@ export const groups = {
     "vercel",
   ],
   cloudflare: ["cloudflare-workers-ai"],
-  direct: ["ambient", "anthropic", "baseten", "chutes", "cortecs", "deepinfra", "digitalocean", "google", "hyper", "openai", "ovhcloud", "pioneer", "tinfoil", "venice", "wandb", "xai"],
+  direct: ["ambient", "anthropic", "baseten", "chutes", "commandcode", "cortecs", "deepinfra", "digitalocean", "google", "hyper", "openai", "openstarry", "ovhcloud", "pioneer", "tinfoil", "venice", "wandb", "xai"],
 } as const;
 
 type ProviderID = keyof typeof providers;

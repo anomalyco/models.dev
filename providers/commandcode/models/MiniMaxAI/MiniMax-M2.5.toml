@@ -1,0 +1,21 @@
+name = "MiniMax M2.5"
+description = "MiniMax model for chat, coding, office work, and agentic tasks"
+release_date = "2026-08-24"
+last_updated = "2026-08-24"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+open_weights = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high"]
+
+[limit]
+context = 200_000
+output = 50_000
+
+[modalities]
+input = ["text"]
+output = ["text"]

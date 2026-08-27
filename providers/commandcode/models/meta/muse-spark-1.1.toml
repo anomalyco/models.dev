@@ -1,0 +1,11 @@
+base_model = "meta/muse-spark-1.1"
+description = "Open Llama instruction model for multilingual chat, reasoning, and coding"
+release_date = "2026-08-24"
+last_updated = "2026-08-24"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high"]
+
+[limit]
+context = 1_048_576

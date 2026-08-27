@@ -1,0 +1,21 @@
+name = "MiniMax M3"
+description = "MiniMax multimodal coding model for long-context reasoning and agent tasks"
+release_date = "2026-08-24"
+last_updated = "2026-08-24"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+open_weights = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high"]
+
+[limit]
+context = 1_000_000
+output = 250_000
+
+[modalities]
+input = ["text"]
+output = ["text"]
