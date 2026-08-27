@@ -79,6 +79,7 @@ import {
   resolveNanoGptBaseModel,
   type NanoGptModel,
 } from "../src/sync/providers/nano-gpt.js";
+import { nvidia, parseNvidiaModels } from "../src/sync/providers/nvidia.js";
 import { openai, parseOpenAIModels } from "../src/sync/providers/openai.js";
 import { ofox } from "../src/sync/providers/ofox.js";
 import { pioneer } from "../src/sync/providers/pioneer.js";
@@ -1103,6 +1104,31 @@ test("OpenAI availability sync preserves authored metadata", () => {
   )).toEqual({ id: "gpt-5.5", model: authored });
 });
 
+test("Nvidia availability sync preserves authored metadata", () => {
+  const authored = {
+    base_model: "nvidia/llama-3.1-nemotron-70b-instruct",
+    cost: { input: 0, output: 0 },
+  };
+  expect(nvidia.translateModel(
+    { id: "nvidia/llama-3.1-nemotron-70b-instruct", object: "model", created: 1, owned_by: "nvidia" },
+    { existing: () => authored as never, authored: () => authored },
+  )).toEqual({ id: "nvidia/llama-3.1-nemotron-70b-instruct", model: authored });
+});
+
+test("Nvidia availability sync parses the public models listing", () => {
+  const models = parseNvidiaModels({
+    object: "list",
+    data: [
+      { id: "nvidia/nemotron-3-nano-30b-a3b", object: "model", created: 1, owned_by: "nvidia" },
+      { id: "deepseek-ai/deepseek-v4-flash-0731", object: "model", created: 1, owned_by: "deepseek-ai" },
+    ],
+  });
+  expect(models).toEqual([
+    { id: "nvidia/nemotron-3-nano-30b-a3b", object: "model", created: 1, owned_by: "nvidia" },
+    { id: "deepseek-ai/deepseek-v4-flash-0731", object: "model", created: 1, owned_by: "deepseek-ai" },
+  ]);
+});
+
 test("OpenAI availability sync retains models absent from a scoped response", async () => {
   const dir = await mkdtemp(path.join(tmpdir(), "sync-openai-"));
   const modelsDir = path.join(dir, "providers", "openai", "models");
@@ -1153,6 +1179,8 @@ test("tracks missing models except for unreliable first-party inventories", () =
   expect(google.trackMissingModels).toBe(false);
   expect(openai.skipCreates).toBe(true);
   expect(openai.trackMissingModels).toBe(false);
+  expect(nvidia.skipCreates).toBe(true);
+  expect(nvidia.trackMissingModels).toBe(false);
   expect(pioneer.skipCreates).toBe(true);
   expect(pioneer.trackMissingModels).toBe(true);
   expect(ofox.skipCreates).toBe(true);
