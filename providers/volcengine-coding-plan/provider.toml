@@ -11,8 +11,11 @@ npm = "@ai-sdk/openai-compatible"
 # Coding Plan entry while silently paying pay-as-you-go rates.
 # Reasoning HTTP format (accessed 2026-08-26):
 # OpenAI Chat: POST /api/coding/v3/chat/completions; `thinking.type` = enabled or
-# disabled (`auto` is rejected on most models); `reasoning_effort` = minimal, low,
-# medium, or high. Plaintext reasoning is in `choices[].message.reasoning_content`
+# disabled (`auto` is rejected on most models); `reasoning_effort` is per-model —
+# the Doubao entries take none through max, glm-5.3 rejects none and minimal
+# outright, and minimax-m3 tolerates none but still spends reasoning tokens on it,
+# so each model declares only the levels it honours (verified 2026-08-27 against
+# this endpoint). Plaintext reasoning is in `choices[].message.reasoning_content`
 # and the encrypted block in `choices[].message.encrypted_content`.
 # Anthropic: base https://ark.cn-beijing.volces.com/api/coding, POST /v1/messages
 # with `thinking.type` and `output_config.effort`.
