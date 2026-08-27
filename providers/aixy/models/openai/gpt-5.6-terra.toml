@@ -1,0 +1,26 @@
+# Pricing: https://developers.openai.com/api/docs/pricing (Terra/Luna cut 2026-07-30)
+base_model = "openai/gpt-5.6-terra"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "xhigh", "max"]
+
+[cost]
+input = 2
+output = 12
+cache_read = 0.2
+cache_write = 2.5
+
+[[cost.tiers]]
+tier = { type = "context", size = 272_000 }
+input = 4
+output = 18
+cache_read = 0.4
+cache_write = 5
+
+[experimental.modes.fast]
+cost = { input = 4, output = 24, cache_read = 0.4, cache_write = 5 }
+provider = { body = { service_tier = "priority" } }
+
+[experimental.modes.pro]
+provider = { body = { reasoning = { mode = "pro" } } }

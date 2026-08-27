@@ -1,0 +1,21 @@
+# Toggle: reasoning.enabled = true|false
+# Aixy forwards this route to openrouter without translating the model payload.
+# Reasoning controls mirror providers/openrouter/models/moonshotai/kimi-k3.toml.
+base_model = "moonshotai/kimi-k3"
+description = "Kimi multimodal agent model for visual understanding, coding, and planning"
+temperature = true
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[cost]
+input = 3
+output = 15
+cache_read = 0.3
+
+[limit]
+output = 943_718
