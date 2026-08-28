@@ -4,14 +4,12 @@
 # CNY→USD rate: 6.72, 2026-08-28, source: https://www.nimbuscalc.com/calculators/financial-calculators/currency-converter/USD-CNY-2026-08-26/ (mid-market ~6.7205; 6.72 used)
 # CNY list: input ¥0.8, output ¥2.7, cache hit ¥0.1, explicit cache create ¥1.25 (per 1M tokens).
 # Toggle: enable_thinking true|false (hybrid)
-# Effort: reasoning_effort = low|medium|xhigh
-# Budget: thinking_budget (0..262144) cannot be combined with reasoning_effort
+# Budget: thinking_budget (max 262144) — reasoning_effort is for qwen3.8-max only, not flash
 # Pay-as-you-go on DashScope CN / 千问AI (not Token Plan only).
 base_model = "alibaba/qwen3.8-flash"
 reasoning_options = [
   { type = "toggle" },
-  { type = "effort", values = ["low", "medium", "xhigh"] },
-  { type = "budget_tokens", min = 0, max = 262_144 },
+  { type = "budget_tokens", max = 262_144 },
 ]
 
 [interleaved]
