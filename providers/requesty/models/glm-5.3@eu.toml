@@ -1,12 +1,14 @@
+# Effort: reasoning_effort = low|high|max, matching GLM-5.3's native controls.
+# Thinking is always enabled. Requesty's generic budget conversions document
+# other model families, not a GLM-5.3 reasoning-token budget.
+# https://docs.z.ai/guides/llm/glm-5.3
+# https://docs.requesty.ai/features/reasoning
 base_model = "zhipuai/glm-5.3"
 name = "GLM-5.3 (EU)"
 
 [[reasoning_options]]
 type = "effort"
-values = ["none", "low", "medium", "high", "max"]
-
-[[reasoning_options]]
-type = "budget_tokens"
+values = ["low", "high", "max"]
 
 [cost]
 input = 1.75
