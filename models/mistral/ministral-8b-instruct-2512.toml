@@ -1,0 +1,22 @@
+name = "Ministral 3 8B Instruct"
+description = "Efficient open Mistral 3 8B for local chat, vision, and function calling"
+family = "ministral"
+release_date = "2025-12-03"
+last_updated = "2025-12-03"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = true
+open_weights = true
+
+[limit]
+context = 262_144
+output = 32_768
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/mistralai/Ministral-3-8B-Instruct-2512"
