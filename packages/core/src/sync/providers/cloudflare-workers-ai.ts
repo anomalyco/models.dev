@@ -2,6 +2,7 @@ import { z } from "zod";
 import { readdirSync } from "node:fs";
 import path from "node:path";
 
+import { ReasoningOption } from "../../schema.js";
 import type { ExistingModel, SyncedModel, SyncProvider } from "../index.js";
 import {
   buildOpenRouterModel,
@@ -50,6 +51,8 @@ const CloudflareModel = z.object({
   }),
   supported_features: z.array(z.string()).optional(),
   supported_sampling_parameters: z.array(z.string()).optional(),
+  reasoning: OpenRouterModel.shape.reasoning.catch(undefined),
+  input_schema: z.record(z.unknown()).optional(),
 }).passthrough();
 
 const CloudflareResponse = z.object({
@@ -62,6 +65,11 @@ export const cloudflareWorkersAi = {
   id: "cloudflare-workers-ai",
   name: "Cloudflare Workers AI",
   modelsDir: "providers/cloudflare-workers-ai/models",
+  updateHeader(current, generated) {
+    const notes = current.split("\n").filter((line) => line.trim() &&
+      (/https?:\/\//.test(line) || !/reasoning|thinking|effort|toggle|budget/i.test(line)));
+    return [...new Set([...generated.trim().split("\n"), ...notes])].join("\n") + "\n";
+  },
   async fetchModels() {
     const accountID = process.env.CLOUDFLARE_WORKERS_AI_SYNC_ACCOUNT_ID;
     const token = process.env.CLOUDFLARE_WORKERS_AI_SYNC_API_TOKEN;
@@ -81,6 +89,12 @@ export const cloudflareWorkersAi = {
       models.push(...parseCloudflareModels(await fetchPage(accountID, token, page)));
     }
 
+    for (let i = 0; i < models.length; i += 4) {
+      await Promise.all(models.slice(i, i + 4).map(async (model) => {
+        model.input_schema = await fetchSchema(accountID, token, model.id.replace(/^workers-ai\//, ""));
+      }));
+    }
+
     return { data: models };
   },
   parseModels(raw) {
@@ -89,12 +103,79 @@ export const cloudflareWorkersAi = {
   translateModel(model, context) {
     const normalized = normalizeModel(model);
     const id = normalized.id.replace(/^workers-ai\//, "");
+    const controls = normalized.supported_parameters.some((value) => value === "reasoning" || value === "include_reasoning")
+      ? schemaReasoningOptions(model.input_schema)
+      : undefined;
     return {
       id,
-      model: buildWorkersAiModel(normalized, context.existing(id)),
+      model: {
+        ...buildWorkersAiModel(normalized, context.existing(id)),
+        ...(controls && { reasoning_options: controls.options }),
+      },
+      header: controls?.header,
     };
   },
 } satisfies SyncProvider<CloudflareModel>;
+
+const SchemaNode = z.object({
+  type: z.string().optional(),
+  enum: z.array(z.unknown()).optional(),
+  const: z.unknown().optional(),
+  properties: z.record(z.unknown()).optional(),
+  anyOf: z.array(z.unknown()).optional(),
+  oneOf: z.array(z.unknown()).optional(),
+});
+
+// Follow request properties and alternatives, not arbitrary nested message/tool schemas.
+function schemaFields(input: unknown, path: string[]): z.infer<typeof SchemaNode>[] {
+  const parsed = SchemaNode.safeParse(input);
+  if (!parsed.success) return [];
+  const node = parsed.data;
+  const fields = path.length === 0 ? [node] : schemaFields(node.properties?.[path[0]!], path.slice(1));
+  return fields.concat((node.anyOf ?? []).concat(node.oneOf ?? []).flatMap((branch) => schemaFields(branch, path)));
+}
+
+function schemaReasoningOptions(input: unknown) {
+  const options: z.infer<typeof ReasoningOption>[] = [];
+  const paths = [["reasoning_effort"], ["reasoning", "effort"]];
+  const values = [...new Set(paths.flatMap((path) => schemaFields(input, path))
+    .flatMap((node) => node.enum ?? []).filter((value) => typeof value === "string"))];
+  const effort = ReasoningOption.safeParse({ type: "effort", values });
+  const toggle = schemaFields(input, ["chat_template_kwargs", "enable_thinking"])
+    .some((node) => node.type === "boolean" && node.const === undefined &&
+      (node.enum === undefined || (node.enum.includes(true) && node.enum.includes(false))));
+  const comments = ["# Reasoning controls declared by Cloudflare's model input schema."];
+  if (toggle && !values.includes("none")) {
+    options.push({ type: "toggle" });
+    comments.push("# Toggle: chat_template_kwargs.enable_thinking = true|false");
+  }
+  if (effort.success && values.some((value) => value !== "none")) {
+    options.push(effort.data);
+    for (const path of paths) {
+      if (schemaFields(input, path).some((node) => node.enum?.length)) {
+        comments.push(`# Effort: ${path.join(".")} = ${values.join("|")}`);
+      }
+    }
+  }
+  if (options.length === 0) return undefined;
+  return { options, header: comments.join("\n") + "\n" };
+}
+
+async function fetchSchema(accountID: string, token: string, model: string) {
+  const url = new URL(`${API_BASE}/${accountID}/ai/models/schema`);
+  url.searchParams.set("model", model);
+  const response = await fetch(url, {
+    headers: { Authorization: `Bearer ${token}` },
+    signal: AbortSignal.timeout(30_000),
+  });
+  if (!response.ok) {
+    throw new Error(`Cloudflare Workers AI schema request failed for ${model}: ${response.status}`);
+  }
+  return z.object({
+    success: z.literal(true),
+    result: z.object({ input: z.record(z.unknown()) }),
+  }).parse(await response.json()).result.input;
+}
 
 export function buildWorkersAiModel(
   model: z.infer<typeof OpenRouterModel>,
@@ -102,20 +183,22 @@ export function buildWorkersAiModel(
 ): SyncedModel {
   const source = {
     ...model,
+    // Cloudflare has no verified "null means every effort" contract.
+    reasoning: model.reasoning === undefined ? undefined : {
+      ...model.reasoning,
+      supported_efforts: model.reasoning.supported_efforts ?? undefined,
+    },
     name: existing?.name ?? model.name,
     top_provider: {
       ...model.top_provider,
       max_completion_tokens: existing?.limit?.output ?? model.top_provider.max_completion_tokens,
     },
   };
-  const synced = {
-    ...buildOpenRouterModel(
-      source,
-      existing,
-      existing?.base_model ?? resolveCloudflareBaseModel(model),
-    ),
-    reasoning_options: existing?.reasoning_options,
-  };
+  const synced = buildOpenRouterModel(
+    source,
+    existing,
+    existing?.base_model ?? resolveCloudflareBaseModel(model),
+  );
   if ("base_model" in synced) return synced;
   return {
     ...synced,
@@ -214,6 +297,7 @@ function normalizeModel(model: CloudflareModel) {
       ...model.supported_sampling_parameters ?? [],
       ...model.supported_features ?? [],
     ],
+    reasoning: model.reasoning,
   });
 }
 
