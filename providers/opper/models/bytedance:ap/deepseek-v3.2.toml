@@ -1,0 +1,18 @@
+base_model = "deepseek/deepseek-v3.2"
+name = "DeepSeek V3.2 (BytePlus)"
+reasoning_options = []
+
+[cost]
+input = 0.28
+output = 0.42
+cache_read = 0.056
+
+[[cost.tiers]]
+tier = { type = "context", size = 32_768 }
+input = 0.56
+output = 0.84
+cache_read = 0.056
+
+[limit]
+context = 131_072
+output = 32_768

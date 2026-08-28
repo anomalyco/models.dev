@@ -1,0 +1,14 @@
+base_model = "anthropic/claude-sonnet-5"
+name = "Claude Sonnet 5 (Google, US)"
+temperature = true
+structured_output = true
+reasoning_options = []
+
+[cost]
+input = 2
+output = 10
+cache_read = 0.2
+cache_write = 2.5
+
+[limit]
+output = 64_000

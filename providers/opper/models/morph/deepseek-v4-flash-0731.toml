@@ -1,0 +1,14 @@
+base_model = "deepseek/deepseek-v4-flash-0731"
+name = "DeepSeek V4 Flash (0731) (Morph)"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high"]
+
+[cost]
+input = 0.139
+output = 0.278
+
+[limit]
+context = 1_048_576
+output = 1_048_576

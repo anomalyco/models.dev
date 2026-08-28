@@ -1,0 +1,15 @@
+base_model = "moonshotai/kimi-k3"
+name = "Kimi K3 (Berget)"
+temperature = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["max"]
+
+[cost]
+input = 3.4935
+output = 17.4675
+
+[limit]
+context = 327_680
+output = 327_680

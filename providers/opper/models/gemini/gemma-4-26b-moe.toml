@@ -1,0 +1,13 @@
+base_model = "google/gemma-4-26b-a4b-it"
+name = "Gemma 4 26B A4B IT (Google)"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high"]
+
+[limit]
+context = 256_000
+output = 8_192
+
+[modalities]
+input = ["text", "image", "audio", "video"]

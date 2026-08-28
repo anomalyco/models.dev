@@ -1,0 +1,14 @@
+base_model = "alibaba/qwen3.6-flash"
+name = "Qwen3.6-Flash"
+reasoning_options = []
+
+[cost]
+input = 0.17856
+output = 1.07136
+cache_read = 0.017856
+
+[[cost.tiers]]
+tier = { type = "context", size = 262_144 }
+input = 0.71424
+output = 4.28544
+cache_read = 0.071424

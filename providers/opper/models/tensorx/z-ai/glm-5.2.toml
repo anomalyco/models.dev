@@ -1,0 +1,12 @@
+base_model = "zhipuai/glm-5.2"
+name = "GLM-5.2 (TensorX)"
+reasoning_options = []
+
+[cost]
+input = 1.5
+output = 4.5
+cache_read = 0.38
+
+[limit]
+context = 1_048_576
+output = 1_048_576

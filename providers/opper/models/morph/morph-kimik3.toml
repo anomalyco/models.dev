@@ -1,0 +1,15 @@
+base_model = "moonshotai/kimi-k3"
+name = "Kimi K3 (morph/morph-kimik3)"
+temperature = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"]
+
+[cost]
+input = 2.9
+output = 14
+cache_read = 0.29
+
+[limit]
+output = 1_048_576

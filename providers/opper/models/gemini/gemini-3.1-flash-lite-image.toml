@@ -1,0 +1,12 @@
+base_model = "google/gemini-3.1-flash-lite-image"
+name = "Gemini 3.1 Flash Lite Image (gemini)"
+structured_output = true
+reasoning_options = []
+
+[cost]
+input = 0.25
+output = 1.5
+
+[limit]
+context = 131_072
+output = 32_768

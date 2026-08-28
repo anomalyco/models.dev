@@ -1,0 +1,11 @@
+base_model = "bytedance-seed/seed-2.0-mini"
+name = "Seed 2.0 Mini (DeepInfra)"
+reasoning_options = []
+
+[cost]
+input = 0.1
+output = 0.4
+cache_read = 0.02
+
+[limit]
+output = 256_000

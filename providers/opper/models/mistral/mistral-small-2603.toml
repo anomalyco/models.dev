@@ -1,4 +1,6 @@
 base_model = "mistral/mistral-small-2603"
+name = "Mistral Small 4 (Mistral)"
+structured_output = true
 
 [[reasoning_options]]
 type = "effort"
@@ -7,3 +9,6 @@ values = ["none", "high"]
 [cost]
 input = 0.15
 output = 0.6
+
+[limit]
+output = 8_192

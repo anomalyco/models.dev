@@ -1,0 +1,18 @@
+base_model = "alibaba/qwen3.7-plus"
+name = "Qwen3.7-Plus (Alibaba Cloud)"
+structured_output = true
+reasoning_options = []
+
+[cost]
+input = 0.2976
+output = 1.1904
+cache_read = 0.05952
+
+[[cost.tiers]]
+tier = { type = "context", size = 262_144 }
+input = 0.8928
+output = 3.5712
+cache_read = 0.17856
+
+[limit]
+output = 65_536

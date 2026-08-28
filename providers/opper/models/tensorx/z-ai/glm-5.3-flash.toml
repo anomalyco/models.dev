@@ -1,0 +1,14 @@
+base_model = "zhipuai/glm-5.3-flash"
+name = "GLM-5.3-Flash (TensorX)"
+
+[[reasoning_options]]
+type = "effort"
+values = ["minimal", "low", "medium", "high", "xhigh", "max"]
+
+[cost]
+input = 0.2
+output = 0.5
+cache_read = 0.05
+
+[limit]
+context = 1_048_576

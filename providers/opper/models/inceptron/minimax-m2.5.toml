@@ -1,0 +1,13 @@
+base_model = "minimax/MiniMax-M2.5"
+name = "MiniMax M2.5 (Inceptron)"
+structured_output = true
+reasoning_options = []
+
+[cost]
+input = 0.22
+output = 0.9
+cache_read = 0.05
+
+[limit]
+context = 200_000
+output = 196_608

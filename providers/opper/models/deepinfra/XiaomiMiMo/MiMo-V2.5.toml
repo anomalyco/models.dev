@@ -1,0 +1,13 @@
+base_model = "xiaomi/mimo-v2.5"
+name = "MiMo V2.5 (DeepInfra)"
+structured_output = true
+reasoning_options = []
+
+[cost]
+input = 0.4
+output = 2
+cache_read = 0.08
+
+[limit]
+context = 262_144
+output = 262_144

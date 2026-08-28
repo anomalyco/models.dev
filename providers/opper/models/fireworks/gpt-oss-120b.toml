@@ -1,0 +1,15 @@
+base_model = "openai/gpt-oss-120b"
+name = "GPT OSS 120B (Fireworks)"
+attachment = true
+reasoning_options = []
+
+[cost]
+input = 0.15
+output = 0.6
+cache_read = 0.014
+
+[limit]
+output = 131_072
+
+[modalities]
+input = ["text", "image"]

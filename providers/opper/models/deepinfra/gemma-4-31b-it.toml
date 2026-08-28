@@ -1,0 +1,13 @@
+base_model = "google/gemma-4-31b-it"
+name = "Gemma 4 31B (DeepInfra)"
+reasoning_options = []
+
+[cost]
+input = 0.13
+output = 0.38
+
+[limit]
+output = 262_144
+
+[modalities]
+input = ["text", "image", "audio", "video"]

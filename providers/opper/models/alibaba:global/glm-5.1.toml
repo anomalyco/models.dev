@@ -1,0 +1,17 @@
+base_model = "zhipuai/glm-5.1"
+name = "GLM 5.1 (Alibaba Cloud)"
+reasoning_options = []
+
+[cost]
+input = 0.8928
+output = 3.5712
+cache_read = 0.17856
+
+[[cost.tiers]]
+tier = { type = "context", size = 32_768 }
+input = 1.1904
+output = 4.1664
+cache_read = 0.23808
+
+[limit]
+context = 202_752

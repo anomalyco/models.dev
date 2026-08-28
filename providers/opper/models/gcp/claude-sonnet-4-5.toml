@@ -1,0 +1,17 @@
+base_model = "anthropic/claude-sonnet-4-5"
+name = "Claude Sonnet 4.5 (Google, US)"
+structured_output = true
+reasoning_options = []
+
+[cost]
+input = 3
+output = 15
+cache_read = 0.3
+cache_write = 3.75
+
+[[cost.tiers]]
+tier = { type = "context", size = 199_999 }
+input = 6
+output = 22.5
+cache_read = 0.6
+cache_write = 7.5

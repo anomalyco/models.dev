@@ -1,0 +1,16 @@
+base_model = "deepseek/deepseek-v3.2"
+name = "DeepSeek V3.2 (TensorX)"
+attachment = true
+reasoning_options = []
+
+[cost]
+input = 0.3
+output = 0.5
+cache_read = 0.08
+
+[limit]
+context = 163_840
+output = 65_536
+
+[modalities]
+input = ["text", "pdf"]

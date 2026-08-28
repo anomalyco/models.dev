@@ -1,4 +1,8 @@
 base_model = "xai/grok-4.3"
+name = "Grok 4.3 (xAI, US)"
+
+[interleaved]
+field = "reasoning_content"
 
 [[reasoning_options]]
 type = "effort"
@@ -10,10 +14,7 @@ output = 2.5
 cache_read = 0.2
 
 [[cost.tiers]]
-tier = { size = 200_000 }
+tier = { type = "context", size = 200_000 }
 input = 2.5
 output = 5
 cache_read = 0.4
-
-[interleaved]
-field = "reasoning_content"

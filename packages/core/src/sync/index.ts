@@ -28,6 +28,7 @@ import { nanoGpt } from "./providers/nano-gpt.js";
 import { openai } from "./providers/openai.js";
 import { ofox } from "./providers/ofox.js";
 import { openrouter } from "./providers/openrouter.js";
+import { opper } from "./providers/opper.js";
 import { ovhcloud } from "./providers/ovhcloud.js";
 import { pioneer } from "./providers/pioneer.js";
 import { requesty } from "./providers/requesty.js";
@@ -149,6 +150,7 @@ export const providers: {
   ofox: SyncProvider<any>;
   openai: SyncProvider<any>;
   openrouter: SyncProvider<any>;
+  opper: SyncProvider<any>;
   ovhcloud: SyncProvider<any>;
   pioneer: SyncProvider<any>;
   requesty: SyncProvider<any>;
@@ -182,6 +184,7 @@ export const providers: {
   ofox,
   openai,
   openrouter,
+  opper,
   ovhcloud,
   pioneer,
   requesty,
@@ -205,6 +208,7 @@ export const groups = {
     "merge-gateway",
     "nano-gpt",
     "ofox",
+    "opper",
     "requesty",
     "openrouter",
     "vercel",

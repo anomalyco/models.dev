@@ -1,9 +1,14 @@
 base_model = "anthropic/claude-sonnet-5"
+name = "Claude Sonnet 5 (Anthropic)"
+temperature = true
 structured_output = true
+
+[interleaved]
+field = "reasoning_content"
 
 [[reasoning_options]]
 type = "effort"
-values = ["low", "medium", "high", "xhigh", "max"]
+values = ["low", "medium", "high", "max"]
 
 [cost]
 input = 2
@@ -11,5 +16,5 @@ output = 10
 cache_read = 0.2
 cache_write = 2.5
 
-[interleaved]
-field = "reasoning_content"
+[limit]
+output = 64_000

@@ -1,0 +1,14 @@
+base_model = "openai/gpt-oss-120b"
+name = "GPT OSS 120B (Geodd, US)"
+attachment = true
+reasoning_options = []
+
+[cost]
+input = 0.039
+output = 0.182
+
+[limit]
+output = 131_072
+
+[modalities]
+input = ["text", "image"]

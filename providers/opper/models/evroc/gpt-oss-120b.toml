@@ -1,0 +1,15 @@
+base_model = "openai/gpt-oss-120b"
+name = "GPT OSS 120B (Evroc)"
+attachment = true
+reasoning_options = []
+
+[cost]
+input = 0.2329
+output = 0.9316
+
+[limit]
+context = 128_000
+output = 8_192
+
+[modalities]
+input = ["text", "image"]

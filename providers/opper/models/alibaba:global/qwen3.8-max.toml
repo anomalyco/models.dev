@@ -1,0 +1,15 @@
+base_model = "alibaba/qwen3.8-max"
+name = "Qwen3.8-Max"
+structured_output = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"]
+
+[cost]
+input = 2
+output = 6
+cache_read = 0.25
+
+[limit]
+context = 983_616

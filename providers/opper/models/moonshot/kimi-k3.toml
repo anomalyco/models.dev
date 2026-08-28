@@ -1,13 +1,18 @@
 base_model = "moonshotai/kimi-k3"
+name = "Kimi K3 (Moonshot AI)"
+temperature = true
+
+[interleaved]
+field = "reasoning_content"
 
 [[reasoning_options]]
 type = "effort"
-values = ["low", "high", "max"]
+values = ["max"]
 
 [cost]
 input = 3
 output = 15
 cache_read = 0.3
 
-[interleaved]
-field = "reasoning_content"
+[limit]
+output = 1_048_576

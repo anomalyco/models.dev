@@ -1,0 +1,12 @@
+base_model = "alibaba/qwen3-32b"
+name = "Qwen3 32B (Nebius)"
+structured_output = true
+reasoning_options = []
+
+[cost]
+input = 0.1
+output = 0.3
+
+[limit]
+context = 40_960
+output = 8_192

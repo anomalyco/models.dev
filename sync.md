@@ -306,6 +306,53 @@ Requesty is implemented in `packages/core/src/sync/providers/requesty.ts`.
 - Region variants are written as separate models: `gpt-5.4` and `gpt-5.4@eu` are distinct files that share a `base_model` and differ only in served pricing and limits.
 - Prices are per-token USD and are converted to per-1M-token numbers. `pricing[]` bands become `cost.tiers`, with the first band as the flat `cost`. Price fields are nullable upstream, so a route quoting no prices gets no `[cost]` section rather than a fabricated zero.
 
+## Opper Notes
+
+Opper is implemented in `packages/core/src/sync/providers/opper.ts`.
+
+- Run it with `bun models:sync opper` or `bun opper:sync`.
+- Source endpoint: `https://api.opper.ai/v3/models?limit=2000`. **No auth**: the
+  catalog is public, so this sync needs no secret in CI.
+- Only `type: "llm"` rows are synced. The same endpoint also serves image,
+  video, embedding, rerank, OCR, speech and realtime routes, which the
+  token-cost schema cannot represent.
+- Opper is a relay, so the lab entry stays authoritative for what the weights
+  can do and this sync only ever **widens** capabilities and modalities, never
+  narrows them. Opper records a capability once it has been verified for a
+  route, which makes absence silence rather than denial — it declares PDF input
+  on none of the OpenAI routes that demonstrably accept it, and omits
+  `reasoning` on several models that reason. Writing the negative would
+  contradict the lab entry and, for `reasoning`, strip the base model's effort
+  controls.
+- Opper *is* authoritative for what it serves: price, context window, output
+  cap and the reasoning effort ladder override the base. The ladder is
+  per-route and genuinely differs between hosts — `tensorx/moonshotai/kimi-k3`
+  accepts the full ladder while `moonshot/kimi-k3` accepts only `max` — and
+  requesting an effort outside it is an error rather than a silent downgrade,
+  so a wider ladder than the route accepts would be user-visible breakage.
+- Route IDs are `<host>/<host's own model id>` and carry no lab prefix, so
+  `base_model` resolves from the `maker` field plus the routing key, not from
+  the ID. A route whose lab model has no `models/` entry is skipped and
+  reported as a notice; it is never written inline.
+- An authored `base_model` always wins. Opper's routing key names a dated
+  snapshot for some routes (`anthropic/claude-haiku-4-5` routes to
+  `claude-haiku-4-5-20251001`), and a sync should not repoint a pointer a
+  human chose.
+- Prices are quoted per million tokens already, but derived rates carry
+  binary-float noise (a cached rate reads `0.029759999999999998`) and are
+  rounded. A route quoting no price gets no `[cost]` section.
+- Two distinct long-context mechanisms both become `cost.tiers`: `thresholds`
+  bands the marginal rate, while `input_surcharge_threshold_tokens` reprices
+  the whole request by a per-side multiplier. They are mutually exclusive
+  upstream. An authored tier is preserved where a route quotes neither.
+- Opper relays the same model from many hosts, so `name` alone is ambiguous for
+  most of the catalog — fifteen routes are called "GLM-5.2". Display names are
+  qualified only as far as uniqueness requires: bare name, then host, then host
+  and region, then the raw provider slug (`azure` and `azure-zdr` share a
+  display name and a region).
+- `interleaved` and `status` are not expressed in `/v3/models`, so authored
+  values are the only source and are preserved.
+
 ## Venice Notes
 
 Venice is implemented in `packages/core/src/sync/providers/venice.ts`.

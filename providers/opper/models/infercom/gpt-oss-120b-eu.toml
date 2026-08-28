@@ -1,0 +1,14 @@
+base_model = "openai/gpt-oss-120b"
+name = "GPT OSS 120B (Infercom)"
+attachment = true
+reasoning_options = []
+
+[cost]
+input = 0.25619
+output = 0.687055
+
+[limit]
+output = 131_072
+
+[modalities]
+input = ["text", "image"]

@@ -1,0 +1,14 @@
+base_model = "deepseek/deepseek-v4-flash"
+name = "DeepSeek V4 Flash (Geodd)"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "high", "max"]
+
+[cost]
+input = 0.14
+output = 0.3
+
+[limit]
+context = 1_048_576
+output = 1_048_576

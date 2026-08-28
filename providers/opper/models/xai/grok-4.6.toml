@@ -1,5 +1,8 @@
 base_model = "xai/grok-4.6"
 
+[interleaved]
+field = "reasoning_content"
+
 [[reasoning_options]]
 type = "effort"
 values = ["low", "medium", "high", "xhigh"]
@@ -15,5 +18,5 @@ input = 4
 output = 12
 cache_read = 1
 
-[interleaved]
-field = "reasoning_content"
+[modalities]
+input = ["text", "image", "pdf"]

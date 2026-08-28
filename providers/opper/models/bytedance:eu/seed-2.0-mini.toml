@@ -1,0 +1,18 @@
+base_model = "bytedance-seed/seed-2.0-mini"
+name = "Seed 2.0 Mini (BytePlus, EU)"
+reasoning_options = []
+
+[cost]
+input = 0.1
+output = 0.4
+cache_read = 0.02
+
+[[cost.tiers]]
+tier = { type = "context", size = 131_072 }
+input = 0.2
+output = 0.8
+cache_read = 0.04
+
+[limit]
+context = 262_144
+output = 131_072

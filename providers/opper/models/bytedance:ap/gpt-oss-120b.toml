@@ -1,0 +1,14 @@
+base_model = "openai/gpt-oss-120b"
+name = "GPT OSS 120B (BytePlus)"
+attachment = true
+reasoning_options = []
+
+[cost]
+input = 0.1
+output = 0.5
+
+[limit]
+output = 65_536
+
+[modalities]
+input = ["text", "image"]

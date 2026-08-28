@@ -1,0 +1,15 @@
+base_model = "deepseek/deepseek-v4-flash"
+name = "DeepSeek V4 Flash (Alibaba Cloud)"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "high", "max"]
+
+[cost]
+input = 0.1488
+output = 0.2976
+cache_read = 0.02976
+
+[limit]
+context = 1_048_576
+output = 393_216

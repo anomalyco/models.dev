@@ -1,0 +1,14 @@
+base_model = "openai/gpt-oss-120b"
+name = "GPT OSS 120B (Groq)"
+attachment = true
+reasoning_options = []
+
+[cost]
+input = 0.15
+output = 0.6
+
+[limit]
+context = 128_000
+
+[modalities]
+input = ["text", "image"]

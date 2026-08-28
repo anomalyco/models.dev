@@ -1,0 +1,13 @@
+base_model = "google/gemini-3.1-flash-image-preview"
+name = "Gemini 3.1 Flash Image Preview (gemini)"
+tool_call = true
+structured_output = true
+reasoning_options = []
+
+[cost]
+input = 0.5
+output = 3
+
+[limit]
+context = 131_072
+output = 32_768

@@ -1,0 +1,16 @@
+base_model = "zhipuai/glm-5"
+name = "GLM 5 (TensorX)"
+attachment = true
+structured_output = true
+reasoning_options = []
+
+[cost]
+input = 1
+output = 3.2
+cache_read = 0.25
+
+[limit]
+context = 202_752
+
+[modalities]
+input = ["text", "pdf"]

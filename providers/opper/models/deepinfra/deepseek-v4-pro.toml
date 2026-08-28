@@ -1,0 +1,12 @@
+base_model = "deepseek/deepseek-v4-pro"
+name = "DeepSeek V4 Pro (DeepInfra)"
+reasoning_options = []
+
+[cost]
+input = 1.3
+output = 2.6
+cache_read = 0.1
+
+[limit]
+context = 1_048_576
+output = 65_536

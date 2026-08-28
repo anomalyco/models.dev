@@ -1,0 +1,12 @@
+base_model = "zhipuai/glm-5.1"
+name = "GLM 5.1 (DeepInfra)"
+reasoning_options = []
+
+[cost]
+input = 1.05
+output = 3.5
+cache_read = 0.205
+
+[limit]
+context = 202_752
+output = 202_752

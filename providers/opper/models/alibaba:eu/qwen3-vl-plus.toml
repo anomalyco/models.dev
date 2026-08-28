@@ -1,0 +1,14 @@
+base_model = "alibaba/qwen3-vl-plus"
+name = "Qwen3-VL-Plus (Alibaba Cloud, EU)"
+attachment = true
+structured_output = true
+reasoning_options = []
+
+[cost]
+input = 0.2
+output = 1.6
+
+[[cost.tiers]]
+tier = { type = "context", size = 131_072 }
+input = 0.6
+output = 4.8

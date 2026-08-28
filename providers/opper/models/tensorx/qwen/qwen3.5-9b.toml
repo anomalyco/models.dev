@@ -1,0 +1,14 @@
+base_model = "alibaba/qwen3.5-9b"
+name = "Qwen3.5 9B (TensorX)"
+reasoning_options = []
+
+[cost]
+input = 0.15
+output = 0.2
+cache_read = 0.04
+
+[limit]
+output = 262_144
+
+[modalities]
+input = ["text", "image", "video", "pdf"]

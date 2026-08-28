@@ -1,0 +1,11 @@
+base_model = "moonshotai/kimi-k2.6"
+name = "Kimi K2.6 (TensorX)"
+reasoning_options = []
+
+[cost]
+input = 1
+output = 4
+cache_read = 0.25
+
+[modalities]
+input = ["text", "image", "video", "pdf"]

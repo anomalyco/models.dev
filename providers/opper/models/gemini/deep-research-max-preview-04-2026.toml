@@ -1,0 +1,19 @@
+base_model = "google/deep-research-max-preview-04-2026"
+name = "Deep Research Max Preview (Apr-21-2026)"
+temperature = true
+structured_output = true
+reasoning_options = []
+
+[cost]
+input = 2
+output = 12
+cache_read = 0.2
+
+[[cost.tiers]]
+tier = { type = "context", size = 200_000 }
+input = 4
+output = 18
+cache_read = 0.4
+
+[limit]
+context = 131_072

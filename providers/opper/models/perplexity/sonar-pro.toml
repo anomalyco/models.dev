@@ -1,5 +1,10 @@
 base_model = "perplexity/sonar-pro"
+name = "Perplexity Sonar Pro"
+structured_output = true
 
 [cost]
 input = 3
 output = 15
+
+[limit]
+output = 8_000

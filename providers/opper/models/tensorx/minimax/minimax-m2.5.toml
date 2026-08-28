@@ -1,0 +1,17 @@
+base_model = "minimax/MiniMax-M2.5"
+name = "MiniMax M2.5 (TensorX)"
+attachment = true
+structured_output = true
+reasoning_options = []
+
+[cost]
+input = 0.3
+output = 1.2
+cache_read = 0.08
+
+[limit]
+context = 196_608
+output = 196_608
+
+[modalities]
+input = ["text", "pdf"]

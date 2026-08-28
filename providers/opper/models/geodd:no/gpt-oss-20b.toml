@@ -1,0 +1,14 @@
+base_model = "openai/gpt-oss-20b"
+name = "GPT OSS 20B (Geodd, EU)"
+attachment = true
+reasoning_options = []
+
+[cost]
+input = 0.03
+output = 0.14
+
+[limit]
+output = 131_072
+
+[modalities]
+input = ["text", "image"]
