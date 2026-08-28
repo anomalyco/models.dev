@@ -1,8 +1,16 @@
+# https://opencode.ai/docs/go/#endpoints
+# https://help.aliyun.com/en/model-studio/anthropic-api-messages
+# Toggle (Messages): thinking.type = enabled|disabled
+# Effort (Messages): output_config.effort = low|medium|xhigh
 base_model = "alibaba/qwen3.8-flash"
 temperature = true
 
 [[reasoning_options]]
 type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "xhigh"]
 
 [[reasoning_options]]
 type = "budget_tokens"
