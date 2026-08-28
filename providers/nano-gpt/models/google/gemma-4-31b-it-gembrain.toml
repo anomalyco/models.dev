@@ -1,0 +1,25 @@
+name = "Gembrain"
+description = "Gembrain is a multimodal Gemma 4 31B creative finetune for expressive dialogue, long-form storytelling, and roleplay."
+family = "gemma"
+release_date = "2026-08-28"
+last_updated = "2026-08-28"
+attachment = true
+reasoning = true
+tool_call = true
+structured_output = false
+open_weights = true
+reasoning_options = []
+
+[cost]
+input = 0.08
+output = 0.33
+cache_read = 0.04
+
+[limit]
+context = 262_144
+input = 262_144
+output = 32_768
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
