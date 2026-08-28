@@ -1,0 +1,24 @@
+name = "qwen3.8-flash-next"
+description = "Qwen3.8 Flash Next is an efficient multimodal MoE model designed for low-cost inference and strong coding performance."
+release_date = "2026-08-28"
+last_updated = "2026-08-28"
+attachment = true
+reasoning = true
+temperature = false
+tool_call = true
+structured_output = true
+open_weights = false
+reasoning_options = []
+
+[cost]
+input = 0.201
+output = 0.5
+cache_read = 0.05
+
+[limit]
+context = 262_144
+output = 262_144
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

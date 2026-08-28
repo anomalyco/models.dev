@@ -1,0 +1,14 @@
+base_model = "zhipuai/glm-5.3-flash"
+reasoning_options = []
+
+[cost]
+input = 0.201
+output = 0.5
+cache_read = 0.05
+
+[limit]
+context = 1_048_576
+output = 1_048_576
+
+[modalities]
+input = ["text", "image"]
