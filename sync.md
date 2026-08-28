@@ -318,14 +318,14 @@ Neuralwatt is implemented in `packages/core/src/sync/providers/neuralwatt.ts`.
 - `max_output_tokens` is null for models that can fill their context, so `limit.output` falls back to the authored cap and then to the context window. `limit.input` is always preserved.
 - `pricing_tbd` keeps the existing `[cost]` instead of writing a zero.
 - Neuralwatt currently only advertises vision, not video or audio, so `modalities.input` is `["text", "image"]` or `["text"]`.
-- `created` is always `0`, and the endpoint carries no lifecycle or provenance metadata, so `release_date`, `last_updated`, `knowledge`, `family`, `temperature`, `open_weights`, names, and descriptions are preserved when a model already has them. So is `status`, unless the API reports the model as deprecated.
+- `created` is always `0`, and the endpoint carries no lifecycle or provenance metadata, so `release_date`, `last_updated`, `knowledge`, `family`, `temperature`, `open_weights`, names, and descriptions are preserved when a model already has them. `status` is preserved too, except that the API deprecation flag sets `status = "deprecated"` and clears it again once the flag goes away.
 - Non-effort reasoning controls are preserved from the authored TOML: the endpoint describes effort levels but never `thinking_token_budget`.
 - New models are created automatically, so a model is usable as soon as Neuralwatt serves it. Every model Neuralwatt serves is open weights, and reasoning traces always return on a `reasoning` field, so `interleaved` is automatically set when the model has a reasoning field.
 - This provider tries to always use a `base_model` reference. It determines a reference by taking the slug and stripping serving tiers (`-fast`, `-flex`, `-short`, and combinations such as `-short-fast-flex`), and any quantization or checkpoint suffixes.
 - When no exact slug matches, the sync retries against a canonical ID carrying an MoE active-parameter suffix the slug might not have, which is how `qwen3.6-35b` links to `alibaba/qwen3.6-35b-a3b`. Both passes require a unique match, so an ambiguous slug resolves to nothing.
-- Together these resolve all current 20 models. An authored `base_model` is never overriden by this auto-linking.
+- Together these resolve all current 20 models. An authored `base_model` is used only when resolution finds no match.
 - A factored model inherits `family`, the description, and the other intrinsic fields; only the served facts stay in the provider file. A model with no canonical match is written inline with a generated description and no `family`.
-- A created model has no `knowledge`, `temperature`, or `budget_tokens` control, and its dates default to the sync date.
+- A created model has no `knowledge`, `temperature`, or `budget_tokens` control. Its dates are inherited from `base_model`, or default to the sync date when there is no `base_model`.
 - Interior (i.e., not in the header/top of the TOML file) comments are not preserved. Keep per-model wire notes in the leading comment block, which the runner does preserve.
 - The sync emits a `thinking_token_budget` note as a generated header for any model carrying a `budget_tokens` control.
 

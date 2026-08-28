@@ -130,12 +130,9 @@ export function buildNeuralwattModel(
   // re-derive, such as a canonical ID carrying a suffix the served ID drops.
   const baseModel = resolveBaseModel(model) ?? authored?.base_model;
 
-  const values: Omit<SyncedFullModel, "description"> = {
+  const values: Omit<SyncedFullModel, "description" | "release_date" | "last_updated"> = {
     name,
     family: existing?.family,
-    // Every entry reports created = 0, so authored dates are the only source.
-    release_date: existing?.release_date ?? today,
-    last_updated: existing?.last_updated ?? today,
     attachment: capabilities.vision,
     reasoning: capabilities.reasoning,
     reasoning_options: capabilities.reasoning ? reasoningOptions(model, authored) : undefined,
@@ -145,7 +142,12 @@ export function buildNeuralwattModel(
     knowledge: existing?.knowledge,
     // Neuralwatt serves open models only; huggingface_id is often null anyway.
     open_weights: existing?.open_weights ?? true,
-    status: model.metadata.deprecated === true ? "deprecated" : existing?.status,
+    // A revived model clears the flag; hand-authored beta/alpha stays.
+    status: model.metadata.deprecated === true
+      ? "deprecated"
+      : existing?.status === "deprecated"
+        ? undefined
+        : existing?.status,
     // Reasoning traces always come back on a `reasoning` field, provider-wide.
     interleaved: existing?.interleaved ?? (capabilities.reasoning || undefined),
     cost: pricing.pricing_tbd === true ? existing?.cost : {
@@ -157,14 +159,22 @@ export function buildNeuralwattModel(
     modalities,
   };
 
-  // A factored model inherits the canonical blurb; a standalone one needs its own.
+  // A factored model inherits the canonical blurb and dates; a standalone one
+  // needs its own, and every entry reports created = 0, so it gets the run date.
   if (baseModel !== undefined) {
-    const overrides = { ...values, description: existing?.description };
+    const overrides = {
+      ...values,
+      description: existing?.description,
+      release_date: existing?.release_date,
+      last_updated: existing?.last_updated,
+    };
     return factorBaseModel(baseModel, overrides, limit, authored?.base_model_omit);
   }
 
   return {
     ...values,
+    release_date: existing?.release_date ?? today,
+    last_updated: existing?.last_updated ?? today,
     description: existing?.description ?? describeModel({
       id: model.id,
       name,

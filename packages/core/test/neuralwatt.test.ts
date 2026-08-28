@@ -76,8 +76,10 @@ test("factors onto canonical metadata once the serving tier is stripped", () => 
   const model = buildNeuralwattModel(sourceModel("kimi-k3-flex"), undefined, undefined, "2026-08-28");
 
   expect(model).toMatchObject({ base_model: "moonshotai/kimi-k3" });
-  // The canonical blurb is inherited rather than generated.
+  // The canonical blurb and dates are inherited rather than invented.
   expect(model.description).toBeUndefined();
+  expect(model.release_date).toBeUndefined();
+  expect(model.last_updated).toBeUndefined();
 });
 
 test("factors onto a canonical ID whose MoE suffix the served ID drops", () => {
@@ -128,4 +130,12 @@ test("marks deprecated models", () => {
   );
 
   expect(model.status).toBe("deprecated");
+});
+
+test("clears a deprecated status the API no longer reports", () => {
+  const model = buildNeuralwattModel(sourceModel("glm-5.2"), { status: "deprecated" }, undefined, "2026-08-28");
+  const beta = buildNeuralwattModel(sourceModel("glm-5.2"), { status: "beta" }, undefined, "2026-08-28");
+
+  expect(model.status).toBeUndefined();
+  expect(beta.status).toBe("beta");
 });
