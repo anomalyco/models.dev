@@ -7,7 +7,7 @@ attachment = false
 reasoning = true
 temperature = true
 tool_call = true
-structured_output = false
+structured_output = true
 open_weights = false
 
 [[reasoning_options]]
@@ -15,13 +15,13 @@ type = "effort"
 values = ["low", "high", "max"]
 
 [cost]
-input = 1.4
-output = 4.4
-cache_read = 0.26
+input = 1.2
+output = 1.2
+cache_read = 0.6
 
 [limit]
 context = 1_048_576
-output = 131_072
+output = 943_718
 
 [modalities]
 input = ["text"]
