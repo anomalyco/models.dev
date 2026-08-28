@@ -1,0 +1,20 @@
+# Source: https://docs.mistral.ai/models/magistral-medium-1-2-25-09 (accessed 2026-08-28)
+name = "Magistral Medium 1.2"
+description = "Frontier-class multimodal reasoning model for transparent analysis, math, and complex decisions"
+family = "magistral-medium"
+release_date = "2025-09-18"
+last_updated = "2025-09-18"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+knowledge = "2025-06"
+open_weights = false
+
+[limit]
+context = 128_000
+output = 128_000
+
+[modalities]
+input = ["text"]
+output = ["text"]
