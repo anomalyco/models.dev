@@ -1,0 +1,23 @@
+# Sources (accessed 2026-08-28):
+# https://www.alibabacloud.com/help/en/model-studio/qwen3-8-flash (Singapore/International: $0.15 in / $0.47 out)
+# https://platform.qianwenai.com/docs/developer-guides/text-generation/thinking
+# Official international (Singapore) price: $0.15 input / $0.47 output per 1M tokens.
+# Context cache: write (Explicit Cache Creation) $0.20, read (Implicit/Explicit Cache) $0.016.
+# Toggle: enable_thinking true|false (hybrid)
+# Effort: reasoning_effort = low|medium|xhigh
+# Budget: thinking_budget (0..262144) cannot be combined with reasoning_effort
+base_model = "alibaba/qwen3.8-flash"
+reasoning_options = [
+  { type = "toggle" },
+  { type = "effort", values = ["low", "medium", "xhigh"] },
+  { type = "budget_tokens", min = 0, max = 262_144 },
+]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.15
+output = 0.47
+cache_read = 0.016
+cache_write = 0.20
