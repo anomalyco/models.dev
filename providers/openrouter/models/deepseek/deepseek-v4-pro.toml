@@ -1,3 +1,5 @@
+# Toggle: reasoning.enabled = true|false
+# https://openrouter.ai/docs/guides/best-practices/reasoning-tokens
 base_model = "deepseek/deepseek-v4-pro"
 
 [interleaved]
@@ -11,9 +13,9 @@ type = "effort"
 values = ["high", "xhigh"]
 
 [cost]
-input = 0.87
-output = 1.74
-cache_read = 0.0725
+input = 0.772038
+output = 1.544076
+cache_read = 0.064337
 
 [limit]
 context = 1_048_576
