@@ -21,26 +21,78 @@ function sourceModel(id: string, metadata: Record<string, unknown> = {}): Neural
   };
 }
 
+function context(existing?: Record<string, unknown>, authored = existing) {
+  return { existing: () => existing, authored: () => authored } as Parameters<
+    typeof neuralwatt.translateModel
+  >[1];
+}
+
 test("applies the flex discount the API omits, without float noise", () => {
-  const model = buildNeuralwattModel(sourceModel("glm-5.2-flex"), undefined, undefined, "2026-08-28");
+  const model = buildNeuralwattModel(sourceModel("glm-5.2-flex"), undefined, undefined);
 
   expect(model.cost).toEqual({ input: 0.9425, output: 2.925, cache_read: 0.09425 });
 });
 
 test("keeps standard pricing on standard model IDs", () => {
-  const model = buildNeuralwattModel(sourceModel("glm-5.2"), undefined, undefined, "2026-08-28");
+  const model = buildNeuralwattModel(sourceModel("glm-5.2"), undefined, undefined);
 
   expect(model.cost).toEqual({ input: 1.45, output: 4.5, cache_read: 0.145 });
 });
 
-test("syncs the effort ladder but keeps authored budget controls", () => {
-  const authored = { reasoning_options: [{ type: "budget_tokens" as const }] };
+test("syncs the effort ladder and keeps authored budget bounds", () => {
+  const authored = { reasoning_options: [{ type: "budget_tokens" as const, max: 32_000 }] };
 
-  const model = buildNeuralwattModel(sourceModel("glm-5.2"), undefined, authored, "2026-08-28");
+  const model = buildNeuralwattModel(sourceModel("glm-5.2"), undefined, authored);
 
   // formatToml sorts effort values, so the API's order is kept as-is.
   expect(model.reasoning_options).toEqual([
     { type: "effort", values: ["max", "high", "none"] },
+    { type: "budget_tokens", max: 32_000 },
+  ]);
+});
+
+test("declares the budget control the API never describes", () => {
+  const model = buildNeuralwattModel(sourceModel("glm-5.2"), undefined, undefined);
+
+  expect(model.reasoning_options).toEqual([
+    { type: "effort", values: ["max", "high", "none"] },
+    { type: "budget_tokens" },
+  ]);
+});
+
+test("omits the budget control on the models that reject it", () => {
+  const flash = buildNeuralwattModel(sourceModel("deepseek-v4-flash"), undefined, undefined);
+  const flex = buildNeuralwattModel(sourceModel("deepseek-v4-flash-flex"), undefined, undefined);
+  // Gemma only links to canonical metadata through its repacked repo name.
+  const gemma = buildNeuralwattModel(
+    sourceModel("gemma-4-31b", { huggingface_id: "nvidia/Gemma-4-31B-IT-NVFP4" }),
+    undefined,
+    undefined,
+  );
+
+  for (const model of [flash, flex, gemma]) {
+    expect(model.reasoning_options).toEqual([{ type: "effort", values: ["max", "high", "none"] }]);
+  }
+});
+
+test("gives a budget-only model its single control", () => {
+  const source = sourceModel("kimi-k2.7-code", { reasoning: { supported_efforts: [] } });
+
+  const model = buildNeuralwattModel(source, undefined, undefined);
+
+  expect(model.reasoning_options).toEqual([{ type: "budget_tokens" }]);
+});
+
+test("keeps the authored ladder when the API sends no reasoning block", () => {
+  const source = sourceModel("glm-5.2", { reasoning: undefined });
+  const authored = {
+    reasoning_options: [{ type: "effort" as const, values: ["none" as const, "high" as const] }],
+  };
+
+  const model = buildNeuralwattModel(source, undefined, authored);
+
+  expect(model.reasoning_options).toEqual([
+    { type: "effort", values: ["none", "high"] },
     { type: "budget_tokens" },
   ]);
 });
@@ -53,7 +105,7 @@ test("prefers authored catalog metadata over the API blurb and missing dates", (
     limit: { context: 1_048_560, output: 1_048_560 },
   };
 
-  const model = buildNeuralwattModel(sourceModel("glm-5.2"), existing, undefined, "2026-08-28");
+  const model = buildNeuralwattModel(sourceModel("glm-5.2"), existing, undefined);
 
   expect(model.description).toBe("authored blurb");
   expect(model.release_date).toBe("2026-06-17");
@@ -61,19 +113,28 @@ test("prefers authored catalog metadata over the API blurb and missing dates", (
   expect(model.limit?.output).toBe(1_048_560);
 });
 
-test("creates a complete model for an ID the catalog has never seen", () => {
-  const model = buildNeuralwattModel(sourceModel("glm-6"), undefined, undefined, "2026-08-28");
+test("skips an unknown ID rather than inventing a standalone definition", () => {
+  expect(neuralwatt.translateModel(sourceModel("glm-6"), context())).toBeUndefined();
+  expect(neuralwatt.sourceID(sourceModel("glm-6"))).toBe("glm-6");
+  expect(neuralwatt.skippedNotice(["glm-6"]).join(" ")).toContain("glm-6");
+});
 
-  expect(AuthoredModel.safeParse({ id: "glm-6", ...model }).success).toBe(true);
-  expect(model.name).toBe("GLM 5.2");
-  expect(model.description).not.toBe("upstream blurb");
-  expect(model.open_weights).toBe(true);
-  expect(model.interleaved).toBe(true);
-  expect(model.release_date).toBe("2026-08-28");
+test("keeps writing a pre-existing standalone definition", () => {
+  const existing = {
+    name: "GLM 5.2",
+    description: "authored blurb",
+    release_date: "2026-06-17",
+    last_updated: "2026-06-17",
+  };
+
+  const translated = neuralwatt.translateModel(sourceModel("glm-6"), context(existing));
+
+  expect(AuthoredModel.safeParse({ id: "glm-6", ...translated?.model }).success).toBe(true);
+  expect(translated?.model.release_date).toBe("2026-06-17");
 });
 
 test("factors onto canonical metadata once the serving tier is stripped", () => {
-  const model = buildNeuralwattModel(sourceModel("kimi-k3-flex"), undefined, undefined, "2026-08-28");
+  const model = buildNeuralwattModel(sourceModel("kimi-k3-flex"), undefined, undefined);
 
   expect(model).toMatchObject({ base_model: "moonshotai/kimi-k3" });
   // The canonical blurb and dates are inherited rather than invented.
@@ -83,7 +144,7 @@ test("factors onto canonical metadata once the serving tier is stripped", () => 
 });
 
 test("factors onto a canonical ID whose MoE suffix the served ID drops", () => {
-  const model = buildNeuralwattModel(sourceModel("qwen3.6-35b-fast"), undefined, undefined, "2026-08-28");
+  const model = buildNeuralwattModel(sourceModel("qwen3.6-35b-fast"), undefined, undefined);
 
   expect(model).toMatchObject({ base_model: "alibaba/qwen3.6-35b-a3b" });
 });
@@ -91,20 +152,28 @@ test("factors onto a canonical ID whose MoE suffix the served ID drops", () => {
 test("prefers a resolved base over a stale authored pointer", () => {
   const authored = { base_model: "moonshotai/kimi-k2.6" };
 
-  const model = buildNeuralwattModel(sourceModel("kimi-k3"), undefined, authored, "2026-08-28");
+  const model = buildNeuralwattModel(sourceModel("kimi-k3"), undefined, authored);
 
   expect(model).toMatchObject({ base_model: "moonshotai/kimi-k3" });
 });
 
-test("documents the budget control in a header the runner re-attaches", () => {
-  const authored = { reasoning_options: [{ type: "budget_tokens" as const }] };
-  const context = { existing: () => undefined, authored: () => authored };
-
-  const budget = neuralwatt.translateModel(sourceModel("glm-5.2"), context);
-  const none = neuralwatt.translateModel(sourceModel("glm-5.2"), {
-    existing: () => undefined,
-    authored: () => undefined,
+test("carries no reasoning options onto a non-reasoning variant", () => {
+  const source = sourceModel("kimi-k3-fast", {
+    capabilities: { tools: true, json_mode: true, vision: true, reasoning: false },
+    reasoning: { supported_efforts: ["none"] },
   });
+
+  const model = buildNeuralwattModel(source, undefined, undefined);
+
+  expect(model.reasoning).toBe(false);
+  expect(model.reasoning_options).toBeUndefined();
+  // No reasoning means no reasoning trace to interleave.
+  expect(model.interleaved).toBeUndefined();
+});
+
+test("documents the budget control in a header the runner re-attaches", () => {
+  const budget = neuralwatt.translateModel(sourceModel("glm-5.2"), context());
+  const none = neuralwatt.translateModel(sourceModel("deepseek-v4-flash"), context());
 
   expect(budget?.header).toBe("# Budget: thinking_token_budget (integer reasoning tokens)\n");
   expect(none?.header).toBeUndefined();
@@ -116,25 +185,31 @@ test("keeps the authored cost when upstream pricing is still tbd", () => {
   });
   const existing = { cost: { input: 1.45, output: 4.5 } };
 
-  const model = buildNeuralwattModel(source, existing, undefined, "2026-08-28");
+  const model = buildNeuralwattModel(source, existing, undefined);
 
   expect(model.cost).toEqual({ input: 1.45, output: 4.5 });
 });
 
+test("never publishes a free rate from a partial pricing payload", () => {
+  const source = sourceModel("glm-5.2", {
+    pricing: { input_per_million: 1.45, output_per_million: null },
+  });
+  const existing = { cost: { input: 1.45, output: 4.5 } };
+
+  expect(buildNeuralwattModel(source, existing, undefined).cost).toEqual({ input: 1.45, output: 4.5 });
+  // A new model with no usable price is skipped rather than priced at zero.
+  expect(neuralwatt.translateModel(source, context())).toBeUndefined();
+});
+
 test("marks deprecated models", () => {
-  const model = buildNeuralwattModel(
-    sourceModel("glm-5.2", { deprecated: true }),
-    undefined,
-    undefined,
-    "2026-08-28",
-  );
+  const model = buildNeuralwattModel(sourceModel("glm-5.2", { deprecated: true }), undefined, undefined);
 
   expect(model.status).toBe("deprecated");
 });
 
 test("clears a deprecated status the API no longer reports", () => {
-  const model = buildNeuralwattModel(sourceModel("glm-5.2"), { status: "deprecated" }, undefined, "2026-08-28");
-  const beta = buildNeuralwattModel(sourceModel("glm-5.2"), { status: "beta" }, undefined, "2026-08-28");
+  const model = buildNeuralwattModel(sourceModel("glm-5.2"), { status: "deprecated" }, undefined);
+  const beta = buildNeuralwattModel(sourceModel("glm-5.2"), { status: "beta" }, undefined);
 
   expect(model.status).toBeUndefined();
   expect(beta.status).toBe("beta");
