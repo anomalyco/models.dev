@@ -1,0 +1,27 @@
+# Sources (accessed 2026-08-02):
+# https://api-docs.deepseek.com/guides/thinking_mode/
+# https://api-docs.deepseek.com/quick_start/pricing/
+# Reasoning HTTP format: thinking.type = "enabled" | "disabled";
+# reasoning_effort = "low" | "high" | "max". Flash maps low->low;
+# xhigh maps to high. Reasoning tokens are billed at the output rate.
+# Interleaved field: reasoning_content.
+# Lab cost: input 0.14 / output 0.28 / reasoning 0.28 / cache_read 0.0028.
+# Vancine public pricing (/api/pricing) is 0.22 / 0.66 / n/a / 0.007 (USD/MTok).
+# Vancine ModelList exposes "deepseek-v4-flash", "deepseek-v4-flash-none",
+# "deepseek-v4-flash-max" (relay/channel/deepseek/constants.go).
+base_model = "deepseek/deepseek-v4-flash"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.22
+output = 0.66
+cache_read = 0.007

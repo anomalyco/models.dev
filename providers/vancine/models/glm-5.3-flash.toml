@@ -1,0 +1,16 @@
+# Sources (accessed 2026-08-26):
+# https://docs.bigmodel.cn/cn/guide/capabilities/thinking
+# https://docs.z.ai/guides/overview/pricing
+# Lab cost (no 50% promo): input 0.15 / output 0.50 / cache_read 0.03.
+# Vancine public pricing (/api/pricing) is 0.06 / 0.20 / 0.012 (USD/MTok).
+# Thinking is always enabled, so no toggle.
+base_model = "zhipuai/glm-5.3-flash"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[cost]
+input = 0.06
+output = 0.20
+cache_read = 0.012
