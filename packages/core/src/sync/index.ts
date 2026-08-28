@@ -9,6 +9,7 @@ import { ambient } from "./providers/ambient.js";
 import { anthropic } from "./providers/anthropic.js";
 import { baseten } from "./providers/baseten.js";
 import { chutes } from "./providers/chutes.js";
+import { cloudflareAiGateway } from "./providers/cloudflare-ai-gateway.js";
 import { cloudflareWorkersAi } from "./providers/cloudflare-workers-ai.js";
 import { cortecs } from "./providers/cortecs.js";
 import { crossmodel } from "./providers/crossmodel.js";
@@ -83,6 +84,8 @@ export interface SyncProvider<SourceModel> {
   preserveSymlinks?: boolean;
   preserveBaseModels?: boolean;
   preserveDescriptions?: boolean;
+  /** Replace existing leading comments with translateModel.header. */
+  authoritativeHeaders?: boolean;
   sameModel?(current: ExistingModel, desired: SyncedModel): boolean;
   missingNotice?(paths: string[]): string[];
   /**
@@ -104,9 +107,9 @@ export interface SyncProvider<SourceModel> {
     model: SyncedModel;
     metadata?: { id: string; model: SyncedMetadata };
     /**
-     * Leading comment block for the written file when it has none of its own
-     * (e.g. the wire-path header every toggle reasoning control requires). A
-     * header already present on the existing file always wins.
+     * Leading comment block for the written file (e.g. the wire-path header
+     * every toggle reasoning control requires). Existing headers win unless
+     * authoritativeHeaders is enabled.
      */
     header?: string;
   } | undefined;
@@ -129,6 +132,7 @@ export const providers: {
   anthropic: SyncProvider<any>;
   baseten: SyncProvider<any>;
   chutes: SyncProvider<any>;
+  "cloudflare-ai-gateway": SyncProvider<any>;
   "cloudflare-workers-ai": SyncProvider<any>;
   cortecs: SyncProvider<any>;
   crossmodel: SyncProvider<any>;
@@ -162,6 +166,7 @@ export const providers: {
   anthropic,
   baseten,
   chutes,
+  "cloudflare-ai-gateway": cloudflareAiGateway,
   "cloudflare-workers-ai": cloudflareWorkersAi,
   cortecs,
   crossmodel,
@@ -209,7 +214,7 @@ export const groups = {
     "openrouter",
     "vercel",
   ],
-  cloudflare: ["cloudflare-workers-ai"],
+  cloudflare: ["cloudflare-ai-gateway", "cloudflare-workers-ai"],
   direct: ["ambient", "anthropic", "baseten", "chutes", "cortecs", "deepinfra", "digitalocean", "github-copilot", "google", "hyper", "openai", "ovhcloud", "pioneer", "tinfoil", "venice", "wandb", "xai"],
 } as const;
 
@@ -235,7 +240,11 @@ export async function syncProvider<SourceModel>(
   const { models: existing, brokenSymlinks } = existingState;
   let { modelMetadata } = existingState;
   const sourceModels = provider.parseModels(await provider.fetchModels());
-  const desired = new Map<string, { model: z.infer<typeof SyncedAuthoredModel>; content: string }>();
+  const desired = new Map<string, {
+    model: z.infer<typeof SyncedAuthoredModel>;
+    content: string;
+    header: string;
+  }>();
   const caseNormalizedDesiredPaths = new Map<string, string>();
   const desiredMetadata = new Map<string, { model: z.infer<typeof ModelMetadata>; content: string }>();
   const skippedRemote: string[] = [];
@@ -325,9 +334,16 @@ export async function syncProvider<SourceModel>(
       throw parsed.error;
     }
 
+    const translatedHeader = translated.header === undefined
+      ? undefined
+      : leadingComments(translated.header);
+    const header = provider.authoritativeHeaders
+      ? translatedHeader ?? ""
+      : (existing.get(relativePath)?.header || translatedHeader) ?? "";
     desired.set(relativePath, {
       model: parsed.data,
-      content: ((existing.get(relativePath)?.header || translated.header) ?? "") + formatToml(parsed.data),
+      content: header + formatToml(parsed.data),
+      header,
     });
   }
 
@@ -336,7 +352,7 @@ export async function syncProvider<SourceModel>(
 
   const metadataDir = modelMetadataDir(provider.modelsDir);
   for (const [relativePath, file] of desiredMetadata) {
-    const filePath = path.join(metadataDir, relativePath);
+    const filePath = await safeWritePath(metadataDir, relativePath);
     const currentFile = Bun.file(filePath);
     const currentText = await currentFile.exists() ? await currentFile.text() : undefined;
     const current = currentText !== undefined
@@ -367,7 +383,7 @@ export async function syncProvider<SourceModel>(
         console.log(`Skipping metadata removal in new-only mode: ${relativePath}`);
         continue;
       }
-      const filePath = path.join(metadataDir, relativePath);
+      const filePath = await safeWritePath(metadataDir, relativePath);
       files.push({ status: "deleted", path: filePath });
       if (options.dryRun) {
         console.log(`Would remove metadata ${relativePath}`);
@@ -378,7 +394,7 @@ export async function syncProvider<SourceModel>(
   }
 
   for (const [relativePath, file] of desired) {
-    const filePath = path.join(provider.modelsDir, relativePath);
+    const filePath = await safeWritePath(provider.modelsDir, relativePath, true);
     const current = existing.get(relativePath);
 
     if (current === undefined) {
@@ -398,7 +414,12 @@ export async function syncProvider<SourceModel>(
       continue;
     }
 
-    if (!(provider.sameModel?.(current.authored, file.model) ?? sameModel(relativePath, current.authored, file.model))) {
+    const headerChanged = provider.authoritativeHeaders && current.header !== file.header;
+    if (
+      headerChanged
+      || !(provider.sameModel?.(current.authored, file.model)
+        ?? sameModel(relativePath, current.authored, file.model))
+    ) {
       if (options.newOnly) {
         unchanged++;
         continue;
@@ -431,7 +452,7 @@ export async function syncProvider<SourceModel>(
       continue;
     }
 
-    const filePath = path.join(provider.modelsDir, relativePath);
+    const filePath = await safeWritePath(provider.modelsDir, relativePath, true);
     files.push({ status: "deleted", path: filePath });
     if (options.dryRun) {
       console.log(`Would remove ${relativePath}`);
@@ -600,6 +621,31 @@ async function isSymlink(filePath: string) {
     if (error instanceof Error && "code" in error && error.code === "ENOENT") return false;
     throw error;
   }
+}
+
+async function safeWritePath(root: string, relativePath: string, allowLeafSymlink = false) {
+  const resolvedRoot = path.resolve(root);
+  const target = path.resolve(resolvedRoot, relativePath);
+  const relative = path.relative(resolvedRoot, target);
+  if (relative === "" || relative.startsWith(`..${path.sep}`) || path.isAbsolute(relative)) {
+    throw new Error(`Refusing to sync path outside ${root}: ${relativePath}`);
+  }
+  if (await isSymlink(resolvedRoot)) {
+    throw new Error(`Refusing to sync through symlink: ${resolvedRoot}`);
+  }
+
+  let current = resolvedRoot;
+  for (const segment of path.relative(resolvedRoot, path.dirname(target)).split(path.sep)) {
+    if (segment === "") continue;
+    current = path.join(current, segment);
+    if (await isSymlink(current)) {
+      throw new Error(`Refusing to sync through symlink: ${current}`);
+    }
+  }
+  if (!allowLeafSymlink && await isSymlink(target)) {
+    throw new Error(`Refusing to sync through symlink: ${target}`);
+  }
+  return target;
 }
 
 async function readModelMetadata(modelsDir: string) {
@@ -829,7 +875,7 @@ async function writeReport(target: string, results: SyncResult[]) {
     }
   }
 
-  lines.push("", "This PR was created automatically by the daily model sync workflow.");
+  lines.push("", "This PR was created automatically by the model sync workflow.");
   await Bun.write(".sync/model-sync-report.md", `${lines.join("\n")}\n`);
 }
 

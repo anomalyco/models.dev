@@ -55,6 +55,14 @@ export async function classifyAutoMerge(
   if (created + deleted > MAX_MODEL_CHURN) {
     reasons.push(`${created + deleted} models created or deleted (limit ${MAX_MODEL_CHURN})`);
   }
+  if (
+    models.some((change) =>
+      change.status === "deleted"
+      && change.path.startsWith("providers/cloudflare-ai-gateway/models/")
+    )
+  ) {
+    reasons.push("Cloudflare AI Gateway model deletions require manual review");
+  }
 
   const reasoningMetadata = async (path: string, loader: typeof load) => {
     const model = Bun.TOML.parse(await loader(path)) as Record<string, unknown>;

@@ -31,6 +31,18 @@ test("requires manual review for bulk additions", async () => {
   expect(decision.reasons).toContain("11 models created (limit 10)");
 });
 
+test("requires manual review for Cloudflare AI Gateway deletions", async () => {
+  const decision = await classifyAutoMerge([
+    {
+      status: "deleted",
+      path: "providers/cloudflare-ai-gateway/models/openai/gpt-4.1.toml",
+    },
+  ]);
+
+  expect(decision.safe).toBe(false);
+  expect(decision.reasons).toContain("Cloudflare AI Gateway model deletions require manual review");
+});
+
 test("requires manual review for added reasoning provider models", async () => {
   const withoutOptions = await classifyAutoMerge(
     [{ status: "created", path: "providers/test/models/reasoner.toml" }],

@@ -11,6 +11,7 @@ The grouped sync targets are available for local convenience, but CI syncs each 
 - `bun models:sync aggregators` syncs every provider in the `aggregators` group.
 - `bun models:sync openrouter` syncs only OpenRouter.
 - `bun models:sync cloudflare-workers-ai` syncs only Cloudflare Workers AI.
+- `bun models:sync cloudflare-ai-gateway` syncs only Cloudflare AI Gateway's proxied catalog.
 - `bun models:sync cloudflare` syncs the Cloudflare sync group.
 - `bun models:sync direct` syncs every provider in the `direct` group.
 - `bun models:sync google` syncs only Google.
@@ -202,7 +203,16 @@ Cloudflare Workers AI is implemented in `packages/core/src/sync/providers/cloudf
 - Use a dedicated token scoped to Workers AI read access so sync automation does not share deploy credentials.
 - The endpoint is parsed as Cloudflare's OpenRouter-like Workers AI metadata.
 - Model IDs map directly to TOML paths under `providers/cloudflare-workers-ai/models`.
-- This sync target does not manage `providers/cloudflare-ai-gateway`, because the AI Gateway `/compat/models` endpoint does not support `format=openrouter` and does not provide enough model metadata for authoritative catalog sync.
+- This target only manages Workers AI; the separate Cloudflare AI Gateway target handles proxied third-party models.
+
+## Cloudflare AI Gateway Notes
+
+- Cloudflare AI Gateway is implemented in `packages/core/src/sync/providers/cloudflare-ai-gateway.ts`.
+- Source endpoints: `GET /accounts/{id}/ai/catalog/models` for model availability, context limits, and pricing, plus `GET /accounts/{id}/ai/catalog/models/{model}/schema` for reasoning controls exposed by compatible schemas.
+- Required auth: `CLOUDFLARE_ACCOUNT_ID` and `CLOUDFLARE_API_TOKEN`, or the production-token aliases documented in the provider README for local runs. The hourly workflow uses the canonical secret names.
+- The sync manages proxied third-party text-generation models only. Workers AI `@cf/...` models remain under `providers/cloudflare-workers-ai`.
+- `providers/cloudflare-ai-gateway/curation.toml` supplies base-model mappings, live-tested reasoning controls, structured-output support, limit overrides, and intentional skips that the catalog cannot express authoritatively.
+- New catalog entries without canonical lab metadata or required reasoning controls fail closed instead of generating incomplete TOMLs.
 
 ## Google Notes
 
