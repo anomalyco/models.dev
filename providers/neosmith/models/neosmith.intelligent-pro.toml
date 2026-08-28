@@ -1,0 +1,32 @@
+# `cost` is a published CEILING, not a fixed list price. NeoSmith routes each
+# request across a model pool, so this id can bill LESS depending on which model
+# serves it. The rate below is the highest a customer can be charged, so a cost
+# estimate never falls under the invoice.
+# Source: NeoSmith's first-party rate card — the per-tier table shown to every
+# customer on their billing dashboard. There is no public pricing page yet; the
+# `doc` URL in provider.toml is product documentation, not a price list.
+name = "NeoSmith Pro"
+description = "Default production tier. Intelligent NeoSmith routing with a Claude Opus ceiling on escalation."
+release_date = "2026-04-26"
+last_updated = "2026-07-18"
+open_weights = false
+attachment = true
+reasoning = true
+reasoning_options = []
+tool_call = true
+structured_output = false
+temperature = true
+
+[cost]
+input = 1.81
+output = 8.39
+cache_read = 0.3
+cache_write = 0.0
+
+[limit]
+context = 1_000_000
+output = 128_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

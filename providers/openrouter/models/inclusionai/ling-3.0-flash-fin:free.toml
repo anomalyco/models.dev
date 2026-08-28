@@ -1,0 +1,28 @@
+# Toggle: reasoning.enabled = true|false
+# https://openrouter.ai/docs/guides/best-practices/reasoning-tokens
+name = "Ling 3.0 Flash Fin (free)"
+description = "Efficient model for low-latency assistance, extraction, and routine automation"
+family = "ling"
+release_date = "2026-08-27"
+last_updated = "2026-08-27"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = false
+open_weights = false
+
+[[reasoning_options]]
+type = "toggle"
+
+[cost]
+input = 0
+output = 0
+
+[limit]
+context = 262_144
+output = 32_768
+
+[modalities]
+input = ["text"]
+output = ["text"]

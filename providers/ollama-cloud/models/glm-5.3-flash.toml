@@ -1,0 +1,9 @@
+base_model = "zhipuai/glm-5.3-flash"
+open_weights = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[interleaved]
+field = "reasoning_content"

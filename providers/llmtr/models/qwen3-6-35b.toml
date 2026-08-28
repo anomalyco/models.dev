@@ -1,7 +1,11 @@
-# LLMTR's endpoint-specific reasoning pages document Responses effort and GLM
-# toggles, but no raw Qwen3.6-35B toggle field or values; this claim is unproven.
-# https://llmtr.com/docs/gateway/reasoning-effort/ (accessed 2026-06-25)
+# LLMTR serves this route from its own Turkey-hosted deployment. Tool calling
+# does not carry over from the base entry: verified on 2026-08-16 that a
+# chat/completions request with `tools` returns HTTP 200 and no tool_calls,
+# so it is pinned false here. Limits and pricing from
+# https://llmtr.com/api/models (accessed 2026-08-16).
+# Toggle: reasoning = true|false
 base_model = "alibaba/qwen3.6-35b-a3b"
+tool_call = false
 reasoning_options = [{ type = "toggle" }]
 
 [cost]
@@ -10,3 +14,4 @@ output = 10.0
 
 [limit]
 context = 16_384
+output = 16_384

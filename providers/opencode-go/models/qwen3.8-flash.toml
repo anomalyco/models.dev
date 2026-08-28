@@ -1,0 +1,17 @@
+base_model = "alibaba/qwen3.8-flash"
+temperature = true
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "budget_tokens"
+
+[cost]
+input = 0.15
+output = 0.47
+cache_read = 0.016
+cache_write = 0.2
+
+[provider]
+npm = "@ai-sdk/anthropic"

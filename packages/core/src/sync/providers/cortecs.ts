@@ -13,6 +13,16 @@ const CANONICAL_BASE_MODEL_EXCEPTIONS = {
 const EUR_TO_USD = 1.114;
 
 const CortecsModality = z.enum(["text", "audio", "image", "video", "pdf"]);
+type CortecsModality = z.infer<typeof CortecsModality>;
+
+function modalities(values: string[]): CortecsModality[] {
+  const allowed = new Set<CortecsModality>(CortecsModality.options);
+  const result = values
+    .map((value) => value.toLowerCase())
+    .map((value) => value === "file" ? "pdf" : value)
+    .filter((value): value is CortecsModality => allowed.has(value as CortecsModality));
+  return [...new Set<CortecsModality>(result.length > 0 ? result : ["text"])];
+}
 
 export const CortecsModel = z.object({
   id: z.string().min(1),
@@ -26,8 +36,8 @@ export const CortecsModel = z.object({
     cache_write_cost: z.number().nonnegative().optional(),
   }).passthrough(),
   context_size: z.number().int().positive(),
-  input_modalities: z.array(CortecsModality).default(["text"]),
-  output_modalities: z.array(CortecsModality).default(["text"]),
+  input_modalities: z.array(z.string()).transform(modalities).default(["text"]),
+  output_modalities: z.array(z.string()).transform(modalities).default(["text"]),
   supported_features: z.array(z.string()).default([]),
 }).passthrough();
 

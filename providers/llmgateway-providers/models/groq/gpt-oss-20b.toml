@@ -1,0 +1,14 @@
+base_model = "openai/gpt-oss-20b"
+name = "GPT OSS 20B (Groq)"
+structured_output = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high"]
+
+[cost]
+input = 0.1
+output = 0.5
+
+[limit]
+output = 32_766

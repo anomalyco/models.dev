@@ -1,7 +1,11 @@
+# Pricing and limits from https://llmtr.com/api/models (accessed 2026-08-16).
+# The previous entry listed this route as free; LLMTR charges for it.
+# Tool calling verified absent on 2026-08-16: a chat/completions request with
+# `tools` is rejected with HTTP 400.
 name = "Magibu 11B v8"
-description = "General-purpose chat model for instruction following, writing, and analysis"
+description = "Turkish-language chat model for instruction following and assistant flows"
 release_date = "2026-06-05"
-last_updated = "2026-06-05"
+last_updated = "2026-08-16"
 attachment = false
 reasoning = false
 temperature = true
@@ -9,12 +13,12 @@ tool_call = false
 open_weights = false
 
 [cost]
-input = 0.0
-output = 0.0
+input = 0.1
+output = 0.5
 
 [limit]
 context = 8_192
-output = 4_096
+output = 8_192
 
 [modalities]
 input = ["text"]

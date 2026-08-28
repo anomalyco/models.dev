@@ -1,0 +1,31 @@
+# Toggle: $.reasoning_effort = "none" disables thinking; any other accepted
+# value (or omitting the field) leaves it on. The gateway maps it to the
+# deployment's thinking switch.
+# https://docs.llmgateway.io/features/reasoning
+name = "InclusionAI Ling 3.0 Flash (DeepInfra)"
+description = "Efficient model for low-latency assistance, extraction, and routine automation"
+family = "ling"
+release_date = "2026-08-02"
+last_updated = "2026-08-02"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = false
+open_weights = false
+
+[[reasoning_options]]
+type = "toggle"
+
+[cost]
+input = 0.06
+output = 0.18
+cache_read = 0.012
+
+[limit]
+context = 262_144
+output = 32_768
+
+[modalities]
+input = ["text"]
+output = ["text"]

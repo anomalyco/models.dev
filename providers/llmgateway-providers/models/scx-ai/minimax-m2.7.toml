@@ -1,0 +1,16 @@
+base_model = "minimax/MiniMax-M2.7"
+name = "MiniMax M2.7 (SCX.ai (Turbo))"
+structured_output = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high", "xhigh", "max"]
+
+[cost]
+input = 0.48
+output = 1.79
+cache_read = 0.05
+
+[limit]
+context = 196_608
+output = 196_608

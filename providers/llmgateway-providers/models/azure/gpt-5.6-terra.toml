@@ -1,0 +1,12 @@
+base_model = "openai/gpt-5.6-terra"
+name = "GPT-5.6 Terra (Azure)"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "xhigh", "max"]
+
+[cost]
+input = 2
+output = 12
+cache_read = 0.2
+cache_write = 2.5

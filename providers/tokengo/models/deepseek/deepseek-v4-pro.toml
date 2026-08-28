@@ -1,0 +1,18 @@
+# Toggle: thinking.type = enabled|disabled
+# Effort: reasoning_effort = high|max
+# Pricing (USD/MTok, accessed 2026-08-27):
+# - Public hub (rounded $0.43/$0.87): https://www.tokengo.com/models
+# - Exact console rates $0.435/$0.87 (no cache ratio listed)
+# TokenGo OpenAI-compatible extra_body; same controls as typical DeepSeek V4 Pro openai-compat peers.
+base_model = "deepseek/deepseek-v4-pro"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["high", "max"]
+
+[cost]
+input = 0.435
+output = 0.87

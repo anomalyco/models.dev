@@ -1,0 +1,10 @@
+# Host bills cache write at 2x input, not the usual 1.25x.
+# Model page states: Cache read / 1M $0.500, Cache write / 1M $10.00.
+base_model = "anthropic/claude-opus-5"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
+
+[cost]
+input = 5
+output = 25
+cache_read = 0.5
+cache_write = 10

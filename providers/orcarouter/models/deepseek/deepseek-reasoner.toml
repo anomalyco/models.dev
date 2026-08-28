@@ -1,3 +1,5 @@
+# Host rate per /v1/models: 0.147/0.295, matching the V4 Flash line.
+# cache_ratio 0.19047619 gives 0.028, not the 0.02 those models use.
 base_model = "deepseek/deepseek-reasoner"
 reasoning_options = []
 
@@ -5,6 +7,6 @@ reasoning_options = []
 field = "reasoning_content"
 
 [cost]
-input = 0.435
-output = 0.87
+input = 0.147
+output = 0.295
 cache_read = 0.028

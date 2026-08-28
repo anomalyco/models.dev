@@ -3,24 +3,27 @@ name = "Claw Low"
 description = "Compact GPT model for low-latency assistance and high-volume workloads"
 release_date = "2026-05-11"
 last_updated = "2026-05-11"
-attachment = true
+attachment = false
 reasoning = true
 tool_call = true
 structured_output = true
 open_weights = false
-reasoning_options = []
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
 
 [cost]
-input = 0.25
-output = 1.5
-cache_read = 0.025
+input = 1.4
+output = 4.4
+cache_read = 0.26
 cache_write = 0.08333
 
 [limit]
 context = 1_048_576
 input = 1_048_576
-output = 65_536
+output = 131_072
 
 [modalities]
-input = ["text", "image", "video", "pdf"]
+input = ["text"]
 output = ["text"]

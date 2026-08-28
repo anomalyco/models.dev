@@ -4,9 +4,11 @@ base_model = "moonshotai/kimi-k2.7-code"
 attachment = false
 reasoning_options = []
 
+# cost as described on the AKI.IO pricing page at https://aki.io/#pricing
 [cost]
 input = 0.86
 output = 3.00
+cache_read = 0.18
 
 [limit]
 context = 262_144

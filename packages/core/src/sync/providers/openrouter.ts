@@ -44,6 +44,7 @@ const CANONICAL_PROVIDER_PREFIXES = {
   thinkingmachines: { provider: "thinkingmachines", metadata: "thinkingmachines" },
   "x-ai": { provider: "xai", metadata: "xai" },
   xai: { provider: "xai", metadata: "xai" },
+  spacexai: { provider: "xai", metadata: "xai" },
   xiaomi: { provider: "xiaomi", metadata: "xiaomi" },
   zai: { provider: "zai", metadata: "zhipuai" },
   "z-ai": { provider: "zai", metadata: "zhipuai" },
@@ -68,7 +69,7 @@ export const OpenRouterModel = z.object({
     input_cache_read: z.string().optional(),
     input_cache_write: z.string().optional(),
     overrides: z.array(z.object({
-      min_prompt_tokens: z.number(),
+      min_prompt_tokens: z.number().optional(),
       prompt: z.string().optional(),
       completion: z.string().optional(),
       input_cache_read: z.string().optional(),
@@ -127,9 +128,13 @@ export const openrouter = {
       const authored = context.authored(model.id);
       return authored === undefined ? undefined : { id: model.id, model: authored as SyncedModel };
     }
+    const translated = buildOpenRouterModel(model, context.existing(model.id));
     return {
       id: model.id,
-      model: buildOpenRouterModel(model, context.existing(model.id)),
+      model: translated,
+      header: translated.reasoning_options?.some((option) => option.type === "toggle")
+        ? "# Toggle: reasoning.enabled = true|false\n# https://openrouter.ai/docs/guides/best-practices/reasoning-tokens\n"
+        : undefined,
     };
   },
 } satisfies SyncProvider<OpenRouterModel>;
@@ -159,7 +164,7 @@ function costTiers(model: OpenRouterModel, existing: ExistingModel | undefined) 
     .flatMap((o) => {
       const input = price(o.prompt);
       const output = price(o.completion);
-      if (input === undefined || output === undefined) return [];
+      if (o.min_prompt_tokens === undefined || input === undefined || output === undefined) return [];
       return [{
         tier: { type: "context" as const, size: o.min_prompt_tokens },
         input,
@@ -214,8 +219,9 @@ export function buildOpenRouterModel(
   // Prefer OpenRouter's live reasoning metadata over authored options so aliases
   // and rotated models pick up new efforts/budget support. Fall back to authored
   // only when the API omits a reasoning object.
-  const reasoning_options = openRouterReasoningOptions(model.reasoning)
-    ?? (reasoning ? existing?.reasoning_options : undefined);
+  const reasoning_options = reasoning
+    ? openRouterReasoningOptions(model.reasoning) ?? existing?.reasoning_options
+    : undefined;
   const context = model.context_length;
   const family = inferFamily(model, name);
   const releaseDate = dateFromTimestamp(model.created);
@@ -320,10 +326,11 @@ function openRouterReasoningOptions(reasoning: OpenRouterModel["reasoning"]): Sy
     ? ["max", "xhigh", "high", "medium", "low", "minimal", "none"] as const
     : reasoning.supported_efforts;
 
+  if (!reasoning.mandatory && !efforts?.includes("none")) {
+    options.push({ type: "toggle" });
+  }
+
   if (efforts !== undefined) {
-    if (!reasoning.mandatory && !efforts.includes("none")) {
-      options.push({ type: "toggle" });
-    }
     options.push({
       type: "effort",
       values: reasoning.mandatory ? efforts.filter((value) => value !== "none") : [...efforts],

@@ -1,0 +1,18 @@
+base_model = "moonshotai/kimi-k2.7-code"
+name = "Kimi K2.7 Code (Nebius AI)"
+attachment = false
+structured_output = false
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high", "xhigh", "max"]
+
+[cost]
+input = 0.95
+output = 4
+
+[modalities]
+input = ["text"]

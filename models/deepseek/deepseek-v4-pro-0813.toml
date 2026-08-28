@@ -1,14 +1,16 @@
+# https://huggingface.co/deepseek-ai/DeepSeek-V4-Pro-0813
 name = "DeepSeek V4 Pro 0813"
 description = "DeepSeek V4 Pro snapshot with million-token context and support for thinking and non-thinking modes"
 family = "deepseek-thinking"
 release_date = "2026-08-12"
-last_updated = "2026-08-12"
+last_updated = "2026-08-22"
 attachment = false
 reasoning = true
 temperature = true
 tool_call = true
 structured_output = true
-open_weights = false
+open_weights = true
+license = "MIT"
 
 [limit]
 context = 1_000_000
@@ -17,3 +19,7 @@ output = 384_000
 [modalities]
 input = ["text"]
 output = ["text"]
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/deepseek-ai/DeepSeek-V4-Pro-0813"

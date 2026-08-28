@@ -1,3 +1,5 @@
+# Toggle: reasoning.enabled = true|false
+# https://openrouter.ai/docs/guides/best-practices/reasoning-tokens
 base_model = "deepseek/deepseek-v4-flash-0731"
 
 [[reasoning_options]]
@@ -8,10 +10,10 @@ type = "effort"
 values = ["low", "high", "max"]
 
 [cost]
-input = 0.14
-output = 0.28
-cache_read = 0.028
+input = 0.07
+output = 0.14
+cache_read = 0.014
 
 [limit]
-context = 1_048_576
-output = 393_216
+context = 1_310_720
+output = 943_718

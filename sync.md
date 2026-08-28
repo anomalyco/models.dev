@@ -19,6 +19,7 @@ The grouped sync targets are available for local convenience, but CI syncs each 
 - `bun models:sync kilo` syncs only Kilo.
 - `bun models:sync merge-gateway` syncs only Merge Gateway.
 - `bun models:sync openai` syncs only OpenAI catalog availability.
+- `bun models:sync github-copilot` syncs only GitHub Copilot pricing.
 - `bun models:sync tinfoil` syncs only Tinfoil.
 - `bun models:sync aggregators --dry-run` prints changes without writing model files.
 - `bun models:sync aggregators --new-only` creates new model files but skips updates and removals.
@@ -139,6 +140,14 @@ CI automatically picks up providers registered in `providers` in `packages/core/
 
 Actions are pinned by commit SHA. Keep new workflow actions pinned the same way.
 
+## Eden AI Notes
+
+- Source endpoint: `https://api.edenai.run/v3/models`; no authentication required.
+- Reasoning effort options are derived from the lab's provider entry or OpenRouter. A toggle-only or budget-only control is not an effort list; do not invent effort levels.
+- When the effort mapper cannot resolve controls, preserve the existing route's authored `reasoning_options` while syncing other authoritative fields. Do not replace authored toggle, effort, or budget controls with `[]`.
+- New reasoning models with neither a resolved mapping nor authored controls remain skipped for manual authoring. No empty placeholder is generated, so the normal auto-merge policy remains unchanged; legitimate always-on `[]` entries are not blanket-blocked.
+- Intentional route deduplication and removal of IDs absent from the upstream catalog are unchanged.
+
 ## CrossModel Notes
 
 CrossModel is implemented in `packages/core/src/sync/providers/crossmodel.ts`.
@@ -207,6 +216,15 @@ Google is implemented in `packages/core/src/sync/providers/google.ts`.
 - New Google API models are not created automatically (`skipCreates`) and do not open missing-model issues because the endpoint is not lifecycle-authoritative.
 - Missing-model tracking is limited to recognizable public model families; opaque API codenames such as `ajax`, `perseus`, and `thorin` are ignored.
 
+## GitHub Copilot Notes
+
+GitHub Copilot is implemented in `packages/core/src/sync/providers/github-copilot.ts`.
+
+- Source: `https://raw.githubusercontent.com/github/docs/main/data/tables/copilot/models-and-pricing.yml`
+- The YML contains only token rates, so the sync only updates `[cost]`: `input`, `cached_input` (as `cache_read`), `cache_write`, `output`, and long-context rows as `cost.tiers`.
+- Display names are converted to file IDs, with minimal special case logic to match existing model entries.
+- Unmatched rows open missing-model issues, and local entries missing from the source are kept.
+
 ## xAI Notes
 
 xAI is implemented in `packages/core/src/sync/providers/xai.ts`.
@@ -222,8 +240,9 @@ xAI is implemented in `packages/core/src/sync/providers/xai.ts`.
 - Tinfoil is implemented in `packages/core/src/sync/providers/tinfoil.ts`.
 - Source endpoint: `https://inference.tinfoil.sh/v1/models`.
 - No authentication is required; the catalog is public.
-- Existing Tinfoil models are updated from API-authoritative input, output, cached-input pricing, context windows, and catalog availability.
+- Existing Tinfoil models are updated from API-authoritative input, output, cached-input pricing, context windows, reasoning capability, and catalog availability.
 - Provider-specific metadata that the endpoint does not expose, including exact modalities, output limits, reasoning controls, and lifecycle status, remains hand-authored.
+- Reasoning controls are preserved for reasoners and removed when the API reports `reasoning: false`. A reasoner without authored controls fails sync for manual review rather than inventing an empty control set.
 - New token-priced chat, safety, and embedding models are not created automatically (`skipCreates`); each missing ID opens a deduped GitHub issue for hand-authored metadata.
 - Per-request tool, TTS, transcription, realtime, and document-processing services are ignored because their pricing cannot be represented by the token-cost schema.
 

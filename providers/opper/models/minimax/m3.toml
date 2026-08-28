@@ -1,0 +1,24 @@
+# Opper billed schedule, verified against GET /v3/compat/models and /v3/models (2026-08-20):
+# base 0.6/2.4 (cache 0.12) up to 524_288, then 2x. This differs from MiniMax first-party
+# list (0.30/1.20 base, upper band 0.60/2.40); the delta is flagged to Opper catalog
+# maintainers and this entry will be updated if the billed schedule changes.
+base_model = "minimax/MiniMax-M3"
+
+reasoning_options = []
+
+[cost]
+input = 0.6
+output = 2.4
+cache_read = 0.12
+
+[[cost.tiers]]
+tier = { size = 524_288 }
+input = 1.2
+output = 4.8
+cache_read = 0.24
+
+[limit]
+context = 1_048_576
+
+[interleaved]
+field = "reasoning_content"

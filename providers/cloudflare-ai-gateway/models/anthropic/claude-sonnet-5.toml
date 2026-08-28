@@ -1,5 +1,7 @@
+# Toggle: thinking.type = adaptive|disabled.
+# Effort: output_config.effort = low|medium|high|xhigh|max.
+
 base_model = "anthropic/claude-sonnet-5"
-release_date = "2026-06-29"
 structured_output = true
 
 [[reasoning_options]]
@@ -14,3 +16,9 @@ input = 2
 output = 10
 cache_read = 0.2
 cache_write = 2.5
+
+[limit]
+context = 1_000_000
+
+[provider]
+npm = "@ai-sdk/anthropic"

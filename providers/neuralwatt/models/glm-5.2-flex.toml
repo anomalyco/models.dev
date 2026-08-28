@@ -5,19 +5,21 @@ release_date = "2026-06-17"
 last_updated = "2026-06-17"
 attachment = false
 reasoning = true
+# Budget: thinking_token_budget (integer reasoning tokens)
 reasoning_options = [
-  { type = "toggle" },
-  { type = "effort", values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"] },
+  { type = "effort", values = ["none", "high", "max"] },
   { type = "budget_tokens" },
 ]
+interleaved = true
 temperature = true
 tool_call = true
+structured_output = false
 open_weights = true
 
 [cost]
-input = 0.725
-output = 2.25
-cache_read = 0.18125
+input = 0.9425
+output = 2.925
+cache_read = 0.09425
 
 [limit]
 context = 1_048_560

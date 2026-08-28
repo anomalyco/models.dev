@@ -1,3 +1,5 @@
+# Toggle: reasoning.enabled = true|false
+# https://openrouter.ai/docs/guides/best-practices/reasoning-tokens
 name = "Laguna S 2.1 (free)"
 description = "Free provider route for experiments, demos, and cost-sensitive chat workloads"
 family = "laguna-s"
@@ -9,7 +11,9 @@ temperature = true
 tool_call = true
 structured_output = false
 open_weights = true
-reasoning_options = []
+
+[[reasoning_options]]
+type = "toggle"
 
 [cost]
 input = 0

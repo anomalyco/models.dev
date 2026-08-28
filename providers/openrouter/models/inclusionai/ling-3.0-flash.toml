@@ -1,3 +1,5 @@
+# Toggle: reasoning.enabled = true|false
+# https://openrouter.ai/docs/guides/best-practices/reasoning-tokens
 name = "Ling-3.0-flash"
 description = "Efficient model for low-latency assistance, extraction, and routine automation"
 family = "ling"
@@ -9,7 +11,9 @@ temperature = true
 tool_call = true
 structured_output = false
 open_weights = true
-reasoning_options = []
+
+[[reasoning_options]]
+type = "toggle"
 
 [cost]
 input = 0.021

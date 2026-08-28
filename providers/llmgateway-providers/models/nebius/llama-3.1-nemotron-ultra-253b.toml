@@ -1,0 +1,23 @@
+name = "Llama 3.1 Nemotron Ultra 253B (Nebius AI)"
+description = "Flagship Nemotron model for high-throughput reasoning and complex agents"
+family = "nemotron"
+release_date = "2025-04-07"
+last_updated = "2025-04-07"
+attachment = false
+reasoning = false
+temperature = true
+tool_call = false
+structured_output = false
+open_weights = false
+
+[cost]
+input = 0.6
+output = 1.8
+
+[limit]
+context = 128_000
+output = 128_000
+
+[modalities]
+input = ["text"]
+output = ["text"]

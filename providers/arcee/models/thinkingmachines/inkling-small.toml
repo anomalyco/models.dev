@@ -1,0 +1,22 @@
+# Beta catalog and pricing: https://www.arcee.ai/blog/open-models-api-beta
+# Cached input pricing: https://docs.arcee.ai/get-started/pricing.md
+# A live reasoning_effort request is rejected; reasoning is always on.
+base_model = "thinkingmachines/inkling-small"
+attachment = false
+status = "beta"
+reasoning_options = []
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.50
+output = 1.20
+cache_read = 0.10
+
+[limit]
+context = 262_144
+output = 262_144
+
+[modalities]
+input = ["text"]

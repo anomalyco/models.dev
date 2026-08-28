@@ -16,12 +16,13 @@ import { deepinfra } from "./providers/deepinfra.js";
 import { digitalocean } from "./providers/digitalocean.js";
 import { edenai } from "./providers/edenai.js";
 import { empiriolabs } from "./providers/empiriolabs.js";
+import { githubCopilot } from "./providers/github-copilot.js";
 import { google } from "./providers/google.js";
 import { hyper } from "./providers/hyper.js";
 import { huggingface } from "./providers/huggingface.js";
 import { inceptron } from "./providers/inceptron.js";
 import { kilo } from "./providers/kilo.js";
-import { llmgateway } from "./providers/llmgateway.js";
+import { llmgateway, llmgatewayProviders } from "./providers/llmgateway.js";
 import { mergeGateway } from "./providers/merge-gateway.js";
 import { nanoGpt } from "./providers/nano-gpt.js";
 import { openai } from "./providers/openai.js";
@@ -98,7 +99,17 @@ export interface SyncProvider<SourceModel> {
       existing(id: string): ExistingModel | undefined;
       authored(id: string): ExistingModel | undefined;
     },
-  ): { id: string; model: SyncedModel; metadata?: { id: string; model: SyncedMetadata } } | undefined;
+  ): {
+    id: string;
+    model: SyncedModel;
+    metadata?: { id: string; model: SyncedMetadata };
+    /**
+     * Leading comment block for the written file when it has none of its own
+     * (e.g. the wire-path header every toggle reasoning control requires). A
+     * header already present on the existing file always wins.
+     */
+    header?: string;
+  } | undefined;
 }
 
 export interface SyncResult {
@@ -125,12 +136,14 @@ export const providers: {
   digitalocean: SyncProvider<any>;
   edenai: SyncProvider<any>;
   empiriolabs: SyncProvider<any>;
+  "github-copilot": SyncProvider<any>;
   google: SyncProvider<any>;
   hyper: SyncProvider<any>;
   huggingface: SyncProvider<any>;
   inceptron: SyncProvider<any>;
   kilo: SyncProvider<any>;
   llmgateway: SyncProvider<any>;
+  "llmgateway-providers": SyncProvider<any>;
   "merge-gateway": SyncProvider<any>;
   "nano-gpt": SyncProvider<any>;
   ofox: SyncProvider<any>;
@@ -156,12 +169,14 @@ export const providers: {
   digitalocean,
   edenai,
   empiriolabs,
+  "github-copilot": githubCopilot,
   google,
   hyper,
   huggingface,
   inceptron,
   kilo,
   llmgateway,
+  "llmgateway-providers": llmgatewayProviders,
   "merge-gateway": mergeGateway,
   "nano-gpt": nanoGpt,
   ofox,
@@ -186,6 +201,7 @@ export const groups = {
     "inceptron",
     "kilo",
     "llmgateway",
+    "llmgateway-providers",
     "merge-gateway",
     "nano-gpt",
     "ofox",
@@ -194,7 +210,7 @@ export const groups = {
     "vercel",
   ],
   cloudflare: ["cloudflare-workers-ai"],
-  direct: ["ambient", "anthropic", "baseten", "chutes", "cortecs", "deepinfra", "digitalocean", "google", "hyper", "openai", "ovhcloud", "pioneer", "tinfoil", "venice", "wandb", "xai"],
+  direct: ["ambient", "anthropic", "baseten", "chutes", "cortecs", "deepinfra", "digitalocean", "github-copilot", "google", "hyper", "openai", "ovhcloud", "pioneer", "tinfoil", "venice", "wandb", "xai"],
 } as const;
 
 type ProviderID = keyof typeof providers;
@@ -220,6 +236,7 @@ export async function syncProvider<SourceModel>(
   let { modelMetadata } = existingState;
   const sourceModels = provider.parseModels(await provider.fetchModels());
   const desired = new Map<string, { model: z.infer<typeof SyncedAuthoredModel>; content: string }>();
+  const caseNormalizedDesiredPaths = new Map<string, string>();
   const desiredMetadata = new Map<string, { model: z.infer<typeof ModelMetadata>; content: string }>();
   const skippedRemote: string[] = [];
 
@@ -244,9 +261,15 @@ export async function syncProvider<SourceModel>(
       continue;
     }
 
-    if (desired.has(relativePath)) {
-      throw new Error(`Duplicate synced model path: ${provider.id}/${relativePath}`);
+    const collidingPath = caseNormalizedDesiredPaths.get(relativePath.toLowerCase());
+    if (collidingPath !== undefined) {
+      throw new Error(
+        collidingPath === relativePath
+          ? `Duplicate synced model path: ${provider.id}/${relativePath}`
+          : `Synced model paths differ only in case: ${provider.id}/${collidingPath} and ${provider.id}/${relativePath}`,
+      );
     }
+    caseNormalizedDesiredPaths.set(relativePath.toLowerCase(), relativePath);
 
     if (translated.metadata !== undefined) {
       const parsedMetadata = ModelMetadata.safeParse({
@@ -270,13 +293,16 @@ export async function syncProvider<SourceModel>(
       : preserveBaseModel(translated.model, existing.get(relativePath)?.authored);
     const translatedBase = "base_model" in translatedModel ? translatedModel.base_model : undefined;
     let resolvedReasoning: boolean | undefined;
+    let baseReasoningOptions: unknown;
     if (translatedBase !== undefined) {
       if (translated.metadata?.id === translatedBase) {
         resolvedReasoning = translated.metadata.model.reasoning;
+        baseReasoningOptions = translated.metadata.model.reasoning_options;
       } else {
         modelMetadata ??= await readModelMetadata(provider.modelsDir);
         const canonicalReasoning = modelMetadata[translatedBase]?.reasoning;
         resolvedReasoning = typeof canonicalReasoning === "boolean" ? canonicalReasoning : undefined;
+        baseReasoningOptions = modelMetadata[translatedBase]?.reasoning_options;
       }
     } else {
       resolvedReasoning = existing.get(relativePath)?.toml.reasoning;
@@ -285,6 +311,7 @@ export async function syncProvider<SourceModel>(
       translatedModel,
       existing.get(relativePath)?.authored,
       resolvedReasoning,
+      baseReasoningOptions,
     );
     const withDescription = provider.preserveDescriptions === false
       ? withReasoningOptions
@@ -300,7 +327,7 @@ export async function syncProvider<SourceModel>(
 
     desired.set(relativePath, {
       model: parsed.data,
-      content: (existing.get(relativePath)?.header ?? "") + formatToml(parsed.data),
+      content: ((existing.get(relativePath)?.header || translated.header) ?? "") + formatToml(parsed.data),
     });
   }
 
@@ -476,6 +503,7 @@ export function preserveReasoningOptions(
   model: SyncedModel,
   existing: ExistingModel | undefined,
   resolvedReasoning: boolean | undefined = existing?.reasoning,
+  baseReasoningOptions: unknown = undefined,
 ): SyncedModel {
   if ((model.reasoning ?? resolvedReasoning) === false) {
     const { reasoning_options: _reasoningOptions, ...withoutReasoningOptions } = model;
@@ -483,7 +511,10 @@ export function preserveReasoningOptions(
   }
   if (model.reasoning_options !== undefined) return model;
   if (existing?.reasoning_options === undefined) {
-    return (model.reasoning ?? resolvedReasoning) === true
+    // When the base model already declares reasoning_options, leave the field
+    // unset so the factored file inherits them — stamping [] here would
+    // shadow the base's real controls with "no controls".
+    return (model.reasoning ?? resolvedReasoning) === true && baseReasoningOptions === undefined
       ? { ...model, reasoning_options: [] }
       : model;
   }

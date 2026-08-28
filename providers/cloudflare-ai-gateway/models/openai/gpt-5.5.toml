@@ -7,10 +7,9 @@ values = ["none", "low", "medium", "high", "xhigh"]
 [cost]
 input = 5
 output = 30
-cache_read = 0.5
 
-[[cost.tiers]]
-tier = { size = 272000 }
-input = 10
-output = 45
-cache_read = 1
+[limit]
+context = 1_000_000
+
+[provider]
+npm = "@ai-sdk/openai"

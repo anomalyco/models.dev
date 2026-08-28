@@ -1,0 +1,23 @@
+name = "devstral-latest@eu"
+description = "An enterprise grade text model, that excels at using tools to explore codebases, editing multiple files and power software engineering agents."
+family = "devstral"
+release_date = "2026-05-27"
+last_updated = "2026-05-27"
+attachment = false
+reasoning = false
+tool_call = true
+structured_output = true
+open_weights = false
+
+[cost]
+input = 0.44
+output = 2.2
+cache_read = 0.44
+
+[limit]
+context = 256_000
+output = 256_000
+
+[modalities]
+input = ["text"]
+output = ["text"]

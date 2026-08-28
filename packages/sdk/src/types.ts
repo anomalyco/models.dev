@@ -68,7 +68,10 @@ export interface CostTier extends Cost {
 
 /** Pricing for a provider's model, including context-size tiers. */
 export interface ModelCost extends Cost {
-  /** Legacy compatibility field: pricing applied beyond 200K context. Prefer `tiers`. */
+  /**
+   * Legacy compatibility field for context-tier pricing.
+   * @deprecated Use `tiers` to read the exact context threshold.
+   */
   context_over_200k?: Cost
   /** Context-size-based pricing tiers. */
   tiers?: CostTier[]
