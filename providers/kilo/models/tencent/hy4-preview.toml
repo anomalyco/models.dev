@@ -1,13 +1,6 @@
-name = "Tencent: Hy4 preview"
+base_model = "tencent/hy4-preview"
 description = "Tencent: Hy4 preview is a mixture-of-experts model from Tencent, with 49B active parameters out of 770B total. It is designed for coding agents, complex tool-use workflows, and productivity tasks that..."
-release_date = "2026-08-28"
-last_updated = "2026-08-28"
-attachment = false
-reasoning = true
-temperature = true
-tool_call = true
 structured_output = true
-open_weights = false
 
 [[reasoning_options]]
 type = "effort"
@@ -20,8 +13,3 @@ cache_read = 0.042
 
 [limit]
 context = 1_048_576
-output = 64_000
-
-[modalities]
-input = ["text"]
-output = ["text"]
