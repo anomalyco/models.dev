@@ -1,9 +1,14 @@
 import path from "node:path";
 import { z } from "zod";
 
-import { describeModel } from "../../describe.js";
-import type { ExistingModel, SyncProvider, SyncedFullModel, SyncedModel } from "../index.js";
-import { factorBaseModel, resolveModelMetadataBaseModel } from "./openrouter.js";
+import type {
+  ExistingModel,
+  SyncProvider,
+  SyncedBaseModel,
+  SyncedFullModel,
+  SyncedModel,
+} from "../index.js";
+import { factorBaseModel, modelMetadata, resolveModelMetadataBaseModel } from "./openrouter.js";
 
 const API_ENDPOINT = "https://api.neuralwatt.com/v1/models";
 
@@ -20,6 +25,11 @@ const REPO_SUFFIX = /-(nvfp4|fp8|awq|int4|\d{4})$/;
 // A rewrite drops interior comments, so document the budget control, which
 // the endpoint never describes, in the header the runner re-attaches.
 const BUDGET_HEADER = "# Budget: thinking_token_budget (integer reasoning tokens)\n";
+
+// thinking_token_budget is accepted on every model except these two, which
+// reject it with a 400. Serving tiers share their base model's behaviour.
+// https://portal.neuralwatt.com/docs/api/chat-completions
+const BUDGET_REJECTORS = new Set(["deepseek-v4-flash", "gemma-4-31b"]);
 
 // A canonical ID may carry an MoE active-parameter suffix the served ID drops.
 const MOE_SUFFIX = /^-a\d+b$/;
@@ -49,9 +59,11 @@ const Metadata = z.object({
     vision: z.boolean(),
     reasoning: z.boolean(),
   }).passthrough(),
+  // Optional: `capabilities.reasoning` is the authoritative flag, and a model
+  // with no reasoning at all has no reason to carry an effort ladder.
   reasoning: z.object({
     supported_efforts: z.array(z.string()),
-  }).passthrough(),
+  }).passthrough().optional(),
   limits: z.object({
     max_context_length: z.number().nullish(),
     max_output_tokens: z.number().nullish(),
@@ -77,6 +89,24 @@ export const neuralwatt = {
   modelsDir: "providers/neuralwatt/models",
   // Beta models are listed only for accounts granted access to each one.
   deleteMissing: false,
+  sourceID(model) {
+    return model.id;
+  },
+  skippedNotice(ids) {
+    if (ids.length === 0) return [];
+    return [
+      `${ids.length} Neuralwatt models were not created because no canonical \`models/\` entry resolved for them, or because the API published no usable price.`,
+      `Skipped remote IDs: ${ids.map((id) => `\`${id}\``).join(", ")}`,
+      "Add a `models/<lab>/<model>.toml` entry to include them in the next sync.",
+    ];
+  },
+  missingNotice(paths) {
+    if (paths.length === 0) return [];
+    return [
+      `${paths.length} local Neuralwatt models were absent from the live API and were retained; a run cannot tell a retired model from a beta this account was never granted.`,
+      `Retained local paths: ${paths.map((item) => `\`${item}\``).join(", ")}`,
+    ];
+  },
   async fetchModels() {
     const headers = process.env.NEURALWATT_API_KEY
       ? { Authorization: `Bearer ${process.env.NEURALWATT_API_KEY}` }
@@ -91,7 +121,20 @@ export const neuralwatt = {
     return NeuralwattResponse.parse(raw).data;
   },
   translateModel(model, context) {
-    const translated = buildNeuralwattModel(model, context.existing(model.id), context.authored(model.id));
+    const existing = context.existing(model.id);
+    const authored = context.authored(model.id);
+
+    // The endpoint supplies no description, dates or knowledge cutoff, so a
+    // new ID needs canonical metadata to inherit and a real price. Never
+    // author a standalone definition for a lab model from the API alone.
+    if (
+      existing === undefined
+      && (baseModelFor(model, authored) === undefined || buildCost(model, undefined) === undefined)
+    ) {
+      return undefined;
+    }
+
+    const translated = buildNeuralwattModel(model, existing, authored);
     return {
       id: model.id,
       model: translated,
@@ -106,10 +149,8 @@ export function buildNeuralwattModel(
   model: NeuralwattModel,
   existing: ExistingModel | undefined,
   authored: ExistingModel | undefined,
-  today = new Date().toISOString().slice(0, 10),
 ): SyncedModel {
-  const { capabilities, limits, pricing } = model.metadata;
-  const flex = model.id.endsWith("-flex");
+  const { capabilities, limits } = model.metadata;
 
   const context = limits.max_context_length ?? model.max_model_len ?? existing?.limit?.context ?? 0;
   const limit = {
@@ -119,20 +160,20 @@ export function buildNeuralwattModel(
     output: limits.max_output_tokens ?? existing?.limit?.output ?? context,
   };
 
-  const name = existing?.name ?? model.metadata.display_name;
   const modalities: { input: Modality[]; output: Modality[] } = {
     // Neuralwatt only advertises vision, never video or audio input.
     input: capabilities.vision ? ["text", "image"] : ["text"],
     output: ["text"],
   };
 
-  // Always factor onto canonical metadata; keep an authored pointer we cannot
-  // re-derive, such as a canonical ID carrying a suffix the served ID drops.
-  const baseModel = resolveBaseModel(model) ?? authored?.base_model;
+  const baseModel = baseModelFor(model, authored);
 
-  const values: Omit<SyncedFullModel, "description" | "release_date" | "last_updated"> = {
-    name,
+  const values: Partial<SyncedFullModel> = {
+    name: existing?.name ?? model.metadata.display_name,
+    description: existing?.description,
     family: existing?.family,
+    release_date: existing?.release_date,
+    last_updated: existing?.last_updated,
     attachment: capabilities.vision,
     reasoning: capabilities.reasoning,
     reasoning_options: capabilities.reasoning ? reasoningOptions(model, authored) : undefined,
@@ -150,42 +191,49 @@ export function buildNeuralwattModel(
         : existing?.status,
     // Reasoning traces always come back on a `reasoning` field, provider-wide.
     interleaved: existing?.interleaved ?? (capabilities.reasoning || undefined),
-    cost: pricing.pricing_tbd === true ? existing?.cost : {
-      input: price(pricing.input_per_million, flex) ?? 0,
-      output: price(pricing.output_per_million, flex) ?? 0,
-      cache_read: price(pricing.cached_input_per_million, flex),
-    },
+    cost: buildCost(model, existing),
     limit,
     modalities,
   };
 
-  // A factored model inherits the canonical blurb and dates; a standalone one
-  // needs its own, and every entry reports created = 0, so it gets the run date.
   if (baseModel !== undefined) {
-    const overrides = {
-      ...values,
-      description: existing?.description,
-      release_date: existing?.release_date,
-      last_updated: existing?.last_updated,
-    };
-    return factorBaseModel(baseModel, overrides, limit, authored?.base_model_omit);
+    const factored = factorBaseModel(
+      baseModel,
+      values,
+      limit,
+      authored?.base_model_omit,
+    ) as SyncedBaseModel;
+    return capabilities.reasoning ? factored : omitInheritedReasoningOptions(factored, baseModel);
   }
 
-  return {
-    ...values,
-    release_date: existing?.release_date ?? today,
-    last_updated: existing?.last_updated ?? today,
-    description: existing?.description ?? describeModel({
-      id: model.id,
-      name,
-      reasoning: capabilities.reasoning,
-      tool_call: capabilities.tools,
-      structured_output: capabilities.json_mode,
-      open_weights: true,
-      limit,
-      modalities,
-    }),
-  };
+  // Only a model that already has a local TOML reaches this branch: creates
+  // are skipped without canonical metadata, so nothing here is invented.
+  const required = z.object({
+    name: z.string(),
+    description: z.string(),
+    release_date: z.string(),
+    last_updated: z.string(),
+    cost: z.object({ input: z.number(), output: z.number() }),
+  }).safeParse(values);
+  if (!required.success) {
+    throw new Error(`Neuralwatt model ${model.id} has incomplete local metadata required for sync`);
+  }
+  return values as SyncedFullModel;
+}
+
+// Always factor onto canonical metadata; fall back to an authored pointer we
+// cannot re-derive, such as a canonical ID with a suffix the served ID drops.
+function baseModelFor(model: NeuralwattModel, authored: ExistingModel | undefined) {
+  return resolveBaseModel(model) ?? authored?.base_model;
+}
+
+// The catalog rejects reasoning_options on a non-reasoning model, so a fast
+// variant has to drop the options its canonical entry declares.
+function omitInheritedReasoningOptions(factored: SyncedBaseModel, baseModel: string) {
+  if (modelMetadata(baseModel).reasoning_options === undefined) return factored;
+  const omit = factored.base_model_omit ?? [];
+  if (omit.includes("reasoning_options")) return factored;
+  return { ...factored, base_model_omit: [...omit, "reasoning_options"] };
 }
 
 // Match on the bare slug. The Hugging Face org is no help: repacks are served
@@ -221,15 +269,53 @@ function strip(value: string, suffix: RegExp) {
   return result;
 }
 
-// The API knows the effort ladder; budget controls stay hand-authored.
+// The API knows the effort ladder but never describes thinking_token_budget,
+// so the budget control comes from the provider docs and authored min/max is
+// carried over.
 function reasoningOptions(
   model: NeuralwattModel,
   authored: ExistingModel | undefined,
 ): SyncedFullModel["reasoning_options"] {
-  const values = model.metadata.reasoning.supported_efforts
+  const authoredOptions = authored?.reasoning_options ?? [];
+  const efforts = model.metadata.reasoning?.supported_efforts;
+  const values = (efforts ?? [])
     .filter((effort): effort is Effort => EFFORT_VALUES.includes(effort as Effort));
-  const others = authored?.reasoning_options?.filter((option) => option.type !== "effort") ?? [];
-  return values.length > 0 ? [{ type: "effort", values }, ...others] : others;
+  const options: NonNullable<SyncedFullModel["reasoning_options"]> = authoredOptions
+    .filter((option) => option.type !== "effort");
+
+  if (values.length > 0) {
+    options.unshift({ type: "effort", values });
+  } else if (efforts === undefined) {
+    // No reasoning block at all is silence, not "this model has no effort
+    // levels", so an authored ladder is kept rather than deleted.
+    const authoredEffort = authoredOptions.find((option) => option.type === "effort");
+    if (authoredEffort !== undefined) options.unshift(authoredEffort);
+  }
+
+  if (
+    !BUDGET_REJECTORS.has(strip(model.id, TIER_SUFFIX))
+    && !options.some((option) => option.type === "budget_tokens")
+  ) {
+    options.push({ type: "budget_tokens" });
+  }
+  return options;
+}
+
+// The API is authoritative for pricing, but a partial payload must never be
+// published as free: keep the authored cost until real numbers come back.
+function buildCost(
+  model: NeuralwattModel,
+  existing: ExistingModel | undefined,
+): SyncedFullModel["cost"] | undefined {
+  const { pricing } = model.metadata;
+  const flex = model.id.endsWith("-flex");
+  const input = price(pricing.input_per_million, flex);
+  const output = price(pricing.output_per_million, flex);
+
+  if (pricing.pricing_tbd === true || input === undefined || output === undefined) {
+    return existing?.cost;
+  }
+  return { input, output, cache_read: price(pricing.cached_input_per_million, flex) };
 }
 
 // toPrecision drops the float error in products like 4.5 * 0.65.

@@ -312,20 +312,22 @@ Neuralwatt is implemented in `packages/core/src/sync/providers/neuralwatt.ts`.
 - Source endpoint: `https://api.neuralwatt.com/v1/models`.
 - Optional auth: `NEURALWATT_API_KEY`. Without it the response is the public catalog. With it, the response is scoped to that account.
 - `status = "beta"` means not generally available. Beta models appear in the response for an account that requested access to a beta model from the portal models page.
-- `deleteMissing: false`, because we don't want to inadvertently delete a model when (for example) only its visibility changes.
+- `deleteMissing: false`, because we don't want to inadvertently delete a model when (for example) only its visibility changes. A run cannot tell a retired model from a beta this account was never granted, so absent models are retained and listed by `missingNotice`.
 - The `-flex` model IDs are billed at 0.65x standard, but the endpoint quotes the standard rate for them, so the sync applies the multiplier itself. Revisit `FLEX_MULTIPLIER` if the documented discount changes.
-- The API is authoritative for pricing, the context window, vision, tool calling, JSON mode, the reasoning flag, deprecation, and the `reasoning_effort` array. Its metadata blocks are required by the Zod schema, so an upstream change fails the sync.
+- The API is authoritative for pricing, the context window, vision, tool calling, JSON mode, the reasoning flag, deprecation, and the `reasoning_effort` array. `metadata.reasoning` is optional, because a model with no reasoning has no effort ladder to report; every other metadata block is required, so an upstream change there fails the sync.
 - `max_output_tokens` is null for models that can fill their context, so `limit.output` falls back to the authored cap and then to the context window. `limit.input` is always preserved.
-- `pricing_tbd` keeps the existing `[cost]` instead of writing a zero.
+- Prices are never coerced to zero. `pricing_tbd`, a null input price, or a null output price all keep the existing `[cost]`, and a model that has no local `[cost]` to keep is skipped instead of published as free.
 - Neuralwatt currently only advertises vision, not video or audio, so `modalities.input` is `["text", "image"]` or `["text"]`.
 - `created` is always `0`, and the endpoint carries no lifecycle or provenance metadata, so `release_date`, `last_updated`, `knowledge`, `family`, `temperature`, `open_weights`, names, and descriptions are preserved when a model already has them. `status` is preserved too, except that the API deprecation flag sets `status = "deprecated"` and clears it again once the flag goes away.
-- Non-effort reasoning controls are preserved from the authored TOML: the endpoint describes effort levels but never `thinking_token_budget`.
-- New models are created automatically, so a model is usable as soon as Neuralwatt serves it. Every model Neuralwatt serves is open weights, and reasoning traces always return on a `reasoning` field, so `interleaved` is automatically set when the model has a reasoning field.
+- `reasoning_options` combines three sources. The effort ladder comes from `metadata.reasoning.supported_efforts`; a `budget_tokens` control is added from the provider docs, which state `thinking_token_budget` is accepted on every model except `deepseek-v4-flash` and `gemma-4-31b`; authored `min`/`max` bounds on that control are carried over. A missing `metadata.reasoning` block is read as silence, not as "no effort levels", so an authored ladder is kept rather than deleted.
+- A non-reasoning model gets no `reasoning_options` at all. When its `base_model` declares them, the provider file adds `base_model_omit = ["reasoning_options"]`, because the catalog schema rejects options on a model with `reasoning = false`.
 - This provider tries to always use a `base_model` reference. It determines a reference by taking the slug and stripping serving tiers (`-fast`, `-flex`, `-short`, and combinations such as `-short-fast-flex`), and any quantization or checkpoint suffixes.
 - When no exact slug matches, the sync retries against a canonical ID carrying an MoE active-parameter suffix the slug might not have, which is how `qwen3.6-35b` links to `alibaba/qwen3.6-35b-a3b`. Both passes require a unique match, so an ambiguous slug resolves to nothing.
 - Together these resolve all current 20 models. An authored `base_model` is used only when resolution finds no match.
-- A factored model inherits `family`, the description, and the other intrinsic fields; only the served facts stay in the provider file. A model with no canonical match is written inline with a generated description and no `family`.
-- A created model has no `knowledge`, `temperature`, or `budget_tokens` control. Its dates are inherited from `base_model`, or default to the sync date when there is no `base_model`.
+- A factored model inherits `family`, the description, and the other intrinsic fields; only the served facts stay in the provider file.
+- New models are only created when they resolve a `base_model`. The endpoint supplies no description, dates, knowledge cutoff or temperature, so an unknown ID has nothing to author from and is reported through `skippedNotice` instead. Add a `models/<lab>/<model>.toml` entry and the next run picks it up. Models that already have a full inline TOML keep being updated in place.
+- A created model has no `knowledge` or `temperature`, and inherits its dates from `base_model`.
+- Every model Neuralwatt serves is open weights, and reasoning traces always return on a `reasoning` field, so `interleaved` is set for reasoning models.
 - Interior (i.e., not in the header/top of the TOML file) comments are not preserved. Keep per-model wire notes in the leading comment block, which the runner does preserve.
 - The sync emits a `thinking_token_budget` note as a generated header for any model carrying a `budget_tokens` control.
 
