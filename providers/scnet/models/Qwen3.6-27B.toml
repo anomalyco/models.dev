@@ -1,6 +1,9 @@
 # SCNet probe 2026-08-27: image input was positively confirmed with a semantic red-image probe.
 # Toggle: enable_thinking = true|false
-# SCNet API docs expose the thinking toggle; no separate budget or effort control is documented for this host.
+# SCNet probe 2026-08-28: enable_thinking=false removed reasoning_content.
+# SCNet probe 2026-08-28: thinking_budget=128/1024 was accepted but showed no stable
+# difference from baseline; keep this SKU toggle-only.
+# SCNet API exposes the thinking toggle; budget was tested with no distinct effect.
 # SCNet OpenAI Chat API source:
 # https://www.scnet.cn/ac/openapi/doc/2.0/moduleapi/api/chat.html
 base_model = "alibaba/qwen3.6-27b"
