@@ -1,9 +1,10 @@
 # Effort: reasoning_effort = low|high|max; thinking cannot be disabled.
+# Native multimodal (image input); HF Inference Providers chat-completion supports image_url.
 # https://docs.z.ai/guides/llm/glm-5.3-flash
+# https://huggingface.co/zai-org/GLM-5.3-Flash
 # https://huggingface.co/docs/inference-providers/tasks/chat-completion
 base_model = "zhipuai/glm-5.3-flash"
 description = "Efficient GLM model for fast reasoning, coding, and agent workflows"
-attachment = false
 open_weights = true
 reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]
 
@@ -15,4 +16,4 @@ output = 0.5
 context = 1_048_576
 
 [modalities]
-input = ["text"]
+input = ["text", "image"]
