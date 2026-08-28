@@ -1,0 +1,31 @@
+# Sources (accessed 2026-08-18):
+# - https://inference.phala.com/v1/models
+# - https://huggingface.co/cloud19/gemma-4-26B-A4B-it-heretic-FP8-Static
+# - https://huggingface.co/coder3101/gemma-4-26B-A4B-it-heretic
+
+name = "Gemma 4 26B-A4B IT Heretic (FP8 Static)"
+description = "Static FP8-quantized derivative of coder3101's Heretic-decensored Gemma 4 26B-A4B IT multimodal MoE model"
+family = "gemma"
+release_date = "2026-04-07"
+last_updated = "2026-04-08"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = true
+license = "Apache-2.0"
+
+[limit]
+context = 262_144
+output = 32_768
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/cloud19/gemma-4-26B-A4B-it-heretic-FP8-Static"
+format = "Safetensors"
+quantization = "fp8"

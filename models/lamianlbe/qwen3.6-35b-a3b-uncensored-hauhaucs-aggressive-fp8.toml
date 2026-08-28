@@ -1,0 +1,31 @@
+# Sources (accessed 2026-08-18):
+# - https://inference.phala.com/v1/models
+# - https://huggingface.co/lamianlbe/Qwen3.6-35B-A3B-Uncensored-HauhauCS-Aggressive-fp8
+# - https://huggingface.co/HauhauCS/Qwen3.6-35B-A3B-Uncensored-HauhauCS-Aggressive
+
+name = "Qwen3.6 35B-A3B Uncensored (HauhauCS Aggressive, FP8)"
+description = "FP8-quantized derivative of HauhauCS's aggressive uncensored Qwen3.6 35B-A3B multimodal MoE variant"
+family = "qwen"
+release_date = "2026-04-20"
+last_updated = "2026-04-20"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = true
+license = "Apache-2.0"
+
+[limit]
+context = 262_144
+output = 65_536
+
+[modalities]
+input = ["text", "image", "video"]
+output = ["text"]
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/lamianlbe/Qwen3.6-35B-A3B-Uncensored-HauhauCS-Aggressive-fp8"
+format = "Safetensors"
+quantization = "fp8"

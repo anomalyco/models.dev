@@ -1,0 +1,22 @@
+# Toggle: reasoning.enabled = true|false
+# Effort: reasoning.effort = low|high|max
+# Sources: https://inference.phala.com/v1/models and https://docs.z.ai/guides/llm/glm-5.3-flash
+base_model = "zhipuai/glm-5.3-flash"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[cost]
+input = 0.15
+output = 0.5
+cache_read = 0.03
+
+[limit]
+context = 1_048_576
+
+[modalities]
+input = ["text", "image"]

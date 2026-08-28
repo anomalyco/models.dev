@@ -1,0 +1,22 @@
+name = "all-MiniLM-L6-v2"
+description = "Compact sentence embedding model for semantic search, clustering, and similarity"
+family = "text-embedding"
+release_date = "2021-08-30"
+last_updated = "2021-08-30"
+attachment = false
+reasoning = false
+temperature = false
+tool_call = false
+open_weights = true
+
+[limit]
+context = 256
+output = 384
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2"

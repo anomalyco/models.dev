@@ -1,0 +1,10 @@
+base_model = "google/gemma-3-27b-it"
+
+[cost]
+input = 0.15
+output = 0.46
+cache_read = 0.075
+
+[limit]
+context = 53_920
+output = 16_384

@@ -1,0 +1,12 @@
+# Hosted route omits reasoning from the public catalog.
+# Source: https://inference.phala.com/v1/models
+base_model = "cloud19/gemma-4-26b-a4b-it-heretic-fp8-static"
+name = "Phala: Gemma-4 26B-A4B Uncensored (Heretic)"
+reasoning = false
+
+[cost]
+input = 0.15
+output = 0.7
+
+[limit]
+context = 65_536

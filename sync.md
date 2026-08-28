@@ -267,6 +267,30 @@ OVHcloud AI Endpoints is implemented in `packages/core/src/sync/providers/ovhclo
 - `attachment` is derived from non-text `input_modalities`, and `open_weights` from the presence of `hugging_face_id`.
 - `release_date`/`last_updated` default to the catalog `created` timestamp but preserve any existing hand-authored dates; `knowledge`, `family`, `status`, `interleaved`, and `limit.input` are preserved when present.
 
+## Phala Notes
+
+Phala is implemented in `packages/core/src/sync/providers/phala.ts` and shares
+the ACI catalog parser and translator in `packages/core/src/sync/providers/aci.ts`.
+
+- Source endpoints: `https://inference.phala.com/v1/models` for chat models and
+  `https://inference.phala.com/v1/embeddings/models` for embedding models.
+- Phala is a separate API product with its own base URL, API keys, billing entry,
+  and documentation. Synchronization reads Phala's endpoints as the authoritative
+  contract.
+- Prices are public per-token USD values and use the shared conversion to
+  per-1M-token catalog prices.
+- Phala is a multi-model provider, not the lab for hosted upstream models. Known
+  canonical models use `base_model`. The two `phala/*-uncensored` routes resolve to
+  their exact deployed FP8 checkpoints under `models/lamianlbe/` and
+  `models/cloud19/`; the upstream checkpoints are recorded only as provenance.
+- Synchronization is existing-only: new API IDs are neither written automatically
+  nor reported as missing. Add canonical metadata and audit provider controls before
+  admitting a new model. Existing entries still receive authoritative prices,
+  limits, capabilities, modalities, and catalog membership from the API.
+- `reasoning_options` is always hand-authored. The public catalog identifies
+  reasoning-capable models but does not describe exact toggle, effort, or budget
+  controls.
+
 ## DigitalOcean Notes
 
 - DigitalOcean is implemented in `packages/core/src/sync/providers/digitalocean.ts`.

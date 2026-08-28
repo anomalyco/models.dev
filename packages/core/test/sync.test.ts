@@ -82,6 +82,13 @@ import {
 import { openai, parseOpenAIModels } from "../src/sync/providers/openai.js";
 import { ofox } from "../src/sync/providers/ofox.js";
 import { pioneer } from "../src/sync/providers/pioneer.js";
+import {
+  buildAciCatalogModel,
+  parseAciModels,
+  resolveAciBaseModel,
+  type AciModel,
+} from "../src/sync/providers/aci.js";
+import { phala } from "../src/sync/providers/phala.js";
 import { google, shouldTrackGoogleModel } from "../src/sync/providers/google.js";
 import { buildTinfoilModel, tinfoil, type TinfoilModel } from "../src/sync/providers/tinfoil.js";
 import { resolveVeniceBaseModel } from "../src/sync/providers/venice.js";
@@ -204,6 +211,99 @@ function readyInceptronModel(overrides: Partial<InceptronModel> = {}): ReadyInce
     data: [inceptronModel(overrides)],
   })[0]!;
 }
+
+function aciModel(overrides: Partial<AciModel> = {}): AciModel {
+  return {
+    id: "openai/gpt-oss-20b",
+    name: "OpenAI: GPT OSS 20B",
+    created: Date.parse("2025-08-05T00:00:00Z") / 1_000,
+    input_modalities: ["text", "file"],
+    output_modalities: ["text"],
+    context_length: 131_072,
+    max_output_length: 131_072,
+    pricing: {
+      prompt: "0.00000004",
+      completion: "0.00000015",
+      input_cache_read: "0.00000001",
+    },
+    supported_parameters: ["reasoning", "tools", "structured_outputs"],
+    supported_sampling_parameters: ["temperature"],
+    supported_features: ["reasoning", "tools", "structured_outputs"],
+    is_tee: true,
+    providers: ["phala"],
+    catalog: "chat",
+    ...overrides,
+  };
+}
+
+test("parses ACI chat and embedding catalogs at the provider boundary", () => {
+  const source = aciModel();
+  expect(parseAciModels({
+    chat: { data: [source] },
+    embeddings: { data: [] },
+  }, "Phala")).toEqual([{ ...source, catalog: "chat" }]);
+
+  expect(() => parseAciModels({
+    chat: { data: [source] },
+    embeddings: { data: [source] },
+  }, "Phala")).toThrow("Duplicate Phala model ID: openai/gpt-oss-20b");
+
+  expect(() => parseAciModels({
+    chat: { data: [aciModel({ id: "../outside" })] },
+    embeddings: { data: [] },
+  }, "Phala")).toThrow("Model ID must be a safe relative path");
+});
+
+test("resolves Phala catalog IDs to canonical model metadata", () => {
+  expect(resolveAciBaseModel("meta-llama/llama-3.3-70b-instruct"))
+    .toBe("meta/llama-3.3-70b-instruct");
+  expect(resolveAciBaseModel("phala/gemma-4-26b-a4b-uncensored"))
+    .toBe("cloud19/gemma-4-26b-a4b-it-heretic-fp8-static");
+  expect(resolveAciBaseModel("qwen/qwen-2.5-7b-instruct"))
+    .toBe("alibaba/qwen2.5-7b-instruct");
+});
+
+test("builds reviewed Phala overrides from the public catalog", () => {
+  const existing: ExistingModel = {
+    base_model: "openai/gpt-oss-20b",
+    reasoning_options: [{ type: "effort", values: ["low", "medium", "high"] }],
+  };
+  const model = buildAciCatalogModel(aciModel(), existing, "Phala");
+
+  expect(model).toMatchObject({
+    base_model: "openai/gpt-oss-20b",
+    reasoning_options: existing.reasoning_options,
+    cost: { input: 0.04, output: 0.15, cache_read: 0.01 },
+    modalities: { input: ["text", "pdf"] },
+  });
+  expect(phala.skipCreates).toBe(true);
+  expect(phala.trackMissingModels).toBe(false);
+});
+
+test("keeps embedding dimensions canonical and rejects invalid prices", () => {
+  const embedding = buildAciCatalogModel(aciModel({
+    id: "sentence-transformers/all-minilm-l6-v2",
+    input_modalities: ["text"],
+    output_modalities: ["embeddings"],
+    context_length: 256,
+    max_output_length: 384,
+    pricing: { prompt: "0", completion: "0", input_cache_write: "0" },
+    supported_parameters: [],
+    supported_sampling_parameters: [],
+    supported_features: [],
+    catalog: "embedding",
+  }), { base_model: "sentence-transformers/all-minilm-l6-v2" }, "Phala");
+
+  expect(embedding).toMatchObject({
+    base_model: "sentence-transformers/all-minilm-l6-v2",
+    cost: { input: 0, output: 0 },
+  });
+  expect(() => buildAciCatalogModel(
+    aciModel({ pricing: { prompt: "invalid", completion: "0" } }),
+    { base_model: "openai/gpt-oss-20b" },
+    "Phala",
+  )).toThrow("Invalid Phala prompt price");
+});
 
 test("builds current Inceptron models from explicit base metadata", () => {
   const models = parseInceptronModels({
