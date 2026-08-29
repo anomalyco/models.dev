@@ -6,15 +6,15 @@ type = "effort"
 values = ["none", "low", "medium", "high", "xhigh", "max"]
 
 [cost]
-input = 5
-output = 30
-cache_read = 0.5
+input = 4
+output = 20
+cache_read = 0.4
 
 [[cost.tiers]]
 tier = { type = "context", size = 272_000 }
-input = 10
-output = 45
-cache_read = 1
+input = 8
+output = 30
+cache_read = 0.8
 
 [modalities]
 input = ["text", "image"]

@@ -1,0 +1,15 @@
+# Effort: reasoning_effort = low|high|max, matching the lab and relay peers.
+# Cortecs maps reasoning_effort to backend controls; GLM-5.3 always reasons.
+# https://docs.z.ai/guides/llm/glm-5.3
+# https://docs.cortecs.ai/examples/reasoning
+base_model = "zhipuai/glm-5.3"
+reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]
+
+[cost]
+input = 1.75
+output = 4.499
+cache_read = 0.438
+
+[limit]
+context = 1_048_576
+output = 1_048_576

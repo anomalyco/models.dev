@@ -4,13 +4,15 @@
 # https://docs.qwencloud.com/developer-guides/text-generation/thinking
 # https://docs.qwencloud.com/api-reference/chat/openai-chat
 # Toggle: enable_thinking true|false (hybrid)
-# Budget: thinking_budget — model page lists Max Reasoning 262K
-# reasoning_effort is documented for qwen3.8-max / qwen3.8-max-preview only, not flash.
+# Effort: reasoning_effort = low|medium|xhigh (not yet in the API reference; see
+# the Qwen3.8-Flash-Next release blog)
+# Budget: thinking_budget (Max Reasoning 262K)
 # Reasoning streams in reasoning_content.
 # Cost is Credits-subscription (no public USD per-token rate on Token Plan).
 base_model = "alibaba/qwen3.8-flash"
 reasoning_options = [
   { type = "toggle" },
+  { type = "effort", values = ["low", "medium", "xhigh"] },
   { type = "budget_tokens", max = 262_144 },
 ]
 

@@ -12,7 +12,10 @@ values = ["low", "medium", "xhigh"]
 [cost]
 input = 2
 output = 6
-cache_read = 0.2
+cache_read = 0.25
+
+[limit]
+output = 128_000
 
 [modalities]
 input = ["text", "image"]
