@@ -1,0 +1,22 @@
+# Effort: reasoning_effort = low|high|max; reasoning cannot be disabled.
+# https://docs.baseten.co/inference/model-apis/reasoning
+# Pricing: https://www.baseten.co/pricing
+base_model = "zhipuai/glm-5.3"
+name = "GLM 5.3"
+description = "Flagship GLM model for hybrid reasoning, coding, and agentic engineering"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 1.4
+output = 4.4
+cache_read = 0.14
+
+[limit]
+context = 1_048_576
+output = 262_144

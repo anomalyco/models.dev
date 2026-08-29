@@ -1,0 +1,23 @@
+# Sources (accessed 2026-08-28):
+# https://docs.bigmodel.cn/cn/guide/models/vlm/glm-5.3-flash
+# https://docs.cortecs.ai/usage/reasoning
+# Effort: reasoning_effort = low|high|max, matching the lab and relay peers.
+# Thinking is always enabled; no toggle or reasoning-token budget.
+# Output limit: https://api.cortecs.ai/v1/models (max_output_tokens, not context_size).
+base_model = "zhipuai/glm-5.3-flash"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[cost]
+input = 0.201
+output = 0.5
+cache_read = 0.05
+
+[limit]
+context = 1_048_576
+output = 64_000
+
+[modalities]
+input = ["text", "image"]

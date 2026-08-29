@@ -1,4 +1,5 @@
 name = "GPT OSS 20B"
+description = "Open-weight GPT model for self-hosted reasoning and instruction-following workloads"
 family = "gpt-oss"
 release_date = "2025-08-05"
 last_updated = "2025-08-05"
@@ -16,7 +17,7 @@ output = 0.20
 
 [limit]
 context = 131_072
-output = 32_768
+output = 25_000
 
 [modalities]
 input = ["text"]

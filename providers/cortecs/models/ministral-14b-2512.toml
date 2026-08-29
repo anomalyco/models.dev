@@ -1,0 +1,23 @@
+name = "ministral-14b-2512"
+description = "Ministral 3 14B is a frontier-level 14B multimodal model optimized for local deployment, delivering state-of-the-art text and vision reasoning with a 256K context window and strong agentic capabilities."
+release_date = "2025-12-03"
+last_updated = "2025-12-03"
+attachment = true
+reasoning = false
+temperature = false
+tool_call = true
+structured_output = true
+open_weights = false
+
+[cost]
+input = 0.223
+output = 0.223
+cache_read = 0.022
+
+[limit]
+context = 256_000
+output = 256_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

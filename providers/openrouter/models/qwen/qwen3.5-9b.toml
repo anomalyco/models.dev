@@ -1,5 +1,4 @@
 base_model = "alibaba/qwen3.5-9b"
-attachment = true
 
 [[reasoning_options]]
 type = "toggle"
@@ -9,7 +8,4 @@ input = 0.1
 output = 0.15
 
 [limit]
-output = 262_144
-
-[modalities]
-input = ["text", "image", "video"]
+output = 235_929

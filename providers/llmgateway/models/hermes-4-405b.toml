@@ -1,0 +1,30 @@
+# Gateway-wide $.reasoning_effort = "none" (or $.reasoning.effort = "none")
+# disables non-OpenAI reasoning; this model has no documented effort tiers
+# or exact reasoning-token budget.
+# https://docs.llmgateway.io/features/reasoning (accessed 2026-07-23)
+name = "Hermes 4 405B"
+description = "Reasoning model for deliberate analysis, multi-step problem solving, and tool use"
+family = "hermes"
+release_date = "2025-08-26"
+last_updated = "2025-08-26"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = false
+open_weights = false
+
+[[reasoning_options]]
+type = "toggle" # API: {"reasoning_effort": "none"} or {"reasoning": {"effort": "none"}}
+
+[cost]
+input = 1
+output = 3
+
+[limit]
+context = 131_072
+output = 131_072
+
+[modalities]
+input = ["text"]
+output = ["text"]

@@ -1,0 +1,23 @@
+# Source: https://routellm.abacus.ai/v1/models
+# RouteLLM API does not report thinking: true for this ID.
+# RouteLLM input_modalities: ['text']
+# RouteLLM output_modalities: ['text']
+# RouteLLM context_length: 131072
+# RouteLLM max_completion_tokens: 96000
+# RouteLLM input_token_rate: 0.0000006
+# RouteLLM output_token_rate: 0.0000022
+base_model = "zhipuai/glm-4.5"
+reasoning = true
+reasoning_options = []
+
+[cost]
+input = 0.6
+output = 2.2
+
+[limit]
+context = 131_072
+output = 96_000
+
+[modalities]
+input = ["text"]
+output = ["text"]

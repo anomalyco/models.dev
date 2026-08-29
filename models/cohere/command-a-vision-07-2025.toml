@@ -1,0 +1,25 @@
+# https://docs.cohere.com/docs/command-a-vision
+# https://huggingface.co/CohereLabs/c4ai-command-a-vision-07-2025
+name = "Command A Vision"
+description = "Cohere vision model for multilingual document analysis, OCR, and image understanding"
+family = "command-a"
+release_date = "2025-07-31"
+last_updated = "2025-07-31"
+attachment = true
+reasoning = false
+temperature = true
+knowledge = "2024-06-01"
+tool_call = false
+open_weights = true
+
+[limit]
+context = 128_000
+output = 8_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/CohereLabs/c4ai-command-a-vision-07-2025"

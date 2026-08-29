@@ -1,0 +1,25 @@
+# Modal Shared Endpoint model ID: Qwen/Qwen3.8-2.4T-A95B.
+# Pricing is USD per 1M tokens: prompt $2.00, cached prompt $0.25,
+# and completion $6.00.
+# Modal documents text-only input, context up to 1,010,000 tokens, and
+# adjustable reasoning effort with low, medium, and xhigh levels.
+# https://modal.com/library/qwen/qwen3-8-max
+# https://modal.com/blog/qwen3-8-2-4t-a95b-now-available-on-modal
+# https://huggingface.co/Qwen/Qwen3.8-2.4T-A95B
+base_model = "alibaba/qwen3.8-2.4t-a95b"
+name = "Qwen3.8-Max"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "xhigh"]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 2.0
+output = 6.0
+cache_read = 0.25
+
+[limit]
+context = 1_010_000

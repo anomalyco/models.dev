@@ -1,0 +1,23 @@
+name = "Ministral 3B (Mistral AI)"
+description = "Compact Mistral model for edge, latency-sensitive, and cost-efficient workloads"
+family = "ministral"
+release_date = "2025-12-02"
+last_updated = "2025-12-02"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = false
+structured_output = false
+open_weights = false
+
+[cost]
+input = 0.1
+output = 0.1
+
+[limit]
+context = 131_072
+output = 131_072
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

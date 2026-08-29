@@ -1,0 +1,195 @@
+# Cloudflare AI Gateway - human curation layer (proxied third-party models only).
+#
+# The generator derives id, name, description, cost, and limit.context from the Cloudflare
+# catalog. This file holds only what the catalog cannot express:
+#   - base_model: any proxied id whose canonical file name differs from its catalog id.
+#   - structured_output: a quality judgement. Cloudflare advertises response_format for
+#     nearly every model, but several do not honour it, so this stays hand-set.
+#   - reasoning_options: the catalog has no reasoning schema, so reasoning shapes are curated.
+#   - interleaved: whether a wire returns reasoning content as a separate field. Never
+#     inheritable from base_model (this deployment's wire format can differ from the lab's).
+#   - limit.output: the catalog's max_output_tokens is not a reliable ceiling (verified wrong
+#     against lab/first-party for several models), so output is hand-curated; only
+#     limit.context is auto-derived.
+#   - note: leading `#` comment lines (wire-path docs, source citations) that would otherwise
+#     be lost on every regeneration.
+#   - skip: catalog ids with no lab file, or not reachable via unified billing (BYOK-only).
+# Consumed by: bun run cloudflare-ai-gateway:generate
+
+# Proxied Text-Generation catalog ids with no lab file under models/ (cannot publish yet).
+skip = [
+  "google/gemini-3-flash",
+  "google/gemini-3.1-pro",
+  "xai/grok-4.20-multi-agent-0309",
+  "thinkingmachines/inkling-256k",
+  "minimax/m2.7",
+  "minimax/m3",
+  "thinkingmachines/inkling",
+  "google/gemini-2.5-flash-lite",
+  "google/gemini-2.5-flash",
+  "google/gemini-2.5-pro",
+  "google/gemini-3.1-flash-lite",
+  "google/gemini-3.5-flash-lite",
+  "google/gemini-3.5-flash",
+  "google/gemini-3.6-flash",
+  "google/gemini-3.7-flash",
+]
+
+[models."anthropic/claude-fable-5"]
+structured_output = true
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
+
+[models."anthropic/claude-haiku-4.5"]
+structured_output = true
+reasoning_options = [{ type = "budget_tokens", min = 1024 }]
+
+[models."anthropic/claude-opus-4.5"]
+structured_output = true
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }, { type = "budget_tokens", min = 1024 }]
+
+[models."anthropic/claude-opus-4.6"]
+structured_output = true
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "max"] }, { type = "budget_tokens", min = 1024 }]
+
+[models."anthropic/claude-opus-4.7"]
+structured_output = true
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
+
+[models."anthropic/claude-opus-4.8"]
+structured_output = true
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
+
+[models."anthropic/claude-opus-5"]
+structured_output = true
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
+
+[models."anthropic/claude-sonnet-4.5"]
+structured_output = true
+limit = { context = 1000000 }
+reasoning_options = [{ type = "budget_tokens", min = 1024 }]
+
+[models."anthropic/claude-sonnet-4.6"]
+structured_output = true
+limit = { context = 1000000, output = 128000 }
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "max"] }, { type = "budget_tokens", min = 1024 }]
+
+[models."anthropic/claude-sonnet-5"]
+structured_output = true
+note = ["Toggle: thinking.type = adaptive|disabled.", "Effort: output_config.effort = low|medium|high|xhigh|max."]
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
+
+[models."openai/gpt-5"]
+reasoning_options = [{ type = "effort", values = ["minimal", "low", "medium", "high"] }]
+
+[models."openai/gpt-5-mini"]
+reasoning_options = [{ type = "effort", values = ["minimal", "low", "medium", "high"] }]
+
+[models."openai/gpt-5-nano"]
+reasoning_options = [{ type = "effort", values = ["minimal", "low", "medium", "high"] }]
+
+[models."openai/gpt-5.1"]
+reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high"] }]
+
+[models."openai/gpt-5.4"]
+reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh"] }]
+
+[models."openai/gpt-5.4-mini"]
+reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh"] }]
+
+[models."openai/gpt-5.4-nano"]
+reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh"] }]
+
+[models."openai/gpt-5.4-pro"]
+reasoning_options = [{ type = "effort", values = ["medium", "high", "xhigh"] }]
+
+[models."openai/gpt-5.5"]
+reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh"] }]
+
+[models."openai/gpt-5.5-pro"]
+reasoning_options = [{ type = "effort", values = ["medium", "high", "xhigh"] }]
+
+[models."openai/gpt-5.6-luna"]
+reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh", "max"] }]
+
+[models."openai/gpt-5.6-sol"]
+reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh", "max"] }]
+
+[models."openai/gpt-5.6-terra"]
+reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh", "max"] }]
+
+[models."openai/o3"]
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
+
+[models."openai/o3-mini"]
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
+
+[models."openai/o4-mini"]
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
+
+# Proxied reasoning models whose reasoning shape the Cloudflare catalog schema does not
+# expose (native-format providers). Values mirror models.dev's merge-gateway provider, which
+# proxies the same upstreams. Google uses thinkingConfig.thinkingBudget / thinking_level.
+#
+# DeepSeek: toggle-only would only be correct if AI Gateway drops the effort field on this
+# route (merge-gateway's own toggle-only shape is backed by a live-tested selected-route
+# comment specific to *their* relay, not evidence about Cloudflare's). Absent host-specific
+# proof that Cloudflare strips it, match the lab + Workers AI baseline: toggle + high/max.
+[models."deepseek/deepseek-v4-pro"]
+note = ["Toggle: thinking.type = enabled|disabled.", "Effort: reasoning_effort = high|max."]
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["high", "max"] }]
+
+# Alibaba is a first-party lab; the catalog's OpenAI-compat schema exposes a generic
+# `reasoning_effort` enum, but Alibaba's real API (see providers/alibaba/models/qwen3.7-plus.toml)
+# is toggle + budget_tokens, not graded effort. Match the lab shape per AGENTS.md.
+[models."alibaba/qwen3.7-plus"]
+note = ["Toggle: enable_thinking true|false.", "Budget: thinking_budget (integer reasoning tokens)."]
+reasoning_options = [{ type = "toggle" }, { type = "budget_tokens" }]
+
+[models."alibaba/qwen3.5-397b-a17b"]
+note = ["Toggle: enable_thinking true|false.", "Budget: thinking_budget (integer reasoning tokens)."]
+reasoning_options = [{ type = "toggle" }, { type = "budget_tokens" }]
+
+[models."alibaba/qwen3.7-max"]
+note = ["Toggle: enable_thinking true|false.", "Budget: thinking_budget (integer reasoning tokens)."]
+reasoning_options = [{ type = "toggle" }, { type = "budget_tokens" }]
+
+# providers/alibaba/models/qwen3.8-max.toml: hybrid toggle, low|medium|xhigh effort (high
+# aliases to xhigh), and a 0..262144 budget that cannot combine with effort.
+[models."alibaba/qwen3.8-max"]
+note = [
+  "Toggle: enable_thinking true|false (hybrid).",
+  "Effort: reasoning_effort = low|medium|xhigh (default xhigh); high accepted as alias -> xhigh.",
+  "Budget: thinking_budget (0..262144) cannot be combined with reasoning_effort.",
+]
+interleaved = { field = "reasoning_content" }
+reasoning_options = [
+  { type = "toggle" },
+  { type = "effort", values = ["low", "medium", "xhigh"] },
+  { type = "budget_tokens", min = 0, max = 262_144 },
+]
+
+# xAI Grok 4.6: the first-party API (providers/xai/models/grok-4.6.toml) includes xhigh, but
+# Cloudflare's gateway route rejects it (verified live: reasoning_effort accepts only
+# low|medium|high, code 7003) — a host delta, so match what the CF route actually accepts.
+[models."xai/grok-4.6"]
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
+
+# First-party xAI Grok 4.20 (Reasoning) is always-on with no caller control
+# (providers/xai/models/grok-4.20-0309-reasoning.toml: reasoning_options = []).
+[models."xai/grok-4.20-0309-reasoning"]
+reasoning_options = []
+
+[models."moonshotai/kimi-k3"]
+note = [
+  "API: thinking.type = enabled|disabled|adaptive; in adaptive mode the",
+  "reasoning depth is set by output_config.effort = low|high|max.",
+]
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "high", "max"] }]
+
+[models."thinkingmachines/inkling"]
+note = [
+  "Tinker's Anthropic-compatible route: thinking.type = adaptive|disabled toggles reasoning;",
+  "output_config.effort = low|medium|high|xhigh|max sets effort.",
+]
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
+limit = { output = 65_536 }

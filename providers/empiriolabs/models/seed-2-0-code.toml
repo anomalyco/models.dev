@@ -1,0 +1,26 @@
+# Toggle: enable_thinking = true|false
+# Effort: reasoning_effort = low|medium|high
+# https://empiriolabs.ai/models/seed-2-0-code
+base_model = "bytedance-seed/seed-2.0-code"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high"]
+
+[cost]
+input = 0.4
+output = 2.4
+cache_read = 0.4
+
+[[cost.tiers]]
+tier = { type = "context", size = 128_000 }
+input = 0.8
+output = 4.8
+cache_read = 0.8
+
+[limit]
+context = 256_000
+output = 128_000

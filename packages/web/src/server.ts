@@ -1,5 +1,5 @@
 import Index from "../index.html";
-import { getRenderedPage, Models, Providers } from "./render";
+import { getRenderedPage, Models, Providers, renderDocument } from "./render";
 import path from "path";
 
 const assetPort = Number(Bun.env.ASSET_PORT ?? 16000);
@@ -147,7 +147,7 @@ const server = Bun.serve({
       shellUrl.search = "";
 
       let html = await fetch(shellUrl.toString(), req).then((r) => r.text());
-      html = html.replace("<!--static-->", rendered);
+      html = renderDocument(html, rendered);
       return new Response(html, {
         headers: {
           "Content-Type": "text/html",

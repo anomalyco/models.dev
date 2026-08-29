@@ -1,0 +1,23 @@
+name = "nova-micro-v1"
+description = "Nova Micro is a multilingual text-to-text foundation model with strong reasoning capabilities and broad language coverage across 200+ languages."
+release_date = "2025-04-14"
+last_updated = "2025-04-14"
+attachment = true
+reasoning = true
+temperature = false
+tool_call = true
+structured_output = true
+open_weights = false
+reasoning_options = []
+
+[cost]
+input = 0.04
+output = 0.159
+
+[limit]
+context = 128_000
+output = 128_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

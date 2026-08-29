@@ -1,10 +1,17 @@
+# Moonshot mapping lists $.reasoning_effort / $.reasoning.effort =
+# none|minimal|low|medium|high|xhigh|max. No exact token budget documented.
+# https://docs.llmgateway.io/features/reasoning (accessed 2026-07-23)
+# https://api.llmgateway.io/v1/models providers[].reasoning_efforts (accessed 2026-07-23)
 base_model = "moonshotai/kimi-k2.6"
-reasoning_options = []
+
+[[reasoning_options]]
+type = "effort" # API: {"reasoning_effort": "<v>"} or {"reasoning": {"effort": "<v>"}}
+values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"]
 
 [interleaved]
 field = "reasoning_content"
 
 [cost]
-input = 0.4
-output = 2.2
-cache_read = 0.08
+input = 0.22
+output = 1.137
+cache_read = 0.048

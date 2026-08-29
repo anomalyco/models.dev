@@ -1,4 +1,5 @@
 name = "Voxtral Small 24B 2507"
+description = "Efficient Mistral model for fast chat, extraction, and production assistants"
 family = "mistral"
 release_date = "2025-10-30"
 last_updated = "2025-10-30"
@@ -15,8 +16,8 @@ output = 0.3
 cache_read = 0.01
 
 [limit]
-context = 32_000
-output = 32_000
+context = 32_768
+output = 26_214
 
 [modalities]
 input = ["text", "audio", "pdf"]

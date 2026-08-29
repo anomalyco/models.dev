@@ -23,3 +23,7 @@ jobs:
 
       - name: Run validation script
         run: bun validate
+
+      - name: SDK tests
+        run: bun run test
+        working-directory: packages/sdk

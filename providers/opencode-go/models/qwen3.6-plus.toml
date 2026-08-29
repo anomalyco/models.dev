@@ -1,4 +1,5 @@
 name = "Qwen3.6 Plus"
+description = "Multimodal reasoning model for visual analysis, planning, and tool use"
 family = "qwen3.6"
 release_date = "2026-04-02"
 last_updated = "2026-04-02"
@@ -30,6 +31,3 @@ output = 65_536
 [modalities]
 input = ["text", "image", "video"]
 output = ["text"]
-
-[provider]
-npm = "@ai-sdk/anthropic"

@@ -1,0 +1,14 @@
+base_model = "google/gemini-2.5-flash-image"
+structured_output = true
+reasoning_options = []
+
+[cost]
+input = 0.3
+output = 2.5
+reasoning = 2.5
+cache_read = 0.03
+cache_write = 0.083333
+input_audio = 1
+
+[modalities]
+input = ["audio", "image", "text", "video"]

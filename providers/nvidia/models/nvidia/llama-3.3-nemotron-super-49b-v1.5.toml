@@ -1,0 +1,15 @@
+# Sources (accessed 2026-07-25):
+# - https://docs.api.nvidia.com/nim/reference/nvidia-llama-3_3-nemotron-super-49b-v1_5
+# - https://docs.api.nvidia.com/nim/reference/nvidia-llama-3_3-nemotron-super-49b-v1_5-infer
+# - https://integrate.api.nvidia.com/v1/models id: nvidia/llama-3.3-nemotron-super-49b-v1.5
+# Toggle: empty system prompt = reasoning ON; system content `/no_think` = OFF.
+# Infer OpenAPI: max_tokens 1..65536 (no JSON reasoning field; control is system prompt).
+base_model = "nvidia/llama-3.3-nemotron-super-49b-v1.5"
+reasoning_options = [{ type = "toggle" }] # API: system message "/no_think" vs default empty
+
+[cost]
+input = 0.0
+output = 0.0
+
+[limit]
+output = 65_536

@@ -1,4 +1,5 @@
 name = "Model Router"
+description = "Automatic model router for matching prompts to suitable backends and budgets"
 family = "model-router"
 release_date = "2025-05-19"
 last_updated = "2025-11-18"
@@ -12,7 +13,7 @@ input = 0.14
 output = 0.00
 
 [limit]
-context = 128_000
+context = 200_000
 output = 16_384
 
 [modalities]

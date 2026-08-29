@@ -1,13 +1,23 @@
 base_model = "alibaba/qwen3.6-plus"
 # Reasoning HTTP format (accessed 2026-06-25):
 # Hybrid, thinking on by default. Chat/DashScope `enable_thinking`: true|false;
-# integer `thinking_budget` maximum 81920; no minimum or disable sentinel is
+# integer `thinking_budget`; the gateway ENFORCES a max of 131072 (probed 2026-07-24:
+# accepts 131072, rejects 131073) - Alibaba's docs say 81920 but the gateway exceeds it. No
+# minimum or disable sentinel is
 # documented. Responses instead uses `reasoning.effort` and no numeric budget.
+# Reasoning streams in `reasoning_content` (hence [interleaved], added 2026-07-24).
+# structured_output: the gateway now accepts response_format json_schema (probed
+# 2026-07-24, returned {"n": 7}); the base model reports none. This matches its
+# sibling qwen3.6-flash.
 # Sources:
 # https://www.alibabacloud.com/help/en/model-studio/deep-thinking
 # https://www.alibabacloud.com/help/en/model-studio/compatibility-with-openai-responses-api
 
-reasoning_options = [{ type = "toggle" }, { type = "budget_tokens", max = 81_920 }]
+structured_output = true
+reasoning_options = [{ type = "toggle" }, { type = "budget_tokens", max = 131_072 }]
+
+[interleaved]
+field = "reasoning_content"
 
 [cost]
 input = 0

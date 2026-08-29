@@ -1,5 +1,6 @@
 import { z } from "zod";
 
+import { describeModel } from "../../describe.js";
 import type { ExistingModel, SyncProvider, SyncedModel } from "../index.js";
 
 const API_ENDPOINT = "https://catalog.endpoints.ai.ovh.net/rest/v2/openrouter";
@@ -116,6 +117,21 @@ export function buildOvhcloudModel(
     base_model: existing?.base_model,
     base_model_omit: existing?.base_model_omit,
     name: model.name,
+    description: existing?.description ?? describeModel({
+      id: model.id,
+      name: model.name,
+      family: existing?.family,
+      reasoning,
+      tool_call: toolCall,
+      structured_output: structuredOutput || undefined,
+      open_weights: openWeights,
+      limit: {
+        context: model.context_length,
+        input: existing?.limit?.input,
+        output: model.max_output_length ?? existing?.limit?.output ?? model.context_length,
+      },
+      modalities: { input, output },
+    }),
     family: existing?.family,
     release_date: releaseDate,
     last_updated: lastUpdated,

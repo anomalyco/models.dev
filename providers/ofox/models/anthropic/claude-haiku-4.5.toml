@@ -1,0 +1,18 @@
+# Sources:
+# - https://ofox.ai/en/models/anthropic/claude-haiku-4.5 (model id, $1/$5 MTok, cache $0.1/$1.25, 200K/64K)
+# - https://platform.claude.com/docs/en/build-with-claude/extended-thinking (Haiku 4.5 extended thinking via budget_tokens ≥1024)
+# - https://www.anthropic.com/claude/haiku (first-party $1/$5 MTok list price)
+# Lab: models/anthropic/claude-haiku-4-5.toml
+# Budget: thinking.budget_tokens (Anthropic Messages; Ofox anthropic protocol)
+base_model = "anthropic/claude-haiku-4-5"
+reasoning_options = [{ type = "budget_tokens", min = 1_024 }]
+
+[cost]
+input = 1
+output = 5
+cache_read = 0.1
+cache_write = 1.25
+
+[provider]
+npm = "@ai-sdk/anthropic"
+api = "https://api.ofox.ai/anthropic/v1"

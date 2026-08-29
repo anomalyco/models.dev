@@ -1,0 +1,13 @@
+# Source: https://api.ofox.ai/v2/models/catalog?include=provider_price&limit=500
+# Ofox reports capabilities.reasoning=false for this route, so it does not inherit OpenAI effort controls.
+base_model = "openai/gpt-5-nano"
+reasoning = false
+
+[cost]
+input = 0.05
+output = 0.4
+cache_read = 0.01
+
+[provider]
+npm = "@ai-sdk/openai"
+api = "https://api.ofox.ai/v1"

@@ -2,6 +2,7 @@
 # this reasoning-only model.
 # https://moark.com/docs/openapi/v1 (accessed 2026-06-25)
 name = "MiniMax-M2.1"
+description = "MiniMax model for chat, coding, office work, and agentic tasks"
 family = "minimax"
 release_date = "2025-12-23"
 last_updated = "2025-12-23"
@@ -15,8 +16,8 @@ open_weights = true
 [cost]
 input = 2.10
 output = 8.40
-cached_input = 2.10
-cached_write = 8.40
+cache_read = 2.10
+cache_write = 8.40
 
 [limit]
 context = 204_800

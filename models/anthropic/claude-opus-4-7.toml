@@ -1,4 +1,5 @@
 name = "Claude Opus 4.7"
+description = "Stronger Opus tier for advanced software work and high-stakes reasoning"
 family = "claude-opus"
 release_date = "2026-04-16"
 last_updated = "2026-04-16"
@@ -141,3 +142,33 @@ harness = "Claude Code"
 variant = "medium"
 version = "2.1"
 source = "https://artificialanalysis.ai/agents/coding-agents"
+
+[[benchmarks]]
+name = "GPQA Diamond"
+score = 94.2
+metric = "accuracy"
+source = "https://openai.com/index/introducing-gpt-5-5/"
+date = "2026-04-23"
+
+[[benchmarks]]
+name = "Humanity's Last Exam"
+score = 46.9
+metric = "accuracy"
+variant = "no tools"
+source = "https://openai.com/index/introducing-gpt-5-5/"
+date = "2026-04-23"
+
+[[benchmarks]]
+name = "Humanity's Last Exam"
+score = 54.7
+metric = "accuracy"
+variant = "with tools"
+source = "https://openai.com/index/introducing-gpt-5-5/"
+date = "2026-04-23"
+
+[[benchmarks]]
+name = "OSWorld-Verified"
+score = 78.0
+metric = "success rate"
+source = "https://openai.com/index/introducing-gpt-5-5/"
+date = "2026-04-23"

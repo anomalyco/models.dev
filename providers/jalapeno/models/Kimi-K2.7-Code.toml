@@ -1,0 +1,16 @@
+# Always-on thinking on this host (dedicated coding ID; Moonshot first-party
+# also publishes no caller control). Interleaved as reasoning_content.
+# Pricing: Jalapeno Cloud USD per million tokens (marketplace / plugin catalog)
+# Limits: GET https://api.jalapeno-cloud.ai/v1/models id=Kimi-K2.7-Code (2026-08-17)
+base_model = "moonshotai/kimi-k2.7-code"
+reasoning_options = []
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.95
+output = 4.00
+
+[limit]
+context = 271_360

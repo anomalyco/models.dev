@@ -1,0 +1,23 @@
+# OpenReason routes moonshotai/kimi-k2.7-code through Baseten by default
+# (endpoint pin `@baseten-us`). The upstream accepts opt-in via
+# `chat_template_args.enable_thinking = true`; OpenReason forwards the value
+# verbatim. No off behavior, effort values, or reasoning-token budget are
+# documented. Reasoning output is returned in the `reasoning_content` field.
+# The Baseten route respects temperature, so we override the canonical
+# `false` to `true` for this host.
+# https://openreason.app · https://docs.baseten.co/inference/model-apis/reasoning
+base_model = "moonshotai/kimi-k2.7-code"
+temperature = true
+
+[[reasoning_options]]
+type = "toggle"
+
+[cost]
+input = 1.0022
+output = 4.22
+
+[interleaved]
+field = "reasoning_content"
+
+[modalities]
+input = ["text", "image"]

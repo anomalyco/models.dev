@@ -35,6 +35,16 @@ function stable(value: unknown): string {
 }
 
 describe("catalog generation", () => {
+  test("rejects providers with no models", async () => {
+    await withFixture(async (root) => {
+      await write(root, "providers/empty/provider.toml", providerToml("Empty"));
+
+      expect(generate(path.join(root, "providers"))).rejects.toThrow(
+        'Provider "empty" has no models',
+      );
+    });
+  });
+
   test("base_model can factor metadata without changing provider JSON", async () => {
     await withFixture(async (root) => {
       await write(root, "providers/direct/provider.toml", providerToml("Direct"));
@@ -309,12 +319,12 @@ doc = "https://example.com/models"
 
 function modelMetadataToml() {
   return `name = "Lab Model"
+description = "Example model for catalog generation and inheritance tests"
 family = "gpt"
 release_date = "2026-01-02"
 last_updated = "2026-01-03"
 attachment = true
 reasoning = true
-reasoning_options = []
 temperature = false
 tool_call = true
 structured_output = true
@@ -355,11 +365,13 @@ source = "https://example.com/benchmarks"
 
 function providerFieldsToml() {
   return `name = "Lab Model"
+description = "Example model for catalog generation and inheritance tests"
 family = "gpt"
 release_date = "2026-01-02"
 last_updated = "2026-01-03"
 attachment = true
 reasoning = true
+reasoning_options = []
 temperature = false
 tool_call = true
 structured_output = true

@@ -1,0 +1,15 @@
+base_model = "anthropic/claude-opus-5"
+name = "Claude Opus 5 Fast"
+description = "Flagship Claude model for deep reasoning, coding, and long-horizon agents"
+release_date = "2026-07-23"
+structured_output = true
+reasoning_options = []
+
+[cost]
+input = 12
+output = 60
+cache_read = 1.2
+cache_write = 15
+
+[modalities]
+input = ["text", "image"]

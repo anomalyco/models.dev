@@ -1,4 +1,5 @@
 name = "UnslopNemo 12B"
+description = "Open-weight instruction model for adaptable chat and self-hosted production workloads"
 release_date = "2024-11-08"
 last_updated = "2024-11-08"
 attachment = false
@@ -14,8 +15,8 @@ input = 0.4
 output = 0.4
 
 [limit]
-context = 32_768
-output = 32_768
+context = 1_024_000
+output = 26_214
 
 [modalities]
 input = ["text"]

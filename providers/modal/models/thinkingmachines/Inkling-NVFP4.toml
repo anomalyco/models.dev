@@ -1,0 +1,18 @@
+# Modal serves Inkling as an OpenAI-compatible shared endpoint with text,
+# image, and audio inputs.
+# https://modal.com/blog/inkling-by-thinking-machines-labs-now-available-on-modal
+# https://modal.com/docs/guide/endpoints
+base_model = "thinkingmachines/inkling"
+structured_output = false
+reasoning_options = []
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 1.2
+output = 5
+cache_read = 0.27
+
+[limit]
+output = 262_144

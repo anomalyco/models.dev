@@ -1,0 +1,16 @@
+base_model = "alibaba/qwen3.8-27b"
+release_date = "2026-08-26"
+last_updated = "2026-08-26"
+reasoning_options = []
+
+[cost]
+input = 0.5
+output = 3
+cache_read = 0.1
+
+[limit]
+context = 1_000_000
+output = 128_000
+
+[modalities]
+input = ["text", "image"]

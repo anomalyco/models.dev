@@ -1,6 +1,13 @@
 import { z } from "zod";
 
-import type { ExistingModel, SyncProvider, SyncedFullModel, SyncedModel } from "../index.js";
+import { describeModel } from "../../describe.js";
+import type {
+  ExistingModel,
+  SyncProvider,
+  SyncedBaseModel,
+  SyncedFullModel,
+  SyncedModel,
+} from "../index.js";
 import { factorBaseModel, resolveCanonicalBaseModel } from "./openrouter.js";
 
 const API_ENDPOINT = "https://inference.baseten.co/v1/models";
@@ -60,6 +67,7 @@ export const baseten = {
   },
   translateModel(model, context) {
     const existing = context.existing(model.id);
+    const authored = context.authored(model.id);
     const baseModel = existing === undefined
       ? resolveBasetenBaseModel(model.id)
       : existing.base_model;
@@ -71,7 +79,7 @@ export const baseten = {
 
     return {
       id: model.id,
-      model: buildBasetenModel(model, existing, baseModel),
+      model: buildBasetenModel(model, existing, baseModel, authored),
     };
   },
 } satisfies SyncProvider<BasetenModel>;
@@ -101,6 +109,7 @@ export function buildBasetenModel(
   model: BasetenModel,
   existing: ExistingModel | undefined,
   baseModel = existing === undefined ? resolveBasetenBaseModel(model.id) : existing.base_model,
+  authored?: ExistingModel,
 ): SyncedModel {
   const features = new Set(model.supported_features);
   const samplingParameters = new Set(model.supported_sampling_parameters);
@@ -121,10 +130,23 @@ export function buildBasetenModel(
   const limit = {
     context: model.context_length,
     input: existing?.limit?.input,
-    output: model.max_completion_tokens,
+    // Explicit provider limits are serving overrides and sync pins. Baseten's
+    // catalog has returned a model's context window as its completion limit.
+    output: authored?.limit?.output ?? model.max_completion_tokens,
   };
   const values: Partial<SyncedFullModel> = {
     name: model.name ?? existing?.name,
+    description: existing?.description ?? describeModel({
+      id: model.id,
+      name: model.name ?? existing?.name,
+      family: existing?.family,
+      reasoning: features.has("reasoning") || existing?.reasoning,
+      tool_call: features.has("tools") || existing?.tool_call,
+      structured_output: features.has("structured_outputs") || existing?.structured_output,
+      open_weights: existing?.open_weights,
+      limit,
+      modalities: { input, output },
+    }),
     family: existing?.family,
     release_date: existing?.release_date,
     last_updated: existing?.last_updated,
@@ -147,13 +169,28 @@ export function buildBasetenModel(
     if (limit.context === undefined || limit.output === undefined) {
       throw new Error(`Baseten model ${model.id} has incomplete token limits required for sync`);
     }
-    return factorBaseModel(baseModel, values, limit, existing?.base_model_omit);
+    const factored = factorBaseModel(
+      baseModel,
+      values,
+      limit,
+      existing?.base_model_omit,
+    ) as SyncedBaseModel;
+    if (authored?.limit?.output === undefined) return factored;
+
+    return {
+      ...factored,
+      limit: {
+        ...factored.limit,
+        output: authored.limit.output,
+      },
+    };
   }
 
   const required = z.object({
     name: z.string(),
     release_date: z.string(),
     last_updated: z.string(),
+    description: z.string(),
     open_weights: z.boolean(),
     cost: z.object({ input: z.number(), output: z.number() }),
   }).safeParse(values);

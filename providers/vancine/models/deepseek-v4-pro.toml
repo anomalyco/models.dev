@@ -1,0 +1,27 @@
+# Sources (accessed 2026-08-12):
+# https://api-docs.deepseek.com/api/create-chat-completion
+# https://api-docs.deepseek.com/guides/thinking_mode/
+# Reasoning HTTP format: thinking.type = "enabled" | "disabled";
+# reasoning_effort = "high" | "max" (Pro does not expose "low"). Reasoning
+# tokens are billed at the output rate.
+# Interleaved field: reasoning_content.
+# Lab cost: input 0.435 / output 0.87 / reasoning 0.87 / cache_read 0.003625.
+# Vancine public pricing (/api/pricing) is 0.66 / 1.98 / n/a / 0.022 (USD/MTok).
+# Vancine ModelList exposes "deepseek-v4-pro", "deepseek-v4-pro-none",
+# "deepseek-v4-pro-max" (relay/channel/deepseek/constants.go).
+base_model = "deepseek/deepseek-v4-pro"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["high", "max"]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.66
+output = 1.98
+cache_read = 0.022

@@ -1,4 +1,5 @@
 name = "Qwen3.5 Plus"
+description = "Legacy model retained for compatibility with older integrations"
 family = "qwen3.5"
 release_date = "2026-02-16"
 last_updated = "2026-02-16"
@@ -24,6 +25,3 @@ output = 65_536
 [modalities]
 input = ["text", "image", "video"]
 output = ["text"]
-
-[provider]
-npm = "@ai-sdk/anthropic"

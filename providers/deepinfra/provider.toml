@@ -1,6 +1,3 @@
-name = "Deep Infra"
-env = ["DEEPINFRA_API_KEY"]
-npm = "@ai-sdk/deepinfra"
 # Reasoning HTTP format (accessed 2026-06-25):
 # OpenAI Chat: POST https://api.deepinfra.com/v1/openai/chat/completions
 # (also POST /v1/chat/completions). Toggle: reasoning.enabled = true|false;
@@ -15,4 +12,7 @@ npm = "@ai-sdk/deepinfra"
 # https://docs.deepinfra.com/api-reference/chat-completions/openai-chat-completions
 # https://docs.deepinfra.com/api-reference/chat-completions/anthropic-messages
 # https://docs.deepinfra.com/apis/deepinfra-native
+name = "Deep Infra"
+env = ["DEEPINFRA_API_KEY"]
+npm = "@ai-sdk/deepinfra"
 doc = "https://deepinfra.com/models"

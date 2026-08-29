@@ -1,0 +1,19 @@
+base_model = "anthropic/claude-opus-4-8"
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
+# Anthropic-compatible /v1/messages: $.thinking.type = "enabled"|"disabled"|"adaptive" (disabled turns reasoning off = toggle) and $.output_config.effort = "low"|"medium"|"high"|"xhigh"|"max"; manual budget_tokens is rejected on this Opus tier. https://docs.aihubmix.com/cn/api-reference/anthropic-compatible/create-a-message (accessed 2026-07-02)
+
+interleaved = true
+
+[cost]
+input = 5
+output = 25
+cache_read = 0.5
+cache_write = 6.25
+
+[limit]
+context = 200_000
+output = 32_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

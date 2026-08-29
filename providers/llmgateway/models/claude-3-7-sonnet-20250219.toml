@@ -1,8 +1,0 @@
-base_model = "anthropic/claude-3-7-sonnet-20250219"
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }, { type = "budget_tokens", min = 1_024, max = 8_191 }]
-
-[cost]
-input = 3
-output = 15
-cache_read = 0.3
-cache_write = 3.75

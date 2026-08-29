@@ -2,6 +2,7 @@ import { existsSync, readdirSync } from "node:fs";
 import path from "node:path";
 import { z } from "zod";
 
+import { describeModel } from "../../describe.js";
 import { inferKimiFamily, ModelFamilyValues } from "../../family.js";
 import type { ExistingModel, SyncProvider, SyncedFullModel, SyncedModel } from "../index.js";
 import { factorBaseModel } from "./openrouter.js";
@@ -117,14 +118,27 @@ export function buildChutesModel(
 
   const values: SyncedFullModel = {
     name,
+    description: existing?.description ?? describeModel({
+      id: model.id,
+      name,
+      family: baseModel == null ? (existing?.family ?? inferFamily(model.id, name)) : existing?.family,
+      reasoning,
+      tool_call: toolCall,
+      structured_output: structuredOutput ? true : undefined,
+      open_weights: true,
+      limit,
+      modalities: { input, output },
+    }),
     family: baseModel == null ? (existing?.family ?? inferFamily(model.id, name)) : existing?.family,
     release_date: existing?.release_date ?? dateFromTimestamp(model.created),
     last_updated: existing?.last_updated ?? today,
     attachment,
     reasoning,
-    // Chutes' /v1/models advertises `reasoning` as a capability but exposes no parameter
-    // to toggle or set its effort, so there is no provider evidence for a reasoning option.
-    reasoning_options: [],
+    // Chutes' /v1/models advertises `reasoning` as a capability but lists no sampling
+    // parameter for it, so the endpoint alone cannot describe the control. The real
+    // control is `chat_template_kwargs`, which is hand-authored per model. Leaving this
+    // field unset lets preserveReasoningOptions keep those authored options and default
+    // only new, unannotated reasoners to an empty list.
     temperature,
     tool_call: toolCall,
     structured_output: structuredOutput ? true : undefined,

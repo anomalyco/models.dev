@@ -1,23 +1,19 @@
 # Not included in subscription
+base_model = "alibaba/qwen3.5-flash"
 name = "Qwen3.5 Flash Thinking"
-release_date = "2026-02-24"
-last_updated = "2026-02-24"
-attachment = true
-reasoning = true
-reasoning_options = [{ type = "budget_tokens", min = 1_024, max = 81_920 }]
 tool_call = false
 structured_output = false
-open_weights = false
+
+[[reasoning_options]]
+type = "budget_tokens"
+min = 1_024
+max = 81_920
 
 [cost]
-input = 0.09
-output = 0.36
+input = 0.1
+output = 0.4
+cache_read = 0.05
 
 [limit]
-context = 991808
-input = 991808
-output = 65536
-
-[modalities]
-input = ["text", "image", "video"]
-output = ["text"]
+context = 991_808
+input = 991_808

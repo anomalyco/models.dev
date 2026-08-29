@@ -1,0 +1,17 @@
+# Source: https://api-gateway.merge.dev/v1/models?model=bytedance%2Fdola-seed-2.0-code (accessed 2026-07-21)
+base_model = "bytedance-seed/seed-2.0-code"
+description = "Coding model for repository understanding, refactors, and agentic engineering tasks"
+reasoning = false
+tool_call = false
+structured_output = false
+
+[cost]
+input = 0.4
+output = 2.4
+
+[limit]
+context = 256_000
+output = 128_000
+
+[modalities]
+input = ["text", "image"]

@@ -1,4 +1,5 @@
 name = "MiMo-V2.5-Pro"
+description = "Stronger MiMo Pro tier for multimodal reasoning and coding-agent execution"
 family = "mimo"
 release_date = "2026-04-22"
 last_updated = "2026-04-22"
@@ -26,3 +27,17 @@ name = "SWE-Bench Verified"
 score = 78.9
 metric = "resolved"
 source = "https://huggingface.co/XiaomiMiMo/MiMo-V2.5-Pro"
+
+[[benchmarks]]
+name = "SWE-Bench Pro"
+score = 57.2
+metric = "resolve rate"
+source = "https://mimo.xiaomi.com/mimo-v2-5-pro/"
+date = "2026-04-22"
+
+[[benchmarks]]
+name = "GPQA Diamond"
+score = 86.6
+metric = "accuracy"
+source = "https://mimo.xiaomi.com/mimo-v2-5-pro/"
+date = "2026-04-22"

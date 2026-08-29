@@ -1,0 +1,36 @@
+# Sources (accessed 2026-08-28):
+# https://huggingface.co/Qwen/Qwen3.8-Flash-Next
+# https://huggingface.co/api/models/Qwen/Qwen3.8-Flash-Next
+# https://qwen.ai/blog?id=qwen3.8-flash-next
+# Hub lastModified 2026-08-27T05:03:36Z is the open-weight drop (Do not use
+# Hub createdAt, staged countdown page).
+# Experimental preview of the Qwen4 architecture (Qwen4Exp): hybrid
+# Gated DeltaNet + Qwen Sparse Attention, 512 experts (10 routed + 1 shared),
+# 125B total with 6B active plus 51B n-gram embedding and 4B MTP.
+# Thinking always on: reasoning_effort low|medium|xhigh (default xhigh).
+# Native context 262K, extensible up to 1M tokens.
+
+name = "Qwen3.8 Flash Next"
+description = "Open-weight experimental preview of the Qwen4 architecture: hybrid-attention MoE (125B total, 6B active) with vision encoder for coding, agent tasks, and image and video understanding"
+family = "qwen"
+release_date = "2026-08-27"
+last_updated = "2026-08-27"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = true
+license = "qwen-community-1.0"
+
+[limit]
+context = 262_144
+output = 131_072
+
+[modalities]
+input = ["text", "image", "video"]
+output = ["text"]
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/Qwen/Qwen3.8-Flash-Next"

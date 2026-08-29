@@ -1,0 +1,23 @@
+name = "llama-3.1-nemotron-ultra-253b-v1"
+description = "A reasoning-optimized LLM based on Llama 3.1, Nemotron Ultra 253B delivers strong performance in tasks like RAG and tool use, with high efficiency and reduced latency."
+release_date = "2025-04-07"
+last_updated = "2025-04-07"
+attachment = false
+reasoning = true
+temperature = false
+tool_call = true
+structured_output = true
+open_weights = false
+reasoning_options = []
+
+[cost]
+input = 0.598
+output = 1.794
+
+[limit]
+context = 128_000
+output = 128_000
+
+[modalities]
+input = ["text"]
+output = ["text"]

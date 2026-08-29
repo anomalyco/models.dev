@@ -1,0 +1,26 @@
+# Coding Plan model name from https://www.volcengine.com/docs/82379/1928261
+# (accessed 2026-08-26). Subscription tier: no per-token price.
+# Effort: reasoning_effort = none|low|high, POST /api/coding/v3/chat/completions.
+# The wire also accepts minimal|medium|xhigh|max, but they are not separable.
+# Over n=4 runs per level on a prompt hard enough to consume the budget:
+#   none 0 0 0 0            low  1609/1242/1194/1195
+#   medium 1672/1597/2218/1534                        -> overlaps low
+#   high 4065/2727/2988/3863
+#   max  2665/2674/2159/1965                          -> lands *below* high
+# 'max' is not a deeper tier on this model, so declaring it would mislead callers
+# into paying for a level that thinks less than 'high'. Only none|low|high hold up.
+# 'none' is kept rather than a toggle because thinking.type=disabled sent together
+# with a graded effort is rejected as an invalid combination here.
+base_model = "bytedance-seed/seed-evolving"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "high"]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0
+output = 0
+cache_read = 0

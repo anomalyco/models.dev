@@ -1,0 +1,11 @@
+# SCNet documents its OpenAI-compatible endpoint and OpenCode integration here:
+# https://www.scnet.cn/ac/openapi/doc/2.0/moduleapi/tools/opencode.html
+# Token Plan model catalog (accessed 2026-08-16):
+# https://www.scnet.cn/ac/openapi/doc/2.0/moduleapi/plans/token-plan.html
+# Model costs are zero because requests consume prepaid plan Credits rather than
+# incurring a public marginal USD-per-token charge.
+name = "SCNet Token Plan"
+env = ["SCNET_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+api = "https://api.scnet.cn/api/llm/v1"
+doc = "https://www.scnet.cn/ac/openapi/doc/2.0/moduleapi/plans/token-plan.html"

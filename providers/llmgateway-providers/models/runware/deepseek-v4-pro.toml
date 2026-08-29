@@ -1,0 +1,17 @@
+base_model = "deepseek/deepseek-v4-pro"
+name = "DeepSeek V4 Pro (Runware)"
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "high", "xhigh", "max"]
+
+[cost]
+input = 0.961
+output = 1.922
+cache_read = 0.079
+
+[limit]
+context = 1_048_576

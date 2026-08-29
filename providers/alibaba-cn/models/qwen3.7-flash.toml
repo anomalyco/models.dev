@@ -1,0 +1,33 @@
+# CNY→USD rate: 6.7513, 2026-08-02, source: https://www.nimbuscalc.com/calculators/financial-calculators/currency-converter/USD-CNY-2026-08-02/
+# CNY list price source: https://help.aliyun.com/zh/model-studio/model-pricing (Beijing region)
+# Cache pricing: https://help.aliyun.com/zh/model-studio/context-cache (explicit: read 10%, write 125% of input)
+# Toggle: enable_thinking true|false
+# Budget: thinking_budget
+base_model = "alibaba/qwen3.7-flash"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "budget_tokens"
+max = 262_144
+
+[cost]
+input = 0.02962
+output = 0.1185
+cache_read = 0.002962
+cache_write = 0.03703
+
+[[cost.tiers]]
+tier = { type = "context", size = 32_000 }
+input = 0.08887
+output = 0.35549
+cache_read = 0.008887
+cache_write = 0.11109
+
+[[cost.tiers]]
+tier = { type = "context", size = 256_000 }
+input = 0.17774
+output = 0.71098
+cache_read = 0.017774
+cache_write = 0.22218

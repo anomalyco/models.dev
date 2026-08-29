@@ -1,0 +1,12 @@
+base_model = "alibaba/qwen-vl-plus"
+attachment = true
+tool_call = false
+structured_output = false
+
+[cost]
+input = 0.21
+output = 0.63
+cache_read = 0.042
+
+[modalities]
+input = ["text", "image", "video"]

@@ -1,0 +1,17 @@
+base_model = "zhipuai/glm-5.2"
+name = "Ambient Large"
+description = "Flagship GLM model for hybrid reasoning, coding, and agentic engineering"
+
+[[reasoning_options]]
+type = "effort"
+values = ["high", "max"]
+
+[cost]
+input = 0.6
+output = 2
+cache_read = 0.15
+cache_write = 0
+
+[limit]
+context = 202_752
+output = 202_752

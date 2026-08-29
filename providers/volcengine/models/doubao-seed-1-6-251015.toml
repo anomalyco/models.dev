@@ -1,0 +1,37 @@
+# Model ID verified against POST /api/v3/chat/completions (2026-08-26): `doubao-seed-1-6-251015`
+# CNY→USD rate: 6.737012, 2026-08-26, source: https://open.er-api.com/v6/latest/USD
+# Volcengine also splits the base band by OUTPUT length: CNY 2.00/M for outputs
+# under 200 tokens and CNY 8.00/M above it. The higher (general-case) rate is used
+# here since the catalog has no output-length dimension.
+# Output tiering note applies to the base [cost] block only.
+# CNY list price source: https://www.volcengine.com/docs/82379/1544106
+# Toggle: thinking.type = enabled|disabled
+# Effort: reasoning_effort = minimal|low|medium|high
+base_model = "bytedance-seed/seed-1-6"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["minimal", "low", "medium", "high"]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.11875
+output = 1.18747
+cache_read = 0.02375
+
+[[cost.tiers]]
+tier = { type = "context", size = 32_000 }
+input = 0.17812
+output = 2.37494
+cache_read = 0.02375
+
+[[cost.tiers]]
+tier = { type = "context", size = 128_000 }
+input = 0.35624
+output = 3.56241
+cache_read = 0.02375

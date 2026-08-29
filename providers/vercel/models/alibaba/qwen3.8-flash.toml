@@ -1,0 +1,22 @@
+# Sources: https://www.qwencloud.com/models/qwen3.8-flash
+# https://docs.qwencloud.com/developer-guides/text-generation/thinking
+# https://ai-sdk.dev/providers/ai-sdk-providers/alibaba
+# https://vercel.com/docs/ai-gateway/models-and-providers/provider-options
+# Toggle: providerOptions.alibaba.enableThinking true|false -> enable_thinking
+# Budget: providerOptions.alibaba.thinkingBudget -> thinking_budget (reasoning tokens)
+base_model = "alibaba/qwen3.8-flash"
+name = "Qwen 3.8 Flash"
+reasoning_options = [{ type = "toggle" }, { type = "budget_tokens" }]
+
+[cost]
+input = 0.16
+output = 0.47
+cache_read = 0.016
+cache_write = 0.2
+
+[limit]
+context = 991_000
+output = 128_000
+
+[modalities]
+input = ["text", "image", "pdf"]

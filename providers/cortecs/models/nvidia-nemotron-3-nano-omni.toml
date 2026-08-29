@@ -1,0 +1,23 @@
+name = "nvidia-nemotron-3-nano-omni"
+description = "Nemotron-3-Nano-Omni is an open, efficient omni-modal reasoning model that unifies text, image, audio, and video for agentic AI workflows."
+release_date = "2026-04-29"
+last_updated = "2026-04-29"
+attachment = false
+reasoning = true
+temperature = false
+tool_call = true
+structured_output = true
+open_weights = false
+reasoning_options = []
+
+[cost]
+input = 0.059
+output = 0.237
+
+[limit]
+context = 300_000
+output = 300_000
+
+[modalities]
+input = ["text"]
+output = ["text"]

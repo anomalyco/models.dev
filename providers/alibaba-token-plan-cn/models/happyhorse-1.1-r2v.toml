@@ -1,0 +1,30 @@
+# HappyHorse 1.1 reference-to-video. Served on the ASYNC video-synthesis endpoint,
+# not the OpenAI-compatible /models list: POST
+# https://token-plan.cn-beijing.maas.aliyuncs.com/api/v1/services/aigc/video-generation/video-synthesis
+# with header `X-DashScope-Async: enable`, then poll GET /api/v1/tasks/{task_id}.
+# Family entitlement confirmed live 2026-07-24 on both Token Plan tiers. Credit-
+# billed (prepaid), so per-token cost is 0.
+# Sources:
+# https://help.aliyun.com/zh/model-studio/happyhorse-text-to-video-api-reference
+# https://help.aliyun.com/zh/model-studio/token-plan-overview
+name = "HappyHorse 1.1 Reference-to-Video"
+description = "Video model for reference-guided video generation"
+release_date = "2026-07-17"
+last_updated = "2026-07-17"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = false
+open_weights = false
+
+[cost]
+input = 0
+output = 0
+
+[limit]
+context = 0
+output = 0
+
+[modalities]
+input = ["image", "text"]
+output = ["video"]

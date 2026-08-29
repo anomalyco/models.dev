@@ -6,5 +6,11 @@ input = 1
 output = 2
 cache_read = 0.2
 
-[modalities]
-input = ["text", "image"]
+[[cost.tiers]]
+tier = { type = "context", size = 200_000 }
+input = 2
+output = 4
+cache_read = 0.4
+
+[limit]
+output = 230_400

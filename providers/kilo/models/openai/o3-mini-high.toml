@@ -1,11 +1,18 @@
 name = "OpenAI: o3 Mini High"
-release_date = "2025-01-31"
-last_updated = "2026-03-15"
+description = "O-series reasoning model for hard analysis, math, coding, and planning"
+family = "o"
+release_date = "2025-02-12"
+last_updated = "2025-02-12"
 attachment = true
-reasoning = false
+reasoning = true
 temperature = false
 tool_call = true
+structured_output = true
 open_weights = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["high"]
 
 [cost]
 input = 1.1
@@ -13,9 +20,9 @@ output = 4.4
 cache_read = 0.55
 
 [limit]
-context = 200000
-output = 100000
+context = 200_000
+output = 100_000
 
 [modalities]
-input = ["pdf", "text"]
+input = ["text", "pdf"]
 output = ["text"]

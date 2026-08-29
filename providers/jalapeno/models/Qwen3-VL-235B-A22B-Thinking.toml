@@ -1,0 +1,12 @@
+# Always-on thinking on this host (dedicated *-Thinking ID).
+# Pricing: Jalapeno Cloud USD per million tokens (marketplace / plugin catalog)
+# Limits: GET https://api.jalapeno-cloud.ai/v1/models id=Qwen3-VL-235B-A22B-Thinking (2026-08-17)
+base_model = "alibaba/qwen3-vl-235b-a22b-thinking"
+reasoning_options = []
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.98
+output = 3.95

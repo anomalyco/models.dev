@@ -1,4 +1,8 @@
+# Live /models (2026-06-25): low|medium|high; no dedicated reasoning budget.
+# https://api.venice.ai/api/v1/models?type=text (accessed 2026-06-25)
+
 name = "Qwen 3 235B A22B Thinking 2507"
+description = "Qwen reasoning model for deliberate problem solving, math, and coding"
 family = "qwen"
 release_date = "2025-04-29"
 last_updated = "2026-06-11"
@@ -8,8 +12,6 @@ tool_call = true
 structured_output = true
 open_weights = true
 
-# Live /models (2026-06-25): low|medium|high; no dedicated reasoning budget.
-# https://api.venice.ai/api/v1/models?type=text (accessed 2026-06-25)
 [[reasoning_options]]
 type = "effort"
 values = ["low", "medium", "high"]

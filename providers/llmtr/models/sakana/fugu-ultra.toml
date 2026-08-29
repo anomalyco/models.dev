@@ -1,0 +1,15 @@
+# Hand-authored from LLMTR's public catalog https://llmtr.com/api/models (accessed 2026-08-16).
+# reasoning_options measured against POST https://llmtr.com/v1/chat/completions (2026-08-16).
+# Effort: $.reasoning.effort = high|xhigh
+base_model = "sakana/fugu-ultra"
+
+[cost]
+input = 5
+output = 30
+
+[limit]
+output = 1_000_000
+
+[[reasoning_options]]
+type = "effort"
+values = ["high", "xhigh"]

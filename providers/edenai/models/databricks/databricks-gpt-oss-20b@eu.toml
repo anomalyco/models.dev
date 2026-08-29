@@ -1,0 +1,13 @@
+base_model = "openai/gpt-oss-20b"
+name = "GPT OSS 20B (EU)"
+structured_output = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high"]
+
+[cost]
+input = 0.07
+output = 0.30002
+cache_read = 0.07
+cache_write = 0.07

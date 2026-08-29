@@ -1,3 +1,5 @@
+# Live /models (2026-06-25): none|low|medium|high; no dedicated reasoning budget.
+# https://api.venice.ai/api/v1/models?type=text (accessed 2026-06-25)
 base_model = "zhipuai/glm-4.7-flash"
 name = "GLM 4.7 Flash"
 family = "glm"
@@ -5,15 +7,14 @@ release_date = "2026-01-29"
 last_updated = "2026-06-11"
 structured_output = true
 
-# Live /models (2026-06-25): none|low|medium|high; no dedicated reasoning budget.
-# https://api.venice.ai/api/v1/models?type=text (accessed 2026-06-25)
 [[reasoning_options]]
 type = "effort"
 values = ["none", "low", "medium", "high"]
 
 [cost]
-input = 0.125
-output = 0.5
+input = 0.06
+output = 0.4
+cache_read = 0.01
 
 [limit]
 context = 128_000

@@ -1,0 +1,25 @@
+name = "Qwen 3.8 27B Uncensored"
+description = "Qwen 3.8 27B Uncensored is an NVFP4 open-weight multimodal model LoRA-tuned for fewer refusals across chat, coding, reasoning, tool use, and long-context work."
+family = "qwen"
+release_date = "2026-08-21"
+last_updated = "2026-08-21"
+attachment = true
+reasoning = true
+tool_call = true
+structured_output = true
+open_weights = true
+reasoning_options = []
+
+[cost]
+input = 0.18
+output = 0.5
+cache_read = 0.075
+
+[limit]
+context = 262_144
+input = 262_144
+output = 32_768
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

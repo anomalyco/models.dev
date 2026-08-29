@@ -1,255 +1,123 @@
 # Cloudflare AI Gateway Provider
 
-This provider enables model management for Cloudflare AI Gateway, which acts as a unified proxy for multiple AI providers (OpenAI, Anthropic, Workers AI, Replicate, etc.).
+Cloudflare AI Gateway relays third-party labs (Anthropic, OpenAI, Google, xAI, Alibaba,
+DeepSeek, Moonshot, …) through a single endpoint. This provider's model files are **derived**
+from Cloudflare's own live catalog, with human curation reduced to the few things the catalog
+can't express.
 
-## Overview
+**Scope: proxied third-party models only.** Cloudflare's own Workers AI (`@cf/...`) models are
+a different pathway — hosted on Cloudflare, CF-token auth, per-model agreements — and live in
+their own provider, [`cloudflare-workers-ai`](../cloudflare-workers-ai/). They are deliberately
+not mirrored here.
 
-Cloudflare AI Gateway provides a compatibility layer that allows you to access models from various providers through a single endpoint. This provider automatically fetches available models from the Cloudflare API and generates TOML configuration files for use in the models.dev system.
+## How it works
 
-## Directory Structure
+One command regenerates every model TOML:
 
-```
-cloudflare-ai-gateway/
-├── data/
-│   ├── api_response.json    # Cached API response from Cloudflare
-│   └── model_names.json     # Human-readable name mappings
-├── models/                   # Generated TOML files
-│   ├── anthropic/
-│   ├── openai/
-│   ├── replicate/
-│   └── workers-ai/
-├── scripts/
-│   ├── 01_fetch_model_data.sh      # Fetches models from Cloudflare API
-│   ├── 02_generate_model_names.sh  # Updates model name mappings
-│   ├── 03_generate_model_toml.sh   # Generates TOML files
-│   └── utils.sh                     # Shared utility functions
-├── provider.toml            # Provider configuration
-└── README.md                # This file
+```bash
+CLOUDFLARE_API_TOKEN=xxx CLOUDFLARE_ACCOUNT_ID=xxx bun run cloudflare-ai-gateway:generate
 ```
 
-## How It Works
+It reads two live Cloudflare sources plus one local curation file:
 
-### 1. Model Fetching (01_fetch_model_data.sh)
+- **Proxied catalog** — `GET /accounts/{id}/ai/catalog/models`. The source of truth: one
+  canonical (dotted) `model_id` per model, description, context/output limits, and pricing.
+  This is why ids look like `anthropic/claude-haiku-4.5`, not `claude-haiku-4-5`.
+- **Per-model catalog schema** — `GET /accounts/{id}/ai/catalog/models/{id}/schema`. Used to
+  derive `reasoning_options` for providers whose schema is OpenAI-compatible (xAI, Alibaba,
+  OpenAI). Native-format providers (Google, Anthropic, DeepSeek, Moonshot) don't expose the
+  knob here — those fall back to curation (see below).
 
-This script fetches the list of available models from the Cloudflare AI Gateway API:
+Everything the generator can read is derived: `cost`, `limit.context`, and `reasoning_options`.
+`name` and `description` are intentionally **not** written — they inherit from `base_model`
+(models.dev's canonical copy), since the catalog only carries Cloudflare's own casing and
+marketing copy. Anthropic/OpenAI also get a `[provider] npm` pointing at their native SDK so
+consumers route to the Messages/Responses endpoint rather than the generic compat transform.
 
-- **API Endpoint**: `https://gateway.ai.cloudflare.com/v1/{ACCOUNT_ID}/{GATEWAY_ID}/compat/models`
-- **Authentication**: Uses `CLOUDFLARE_API_TOKEN` for authorization
-- **Output**: Saves the API response to `data/api_response.json`
+The generator emits override-only `base_model` stubs (see the repo `AGENTS.md`): the lab
+metadata lives under `models/<lab>/`, and each provider file only records real deltas.
 
-The API returns model data including:
-- Model ID (e.g., `openai/gpt-4o`, `anthropic/claude-3.5-sonnet`)
-- Cost per token (input and output)
-- Creation timestamp
-- Other metadata
+### `--check`
 
-### 2. Model Name Generation (02_generate_model_names.sh)
+```bash
+bun run cloudflare-ai-gateway:generate --check
+```
 
-This script manages the `data/model_names.json` file, which maps model IDs to human-readable names:
+Exits non-zero if the committed TOMLs are out of date with the live catalog + curation.
+Used in CI.
 
-- Reads from `data/api_response.json`
-- Adds new model IDs to `model_names.json` (if not already present)
-- Preserves existing name mappings
-- Filters models based on configuration in `utils.sh`
+### Offline / fixtures
 
-**Model Filtering**:
-- Includes ALL models from: `workers-ai`, `replicate`
-- Includes ONLY well-known models from: `openai`, `anthropic`
-- Skips namespaces: `replicate/replicate-internal`
-- Skips specific models: `aura-1`, `whisper`
+Set `CF_AIG_FIXTURE_DIR` to a directory of cached responses to run without network access
+(used in tests). It expects:
 
-### 3. TOML Generation (03_generate_model_toml.sh)
+- `catalog_*.json` — paginated `ai/catalog/models` responses
+- `schema/<provider>_<model>.json` — one per-model catalog schema response
 
-This script generates TOML configuration files for each model:
+## curation.toml
 
-**Two Generation Strategies**:
+The only hand-authored file. It holds what the catalog cannot express, or where a live
+quality judgement overrides what a schema merely advertises:
 
-1. **Cross-referencing** (for OpenAI and Anthropic):
-   - Copies TOML files from the source provider directories
-   - Maps Cloudflare model names to canonical provider names
-   - Example: `anthropic/claude-3.5-sonnet` → `../../anthropic/models/claude-3-5-sonnet-20241022.toml`
-
-2. **Auto-generation** (for Workers AI and Replicate):
-   - Generates TOML files with default values
-   - Uses cost and metadata from the API response
-   - Converts cost per token → cost per million tokens
-   - Sets default capabilities (context length, modalities, etc.)
-
-**Generated TOML Structure**:
 ```toml
-name = "Model Name"
-release_date = "2024-01-01"
-last_updated = "2024-01-01"
-attachment = false
-reasoning = false
-temperature = true
-tool_call = false
-open_weights = false
+# Catalog Text-Generation ids we intentionally don't publish: no lab file to map to, or
+# not reachable via unified billing (BYOK-only).
+skip = ["google/gemini-3.1-pro", "thinkingmachines/inkling", ...]
 
-[cost]
-input = 0.15      # USD per 1M input tokens
-output = 0.60     # USD per 1M output tokens
+# reasoning_options for native-format providers whose shape the catalog schema doesn't expose.
+[models."alibaba/qwen3.7-plus"]
+note = ["Toggle: enable_thinking true|false.", "Budget: thinking_budget (integer)."]
+reasoning_options = [{ type = "toggle" }, { type = "budget_tokens" }]
 
-[limit]
-context = 128000   # Max context tokens
-output = 16384     # Max output tokens
-
-[modalities]
-input = ["text"]
-output = ["text"]
+# structured_output is a live-tested judgement, not a schema claim.
+[models."anthropic/claude-sonnet-4.5"]
+structured_output = true
+limit = { context = 1000000 }
+reasoning_options = [{ type = "budget_tokens", min = 1024 }]
 ```
 
-### 4. Utilities (utils.sh)
+### What belongs in curation vs. what's derived
 
-Shared configuration and helper functions:
+| Field | Source |
+| --- | --- |
+| `cost`, `limit.context` | derived (catalog) |
+| `name`, `description`, `tool_call`, `attachment` | inherited from `base_model` (never written) |
+| `base_model` | auto-resolved from `model_id`; curated only when the file name differs |
+| `reasoning_options` | derived from the per-model `schema.input`; curated for native-format providers and always-on reasoners |
+| `structured_output` | curated — a live-tested judgement (schema acceptance ≠ conformance) |
+| `[provider] npm` | derived — `@ai-sdk/anthropic` / `@ai-sdk/openai` for the native-passthrough families |
 
-**Configuration**:
-- `INCLUDE_ALL_PROVIDERS`: Providers to include all models from
-- `CROSS_REFERENCE_PROVIDERS`: Providers to copy from source directories
-- `WELL_KNOWN_MODELS`: Regex patterns for specific models to include
-- `SKIP_NAMESPACES`: Namespaces to exclude
-- `SKIP_MODELS`: Specific models to exclude
+`reasoning_options` is only written when the `base_model` declares `reasoning = true`; the
+schema forbids it otherwise. When a reasoning model has no derivable and no curated shape,
+the generator hard-fails rather than ship an invalid file.
 
-**Helper Functions**:
-- `should_include_model()`: Determines if a model should be included
-- `get_mapped_name()`: Maps Cloudflare names to source provider names
-- `find_source_file()`: Locates source TOML files for cross-referencing
+### Adding a model
 
-## Usage
+1. Confirm it appears in `ai/catalog/models`.
+2. If its canonical lab metadata is missing, add it under `models/<lab>/<model>.toml`.
+3. For a model with a matching lab file, nothing more is needed — the generator auto-resolves
+   `base_model`. Add a `skip` entry instead if there's no lab file to map to, or if the model
+   isn't reachable via unified billing.
+4. If it's a reasoning model whose knob the schema doesn't expose, add `reasoning_options`.
+5. Run the generator; `bun validate` must pass.
 
-### Prerequisites
+## Provider configuration
 
-- Cloudflare account with AI Gateway configured
-- Required environment variables:
-  - `CLOUDFLARE_API_TOKEN`: Your Cloudflare API token
-  - `CLOUDFLARE_ACCOUNT_ID`: Your Cloudflare account ID
-  - `CLOUDFLARE_GATEWAY_ID`: Your AI Gateway name/ID
-
-### Running the Scripts
-
-Run scripts individually or in sequence:
-
-```bash
-# Step 1: Fetch model data from Cloudflare API
-cd scripts
-CLOUDFLARE_API_TOKEN=xxx \
-CLOUDFLARE_ACCOUNT_ID=xxx \
-CLOUDFLARE_GATEWAY_ID=xxx \
-./01_fetch_model_data.sh
-
-# Step 2: Update model name mappings
-./02_generate_model_names.sh
-
-# Step 3: Generate TOML files
-./03_generate_model_toml.sh
-```
-
-### Configuration
-
-Edit `scripts/utils.sh` to customize:
-
-1. **Add a provider to include all models**:
-```bash
-INCLUDE_ALL_PROVIDERS="workers-ai replicate my-new-provider"
-```
-
-2. **Add a well-known model**:
-```bash
-WELL_KNOWN_MODELS=(
-  # ... existing patterns ...
-  "openai/gpt-5$"
-)
-```
-
-3. **Skip a namespace**:
-```bash
-SKIP_NAMESPACES="replicate/replicate-internal my-provider/internal"
-```
-
-4. **Cross-reference a provider**:
-```bash
-CROSS_REFERENCE_PROVIDERS="openai anthropic google"
-```
-
-### Model Name Mappings
-
-Edit `data/model_names.json` to provide human-readable names:
-
-```json
-{
-  "workers-ai/llama-3-8b-instruct": "Llama 3 8B Instruct",
-  "openai/gpt-4o": "GPT-4o",
-  "anthropic/claude-3.5-sonnet": "Claude 3.5 Sonnet"
-}
-```
-
-## Model ID Format
-
-Cloudflare uses BOTH dots and hyphens in model IDs (the API returns both formats):
-- **OpenAI**: `openai/gpt-5.1` OR `openai/gpt-5-1`, `openai/gpt-3.5-turbo` OR `openai/gpt-3-5-turbo`
-- **Anthropic**: `anthropic/claude-3.5-sonnet` OR `anthropic/claude-3-5-sonnet`, `anthropic/claude-haiku-4-5`
-- **Workers AI**: `workers-ai/@cf/meta/llama-3-8b-instruct`
-- **Replicate**: `replicate/meta/meta-llama-3-70b-instruct`
-
-**Important**: The API returns duplicate models with different naming conventions (dots vs hyphens). The WELL_KNOWN_MODELS patterns handle both formats using `[\.-]` regex to match either a dot or hyphen.
-
-**File Path Conversion**:
-- Dots are preserved in filenames: `openai/gpt-5.1.toml`
-- Workers AI special handling: `workers-ai/@cf/meta/llama` → `workers-ai/llama.toml`
-
-## Cross-Referencing Logic
-
-For OpenAI and Anthropic models, the scripts map Cloudflare model IDs to canonical provider filenames:
-
-**Anthropic Mappings**:
-- `claude-3.5-sonnet` → `claude-3-5-sonnet-20241022.toml`
-- `claude-3.5-haiku` → `claude-3-5-haiku-latest.toml`
-- `claude-3-opus` → `claude-3-opus-20240229.toml`
-
-**OpenAI Mappings**:
-- `gpt-5.1` → `gpt-5.1.toml`
-- `gpt-3.5-turbo` → `gpt-3.5-turbo.toml`
-
-This ensures consistency with the canonical provider definitions while supporting Cloudflare's naming conventions.
-
-## Cleanup
-
-The TOML generation script automatically:
-- Removes models that are no longer in the API response
-- Cleans up empty directories
-- Maintains a clean models directory
-
-## Troubleshooting
-
-**API errors**:
-- Verify environment variables are set correctly
-- Check API token has necessary permissions
-- Ensure Gateway ID matches your Cloudflare configuration
-
-**Missing models**:
-- Check if the model is filtered by `utils.sh` configuration
-- Review `WELL_KNOWN_MODELS` patterns
-- Verify the model exists in `data/api_response.json`
-
-**Cross-referencing failures**:
-- Ensure source provider directories exist (e.g., `../openai/models/`)
-- Check model name mappings in `get_mapped_name()`
-- Verify source TOML files exist with correct names
-
-## Provider Configuration
-
-The `provider.toml` file defines how OpenCode connects to Cloudflare AI Gateway:
+`provider.toml` defines how models.dev connects to the gateway:
 
 ```toml
 name = "Cloudflare AI Gateway"
 env = ["CLOUDFLARE_API_TOKEN", "CLOUDFLARE_ACCOUNT_ID", "CLOUDFLARE_GATEWAY_ID"]
-npm = "@ai-sdk/openai-compatible"
-api = "https://gateway.ai.cloudflare.com/v1/${CLOUDFLARE_ACCOUNT_ID}/${CLOUDFLARE_GATEWAY_ID}/compat/"
+npm = "ai-gateway-provider"
 doc = "https://developers.cloudflare.com/ai-gateway/"
 ```
 
-## Additional Resources
+It is hand-authored and not touched by the generator.
 
-- [Cloudflare AI Gateway Documentation](https://developers.cloudflare.com/ai-gateway/)
-- [OpenAI Compatibility API](https://developers.cloudflare.com/ai-gateway/providers/openai/)
-- [Vercel AI SDK](https://sdk.vercel.ai/)
+## Known limitations
+
+- `reasoning_options` for native-format providers (Google, Anthropic, DeepSeek, Moonshot)
+  can't be derived from Cloudflare's schema and must be curated. New reasoning models from
+  these providers hard-fail until their knob is added to `curation.toml`.
+- `structured_output` requires a live conformance test when adding a model; the schema
+  advertises `response_format` even for models that don't honour it.

@@ -1,0 +1,16 @@
+base_model = "alibaba/qwen3.6-27b"
+name = "Qwen3.6 27B TEE"
+tool_call = false
+structured_output = false
+reasoning_options = []
+
+[cost]
+input = 0.32
+output = 2.7
+cache_read = 0.16
+
+[limit]
+input = 262_144
+
+[modalities]
+input = ["text", "image"]

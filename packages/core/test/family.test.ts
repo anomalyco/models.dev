@@ -13,3 +13,8 @@ test("Kimi family inference preserves thinking variants", () => {
   expect(inferKimiFamily("Kimi K2.5 Thinking")).toBe("kimi-thinking");
   expect(inferKimiFamily("moonshotai/kimi-k2.6:thinking")).toBe("kimi-thinking");
 });
+
+test("Kimi family inference maps K3 to its own family", () => {
+  expect(inferKimiFamily("moonshotai/kimi-k3")).toBe("kimi-k3");
+  expect(inferKimiFamily("Kimi K3")).toBe("kimi-k3");
+});

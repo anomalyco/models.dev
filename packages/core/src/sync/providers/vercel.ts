@@ -1,5 +1,6 @@
 import { z } from "zod";
 
+import { describeModel } from "../../describe.js";
 import { inferKimiFamily, ModelFamilyValues } from "../../family.js";
 import type { ExistingModel, SyncProvider, SyncedFullModel, SyncedModel } from "../index.js";
 import { factorBaseModel, resolveCanonicalBaseModel } from "./openrouter.js";
@@ -19,7 +20,7 @@ const ModelType = z.enum([
 
 const PricingTier = z.object({
   cost: z.string(),
-  min: z.number(),
+  min: z.number().optional(),
   max: z.number().optional(),
 });
 
@@ -68,9 +69,17 @@ export const vercel = {
     return VercelResponse.parse(raw).data;
   },
   translateModel(model, context) {
+    const existing = context.existing(model.id);
+    const routeBase = freeRouteBase(model.id);
+    const baseModel = existing?.base_model ?? resolveVercelBaseModel(model.id);
+    const inherited = routeBase === undefined ? undefined : context.existing(routeBase);
     return {
       id: model.id,
-      model: buildVercelModel(model, context.existing(model.id)),
+      model: buildVercelModel(
+        model,
+        existing,
+        inherited ?? (baseModel === undefined || baseModel === model.id ? undefined : context.existing(baseModel)),
+      ),
     };
   },
   sameModel(current, desired) {
@@ -78,7 +87,11 @@ export const vercel = {
   },
 } satisfies SyncProvider<VercelModel>;
 
-export function buildVercelModel(model: VercelModel, existing: ExistingModel | undefined): SyncedModel {
+export function buildVercelModel(
+  model: VercelModel,
+  existing: ExistingModel | undefined,
+  base: ExistingModel | undefined = undefined,
+): SyncedModel {
   const tags = new Set(model.tags);
   const releaseDate = model.released
     ? dateFromTimestamp(model.released)
@@ -96,13 +109,46 @@ export function buildVercelModel(model: VercelModel, existing: ExistingModel | u
 
   const synced: SyncedFullModel = {
     name: existing?.name ?? model.name,
+    description: existing?.description ?? describeModel({
+      id: model.id,
+      name: existing?.name ?? model.name,
+      family: existing?.family ?? inferFamily(model.id, model.name),
+      reasoning: existing?.reasoning ?? tags.has("reasoning"),
+      tool_call: model.type === "language"
+        ? existing?.tool_call ?? tags.has("tool-use")
+        : tags.has("tool-use"),
+      structured_output: existing?.structured_output,
+      open_weights: existing?.open_weights ?? false,
+      limit: { context, input, output },
+      modalities: {
+        input: model.type === "transcription"
+          ? ["audio"]
+          : model.type === "realtime"
+          ? ["text", "audio"]
+          : ["text", tags.has("vision") ? "image" : undefined, tags.has("file-input") ? "pdf" : undefined]
+            .filter((value): value is "text" | "image" | "pdf" => value !== undefined),
+        output: model.type === "speech"
+          ? ["audio"]
+          : model.type === "realtime"
+          ? ["text", "audio"]
+          : model.type === "image"
+          ? ["image"]
+          : model.type === "video"
+          ? ["video"]
+          : tags.has("image-generation")
+          ? ["text", "image"]
+          : ["text"],
+      },
+    }),
     family: existing?.family ?? inferFamily(model.id, model.name),
     release_date: releaseDate,
     last_updated: existing?.last_updated ?? releaseDate,
     attachment: existing?.attachment ?? (tags.has("vision") || tags.has("file-input")),
     reasoning: existing?.reasoning ?? tags.has("reasoning"),
-    reasoning_options: existing?.reasoning_options,
-    temperature: true,
+    reasoning_options: existing?.reasoning_options?.length
+      ? existing.reasoning_options
+      : base?.reasoning_options,
+    temperature: existing?.temperature,
     tool_call: model.type === "language"
       ? existing?.tool_call ?? tags.has("tool-use")
       : tags.has("tool-use"),
@@ -136,11 +182,35 @@ export function buildVercelModel(model: VercelModel, existing: ExistingModel | u
     },
   };
 
-  const baseModel = existing?.base_model ?? resolveCanonicalBaseModel(model.id);
+  const baseModel = existing?.base_model ?? resolveVercelBaseModel(model.id);
   if (baseModel === undefined) return synced;
 
-  const { last_updated: _lastUpdated, ...overrides } = synced;
-  return factorBaseModel(baseModel, overrides, synced.limit, existing?.base_model_omit);
+  return factorBaseModel(baseModel, {
+    name: synced.name,
+    attachment: synced.attachment,
+    reasoning: synced.reasoning,
+    reasoning_options: synced.reasoning_options,
+    temperature: synced.temperature,
+    tool_call: synced.tool_call,
+    structured_output: synced.structured_output,
+    status: synced.status,
+    interleaved: synced.interleaved,
+    experimental: synced.experimental,
+    provider: synced.provider,
+    cost: synced.cost,
+    limit: synced.limit,
+    modalities: synced.modalities,
+  }, synced.limit, existing?.base_model_omit);
+}
+
+function resolveVercelBaseModel(modelID: string) {
+  const routeBase = freeRouteBase(modelID);
+  return resolveCanonicalBaseModel(modelID)
+    ?? (routeBase === undefined ? undefined : resolveCanonicalBaseModel(routeBase));
+}
+
+function freeRouteBase(modelID: string) {
+  return modelID.endsWith("-free") ? modelID.slice(0, -"-free".length) : undefined;
 }
 
 function dateFromTimestamp(timestamp: number) {
@@ -193,6 +263,7 @@ function sameVercelModel(current: ExistingModel, desired: SyncedModel) {
     [current.base_model, desiredModel.base_model],
     [current.base_model_omit, desiredModel.base_model_omit],
     [current.name, desiredModel.name],
+    [current.description, desiredModel.description],
     [current.family, desiredModel.family],
     [current.attachment, desiredModel.attachment],
     [current.reasoning, desiredModel.reasoning],

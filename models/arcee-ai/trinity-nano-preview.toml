@@ -1,0 +1,40 @@
+# Source: https://huggingface.co/arcee-ai/Trinity-Nano-Preview
+name = "Trinity Nano Preview"
+description = "Experimental chat-tuned 6B MoE model with 1B active parameters for low-resource chat and instruction following"
+family = "trinity"
+release_date = "2025-12-01"
+last_updated = "2026-05-28"
+attachment = false
+reasoning = false
+temperature = true
+tool_call = true
+open_weights = true
+license = "OpenMDW-1.1"
+
+[limit]
+context = 131_072
+output = 131_072
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/arcee-ai/Trinity-Nano-Preview"
+format = "safetensors"
+
+[[links]]
+label = "Model card"
+url = "https://huggingface.co/arcee-ai/Trinity-Nano-Preview"
+type = "model_card"
+
+[[links]]
+label = "Announcement"
+url = "https://www.arcee.ai/blog/the-trinity-manifesto"
+type = "announcement"
+
+[[links]]
+label = "License"
+url = "https://huggingface.co/arcee-ai/Trinity-Nano-Preview/blob/main/LICENSE"
+type = "license"

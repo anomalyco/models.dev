@@ -1,4 +1,5 @@
 name = "Qwen Plus 0728"
+description = "Qwen instruction model for multilingual chat, reasoning, and tool use"
 family = "qwen"
 release_date = "2025-09-08"
 last_updated = "2025-09-08"
@@ -13,6 +14,11 @@ open_weights = false
 [cost]
 input = 0.26
 output = 0.78
+
+[[cost.tiers]]
+tier = { type = "context", size = 256_000 }
+input = 0.78
+output = 2.34
 
 [limit]
 context = 1_000_000

@@ -1,0 +1,18 @@
+base_model = "deepseek/deepseek-v4-flash"
+name = "DeepSeek V4 Flash (Consensus Protocol)"
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "high", "max"]
+
+[cost]
+input = 0.13
+output = 0.27
+cache_read = 0.02
+
+[limit]
+context = 524_288
+output = 393_216

@@ -1,0 +1,16 @@
+base_model = "thinkingmachines/inkling"
+structured_output = true
+reasoning_options = [{ type = "effort", values = ["max", "xhigh", "high", "medium", "low", "none"] }]
+
+[cost]
+input = 1.00
+cache_read = 0.17
+output = 4.05
+
+[limit]
+context = 524_288
+output = 131_072
+
+[modalities]
+input = ["text", "image", "audio"]
+output = ["text"]

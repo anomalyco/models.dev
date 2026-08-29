@@ -1,1 +1,11 @@
-../../../anthropic/models/claude-opus-4-20250514.toml
+base_model = "anthropic/claude-opus-4-20250514"
+reasoning_options = []
+
+[cost]
+input = 15
+output = 75
+cache_read = 1.5
+cache_write = 18.75
+
+[limit]
+output = 8_192

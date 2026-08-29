@@ -1,0 +1,158 @@
+# Sources (accessed 2026-07-20):
+# https://docs.qwencloud.com/token-plan/personal/token-plan-personal-overview
+# https://platform.qianwenai.com/docs/token-plan/personal/token-plan-personal-overview
+# https://docs.qwencloud.com/developer-guides/getting-started/text-generation-models
+# https://platform.qianwenai.com/docs/developer-guides/getting-started/text-generation-models
+# https://docs.qwencloud.com/developer-guides/clients-and-developer-tools/opencode
+# https://platform.qianwenai.com/docs/developer-guides/clients-and-developer-tools/opencode
+# https://docs.qwencloud.com/developer-guides/clients-and-developer-tools/kilo-cli
+# https://platform.qianwenai.com/docs/developer-guides/clients-and-developer-tools/kilo-cli
+# https://github.com/QwenLM/qwen-code/issues/7198
+# https://github.com/QwenLM/qwen-code/pull/7199
+
+name = "Qwen3.8 Max Preview"
+description = "Preview Qwen flagship for million-token multimodal reasoning and long-horizon agentic workflows"
+family = "qwen"
+release_date = "2026-07-19"
+last_updated = "2026-07-19"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+open_weights = false
+
+[limit]
+context = 1_000_000
+output = 131_072
+
+[modalities]
+input = ["text", "image", "video"]
+output = ["text"]
+
+[[benchmarks]]
+name = "Terminal-Bench"
+score = 86.6
+metric = "accuracy"
+variant = "xhigh"
+version = "2.1"
+source = "https://www.alibabacloud.com/blog/qwen3-8-max-a-new-bar-for-coding-and-cowork_603421"
+date = "2026-08-03"
+
+[[benchmarks]]
+name = "SWE-Bench Pro"
+score = 67.7
+metric = "resolve rate"
+variant = "xhigh"
+harness = "Claude Code"
+source = "https://www.alibabacloud.com/blog/qwen3-8-max-a-new-bar-for-coding-and-cowork_603421"
+date = "2026-08-03"
+
+[[benchmarks]]
+name = "DeepSWE"
+score = 56.6
+metric = "resolve rate"
+variant = "xhigh"
+harness = "Claude Code"
+version = "1.1"
+source = "https://www.alibabacloud.com/blog/qwen3-8-max-a-new-bar-for-coding-and-cowork_603421"
+date = "2026-08-03"
+
+[[benchmarks]]
+name = "NL2Repo"
+score = 55.9
+metric = "resolve rate"
+variant = "xhigh"
+harness = "Claude Code"
+source = "https://www.alibabacloud.com/blog/qwen3-8-max-a-new-bar-for-coding-and-cowork_603421"
+date = "2026-08-03"
+
+[[benchmarks]]
+name = "FrontierSWE"
+score = 73.5
+metric = "dominance score"
+variant = "xhigh"
+harness = "Claude Code"
+source = "https://www.alibabacloud.com/blog/qwen3-8-max-a-new-bar-for-coding-and-cowork_603421"
+date = "2026-08-03"
+
+[[benchmarks]]
+name = "MLS-Bench-Lite"
+score = 41.0
+metric = "score"
+variant = "xhigh"
+harness = "Claude Code"
+source = "https://www.alibabacloud.com/blog/qwen3-8-max-a-new-bar-for-coding-and-cowork_603421"
+date = "2026-08-03"
+
+[[benchmarks]]
+name = "AutomationBench"
+score = 27.3
+metric = "pass@1"
+variant = "xhigh"
+dataset = "600-task public subset"
+source = "https://www.alibabacloud.com/blog/qwen3-8-max-a-new-bar-for-coding-and-cowork_603421"
+date = "2026-08-03"
+
+[[benchmarks]]
+name = "Toolathlon Verified"
+score = 72.5
+metric = "pass@1"
+variant = "xhigh"
+source = "https://www.alibabacloud.com/blog/qwen3-8-max-a-new-bar-for-coding-and-cowork_603421"
+date = "2026-08-03"
+
+[[benchmarks]]
+name = "WideSearch"
+score = 81.9
+metric = "F1"
+variant = "xhigh"
+source = "https://www.alibabacloud.com/blog/qwen3-8-max-a-new-bar-for-coding-and-cowork_603421"
+date = "2026-08-03"
+
+[[benchmarks]]
+name = "Humanity's Last Exam"
+score = 56.2
+metric = "accuracy"
+variant = "xhigh, with tools"
+source = "https://www.alibabacloud.com/blog/qwen3-8-max-a-new-bar-for-coding-and-cowork_603421"
+date = "2026-08-03"
+
+[[benchmarks]]
+name = "GPQA Diamond"
+score = 92.6
+metric = "accuracy"
+variant = "xhigh"
+source = "https://www.alibabacloud.com/blog/qwen3-8-max-a-new-bar-for-coding-and-cowork_603421"
+date = "2026-08-03"
+
+[[benchmarks]]
+name = "Humanity's Last Exam"
+score = 43.6
+metric = "accuracy"
+variant = "xhigh, no tools"
+source = "https://www.alibabacloud.com/blog/qwen3-8-max-a-new-bar-for-coding-and-cowork_603421"
+date = "2026-08-03"
+
+[[benchmarks]]
+name = "IFBench"
+score = 82.8
+metric = "score"
+variant = "xhigh"
+source = "https://www.alibabacloud.com/blog/qwen3-8-max-a-new-bar-for-coding-and-cowork_603421"
+date = "2026-08-03"
+
+[[benchmarks]]
+name = "OSWorld-Verified"
+score = 86.1
+metric = "success rate"
+variant = "xhigh"
+source = "https://www.alibabacloud.com/blog/qwen3-8-max-a-new-bar-for-coding-and-cowork_603421"
+date = "2026-08-03"
+
+[[benchmarks]]
+name = "MMMU Pro"
+score = 82.3
+metric = "accuracy"
+variant = "xhigh"
+source = "https://www.alibabacloud.com/blog/qwen3-8-max-a-new-bar-for-coding-and-cowork_603421"
+date = "2026-08-03"

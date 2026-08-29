@@ -1,12 +1,9 @@
-name = "Google: Gemini 3 Flash Preview"
-release_date = "2025-12-17"
-last_updated = "2026-03-15"
-attachment = true
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh"] }]
-reasoning = true
-temperature = true
-tool_call = true
-open_weights = false
+base_model = "google/gemini-3-flash-preview"
+description = "Fast Gemini model balancing multimodal reasoning, tool use, and cost"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "minimal", "low", "medium", "high"]
 
 [cost]
 input = 0.5
@@ -14,11 +11,3 @@ output = 3
 reasoning = 3
 cache_read = 0.05
 cache_write = 0.083333
-
-[limit]
-context = 1048576
-output = 65536
-
-[modalities]
-input = ["audio", "image", "pdf", "text", "video"]
-output = ["text"]

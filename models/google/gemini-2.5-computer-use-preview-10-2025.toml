@@ -1,0 +1,27 @@
+# Sources:
+# - https://ai.google.dev/gemini-api/docs/models/gemini-2.5-computer-use-preview-10-2025
+#   (model id, modalities text+image in / text out, input 128000, output 64000, latest update Oct 2025)
+# - https://ai.google.dev/gemini-api/docs/computer-use
+#   (legacy computer-use model; tool/function actions; still listed as available)
+# - https://blog.google/innovation-and-ai/models-and-research/google-deepmind/gemini-computer-use-model/
+#   (public preview 2025-10-07; built on Gemini 2.5 Pro visual + reasoning)
+
+name = "Gemini 2.5 Computer Use Preview"
+description = "Specialized Gemini 2.5 model for browser-control agents that automate UI tasks"
+family = "gemini-pro"
+release_date = "2025-10-07"
+last_updated = "2025-10-07"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+knowledge = "2025-01"
+open_weights = false
+
+[limit]
+context = 128_000
+output = 64_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

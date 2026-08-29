@@ -14,6 +14,7 @@ interface SearchIndexItem {
   releaseDate?: string;
   inputCost?: number;
   outputCost?: number;
+  description?: string;
   npm?: string;
   api?: string;
   updated?: string;

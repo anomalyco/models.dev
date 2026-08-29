@@ -1,0 +1,28 @@
+name = "GLM Latest"
+description = "Flagship GLM model for hybrid reasoning, coding, and agentic engineering"
+family = "glm"
+release_date = "2026-08-19"
+last_updated = "2026-08-19"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[cost]
+input = 1.1875
+output = 4.18
+cache_read = 0.247
+
+[limit]
+context = 1_310_720
+output = 131_072
+
+[modalities]
+input = ["text"]
+output = ["text"]

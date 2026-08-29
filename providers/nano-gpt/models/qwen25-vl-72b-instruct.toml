@@ -1,15 +1,17 @@
 name = "Qwen25 VL 72b"
+description = "Compact GPT model for low-latency assistance and high-volume workloads"
 release_date = "2025-05-10"
 last_updated = "2025-05-10"
 attachment = true
 reasoning = false
 tool_call = false
 structured_output = false
-open_weights = false
+open_weights = true
 
 [cost]
 input = 0.69989
 output = 0.69989
+cache_read = 0.349945
 
 [limit]
 context = 32_000

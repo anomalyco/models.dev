@@ -1,0 +1,30 @@
+# Toggle: $.reasoning_effort = "none" disables thinking; any other accepted
+# value (or omitting the field) leaves it on. The gateway maps it to the
+# deployment's thinking switch.
+# https://docs.llmgateway.io/features/reasoning
+name = "Nemotron 3 Super 120B (Nebius AI)"
+description = "Nemotron model for efficient reasoning, coding, and specialized AI agents"
+family = "nemotron"
+release_date = "2026-03-11"
+last_updated = "2026-03-11"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = false
+open_weights = false
+
+[[reasoning_options]]
+type = "toggle"
+
+[cost]
+input = 0.3
+output = 0.9
+
+[limit]
+context = 262_144
+output = 262_144
+
+[modalities]
+input = ["text"]
+output = ["text"]

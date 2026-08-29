@@ -1,0 +1,7 @@
+name = "Aixy"
+env = ["AIXY_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+# Aixy is a BYOK gateway. Model availability is tenant-specific and returned by
+# authenticated GET /v1/models; direct IDs use provider/model.
+api = "https://api.aixy-gateway.com/v1"
+doc = "https://docs.aixy-gateway.com/integrations/overview"
