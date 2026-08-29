@@ -1,3 +1,6 @@
+# Context/output capped to Cloudflare Workers AI context window (1,048,576).
+# Catalog/search previously reported 1,310,720, which exceeds AI Gateway max_completion_tokens.
+# https://developers.cloudflare.com/workers-ai/models/glm-5.3-flash/
 name = "Glm 5.3 Flash"
 description = "GLM vision model for visual reasoning, documents, and multimodal agents"
 family = "glm"
@@ -17,8 +20,8 @@ output = 0.5
 cache_read = 0.03
 
 [limit]
-context = 1_310_720
-output = 1_310_720
+context = 1_048_576
+output = 1_048_576
 
 [modalities]
 input = ["text", "image"]
