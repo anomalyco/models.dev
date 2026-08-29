@@ -1,0 +1,19 @@
+# Sources:
+# - https://tokenfactory.nebius.com/ (model catalog)
+# - https://tokenfactory.nebius.com/api/public/models_info (pricing, context, max length)
+# Accessed 2026-08-29.
+# Reasoning is always-on with no caller control on this host (same treatment as
+# Kimi-K2.7-Code on Nebius); reasoning text returns via reasoning_content.
+base_model = "moonshotai/kimi-k2.6"
+reasoning_options = []
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.95
+output = 4
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

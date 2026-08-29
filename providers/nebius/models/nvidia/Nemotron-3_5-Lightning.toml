@@ -1,0 +1,13 @@
+# Sources:
+# - https://tokenfactory.nebius.com/ (model catalog)
+# - https://tokenfactory.nebius.com/api/public/models_info (pricing, context, max length)
+# Accessed 2026-08-29.
+base_model = "nvidia/nemotron-3.5-lightning"
+reasoning_options = []
+
+[cost]
+input = 0.06
+output = 0.24
+
+[limit]
+context = 1_048_576
