@@ -1,6 +1,6 @@
-# Cost: 25 SEK/MTok on klokintegration.se (indicative, no input/output split).
-# Converted 2026-08-29 at 1 USD = 9.52 SEK (CurrencyBeacon, 2026-08-28) → 2.63 USD/MTok.
-# Limits are unverified working values for agent use until the live API publishes them.
+# Cost from https://klokintegration.se/docs/ai-api (email-token rate):
+# €0.20 input / €1.00 output per MTok. EUR/USD 1.1583 (2026-08-28) → 0.23 / 1.16 USD.
+# Limits are working values until the live API publishes them.
 name = "Kloker"
 description = "Cheap clean-context model. Nothing from the customer environment is packed in. It tracks the current best open source model; the Klok team verifies it and upgrades it periodically."
 attachment = false
@@ -14,8 +14,8 @@ open_weights = false
 status = "beta"
 
 [cost]
-input = 2.63
-output = 2.63
+input = 0.23
+output = 1.16
 
 [limit]
 context = 128_000
