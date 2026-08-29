@@ -1,0 +1,16 @@
+# Source: GET https://api.aiand.com/v1/models (USD list prices; accessed
+# 2026-08-29). GET /v1/models reports context_window = 1048576 (the shared
+# base model uses 1_000_000), so the exact figure is overridden here.
+# reasoning_efforts from the live catalog: none|low|xhigh|max.
+base_model = "zhipuai/glm-5.3"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "xhigh", "max"]
+
+[cost]
+input = 1
+output = 4
+
+[limit]
+context = 1_048_576
