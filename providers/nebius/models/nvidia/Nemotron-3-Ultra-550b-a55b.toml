@@ -2,8 +2,11 @@
 # - https://tokenfactory.nebius.com/ (model catalog)
 # - https://tokenfactory.nebius.com/api/public/models_info (pricing, context, max length)
 # Accessed 2026-08-29.
+# Toggle: chat_template_kwargs.enable_thinking = true|false (thinking is ON by
+# default; per the Nemotron 3 Ultra chat template,
+# https://huggingface.co/nvidia/NVIDIA-Nemotron-3-Ultra-550B-A55B-NVFP4).
 base_model = "nvidia/nemotron-3-ultra-550b-a55b"
-reasoning_options = []
+reasoning_options = [{ type = "toggle" }]
 
 [cost]
 input = 1
@@ -11,3 +14,4 @@ output = 3
 
 [limit]
 context = 1_048_576
+output = 1_048_576
