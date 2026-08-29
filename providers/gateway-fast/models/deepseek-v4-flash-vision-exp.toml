@@ -1,12 +1,10 @@
+# Passthrough to the official DeepSeek API.
+# Toggle: `thinking.type = enabled|disabled`; effort: `reasoning_effort = low|high|max`
+# (Flash maps requested low→low). https://api-docs.deepseek.com/guides/thinking_mode/
 # Off-peak rate; peak (weekdays 01:00-04:00 and 06:00-10:00 UTC) is 2x.
+# Reasoning tokens billed at the output rate.
 base_model = "deepseek/deepseek-v4-flash-vision-exp"
 name = "DeepSeek V4 Flash Vision (Exp)"
-
-[cost]
-input = 0.242
-output = 0.726
-reasoning = 0.726
-cache_read = 0.0077
 
 [[reasoning_options]]
 type = "toggle"
@@ -17,3 +15,9 @@ values = ["low", "high", "max"]
 
 [interleaved]
 field = "reasoning_content"
+
+[cost]
+input = 0.242
+output = 0.726
+reasoning = 0.726
+cache_read = 0.0077

@@ -1,11 +1,16 @@
+# Passthrough to the official MiMo API (api.xiaomimimo.com).
+# Toggle: `thinking.type = enabled|disabled`, as providers/xiaomi.
 # RMB upstream converted at 6.5 CNY/USD; rounded to 4dp.
 base_model = "xiaomi/mimo-v2.5-pro"
 name = "MiMo V2.5 Pro"
+
+[[reasoning_options]]
+type = "toggle"
+
+[interleaved]
+field = "reasoning_content"
 
 [cost]
 input = 0.5077
 output = 1.0154
 cache_read = 0.0042
-
-[[reasoning_options]]
-type = "toggle"

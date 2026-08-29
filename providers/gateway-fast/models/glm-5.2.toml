@@ -1,10 +1,8 @@
+# Passthrough to Fireworks serverless (same control surface as
+# providers/fireworks-ai/models/accounts/fireworks/models/glm-5p2.toml):
+# toggle + `reasoning_effort = high|max`.
 base_model = "zhipuai/glm-5.2"
 name = "GLM 5.2"
-
-[cost]
-input = 1.54
-output = 4.84
-cache_read = 0.154
 
 [[reasoning_options]]
 type = "toggle"
@@ -15,3 +13,8 @@ values = ["high", "max"]
 
 [interleaved]
 field = "reasoning_content"
+
+[cost]
+input = 1.54
+output = 4.84
+cache_read = 0.154
