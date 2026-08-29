@@ -2,8 +2,12 @@
 # TP4). Reasoning always on, effort levels low/high/max (default max), returned
 # in message.reasoning_content. Needle-validated to 327K context.
 # https://api.berget.ai/openapi.json
+#
+# Berget bills in EUR: 1.5 EUR/M input, 5.0 EUR/M output.
+# Converted to USD at 1.1643 (ECB rate, 2026-08-28):
+#   1.5 EUR/M  -> 1.75 USD/M input
+#   5.0 EUR/M  -> 5.82 USD/M output
 base_model = "zhipuai/glm-5.3"
-release_date = "2026-08-25"
 last_updated = "2026-08-29"
 
 [[reasoning_options]]
@@ -14,9 +18,13 @@ values = ["low", "high", "max"]
 field = "reasoning_content"
 
 [cost]
-input = 1.5
-output = 5.0
+input = 1.75
+output = 5.82
 
 [limit]
 context = 327_680
 output = 32_768
+
+[modalities]
+input = ["text"]
+output = ["text"]
