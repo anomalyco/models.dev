@@ -1,0 +1,17 @@
+# Sources (accessed 2026-08-28):
+# https://platform.sensenova.cn/docs
+# Reasoning: reasoning_effort documented enum none|low|medium|high (default
+# medium). Interleaved reasoning_content verified live against
+# POST /v1/chat/completions.
+base_model = "zhipuai/glm-5.2"
+reasoning_options = [
+  { type = "effort", values = ["none", "low", "medium", "high"] },
+]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0
+output = 0
+cache_read = 0
