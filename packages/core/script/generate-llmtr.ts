@@ -139,44 +139,76 @@ function noControlHeader(owner: string): string[] {
   ]
 }
 
-// Build the reasoning_options block for a model. The wire path goes in a leading top-of-file
-// comment because sync strips mid-file ones (AGENTS.md, "Reasoning options" 3).
-// A named provider toggle (e.g. zai_thinking_toggle) is the vendor's documented chat control,
-// so it wins over reasoning_effort_* when a model advertises both (verified: GLM-5.2 accepts
-// both over chat, but provider.toml documents the GLM family as a toggle). Effort is only
-// emitted when it is the model's sole reasoning control.
-function reasoningOptions(owner: string, caps: string[]): Options {
+// One route where LLMTR's capability list and the route's behaviour disagree, so the list
+// cannot be trusted to author the entry. Measured 2026-08-29, two runs per variant.
+const OVERRIDE: Record<string, Options> = {
+  "zai/glm-5.2": {
+    header: [
+      `# Toggle: $.reasoning = true|false (aliases: the :think / :fast suffixes on the model id).`,
+      `# Measured 2026-08-29: thinking is off by default here (baseline reasoning_content 0, twice),`,
+      `# reasoning=true returns 602-1039 chars and reasoning=false returns 0. capabilities also lists`,
+      `# reasoning_effort none..xhigh, and unlike every other route the gateway does not validate`,
+      `# those per model (only junk values fail, against the global enum). They are not a scale:`,
+      `# "none" -- the level that would mean off -- turns thinking ON (873/967/1132 chars against a 0`,
+      `# baseline), and low 341-1082, medium 1149, high 380, xhigh 379-1340 do not order. Authoring`,
+      `# effort here would promise callers a graded control, and an off switch, that the route does`,
+      `# not have, so only the verified toggle is declared.`,
+    ],
+    block: `\n[[reasoning_options]]\ntype = "toggle"\n`,
+  },
+}
+
+const TOGGLE_BLOCK = `\n[[reasoning_options]]\ntype = "toggle"\n`
+const TOGGLE_HEADER = [
+  `# Toggle: $.reasoning = true|false (aliases: the :think / :fast suffixes on the model id).`,
+  `# The gateway names this wire path itself: reasoning_effort answers 400 "This model exposes`,
+  `# thinking as an on/off mode: send "reasoning": true or use the :think suffix on the model id"`,
+  `# (measured 2026-08-29 on zai/glm-4.6 and zai/glm-4.7; reasoning=true returns reasoning_content,`,
+  `# reasoning=false and an omitted field return none).`,
+]
+
+const effortBlock = (levels: string[]) =>
+  `\n[[reasoning_options]]\ntype = "effort"\nvalues = [${levels.map((v) => `"${v}"`).join(", ")}]\n`
+const effortHeader = (levels: string[]) => [
+  `# Effort: $.reasoning_effort = ${levels.join("|")} (model suffixes :${levels.join("|:")} are aliases).`,
+]
+
+// Build the reasoning_options block for a model, following the table in AGENTS.md
+// ("Reasoning options" 3): effort carrying "none" alongside graded levels is the off switch and
+// stands alone; a separate on/off control next to graded effort is authored as both; a control
+// that is only on/off is a toggle. Wire paths go in a leading top-of-file comment because sync
+// strips mid-file ones.
+function reasoningOptions(owner: string, slug: string, caps: string[]): Options {
+  const override = OVERRIDE[slug]
+  if (override) return override
   const measured = MEASURED[owner]
   if (measured) return measured
-  if (caps.some((c) => c.endsWith("_toggle"))) {
+
+  const toggle = caps.some((c) => c.endsWith("_toggle"))
+  const efforts = EFFORT_ORDER.filter((l) => caps.includes(`reasoning_effort_${l}`))
+  const graded = efforts.filter((l) => l !== "none")
+
+  if (efforts.includes("none") && graded.length) return { header: effortHeader(efforts), block: effortBlock(efforts) }
+  if (toggle && graded.length) {
     return {
-      header: [`# Toggle: $.reasoning = true|false (suffix aliases :think|:fast).`],
-      block: `\n[[reasoning_options]]\ntype = "toggle"\n`,
+      header: [...TOGGLE_HEADER, ...effortHeader(graded)],
+      block: TOGGLE_BLOCK + effortBlock(graded),
     }
   }
-  const efforts = EFFORT_ORDER.filter((l) => caps.includes(`reasoning_effort_${l}`))
-  // "none" on its own is not a graded scale, it is an off switch, and AGENTS.md files a binary
-  // on/off control as a toggle.
+  if (toggle) return { header: TOGGLE_HEADER, block: TOGGLE_BLOCK }
+  // "none" on its own is not a graded scale, it is an off switch.
   if (efforts.length === 1 && efforts[0] === "none") {
     return {
       header: [
         `# Toggle: $.reasoning_effort = "none" turns thinking off; omit the field to leave it on`,
         `# (the route advertises reasoning_default_on). "none" is the only level it accepts -- any`,
         `# other answers 400 "does not support reasoning effort ... Supported: none" -- so this is a`,
-        `# binary on/off control rather than a graded scale (AGENTS.md, "Reasoning options" 3).`,
+        `# binary on/off control rather than a graded scale.`,
       ],
-      block: `\n[[reasoning_options]]\ntype = "toggle"\n`,
+      block: TOGGLE_BLOCK,
     }
   }
-  if (efforts.length) {
-    const values = efforts.map((v) => `"${v}"`).join(", ")
-    return {
-      header: [
-        `# Effort: $.reasoning_effort = ${efforts.join("|")} (model suffixes :${efforts.join("|:")} are aliases).`,
-      ],
-      block: `\n[[reasoning_options]]\ntype = "effort"\nvalues = [${values}]\n`,
-    }
-  }
+  if (efforts.length) return { header: effortHeader(efforts), block: effortBlock(efforts) }
   return { header: noControlHeader(owner), block: "" } // caller writes `reasoning_options = []`
 }
 
@@ -226,7 +258,7 @@ async function worker() {
     if (input === undefined || output === undefined) { skipped.noPrice.push(slug); continue }
 
     const caps: string[] = d.capabilities || []
-    const options: Options = reasons(ns, base) ? reasoningOptions(owner, caps) : { header: [], block: "" }
+    const options: Options = reasons(ns, base) ? reasoningOptions(owner, slug, caps) : { header: [], block: "" }
     const empty = reasons(ns, base) && !options.block
 
     const file = path.join(OUT, `${slug}.toml`)
