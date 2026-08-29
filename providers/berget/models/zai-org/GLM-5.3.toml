@@ -1,0 +1,21 @@
+# GLM-5.3 served on Berget AI's Swedish infrastructure (NVIDIA B300, SGLang
+# TP4). Reasoning always on, effort levels low/high/max (default max), returned
+# in message.reasoning_content. Needle-validated to 327K context.
+# https://api.berget.ai/openapi.json
+release_date = "2026-08-25"
+last_updated = "2026-08-29"
+
+[extends]
+from = "zai/glm-5.3"
+
+[cost]
+input = 1.5
+output = 5.0
+
+[limit]
+context = 327_680
+output = 32_768
+
+[modalities]
+input = ["text"]
+output = ["text"]
