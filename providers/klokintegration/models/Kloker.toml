@@ -1,6 +1,6 @@
 # Cost from https://klokintegration.se/docs/ai-api (email-token rate):
 # €0.20 input / €1.00 output per MTok. EUR/USD 1.1583 (2026-08-28) → 0.23 / 1.16 USD.
-# Limits are working values until the live API publishes them.
+# Context 256k from Klok. Output limit is a working value until published.
 name = "Kloker"
 description = "Cheap general model with a clean context. Nothing from the customer environment is packed in. It tracks the current best open source model. The Klok team verifies it and upgrades it periodically."
 attachment = false
@@ -18,7 +18,7 @@ input = 0.23
 output = 1.16
 
 [limit]
-context = 128_000
+context = 256_000
 output = 16_384
 
 [modalities]
