@@ -1,0 +1,18 @@
+# Effort: reasoning.effort = low|high|max
+# Catalog exposes reasoning_effort: https://api.redpill.ai/v1/models (accessed 2026-08-29)
+base_model = "zhipuai/glm-5.3-flash"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[cost]
+input = 0.15
+output = 0.5
+cache_read = 0.03
+
+[limit]
+context = 1_048_576
+
+[modalities]
+input = ["text", "image"]

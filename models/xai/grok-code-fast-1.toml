@@ -1,0 +1,25 @@
+# Sources (accessed 2026-08-18):
+# - https://x.ai/news/grok-code-fast-1 (release, reasoning, coding, and tool use)
+# - https://docs.x.ai/developers/models/grok-code-fast-1 (256K context and API capabilities)
+# - https://api.redpill.ai/v1/models (x-ai/grok-code-fast-1 route modalities)
+# - https://github.com/anomalyco/models.dev/blob/dev/providers/zenmux/models/x-ai/grok-code-fast-1.toml (64K output peer baseline)
+name = "Grok Code Fast 1"
+description = "Fast Grok model for responsive chat, reasoning, and tool-assisted work"
+family = "grok"
+release_date = "2025-08-26"
+last_updated = "2025-08-26"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = true
+knowledge = "2025-01-01"
+open_weights = false
+
+[limit]
+context = 256_000
+output = 64_000
+
+[modalities]
+input = ["text"]
+output = ["text"]

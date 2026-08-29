@@ -1,0 +1,19 @@
+# Toggle: reasoning.enabled = true|false
+# Effort: reasoning.effort = high|max
+# Catalog exposes reasoning + reasoning_effort: https://api.redpill.ai/v1/models (accessed 2026-08-18)
+base_model = "zhipuai/glm-5.2"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["high", "max"]
+
+[cost]
+input = 1.26
+output = 3
+cache_read = 0.22
+
+[limit]
+context = 1_048_576

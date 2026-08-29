@@ -1,0 +1,14 @@
+# Toggle: reasoning.enabled = true|false
+# Source: https://github.com/Dstack-TEE/private-ai-gateway/blob/30296dd9a0dbaf06e520f2ed1be01eab75c3c287/src/middleware/reasoning.rs#L6-L13
+base_model = "moonshotai/kimi-k2.6"
+
+[[reasoning_options]]
+type = "toggle"
+
+[cost]
+input = 1.09
+output = 4.6
+cache_read = 0.37
+
+[modalities]
+input = ["text", "image"]

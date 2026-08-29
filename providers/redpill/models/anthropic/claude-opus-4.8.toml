@@ -1,0 +1,9 @@
+# No caller control: Anthropic routes reject reasoning with "has no adapter".
+# Verified on Opus 4.6 (2026-08-18); source: https://github.com/Dstack-TEE/private-ai-gateway/blob/30296dd9a0dbaf06e520f2ed1be01eab75c3c287/src/middleware/request_transform.rs#L251-L276
+base_model = "anthropic/claude-opus-4-8"
+structured_output = true
+reasoning_options = []
+
+[cost]
+input = 5
+output = 25
