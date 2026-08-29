@@ -1,0 +1,11 @@
+# Same model as mimo-v2.5-pro served at up to ~1000 tok/s; 3x price for speed.
+base_model = "xiaomi/mimo-v2.5-pro-ultraspeed"
+name = "MiMo V2.5 Pro UltraSpeed"
+
+[cost]
+input = 1.5231
+output = 3.0462
+cache_read = 0.0127
+
+[[reasoning_options]]
+type = "toggle"

@@ -1,0 +1,18 @@
+# Fireworks fast router (~2x standard throughput).
+base_model = "zhipuai/glm-5.2"
+name = "GLM 5.2 Fast"
+
+[cost]
+input = 2.31
+output = 7.26
+cache_read = 0.231
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["high", "max"]
+
+[interleaved]
+field = "reasoning_content"

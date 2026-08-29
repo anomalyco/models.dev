@@ -1,0 +1,19 @@
+# Off-peak rate; peak (weekdays 01:00-04:00 and 06:00-10:00 UTC) is 2x.
+base_model = "deepseek/deepseek-v4-pro-0813"
+name = "DeepSeek V4 Pro"
+
+[cost]
+input = 0.726
+output = 2.178
+reasoning = 2.178
+cache_read = 0.0242
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[interleaved]
+field = "reasoning_content"
