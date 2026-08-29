@@ -4,7 +4,7 @@ description = "Small multimodal reasoning model update of September 2025"
 family = "magistral-small"
 release_date = "2025-09-18"
 last_updated = "2025-09-18"
-attachment = false
+attachment = true
 reasoning = true
 temperature = true
 tool_call = true
@@ -17,5 +17,5 @@ context = 128_000
 output = 128_000
 
 [modalities]
-input = ["text"]
+input = ["text", "image"]
 output = ["text"]
