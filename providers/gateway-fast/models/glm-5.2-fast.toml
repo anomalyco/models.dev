@@ -1,16 +1,13 @@
 # Passthrough to the Fireworks fast router (~2x standard throughput).
-# Toggle: `reasoning_effort = "none"` disables thinking (also accepts
-# `chat_template_kwargs = {"thinking": false}`); effort: `reasoning_effort =
-# high|max`. Verified end-to-end on this host 2026-08-29.
+# Effort: `reasoning_effort = none|high|max`; "none" disables thinking
+# (`chat_template_kwargs = {"thinking": false}` also works as an alternate).
+# Verified end-to-end on this host 2026-08-29.
 base_model = "zhipuai/glm-5.2"
 name = "GLM 5.2 Fast"
 
 [[reasoning_options]]
-type = "toggle"
-
-[[reasoning_options]]
 type = "effort"
-values = ["high", "max"]
+values = ["none", "high", "max"]
 
 [interleaved]
 field = "reasoning_content"

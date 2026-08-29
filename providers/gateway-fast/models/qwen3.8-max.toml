@@ -4,8 +4,7 @@
 # host 2026-08-29. The Alibaba first-party effort levels and budget_tokens are
 # not exposed by this host.
 # Host deltas vs the lab base: image input verified end-to-end 2026-08-23
-# (video/pdf not supported on this host), context per this host's /v1/models,
-# output capped at 32,768.
+# (video/pdf not supported on this host); output capped at 32,768.
 base_model = "alibaba/qwen3.8-max"
 name = "Qwen 3.8 Max"
 attachment = false
@@ -18,10 +17,8 @@ field = "reasoning_content"
 
 [modalities]
 input = ["text", "image"]
-output = ["text"]
 
 [limit]
-context = 1_000_000
 output = 32_768
 
 [cost]
