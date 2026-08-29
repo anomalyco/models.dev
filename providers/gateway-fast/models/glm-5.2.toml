@@ -1,6 +1,7 @@
-# Passthrough to Fireworks serverless (same control surface as
-# providers/fireworks-ai/models/accounts/fireworks/models/glm-5p2.toml):
-# toggle + `reasoning_effort = high|max`.
+# Passthrough to Fireworks serverless.
+# Toggle: `reasoning_effort = "none"` disables thinking (also accepts
+# `chat_template_kwargs = {"thinking": false}`); effort: `reasoning_effort =
+# high|max`. Both verified end-to-end on this host 2026-08-29.
 base_model = "zhipuai/glm-5.2"
 name = "GLM 5.2"
 

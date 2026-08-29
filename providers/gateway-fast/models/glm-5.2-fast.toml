@@ -1,6 +1,7 @@
-# Passthrough to the Fireworks fast router (~2x standard throughput); same
-# control surface as providers/fireworks-ai/models/accounts/fireworks/routers/
-# glm-5p2-fast.toml: toggle + `reasoning_effort = high|max`.
+# Passthrough to the Fireworks fast router (~2x standard throughput).
+# Toggle: `reasoning_effort = "none"` disables thinking (also accepts
+# `chat_template_kwargs = {"thinking": false}`); effort: `reasoning_effort =
+# high|max`. Verified end-to-end on this host 2026-08-29.
 base_model = "zhipuai/glm-5.2"
 name = "GLM 5.2 Fast"
 

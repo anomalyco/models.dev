@@ -1,6 +1,9 @@
 # Passthrough to the official MiMo API (api.xiaomimimo.com).
-# Toggle: `thinking.type = enabled|disabled`, as providers/xiaomi.
-# RMB upstream converted at 6.5 CNY/USD; rounded to 4dp.
+# Toggle: `thinking.type = enabled|disabled`, as providers/xiaomi; verified
+# end-to-end on this host 2026-08-29.
+# RMB upstream (pro CNY 3/0.025/6, ultraspeed CNY 9/0.075/18 per MTok)
+# converted at 6.5 CNY/USD (operator rate set 2026-07, spot ~6.79; buffer
+# covers FX drift), then a flat 10% markup; rounded to 4dp. Checked 2026-08-29.
 base_model = "xiaomi/mimo-v2.5-pro"
 name = "MiMo V2.5 Pro"
 
