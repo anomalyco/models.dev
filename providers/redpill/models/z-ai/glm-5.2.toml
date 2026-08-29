@@ -1,0 +1,19 @@
+# Source: https://api.redpill.ai/v1/models
+# Toggle: reasoning.enabled = true|false
+# Effort: reasoning.effort = high|max
+base_model = "zhipuai/glm-5.2"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["high", "max"]
+
+[cost]
+input = 1.26
+output = 3
+cache_read = 0.22
+
+[limit]
+context = 1_048_576

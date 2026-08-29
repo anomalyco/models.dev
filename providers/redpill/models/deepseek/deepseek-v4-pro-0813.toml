@@ -1,0 +1,20 @@
+# Source: https://api.redpill.ai/v1/models
+# Toggle: reasoning.enabled = true|false
+# Effort: reasoning.effort = low|high|max
+base_model = "deepseek/deepseek-v4-pro-0813"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[cost]
+input = 1.45
+output = 4.36
+cache_read = 0.15
+
+[limit]
+context = 1_048_576
+output = 393_216
