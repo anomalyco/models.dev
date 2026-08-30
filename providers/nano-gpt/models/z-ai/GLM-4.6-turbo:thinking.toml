@@ -1,0 +1,25 @@
+name = "GLM 4.6 Turbo (Thinking)"
+description = "GLM 4.6 Turbo with thinking mode enabled for enhanced reasoning; shows internal reasoning and supports long context."
+family = "glm"
+release_date = "2025-10-02"
+last_updated = "2025-10-02"
+attachment = false
+reasoning = true
+tool_call = false
+structured_output = false
+open_weights = true
+reasoning_options = []
+
+[cost]
+input = 1
+output = 3
+cache_read = 0.5
+
+[limit]
+context = 200_000
+input = 200_000
+output = 204_800
+
+[modalities]
+input = ["text"]
+output = ["text"]

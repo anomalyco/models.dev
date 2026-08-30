@@ -1,0 +1,20 @@
+# Passthrough to the official MiMo API (api.xiaomimimo.com); same model as
+# mimo-v2.5-pro served at up to ~1000 tok/s, 3x price for speed.
+# Toggle: `thinking.type = enabled|disabled`, as providers/xiaomi; verified
+# end-to-end on this host 2026-08-29.
+# RMB upstream (pro CNY 3/0.025/6, ultraspeed CNY 9/0.075/18 per MTok)
+# converted at 6.5 CNY/USD (operator rate set 2026-07, spot ~6.79; buffer
+# covers FX drift), then a flat 10% markup; rounded to 4dp. Checked 2026-08-29.
+base_model = "xiaomi/mimo-v2.5-pro-ultraspeed"
+name = "MiMo V2.5 Pro UltraSpeed"
+
+[[reasoning_options]]
+type = "toggle"
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 1.5231
+output = 3.0462
+cache_read = 0.0127

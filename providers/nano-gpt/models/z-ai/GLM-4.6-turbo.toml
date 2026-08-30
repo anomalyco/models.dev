@@ -1,0 +1,24 @@
+name = "GLM 4.6 Turbo"
+description = "Fast variant of GLM 4.6 for general chat, coding, and analysis with improved latency and strong reasoning."
+family = "glm"
+release_date = "2025-10-02"
+last_updated = "2025-10-02"
+attachment = false
+reasoning = false
+tool_call = false
+structured_output = false
+open_weights = true
+
+[cost]
+input = 1
+output = 3
+cache_read = 0.5
+
+[limit]
+context = 200_000
+input = 200_000
+output = 204_800
+
+[modalities]
+input = ["text"]
+output = ["text"]

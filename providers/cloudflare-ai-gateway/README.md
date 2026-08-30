@@ -18,10 +18,13 @@ One command regenerates every model TOML:
 CLOUDFLARE_API_TOKEN=xxx CLOUDFLARE_ACCOUNT_ID=xxx bun run cloudflare-ai-gateway:generate
 ```
 
+The sync also accepts `CLOUDFLARE_PRODUCTION_API_TOKEN` and
+`CLOUDFLARE_PRODUCTION_ACCOUNT_ID_AI_GATEWAY_SANDBOX` directly.
+
 It reads two live Cloudflare sources plus one local curation file:
 
 - **Proxied catalog** — `GET /accounts/{id}/ai/catalog/models`. The source of truth: one
-  canonical (dotted) `model_id` per model, description, context/output limits, and pricing.
+  canonical (dotted) `model_id` per model, description, context limits, and pricing.
   This is why ids look like `anthropic/claude-haiku-4.5`, not `claude-haiku-4-5`.
 - **Per-model catalog schema** — `GET /accounts/{id}/ai/catalog/models/{id}/schema`. Used to
   derive `reasoning_options` for providers whose schema is OpenAI-compatible (xAI, Alibaba,
@@ -44,7 +47,7 @@ bun run cloudflare-ai-gateway:generate --check
 ```
 
 Exits non-zero if the committed TOMLs are out of date with the live catalog + curation.
-Used in CI.
+The same shared provider runs hourly; use `--check` for local drift checks.
 
 ### Offline / fixtures
 

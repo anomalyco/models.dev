@@ -1,0 +1,15 @@
+base_model = "zhipuai/glm-5.3"
+name = "GLM 5.3 Thinking"
+
+[[reasoning_options]]
+type = "effort"
+values = ["high", "max"]
+
+[cost]
+input = 1
+output = 3.2
+cache_read = 0.2
+
+[limit]
+context = 1_048_576
+input = 1_048_576
