@@ -1,20 +1,19 @@
 # Sources:
 # - https://tokenfactory.nebius.com/ (model catalog)
-# - https://tokenfactory.nebius.com/api/public/models_info (pricing, context, max length)
-# Accessed 2026-08-29.
-# Effort: reasoning_effort = none|medium|high (none = thinking off). Probed live on
-# 2026-08-29: thinking is ON by default, reasoning_effort=none returns zero reasoning
-# tokens, and all schema effort values are accepted (graded effect was flat at probe
-# scale). Level set mirrors the same-host Nemotron 3 Ultra entry.
-# Served window on this host: models_info max_model_len = 1_048_576 for the Nebius
-# deployment (the lab 262K limit is NVIDIA NIM's own cap) with no separate output cap,
-# so context and output both take the full served window.
+# - https://tokenfactory.nebius.com/model-catalog.md (pricing)
+# - https://tokenfactory.nebius.com/api/public/models_info (context, max length)
+
 base_model = "nvidia/nemotron-3.5-lightning"
-reasoning_options = [{ type = "effort", values = ["none", "medium", "high"] }]
+description = "Nemotron model for efficient reasoning, coding, and specialized AI agents"
+
+
+[[reasoning_options]]
+type = "toggle"
 
 [cost]
 input = 0.06
 output = 0.24
+cache_read = 0.06
 
 [limit]
 context = 1_048_576
