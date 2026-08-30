@@ -1,0 +1,20 @@
+# Sources (accessed 2026-08-30):
+# https://platform.xiaomimimo.com/static/docs/api/chat/openai-api.md
+# models/xiaomi/mimo-v2.5-pro.toml
+# providers/xiaomi/models/mimo-v2.5-pro.toml
+# Toggle: thinking.type = "enabled" | "disabled".
+# Interleaved field: reasoning_content.
+# Lab cost: input 0.435 / output 0.87 / cache_read 0.0036.
+# Vancine public pricing (/api/pricing) is 0.348 / 0.696 / n/a / 0.00288 (USD/MTok).
+base_model = "xiaomi/mimo-v2.5-pro"
+
+[[reasoning_options]]
+type = "toggle"
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.348
+output = 0.696
+cache_read = 0.00288

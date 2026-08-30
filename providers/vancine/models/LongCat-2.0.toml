@@ -1,0 +1,19 @@
+# Sources (accessed 2026-08-30):
+# models/meituan/longcat-2.0.toml
+# providers/longcat/models/LongCat-2.0.toml
+# Toggle: thinking.type = "enabled" | "disabled".
+# Interleaved field: reasoning_content.
+# Lab cost: input 0.75 / output 2.95 / cache_read 0.015.
+# Vancine public pricing (/api/pricing) is 0.24 / 0.96 / n/a / 0.0048 (USD/MTok).
+base_model = "meituan/longcat-2.0"
+
+[[reasoning_options]]
+type = "toggle"
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.24
+output = 0.96
+cache_read = 0.0048
