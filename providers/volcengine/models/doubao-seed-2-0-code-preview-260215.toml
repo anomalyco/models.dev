@@ -5,6 +5,12 @@
 # none/minimal disable thinking, so no separate toggle: sending effort alone
 # already enables it, and thinking.type=disabled + a graded effort is rejected.
 base_model = "bytedance-seed/seed-2.0-code"
+# Structured output: the lab entry declares it and other hosts (e.g. openrouter)
+# do support it, but this host rejects both response_format forms outright:
+#   {"type":"json_object"} / {"type":"json_schema"} -> 400
+#   "`json_object` is not supported by this model"
+# Verified 2026-08-30; omitting response_format returns 200. Host-specific.
+structured_output = false
 
 [[reasoning_options]]
 type = "effort"
