@@ -1,9 +1,9 @@
 name = "GLM 5.3 Flash Uncensored"
 description = "GLM 5.3 Flash Uncensored is an uncensored fine-tune of the efficient 320B mixture-of-experts reasoning model, built for unrestricted chat, creative writing, coding, agentic work, tool use, and long-context tasks."
 family = "glm"
-release_date = "2026-08-27"
+release_date = "2026-07-29"
 last_updated = "2026-08-27"
-attachment = false
+attachment = true
 reasoning = true
 tool_call = true
 structured_output = true
@@ -24,5 +24,5 @@ input = 262_144
 output = 32_768
 
 [modalities]
-input = ["text"]
+input = ["text", "image"]
 output = ["text"]

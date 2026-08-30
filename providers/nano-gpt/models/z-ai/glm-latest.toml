@@ -1,0 +1,25 @@
+name = "GLM Latest"
+description = "Compatibility alias that routes to the newest thinking GLM model. Currently routes to GLM 5.2 Thinking."
+family = "glm"
+release_date = "2026-05-03"
+last_updated = "2026-05-03"
+attachment = false
+reasoning = true
+tool_call = true
+structured_output = true
+open_weights = true
+reasoning_options = []
+
+[cost]
+input = 0.42
+output = 1.32
+cache_read = 0.078
+
+[limit]
+context = 1_048_576
+input = 1_048_576
+output = 131_072
+
+[modalities]
+input = ["text"]
+output = ["text"]
