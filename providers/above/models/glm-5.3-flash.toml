@@ -1,0 +1,21 @@
+# Passthrough to Fireworks serverless (accounts/fireworks/models/glm-5p3-flash).
+# Effort: `reasoning_effort = low|high`; "low" disables thinking on this host
+# ("none" is rejected upstream). Verified end-to-end 2026-08-30, image input
+# included; video/pdf are not supported on this host. Costs are the Fireworks rate ($0.15/$0.029/$0.50) plus a flat 10%.
+base_model = "zhipuai/glm-5.3-flash"
+name = "GLM 5.3 Flash"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high"]
+
+[modalities]
+input = ["text", "image"]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.165
+output = 0.55
+cache_read = 0.0319
