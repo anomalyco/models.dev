@@ -1,0 +1,20 @@
+# Source: GET https://api.aiand.com/v1/models (USD list prices; accessed
+# 2026-08-29). GET /v1/models reports context_window = 262144, input = $0.40,
+# output = $3.00, cached_input = $0.20 per 1M tokens.
+# Modalities: text, image, video, and document (PDF) supported per catalog and
+# live probes.
+# reasoning_effort verified by live probe on 2026-08-29: accepts none, low,
+# medium, xhigh; rejects minimal, high, max with 400.
+base_model = "alibaba/qwen3.8-27b"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "xhigh"]
+
+[cost]
+input = 0.4
+output = 3
+cache_read = 0.2
+
+[modalities]
+input = ["text", "image", "video", "pdf"]
