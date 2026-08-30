@@ -14,6 +14,7 @@ Standard Models
 - gemma-4-31b: Gemma 4 31B, image input, 262K context
 - glm-5.2: GLM 5.2, 1M context
 - glm-5.2-short: GLM 5.2 Short, 200K context, 32K output cap
+- glm-5.3: GLM 5.3, 1M context, gated preview
 - kimi-k2.7-code: Kimi K2.7 Code, image input, 262K context
 - kimi-k3: Kimi K3, image input, 1M context
 - qwen-3.8-27b: Qwen 3.8 27B, image input, 262K context, private preview
@@ -43,7 +44,8 @@ Pricing
 
 Reasoning Controls
 - reasoning_effort accepts the levels in metadata.reasoning.supported_efforts.
-  Every list that offers reasoning also offers none, which is the off switch.
+  Most lists include none, which is the off switch. glm-5.3 is the exception:
+  it reports reasoning.mandatory and offers only low, high and max.
 - accepted_efforts is wider than supported_efforts. The extra values are
   aliases the API folds into a supported level, not distinct levels.
 - thinking_token_budget is accepted on every model except deepseek-v4-flash and
