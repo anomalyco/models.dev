@@ -1,14 +1,10 @@
+base_model = "alibaba/qwen3.6-35b-a3b"
 name = "Qwen3.6 35B Fast"
 description = "Efficient model for low-latency assistance, extraction, and routine automation"
 family = "qwen3.6"
 release_date = "2026-04-01"
 last_updated = "2026-04-01"
-attachment = true
 reasoning = false
-temperature = true
-tool_call = true
-structured_output = true
-open_weights = true
 
 [cost]
 input = 0.29
@@ -21,4 +17,3 @@ output = 131_056
 
 [modalities]
 input = ["text", "image"]
-output = ["text"]

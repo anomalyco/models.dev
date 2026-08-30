@@ -1,7 +1,10 @@
-base_model = "moonshotai/kimi-k2.7-code"
 # Budget: thinking_token_budget (integer reasoning tokens)
-reasoning_options = [{ type = "budget_tokens" }]
+base_model = "moonshotai/kimi-k2.7-code"
+
 interleaved = true
+
+[[reasoning_options]]
+type = "budget_tokens"
 
 [cost]
 input = 0.95
@@ -14,4 +17,3 @@ output = 262_128
 
 [modalities]
 input = ["text", "image"]
-output = ["text"]

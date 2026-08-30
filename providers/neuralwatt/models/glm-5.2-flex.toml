@@ -1,20 +1,19 @@
+# Budget: thinking_token_budget (integer reasoning tokens)
+base_model = "zhipuai/glm-5.2"
 name = "GLM 5.2 Flex"
 description = "Flagship GLM model for hybrid reasoning, coding, and agentic engineering"
-family = "glm"
 release_date = "2026-06-17"
 last_updated = "2026-06-17"
-attachment = false
-reasoning = true
-# Budget: thinking_token_budget (integer reasoning tokens)
-reasoning_options = [
-  { type = "effort", values = ["none", "high", "max"] },
-  { type = "budget_tokens" },
-]
-interleaved = true
-temperature = true
-tool_call = true
 structured_output = false
-open_weights = true
+
+interleaved = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "high", "max"]
+
+[[reasoning_options]]
+type = "budget_tokens"
 
 [cost]
 input = 0.9425
@@ -24,7 +23,3 @@ cache_read = 0.09425
 [limit]
 context = 1_048_560
 output = 1_048_560
-
-[modalities]
-input = ["text"]
-output = ["text"]
