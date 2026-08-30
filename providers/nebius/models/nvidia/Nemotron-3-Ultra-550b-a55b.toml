@@ -2,11 +2,16 @@
 # - https://tokenfactory.nebius.com/ (model catalog)
 # - https://tokenfactory.nebius.com/api/public/models_info (pricing, context, max length)
 # Accessed 2026-08-29.
-# Toggle: chat_template_kwargs.enable_thinking = true|false (thinking is ON by
-# default; per the Nemotron 3 Ultra chat template,
-# https://huggingface.co/nvidia/NVIDIA-Nemotron-3-Ultra-550B-A55B-NVFP4).
+# Effort: reasoning_effort = none|medium|high (none = thinking off). Probed live against
+# api.tokenfactory.nebius.com chat completions on 2026-08-29: thinking is ON by default,
+# reasoning_effort=none returns zero reasoning tokens, and every schema effort value
+# (minimal…max) is accepted. The undocumented chat_template_kwargs.enable_thinking kwarg
+# is also forwarded (and overrides effort) but reasoning_effort is the host's documented
+# control; level set follows the same-host Eden AI Nebius route peer.
+# Served window: models_info max_model_len = 1_048_576 with no separate output cap, so
+# context and output both take the full served window.
 base_model = "nvidia/nemotron-3-ultra-550b-a55b"
-reasoning_options = [{ type = "toggle" }]
+reasoning_options = [{ type = "effort", values = ["none", "medium", "high"] }]
 
 [cost]
 input = 1
