@@ -1,0 +1,10 @@
+# Pulled by bare name, which llmman expands to a Docker Hub reference and
+# fetches as a CNCF ModelPack artifact. Served locally, so no per-token cost.
+base_model = "google/gemma-4-31b-it"
+
+# Reasoning is exposed by the model itself; no host-side effort control.
+reasoning_options = []
+
+[cost]
+input = 0
+output = 0

@@ -1,0 +1,11 @@
+# llmman serves an OpenAI-compatible API at /v1 (alongside Ollama- and
+# Anthropic-compatible ones), so the openai-compatible SDK is used here.
+# Models are whatever the user has pulled locally. The entries below use the
+# bare names llmman expands to Docker Hub references, fetched as CNCF ModelPack
+# artifacts (https://github.com/modelpack/model-spec).
+# https://github.com/llmmanorg/llmman (accessed 2026-08-31)
+name = "llmman"
+env = ["LLMMAN_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+api = "http://127.0.0.1:17434/v1"
+doc = "https://github.com/llmmanorg/llmman"
