@@ -1,13 +1,16 @@
 # Passthrough to Fireworks serverless (accounts/fireworks/models/glm-5p3-flash).
-# Effort: `reasoning_effort = low|high`; "low" disables thinking on this host
-# ("none" is rejected upstream). Verified end-to-end 2026-08-30, image input
-# included; video/pdf are not supported on this host. Costs are the Fireworks rate ($0.15/$0.029/$0.50) plus a flat 10%.
+# Thinking-only model: reasoning cannot be disabled. Same surface as the
+# Fireworks peer entry: effort high|max (Fireworks collapses requested
+# low/medium to high; the wire accepts them but they select no distinct tier,
+# and "none" is rejected with a 400 — verified live 2026-08-30). Image input
+# verified; video/pdf are not supported on this host. Costs are the Fireworks
+# rate ($0.15/$0.029/$0.50) plus a flat 10%.
 base_model = "zhipuai/glm-5.3-flash"
 name = "GLM 5.3 Flash"
 
 [[reasoning_options]]
 type = "effort"
-values = ["low", "high"]
+values = ["high", "max"]
 
 [modalities]
 input = ["text", "image"]
