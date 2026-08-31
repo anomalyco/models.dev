@@ -1,8 +1,7 @@
 base_model = "zhipuai/glm-5.3"
 name = "GLM 5.3 FP4"
 
-reasoning = true
-reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["minimal", "low", "medium", "high"] }]
+reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]
 interleaved = true
 
 [limit]
