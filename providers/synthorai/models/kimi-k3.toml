@@ -6,6 +6,12 @@
 # attachment/modalities: Synthorai serves this model text-only (its own catalog
 # declares input_modalities = ["text"]), narrower than the multimodal lab entry,
 # so both are overridden together to stay self-consistent.
+#
+# Cost: Synthorai's own list price for this model, from its catalog at
+# https://synthorai.io/models/ — already USD per million tokens, no conversion.
+# A relay's price is its own, so it does not have to match Moonshot's first-party
+# rate; on this model the two happen to be identical because both follow
+# Moonshot's public rate card.
 base_model = "moonshotai/kimi-k3"
 attachment = false
 reasoning_options = [

@@ -7,6 +7,11 @@
 # reasoning_content field. So there is no caller-visible reasoning control here
 # and `reasoning` is turned off as a real host delta rather than advertising a
 # knob that silently does nothing.
+#
+# Cost: Synthorai's own list price for this model, from its catalog at
+# https://synthorai.io/models/ — already USD per million tokens, no conversion.
+# cache_write is the 5-minute tier; Anthropic-style caching also has a 1-hour
+# tier at a higher rate, which this schema has no field for.
 base_model = "anthropic/claude-opus-5"
 reasoning = false
 
