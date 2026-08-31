@@ -1,13 +1,13 @@
 base_model = "arcee-ai/trinity-large-thinking"
-structured_output = true
+structured_output = false
 
 [[reasoning_options]]
 type = "effort"
 values = ["high"]
 
 [cost]
-input = 0.22
-output = 0.85
+input = 0.25
+output = 0.8
 cache_read = 0.06
 
 [limit]
