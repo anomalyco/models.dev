@@ -1,6 +1,6 @@
 base_model = "alibaba/qwen3.8-flash-next"
 name = "Qwen 3.8 Flash Next"
-reasoning_options = []
+reasoning_options = [{ type = "effort", values = ["low", "medium", "xhigh"] }]
 
 [cost]
 input = 0.12
