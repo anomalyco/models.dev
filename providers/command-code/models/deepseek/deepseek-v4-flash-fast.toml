@@ -1,0 +1,20 @@
+# Prices: https://commandcode.ai/docs/resources/pricing-limits (accessed 2026-09-01).
+# Catalog/ids: https://api.commandcode.ai/provider/v1 and https://commandcode.ai/models (accessed 2026-09-01).
+# Relay notes: OpenAI Chat Completions on /provider/v1/chat/completions; reasoning controls
+# pass through to upstreams (mirrored from the labs' own entries).
+# Toggle: `thinking.type` = enabled|disabled (OpenAI body passthrough)
+# Effort: `reasoning_effort` = low|high|max (low stays low; xhigh maps to high)
+# Command Code speed tier; no official DeepSeek `V4 Flash Fast` SKU exists (checked api-docs.deepseek.com 2026-09-01), so this points at the base lab model.
+
+base_model = "deepseek/deepseek-v4-flash"
+name = "DeepSeek V4 Flash Fast"
+
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "high", "max"] }]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.28
+output = 0.56
+cache_read = 0.07

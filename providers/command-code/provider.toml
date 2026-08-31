@@ -1,0 +1,11 @@
+# Multi-model relay: OpenAI Chat Completions at POST /provider/v1/chat/completions
+# and Anthropic Messages at POST /provider/v1/messages. Claude models are only
+# served on /messages (/chat/completions returns 400), so each Claude entry
+# overrides `provider.npm` to @ai-sdk/anthropic. Optional zero data retention:
+# header `x-cmd-zdr: 1`. Request bodies pass through to upstreams.
+# https://commandcode.ai/docs/provider (accessed 2026-09-01)
+name = "Command Code"
+env = ["COMMAND_CODE_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+api = "https://api.commandcode.ai/provider/v1"
+doc = "https://commandcode.ai/docs/provider"

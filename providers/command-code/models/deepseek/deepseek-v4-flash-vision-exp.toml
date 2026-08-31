@@ -1,0 +1,21 @@
+# Prices: https://commandcode.ai/docs/resources/pricing-limits (accessed 2026-09-01).
+# Catalog/ids: https://api.commandcode.ai/provider/v1 and https://commandcode.ai/models (accessed 2026-09-01).
+# Relay notes: OpenAI Chat Completions on /provider/v1/chat/completions; reasoning controls
+# pass through to upstreams (mirrored from the labs' own entries).
+# Toggle: `thinking.type` = enabled|disabled (OpenAI body passthrough)
+# Effort: `reasoning_effort` = low|high|max (low stays low; xhigh maps to high)
+# Off-peak pricing shown: peak is 01:00-04:00 and 06:00-10:00 UTC at 2x these rates (since 2026-08-16).
+# Peak: $0.44 in / $1.32 out.
+
+base_model = "deepseek/deepseek-v4-flash-vision-exp"
+name = "DeepSeek V4 Flash Vision (exp)"
+
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "high", "max"] }]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.22
+output = 0.66
+cache_read = 0.007

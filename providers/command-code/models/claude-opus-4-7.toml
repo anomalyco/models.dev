@@ -1,0 +1,19 @@
+# Prices: https://commandcode.ai/docs/resources/pricing-limits (accessed 2026-09-01).
+# Catalog/ids: https://api.commandcode.ai/provider/v1 and https://commandcode.ai/models (accessed 2026-09-01).
+# Relay notes: OpenAI Chat Completions on /provider/v1/chat/completions; reasoning controls
+# pass through to upstreams (mirrored from the labs' own entries).
+# Anthropic Messages endpoint only; see claude-fable-5 note.
+
+base_model = "anthropic/claude-opus-4-7"
+
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
+
+[cost]
+input = 5.0
+output = 25.0
+cache_read = 0.5
+cache_write = 6.25
+
+[provider]
+npm = "@ai-sdk/anthropic"
+api = "https://api.commandcode.ai/provider/v1"

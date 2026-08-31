@@ -1,0 +1,18 @@
+# Prices: https://commandcode.ai/docs/resources/pricing-limits (accessed 2026-09-01).
+# Catalog/ids: https://api.commandcode.ai/provider/v1 and https://commandcode.ai/models (accessed 2026-09-01).
+# Relay notes: OpenAI Chat Completions on /provider/v1/chat/completions; reasoning controls
+# pass through to upstreams (mirrored from the labs' own entries).
+# API model id is `tencent/hy3-paid` (paid lane); served as Tencent Hy3.
+
+base_model = "tencent/hy3"
+name = "Tencent Hy3"
+
+reasoning_options = [{ type = "effort", values = ["none", "low", "high"] }]
+
+[cost]
+input = 0.14
+output = 0.58
+cache_read = 0.035
+
+[limit]
+context = 262144
