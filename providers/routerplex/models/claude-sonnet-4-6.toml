@@ -1,0 +1,18 @@
+# Sources: https://routerplex.com/models and https://routerplex.com/api/models (accessed 2026-08-31).
+# Cost is RouterPlex sell price (USD / 1M tokens). cache_read is listed only when
+# this host bills a discounted cache-hit rate; otherwise cached tokens are billed
+# at the input rate.
+base_model = "anthropic/claude-sonnet-4-6"
+
+[[reasoning_options]]
+type = "effort"
+values = [ "low", "medium", "high", "max" ]
+
+[[reasoning_options]]
+type = "budget_tokens"
+min = 1_024
+
+
+[cost]
+input = 3
+output = 15

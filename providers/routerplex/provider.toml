@@ -1,0 +1,10 @@
+# OpenAI-compatible POST /v1/chat/completions and /v1/responses: `reasoning_effort`
+# (Responses also accepts `reasoning.effort`). Anthropic POST /v1/messages:
+# `thinking.type` = enabled|disabled and, when enabled, `thinking.budget_tokens`
+# on models that accept a reasoning budget. Exact effort subsets are model-specific.
+# https://routerplex.com/docs (accessed 2026-08-31)
+name = "RouterPlex"
+env = ["ROUTERPLEX_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+api = "https://api.routerplex.com/v1"
+doc = "https://routerplex.com/docs"

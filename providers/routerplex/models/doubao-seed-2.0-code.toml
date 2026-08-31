@@ -1,0 +1,15 @@
+# Sources: https://routerplex.com/models and https://routerplex.com/api/models (accessed 2026-08-31).
+# Cost is RouterPlex sell price (USD / 1M tokens). cache_read is listed only when
+# this host bills a discounted cache-hit rate; otherwise cached tokens are billed
+# at the input rate.
+base_model = "bytedance-seed/seed-2.0-code"
+name = "Doubao Seed 2.0 Code"
+
+reasoning_options = [{ type = "effort", values = [ "none", "low", "medium", "high" ] }]
+
+[cost]
+input = 0.67
+output = 3.36
+
+[limit]
+context = 200_000

@@ -1,0 +1,18 @@
+# Sources: https://routerplex.com/models and https://routerplex.com/api/models (accessed 2026-08-31).
+# Cost is RouterPlex sell price (USD / 1M tokens). cache_read is listed only when
+# this host bills a discounted cache-hit rate; otherwise cached tokens are billed
+# at the input rate.
+# Toggle: POST /v1/messages `thinking.type` = enabled|disabled. Effort: `output_config.effort` / `reasoning_effort` = low|medium|high|xhigh|max.
+base_model = "anthropic/claude-sonnet-5"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = [ "low", "medium", "high", "xhigh", "max" ]
+
+
+[cost]
+input = 2
+output = 10
