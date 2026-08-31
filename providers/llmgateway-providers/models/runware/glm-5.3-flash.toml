@@ -1,15 +1,11 @@
 base_model = "zhipuai/glm-5.3-flash"
-name = "GLM-5.3 Flash (Z AI)"
-structured_output = false
+name = "GLM-5.3 Flash (Runware)"
 
 [[reasoning_options]]
 type = "effort"
-values = ["low", "high", "max"]
+values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"]
 
 [cost]
 input = 0.15
 output = 0.5
 cache_read = 0.03
-
-[limit]
-context = 1_048_576
