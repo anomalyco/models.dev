@@ -1,0 +1,15 @@
+base_model = "tencent/hy4-preview"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "high"]
+
+[cost]
+input = 0.96
+output = 2.88
+cache_read = 0.048
+cache_write = 0.96
+
+[limit]
+context = 1_048_576
+output = 1_048_576
