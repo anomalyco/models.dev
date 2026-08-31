@@ -1,0 +1,16 @@
+base_model = "zhipuai/glm-5.3"
+release_date = "2026-08-28"
+last_updated = "2026-08-31"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[cost]
+input = 1.52432
+output = 4.79072
+cache_read = 0.283088
+
+[limit]
+context = 1_048_576
+output = 262_144
