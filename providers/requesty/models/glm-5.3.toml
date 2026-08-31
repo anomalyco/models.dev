@@ -1,4 +1,5 @@
 base_model = "zhipuai/glm-5.3"
+structured_output = false
 
 [[reasoning_options]]
 type = "effort"
@@ -8,9 +9,10 @@ values = ["none", "low", "medium", "high", "max"]
 type = "budget_tokens"
 
 [cost]
-input = 1.4
-output = 4.4
+input = 1.2
+output = 4.2
 cache_read = 0.26
 
 [limit]
-output = 128_000
+context = 1_048_576
+output = 1_048_576

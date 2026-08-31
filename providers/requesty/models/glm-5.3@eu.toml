@@ -5,6 +5,7 @@
 # https://docs.requesty.ai/features/reasoning
 base_model = "zhipuai/glm-5.3"
 name = "GLM-5.3 (EU)"
+structured_output = false
 
 [[reasoning_options]]
 type = "effort"
@@ -14,9 +15,9 @@ values = ["none", "low", "medium", "high", "max"]
 type = "budget_tokens"
 
 [cost]
-input = 1.75
-output = 4.5
-cache_read = 0.44
+input = 1.2
+output = 4.2
+cache_read = 0.26
 
 [limit]
 context = 1_048_576
