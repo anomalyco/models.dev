@@ -2,7 +2,7 @@ import { z } from "zod";
 
 import type { ExistingModel, SyncProvider, SyncedModel } from "../index.js";
 
-const API_ENDPOINT = "https://api.saygm.com/v1/models";
+const API_ENDPOINT = process.env.SAYGM_MODELS_URL ?? "https://api.saygm.com/v1/models";
 const NDOLLARS_PER_DOLLAR = 1_000_000_000;
 
 const NanoDollars = z.number().int().nonnegative().max(Number.MAX_SAFE_INTEGER);
@@ -33,15 +33,28 @@ const PriceDimensions = z.object({
   }
 });
 
-// `pricing.basis` is one of two things: the cheapest currently routable
-// miner offer, or (when nothing is routable) gm's published retail cap as a
-// fallback. Both are valid API responses, so both must parse — but only the
-// first is a price to publish; see `buildSaygmModel`. Anything outside these
-// two literals is a schema change models.dev has not reviewed and must fail
-// the sync loudly rather than silently publish an unknown basis.
+// `pricing` remains SayGM's optimistic headline (or retail fallback). The sync
+// validates it because an unknown basis is still a contract change, but
+// `buildSaygmModel` deliberately reads the conservative bound from
+// `price_range` instead.
 const Pricing = z.object({
   basis: z.enum(["cheapest_eligible_offer", "published_retail"]),
   dimensions: PriceDimensions,
+}).passthrough();
+
+const PriceRange = z.object({
+  floor: z.object({
+    basis: z.literal("cheapest_eligible_offer"),
+    dimensions: PriceDimensions,
+  }).passthrough().optional(),
+  route_ceiling: z.object({
+    basis: z.literal("highest_eligible_offer"),
+    dimensions: PriceDimensions,
+  }).passthrough().optional(),
+  ceiling: z.object({
+    basis: z.literal("published_retail"),
+    dimensions: PriceDimensions,
+  }).passthrough(),
 }).passthrough();
 
 export const SaygmModel = z.object({
@@ -50,6 +63,7 @@ export const SaygmModel = z.object({
   available: z.boolean(),
   api_shapes: z.array(z.string().min(1)),
   pricing: Pricing.optional(),
+  price_range: PriceRange.optional(),
 }).passthrough();
 
 export const SaygmResponse = z.object({
@@ -63,15 +77,13 @@ export const saygm = {
   id: "saygm",
   name: "SayGM",
   modelsDir: "providers/saygm/models",
-  // SayGM's discount over each lab's own price is the whole reason to route
-  // through it, so this catalog publishes the current cheapest eligible
-  // miner offer rather than gm's published retail cap. That number moves
-  // with live miner supply and can be a cent or two stale between hourly
-  // syncs — accepted, because a number that is usually right beats a stable
-  // one that is permanently uncompetitive. The live inventory can also change
-  // with miner supply for other reasons (a model can stop being served
-  // entirely), so this sync only ever updates models that were reviewed into
-  // the catalog and retains them through temporary outages.
+  // SayGM can route one request to any currently eligible miner, so the
+  // cheapest offer is not a conservative catalog price. Publish the highest
+  // eligible offer from the same live routing snapshot instead: individual
+  // requests may settle lower, while retail remains the compatibility fallback
+  // for gateways that do not yet expose the live route ceiling. The live
+  // inventory can also change with miner supply, so this sync only updates
+  // reviewed models and retains them through temporary outages.
   skipCreates: true,
   deleteMissing: false,
   trackMissingModels: false,
@@ -120,18 +132,18 @@ export async function fetchSaygmModels(fetcher: typeof fetch = fetch) {
 }
 
 export function buildSaygmModel(model: SaygmModel, existing: ExistingModel): SyncedModel {
-  const pricing = model.pricing;
-  if (pricing === undefined || pricing.basis !== "cheapest_eligible_offer") {
-    // No live miner offer right now: either the field is absent from a
-    // partial response, or the API itself fell back to publishing the
-    // retail cap because nothing is currently routable. Neither is a
-    // cheapest-eligible price, so this must not adopt the retail number
-    // under a stale "current price" label, write a zero, or block the
-    // hourly update — keep the last reviewed price instead.
+  const priceRange = model.price_range;
+  if (priceRange === undefined) {
+    // A partial or older response with no explicit bounds must not erase the
+    // last reviewed price or infer one from the optimistic headline `pricing`.
     return existing as SyncedModel;
   }
 
-  const dimensions = pricing.dimensions;
+  // Prefer the conservative maximum among the routes that were eligible in
+  // SayGM's discovery snapshot. When no live route ceiling is available, use
+  // the explicit published-retail ceiling; never fall back to the cheapest
+  // headline offer, which can understate the route actually selected.
+  const dimensions = priceRange.route_ceiling?.dimensions ?? priceRange.ceiling.dimensions;
   // The API has no explicit "no such price" signal, so an omitted optional
   // dimension keeps the authored value (same as the xAI sync) rather than
   // clearing a reviewed one.

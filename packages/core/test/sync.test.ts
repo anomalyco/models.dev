@@ -212,7 +212,29 @@ function readyInceptronModel(overrides: Partial<InceptronModel> = {}): ReadyInce
   })[0]!;
 }
 
+type SaygmPriceDimensions = NonNullable<SaygmModel["pricing"]>["dimensions"];
+
+function saygmPriceRange(
+  routeCeiling: SaygmPriceDimensions | undefined,
+  retail: SaygmPriceDimensions,
+): NonNullable<SaygmModel["price_range"]> {
+  return {
+    route_ceiling: routeCeiling === undefined
+      ? undefined
+      : { basis: "highest_eligible_offer", dimensions: routeCeiling },
+    ceiling: { basis: "published_retail", dimensions: retail },
+  };
+}
+
 function saygmModel(overrides: Partial<SaygmModel> = {}): SaygmModel {
+  const routeCeiling = {
+    input_per_mtok_ndollars: 2_500_000_000,
+    output_per_mtok_ndollars: 15_000_000_000,
+    cache_read_per_mtok_ndollars: 250_000_000,
+    long_context_threshold_tokens: 272_000,
+    long_context_input_per_mtok_ndollars: 5_000_000_000,
+    long_context_output_per_mtok_ndollars: 22_500_000_000,
+  };
   return {
     id: "gpt-5.4",
     object: "model",
@@ -221,19 +243,20 @@ function saygmModel(overrides: Partial<SaygmModel> = {}): SaygmModel {
     pricing: {
       basis: "cheapest_eligible_offer",
       dimensions: {
-        input_per_mtok_ndollars: 2_500_000_000,
-        output_per_mtok_ndollars: 15_000_000_000,
-        cache_read_per_mtok_ndollars: 250_000_000,
-        long_context_threshold_tokens: 272_000,
-        long_context_input_per_mtok_ndollars: 5_000_000_000,
-        long_context_output_per_mtok_ndollars: 22_500_000_000,
+        input_per_mtok_ndollars: 1_500_000_000,
+        output_per_mtok_ndollars: 9_000_000_000,
       },
     },
+    price_range: saygmPriceRange(routeCeiling, {
+      input_per_mtok_ndollars: 3_000_000_000,
+      output_per_mtok_ndollars: 18_000_000_000,
+      cache_read_per_mtok_ndollars: 300_000_000,
+    }),
     ...overrides,
   };
 }
 
-test("converts SayGM cheapest-eligible-offer nanodollars into models.dev USD per Mtok costs", () => {
+test("converts SayGM highest-eligible-offer nanodollars into models.dev USD per Mtok costs", () => {
   const built = buildSaygmModel(saygmModel(), {
     base_model: "openai/gpt-5.4",
     reasoning_options: [{ type: "effort", values: ["none", "low", "high"] }],
@@ -255,16 +278,19 @@ test("uses SayGM's five-minute cache-write rate for models.dev", () => {
   const built = buildSaygmModel(saygmModel({
     id: "claude-haiku-4-5",
     api_shapes: ["messages"],
-    pricing: {
-      basis: "cheapest_eligible_offer",
-      dimensions: {
+    price_range: saygmPriceRange(
+      {
         input_per_mtok_ndollars: 1_000_000_000,
         output_per_mtok_ndollars: 5_000_000_000,
         cache_read_per_mtok_ndollars: 100_000_000,
         cache_write_5m_per_mtok_ndollars: 1_250_000_000,
         cache_write_1h_per_mtok_ndollars: 2_000_000_000,
       },
-    },
+      {
+        input_per_mtok_ndollars: 1_200_000_000,
+        output_per_mtok_ndollars: 6_000_000_000,
+      },
+    ),
   }), { base_model: "anthropic/claude-haiku-4-5" });
 
   expect(built).toMatchObject({
@@ -272,7 +298,7 @@ test("uses SayGM's five-minute cache-write rate for models.dev", () => {
   });
 });
 
-test("retains authored SayGM cost fields the live cheapest offer omits", () => {
+test("retains authored SayGM cost fields the live route ceiling omits", () => {
   const existing = {
     base_model: "openai/gpt-5.4",
     cost: {
@@ -285,13 +311,16 @@ test("retains authored SayGM cost fields the live cheapest offer omits", () => {
   };
 
   const built = buildSaygmModel(saygmModel({
-    pricing: {
-      basis: "cheapest_eligible_offer",
-      dimensions: {
+    price_range: saygmPriceRange(
+      {
         input_per_mtok_ndollars: 2_500_000_000,
         output_per_mtok_ndollars: 15_000_000_000,
       },
-    },
+      {
+        input_per_mtok_ndollars: 3_000_000_000,
+        output_per_mtok_ndollars: 18_000_000_000,
+      },
+    ),
   }), existing);
 
   expect(built).toMatchObject({
@@ -305,54 +334,49 @@ test("retains authored SayGM cost fields the live cheapest offer omits", () => {
   });
 });
 
-test("retains reviewed SayGM pricing when the live pricing field is absent", () => {
+test("retains reviewed SayGM pricing when the price range is absent", () => {
   const existing = {
     base_model: "openai/gpt-5.4",
     cost: { input: 2.5, output: 15, cache_read: 0.25 },
   };
 
-  const built = buildSaygmModel(saygmModel({ pricing: undefined }), existing);
+  const built = buildSaygmModel(saygmModel({ price_range: undefined }), existing);
 
   expect(built).toEqual(existing);
 });
 
-test("never republishes SayGM's retail-cap fallback as the current price", () => {
-  // When nothing is currently routable, the live API itself falls back to
-  // basis "published_retail" rather than omitting `pricing`. That is a
-  // real, schema-valid response — and still not a cheapest-eligible price,
-  // so the sync must retain the last reviewed number instead of adopting
-  // the cap under a stale "current price" label. This is the regression
-  // guard for the ceiling ever being read again.
+test("falls back to SayGM retail when no live route ceiling is available", () => {
+  // An older gateway or a currently unroutable product can omit the new live
+  // bound. Retail is explicit and conservative, unlike the headline floor.
   const existing = {
     base_model: "openai/gpt-5.4",
     cost: { input: 1.27, output: 6.36, cache_read: 0.13 },
   };
 
   const built = buildSaygmModel(saygmModel({
-    pricing: {
-      basis: "published_retail",
-      dimensions: {
+    price_range: saygmPriceRange(
+      undefined,
+      {
         input_per_mtok_ndollars: 2_000_000_000,
         output_per_mtok_ndollars: 10_000_000_000,
       },
-    },
+    ),
   }), existing);
 
-  expect(built).toEqual(existing);
+  expect(built).toMatchObject({ cost: { input: 2, output: 10, cache_read: 0.13 } });
 });
 
 test("rejects incomplete or unrecognized SayGM pricing bases", () => {
   const valid = saygmModel();
   const missingLongOutput = structuredClone(valid);
-  delete missingLongOutput.pricing!.dimensions.long_context_output_per_mtok_ndollars;
+  delete missingLongOutput.price_range!.route_ceiling!.dimensions
+    .long_context_output_per_mtok_ndollars;
   expect(() => SaygmResponse.parse({ object: "list", data: [missingLongOutput] })).toThrow(
     "Long-context pricing requires a threshold plus input and output prices",
   );
 
-  const unknownBasis = {
-    ...valid,
-    pricing: { ...valid.pricing!, basis: "wholesale_floor" },
-  };
+  const unknownBasis = structuredClone(valid);
+  Object.assign(unknownBasis.price_range!.route_ceiling!, { basis: "wholesale_floor" });
   expect(() => SaygmResponse.parse({ object: "list", data: [unknownBasis] })).toThrow();
 });
 
