@@ -1,16 +1,24 @@
-# Sources (accessed 2026-08-24):
+# Sources (accessed 2026-09-01):
 # https://api.iteracompute.com/v1/models (model ID, availability, and input/output pricing)
 # https://iteracompute.com/docs.html (OpenAI-compatible API documentation)
-# Cache-read pricing is the rate supplied for the OpenCode/models.dev integration.
+# https://huggingface.co/gittensor-model-hub/Qwen3.8-27B-NVFP4-RTX5090 (served checkpoint and image input)
 #
 # IteraCompute serves Qwen3.8 27B through its OpenAI-compatible API.
-# Model capabilities, limits, and modalities are inherited from
-# models/alibaba/qwen3.8-27b.toml. Prices are in USD per million tokens.
+# The NVFP4 deployment accepts text and image input and extends the combined
+# serving window to 327,680 tokens with up to 262,144 input and 65,536 output tokens.
+# Prices are in USD per million tokens.
 # Effort: reasoning_effort = none|low|medium|xhigh (xhigh is the default).
 base_model = "alibaba/qwen3.8-27b"
 reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "xhigh"] }]
 
 [cost]
-input = 0.35
-output = 3.00
-cache_read = 0.10
+input = 0.30
+output = 2.50
+
+[limit]
+context = 327_680
+input = 262_144
+output = 65_536
+
+[modalities]
+input = ["text", "image"]

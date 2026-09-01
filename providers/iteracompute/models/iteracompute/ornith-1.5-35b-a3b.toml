@@ -1,0 +1,31 @@
+# Sources (accessed 2026-08-28):
+# https://api.iteracompute.com/v1/models (model ID, availability, limits, and pricing)
+# https://iteracompute.com/docs.html (OpenAI-compatible API documentation)
+# https://huggingface.co/ornith-ai/Ornith-1.5-35B-A3B (upstream capabilities)
+#
+# IteraCompute serves the language-only NVFP4 build with a 327,680-token
+# combined window, up to 262,144 input tokens, and up to 65,536 output tokens.
+# Reasoning toggle wire path: reasoning_effort = "none" disables thinking;
+# any accepted non-none effort enables it. Responses stream reasoning through
+# the reasoning_content delta field.
+# Prices are in USD per million tokens.
+base_model = "deepreinforce/ornith-1.5-35b-a3b"
+attachment = false
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "toggle"
+
+[cost]
+input = 0.30
+output = 3.00
+
+[limit]
+context = 327_680
+input = 262_144
+output = 65_536
+
+[modalities]
+input = ["text"]
