@@ -2,7 +2,7 @@
 # Catalog/ids: https://api.commandcode.ai/provider/v1 and https://commandcode.ai/models (accessed 2026-09-01).
 # Relay notes: OpenAI Chat Completions on /provider/v1/chat/completions; reasoning controls
 # pass through to upstreams (mirrored from the labs' own entries).
-# Toggle: thinking.type = enabled|disabled (Anthropic Messages passthrough)
+# Toggle: thinking.type = adaptive|disabled (Anthropic Messages; platform.claude.com thinking docs)
 # Anthropic Messages endpoint only; see claude-fable-5 note.
 
 base_model = "anthropic/claude-sonnet-5"
