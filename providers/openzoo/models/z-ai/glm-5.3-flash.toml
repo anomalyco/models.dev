@@ -1,6 +1,11 @@
+# Wire path (OpenZoo is an OpenAI-compatible gateway; reasoning controls ride
+# the OpenRouter-style top-level `reasoning` request object, passed through
+# untouched when the caller sets it):
+#   effort -> `reasoning: { "effort": "low"|"high"|"max" }`
+# Thinking is always on for this model upstream; effort values follow the
+# existing ofox entry for the same base model.
 # Priced from the live catalog: GET https://api.openzoo.fun/v1/models
 # (prompt_price_per_1m = 0.075, completion_price_per_1m = 0.25)
-# Thinking is always on for this model upstream; effort follows the ofox entry.
 base_model = "zhipuai/glm-5.3-flash"
 
 [[reasoning_options]]

@@ -1,3 +1,8 @@
+# Wire path (OpenZoo is an OpenAI-compatible gateway; reasoning controls ride
+# the OpenRouter-style top-level `reasoning` request object, passed through
+# untouched when the caller sets it):
+#   toggle        -> `reasoning: { "enabled": true|false }`
+#   budget_tokens -> `reasoning: { "max_tokens": <int> }`
 # Priced from the live catalog: GET https://api.openzoo.fun/v1/models
 # (prompt_price_per_1m = 0.03, completion_price_per_1m = 0.13)
 base_model = "alibaba/qwen3.7-flash"
