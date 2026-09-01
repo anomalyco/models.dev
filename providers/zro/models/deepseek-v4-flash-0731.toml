@@ -1,7 +1,14 @@
-# DeepSeek V4 Flash; exposes reasoning_effort = none|high (none disables; high is the only tier).
+# DeepSeek V4 Flash; OpenAI-compatible reasoning controls: thinking toggle + reasoning_effort low|high|max
+# (matches first-party providers/deepseek/models/deepseek-v4-flash.toml).
 # Limits 1M context / 384K output. Pricing: https://zro.moonmath.ai/pricing
 base_model = "deepseek/deepseek-v4-flash-0731"
-reasoning_options = [{ type = "effort", values = ["none", "high"] }]
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
 
 [interleaved]
 field = "reasoning_content"
@@ -13,3 +20,4 @@ cache_read = 0.0028
 
 [limit]
 context = 1_048_576
+output = 384_000
