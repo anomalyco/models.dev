@@ -1,0 +1,24 @@
+base_model = "deepseek/deepseek-v4-pro"
+
+# Reasoning: this surface forwards only OpenAI-style `reasoning_effort`, verbatim —
+# no alias mapping, no separate thinking-toggle field (omitting the field applies the
+# gateway default). The set below is enforced server-side for deepseek-v4-pro: any other value
+# returns 400 naming this exact set (e.g. sending "max" to deepseek-v4-flash returns
+# "does not accept reasoning_effort 'max'. Supported: low, medium, high, xhigh").
+# Same set is public in GET /v1/public/models -> capabilities.reasoning_efforts.
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high", "xhigh"]
+
+# Current promotional pricing (40% off list), USD/MTok — what the API bills today.
+# Live source: GET /v1/public/models (nano-USD per token; /1000 = USD/MTok).
+[cost]
+input = 0.792
+output = 2.376
+cache_read = 0.026
+
+# This gateway's serving surface, measured (context probed to the boundary;
+# output verified via max_completion_tokens probes).
+[limit]
+context = 1_048_576
+output = 131_072
