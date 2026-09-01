@@ -1,0 +1,20 @@
+# Sources (accessed 2026-09-02):
+# - Pricing/capabilities: GET https://pass.wafer.ai/v1/models
+# - Model list: https://docs.wafer.ai/serverless/setup#models
+# Host control differs from the lab API: Wafer self-hosts GLM-5.3 and applies
+# its own effort control (system-prompt conditioning); its per-model metadata
+# advertises reasoning_effort none|low|high|max (default low), with none = off.
+base_model = "zhipuai/glm-5.3"
+reasoning_options = [{ type = "effort", values = ["none", "low", "high", "max"] }]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 1.40
+output = 4.40
+cache_read = 0.26
+cache_write = 0
+
+[limit]
+context = 1_048_576

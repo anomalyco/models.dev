@@ -1,0 +1,17 @@
+# Sources (accessed 2026-09-02):
+# - Pricing/capabilities: GET https://pass.wafer.ai/v1/models
+# - Model list: https://docs.wafer.ai/serverless/setup#models
+# Wafer per-model metadata: "Kimi-K3 reasoning is exposed as off/high/max;
+# low and medium collapse to the same enabled tier" — so reasoning_effort is
+# none|high|max (default none), and low is deliberately not listed.
+base_model = "moonshotai/kimi-k3"
+reasoning_options = [{ type = "effort", values = ["none", "high", "max"] }]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 3.00
+output = 15.00
+cache_read = 0.30
+cache_write = 0

@@ -1,0 +1,20 @@
+# Sources (accessed 2026-09-02):
+# - Pricing/capabilities: GET https://pass.wafer.ai/v1/models
+# - Model list: https://docs.wafer.ai/serverless/setup#models
+# Off is reasoning_effort=none; graded levels none|low|high|max (default low)
+base_model = "deepseek/deepseek-v4-flash-0731"
+name = "DeepSeek V4 Flash 0731 Fast"
+description = "The same model served for high TPS."
+reasoning_options = [{ type = "effort", values = ["none", "low", "high", "max"] }]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.20
+output = 0.25
+cache_read = 0.05
+cache_write = 0
+
+[limit]
+context = 1_048_576
