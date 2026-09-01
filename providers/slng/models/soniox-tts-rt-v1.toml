@@ -1,0 +1,27 @@
+# Soniox TTS RT v1 via SLNG
+# Sources:
+# - https://docs.slng.ai/models — SLNG model catalog (EU, JP, US regions)
+# - Original per-minute pricing: $0.01/min converted to per-token at 195 tokens/min
+name = "Soniox TTS RT v1"
+description = "Real-time text-to-speech model supporting 45+ languages"
+family = "soniox"
+release_date = "2024-01-01"
+last_updated = "2025-01-01"
+attachment = false
+reasoning = false
+temperature = true
+tool_call = false
+structured_output = false
+open_weights = false
+
+[cost]
+input = 51.28
+output = 51.28
+
+[limit]
+context = 32_768
+output = 16_384
+
+[modalities]
+input = ["text"]
+output = ["audio"]
