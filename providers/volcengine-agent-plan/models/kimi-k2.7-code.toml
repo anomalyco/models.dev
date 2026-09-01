@@ -1,0 +1,15 @@
+# Agent Plan model from https://www.volcengine.com/docs/82379/2373738
+# (accessed 2026-09-01). Subscription tier: no per-token price. Thinking is
+# always on and the gateway has no effective caller control, matching the
+# Coding Plan peer.
+base_model = "moonshotai/kimi-k2.7-code"
+
+reasoning_options = []
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0
+output = 0
+cache_read = 0
