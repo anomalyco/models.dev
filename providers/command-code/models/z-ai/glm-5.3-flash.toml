@@ -3,9 +3,9 @@
 # Relay notes: OpenAI Chat Completions on /provider/v1/chat/completions; reasoning controls
 # pass through to upstreams (mirrored from the labs' own entries).
 # API model id uses the `z-ai/` prefix while other GLM ids use `zai-org/` (as served).
+# Host context 1048576 per the Command Code catalog/API context_length (lab entry: 1000000).
 
 base_model = "zhipuai/glm-5.3-flash"
-name = "GLM-5.3 Flash"
 
 reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]
 

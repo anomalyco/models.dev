@@ -2,12 +2,10 @@
 # Catalog/ids: https://api.commandcode.ai/provider/v1 and https://commandcode.ai/models (accessed 2026-09-01).
 # Relay notes: OpenAI Chat Completions on /provider/v1/chat/completions; reasoning controls
 # pass through to upstreams (mirrored from the labs' own entries).
-# Budget: upstream-native reasoning budget field (passthrough).
+# Budget: thinking.budget_tokens (Anthropic Messages passthrough)
 # Anthropic Messages endpoint only; see claude-fable-5 note.
-# API model id is the dated `claude-haiku-4-5-20251001`.
 
-base_model = "anthropic/claude-haiku-4-5"
-name = "Claude Haiku 4.5"
+base_model = "anthropic/claude-haiku-4-5-20251001"
 
 reasoning_options = [{ type = "budget_tokens", min = 1024 }]
 

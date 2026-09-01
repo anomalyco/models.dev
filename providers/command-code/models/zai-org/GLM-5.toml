@@ -3,6 +3,7 @@
 # Relay notes: OpenAI Chat Completions on /provider/v1/chat/completions; reasoning controls
 # pass through to upstreams (mirrored from the labs' own entries).
 # Toggle: thinking.type = enabled|disabled
+# Host context 200000 per the Command Code catalog/API context_length (lab entry: 204800).
 
 base_model = "zhipuai/glm-5"
 

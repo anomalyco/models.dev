@@ -4,9 +4,9 @@
 # pass through to upstreams (mirrored from the labs' own entries).
 # Toggle: enable_thinking true|false
 # Budget: thinking_budget
+# Host context 200000 per the Command Code catalog/API context_length (lab entry: 262144).
 
 base_model = "alibaba/qwen3.6-max-preview"
-name = "Qwen 3.6 Max Preview"
 
 reasoning_options = [{ type = "toggle" }, { type = "budget_tokens" }]
 

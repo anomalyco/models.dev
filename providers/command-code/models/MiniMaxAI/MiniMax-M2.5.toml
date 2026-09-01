@@ -2,9 +2,9 @@
 # Catalog/ids: https://api.commandcode.ai/provider/v1 and https://commandcode.ai/models (accessed 2026-09-01).
 # Relay notes: OpenAI Chat Completions on /provider/v1/chat/completions; reasoning controls
 # pass through to upstreams (mirrored from the labs' own entries).
+# Host context 200000 per the Command Code catalog/API context_length (lab entry: 204800).
 
 base_model = "minimax/MiniMax-M2.5"
-name = "MiniMax M2.5"
 
 reasoning_options = []
 

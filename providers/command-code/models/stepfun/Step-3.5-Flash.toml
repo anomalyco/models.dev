@@ -3,6 +3,7 @@
 # Relay notes: OpenAI Chat Completions on /provider/v1/chat/completions; reasoning controls
 # pass through to upstreams (mirrored from the labs' own entries).
 # Host serves this at 1M context (Command Code catalog and API context_length), vs the lab's 256K.
+# Host context 1000000 per the Command Code catalog/API context_length (lab entry: 256000).
 
 base_model = "stepfun/step-3.5-flash"
 
