@@ -569,7 +569,7 @@ function canonicalCandidates(provider: string, modelID: string) {
 
   if (provider === "anthropic") {
     for (const candidate of [...candidates]) {
-      candidates.push(candidate.replace(/(claude-(?:opus|sonnet|haiku)-\d+)\.(\d+)/, "$1-$2"));
+      candidates.push(candidate.replace(/(claude-[a-z]+-\d+)\.(\d+)/, "$1-$2"));
       candidates.push(candidate.replace(/^claude-3\.5-/, "claude-3-5-"));
     }
   }

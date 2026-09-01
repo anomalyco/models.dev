@@ -1830,7 +1830,36 @@ test("resolves DigitalOcean IDs to canonical model metadata", () => {
   expect(resolveDigitalOceanBaseModel("mimo-v2.5-pro")).toBe("xiaomi/mimo-v2.5-pro");
   expect(resolveDigitalOceanBaseModel("anthropic-claude-5-sonnet")).toBe("anthropic/claude-sonnet-5");
   expect(resolveDigitalOceanBaseModel("anthropic-claude-opus-5")).toBe("anthropic/claude-opus-5");
+  expect(resolveDigitalOceanBaseModel("anthropic-claude-fable-5.1")).toBe("anthropic/claude-fable-5-1");
+  expect(resolveDigitalOceanBaseModel("anthropic-claude-5.1-fable")).toBe("anthropic/claude-fable-5-1");
+  expect(resolveDigitalOceanBaseModel("anthropic-claude-unknown-99.1")).toBeUndefined();
   expect(resolveDigitalOceanBaseModel("openai-gpt-5.6-luna")).toBe("openai/gpt-5.6-luna");
+});
+
+test("new DigitalOcean Fable models emit only base metadata overrides", () => {
+  const translated = digitalocean.translateModel(
+    digitalOceanModel({
+      id: "anthropic-claude-fable-5.1",
+      name: "Anthropic Claude Fable 5.1",
+      reasoning_efforts: ["low", "medium", "high", "xhigh", "max"],
+      modalities: { input: ["text", "image"], output: ["text"] },
+      max_output_tokens: 128_000,
+      created_at: "2026-09-01T00:00:00Z",
+      pricing: { input: 10, output: 50, cacheRead: 0.25, cacheWrite: 12.5 },
+    }),
+    { existing: () => undefined, authored: () => undefined },
+  );
+
+  expect(translated).toEqual({
+    id: "anthropic-claude-fable-5.1",
+    model: {
+      base_model: "anthropic/claude-fable-5-1",
+      name: "Anthropic Claude Fable 5.1",
+      reasoning_options: [{ type: "effort", values: ["low", "medium", "high", "xhigh", "max"] }],
+      cost: { input: 10, output: 50, cache_read: 0.25, cache_write: 12.5 },
+      modalities: { input: ["text", "image"] },
+    },
+  });
 });
 
 test("new DigitalOcean base models inherit intrinsic capabilities", () => {
@@ -3003,6 +3032,14 @@ test("factors OpenRouter Pro routes against canonical OpenAI metadata", () => {
   });
   expect("family" in model).toBe(false);
   expect("release_date" in model).toBe(false);
+});
+
+test("resolves dotted Claude versions without a family allowlist", () => {
+  expect(resolveCanonicalBaseModel("anthropic/claude-fable-5.1")).toBe("anthropic/claude-fable-5-1");
+  expect(resolveCanonicalBaseModel("anthropic/claude-fable-5.1-fast")).toBe("anthropic/claude-fable-5-1");
+  expect(resolveCanonicalBaseModel("anthropic/claude-opus-4.6")).toBe("anthropic/claude-opus-4-6");
+  expect(resolveCanonicalBaseModel("anthropic/claude-3.5-sonnet-20241022")).toBe("anthropic/claude-3-5-sonnet-20241022");
+  expect(resolveCanonicalBaseModel("anthropic/claude-unknown-99.1")).toBeUndefined();
 });
 
 test("resolves SpaceXAI provider IDs to canonical xAI metadata", () => {
