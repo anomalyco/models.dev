@@ -1,5 +1,5 @@
 # https://docs.cline.bot/getting-started/clinepass (accessed 2026-09-02)
-# Model ID cline-pass/glm-5.3-flash; reference pricing matches glm-5.3 at $1.4 / $4.4 / $0.26 per 1M tokens (input/output/cache read).
+# Model ID cline-pass/glm-5.3-flash; reference pricing $0.075 / $0.25 / $0.015 per 1M tokens (input/output/cache read).
 base_model = "zhipuai/glm-5.3-flash"
 
 [[reasoning_options]]
@@ -10,6 +10,6 @@ values = ["low", "high", "max"]
 field = "reasoning_content"
 
 [cost]
-input = 1.4
-output = 4.4
-cache_read = 0.26
+input = 0.075
+output = 0.25
+cache_read = 0.015
