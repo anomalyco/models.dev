@@ -2,8 +2,8 @@
 # Catalog/ids: https://api.commandcode.ai/provider/v1 and https://commandcode.ai/models (accessed 2026-09-01).
 # Relay notes: OpenAI Chat Completions on /provider/v1/chat/completions; reasoning controls
 # pass through to upstreams (mirrored from the labs' own entries).
-# Toggle/budget controls mirrored from the baseline entry; Command Code forwards
-# request bodies to upstreams unchanged, so the upstream-native switch applies.
+# Toggle: chat_template_kwargs.enable_thinking true|false
+# Budget: reasoning_budget via chat_template_kwargs (Nemotron docs)
 
 base_model = "nvidia/nemotron-3-ultra-550b-a55b"
 name = "Nemotron 3 Ultra"

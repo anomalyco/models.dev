@@ -2,8 +2,7 @@
 # Catalog/ids: https://api.commandcode.ai/provider/v1 and https://commandcode.ai/models (accessed 2026-09-01).
 # Relay notes: OpenAI Chat Completions on /provider/v1/chat/completions; reasoning controls
 # pass through to upstreams (mirrored from the labs' own entries).
-# Toggle/budget controls mirrored from the baseline entry; Command Code forwards
-# request bodies to upstreams unchanged, so the upstream-native switch applies.
+# Toggle: thinking.type = enabled|disabled
 # Xiaomi price cut, unified across context lengths (was $0.80 in / $4.00 out / $0.16 cache read).
 
 base_model = "xiaomi/mimo-v2.5"
