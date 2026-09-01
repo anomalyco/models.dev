@@ -1,0 +1,24 @@
+name = "DeepSeek V3"
+description = "DeepSeek-V3 is an advanced LLM with efficient architecture and high performance across various natural language tasks."
+family = "deepseek"
+release_date = "2025-08-28"
+last_updated = "2025-08-28"
+attachment = false
+reasoning = false
+tool_call = false
+structured_output = false
+open_weights = false
+
+[cost]
+input = 0.364
+output = 0.546
+cache_read = 0.0364
+
+[limit]
+context = 128_000
+input = 128_000
+output = 124_000
+
+[modalities]
+input = ["text"]
+output = ["text"]

@@ -1,0 +1,23 @@
+name = "Llama 3.3 70B Versatile"
+description = "Llama-3.3-70B-Versatile is Meta's advanced multilingual large language model, optimized for a wide range of natural language processing tasks. With 70 billion parameters, it offers high performance across various benchmarks while maintaining efficiency suitable for diverse applications."
+family = "llama"
+release_date = "2025-09-30"
+last_updated = "2025-09-30"
+attachment = false
+reasoning = false
+tool_call = false
+structured_output = false
+open_weights = false
+
+[cost]
+input = 0.767
+output = 1.027
+
+[limit]
+context = 131_072
+input = 131_072
+output = 32_768
+
+[modalities]
+input = ["text"]
+output = ["text"]

@@ -1,0 +1,23 @@
+name = "ERNIE 5.0"
+description = "ERNIE 5.0 is Baidu’s unified foundation model supporting text generation, visual understanding, and deep-thinking reasoning, with a 128K context window."
+family = "ernie"
+release_date = "2026-06-30"
+last_updated = "2026-06-30"
+attachment = true
+reasoning = false
+tool_call = false
+structured_output = false
+open_weights = false
+
+[cost]
+input = 1.82
+output = 7.28
+
+[limit]
+context = 128_000
+input = 128_000
+output = 65_536
+
+[modalities]
+input = ["image", "text"]
+output = ["text"]

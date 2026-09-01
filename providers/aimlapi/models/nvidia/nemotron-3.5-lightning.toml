@@ -1,0 +1,23 @@
+name = "Nemotron 3.5 Lightning"
+description = "NVIDIA Nemotron 3.5 Lightning is an open mixture-of-experts model with 3B active parameters out of 30B total, built for high-throughput agentic workloads and specialized task execution with up to 1M context length."
+family = "nemotron"
+release_date = "2026-08-11"
+last_updated = "2026-08-11"
+attachment = false
+reasoning = false
+tool_call = false
+structured_output = false
+open_weights = false
+
+[cost]
+input = 0
+output = 0
+
+[limit]
+context = 1_000_000
+input = 1_000_000
+output = 65_536
+
+[modalities]
+input = ["text"]
+output = ["text"]

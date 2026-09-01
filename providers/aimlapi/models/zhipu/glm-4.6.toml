@@ -1,0 +1,24 @@
+name = "GLM 4.6"
+description = "Advanced version of GLM-4.6 with web search integration and enhanced capabilities"
+family = "glm"
+release_date = "2025-10-02"
+last_updated = "2025-10-02"
+attachment = false
+reasoning = false
+tool_call = false
+structured_output = false
+open_weights = false
+
+[cost]
+input = 0.78
+output = 2.86
+cache_read = 0.143
+
+[limit]
+context = 200_000
+input = 200_000
+output = 128_000
+
+[modalities]
+input = ["text"]
+output = ["text"]

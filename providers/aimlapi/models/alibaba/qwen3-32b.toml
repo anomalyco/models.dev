@@ -1,0 +1,22 @@
+name = "Qwen3 32B"
+description = "Alibaba's Qwen 3 32B is a multilingual model with instruction-following capabilities and enhanced reasoning."
+release_date = "2025-09-09"
+last_updated = "2025-09-09"
+attachment = false
+reasoning = false
+tool_call = false
+structured_output = false
+open_weights = false
+
+[cost]
+input = 0.208
+output = 0.832
+
+[limit]
+context = 131_000
+input = 131_000
+output = 16_384
+
+[modalities]
+input = ["text"]
+output = ["text"]

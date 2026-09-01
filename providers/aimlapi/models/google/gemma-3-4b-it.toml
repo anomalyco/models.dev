@@ -1,0 +1,24 @@
+name = "Gemma 3 4B"
+description = "Gemma 3 4B is a lightweight open language model from Google, suitable for on-device deployment and efficient inference."
+family = "gemma"
+release_date = "2025-09-09"
+last_updated = "2025-09-09"
+attachment = true
+reasoning = false
+tool_call = false
+structured_output = false
+open_weights = false
+
+[cost]
+input = 0.06877
+output = 0.13754
+cache_read = 0.055016
+
+[limit]
+context = 131_000
+input = 131_000
+output = 32_768
+
+[modalities]
+input = ["image", "text"]
+output = ["text"]

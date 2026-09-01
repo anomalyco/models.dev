@@ -1,0 +1,22 @@
+name = "Qwen3.8 27B"
+description = "Qwen3.8 27B is an open-weight dense vision-language model from Qwen. It accepts text, image and video inputs and is suited for coding, professional workflows, research, multimodal interaction and long-running agent tasks, with flexible thinking that can be tuned per request."
+release_date = "2026-08-14"
+last_updated = "2026-08-14"
+attachment = true
+reasoning = false
+tool_call = false
+structured_output = false
+open_weights = false
+
+[cost]
+input = 0.61893
+output = 4.40128
+
+[limit]
+context = 262_144
+input = 262_144
+output = 131_072
+
+[modalities]
+input = ["image", "text", "video"]
+output = ["text"]

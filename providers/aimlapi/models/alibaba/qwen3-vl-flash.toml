@@ -1,0 +1,23 @@
+name = "Qwen3 VL Flash"
+description = "Alibaba's Qwen 3 VL Flash is a fast and cost-effective vision-language model with hybrid thinking capabilities. Supports image understanding with up to 16,384 tokens per image and high-resolution mode for detailed analysis."
+release_date = "2025-10-19"
+last_updated = "2025-10-19"
+attachment = true
+reasoning = false
+tool_call = false
+structured_output = false
+open_weights = false
+
+[cost]
+input = 0.065
+output = 0.52
+cache_read = 0.065
+
+[limit]
+context = 262_144
+input = 262_144
+output = 32_768
+
+[modalities]
+input = ["image", "text"]
+output = ["text"]

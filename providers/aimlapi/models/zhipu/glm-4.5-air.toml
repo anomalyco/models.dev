@@ -1,0 +1,24 @@
+name = "GLM 4.5 Air"
+description = "Lightweight version of GLM-4.5 for cost-effective applications"
+family = "glm"
+release_date = "2025-09-09"
+last_updated = "2025-09-09"
+attachment = false
+reasoning = false
+tool_call = false
+structured_output = false
+open_weights = false
+
+[cost]
+input = 0.26
+output = 1.43
+cache_read = 0.039
+
+[limit]
+context = 128_000
+input = 128_000
+output = 98_000
+
+[modalities]
+input = ["text"]
+output = ["text"]

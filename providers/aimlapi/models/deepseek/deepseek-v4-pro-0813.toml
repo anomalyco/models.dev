@@ -1,0 +1,24 @@
+name = "DeepSeek V4 Pro 0813"
+description = "DeepSeek V4 Pro 0813 is the GA release of DeepSeek V4 Pro — a large-scale mixture-of-experts model for chat and reasoning tasks with 1M context length, supporting both standard and thinking modes."
+family = "deepseek"
+release_date = "2026-08-12"
+last_updated = "2026-08-12"
+attachment = false
+reasoning = false
+tool_call = false
+structured_output = false
+open_weights = false
+
+[cost]
+input = 2.393196
+output = 4.786392
+cache_read = 0.199433
+
+[limit]
+context = 1_048_576
+input = 1_048_576
+output = 384_000
+
+[modalities]
+input = ["text"]
+output = ["text"]

@@ -1,0 +1,24 @@
+name = "Step 3.7 Flash"
+description = "Step 3.7 Flash is a multimodal Mixture-of-Experts model from StepFun with text, image, and video understanding. It supports a 256K context window and is optimized for fast inference, reasoning, agent workflows, and long-context productivity tasks."
+family = "step"
+release_date = "2026-06-01"
+last_updated = "2026-06-01"
+attachment = true
+reasoning = false
+tool_call = false
+structured_output = false
+open_weights = false
+
+[cost]
+input = 0.27508
+output = 1.58171
+cache_read = 0.055016
+
+[limit]
+context = 256_000
+input = 256_000
+output = 256_000
+
+[modalities]
+input = ["image", "text", "video"]
+output = ["text"]

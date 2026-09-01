@@ -1,0 +1,23 @@
+name = "Seed 1.8"
+description = "ByteDance Seed 1.8 is a large language model with a 256K context window optimized for long-context reasoning and generation."
+family = "seed"
+release_date = "2026-01-12"
+last_updated = "2026-01-12"
+attachment = true
+reasoning = false
+tool_call = false
+structured_output = false
+open_weights = false
+
+[cost]
+input = 0.325
+output = 2.6
+
+[limit]
+context = 256_000
+input = 256_000
+output = 224_000
+
+[modalities]
+input = ["image", "text"]
+output = ["text"]

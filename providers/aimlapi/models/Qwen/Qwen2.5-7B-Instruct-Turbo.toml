@@ -1,0 +1,23 @@
+name = "Qwen2.5 7B Instruct Turbo"
+description = "Qwen 2.5 7B Instruct Turbo excels in coding and instruction following."
+family = "qwen"
+release_date = "2025-09-30"
+last_updated = "2025-09-30"
+attachment = false
+reasoning = false
+tool_call = false
+structured_output = false
+open_weights = false
+
+[cost]
+input = 0.39
+output = 0.39
+
+[limit]
+context = 32_000
+input = 32_000
+output = 31_000
+
+[modalities]
+input = ["text"]
+output = ["text"]

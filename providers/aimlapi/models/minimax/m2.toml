@@ -1,0 +1,23 @@
+name = "MiniMax M2"
+description = "MiniMax-M2 is an advanced large language model with 1M token context for extended reasoning and generation."
+family = "minimax"
+release_date = "2025-11-04"
+last_updated = "2025-11-04"
+attachment = false
+reasoning = false
+tool_call = false
+structured_output = false
+open_weights = false
+
+[cost]
+input = 0.39
+output = 1.56
+
+[limit]
+context = 1_000_000
+input = 1_000_000
+output = 40_960
+
+[modalities]
+input = ["text"]
+output = ["text"]

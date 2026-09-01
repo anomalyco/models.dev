@@ -1,0 +1,24 @@
+name = "Nemotron 3 Ultra 550B A55B"
+description = "NVIDIA Nemotron 3 Ultra is a reasoning and orchestration model built on a hybrid Transformer-Mamba Mixture-of-Experts architecture, optimized for complex reasoning, long-context analysis, and agent workflows with up to 1M context length."
+family = "nemotron"
+release_date = "2026-06-04"
+last_updated = "2026-06-04"
+attachment = false
+reasoning = false
+tool_call = false
+structured_output = false
+open_weights = false
+
+[cost]
+input = 0.82524
+output = 4.95144
+cache_read = 0.20631
+
+[limit]
+context = 1_000_000
+input = 1_000_000
+output = 32_768
+
+[modalities]
+input = ["text"]
+output = ["text"]

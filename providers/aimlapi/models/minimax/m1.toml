@@ -1,0 +1,23 @@
+name = "MiniMax M1"
+description = "MiniMax-M1 is a powerful reasoning model with a 1M token context window, delivering strong performance on complex tasks."
+family = "minimax"
+release_date = "2025-09-09"
+last_updated = "2025-09-09"
+attachment = false
+reasoning = false
+tool_call = false
+structured_output = false
+open_weights = false
+
+[cost]
+input = 0.52
+output = 2.86
+
+[limit]
+context = 1_000_000
+input = 1_000_000
+output = 40_960
+
+[modalities]
+input = ["text"]
+output = ["text"]

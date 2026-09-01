@@ -1,0 +1,23 @@
+name = "Qwen3 Max Preview"
+description = "Alibaba's Qwen 3 Max Preview is a multilingual model with instruction-following capabilities and enhanced reasoning."
+release_date = "2025-09-30"
+last_updated = "2025-09-30"
+attachment = false
+reasoning = false
+tool_call = false
+structured_output = false
+open_weights = false
+
+[cost]
+input = 1.56
+output = 7.8
+cache_read = 0.312
+
+[limit]
+context = 252_000
+input = 252_000
+output = 32_768
+
+[modalities]
+input = ["text"]
+output = ["text"]

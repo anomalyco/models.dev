@@ -1,0 +1,24 @@
+name = "Claude Sonnet 5"
+description = "Claude Sonnet 5 is a high-performance model for coding and agentic workflows, delivering near-Opus quality at Sonnet cost. Features a 1M token context window, adaptive thinking, and high-resolution vision."
+family = "claude-sonnet"
+release_date = "2026-06-30"
+last_updated = "2026-06-30"
+attachment = false
+reasoning = false
+tool_call = false
+structured_output = false
+open_weights = false
+
+[cost]
+input = 2.6
+output = 13
+cache_read = 0.26
+
+[limit]
+context = 1_000_000
+input = 1_000_000
+output = 128_000
+
+[modalities]
+input = ["text"]
+output = ["text"]

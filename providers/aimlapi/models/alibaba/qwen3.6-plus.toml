@@ -1,0 +1,23 @@
+name = "Qwen3.6 Plus"
+description = "Qwen3.6-Plus — a balanced general-purpose model by Alibaba Cloud optimized for performance, cost, and speed. Suitable for a wide range of chat and generation tasks."
+family = "qwen3.6"
+release_date = "2026-04-21"
+last_updated = "2026-04-21"
+attachment = false
+reasoning = false
+tool_call = false
+structured_output = false
+open_weights = false
+
+[cost]
+input = 0.52
+output = 3.12
+
+[limit]
+context = 1_000_000
+input = 1_000_000
+output = 65_536
+
+[modalities]
+input = ["text"]
+output = ["text"]

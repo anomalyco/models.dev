@@ -1,0 +1,24 @@
+name = "Mistral NeMo"
+description = "Mistral-Nemo is a powerful multilingual language model with advanced capabilities."
+family = "mistral-nemo"
+release_date = "2025-09-09"
+last_updated = "2025-09-09"
+attachment = false
+reasoning = false
+tool_call = false
+structured_output = false
+open_weights = false
+
+[cost]
+input = 0.20631
+output = 0.233818
+cache_read = 0.20631
+
+[limit]
+context = 128_000
+input = 128_000
+output = 131_072
+
+[modalities]
+input = ["text"]
+output = ["text"]

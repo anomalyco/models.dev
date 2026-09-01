@@ -1,0 +1,24 @@
+name = "Gemini 2.5 Pro"
+description = "Gemini Pro 2.5 is Google's most advanced reasoning AI model designed for complex tasks, showcasing strong reasoning and coding capabilities. It leads various benchmarks, indicating its enhanced performance."
+family = "gemini"
+release_date = "2025-09-09"
+last_updated = "2025-09-09"
+attachment = true
+reasoning = false
+tool_call = false
+structured_output = false
+open_weights = false
+
+[cost]
+input = 1.625
+output = 13
+cache_read = 1.625
+
+[limit]
+context = 1_000_000
+input = 1_000_000
+output = 65_536
+
+[modalities]
+input = ["image", "text"]
+output = ["text"]
