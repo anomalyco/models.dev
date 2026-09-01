@@ -1,7 +1,9 @@
-# GLM-5.2; exposes reasoning_effort = none|high|max (none disables; high/max tiers).
+# GLM-5.2; reasoning_effort effective levels high|max (default max).
+# low|medium map to high, xhigh maps to max; see providers/zhipuai/models/glm-5.2.toml.
+# `none` (off) is accepted via the effort field to disable thinking.
 # Pricing: https://zro.moonmath.ai/pricing
 base_model = "zhipuai/glm-5.2"
-reasoning_options = [{ type = "effort", values = ["none", "high", "max"] }]
+reasoning_options = [{ type = "effort", values = ["high", "max"] }]
 
 [interleaved]
 field = "reasoning_content"
