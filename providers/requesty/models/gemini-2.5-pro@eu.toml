@@ -1,0 +1,25 @@
+base_model = "google/gemini-2.5-pro"
+name = "Gemini 2.5 Pro (EU)"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "max"]
+
+[[reasoning_options]]
+type = "budget_tokens"
+
+[cost]
+input = 1.25
+output = 10
+cache_read = 0.31
+cache_write = 2.375
+
+[[cost.tiers]]
+tier = { type = "context", size = 200_000 }
+input = 2.5
+output = 15
+cache_read = 0.62
+cache_write = 4.75
+
+[limit]
+output = 65_535
