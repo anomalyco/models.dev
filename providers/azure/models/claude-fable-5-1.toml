@@ -1,0 +1,13 @@
+base_model = "anthropic/claude-fable-5-1"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
+structured_output = true
+
+[cost]
+input = 10.00
+output = 50.00
+cache_read = 0.25
+cache_write = 12.50
+
+[provider]
+npm = "@ai-sdk/anthropic"
+api = "https://${AZURE_RESOURCE_NAME}.services.ai.azure.com/anthropic/v1"
