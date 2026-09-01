@@ -1,5 +1,8 @@
+# Prices are DeepSeek's published OFF-PEAK rates, USD per 1M tokens.
+# Peak (01:00-04:00 and 06:00-10:00 UTC, Mon-Fri) is exactly double; models.dev
+# has no time-of-day pricing, and off-peak covers ~79% of hours.
+# https://api-docs.deepseek.com/quick_start/pricing/ (accessed 2026-09-01)
 # DeepSeek-V4-Flash-Vision-Exp is priced the same as DeepSeek V4 Flash.
-# https://api-docs.deepseek.com/quick_start/pricing/ (accessed 2026-08-22)
 # https://api-docs.deepseek.com/guides/vision (accessed 2026-08-22)
 # OpenAI: `thinking.type = enabled|disabled`, `reasoning_effort = low|high|max`.
 # Anthropic: `thinking.type`, `output_config.effort = low|high|max`; budget ignored.
@@ -17,7 +20,7 @@ values = ["low", "high", "max"]
 field = "reasoning_content"
 
 [cost]
-input = 0.14
-output = 0.28
-reasoning = 0.28
-cache_read = 0.0028
+input = 0.22
+output = 0.66
+reasoning = 0.66
+cache_read = 0.007

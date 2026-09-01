@@ -1,6 +1,9 @@
+# Prices are DeepSeek's published OFF-PEAK rates, USD per 1M tokens.
+# Peak (01:00-04:00 and 06:00-10:00 UTC, Mon-Fri) is exactly double; models.dev
+# has no time-of-day pricing, and off-peak covers ~79% of hours.
+# https://api-docs.deepseek.com/quick_start/pricing/ (accessed 2026-09-01)
 # Reasoning tokens are billed at the output rate (no separate CoT price).
 # `completion_tokens_details.reasoning_tokens` is a subset of completion_tokens.
-# https://api-docs.deepseek.com/quick_start/pricing/ (accessed 2026-08-12)
 base_model = "deepseek/deepseek-v4-pro-0813"
 name = "DeepSeek V4 Pro"
 # OpenAI: `thinking.type = enabled|disabled`, `reasoning_effort = high|max`.
@@ -18,7 +21,7 @@ values = ["high", "max"]
 field = "reasoning_content"
 
 [cost]
-input = 0.435
-output = 0.87
-reasoning = 0.87
-cache_read = 0.003625
+input = 0.66
+output = 1.98
+reasoning = 1.98
+cache_read = 0.022
