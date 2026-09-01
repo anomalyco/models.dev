@@ -1,0 +1,24 @@
+name = "MiniMax M2.5 Highspeed"
+description = "MiniMax-M2.5 Highspeed is a low-latency, high-throughput version of MiniMax-M2.5 optimized for real-time applications."
+family = "minimax"
+release_date = "2026-02-19"
+last_updated = "2026-02-19"
+attachment = true
+reasoning = false
+tool_call = false
+structured_output = false
+open_weights = false
+
+[cost]
+input = 0.78
+output = 3.12
+cache_read = 0.78
+
+[limit]
+context = 204_800
+input = 204_800
+output = 204_800
+
+[modalities]
+input = ["image", "text"]
+output = ["text"]

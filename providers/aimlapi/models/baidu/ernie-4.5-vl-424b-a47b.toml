@@ -1,0 +1,23 @@
+name = "Ernie 4.5 VL 424B A47B"
+description = "High-capacity vision-language Ernie 4.5 VL 424B A47B for demanding multimodal workflows."
+family = "ernie"
+release_date = "2026-01-12"
+last_updated = "2026-01-12"
+attachment = true
+reasoning = false
+tool_call = false
+structured_output = false
+open_weights = false
+
+[cost]
+input = 0.5577
+output = 1.677
+
+[limit]
+context = 123_000
+input = 123_000
+output = 123_000
+
+[modalities]
+input = ["image", "text"]
+output = ["text"]

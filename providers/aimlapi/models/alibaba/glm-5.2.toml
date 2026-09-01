@@ -1,0 +1,24 @@
+name = "GLM 5.2"
+description = "GLM-5.2 is Zhipu AI flagship MoE LLM with a 1M-token context window, optimized for agentic coding, tool use, reasoning, and long-context tasks."
+family = "glm"
+release_date = "2026-06-16"
+last_updated = "2026-06-16"
+attachment = false
+reasoning = false
+tool_call = false
+structured_output = false
+open_weights = false
+
+[cost]
+input = 1.82
+output = 5.72
+cache_read = 0.364
+
+[limit]
+context = 1_000_000
+input = 1_000_000
+output = 131_072
+
+[modalities]
+input = ["text"]
+output = ["text"]

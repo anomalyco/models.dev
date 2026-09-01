@@ -1,0 +1,24 @@
+name = "MiMo V2.5 Pro"
+description = "MiMo-V2.5-Pro — a flagship reasoning model by Xiaomi designed for complex agentic workflows, long-horizon tasks, and advanced software engineering scenarios with a 1M token context window."
+family = "mimo-v2.5-pro"
+release_date = "2026-04-23"
+last_updated = "2026-04-23"
+attachment = false
+reasoning = false
+tool_call = false
+structured_output = false
+open_weights = false
+
+[cost]
+input = 0.598299
+output = 1.196598
+cache_read = 0.00495144
+
+[limit]
+context = 1_000_000
+input = 1_000_000
+output = 128_000
+
+[modalities]
+input = ["text"]
+output = ["text"]

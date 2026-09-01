@@ -1,0 +1,23 @@
+name = "Nemotron 3 Nano 30B A3B"
+description = "NVIDIA Nemotron 3 Nano 30B A3B is a lightweight MoE language model from the Nemotron 3 family, designed for efficient and scalable text generation and agent workflows with strong compute efficiency."
+family = "nemotron"
+release_date = "2026-04-30"
+last_updated = "2026-04-30"
+attachment = false
+reasoning = false
+tool_call = false
+structured_output = false
+open_weights = false
+
+[cost]
+input = 0.06877
+output = 0.27508
+
+[limit]
+context = 262_144
+input = 262_144
+output = 228_000
+
+[modalities]
+input = ["text"]
+output = ["text"]

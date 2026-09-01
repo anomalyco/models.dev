@@ -1,0 +1,24 @@
+name = "Claude 4.1 Opus"
+description = "Claude 4.1 Opus is an enhanced version of Claude 4 Opus with improved reasoning and instruction-following capabilities."
+family = "claude-opus"
+release_date = "2025-09-30"
+last_updated = "2025-09-30"
+attachment = false
+reasoning = false
+tool_call = false
+structured_output = false
+open_weights = false
+
+[cost]
+input = 19.5
+output = 97.5
+cache_read = 1.95
+
+[limit]
+context = 200_000
+input = 200_000
+output = 32_000
+
+[modalities]
+input = ["text"]
+output = ["text"]

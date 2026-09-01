@@ -1,0 +1,24 @@
+name = "Claude 4.5 Sonnet"
+description = "Claude 4.5 Sonnet offers a balance of intelligence and speed for diverse enterprise and coding tasks."
+family = "claude-sonnet"
+release_date = "2025-10-01"
+last_updated = "2025-10-01"
+attachment = false
+reasoning = false
+tool_call = false
+structured_output = false
+open_weights = false
+
+[cost]
+input = 3.9
+output = 19.5
+cache_read = 0.39
+
+[limit]
+context = 200_000
+input = 200_000
+output = 64_000
+
+[modalities]
+input = ["text"]
+output = ["text"]

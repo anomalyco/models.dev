@@ -1,0 +1,24 @@
+name = "Claude 4.5 Opus"
+description = "Claude 4.5 Opus is Anthropic's flagship model for the most demanding reasoning and analysis tasks."
+family = "claude-opus"
+release_date = "2025-11-25"
+last_updated = "2025-11-25"
+attachment = true
+reasoning = false
+tool_call = false
+structured_output = false
+open_weights = false
+
+[cost]
+input = 6.877
+output = 34.385
+cache_read = 0.6877
+
+[limit]
+context = 200_000
+input = 200_000
+output = 64_000
+
+[modalities]
+input = ["image", "text"]
+output = ["text"]

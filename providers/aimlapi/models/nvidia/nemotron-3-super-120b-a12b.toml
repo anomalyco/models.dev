@@ -1,0 +1,23 @@
+name = "Nemotron 3 Super 120B A12B"
+description = "NVIDIA Nemotron 3 Super 120B A12B is the high-capacity MoE variant of the Nemotron 3 family, delivering strong reasoning and long-context performance for demanding text generation and agent workflows while preserving MoE compute efficiency."
+family = "nemotron"
+release_date = "2026-04-30"
+last_updated = "2026-04-30"
+attachment = false
+reasoning = false
+tool_call = false
+structured_output = false
+open_weights = false
+
+[cost]
+input = 0.123786
+output = 0.61893
+
+[limit]
+context = 262_144
+input = 262_144
+output = 262_144
+
+[modalities]
+input = ["text"]
+output = ["text"]

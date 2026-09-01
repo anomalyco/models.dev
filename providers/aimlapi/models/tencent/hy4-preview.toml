@@ -1,0 +1,23 @@
+name = "Hy4 preview"
+description = "Hy4 preview is a mixture-of-experts model from Tencent with 49B active parameters out of 770B total, built for coding agents, complex tool-use workflows and productivity tasks. It has a 1M-token context window and configurable reasoning effort."
+release_date = "2026-08-28"
+last_updated = "2026-08-28"
+attachment = false
+reasoning = false
+tool_call = false
+structured_output = false
+open_weights = false
+
+[cost]
+input = 1.1470836
+output = 3.4398754
+cache_read = 0.0577668
+
+[limit]
+context = 1_048_576
+input = 1_048_576
+output = 64_000
+
+[modalities]
+input = ["text"]
+output = ["text"]

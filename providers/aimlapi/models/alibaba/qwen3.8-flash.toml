@@ -1,0 +1,23 @@
+name = "Qwen3.8 Flash"
+description = "Qwen3.8-Flash is the speed- and cost-optimized tier of the Qwen3.8 family, pairing hybrid thinking with high throughput for coding assistance, agentic workflows and visual understanding. Natively multimodal: accepts text, images and video and returns text, with a 1M-token context window. Supports function calling, built-in tools (including web search), structured outputs and context caching."
+release_date = "2026-08-26"
+last_updated = "2026-08-26"
+attachment = true
+reasoning = false
+tool_call = false
+structured_output = false
+open_weights = false
+
+[cost]
+input = 0.208
+output = 0.611
+cache_read = 0.0208
+
+[limit]
+context = 1_000_000
+input = 1_000_000
+output = 131_072
+
+[modalities]
+input = ["image", "text"]
+output = ["text"]

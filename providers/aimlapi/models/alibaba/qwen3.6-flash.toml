@@ -1,0 +1,23 @@
+name = "Qwen3.6 Flash"
+description = "Qwen3.6-Flash — a lightweight and cost-efficient model by Alibaba Cloud designed for simple tasks and high-throughput applications. It offers fast response times with lower cost."
+family = "qwen3.6"
+release_date = "2026-04-21"
+last_updated = "2026-04-21"
+attachment = false
+reasoning = false
+tool_call = false
+structured_output = false
+open_weights = false
+
+[cost]
+input = 0.325
+output = 1.95
+
+[limit]
+context = 1_000_000
+input = 1_000_000
+output = 65_536
+
+[modalities]
+input = ["text"]
+output = ["text"]

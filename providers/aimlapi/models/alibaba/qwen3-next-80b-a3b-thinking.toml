@@ -1,0 +1,22 @@
+name = "Qwen3 Next 80B A3B Thinking"
+description = "Alibaba's Qwen 3 Next 80B A3B Thinking is a multilingual reasoning model with advanced chain-of-thought capabilities."
+release_date = "2025-09-30"
+last_updated = "2025-09-30"
+attachment = false
+reasoning = false
+tool_call = false
+structured_output = false
+open_weights = false
+
+[cost]
+input = 0.195
+output = 1.56
+
+[limit]
+context = 126_976
+input = 126_976
+output = 81_920
+
+[modalities]
+input = ["text"]
+output = ["text"]

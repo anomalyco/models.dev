@@ -1,0 +1,24 @@
+name = "GPT-5 Nano"
+description = "GPT-5 nano is the most lightweight GPT-5 variant, built for ultra-low latency use cases."
+family = "gpt"
+release_date = "2025-09-30"
+last_updated = "2025-09-30"
+attachment = true
+reasoning = false
+tool_call = false
+structured_output = false
+open_weights = false
+
+[cost]
+input = 0.075647
+output = 0.605176
+cache_read = 0.06877
+
+[limit]
+context = 400_000
+input = 400_000
+output = 128_000
+
+[modalities]
+input = ["image", "text"]
+output = ["text"]

@@ -1,0 +1,24 @@
+name = "Qwen3.7-Plus"
+description = "Qwen3.7-Plus is a multimodal agent model that unifies vision and language into a single agent foundation. It delivers strong vision-language capabilities while retaining agentic strength in coding, tool use, and productivity workflows — including GUI understanding, visual Q&A, and full-modality input for complex software engineering tasks."
+family = "qwen3.7-plus"
+release_date = "2026-06-01"
+last_updated = "2026-06-01"
+attachment = true
+reasoning = false
+tool_call = false
+structured_output = false
+open_weights = false
+
+[cost]
+input = 0.416
+output = 1.664
+cache_read = 0.0832
+
+[limit]
+context = 1_000_000
+input = 1_000_000
+output = 65_536
+
+[modalities]
+input = ["image", "text"]
+output = ["text"]

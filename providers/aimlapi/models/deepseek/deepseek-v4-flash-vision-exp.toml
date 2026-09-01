@@ -1,0 +1,24 @@
+name = "DeepSeek V4 Flash Vision Exp"
+description = "DeepSeek V4 Flash Vision Exp is an experimental vision-enabled build of DeepSeek V4 Flash. It adds image understanding on top of the base model while matching it on text tasks, with a 1M-token context window and thinking mode enabled by default."
+family = "deepseek"
+release_date = "2026-08-21"
+last_updated = "2026-08-21"
+attachment = true
+reasoning = false
+tool_call = false
+structured_output = false
+open_weights = false
+
+[cost]
+input = 0.572
+output = 1.716
+cache_read = 0.0182
+
+[limit]
+context = 1_048_576
+input = 1_048_576
+output = 384_000
+
+[modalities]
+input = ["image", "text"]
+output = ["text"]

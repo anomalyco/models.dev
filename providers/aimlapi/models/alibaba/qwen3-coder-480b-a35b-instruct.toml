@@ -1,0 +1,22 @@
+name = "Qwen3 Coder"
+description = "Alibaba's Qwen 3 Coder is a powerful coding agent."
+release_date = "2025-09-09"
+last_updated = "2025-09-09"
+attachment = false
+reasoning = false
+tool_call = false
+structured_output = false
+open_weights = false
+
+[cost]
+input = 1.95
+output = 9.75
+
+[limit]
+context = 262_000
+input = 262_000
+output = 65_536
+
+[modalities]
+input = ["text"]
+output = ["text"]

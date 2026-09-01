@@ -1,0 +1,24 @@
+name = "Claude 4.6 Sonnet"
+description = "Claude 4.6 Sonnet is a highly capable model balancing performance and efficiency for everyday AI tasks."
+family = "claude-sonnet"
+release_date = "2026-02-18"
+last_updated = "2026-02-18"
+attachment = false
+reasoning = false
+tool_call = false
+structured_output = false
+open_weights = false
+
+[cost]
+input = 3.9
+output = 19.5
+cache_read = 0.39
+
+[limit]
+context = 200_000
+input = 200_000
+output = 64_000
+
+[modalities]
+input = ["text"]
+output = ["text"]

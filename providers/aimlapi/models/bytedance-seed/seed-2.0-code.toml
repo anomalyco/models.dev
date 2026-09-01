@@ -1,0 +1,23 @@
+name = "Seed-2.0-Code"
+description = "ByteDance Seed-2.0-Code is optimized for agentic coding — frontend development, multilingual programming tasks and coding-agent workflows — with a 256K context window, multimodal (text/image/video) input and selectable reasoning effort."
+family = "seed"
+release_date = "2026-07-30"
+last_updated = "2026-07-30"
+attachment = true
+reasoning = false
+tool_call = false
+structured_output = false
+open_weights = false
+
+[cost]
+input = 0.6877
+output = 4.1262
+
+[limit]
+context = 262_144
+input = 262_144
+output = 131_072
+
+[modalities]
+input = ["image", "text"]
+output = ["text"]

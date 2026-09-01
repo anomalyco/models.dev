@@ -1,0 +1,23 @@
+name = "Sonar Pro"
+description = "Perplexity Sonar Pro is an advanced search-augmented language model with deeper reasoning and broader web coverage."
+family = "sonar-pro"
+release_date = "2025-09-09"
+last_updated = "2025-09-09"
+attachment = true
+reasoning = false
+tool_call = false
+structured_output = false
+open_weights = false
+
+[cost]
+input = 3.9
+output = 19.5
+
+[limit]
+context = 200_000
+input = 200_000
+output = 100_000
+
+[modalities]
+input = ["image", "text"]
+output = ["text"]

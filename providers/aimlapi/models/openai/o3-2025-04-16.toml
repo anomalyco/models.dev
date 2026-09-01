@@ -1,0 +1,24 @@
+name = "o3"
+description = "OpenAI o3 is a frontier reasoning model with exceptional performance on complex scientific, math, and coding tasks."
+family = "o"
+release_date = "2025-09-30"
+last_updated = "2025-09-30"
+attachment = true
+reasoning = false
+tool_call = false
+structured_output = false
+open_weights = false
+
+[cost]
+input = 2.6
+output = 10.4
+cache_read = 0.65
+
+[limit]
+context = 200_000
+input = 200_000
+output = 100_000
+
+[modalities]
+input = ["image", "text"]
+output = ["text"]

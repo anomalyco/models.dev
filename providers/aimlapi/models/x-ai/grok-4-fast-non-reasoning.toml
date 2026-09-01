@@ -1,0 +1,24 @@
+name = "Grok 4 Fast Non-Reasoning"
+description = "Grok 4 Fast without reasoning for faster responses and lower latency."
+family = "grok"
+release_date = "2025-09-30"
+last_updated = "2025-09-30"
+attachment = true
+reasoning = false
+tool_call = false
+structured_output = false
+open_weights = false
+
+[cost]
+input = 1.625
+output = 3.25
+cache_read = 0.26
+
+[limit]
+context = 2_000_000
+input = 2_000_000
+output = 1_999_000
+
+[modalities]
+input = ["image", "text"]
+output = ["text"]

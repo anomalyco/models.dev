@@ -1,0 +1,24 @@
+name = "Gemma 3 27B"
+description = "Gemma 3 27B is Google's largest Gemma open model, delivering strong reasoning and text generation capabilities."
+family = "gemma"
+release_date = "2025-09-09"
+last_updated = "2025-09-09"
+attachment = true
+reasoning = false
+tool_call = false
+structured_output = false
+open_weights = false
+
+[cost]
+input = 0.20631
+output = 0.632684
+cache_read = 0.103155
+
+[limit]
+context = 128_000
+input = 128_000
+output = 131_072
+
+[modalities]
+input = ["image", "text"]
+output = ["text"]
