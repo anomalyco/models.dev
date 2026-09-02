@@ -3,13 +3,17 @@
 # https://catalog.endpoints.ai.ovh.net/rest/v2/openrouter
 # Effort: reasoning_effort = none|minimal|low|medium|high (OVHcloud's API enum,
 # not the lab's low|medium|xhigh). Responses uses reasoning.effort.
-# Pricing is omitted: the catalog currently publishes blank prompt/completion rates.
+# Blank catalog prompt/completion rates default to zero in the sync.
 base_model = "alibaba/qwen3.8-27b"
 name = "Qwen3.8-27B"
 description = "Multimodal reasoning model for visual analysis, planning, and tool use"
 release_date = "2026-09-02"
 last_updated = "2026-09-02"
 reasoning_options = [{ type = "effort", values = ["none", "minimal", "low", "medium", "high"] }]
+
+[cost]
+input = 0
+output = 0
 
 [limit]
 output = 262_144
