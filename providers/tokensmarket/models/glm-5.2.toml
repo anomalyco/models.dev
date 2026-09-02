@@ -1,8 +1,8 @@
-# Alibaba Cloud (DashScope) channel, which accepts the full
-# reasoning_effort enum for GLM-5.2 ("none" disables reasoning, so no separate
-# toggle is needed).
+# Alibaba Cloud (DashScope) channel. The effective `reasoning_effort`
+# values are `none | high | max`: `none` disables reasoning, low/medium
+# collapse to high, and xhigh collapses to max.
 base_model = "zhipuai/glm-5.2"
-reasoning_options = [{ type = "effort", values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"] }]
+reasoning_options = [{ type = "effort", values = ["none", "high", "max"] }]
 
 [interleaved]
 field = "reasoning_content"
