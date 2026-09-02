@@ -1,12 +1,7 @@
-# Alibaba Cloud (DashScope) channel. The adapter maps effort "none" to
-# `enable_thinking = false` and forwards `reasoning.budget_tokens` as
-# `thinking_budget`; Model Studio documents no bounds for the budget on Kimi.
-# Matches the declared surface of the DashScope peer providers on this same
-# model ID (e.g. alibaba-token-plan/kimi-k2.7-code.toml), which cite
-# https://www.alibabacloud.com/help/en/model-studio/kimi-api and
-# https://www.alibabacloud.com/help/en/model-studio/deep-thinking for both fields.
+# Alibaba Cloud (DashScope) channel. Kimi K2.7 Code is a thinking-only model
+# on this surface and does not expose caller-selectable reasoning controls.
 base_model = "moonshotai/kimi-k2.7-code"
-reasoning_options = [{ type = "toggle" }, { type = "budget_tokens" }]
+reasoning_options = []
 
 [interleaved]
 field = "reasoning_content"
