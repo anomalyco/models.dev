@@ -1,0 +1,23 @@
+name = "GLM 5.3 (50% off)"
+description = "Flagship GLM model for hybrid reasoning, coding, and agentic engineering"
+family = "glm"
+release_date = "2026-08-18"
+last_updated = "2026-08-18"
+attachment = false
+reasoning = true
+tool_call = true
+open_weights = false
+reasoning_options = []
+
+[cost]
+input = 0.7
+output = 2.2
+cache_read = 0.13
+
+[limit]
+context = 1_048_576
+output = 1_048_576
+
+[modalities]
+input = ["text"]
+output = ["text"]

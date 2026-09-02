@@ -1,0 +1,24 @@
+name = "Qwen3.8 Max 0902"
+description = "Qwen vision-language model for visual reasoning, documents, and agent tasks"
+family = "qwen3.8-max"
+release_date = "2026-09-01"
+last_updated = "2026-09-01"
+attachment = true
+reasoning = true
+tool_call = true
+open_weights = false
+reasoning_options = []
+
+[cost]
+input = 2
+output = 6
+cache_read = 0.25
+cache_write = 2.5
+
+[limit]
+context = 991_000
+output = 128_000
+
+[modalities]
+input = ["text", "image", "pdf"]
+output = ["text"]
