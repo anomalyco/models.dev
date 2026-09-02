@@ -1,15 +1,8 @@
-# Kimi K3; OpenAI-compatible reasoning controls: thinking toggle + reasoning effort low|high|max
-# (matches providers/moonshotai/models/kimi-k3.toml and providers/neuralwatt/models/kimi-k3.toml).
-# Limits 1M context / 1M output (context matches base model; output is the delta).
-# Pricing: https://zro.moonmath.ai/pricing
+# Effort: reasoning_effort = low|high|max (default high)
+# Pricing: https://zro.moonmath.ai/pricing (USD / 1M tokens)
 base_model = "moonshotai/kimi-k3"
-
-[[reasoning_options]]
-type = "toggle"
-
-[[reasoning_options]]
-type = "effort"
-values = ["low", "high", "max"]
+temperature = true
+reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]
 
 [interleaved]
 field = "reasoning_content"
@@ -21,3 +14,6 @@ cache_read = 0.45
 
 [limit]
 output = 1_048_576
+
+[modalities]
+input = ["text", "image"]
