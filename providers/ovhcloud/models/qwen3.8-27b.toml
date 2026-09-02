@@ -1,0 +1,19 @@
+name = "Qwen3.8-27B"
+description = "Multimodal reasoning model for visual analysis, planning, and tool use"
+release_date = "2026-09-02"
+last_updated = "2026-09-02"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = true
+reasoning_options = []
+
+[limit]
+context = 262_144
+output = 262_144
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
