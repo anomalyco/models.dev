@@ -1,17 +1,14 @@
 base_model = "zhipuai/glm-5.3"
 
-# Reasoning: this surface forwards only OpenAI-style `reasoning_effort`, verbatim —
-# no alias mapping, no separate thinking-toggle field (omitting the field applies the
-# gateway default). The set below is enforced server-side for glm-5.3: any other value
-# returns 400 naming this exact set (e.g. sending "max" to deepseek-v4-flash returns
-# "does not accept reasoning_effort 'max'. Supported: low, medium, high, xhigh").
-# Same set is public in GET /v1/public/models -> capabilities.reasoning_efforts.
-# "none" is deliberately NOT advertised here even though the API accepts it (it is
-# part of the public accept-set): measured 2026-08-28, it does not reliably disable
-# thinking upstream — no hard off switch exists, so we won't promise one to clients.
+# Reasoning control on this surface: only OpenAI-style `reasoning_effort` is forwarded
+# (verbatim, no alias mapping, no separate thinking toggle). The gateway validates the
+# accepted set per model (400 names it; also in GET /v1/public/models ->
+# capabilities.reasoning_efforts). The values advertised below are the subset with a
+# MEASURED distinct effect — same prompt, 3 samples per level, median reasoning_tokens
+# (2026-09-02): low 26 / medium 330 / high 32 / max 368 → two behaviors: {low,high} minimal, {medium,max} full. medium and high are accepted aliases; "none" accepted but does not disable thinking.
 [[reasoning_options]]
 type = "effort"
-values = ["low", "medium", "high", "max"]
+values = ["low", "max"]
 
 # Current promotional pricing (40% off list), USD/MTok — what the API bills today.
 # Live source: GET /v1/public/models (nano-USD per token; /1000 = USD/MTok).

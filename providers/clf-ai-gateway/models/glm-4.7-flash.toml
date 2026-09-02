@@ -1,19 +1,16 @@
 base_model = "zhipuai/glm-4.7-flash"
 
-# Reasoning: this surface forwards only OpenAI-style `reasoning_effort`, verbatim —
-# no alias mapping, no separate thinking-toggle field (omitting the field applies the
-# gateway default). The set below is enforced server-side for glm-4.7-flash: any other value
-# returns 400 naming this exact set (e.g. sending "max" to deepseek-v4-flash returns
-# "does not accept reasoning_effort 'max'. Supported: low, medium, high, xhigh").
-# Same set is public in GET /v1/public/models -> capabilities.reasoning_efforts.
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high"]
+# Reasoning control on this surface: only OpenAI-style `reasoning_effort` is forwarded
+# (verbatim, no alias mapping, no separate thinking toggle). The gateway validates the
+# accepted set per model (400 names it; also in GET /v1/public/models ->
+# capabilities.reasoning_efforts). The values advertised below are the subset with a
+# MEASURED distinct effect — same prompt, 3 samples per level, median reasoning_tokens
+# (2026-09-02): low 1294 / medium 1451 / high 567 with overlapping spreads (high samples 1778/567/192) → no measurable graded control; low/medium/high are accepted but ignored.
+reasoning_options = []
 
 # Current promotional pricing (40% off list), USD/MTok — what the API bills today.
 # Live source: GET /v1/public/models (nano-USD per token; /1000 = USD/MTok).
-# No cached tier for this model on this surface (public endpoint: cached_input = null);
-# cached tokens, if any, bill at the input rate.
+# No cached tier for this model on this surface (public endpoint: cached_input = null).
 [cost]
 input = 0.036
 output = 0.24
