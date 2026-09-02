@@ -1,11 +1,11 @@
 base_model = "deepseek/deepseek-v4-pro-0813"
 
-# Reasoning control on this surface: only OpenAI-style `reasoning_effort` is forwarded
-# (verbatim, no alias mapping, no separate thinking toggle). The gateway validates the
-# accepted set per model (400 names it; also in GET /v1/public/models ->
-# capabilities.reasoning_efforts). The values advertised below are the subset with a
-# MEASURED distinct effect — same prompt, 3 samples per level, median reasoning_tokens
-# (2026-09-02): low 282 / medium 214 / high 746 / xhigh 4124 → three graded behaviors; medium is an accepted alias of low.
+# Wire: only OpenAI-style `reasoning_effort` is forwarded, verbatim. No on/off toggle
+# field is forwarded on this surface, so there is no "toggle" option to expose.
+# Host accept-set for deepseek-v4-pro: low, medium, high, xhigh (anything else -> 400 naming this set; public
+# in GET /v1/public/models -> capabilities.reasoning_efforts). Only the levels with a
+# MEASURED distinct effect are advertised — same prompt, 3 samples per level, median
+# reasoning_tokens, 2026-09-02: low 282 / medium 214 / high 746 / xhigh 4124 -> three graded behaviors; medium is an inert alias of low.
 [[reasoning_options]]
 type = "effort"
 values = ["low", "high", "xhigh"]

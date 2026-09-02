@@ -1,11 +1,12 @@
 base_model = "deepseek/deepseek-v4-flash-0731"
 
-# Reasoning control on this surface: only OpenAI-style `reasoning_effort` is forwarded
-# (verbatim, no alias mapping, no separate thinking toggle). The gateway validates the
-# accepted set per model (400 names it; also in GET /v1/public/models ->
-# capabilities.reasoning_efforts). The values advertised below are the subset with a
-# MEASURED distinct effect — same prompt, 3 samples per level, median reasoning_tokens
-# (2026-09-02): low 563 / medium 242 / high 199 / xhigh 226 (xhigh samples 1210/226/186) → no consistent ordering; low/medium/high/xhigh are accepted but not a reliable control.
+# Wire: only OpenAI-style `reasoning_effort` is forwarded, verbatim. No on/off toggle
+# field is forwarded on this surface, so there is no "toggle" option to expose.
+# Host accept-set for deepseek-v4-flash: low, medium, high, xhigh (anything else -> 400 naming this set; public
+# in GET /v1/public/models -> capabilities.reasoning_efforts). Only the levels with a
+# MEASURED distinct effect are advertised — same prompt, 3 samples per level, median
+# reasoning_tokens, 2026-09-02: low 563 / medium 242 / high 199 / xhigh 226 (xhigh samples 1210/226/186) -> no consistent ordering; the accepted levels are not a reliable control.
+# Accepted levels are inert and no toggle is forwarded -> no real caller control here.
 reasoning_options = []
 
 # Current promotional pricing (40% off list), USD/MTok — what the API bills today.

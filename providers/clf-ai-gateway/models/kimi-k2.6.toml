@@ -1,11 +1,12 @@
 base_model = "moonshotai/kimi-k2.6"
 
-# Reasoning control on this surface: only OpenAI-style `reasoning_effort` is forwarded
-# (verbatim, no alias mapping, no separate thinking toggle). The gateway validates the
-# accepted set per model (400 names it; also in GET /v1/public/models ->
-# capabilities.reasoning_efforts). The values advertised below are the subset with a
-# MEASURED distinct effect — same prompt, 3 samples per level, median reasoning_tokens
-# (2026-09-02): low 528 / medium 577 / high 456 → flat; thinking is always on, low/medium/high accepted but ignored (matches the lab: toggle-only).
+# Wire: only OpenAI-style `reasoning_effort` is forwarded, verbatim. No on/off toggle
+# field is forwarded on this surface, so there is no "toggle" option to expose.
+# Host accept-set for kimi-k2.6: low, medium, high (anything else -> 400 naming this set; public
+# in GET /v1/public/models -> capabilities.reasoning_efforts). Only the levels with a
+# MEASURED distinct effect are advertised — same prompt, 3 samples per level, median
+# reasoning_tokens, 2026-09-02: low 528 / medium 577 / high 456 -> flat; thinking is always on and the accepted levels are inert (matches the lab: toggle-only, and no toggle is forwarded here).
+# Accepted levels are inert and no toggle is forwarded -> no real caller control here.
 reasoning_options = []
 
 # Current promotional pricing (40% off list), USD/MTok — what the API bills today.

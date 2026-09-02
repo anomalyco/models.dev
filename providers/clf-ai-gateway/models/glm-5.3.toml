@@ -1,11 +1,11 @@
 base_model = "zhipuai/glm-5.3"
 
-# Reasoning control on this surface: only OpenAI-style `reasoning_effort` is forwarded
-# (verbatim, no alias mapping, no separate thinking toggle). The gateway validates the
-# accepted set per model (400 names it; also in GET /v1/public/models ->
-# capabilities.reasoning_efforts). The values advertised below are the subset with a
-# MEASURED distinct effect — same prompt, 3 samples per level, median reasoning_tokens
-# (2026-09-02): low 26 / medium 330 / high 32 / max 368 → two behaviors: {low,high} minimal, {medium,max} full. medium and high are accepted aliases; "none" accepted but does not disable thinking.
+# Wire: only OpenAI-style `reasoning_effort` is forwarded, verbatim. No on/off toggle
+# field is forwarded on this surface, so there is no "toggle" option to expose.
+# Host accept-set for glm-5.3: none, low, medium, high, max (anything else -> 400 naming this set; public
+# in GET /v1/public/models -> capabilities.reasoning_efforts). Only the levels with a
+# MEASURED distinct effect are advertised — same prompt, 3 samples per level, median
+# reasoning_tokens, 2026-09-02: low 26 / medium 330 / high 32 / max 368 -> two behaviors: {low,high} minimal, {medium,max} full; medium and high are inert aliases; "none" is accepted but does not disable thinking, so it is not advertised.
 [[reasoning_options]]
 type = "effort"
 values = ["low", "max"]
