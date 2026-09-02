@@ -6,12 +6,12 @@ base_model = "zhipuai/glm-5.3"
 # returns 400 naming this exact set (e.g. sending "max" to deepseek-v4-flash returns
 # "does not accept reasoning_effort 'max'. Supported: low, medium, high, xhigh").
 # Same set is public in GET /v1/public/models -> capabilities.reasoning_efforts.
-# "none" is accepted and validated by the API (part of the public set); measured
-# 2026-08-28: upstream may still emit some reasoning at "none" — there is no hard
-# off switch, so treat "none" as minimize-thinking, not disable.
+# "none" is deliberately NOT advertised here even though the API accepts it (it is
+# part of the public accept-set): measured 2026-08-28, it does not reliably disable
+# thinking upstream — no hard off switch exists, so we won't promise one to clients.
 [[reasoning_options]]
 type = "effort"
-values = ["none", "low", "medium", "high", "max"]
+values = ["low", "medium", "high", "max"]
 
 # Current promotional pricing (40% off list), USD/MTok — what the API bills today.
 # Live source: GET /v1/public/models (nano-USD per token; /1000 = USD/MTok).
