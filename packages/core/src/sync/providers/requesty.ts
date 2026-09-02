@@ -133,6 +133,9 @@ export function resolveRequestyBaseModel(id: string) {
     const bare = id.replace(REGION_SUFFIX, "");
     return (
         resolveModelMetadataBaseModel(bare) ??
+        (bare.startsWith("claude-")
+            ? resolveModelMetadataBaseModel(`anthropic/${bare}`)
+            : undefined) ??
         (ANTHROPIC_DOT_ZERO.test(bare)
             ? resolveModelMetadataBaseModel(`${bare}-0`)
             : undefined)

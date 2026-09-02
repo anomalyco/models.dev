@@ -1,13 +1,5 @@
-name = "claude-fable-5.1"
-description = "Claude Fable 5.1 is Anthropic's most capable model, improving on Claude Fable 5 across agentic coding, long running agentic workflows, and knowledge work such as large code refactors, front end and visual code generation, and finance and analysis tasks. It ships a 1M token context window by default with 128K max output, is more token efficient and concise than Fable 5, and supports per message effort control. It is a Mythos class model with robust safeguards."
-family = "claude-fable"
-release_date = "2026-09-01"
-last_updated = "2026-09-01"
-attachment = true
-reasoning = true
-tool_call = true
+base_model = "anthropic/claude-fable-5-1"
 structured_output = true
-open_weights = false
 
 [[reasoning_options]]
 type = "effort"
@@ -21,11 +13,3 @@ input = 10
 output = 50
 cache_read = 0.25
 cache_write = 12.5
-
-[limit]
-context = 1_000_000
-output = 128_000
-
-[modalities]
-input = ["text", "image"]
-output = ["text"]
