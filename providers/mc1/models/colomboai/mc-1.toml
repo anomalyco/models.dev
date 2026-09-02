@@ -1,3 +1,6 @@
+# First-party contract: https://github.com/ColomboAI-com/MC-1-platform/blob/main/mc1/logical-model.ts
+# Product change and validation: https://github.com/ColomboAI-com/MC-1-platform/pull/40
+# MC-1 uses dynamic route pricing rather than one fixed per-token model price.
 name = "MC-1 — Auto Intelligence"
 description = "ColomboAI's logical intelligence model that routes each request to an eligible executable model under project policy."
 family = "model-router"
@@ -10,7 +13,6 @@ tool_call = true
 structured_output = true
 open_weights = false
 
-# MC-1 uses dynamic route pricing rather than one fixed per-token model price.
 [limit]
 context = 128000
 output = 128000
