@@ -264,6 +264,15 @@ xAI is implemented in `packages/core/src/sync/providers/xai.ts`.
 - The endpoint is used only to monitor catalog availability. Existing TOMLs are preserved byte-for-byte, including models absent from the response, because model access can be scoped to the API project.
 - Fine-tuned and customer-owned models are excluded. Unknown first-party models are ignored because the endpoint does not provide enough lifecycle or visibility metadata to distinguish public catalog additions.
 
+## Meta Notes
+
+- Run with `bun models:sync meta` or as part of the `direct` group. Registration also enables the hourly provider-specific workflow; no new secret is required.
+- Sources: `https://dev.meta.ai/docs/models.md` and `https://dev.meta.ai/docs/pricing-rate-limits.md`.
+- Meta's `/v1/models` endpoint is team-scoped and exposes IDs and registry timestamps, not pricing or limits. Use the public documentation instead of treating account-visible IDs as public catalog additions.
+- Sync only the token-priced text models in the public model table. Update standard/contributor input, output, and cached-input USD/MTok prices and context windows. Keep output limits, modalities (including audio support caveats), reasoning controls, dates, inheritance, and other authored fields unchanged.
+- New documented models open deduped missing-model issues for manual authoring (`skipCreates`); local models absent from the docs are retained (`deleteMissing: false`). Image generation, transcription, and self-hosted models are outside this sync's scope.
+- Missing tables, unknown pricing tiers, invalid prices/limits, and duplicate model rows fail before writing. Documentation format changes require updating the parser, not guessing defaults.
+
 ## OVHcloud Notes
 
 OVHcloud AI Endpoints is implemented in `packages/core/src/sync/providers/ovhcloud.ts`.
