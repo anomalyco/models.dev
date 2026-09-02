@@ -1,0 +1,28 @@
+name = "GLM Flash Latest"
+description = "GLM vision model for visual reasoning, documents, and multimodal agents"
+family = "glm-flash"
+release_date = "2026-08-27"
+last_updated = "2026-08-27"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[cost]
+input = 0.075
+output = 0.25
+cache_read = 0.015
+
+[limit]
+context = 1_310_720
+output = 131_072
+
+[modalities]
+input = ["text", "image", "video"]
+output = ["text"]
