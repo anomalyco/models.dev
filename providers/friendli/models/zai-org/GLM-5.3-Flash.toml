@@ -1,0 +1,32 @@
+# Friendli live catalog (GET /serverless/v1/models, accessed 2026-08-29)
+# reports input_modalities=[text,image,video] and omits pdf. Verified the
+# host-side omission with a live POST /chat/completions request: a minimal
+# application/pdf data URL supplied through image_url returned HTTP 422
+# "Failed to load media". Keep this real host delta rather than inheriting
+# the lab's pdf modality.
+# Effort: reasoning_effort = "low" | "high" | "max"
+# https://friendli.ai/docs/openapi/model-apis/chat-completions#body-reasoning-effort-one-of-0
+# Budget: reasoning_budget = positive integer reasoning-token cap (-1 = unlimited)
+# https://friendli.ai/docs/openapi/model-apis/chat-completions#body-reasoning-budget-one-of-0
+base_model = "zhipuai/glm-5.3-flash"
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[[reasoning_options]]
+type = "budget_tokens"
+
+[cost]
+input = 0.15
+output = 0.5
+cache_read = 0.03
+
+[limit]
+context = 1_048_576
+
+[modalities]
+input = ["text", "image", "video"]

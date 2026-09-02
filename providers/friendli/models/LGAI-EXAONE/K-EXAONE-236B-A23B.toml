@@ -1,0 +1,23 @@
+# Toggle: chat_template_kwargs.enable_thinking = true | false
+# https://friendli.ai/docs/guides/reasoning
+#
+# Deprecated route: deprecation_date 2026-08-20 passed; the live catalog no
+# longer lists this model and POST /chat/completions now returns HTTP 404
+# (verified live 2026-08-29). Retained for history via deleteMissing: false.
+# Override-only: cost, reasoning options, and lifecycle come from this host;
+# limits inherit wholesale from models/lgai-exaone/k-exaone-236b-a23b.toml
+# (LG config max_position_embeddings = 262,144), with no serving-field
+# completion claim on this dead route.
+base_model = "lgai-exaone/k-exaone-236b-a23b"
+status = "deprecated"
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "toggle"
+
+[cost]
+input = 0.2
+output = 0.8
+cache_read = 0.1

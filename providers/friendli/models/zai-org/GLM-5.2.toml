@@ -1,17 +1,29 @@
-name = "GLM-5.2"
-# Friendli documents only $.chat_template_kwargs.enable_thinking = true | false
-# for this model, not the configured effort values "high" and "max".
-# https://friendli.ai/docs/guides/reasoning (accessed 2026-06-25)
+# Toggle: chat_template_kwargs.enable_thinking = true | false
+# https://friendli.ai/docs/guides/reasoning
+# Effort: $.reasoning_effort = "high" | "max" — confirmed for this model only
+# (GLM-5.2), not the GLM family generally (GLM-5.1 documents toggle only).
+# https://friendli.ai/docs/examples/models/zai-glm-5-2/control-reasoning
+# Budget: reasoning_budget = positive integer reasoning-token cap (-1 = unlimited)
+# https://friendli.ai/docs/openapi/model-apis/chat-completions#body-reasoning-budget-one-of-0
 base_model = "zhipuai/glm-5.2"
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "toggle"
 
 [[reasoning_options]]
 type = "effort"
 values = ["high", "max"]
 
-[interleaved]
-field = "reasoning_content"
+[[reasoning_options]]
+type = "budget_tokens"
 
 [cost]
 input = 1.4
 output = 4.4
 cache_read = 0.26
+
+[limit]
+context = 1_048_576

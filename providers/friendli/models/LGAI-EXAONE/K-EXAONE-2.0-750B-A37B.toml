@@ -2,7 +2,7 @@
 # https://friendli.ai/docs/guides/reasoning
 # Budget: reasoning_budget = positive integer reasoning-token cap (-1 = unlimited)
 # https://friendli.ai/docs/openapi/model-apis/chat-completions#body-reasoning-budget-one-of-0
-base_model = "deepseek/deepseek-v3.2"
+base_model = "lgai-exaone/k-exaone-2.0-750b-a37b"
 
 [interleaved]
 field = "reasoning_content"
@@ -14,9 +14,6 @@ type = "toggle"
 type = "budget_tokens"
 
 [cost]
-input = 0.5
-output = 1.5
-cache_read = 0.25
-
-[limit]
-context = 163_840
+input = 0.6
+output = 2.4
+cache_read = 0.12

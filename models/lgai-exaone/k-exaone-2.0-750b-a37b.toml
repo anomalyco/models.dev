@@ -1,0 +1,27 @@
+# Context: official Hugging Face config max_position_embeddings = 262_144.
+# Output: K-EXAONE 2.0 Technical Report, Appendix C evaluation setup allows
+# up to 32,768 generated tokens within a 256K context window.
+# https://huggingface.co/LGAI-EXAONE/K-EXAONE-2.0-750B-A37B/raw/main/config.json
+# https://arxiv.org/html/2608.04505v1
+name = "K-EXAONE-2.0-750B-A37B"
+description = "Frontier-scale multilingual language model developed by LG AI Research"
+release_date = "2026-08-06"
+last_updated = "2026-08-06"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = true
+
+[limit]
+context = 262_144
+output = 32_768
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/LGAI-EXAONE/K-EXAONE-2.0-750B-A37B"

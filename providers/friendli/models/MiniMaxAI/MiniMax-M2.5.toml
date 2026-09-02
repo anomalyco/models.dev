@@ -1,12 +1,15 @@
+# Reasoning control on this route is budget-only (no thinking toggle field is
+# documented for MiniMax-M2.5 on Friendli; verified live 2026-08-29).
+# Budget: reasoning_budget = positive integer reasoning-token cap (-1 = unlimited)
+# https://friendli.ai/docs/openapi/model-apis/chat-completions#body-reasoning-budget-one-of-0
 base_model = "minimax/MiniMax-M2.5"
-name = "MiniMax-M2.5"
-release_date = "2026-02-12"
-last_updated = "2026-02-12"
 structured_output = true
-reasoning_options = []
 
 [interleaved]
 field = "reasoning_content"
+
+[[reasoning_options]]
+type = "budget_tokens"
 
 [cost]
 input = 0.3
@@ -15,4 +18,3 @@ cache_read = 0.06
 
 [limit]
 context = 196_608
-output = 196_608
