@@ -9,10 +9,10 @@
 # adapter projects onto its upstream vendor's own field. The per-model
 # `reasoning_options` below record the surface that survives that projection:
 # OpenAI-channel models pass `reasoning_effort` through natively; DashScope and
-# SiliconFlow channels collapse low/medium -> high and xhigh -> max and expose
-# `thinking_budget`; Zhipu and DeepSeek channels toggle `thinking.type` and pass
-# effort through; MiniMax channel strips effort entirely, leaving a plain toggle;
-# the Anthropic channel is a raw /v1/messages passthrough.
+# SiliconFlow channels collapse low/medium -> high and xhigh -> max, and expose
+# `thinking_budget` only for models that support it; MiniMax thinking-only
+# models expose no caller-selectable reasoning controls; the Anthropic channel
+# is a raw /v1/messages passthrough.
 #
 # Sources:
 # https://www.tokensmarket.ai/docs
