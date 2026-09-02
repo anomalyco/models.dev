@@ -1,0 +1,64 @@
+name = "Gemini 3.8 Flash"
+description = "Most intelligent Gemini Flash model for long-horizon software engineering, autonomous agents, and complex enterprise workflows"
+family = "gemini-flash"
+release_date = "2026-09-02"
+last_updated = "2026-09-02"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = true
+knowledge = "2026-03"
+open_weights = false
+
+[limit]
+context = 1_048_576
+output = 65_536
+
+[modalities]
+input = ["text", "image", "video", "audio", "pdf"]
+output = ["text"]
+
+[[benchmarks]]
+name = "Terminal-Bench"
+score = 90.8
+metric = "accuracy"
+version = "2.1"
+source = "https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/guides/gemini-3-8-flash"
+date = "2026-09-02"
+
+[[benchmarks]]
+name = "SWE-Bench Pro"
+score = 61.6
+metric = "resolve rate"
+source = "https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/guides/gemini-3-8-flash"
+date = "2026-09-02"
+
+[[benchmarks]]
+name = "SWE-Atlas"
+score = 51.9
+metric = "accuracy"
+source = "https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/guides/gemini-3-8-flash"
+date = "2026-09-02"
+
+[[benchmarks]]
+name = "GDP.pdf"
+score = 35.0
+metric = "accuracy"
+source = "https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/guides/gemini-3-8-flash"
+date = "2026-09-02"
+
+[[benchmarks]]
+name = "CharXiv"
+score = 86.2
+metric = "accuracy"
+variant = "Multimodal"
+source = "https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/guides/gemini-3-8-flash"
+date = "2026-09-02"
+
+[[benchmarks]]
+name = "HLE-Verified"
+score = 54.9
+metric = "accuracy"
+source = "https://blog.google/innovation-and-ai/models-and-research/gemini-models/3-8-flash-and-3-8-flash-cyber/"
+date = "2026-09-02"
