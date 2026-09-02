@@ -1,0 +1,12 @@
+base_model = "google/gemini-3.1-flash-lite-image"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high"]
+
+[cost]
+input = 0.34385
+output = 2.0631
+
+[limit]
+output = 66_000

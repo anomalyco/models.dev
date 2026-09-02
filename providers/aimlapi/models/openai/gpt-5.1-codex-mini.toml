@@ -1,24 +1,10 @@
-name = "GPT-5.1 Codex Mini"
-description = "GPT-5.1 Codex Mini is a lighter coding model optimized for fast code completions and suggestions."
-family = "gpt"
-release_date = "2025-11-14"
-last_updated = "2025-11-14"
-attachment = true
-reasoning = false
-tool_call = false
-structured_output = false
-open_weights = false
+base_model = "openai/gpt-5.1-codex-mini"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high"]
 
 [cost]
 input = 0.34385
 output = 2.7508
 cache_read = 0.041262
-
-[limit]
-context = 400_000
-input = 400_000
-output = 128_000
-
-[modalities]
-input = ["image", "text"]
-output = ["text"]

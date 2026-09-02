@@ -1,13 +1,8 @@
-name = "MiMo V2.5"
-description = "MiMo-V2.5 — a native omnimodal model by Xiaomi for text, image, audio, and video understanding. It delivers strong agentic performance at lower cost, making it suitable for general-purpose AI applications."
-family = "mimo-v2.5"
-release_date = "2026-04-23"
-last_updated = "2026-04-23"
-attachment = true
-reasoning = false
-tool_call = false
-structured_output = false
-open_weights = false
+base_model = "xiaomi/mimo-v2.5"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high"]
 
 [cost]
 input = 0.192556
@@ -16,9 +11,4 @@ cache_read = 0.0038511200000000004
 
 [limit]
 context = 1_000_000
-input = 1_000_000
 output = 128_000
-
-[modalities]
-input = ["image", "text"]
-output = ["text"]

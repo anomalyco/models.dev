@@ -1,24 +1,10 @@
-name = "DeepSeek V4 Flash"
-description = "DeepSeek V4 Flash and Pro are large language models for chat and reasoning tasks with up to 1M context length. They support both standard and thinking modes, enabling efficient responses or deeper reasoning workflows."
-family = "deepseek"
-release_date = "2026-04-24"
-last_updated = "2026-04-24"
-attachment = false
-reasoning = false
-tool_call = false
-structured_output = false
-open_weights = false
+base_model = "deepseek/deepseek-v4-flash"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high"]
 
 [cost]
 input = 0.182
 output = 0.364
 cache_read = 0.00364
-
-[limit]
-context = 1_000_000
-input = 1_000_000
-output = 384_000
-
-[modalities]
-input = ["text"]
-output = ["text"]
