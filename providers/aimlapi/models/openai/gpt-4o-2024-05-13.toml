@@ -1,23 +1,8 @@
-name = "GPT-4o"
-description = "Multimodal AI model by OpenAI enhancing human-computer interaction."
-family = "gpt"
-release_date = "2025-08-07"
-last_updated = "2025-08-07"
-attachment = true
-reasoning = false
-tool_call = false
-structured_output = false
-open_weights = false
+base_model = "openai/gpt-4o-2024-05-13"
 
 [cost]
 input = 6.5
 output = 19.5
 
 [limit]
-context = 128_000
-input = 128_000
 output = 16_384
-
-[modalities]
-input = ["image", "text"]
-output = ["text"]

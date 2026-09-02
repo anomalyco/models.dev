@@ -1,12 +1,8 @@
-name = "Inkling Small"
-description = "Inkling Small is an open-weight multimodal mixture-of-experts model from Thinking Machines Lab, with 12B active parameters out of 276B total. It is positioned as the smaller, more efficient member of the Inkling family."
-release_date = "2026-07-30"
-last_updated = "2026-07-30"
-attachment = true
-reasoning = false
-tool_call = false
-structured_output = false
-open_weights = false
+base_model = "thinkingmachines/inkling-small"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high"]
 
 [cost]
 input = 0.797732
@@ -15,9 +11,4 @@ cache_read = 0.1595464
 
 [limit]
 context = 524_288
-input = 524_288
 output = 262_144
-
-[modalities]
-input = ["image", "text"]
-output = ["text"]

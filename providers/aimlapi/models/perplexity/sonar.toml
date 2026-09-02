@@ -1,23 +1,8 @@
-name = "Sonar"
-description = "Perplexity Sonar is a fast search-augmented language model grounded in real-time web data for up-to-date answers."
-family = "sonar"
-release_date = "2025-09-09"
-last_updated = "2025-09-09"
-attachment = true
-reasoning = false
-tool_call = false
-structured_output = false
-open_weights = false
+base_model = "perplexity/sonar"
 
 [cost]
 input = 1.3
 output = 1.3
 
 [limit]
-context = 128_000
-input = 128_000
 output = 100_000
-
-[modalities]
-input = ["image", "text"]
-output = ["text"]

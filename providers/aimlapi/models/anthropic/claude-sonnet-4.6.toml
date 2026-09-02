@@ -1,13 +1,8 @@
-name = "Claude 4.6 Sonnet"
-description = "Claude 4.6 Sonnet is a highly capable model balancing performance and efficiency for everyday AI tasks."
-family = "claude-sonnet"
-release_date = "2026-02-18"
-last_updated = "2026-02-18"
-attachment = true
-reasoning = false
-tool_call = false
-structured_output = false
-open_weights = false
+base_model = "anthropic/claude-sonnet-4-6"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high"]
 
 [cost]
 input = 4.1262
@@ -16,9 +11,3 @@ cache_read = 0.41262
 
 [limit]
 context = 200_000
-input = 200_000
-output = 64_000
-
-[modalities]
-input = ["image", "text"]
-output = ["text"]

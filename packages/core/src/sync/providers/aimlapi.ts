@@ -1,49 +1,72 @@
 import { z } from "zod";
 
-import { inferKimiFamily, ModelFamilyValues } from "../../family.js";
 import type { SyncProvider } from "../index.js";
+import { factorBaseModel, modelMetadata, resolveModelMetadataBaseModel } from "./openrouter.js";
 
 // The public catalog needs no key, and `include` is what turns on the pricing
 // and modality blocks this sync depends on.
 const API_ENDPOINT = "https://api.aimlapi.com/v1/models?include=pricing,modalities";
 
+// Per-model request schema. It is the only place the API states which reasoning
+// controls a model actually accepts, so reasoning_options is read from here
+// rather than assumed.
+const DOCS_ENDPOINT = "https://api.aimlapi.com/docs-json";
+
 // AI/ML API serves one id under several endpoint types — a model can be both a
 // chat model and, say, an image model. Only the chat surface belongs here.
 const CHAT_COMPLETIONS_TYPE = "openai/chat-completions";
 
-const PricingUnit = z.object({
-  name: z.string().nullish(),
-  content: z.string().nullish(),
-  origin: z.string().nullish(),
-  price: z.number().nullish(),
-  per: z.number().nullish(),
-}).passthrough();
+// Values this schema accepts for an "effort" reasoning control. Anything the
+// API documents outside this set is dropped rather than coerced.
+const EFFORT_VALUES = new Set(["none", "minimal", "low", "medium", "high", "xhigh", "max", "default"]);
 
-const Info = z.object({
-  name: z.string().nullish(),
-  description: z.string().nullish(),
-  developer: z.string().nullish(),
-  releasedAt: z.string().nullish(),
-  contextLength: z.number().int().nonnegative().nullish(),
-  outputMax: z.number().int().nonnegative().nullish(),
-}).passthrough();
+const DOCS_CONCURRENCY = 8;
 
-export const AimlapiModel = z.object({
-  id: z.string().min(1),
-  type: z.string().nullish(),
-  info: Info.nullish(),
-  modalities: z.object({
-    input: z.array(z.string()).nullish(),
-    output: z.array(z.string()).nullish(),
-  }).passthrough().nullish(),
-  pricing: z.object({
-    units: z.array(PricingUnit).nullish(),
-  }).passthrough().nullish(),
-}).passthrough();
+const PricingUnit = z
+  .object({
+    name: z.string().nullish(),
+    content: z.string().nullish(),
+    origin: z.string().nullish(),
+    price: z.number().nullish(),
+    per: z.number().nullish(),
+  })
+  .passthrough();
 
-export const AimlapiResponse = z.object({
-  data: z.array(AimlapiModel).min(1),
-}).passthrough();
+const Info = z
+  .object({
+    contextLength: z.number().int().nonnegative().nullish(),
+    outputMax: z.number().int().nonnegative().nullish(),
+  })
+  .passthrough();
+
+export const AimlapiModel = z
+  .object({
+    id: z.string().min(1),
+    type: z.string().nullish(),
+    info: Info.nullish(),
+    modalities: z
+      .object({
+        input: z.array(z.string()).nullish(),
+        output: z.array(z.string()).nullish(),
+      })
+      .passthrough()
+      .nullish(),
+    pricing: z
+      .object({
+        units: z.array(PricingUnit).nullish(),
+      })
+      .passthrough()
+      .nullish(),
+    /** Attached by fetchModels; not part of the upstream payload. */
+    reasoningEffort: z.array(z.string()).nullish(),
+  })
+  .passthrough();
+
+export const AimlapiResponse = z
+  .object({
+    data: z.array(AimlapiModel).min(1),
+  })
+  .passthrough();
 
 export type AimlapiModel = z.infer<typeof AimlapiModel>;
 
@@ -61,19 +84,40 @@ function normalizeModalities(values: readonly string[] | null | undefined): Moda
   return [...seen];
 }
 
+function isChatTextModel(model: AimlapiModel): boolean {
+  if (model.type !== CHAT_COMPLETIONS_TYPE) return false;
+  const output = normalizeModalities(model.modalities?.output);
+  // A chat model whose output is not purely text is a media model riding the
+  // chat protocol, and does not belong in a chat catalog.
+  return output.length === 1 && output[0] === "text";
+}
+
+/**
+ * Lab entry this id is a host for. AI/ML API is an aggregator and authors none
+ * of these models, so every entry has to point at the lab file rather than
+ * restate it.
+ */
+function baseModelFor(id: string): string | undefined {
+  return resolveModelMetadataBaseModel(id);
+}
+
+function baseReasoning(baseModelID: string): boolean {
+  try {
+    return modelMetadata(baseModelID).reasoning === true;
+  } catch {
+    return false;
+  }
+}
+
 /**
  * Prices are quoted as `price` per `per` tokens; models.dev stores dollars per
  * million. The unit discriminator is `origin`, not `measure`: provided is
  * input, generated is output, cached is a cache read. Only text token charges
  * are taken — a model's image or audio units are a different surface.
  */
-function perMillion(
-  units: readonly z.infer<typeof PricingUnit>[],
-  origin: string,
-): number | undefined {
+function perMillion(units: readonly z.infer<typeof PricingUnit>[], origin: string): number | undefined {
   const unit = units.find(
-    (candidate) =>
-      candidate.name === "token" && candidate.content === "text" && candidate.origin === origin,
+    (candidate) => candidate.name === "token" && candidate.content === "text" && candidate.origin === origin,
   );
   if (!unit || unit.price == null || !unit.per) return undefined;
   return (unit.price / unit.per) * 1_000_000;
@@ -84,31 +128,72 @@ function positive(value: number | null | undefined): number | undefined {
 }
 
 /**
- * `family` is a closed vocabulary of model families (`gpt`, `claude`, `o`, …),
- * not the vendor prefix — matching on the prefix produces values the schema
- * rejects. Longest match first so `claude-sonnet` wins over `claude`, and `o`
- * only matches when a digit follows it, as in `o3`.
+ * Reads the documented `reasoning_effort` enum for one model. Returns undefined
+ * when the docs do not describe the control, which is treated as "cannot state
+ * it" rather than "the model has none".
  */
-function inferFamily(id: string, name: string): string | undefined {
-  const kimi = inferKimiFamily(id, name);
-  if (kimi !== undefined) return kimi;
+async function fetchReasoningEffort(id: string): Promise<string[] | undefined> {
+  const url = `${DOCS_ENDPOINT}?model=${encodeURIComponent(id)}&endpoint=${encodeURIComponent(CHAT_COMPLETIONS_TYPE)}`;
+  let payload: unknown;
+  try {
+    const response = await fetch(url);
+    if (!response.ok) return undefined;
+    payload = await response.json();
+  } catch {
+    return undefined;
+  }
 
-  const target = `${id} ${name}`.toLowerCase();
-  return [...ModelFamilyValues]
-    .sort((a, b) => b.length - a.length)
-    .find((family) => {
-      const value = family.toLowerCase().replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-      if (family === "o") {
-        return new RegExp(`(^|[^a-z0-9])${value}(?=\\d|$|[^a-z0-9])`).test(target);
-      }
-      return new RegExp(`(^|[^a-z0-9])${value}(?=$|[^a-z0-9])`).test(target);
-    });
+  const found = findReasoningEffortEnum(payload);
+  if (found === undefined) return undefined;
+
+  const values = found.filter((value) => EFFORT_VALUES.has(value));
+  return values.length > 0 ? values : undefined;
 }
 
-function releaseDate(value: string | null | undefined): string | undefined {
-  if (!value) return undefined;
-  const match = /^(\d{4}-\d{2}-\d{2})/.exec(value.trim());
-  return match?.[1];
+function findReasoningEffortEnum(node: unknown): string[] | undefined {
+  if (Array.isArray(node)) {
+    for (const item of node) {
+      const found = findReasoningEffortEnum(item);
+      if (found !== undefined) return found;
+    }
+    return undefined;
+  }
+  if (node === null || typeof node !== "object") return undefined;
+
+  const record = node as Record<string, unknown>;
+  const effort = record["reasoning_effort"];
+  if (effort !== null && typeof effort === "object") {
+    const values = (effort as Record<string, unknown>)["enum"];
+    if (Array.isArray(values) && values.every((value) => typeof value === "string")) {
+      return values as string[];
+    }
+  }
+
+  for (const value of Object.values(record)) {
+    const found = findReasoningEffortEnum(value);
+    if (found !== undefined) return found;
+  }
+  return undefined;
+}
+
+async function attachReasoningEffort(models: AimlapiModel[]): Promise<void> {
+  // Only models whose lab entry says they reason need the control documented,
+  // and only those are worth a request.
+  const pending = models.filter((model) => {
+    if (!isChatTextModel(model)) return false;
+    const base = baseModelFor(model.id);
+    return base !== undefined && baseReasoning(base);
+  });
+
+  let cursor = 0;
+  const workers = Array.from({ length: Math.min(DOCS_CONCURRENCY, pending.length) }, async () => {
+    while (cursor < pending.length) {
+      const model = pending[cursor++];
+      if (model === undefined) return;
+      model.reasoningEffort = await fetchReasoningEffort(model.id);
+    }
+  });
+  await Promise.all(workers);
 }
 
 export const aimlapi = {
@@ -119,12 +204,12 @@ export const aimlapi = {
   // a local model missing from one response is not proof that it is gone.
   deleteMissing: false,
   sourceID(model) {
-    return model.type === CHAT_COMPLETIONS_TYPE ? model.id : undefined;
+    return isChatTextModel(model) ? model.id : undefined;
   },
   skippedNotice(ids) {
     if (ids.length === 0) return [];
     return [
-      `${ids.length} AI/ML API chat models were skipped because the catalog does not yet publish a description or an output limit for them, both of which this schema requires.`,
+      `${ids.length} AI/ML API chat models were skipped because this repository has no lab entry to point \`base_model\` at, or because the API does not document the reasoning control a reasoning model requires.`,
       `Skipped remote IDs: ${ids.map((id) => `\`${id}\``).join(", ")}`,
     ];
   },
@@ -140,67 +225,69 @@ export const aimlapi = {
     if (!response.ok) {
       throw new Error(`AI/ML API request failed: ${response.status} ${response.statusText}`);
     }
-    return response.json();
+    const raw = await response.json();
+    const parsed = AimlapiResponse.parse(raw);
+    await attachReasoningEffort(parsed.data);
+    return parsed;
   },
   parseModels(raw) {
     return AimlapiResponse.parse(raw).data;
   },
   translateModel(model, context) {
-    // Chat only. The same id may also appear under an image or audio type;
-    // those entries are a different product and are skipped silently.
-    if (model.type !== CHAT_COMPLETIONS_TYPE) return undefined;
+    if (!isChatTextModel(model)) return undefined;
 
     const existing = context.existing(model.id);
-    const info = model.info ?? {};
+
+    // AI/ML API hosts other people's models, so the entry must reference the
+    // lab file instead of duplicating it. Without a lab entry to point at there
+    // is nothing correct to write: inlining the metadata is what this schema
+    // forbids, and authoring the lab file would mean sourcing capability data
+    // the catalog does not publish.
+    const base = existing?.base_model ?? baseModelFor(model.id);
+    if (base === undefined) return undefined;
+
+    // Required whenever the base model reasons. Only the API's own request
+    // schema can say which values it takes, so a model whose docs stay silent
+    // is skipped rather than given an invented control.
+    let reasoningOptions: Array<{ type: "effort"; values: string[] }> | undefined;
+    if (baseReasoning(base)) {
+      const values = model.reasoningEffort ?? undefined;
+      if (values === undefined || values.length === 0) return undefined;
+      reasoningOptions = [{ type: "effort", values }];
+    }
+
     const units = model.pricing?.units ?? [];
+    const info = model.info ?? {};
+    const contextLimit = positive(info.contextLength);
+    const outputLimit = positive(info.outputMax);
+    // Only what the catalog actually publishes. It reports a context window and
+    // an output cap but no input cap, and equating the input cap with the whole
+    // context would overwrite the lab's correct split (e.g. 272k in + 128k out
+    // within a 400k window) with a wrong number.
+    const limit =
+      contextLimit === undefined && outputLimit === undefined
+        ? undefined
+        : { context: contextLimit, output: outputLimit };
 
-    const output = normalizeModalities(model.modalities?.output);
-    // A chat model whose output is not purely text is a media model riding the
-    // chat protocol, and does not belong in a chat catalog.
-    if (output.length !== 1 || output[0] !== "text") return undefined;
-
-    const input = normalizeModalities(model.modalities?.input);
-    const contextLimit = positive(info.contextLength) ?? existing?.limit?.context;
-    const outputLimit = positive(info.outputMax) ?? existing?.limit?.output;
-    const description = info.description?.trim() || existing?.description;
-
-    // The schema requires a description and an output limit. Where the catalog
-    // publishes neither and no local value exists, the model is skipped rather
-    // than filled in: an invented description or a guessed limit would be worse
-    // than an absent entry, and skippedNotice makes the gap visible.
-    if (!description || outputLimit === undefined) return undefined;
-
+    // Everything else — the capability flags, description, dates, modalities —
+    // is the lab's to state and is inherited. factorBaseModel drops whatever
+    // matches the base, so the file carries only what is genuinely ours.
     return {
       id: model.id,
-      model: {
-        name: info.name?.trim() || existing?.name || model.id,
-        description,
-        family: existing?.family ?? inferFamily(model.id, info.name?.trim() ?? ""),
-        release_date: releaseDate(info.releasedAt) ?? existing?.release_date,
-        last_updated: releaseDate(info.releasedAt) ?? existing?.last_updated,
-        // The catalog does not report these capabilities. A value already in the
-        // repo was put there by someone who checked; a default here would only
-        // overwrite that with a guess.
-        attachment: existing?.attachment ?? input.length > 1,
-        reasoning: existing?.reasoning ?? false,
-        tool_call: existing?.tool_call ?? false,
-        structured_output: existing?.structured_output ?? false,
-        open_weights: existing?.open_weights ?? false,
-        cost: {
-          input: perMillion(units, "provided") ?? existing?.cost?.input,
-          output: perMillion(units, "generated") ?? existing?.cost?.output,
-          cache_read: perMillion(units, "cached") ?? existing?.cost?.cache_read,
+      model: factorBaseModel(
+        base,
+        {
+          cost: {
+            input: perMillion(units, "provided") ?? existing?.cost?.input,
+            output: perMillion(units, "generated") ?? existing?.cost?.output,
+            cache_read: perMillion(units, "cached") ?? existing?.cost?.cache_read,
+          },
+          reasoning_options: reasoningOptions,
+          limit,
         },
-        limit: {
-          context: contextLimit,
-          input: contextLimit,
-          output: outputLimit,
-        },
-        modalities: {
-          input,
-          output,
-        },
-      },
+        limit,
+        existing?.base_model === base ? existing?.base_model_omit : undefined,
+      ),
     };
   },
 } satisfies SyncProvider<AimlapiModel>;

@@ -1,24 +1,10 @@
-name = "Qwen3.7 Max"
-description = "Qwen3.7-Max is Alibaba’s flagship reasoning and agentic LLM optimized for coding, productivity, long-context understanding and autonomous workflows. Text input and text output only. Supports function calling, explicit context cache and advanced reasoning capabilities."
-family = "qwen3.7-max"
-release_date = "2026-05-21"
-last_updated = "2026-05-21"
-attachment = false
-reasoning = false
-tool_call = false
-structured_output = false
-open_weights = false
+base_model = "alibaba/qwen3.7-max"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high"]
 
 [cost]
 input = 2.6
 output = 7.8
 cache_read = 2.6
-
-[limit]
-context = 1_000_000
-input = 1_000_000
-output = 65_536
-
-[modalities]
-input = ["text"]
-output = ["text"]

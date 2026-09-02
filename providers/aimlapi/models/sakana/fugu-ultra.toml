@@ -1,13 +1,8 @@
-name = "Fugu Ultra"
-description = "Fugu Ultra is the higher-performance model in Sakana AI's Fugu family. Rather than a standard monolithic language model, it is a learned multi-agent orchestration system: a model trained to route tasks across a swappable pool of underlying models and to recursively call instances of itself. It is optimized for complex, multi-step reasoning, coding, and agentic workflows, with orchestration tokens billed as standard input/output tokens."
-family = "fugu"
-release_date = "2026-06-24"
-last_updated = "2026-06-24"
-attachment = true
-reasoning = false
-tool_call = false
-structured_output = false
-open_weights = false
+base_model = "sakana/fugu-ultra"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high"]
 
 [cost]
 input = 6.877
@@ -15,10 +10,4 @@ output = 41.262
 cache_read = 0.6877
 
 [limit]
-context = 1_000_000
-input = 1_000_000
 output = 128_000
-
-[modalities]
-input = ["image", "text"]
-output = ["text"]
