@@ -89,8 +89,15 @@ const TOGGLE_HEADER = `# Toggle: reasoning_effort = "none" turns thinking off; a
 # value turns it on. https://docs.neosantara.xyz
 `;
 
+// Whether the catalog reported a caller-control surface for this reasoning model. A missing
+// `reasoning_efforts` is "unknown" (skip + report), NOT an affirmative always-on `[]`.
+function hasReasoningEfforts(model: NeosantaraSourceModel) {
+  return Array.isArray(mapping(model).reasoning_efforts);
+}
+
 // The catalog reports each model's real effort surface: [] = always-on (no caller control),
-// ["none"] = on/off toggle, otherwise the graded levels (intersected with the host enum).
+// ["none"] = on/off toggle, otherwise the graded levels (intersected with the host enum). Only
+// called once the surface is known (see shouldSyncNeosantaraModel).
 export function neosantaraReasoningControls(model: NeosantaraSourceModel): ReasoningControls {
   const efforts = (mapping(model).reasoning_efforts ?? []).filter((effort) =>
     HOST_EFFORT_SET.has(effort),
@@ -148,7 +155,13 @@ export function shouldSyncNeosantaraModel(model: NeosantaraSourceModel) {
   if (!meetsNeosantaraPublicFilter(model)) return false;
   if (isImageModel(model)) return true;
   // Skip rather than throw: one missing price costs a single model, not the run.
-  return price(model.pricing.prompt) !== undefined && price(model.pricing.completion) !== undefined;
+  if (price(model.pricing.prompt) === undefined || price(model.pricing.completion) === undefined) {
+    return false;
+  }
+  // A reasoning model with no reported effort surface is unknown, not always-on: skip it (and
+  // report it) rather than stamping `[]`. Explicit `[]` from the catalog is a real always-on set.
+  if (mapping(model).reasoning === true && !hasReasoningEfforts(model)) return false;
+  return true;
 }
 
 export function buildNeosantaraModel(
@@ -231,7 +244,7 @@ export const neosantara = {
   skippedNotice(ids) {
     if (ids.length === 0) return [];
     return [
-      `${ids.length} Neosantara models were not created because they lack a canonical \`models/\` entry to inherit or the catalog reported no usable token pricing.`,
+      `${ids.length} Neosantara models were not created because they lack a canonical \`models/\` entry to inherit, the catalog reported no usable token pricing, or a reasoning model did not report its effort surface.`,
       `Skipped remote IDs: ${ids.map((id) => `\`${id}\``).join(", ")}`,
       "Add a `models/<provider>/<model>.toml` entry (or an alias in BASE_MODEL_ALIASES) to include them in the next sync.",
     ];

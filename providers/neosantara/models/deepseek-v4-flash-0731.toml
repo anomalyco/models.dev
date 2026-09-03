@@ -1,5 +1,11 @@
 base_model = "deepseek/deepseek-v4-flash-0731"
-reasoning = false
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "high", "max"]
 
 [cost]
 input = 0.14

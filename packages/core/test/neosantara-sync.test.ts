@@ -190,15 +190,29 @@ test("maps catalog efforts to toggle / effort / always-on (llmgateway convention
     neosantaraReasoningControls({ providers: [{ reasoning: true, reasoning_efforts: [] }] } as never),
   ).toEqual([]);
 
-  // Missing efforts -> also always-on, never a full-enum dump.
-  expect(
-    neosantaraReasoningControls({ providers: [{ reasoning: true }] } as never),
-  ).toEqual([]);
-
   // Values outside the host enum are dropped.
   expect(
     neosantaraReasoningControls({ providers: [{ reasoning: true, reasoning_efforts: ["low", "bogus"] }] } as never),
   ).toEqual([{ type: "effort", values: ["low"] }]);
+});
+
+test("skips a reasoning model whose effort surface is unknown (missing != always-on)", () => {
+  const source = NeosantaraCatalogResponse.parse(catalogResponse).data[0]!;
+  // Reasoning model with a real surface syncs.
+  expect(shouldSyncNeosantaraModel(source)).toBe(true);
+
+  // Same model but the catalog omits reasoning_efforts -> unknown -> skipped and reported,
+  // never stamped as always-on `[]`.
+  const unknown = { ...source, providers: [{ ...source.providers[0], reasoning_efforts: undefined }] };
+  const parsed = NeosantaraCatalogResponse.parse({ data: [unknown] }).data[0]!;
+  expect(shouldSyncNeosantaraModel(parsed)).toBe(false);
+  expect(neosantara.sourceID(parsed)).toBe(parsed.id);
+
+  // Explicit [] is different: it is an affirmative always-on set and still syncs.
+  const alwaysOn = { ...source, providers: [{ ...source.providers[0], reasoning_efforts: [] }] };
+  const parsedAlwaysOn = NeosantaraCatalogResponse.parse({ data: [alwaysOn] }).data[0]!;
+  expect(shouldSyncNeosantaraModel(parsedAlwaysOn)).toBe(true);
+  expect(buildNeosantaraModel(parsedAlwaysOn, undefined).reasoning_options).toEqual([]);
 });
 
 test("toggle models carry a wire-comment header; effort models carry none", () => {

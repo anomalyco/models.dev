@@ -1,27 +1,19 @@
-# Sources (accessed 2026-09-03):
+# Source (accessed 2026-09-03):
 # - https://docs.neosantara.xyz
-# - https://api.neosantara.xyz/v1/models          (catalog, public, no key)
-# - https://api.neosantara.xyz/v1/public/pricing  (raw_pricing + meta.exchange_rate, public)
+# - https://api.neosantara.xyz/v1/catalog  (models.dev / LLM Gateway shape, public, no key)
 #
-# Reasoning: Neosantara is a relay. It normalizes every model's reasoning onto a single
-# OpenAI-compatible `reasoning_effort` field and maps each upstream native shape (Anthropic
-# thinking budgets, DeepSeek/GLM toggles, OpenAI effort, …) behind it, so callers never send an
-# upstream-native control. Accepted enum (verified live, `max` → HTTP 400):
-#   reasoning_effort = none|minimal|low|medium|high|xhigh
-# The catalog advertises only whether a model reasons, not its effort levels, so every
-# reasoning model advertises this full enum rather than a lab- or peer-derived subset; each
-# generated reasoning TOML carries a note explaining that divergence. If the catalog later
-# publishes per-model effort levels, the sync consumes them automatically.
+# The sync consumes the single /v1/catalog endpoint. The gateway does the host-specific work
+# upstream (USD-per-token pricing incl. IDR conversion and any discount, capability flags, and
+# the reasoning surface), so the sync is a thin, override-only translation.
 #
-# Capability flags (reasoning, vision, json_mode, …) are read from each catalog entry's
-# `capabilities` array and never inherited from lab metadata, because this gateway enforces
-# its own list: a model the lab ships as a reasoner is published here with reasoning = false
-# until the catalog advertises it, and starts publishing controls on the sync after it does.
-#   A model without the `reasoning` capability rejects `reasoning_effort` with HTTP 400.
-#
-# Pricing: raw_pricing is per million tokens in USD or IDR and excludes `discount`,
-# which is a percentage applied at billing time. Published costs are therefore
-# raw * (100 - discount) / 100, with IDR converted at meta.exchange_rate.usd_idr.
+# Reasoning: the catalog reports each model's real per-model effort surface in providers[].
+# reasoning_efforts, mapped to reasoning_options as:
+#   []          -> [] (always-on: reasons, no caller control)
+#   ["none"]    -> toggle (reasoning_effort = "none" is off; carries a leading wire comment)
+#   graded set  -> effort, using the model's real levels (lab + same-surface peers), never a
+#                  full enum. Host ceiling is none|minimal|low|medium|high|xhigh|max.
+# A reasoning model that does not report a surface is skipped and reported (its controls are
+# unknown, not always-on). Capability flags come from the catalog, not lab metadata.
 name = "Neosantara"
 env = ["NEOSANTARA_API_KEY"]
 npm = "@ai-sdk/openai-compatible"
