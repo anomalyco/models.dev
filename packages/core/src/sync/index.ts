@@ -125,7 +125,6 @@ export interface SyncResult {
   updated: number;
   deleted: number;
   unchanged: number;
-  missingReasoningOptions: number;
   notices: string[];
   files: Array<{ status: "created" | "updated" | "deleted"; path: string }>;
 }
@@ -255,25 +254,6 @@ export async function syncProvider<SourceModel>(
   const skippedRemote: string[] = [];
   const missingReasoning = new Map<string, string>();
 
-  function deferReasoning(id: string, reason: string) {
-    missingReasoning.set(`${id}.toml`, reason);
-    console.warn(`Missing reasoning options for ${id}: ${reason}`);
-  }
-
-  function claimPath(id: string) {
-    const relativePath = `${id}.toml`;
-    const collidingPath = caseNormalizedDesiredPaths.get(relativePath.toLowerCase());
-    if (collidingPath !== undefined) {
-      throw new Error(
-        collidingPath === relativePath
-          ? `Duplicate synced model path: ${provider.id}/${relativePath}`
-          : `Synced model paths differ only in case: ${provider.id}/${collidingPath} and ${provider.id}/${relativePath}`,
-      );
-    }
-    caseNormalizedDesiredPaths.set(relativePath.toLowerCase(), relativePath);
-    return relativePath;
-  }
-
   for (const sourceModel of sourceModels) {
     let translated: ReturnType<typeof provider.translateModel>;
     try {
@@ -287,8 +267,8 @@ export async function syncProvider<SourceModel>(
       });
     } catch (error) {
       if (!(error instanceof MissingReasoningOptionsError)) throw error;
-      await safeWritePath(provider.modelsDir, claimPath(error.modelId), true);
-      deferReasoning(error.modelId, error.reason);
+      missingReasoning.set(error.modelId, error.message);
+      console.warn(error.message);
       continue;
     }
     if (translated === undefined) {
@@ -302,9 +282,17 @@ export async function syncProvider<SourceModel>(
       skippedRemote.push(translated.id);
       continue;
     }
-    claimPath(translated.id);
 
-    let metadata: { id: string; model: z.infer<typeof ModelMetadata>; content: string } | undefined;
+    const collidingPath = caseNormalizedDesiredPaths.get(relativePath.toLowerCase());
+    if (collidingPath !== undefined) {
+      throw new Error(
+        collidingPath === relativePath
+          ? `Duplicate synced model path: ${provider.id}/${relativePath}`
+          : `Synced model paths differ only in case: ${provider.id}/${collidingPath} and ${provider.id}/${relativePath}`,
+      );
+    }
+    caseNormalizedDesiredPaths.set(relativePath.toLowerCase(), relativePath);
+
     if (translated.metadata !== undefined) {
       const parsedMetadata = ModelMetadata.safeParse({
         id: translated.metadata.id,
@@ -316,11 +304,10 @@ export async function syncProvider<SourceModel>(
       }
       const metadataPath = `${translated.metadata.id}.toml`;
       if (desiredMetadata.has(metadataPath)) throw new Error(`Duplicate synced metadata path: ${metadataPath}`);
-      metadata = {
-        id: metadataPath,
+      desiredMetadata.set(metadataPath, {
         model: parsedMetadata.data,
         content: formatMetadataToml(parsedMetadata.data),
-      };
+      });
     }
 
     const translatedModel = provider.preserveBaseModels === false
@@ -328,13 +315,16 @@ export async function syncProvider<SourceModel>(
       : preserveBaseModel(translated.model, existing.get(relativePath)?.authored);
     const translatedBase = "base_model" in translatedModel ? translatedModel.base_model : undefined;
     let resolvedReasoning: boolean | undefined;
+    let baseReasoningOptions: unknown;
     if (translatedBase !== undefined) {
       if (translated.metadata?.id === translatedBase) {
         resolvedReasoning = translated.metadata.model.reasoning;
+        baseReasoningOptions = translated.metadata.model.reasoning_options;
       } else {
         modelMetadata ??= await readModelMetadata(provider.modelsDir);
         const canonicalReasoning = modelMetadata[translatedBase]?.reasoning;
         resolvedReasoning = typeof canonicalReasoning === "boolean" ? canonicalReasoning : undefined;
+        baseReasoningOptions = modelMetadata[translatedBase]?.reasoning_options;
       }
     } else {
       resolvedReasoning = existing.get(relativePath)?.toml.reasoning;
@@ -343,6 +333,7 @@ export async function syncProvider<SourceModel>(
       translatedModel,
       existing.get(relativePath)?.authored,
       resolvedReasoning,
+      baseReasoningOptions,
     );
     const withDescription = provider.preserveDescriptions === false
       ? withReasoningOptions
@@ -352,28 +343,9 @@ export async function syncProvider<SourceModel>(
       ...withDescription,
     }));
     if (!parsed.success) {
-      if (parsed.error.issues.every((issue) =>
-        issue.code === "custom"
-        && issue.path.length === 1
-        && issue.path[0] === "reasoning_options"
-        && issue.message === "Must set reasoning_options when reasoning is true"
-      )) {
-        await safeWritePath(provider.modelsDir, relativePath, true);
-        deferReasoning(translated.id, "Must set reasoning_options when reasoning is true");
-        continue;
-      }
       parsed.error.cause = { provider: provider.id, path: relativePath };
       throw parsed.error;
     }
-    // Factored entries use a partial authored schema, so check only the inherited
-    // reasoning requirement here. Other validation behavior is unchanged.
-    if ((parsed.data.reasoning ?? resolvedReasoning) === true && parsed.data.reasoning_options === undefined) {
-      await safeWritePath(provider.modelsDir, relativePath, true);
-      deferReasoning(translated.id, "Must set reasoning_options when reasoning is true");
-      continue;
-    }
-
-    if (metadata !== undefined) desiredMetadata.set(metadata.id, metadata);
 
     const translatedHeader = translated.header === undefined
       ? undefined
@@ -392,10 +364,6 @@ export async function syncProvider<SourceModel>(
   let unchanged = 0;
 
   const metadataDir = modelMetadataDir(provider.modelsDir);
-  const retainedMetadata = new Set([...missingReasoning.keys()].flatMap((file) => {
-    const base = existing.get(file)?.authored.base_model;
-    return base === undefined ? [] : [`${base}.toml`];
-  }));
   for (const [relativePath, file] of desiredMetadata) {
     const filePath = await safeWritePath(metadataDir, relativePath);
     const currentFile = Bun.file(filePath);
@@ -423,7 +391,7 @@ export async function syncProvider<SourceModel>(
     const namespaceDir = path.join(metadataDir, provider.metadataNamespace);
     for (const { file } of await tomlFiles(namespaceDir)) {
       const relativePath = path.join(provider.metadataNamespace, file).split(path.sep).join("/");
-      if (desiredMetadata.has(relativePath) || retainedMetadata.has(relativePath) || provider.deleteMissing === false) continue;
+      if (desiredMetadata.has(relativePath) || provider.deleteMissing === false) continue;
       if (options.newOnly) {
         console.log(`Skipping metadata removal in new-only mode: ${relativePath}`);
         continue;
@@ -485,7 +453,7 @@ export async function syncProvider<SourceModel>(
   const missingLocal: string[] = [];
   for (const relativePath of new Set([...existing.keys(), ...brokenSymlinks])) {
     if (desired.has(relativePath)) continue;
-    if (missingReasoning.has(relativePath)) {
+    if (missingReasoning.has(relativePath.slice(0, -5))) {
       unchanged++;
       continue;
     }
@@ -511,14 +479,14 @@ export async function syncProvider<SourceModel>(
   }
 
   const notices = [
-    ...[...missingReasoning].map(([file, reason]) => `Missing reasoning options for \`${file.slice(0, -5)}\`: ${reason}`),
+    ...missingReasoning.values(),
     ...provider.skippedNotice?.(skippedRemote) ?? [],
     ...provider.missingNotice?.(missingLocal) ?? [],
   ];
 
   const issueModels = [
     ...(provider.skipCreates === true ? skippedRemote : []),
-    ...[...missingReasoning.keys()].map((file) => file.slice(0, -5)),
+    ...missingReasoning.keys(),
   ];
   if (
     provider.trackMissingModels !== false
@@ -530,10 +498,7 @@ export async function syncProvider<SourceModel>(
         ...await openMissingModelIssues(
           { id: provider.id, name: provider.name, modelsDir: provider.modelsDir },
           issueModels,
-          {
-            dryRun: options.dryRun,
-            reasons: Object.fromEntries([...missingReasoning].map(([file, reason]) => [file.slice(0, -5), reason])),
-          },
+          { dryRun: options.dryRun, reasons: Object.fromEntries(missingReasoning) },
         ),
       );
     } catch (error) {
@@ -548,9 +513,9 @@ export async function syncProvider<SourceModel>(
     }
   }
 
-  const result = summarize(provider, files, unchanged, notices, missingReasoning.size);
+  const result = summarize(provider, files, unchanged, notices);
   console.log(
-    `${options.dryRun ? "Dry run: " : ""}${result.created} created, ${result.updated} updated, ${result.deleted} removed, ${result.unchanged} unchanged, ${result.missingReasoningOptions} missing reasoning options`,
+    `${options.dryRun ? "Dry run: " : ""}${result.created} created, ${result.updated} updated, ${result.deleted} removed, ${result.unchanged} unchanged`,
   );
   return result;
 }
@@ -580,6 +545,7 @@ export function preserveReasoningOptions(
   model: SyncedModel,
   existing: ExistingModel | undefined,
   resolvedReasoning: boolean | undefined = existing?.reasoning,
+  baseReasoningOptions: unknown = undefined,
 ): SyncedModel {
   if ((model.reasoning ?? resolvedReasoning) === false) {
     const { reasoning_options: _reasoningOptions, ...withoutReasoningOptions } = model;
@@ -587,8 +553,12 @@ export function preserveReasoningOptions(
   }
   if (model.reasoning_options !== undefined) return model;
   if (existing?.reasoning_options === undefined) {
-    // Unknown controls are incomplete metadata, not proof of an always-on model.
-    return model;
+    // When the base model already declares reasoning_options, leave the field
+    // unset so the factored file inherits them — stamping [] here would
+    // shadow the base's real controls with "no controls".
+    return (model.reasoning ?? resolvedReasoning) === true && baseReasoningOptions === undefined
+      ? { ...model, reasoning_options: [] }
+      : model;
   }
   return {
     ...model,
@@ -833,7 +803,6 @@ function summarize(
   files: SyncResult["files"],
   unchanged: number,
   notices: string[],
-  missingReasoningOptions: number,
 ): SyncResult {
   return {
     id: provider.id,
@@ -843,7 +812,6 @@ function summarize(
     updated: files.filter((file) => file.status === "updated").length,
     deleted: files.filter((file) => file.status === "deleted").length,
     unchanged,
-    missingReasoningOptions,
     notices,
     files,
   };

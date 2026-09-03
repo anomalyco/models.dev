@@ -1,13 +1,46 @@
-import { expect, test } from "bun:test";
+import { expect, spyOn, test } from "bun:test";
 import { mkdir, mkdtemp, readFile, rm, symlink, writeFile } from "node:fs/promises";
 import path from "node:path";
 
 import { syncProvider } from "../src/sync/index.js";
+import * as missingIssues from "../src/sync/missing-issues.js";
 import {
   buildCloudflareAiGatewayModel,
   cloudflareAiGateway,
   deriveReasoningOptions,
 } from "../src/sync/providers/cloudflare-ai-gateway.js";
+
+test("missing reasoning controls open issues without deleting existing models or blocking valid ones", async () => {
+  const dir = await mkdtemp(path.join(import.meta.dirname, "../../../providers/.reasoning-sync-"));
+  const modelsDir = path.join(dir, "models");
+  const ids = ["anthropic/claude-fable-5.1", "anthropic/claude-fable-5-1"];
+  const file = path.join(modelsDir, `${ids[0]}.toml`);
+  const content = '# Keep authored controls\nbase_model = "anthropic/claude-fable-5-1"\nreasoning_options = [{ type = "effort", values = ["high"] }]\n';
+  await mkdir(path.dirname(file), { recursive: true });
+  await writeFile(file, content);
+  const issues = spyOn(missingIssues, "openMissingModelIssues").mockResolvedValue([]);
+  const provider = {
+    ...cloudflareAiGateway, modelsDir,
+    async fetchModels() {
+      return [...ids, "openai/gpt-4.1"].map((model_id) => ({
+        catalog: { model_id, task: "Text Generation", pricing: { "Input tokens (per 1M)": 1, "Output tokens (per 1M)": 2 } },
+      }));
+    },
+  };
+  try {
+    const result = await syncProvider(provider, { openIssues: true });
+    expect(result).toMatchObject({ created: 1, updated: 0, deleted: 0, unchanged: 1 });
+    expect(await readFile(file, "utf8")).toBe(content);
+    expect(await Bun.file(path.join(modelsDir, `${ids[1]}.toml`)).exists()).toBe(false);
+    expect(issues.mock.calls[0]?.[1]).toEqual(ids);
+    expect(issues.mock.calls[0]?.[2]?.reasons?.[ids[0]!]).toContain("reasoning_options");
+    await expect(syncProvider({ ...provider, async fetchModels() { throw new Error("fetch failed"); } })).rejects.toThrow("fetch failed");
+    expect(issues).toHaveBeenCalledTimes(1);
+  } finally {
+    issues.mockRestore();
+    await rm(dir, { recursive: true, force: true });
+  }
+});
 
 test("builds Cloudflare AI Gateway overrides from catalog metadata", () => {
   const model = buildCloudflareAiGatewayModel(

@@ -2856,14 +2856,16 @@ test("formats reasoning efforts from lowest to highest", () => {
   );
 });
 
-test("leaves unknown reasoning controls unset for issue reporting", () => {
-  const model = { base_model: "anthropic/claude-fable-5-1", reasoning: true };
-  expect(preserveReasoningOptions(model, undefined)).toEqual(model);
+test("defaults new reasoning models to empty reasoning options", () => {
+  expect(preserveReasoningOptions({ reasoning: true }, undefined)).toEqual({
+    reasoning: true,
+    reasoning_options: [],
+  });
 });
 
-test("preserves explicit always-on reasoning controls", () => {
-  const model = { base_model: "anthropic/claude-fable-5-1", reasoning: true, reasoning_options: [] };
-  expect(preserveReasoningOptions(model, undefined)).toEqual(model);
+test("inherits base reasoning options instead of stamping empty ones", () => {
+  expect(preserveReasoningOptions({ reasoning: true }, undefined, undefined, [{ type: "toggle" }]))
+    .toEqual({ reasoning: true });
 });
 
 test("normalizes Cortecs file modalities to pdf", () => {

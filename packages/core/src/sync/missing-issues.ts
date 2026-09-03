@@ -28,16 +28,10 @@ function issueBody(provider: MissingModelIssueTarget, modelId: string, reason?: 
     reason === undefined
       ? "This provider uses `skipCreates` because the remote source is not enough to auto-author a full TOML."
       : `Sync diagnostic: ${reason}`,
-    ...(reason === undefined ? [
-      "Add the model manually (prefer `base_model` when matching `models/` metadata exists).",
-    ] : [
-      "Research and author this provider's reasoning_options. Do not guess missing values or use empty reasoning controls as a placeholder.",
-      "For generated entries, update the provider's curation/source of truth as well as the TOML so the next sync retains the fix. Re-run the provider sync and `bun validate`.",
+    "Add the model manually (prefer `base_model` when matching `models/` metadata exists).",
+    ...(reason === undefined ? [] : [
+      `Research the provider's reasoning controls; do not use an empty placeholder. Update \`providers/${provider.id}/curation.toml\` if present, including source URLs and wire paths in its \`note\` array, so the next sync retains the fix.`,
     ]),
-    ...(provider.id === "cloudflare-ai-gateway" ? [
-      `Update \`providers/cloudflare-ai-gateway/curation.toml\` under \`[models.${JSON.stringify(modelId)}]\` with verified reasoning controls. Editing only the generated TOML will not fix this sync.`,
-      "Put source URLs and exact reasoning wire paths in the curation entry's `note` array; generated headers are replaced from it. Do not add the model to `skip` merely to silence missing metadata.",
-    ] : []),
     "",
   ].join("\n");
 }
