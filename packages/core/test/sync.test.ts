@@ -857,18 +857,8 @@ test("NanoGPT sync drops stale descriptions while first factoring existing model
     "",
   ].join("\n"));
   await Bun.write(metadataPath, [
-    'name = "Claude Sonnet 4.6"',
     'description = "Canonical description"',
     "reasoning = true",
-    "attachment = true",
-    "tool_call = true",
-    "open_weights = false",
-    'release_date = "2026-01-01"',
-    'last_updated = "2026-01-01"',
-    "",
-    "[modalities]",
-    'input = ["text", "image"]',
-    'output = ["text"]',
     "",
     "[limit]",
     "context = 1_000_000",
@@ -2866,7 +2856,7 @@ test("formats reasoning efforts from lowest to highest", () => {
   );
 });
 
-test("leaves unknown reasoning controls unset for incomplete-model reporting", () => {
+test("leaves unknown reasoning controls unset for issue reporting", () => {
   const model = { base_model: "anthropic/claude-fable-5-1", reasoning: true };
   expect(preserveReasoningOptions(model, undefined)).toEqual(model);
 });

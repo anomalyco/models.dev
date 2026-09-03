@@ -4,7 +4,7 @@ import { z } from "zod";
 
 import { ReasoningOption } from "../../schema.js";
 import type { ExistingModel, SyncProvider, SyncedBaseModel } from "../index.js";
-import { IncompleteModelError } from "../incomplete-model.js";
+import { MissingReasoningOptionsError } from "../missing-reasoning-options.js";
 
 const API_BASE = "https://api.cloudflare.com/client/v4/accounts";
 const PROVIDER_DIR = path.join(
@@ -39,7 +39,7 @@ const CatalogEntry = z.object({
 const CatalogModel = CatalogEntry.extend({
   task: z.literal(TEXT_GENERATION),
   context_length: z.number().int().positive().nullish(),
-  pricing: z.record(z.number().nonnegative()).nullish(),
+  pricing: z.record(z.number().nonnegative()),
 });
 
 const CloudflareResponse = z.object({
@@ -149,11 +149,11 @@ export function buildCloudflareAiGatewayModel(
   existing?: ExistingModel,
 ): SyncedBaseModel {
   const id = catalog.model_id;
-  // Validate billing units before any recoverable metadata gap can skip the row.
-  const cost = proxiedCost(catalog.pricing ?? {}, id);
+  // Pricing failures must not be hidden by missing reasoning controls.
+  const cost = proxiedCost(catalog.pricing, id);
   const baseModel = curated.base_model ?? resolveBaseModel(id);
   if (baseModel === undefined) {
-    throw new IncompleteModelError(id, "no lab file and no curated base_model; research the lab metadata and curation mapping");
+    throw new Error(`${id}: no lab file and no curated base_model; add it to skip or map it`);
   }
 
   const model: SyncedBaseModel = { base_model: baseModel };
@@ -166,7 +166,7 @@ export function buildCloudflareAiGatewayModel(
     const derived = deriveReasoningOptions(schemaInput);
     const reasoningOptions = curated.reasoning_options ?? (derived.length > 0 ? derived : undefined);
     if (reasoningOptions === undefined) {
-      throw new IncompleteModelError(
+      throw new MissingReasoningOptionsError(
         id,
         `base ${baseModel} reasons but the catalog schema and curation provide no reasoning_options`,
       );
@@ -471,7 +471,7 @@ function proxiedCost(pricing: Record<string, number>, id: string): NonNullable<S
     throw new Error(`${id}: unmapped pricing key "${key}"`);
   }
   if (cost.input === undefined || cost.output === undefined) {
-    throw new IncompleteModelError(id, "catalog pricing must include input and output rates");
+    throw new Error(`${id}: catalog pricing must include input and output rates`);
   }
   return cost;
 }

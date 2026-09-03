@@ -4,7 +4,7 @@ import { tmpdir } from "node:os";
 import path from "node:path";
 
 import { syncProvider, type SyncedModel } from "../src/sync/index.js";
-import { IncompleteModelError } from "../src/sync/incomplete-model.js";
+import { MissingReasoningOptionsError } from "../src/sync/missing-reasoning-options.js";
 import { cloudflareAiGateway } from "../src/sync/providers/cloudflare-ai-gateway.js";
 
 function source(id: string, pricing: Record<string, number> = { "Input tokens (per 1M)": 2, "Output tokens (per 1M)": 8 }) {
@@ -12,7 +12,7 @@ function source(id: string, pricing: Record<string, number> = { "Input tokens (p
 }
 
 async function fixture() {
-  const dir = await mkdtemp(path.join(import.meta.dirname, "../../../providers/.incomplete-sync-"));
+  const dir = await mkdtemp(path.join(import.meta.dirname, "../../../providers/.reasoning-sync-"));
   const modelsDir = path.join(dir, "models");
   await mkdir(path.join(modelsDir, "anthropic"), { recursive: true });
   const file = path.join(modelsDir, "anthropic/claude-fable-5.1.toml");
@@ -21,7 +21,7 @@ async function fixture() {
   return { dir, modelsDir, file, content };
 }
 
-test.each([true, false])("incomplete Cloudflare models do not block valid models (existing entry: %s)", async (existing) => {
+test.each([true, false])("missing Cloudflare reasoning options do not block valid models (existing entry: %s)", async (existing) => {
   const data = await fixture();
   if (!existing) await rm(data.file);
   try {
@@ -31,22 +31,16 @@ test.each([true, false])("incomplete Cloudflare models do not block valid models
       async fetchModels() {
         return [
           source("anthropic/claude-fable-5.1"),
-          source("anthropic/not-a-real-model"),
-          source("openai/gpt-4.1-mini", {}),
           source("openai/gpt-4.1"),
         ];
       },
     }, { openIssues: false });
 
-    expect(result).toMatchObject({ created: 1, updated: 0, deleted: 0, unchanged: existing ? 1 : 0, incomplete: 3 });
+    expect(result).toMatchObject({ created: 1, updated: 0, deleted: 0, unchanged: existing ? 1 : 0, missingReasoningOptions: 1 });
     if (existing) expect(await readFile(data.file, "utf8")).toBe(data.content);
     else expect(await Bun.file(data.file).exists()).toBe(false);
     expect(await Bun.file(path.join(data.modelsDir, "openai/gpt-4.1.toml")).exists()).toBe(true);
-    expect(await Bun.file(path.join(data.modelsDir, "anthropic/not-a-real-model.toml")).exists()).toBe(false);
-    expect(await Bun.file(path.join(data.modelsDir, "openai/gpt-4.1-mini.toml")).exists()).toBe(false);
     expect(result.notices.join("\n")).toContain("reasoning_options");
-    expect(result.notices.join("\n")).toContain("base_model");
-    expect(result.notices.join("\n")).toContain("input and output rates");
   } finally {
     await rm(data.dir, { recursive: true, force: true });
   }
@@ -79,7 +73,7 @@ test.each([
   { openIssues: false },
   { openIssues: true, trackMissingModels: false },
   { newOnly: true, openIssues: false },
-])("incomplete models respect issue and dry-run controls: %j", async (options) => {
+])("missing reasoning options respect issue and dry-run controls: %j", async (options) => {
   const data = await fixture();
   const spawn = spyOn(Bun, "spawn").mockImplementation(() => { throw new Error("Unexpected subprocess"); });
   try {
@@ -90,7 +84,7 @@ test.each([
       async fetchModels() { return [source("anthropic/claude-fable-5.1")]; },
     }, options);
     expect(spawn).not.toHaveBeenCalled();
-    expect(result.incomplete).toBe(1);
+    expect(result.missingReasoningOptions).toBe(1);
     expect(result.notices.join("\n")).toContain("reasoning_options");
     expect(await readFile(data.file, "utf8")).toBe(data.content);
   } finally {
@@ -99,7 +93,7 @@ test.each([
   }
 });
 
-test("incomplete models dispatch the issue fixer even when the provider can auto-create models", async () => {
+test("missing reasoning options dispatch the issue fixer even when the provider can auto-create models", async () => {
   const data = await fixture();
   const repository = process.env.GITHUB_REPOSITORY;
   process.env.GITHUB_REPOSITORY = "example/catalog";
@@ -123,7 +117,7 @@ test("incomplete models dispatch the issue fixer even when the provider can auto
     expect(create[create.indexOf("--body") + 1]).toContain("reasoning_options");
     expect(create[create.indexOf("--body") + 1]).toContain("curation.toml");
     expect(calls.find((args) => args[1] === "api")).toContain("client_payload[issue_number]=123");
-    expect(result).toMatchObject({ created: 1, incomplete: 1, deleted: 0 });
+    expect(result).toMatchObject({ created: 1, missingReasoningOptions: 1, deleted: 0 });
     expect(result.notices.join("\n")).toContain("dispatched the issue fixer");
   } finally {
     spawn.mockRestore();
@@ -133,12 +127,11 @@ test("incomplete models dispatch the issue fixer even when the provider can auto
   }
 });
 
-test("the shared runner reports missing inherited fields and controls without inventing defaults", async () => {
+test("the shared runner reports missing reasoning controls without inventing defaults", async () => {
   const data = await fixture();
   const definitions: Record<string, SyncedModel> = {
-    "missing-base": { base_model: "unknown/missing" },
-    "missing-output": { base_model: "openai/gpt-4.1", base_model_omit: ["limit.output"] },
     "unknown-controls": { base_model: "anthropic/claude-fable-5-1" },
+    "standalone-controls": fullModel(),
     "always-on": { base_model: "anthropic/claude-fable-5-1", reasoning_options: [] },
     "complete": { base_model: "openai/gpt-4.1" },
   };
@@ -149,25 +142,24 @@ test("the shared runner reports missing inherited fields and controls without in
       parseModels(raw) { return raw as string[]; },
       translateModel(id) { return { id, model: definitions[id]! }; },
     });
-    expect(result).toMatchObject({ created: 2, deleted: 1, incomplete: 3 });
-    expect(result.notices.join("\n")).toContain("Missing base_model metadata");
-    expect(result.notices.join("\n")).toContain("limit.output");
+    expect(result).toMatchObject({ created: 2, deleted: 1, missingReasoningOptions: 2 });
     expect(result.notices.join("\n")).toContain("reasoning_options");
     expect(await Bun.file(path.join(data.modelsDir, "unknown-controls.toml")).exists()).toBe(false);
+    expect(await Bun.file(path.join(data.modelsDir, "standalone-controls.toml")).exists()).toBe(false);
     expect(await readFile(path.join(data.modelsDir, "always-on.toml"), "utf8")).toContain("reasoning_options = []");
   } finally {
     await rm(data.dir, { recursive: true, force: true });
   }
 });
 
-test("incomplete metadata is not written and retained models keep their original lab metadata", async () => {
-  const dir = await mkdtemp(path.join(tmpdir(), "incomplete-metadata-"));
+test("models missing reasoning options do not write or delete lab metadata", async () => {
+  const dir = await mkdtemp(path.join(tmpdir(), "reasoning-metadata-"));
   const modelsDir = path.join(dir, "providers/test/models");
   const metadataDir = path.join(dir, "models/lab");
   await mkdir(modelsDir, { recursive: true });
   await mkdir(metadataDir, { recursive: true });
   const originalMetadata = await readFile(path.join(import.meta.dirname, "../../../models/anthropic/claude-fable-5-1.toml"), "utf8");
-  const original = 'base_model = "lab/kept"\nreasoning_options = []\n';
+  const original = 'base_model = "lab/kept"\n';
   await writeFile(path.join(modelsDir, "kept.toml"), original);
   await writeFile(path.join(metadataDir, "kept.toml"), originalMetadata);
   try {
@@ -178,11 +170,11 @@ test("incomplete metadata is not written and retained models keep their original
       translateModel(id) {
         return {
           id, model: { base_model: `lab/${id}` },
-          metadata: { id: `lab/${id}`, model: { name: id, description: "Fixture", reasoning: true } },
+          metadata: { id: `lab/${id}`, model: { ...Bun.TOML.parse(originalMetadata), name: id, description: "Fixture", reasoning: true } },
         };
       },
     });
-    expect(result).toMatchObject({ created: 0, updated: 0, deleted: 0, incomplete: 2 });
+    expect(result).toMatchObject({ created: 0, updated: 0, deleted: 0, missingReasoningOptions: 2 });
     expect(await readFile(path.join(modelsDir, "kept.toml"), "utf8")).toBe(original);
     expect(await readFile(path.join(metadataDir, "kept.toml"), "utf8")).toBe(originalMetadata);
     expect(await Bun.file(path.join(metadataDir, "new.toml")).exists()).toBe(false);
@@ -191,8 +183,8 @@ test("incomplete metadata is not written and retained models keep their original
   }
 });
 
-test("Cloudflare --check fails on incomplete models even with no file changes", async () => {
-  const dir = await mkdtemp(path.join(tmpdir(), "incomplete-check-"));
+test("Cloudflare --check fails on missing reasoning options even with no file changes", async () => {
+  const dir = await mkdtemp(path.join(tmpdir(), "reasoning-check-"));
   const modelsDir = path.join(dir, "providers/cloudflare-ai-gateway/models/anthropic");
   const metadataDir = path.join(dir, "models/anthropic");
   const fixtures = path.join(dir, "fixtures");
@@ -209,15 +201,15 @@ test("Cloudflare --check fails on incomplete models even with no file changes", 
     });
     const [code, stdout, stderr] = await Promise.all([proc.exited, new Response(proc.stdout).text(), new Response(proc.stderr).text()]);
     expect(code).toBe(1);
-    expect(stdout).toContain("0 created, 0 updated, 0 removed, 1 unchanged, 1 incomplete");
-    expect(stderr).toContain("--check: 1 model(s) need curation");
+    expect(stdout).toContain("0 created, 0 updated, 0 removed, 1 unchanged, 1 missing reasoning options");
+    expect(stderr).toContain("--check: 1 model(s) need reasoning options");
     expect(stdout).not.toContain("up to date");
   } finally {
     await rm(dir, { recursive: true, force: true });
   }
 });
 
-test.each(["duplicate", "unsafe", "invalid-value", "programming-error", "fetch-error"])("does not turn %s failures into incomplete-model issues", async (mode) => {
+test.each(["duplicate", "unsafe", "invalid-value", "programming-error", "fetch-error"])("does not turn %s failures into reasoning-option issues", async (mode) => {
   const data = await fixture();
   try {
     await expect(syncProvider({
@@ -229,14 +221,59 @@ test.each(["duplicate", "unsafe", "invalid-value", "programming-error", "fetch-e
       parseModels(raw) { return raw as string[]; },
       translateModel(id) {
         if (mode === "programming-error") throw new TypeError("bug");
-        if (mode === "duplicate") throw new IncompleteModelError("same-id", "missing facts");
-        if (mode === "unsafe") throw new IncompleteModelError("../../escape", "missing facts");
+        if (mode === "duplicate") throw new MissingReasoningOptionsError("same-id", "missing controls");
+        if (mode === "unsafe") throw new MissingReasoningOptionsError("../../escape", "missing controls");
         return { id, model: { base_model: "openai/gpt-4.1", limit: { output: -1 } } };
       },
     })).rejects.toThrow();
     expect(await readFile(data.file, "utf8")).toBe(data.content);
     expect(await Bun.file(path.join(data.modelsDir, "first.toml")).exists()).toBe(false);
   } finally {
+    await rm(data.dir, { recursive: true, force: true });
+  }
+});
+
+function fullModel(): SyncedModel {
+  return {
+    name: "Fixture", description: "Test model", reasoning: true, attachment: false,
+    tool_call: true, open_weights: false, release_date: "2026-01-01", last_updated: "2026-01-01",
+    modalities: { input: ["text"], output: ["text"] }, limit: { context: 1000, output: 100 },
+  };
+}
+
+test.each(["name", "limit", "release_date"])("missing %s still fails rather than opening a reasoning-option issue", async (field) => {
+  const data = await fixture();
+  const spawn = spyOn(Bun, "spawn").mockImplementation(() => { throw new Error("Unexpected subprocess"); });
+  try {
+    await expect(syncProvider({
+      id: "test", name: "Test", modelsDir: data.modelsDir,
+      async fetchModels() { return ["new"]; },
+      parseModels(raw) { return raw as string[]; },
+      translateModel(id) { return { id, model: { ...fullModel(), [field]: undefined } }; },
+    }, { openIssues: true })).rejects.toThrow();
+    expect(spawn).not.toHaveBeenCalled();
+    expect(await readFile(data.file, "utf8")).toBe(data.content);
+  } finally {
+    spawn.mockRestore();
+    await rm(data.dir, { recursive: true, force: true });
+  }
+});
+
+test.each([
+  source("anthropic/not-a-real-model"),
+  source("openai/gpt-4.1", {}),
+])("missing Cloudflare base metadata or pricing still aborts the run: %j", async (bad) => {
+  const data = await fixture();
+  const spawn = spyOn(Bun, "spawn").mockImplementation(() => { throw new Error("Unexpected subprocess"); });
+  try {
+    await expect(syncProvider({
+      ...cloudflareAiGateway, modelsDir: data.modelsDir,
+      async fetchModels() { return [source("anthropic/claude-fable-5.1"), bad]; },
+    }, { openIssues: true })).rejects.toThrow();
+    expect(spawn).not.toHaveBeenCalled();
+    expect(await readFile(data.file, "utf8")).toBe(data.content);
+  } finally {
+    spawn.mockRestore();
     await rm(data.dir, { recursive: true, force: true });
   }
 });

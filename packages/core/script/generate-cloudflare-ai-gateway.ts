@@ -6,8 +6,8 @@ const check = process.argv.includes("--check");
 const result = await syncProviderByID("cloudflare-ai-gateway", { dryRun: check });
 
 if (check) {
-  if (result.incomplete > 0) {
-    console.error(`--check: ${result.incomplete} model(s) need curation`);
+  if (result.missingReasoningOptions > 0) {
+    console.error(`--check: ${result.missingReasoningOptions} model(s) need reasoning options`);
     process.exit(1);
   }
   if (result.files.length > 0) {

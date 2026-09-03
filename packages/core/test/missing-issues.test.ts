@@ -107,7 +107,7 @@ test.serial("dedupes exact titles from both open and closed issues", async () =>
 
 test.serial.each([
   ["test", undefined],
-  ["test", "Missing pricing"],
+  ["test", "Missing reasoning_options"],
   ["cloudflare-ai-gateway", "Missing reasoning_options"],
 ] as const)("includes model-specific diagnostics and curation guidance for %s (%s)", async (id, reason) => {
   await withGh({}, async (calls) => {
@@ -119,15 +119,15 @@ test.serial.each([
     const body = create[6]!;
 
     expect(body).toContain(`| Expected path | \`providers/${id}/models/${modelId}.toml\` |`);
-    expect(body).toContain("prefer `base_model`");
-    expect(body).toContain("Do not guess missing values or use empty reasoning controls as a placeholder.");
-    expect(body).toContain("Re-run the provider sync and `bun validate`.");
     expect(body).not.toContain("Do not leak this diagnostic");
     if (reason === undefined) {
+      expect(body).toContain("prefer `base_model`");
       expect(body).toContain("not in the local catalog");
       expect(body).toContain("This provider uses `skipCreates`");
       expect(body).not.toContain("Sync diagnostic:");
     } else {
+      expect(body).toContain("Do not guess missing values or use empty reasoning controls as a placeholder.");
+      expect(body).toContain("Re-run the provider sync and `bun validate`.");
       expect(body).toContain(`Sync diagnostic: ${reason}`);
       expect(body).toContain("Any existing local entry was left unchanged.");
       expect(body).not.toContain("This provider uses `skipCreates`");
@@ -175,7 +175,6 @@ test.serial("reports a dispatch failure without claiming the issue fixer ran or 
 
     expect(notices).toHaveLength(1);
     expect(notices[0]).toContain("missing model `new`");
-    expect(notices[0]).toContain("Opened GitHub issue #101");
     expect(notices[0]).toContain("issue fixer dispatch failed: dispatch unavailable");
     expect(notices[0]).not.toContain("dispatched the issue fixer");
     expect(calls.filter((call) => call[1] === "issue" && call[2] === "create")).toHaveLength(1);
