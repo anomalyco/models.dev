@@ -10,6 +10,11 @@ input = 27.81
 output = 166.86
 cache_read = 2.781
 
+[[cost.tiers]]
+tier = { type = "context", size = 272_000 }
+input = 55.62
+output = 250.29
+
 [provider]
 npm = "@ai-sdk/openai"
 api = "https://api.saygm.com/v1"
