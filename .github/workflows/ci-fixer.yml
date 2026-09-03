@@ -2,7 +2,7 @@ name: Dev CI Fixer
 
 on:
   workflow_run:
-    workflows: [Deploy]
+    workflows: [Deploy, Sync Model Catalogs]
     types: [completed]
   workflow_dispatch:
 
