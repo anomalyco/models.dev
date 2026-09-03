@@ -1,6 +1,4 @@
 import { expect, test } from "bun:test";
-import { tmpdir } from "node:os";
-import path from "node:path";
 
 import {
   buildNeosantaraModel,
@@ -143,7 +141,10 @@ test("builds override-only models with effective USD pricing and host reasoning 
   const gemini = buildNeosantaraModel(merged[0]!, undefined);
   expect(gemini).toMatchObject({
     base_model: "google/gemini-3.7-flash",
-    reasoning_options: [{ type: "effort", values: ["low", "medium", "high"] }],
+    // Uniform host effort enum — the catalog exposes reasoning capability, not grades.
+    reasoning_options: [
+      { type: "effort", values: ["none", "minimal", "low", "medium", "high", "xhigh"] },
+    ],
     // This host streams reasoning in `reasoning_content`.
     interleaved: { field: "reasoning_content" },
     limit: { context: 1_000_000 },
@@ -189,30 +190,22 @@ test("never advertises a control this host cannot send", () => {
     NeosantaraPricingResponse.parse(pricingResponse),
   )[0]!;
 
-  const ids = [
-    ["gpt-5.6-terra", "openai/gpt-5.6-terra"],
-    ["claude-sonnet-5", "anthropic/claude-sonnet-5"],
-    ["glm-5.3-flash", "zhipuai/glm-5.3-flash"],
-    ["gemini-3.7-flash", "google/gemini-3.7-flash"],
-  ] as const;
-
-  for (const [id, base] of ids) {
-    const options = neosantaraReasoningControls(id, base);
-    expect(options).toBeDefined();
-    if (options === undefined) continue;
-    // Neither a thinking budget nor a bare toggle names a field a caller can use here.
+  // Whatever the upstream lab, the host maps effort onto the same accepted enum: only effort,
+  // no budget_tokens or toggle, and every value inside the host enum.
+  for (const id of ["gpt-5.6-terra", "claude-sonnet-5", "glm-5.3-flash", "gemini-3.7-flash"]) {
+    const options = neosantaraReasoningControls({ ...source, id });
     expect(options.some((option) => option.type === "budget_tokens")).toBe(false);
     expect(options.some((option) => option.type === "toggle")).toBe(false);
-    expect(neosantaraReasoningHeader(options)).toBeUndefined();
+    expect(neosantaraReasoningHeader(options)).toContain("reasoning_effort");
     for (const value of options.flatMap((o) => ("values" in o ? o.values : []))) {
       expect(["none", "minimal", "low", "medium", "high", "xhigh"]).toContain(value);
     }
   }
 
-  // The request enum is never dumped wholesale onto a model.
+  // The full host enum is what a reasoning model advertises, including the `none` off value.
   const built = buildNeosantaraModel({ ...source, id: "gpt-5.6-terra" }, undefined);
   expect(built.reasoning_options).toEqual([
-    { type: "effort", values: ["none", "low", "medium", "high", "xhigh"] },
+    { type: "effort", values: ["none", "minimal", "low", "medium", "high", "xhigh"] },
   ]);
 });
 
@@ -488,93 +481,63 @@ test("skips a model with unusable upstream pricing instead of aborting the whole
   expect(neosantara.sourceID(merged[0]!)).toBe("kimi-k2.5");
 });
 
-test("derives reasoning controls from the canonical tree so new models need no code change", () => {
-  // Lab entry wins, intersected with what this host accepts, so `max` never survives.
-  expect(neosantaraReasoningControls("gpt-5.6-terra", "openai/gpt-5.6-terra")).toEqual([
-    { type: "effort", values: ["none", "low", "medium", "high", "xhigh"] },
-  ]);
-  expect(neosantaraReasoningControls("claude-fable-5", "anthropic/claude-fable-5")).toEqual([
-    { type: "effort", values: ["low", "medium", "high", "xhigh"] },
-  ]);
-
-  // DeepSeek's backend route only distinguishes `none` from non-`none`; it does not forward a
-  // graded effort upstream, so neither lab `max` nor the projected `high` is advertised.
-  for (const base of ["deepseek/deepseek-v4-pro", "deepseek/deepseek-v4-flash"] as const) {
-    const controls = neosantaraReasoningControls(base.split("/")[1]!, base);
-    expect(controls).toEqual([{ type: "toggle" }]);
-    expect(neosantaraReasoningHeader(controls!)).toContain("Omitting the field defaults to off");
-  }
-
-  // An always-on reasoner keeps an empty control set rather than borrowing a peer's levels.
-  expect(neosantaraReasoningControls("kimi-k2-thinking", "moonshotai/kimi-k2-thinking")).toEqual([]);
-
-  // A lab with no graded level is a binary control, carried with a wire comment rather than
-  // an effort list that could only say how to switch reasoning off.
-  for (const [id, base] of [
-    ["kimi-k2.5", "moonshotai/kimi-k2.5"],
-    ["laguna-s-2.1", "poolside/laguna-s-2.1"],
-  ] as const) {
-    const controls = neosantaraReasoningControls(id, base);
-    expect(controls).toEqual([{ type: "toggle" }]);
-    expect(neosantaraReasoningHeader(controls)).toContain("reasoning_effort");
-  }
-
-  // A dated snapshot uses the same binary DeepSeek route.
-  expect(neosantaraReasoningControls("deepseek-v4-pro-0813", "deepseek/deepseek-v4-pro-0813"))
-    .toEqual([{ type: "toggle" }]);
-});
-
-test("does not turn unresolved relay controls into always-on", () => {
-  expect(neosantaraReasoningControls("future-model", "example/future-model")).toBeUndefined();
-  expect(neosantaraReasoningControls("devstral-2", "mistral/devstral-2512")).toBeUndefined();
-
+test("advertises the host effort enum uniformly for every reasoning model", () => {
   const source = mergeNeosantaraCatalogs(
     NeosantaraModelsResponse.parse(modelsResponse),
     NeosantaraPricingResponse.parse(pricingResponse),
   )[0]!;
-  const unresolved = {
-    ...source,
-    id: "devstral-2",
-    capabilities: ["text_generation", "function_calling", "reasoning"],
-  };
-  expect(shouldSyncNeosantaraModel(unresolved)).toBe(false);
-  expect(neosantara.translateModel(unresolved, {
-    existing: () => undefined,
-    authored: () => undefined,
-  })).toBeUndefined();
-  expect(neosantara.sourceID(unresolved)).toBe("devstral-2");
-});
+  const enumEffort = [
+    { type: "effort", values: ["none", "minimal", "low", "medium", "high", "xhigh"] },
+  ];
 
-test("falls through to peers when the lab documents only a control this host cannot send", () => {
-  // Anthropic's own entry for this model is a thinking budget, which no caller of this host can
-  // set. That is unknown, not always-on, so peer consensus decides instead of publishing `[]`.
-  const controls = neosantaraReasoningControls("claude-4.5-sonnet", "anthropic/claude-sonnet-4-5");
-
-  expect(controls).toBeDefined();
-  if (controls === undefined) return;
-  expect(controls.length).toBeGreaterThan(0);
-  expect(controls.some((option) => option.type === "budget_tokens")).toBe(false);
-  for (const value of controls.flatMap((option) => ("values" in option ? option.values : []))) {
-    expect(["none", "minimal", "low", "medium", "high", "xhigh"]).toContain(value);
+  // Anthropic (lab uses budgets), OpenAI (native effort), and relayed DeepSeek (lab toggle) all
+  // resolve to the same mapped surface — the module reads capability, not lab shape.
+  for (const id of ["claude-fable-5", "gpt-5.6-terra", "deepseek-v4-pro", "deepseek-v4-flash"]) {
+    expect(neosantaraReasoningControls({ ...source, id })).toEqual(enumEffort);
   }
 });
 
-test("reads the provider tree from the module, not the working directory", () => {
-  const module = path.join(import.meta.dir, "..", "src", "sync", "providers", "neosantara.ts");
-  const run = Bun.spawnSync(
-    [
-      "bun",
-      "-e",
-      `const { neosantaraReasoningControls } = await import(${JSON.stringify(module)});
-       console.log(JSON.stringify(neosantaraReasoningControls("gpt-5.4", "openai/gpt-5.4")));`,
-    ],
-    { cwd: tmpdir() },
-  );
+test("honors catalog-published effort levels when they appear, filtered to the host enum", () => {
+  const source = mergeNeosantaraCatalogs(
+    NeosantaraModelsResponse.parse(modelsResponse),
+    NeosantaraPricingResponse.parse(pricingResponse),
+  )[0]!;
 
-  expect(run.stderr.toString()).toBe("");
-  expect(JSON.parse(run.stdout.toString())).toEqual([
-    { type: "effort", values: ["none", "low", "medium", "high", "xhigh"] },
+  // Future catalog: a per-model effort list is honored, and values the host cannot send (`max`)
+  // are dropped rather than published.
+  const future = { ...source, reasoning_efforts: ["low", "high", "max"] };
+  expect(neosantaraReasoningControls(future)).toEqual([
+    { type: "effort", values: ["low", "high"] },
   ]);
+
+  // An empty or all-invalid catalog list falls back to the full host enum, never to `[]`.
+  expect(neosantaraReasoningControls({ ...source, reasoning_efforts: ["max"] })).toEqual([
+    { type: "effort", values: ["none", "minimal", "low", "medium", "high", "xhigh"] },
+  ]);
+});
+
+test("stamps every reasoning TOML with the note explaining the mapped surface", () => {
+  const source = mergeNeosantaraCatalogs(
+    NeosantaraModelsResponse.parse(modelsResponse),
+    NeosantaraPricingResponse.parse(pricingResponse),
+  )[0]!;
+  const context = { existing: () => undefined, authored: () => undefined };
+
+  // A reasoning model (gemini here) carries the note so a reviewer sees why the shape differs
+  // from the upstream provider's own entry.
+  const reasoning = neosantara.translateModel(source, context);
+  expect(reasoning?.header).toContain("Neosantara relays this model");
+  expect(reasoning?.header).toContain("reasoning_effort");
+
+  // A non-reasoning model carries no reasoning note.
+  const plain = neosantara.translateModel(
+    mergeNeosantaraCatalogs(
+      NeosantaraModelsResponse.parse(modelsResponse),
+      NeosantaraPricingResponse.parse(pricingResponse),
+    )[1]!,
+    context,
+  );
+  expect(plain?.header ?? "").not.toContain("Neosantara relays this model");
 });
 
 test("filters deprecated models and never treats the gateway runtime cap as an output limit", () => {

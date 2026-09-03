@@ -3,19 +3,21 @@
 # - https://api.neosantara.xyz/v1/models          (catalog, public, no key)
 # - https://api.neosantara.xyz/v1/public/pricing  (raw_pricing + meta.exchange_rate, public)
 #
-# Reasoning wire format on POST /v1/chat/completions:
-#   Effort: reasoning_effort = none|minimal|low|medium|high|xhigh
-#   Off is reasoning_effort = none; anything else turns reasoning on.
-#   Binary on/off controls are authored as `toggle`, where reasoning_effort = "none"
-#   disables reasoning, another accepted value enables it, and omission defaults to off.
-#   DeepSeek routes are binary: the backend consumes a non-none effort only as an enable flag
-#   and forwards no grade, so their lab high/max distinction is intentionally not published.
-#   A model without the `reasoning` capability rejects the field with HTTP 400.
+# Reasoning: Neosantara is a relay. It normalizes every model's reasoning onto a single
+# OpenAI-compatible `reasoning_effort` field and maps each upstream native shape (Anthropic
+# thinking budgets, DeepSeek/GLM toggles, OpenAI effort, …) behind it, so callers never send an
+# upstream-native control. Accepted enum (verified live, `max` → HTTP 400):
+#   reasoning_effort = none|minimal|low|medium|high|xhigh
+# The catalog advertises only whether a model reasons, not its effort levels, so every
+# reasoning model advertises this full enum rather than a lab- or peer-derived subset; each
+# generated reasoning TOML carries a note explaining that divergence. If the catalog later
+# publishes per-model effort levels, the sync consumes them automatically.
 #
-# Capability flags (reasoning, vision, json_mode, ...) are read from each catalog entry's
+# Capability flags (reasoning, vision, json_mode, …) are read from each catalog entry's
 # `capabilities` array and never inherited from lab metadata, because this gateway enforces
 # its own list: a model the lab ships as a reasoner is published here with reasoning = false
 # until the catalog advertises it, and starts publishing controls on the sync after it does.
+#   A model without the `reasoning` capability rejects `reasoning_effort` with HTTP 400.
 #
 # Pricing: raw_pricing is per million tokens in USD or IDR and excludes `discount`,
 # which is a percentage applied at billing time. Published costs are therefore

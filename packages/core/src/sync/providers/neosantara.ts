@@ -1,6 +1,3 @@
-import { readdirSync, readFileSync } from "node:fs";
-import path from "node:path";
-
 import { z } from "zod";
 import type { ExistingModel, SyncProvider, SyncedFullModel, SyncedModel } from "../index.js";
 import { factorBaseModel, resolveModelMetadataBaseModel } from "./openrouter.js";
@@ -8,9 +5,6 @@ import { factorBaseModel, resolveModelMetadataBaseModel } from "./openrouter.js"
 const MODELS_ENDPOINT = "https://api.neosantara.xyz/v1/models";
 const PRICING_ENDPOINT = "https://api.neosantara.xyz/v1/public/pricing";
 const MIN_CONTEXT_WINDOW = 100_000;
-// Resolved from this module, not the working directory: the tree is what every reasoning
-// control is derived from, so it must not depend on where the sync happens to be launched.
-const PROVIDERS_DIR = path.join(import.meta.dirname, "..", "..", "..", "..", "..", "providers");
 
 const Pricing = z.object({
   currency: z.enum(["USD", "IDR"]),
@@ -31,6 +25,9 @@ export const NeosantaraModel = z.object({
   pricing: Pricing,
   discount: z.number().min(0).max(100).optional(),
   capabilities: z.array(z.string()),
+  // Future-proofing: Neosantara does not publish per-model effort levels today. When it does,
+  // this optional array is consumed automatically (see neosantaraReasoningEfforts).
+  reasoning_efforts: z.array(z.string()).optional(),
   deprecated: z.boolean(),
   deprecation_alternatives: z.array(z.string()),
 }).passthrough();
@@ -145,183 +142,61 @@ type ReasoningControls = NonNullable<SyncedFullModel["reasoning_options"]>;
 /**
  * Reasoning controls (AGENTS.md → "Reasoning options").
  *
- * This host is OpenAI-compatible and normalizes reasoning onto a single caller-facing
- * field, `reasoning_effort`, accepting the values below. Upstream-native shapes (thinking
- * budgets, vendor toggles) are handled behind that field and never appear in a caller's
- * request, so the control is always an effort list.
+ * Neosantara is a relay. It normalizes every upstream model's reasoning onto a single
+ * OpenAI-compatible `reasoning_effort` field and maps each native shape (Anthropic thinking
+ * budgets, DeepSeek/GLM toggles, OpenAI effort, …) behind it, so a caller never sends an
+ * upstream-native control here. Its catalog advertises only *whether* a model reasons, never
+ * per-model effort granularity, so this module does not derive per-model control sets from lab
+ * or peer files — every reasoning-capable model advertises the host's accepted effort enum.
  *
- * The values are read from the canonical tree at sync time rather than hardcoded: the
- * underlying lab entry wins, otherwise the set its same-surface peers agree on, and the
- * result is intersected with what this host accepts — which is why `max` never appears.
- * A model whose lab and peers document no graded level at all has only an on/off choice,
- * which is a toggle. New models therefore need no change here.
+ * `HOST_EFFORTS` is a host fact (the request schema's enum), not a per-model choice. Verified
+ * live via the AI SDK: `max` is rejected (HTTP 400: `none|minimal|low|medium|high|xhigh`) while
+ * those six are accepted. `none` is the off value for models that support switching reasoning
+ * off; always-on models ignore it upstream but still accept it on the wire.
+ *
+ * Future-proof: if the catalog begins publishing per-model effort levels (optional
+ * `reasoning_efforts`), they are honored automatically after filtering to the host enum;
+ * until then the full enum is advertised. New models — reasoning or not — need no code change.
  */
-const HOST_EFFORTS = new Set(["none", "minimal", "low", "medium", "high", "xhigh"]);
+const HOST_EFFORTS = ["none", "minimal", "low", "medium", "high", "xhigh"] as const;
+const HOST_EFFORT_SET: ReadonlySet<string> = new Set(HOST_EFFORTS);
 
-/** A model that reasons with no caller control. */
-const ALWAYS_ON = "always-on";
 /**
- * A model whose only caller choice is whether to reason at all. The switch is
- * `reasoning_effort`, not a separate field — `reasoning.enabled` on its own is inert — so the
- * control is a toggle and the header below records the mapping.
+ * Leading note stamped on every generated reasoning TOML. It exists so a reviewer comparing
+ * this file to the model's own lab entry or another provider understands the divergence: the
+ * effort list is Neosantara's mapped request surface, not the upstream provider's native API.
  */
-const ON_OFF_ONLY = "on-off";
-
-const TOGGLE_HEADER = `# Toggle: reasoning_effort = "none" turns reasoning off; any other accepted
-# value turns it on. Omitting the field defaults to off. This host has no separate on/off
-# field: reasoning.enabled alone does not enable reasoning.
-# https://docs.neosantara.xyz
+const REASONING_NOTE = `# Reasoning: Neosantara relays this model and normalizes reasoning onto a
+# single OpenAI-compatible \`reasoning_effort\` field, mapping the upstream model's native shape
+# (Anthropic thinking budget, DeepSeek/GLM toggle, OpenAI effort, …) behind it. The catalog
+# advertises only that the model reasons, not its effort levels, so this entry lists the host's
+# accepted effort enum rather than the upstream/lab control set. This is Neosantara's request
+# surface, not the origin provider's API. https://docs.neosantara.xyz
 `;
 
-function tomlFilesIn(dir: string): string[] {
-  let entries;
-  try {
-    entries = readdirSync(dir, { withFileTypes: true });
-  } catch {
-    return [];
-  }
-  return entries.flatMap((entry) =>
-    entry.isDirectory()
-      ? tomlFilesIn(path.join(dir, entry.name))
-      : entry.name.endsWith(".toml")
-        ? [path.join(dir, entry.name)]
-        : [],
-  );
-}
-
-function parseToml(filePath: string) {
-  try {
-    return Bun.TOML.parse(readFileSync(filePath, "utf8")) as Record<string, unknown>;
-  } catch {
-    return undefined;
-  }
-}
-
 /**
- * Project another entry's controls onto this host's single field.
- *
- * An empty set means always-on. A lab-side toggle is `reasoning_effort = none` here, so it
- * joins the effort list rather than staying a separate option — a bare toggle would claim an
- * on/off field this host does not have. Values the host cannot send are dropped.
+ * Effort levels this host accepts for a model: catalog-advertised when present (future-proofing
+ * for when Neosantara starts publishing them), otherwise the full host enum, because today the
+ * catalog exposes reasoning capability but not grades.
  */
-function hostControls(
-  options: unknown,
-): string[] | typeof ALWAYS_ON | typeof ON_OFF_ONLY | undefined {
-  if (!Array.isArray(options)) return undefined;
-  if (options.length === 0) return ALWAYS_ON;
-
-  let toggled = false;
-  let accepted: string[] | undefined;
-  for (const option of options) {
-    if (typeof option !== "object" || option === null) continue;
-    const type = (option as { type?: unknown }).type;
-    if (type === "toggle") toggled = true;
-    if (type !== "effort") continue;
-    const values = (option as { values?: unknown }).values;
-    if (!Array.isArray(values)) continue;
-    const usable = values.filter(
-      (value): value is string => typeof value === "string" && HOST_EFFORTS.has(value),
-    );
-    if (usable.length > 0) accepted = usable;
-  }
-
-  if (accepted === undefined) return toggled ? ON_OFF_ONLY : undefined;
-  return toggled && !accepted.includes("none") ? ["none", ...accepted] : accepted;
+function neosantaraReasoningEfforts(model: NeosantaraSourceModel): string[] {
+  const advertised = Array.isArray(model.reasoning_efforts)
+    ? model.reasoning_efforts.filter(
+        (effort): effort is string => typeof effort === "string" && HOST_EFFORT_SET.has(effort),
+      )
+    : [];
+  return advertised.length > 0 ? advertised : [...HOST_EFFORTS];
 }
 
-let controlIndex: { lab: Map<string, ReturnType<typeof hostControls>>; peers: Map<string, ReturnType<typeof hostControls>> } | undefined;
-
-/** Index every other provider's controls: the model's own lab, then peer consensus. */
-function indexControls() {
-  if (controlIndex !== undefined) return controlIndex;
-
-  const lab = new Map<string, ReturnType<typeof hostControls>>();
-  const tally = new Map<string, Map<string, number>>();
-  const shapes = new Map<string, Map<string, ReturnType<typeof hostControls>>>();
-  let parsed = 0;
-
-  for (const file of tomlFilesIn(PROVIDERS_DIR)) {
-    if (file.startsWith(path.join(PROVIDERS_DIR, "neosantara"))) continue;
-    const toml = parseToml(file);
-    if (toml === undefined) continue;
-    parsed++;
-    const controls = hostControls(toml.reasoning_options);
-
-    // A lab's own directory is authoritative, wherever the file sits inside it. An entry whose
-    // controls cannot be read is left unrecorded so peer consensus still gets a say; recording
-    // it as `undefined` would claim the lab documents no control and settle for always-on.
-    const owner = path.relative(PROVIDERS_DIR, file).split(path.sep)[0];
-    const name = path.basename(file, ".toml");
-    const labKey = `${owner}/${name}`;
-    if (owner !== undefined && controls !== undefined && !lab.has(labKey)) lab.set(labKey, controls);
-
-    const base = toml.base_model;
-    if (typeof base !== "string" || controls === undefined) continue;
-    const key = typeof controls === "string" ? controls : controls.join(",");
-    const counts = tally.get(base) ?? new Map<string, number>();
-    counts.set(key, (counts.get(key) ?? 0) + 1);
-    tally.set(base, counts);
-    const seen = shapes.get(base) ?? new Map();
-    seen.set(key, controls);
-    shapes.set(base, seen);
-  }
-
-  // Every control on this host is derived from the tree, so an unreadable tree is not an empty
-  // answer — it would publish "no caller control" for every reasoning model. Fail loudly:
-  // the causes are an incomplete checkout or a runtime whose `Bun.TOML` cannot parse the files.
-  if (parsed === 0) {
-    throw new Error(
-      `Neosantara reasoning controls need the provider tree, but no TOML under '${PROVIDERS_DIR}' could be read. Run the sync from a full checkout with Bun.`,
-    );
-  }
-
-  const peers = new Map<string, ReturnType<typeof hostControls>>();
-  for (const [base, counts] of tally) {
-    const [best] = [...counts.entries()].sort((a, b) => b[1] - a[1]);
-    if (best !== undefined) peers.set(base, shapes.get(base)?.get(best[0]));
-  }
-
-  controlIndex = { lab, peers };
-  return controlIndex;
+/** Uniform for every reasoning-capable model, including relayed DeepSeek: the host maps effort,
+ * so the same request surface applies regardless of the upstream provider's native control. */
+export function neosantaraReasoningControls(model: NeosantaraSourceModel): ReasoningControls {
+  return [{ type: "effort", values: neosantaraReasoningEfforts(model) as never }];
 }
 
-/**
- * Reasoning controls (AGENTS.md → "Reasoning options").
- *
- * This host is OpenAI-compatible and normalizes reasoning onto one caller-facing field,
- * `reasoning_effort`. Upstream-native shapes never reach a caller, so controls are read from
- * the canonical tree at sync time instead of being listed here: the model's own lab entry
- * wins, otherwise the shape its peers agree on. New models need no change here.
- */
-/** A toggle control must carry a leading comment naming the field it refers to. */
-export function neosantaraReasoningHeader(controls: ReasoningControls) {
-  return controls.some((option) => option.type === "toggle") ? TOGGLE_HEADER : undefined;
-}
-
-export function neosantaraReasoningControls(
-  id: string,
-  baseModel: string,
-): ReasoningControls | undefined {
-  const [owner, ...rest] = baseModel.split("/");
-
-  // DeepSeek routes are binary on this gateway. The backend consumes any non-`none` effort only
-  // as `reasoning.enabled = true`; DeepSeekProvider forwards no graded effort upstream. Thus the
-  // lab's high/max distinction cannot be represented here and must not be advertised. This is a
-  // family-level request-shape rule, not a capability override: the live catalog still decides
-  // which individual DeepSeek model IDs reason at all.
-  if (owner === "deepseek") return [{ type: "toggle" }];
-
-  const { lab, peers } = indexControls();
-  const name = rest.at(-1) ?? "";
-  // A dated snapshot such as `-0813` shares its lab entry with the undated model.
-  const candidates = [name, name.replace(/-\d{4,}$/, "")];
-  const key = candidates.map((candidate) => `${owner}/${candidate}`).find((k) => lab.has(k));
-  const derived = key === undefined ? peers.get(baseModel) : lab.get(key);
-
-  if (derived === undefined) return undefined;
-  if (derived === ALWAYS_ON) return [];
-  if (derived === ON_OFF_ONLY) return [{ type: "toggle" }];
-  return [{ type: "effort", values: derived as never }];
+/** Reasoning TOMLs carry the note above; non-reasoning models carry none. */
+export function neosantaraReasoningHeader(controls: ReasoningControls | undefined) {
+  return controls === undefined ? undefined : REASONING_NOTE;
 }
 
 
@@ -372,12 +247,6 @@ export function shouldSyncNeosantaraModel(model: NeosantaraSourceModel) {
   if (isImageModel(model)) return true;
   // Skip rather than throw: one missing catalog field must cost a single model, not the run.
   if (model.pricing.prompt === undefined || model.pricing.completion === undefined) return false;
-  // Empty means explicitly always-on; undefined means neither the lab nor peers document a
-  // control. Never turn uncertainty into an affirmative no-control claim on a relay.
-  if (
-    model.capabilities.includes("reasoning")
-    && neosantaraReasoningControls(model.id, baseModel) === undefined
-  ) return false;
   return true;
 }
 
@@ -427,12 +296,7 @@ export function buildNeosantaraModel(
   // underlying model can do elsewhere. Reading them live means a capability the host adds later
   // is picked up by the next sync with no code change.
   const reasoning = model.capabilities.includes("reasoning");
-  const reasoningOptions = reasoning
-    ? neosantaraReasoningControls(model.id, baseModel)
-    : undefined;
-  if (reasoning && reasoningOptions === undefined) {
-    throw new Error(`No reviewed reasoning controls for Neosantara model '${model.id}'`);
-  }
+  const reasoningOptions = reasoning ? neosantaraReasoningControls(model) : undefined;
   const inputCost = effectiveUsd(model.pricing.prompt, model);
   const outputCost = effectiveUsd(model.pricing.completion, model);
   if (inputCost === undefined || outputCost === undefined) {

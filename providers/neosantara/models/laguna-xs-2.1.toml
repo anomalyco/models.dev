@@ -1,14 +1,17 @@
-# Toggle: reasoning_effort = "none" turns reasoning off; any other accepted
-# value turns it on. Omitting the field defaults to off. This host has no separate on/off
-# field: reasoning.enabled alone does not enable reasoning.
-# https://docs.neosantara.xyz
+# Reasoning: Neosantara relays this model and normalizes reasoning onto a
+# single OpenAI-compatible `reasoning_effort` field, mapping the upstream model's native shape
+# (Anthropic thinking budget, DeepSeek/GLM toggle, OpenAI effort, …) behind it. The catalog
+# advertises only that the model reasons, not its effort levels, so this entry lists the host's
+# accepted effort enum rather than the upstream/lab control set. This is Neosantara's request
+# surface, not the origin provider's API. https://docs.neosantara.xyz
 base_model = "poolside/laguna-xs-2.1"
 
 [interleaved]
 field = "reasoning_content"
 
 [[reasoning_options]]
-type = "toggle"
+type = "effort"
+values = ["none", "minimal", "low", "medium", "high", "xhigh"]
 
 [cost]
 input = 0
