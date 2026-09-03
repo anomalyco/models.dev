@@ -3254,6 +3254,7 @@ test("factors aliased LLM Gateway routes against canonical metadata", () => {
 
   expect(model).toEqual({
     base_model: "zhipuai/glm-5.2",
+    base_model_omit: ["limit.input"],
     cost: {
       input: 1.4,
       output: 4.4,
