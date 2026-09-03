@@ -1,9 +1,5 @@
-# Effort: reasoning_effort = none|high|max (default max)
-# Off is effort=none. thinking.type=disabled is accepted as an alias for none.
-# Pricing: https://zro.moonmath.ai/pricing (USD / 1M tokens)
 base_model = "zhipuai/glm-5.3-flash"
-attachment = false
-reasoning_options = [{ type = "effort", values = ["none", "high", "max"] }]
+reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]
 
 [interleaved]
 field = "reasoning_content"
@@ -16,6 +12,3 @@ cache_read = 0.03
 [limit]
 context = 1_048_576
 output = 64_000
-
-[modalities]
-input = ["text"]
