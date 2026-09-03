@@ -1,8 +1,8 @@
-# Toggle: reasoning_effort = none turns reasoning off
 base_model = "poolside/laguna-xs-2.1"
 
 [[reasoning_options]]
-type = "toggle"
+type = "effort"
+values = ["none"]
 
 [cost]
 input = 0

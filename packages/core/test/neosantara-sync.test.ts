@@ -150,39 +150,35 @@ test("builds override-only models with effective USD pricing and host reasoning 
   });
 });
 
-test("authors reviewed per-host reasoning controls instead of dumping the request enum", () => {
+test("never advertises a control this host cannot send", () => {
   const source = mergeNeosantaraCatalogs(
     NeosantaraModelsResponse.parse(modelsResponse),
     NeosantaraPricingResponse.parse(pricingResponse),
   )[0]!;
-  const build = (id: string) => buildNeosantaraModel({ ...source, id }, undefined);
 
-  expect(build("gpt-5.6-terra").reasoning_options).toEqual([
-    { type: "effort", values: ["none", "low", "medium", "high", "xhigh"] },
-  ]);
-  expect(build("claude-opus-5").reasoning_options).toEqual([
-    { type: "effort", values: ["low", "medium", "high", "xhigh"] },
-  ]);
-  // Native upstream shapes never reach a caller: the host normalizes everything onto
-  // reasoning_effort, so these are effort lists, not thinking budgets.
-  expect(build("claude-fable-5").reasoning_options).toEqual([
-    { type: "effort", values: ["low", "medium", "high", "xhigh"] },
-  ]);
-  expect(build("kimi-k2-thinking").reasoning_options).toEqual([
-    { type: "effort", values: ["high"] },
-  ]);
-  expect(build("gpt-5.4").reasoning_options).toEqual([
-    { type: "effort", values: ["none", "low", "medium", "high", "xhigh"] },
-  ]);
-  // Only models whose lab and peers document no graded level stay a plain on/off.
-  expect(build("glm-4.6v-flash").reasoning_options).toEqual([{ type: "toggle" }]);
+  const ids = [
+    ["gpt-5.6-terra", "openai/gpt-5.6-terra"],
+    ["claude-sonnet-5", "anthropic/claude-sonnet-5"],
+    ["deepseek-v4-pro", "deepseek/deepseek-v4-pro"],
+    ["kimi-k2.5", "moonshotai/kimi-k2.5"],
+    ["glm-5.3-flash", "zhipuai/glm-5.3-flash"],
+  ] as const;
 
-  for (const id of ["gpt-5.6-terra", "claude-opus-5", "glm-5.3-flash", "laguna-s-2.1"]) {
-    const options = build(id).reasoning_options ?? [];
+  for (const [id, base] of ids) {
+    const options = neosantaraReasoningControls(id, base);
+    // A thinking budget and a bare toggle both describe fields this host does not expose.
     expect(options.some((option) => option.type === "budget_tokens")).toBe(false);
-    const values = options.flatMap((option) => ("values" in option ? option.values : []));
-    expect(values).not.toContain("max");
+    expect(options.some((option) => option.type === "toggle")).toBe(false);
+    for (const value of options.flatMap((o) => ("values" in o ? o.values : []))) {
+      expect(["none", "minimal", "low", "medium", "high", "xhigh"]).toContain(value);
+    }
   }
+
+  // The request enum is never dumped wholesale onto a model.
+  const built = buildNeosantaraModel({ ...source, id: "gpt-5.6-terra" }, undefined);
+  expect(built.reasoning_options).toEqual([
+    { type: "effort", values: ["none", "low", "medium", "high", "xhigh"] },
+  ]);
 });
 
 test("syncs a reasoning model with no per-model configuration in the module", () => {
@@ -458,29 +454,37 @@ test("skips a model with unusable upstream pricing instead of aborting the whole
 });
 
 test("derives reasoning controls from the canonical tree so new models need no code change", () => {
-  // Nothing about these ids is listed in the module; the values come from the lab entry
-  // and its same-surface peers, intersected with what this host accepts.
+  // Lab entry wins, intersected with what this host accepts, so `max` never survives.
   expect(neosantaraReasoningControls("gpt-5.6-terra", "openai/gpt-5.6-terra")).toEqual([
     { type: "effort", values: ["none", "low", "medium", "high", "xhigh"] },
   ]);
   expect(neosantaraReasoningControls("claude-fable-5", "anthropic/claude-fable-5")).toEqual([
     { type: "effort", values: ["low", "medium", "high", "xhigh"] },
   ]);
-  expect(neosantaraReasoningControls("deepseek-v4-pro-0813", "deepseek/deepseek-v4-pro-0813"))
-    .toEqual([{ type: "effort", values: ["high"] }]);
-  expect(neosantaraReasoningControls("gemini-3.7-flash", "google/gemini-3.7-flash")).toEqual([
-    { type: "effort", values: ["low", "medium", "high"] },
+
+  // A lab toggle is this host's `reasoning_effort = none`, so it joins the effort list.
+  expect(neosantaraReasoningControls("deepseek-v4-pro", "deepseek/deepseek-v4-pro")).toEqual([
+    { type: "effort", values: ["none", "high"] },
   ]);
 
-  // No lab or peer entry documents a graded level for this one.
-  expect(neosantaraReasoningControls("glm-4.6v-flash", "zhipuai/glm-4.6v-flash")).toEqual([
-    { type: "toggle" },
+  // An always-on reasoner keeps an empty control set rather than borrowing a peer's levels.
+  expect(neosantaraReasoningControls("kimi-k2-thinking", "moonshotai/kimi-k2-thinking")).toEqual([]);
+
+  // Toggle-only labs expose just the off switch on this host, never invented levels.
+  expect(neosantaraReasoningControls("kimi-k2.5", "moonshotai/kimi-k2.5")).toEqual([
+    { type: "effort", values: ["none"] },
+  ]);
+  expect(neosantaraReasoningControls("laguna-s-2.1", "poolside/laguna-s-2.1")).toEqual([
+    { type: "effort", values: ["none"] },
   ]);
 
-  // A model nobody has authored yet still resolves to something usable.
-  expect(neosantaraReasoningControls("brand-new", "openai/gpt-5.6-sol")).toEqual([
-    { type: "effort", values: ["none", "low", "medium", "high", "xhigh"] },
-  ]);
+  // Nothing authors a bare toggle, which would claim a separate on/off field.
+  for (const [id, base] of [
+    ["glm-4.6v-flash", "zhipuai/glm-4.6v-flash"],
+    ["ling-3.0-flash-fin", "inclusionai/ling-3.0-flash-fin"],
+  ] as const) {
+    expect(neosantaraReasoningControls(id, base).some((o) => o.type === "toggle")).toBe(false);
+  }
 });
 
 test("filters deprecated models and never treats the gateway runtime cap as an output limit", () => {

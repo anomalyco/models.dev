@@ -1,9 +1,9 @@
-# Toggle: reasoning_effort = none turns reasoning off
 base_model = "inclusionai/ling-3.0-flash-fin"
 structured_output = false
 
 [[reasoning_options]]
-type = "toggle"
+type = "effort"
+values = ["none"]
 
 [cost]
 input = 0

@@ -152,7 +152,8 @@ type ReasoningControls = NonNullable<SyncedFullModel["reasoning_options"]>;
  */
 const HOST_EFFORTS = new Set(["none", "minimal", "low", "medium", "high", "xhigh"]);
 
-const TOGGLE_HEADER = "# Toggle: reasoning_effort = none turns reasoning off\n";
+/** A model that reasons with no caller control. */
+const ALWAYS_ON = "always-on";
 
 function tomlFilesIn(dir: string): string[] {
   let entries;
@@ -178,68 +179,94 @@ function parseToml(filePath: string) {
   }
 }
 
-/** Effort values declared by a provider file, restricted to what this host can send. */
-function hostEfforts(options: unknown) {
+/**
+ * Project another entry's controls onto this host's single field.
+ *
+ * An empty set means always-on. A lab-side toggle is `reasoning_effort = none` here, so it
+ * joins the effort list rather than staying a separate option — a bare toggle would claim an
+ * on/off field this host does not have. Values the host cannot send are dropped.
+ */
+function hostControls(options: unknown): string[] | typeof ALWAYS_ON | undefined {
   if (!Array.isArray(options)) return undefined;
+  if (options.length === 0) return ALWAYS_ON;
+
+  let toggled = false;
+  let accepted: string[] | undefined;
   for (const option of options) {
     if (typeof option !== "object" || option === null) continue;
-    if ((option as { type?: unknown }).type !== "effort") continue;
+    const type = (option as { type?: unknown }).type;
+    if (type === "toggle") toggled = true;
+    if (type !== "effort") continue;
     const values = (option as { values?: unknown }).values;
     if (!Array.isArray(values)) continue;
-    const accepted = values.filter(
+    const usable = values.filter(
       (value): value is string => typeof value === "string" && HOST_EFFORTS.has(value),
     );
-    if (accepted.length > 0) return accepted;
+    if (usable.length > 0) accepted = usable;
   }
-  return undefined;
+
+  if (accepted === undefined) return toggled ? ["none"] : undefined;
+  return toggled && !accepted.includes("none") ? ["none", ...accepted] : accepted;
 }
 
-let effortsByBaseModel: Map<string, string[]> | undefined;
+let controlIndex: { lab: Map<string, ReturnType<typeof hostControls>>; peers: Map<string, ReturnType<typeof hostControls>> } | undefined;
 
-/** Effort set each base model's peers agree on, most common wins. */
-function peerEfforts() {
-  if (effortsByBaseModel !== undefined) return effortsByBaseModel;
+/** Index every other provider's controls: the model's own lab, then peer consensus. */
+function indexControls() {
+  if (controlIndex !== undefined) return controlIndex;
 
+  const lab = new Map<string, ReturnType<typeof hostControls>>();
   const tally = new Map<string, Map<string, number>>();
+  const shapes = new Map<string, Map<string, ReturnType<typeof hostControls>>>();
+
   for (const file of tomlFilesIn(PROVIDERS_DIR)) {
     if (file.startsWith(path.join(PROVIDERS_DIR, "neosantara"))) continue;
     const toml = parseToml(file);
-    const base = toml?.base_model;
-    if (typeof base !== "string") continue;
-    const values = hostEfforts(toml?.reasoning_options);
-    if (values === undefined) continue;
+    if (toml === undefined) continue;
+    const controls = hostControls(toml.reasoning_options);
+
+    // A lab's own directory is authoritative, wherever the file sits inside it.
+    const owner = path.relative(PROVIDERS_DIR, file).split(path.sep)[0];
+    const name = path.basename(file, ".toml");
+    if (owner !== undefined && !lab.has(`${owner}/${name}`)) lab.set(`${owner}/${name}`, controls);
+
+    const base = toml.base_model;
+    if (typeof base !== "string" || controls === undefined) continue;
+    const key = controls === ALWAYS_ON ? ALWAYS_ON : controls.join(",");
     const counts = tally.get(base) ?? new Map<string, number>();
-    const key = values.join(",");
     counts.set(key, (counts.get(key) ?? 0) + 1);
     tally.set(base, counts);
+    const seen = shapes.get(base) ?? new Map();
+    seen.set(key, controls);
+    shapes.set(base, seen);
   }
 
-  effortsByBaseModel = new Map();
+  const peers = new Map<string, ReturnType<typeof hostControls>>();
   for (const [base, counts] of tally) {
     const [best] = [...counts.entries()].sort((a, b) => b[1] - a[1]);
-    if (best !== undefined) effortsByBaseModel.set(base, best[0].split(","));
+    if (best !== undefined) peers.set(base, shapes.get(base)?.get(best[0]));
   }
-  return effortsByBaseModel;
+
+  controlIndex = { lab, peers };
+  return controlIndex;
 }
 
-/** The lab's own entry for a model, which outranks any relay. */
-function firstPartyEfforts(baseModel: string) {
-  const [lab, ...rest] = baseModel.split("/");
-  if (lab === undefined || rest.length === 0) return undefined;
-  return hostEfforts(
-    parseToml(path.join(PROVIDERS_DIR, lab, "models", `${rest.join("/")}.toml`))?.reasoning_options,
-  );
-}
-
+/**
+ * Reasoning controls (AGENTS.md → "Reasoning options").
+ *
+ * This host is OpenAI-compatible and normalizes reasoning onto one caller-facing field,
+ * `reasoning_effort`. Upstream-native shapes never reach a caller, so controls are read from
+ * the canonical tree at sync time instead of being listed here: the model's own lab entry
+ * wins, otherwise the shape its peers agree on. New models need no change here.
+ */
 export function neosantaraReasoningControls(id: string, baseModel: string): ReasoningControls {
-  const derived = firstPartyEfforts(baseModel) ?? peerEfforts().get(baseModel);
-  return derived === undefined
-    ? [{ type: "toggle" }]
-    : [{ type: "effort", values: derived as never }];
-}
+  const { lab, peers } = indexControls();
+  const [owner, ...rest] = baseModel.split("/");
+  const key = `${owner}/${rest.at(-1)}`;
+  const derived = lab.has(key) ? lab.get(key) : peers.get(baseModel);
 
-function reasoningHeader(controls: ReasoningControls) {
-  return controls.some((option) => option.type === "toggle") ? TOGGLE_HEADER : undefined;
+  if (derived === undefined || derived === ALWAYS_ON) return [];
+  return [{ type: "effort", values: derived as never }];
 }
 
 /** Image models are priced per image and carry no context window, so they skip the token filters. */
@@ -392,11 +419,6 @@ export const neosantara = {
     return {
       id: model.id,
       model: buildNeosantaraModel(model, context.existing(model.id)),
-      header: reasoningHeader(
-        model.capabilities.includes("reasoning")
-          ? neosantaraReasoningControls(model.id, resolveNeosantaraBaseModel(model.id) ?? "")
-          : [],
-      ),
     };
   },
 } satisfies SyncProvider<NeosantaraSourceModel>;
