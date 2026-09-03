@@ -1,0 +1,17 @@
+# Pricing and reasoning controls verified against the AMD Token Factory API
+# (accessed 2026-09-03): GET /v1/models and live POST /v1/chat/completions.
+# reasoning_effort accepts low|medium|high on this host (minimal, xhigh, and
+# max return 400). none is accepted but does not disable thinking - the model
+# keeps emitting reasoning (as <think> text in the content stream), and no
+# reasoning_content is ever returned, so there is no toggle and no
+# interleaved channel on this host.
+base_model = "openbmb/minicpm5-1b"
+
+reasoning_options = [
+  { type = "effort", values = ["low", "medium", "high"] },
+]
+
+[cost]
+input = 0.124
+output = 0.7425
+cache_read = 0.124
