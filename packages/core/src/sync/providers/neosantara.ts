@@ -80,6 +80,8 @@ const NeosantaraCombinedResponse = z.object({
 
 export type NeosantaraSourceModel = z.infer<typeof NeosantaraModel> & {
   exchange_rate: number;
+  exchange_rate_source: string;
+  exchange_rate_updated_at: string;
 };
 
 /**
@@ -133,6 +135,8 @@ export function mergeNeosantaraCatalogs(
     ...model,
     pricing: publicPricing.get(model.id) ?? model.pricing,
     exchange_rate: pricing.meta.exchange_rate.usd_idr,
+    exchange_rate_source: pricing.meta.exchange_rate.source,
+    exchange_rate_updated_at: pricing.meta.updated_at,
   }));
 }
 
@@ -164,7 +168,7 @@ const ALWAYS_ON = "always-on";
 const ON_OFF_ONLY = "on-off";
 
 const TOGGLE_HEADER = `# Toggle: reasoning_effort = "none" turns reasoning off; any other accepted
-# value (or omitting the field) leaves it on. This host has no separate on/off
+# value turns it on. Omitting the field defaults to off. This host has no separate on/off
 # field: reasoning.enabled alone does not enable reasoning.
 # https://docs.neosantara.xyz
 `;
@@ -294,16 +298,28 @@ export function neosantaraReasoningHeader(controls: ReasoningControls) {
   return controls.some((option) => option.type === "toggle") ? TOGGLE_HEADER : undefined;
 }
 
-export function neosantaraReasoningControls(id: string, baseModel: string): ReasoningControls {
-  const { lab, peers } = indexControls();
+export function neosantaraReasoningControls(
+  id: string,
+  baseModel: string,
+): ReasoningControls | undefined {
   const [owner, ...rest] = baseModel.split("/");
+
+  // DeepSeek routes are binary on this gateway. The backend consumes any non-`none` effort only
+  // as `reasoning.enabled = true`; DeepSeekProvider forwards no graded effort upstream. Thus the
+  // lab's high/max distinction cannot be represented here and must not be advertised. This is a
+  // family-level request-shape rule, not a capability override: the live catalog still decides
+  // which individual DeepSeek model IDs reason at all.
+  if (owner === "deepseek") return [{ type: "toggle" }];
+
+  const { lab, peers } = indexControls();
   const name = rest.at(-1) ?? "";
   // A dated snapshot such as `-0813` shares its lab entry with the undated model.
   const candidates = [name, name.replace(/-\d{4,}$/, "")];
   const key = candidates.map((candidate) => `${owner}/${candidate}`).find((k) => lab.has(k));
   const derived = key === undefined ? peers.get(baseModel) : lab.get(key);
 
-  if (derived === undefined || derived === ALWAYS_ON) return [];
+  if (derived === undefined) return undefined;
+  if (derived === ALWAYS_ON) return [];
   if (derived === ON_OFF_ONLY) return [{ type: "toggle" }];
   return [{ type: "effort", values: derived as never }];
 }
@@ -319,6 +335,26 @@ const NAME_OVERRIDES: Record<string, string> = {
   "grok-code-fast": "Grok Code Fast",
 };
 
+/** Leading provenance for prices converted from IDR into models.dev's required USD units. */
+export function neosantaraFxHeader(model: NeosantaraSourceModel) {
+  if (model.pricing.currency !== "IDR") return undefined;
+  const date = model.exchange_rate_updated_at.slice(0, 10);
+  const source = model.exchange_rate_source.replace(/[\r\n]+/g, " ");
+  return `# FX: IDR prices converted to USD at 1 USD = ${model.exchange_rate} IDR` +
+    ` (${source}, ${date}).\n`;
+}
+
+function neosantaraModelHeader(
+  model: NeosantaraSourceModel,
+  controls: ReasoningControls | undefined,
+) {
+  const headers = [
+    neosantaraFxHeader(model),
+    controls === undefined ? undefined : neosantaraReasoningHeader(controls),
+  ].filter((header): header is string => header !== undefined);
+  return headers.length === 0 ? undefined : headers.join("");
+}
+
 /** Models this host publishes at all, regardless of whether we can translate them yet. */
 export function meetsNeosantaraPublicFilter(model: NeosantaraSourceModel) {
   return (
@@ -330,11 +366,18 @@ export function meetsNeosantaraPublicFilter(model: NeosantaraSourceModel) {
 }
 
 export function shouldSyncNeosantaraModel(model: NeosantaraSourceModel) {
-  if (model.deprecated || resolveNeosantaraBaseModel(model.id) === undefined) return false;
+  const baseModel = resolveNeosantaraBaseModel(model.id);
+  if (model.deprecated || baseModel === undefined) return false;
   if (!meetsNeosantaraPublicFilter(model)) return false;
   if (isImageModel(model)) return true;
   // Skip rather than throw: one missing catalog field must cost a single model, not the run.
   if (model.pricing.prompt === undefined || model.pricing.completion === undefined) return false;
+  // Empty means explicitly always-on; undefined means neither the lab nor peers document a
+  // control. Never turn uncertainty into an affirmative no-control claim on a relay.
+  if (
+    model.capabilities.includes("reasoning")
+    && neosantaraReasoningControls(model.id, baseModel) === undefined
+  ) return false;
   return true;
 }
 
@@ -384,6 +427,12 @@ export function buildNeosantaraModel(
   // underlying model can do elsewhere. Reading them live means a capability the host adds later
   // is picked up by the next sync with no code change.
   const reasoning = model.capabilities.includes("reasoning");
+  const reasoningOptions = reasoning
+    ? neosantaraReasoningControls(model.id, baseModel)
+    : undefined;
+  if (reasoning && reasoningOptions === undefined) {
+    throw new Error(`No reviewed reasoning controls for Neosantara model '${model.id}'`);
+  }
   const inputCost = effectiveUsd(model.pricing.prompt, model);
   const outputCost = effectiveUsd(model.pricing.completion, model);
   if (inputCost === undefined || outputCost === undefined) {
@@ -401,7 +450,7 @@ export function buildNeosantaraModel(
     {
       name: NAME_OVERRIDES[model.id],
       reasoning,
-      reasoning_options: reasoning ? neosantaraReasoningControls(model.id, baseModel) : undefined,
+      reasoning_options: reasoningOptions,
       // Reasoning is streamed back in `reasoning_content`, whichever lab built the model.
       interleaved: reasoning ? { field: "reasoning_content" as const } : undefined,
       attachment: model.capabilities.includes("vision"),
@@ -467,9 +516,7 @@ export const neosantara = {
     return {
       id: model.id,
       model: translated,
-      header: translated.reasoning_options !== undefined
-        ? neosantaraReasoningHeader(translated.reasoning_options)
-        : undefined,
+      header: neosantaraModelHeader(model, translated.reasoning_options),
     };
   },
 } satisfies SyncProvider<NeosantaraSourceModel>;

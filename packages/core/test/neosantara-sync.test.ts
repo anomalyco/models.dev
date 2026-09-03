@@ -6,6 +6,7 @@ import {
   buildNeosantaraModel,
   mergeNeosantaraCatalogs,
   neosantara,
+  neosantaraFxHeader,
   neosantaraInputModalities,
   neosantaraReasoningControls,
   neosantaraReasoningHeader,
@@ -115,6 +116,8 @@ test("parses and merges both public Neosantara endpoints", () => {
 
   expect(merged).toHaveLength(4);
   expect(merged[0]?.exchange_rate).toBe(20_000);
+  expect(merged[0]?.exchange_rate_source).toBe("test");
+  expect(merged[0]?.exchange_rate_updated_at).toBe("2026-09-02T16:32:29.553Z");
   expect(merged[0]?.pricing.prompt).toBe(1.5);
 });
 
@@ -160,6 +163,26 @@ test("builds override-only models with effective USD pricing and host reasoning 
   expect(idr.interleaved).toBeUndefined();
 });
 
+test("writes FX provenance only for IDR-derived USD prices", () => {
+  const merged = mergeNeosantaraCatalogs(
+    NeosantaraModelsResponse.parse(modelsResponse),
+    NeosantaraPricingResponse.parse(pricingResponse),
+  );
+  const usd = merged[0]!;
+  const idr = merged[1]!;
+
+  expect(neosantaraFxHeader(usd)).toBeUndefined();
+  expect(neosantaraFxHeader(idr)).toBe(
+    "# FX: IDR prices converted to USD at 1 USD = 20000 IDR (test, 2026-09-02).\n",
+  );
+
+  const translated = neosantara.translateModel(idr, {
+    existing: () => undefined,
+    authored: () => undefined,
+  });
+  expect(translated?.header).toBe(neosantaraFxHeader(idr));
+});
+
 test("never advertises a control this host cannot send", () => {
   const source = mergeNeosantaraCatalogs(
     NeosantaraModelsResponse.parse(modelsResponse),
@@ -169,13 +192,14 @@ test("never advertises a control this host cannot send", () => {
   const ids = [
     ["gpt-5.6-terra", "openai/gpt-5.6-terra"],
     ["claude-sonnet-5", "anthropic/claude-sonnet-5"],
-    ["deepseek-v4-pro", "deepseek/deepseek-v4-pro"],
     ["glm-5.3-flash", "zhipuai/glm-5.3-flash"],
     ["gemini-3.7-flash", "google/gemini-3.7-flash"],
   ] as const;
 
   for (const [id, base] of ids) {
     const options = neosantaraReasoningControls(id, base);
+    expect(options).toBeDefined();
+    if (options === undefined) continue;
     // Neither a thinking budget nor a bare toggle names a field a caller can use here.
     expect(options.some((option) => option.type === "budget_tokens")).toBe(false);
     expect(options.some((option) => option.type === "toggle")).toBe(false);
@@ -473,10 +497,13 @@ test("derives reasoning controls from the canonical tree so new models need no c
     { type: "effort", values: ["low", "medium", "high", "xhigh"] },
   ]);
 
-  // A lab toggle is this host's `reasoning_effort = none`, so it joins the effort list.
-  expect(neosantaraReasoningControls("deepseek-v4-pro", "deepseek/deepseek-v4-pro")).toEqual([
-    { type: "effort", values: ["none", "high"] },
-  ]);
+  // DeepSeek's backend route only distinguishes `none` from non-`none`; it does not forward a
+  // graded effort upstream, so neither lab `max` nor the projected `high` is advertised.
+  for (const base of ["deepseek/deepseek-v4-pro", "deepseek/deepseek-v4-flash"] as const) {
+    const controls = neosantaraReasoningControls(base.split("/")[1]!, base);
+    expect(controls).toEqual([{ type: "toggle" }]);
+    expect(neosantaraReasoningHeader(controls!)).toContain("Omitting the field defaults to off");
+  }
 
   // An always-on reasoner keeps an empty control set rather than borrowing a peer's levels.
   expect(neosantaraReasoningControls("kimi-k2-thinking", "moonshotai/kimi-k2-thinking")).toEqual([]);
@@ -492,9 +519,30 @@ test("derives reasoning controls from the canonical tree so new models need no c
     expect(neosantaraReasoningHeader(controls)).toContain("reasoning_effort");
   }
 
-  // A dated snapshot resolves to its lab entry rather than falling through to peers.
+  // A dated snapshot uses the same binary DeepSeek route.
   expect(neosantaraReasoningControls("deepseek-v4-pro-0813", "deepseek/deepseek-v4-pro-0813"))
-    .toEqual([{ type: "effort", values: ["none", "high"] }]);
+    .toEqual([{ type: "toggle" }]);
+});
+
+test("does not turn unresolved relay controls into always-on", () => {
+  expect(neosantaraReasoningControls("future-model", "example/future-model")).toBeUndefined();
+  expect(neosantaraReasoningControls("devstral-2", "mistral/devstral-2512")).toBeUndefined();
+
+  const source = mergeNeosantaraCatalogs(
+    NeosantaraModelsResponse.parse(modelsResponse),
+    NeosantaraPricingResponse.parse(pricingResponse),
+  )[0]!;
+  const unresolved = {
+    ...source,
+    id: "devstral-2",
+    capabilities: ["text_generation", "function_calling", "reasoning"],
+  };
+  expect(shouldSyncNeosantaraModel(unresolved)).toBe(false);
+  expect(neosantara.translateModel(unresolved, {
+    existing: () => undefined,
+    authored: () => undefined,
+  })).toBeUndefined();
+  expect(neosantara.sourceID(unresolved)).toBe("devstral-2");
 });
 
 test("falls through to peers when the lab documents only a control this host cannot send", () => {
@@ -502,6 +550,8 @@ test("falls through to peers when the lab documents only a control this host can
   // set. That is unknown, not always-on, so peer consensus decides instead of publishing `[]`.
   const controls = neosantaraReasoningControls("claude-4.5-sonnet", "anthropic/claude-sonnet-4-5");
 
+  expect(controls).toBeDefined();
+  if (controls === undefined) return;
   expect(controls.length).toBeGreaterThan(0);
   expect(controls.some((option) => option.type === "budget_tokens")).toBe(false);
   for (const value of controls.flatMap((option) => ("values" in option ? option.values : []))) {

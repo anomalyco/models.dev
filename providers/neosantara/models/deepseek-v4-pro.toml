@@ -1,3 +1,7 @@
+# Toggle: reasoning_effort = "none" turns reasoning off; any other accepted
+# value turns it on. Omitting the field defaults to off. This host has no separate on/off
+# field: reasoning.enabled alone does not enable reasoning.
+# https://docs.neosantara.xyz
 base_model = "deepseek/deepseek-v4-pro"
 attachment = true
 structured_output = false
@@ -6,8 +10,7 @@ structured_output = false
 field = "reasoning_content"
 
 [[reasoning_options]]
-type = "effort"
-values = ["none", "high"]
+type = "toggle"
 
 [cost]
 input = 2.4

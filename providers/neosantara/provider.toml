@@ -7,7 +7,9 @@
 #   Effort: reasoning_effort = none|minimal|low|medium|high|xhigh
 #   Off is reasoning_effort = none; anything else turns reasoning on.
 #   Binary on/off controls are authored as `toggle`, where reasoning_effort = "none"
-#   disables reasoning and any other accepted value (or omitting the field) leaves it on.
+#   disables reasoning, another accepted value enables it, and omission defaults to off.
+#   DeepSeek routes are binary: the backend consumes a non-none effort only as an enable flag
+#   and forwards no grade, so their lab high/max distinction is intentionally not published.
 #   A model without the `reasoning` capability rejects the field with HTTP 400.
 #
 # Capability flags (reasoning, vision, json_mode, ...) are read from each catalog entry's
