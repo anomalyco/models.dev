@@ -166,7 +166,7 @@ test("never advertises a control this host cannot send", () => {
 
   for (const [id, base] of ids) {
     const options = neosantaraReasoningControls(id, base);
-    // A thinking budget and a bare toggle both describe fields this host does not expose.
+    // Neither a thinking budget nor a bare toggle names a field a caller can use here.
     expect(options.some((option) => option.type === "budget_tokens")).toBe(false);
     expect(options.some((option) => option.type === "toggle")).toBe(false);
     for (const value of options.flatMap((o) => ("values" in o ? o.values : []))) {
@@ -470,7 +470,8 @@ test("derives reasoning controls from the canonical tree so new models need no c
   // An always-on reasoner keeps an empty control set rather than borrowing a peer's levels.
   expect(neosantaraReasoningControls("kimi-k2-thinking", "moonshotai/kimi-k2-thinking")).toEqual([]);
 
-  // Toggle-only labs expose just the off switch on this host, never invented levels.
+  // A lab with no graded level leaves one meaningful value: off. This host has no separate
+  // on/off field, so a toggle would name a control a caller cannot actually use.
   expect(neosantaraReasoningControls("kimi-k2.5", "moonshotai/kimi-k2.5")).toEqual([
     { type: "effort", values: ["none"] },
   ]);
@@ -478,13 +479,9 @@ test("derives reasoning controls from the canonical tree so new models need no c
     { type: "effort", values: ["none"] },
   ]);
 
-  // Nothing authors a bare toggle, which would claim a separate on/off field.
-  for (const [id, base] of [
-    ["glm-4.6v-flash", "zhipuai/glm-4.6v-flash"],
-    ["ling-3.0-flash-fin", "inclusionai/ling-3.0-flash-fin"],
-  ] as const) {
-    expect(neosantaraReasoningControls(id, base).some((o) => o.type === "toggle")).toBe(false);
-  }
+  // A dated snapshot resolves to its lab entry rather than falling through to peers.
+  expect(neosantaraReasoningControls("deepseek-v4-pro-0813", "deepseek/deepseek-v4-pro-0813"))
+    .toEqual([{ type: "effort", values: ["none", "high"] }]);
 });
 
 test("filters deprecated models and never treats the gateway runtime cap as an output limit", () => {

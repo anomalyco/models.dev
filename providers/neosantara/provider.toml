@@ -1,3 +1,17 @@
+# Sources (accessed 2026-09-03):
+# - https://docs.neosantara.xyz
+# - https://api.neosantara.xyz/v1/models          (catalog, public, no key)
+# - https://api.neosantara.xyz/v1/public/pricing  (raw_pricing + meta.exchange_rate, public)
+#
+# Reasoning wire format on POST /v1/chat/completions:
+#   Effort: reasoning_effort = none|minimal|low|medium|high|xhigh
+#   Off is reasoning_effort = none; anything else turns reasoning on.
+#   There is no separate caller-usable on/off field, so no model here authors a toggle.
+#   A model without the `reasoning` capability rejects the field with HTTP 400.
+#
+# Pricing: raw_pricing is per million tokens in USD or IDR and excludes `discount`,
+# which is a percentage applied at billing time. Published costs are therefore
+# raw * (100 - discount) / 100, with IDR converted at meta.exchange_rate.usd_idr.
 name = "Neosantara"
 env = ["NEOSANTARA_API_KEY"]
 npm = "@ai-sdk/openai-compatible"

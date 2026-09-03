@@ -154,6 +154,13 @@ const HOST_EFFORTS = new Set(["none", "minimal", "low", "medium", "high", "xhigh
 
 /** A model that reasons with no caller control. */
 const ALWAYS_ON = "always-on";
+/**
+ * A model whose only caller choice is whether to reason at all. This host has no separate
+ * on/off field a caller can use: `reasoning.enabled` alone is inert, because reasoning is
+ * switched on by `reasoning_effort` being anything other than `none`. So the control is an
+ * effort list holding the one value that changes behaviour.
+ */
+const ON_OFF_ONLY = "on-off";
 
 function tomlFilesIn(dir: string): string[] {
   let entries;
@@ -186,7 +193,9 @@ function parseToml(filePath: string) {
  * joins the effort list rather than staying a separate option — a bare toggle would claim an
  * on/off field this host does not have. Values the host cannot send are dropped.
  */
-function hostControls(options: unknown): string[] | typeof ALWAYS_ON | undefined {
+function hostControls(
+  options: unknown,
+): string[] | typeof ALWAYS_ON | typeof ON_OFF_ONLY | undefined {
   if (!Array.isArray(options)) return undefined;
   if (options.length === 0) return ALWAYS_ON;
 
@@ -205,7 +214,7 @@ function hostControls(options: unknown): string[] | typeof ALWAYS_ON | undefined
     if (usable.length > 0) accepted = usable;
   }
 
-  if (accepted === undefined) return toggled ? ["none"] : undefined;
+  if (accepted === undefined) return toggled ? ON_OFF_ONLY : undefined;
   return toggled && !accepted.includes("none") ? ["none", ...accepted] : accepted;
 }
 
@@ -232,7 +241,7 @@ function indexControls() {
 
     const base = toml.base_model;
     if (typeof base !== "string" || controls === undefined) continue;
-    const key = controls === ALWAYS_ON ? ALWAYS_ON : controls.join(",");
+    const key = typeof controls === "string" ? controls : controls.join(",");
     const counts = tally.get(base) ?? new Map<string, number>();
     counts.set(key, (counts.get(key) ?? 0) + 1);
     tally.set(base, counts);
@@ -262,12 +271,17 @@ function indexControls() {
 export function neosantaraReasoningControls(id: string, baseModel: string): ReasoningControls {
   const { lab, peers } = indexControls();
   const [owner, ...rest] = baseModel.split("/");
-  const key = `${owner}/${rest.at(-1)}`;
-  const derived = lab.has(key) ? lab.get(key) : peers.get(baseModel);
+  const name = rest.at(-1) ?? "";
+  // A dated snapshot such as `-0813` shares its lab entry with the undated model.
+  const candidates = [name, name.replace(/-\d{4,}$/, "")];
+  const key = candidates.map((candidate) => `${owner}/${candidate}`).find((k) => lab.has(k));
+  const derived = key === undefined ? peers.get(baseModel) : lab.get(key);
 
   if (derived === undefined || derived === ALWAYS_ON) return [];
+  if (derived === ON_OFF_ONLY) return [{ type: "effort", values: ["none"] as never }];
   return [{ type: "effort", values: derived as never }];
 }
+
 
 /** Image models are priced per image and carry no context window, so they skip the token filters. */
 function isImageModel(model: NeosantaraSourceModel) {
