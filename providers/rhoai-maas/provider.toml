@@ -1,0 +1,10 @@
+# Red Hat OpenShift AI Models-as-a-Service (MaaS) exposes an OpenAI-compatible
+# gateway that is deployed per cluster, so there is no single fixed base URL.
+# The `api` value below is a placeholder: the opencode "Red Hat OpenShift AI"
+# provider captures the real per-cluster gateway URL during `opencode auth login`
+# and overrides it at runtime (models are then discovered from `<gateway>/v1/models`).
+name = "Red Hat OpenShift AI"
+env = ["RHOAI_MAAS_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+api = "https://maas.apps.example.com/v1"
+doc = "https://github.com/opendatahub-io/odh-dashboard/blob/main/packages/maas/docs/opencode-integration.md"
