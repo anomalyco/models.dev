@@ -1,0 +1,23 @@
+# Effort: reasoning_effort = low|high|max
+# Prices: https://api.engy.ai/v1/models; limits: authed https://engy.ai/api/v1/models (2026-08-28/31).
+# Live probe 2026-08-30 at 8k, n=40 for low/medium/high, 20 for xhigh/max: low = medium (p=0.49)
+# < high (p=3.4e-06) < xhigh = max (MWU). Nothing switches it off: none, minimal and
+# enable_thinking=false measure as low; 0 of 320 empty.
+base_model = "zhipuai/glm-5.3"
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[cost]
+input = 0.98
+output = 3.08
+cache_read = 0.18
+
+[limit]
+context = 327_680
+input = 294_912
+output = 32_768

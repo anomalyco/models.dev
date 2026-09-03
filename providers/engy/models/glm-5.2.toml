@@ -1,0 +1,27 @@
+# Toggle: chat_template_kwargs.enable_thinking = true|false
+# Effort: reasoning_effort = high|max
+# Prices: https://api.engy.ai/v1/models; limits: authed https://engy.ai/api/v1/models (2026-08-28/30).
+# Live probe 2026-08-30, n=20/level at 8k: low, medium and high one rung (p>=0.38), xhigh and max
+# another (p=0.19), the rungs apart at p<=2e-07 (MWU), xhigh and max hit the cap 6/20 and 5/20;
+# toggle, none and minimal suppress reasoning 20/20.
+base_model = "zhipuai/glm-5.2"
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["high", "max"]
+
+[cost]
+input = 0.68
+output = 1.5
+cache_read = 0.18
+
+[limit]
+context = 262_144
+input = 229_376
+output = 32_768

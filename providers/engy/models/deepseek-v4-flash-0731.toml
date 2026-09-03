@@ -1,0 +1,27 @@
+# Toggle: chat_template_kwargs.thinking = true|false
+# Effort: reasoning_effort = high|max
+# Prices: https://api.engy.ai/v1/models; limits: authed https://engy.ai/api/v1/models (2026-08-28/30).
+# Reasoning is off unless asked. Live probe 2026-08-30, n=113-126/level at 64k: low, medium and high
+# one rung (p>=0.89), xhigh and max another (p=0.82), high vs max p=0.0064; thinking=false and none
+# suppress reasoning 18/18.
+base_model = "deepseek/deepseek-v4-flash-0731"
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["high", "max"]
+
+[cost]
+input = 0.045
+output = 0.09
+cache_read = 0.009
+
+[limit]
+context = 1_048_576
+input = 920_576
+output = 128_000
