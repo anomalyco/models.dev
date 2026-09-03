@@ -1,0 +1,19 @@
+# Source: https://nan.builders/docs/models (accessed 2026-09-03)
+# 35B total MoE, 3B active per token, FP8, 256K context, vision, XML tool
+# calling. MTP speculative decoding (~2x throughput). No token counter, 1.5M tpm.
+# Sampling defaults temp=0.6, top_p=0.95. NaN's own client configs confirm
+# maxTokens 65536 as the model ceiling. Included in the membership, so no
+# per-token price.
+# Toggle: `reasoning_config={}` in the request body enables reasoning mode --
+# the only reasoning field NaN documents. No graded effort.
+base_model = "alibaba/qwen3.6-35b-a3b"
+
+[[reasoning_options]]
+type = "toggle"
+
+[cost]
+input = 0
+output = 0
+
+[modalities]
+input = ["text", "image"]

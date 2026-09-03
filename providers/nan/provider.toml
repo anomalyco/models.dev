@@ -1,0 +1,11 @@
+# NaN is a builders community that shares dedicated GPUs to serve open-weight models.
+# Access is via LiteLLM with an OpenAI-compatible API at https://api.nan.builders/v1.
+# Membership based (70 EUR/month, plus a 200 EUR/month tier that unlocks glm5.2), so
+# per-token cost is 0: usage is metered as monthly token quotas, not billed per token.
+# Rate limits: 60 rpm and 5 concurrent requests per API key.
+# https://nan.builders/docs/getting-started (accessed 2026-09-03)
+name = "NaN"
+env = ["NAN_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+api = "https://api.nan.builders/v1"
+doc = "https://nan.builders/docs/models"

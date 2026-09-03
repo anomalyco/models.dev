@@ -1,0 +1,20 @@
+# Source: https://nan.builders/docs/models (accessed 2026-09-03)
+# 125B-6B MoE with vision, XML tool calling. 262K context, the model's native
+# window. 1B token monthly quota per member. License qwen-community-1.0.
+# Included in the membership, so no per-token price.
+# Reasoning: on by default. NaN documents no request field for it and no graded
+# effort. Toggle is taken from the Alibaba lab entry and relay peers.
+base_model = "alibaba/qwen3.8-flash"
+
+[[reasoning_options]]
+type = "toggle"
+
+[cost]
+input = 0
+output = 0
+
+[limit]
+context = 262_144
+
+[modalities]
+input = ["text", "image"]

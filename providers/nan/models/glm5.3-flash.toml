@@ -1,0 +1,18 @@
+# Source: https://nan.builders/docs/models (accessed 2026-09-03)
+# 320B-18B MoE, FP8, natively multimodal. 1M context. 500M token monthly quota
+# per member. MIT license. No video or PDF input on this host.
+# Included in the membership, so no per-token price.
+# Reasoning: NaN lists a reasoning mode but documents no request field for it,
+# and no graded effort — the low|high|max levels of the Z.ai API are not exposed
+# here. Toggle is taken from the Z.ai lab entry and relay peers.
+base_model = "zhipuai/glm-5.3-flash"
+
+[[reasoning_options]]
+type = "toggle"
+
+[cost]
+input = 0
+output = 0
+
+[modalities]
+input = ["text", "image"]

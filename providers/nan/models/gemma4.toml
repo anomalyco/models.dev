@@ -1,0 +1,14 @@
+# Source: https://nan.builders/docs/models (accessed 2026-09-03)
+# 26B-A4B MoE, FP8, 256K context, vision, XML tool calling. No token counter,
+# 1.5M tpm. Sampling defaults temp=0.6, top_p=0.95.
+# Included in the membership, so no per-token price.
+# Toggle: `reasoning_config={}` in the request body enables reasoning mode --
+# the only reasoning field NaN documents. No graded effort.
+base_model = "google/gemma-4-26b-a4b-it"
+
+[[reasoning_options]]
+type = "toggle"
+
+[cost]
+input = 0
+output = 0

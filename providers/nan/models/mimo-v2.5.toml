@@ -1,0 +1,23 @@
+# Source: https://nan.builders/docs/models (accessed 2026-09-03)
+# 310B-15B MoE, FP8, natively omnimodal with dedicated vision and audio encoders.
+# 1M context. 1.0B token monthly quota per member, 1.5M tpm. MIT license.
+# No video input on this host. Included in the membership, so no per-token price.
+# Reasoning: NaN lists a reasoning mode (recommends max_tokens >= 300) but
+# documents no request field for it, and no graded effort. Toggle is taken from
+# the Xiaomi lab entry and relay peers.
+# The docs/examples opencode.json snippet caps contextWindow at 500000; the
+# models reference publishes 1M, which is what is recorded here.
+base_model = "xiaomi/mimo-v2.5"
+
+[[reasoning_options]]
+type = "toggle"
+
+[cost]
+input = 0
+output = 0
+
+[limit]
+context = 1_000_000
+
+[modalities]
+input = ["text", "image", "audio"]
