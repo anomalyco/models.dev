@@ -39,6 +39,18 @@ skip = [
 structured_output = true
 reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
 
+# Claude Fable 5.1: adaptive thinking always on; caller control is effort only (no thinking toggle).
+# Wire: output_config.effort = low|medium|high|xhigh|max on the Anthropic Messages path.
+# https://platform.claude.com/docs/en/build-with-claude/effort
+# https://platform.claude.com/docs/en/about-claude/pricing
+[models."anthropic/claude-fable-5.1"]
+structured_output = true
+note = [
+  "Effort: output_config.effort = low|medium|high|xhigh|max (Anthropic Messages API; adaptive thinking always on).",
+  "Sources: https://platform.claude.com/docs/en/build-with-claude/effort ; https://platform.claude.com/docs/en/about-claude/pricing",
+]
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
+
 [models."anthropic/claude-haiku-4.5"]
 structured_output = true
 reasoning_options = [{ type = "budget_tokens", min = 1024 }]
