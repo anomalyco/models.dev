@@ -3,13 +3,12 @@
 # 200 EUR/month GLM 5.2 premium membership: 3,000M tokens per billing period and
 # 400M tokens per rolling 4h window, 5 concurrent requests. Context is 500K on
 # this host, not the 1M of the weights. Included in the tier, so no per-token price.
-# Reasoning: NaN documents a reasoning trace but no request field for it, and no
-# graded effort — the low|high|max levels of the Z.ai API are not exposed here.
+# Reasoning: no caller control on this surface. NaN documents a reasoning trace
+# but no request field for it, and the high|max effort levels of the first-party
+# Z.ai API are not exposed here.
 base_model = "zhipuai/glm-5.2"
 description = "Open flagship GLM for long-horizon coding agents, served at 500K context on the NaN premium tier"
-
-[[reasoning_options]]
-type = "toggle"
+reasoning_options = []
 
 [cost]
 input = 0
