@@ -136,7 +136,7 @@ test("builds override-only models with effective USD pricing and host reasoning 
   const gemini = buildNeosantaraModel(merged[0]!, undefined);
   expect(gemini).toMatchObject({
     base_model: "google/gemini-3.7-flash",
-    reasoning_options: [],
+    reasoning_options: [{ type: "effort", values: ["low", "medium", "high"] }],
     limit: { context: 1_000_000 },
     cost: { input: 0.75, output: 3.75, cache_read: 0.075, cache_write: 0.75 },
   });
@@ -162,19 +162,24 @@ test("authors reviewed per-host reasoning controls instead of dumping the reques
   expect(build("claude-opus-5").reasoning_options).toEqual([
     { type: "effort", values: ["low", "medium", "high", "xhigh"] },
   ]);
+  // Native upstream shapes never reach a caller: the host normalizes everything onto
+  // reasoning_effort, so these are effort lists, not thinking budgets.
   expect(build("claude-fable-5").reasoning_options).toEqual([
-    { type: "toggle" },
-    { type: "budget_tokens", min: 1_024 },
+    { type: "effort", values: ["low", "medium", "high", "xhigh"] },
   ]);
+  expect(build("kimi-k2-thinking").reasoning_options).toEqual([
+    { type: "effort", values: ["high"] },
+  ]);
+  expect(build("gpt-5.4").reasoning_options).toEqual([
+    { type: "effort", values: ["none", "low", "medium", "high", "xhigh"] },
+  ]);
+  // Only models whose lab and peers document no graded level stay a plain on/off.
   expect(build("glm-4.6v-flash").reasoning_options).toEqual([{ type: "toggle" }]);
-  expect(build("kimi-k2-thinking").reasoning_options).toEqual([]);
-  expect(build("gpt-5.4").reasoning_options).toEqual([]);
 
   for (const id of ["gpt-5.6-terra", "claude-opus-5", "glm-5.3-flash", "laguna-s-2.1"]) {
-    const values = build(id).reasoning_options?.flatMap((option) =>
-      "values" in option ? option.values : [],
-    );
-    expect(values).not.toContain("minimal");
+    const options = build(id).reasoning_options ?? [];
+    expect(options.some((option) => option.type === "budget_tokens")).toBe(false);
+    const values = options.flatMap((option) => ("values" in option ? option.values : []));
     expect(values).not.toContain("max");
   }
 });

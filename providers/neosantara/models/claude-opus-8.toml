@@ -1,14 +1,9 @@
-# Toggle: /v1/messages thinking.type = enabled|disabled
-# Budget: /v1/messages thinking.budget_tokens (reasoning tokens)
 base_model = "anthropic/claude-opus-4-8"
 structured_output = true
 
 [[reasoning_options]]
-type = "toggle"
-
-[[reasoning_options]]
-type = "budget_tokens"
-min = 1_024
+type = "effort"
+values = ["low", "medium", "high", "xhigh"]
 
 [cost]
 input = 5

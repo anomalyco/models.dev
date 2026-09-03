@@ -1,6 +1,9 @@
 base_model = "minimax/MiniMax-M2.7"
 structured_output = true
-reasoning_options = []
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high", "xhigh"]
 
 [cost]
 input = 0.09

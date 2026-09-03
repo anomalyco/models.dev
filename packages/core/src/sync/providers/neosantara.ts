@@ -135,72 +135,59 @@ type ReasoningControls = NonNullable<SyncedFullModel["reasoning_options"]>;
 /**
  * Reviewed reasoning controls per model (AGENTS.md → "Reasoning options").
  *
- * Neosantara is a multi-model relay, so each effort list is the underlying lab/peer set
- * intersected with what this host actually accepts and passes on. The public request schema
- * takes `reasoning_effort` of none|minimal|low|medium|high|xhigh only, so peer values such as
- * `max` are dropped, and `minimal` is never added unless the lab/peers list it. `[]` means the
- * model reasons but exposes no caller control on this host.
+ * This host is OpenAI-compatible and normalizes reasoning onto a single caller-facing
+ * field, `reasoning_effort`, accepting none|minimal|low|medium|high|xhigh. Upstream-native
+ * shapes (thinking budgets, vendor toggles) are handled behind that field and never appear
+ * in a caller's request, so every entry below is an effort list taken from the underlying
+ * lab entry and its same-surface peers, intersected with the values this host accepts —
+ * which is why `max` never appears.
  *
- * Every entry was verified against this host's public request surface. Internal routing is
- * deliberately not described here.
+ * The exception is a model whose lab and peers document no graded level at all: there the
+ * only caller-visible choice is on or off, which is a toggle.
  */
-const EFFORT_GPT_5_6: ReasoningControls = [
-  { type: "effort", values: ["none", "low", "medium", "high", "xhigh"] },
-];
-const EFFORT_LOW_HIGH: ReasoningControls = [{ type: "effort", values: ["low", "high"] }];
-const EFFORT_LOW_MEDIUM_HIGH: ReasoningControls = [
-  { type: "effort", values: ["low", "medium", "high"] },
-];
-const THINKING_BUDGET: ReasoningControls = [
-  { type: "toggle" },
-  { type: "budget_tokens", min: 1_024 },
-];
-const THINKING_BUDGET_HEADER =
-  "# Toggle: /v1/messages thinking.type = enabled|disabled\n# Budget: /v1/messages thinking.budget_tokens (reasoning tokens)\n";
-const NO_CALLER_CONTROL: ReasoningControls = [];
+const effort = (...values: string[]): ReasoningControls =>
+  [{ type: "effort", values: values as never }];
 
 const REASONING_CONTROLS: Record<string, { options: ReasoningControls; header?: string }> = {
-  // `reasoning_effort` is accepted and honoured for these models.
-  "gpt-5.6-sol": { options: EFFORT_GPT_5_6 },
-  "gpt-5.6-terra": { options: EFFORT_GPT_5_6 },
-  "gpt-5.6-luna": { options: EFFORT_GPT_5_6 },
-  "claude-opus-5": { options: [{ type: "effort", values: ["low", "medium", "high", "xhigh"] }] },
-  // Graded effort is honoured, but only the levels the lab and its peers document.
-  "deepseek-v4-pro-0813": { options: EFFORT_LOW_HIGH },
-  "glm-5.3-flash": { options: EFFORT_LOW_HIGH },
-  // Peers are split: several author a toggle this host cannot express, so the effort list
-  // follows the same-surface effort peers (pioneer, opencode).
-  "laguna-s-2.1": { options: EFFORT_LOW_MEDIUM_HIGH },
-  "laguna-xs-2.1": { options: EFFORT_LOW_MEDIUM_HIGH },
-  // Thinking is a plain on/off here; no graded effort reaches the model.
+  "claude-fable-5": { options: effort("low", "medium", "high", "xhigh") },
+  "claude-opus-4-6": { options: effort("low", "medium", "high") },
+  "claude-opus-5": { options: effort("low", "medium", "high", "xhigh") },
+  "claude-opus-7": { options: effort("low", "medium", "high", "xhigh") },
+  "claude-opus-8": { options: effort("low", "medium", "high", "xhigh") },
+  "claude-sonnet-4-6": { options: effort("low", "medium", "high") },
+  "claude-sonnet-5": { options: effort("low", "medium", "high", "xhigh") },
+  "deepseek-v4-flash": { options: effort("none", "minimal", "low", "medium", "high", "xhigh") },
+  "deepseek-v4-pro": { options: effort("high") },
+  "deepseek-v4-pro-0813": { options: effort("high") },
+  "gemini-3.6-flash": { options: effort("minimal", "low", "medium", "high") },
+  "gemini-3.7-flash": { options: effort("low", "medium", "high") },
+  "glm-5.3-flash": { options: effort("low", "high") },
+  "gpt-5-nano": { options: effort("minimal", "low", "medium", "high") },
+  "gpt-5.4": { options: effort("none", "low", "medium", "high", "xhigh") },
+  "gpt-5.4-nano": { options: effort("none", "low", "medium", "high", "xhigh") },
+  "gpt-5.5": { options: effort("none", "low", "medium", "high", "xhigh") },
+  "gpt-5.6-luna": { options: effort("none", "low", "medium", "high", "xhigh") },
+  "gpt-5.6-sol": { options: effort("none", "low", "medium", "high", "xhigh") },
+  "gpt-5.6-terra": { options: effort("none", "low", "medium", "high", "xhigh") },
+  "kimi-k2-thinking": { options: effort("high") },
+  "kimi-k2.5": { options: effort("none", "minimal", "low", "medium", "high", "xhigh") },
+  "kimi-k2.6": { options: effort("none", "minimal", "low", "medium", "high", "xhigh") },
+  "kimi-k3": { options: effort("low", "high") },
+  "laguna-s-2.1": { options: effort("low", "medium", "high") },
+  "laguna-xs-2.1": { options: effort("low", "medium", "high") },
+  "minimax-m2.7": { options: effort("low", "medium", "high", "xhigh") },
+  "muse-spark-1.1": { options: effort("minimal", "low", "medium", "high", "xhigh") },
+  "step-3.5-flash": { options: effort("low", "high") },
+  // No lab or peer entry documents a graded level for these, so the caller's only
+  // choice is whether to reason at all.
   "glm-4.6v-flash": {
     options: [{ type: "toggle" }],
-    header: "# Toggle: thinking.type = enabled (off = field omitted)\n",
+    header: "# Toggle: reasoning_effort = none turns reasoning off\n",
   },
-  // Graded effort is not honoured for these; the caller steers them with a thinking budget.
-  "claude-fable-5": { options: THINKING_BUDGET, header: THINKING_BUDGET_HEADER },
-  "claude-sonnet-5": { options: THINKING_BUDGET, header: THINKING_BUDGET_HEADER },
-  "claude-opus-7": { options: THINKING_BUDGET, header: THINKING_BUDGET_HEADER },
-  "claude-opus-8": { options: THINKING_BUDGET, header: THINKING_BUDGET_HEADER },
-  // Models that reason but accept no reasoning control on this host.
-  "claude-sonnet-4-6": { options: NO_CALLER_CONTROL },
-  "claude-opus-4-6": { options: NO_CALLER_CONTROL },
-  "deepseek-v4-flash": { options: NO_CALLER_CONTROL },
-  "deepseek-v4-pro": { options: NO_CALLER_CONTROL },
-  "gemini-3.6-flash": { options: NO_CALLER_CONTROL },
-  "gemini-3.7-flash": { options: NO_CALLER_CONTROL },
-  "gpt-5-nano": { options: NO_CALLER_CONTROL },
-  "gpt-5.4": { options: NO_CALLER_CONTROL },
-  "gpt-5.4-nano": { options: NO_CALLER_CONTROL },
-  "gpt-5.5": { options: NO_CALLER_CONTROL },
-  "kimi-k2-thinking": { options: NO_CALLER_CONTROL },
-  "kimi-k2.5": { options: NO_CALLER_CONTROL },
-  "kimi-k2.6": { options: NO_CALLER_CONTROL },
-  "kimi-k3": { options: NO_CALLER_CONTROL },
-  "ling-3.0-flash-fin": { options: NO_CALLER_CONTROL },
-  "minimax-m2.7": { options: NO_CALLER_CONTROL },
-  "muse-spark-1.1": { options: NO_CALLER_CONTROL },
-  "step-3.5-flash": { options: NO_CALLER_CONTROL },
+  "ling-3.0-flash-fin": {
+    options: [{ type: "toggle" }],
+    header: "# Toggle: reasoning_effort = none turns reasoning off\n",
+  },
 };
 
 /** Image models are priced per image and carry no context window, so they skip the token filters. */
