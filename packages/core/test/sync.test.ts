@@ -3636,6 +3636,56 @@ test("strips image input when the deployment has no vision", () => {
   });
 });
 
+test("keeps the last LLM Gateway entry for case-insensitive duplicate IDs", () => {
+  const first = llmGatewayModel({ id: "qwen3.8-27b", family: "alibaba" });
+  const other = llmGatewayModel();
+  for (const id of [first.id, "Qwen3.8-27B"]) {
+    const last = llmGatewayModel({
+      id,
+      family: "consensusprotocol",
+      context_length: 32_768,
+      pricing: { prompt: "0.41e-6", completion: "2.5e-6" },
+    });
+    expect(llmgateway.parseModels({ data: [first, other, last] })).toEqual([last, other]);
+    expect(llmgateway.parseModels({ data: [last, other, first] })).toEqual([first, other]);
+  }
+  const nonText = llmGatewayModel({
+    id: first.id,
+    architecture: { input_modalities: ["text"], output_modalities: ["image"] },
+  });
+  expect(llmgateway.parseModels({ data: [first, nonText] })).toEqual([first]);
+});
+
+test("syncs the last LLM Gateway case variant without mixing source records", async () => {
+  const root = await mkdtemp(path.join(tmpdir(), "models-dev-llmgateway-case-"));
+  const modelsDir = path.join(root, "providers", "llmgateway", "models");
+  await mkdir(modelsDir, { recursive: true });
+  const first = llmGatewayModel({ id: "qwen3.8-27b", family: undefined });
+  const last = llmGatewayModel({
+    id: "Qwen3.8-27B",
+    family: undefined,
+    context_length: 32_768,
+    pricing: { prompt: "0.41e-6", completion: "2.5e-6" },
+  });
+  const provider = { ...llmgateway, modelsDir, fetchModels: async () => ({ data: [first, last] }) };
+
+  try {
+    await syncProvider({ ...provider, fetchModels: async () => ({ data: [first] }) });
+    const result = await syncProvider(provider);
+    expect(result).toMatchObject({ created: 1, updated: 0, deleted: 1 });
+    expect(await Bun.file(path.join(modelsDir, `${first.id}.toml`)).exists()).toBe(false);
+    const written = Bun.TOML.parse(await readFile(path.join(modelsDir, `${last.id}.toml`), "utf8"));
+    expect(written).toMatchObject({
+      cost: { input: 0.41, output: 2.5 },
+      limit: { context: 32_768 },
+    });
+    expect(written.cost).not.toHaveProperty("cache_write");
+    expect(await syncProvider(provider)).toMatchObject({ created: 0, updated: 0, deleted: 0, unchanged: 1 });
+  } finally {
+    await rm(root, { recursive: true, force: true });
+  }
+});
+
 test("refuses empty responses in both LLM Gateway syncs", () => {
   expect(() => llmgateway.parseModels({ data: [] })).toThrow("no text models");
   expect(() => llmgatewayProviders.parseModels({ data: [] })).toThrow("mapped view unavailable");
