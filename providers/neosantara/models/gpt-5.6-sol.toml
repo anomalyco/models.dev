@@ -3,6 +3,9 @@ base_model_omit = ["limit.input"]
 attachment = false
 structured_output = false
 
+[interleaved]
+field = "reasoning_content"
+
 [[reasoning_options]]
 type = "effort"
 values = ["none", "low", "medium", "high", "xhigh"]

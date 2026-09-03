@@ -5,6 +5,9 @@
 base_model = "inclusionai/ling-3.0-flash-fin"
 structured_output = false
 
+[interleaved]
+field = "reasoning_content"
+
 [[reasoning_options]]
 type = "toggle"
 

@@ -1,6 +1,9 @@
 base_model = "zhipuai/glm-5.3-flash"
 attachment = false
 
+[interleaved]
+field = "reasoning_content"
+
 [[reasoning_options]]
 type = "effort"
 values = ["low", "high"]

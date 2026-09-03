@@ -6,8 +6,14 @@
 # Reasoning wire format on POST /v1/chat/completions:
 #   Effort: reasoning_effort = none|minimal|low|medium|high|xhigh
 #   Off is reasoning_effort = none; anything else turns reasoning on.
-#   There is no separate caller-usable on/off field, so no model here authors a toggle.
+#   Binary on/off controls are authored as `toggle`, where reasoning_effort = "none"
+#   disables reasoning and any other accepted value (or omitting the field) leaves it on.
 #   A model without the `reasoning` capability rejects the field with HTTP 400.
+#
+# Capability flags (reasoning, vision, json_mode, ...) are read from each catalog entry's
+# `capabilities` array and never inherited from lab metadata, because this gateway enforces
+# its own list: a model the lab ships as a reasoner is published here with reasoning = false
+# until the catalog advertises it, and starts publishing controls on the sync after it does.
 #
 # Pricing: raw_pricing is per million tokens in USD or IDR and excludes `discount`,
 # which is a percentage applied at billing time. Published costs are therefore

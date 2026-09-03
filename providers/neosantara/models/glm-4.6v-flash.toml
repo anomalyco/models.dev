@@ -5,6 +5,9 @@
 base_model = "zhipuai/glm-4.6v-flash"
 structured_output = false
 
+[interleaved]
+field = "reasoning_content"
+
 [[reasoning_options]]
 type = "toggle"
 

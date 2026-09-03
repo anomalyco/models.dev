@@ -1,5 +1,8 @@
 base_model = "openai/gpt-5.4-nano"
 
+[interleaved]
+field = "reasoning_content"
+
 [[reasoning_options]]
 type = "effort"
 values = ["none", "low", "medium", "high", "xhigh"]

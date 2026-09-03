@@ -2,6 +2,9 @@ base_model = "minimax/MiniMax-M2.7"
 structured_output = true
 reasoning_options = []
 
+[interleaved]
+field = "reasoning_content"
+
 [cost]
 input = 0.09
 output = 0.36

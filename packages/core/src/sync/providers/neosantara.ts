@@ -8,7 +8,9 @@ import { factorBaseModel, resolveModelMetadataBaseModel } from "./openrouter.js"
 const MODELS_ENDPOINT = "https://api.neosantara.xyz/v1/models";
 const PRICING_ENDPOINT = "https://api.neosantara.xyz/v1/public/pricing";
 const MIN_CONTEXT_WINDOW = 100_000;
-const PROVIDERS_DIR = path.join(process.cwd(), "providers");
+// Resolved from this module, not the working directory: the tree is what every reasoning
+// control is derived from, so it must not depend on where the sync happens to be launched.
+const PROVIDERS_DIR = path.join(import.meta.dirname, "..", "..", "..", "..", "..", "providers");
 
 const Pricing = z.object({
   currency: z.enum(["USD", "IDR"]),
@@ -232,17 +234,22 @@ function indexControls() {
   const lab = new Map<string, ReturnType<typeof hostControls>>();
   const tally = new Map<string, Map<string, number>>();
   const shapes = new Map<string, Map<string, ReturnType<typeof hostControls>>>();
+  let parsed = 0;
 
   for (const file of tomlFilesIn(PROVIDERS_DIR)) {
     if (file.startsWith(path.join(PROVIDERS_DIR, "neosantara"))) continue;
     const toml = parseToml(file);
     if (toml === undefined) continue;
+    parsed++;
     const controls = hostControls(toml.reasoning_options);
 
-    // A lab's own directory is authoritative, wherever the file sits inside it.
+    // A lab's own directory is authoritative, wherever the file sits inside it. An entry whose
+    // controls cannot be read is left unrecorded so peer consensus still gets a say; recording
+    // it as `undefined` would claim the lab documents no control and settle for always-on.
     const owner = path.relative(PROVIDERS_DIR, file).split(path.sep)[0];
     const name = path.basename(file, ".toml");
-    if (owner !== undefined && !lab.has(`${owner}/${name}`)) lab.set(`${owner}/${name}`, controls);
+    const labKey = `${owner}/${name}`;
+    if (owner !== undefined && controls !== undefined && !lab.has(labKey)) lab.set(labKey, controls);
 
     const base = toml.base_model;
     if (typeof base !== "string" || controls === undefined) continue;
@@ -253,6 +260,15 @@ function indexControls() {
     const seen = shapes.get(base) ?? new Map();
     seen.set(key, controls);
     shapes.set(base, seen);
+  }
+
+  // Every control on this host is derived from the tree, so an unreadable tree is not an empty
+  // answer — it would publish "no caller control" for every reasoning model. Fail loudly:
+  // the causes are an incomplete checkout or a runtime whose `Bun.TOML` cannot parse the files.
+  if (parsed === 0) {
+    throw new Error(
+      `Neosantara reasoning controls need the provider tree, but no TOML under '${PROVIDERS_DIR}' could be read. Run the sync from a full checkout with Bun.`,
+    );
   }
 
   const peers = new Map<string, ReturnType<typeof hostControls>>();
@@ -362,6 +378,11 @@ export function buildNeosantaraModel(
     );
   }
 
+  // Capabilities come from this host's catalog, never from the lab entry: the gateway enforces
+  // its own list and answers HTTP 400 when a request uses a capability the model does not
+  // advertise here (`reasoning_effort` on a model without `reasoning`), no matter what the
+  // underlying model can do elsewhere. Reading them live means a capability the host adds later
+  // is picked up by the next sync with no code change.
   const reasoning = model.capabilities.includes("reasoning");
   const inputCost = effectiveUsd(model.pricing.prompt, model);
   const outputCost = effectiveUsd(model.pricing.completion, model);
@@ -381,8 +402,10 @@ export function buildNeosantaraModel(
       name: NAME_OVERRIDES[model.id],
       reasoning,
       reasoning_options: reasoning ? neosantaraReasoningControls(model.id, baseModel) : undefined,
+      // Reasoning is streamed back in `reasoning_content`, whichever lab built the model.
+      interleaved: reasoning ? { field: "reasoning_content" as const } : undefined,
       attachment: model.capabilities.includes("vision"),
-      tool_call: true,
+      tool_call: model.capabilities.includes("function_calling"),
       structured_output: model.capabilities.includes("json_mode"),
       modalities: {
         input: neosantaraInputModalities(model.capabilities),
@@ -440,13 +463,12 @@ export const neosantara = {
   },
   translateModel(model, context) {
     if (!shouldSyncNeosantaraModel(model)) return undefined;
+    const translated = buildNeosantaraModel(model, context.existing(model.id));
     return {
       id: model.id,
-      model: buildNeosantaraModel(model, context.existing(model.id)),
-      header: model.capabilities.includes("reasoning")
-        ? neosantaraReasoningHeader(
-            neosantaraReasoningControls(model.id, resolveNeosantaraBaseModel(model.id) ?? ""),
-          )
+      model: translated,
+      header: translated.reasoning_options !== undefined
+        ? neosantaraReasoningHeader(translated.reasoning_options)
         : undefined,
     };
   },

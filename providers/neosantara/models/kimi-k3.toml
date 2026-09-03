@@ -1,6 +1,9 @@
 base_model = "moonshotai/kimi-k3"
 attachment = false
 
+[interleaved]
+field = "reasoning_content"
+
 [[reasoning_options]]
 type = "effort"
 values = ["none", "low", "high"]

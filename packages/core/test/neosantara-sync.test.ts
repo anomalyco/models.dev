@@ -1,4 +1,6 @@
 import { expect, test } from "bun:test";
+import { tmpdir } from "node:os";
+import path from "node:path";
 
 import {
   buildNeosantaraModel,
@@ -139,16 +141,23 @@ test("builds override-only models with effective USD pricing and host reasoning 
   expect(gemini).toMatchObject({
     base_model: "google/gemini-3.7-flash",
     reasoning_options: [{ type: "effort", values: ["low", "medium", "high"] }],
+    // This host streams reasoning in `reasoning_content`.
+    interleaved: { field: "reasoning_content" },
     limit: { context: 1_000_000 },
     cost: { input: 0.75, output: 3.75, cache_read: 0.075, cache_write: 0.75 },
   });
 
+  // The host's own capability list decides whether reasoning is served here: it rejects
+  // `reasoning_effort` with HTTP 400 for a model that does not advertise `reasoning`, however
+  // the lab entry describes the underlying model.
   const idr = buildNeosantaraModel(merged[1]!, undefined);
   expect(idr).toMatchObject({
     base_model: "openai/gpt-oss-20b",
     reasoning: false,
     cost: { input: 0.02, output: 0.08 },
   });
+  expect(idr.reasoning_options).toBeUndefined();
+  expect(idr.interleaved).toBeUndefined();
 });
 
 test("never advertises a control this host cannot send", () => {
@@ -486,6 +495,36 @@ test("derives reasoning controls from the canonical tree so new models need no c
   // A dated snapshot resolves to its lab entry rather than falling through to peers.
   expect(neosantaraReasoningControls("deepseek-v4-pro-0813", "deepseek/deepseek-v4-pro-0813"))
     .toEqual([{ type: "effort", values: ["none", "high"] }]);
+});
+
+test("falls through to peers when the lab documents only a control this host cannot send", () => {
+  // Anthropic's own entry for this model is a thinking budget, which no caller of this host can
+  // set. That is unknown, not always-on, so peer consensus decides instead of publishing `[]`.
+  const controls = neosantaraReasoningControls("claude-4.5-sonnet", "anthropic/claude-sonnet-4-5");
+
+  expect(controls.length).toBeGreaterThan(0);
+  expect(controls.some((option) => option.type === "budget_tokens")).toBe(false);
+  for (const value of controls.flatMap((option) => ("values" in option ? option.values : []))) {
+    expect(["none", "minimal", "low", "medium", "high", "xhigh"]).toContain(value);
+  }
+});
+
+test("reads the provider tree from the module, not the working directory", () => {
+  const module = path.join(import.meta.dir, "..", "src", "sync", "providers", "neosantara.ts");
+  const run = Bun.spawnSync(
+    [
+      "bun",
+      "-e",
+      `const { neosantaraReasoningControls } = await import(${JSON.stringify(module)});
+       console.log(JSON.stringify(neosantaraReasoningControls("gpt-5.4", "openai/gpt-5.4")));`,
+    ],
+    { cwd: tmpdir() },
+  );
+
+  expect(run.stderr.toString()).toBe("");
+  expect(JSON.parse(run.stdout.toString())).toEqual([
+    { type: "effort", values: ["none", "low", "medium", "high", "xhigh"] },
+  ]);
 });
 
 test("filters deprecated models and never treats the gateway runtime cap as an output limit", () => {

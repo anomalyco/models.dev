@@ -2,6 +2,9 @@ base_model = "moonshotai/kimi-k2-thinking"
 structured_output = false
 reasoning_options = []
 
+[interleaved]
+field = "reasoning_content"
+
 [cost]
 input = 0.6
 output = 2.5
