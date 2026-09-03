@@ -6,15 +6,18 @@ export interface MissingModelIssueTarget {
 
 export interface OpenMissingModelIssuesOptions {
   dryRun?: boolean;
+  reasons?: Record<string, string>;
 }
 
 function issueTitle(providerId: string, modelId: string) {
   return `[missing-model] ${providerId}: ${modelId}`;
 }
 
-function issueBody(provider: MissingModelIssueTarget, modelId: string) {
+function issueBody(provider: MissingModelIssueTarget, modelId: string, reason?: string) {
   return [
-    `The **${provider.name}** catalog sync found remote model \`${modelId}\` that is not in the local catalog.`,
+    reason === undefined
+      ? `The **${provider.name}** catalog sync found remote model \`${modelId}\` that is not in the local catalog.`
+      : `The **${provider.name}** catalog sync could not safely complete remote model \`${modelId}\`. Any existing local entry was left unchanged.`,
     "",
     `| Field | Value |`,
     `| --- | --- |`,
@@ -22,8 +25,15 @@ function issueBody(provider: MissingModelIssueTarget, modelId: string) {
     `| Model ID | \`${modelId}\` |`,
     `| Expected path | \`${provider.modelsDir}/${modelId}.toml\` |`,
     "",
-    "This provider uses `skipCreates` because the remote source is not enough to auto-author a full TOML.",
-    "Add the model manually (prefer `base_model` when matching `models/` metadata exists).",
+    reason === undefined
+      ? "This provider uses `skipCreates` because the remote source is not enough to auto-author a full TOML."
+      : `Sync diagnostic: ${reason}`,
+    "Research and complete the model metadata (prefer `base_model` when matching `models/` metadata exists). Do not guess missing values or use empty reasoning controls as a placeholder.",
+    "For generated entries, update the provider's curation/source of truth as well as the TOML so the next sync retains the fix. Re-run the provider sync and `bun validate`.",
+    ...(provider.id === "cloudflare-ai-gateway" ? [
+      `Update \`providers/cloudflare-ai-gateway/curation.toml\` under \`[models.${JSON.stringify(modelId)}]\` for missing controls or a base-model mapping. Editing only the generated TOML will not fix this sync.`,
+      "Put source URLs and exact reasoning wire paths in the curation entry's `note` array; generated headers are replaced from it. Do not add the model to `skip` merely to silence missing metadata.",
+    ] : []),
     "",
   ].join("\n");
 }
@@ -79,8 +89,9 @@ export async function openMissingModelIssues(
       continue;
     }
 
+    let number: number | undefined;
     try {
-      const number = await createIssue(title, issueBody(provider, modelId), labels);
+      number = await createIssue(title, issueBody(provider, modelId, options.reasons?.[modelId]), labels);
       existingByTitle.set(title, number);
       await dispatchIssueFixer(provider.id, number);
       const notice = `Opened GitHub issue #${number} and dispatched the issue fixer for missing model \`${modelId}\``;
@@ -88,9 +99,12 @@ export async function openMissingModelIssues(
       console.log(notice);
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error);
-      const notice = `Failed to open GitHub issue for missing model \`${modelId}\`: ${message}`;
+      const notice = number === undefined
+        ? `Failed to open GitHub issue for missing model \`${modelId}\`: ${message}`
+        : `Opened GitHub issue #${number} for missing model \`${modelId}\`, but failed to dispatch the issue fixer: ${message}`;
       notices.push(notice);
       console.error(notice);
+      if (process.env.GITHUB_ACTIONS === "true") console.log(`::error::${provider.id}: ${notice}`);
     }
   }
 

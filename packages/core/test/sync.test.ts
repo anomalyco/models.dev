@@ -857,8 +857,18 @@ test("NanoGPT sync drops stale descriptions while first factoring existing model
     "",
   ].join("\n"));
   await Bun.write(metadataPath, [
+    'name = "Claude Sonnet 4.6"',
     'description = "Canonical description"',
     "reasoning = true",
+    "attachment = true",
+    "tool_call = true",
+    "open_weights = false",
+    'release_date = "2026-01-01"',
+    'last_updated = "2026-01-01"',
+    "",
+    "[modalities]",
+    'input = ["text", "image"]',
+    'output = ["text"]',
     "",
     "[limit]",
     "context = 1_000_000",
@@ -2856,16 +2866,14 @@ test("formats reasoning efforts from lowest to highest", () => {
   );
 });
 
-test("defaults new reasoning models to empty reasoning options", () => {
-  expect(preserveReasoningOptions({ reasoning: true }, undefined)).toEqual({
-    reasoning: true,
-    reasoning_options: [],
-  });
+test("leaves unknown reasoning controls unset for incomplete-model reporting", () => {
+  const model = { base_model: "anthropic/claude-fable-5-1", reasoning: true };
+  expect(preserveReasoningOptions(model, undefined)).toEqual(model);
 });
 
-test("inherits base reasoning options instead of stamping empty ones", () => {
-  expect(preserveReasoningOptions({ reasoning: true }, undefined, undefined, [{ type: "toggle" }]))
-    .toEqual({ reasoning: true });
+test("preserves explicit always-on reasoning controls", () => {
+  const model = { base_model: "anthropic/claude-fable-5-1", reasoning: true, reasoning_options: [] };
+  expect(preserveReasoningOptions(model, undefined)).toEqual(model);
 });
 
 test("normalizes Cortecs file modalities to pdf", () => {

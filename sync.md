@@ -24,7 +24,7 @@ The grouped sync targets are available for local convenience, but CI syncs each 
 - `bun models:sync tinfoil` syncs only Tinfoil.
 - `bun models:sync aggregators --dry-run` prints changes without writing model files.
 - `bun models:sync aggregators --new-only` creates new model files but skips updates and removals.
-- `bun models:sync <provider> --open-issues` opens GitHub issues for missing models (on by default only when `GITHUB_ACTIONS=true`).
+- `bun models:sync <provider> --open-issues` opens GitHub issues for missing or incomplete models (on by default only when `GITHUB_ACTIONS=true`).
 - `bun models:sync <provider> --no-issues` skips opening GitHub issues in Actions.
 - `bun validate` validates the generated catalog after a sync.
 
@@ -45,8 +45,11 @@ Sync runs also write `.sync/model-sync-report.md` for the automation workflow PR
 - Removes existing files that are no longer present in the desired synced set.
 - Writes `.sync/model-sync-report.md` for GitHub Actions.
 - When `skipCreates` is set and issue opens are enabled, opens one deduped GitHub issue per remote model missing from the local catalog (via `gh`).
+- Missing required translated fields (including after `base_model` inheritance) and explicit `IncompleteModelError` outcomes are reported for research through the same issue/fixer pipeline, even without `skipCreates`. Existing affected TOMLs and their lab metadata are retained; complete sibling models still sync. Unknown reasoning controls are not replaced with `[]`.
 
 Because the runner removes files missing from the desired set, a provider module should only skip source models when deleting existing local files for those skipped IDs is intentional.
+
+Throw `IncompleteModelError(modelId, reason)` from translation when a known catalog entry needs researched metadata rather than a provider retry. Do not return `undefined` for this case. Auth/network failures, malformed values, unknown pricing keys, unsafe paths, duplicate IDs, and unexpected exceptions still abort the run. Incomplete entries are counted and reported even with `--no-issues`; `trackMissingModels: false` still suppresses GitHub issue creation.
 
 ## Missing-model GitHub issues
 
@@ -57,6 +60,8 @@ Providers that cannot safely auto-create TOMLs set `skipCreates: true`. In GitHu
 3. Lists existing issues (open **and** closed) with those labels; skips create when the title already exists
 4. Dispatches the Issue Fixer explicitly so issues created with `GITHUB_TOKEN` can still produce PRs
 5. If listing fails, creates nothing (fail closed)
+
+Incomplete-model issues use the same title and labels, with the missing facts in the body. Fix generated models at their curation/source of truth as well as their output TOML so the next sync retains the correction. Open and closed title dedupe, explicit fixer dispatch, and dry-run behavior are unchanged.
 
 Requires `GH_TOKEN` on the sync workflow step. Local runs are notice-only unless `--open-issues`. Use `--no-issues` / `--dry-run` to skip creates. Each newly opened issue explicitly dispatches the issue-fixer workflow so an agent can research the missing metadata and open a model PR.
 
@@ -212,7 +217,8 @@ Cloudflare Workers AI is implemented in `packages/core/src/sync/providers/cloudf
 - Required auth: `CLOUDFLARE_ACCOUNT_ID` and `CLOUDFLARE_API_TOKEN`, or the production-token aliases documented in the provider README for local runs. The hourly workflow uses the canonical secret names.
 - The sync manages proxied third-party text-generation models only. Workers AI `@cf/...` models remain under `providers/cloudflare-workers-ai`.
 - `providers/cloudflare-ai-gateway/curation.toml` supplies base-model mappings, live-tested reasoning controls, structured-output support, limit overrides, and intentional skips that the catalog cannot express authoritatively.
-- New catalog entries without canonical lab metadata or required reasoning controls fail closed instead of generating incomplete TOMLs.
+- Catalog entries without canonical lab metadata, required reasoning controls, or input/output rates are deferred to missing-model issues instead of stopping complete entries from syncing. Existing affected files are retained, never overwritten with incomplete data or deleted. Unknown pricing keys still fail the run.
+- The issue directs the fixer to `providers/cloudflare-ai-gateway/curation.toml`, including its `note` array for source URLs and wire paths. `cloudflare-ai-gateway:generate --check` fails while any model needs curation, even when no files would change.
 
 ## Google Notes
 
@@ -308,7 +314,7 @@ Chutes is implemented in `packages/core/src/sync/providers/chutes.ts`.
 - Source endpoint: `https://llm.chutes.ai/v1/models`; no auth required (the model list is public).
 - Model IDs map directly to TOML paths under `providers/chutes/models`.
 - `reasoning`, `tool_call`, and `structured_output` come from `supported_features`; `temperature` comes from `supported_sampling_parameters`.
-- `reasoning_options` is hand-authored, not derived: the API advertises a `reasoning` capability but no toggle or effort parameter, while the models accept a `chat_template_kwargs` thinking switch (`enable_thinking` for Qwen/Gemma, `thinking` for Kimi/GLM/DeepSeek). The sync leaves the field unset so authored options survive; new reasoners without an entry still default to an empty array.
+- `reasoning_options` is hand-authored, not derived: the API advertises a `reasoning` capability but no toggle or effort parameter, while the models accept a `chat_template_kwargs` thinking switch (`enable_thinking` for Qwen/Gemma, `thinking` for Kimi/GLM/DeepSeek). The sync leaves the field unset so authored options survive; new reasoners without controls are reported as incomplete instead of receiving an empty placeholder.
 - TEE model IDs emit `base_model` references to matching `models/` metadata; checkpoints without a canonical entry (e.g. `Qwen3-235B-A22B-Thinking-2507`, `DeepSeek-V3.2`) are written inline.
 - `attachment` is derived from non-text `input_modalities`, and all models are `open_weights`.
 - `release_date`/`last_updated` default to the API `created` timestamp but preserve existing hand-authored dates; `knowledge`, `family`, `status`, `interleaved`, and `limit.input` are preserved when present.

@@ -6,6 +6,10 @@ const check = process.argv.includes("--check");
 const result = await syncProviderByID("cloudflare-ai-gateway", { dryRun: check });
 
 if (check) {
+  if (result.incomplete > 0) {
+    console.error(`--check: ${result.incomplete} model(s) need curation`);
+    process.exit(1);
+  }
   if (result.files.length > 0) {
     console.error(`--check: ${result.files.length} file(s) out of date`);
     process.exit(1);
