@@ -1,0 +1,10 @@
+base_model = "openai/gpt-5-nano"
+base_model_omit = ["limit.input"]
+reasoning_options = []
+
+[cost]
+input = 0.050625
+output = 0.405313
+
+[limit]
+context = 128_000

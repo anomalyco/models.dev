@@ -1,0 +1,23 @@
+# Toggle: /v1/messages thinking.type = enabled|disabled
+# Budget: /v1/messages thinking.budget_tokens (reasoning tokens)
+base_model = "anthropic/claude-opus-4-8"
+structured_output = true
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "budget_tokens"
+min = 1_024
+
+[cost]
+input = 5
+output = 25
+cache_read = 0.5
+cache_write = 6.25
+
+[limit]
+context = 200_000
+
+[modalities]
+input = ["text", "image"]

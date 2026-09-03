@@ -1,0 +1,14 @@
+base_model = "google/gemini-3.5-flash"
+reasoning = false
+
+[cost]
+input = 1.5
+output = 9
+cache_read = 0.15
+cache_write = 1.5
+
+[limit]
+context = 1_000_000
+
+[modalities]
+input = ["text", "image"]
