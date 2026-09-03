@@ -1,3 +1,6 @@
+import { readdirSync, readFileSync } from "node:fs";
+import path from "node:path";
+
 import { z } from "zod";
 import type { ExistingModel, SyncProvider, SyncedFullModel, SyncedModel } from "../index.js";
 import { factorBaseModel, resolveModelMetadataBaseModel } from "./openrouter.js";
@@ -5,6 +8,7 @@ import { factorBaseModel, resolveModelMetadataBaseModel } from "./openrouter.js"
 const MODELS_ENDPOINT = "https://api.neosantara.xyz/v1/models";
 const PRICING_ENDPOINT = "https://api.neosantara.xyz/v1/public/pricing";
 const MIN_CONTEXT_WINDOW = 100_000;
+const PROVIDERS_DIR = path.join(process.cwd(), "providers");
 
 const Pricing = z.object({
   currency: z.enum(["USD", "IDR"]),
@@ -133,62 +137,110 @@ export function mergeNeosantaraCatalogs(
 type ReasoningControls = NonNullable<SyncedFullModel["reasoning_options"]>;
 
 /**
- * Reviewed reasoning controls per model (AGENTS.md → "Reasoning options").
+ * Reasoning controls (AGENTS.md → "Reasoning options").
  *
  * This host is OpenAI-compatible and normalizes reasoning onto a single caller-facing
- * field, `reasoning_effort`, accepting none|minimal|low|medium|high|xhigh. Upstream-native
- * shapes (thinking budgets, vendor toggles) are handled behind that field and never appear
- * in a caller's request, so every entry below is an effort list taken from the underlying
- * lab entry and its same-surface peers, intersected with the values this host accepts —
- * which is why `max` never appears.
+ * field, `reasoning_effort`, accepting the values below. Upstream-native shapes (thinking
+ * budgets, vendor toggles) are handled behind that field and never appear in a caller's
+ * request, so the control is always an effort list.
  *
- * The exception is a model whose lab and peers document no graded level at all: there the
- * only caller-visible choice is on or off, which is a toggle.
+ * The values are read from the canonical tree at sync time rather than hardcoded: the
+ * underlying lab entry wins, otherwise the set its same-surface peers agree on, and the
+ * result is intersected with what this host accepts — which is why `max` never appears.
+ * A model whose lab and peers document no graded level at all has only an on/off choice,
+ * which is a toggle. New models therefore need no change here.
  */
-const effort = (...values: string[]): ReasoningControls =>
-  [{ type: "effort", values: values as never }];
+const HOST_EFFORTS = new Set(["none", "minimal", "low", "medium", "high", "xhigh"]);
 
-const REASONING_CONTROLS: Record<string, { options: ReasoningControls; header?: string }> = {
-  "claude-fable-5": { options: effort("low", "medium", "high", "xhigh") },
-  "claude-opus-4-6": { options: effort("low", "medium", "high") },
-  "claude-opus-5": { options: effort("low", "medium", "high", "xhigh") },
-  "claude-opus-7": { options: effort("low", "medium", "high", "xhigh") },
-  "claude-opus-8": { options: effort("low", "medium", "high", "xhigh") },
-  "claude-sonnet-4-6": { options: effort("low", "medium", "high") },
-  "claude-sonnet-5": { options: effort("low", "medium", "high", "xhigh") },
-  "deepseek-v4-flash": { options: effort("none", "minimal", "low", "medium", "high", "xhigh") },
-  "deepseek-v4-pro": { options: effort("high") },
-  "deepseek-v4-pro-0813": { options: effort("high") },
-  "gemini-3.6-flash": { options: effort("minimal", "low", "medium", "high") },
-  "gemini-3.7-flash": { options: effort("low", "medium", "high") },
-  "glm-5.3-flash": { options: effort("low", "high") },
-  "gpt-5-nano": { options: effort("minimal", "low", "medium", "high") },
-  "gpt-5.4": { options: effort("none", "low", "medium", "high", "xhigh") },
-  "gpt-5.4-nano": { options: effort("none", "low", "medium", "high", "xhigh") },
-  "gpt-5.5": { options: effort("none", "low", "medium", "high", "xhigh") },
-  "gpt-5.6-luna": { options: effort("none", "low", "medium", "high", "xhigh") },
-  "gpt-5.6-sol": { options: effort("none", "low", "medium", "high", "xhigh") },
-  "gpt-5.6-terra": { options: effort("none", "low", "medium", "high", "xhigh") },
-  "kimi-k2-thinking": { options: effort("high") },
-  "kimi-k2.5": { options: effort("none", "minimal", "low", "medium", "high", "xhigh") },
-  "kimi-k2.6": { options: effort("none", "minimal", "low", "medium", "high", "xhigh") },
-  "kimi-k3": { options: effort("low", "high") },
-  "laguna-s-2.1": { options: effort("low", "medium", "high") },
-  "laguna-xs-2.1": { options: effort("low", "medium", "high") },
-  "minimax-m2.7": { options: effort("low", "medium", "high", "xhigh") },
-  "muse-spark-1.1": { options: effort("minimal", "low", "medium", "high", "xhigh") },
-  "step-3.5-flash": { options: effort("low", "high") },
-  // No lab or peer entry documents a graded level for these, so the caller's only
-  // choice is whether to reason at all.
-  "glm-4.6v-flash": {
-    options: [{ type: "toggle" }],
-    header: "# Toggle: reasoning_effort = none turns reasoning off\n",
-  },
-  "ling-3.0-flash-fin": {
-    options: [{ type: "toggle" }],
-    header: "# Toggle: reasoning_effort = none turns reasoning off\n",
-  },
-};
+const TOGGLE_HEADER = "# Toggle: reasoning_effort = none turns reasoning off\n";
+
+function tomlFilesIn(dir: string): string[] {
+  let entries;
+  try {
+    entries = readdirSync(dir, { withFileTypes: true });
+  } catch {
+    return [];
+  }
+  return entries.flatMap((entry) =>
+    entry.isDirectory()
+      ? tomlFilesIn(path.join(dir, entry.name))
+      : entry.name.endsWith(".toml")
+        ? [path.join(dir, entry.name)]
+        : [],
+  );
+}
+
+function parseToml(filePath: string) {
+  try {
+    return Bun.TOML.parse(readFileSync(filePath, "utf8")) as Record<string, unknown>;
+  } catch {
+    return undefined;
+  }
+}
+
+/** Effort values declared by a provider file, restricted to what this host can send. */
+function hostEfforts(options: unknown) {
+  if (!Array.isArray(options)) return undefined;
+  for (const option of options) {
+    if (typeof option !== "object" || option === null) continue;
+    if ((option as { type?: unknown }).type !== "effort") continue;
+    const values = (option as { values?: unknown }).values;
+    if (!Array.isArray(values)) continue;
+    const accepted = values.filter(
+      (value): value is string => typeof value === "string" && HOST_EFFORTS.has(value),
+    );
+    if (accepted.length > 0) return accepted;
+  }
+  return undefined;
+}
+
+let effortsByBaseModel: Map<string, string[]> | undefined;
+
+/** Effort set each base model's peers agree on, most common wins. */
+function peerEfforts() {
+  if (effortsByBaseModel !== undefined) return effortsByBaseModel;
+
+  const tally = new Map<string, Map<string, number>>();
+  for (const file of tomlFilesIn(PROVIDERS_DIR)) {
+    if (file.startsWith(path.join(PROVIDERS_DIR, "neosantara"))) continue;
+    const toml = parseToml(file);
+    const base = toml?.base_model;
+    if (typeof base !== "string") continue;
+    const values = hostEfforts(toml?.reasoning_options);
+    if (values === undefined) continue;
+    const counts = tally.get(base) ?? new Map<string, number>();
+    const key = values.join(",");
+    counts.set(key, (counts.get(key) ?? 0) + 1);
+    tally.set(base, counts);
+  }
+
+  effortsByBaseModel = new Map();
+  for (const [base, counts] of tally) {
+    const [best] = [...counts.entries()].sort((a, b) => b[1] - a[1]);
+    if (best !== undefined) effortsByBaseModel.set(base, best[0].split(","));
+  }
+  return effortsByBaseModel;
+}
+
+/** The lab's own entry for a model, which outranks any relay. */
+function firstPartyEfforts(baseModel: string) {
+  const [lab, ...rest] = baseModel.split("/");
+  if (lab === undefined || rest.length === 0) return undefined;
+  return hostEfforts(
+    parseToml(path.join(PROVIDERS_DIR, lab, "models", `${rest.join("/")}.toml`))?.reasoning_options,
+  );
+}
+
+export function neosantaraReasoningControls(id: string, baseModel: string): ReasoningControls {
+  const derived = firstPartyEfforts(baseModel) ?? peerEfforts().get(baseModel);
+  return derived === undefined
+    ? [{ type: "toggle" }]
+    : [{ type: "effort", values: derived as never }];
+}
+
+function reasoningHeader(controls: ReasoningControls) {
+  return controls.some((option) => option.type === "toggle") ? TOGGLE_HEADER : undefined;
+}
 
 /** Image models are priced per image and carry no context window, so they skip the token filters. */
 function isImageModel(model: NeosantaraSourceModel) {
@@ -216,7 +268,7 @@ export function shouldSyncNeosantaraModel(model: NeosantaraSourceModel) {
   if (isImageModel(model)) return true;
   // Skip rather than throw: one missing catalog field must cost a single model, not the run.
   if (model.pricing.prompt === undefined || model.pricing.completion === undefined) return false;
-  return !model.capabilities.includes("reasoning") || REASONING_CONTROLS[model.id] !== undefined;
+  return true;
 }
 
 function effectiveUsd(value: number | undefined, model: NeosantaraSourceModel) {
@@ -277,7 +329,7 @@ export function buildNeosantaraModel(
     {
       name: NAME_OVERRIDES[model.id],
       reasoning,
-      reasoning_options: reasoning ? REASONING_CONTROLS[model.id]?.options ?? [] : undefined,
+      reasoning_options: reasoning ? neosantaraReasoningControls(model.id, baseModel) : undefined,
       attachment: model.capabilities.includes("vision"),
       tool_call: true,
       structured_output: model.capabilities.includes("json_mode"),
@@ -340,7 +392,11 @@ export const neosantara = {
     return {
       id: model.id,
       model: buildNeosantaraModel(model, context.existing(model.id)),
-      header: REASONING_CONTROLS[model.id]?.header,
+      header: reasoningHeader(
+        model.capabilities.includes("reasoning")
+          ? neosantaraReasoningControls(model.id, resolveNeosantaraBaseModel(model.id) ?? "")
+          : [],
+      ),
     };
   },
 } satisfies SyncProvider<NeosantaraSourceModel>;

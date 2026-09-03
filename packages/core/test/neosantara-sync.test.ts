@@ -5,6 +5,7 @@ import {
   mergeNeosantaraCatalogs,
   neosantara,
   neosantaraInputModalities,
+  neosantaraReasoningControls,
   NeosantaraModelsResponse,
   NeosantaraPricingResponse,
   resolveNeosantaraBaseModel,
@@ -184,19 +185,19 @@ test("authors reviewed per-host reasoning controls instead of dumping the reques
   }
 });
 
-test("refuses to sync a reasoning model that has no reviewed control set", () => {
+test("syncs a reasoning model with no per-model configuration in the module", () => {
   const merged = mergeNeosantaraCatalogs(
     NeosantaraModelsResponse.parse(modelsResponse),
     NeosantaraPricingResponse.parse(pricingResponse),
   );
 
-  const unreviewed = {
+  const reasoner = {
     ...merged[1]!,
     capabilities: [...merged[1]!.capabilities, "reasoning"],
   };
 
-  expect(shouldSyncNeosantaraModel(merged[1]!)).toBe(true);
-  expect(shouldSyncNeosantaraModel(unreviewed)).toBe(false);
+  expect(shouldSyncNeosantaraModel(reasoner)).toBe(true);
+  expect(buildNeosantaraModel(reasoner, undefined).reasoning_options?.length).toBeGreaterThan(0);
 });
 
 test("keeps model pricing when the public pricing entry is only partially populated", () => {
@@ -410,19 +411,16 @@ test("resolves base models from the canonical metadata tree, aliasing only ambig
   expect(resolveNeosantaraBaseModel("definitely-not-a-model")).toBeUndefined();
 });
 
-test("reports reasoning models held back for control review instead of dropping them silently", () => {
+test("reports models skipped for want of a canonical entry", () => {
   const merged = mergeNeosantaraCatalogs(
     NeosantaraModelsResponse.parse(modelsResponse),
     NeosantaraPricingResponse.parse(pricingResponse),
   );
 
-  const unreviewed = {
-    ...merged[1]!,
-    capabilities: [...merged[1]!.capabilities, "reasoning"],
-  };
+  const unknown = { ...merged[1]!, id: "not-in-the-canonical-tree" };
 
-  expect(shouldSyncNeosantaraModel(unreviewed)).toBe(false);
-  expect(neosantara.sourceID(unreviewed)).toBe("gpt-oss-20b");
+  expect(shouldSyncNeosantaraModel(unknown)).toBe(false);
+  expect(neosantara.sourceID(unknown)).toBe("not-in-the-canonical-tree");
 });
 
 test("surfaces skipped models in the sync notice so they are not collected and discarded", () => {
@@ -457,6 +455,32 @@ test("skips a model with unusable upstream pricing instead of aborting the whole
   expect(() => neosantara.translateModel(merged[0]!, context)).not.toThrow();
   expect(neosantara.translateModel(merged[0]!, context)).toBeUndefined();
   expect(neosantara.sourceID(merged[0]!)).toBe("kimi-k2.5");
+});
+
+test("derives reasoning controls from the canonical tree so new models need no code change", () => {
+  // Nothing about these ids is listed in the module; the values come from the lab entry
+  // and its same-surface peers, intersected with what this host accepts.
+  expect(neosantaraReasoningControls("gpt-5.6-terra", "openai/gpt-5.6-terra")).toEqual([
+    { type: "effort", values: ["none", "low", "medium", "high", "xhigh"] },
+  ]);
+  expect(neosantaraReasoningControls("claude-fable-5", "anthropic/claude-fable-5")).toEqual([
+    { type: "effort", values: ["low", "medium", "high", "xhigh"] },
+  ]);
+  expect(neosantaraReasoningControls("deepseek-v4-pro-0813", "deepseek/deepseek-v4-pro-0813"))
+    .toEqual([{ type: "effort", values: ["high"] }]);
+  expect(neosantaraReasoningControls("gemini-3.7-flash", "google/gemini-3.7-flash")).toEqual([
+    { type: "effort", values: ["low", "medium", "high"] },
+  ]);
+
+  // No lab or peer entry documents a graded level for this one.
+  expect(neosantaraReasoningControls("glm-4.6v-flash", "zhipuai/glm-4.6v-flash")).toEqual([
+    { type: "toggle" },
+  ]);
+
+  // A model nobody has authored yet still resolves to something usable.
+  expect(neosantaraReasoningControls("brand-new", "openai/gpt-5.6-sol")).toEqual([
+    { type: "effort", values: ["none", "low", "medium", "high", "xhigh"] },
+  ]);
 });
 
 test("filters deprecated models and never treats the gateway runtime cap as an output limit", () => {
