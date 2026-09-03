@@ -5,8 +5,11 @@
 # Reasoning: NaN lists a reasoning mode (recommends max_tokens >= 300) but
 # documents no request field for it, and no graded effort. Toggle is taken from
 # the Xiaomi lab entry and relay peers.
-# The docs/examples opencode.json snippet caps contextWindow at 500000; the
-# models reference publishes 1M, which is what is recorded here.
+# Context is inherited: NaN publishes "1M tokens", the same wording it uses for
+# deepseek-v4-flash and glm5.3-flash, with no documented trim of the model's
+# native 1_048_576 window. The docs/examples opencode.json snippet caps
+# contextWindow at 500000, but that snippet also trims maxTokens to a
+# per-request value rather than the ceiling.
 base_model = "xiaomi/mimo-v2.5"
 
 [[reasoning_options]]
@@ -15,9 +18,6 @@ type = "toggle"
 [cost]
 input = 0
 output = 0
-
-[limit]
-context = 1_000_000
 
 [modalities]
 input = ["text", "image", "audio"]
