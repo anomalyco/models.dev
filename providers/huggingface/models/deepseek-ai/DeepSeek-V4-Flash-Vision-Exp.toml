@@ -1,0 +1,11 @@
+base_model = "deepseek/deepseek-v4-flash-vision-exp"
+description = "Fast DeepSeek model for efficient chat, coding help, and agent loops"
+open_weights = true
+reasoning_options = []
+
+[cost]
+input = 0.44
+output = 1.32
+
+[limit]
+context = 1_048_576
