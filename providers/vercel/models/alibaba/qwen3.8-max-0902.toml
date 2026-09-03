@@ -1,12 +1,5 @@
-name = "Qwen3.8 Max 0902"
+base_model = "alibaba/qwen3.8-max-0902"
 description = "Qwen vision-language model for visual reasoning, documents, and agent tasks"
-family = "qwen3.8-max"
-release_date = "2026-09-01"
-last_updated = "2026-09-01"
-attachment = true
-reasoning = true
-tool_call = true
-open_weights = false
 reasoning_options = []
 
 [cost]
@@ -21,4 +14,3 @@ output = 128_000
 
 [modalities]
 input = ["text", "image", "pdf"]
-output = ["text"]
