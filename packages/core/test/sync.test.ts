@@ -923,6 +923,36 @@ test("parses current and future Anthropic pricing rows", () => {
   expect(standard.get("claude sonnet 5")).toMatchObject({ input: 3, output: 15 });
 });
 
+test.each([
+  "| Model | Base input tokens | 5m cache writes | 1h cache writes | Cache hits and refreshes | Output tokens |",
+  "| Model | Base input tokens | 5m cache writes | 1h cache writes | Cache hits & refreshes | Output tokens |",
+  "| Model | Base Input Tokens | 5m Cache Writes | 1h Cache Writes | Cache Hits and Refreshes | Output Tokens |",
+])("parses Anthropic pricing with header %s", (header) => {
+  const markdown = anthropicPricingMarkdown.replace(/^\| Model \|.*$/m, header);
+  const pricing = parseAnthropicPricing(markdown, new Date("2026-09-03T00:00:00Z"));
+
+  expect(pricing.size).toBe(5);
+  expect(pricing.get("claude opus 4.8")).toEqual({
+    input: 5,
+    output: 25,
+    cacheRead: 0.5,
+    cacheWrite: 6.25,
+    deprecated: false,
+  });
+});
+
+test.each([
+  "Model",
+  "Base Input Tokens",
+  "5m Cache Writes",
+  "Cache Hits & Refreshes",
+  "Output Tokens",
+])("rejects Anthropic pricing without the %s column", (column) => {
+  const markdown = anthropicPricingMarkdown.replace(`| ${column} |`, "| Unknown |");
+
+  expect(() => parseAnthropicPricing(markdown)).toThrow("Anthropic model pricing table has unexpected columns");
+});
+
 test("syncs Anthropic capabilities and exact effort levels", () => {
   const model = buildAnthropicModel(anthropicModel(), {
     name: "Claude Sonnet 5",

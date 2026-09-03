@@ -210,15 +210,15 @@ export function parseAnthropicPricing(markdown: string, now = new Date()) {
 
   const table = section.split("\n").filter((line) => line.trimStart().startsWith("|"));
   const rows = table.map((line) => line.split("|").slice(1, -1).map((cell) => cell.trim()));
-  const header = rows[0]?.map(markdownText);
+  const header = rows[0]?.map((cell) => markdownText(cell).toLowerCase().replaceAll("&", "and"));
   if (header === undefined) throw new Error("Anthropic pricing page is missing the model pricing table");
 
   const indexes = {
-    model: header.indexOf("Model"),
-    input: header.indexOf("Base Input Tokens"),
-    cacheWrite: header.indexOf("5m Cache Writes"),
-    cacheRead: header.indexOf("Cache Hits & Refreshes"),
-    output: header.indexOf("Output Tokens"),
+    model: header.indexOf("model"),
+    input: header.indexOf("base input tokens"),
+    cacheWrite: header.indexOf("5m cache writes"),
+    cacheRead: header.indexOf("cache hits and refreshes"),
+    output: header.indexOf("output tokens"),
   };
   if (Object.values(indexes).some((index) => index < 0)) {
     throw new Error("Anthropic model pricing table has unexpected columns");
