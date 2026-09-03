@@ -1,0 +1,29 @@
+name = "Corti S1"
+description = "Frontier reasoning model for complex multi-step reasoning, agentic coding, and deep analysis"
+attachment = false
+reasoning = true
+tool_call = true
+structured_output = true
+temperature = true
+release_date = "2026-06-13"
+last_updated = "2026-09-03"
+open_weights = false
+
+interleaved = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["high", "max"]
+
+[cost]
+input = 2
+output = 8
+cache_read = 0.2
+
+[limit]
+context = 262_144
+output = 16_384
+
+[modalities]
+input = ["text"]
+output = ["text"]

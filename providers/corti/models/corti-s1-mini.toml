@@ -1,0 +1,26 @@
+name = "Corti S1 Mini"
+description = "Efficient model for latency-sensitive generation, high-throughput workloads, and image analysis"
+attachment = true
+reasoning = true
+reasoning_options = []
+tool_call = true
+structured_output = true
+temperature = true
+release_date = "2026-06-13"
+last_updated = "2026-09-03"
+open_weights = false
+
+interleaved = true
+
+[cost]
+input = 1
+output = 4
+cache_read = 0.1
+
+[limit]
+context = 262_144
+output = 16_384
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
