@@ -1,8 +1,11 @@
+# Toggle: reasoning_effort = "none" turns reasoning off; any other accepted
+# value (or omitting the field) leaves it on. This host has no separate on/off
+# field: reasoning.enabled alone does not enable reasoning.
+# https://docs.neosantara.xyz
 base_model = "poolside/laguna-xs-2.1"
 
 [[reasoning_options]]
-type = "effort"
-values = ["none"]
+type = "toggle"
 
 [cost]
 input = 0

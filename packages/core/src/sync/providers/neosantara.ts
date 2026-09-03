@@ -155,12 +155,17 @@ const HOST_EFFORTS = new Set(["none", "minimal", "low", "medium", "high", "xhigh
 /** A model that reasons with no caller control. */
 const ALWAYS_ON = "always-on";
 /**
- * A model whose only caller choice is whether to reason at all. This host has no separate
- * on/off field a caller can use: `reasoning.enabled` alone is inert, because reasoning is
- * switched on by `reasoning_effort` being anything other than `none`. So the control is an
- * effort list holding the one value that changes behaviour.
+ * A model whose only caller choice is whether to reason at all. The switch is
+ * `reasoning_effort`, not a separate field — `reasoning.enabled` on its own is inert — so the
+ * control is a toggle and the header below records the mapping.
  */
 const ON_OFF_ONLY = "on-off";
+
+const TOGGLE_HEADER = `# Toggle: reasoning_effort = "none" turns reasoning off; any other accepted
+# value (or omitting the field) leaves it on. This host has no separate on/off
+# field: reasoning.enabled alone does not enable reasoning.
+# https://docs.neosantara.xyz
+`;
 
 function tomlFilesIn(dir: string): string[] {
   let entries;
@@ -268,6 +273,11 @@ function indexControls() {
  * the canonical tree at sync time instead of being listed here: the model's own lab entry
  * wins, otherwise the shape its peers agree on. New models need no change here.
  */
+/** A toggle control must carry a leading comment naming the field it refers to. */
+export function neosantaraReasoningHeader(controls: ReasoningControls) {
+  return controls.some((option) => option.type === "toggle") ? TOGGLE_HEADER : undefined;
+}
+
 export function neosantaraReasoningControls(id: string, baseModel: string): ReasoningControls {
   const { lab, peers } = indexControls();
   const [owner, ...rest] = baseModel.split("/");
@@ -278,7 +288,7 @@ export function neosantaraReasoningControls(id: string, baseModel: string): Reas
   const derived = key === undefined ? peers.get(baseModel) : lab.get(key);
 
   if (derived === undefined || derived === ALWAYS_ON) return [];
-  if (derived === ON_OFF_ONLY) return [{ type: "effort", values: ["none"] as never }];
+  if (derived === ON_OFF_ONLY) return [{ type: "toggle" }];
   return [{ type: "effort", values: derived as never }];
 }
 
@@ -433,6 +443,11 @@ export const neosantara = {
     return {
       id: model.id,
       model: buildNeosantaraModel(model, context.existing(model.id)),
+      header: model.capabilities.includes("reasoning")
+        ? neosantaraReasoningHeader(
+            neosantaraReasoningControls(model.id, resolveNeosantaraBaseModel(model.id) ?? ""),
+          )
+        : undefined,
     };
   },
 } satisfies SyncProvider<NeosantaraSourceModel>;

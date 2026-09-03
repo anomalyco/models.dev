@@ -6,6 +6,7 @@ import {
   neosantara,
   neosantaraInputModalities,
   neosantaraReasoningControls,
+  neosantaraReasoningHeader,
   NeosantaraModelsResponse,
   NeosantaraPricingResponse,
   resolveNeosantaraBaseModel,
@@ -160,8 +161,8 @@ test("never advertises a control this host cannot send", () => {
     ["gpt-5.6-terra", "openai/gpt-5.6-terra"],
     ["claude-sonnet-5", "anthropic/claude-sonnet-5"],
     ["deepseek-v4-pro", "deepseek/deepseek-v4-pro"],
-    ["kimi-k2.5", "moonshotai/kimi-k2.5"],
     ["glm-5.3-flash", "zhipuai/glm-5.3-flash"],
+    ["gemini-3.7-flash", "google/gemini-3.7-flash"],
   ] as const;
 
   for (const [id, base] of ids) {
@@ -169,6 +170,7 @@ test("never advertises a control this host cannot send", () => {
     // Neither a thinking budget nor a bare toggle names a field a caller can use here.
     expect(options.some((option) => option.type === "budget_tokens")).toBe(false);
     expect(options.some((option) => option.type === "toggle")).toBe(false);
+    expect(neosantaraReasoningHeader(options)).toBeUndefined();
     for (const value of options.flatMap((o) => ("values" in o ? o.values : []))) {
       expect(["none", "minimal", "low", "medium", "high", "xhigh"]).toContain(value);
     }
@@ -470,14 +472,16 @@ test("derives reasoning controls from the canonical tree so new models need no c
   // An always-on reasoner keeps an empty control set rather than borrowing a peer's levels.
   expect(neosantaraReasoningControls("kimi-k2-thinking", "moonshotai/kimi-k2-thinking")).toEqual([]);
 
-  // A lab with no graded level leaves one meaningful value: off. This host has no separate
-  // on/off field, so a toggle would name a control a caller cannot actually use.
-  expect(neosantaraReasoningControls("kimi-k2.5", "moonshotai/kimi-k2.5")).toEqual([
-    { type: "effort", values: ["none"] },
-  ]);
-  expect(neosantaraReasoningControls("laguna-s-2.1", "poolside/laguna-s-2.1")).toEqual([
-    { type: "effort", values: ["none"] },
-  ]);
+  // A lab with no graded level is a binary control, carried with a wire comment rather than
+  // an effort list that could only say how to switch reasoning off.
+  for (const [id, base] of [
+    ["kimi-k2.5", "moonshotai/kimi-k2.5"],
+    ["laguna-s-2.1", "poolside/laguna-s-2.1"],
+  ] as const) {
+    const controls = neosantaraReasoningControls(id, base);
+    expect(controls).toEqual([{ type: "toggle" }]);
+    expect(neosantaraReasoningHeader(controls)).toContain("reasoning_effort");
+  }
 
   // A dated snapshot resolves to its lab entry rather than falling through to peers.
   expect(neosantaraReasoningControls("deepseek-v4-pro-0813", "deepseek/deepseek-v4-pro-0813"))
