@@ -1,9 +1,3 @@
-# Reasoning: Neosantara relays this model and normalizes reasoning onto a
-# single OpenAI-compatible `reasoning_effort` field, mapping the upstream model's native shape
-# (Anthropic thinking budget, DeepSeek/GLM toggle, OpenAI effort, …) behind it. The catalog
-# advertises only that the model reasons, not its effort levels, so this entry lists the host's
-# accepted effort enum rather than the upstream/lab control set. This is Neosantara's request
-# surface, not the origin provider's API. https://docs.neosantara.xyz
 base_model = "moonshotai/kimi-k2.6"
 attachment = false
 
@@ -12,11 +6,11 @@ field = "reasoning_content"
 
 [[reasoning_options]]
 type = "effort"
-values = ["none", "minimal", "low", "medium", "high", "xhigh"]
+values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"]
 
 [cost]
-input = 0.285
-output = 1.2
+input = 0.95
+output = 4
 
 [modalities]
 input = ["text"]

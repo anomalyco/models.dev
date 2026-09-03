@@ -1,5 +1,4 @@
-base_model = "anthropic/claude-fable-5"
-attachment = false
+base_model = "anthropic/claude-opus-4-8"
 structured_output = true
 
 [interleaved]
@@ -10,13 +9,13 @@ type = "effort"
 values = ["none", "low", "medium", "high", "max"]
 
 [cost]
-input = 10
-output = 50
-cache_read = 1
-cache_write = 12.5
+input = 5
+output = 25
+cache_read = 0.5
+cache_write = 6.25
 
 [limit]
 context = 200_000
 
 [modalities]
-input = ["text"]
+input = ["text", "image"]

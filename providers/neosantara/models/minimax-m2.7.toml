@@ -1,19 +1,10 @@
-# Reasoning: Neosantara relays this model and normalizes reasoning onto a
-# single OpenAI-compatible `reasoning_effort` field, mapping the upstream model's native shape
-# (Anthropic thinking budget, DeepSeek/GLM toggle, OpenAI effort, …) behind it. The catalog
-# advertises only that the model reasons, not its effort levels, so this entry lists the host's
-# accepted effort enum rather than the upstream/lab control set. This is Neosantara's request
-# surface, not the origin provider's API. https://docs.neosantara.xyz
 base_model = "minimax/MiniMax-M2.7"
 structured_output = true
+reasoning_options = []
 
 [interleaved]
 field = "reasoning_content"
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "minimal", "low", "medium", "high", "xhigh"]
-
 [cost]
-input = 0.09
-output = 0.36
+input = 0.3
+output = 1.2

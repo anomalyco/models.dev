@@ -1,8 +1,14 @@
-# FX: IDR prices converted to USD at 1 USD = 16000 IDR (ExchangeRate-API, 2026-09-03).
+# Toggle: reasoning_effort = "none" turns thinking off; any other accepted
+# value turns it on. https://docs.neosantara.xyz
 base_model = "zhipuai/glm-4.5-flash"
 attachment = true
-reasoning = false
 structured_output = false
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "toggle"
 
 [cost]
 input = 0.015625
