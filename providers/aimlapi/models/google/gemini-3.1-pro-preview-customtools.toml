@@ -1,0 +1,13 @@
+base_model = "google/gemini-3.1-pro-preview-customtools"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high"]
+
+[cost]
+input = 2.7508
+output = 16.5048
+cache_read = 0.27508
+
+[limit]
+context = 1_048_756
