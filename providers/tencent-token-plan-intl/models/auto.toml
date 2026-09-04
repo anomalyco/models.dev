@@ -1,0 +1,37 @@
+# Router model unique to this host: routes each request to the most suitable
+# backend by task complexity, cost, and latency. thinking.type passes through
+# to the routed backend (verified 2026-08-30: 3/3 default runs reasoned, rt
+# 216-387; 3/3 disabled runs 0; 2/2 enabled runs restored). No effort control
+# for the router, so only the toggle is declared. Token limits are
+# undocumented ("-"); values mirror the China-site router
+# (tencent-coding-plan tc-code-latest).
+# https://intl.cloud.tencent.com/document/product/1300/81315
+name = "Auto"
+description = "Token Plan intelligent routing model that dynamically matches requests to the most suitable underlying model"
+family = "auto"
+release_date = "2026-07-14"
+last_updated = "2026-08-30"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+open_weights = false
+
+reasoning_options = [{ type = "toggle" }]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0
+output = 0
+cache_read = 0
+cache_write = 0
+
+[limit]
+context = 131_072
+output = 16_384
+
+[modalities]
+input = ["text"]
+output = ["text"]

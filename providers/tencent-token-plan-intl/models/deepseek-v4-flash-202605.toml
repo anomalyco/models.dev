@@ -1,0 +1,22 @@
+# Vendor-direct alias of DeepSeek V4 Flash 0731 GA, served by DeepSeek.
+# Toggle: thinking.type = enabled|disabled (default enabled)
+# Effort: reasoning_effort = high|max (default high); see deepseek-v4-flash for
+# why the sub-high levels are excluded.
+# https://intl.cloud.tencent.com/document/product/1300/81315
+base_model = "deepseek/deepseek-v4-flash-0731"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["high", "max"]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0
+output = 0
+cache_read = 0
+cache_write = 0
