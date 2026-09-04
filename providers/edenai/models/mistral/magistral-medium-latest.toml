@@ -1,5 +1,4 @@
-base_model = "mistral/magistral-medium-latest"
-attachment = true
+base_model = "mistral/magistral-medium-2509"
 structured_output = true
 reasoning_options = []
 
@@ -9,6 +8,3 @@ output = 5
 
 [limit]
 context = 262_144
-
-[modalities]
-input = ["text", "image"]

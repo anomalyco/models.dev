@@ -1,0 +1,25 @@
+# Source: https://docs.mistral.ai/models/mixtral-8x7b-0-1 (accessed 2026-08-28)
+name = "Mixtral 8x7B"
+description = "Mistral's first open sparse mixture-of-experts model for multilingual chat and instruction following"
+family = "mixtral"
+release_date = "2023-12-11"
+last_updated = "2023-12-11"
+attachment = false
+reasoning = false
+temperature = true
+tool_call = true
+knowledge = "2024-01"
+open_weights = true
+license = "Apache 2.0"
+
+[limit]
+context = 32_000
+output = 8_192
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/mistralai/Mixtral-8x7B-Instruct-v0.1"
