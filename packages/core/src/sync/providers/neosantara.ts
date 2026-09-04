@@ -87,7 +87,7 @@ type ReasoningControls = NonNullable<SyncedFullModel["reasoning_options"]>;
 
 // Toggle controls carry a leading wire comment naming the off value (AGENTS.md requirement).
 const TOGGLE_HEADER = `# Toggle: reasoning_effort = "none" turns thinking off; any other accepted
-# value turns it on. https://docs.neosantara.xyz
+# value turns it on. https://docs.neosantara.xyz/en/capability/reasoning
 `;
 
 // Whether the catalog reported a caller-control surface for this reasoning model. A missing

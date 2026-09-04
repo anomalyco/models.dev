@@ -229,6 +229,7 @@ test("toggle models carry a wire-comment header; effort models carry none", () =
   const toggle = neosantara.translateModel(models.find((m) => m.id === "glm-4.7-flash")!, ctx);
   expect(toggle?.header).toContain("reasoning_effort");
   expect(toggle?.header).toContain("Toggle");
+  expect(toggle?.header).toContain("https://docs.neosantara.xyz/en/capability/reasoning");
 
   // gemini-3.7-flash advertises graded effort -> no toggle header.
   const effort = neosantara.translateModel(models[0]!, ctx);
