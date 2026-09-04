@@ -15,8 +15,8 @@ open_weights = false
 field = "reasoning_content"
 
 [cost]
-input = 0.03
-output = 0.28
+input = 0.0282
+output = 0.282
 cache_read = 0.00564
 input_audio = 0.423
 
@@ -36,7 +36,7 @@ input_audio = 1.692
 
 [limit]
 context = 256_000
-output = 128_000
+output = 32_000
 
 [modalities]
 input = ["text", "image", "video"]
