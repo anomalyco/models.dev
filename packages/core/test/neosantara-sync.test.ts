@@ -137,8 +137,9 @@ test("builds override-only models with per-million USD cost and host reasoning c
 
   expect(built).toMatchObject({
     base_model: "google/gemini-3.7-flash",
-    // Efforts advertised by the catalog are honored (intersected with the host enum).
-    reasoning_options: [{ type: "effort", values: ["none", "low", "medium", "high"] }],
+    // Levels come from the first-party lab entry (google/gemini-3.7-flash = low/medium/high),
+    // not the host's advertised list; `none` is dropped because the lab exposes no off.
+    reasoning_options: [{ type: "effort", values: ["low", "medium", "high"] }],
     interleaved: { field: "reasoning_content" },
     limit: { context: 1_000_000 },
     cost: { input: 1.5, output: 6, cache_read: 0.15, cache_write: 1.5 },
@@ -174,26 +175,50 @@ test("a non-reasoning model carries no reasoning controls, interleaved, or note"
   expect(translated?.header ?? "").not.toContain("reasoning_effort");
 });
 
-test("maps catalog efforts to toggle / effort / always-on (llmgateway convention)", () => {
-  // Graded levels within the host enum (max included) -> effort, verbatim.
-  expect(
-    neosantaraReasoningControls({ providers: [{ reasoning: true, reasoning_efforts: ["low", "high", "max"] }] } as never),
-  ).toEqual([{ type: "effort", values: ["low", "high", "max"] }]);
+test("maps the host mechanism: toggle / always-on / graded", () => {
+  const ctl = (efforts, base = "example/unknown") =>
+    neosantaraReasoningControls({ providers: [{ reasoning: true, reasoning_efforts: efforts }] } as never, base);
 
   // Exactly ["none"] -> on/off toggle.
-  expect(
-    neosantaraReasoningControls({ providers: [{ reasoning: true, reasoning_efforts: ["none"] }] } as never),
-  ).toEqual([{ type: "toggle" }]);
-
+  expect(ctl(["none"])).toEqual([{ type: "toggle" }]);
   // [] -> always-on (reasons, no caller control).
-  expect(
-    neosantaraReasoningControls({ providers: [{ reasoning: true, reasoning_efforts: [] }] } as never),
-  ).toEqual([]);
+  expect(ctl([])).toEqual([]);
+  // Graded with no first-party lab entry -> fall back to the host's accepted set (enum-filtered).
+  expect(ctl(["low", "high", "max", "bogus"])).toEqual([{ type: "effort", values: ["low", "high", "max"] }]);
+});
 
-  // Values outside the host enum are dropped.
-  expect(
-    neosantaraReasoningControls({ providers: [{ reasoning: true, reasoning_efforts: ["low", "bogus"] }] } as never),
-  ).toEqual([{ type: "effort", values: ["low"] }]);
+test("graded ladders follow the first-party lab entry per model (not a family guess)", () => {
+  const ctl = (efforts, base) =>
+    neosantaraReasoningControls({ providers: [{ reasoning: true, reasoning_efforts: efforts }] } as never, base);
+
+  // gpt-5-nano lab = minimal/low/medium/high (no off) -> host `none` is dropped.
+  expect(ctl(["none", "low", "medium", "high", "xhigh"], "openai/gpt-5-nano")).toEqual([
+    { type: "effort", values: ["minimal", "low", "medium", "high"] },
+  ]);
+  // gpt-5.4 lab = none/low/medium/high/xhigh.
+  expect(ctl(["none", "low", "medium", "high", "xhigh"], "openai/gpt-5.4")).toEqual([
+    { type: "effort", values: ["none", "low", "medium", "high", "xhigh"] },
+  ]);
+  // claude-opus-4-6 lab = low/medium/high/max (+budget); no off -> keep max, no none.
+  expect(ctl(["none", "low", "medium", "high"], "anthropic/claude-opus-4-6")).toEqual([
+    { type: "effort", values: ["low", "medium", "high", "max"] },
+  ]);
+  // claude-opus-4-7 lab adds xhigh.
+  expect(ctl(["none", "low", "medium", "high"], "anthropic/claude-opus-4-7")).toEqual([
+    { type: "effort", values: ["low", "medium", "high", "xhigh", "max"] },
+  ]);
+  // gemini-3.6-flash lab = minimal/low/medium/high.
+  expect(ctl(["none", "low", "medium", "high"], "google/gemini-3.6-flash")).toEqual([
+    { type: "effort", values: ["minimal", "low", "medium", "high"] },
+  ]);
+  // deepseek-v4-flash lab = toggle + low/high/max; host exposes off -> none + low/high/max.
+  expect(ctl(["none", "high", "max"], "deepseek/deepseek-v4-flash")).toEqual([
+    { type: "effort", values: ["none", "low", "high", "max"] },
+  ]);
+  // deepseek-v4-pro lab = toggle + high/max.
+  expect(ctl(["none", "high", "max"], "deepseek/deepseek-v4-pro")).toEqual([
+    { type: "effort", values: ["none", "high", "max"] },
+  ]);
 });
 
 test("skips a reasoning model whose effort surface is unknown (missing != always-on)", () => {

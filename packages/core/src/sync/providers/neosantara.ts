@@ -1,3 +1,6 @@
+import { existsSync, readFileSync } from "node:fs";
+import path from "node:path";
+
 import { z } from "zod";
 import type { ExistingModel, SyncProvider, SyncedFullModel, SyncedModel } from "../index.js";
 import { factorBaseModel, resolveModelMetadataBaseModel } from "./openrouter.js";
@@ -9,6 +12,42 @@ const MIN_CONTEXT_WINDOW = 100_000;
 // Accepted reasoning_effort enum (up to `max`); efforts from the catalog are intersected with it.
 const HOST_EFFORTS = ["none", "minimal", "low", "medium", "high", "xhigh", "max"] as const;
 const HOST_EFFORT_SET: ReadonlySet<string> = new Set(HOST_EFFORTS);
+
+// Graded effort levels come from each model's first-party lab entry (AGENTS.md baseline), read
+// from the canonical tree — never guessed per family. Resolved from the module, not the cwd.
+const PROVIDERS_DIR = path.join(import.meta.dirname, "..", "..", "..", "..", "..", "providers");
+const labReasoningCache = new Map<string, { effort: string[]; toggle: boolean }>();
+
+function firstPartyLabReasoning(baseModel: string): { effort: string[]; toggle: boolean } {
+  const cached = labReasoningCache.get(baseModel);
+  if (cached !== undefined) return cached;
+  const [lab, ...rest] = baseModel.split("/");
+  const file = path.join(PROVIDERS_DIR, lab ?? "", "models", `${rest.join("/")}.toml`);
+  let effort: string[] = [];
+  let toggle = false;
+  try {
+    if (existsSync(file)) {
+      const toml = Bun.TOML.parse(readFileSync(file, "utf8")) as { reasoning_options?: unknown };
+      const options = Array.isArray(toml.reasoning_options) ? toml.reasoning_options : [];
+      for (const option of options) {
+        if (typeof option !== "object" || option === null) continue;
+        const type = (option as { type?: unknown }).type;
+        if (type === "toggle") toggle = true;
+        if (type === "effort") {
+          const values = (option as { values?: unknown }).values;
+          if (Array.isArray(values)) {
+            effort = values.filter((value): value is string => typeof value === "string");
+          }
+        }
+      }
+    }
+  } catch {
+    // Unreadable lab entry: fall back to the host-reported efforts below.
+  }
+  const result = { effort, toggle };
+  labReasoningCache.set(baseModel, result);
+  return result;
+}
 
 const CatalogProvider = z
   .object({
@@ -95,16 +134,28 @@ function hasReasoningEfforts(model: NeosantaraSourceModel) {
   return Array.isArray(mapping(model).reasoning_efforts);
 }
 
-// The catalog reports each model's real effort surface: [] = always-on (no caller control),
-// ["none"] = on/off toggle, otherwise the graded levels (intersected with the host enum). Only
-// called once the surface is known (see shouldSyncNeosantaraModel).
-export function neosantaraReasoningControls(model: NeosantaraSourceModel): ReasoningControls {
-  const efforts = (mapping(model).reasoning_efforts ?? []).filter((effort) =>
+// The catalog reports the host mechanism per model: [] = always-on (no caller control),
+// ["none"] = on/off toggle, otherwise the host forwards graded effort. For the graded case the
+// levels come from the first-party lab entry (AGENTS.md baseline) intersected with the host
+// enum; `none` (off) is kept only when the lab supports off (toggle or `none` in its effort) AND
+// the host exposes it. Only called once the surface is known (see shouldSyncNeosantaraModel).
+export function neosantaraReasoningControls(
+  model: NeosantaraSourceModel,
+  baseModel: string,
+): ReasoningControls {
+  const host = (mapping(model).reasoning_efforts ?? []).filter((effort) =>
     HOST_EFFORT_SET.has(effort),
   );
-  if (efforts.length === 0) return [];
-  if (efforts.length === 1 && efforts[0] === "none") return [{ type: "toggle" }];
-  return [{ type: "effort", values: efforts as never }];
+  if (host.length === 0) return [];
+  if (host.length === 1 && host[0] === "none") return [{ type: "toggle" }];
+
+  const lab = firstPartyLabReasoning(baseModel);
+  const labEffort = lab.effort.filter((effort) => HOST_EFFORT_SET.has(effort));
+  const graded = labEffort.filter((effort) => effort !== "none");
+  // No graded levels to borrow from the lab (toggle/budget-only): use the host's accepted set.
+  if (graded.length === 0) return [{ type: "effort", values: host as never }];
+  const includeNone = (lab.toggle || labEffort.includes("none")) && host.includes("none");
+  return [{ type: "effort", values: (includeNone ? ["none", ...graded] : graded) as never }];
 }
 
 // A toggle needs its wire comment; effort/always-on models carry none.
@@ -200,7 +251,7 @@ export function buildNeosantaraModel(
     {
       name: NAME_OVERRIDES[model.id],
       reasoning,
-      reasoning_options: reasoning ? neosantaraReasoningControls(model) : undefined,
+      reasoning_options: reasoning ? neosantaraReasoningControls(model, baseModel) : undefined,
       interleaved: reasoning ? { field: "reasoning_content" as const } : undefined,
       attachment: map.vision === true,
       tool_call: map.tools === true,
