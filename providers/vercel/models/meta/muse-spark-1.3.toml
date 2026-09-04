@@ -1,9 +1,12 @@
-# Vercel's documented unified effort levels stop at xhigh; native Meta max passthrough is unverified.
+# Effort: providerOptions.openai.reasoningEffort = minimal|low|medium|high|xhigh|max
+# Verified via Chat Completions with providerOptions.gateway.only = ["meta"] on 2026-09-04.
+# Native max succeeds on standard 1.3 and is rejected on Contributor/1.2; generic reasoning.effort also accepts those unsupported combinations.
 # https://research.meta.ai/blog/introducing-muse-spark-1-3
-# https://vercel.com/docs/ai-gateway/sdks-and-apis/openai-chat-completions/reasoning
+# https://vercel.com/docs/ai-gateway/sdks-and-apis/openai-chat-completions/advanced
+# https://dev.meta.ai/docs/reasoning.md
 base_model = "meta/muse-spark-1.3"
 description = "Open Llama multimodal model for image understanding and text reasoning"
-reasoning_options = [{ type = "effort", values = ["minimal", "low", "medium", "high", "xhigh"] }]
+reasoning_options = [{ type = "effort", values = ["minimal", "low", "medium", "high", "xhigh", "max"] }]
 
 [cost]
 input = 1.25
