@@ -1,0 +1,15 @@
+# Model reasons but no verified caller control (2026-08-14: effort low=600/high=600/max=600 saturated).
+# Free while capacity lasts:
+# https://commandcode.ai/docs/resources/pricing-limits#laguna-s-2.1-free
+base_model = "poolside/laguna-s-2.1"
+name = "Laguna S 2.1 Free"
+reasoning_options = []
+interleaved = { field = "reasoning_details" }
+
+[cost]
+input = 0
+output = 0
+cache_read = 0
+
+[limit]
+context = 256_000

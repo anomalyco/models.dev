@@ -1,0 +1,21 @@
+# Effort: reasoning_effort = low|medium|high|xhigh (lab baseline minus gateway-rejected none; max not graded-probed, 2026-08-14).
+base_model = "openai/gpt-5.4"
+base_model_omit = ["limit.input"]
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh"] }]
+
+[cost]
+input = 2.5
+output = 15
+cache_read = 0.25
+
+[[cost.tiers]]
+tier = { type = "context", size = 272_000 }
+input = 5
+output = 22.5
+cache_read = 0.5
+
+[limit]
+context = 400_000
+
+[modalities]
+input = ["text", "image"]

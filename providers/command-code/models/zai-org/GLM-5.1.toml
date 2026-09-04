@@ -1,0 +1,9 @@
+# Model reasons but no verified caller control (2026-08-14: effort low=424/high=475/max=445 flat).
+base_model = "zhipuai/glm-5.1"
+reasoning_options = []
+interleaved = { field = "reasoning_details" }
+
+[cost]
+input = 1.4
+output = 4.4
+cache_read = 0.26

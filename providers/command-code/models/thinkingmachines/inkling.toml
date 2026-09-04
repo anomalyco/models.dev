@@ -1,0 +1,17 @@
+# Effort: reasoning_effort = low|medium|high|xhigh (max dropped — high=max saturated in probes, 2026-08-14).
+# Emits reasoning via reasoning / reasoning_details.
+base_model = "thinkingmachines/inkling"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh"] }]
+interleaved = { field = "reasoning_details" }
+
+[cost]
+input = 1
+output = 4.05
+cache_read = 0.17
+
+[limit]
+context = 256_000
+output = 256_000
+
+[modalities]
+input = ["text", "image"]

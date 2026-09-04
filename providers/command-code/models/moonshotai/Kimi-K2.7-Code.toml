@@ -1,0 +1,16 @@
+# Model reasons but no verified caller control (2026-08-14: effort low=106/high=97 flat; max 400-rejected; thinking.type no-op).
+base_model = "moonshotai/kimi-k2.7-code"
+reasoning_options = []
+interleaved = { field = "reasoning_content" }
+
+[cost]
+input = 0.95
+output = 4
+cache_read = 0.19
+
+[limit]
+context = 256_000
+output = 256_000
+
+[modalities]
+input = ["text", "image"]

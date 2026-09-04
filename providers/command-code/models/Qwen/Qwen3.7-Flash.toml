@@ -1,0 +1,17 @@
+# Model reasons but no verified graded control (2026-08-14: effort low=555/high=731/max=735
+# — high≈max saturated; enable_thinking/thinking_budget no-ops). Sibling Qwen entries set to []
+# for the same flat pattern.
+# Emits reasoning via reasoning / reasoning_details.
+base_model = "alibaba/qwen3.7-flash"
+name = "Qwen 3.7 Flash"
+reasoning_options = []
+interleaved = { field = "reasoning_details" }
+
+[cost]
+input = 0.03
+output = 0.13
+cache_read = 0.006
+cache_write = 0.038
+
+[modalities]
+input = ["text", "image"]
