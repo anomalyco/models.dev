@@ -1,0 +1,29 @@
+name = "GPT-6 Astra (OpenAI)"
+description = "GPT model for general reasoning, writing, coding, and tool-assisted tasks"
+family = "gpt"
+release_date = "2026-09-03"
+last_updated = "2026-09-03"
+attachment = true
+reasoning = true
+temperature = false
+tool_call = true
+structured_output = true
+open_weights = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high", "xhigh", "max"]
+
+[cost]
+input = 10
+output = 50
+cache_read = 1
+cache_write = 12.5
+
+[limit]
+context = 1_050_000
+output = 128_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
