@@ -1,7 +1,6 @@
 # Toggle: reasoning_effort = "none" turns thinking off; any other accepted
 # value turns it on. https://docs.neosantara.xyz/en/capability/reasoning
 base_model = "moonshotai/kimi-k3"
-attachment = false
 
 [interleaved]
 field = "reasoning_content"
@@ -17,6 +16,3 @@ values = ["low", "high", "max"]
 input = 3
 output = 15
 cache_read = 0.3
-
-[modalities]
-input = ["text"]

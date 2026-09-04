@@ -121,9 +121,28 @@ export function neosantaraReasoningControls(
   return [{ type: "effort", values: efforts as never }];
 }
 
-// A toggle needs its wire comment; effort/always-on models carry none.
-export function neosantaraReasoningHeader(controls: ReasoningControls | undefined) {
-  return controls?.some((option) => option.type === "toggle") ? TOGGLE_HEADER : undefined;
+// Toggle controls carry a leading wire comment naming the off value (AGENTS.md requirement).
+// Dedicated headers document always-on relays (minimax-m2.7) and external effort baselines (muse-glimmer-30b).
+export function neosantaraReasoningHeader(
+  controls: ReasoningControls | undefined,
+  modelId?: string,
+) {
+  if (controls?.some((option) => option.type === "toggle")) {
+    return TOGGLE_HEADER;
+  }
+  if (modelId === "minimax-m2.7") {
+    return `# Always-on thinking: upstream Dahl forwards no reasoning_effort parameter.
+# Matches lab providers/minimax/models/MiniMax-M2.7.toml and peers OpenRouter/FastRouter/Cortecs.
+`;
+  }
+  if (modelId === "muse-glimmer-30b") {
+    return `# Sources:
+# https://huggingface.co/meta-models/Muse-Glimmer-30B
+# Effort: reasoning_effort = low|medium|high|xhigh
+# Matches peers OpenRouter and Vercel AI Gateway.
+`;
+  }
+  return undefined;
 }
 
 // Image models output an image modality, are priced per image, and skip the token filters.
@@ -297,7 +316,7 @@ export const neosantara = {
     return {
       id: model.id,
       model: translated,
-      header: neosantaraReasoningHeader(translated.reasoning_options),
+      header: neosantaraReasoningHeader(translated.reasoning_options, model.id),
     };
   },
 } satisfies SyncProvider<NeosantaraSourceModel>;

@@ -265,6 +265,13 @@ test("toggle models carry a wire-comment header; effort models carry none", () =
   // gemini-3.7-flash advertises graded effort -> no toggle header.
   const effort = neosantara.translateModel(models[0]!, ctx);
   expect(effort?.header ?? "").not.toContain("Toggle");
+
+  // minimax-m2.7 documents always-on reasoning.
+  expect(neosantaraReasoningHeader([], "minimax-m2.7")).toContain("Always-on thinking");
+  // muse-glimmer-30b documents external baseline sources.
+  expect(neosantaraReasoningHeader([{ type: "effort", values: ["low"] as never }], "muse-glimmer-30b")).toContain(
+    "https://huggingface.co/meta-models/Muse-Glimmer-30B",
+  );
 });
 
 test("syncs image-generation models on per-image pricing without token cost", () => {

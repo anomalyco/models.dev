@@ -1,6 +1,5 @@
 base_model = "openai/gpt-5.5"
 base_model_omit = ["limit.input"]
-attachment = false
 
 [interleaved]
 field = "reasoning_content"
@@ -16,6 +15,3 @@ cache_read = 0.5
 
 [limit]
 context = 270_000
-
-[modalities]
-input = ["text"]

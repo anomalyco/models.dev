@@ -1,5 +1,4 @@
 base_model = "anthropic/claude-fable-5"
-attachment = false
 
 [interleaved]
 field = "reasoning_content"
@@ -16,6 +15,3 @@ cache_write = 12.5
 
 [limit]
 context = 200_000
-
-[modalities]
-input = ["text"]
