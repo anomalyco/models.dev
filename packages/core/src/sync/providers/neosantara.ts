@@ -156,6 +156,26 @@ function modalities(values: string[]): string[] {
   return [...new Set(mapped.length > 0 ? mapped : ["text"])];
 }
 
+// Modalities as served by a specific deployment: a mapping without vision must
+// not carry image/pdf/video input, regardless of what the model-level architecture
+// claims — attachment=false with image/pdf/video input is contradictory.
+export function deploymentModalities(model: NeosantaraSourceModel, vision: boolean | undefined) {
+  const baseInput = modalities(model.architecture.input_modalities);
+  if (vision !== false) {
+    return {
+      input: baseInput,
+      output: modalities(model.architecture.output_modalities),
+    };
+  }
+  const filtered = baseInput.filter(
+    (value) => value !== "image" && value !== "pdf" && value !== "video",
+  );
+  return {
+    input: filtered.length > 0 ? filtered : ["text"],
+    output: modalities(model.architecture.output_modalities),
+  };
+}
+
 // Image generators, or 100k+ context function-calling text models.
 export function meetsNeosantaraPublicFilter(model: NeosantaraSourceModel) {
   return (
@@ -216,13 +236,10 @@ export function buildNeosantaraModel(
       reasoning,
       reasoning_options: reasoning ? neosantaraReasoningControls(model, existing) : undefined,
       interleaved: reasoning ? { field: "reasoning_content" as const } : undefined,
-      attachment: map.vision === true,
-      tool_call: map.tools === true,
+      attachment: map.vision,
+      tool_call: map.tools,
       structured_output: model.structured_outputs === false ? false : undefined,
-      modalities: {
-        input: modalities(model.architecture.input_modalities),
-        output: modalities(model.architecture.output_modalities),
-      },
+      modalities: map.vision === false ? deploymentModalities(model, false) : undefined,
       status: model.deprecated ? "deprecated" : existing?.status,
       limit,
       cost: {

@@ -2,6 +2,7 @@ import { expect, test } from "bun:test";
 
 import {
   buildNeosantaraModel,
+  deploymentModalities,
   meetsNeosantaraPublicFilter,
   neosantara,
   neosantaraReasoningControls,
@@ -310,3 +311,66 @@ test("filters deprecated models and reports unmapped ids as skipped", () => {
 test("an empty catalog is fatal rather than wiping every model", () => {
   expect(() => neosantara.parseModels({ data: [] })).toThrow();
 });
+
+test("deploymentModalities strips non-text inputs when vision is false and preserves otherwise", () => {
+  const multimodal = {
+    architecture: {
+      input_modalities: ["text", "image", "video", "pdf"],
+      output_modalities: ["text"],
+    },
+  } as never;
+
+  expect(deploymentModalities(multimodal, false)).toEqual({
+    input: ["text"],
+    output: ["text"],
+  });
+
+  expect(deploymentModalities(multimodal, true)).toEqual({
+    input: ["text", "image", "video", "pdf"],
+    output: ["text"],
+  });
+
+  expect(deploymentModalities(multimodal, undefined)).toEqual({
+    input: ["text", "image", "video", "pdf"],
+    output: ["text"],
+  });
+});
+
+test("enforces text-only input and attachment=false when vision is false on multimodal base model", () => {
+  const model = {
+    id: "kimi-k3",
+    context_length: 1_048_576,
+    architecture: { input_modalities: ["text"], output_modalities: ["text"] },
+    pricing: { prompt: "0.000003000000", completion: "0.000015000000" },
+    providers: [{ providerId: "neosantara", vision: false, tools: true, reasoning: false }],
+  } as never;
+
+  const built = buildNeosantaraModel(model, undefined);
+  // moonshotai/kimi-k3 base model has attachment=true and input=["text", "image", "video"].
+  // Because vision is false on this host, attachment must be false AND input must be overridden to ["text"].
+  expect(built).toMatchObject({
+    base_model: "moonshotai/kimi-k3",
+    attachment: false,
+    modalities: { input: ["text"] },
+  });
+  // tool_call is true in both host and base model; factored out
+  expect("tool_call" in built).toBe(false);
+});
+
+test("omits attachment and modalities when vision is true matching base model", () => {
+  const model = {
+    id: "claude-4.5-opus",
+    base_model: "anthropic/claude-opus-4-5",
+    context_length: 200_000,
+    architecture: { input_modalities: ["text", "image"], output_modalities: ["text"] },
+    pricing: { prompt: "0.000005000000", completion: "0.000025000000" },
+    providers: [{ providerId: "neosantara", vision: true, tools: true, reasoning: false }],
+  } as never;
+
+  const built = buildNeosantaraModel(model, undefined);
+  // anthropic/claude-opus-4-5 base model has attachment=true and input=["text", "image", "pdf"].
+  // Because vision is true, attachment and modalities overrides are omitted and inherited from the base model.
+  expect("attachment" in built).toBe(false);
+  expect("modalities" in built).toBe(false);
+});
+

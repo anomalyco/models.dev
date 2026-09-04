@@ -1,5 +1,3 @@
-# Toggle: reasoning_effort = "none" turns thinking off; any other accepted
-# value turns it on. https://docs.neosantara.xyz/en/capability/reasoning
 base_model = "anthropic/claude-sonnet-4-6"
 attachment = false
 
@@ -7,11 +5,8 @@ attachment = false
 field = "reasoning_content"
 
 [[reasoning_options]]
-type = "toggle"
-
-[[reasoning_options]]
 type = "effort"
-values = ["low", "medium", "high", "max"]
+values = ["none", "low", "medium", "high", "max"]
 
 [cost]
 input = 3
