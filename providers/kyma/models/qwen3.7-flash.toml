@@ -1,0 +1,11 @@
+# Price source: https://api.kymaapi.com/v1/models (public, unauthenticated), accessed 2026-09-04.
+base_model = "alibaba/qwen3.7-flash"
+
+reasoning_options = [{ type = "effort", values = ["none", "high"] }]
+
+[cost]
+input = 0.0498
+output = 0.2164
+
+[limit]
+output = 8_192
