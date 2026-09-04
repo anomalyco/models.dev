@@ -84,8 +84,41 @@ function normalizeModalities(values: readonly string[] | null | undefined): Moda
   return [...seen];
 }
 
+/**
+ * Ids this host also serves on a non-text surface.
+ *
+ * The catalog lists an id once per endpoint type, and the chat-surface record of
+ * an image model claims text output. Measured 2026-09-04:
+ * `google/gemini-2.5-flash-image` appears both as `openai/image-generations`
+ * with `output: ["image"]` and as `openai/chat-completions` with
+ * `output: ["text"]`; the same holds for the `gemini-3-pro-image` and
+ * `gemini-3.1-flash-image` families. Judging a record only by its own modalities
+ * therefore admits image generators into a chat catalog.
+ *
+ * An id this host serves as a media model is not a text-only chat model, whatever
+ * its chat record claims. Populated from the whole response before any record is
+ * judged, because the answer is not in the record itself.
+ */
+const mediaOutputIDs = new Set<string>();
+
+function indexMediaOutputs(models: readonly AimlapiModel[]): void {
+  mediaOutputIDs.clear();
+  for (const model of models) {
+    const declared = model.modalities?.output ?? [];
+    // `normalizeModalities` treats an empty list as text, so an undeclared
+    // record must not be read as evidence of anything.
+    if (declared.length === 0) continue;
+    if (normalizeModalities(declared).some((modality) => modality !== "text")) {
+      mediaOutputIDs.add(model.id);
+    }
+  }
+}
+
 function isChatTextModel(model: AimlapiModel): boolean {
   if (model.type !== CHAT_COMPLETIONS_TYPE) return false;
+  // Cross-surface check first: the chat record of a media model does not admit
+  // to being one.
+  if (mediaOutputIDs.has(model.id)) return false;
   const output = normalizeModalities(model.modalities?.output);
   // A chat model whose output is not purely text is a media model riding the
   // chat protocol, and does not belong in a chat catalog.
@@ -227,11 +260,15 @@ export const aimlapi = {
     }
     const raw = await response.json();
     const parsed = AimlapiResponse.parse(raw);
+    indexMediaOutputs(parsed.data);
     await attachReasoningEffort(parsed.data);
     return parsed;
   },
   parseModels(raw) {
-    return AimlapiResponse.parse(raw).data;
+    const models = AimlapiResponse.parse(raw).data;
+    // Replays parse a cached payload without going through fetchModels.
+    indexMediaOutputs(models);
+    return models;
   },
   translateModel(model, context) {
     if (!isChatTextModel(model)) return undefined;
