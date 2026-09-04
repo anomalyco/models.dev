@@ -234,6 +234,7 @@ GitHub Copilot is implemented in `packages/core/src/sync/providers/github-copilo
 - The YML contains only token rates, so the sync only updates `[cost]`: `input`, `cached_input` (as `cache_read`), `cache_write`, `output`, and long-context rows as `cost.tiers`.
 - Display names are converted to file IDs, with minimal special case logic to match existing model entries.
 - Unmatched rows open missing-model issues, and local entries missing from the source are kept.
+- When removing a fully retired Copilot model, add its pricing-table slug to `IGNORED_ROWS` so stale pricing rows cannot trigger translation or missing-model issues. Models still served to some subscribers (such as Sonnet 4.6 on annual plans) remain eligible.
 
 ## xAI Notes
 
