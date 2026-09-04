@@ -92,8 +92,8 @@ function hasReasoningEfforts(model: NeosantaraSourceModel) {
 
 // The catalog reports each model's real reasoning surface (resolved host-side from the model's
 // models.dev lab entry): [] = always-on (no caller control), ["none"] = on/off toggle, otherwise
-// the graded effort levels. When a model's lab entry exposes toggle + graded effort (e.g. Sonnet 5),
-// the host reports `has_toggle: true`, authoring `toggle` alongside the graded effort ladder.
+// the graded effort levels. When off is expressed via reasoning_effort = "none" alongside graded
+// levels, AGENTS.md strictly requires authoring only `effort` with `none` in values and NO toggle.
 export function neosantaraReasoningControls(
   model: NeosantaraSourceModel,
   _existing?: ExistingModel,
@@ -105,20 +105,9 @@ export function neosantaraReasoningControls(
   if (efforts.length === 0) return [];
   if (efforts.length === 1 && efforts[0] === "none") return [{ type: "toggle" }];
 
-  const hasToggle = map.has_toggle === true;
   const graded = efforts.filter((effort) => effort !== "none");
-
-  if (hasToggle) {
-    if (graded.length > 0) {
-      return [
-        { type: "toggle" },
-        { type: "effort", values: graded as never },
-      ];
-    }
-    return [{ type: "toggle" }];
-  }
-
-  return [{ type: "effort", values: efforts as never }];
+  const values = efforts.includes("none") ? ["none", ...graded] : graded;
+  return [{ type: "effort", values: values as never }];
 }
 
 // Toggle controls carry a leading wire comment naming the off value (AGENTS.md requirement).
@@ -258,7 +247,7 @@ export function buildNeosantaraModel(
       attachment: map.vision,
       tool_call: map.tools,
       structured_output: model.structured_outputs === false ? false : undefined,
-      modalities: map.vision === false ? deploymentModalities(model, false) : undefined,
+      modalities: deploymentModalities(model, map.vision),
       status: model.deprecated ? "deprecated" : existing?.status,
       limit,
       cost: {

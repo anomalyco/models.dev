@@ -1,5 +1,3 @@
-# Toggle: reasoning_effort = "none" turns thinking off; any other accepted
-# value turns it on. https://docs.neosantara.xyz/en/capability/reasoning
 base_model = "deepseek/deepseek-v4-flash-0731"
 name = "DeepSeek V4 Flash"
 
@@ -7,11 +5,8 @@ name = "DeepSeek V4 Flash"
 field = "reasoning_content"
 
 [[reasoning_options]]
-type = "toggle"
-
-[[reasoning_options]]
 type = "effort"
-values = ["low", "high", "max"]
+values = ["none", "low", "high", "max"]
 
 [cost]
 input = 0.14

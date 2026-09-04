@@ -202,24 +202,21 @@ test("copies the catalog's per-model reasoning surface verbatim (llmgateway conv
   expect(ctl(["none", "high", "max"])).toEqual([{ type: "effort", values: ["none", "high", "max"] }]);
   expect(ctl(["low", "high", "max", "bogus"])).toEqual([{ type: "effort", values: ["low", "high", "max"] }]);
 
-  // When a model has has_toggle: true alongside graded levels, emit toggle + effort.
+  // Graded levels with "none" author only effort with "none" in values, without toggle.
   expect(
     neosantaraReasoningControls({
-      providers: [{ reasoning: true, reasoning_efforts: ["low", "medium", "high", "xhigh", "max"], has_toggle: true }],
+      providers: [{ reasoning: true, reasoning_efforts: ["low", "medium", "high", "xhigh", "max"] }],
     } as never),
   ).toEqual([
-    { type: "toggle" },
     { type: "effort", values: ["low", "medium", "high", "xhigh", "max"] },
   ]);
 
-  // When a model has has_toggle: true and efforts contains "none", emit toggle + effort without "none".
   expect(
     neosantaraReasoningControls({
-      providers: [{ reasoning: true, reasoning_efforts: ["none", "low", "high", "max"], has_toggle: true }],
+      providers: [{ reasoning: true, reasoning_efforts: ["none", "low", "high", "max"] }],
     } as never),
   ).toEqual([
-    { type: "toggle" },
-    { type: "effort", values: ["low", "high", "max"] },
+    { type: "effort", values: ["none", "low", "high", "max"] },
   ]);
 
   // Toggle is driven only by the catalog (has_toggle / ["none"]), not re-inferred from prior TOMLs.
@@ -364,7 +361,7 @@ test("enforces text-only input and attachment=false when vision is false on mult
   expect("tool_call" in built).toBe(false);
 });
 
-test("omits attachment and modalities when vision is true matching base model", () => {
+test("emits narrower modalities when host deployment does not support pdf/video", () => {
   const model = {
     id: "claude-4.5-opus",
     base_model: "anthropic/claude-opus-4-5",
@@ -376,7 +373,23 @@ test("omits attachment and modalities when vision is true matching base model", 
 
   const built = buildNeosantaraModel(model, undefined);
   // anthropic/claude-opus-4-5 base model has attachment=true and input=["text", "image", "pdf"].
-  // Because vision is true, attachment and modalities overrides are omitted and inherited from the base model.
+  // Because vision is true, attachment is true matching base and factored out.
+  // Because host deployment only serves text+image (not pdf), narrower input modalities are authored.
+  expect("attachment" in built).toBe(false);
+  expect(built.modalities).toEqual({ input: ["text", "image"] });
+});
+
+test("omits modalities when host input modalities match base model", () => {
+  const model = {
+    id: "claude-4.5-opus",
+    base_model: "anthropic/claude-opus-4-5",
+    context_length: 200_000,
+    architecture: { input_modalities: ["text", "image", "pdf"], output_modalities: ["text"] },
+    pricing: { prompt: "0.000005000000", completion: "0.000025000000" },
+    providers: [{ providerId: "neosantara", vision: true, tools: true, reasoning: false }],
+  } as never;
+
+  const built = buildNeosantaraModel(model, undefined);
   expect("attachment" in built).toBe(false);
   expect("modalities" in built).toBe(false);
 });

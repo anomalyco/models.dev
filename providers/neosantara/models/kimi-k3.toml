@@ -1,18 +1,16 @@
-# Toggle: reasoning_effort = "none" turns thinking off; any other accepted
-# value turns it on. https://docs.neosantara.xyz/en/capability/reasoning
 base_model = "moonshotai/kimi-k3"
 
 [interleaved]
 field = "reasoning_content"
 
 [[reasoning_options]]
-type = "toggle"
-
-[[reasoning_options]]
 type = "effort"
-values = ["low", "high", "max"]
+values = ["none", "low", "high", "max"]
 
 [cost]
 input = 3
 output = 15
 cache_read = 0.3
+
+[modalities]
+input = ["text", "image"]
