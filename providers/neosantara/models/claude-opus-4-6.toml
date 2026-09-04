@@ -1,8 +1,13 @@
+# Toggle: reasoning_effort = "none" turns thinking off; any other accepted
+# value turns it on. https://docs.neosantara.xyz/en/capability/reasoning
 base_model = "anthropic/claude-opus-4-6"
 attachment = false
 
 [interleaved]
 field = "reasoning_content"
+
+[[reasoning_options]]
+type = "toggle"
 
 [[reasoning_options]]
 type = "effort"

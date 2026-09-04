@@ -2,7 +2,6 @@
 # value turns it on. https://docs.neosantara.xyz/en/capability/reasoning
 base_model = "deepseek/deepseek-v4-pro-0813"
 name = "DeepSeek V4 Pro"
-attachment = true
 structured_output = false
 
 [interleaved]
@@ -19,6 +18,3 @@ values = ["high", "max"]
 input = 2.4
 output = 4.8
 cache_read = 0.024
-
-[modalities]
-input = ["text", "image"]
