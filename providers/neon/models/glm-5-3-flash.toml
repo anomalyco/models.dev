@@ -1,11 +1,12 @@
+# Toggle: thinking.type = enabled|disabled
+# Effort: reasoning_effort = minimal|low|medium|high|xhigh|max
+# `none` is rejected: thinking-only model.
 base_model = "zhipuai/glm-5.3-flash"
 name = "GLM-5.3 Flash"
 open_weights = true
-release_date = "2026-08-28"
-last_updated = "2026-08-28"
 reasoning_options = [
-  { type = "toggle" },                                                              # API: {"thinking": {"type": "enabled"|"disabled"}}
-  { type = "effort", values = ["minimal", "low", "medium", "high", "xhigh", "max"] }, # API: {"reasoning_effort": <v>}; `none` is rejected
+  { type = "toggle" },
+  { type = "effort", values = ["minimal", "low", "medium", "high", "xhigh", "max"] },
 ]
 
 # List rates. First-party zhipuai currently publishes a 50% promo that Neon does not.

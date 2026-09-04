@@ -1,9 +1,8 @@
+# Off is effort=none; graded levels on chat completions reasoning_effort.
+# Neon accepts none, minimal, low, medium, high, xhigh. `max` is rejected.
 base_model = "xai/grok-4.6"
-release_date = "2026-08-24"
-last_updated = "2026-08-24"
 reasoning_options = [
-  { type = "toggle" },                                                              # API: {"thinking": {"type": "enabled"|"disabled"}}
-  { type = "effort", values = ["none", "minimal", "low", "medium", "high", "xhigh"] }, # API: {"reasoning_effort": <v>}; `max` is rejected
+  { type = "effort", values = ["none", "minimal", "low", "medium", "high", "xhigh"] },
 ]
 # Lab entry carries a knowledge cutoff the website catalog does not publish.
 base_model_omit = ["knowledge"]
