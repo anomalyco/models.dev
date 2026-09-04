@@ -1,17 +1,16 @@
-# Model path, serverless pricing, 262K context, text-only input, and function calling:
+# Fireworks' page retains a qwen3p8-max URL slug, but identifies the served model as
+# Qwen3.8-2.4T-A95B with API path accounts/fireworks/models/qwen3p8-2p4t-a95b;
+# it also documents serverless pricing, 262K context, and text-only input:
 # https://fireworks.ai/models/fireworks/qwen3p8-max (accessed 2026-09-04)
-# Fireworks Qwen3 reasoning accepts reasoning_effort none|low|medium|high and
-# integer token limits; reasoning is returned in reasoning_content:
+# The model requires thinking and accepts reasoning_effort low|medium|xhigh:
+# https://huggingface.co/Qwen/Qwen3.8-2.4T-A95B/raw/main/README.md (accessed 2026-09-04)
+# Fireworks returns reasoning in reasoning_content:
 # https://docs.fireworks.ai/api-reference/post-chatcompletions (accessed 2026-09-04)
 base_model = "alibaba/qwen3.8-2.4t-a95b"
 
 [[reasoning_options]]
 type = "effort"
-values = ["none", "low", "medium", "high"]
-
-[[reasoning_options]]
-type = "budget_tokens"
-min = 1_024
+values = ["low", "medium", "xhigh"]
 
 [interleaved]
 field = "reasoning_content"
