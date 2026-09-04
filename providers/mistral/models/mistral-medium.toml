@@ -1,0 +1,13 @@
+# Sources (accessed 2026-08-27):
+#   https://docs.mistral.ai/models/mistral-medium-3-5-26-04
+#   Undated alias of Mistral Medium 3.5 (mistral-medium-2604 / mistral-medium-latest).
+base_model = "mistral/mistral-medium-latest"
+name = "Mistral Medium"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "high"]
+
+[cost]
+input = 1.50
+output = 7.50

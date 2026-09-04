@@ -1,0 +1,13 @@
+# Sources (accessed 2026-08-27):
+#   https://docs.mistral.ai/models/mistral-medium-3-5-26-04
+#   Dot-form product-name alias for mistral-medium-2604 (Medium 3.5).
+base_model = "mistral/mistral-medium-2604"
+name = "Mistral Medium 3.5"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "high"]
+
+[cost]
+input = 1.50
+output = 7.50

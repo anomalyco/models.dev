@@ -1,0 +1,23 @@
+# Sources (accessed 2026-08-27):
+#   https://docs.mistral.ai/models/ministral-3-14b-25-12
+#   https://docs.mistral.ai/inference/pricing
+name = "Ministral 3 14B"
+description = "Largest Ministral 3 model with strong text and vision capabilities for local and edge deployment"
+family = "ministral"
+release_date = "2025-12-02"
+last_updated = "2025-12-02"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = true
+license = "Apache 2.0"
+
+[limit]
+context = 256_000
+output = 256_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

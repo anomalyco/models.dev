@@ -1,0 +1,21 @@
+# Sources (accessed 2026-08-27):
+#   https://docs.mistral.ai/models/mistral-moderation-26-03
+#   https://docs.mistral.ai/inference/pricing
+name = "Mistral Moderation 2"
+description = "Moderation model with 128k context and jailbreaking detection for multilingual multi-turn content"
+family = "mistral-moderation"
+release_date = "2026-03-01"
+last_updated = "2026-03-01"
+attachment = false
+reasoning = false
+temperature = false
+tool_call = false
+open_weights = false
+
+[limit]
+context = 128_000
+output = 0
+
+[modalities]
+input = ["text"]
+output = ["text"]

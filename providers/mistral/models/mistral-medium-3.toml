@@ -1,0 +1,27 @@
+# Sources (accessed 2026-08-27):
+#   https://docs.mistral.ai/models/mistral-medium-3-25-05
+#   Product-name alias for mistral-medium-2505 (deprecated).
+name = "Mistral Medium 3"
+description = "Mistral model for multilingual chat, reasoning, and tool-assisted workflows"
+family = "mistral-medium"
+release_date = "2025-05-07"
+last_updated = "2025-05-07"
+attachment = true
+reasoning = false
+temperature = true
+knowledge = "2025-05"
+tool_call = true
+open_weights = false
+status = "deprecated"
+
+[cost]
+input = 0.40
+output = 2.00
+
+[limit]
+context = 131_072
+output = 131_072
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

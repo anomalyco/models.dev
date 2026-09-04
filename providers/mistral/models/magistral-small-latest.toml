@@ -1,0 +1,32 @@
+# Sources (accessed 2026-08-27):
+#   https://docs.mistral.ai/models/mistral-small-4-0-26-03
+#   https://docs.mistral.ai/en/studio-api/conversations/reasoning
+# magistral-small-latest now resolves to Mistral Small 4 (mistral-small-2603),
+# not the standalone Magistral Small snapshot.
+name = "Magistral Small (latest)"
+description = "Fast Mistral production model for chat, extraction, and cost-sensitive agents"
+family = "mistral-small"
+release_date = "2026-03-16"
+last_updated = "2026-03-16"
+attachment = true
+reasoning = true
+temperature = true
+knowledge = "2025-06"
+tool_call = true
+open_weights = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "high"]
+
+[cost]
+input = 0.15
+output = 0.60
+
+[limit]
+context = 256_000
+output = 256_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

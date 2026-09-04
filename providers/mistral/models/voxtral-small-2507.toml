@@ -1,9 +1,8 @@
-# Sources :
-#   https://docs.mistral.ai/models/model-cards/voxtral-small-25-07
-#   https://mistral.ai/news/voxtral/
-# Le bloc [cost] ne porte que le texte ($0.10 / $0.30 per 1M tokens) : l'audio en
-# entrée se facture à la MINUTE ($0.004/min), unité que le schéma ne modélise pas.
-name = "Voxtral Small (latest)"
+# Sources (accessed 2026-08-27):
+#   https://docs.mistral.ai/models/voxtral-small-25-07
+#   Dated id for voxtral-small-latest.
+# Text tokens $0.10 / $0.40; audio input is $0.004/min (not modeled in cost).
+name = "Voxtral Small 25.07"
 description = "Instruct model with native audio input for speech understanding and tool use"
 family = "voxtral"
 release_date = "2025-07-15"
@@ -17,7 +16,6 @@ open_weights = true
 [cost]
 input = 0.10
 output = 0.40
-
 
 [limit]
 context = 32_000
