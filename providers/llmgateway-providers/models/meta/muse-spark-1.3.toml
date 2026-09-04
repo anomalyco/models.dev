@@ -1,9 +1,13 @@
+# Effort: reasoning_effort or reasoning.effort is forwarded unchanged to Meta's Responses API.
+# https://docs.llmgateway.io/features/reasoning
+# https://dev.meta.ai/docs/reasoning.md (max is Standard-tier 1.3 only)
+# https://github.com/theopenco/llmgateway/blob/910a6632c47b83c74944bad231f25f17bd5acb7b/packages/actions/src/prepare-request-body.ts#L2231-L2241
 base_model = "meta/muse-spark-1.3"
 name = "Muse Spark 1.3 (Meta)"
 
 [[reasoning_options]]
 type = "effort"
-values = ["minimal", "low", "medium", "high", "xhigh"]
+values = ["minimal", "low", "medium", "high", "xhigh", "max"]
 
 [cost]
 input = 1.25
