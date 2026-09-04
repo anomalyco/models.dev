@@ -126,8 +126,12 @@ test("filters to 100k+ context, function calling, image models, and known base m
   expect(shouldSyncNeosantaraModel(noTools!)).toBe(false);
 
   expect(resolveNeosantaraBaseModel("gemini-3.7-flash")).toBe("google/gemini-3.7-flash");
-  expect(resolveNeosantaraBaseModel("claude-4.5-sonnet")).toBe("anthropic/claude-sonnet-4-5");
-  expect(resolveNeosantaraBaseModel("grok-code-fast")).toBe("xai/grok-4.3");
+  expect(
+    resolveNeosantaraBaseModel({ id: "claude-4.5-sonnet", base_model: "anthropic/claude-sonnet-4-5" } as never),
+  ).toBe("anthropic/claude-sonnet-4-5");
+  expect(
+    resolveNeosantaraBaseModel({ id: "grok-code-fast", base_model: "xai/grok-4.3" } as never),
+  ).toBe("xai/grok-4.3");
   expect(resolveNeosantaraBaseModel("definitely-not-a-model")).toBeUndefined();
 });
 

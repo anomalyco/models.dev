@@ -48,6 +48,8 @@ export const NeosantaraModel = z
     pricing: CatalogPricing,
     supported_parameters: z.array(z.string()).optional(),
     structured_outputs: z.boolean().optional(),
+    base_model: z.string().optional(),
+    override_name: z.string().optional(),
     providers: z.array(CatalogProvider).min(1),
     deprecated: z.boolean().optional(),
   })
@@ -64,24 +66,12 @@ function mapping(model: NeosantaraSourceModel) {
   return model.providers[0];
 }
 
-// Only ids the canonical tree cannot resolve are aliased (renamed generations, coding aliases).
-const BASE_MODEL_ALIASES: Record<string, string> = {
-  "claude-3-haiku": "anthropic/claude-3-haiku-20240307",
-  "claude-4.5-opus": "anthropic/claude-opus-4-5",
-  "claude-4.5-sonnet": "anthropic/claude-sonnet-4-5",
-  "devstral-2": "mistral/devstral-2512",
-  "grok-code-fast": "xai/grok-4.3",
-  "qwen3-235b-wse": "alibaba/qwen3-235b-a22b-instruct-2507",
-};
-
-export function resolveNeosantaraBaseModel(id: string) {
-  return BASE_MODEL_ALIASES[id] ?? resolveModelMetadataBaseModel(id);
+// Canonical lab base models are supplied directly by the /v1/catalog endpoint, falling
+// back to canonical resolution against the local models/ directory.
+export function resolveNeosantaraBaseModel(model: NeosantaraSourceModel | string) {
+  if (typeof model === "string") return resolveModelMetadataBaseModel(model);
+  return model.base_model ?? resolveModelMetadataBaseModel(model.id);
 }
-
-// Display names for ids whose canonical entry is a different model (see BASE_MODEL_ALIASES).
-const NAME_OVERRIDES: Record<string, string> = {
-  "grok-code-fast": "Grok Code Fast",
-};
 
 type ReasoningControls = NonNullable<SyncedFullModel["reasoning_options"]>;
 
@@ -171,7 +161,7 @@ export function meetsNeosantaraPublicFilter(model: NeosantaraSourceModel) {
 }
 
 export function shouldSyncNeosantaraModel(model: NeosantaraSourceModel) {
-  if (model.deprecated || resolveNeosantaraBaseModel(model.id) === undefined) return false;
+  if (model.deprecated || resolveNeosantaraBaseModel(model) === undefined) return false;
   if (!meetsNeosantaraPublicFilter(model)) return false;
   if (isImageModel(model)) return true;
   // Skip rather than throw: one missing price costs a single model, not the run.
@@ -188,7 +178,7 @@ export function buildNeosantaraModel(
   model: NeosantaraSourceModel,
   existing: ExistingModel | undefined,
 ): SyncedModel {
-  const baseModel = resolveNeosantaraBaseModel(model.id);
+  const baseModel = resolveNeosantaraBaseModel(model);
   if (baseModel === undefined) {
     throw new Error(`No canonical base model mapping for Neosantara model '${model.id}'`);
   }
@@ -218,7 +208,7 @@ export function buildNeosantaraModel(
   return factorBaseModel(
     baseModel,
     {
-      name: NAME_OVERRIDES[model.id],
+      name: model.override_name,
       reasoning,
       reasoning_options: reasoning ? neosantaraReasoningControls(model, existing) : undefined,
       interleaved: reasoning ? { field: "reasoning_content" as const } : undefined,
@@ -266,7 +256,7 @@ export const neosantara = {
     return [
       `${ids.length} Neosantara models were not created because they lack a canonical \`models/\` entry to inherit, the catalog reported no usable token pricing, or a reasoning model did not report its effort surface.`,
       `Skipped remote IDs: ${ids.map((id) => `\`${id}\``).join(", ")}`,
-      "Add a `models/<provider>/<model>.toml` entry (or an alias in BASE_MODEL_ALIASES) to include them in the next sync.",
+      "Ensure the catalog provides a valid base_model or add a `models/<provider>/<model>.toml` entry to include them in the next sync.",
     ];
   },
   async fetchModels() {

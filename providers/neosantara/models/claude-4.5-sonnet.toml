@@ -1,5 +1,8 @@
 base_model = "anthropic/claude-sonnet-4-5"
-reasoning = false
+reasoning_options = []
+
+[interleaved]
+field = "reasoning_content"
 
 [cost]
 input = 3
