@@ -132,6 +132,12 @@ test("filters to 100k+ context, function calling, image models, and known base m
   expect(
     resolveNeosantaraBaseModel({ id: "grok-code-fast", base_model: "xai/grok-4.3" } as never),
   ).toBe("xai/grok-4.3");
+  expect(
+    resolveNeosantaraBaseModel({ id: "gemini-3.7-flash", base_model: "google/nonexistent-model" } as never),
+  ).toBe("google/gemini-3.7-flash");
+  expect(
+    resolveNeosantaraBaseModel({ id: "unknown-id", base_model: "nonexistent/fake-model" } as never),
+  ).toBeUndefined();
   expect(resolveNeosantaraBaseModel("definitely-not-a-model")).toBeUndefined();
 });
 

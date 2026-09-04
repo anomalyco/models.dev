@@ -66,11 +66,15 @@ function mapping(model: NeosantaraSourceModel) {
   return model.providers[0];
 }
 
-// Canonical lab base models are supplied directly by the /v1/catalog endpoint, falling
-// back to canonical resolution against the local models/ directory.
+// Canonical lab base models are supplied directly by the /v1/catalog endpoint, verified
+// against the local models/ directory before falling back to id-based resolution.
 export function resolveNeosantaraBaseModel(model: NeosantaraSourceModel | string) {
   if (typeof model === "string") return resolveModelMetadataBaseModel(model);
-  return model.base_model ?? resolveModelMetadataBaseModel(model.id);
+  if (model.base_model !== undefined) {
+    const verified = resolveModelMetadataBaseModel(model.base_model);
+    if (verified !== undefined) return verified;
+  }
+  return resolveModelMetadataBaseModel(model.id);
 }
 
 type ReasoningControls = NonNullable<SyncedFullModel["reasoning_options"]>;
