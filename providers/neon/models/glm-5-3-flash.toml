@@ -1,0 +1,25 @@
+base_model = "zhipuai/glm-5.3-flash"
+name = "GLM-5.3 Flash"
+open_weights = true
+release_date = "2026-08-28"
+last_updated = "2026-08-28"
+reasoning_options = [
+  { type = "toggle" },                                                              # API: {"thinking": {"type": "enabled"|"disabled"}}
+  { type = "effort", values = ["minimal", "low", "medium", "high", "xhigh", "max"] }, # API: {"reasoning_effort": <v>}; `none` is rejected
+]
+
+# List rates. First-party zhipuai currently publishes a 50% promo that Neon does not.
+[cost]
+input = 0.15
+output = 0.5
+cache_read = 0.03
+
+# Lab entry also lists video and pdf. A real PNG on /v1/chat/completions returned 200.
+# Video and pdf were not measured.
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+# Lab context is 1_000_000. neon.com/models publishes 1_048_576.
+[limit]
+context = 1_048_576

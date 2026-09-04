@@ -1,0 +1,21 @@
+base_model = "xai/grok-4.6"
+release_date = "2026-08-24"
+last_updated = "2026-08-24"
+reasoning_options = [
+  { type = "toggle" },                                                              # API: {"thinking": {"type": "enabled"|"disabled"}}
+  { type = "effort", values = ["none", "minimal", "low", "medium", "high", "xhigh"] }, # API: {"reasoning_effort": <v>}; `max` is rejected
+]
+# Lab entry carries a knowledge cutoff the website catalog does not publish.
+base_model_omit = ["knowledge"]
+
+# Neon rate is not published yet. Do not copy first-party xAI prices.
+
+# Lab output is 500_000. The gateway names 524_288:
+# 'max_tokens' (100000000) exceeds model maximum (524288). Measured 2026-09-04.
+[limit]
+output = 524_288
+
+[provider]
+npm = "@ai-sdk/openai"
+api = "${NEON_AI_GATEWAY_BASE_URL}/openai/v1"
+shape = "responses"
