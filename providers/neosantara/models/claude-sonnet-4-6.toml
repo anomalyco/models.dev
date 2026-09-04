@@ -1,13 +1,12 @@
 base_model = "anthropic/claude-sonnet-4-6"
 attachment = false
-structured_output = true
 
 [interleaved]
 field = "reasoning_content"
 
 [[reasoning_options]]
 type = "effort"
-values = ["none", "low", "medium", "high", "max"]
+values = ["low", "medium", "high", "max"]
 
 [cost]
 input = 3

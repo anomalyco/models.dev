@@ -1,12 +1,11 @@
 base_model = "anthropic/claude-opus-4-7"
-structured_output = true
 
 [interleaved]
 field = "reasoning_content"
 
 [[reasoning_options]]
 type = "effort"
-values = ["none", "low", "medium", "high", "xhigh", "max"]
+values = ["low", "medium", "high", "xhigh", "max"]
 
 [cost]
 input = 5

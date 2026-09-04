@@ -1,4 +1,3 @@
-import { existsSync, readFileSync } from "node:fs";
 import { z } from "zod";
 import type { ExistingModel, SyncProvider, SyncedFullModel, SyncedModel } from "../index.js";
 import { factorBaseModel, resolveModelMetadataBaseModel } from "./openrouter.js";
@@ -206,7 +205,7 @@ export function buildNeosantaraModel(
       interleaved: reasoning ? { field: "reasoning_content" as const } : undefined,
       attachment: map.vision === true,
       tool_call: map.tools === true,
-      structured_output: model.structured_outputs === true,
+      structured_output: model.structured_outputs === false ? false : undefined,
       modalities: {
         input: modalities(model.architecture.input_modalities),
         output: modalities(model.architecture.output_modalities),

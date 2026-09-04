@@ -1,13 +1,12 @@
 base_model = "anthropic/claude-fable-5"
 attachment = false
-structured_output = true
 
 [interleaved]
 field = "reasoning_content"
 
 [[reasoning_options]]
 type = "effort"
-values = ["none", "low", "medium", "high", "xhigh", "max"]
+values = ["low", "medium", "high", "xhigh", "max"]
 
 [cost]
 input = 10
