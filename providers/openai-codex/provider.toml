@@ -1,0 +1,9 @@
+# ChatGPT subscription models served by the Codex backend use limits that differ
+# from direct OpenAI API access. This provider intentionally has no API-key env.
+# https://github.com/openai/codex/releases/tag/rust-v0.144.6
+# https://github.com/openai/codex/blob/rust-v0.145.0/codex-rs/models-manager/models.json
+name = "OpenAI Codex"
+env = []
+npm = "@ai-sdk/openai"
+doc = "https://github.com/openai/codex"
+api = "https://chatgpt.com/backend-api/codex"

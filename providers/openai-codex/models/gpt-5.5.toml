@@ -1,0 +1,13 @@
+# Codex exposes a 272K usable input window for GPT-5.5. The 400K total keeps
+# the model's separate 128K output allowance explicit.
+# https://github.com/anomalyco/models.dev/issues/3183
+base_model = "openai/gpt-5.5"
+reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh"] }]
+
+[limit]
+context = 400_000
+input = 272_000
+output = 128_000
+
+[experimental.modes.fast]
+provider = { body = { service_tier = "priority" } }

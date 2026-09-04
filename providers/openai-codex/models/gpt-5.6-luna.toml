@@ -1,0 +1,14 @@
+# OpenAI corrected the Codex GPT-5.6 window to 272K in 0.144.6. The 400K total
+# keeps the model's separate 128K output allowance explicit.
+# https://github.com/openai/codex/releases/tag/rust-v0.144.6
+# https://github.com/openai/codex/blob/rust-v0.145.0/codex-rs/models-manager/models.json
+base_model = "openai/gpt-5.6-luna"
+reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh", "max"] }]
+
+[limit]
+context = 400_000
+input = 272_000
+output = 128_000
+
+[experimental.modes.fast]
+provider = { body = { service_tier = "priority" } }

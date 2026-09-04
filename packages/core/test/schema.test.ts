@@ -131,6 +131,22 @@ describe("provider schema", () => {
   });
 });
 
+describe("provider schema", () => {
+  test("accepts OAuth-only providers without environment credentials", () => {
+    expect(
+      Provider.safeParse({
+        id: "openai-codex",
+        name: "OpenAI Codex",
+        env: [],
+        npm: "@ai-sdk/openai",
+        api: "https://chatgpt.com/backend-api/codex",
+        doc: "https://github.com/openai/codex",
+        models: {},
+      }).success,
+    ).toBe(true);
+  });
+});
+
 function baseModel(overrides: Partial<AuthoredModelData>) {
   return {
     id: "example/model",
