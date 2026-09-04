@@ -265,6 +265,8 @@ test("toggle models carry a wire-comment header; effort models carry none", () =
 
   // minimax-m2.7 documents always-on reasoning.
   expect(neosantaraReasoningHeader([], "minimax-m2.7")).toContain("Always-on thinking");
+  // kimi-k2-thinking documents dedicated thinking variant.
+  expect(neosantaraReasoningHeader([], "kimi-k2-thinking")).toContain("Dedicated thinking variant");
   // muse-glimmer-30b documents external baseline sources.
   expect(neosantaraReasoningHeader([{ type: "effort", values: ["low"] as never }], "muse-glimmer-30b")).toContain(
     "https://huggingface.co/meta-models/Muse-Glimmer-30B",

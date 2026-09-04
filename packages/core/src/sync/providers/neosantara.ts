@@ -124,6 +124,11 @@ export function neosantaraReasoningHeader(
 # Matches lab providers/minimax/models/MiniMax-M2.7.toml and peers OpenRouter/FastRouter/Cortecs.
 `;
   }
+  if (modelId === "kimi-k2-thinking") {
+    return `# Dedicated thinking variant: always-on reasoning with no caller control.
+# Matches lab providers/moonshotai/models/kimi-k2-thinking.toml and peers OpenRouter/Vercel.
+`;
+  }
   if (modelId === "muse-glimmer-30b") {
     return `# Sources:
 # https://huggingface.co/meta-models/Muse-Glimmer-30B

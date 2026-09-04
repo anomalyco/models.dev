@@ -12,9 +12,10 @@
 #   ["none"]    -> toggle (reasoning_effort = "none" is off; carries a leading wire comment)
 #   graded set  -> effort, using the model's real levels (lab + same-surface peers), never a
 #                  full enum. Host ceiling is none|minimal|low|medium|high|xhigh|max.
-# When has_toggle is true, toggle is authored alongside graded effort (excluding "none").
-# A reasoning model that does not report a surface is skipped and reported (its controls are
-# unknown, not always-on). Capability flags come from the catalog, not lab metadata.
+# When off is expressed via reasoning_effort = "none" alongside graded levels, AGENTS.md strictly
+# requires authoring only `effort` with `none` in values and NO toggle. Only binary on/off models
+# (no graded levels, only ["none"]) author toggle alone with a wire comment. Dedicated headers
+# document always-on relays (minimax-m2.7, kimi-k2-thinking) and external citations.
 #
 # Streaming: Neosantara normalizes reasoning output across all upstream providers into the
 # OpenAI-compatible delta.reasoning_content field (see https://docs.neosantara.xyz/en/capability/reasoning).
