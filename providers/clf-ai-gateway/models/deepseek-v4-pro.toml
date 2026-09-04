@@ -1,0 +1,24 @@
+base_model = "deepseek/deepseek-v4-pro-0813"
+
+# Wire: only OpenAI-style `reasoning_effort` is forwarded, verbatim. No on/off toggle
+# field is forwarded on this surface, so there is no "toggle" option to expose.
+# Host accept-set for deepseek-v4-pro: low, medium, high, xhigh (anything else -> 400 naming this set; public
+# in GET /v1/public/models -> capabilities.reasoning_efforts). Only the levels with a
+# MEASURED distinct effect are advertised — same prompt, 3 samples per level, median
+# reasoning_tokens, 2026-09-02: low 282 / medium 214 / high 746 / xhigh 4124 -> three graded behaviors; medium is an inert alias of low.
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "xhigh"]
+
+# Current promotional pricing (40% off list), USD/MTok — what the API bills today.
+# Live source: GET /v1/public/models (nano-USD per token; /1000 = USD/MTok).
+[cost]
+input = 0.792
+output = 2.376
+cache_read = 0.026
+
+# This gateway's serving surface, measured (context probed to the boundary;
+# output verified via max_completion_tokens probes).
+[limit]
+context = 1_048_576
+output = 131_072

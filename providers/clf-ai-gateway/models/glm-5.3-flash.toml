@@ -1,0 +1,29 @@
+base_model = "zhipuai/glm-5.3-flash"
+
+# Wire: only OpenAI-style `reasoning_effort` is forwarded, verbatim. No on/off toggle
+# field is forwarded on this surface, so there is no "toggle" option to expose.
+# Host accept-set for glm-5.3-flash: low, medium, high, xhigh (anything else -> 400 naming this set; public
+# in GET /v1/public/models -> capabilities.reasoning_efforts). Only the levels with a
+# MEASURED distinct effect are advertised — same prompt, 3 samples per level, median
+# reasoning_tokens, 2026-09-02: low 27 / medium 289 / high 31 / xhigh 295 -> two behaviors: {low,high} minimal, {medium,xhigh} full; medium and high are inert aliases.
+[[reasoning_options]]
+type = "effort"
+values = ["low", "xhigh"]
+
+# Current promotional pricing (40% off list), USD/MTok — what the API bills today.
+# Live source: GET /v1/public/models (nano-USD per token; /1000 = USD/MTok).
+[cost]
+input = 0.09
+output = 0.3
+cache_read = 0.018
+
+# This gateway's serving surface, measured (context probed to the boundary;
+# output verified via max_completion_tokens probes).
+[limit]
+context = 1_048_576
+output = 131_072
+
+# Gateway accepts text + image_url parts only (no video/pdf on this surface).
+[modalities]
+input = ["text", "image"]
+output = ["text"]
