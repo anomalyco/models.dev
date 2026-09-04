@@ -1,13 +1,6 @@
-name = "Qwen3 Coder Next"
-description = "Open-weight Qwen3 Coder model built for coding agents, with a 256K context and strong error recovery for long agentic sessions."
-family = "qwen"
-release_date = "2026-02-10"
-last_updated = "2026-02-10"
-attachment = false
-reasoning = false
-temperature = true
-tool_call = true
-open_weights = true
+# Context: kiro-cli chat --list-models --format json reports 256000 for qwen3-coder-next
+# Source: https://kiro.dev/docs/cli/models/
+base_model = "alibaba/qwen3-coder-next"
 
 [cost]
 input = 0
@@ -16,7 +9,3 @@ output = 0
 [limit]
 context = 256_000
 output = 64_000
-
-[modalities]
-input = ["text"]
-output = ["text"]
