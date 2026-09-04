@@ -17,6 +17,7 @@ const CatalogProvider = z
     tools: z.boolean().optional(),
     reasoning: z.boolean().optional(),
     reasoning_efforts: z.array(z.string()).optional(),
+    has_toggle: z.boolean().optional(),
   })
   .passthrough();
 
@@ -97,14 +98,30 @@ function hasReasoningEfforts(model: NeosantaraSourceModel) {
 
 // The catalog reports each model's real reasoning surface (resolved host-side from the model's
 // models.dev lab entry): [] = always-on (no caller control), ["none"] = on/off toggle, otherwise
-// the graded effort levels. Copied verbatim (llmgateway convention), intersected with the host
-// enum defensively. Only called once the surface is known (see shouldSyncNeosantaraModel).
-export function neosantaraReasoningControls(model: NeosantaraSourceModel): ReasoningControls {
-  const efforts = (mapping(model).reasoning_efforts ?? []).filter((effort) =>
+// the graded effort levels. When a model's lab entry exposes toggle + graded effort (e.g. Sonnet 5),
+// the host reports `has_toggle: true`, authoring `toggle` alongside the graded effort ladder.
+export function neosantaraReasoningControls(
+  model: NeosantaraSourceModel,
+  existing?: ExistingModel,
+): ReasoningControls {
+  const map = mapping(model);
+  const efforts = (map.reasoning_efforts ?? []).filter((effort) =>
     HOST_EFFORT_SET.has(effort),
   );
   if (efforts.length === 0) return [];
   if (efforts.length === 1 && efforts[0] === "none") return [{ type: "toggle" }];
+
+  const hasToggle =
+    map.has_toggle === true ||
+    existing?.reasoning_options?.some((option) => option.type === "toggle");
+
+  if (hasToggle && !efforts.includes("none")) {
+    return [
+      { type: "toggle" },
+      { type: "effort", values: efforts as never },
+    ];
+  }
+
   return [{ type: "effort", values: efforts as never }];
 }
 
@@ -201,7 +218,7 @@ export function buildNeosantaraModel(
     {
       name: NAME_OVERRIDES[model.id],
       reasoning,
-      reasoning_options: reasoning ? neosantaraReasoningControls(model) : undefined,
+      reasoning_options: reasoning ? neosantaraReasoningControls(model, existing) : undefined,
       interleaved: reasoning ? { field: "reasoning_content" as const } : undefined,
       attachment: map.vision === true,
       tool_call: map.tools === true,

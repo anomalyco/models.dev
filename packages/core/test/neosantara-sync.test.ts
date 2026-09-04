@@ -190,6 +190,16 @@ test("copies the catalog's per-model reasoning surface verbatim (llmgateway conv
   ]);
   expect(ctl(["none", "high", "max"])).toEqual([{ type: "effort", values: ["none", "high", "max"] }]);
   expect(ctl(["low", "high", "max", "bogus"])).toEqual([{ type: "effort", values: ["low", "high", "max"] }]);
+
+  // When a model has has_toggle: true alongside graded levels, emit toggle + effort.
+  expect(
+    neosantaraReasoningControls({
+      providers: [{ reasoning: true, reasoning_efforts: ["low", "medium", "high", "xhigh", "max"], has_toggle: true }],
+    } as never),
+  ).toEqual([
+    { type: "toggle" },
+    { type: "effort", values: ["low", "medium", "high", "xhigh", "max"] },
+  ]);
 });
 
 test("skips a reasoning model whose effort surface is unknown (missing != always-on)", () => {
