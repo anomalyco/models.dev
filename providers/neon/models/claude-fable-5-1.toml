@@ -2,7 +2,7 @@
 # Effort is the Anthropic Messages control: thinking.type adaptive + output_config.effort.
 # No toggle: thinking.type.disabled is rejected, same as claude-fable-5.
 base_model = "anthropic/claude-fable-5-1"
-# Databricks translates json_schema on /v1/chat/completions via forced tool use;
+# The gateway translates json_schema on /v1/chat/completions via forced tool use;
 # this model rejects that. Measured 2026-09-04:
 # INVALID_PARAMETER_VALUE: Structured output is not supported for this model
 # because its translation requires forced tool use, which newer Anthropic models reject.
