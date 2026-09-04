@@ -150,11 +150,11 @@ test("clears authored tiers and cache_write the table no longer lists", () => {
 
 test("resolves preview and alias filenames", () => {
   const preview = parseGitHubCopilotPricing([
-    row({ model: "Gemini 3.1 Pro", provider: "google", release_status: "Public preview" }),
+    row({ model: "Example Model", release_status: "Public preview" }),
   ]);
   expect(githubCopilot.translateModel(preview[0]!, translationContext({
-    "gemini-3.1-pro-preview": authoredTerra,
-  }))?.id).toBe("gemini-3.1-pro-preview");
+    "example-model-preview": authoredTerra,
+  }))?.id).toBe("example-model-preview");
 
   const alias = parseGitHubCopilotPricing([row({ model: "MAI-Code-1-Flash", provider: "microsoft" })]);
   expect(githubCopilot.translateModel(alias[0]!, translationContext({
@@ -163,9 +163,9 @@ test("resolves preview and alias filenames", () => {
 
   // An exact slug match wins over both fallbacks.
   expect(githubCopilot.translateModel(preview[0]!, translationContext({
-    "gemini-3.1-pro": authoredTerra,
-    "gemini-3.1-pro-preview": authoredTerra,
-  }))?.id).toBe("gemini-3.1-pro");
+    "example-model": authoredTerra,
+    "example-model-preview": authoredTerra,
+  }))?.id).toBe("example-model");
   expect(githubCopilot.translateModel(alias[0]!, translationContext({
     "mai-code-1-flash": authoredTerra,
     "mai-code-1-flash-picker": authoredTerra,
@@ -182,6 +182,36 @@ test("skips ignored rows silently and unmatched rows with an ID", () => {
   const [unmatched] = parseGitHubCopilotPricing([row({ model: "Brand New Model" })]);
   expect(githubCopilot.translateModel(unmatched!, translationContext({}))).toBeUndefined();
   expect(githubCopilot.sourceID(unmatched!)).toBe("brand-new-model");
+});
+
+test.each([
+  "Claude Sonnet 4",
+  "Claude Sonnet 4.5",
+  "Claude Opus 4.5",
+  "Claude Opus 4.6",
+  "Gemini 3.1 Pro",
+  "GPT-4.1",
+  "GPT-5.2",
+  "GPT-5.2-Codex",
+  "Raptor mini",
+])("ignores retired %s for translation and missing-model discovery", (name) => {
+  const [model] = parseGitHubCopilotPricing([row({ model: name, release_status: "Public preview" })]);
+  expect(githubCopilot.sourceID(model!)).toBeUndefined();
+  expect(githubCopilot.translateModel(model!, translationContext({}))).toBeUndefined();
+  expect(githubCopilot.translateModel(model!, translationContext({
+    [model!.slug]: authoredTerra,
+  }))).toBeUndefined();
+  expect(githubCopilot.translateModel(model!, translationContext({
+    [`${model!.slug}-preview`]: authoredTerra,
+  }))).toBeUndefined();
+});
+
+test("keeps Sonnet 4.6 eligible for annual-plan subscribers", () => {
+  const [model] = parseGitHubCopilotPricing([row({ model: "Claude Sonnet 4.6", provider: "anthropic" })]);
+  expect(githubCopilot.sourceID(model!)).toBe("claude-sonnet-4.6");
+  expect(githubCopilot.translateModel(model!, translationContext({
+    "claude-sonnet-4.6": authoredTerra,
+  }))?.id).toBe("claude-sonnet-4.6");
 });
 
 const pricingYaml = `
