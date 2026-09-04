@@ -1,7 +1,9 @@
 # Price source: https://api.kymaapi.com/v1/models (public, unauthenticated), accessed 2026-09-04.
+# Toggle: reasoning_effort = "none" disables thinking.
+# Effort: reasoning_effort = low|high|max selects depth when enabled.
 base_model = "moonshotai/kimi-k3"
 
-reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "high", "max"] }]
 
 [cost]
 input = 4.05

@@ -1,7 +1,9 @@
 # Price source: https://api.kymaapi.com/v1/models (public, unauthenticated), accessed 2026-09-04.
+# Toggle: reasoning_effort = "none" disables thinking.
+# Effort: reasoning_effort = low|medium|high|xhigh|max selects depth when enabled.
 base_model = "anthropic/claude-sonnet-5"
 
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
 
 [cost]
 input = 2.7

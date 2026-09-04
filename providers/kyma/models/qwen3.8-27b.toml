@@ -1,7 +1,9 @@
 # Price source: https://api.kymaapi.com/v1/models (public, unauthenticated), accessed 2026-09-04.
+# Toggle: reasoning_effort = "none" disables thinking.
+# Effort: reasoning_effort = low|medium|xhigh selects depth when enabled.
 base_model = "alibaba/qwen3.8-27b"
 
-reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "xhigh"] }]
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "medium", "xhigh"] }]
 
 [cost]
 input = 0.567
