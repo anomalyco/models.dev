@@ -1,0 +1,35 @@
+name = "GPT-6 Astra"
+description = "GPT model for general reasoning, writing, coding, and tool-assisted tasks"
+family = "gpt"
+release_date = "2026-09-04"
+last_updated = "2026-09-04"
+attachment = true
+reasoning = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high", "xhigh", "max"]
+
+[cost]
+input = 12.5
+output = 62.5
+cache_read = 1.25
+cache_write = 15.625
+
+[[cost.tiers]]
+tier = { type = "context", size = 272_000 }
+input = 25
+output = 93.75
+cache_read = 2.5
+cache_write = 31.25
+
+[limit]
+context = 1_050_000
+output = 128_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
