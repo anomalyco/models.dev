@@ -1,14 +1,5 @@
-name = "OpenAI: GPT-6 Astra ($$$$)"
+base_model = "openai/gpt-6-astra"
 description = "GPT-6 Astra is OpenAI's flagship model for demanding end-to-end work. It is suited for advanced analysis, software engineering, deep research, scientific work, and document creation, with particular strengths in long-horizon..."
-family = "gpt"
-release_date = "2026-09-04"
-last_updated = "2026-09-04"
-attachment = true
-reasoning = true
-temperature = false
-tool_call = true
-structured_output = true
-open_weights = false
 
 [[reasoning_options]]
 type = "effort"
@@ -19,11 +10,3 @@ input = 10
 output = 50
 cache_read = 1
 cache_write = 12.5
-
-[limit]
-context = 1_050_000
-output = 128_000
-
-[modalities]
-input = ["pdf", "image", "text"]
-output = ["text"]
