@@ -1,0 +1,23 @@
+name = "Qwen2.5 7B Instruct"
+description = "7B-parameter Qwen2.5 instruct model for chat, coding, and tool use"
+family = "qwen"
+release_date = "2024-09-19"
+last_updated = "2024-09-19"
+attachment = false
+reasoning = false
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = true
+
+[limit]
+context = 32_768
+output = 8_192
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/Qwen/Qwen2.5-7B-Instruct"

@@ -1,0 +1,14 @@
+# Source: GET https://neuronpool.damnknee.workers.dev/v1/models (CATALOG_SEED 2026-09-03)
+# Effort: reasoning_effort = low|medium|high (gpt-oss native; NeuronPool forwards OpenAI-compat extras)
+base_model = "openai/gpt-oss-20b"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high"]
+
+[cost]
+input = 0.015
+output = 0.070
+
+[limit]
+output = 4_096

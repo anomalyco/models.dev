@@ -1,0 +1,12 @@
+# Source: GET https://neuronpool.damnknee.workers.dev/v1/models (CATALOG_SEED 2026-09-03)
+# Toggle: enable_thinking true|false (Qwen3 native; NeuronPool forwards OpenAI-compat extras)
+base_model = "alibaba/qwen3-30b-a3b"
+
+reasoning_options = [{ type = "toggle" }]
+
+[cost]
+input = 0.060
+output = 0.090
+
+[limit]
+output = 4_096

@@ -1,0 +1,22 @@
+name = "Gemma 3 12B IT"
+description = "12B-parameter Gemma 3 instruction-tuned model for chat and reasoning"
+family = "gemma"
+release_date = "2025-03-12"
+last_updated = "2025-03-12"
+attachment = false
+reasoning = false
+temperature = true
+tool_call = true
+open_weights = true
+
+[limit]
+context = 131_072
+output = 8_192
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/google/gemma-3-12b-it"

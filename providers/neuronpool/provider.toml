@@ -1,0 +1,10 @@
+# Live coordinator until T66 (api.neuronpool.dev does not resolve yet).
+# Source: GET /v1/models 200 on neuronpool.damnknee.workers.dev.
+# NeuronPool OpenAI-compatible provider for models.dev (T81.1).
+# Costs are USD per million tokens from GET /v1/models (pricing.input / pricing.output).
+# Regenerated from CATALOG_SEED 2026-09-03.
+name = "NeuronPool"
+npm = "@ai-sdk/openai-compatible"
+env = ["NEURONPOOL_API_KEY"]
+api = "https://neuronpool.damnknee.workers.dev/v1"
+doc = "https://neuronpool.damnknee.workers.dev/v1/models"

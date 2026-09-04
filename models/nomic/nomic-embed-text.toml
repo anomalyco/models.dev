@@ -1,0 +1,23 @@
+# Embedding model. NeuronPool serves it at POST /v1/embeddings.
+name = "Nomic Embed Text"
+description = "Open-weight text embedding model (nomic-embed-text) for retrieval and clustering"
+family = "text-embedding"
+release_date = "2024-02-01"
+last_updated = "2024-02-01"
+attachment = false
+reasoning = false
+temperature = false
+tool_call = false
+open_weights = true
+
+[limit]
+context = 8_192
+output = 8_192
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/nomic-ai/nomic-embed-text-v1.5"

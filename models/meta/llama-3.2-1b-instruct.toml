@@ -1,0 +1,24 @@
+# Lab metadata — NeuronPool hosts this instruct id; models.dev only had llama-3.2-1b.
+name = "Llama-3.2-1B-Instruct"
+description = "1B-parameter Llama 3.2 instruct model for on-device and low-cost chat"
+family = "llama"
+release_date = "2024-09-25"
+last_updated = "2024-09-25"
+attachment = false
+reasoning = false
+temperature = true
+tool_call = true
+knowledge = "2023-12"
+open_weights = true
+
+[limit]
+context = 131_072
+output = 4_096
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/meta-llama/Llama-3.2-1B-Instruct"
