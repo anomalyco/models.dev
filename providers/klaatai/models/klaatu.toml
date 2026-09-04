@@ -1,0 +1,23 @@
+# Model alias and per-tier billing: https://klaatai.com/models
+# API pricing: https://klaatai.com/pricing
+# Context and output limits: https://github.com/KlaatAI/klaatcode/blob/main/src/screens/tiers.ts
+# Klaatu is billed at the tier that serves each request, so a single flat cost is intentionally omitted.
+name = "Klaatu"
+description = "KlaatAI routing model that selects a suitable model tier for each request and can escalate or fail over between providers"
+family = "auto"
+release_date = "2026-07-17"
+last_updated = "2026-09-05"
+attachment = false
+reasoning = true
+reasoning_options = []
+tool_call = true
+open_weights = false
+
+[limit]
+context = 256_000
+input = 220_000
+output = 32_000
+
+[modalities]
+input = ["text"]
+output = ["text"]
