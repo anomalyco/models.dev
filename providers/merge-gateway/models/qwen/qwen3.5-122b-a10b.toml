@@ -1,8 +1,6 @@
 # Source: https://api-gateway.merge.dev/v1/models?model=qwen%2Fqwen3.5-122b-a10b (accessed 2026-07-21)
 base_model = "alibaba/qwen3.5-122b-a10b"
 name = "Qwen3.5 122B A10B"
-attachment = false
-structured_output = false
 
 [[reasoning_options]]
 type = "toggle"
@@ -13,8 +11,8 @@ output = 0.917
 cache_read = 0.023
 
 [limit]
-context = 131_072
-output = 32_768
+context = 256_000
+output = 64_000
 
 [modalities]
-input = ["text"]
+input = ["text", "image"]
