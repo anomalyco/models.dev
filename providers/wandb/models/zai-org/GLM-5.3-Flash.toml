@@ -1,8 +1,10 @@
+# W&B lists always-on reasoning with low/high/max effort; no on/off toggle.
+# https://trace.wandb.ai/inference/catalog/models
 base_model = "zhipuai/glm-5.3-flash"
 name = "GLM 5.3 Flash"
 description = "GLM-5.3-Flash is a natively multimodal model with 320B total parameters and 18B active parameters."
 open_weights = true
-reasoning_options = []
+reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]
 
 [cost]
 input = 0.15
