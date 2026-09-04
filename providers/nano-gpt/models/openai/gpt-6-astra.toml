@@ -1,17 +1,9 @@
+base_model = "openai/gpt-6-astra"
 name = "GPT 6 Astra"
-description = "OpenAI's most capable model for the hardest end-to-end work, with state-of-the-art performance in computer use, browsing, software engineering, science, and professional tasks. Astra is designed to carry long, multistep workflows across code, browsers, and professional software through to a finished result."
-family = "gpt"
-release_date = "2026-09-03"
-last_updated = "2026-09-03"
-attachment = true
-reasoning = true
-tool_call = true
-structured_output = true
-open_weights = false
 
 [[reasoning_options]]
 type = "effort"
-values = ["none", "low", "medium", "high", "xhigh", "max"]
+values = ["low", "medium", "high", "xhigh", "max"]
 
 [cost]
 input = 10
@@ -20,10 +12,4 @@ cache_read = 1
 cache_write = 12.5
 
 [limit]
-context = 1_050_000
 input = 1_050_000
-output = 128_000
-
-[modalities]
-input = ["text", "image", "pdf"]
-output = ["text"]
