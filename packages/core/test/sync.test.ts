@@ -1,5 +1,5 @@
 import { expect, test } from "bun:test";
-import { mkdir, mkdtemp, readFile, rm } from "node:fs/promises";
+import { copyFile, mkdir, mkdtemp, readFile, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 
@@ -10,7 +10,17 @@ import {
   parseAnthropicPricing,
   type AnthropicModel,
 } from "../src/sync/providers/anthropic.js";
-import { buildDeepInfraModel, type DeepInfraModel } from "../src/sync/providers/deepinfra.js";
+import { buildCortecsModel, cortecs, type CortecsModel } from "../src/sync/providers/cortecs.js";
+import {
+  buildCrossModel,
+  CrossModelResponse,
+  type CrossModelModel,
+} from "../src/sync/providers/crossmodel.js";
+import {
+  buildDeepInfraModel,
+  resolveDeepInfraBaseModel,
+  type DeepInfraModel,
+} from "../src/sync/providers/deepinfra.js";
 import {
   buildDigitalOceanModel,
   digitalocean,
@@ -19,7 +29,22 @@ import {
   resolveDigitalOceanBaseModel,
   type DigitalOceanSourceModel,
 } from "../src/sync/providers/digitalocean.js";
+import {
+  buildEdenAIModel,
+  collectFirstPartyBaseModels,
+  edenai,
+  reasoningOptionsFor,
+  resolveEdenAIBaseModel,
+  type EdenAIModel,
+} from "../src/sync/providers/edenai.js";
 import { buildHyperModel, type HyperModel } from "../src/sync/providers/hyper.js";
+import {
+  buildInceptronModel,
+  parseInceptronModels,
+  perTokenToPerMillion,
+  type InceptronModel,
+  type ReadyInceptronModel,
+} from "../src/sync/providers/inceptron.js";
 import {
   buildEmpiriolabsModel,
   empiriolabs,
@@ -32,7 +57,13 @@ import {
   resolveCanonicalBaseModel,
   type OpenRouterModel,
 } from "../src/sync/providers/openrouter.js";
-import { buildLLMGatewayModel, type LLMGatewayModel } from "../src/sync/providers/llmgateway.js";
+import {
+  buildLLMGatewayMappedModel,
+  buildLLMGatewayModel,
+  llmgateway,
+  llmgatewayProviders,
+  type LLMGatewayModel,
+} from "../src/sync/providers/llmgateway.js";
 import {
   buildMergeGatewayModel,
   fetchMergeGatewayModels,
@@ -49,13 +80,14 @@ import {
   type NanoGptModel,
 } from "../src/sync/providers/nano-gpt.js";
 import { openai, parseOpenAIModels } from "../src/sync/providers/openai.js";
+import { ofox } from "../src/sync/providers/ofox.js";
 import { pioneer } from "../src/sync/providers/pioneer.js";
 import { google, shouldTrackGoogleModel } from "../src/sync/providers/google.js";
 import { buildTinfoilModel, tinfoil, type TinfoilModel } from "../src/sync/providers/tinfoil.js";
 import { resolveVeniceBaseModel } from "../src/sync/providers/venice.js";
 import { buildVercelModel, vercel } from "../src/sync/providers/vercel.js";
 import { buildWandbModel, type WandbModel } from "../src/sync/providers/wandb.js";
-import { buildXAIModel } from "../src/sync/providers/xai.js";
+import { buildXAIModel, xai } from "../src/sync/providers/xai.js";
 
 function anthropicModel(overrides: Partial<AnthropicModel> = {}): AnthropicModel {
   return {
@@ -113,6 +145,380 @@ function nanoGptModel(overrides: Partial<NanoGptModel> = {}): NanoGptModel {
     ...overrides,
   };
 }
+
+function crossModelModel(overrides: Partial<CrossModelModel> = {}): CrossModelModel {
+  return {
+    id: "qwen/qwen3.8-max",
+    vendor_code: "qwen",
+    display_name: "Qwen3.8 Max",
+    context_window_tokens: 1_000_000,
+    max_output_tokens: 131_072,
+    modalities: { input: ["text", "image", "video"], output: ["text"] },
+    capabilities: {
+      json: true,
+      reasoning: { toggle: true },
+    },
+    currency: "USD",
+    pricing: {
+      tiers: [
+        {
+          threshold: 0,
+          input_micro_per_1m: 1_880_000,
+          output_micro_per_1m: 5_630_000,
+        },
+      ],
+    },
+    ...overrides,
+  };
+}
+
+function inceptronModel(overrides: Partial<InceptronModel> = {}): InceptronModel {
+  return {
+    id: "zai-org/GLM-5.2",
+    name: "GLM 5.2",
+    context_length: 1_048_576,
+    max_output_length: 1_048_576,
+    input_modalities: ["text"],
+    output_modalities: ["text"],
+    supported_features: ["chat", "tools", "reasoning", "structured_outputs"],
+    supported_sampling_parameters: ["temperature", "reasoning_effort"],
+    pricing: {
+      prompt: "0.00000075",
+      completion: "0.0000029",
+      input_cache_reads: "0.00000017",
+      input_cache_writes: "0",
+    },
+    models_dev: {
+      base_model: "zhipuai/glm-5.2",
+      reasoning_options: [{ type: "effort", values: ["high", "max"] }],
+      interleaved: { field: "reasoning_content" },
+      status: "alpha",
+    },
+    ...overrides,
+  };
+}
+
+function readyInceptronModel(overrides: Partial<InceptronModel> = {}): ReadyInceptronModel {
+  return parseInceptronModels({
+    object: "list",
+    data: [inceptronModel(overrides)],
+  })[0]!;
+}
+
+test("builds current Inceptron models from explicit base metadata", () => {
+  const models = parseInceptronModels({
+    object: "list",
+    data: [
+      inceptronModel({
+        id: "MiniMaxAI/MiniMax-M2.5",
+        name: "MiniMax M2.5",
+        context_length: 196_608,
+        max_output_length: 196_608,
+        pricing: { prompt: "0.00000022", completion: "0.0000009" },
+        models_dev: {
+          base_model: "minimax/MiniMax-M2.5",
+          reasoning_options: [{ type: "effort", values: ["low", "medium", "high"] }],
+        },
+      }),
+      inceptronModel(),
+      inceptronModel({
+        id: "moonshotai/Kimi-K2.6",
+        name: "Kimi K2.6",
+        context_length: 262_144,
+        max_output_length: 262_144,
+        input_modalities: ["text", "image"],
+        supported_sampling_parameters: ["temperature"],
+        pricing: { prompt: "0.0000006", completion: "0.00000341" },
+        models_dev: {
+          base_model: "moonshotai/kimi-k2.6",
+          reasoning_options: [],
+          interleaved: { field: "reasoning_content" },
+        },
+      }),
+      inceptronModel({
+        id: "moonshotai/Kimi-K2.7-Code",
+        name: "Kimi K2.7 Code",
+        context_length: 262_144,
+        max_output_length: 262_144,
+        input_modalities: ["text", "image"],
+        supported_sampling_parameters: ["temperature"],
+        pricing: { prompt: "0.0000007", completion: "0.0000035" },
+        models_dev: {
+          base_model: "moonshotai/kimi-k2.7-code",
+          reasoning_options: [],
+          interleaved: { field: "reasoning_content" },
+        },
+      }),
+      inceptronModel({
+        id: "deepseek-ai/DeepSeek-V4-Flash-0731",
+        name: "DeepSeek V4 Flash 0731",
+        context_length: 1_048_576,
+        max_output_length: 1_048_576,
+        pricing: {
+          prompt: "0.00000013",
+          completion: "0.00000028",
+          input_cache_reads: "0.00000003",
+          input_cache_writes: "0",
+        },
+        models_dev: {
+          base_model: "deepseek/deepseek-v4-flash-0731",
+          reasoning_options: [{ type: "effort", values: ["high", "max"] }],
+          interleaved: { field: "reasoning_content" },
+        },
+      }),
+    ],
+  });
+
+  const built = models.map(buildInceptronModel);
+  expect(built.map((model) => "base_model" in model ? model.base_model : undefined)).toEqual([
+    "minimax/MiniMax-M2.5",
+    "zhipuai/glm-5.2",
+    "moonshotai/kimi-k2.6",
+    "moonshotai/kimi-k2.7-code",
+    "deepseek/deepseek-v4-flash-0731",
+  ]);
+  expect(built[0]).toMatchObject({
+    reasoning_options: [{ type: "effort", values: ["low", "medium", "high"] }],
+    cost: { input: 0.22, output: 0.9 },
+  });
+  expect(built[1]).toMatchObject({
+    name: "GLM 5.2",
+    reasoning_options: [{ type: "effort", values: ["high", "max"] }],
+    interleaved: { field: "reasoning_content" },
+    status: "alpha",
+    cost: { input: 0.75, output: 2.9, cache_read: 0.17, cache_write: 0 },
+    limit: { context: 1_048_576, output: 1_048_576 },
+  });
+  expect(built[2]).toMatchObject({
+    reasoning_options: [],
+    interleaved: { field: "reasoning_content" },
+    modalities: { input: ["text", "image"] },
+  });
+  expect(built[3]).toMatchObject({
+    reasoning_options: [],
+    interleaved: { field: "reasoning_content" },
+  });
+  expect(built[4]).toMatchObject({
+    reasoning_options: [{ type: "effort", values: ["high", "max"] }],
+    interleaved: { field: "reasoning_content" },
+    cost: { input: 0.13, output: 0.28, cache_read: 0.03, cache_write: 0 },
+    limit: { context: 1_048_576, output: 1_048_576 },
+  });
+});
+
+test("converts Inceptron per-token decimal prices exactly", () => {
+  expect(perTokenToPerMillion("0")).toBe(0);
+  expect(perTokenToPerMillion("0.00000005")).toBe(0.05);
+  expect(perTokenToPerMillion("0.00000341")).toBe(3.41);
+  expect(perTokenToPerMillion("1.25")).toBe(1_250_000);
+});
+
+test("rejects incomplete or contradictory ready Inceptron catalogs", () => {
+  expect(() =>
+    parseInceptronModels({ object: "list", data: [inceptronModel({ models_dev: undefined })] })
+  ).toThrow("missing models_dev metadata");
+  expect(() =>
+    parseInceptronModels({
+      object: "list",
+      data: [inceptronModel(), inceptronModel()],
+    })
+  ).toThrow("Duplicate ready Inceptron model ID");
+  expect(() =>
+    readyInceptronModel({
+      models_dev: { base_model: "zhipuai/not-a-real-model", reasoning_options: [] },
+      supported_sampling_parameters: [],
+    })
+  ).toThrow("missing base model");
+  expect(() =>
+    readyInceptronModel({ pricing: { prompt: "1e-6", completion: "0.1" } })
+  ).toThrow("Invalid Inceptron per-token price");
+  expect(() => readyInceptronModel({ input_modalities: ["text", "binary"] }))
+    .toThrow("unsupported input modality");
+  expect(() =>
+    readyInceptronModel({
+      models_dev: { base_model: "zhipuai/glm-5.2", reasoning_options: [] },
+    })
+  ).toThrow("reasoning_effort exactly when effort options are exposed");
+});
+
+test("ignores not-ready Inceptron models while validating every ready model", () => {
+  const ready = inceptronModel();
+  const notReady = inceptronModel({
+    id: "staged/model",
+    is_ready: false,
+    models_dev: undefined,
+    input_modalities: ["unsupported-but-ignored"],
+    pricing: { prompt: "malformed", completion: "malformed" },
+  });
+  expect(parseInceptronModels({ object: "list", data: [ready, notReady] })).toHaveLength(1);
+
+  expect(() =>
+    parseInceptronModels({
+      object: "list",
+      data: [ready, inceptronModel({ id: "ready/model", models_dev: undefined })],
+    })
+  ).toThrow("missing models_dev metadata");
+});
+
+test("syncs authoritative Inceptron additions, updates, and removals", async () => {
+  const root = await mkdtemp(path.join(tmpdir(), "models-dev-inceptron-"));
+  const modelsDir = path.join(root, "providers", "inceptron", "models");
+  await mkdir(modelsDir, { recursive: true });
+  for (const base of ["zhipuai/glm-5.2", "moonshotai/kimi-k2.6"]) {
+    const destination = path.join(root, "models", `${base}.toml`);
+    await mkdir(path.dirname(destination), { recursive: true });
+    await copyFile(path.join(import.meta.dirname, "..", "..", "..", "models", `${base}.toml`), destination);
+  }
+
+  let source: ReadyInceptronModel[] = [
+    readyInceptronModel(),
+    readyInceptronModel({
+      id: "moonshotai/Kimi-K2.6",
+      name: "Kimi K2.6",
+      context_length: 262_144,
+      max_output_length: 262_144,
+      input_modalities: ["text", "image"],
+      supported_sampling_parameters: ["temperature"],
+      models_dev: {
+        base_model: "moonshotai/kimi-k2.6",
+        reasoning_options: [],
+        interleaved: true,
+      },
+    }),
+  ];
+  const provider: SyncProvider<ReadyInceptronModel> = {
+    id: "inceptron-test",
+    name: "Inceptron test",
+    modelsDir,
+    async fetchModels() {
+      return source;
+    },
+    parseModels(raw) {
+      return raw as ReadyInceptronModel[];
+    },
+    translateModel(model) {
+      return { id: model.id, model: buildInceptronModel(model) };
+    },
+  };
+
+  try {
+    const initial = await syncProvider(provider);
+    expect(initial).toMatchObject({ created: 2, updated: 0, deleted: 0 });
+
+    source = [readyInceptronModel({
+      pricing: { prompt: "0.0000008", completion: "0.0000029" },
+    })];
+    const changed = await syncProvider(provider);
+    expect(changed).toMatchObject({ created: 0, updated: 1, deleted: 1 });
+
+    const unchanged = await syncProvider(provider);
+    expect(unchanged).toMatchObject({ created: 0, updated: 0, deleted: 0, unchanged: 1 });
+  } finally {
+    await rm(root, { recursive: true, force: true });
+  }
+});
+
+test("syncs CrossModel's structured-output capability", () => {
+  const supported = buildCrossModel(crossModelModel(), undefined);
+  const unsupported = buildCrossModel(
+    crossModelModel({
+      id: "qwen/qwen3.7-flash",
+      capabilities: { json: false, reasoning: { toggle: true } },
+    }),
+    undefined,
+  );
+  const preserved = buildCrossModel(
+    crossModelModel({ capabilities: { reasoning: { toggle: true } } }),
+    {
+      base_model: "alibaba/qwen3.8-max",
+      structured_output: true,
+    },
+  );
+
+  expect(supported).toMatchObject({
+    base_model: "alibaba/qwen3.8-max",
+    structured_output: true,
+  });
+  expect(unsupported).toMatchObject({
+    base_model: "alibaba/qwen3.7-flash",
+    structured_output: false,
+  });
+  expect(preserved).toMatchObject({
+    base_model: "alibaba/qwen3.8-max",
+    structured_output: true,
+  });
+});
+
+test("parses CrossModel's nullable reasoning controls", () => {
+  const parsed = CrossModelResponse.parse({
+    data: [
+      {
+        ...crossModelModel(),
+        capabilities: {
+          reasoning: {
+            supported: true,
+            toggle: null,
+            effort: null,
+            budget_tokens: null,
+          },
+        },
+      },
+    ],
+  });
+
+  expect(parsed.data[0]?.capabilities?.reasoning).toEqual({
+    supported: true,
+    toggle: undefined,
+    effort: undefined,
+    budget_tokens: undefined,
+  });
+});
+
+test("preserves CrossModel's toggle-only reasoning control", () => {
+  const model = buildCrossModel(crossModelModel(), undefined);
+  expect(model?.reasoning_options).toEqual([{ type: "toggle" }]);
+});
+
+test.each([{ off: false }, { off: true }])("syncs CrossModel's reasoning controls (effort includes none: $off)", ({ off }) => {
+  const effort = off ? ["none", "low", "high", "max"] as const : ["low", "high", "max"] as const;
+  const model = buildCrossModel(
+    crossModelModel({
+      capabilities: {
+        json: true,
+        reasoning: {
+          supported: true,
+          toggle: true,
+          effort: [...effort],
+          budget_tokens: { min: 1_024, max: 32_000 },
+        },
+      },
+    }),
+    undefined,
+  );
+
+  expect(model).toMatchObject({
+    reasoning_options: [
+      ...off ? [] : [{ type: "toggle" }],
+      { type: "effort", values: effort },
+      { type: "budget_tokens", min: 1_024, max: 32_000 },
+    ],
+  });
+});
+
+test("rejects unknown CrossModel reasoning efforts", () => {
+  expect(() =>
+    CrossModelResponse.parse({
+      data: [
+        {
+          ...crossModelModel(),
+          capabilities: {
+            reasoning: { supported: true, effort: ["unexpected"] },
+          },
+        },
+      ],
+    })
+  ).toThrow();
+});
 
 test("syncs NanoGPT's verified reasoning, pricing, limits, and open-weight metadata", () => {
   const model = buildNanoGptModel(nanoGptModel({
@@ -211,6 +617,8 @@ test("factors NanoGPT variants against canonical models without retaining wrong 
   expect(resolveNanoGptBaseModel("TEE/gpt-oss-120b")).toBe("openai/gpt-oss-120b");
   expect(resolveNanoGptBaseModel("TEE/gemma-4-31b-it")).toBe("google/gemma-4-31b-it");
   expect(resolveNanoGptBaseModel("cohere/north-mini-code")).toBe("cohere/north-mini-code-1-0");
+  expect(resolveNanoGptBaseModel("doubao-seed-2-0-code-preview-260215"))
+    .toBe("bytedance-seed/seed-2.0-code");
   expect(resolveNanoGptBaseModel("xiaomi/mimo-v2.5-pro-ultraspeed"))
     .toBe("xiaomi/mimo-v2.5-pro-ultraspeed");
   expect(resolveNanoGptBaseModel("claude-haiku-4-5-20251001-thinking"))
@@ -515,6 +923,36 @@ test("parses current and future Anthropic pricing rows", () => {
   expect(standard.get("claude sonnet 5")).toMatchObject({ input: 3, output: 15 });
 });
 
+test.each([
+  "| Model | Base input tokens | 5m cache writes | 1h cache writes | Cache hits and refreshes | Output tokens |",
+  "| Model | Base input tokens | 5m cache writes | 1h cache writes | Cache hits & refreshes | Output tokens |",
+  "| Model | Base Input Tokens | 5m Cache Writes | 1h Cache Writes | Cache Hits and Refreshes | Output Tokens |",
+])("parses Anthropic pricing with header %s", (header) => {
+  const markdown = anthropicPricingMarkdown.replace(/^\| Model \|.*$/m, header);
+  const pricing = parseAnthropicPricing(markdown, new Date("2026-09-03T00:00:00Z"));
+
+  expect(pricing.size).toBe(5);
+  expect(pricing.get("claude opus 4.8")).toEqual({
+    input: 5,
+    output: 25,
+    cacheRead: 0.5,
+    cacheWrite: 6.25,
+    deprecated: false,
+  });
+});
+
+test.each([
+  "Model",
+  "Base Input Tokens",
+  "5m Cache Writes",
+  "Cache Hits & Refreshes",
+  "Output Tokens",
+])("rejects Anthropic pricing without the %s column", (column) => {
+  const markdown = anthropicPricingMarkdown.replace(`| ${column} |`, "| Unknown |");
+
+  expect(() => parseAnthropicPricing(markdown)).toThrow("Anthropic model pricing table has unexpected columns");
+});
+
 test("syncs Anthropic capabilities and exact effort levels", () => {
   const model = buildAnthropicModel(anthropicModel(), {
     name: "Claude Sonnet 5",
@@ -740,13 +1178,19 @@ test("OpenAI availability sync retains models absent from a scoped response", as
   }
 });
 
-test("does not track unreliable remote-only models", () => {
+test("tracks missing models except for unreliable first-party inventories", () => {
   expect(google.skipCreates).toBe(true);
   expect(google.trackMissingModels).toBe(false);
   expect(openai.skipCreates).toBe(true);
   expect(openai.trackMissingModels).toBe(false);
   expect(pioneer.skipCreates).toBe(true);
-  expect(pioneer.trackMissingModels).toBe(false);
+  expect(pioneer.trackMissingModels).toBe(true);
+  expect(ofox.skipCreates).toBe(true);
+  expect(ofox.trackMissingModels).toBe(true);
+  expect(tinfoil.skipCreates).toBe(true);
+  expect(tinfoil.trackMissingModels).not.toBe(false);
+  expect(xai.skipCreates).toBe(true);
+  expect(xai.trackMissingModels).not.toBe(false);
 });
 
 test("tracks public Google model families but not opaque internal IDs", () => {
@@ -814,6 +1258,31 @@ test("syncs Tinfoil cached-input pricing from the public model catalog", () => {
     },
     limit: { context: 384_000 },
   });
+});
+
+test.each([undefined, "zhipuai/glm-5.2"])("syncs Tinfoil reasoning with base model %s", (base_model) => {
+  const existing = { ...existingTinfoilGLM, base_model };
+  const enabled = buildTinfoilModel(tinfoilModel(), { ...existing, reasoning: false });
+  expect(enabled.reasoning_options).toEqual(existing.reasoning_options);
+  // Factored models inherit true from the lab; standalone models must author it.
+  expect(enabled.reasoning).toBe(base_model === undefined ? true : undefined);
+
+  const disabled = buildTinfoilModel(tinfoilModel({ reasoning: false }), existing);
+  expect(disabled.reasoning).toBe(false);
+  expect(disabled.reasoning_options).toBeUndefined();
+});
+
+test("requires authored Tinfoil controls instead of inventing an empty set", () => {
+  expect(() => buildTinfoilModel(tinfoilModel(), {
+    ...existingTinfoilGLM,
+    reasoning_options: undefined,
+  })).toThrow("requires hand-authored reasoning_options");
+
+  const model = buildTinfoilModel(tinfoilModel(), {
+    ...existingTinfoilGLM,
+    reasoning_options: [],
+  });
+  expect(model.reasoning_options).toEqual([]);
 });
 
 test("removes stale Tinfoil cache pricing when the public catalog omits it", () => {
@@ -1391,7 +1860,36 @@ test("resolves DigitalOcean IDs to canonical model metadata", () => {
   expect(resolveDigitalOceanBaseModel("mimo-v2.5-pro")).toBe("xiaomi/mimo-v2.5-pro");
   expect(resolveDigitalOceanBaseModel("anthropic-claude-5-sonnet")).toBe("anthropic/claude-sonnet-5");
   expect(resolveDigitalOceanBaseModel("anthropic-claude-opus-5")).toBe("anthropic/claude-opus-5");
+  expect(resolveDigitalOceanBaseModel("anthropic-claude-fable-5.1")).toBe("anthropic/claude-fable-5-1");
+  expect(resolveDigitalOceanBaseModel("anthropic-claude-5.1-fable")).toBe("anthropic/claude-fable-5-1");
+  expect(resolveDigitalOceanBaseModel("anthropic-claude-unknown-99.1")).toBeUndefined();
   expect(resolveDigitalOceanBaseModel("openai-gpt-5.6-luna")).toBe("openai/gpt-5.6-luna");
+});
+
+test("new DigitalOcean Fable models emit only base metadata overrides", () => {
+  const translated = digitalocean.translateModel(
+    digitalOceanModel({
+      id: "anthropic-claude-fable-5.1",
+      name: "Anthropic Claude Fable 5.1",
+      reasoning_efforts: ["low", "medium", "high", "xhigh", "max"],
+      modalities: { input: ["text", "image"], output: ["text"] },
+      max_output_tokens: 128_000,
+      created_at: "2026-09-01T00:00:00Z",
+      pricing: { input: 10, output: 50, cacheRead: 0.25, cacheWrite: 12.5 },
+    }),
+    { existing: () => undefined, authored: () => undefined },
+  );
+
+  expect(translated).toEqual({
+    id: "anthropic-claude-fable-5.1",
+    model: {
+      base_model: "anthropic/claude-fable-5-1",
+      name: "Anthropic Claude Fable 5.1",
+      reasoning_options: [{ type: "effort", values: ["low", "medium", "high", "xhigh", "max"] }],
+      cost: { input: 10, output: 50, cache_read: 0.25, cache_write: 12.5 },
+      modalities: { input: ["text", "image"] },
+    },
+  });
 });
 
 test("new DigitalOcean base models inherit intrinsic capabilities", () => {
@@ -1673,6 +2171,33 @@ test("OpenRouter sync maps pricing.overrides into cost tiers", () => {
   });
 });
 
+test("OpenRouter sync ignores time-window pricing overrides", () => {
+  const source = openRouterModel({
+    pricing: {
+      prompt: "0.00000132",
+      completion: "0.00000396",
+      overrides: [{
+        utc_start: 1_000,
+        utc_end: 100,
+        prompt: "0.00000066",
+        completion: "0.00000198",
+      }],
+    },
+  });
+  const [parsed] = openrouter.parseModels({ data: [source] });
+  const model = buildOpenRouterModel(parsed!, {
+    cost: {
+      input: 1.32,
+      output: 3.96,
+      tiers: [{ tier: { type: "context", size: 200_000 }, input: 2.64, output: 7.92 }],
+    },
+  });
+
+  expect(model.cost?.tiers).toEqual([
+    { tier: { type: "context", size: 200_000 }, input: 2.64, output: 7.92 },
+  ]);
+});
+
 test("OpenRouter sync keeps authored tiers when API omits overrides", () => {
   const model = buildOpenRouterModel(openRouterModel({
     pricing: {
@@ -1802,9 +2327,9 @@ test("syncs Hyper pricing from catalog input/output fields", () => {
 
   expect(buildHyperModel(model, undefined, "minimax/MiniMax-M2.7")).toMatchObject({
     cost: { input: 0.3, output: 1.2, cache_read: 0.06, cache_write: 0.03 },
-    reasoning: false,
+    reasoning_options: [],
   });
-  expect(buildHyperModel(model, undefined, "minimax/MiniMax-M2.7")).not.toHaveProperty("reasoning_options");
+  expect(buildHyperModel(model, undefined, "minimax/MiniMax-M2.7")).not.toHaveProperty("reasoning");
 });
 
 test("rounds Hyper pricing to six decimal places", () => {
@@ -1822,7 +2347,7 @@ test("rounds Hyper pricing to six decimal places", () => {
   });
 });
 
-test("sets Hyper reasoning false when API omits reasoning metadata", () => {
+test("inherits Hyper reasoning when API omits reasoning metadata", () => {
   const model = hyperModel({ id: "llama-3.3-70b-instruct", reasoning: undefined });
 
   expect(buildHyperModel(model, undefined, "meta/llama-3.3-70b-instruct")).toMatchObject({
@@ -1832,8 +2357,9 @@ test("sets Hyper reasoning false when API omits reasoning metadata", () => {
   expect(buildHyperModel(model, undefined, "meta/llama-3.3-70b-instruct")).not.toHaveProperty("reasoning_options");
 
   expect(buildHyperModel(hyperModel({ id: "minimax-m2.7", reasoning: undefined }), undefined, "minimax/MiniMax-M2.7")).toMatchObject({
-    reasoning: false,
+    reasoning_options: [],
   });
+  expect(buildHyperModel(hyperModel({ id: "minimax-m2.7", reasoning: undefined }), undefined, "minimax/MiniMax-M2.7")).not.toHaveProperty("reasoning");
 });
 
 test("preserves existing Hyper cost when API pricing is missing", () => {
@@ -1850,8 +2376,8 @@ test("preserves existing Hyper cost when API pricing is missing", () => {
 
 test("creates a full Hyper model when no base_model metadata exists", () => {
   const model = hyperModel({
-    id: "qwen3.7-flash",
-    display_name: "Qwen3.7-Flash",
+    id: "custom-coder",
+    display_name: "Custom Coder",
     reasoning: undefined,
     capabilities: { vision: true },
     pricing: {
@@ -1863,7 +2389,7 @@ test("creates a full Hyper model when no base_model metadata exists", () => {
   });
 
   expect(buildHyperModel(model, undefined)).toMatchObject({
-    name: "Qwen3.7-Flash",
+    name: "Custom Coder",
     attachment: true,
     reasoning: false,
     tool_call: true,
@@ -1879,8 +2405,294 @@ test("creates a full Hyper model when no base_model metadata exists", () => {
 test("factors new Hyper models against unique models/ metadata", () => {
   expect(buildHyperModel(hyperModel({ id: "kimi-k3", reasoning: undefined }), undefined)).toMatchObject({
     base_model: "moonshotai/kimi-k3",
-    reasoning: false,
+    reasoning_options: [],
   });
+});
+
+test("deduplicates Eden AI case-only IDs without losing context metadata", () => {
+  const lowercase = edenAIModel({
+    id: "flexai/deepseek-v4-flash-0731",
+    model_name: "deepseek-v4-flash-0731",
+    owned_by: "flexai",
+    context_length: null,
+  });
+  const uppercase = edenAIModel({
+    ...lowercase,
+    id: "flexai/DeepSeek-V4-Flash-0731",
+    model_name: "DeepSeek-V4-Flash-0731",
+    context_length: 786_432,
+  });
+
+  for (const data of [[lowercase, uppercase], [uppercase, lowercase]]) {
+    const models = edenai.parseModels({ object: "list", data });
+    expect(models).toEqual([{ ...lowercase, context_length: 786_432 }]);
+    expect(edenai.translateModel(models[0]!, { existing: () => undefined, authored: () => undefined })).toMatchObject({
+      id: lowercase.id,
+      model: { base_model: "deepseek/deepseek-v4-flash-0731", limit: { context: 786_432 } },
+    });
+  }
+
+  expect(edenai.parseModels({ object: "list", data: [uppercase] })).toEqual([uppercase]);
+});
+
+test("factors Eden AI models onto lab metadata and prices from list_pricing", () => {
+  const model = edenAIModel({
+    id: "openai/gpt-5.6-terra",
+    model_name: "gpt-5.6-terra",
+    owned_by: "openai",
+    pricing: { input_cost_per_token: 0.0000013, output_cost_per_token: 0.0000078 },
+    list_pricing: {
+      input_cost_per_token: 0.000002,
+      output_cost_per_token: 0.000012,
+      cache_read_input_token_cost: 0.0000002,
+    },
+  });
+
+  expect(buildEdenAIModel(model)).toMatchObject({
+    base_model: "openai/gpt-5.6-terra",
+    cost: { input: 2, output: 12, cache_read: 0.2 },
+    reasoning_options: [
+      { type: "effort", values: ["none", "low", "medium", "high", "xhigh", "max"] },
+    ],
+  });
+  expect(buildEdenAIModel(model)).not.toHaveProperty("reasoning");
+});
+
+test("takes Eden AI reasoning options from the model's own lab entry", () => {
+  expect(reasoningOptionsFor("deepseek/deepseek-v4-pro")).toEqual([
+    { type: "effort", values: ["none", "high", "max"] },
+  ]);
+  expect(reasoningOptionsFor("openai/o1")).toEqual([
+    { type: "effort", values: ["low", "medium", "high"] },
+  ]);
+});
+
+test("skips new Eden AI models whose reasoning control has no effort equivalent", () => {
+  // The sync does not yet map this route's budget control to Eden AI's API.
+  expect(reasoningOptionsFor("google/gemini-2.5-pro")).toBeUndefined();
+  expect(
+    buildEdenAIModel(
+      edenAIModel({
+        id: "google/gemini-2.5-pro",
+        model_name: "gemini-2.5-pro",
+        owned_by: "google",
+      }),
+    ),
+  ).toBeUndefined();
+});
+
+test("Eden AI preserves authored controls when reasoning mapping is unresolved", () => {
+  const authored: NonNullable<ExistingModel["reasoning_options"]>[] = [
+    [],
+    [{ type: "toggle" }],
+    [{ type: "effort", values: ["high"] }],
+    [{ type: "toggle" }, { type: "budget_tokens" }],
+  ];
+  for (const [id, base] of [
+    ["zai/glm-5", "zhipuai/glm-5"],
+    ["moonshot/kimi-k2.6", "moonshotai/kimi-k2.6"],
+    ["minimax/MiniMax-M3", "minimax/MiniMax-M3"],
+    ["deepinfra/nvidia/Nemotron-3-Nano-30B-A3B", "nvidia/nemotron-3-nano-30b-a3b"],
+    ["google/gemini-2.5-pro", "google/gemini-2.5-pro"],
+  ] as const) {
+    const model = edenAIModel({
+      id,
+      owned_by: id.slice(0, id.indexOf("/")),
+      model_name: id.slice(id.indexOf("/") + 1),
+    });
+    expect(buildEdenAIModel(model)).toBeUndefined();
+    for (const reasoning_options of authored) {
+      expect(buildEdenAIModel(model, { base_model: base, reasoning_options })).toMatchObject({
+        base_model: base,
+        reasoning_options,
+      });
+    }
+  }
+});
+
+test("Eden AI sync keeps listed models with unresolved reasoning controls", async () => {
+  const root = await mkdtemp(path.join(tmpdir(), "sync-edenai-"));
+  const modelsDir = path.join(root, "providers", "edenai", "models");
+  const repo = path.join(import.meta.dirname, "..", "..", "..");
+  const files = [
+    ["openai/gpt-4o-mini", "openai/gpt-4o-mini"],
+    ["zai/glm-5", "zhipuai/glm-5"],
+    ["retired/model", "openai/gpt-4o-mini"],
+  ] as const;
+
+  try {
+    for (const [id, base] of files) {
+      const destination = path.join(modelsDir, `${id}.toml`);
+      const metadata = path.join(root, "models", `${base}.toml`);
+      await mkdir(path.dirname(destination), { recursive: true });
+      await mkdir(path.dirname(metadata), { recursive: true });
+      await copyFile(path.join(repo, "models", `${base}.toml`), metadata);
+      await copyFile(
+        path.join(repo, "providers", "edenai", "models", `${id === "retired/model" ? "openai/gpt-4o-mini" : id}.toml`),
+        destination,
+      );
+    }
+    const glmPath = path.join(modelsDir, "zai/glm-5.toml");
+    const authored = (await readFile(glmPath, "utf8")).replace(
+      "reasoning_options = []",
+      'reasoning_options = [{ type = "toggle" }]',
+    );
+    const header = "# Toggle: extra_body.thinking.type = enabled|disabled\n";
+    await Bun.write(glmPath, header + authored);
+    const supported = edenAIModel({
+      id: "openai/gpt-4o-mini",
+      model_name: "gpt-4o-mini",
+      owned_by: "openai",
+      list_pricing: { input_cost_per_token: 0.000123, output_cost_per_token: 0.000456 },
+    });
+    const unresolved = edenAIModel({ id: "zai/glm-5", model_name: "glm-5", owned_by: "zai" });
+    const provider = {
+      ...edenai,
+      modelsDir,
+      async fetchModels() {
+        return { object: "list", data: [
+          supported,
+          { ...supported, id: "openai/gpt-4o-mini@us" },
+          unresolved,
+          { ...unresolved, id: "zai/glm-5@us" },
+        ] };
+      },
+    };
+
+    const result = await syncProvider(provider);
+    expect(result).toMatchObject({ created: 1, deleted: 1 });
+    expect(result.files.filter((file) => file.status === "deleted").map((file) => file.path)).toEqual([
+      path.join(modelsDir, "retired/model.toml"),
+    ]);
+    const content = await readFile(glmPath, "utf8");
+    expect(content).toStartWith(header);
+    expect(Bun.TOML.parse(content)).toMatchObject({
+      base_model: "zhipuai/glm-5",
+      reasoning_options: [{ type: "toggle" }],
+    });
+    expect(await Bun.file(path.join(modelsDir, "zai/glm-5@us.toml")).exists()).toBe(false);
+    expect(await Bun.file(path.join(modelsDir, "openai/gpt-4o-mini@us.toml")).exists()).toBe(true);
+  } finally {
+    await rm(root, { recursive: true, force: true });
+  }
+});
+
+test("omits Eden AI reasoning options for non-reasoning models", () => {
+  const model = edenAIModel({
+    id: "openai/gpt-4o-mini",
+    model_name: "gpt-4o-mini",
+    owned_by: "openai",
+    context_length: 128_000,
+  });
+
+  const built = buildEdenAIModel(model);
+  expect(built).toMatchObject({ base_model: "openai/gpt-4o-mini" });
+  expect(built).not.toHaveProperty("reasoning_options");
+});
+
+test("skips Eden AI models without lab metadata", () => {
+  expect(
+    buildEdenAIModel(
+      edenAIModel({
+        id: "deepinfra/acme/Not-A-Real-Model",
+        model_name: "acme/Not-A-Real-Model",
+        owned_by: "deepinfra",
+      }),
+    ),
+  ).toBeUndefined();
+});
+
+test("names Eden AI regional deployments after the canonical model", () => {
+  expect(
+    buildEdenAIModel(
+      edenAIModel({
+        id: "amazon/anthropic.claude-opus-5@eu",
+        model_name: "anthropic.claude-opus-5",
+        owned_by: "amazon",
+      }),
+    ),
+  ).toMatchObject({
+    base_model: "anthropic/claude-opus-5",
+    name: "Claude Opus 5 (EU)",
+  });
+});
+
+test("builds Eden AI context tiers without reading time-based cache keys", () => {
+  const model = edenAIModel({
+    id: "openai/gpt-5.6-terra",
+    model_name: "gpt-5.6-terra",
+    owned_by: "openai",
+    list_pricing: {
+      input_cost_per_token: 0.000002,
+      output_cost_per_token: 0.000012,
+      input_cost_per_token_above_272k_tokens: 0.000004,
+      output_cost_per_token_above_272k_tokens: 0.000018,
+      cache_creation_input_token_cost_above_1hr: 0.000009,
+      cache_creation_input_token_cost_above_1hr_above_272k_tokens: 0.00001,
+    },
+  });
+
+  expect(buildEdenAIModel(model)).toMatchObject({
+    cost: {
+      input: 2,
+      output: 12,
+      tiers: [{ tier: { type: "context", size: 272_000 }, input: 4, output: 18 }],
+    },
+  });
+  expect(
+    (buildEdenAIModel(model) as { cost: { tiers: Array<Record<string, unknown>> } }).cost.tiers[0],
+  ).not.toHaveProperty("cache_write");
+});
+
+test("keeps only the first-party Eden AI route when the lab's own API is relayed", () => {
+  const bedrock = edenAIModel({
+    id: "amazon/anthropic.claude-opus-5",
+    model_name: "anthropic.claude-opus-5",
+    owned_by: "amazon",
+  });
+  const direct = edenAIModel({
+    id: "anthropic/claude-opus-5",
+    model_name: "claude-opus-5",
+    owned_by: "anthropic",
+  });
+
+  const firstParty = collectFirstPartyBaseModels([bedrock, direct]);
+  expect(firstParty).toEqual(new Set(["anthropic/claude-opus-5"]));
+  expect(buildEdenAIModel(bedrock, undefined, firstParty)).toBeUndefined();
+  expect(buildEdenAIModel(direct, undefined, firstParty)).toMatchObject({
+    base_model: "anthropic/claude-opus-5",
+  });
+});
+
+test("keeps every Eden AI route for models with no first-party relay", () => {
+  const models = ["deepinfra", "groq", "cerebras"].map((owner) =>
+    edenAIModel({
+      id: `${owner}/openai/gpt-oss-120b`,
+      model_name: "openai/gpt-oss-120b",
+      owned_by: owner,
+    }),
+  );
+
+  const firstParty = collectFirstPartyBaseModels(models);
+  expect(firstParty.size).toBe(0);
+  for (const model of models) {
+    expect(buildEdenAIModel(model, undefined, firstParty)).toMatchObject({
+      base_model: "openai/gpt-oss-120b",
+    });
+  }
+});
+
+test("resolves Eden AI aliases to the model they point at", () => {
+  expect(
+    resolveEdenAIBaseModel(
+      edenAIModel({
+        id: "anthropic/claude-opus-latest",
+        model_name: "claude-opus-latest",
+        owned_by: "anthropic",
+        alias_of: "anthropic/claude-opus-5",
+      }),
+    ),
+  ).toBe("anthropic/claude-opus-5");
 });
 
 test("formats interleaved as a root field before reasoning option tables", () => {
@@ -1972,6 +2784,11 @@ test("formats provider overrides and experimental modes", () => {
       },
     },
   });
+});
+
+test("resolves DeepInfra ByteDance IDs to canonical metadata", () => {
+  expect(resolveDeepInfraBaseModel("ByteDance/Seed-2.0-code"))
+    .toBe("bytedance-seed/seed-2.0-code");
 });
 
 test("DeepInfra preserves live modalities for new base models", () => {
@@ -2076,6 +2893,71 @@ test("defaults new reasoning models to empty reasoning options", () => {
   });
 });
 
+test("inherits base reasoning options instead of stamping empty ones", () => {
+  expect(preserveReasoningOptions({ reasoning: true }, undefined, undefined, [{ type: "toggle" }]))
+    .toEqual({ reasoning: true });
+});
+
+test("normalizes Cortecs file modalities to pdf", () => {
+  const [model] = cortecs.parseModels({
+    object: "list",
+    data: [{
+      id: "document-model",
+      created: 1_775_088_000,
+      pricing: { currency: "EUR", input_token: 1, output_token: 2 },
+      context_size: 65_536,
+      input_modalities: ["text", "file"],
+      output_modalities: ["text"],
+    }],
+  });
+
+  expect(model.input_modalities).toEqual(["text", "pdf"]);
+});
+
+test("preserves authored Cortecs reasoning options missing from the API", () => {
+  const model: CortecsModel = {
+    id: "deepseek-v4-flash-0731",
+    created: 1_775_088_000,
+    pricing: { currency: "EUR", input_token: 0.224, output_token: 0.269 },
+    context_size: 1_048_576,
+    input_modalities: ["text"],
+    output_modalities: ["text"],
+    supported_features: ["reasoning", "tools"],
+  };
+  const existing: ExistingModel = {
+    base_model: "deepseek/deepseek-v4-flash-0731",
+    reasoning: true,
+    reasoning_options: [{ type: "effort", values: ["low", "medium", "high"] }],
+  };
+
+  expect(buildCortecsModel(model, existing, existing)).toMatchObject({
+    reasoning_options: [{ type: "effort", values: ["low", "medium", "high"] }],
+  });
+});
+
+test("overrides canonical metadata with Cortecs reasoning support", () => {
+  const model: CortecsModel = {
+    id: "apertus-70b",
+    created: 1_775_088_000,
+    pricing: { currency: "EUR", input_token: 1.25, output_token: 2 },
+    context_size: 65_536,
+    input_modalities: ["text"],
+    output_modalities: ["text"],
+    supported_features: ["reasoning", "tools"],
+  };
+  const existing: ExistingModel = {
+    base_model: "swiss-ai/apertus-70b",
+    reasoning: true,
+    reasoning_options: [],
+  };
+
+  expect(buildCortecsModel(model, existing, existing)).toMatchObject({
+    base_model: "swiss-ai/apertus-70b",
+    reasoning: true,
+    reasoning_options: [],
+  });
+});
+
 test("syncs OpenRouter reasoning efforts from model metadata", () => {
   const model = buildOpenRouterModel(openRouterModel({
     reasoning: {
@@ -2087,9 +2969,49 @@ test("syncs OpenRouter reasoning efforts from model metadata", () => {
   expect(model).toMatchObject({
     base_model: "anthropic/claude-sonnet-5",
     reasoning_options: [
+      { type: "toggle" },
       { type: "effort", values: ["max", "xhigh", "high", "medium", "low"] },
     ],
   });
+});
+
+test("syncs OpenRouter toggles without an effort selector", () => {
+  for (const supports_max_tokens of [undefined, true]) {
+    const source = openRouterModel({
+      reasoning: { mandatory: false, supports_max_tokens },
+    });
+    const translated = openrouter.translateModel(source, {
+      existing: () => undefined,
+      authored: () => undefined,
+    });
+    expect(translated?.model.reasoning_options).toEqual([
+      { type: "toggle" },
+      ...(supports_max_tokens ? [{ type: "budget_tokens" }] : []),
+    ]);
+    expect(translated?.header).toStartWith("# Toggle: reasoning.enabled = true|false\n");
+  }
+});
+
+test("does not derive OpenRouter controls for non-reasoning models", () => {
+  const model = buildOpenRouterModel(openRouterModel({
+    supported_parameters: ["temperature"],
+    reasoning: { mandatory: false, supports_max_tokens: true },
+  }), { reasoning_options: [{ type: "toggle" }] });
+  expect(model.reasoning).toBe(false);
+  expect(model.reasoning_options).toBeUndefined();
+});
+
+test("does not add OpenRouter toggles to mandatory or effort-none models", () => {
+  for (const reasoning of [
+    { mandatory: true, supports_max_tokens: true },
+    { mandatory: true, supported_efforts: ["none", "high"] as const },
+    { mandatory: false, supported_efforts: ["none", "high"] as const },
+    { mandatory: false, supported_efforts: null },
+  ]) {
+    const [source] = openrouter.parseModels({ data: [{ ...openRouterModel(), reasoning }] });
+    const model = buildOpenRouterModel(source!, undefined);
+    expect(model.reasoning_options?.some((option) => option.type === "toggle")).toBe(false);
+  }
 });
 
 test("uses OpenRouter model context when top provider reports a shorter context", () => {
@@ -2142,20 +3064,38 @@ test("factors OpenRouter Pro routes against canonical OpenAI metadata", () => {
   expect("release_date" in model).toBe(false);
 });
 
+test("resolves dotted Claude versions without a family allowlist", () => {
+  expect(resolveCanonicalBaseModel("anthropic/claude-fable-5.1")).toBe("anthropic/claude-fable-5-1");
+  expect(resolveCanonicalBaseModel("anthropic/claude-fable-5.1-fast")).toBe("anthropic/claude-fable-5-1");
+  expect(resolveCanonicalBaseModel("anthropic/claude-opus-4.6")).toBe("anthropic/claude-opus-4-6");
+  expect(resolveCanonicalBaseModel("anthropic/claude-3.5-sonnet-20241022")).toBe("anthropic/claude-3-5-sonnet-20241022");
+  expect(resolveCanonicalBaseModel("anthropic/claude-unknown-99.1")).toBeUndefined();
+});
+
+test("resolves SpaceXAI provider IDs to canonical xAI metadata", () => {
+  expect(resolveCanonicalBaseModel("spacexai/grok-4.5")).toBe("xai/grok-4.5");
+});
+
 // Ensures Merge Gateway namespaces reuse the matching canonical model metadata.
 test("resolves Merge Gateway provider aliases to canonical metadata", () => {
   expect([
+    resolveCanonicalBaseModel("bytedance-seed/seed-2.0-code"),
+    resolveCanonicalBaseModel("bytedance/dola-seed-2.0-code"),
     resolveCanonicalBaseModel("moonshot/kimi-k2.5"),
     resolveCanonicalBaseModel("moonshot/kimi-k2.6"),
     resolveCanonicalBaseModel("moonshot/kimi-k2.7-code"),
     resolveCanonicalBaseModel("moonshot/kimi-k2.7-code-highspeed"),
     resolveCanonicalBaseModel("sakana/fugu-ultra"),
+    resolveCanonicalBaseModel("meta/muse-glimmer-30b"),
   ]).toEqual([
+    "bytedance-seed/seed-2.0-code",
+    "bytedance-seed/seed-2.0-code",
     "moonshotai/kimi-k2.5",
     "moonshotai/kimi-k2.6",
     "moonshotai/kimi-k2.7-code",
     "moonshotai/kimi-k2.7-code-highspeed",
     "sakana/fugu-ultra",
+    "meta/muse-glimmer-30b",
   ]);
 });
 
@@ -2198,6 +3138,7 @@ test("prefers OpenRouter API reasoning options over authored ones", () => {
 
   expect(model).toMatchObject({
     reasoning_options: [
+      { type: "toggle" },
       { type: "effort", values: ["max", "xhigh", "high", "medium", "low"] },
     ],
   });
@@ -2250,6 +3191,7 @@ test("upgrades empty OpenRouter reasoning options from model metadata", () => {
 
   expect(model).toMatchObject({
     reasoning_options: [
+      { type: "toggle" },
       { type: "effort", values: ["high", "medium", "low"] },
     ],
   });
@@ -2269,6 +3211,62 @@ test("factors new LLM Gateway models against the canonical base metadata", () =>
   });
   expect("name" in model).toBe(false);
   expect("modalities" in model).toBe(false);
+});
+
+test("syncs explicitly advertised LLM Gateway reasoning efforts", () => {
+  const model = buildLLMGatewayModel(llmGatewayModel({
+    id: "seed-2-1-turbo",
+    name: "Seed 2.1 Turbo",
+    family: "bytedance",
+    providers: [{
+      reasoning_efforts: ["high", "none", "max", "low", "xhigh", "minimal", "medium"],
+    }],
+  }), undefined);
+
+  expect(model).toMatchObject({
+    reasoning_options: [{
+      type: "effort",
+      values: ["none", "minimal", "low", "medium", "high", "xhigh", "max"],
+    }],
+  });
+});
+
+test("unions LLM Gateway reasoning efforts in canonical order", () => {
+  const model = buildLLMGatewayModel(llmGatewayModel({
+    id: "unreviewed-reasoner",
+    providers: [
+      { reasoning_efforts: ["high", "low"] },
+      { reasoning_efforts: ["none", "low", "xhigh"] },
+    ],
+  }), undefined);
+
+  expect(model).toMatchObject({
+    reasoning_options: [{
+      type: "effort",
+      values: ["none", "low", "high", "xhigh"],
+    }],
+  });
+});
+
+test("keeps non-effort LLM Gateway controls when syncing efforts", () => {
+  const model = buildLLMGatewayModel(llmGatewayModel({
+    providers: [{ reasoning_efforts: ["none", "low", "high"] }],
+  }), {
+    name: "Claude Fable 5",
+    reasoning: true,
+    reasoning_options: [
+      { type: "toggle" },
+      { type: "budget_tokens", min: 1024 },
+      { type: "effort", values: ["low"] },
+    ],
+  });
+
+  expect(model).toMatchObject({
+    reasoning_options: [
+      { type: "budget_tokens", min: 1024 },
+      { type: "effort", values: ["none", "low", "high"] },
+    ],
+  });
 });
 
 test("factors aliased LLM Gateway routes against canonical metadata", () => {
@@ -2295,6 +3293,458 @@ test("factors aliased LLM Gateway routes against canonical metadata", () => {
       context: 1_024_000,
     },
   });
+});
+
+test("factors mapped LLM Gateway entries against the root model metadata", () => {
+  const model = buildLLMGatewayMappedModel(llmGatewayMappedModel(), undefined);
+
+  expect(model).toEqual({
+    base_model: "anthropic/claude-fable-5",
+    name: "Claude Fable 5 (Anthropic)",
+    reasoning_options: [{ type: "effort", values: ["low", "medium", "high", "xhigh", "max"] }],
+    structured_output: true,
+    cost: {
+      input: 10,
+      output: 50,
+      cache_read: 1,
+      cache_write: 12.5,
+    },
+  });
+});
+
+test("applies deployment capability flags on mapped factored entries", () => {
+  const model = buildLLMGatewayMappedModel(llmGatewayMappedModel({
+    providers: [{ providerId: "anthropic", vision: false, tools: false, reasoning: false }],
+    architecture: { input_modalities: ["text"], output_modalities: ["text"] },
+    max_output: 64_000,
+  }), undefined);
+
+  expect(model).toEqual({
+    base_model: "anthropic/claude-fable-5",
+    name: "Claude Fable 5 (Anthropic)",
+    attachment: false,
+    reasoning: false,
+    tool_call: false,
+    structured_output: true,
+    modalities: {
+      input: ["text"],
+    },
+    limit: {
+      output: 64_000,
+    },
+    cost: {
+      input: 10,
+      output: 50,
+      cache_read: 1,
+      cache_write: 12.5,
+    },
+  });
+});
+
+test("factors Grok LLM Gateway routes against xAI metadata", () => {
+  const model = buildLLMGatewayModel(llmGatewayModel({
+    id: "grok-4-6",
+    name: "Grok 4.6",
+    family: "grok",
+    context_length: 500_000,
+    pricing: {
+      prompt: "2e-6",
+      completion: "6e-6",
+      input_cache_read: "0.5e-6",
+    },
+  }), undefined);
+
+  expect(model).toEqual({
+    base_model: "xai/grok-4.6",
+    cost: {
+      input: 2,
+      output: 6,
+      cache_read: 0.5,
+    },
+  });
+});
+
+test("prefers the gateway max_output over authored output on mapped resyncs", () => {
+  const model = buildLLMGatewayMappedModel(llmGatewayMappedModel({ max_output: 32_000 }), {
+    base_model: "anthropic/claude-fable-5",
+    name: "Claude Fable 5 (Anthropic)",
+    description: "Claude Fable 5 served by Anthropic",
+    limit: { output: 64_000 },
+  });
+
+  expect(model).toEqual({
+    base_model: "anthropic/claude-fable-5",
+    name: "Claude Fable 5 (Anthropic)",
+    description: "Claude Fable 5 served by Anthropic",
+    reasoning_options: [{ type: "effort", values: ["low", "medium", "high", "xhigh", "max"] }],
+    structured_output: true,
+    limit: {
+      output: 32_000,
+    },
+    cost: {
+      input: 10,
+      output: 50,
+      cache_read: 1,
+      cache_write: 12.5,
+    },
+  });
+});
+
+test("translates a none-only effort list into a reasoning toggle", () => {
+  const model = buildLLMGatewayMappedModel(llmGatewayMappedModel({
+    providers: [{ providerId: "anthropic", vision: true, tools: true, reasoning: true, reasoning_efforts: ["none"] }],
+  }), undefined);
+
+  expect(model).toMatchObject({
+    base_model: "anthropic/claude-fable-5",
+    reasoning_options: [{ type: "toggle" }],
+  });
+});
+
+test("realigns capability flags from the mapping on mapped factored resyncs", () => {
+  // The deployment dropped reasoning and gained tools since the file was
+  // written: the resync must move the booleans and the reasoning controls
+  // together instead of clearing options under a frozen reasoning = true.
+  const model = buildLLMGatewayMappedModel(llmGatewayMappedModel({
+    providers: [{ providerId: "anthropic", vision: true, tools: true, reasoning: false }],
+  }), {
+    base_model: "anthropic/claude-fable-5",
+    name: "Claude Fable 5 (Anthropic)",
+    reasoning: true,
+    reasoning_options: [{ type: "toggle" }],
+    tool_call: false,
+  });
+
+  expect(model).toMatchObject({ reasoning: false });
+  expect(model!.reasoning_options).toBeUndefined();
+  // Realigned to the mapping and now equal to the base, the stale
+  // tool_call = false override is dropped and inherits the base again.
+  expect(model!.tool_call).toBeUndefined();
+});
+
+test("restores image input when vision returns on mapped resyncs", () => {
+  // The file was written while the deployment had no vision (text-only
+  // stripped modalities); vision is back, so the stale override must clear.
+  const factored = buildLLMGatewayMappedModel(llmGatewayMappedModel(), {
+    base_model: "anthropic/claude-fable-5",
+    name: "Claude Fable 5 (Anthropic)",
+    attachment: false,
+    modalities: { input: ["text"] },
+  });
+  expect(factored!.modalities).toBeUndefined();
+  expect(factored!.attachment).toBeUndefined();
+
+  const full = buildLLMGatewayMappedModel(llmGatewayMappedModel({
+    id: "acme/mystery-model",
+    name: "Mystery Model (Acme)",
+    family: undefined,
+    providers: [{ providerId: "acme", vision: true, tools: true, reasoning: false }],
+  }), {
+    name: "Mystery Model (Acme)",
+    attachment: false,
+    modalities: { input: ["text"], output: ["text"] },
+  });
+  expect(full).toMatchObject({
+    attachment: true,
+    modalities: { input: ["text", "image"], output: ["text"] },
+  });
+});
+
+test("never synthesizes a description on mapped factored resyncs", () => {
+  const model = buildLLMGatewayMappedModel(llmGatewayMappedModel(), {
+    base_model: "anthropic/claude-fable-5",
+    name: "Claude Fable 5 (Anthropic)",
+  });
+
+  // An unset description must keep inheriting the base's lab text instead of
+  // being stamped with a sticky synthesized override on the first resync.
+  expect(model).toBeDefined();
+  expect(model!.description).toBeUndefined();
+});
+
+test("authors the toggle wire-path header on mapped sync creates", () => {
+  const context = { existing: () => undefined, authored: () => undefined };
+
+  const toggle = llmgatewayProviders.translateModel(llmGatewayMappedModel({
+    providers: [{ providerId: "anthropic", vision: true, tools: true, reasoning: true, reasoning_efforts: ["none"] }],
+  }), context);
+  expect(toggle?.header).toStartWith("# Toggle: $.reasoning_effort");
+
+  const effort = llmgatewayProviders.translateModel(llmGatewayMappedModel(), context);
+  expect(effort?.model).toMatchObject({
+    reasoning_options: [{ type: "effort", values: ["low", "medium", "high", "xhigh", "max"] }],
+  });
+  expect(effort?.header).toBeUndefined();
+});
+
+test("keeps inheriting base output on factored resyncs without max_output", () => {
+  const model = buildLLMGatewayMappedModel(llmGatewayMappedModel({ max_output: undefined }), {
+    base_model: "anthropic/claude-fable-5",
+    name: "Claude Fable 5 (Anthropic)",
+    description: "Claude Fable 5 served by Anthropic",
+  });
+
+  expect(model).toEqual({
+    base_model: "anthropic/claude-fable-5",
+    name: "Claude Fable 5 (Anthropic)",
+    description: "Claude Fable 5 served by Anthropic",
+    reasoning_options: [{ type: "effort", values: ["low", "medium", "high", "xhigh", "max"] }],
+    structured_output: true,
+    cost: {
+      input: 10,
+      output: 50,
+      cache_read: 1,
+      cache_write: 12.5,
+    },
+  });
+});
+
+test("skips unfactorable LLM Gateway creates without a served context", () => {
+  // Unknown family, so no canonical base to inherit a context from.
+  const mapped = buildLLMGatewayMappedModel(llmGatewayMappedModel({
+    id: "acme/mystery-model",
+    name: "Mystery Model (Acme)",
+    family: undefined,
+    context_length: undefined,
+  }), undefined);
+  expect(mapped).toBeUndefined();
+
+  const aggregated = buildLLMGatewayModel(llmGatewayModel({
+    id: "mystery-model",
+    name: "Mystery Model",
+    family: undefined,
+    context_length: undefined,
+  }), undefined);
+  expect(aggregated).toBeUndefined();
+});
+
+test("keeps curated budget controls under deployment efforts", () => {
+  // Deployment efforts own only the effort/toggle surface: the hand-authored
+  // budget_tokens control (this host's $.reasoning.max_tokens path) survives
+  // the resync, while the stale effort list is replaced.
+  const model = buildLLMGatewayMappedModel(llmGatewayMappedModel(), {
+    base_model: "anthropic/claude-fable-5",
+    name: "Claude Fable 5 (Anthropic)",
+    reasoning_options: [
+      { type: "effort", values: ["low", "high"] },
+      { type: "budget_tokens", min: 1_024, max: 63_999 },
+    ],
+  });
+  expect(model!.reasoning_options).toEqual([
+    { type: "budget_tokens", min: 1_024, max: 63_999 },
+    { type: "effort", values: ["low", "medium", "high", "xhigh", "max"] },
+  ]);
+
+  // Same merge on creates, with the budget coming from the aggregated
+  // sibling's curation for the same root model.
+  const seeded = buildLLMGatewayMappedModel(llmGatewayMappedModel({
+    id: "anthropic/claude-sonnet-4-6",
+    name: "Claude Sonnet 4.6 (Anthropic)",
+  }), undefined);
+  expect(seeded!.reasoning_options).toEqual([
+    { type: "budget_tokens", min: 1_024, max: 63_999 },
+    { type: "effort", values: ["low", "medium", "high", "xhigh", "max"] },
+  ]);
+});
+
+test("seeds context pricing tiers from the aggregated sibling on creates", () => {
+  // The gateway API carries no tier pricing; without the sibling's curated
+  // tiers the bulk sync would author tiered models at flat long-context rates.
+  const model = buildLLMGatewayMappedModel(llmGatewayMappedModel({
+    id: "openai/gpt-5.5",
+    name: "GPT-5.5 (OpenAI)",
+    family: "openai",
+  }), undefined);
+
+  expect(model!.cost?.tiers).toEqual([
+    { tier: { type: "context", size: 272_000 }, input: 10, output: 45, cache_read: 1 },
+  ]);
+});
+
+test("factors perplexity entries without widening the shared prefix map", () => {
+  // The perplexity family resolves through resolveModelMetadataBaseModel's
+  // exact models/ path match; CANONICAL_PROVIDER_PREFIXES stays untouched so
+  // other hosts' standalone perplexity files keep their current behavior.
+  const model = buildLLMGatewayMappedModel(llmGatewayMappedModel({
+    id: "perplexity/sonar-pro",
+    name: "Sonar Pro (Perplexity)",
+    family: "perplexity",
+  }), undefined);
+
+  expect(model).toMatchObject({ base_model: "perplexity/sonar-pro" });
+});
+
+test("refuses to author a zero context on full LLM Gateway resyncs", () => {
+  // Existing full rows (no base to inherit from) with nothing usable from the
+  // API or the file must fail loudly instead of being rewritten with
+  // limit.context = 0.
+  expect(() => buildLLMGatewayMappedModel(llmGatewayMappedModel({
+    context_length: undefined,
+    max_output: undefined,
+  }), {
+    name: "Claude Fable 5 (Anthropic)",
+  })).toThrow("no usable context");
+
+  // An authored 0 on disk is as unusable as an absent context.
+  expect(() => buildLLMGatewayMappedModel(llmGatewayMappedModel({
+    context_length: 0,
+    max_output: undefined,
+  }), {
+    name: "Claude Fable 5 (Anthropic)",
+    limit: { context: 0 },
+  })).toThrow("no usable context");
+
+  expect(() => buildLLMGatewayModel(llmGatewayModel({
+    context_length: undefined,
+  }), {
+    name: "Claude Fable 5",
+  })).toThrow("no usable context");
+});
+
+test("leaves context unset on mapped factored creates without a served context", () => {
+  const model = buildLLMGatewayMappedModel(llmGatewayMappedModel({
+    context_length: undefined,
+    max_output: undefined,
+  }), undefined);
+
+  // Everything limit-related inherits from the base; no zero is authored.
+  expect(model).toBeDefined();
+  expect("limit" in model!).toBe(false);
+});
+
+test("strips image input when the deployment has no vision", () => {
+  // The model-level architecture still claims image input; the deployment
+  // flag must win on both the factored and the unfactored path.
+  const factored = buildLLMGatewayMappedModel(llmGatewayMappedModel({
+    providers: [{ providerId: "anthropic", vision: false, tools: true, reasoning: false }],
+  }), undefined);
+  expect(factored).toMatchObject({
+    base_model: "anthropic/claude-fable-5",
+    attachment: false,
+    modalities: { input: ["text"] },
+  });
+
+  const full = buildLLMGatewayMappedModel(llmGatewayMappedModel({
+    id: "acme/mystery-model",
+    name: "Mystery Model (Acme)",
+    family: undefined,
+    providers: [{ providerId: "acme", vision: false, tools: true, reasoning: false }],
+  }), undefined);
+  expect(full).toMatchObject({
+    attachment: false,
+    modalities: { input: ["text"], output: ["text"] },
+  });
+});
+
+test("keeps the last LLM Gateway entry for case-insensitive duplicate IDs", () => {
+  const first = llmGatewayModel({ id: "qwen3.8-27b", family: "alibaba" });
+  const other = llmGatewayModel();
+  for (const id of [first.id, "Qwen3.8-27B"]) {
+    const last = llmGatewayModel({
+      id,
+      family: "consensusprotocol",
+      context_length: 32_768,
+      pricing: { prompt: "0.41e-6", completion: "2.5e-6" },
+    });
+    expect(llmgateway.parseModels({ data: [first, other, last] })).toEqual([last, other]);
+    expect(llmgateway.parseModels({ data: [last, other, first] })).toEqual([first, other]);
+  }
+  const nonText = llmGatewayModel({
+    id: first.id,
+    architecture: { input_modalities: ["text"], output_modalities: ["image"] },
+  });
+  expect(llmgateway.parseModels({ data: [first, nonText] })).toEqual([first]);
+});
+
+test("syncs the last LLM Gateway case variant without mixing source records", async () => {
+  const root = await mkdtemp(path.join(tmpdir(), "models-dev-llmgateway-case-"));
+  const modelsDir = path.join(root, "providers", "llmgateway", "models");
+  await mkdir(modelsDir, { recursive: true });
+  const first = llmGatewayModel({ id: "qwen3.8-27b", family: undefined });
+  const last = llmGatewayModel({
+    id: "Qwen3.8-27B",
+    family: undefined,
+    context_length: 32_768,
+    pricing: { prompt: "0.41e-6", completion: "2.5e-6" },
+  });
+  const provider = { ...llmgateway, modelsDir, fetchModels: async () => ({ data: [first, last] }) };
+
+  try {
+    await syncProvider({ ...provider, fetchModels: async () => ({ data: [first] }) });
+    const result = await syncProvider(provider);
+    expect(result).toMatchObject({ created: 1, updated: 0, deleted: 1 });
+    expect(await Bun.file(path.join(modelsDir, `${first.id}.toml`)).exists()).toBe(false);
+    const written = Bun.TOML.parse(await readFile(path.join(modelsDir, `${last.id}.toml`), "utf8"));
+    expect(written).toMatchObject({
+      cost: { input: 0.41, output: 2.5 },
+      limit: { context: 32_768 },
+    });
+    expect(written.cost).not.toHaveProperty("cache_write");
+    expect(await syncProvider(provider)).toMatchObject({ created: 0, updated: 0, deleted: 0, unchanged: 1 });
+  } finally {
+    await rm(root, { recursive: true, force: true });
+  }
+});
+
+test("refuses empty responses in both LLM Gateway syncs", () => {
+  expect(() => llmgateway.parseModels({ data: [] })).toThrow("no text models");
+  expect(() => llmgatewayProviders.parseModels({ data: [] })).toThrow("mapped view unavailable");
+});
+
+test("refuses aggregated responses in the mapped LLM Gateway sync", () => {
+  expect(() => llmgatewayProviders.parseModels({ data: [llmGatewayModel()] }))
+    .toThrow("mapped view unavailable");
+});
+
+test("filters pseudo and non-text entries from the mapped LLM Gateway sync", () => {
+  const parsed = llmgatewayProviders.parseModels({
+    data: [
+      llmGatewayMappedModel(),
+      llmGatewayMappedModel({ id: "llmgateway/auto", name: "Auto Route (LLM Gateway)" }),
+      llmGatewayMappedModel({
+        id: "openai/sora-2",
+        name: "Sora 2 (OpenAI)",
+        architecture: { input_modalities: ["text"], output_modalities: ["video"] },
+      }),
+    ],
+  });
+
+  expect(parsed.map((model) => model.id)).toEqual(["anthropic/claude-fable-5"]);
+});
+
+test("refuses mapped LLM Gateway entries without exactly one provider mapping", () => {
+  expect(() => llmgatewayProviders.parseModels({
+    data: [llmGatewayMappedModel({ providers: undefined })],
+  })).toThrow("without exactly one provider mapping");
+
+  expect(() => llmgatewayProviders.parseModels({
+    data: [llmGatewayMappedModel({ providers: [] })],
+  })).toThrow("without exactly one provider mapping");
+
+  expect(() => llmgatewayProviders.parseModels({
+    data: [
+      llmGatewayMappedModel(),
+      llmGatewayMappedModel({
+        id: "azure/gpt-5.5",
+        name: "GPT-5.5 (Azure)",
+        providers: [{ providerId: "azure" }, { providerId: "openai" }],
+      }),
+    ],
+  })).toThrow("azure/gpt-5.5");
+
+  // Entries the sync drops anyway (pseudo-models, non-text) may lack a
+  // mapping without tripping the guard.
+  const parsed = llmgatewayProviders.parseModels({
+    data: [
+      llmGatewayMappedModel(),
+      llmGatewayMappedModel({
+        id: "llmgateway/auto",
+        name: "Auto Route (LLM Gateway)",
+        providers: undefined,
+      }),
+    ],
+  });
+  expect(parsed.map((model) => model.id)).toEqual(["anthropic/claude-fable-5"]);
 });
 
 // Ensures catalog pagination preserves authentication and returns every page.
@@ -2475,6 +3925,23 @@ test("confirms reasoning when any available Merge Gateway route reports supports
   expect(model).not.toMatchObject({ reasoning: false });
 });
 
+// The live catalog emits reasoning: null on some routes even when
+// supports_reasoning is true. Treat that as unknown controls, not a crash.
+test("tolerates a null Merge Gateway reasoning object when reasoning is confirmed", () => {
+  const selected = mergeGatewayVendor();
+  selected.capabilities.supports_reasoning = true;
+  selected.capabilities.reasoning = null;
+  const model = buildMergeGatewayModel(mergeGatewayModel({
+    vendors: { openai: selected },
+  }), {
+    base_model: "openai/gpt-5.6-sol",
+    cost: { input: 5, output: 30 },
+  });
+
+  expect(model).toMatchObject({ reasoning_options: [] });
+  expect(model).not.toMatchObject({ reasoning: false });
+});
+
 // Publishes a toggle only when the selected route explicitly supports disabling reasoning.
 test("derives a Merge Gateway reasoning toggle when the selected route supports disabling", () => {
   const selected = mergeGatewayVendor();
@@ -2495,6 +3962,119 @@ test("derives a Merge Gateway reasoning toggle when the selected route supports 
   });
 
   expect(model).toMatchObject({ reasoning_options: [{ type: "toggle" }] });
+});
+
+test("syncs Merge Gateway explicitly advertised thinking budgets", () => {
+  const selected = mergeGatewayVendor();
+  selected.capabilities.supports_reasoning = true;
+  selected.capabilities.reasoning = {
+    configurable: true,
+    disable_supported: true,
+    default_enabled: false,
+    controls: ["thinking.budget_tokens"],
+    output_style: "reasoning_content",
+  };
+  const source = mergeGatewayModel({ vendors: { openai: selected } });
+  const translated = mergeGateway.translateModel(source, {
+    existing: () => ({ reasoning: true, reasoning_options: [] }),
+    authored: () => undefined,
+  });
+  expect(translated?.model.reasoning_options).toEqual([
+    { type: "toggle" },
+    { type: "budget_tokens" },
+  ]);
+  expect(translated?.header).toStartWith('# Toggle: thinking.type = "enabled"|"disabled"');
+
+  selected.capabilities.reasoning.disable_supported = false;
+  expect(buildMergeGatewayModel(source, { reasoning: true })?.reasoning_options).toEqual([
+    { type: "budget_tokens" },
+  ]);
+});
+
+test("does not infer Merge Gateway budgets from other controls or output limits", () => {
+  for (const controls of [undefined, [], ["thinking"], ["max_tokens"], ["reasoning.effort"]]) {
+    const selected = mergeGatewayVendor();
+    selected.capabilities.reasoning = { configurable: true, controls };
+    const model = buildMergeGatewayModel(mergeGatewayModel({ vendors: { openai: selected } }), {
+      reasoning: true,
+      reasoning_options: [],
+    });
+    expect(model?.reasoning_options).toEqual([]);
+  }
+});
+
+test("preserves curated Merge Gateway controls when a budget is advertised", () => {
+  const selected = mergeGatewayVendor();
+  selected.capabilities.reasoning = { controls: ["thinking.budget_tokens"] };
+  const reasoning_options = [{ type: "effort" as const, values: ["high"] }];
+  const model = buildMergeGatewayModel(mergeGatewayModel({ vendors: { openai: selected } }), {
+    reasoning: true,
+    reasoning_options,
+  });
+  expect(model?.reasoning_options).toEqual(reasoning_options);
+});
+
+// Effort control yields toggle + effort, not a bare toggle (claude-opus-5 regression).
+test("derives Merge Gateway toggle + effort from an effort control", () => {
+  const selected = mergeGatewayVendor({
+    pricing: { currency: "USD", input_per_million: 5, output_per_million: 25 },
+  });
+  selected.capabilities.reasoning = {
+    configurable: true,
+    disable_supported: true,
+    default_enabled: true,
+    controls: ["reasoning.effort"],
+    effort_values: ["low", "medium", "high", "xhigh", "max"],
+    output_style: "hidden",
+  };
+  const model = buildMergeGatewayModel(mergeGatewayModel({
+    model: "anthropic/claude-opus-5",
+    provider: "anthropic",
+    display_name: "Claude Opus 5",
+    vendors: { anthropic: selected },
+  }), {
+    base_model: "anthropic/claude-opus-5",
+    reasoning: true,
+    reasoning_options: [],
+    cost: { input: 5, output: 25 },
+  });
+
+  expect(model).toMatchObject({
+    reasoning_options: [
+      { type: "toggle" },
+      { type: "effort", values: ["low", "medium", "high", "xhigh", "max"] },
+    ],
+  });
+});
+
+// Effort control without disable support yields effort only.
+test("derives Merge Gateway effort without a toggle when disable is unsupported", () => {
+  const selected = mergeGatewayVendor({
+    pricing: { currency: "USD", input_per_million: 5, output_per_million: 25 },
+  });
+  selected.capabilities.reasoning = {
+    configurable: true,
+    disable_supported: false,
+    default_enabled: true,
+    controls: ["reasoning.effort"],
+    effort_values: ["low", "medium", "high", "xhigh", "max"],
+    output_style: "hidden",
+  };
+  const model = buildMergeGatewayModel(mergeGatewayModel({
+    model: "anthropic/claude-sonnet-5",
+    provider: "anthropic",
+    display_name: "Claude Sonnet 5",
+    vendors: { anthropic: selected },
+  }), {
+    base_model: "anthropic/claude-sonnet-5",
+    reasoning: true,
+    reasoning_options: [],
+    cost: { input: 3, output: 15 },
+  });
+
+  expect(model).toMatchObject({
+    reasoning_options: [{ type: "effort", values: ["low", "medium", "high", "xhigh", "max"] }],
+  });
 });
 
 // Prevents deprecated routes from contributing capabilities to an available model.
@@ -2770,6 +4350,44 @@ test("Vercel factored models inherit temperature from base metadata", () => {
   expect(synced).not.toHaveProperty("temperature");
 });
 
+test("Vercel free routes factor onto the canonical non-free model", () => {
+  const [model] = vercel.parseModels({
+    data: [{
+      id: "zai/glm-4.6v-flash-free",
+      name: "GLM-4.6V-Flash (Free)",
+      created: 1_765_152_000,
+      released: 1_765_152_000,
+      context_window: 128_000,
+      max_tokens: 24_000,
+      type: "language",
+      tags: ["reasoning", "tool-use", "vision", "file-input"],
+      pricing: { input: "0", output: "0" },
+    }],
+  });
+
+  const translated = vercel.translateModel(model!, {
+    existing(id) {
+      return id === "zai/glm-4.6v-flash"
+        ? { reasoning_options: [{ type: "toggle" }] }
+        : undefined;
+    },
+    authored() {
+      return undefined;
+    },
+  });
+
+  expect(translated?.model).toMatchObject({
+    base_model: "zhipuai/glm-4.6v-flash",
+    name: "GLM-4.6V-Flash (Free)",
+    reasoning_options: [{ type: "toggle" }],
+    cost: { input: 0, output: 0 },
+    limit: { output: 24_000 },
+    modalities: { input: ["text", "image", "pdf"] },
+  });
+  expect(translated?.model).not.toHaveProperty("description");
+  expect(translated?.model).not.toHaveProperty("family");
+});
+
 test("Vercel Claude Opus fast variants factor onto base opus metadata", () => {
   const [model] = vercel.parseModels({
     data: [{
@@ -2789,10 +4407,91 @@ test("Vercel Claude Opus fast variants factor onto base opus metadata", () => {
     }],
   });
 
-  expect(buildVercelModel(model!, undefined)).toMatchObject({
+  const translated = vercel.translateModel(model!, {
+    existing(id) {
+      return id === "anthropic/claude-opus-5"
+        ? { reasoning_options: [{ type: "effort", values: ["low", "medium", "high", "xhigh", "max"] }] }
+        : undefined;
+    },
+    authored() {
+      return undefined;
+    },
+  });
+  const synced = translated?.model;
+
+  expect(synced).toMatchObject({
     base_model: "anthropic/claude-opus-5",
     name: "Claude Opus 5 (Fast)",
+    reasoning_options: [{ type: "effort", values: ["low", "medium", "high", "xhigh", "max"] }],
     cost: { input: 10, output: 50, cache_read: 1, cache_write: 12.5 },
+  });
+  expect(synced).not.toHaveProperty("description");
+  expect(synced).not.toHaveProperty("family");
+});
+
+test("Vercel empty existing reasoning_options falls back to the route base menu", () => {
+  const [model] = vercel.parseModels({
+    data: [{
+      id: "minimax/minimax-m2.7-free",
+      name: "MiniMax M2.7 (Free)",
+      created: 1_784_160_000,
+      context_window: 200_000,
+      max_tokens: 128_000,
+      type: "language",
+      tags: ["reasoning", "tool-use"],
+      pricing: { input: "0", output: "0" },
+    }],
+  });
+
+  const translated = vercel.translateModel(model!, {
+    existing(id) {
+      if (id === "minimax/minimax-m2.7-free") return { reasoning_options: [] };
+      if (id === "minimax/minimax-m2.7") {
+        return { reasoning_options: [{ type: "effort", values: ["low", "high"] }] };
+      }
+      return undefined;
+    },
+    authored() {
+      return undefined;
+    },
+  });
+
+  expect(translated?.model).toMatchObject({
+    reasoning_options: [{ type: "effort", values: ["low", "high"] }],
+  });
+});
+
+test("Vercel preserves a non-empty existing reasoning_options over the base menu", () => {
+  const [model] = vercel.parseModels({
+    data: [{
+      id: "minimax/minimax-m2.7-free",
+      name: "MiniMax M2.7 (Free)",
+      created: 1_784_160_000,
+      context_window: 200_000,
+      max_tokens: 128_000,
+      type: "language",
+      tags: ["reasoning", "tool-use"],
+      pricing: { input: "0", output: "0" },
+    }],
+  });
+
+  const translated = vercel.translateModel(model!, {
+    existing(id) {
+      if (id === "minimax/minimax-m2.7-free") {
+        return { reasoning_options: [{ type: "toggle" }] };
+      }
+      if (id === "minimax/minimax-m2.7") {
+        return { reasoning_options: [{ type: "effort", values: ["low", "high"] }] };
+      }
+      return undefined;
+    },
+    authored() {
+      return undefined;
+    },
+  });
+
+  expect(translated?.model).toMatchObject({
+    reasoning_options: [{ type: "toggle" }],
   });
 });
 
@@ -2971,7 +4670,6 @@ test("syncs EmpirioLabs pricing tiers and reasoning controls", () => {
     base_model: "minimax/MiniMax-M3",
     structured_output: true,
     reasoning_options: [
-      { type: "toggle" },
       { type: "effort", values: ["none", "low", "medium", "high", "max"] },
       { type: "budget_tokens", min: 1_024, max: 32_768 },
     ],
@@ -2992,6 +4690,7 @@ test("syncs EmpirioLabs pricing tiers and reasoning controls", () => {
 
 test("maps EmpirioLabs aliases to canonical model metadata", () => {
   expect(resolveEmpiriolabsBaseModel("fugu-ultra")).toBe("sakana/fugu-ultra");
+  expect(resolveEmpiriolabsBaseModel("seed-2-0-code")).toBe("bytedance-seed/seed-2.0-code");
   expect(resolveEmpiriolabsBaseModel("muse-spark-1-1")).toBe("meta/muse-spark-1.1");
   expect(resolveEmpiriolabsBaseModel("step-3-5-flash")).toBe("stepfun/step-3.5-flash");
 });
@@ -3024,11 +4723,28 @@ function llmGatewayModel(overrides: Partial<LLMGatewayModel> = {}): LLMGatewayMo
       input_cache_write: "12.5e-6",
       internal_reasoning: "0",
     },
+    providers: [{}],
     context_length: 1_000_000,
     supported_parameters: ["temperature", "max_tokens", "top_p", "effort", "reasoning"],
     structured_outputs: true,
     ...overrides,
   };
+}
+
+function llmGatewayMappedModel(overrides: Partial<LLMGatewayModel> = {}): LLMGatewayModel {
+  return llmGatewayModel({
+    id: "anthropic/claude-fable-5",
+    name: "Claude Fable 5 (Anthropic)",
+    providers: [{
+      providerId: "anthropic",
+      vision: true,
+      tools: true,
+      reasoning: true,
+      reasoning_efforts: ["low", "medium", "high", "xhigh", "max"],
+    }],
+    max_output: 128_000,
+    ...overrides,
+  });
 }
 
 function mergeGatewayVendor(
@@ -3065,6 +4781,26 @@ function mergeGatewayModel(overrides: Partial<MergeGatewayModel> = {}): MergeGat
     availability_status: "available",
     created_at: "2026-07-09T00:00:00Z",
     updated_at: "2026-07-09T00:00:00Z",
+    ...overrides,
+  };
+}
+
+function edenAIModel(overrides: Partial<EdenAIModel> = {}): EdenAIModel {
+  return {
+    id: "openai/gpt-5.6-terra",
+    owned_by: "openai",
+    model_name: "gpt-5.6-terra",
+    context_length: 1_050_000,
+    capabilities: {
+      input_modalities: ["text", "image"],
+      output_modalities: ["text"],
+      supports_function_calling: true,
+      supports_response_schema: true,
+    },
+    list_pricing: {
+      input_cost_per_token: 0.000002,
+      output_cost_per_token: 0.000012,
+    },
     ...overrides,
   };
 }
@@ -3112,3 +4848,58 @@ function openRouterModel(overrides: Partial<OpenRouterModel> = {}): OpenRouterMo
     ...overrides,
   };
 }
+
+function caseFoldProvider(modelsDir: string, ids: string[]): SyncProvider<string> {
+  return {
+    id: "case-fold-test",
+    name: "Case fold test",
+    modelsDir,
+    async fetchModels() {
+      return ids;
+    },
+    parseModels(raw) {
+      return raw as string[];
+    },
+    translateModel(id) {
+      return {
+        id,
+        model: {
+          name: id,
+          description: "Case-fold guard test model.",
+          release_date: "2026-08-14",
+          last_updated: "2026-08-14",
+          attachment: false,
+          reasoning: false,
+          tool_call: false,
+          open_weights: false,
+          cost: { input: 1, output: 2 },
+          limit: { context: 8_192, output: 4_096 },
+          modalities: { input: ["text"], output: ["text"] },
+        },
+      };
+    },
+  };
+}
+
+test("rejects synced model paths that differ only in case", async () => {
+  const root = await mkdtemp(path.join(tmpdir(), "models-dev-case-fold-"));
+  const modelsDir = path.join(root, "providers", "case-fold-test", "models");
+  await mkdir(modelsDir, { recursive: true });
+
+  try {
+    await expect(
+      syncProvider(caseFoldProvider(modelsDir, ["Alpha", "alpha"])),
+    ).rejects.toThrow(/differ only in case/u);
+
+    await expect(
+      syncProvider(caseFoldProvider(modelsDir, ["beta", "beta"])),
+    ).rejects.toThrow(/Duplicate synced model path/u);
+
+    const clean = await syncProvider(
+      caseFoldProvider(modelsDir, ["Gamma", "delta"]),
+    );
+    expect(clean).toMatchObject({ created: 2, updated: 0, deleted: 0 });
+  } finally {
+    await rm(root, { recursive: true, force: true });
+  }
+});

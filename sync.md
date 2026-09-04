@@ -11,6 +11,7 @@ The grouped sync targets are available for local convenience, but CI syncs each 
 - `bun models:sync aggregators` syncs every provider in the `aggregators` group.
 - `bun models:sync openrouter` syncs only OpenRouter.
 - `bun models:sync cloudflare-workers-ai` syncs only Cloudflare Workers AI.
+- `bun models:sync cloudflare-ai-gateway` syncs only Cloudflare AI Gateway's proxied catalog.
 - `bun models:sync cloudflare` syncs the Cloudflare sync group.
 - `bun models:sync direct` syncs every provider in the `direct` group.
 - `bun models:sync google` syncs only Google.
@@ -19,6 +20,7 @@ The grouped sync targets are available for local convenience, but CI syncs each 
 - `bun models:sync kilo` syncs only Kilo.
 - `bun models:sync merge-gateway` syncs only Merge Gateway.
 - `bun models:sync openai` syncs only OpenAI catalog availability.
+- `bun models:sync github-copilot` syncs only GitHub Copilot pricing.
 - `bun models:sync tinfoil` syncs only Tinfoil.
 - `bun models:sync aggregators --dry-run` prints changes without writing model files.
 - `bun models:sync aggregators --new-only` creates new model files but skips updates and removals.
@@ -56,11 +58,11 @@ Providers that cannot safely auto-create TOMLs set `skipCreates: true`. In GitHu
 4. Dispatches the Issue Fixer explicitly so issues created with `GITHUB_TOKEN` can still produce PRs
 5. If listing fails, creates nothing (fail closed)
 
-Requires `GH_TOKEN` on the sync workflow step. Local runs are notice-only unless `--open-issues`. Use `--no-issues` / `--dry-run` to skip creates. Issue-fixer ignores these titles (`[missing-model]…`) — they need hand-authored metadata.
+Requires `GH_TOKEN` on the sync workflow step. Local runs are notice-only unless `--open-issues`. Use `--no-issues` / `--dry-run` to skip creates. Each newly opened issue explicitly dispatches the issue-fixer workflow so an agent can research the missing metadata and open a model PR.
 
 The first Actions run may open a batch of issues per provider, including remote IDs the catalog intentionally omits (e.g. OpenAI whisper/tts/moderation surfaces, dated snapshots). This one-time volume is accepted by design: close unwanted issues once and the closed-title dedupe suppresses them permanently. If the dedupe list window (1000 labeled issues per provider) ever fills, the sync fails closed and creates nothing rather than risk duplicates.
 
-Pioneer sets `trackMissingModels: false`: its API currently assigns the placeholder creation date `2024-01-01` to every model, so neither its timestamps nor an age cutoff can identify meaningful new additions. Existing Pioneer TOMLs are still updated by the sync.
+Pioneer and Ofox track remote-only chat models as missing-model issues. Their APIs are not authoritative enough to create complete TOMLs directly, so the issue-fixer agent researches the missing canonical and provider-specific metadata before opening a PR.
 
 OpenAI also sets `trackMissingModels: false`: `/v1/models` is scoped to the automation account and mixes public models with legacy, internal experiment, dated snapshot, and non-catalog IDs without lifecycle metadata. Existing OpenAI TOMLs are still preserved by the availability sync.
 
@@ -139,6 +141,23 @@ CI automatically picks up providers registered in `providers` in `packages/core/
 
 Actions are pinned by commit SHA. Keep new workflow actions pinned the same way.
 
+## Eden AI Notes
+
+- Source endpoint: `https://api.edenai.run/v3/models`; no authentication required.
+- Reasoning effort options are derived from the lab's provider entry or OpenRouter. A toggle-only or budget-only control is not an effort list; do not invent effort levels.
+- When the effort mapper cannot resolve controls, preserve the existing route's authored `reasoning_options` while syncing other authoritative fields. Do not replace authored toggle, effort, or budget controls with `[]`.
+- New reasoning models with neither a resolved mapping nor authored controls remain skipped for manual authoring. No empty placeholder is generated, so the normal auto-merge policy remains unchanged; legitimate always-on `[]` entries are not blanket-blocked.
+- Intentional route deduplication and removal of IDs absent from the upstream catalog are unchanged.
+
+## CrossModel Notes
+
+CrossModel is implemented in `packages/core/src/sync/providers/crossmodel.ts`.
+
+- Source endpoint: `https://www.crossmodel.ai/api/models`.
+- Pricing, context/output limits, modalities, and reasoning controls come from CrossModel's public catalog.
+- `structured_output` comes from `capabilities.json`; when that field is absent, the sync preserves an existing authored override.
+- Other intrinsic model facts remain inherited from the canonical `base_model` metadata.
+
 ## OpenRouter Notes
 
 OpenRouter is implemented in `packages/core/src/sync/providers/openrouter.ts`.
@@ -184,7 +203,16 @@ Cloudflare Workers AI is implemented in `packages/core/src/sync/providers/cloudf
 - Use a dedicated token scoped to Workers AI read access so sync automation does not share deploy credentials.
 - The endpoint is parsed as Cloudflare's OpenRouter-like Workers AI metadata.
 - Model IDs map directly to TOML paths under `providers/cloudflare-workers-ai/models`.
-- This sync target does not manage `providers/cloudflare-ai-gateway`, because the AI Gateway `/compat/models` endpoint does not support `format=openrouter` and does not provide enough model metadata for authoritative catalog sync.
+- This target only manages Workers AI; the separate Cloudflare AI Gateway target handles proxied third-party models.
+
+## Cloudflare AI Gateway Notes
+
+- Cloudflare AI Gateway is implemented in `packages/core/src/sync/providers/cloudflare-ai-gateway.ts`.
+- Source endpoints: `GET /accounts/{id}/ai/catalog/models` for model availability, context limits, and pricing, plus `GET /accounts/{id}/ai/catalog/models/{model}/schema` for reasoning controls exposed by compatible schemas.
+- Required auth: `CLOUDFLARE_ACCOUNT_ID` and `CLOUDFLARE_API_TOKEN`, or the production-token aliases documented in the provider README for local runs. The hourly workflow uses the canonical secret names.
+- The sync manages proxied third-party text-generation models only. Workers AI `@cf/...` models remain under `providers/cloudflare-workers-ai`.
+- `providers/cloudflare-ai-gateway/curation.toml` supplies base-model mappings, live-tested reasoning controls, structured-output support, limit overrides, and intentional skips that the catalog cannot express authoritatively.
+- New catalog entries without canonical lab metadata or required reasoning controls fail closed instead of generating incomplete TOMLs.
 
 ## Google Notes
 
@@ -197,6 +225,15 @@ Google is implemented in `packages/core/src/sync/providers/google.ts`.
 - Local Google models missing from the API response are removed.
 - New Google API models are not created automatically (`skipCreates`) and do not open missing-model issues because the endpoint is not lifecycle-authoritative.
 - Missing-model tracking is limited to recognizable public model families; opaque API codenames such as `ajax`, `perseus`, and `thorin` are ignored.
+
+## GitHub Copilot Notes
+
+GitHub Copilot is implemented in `packages/core/src/sync/providers/github-copilot.ts`.
+
+- Source: `https://raw.githubusercontent.com/github/docs/main/data/tables/copilot/models-and-pricing.yml`
+- The YML contains only token rates, so the sync only updates `[cost]`: `input`, `cached_input` (as `cache_read`), `cache_write`, `output`, and long-context rows as `cost.tiers`.
+- Display names are converted to file IDs, with minimal special case logic to match existing model entries.
+- Unmatched rows open missing-model issues, and local entries missing from the source are kept.
 
 ## xAI Notes
 
@@ -213,8 +250,9 @@ xAI is implemented in `packages/core/src/sync/providers/xai.ts`.
 - Tinfoil is implemented in `packages/core/src/sync/providers/tinfoil.ts`.
 - Source endpoint: `https://inference.tinfoil.sh/v1/models`.
 - No authentication is required; the catalog is public.
-- Existing Tinfoil models are updated from API-authoritative input, output, cached-input pricing, context windows, and catalog availability.
+- Existing Tinfoil models are updated from API-authoritative input, output, cached-input pricing, context windows, reasoning capability, and catalog availability.
 - Provider-specific metadata that the endpoint does not expose, including exact modalities, output limits, reasoning controls, and lifecycle status, remains hand-authored.
+- Reasoning controls are preserved for reasoners and removed when the API reports `reasoning: false`. A reasoner without authored controls fails sync for manual review rather than inventing an empty control set.
 - New token-priced chat, safety, and embedding models are not created automatically (`skipCreates`); each missing ID opens a deduped GitHub issue for hand-authored metadata.
 - Per-request tool, TTS, transcription, realtime, and document-processing services are ignored because their pricing cannot be represented by the token-cost schema.
 
@@ -225,6 +263,15 @@ xAI is implemented in `packages/core/src/sync/providers/xai.ts`.
 - Required auth: `OPENAI_API_KEY` from an automation account with access to the full first-party catalog.
 - The endpoint is used only to monitor catalog availability. Existing TOMLs are preserved byte-for-byte, including models absent from the response, because model access can be scoped to the API project.
 - Fine-tuned and customer-owned models are excluded. Unknown first-party models are ignored because the endpoint does not provide enough lifecycle or visibility metadata to distinguish public catalog additions.
+
+## Meta Notes
+
+- Run with `bun models:sync meta` or as part of the `direct` group. Registration also enables the hourly provider-specific workflow; no new secret is required.
+- Sources: `https://dev.meta.ai/docs/models.md` and `https://dev.meta.ai/docs/pricing-rate-limits.md`.
+- Meta's `/v1/models` endpoint is team-scoped and exposes IDs and registry timestamps, not pricing or limits. Use the public documentation instead of treating account-visible IDs as public catalog additions.
+- Sync only the token-priced text models in the public model table. Update standard/contributor input, output, and cached-input USD/MTok prices and context windows. Keep output limits, modalities (including audio support caveats), reasoning controls, dates, inheritance, and other authored fields unchanged.
+- New documented models open deduped missing-model issues for manual authoring (`skipCreates`); local models absent from the docs are retained (`deleteMissing: false`). Image generation, transcription, and self-hosted models are outside this sync's scope.
+- Missing tables, unknown pricing tiers, invalid prices/limits, and duplicate model rows fail before writing. Documentation format changes require updating the parser, not guessing defaults.
 
 ## OVHcloud Notes
 
@@ -261,10 +308,22 @@ Chutes is implemented in `packages/core/src/sync/providers/chutes.ts`.
 - Source endpoint: `https://llm.chutes.ai/v1/models`; no auth required (the model list is public).
 - Model IDs map directly to TOML paths under `providers/chutes/models`.
 - `reasoning`, `tool_call`, and `structured_output` come from `supported_features`; `temperature` comes from `supported_sampling_parameters`.
-- `reasoning_options` is always an empty array: the API advertises a `reasoning` capability but exposes no toggle or effort parameter, so there is no provider evidence for a reasoning option.
+- `reasoning_options` is hand-authored, not derived: the API advertises a `reasoning` capability but no toggle or effort parameter, while the models accept a `chat_template_kwargs` thinking switch (`enable_thinking` for Qwen/Gemma, `thinking` for Kimi/GLM/DeepSeek). The sync leaves the field unset so authored options survive; new reasoners without an entry still default to an empty array.
 - TEE model IDs emit `base_model` references to matching `models/` metadata; checkpoints without a canonical entry (e.g. `Qwen3-235B-A22B-Thinking-2507`, `DeepSeek-V3.2`) are written inline.
 - `attachment` is derived from non-text `input_modalities`, and all models are `open_weights`.
 - `release_date`/`last_updated` default to the API `created` timestamp but preserve existing hand-authored dates; `knowledge`, `family`, `status`, `interleaved`, and `limit.input` are preserved when present.
+
+## Requesty Notes
+
+Requesty is implemented in `packages/core/src/sync/providers/requesty.ts`.
+
+- Run it with `bun models:sync requesty` or `bun requesty:sync`.
+- Source endpoint: `https://router.requesty.ai/v1/models/managed`; no auth required (the managed catalog is public).
+- The endpoint is the sole source of truth. `preserveBaseModels` and `preserveDescriptions` are both `false` so an upstream correction always wins over a previously committed value; local TOMLs are never read back into the translation.
+- Managed IDs are bare (`claude-opus-4-7`) or region-pinned (`gpt-5.4@eu`) rather than OpenRouter-shaped, so they resolve through `resolveModelMetadataBaseModel` after the `@<region>` qualifier is stripped. Every model emits `base_model` plus provider-specific overrides only.
+- Anthropic files `.0` releases with an explicit `-0` (`claude-sonnet-4-0.toml`) while later point releases drop it, so bare `claude-<tier>-<major>` IDs retry against the `-0` filename.
+- Region variants are written as separate models: `gpt-5.4` and `gpt-5.4@eu` are distinct files that share a `base_model` and differ only in served pricing and limits.
+- Prices are per-token USD and are converted to per-1M-token numbers. `pricing[]` bands become `cost.tiers`, with the first band as the flat `cost`. Price fields are nullable upstream, so a route quoting no prices gets no `[cost]` section rather than a fabricated zero.
 
 ## Venice Notes
 

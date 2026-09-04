@@ -1,0 +1,17 @@
+base_model = "zhipuai/glm-5.3-flash"
+last_updated = "2026-08-31"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[cost]
+input = 0.16332
+output = 0.5444
+cache_read = 0.031575
+
+[limit]
+context = 1_048_576
+
+[modalities]
+input = ["text", "image"]

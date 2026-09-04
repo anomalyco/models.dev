@@ -1,3 +1,4 @@
+# Source: https://cloud.google.com/gemini-enterprise-agent-platform/generative-ai/pricing
 name = "GPT OSS 20B"
 description = "Open-weight GPT model for self-hosted reasoning and instruction-following workloads"
 family = "gpt-oss"
@@ -14,6 +15,7 @@ status = "deprecated"
 [cost]
 input = 0.07
 output = 0.25
+cache_read = 0.007
 
 [limit]
 context = 131_072

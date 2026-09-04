@@ -1,0 +1,22 @@
+# Sources:
+# - https://ofox.ai/models/openai/gpt-5-mini (pricing: $0.25/$2 input/output, cache read $0.03)
+# - https://api.ofox.ai/v1/models/openai/gpt-5-mini (context 256K, max out 32K, Azure-backed)
+# - https://api.ofox.ai/v2/models/catalog (chat mode id openai/gpt-5-mini)
+# - https://developers.openai.com/api/docs/models/gpt-5-mini (lab metadata; effort levels)
+# - peers: providers/openai/models/gpt-5-mini.toml, providers/ofox/models/openai/gpt-5.5.toml
+base_model = "openai/gpt-5-mini"
+base_model_omit = ["limit.input"]
+reasoning_options = [{ type = "effort", values = ["minimal", "low", "medium", "high"] }]
+
+[cost]
+input = 0.25
+output = 2
+cache_read = 0.03
+
+[limit]
+context = 256_000
+output = 32_768
+
+[provider]
+npm = "@ai-sdk/openai"
+api = "https://api.ofox.ai/v1"

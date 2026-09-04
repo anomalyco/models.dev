@@ -22,13 +22,17 @@ function baseModelExists(modelID: string): boolean {
 // CROSSMODEL_MODELS_URL overrides the endpoint (e.g. a local backend) for testing.
 const API_ENDPOINT = process.env.CROSSMODEL_MODELS_URL ?? "https://www.crossmodel.ai/api/models";
 
+const REASONING_EFFORTS = ["none", "minimal", "low", "medium", "high", "xhigh", "max", "default"] as const;
+
 const ReasoningCapability = z
   .object({
-    toggle: z.boolean().optional(),
-    effort: z.array(z.string()).optional(),
+    supported: z.boolean().optional(),
+    toggle: z.boolean().nullish().transform((value) => value ?? undefined),
+    effort: z.array(z.enum(REASONING_EFFORTS)).nullish().transform((value) => value ?? undefined),
     budget_tokens: z
       .object({ min: z.number().optional(), max: z.number().optional() })
-      .optional(),
+      .nullish()
+      .transform((value) => value ?? undefined),
   })
   .passthrough();
 
@@ -55,7 +59,10 @@ export const CrossModelModel = z
       .object({ input: z.array(z.string()), output: z.array(z.string()) })
       .optional(),
     capabilities: z
-      .object({ reasoning: ReasoningCapability.optional() })
+      .object({
+        json: z.boolean().optional(),
+        reasoning: ReasoningCapability.optional(),
+      })
       .passthrough()
       .nullable()
       .optional(),
@@ -155,27 +162,17 @@ function modalities(values: string[] | undefined, fallback: Modality[]): Modalit
   return [...new Set(result.length > 0 ? result : fallback)];
 }
 
-// models.dev's reasoning_options effort enum (schema.ts ReasoningEffortValue).
-// Guarding against it means an unexpected upstream value is dropped instead of
-// silently producing a TOML that fails `validate`.
-const REASONING_EFFORTS = ["none", "minimal", "low", "medium", "high", "xhigh", "max", "default"] as const;
-type ReasoningEffort = (typeof REASONING_EFFORTS)[number];
-function isReasoningEffort(value: string): value is ReasoningEffort {
-  return (REASONING_EFFORTS as readonly string[]).includes(value);
-}
-
 // Project CrossModel's capabilities.reasoning onto models.dev reasoning_options.
 //   reasoning absent  -> undefined (non-reasoning model; option omitted)
 //   reasoning === {}  -> [] (model reasons, no verified user-selectable control)
 //   otherwise         -> toggle / effort / budget_tokens entries
 function reasoningOptions(model: CrossModelModel): SyncedModel["reasoning_options"] {
   const reasoning = model.capabilities?.reasoning;
-  if (reasoning === undefined) return undefined;
+  if (reasoning === undefined || reasoning.supported === false) return undefined;
   const options: NonNullable<SyncedModel["reasoning_options"]> = [];
   if (reasoning.toggle === true) options.push({ type: "toggle" });
   if (reasoning.effort !== undefined) {
-    const values = reasoning.effort.filter(isReasoningEffort);
-    if (values.length > 0) options.push({ type: "effort", values });
+    if (reasoning.effort.length > 0) options.push({ type: "effort", values: reasoning.effort });
   }
   if (reasoning.budget_tokens !== undefined) {
     const budget: { type: "budget_tokens"; min?: number; max?: number } = { type: "budget_tokens" };
@@ -183,10 +180,13 @@ function reasoningOptions(model: CrossModelModel): SyncedModel["reasoning_option
     if (reasoning.budget_tokens.max !== undefined) budget.max = reasoning.budget_tokens.max;
     options.push(budget);
   }
+  if (options.some((option) => option.type === "effort" && option.values.includes("none"))) {
+    return options.filter((option) => option.type !== "toggle");
+  }
   return options;
 }
 
-function buildCrossModel(
+export function buildCrossModel(
   model: CrossModelModel,
   existing: ExistingModel | undefined,
 ): SyncedModel | undefined {
@@ -247,7 +247,7 @@ function buildCrossModel(
       reasoning: existing?.reasoning,
       temperature: existing?.temperature,
       tool_call: existing?.tool_call,
-      structured_output: existing?.structured_output,
+      structured_output: model.capabilities?.json ?? existing?.structured_output,
       knowledge: existing?.knowledge,
       modalities: modality,
       reasoning_options,

@@ -1,16 +1,9 @@
 # Live /models (2026-06-25): none|low|medium|high; no dedicated reasoning budget.
 # https://api.venice.ai/api/v1/models?type=text (accessed 2026-06-25)
-
-name = "DeepSeek V3.2"
+base_model = "deepseek/deepseek-v3.2"
 description = "DeepSeek chat model for instruction following, coding, and analysis"
-family = "deepseek"
 release_date = "2025-12-04"
 last_updated = "2026-06-11"
-attachment = false
-reasoning = true
-tool_call = true
-structured_output = true
-open_weights = true
 
 [[reasoning_options]]
 type = "effort"
@@ -24,7 +17,3 @@ cache_read = 0.16
 [limit]
 context = 160_000
 output = 32_768
-
-[modalities]
-input = ["text"]
-output = ["text"]

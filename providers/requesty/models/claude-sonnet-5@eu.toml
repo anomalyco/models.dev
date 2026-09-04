@@ -1,0 +1,16 @@
+base_model = "anthropic/claude-sonnet-5"
+name = "Claude Sonnet 5 (EU)"
+structured_output = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "max"]
+
+[[reasoning_options]]
+type = "budget_tokens"
+
+[cost]
+input = 2.2
+output = 11
+cache_read = 0.22
+cache_write = 2.75

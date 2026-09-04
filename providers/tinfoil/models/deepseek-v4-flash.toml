@@ -1,0 +1,19 @@
+# Sources (accessed 2026-08-26):
+# - https://inference.tinfoil.sh/v1/models
+# - https://docs.tinfoil.sh/models/chat.md (weights deepseek-ai/DeepSeek-V4-Flash-0731)
+# - https://docs.tinfoil.sh/guides/reasoning.md
+# Effort: reasoning_effort = none|minimal|low|medium|high|xhigh|max on Tinfoil.
+# Off is reasoning_effort=none; no separate toggle.
+base_model = "deepseek/deepseek-v4-flash-0731"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"]
+
+[cost]
+input = 0.3
+output = 0.7
+cache_read = 0.06
+
+[limit]
+context = 1_048_576

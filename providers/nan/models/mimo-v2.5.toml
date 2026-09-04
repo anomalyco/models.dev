@@ -1,0 +1,21 @@
+# Source: https://nan.builders/docs/models (accessed 2026-09-03)
+# 310B-15B MoE, FP8, natively omnimodal with dedicated vision and audio encoders.
+# 1M context. 1.0B token monthly quota per member, 1.5M tpm. MIT license.
+# No video input on this host. Included in the membership, so no per-token price.
+# Reasoning: no caller control on this surface. NaN lists a reasoning mode
+# (recommends max_tokens >= 300) but exposes no request field for it and no
+# graded effort.
+# Context is inherited: NaN publishes "1M tokens", the same wording it uses for
+# deepseek-v4-flash and glm5.3-flash, with no documented trim of the model's
+# native 1_048_576 window. The docs/examples opencode.json snippet caps
+# contextWindow at 500000, but that snippet also trims maxTokens to a
+# per-request value rather than the ceiling.
+base_model = "xiaomi/mimo-v2.5"
+reasoning_options = []
+
+[cost]
+input = 0
+output = 0
+
+[modalities]
+input = ["text", "image", "audio"]

@@ -1,14 +1,20 @@
+# Pricing: https://azure.microsoft.com/en-us/blog/gpt-5-6-now-available-in-microsoft-foundry/
+# Rates: https://azure.microsoft.com/en-us/pricing/details/cognitive-services/openai-service/
+# $4 input / $20 output promotion: 2026-09-01 through at least 2026-11-30.
+# Keep published cache and long-context rates; the announcement does not specify discounts for them.
 base_model = "openai/gpt-5.6-sol"
 status = "beta"
 reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh", "max"] }]
 
 [cost]
-input = 5
-output = 30
-cache_read = 0.5
+input = 4.00
+output = 20.00
+cache_read = 0.50
+cache_write = 6.25
 
 [[cost.tiers]]
 tier = { type = "context", size = 272_000 }
-input = 10
-output = 45
-cache_read = 1
+input = 10.00
+output = 45.00
+cache_read = 1.00
+cache_write = 12.50

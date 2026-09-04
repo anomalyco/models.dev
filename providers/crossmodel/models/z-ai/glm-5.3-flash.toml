@@ -1,0 +1,17 @@
+base_model = "zhipuai/glm-5.3-flash"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[cost]
+input = 0.075
+output = 0.25
+cache_read = 0.015
+cache_write = 0.075
+
+[limit]
+output = 128_000
+
+[modalities]
+input = ["text", "image", "video"]

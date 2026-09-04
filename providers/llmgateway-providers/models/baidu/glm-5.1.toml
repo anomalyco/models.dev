@@ -1,0 +1,18 @@
+base_model = "zhipuai/glm-5.1"
+name = "GLM-5.1 (Baidu)"
+structured_output = false
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"]
+
+[cost]
+input = 1.4
+output = 4.4
+cache_read = 0.26
+
+[limit]
+context = 202_752

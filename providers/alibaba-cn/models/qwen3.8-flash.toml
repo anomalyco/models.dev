@@ -1,0 +1,26 @@
+# Sources (accessed 2026-08-28):
+# https://www.qianwenai.com/models/qwen3.8-flash
+# https://help.aliyun.com/zh/model-studio/model-pricing (Beijing: ¥0.8 input / ¥2.7
+# output per 1M tokens, flat 0<Token≤1M band, no tiers)
+# CNY→USD rate: 6.737174, 2026-08-28, source: https://open.er-api.com/v6/latest/USD
+# Cache pricing: cache read 10%, explicit cache create 125% of input
+# (https://help.aliyun.com/zh/model-studio/context-cache)
+# Toggle: enable_thinking true|false (hybrid)
+# Effort: reasoning_effort = low|medium|xhigh (not yet in the API reference; see
+# the Qwen3.8-Flash-Next release blog)
+# Budget: thinking_budget (Max Reasoning 262K)
+base_model = "alibaba/qwen3.8-flash"
+reasoning_options = [
+  { type = "toggle" },
+  { type = "effort", values = ["low", "medium", "xhigh"] },
+  { type = "budget_tokens", max = 262_144 },
+]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.11875
+output = 0.40073
+cache_read = 0.01187
+cache_write = 0.14844

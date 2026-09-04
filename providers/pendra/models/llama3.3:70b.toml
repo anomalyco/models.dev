@@ -1,0 +1,9 @@
+base_model = "meta/llama-3.3-70b-instruct"
+
+# Pendra serves Llama 3.3 70B as a text-only chat model (no vision).
+attachment = false
+
+# Self-hosted on your own workers — no per-token charge at the API.
+[cost]
+input = 0
+output = 0

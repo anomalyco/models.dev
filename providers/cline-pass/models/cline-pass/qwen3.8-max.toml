@@ -1,0 +1,14 @@
+# https://docs.cline.bot/getting-started/clinepass (accessed 2026-08-24)
+# Model ID cline-pass/qwen3.8-max; reference pricing $2 / $6 / $0.25 per 1M tokens (input/output/cache read), cache write $2.5.
+base_model = "alibaba/qwen3.8-max"
+structured_output = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["minimal", "low", "medium", "high", "xhigh"]
+
+[cost]
+input = 2
+output = 6
+cache_read = 0.25
+cache_write = 2.5

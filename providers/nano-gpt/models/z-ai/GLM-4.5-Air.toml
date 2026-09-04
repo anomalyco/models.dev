@@ -1,0 +1,13 @@
+base_model = "zhipuai/glm-4.5-air"
+name = "GLM 4.5 Air"
+reasoning = false
+structured_output = true
+
+[cost]
+input = 0.12
+output = 0.8
+cache_read = 0.06
+
+[limit]
+context = 128_000
+input = 128_000

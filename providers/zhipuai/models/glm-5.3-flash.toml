@@ -1,0 +1,19 @@
+# GLM-5.3-Flash always reasons (thinking cannot be disabled); text params
+# match GLM-5.3 — effort low|high|max with default max.
+# https://docs.bigmodel.cn/cn/guide/models/vlm/glm-5.3-flash
+# Cost: https://docs.z.ai/guides/overview/pricing (accessed 2026-08-26)
+# GLM-5.3-Flash 50% promo ends 2026-09-09 24:00 UTC+8; list $0.15/$0.03/$0.50.
+base_model = "zhipuai/glm-5.3-flash"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.075
+output = 0.25
+cache_read = 0.015
+cache_write = 0

@@ -1,0 +1,20 @@
+# Toggle: thinking.type = enabled|disabled (reasoning_effort = none|false also disables)
+# Effort: reasoning_effort = low|high|max (same surface as deepseek-v4-flash-0731 on Fireworks)
+# Pricing/model: https://fireworks.ai/models/deepseek-ai/deepseek-v4-flash-vision-exp (accessed 2026-09-02)
+# Peer: providers/fireworks-ai/models/accounts/fireworks/models/deepseek-v4-flash-0731.toml
+base_model = "deepseek/deepseek-v4-flash-vision-exp"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.22
+output = 0.66
+cache_read = 0.007

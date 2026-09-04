@@ -1,0 +1,17 @@
+# Sources (accessed 2026-08-26):
+# https://docs.bigmodel.cn/cn/guide/capabilities/thinking
+# https://docs.z.ai/guides/overview/pricing
+# Lab cost: input 1.40 / output 4.40 / cache_read 0.26 (USD/MTok).
+# Vancine public pricing (/api/pricing) is 1.12 / 3.52 / 0.208 (USD/MTok).
+# Per the audit-reasoning-options skill, the lab effort list is
+# "low" | "high" | "max"; thinking cannot be disabled, so no toggle.
+base_model = "zhipuai/glm-5.3"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[cost]
+input = 1.12
+output = 3.52
+cache_read = 0.208

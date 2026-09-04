@@ -1,17 +1,22 @@
 name = "Gemini 2.5 Flash 0520 Thinking"
 description = "Compact GPT model for low-latency assistance and high-volume workloads"
+family = "gemini"
 release_date = "2025-05-20"
 last_updated = "2025-05-20"
 attachment = true
 reasoning = true
-reasoning_options = []
 tool_call = false
 structured_output = false
 open_weights = false
 
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high"]
+
 [cost]
 input = 0.15
 output = 3.5
+cache_read = 0.015
 
 [limit]
 context = 1_048_000

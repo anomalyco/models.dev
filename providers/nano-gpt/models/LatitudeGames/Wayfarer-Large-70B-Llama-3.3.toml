@@ -7,15 +7,16 @@ attachment = false
 reasoning = false
 tool_call = false
 structured_output = false
-open_weights = false
+open_weights = true
 
 [cost]
-input = 0.700000007
-output = 0.700000007
+input = 0.7
+output = 0.7
+cache_read = 0.35
 
 [limit]
-context = 16_384
-input = 16_384
+context = 32_768
+input = 32_768
 output = 16_384
 
 [modalities]

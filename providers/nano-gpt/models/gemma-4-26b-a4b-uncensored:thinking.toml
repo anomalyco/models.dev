@@ -1,0 +1,25 @@
+name = "Gemma 4 26B A4B Uncensored Thinking"
+description = "Gemma 4 26B A4B Uncensored with thinking enabled for more deliberate coding, multimodal analysis, tool use, and long-context problem solving."
+family = "gemma"
+release_date = "2026-07-29"
+last_updated = "2026-07-29"
+attachment = true
+reasoning = true
+tool_call = true
+structured_output = true
+open_weights = true
+reasoning_options = []
+
+[cost]
+input = 0.12
+output = 0.38
+cache_read = 0.06
+
+[limit]
+context = 262_144
+input = 262_144
+output = 32_768
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

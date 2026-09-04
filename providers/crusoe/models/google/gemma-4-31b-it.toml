@@ -1,0 +1,15 @@
+# Probed live endpoint 2026-08-13 (POST /v1/chat/completions, temperature 0):
+# reasoning is off by default (no reasoning field on a plain request);
+# setting reasoning_effort to any of low/medium/high enables it (constant
+# length, values inert relative to each other) and "none" disables it,
+# so this behaves as a toggle. Reasoning text arrives in the message field
+# named "reasoning" (not "reasoning_content"). A tool-call request returned
+# tool_calls without reasoning text, so no interleaved claim is made.
+base_model = "google/gemma-4-31b-it"
+reasoning_options = [{ type = "toggle" }]
+
+# Pricing: https://www.crusoe.ai/cloud/pricing (accessed 2026-08-13)
+[cost]
+input = 0.14
+output = 0.40
+cache_read = 0.14

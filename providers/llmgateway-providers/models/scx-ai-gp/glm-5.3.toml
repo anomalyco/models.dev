@@ -1,0 +1,15 @@
+base_model = "zhipuai/glm-5.3"
+name = "GLM-5.3 (SCX.ai)"
+structured_output = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[cost]
+input = 1.3
+output = 4
+cache_read = 0.25
+
+[limit]
+output = 128_000

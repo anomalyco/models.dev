@@ -1,0 +1,21 @@
+# AIHubMix Models API reports text,image input (queried 2026-08-31T04:06:29Z).
+# OpenAI-compatible HTTPS image input returned HTTP 200 (validated 2026-08-31T04:08:19Z).
+base_model = "alibaba/qwen3.8-2.4t-a95b"
+attachment = true
+reasoning_options = [{ type = "effort", values = ["low", "medium", "xhigh"] }]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 2
+output = 6
+cache_read = 0.5
+
+[limit]
+context = 262_000
+output = 262_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

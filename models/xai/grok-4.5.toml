@@ -1,5 +1,5 @@
 name = "Grok 4.5"
-description = "xAI's latest Grok for chat, coding, agentic tools, and lower hallucination risk"
+description = "xAI's Grok model for chat, coding, agentic tools, and lower hallucination risk"
 family = "grok"
 release_date = "2026-07-08"
 last_updated = "2026-07-08"
@@ -54,5 +54,12 @@ score = 53
 metric = "resolve rate"
 harness = "mini-swe-agent"
 version = "1.1"
+source = "https://x.ai/news/grok-4-5"
+date = "2026-07-08"
+
+[[benchmarks]]
+name = "SWE Marathon"
+score = 29.0
+metric = "pass@1"
 source = "https://x.ai/news/grok-4-5"
 date = "2026-07-08"

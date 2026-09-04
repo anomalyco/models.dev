@@ -1,0 +1,22 @@
+name = "qwen3guard-gen-0.6b"
+description = "Qwen3Guard-Gen-0.6B is a lightweight multilingual safety moderation model that classifies prompts and responses into safe, controversial, or unsafe categories."
+release_date = "2026-02-04"
+last_updated = "2026-02-04"
+attachment = false
+reasoning = false
+temperature = false
+tool_call = false
+structured_output = false
+open_weights = false
+
+[cost]
+input = 0
+output = 0
+
+[limit]
+context = 32_000
+output = 32_000
+
+[modalities]
+input = ["text"]
+output = ["text"]

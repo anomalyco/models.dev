@@ -1,0 +1,34 @@
+# Sources (accessed 2026-09-02):
+# https://oai.endpoints.kepler.ai.cloud.ovh.net/doc/Qwen3.8-27B/openapi.json
+# https://catalog.endpoints.ai.ovh.net/rest/v2/openrouter
+# Effort: reasoning_effort = none|minimal|low|medium|high (OVHcloud's API enum,
+# not the lab's low|medium|xhigh). Responses uses reasoning.effort.
+# Blank catalog prompt/completion rates default to zero in the sync.
+base_model = "alibaba/qwen3.8-27b"
+name = "Qwen3.8-27B"
+description = "Multimodal reasoning model for visual analysis, planning, and tool use"
+family = "qwen"
+release_date = "2026-09-02"
+last_updated = "2026-09-02"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "minimal", "low", "medium", "high"]
+
+[cost]
+input = 0
+output = 0
+
+[limit]
+context = 262_144
+output = 262_144
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

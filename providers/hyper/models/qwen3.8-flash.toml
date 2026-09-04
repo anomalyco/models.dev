@@ -1,0 +1,14 @@
+base_model = "alibaba/qwen3.8-flash"
+description = "Efficient model for low-latency assistance, extraction, and routine automation"
+reasoning_options = []
+
+[cost]
+input = 0.15
+output = 0.47
+cache_read = 0.016
+
+[limit]
+output = 128_000
+
+[modalities]
+input = ["text", "image"]

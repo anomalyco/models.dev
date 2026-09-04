@@ -1,0 +1,23 @@
+# Coding Plan model name from https://www.volcengine.com/docs/82379/1928261
+# (accessed 2026-08-26). Subscription tier: no per-token price.
+# Toggle: thinking.type = enabled|disabled, POST /api/coding/v3/chat/completions
+# (verified: enabled -> reasoning_tokens 57, disabled -> 0).
+# No graded effort: the same body accepts reasoning_effort, but acceptance is not
+# effect. Over n=5 runs per level on a prompt hard enough to consume the budget,
+# none and minimal were hard zeros (the off switch) while the graded values fully
+# overlapped -- low 659/873/216/487/845, medium 271/1548/556/296/1245,
+# high 121/123/132/349/262, xhigh 928/753/268/480/110, max 811/435/570/910/623.
+# 'high' sits below 'low', so the levels are not separable and only the toggle is
+# declared, matching the toggle the lab (providers/deepseek) exposes.
+base_model = "deepseek/deepseek-v4-flash"
+
+[[reasoning_options]]
+type = "toggle"
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0
+output = 0
+cache_read = 0

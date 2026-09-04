@@ -2,7 +2,10 @@ base_model = "anthropic/claude-opus-5"
 description = "Flagship Claude model for deep reasoning, coding, and long-horizon agents"
 release_date = "2026-07-23"
 structured_output = true
-reasoning_options = []
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high", "xhigh", "max"]
 
 [cost]
 input = 6

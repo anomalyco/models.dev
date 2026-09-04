@@ -1,0 +1,15 @@
+base_model = "openai/gpt-oss-20b"
+name = "GPT OSS 20B (Consensus Protocol)"
+structured_output = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high"]
+
+[cost]
+input = 0.04
+output = 0.19
+cache_read = 0.01
+
+[limit]
+context = 65_536

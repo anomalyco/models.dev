@@ -1,12 +1,13 @@
 base_model = "minimax/MiniMax-M2.7"
 release_date = "2026-06-05"
 last_updated = "2026-07-22"
-reasoning = false
+reasoning_options = []
 
 [cost]
-input = 0.436
-output = 1.72
-cache_write = 0.218
+input = 0.418
+output = 1.588
+cache_write = 0.209
 
 [limit]
-output = 20_480
+context = 262_100
+output = 6_553

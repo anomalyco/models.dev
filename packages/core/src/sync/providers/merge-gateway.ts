@@ -13,6 +13,7 @@ const VendorReasoning = z.object({
   disable_supported: z.boolean().optional(),
   default_enabled: z.boolean().optional(),
   controls: z.array(z.string()).optional(),
+  effort_values: z.array(z.string()).optional(),
   output_style: z.string().nullable().optional(),
 }).passthrough();
 
@@ -157,9 +158,42 @@ export const mergeGateway = {
   translateModel(model, context) {
     const existing = context.existing(model.model);
     const translated = buildMergeGatewayModel(model, existing, context.authored(model.model));
-    return translated === undefined ? undefined : { id: model.model, model: translated };
+    return translated === undefined ? undefined : {
+      id: model.model,
+      model: translated,
+      header: translated.reasoning_options?.some((option) => option.type === "toggle")
+        && translated.reasoning_options.some((option) => option.type === "budget_tokens")
+        ? '# Toggle: thinking.type = "enabled"|"disabled"; enabled requires thinking.budget_tokens.\n# https://docs.merge.dev/merge-gateway/features/reasoning\n'
+        : undefined,
+    };
   },
 } satisfies SyncProvider<MergeGatewayModel>;
+
+export function mergeGatewayReasoningOptions(
+  reasoning: MergeGatewayVendor["capabilities"]["reasoning"],
+): NonNullable<SyncedFullModel["reasoning_options"]> | undefined {
+  if (reasoning == null) return undefined;
+  const options: NonNullable<SyncedFullModel["reasoning_options"]> = [];
+
+  if (reasoning.disable_supported === true) {
+    options.push({ type: "toggle" as const });
+  }
+
+  const controls = (reasoning.controls ?? []).map((control) => control.toLowerCase());
+  const effortValues = reasoning.effort_values ?? [];
+  if (
+    (controls.includes("reasoning.effort") || controls.includes("reasoning_effort"))
+    && effortValues.length > 0
+  ) {
+    options.push({ type: "effort" as const, values: [...effortValues] });
+  }
+
+  if (controls.includes("thinking.budget_tokens")) {
+    options.push({ type: "budget_tokens" });
+  }
+
+  return options;
+}
 
 export function selectMergeGatewayVendor(model: MergeGatewayModel) {
   const canonical = model.vendors[model.provider];
@@ -234,8 +268,8 @@ export function buildMergeGatewayModel(
   const reasoning = routeConfirmsReasoning ? true : existing?.reasoning;
   const existingReasoningOptions = existing?.reasoning_options ?? [];
   const reasoningOptions = reasoning === true && existingReasoningOptions.length === 0
-    && selected.info.capabilities.reasoning?.disable_supported === true
-    ? [{ type: "toggle" as const }]
+    ? mergeGatewayReasoningOptions(selected.info.capabilities.reasoning)
+      ?? existingReasoningOptions
     : reasoning === true
       ? existingReasoningOptions
       : existing?.reasoning_options;

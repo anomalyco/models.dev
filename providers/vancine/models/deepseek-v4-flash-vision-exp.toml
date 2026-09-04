@@ -1,0 +1,28 @@
+# Sources (accessed 2026-08-30):
+# https://api-docs.deepseek.com/quick_start/pricing/
+# https://api-docs.deepseek.com/guides/vision
+# models/deepseek/deepseek-v4-flash-vision-exp.toml
+# providers/deepseek/models/deepseek-v4-flash-vision-exp.toml
+# providers/vancine/models/deepseek-v4-flash.toml
+# Toggle: thinking.type = "enabled" | "disabled".
+# Effort: reasoning_effort = "low" | "high" | "max". Priced the same as
+# DeepSeek V4 Flash; reasoning tokens are billed at the output rate.
+# Interleaved field: reasoning_content.
+# Lab cost: input 0.14 / output 0.28 / reasoning 0.28 / cache_read 0.0028.
+# Vancine public pricing (/api/pricing) is 0.22 / 0.66 / n/a / 0.007 (USD/MTok).
+base_model = "deepseek/deepseek-v4-flash-vision-exp"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.22
+output = 0.66
+cache_read = 0.007

@@ -1,0 +1,16 @@
+# Source: https://nan.builders/docs/models (accessed 2026-09-03)
+# 320B-18B MoE, FP8, natively multimodal. 1M context. 500M token monthly quota
+# per member. MIT license. No video or PDF input on this host.
+# Included in the membership, so no per-token price.
+# Reasoning: no caller control on this surface. NaN lists a reasoning mode but
+# exposes no request field for it, and the low|high|max effort levels of the
+# first-party Z.ai API are not exposed here.
+base_model = "zhipuai/glm-5.3-flash"
+reasoning_options = []
+
+[cost]
+input = 0
+output = 0
+
+[modalities]
+input = ["text", "image"]

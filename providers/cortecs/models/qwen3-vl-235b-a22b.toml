@@ -1,0 +1,24 @@
+name = "qwen3-vl-235b-a22b"
+description = "Qwen3 VL 235B A22B is a 235B-parameter MoE vision-language flagship model (≈22B active) designed for frontier-level multimodal understanding across text, images, documents, and long videos."
+release_date = "2026-01-13"
+last_updated = "2026-01-13"
+attachment = true
+reasoning = true
+temperature = false
+tool_call = true
+structured_output = true
+open_weights = false
+reasoning_options = []
+
+[cost]
+input = 0.617
+output = 3.119
+cache_read = 0.052
+
+[limit]
+context = 256_000
+output = 256_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

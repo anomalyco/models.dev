@@ -1,0 +1,24 @@
+# Source: https://runinfra.ai/inference-api/deepseek-v4-pro
+# Reasoning control, verified live 2026-08-18 on the public path (temperature 0,
+# fixed prompt, three runs per level): reasoning is OFF by default on this host,
+# the omitted field behaves exactly like reasoning_effort = "none" (completion
+# triples 2/2/2), and any other accepted level switches reasoning on with
+# reasoning_content arriving on the message (low/medium/xhigh triples 22/22/22,
+# identical medians, so the control is a toggle, not an effort ladder).
+# json_object and strict json_schema each validated 3 of 3; one tool call
+# round-tripped; the prefix cache hit on an identical repeated prompt; the
+# 32,768 output cap refuses an over-cap request with 400.
+# cache_read is the cached input price (standing rate; no promotional window).
+base_model = "deepseek/deepseek-v4-pro-0813"
+
+[[reasoning_options]]
+type = "toggle"
+
+[cost]
+input = 0.60
+output = 1.90
+cache_read = 0.03
+
+[limit]
+context = 1_048_576
+output = 32_768

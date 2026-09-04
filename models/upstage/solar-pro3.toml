@@ -1,0 +1,25 @@
+# Sources (accessed 2026-08-16):
+#   https://developers.upstage.ai/docs/apis/chat
+#   https://developers.upstage.ai/docs/capabilities/generate/reasoning
+# Field values mirror Upstage's own first-party host entry in this repo
+# (providers/upstage/models/solar-pro3.toml); host-scoped keys (cost,
+# reasoning_options) are intentionally left to the provider files.
+name = "Solar Pro 3"
+description = "Flagship model for demanding analysis, coding, and production agent workflows"
+family = "solar-pro"
+release_date = "2026-01"
+last_updated = "2026-01"
+attachment = false
+reasoning = true
+temperature = true
+knowledge = "2025-03"
+tool_call = true
+open_weights = false
+
+[limit]
+context = 131_072
+output = 8_192
+
+[modalities]
+input = ["text"]
+output = ["text"]

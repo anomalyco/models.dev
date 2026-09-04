@@ -3,13 +3,13 @@ description = "DeepSeek V4 Flash 0731 is a sparse mixture-of-experts model from 
 
 [[reasoning_options]]
 type = "effort"
-values = ["none", "high", "xhigh"]
+values = ["none", "low", "high", "max"]
 
 [cost]
-input = 0.14
-output = 0.28
+input = 0.44
+output = 1.32
 cache_read = 0.028
 
 [limit]
 context = 1_048_576
-output = 65_536
+output = 943_718

@@ -1,0 +1,23 @@
+# Pricing: https://docs.fireworks.ai/serverless/pricing (accessed 2026-08-29)
+# Released on Fireworks Serverless API 2026-08-28.
+# Thinking-only model: reasoning cannot be disabled (reasoning_effort="none"
+# and thinking.type="disabled" both return 400). Unlike GLM 5.2 (two tiers,
+# low/medium collapse to high), GLM 5.3 has three distinct effort tiers:
+# verified empirically 2026-09-04 — same prompt yields ~10/25/198 reasoning
+# tokens for low/high/max. max/xhigh select max.
+# https://docs.fireworks.ai/api-reference/post-chatcompletions
+base_model = "zhipuai/glm-5.3"
+name = "GLM 5.3"
+last_updated = "2026-09-04"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 1.40
+output = 4.40
+cache_read = 0.26

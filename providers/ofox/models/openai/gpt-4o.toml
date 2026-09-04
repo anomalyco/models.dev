@@ -1,0 +1,12 @@
+# https://ofox.ai/models/openai/gpt-4o
+# https://api.ofox.ai/v2/models/catalog?include=provider_price&limit=500
+base_model = "openai/gpt-4o"
+
+[cost]
+input = 2.5
+output = 10
+cache_read = 1.25
+
+[provider]
+npm = "@ai-sdk/openai"
+api = "https://api.ofox.ai/v1"

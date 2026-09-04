@@ -1,4 +1,4 @@
-name = "Llama 4 Maverick 17B 128E Instruct"
+name = "Llama 4 Maverick"
 description = "Open multimodal Llama model for strong reasoning and fast responses"
 family = "llama"
 release_date = "2025-04-05"
@@ -12,11 +12,11 @@ knowledge = "2024-08"
 open_weights = true
 
 [cost]
-input = 0.25
-output = 0.87
+input = 0.2
+output = 0.696
 
 [limit]
-context = 1_000_000
+context = 128_000
 output = 16_384
 
 [modalities]

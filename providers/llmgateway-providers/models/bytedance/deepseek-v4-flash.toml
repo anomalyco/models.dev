@@ -1,0 +1,19 @@
+base_model = "deepseek/deepseek-v4-flash"
+name = "DeepSeek V4 Flash (ByteDance)"
+structured_output = false
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"]
+
+[cost]
+input = 0.44
+output = 1.32
+cache_read = 0.014
+
+[limit]
+context = 1_048_576
+output = 393_216

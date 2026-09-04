@@ -1,0 +1,14 @@
+base_model = "meituan/longcat-2.0"
+name = "LongCat 2.0 Thinking"
+structured_output = true
+reasoning_options = []
+
+[cost]
+input = 0.75
+output = 3
+cache_read = 0.015
+
+[limit]
+context = 1_048_756
+input = 1_048_756
+output = 262_144

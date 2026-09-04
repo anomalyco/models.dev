@@ -1,4 +1,4 @@
-name = "xAI: Grok 4.20 Multi-Agent"
+name = "SpaceXAI: Grok 4.20 Multi-Agent"
 description = "Grok model for agentic tool use, reasoning, coding, and live assistance"
 family = "grok"
 release_date = "2026-03-31"
@@ -12,7 +12,7 @@ open_weights = false
 
 [[reasoning_options]]
 type = "effort"
-values = ["none", "high"]
+values = ["low", "medium", "high", "xhigh"]
 
 [cost]
 input = 1.25
@@ -21,7 +21,7 @@ cache_read = 0.2
 
 [limit]
 context = 2_000_000
-output = 2_000_000
+output = 1_800_000
 
 [modalities]
 input = ["text", "image", "pdf"]

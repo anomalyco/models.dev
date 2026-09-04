@@ -6,15 +6,18 @@ export interface MissingModelIssueTarget {
 
 export interface OpenMissingModelIssuesOptions {
   dryRun?: boolean;
+  reasons?: Record<string, string>;
 }
 
 function issueTitle(providerId: string, modelId: string) {
   return `[missing-model] ${providerId}: ${modelId}`;
 }
 
-function issueBody(provider: MissingModelIssueTarget, modelId: string) {
+function issueBody(provider: MissingModelIssueTarget, modelId: string, reason?: string) {
   return [
-    `The **${provider.name}** catalog sync found remote model \`${modelId}\` that is not in the local catalog.`,
+    reason === undefined
+      ? `The **${provider.name}** catalog sync found remote model \`${modelId}\` that is not in the local catalog.`
+      : `The **${provider.name}** catalog sync is missing reasoning options for remote model \`${modelId}\`. Any existing local entry was left unchanged.`,
     "",
     `| Field | Value |`,
     `| --- | --- |`,
@@ -22,8 +25,13 @@ function issueBody(provider: MissingModelIssueTarget, modelId: string) {
     `| Model ID | \`${modelId}\` |`,
     `| Expected path | \`${provider.modelsDir}/${modelId}.toml\` |`,
     "",
-    "This provider uses `skipCreates` because the remote source is not enough to auto-author a full TOML.",
+    reason === undefined
+      ? "This provider uses `skipCreates` because the remote source is not enough to auto-author a full TOML."
+      : `Sync diagnostic: ${reason}`,
     "Add the model manually (prefer `base_model` when matching `models/` metadata exists).",
+    ...(reason === undefined ? [] : [
+      `Research the provider's reasoning controls; do not use an empty placeholder. Update \`providers/${provider.id}/curation.toml\` if present, including source URLs and wire paths in its \`note\` array, so the next sync retains the fix.`,
+    ]),
     "",
   ].join("\n");
 }
@@ -80,7 +88,7 @@ export async function openMissingModelIssues(
     }
 
     try {
-      const number = await createIssue(title, issueBody(provider, modelId), labels);
+      const number = await createIssue(title, issueBody(provider, modelId, options.reasons?.[modelId]), labels);
       existingByTitle.set(title, number);
       await dispatchIssueFixer(provider.id, number);
       const notice = `Opened GitHub issue #${number} and dispatched the issue fixer for missing model \`${modelId}\``;

@@ -1,0 +1,16 @@
+# Source: https://nan.builders/docs/models (accessed 2026-09-03)
+# 284B-21B MoE, FP8, 1M context. 2B token monthly quota per member, 1.5M tpm.
+# Served from the shared community GPU cluster, so no per-token price: included
+# in the membership.
+# Reasoning: no caller control on this surface. NaN lists a reasoning mode but
+# exposes no request field for it anywhere in its docs (only gemma4/qwen3.6 show
+# `reasoning_config={}`) and no graded effort, so neither the DeepSeek toggle nor
+# its low|high|max levels reach this host.
+# The docs/examples opencode.json snippet caps contextWindow at 500000; the
+# models reference publishes 1M, which is what is recorded here.
+base_model = "deepseek/deepseek-v4-flash"
+reasoning_options = []
+
+[cost]
+input = 0
+output = 0

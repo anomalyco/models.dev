@@ -1,0 +1,16 @@
+base_model = "anthropic/claude-fable-5-1"
+name = "Claude Fable 5.1 (EU)"
+structured_output = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "max"]
+
+[[reasoning_options]]
+type = "budget_tokens"
+
+[cost]
+input = 11
+output = 55
+cache_read = 0.275
+cache_write = 13.75

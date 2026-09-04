@@ -1,3 +1,10 @@
+# Sources (accessed 2026-08-10):
+# Model overview: https://docs.privatemode.ai/models/overview/#qwen3-embedding-4b
+# Pricing (EUR): https://docs.privatemode.ai/pricing/
+# Upstream quant checkpoint: https://huggingface.co/boboliu/Qwen3-Embedding-4B-W4A16-G128
+# Cost: EUR list prices converted at 1 EUR = 1.1555 USD (Frankfurter 2026-08-10).
+# EUR/MTok: input 0.13 (embeddings; output not billed).
+# Output dimensions: 1024 or 2560 via request `dimensions` (limit.output = max dims).
 name = "Qwen3-Embedding 4B"
 description = "Embedding model for semantic search, retrieval, clustering, and ranking pipelines"
 family = "qwen"
@@ -12,7 +19,7 @@ knowledge = "2025-06"
 open_weights = true
 
 [cost]
-input = 0.00
+input = 0.1502
 output = 0.00
 
 [limit]

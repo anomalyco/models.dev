@@ -1,17 +1,18 @@
 name = "Llama 3.2 3b Instruct"
 description = "Open Llama multimodal model for image understanding and text reasoning"
 family = "llama"
-release_date = "2024-09-25"
+release_date = "2024-01-01"
 last_updated = "2024-09-25"
 attachment = true
 reasoning = false
 tool_call = false
 structured_output = false
-open_weights = false
+open_weights = true
 
 [cost]
 input = 0.0306
 output = 0.0493
+cache_read = 0.0153
 
 [limit]
 context = 131_072

@@ -1,0 +1,20 @@
+# Cloudflare model input schema verified 2026-08-28 for @cf/zai-org/glm-5.3.
+# https://developers.cloudflare.com/api/resources/ai/subresources/models/subresources/schema/methods/get/
+# Toggle: chat_template_kwargs.enable_thinking = true|false (default true).
+# Effort: reasoning_effort = low|medium|high; Cloudflare's declared controls differ from Z.ai's API.
+base_model = "zhipuai/glm-5.3"
+name = "Glm 5.3"
+description = "Flagship GLM model for hybrid reasoning, coding, and agentic engineering"
+reasoning_options = [
+  { type = "toggle" },
+  { type = "effort", values = ["low", "medium", "high"] },
+]
+
+[cost]
+input = 1.4
+output = 4.4
+cache_read = 0.26
+
+[limit]
+context = 1_310_720
+output = 1_310_720

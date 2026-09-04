@@ -1,0 +1,20 @@
+# Toggle: reasoning.enabled = true|false
+# https://openrouter.ai/docs/guides/best-practices/reasoning-tokens
+base_model = "alibaba/qwen3.8-27b"
+description = "Qwen vision-language model for visual reasoning, documents, and agent tasks"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "xhigh"]
+
+[cost]
+input = 0.42
+output = 3
+cache_read = 0.085
+
+[limit]
+context = 1_000_000
+output = 131_072

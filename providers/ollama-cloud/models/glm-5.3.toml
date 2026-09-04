@@ -1,0 +1,15 @@
+# Effort: OpenAI POST /v1/chat/completions accepts top-level `reasoning_effort`
+# or `reasoning.effort` with low|high|max (GLM-5.3 always reasons; thinking
+# cannot be disabled, so there is no toggle).
+# Sources: https://docs.ollama.com/capabilities/thinking, https://docs.ollama.com/openai
+# API-verified context: https://ollama.com/api/show (glm_dsa_moe.context_length = 1048576)
+base_model = "zhipuai/glm-5.3"
+open_weights = true
+
+reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]
+
+[interleaved]
+field = "reasoning_content"
+
+[limit]
+context = 1_048_576

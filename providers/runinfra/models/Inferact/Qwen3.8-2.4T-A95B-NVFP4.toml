@@ -1,0 +1,37 @@
+# Source: https://runinfra.ai/inference-api/qwen3-8-2-4t-a95b
+# This served checkpoint is Inferact's NVFP4 packaging of Qwen/Qwen3.8-2.4T-A95B
+# (https://huggingface.co/Inferact/Qwen3.8-2.4T-A95B-NVFP4); the lab entry is the Qwen base model
+# Reasoning control, verified live 2026-08-16 (temperature 0, fixed prompt, two identical runs
+# per level): reasoning_effort is a graded dial with the wire values below, each reproducibly
+# distinct (completion tokens 113 low, 140 medium, 89 xhigh which equals the omitted default).
+# Since 2026-08-21 the gateway also ACCEPTS "high" and folds it to "xhigh" before dispatch.
+# It is not published as a separate rung because it is not a distinct behaviour, only the
+# OpenAI ladder's word for the maximum, and this serve's maximum is "xhigh". Callers that
+# send "high" are served rather than refused.
+# Reasoning cannot be turned off: reasoning_effort = "none" is rejected with HTTP 400, and the
+# refusal is deliberate rather than folded, so such a request is never silently served and
+# billed at the most expensive setting.
+# ONE CLAIM THAT SAT HERE WAS CORRECTED 2026-08-27 after re-measuring the buyer path. It used
+# to say the caller learns this model has no off switch. That is not what happens. The gateway
+# authors every rejection sentence a buyer reads and answers an unrecognised refusal with a
+# generic one, so a caller sending "none" learns the request was rejected and no more. The
+# reason is recorded because the claim was true when written and quietly stopped being true.
+# enable_thinking / chat_template_kwargs / thinking_budget are accepted but have no effect.
+# cache_read is the cached input price. JSON mode went live on this host 2026-08-17,
+# verified on the public path: 3 of 3 json_object responses parsed and 3 of 3 strict
+# json_schema responses validated, at 0.35x baseline latency, so structured_output now
+# inherits true from the lab entry
+name = "Qwen3.8 2.4T A95B (NVFP4)"
+base_model = "alibaba/qwen3.8-2.4t-a95b"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "xhigh"]
+
+[cost]
+input = 2.00
+output = 6.00
+cache_read = 0.20
+
+[limit]
+output = 32_768

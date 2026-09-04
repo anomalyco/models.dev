@@ -1,0 +1,23 @@
+# Sources (accessed 2026-08-28):
+# https://platform.sensenova.cn/docs
+# Reasoning: host documents reasoning_effort none|low|medium|high (default
+# medium), but live calls show no grading: none disables reasoning and
+# low|medium|high produce indistinguishable reasoning volume (same
+# reasoning_content length within run variance). Aligned to the lab-effective
+# level (DeepSeek lab maps low/medium -> high); no toggle and no max on this
+# host.
+base_model = "deepseek/deepseek-v4-flash"
+reasoning_options = [
+  { type = "effort", values = ["none", "high"] },
+]
+
+[interleaved]
+field = "reasoning_content"
+
+[limit]
+output = 65_536
+
+[cost]
+input = 0
+output = 0
+cache_read = 0

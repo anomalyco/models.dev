@@ -1,4 +1,4 @@
-name = "Nex AGI: Nex-N2-Pro"
+name = "Nex AGI: Nex-N2-Pro (retires Sep 8)"
 description = "Nex-N2-Pro is an agentic mixture-of-experts model from Nex AGI, with 17B active parameters out of 397B total. Built on the Qwen3.5 architecture, it accepts text and image input and produces..."
 family = "agi"
 release_date = "2026-06-08"
@@ -9,7 +9,10 @@ temperature = true
 tool_call = true
 structured_output = false
 open_weights = false
-reasoning_options = []
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "high"]
 
 [cost]
 input = 0.25
@@ -18,7 +21,7 @@ cache_read = 0.025
 
 [limit]
 context = 262_144
-output = 262_144
+output = 235_929
 
 [modalities]
 input = ["text", "image"]

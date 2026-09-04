@@ -1,0 +1,18 @@
+# Passthrough to Fireworks serverless.
+# Effort: `reasoning_effort = none|high|max`; "none" disables thinking
+# (`chat_template_kwargs = {"thinking": false}` also works as an alternate).
+# Verified end-to-end on this host 2026-08-29.
+base_model = "zhipuai/glm-5.2"
+name = "GLM 5.2"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "high", "max"]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 1.54
+output = 4.84
+cache_read = 0.154

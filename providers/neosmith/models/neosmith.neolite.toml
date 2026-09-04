@@ -1,0 +1,30 @@
+# `cost` is a fixed rate. This SKU never escalates above its own tier, so every
+# request bills exactly the rate below.
+# Source: NeoSmith's first-party rate card — the per-tier table shown to every
+# customer on their billing dashboard. There is no public pricing page yet; the
+# `doc` URL in provider.toml is product documentation, not a price list.
+name = "NeoSmith NeoLite"
+description = "Sealed single-model budget tier. 512K context, text and images, tool use, and no escalation of any kind."
+release_date = "2026-06-20"
+last_updated = "2026-08-03"
+open_weights = false
+attachment = true
+reasoning = true
+reasoning_options = []
+tool_call = true
+structured_output = false
+temperature = true
+
+[cost]
+input = 0.6
+output = 2.4
+cache_read = 0.08
+cache_write = 0.0
+
+[limit]
+context = 512_000
+output = 64_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

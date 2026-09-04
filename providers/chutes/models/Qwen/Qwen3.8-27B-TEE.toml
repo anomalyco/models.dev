@@ -1,0 +1,17 @@
+base_model = "alibaba/qwen3.8-27b"
+name = "Qwen3.8 27B TEE"
+description = "Qwen instruction model for multilingual chat, reasoning, and tool use"
+release_date = "2026-08-16"
+last_updated = "2026-08-16"
+reasoning_options = []
+
+[cost]
+input = 0.32
+output = 2.5
+cache_read = 0.031999999999999994
+
+[limit]
+output = 65_536
+
+[modalities]
+input = ["text", "image"]

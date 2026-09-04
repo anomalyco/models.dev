@@ -1,0 +1,28 @@
+# Sources (accessed 2026-09-03):
+# https://www.qwencloud.com/models/qwen3.8-max-0902
+# https://www.alibabacloud.com/help/en/model-studio/qwen3-8-max
+# https://docs.qwencloud.com/developer-guides/text-generation/thinking
+# Snapshot of qwen3.8-max (alias qwen3.8-max-2026-09-02). Same limits,
+# hybrid thinking, modalities, and tool ecosystem as qwen3.8-max; post-trained
+# for stronger coding, collaborative agents, and vision/document understanding.
+# PDF input: inherits Completions PDF理解 / document parsing from the Max line
+# (same as models/alibaba/qwen3.8-max.toml).
+
+name = "Qwen3.8 Max 0902"
+description = "2026-09-02 upgraded snapshot of Qwen3.8 Max with stronger coding, collaborative agents, and multimodal document understanding"
+family = "qwen"
+release_date = "2026-09-02"
+last_updated = "2026-09-02"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+open_weights = false
+
+[limit]
+context = 1_000_000
+output = 131_072
+
+[modalities]
+input = ["text", "image", "video", "pdf"]
+output = ["text"]

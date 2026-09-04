@@ -1,14 +1,8 @@
 # Not included in subscription
+base_model = "zhipuai/glm-5v-turbo"
 name = "GLM 5V Turbo Thinking"
-description = "GLM vision model for visual reasoning, documents, and multimodal agents"
-release_date = "2026-04-02"
-last_updated = "2026-04-02"
-attachment = true
-reasoning = true
-reasoning_options = []
-tool_call = true
 structured_output = true
-open_weights = false
+reasoning_options = []
 
 [cost]
 input = 1.2
@@ -16,10 +10,8 @@ output = 4
 cache_read = 0.24
 
 [limit]
-context = 202800
-input = 202800
-output = 131100
+context = 202_800
+input = 202_800
 
 [modalities]
 input = ["text", "image"]
-output = ["text"]

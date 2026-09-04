@@ -1,0 +1,16 @@
+base_model = "deepseek/deepseek-v4-flash-0731"
+
+# Reasoning control verified against the AMD Token Factory API (accessed 2026-08-16):
+# POST https://developer.amd.com.cn/radeon/api/v1/chat/completions validates
+# reasoning_effort with enum none|minimal|low|medium|high|xhigh|max (invalid
+# values return 400). thinking.* and budget controls are silently ignored and no
+# reasoning_content is ever returned, so there is no toggle and no interleaved
+# channel on this host.
+reasoning_options = [
+  { type = "effort", values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"] },
+]
+
+[cost]
+input = 0.14
+output = 0.28
+cache_read = 0.0028

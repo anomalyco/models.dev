@@ -1,17 +1,18 @@
 name = "Llama 3.05 Storybreaker Ministral 70b"
 description = "Compact Mistral model for edge, latency-sensitive, and cost-efficient workloads"
 family = "llama"
-release_date = "2024-12-01"
+release_date = "2024-01-01"
 last_updated = "2024-12-01"
 attachment = false
 reasoning = false
 tool_call = false
 structured_output = false
-open_weights = false
+open_weights = true
 
 [cost]
-input = 0.49299999999999994
-output = 0.49299999999999994
+input = 0.493
+output = 0.493
+cache_read = 0.2465
 
 [limit]
 context = 16_384

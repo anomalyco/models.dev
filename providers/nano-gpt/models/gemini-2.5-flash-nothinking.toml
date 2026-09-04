@@ -1,5 +1,6 @@
 name = "Gemini 2.5 Flash (No Thinking)"
 description = "Compact GPT model for low-latency assistance and high-volume workloads"
+family = "gemini"
 release_date = "2025-06-05"
 last_updated = "2025-06-05"
 attachment = true
@@ -11,6 +12,7 @@ open_weights = false
 [cost]
 input = 0.3
 output = 2.5
+cache_read = 0.03
 
 [limit]
 context = 1_048_756
@@ -18,5 +20,5 @@ input = 1_048_756
 output = 65_536
 
 [modalities]
-input = ["text", "image", "pdf"]
+input = ["text", "image", "audio", "pdf"]
 output = ["text"]

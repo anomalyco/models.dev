@@ -1,0 +1,15 @@
+base_model = "alibaba/qwen3.8-flash-next"
+name = "Qwen 3.8 Flash Next"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "xhigh"] }]
+
+[cost]
+input = 0.12
+output = 0.4
+cache_read = 0.01
+
+[limit]
+context = 1_048_576
+output = 1_048_576
+
+[modalities]
+input = ["text", "image"]

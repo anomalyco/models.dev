@@ -1,0 +1,32 @@
+# Preview rollout: glm-5.3 is a gated preview on Neuralwatt, visible to
+# accounts granted access per the Preview Models guide. Its list price is
+# Neuralwatt's GLM 5.2 parity default and is marked for review at launch,
+# per the model description in GET /v1/models (checked 2026-08-30).
+# Reasoning cannot be disabled (reasoning.mandatory = true), so there is no
+# none level and no toggle. The API supports low, high and max as distinct
+# efforts; minimal, medium and xhigh are accepted as aliases onto them.
+# Budget: thinking_token_budget (integer reasoning tokens)
+# https://portal.neuralwatt.com/docs/api/chat-completions
+# https://portal.neuralwatt.com/docs/guides/preview-models
+base_model = "zhipuai/glm-5.3"
+name = "GLM 5.3"
+structured_output = false
+status = "beta"
+
+interleaved = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[[reasoning_options]]
+type = "budget_tokens"
+
+[cost]
+input = 1.45
+output = 4.5
+cache_read = 0.145
+
+[limit]
+context = 1_048_560
+output = 1_048_560

@@ -88,6 +88,8 @@ jobs:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           GOOGLE_GENERATIVE_AI_API_KEY: ${{ secrets.GOOGLE_GENERATIVE_AI_API_KEY }}
           XAI_API_KEY: ${{ secrets.XAI_API_KEY }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_WORKERS_AI_SYNC_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_WORKERS_AI_SYNC_ACCOUNT_ID }}
           CLOUDFLARE_WORKERS_AI_SYNC_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_WORKERS_AI_SYNC_ACCOUNT_ID }}
           CLOUDFLARE_WORKERS_AI_SYNC_API_TOKEN: ${{ secrets.CLOUDFLARE_WORKERS_AI_SYNC_API_TOKEN }}
 
@@ -95,6 +97,7 @@ jobs:
         run: bun validate
 
       - name: Report changes
+        id: report
         env:
           GH_TOKEN: ${{ steps.committer.outputs.token }}
           BRANCH: automation/sync-models-${{ matrix.provider }}
@@ -119,9 +122,20 @@ jobs:
           git checkout -B "$BRANCH"
           git add models providers
           git commit -m "$TITLE"
-          git push --force-with-lease origin "$BRANCH"
+          bun sync:auto-merge HEAD^ HEAD
+          safe="$(sed -n 's/^safe=//p' "$GITHUB_OUTPUT" | tail -1)"
 
           pr_number="$(gh pr list --head "$BRANCH" --base dev --json number --jq '.[0].number')"
+          if [ "$safe" != "true" ] && [ -n "$pr_number" ]; then
+            gh pr merge "$pr_number" --disable-auto || true
+            if [ "$(gh pr view "$pr_number" --json autoMergeRequest --jq '.autoMergeRequest == null')" != "true" ]; then
+              echo "Failed to disable auto-merge for unsafe sync PR #$pr_number."
+              exit 1
+            fi
+          fi
+
+          git push --force-with-lease origin "$BRANCH"
+
           if [ -n "$pr_number" ]; then
             gh pr edit "$pr_number" --title "$TITLE" --body-file .sync/model-sync-report.md
             for label in "${labels[@]}"; do
@@ -129,4 +143,12 @@ jobs:
             done
           else
             gh pr create --base dev --head "$BRANCH" --title "$TITLE" --body-file .sync/model-sync-report.md "${label_args[@]}"
+            pr_number="$(gh pr list --head "$BRANCH" --base dev --json number --jq '.[0].number')"
+          fi
+
+          if [ "$safe" = "true" ]; then
+            gh pr merge "$pr_number" --auto --squash
+          elif [ "$(gh pr view "$pr_number" --json autoMergeRequest --jq '.autoMergeRequest == null')" != "true" ]; then
+            echo "Unsafe sync PR #$pr_number still has auto-merge enabled."
+            exit 1
           fi

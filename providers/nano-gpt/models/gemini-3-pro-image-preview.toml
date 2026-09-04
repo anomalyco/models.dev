@@ -1,16 +1,12 @@
+base_model = "google/gemini-3-pro-image-preview"
 name = "Gemini 3 Pro Image"
-description = "Image model for prompt-driven generation, editing, and visual design workflows"
-release_date = "2025-11-18"
-last_updated = "2025-11-18"
-attachment = true
 reasoning = false
-tool_call = false
 structured_output = false
-open_weights = false
 
 [cost]
-input = 2.00
-output = 12.00
+input = 2
+output = 12
+cache_read = 0.2
 
 [limit]
 context = 1_048_756
@@ -18,5 +14,4 @@ input = 1_048_756
 output = 65_536
 
 [modalities]
-input = ["text", "image"]
 output = ["text"]

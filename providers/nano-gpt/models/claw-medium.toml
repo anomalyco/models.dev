@@ -5,19 +5,23 @@ release_date = "2026-05-11"
 last_updated = "2026-05-11"
 attachment = false
 reasoning = true
-reasoning_options = []
 tool_call = true
 structured_output = true
 open_weights = false
 
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
 [cost]
-input = 0.3
-output = 1.2
+input = 1
+output = 3.2
+cache_read = 0.2
 
 [limit]
-context = 204800
-input = 204800
-output = 131072
+context = 1_048_576
+input = 1_048_576
+output = 131_072
 
 [modalities]
 input = ["text"]

@@ -1,0 +1,14 @@
+base_model = "zhipuai/glm-5.3"
+name = "GLM 5.3 FP4"
+
+reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]
+interleaved = true
+
+[limit]
+context = 1_048_576
+output = 131_072
+
+[cost]
+input = 1.12
+output = 4.4
+cache_read = 0

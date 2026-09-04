@@ -1,0 +1,25 @@
+# Sources (accessed 2026-08-27):
+# https://www.qwencloud.com/models/qwen3.8-flash
+# https://docs.qwencloud.com/developer-guides/text-generation/thinking
+# Lab reasoning controls: enable_thinking true|false (toggle);
+# thinking_budget up to 262144. reasoning_effort is NOT exposed for flash
+# (qwencloud docs document it for qwen3.8-max / qwen3.8-max-preview only).
+# Interleaved field: reasoning_content.
+# Lab cost: input 0.15 / output 0.47 / cache_read 0.016 / cache_write 0.20.
+# Vancine public pricing (/api/pricing) is 0.12 / 0.38 / 0.013 / n/a (USD/MTok).
+base_model = "alibaba/qwen3.8-flash"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "budget_tokens"
+max = 262_144
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.12
+output = 0.38
+cache_read = 0.013

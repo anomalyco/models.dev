@@ -1,0 +1,15 @@
+base_model = "meta/muse-glimmer-30b"
+
+# NIM Chat schema: `reasoning_effort = none|minimal|low|medium|high|max`
+# (off = none; graded levels, no separate toggle).
+# https://docs.api.nvidia.com/nim/reference/meta-muse-glimmer-30b-infer
+reasoning_options = [{ type = "effort", values = ["none", "minimal", "low", "medium", "high", "max"] }]
+
+[interleaved]
+field = "reasoning_content"
+
+# NVIDIA API catalog is free for prototyping (no published per-token price).
+# Matches other NVIDIA-hosted Meta models (e.g. llama-3.2-*).
+[cost]
+input = 0.00
+output = 0.00

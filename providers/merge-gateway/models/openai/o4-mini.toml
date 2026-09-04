@@ -1,8 +1,10 @@
 # Source: https://api-gateway.merge.dev/v1/models?model=openai%2Fo4-mini (accessed 2026-07-21)
-
 base_model = "openai/o4-mini"
 name = "o4 Mini"
-reasoning_options = []
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high", "xhigh"]
 
 [cost]
 input = 1.1

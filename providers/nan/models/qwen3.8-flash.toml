@@ -1,0 +1,18 @@
+# Source: https://nan.builders/docs/models (accessed 2026-09-03)
+# 125B-6B MoE with vision, XML tool calling. 262K context, the model's native
+# window. 1B token monthly quota per member. License qwen-community-1.0.
+# Included in the membership, so no per-token price.
+# Reasoning: on by default, with no caller control on this surface. NaN exposes
+# no request field to disable it and no graded effort.
+base_model = "alibaba/qwen3.8-flash"
+reasoning_options = []
+
+[cost]
+input = 0
+output = 0
+
+[limit]
+context = 262_144
+
+[modalities]
+input = ["text", "image"]

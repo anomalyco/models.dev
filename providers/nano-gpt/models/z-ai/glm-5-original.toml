@@ -1,0 +1,25 @@
+name = "GLM 5 Original"
+description = "GLM-5 is Zhipu's latest flagship model with advanced reasoning and instruction following. Routed directly via Z-AI (Zhipu)."
+family = "glm"
+release_date = "2026-02-11"
+last_updated = "2026-02-11"
+attachment = false
+reasoning = true
+tool_call = true
+structured_output = true
+open_weights = true
+reasoning_options = []
+
+[cost]
+input = 1
+output = 3.2
+cache_read = 0.2
+
+[limit]
+context = 200_000
+input = 200_000
+output = 128_000
+
+[modalities]
+input = ["text"]
+output = ["text"]

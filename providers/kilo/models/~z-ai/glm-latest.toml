@@ -1,0 +1,28 @@
+name = "Z.ai: GLM Latest"
+description = "This model always redirects to the latest GLM model from Z.ai."
+family = "glm"
+release_date = "2026-08-19"
+last_updated = "2026-08-19"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[cost]
+input = 1.15
+output = 3.5
+cache_read = 0.1
+
+[limit]
+context = 262_144
+output = 235_929
+
+[modalities]
+input = ["text"]
+output = ["text"]

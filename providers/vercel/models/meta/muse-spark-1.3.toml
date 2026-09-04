@@ -1,0 +1,17 @@
+# Effort levels match Meta's native model and established relay peers; max is not yet available.
+# https://research.meta.ai/blog/introducing-muse-spark-1-3
+# https://vercel.com/docs/ai-gateway/sdks-and-apis/openai-chat-completions/reasoning
+base_model = "meta/muse-spark-1.3"
+description = "Open Llama multimodal model for image understanding and text reasoning"
+reasoning_options = [{ type = "effort", values = ["minimal", "low", "medium", "high", "xhigh"] }]
+
+[cost]
+input = 1.25
+output = 4.25
+cache_read = 0.15
+
+[limit]
+output = 1_048_576
+
+[modalities]
+input = ["text", "image", "pdf"]

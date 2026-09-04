@@ -1,0 +1,27 @@
+# Sources:
+# - https://tokenfactory.nebius.com/ (model catalog)
+# - https://tokenfactory.nebius.com/model-catalog.md (pricing)
+# - https://tokenfactory.nebius.com/api/public/models_info (context, max length)
+# Accessed 2026-08-29.
+# Effort: reasoning_effort = none|high (none = thinking off). Probed live against
+# api.tokenfactory.nebius.com chat completions on 2026-08-29: thinking is ON by default,
+# reasoning_effort=none returns zero reasoning tokens, and high enables thinking. Other
+# accepted non-none levels did not show a distinct graded effect at probe scale, so they
+# are not exposed.
+# Served window: models_info max_model_len = 1_048_576 with no separate output cap, so
+# context and output both take the full served window.
+
+base_model = "nvidia/nemotron-3.5-lightning"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "high"]
+
+[cost]
+input = 0.06
+output = 0.24
+cache_read = 0.06
+
+[limit]
+context = 1_048_576
+output = 1_048_576

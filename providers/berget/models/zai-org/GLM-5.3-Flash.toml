@@ -1,0 +1,33 @@
+# GLM-5.3-Flash served on Berget AI's Swedish infrastructure (NVIDIA B300,
+# SGLang TP4). Multimodal (text + image), reasoning on by default with effort
+# levels low/high/max. Needle-validated to 512K context.
+# https://api.berget.ai/openapi.json
+#
+# Berget bills in EUR: 0.25 EUR/M input, 0.5 EUR/M output.
+# Converted to USD at 1.1643 (ECB rate, 2026-08-28):
+#   0.25 EUR/M -> 0.29 USD/M input
+#   0.5 EUR/M  -> 0.58 USD/M output
+base_model = "zhipuai/glm-5.3-flash"
+last_updated = "2026-09-01"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.29
+output = 0.58
+
+[limit]
+context = 524_288
+output = 16_384
+
+# The lab model accepts text/image/video/pdf; the Berget SGLang deployment
+# serves text + image + video (video verified against the live endpoint
+# 2026-08-29). PDF input is NOT supported by the serving stack.
+[modalities]
+input = ["text", "image", "video"]
+output = ["text"]

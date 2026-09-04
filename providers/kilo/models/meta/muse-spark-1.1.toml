@@ -3,7 +3,7 @@ description = "Muse Spark 1.1 is a multimodal reasoning model from Meta, built f
 
 [[reasoning_options]]
 type = "effort"
-values = ["none", "minimal", "low", "medium", "high"]
+values = ["minimal", "low", "medium", "high", "xhigh"]
 
 [cost]
 input = 1.25
@@ -11,8 +11,7 @@ output = 4.25
 cache_read = 0.15
 
 [limit]
-context = 1_048_576
-output = 1_048_576
+output = 943_718
 
 [modalities]
 input = ["text", "image", "video", "pdf", "audio"]

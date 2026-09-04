@@ -2,7 +2,8 @@ base_model = "nvidia/nemotron-3-super-120b-a12b"
 structured_output = true
 
 [[reasoning_options]]
-type = "toggle"
+type = "effort"
+values = ["none", "low", "medium"]
 
 [cost]
 input = 0.085

@@ -1,0 +1,14 @@
+# Toggle: thinking true|false
+base_model = "moonshotai/kimi-k3"
+reasoning_options = [
+  { type = "toggle" },
+  { type = "effort", values = ["low", "high", "max"] },
+]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 3.3
+output = 16.5
+cache_read = 0.33

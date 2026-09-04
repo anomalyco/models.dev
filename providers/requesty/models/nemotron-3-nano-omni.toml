@@ -1,0 +1,30 @@
+name = "nemotron-3-nano-omni"
+description = "The most open, efficient, and accurate omni modal reasoning model for agentic AI."
+family = "nemotron"
+release_date = "2026-05-20"
+last_updated = "2026-05-20"
+attachment = false
+reasoning = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "max"]
+
+[[reasoning_options]]
+type = "budget_tokens"
+
+[cost]
+input = 0.06
+output = 0.24
+cache_read = 0.06
+
+[limit]
+context = 300_000
+output = 300_000
+
+[modalities]
+input = ["text"]
+output = ["text"]

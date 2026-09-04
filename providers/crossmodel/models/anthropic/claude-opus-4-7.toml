@@ -1,4 +1,8 @@
 base_model = "anthropic/claude-opus-4-7"
+structured_output = true
+
+[[reasoning_options]]
+type = "toggle"
 
 [[reasoning_options]]
 type = "effort"

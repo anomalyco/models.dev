@@ -1,0 +1,17 @@
+# TokenGo is an OpenAI-compatible multi-model gateway (POST /v1/chat/completions).
+# Sources (accessed 2026-08-27), and what each supports:
+# - https://www.tokengo.com/docs/documentation/getting-started/introduction
+#   Unified OpenAI-compatible API; pay-as-you-go USD per million tokens; Model Hub for rates.
+# - https://www.tokengo.com/docs/documentation/getting-started/quickstart
+#   Chat completions base shape (model + messages).
+# - https://www.tokengo.com/models
+#   Public Model Hub input/output list prices (some cards round). Cache is not shown.
+# Exact USD/MTok including cache_read come from TokenGo's first-party console model
+# table (model/completion/cache ratios) accessed 2026-08-27.
+# Reasoning extra_body matches typical openai-compat peers per model (thinking.type /
+# reasoning_effort / enable_thinking). See each model file for the exact wire path.
+name = "TokenGo"
+env = ["TOKENGO_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+doc = "https://www.tokengo.com/docs"
+api = "https://api.tokengo.com/v1"

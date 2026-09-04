@@ -1,0 +1,14 @@
+base_model = "meta/muse-spark-1.2"
+structured_output = false
+reasoning_options = []
+
+[cost]
+input = 1.25
+output = 4.25
+cache_read = 0.15
+
+[limit]
+output = 262_144
+
+[modalities]
+input = ["text", "image"]

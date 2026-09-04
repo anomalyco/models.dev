@@ -1,0 +1,13 @@
+base_model = "zhipuai/glm-5.3-flash"
+reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.075
+output = 0.25
+
+[limit]
+context = 1_000_000
+output = 128_000

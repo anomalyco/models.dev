@@ -1,0 +1,13 @@
+base_model = "openai/gpt-oss-120b"
+structured_output = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high"]
+
+[cost]
+input = 0.35
+output = 0.75
+
+[limit]
+context = 128_000

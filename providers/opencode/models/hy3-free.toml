@@ -1,15 +1,16 @@
+base_model = "tencent/hy3"
 name = "Hy3 Free"
-description = "Tencent Hy reasoning model for coding, instruction following, and agent tasks"
 family = "hy3-free"
-release_date = "2026-06-26"
-last_updated = "2026-06-26"
-attachment = false
-reasoning = true
-reasoning_options = []
-temperature = true
-tool_call = true
-open_weights = true
+structured_output = true
 status = "deprecated"
+
+reasoning_options = [
+  { type = "toggle" },
+  { type = "effort", values = ["low", "medium", "high"] },
+]
+
+[interleaved]
+field = "reasoning_content"
 
 [cost]
 input = 0
@@ -19,7 +20,3 @@ cache_read = 0
 [limit]
 context = 190_000
 output = 64_000
-
-[modalities]
-input = ["text"]
-output = ["text"]

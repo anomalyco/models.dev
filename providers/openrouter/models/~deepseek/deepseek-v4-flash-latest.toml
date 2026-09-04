@@ -1,3 +1,5 @@
+# Toggle: reasoning.enabled = true|false
+# https://openrouter.ai/docs/guides/best-practices/reasoning-tokens
 name = "DeepSeek V4 Flash Latest"
 description = "Fast DeepSeek model for efficient chat, coding help, and agent loops"
 family = "deepseek"
@@ -11,17 +13,20 @@ structured_output = true
 open_weights = false
 
 [[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
 type = "effort"
 values = ["low", "high", "max"]
 
 [cost]
-input = 0.09
-output = 0.18
-cache_read = 0.018
+input = 0.05
+output = 0.16
+cache_read = 0.013
 
 [limit]
-context = 1_048_576
-output = 65_536
+context = 1_310_720
+output = 393_216
 
 [modalities]
 input = ["text"]

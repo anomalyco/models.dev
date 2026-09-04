@@ -1,0 +1,27 @@
+name = "Qwen3 8B TEE"
+description = "Qwen3 8B is an open-weight dense language model from Alibaba's Qwen team for efficient dialogue, reasoning, mathematics, coding, and tool use. Running inside a TEE (Trusted Execution Environment), with provider attestation support."
+release_date = "2026-09-04"
+last_updated = "2026-09-04"
+attachment = false
+reasoning = true
+tool_call = true
+structured_output = true
+open_weights = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high"]
+
+[cost]
+input = 0.11
+output = 0.45
+cache_read = 0.11
+
+[limit]
+context = 40_960
+input = 40_960
+output = 8_192
+
+[modalities]
+input = ["text"]
+output = ["text"]

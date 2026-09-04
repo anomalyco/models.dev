@@ -1,25 +1,20 @@
 # Not included in subscription
+base_model = "google/gemini-3.1-pro-preview"
 name = "Gemini 3.1 Pro (Preview)"
-description = "Advanced Gemini model for complex reasoning, coding, and multimodal analysis"
-release_date = "2026-02-19"
-last_updated = "2026-02-19"
-attachment = true
-reasoning = true
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
-tool_call = true
-structured_output = true
-open_weights = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high"]
 
 [cost]
 input = 2
 output = 12
 cache_read = 0.2
+cache_write = 0.375
 
 [limit]
-context = 1048756
-input = 1048756
-output = 65536
+context = 1_048_756
+input = 1_048_756
 
 [modalities]
-input = ["text", "image"]
-output = ["text"]
+input = ["text", "image", "audio"]

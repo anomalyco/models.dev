@@ -1,0 +1,42 @@
+# Sources (accessed 2026-08-31):
+# - Model card, limits (1M context, 999,990 max output), capabilities, GLM-5.3 base:
+#   https://docs.abliteration.ai/models
+# - Reasoning modes and per-endpoint request fields:
+#   https://docs.abliteration.ai/capabilities/thinking
+# - Pricing ($5 per 1M tokens input/output, $0.50 per 1M cached input):
+#   https://docs.abliteration.ai/pricing
+#   https://abliteration.ai/pricing
+# - Launch announcement (GLM-5.3 base, FP8 hosting, benchmarks):
+#   https://abliteration.ai/blog/introducing-abliterated-model-large-v2
+name = "Abliterated Model Large V2"
+description = "GLM-5.3 model abliterated and finetuned for cyber, ML red teaming, and agent testing"
+release_date = "2026-08-29"
+last_updated = "2026-08-31"
+attachment = false
+reasoning = true
+tool_call = true
+structured_output = true
+temperature = true
+open_weights = false
+
+# Three distinct reasoning depths: low, high, max (default: max).
+# Reasoning cannot be disabled on this model: "none" and {"thinking": false}
+# map to low and hide the trace, so there is no toggle option. Other ladder
+# values are accepted aliases: minimal -> low, medium -> high, xhigh -> max.
+[[reasoning_options]]
+type = "effort" # API: {"reasoning_effort": "<value>"} on /v1/chat/completions
+values = ["low", "high", "max"]
+
+[cost]
+input = 5.00
+output = 5.00
+cache_read = 0.50
+
+[limit]
+context = 1_000_000
+input = 1_000_000
+output = 999_990
+
+[modalities]
+input = ["text"]
+output = ["text"]

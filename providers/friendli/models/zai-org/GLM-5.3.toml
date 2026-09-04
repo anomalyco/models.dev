@@ -1,0 +1,42 @@
+# Friendli's chat-completions endpoint documents reasoning_effort (generic
+# enum) and reasoning_budget (integer token cap) as real request fields; GLM-5.3
+# on Z.AI's own API always reasons and only exposes low|high|max, so we mirror
+# those graded levels here instead of Friendli's full generic effort enum.
+#
+# budget_tokens is a REAL, independently-enforced reasoning-token budget, not
+# derived from max_tokens/context capacity: two live POST /chat/completions
+# requests against this exact model (reasoning_budget=30 and =50, generous
+# max_tokens=3000/4000) cut reasoning_content mid-sentence at the requested
+# cap while completion_tokens continued to 1553/177 respectively — proof the
+# reasoning phase and the completion phase are capped independently.
+# min=-1/max=1_048_576 are Friendli's own reported values, read verbatim from
+# GET /serverless/v1/models -> reasoning_options -> {type: budget_tokens} for
+# zai-org/GLM-5.3 (not computed by us from max_completion_tokens; that field
+# happens to equal this model's max_completion_tokens/context_length, but we
+# pass through the catalog's own budget_tokens object, we do not derive it).
+# https://friendli.ai/docs/openapi/model-apis/chat-completions#body-reasoning-effort-one-of-0
+# https://friendli.ai/docs/openapi/model-apis/chat-completions#body-reasoning-budget-one-of-0
+# (accessed 2026-08-29)
+base_model = "zhipuai/glm-5.3"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[[reasoning_options]]
+type = "budget_tokens"
+min = -1
+max = 1_048_576
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 1.4
+output = 4.4
+cache_read = 0.26
+
+[limit]
+context = 1_048_576
+output = 1_048_576
+

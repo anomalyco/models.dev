@@ -17,3 +17,119 @@ output = 131_072
 [modalities]
 input = ["text", "image", "video"]
 output = ["text"]
+
+[[benchmarks]]
+name = "DeepSWE"
+score = 67.5
+metric = "resolve rate"
+variant = "max effort"
+harness = "Kimi Code"
+version = "1.1"
+source = "https://www.kimi.com/blog/kimi-k3"
+date = "2026-07-16"
+
+[[benchmarks]]
+name = "Terminal-Bench"
+score = 88.3
+metric = "accuracy"
+variant = "max effort"
+harness = "Kimi Code"
+version = "2.1"
+source = "https://www.kimi.com/blog/kimi-k3"
+date = "2026-07-16"
+
+[[benchmarks]]
+name = "FrontierSWE"
+score = 81.2
+metric = "dominance score"
+variant = "max effort"
+harness = "Kimi Code"
+source = "https://www.kimi.com/blog/kimi-k3"
+date = "2026-07-16"
+
+[[benchmarks]]
+name = "Program Bench"
+score = 77.8
+metric = "score"
+variant = "max effort"
+harness = "Kimi Code"
+source = "https://www.kimi.com/blog/kimi-k3"
+date = "2026-07-16"
+
+[[benchmarks]]
+name = "SWE Marathon"
+score = 42.0
+metric = "resolve rate"
+variant = "max effort"
+harness = "Claude Code"
+version = "1.1"
+source = "https://www.kimi.com/blog/kimi-k3"
+date = "2026-07-16"
+
+[[benchmarks]]
+name = "GDPval-AA"
+score = 1668
+metric = "Elo"
+variant = "max effort"
+version = "v2"
+source = "https://www.kimi.com/blog/kimi-k3"
+date = "2026-07-16"
+
+[[benchmarks]]
+name = "AA-Briefcase"
+score = 1548
+metric = "Elo"
+variant = "max effort"
+source = "https://www.kimi.com/blog/kimi-k3"
+date = "2026-07-16"
+
+[[benchmarks]]
+name = "AutomationBench"
+score = 30.8
+metric = "success rate"
+variant = "max effort"
+dataset = "600-task public subset"
+source = "https://www.kimi.com/blog/kimi-k3"
+date = "2026-07-16"
+
+[[benchmarks]]
+name = "JobBench"
+score = 52.9
+metric = "score"
+variant = "max effort"
+source = "https://www.kimi.com/blog/kimi-k3"
+date = "2026-07-16"
+
+[[benchmarks]]
+name = "SpreadsheetBench"
+score = 34.8
+metric = "score"
+variant = "max effort"
+harness = "Claude Code"
+version = "2"
+source = "https://www.kimi.com/blog/kimi-k3"
+date = "2026-07-16"
+
+[[benchmarks]]
+name = "BrowseComp"
+score = 91.2
+metric = "accuracy"
+variant = "max effort, context compaction"
+source = "https://www.kimi.com/blog/kimi-k3"
+date = "2026-07-16"
+
+[[benchmarks]]
+name = "CharXiv Reasoning"
+score = 91.3
+metric = "accuracy"
+variant = "max effort, with tools"
+source = "https://www.kimi.com/blog/kimi-k3"
+date = "2026-07-16"
+
+[[benchmarks]]
+name = "ZeroBench"
+score = 41.0
+metric = "pass@5"
+variant = "max effort, with tools"
+source = "https://www.kimi.com/blog/kimi-k3"
+date = "2026-07-16"

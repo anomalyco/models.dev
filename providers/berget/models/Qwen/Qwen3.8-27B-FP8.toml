@@ -1,0 +1,28 @@
+# Qwen3.8 27B FP8 served on Berget AI's Swedish infrastructure.
+# Multimodal (text + image), reasoning on by default with effort levels
+# none|low|medium|xhigh (matched against the live API 2026-09-01).
+# https://api.berget.ai/openapi.json
+#
+# Berget bills in EUR: 0.4 EUR/M input, 3 EUR/M output.
+# Converted to USD at 1.1596 (ECB rate, 2026-08-31):
+#   0.4 EUR/M -> 0.46 USD/M input
+#   3 EUR/M   -> 3.48 USD/M output
+base_model = "alibaba/qwen3.8-27b"
+last_updated = "2026-09-01"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "xhigh"]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.46
+output = 3.48
+
+[limit]
+output = 65_536
+
+[modalities]
+input = ["text", "image"]

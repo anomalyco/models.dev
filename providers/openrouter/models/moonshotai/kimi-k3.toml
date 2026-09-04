@@ -1,6 +1,11 @@
+# Toggle: reasoning.enabled = true|false
+# https://openrouter.ai/docs/guides/best-practices/reasoning-tokens
 base_model = "moonshotai/kimi-k3"
 description = "Kimi multimodal agent model for visual understanding, coding, and planning"
 temperature = true
+
+[[reasoning_options]]
+type = "toggle"
 
 [[reasoning_options]]
 type = "effort"
@@ -12,7 +17,4 @@ output = 15
 cache_read = 0.3
 
 [limit]
-output = 1_048_576
-
-[modalities]
-input = ["text", "image"]
+output = 943_718

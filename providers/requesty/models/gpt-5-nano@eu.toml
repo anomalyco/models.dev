@@ -1,0 +1,19 @@
+base_model = "openai/gpt-5-nano"
+base_model_omit = ["limit.input"]
+name = "GPT-5 Nano (EU)"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "max"]
+
+[[reasoning_options]]
+type = "budget_tokens"
+
+[cost]
+input = 0.055
+output = 0.44
+cache_read = 0.0055
+
+[limit]
+context = 200_000
+output = 100_000

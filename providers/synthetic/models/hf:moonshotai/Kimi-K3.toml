@@ -2,7 +2,7 @@ base_model = "moonshotai/kimi-k3"
 last_updated = "2026-07-27"
 
 temperature = true
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
+reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]
 
 [interleaved]
 field = "reasoning_content"

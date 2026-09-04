@@ -1,0 +1,18 @@
+# Sources (accessed 2026-08-28):
+# https://docs.z.ai/guides/llm/glm-5.3
+# https://api.deepinfra.com/models/zai-org/GLM-5.3/schema/openai-chat-completions
+# Effort: reasoning_effort = low|high|max, matching the lab and relay peers.
+# GLM-5.3 always reasons; no toggle or reasoning-token budget.
+base_model = "zhipuai/glm-5.3"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[cost]
+input = 1.2
+output = 4
+cache_read = 0.12
+
+[limit]
+context = 1_048_576
