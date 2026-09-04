@@ -1,0 +1,11 @@
+# Pricing per InferX API (user-verified, 2026-09-04).
+name = "GLM 5.3 Flash"
+base_model = "zhipuai/glm-5.3-flash"
+reasoning_options = []
+[cost]
+input = 0.045
+output = 0.15
+cache_read = 0.009
+[modalities]
+input = ["text", "image"]
+output = ["text"]
