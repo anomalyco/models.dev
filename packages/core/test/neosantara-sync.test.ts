@@ -200,6 +200,26 @@ test("copies the catalog's per-model reasoning surface verbatim (llmgateway conv
     { type: "toggle" },
     { type: "effort", values: ["low", "medium", "high", "xhigh", "max"] },
   ]);
+
+  // When a model has has_toggle: true and efforts contains "none", emit toggle + effort without "none".
+  expect(
+    neosantaraReasoningControls({
+      providers: [{ reasoning: true, reasoning_efforts: ["none", "low", "high", "max"], has_toggle: true }],
+    } as never),
+  ).toEqual([
+    { type: "toggle" },
+    { type: "effort", values: ["low", "high", "max"] },
+  ]);
+
+  // Toggle is driven only by the catalog (has_toggle / ["none"]), not re-inferred from prior TOMLs.
+  expect(
+    neosantaraReasoningControls(
+      {
+        providers: [{ reasoning: true, reasoning_efforts: ["low", "high", "max"] }],
+      } as never,
+      { reasoning_options: [{ type: "toggle" }, { type: "effort", values: ["low", "high", "max"] }] } as never,
+    ),
+  ).toEqual([{ type: "effort", values: ["low", "high", "max"] }]);
 });
 
 test("skips a reasoning model whose effort surface is unknown (missing != always-on)", () => {

@@ -102,7 +102,7 @@ function hasReasoningEfforts(model: NeosantaraSourceModel) {
 // the host reports `has_toggle: true`, authoring `toggle` alongside the graded effort ladder.
 export function neosantaraReasoningControls(
   model: NeosantaraSourceModel,
-  existing?: ExistingModel,
+  _existing?: ExistingModel,
 ): ReasoningControls {
   const map = mapping(model);
   const efforts = (map.reasoning_efforts ?? []).filter((effort) =>
@@ -111,15 +111,17 @@ export function neosantaraReasoningControls(
   if (efforts.length === 0) return [];
   if (efforts.length === 1 && efforts[0] === "none") return [{ type: "toggle" }];
 
-  const hasToggle =
-    map.has_toggle === true ||
-    existing?.reasoning_options?.some((option) => option.type === "toggle");
+  const hasToggle = map.has_toggle === true;
+  const graded = efforts.filter((effort) => effort !== "none");
 
-  if (hasToggle && !efforts.includes("none")) {
-    return [
-      { type: "toggle" },
-      { type: "effort", values: efforts as never },
-    ];
+  if (hasToggle) {
+    if (graded.length > 0) {
+      return [
+        { type: "toggle" },
+        { type: "effort", values: graded as never },
+      ];
+    }
+    return [{ type: "toggle" }];
   }
 
   return [{ type: "effort", values: efforts as never }];
