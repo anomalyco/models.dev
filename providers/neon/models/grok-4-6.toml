@@ -1,11 +1,10 @@
-# Off is effort=none; graded levels on chat completions reasoning_effort.
+# Off is effort=none. Chat completions: reasoning_effort.
+# Responses: reasoning.effort. Native dialect is openai-responses.
 # Neon accepts none, minimal, low, medium, high, xhigh. `max` is rejected.
 base_model = "xai/grok-4.6"
 reasoning_options = [
   { type = "effort", values = ["none", "minimal", "low", "medium", "high", "xhigh"] },
 ]
-# Lab entry carries a knowledge cutoff the website catalog does not publish.
-base_model_omit = ["knowledge"]
 
 # Neon rate is not published yet. Do not copy first-party xAI prices.
 

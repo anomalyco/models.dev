@@ -1,11 +1,9 @@
-# Toggle: thinking.type = enabled|disabled
-# Effort: reasoning_effort = minimal|low|medium|high|xhigh|max
-# `none` is rejected: thinking-only model.
+# Effort: chat completions reasoning_effort.
+# `none` is rejected (thinking-only). thinking.type=disabled returns 200 and
+# still emits reasoning_content, so there is no off control.
 base_model = "zhipuai/glm-5.3-flash"
 name = "GLM-5.3 Flash"
-open_weights = true
 reasoning_options = [
-  { type = "toggle" },
   { type = "effort", values = ["minimal", "low", "medium", "high", "xhigh", "max"] },
 ]
 
@@ -14,12 +12,6 @@ reasoning_options = [
 input = 0.15
 output = 0.5
 cache_read = 0.03
-
-# Lab entry also lists video and pdf. A real PNG on /v1/chat/completions returned 200.
-# Video and pdf were not measured.
-[modalities]
-input = ["text", "image"]
-output = ["text"]
 
 # Lab context is 1_000_000. neon.com/models publishes 1_048_576.
 [limit]
