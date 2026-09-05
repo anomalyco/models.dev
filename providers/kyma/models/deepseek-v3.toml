@@ -1,5 +1,11 @@
 # Price source: https://api.kymaapi.com/v1/models (public, unauthenticated), accessed 2026-09-04.
-base_model = "deepseek/deepseek-v3"
+# This id serves DeepSeek V3.2 (hybrid thinking/non-thinking), not the original V3 — base_model
+# points at the matching lab entry so reasoning inherits correctly. No caller-facing reasoning
+# control is forwarded on this route (checked against Kyma's own request pipeline), so
+# reasoning_options is empty rather than an invented toggle/effort set.
+base_model = "deepseek/deepseek-v3.2"
+
+reasoning_options = []
 
 [cost]
 input = 0.351
