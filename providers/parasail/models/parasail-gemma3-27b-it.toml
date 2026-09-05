@@ -1,0 +1,13 @@
+# Prior Parasail full definition: text-only, no attachments
+base_model = "google/gemma-3-27b-it"
+
+attachment = false
+
+[cost]
+input = 0.08
+output = 0.45
+cache_read = 0.04
+
+[modalities]
+input = ["text"]
+output = ["text"]

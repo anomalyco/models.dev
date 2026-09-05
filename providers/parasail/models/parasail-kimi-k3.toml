@@ -1,0 +1,18 @@
+# Toggle: thinking.type = enabled|disabled
+# Effort: output_config.effort = low|high|max
+# Sources:
+# https://openrouter.ai/moonshotai/kimi-k3
+# Pricing from OpenRouter peers (Parasail pricing not published)
+base_model = "moonshotai/kimi-k3"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[cost]
+input = 3
+output = 15
+cache_read = 0.3

@@ -1,0 +1,23 @@
+name = "Gemma 3 27B Instruct"
+description = "Instruction-tuned open Gemma 3 model for multimodal chat, vision, and self-hosting"
+family = "gemma"
+release_date = "2025-03-13"
+last_updated = "2025-03-13"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = false
+structured_output = true
+open_weights = true
+
+[limit]
+context = 131072
+output = 8192
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/google/gemma-3-27b-it"

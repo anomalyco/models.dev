@@ -1,0 +1,19 @@
+# Cost: public Parasail pricing not published; intentionally unpriced
+name = "Resemble TTS English"
+description = "Resemble English text-to-speech model served by Parasail"
+release_date = "2025-01-01"
+last_updated = "2025-01-01"
+attachment = false
+reasoning = false
+temperature = true
+tool_call = false
+structured_output = false
+open_weights = false
+
+[limit]
+context = 8192
+output = 8192
+
+[modalities]
+input = ["text"]
+output = ["audio"]
