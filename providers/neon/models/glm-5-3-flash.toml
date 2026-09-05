@@ -1,10 +1,12 @@
 # Effort: chat completions reasoning_effort.
-# `none` is rejected (thinking-only). thinking.type=disabled returns 200 and
-# still emits reasoning_content, so there is no off control.
+# Lab/peers: low|high|max. Neon accepts extra values (minimal, medium, xhigh)
+# with HTTP 200, but a 2026-09-04 effect probe did not show distinct tiers
+# (reasoning_content length is not monotonic). `none` is rejected (thinking-only).
+# thinking.type=disabled returns 200 and still emits reasoning_content.
 base_model = "zhipuai/glm-5.3-flash"
 name = "GLM-5.3 Flash"
 reasoning_options = [
-  { type = "effort", values = ["minimal", "low", "medium", "high", "xhigh", "max"] },
+  { type = "effort", values = ["low", "high", "max"] },
 ]
 
 # List rates. First-party zhipuai currently publishes a 50% promo that Neon does not.

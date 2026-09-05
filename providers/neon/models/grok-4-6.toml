@@ -1,9 +1,13 @@
-# Off is effort=none. Chat completions: reasoning_effort.
-# Responses: reasoning.effort. Native dialect is openai-responses.
-# Neon accepts none, minimal, low, medium, high, xhigh. `max` is rejected.
+# Effort: Chat Completions `reasoning_effort` and Responses `reasoning.effort`.
+# Native dialect is openai-responses: POST /openai/v1/responses returns 200.
+# Chat Completions also returns 200 and accepts `reasoning_effort`.
+# Lab/peers: low|medium|high|xhigh. `max` is rejected.
+# `none` and `minimal` return 200 but do not expose a reasoning channel to
+# compare against, and first-party xAI does not treat this model as disableable.
+# Do not advertise an off switch we cannot verify.
 base_model = "xai/grok-4.6"
 reasoning_options = [
-  { type = "effort", values = ["none", "minimal", "low", "medium", "high", "xhigh"] },
+  { type = "effort", values = ["low", "medium", "high", "xhigh"] },
 ]
 
 # Neon rate is not published yet. Do not copy first-party xAI prices.
