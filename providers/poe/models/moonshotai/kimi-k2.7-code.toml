@@ -1,0 +1,15 @@
+# Source: Poe GET /v1/models (accessed 2026-08-16).
+# Poe lists no caller reasoning controls for this bot.
+# Costs are USD/MTok from Poe pricing fields * 1e6.
+base_model = "moonshotai/kimi-k2.7-code"
+name = "Kimi-K2.7-Code"
+reasoning_options = []
+
+[cost]
+input = 0.9596
+output = 4.0404
+cache_read = 0.1919
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

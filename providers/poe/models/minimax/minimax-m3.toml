@@ -1,0 +1,14 @@
+# Source: Poe GET /v1/models (accessed 2026-08-16).
+# Toggle: extra_body.enable_thinking true|false
+# Costs are USD/MTok from Poe pricing fields * 1e6.
+base_model = "minimax/MiniMax-M3"
+reasoning_options = [{ type = "toggle" }]
+
+[cost]
+input = 0.303
+output = 1.2121
+cache_read = 0.0606
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
