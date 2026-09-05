@@ -1,0 +1,21 @@
+base_model = "xiaomi/mimo-v2.5-pro"
+name = "MiMo V2.5 Pro"
+description = "Xiaomi MiMo V2.5 Pro - enhanced reasoning"
+attachment = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[cost]
+input = 0
+output = 0
+cache_read = 0
+cache_write = 0
+
+[limit]
+context = 256_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

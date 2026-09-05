@@ -1,0 +1,21 @@
+base_model = "alibaba/qwen3.7-flash"
+name = "Qwen 3.7 Flash"
+description = "Alibaba Qwen 3.7 Flash - high-speed reasoning"
+attachment = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[cost]
+input = 0
+output = 0
+cache_read = 0
+cache_write = 0
+
+[limit]
+context = 256_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

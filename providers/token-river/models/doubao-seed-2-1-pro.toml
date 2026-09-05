@@ -1,0 +1,25 @@
+name = "Doubao Seed 2.1 Pro"
+description = "ByteDance Doubao Seed 2.1 Pro - flagship multimodal model"
+family = "seed"
+release_date = "2026-07-01"
+last_updated = "2026-07-01"
+attachment = true
+reasoning = true
+reasoning_options = []
+temperature = true
+tool_call = true
+open_weights = false
+
+[cost]
+input = 0
+output = 0
+cache_read = 0
+cache_write = 0
+
+[limit]
+context = 256_000
+output = 16_384
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
