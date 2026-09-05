@@ -1,0 +1,14 @@
+# Pricing, limits and reasoning surface as published for this ID.
+# https://concentrate.ai/models/o3
+base_model = "openai/o3"
+
+interleaved = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high"]
+
+[cost]
+input = 2
+output = 8
+cache_read = 0.5

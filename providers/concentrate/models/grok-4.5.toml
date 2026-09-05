@@ -1,0 +1,28 @@
+# Cache reads bill at $0.50/M on this gateway, above the $0.30 first-party rate;
+# this is the price the xai route publishes here, and the 200k tier doubles it to
+# $1.00/M in line with the tier's input and output rates.
+# Effort stays at the lab and peer surface of low|medium|high. The route also
+# reports `minimal` and the list capabilities report `max`, but neither is
+# published: live probes on 2026-08-19 returned 334 reasoning characters at
+# minimal against 355 at low, and 489 at max against 673 at high, so the gateway
+# normalizes them rather than honouring a distinct level. `xhigh` behaves the same
+# way here (539 characters against 673 at high) and is the Grok 4.6 surface.
+# https://concentrate.ai/models/grok-4.5
+base_model = "xai/grok-4.5"
+
+interleaved = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high"]
+
+[cost]
+input = 2
+output = 6
+cache_read = 0.5
+
+[[cost.tiers]]
+tier = { type = "context", size = 200_000 }
+input = 4
+output = 12
+cache_read = 1
