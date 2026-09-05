@@ -1,0 +1,12 @@
+# Effort: reasoning.effort = none|low|medium|high|xhigh|max
+base_model = "openai/gpt-5.6-terra"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "xhigh", "max"]
+
+[cost]
+input = 2.2788
+output = 13.6728
+cache_read = 0.22788
+cache_write = 2.8485

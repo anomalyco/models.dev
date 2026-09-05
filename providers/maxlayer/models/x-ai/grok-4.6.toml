@@ -1,0 +1,14 @@
+# Effort: reasoning.effort = low|medium|high|xhigh
+base_model = "xai/grok-4.6"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high", "xhigh"]
+
+[cost]
+input = 2.2788
+output = 6.8364
+cache_read = 0.5697
+
+[modalities]
+input = ["text", "image", "pdf"]

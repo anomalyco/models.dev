@@ -1,0 +1,14 @@
+# Effort: reasoning.effort = none|low|medium|high|xhigh|max
+base_model = "openai/gpt-5.6-luna"
+name = "GPT-5.6 Luna Pro"
+description = "Frontier GPT model for professional reasoning, coding, and multimodal work"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "xhigh", "max"]
+
+[cost]
+input = 0.22788
+output = 1.36728
+cache_read = 0.022788
+cache_write = 0.28485

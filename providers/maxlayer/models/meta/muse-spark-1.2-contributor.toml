@@ -1,0 +1,13 @@
+# Effort: reasoning.effort = minimal|low|medium|high|xhigh
+base_model = "meta/muse-spark-1.2"
+name = "Muse Spark 1.2 Contributor"
+description = "Lower-cost Muse Spark 1.2 tier for multimodal reasoning, coding, and agentic work"
+
+[[reasoning_options]]
+type = "effort"
+values = ["minimal", "low", "medium", "high", "xhigh"]
+
+[cost]
+input = 0.11394
+output = 0.22788
+cache_read = 0.002279

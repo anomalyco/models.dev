@@ -1,0 +1,15 @@
+# Effort: reasoning.effort = none|minimal|low|medium|high|max
+base_model = "thinkingmachines/inkling-small"
+structured_output = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "minimal", "low", "medium", "high", "max"]
+
+[cost]
+input = 0.51273
+output = 1.36728
+cache_read = 0.11394
+
+[limit]
+output = 262_144

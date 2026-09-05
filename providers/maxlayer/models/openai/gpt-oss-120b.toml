@@ -1,0 +1,13 @@
+# Effort: reasoning.effort = low|medium|high
+base_model = "openai/gpt-oss-120b"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high"]
+
+[cost]
+input = 0.042158
+output = 0.193698
+
+[limit]
+output = 131_072

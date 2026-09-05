@@ -1,0 +1,13 @@
+# Effort: reasoning.effort = low|medium|high
+base_model = "openai/o3-pro"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high"]
+
+[cost]
+input = 22.788
+output = 91.152
+
+[modalities]
+input = ["text", "pdf", "image"]
