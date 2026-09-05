@@ -1,0 +1,21 @@
+# Cost = Gondola's live fee-inclusive "from" quote (/v1/models): the cheapest active
+# lender's uniform pricing factor (a fraction of Venice list, applied to every model)
+# + a 2% platform fee. So each model is the same multiple of Venice list right now;
+# that multiple floats over time as supply shifts. Limits from /v1/models; modalities
+# mirror providers/venice/. https://api.gondola-ai.com/v1/models (accessed 2026-08-14)
+base_model = "anthropic/claude-opus-4-8"
+name = "Claude Opus 4.8 (Fast)"
+reasoning_options = []
+
+[cost]
+input = 3.672
+output = 18.36
+cache_read = 0.3672
+cache_write = 4.59
+
+[limit]
+output = 32768
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

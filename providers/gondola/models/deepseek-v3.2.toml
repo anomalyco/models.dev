@@ -1,0 +1,19 @@
+# Cost = Gondola's live fee-inclusive "from" quote (/v1/models): the cheapest active
+# lender's uniform pricing factor (a fraction of Venice list, applied to every model)
+# + a 2% platform fee. So each model is the same multiple of Venice list right now;
+# that multiple floats over time as supply shifts. Limits from /v1/models; modalities
+# mirror providers/venice/. https://api.gondola-ai.com/v1/models (accessed 2026-08-14)
+base_model = "deepseek/deepseek-v3.2"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high"]
+
+[cost]
+input = 0.10098
+output = 0.14688
+cache_read = 0.04896
+
+[limit]
+context = 160000
+output = 32768
