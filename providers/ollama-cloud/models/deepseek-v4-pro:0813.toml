@@ -1,0 +1,18 @@
+# Dated tag of deepseek-v4-pro, served by Ollama Cloud and listed by GET /v1/models.
+# API-verified context: https://ollama.com/api/show (deepseek4.context_length = 1048576)
+name = "deepseek-v4-pro:0813"
+description = "Dated release of the flagship DeepSeek model for coding, reasoning, and agentic work"
+family = "deepseek-thinking"
+attachment = false
+reasoning = true
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["high", "max"] }]
+tool_call = true
+open_weights = true
+
+[limit]
+context = 1048576
+output = 1048576
+
+[modalities]
+input = ["text"]
+output = ["text"]

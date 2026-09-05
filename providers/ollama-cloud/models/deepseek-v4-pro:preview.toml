@@ -1,0 +1,19 @@
+# Preview tag of deepseek-v4-pro, served by Ollama Cloud and listed by GET /v1/models.
+# NOTE: this tag has HALF the context of the stable tag.
+# API-verified context: https://ollama.com/api/show (deepseek4.context_length = 524288)
+name = "deepseek-v4-pro:preview"
+description = "Preview release of the flagship DeepSeek model for coding, reasoning, and agentic work"
+family = "deepseek-thinking"
+attachment = false
+reasoning = true
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["high", "max"] }]
+tool_call = true
+open_weights = true
+
+[limit]
+context = 524288
+output = 524288
+
+[modalities]
+input = ["text"]
+output = ["text"]
