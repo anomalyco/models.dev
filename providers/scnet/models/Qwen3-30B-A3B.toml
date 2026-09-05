@@ -1,0 +1,14 @@
+# SCNet probe 2026-08-28: enable_thinking=false moved reasoning into visible content
+# instead of disabling it; enable_thinking=true retained reasoning_content.
+# This is not a reliable caller off switch, so no toggle is advertised.
+# SCNet OpenAI Chat API source:
+# https://www.scnet.cn/ac/openapi/doc/2.0/moduleapi/api/chat.html
+base_model = "alibaba/qwen3-30b-a3b"
+reasoning_options = []
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.05578125
+output = 0.223125

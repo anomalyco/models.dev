@@ -1,0 +1,17 @@
+# Toggle: enable_thinking = true|false
+# Budget: thinking_budget = integer reasoning tokens
+# SCNet probe 2026-08-27: thinking_budget=128/1024 changed reasoning token counts on this SKU.
+# SCNet API exposes the thinking toggle and thinking_budget; no separate effort control is documented for this host.
+# SCNet OpenAI Chat API source:
+# https://www.scnet.cn/ac/openapi/doc/2.0/moduleapi/api/chat.html
+base_model = "alibaba/qwen3.7-max"
+reasoning_options = [{ type = "toggle" }, { type = "budget_tokens" }]
+
+[interleaved]
+field = "reasoning_content"
+
+
+[cost]
+input = 1.785
+output = 5.355
+cache_read = 0.357

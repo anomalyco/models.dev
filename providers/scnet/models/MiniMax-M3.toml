@@ -1,0 +1,21 @@
+# Toggle: thinking.type = disabled|adaptive
+# SCNet probe 2026-08-27: thinking.type=disabled removed reasoning content; baseline/adaptive retained it.
+# https://www.scnet.cn/ac/openapi/doc/2.0/moduleapi/api/chat.html
+# SCNet console model-list snapshot (2026-08-26) reports a 1,048,576-token context for this host, overriding the 512,000-token lab limit.
+# SCNet probe 2026-08-27: image input was positively confirmed with a semantic red-image probe.
+base_model = "minimax/MiniMax-M3"
+reasoning_options = [{ type = "toggle" }]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.62475
+output = 2.499
+cache_read = 0.12495
+
+[limit]
+context = 1_048_576
+
+[modalities]
+input = ["text", "image"]

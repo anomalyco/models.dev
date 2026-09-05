@@ -1,0 +1,17 @@
+# SCNet catalog exposes no caller-controlled reasoning option for this SKU.
+# SCNet probe 2026-08-27: image input was positively confirmed with a semantic red-image probe.
+# https://www.scnet.cn/ac/openapi/doc/2.0/moduleapi/api/chat.html
+attachment = true
+base_model = "minimax/MiniMax-M2.7"
+reasoning_options = []
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.312375
+output = 1.2495
+cache_read = 0.062475
+
+[modalities]
+input = ["text", "image"]

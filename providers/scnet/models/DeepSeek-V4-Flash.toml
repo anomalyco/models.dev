@@ -1,0 +1,20 @@
+# Toggle: enable_thinking = true|false
+# Effort: reasoning_effort = high|max
+# SCNet probe 2026-08-27: low was accepted but matched high/max in the low-token reasoning probe; keep the host set narrowed to high/max.
+# SCNet OpenAI Chat API source:
+# SCNet probe 2026-08-27: image input was positively confirmed with a semantic red-image probe.
+# https://www.scnet.cn/ac/openapi/doc/2.0/moduleapi/api/chat.html
+attachment = true
+base_model = "deepseek/deepseek-v4-flash"
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["high", "max"] }]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.14875
+output = 0.2975
+cache_read = 0.02975
+
+[modalities]
+input = ["text", "image"]

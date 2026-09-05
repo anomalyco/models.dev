@@ -1,0 +1,17 @@
+# Toggle: thinking.type = enabled|disabled
+# SCNet probe 2026-08-27: GLM-5.1 thinking.type disabled/enabled changed reasoning presence on this host.
+# https://www.scnet.cn/ac/openapi/doc/2.0/moduleapi/api/chat.html
+base_model = "zhipuai/glm-5.1"
+name = "GLM-5.1-Base"
+reasoning_options = [{ type = "toggle" }]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.595
+output = 2.0825
+cache_read = 0.14875
+
+[limit]
+context = 131_072

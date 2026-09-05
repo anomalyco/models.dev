@@ -1,0 +1,19 @@
+# Toggle: thinking.type = enabled|disabled|adaptive
+# Effort: output_config.effort = low|high|max
+# SCNet probe 2026-08-28: thinking.type enabled/disabled changed reasoning output;
+# adaptive with output_config.effort low/high/max produced distinct reasoning lengths.
+# https://www.scnet.cn/ac/openapi/doc/2.0/moduleapi/api/chat.html
+# SCNet probe 2026-08-27: image input was positively confirmed with a semantic red-image probe.
+base_model = "moonshotai/kimi-k3"
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "high", "max"] }]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 2.975
+output = 14.875
+cache_read = 0.2975
+
+[modalities]
+input = ["text", "image"]
