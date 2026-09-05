@@ -111,7 +111,11 @@ async function fetchUsdRate(): Promise<UsdRate> {
       throw new Error(`Bank of Russia rates request failed: ${response.status} ${response.statusText}`);
     }
     const json = CbrDailyRatesJson.parse(await response.json());
-    return { rate: json.Valute.USD.Value, date: json.Date.slice(0, 10) };
+    // The mirror publishes an ISO 8601 timestamp ("2026-09-05T11:30:00+03:00");
+    // normalise it to the same YYYY-MM-DD contract as the XML path.
+    const parsed = new Date(json.Date);
+    if (Number.isNaN(parsed.getTime())) throw new Error(`Bank of Russia JSON mirror has an invalid Date: ${json.Date}`);
+    return UsdRate.parse({ rate: json.Valute.USD.Value, date: parsed.toISOString().slice(0, 10) });
   }
 }
 
