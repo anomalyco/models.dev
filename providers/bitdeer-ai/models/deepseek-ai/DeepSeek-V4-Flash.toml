@@ -1,0 +1,12 @@
+# Bitdeer AI Inference (POST https://api-inference.bitdeer.ai/v1/chat/completions)
+# model = "deepseek-ai/DeepSeek-V4-Flash"
+# Pricing source: https://www.bitdeer.ai/en/pricing/ai-models (accessed 2026-08-12)
+base_model = "deepseek/deepseek-v4-flash"
+
+[[reasoning_options]]
+type = "toggle"
+
+[cost]
+input = 0.04
+output = 0.08
+cache_read = 0.01
