@@ -1,0 +1,15 @@
+base_model = "bytedance-seed/seed-2.0-mini"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "max"]
+
+[[reasoning_options]]
+type = "budget_tokens"
+
+[cost]
+input = 0.146
+output = 0.5837
+
+[limit]
+context = 262_144

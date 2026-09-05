@@ -1,0 +1,13 @@
+base_model = "upstage/solar-pro4"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "max"]
+
+[[reasoning_options]]
+type = "budget_tokens"
+
+[cost]
+input = 0.0438
+output = 0.1751
+cache_read = 0.0088

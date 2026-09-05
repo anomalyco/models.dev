@@ -1,0 +1,13 @@
+base_model = "openai/o1"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "max"]
+
+[[reasoning_options]]
+type = "budget_tokens"
+
+[cost]
+input = 21.8906
+output = 87.5624
+cache_read = 10.9453

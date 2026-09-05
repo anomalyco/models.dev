@@ -1,0 +1,13 @@
+base_model = "nvidia/nemotron-3.5-lightning"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "max"]
+
+[[reasoning_options]]
+type = "budget_tokens"
+
+[cost]
+input = 0.1168
+output = 0.2918
+cache_read = 0.0583

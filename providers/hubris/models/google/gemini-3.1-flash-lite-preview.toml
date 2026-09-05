@@ -1,0 +1,14 @@
+base_model = "google/gemini-3.1-flash-lite-preview"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "max"]
+
+[[reasoning_options]]
+type = "budget_tokens"
+
+[cost]
+input = 0.3648
+output = 2.189
+cache_read = 0.0365
+cache_write = 0.1216

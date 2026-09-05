@@ -1,0 +1,13 @@
+base_model = "google/gemini-3.1-flash-lite-image"
+tool_call = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "max"]
+
+[[reasoning_options]]
+type = "budget_tokens"
+
+[cost]
+input = 0.3648
+output = 2.189

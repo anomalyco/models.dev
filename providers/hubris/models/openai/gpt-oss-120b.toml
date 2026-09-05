@@ -1,0 +1,12 @@
+base_model = "openai/gpt-oss-120b"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "max"]
+
+[[reasoning_options]]
+type = "budget_tokens"
+
+[cost]
+input = 0.0541
+output = 0.2481

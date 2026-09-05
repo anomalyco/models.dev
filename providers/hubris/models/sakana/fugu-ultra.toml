@@ -1,0 +1,16 @@
+base_model = "sakana/fugu-ultra"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "max"]
+
+[[reasoning_options]]
+type = "budget_tokens"
+
+[cost]
+input = 7.2968
+output = 43.7811
+cache_read = 0.7297
+
+[limit]
+output = 1_000_000

@@ -1,0 +1,12 @@
+base_model = "alibaba/qwen3-vl-235b-a22b-thinking"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "max"]
+
+[[reasoning_options]]
+type = "budget_tokens"
+
+[cost]
+input = 0.5837
+output = 5.8375

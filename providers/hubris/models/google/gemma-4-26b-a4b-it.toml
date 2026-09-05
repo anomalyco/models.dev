@@ -1,0 +1,12 @@
+base_model = "google/gemma-4-26b-a4b-it"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "max"]
+
+[[reasoning_options]]
+type = "budget_tokens"
+
+[cost]
+input = 0.1022
+output = 0.4962

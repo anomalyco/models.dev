@@ -1,0 +1,13 @@
+base_model = "openai/gpt-5.2-codex"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "max"]
+
+[[reasoning_options]]
+type = "budget_tokens"
+
+[cost]
+input = 2.5539
+output = 20.4312
+cache_read = 0.2554

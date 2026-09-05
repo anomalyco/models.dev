@@ -1,0 +1,15 @@
+base_model = "google/gemini-3-pro-image-preview"
+structured_output = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "max"]
+
+[[reasoning_options]]
+type = "budget_tokens"
+
+[cost]
+input = 2.9187
+output = 17.5125
+cache_read = 0.2918
+cache_write = 0.5473

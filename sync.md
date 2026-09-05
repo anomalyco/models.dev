@@ -314,6 +314,17 @@ Chutes is implemented in `packages/core/src/sync/providers/chutes.ts`.
 - `attachment` is derived from non-text `input_modalities`, and all models are `open_weights`.
 - `release_date`/`last_updated` default to the API `created` timestamp but preserve existing hand-authored dates; `knowledge`, `family`, `status`, `interleaved`, and `limit.input` are preserved when present.
 
+## Hubris Notes
+
+Hubris is implemented in `packages/core/src/sync/providers/hubris.ts`.
+
+- Source endpoint: `https://hubris.pw/api/internal/models/catalog?limit=1000` (the public catalog behind https://hubris.pw/models); no authentication required.
+- Hubris bills in Russian rubles. Prices are converted to USD per 1M tokens at the Bank of Russia official daily rate (`https://www.cbr.ru/scripts/XML_daily.asp`, with `https://www.cbr-xml-daily.ru/daily_json.js` as a fallback); the previously synced USD prices are kept while the converted value drifts less than 3 %, so daily FX movement does not churn every file.
+- Model IDs are OpenRouter-shaped (`vendor/model`) and map directly to TOML paths under `providers/hubris/models`; batch variants (`:batch`), `~` aliases and non-chat models (image, video, speech, embeddings) are skipped.
+- Every entry factors onto canonical lab metadata via `base_model`. Models without a matching `models/` entry are skipped and listed in the sync notices (no missing-model issues).
+- `reasoning`, `tool_call` and `structured_output` come from the catalog's `supportedParameters`; reasoning models get the relay controls (`effort` none/low/medium/high/max + `budget_tokens`), as for Requesty.
+- `limit.context` comes from the catalog; `limit.output` is inherited from the lab entry.
+
 ## Requesty Notes
 
 Requesty is implemented in `packages/core/src/sync/providers/requesty.ts`.

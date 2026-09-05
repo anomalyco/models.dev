@@ -1,0 +1,17 @@
+base_model = "arcee-ai/trinity-large-thinking"
+structured_output = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "max"]
+
+[[reasoning_options]]
+type = "budget_tokens"
+
+[cost]
+input = 0.3648
+output = 1.1675
+cache_read = 0.0875
+
+[limit]
+context = 262_144

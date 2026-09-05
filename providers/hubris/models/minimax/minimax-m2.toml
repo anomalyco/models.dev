@@ -1,0 +1,13 @@
+base_model = "minimax/MiniMax-M2"
+structured_output = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "max"]
+
+[[reasoning_options]]
+type = "budget_tokens"
+
+[cost]
+input = 0.3721
+output = 1.4886

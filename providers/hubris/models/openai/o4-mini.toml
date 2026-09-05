@@ -1,0 +1,13 @@
+base_model = "openai/o4-mini"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "max"]
+
+[[reasoning_options]]
+type = "budget_tokens"
+
+[cost]
+input = 1.6053
+output = 6.4213
+cache_read = 0.4013

@@ -1,0 +1,14 @@
+base_model = "moonshotai/kimi-k2-thinking"
+structured_output = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "max"]
+
+[[reasoning_options]]
+type = "budget_tokens"
+
+[cost]
+input = 0.8757
+output = 3.6484
+cache_read = 0.2189

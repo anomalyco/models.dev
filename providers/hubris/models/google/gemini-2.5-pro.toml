@@ -1,0 +1,14 @@
+base_model = "google/gemini-2.5-pro"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "max"]
+
+[[reasoning_options]]
+type = "budget_tokens"
+
+[cost]
+input = 1.8242
+output = 14.5937
+cache_read = 0.1825
+cache_write = 0.5473

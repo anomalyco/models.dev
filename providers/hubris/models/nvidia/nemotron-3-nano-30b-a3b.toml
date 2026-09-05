@@ -1,0 +1,14 @@
+base_model = "nvidia/nemotron-3-nano-30b-a3b"
+structured_output = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "max"]
+
+[[reasoning_options]]
+type = "budget_tokens"
+
+[cost]
+input = 0.073
+output = 0.2918
+cache_read = 0.0438

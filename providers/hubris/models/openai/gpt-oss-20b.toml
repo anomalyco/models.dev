@@ -1,0 +1,13 @@
+base_model = "openai/gpt-oss-20b"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "max"]
+
+[[reasoning_options]]
+type = "budget_tokens"
+
+[cost]
+input = 0.0438
+output = 0.1898
+cache_read = 0.0438

@@ -1,0 +1,12 @@
+base_model = "openai/o3-pro"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "max"]
+
+[[reasoning_options]]
+type = "budget_tokens"
+
+[cost]
+input = 29.1875
+output = 116.7499

@@ -1,0 +1,13 @@
+base_model = "meta/muse-glimmer-30b"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "max"]
+
+[[reasoning_options]]
+type = "budget_tokens"
+
+[cost]
+input = 0.4378
+output = 1.6053
+cache_read = 0.0583

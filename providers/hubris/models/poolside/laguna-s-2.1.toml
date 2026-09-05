@@ -1,0 +1,13 @@
+base_model = "poolside/laguna-s-2.1"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "max"]
+
+[[reasoning_options]]
+type = "budget_tokens"
+
+[cost]
+input = 0.1313
+output = 0.2626
+cache_read = 0.0132

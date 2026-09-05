@@ -1,0 +1,13 @@
+base_model = "meta/muse-spark-1.1"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "max"]
+
+[[reasoning_options]]
+type = "budget_tokens"
+
+[cost]
+input = 1.8242
+output = 6.2023
+cache_read = 0.2189
