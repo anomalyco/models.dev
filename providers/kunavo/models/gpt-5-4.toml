@@ -1,16 +1,18 @@
-# Kunavo is an OpenAI-compatible gateway; the ids below are Kunavo's own and
-# are matched exactly (no date-suffixed aliases). Prices are Kunavo's list
-# rates in USD per 1M tokens, taken from the live catalog at
-# https://kunavo.com/llms.txt (re-verified 2026-09-06). cache_read is 0.10x
-# input on the Anthropic-protocol models and 0.20x elsewhere; cache_write
-# equals input because Kunavo absorbs Anthropic's cache-write surcharge
-# rather than passing it through.
-# reasoning_options is intentionally empty: Kunavo relays the request body
-# verbatim, so reasoning fields are accepted at the edge, but which controls
-# the upstream channel honours end-to-end has not been probed. Left empty
-# rather than declaring controls we cannot demonstrate.
+# Kunavo is an OpenAI-compatible gateway; the ids here are Kunavo's own and are
+# matched exactly (no date-suffixed aliases).
+#
+# Prices are Kunavo's list rates in USD per 1M tokens, from the live catalog at
+# https://kunavo.com/llms.txt (re-verified 2026-09-06). cache_read derives as
+# 0.10x input on the Anthropic-protocol models and 0.20x elsewhere, EXCEPT where
+# the catalog pins an explicit rate — claude-fable-5-1 pins $0.25 rather than the
+# derived $0.70. cache_write equals input on the Claude models because Kunavo
+# absorbs Anthropic's cache-write surcharge instead of passing it through.
+#
+# `reasoning_effort` is forwarded on this surface: Kunavo maps the OpenAI chat
+# field onto the Responses request as `reasoning.effort` before dispatch.
+# Values follow the lab set as carried by same-surface peers for this model.
 base_model = "openai/gpt-5.4"
-reasoning_options = []
+reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh"] }]
 
 [cost]
 input = 1
