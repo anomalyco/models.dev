@@ -35,6 +35,17 @@ function stable(value: unknown): string {
 }
 
 describe("catalog generation", () => {
+  test("repository keeps the Trendyol fine-tune out of lab metadata", async () => {
+    const root = path.join(import.meta.dirname, "..", "..", "..");
+    const catalog = await generateCatalog(root);
+
+    expect(catalog.models).not.toHaveProperty("trendyol/asure-12b");
+    expect(catalog.providers.llmtr?.models["trendyol-asure-12b"]).toMatchObject({
+      name: "Trendyol Asure 12B",
+      family: "gemma",
+    });
+  });
+
   test("rejects providers with no models", async () => {
     await withFixture(async (root) => {
       await write(root, "providers/empty/provider.toml", providerToml("Empty"));

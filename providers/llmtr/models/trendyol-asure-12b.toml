@@ -3,7 +3,16 @@
 # Pricing and the served window from https://llmtr.com/api/models
 # (accessed 2026-08-16); this host serves a smaller window than the model's
 # native 131,072.
-base_model = "trendyol/asure-12b"
+name = "Trendyol Asure 12B"
+description = "Turkish-language multimodal Gemma 3 12B fine-tune for e-commerce text, chat, and image-text tasks"
+family = "gemma"
+release_date = "2026-02-19"
+last_updated = "2026-02-20"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = false
+open_weights = true
 
 [cost]
 input = 0.1
@@ -13,3 +22,7 @@ cache_read = 0.025
 [limit]
 context = 40_960
 output = 40_960
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
