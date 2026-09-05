@@ -1,0 +1,9 @@
+# Price source: https://api.kymaapi.com/v1/models (public, unauthenticated), accessed 2026-09-04.
+# Toggle: Kyma forwards `reasoning_effort` on this route; `reasoning_effort = "none"` (or `reasoning = { enabled = false }`) turns thinking off. Verified live 2026-09-04 on qwen-3.6-plus: 200 reasoning tokens by default, 0 with "none".
+base_model = "anthropic/claude-haiku-4-5"
+
+reasoning_options = [{ type = "toggle" }]
+
+[cost]
+input = 1.35
+output = 6.75

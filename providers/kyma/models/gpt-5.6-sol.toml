@@ -1,0 +1,8 @@
+# Price source: https://api.kymaapi.com/v1/models (public, unauthenticated), accessed 2026-09-04.
+base_model = "openai/gpt-5.6-sol"
+
+reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh", "max"] }]
+
+[cost]
+input = 2.7
+output = 13.5
