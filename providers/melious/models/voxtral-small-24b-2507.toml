@@ -1,0 +1,10 @@
+# Cost: Melious lists EUR; converted at 1.17 USD/EUR (ECB reference rate, captured 2026-08-20).
+# Sources: https://melious.ai/hub/models and
+# GET https://api.melious.ai/v1/models?include_meta=true
+base_model = "mistral/voxtral-small-latest"
+tool_call = false
+structured_output = false
+
+[cost]
+input = 0.1755
+output = 0.4095

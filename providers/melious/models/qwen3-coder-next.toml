@@ -1,0 +1,14 @@
+# Cost: Melious lists EUR; converted at 1.17 USD/EUR (ECB reference rate, captured 2026-08-20).
+# Sources: https://melious.ai/hub/models and
+# GET https://api.melious.ai/v1/models?include_meta=true
+# limit.output: no published cap; max_tokens = 256_000 is accepted on
+# this host, verified against the live API.
+base_model = "alibaba/qwen3-coder-next"
+
+[cost]
+input = 0.1989
+output = 1.053
+
+[limit]
+context = 256_000
+output = 256_000

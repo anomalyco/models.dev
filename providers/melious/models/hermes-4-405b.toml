@@ -1,0 +1,34 @@
+# Cost: Melious lists EUR; converted at 1.17 USD/EUR (ECB reference rate, captured 2026-08-20).
+# Sources: https://melious.ai/hub/models and
+# GET https://api.melious.ai/v1/models?include_meta=true
+# Weights: https://huggingface.co/NousResearch/Hermes-4-405B
+# limit.output: no published cap; max_tokens = 128_000 is accepted on
+# this host, verified against the live API.
+# Effort: reasoning_effort = low|medium|high
+# (https://melious.ai/docs/reference/chat-completions). No off state: an explicit
+# "none" still returns reasoning, so this host exposes no toggle.
+# Reasoning is inlined into message.content, so no interleaved field is declared.
+name = "Hermes 4 405B"
+description = "Reasoning model for deliberate analysis, multi-step problem solving, and tool use"
+family = "hermes"
+release_date = "2025-08-26"
+last_updated = "2025-08-26"
+attachment = false
+reasoning = true
+tool_call = true
+structured_output = false
+temperature = true
+open_weights = true
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
+
+[cost]
+input = 1.053
+output = 3.159
+
+[limit]
+context = 128_000
+output = 128_000
+
+[modalities]
+input = ["text"]
+output = ["text"]
