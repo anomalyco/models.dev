@@ -1,20 +1,4 @@
-name = "Step-3.7-Flash"
-description = "Step-3.7-Flash served via the CommandCode aggregation gateway"
-release_date = "2026-09-05"
-last_updated = "2026-09-05"
-open_weights = true
-attachment = false
-reasoning = true
-tool_call = false
-temperature = true
-
-[limit]
-context = 256000
-output = 65536
-
-[modalities]
-input = ["text"]
-output = ["text"]
+base_model = "stepfun/step-3.7-flash"
 
 [[reasoning_options]]
 type = "toggle"

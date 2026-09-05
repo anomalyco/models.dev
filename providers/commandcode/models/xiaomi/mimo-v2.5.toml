@@ -1,20 +1,4 @@
-name = "mimo-v2.5"
-description = "mimo-v2.5 served via the CommandCode aggregation gateway"
-release_date = "2026-09-05"
-last_updated = "2026-09-05"
-open_weights = true
-attachment = true
-reasoning = true
-tool_call = true
-temperature = true
-
-[limit]
-context = 1000000
-output = 65536
-
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+base_model = "xiaomi/mimo-v2.5"
 
 [[reasoning_options]]
 type = "toggle"

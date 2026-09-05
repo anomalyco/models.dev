@@ -1,17 +1,4 @@
-name = "gpt-5.6-sol"
-description = "gpt-5.6-sol served via the CommandCode aggregation gateway"
-release_date = "2026-09-05"
-last_updated = "2026-09-05"
-open_weights = false
-attachment = true
-reasoning = false
-tool_call = true
-temperature = true
+base_model = "openai/gpt-5.6-sol"
 
-[limit]
-context = 1050000
-output = 65536
-
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[[reasoning_options]]
+type = "toggle"

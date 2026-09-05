@@ -1,20 +1,4 @@
-name = "Kimi-K2.7-Code"
-description = "Kimi-K2.7-Code served via the CommandCode aggregation gateway"
-release_date = "2026-09-05"
-last_updated = "2026-09-05"
-open_weights = true
-attachment = true
-reasoning = true
-tool_call = true
-temperature = true
-
-[limit]
-context = 256000
-output = 65536
-
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+base_model = "moonshotai/kimi-k2.7-code"
 
 [[reasoning_options]]
 type = "toggle"

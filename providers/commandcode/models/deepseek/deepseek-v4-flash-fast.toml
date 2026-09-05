@@ -1,20 +1,5 @@
-name = "deepseek-v4-flash-fast"
-description = "deepseek-v4-flash-fast served via the CommandCode aggregation gateway"
-release_date = "2026-09-05"
-last_updated = "2026-09-05"
-open_weights = true
-attachment = false
-reasoning = true
-tool_call = true
-temperature = true
-
-[limit]
-context = 1000000
-output = 65536
-
-[modalities]
-input = ["text"]
-output = ["text"]
+base_model = "deepseek/deepseek-v4-flash"
+name = "DeepSeek V4 Flash Fast"
 
 [[reasoning_options]]
 type = "toggle"

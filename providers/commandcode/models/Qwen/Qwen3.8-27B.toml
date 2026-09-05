@@ -1,20 +1,4 @@
-name = "Qwen3.8-27B"
-description = "Qwen3.8-27B served via the CommandCode aggregation gateway"
-release_date = "2026-09-05"
-last_updated = "2026-09-05"
-open_weights = true
-attachment = true
-reasoning = true
-tool_call = true
-temperature = true
-
-[limit]
-context = 262144
-output = 65536
-
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+base_model = "alibaba/qwen3.8-27b"
 
 [[reasoning_options]]
 type = "toggle"

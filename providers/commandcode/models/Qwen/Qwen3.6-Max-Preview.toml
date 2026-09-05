@@ -1,20 +1,4 @@
-name = "Qwen3.6-Max-Preview"
-description = "Qwen3.6-Max-Preview served via the CommandCode aggregation gateway"
-release_date = "2026-09-05"
-last_updated = "2026-09-05"
-open_weights = true
-attachment = false
-reasoning = true
-tool_call = true
-temperature = true
-
-[limit]
-context = 200000
-output = 65536
-
-[modalities]
-input = ["text"]
-output = ["text"]
+base_model = "alibaba/qwen3.6-max-preview"
 
 [[reasoning_options]]
 type = "toggle"

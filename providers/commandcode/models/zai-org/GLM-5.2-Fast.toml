@@ -1,20 +1,5 @@
-name = "GLM-5.2-Fast"
-description = "GLM-5.2-Fast served via the CommandCode aggregation gateway"
-release_date = "2026-09-05"
-last_updated = "2026-09-05"
-open_weights = false
-attachment = false
-reasoning = true
-tool_call = true
-temperature = true
-
-[limit]
-context = 1000000
-output = 65536
-
-[modalities]
-input = ["text"]
-output = ["text"]
+base_model = "zhipuai/glm-5.2"
+name = "GLM-5.2 Fast"
 
 [[reasoning_options]]
 type = "toggle"

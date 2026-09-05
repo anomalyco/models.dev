@@ -1,20 +1,4 @@
-name = "Qwen3.7-Max"
-description = "Qwen3.7-Max served via the CommandCode aggregation gateway"
-release_date = "2026-09-05"
-last_updated = "2026-09-05"
-open_weights = true
-attachment = false
-reasoning = true
-tool_call = true
-temperature = true
-
-[limit]
-context = 1000000
-output = 65536
-
-[modalities]
-input = ["text"]
-output = ["text"]
+base_model = "alibaba/qwen3.7-max"
 
 [[reasoning_options]]
 type = "toggle"

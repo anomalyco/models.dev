@@ -1,17 +1,5 @@
-name = "muse-spark-1.2-contributor"
-description = "muse-spark-1.2-contributor served via the CommandCode aggregation gateway"
-release_date = "2026-09-05"
-last_updated = "2026-09-05"
-open_weights = true
-attachment = true
-reasoning = false
-tool_call = true
-temperature = true
+base_model = "meta/muse-spark-1.2"
+name = "Muse Spark 1.2 Contributor"
 
-[limit]
-context = 1048576
-output = 65536
-
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[[reasoning_options]]
+type = "toggle"
