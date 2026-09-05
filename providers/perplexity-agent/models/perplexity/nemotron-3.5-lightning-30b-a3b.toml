@@ -1,0 +1,14 @@
+# Perplexity Agent API pricing:
+# https://docs.perplexity.ai/docs/agent-api/models (accessed 2026-08-27)
+# Callable ID is perplexity/nemotron-3.5-lightning-30b-a3b.
+# Effort list matches prior Perplexity Agent Nemotron Super entry on this host.
+base_model = "nvidia/nemotron-3.5-lightning"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high", "xhigh", "max"]
+
+[cost]
+input = 0.0115
+output = 0.17
+cache_read = 0.00115

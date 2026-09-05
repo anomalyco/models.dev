@@ -1,0 +1,19 @@
+# Pricing: https://docs.perplexity.ai/docs/agent-api/models (accessed 2026-08-27)
+# Context tiers: <=272k / >272k. Cache-read $0.02/1M at base tier.
+# Priority processing is 2x listed rates via service_tier=priority (not modeled here).
+base_model = "openai/gpt-5.6-luna"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high", "xhigh", "max"]
+
+[cost]
+input = 0.20
+output = 1.20
+cache_read = 0.02
+
+[[cost.tiers]]
+tier = { type = "context", size = 272_000 }
+input = 0.40
+output = 1.80
+cache_read = 0.04

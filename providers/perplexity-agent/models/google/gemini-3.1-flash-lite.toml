@@ -1,11 +1,12 @@
 # Pricing: https://docs.perplexity.ai/docs/agent-api/models (accessed 2026-08-27)
-base_model = "anthropic/claude-haiku-4-5"
+# Cache-read = 10% of input rate.
+base_model = "google/gemini-3.1-flash-lite"
 
 [[reasoning_options]]
 type = "effort"
 values = ["low", "medium", "high", "xhigh", "max"]
 
 [cost]
-input = 1.00
-output = 5.00
-cache_read = 0.10
+input = 0.25
+output = 1.50
+cache_read = 0.025

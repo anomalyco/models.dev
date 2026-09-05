@@ -1,0 +1,14 @@
+# Perplexity Agent API pricing:
+# https://docs.perplexity.ai/docs/agent-api/models (accessed 2026-08-27)
+# Callable ID is perplexity/kimi-k2.7-code (not moonshot-ai/).
+# Force-thinking / no graded effort on this surface → reasoning_options = [].
+base_model = "moonshotai/kimi-k2.7-code"
+reasoning_options = []
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.95
+output = 4.00
+cache_read = 0.19
