@@ -1,0 +1,10 @@
+# Toggle: thinking.type = enabled|disabled (Anthropic Messages compat; the
+# gateway maps enable_thinking / reasoning_effort=none onto it).
+base_model = "anthropic/claude-haiku-4-5"
+
+[cost]
+input = 1
+output = 5
+
+[[reasoning_options]]
+type = "toggle"
