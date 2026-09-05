@@ -1,0 +1,20 @@
+# Perplexity Agent API pricing for openai/gpt-5.6-sol.
+# Source: https://docs.perplexity.ai/docs/agent-api/models#openai
+# Cache read is published as 90% off the active input rate
+# (luna/terra/sol all use the same discount); tier switch is at 272k input tokens.
+base_model = "openai/gpt-5.6-sol"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high", "xhigh", "max"]
+
+[cost]
+input = 5.00
+output = 30.00
+cache_read = 0.50
+
+[[cost.tiers]]
+tier = { type = "context", size = 272_000 }
+input = 10.00
+output = 45.00
+cache_read = 1.00
