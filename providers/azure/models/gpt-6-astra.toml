@@ -1,0 +1,17 @@
+# Azure pricing page publishes GPT-6 pricing in the blog rather than the service pricing page; https://azure.microsoft.com/en-us/blog/gpt-6-astra-frontier-intelligence-for-work-now-generally-available-in-microsoft-foundry/
+base_model = "openai/gpt-6-astra"
+status = "beta"
+reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh", "max"] }]
+
+[cost]
+input = 10.00
+output = 50.00
+cache_read = 1.00
+cache_write = 12.50
+
+[[cost.tiers]]
+tier = { type = "context", size = 272_000 }
+input = 20.00
+output = 75.00
+cache_read = 2.00
+cache_write = 25.00
