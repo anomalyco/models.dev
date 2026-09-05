@@ -1,0 +1,25 @@
+# Toggle: chat_template_kwargs: enable_thinking true|false
+# Effort: reasoning_effort = low|medium|xhigh
+# Cost converted from the published EUR list price at EUR 1 = USD 1.1596 (rate
+# for 2026-08-31, frankfurter.dev): EUR 0.30 in / EUR 2.70 out per 1M tokens.
+# Prices are net, plus statutory VAT.
+# Limits: context and output as confirmed by the endpoint operator for this deployment.
+# Sources (accessed 2026-09-01):
+# https://docs.nws.netways.de/en/ai/getting-started/endpoints/
+# https://nws.netways.de/en/managed-ai-model/
+base_model = "alibaba/qwen3.8-27b"
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "medium", "xhigh"] }]
+
+[cost]
+input = 0.35
+output = 3.13
+
+[limit]
+context = 256_000
+output = 256_000
+
+[modalities]
+input = ["text", "image"]
+
+[provider]
+api = "https://api.ai.nws.netways.de/qwen/v1"
