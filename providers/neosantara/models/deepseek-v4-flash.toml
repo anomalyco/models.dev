@@ -1,5 +1,4 @@
-# Toggle: thinking.type = enabled|disabled
-# Effort: reasoning_effort = low|high|max
+# Effort: reasoning_effort = "none" turns thinking off; graded levels control depth.
 # Documented at https://docs.neosantara.xyz/en/capability/reasoning
 base_model = "deepseek/deepseek-v4-flash-0731"
 name = "DeepSeek V4 Flash"
@@ -8,11 +7,8 @@ name = "DeepSeek V4 Flash"
 field = "reasoning_content"
 
 [[reasoning_options]]
-type = "toggle"
-
-[[reasoning_options]]
 type = "effort"
-values = ["low", "high", "max"]
+values = ["none", "low", "high", "max"]
 
 [cost]
 input = 0.14

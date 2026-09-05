@@ -1,5 +1,4 @@
-# Toggle: reasoning.enabled = true|false
-# Effort: reasoning_effort = low|medium|high
+# Effort: reasoning_effort = "none" turns thinking off; graded levels control depth.
 # Documented at https://docs.neosantara.xyz/en/capability/reasoning
 base_model = "anthropic/claude-opus-4-5"
 
@@ -7,11 +6,8 @@ base_model = "anthropic/claude-opus-4-5"
 field = "reasoning_content"
 
 [[reasoning_options]]
-type = "toggle"
-
-[[reasoning_options]]
 type = "effort"
-values = ["low", "medium", "high"]
+values = ["none", "low", "medium", "high"]
 
 [cost]
 input = 5

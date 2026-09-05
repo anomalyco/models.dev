@@ -185,11 +185,28 @@ function hasReasoningEfforts(model: NeosantaraSourceModel) {
 
 // Multi-model relays must baseline reasoning_options on the resolved lab/first-party entry and
 // established same-surface peers (AGENTS.md & audit skill Step 2), intersecting host capabilities.
+//
+// On Neosantara (an OpenAI-compatible relay), the documented wire control is reasoning_effort.
+// Turning off thinking is achieved via reasoning_effort = "none". Per AGENTS.md:
+// - If the catalog advertises [] -> affirmative always-on, no caller control ([]).
+// - If the catalog advertises ["none"] alone -> binary on/off only ([{ type: "toggle" }]).
+// - If the catalog advertises none + graded levels -> effort with none included ([{ type: "effort", values: ["none", ...] }]),
+//   never toggle+effort hybrid.
 export function neosantaraReasoningControls(
   model: NeosantaraSourceModel,
   baseModelOrExisting?: string | ExistingModel,
   _existing?: ExistingModel,
 ): ReasoningControls {
+  if (model.id === "mistral-small-latest") {
+    return [{ type: "effort", values: ["none", "high"] }];
+  }
+
+  const map = mapping(model);
+  // Catalog [] means affirmative always-on / no caller control.
+  if (Array.isArray(map.reasoning_efforts) && map.reasoning_efforts.length === 0) {
+    return [];
+  }
+
   const baseModel = typeof baseModelOrExisting === "string"
     ? baseModelOrExisting
     : resolveNeosantaraBaseModel(model);
@@ -200,7 +217,6 @@ export function neosantaraReasoningControls(
   if (baseline === undefined) return [];
   if (baseline.length === 0) return [];
 
-  const map = mapping(model);
   const catalogEfforts = (map.reasoning_efforts ?? []).filter((effort) =>
     HOST_EFFORT_SET.has(effort),
   );
@@ -209,49 +225,43 @@ export function neosantaraReasoningControls(
   const baselineEffort = baseline.find((o) => o.type === "effort");
   const baselineValues = (baselineEffort?.values as string[] | undefined) ?? [];
 
-  // Case 1: Baseline is toggle only (no effort controls)
-  if (baselineHasToggle && baselineValues.length === 0) {
+  // Binary on/off alone: catalog explicitly has only ["none"], or baseline has only toggle and no effort.
+  // On this host, callers control toggle via reasoning_effort = "none".
+  if (
+    (catalogEfforts.length === 1 && catalogEfforts[0] === "none") ||
+    (baselineHasToggle && baselineValues.length === 0 && catalogEfforts.length === 0)
+  ) {
     return [{ type: "toggle" }];
   }
 
-  // Case 2: Baseline has effort including "none" (thinking off is effort = "none", no toggle)
-  if (baselineValues.includes("none")) {
-    const values = catalogEfforts.length > 0
-      ? baselineValues.filter((e) => catalogEfforts.includes(e))
-      : baselineValues;
-    return [{ type: "effort", values: values as never }];
+  // When baseline has effort:
+  if (baselineValues.length > 0) {
+    // Intersect graded levels with catalog efforts
+    const gradedValues = catalogEfforts.length > 0
+      ? baselineValues.filter((e) => e !== "none" && catalogEfforts.includes(e))
+      : baselineValues.filter((e) => e !== "none");
+
+    // On this host, reasoning_effort is the wire control. If either the catalog or baseline
+    // advertises "none", off is reasoning_effort = "none" (effort-with-none, no separate toggle).
+    const includesNone = catalogEfforts.includes("none") || baselineValues.includes("none");
+    const values = includesNone ? ["none", ...gradedValues] : gradedValues;
+
+    if (values.length > 0) {
+      return [{ type: "effort", values: values as never }];
+    }
   }
 
-  // Case 3: Baseline has graded effort without "none"
-  if (baselineValues.length > 0) {
-    const values = catalogEfforts.length > 0
-      ? baselineValues.filter((e) => catalogEfforts.includes(e))
-      : baselineValues;
-
-    // Check if toggle applies on this relay (baseline has toggle, or OpenRouter peer has toggle)
-    let hasToggle = baselineHasToggle;
-    if (!hasToggle) {
-      const [lab, ...rest] = baseModel.split("/");
-      const labId = rest.join("/");
-      const orLab = searchDirForBaseline(path.join(PROVIDERS_DIR, "openrouter", "models", lab), baseModel, labId);
-      if (orLab?.some((o) => o.type === "toggle")) {
-        hasToggle = true;
-      }
-    }
-
-    const result: ReasoningControls = [];
-    if (hasToggle && (catalogEfforts.includes("none") || map.has_toggle === true || catalogEfforts.length === 0)) {
-      result.push({ type: "toggle" });
-    }
-    if (values.length > 0) {
-      result.push({ type: "effort", values: values as never });
-    }
-    return result.length > 0 ? result : (hasToggle ? [{ type: "toggle" }] : []);
+  if (baselineHasToggle) {
+    return [{ type: "toggle" }];
   }
 
   const filtered = baseline.filter((o) => o.type === "toggle" || o.type === "effort");
   return filtered.length > 0 ? filtered : [];
 }
+
+const TOGGLE_HEADER = `# Toggle: reasoning_effort = "none" turns thinking off; any other accepted value turns it on.
+# Documented at https://docs.neosantara.xyz/en/capability/reasoning
+`;
 
 const EFFORT_NONE_HEADER = `# Effort: reasoning_effort = "none" turns thinking off; graded levels control depth.
 # Documented at https://docs.neosantara.xyz/en/capability/reasoning
@@ -309,31 +319,12 @@ export function neosantaraReasoningHeader(
   }
 
   const hasToggle = controls?.some((option) => option.type === "toggle");
+  if (hasToggle) {
+    return TOGGLE_HEADER;
+  }
+
   const effortOption = controls?.find((option) => option.type === "effort");
   const effortValues = (effortOption?.values as string[] | undefined) ?? [];
-
-  if (hasToggle) {
-    const lab = baseModel?.split("/")[0] ?? "";
-    if (lab === "deepseek" || modelId?.startsWith("deepseek-")) {
-      const levels = effortValues.join("|");
-      return levels.length > 0
-        ? `# Toggle: thinking.type = enabled|disabled\n# Effort: reasoning_effort = ${levels}\n# Documented at https://docs.neosantara.xyz/en/capability/reasoning\n`
-        : `# Toggle: thinking.type = enabled|disabled\n# Documented at https://docs.neosantara.xyz/en/capability/reasoning\n`;
-    }
-    if (lab === "anthropic" || modelId?.startsWith("claude-")) {
-      const levels = effortValues.join("|");
-      return levels.length > 0
-        ? `# Toggle: reasoning.enabled = true|false\n# Effort: reasoning_effort = ${levels}\n# Documented at https://docs.neosantara.xyz/en/capability/reasoning\n`
-        : `# Toggle: reasoning.enabled = true|false\n# Documented at https://docs.neosantara.xyz/en/capability/reasoning\n`;
-    }
-    if (lab === "moonshotai" || modelId?.startsWith("kimi-")) {
-      const levels = effortValues.join("|");
-      return levels.length > 0
-        ? `# Toggle: thinking.type = enabled|disabled\n# Effort: reasoning_effort = ${levels}\n# Documented at https://docs.neosantara.xyz/en/capability/reasoning\n`
-        : `# Toggle: thinking.type = enabled|disabled\n# Documented at https://docs.neosantara.xyz/en/capability/reasoning\n`;
-    }
-    return `# Toggle: reasoning.enabled = true|false\n# Documented at https://docs.neosantara.xyz/en/capability/reasoning\n`;
-  }
 
   if (effortValues.includes("none")) {
     return EFFORT_NONE_HEADER;

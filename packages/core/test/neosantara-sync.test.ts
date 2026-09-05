@@ -148,8 +148,8 @@ test("builds override-only models with per-million USD cost and host reasoning c
 
   expect(built).toMatchObject({
     base_model: "google/gemini-3.7-flash",
-    // Baselines against Google's lab entry, intersecting the host enum.
-    reasoning_options: [{ type: "effort", values: ["low", "medium", "high"] }],
+    // Baselines against Google's lab entry, intersecting the host enum and including "none".
+    reasoning_options: [{ type: "effort", values: ["none", "low", "medium", "high"] }],
     interleaved: { field: "reasoning_content" },
     limit: { context: 1_000_000 },
     cost: { input: 1.5, output: 6, cache_read: 0.15, cache_write: 1.5 },
@@ -186,8 +186,7 @@ test("a non-reasoning model carries no reasoning controls, interleaved, or note"
 });
 
 test("baselines reasoning_options against lab and same-surface peers, intersecting catalog efforts", () => {
-  // DeepSeek V4 Flash: lab baseline is toggle + ["low", "high", "max"].
-  // Catalog ["none", "low", "high", "max"] -> toggle + ["low", "high", "max"] (none maps to toggle).
+  // DeepSeek V4 Flash: catalog ["none", "low", "high", "max"] -> effort including none (off is reasoning_effort="none", no toggle).
   expect(
     neosantaraReasoningControls(
       {
@@ -197,11 +196,10 @@ test("baselines reasoning_options against lab and same-surface peers, intersecti
       "deepseek/deepseek-v4-flash-0731",
     ),
   ).toEqual([
-    { type: "toggle" },
-    { type: "effort", values: ["low", "high", "max"] },
+    { type: "effort", values: ["none", "low", "high", "max"] },
   ]);
 
-  // DeepSeek V4 Pro: lab baseline is toggle + ["high", "max"].
+  // DeepSeek V4 Pro: catalog ["none", "high", "max"] -> effort including none (no fake toggle).
   expect(
     neosantaraReasoningControls(
       {
@@ -211,11 +209,10 @@ test("baselines reasoning_options against lab and same-surface peers, intersecti
       "deepseek/deepseek-v4-pro-0813",
     ),
   ).toEqual([
-    { type: "toggle" },
-    { type: "effort", values: ["high", "max"] },
+    { type: "effort", values: ["none", "high", "max"] },
   ]);
 
-  // Claude Sonnet 5: lab baseline is toggle + ["low", "medium", "high", "xhigh", "max"].
+  // Claude Sonnet 5: catalog ["none", "low", "medium", "high", "xhigh", "max"] -> effort including none (no fake toggle).
   expect(
     neosantaraReasoningControls(
       {
@@ -225,8 +222,7 @@ test("baselines reasoning_options against lab and same-surface peers, intersecti
       "anthropic/claude-sonnet-5",
     ),
   ).toEqual([
-    { type: "toggle" },
-    { type: "effort", values: ["low", "medium", "high", "xhigh", "max"] },
+    { type: "effort", values: ["none", "low", "medium", "high", "xhigh", "max"] },
   ]);
 
   // GPT-5.4: lab baseline is effort with "none" (effort-based on/off, no toggle).
@@ -293,13 +289,11 @@ test("skips a reasoning model whose effort surface is unknown (missing != always
   expect(shouldSyncNeosantaraModel(parsed)).toBe(false);
   expect(neosantara.sourceID(parsed)).toBe(parsed.id);
 
-  // Explicit [] is different: it is an affirmative always-on set and still syncs.
+  // Explicit [] is different: it is an affirmative always-on set and still syncs as [].
   const alwaysOn = { ...source, providers: [{ ...source.providers[0], reasoning_efforts: [] }] };
   const parsedAlwaysOn = NeosantaraCatalogResponse.parse({ data: [alwaysOn] }).data[0]!;
   expect(shouldSyncNeosantaraModel(parsedAlwaysOn)).toBe(true);
-  expect(buildNeosantaraModel(parsedAlwaysOn, undefined).reasoning_options).toEqual([
-    { type: "effort", values: ["low", "medium", "high"] },
-  ]);
+  expect(buildNeosantaraModel(parsedAlwaysOn, undefined).reasoning_options).toEqual([]);
 });
 
 test("toggle models carry a wire-comment header; effort models carry effort docs; text-only deployments document limitations", () => {
@@ -308,7 +302,7 @@ test("toggle models carry a wire-comment header; effort models carry effort docs
 
   // glm-4.7-flash advertises ["none"] -> toggle -> header names the wire field.
   const toggle = neosantara.translateModel(models.find((m) => m.id === "glm-4.7-flash")!, ctx);
-  expect(toggle?.header).toContain("Toggle: reasoning.enabled = true|false");
+  expect(toggle?.header).toContain('Toggle: reasoning_effort = "none" turns thinking off');
   expect(toggle?.header).toContain("https://docs.neosantara.xyz/en/capability/reasoning");
 
   // gemini-3.7-flash advertises graded effort -> effort header citing docs, no toggle.
@@ -340,36 +334,29 @@ test("toggle models carry a wire-comment header; effort models carry effort docs
       "mistral/mistral-small-latest",
     ),
   ).toContain('reasoning_effort = "none" turns thinking off; "high" turns thinking on');
-  // DeepSeek wire comment header.
+  // Toggle models use the single host wire comment.
   expect(
     neosantaraReasoningHeader(
-      [{ type: "toggle" }, { type: "effort", values: ["high", "max"] as never }],
+      [{ type: "toggle" }],
+      "glm-4.7-flash",
+      "zhipuai/glm-4.7-flash",
+    ),
+  ).toContain('Toggle: reasoning_effort = "none" turns thinking off; any other accepted value turns it on.');
+  // Effort-only models document reasoning_effort depth.
+  expect(
+    neosantaraReasoningHeader(
+      [{ type: "effort", values: ["none", "high", "max"] as never }],
       "deepseek-v4-pro",
       "deepseek/deepseek-v4-pro-0813",
     ),
-  ).toContain("Toggle: thinking.type = enabled|disabled");
+  ).toContain('Effort: reasoning_effort = "none" turns thinking off; graded levels control depth.');
   expect(
     neosantaraReasoningHeader(
-      [{ type: "toggle" }, { type: "effort", values: ["high", "max"] as never }],
-      "deepseek-v4-pro",
-      "deepseek/deepseek-v4-pro-0813",
-    ),
-  ).toContain("Effort: reasoning_effort = high|max");
-  // Claude wire comment header.
-  expect(
-    neosantaraReasoningHeader(
-      [{ type: "toggle" }, { type: "effort", values: ["low", "medium", "high", "xhigh", "max"] as never }],
+      [{ type: "effort", values: ["none", "low", "medium", "high", "xhigh", "max"] as never }],
       "claude-sonnet-5",
       "anthropic/claude-sonnet-5",
     ),
-  ).toContain("Toggle: reasoning.enabled = true|false");
-  expect(
-    neosantaraReasoningHeader(
-      [{ type: "toggle" }, { type: "effort", values: ["low", "medium", "high", "xhigh", "max"] as never }],
-      "claude-sonnet-5",
-      "anthropic/claude-sonnet-5",
-    ),
-  ).toContain("Effort: reasoning_effort = low|medium|high|xhigh|max");
+  ).toContain('Effort: reasoning_effort = "none" turns thinking off; graded levels control depth.');
 });
 
 test("syncs image-generation models on per-image pricing without token cost", () => {
