@@ -57,23 +57,39 @@ export interface Cost {
   output_audio?: number
 }
 
-/** Pricing that applies from a given context size upward. */
-export interface CostTier extends Cost {
-  tier: {
-    type: "context"
-    /** Context size (in tokens) at which this tier starts to apply. */
-    size: number
-  }
+/** Band that applies from a given context size upward. */
+export interface ContextTier {
+  type: "context"
+  /** Context size (in tokens) at which this tier starts to apply. */
+  size: number
 }
 
-/** Pricing for a provider's model, including context-size tiers. */
+/** Band that applies during given times of day. */
+export interface TimeTier {
+  type: "time"
+  /**
+   * UTC `HH:MM-HH:MM` ranges, start inclusive and end exclusive. An end that
+   * precedes its start wraps past midnight. The model's base cost applies
+   * outside every window. When a context tier and a time tier both match a
+   * request, the context tier wins — tiers replace the base cost, they never
+   * compose.
+   */
+  windows: string[]
+}
+
+/** Pricing for one context-size band or time-of-day band. */
+export interface CostTier extends Cost {
+  tier: ContextTier | TimeTier
+}
+
+/** Pricing for a provider's model, including context-size and time-of-day tiers. */
 export interface ModelCost extends Cost {
   /**
    * Legacy compatibility field for context-tier pricing.
    * @deprecated Use `tiers` to read the exact context threshold.
    */
   context_over_200k?: Cost
-  /** Context-size-based pricing tiers. */
+  /** Context-size and time-of-day pricing tiers. */
   tiers?: CostTier[]
 }
 

@@ -2719,6 +2719,37 @@ test("formats interleaved as a root field before reasoning option tables", () =>
   });
 });
 
+test("round-trips context and time cost tiers through TOML", () => {
+  const tiers = [
+    { tier: { type: "context" as const, size: 200_000 }, input: 0.33, output: 0.99 },
+    {
+      tier: { type: "time" as const, windows: ["01:00-04:00", "06:00-10:00"] },
+      input: 0.44,
+      output: 1.32,
+      cache_read: 0.014,
+    },
+  ];
+
+  const content = formatToml({
+    id: "example/model",
+    name: "Example Model",
+    description: "Example model for sync formatting regression tests",
+    release_date: "2026-01-01",
+    last_updated: "2026-01-01",
+    attachment: false,
+    reasoning: false,
+    tool_call: true,
+    open_weights: false,
+    cost: { input: 0.22, output: 0.66, cache_read: 0.007, tiers },
+    limit: { context: 1_000, output: 100 },
+    modalities: { input: ["text"], output: ["text"] },
+  });
+
+  // A sync that carries authored tiers forward must not drop the tier header:
+  // a time tier written as bare prices no longer parses as a tier at all.
+  expect(Bun.TOML.parse(content)).toMatchObject({ cost: { tiers } });
+});
+
 test("formats empty reasoning options outside the interleaved table", () => {
   const content = formatToml({
     id: "example/model",

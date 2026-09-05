@@ -1047,7 +1047,9 @@ export function formatToml(model: z.infer<typeof SyncedAuthoredModel>) {
 
     for (const tier of model.cost.tiers ?? []) {
       lines.push("", "[[cost.tiers]]");
-      if (tier.tier?.size !== undefined) {
+      if (tier.tier?.type === "time") {
+        lines.push(`tier = { type = "time", windows = [${tier.tier.windows.map(quote).join(", ")}] }`);
+      } else if (tier.tier?.size !== undefined) {
         lines.push(`tier = { type = ${quote(tier.tier.type ?? "context")}, size = ${formatInteger(tier.tier.size)} }`);
       }
       if (tier.input !== undefined) lines.push(`input = ${formatNumber(tier.input)}`);
