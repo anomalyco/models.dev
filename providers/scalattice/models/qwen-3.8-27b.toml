@@ -1,0 +1,15 @@
+# Toggle: enable_thinking true|false (OpenAI-compatible extra_body)
+base_model = "alibaba/qwen3.8-27b"
+attachment = false
+
+[[reasoning_options]]
+type = "toggle"
+
+[cost]
+input = 0.40926
+output = 2.9079
+
+[modalities]
+input = ["text"]
+output = ["text"]
+

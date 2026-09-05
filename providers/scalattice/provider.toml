@@ -1,0 +1,12 @@
+name = "Scalattice"
+env = ["SCALATTICE_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+# OpenAI-compatible chat completions. Auth is Authorization: Bearer slt_…
+# (SCALATTICE_API_KEY, or OPENAI_API_KEY with OPENAI_BASE_URL set to api).
+# Marketplace rates move with GPU supply; snapshot from
+# https://scalattice.cloud/api/v1/public/models (accessed 2026-08-28).
+# Qwen thinking models: extra_body enable_thinking true|false
+# (llama.cpp / OpenAI-compatible extra_body). Dedicated *-thinking IDs
+# are always-on and are not a toggle.
+api = "https://api.scalattice.cloud/v1"
+doc = "https://scalattice.cloud/docs/developers"
