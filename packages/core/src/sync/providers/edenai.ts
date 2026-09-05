@@ -59,6 +59,8 @@ const MODALITY_BY_EDENAI: Record<
 };
 
 // Upstreams that are the lab's own API for models under that namespace.
+// The first entry is the unsuffixed display route when several first-party
+// hosts exist (Google AI Studio vs Vertex AI).
 const LAB_UPSTREAMS: Record<string, readonly string[]> = {
   alibaba: ["qwen"],
   amazon: ["amazon"],
@@ -74,6 +76,29 @@ const LAB_UPSTREAMS: Record<string, readonly string[]> = {
   perplexity: ["perplexityai"],
   xai: ["xai"],
   zhipuai: ["zai"],
+};
+
+const ROUTE_LABELS: Record<string, string> = {
+  amazon: "Amazon Bedrock",
+  azure: "Azure",
+  cerebras: "Cerebras",
+  cloudflare: "Cloudflare",
+  compactifai: "CompactifAI",
+  databricks: "Databricks",
+  deepinfra: "Deep Infra",
+  fireworks_ai: "Fireworks AI",
+  flexai: "FlexAI",
+  groq: "Groq",
+  infomaniak: "Infomaniak",
+  ionos: "IONOS",
+  lilac: "Lilac",
+  nebius: "Nebius",
+  ovhcloud: "OVHcloud",
+  qwen: "Alibaba",
+  scaleway: "Scaleway",
+  tensorx: "TensorX",
+  together_ai: "Together AI",
+  vertex: "Vertex AI",
 };
 
 type ReasoningOption = NonNullable<
@@ -238,19 +263,31 @@ function isLatestAlias(model: EdenAIModel) {
   return /(?:^|-)latest$/i.test(slug);
 }
 
+function routeLabel(model: EdenAIModel, baseModel: string) {
+  const lab = baseModel.split("/")[0] ?? "";
+  const primary = LAB_UPSTREAMS[lab]?.[0];
+  if (model.owned_by === primary) return undefined;
+  return ROUTE_LABELS[model.owned_by] ?? titleCaseSlug(model.owned_by);
+}
+
 function displayName(model: EdenAIModel, baseModel: string) {
   const region = REGION_SUFFIX.exec(model.id)?.[0].slice(1);
   const latest = isLatestAlias(model);
-  if (region === undefined && !latest) return undefined;
+  const route = routeLabel(model, baseModel);
+  if (region === undefined && !latest && route === undefined) return undefined;
 
   const canonical = canonicalModelName(baseModel);
   if (canonical === undefined) return undefined;
-  if (latest) {
-    const slug = model.id.replace(REGION_SUFFIX, "").split("/").at(-1) ?? "";
-    const name = `${titleCaseSlug(slug)} (${canonical})`;
-    return region === undefined ? name : `${name} (${region.toUpperCase()})`;
-  }
-  return `${canonical} (${region.toUpperCase()})`;
+
+  const head = latest
+    ? titleCaseSlug(model.id.replace(REGION_SUFFIX, "").split("/").at(-1) ?? "")
+    : canonical;
+  const details = [
+    ...(latest ? [canonical] : []),
+    ...(route !== undefined ? [route] : []),
+    ...(region !== undefined ? [region.toUpperCase()] : []),
+  ];
+  return `${head} (${details.join(", ")})`;
 }
 
 // ========================================
