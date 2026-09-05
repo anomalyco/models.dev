@@ -1,0 +1,27 @@
+name = "Gemini Pro Latest"
+description = "Lab latest market for Gemini Pro frontier supply. You contract for the latest qualifying route, not a specific model."
+# contract spec: https://thegrid.ai/docs/instrument-specifications/current-instruments
+release_date = "2026-07-06"
+last_updated = "2026-07-06"
+attachment = true
+reasoning = true
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "medium", "high"] }]
+temperature = false
+tool_call = true
+structured_output = true
+open_weights = false
+
+[interleaved]
+field = "reasoning_content"
+
+[limit]
+context = 1_000_000
+input = 922_000
+output = 65_536
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+# Pricing on The Grid is variable.
+# Tokens trade on an open market, so cost is not fixed and is intentionally omitted here.
