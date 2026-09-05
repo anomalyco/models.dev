@@ -322,7 +322,8 @@ Hubris is implemented in `packages/core/src/sync/providers/hubris.ts`.
 - Hubris bills in Russian rubles. Prices are converted to USD per 1M tokens at the Bank of Russia official daily rate (`https://www.cbr.ru/scripts/XML_daily.asp`, with `https://www.cbr-xml-daily.ru/daily_json.js` as a fallback); the previously synced USD prices are kept while the converted value drifts less than 3 %, so daily FX movement does not churn every file.
 - Model IDs are OpenRouter-shaped (`vendor/model`) and map directly to TOML paths under `providers/hubris/models`; batch variants (`:batch`), `~` aliases and non-chat models (image, video, speech, embeddings) are skipped.
 - Every entry factors onto canonical lab metadata via `base_model`. Models without a matching `models/` entry are skipped and listed in the sync notices (no missing-model issues).
-- `reasoning`, `tool_call` and `structured_output` come from the catalog's `supportedParameters`; reasoning models get the relay controls (`effort` none/low/medium/high/max + `budget_tokens`), as for Requesty.
+- `reasoning`, `tool_call` and `structured_output` come from the catalog's `supportedParameters`. `reasoning_options` are never templated: Hubris speaks the OpenRouter-style `reasoning` object, so the OpenRouter entry for the same route (same id, else same `base_model`) is the same-surface peer; the lab's first-party entry is the fallback, then the locally authored options. A reasoner with no resolvable controls is skipped for manual authoring.
+- Every file starts with a `# FX:` header naming the Bank of Russia rate and date the USD figures were converted at (kept together with the prices while the drift stays under 3 %), followed by the wire-path comment for the emitted controls (`reasoning.enabled`, `reasoning.effort`, `reasoning.max_tokens`).
 - `limit.context` comes from the catalog; `limit.output` is inherited from the lab entry.
 
 ## Requesty Notes

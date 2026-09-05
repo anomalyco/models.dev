@@ -1,3 +1,6 @@
+import { readdirSync, readFileSync } from "node:fs";
+import path from "node:path";
+
 import { z } from "zod";
 
 import type { ExistingModel, SyncProvider, SyncedFullModel, SyncedModel } from "../index.js";
@@ -16,10 +19,20 @@ const FX_ENDPOINT = "https://www.cbr.ru/scripts/XML_daily.asp";
 const FX_FALLBACK_ENDPOINT = "https://www.cbr-xml-daily.ru/daily_json.js";
 const PRICE_DECIMALS = 10_000;
 // The official rate moves a little every business day. Keep the previously
-// synced USD prices unless the converted value drifted more than this, so
-// the hourly sync does not churn every model file on FX noise alone.
+// synced USD prices (and their FX header) unless the converted value drifted
+// more than this, so the hourly sync does not churn every model file on FX
+// noise alone.
 const FX_DRIFT_TOLERANCE = 0.03;
-const REASONING_EFFORTS = ["none", "low", "medium", "high", "max"] as const;
+const FX_HEADER_PREFIX = "# FX:";
+// Hubris speaks the OpenAI-compatible request shape with the OpenRouter-style
+// `reasoning` object, so OpenRouter is the same-surface peer for reasoning
+// controls; the lab's first-party entry is the fallback.
+const PEER_PROVIDER = "openrouter";
+const WIRE_DOC = "https://hubris.pw/docs";
+
+const MODELS_DIR = path.join(import.meta.dirname, "..", "..", "..", "..", "..", "models");
+const PROVIDERS_DIR = path.join(MODELS_DIR, "..", "providers");
+const HUBRIS_MODELS_DIR = path.join(PROVIDERS_DIR, "hubris", "models");
 
 // ========================================
 // Schemas
@@ -49,33 +62,44 @@ const HubrisCatalog = z
 
 const CbrDailyRatesJson = z
   .object({
+    Date: z.string(),
     Valute: z.object({
       USD: z.object({ Value: z.number().positive() }).passthrough(),
     }).passthrough(),
   })
   .passthrough();
 
-const HubrisSource = z.object({
-  catalog: HubrisCatalog,
-  usdRate: z.number().positive(),
+const UsdRate = z.object({
+  rate: z.number().positive(),
+  // YYYY-MM-DD the Bank of Russia published the rate for.
+  date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
 });
 
-export type HubrisModel = z.infer<typeof HubrisCatalogModel> & { usdRate: number };
+const HubrisSource = z.object({
+  catalog: HubrisCatalog,
+  usd: UsdRate,
+});
+
+type UsdRate = z.infer<typeof UsdRate>;
+export type HubrisModel = z.infer<typeof HubrisCatalogModel> & { usd: UsdRate };
+type ReasoningOptions = NonNullable<SyncedFullModel["reasoning_options"]>;
 
 // ========================================
-// Util functions
+// FX rate
 // ========================================
 
-/** USD rate from the Bank of Russia XML feed (`<Value>` uses a decimal comma). */
-function parseCbrXmlUsdRate(xml: string): number {
+/** USD rate + date from the Bank of Russia XML feed (`<Value>` uses a decimal comma). */
+export function parseCbrXmlUsdRate(xml: string): UsdRate {
+  const date = /<ValCurs[^>]*\sDate="(\d{2})\.(\d{2})\.(\d{4})"/.exec(xml);
+  if (date === null) throw new Error("Bank of Russia XML feed has no Date attribute");
   const usd = /<Valute[^>]*>(?:(?!<\/Valute>)[\s\S])*?<CharCode>USD<\/CharCode>(?:(?!<\/Valute>)[\s\S])*?<Value>([\d,.]+)<\/Value>/.exec(xml);
   if (usd === null) throw new Error("Bank of Russia XML feed has no USD rate");
   const rate = Number(usd[1].replace(",", "."));
   if (!Number.isFinite(rate) || rate <= 0) throw new Error(`Bank of Russia XML feed has an invalid USD rate: ${usd[1]}`);
-  return rate;
+  return { rate, date: `${date[3]}-${date[2]}-${date[1]}` };
 }
 
-async function fetchUsdRate(): Promise<number> {
+async function fetchUsdRate(): Promise<UsdRate> {
   try {
     const response = await fetch(FX_ENDPOINT);
     if (!response.ok) throw new Error(`${response.status} ${response.statusText}`);
@@ -86,9 +110,14 @@ async function fetchUsdRate(): Promise<number> {
     if (!response.ok) {
       throw new Error(`Bank of Russia rates request failed: ${response.status} ${response.statusText}`);
     }
-    return CbrDailyRatesJson.parse(await response.json()).Valute.USD.Value;
+    const json = CbrDailyRatesJson.parse(await response.json());
+    return { rate: json.Valute.USD.Value, date: json.Date.slice(0, 10) };
   }
 }
+
+// ========================================
+// Util functions
+// ========================================
 
 function isChatModel(model: HubrisModel) {
   return (
@@ -105,15 +134,15 @@ function usd(rub: number | null | undefined, rate: number): number | undefined {
 }
 
 function buildCost(model: HubrisModel): SyncedFullModel["cost"] {
-  const input = usd(model.inputPriceRubPerMillion, model.usdRate);
-  const output = usd(model.outputPriceRubPerMillion, model.usdRate);
+  const input = usd(model.inputPriceRubPerMillion, model.usd.rate);
+  const output = usd(model.outputPriceRubPerMillion, model.usd.rate);
   if (input === undefined || output === undefined) return undefined;
   const extras = model.pricingExtrasRub ?? {};
   return {
     input,
     output,
-    cache_read: usd(extras.input_cache_read, model.usdRate),
-    cache_write: usd(extras.input_cache_write, model.usdRate),
+    cache_read: usd(extras.input_cache_read, model.usd.rate),
+    cache_write: usd(extras.input_cache_write, model.usd.rate),
   };
 }
 
@@ -126,36 +155,129 @@ function withinTolerance(current: number | undefined, desired: number | undefine
 
 /**
  * Reuse the previously synced cost when the only change is FX drift below the
- * tolerance. Any real price change on the gateway (or a new cache price
+ * tolerance. Any real price change on the gateway (or a cache price
  * appearing/disappearing) still updates the file.
  */
 function stableCost(
   desired: SyncedFullModel["cost"],
   existing: ExistingModel | undefined,
-): SyncedFullModel["cost"] {
+): { cost: SyncedFullModel["cost"]; reused: boolean } {
   const current = existing?.cost;
-  if (desired === undefined || current === undefined) return desired;
-  if (current.input === undefined || current.output === undefined) return desired;
+  if (desired === undefined || current === undefined) return { cost: desired, reused: false };
+  if (current.input === undefined || current.output === undefined) return { cost: desired, reused: false };
   const keys = ["input", "output", "cache_read", "cache_write"] as const;
   const stable = keys.every((key) => withinTolerance(current[key], desired[key]));
-  if (!stable) return desired;
+  if (!stable) return { cost: desired, reused: false };
   return {
-    input: current.input,
-    output: current.output,
-    cache_read: current.cache_read,
-    cache_write: current.cache_write,
+    cost: {
+      input: current.input,
+      output: current.output,
+      cache_read: current.cache_read,
+      cache_write: current.cache_write,
+    },
+    reused: true,
   };
 }
 
-function reasoningOptions(reasoning: boolean): SyncedFullModel["reasoning_options"] {
-  if (!reasoning) return;
-  return [{ type: "effort", values: [...REASONING_EFFORTS] }, { type: "budget_tokens" }];
+function parseToml(filePath: string): Record<string, unknown> | undefined {
+  try {
+    return Bun.TOML.parse(readFileSync(filePath, "utf8")) as Record<string, unknown>;
+  } catch {
+    return undefined;
+  }
+}
+
+function tomlFilesIn(dir: string): string[] {
+  let entries;
+  try {
+    entries = readdirSync(dir, { withFileTypes: true });
+  } catch {
+    return [];
+  }
+  return entries.flatMap((entry) =>
+    entry.isDirectory()
+      ? tomlFilesIn(path.join(dir, entry.name))
+      : entry.name.endsWith(".toml")
+        ? [path.join(dir, entry.name)]
+        : [],
+  );
+}
+
+function authoredReasoningOptions(toml: Record<string, unknown> | undefined): ReasoningOptions | undefined {
+  const options = toml?.reasoning_options;
+  return Array.isArray(options) ? (options as ReasoningOptions) : undefined;
+}
+
+let peerOptionsByBaseModel: Map<string, ReasoningOptions> | undefined;
+
+function peerReasoningOptions(id: string, canonical: string): ReasoningOptions | undefined {
+  // Hubris ids are OpenRouter ids, so the same path is the first candidate.
+  const direct = authoredReasoningOptions(parseToml(path.join(PROVIDERS_DIR, PEER_PROVIDER, "models", `${id}.toml`)));
+  if (direct !== undefined) return direct;
+
+  if (peerOptionsByBaseModel === undefined) {
+    peerOptionsByBaseModel = new Map();
+    for (const file of tomlFilesIn(path.join(PROVIDERS_DIR, PEER_PROVIDER, "models"))) {
+      const toml = parseToml(file);
+      const base = toml?.base_model;
+      const options = authoredReasoningOptions(toml);
+      if (typeof base !== "string" || options === undefined || peerOptionsByBaseModel.has(base)) continue;
+      peerOptionsByBaseModel.set(base, options);
+    }
+  }
+  return peerOptionsByBaseModel.get(canonical);
+}
+
+function labReasoningOptions(canonical: string): ReasoningOptions | undefined {
+  const [lab, ...rest] = canonical.split("/");
+  return authoredReasoningOptions(parseToml(path.join(PROVIDERS_DIR, lab ?? "", "models", `${rest.join("/")}.toml`)));
+}
+
+/**
+ * Host-accurate reasoning controls: the OpenRouter entry for the same route
+ * (same wire surface), then the lab's first-party entry, then whatever was
+ * authored locally. Never a generic template.
+ */
+function resolveReasoningOptions(
+  id: string,
+  canonical: string,
+  existing: ExistingModel | undefined,
+): ReasoningOptions | undefined {
+  return (
+    peerReasoningOptions(id, canonical) ??
+    labReasoningOptions(canonical) ??
+    (Array.isArray(existing?.reasoning_options) ? (existing.reasoning_options as ReasoningOptions) : undefined)
+  );
+}
+
+function fxHeaderLine(usdRate: UsdRate) {
+  return `${FX_HEADER_PREFIX} Hubris bills in RUB. USD/MTok below = public RUB price / Bank of Russia official rate ${usdRate.rate} RUB/USD (${usdRate.date}); kept until the rate drifts >3 %.`;
+}
+
+function existingFxHeaderLine(id: string): string | undefined {
+  try {
+    const text = readFileSync(path.join(HUBRIS_MODELS_DIR, `${id}.toml`), "utf8");
+    return text.split(/\r?\n/).find((line) => line.startsWith(FX_HEADER_PREFIX));
+  } catch {
+    return undefined;
+  }
+}
+
+function wireHeaderLines(options: ReasoningOptions | undefined): string[] {
+  if (options === undefined || options.length === 0) return [];
+  const types = new Set(options.map((option) => option.type));
+  const lines: string[] = [];
+  if (types.has("toggle")) lines.push("# Toggle: reasoning.enabled = true|false");
+  if (types.has("effort")) lines.push("# Effort: reasoning.effort");
+  if (types.has("budget_tokens")) lines.push("# Budget: reasoning.max_tokens");
+  if (lines.length > 0) lines.push(`# ${WIRE_DOC}`);
+  return lines;
 }
 
 export function buildHubrisModel(
   model: HubrisModel,
   existing: ExistingModel | undefined,
-): SyncedModel | undefined {
+): { model: SyncedModel; header: string } | undefined {
   // Hubris only relays models built by other labs, so every entry must factor
   // onto the canonical lab metadata. Models without a `models/` entry are
   // reported as skipped instead of being authored inline.
@@ -164,6 +286,11 @@ export function buildHubrisModel(
 
   const params = model.supportedParameters ?? [];
   const reasoning = params.includes("reasoning");
+  const reasoningOptions = reasoning ? resolveReasoningOptions(model.id, canonical, existing) : undefined;
+  // A reasoner with no host-accurate controls anywhere is left for manual
+  // authoring rather than stamped with an invented control set.
+  if (reasoning && reasoningOptions === undefined) return undefined;
+
   const context = model.contextWindow != null && model.contextWindow > 0 ? model.contextWindow : undefined;
   // The catalog does not publish a max-output figure. Inherit the lab's
   // `limit.output`; when the lab entry has none, fall back to the context
@@ -171,7 +298,7 @@ export function buildHubrisModel(
   const baseLimit = modelMetadata(canonical).limit;
   const baseOutput =
     typeof baseLimit === "object" && baseLimit !== null && typeof (baseLimit as { output?: unknown }).output === "number"
-      ? ((baseLimit as { output: number }).output)
+      ? (baseLimit as { output: number }).output
       : undefined;
   const limit =
     context === undefined
@@ -180,19 +307,26 @@ export function buildHubrisModel(
         ? { context, output: context }
         : { context };
 
-  return factorBaseModel(
-    canonical,
-    {
-      reasoning,
-      reasoning_options: reasoningOptions(reasoning),
-      tool_call: params.includes("tools"),
-      structured_output: params.includes("structured_outputs"),
-      cost: stableCost(buildCost(model), existing),
+  const { cost, reused } = stableCost(buildCost(model), existing);
+  const fxLine = (reused ? existingFxHeaderLine(model.id) : undefined) ?? fxHeaderLine(model.usd);
+  const header = [fxLine, ...wireHeaderLines(reasoningOptions)].join("\n") + "\n";
+
+  return {
+    header,
+    model: factorBaseModel(
+      canonical,
+      {
+        reasoning,
+        reasoning_options: reasoningOptions,
+        tool_call: params.includes("tools"),
+        structured_output: params.includes("structured_outputs"),
+        cost,
+        limit,
+      },
       limit,
-    },
-    limit,
-    existing?.base_model_omit,
-  );
+      existing?.base_model_omit,
+    ),
+  };
 }
 
 // ========================================
@@ -205,8 +339,10 @@ export const hubris = {
   modelsDir: "providers/hubris/models",
   preserveBaseModels: false,
   preserveDescriptions: false,
-  // Models without lab metadata are intentionally left out of the catalog;
-  // they are listed in the sync notices, not opened as issues.
+  authoritativeHeaders: true,
+  // Models without lab metadata (or without resolvable reasoning controls)
+  // are intentionally left out; they are listed in the sync notices, not
+  // opened as issues.
   trackMissingModels: false,
   sourceID(model) {
     return isChatModel(model) ? model.id : undefined;
@@ -221,16 +357,16 @@ export const hubris = {
       }),
       fetchUsdRate(),
     ]);
-    return { catalog, usdRate };
+    return { catalog, usd: usdRate };
   },
   parseModels(raw) {
     const source = HubrisSource.parse(raw);
-    return source.catalog.items.map((model) => ({ ...model, usdRate: source.usdRate }));
+    return source.catalog.items.map((model) => ({ ...model, usd: source.usd }));
   },
   translateModel(model, context) {
     if (!isChatModel(model)) return undefined;
     const built = buildHubrisModel(model, context.existing(model.id));
     if (built === undefined) return undefined;
-    return { id: model.id, model: built };
+    return { id: model.id, model: built.model, header: built.header };
   },
 } satisfies SyncProvider<HubrisModel>;

@@ -1,9 +1,17 @@
+# FX: Hubris bills in RUB. USD/MTok below = public RUB price / Bank of Russia official rate 86.5857 RUB/USD (2026-09-05); kept until the rate drifts >3 %.
+# Toggle: reasoning.enabled = true|false
+# Effort: reasoning.effort
+# Budget: reasoning.max_tokens
+# https://hubris.pw/docs
 base_model = "nvidia/nemotron-3-super-120b-a12b"
 structured_output = true
 
 [[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
 type = "effort"
-values = ["none", "low", "medium", "high", "max"]
+values = ["low", "medium"]
 
 [[reasoning_options]]
 type = "budget_tokens"
