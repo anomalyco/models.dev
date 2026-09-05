@@ -1,0 +1,17 @@
+# Toggle: thinking.type = "enabled"|"disabled" (also accepts enable_thinking =
+# true|false, and reasoning_effort="minimal" as an off switch). Probed
+# 2026-08-26 on POST https://synthorai.io/v1/chat/completions: the toggle really
+# switches reasoning off (reasoning_tokens 24 -> absent), while
+# reasoning_effort=low|medium|high|xhigh|max all returned an identical
+# reasoning_tokens=24 — accepted but not graded — so only the toggle is claimed.
+#
+# Cost: Synthorai's own list price for this model, from its catalog at
+# https://synthorai.io/models/ — already USD per million tokens, no conversion.
+# A relay prices its own service, so this need not match Z.ai's first-party rate.
+base_model = "zhipuai/glm-5.2"
+reasoning_options = [{ type = "toggle" }]
+
+[cost]
+input = 1.4
+output = 4.4
+cache_read = 0.28

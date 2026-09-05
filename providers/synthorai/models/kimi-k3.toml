@@ -1,0 +1,29 @@
+# Toggle: thinking.type = "enabled"|"disabled" (enable_thinking = true|false
+# works too). Effort IS graded here, unlike the other relays on this host —
+# probed 2026-08-26 on POST https://synthorai.io/v1/chat/completions with one
+# fixed prompt: reasoning_effort low -> 1, medium -> 16, high -> 18, xhigh -> 23,
+# max -> 51 reasoning_tokens; the toggle drives it to 0.
+# attachment/modalities: Synthorai serves this model text-only (its own catalog
+# declares input_modalities = ["text"]), narrower than the multimodal lab entry,
+# so both are overridden together to stay self-consistent.
+#
+# Cost: Synthorai's own list price for this model, from its catalog at
+# https://synthorai.io/models/ — already USD per million tokens, no conversion.
+# A relay's price is its own, so it does not have to match Moonshot's first-party
+# rate; on this model the two happen to be identical because both follow
+# Moonshot's public rate card.
+base_model = "moonshotai/kimi-k3"
+attachment = false
+reasoning_options = [
+  { type = "toggle" },
+  { type = "effort", values = ["low", "medium", "high", "xhigh", "max"] },
+]
+
+[cost]
+input = 3.00
+output = 15.00
+cache_read = 0.30
+
+[modalities]
+input = ["text"]
+output = ["text"]

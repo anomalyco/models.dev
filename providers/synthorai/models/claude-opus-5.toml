@@ -1,0 +1,22 @@
+# Synthorai exposes this model through an OpenAI-compatible surface
+# (provider.toml declares @ai-sdk/openai-compatible), and on that surface the
+# extended-thinking channel is not relayed: probed 2026-08-26 against
+# POST https://synthorai.io/v1/chat/completions, every one of
+# reasoning_effort=low|medium|high|xhigh|max, thinking={"type":"enabled"} and
+# enable_thinking returned 200 with reasoning_tokens absent and no
+# reasoning_content field. So there is no caller-visible reasoning control here
+# and `reasoning` is turned off as a real host delta rather than advertising a
+# knob that silently does nothing.
+#
+# Cost: Synthorai's own list price for this model, from its catalog at
+# https://synthorai.io/models/ — already USD per million tokens, no conversion.
+# cache_write is the 5-minute tier; Anthropic-style caching also has a 1-hour
+# tier at a higher rate, which this schema has no field for.
+base_model = "anthropic/claude-opus-5"
+reasoning = false
+
+[cost]
+input = 5
+output = 25
+cache_read = 0.5
+cache_write = 6.25
