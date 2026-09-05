@@ -336,6 +336,20 @@ Venice is implemented in `packages/core/src/sync/providers/venice.ts`.
 - Every Venice model uses `base_model`; flattened IDs are matched to provider-agnostic metadata before provider-specific overrides are written.
 - Every Venice model declares `reasoning_options`; models without API-provided effort levels use an empty array.
 
+## engy Notes
+
+engy is implemented in `packages/core/src/sync/providers/engy.ts`.
+
+- Run it with `bun models:sync engy` or `bun engy:sync`.
+- Source endpoint: `https://api.engy.ai/v1/models`; no auth required.
+- The endpoint owns `cost.input`, `cost.output` and `cost.cache_read` while quoted, `limit.context` when positive, and `modalities` when sent.
+- `limit.input`/`limit.output`, `reasoning_options`, `interleaved`, the other cost keys, `provider`, `experimental`, `status` and `base_model` are preserved; no public endpoint reports them, and `context_length` is `max_input + max_output`.
+- `skipCreates` and `trackMissingModels` are set: a created file would ship `limit.output = 0`. Unseen IDs open deduped `[missing-model]` issues.
+- `deleteMissing` is `false`: the list is unauthenticated and `{"data":[]}` passes the schema, so a truncated 200 must not delete hand-measured files; they are retained and reported.
+- An authored `base_model` wins over the resolver, so a miss never de-factors a committed file.
+- Per-token USD string prices become per-1M, rounded to six decimals; two would carry float error otherwise.
+- Modalities are sorted into catalogue order; wire order is arbitrary.
+
 ## Standalone Generators
 
 Some provider scripts in `packages/core/script/generate-*.ts` are not wired into `bun models:sync`. When updating those scripts, preserve existing `base_model` and `base_model_omit` fields for generated TOMLs that already use model metadata inheritance. New inheritance-aware output should use `base_model`; do not reintroduce legacy `[extends]` syntax.
