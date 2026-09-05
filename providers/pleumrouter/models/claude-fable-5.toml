@@ -1,5 +1,5 @@
 base_model = "anthropic/claude-fable-5"
-reasoning_options = [{ type = "toggle" }]
+reasoning_options = [{ type = "effort", values = ["minimal", "none", "low", "medium", "high", "xhigh", "max"] }]
 [cost]
 input = 10
 output = 50
