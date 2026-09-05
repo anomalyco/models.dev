@@ -1,0 +1,15 @@
+# Reasoning: reasoning_effort = low|medium|xhigh
+base_model = "alibaba/qwen3.8-27b"
+attachment = false
+reasoning_options = [{ type = "effort", values = ["low", "medium", "xhigh"] }]
+
+[modalities]
+input = ["text"]
+
+[provider]
+shape = "completions"
+
+[cost]
+input = 0.30
+output = 0.90
+cache_read = 0.05
