@@ -1,0 +1,15 @@
+base_model = "anthropic/claude-opus-5"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high", "xhigh", "max"]
+
+[cost]
+input = 4.635
+output = 23.175
+cache_read = 0.4635
+cache_write = 5.79375
+
+[provider]
+npm = "@ai-sdk/anthropic"
+api = "https://api.saygm.com/v1"

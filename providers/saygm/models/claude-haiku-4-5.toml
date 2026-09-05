@@ -1,0 +1,15 @@
+base_model = "anthropic/claude-haiku-4-5"
+
+[[reasoning_options]]
+type = "budget_tokens"
+min = 1_024
+
+[cost]
+input = 0.927
+output = 4.635
+cache_read = 0.0927
+cache_write = 1.15875
+
+[provider]
+npm = "@ai-sdk/anthropic"
+api = "https://api.saygm.com/v1"
