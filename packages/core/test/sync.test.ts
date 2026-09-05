@@ -2613,7 +2613,112 @@ test("names Eden AI regional deployments after the canonical model", () => {
     ),
   ).toMatchObject({
     base_model: "anthropic/claude-opus-5",
-    name: "Claude Opus 5 (EU)",
+    name: "Claude Opus 5 (Amazon Bedrock, EU)",
+  });
+});
+
+test("names Eden AI latest aliases as Latest plus the current target", () => {
+  expect(
+    buildEdenAIModel(
+      edenAIModel({
+        id: "anthropic/claude-fable-latest",
+        model_name: "claude-fable-5-1",
+        owned_by: "anthropic",
+        alias_of: "anthropic/claude-fable-5-1",
+      }),
+    ),
+  ).toMatchObject({
+    base_model: "anthropic/claude-fable-5-1",
+    name: "Claude Fable Latest (Claude Fable 5.1)",
+  });
+  expect(
+    buildEdenAIModel(
+      edenAIModel({
+        id: "openai/gpt-latest",
+        model_name: "gpt-6-astra",
+        owned_by: "openai",
+        alias_of: "openai/gpt-6-astra",
+      }),
+    ),
+  ).toMatchObject({
+    base_model: "openai/gpt-6-astra",
+    name: "GPT Latest (GPT-6 Astra)",
+  });
+  expect(
+    buildEdenAIModel(
+      edenAIModel({
+        id: "vertex/gemini-flash-latest@us",
+        model_name: "gemini-3.8-flash",
+        owned_by: "vertex",
+        alias_of: "vertex/gemini-3.8-flash",
+      }),
+    ),
+  ).toMatchObject({
+    base_model: "google/gemini-3.8-flash",
+    name: "Gemini Flash Latest (Gemini 3.8 Flash, Vertex AI, US)",
+  });
+});
+
+test("names Eden AI non-primary hosts distinctly from the lab route", () => {
+  expect(
+    buildEdenAIModel(
+      edenAIModel({
+        id: "google/gemini-3.8-flash",
+        model_name: "gemini-3.8-flash",
+        owned_by: "google",
+      }),
+    ),
+  ).not.toHaveProperty("name");
+  expect(
+    buildEdenAIModel(
+      edenAIModel({
+        id: "vertex/gemini-3.8-flash",
+        model_name: "gemini-3.8-flash",
+        owned_by: "vertex",
+      }),
+    ),
+  ).toMatchObject({
+    base_model: "google/gemini-3.8-flash",
+    name: "Gemini 3.8 Flash (Vertex AI)",
+  });
+  expect(
+    buildEdenAIModel(
+      edenAIModel({
+        id: "vertex/gemini-3.8-flash@us",
+        model_name: "gemini-3.8-flash",
+        owned_by: "vertex",
+      }),
+    ),
+  ).toMatchObject({
+    base_model: "google/gemini-3.8-flash",
+    name: "Gemini 3.8 Flash (Vertex AI, US)",
+  });
+  expect(
+    buildEdenAIModel(
+      edenAIModel({
+        id: "deepinfra/openai/gpt-oss-120b",
+        model_name: "openai/gpt-oss-120b",
+        owned_by: "deepinfra",
+      }),
+    ),
+  ).toMatchObject({
+    base_model: "openai/gpt-oss-120b",
+    name: "GPT OSS 120B (Deep Infra)",
+  });
+});
+
+test("does not treat Eden AI case-only aliases as latest pointers", () => {
+  const built = buildEdenAIModel(
+    edenAIModel({
+      id: "flexai/deepseek-v4-flash-0731",
+      model_name: "DeepSeek-V4-Flash-0731",
+      owned_by: "flexai",
+      alias_of: "flexai/DeepSeek-V4-Flash-0731",
+    }),
+  );
+  expect(built).toMatchObject({
+    base_model: "deepseek/deepseek-v4-flash-0731",
+    name: "DeepSeek V4 Flash 0731 (FlexAI)",
   });
 });
 
@@ -2675,9 +2780,15 @@ test("keeps every Eden AI route for models with no first-party relay", () => {
 
   const firstParty = collectFirstPartyBaseModels(models);
   expect(firstParty.size).toBe(0);
+  const names = {
+    deepinfra: "GPT OSS 120B (Deep Infra)",
+    groq: "GPT OSS 120B (Groq)",
+    cerebras: "GPT OSS 120B (Cerebras)",
+  };
   for (const model of models) {
     expect(buildEdenAIModel(model, undefined, firstParty)).toMatchObject({
       base_model: "openai/gpt-oss-120b",
+      name: names[model.owned_by as keyof typeof names],
     });
   }
 });
