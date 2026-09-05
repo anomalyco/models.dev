@@ -1,14 +1,11 @@
+# Reasoning wire: OpenAI Chat Completions reasoning_effort; "none" disables
+# thinking, "high"/"max" grade it. No separate on/off field is forwarded.
 base_model = "deepseek/deepseek-v4-pro-0813"
 
 [cost]
 input = 1.32
 output = 3.96
 
-# Toggle: OpenAI Chat Completions reasoning_effort="none" disables thinking on
-# DeepSeek's OpenAI-compatible endpoint; "high"/"max" grade it.
-[[reasoning_options]]
-type = "toggle"
-
 [[reasoning_options]]
 type = "effort"
-values = ["high", "max"]
+values = ["none", "high", "max"]

@@ -1,14 +1,11 @@
+# Reasoning wire: OpenAI Chat Completions reasoning_effort; "none" disables
+# thinking. No separate thinking.type field is forwarded.
 base_model = "moonshotai/kimi-k3"
 
 [cost]
 input = 3
 output = 15
 
-# Toggle: OpenAI Chat Completions reasoning_effort="none" disables thinking on
-# Moonshot's OpenAI-compatible endpoint; graded effort via reasoning_effort.
-[[reasoning_options]]
-type = "toggle"
-
 [[reasoning_options]]
 type = "effort"
-values = ["low", "high", "max"]
+values = ["none", "low", "high", "max"]
