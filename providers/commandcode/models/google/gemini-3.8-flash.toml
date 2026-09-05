@@ -1,0 +1,13 @@
+name = "gemini-3.8-flash"
+attachment = true
+reasoning = false
+tool_call = true
+temperature = true
+
+[limit]
+context = 1000000
+output = 65536
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

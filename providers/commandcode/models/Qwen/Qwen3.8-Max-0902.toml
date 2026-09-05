@@ -1,0 +1,13 @@
+name = "Qwen3.8-Max-0902"
+attachment = true
+reasoning = true
+tool_call = true
+temperature = true
+
+[limit]
+context = 1000000
+output = 65536
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
