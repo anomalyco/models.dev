@@ -1,0 +1,27 @@
+name = "Qwen3 14B"
+description = "Dense open Qwen model with hybrid thinking for chat, reasoning, and coding"
+family = "qwen"
+release_date = "2025-04"
+last_updated = "2025-04"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = true
+knowledge = "2025-04"
+open_weights = true
+
+[limit]
+context = 131_072
+# 8_192 is what the first-party alibaba and alibaba-cn entries use, and what
+# OpenRouter publishes. Providers that serve a larger ceiling override it —
+# Infersia serves 16_384 and declares that in its own entry.
+output = 8_192
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/Qwen/Qwen3-14B"

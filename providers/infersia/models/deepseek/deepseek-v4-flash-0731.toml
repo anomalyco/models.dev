@@ -1,0 +1,55 @@
+# Infersia serving details for DeepSeek V4 Flash 0731.
+#
+# Sources:
+#   Pricing   https://infersia.com/models/deepseek/deepseek-v4-flash-0731
+#   Limits    https://api.infersia.com/v1/models (context_length, max_completion_tokens)
+#
+# Served as DeepSeek's own MXFP4 release — not a quantisation we produced. The
+# KV cache is fp8 in DeepSeek's sparse-MLA layout, which is what makes the full
+# 1M window practical to serve rather than nominal.
+#
+# The directory is `deepseek/` because a provider file's path is that provider's
+# own API id and we serve this as `deepseek/deepseek-v4-flash-0731`.
+#
+# Toggle: chat_template_kwargs.enable_thinking = true|false (default false)
+# Effort: top-level reasoning_effort = "max" (deepest; "low"/"high" are
+# accepted by the engine but do not change depth, so they are not listed)
+
+base_model = "deepseek/deepseek-v4-flash-0731"
+interleaved = true
+
+# Verified against the live endpoint, not transcribed from docs. Thinking
+# defaults OFF (280 completion tokens on a short prompt); the toggle turns it
+# on, and `reasoning_effort = "max"` injects the deepest deliberation prompt
+# (7,972 tokens on the same short prompt). Off is the toggle, not an effort
+# level, so `none` is not listed; DeepSeek's documented low/high are accepted
+# by the engine as no-ops on this stack, and a level that changes nothing is
+# not a level.
+#
+# Deliberation is returned in the message field `reasoning` — vLLM's name, not
+# DeepSeek's `reasoning_content`. That is why `interleaved` is the bare flag
+# above rather than a field declaration: the schema can only name
+# reasoning_content or reasoning_details, and claiming either would point
+# clients at an empty key. Returned on both the streaming and non-streaming
+# paths, billed as completion tokens.
+[[reasoning_options]]
+type = "toggle" # API: {"chat_template_kwargs": {"enable_thinking": true}}
+
+[[reasoning_options]]
+type = "effort" # API: top-level {"reasoning_effort": "max"}
+values = ["max"]
+
+# Both differ from the canonical entry, in opposite directions: 1_048_576 is
+# the model's full window and what we serve, against a rounded 1_000_000, while
+# completions are capped at 32_768 rather than 384_000.
+[limit]
+context = 1_048_576
+output = 32_768
+
+[provider]
+shape = "completions"
+
+[cost]
+input = 0.10
+output = 0.20
+cache_read = 0.02
