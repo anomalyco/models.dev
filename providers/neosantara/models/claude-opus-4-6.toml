@@ -1,0 +1,23 @@
+# Effort: reasoning_effort = "none" turns thinking off; graded levels control depth.
+# Documented at https://docs.neosantara.xyz/en/capability/reasoning
+base_model = "anthropic/claude-opus-4-6"
+description = "Anthropic Claude Opus 4.6 is a hybrid reasoning model for frontier coding, AI agents, complex enterprise workflows, and high-stakes reasoning."
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "max"]
+
+[cost]
+input = 5
+output = 25
+cache_read = 0.5
+cache_write = 6.25
+
+[limit]
+context = 200_000
+
+[modalities]
+input = ["text", "image"]
