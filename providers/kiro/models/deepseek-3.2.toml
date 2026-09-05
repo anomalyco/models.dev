@@ -1,0 +1,13 @@
+# Context: kiro-cli chat --list-models --format json reports 164000 for deepseek-3.2
+# Reasoning: Kiro exposes no caller-configurable reasoning control for DeepSeek 3.2
+# (effort/thinking settings are documented for Claude and GPT-5.6 only):
+# https://kiro.dev/docs/models/effort/
+base_model = "deepseek/deepseek-v3.2"
+reasoning_options = []
+
+[cost]
+input = 0
+output = 0
+
+[limit]
+context = 164_000
