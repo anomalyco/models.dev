@@ -1,4 +1,8 @@
 name = "Qwen3.7-Plus"
+description = "Qwen3.7-Plus served via the CommandCode aggregation gateway"
+release_date = "2026-09-05"
+last_updated = "2026-09-05"
+open_weights = true
 attachment = true
 reasoning = true
 tool_call = true
@@ -11,3 +15,6 @@ output = 65536
 [modalities]
 input = ["text", "image"]
 output = ["text"]
+
+[[reasoning_options]]
+type = "toggle"
