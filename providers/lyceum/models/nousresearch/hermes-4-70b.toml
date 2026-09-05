@@ -1,0 +1,11 @@
+# Hybrid reasoner driven by the system prompt, not a request field: it emits
+# <think> blocks inside content, and reasoning_effort changes nothing.
+base_model = "nousresearch/hermes-4-70b"
+reasoning_options = []
+
+[cost]
+input = 0.13
+output = 0.4
+
+[limit]
+output = 65_536

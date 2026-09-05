@@ -1,0 +1,24 @@
+# Gemma 3 has no native function calling: the served endpoint accepts a tools
+# array but the model answers in prose instead of emitting tool_calls.
+# https://ai.google.dev/gemma/docs/core/model_card_3 (accessed 2026-09-02)
+name = "Gemma 3 27B IT"
+description = "Open multimodal Gemma instruction model for efficient chat, vision, and self-hosted deployments"
+family = "gemma"
+release_date = "2025-03-12"
+last_updated = "2025-03-12"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = false
+structured_output = true
+knowledge = "2024-08"
+open_weights = true
+license = "gemma"
+
+[limit]
+context = 131_072
+output = 8_192
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

@@ -1,0 +1,11 @@
+# Name-encoded alias for qwen/qwen3.8-27b: Lyceum sends the request with
+# chat_template_kwargs.enable_thinking = false, so this id never reasons.
+# Same weights and price as qwen/qwen3.8-27b; it exists for clients that cannot set
+# request parameters, such as GitHub Copilot and Cursor.
+base_model = "alibaba/qwen3.8-27b"
+name = "Qwen3.8 27B (Instant)"
+reasoning = false
+
+[cost]
+input = 0.4
+output = 2.4

@@ -1,0 +1,13 @@
+# Router alias resolved server-side to qwen/qwen3.5-9b; controls and price are its own.
+# Toggle: reasoning_effort = none disables thinking, any other accepted value enables it.
+base_model = "alibaba/qwen3.5-9b"
+name = "Lyceum Simple"
+description = "Routing alias that Lyceum resolves to qwen/qwen3.5-9b"
+reasoning_options = [{ type = "toggle" }]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.15
+output = 0.2

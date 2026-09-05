@@ -1,0 +1,12 @@
+# OpenAI-compatible surface: POST https://api.lyceum.technology/openai/v1/chat/completions,
+# GET /openai/v1/models. An Anthropic Messages surface exists at
+# https://api.lyceum.technology/anthropic/v1/messages.
+# Reasoning control is `reasoning_effort`; the accepted values differ per model
+# and are recorded on each model file. `max_tokens` is capped at 65536 for every
+# model, so every entry resolves limit.output to at most that.
+# https://docs.lyceum.technology/docs/inference/serverless (accessed 2026-09-02)
+name = "Lyceum"
+env = ["LYCEUM_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+api = "https://api.lyceum.technology/openai/v1"
+doc = "https://docs.lyceum.technology/docs/inference/serverless"

@@ -1,0 +1,8 @@
+# Reasoning is prompt-driven (Qwen's /think and /no_think convention): the <think>
+# block arrives inside content and reasoning_effort changes nothing.
+base_model = "alibaba/qwen3-32b"
+reasoning_options = []
+
+[cost]
+input = 0.1
+output = 0.3

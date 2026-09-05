@@ -1,0 +1,9 @@
+# Reasoning is switched by the "detailed thinking on" system prompt, not by a
+# request field: the <think> block arrives inside content and reasoning_effort
+# changes nothing.
+base_model = "nvidia/llama-3.1-nemotron-ultra-253b"
+reasoning_options = []
+
+[cost]
+input = 0.6
+output = 1.8

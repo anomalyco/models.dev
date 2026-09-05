@@ -1,0 +1,15 @@
+# Router alias resolved server-side to z-ai/glm-5.2; controls and price are its own.
+# Effort: reasoning_effort = none|high|max; none disables thinking.
+# low and medium map to high upstream, and minimal skips thinking like none.
+base_model = "zhipuai/glm-5.2"
+name = "Lyceum Reasoning"
+description = "Routing alias that Lyceum resolves to z-ai/glm-5.2"
+reasoning_options = [{ type = "effort", values = ["none", "high", "max"] }]
+interleaved = true
+
+[cost]
+input = 1.5
+output = 4.5
+
+[limit]
+output = 65_536

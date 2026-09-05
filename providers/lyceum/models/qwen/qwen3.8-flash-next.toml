@@ -1,0 +1,14 @@
+# Effort: reasoning_effort = none|low|medium|xhigh; none disables thinking.
+# high and max are rejected upstream, matching Alibaba's own qwen3.8 entries.
+base_model = "alibaba/qwen3.8-flash-next"
+reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "xhigh"] }]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.2
+output = 0.5
+
+[limit]
+output = 65_536

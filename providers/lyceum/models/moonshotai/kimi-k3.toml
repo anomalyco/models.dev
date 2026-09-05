@@ -1,0 +1,12 @@
+# Effort: reasoning_effort = none|low|high|max; none disables thinking.
+# medium is rejected upstream; the rest collapse onto these levels.
+base_model = "moonshotai/kimi-k3"
+reasoning_options = [{ type = "effort", values = ["none", "low", "high", "max"] }]
+interleaved = true
+
+[cost]
+input = 3
+output = 15
+
+[limit]
+output = 65_536

@@ -1,0 +1,14 @@
+# Name-encoded alias for z-ai/glm-5.3-flash: Lyceum sends the request with
+# chat_template_kwargs.enable_thinking = false, so this id never reasons.
+# Same weights and price as z-ai/glm-5.3-flash; it exists for clients that cannot set
+# request parameters, such as GitHub Copilot and Cursor.
+base_model = "zhipuai/glm-5.3-flash"
+name = "GLM-5.3 Flash (Instant)"
+reasoning = false
+
+[cost]
+input = 0.2
+output = 0.5
+
+[limit]
+output = 65_536

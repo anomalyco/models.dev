@@ -1,0 +1,14 @@
+# Effort: reasoning_effort = none|low|high|max; none disables thinking.
+# The unlisted values are accepted but collapse onto these, as on DeepSeek's own API.
+base_model = "deepseek/deepseek-v4-flash-0731"
+reasoning_options = [{ type = "effort", values = ["none", "low", "high", "max"] }]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.25
+output = 0.3
+
+[limit]
+output = 65_536

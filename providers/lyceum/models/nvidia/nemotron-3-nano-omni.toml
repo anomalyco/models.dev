@@ -1,0 +1,9 @@
+# Effort: reasoning_effort = none|low|medium|high|max; none disables thinking.
+# This is the set the relay peers author for the same model.
+base_model = "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning"
+reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "max"] }]
+interleaved = true
+
+[cost]
+input = 0.06
+output = 0.24

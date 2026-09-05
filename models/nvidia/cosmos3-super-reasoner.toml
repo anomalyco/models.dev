@@ -1,0 +1,22 @@
+# Reasoning tower of NVIDIA Cosmos 3 Super, a 64B two-tower Mixture-of-Transformers
+# built on the Qwen3-VL 32B architecture.
+# https://developer.nvidia.com/blog/develop-physical-ai-reasoning-world-and-action-models-with-nvidia-cosmos-3/
+# (accessed 2026-09-02)
+name = "Cosmos3 Super Reasoner"
+description = "Physical-AI reasoning model for spatial understanding, multi-agent planning, and vision grounding"
+release_date = "2026-06"
+last_updated = "2026-06"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = true
+
+[limit]
+context = 256_000
+output = 256_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

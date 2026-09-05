@@ -1,0 +1,12 @@
+# Serving caps max_tokens at 24576 and rejects a tools array. The hybrid thinking
+# mode is not reachable here: reasoning_effort is rejected and no <think> block or
+# reasoning field ever comes back.
+base_model = "openbmb/minicpm-v-4_5"
+reasoning = false
+
+[cost]
+input = 0.66
+output = 1.11
+
+[limit]
+output = 24_576
