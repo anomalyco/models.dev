@@ -1,0 +1,12 @@
+# Pricing: CNY 2.00 input / 8.00 output per 1M tokens (converted at ~6.74 CNY/USD)
+# Source: https://support.huaweicloud.com/price-maas/price-maas-0002.html (2026-08-13)
+base_model = "deepseek/deepseek-v3"
+
+[cost]
+input = 0.30
+output = 1.19
+
+[limit]
+context = 128_000
+input = 128_000
+output = 32_000

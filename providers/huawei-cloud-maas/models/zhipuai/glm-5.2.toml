@@ -1,0 +1,25 @@
+# Pricing: CNY 8.00 input / 28.00 output per 1M tokens (converted at ~6.74 CNY/USD)
+# Source: https://support.huaweicloud.com/price-maas/price-maas-0002.html (2026-08-13)
+# Toggle: chat_template_kwargs.thinking true|false
+# Effort: reasoning_effort = high|max (xhigh→max, low/medium→high, minimal/none skip thinking)
+# https://support.huaweicloud.com/model-call-maas/model-call-021.html (accessed 2026-08-13)
+base_model = "zhipuai/glm-5.2"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["high", "max"]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 1.19
+output = 4.15
+
+[limit]
+context = 198_000
+input = 192_000
+output = 128_000

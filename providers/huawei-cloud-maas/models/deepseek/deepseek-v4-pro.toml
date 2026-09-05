@@ -1,0 +1,25 @@
+# Pricing: CNY 12.00 input / 24.00 output per 1M tokens (converted at ~6.74 CNY/USD)
+# Source: https://support.huaweicloud.com/price-maas/price-maas-0002.html (2026-08-13)
+# Toggle: chat_template_kwargs.thinking true|false
+# Effort: reasoning_effort = high (only supported value on this host)
+# https://support.huaweicloud.com/model-call-maas/model-call-021.html (accessed 2026-08-13)
+base_model = "deepseek/deepseek-v4-pro"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["high"]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 1.78
+output = 3.56
+
+[limit]
+context = 1_000_000
+input = 1_000_000
+output = 128_000

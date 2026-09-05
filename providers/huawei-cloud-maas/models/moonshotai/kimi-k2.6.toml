@@ -1,0 +1,26 @@
+# Pricing: CNY 6.50 input / 27.00 output per 1M tokens (converted at ~6.74 CNY/USD)
+# Source: https://support.huaweicloud.com/price-maas/price-maas-0002.html (2026-08-13)
+# Toggle: chat_template_kwargs.thinking true|false
+# Huawei MaaS Kimi K2.6 is text-only (listed under 文本生成, not 图像理解).
+# https://support.huaweicloud.com/model-call-maas/model-call-021.html (accessed 2026-08-13)
+base_model = "moonshotai/kimi-k2.6"
+attachment = false
+
+[[reasoning_options]]
+type = "toggle"
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.96
+output = 4.01
+
+[limit]
+context = 256_000
+input = 256_000
+output = 96_000
+
+[modalities]
+input = ["text"]
+output = ["text"]
