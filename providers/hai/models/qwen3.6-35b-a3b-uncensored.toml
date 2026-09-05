@@ -1,0 +1,28 @@
+name = "Qwen3.6 35B-A3B Uncensored"
+description = "Uncensored 35B/3B MoE variant that avoids refusal responses"
+family = "qwen"
+release_date = "2026-08-08"
+last_updated = "2026-08-10"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+open_weights = true
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "toggle"
+
+[cost]
+input = 0.24
+output = 1.60
+
+[limit]
+context = 65_536
+output = 16_384
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
