@@ -1,0 +1,20 @@
+# Reasoning toggle wire path: OpenAI-compatible `reasoning = { enabled = true|false }`.
+# Verified live 2026-08-11 on api.quicksilverpro.io: enabled=false -> no reasoning
+# tokens; enabled=true -> reasoning_content + usage reasoning_tokens.
+base_model = "deepseek/deepseek-v4-flash"
+description = "DeepSeek V4 Flash — lowest-cost agent model, 1M context"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.112
+output = 0.224
+cache_read = 0.0144

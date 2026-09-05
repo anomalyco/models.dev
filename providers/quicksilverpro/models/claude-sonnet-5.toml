@@ -1,0 +1,11 @@
+# reasoning_options = [] is affirmative: no caller-side reasoning control on this
+# host. Live-tested 2026-08-11 on api.quicksilverpro.io — `reasoning.enabled`,
+# `reasoning_effort` (none/high), and Anthropic-style `thinking` are all no-ops
+# (no reasoning tokens or reasoning_content surfaced in any combination).
+base_model = "anthropic/claude-sonnet-5"
+description = "Balanced Claude for coding, planning, and long-context agents"
+reasoning_options = []
+
+[cost]
+input = 2
+output = 10

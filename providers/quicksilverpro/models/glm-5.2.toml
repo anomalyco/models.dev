@@ -1,0 +1,15 @@
+base_model = "zhipuai/glm-5.2"
+name = "GLM 5.2"
+description = "Z.ai GLM 5.2 — open-source SOTA reasoning and coding"
+
+[[reasoning_options]]
+type = "effort"
+values = ["high", "max"]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 1.12
+output = 3.52
+cache_read = 0.208

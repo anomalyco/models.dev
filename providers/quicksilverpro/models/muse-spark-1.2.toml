@@ -1,0 +1,11 @@
+base_model = "meta/muse-spark-1.2"
+description = "Meta Muse Spark 1.2 — long-context coding agent"
+
+[[reasoning_options]]
+type = "effort"
+values = ["minimal", "low", "medium", "high", "xhigh"]
+
+[cost]
+input = 1
+output = 3.4
+cache_read = 0.12

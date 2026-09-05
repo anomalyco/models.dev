@@ -1,0 +1,14 @@
+# Reasoning toggle wire path: OpenAI-compatible `reasoning = { enabled = true|false }`.
+# Verified live 2026-08-11 on api.quicksilverpro.io: enabled=false -> no reasoning
+# tokens; enabled=true -> reasoning_content + usage reasoning_tokens.
+base_model = "minimax/MiniMax-M3"
+name = "MiniMax M3"
+description = "MiniMax M3 — efficient long-context agent model"
+
+[[reasoning_options]]
+type = "toggle"
+
+[cost]
+input = 0.24
+output = 0.96
+cache_read = 0.048

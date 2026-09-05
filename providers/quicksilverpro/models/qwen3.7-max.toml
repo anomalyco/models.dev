@@ -1,0 +1,14 @@
+# Reasoning toggle wire path: `enable_thinking = true|false` (DashScope-compatible
+# passthrough; same control the lab documents). Verified live 2026-08-11 on
+# api.quicksilverpro.io: default/false -> no reasoning tokens; true ->
+# reasoning_content + usage reasoning_tokens.
+base_model = "alibaba/qwen3.7-max"
+description = "Qwen 3.7 Max — strong coding and reasoning at low cost"
+
+[[reasoning_options]]
+type = "toggle"
+
+[cost]
+input = 1.25
+output = 3.75
+cache_read = 0.25
