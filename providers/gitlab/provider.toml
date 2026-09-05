@@ -1,7 +1,4 @@
-name = "GitLab Duo"
-env = ["GITLAB_TOKEN"]
-npm = "gitlab-ai-provider"
-# Raw HTTP reasoning controls (sources accessed 2026-06-25):
+# Reasoning controls (sources accessed 2026-09-04):
 # - OpenAI Chat: POST /ai/v1/proxy/openai/v1/chat/completions uses top-level
 #   `reasoning_effort`; Responses: POST /ai/v1/proxy/openai/v1/responses uses
 #   `reasoning = { effort = "..." }`.
@@ -11,11 +8,12 @@ npm = "gitlab-ai-provider"
 #   `thinking = { type = "enabled", budget_tokens = N }` or
 #   `thinking = { type = "disabled" }`; effort is `output_config.effort`.
 #   https://docs.anthropic.com/en/api/messages
-# The npm provider obtains a direct-access token, points the native SDKs at
-# those proxy bases, but builds fixed request bodies without reasoning fields;
-# it does not expose a reasoning passthrough. These raw shapes therefore do not
-# make `reasoning_options` available through this configured npm integration.
+# gitlab-ai-provider 6.14.0 exposes OpenAI `reasoningEffort` and Anthropic
+# `thinking` options through model defaults and per-call provider options.
 # https://gitlab.com/vglafirov/gitlab-ai-provider/-/blob/main/src/gitlab-direct-access.ts
 # https://gitlab.com/vglafirov/gitlab-ai-provider/-/blob/main/src/gitlab-openai-language-model.ts
 # https://gitlab.com/vglafirov/gitlab-ai-provider/-/blob/main/src/gitlab-anthropic-language-model.ts
+name = "GitLab Duo"
+env = ["GITLAB_TOKEN"]
+npm = "gitlab-ai-provider"
 doc = "https://docs.gitlab.com/user/duo_agent_platform/"
