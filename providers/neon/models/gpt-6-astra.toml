@@ -1,0 +1,24 @@
+base_model = "openai/gpt-6-astra"
+knowledge = "2026-04-30"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
+
+[cost]
+input = 10
+output = 50
+cache_read = 1
+cache_write = 12.5
+
+[[cost.tiers]]
+tier = { type = "context", size = 272_000 }
+input = 20
+output = 75
+cache_read = 2
+cache_write = 25
+
+[modalities]
+output = ["text", "image"]
+
+[provider]
+npm = "@ai-sdk/openai"
+api = "${NEON_AI_GATEWAY_BASE_URL}/openai/v1"
+shape = "responses"
