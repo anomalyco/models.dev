@@ -1,0 +1,27 @@
+# Cartesia Sonic 3 TTS via SLNG
+# Sources:
+# - https://docs.slng.ai/models — SLNG model catalog (EU, India, US regions)
+# - Original per-minute pricing: $0.02/min converted to per-token at 195 tokens/min
+name = "Cartesia Sonic 3"
+description = "Fast text-to-speech model supporting 39 languages with low latency"
+family = "sonic"
+release_date = "2024-01-01"
+last_updated = "2025-01-01"
+attachment = false
+reasoning = false
+temperature = true
+tool_call = false
+structured_output = false
+open_weights = false
+
+[cost]
+input = 102.56
+output = 102.56
+
+[limit]
+context = 32_768
+output = 16_384
+
+[modalities]
+input = ["text"]
+output = ["audio"]

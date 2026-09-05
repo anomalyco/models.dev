@@ -1,0 +1,27 @@
+# Murf Falcon TTS via SLNG
+# Sources:
+# - https://docs.slng.ai/models — SLNG model catalog (UAE, AU, EU, UK, India, JP, KR, US regions)
+# - Original per-minute pricing: $0.0080/min converted to per-token at 195 tokens/min
+name = "Murf Falcon"
+description = "Text-to-speech model supporting 18 languages across 9 regions"
+family = "murf"
+release_date = "2024-01-01"
+last_updated = "2025-01-01"
+attachment = false
+reasoning = false
+temperature = true
+tool_call = false
+structured_output = false
+open_weights = false
+
+[cost]
+input = 41.03
+output = 41.03
+
+[limit]
+context = 32_768
+output = 16_384
+
+[modalities]
+input = ["text"]
+output = ["audio"]
