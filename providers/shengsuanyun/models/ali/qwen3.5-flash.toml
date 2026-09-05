@@ -1,0 +1,14 @@
+base_model = "alibaba/qwen3.5-flash"
+attachment = false
+reasoning_options = []
+
+[cost]
+input = 0.0285
+output = 0.2857
+cache_read = 0.0028
+
+[limit]
+output = 64_000
+
+[modalities]
+input = ["text"]

@@ -1,0 +1,13 @@
+base_model = "bytedance-seed/seed-1-6-flash"
+attachment = true
+
+[cost]
+input = 0.0214
+output = 0.2142
+cache_read = 0.0042
+
+[limit]
+output = 16_000
+
+[modalities]
+input = ["text", "image", "video"]

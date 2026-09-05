@@ -326,6 +326,19 @@ Requesty is implemented in `packages/core/src/sync/providers/requesty.ts`.
 - Region variants are written as separate models: `gpt-5.4` and `gpt-5.4@eu` are distinct files that share a `base_model` and differ only in served pricing and limits.
 - Prices are per-token USD and are converted to per-1M-token numbers. `pricing[]` bands become `cost.tiers`, with the first band as the flat `cost`. Price fields are nullable upstream, so a route quoting no prices gets no `[cost]` section rather than a fabricated zero.
 
+## ShengSuanYun Notes
+
+ShengSuanYun is implemented in `packages/core/src/sync/providers/shengsuanyun.ts`.
+
+- Run it with `bun models:sync shengsuanyun` or `bun shengsuanyun:sync`.
+- Source endpoint: `https://router.shengsuanyun.com/api/v1/models`; no auth required for the catalog (only `/v1/chat/completions` requires an `Authorization` header).
+- IDs are OpenRouter-shaped (`<org>/<model>[:thinking]`), but several org prefixes don't match the canonical `models/` directory names and are remapped locally before delegating to `resolveModelMetadataBaseModel`: `ali`→`alibaba`, `bigmodel`→`zhipuai`, `bytedance`→`bytedance-seed`, `longcat`→`meituan`. `baidu`, `streamlake`, and `intern` have no canonical metadata at all and always fall through to standalone models.
+- ByteDance IDs use `doubao-seed-<version>` while the canonical files use `seed-<version>` with an inconsistent dash/dot separator on-disk, so both forms are tried.
+- Reasoning is signaled only by a literal `:thinking` ID suffix; there is no other capability data in the payload, so `tool_call` defaults to `true` and `structured_output` is left unset (a best-effort guess, not verified against the API).
+- The API has no `created`/timestamp field, so `release_date`/`last_updated` fall back to the previously committed value or today's date for new models.
+- `pricing.prompt`/`completion`/`cache` are raw units; divide by 10,000 for USD per 1M tokens. The `supports_prompt_cache` boolean is unreliable, so `cache_read` cost is emitted whenever `pricing.cache > 0` instead.
+- Display names sometimes carry zero-width spaces or promotional parenthetical text (discount notices); both are stripped before use.
+
 ## Venice Notes
 
 Venice is implemented in `packages/core/src/sync/providers/venice.ts`.

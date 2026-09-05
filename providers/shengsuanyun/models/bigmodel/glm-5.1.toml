@@ -1,0 +1,14 @@
+base_model = "zhipuai/glm-5.1"
+attachment = true
+reasoning_options = []
+
+[cost]
+input = 0.8571
+output = 3.4285
+cache_read = 0.1857
+
+[limit]
+output = 128_000
+
+[modalities]
+input = ["text", "image"]

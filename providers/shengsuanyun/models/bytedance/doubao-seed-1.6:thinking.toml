@@ -1,0 +1,14 @@
+base_model = "bytedance-seed/seed-1-6"
+attachment = true
+reasoning_options = []
+
+[cost]
+input = 0.1142
+output = 1.1428
+cache_read = 0.0228
+
+[limit]
+output = 32_000
+
+[modalities]
+input = ["text", "image", "video"]

@@ -1,0 +1,23 @@
+name = "MiniMax M2.1 lightning"
+description = "High-speed MiniMax model for low-latency coding and agent workflows"
+family = "minimax"
+release_date = "2026-08-17"
+last_updated = "2026-08-17"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = true
+open_weights = false
+
+[cost]
+input = 0.2999
+output = 2.3999
+cache_read = 0.0299
+
+[limit]
+context = 200_000
+output = 131_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

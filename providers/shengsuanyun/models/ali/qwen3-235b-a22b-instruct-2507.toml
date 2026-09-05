@@ -1,0 +1,14 @@
+base_model = "alibaba/qwen3-235b-a22b-instruct-2507"
+attachment = true
+
+[cost]
+input = 0.2857
+output = 1.1428
+cache_read = 0.1142
+
+[limit]
+context = 131_072
+output = 32_768
+
+[modalities]
+input = ["text", "image"]

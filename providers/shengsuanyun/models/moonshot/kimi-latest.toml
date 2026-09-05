@@ -1,0 +1,22 @@
+name = "Kimi-latest"
+description = "Kimi multimodal agent model for visual understanding, coding, and planning"
+family = "kimi"
+release_date = "2026-08-17"
+last_updated = "2026-08-17"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = true
+open_weights = false
+
+[cost]
+input = 0.2857
+output = 1.4285
+
+[limit]
+context = 128_000
+output = 128_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
