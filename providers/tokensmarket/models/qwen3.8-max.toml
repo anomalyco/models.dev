@@ -1,0 +1,23 @@
+# Alibaba Cloud (DashScope) channel. Hybrid thinking: effort "none" becomes
+# `enable_thinking = false`; `reasoning_effort` accepts low|medium|xhigh (high is
+# an alias for xhigh); `thinking_budget` (0..262,144) cannot be combined with
+# `reasoning_effort`. Token Market's catalog lists text and image input only.
+base_model = "alibaba/qwen3.8-max"
+structured_output = true
+reasoning_options = [
+  { type = "toggle" },
+  { type = "effort", values = ["low", "medium", "xhigh"] },
+  { type = "budget_tokens", min = 0, max = 262_144 },
+]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 1.765
+output = 5.29
+cache_read = 0.221
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

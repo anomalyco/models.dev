@@ -1,0 +1,20 @@
+# Alibaba Cloud (DashScope) channel.
+# Toggle: `enable_thinking = false` (effort "none") | `enable_thinking = true`.
+# Effort: `reasoning_effort = high | max`; low/medium collapse to high and xhigh
+# collapses to max on this channel, so only two levels are distinctly reachable.
+base_model = "moonshotai/kimi-k3"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["high", "max"]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 3.0
+output = 15.0
+cache_read = 0.3

@@ -1,0 +1,24 @@
+# Token Market is an OpenAI-compatible aggregation gateway that fronts several
+# upstream vendors (Anthropic, OpenAI, Google, Alibaba/DashScope, Tencent,
+# SiliconFlow, BytePlus) behind one key and one base URL.
+#
+# Reasoning HTTP format (verified against the gateway source 2026-08-18):
+# POST /v1/chat/completions accepts the OpenAI wire field `reasoning_effort`
+# with the enum none|minimal|low|medium|high|xhigh|max, plus a gateway-canonical
+# `reasoning` object `{effort?, summary?, budget_tokens?}` that each channel
+# adapter projects onto its upstream vendor's own field. The per-model
+# `reasoning_options` below record the surface that survives that projection:
+# OpenAI-channel models pass `reasoning_effort` through natively; DashScope and
+# SiliconFlow channels collapse low/medium -> high and xhigh -> max, and expose
+# `thinking_budget` only for models that support it; MiniMax thinking-only
+# models expose no caller-selectable reasoning controls; the Anthropic channel
+# is a raw /v1/messages passthrough.
+#
+# Sources:
+# https://www.tokensmarket.ai/docs
+# https://api.tokensmarket.ai/v1/models
+name = "Token Market"
+env = ["TOKENSMARKET_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+doc = "https://www.tokensmarket.ai/docs"
+api = "https://api.tokensmarket.ai/v1"
