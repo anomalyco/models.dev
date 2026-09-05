@@ -1,0 +1,13 @@
+# Off: reasoning.effort=none. Vercel exposes high|xhigh on this relay path;
+# gateway xhigh is the peer's name for the first-party DeepSeek max tier.
+# https://vercel.com/docs/ai-gateway/models-and-providers/reasoning
+base_model = "deepseek/deepseek-v4-pro-0813"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "high", "xhigh"]
+
+[cost]
+input = 1.386
+output = 4.158
+cache_read = 0.1386

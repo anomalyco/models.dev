@@ -1,0 +1,14 @@
+base_model = "moonshotai/kimi-k2.7-code-highspeed"
+temperature = true
+reasoning_options = []
+
+[cost]
+input = 1.995
+output = 8.4
+cache_read = 0.399
+
+[limit]
+output = 32_768
+
+[modalities]
+input = ["text", "image", "pdf"]

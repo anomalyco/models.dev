@@ -1,0 +1,19 @@
+# MiniRouter source of truth for POST /v1/chat/completions reasoning controls:
+# https://github.com/SolWorks-Dev/minirouter/blob/401f445fe23e94e21a6cb921c7c855296732ee27/packages/pricing/src/admission-bound.ts#L520-L538
+# Accepted object keys: reasoning.effort, reasoning.max_tokens, reasoning.exclude
+# Effort schema: reasoning.effort = none|minimal|low|medium|high|xhigh|max
+# Per-model effort values below follow lab and same-surface Vercel peers.
+# Budget: reasoning.max_tokens = positive integer
+# Response exclusion: reasoning.exclude = boolean
+# The default upstream is Vercel AI Gateway and admitted fields are forwarded unchanged:
+# https://github.com/SolWorks-Dev/minirouter/blob/401f445fe23e94e21a6cb921c7c855296732ee27/services/edge/src/config.ts#L10-L15
+# https://github.com/SolWorks-Dev/minirouter/blob/401f445fe23e94e21a6cb921c7c855296732ee27/services/edge/src/relay.ts#L846-L850
+# https://vercel.com/docs/ai-gateway/models-and-providers/reasoning
+# Chat Completions forwards the admitted reasoning object to Vercel unchanged.
+# Binary on/off is encoded as models.dev type=toggle; its exact wire mapping is
+# reasoning.effort=none for off and omission/default for on.
+name = "minirouter"
+env = ["MINIROUTER_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+api = "https://api.minirouter.sh/v1"
+doc = "https://minirouter.sh/docs/models"

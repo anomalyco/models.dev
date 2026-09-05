@@ -1,0 +1,19 @@
+# Source: https://ai-gateway.vercel.sh/v1/models (accessed 2026-08-22)
+name = "Tencent Hy-MT2-Pro"
+description = "Hy-MT2-Pro is Tencent Cloud Hunyuan’s flagship translation model, featuring 30B-A3B parameters and an 8K-token context window. It delivers bidirectional translation across 33 core language pairs, plus five minority-language and dialect pairs. With industry-leading performance on FLORES-200 and WMT25, it excels in specialized domains and real-world business scenarios while supporting structured, contextual, terminology-aware, style-specific, and delimiter-preserving translation."
+family = "Hy"
+release_date = "2026-05-21"
+last_updated = "2026-05-21"
+attachment = false
+reasoning = false
+temperature = true
+tool_call = false
+open_weights = false
+
+[limit]
+context = 8_000
+output = 4_000
+
+[modalities]
+input = ["text"]
+output = ["text"]

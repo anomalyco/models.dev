@@ -1,0 +1,21 @@
+# Source: https://docs.mistral.ai/models/magistral-medium-1-2-25-09 (accessed 2026-08-22)
+# Identity and limits cross-checked against the MiniRouter and Vercel public catalogs.
+# Sources: https://api.minirouter.sh/v1/models and https://ai-gateway.vercel.sh/v1/models (accessed 2026-08-22)
+name = "Magistral Medium 2509"
+description = "Frontier-class multimodal Mistral reasoning model updated in September 2025"
+family = "magistral"
+release_date = "2025-09-18"
+last_updated = "2025-09-18"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+open_weights = false
+
+[limit]
+context = 128_000
+output = 64_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

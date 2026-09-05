@@ -1,0 +1,18 @@
+# Toggle: reasoning.effort = none (off); omit reasoning (on).
+base_model = "google/gemini-2.5-flash-lite"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "budget_tokens"
+min = 512
+max = 24_576
+
+[cost]
+input = 0.105
+output = 0.42
+cache_read = 0.0105
+
+[modalities]
+input = ["text", "image", "pdf"]

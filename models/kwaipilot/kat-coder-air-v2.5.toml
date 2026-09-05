@@ -1,0 +1,19 @@
+# Source: https://ai-gateway.vercel.sh/v1/models (accessed 2026-08-22)
+name = "Kat Coder Air V2.5"
+description = "Fast response version of Kat Coder V2.5 optimized for Agent and Claw use cases."
+family = "kat-coder"
+release_date = "2026-07-10"
+last_updated = "2026-07-10"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+open_weights = false
+
+[limit]
+context = 256_000
+output = 80_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

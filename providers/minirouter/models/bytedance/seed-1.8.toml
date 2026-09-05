@@ -1,0 +1,21 @@
+# Off: reasoning.effort=none; other values match the same-ID Vercel peer levels.
+# MiniRouter's exact Seed 1.8 row combines the reasoning tag with image+text
+# input; no separate Seed 1.8 vision lab identity exists, so attachment and
+# modalities are genuine host deltas. The live display name includes Bytedance.
+# Frozen source: https://github.com/SolWorks-Dev/minirouter/blob/35ac01a7b87b5feec3984c49c1eb995d74f0ae23/parity/snapshots/2026-08-06/artifacts/models.json
+# Live catalog: https://api.minirouter.sh/v1/models (accessed 2026-08-22)
+base_model = "bytedance-seed/seed-1-8"
+name = "Bytedance Seed 1.8"
+attachment = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "minimal", "low", "medium", "high"]
+
+[cost]
+input = 0.2625
+output = 2.1
+cache_read = 0.0525
+
+[modalities]
+input = ["text", "image"]

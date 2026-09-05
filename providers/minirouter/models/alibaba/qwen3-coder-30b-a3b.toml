@@ -1,0 +1,14 @@
+# MiniRouter forwards this exact ID unchanged to its Vercel default upstream.
+# The same-ID Vercel reconciliation marks it reasoning-capable with no caller
+# control; catalog tag omission is not negative runtime evidence.
+# Peer evidence: https://github.com/anomalyco/models.dev/commit/728dad6ec
+base_model = "alibaba/qwen3-coder-30b-a3b-instruct"
+reasoning = true
+reasoning_options = []
+
+[cost]
+input = 0.1575
+output = 0.63
+
+[limit]
+output = 8_192

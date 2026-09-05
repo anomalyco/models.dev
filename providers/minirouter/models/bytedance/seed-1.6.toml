@@ -1,0 +1,21 @@
+# Toggle: reasoning.effort = none (off); omit reasoning (on).
+# MiniRouter's exact Seed 1.6 row combines the reasoning tag with image+text
+# input. The separate vision lab identity is non-reasoning, so the reasoning
+# Seed 1.6 base plus attachment/modalities is the accurate host composition.
+# Source: https://github.com/SolWorks-Dev/minirouter/blob/35ac01a7b87b5feec3984c49c1eb995d74f0ae23/parity/snapshots/2026-08-06/artifacts/models.json
+base_model = "bytedance-seed/seed-1-6"
+attachment = true
+
+[[reasoning_options]]
+type = "toggle"
+
+[cost]
+input = 0.2625
+output = 2.1
+cache_read = 0.0525
+
+[limit]
+output = 32_000
+
+[modalities]
+input = ["text", "image"]

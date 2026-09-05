@@ -1,0 +1,14 @@
+# MiniRouter's exact non-suffix ID has no reasoning tag or reasoning request
+# parameter; reasoning is served under the separate -thinking ID. The same
+# exact row does expose tools, so tool_call remains inherited from the lab.
+# Source: https://github.com/SolWorks-Dev/minirouter/blob/35ac01a7b87b5feec3984c49c1eb995d74f0ae23/parity/snapshots/2026-08-06/artifacts/models.json
+base_model = "deepseek/deepseek-v3.2"
+reasoning = false
+
+[cost]
+input = 0.294
+output = 0.441
+cache_read = 0.0294
+
+[limit]
+output = 8_000

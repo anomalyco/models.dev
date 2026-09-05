@@ -1,0 +1,12 @@
+# Off: reasoning.effort=none; other values match the same-ID Vercel peer levels.
+base_model = "anthropic/claude-sonnet-5"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "xhigh"]
+
+[cost]
+input = 2.1
+output = 10.5
+cache_read = 0.21
+cache_write = 2.625

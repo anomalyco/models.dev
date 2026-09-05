@@ -1,0 +1,18 @@
+base_model = "meta/muse-spark-1.1"
+attachment = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["minimal", "low", "medium", "high", "xhigh"]
+
+[cost]
+input = 1.3125
+output = 4.4625
+cache_read = 0.1575
+
+[limit]
+context = 1_048_576
+output = 1_048_576
+
+[modalities]
+input = ["text", "image", "pdf"]

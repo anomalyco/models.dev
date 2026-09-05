@@ -1,0 +1,20 @@
+# Off: reasoning.effort=none; other values match the same-ID Vercel peer levels.
+# MiniRouter's frozen host snapshot lists tool_choice and tools as supported
+# parameters for this exact ID, matching the inherited tool_call=true capability.
+# Source: https://github.com/SolWorks-Dev/minirouter/blob/35ac01a7b87b5feec3984c49c1eb995d74f0ae23/parity/snapshots/2026-08-06/artifacts/models.json
+base_model = "amazon/nova-2-lite"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high"]
+
+[cost]
+input = 0.315
+output = 2.625
+cache_read = 0.07875
+
+[limit]
+output = 1_000_000
+
+[modalities]
+input = ["text", "image", "pdf"]

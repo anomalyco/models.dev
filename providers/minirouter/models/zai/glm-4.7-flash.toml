@@ -1,0 +1,12 @@
+# Toggle: reasoning.effort = none (off); omit reasoning (on).
+base_model = "zhipuai/glm-4.7-flash"
+
+[[reasoning_options]]
+type = "toggle"
+
+[cost]
+input = 0.0735
+output = 0.42
+
+[limit]
+output = 131_000

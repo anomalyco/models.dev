@@ -1,0 +1,13 @@
+base_model = "openai/gpt-5-pro"
+temperature = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["high"]
+
+[cost]
+input = 15.75
+output = 126
+
+[modalities]
+input = ["text", "image", "pdf"]

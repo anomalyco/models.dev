@@ -1,0 +1,24 @@
+# MiniRouter publishes this exact host ID as the GA Qwen 3.8 Max model.
+# Source: https://github.com/SolWorks-Dev/minirouter/blob/35ac01a7b87b5feec3984c49c1eb995d74f0ae23/parity/snapshots/2026-08-06/artifacts/models.json
+base_model = "alibaba/qwen3.8-max"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "xhigh"]
+
+[[reasoning_options]]
+type = "budget_tokens"
+min = 0
+max = 262_144
+
+[cost]
+input = 2.1
+output = 6.3
+cache_read = 0.2625
+cache_write = 2.625
+
+[limit]
+output = 128_000
+
+[modalities]
+input = ["text", "image"]

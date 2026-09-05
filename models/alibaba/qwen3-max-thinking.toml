@@ -1,0 +1,20 @@
+# Source: https://ai-gateway.vercel.sh/v1/models (accessed 2026-08-22)
+name = "Qwen 3 Max Thinking"
+description = "Compared with the snapshot as of September 23, 2025, the Qwen-3 series Max model in this release achieves an effective integration of thinking and non-thinking modes, resulting in a comprehensive and substantial improvement in the model’s overall performance. In thinking mode, the model simultaneously supports web search, web information extraction, and a code interpreter tool, enabling it to tackle more complex and challenging problems with greater accuracy by leveraging external tools while engaging in slow, deliberative reasoning. This version is based on a snapshot taken on January 23, 2026."
+family = "qwen"
+release_date = "2026-01-23"
+last_updated = "2026-01-23"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+knowledge = "2025-01"
+open_weights = false
+
+[limit]
+context = 256_000
+output = 65_536
+
+[modalities]
+input = ["text"]
+output = ["text"]

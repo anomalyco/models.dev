@@ -1,0 +1,15 @@
+base_model = "openai/gpt-5.2"
+temperature = true
+knowledge = "2024-10"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "xhigh"]
+
+[cost]
+input = 1.8375
+output = 14.7
+cache_read = 0.18375
+
+[modalities]
+input = ["text", "image", "pdf"]

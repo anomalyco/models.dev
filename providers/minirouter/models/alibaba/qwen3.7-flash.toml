@@ -1,0 +1,16 @@
+base_model = "alibaba/qwen3.7-flash"
+base_model_omit = ["limit.input"]
+reasoning_options = []
+
+[cost]
+input = 0.0315
+output = 0.1365
+cache_read = 0.0063
+cache_write = 0.0399
+
+[limit]
+context = 991_000
+output = 64_000
+
+[modalities]
+input = ["text", "image", "pdf"]

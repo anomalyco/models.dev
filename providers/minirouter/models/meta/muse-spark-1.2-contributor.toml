@@ -1,0 +1,14 @@
+base_model = "meta/muse-spark-1.2"
+name = "Muse Spark 1.2 Contributor"
+reasoning_options = []
+
+[cost]
+input = 0.105
+output = 0.21
+cache_read = 0.0021
+
+[limit]
+output = 1_048_576
+
+[modalities]
+input = ["text", "image", "pdf"]

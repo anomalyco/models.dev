@@ -1,0 +1,21 @@
+# Amazon documents text, image, video, and PDF/document inputs for Nova Lite and Pro.
+# Source: https://docs.aws.amazon.com/nova/latest/userguide/what-is-nova.html (accessed 2026-08-22)
+name = "Nova Pro"
+description = "A highly capable multimodal model with the best combination of accuracy, speed, and cost for a wide range of tasks."
+family = "nova-pro"
+release_date = "2024-12-03"
+last_updated = "2024-12-03"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = true
+knowledge = "2024-10"
+open_weights = false
+
+[limit]
+context = 300_000
+output = 8_192
+
+[modalities]
+input = ["text", "image", "video", "pdf"]
+output = ["text"]

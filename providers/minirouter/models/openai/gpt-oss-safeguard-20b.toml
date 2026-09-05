@@ -1,0 +1,10 @@
+base_model = "openai/gpt-oss-safeguard-20b"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high"]
+
+[cost]
+input = 0.07875
+output = 0.315
+cache_read = 0.03885

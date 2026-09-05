@@ -1,0 +1,15 @@
+# MiniRouter /v1/models identifies this generic alias as Qwen3 VL 235B A22B Thinking.
+# Source: https://api.minirouter.sh/v1/models (accessed 2026-08-22)
+base_model = "alibaba/qwen3-vl-235b-a22b-thinking"
+
+[[reasoning_options]]
+type = "budget_tokens"
+min = 1
+max = 81_920
+
+[cost]
+input = 0.42
+output = 4.2
+
+[modalities]
+input = ["text", "image", "pdf"]

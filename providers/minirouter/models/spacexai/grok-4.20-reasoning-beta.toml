@@ -1,0 +1,12 @@
+base_model = "xai/grok-4.20-0309-reasoning"
+name = "Grok 4.20 Beta Reasoning"
+reasoning_options = []
+
+[cost]
+input = 1.3125
+output = 2.625
+cache_read = 0.21
+
+[limit]
+context = 2_000_000
+output = 2_000_000

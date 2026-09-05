@@ -1,0 +1,16 @@
+# Toggle: reasoning.effort = none (off); omit reasoning (on).
+base_model = "zhipuai/glm-4.7-flashx"
+knowledge = "2025-01"
+
+interleaved = true
+
+[[reasoning_options]]
+type = "toggle"
+
+[cost]
+input = 0.063
+output = 0.42
+cache_read = 0.0105
+
+[limit]
+output = 128_000

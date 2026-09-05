@@ -1,0 +1,13 @@
+base_model = "openai/gpt-oss-120b"
+knowledge = "2024-10"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high"]
+
+[cost]
+input = 0.105
+output = 0.525
+
+[limit]
+output = 131_072

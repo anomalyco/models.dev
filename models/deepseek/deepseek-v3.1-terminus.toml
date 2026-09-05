@@ -1,0 +1,20 @@
+# Source: https://ai-gateway.vercel.sh/v1/models (accessed 2026-08-22)
+name = "DeepSeek V3.1 Terminus"
+description = "DeepSeek-V3.1-Terminus delivers more stable & reliable outputs across benchmarks compared to the previous version and addresses user feedback (i.e. language consistency and agent upgrades)."
+family = "deepseek"
+release_date = "2025-09-22"
+last_updated = "2025-09-22"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+knowledge = "2025-07"
+open_weights = true
+
+[limit]
+context = 131_072
+output = 65_536
+
+[modalities]
+input = ["text"]
+output = ["text"]

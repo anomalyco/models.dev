@@ -1,0 +1,16 @@
+# Toggle: reasoning.effort = none (off); omit reasoning (on).
+base_model = "zhipuai/glm-5v-turbo"
+
+[[reasoning_options]]
+type = "toggle"
+
+[cost]
+input = 1.26
+output = 4.2
+cache_read = 0.252
+
+[limit]
+output = 128_000
+
+[modalities]
+input = ["text", "image", "pdf"]

@@ -1,0 +1,12 @@
+base_model = "openai/gpt-5.6-luna"
+temperature = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "xhigh", "max"]
+
+[cost]
+input = 0.21
+output = 1.26
+cache_read = 0.021
+cache_write = 0.2625
