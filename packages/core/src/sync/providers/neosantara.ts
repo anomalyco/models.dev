@@ -79,10 +79,6 @@ export function resolveNeosantaraBaseModel(model: NeosantaraSourceModel | string
 
 type ReasoningControls = NonNullable<SyncedFullModel["reasoning_options"]>;
 
-// Toggle controls carry a leading wire comment naming the off value (AGENTS.md requirement).
-const TOGGLE_HEADER = `# Toggle: reasoning_effort = "none" turns thinking off; any other accepted
-# value turns it on. https://docs.neosantara.xyz/en/capability/reasoning
-`;
 
 // Whether the catalog reported a caller-control surface for this reasoning model. A missing
 // `reasoning_efforts` is "unknown" (skip + report), NOT an affirmative always-on `[]`.
@@ -111,14 +107,34 @@ export function neosantaraReasoningControls(
 }
 
 // Toggle controls carry a leading wire comment naming the off value (AGENTS.md requirement).
-// Dedicated headers document always-on relays (minimax-m2.7) and external effort baselines (muse-glimmer-30b).
+const TOGGLE_HEADER = `# Toggle: reasoning_effort = "none" turns thinking off; any other accepted
+# value turns it on. https://docs.neosantara.xyz/en/capability/reasoning
+`;
+
+const EFFORT_NONE_HEADER = `# Effort: reasoning_effort = "none" turns thinking off; graded levels control depth.
+# Documented at https://docs.neosantara.xyz/en/capability/reasoning
+`;
+
+const EFFORT_GRADED_HEADER = `# Effort: reasoning_effort controls thinking depth.
+# Documented at https://docs.neosantara.xyz/en/capability/reasoning
+`;
+
+const TEXT_ONLY_KIRO_HEADER = `# Deployment limitation: text-only deployment on this host (upstream Kiro backend ignores image/multimodal input).
+# Modalities explicitly restricted to text input with attachments disabled.
+# Effort: reasoning_effort = "none" turns thinking off; graded levels control depth.
+# Documented at https://docs.neosantara.xyz/en/capability/reasoning
+`;
+
+const TEXT_ONLY_MISTRAL_HEADER = `# Deployment limitation: text-only deployment on this host; attachments disabled.
+`;
+
+// Dedicated headers document always-on relays (minimax-m2.7, kimi-k2-thinking), text-only
+// deployments (gpt-5.6-luna/sol, mistral), external baselines (muse-glimmer-30b), and verified
+// reasoning effort/toggle controls cited from https://docs.neosantara.xyz/en/capability/reasoning.
 export function neosantaraReasoningHeader(
   controls: ReasoningControls | undefined,
   modelId?: string,
 ) {
-  if (controls?.some((option) => option.type === "toggle")) {
-    return TOGGLE_HEADER;
-  }
   if (modelId === "minimax-m2.7") {
     return `# Always-on thinking: upstream Dahl forwards no reasoning_effort parameter.
 # Matches lab providers/minimax/models/MiniMax-M2.7.toml and peers OpenRouter/FastRouter/Cortecs.
@@ -135,6 +151,21 @@ export function neosantaraReasoningHeader(
 # Effort: reasoning_effort = low|medium|high|xhigh
 # Matches peers OpenRouter and Vercel AI Gateway.
 `;
+  }
+  if (modelId === "gpt-5.6-luna" || modelId === "gpt-5.6-sol") {
+    return TEXT_ONLY_KIRO_HEADER;
+  }
+  if (modelId === "mistral-small-latest" || modelId === "mistral-large-latest") {
+    return TEXT_ONLY_MISTRAL_HEADER;
+  }
+  if (controls?.some((option) => option.type === "toggle")) {
+    return TOGGLE_HEADER;
+  }
+  if (controls?.some((option) => option.type === "effort" && option.values?.includes("none" as never))) {
+    return EFFORT_NONE_HEADER;
+  }
+  if (controls?.some((option) => option.type === "effort")) {
+    return EFFORT_GRADED_HEADER;
   }
   return undefined;
 }

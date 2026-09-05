@@ -249,7 +249,7 @@ test("skips a reasoning model whose effort surface is unknown (missing != always
   expect(buildNeosantaraModel(parsedAlwaysOn, undefined).reasoning_options).toEqual([]);
 });
 
-test("toggle models carry a wire-comment header; effort models carry none", () => {
+test("toggle models carry a wire-comment header; effort models carry effort docs; text-only deployments document limitations", () => {
   const models = NeosantaraCatalogResponse.parse(catalogResponse).data;
   const ctx = { existing: () => undefined, authored: () => undefined };
 
@@ -259,9 +259,10 @@ test("toggle models carry a wire-comment header; effort models carry none", () =
   expect(toggle?.header).toContain("Toggle");
   expect(toggle?.header).toContain("https://docs.neosantara.xyz/en/capability/reasoning");
 
-  // gemini-3.7-flash advertises graded effort -> no toggle header.
+  // gemini-3.7-flash advertises graded effort -> effort header citing docs, no toggle.
   const effort = neosantara.translateModel(models[0]!, ctx);
   expect(effort?.header ?? "").not.toContain("Toggle");
+  expect(effort?.header ?? "").toContain("https://docs.neosantara.xyz/en/capability/reasoning");
 
   // minimax-m2.7 documents always-on reasoning.
   expect(neosantaraReasoningHeader([], "minimax-m2.7")).toContain("Always-on thinking");
@@ -271,6 +272,22 @@ test("toggle models carry a wire-comment header; effort models carry none", () =
   expect(neosantaraReasoningHeader([{ type: "effort", values: ["low"] as never }], "muse-glimmer-30b")).toContain(
     "https://huggingface.co/meta-models/Muse-Glimmer-30B",
   );
+  // gpt-5.6-luna / sol document text-only deployment limitation and effort surface.
+  expect(neosantaraReasoningHeader([{ type: "effort", values: ["none", "low"] as never }], "gpt-5.6-luna")).toContain(
+    "upstream Kiro backend ignores image/multimodal input",
+  );
+  expect(neosantaraReasoningHeader([{ type: "effort", values: ["none", "low"] as never }], "gpt-5.6-sol")).toContain(
+    "upstream Kiro backend ignores image/multimodal input",
+  );
+  // mistral text-only deployments document limitation.
+  expect(neosantaraReasoningHeader(undefined, "mistral-small-latest")).toContain("text-only deployment on this host");
+  // Claude effort models cite reasoning_effort = none off control and docs.
+  expect(
+    neosantaraReasoningHeader(
+      [{ type: "effort", values: ["none", "low", "medium", "high", "max"] as never }],
+      "claude-opus-4-6",
+    ),
+  ).toContain('reasoning_effort = "none" turns thinking off');
 });
 
 test("syncs image-generation models on per-image pricing without token cost", () => {
