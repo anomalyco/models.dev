@@ -1,0 +1,16 @@
+# Toggle: reasoning_effort = "none" turns thinking off; any other accepted value turns it on.
+# Documented at https://docs.neosantara.xyz/en/capability/reasoning
+base_model = "nvidia/llama-3.3-nemotron-super-49b-v1.5"
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "toggle"
+
+[cost]
+input = 0.285
+output = 1.999437
+
+[limit]
+context = 132_000

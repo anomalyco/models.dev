@@ -28,6 +28,7 @@ import { llmgateway, llmgatewayProviders } from "./providers/llmgateway.js";
 import { mergeGateway } from "./providers/merge-gateway.js";
 import { meta } from "./providers/meta.js";
 import { nanoGpt } from "./providers/nano-gpt.js";
+import { neosantara } from "./providers/neosantara.js";
 import { openai } from "./providers/openai.js";
 import { ofox } from "./providers/ofox.js";
 import { openrouter } from "./providers/openrouter.js";
@@ -153,6 +154,7 @@ export const providers: {
   "merge-gateway": SyncProvider<any>;
   meta: SyncProvider<any>;
   "nano-gpt": SyncProvider<any>;
+  neosantara: SyncProvider<any>;
   ofox: SyncProvider<any>;
   openai: SyncProvider<any>;
   openrouter: SyncProvider<any>;
@@ -188,6 +190,7 @@ export const providers: {
   "merge-gateway": mergeGateway,
   meta,
   "nano-gpt": nanoGpt,
+  neosantara,
   ofox,
   openai,
   openrouter,
@@ -213,6 +216,7 @@ export const groups = {
     "llmgateway-providers",
     "merge-gateway",
     "nano-gpt",
+    "neosantara",
     "ofox",
     "requesty",
     "openrouter",

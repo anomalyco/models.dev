@@ -1,0 +1,18 @@
+# Effort: reasoning_effort = "none" turns thinking off; graded levels control depth.
+# Documented at https://docs.neosantara.xyz/en/capability/reasoning
+base_model = "moonshotai/kimi-k3"
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "high", "max"]
+
+[cost]
+input = 3
+output = 15
+cache_read = 0.3
+
+[modalities]
+input = ["text", "image"]

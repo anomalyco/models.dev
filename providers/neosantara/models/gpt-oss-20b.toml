@@ -1,0 +1,14 @@
+# Effort: reasoning_effort controls thinking depth.
+# Documented at https://docs.neosantara.xyz/en/capability/reasoning
+base_model = "openai/gpt-oss-20b"
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high"]
+
+[cost]
+input = 0.025
+output = 0.1
