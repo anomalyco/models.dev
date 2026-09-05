@@ -1,0 +1,11 @@
+# Catalog lists no reasoning params for this E2EE route and a live probe
+# found no active sellers (2026-08-23); controls mirror the OpenRouter
+# peer's [] until testable.
+base_model = "zhipuai/glm-4.7-flash"
+name = "GLM 4.7 Flash E2EE"
+structured_output = true
+reasoning_options = []
+
+[limit]
+context = 198_000
+output = 4_096

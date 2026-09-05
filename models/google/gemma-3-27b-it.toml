@@ -1,0 +1,27 @@
+# Promoted from providers/openrouter/models/google/gemma-3-27b-it.toml so relay
+# hosts can base_model it. Native context is 128K; hosts serving extended
+# context override [limit] locally.
+name = "Gemma 3 27B"
+description = "Open Gemma instruction model for efficient chat and self-hosted deployments"
+family = "gemma"
+release_date = "2025-03-12"
+last_updated = "2025-03-12"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = true
+structured_output = true
+knowledge = "2024-08"
+open_weights = true
+
+[limit]
+context = 131_072
+output = 16_384
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/google/gemma-3-27b-it"

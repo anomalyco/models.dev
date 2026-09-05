@@ -1,0 +1,12 @@
+base_model = "minimax/MiniMax-M3"
+name = "MiniMax M3"
+attachment = false
+structured_output = true
+reasoning_options = []
+
+[limit]
+context = 200_000
+output = 32_768
+
+[modalities]
+input = ["text"]

@@ -1,0 +1,16 @@
+# Live probes 2026-08-23: the default seller exposed ~7k chars of
+# reasoning identically at reasoning.effort=low, xhigh, and
+# reasoning_effort=low; an OpenRouter-pinned (xAI-served) seller exposed
+# none at any effort. Effort is not honored either way, so no caller
+# control is cataloged despite the OpenRouter peer's effort list.
+base_model = "xai/grok-4.20-multi-agent-0309"
+name = "Grok 4.20 Multi-Agent Beta"
+attachment = false
+reasoning_options = []
+
+[limit]
+context = 2_000_000
+output = 128_000
+
+[modalities]
+input = ["text"]

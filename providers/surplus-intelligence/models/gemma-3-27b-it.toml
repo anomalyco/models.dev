@@ -1,0 +1,10 @@
+base_model = "google/gemma-3-27b-it"
+attachment = false
+tool_call = false
+
+[limit]
+context = 40_000
+output = 4_096
+
+[modalities]
+input = ["text"]

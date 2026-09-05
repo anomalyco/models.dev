@@ -1,0 +1,24 @@
+# Live probes 2026-08-23: reasoning content returned on every request
+# across two pinned providers (Venice AI, Mordiem);
+# reasoning.enabled=false and enable_thinking=false both ignored —
+# always-on with no caller control.
+name = "Qwen 3.6 35B A3B Uncensored (E2EE)"
+description = "Qwen instruction model for multilingual chat, reasoning, and tool use"
+family = "qwen"
+release_date = "2025-01-01"
+last_updated = "2025-01-01"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = false
+reasoning_options = []
+
+[limit]
+context = 128_000
+output = 32_768
+
+[modalities]
+input = ["text"]
+output = ["text"]

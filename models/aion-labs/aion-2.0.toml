@@ -1,0 +1,20 @@
+# Promoted from providers/openrouter/models/aion-labs/aion-2.0.toml so relay
+# hosts can base_model it.
+name = "Aion-2.0"
+description = "Reasoning model for deliberate analysis, multi-step problem solving, and tool use"
+release_date = "2026-02-23"
+last_updated = "2026-02-23"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = false
+open_weights = false
+
+[limit]
+context = 131_072
+output = 32_768
+
+[modalities]
+input = ["text"]
+output = ["text"]

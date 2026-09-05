@@ -1,0 +1,10 @@
+base_model = "zhipuai/glm-5v-turbo"
+name = "GLM 5V Turbo"
+structured_output = true
+reasoning_options = []
+
+[limit]
+output = 32_768
+
+[modalities]
+input = ["text", "image"]
