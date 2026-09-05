@@ -1,10 +1,13 @@
+# Toggle: $.reasoning.enabled = true|false
 base_model = "deepseek/deepseek-v4-pro"
 
 [[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
 type = "effort"
-values = ["high", "xhigh"]
+values = ["high", "max"]
 
 [cost]
 input = 0
 output = 0
-

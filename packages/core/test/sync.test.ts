@@ -3,7 +3,7 @@ import { copyFile, mkdir, mkdtemp, readFile, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 
-import { formatToml, preserveReasoningOptions, syncProvider, type ExistingModel, type SyncProvider } from "../src/sync/index.js";
+import { formatToml, preserveReasoningOptions, syncProvider, type ExistingModel, type SyncedModel, type SyncProvider } from "../src/sync/index.js";
 import {
   anthropic,
   buildAnthropicModel,
@@ -45,6 +45,13 @@ import {
   type InceptronModel,
   type ReadyInceptronModel,
 } from "../src/sync/providers/inceptron.js";
+import {
+  buildKenariModel,
+  KenariResponse,
+  resolveKenariBaseModel,
+  toggleHeader as kenariToggleHeader,
+  type KenariModel,
+} from "../src/sync/providers/kenari.js";
 import {
   buildEmpiriolabsModel,
   empiriolabs,
@@ -2932,6 +2939,267 @@ test("preserves authored Cortecs reasoning options missing from the API", () => 
 
   expect(buildCortecsModel(model, existing, existing)).toMatchObject({
     reasoning_options: [{ type: "effort", values: ["low", "medium", "high"] }],
+  });
+});
+
+test("preserves authored Kenari reasoning options missing from the API", () => {
+  // The endpoint advertises reasoning but publishes no efforts. That is silence,
+  // not an assertion that the model has no controls, so the authored list stands.
+  const model: KenariModel = {
+    id: "deepseek-v4-flash",
+    owned_by: "deepseek",
+    reasoning: true,
+  };
+  const existing: ExistingModel = {
+    base_model: "deepseek/deepseek-v4-flash",
+    reasoning: true,
+    reasoning_options: [{ type: "effort", values: ["low", "medium", "high", "xhigh"] }],
+  };
+
+  expect(buildKenariModel(model, existing)).toMatchObject({
+    reasoning_options: [
+      { type: "toggle" },
+      { type: "effort", values: ["low", "medium", "high", "xhigh"] },
+    ],
+  });
+});
+
+test("honours an explicitly empty Kenari reasoning option list", () => {
+  // An empty list IS an assertion: the endpoint says there is no effort control.
+  // The host off switch still applies, so the entry is the toggle alone rather
+  // than a bare [].
+  const model: KenariModel = {
+    id: "deepseek-v4-flash",
+    owned_by: "deepseek",
+    reasoning: true,
+    reasoning_options: [],
+  };
+  const existing: ExistingModel = {
+    base_model: "deepseek/deepseek-v4-flash",
+    reasoning: true,
+    reasoning_options: [{ type: "effort", values: ["low", "medium", "high"] }],
+  };
+
+  expect(buildKenariModel(model, existing)).toMatchObject({
+    reasoning_options: [{ type: "toggle" }],
+  });
+});
+
+test("preserves an authored Kenari toggle while refreshing the efforts", () => {
+  // The endpoint speaks for the effort axis only. Kenari's `reasoning_toggle`
+  // field cannot stand in for the on/off control: it is false for every model
+  // today, including `deepseek-v4-flash`, where `reasoning.enabled = false`
+  // measurably stops the model thinking. So an authored toggle survives a sync
+  // that rewrites the effort list.
+  const model: KenariModel = {
+    id: "deepseek-v4-flash",
+    owned_by: "deepseek",
+    reasoning: true,
+    reasoning_options: ["low", "high", "max"],
+  };
+  const existing: ExistingModel = {
+    base_model: "deepseek/deepseek-v4-flash",
+    reasoning: true,
+    reasoning_options: [{ type: "toggle" }, { type: "effort", values: ["high", "xhigh"] }],
+  };
+
+  expect(buildKenariModel(model, existing)).toMatchObject({
+    reasoning_options: [{ type: "toggle" }, { type: "effort", values: ["low", "high", "max"] }],
+  });
+});
+
+test("keeps an authored Kenari toggle when the endpoint publishes no efforts", () => {
+  // An explicitly empty effort list asserts there is no effort control. It says
+  // nothing about the on/off axis, so the authored toggle stands.
+  const model: KenariModel = {
+    id: "deepseek-v4-flash",
+    owned_by: "deepseek",
+    reasoning: true,
+    reasoning_options: [],
+  };
+  const existing: ExistingModel = {
+    base_model: "deepseek/deepseek-v4-flash",
+    reasoning: true,
+    reasoning_options: [{ type: "toggle" }],
+  };
+
+  expect(buildKenariModel(model, existing)).toMatchObject({
+    reasoning_options: [{ type: "toggle" }],
+  });
+});
+
+test("drops an authored Kenari toggle when the efforts carry none", () => {
+  // `none` IS the off switch, so keeping a toggle beside it would spell one
+  // control twice.
+  const model: KenariModel = {
+    id: "gpt-5-5",
+    owned_by: "openai",
+    reasoning: true,
+    reasoning_options: ["none", "low", "high"],
+  };
+  const existing: ExistingModel = {
+    base_model: "openai/gpt-5.5",
+    reasoning: true,
+    reasoning_options: [{ type: "toggle" }],
+  };
+
+  expect(buildKenariModel(model, existing)).toMatchObject({
+    reasoning_options: [{ type: "effort", values: ["none", "low", "high"] }],
+  });
+});
+
+test("a Kenari toggle carries the wire-path header", () => {
+  // The runner only preserves a header already on disk, so a file this sync
+  // creates with a toggle needs one from the adapter.
+  expect(kenariToggleHeader({
+    base_model: "deepseek/deepseek-v4-flash",
+    reasoning_options: [{ type: "toggle" }],
+  } as SyncedModel)).toContain("$.reasoning.enabled = true|false");
+  expect(kenariToggleHeader({
+    base_model: "deepseek/deepseek-v4-flash",
+    reasoning_options: [{ type: "effort", values: ["low", "high"] }],
+  } as SyncedModel)).toBeUndefined();
+});
+
+test("an unknown Kenari effort value does not fail the parse", () => {
+  // One unrecognised effort must not throw and take the whole catalog down.
+  const parsed = KenariResponse.parse({
+    data: [{ id: "step-3-7-flash", owned_by: "stepfun", reasoning: true, reasoning_options: ["low", "ultra"] }],
+  });
+  expect(parsed.data[0]?.reasoning_options).toEqual(["low", "ultra"]);
+});
+
+test("drops unknown Kenari effort values and keeps the known ones", () => {
+  const model: KenariModel = {
+    id: "deepseek-v4-flash",
+    owned_by: "deepseek",
+    reasoning: true,
+    reasoning_options: ["low", "ultra", "high"],
+  };
+  const existing: ExistingModel = {
+    base_model: "deepseek/deepseek-v4-flash",
+    reasoning: true,
+  };
+
+  expect(buildKenariModel(model, existing)).toMatchObject({
+    reasoning_options: [{ type: "toggle" }, { type: "effort", values: ["low", "high"] }],
+  });
+});
+
+test("keeps authored Kenari efforts when every published value is unknown", () => {
+  // The endpoint said something, but nothing we can represent. That is not an
+  // assertion that the control is gone, so the authored list stands.
+  const model: KenariModel = {
+    id: "deepseek-v4-flash",
+    owned_by: "deepseek",
+    reasoning: true,
+    reasoning_options: ["ultra"],
+  };
+  const existing: ExistingModel = {
+    base_model: "deepseek/deepseek-v4-flash",
+    reasoning: true,
+    reasoning_options: [{ type: "effort", values: ["low", "high"] }],
+  };
+
+  expect(buildKenariModel(model, existing)).toMatchObject({
+    reasoning_options: [{ type: "effort", values: ["low", "high"] }],
+  });
+});
+
+test("migrates an unfactored Kenari model onto its canonical base", () => {
+  // An existing full-inline file used to keep its inline copy forever, because
+  // the base was only resolved when creating a file. Once the lab entry exists,
+  // the next sync factors the file onto it and the entry becomes override-only.
+  const model: KenariModel = {
+    id: "gpt-oss-20b",
+    owned_by: "openai",
+    reasoning: true,
+    reasoning_options: ["low", "medium", "high"],
+  };
+  const existing: ExistingModel = {
+    name: "GPT OSS 20B",
+    reasoning: true,
+    tool_call: true,
+    open_weights: true,
+  };
+
+  const built = buildKenariModel(model, existing);
+  expect(built).toMatchObject({ base_model: "openai/gpt-oss-20b" });
+  // Facts the canonical entry already carries are not restated on the override.
+  expect((built as { open_weights?: boolean }).open_weights).toBeUndefined();
+});
+
+test("resolves dash-spelled Kenari versions onto dotted canonical IDs", () => {
+  expect(resolveKenariBaseModel({ id: "step-3-7-flash", owned_by: "stepfun" }))
+    .toBe("stepfun/step-3.7-flash");
+  expect(resolveKenariBaseModel({ id: "qwen3-8-max", owned_by: "alibaba" }))
+    .toBe("alibaba/qwen3.8-max");
+});
+
+test("resolves a Kenari ID onto a canonical entry carrying a version suffix", () => {
+  // Kenari publishes `north-mini-code:free`; the canonical file is
+  // `models/cohere/north-mini-code-1-0.toml`. Every earlier path compares
+  // filenames exactly, so the version the host drops made this a silent skip
+  // even though the lab metadata was already in the tree.
+  expect(resolveKenariBaseModel({ id: "north-mini-code:free", owned_by: "cohere" }))
+    .toBe("cohere/north-mini-code-1-0");
+});
+
+test("does not stem a Kenari ID onto a canonical entry another ID claims exactly", () => {
+  // Kenari serves both `grok-imagine-image` and `grok-imagine-image-2-0`. The
+  // second matches `xai/grok-imagine-image-2.0` exactly, so the bare ID is a
+  // sibling product with no metadata entry, not the same model spelled without
+  // its version. Handing both the same base would inherit 2.0's limits and
+  // modalities for a model that may not be that generation.
+  const bare: KenariModel = { id: "grok-imagine-image", owned_by: "x-ai" };
+  const pinned: KenariModel = { id: "grok-imagine-image-2-0", owned_by: "x-ai" };
+
+  expect(resolveKenariBaseModel(pinned)).toBe("xai/grok-imagine-image-2.0");
+  expect(resolveKenariBaseModel(bare, new Set(["xai/grok-imagine-image-2.0"])))
+    .toBeUndefined();
+  // With nothing claiming it, the stem match still resolves.
+  expect(resolveKenariBaseModel(bare, new Set())).toBe("xai/grok-imagine-image-2.0");
+});
+
+test("skips rather than guess when a version suffix is ambiguous", () => {
+  // Canonical siblings share this stem (`mistral-large-2411`, `-2512`), so
+  // there is no single right answer and a wrong base_model is worse than no
+  // entry. Skipping keeps the existing fail-safe behaviour.
+  expect(resolveKenariBaseModel({ id: "mistral-large", owned_by: "mistral" }))
+    .toBeUndefined();
+});
+
+test("resolves a Kenari model whose owned_by is not a canonical prefix", () => {
+  // `owned_by` here is a lab name with no prefix alias. The bare-ID fallback
+  // still finds the metadata entry, where the prefix-only path returned nothing.
+  expect(resolveKenariBaseModel({ id: "step-3-7-flash", owned_by: "not-a-real-prefix" }))
+    .toBe("stepfun/step-3.7-flash");
+});
+
+test("names a Kenari free variant after its canonical base", () => {
+  const built = buildKenariModel({ id: "step-3-7-flash:free", owned_by: "stepfun" }, undefined);
+  expect(built).toMatchObject({
+    base_model: "stepfun/step-3.7-flash",
+    cost: { input: 0, output: 0 },
+  });
+  expect((built as { name?: string }).name).toMatch(/\(Free\)$/);
+});
+
+test("maps a published Kenari effort list onto the model", () => {
+  const model: KenariModel = {
+    id: "deepseek-v4-flash",
+    owned_by: "deepseek",
+    reasoning: true,
+    reasoning_options: ["low", "high"],
+  };
+  const existing: ExistingModel = {
+    base_model: "deepseek/deepseek-v4-flash",
+    reasoning: true,
+    reasoning_options: [{ type: "effort", values: ["low", "medium", "high"] }],
+  };
+
+  expect(buildKenariModel(model, existing)).toMatchObject({
+    reasoning_options: [{ type: "toggle" }, { type: "effort", values: ["low", "high"] }],
   });
 });
 
