@@ -162,10 +162,10 @@ CrossModel is implemented in `packages/core/src/sync/providers/crossmodel.ts`.
 
 OpenRouter is implemented in `packages/core/src/sync/providers/openrouter.ts`.
 
-- Source endpoint: `https://openrouter.ai/api/v1/models`.
+- Source endpoints: `https://openrouter.ai/api/v1/models` and the same endpoint filtered with `output_modalities=image` so image-only models are included.
 - Optional auth: `OPENROUTER_API_KEY`.
 - Model IDs map directly to TOML paths under `providers/openrouter/models`.
-- API prices are per-token strings and are converted to per-1M-token numbers.
+- API prices are per-token strings and are converted to per-1M-token numbers; image-output models use `image_output` (falling back to `image_token`) for output cost.
 - `structured_output` comes from `supported_parameters.includes("structured_outputs")` only.
 - Existing `status`, `interleaved`, `knowledge`, `limit.input`, and `cost.tiers` may be preserved when OpenRouter is not authoritative enough for those fields.
 - Canonical OpenRouter model IDs should emit `base_model` references to model metadata when a matching `models/` entry exists.

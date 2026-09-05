@@ -6,7 +6,10 @@ import { describeModel } from "../../describe.js";
 import { inferKimiFamily, ModelFamilyValues } from "../../family.js";
 import type { ExistingModel, SyncProvider, SyncedFullModel, SyncedModel } from "../index.js";
 
-const API_ENDPOINT = "https://openrouter.ai/api/v1/models";
+const API_ENDPOINTS = [
+  "https://openrouter.ai/api/v1/models",
+  "https://openrouter.ai/api/v1/models?output_modalities=image",
+] as const;
 const MODELS_DIR = path.join(import.meta.dirname, "..", "..", "..", "..", "..", "models");
 const modelMetadataByID = new Map<string, Record<string, unknown>>();
 const modelMetadataFilesByProvider = new Map<string, Set<string>>();
@@ -65,6 +68,8 @@ export const OpenRouterModel = z.object({
   pricing: z.object({
     prompt: z.string(),
     completion: z.string(),
+    image_token: z.string().optional(),
+    image_output: z.string().optional(),
     internal_reasoning: z.string().optional(),
     input_cache_read: z.string().optional(),
     input_cache_write: z.string().optional(),
@@ -108,11 +113,14 @@ export const openrouter = {
     const headers = process.env.OPENROUTER_API_KEY
       ? { Authorization: `Bearer ${process.env.OPENROUTER_API_KEY}` }
       : undefined;
-    const response = await fetch(API_ENDPOINT, { headers });
-    if (!response.ok) {
-      throw new Error(`OpenRouter request failed: ${response.status} ${response.statusText}`);
-    }
-    return response.json();
+    const responses = await Promise.all(API_ENDPOINTS.map(async (endpoint) => {
+      const response = await fetch(endpoint, { headers });
+      if (!response.ok) {
+        throw new Error(`OpenRouter request failed: ${response.status} ${response.statusText}`);
+      }
+      return response.json();
+    }));
+    return mergeOpenRouterResponses(responses);
   },
   parseModels(raw) {
     // Temporarily skip batch routes (`*:batch`) — they are not catalog targets.
@@ -138,6 +146,13 @@ export const openrouter = {
     };
   },
 } satisfies SyncProvider<OpenRouterModel>;
+
+export function mergeOpenRouterResponses(responses: unknown[]) {
+  const models = responses.flatMap((raw) => OpenRouterResponse.parse(raw).data);
+  return {
+    data: [...new Map(models.map((model) => [model.id, model])).values()],
+  };
+}
 
 function isUnavailable(model: OpenRouterModel) {
   return (
@@ -214,7 +229,11 @@ export function buildOpenRouterModel(
   const input = modalities(model.architecture.input_modalities, ["text"]);
   const output = modalities(model.architecture.output_modalities, ["text"]);
   const prompt = price(model.pricing.prompt);
-  const completion = price(model.pricing.completion);
+  const completion = price(
+    output.includes("image")
+      ? (model.pricing.image_output ?? model.pricing.image_token ?? model.pricing.completion)
+      : model.pricing.completion,
+  );
   const reasoning = params.has("reasoning") || params.has("include_reasoning");
   // Prefer OpenRouter's live reasoning metadata over authored options so aliases
   // and rotated models pick up new efforts/budget support. Fall back to authored
