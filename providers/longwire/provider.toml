@@ -1,0 +1,18 @@
+# longwire is a hosted router in front of the user's own machines: a daemon on
+# each machine discovers local engines (ollama, vLLM, sglang, llama.cpp,
+# LM Studio) and tunnels them out through one endpoint. The model catalog is
+# per-account and dynamic — GET https://longwire.ai/v1/models (Bearer lw_sk_
+# key) lists every model the account can reach, addressable as
+# "machine/model" (pinned to one machine) or the bare model name (routed to
+# the least-loaded machine serving it). The entries under models/ are a
+# representative set of commonly-served open-weights models, following the
+# LM Studio convention for bring-your-own-model providers.
+# Besides Chat Completions, completions, and embeddings, the same base URL
+# serves the OpenAI Responses API (/v1/responses) and the Anthropic Messages
+# API (/v1/messages), all streaming.
+# https://longwire.ai/getting-started (accessed 2026-08-10)
+name = "longwire"
+env = ["LONGWIRE_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+api = "https://longwire.ai/v1"
+doc = "https://longwire.ai/getting-started"
