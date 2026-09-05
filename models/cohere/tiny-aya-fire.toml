@@ -1,0 +1,27 @@
+# Sources:
+# https://docs.cohere.com/docs/models
+# https://docs.cohere.com/docs/tiny-aya
+# https://cohere.com/blog/cohere-labs-tiny-aya
+# https://huggingface.co/CohereLabs/tiny-aya-fire
+name = "Tiny Aya Fire"
+description = "Compact 3.35B multilingual chat model specialized for South Asian languages"
+release_date = "2026-02-17"
+last_updated = "2026-02-17"
+attachment = false
+reasoning = false
+temperature = true
+tool_call = false
+open_weights = true
+license = "CC-BY-NC-4.0"
+
+[limit]
+context = 8_000
+output = 8_000
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/CohereLabs/tiny-aya-fire"
