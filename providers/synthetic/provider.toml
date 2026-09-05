@@ -1,13 +1,13 @@
+# Catalog metadata (authenticated 2026-08-27):
+# https://api.synthetic.new/openai/v1/models
+# https://dev.synthetic.new/docs/api/models
+# Reasoning request/response fields:
+# https://dev.synthetic.new/docs/openai/chat-completions
+# The catalog's per-model `reasoning_parameters.efforts` values are sent as the
+# top-level `reasoning_effort` request field. Prices are USD per million tokens.
+
 name = "Synthetic"
 env = ["SYNTHETIC_API_KEY"]
 npm = "@ai-sdk/openai-compatible"
-# Reasoning HTTP metadata (accessed 2026-06-25):
-# GET https://api.synthetic.new/openai/v1/models is the live model surface.
-# Entries expose `supported_features` (including `reasoning`), context/output
-# limits, modalities, pricing, and serving provider, but no reasoning request
-# field, accepted values, budget bounds, or disable sentinel.
-# Sources:
-# https://api.synthetic.new/openai/v1/models
-# https://synthetic.new/pricing
 doc = "https://synthetic.new/pricing"
 api = "https://api.synthetic.new/openai/v1"
