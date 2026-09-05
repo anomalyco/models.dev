@@ -274,22 +274,40 @@ function wireHeaderLines(options: ReasoningOptions | undefined): string[] {
   return lines;
 }
 
+type SkipReason = "no lab metadata" | "no resolvable reasoning controls";
+
+function normalizeSlug(value: string) {
+  return value.toLowerCase().replace(/[._]/g, "-");
+}
+
+/**
+ * Hubris display names carry a "Vendor: " prefix ("OpenAI: GPT-5.6 Luna Pro").
+ * Only routes whose slug differs from the lab model's (Pro/alias routes that
+ * share a `base_model`) keep their own name; the rest inherit the lab name.
+ */
+function routeName(model: HubrisModel, canonical: string): string | undefined {
+  const routeSlug = model.id.split("/").slice(1).join("/");
+  const labSlug = canonical.split("/").slice(1).join("/");
+  if (normalizeSlug(routeSlug) === normalizeSlug(labSlug)) return undefined;
+  return model.displayName.replace(/^[^:]+:\s*/, "");
+}
+
 export function buildHubrisModel(
   model: HubrisModel,
   existing: ExistingModel | undefined,
-): { model: SyncedModel; header: string } | undefined {
+): { model: SyncedModel; header: string } | { skip: SkipReason } {
   // Hubris only relays models built by other labs, so every entry must factor
   // onto the canonical lab metadata. Models without a `models/` entry are
   // reported as skipped instead of being authored inline.
   const canonical = resolveModelMetadataBaseModel(model.id);
-  if (canonical === undefined) return undefined;
+  if (canonical === undefined) return { skip: "no lab metadata" };
 
   const params = model.supportedParameters ?? [];
   const reasoning = params.includes("reasoning");
   const reasoningOptions = reasoning ? resolveReasoningOptions(model.id, canonical, existing) : undefined;
   // A reasoner with no host-accurate controls anywhere is left for manual
   // authoring rather than stamped with an invented control set.
-  if (reasoning && reasoningOptions === undefined) return undefined;
+  if (reasoning && reasoningOptions === undefined) return { skip: "no resolvable reasoning controls" };
 
   const context = model.contextWindow != null && model.contextWindow > 0 ? model.contextWindow : undefined;
   // The catalog does not publish a max-output figure. Inherit the lab's
@@ -316,6 +334,7 @@ export function buildHubrisModel(
     model: factorBaseModel(
       canonical,
       {
+        name: routeName(model, canonical),
         reasoning,
         reasoning_options: reasoningOptions,
         tool_call: params.includes("tools"),
@@ -333,6 +352,8 @@ export function buildHubrisModel(
 // Hubris provider
 // ========================================
 
+const skipReasons = new Map<string, SkipReason>();
+
 export const hubris = {
   id: "hubris",
   name: "Hubris",
@@ -346,6 +367,16 @@ export const hubris = {
   trackMissingModels: false,
   sourceID(model) {
     return isChatModel(model) ? model.id : undefined;
+  },
+  skippedNotice(ids) {
+    const byReason = new Map<SkipReason, string[]>();
+    for (const id of ids) {
+      const reason = skipReasons.get(id) ?? "no lab metadata";
+      byReason.set(reason, [...(byReason.get(reason) ?? []), id]);
+    }
+    return [...byReason.entries()].map(
+      ([reason, skipped]) => `Skipped ${skipped.length} Hubris model(s) with ${reason}: ${skipped.sort().join(", ")}`,
+    );
   },
   async fetchModels() {
     const [catalog, usdRate] = await Promise.all([
@@ -366,7 +397,10 @@ export const hubris = {
   translateModel(model, context) {
     if (!isChatModel(model)) return undefined;
     const built = buildHubrisModel(model, context.existing(model.id));
-    if (built === undefined) return undefined;
+    if ("skip" in built) {
+      skipReasons.set(model.id, built.skip);
+      return undefined;
+    }
     return { id: model.id, model: built.model, header: built.header };
   },
 } satisfies SyncProvider<HubrisModel>;
