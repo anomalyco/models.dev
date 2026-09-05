@@ -1,6 +1,8 @@
+import { existsSync, readFileSync, readdirSync } from "node:fs";
+import path from "node:path";
 import { z } from "zod";
 import type { ExistingModel, SyncProvider, SyncedFullModel, SyncedModel } from "../index.js";
-import { factorBaseModel, resolveModelMetadataBaseModel } from "./openrouter.js";
+import { factorBaseModel, modelMetadata, resolveModelMetadataBaseModel } from "./openrouter.js";
 
 // Neosantara serves a models.dev / LLM Gateway shaped catalog at this single public endpoint.
 const CATALOG_ENDPOINT = "https://api.neosantara.xyz/v1/catalog";
@@ -79,6 +81,101 @@ export function resolveNeosantaraBaseModel(model: NeosantaraSourceModel | string
 
 type ReasoningControls = NonNullable<SyncedFullModel["reasoning_options"]>;
 
+const PROVIDERS_DIR = path.join(import.meta.dirname, "..", "..", "..", "..", "..", "providers");
+const baselineOptionsCache = new Map<string, ReasoningControls | undefined>();
+
+function readReasoningOptionsFromFile(filePath: string): ReasoningControls | undefined {
+  if (!existsSync(filePath)) return undefined;
+  try {
+    const parsed = Bun.TOML.parse(readFileSync(filePath, "utf8")) as Record<string, unknown>;
+    return Array.isArray(parsed.reasoning_options) ? (parsed.reasoning_options as ReasoningControls) : undefined;
+  } catch {
+    return undefined;
+  }
+}
+
+function searchDirForBaseline(dir: string, baseModel: string, labId: string): ReasoningControls | undefined {
+  if (!existsSync(dir)) return undefined;
+  const candidates = [
+    `${labId}.toml`,
+    `${labId.replace(/-(?=\d)/g, ".")}.toml`,
+    `${labId.replace(/\.(?=\d)/g, "-")}.toml`,
+    `${labId.replace(/-latest$/, "")}.toml`,
+    `${labId.replace(/^MiniMax-M/i, "minimax-m")}.toml`,
+    `${labId.replace(/^minimax-m/i, "MiniMax-M")}.toml`,
+  ];
+  for (const cand of candidates) {
+    const opts = readReasoningOptionsFromFile(path.join(dir, cand));
+    if (opts !== undefined) return opts;
+  }
+  for (const file of readdirSync(dir)) {
+    if (!file.endsWith(".toml")) continue;
+    const p = path.join(dir, file);
+    try {
+      const parsed = Bun.TOML.parse(readFileSync(p, "utf8")) as Record<string, unknown>;
+      if (parsed.base_model === baseModel && Array.isArray(parsed.reasoning_options)) {
+        return parsed.reasoning_options as ReasoningControls;
+      }
+    } catch {}
+  }
+  return undefined;
+}
+
+export function resolveBaselineReasoningOptions(baseModel: string): ReasoningControls | undefined {
+  if (baselineOptionsCache.has(baseModel)) {
+    return baselineOptionsCache.get(baseModel);
+  }
+
+  const [lab, ...rest] = baseModel.split("/");
+  const labId = rest.join("/");
+  if (!lab || !labId) return undefined;
+
+  let resolved: ReasoningControls | undefined = undefined;
+
+  // 1. Lab first-party provider: providers/<lab>/models
+  const labsToTry = lab === "zhipuai" ? ["zhipuai", "zai"] : [lab];
+  for (const l of labsToTry) {
+    const fp = searchDirForBaseline(path.join(PROVIDERS_DIR, l, "models"), baseModel, labId);
+    if (fp !== undefined) {
+      resolved = fp;
+      break;
+    }
+  }
+
+  // 2. OpenRouter peer relay: providers/openrouter/models/<lab> or providers/openrouter/models/<baseModel>.toml
+  // If lab has only budget_tokens (and no toggle or effort), look for a relay peer like OpenRouter.
+  const onlyBudgetTokens = Array.isArray(resolved) && resolved.length > 0 && resolved.every((o) => o.type === "budget_tokens");
+  if (resolved === undefined || onlyBudgetTokens) {
+    const orLab = searchDirForBaseline(path.join(PROVIDERS_DIR, "openrouter", "models", lab), baseModel, labId);
+    if (orLab !== undefined) {
+      resolved = orLab;
+    } else {
+      const orRoot = readReasoningOptionsFromFile(path.join(PROVIDERS_DIR, "openrouter", "models", `${baseModel}.toml`));
+      if (orRoot !== undefined) {
+        resolved = orRoot;
+      }
+    }
+  }
+
+  // 3. Established relay peers: vercel, cortecs, nvidia, empiriolabs, huggingface, opencode
+  if (resolved === undefined) {
+    for (const peer of ["vercel", "cortecs", "nvidia", "empiriolabs", "huggingface", "opencode"]) {
+      const peerLab = searchDirForBaseline(path.join(PROVIDERS_DIR, peer, "models", lab), baseModel, labId);
+      if (peerLab !== undefined) {
+        resolved = peerLab;
+        break;
+      }
+      const peerRoot = searchDirForBaseline(path.join(PROVIDERS_DIR, peer, "models"), baseModel, labId);
+      if (peerRoot !== undefined) {
+        resolved = peerRoot;
+        break;
+      }
+    }
+  }
+
+  baselineOptionsCache.set(baseModel, resolved);
+  return resolved;
+}
 
 // Whether the catalog reported a caller-control surface for this reasoning model. A missing
 // `reasoning_efforts` is "unknown" (skip + report), NOT an affirmative always-on `[]`.
@@ -86,30 +183,75 @@ function hasReasoningEfforts(model: NeosantaraSourceModel) {
   return Array.isArray(mapping(model).reasoning_efforts);
 }
 
-// The catalog reports each model's real reasoning surface (resolved host-side from the model's
-// models.dev lab entry): [] = always-on (no caller control), ["none"] = on/off toggle, otherwise
-// the graded effort levels. When off is expressed via reasoning_effort = "none" alongside graded
-// levels, AGENTS.md strictly requires authoring only `effort` with `none` in values and NO toggle.
+// Multi-model relays must baseline reasoning_options on the resolved lab/first-party entry and
+// established same-surface peers (AGENTS.md & audit skill Step 2), intersecting host capabilities.
 export function neosantaraReasoningControls(
   model: NeosantaraSourceModel,
+  baseModelOrExisting?: string | ExistingModel,
   _existing?: ExistingModel,
 ): ReasoningControls {
+  const baseModel = typeof baseModelOrExisting === "string"
+    ? baseModelOrExisting
+    : resolveNeosantaraBaseModel(model);
+
+  if (baseModel === undefined) return [];
+
+  const baseline = resolveBaselineReasoningOptions(baseModel);
+  if (baseline === undefined) return [];
+  if (baseline.length === 0) return [];
+
   const map = mapping(model);
-  const efforts = (map.reasoning_efforts ?? []).filter((effort) =>
+  const catalogEfforts = (map.reasoning_efforts ?? []).filter((effort) =>
     HOST_EFFORT_SET.has(effort),
   );
-  if (efforts.length === 0) return [];
-  if (efforts.length === 1 && efforts[0] === "none") return [{ type: "toggle" }];
 
-  const graded = efforts.filter((effort) => effort !== "none");
-  const values = efforts.includes("none") ? ["none", ...graded] : graded;
-  return [{ type: "effort", values: values as never }];
+  const baselineHasToggle = baseline.some((o) => o.type === "toggle");
+  const baselineEffort = baseline.find((o) => o.type === "effort");
+  const baselineValues = (baselineEffort?.values as string[] | undefined) ?? [];
+
+  // Case 1: Baseline is toggle only (no effort controls)
+  if (baselineHasToggle && baselineValues.length === 0) {
+    return [{ type: "toggle" }];
+  }
+
+  // Case 2: Baseline has effort including "none" (thinking off is effort = "none", no toggle)
+  if (baselineValues.includes("none")) {
+    const values = catalogEfforts.length > 0
+      ? baselineValues.filter((e) => catalogEfforts.includes(e))
+      : baselineValues;
+    return [{ type: "effort", values: values as never }];
+  }
+
+  // Case 3: Baseline has graded effort without "none"
+  if (baselineValues.length > 0) {
+    const values = catalogEfforts.length > 0
+      ? baselineValues.filter((e) => catalogEfforts.includes(e))
+      : baselineValues;
+
+    // Check if toggle applies on this relay (baseline has toggle, or OpenRouter peer has toggle)
+    let hasToggle = baselineHasToggle;
+    if (!hasToggle) {
+      const [lab, ...rest] = baseModel.split("/");
+      const labId = rest.join("/");
+      const orLab = searchDirForBaseline(path.join(PROVIDERS_DIR, "openrouter", "models", lab), baseModel, labId);
+      if (orLab?.some((o) => o.type === "toggle")) {
+        hasToggle = true;
+      }
+    }
+
+    const result: ReasoningControls = [];
+    if (hasToggle && (catalogEfforts.includes("none") || map.has_toggle === true || catalogEfforts.length === 0)) {
+      result.push({ type: "toggle" });
+    }
+    if (values.length > 0) {
+      result.push({ type: "effort", values: values as never });
+    }
+    return result.length > 0 ? result : (hasToggle ? [{ type: "toggle" }] : []);
+  }
+
+  const filtered = baseline.filter((o) => o.type === "toggle" || o.type === "effort");
+  return filtered.length > 0 ? filtered : [];
 }
-
-// Toggle controls carry a leading wire comment naming the off value (AGENTS.md requirement).
-const TOGGLE_HEADER = `# Toggle: reasoning_effort = "none" turns thinking off; any other accepted
-# value turns it on. https://docs.neosantara.xyz/en/capability/reasoning
-`;
 
 const EFFORT_NONE_HEADER = `# Effort: reasoning_effort = "none" turns thinking off; graded levels control depth.
 # Documented at https://docs.neosantara.xyz/en/capability/reasoning
@@ -134,6 +276,7 @@ const TEXT_ONLY_MISTRAL_HEADER = `# Deployment limitation: text-only deployment 
 export function neosantaraReasoningHeader(
   controls: ReasoningControls | undefined,
   modelId?: string,
+  baseModel?: string,
 ) {
   if (modelId === "minimax-m2.7") {
     return `# Always-on thinking: upstream Dahl forwards no reasoning_effort parameter.
@@ -155,16 +298,47 @@ export function neosantaraReasoningHeader(
   if (modelId === "gpt-5.6-luna" || modelId === "gpt-5.6-sol") {
     return TEXT_ONLY_KIRO_HEADER;
   }
-  if (modelId === "mistral-small-latest" || modelId === "mistral-large-latest") {
+  if (modelId === "mistral-large-latest") {
     return TEXT_ONLY_MISTRAL_HEADER;
   }
-  if (controls?.some((option) => option.type === "toggle")) {
-    return TOGGLE_HEADER;
+  if (modelId === "mistral-small-latest") {
+    return `# Deployment limitation: text-only deployment on this host; attachments disabled.
+# Effort: reasoning_effort = "none" turns thinking off; "high" turns thinking on.
+# Documented at https://docs.neosantara.xyz/en/capability/reasoning
+`;
   }
-  if (controls?.some((option) => option.type === "effort" && option.values?.includes("none" as never))) {
+
+  const hasToggle = controls?.some((option) => option.type === "toggle");
+  const effortOption = controls?.find((option) => option.type === "effort");
+  const effortValues = (effortOption?.values as string[] | undefined) ?? [];
+
+  if (hasToggle) {
+    const lab = baseModel?.split("/")[0] ?? "";
+    if (lab === "deepseek" || modelId?.startsWith("deepseek-")) {
+      const levels = effortValues.join("|");
+      return levels.length > 0
+        ? `# Toggle: thinking.type = enabled|disabled\n# Effort: reasoning_effort = ${levels}\n# Documented at https://docs.neosantara.xyz/en/capability/reasoning\n`
+        : `# Toggle: thinking.type = enabled|disabled\n# Documented at https://docs.neosantara.xyz/en/capability/reasoning\n`;
+    }
+    if (lab === "anthropic" || modelId?.startsWith("claude-")) {
+      const levels = effortValues.join("|");
+      return levels.length > 0
+        ? `# Toggle: reasoning.enabled = true|false\n# Effort: reasoning_effort = ${levels}\n# Documented at https://docs.neosantara.xyz/en/capability/reasoning\n`
+        : `# Toggle: reasoning.enabled = true|false\n# Documented at https://docs.neosantara.xyz/en/capability/reasoning\n`;
+    }
+    if (lab === "moonshotai" || modelId?.startsWith("kimi-")) {
+      const levels = effortValues.join("|");
+      return levels.length > 0
+        ? `# Toggle: thinking.type = enabled|disabled\n# Effort: reasoning_effort = ${levels}\n# Documented at https://docs.neosantara.xyz/en/capability/reasoning\n`
+        : `# Toggle: thinking.type = enabled|disabled\n# Documented at https://docs.neosantara.xyz/en/capability/reasoning\n`;
+    }
+    return `# Toggle: reasoning.enabled = true|false\n# Documented at https://docs.neosantara.xyz/en/capability/reasoning\n`;
+  }
+
+  if (effortValues.includes("none")) {
     return EFFORT_NONE_HEADER;
   }
-  if (controls?.some((option) => option.type === "effort")) {
+  if (effortValues.length > 0) {
     return EFFORT_GRADED_HEADER;
   }
   return undefined;
@@ -229,16 +403,22 @@ export function meetsNeosantaraPublicFilter(model: NeosantaraSourceModel) {
 }
 
 export function shouldSyncNeosantaraModel(model: NeosantaraSourceModel) {
-  if (model.deprecated || resolveNeosantaraBaseModel(model) === undefined) return false;
+  if (model.deprecated) return false;
+  const baseModel = resolveNeosantaraBaseModel(model);
+  if (baseModel === undefined) return false;
   if (!meetsNeosantaraPublicFilter(model)) return false;
   if (isImageModel(model)) return true;
   // Skip rather than throw: one missing price costs a single model, not the run.
   if (price(model.pricing.prompt) === undefined || price(model.pricing.completion) === undefined) {
     return false;
   }
-  // A reasoning model with no reported effort surface is unknown, not always-on: skip it (and
-  // report it) rather than stamping `[]`. Explicit `[]` from the catalog is a real always-on set.
-  if (mapping(model).reasoning === true && !hasReasoningEfforts(model)) return false;
+  const map = mapping(model);
+  const isReasoning = model.id === "mistral-small-latest" || map.reasoning === true;
+  if (isReasoning) {
+    const baseline = resolveBaselineReasoningOptions(baseModel);
+    if (baseline === undefined) return false;
+    if (map.reasoning === true && !hasReasoningEfforts(model) && baseline.length > 0) return false;
+  }
   return true;
 }
 
@@ -266,7 +446,7 @@ export function buildNeosantaraModel(
   }
 
   const map = mapping(model);
-  const reasoning = map.reasoning === true;
+  const reasoning = model.id === "mistral-small-latest" || map.reasoning === true;
   const inputCost = price(model.pricing.prompt);
   const outputCost = price(model.pricing.completion);
   if (inputCost === undefined || outputCost === undefined) {
@@ -278,7 +458,7 @@ export function buildNeosantaraModel(
     {
       name: model.override_name,
       reasoning,
-      reasoning_options: reasoning ? neosantaraReasoningControls(model, existing) : undefined,
+      reasoning_options: reasoning ? neosantaraReasoningControls(model, baseModel, existing) : undefined,
       interleaved: reasoning ? { field: "reasoning_content" as const } : undefined,
       attachment: map.vision,
       tool_call: map.tools,
@@ -319,7 +499,7 @@ export const neosantara = {
   skippedNotice(ids) {
     if (ids.length === 0) return [];
     return [
-      `${ids.length} Neosantara models were not created because they lack a canonical \`models/\` entry to inherit, the catalog reported no usable token pricing, or a reasoning model did not report its effort surface.`,
+      `${ids.length} Neosantara models were not created because they lack a canonical \`models/\` entry to inherit, the catalog reported no usable token pricing, or a reasoning model did not resolve to a known lab/peer reasoning baseline.`,
       `Skipped remote IDs: ${ids.map((id) => `\`${id}\``).join(", ")}`,
       "Ensure the catalog provides a valid base_model or add a `models/<provider>/<model>.toml` entry to include them in the next sync.",
     ];
@@ -337,11 +517,12 @@ export const neosantara = {
   },
   translateModel(model, context) {
     if (!shouldSyncNeosantaraModel(model)) return undefined;
+    const baseModel = resolveNeosantaraBaseModel(model);
     const translated = buildNeosantaraModel(model, context.existing(model.id));
     return {
       id: model.id,
       model: translated,
-      header: neosantaraReasoningHeader(translated.reasoning_options, model.id),
+      header: neosantaraReasoningHeader(translated.reasoning_options, model.id, baseModel),
     };
   },
 } satisfies SyncProvider<NeosantaraSourceModel>;

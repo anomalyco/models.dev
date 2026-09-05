@@ -1,7 +1,15 @@
 # Deployment limitation: text-only deployment on this host; attachments disabled.
+# Effort: reasoning_effort = "none" turns thinking off; "high" turns thinking on.
+# Documented at https://docs.neosantara.xyz/en/capability/reasoning
 base_model = "mistral/mistral-small-latest"
 attachment = false
-reasoning = false
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "high"]
 
 [cost]
 input = 0.15
