@@ -1,18 +1,18 @@
-base_model = "openai/gpt-5.6-sol"
+base_model = "openai/gpt-6-astra"
 
 [[reasoning_options]]
 type = "effort"
-values = ["none", "low", "medium", "high", "xhigh", "max"]
+values = ["low", "medium", "high", "xhigh", "max"]
 
 [cost]
-input = 4
-output = 20
-cache_read = 0.4
-cache_write = 5
+input = 10
+output = 50
+cache_read = 1
+cache_write = 12.5
 
 [[cost.tiers]]
 tier = { type = "context", size = 272_000 }
-input = 8
-output = 30
-cache_read = 0.8
-cache_write = 10
+input = 20
+output = 75
+cache_read = 2
+cache_write = 25
