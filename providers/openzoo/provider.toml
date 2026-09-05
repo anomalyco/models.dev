@@ -1,0 +1,18 @@
+# Endpoint is the LOCAL proxy, on purpose (same shape as lmstudio's 127.0.0.1:1234):
+# `npx openzoo` (npm `openzoo`, https://github.com/staccDOTsol/openzoo) listens on
+# http://localhost:8402/v1, is OpenAI-compatible, and pays each call over x402 from a
+# local burner wallet. No account. The proxy ignores the API key, so OPENZOO_API_KEY
+# can hold any non-empty value (e.g. sk-openzoo).
+# The hosted https://api.openzoo.fun/v1 answers POST /v1/chat/completions with 402
+# unless the caller pays x402 or presents an OpenZoo subscription key (ozk_live_...),
+# which a plain OpenAI client cannot do, so it is not the default here.
+# GET /v1/models is free on both and lists ids plus pricing.
+# Reasoning wire path (POST /v1/chat/completions): the proxy forwards the
+# OpenRouter-style top-level `reasoning` object untouched:
+#   $.reasoning.enabled (bool), $.reasoning.max_tokens (int), $.reasoning.effort (str).
+# https://github.com/staccDOTsol/openzoo (accessed 2026-09-02)
+name = "OpenZoo"
+env = ["OPENZOO_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+api = "http://localhost:8402/v1"
+doc = "https://openzoo.fun"

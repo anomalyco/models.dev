@@ -1,0 +1,19 @@
+# Wire path (POST http://localhost:8402/v1/chat/completions on the local
+# `npx openzoo` proxy, OpenAI-compatible; reasoning controls ride the
+# OpenRouter-style top-level `reasoning` request object, which the proxy
+# forwards untouched when the caller sets it):
+#   effort -> $.reasoning.effort = "low"|"high"|"max"
+# Thinking is always on for this model upstream; effort values follow the
+# existing ofox entry for the same base model.
+# Priced from the live catalog: GET /v1/models (free; same list on the hosted
+# https://api.openzoo.fun/v1/models and on the local proxy)
+# (prompt_price_per_1m = 0.075, completion_price_per_1m = 0.25)
+base_model = "zhipuai/glm-5.3-flash"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[cost]
+input = 0.075
+output = 0.25
