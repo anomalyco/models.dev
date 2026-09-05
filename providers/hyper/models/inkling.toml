@@ -1,0 +1,18 @@
+base_model = "thinkingmachines/inkling"
+release_date = "2026-08-15"
+last_updated = "2026-09-05"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "minimal", "low", "medium", "high", "xhigh"]
+
+[cost]
+input = 1.0888
+output = 4.40964
+cache_read = 0.185096
+
+[limit]
+output = 32_768
+
+[modalities]
+input = ["text", "image"]
