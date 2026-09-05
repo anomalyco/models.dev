@@ -1,14 +1,14 @@
-base_model = "deepseek/deepseek-v4-pro-0813"
+base_model = "moonshotai/kimi-k3"
 
 [cost]
-input = 1.32
-output = 3.96
+input = 3
+output = 15
 
 # Toggle: OpenAI Chat Completions reasoning_effort="none" disables thinking on
-# DeepSeek's OpenAI-compatible endpoint; "high"/"max" grade it.
+# Moonshot's OpenAI-compatible endpoint; graded effort via reasoning_effort.
 [[reasoning_options]]
 type = "toggle"
 
 [[reasoning_options]]
 type = "effort"
-values = ["high", "max"]
+values = ["low", "high", "max"]

@@ -4,6 +4,11 @@ base_model = "alibaba/qwen3.8-max"
 input = 2
 output = 6
 
+# Toggle: OpenAI Chat Completions reasoning_effort="none" disables thinking on
+# Alibaba's OpenAI-compatible endpoint; graded effort via reasoning_effort.
+[[reasoning_options]]
+type = "toggle"
+
 [[reasoning_options]]
 type = "effort"
 values = ["low", "medium", "xhigh"]
