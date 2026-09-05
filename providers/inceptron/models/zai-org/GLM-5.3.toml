@@ -1,17 +1,17 @@
-base_model = "zhipuai/glm-5.2"
-name = "GLM 5.2"
+base_model = "zhipuai/glm-5.3"
+name = "GLM 5.3"
 
 [interleaved]
 field = "reasoning_content"
 
 [[reasoning_options]]
 type = "effort"
-values = ["high", "max"]
+values = ["low", "high", "max"]
 
 [cost]
 input = 1.25
-output = 2.99
-cache_read = 0.22
+output = 4.4
+cache_read = 0.26
 cache_write = 0
 
 [limit]
