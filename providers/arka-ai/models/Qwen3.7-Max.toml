@@ -1,0 +1,15 @@
+# Toggle: enable_thinking true|false (Arka also accepts thinking.type = enabled|disabled)
+# Budget: thinking_budget is accepted but not enforced, so no budget_tokens control is
+# advertised.
+# Verified live on https://api.arka-ai.ru/v1/chat/completions (accessed 2026-08-18).
+# Cost: converted from Arka AI's RUB list price at 82.9977 RUB/USD (CBR rate captured 2026-08-13).
+# Sources: https://arka-ai.ru (pricing) and https://api.arka-ai.ru/v1/models.
+
+base_model = "alibaba/qwen3.7-max"
+reasoning_options = [
+  { type = "toggle" },
+]
+
+[cost]
+input = 2.13877
+output = 6.41631

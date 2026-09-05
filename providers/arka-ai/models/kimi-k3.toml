@@ -1,0 +1,19 @@
+# Reasoning is always on: disabling it (enable_thinking=false or thinking.type=disabled)
+# returns HTTP 400 "invalid temperature: only 0.6 is allowed" from the non-thinking lane
+# even when temperature=0.6 is explicitly set (the value the error demands), so that lane
+# is unusable by callers. Effort controls (reasoning_effort, output_config.effort,
+# thinking.type=adaptive + output_config.effort) are accepted without any observable
+# change in reasoning depth. No client control is therefore advertised.
+# Verified live on https://api.arka-ai.ru/v1/chat/completions (accessed 2026-08-18).
+# Cost: converted from Arka AI's RUB list price at 82.9977 RUB/USD (CBR rate captured 2026-08-13).
+# Sources: https://arka-ai.ru (pricing) and https://api.arka-ai.ru/v1/models.
+
+base_model = "moonshotai/kimi-k3"
+reasoning_options = []
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 3.564617
+output = 17.823084
