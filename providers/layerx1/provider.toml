@@ -1,0 +1,12 @@
+# LayerX1 is an OpenAI-compatible multi-model gateway. It also speaks the
+# Anthropic Messages and OpenAI Responses wires on the same key.
+# Reasoning is requested through a single `reasoning` effort parameter on one
+# neutral ladder ("none" | "minimal" | "low" | "medium" | "high" | "max"),
+# where "none" disables it. Per-model reasoning support is reported by
+# /v1/models in `capabilities.reasoning` and `supported_parameters`.
+# https://docs.layerx1.com (accessed 2026-08-19)
+name = "LayerX1"
+env = ["LAYERX1_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+doc = "https://docs.layerx1.com"
+api = "https://api.layerx1.com/v1"

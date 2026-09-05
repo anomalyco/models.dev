@@ -1,0 +1,14 @@
+base_model = "anthropic/claude-sonnet-5"
+
+# reasoning: `reasoning` request field, effort ladder; `none` disables.
+reasoning_options = [
+  { type = "effort", values = ["none", "minimal", "low", "medium", "high", "max"] },
+]
+
+[modalities]
+input = ["text", "image"]
+
+[cost]
+input = 3
+output = 15
+cache_read = 0.3

@@ -1,0 +1,13 @@
+base_model = "moonshotai/kimi-k2.5"
+
+# /v1/models reports no reasoning support for this id: it is absent
+# from both `capabilities.reasoning` and `supported_parameters`.
+reasoning = false
+attachment = false
+
+[modalities]
+input = ["text"]
+
+[cost]
+input = 0.6
+output = 3

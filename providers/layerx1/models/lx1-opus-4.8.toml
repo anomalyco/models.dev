@@ -1,0 +1,19 @@
+base_model = "anthropic/claude-opus-4-8"
+
+attachment = false
+
+# reasoning: `reasoning` request field, effort ladder; `none` disables.
+reasoning_options = [
+  { type = "effort", values = ["none", "minimal", "low", "medium", "high", "max"] },
+]
+
+[modalities]
+input = ["text"]
+
+[cost]
+input = 5
+output = 25
+cache_read = 0.5
+
+[limit]
+output = 32_000

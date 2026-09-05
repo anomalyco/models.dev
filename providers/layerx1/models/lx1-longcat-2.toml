@@ -1,0 +1,11 @@
+base_model = "meituan/longcat-2.0"
+
+# reasoning: `reasoning` request field, effort ladder; `none` disables.
+reasoning_options = [
+  { type = "effort", values = ["none", "minimal", "low", "medium", "high", "max"] },
+]
+
+[cost]
+input = 0.75
+output = 2.95
+cache_read = 0.015
