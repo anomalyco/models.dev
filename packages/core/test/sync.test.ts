@@ -2617,6 +2617,63 @@ test("names Eden AI regional deployments after the canonical model", () => {
   });
 });
 
+test("names Eden AI latest aliases as Latest plus the current target", () => {
+  expect(
+    buildEdenAIModel(
+      edenAIModel({
+        id: "anthropic/claude-fable-latest",
+        model_name: "claude-fable-5-1",
+        owned_by: "anthropic",
+        alias_of: "anthropic/claude-fable-5-1",
+      }),
+    ),
+  ).toMatchObject({
+    base_model: "anthropic/claude-fable-5-1",
+    name: "Claude Fable Latest (Claude Fable 5.1)",
+  });
+  expect(
+    buildEdenAIModel(
+      edenAIModel({
+        id: "openai/gpt-latest",
+        model_name: "gpt-6-astra",
+        owned_by: "openai",
+        alias_of: "openai/gpt-6-astra",
+      }),
+    ),
+  ).toMatchObject({
+    base_model: "openai/gpt-6-astra",
+    name: "GPT Latest (GPT-6 Astra)",
+  });
+  expect(
+    buildEdenAIModel(
+      edenAIModel({
+        id: "vertex/gemini-flash-latest@us",
+        model_name: "gemini-3.8-flash",
+        owned_by: "vertex",
+        alias_of: "vertex/gemini-3.8-flash",
+      }),
+    ),
+  ).toMatchObject({
+    base_model: "google/gemini-3.8-flash",
+    name: "Gemini Flash Latest (Gemini 3.8 Flash) (US)",
+  });
+});
+
+test("does not treat Eden AI case-only aliases as latest pointers", () => {
+  const built = buildEdenAIModel(
+    edenAIModel({
+      id: "flexai/deepseek-v4-flash-0731",
+      model_name: "DeepSeek-V4-Flash-0731",
+      owned_by: "flexai",
+      alias_of: "flexai/DeepSeek-V4-Flash-0731",
+    }),
+  );
+  expect(built).toMatchObject({
+    base_model: "deepseek/deepseek-v4-flash-0731",
+  });
+  expect(built).not.toHaveProperty("name");
+});
+
 test("builds Eden AI context tiers without reading time-based cache keys", () => {
   const model = edenAIModel({
     id: "openai/gpt-5.6-terra",

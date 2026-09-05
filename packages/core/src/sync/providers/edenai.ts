@@ -217,12 +217,39 @@ function hasOutputLimit(baseModel: string) {
   );
 }
 
-function regionVariantName(model: EdenAIModel, baseModel: string) {
+function titleCaseSlug(slug: string) {
+  return slug
+    .split(/[-_]/)
+    .filter((word) => word.length > 0)
+    .map((word) =>
+      word.toLowerCase() === "gpt"
+        ? "GPT"
+        : word[0]!.toUpperCase() + word.slice(1).toLowerCase(),
+    )
+    .join(" ");
+}
+
+function isLatestAlias(model: EdenAIModel) {
+  if (model.alias_of == null) return false;
+  const id = model.id.replace(REGION_SUFFIX, "");
+  const target = model.alias_of.replace(REGION_SUFFIX, "");
+  if (id.toLowerCase() === target.toLowerCase()) return false;
+  const slug = id.split("/").at(-1) ?? id;
+  return /(?:^|-)latest$/i.test(slug);
+}
+
+function displayName(model: EdenAIModel, baseModel: string) {
   const region = REGION_SUFFIX.exec(model.id)?.[0].slice(1);
-  if (region === undefined) return undefined;
+  const latest = isLatestAlias(model);
+  if (region === undefined && !latest) return undefined;
 
   const canonical = canonicalModelName(baseModel);
   if (canonical === undefined) return undefined;
+  if (latest) {
+    const slug = model.id.replace(REGION_SUFFIX, "").split("/").at(-1) ?? "";
+    const name = `${titleCaseSlug(slug)} (${canonical})`;
+    return region === undefined ? name : `${name} (${region.toUpperCase()})`;
+  }
   return `${canonical} (${region.toUpperCase()})`;
 }
 
@@ -462,7 +489,7 @@ export function buildEdenAIModel(
   return factorBaseModel(
     baseModel,
     {
-      name: regionVariantName(model, baseModel),
+      name: displayName(model, baseModel),
       modalities,
       attachment: input?.some((value) => value !== "text"),
       reasoning_options: reasoningOptions,
