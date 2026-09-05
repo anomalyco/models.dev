@@ -1,0 +1,13 @@
+# Reasoning budget wire path: the Portal relays third-party models through
+# OpenRouter, so the budget is set via the reasoning.max_tokens request field
+# (OpenAI-compatible chat convention).
+base_model = "meituan/longcat-2.0"
+name = "LongCat-2.0 (free)"
+
+[[reasoning_options]]
+type = "budget_tokens"
+
+[cost]
+input = 0
+output = 0
+cache_read = 0

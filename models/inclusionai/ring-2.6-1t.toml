@@ -1,0 +1,18 @@
+name = "Ring-2.6-1T"
+description = "InclusionAI Ring-2.6-1T, a 1T-parameter-scale thinking model with 63B active parameters, built for coding agents and long-horizon tool-using workflows"
+family = "ring"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+release_date = "2026-05-08"
+last_updated = "2026-05-08"
+open_weights = false
+
+[limit]
+context = 262_144
+output = 65_536
+
+[modalities]
+input = ["text"]
+output = ["text"]
