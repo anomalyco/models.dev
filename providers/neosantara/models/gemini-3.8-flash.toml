@@ -1,0 +1,22 @@
+# Effort: reasoning_effort controls thinking depth.
+# Documented at https://docs.neosantara.xyz/en/capability/reasoning
+base_model = "google/gemini-3.8-flash"
+description = "The latest iteration in the Gemini 3 model family, featuring advanced multimodal capabilities and dynamic thinking budget control for coding, analysis, and conversational tasks."
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high"]
+
+[cost]
+input = 0.75
+output = 3.75
+cache_read = 0.075
+
+[limit]
+context = 1_000_000
+
+[modalities]
+input = ["text", "image"]

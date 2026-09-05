@@ -1,0 +1,16 @@
+# Effort: reasoning_effort = "none" turns thinking off; graded levels control depth.
+# Documented at https://docs.neosantara.xyz/en/capability/reasoning
+base_model = "deepseek/deepseek-v4-pro-0813"
+description = "DeepSeek-V4-Pro-0813 is a 1.65T parameter (49B active) production MoE model featuring integrated DSpark speculative decoding, 1M token context support, native tool use, and configurable reasoning effort levels for complex engineering workflows."
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "high", "max"]
+
+[cost]
+input = 1.32
+output = 3.96
+cache_read = 0.13

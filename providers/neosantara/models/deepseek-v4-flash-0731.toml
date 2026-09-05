@@ -1,0 +1,16 @@
+# Effort: reasoning_effort = "none" turns thinking off; graded levels control depth.
+# Documented at https://docs.neosantara.xyz/en/capability/reasoning
+base_model = "deepseek/deepseek-v4-flash-0731"
+description = "DeepSeek-V4-Flash-0731 is an ultra-fast 284B MoE (13B active) model engineered for sub-second latency, 1M context processing, structured JSON extraction, and multi-turn function calling in high-volume agentic applications."
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "high", "max"]
+
+[cost]
+input = 0.14
+output = 0.28
+cache_read = 0.03

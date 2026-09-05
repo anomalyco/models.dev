@@ -1,0 +1,17 @@
+# Toggle: reasoning_effort = "none" turns thinking off; any other accepted value turns it on.
+# Documented at https://docs.neosantara.xyz/en/capability/reasoning
+base_model = "agnes/agnes-2.5-flash"
+description = "Agnes 2.5 Flash is a high-speed multimodal reasoning model by Sapiens AI featuring native chain-of-thought, tool calling, and vision understanding."
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "toggle"
+
+[cost]
+input = 0
+output = 0
+
+[limit]
+context = 1_048_576
