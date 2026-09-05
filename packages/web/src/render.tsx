@@ -99,9 +99,13 @@ interface SearchIndexItem {
 
 const LAB_NAME_OVERRIDES: Record<string, string> = {
   alibaba: "Alibaba",
+  baai: "BAAI",
+  hcompany: "H Company",
+  intfloat: "intfloat",
   meta: "Meta",
   minimax: "MiniMax",
   moonshotai: "Moonshot AI",
+  nousresearch: "Nous Research",
   openai: "OpenAI",
   perplexity: "Perplexity",
   stepfun: "StepFun",

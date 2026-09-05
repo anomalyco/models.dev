@@ -1,0 +1,23 @@
+name = "Paraphrase Multilingual MPNet Base v2"
+description = "Compact multilingual sentence embedding model for paraphrase matching and clustering"
+family = "text-embedding"
+release_date = "2021-06-02"
+last_updated = "2021-06-02"
+attachment = false
+reasoning = false
+temperature = false
+tool_call = false
+open_weights = true
+license = "Apache-2.0"
+
+[limit]
+context = 128
+output = 1
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/sentence-transformers/paraphrase-multilingual-mpnet-base-v2"

@@ -1,0 +1,15 @@
+# Cost: converted from Melious's EUR list price for the default `balanced`
+# route at 1.1535 USD/EUR (ECB euro reference rate, 2026-08-07).
+# Sources: https://melious.ai/hub/models/qwen3-next-80b-a3b-thinking and https://melious.ai/pricing
+# Reasoning: dedicated thinking ID. Alibaba's own API exposes only a reasoning
+# budget (no effort grades) and OpenRouter authors []; Melious has no budget field,
+# so there is no caller-side control to forward here.
+base_model = "alibaba/qwen3-next-80b-a3b-thinking"
+reasoning_options = []
+
+[cost]
+input = 0.173
+output = 1.3842
+
+[limit]
+context = 262_144

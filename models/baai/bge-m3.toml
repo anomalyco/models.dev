@@ -1,0 +1,23 @@
+name = "BGE M3"
+description = "Multilingual multi-granularity embedding model for dense, sparse, and multi-vector retrieval"
+family = "bge"
+release_date = "2024-01-27"
+last_updated = "2024-01-27"
+attachment = false
+reasoning = false
+temperature = false
+tool_call = false
+open_weights = true
+license = "MIT"
+
+[limit]
+context = 8_192
+output = 1
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/BAAI/bge-m3"

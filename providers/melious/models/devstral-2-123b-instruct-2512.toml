@@ -1,0 +1,15 @@
+# Cost: converted from Melious's EUR list price for the default `balanced`
+# route at 1.1535 USD/EUR (ECB euro reference rate, 2026-08-07).
+# Sources: https://melious.ai/hub/models/devstral-2-123b-instruct-2512 and https://melious.ai/pricing
+# Limit: context and max output are the hub's served values for this deployment
+# (parameters.context_window = 200000, parameters.max_tokens = 8192).
+base_model = "mistral/devstral-2512"
+structured_output = true
+
+[cost]
+input = 0.4614
+output = 2.307
+
+[limit]
+context = 200_000
+output = 8_192

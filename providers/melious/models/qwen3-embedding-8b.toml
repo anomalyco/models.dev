@@ -1,0 +1,11 @@
+# Cost: converted from Melious's EUR list price for the default `balanced`
+# route at 1.1535 USD/EUR (ECB euro reference rate, 2026-08-07).
+# Sources: https://melious.ai/hub/models/qwen3-embedding-8b and https://melious.ai/pricing
+# Limit: the hub reports a 41000-token context, above Qwen3-Embedding-8B's native
+# 32768, so the lab limit is kept rather than overridden.
+base_model = "alibaba/qwen3-embedding-8b"
+
+[cost]
+input = 0.0115
+output = 0
+

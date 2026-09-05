@@ -1,0 +1,15 @@
+# Cost: converted from Melious's EUR list price for the default `balanced`
+# route at 1.1535 USD/EUR (ECB euro reference rate, 2026-08-07).
+# Sources: https://melious.ai/hub/models/minimax-m2.7 and https://melious.ai/pricing
+# Reasoning: always-on. First-party providers/minimax/models/MiniMax-M2.7.toml
+# authors [], so there is no caller-side control to forward here.
+base_model = "minimax/MiniMax-M2.7"
+structured_output = true
+reasoning_options = []
+
+[cost]
+input = 0.6921
+output = 2.7684
+
+[limit]
+context = 192_000
