@@ -1,0 +1,33 @@
+# Cost, modalities, and reasoning_options verified against live
+# GET https://api.friendli.ai/serverless/v1/models (zai-org/GLM-5.3-Flash):
+# pricing input=0.00000015/output=0.0000005/cache_read=0.00000003 USD-per-token
+# (converted to USD/MTok below); input_modalities=[text,image,video];
+# reasoning_options=[effort low|high|max, budget_tokens min=-1 max=1048576].
+# https://friendli.ai/docs/openapi/model-apis/chat-completions#body-reasoning-budget-one-of-0
+# (accessed 2026-08-29)
+base_model = "zhipuai/glm-5.3-flash"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[[reasoning_options]]
+type = "budget_tokens"
+min = -1
+max = 1_048_576
+
+[interleaved]
+field = "reasoning_content"
+
+[modalities]
+input = ["text", "image", "video"]
+output = ["text"]
+
+[cost]
+input = 0.15
+output = 0.5
+cache_read = 0.03
+
+[limit]
+context = 1_048_576
+output = 1_048_576
