@@ -1,0 +1,14 @@
+# Pricing, limits, and reasoning controls from the inference.net public
+# model catalog: https://inference.net/models (accessed 2026-08-14).
+# Served on inference.net's own GPUs with an extended 1M context window.
+base_model = "nvidia/nemotron-3-super-120b-a12b"
+name = "Nemotron 3 Super"
+reasoning_options = []
+
+[cost]
+input = 2.5
+output = 5
+
+[limit]
+context = 1_024_000
+output = 500_000

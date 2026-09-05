@@ -1,0 +1,13 @@
+# Pricing, limits, and reasoning controls from the inference.net public
+# model catalog: https://inference.net/models (accessed 2026-08-14).
+base_model = "anthropic/claude-sonnet-4-6"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "minimal", "low", "medium", "high", "max"]
+
+[cost]
+input = 3
+output = 15
+cache_read = 0.3
+cache_write = 3.75
