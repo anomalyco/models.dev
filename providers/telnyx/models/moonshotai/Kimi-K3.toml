@@ -1,0 +1,24 @@
+# Pricing: https://telnyx.com/pricing/inference-api (accessed 2026-08-19)
+# Models: https://developers.telnyx.com/docs/inference/models
+# Reasoning effort: low, high, max (default: max)
+# https://telnyx.com/resources/kimi-k3-open-model-telnyx-inference
+# Reasoning side channel: reasoning_content field
+# https://developers.telnyx.com/docs/inference/getting-started
+base_model = "moonshotai/kimi-k3"
+interleaved = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[cost]
+input = 2.7
+output = 13.5
+cache_read = 0.27
+
+[limit]
+context = 1_000_000
+output = 64_000
+
+[modalities]
+input = ["text", "image"]
