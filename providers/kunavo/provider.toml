@@ -1,0 +1,12 @@
+name = "Kunavo"
+# OpenAI-wire-compatible gateway. `api` below is the OpenAI-compatible surface
+# (/v1/chat/completions). Claude models are additionally reachable on the native
+# Anthropic Messages API at the origin https://api.kunavo.com, where the client
+# appends /v1/messages itself — that route relays `thinking` and `cache_control`
+# through untranslated. https://kunavo.com/docs/messages (accessed 2026-08-08)
+# Model ids are matched exactly and are not aliased, so date-suffixed names
+# (e.g. claude-sonnet-4-5-20250929) do not resolve.
+env = ["KUNAVO_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+api = "https://api.kunavo.com/v1"
+doc = "https://kunavo.com/docs/quickstart"

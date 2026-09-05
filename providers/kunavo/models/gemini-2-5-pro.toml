@@ -1,0 +1,19 @@
+base_model = "google/gemini-2.5-pro"
+
+# reasoning_options is intentionally empty: Kunavo relays the request body
+# verbatim, so reasoning fields are accepted, but which controls the upstream
+# channel actually honours has not been verified end-to-end. Left empty rather
+# than declaring controls we cannot yet demonstrate; will be widened to the
+# real effort/toggle/budget_tokens set once probed.
+reasoning_options = []
+
+[cost]
+# Source: https://kunavo.com/llms.txt (per-model input/output USD per 1M
+# tokens, generated from the live catalog). cache_read is 0.10x input on the
+# Anthropic-protocol models and 0.20x elsewhere; cache_write bills at the
+# plain input rate because Kunavo absorbs Anthropic's cache-write surcharge
+# rather than passing it through.
+input = 0.375
+output = 3
+cache_read = 0.075
+cache_write = 0.375
