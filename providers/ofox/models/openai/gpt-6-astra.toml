@@ -1,0 +1,17 @@
+# Sources:
+# - Ofox model page: https://ofox.ai/models/openai/gpt-6-astra
+# - Ofox catalog API: https://api.ofox.ai/v2/models/catalog?include=provider_price&search=gpt-6-astra
+# - OpenAI model docs (reasoning effort): https://developers.openai.com/api/docs/models/gpt-6-astra
+# Ofox publishes flat $10/$50 (+ cache) with no >=272k context tier in the catalog, so no [[cost.tiers]].
+base_model = "openai/gpt-6-astra"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
+
+[cost]
+input = 10
+output = 50
+cache_read = 1
+cache_write = 12.5
+
+[provider]
+npm = "@ai-sdk/openai"
+api = "https://api.ofox.ai/v1"
