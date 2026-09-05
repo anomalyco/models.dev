@@ -1,0 +1,9 @@
+# Sources (accessed 2026-09-02):
+# - Model list: https://docs.wafer.ai/serverless/setup#models (262K context,
+#   serverless-only, non-ZDR)
+# - GET https://pass.wafer.ai/v1/models lists the model but publishes no
+#   pricing or capability metadata for it yet; no public Wafer price as of
+#   2026-09-02, so cost is intentionally omitted.
+# Toggle: enable_thinking = true|false (normalized by the Wafer API)
+base_model = "alibaba/qwen3.5-397b-a17b"
+reasoning_options = [{ type = "toggle" }]
