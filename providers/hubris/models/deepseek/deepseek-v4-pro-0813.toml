@@ -1,0 +1,16 @@
+base_model = "deepseek/deepseek-v4-pro-0813"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "max"]
+
+[[reasoning_options]]
+type = "budget_tokens"
+
+[cost]
+input = 1.6355
+output = 4.9065
+cache_read = 0.0545
+
+[limit]
+context = 1_048_576

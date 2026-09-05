@@ -1,0 +1,14 @@
+base_model = "alibaba/qwen3.8-flash"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "max"]
+
+[[reasoning_options]]
+type = "budget_tokens"
+
+[cost]
+input = 0.2189
+output = 0.6859
+cache_read = 0.0233
+cache_write = 0.2918

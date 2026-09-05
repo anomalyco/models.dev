@@ -1,0 +1,14 @@
+base_model = "openai/gpt-5.6-sol"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "max"]
+
+[[reasoning_options]]
+type = "budget_tokens"
+
+[cost]
+input = 2.9187
+output = 14.5937
+cache_read = 0.2918
+cache_write = 3.6484

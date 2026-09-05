@@ -1,0 +1,16 @@
+base_model = "zhipuai/glm-5.3-flash"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "max"]
+
+[[reasoning_options]]
+type = "budget_tokens"
+
+[cost]
+input = 0.1095
+output = 0.3648
+cache_read = 0.0219
+
+[limit]
+context = 1_310_720
