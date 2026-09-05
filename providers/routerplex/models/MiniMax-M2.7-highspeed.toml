@@ -1,0 +1,14 @@
+# Sources: https://routerplex.com/models and https://routerplex.com/api/models (accessed 2026-08-31).
+# Cost is RouterPlex sell price (USD / 1M tokens). cache_read is listed only when
+# this host bills a discounted cache-hit rate; otherwise cached tokens are billed
+# at the input rate.
+base_model = "minimax/MiniMax-M2.7-highspeed"
+
+reasoning_options = []
+
+[cost]
+input = 0.6
+output = 2.4
+
+[limit]
+context = 196_000
