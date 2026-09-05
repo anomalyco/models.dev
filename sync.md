@@ -163,9 +163,12 @@ CrossModel is implemented in `packages/core/src/sync/providers/crossmodel.ts`.
 OpenRouter is implemented in `packages/core/src/sync/providers/openrouter.ts`.
 
 - Source endpoint: `https://openrouter.ai/api/v1/models`.
+- Discount source: `https://openrouter.ai/api/v1/models/{author}/{slug}/endpoints`, one call per model at a concurrency of 6.
 - Optional auth: `OPENROUTER_API_KEY`.
 - Model IDs map directly to TOML paths under `providers/openrouter/models`.
 - API prices are per-token strings and are converted to per-1M-token numbers.
+- `/models` quotes an already-discounted headline price without naming the route it came from. `cost.discount` is the discount of the endpoint quoting exactly that headline price, so it always describes the prices written next to it. Prices stay as billed; the pre-discount rate is `input / (1 - discount)`.
+- Discount lookups are fail-soft. A model whose endpoint cannot be matched (a `:free` variant priced at 0, a failed request) keeps its authored `cost.discount` rather than churning the file; a matched endpoint quoting no discount clears it.
 - `structured_output` comes from `supported_parameters.includes("structured_outputs")` only.
 - Existing `status`, `interleaved`, `knowledge`, `limit.input`, and `cost.tiers` may be preserved when OpenRouter is not authoritative enough for those fields.
 - Canonical OpenRouter model IDs should emit `base_model` references to model metadata when a matching `models/` entry exists.

@@ -7,6 +7,13 @@ import { inferKimiFamily, ModelFamilyValues } from "../../family.js";
 import type { ExistingModel, SyncProvider, SyncedFullModel, SyncedModel } from "../index.js";
 
 const API_ENDPOINT = "https://openrouter.ai/api/v1/models";
+const ENDPOINTS_API = "https://openrouter.ai/api/v1/models";
+/**
+ * `/models` is one bulk call; discounts need one `/endpoints` call per model.
+ * Six at a time keeps a full catalog sweep well inside the sync job's budget
+ * without hammering the API.
+ */
+const ENDPOINTS_CONCURRENCY = 6;
 const MODELS_DIR = path.join(import.meta.dirname, "..", "..", "..", "..", "..", "models");
 const modelMetadataByID = new Map<string, Record<string, unknown>>();
 const modelMetadataFilesByProvider = new Map<string, Set<string>>();
@@ -68,6 +75,12 @@ export const OpenRouterModel = z.object({
     internal_reasoning: z.string().optional(),
     input_cache_read: z.string().optional(),
     input_cache_write: z.string().optional(),
+    /**
+     * Not served by `/models`; merged in by `fetchModels` from the per-model
+     * `/endpoints` route. Present means the lookup was conclusive (`0` included);
+     * absent means unknown, and an authored discount should survive the sync.
+     */
+    discount: z.number().optional(),
     overrides: z.array(z.object({
       min_prompt_tokens: z.number().optional(),
       prompt: z.string().optional(),
@@ -98,21 +111,34 @@ export const OpenRouterResponse = z.object({
   data: z.array(OpenRouterModel),
 }).passthrough();
 
+export const OpenRouterEndpoint = z.object({
+  pricing: z.object({
+    prompt: z.string(),
+    completion: z.string(),
+    discount: z.number().optional(),
+  }).passthrough(),
+}).passthrough();
+
+export const OpenRouterEndpointsResponse = z.object({
+  data: z.object({
+    endpoints: z.array(OpenRouterEndpoint),
+  }).passthrough(),
+}).passthrough();
+
 export type OpenRouterModel = z.infer<typeof OpenRouterModel>;
+export type OpenRouterEndpoint = z.infer<typeof OpenRouterEndpoint>;
 
 export const openrouter = {
   id: "openrouter",
   name: "OpenRouter",
   modelsDir: "providers/openrouter/models",
   async fetchModels() {
-    const headers = process.env.OPENROUTER_API_KEY
-      ? { Authorization: `Bearer ${process.env.OPENROUTER_API_KEY}` }
-      : undefined;
-    const response = await fetch(API_ENDPOINT, { headers });
+    const response = await fetch(API_ENDPOINT, { headers: authHeaders() });
     if (!response.ok) {
       throw new Error(`OpenRouter request failed: ${response.status} ${response.statusText}`);
     }
-    return response.json();
+    const raw = await response.json();
+    return mergeEndpointDiscounts(raw);
   },
   parseModels(raw) {
     // Temporarily skip batch routes (`*:batch`) — they are not catalog targets.
@@ -139,6 +165,112 @@ export const openrouter = {
   },
 } satisfies SyncProvider<OpenRouterModel>;
 
+function authHeaders() {
+  return process.env.OPENROUTER_API_KEY
+    ? { Authorization: `Bearer ${process.env.OPENROUTER_API_KEY}` }
+    : undefined;
+}
+
+/**
+ * `/models` quotes a headline price without saying which of a model's provider
+ * routes it came from, and never mentions discounts. The per-model `/endpoints`
+ * route does both, so pair them here: whichever endpoint quotes exactly the
+ * headline price is the route the catalog is recording, and its `discount` is
+ * the one consistent with the `cost.input`/`cost.output` we write.
+ *
+ * Every lookup is fail-soft. A model whose discount cannot be established keeps
+ * `pricing.discount` absent so the sync preserves whatever is already authored
+ * rather than churning a file on a transient API failure.
+ */
+async function mergeEndpointDiscounts(raw: unknown): Promise<unknown> {
+  if (!isPlainObject(raw) || !Array.isArray(raw.data)) return raw;
+
+  const models = raw.data.filter(isPlainObject);
+  const discounts = await mapWithConcurrency(models, ENDPOINTS_CONCURRENCY, async (model) => {
+    const id = model.id;
+    const pricing = model.pricing;
+    if (typeof id !== "string" || !isPlainObject(pricing)) return undefined;
+    if (typeof pricing.prompt !== "string" || typeof pricing.completion !== "string") {
+      return undefined;
+    }
+    // Degraded routes are skipped by translateModel anyway; don't spend a request.
+    if (Number(pricing.prompt) < 0 || Number(pricing.completion) < 0) return undefined;
+
+    const endpoints = await fetchEndpoints(id);
+    if (endpoints === undefined) return undefined;
+    return resolveEndpointDiscount(
+      { prompt: pricing.prompt, completion: pricing.completion },
+      endpoints,
+    );
+  });
+
+  models.forEach((model, index) => {
+    const discount = discounts[index];
+    if (discount !== undefined && isPlainObject(model.pricing)) {
+      model.pricing.discount = discount;
+    }
+  });
+
+  return raw;
+}
+
+async function fetchEndpoints(modelID: string): Promise<OpenRouterEndpoint[] | undefined> {
+  // Variant routes (`:free`, `:nitro`) are served under the base model slug.
+  const slug = modelID.split(":")[0];
+  try {
+    const response = await fetch(`${ENDPOINTS_API}/${slug}/endpoints`, { headers: authHeaders() });
+    if (!response.ok) return undefined;
+    const parsed = OpenRouterEndpointsResponse.safeParse(await response.json());
+    return parsed.success ? parsed.data.data.endpoints : undefined;
+  } catch {
+    return undefined;
+  }
+}
+
+/**
+ * Discount of the endpoint quoting exactly the headline price, or `undefined`
+ * when no endpoint does — a `:free` variant priced at 0, or a headline that has
+ * moved since the endpoints were read.
+ */
+export function resolveEndpointDiscount(
+  pricing: { prompt: string; completion: string },
+  endpoints: OpenRouterEndpoint[],
+): number | undefined {
+  const prompt = Number(pricing.prompt);
+  const completion = Number(pricing.completion);
+  if (!Number.isFinite(prompt) || !Number.isFinite(completion)) return undefined;
+
+  const matches = endpoints.filter((endpoint) => (
+    Number(endpoint.pricing.prompt) === prompt &&
+    Number(endpoint.pricing.completion) === completion
+  ));
+  if (matches.length === 0) return undefined;
+
+  // Identically priced routes should quote identical discounts. Take the largest
+  // so a promo is never under-reported if they ever diverge.
+  const discount = Math.max(...matches.map((endpoint) => endpoint.pricing.discount ?? 0));
+  if (!Number.isFinite(discount) || discount <= 0) return 0;
+  return Math.round(discount * 1_000_000) / 1_000_000;
+}
+
+async function mapWithConcurrency<T, R>(
+  items: T[],
+  limit: number,
+  worker: (item: T) => Promise<R>,
+): Promise<(R | undefined)[]> {
+  const results: (R | undefined)[] = new Array(items.length).fill(undefined);
+  let cursor = 0;
+  const runners = Array.from({ length: Math.min(limit, items.length) }, async () => {
+    while (cursor < items.length) {
+      const index = cursor++;
+      const item = items[index];
+      if (item !== undefined) results[index] = await worker(item);
+    }
+  });
+  await Promise.all(runners);
+  return results;
+}
+
 function isUnavailable(model: OpenRouterModel) {
   return (
     model.supported_parameters.length === 0 ||
@@ -157,6 +289,18 @@ function price(value: string | undefined) {
   return Number.isFinite(number) && number >= 0
     ? Math.round(number * 1_000_000_000_000) / 1_000_000
     : undefined;
+}
+
+/**
+ * The provider's standard rate before the promotion. OpenRouter serves only the
+ * discounted price, but shows the pre-discount one struck through on the model's
+ * provider table, and it is exactly this quotient — a 35%-off route billing
+ * $0.091/M is posted at $0.14/M. Recording it lets a diff distinguish a real
+ * price cut from a promotion starting.
+ */
+function listPrice(value: number | undefined, discount: number | undefined) {
+  if (value === undefined || discount === undefined || discount <= 0) return undefined;
+  return Math.round((value / (1 - discount)) * 1_000_000) / 1_000_000;
 }
 
 function costTiers(model: OpenRouterModel, existing: ExistingModel | undefined) {
@@ -233,13 +377,26 @@ export function buildOpenRouterModel(
   const structuredOutput = params.has("structured_outputs");
   const knowledge = model.knowledge_cutoff?.slice(0, 10) ?? existing?.knowledge;
   const openWeights = Boolean(model.hugging_face_id);
+  // An absent discount means the endpoints lookup was inconclusive, not that the
+  // promo ended, so keep the authored value. A resolved 0 is authoritative and
+  // clears it.
+  const discount = model.pricing.discount === undefined
+    ? existing?.cost?.discount
+    : model.pricing.discount > 0 ? model.pricing.discount : undefined;
+  const cacheRead = price(model.pricing.input_cache_read);
+  const cacheWrite = price(model.pricing.input_cache_write);
   const cost = prompt !== undefined && completion !== undefined
     ? {
         input: prompt,
         output: completion,
         reasoning: reasoning ? price(model.pricing.internal_reasoning) : undefined,
-        cache_read: price(model.pricing.input_cache_read),
-        cache_write: price(model.pricing.input_cache_write),
+        cache_read: cacheRead,
+        cache_write: cacheWrite,
+        discount,
+        input_list: listPrice(prompt, discount),
+        output_list: listPrice(completion, discount),
+        cache_read_list: listPrice(cacheRead, discount),
+        cache_write_list: listPrice(cacheWrite, discount),
         tiers: costTiers(model, existing),
       }
     : existing?.cost;

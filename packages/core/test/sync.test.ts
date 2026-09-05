@@ -55,6 +55,7 @@ import {
   buildOpenRouterModel,
   openrouter,
   resolveCanonicalBaseModel,
+  resolveEndpointDiscount,
   type OpenRouterModel,
 } from "../src/sync/providers/openrouter.js";
 import {
@@ -2218,6 +2219,160 @@ test("OpenRouter sync keeps authored tiers when API omits overrides", () => {
     cost: {
       tiers: [{ tier: { size: 200_000 }, input: 6, output: 22.5 }],
     },
+  });
+});
+
+test("resolves the discount of the OpenRouter endpoint the headline price came from", () => {
+  const discount = resolveEndpointDiscount(
+    { prompt: "0.00000049", completion: "0.00000154" },
+    [
+      { pricing: { prompt: "0.0000007", completion: "0.0000022", discount: 0.5 } },
+      { pricing: { prompt: "0.00000049", completion: "0.00000154", discount: 0.65 } },
+      { pricing: { prompt: "0.00000105", completion: "0.0000033", discount: 0 } },
+    ],
+  );
+
+  expect(discount).toBe(0.65);
+});
+
+test("resolves an OpenRouter discount of zero when the headline endpoint is undiscounted", () => {
+  const discount = resolveEndpointDiscount(
+    { prompt: "0.00000014", completion: "0.00000028" },
+    [
+      { pricing: { prompt: "0.000000091", completion: "0.000000182", discount: 0.35 } },
+      { pricing: { prompt: "0.00000014", completion: "0.00000028", discount: 0 } },
+    ],
+  );
+
+  expect(discount).toBe(0);
+});
+
+test("resolves no OpenRouter discount when the headline price matches no endpoint", () => {
+  const discount = resolveEndpointDiscount(
+    { prompt: "0", completion: "0" },
+    [{ pricing: { prompt: "0.00000009", completion: "0.00000018", discount: 0.1 } }],
+  );
+
+  expect(discount).toBeUndefined();
+});
+
+test("OpenRouter sync records a discount alongside the already-discounted cost", () => {
+  const model = buildOpenRouterModel(openRouterModel({
+    id: "upstage/solar-pro4",
+    name: "Upstage: Solar Pro 4",
+    pricing: {
+      prompt: "0.00000003",
+      completion: "0.00000012",
+      discount: 0.9,
+    },
+  }), undefined);
+
+  expect(model).toMatchObject({
+    cost: {
+      input: 0.03,
+      output: 0.12,
+      discount: 0.9,
+    },
+  });
+});
+
+test("OpenRouter sync omits a zero discount instead of writing it", () => {
+  const model = buildOpenRouterModel(openRouterModel({
+    pricing: {
+      prompt: "0.000002",
+      completion: "0.00001",
+      discount: 0,
+    },
+  }), {
+    cost: { input: 2, output: 10, discount: 0.5 },
+  });
+
+  expect(model.cost?.discount).toBeUndefined();
+});
+
+test("OpenRouter sync preserves an existing discount when the endpoints lookup is inconclusive", () => {
+  const model = buildOpenRouterModel(openRouterModel({
+    pricing: {
+      prompt: "0.000002",
+      completion: "0.00001",
+    },
+  }), {
+    cost: { input: 2, output: 10, discount: 0.25 },
+  });
+
+  expect(model.cost?.discount).toBe(0.25);
+});
+
+test("OpenRouter sync reconstructs pre-discount list prices", () => {
+  const model = buildOpenRouterModel(openRouterModel({
+    id: "upstage/solar-pro4",
+    name: "Upstage: Solar Pro 4",
+    pricing: {
+      prompt: "0.00000003",
+      completion: "0.00000012",
+      input_cache_read: "0.000000006",
+      discount: 0.9,
+    },
+  }), undefined);
+
+  expect(model.cost).toMatchObject({
+    input: 0.03,
+    output: 0.12,
+    cache_read: 0.006,
+    discount: 0.9,
+    input_list: 0.3,
+    output_list: 1.2,
+    cache_read_list: 0.06,
+  });
+});
+
+test("OpenRouter sync omits list prices when nothing is discounted", () => {
+  const model = buildOpenRouterModel(openRouterModel({
+    pricing: {
+      prompt: "0.000002",
+      completion: "0.00001",
+      discount: 0,
+    },
+  }), undefined);
+
+  expect(model.cost?.input_list).toBeUndefined();
+  expect(model.cost?.output_list).toBeUndefined();
+});
+
+test("OpenRouter list prices stay clean under repeated float division", () => {
+  const model = buildOpenRouterModel(openRouterModel({
+    id: "moonshotai/kimi-k2.6",
+    name: "MoonshotAI: Kimi K2.6",
+    pricing: {
+      prompt: "0.0000005795",
+      completion: "0.00000244",
+      discount: 0.39,
+    },
+  }), undefined);
+
+  // 0.5795 / 0.61 is 0.9500000000000001 before rounding.
+  expect(model.cost?.input_list).toBe(0.95);
+  expect(model.cost?.output_list).toBe(4);
+});
+
+test("formats a cost discount into the generated TOML", () => {
+  const content = formatToml({
+    id: "example/model",
+    name: "Example Model",
+    description: "Example model for sync formatting regression tests",
+    release_date: "2026-01-01",
+    last_updated: "2026-01-01",
+    attachment: false,
+    reasoning: false,
+    tool_call: true,
+    open_weights: false,
+    cost: { input: 0.03, output: 0.12, discount: 0.9 },
+    limit: { context: 1_000, output: 100 },
+    modalities: { input: ["text"], output: ["text"] },
+  });
+
+  expect(Bun.TOML.parse(content)).toMatchObject({
+    cost: { input: 0.03, output: 0.12, discount: 0.9 },
   });
 });
 
