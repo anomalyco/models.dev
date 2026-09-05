@@ -1,0 +1,14 @@
+# Pricing: https://api.impossibl.com/v1/models
+base_model = "minimax/MiniMax-M3"
+reasoning_options = []
+
+[cost]
+input = 0.30
+output = 1.20
+cache_read = 0.06
+
+[[cost.tiers]]
+tier = { size = 512_000 }
+input = 0.60
+output = 2.40
+cache_read = 0.12

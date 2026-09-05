@@ -1,0 +1,11 @@
+# Pricing: https://api.impossibl.com/v1/models
+base_model = "tencent/hy3"
+
+[cost]
+input = 0.20
+output = 0.80
+cache_read = 0.05
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "xhigh"]

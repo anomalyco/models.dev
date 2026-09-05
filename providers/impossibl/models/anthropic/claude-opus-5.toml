@@ -1,11 +1,11 @@
 # Pricing: https://api.impossibl.com/v1/models
-base_model = "anthropic/claude-fable-5"
+base_model = "anthropic/claude-opus-5"
 
 [cost]
-input = 10.00
-output = 50.00
-cache_read = 1.00
-cache_write = 12.50
+input = 5.00
+output = 25.00
+cache_read = 0.50
+cache_write = 6.25
 
 [[reasoning_options]]
 type = "effort" # API: {"output_config":{"effort":"<value>"}} on POST /v1/messages

@@ -1,4 +1,5 @@
 # Pricing: https://api.impossibl.com/v1/models
+# Toggle: {"reasoning_effort":"none"} disables
 base_model = "alibaba/qwen3.7-max"
 
 [cost]
@@ -7,4 +8,4 @@ output = 7.50
 cache_read = 0.50
 
 [[reasoning_options]]
-type = "toggle" # API: {"reasoning_effort":"none"}
+type = "toggle" # API: {"reasoning_effort":"none"} disables

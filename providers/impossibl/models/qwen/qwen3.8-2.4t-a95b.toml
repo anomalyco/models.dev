@@ -1,9 +1,10 @@
 # Pricing: https://api.impossibl.com/v1/models
-base_model = "alibaba/qwen3.8-max-preview"
+base_model = "alibaba/qwen3.8-2.4t-a95b"
 
 [cost]
-input = 2.50
-output = 7.50
+input = 1.20
+output = 1.20
+cache_read = 0.60
 
 [[reasoning_options]]
 type = "effort"
