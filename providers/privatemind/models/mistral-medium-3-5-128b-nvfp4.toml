@@ -1,0 +1,20 @@
+# Toggle: reasoning_effort = off|low|medium|high|max ("off" disables, every other value enables)
+# https://docs.privatemind.com/chat-completions.html#reasoning-effort
+base_model = "mistral/mistral-medium-2604"
+name = "Mistral Medium 3.5 128B"
+description = "Balanced dense chat with optional thinking"
+attachment = false
+
+[[reasoning_options]]
+type = "toggle"
+
+[cost]
+input = 1.7
+output = 7.5
+
+[limit]
+context = 131_072
+output = 131_072
+
+[modalities]
+input = ["text"]
