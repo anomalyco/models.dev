@@ -1,3 +1,8 @@
+# Reasoning wire path on POST https://api.thegrid.ai/v1/chat/completions:
+#   toggle -> `reasoning = { enabled = true | false }`
+#   effort -> `reasoning_effort = "low" | "medium" | "high" | "xhigh" | "max"`
+# The instrument reports `reasoning.mandatory = false` at GET /v1/models, which is
+# the same shape the max-tier instruments use for their caller toggle.
 name = "Claude Opus Latest"
 description = "Lab latest market for Claude Opus frontier supply. You contract for the latest qualifying route, not a specific model."
 # contract spec: https://thegrid.ai/docs/instrument-specifications/current-instruments
