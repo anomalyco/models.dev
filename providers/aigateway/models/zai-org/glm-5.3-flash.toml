@@ -1,13 +1,10 @@
-# Toggle: chat_template_kwargs.enable_thinking (Z.ai OpenAI-compat dialect).
-# Effort: reasoning_effort = low|high|max.
+# Effort: reasoning_effort = low|high|max (thinking is always-on for this
+# model; no working disable control, matching the lab and peers).
 base_model = "zhipuai/glm-5.3-flash"
 
 [cost]
 input = 0.15
 output = 0.5
-
-[[reasoning_options]]
-type = "toggle"
 
 [[reasoning_options]]
 type = "effort"
