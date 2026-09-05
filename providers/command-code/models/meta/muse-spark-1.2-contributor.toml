@@ -1,0 +1,15 @@
+# Prices: https://commandcode.ai/docs/resources/pricing-limits (accessed 2026-09-01).
+# Catalog/ids: https://api.commandcode.ai/provider/v1 and https://commandcode.ai/models (accessed 2026-09-01).
+# Relay notes: OpenAI Chat Completions on /provider/v1/chat/completions; reasoning controls
+# pass through to upstreams (mirrored from the labs' own entries).
+# Discounted lane of Command Code's contributor program.
+
+base_model = "meta/muse-spark-1.2"
+name = "Muse Spark 1.2 Contributor"
+
+reasoning_options = [{ type = "effort", values = ["minimal", "low", "medium", "high", "xhigh"] }]
+
+[cost]
+input = 0.1
+output = 0.2
+cache_read = 0.002

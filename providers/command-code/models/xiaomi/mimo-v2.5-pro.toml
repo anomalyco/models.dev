@@ -1,0 +1,22 @@
+# Prices: https://commandcode.ai/docs/resources/pricing-limits (accessed 2026-09-01).
+# Catalog/ids: https://api.commandcode.ai/provider/v1 and https://commandcode.ai/models (accessed 2026-09-01).
+# Relay notes: OpenAI Chat Completions on /provider/v1/chat/completions; reasoning controls
+# pass through to upstreams (mirrored from the labs' own entries).
+# Toggle: thinking.type = enabled|disabled
+# Xiaomi price cut, unified across context lengths (was $2.00 in / $6.00 out / $0.40 cache read).
+# Host context 1000000 per the Command Code catalog/API context_length (lab entry: 1048576).
+
+base_model = "xiaomi/mimo-v2.5-pro"
+
+reasoning_options = [{ type = "toggle" }]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.435
+output = 0.87
+cache_read = 0.0036
+
+[limit]
+context = 1000000

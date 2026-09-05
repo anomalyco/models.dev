@@ -1,0 +1,19 @@
+# Prices: https://commandcode.ai/docs/resources/pricing-limits (accessed 2026-09-01).
+# Catalog/ids: https://api.commandcode.ai/provider/v1 and https://commandcode.ai/models (accessed 2026-09-01).
+# Relay notes: OpenAI Chat Completions on /provider/v1/chat/completions; reasoning controls
+# pass through to upstreams (mirrored from the labs' own entries).
+# Toggle: thinking.type = adaptive|disabled (MiniMax platform API; thinking defaults off)
+# Deal: 50% off, auto-applied. List price was $0.60 in / $2.40 out / $0.12 cache read.
+# Host context 1000000 per the Command Code catalog/API context_length (lab entry: 1048576).
+
+base_model = "minimax/MiniMax-M3"
+
+reasoning_options = [{ type = "toggle" }]
+
+[cost]
+input = 0.3
+output = 1.2
+cache_read = 0.06
+
+[limit]
+context = 1000000

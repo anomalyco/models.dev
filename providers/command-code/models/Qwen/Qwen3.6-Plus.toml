@@ -1,0 +1,19 @@
+# Prices: https://commandcode.ai/docs/resources/pricing-limits (accessed 2026-09-01).
+# Catalog/ids: https://api.commandcode.ai/provider/v1 and https://commandcode.ai/models (accessed 2026-09-01).
+# Relay notes: OpenAI Chat Completions on /provider/v1/chat/completions; reasoning controls
+# pass through to upstreams (mirrored from the labs' own entries).
+# Toggle: enable_thinking true|false
+# Budget: thinking_budget
+# Host context 200000 per the Command Code catalog/API context_length (lab entry: 1000000).
+
+base_model = "alibaba/qwen3.6-plus"
+
+reasoning_options = [{ type = "toggle" }, { type = "budget_tokens" }]
+
+[cost]
+input = 0.5
+output = 3.0
+cache_read = 0.1
+
+[limit]
+context = 200000

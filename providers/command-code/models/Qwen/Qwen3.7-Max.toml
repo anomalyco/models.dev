@@ -1,0 +1,16 @@
+# Prices: https://commandcode.ai/docs/resources/pricing-limits (accessed 2026-09-01).
+# Catalog/ids: https://api.commandcode.ai/provider/v1 and https://commandcode.ai/models (accessed 2026-09-01).
+# Relay notes: OpenAI Chat Completions on /provider/v1/chat/completions; reasoning controls
+# pass through to upstreams (mirrored from the labs' own entries).
+# Toggle: enable_thinking true|false
+# Budget: thinking_budget
+
+base_model = "alibaba/qwen3.7-max"
+
+reasoning_options = [{ type = "toggle" }, { type = "budget_tokens" }]
+
+[cost]
+input = 2.5
+output = 7.5
+cache_read = 0.5
+cache_write = 3.13

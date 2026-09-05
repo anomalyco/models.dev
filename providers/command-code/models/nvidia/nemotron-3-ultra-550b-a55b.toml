@@ -1,0 +1,15 @@
+# Prices: https://commandcode.ai/docs/resources/pricing-limits (accessed 2026-09-01).
+# Catalog/ids: https://api.commandcode.ai/provider/v1 and https://commandcode.ai/models (accessed 2026-09-01).
+# Relay notes: OpenAI Chat Completions on /provider/v1/chat/completions; reasoning controls
+# pass through to upstreams (mirrored from the labs' own entries).
+# Toggle: chat_template_kwargs.enable_thinking true|false
+
+base_model = "nvidia/nemotron-3-ultra-550b-a55b"
+name = "Nemotron 3 Ultra"
+
+reasoning_options = [{ type = "toggle" }]
+
+[cost]
+input = 0.6
+output = 2.4
+cache_read = 0.12

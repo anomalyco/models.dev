@@ -1,0 +1,20 @@
+# Prices: https://commandcode.ai/docs/resources/pricing-limits (accessed 2026-09-01).
+# Catalog/ids: https://api.commandcode.ai/provider/v1 and https://commandcode.ai/models (accessed 2026-09-01).
+# Relay notes: OpenAI Chat Completions on /provider/v1/chat/completions; reasoning controls
+# pass through to upstreams (mirrored from the labs' own entries).
+# Effort: reasoning_effort = none|high (none disables thinking; the lab's
+# thinking.type switch is not modeled here to avoid a double off-state)
+# Host context 1048576 per the Command Code catalog/API context_length (lab entry: 1024000).
+
+base_model = "tencent/hy4-preview"
+name = "Tencent Hy4 Preview"
+
+reasoning_options = [{ type = "effort", values = ["none", "high"] }]
+
+[cost]
+input = 0.834
+output = 2.501
+cache_read = 0.042
+
+[limit]
+context = 1048576

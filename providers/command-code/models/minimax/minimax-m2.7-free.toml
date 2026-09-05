@@ -1,0 +1,19 @@
+# Prices: https://commandcode.ai/docs/resources/pricing-limits (accessed 2026-09-01).
+# Catalog/ids: https://api.commandcode.ai/provider/v1 and https://commandcode.ai/models (accessed 2026-09-01).
+# Relay notes: OpenAI Chat Completions on /provider/v1/chat/completions; reasoning controls
+# pass through to upstreams (mirrored from the labs' own entries).
+# Free variant (gateway's own free lane, served by GMICloud) through 2026-09-05; offline when the deal ends. No ZDR on this lane. Billed at $0 across input, output, and cache reads.
+# Host context 197000 per the Command Code catalog/API context_length (lab entry: 204800).
+
+base_model = "minimax/MiniMax-M2.7"
+name = "MiniMax M2.7 Free"
+
+reasoning_options = []
+
+[cost]
+input = 0
+output = 0
+cache_read = 0
+
+[limit]
+context = 197000

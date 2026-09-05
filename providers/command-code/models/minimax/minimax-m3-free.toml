@@ -1,0 +1,20 @@
+# Prices: https://commandcode.ai/docs/resources/pricing-limits (accessed 2026-09-01).
+# Catalog/ids: https://api.commandcode.ai/provider/v1 and https://commandcode.ai/models (accessed 2026-09-01).
+# Relay notes: OpenAI Chat Completions on /provider/v1/chat/completions; reasoning controls
+# pass through to upstreams (mirrored from the labs' own entries).
+# Toggle: thinking.type = adaptive|disabled (MiniMax platform API; thinking defaults off)
+# Free variant (gateway's own free lane, served by GMICloud) through 2026-09-05; offline when the deal ends. No ZDR on this lane. Billed at $0 across input, output, and cache reads.
+# Host context 1000000 per the Command Code catalog/API context_length (lab entry: 1048576).
+
+base_model = "minimax/MiniMax-M3"
+name = "MiniMax M3 Free"
+
+reasoning_options = [{ type = "toggle" }]
+
+[cost]
+input = 0
+output = 0
+cache_read = 0
+
+[limit]
+context = 1000000

@@ -1,0 +1,18 @@
+# Prices: https://commandcode.ai/docs/resources/pricing-limits (accessed 2026-09-01).
+# Catalog/ids: https://api.commandcode.ai/provider/v1 and https://commandcode.ai/models (accessed 2026-09-01).
+# Relay notes: OpenAI Chat Completions on /provider/v1/chat/completions; reasoning controls
+# pass through to upstreams (mirrored from the labs' own entries).
+# Command Code speed tier; no official z.ai `GLM-5.2-Fast` SKU exists (checked z.ai/model-api 2026-09-01), so this points at the base lab model.
+
+base_model = "zhipuai/glm-5.2"
+name = "GLM-5.2 Fast"
+
+reasoning_options = [{ type = "effort", values = ["high", "max"] }]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 3.0
+output = 10.25
+cache_read = 0.5
