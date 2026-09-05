@@ -1,0 +1,17 @@
+# Toggle: reasoning.enabled = true|false
+# Budget: reasoning.max_tokens (512..24576)
+# Source: https://github.com/Dstack-TEE/private-ai-gateway/blob/30296dd9a0dbaf06e520f2ed1be01eab75c3c287/src/middleware/reasoning.rs#L6-L13
+# Bounds: https://ai.google.dev/gemini-api/docs/thinking#thinking-budgets
+base_model = "google/gemini-2.5-flash-lite"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "budget_tokens"
+min = 512
+max = 24_576
+
+[cost]
+input = 0.1
+output = 0.4

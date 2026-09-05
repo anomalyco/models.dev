@@ -1,0 +1,20 @@
+# Source: https://platform.openai.com/docs/models/text-embedding-ada-002
+name = "text-embedding-ada-002"
+description = "Embedding model for semantic search, retrieval, clustering, and ranking pipelines"
+family = "text-embedding"
+release_date = "2022-12-15"
+last_updated = "2022-12-15"
+attachment = false
+reasoning = false
+temperature = false
+tool_call = false
+knowledge = "2022-12"
+open_weights = false
+
+[limit]
+context = 8_192
+output = 1_536
+
+[modalities]
+input = ["text"]
+output = ["text"]

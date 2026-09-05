@@ -1,0 +1,14 @@
+# Toggle: reasoning.enabled = true|false
+# No budget on this route: https://github.com/Dstack-TEE/private-ai-gateway/blob/30296dd9a0dbaf06e520f2ed1be01eab75c3c287/src/middleware/request_transform.rs#L251-L275
+base_model = "alibaba/qwen3.5-27b"
+
+[[reasoning_options]]
+type = "toggle"
+
+[cost]
+input = 0.3
+output = 2.4
+cache_read = 0.15
+
+[modalities]
+input = ["text", "image", "video"]
