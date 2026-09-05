@@ -1,8 +1,13 @@
+# Toggle: chat_template_kwargs.enable_thinking (Z.ai OpenAI-compat dialect).
+# Effort: reasoning_effort = high|max.
 base_model = "zhipuai/glm-5.2"
 
 [cost]
 input = 1.4
 output = 4.4
+
+[[reasoning_options]]
+type = "toggle"
 
 [[reasoning_options]]
 type = "effort"

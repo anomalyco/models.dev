@@ -1,5 +1,6 @@
-# Reasoning wire: OpenAI Chat Completions reasoning_effort; "none" disables
-# thinking. No separate thinking.type field is forwarded.
+# Toggle: enable_thinking boolean (Moonshot OpenAI-compat dialect; the gateway
+# also accepts enable_thinking:false which maps to effort=none).
+# Effort: reasoning_effort = low|high|max.
 base_model = "moonshotai/kimi-k3"
 
 [cost]
@@ -7,5 +8,8 @@ input = 3
 output = 15
 
 [[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
 type = "effort"
-values = ["none", "low", "high", "max"]
+values = ["low", "high", "max"]
