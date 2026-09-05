@@ -1,0 +1,30 @@
+# Agent Plan console routing alias from
+# https://www.volcengine.com/docs/82379/2373738 (accessed 2026-09-01).
+# The alias follows the model selected in the Agent Plan console; callers do
+# not control that target through this model ID, so no reasoning control is
+# declared. A one-token smoke call returned 200. Subscription usage is metered
+# through Agent Plan AFP rather than per-token API pricing.
+name = "Ark Code Latest"
+description = "Volcengine Agent Plan console-managed routing alias for coding and agent workloads"
+attachment = true
+reasoning = true
+reasoning_options = []
+tool_call = true
+structured_output = true
+temperature = true
+release_date = "2026-08-28"
+last_updated = "2026-09-01"
+open_weights = false
+
+[limit]
+context = 256_000
+output = 32_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[cost]
+input = 0
+output = 0
+cache_read = 0

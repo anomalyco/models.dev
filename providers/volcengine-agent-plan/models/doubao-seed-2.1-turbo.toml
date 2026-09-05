@@ -1,0 +1,16 @@
+# Agent Plan model from https://www.volcengine.com/docs/82379/2373738
+# (accessed 2026-09-01). Subscription tier: no per-token price. Controls match
+# the Coding Plan peer on the same Volcengine subscription gateway.
+base_model = "bytedance-seed/seed-2.1-turbo"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "high"]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0
+output = 0
+cache_read = 0

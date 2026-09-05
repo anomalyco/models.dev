@@ -1,0 +1,17 @@
+name = "Volcengine Ark Agent Plan"
+env = ["ARK_AGENT_PLAN_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+# Agent Plan is a separate subscription tier with its own dedicated API keys
+# and base URL. Generic Ark API keys can authenticate against /api/v3, but are
+# rejected by /api/plan/v3; Coding Plan keys likewise belong to a different
+# subscription surface. Keep this provider distinct so calls cannot bill the
+# wrong plan or hide an entitlement error as an ordinary model failure.
+# The short model IDs below are what the Agent Plan console exposes.
+# `ark-code-latest` is the console-managed routing alias; direct model IDs are
+# also accepted. OpenAI Chat uses POST /api/plan/v3/chat/completions and the
+# Anthropic-compatible API uses POST /api/plan/v1/messages.
+# Sources (accessed 2026-09-01):
+# https://www.volcengine.com/docs/82379/2373738
+# https://console.volcengine.com/ark/region:cn-beijing/subscription/agent-plan
+doc = "https://www.volcengine.com/docs/82379/2373738"
+api = "https://ark.cn-beijing.volces.com/api/plan/v3"
