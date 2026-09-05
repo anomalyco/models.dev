@@ -1,0 +1,26 @@
+name = "GPT-5.6 Sol"
+description = "Flagship GPT-5.6 tier for the hardest reasoning and coding tasks"
+family = "gpt"
+release_date = "2026-07-13"
+last_updated = "2026-07-30"
+attachment = true
+reasoning = true
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
+temperature = false
+tool_call = true
+structured_output = true
+open_weights = false
+
+[cost]
+input = 5
+output = 30
+cache_read = 0.5
+cache_write = 6.25
+
+[limit]
+context = 272_000
+output = 128_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

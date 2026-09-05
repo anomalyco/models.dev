@@ -1,21 +1,21 @@
-name = "DeepSeek v4 Pro"
-description = "Flagship DeepSeek model for coding, reasoning, and agentic work"
-family = "deepseek"
-release_date = "2026-08-13"
-last_updated = "2026-08-13"
+name = "GLM 5.3"
+description = "Strongest open-weights GLM for complex coding and long-horizon agents"
+family = "glm"
+release_date = "2026-08-14"
+last_updated = "2026-08-14"
 attachment = false
 reasoning = true
 reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]
 temperature = true
-knowledge = "2026-01"
+knowledge = "2025-06"
 tool_call = true
 structured_output = true
 open_weights = true
 
 [cost]
-input = 1.32
-output = 3.96
-cache_read = 0.044
+input = 1.40
+output = 4.40
+cache_read = 0.26
 
 [limit]
 context = 1_040_000

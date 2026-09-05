@@ -1,0 +1,25 @@
+name = "Kimi K3"
+description = "Moonshot flagship 1M-context agentic model with configurable reasoning effort"
+family = "kimi-k3"
+release_date = "2026-07-16"
+last_updated = "2026-07-27"
+attachment = true
+reasoning = true
+reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = true
+
+[cost]
+input = 3
+output = 15
+cache_read = 0.3
+
+[limit]
+context = 1_040_000
+output = 131_072
+
+[modalities]
+input = ["text", "image", "video"]
+output = ["text"]

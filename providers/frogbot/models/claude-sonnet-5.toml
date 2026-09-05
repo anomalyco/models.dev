@@ -1,0 +1,27 @@
+name = "Claude Sonnet 5"
+description = "Balanced Claude model for everyday coding, reasoning, and agent workloads"
+family = "claude-sonnet"
+release_date = "2026-06-30"
+last_updated = "2026-06-30"
+attachment = true
+reasoning = true
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
+temperature = false
+tool_call = true
+structured_output = true
+knowledge = "2026-01"
+open_weights = false
+
+[cost]
+input = 3
+output = 15
+cache_read = 0.3
+cache_write = 3.75
+
+[limit]
+context = 1_000_000
+output = 128_000
+
+[modalities]
+input = ["text", "image", "pdf"]
+output = ["text"]

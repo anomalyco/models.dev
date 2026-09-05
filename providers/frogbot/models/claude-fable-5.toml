@@ -1,0 +1,27 @@
+name = "Claude Fable 5"
+description = "Anthropic's most capable model for long-horizon agentic coding and research"
+family = "claude-fable"
+release_date = "2026-06-09"
+last_updated = "2026-06-09"
+attachment = true
+reasoning = true
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
+temperature = false
+tool_call = true
+structured_output = true
+knowledge = "2026-01"
+open_weights = false
+
+[cost]
+input = 10
+output = 50
+cache_read = 1
+cache_write = 12.5
+
+[limit]
+context = 1_000_000
+output = 128_000
+
+[modalities]
+input = ["text", "image", "pdf"]
+output = ["text"]
