@@ -1,0 +1,28 @@
+# Serving facts (verified live 2026-08-25): FP8 checkpoint, 393,216-token
+# context, text-only (image inputs are rejected with HTTP 400). Reasoning HTTP
+# controls: `chat_template_kwargs.enable_thinking = false` disables reasoning;
+# `reasoning_effort` accepts none/minimal/low/medium/high/xhigh/max and "none"
+# disables reasoning. Free GA launch: cost 0.
+# Sources:
+# https://docs.corvex.cloud/models/zai-org/GLM-5.2-FP8
+# https://docs.corvex.cloud/integrations/opencode
+base_model = "zhipuai/glm-5.2"
+name = "GLM 5.2 FP8"
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"]
+
+[cost]
+input = 0
+output = 0
+
+[limit]
+context = 393_216
+output = 393_216

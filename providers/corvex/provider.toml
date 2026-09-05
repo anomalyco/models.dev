@@ -1,0 +1,9 @@
+# Raw HTTP is POST `/v1/chat/completions` (OpenAI-compatible). Keys are minted
+# in the Token Factory dashboard.
+# https://docs.corvex.cloud/integrations/opencode
+# https://docs.corvex.cloud/getting-started/authentication
+name = "Corvex"
+env = ["CORVEX_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+api = "https://api.tokenfactory.corvex.cloud/v1"
+doc = "https://docs.corvex.cloud/integrations/opencode"
