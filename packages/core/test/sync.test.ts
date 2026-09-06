@@ -994,19 +994,29 @@ test("adds manual budget control for new Anthropic models", () => {
   expect(model.reasoning_options).toEqual([{ type: "budget_tokens" }]);
 });
 
-test("labels Anthropic aliases as latest", () => {
+test("never invents latest tags for Anthropic aliases", () => {
   const model = buildAnthropicModel(anthropicModel({
     id: "claude-sonnet-5",
     canonical_id: "claude-sonnet-5-20260630",
   }), undefined, "anthropic/claude-sonnet-5");
 
-  expect(model.name).toBe("Claude Sonnet 5 (latest)");
+  expect(model.name).toBe("Claude Sonnet 5");
+});
+
+test("strips stale latest suffix from Anthropic display names", () => {
+  const model = buildAnthropicModel(anthropicModel({
+    id: "claude-opus-4-5",
+    canonical_id: "claude-opus-4-5-20251101",
+    display_name: "Claude Opus 4.5 (latest)",
+  }), undefined, "anthropic/claude-opus-4-5");
+
+  expect(model.name).toBe("Claude Opus 4.5");
 });
 
 test("Anthropic sync preserves base model inheritance", () => {
   const resolved = {
     base_model: "anthropic/claude-opus-4-5",
-    name: "Claude Opus 4.5 (latest)",
+    name: "Claude Opus 4.5",
     description: "Flagship Claude model",
     release_date: "2025-11-24",
     last_updated: "2025-11-24",
