@@ -1,0 +1,24 @@
+# Source (accessed 2026-09-06):
+# - https://docs.neosantara.xyz/en/capability/reasoning (reasoning_effort none|minimal|low|medium|high|xhigh|max, none disables; reasoning_content side channel)
+# - https://api.neosantara.xyz/v1/models?currency=USD (pricing USD/MTok; context 200k; no reliable max_output)
+# Effort: reasoning_effort = "none" turns thinking off; graded levels control depth. Catalog row claude-sonnet-4-6 reports ["none","low","medium","high","max"].
+# Cost: USD/MTok, matches first-party providers/anthropic/models/claude-sonnet-4-6.toml (3/15/0.3/3.75).
+# Limit: context 200k per catalog (lab 1M); output inherits lab 64k (catalog has no reliable max_output; first-party resolves 128k but host serves lab value).
+# No budget_tokens: catalogued surface is the OpenAI-path reasoning_effort control; reasoning.max_tokens is an output cap, not a reasoning budget.
+base_model = "anthropic/claude-sonnet-4-6"
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "max"]
+
+[cost]
+input = 3
+output = 15
+cache_read = 0.3
+cache_write = 3.75
+
+[limit]
+context = 200_000
