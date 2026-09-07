@@ -1,0 +1,16 @@
+# Pricing: https://nullsink.is/v1/models (USD per million tokens deducted from prepaid credit).
+# Funding service fees are charged when purchasing credit, separately from inference usage.
+# Served through Tinfoil using nullsink's Chat Completions route: https://nullsink.is/api/
+# Effort: reasoning_effort = low|medium|high; no off toggle or caller token budget.
+# Controls: https://docs.tinfoil.sh/guides/reasoning#supported-values-per-model
+# Context and capabilities: https://inference.tinfoil.sh/v1/models
+base_model = "openai/gpt-oss-120b"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
+
+[cost]
+input = 0.15
+output = 0.6
+cache_read = 0.15
+
+[provider]
+shape = "completions"

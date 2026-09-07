@@ -1,0 +1,26 @@
+# Pricing: https://nullsink.is/v1/models (USD per million tokens deducted from prepaid credit).
+# Funding service fees are charged when purchasing credit, separately from inference usage.
+# Native Responses API: https://nullsink.is/api/
+# Effort: reasoning.effort = low|medium|high|xhigh|max.
+# Controls: https://developers.openai.com/api/docs/guides/latest-model?model=gpt-6-astra
+# Standard service tier only; nullsink rejects priority/flex and disables response storage.
+# The higher rate applies above 272000 total input tokens (inclusive minimum 272001).
+base_model = "openai/gpt-6-astra"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
+
+[cost]
+input = 10
+output = 50
+cache_read = 1
+cache_write = 12.5
+
+[[cost.tiers]]
+tier = { type = "context", size = 272_000 }
+input = 20
+output = 75
+cache_read = 2
+cache_write = 25
+
+[provider]
+npm = "@ai-sdk/openai"
+shape = "responses"
