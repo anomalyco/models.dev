@@ -6,9 +6,17 @@
 # verified empirically 2026-09-04 — same prompt yields ~10/25/198 reasoning
 # tokens for low/high/max. max/xhigh select max.
 # https://docs.fireworks.ai/api-reference/post-chatcompletions
+# Serving limits verified 2026-09-07: GET /v1/models reports context_length
+# 1_048_576; an over-limit probe (1_200_012 prompt tokens) was rejected with
+# "model maximum context length: 1048573" — the enforced prompt cap, recorded
+# here. max_tokens is validated against the context window, not a separate
+# output cap (262_144 and 524_288 both accepted); output = 262_144 per the
+# Baseten-documented ceiling for the same weights. The Z.ai lab default
+# (1M / 128K, https://docs.z.ai/guides/llm/glm-5.3) understates Fireworks
+# serving.
 base_model = "zhipuai/glm-5.3"
 name = "GLM 5.3"
-last_updated = "2026-09-04"
+last_updated = "2026-09-07"
 
 [[reasoning_options]]
 type = "effort"
@@ -21,3 +29,7 @@ field = "reasoning_content"
 input = 1.40
 output = 4.40
 cache_read = 0.26
+
+[limit]
+context = 1_048_573
+output = 262_144
