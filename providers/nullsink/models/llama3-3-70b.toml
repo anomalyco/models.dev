@@ -3,16 +3,15 @@
 # Served through Tinfoil using nullsink's Chat Completions route: https://nullsink.is/api/
 # Context and capabilities: https://inference.tinfoil.sh/v1/models
 # Hosted weights and modalities: https://docs.tinfoil.sh/models/chat
-# Controls: https://docs.tinfoil.sh/guides/reasoning#supported-values-per-model
-# Effort: reasoning_effort = low|medium|high; no caller token budget.
-# Reasoning is always on; no off toggle.
-base_model = "openai/gpt-oss-120b"
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
+base_model = "meta/llama-3.3-70b-instruct"
 
 [cost]
-input = 0.15
-output = 0.6
-cache_read = 0.15
+input = 1.75
+output = 2.75
+cache_read = 1.75
+
+[limit]
+context = 131_072
 
 [provider]
 shape = "completions"

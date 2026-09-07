@@ -4,15 +4,18 @@
 # Context and capabilities: https://inference.tinfoil.sh/v1/models
 # Hosted weights and modalities: https://docs.tinfoil.sh/models/chat
 # Controls: https://docs.tinfoil.sh/guides/reasoning#supported-values-per-model
-# Effort: reasoning_effort = low|medium|high; no caller token budget.
-# Reasoning is always on; no off toggle.
-base_model = "openai/gpt-oss-120b"
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
+# Effort: reasoning_effort = none|minimal|low|medium|high|xhigh|max; no caller token budget.
+# Off is reasoning_effort=none; no separate toggle.
+base_model = "deepseek/deepseek-v4-flash-0731"
+reasoning_options = [{ type = "effort", values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"] }]
 
 [cost]
-input = 0.15
-output = 0.6
-cache_read = 0.15
+input = 0.3
+output = 0.7
+cache_read = 0.06
+
+[limit]
+context = 1_048_576
 
 [provider]
 shape = "completions"

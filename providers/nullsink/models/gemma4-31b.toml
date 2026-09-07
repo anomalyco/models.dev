@@ -4,15 +4,15 @@
 # Context and capabilities: https://inference.tinfoil.sh/v1/models
 # Hosted weights and modalities: https://docs.tinfoil.sh/models/chat
 # Controls: https://docs.tinfoil.sh/guides/reasoning#supported-values-per-model
-# Effort: reasoning_effort = low|medium|high; no caller token budget.
-# Reasoning is always on; no off toggle.
-base_model = "openai/gpt-oss-120b"
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
+# Effort: reasoning_effort = none|minimal|low|medium|high|xhigh|max; no caller token budget.
+# Off is reasoning_effort=none; no separate toggle.
+base_model = "google/gemma-4-31b-it"
+reasoning_options = [{ type = "effort", values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"] }]
 
 [cost]
-input = 0.15
-output = 0.6
-cache_read = 0.15
+input = 0.4
+output = 1
+cache_read = 0.4
 
 [provider]
 shape = "completions"

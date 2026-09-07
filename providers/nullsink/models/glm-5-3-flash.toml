@@ -4,15 +4,22 @@
 # Context and capabilities: https://inference.tinfoil.sh/v1/models
 # Hosted weights and modalities: https://docs.tinfoil.sh/models/chat
 # Controls: https://docs.tinfoil.sh/guides/reasoning#supported-values-per-model
-# Effort: reasoning_effort = low|medium|high; no caller token budget.
+# Effort: reasoning_effort = low|high|max; no caller token budget.
 # Reasoning is always on; no off toggle.
-base_model = "openai/gpt-oss-120b"
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
+# Tinfoil documents text/image inputs; the base model supports additional modalities.
+base_model = "zhipuai/glm-5.3-flash"
+reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]
 
 [cost]
-input = 0.15
-output = 0.6
-cache_read = 0.15
+input = 0.4
+output = 1.25
+cache_read = 0.1
+
+[limit]
+context = 1_048_576
+
+[modalities]
+input = ["text", "image"]
 
 [provider]
 shape = "completions"
