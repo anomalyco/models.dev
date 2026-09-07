@@ -289,6 +289,19 @@ OVHcloud AI Endpoints is implemented in `packages/core/src/sync/providers/ovhclo
 - `attachment` is derived from non-text `input_modalities`, and `open_weights` from the presence of `hugging_face_id`.
 - `release_date`/`last_updated` default to the catalog `created` timestamp but preserve any existing hand-authored dates; `knowledge`, `family`, `status`, `interleaved`, and `limit.input` are preserved when present.
 
+## Fireworks AI Notes
+
+Fireworks AI is implemented in `packages/core/src/sync/providers/fireworks-ai.ts`.
+
+- Run it with `bun models:sync fireworks-ai` or `bun fireworks:sync`.
+- Source endpoint: `https://api.fireworks.ai/inference/v1/models`; required auth: `FIREWORKS_API_KEY`.
+- The OpenAI-compatible response is the most complete callable catalog for an account: it includes base-model and router IDs, creation timestamps, advertised context length, model kind, and chat/image/tool capability flags.
+- The endpoint does not expose OpenRouter-format metadata. `format=openrouter`, `type=text`, `limit`, and `pageSize` are accepted but ignored and return the same unpaginated response.
+- The management endpoint at `/v1/accounts/fireworks/models?filter=supports_serverless=true` exposes richer base-model metadata but omits routers and can omit callable models. Its documented `serverlessModes` pricing data was empty in the live response, so it is not used by the sync.
+- New text/vision IDs are reported but not created automatically because neither endpoint provides pricing, output limits, reasoning controls, or structured-output metadata. Embedding/reranking rows are ignored because the catalog provider entries describe generation models.
+- Existing exact context caps smaller than the advertised API value are preserved; a lower API ceiling is applied. Positive image/tool flags upgrade authored capabilities, but false flags do not remove them: `minimax-m3` reported `supports_image_input=false` while successfully accepting an image completion. Authored output limits, pricing, reasoning options, and other metadata are preserved.
+- Models absent from this account-scoped response are retained for manual lifecycle review.
+
 ## DigitalOcean Notes
 
 - DigitalOcean is implemented in `packages/core/src/sync/providers/digitalocean.ts`.
