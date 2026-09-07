@@ -18,21 +18,6 @@ field = "reasoning_content"
 input = 0.0282
 output = 0.282
 cache_read = 0.00564
-input_audio = 0.423
-
-[[cost.tiers]]
-tier = { size = 32_000 }
-input = 0.06
-output = 0.56
-cache_read = 0.01128
-input_audio = 0.846
-
-[[cost.tiers]]
-tier = { size = 128_000 }
-input = 0.11
-output = 1.13
-cache_read = 0.02256
-input_audio = 1.692
 
 [limit]
 context = 256_000
