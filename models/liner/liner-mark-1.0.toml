@@ -1,0 +1,56 @@
+# Benchmarks from https://liner.com/developers/liner-model (reasoning effort: medium).
+# Published as 0-1 accuracy on that page; recorded here on the 0-100 scale used by this repo.
+name = "Liner Mark 1.0"
+description = "Orchestration model that answers each request with the best-suited frontier LLM behind one OpenAI-compatible API"
+family = "mark"
+release_date = "2026-08-25"
+last_updated = "2026-08-25"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = false
+open_weights = false
+
+[limit]
+context = 1_000_000
+output = 65_536
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[[links]]
+label = "API documentation"
+url = "https://liner.com/developers/docs/liner-model-api"
+type = "docs"
+
+[[benchmarks]]
+name = "Humanity's Last Exam"
+score = 29.0
+source = "https://liner.com/developers/liner-model"
+
+[[benchmarks]]
+name = "MedQA"
+score = 97.0
+source = "https://liner.com/developers/liner-model"
+
+[[benchmarks]]
+name = "MathBench"
+score = 99.3
+source = "https://liner.com/developers/liner-model"
+
+[[benchmarks]]
+name = "SciCode"
+score = 39.6
+source = "https://liner.com/developers/liner-model"
+
+[[benchmarks]]
+name = "AIME"
+score = 94.9
+source = "https://liner.com/developers/liner-model"
+
+[[benchmarks]]
+name = "FinQA"
+score = 75.0
+source = "https://liner.com/developers/liner-model"
