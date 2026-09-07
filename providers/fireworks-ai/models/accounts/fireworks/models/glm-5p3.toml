@@ -9,9 +9,10 @@
 # Serving limits verified 2026-09-07: GET /v1/models reports context_length
 # 1_048_576; an over-limit probe (1_200_012 prompt tokens) was rejected with
 # "model maximum context length: 1048573" — the enforced prompt cap, recorded
-# here. max_tokens is validated against the context window, not a separate
-# output cap (262_144 and 524_288 both accepted); output = 262_144 per the
-# Baseten-documented ceiling for the same weights. The Z.ai lab default
+# here. Fireworks performs no pre-flight max_tokens validation at all
+# (262_144, 524_288, and 2_000_000 all accepted), so a request-side output
+# ceiling is untestable by probes; output = 262_144 per the Baseten-
+# documented generation ceiling for the same weights. The Z.ai lab default
 # (1M / 128K, https://docs.z.ai/guides/llm/glm-5.3) understates Fireworks
 # serving.
 base_model = "zhipuai/glm-5.3"
