@@ -9,12 +9,13 @@
 # standard, matching the GLM 5.2 Fast premium over GLM 5.2.
 # Limits and release verified 2026-09-07: GET /v1/models reports
 # context_length 1_048_576 and a created timestamp of 2026-08-28 (identical
-# to glm-5p3 — router launched with the base model); a max_tokens=262_144
-# probe was accepted, matching the Baseten/Vercel GLM 5.3 Fast output
-# ceilings; an over-limit probe (1_200_012 prompt tokens) was rejected
+# to glm-5p3 — router launched with the base model); an over-limit probe
+# (1_200_012 prompt tokens) was rejected
 # with "model maximum context length: 1048572" — the enforced prompt cap
 # sits 4 tokens below the advertised context_length, so that value is
-# recorded here.
+# recorded here. Fireworks performs no pre-flight max_tokens validation
+# (2_000_000 accepted); output = 262_144 per the Baseten/Vercel-documented
+# generation ceiling for the same weights.
 # Thinking-only, effort tiers identical to the sibling glm-5p3 entry:
 # low/high/max (max/xhigh select max).
 base_model = "zhipuai/glm-5.3"
