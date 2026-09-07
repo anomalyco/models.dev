@@ -1,0 +1,16 @@
+# Pricing and context length: https://onlist.io/models/mistralai/mistral-small-2603 (accessed 2026-09-07)
+# Reasoning: effort via `reasoning_effort` / `reasoning.effort`, budget via `reasoning.max_tokens`; no on/off toggle on Onlist
+base_model = "mistral/mistral-small-2603"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "high"]
+
+[cost]
+input = 0.15
+output = 0.6
+cache_read = 0.015
+
+[limit]
+context = 262_144
+output = 209_715

@@ -1,0 +1,14 @@
+# Pricing and context length: https://onlist.io/models/qwen/qwen3-235b-a22b (accessed 2026-09-07)
+# Toggle: top-level `enable_thinking` = true|false (Alibaba/DashScope field, not OpenRouter's `reasoning.enabled`)
+base_model = "alibaba/qwen3-235b-a22b"
+
+[[reasoning_options]]
+type = "toggle"
+
+[cost]
+input = 0.455
+output = 1.82
+cache_read = 0.0455
+
+[limit]
+output = 8_192

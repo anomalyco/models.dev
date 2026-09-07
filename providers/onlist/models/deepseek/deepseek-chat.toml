@@ -1,0 +1,12 @@
+# Pricing and context length: https://onlist.io/models/deepseek/deepseek-chat (accessed 2026-09-07)
+base_model = "deepseek/deepseek-chat"
+attachment = false
+
+[cost]
+input = 0.2002
+output = 0.8001
+cache_read = 0.05005
+
+[limit]
+context = 163_840
+output = 16_384

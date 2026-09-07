@@ -1,0 +1,12 @@
+# Pricing and context length: https://onlist.io/models/minimax/minimax-m2 (accessed 2026-09-07)
+# Reasoning: effort via `reasoning_effort` / `reasoning.effort`, budget via `reasoning.max_tokens`; no on/off toggle on Onlist
+base_model = "minimax/MiniMax-M2"
+reasoning_options = []
+
+[interleaved]
+field = "reasoning_details"
+
+[cost]
+input = 0.255
+output = 1.02
+cache_read = 0.03

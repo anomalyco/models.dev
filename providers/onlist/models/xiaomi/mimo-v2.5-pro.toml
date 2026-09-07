@@ -1,0 +1,12 @@
+# Pricing and context length: https://onlist.io/models/xiaomi/mimo-v2.5-pro (accessed 2026-09-07)
+# Reasoning: effort via `reasoning_effort` / `reasoning.effort`, budget via `reasoning.max_tokens`; no on/off toggle on Onlist
+base_model = "xiaomi/mimo-v2.5-pro"
+reasoning_options = []
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.435
+output = 0.87
+cache_read = 0.0036

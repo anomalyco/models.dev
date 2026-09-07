@@ -1,0 +1,15 @@
+# Pricing and context length: https://onlist.io/models/moonshotai/kimi-k2-thinking (accessed 2026-09-07)
+# Reasoning: effort via `reasoning_effort` / `reasoning.effort`, budget via `reasoning.max_tokens`; no on/off toggle on Onlist
+base_model = "moonshotai/kimi-k2-thinking"
+reasoning_options = []
+
+[interleaved]
+field = "reasoning_details"
+
+[cost]
+input = 0.6
+output = 2.5
+cache_read = 0.15
+
+[limit]
+output = 100_352

@@ -1,0 +1,9 @@
+# Pricing and context length: https://onlist.io/models/qwen/qwen3-vl-235b-a22b-thinking (accessed 2026-09-07)
+# Reasoning: effort via `reasoning_effort` / `reasoning.effort`, budget via `reasoning.max_tokens`; no on/off toggle on Onlist
+base_model = "alibaba/qwen3-vl-235b-a22b-thinking"
+reasoning_options = []
+
+[cost]
+input = 0.26
+output = 2.6
+cache_read = 0.026
