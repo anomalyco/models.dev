@@ -1,9 +1,9 @@
 # https://commandcode.ai/models/claude-haiku-4-5-20251001
+# Toggle: thinking.type = enabled|disabled
 base_model = "anthropic/claude-haiku-4-5-20251001"
 
 [[reasoning_options]]
-min = 1024
-type = "budget_tokens"
+type = "toggle"
 
 [cost]
 cache_read = 0.1
