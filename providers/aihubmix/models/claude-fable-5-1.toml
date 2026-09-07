@@ -1,3 +1,4 @@
+# AIHubMix Anthropic-compatible /v1/messages: $.thinking.type = "disabled"|"adaptive" (toggle) and $.output_config.effort = "low"|"medium"|"high"|"xhigh"|"max". https://docs.aihubmix.com/cn/api-reference/anthropic-compatible/create-a-message
 base_model = "anthropic/claude-fable-5-1"
 structured_output = true
 reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
@@ -8,10 +9,6 @@ input = 11
 output = 55
 cache_read = 0.275
 cache_write = 13.75
-
-[limit]
-context = 1_000_000
-output = 128_000
 
 [modalities]
 input = ["text", "image"]

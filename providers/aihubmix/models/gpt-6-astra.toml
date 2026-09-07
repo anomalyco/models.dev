@@ -1,0 +1,13 @@
+# AIHubMix OpenAI-compatible /v1/chat/completions: $.reasoning_effort = "low"|"medium"|"high"|"xhigh"|"max". https://docs.aihubmix.com/cn/api/unified-inference
+base_model = "openai/gpt-6-astra"
+name = "GPT 6 Astra"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
+
+[cost]
+input = 10
+output = 50
+cache_read = 1
+cache_write = 12.5
+
+[modalities]
+input = ["text", "image"]
