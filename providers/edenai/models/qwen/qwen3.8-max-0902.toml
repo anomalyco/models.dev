@@ -1,0 +1,15 @@
+base_model = "alibaba/qwen3.8-max-0902"
+structured_output = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["minimal", "low", "medium", "high", "xhigh"]
+
+[cost]
+input = 2
+output = 6
+cache_read = 0.25
+cache_write = 2.5
+
+[modalities]
+input = ["text", "image", "video"]

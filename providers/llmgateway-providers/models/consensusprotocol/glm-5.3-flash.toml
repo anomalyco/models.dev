@@ -1,0 +1,19 @@
+base_model = "zhipuai/glm-5.3-flash"
+name = "GLM-5.3 Flash (Consensus Protocol)"
+attachment = false
+structured_output = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"]
+
+[cost]
+input = 0.1
+output = 0.25
+cache_read = 0.02
+
+[limit]
+context = 1_048_576
+
+[modalities]
+input = ["text"]

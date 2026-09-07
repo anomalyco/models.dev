@@ -5,6 +5,9 @@
 # Pricing: $0.04 per image (not token-based; no [cost] authored, same as sibling imagine image models)
 base_model = "xai/grok-imagine-image-2.0"
 
+[limit]
+context = 64_000
+
 [modalities]
 input = ["text", "image", "pdf"]
 output = ["image", "pdf"]

@@ -1,0 +1,36 @@
+# https://docs.cline.bot/getting-started/clinepass (accessed 2026-09-02)
+# Model ID cline-pass/glm-5.3-flash; reference pricing $0.15 / $0.50 / $0.03 per 1M tokens (input/output/cache read).
+# Name/description from the ClinePass model catalog. ClinePass does not declare an
+# upstream lab mapping for this entry; specs (limits, modalities, reasoning) match
+# Z.ai's GLM-5.3-Flash (https://docs.bigmodel.cn/cn/guide/models/vlm/glm-5.3-flash).
+name = "cline-pass/glm-5.3-flash"
+description = "Latest natively multimodal model in the GLM-5 series"
+family = "glm"
+release_date = "2026-08-26"
+last_updated = "2026-08-26"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[limit]
+context = 1_000_000
+output = 131_072
+
+[modalities]
+input = ["text", "image", "video", "pdf"]
+output = ["text"]
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.15
+output = 0.5
+cache_read = 0.03

@@ -5,17 +5,17 @@ type = "effort"
 values = ["none", "low", "medium", "high", "xhigh", "max"]
 
 [cost]
-input = 5
-output = 30
-cache_read = 0.5
-cache_write = 6.25
+input = 4
+output = 20
+cache_read = 0.4
+cache_write = 5
 
 [[cost.tiers]]
 tier = { type = "context", size = 272_000 }
-input = 10
-output = 45
-cache_read = 1
-cache_write = 12.5
+input = 8
+output = 30
+cache_read = 0.8
+cache_write = 10
 
 [modalities]
 input = ["text", "image"]

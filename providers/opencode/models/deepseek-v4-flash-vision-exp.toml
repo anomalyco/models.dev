@@ -1,0 +1,12 @@
+# Toggle: thinking.type = enabled|disabled
+# Effort: reasoning_effort = low|high|max
+base_model = "deepseek/deepseek-v4-flash-vision-exp"
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "high", "max"] }]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.14
+output = 0.28
+cache_read = 0.028

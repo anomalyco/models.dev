@@ -1,0 +1,20 @@
+name = "GPT-6 Astra (Fast)"
+description = "Fast variant of GPT-6 Astra for low-latency assistance and high-volume workloads."
+family = "gpt-astra"
+release_date = "2026-09-04"
+last_updated = "2026-09-04"
+attachment = true
+reasoning = true
+temperature = false
+tool_call = true
+structured_output = true
+open_weights = false
+
+[limit]
+context = 1_050_000
+input = 922_000
+output = 128_000
+
+[modalities]
+input = ["text", "image", "pdf"]
+output = ["text"]

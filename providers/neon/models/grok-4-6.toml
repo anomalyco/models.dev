@@ -1,0 +1,23 @@
+# Effort: Chat Completions `reasoning_effort` and Responses `reasoning.effort`.
+# Native dialect is openai-responses: POST /openai/v1/responses returns 200.
+# Chat Completions also returns 200 and accepts `reasoning_effort`.
+# Lab/peers: low|medium|high|xhigh. `max` is rejected.
+# `none` and `minimal` return 200 but do not expose a reasoning channel to
+# compare against, and first-party xAI does not treat this model as disableable.
+# Do not advertise an off switch we cannot verify.
+base_model = "xai/grok-4.6"
+reasoning_options = [
+  { type = "effort", values = ["low", "medium", "high", "xhigh"] },
+]
+
+# Neon rate is not published yet. Do not copy first-party xAI prices.
+
+# Lab output is 500_000. The gateway names 524_288:
+# 'max_tokens' (100000000) exceeds model maximum (524288). Measured 2026-09-04.
+[limit]
+output = 524_288
+
+[provider]
+npm = "@ai-sdk/openai"
+api = "${NEON_AI_GATEWAY_BASE_URL}/openai/v1"
+shape = "responses"
