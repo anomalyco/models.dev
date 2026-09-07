@@ -1,0 +1,22 @@
+# https://commandcode.ai/models/deepseek-v4-flash-fast
+# Low-latency deployment tier of DeepSeek V4 Flash, not a distinct model:
+# https://commandcode.ai/models/deepseek-v4-flash-fast
+# Toggle: thinking.type = enabled|disabled
+# Effort: reasoning_effort = low|high|max
+base_model = "deepseek/deepseek-v4-flash-0731"
+name = "DeepSeek V4 Flash Fast"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+cache_read = 0.07
+input = 0.28
+output = 0.56

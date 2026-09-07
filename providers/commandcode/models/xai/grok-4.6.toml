@@ -1,0 +1,11 @@
+# https://commandcode.ai/models/grok-4-6
+base_model = "xai/grok-4.6"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high", "xhigh"]
+
+[cost]
+cache_read = 0.5
+input = 2
+output = 6

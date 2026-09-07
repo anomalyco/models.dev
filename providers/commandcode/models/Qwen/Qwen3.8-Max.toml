@@ -1,0 +1,26 @@
+# https://commandcode.ai/models/qwen3-8-max
+# Toggle: enable_thinking true|false
+# Effort: reasoning_effort = low|medium|xhigh
+# Budget: thinking_budget (0..262144)
+base_model = "alibaba/qwen3.8-max"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "xhigh"]
+
+[[reasoning_options]]
+max = 262144
+min = 0
+type = "budget_tokens"
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+cache_read = 0.25
+cache_write = 2.5
+input = 2
+output = 6

@@ -1,0 +1,10 @@
+# https://commandcode.ai/models/inkling-small
+# Reasoning is always-on on this host; no caller control (inherits reasoning = true).
+base_model = "thinkingmachines/inkling-small"
+
+reasoning_options = []
+
+[cost]
+cache_read = 0.1
+input = 0.5
+output = 1.2

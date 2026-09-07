@@ -1,0 +1,11 @@
+# https://commandcode.ai/models/minimax-m3
+# Toggle: chat_template_kwargs.thinking_mode = enabled|disabled
+base_model = "minimax/MiniMax-M3"
+
+[[reasoning_options]]
+type = "toggle"
+
+[cost]
+cache_read = 0.06
+input = 0.3
+output = 1.2

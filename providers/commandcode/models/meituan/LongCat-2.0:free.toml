@@ -1,0 +1,15 @@
+# https://commandcode.ai/models/longcat-2-0-free
+# Toggle: reasoning.enabled = true|false
+# Id "meituan/LongCat-2.0:free" is verbatim from https://api.commandcode.ai/provider/v1/models.
+# The colon is part of the upstream id and must stay in the filename; there's precedent for that.
+base_model = "meituan/longcat-2.0"
+name = "LongCat 2.0 Free"
+reasoning_options = [{ type = "toggle" }]
+
+[cost]
+cache_read = 0
+input = 0
+output = 0
+
+[interleaved]
+field = "reasoning_content"

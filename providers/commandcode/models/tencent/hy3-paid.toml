@@ -1,0 +1,11 @@
+# https://commandcode.ai/models/hy3-paid
+base_model = "tencent/hy3"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "high"]
+
+[cost]
+cache_read = 0.035
+input = 0.14
+output = 0.58

@@ -1,0 +1,14 @@
+# https://commandcode.ai/models/fugu-ultra
+base_model = "sakana/fugu-ultra"
+
+[[reasoning_options]]
+type = "effort"
+values = ["high", "xhigh"]
+
+[cost]
+cache_read = 0.5
+input = 5
+output = 30
+
+[limit]
+output = 128_000
