@@ -1,9 +1,10 @@
 # https://commandcode.ai/models/hy3-paid
+# Effort: reasoning_effort = none|low|high (off is effort=none)
 base_model = "tencent/hy3"
 
 [[reasoning_options]]
 type = "effort"
-values = ["none", "high"]
+values = ["none", "low", "high"]
 
 [cost]
 cache_read = 0.035

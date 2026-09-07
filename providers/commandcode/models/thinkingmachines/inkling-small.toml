@@ -1,8 +1,10 @@
 # https://commandcode.ai/models/inkling-small
-# Reasoning is always-on on this host; no caller control (inherits reasoning = true).
+# Effort: reasoning_effort = none|minimal|low|medium|high|max (off is effort=none)
 base_model = "thinkingmachines/inkling-small"
 
-reasoning_options = []
+[[reasoning_options]]
+type = "effort"
+values = ["none", "minimal", "low", "medium", "high", "max"]
 
 [cost]
 cache_read = 0.1
