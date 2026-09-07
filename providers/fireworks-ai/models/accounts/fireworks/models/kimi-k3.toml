@@ -2,6 +2,9 @@ base_model = "moonshotai/kimi-k3"
 release_date = "2026-07-27"
 last_updated = "2026-07-27"
 
+[interleaved]
+field = "reasoning_content"
+
 [[reasoning_options]]
 type = "toggle"
 
@@ -13,13 +16,14 @@ values = ["low", "medium", "high", "max"]
 type = "budget_tokens"
 min = 1_024
 
-[interleaved]
-field = "reasoning_content"
-
 [cost]
-input = 3.0
-output = 15.0
+input = 3
+output = 15
 cache_read = 0.3
 
 [modalities]
 input = ["text", "image"]
+
+[experimental.modes.priority]
+cost = { input = 3.75, output = 18.75, cache_read = 0.375 }
+provider = { body = { service_tier = "priority" } }

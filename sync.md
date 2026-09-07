@@ -295,6 +295,18 @@ OVHcloud AI Endpoints is implemented in `packages/core/src/sync/providers/ovhclo
 - `attachment` is derived from non-text `input_modalities`, and `open_weights` from the presence of `hugging_face_id`.
 - `release_date`/`last_updated` default to the catalog `created` timestamp but preserve any existing hand-authored dates; `knowledge`, `family`, `status`, `interleaved`, and `limit.input` are preserved when present.
 
+## Fireworks AI Notes
+
+Fireworks AI is implemented in `packages/core/src/sync/providers/fireworks-ai.ts`.
+
+- Run it with `bun models:sync fireworks-ai` or `bun fireworks:sync`.
+- Source endpoint: `https://api.fireworks.ai/v1/serverless/models`; required auth: `FIREWORKS_API_KEY`.
+- The serverless catalog exposes one row per serving mode with live per-million-token pricing, invocation identifiers, aliases, advertised context length, and input/output modalities.
+- Standard rows update base-model IDs. Fast and other alternate-resource rows update the model or router named by `usage_identifier`; their aliases are tracked as additional invocation IDs. Flag-only modes such as Priority become priced `experimental.modes` with the required request-body `service_tier` instead of duplicate catalog IDs. A priority-only model remains discoverable with that service-tier recipe on its base ID.
+- New text/vision invocation IDs are reported but not created automatically because the endpoint does not yet provide output limits, reasoning controls, tool support, or open-weight status. Embedding/reranking rows are ignored because the catalog provider entries describe generation models.
+- Pricing and modalities come from the matching serverless serving mode. Existing exact context caps smaller than the advertised API value are preserved, while a lower API ceiling is applied. Authored output limits, reasoning options, tool support, and other metadata not exposed by the endpoint are preserved.
+- Models absent from the serverless response are retained for manual lifecycle review.
+
 ## DigitalOcean Notes
 
 - DigitalOcean is implemented in `packages/core/src/sync/providers/digitalocean.ts`.
