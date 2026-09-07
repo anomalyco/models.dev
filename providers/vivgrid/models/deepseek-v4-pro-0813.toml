@@ -1,0 +1,22 @@
+# Pricing and capabilities:
+# https://docs.vivgrid.com/models/deepseek-v4-pro-0813 (accessed 2026-09-07)
+# Reasoning tokens bill at the output rate (no separate CoT price).
+# Toggle: thinking.type = enabled|disabled
+# Effort: reasoning_effort = high|max
+base_model = "deepseek/deepseek-v4-pro-0813"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["high", "max"]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 1.35
+output = 3.00
+reasoning = 3.00
+cache_read = 0.05
