@@ -1,4 +1,6 @@
 # https://commandcode.ai/models/gemini-3-7-flash
+# CommandCode bills cache writes only on this Gemini Flash model; the host's
+# sibling Flash pages publish no cache-write rate, so the other entries omit it.
 base_model = "google/gemini-3.7-flash"
 
 [[reasoning_options]]
