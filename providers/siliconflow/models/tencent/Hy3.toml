@@ -1,13 +1,12 @@
-base_model = "tencent/hy3-preview"
-attachment = false
-reasoning = true
+# Sources: https://www.siliconflow.com/models (2026-09-08)
+base_model = "tencent/hy3"
 reasoning_options = [{ type = "budget_tokens", min = 128, max = 32_768 }]
 open_weights = false
 
 [cost]
-input = 0.066
-cache_read = 0.029
-output = 0.26
+input = 0.132
+cache_read = 0.033
+output = 0.528
 
 [limit]
 context = 262_144

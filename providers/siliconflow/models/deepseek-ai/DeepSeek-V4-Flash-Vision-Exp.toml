@@ -1,4 +1,5 @@
-base_model = "deepseek/deepseek-v4-flash"
+# Sources: https://www.siliconflow.com/models (2026-09-08)
+base_model = "deepseek/deepseek-v4-flash-vision-exp"
 
 reasoning_options = [{ type = "budget_tokens", min = 128, max = 32_768 }]
 
@@ -6,6 +7,6 @@ reasoning_options = [{ type = "budget_tokens", min = 128, max = 32_768 }]
 field = "reasoning_content"
 
 [cost]
-input = 0.13
-output = 0.28
+input = 0.44
+output = 1.32
 cache_read = 0.028

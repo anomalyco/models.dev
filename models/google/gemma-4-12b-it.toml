@@ -1,0 +1,23 @@
+name = "Gemma 4 12B IT"
+description = "Compact Gemma 4 instruction model for open, self-hosted chat and reasoning"
+family = "gemma"
+release_date = "2026-06-09"
+last_updated = "2026-06-09"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = true
+
+[limit]
+context = 262_144
+output = 32_768
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/google/gemma-4-12B-it"

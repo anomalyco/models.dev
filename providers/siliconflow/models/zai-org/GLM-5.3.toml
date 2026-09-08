@@ -1,13 +1,13 @@
 # Sources: https://www.siliconflow.com/models (2026-09-08)
-base_model = "zhipuai/glm-5.2"
+base_model = "zhipuai/glm-5.3"
 reasoning_options = [{ type = "effort", values = ["high", "max"] }]
 
 [interleaved]
 field = "reasoning_content"
 
 [cost]
-input = 1.302
-output = 4.092
+input = 1.4
+output = 4.4
 cache_read = 0.26
 cache_write = 0
 

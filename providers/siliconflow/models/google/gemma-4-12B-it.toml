@@ -1,0 +1,17 @@
+# Sources: https://www.siliconflow.com/models (2026-09-08)
+base_model = "google/gemma-4-12b-it"
+attachment = false
+reasoning = false
+open_weights = false
+
+[cost]
+input = 0.10
+output = 0.30
+
+[limit]
+context = 262_144
+output = 262_144
+
+[modalities]
+input = ["text"]
+output = ["text"]
