@@ -1,5 +1,10 @@
+# No caller-side reasoning control on this route. Verified live on
+# POST https://cloud-api.near.ai/v1/chat/completions 2026-09-08:
+# thinking.type = "enabled" -> `"thinking.type.enabled" is not supported for this model`
+# reasoning_effort -> `reasoning_effort: Extra inputs are not permitted`
+# reasoning.enabled / .effort / .max_tokens -> accepted but no reasoning_content returned
 base_model = "anthropic/claude-opus-5"
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
+reasoning_options = []
 
 [cost]
 input = 5
