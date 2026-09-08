@@ -1,15 +1,12 @@
-name = "GLM-5.1 FP8"
-description = "Flagship GLM model for hybrid reasoning, coding, and agentic engineering"
-family = "glm"
-release_date = "2026-03-27"
-last_updated = "2026-03-27"
-attachment = false
-reasoning = true
+# NEAR AI Cloud TEE deployment (FP8). release_date/last_updated track the TEE catalog
+# refresh, not the lab release (see models/zhipuai/glm-5.1.toml).
+# Toggle: chat_template_kwargs.enable_thinking = true|false (on by default)
+# https://docs.near.ai/cloud/reasoning-models
+base_model = "zhipuai/glm-5.1"
+name = "GLM 5.1 FP8 TEE"
+release_date = "2026-09-08"
+last_updated = "2026-09-08"
 reasoning_options = [{ type = "toggle" }]
-temperature = true
-tool_call = true
-structured_output = true
-open_weights = true
 
 [interleaved]
 field = "reasoning_content"
@@ -17,11 +14,7 @@ field = "reasoning_content"
 [cost]
 input = 1.4
 output = 4.4
+cache_read = 0.26
 
 [limit]
 context = 202_752
-output = 16384
-
-[modalities]
-input = ["text"]
-output = ["text"]

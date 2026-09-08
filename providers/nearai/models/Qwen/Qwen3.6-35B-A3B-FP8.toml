@@ -1,6 +1,15 @@
+# NEAR AI Cloud TEE deployment (FP8). release_date/last_updated track the TEE catalog
+# refresh, not the lab release (see models/alibaba/qwen3.6-35b-a3b.toml).
+# Toggle: chat_template_kwargs.enable_thinking = true|false (on by default)
+# https://docs.near.ai/cloud/reasoning-models
 base_model = "alibaba/qwen3.6-35b-a3b"
+name = "Qwen 3.6 35B A3B FP8 TEE"
+release_date = "2026-09-08"
+last_updated = "2026-09-08"
 reasoning_options = [{ type = "toggle" }]
-name = "Qwen 3.6 35B A3B FP8"
+
+[interleaved]
+field = "reasoning_content"
 
 [cost]
 input = 0.17
@@ -8,7 +17,7 @@ output = 1.1
 cache_read = 0.056
 
 [limit]
-output = 8192
+output = 32_768
 
 [modalities]
 input = ["text"]
