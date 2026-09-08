@@ -1,0 +1,23 @@
+# Toggle: reasoning.effort = none (off); omit reasoning (on).
+base_model = "alibaba/qwen3.5-plus"
+attachment = true
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "budget_tokens"
+min = 1
+max = 81_920
+
+[cost]
+input = 0.42
+output = 2.52
+cache_read = 0.042
+cache_write = 0.525
+
+[limit]
+output = 64_000
+
+[modalities]
+input = ["text", "image", "pdf"]

@@ -1,0 +1,17 @@
+base_model = "thinkingmachines/inkling"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"]
+
+[cost]
+input = 1.05
+output = 4.2525
+cache_read = 0.1785
+
+[limit]
+context = 256_000
+output = 256_000
+
+[modalities]
+input = ["text", "image", "pdf"]

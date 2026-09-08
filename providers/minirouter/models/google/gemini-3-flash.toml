@@ -1,0 +1,18 @@
+base_model = "google/gemini-3-flash-preview"
+name = "Gemini 3 Flash"
+
+[[reasoning_options]]
+type = "effort"
+values = ["minimal", "low", "medium", "high"]
+
+[cost]
+input = 0.525
+output = 3.15
+cache_read = 0.0525
+
+[limit]
+context = 1_000_000
+output = 65_000
+
+[modalities]
+input = ["text", "image", "pdf"]

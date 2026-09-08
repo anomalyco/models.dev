@@ -1,0 +1,24 @@
+# Source: https://docs.mistral.ai/models/magistral-small-1-2-25-09 (accessed 2026-08-22)
+name = "Magistral Small 2509"
+description = "Small multimodal Mistral reasoning model updated in September 2025"
+family = "magistral"
+release_date = "2025-09-18"
+last_updated = "2025-09-18"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+open_weights = true
+license = "Apache 2.0"
+
+[limit]
+context = 128_000
+output = 128_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[[weights]]
+label = "Mistral"
+url = "https://docs.mistral.ai/models/magistral-small-1-2-25-09"

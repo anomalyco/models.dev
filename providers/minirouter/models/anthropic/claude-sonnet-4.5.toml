@@ -1,0 +1,15 @@
+base_model = "anthropic/claude-sonnet-4-5"
+structured_output = true
+
+[[reasoning_options]]
+type = "budget_tokens"
+min = 1_024
+
+[cost]
+input = 3.15
+output = 15.75
+cache_read = 0.315
+cache_write = 3.9375
+
+[limit]
+context = 1_000_000

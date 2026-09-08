@@ -1,0 +1,14 @@
+base_model = "google/gemini-omni-flash-preview"
+temperature = true
+reasoning_options = []
+
+[cost]
+input = 1.575
+output = 9.45
+
+[limit]
+context = 1_000_000
+
+[modalities]
+input = ["text", "image", "pdf"]
+output = ["text"]

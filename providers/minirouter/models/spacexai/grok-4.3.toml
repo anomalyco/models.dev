@@ -1,0 +1,16 @@
+# MiniRouter's frozen exact xai/grok-4.3 row itself advertises reasoning.effort
+# with none|low|medium|high, so these are verified host controls.
+# Source: https://github.com/SolWorks-Dev/minirouter/blob/35ac01a7b87b5feec3984c49c1eb995d74f0ae23/parity/snapshots/2026-08-06/artifacts/models.json
+base_model = "xai/grok-4.3"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high"]
+
+[cost]
+input = 1.3125
+output = 2.625
+cache_read = 0.21
+
+[limit]
+output = 1_000_000

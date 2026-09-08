@@ -1,0 +1,14 @@
+# Toggle: reasoning.effort = none (off); omit reasoning (on).
+base_model = "nvidia/nemotron-3-ultra-550b-a55b"
+name = "Nemotron 3 Ultra"
+
+[[reasoning_options]]
+type = "toggle"
+
+[cost]
+input = 0.63
+output = 2.52
+cache_read = 0.126
+
+[limit]
+output = 65_000

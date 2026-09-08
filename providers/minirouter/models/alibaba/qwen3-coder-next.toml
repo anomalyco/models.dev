@@ -1,0 +1,15 @@
+# MiniRouter forwards this exact ID unchanged to its Vercel default upstream.
+# The same-ID Vercel reconciliation marks it reasoning-capable with no caller
+# control; catalog tag omission is not negative runtime evidence.
+# Peer evidence: providers/vercel/models/alibaba/qwen3-coder-next.toml
+base_model = "alibaba/qwen3-coder-next"
+reasoning = true
+reasoning_options = []
+
+[cost]
+input = 0.525
+output = 1.26
+
+[limit]
+context = 256_000
+output = 256_000

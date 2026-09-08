@@ -1,0 +1,14 @@
+# Off: reasoning.effort=none; other values match the same-ID Vercel peer levels.
+base_model = "zhipuai/glm-5.2"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "high", "xhigh"]
+
+[cost]
+input = 0.84
+output = 2.6775
+cache_read = 0.168
+
+[limit]
+output = 128_000

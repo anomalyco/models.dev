@@ -1,0 +1,17 @@
+# Toggle: reasoning.effort = none (off); omit reasoning (on).
+base_model = "minimax/MiniMax-M3"
+
+[[reasoning_options]]
+type = "toggle"
+
+[cost]
+input = 0.315
+output = 1.26
+cache_read = 0.063
+
+[limit]
+context = 1_000_000
+output = 1_000_000
+
+[modalities]
+input = ["text", "image", "pdf"]

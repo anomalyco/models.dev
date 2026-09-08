@@ -1,0 +1,22 @@
+# The first-party KAT-Coder report describes agentic planning/reasoning, and the
+# same-ID Vercel peer marks the model as reasoning-capable without controls.
+# Sources: https://arxiv.org/abs/2510.18779 and providers/vercel/models/kwaipilot/kat-coder-pro-v1.toml
+name = "KAT-Coder-Pro V1"
+description = "KAT-Coder-Pro V1 is KwaiKAT's most advanced agentic coding model in the KwaiKAT series. Designed specifically for agentic coding tasks, it excels in real-world software engineering scenarios, achieving a remarkable 73.4% solve rate on the SWE-Bench Verified benchmark. KAT-Coder-Pro V1 delivers top-tier coding performance and has been rigorously tested by thousands of in-house engineers. The model has been optimized for tool-use capability, multi-turn interaction, instruction following, generalization and comprehensive capabilities through a multi-stage training process, including mid-training, supervised fine-tuning (SFT), reinforcement fine-tuning (RFT), and scalable agentic RL."
+family = "kat-coder"
+release_date = "2025-11-09"
+last_updated = "2025-11-09"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+knowledge = "2024-10"
+open_weights = false
+
+[limit]
+context = 256_000
+output = 32_000
+
+[modalities]
+input = ["text"]
+output = ["text"]

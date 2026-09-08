@@ -1,0 +1,19 @@
+# MiniRouter's public catalog publishes this non-VL-looking provider ID and
+# alibaba/qwen3-vl-thinking as aliases of Qwen3 VL 235B A22B Thinking; both have
+# vision, reasoning, tool-use, and file-input tags. The frozen host snapshot
+# also records input=[image,pdf,text] for this exact provider ID.
+# Live source: https://api.minirouter.sh/v1/models (accessed 2026-08-22)
+# Frozen source: https://github.com/SolWorks-Dev/minirouter/blob/35ac01a7b87b5feec3984c49c1eb995d74f0ae23/parity/snapshots/2026-08-06/artifacts/models.json
+base_model = "alibaba/qwen3-vl-235b-a22b-thinking"
+
+[[reasoning_options]]
+type = "budget_tokens"
+min = 1
+max = 81_920
+
+[cost]
+input = 0.42
+output = 4.2
+
+[modalities]
+input = ["text", "image", "pdf"]

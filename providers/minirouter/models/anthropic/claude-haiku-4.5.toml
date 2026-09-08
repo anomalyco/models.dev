@@ -1,0 +1,17 @@
+# Toggle: reasoning.effort = none (off); omit reasoning (on).
+base_model = "anthropic/claude-haiku-4-5"
+
+interleaved = true
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "budget_tokens"
+min = 1_024
+
+[cost]
+input = 1.05
+output = 5.25
+cache_read = 0.105
+cache_write = 1.3125

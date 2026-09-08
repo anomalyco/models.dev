@@ -1,0 +1,20 @@
+# Toggle: reasoning.effort = none (off); omit reasoning (on).
+base_model = "moonshotai/kimi-k2.5"
+temperature = true
+
+interleaved = true
+
+[[reasoning_options]]
+type = "toggle"
+
+[cost]
+input = 0.63
+output = 3.15
+cache_read = 0.105
+
+[limit]
+context = 262_114
+output = 262_114
+
+[modalities]
+input = ["text", "image"]

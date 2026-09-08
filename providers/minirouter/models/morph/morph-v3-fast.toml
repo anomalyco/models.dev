@@ -1,0 +1,11 @@
+# MiniRouter reports context_window=81920 and max_tokens=16384 for Morph V3 Fast.
+# Source: https://api.minirouter.sh/v1/models (accessed 2026-08-22)
+base_model = "morph/morph-v3-fast"
+
+[limit]
+context = 81_920
+output = 16_384
+
+[cost]
+input = 0.84
+output = 1.26

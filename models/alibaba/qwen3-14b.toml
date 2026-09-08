@@ -1,0 +1,20 @@
+# Source: https://ai-gateway.vercel.sh/v1/models (accessed 2026-08-22)
+name = "Qwen3-14B"
+description = "Qwen3 is the latest generation of large language models in Qwen series, offering a comprehensive suite of dense and mixture-of-experts (MoE) models. Built upon extensive training, Qwen3 delivers groundbreaking advancements in reasoning, instruction-following, agent capabilities, and multilingual support"
+family = "qwen"
+release_date = "2025-04-28"
+last_updated = "2025-04-28"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+knowledge = "2025-04"
+open_weights = true
+
+[limit]
+context = 40_960
+output = 16_384
+
+[modalities]
+input = ["text"]
+output = ["text"]

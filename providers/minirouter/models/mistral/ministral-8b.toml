@@ -1,0 +1,13 @@
+# MiniRouter verifies context_window=128000 and max_tokens=4000 for this ID.
+# Its catalog vision flag conflicts with the same-ID Vercel peer and first-party
+# 2410 identity, so modalities conservatively inherit the text-only lab entry.
+# Source: https://github.com/SolWorks-Dev/minirouter/blob/35ac01a7b87b5feec3984c49c1eb995d74f0ae23/parity/snapshots/2026-08-06/artifacts/models.json
+base_model = "mistral/ministral-8b-instruct-2410"
+
+[limit]
+context = 128_000
+output = 4_000
+
+[cost]
+input = 0.1575
+output = 0.1575

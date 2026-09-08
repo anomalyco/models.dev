@@ -1,0 +1,19 @@
+# Source: https://ai-gateway.vercel.sh/v1/models (accessed 2026-08-22)
+name = "Morph V3 Fast"
+description = "Morph offers a specialized AI model that applies code changes suggested by frontier models (like Claude or GPT-4o) to your existing code files FAST - 4500+ tokens/second. It acts as the final step in the AI coding workflow. Supports 16k input tokens and 16k output tokens."
+family = "morph"
+release_date = "2025-07-07"
+last_updated = "2025-07-07"
+attachment = false
+reasoning = false
+temperature = false
+tool_call = false
+open_weights = false
+
+[limit]
+context = 16_000
+output = 16_000
+
+[modalities]
+input = ["text"]
+output = ["text"]

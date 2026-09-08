@@ -1,0 +1,14 @@
+base_model = "mistral/mistral-medium-2604"
+name = "Mistral Medium Latest"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "high"]
+
+[cost]
+input = 1.575
+output = 7.875
+
+[limit]
+context = 256_000
+output = 256_000

@@ -1,0 +1,14 @@
+base_model = "openai/o3-deep-research"
+temperature = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["medium"]
+
+[cost]
+input = 10.5
+output = 42
+cache_read = 2.625
+
+[modalities]
+input = ["text", "image", "pdf"]

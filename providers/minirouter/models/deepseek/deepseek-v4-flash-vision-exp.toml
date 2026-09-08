@@ -1,0 +1,13 @@
+# MiniRouter forwards this request to Vercel AI Gateway; its same-surface
+# DeepSeek peer exposes high|xhigh, with effort=none as the mapped off path.
+# https://vercel.com/docs/ai-gateway/models-and-providers/reasoning
+base_model = "deepseek/deepseek-v4-flash-vision-exp"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "high", "xhigh"]
+
+[cost]
+input = 0.231
+output = 0.693
+cache_read = 0.00735

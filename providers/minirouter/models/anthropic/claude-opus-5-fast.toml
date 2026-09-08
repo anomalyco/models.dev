@@ -1,0 +1,12 @@
+base_model = "anthropic/claude-opus-5"
+name = "Claude Opus 5 (Fast)"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high", "xhigh", "max"]
+
+[cost]
+input = 10.5
+output = 52.5
+cache_read = 1.05
+cache_write = 13.125

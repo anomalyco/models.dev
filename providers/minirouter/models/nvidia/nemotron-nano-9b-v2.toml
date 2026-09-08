@@ -1,0 +1,10 @@
+# Toggle: reasoning.effort = none (off); omit reasoning (on).
+base_model = "nvidia/nemotron-nano-9b-v2"
+name = "Nvidia Nemotron Nano 9B V2"
+
+[[reasoning_options]]
+type = "toggle"
+
+[cost]
+input = 0.063
+output = 0.2415
