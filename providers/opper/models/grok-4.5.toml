@@ -1,4 +1,6 @@
 # Pool metadata: https://api.opper.ai/v3/models (2026-09-08).
+# All pool members publish flat rates: no pricing.thresholds or input_surcharge_threshold_tokens.
+# Opper billing uses this schedule; native context surcharges do not apply to these pools.
 # No pool-wide effort control: at least one member does not forward reasoning_effort.
 base_model = "xai/grok-4.5"
 
