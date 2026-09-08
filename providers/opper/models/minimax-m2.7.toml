@@ -1,0 +1,16 @@
+# Pool metadata: https://api.opper.ai/v3/models (2026-09-08).
+# No pool-wide effort control: at least one member does not forward reasoning_effort.
+base_model = "minimax/MiniMax-M2.7"
+structured_output = true
+
+reasoning_options = []
+
+[cost]
+input = 0.69732
+output = 2.78928
+
+[limit]
+context = 196608
+
+[interleaved]
+field = "reasoning_content"

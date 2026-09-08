@@ -1,0 +1,16 @@
+# Pool metadata: https://api.opper.ai/v3/models (2026-09-08).
+# No pool-wide effort control: at least one member does not forward reasoning_effort.
+base_model = "xai/grok-4.3"
+
+reasoning_options = []
+
+[cost]
+input = 1.25
+output = 2.5
+cache_read = 0.2
+
+[modalities]
+input = ["text", "image"]
+
+[interleaved]
+field = "reasoning_content"

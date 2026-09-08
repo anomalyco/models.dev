@@ -1,0 +1,23 @@
+# Pool metadata: https://api.opper.ai/v3/models (2026-09-08).
+# No pool-wide effort control: at least one member does not forward reasoning_effort.
+# Context tiers are conservative pool price ceilings, including marginal-rate bands.
+base_model = "anthropic/claude-sonnet-4-5"
+structured_output = true
+
+reasoning_options = []
+
+[cost]
+input = 3.3
+output = 16.5
+cache_read = 0.33
+cache_write = 4.125
+
+[[cost.tiers]]
+tier = { type = "context", size = 200000 }
+input = 6.6
+output = 24.75
+cache_read = 0.66
+cache_write = 8.25
+
+[interleaved]
+field = "reasoning_content"
