@@ -1,3 +1,5 @@
+# Toggle: reasoning.enabled = true|false
+# Effort: reasoning.effort = high|xhigh (Vercel gateway aliases)
 name = "DeepSeek V4.1 Flash Beta"
 description = "Fast DeepSeek model for efficient chat, coding help, and agent loops"
 family = "deepseek"
@@ -7,7 +9,7 @@ attachment = true
 reasoning = true
 tool_call = true
 open_weights = false
-reasoning_options = []
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["high", "xhigh"] }]
 
 [cost]
 input = 0.22
