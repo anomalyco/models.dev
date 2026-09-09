@@ -2,9 +2,10 @@
 # - Pricing: https://cursor.com/docs/models-and-pricing
 # - Context/capabilities: https://cursor.com/docs
 # - npm mapping: cursor-opencode-provider src/pricing-data.ts + src/model-config.ts
+# Reasoning: Cursor wire surface carries thinking/effort variant params only (no reasoning-token budget field); see npm src/protocol/thinking.ts.
 base_model = "anthropic/claude-opus-4-6"
 
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "max"] }, { type = "budget_tokens", min = 1_024 }]
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "max"] }]
 
 [cost]
 input = 5

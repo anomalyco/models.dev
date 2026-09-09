@@ -2,9 +2,11 @@
 # - Pricing: https://cursor.com/docs/models-and-pricing
 # - Context/capabilities: https://cursor.com/docs
 # - npm mapping: cursor-opencode-provider src/pricing-data.ts + src/model-config.ts
+# Toggle: requested_model.parameters thinking = true|false
+# Reasoning: Cursor wire surface carries thinking/effort variant params only (no reasoning-token budget field); see npm src/protocol/thinking.ts.
 base_model = "anthropic/claude-sonnet-4-0"
 
-reasoning_options = [{ type = "budget_tokens", min = 1_024 }]
+reasoning_options = [{ type = "toggle" }]
 
 [cost]
 input = 3
@@ -21,4 +23,3 @@ cache_write = 7.5
 
 [limit]
 context = 1_000_000
-output = 128_000
