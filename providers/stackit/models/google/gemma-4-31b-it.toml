@@ -1,0 +1,19 @@
+# Sources (accessed 2026-09-09):
+# https://docs.stackit.cloud/de/products/data-and-ai/ai-model-serving/basics/available-shared-models/#gemma-4-31b
+# Limits: Context 256K, output 4096
+# Modalities: text + images in, text out
+base_model = "google/gemma-4-31b-it"
+structured_output = false
+reasoning_options = []
+
+[cost]
+input = 0.53
+output = 0.76
+
+[limit]
+context = 256_000
+output = 4_096
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
