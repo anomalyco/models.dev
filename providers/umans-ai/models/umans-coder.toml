@@ -1,21 +1,23 @@
-base_model = "moonshotai/kimi-k2.7-code"
+base_model = "zhipuai/glm-5.3-flash"
 name = "Umans Coder"
 temperature = false
-# This alias currently routes to Kimi K2.7 Code: reasoning is always on
-# (`can_disable=false`) with no effort levels (accessed 2026-06-25).
+# This alias routes to GLM-5.3-Flash since 2026-09-09 (it rode Kimi K2.7 Code
+# before): reasoning is always on (`can_disable=false`) WITH effort levels
+# low|high|max, default max (accessed 2026-09-08):
 # https://api.code.umans.ai/v1/models/info
-reasoning_options = []
+reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]
 
 [interleaved]
 field = "reasoning_content"
 
 [cost]
-input = 0.95
-output = 4.00
-cache_read = 0.19
+input = 0.15
+output = 0.50
+cache_read = 0.03
 
 [limit]
-output = 32_768
+context = 1_048_576
+output = 131_071
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image", "video"]
