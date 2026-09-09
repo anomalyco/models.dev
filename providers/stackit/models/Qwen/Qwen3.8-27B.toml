@@ -1,0 +1,20 @@
+# Sources (accessed 2026-09-09):
+# https://docs.stackit.cloud/de/products/data-and-ai/ai-model-serving/basics/available-shared-models/#qwen38-27b
+# Limits: Context 262K, output 16_384
+# Modalities: text + images in, text out
+base_model = "alibaba/qwen3.8-27b"
+attachment = false
+reasoning = false
+structured_output = false
+
+[cost]
+input = 0.53
+output = 0.76
+
+[limit]
+context = 262_000
+output = 16_384
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
