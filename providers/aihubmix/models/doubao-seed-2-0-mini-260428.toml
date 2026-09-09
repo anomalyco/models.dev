@@ -5,7 +5,6 @@ release_date = "2026-04-28"
 last_updated = "2026-04-28"
 attachment = true
 reasoning = true
-reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["minimal", "low", "medium", "high"] }]
 temperature = true
 tool_call = true
 structured_output = true
@@ -14,21 +13,28 @@ open_weights = false
 [interleaved]
 field = "reasoning_content"
 
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["minimal", "low", "medium", "high"]
+
 [cost]
-input = 0.03
-output = 0.28
+input = 0.0282
+output = 0.282
 cache_read = 0.00564
 input_audio = 0.423
 
 [[cost.tiers]]
-tier = { size = 32_000 }
+tier = { type = "context", size = 32_000 }
 input = 0.06
 output = 0.56
 cache_read = 0.01128
 input_audio = 0.846
 
 [[cost.tiers]]
-tier = { size = 128_000 }
+tier = { type = "context", size = 128_000 }
 input = 0.11
 output = 1.13
 cache_read = 0.02256

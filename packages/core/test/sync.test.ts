@@ -5,6 +5,11 @@ import path from "node:path";
 
 import { formatToml, preserveReasoningOptions, syncProvider, type ExistingModel, type SyncProvider } from "../src/sync/index.js";
 import {
+  aihubmix,
+  buildAihubmixModel,
+  type AihubmixModel,
+} from "../src/sync/providers/aihubmix.js";
+import {
   anthropic,
   buildAnthropicModel,
   parseAnthropicPricing,
@@ -1185,6 +1190,8 @@ test("tracks missing models except for unreliable first-party inventories", () =
   expect(openai.trackMissingModels).toBe(false);
   expect(pioneer.skipCreates).toBe(true);
   expect(pioneer.trackMissingModels).toBe(true);
+  expect(aihubmix.skipCreates).toBe(true);
+  expect(aihubmix.trackMissingModels).toBe(true);
   expect(ofox.skipCreates).toBe(true);
   expect(ofox.trackMissingModels).toBe(true);
   expect(tinfoil.skipCreates).toBe(true);
@@ -5013,4 +5020,76 @@ test("rejects synced model paths that differ only in case", async () => {
   } finally {
     await rm(root, { recursive: true, force: true });
   }
+});
+
+function aihubmixModel(overrides: Partial<AihubmixModel> = {}): AihubmixModel {
+  return {
+    model_id: "gemini-3.1-flash-lite",
+    model_name: "Gemini 3.1 Flash Lite",
+    pricing: { input: 0.25, output: 1.5, cache_read: 0.025 },
+    ...overrides,
+  };
+}
+
+const aihubmixAuthored: ExistingModel = {
+  id: "gemini-3.1-flash-lite",
+  name: "Gemini 3.1 Flash Lite",
+  attachment: true,
+  reasoning: true,
+  reasoning_options: [{ type: "effort", values: ["minimal", "low", "medium", "high"] }],
+  cost: { input: 0.25, output: 1.5, cache_read: 0.025, cache_write: 1 },
+  limit: { context: 1_048_576, output: 65_536 },
+  modalities: { input: ["text", "image", "audio", "video", "pdf"], output: ["text"] },
+};
+
+test("syncs AIHubMix pricing while preserving hand-authored capabilities", () => {
+  const model = buildAihubmixModel(
+    aihubmixModel({ pricing: { input: 0.2, output: 1.2, cache_read: 0.02, cache_write: 0.25 } }),
+    aihubmixAuthored,
+  );
+  expect(model.cost).toMatchObject({ input: 0.2, output: 1.2, cache_read: 0.02, cache_write: 0.25 });
+  // The endpoint reports relay defaults for these, so authored values win.
+  expect(model.limit).toEqual({ context: 1_048_576, output: 65_536 });
+  expect(model.modalities).toEqual({
+    input: ["text", "image", "audio", "video", "pdf"],
+    output: ["text"],
+  });
+  expect(model.reasoning_options).toEqual([
+    { type: "effort", values: ["minimal", "low", "medium", "high"] },
+  ]);
+});
+
+test("ignores AIHubMix cache_read that merely echoes the input price", () => {
+  const model = buildAihubmixModel(
+    aihubmixModel({ pricing: { input: 0.25, output: 1.5, cache_read: 0.25 } }),
+    aihubmixAuthored,
+  );
+  expect(model.cost?.cache_read).toBe(0.025);
+});
+
+test("keeps authored AIHubMix pricing when the endpoint quotes no rate", () => {
+  const model = buildAihubmixModel(aihubmixModel({ pricing: null }), aihubmixAuthored);
+  expect(model.cost).toEqual(aihubmixAuthored.cost);
+});
+
+test("marks retired AIHubMix relays deprecated and stops tracking them", () => {
+  const retired = aihubmixModel({ retire_stage: "deprecated" });
+  expect(buildAihubmixModel(retired, aihubmixAuthored).status).toBe("deprecated");
+  expect(aihubmix.sourceID?.(retired)).toBeUndefined();
+  expect(aihubmix.sourceID?.(aihubmixModel())).toBe("gemini-3.1-flash-lite");
+});
+
+test("writes per-tier audio pricing", () => {
+  const toml = formatToml({
+    name: "Doubao Seed 2.0 Lite",
+    cost: {
+      input: 0.09041,
+      output: 0.54246,
+      input_audio: 1.269,
+      tiers: [
+        { tier: { type: "context", size: 32_000 }, input: 0.13, output: 0.76, input_audio: 1.902 },
+      ],
+    },
+  } as never);
+  expect(toml).toContain("input_audio = 1.902");
 });

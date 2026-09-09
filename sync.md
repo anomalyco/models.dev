@@ -248,6 +248,18 @@ xAI is implemented in `packages/core/src/sync/providers/xai.ts`.
 - Existing xAI models are updated from API-authoritative fields while local metadata is preserved for fields the API does not expose, especially output token limits and some feature/capability flags.
 - New xAI API models are not created automatically (`skipCreates`); each missing ID opens a deduped GitHub issue. Alias IDs of models already cataloged under their canonical ID are skipped silently and never reported as missing.
 
+## AIHubMix Notes
+
+- AIHubMix is implemented in `packages/core/src/sync/providers/aihubmix.ts`.
+- Source endpoint: `https://aihubmix.com/api/v1/models?type=llm`.
+- No authentication is required; the catalog is public.
+- The endpoint is authoritative for pricing and deprecation status only. Everything else in the authored TOMLs is preserved.
+- Token limits and modalities are deliberately **not** synced: the endpoint reports the relay's conservative defaults rather than the upstream model's capabilities. It caps `context_length` per relay (Claude Opus 4.6 is listed at 200K against its 1M window), quotes `max_output` per default request, and never lists `pdf` in `input_modalities` even for models that accept PDFs.
+- `cache_read` is ignored when it equals `input`. The endpoint echoes the input price for models with no cached rate configured: 35 of the 301 priced entries carry a nonzero price this way, and 51 more are free models reporting 0 across the board. Taking the echoed value literally would overstate Gemini 3.1 Flash Lite tenfold against the $0.025 every other provider lists.
+- The free-text `features` list mixes synonyms (`thinking` vs `reasoning`, `tools` vs `tool_calling`) and never exposes accepted reasoning effort levels, so capability flags and `reasoning_options` stay hand-authored.
+- AIHubMix relays roughly 400 upstream models against a much smaller hand-verified subset here, so new IDs are not created automatically (`skipCreates`); each missing ID opens a deduped GitHub issue.
+- Routing aliases such as `alicloud-glm-5.1` and `deep-deepseek-v4-pro` are served but not listed by the endpoint, so local files missing from the response are retained (`deleteMissing: false`).
+
 ## Tinfoil Notes
 
 - Tinfoil is implemented in `packages/core/src/sync/providers/tinfoil.ts`.

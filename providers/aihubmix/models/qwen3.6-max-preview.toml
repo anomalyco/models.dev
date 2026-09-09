@@ -5,7 +5,6 @@ release_date = "2026-05-09"
 last_updated = "2026-05-09"
 attachment = false
 reasoning = true
-reasoning_options = [{ type = "toggle" }]
 temperature = true
 tool_call = true
 structured_output = true
@@ -15,14 +14,17 @@ open_weights = false
 [interleaved]
 field = "reasoning_content"
 
+[[reasoning_options]]
+type = "toggle"
+
 [cost]
-input = 1.27
-output = 7.61
+input = 1.268
+output = 7.608
 cache_read = 0.1268
 cache_write = 1.585
 
 [[cost.tiers]]
-tier = { size = 128_000 }
+tier = { type = "context", size = 128_000 }
 input = 2.11
 output = 12.67
 cache_read = 0.2112
