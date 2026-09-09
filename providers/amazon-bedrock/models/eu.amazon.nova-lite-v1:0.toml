@@ -1,0 +1,9 @@
+# EU cross-Region inference profile, verified via ListInferenceProfiles from eu-west-1.
+# EU geo pricing (Price List eu-west-1 standard): input/output/cache-read USD per 1M tokens; Nova has no cache-write charge.
+base_model = "amazon/nova-lite"
+name = "Nova Lite (EU)"
+
+[cost]
+input = 0.069
+output = 0.276
+cache_read = 0.01725

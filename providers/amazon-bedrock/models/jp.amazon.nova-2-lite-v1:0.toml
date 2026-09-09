@@ -1,0 +1,11 @@
+# JP cross-Region inference profile, verified via ListInferenceProfiles from ap-northeast-1.
+# JP geo pricing (Price List ap-northeast-1 standard): input/output/cache-read USD per 1M tokens; Nova has no cache-write charge.
+# Toggle: reasoningConfig.type = enabled|disabled; Effort: reasoningConfig.maxReasoningEffort = low|medium|high
+base_model = "amazon/nova-2-lite"
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "medium", "high"] }]
+name = "Nova 2 Lite (JP)"
+
+[cost]
+input = 0.396
+output = 3.311
+cache_read = 0.099

@@ -1,0 +1,9 @@
+# CA cross-Region inference profile, verified via ListInferenceProfiles from ca-central-1.
+# CA geo pricing (Price List ca-central-1 standard): input/output/cache-read USD per 1M tokens; Nova has no cache-write charge.
+base_model = "amazon/nova-lite"
+name = "Nova Lite (CA)"
+
+[cost]
+input = 0.064
+output = 0.256
+cache_read = 0.016
