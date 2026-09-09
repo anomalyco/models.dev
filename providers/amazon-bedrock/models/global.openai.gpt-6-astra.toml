@@ -6,7 +6,6 @@ base_model = "openai/gpt-6-astra"
 reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
 base_model_omit = ["cost.context_over_200k", "experimental.modes.fast"]
 name = "GPT-6 Astra (Global)"
-structured_output = false
 
 [cost]
 input = 10.00
