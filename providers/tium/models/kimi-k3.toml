@@ -1,0 +1,46 @@
+# Resale of the official Moonshot API. The Tium gateway forwards the request
+# body verbatim apart from `model`, `max_tokens` and `stream_options`.
+# Tium bills a monthly allotment of weighted tokens (WT), not USD per token.
+# These are the effective USD rates at the subscription price: $2.8302/MWT (the
+# highest of the three tiers) x the published model multiplier, with the
+# per-model output and cache weights. Source: https://tium.ai/pricing
+# Prepaid credit packs bill at $3.56-$4.50/MWT.
+# Reasoning tokens are counted as output tokens and billed at the output rate.
+#
+# Verified live against api.tium.ai on 2026-09-09:
+#   thinking.type = enabled/disabled both accepted, and disabled genuinely
+#     silences reasoning_content -- a real toggle.
+#   reasoning_content present in the response.
+#   Effort levels are ACCEPTED BUT NOT GRADED. Holding the prompt fixed over 3
+#     runs, reasoning_content medians were none=0, minimal=576, low=470,
+#     medium=851, high=699, xhigh=787, max=662 chars. Ranges overlapped
+#     throughout with no ordering at all. `minimal`, `medium` and `xhigh` are
+#     accepted on the wire but are omitted here, having no measurable effect
+#     and no place in the lab or peer baselines. Caveat: many runs hit the
+#     600-token max_tokens ceiling, which compresses differences at the top
+#     end, so this understates any grading that exists.
+#   `none` produced zero reasoning_content in 3 of 3 runs: a real off switch,
+#     consistent with the verified thinking.type toggle.
+#   Image input accepted. Video is REJECTED ("unsupported video url") though
+#     the base model lists it, hence the modalities override. PDF also refused.
+base_model = "moonshotai/kimi-k3"
+reasoning_options = [
+  { type = "toggle" },
+  { type = "effort", values = ["none", "low", "high", "max"] },
+]
+
+[interleaved]
+field = "reasoning_content"
+
+[modalities]
+input = ["text", "image"]
+
+[cost]
+input = 6.065
+output = 30.323
+reasoning = 30.323
+cache_read = 0.606
+
+[limit]
+context = 128000
+output = 32768
