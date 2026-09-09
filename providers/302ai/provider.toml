@@ -1,11 +1,16 @@
 name = "302.AI"
 env = ["302AI_API_KEY"]
 npm = "@ai-sdk/openai-compatible"
-# Reasoning HTTP format (accessed 2026-06-25):
-# Audited POST https://api.302.ai/v1/chat/completions. The provider's API guide
-# documents model/messages only; no reasoning toggle, effort, or numeric budget
-# request field is documented. Do not infer passthrough from upstream APIs.
-# Sources:
-# https://doc.302.ai/
+# Relay provider: 302.AI proxies multi-model lab endpoints (OpenAI, Anthropic, Google, GLM, Qwen, xAI, Moonshot, Xiaomi, MiniMax, etc.).
+# Reasoning controls verified live against POST https://api.302.ai/v1/chat/completions (2026-09-08):
+# - OpenAI / GPT: `reasoning_effort` (parsed upstream; invalid values rejected with 400)
+# - Qwen / Alibaba: `enable_thinking` true|false, `reasoning_effort`, `thinking_budget` (probed; `reasoning_content` returned)
+# - Moonshot / Kimi: `thinking.type = enabled|disabled` (probed; `reasoning_content` returned)
+# - GLM / Zhipu: `thinking.type = enabled|disabled` (same field as verified Kimi pattern)
+# - Anthropic / Claude: `output_config.effort` and optional `thinking.type` (lab-mapped, not probed)
+# - Google / Gemini, xAI / Grok: `reasoning_effort` (lab-mapped)
+# - MiniMax: `thinking.type = enabled|disabled` (M3, lab-mapped)
+# - Xiaomi / MiMo: entries removed 2026-09-08; IDs rejected even plain chat completions (-10003)
+# - Dedicated thinking IDs (e.g. *-thinking, MiniMax M2.x): []
 doc = "https://doc.302.ai"
 api = "https://api.302.ai/v1"

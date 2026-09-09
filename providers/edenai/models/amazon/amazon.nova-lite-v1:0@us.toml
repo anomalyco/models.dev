@@ -1,0 +1,10 @@
+base_model = "amazon/nova-lite"
+name = "Nova Lite (US)"
+structured_output = true
+
+[cost]
+input = 0.06
+output = 0.24
+
+[modalities]
+input = ["text", "image", "pdf"]

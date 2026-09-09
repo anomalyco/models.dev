@@ -1,0 +1,9 @@
+# US cross-Region inference profile, verified via ListInferenceProfiles from us-east-1.
+# US geo pricing (Price List us-east-1 standard): input/output USD per 1M tokens.
+base_model = "writer/palmyra-x4"
+reasoning_options = []
+name = "Palmyra X4 (US)"
+
+[cost]
+input = 2.50
+output = 10.00

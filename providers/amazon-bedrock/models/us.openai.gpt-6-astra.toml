@@ -1,0 +1,22 @@
+# US cross-Region inference profile — served by Bedrock core (Converse), not Mantle, so no [provider] override.
+# Bedrock model IDs and routes: https://github.com/openai/codex/pull/42805
+# Geo CRIS pricing inferred at 1.1x OpenAI-direct (= in-region) from the GPT-5.6 Sol AWS card precedent.
+# Effort levels match OpenAI-native Astra (Low..Max, no "none"): https://developers.openai.com/api/docs/models/gpt-6-astra
+base_model = "openai/gpt-6-astra"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
+base_model_omit = ["cost.context_over_200k", "experimental.modes.fast"]
+name = "GPT-6 Astra (US)"
+structured_output = false
+
+[cost]
+input = 11.00
+output = 55.00
+cache_read = 1.10
+cache_write = 13.75
+
+[[cost.tiers]]
+tier = { size = 272_000 }
+input = 22.00
+output = 82.50
+cache_read = 2.20
+cache_write = 27.50

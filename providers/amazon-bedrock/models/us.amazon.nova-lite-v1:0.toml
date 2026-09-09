@@ -1,0 +1,9 @@
+# US cross-Region inference profile, verified via ListInferenceProfiles from us-east-1.
+# US geo pricing (Price List us-east-1 standard): input/output/cache-read USD per 1M tokens; Nova has no cache-write charge.
+base_model = "amazon/nova-lite"
+name = "Nova Lite (US)"
+
+[cost]
+input = 0.06
+output = 0.24
+cache_read = 0.015

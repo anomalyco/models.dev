@@ -1,0 +1,9 @@
+# Cost: 302.AI bills Sol Pro at GPT-5.5 rates ($5.000/$30.000 per MTok), per live catalog https://api.302.ai/v1/models (retrieved 2026-09-08)
+# 302.AI model SKU routing to GPT-5.6 Pro reasoning tier (published at same token pricing in 302.AI API catalog)
+base_model = "openai/gpt-5.6-sol"
+name = "gpt-5.6-sol-pro"
+reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh", "max"] }]
+
+[cost]
+input = 5.0
+output = 30.0

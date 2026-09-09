@@ -1,0 +1,12 @@
+# AU cross-Region inference profile, verified via ListInferenceProfiles from ap-southeast-2.
+# AU geo pricing (Price List ap-southeast-2 standard): input/output/cache-read/cache-write USD per 1M tokens.
+# Note: sibling au.* entries are priced at 1.0x; the Price List bills AU-geo calls at the 1.1x standard rate.
+base_model = "anthropic/claude-opus-4-7"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
+name = "Claude Opus 4.7 (AU)"
+
+[cost]
+input = 5.50
+output = 27.50
+cache_read = 0.55
+cache_write = 6.875
