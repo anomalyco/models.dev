@@ -1,7 +1,9 @@
 # Model list, pricing and context limits: https://ai.paratera.com/#/lms/model (model square, accessed 2026-09-02)
 # RMB converted to USD at 1 USD = 6.7829 CNY: https://www.news.cn/fortune/20260902/02111c46d5fc4d7ba9fb8a67db1ba49e/c.html
+# Toggle: thinking.type = enabled|disabled. Verified against this gateway on 2026-09-02;
+# it accepts but ignores enable_thinking and reasoning_effort, so no effort control is exposed.
 base_model = "alibaba/qwen3.8-max"
-reasoning_options = []
+reasoning_options = [{ type = "toggle" }]
 
 [cost]
 input = 1.769155
