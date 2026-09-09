@@ -1,0 +1,13 @@
+# Pricing, context window and max output:
+# https://docs.vivgrid.com/models/claude-fable-5 (accessed 2026-09-07)
+# Cached input is $1.25/MTok. Vivgrid publishes no cache-write rate and states
+# pricing matches the original provider, so Anthropic's $12.50/MTok applies.
+base_model = "anthropic/claude-fable-5"
+structured_output = true
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
+
+[cost]
+input = 10
+output = 50
+cache_read = 1.25
+cache_write = 12.5

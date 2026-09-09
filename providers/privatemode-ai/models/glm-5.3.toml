@@ -1,0 +1,21 @@
+# Sources (accessed 2026-09-01):
+# Model overview (preview): https://docs.privatemode.ai/models/overview/#glm-53
+# Pricing (EUR): https://docs.privatemode.ai/pricing/
+# Added in v1.55.0 (upgraded from GLM-5.2): https://docs.privatemode.ai/release/#v1550
+# Upstream: https://huggingface.co/zai-org/GLM-5.3
+# Effort: reasoning_effort = low|high|max (default max; always on).
+# Any other value including none is silently mapped to max; reasoning cannot be off.
+# Cost: EUR list prices converted at 1 EUR = 1.1555 USD (Frankfurter 2026-08-10),
+# matching other Privatemode catalog entries with the same EUR list prices.
+# EUR/MTok: input 1.55 / output 7.74 / cached input 0.15
+base_model = "zhipuai/glm-5.3"
+status = "beta"
+reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]
+
+[cost]
+input = 1.7910
+output = 8.9436
+cache_read = 0.1733
+
+[limit]
+context = 256_000

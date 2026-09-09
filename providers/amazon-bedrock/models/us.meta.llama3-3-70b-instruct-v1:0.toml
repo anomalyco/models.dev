@@ -1,0 +1,9 @@
+# US cross-Region inference profile, verified via ListInferenceProfiles from us-east-1.
+# US geo pricing (Price List us-east-1 standard): input/output USD per 1M tokens.
+base_model = "meta/llama-3.3-70b-instruct"
+name = "Llama 3.3 70B Instruct (US)"
+attachment = false
+
+[cost]
+input = 0.72
+output = 0.72

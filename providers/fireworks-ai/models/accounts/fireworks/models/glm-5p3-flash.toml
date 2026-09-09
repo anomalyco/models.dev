@@ -5,9 +5,15 @@
 # empirically 2026-09-04 — same prompt yields ~9/17/559 reasoning tokens for
 # low/high/max. max/xhigh select max.
 # https://docs.fireworks.ai/api-reference/post-chatcompletions
+# Serving limits verified 2026-09-07: GET /v1/models reports context_length
+# 1_048_576; an over-limit probe (1_200_012 prompt tokens) was rejected with
+# "model maximum context length: 1048573" — the enforced prompt cap, recorded
+# here (the lab default is 1M context). Output stays at the inherited
+# 131_072: Fireworks performs no pre-flight max_tokens validation (up to
+# 2_000_000 accepted), and Baseten documents 131_072 for GLM-5.3-Flash.
 base_model = "zhipuai/glm-5.3-flash"
 name = "GLM 5.3 Flash"
-last_updated = "2026-09-04"
+last_updated = "2026-09-07"
 
 [[reasoning_options]]
 type = "effort"
@@ -20,3 +26,6 @@ field = "reasoning_content"
 input = 0.15
 output = 0.50
 cache_read = 0.03
+
+[limit]
+context = 1_048_573

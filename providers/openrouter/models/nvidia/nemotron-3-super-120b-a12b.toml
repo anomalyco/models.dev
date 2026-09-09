@@ -1,5 +1,7 @@
+# Toggle: reasoning.enabled = true|false
+# https://openrouter.ai/docs/guides/best-practices/reasoning-tokens
 base_model = "nvidia/nemotron-3-super-120b-a12b"
-structured_output = true
+structured_output = false
 
 [[reasoning_options]]
 type = "toggle"
@@ -16,5 +18,4 @@ input = 0.085
 output = 0.4
 
 [limit]
-context = 1_000_000
 output = 16_384

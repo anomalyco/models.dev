@@ -1,0 +1,22 @@
+# US cross-Region inference profile — served by Bedrock core (Converse), not Mantle, so no [provider] override.
+# Profile ID verified via ListInferenceProfiles from us-east-1 and ca-central-1.
+# Geo CRIS pricing (= in-region) per the GPT-5.6 AWS card pattern; OpenAI-on-Bedrock is absent from the Price List API.
+# Effort levels incl. "none" verified on the Global twin: global.openai.gpt-5.6-terra.toml
+base_model = "openai/gpt-5.6-terra"
+reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh", "max"] }]
+base_model_omit = ["cost.context_over_200k", "experimental.modes.fast"]
+name = "GPT-5.6 Terra (US)"
+structured_output = false
+
+[cost]
+input = 2.20
+output = 13.20
+cache_read = 0.22
+cache_write = 2.75
+
+[[cost.tiers]]
+tier = { size = 272_000 }
+input = 4.40
+output = 19.80
+cache_read = 0.44
+cache_write = 5.50

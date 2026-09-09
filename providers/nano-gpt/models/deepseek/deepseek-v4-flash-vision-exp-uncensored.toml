@@ -1,0 +1,25 @@
+name = "DeepSeek V4 Flash Vision Exp Uncensored"
+description = "An uncensored variant of the experimental vision-enabled DeepSeek V4 Flash model for chat, image understanding, reasoning, coding, and tool use, with a 524K context window."
+family = "deepseek"
+release_date = "2026-09-07"
+last_updated = "2026-09-07"
+attachment = true
+reasoning = true
+tool_call = true
+structured_output = false
+open_weights = true
+reasoning_options = []
+
+[cost]
+input = 0.44
+output = 1.6
+cache_read = 0.22
+
+[limit]
+context = 524_288
+input = 524_288
+output = 32_768
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
