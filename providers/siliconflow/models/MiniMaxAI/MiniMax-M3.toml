@@ -5,6 +5,7 @@
 # https://docs.siliconflow.com/en/api-reference/chat-completions/chat-completions
 base_model = "minimax/MiniMax-M3"
 
+
 reasoning_options = [{ type = "budget_tokens", min = 128, max = 32_768 }]
 
 [interleaved]
@@ -17,3 +18,9 @@ cache_read = 0.06
 
 [limit]
 output = 131_000
+
+# SiliconFlow serves image input but not video for this model
+# (model page "Support image input: Yes"): https://www.siliconflow.com/models/minimax-m3
+[modalities]
+input = ["text", "image"]
+output = ["text"]
