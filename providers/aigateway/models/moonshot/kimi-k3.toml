@@ -1,6 +1,5 @@
-# Toggle: enable_thinking boolean (Moonshot OpenAI-compat dialect; the gateway
-# also accepts enable_thinking:false which maps to effort=none).
-# Effort: reasoning_effort = low|high|max.
+# AIgateway forwards the OpenAI Chat Completions reasoning_effort value
+# (including "none" for off) for this model; no separate on/off wire is exposed.
 base_model = "moonshotai/kimi-k3"
 
 [cost]
@@ -8,8 +7,5 @@ input = 3
 output = 15
 
 [[reasoning_options]]
-type = "toggle"
-
-[[reasoning_options]]
 type = "effort"
-values = ["low", "high", "max"]
+values = ["none", "low", "high", "max"]

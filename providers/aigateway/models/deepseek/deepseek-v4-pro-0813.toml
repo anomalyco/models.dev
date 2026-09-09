@@ -1,4 +1,7 @@
-# Toggle: chat_template_kwargs.enable_thinking (DeepSeek OpenAI-compat dialect).
+# Toggle: AIgateway's gateway source (audited per-model reasoning-control table,
+# verified against the CF Workers AI live schema for this model) maps the
+# caller's reasoning_effort="none" / enable_thinking:false onto
+# chat_template_kwargs.enable_thinking on the upstream dispatch wire.
 # Effort: reasoning_effort = high|max.
 base_model = "deepseek/deepseek-v4-pro-0813"
 
