@@ -4,12 +4,8 @@
 # - npm mapping: cursor-opencode-provider src/pricing-data.ts + src/model-config.ts
 # Toggle: requested_model.parameters thinking = true|false
 # Reasoning: Cursor wire surface carries thinking/effort variant params only (no reasoning-token budget field); see npm src/protocol/thinking.ts.
-# Note: Cursor lists Haiku 4.5 capabilities as Thinking + Images with no Agent
-# (https://cursor.com/docs model table), so tool_call is disabled on this host
-# even though the lab base supports it.
 base_model = "anthropic/claude-haiku-4-5"
 
-tool_call = false
 reasoning_options = [{ type = "toggle" }]
 
 [cost]
