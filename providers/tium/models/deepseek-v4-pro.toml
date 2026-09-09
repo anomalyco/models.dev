@@ -1,5 +1,9 @@
-# Resale of the official DeepSeek API. The Tium gateway forwards the request
-# body verbatim apart from `model`, `max_tokens` and `stream_options`.
+# Toggle: thinking.type = enabled|disabled
+# Effort: reasoning_effort = high|max
+#
+# Resale of the official DeepSeek API. The Tium gateway forwards the
+# request body verbatim apart from `model`, `max_tokens` and
+# `stream_options`.
 # Tium bills a monthly allotment of weighted tokens (WT), not USD per token.
 # These are the effective USD rates at the subscription price: $2.8302/MWT (the
 # highest of the three tiers) x the published model multiplier, with the
@@ -8,27 +12,27 @@
 # Reasoning tokens are counted as output tokens and billed at the output rate.
 #
 # Verified live against api.tium.ai on 2026-09-09:
-#   thinking.type = enabled/disabled both accepted, and disabled genuinely
-#     silences reasoning_content -- a real toggle, not a rubber stamp.
+#   thinking.type enabled/disabled both accepted, and disabled genuinely
+#     silences reasoning_content: a real toggle, not a rubber stamp.
 #   reasoning_content present in the response.
-#   Effort levels are ACCEPTED BUT NOT GRADED. Holding the prompt fixed over 3
-#     runs, reasoning_content medians were none=0, minimal=988, low=1148,
-#     medium=1064, high=1074, xhigh=1565, max=1968 chars, with ranges
-#     overlapping throughout. `low` tracked `high` closely, consistent with the
-#     documented low->high mapping on Pro, so `low` is omitted along with
-#     `minimal`, `medium` and `xhigh`: all are accepted on the wire but show no
-#     measurable effect and are absent from the lab and peer baselines. Caveat:
-#     many runs hit the 600-token max_tokens ceiling, which compresses
-#     differences at the top end, so this understates any grading that exists.
-#   `none` produced zero reasoning_content in 3 of 3 runs: a real off switch,
-#     consistent with the verified thinking.type toggle.
+#   Effort levels are accepted but not measurably graded. Over 3 runs on a
+#     fixed prompt, reasoning_content medians were low=1148, medium=1064,
+#     high=1074, xhigh=1565, max=1968 chars, with overlapping ranges. `low`
+#     tracked `high`, consistent with the documented low->high mapping on
+#     Pro, so `low` is omitted along with `minimal`, `medium` and `xhigh`.
+#     Caveat: many runs hit the 600-token max_tokens ceiling, which
+#     compresses differences at the top end, so this understates any
+#     grading that exists.
+#   `none` also returns zero reasoning_content, but the toggle already
+#     models off, so it is not published as an effort level (AGENTS.md
+#     section 3).
 #   Multimodal note: image and PDF parts are accepted with 200, but the base
-#     model is text-only and a 200 on a 16-token reply does not prove the model
-#     reads them. Not asserted here; inherits text-only deliberately.
+#     model is text-only and a 200 on a 16-token reply does not prove the
+#     model reads them. Not asserted here; inherits text-only deliberately.
 base_model = "deepseek/deepseek-v4-pro"
 reasoning_options = [
   { type = "toggle" },
-  { type = "effort", values = ["none", "high", "max"] },
+  { type = "effort", values = ["high", "max"] },
 ]
 
 [interleaved]
