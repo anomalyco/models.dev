@@ -2,6 +2,9 @@
 # - Pricing: https://cursor.com/docs/models-and-pricing
 # - Context/capabilities: https://cursor.com/docs
 # - npm mapping: cursor-opencode-provider src/pricing-data.ts + src/model-config.ts
+# Note: Cursor lists Haiku 4.5 capabilities as Thinking + Images with no Agent
+# (https://cursor.com/docs model table), so tool_call is disabled on this host
+# even though the lab base supports it.
 base_model = "anthropic/claude-haiku-4-5"
 
 tool_call = false
@@ -14,5 +17,4 @@ cache_read = 0.1
 cache_write = 1.25
 
 [limit]
-context = 200_000
 output = 32_000

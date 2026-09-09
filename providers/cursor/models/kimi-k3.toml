@@ -2,6 +2,7 @@
 # - Pricing: https://cursor.com/docs/models-and-pricing
 # - Context/capabilities: https://cursor.com/docs
 # - npm mapping: cursor-opencode-provider src/pricing-data.ts + src/model-config.ts
+# Toggle: requested_model.parameters thinking = true|false
 base_model = "moonshotai/kimi-k3"
 
 reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "high", "max"] }]
