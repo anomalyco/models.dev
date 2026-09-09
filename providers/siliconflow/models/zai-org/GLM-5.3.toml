@@ -1,6 +1,6 @@
 # Sources: https://www.siliconflow.com/models (2026-09-08)
 base_model = "zhipuai/glm-5.3"
-reasoning_options = [{ type = "effort", values = ["high", "max"] }]
+reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]
 
 [interleaved]
 field = "reasoning_content"
