@@ -1,0 +1,24 @@
+# India cross-Region inference profile served by Bedrock Runtime (Converse).
+# Exact ID, ap-south-1/ap-south-2 availability, Geo CRIS prices and capabilities: https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-openai-gpt-56-terra.html
+# Bedrock 1,050,000-token context: https://developers.openai.com/api/docs/guides/amazon-bedrock
+# Effort follows the native model and existing Runtime profiles: https://developers.openai.com/api/docs/models/gpt-5.6-terra
+# Cache rates: AWS-published Responses pricing; the card's API coverage can lag live behavior.
+# Converse effort: additionalModelRequestFields.reasoning.effort = none|low|medium|high|xhigh|max; reasoning_effort is rejected.
+# Live check 2026-09-09 (ap-south-1): nested reasoning.effort=none returns 200.
+base_model = "openai/gpt-5.6-terra"
+name = "GPT-5.6 Terra (India)"
+reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh", "max"] }]
+structured_output = false
+
+[cost]
+input = 2.20
+output = 13.20
+cache_read = 0.22
+cache_write = 2.75
+
+[[cost.tiers]]
+tier = { type = "context", size = 272_000 }
+input = 4.40
+output = 19.80
+cache_read = 0.44
+cache_write = 5.50

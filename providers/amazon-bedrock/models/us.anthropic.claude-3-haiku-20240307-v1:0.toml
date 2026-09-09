@@ -1,0 +1,14 @@
+# Sources: https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-anthropic-claude-3-haiku.html
+# https://docs.aws.amazon.com/bedrock/latest/APIReference/API_ListInferenceProfiles.html
+# Pricing: https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AmazonBedrockFoundationModels/current/us-east-1/index.json
+# Profile verified from us-east-1; set AWS_REGION to a supported source such as us-east-1.
+# Uses the native Bedrock provider's bedrock-runtime Converse/InvokeModel surface.
+# On-demand USD/MTok from us-east-1. Legacy, EOL September 10, 2026.
+# Live US-family probe, 2026-09-09: Legacy access denied (404) without active use in the last 30 days.
+base_model = "anthropic/claude-3-haiku-20240307"
+name = "Claude Haiku 3 (US)"
+status = "deprecated"
+
+[cost]
+input = 0.25
+output = 1.25

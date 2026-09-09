@@ -1,6 +1,8 @@
-# APAC cross-Region inference profile, verified via ListInferenceProfiles from ap-southeast-2.
-# Priced at ap-southeast-2 standard; also invocable from ap-northeast-1/ap-southeast-1 where regional rates differ slightly.
-# Prices (Price List): input/output/cache-read USD per 1M tokens; Nova has no cache-write charge.
+# APAC cross-Region profile verified by ListInferenceProfiles (ap-southeast-2, 2026-09-08).
+# Model: https://docs.aws.amazon.com/nova/latest/userguide/what-is-nova.html
+# Pricing: https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AmazonBedrock/current/ap-southeast-2/index.json
+# Standard ap-southeast-2 reference rates, USD/MTok; rates vary by source Region. Cache writes billed at input rate; no surcharge.
+# Cache billing: https://docs.aws.amazon.com/bedrock/latest/userguide/prompt-caching.html
 base_model = "amazon/nova-pro"
 name = "Nova Pro (APAC)"
 
@@ -8,3 +10,4 @@ name = "Nova Pro (APAC)"
 input = 0.840
 output = 3.360
 cache_read = 0.210
+cache_write = 0.840
