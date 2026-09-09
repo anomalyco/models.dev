@@ -1,0 +1,16 @@
+# Sources (accessed 2026-09-09):
+# - Pricing: https://cursor.com/docs/models-and-pricing
+# - Context/capabilities: https://cursor.com/docs
+# - npm mapping: cursor-opencode-provider src/pricing-data.ts + src/model-config.ts
+base_model = "google/gemini-3-flash-preview"
+
+reasoning_options = [{ type = "effort", values = ["minimal", "low", "medium", "high"] }]
+
+[cost]
+input = 0.5
+output = 3
+cache_read = 0.05
+
+[limit]
+context = 1_000_000
+output = 128_000

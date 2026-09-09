@@ -1,0 +1,28 @@
+# Cursor's proprietary coding model (sources accessed 2026-09-09):
+# - Pricing ($0.50/$2.50, cache read $0.20): https://cursor.com/docs/models-and-pricing
+# - Capabilities (Agent, Thinking, Images; default context 200k): https://cursor.com/docs
+# - Release 2026-05-18; built on Moonshot Kimi K2.5 checkpoint: https://cursor.com/blog/composer-2-5
+# - OpenCode catalog output (32k base tier): cursor-opencode-provider src/model-config.ts
+name = "Composer 2.5"
+description = "Cursor's proprietary coding model for sustained long-running tasks and complex instructions"
+release_date = "2026-05-18"
+last_updated = "2026-05-18"
+attachment = true
+reasoning = true
+reasoning_options = []
+temperature = false
+tool_call = true
+open_weights = false
+
+[cost]
+input = 0.5
+output = 2.5
+cache_read = 0.2
+
+[limit]
+context = 200_000
+output = 32_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

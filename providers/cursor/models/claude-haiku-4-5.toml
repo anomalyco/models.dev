@@ -1,0 +1,18 @@
+# Sources (accessed 2026-09-09):
+# - Pricing: https://cursor.com/docs/models-and-pricing
+# - Context/capabilities: https://cursor.com/docs
+# - npm mapping: cursor-opencode-provider src/pricing-data.ts + src/model-config.ts
+base_model = "anthropic/claude-haiku-4-5"
+
+tool_call = false
+reasoning_options = [{ type = "budget_tokens", min = 1_024 }]
+
+[cost]
+input = 1
+output = 5
+cache_read = 0.1
+cache_write = 1.25
+
+[limit]
+context = 200_000
+output = 32_000

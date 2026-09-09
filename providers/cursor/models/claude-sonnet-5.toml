@@ -1,0 +1,17 @@
+# Sources (accessed 2026-09-09):
+# - Pricing: https://cursor.com/docs/models-and-pricing
+# - Context/capabilities: https://cursor.com/docs
+# - npm mapping: cursor-opencode-provider src/pricing-data.ts + src/model-config.ts
+base_model = "anthropic/claude-sonnet-5"
+
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
+
+[cost]
+input = 2
+output = 10
+cache_read = 0.2
+cache_write = 2.5
+
+[limit]
+context = 1_000_000
+output = 128_000
