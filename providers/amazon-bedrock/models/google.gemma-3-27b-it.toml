@@ -1,8 +1,9 @@
 # https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-google-gemma-3-27b-pt.html
 # AWS's card title says PT, but its programmatic ID and discovery name specify IT.
 # https://aws.amazon.com/bedrock/pricing/ (US Standard pricing)
+# Live Converse (us-east-1, 2026-09-09): forced toolUse works, but native toolResult continuation fails with a role-alternation error.
+# Tool calling remains disabled because a complete native tool-use round trip is unavailable.
 base_model = "google/gemma-3-27b-it"
-tool_call = true
 structured_output = true
 
 [cost]

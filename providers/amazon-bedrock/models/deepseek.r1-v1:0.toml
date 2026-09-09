@@ -3,6 +3,8 @@
 # Runtime accepts 32,768 output tokens; 8,192 is the quality recommendation.
 # R1 has always-on reasoning and no reasoning toggle, effort, or budget parameter.
 # US Standard pricing; use the us.deepseek.r1-v1:0 profile for on-demand Converse.
+# Live US profile (us-east-1, 2026-09-09): toolConfig rejected with HTTP 400,
+# "This model doesn't support tool use." with AUTO or omitted toolChoice.
 base_model = "deepseek/deepseek-r1"
 reasoning_options = []
 tool_call = false

@@ -1,5 +1,9 @@
 # https://mistral.ai/news/voxtral/
 # https://huggingface.co/mistralai/Voxtral-Mini-3B-2507
+# https://huggingface.co/mistralai/Voxtral-Mini-3B-2507/blob/main/params.json
+# https://docs.mistral.ai/api/endpoint/chat
+# Native params specify 32768 positions, matching the card's 32k context.
+# Output is this shared-window ceiling: prompt + max_tokens must fit; no separate native output cap is published.
 name = "Voxtral Mini 3B 2507"
 description = "Open audio-language model for speech transcription, audio understanding, and voice-driven tool use"
 family = "voxtral"
@@ -13,7 +17,8 @@ open_weights = true
 license = "Apache 2.0"
 
 [limit]
-context = 32_000
+context = 32_768
+output = 32_768
 
 [modalities]
 input = ["text", "audio"]
