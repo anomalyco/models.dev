@@ -1,0 +1,17 @@
+# Toggle: reasoning.enabled = true|false
+# Effort: reasoning.effort = low|high|max
+# Catalog exposes reasoning + reasoning_effort: https://api.redpill.ai/v1/models (accessed 2026-08-18)
+base_model = "moonshotai/kimi-k3"
+temperature = true
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[cost]
+input = 3
+output = 15
+cache_read = 0.3

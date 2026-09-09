@@ -1,0 +1,20 @@
+# Toggle: reasoning.enabled = true|false
+# Effort: reasoning.effort = low|high|max
+# Source: https://github.com/Dstack-TEE/private-ai-gateway/blob/30296dd9a0dbaf06e520f2ed1be01eab75c3c287/src/middleware/reasoning.rs#L6-L13
+base_model = "deepseek/deepseek-v4-flash"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[cost]
+input = 0.2
+output = 0.4
+cache_read = 0.07
+
+[limit]
+context = 1_048_576
+output = 393_216

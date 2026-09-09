@@ -1,0 +1,23 @@
+# xAI Grok 4.1 Fast (reasoning).
+# Sources (accessed 2026-08-18):
+# - https://x.ai/news/grok-4-1-fast (release, reasoning ID, 2M context, tool use, and pricing)
+# - https://docs.oracle.com/en-us/iaas/Content/generative-ai/xai-grok-4-1-fast.htm (modalities, structured output, and limits)
+name = "Grok 4.1 Fast (Reasoning)"
+description = "xAI's fast agentic tool-calling model with a 2M context window and built-in reasoning"
+family = "grok"
+release_date = "2025-11-19"
+last_updated = "2025-11-19"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[limit]
+context = 2_000_000
+output = 30_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
