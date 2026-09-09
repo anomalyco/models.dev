@@ -1,0 +1,18 @@
+name = "ERNIE-4.5-Turbo-VL"
+description = "ERNIE 4.5 Turbo vision-language model for image understanding, creation, and translation"
+family = "ernie"
+release_date = "2025-06-30"
+last_updated = "2025-06-30"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = true
+open_weights = false
+
+[limit]
+context = 32_000
+output = 8_192
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

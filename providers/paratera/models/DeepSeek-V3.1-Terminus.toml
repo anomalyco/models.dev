@@ -1,0 +1,12 @@
+# Model list, pricing and context limits: https://ai.paratera.com/#/lms/model (model square, accessed 2026-09-02)
+# RMB converted to USD at 1 USD = 6.7829 CNY: https://www.news.cn/fortune/20260902/02111c46d5fc4d7ba9fb8a67db1ba49e/c.html
+base_model = "deepseek/deepseek-v3.1-terminus"
+reasoning_options = []
+
+[cost]
+input = 0.589718
+output = 1.769155
+cache_read = 0.073715
+
+[limit]
+context = 128_000

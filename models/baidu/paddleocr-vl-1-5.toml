@@ -1,0 +1,21 @@
+name = "PaddleOCR-VL-1.5"
+description = "Open document-parsing vision-language model covering 110+ languages and complex layouts"
+release_date = "2026-01-29"
+last_updated = "2026-01-29"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = false
+open_weights = true
+
+[limit]
+context = 16_384
+output = 16_384
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/PaddlePaddle/PaddleOCR-VL-1.5"

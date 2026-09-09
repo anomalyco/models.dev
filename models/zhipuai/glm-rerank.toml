@@ -1,0 +1,17 @@
+name = "GLM-Rerank"
+description = "Text reranking model for improving retrieval quality in search and recommendation systems"
+family = "glm"
+release_date = "2025-04"
+last_updated = "2025-04"
+attachment = false
+reasoning = false
+tool_call = false
+open_weights = false
+
+[limit]
+context = 4_096
+output = 1
+
+[modalities]
+input = ["text"]
+output = ["text"]
