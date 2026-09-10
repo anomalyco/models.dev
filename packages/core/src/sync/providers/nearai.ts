@@ -127,20 +127,12 @@ export function buildNearAIModel(
     ? { ...existing.limit, context: atMost(existing.limit?.context, model.context_length) }
     : existing.limit;
 
-  const values = {
-    ...current,
-    // The catalog misreports capabilities in both directions: `supported_features`
-    // omits reasoning for relayed models that plainly reason, and
-    // `input_modalities` claims image for routes that reject it. So these two
-    // flags are the only ones taken from it, and only to turn something on;
-    // reasoning, modalities and attachment stay hand-authored.
-    tool_call: model.supported_features.includes("tools") ? true : existing.tool_call,
-    structured_output: model.supported_features.includes("structured_outputs")
-      ? true
-      : existing.structured_output,
-    cost,
-    limit,
-  } as SyncedFullModel;
+  // Only price and serving limits come from the catalog. Its capability fields are
+  // wrong in both directions: `supported_features` lists reasoning for relayed
+  // routes that return no reasoning content, and `input_modalities` claims image
+  // for routes that reject it. Capabilities, modalities and reasoning controls
+  // therefore stay hand-authored.
+  const values = { ...current, cost, limit } as SyncedFullModel;
 
   return baseModel === undefined
     ? values

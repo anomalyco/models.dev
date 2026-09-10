@@ -124,13 +124,17 @@ test("ignores an output modality the catalog schema cannot express", () => {
   expect(built).toMatchObject({ modalities: { output: ["text"] } });
 });
 
-test("never withdraws a capability the catalog stops advertising", () => {
+test("takes no capability from supported_features, which misreports both ways", () => {
   const built = buildNearAIModel(
-    nearAIModel({ supported_features: [] }),
-    authored(),
+    nearAIModel({ supported_features: ["tools", "structured_outputs", "reasoning"] }),
+    authored({ tool_call: false, structured_output: false, reasoning: false }),
   );
 
-  expect(built).toMatchObject({ tool_call: true, structured_output: true });
+  expect(built).toMatchObject({
+    tool_call: false,
+    structured_output: false,
+    reasoning: false,
+  });
 });
 
 test("leaves attachment as authored when the gateway claims an image route", () => {
