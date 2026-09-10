@@ -136,6 +136,22 @@ export interface BenchmarkResult {
 }
 
 /**
+ * Total/active parameter counts, in raw units (not "B" suffixes).
+ * `active` is only meaningful for Mixture-of-Experts models.
+ * `estimate` is true when counts are inferred (name parsing, third-party
+ * reporting) rather than read from the lab's own config/weights.
+ */
+export interface ModelParameters {
+  /** Total parameters, e.g. 671_000_000_000 for DeepSeek-V3. */
+  total: number
+  /** Per-token activated parameters (MoE), e.g. 37_000_000_000. */
+  active?: number
+  architecture?: "dense" | "moe" | "hybrid"
+  estimate?: boolean
+  source?: string
+}
+
+/**
  * Provider-agnostic model metadata as published by the lab.
  * Served by `GET https://models.dev/models.json`, keyed by `<lab>/<model>` ID.
  * Carries no provider-specific pricing or limits; see {@link Model} for those.
@@ -165,6 +181,8 @@ export interface ModelMetadata {
   modalities?: Modalities
   open_weights?: boolean
   limit?: MetadataLimit
+  /** Parameter counts, when the lab publishes them or they are reliably inferable. */
+  parameters?: ModelParameters
   /** License identifier for open-weights models. */
   license?: string
   links?: ModelLink[]
@@ -234,6 +252,8 @@ export interface Model {
   modalities: Modalities
   open_weights: boolean
   limit: Limit
+  /** Parameter counts inherited from lab metadata via `base_model`, when present. */
+  parameters?: ModelParameters
   /** Lifecycle status; absent means generally available. */
   status?: "alpha" | "beta" | "deprecated"
   experimental?: ModelExperimental

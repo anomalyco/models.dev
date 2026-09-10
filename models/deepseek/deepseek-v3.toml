@@ -14,6 +14,12 @@ license = "DeepSeek Model License"
 context = 131_072
 output = 8_192
 
+[parameters]
+total = 671_000_000_000
+active = 37_000_000_000
+architecture = "moe"
+source = "https://huggingface.co/deepseek-ai/DeepSeek-V3/blob/main/config.json"
+
 [modalities]
 input = ["text"]
 output = ["text"]

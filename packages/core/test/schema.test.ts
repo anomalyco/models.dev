@@ -1,7 +1,7 @@
 import { describe, expect, test } from "bun:test";
 import { z } from "zod";
 
-import { AuthoredModel, Provider } from "../src/index.js";
+import { AuthoredModel, ModelMetadata, Provider } from "../src/index.js";
 
 type AuthoredModelData = z.infer<typeof AuthoredModel>;
 
@@ -106,6 +106,87 @@ describe("model schema", () => {
         ).toBe(false);
       }
     }
+  });
+});
+
+describe("parameters schema", () => {
+  const metadata = {
+    id: "lab/model",
+    name: "Example Model",
+    description: "Example model for parameter schema tests",
+    open_weights: true,
+  };
+
+  test("accepts total-only parameters", () => {
+    expect(
+      ModelMetadata.safeParse({
+        ...metadata,
+        parameters: { total: 30_500_000_000 },
+      }).success,
+    ).toBe(true);
+  });
+
+  test("accepts MoE total with active and architecture", () => {
+    const result = ModelMetadata.safeParse({
+      ...metadata,
+      parameters: {
+        total: 671_000_000_000,
+        active: 37_000_000_000,
+        architecture: "moe",
+        source: "https://huggingface.co/lab/model/blob/main/config.json",
+      },
+    });
+
+    expect(result.success).toBe(true);
+  });
+
+  test("rejects active exceeding total", () => {
+    expect(
+      ModelMetadata.safeParse({
+        ...metadata,
+        parameters: {
+          total: 3_000_000_000,
+          active: 30_000_000_000,
+          architecture: "moe",
+        },
+      }).success,
+    ).toBe(false);
+  });
+
+  test("rejects zero or negative totals", () => {
+    expect(
+      ModelMetadata.safeParse({
+        ...metadata,
+        parameters: { total: 0 },
+      }).success,
+    ).toBe(false);
+  });
+
+  test("rejects unknown parameter fields", () => {
+    expect(
+      ModelMetadata.safeParse({
+        ...metadata,
+        parameters: { total: 1_000, layers: 32 },
+      }).success,
+    ).toBe(false);
+  });
+
+  test("rejects invalid source URLs", () => {
+    expect(
+      ModelMetadata.safeParse({
+        ...metadata,
+        parameters: { total: 1_000, source: "not-a-url" },
+      }).success,
+    ).toBe(false);
+  });
+
+  test("rejects unknown architecture values", () => {
+    expect(
+      ModelMetadata.safeParse({
+        ...metadata,
+        parameters: { total: 1_000, architecture: "sparse" },
+      }).success,
+    ).toBe(false);
   });
 });
 
