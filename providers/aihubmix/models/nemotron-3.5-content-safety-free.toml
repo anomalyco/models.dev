@@ -1,0 +1,11 @@
+base_model = "nvidia/nemotron-3.5-content-safety"
+
+[[reasoning_options]]
+type = "toggle"
+
+[cost]
+input = 0
+output = 0
+
+[limit]
+context = 131_072

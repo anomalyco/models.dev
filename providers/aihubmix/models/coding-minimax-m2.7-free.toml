@@ -1,11 +1,10 @@
-name = "Coding MiniMax M2.7 (Free)"
+name = "Coding MiniMax M2.7 (free)"
 description = "MiniMax model for chat, coding, office work, and agentic tasks"
 family = "minimax-free"
 release_date = "2026-03-18"
 last_updated = "2026-03-18"
 attachment = false
 reasoning = true
-reasoning_options = []
 temperature = true
 tool_call = true
 structured_output = true
@@ -14,13 +13,20 @@ open_weights = true
 [interleaved]
 field = "reasoning_content"
 
+[[reasoning_options]]
+type = "effort"
+values = ["none", "minimal", "low", "medium", "high"]
+
+[[reasoning_options]]
+type = "budget_tokens"
+
 [cost]
 input = 0
 output = 0
 
 [limit]
 context = 204_800
-output = 128_100
+output = 204_800
 
 [modalities]
 input = ["text"]

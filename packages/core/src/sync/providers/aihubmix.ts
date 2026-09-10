@@ -1,6 +1,10 @@
+import path from "node:path";
+
 import { z } from "zod";
 
+import { describeModel } from "../../describe.js";
 import type { ExistingModel, SyncProvider, SyncedFullModel, SyncedModel } from "../index.js";
+import { factorBaseModel } from "./openrouter.js";
 
 const API_ENDPOINT = "https://aihubmix.com/api/v1/models?type=llm";
 
@@ -11,6 +15,33 @@ const Pricing = z
     output: z.number().nullish(),
     cache_read: z.number().nullish(),
     cache_write: z.number().nullish(),
+    tiers: z
+      .array(
+        z
+          .object({
+            tier: z.object({
+              type: z.string().nullish(),
+              size: z.number(),
+            }),
+            input: z.number().nullish(),
+            output: z.number().nullish(),
+            cache_read: z.number().nullish(),
+            cache_write: z.number().nullish(),
+          })
+          .passthrough(),
+      )
+      .nullish(),
+  })
+  .passthrough();
+
+/**
+ * AIHubMix ships `default` alongside `type`/`values`, which the catalog's strict
+ * ReasoningOption rejects, so the extra key is dropped during translation.
+ */
+const ReasoningOption = z
+  .object({
+    type: z.string(),
+    values: z.array(z.string()).nullish(),
   })
   .passthrough();
 
@@ -18,7 +49,23 @@ export const AihubmixModel = z
   .object({
     model_id: z.string().min(1),
     model_name: z.string().nullish(),
+    developer_id: z.number().nullish(),
+    desc: z.string().nullish(),
     pricing: Pricing.nullish(),
+    features: z.string().nullish(),
+    input_modalities: z.string().nullish(),
+    output_modalities: z.string().nullish(),
+    context_length: z.number().nullish(),
+    max_output: z.number().nullish(),
+    reasoning: z.boolean().nullish(),
+    reasoning_options: z.array(ReasoningOption).nullish(),
+    tool_call: z.boolean().nullish(),
+    release_date: z.string().nullish(),
+    last_updated: z.string().nullish(),
+    // Not served yet; read opportunistically so creates unblock without a code
+    // change once AIHubMix adds them.
+    knowledge: z.string().nullish(),
+    open_weights: z.boolean().nullish(),
     retire_stage: z.string().nullish(),
   })
   .passthrough();
@@ -33,35 +80,80 @@ export const AihubmixResponse = z
 export type AihubmixModel = z.infer<typeof AihubmixModel>;
 
 /**
- * AIHubMix relays ~400 upstream models while the catalog curates a much smaller
- * hand-verified subset, so this sync only updates existing TOMLs
- * (`skipCreates`) and treats the AIHubMix endpoint as authoritative for pricing
- * and deprecation status only.
+ * AIHubMix relays upstream models under its own IDs, so a relay is factored onto
+ * the lab metadata it serves whenever that metadata exists — the relay then only
+ * records what it actually changes (price, reasoning controls, limits).
  *
- * Everything else in the authored TOMLs is preserved as hand-authored, because
- * the endpoint reports the relay's own conservative defaults rather than the
- * upstream model's real capabilities: `context_length` is capped per relay
- * (Claude Opus 4.6 reports 200K against its 1M window), `max_output` is quoted
- * per default request rather than per model, and `input_modalities` never lists
- * `pdf` even for models the provider does accept PDFs for. Its free-text
- * `features` list likewise mixes synonyms (`thinking` vs `reasoning`, `tools`
- * vs `tool_calling`) and never exposes accepted reasoning effort levels, so
- * capability flags, `reasoning_options`, `base_model` inheritance, and the
- * per-model `[provider]` protocol overrides all stay authored.
- *
- * Routing aliases such as `alicloud-glm-5.1` and `deep-deepseek-v4-pro` are
- * served but not listed by the endpoint, so local files missing from the
- * response are retained (`deleteMissing: false`).
+ * `developer_id` is AIHubMix's own lab identifier and is the only reliable way
+ * back to a catalog namespace: relay IDs carry routing prefixes (`coding-`,
+ * `alicloud-`) and suffixes (`-free`, `-think`, `-nothink`) that are AIHubMix
+ * routing modes rather than distinct upstream models.
  */
+const LAB_BY_DEVELOPER: Record<number, string> = {
+  2: "anthropic",
+  3: "microsoft",
+  4: "bytedance-seed",
+  5: "zhipuai",
+  6: "cohere",
+  7: "deepseek",
+  8: "google",
+  9: "xai",
+  10: "mistral",
+  11: "meta",
+  12: "openai",
+  13: "alibaba",
+  15: "moonshotai",
+  16: "stepfun",
+  17: "nvidia",
+  18: "minimax",
+  24: "tencent",
+  28: "meituan",
+  29: "inclusionai",
+  31: "xiaomi",
+  44: "upstage",
+};
+
+/** Routing prefixes and suffixes that select a mode, not a different model. */
+const ROUTING_PREFIXES = ["coding-", "alicloud-", "deep-", "zai-", "anthropic-", "xiaomi-", "openai-"];
+const ROUTING_SUFFIXES = ["-free", "-think", "-nothink", "-search", "-preview", "-disc", "-exp"];
+
+/** Catalog effort levels; AIHubMix spells two of them differently. */
+const EFFORT_ALIASES: Record<string, string> = { no_think: "none", instant: "minimal" };
+const EFFORT_VALUES = new Set([
+  "none",
+  "minimal",
+  "low",
+  "medium",
+  "high",
+  "xhigh",
+  "max",
+  "default",
+]);
+
+let labMetadataIDs: Set<string> | undefined;
+
+/**
+ * The catalog rejects a `base_model` that resolves to nothing, so relays are
+ * only factored onto metadata that is actually present on disk.
+ */
+async function readLabMetadataIDs(modelsDir: string) {
+  const metadataDir = path.join(path.dirname(path.dirname(path.dirname(modelsDir))), "models");
+  const ids = new Set<string>();
+  for await (const file of new Bun.Glob("**/*.toml").scan({ cwd: metadataDir, followSymlinks: true })) {
+    ids.add(file.split(path.sep).join("/").slice(0, -5));
+  }
+  return ids;
+}
+
 export const aihubmix = {
   id: "aihubmix",
   name: "AIHubMix",
   modelsDir: "providers/aihubmix/models",
-  skipCreates: true,
   trackMissingModels: true,
+  // Routing aliases such as `alicloud-glm-5.1` are served but unlisted, so a
+  // local file absent from the response is retained rather than deleted.
   deleteMissing: false,
   sourceID(model) {
-    // Deprecated relays are not catalog additions worth an issue.
     return model.retire_stage === "deprecated" ? undefined : model.model_id;
   },
   missingNotice(paths) {
@@ -70,7 +162,14 @@ export const aihubmix = {
         `AIHubMix no longer lists ${file}; confirm it is still a served routing alias or deprecate it.`,
     );
   },
+  skippedNotice(ids) {
+    return ids.map(
+      (id) =>
+        `AIHubMix lists ${id} but the response carries neither a resolvable base model nor the release_date/open_weights a standalone entry needs.`,
+    );
+  },
   async fetchModels() {
+    labMetadataIDs = await readLabMetadataIDs(this.modelsDir);
     const response = await fetch(process.env.AIHUBMIX_MODELS_URL ?? API_ENDPOINT);
     if (!response.ok) {
       throw new Error(`AIHubMix models request failed: ${response.status} ${response.statusText}`);
@@ -81,28 +180,141 @@ export const aihubmix = {
     return AihubmixResponse.parse(raw).data;
   },
   translateModel(model, context) {
-    const authored = context.authored(model.model_id);
-    if (authored === undefined) return undefined;
-    return {
-      id: model.model_id,
-      model: buildAihubmixModel(model, authored),
-    };
+    const existing = context.existing(model.model_id);
+    const built = buildAihubmixModel(model, existing, labMetadataIDs);
+    if (built === undefined) return undefined;
+    return { id: model.model_id, model: built };
   },
 } satisfies SyncProvider<AihubmixModel>;
 
-export function buildAihubmixModel(model: AihubmixModel, authored: ExistingModel): SyncedModel {
-  const { id: _id, ...preserved } = authored;
+export function buildAihubmixModel(
+  model: AihubmixModel,
+  existing: ExistingModel | undefined,
+  labIDs: Set<string> | undefined = labMetadataIDs,
+): SyncedModel | undefined {
+  const input = modalities(model.input_modalities, existing?.modalities?.input ?? ["text"]);
+  const output = modalities(model.output_modalities, existing?.modalities?.output ?? ["text"]);
+  const features = new Set((model.features ?? "").split(",").map((value) => value.trim()));
+  const reasoning = model.reasoning ?? existing?.reasoning ?? false;
+  const toolCall = model.tool_call ?? existing?.tool_call ?? false;
+  const structuredOutput = features.has("structured_outputs") || existing?.structured_output;
+  const name = model.model_name ?? existing?.name;
+  const limit = {
+    context: tokens(model.context_length) ?? existing?.limit?.context,
+    output: tokens(model.max_output) ?? existing?.limit?.output,
+  };
+  const shared = {
+    attachment: input.some((value) => value !== "text"),
+    reasoning,
+    reasoning_options: reasoningOptions(model) ?? existing?.reasoning_options,
+    tool_call: toolCall,
+    structured_output: structuredOutput,
+    // AIHubMix serves no temperature or interleaved flags; keep what was authored.
+    temperature: existing?.temperature,
+    interleaved: existing?.interleaved,
+    status: model.retire_stage === "deprecated" ? ("deprecated" as const) : existing?.status,
+    modalities: { input, output },
+    limit,
+    cost: buildCost(model.pricing, existing?.cost),
+  };
+
+  const base = existing?.base_model ?? resolveBaseModel(model, labIDs);
+  if (base !== undefined) {
+    return factorBaseModel(
+      base,
+      { name: existing?.name, description: existing?.description, ...shared },
+      limit,
+      existing?.base_model === base ? existing.base_model_omit : undefined,
+    );
+  }
+
+  // A standalone entry must carry every required catalog field itself. AIHubMix
+  // dates only 52 of its 415 models and serves no open_weights flag, so a relay
+  // with neither metadata to inherit nor those fields is reported rather than
+  // written with invented values.
+  const releaseDate = model.release_date ?? existing?.release_date;
+  const openWeights = model.open_weights ?? existing?.open_weights;
+  if (name === undefined || releaseDate === undefined || openWeights === undefined) {
+    return existing === undefined ? undefined : (existing as SyncedModel);
+  }
+
   return {
-    ...preserved,
-    cost: buildCost(model.pricing, authored.cost),
-    status: model.retire_stage === "deprecated" ? "deprecated" : authored.status,
-  } as SyncedModel;
+    ...shared,
+    name,
+    description:
+      existing?.description ??
+      model.desc ??
+      describeModel({
+        id: model.model_id,
+        providerId: "aihubmix",
+        name,
+        reasoning,
+        tool_call: toolCall,
+        structured_output: structuredOutput,
+        open_weights: openWeights,
+        limit,
+        modalities: { input, output },
+      }),
+    family: existing?.family,
+    release_date: releaseDate,
+    last_updated: model.last_updated ?? model.release_date ?? existing?.last_updated ?? releaseDate,
+    knowledge: model.knowledge ?? existing?.knowledge,
+    open_weights: openWeights,
+  } as SyncedFullModel;
+}
+
+function resolveBaseModel(model: AihubmixModel, labIDs: Set<string> | undefined) {
+  const lab = LAB_BY_DEVELOPER[model.developer_id ?? -1];
+  if (lab === undefined || labIDs === undefined) return undefined;
+  for (const candidate of baseCandidates(model.model_id)) {
+    const id = `${lab}/${candidate}`;
+    if (labIDs.has(id)) return id;
+  }
+  return undefined;
+}
+
+/** Longest match first: strip routing prefixes, then routing suffixes. */
+function baseCandidates(modelID: string) {
+  const bare = modelID.split("/").at(-1) ?? modelID;
+  const candidates = new Set([bare]);
+  for (const prefix of ROUTING_PREFIXES) {
+    if (bare.startsWith(prefix)) candidates.add(bare.slice(prefix.length));
+  }
+  for (const suffix of ROUTING_SUFFIXES) {
+    for (const candidate of [...candidates]) {
+      if (candidate.endsWith(suffix)) candidates.add(candidate.slice(0, -suffix.length));
+    }
+  }
+  return candidates;
+}
+
+function reasoningOptions(model: AihubmixModel): SyncedFullModel["reasoning_options"] {
+  if (model.reasoning_options == null) return undefined;
+  const options = model.reasoning_options.flatMap((option) => {
+    if (option.type === "toggle" || option.type === "budget_tokens") {
+      return [{ type: option.type }];
+    }
+    if (option.type !== "effort") return [];
+    const values = (option.values ?? [])
+      .map((value) => EFFORT_ALIASES[value] ?? value)
+      .filter((value) => EFFORT_VALUES.has(value));
+    return values.length > 0 ? [{ type: "effort" as const, values }] : [];
+  });
+  return options.length > 0 ? (options as SyncedFullModel["reasoning_options"]) : undefined;
+}
+
+function modalities(value: string | null | undefined, fallback: string[]) {
+  const parsed = (value ?? "")
+    .split(",")
+    .map((entry) => entry.trim())
+    .filter((entry) => ["text", "audio", "image", "video", "pdf"].includes(entry));
+  return (parsed.length > 0 ? parsed : fallback) as SyncedFullModel["modalities"]["input"];
 }
 
 /**
- * AIHubMix omits a price field when the model has no such rate, but a partial
- * authored `[cost]` (tiers, reasoning, audio rates) still carries values the
- * endpoint does not model, so those are kept.
+ * AIHubMix omits a price field when the model has no such rate, so an omitted
+ * field means "not offered" and an authored value is only kept when the
+ * endpoint quotes nothing at all for the model.
  */
 function buildCost(
   pricing: AihubmixModel["pricing"],
@@ -113,20 +325,41 @@ function buildCost(
   const output = price(pricing.output);
   if (input === undefined || output === undefined) return authored;
 
-  const cacheRead = price(pricing.cache_read);
   return {
-    ...authored,
     input,
     output,
-    // AIHubMix echoes the input price into `cache_read` for models it has no
-    // cached rate for (35 of the 301 priced entries carry a nonzero price this
-    // way; 51 more are free models reporting 0 across the board, where this is
-    // a no-op), so an equal value means "not quoted" rather than "cached reads
-    // cost full price" — taking it literally would overstate e.g. Gemini 3.1
-    // Flash Lite by 10x against the $0.025 every other provider lists.
-    cache_read: cacheRead === input ? authored?.cache_read : (cacheRead ?? authored?.cache_read),
-    cache_write: price(pricing.cache_write) ?? authored?.cache_write,
+    cache_read: price(pricing.cache_read),
+    cache_write: price(pricing.cache_write),
+    tiers: costTiers(pricing) ?? authored?.tiers,
   };
+}
+
+function costTiers(pricing: NonNullable<AihubmixModel["pricing"]>) {
+  const tiers = (pricing.tiers ?? []).flatMap((tier) => {
+    const input = price(tier.input);
+    const output = price(tier.output);
+    if (input === undefined || output === undefined) return [];
+    return [
+      {
+        tier: { type: tier.tier.type ?? "context", size: tier.tier.size },
+        input,
+        output,
+        cache_read: price(tier.cache_read),
+        cache_write: price(tier.cache_write),
+      },
+    ];
+  });
+  return tiers.length > 0 ? (tiers as NonNullable<SyncedFullModel["cost"]>["tiers"]) : undefined;
+}
+
+/**
+ * AIHubMix sends 0 for a limit it does not know rather than omitting the field —
+ * 102 of 415 models quote `max_output: 0` — so 0 is read as absent. A model that
+ * truly emitted no tokens would not be servable.
+ */
+function tokens(value: number | null | undefined) {
+  if (value == null || !Number.isFinite(value) || value <= 0) return undefined;
+  return value;
 }
 
 function price(value: number | null | undefined) {

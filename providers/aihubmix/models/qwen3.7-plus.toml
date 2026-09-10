@@ -1,9 +1,18 @@
 base_model = "alibaba/qwen3.7-plus"
 structured_output = true
-reasoning_options = [{ type = "toggle" }, { type = "budget_tokens", max = 262_144 }]
 
 [interleaved]
 field = "reasoning_content"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"]
+
+[[reasoning_options]]
+type = "budget_tokens"
 
 [cost]
 input = 0.282
@@ -11,10 +20,12 @@ output = 1.128
 cache_read = 0.0564
 cache_write = 0.3525
 
-[limit]
-context = 991_000
-output = 64_000
+[[cost.tiers]]
+tier = { type = "context", size = 256_000 }
+input = 0.845
+output = 3.38
+cache_read = 0.169
+cache_write = 1.05625
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[limit]
+output = 131_072

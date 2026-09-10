@@ -1,0 +1,13 @@
+base_model = "alibaba/qwen3-vl-235b-a22b-thinking"
+reasoning_options = []
+
+[cost]
+input = 0.274
+output = 2.74
+
+[limit]
+context = 131_000
+output = 33_000
+
+[modalities]
+input = ["text", "image", "video"]

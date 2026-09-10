@@ -1190,7 +1190,7 @@ test("tracks missing models except for unreliable first-party inventories", () =
   expect(openai.trackMissingModels).toBe(false);
   expect(pioneer.skipCreates).toBe(true);
   expect(pioneer.trackMissingModels).toBe(true);
-  expect(aihubmix.skipCreates).toBe(true);
+  expect(aihubmix.skipCreates).toBeUndefined();
   expect(aihubmix.trackMissingModels).toBe(true);
   expect(ofox.skipCreates).toBe(true);
   expect(ofox.trackMissingModels).toBe(true);
@@ -5026,6 +5026,7 @@ function aihubmixModel(overrides: Partial<AihubmixModel> = {}): AihubmixModel {
   return {
     model_id: "gemini-3.1-flash-lite",
     model_name: "Gemini 3.1 Flash Lite",
+    developer_id: 8,
     pricing: { input: 0.25, output: 1.5, cache_read: 0.025 },
     ...overrides,
   };
@@ -5042,39 +5043,116 @@ const aihubmixAuthored: ExistingModel = {
   modalities: { input: ["text", "image", "audio", "video", "pdf"], output: ["text"] },
 };
 
-test("syncs AIHubMix pricing while preserving hand-authored capabilities", () => {
+const aihubmixLabIDs = new Set(["google/gemini-3.1-flash-lite", "openai/gpt-5.5"]);
+
+test("factors an AIHubMix relay onto the lab metadata it serves", () => {
   const model = buildAihubmixModel(
-    aihubmixModel({ pricing: { input: 0.2, output: 1.2, cache_read: 0.02, cache_write: 0.25 } }),
-    aihubmixAuthored,
+    aihubmixModel({
+      model_id: "gemini-3.1-flash-lite-nothink",
+      context_length: 1_048_576,
+      max_output: 65_536,
+      input_modalities: "text,image",
+    }),
+    undefined,
+    aihubmixLabIDs,
   );
-  expect(model.cost).toMatchObject({ input: 0.2, output: 1.2, cache_read: 0.02, cache_write: 0.25 });
-  // The endpoint reports relay defaults for these, so authored values win.
-  expect(model.limit).toEqual({ context: 1_048_576, output: 65_536 });
-  expect(model.modalities).toEqual({
-    input: ["text", "image", "audio", "video", "pdf"],
-    output: ["text"],
+  expect(model).toMatchObject({
+    base_model: "google/gemini-3.1-flash-lite",
+    cost: { input: 0.25, output: 1.5, cache_read: 0.025 },
   });
-  expect(model.reasoning_options).toEqual([
-    { type: "effort", values: ["minimal", "low", "medium", "high"] },
+  // The relay only records what it actually changes.
+  expect(model).not.toHaveProperty("release_date");
+  expect(model).not.toHaveProperty("open_weights");
+});
+
+test("routes AIHubMix prefixes and suffixes back to the upstream lab model", () => {
+  for (const id of ["coding-gemini-3.1-flash-lite", "gemini-3.1-flash-lite-free"]) {
+    const model = buildAihubmixModel(aihubmixModel({ model_id: id }), undefined, aihubmixLabIDs);
+    expect(model).toMatchObject({ base_model: "google/gemini-3.1-flash-lite" });
+  }
+});
+
+test("skips an AIHubMix relay with neither base metadata nor standalone fields", () => {
+  const model = buildAihubmixModel(
+    aihubmixModel({ model_id: "house-brand-v1", developer_id: 999 }),
+    undefined,
+    aihubmixLabIDs,
+  );
+  expect(model).toBeUndefined();
+});
+
+test("normalizes AIHubMix reasoning options to the catalog vocabulary", () => {
+  const model = buildAihubmixModel(
+    aihubmixModel({
+      reasoning: true,
+      // `default` is AIHubMix-only, and it spells two efforts differently.
+      reasoning_options: [
+        { type: "effort", values: ["no_think", "instant", "high", "bogus"], default: "high" },
+        { type: "toggle", default: true },
+      ] as AihubmixModel["reasoning_options"],
+    }),
+    undefined,
+    aihubmixLabIDs,
+  );
+  expect(model?.reasoning_options).toEqual([
+    { type: "effort", values: ["none", "minimal", "high"] },
+    { type: "toggle" },
   ]);
 });
 
-test("ignores AIHubMix cache_read that merely echoes the input price", () => {
-  const model = buildAihubmixModel(
-    aihubmixModel({ pricing: { input: 0.25, output: 1.5, cache_read: 0.25 } }),
+test("reads a zero AIHubMix limit as absent rather than a real ceiling", () => {
+  // 102 of 415 models quote `max_output: 0` for a limit the endpoint does not know.
+  const zeroed = buildAihubmixModel(
+    aihubmixModel({ context_length: 262_144, max_output: 0 }),
     aihubmixAuthored,
+    aihubmixLabIDs,
   );
-  expect(model.cost?.cache_read).toBe(0.025);
+  const omitted = buildAihubmixModel(
+    aihubmixModel({ context_length: 262_144 }),
+    aihubmixAuthored,
+    aihubmixLabIDs,
+  );
+  expect(zeroed?.limit).toEqual(omitted?.limit);
+  expect(zeroed?.limit?.output).not.toBe(0);
 });
 
-test("keeps authored AIHubMix pricing when the endpoint quotes no rate", () => {
-  const model = buildAihubmixModel(aihubmixModel({ pricing: null }), aihubmixAuthored);
-  expect(model.cost).toEqual(aihubmixAuthored.cost);
+test("syncs AIHubMix pricing over the authored entry", () => {
+  const model = buildAihubmixModel(
+    aihubmixModel({ pricing: { input: 0.2, output: 1.2, cache_read: 0.02, cache_write: 0.25 } }),
+    aihubmixAuthored,
+    aihubmixLabIDs,
+  );
+  expect(model?.cost).toMatchObject({
+    input: 0.2,
+    output: 1.2,
+    cache_read: 0.02,
+    cache_write: 0.25,
+  });
+});
+
+test("drops an authored AIHubMix rate the endpoint no longer quotes", () => {
+  // An omitted price field means the model has no such rate, not that it is unknown.
+  const model = buildAihubmixModel(
+    aihubmixModel({ pricing: { input: 0.25, output: 1.5 } }),
+    aihubmixAuthored,
+    aihubmixLabIDs,
+  );
+  expect(model?.cost?.cache_read).toBeUndefined();
+  expect(model?.cost?.cache_write).toBeUndefined();
+});
+
+test("keeps authored AIHubMix pricing when the endpoint quotes no rate at all", () => {
+  const model = buildAihubmixModel(
+    aihubmixModel({ pricing: null }),
+    aihubmixAuthored,
+    aihubmixLabIDs,
+  );
+  expect(model?.cost).toEqual(aihubmixAuthored.cost);
 });
 
 test("marks retired AIHubMix relays deprecated and stops tracking them", () => {
   const retired = aihubmixModel({ retire_stage: "deprecated" });
-  expect(buildAihubmixModel(retired, aihubmixAuthored).status).toBe("deprecated");
+  expect(buildAihubmixModel(retired, aihubmixAuthored, aihubmixLabIDs)?.status).toBe("deprecated");
   expect(aihubmix.sourceID?.(retired)).toBeUndefined();
   expect(aihubmix.sourceID?.(aihubmixModel())).toBe("gemini-3.1-flash-lite");
 });

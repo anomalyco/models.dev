@@ -1,0 +1,20 @@
+base_model = "tencent/hy4-preview"
+structured_output = true
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "high"]
+
+[[reasoning_options]]
+type = "budget_tokens"
+
+[cost]
+input = 0.845
+output = 2.535
+cache_read = 0.04225
+
+[limit]
+context = 1_048_576

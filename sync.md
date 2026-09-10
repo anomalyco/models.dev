@@ -253,12 +253,13 @@ xAI is implemented in `packages/core/src/sync/providers/xai.ts`.
 - AIHubMix is implemented in `packages/core/src/sync/providers/aihubmix.ts`.
 - Source endpoint: `https://aihubmix.com/api/v1/models?type=llm`.
 - No authentication is required; the catalog is public.
-- The endpoint is authoritative for pricing and deprecation status only. Everything else in the authored TOMLs is preserved.
-- Token limits and modalities are deliberately **not** synced: the endpoint reports the relay's conservative defaults rather than the upstream model's capabilities. It caps `context_length` per relay (Claude Opus 4.6 is listed at 200K against its 1M window), quotes `max_output` per default request, and never lists `pdf` in `input_modalities` even for models that accept PDFs.
-- `cache_read` is ignored when it equals `input`. The endpoint echoes the input price for models with no cached rate configured: 35 of the 301 priced entries carry a nonzero price this way, and 51 more are free models reporting 0 across the board. Taking the echoed value literally would overstate Gemini 3.1 Flash Lite tenfold against the $0.025 every other provider lists.
-- The free-text `features` list mixes synonyms (`thinking` vs `reasoning`, `tools` vs `tool_calling`) and never exposes accepted reasoning effort levels, so capability flags and `reasoning_options` stay hand-authored.
-- AIHubMix relays roughly 400 upstream models against a much smaller hand-verified subset here, so new IDs are not created automatically (`skipCreates`); each missing ID opens a deduped GitHub issue.
-- Routing aliases such as `alicloud-glm-5.1` and `deep-deepseek-v4-pro` are served but not listed by the endpoint, so local files missing from the response are retained (`deleteMissing: false`).
+- The endpoint now serves capabilities, limits, modalities, reasoning controls and pricing, so it is authoritative for all of them. Fields it does not serve (`family`, `temperature`, `interleaved`, `knowledge`) keep whatever was authored.
+- AIHubMix relays upstream models under its own IDs, so a relay is factored onto the lab metadata it serves (`base_model`) whenever that metadata exists, and then records only what it actually changes. `developer_id` maps a relay to its lab; routing prefixes (`coding-`, `alicloud-`) and suffixes (`-free`, `-think`, `-nothink`) select a mode rather than a different model and are stripped when resolving the base.
+- A relay with neither resolvable lab metadata nor the `release_date`/`open_weights` a standalone entry requires is reported rather than written with invented values. AIHubMix dates 52 of its 415 models and serves no `open_weights` flag, so 200-odd relays are skipped on that basis today.
+- `max_output: 0` is read as absent, not as a real ceiling: 102 of 415 models quote 0 for a limit the endpoint does not know.
+- `reasoning_options[]` entries carry an AIHubMix-only `default` key that the strict `ReasoningOption` schema rejects, and spell two effort levels differently (`no_think`, `instant`), so translation drops the extra key and maps those onto `none` and `minimal`.
+- A price field is omitted when the model has no such rate, so an omitted `cache_read`/`cache_write` clears an authored one; authored pricing survives only when the endpoint quotes nothing at all for the model.
+- Routing aliases such as `alicloud-glm-5.1` and `deep-deepseek-v4-pro` are served but not listed by the endpoint, so local files missing from the response are retained (`deleteMissing: false`) and each opens a deduped GitHub issue.
 
 ## Tinfoil Notes
 

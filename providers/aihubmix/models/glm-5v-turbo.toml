@@ -1,28 +1,24 @@
+base_model = "zhipuai/glm-5v-turbo"
 name = "GLM 5 Vision Turbo"
 description = "GLM vision model for visual reasoning, documents, and multimodal agents"
-family = "glmv"
-release_date = "2026-05-09"
-last_updated = "2026-05-09"
-attachment = true
-reasoning = true
-reasoning_options = [{ type = "toggle" }]
-temperature = true
-tool_call = true
 structured_output = true
-open_weights = false
 
 [interleaved]
 field = "reasoning_content"
+
+[[reasoning_options]]
+type = "toggle"
 
 [cost]
 input = 0.7042
 output = 3.09848
 cache_read = 0.169008
 
-[limit]
-context = 200_000
-output = 128_000
+[[cost.tiers]]
+tier = { type = "context", size = 32_000 }
+input = 0.986
+output = 3.662004
+cache_read = 0.253402
 
 [modalities]
 input = ["text", "image", "video"]
-output = ["text"]

@@ -1,0 +1,14 @@
+base_model = "anthropic/claude-haiku-4-5"
+structured_output = true
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "budget_tokens"
+
+[cost]
+input = 1.1
+output = 5.5
+cache_read = 0.11
+cache_write = 1.375

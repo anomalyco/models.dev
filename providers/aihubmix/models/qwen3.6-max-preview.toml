@@ -1,21 +1,15 @@
-name = "Qwen3.6 Max Preview"
+base_model = "alibaba/qwen3.6-max-preview"
 description = "Flagship model for demanding analysis, coding, and production agent workflows"
-family = "qwen3.6"
-release_date = "2026-05-09"
-last_updated = "2026-05-09"
-attachment = false
-reasoning = true
-temperature = true
-tool_call = true
 structured_output = true
-knowledge = "2025-04"
-open_weights = false
 
 [interleaved]
 field = "reasoning_content"
 
 [[reasoning_options]]
 type = "toggle"
+
+[[reasoning_options]]
+type = "budget_tokens"
 
 [cost]
 input = 1.268
@@ -25,15 +19,7 @@ cache_write = 1.585
 
 [[cost.tiers]]
 tier = { type = "context", size = 128_000 }
-input = 2.11
-output = 12.67
+input = 2.112
+output = 12.672
 cache_read = 0.2112
 cache_write = 2.64
-
-[limit]
-context = 240_000
-output = 64_000
-
-[modalities]
-input = ["text"]
-output = ["text"]

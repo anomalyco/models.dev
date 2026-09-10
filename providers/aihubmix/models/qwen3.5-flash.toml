@@ -1,0 +1,31 @@
+base_model = "alibaba/qwen3.5-flash"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"]
+
+[[reasoning_options]]
+type = "budget_tokens"
+
+[cost]
+input = 0.0282
+output = 0.282
+cache_read = 0.00282
+cache_write = 0.03525
+
+[[cost.tiers]]
+tier = { type = "context", size = 128_000 }
+input = 0.1126
+output = 1.126
+cache_read = 0.01126
+cache_write = 0.14075
+
+[[cost.tiers]]
+tier = { type = "context", size = 256_000 }
+input = 0.169
+output = 1.69
+cache_read = 0.0169
+cache_write = 0.21125

@@ -1,7 +1,6 @@
 base_model = "xiaomi/mimo-v2.5"
 name = "Coding Xiaomi MiMo-V2.5"
-family = "mimo-v2.5"
-last_updated = "2026-05-13"
+structured_output = true
 
 [interleaved]
 field = "reasoning_content"
@@ -19,3 +18,6 @@ tier = { type = "context", size = 256_000 }
 input = 0.16
 output = 0.8
 cache_read = 0.032
+
+[limit]
+context = 1_000_000

@@ -1,0 +1,20 @@
+base_model = "alibaba/qwen3-coder-480b-a35b-instruct"
+structured_output = true
+
+[cost]
+input = 0.82
+output = 3.28
+
+[[cost.tiers]]
+tier = { type = "context", size = 32_000 }
+input = 1.232876
+output = 4.931504
+
+[[cost.tiers]]
+tier = { type = "context", size = 128_000 }
+input = 2.054794
+output = 8.219176
+
+[limit]
+context = 262_000
+output = 262_000

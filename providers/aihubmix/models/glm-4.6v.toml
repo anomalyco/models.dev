@@ -1,0 +1,23 @@
+base_model = "zhipuai/glm-4.6v"
+tool_call = false
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[cost]
+input = 0.137
+output = 0.411
+cache_read = 0.0274
+
+[[cost.tiers]]
+tier = { type = "context", size = 32_000 }
+input = 0.274
+output = 0.822
+cache_read = 0.0548
+
+[limit]
+context = 131_072

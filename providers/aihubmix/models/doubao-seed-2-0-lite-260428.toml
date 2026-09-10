@@ -18,32 +18,29 @@ type = "toggle"
 
 [[reasoning_options]]
 type = "effort"
-values = ["minimal", "low", "medium", "high"]
+values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"]
 
 [cost]
 input = 0.09041
 output = 0.54246
 cache_read = 0.018082
-input_audio = 1.269
 
 [[cost.tiers]]
 tier = { type = "context", size = 32_000 }
-input = 0.13
-output = 0.76
+input = 0.1268
+output = 0.7608
 cache_read = 0.02536
-input_audio = 1.902
 
 [[cost.tiers]]
 tier = { type = "context", size = 128_000 }
-input = 0.25
-output = 1.52
+input = 0.2536
+output = 1.5216
 cache_read = 0.05072
-input_audio = 3.804
 
 [limit]
 context = 256_000
 output = 128_000
 
 [modalities]
-input = ["text", "image", "video"]
+input = ["text", "image", "video", "audio"]
 output = ["text"]

@@ -1,0 +1,13 @@
+base_model = "zhipuai/glm-5"
+structured_output = true
+
+[[reasoning_options]]
+type = "toggle"
+
+[cost]
+input = 0.88
+output = 2.816
+cache_read = 0.176
+
+[limit]
+context = 200_000

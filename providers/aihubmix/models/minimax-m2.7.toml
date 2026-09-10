@@ -9,20 +9,25 @@ temperature = true
 tool_call = true
 structured_output = true
 open_weights = true
-reasoning_options = []
 
 [interleaved]
 field = "reasoning_content"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "minimal", "low", "medium", "high"]
+
+[[reasoning_options]]
+type = "budget_tokens"
 
 [cost]
 input = 0.2958
 output = 1.1832
 cache_read = 0.05916
-cache_write = 0.375
 
 [limit]
 context = 204_800
-output = 128_000
+output = 204_800
 
 [modalities]
 input = ["text"]

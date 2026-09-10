@@ -1,0 +1,26 @@
+base_model = "alibaba/qwen3-max"
+attachment = true
+structured_output = true
+
+[cost]
+input = 0.4508
+output = 1.8032
+cache_read = 0.09016
+cache_write = 0.5635
+
+[[cost.tiers]]
+tier = { type = "context", size = 32_000 }
+input = 0.902
+output = 5.412
+cache_read = 0.1804
+cache_write = 1.1275
+
+[[cost.tiers]]
+tier = { type = "context", size = 128_000 }
+input = 1.3522
+output = 8.1132
+cache_read = 0.27044
+cache_write = 1.69025
+
+[modalities]
+input = ["text", "image"]

@@ -18,7 +18,7 @@ type = "toggle"
 
 [[reasoning_options]]
 type = "effort"
-values = ["minimal", "low", "medium", "high"]
+values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"]
 
 [cost]
 input = 0.4822
@@ -27,14 +27,14 @@ cache_read = 0.09644
 
 [[cost.tiers]]
 tier = { type = "context", size = 32_000 }
-input = 0.72
-output = 3.62
+input = 0.72328
+output = 3.6164
 cache_read = 0.144656
 
 [[cost.tiers]]
 tier = { type = "context", size = 128_000 }
-input = 1.45
-output = 7.23
+input = 1.4466
+output = 7.233
 cache_read = 0.28932
 
 [limit]
