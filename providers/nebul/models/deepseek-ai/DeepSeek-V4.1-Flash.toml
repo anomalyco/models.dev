@@ -1,0 +1,13 @@
+base_model = "deepseek/deepseek-v4.1-flash"
+
+# Efforts: reasoning_effort = low|high|max (from /model/info reasoning_efforts)
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[cost]
+input = 0.2
+output = 0.7
+
+[limit]
+context = 1_048_576

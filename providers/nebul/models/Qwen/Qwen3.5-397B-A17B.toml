@@ -1,0 +1,13 @@
+base_model = "alibaba/qwen3.5-397b-a17b"
+
+# Controls per alibaba's official entry: thinking toggle + budget
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "budget_tokens"
+
+[cost]
+input = 0.63
+output = 3.78
+cache_read = 0.15

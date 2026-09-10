@@ -1,0 +1,13 @@
+base_model = "nvidia/nemotron-3-super-120b-a12b"
+
+# Nemotron 3 hybrid reasoning: on/off toggle (crusoe peer)
+[[reasoning_options]]
+type = "toggle"
+
+[cost]
+input = 0.32
+output = 0.69
+cache_read = 0.08
+
+[limit]
+context = 1_000_000

@@ -1,0 +1,10 @@
+base_model = "nvidia/nemotron-3-nano-30b-a3b"
+
+# Nemotron 3 hybrid reasoning: on/off toggle (deepinfra peer)
+[[reasoning_options]]
+type = "toggle"
+
+[cost]
+input = 1
+output = 3
+cache_read = 0.5

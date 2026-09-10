@@ -1,0 +1,14 @@
+base_model = "moonshotai/kimi-k3"
+
+# Controls per moonshot's official entry: thinking toggle + adaptive effort
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[cost]
+input = 4.73
+output = 23.63
+cache_read = 1.13

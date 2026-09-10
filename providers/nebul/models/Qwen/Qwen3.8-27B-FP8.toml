@@ -1,0 +1,14 @@
+base_model = "alibaba/qwen3.8-27b"
+
+# Controls per deepinfra peer: thinking toggle + efforts
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "xhigh"]
+
+[cost]
+input = 0.21
+output = 0.74
+cache_read = 0.05

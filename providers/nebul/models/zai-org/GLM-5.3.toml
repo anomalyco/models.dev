@@ -1,0 +1,14 @@
+base_model = "zhipuai/glm-5.3"
+
+# GLM-5.3 always reasons; efforts low|high|max per zhipuai's official entry
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[cost]
+input = 1.47
+output = 4.62
+cache_read = 0.35
+
+[limit]
+context = 1_048_576

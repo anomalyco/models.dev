@@ -1,0 +1,10 @@
+base_model = "mistral/mistral-medium-2604"
+
+# Efforts: reasoning_effort = low|medium|high|max (from /model/info reasoning_efforts)
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high", "max"]
+
+[cost]
+input = 1.65
+output = 8.25
