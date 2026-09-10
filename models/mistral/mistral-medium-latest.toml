@@ -16,6 +16,10 @@ open_weights = true
 context = 262_144
 output = 262_144
 
+[parameters]
+total = 127704210176
+source = "https://huggingface.co/mistralai/Mistral-Medium-3.5-128B"
+
 [modalities]
 input = ["text", "image"]
 output = ["text"]

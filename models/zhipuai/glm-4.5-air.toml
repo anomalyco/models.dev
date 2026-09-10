@@ -14,6 +14,11 @@ open_weights = true
 context = 131_072
 output = 98_304
 
+[parameters]
+total = 110468824832
+architecture = "moe"
+source = "https://huggingface.co/zai-org/GLM-4.5-Air"
+
 [modalities]
 input = ["text"]
 output = ["text"]

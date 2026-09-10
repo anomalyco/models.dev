@@ -14,6 +14,11 @@ open_weights = true
 context = 262_144
 output = 65_536
 
+[parameters]
+total = 125086497008
+architecture = "moe"
+source = "https://huggingface.co/Qwen/Qwen3.5-122B-A10B"
+
 [modalities]
 input = ["text", "image", "video", "audio"]
 output = ["text"]

@@ -16,6 +16,10 @@ open_weights = true
 context = 128_000
 output = 32_768
 
+[parameters]
+total = 10292777472
+source = "https://huggingface.co/zai-org/GLM-4.6V-Flash"
+
 [modalities]
 input = ["text", "image", "video"]
 output = ["text"]

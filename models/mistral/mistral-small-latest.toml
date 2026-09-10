@@ -14,6 +14,11 @@ open_weights = true
 context = 256_000
 output = 256_000
 
+[parameters]
+total = 119401317952
+architecture = "moe"
+source = "https://huggingface.co/mistralai/Mistral-Small-4-119B-2603"
+
 [modalities]
 input = ["text", "image"]
 output = ["text"]

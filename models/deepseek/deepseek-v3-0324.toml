@@ -13,6 +13,11 @@ open_weights = true
 context = 163_840
 output = 163_840
 
+[parameters]
+total = 684531386000
+architecture = "moe"
+source = "https://huggingface.co/deepseek-ai/DeepSeek-V3-0324"
+
 [modalities]
 input = ["text"]
 output = ["text"]

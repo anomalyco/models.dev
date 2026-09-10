@@ -14,6 +14,10 @@ open_weights = true
 context = 128_000
 output = 4_096
 
+[parameters]
+total = 8030261248
+source = "https://huggingface.co/meta-llama/Llama-Guard-3-8B"
+
 [modalities]
 input = ["text"]
 output = ["text"]

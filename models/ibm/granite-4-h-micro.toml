@@ -14,6 +14,11 @@ open_weights = true
 context = 131_072
 output = 131_072
 
+[parameters]
+total = 3191396096
+architecture = "moe"
+source = "https://huggingface.co/ibm-granite/granite-4.0-h-micro"
+
 [modalities]
 input = ["text"]
 output = ["text"]

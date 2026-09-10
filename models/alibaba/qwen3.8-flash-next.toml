@@ -27,6 +27,11 @@ license = "qwen-community-1.0"
 context = 262_144
 output = 131_072
 
+[parameters]
+total = 179999981459
+architecture = "moe"
+source = "https://huggingface.co/Qwen/Qwen3.8-Flash-Next"
+
 [modalities]
 input = ["text", "image", "video"]
 output = ["text"]

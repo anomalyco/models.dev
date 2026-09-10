@@ -24,6 +24,11 @@ license = "qwen3.8-max"
 context = 262_144
 output = 131_072
 
+[parameters]
+total = 2446182725504
+architecture = "moe"
+source = "https://huggingface.co/Qwen/Qwen3.8-2.4T-A95B"
+
 [modalities]
 input = ["text"]
 output = ["text"]
