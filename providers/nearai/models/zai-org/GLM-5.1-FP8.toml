@@ -5,7 +5,6 @@ release_date = "2026-03-27"
 last_updated = "2026-03-27"
 attachment = false
 reasoning = true
-reasoning_options = [{ type = "toggle" }]
 temperature = true
 tool_call = true
 structured_output = true
@@ -14,13 +13,17 @@ open_weights = true
 [interleaved]
 field = "reasoning_content"
 
+[[reasoning_options]]
+type = "toggle"
+
 [cost]
 input = 1.4
 output = 4.4
+cache_read = 0.26
 
 [limit]
 context = 202_752
-output = 16384
+output = 16_384
 
 [modalities]
 input = ["text"]
