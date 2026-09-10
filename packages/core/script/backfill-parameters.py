@@ -54,6 +54,52 @@ def hf_json(url: str, retries: int = 4):
     return None
 
 
+def resolve_repo(repo: str):
+    """Follow HF API redirects (org renames, e.g. deepreinforce-ai -> ornith-ai)
+    so `source` always points at the canonical repo."""
+    req = urllib.request.Request(
+        HF_API.format(repo=repo), headers={"User-Agent": "models-dev-backfill"}
+    )
+    try:
+        with urllib.request.urlopen(req, timeout=30) as r:
+            final = r.geturl()
+            return final.split("/api/models/", 1)[-1].rstrip("/")
+    except Exception:
+        return repo
+
+
+def true_safetensors_total(api):
+    """Parameter total = sum over the per-dtype breakdown when it disagrees
+    with the API's `safetensors.total` field (that field is broken on some
+    repos — e.g. reports a few metadata scalars while BF16 tensors hold the
+    real ~35B). Returns (total, dtype_sum, api_total) or (None, …).
+
+    Quantized storage formats are counted as ONE parameter per element only
+    for 8-bit formats (FP8 element == parameter). Sub-byte-packed formats
+    (4-bit/2-bit: packed into U8/I8 shards) are NOT resolvable from this
+    metadata — such repos are skipped entirely rather than undercounted."""
+    st = (api or {}).get("safetensors") or {}
+    params = st.get("parameters") or {}
+    dtypes = {k: v for k, v in params.items() if isinstance(v, int)}
+    if not dtypes:
+        return None
+    unpacked = {k: v for k, v in dtypes.items() if k in ("BF16", "F16", "F32", "I64")}
+    fp8 = {k: v for k, v in dtypes.items() if k.startswith("F8")}
+    subbyte = {k: v for k, v in dtypes.items() if k in ("U8", "I8", "I4", "F4", "U4", "I2")}
+    if subbyte and not fp8:
+        # 4-bit/2-bit packed shards: storage elements != parameters.
+        return None
+    if subbyte and fp8:
+        # Mixed FP8 + packed (e.g. FP4 DFlash): not resolvable without the
+        # full tensor index; refuse rather than undercount.
+        return None
+    dtype_sum = sum(unpacked.values()) + sum(fp8.values())
+    api_total = st.get("total")
+    # Trust the per-dtype sum; it is what safetensors headers actually encode.
+    total = dtype_sum if (api_total is None or dtype_sum > api_total) else api_total
+    return total, dtype_sum, api_total
+
+
 def hf_repo_from_toml(text: str):
     m = re.search(r"\[\[weights\]\]\s*\n(?:[^\[]*?)url\s*=\s*\"(https://huggingface\.co/[^\"?\s]+)\"", text)
     if not m:
@@ -214,11 +260,12 @@ def process_file(path: Path, apply: bool):
     api = hf_json(HF_API.format(repo=repo[len("https://huggingface.co/"):]))
     if not api:
         return ("skip-hf-unreachable", rel, repo)
-    st = api.get("safetensors") or {}
-    total = st.get("total")
-    if not isinstance(total, int) or total <= 0:
+    resolved = resolve_repo(repo[len("https://huggingface.co/"):])
+    result = true_safetensors_total(api)
+    if result is None:
         return ("skip-no-safetensors", rel, repo)
-    total = total
+    total, dtype_sum, api_total = result
+    total = int(total)
     active = None
     architecture = None
     cfg = hf_json(HF_CONFIG.format(repo=repo[len("https://huggingface.co/"):]))
@@ -226,7 +273,7 @@ def process_file(path: Path, apply: bool):
     if any("moe" in (a or "").lower() for a in archs) or is_moe_config(cfg):
         architecture = "moe"
         active = count_active_from_config(repo[len("https://huggingface.co/"):])
-    block = build_block(total, active, architecture, repo, estimate=False)
+    block = build_block(total, active, architecture, "https://huggingface.co/" + resolved, estimate=False)
     if not apply:
         return ("dry", rel, block)
     new_text = insert_block(text, block)

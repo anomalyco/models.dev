@@ -27,6 +27,11 @@ license = "qwen-community-1.0"
 context = 262_144
 output = 131_072
 
+# Parameter counts: the lab's card states "125B total / 6B active" for the
+# model proper; the safetensors sum below (180B) additionally includes the
+# hybrid-attention n-gram/MTP auxiliary tensors. Both are kept — `total`
+# follows the safetensors index (mechanically exact), while `active` follows
+# the lab's stated definition.
 [parameters]
 total = 179999981459
 active = 6000000000
