@@ -1,6 +1,10 @@
 # Reasoning tokens are billed at the output rate (no separate CoT price).
 # `completion_tokens_details.reasoning_tokens` is a subset of completion_tokens.
-# https://api-docs.deepseek.com/quick_start/pricing/ (accessed 2026-08-12)
+# https://api-docs.deepseek.com/quick_start/pricing/ (accessed 2026-09-11)
+# Peak rates below; peak hours are Mon-Fri 01:00-04:00 and
+# 06:00-10:00 UTC, all other hours (off-peak) are billed at half price.
+# From 2026-09-14 Beijing time, deepseek-v4-pro requests are rerouted to
+# V4.1 Flash and billed at the Flash price until V4.1 Pro is released.
 base_model = "deepseek/deepseek-v4-pro-0813"
 name = "DeepSeek V4 Pro"
 # OpenAI: `thinking.type = enabled|disabled`, `reasoning_effort = high|max`.
@@ -18,7 +22,7 @@ values = ["high", "max"]
 field = "reasoning_content"
 
 [cost]
-input = 0.435
-output = 0.87
-reasoning = 0.87
-cache_read = 0.003625
+input = 1.32
+output = 3.96
+reasoning = 3.96
+cache_read = 0.044
