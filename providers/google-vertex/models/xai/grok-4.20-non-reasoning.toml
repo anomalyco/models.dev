@@ -1,0 +1,17 @@
+# Source: Google Cloud Vertex AI Model Garden - xAI Grok 4.20 (Non-Reasoning)
+base_model = "xai/grok-4.20-0309-non-reasoning"
+
+[cost]
+input = 1.25
+output = 2.5
+cache_read = 0.2
+
+[[cost.tiers]]
+tier = { type = "context", size = 200_000 }
+input = 2.5
+output = 5
+cache_read = 0.4
+
+[provider]
+npm = "@ai-sdk/openai-compatible"
+api = "https://${GOOGLE_VERTEX_ENDPOINT}/v1/projects/${GOOGLE_VERTEX_PROJECT}/locations/${GOOGLE_VERTEX_LOCATION}/endpoints/openapi"
