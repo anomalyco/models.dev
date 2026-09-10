@@ -5077,6 +5077,29 @@ test("routes AIHubMix prefixes and suffixes back to the upstream lab model", () 
   }
 });
 
+test("strips dated release tags from an AIHubMix relay ID", () => {
+  // Labs name the model, AIHubMix pins the snapshot: three affixes plus a date.
+  for (const id of [
+    "gemini-3.1-flash-lite-preview-05-20",
+    "gemini-3.1-flash-lite-preview-09-2025",
+    "gemini-3.1-flash-lite-2026-01-23",
+    "gemini-3.1-flash-lite-260215",
+    "coding-gemini-3.1-flash-lite-preview-05-06-search",
+  ]) {
+    const model = buildAihubmixModel(aihubmixModel({ model_id: id }), undefined, aihubmixLabIDs);
+    expect(model).toMatchObject({ base_model: "google/gemini-3.1-flash-lite" });
+  }
+});
+
+test("keeps digits that only look like a date on an AIHubMix relay ID", () => {
+  // `-4096` is a context size and `-13-45` is not a month and day; stripping
+  // either would attach the relay to a model it is not a snapshot of.
+  for (const id of ["gemini-3.1-flash-lite-4096", "gemini-3.1-flash-lite-13-45"]) {
+    const model = buildAihubmixModel(aihubmixModel({ model_id: id }), undefined, aihubmixLabIDs);
+    expect(model).toBeUndefined();
+  }
+});
+
 test("resolves an AIHubMix relay against a lab that spells its ID differently", () => {
   // AIHubMix lowercases every relay ID; the lab keeps `minimax/MiniMax-M2`.
   const model = buildAihubmixModel(
