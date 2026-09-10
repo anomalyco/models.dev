@@ -1,18 +1,16 @@
 # Pricing: https://bothub.ru/models (accessed 2026-09-10).
 # RUB converted to USD at the CBR rate 85.4594 RUB/USD (2026-09-10).
-# Controls mirrored from the lab OpenAI surface: toggle via
-# thinking.type = enabled|disabled, effort via reasoning_effort
-# high|max (lab maps low/medium to high; xhigh to high).
+# Controls: bothub exposes a single reasoning_effort parameter on
+# POST /v1/chat/completions (see providers/bothub/provider.toml); no
+# thinking.type toggle is documented for this host. Levels verified
+# against the bothub model page; "none" disables reasoning.
 base_model = "deepseek/deepseek-v4-pro-0813"
 
 interleaved = true
 
 [[reasoning_options]]
-type = "toggle"
-
-[[reasoning_options]]
 type = "effort"
-values = ["high", "max"]
+values = ["none", "high", "max"]
 
 [cost]
 input = 1.61
