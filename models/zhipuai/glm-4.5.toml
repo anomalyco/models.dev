@@ -14,6 +14,14 @@ open_weights = true
 context = 131_072
 output = 98_304
 
+# Zai card: "GLM-4.5 has 355 billion total parameters with 32 billion
+# active"; total below is the exact safetensors sum (FP8 weights).
+[parameters]
+total = 358_337_791_296
+active = 32_000_000_000
+architecture = "moe"
+source = "https://huggingface.co/zai-org/GLM-4.5"
+
 [modalities]
 input = ["text"]
 output = ["text"]

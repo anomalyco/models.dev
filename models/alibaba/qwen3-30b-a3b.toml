@@ -13,6 +13,12 @@ open_weights = true
 context = 131_072
 output = 16_384
 
+[parameters]
+total = 30_532_122_624
+active = 3_300_000_000
+architecture = "moe"
+source = "https://huggingface.co/Qwen/Qwen3-30B-A3B"
+
 [modalities]
 input = ["text"]
 output = ["text"]
