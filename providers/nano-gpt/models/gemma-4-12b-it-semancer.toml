@@ -1,0 +1,25 @@
+name = "Gemma 4 12B Semancer"
+description = "Gemma 4 12B Semancer is an open-weight roleplay finetune with image understanding, tool calling, optional reasoning, and a 131,072-token context window."
+family = "gemma"
+release_date = "2026-09-09"
+last_updated = "2026-09-09"
+attachment = true
+reasoning = true
+tool_call = true
+structured_output = false
+open_weights = true
+reasoning_options = []
+
+[cost]
+input = 0.05
+output = 0.25
+cache_read = 0.025
+
+[limit]
+context = 131_072
+input = 131_072
+output = 32_768
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

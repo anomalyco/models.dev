@@ -1,0 +1,17 @@
+# Cost: GreenPT EUR list prices converted at 1.1614 USD/EUR (ECB, 2026-09-08).
+# Sources: https://docs.greenpt.ai/pricing and https://docs.greenpt.ai/model-cards
+# FX: https://www.ecb.europa.eu/stats/policy_and_exchange_rates/euro_reference_exchange_rates/html/eurofxref-graph-usd.en.html
+# GreenPT accepts reasoning_effort = none|minimal|low|medium|high.
+# Source: https://docs.greenpt.ai/reasoning
+# Cache writes are not charged: https://docs.greenpt.ai/prompt-caching
+base_model = "zhipuai/glm-5.3-flash"
+reasoning_options = [{ type = "effort", values = ["none", "minimal", "low", "medium", "high"] }]
+attachment = false
+
+[modalities]
+input = ["text"]
+
+[cost]
+input = 0.127754
+cache_read = 0.0255508
+output = 0.511016
