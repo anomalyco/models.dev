@@ -53,7 +53,10 @@ export const nearai = {
   skippedNotice(ids) {
     if (ids.length === 0) return [];
     return [
-      `${ids.length} NEAR AI models were not created because the catalog exposes no release date, knowledge cutoff, or reasoning controls, and most of them reason.`,
+      `${ids.length} NEAR AI models were not synced, either because they have no`
+        + ` local entry (the catalog exposes no release date, knowledge cutoff or`
+        + ` reasoning controls, so those are authored by hand) or because the local`
+        + ` entry resolves to no cost, which the catalog cannot supply on its own.`,
       `Skipped remote IDs: ${ids.map((id) => `\`${id}\``).join(", ")}`,
     ];
   },
@@ -65,7 +68,10 @@ export const nearai = {
   },
   translateModel(model, context) {
     const existing = context.existing(model.id);
-    if (existing === undefined) return undefined;
+    // The runner rethrows anything but a missing-reasoning error, so one unpriced
+    // entry would abort the run for every other model. Skip it into the notice
+    // instead: the catalog cannot supply a cost the local entry does not resolve.
+    if (existing === undefined || existing.cost === undefined) return undefined;
     return {
       id: model.id,
       model: buildNearAIModel(model, existing),

@@ -3,8 +3,14 @@ import { expect, test } from "bun:test";
 import type { ExistingModel } from "../src/sync/index.js";
 import {
   buildNearAIModel,
+  fetchNearAIModels,
+  nearai,
   type NearAIModel,
 } from "../src/sync/providers/nearai.js";
+
+function context(entries: Record<string, ExistingModel>) {
+  return { existing: (id: string) => entries[id], authored: (id: string) => entries[id] };
+}
 
 function nearAIModel(overrides: Partial<NearAIModel> = {}): NearAIModel {
   return {
@@ -161,4 +167,36 @@ test("routes an overlay through the base model rather than inlining it", () => {
 test("refuses to sync a model with no locally authored pricing", () => {
   expect(() => buildNearAIModel(nearAIModel(), authored({ cost: undefined })))
     .toThrow(/incomplete local pricing/);
+});
+
+test("keeps the authored cache price when the catalog publishes an unparseable one", () => {
+  const built = buildNearAIModel(
+    nearAIModel({ pricing: { input: 1.4, output: 4.4, input_cache_read: "n/a" } }),
+    authored({ cost: { input: 1.4, output: 4.4, cache_read: 0.26 } }),
+  );
+
+  expect(built).toMatchObject({ cost: { cache_read: 0.26 } });
+});
+
+test("skips an unpriced local entry rather than aborting the whole run", () => {
+  const model = nearAIModel();
+  const entries = { [model.id]: authored({ cost: undefined }) };
+
+  expect(nearai.translateModel(model, context(entries))).toBeUndefined();
+});
+
+test("reports both reasons a model can be skipped", () => {
+  const notice = nearai.skippedNotice(["openai/privacy-filter"]);
+
+  expect(notice[0]).toContain("no local entry");
+  expect(notice[0]).toContain("no cost");
+  expect(notice[1]).toContain("`openai/privacy-filter`");
+});
+
+test("fails the run rather than syncing from a degraded catalog response", async () => {
+  const unavailable = () =>
+    Promise.resolve(new Response("", { status: 503, statusText: "Service Unavailable" }));
+
+  await expect(fetchNearAIModels(unavailable as unknown as typeof fetch))
+    .rejects.toThrow(/503 Service Unavailable/);
 });
