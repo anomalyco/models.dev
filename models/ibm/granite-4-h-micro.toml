@@ -14,6 +14,13 @@ open_weights = true
 context = 131_072
 output = 131_072
 
+# Hybrid Mamba-2 + attention (config: granitemoehybrid; micro has 0 experts,
+# i.e. no MoE routing), hence architecture = "hybrid" rather than "moe".
+[parameters]
+total = 3191396096
+architecture = "hybrid"
+source = "https://huggingface.co/ibm-granite/granite-4.0-h-micro"
+
 [modalities]
 input = ["text"]
 output = ["text"]

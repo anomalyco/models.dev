@@ -14,6 +14,10 @@ open_weights = true
 context = 131_072
 output = 8_192
 
+[parameters]
+total = 73410777344
+source = "https://huggingface.co/Qwen/Qwen2.5-VL-72B-Instruct"
+
 [modalities]
 input = ["text", "image"]
 output = ["text"]

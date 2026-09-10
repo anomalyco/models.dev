@@ -14,6 +14,11 @@ open_weights = true
 context = 200_000
 output = 131_072
 
+[parameters]
+total = 753864139008
+architecture = "moe"
+source = "https://huggingface.co/zai-org/GLM-5.1"
+
 [modalities]
 input = ["text"]
 output = ["text"]

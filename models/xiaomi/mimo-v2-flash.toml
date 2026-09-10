@@ -14,6 +14,11 @@ open_weights = true
 context = 262_144
 output = 65_536
 
+[parameters]
+total = 309785318400
+architecture = "moe"
+source = "https://huggingface.co/XiaomiMiMo/MiMo-V2-Flash"
+
 [modalities]
 input = ["text"]
 output = ["text"]

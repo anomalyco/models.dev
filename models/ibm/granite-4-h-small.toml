@@ -14,6 +14,13 @@ open_weights = true
 context = 131_072
 output = 131_072
 
+# Hybrid Mamba-2 + attention with MoE layers (config: granitemoehybrid,
+# 72 experts, 10 per token), hence architecture = "hybrid".
+[parameters]
+total = 32207337984
+architecture = "hybrid"
+source = "https://huggingface.co/ibm-granite/granite-4.0-h-small"
+
 [modalities]
 input = ["text"]
 output = ["text"]

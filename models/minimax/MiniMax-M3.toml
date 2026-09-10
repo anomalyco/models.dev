@@ -13,6 +13,11 @@ open_weights = true
 context = 1_048_576
 output = 512_000
 
+[parameters]
+total = 427040140160
+architecture = "moe"
+source = "https://huggingface.co/MiniMaxAI/MiniMax-M3"
+
 [modalities]
 input = ["text", "image", "video"]
 output = ["text"]

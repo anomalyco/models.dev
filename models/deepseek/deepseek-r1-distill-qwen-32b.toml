@@ -13,6 +13,10 @@ open_weights = true
 context = 131_072
 output = 32_768
 
+[parameters]
+total = 32763876352
+source = "https://huggingface.co/deepseek-ai/DeepSeek-R1-Distill-Qwen-32B"
+
 [modalities]
 input = ["text"]
 output = ["text"]

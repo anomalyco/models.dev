@@ -14,6 +14,10 @@ open_weights = true
 context = 131_072
 output = 8_192
 
+[parameters]
+total = 5123178051
+source = "https://huggingface.co/google/gemma-4-E2B-it"
+
 [modalities]
 input = ["text", "image", "audio"]
 output = ["text"]

@@ -95,6 +95,12 @@ cache_read = 0.125
           format: "safetensors",
         },
       ]);
+      expect(catalog.models["lab/model"]?.parameters).toEqual({
+        total: 671_000_000_000,
+        active: 37_000_000_000,
+        architecture: "moe",
+        source: "https://example.com/config.json",
+      });
 
       expect(catalog.providers.factored?.models.model).toEqual(
         catalog.providers.direct?.models.model,
@@ -337,6 +343,12 @@ context = 400_000
 input = 272_000
 output = 128_000
 
+[parameters]
+total = 671_000_000_000
+active = 37_000_000_000
+architecture = "moe"
+source = "https://example.com/config.json"
+
 [modalities]
 input = ["text", "image"]
 output = ["text"]
@@ -382,6 +394,12 @@ open_weights = true
 context = 400_000
 input = 272_000
 output = 128_000
+
+[parameters]
+total = 671_000_000_000
+active = 37_000_000_000
+architecture = "moe"
+source = "https://example.com/config.json"
 
 [modalities]
 input = ["text", "image"]

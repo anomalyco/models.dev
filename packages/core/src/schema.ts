@@ -172,6 +172,49 @@ const ProviderModelLimit = LimitBase.extend({
 
 const UrlString = z.string().url("Must be a valid URL");
 
+/**
+ * Total/active parameter counts for a model, in raw units (not "B" suffixes).
+ *
+ * `total` is required; `active` is only meaningful for Mixture-of-Experts
+ * models (per-token activated parameters). `estimate` MUST be true when the
+ * counts are inferred (e.g. parsed from the model name or third-party
+ * reporting) rather than read from the lab's own config/weights.
+ */
+export const ModelParameters = z
+  .object({
+    total: z.number().min(1, "Total parameters must be positive"),
+    active: z
+      .number()
+      .min(1, "Active parameters must be positive")
+      .optional(),
+    architecture: z
+      .enum(["dense", "moe", "hybrid"])
+      .optional(),
+    estimate: z.boolean().optional(),
+    source: UrlString.optional(),
+  })
+  .strict()
+  .refine(
+    (data) => data.active === undefined || data.active <= data.total,
+    {
+      message: "Active parameters cannot exceed total parameters",
+      path: ["active"],
+    },
+  )
+  .refine((data) => data.estimate === true || data.source !== undefined, {
+    message:
+      "Non-estimate parameter counts must cite a source (lab config, safetensors index, or announcement)",
+    path: ["source"],
+  })
+  .refine(
+    (data) => data.active === undefined || data.architecture === "moe",
+    {
+      message:
+        "Active parameters are only allowed when architecture is \"moe\"",
+      path: ["active"],
+    },
+  );
+
 export const ModelLink = z
   .object({
     label: z.string().min(1, "Link label cannot be empty").optional(),
@@ -233,6 +276,7 @@ const ModelMetadataBase = z.object({
   modalities: Modalities.optional(),
   open_weights: z.boolean().optional(),
   limit: ModelLimit.optional(),
+  parameters: ModelParameters.optional(),
   license: z.string().min(1, "License cannot be empty").optional(),
   links: z.array(ModelLink).optional(),
   weights: z.array(ModelWeights).optional(),
@@ -270,6 +314,7 @@ const ModelBase = z.object({
   modalities: Modalities,
   open_weights: z.boolean(),
   limit: ProviderModelLimit,
+  parameters: ModelParameters.optional(),
   status: z.enum(["alpha", "beta", "deprecated"]).optional(),
   experimental: z
     .object({
