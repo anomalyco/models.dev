@@ -5043,7 +5043,12 @@ const aihubmixAuthored: ExistingModel = {
   modalities: { input: ["text", "image", "audio", "video", "pdf"], output: ["text"] },
 };
 
-const aihubmixLabIDs = new Set(["google/gemini-3.1-flash-lite", "openai/gpt-5.5"]);
+const aihubmixLabIDs = new Map(
+  ["google/gemini-3.1-flash-lite", "openai/gpt-5.5", "minimax/MiniMax-M2"].map((id) => [
+    id.toLowerCase(),
+    id,
+  ]),
+);
 
 test("factors an AIHubMix relay onto the lab metadata it serves", () => {
   const model = buildAihubmixModel(
@@ -5070,6 +5075,16 @@ test("routes AIHubMix prefixes and suffixes back to the upstream lab model", () 
     const model = buildAihubmixModel(aihubmixModel({ model_id: id }), undefined, aihubmixLabIDs);
     expect(model).toMatchObject({ base_model: "google/gemini-3.1-flash-lite" });
   }
+});
+
+test("resolves an AIHubMix relay against a lab that spells its ID differently", () => {
+  // AIHubMix lowercases every relay ID; the lab keeps `minimax/MiniMax-M2`.
+  const model = buildAihubmixModel(
+    aihubmixModel({ model_id: "coding-minimax-m2-free", developer_id: 18 }),
+    undefined,
+    aihubmixLabIDs,
+  );
+  expect(model).toMatchObject({ base_model: "minimax/MiniMax-M2" });
 });
 
 test("skips an AIHubMix relay with neither base metadata nor standalone fields", () => {

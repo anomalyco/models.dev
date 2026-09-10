@@ -1,0 +1,16 @@
+base_model = "minimax/MiniMax-M3"
+structured_output = true
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "budget_tokens"
+
+[cost]
+input = 0.288
+output = 1.152
+
+[limit]
+context = 1_000_000
+output = 524_288

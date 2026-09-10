@@ -114,8 +114,13 @@ const LAB_BY_DEVELOPER: Record<number, string> = {
 };
 
 /** Routing prefixes and suffixes that select a mode, not a different model. */
-const ROUTING_PREFIXES = ["coding-", "alicloud-", "deep-", "zai-", "anthropic-", "xiaomi-", "openai-"];
-const ROUTING_SUFFIXES = ["-free", "-think", "-nothink", "-search", "-preview", "-disc", "-exp"];
+const ROUTING_PREFIXES = [
+  "coding-", "alicloud-", "deep-", "zai-", "anthropic-", "xiaomi-", "openai-", "nvidia-", "bai-",
+];
+const ROUTING_SUFFIXES = [
+  "-free", "-think", "-nothink", "-search", "-preview", "-disc", "-exp", "-highspeed", "-fast",
+  "-latest",
+];
 
 /** Catalog effort levels; AIHubMix spells two of them differently. */
 const EFFORT_ALIASES: Record<string, string> = { no_think: "none", instant: "minimal" };
@@ -130,7 +135,9 @@ const EFFORT_VALUES = new Set([
   "default",
 ]);
 
-let labMetadataIDs: Set<string> | undefined;
+type LabMetadataIDs = Map<string, string>;
+
+let labMetadataIDs: LabMetadataIDs | undefined;
 
 /**
  * The catalog rejects a `base_model` that resolves to nothing, so relays are
@@ -138,9 +145,12 @@ let labMetadataIDs: Set<string> | undefined;
  */
 async function readLabMetadataIDs(modelsDir: string) {
   const metadataDir = path.join(path.dirname(path.dirname(path.dirname(modelsDir))), "models");
-  const ids = new Set<string>();
+  const ids = new Map<string, string>();
   for await (const file of new Bun.Glob("**/*.toml").scan({ cwd: metadataDir, followSymlinks: true })) {
-    ids.add(file.split(path.sep).join("/").slice(0, -5));
+    const id = file.split(path.sep).join("/").slice(0, -5);
+    // AIHubMix lowercases every relay ID while labs keep their own casing
+    // (`minimax-m2` against `minimax/MiniMax-M2`), so lookups are case-folded.
+    ids.set(id.toLowerCase(), id);
   }
   return ids;
 }
@@ -190,7 +200,7 @@ export const aihubmix = {
 export function buildAihubmixModel(
   model: AihubmixModel,
   existing: ExistingModel | undefined,
-  labIDs: Set<string> | undefined = labMetadataIDs,
+  labIDs: LabMetadataIDs | undefined = labMetadataIDs,
 ): SyncedModel | undefined {
   const input = modalities(model.input_modalities, existing?.modalities?.input ?? ["text"]);
   const output = modalities(model.output_modalities, existing?.modalities?.output ?? ["text"]);
@@ -199,9 +209,21 @@ export function buildAihubmixModel(
   const toolCall = model.tool_call ?? existing?.tool_call ?? false;
   const structuredOutput = features.has("structured_outputs") || existing?.structured_output;
   const name = model.model_name ?? existing?.name;
+  const context = tokens(model.context_length);
+  // AIHubMix backfills an unknown `max_output` from `context_length`, so a value
+  // equal to the window is read as absent the same way a 0 is — 51 of 415 models
+  // quote the two as equal, and a model whose output ceiling really is its whole
+  // context window leaves no room for the prompt.
+  const quoted = tokens(model.max_output);
+  // Two ways AIHubMix signals an unknown output ceiling: backfilling it from
+  // `context_length` (51 of 415 models quote the two as equal, which would leave
+  // no room for the prompt) and quoting a value above the window (6 models, up to
+  // 10x). Both are read as absent, the same as the 0 the endpoint also uses.
+  const maxOutput =
+    context !== undefined && quoted !== undefined && quoted >= context ? undefined : quoted;
   const limit = {
-    context: tokens(model.context_length) ?? existing?.limit?.context,
-    output: tokens(model.max_output) ?? existing?.limit?.output,
+    context: context ?? existing?.limit?.context,
+    output: maxOutput ?? existing?.limit?.output,
   };
   const shared = {
     attachment: input.some((value) => value !== "text"),
@@ -263,12 +285,12 @@ export function buildAihubmixModel(
   } as SyncedFullModel;
 }
 
-function resolveBaseModel(model: AihubmixModel, labIDs: Set<string> | undefined) {
+function resolveBaseModel(model: AihubmixModel, labIDs: LabMetadataIDs | undefined) {
   const lab = LAB_BY_DEVELOPER[model.developer_id ?? -1];
   if (lab === undefined || labIDs === undefined) return undefined;
   for (const candidate of baseCandidates(model.model_id)) {
-    const id = `${lab}/${candidate}`;
-    if (labIDs.has(id)) return id;
+    const id = labIDs.get(`${lab}/${candidate}`.toLowerCase());
+    if (id !== undefined) return id;
   }
   return undefined;
 }
@@ -278,11 +300,13 @@ function baseCandidates(modelID: string) {
   const bare = modelID.split("/").at(-1) ?? modelID;
   const candidates = new Set([bare]);
   for (const prefix of ROUTING_PREFIXES) {
-    if (bare.startsWith(prefix)) candidates.add(bare.slice(prefix.length));
+    if (bare.toLowerCase().startsWith(prefix)) candidates.add(bare.slice(prefix.length));
   }
   for (const suffix of ROUTING_SUFFIXES) {
     for (const candidate of [...candidates]) {
-      if (candidate.endsWith(suffix)) candidates.add(candidate.slice(0, -suffix.length));
+      if (candidate.toLowerCase().endsWith(suffix)) {
+        candidates.add(candidate.slice(0, -suffix.length));
+      }
     }
   }
   return candidates;
