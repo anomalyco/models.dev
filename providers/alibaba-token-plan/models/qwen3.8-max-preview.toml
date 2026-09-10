@@ -1,22 +1,14 @@
-# Sources (accessed 2026-07-20):
+# Sources (accessed 2026-09-10):
 # https://docs.qwencloud.com/token-plan/personal/token-plan-personal-overview
-# https://docs.qwencloud.com/token-plan/personal/token-plan-personal-quickstart
-# https://docs.qwencloud.com/developer-guides/clients-and-developer-tools/opencode
-# https://docs.qwencloud.com/developer-guides/clients-and-developer-tools/kilo-cli
-# https://docs.qwencloud.com/developer-guides/text-generation/thinking
-# https://docs.qwencloud.com/api-reference/chat/openai-chat
-# Thinking is always enabled. In thinking mode, temperature defaults to 0.6
-# and values below 0.6 are raised to 0.6. This provider uses the OpenAI-compatible
-# Chat API, whose native qwen3.8 effort values are low/medium/xhigh (default
-# xhigh); the standard high value is accepted as an alias and maps to xhigh.
-# The OpenCode guide labels its tiers low/high/xhigh and configures a 99072-token
-# thinking budget for the international endpoint. `thinking_budget` (0..262144)
-# cannot be combined with `reasoning_effort`. A zero budget maps to low effort;
-# it does not disable thinking. API: {"reasoning_effort":"medium"} or
-# {"thinking_budget":16384}. `preserve_thinking` defaults to true, so clients must
-# replay every historical `reasoning_content` value unchanged.
-# structured_output: the gateway accepts response_format json_schema (probed
-# 2026-07-24: strict schema request returned {"n": 7}).
+# https://www.alibabacloud.com/help/en/model-studio/token-plan-overview
+# Model update: qwen3.8-max-preview ended preview and is officially retired from
+# the Token Plan supported-models allowlist. Docs say legacy calls may still
+# route to production qwen3.8-max (Credits billed as qwen3.8-max); clients should
+# use model ID qwen3.8-max. Marked deprecated so it is not offered as a current
+# Token Plan selection. Prefer providers/.../qwen3.8-max.toml.
+# Prior sources (accessed 2026-07-20): thinking always-on; OpenAI-compatible Chat
+# effort low/medium/xhigh (high aliases to xhigh); thinking_budget 0..262144
+# mutually exclusive with reasoning_effort; preserve_thinking defaults true.
 
 base_model = "alibaba/qwen3.8-max-preview"
 structured_output = true
@@ -24,7 +16,7 @@ reasoning_options = [
   { type = "effort", values = ["low", "medium", "xhigh"] },
   { type = "budget_tokens", min = 0, max = 262_144 },
 ]
-status = "beta"
+status = "deprecated"
 
 [interleaved]
 field = "reasoning_content"
