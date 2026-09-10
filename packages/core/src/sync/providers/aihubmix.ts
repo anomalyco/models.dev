@@ -115,7 +115,11 @@ const LAB_BY_DEVELOPER: Record<number, string> = {
 
 /** Routing prefixes and suffixes that select a mode, not a different model. */
 const ROUTING_PREFIXES = [
-  "coding-", "alicloud-", "deep-", "zai-", "anthropic-", "xiaomi-", "openai-", "nvidia-", "bai-",
+  // Upstream compute the relay routes to.
+  "alicloud-", "cloudflare-", "deepinfra-", "bai-", "zai-", "anthropic-", "openai-", "nvidia-",
+  "xiaomi-", "deep-",
+  // AIHubMix's own routing modes and vanity namespaces.
+  "coding-", "cc-", "mm-", "aihubmix-", "aihub-", "ahm-",
 ];
 const ROUTING_SUFFIXES = [
   "-free", "-think", "-nothink", "-search", "-preview", "-disc", "-exp", "-highspeed", "-fast",
@@ -187,7 +191,11 @@ export const aihubmix = {
     return response.json();
   },
   parseModels(raw) {
-    return AihubmixResponse.parse(raw).data;
+    const data = AihubmixResponse.parse(raw).data;
+    // `cc-minimax-m2` and `cc-MiniMax-M2` are the same route under two spellings
+    // and would claim filenames that differ only in case. Keep the last entry
+    // whole rather than mixing two records.
+    return [...new Map(data.map((model) => [model.model_id.toLowerCase(), model])).values()];
   },
   translateModel(model, context) {
     const existing = context.existing(model.model_id);
