@@ -1,0 +1,16 @@
+# Pricing: https://bothub.ru/models (accessed 2026-09-10) — includes the
+# site's current -80% promo (list 26.30/157.75 RUB per 1M tokens).
+# RUB converted to USD at the CBR rate 85.4594 RUB/USD (2026-09-10).
+# Controls mirrored from the lab entry: off is effort=none; graded
+# levels — no toggle.
+base_model = "openai/gpt-5.6-luna"
+
+interleaved = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "xhigh", "max"]
+
+[cost]
+input = 0.06
+output = 0.37
