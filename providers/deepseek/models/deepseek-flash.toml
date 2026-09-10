@@ -1,15 +1,13 @@
-# Legacy API id `deepseek-v4-flash-vision-exp`: retired; still accepted but
-# served by DeepSeek-V4.1-Flash and billed at Flash prices (effective 2026-09-10).
-# Prefer `deepseek-flash`. https://api-docs.deepseek.com/quick_start/pricing
-# (accessed 2026-09-10)
+# DeepSeek V4.1 Flash GA API id `deepseek-flash` (effective 2026-09-10).
+# https://api-docs.deepseek.com/quick_start/pricing (accessed 2026-09-10)
+# https://mp.weixin.qq.com/s/qg0NU3NNUbp1co2PdkAPAg (accessed 2026-09-10)
 # Costs are off-peak USD/MTok (peak = 2x; peak hours UTC weekdays 01:00-04:00 and 06:00-10:00).
 # Reasoning tokens are billed at the output rate (no separate CoT price).
 # Toggle: thinking.type = enabled|disabled
 # Effort: reasoning_effort = low|high|max (OpenAI); output_config.effort (Anthropic)
 # https://api-docs.deepseek.com/guides/thinking_mode/ (accessed 2026-09-10)
 base_model = "deepseek/deepseek-v4.1-flash"
-name = "DeepSeek V4 Flash Vision Exp"
-status = "deprecated"
+name = "DeepSeek V4.1 Flash"
 
 [[reasoning_options]]
 type = "toggle"

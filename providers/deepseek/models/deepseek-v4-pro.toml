@@ -1,11 +1,18 @@
+# `deepseek-v4-pro` is being retired. From 2026-09-14 12:00 Beijing time until
+# V4.1 Pro ships, requests route to V4.1 Flash and bill at Flash prices.
+# Until then the live model remains DeepSeek-V4-Pro-0813 at Pro rates below.
+# Prefer `deepseek-flash`. https://api-docs.deepseek.com/quick_start/pricing
+# (accessed 2026-09-10)
+# https://mp.weixin.qq.com/s/qg0NU3NNUbp1co2PdkAPAg (accessed 2026-09-10)
+# Costs are off-peak USD/MTok (peak = 2x; peak hours UTC weekdays 01:00-04:00 and 06:00-10:00).
 # Reasoning tokens are billed at the output rate (no separate CoT price).
-# `completion_tokens_details.reasoning_tokens` is a subset of completion_tokens.
-# https://api-docs.deepseek.com/quick_start/pricing/ (accessed 2026-08-12)
+# Toggle: thinking.type = enabled|disabled
+# Effort: reasoning_effort = high|max (OpenAI); output_config.effort (Anthropic)
+# Pro maps low→high. https://api-docs.deepseek.com/guides/thinking_mode/
+# (accessed 2026-09-10)
 base_model = "deepseek/deepseek-v4-pro-0813"
 name = "DeepSeek V4 Pro"
-# OpenAI: `thinking.type = enabled|disabled`, `reasoning_effort = high|max`.
-# Anthropic: `thinking.type`, `output_config.effort = high|max`; budget ignored.
-# https://api-docs.deepseek.com/api/create-chat-completion (accessed 2026-06-25)
+status = "deprecated"
 
 [[reasoning_options]]
 type = "toggle"
@@ -18,7 +25,7 @@ values = ["high", "max"]
 field = "reasoning_content"
 
 [cost]
-input = 0.435
-output = 0.87
-reasoning = 0.87
-cache_read = 0.003625
+input = 0.66
+output = 1.98
+reasoning = 1.98
+cache_read = 0.022
