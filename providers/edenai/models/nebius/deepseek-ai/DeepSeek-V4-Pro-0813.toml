@@ -1,10 +1,14 @@
 base_model = "deepseek/deepseek-v4-pro-0813"
-name = "DeepSeek V4 Pro 0813 (Alibaba)"
+name = "DeepSeek V4 Pro 0813 (Nebius)"
 
 [[reasoning_options]]
 type = "effort"
 values = ["none", "low", "high", "max"]
 
 [cost]
-input = 1.122
-output = 3.366
+input = 1.32
+output = 3.96
+cache_read = 1.32
+
+[limit]
+context = 979_000
