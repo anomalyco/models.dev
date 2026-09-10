@@ -108,8 +108,6 @@ const LAB_BY_DEVELOPER: Record<number, string> = {
   18: "minimax",
   24: "tencent",
   28: "meituan",
-  34: "meta",
-  35: "poolside",
   29: "inclusionai",
   31: "xiaomi",
   44: "upstage",
@@ -126,19 +124,6 @@ const ROUTING_PREFIXES = [
 const ROUTING_SUFFIXES = [
   "-free", "-think", "-nothink", "-search", "-preview", "-disc", "-exp", "-highspeed", "-fast",
   "-latest",
-];
-/**
- * Dated release tags AIHubMix pins onto a relay ID. Labs name the model itself
- * (`google/gemini-2.5-pro`), so the tag has to come off before the ID can match —
- * but only when the digits really are a date, or `llama2-70b-4096` would lose its
- * context size. Tried after the unstripped ID so a lab that genuinely carries a
- * date in its name (`cohere/command-a-03-2025`) still wins.
- */
-const DATE_SUFFIXES = [
-  /-(?:19|20)\d{2}-(?:0[1-9]|1[0-2])-(?:0[1-9]|[12]\d|3[01])$/, // -2026-01-23
-  /-(?:0[1-9]|1[0-2])-(?:19|20)\d{2}$/, // -09-2025
-  /-(?:0[1-9]|1[0-2])-(?:0[1-9]|[12]\d|3[01])$/, // -05-20
-  /-\d{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[12]\d|3[01])$/, // -260215
 ];
 
 /** Catalog effort levels; AIHubMix spells two of them differently. */
@@ -318,32 +303,17 @@ function resolveBaseModel(model: AihubmixModel, labIDs: LabMetadataIDs | undefin
   return undefined;
 }
 
-/** Peel routing prefixes, then routing and date suffixes, to a fixed point. */
+/** Longest match first: strip routing prefixes, then routing suffixes. */
 function baseCandidates(modelID: string) {
   const bare = modelID.split("/").at(-1) ?? modelID;
   const candidates = new Set([bare]);
   for (const prefix of ROUTING_PREFIXES) {
     if (bare.toLowerCase().startsWith(prefix)) candidates.add(bare.slice(prefix.length));
   }
-  // Affixes stack — `gemini-2.5-pro-preview-05-06-search` carries three — and a
-  // date tag can sit between two of them, so peel to a fixed point rather than
-  // making one pass per rule.
-  const add = (candidate: string) => {
-    const before = candidates.size;
-    candidates.add(candidate);
-    return candidates.size > before;
-  };
-  for (let growing = true; growing;) {
-    growing = false;
+  for (const suffix of ROUTING_SUFFIXES) {
     for (const candidate of [...candidates]) {
-      for (const suffix of ROUTING_SUFFIXES) {
-        if (candidate.toLowerCase().endsWith(suffix)) {
-          growing = add(candidate.slice(0, -suffix.length)) || growing;
-        }
-      }
-      for (const pattern of DATE_SUFFIXES) {
-        const stripped = candidate.replace(pattern, "");
-        if (stripped !== candidate) growing = add(stripped) || growing;
+      if (candidate.toLowerCase().endsWith(suffix)) {
+        candidates.add(candidate.slice(0, -suffix.length));
       }
     }
   }
