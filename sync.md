@@ -265,11 +265,12 @@ xAI is implemented in `packages/core/src/sync/providers/xai.ts`.
 - NEAR AI Cloud is implemented in `packages/core/src/sync/providers/nearai.ts`.
 - Source endpoint: `https://cloud-api.near.ai/v1/models`.
 - No authentication is required; the catalog is public, so the sync needs no repository secret.
-- Existing models are updated from API-authoritative input, output and cached-input pricing, context windows, and output limits.
+- Existing models are updated from API-authoritative input, output and cached-input pricing, and context windows. Nothing else is taken from the endpoint.
 - `pricing.input` and `pricing.output` are already dollars per million tokens, while `pricing.input_cache_read` is per token and is scaled. Every published price is rounded because the endpoint returns artifacts such as `1.4000000000000001`.
-- Limits are taken as the lower of the local value and the figure the gateway reports, so a smaller verified cap survives and a lower gateway ceiling is followed.
-- `supported_features` omits `reasoning` for several relayed models that plainly reason, so it is treated as evidence for a capability and never against one. `reasoning`, `reasoning_options`, `interleaved` and lifecycle `status` stay hand-authored, and `tool_call` and `structured_output` are only ever added.
-- Modalities are additive for the same reason. The endpoint also reports `embedding`, which the schema has no value for, so unrepresentable entries are ignored rather than written.
+- `context` is synced only for models NEAR AI hosts itself (`owned_by = "nearai"`), where `context_length` is the serving `max_model_len`. On relayed routes the figure comes from the upstream aggregator and is often rounded below the lab entry, so syncing it would publish a cap the host does not impose. Where it is synced it is taken as the lower of the two values, so a smaller verified cap survives.
+- `limit.output` is never synced. `max_output_length` is advisory rather than enforced: a request above it is accepted, and only exceeding the context window is rejected.
+- The endpoint misreports capabilities in both directions, so most of them are not synced. `supported_features` omits `reasoning` for several relayed models that plainly reason, and `input_modalities` advertises image input for routes that reject it on a live request. `tool_call` and `structured_output` are the only capability fields taken from it, and only ever to turn one on.
+- `reasoning`, `reasoning_options`, `modalities`, `attachment`, `interleaved` and lifecycle `status` stay hand-authored. The endpoint also reports an `embedding` modality the schema has no value for, which is a further reason not to write modalities from it.
 - New models are not created automatically (`skipCreates`) because the endpoint exposes no release date or knowledge cutoff, and most NEAR AI models reason and so need hand-authored controls.
 - Remote-only models are listed in the sync notice rather than filed as issues (`trackMissingModels: false`), because a substantial part of the catalog has no local entry.
 - Absence never removes a model (`deleteMissing: false`): a truncated response would be indistinguishable from a genuine withdrawal.

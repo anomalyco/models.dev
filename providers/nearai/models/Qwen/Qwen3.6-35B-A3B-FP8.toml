@@ -1,9 +1,6 @@
 base_model = "alibaba/qwen3.6-35b-a3b"
+reasoning_options = [{ type = "toggle" }]
 name = "Qwen 3.6 35B A3B FP8"
-attachment = false
-
-[[reasoning_options]]
-type = "toggle"
 
 [cost]
 input = 0.17
@@ -11,7 +8,7 @@ output = 1.1
 cache_read = 0.056
 
 [limit]
-output = 8_192
+output = 8192
 
 [modalities]
 input = ["text"]

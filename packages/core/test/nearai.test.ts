@@ -73,13 +73,31 @@ test("preserves a locally authored cost the catalog does not publish", () => {
   expect(built).toMatchObject({ cost: { cache_write: 0.5 } });
 });
 
-test("caps a limit the gateway serves lower and never raises one", () => {
+test("caps context at the lower of local and gateway, and never raises it", () => {
   const built = buildNearAIModel(
-    nearAIModel({ context_length: 1_000_000, max_output_length: 16_384 }),
-    authored(),
+    nearAIModel({ owned_by: "nearai", context_length: 1_000_000 }),
+    authored({ limit: { context: 202_752, output: 131_072 } }),
   );
 
-  expect(built).toMatchObject({ limit: { context: 202_752, output: 16_384 } });
+  expect(built).toMatchObject({ limit: { context: 202_752 } });
+});
+
+test("ignores the context a relayed route reports, which can round below the lab", () => {
+  const built = buildNearAIModel(
+    nearAIModel({ owned_by: "openai", context_length: 1_000_000 }),
+    authored({ limit: { context: 1_047_576, output: 32_768 } }),
+  );
+
+  expect(built).toMatchObject({ limit: { context: 1_047_576 } });
+});
+
+test("leaves the output limit authored, since max_output_length is not enforced", () => {
+  const built = buildNearAIModel(
+    nearAIModel({ max_output_length: 16_384 }),
+    authored({ limit: { context: 202_752, output: 131_072 } }),
+  );
+
+  expect(built).toMatchObject({ limit: { output: 131_072 } });
 });
 
 test("retains a modality the gateway does not advertise", () => {
@@ -88,13 +106,13 @@ test("retains a modality the gateway does not advertise", () => {
   expect(built).toMatchObject({ modalities: { input: ["text", "pdf"] } });
 });
 
-test("adds a modality the gateway advertises and the local entry lacks", () => {
+test("does not widen a hand-narrowed modality the gateway over-reports", () => {
   const built = buildNearAIModel(
     nearAIModel({ input_modalities: ["text", "image"] }),
-    authored(),
+    authored({ modalities: { input: ["text"], output: ["text"] } }),
   );
 
-  expect(built).toMatchObject({ modalities: { input: ["text", "pdf", "image"] } });
+  expect(built).toMatchObject({ modalities: { input: ["text"] } });
 });
 
 test("ignores an output modality the catalog schema cannot express", () => {
@@ -115,13 +133,13 @@ test("never withdraws a capability the catalog stops advertising", () => {
   expect(built).toMatchObject({ tool_call: true, structured_output: true });
 });
 
-test("marks a model with a non-text input as an attachment host", () => {
+test("leaves attachment as authored when the gateway claims an image route", () => {
   const built = buildNearAIModel(
     nearAIModel({ input_modalities: ["text", "image"] }),
-    authored({ modalities: { input: ["text"], output: ["text"] } }),
+    authored({ attachment: false, modalities: { input: ["text"], output: ["text"] } }),
   );
 
-  expect(built).toMatchObject({ attachment: true });
+  expect(built).toMatchObject({ attachment: false });
 });
 
 test("routes an overlay through the base model rather than inlining it", () => {

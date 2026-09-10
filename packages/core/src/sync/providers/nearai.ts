@@ -7,6 +7,8 @@ const API_ENDPOINT = "https://cloud-api.near.ai/v1/models";
 
 const TOKENS_PER_PRICING_UNIT = 1_000_000;
 
+const HOSTED_BY_NEAR_AI = "nearai";
+
 const NearAIPricing = z.object({
   input: z.number().nonnegative(),
   output: z.number().nonnegative(),
@@ -79,25 +81,6 @@ export async function fetchNearAIModels(fetcher: typeof fetch = fetch) {
   return NearAIResponse.parse(await response.json());
 }
 
-type Modality = SyncedFullModel["modalities"]["input"][number];
-
-const MODALITIES = new Set<Modality>(["text", "audio", "image", "video", "pdf"]);
-
-// Only ever adds: a modality the gateway leaves out is not proof the lab model
-// rejects it. NEAR AI also reports `embedding`, which the schema has no value
-// for, so unrepresentable entries are filtered instead of written.
-function withModalities(
-  existing: Modality[] | undefined,
-  reported: string[],
-): Modality[] | undefined {
-  if (existing === undefined) return undefined;
-  const additions = reported.filter(
-    (value): value is Modality =>
-      MODALITIES.has(value as Modality) && !existing.includes(value as Modality),
-  );
-  return additions.length === 0 ? existing : [...existing, ...additions];
-}
-
 function atMost(current: number | undefined, reported: number | undefined): number | undefined {
   if (current === undefined) return reported;
   if (reported === undefined) return current;
@@ -134,34 +117,29 @@ export function buildNearAIModel(
     cache_read: perMillion(model.pricing.input_cache_read) ?? existing.cost.cache_read,
   };
 
-  // The gateway may cap below the lab model, never above it.
-  const limit = {
-    ...existing.limit,
-    context: atMost(existing.limit?.context, model.context_length),
-    output: atMost(existing.limit?.output, model.max_output_length),
-  };
-
-  const input = withModalities(existing.modalities?.input, model.input_modalities);
-  const output = withModalities(existing.modalities?.output, model.output_modalities);
-  const modalities = input === undefined || output === undefined
-    ? existing.modalities
-    : { input, output };
+  // `context_length` is the serving `max_model_len` only for models NEAR AI hosts
+  // itself. On relayed routes it is whatever the upstream aggregator reported and
+  // is often rounded below the lab figure, so it would publish a cap the host does
+  // not impose. `max_output_length` is advisory even on hosted models: requests
+  // above it succeed, and only exceeding the context window is rejected. So output
+  // is never synced, and context only for hosted models, capped downward.
+  const limit = model.owned_by === HOSTED_BY_NEAR_AI
+    ? { ...existing.limit, context: atMost(existing.limit?.context, model.context_length) }
+    : existing.limit;
 
   const values = {
     ...current,
-    // `supported_features` omits reasoning for relayed models that plainly
-    // reason, so it is only ever evidence FOR a capability, never against one.
-    // reasoning and reasoning_options stay hand-authored.
+    // The catalog misreports capabilities in both directions: `supported_features`
+    // omits reasoning for relayed models that plainly reason, and
+    // `input_modalities` claims image for routes that reject it. So these two
+    // flags are the only ones taken from it, and only to turn something on;
+    // reasoning, modalities and attachment stay hand-authored.
     tool_call: model.supported_features.includes("tools") ? true : existing.tool_call,
     structured_output: model.supported_features.includes("structured_outputs")
       ? true
       : existing.structured_output,
-    attachment: input === undefined
-      ? existing.attachment
-      : input.some((modality) => modality !== "text"),
     cost,
     limit,
-    modalities,
   } as SyncedFullModel;
 
   return baseModel === undefined
