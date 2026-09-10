@@ -2,12 +2,22 @@
 """
 Backfill [parameters] blocks into models.dev lab model TOMLs.
 
-Sources, in priority order:
-  1. Hugging Face API safetensors metadata (exact) -> estimate absent
-  2. config.json MoE fields -> active count computed exactly
-  3. name-suffix parse (e.g. "27b", "235b-a22b") -> estimate = true
+Modes:
+  default           Seed exact totals from Hugging Face safetensors API
+                    (estimate absent, source = HF repo). MoE detected via
+                    expert-config keys; architecture omitted if undetermined.
+  --active-from-names  Curate `active` for MoE models from the lab's own
+                    official repo name (e.g. "Qwen3-235B-A22B" -> 22B active).
+                    Vendor AxB naming is lab-published, so estimate stays
+                    absent. Files with active or estimate=true are skipped.
+                    Totals stay untouched (already exact from safetensors).
 
-Never touches files that already have [parameters].
+Active is NEVER reconstructed arithmetically from config.json: per-token
+activation depends on the full architecture (attention, dense layers,
+shared experts). See AGENTS.md.
+
+Never touches files that already have [parameters] (default mode) or an
+existing active/estimate block (--active-from-names).
 Dry-run by default; --apply writes; --filter substring narrows scope.
 """
 
@@ -98,6 +108,69 @@ def parse_name_estimate(model_id: str):
     return int(round(value * 1e9))
 
 
+# Official repo-name pattern for vendor-stated active params:
+# "Qwen3-235B-A22B", "Qwen3-30B-A3B", "Nemotron-3-Ultra-550B-A55B",
+# "Hunyuan-A13B", "gemma-4-26B-A4B-it". Case-insensitive on the A/B
+# suffix; the number keeps its case only as part of the token.
+ACTIVE_NAME_RE = re.compile(r"(?:^|[-_])[aA](\d+(?:\.\d+)?)[bB](?=$|[-_.])")
+
+# Fallback: lab-published phrasing in the reviewed description text —
+# "37B active parameters" / "(2.4T total, 41B active)".
+ACTIVE_DESC_RES = [
+    re.compile(r"(\d+(?:\.\d+)?)[bB]\s+active\s+parameters?", re.I),
+    re.compile(r"[,]\s*(\d+(?:\.\d+)?)[bB]\s+active\b", re.I),
+]
+
+
+def curate_active(path: Path, apply: bool):
+    rel = path.relative_to(ROOT)
+    text = path.read_text()
+    m = re.search(r"^\[parameters\]\n(.*?)(?=^\[|\Z)", text, re.S | re.M)
+    if not m:
+        return ("skip-no-params", rel, None)
+    block = m.group(0)
+    if re.search(r"^active\s*=", block, re.M):
+        return ("skip-has-active", rel, None)
+    if "estimate = true" in block:
+        return ("skip-estimate", rel, None)
+    if 'architecture = "moe"' not in block:
+        return ("skip-not-moe", rel, None)
+    src = re.search(r'^source\s*=\s*"([^"]+)"', block, re.M)
+    if not src:
+        return ("skip-no-source", rel, None)
+    name = src.group(1).rstrip("/").rsplit("/", 1)[-1]
+    active = None
+    am = ACTIVE_NAME_RE.search(name)
+    if am:
+        active = int(round(float(am.group(1)) * 1e9))
+    else:
+        desc = re.search(r'^description\s*=\s*"([^"]+)"', text, re.M)
+        if desc:
+            for pat in ACTIVE_DESC_RES:
+                dm = pat.search(desc.group(1))
+                if dm:
+                    active = int(round(float(dm.group(1)) * 1e9))
+                    break
+    if active is None:
+        return ("no-name-active", rel, None)
+    tot = re.search(r"^total\s*=\s*(\d+)", block, re.M)
+    if not tot:
+        return ("skip-no-total", rel, None)
+    if active > int(tot.group(1)):
+        return ("skip-active-exceeds-total", rel, None)
+    new_block = re.sub(
+        r"^(total\s*=\s*\d+)$",
+        "\\1\nactive = " + str(active),
+        block,
+        count=1,
+        flags=re.M,
+    )
+    if not apply:
+        return ("dry", rel, new_block)
+    path.write_text(text[: m.start()] + new_block + text[m.end():])
+    return ("applied", rel, new_block)
+
+
 def toml_escape(s: str) -> str:
     return s
 
@@ -166,6 +239,8 @@ def process_file(path: Path, apply: bool):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--apply", action="store_true")
+    ap.add_argument("--active-from-names", action="store_true",
+                    help="curate active counts from official repo AxB names")
     ap.add_argument("--filter", default=None, help="substring filter on rel path")
     ap.add_argument("--workers", type=int, default=8)
     args = ap.parse_args()
@@ -175,16 +250,26 @@ def main():
         files = [f for f in files if args.filter in str(f.relative_to(ROOT))]
 
     counts = {}
-    with ThreadPoolExecutor(max_workers=args.workers) as ex:
-        futs = {ex.submit(process_file, f, args.apply): f for f in files}
-        for fut in as_completed(futs):
+    if args.active_from_names:
+        for f in files:
             try:
-                status, rel, block = fut.result()
+                status, rel, block = curate_active(f, args.apply)
             except Exception as e:
-                status, rel, block = ("error", futs[fut].relative_to(ROOT), str(e))
+                status, rel, block = ("error", f.relative_to(ROOT), str(e))
             counts[status] = counts.get(status, 0) + 1
             if status in ("applied", "dry") and block:
                 print(f"--- {rel}\n{block}")
+    else:
+        with ThreadPoolExecutor(max_workers=args.workers) as ex:
+            futs = {ex.submit(process_file, f, args.apply): f for f in files}
+            for fut in as_completed(futs):
+                try:
+                    status, rel, block = fut.result()
+                except Exception as e:
+                    status, rel, block = ("error", futs[fut].relative_to(ROOT), str(e))
+                counts[status] = counts.get(status, 0) + 1
+                if status in ("applied", "dry") and block:
+                    print(f"--- {rel}\n{block}")
     for k, v in sorted(counts.items()):
         print(f"{k}: {v}")
 
