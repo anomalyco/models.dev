@@ -1,0 +1,13 @@
+base_model = "deepseek/deepseek-v4-pro-0813"
+
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["high", "max"] }]
+
+# https://ollama.com/pricing (accessed 2026-09-10)
+[cost]
+input = 0.66
+output = 1.98
+cache_read = 0.022
+
+[limit]
+context = 1048576
+output = 65536
