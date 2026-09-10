@@ -1,0 +1,14 @@
+# Source: https://docs.anonrouter.ai/models and authenticated GET /v1/models (accessed 2026-09-10).
+# Reasoning wire: reasoning_effort; "none" disables reasoning when listed.
+base_model = "google/gemini-3.6-flash"
+reasoning_options = []
+
+[cost]
+input = 0.9375
+output = 4.6875
+
+[limit]
+context = 1_000_000
+
+[modalities]
+input = ["text", "image"]
