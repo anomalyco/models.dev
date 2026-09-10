@@ -1,6 +1,9 @@
-# Source: Google Cloud Vertex AI Model Garden - xAI Grok 4.20 (Reasoning)
+# Sources:
+# - https://docs.cloud.google.com/vertex-ai/generative-ai/docs/partner-models/grok/grok-4-20
+# - https://docs.cloud.google.com/vertex-ai/generative-ai/docs/partner-models/grok/capabilities/reasoning
+# - https://cloud.google.com/gemini-enterprise-agent-platform/generative-ai/pricing
 base_model = "xai/grok-4.20-0309-reasoning"
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
+reasoning_options = []
 
 [cost]
 input = 1.25
@@ -12,6 +15,12 @@ tier = { type = "context", size = 200_000 }
 input = 2.5
 output = 5
 cache_read = 0.4
+
+[limit]
+context = 2_000_000
+
+[modalities]
+input = ["text", "image"]
 
 [provider]
 npm = "@ai-sdk/openai-compatible"

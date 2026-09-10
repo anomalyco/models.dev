@@ -1,10 +1,17 @@
-# Source: Google Cloud Vertex AI Model Garden - xAI Grok 4.1 Fast (Non-Reasoning)
+# Sources:
+# - https://docs.cloud.google.com/vertex-ai/generative-ai/docs/partner-models/grok/grok-4-1-fast
+# - https://cloud.google.com/gemini-enterprise-agent-platform/generative-ai/pricing
 base_model = "xai/grok-4.1-fast"
+description = "Fast Grok model for responsive chat, tool-assisted work, and low-latency responses"
+status = "deprecated"
 
 [cost]
 input = 0.2
 output = 0.5
 cache_read = 0.05
+
+[limit]
+context = 128_000
 
 [provider]
 npm = "@ai-sdk/openai-compatible"
