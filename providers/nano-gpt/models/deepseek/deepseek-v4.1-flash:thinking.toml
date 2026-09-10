@@ -1,13 +1,5 @@
+base_model = "deepseek/deepseek-v4.1-flash"
 name = "DeepSeek V4.1 Flash Thinking"
-description = "DeepSeek V4.1 Flash supports text and image input, reasoning, tool calling, and structured output with a 1M-token context window. This is a rate-limited beta with limited capacity, intended for testing rather than production use. Assume prompts and responses are logged by the provider and may be used for model training or service improvement. Do not send sensitive or confidential data."
-family = "deepseek"
-release_date = "2026-09-08"
-last_updated = "2026-09-08"
-attachment = true
-reasoning = true
-tool_call = true
-structured_output = true
-open_weights = false
 
 [[reasoning_options]]
 type = "effort"
@@ -19,10 +11,4 @@ output = 0.3124
 cache_read = 0.03124
 
 [limit]
-context = 1_000_000
 input = 1_000_000
-output = 384_000
-
-[modalities]
-input = ["text", "image"]
-output = ["text"]
