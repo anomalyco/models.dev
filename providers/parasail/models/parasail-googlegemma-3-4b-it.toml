@@ -1,0 +1,16 @@
+# Sources:
+# https://openrouter.ai/google/gemma-3-4b-it
+# Pricing from OpenRouter peers (Parasail pricing not published)
+# Prior Parasail full definition: text-only, no attachments, no structured output
+base_model = "google/gemma-3-4b-it"
+
+attachment = false
+structured_output = false
+
+[cost]
+input = 0.05
+output = 0.1
+
+[modalities]
+input = ["text"]
+output = ["text"]

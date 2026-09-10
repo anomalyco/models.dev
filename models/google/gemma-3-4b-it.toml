@@ -1,0 +1,23 @@
+name = "Gemma 3 4B Instruct"
+description = "Compact instruction-tuned open Gemma 3 multimodal model for edge and mobile deployments"
+family = "gemma"
+release_date = "2025-03-13"
+last_updated = "2025-03-13"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = false
+structured_output = true
+open_weights = true
+
+[limit]
+context = 131072
+output = 8192
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/google/gemma-3-4b-it"

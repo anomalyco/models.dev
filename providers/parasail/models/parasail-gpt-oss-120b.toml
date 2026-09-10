@@ -1,0 +1,13 @@
+# Effort: reasoning_effort = low|medium|high
+
+base_model = "openai/gpt-oss-120b"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high"]
+
+[cost]
+input = 0.1
+output = 0.75
+cache_read = 0.055
+

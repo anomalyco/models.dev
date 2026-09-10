@@ -1,0 +1,14 @@
+# Effort: reasoning_effort = high|max
+# Sources:
+# https://openrouter.ai/z-ai/glm-5.2
+# Pricing from OpenRouter peers (Parasail pricing not published)
+base_model = "zhipuai/glm-5.2"
+
+[[reasoning_options]]
+type = "effort"
+values = ["high", "max"]
+
+[cost]
+input = 0.966
+output = 3.036
+cache_read = 0.1932

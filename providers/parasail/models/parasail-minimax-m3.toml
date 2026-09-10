@@ -1,0 +1,13 @@
+# Toggle: thinking.type = enabled|disabled
+# Sources:
+# https://openrouter.ai/minimax/minimax-m3
+# Pricing from OpenRouter peers (Parasail pricing not published)
+base_model = "minimax/MiniMax-M3"
+
+[[reasoning_options]]
+type = "toggle"
+
+[cost]
+input = 0.3
+output = 1.2
+cache_read = 0.06

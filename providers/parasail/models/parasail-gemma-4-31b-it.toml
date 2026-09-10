@@ -1,0 +1,10 @@
+# Toggle: thinking.type = enabled|disabled
+base_model = "google/gemma-4-31b-it"
+
+[[reasoning_options]]
+type = "toggle"
+
+[cost]
+input = 0.15
+output = 0.4
+cache_read = 0.1

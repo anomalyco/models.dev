@@ -1,0 +1,18 @@
+# Toggle: enable_thinking true|false
+# Effort: reasoning_effort = low|medium|xhigh
+# Sources:
+# https://openrouter.ai/qwen/qwen3.8-27b
+# Pricing from OpenRouter peers (Parasail pricing not published)
+base_model = "alibaba/qwen3.8-27b"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "xhigh"]
+
+[cost]
+input = 0.45
+output = 3.2
+cache_read = 0.05
