@@ -15,6 +15,11 @@ open_weights = true
 context = 1_000_000
 output = 384_000
 
+[parameters]
+total = 290_944_616_402
+architecture = "moe"
+source = "https://huggingface.co/deepseek-ai/DeepSeek-V4-Flash"
+
 [modalities]
 input = ["text"]
 output = ["text"]

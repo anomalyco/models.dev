@@ -13,6 +13,15 @@ open_weights = true
 context = 163_840
 output = 163_840
 
+# V3-0324 is a post-training refresh of the V3 weights with the same
+# safetensors layout, so `total` matches DeepSeek-V3 exactly; `active`
+# is the lab-stated 37B activated per token from the V3 announcement.
+[parameters]
+total = 684_531_386_000
+active = 37_000_000_000
+architecture = "moe"
+source = "https://huggingface.co/deepseek-ai/DeepSeek-V3-0324"
+
 [modalities]
 input = ["text"]
 output = ["text"]

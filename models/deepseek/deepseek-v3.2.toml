@@ -18,6 +18,16 @@ license = "MIT License"
 context = 128_000
 output = 64_000
 
+# Same V3 architecture family (37B per-token active per the lab's V3
+# announcement) with DSA sparse attention added; the exact safetensors
+# sum (685.4B, FP8 + BF16 + F32) is used as total. Also the checkpoint
+# served by the API's deepseek-chat / deepseek-reasoner aliases.
+[parameters]
+total = 685_396_921_376
+active = 37_000_000_000
+architecture = "moe"
+source = "https://huggingface.co/deepseek-ai/DeepSeek-V3.2"
+
 [modalities]
 input = ["text"]
 output = ["text"]

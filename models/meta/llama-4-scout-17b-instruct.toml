@@ -14,6 +14,11 @@ open_weights = true
 context = 3_500_000
 output = 16_384
 
+[parameters]
+total = 108_641_793_536
+architecture = "moe"
+source = "https://huggingface.co/meta-llama/Llama-4-Scout-17B-16E-Instruct"
+
 [modalities]
 input = ["text", "image"]
 output = ["text"]

@@ -14,6 +14,14 @@ license = "MIT License"
 context = 131_072
 output = 8_192
 
+# Lab card states "671B total / 37B activated"; `total` is the exact
+# safetensors count (FP8 + BF16 + F32 tensors) of this checkpoint.
+[parameters]
+total = 684_531_386_000
+active = 37_000_000_000
+architecture = "moe"
+source = "https://huggingface.co/deepseek-ai/DeepSeek-V3.1"
+
 [modalities]
 input = ["text"]
 output = ["text"]

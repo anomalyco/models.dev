@@ -14,6 +14,15 @@ open_weights = true
 context = 128_000
 output = 32_768
 
+# R1 shares the DeepSeek-V3 architecture (its card states "671B total /
+# 37B activated" and it is trained from the V3-Base checkpoint); `total`
+# is the exact safetensors sum (BF16 + FP8 tensors) of the R1 weights.
+[parameters]
+total = 684_489_845_504
+active = 37_000_000_000
+architecture = "moe"
+source = "https://huggingface.co/deepseek-ai/DeepSeek-R1"
+
 [modalities]
 input = ["text"]
 output = ["text"]

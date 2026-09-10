@@ -14,6 +14,11 @@ context = 256_000
 input = 256_000
 output = 256_000
 
+[parameters]
+total = 201_365_316_160
+architecture = "moe"
+source = "https://huggingface.co/stepfun-ai/Step-3.7-Flash"
+
 [modalities]
 input = ["text", "image", "video"]
 output = ["text"]

@@ -27,6 +27,16 @@ license = "qwen-community-1.0"
 context = 262_144
 output = 131_072
 
+# Parameter counts: the lab's card states "125B total / 6B active" for the
+# model proper; `total` and `active` follow the lab's stated definition. The
+# raw safetensors sum is ~180B because it additionally counts the hybrid
+# n-gram embedding (~51B) and MTP (~4B) auxiliary tensors.
+[parameters]
+total = 125_000_000_000
+active = 6_000_000_000
+architecture = "moe"
+source = "https://huggingface.co/Qwen/Qwen3.8-Flash-Next"
+
 [modalities]
 input = ["text", "image", "video"]
 output = ["text"]
