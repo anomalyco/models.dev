@@ -10,6 +10,12 @@ tool_call = true
 last_updated = "2026-04-08"
 open_weights = true
 
+# https://ollama.com/pricing (accessed 2026-09-10)
+[cost]
+input = 0.14
+output = 0.40
+cache_read = 0.05
+
 [limit]
 context = 262144
 output = 262144

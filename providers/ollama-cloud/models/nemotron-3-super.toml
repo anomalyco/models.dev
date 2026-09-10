@@ -9,6 +9,12 @@ release_date = "2026-03-11"
 last_updated = "2026-03-12"
 open_weights = true
 
+# https://ollama.com/pricing (accessed 2026-09-10)
+[cost]
+input = 0.015
+output = 0.60
+cache_read = 0.015
+
 [limit]
 context = 262144
 output = 65536
