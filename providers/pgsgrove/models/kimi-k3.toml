@@ -1,6 +1,13 @@
+# Off: reasoning_effort = "none" (omit the field for the model default, which reasons); Effort: reasoning_effort = "low"|"high"|"max" (lab set, default max). Live-verified 2026-09-11: none returns no reasoning_content
+# https://api.pgsgrove.com/docs/reasoning (accessed 2026-09-11)
 base_model = "moonshotai/kimi-k3"
 
-reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high"] }]
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "high", "max"]
+
+[interleaved]
+field = "reasoning_content"
 
 [cost]
 input = 3.75

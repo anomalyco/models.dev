@@ -1,10 +1,12 @@
 # Reasoning HTTP format (accessed 2026-09-11):
-# OpenAI Chat: POST https://api.pgsgrove.com/v1/chat/completions. Off is
-# reasoning_effort = "none"; graded levels via reasoning_effort =
-# "low"|"medium"|"high". Reasoning is returned in reasoning_content
+# OpenAI Chat: POST https://api.pgsgrove.com/v1/chat/completions — a zero-injection
+# relay of curated open-weight models; reasoning_effort passes through to the
+# model, so accepted levels are MODEL-NATIVE (see each model file's header).
+# Off is reasoning_effort = "none" on models that can be switched off;
+# always-on models ignore it. Reasoning is returned in reasoning_content
 # (DeepSeek-style), separate from content.
-# Anthropic Messages: POST https://api.pgsgrove.com/anthropic/v1/messages; toggle:
-# thinking.enabled = true|false; output_config.effort honored.
+# Anthropic Messages: POST https://api.pgsgrove.com/anthropic/v1/messages; thinking.type =
+# enabled|disabled maps to the same switch; output_config.effort honored.
 # Sources:
 # https://api.pgsgrove.com/docs/reasoning
 # https://api.pgsgrove.com/docs/native-protocols
