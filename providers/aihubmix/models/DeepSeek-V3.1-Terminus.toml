@@ -1,0 +1,24 @@
+name = "DeepSeek V3.1 Terminus"
+description = "DeepSeek-V3.1 non-thinking mode has now been updated to the DeepSeek-V3.1-Terminus version."
+release_date = "2025-09-22"
+last_updated = "2025-09-22"
+attachment = false
+reasoning = true
+tool_call = true
+structured_output = true
+open_weights = true
+
+[[reasoning_options]]
+type = "toggle"
+
+[cost]
+input = 0.56
+output = 1.68
+
+[limit]
+context = 160_000
+output = 32_000
+
+[modalities]
+input = ["text"]
+output = ["text"]

@@ -1,0 +1,29 @@
+name = "Gemini 2.5 Flash Preview 09 2025"
+description = "This latest 2.5 Flash model comes with improvements in two key areas we heard consistent feedback on:\n\nBetter agentic tool use: We've improved how the model uses tools, leading to better performance in more complex, agentic and multi-step applications. This model shows noticeable improvements on key agentic benchmarks, including a 5% gain on SWE-Bench Verified, compared to our last release (48.9% → 54%). More efficient: With thinking on, the model is now significantly more cost-efficient—achieving higher quality outputs while using fewer tokens, reducing latency and cost (see charts above)."
+release_date = "2025-09-25"
+last_updated = "2025-09-25"
+attachment = true
+reasoning = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "minimal", "low", "medium", "high"]
+
+[[reasoning_options]]
+type = "budget_tokens"
+
+[cost]
+input = 0.3
+output = 2.499
+cache_read = 0.03
+
+[limit]
+context = 1_048_576
+output = 65_536
+
+[modalities]
+input = ["text", "image", "video", "audio"]
+output = ["text"]

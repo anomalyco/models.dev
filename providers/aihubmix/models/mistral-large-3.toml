@@ -1,0 +1,21 @@
+name = "Mistral Large 3"
+description = "Mistral Large 3 is a MoE model with 67.5B total parameters and 41B active parameters, supporting a 256K-token context window. Trained from scratch on 3,000 NVIDIA H200 GPUs, it is one of the strongest permissively licensed open-weight models available.\n\nDesigned for advanced reasoning and long-context understanding, Mistral Large 3 delivers performance on par with the best instruction-tuned open-weight models for general-purpose tasks, while also offering image understanding capabilities. Its multilingual strengths are particularly notable for non-English/Chinese languages, making it well-suited for global applications.\n\nTypical use cases include enterprise assistants, multilingual customer support, content generation and editing, data analysis over long documents, code assistance, and research workflows that require handling large corpora or complex instructions. With its MoE architecture, Mistral Large 3 balances strong performance with efficient inference, providing a versatile backbone for building reliable, production-grade AI systems."
+release_date = "2024-11-01"
+last_updated = "2024-11-01"
+attachment = true
+reasoning = false
+tool_call = true
+structured_output = true
+open_weights = true
+
+[cost]
+input = 0.5
+output = 1.5
+
+[limit]
+context = 256_000
+output = 131_072
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

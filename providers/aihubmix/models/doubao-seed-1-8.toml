@@ -1,0 +1,41 @@
+name = "Doubao Seed 1.8"
+description = "Doubao's strongest multimodal Agent model Seed1.8 has powerful multimodal capabilities, supports image and text input, and can efficiently and accurately complete tasks in scenarios such as information retrieval, code generation, GUI interaction, and complex workflows, meeting increasingly diverse technical demands."
+release_date = "2025-12-28"
+last_updated = "2025-12-28"
+attachment = true
+reasoning = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"]
+
+[cost]
+input = 0.10959
+output = 0.273975
+cache_read = 0.021918
+
+[[cost.tiers]]
+tier = { type = "context", size = 32_000 }
+input = 0.1644
+output = 2.191995
+cache_read = 0.021915
+
+[[cost.tiers]]
+tier = { type = "context", size = 128_000 }
+input = 0.32876
+output = 3.2876
+cache_read = 0.021918
+
+[limit]
+context = 256_000
+output = 32_768
+
+[modalities]
+input = ["text", "image", "video"]
+output = ["text"]

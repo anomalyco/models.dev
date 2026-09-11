@@ -1,0 +1,21 @@
+name = "Kimi K2 0711"
+description = "Kimi-K2 is a MoE architecture foundational model with extremely powerful coding and agent capabilities, featuring a total of 1 trillion parameters and activating 32 billion parameters. In benchmark performance tests across major categories such as general knowledge reasoning, programming, mathematics, and agents, the K2 model outperforms other mainstream open-source models.\nThe Kimi-K2 model supports a context length of 128k tokens.\nIt does not support visual capabilities."
+release_date = "2025-01-01"
+last_updated = "2025-01-01"
+attachment = false
+reasoning = false
+tool_call = true
+structured_output = true
+open_weights = true
+
+[cost]
+input = 0.54
+output = 2.16
+
+[limit]
+context = 131_072
+output = 16_384
+
+[modalities]
+input = ["text"]
+output = ["text"]

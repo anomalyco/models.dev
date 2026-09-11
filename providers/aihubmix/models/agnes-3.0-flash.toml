@@ -1,0 +1,26 @@
+name = "Agnes 3.0 Flash"
+description = "Agnes 3.0 Flash is designed for real-world agent tasks and development workflows, covering the full execution chain from task understanding and planning to tool invocation and final delivery. The model focuses on improving stability, instruction-following, factual grounding, and output completeness in complex tasks, helping developers build more reliable agent applications."
+release_date = "2026-09-09"
+last_updated = "2026-09-09"
+attachment = true
+reasoning = true
+tool_call = false
+open_weights = false
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "budget_tokens"
+
+[cost]
+input = 0.03
+output = 0.15
+
+[limit]
+context = 512_000
+output = 65_500
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

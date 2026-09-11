@@ -1,0 +1,33 @@
+name = "Qwen3.8 Max 2026 09-02"
+description = "Qwen3.8-Max-0902 (also known as qwen3.8-max-2026-09-02) is a snapshot version of Alibaba Cloud Tongyi Qianwen's qwen3.8-max. It pushes encoding depth further, enabling it to handle more complex engineering-level projects and long-term autonomous development; collaborative agent capabilities are significantly enhanced, performing more confidently in multi-tool orchestration and end-to-end delivery; visual understanding is comprehensively improved, with more sensitive and accurate chart reasoning, document parsing, and multimodal perception. Continuing the 1-million-context window, reasoning modes, and a complete tool ecosystem, it continues to evolve at a higher level of intelligence."
+release_date = "2026-09-02"
+last_updated = "2026-09-02"
+attachment = true
+reasoning = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"]
+
+[[reasoning_options]]
+type = "budget_tokens"
+
+[cost]
+input = 1.69
+output = 5.07
+cache_read = 0.169
+cache_write = 2.1125
+
+[limit]
+context = 1_000_000
+output = 131_072
+
+[modalities]
+input = ["text", "image", "video"]
+output = ["text"]

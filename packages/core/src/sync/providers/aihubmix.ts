@@ -49,7 +49,11 @@ export const AihubmixModel = z
   .object({
     model_id: z.string().min(1),
     model_name: z.string().nullish(),
-    developer_id: z.number().nullish(),
+    // The upstream lab that built the model, and the AIHubMix ID this entry is a
+    // routing variant of. Both are served by the catalog itself, so neither the
+    // lab nor the variant relationship is inferred from the relay ID here.
+    vendor: z.string().nullish(),
+    variant_of: z.string().nullish(),
     desc: z.string().nullish(),
     pricing: Pricing.nullish(),
     features: z.string().nullish(),
@@ -62,8 +66,8 @@ export const AihubmixModel = z
     tool_call: z.boolean().nullish(),
     release_date: z.string().nullish(),
     last_updated: z.string().nullish(),
-    // Not served yet; read opportunistically so creates unblock without a code
-    // change once AIHubMix adds them.
+    // `knowledge` is not served yet; read opportunistically so it lands without a
+    // code change once AIHubMix adds it.
     knowledge: z.string().nullish(),
     open_weights: z.boolean().nullish(),
     retire_stage: z.string().nullish(),
@@ -84,47 +88,22 @@ export type AihubmixModel = z.infer<typeof AihubmixModel>;
  * the lab metadata it serves whenever that metadata exists — the relay then only
  * records what it actually changes (price, reasoning controls, limits).
  *
- * `developer_id` is AIHubMix's own lab identifier and is the only reliable way
- * back to a catalog namespace: relay IDs carry routing prefixes (`coding-`,
- * `alicloud-`) and suffixes (`-free`, `-think`, `-nothink`) that are AIHubMix
- * routing modes rather than distinct upstream models.
+ * The catalog answers both halves of that lookup itself: `vendor` names the lab
+ * that built the model, and `variant_of` names the AIHubMix ID this entry is a
+ * routing variant of. Relay IDs carry prefixes (`coding-`, `alicloud-`) and
+ * suffixes (`-free`, `-think`) that are AIHubMix routing modes rather than
+ * distinct upstream models, and `variant_of` states that relationship instead of
+ * it being guessed from the string — which also resolves the relays no amount of
+ * string surgery reaches, such as `ox-alpha` onto `zhipuai/glm-5.3-flash`.
  */
-const LAB_BY_DEVELOPER: Record<number, string> = {
-  2: "anthropic",
-  3: "microsoft",
-  4: "bytedance-seed",
-  5: "zhipuai",
-  6: "cohere",
-  7: "deepseek",
-  8: "google",
-  9: "xai",
-  10: "mistral",
-  11: "meta",
-  12: "openai",
-  13: "alibaba",
-  15: "moonshotai",
-  16: "stepfun",
-  17: "nvidia",
-  18: "minimax",
-  24: "tencent",
-  28: "meituan",
-  29: "inclusionai",
-  31: "xiaomi",
-  44: "upstage",
+const VENDOR_LABS: Record<string, string> = {
+  // The two registries spell four labs differently. This maps namespaces, not
+  // models: no entry here decides what any model is or which lab built it.
+  zhipu: "zhipuai",
+  moonshot: "moonshotai",
+  bytedance: "bytedance-seed",
+  "meituan-longcat": "meituan",
 };
-
-/** Routing prefixes and suffixes that select a mode, not a different model. */
-const ROUTING_PREFIXES = [
-  // Upstream compute the relay routes to.
-  "alicloud-", "cloudflare-", "deepinfra-", "bai-", "zai-", "anthropic-", "openai-", "nvidia-",
-  "xiaomi-", "deep-",
-  // AIHubMix's own routing modes and vanity namespaces.
-  "coding-", "cc-", "mm-", "aihubmix-", "aihub-", "ahm-",
-];
-const ROUTING_SUFFIXES = [
-  "-free", "-think", "-nothink", "-search", "-preview", "-disc", "-exp", "-highspeed", "-fast",
-  "-latest",
-];
 
 /** Catalog effort levels; AIHubMix spells two of them differently. */
 const EFFORT_ALIASES: Record<string, string> = { no_think: "none", instant: "minimal" };
@@ -140,8 +119,11 @@ const EFFORT_VALUES = new Set([
 ]);
 
 type LabMetadataIDs = Map<string, string>;
+/** Every listed relay by lowercased ID, so `variant_of` can be followed. */
+type RelayCatalog = Map<string, AihubmixModel>;
 
 let labMetadataIDs: LabMetadataIDs | undefined;
+let relayCatalog: RelayCatalog | undefined;
 
 /**
  * The catalog rejects a `base_model` that resolves to nothing, so relays are
@@ -179,7 +161,7 @@ export const aihubmix = {
   skippedNotice(ids) {
     return ids.map(
       (id) =>
-        `AIHubMix lists ${id} but the response carries neither a resolvable base model nor the release_date/open_weights a standalone entry needs.`,
+        `AIHubMix lists ${id} but the response carries neither a vendor/variant_of that resolves to lab metadata nor the release_date/open_weights/limits a standalone entry needs.`,
     );
   },
   async fetchModels() {
@@ -195,11 +177,12 @@ export const aihubmix = {
     // `cc-minimax-m2` and `cc-MiniMax-M2` are the same route under two spellings
     // and would claim filenames that differ only in case. Keep the last entry
     // whole rather than mixing two records.
-    return [...new Map(data.map((model) => [model.model_id.toLowerCase(), model])).values()];
+    relayCatalog = new Map(data.map((model) => [model.model_id.toLowerCase(), model]));
+    return [...relayCatalog.values()];
   },
   translateModel(model, context) {
     const existing = context.existing(model.model_id);
-    const built = buildAihubmixModel(model, existing, labMetadataIDs);
+    const built = buildAihubmixModel(model, existing, labMetadataIDs, relayCatalog);
     if (built === undefined) return undefined;
     return { id: model.model_id, model: built };
   },
@@ -209,6 +192,7 @@ export function buildAihubmixModel(
   model: AihubmixModel,
   existing: ExistingModel | undefined,
   labIDs: LabMetadataIDs | undefined = labMetadataIDs,
+  catalog: RelayCatalog | undefined = relayCatalog,
 ): SyncedModel | undefined {
   const input = modalities(model.input_modalities, existing?.modalities?.input ?? ["text"]);
   const output = modalities(model.output_modalities, existing?.modalities?.output ?? ["text"]);
@@ -218,15 +202,11 @@ export function buildAihubmixModel(
   const structuredOutput = features.has("structured_outputs") || existing?.structured_output;
   const name = model.model_name ?? existing?.name;
   const context = tokens(model.context_length);
-  // AIHubMix backfills an unknown `max_output` from `context_length`, so a value
-  // equal to the window is read as absent the same way a 0 is — 51 of 415 models
-  // quote the two as equal, and a model whose output ceiling really is its whole
-  // context window leaves no room for the prompt.
-  const quoted = tokens(model.max_output);
   // Two ways AIHubMix signals an unknown output ceiling: backfilling it from
-  // `context_length` (51 of 415 models quote the two as equal, which would leave
-  // no room for the prompt) and quoting a value above the window (6 models, up to
-  // 10x). Both are read as absent, the same as the 0 the endpoint also uses.
+  // `context_length` (36 of 408 models quote the two as equal, which would leave
+  // no room for the prompt) and quoting a value above the window. Both are read
+  // as absent, the same as the 0 the endpoint also uses.
+  const quoted = tokens(model.max_output);
   const maxOutput =
     context !== undefined && quoted !== undefined && quoted >= context ? undefined : quoted;
   const limit = {
@@ -248,7 +228,7 @@ export function buildAihubmixModel(
     cost: buildCost(model.pricing, existing?.cost),
   };
 
-  const base = existing?.base_model ?? resolveBaseModel(model, labIDs);
+  const base = existing?.base_model ?? resolveBaseModel(model, labIDs, catalog);
   if (base !== undefined) {
     return factorBaseModel(
       base,
@@ -258,13 +238,20 @@ export function buildAihubmixModel(
     );
   }
 
-  // A standalone entry must carry every required catalog field itself. AIHubMix
-  // dates only 52 of its 415 models and serves no open_weights flag, so a relay
+  // A standalone entry must carry every required catalog field itself, and the
+  // endpoint still leaves gaps: 304 of 408 models are dated, 289 state
+  // `open_weights`, and the rest quote 0 for a limit they do not know. A relay
   // with neither metadata to inherit nor those fields is reported rather than
   // written with invented values.
   const releaseDate = model.release_date ?? existing?.release_date;
   const openWeights = model.open_weights ?? existing?.open_weights;
-  if (name === undefined || releaseDate === undefined || openWeights === undefined) {
+  if (
+    name === undefined ||
+    releaseDate === undefined ||
+    openWeights === undefined ||
+    limit.context === undefined ||
+    limit.output === undefined
+  ) {
     return existing === undefined ? undefined : (existing as SyncedModel);
   }
 
@@ -293,31 +280,43 @@ export function buildAihubmixModel(
   } as SyncedFullModel;
 }
 
-function resolveBaseModel(model: AihubmixModel, labIDs: LabMetadataIDs | undefined) {
-  const lab = LAB_BY_DEVELOPER[model.developer_id ?? -1];
-  if (lab === undefined || labIDs === undefined) return undefined;
-  for (const candidate of baseCandidates(model.model_id)) {
+function resolveBaseModel(
+  model: AihubmixModel,
+  labIDs: LabMetadataIDs | undefined,
+  catalog: RelayCatalog | undefined,
+) {
+  const vendor = model.vendor;
+  if (vendor == null || labIDs === undefined) return undefined;
+  const lab = VENDOR_LABS[vendor] ?? vendor;
+  for (const candidate of relayChain(model, catalog)) {
     const id = labIDs.get(`${lab}/${candidate}`.toLowerCase());
     if (id !== undefined) return id;
   }
   return undefined;
 }
 
-/** Longest match first: strip routing prefixes, then routing suffixes. */
-function baseCandidates(modelID: string) {
-  const bare = modelID.split("/").at(-1) ?? modelID;
-  const candidates = new Set([bare]);
-  for (const prefix of ROUTING_PREFIXES) {
-    if (bare.toLowerCase().startsWith(prefix)) candidates.add(bare.slice(prefix.length));
+/**
+ * The relay's own ID first, then one `variant_of` hop at a time toward the
+ * canonical entry. Nearest first matters: `qwen3.8-max-preview` is a variant of
+ * `qwen3.8-max` and both are published lab models, so the relay must factor onto
+ * the preview it actually serves rather than onto the root of its chain.
+ */
+function relayChain(model: AihubmixModel, catalog: RelayCatalog | undefined) {
+  const chain = [bareID(model.model_id)];
+  const seen = new Set(chain);
+  let current: AihubmixModel | undefined = model;
+  while (current?.variant_of != null) {
+    const parent = bareID(current.variant_of);
+    if (seen.has(parent)) break;
+    seen.add(parent);
+    chain.push(parent);
+    current = catalog?.get(current.variant_of.toLowerCase());
   }
-  for (const suffix of ROUTING_SUFFIXES) {
-    for (const candidate of [...candidates]) {
-      if (candidate.toLowerCase().endsWith(suffix)) {
-        candidates.add(candidate.slice(0, -suffix.length));
-      }
-    }
-  }
-  return candidates;
+  return chain;
+}
+
+function bareID(modelID: string) {
+  return modelID.split("/").at(-1) ?? modelID;
 }
 
 function reasoningOptions(model: AihubmixModel): SyncedFullModel["reasoning_options"] {
@@ -386,7 +385,7 @@ function costTiers(pricing: NonNullable<AihubmixModel["pricing"]>) {
 
 /**
  * AIHubMix sends 0 for a limit it does not know rather than omitting the field —
- * 102 of 415 models quote `max_output: 0` — so 0 is read as absent. A model that
+ * 104 of 408 models quote `max_output: 0` — so 0 is read as absent. A model that
  * truly emitted no tokens would not be servable.
  */
 function tokens(value: number | null | undefined) {

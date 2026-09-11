@@ -1,11 +1,15 @@
 base_model = "alibaba/qwen3-vl-235b-a22b-instruct"
+reasoning = true
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "budget_tokens"
 
 [cost]
 input = 0.274
 output = 1.096
-
-[limit]
-output = 33_000
 
 [modalities]
 input = ["text", "image", "video"]

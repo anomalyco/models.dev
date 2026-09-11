@@ -1,0 +1,27 @@
+name = "Qwen3 VL 30B A3B Thinking"
+description = "The Qwen3-VL series’ second-largest MoE model Thinking version offers fast response speed, stronger multimodal understanding and reasoning, visual agent capabilities, and ultra-long context support for long videos and long documents; it features comprehensive upgrades in image/video understanding, spatial perception, and universal recognition abilities, making it capable of handling complex real-world tasks."
+release_date = "2025-10-11"
+last_updated = "2025-10-11"
+attachment = true
+reasoning = true
+tool_call = true
+structured_output = true
+open_weights = true
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "budget_tokens"
+
+[cost]
+input = 0.1028
+output = 1.028
+
+[limit]
+context = 131_072
+output = 32_768
+
+[modalities]
+input = ["text", "image", "video"]
+output = ["text"]

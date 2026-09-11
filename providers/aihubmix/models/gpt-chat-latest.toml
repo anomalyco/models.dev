@@ -1,0 +1,29 @@
+name = "GPT Chat"
+description = "GPT Chat Latest points to OpenAI's stable API alias chat-latest that always resolves to the latest Instant chat model used in ChatGPT. As OpenAI rolls out new Instant model updates in the future, they are routed behind this slug automatically."
+release_date = "2026-05-05"
+last_updated = "2026-05-05"
+attachment = true
+reasoning = true
+tool_call = true
+structured_output = true
+open_weights = false
+reasoning_options = []
+
+[cost]
+input = 5
+output = 30
+cache_read = 0.5
+
+[[cost.tiers]]
+tier = { type = "context", size = 272_000 }
+input = 10
+output = 45
+cache_read = 1
+
+[limit]
+context = 400_000
+output = 128_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

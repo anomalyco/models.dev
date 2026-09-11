@@ -5026,7 +5026,7 @@ function aihubmixModel(overrides: Partial<AihubmixModel> = {}): AihubmixModel {
   return {
     model_id: "gemini-3.1-flash-lite",
     model_name: "Gemini 3.1 Flash Lite",
-    developer_id: 8,
+    vendor: "google",
     pricing: { input: 0.25, output: 1.5, cache_read: 0.025 },
     ...overrides,
   };
@@ -5044,22 +5044,38 @@ const aihubmixAuthored: ExistingModel = {
 };
 
 const aihubmixLabIDs = new Map(
-  ["google/gemini-3.1-flash-lite", "openai/gpt-5.5", "minimax/MiniMax-M2"].map((id) => [
-    id.toLowerCase(),
-    id,
-  ]),
+  [
+    "google/gemini-3.1-flash-lite",
+    "google/gemini-3.1-flash-lite-preview",
+    "openai/gpt-5.5",
+    "minimax/MiniMax-M2",
+  ].map((id) => [id.toLowerCase(), id]),
+);
+
+/** The listing every `variant_of` hop is resolved against. */
+const aihubmixCatalog = new Map(
+  [
+    aihubmixModel(),
+    aihubmixModel({
+      model_id: "gemini-3.1-flash-lite-preview",
+      variant_of: "gemini-3.1-flash-lite",
+    }),
+    aihubmixModel({ model_id: "minimax-m2", vendor: "minimax" }),
+  ].map((model) => [model.model_id, model]),
 );
 
 test("factors an AIHubMix relay onto the lab metadata it serves", () => {
   const model = buildAihubmixModel(
     aihubmixModel({
       model_id: "gemini-3.1-flash-lite-nothink",
+      variant_of: "gemini-3.1-flash-lite",
       context_length: 1_048_576,
       max_output: 65_536,
       input_modalities: "text,image",
     }),
     undefined,
     aihubmixLabIDs,
+    aihubmixCatalog,
   );
   expect(model).toMatchObject({
     base_model: "google/gemini-3.1-flash-lite",
@@ -5070,28 +5086,83 @@ test("factors an AIHubMix relay onto the lab metadata it serves", () => {
   expect(model).not.toHaveProperty("open_weights");
 });
 
-test("routes AIHubMix prefixes and suffixes back to the upstream lab model", () => {
+test("follows the AIHubMix variant chain back to the upstream lab model", () => {
+  // `coding-` and `-free` are routing modes, and the endpoint says so itself
+  // rather than the prefix and suffix being stripped from the ID here.
   for (const id of ["coding-gemini-3.1-flash-lite", "gemini-3.1-flash-lite-free"]) {
-    const model = buildAihubmixModel(aihubmixModel({ model_id: id }), undefined, aihubmixLabIDs);
+    const model = buildAihubmixModel(
+      aihubmixModel({ model_id: id, variant_of: "gemini-3.1-flash-lite" }),
+      undefined,
+      aihubmixLabIDs,
+      aihubmixCatalog,
+    );
     expect(model).toMatchObject({ base_model: "google/gemini-3.1-flash-lite" });
   }
+});
+
+test("factors an AIHubMix relay onto the nearest published model in its chain", () => {
+  // `-preview` is a variant of the base model and is itself published, so the
+  // relay records the preview it actually serves rather than the chain's root.
+  const model = buildAihubmixModel(
+    aihubmixModel({
+      model_id: "coding-gemini-3.1-flash-lite-preview",
+      variant_of: "gemini-3.1-flash-lite-preview",
+    }),
+    undefined,
+    aihubmixLabIDs,
+    aihubmixCatalog,
+  );
+  expect(model).toMatchObject({ base_model: "google/gemini-3.1-flash-lite-preview" });
 });
 
 test("resolves an AIHubMix relay against a lab that spells its ID differently", () => {
   // AIHubMix lowercases every relay ID; the lab keeps `minimax/MiniMax-M2`.
   const model = buildAihubmixModel(
-    aihubmixModel({ model_id: "coding-minimax-m2-free", developer_id: 18 }),
+    aihubmixModel({ model_id: "coding-minimax-m2-free", vendor: "minimax", variant_of: "minimax-m2" }),
     undefined,
     aihubmixLabIDs,
+    aihubmixCatalog,
   );
   expect(model).toMatchObject({ base_model: "minimax/MiniMax-M2" });
 });
 
 test("skips an AIHubMix relay with neither base metadata nor standalone fields", () => {
   const model = buildAihubmixModel(
-    aihubmixModel({ model_id: "house-brand-v1", developer_id: 999 }),
+    aihubmixModel({ model_id: "house-brand-v1", vendor: null }),
     undefined,
     aihubmixLabIDs,
+    aihubmixCatalog,
+  );
+  expect(model).toBeUndefined();
+});
+
+test("resolves an AIHubMix lab whose namespace the catalog spells differently", () => {
+  // AIHubMix says `zhipu` where the catalog namespace is `zhipuai`.
+  const labIDs = new Map([["zhipuai/glm-5.3", "zhipuai/glm-5.3"]]);
+  const model = buildAihubmixModel(
+    aihubmixModel({ model_id: "coding-glm-5.3", vendor: "zhipu", variant_of: "glm-5.3" }),
+    undefined,
+    labIDs,
+    new Map(),
+  );
+  expect(model).toMatchObject({ base_model: "zhipuai/glm-5.3" });
+});
+
+test("skips an AIHubMix standalone entry the endpoint quotes no limits for", () => {
+  // A full catalog entry must carry its own limits; the endpoint sends 0 for a
+  // ceiling it does not know, which is read as absent rather than written.
+  const model = buildAihubmixModel(
+    aihubmixModel({
+      model_id: "house-brand-v1",
+      vendor: null,
+      release_date: "2026-01-01",
+      open_weights: false,
+      context_length: 0,
+      max_output: 0,
+    }),
+    undefined,
+    aihubmixLabIDs,
+    aihubmixCatalog,
   );
   expect(model).toBeUndefined();
 });

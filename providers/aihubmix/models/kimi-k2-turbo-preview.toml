@@ -1,0 +1,22 @@
+name = "Kimi K2 Turbo Preview"
+description = "The kimi-k2-turbo-preview model is a high-speed version of kimi-k2, with the same model parameters as kimi-k2, but the output speed has been increased from 10 tokens per second to 40 tokens per second."
+release_date = "2025-07-08"
+last_updated = "2025-07-08"
+attachment = false
+reasoning = false
+tool_call = true
+structured_output = true
+open_weights = true
+
+[cost]
+input = 1.2
+output = 4.8
+cache_read = 0.3
+
+[limit]
+context = 262_144
+output = 8_192
+
+[modalities]
+input = ["text"]
+output = ["text"]

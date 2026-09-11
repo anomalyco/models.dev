@@ -1,0 +1,29 @@
+name = "DeepSeek V4.1 Flash"
+description = "DeepSeek-V4.1-Flash model official release. This is the smallest model in DeepSeek’s new model-architecture series, featuring native multimodal visual understanding capabilities. The new architecture is designed to deliver a higher capability ceiling, faster inference speeds, greater throughput, and scalability to larger-parameter models."
+release_date = "2026-09-08"
+last_updated = "2026-09-08"
+attachment = true
+reasoning = true
+tool_call = true
+structured_output = true
+open_weights = true
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[cost]
+input = 0.155
+output = 0.62
+cache_read = 0.0031
+
+[limit]
+context = 1_000_000
+output = 384_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

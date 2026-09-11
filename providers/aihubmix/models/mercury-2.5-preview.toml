@@ -1,0 +1,25 @@
+name = "Mercury 2.5 Preview"
+description = "Mercury 2.5 is the latest diffusion-based large language model (dLLM) released by Inception. It is the fastest inference LLM; unlike the sequential token-by-token generation approach, Mercury 2.5 can generate and optimize multiple tokens in parallel, achieving a generation speed of 1,107 tokens per second on standard GPUs. Compared to Mercury 2, its intelligence has increased by more than 10 percentage points, and its quality rivals leading cost-optimized frontier models such as GPT-5.6 Luna (Low), Gemini 3.5 Flash-Lite, and Claude Haiku 4.5."
+release_date = "2026-09-02"
+last_updated = "2026-09-02"
+attachment = false
+reasoning = true
+tool_call = true
+open_weights = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["minimal", "low", "medium", "high"]
+
+[cost]
+input = 0.2
+output = 0.75
+cache_read = 0.02
+
+[limit]
+context = 260_000
+output = 65_536
+
+[modalities]
+input = ["text"]
+output = ["text"]
