@@ -1,3 +1,8 @@
+# Cache key (chat): body `prompt_cache_key` per-conversation id with sticky worker routing; header `x-session-id` carries the same id; hits report usage.prompt_tokens_details.cached_tokens
+# Use headers: `x-session-id` with the per-conversation id; header applies when both carriers are present
+# Use body: `prompt_cache_key` with the per-conversation id; optional cache_ttl 5m/30m/1h/6h/24h with sliding refresh on hit
+# Cache policy: stable prefix + same model and key; one key per conversation including retries; stable content first with byte-identical prefix for exact-prefix block-aligned matching
+# Docs: https://docs.morphllm.com/sdk/components/caching
 name = "Morph"
 env = ["MORPH_API_KEY"]
 npm = "@ai-sdk/openai-compatible"

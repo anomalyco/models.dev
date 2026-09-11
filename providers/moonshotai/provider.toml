@@ -1,3 +1,8 @@
+# Cache key (chat): body `prompt_cache_key` — stable session/task id scoping reuse to an identical prefix on the same model; required for Kimi Code Plan, recommended for multi-turn agents; hits report usage.cached_tokens
+# Use headers: repeat the stable prefix with identical model and prompt_cache_key
+# Use body: `prompt_cache_key` with a stable session/task id per conversation
+# Cache policy: stable prefix + same model and key; one stable session/task id per conversation with the same value on resume; fixed large context first in messages
+# Docs: https://platform.moonshot.ai/docs/api/chat
 name = "Moonshot AI"
 env = ["MOONSHOT_API_KEY"]
 npm = "@ai-sdk/openai-compatible"
