@@ -1,3 +1,8 @@
+# Cache (chat): no documented cache controls on the OpenAI-compatible chat API.
+# Use headers: none.
+# Use body: none.
+# Prefix: keep stable prefixes first; Bedrock-style `cachePoint` is a separate API surface.
+# Docs: https://nova.amazon.com/dev/documentation
 name = "Nova"
 env = ["NOVA_API_KEY"]
 npm = "@ai-sdk/openai-compatible"

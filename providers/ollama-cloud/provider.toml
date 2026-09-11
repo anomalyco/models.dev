@@ -1,3 +1,8 @@
+# Cache (chat): automatic server-side KV reuse with no request cache fields.
+# Use headers: none.
+# Use body: none.
+# Prefix: keep stable prefixes first with dynamic content last.
+# Docs: https://docs.ollama.com/openai
 name = "Ollama Cloud"
 env = ["OLLAMA_API_KEY"]
 npm = "@ai-sdk/openai-compatible"

@@ -1,3 +1,8 @@
+# Cache (chat): automatic engine-level prompt cache on supported models with no request changes.
+# Use headers: none.
+# Use body: none.
+# Prefix: repeat identical prompts and keep stable prefixes; hits in `usage.prompt_tokens_details.cached_tokens`.
+# Docs: https://novita.ai/docs/guides/llm-prompt-cache.md
 name = "NovitaAI"
 env = ["NOVITA_API_KEY"]
 npm = "@ai-sdk/openai-compatible"

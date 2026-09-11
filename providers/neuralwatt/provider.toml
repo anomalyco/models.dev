@@ -1,3 +1,8 @@
+# Cache (chat): automatic vLLM prefix reuse with no request fields.
+# Use headers: none.
+# Use body: none.
+# Prefix: keep stable byte-identical prefixes first; hits in `usage.prompt_tokens_details.cached_tokens` at reduced energy cost.
+# Docs: https://portal.neuralwatt.com/docs/api/chat-completions
 name = "Neuralwatt"
 env = ["NEURALWATT_API_KEY"]
 npm = "@ai-sdk/openai-compatible"

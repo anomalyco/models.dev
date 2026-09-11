@@ -1,3 +1,8 @@
+# Cache (chat): implicit auto-cache by default on supporting routes; explicit Claude controls plus `caching: true` routing to a cache-capable provider.
+# Use headers: `anthropic-beta`, `x-prompt-caching-cut-after`.
+# Use body: `caching`, `promptCaching`/`prompt_caching`, inline `cache_control` with `ttl`, `cutAfterMessageIndex`, `stickyprovider`.
+# Prefix: place stable content first and keep prefixes byte-identical; hits in `cache_read_input_tokens` and `prompt_tokens_details.cached_tokens`.
+# Docs: https://docs.nano-gpt.com/api-reference/miscellaneous/prompt-caching
 name = "NanoGPT"
 env = ["NANO_GPT_API_KEY"]
 npm = "@ai-sdk/openai-compatible"
