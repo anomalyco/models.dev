@@ -391,12 +391,23 @@ function reasoningHeader(model: AihubmixModel, built: SyncedModel) {
     : undefined;
 }
 
+/**
+ * The endpoint under-reports what a route accepts: it lists `text,image` for
+ * `kimi-k2.5`, whose lab entry and this repo both record video, and `text` for
+ * `qwen3.8-2.4t-a95b`, whose own file notes a live 200 on image input. Both are
+ * reported upstream, but a sync must not delete an accepted modality in the
+ * meantime, so the endpoint adds to what the file recorded rather than replacing
+ * it. A modality the endpoint never listed can still be removed by editing the
+ * file, which is where it came from.
+ */
 function modalities(value: string | null | undefined, fallback: string[]) {
   const parsed = (value ?? "")
     .split(",")
     .map((entry) => entry.trim())
     .filter((entry) => ["text", "audio", "image", "video", "pdf"].includes(entry));
-  return (parsed.length > 0 ? parsed : fallback) as SyncedFullModel["modalities"]["input"];
+  if (parsed.length === 0) return fallback as SyncedFullModel["modalities"]["input"];
+  // Endpoint order first, so a file only changes when its content changes.
+  return [...new Set([...parsed, ...fallback])] as SyncedFullModel["modalities"]["input"];
 }
 
 /**

@@ -5341,6 +5341,27 @@ test("keeps authored reasoning budget bounds the AIHubMix endpoint omits", () =>
   expect(model?.reasoning_options).toEqual([{ type: "budget_tokens", min: 1_024, max: 32_000 }]);
 });
 
+test("does not let a narrower AIHubMix modality list delete an accepted one", () => {
+  // The endpoint lists `text,image` for kimi-k2.5, whose file records video.
+  const authored: ExistingModel = {
+    ...aihubmixAuthored,
+    modalities: { input: ["text", "image", "video"], output: ["text"] },
+  };
+  const model = buildAihubmixModel(
+    aihubmixModel({ input_modalities: "text,image" }),
+    authored,
+    aihubmixLabIDs,
+  );
+  expect(model?.modalities?.input).toEqual(["text", "image", "video"]);
+  // A modality the endpoint adds still lands.
+  const widened = buildAihubmixModel(
+    aihubmixModel({ input_modalities: "text,image,pdf" }),
+    { ...aihubmixAuthored, modalities: { input: ["text"], output: ["text"] } },
+    aihubmixLabIDs,
+  );
+  expect(widened?.modalities?.input).toEqual(["text", "image", "pdf"]);
+});
+
 test("reads a zero AIHubMix limit as absent rather than a real ceiling", () => {
   // 102 of 415 models quote `max_output: 0` for a limit the endpoint does not know.
   const zeroed = buildAihubmixModel(
