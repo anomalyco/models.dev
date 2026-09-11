@@ -1,3 +1,8 @@
+# Cache key (chat): explicit `cache_control` breakpoints on Claude models via Vertex.
+# Use headers: none
+# Use body: `cache_control` — `{"type": "ephemeral"}` on stable blocks with up to 4 breakpoints plus optional 1h TTL.
+# Cache policy: stable prefix plus same model; repeat the exact prefix with markers in place within the 5-minute TTL; confirm via cache_creation_input_tokens plus cache_read_input_tokens.
+# Docs: https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/partner-models/claude/prompt-caching
 name = "Vertex (Anthropic)"
 env = ["GOOGLE_VERTEX_PROJECT", "GOOGLE_VERTEX_LOCATION", "GOOGLE_APPLICATION_CREDENTIALS"]
 npm = "@ai-sdk/google-vertex/anthropic"

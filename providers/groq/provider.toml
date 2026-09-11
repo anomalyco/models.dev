@@ -1,3 +1,8 @@
+# Cache key (chat): none — chat completions carry no cache key field; caching is automatic on supported models.
+# Use headers: none
+# Use body: none
+# Cache policy: automatic exact-prefix cache with 50 percent cached-input discount plus 2-hour expiry; keep stable prefix first; confirm via `usage.prompt_tokens_details.cached_tokens`.
+# Docs: https://console.groq.com/docs/prompt-caching
 name = "Groq"
 env = ["GROQ_API_KEY"]
 npm = "@ai-sdk/groq"

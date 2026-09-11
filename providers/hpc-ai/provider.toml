@@ -1,3 +1,8 @@
+# Cache key (chat): none — chat schema lists model plus messages plus tools plus reasoning_effort with no cache key field.
+# Use headers: none
+# Use body: none
+# Cache policy: automatic prefix reuse with per-model Cache Read billing; keep stable prefix first on the same model; confirm via usage details where reported.
+# Docs: https://www.hpc-ai.com/doc/docs/Model-APIs/API-Reference/OpenAI-Compatible-API/Create-Chat-Completions/
 name = "HPC-AI"
 env = ["HPC_AI_API_KEY"]
 npm = "@ai-sdk/openai-compatible"

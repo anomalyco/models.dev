@@ -1,3 +1,8 @@
+# Cache key (chat): none — chat schema carries no cache key field; caching is automatic.
+# Use headers: none
+# Use body: none
+# Cache policy: automatic repeated-prefix cache on supported models with discounted cached-input rates; keep stable prefix first byte-identical; confirm via `usage.prompt_tokens_details.cached_tokens`.
+# Docs: https://docs.greenpt.ai/prompt-caching
 name = "GreenPT"
 npm = "@ai-sdk/openai-compatible"
 api = "https://api.greenpt.ai/v1"
