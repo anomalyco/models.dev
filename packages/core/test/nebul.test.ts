@@ -64,6 +64,32 @@ test("preserves authored toggle and budget controls when the host advertises eff
   ]);
 });
 
+test("keeps existing entries when the source pricing or context is temporarily null", () => {
+  const existing = {
+    base_model: "zhipuai/glm-5.3",
+    cost: { input: 1.47, output: 4.62 },
+    limit: { context: 1_048_576 },
+  } as ExistingModel;
+  const translated = nebul.translateModel(
+    nebulEntry("zai-org/GLM-5.3", { input_cost_per_1m_tokens: null, output_cost_per_1m_tokens: null, max_input_tokens: null }),
+    context(existing),
+  );
+  expect(translated).toMatchObject({
+    id: "zai-org/GLM-5.3",
+    model: { base_model: "zhipuai/glm-5.3", cost: { input: 1.47, output: 4.62 }, limit: { context: 1_048_576 } },
+  });
+});
+
+test("keeps existing entries when the served alias no longer resolves to lab metadata", () => {
+  const existing = {
+    base_model: "zhipuai/glm-5.3",
+    cost: { input: 1.47, output: 4.62 },
+    limit: { context: 1_048_576 },
+  } as ExistingModel;
+  const translated = nebul.translateModel(nebulEntry("someorg/Unknown-Model", { huggingface_id: null }), context(existing));
+  expect(translated?.model.base_model).toBe("zhipuai/glm-5.3");
+});
+
 test("resolves base models across org renames and quantization suffixes", () => {
   const cases: [string, string | null, string][] = [
     ["Qwen/Qwen3.8-27B-FP8", "Qwen/Qwen3.8-27B-FP8", "alibaba/qwen3.8-27b"],

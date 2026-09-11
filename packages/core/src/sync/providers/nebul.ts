@@ -80,22 +80,35 @@ export const nebul = {
     if (!isCatalogChatModel(entry)) return undefined;
     const id = entry.model_name;
     const info = entry.model_info;
-    const baseModel = resolveBaseModel(id, info.huggingface_id ?? undefined);
-    if (baseModel === undefined) return undefined;
-    if (info.input_cost_per_1m_tokens == null || info.output_cost_per_1m_tokens == null || info.max_input_tokens == null) return undefined;
+    const existing = context.existing(id);
+    // Existing entries must survive incomplete source data — a transient null
+    // price or an unresolved alias would otherwise delete the hand-authored
+    // TOML on the next run. They keep their authored base_model and cost/limit;
+    // only brand-new models need a fully-priced, resolvable source entry.
+    const baseModel = existing?.base_model ?? resolveBaseModel(id, info.huggingface_id ?? undefined);
+    const cost = info.input_cost_per_1m_tokens != null && info.output_cost_per_1m_tokens != null
+      ? {
+          input: info.input_cost_per_1m_tokens,
+          output: info.output_cost_per_1m_tokens,
+          cache_read: info.cache_read_input_cost_per_1m_tokens ?? undefined,
+        }
+      : existing?.cost;
+    const limit = info.max_input_tokens != null ? { context: info.max_input_tokens } : existing?.limit;
+    if (existing === undefined && (baseModel === undefined || cost === undefined || limit === undefined)) return undefined;
     const values = {
-      reasoning_options: buildReasoningOptions(entry, context.existing(id)),
-      cost: {
-        input: info.input_cost_per_1m_tokens,
-        output: info.output_cost_per_1m_tokens,
-        cache_read: info.cache_read_input_cost_per_1m_tokens ?? undefined,
-      },
-      limit: { context: info.max_input_tokens },
+      reasoning_options: buildReasoningOptions(entry, existing),
+      cost,
+      limit,
     };
-    return {
-      id,
-      model: factorBaseModel(baseModel, values, values.limit) as SyncedModel,
-    };
+    if (baseModel !== undefined) {
+      return {
+        id,
+        model: factorBaseModel(baseModel, values, limit) as SyncedModel,
+      };
+    }
+    // Existing standalone definition whose served alias no longer resolves:
+    // keep the authored fields, refreshing only what /model/info still provides.
+    return { id, model: { ...existing, ...values } as SyncedModel };
   },
   // Only report chat models whose base_model could not be resolved; filtered
   // serving artifacts (embeddings, rerankers, the ping model) skip silently.
