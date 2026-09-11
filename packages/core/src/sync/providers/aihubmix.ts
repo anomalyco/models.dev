@@ -141,6 +141,13 @@ async function readLabMetadataIDs(modelsDir: string) {
   return ids;
 }
 
+// The same off state is reachable from whichever dialect the caller speaks, so
+// the toggle has no single wire path. Name one per protocol.
+const TOGGLE_HEADER =
+  '# Toggle: $.enable_thinking = true|false on the OpenAI-compatible /v1/chat/completions path (verified live 2026-09-11);\n' +
+  '# $.thinking.type = "enabled"|"disabled"|"adaptive" on /v1/messages; $.generationConfig.thinkingConfig on the Gemini path.\n' +
+  "# https://docs.aihubmix.com/cn/api/unified-inference\n";
+
 export const aihubmix = {
   id: "aihubmix",
   name: "AIHubMix",
@@ -184,7 +191,13 @@ export const aihubmix = {
     const existing = context.existing(model.model_id);
     const built = buildAihubmixModel(model, existing, labMetadataIDs, relayCatalog);
     if (built === undefined) return undefined;
-    return { id: model.model_id, model: built };
+    return {
+      id: model.model_id,
+      model: built,
+      // A rewrite drops whatever header the file carried, so re-author it here
+      // or the wire path is lost on the first sync that touches the model.
+      header: built.reasoning_options?.some((option) => option.type === "toggle") ? TOGGLE_HEADER : undefined,
+    };
   },
 } satisfies SyncProvider<AihubmixModel>;
 

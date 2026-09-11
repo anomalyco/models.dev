@@ -5186,6 +5186,38 @@ test("normalizes AIHubMix reasoning options to the catalog vocabulary", () => {
   ]);
 });
 
+test("authors the AIHubMix toggle wire-path header so a rewrite cannot drop it", () => {
+  // Standalone relays, so the toggle stays on the written file instead of being
+  // factored onto a lab base model.
+  const standalone = {
+    vendor: "somelab",
+    release_date: "2026-05-01",
+    open_weights: false,
+    context_length: 262_144,
+    max_output: 65_536,
+  } satisfies Partial<AihubmixModel>;
+  const toggled = aihubmixModel({
+    ...standalone,
+    model_id: "somelab-thinker",
+    model_name: "SomeLab Thinker",
+    reasoning: true,
+    reasoning_options: [{ type: "toggle" }] as AihubmixModel["reasoning_options"],
+  });
+  const plain = aihubmixModel({
+    ...standalone,
+    model_id: "somelab-plain",
+    model_name: "SomeLab Plain",
+  });
+  aihubmix.parseModels({ data: [toggled, plain] });
+
+  const context = { existing: () => undefined, authored: () => undefined };
+  const translated = aihubmix.translateModel(toggled, context);
+  expect(translated?.model.reasoning_options).toEqual([{ type: "toggle" }]);
+  expect(translated?.header).toStartWith("# Toggle: $.enable_thinking = true|false");
+  // Only a toggle needs the wire path spelled out; everything else stays bare.
+  expect(aihubmix.translateModel(plain, context)?.header).toBeUndefined();
+});
+
 test("reads a zero AIHubMix limit as absent rather than a real ceiling", () => {
   // 102 of 415 models quote `max_output: 0` for a limit the endpoint does not know.
   const zeroed = buildAihubmixModel(
