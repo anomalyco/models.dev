@@ -1,10 +1,8 @@
 base_model = "moonshotai/kimi-k2.7-code"
+reasoning_options = [{ type = "toggle" }]
 
 [interleaved]
 field = "reasoning_content"
-
-[[reasoning_options]]
-type = "toggle"
 
 [cost]
 input = 0.95
@@ -12,4 +10,9 @@ output = 3.9995
 cache_read = 0.160835
 
 [limit]
+context = 262_144
 output = 32_768
+
+[modalities]
+input = ["text", "image", "video"]
+output = ["text"]

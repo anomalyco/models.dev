@@ -1,30 +1,17 @@
 base_model = "tencent/hy3-preview"
 name = "Hy3 Preview"
 structured_output = true
-
-[[reasoning_options]]
-type = "toggle"
-
-[[reasoning_options]]
-type = "effort"
-values = ["none", "low", "high"]
+reasoning_options = [{ type = "effort", values = ["none", "low", "high"] }]
 
 [cost]
 input = 0.17
 output = 0.566661
 cache_read = 0.051
 
-[[cost.tiers]]
-tier = { type = "context", size = 16_000 }
-input = 0.2254
-output = 0.9016
-cache_read = 0.084525
-
-[[cost.tiers]]
-tier = { type = "context", size = 32_000 }
-input = 0.2818
-output = 1.1272
-cache_read = 0.11272
-
 [limit]
+context = 256_000
 output = 128_000
+
+[modalities]
+input = ["text"]
+output = ["text"]

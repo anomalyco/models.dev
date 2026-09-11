@@ -2,16 +2,10 @@
 # Effort: reasoning_effort = high|max
 # AIHubMix effort levels returned HTTP 200 (validated 2026-08-31T04:17:24Z).
 base_model = "deepseek/deepseek-v4-pro-0813"
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["high", "max"] }]
 
 [interleaved]
 field = "reasoning_content"
-
-[[reasoning_options]]
-type = "toggle"
-
-[[reasoning_options]]
-type = "effort"
-values = ["low", "high", "max"]
 
 [cost]
 input = 0.6918

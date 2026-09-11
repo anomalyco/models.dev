@@ -1,21 +1,17 @@
 base_model = "openai/gpt-5.6-sol"
-
-[[reasoning_options]]
-type = "effort"
-values = ["none", "low", "medium", "high", "xhigh", "max"]
+reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh", "max"] }]
+temperature = false
 
 [cost]
-input = 4
-output = 20
-cache_read = 0.4
-cache_write = 5
-
-[[cost.tiers]]
-tier = { type = "context", size = 272_000 }
-input = 8
+input = 5
 output = 30
-cache_read = 0.8
-cache_write = 10
+cache_read = 0.5
+cache_write = 6.25
+
+[limit]
+context = 1_050_000
+output = 128_000
 
 [modalities]
 input = ["text", "image"]
+output = ["text"]
