@@ -1,3 +1,8 @@
+# Cache key (chat): supported — native Solar prefix cache with per-session key.
+# Use headers: unknown — cache routing via body key; no header control documented.
+# Use body: `prompt_cache_key` — top-level chat field; stable value per session/conversation.
+# Cache policy: place static prefix first, reuse same `prompt_cache_key` within the session; Cached Token billing at published cached rate.
+# Docs: https://console.upstage.ai/api/chat
 name = "Upstage"
 # Raw POST /v1/solar/chat/completions uses top-level reasoning_effort.
 # solar-pro2: "high" enables reasoning; omission disables it. solar-pro3:

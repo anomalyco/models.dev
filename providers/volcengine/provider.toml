@@ -1,3 +1,8 @@
+# Cache key (chat): supported via separate Context API — `context_id` from ContextCreate, applied on ContextChatCompletions.
+# Use headers: unknown — cache routing via body `context_id`.
+# Use body: `context_id` on ContextChatCompletions; Responses caching with previous_response_id plus caching enabled.
+# Cache policy: call ContextCreate once, reuse `context_id` across turns with stable prefix; confirm via usage.prompt_tokens_details.cached_tokens.
+# Docs: https://docs.byteplus.com/en/docs/ModelArk/1346559
 name = "Volcengine Ark"
 env = ["ARK_API_KEY"]
 npm = "@ai-sdk/openai-compatible"

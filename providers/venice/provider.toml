@@ -1,3 +1,8 @@
+# Cache key (chat): supported — automatic prefix cache for all models.
+# Use headers: unknown — cache control via body fields.
+# Use body: `prompt_cache_key` routing hint for all models; `cache_control` ephemeral markers for Claude.
+# Cache policy: reuse a stable `prompt_cache_key`, add Claude `cache_control` breakpoints, confirm via usage.prompt_tokens_details.cached_tokens.
+# Docs: https://docs.venice.ai/guides/features/prompt-caching
 name = "Venice AI"
 env = ["VENICE_API_KEY"]
 npm = "venice-ai-sdk-provider"
