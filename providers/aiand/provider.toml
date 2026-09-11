@@ -1,3 +1,6 @@
+# Prompt caching (chat): automatic prefix cache on POST /v1/chat/completions; repeated prefixes reuse cached input with reduced cached-input billing on models offering a cached rate.
+# To get a hit: reuse the same model with an identical stable prefix and matching tools/order plus matching reasoning_effort, with 1024-token minimum in 128-token increments; confirm via usage.prompt_tokens_details.cached_tokens; for streams include `stream_options: { "include_usage": true }` and read the trailing usage event.
+# Docs: https://docs.aiand.com/models/pricing/
 name = "ai&"
 npm = "@ai-sdk/openai-compatible"
 env = ["AIAND_API_KEY"]
