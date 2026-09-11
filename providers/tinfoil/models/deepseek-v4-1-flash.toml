@@ -1,0 +1,20 @@
+# Sources (accessed 2026-09-11):
+# - https://inference.tinfoil.sh/v1/models (id deepseek-v4-1-flash; experimental; pricing; context 1048576; multimodal; reasoning)
+# - https://docs.tinfoil.sh/guides/reasoning.md (host effort surface; sibling deepseek-v4-flash: none|minimal|low|medium|high|xhigh|max)
+# - Lab metadata: models/deepseek/deepseek-v4.1-flash.toml
+# Effort: reasoning_effort on Tinfoil; off via none (API also exposes thinking disable). Same surface as deepseek-v4-flash.
+# status beta: remote catalog marks experimental=true.
+base_model = "deepseek/deepseek-v4.1-flash"
+status = "beta"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"]
+
+[cost]
+input = 0.75
+output = 3
+cache_read = 0.19
+
+[limit]
+context = 1_048_576
