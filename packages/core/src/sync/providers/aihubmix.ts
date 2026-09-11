@@ -142,11 +142,15 @@ async function readLabMetadataIDs(modelsDir: string) {
 }
 
 // The same off state is reachable from whichever dialect the caller speaks, so
-// the toggle has no single wire path. Name one per protocol.
-const TOGGLE_HEADER =
-  '# Toggle: $.enable_thinking = true|false on the OpenAI-compatible /v1/chat/completions path (verified live 2026-09-11);\n' +
+// an off switch has no single wire path. Name one per protocol.
+const DIALECTS =
+  '# $.enable_thinking = true|false on the OpenAI-compatible /v1/chat/completions path (verified live 2026-09-11);\n' +
   '# $.thinking.type = "enabled"|"disabled"|"adaptive" on /v1/messages; $.generationConfig.thinkingConfig on the Gemini path.\n' +
   "# https://docs.aihubmix.com/cn/api/unified-inference\n";
+const TOGGLE_HEADER = "# Toggle:\n" + DIALECTS;
+// Where the catalog spells the off state as `effort = none`, the other dialects
+// still reach it, and the folded toggle is the only place that was recorded.
+const FOLDED_HEADER = "# Off is effort=none; graded levels — no toggle. The same off elsewhere:\n" + DIALECTS;
 
 export const aihubmix = {
   id: "aihubmix",
@@ -196,7 +200,7 @@ export const aihubmix = {
       model: built,
       // A rewrite drops whatever header the file carried, so re-author it here
       // or the wire path is lost on the first sync that touches the model.
-      header: built.reasoning_options?.some((option) => option.type === "toggle") ? TOGGLE_HEADER : undefined,
+      header: reasoningHeader(model, built),
     };
   },
 } satisfies SyncProvider<AihubmixModel>;
@@ -344,7 +348,30 @@ function reasoningOptions(model: AihubmixModel): SyncedFullModel["reasoning_opti
       .filter((value) => EFFORT_VALUES.has(value));
     return values.length > 0 ? [{ type: "effort" as const, values }] : [];
   });
-  return options.length > 0 ? (options as SyncedFullModel["reasoning_options"]) : undefined;
+  // AIHubMix accepts whichever off switch the caller's SDK speaks and maps it,
+  // so a model can publish both a toggle and `effort = none`. The catalog spells
+  // that one way: graded effort carrying `none` stands alone, and the dialects
+  // that reach the same off state are named in the file header instead.
+  const folded = foldsToggle(options) ? options.filter((option) => option.type !== "toggle") : options;
+  return folded.length > 0 ? (folded as SyncedFullModel["reasoning_options"]) : undefined;
+}
+
+function foldsToggle(options: { type: string; values?: string[] }[]) {
+  return (
+    options.some((option) => option.type === "toggle") &&
+    options.some((option) => option.type === "effort" && (option.values ?? []).includes("none"))
+  );
+}
+
+function reasoningHeader(model: AihubmixModel, built: SyncedModel) {
+  const options = built.reasoning_options;
+  if (options === undefined) return undefined;
+  if (options.some((option) => option.type === "toggle")) return TOGGLE_HEADER;
+  // Only say where the off state moved to on a file that actually spells it out.
+  return options.some((option) => option.type === "effort" && option.values?.includes("none")) &&
+    (model.reasoning_options ?? []).some((option) => option.type === "toggle")
+    ? FOLDED_HEADER
+    : undefined;
 }
 
 function modalities(value: string | null | undefined, fallback: string[]) {

@@ -5180,10 +5180,24 @@ test("normalizes AIHubMix reasoning options to the catalog vocabulary", () => {
     undefined,
     aihubmixLabIDs,
   );
-  expect(model?.reasoning_options).toEqual([
-    { type: "effort", values: ["none", "minimal", "high"] },
-    { type: "toggle" },
-  ]);
+  // `AGENTS.md`: graded effort that already carries `none` stands alone. AIHubMix
+  // publishes both because it accepts either dialect's off switch and maps it.
+  expect(model?.reasoning_options).toEqual([{ type: "effort", values: ["none", "minimal", "high"] }]);
+});
+
+test("keeps the AIHubMix toggle when its effort list has no off value", () => {
+  const model = buildAihubmixModel(
+    aihubmixModel({
+      reasoning: true,
+      reasoning_options: [
+        { type: "effort", values: ["high", "max"] },
+        { type: "toggle" },
+      ] as AihubmixModel["reasoning_options"],
+    }),
+    undefined,
+    aihubmixLabIDs,
+  );
+  expect(model?.reasoning_options).toEqual([{ type: "effort", values: ["high", "max"] }, { type: "toggle" }]);
 });
 
 test("authors the AIHubMix toggle wire-path header so a rewrite cannot drop it", () => {
@@ -5213,9 +5227,25 @@ test("authors the AIHubMix toggle wire-path header so a rewrite cannot drop it",
   const context = { existing: () => undefined, authored: () => undefined };
   const translated = aihubmix.translateModel(toggled, context);
   expect(translated?.model.reasoning_options).toEqual([{ type: "toggle" }]);
-  expect(translated?.header).toStartWith("# Toggle: $.enable_thinking = true|false");
-  // Only a toggle needs the wire path spelled out; everything else stays bare.
+  expect(translated?.header).toStartWith("# Toggle:\n# $.enable_thinking = true|false");
+  // Only a reasoning control needs the wire path spelled out; everything else stays bare.
   expect(aihubmix.translateModel(plain, context)?.header).toBeUndefined();
+
+  // A toggle folded into `effort = none` still records where the off state lives.
+  const folded = aihubmixModel({
+    ...standalone,
+    model_id: "somelab-folded",
+    model_name: "SomeLab Folded",
+    reasoning: true,
+    reasoning_options: [
+      { type: "toggle" },
+      { type: "effort", values: ["no_think", "high"] },
+    ] as AihubmixModel["reasoning_options"],
+  });
+  aihubmix.parseModels({ data: [folded] });
+  const dropped = aihubmix.translateModel(folded, context);
+  expect(dropped?.model.reasoning_options).toEqual([{ type: "effort", values: ["none", "high"] }]);
+  expect(dropped?.header).toStartWith("# Off is effort=none");
 });
 
 test("keeps AIHubMix audio and reasoning prices the endpoint never quotes", () => {
