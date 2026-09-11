@@ -1,0 +1,11 @@
+base_model = "tencent/hy3"
+name = "Tencent HY3"
+structured_output = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "high"]
+
+[limit]
+context = 262_144
+output = 131_072

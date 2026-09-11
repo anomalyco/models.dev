@@ -1,0 +1,16 @@
+# Toggle: reasoning.enabled true|false (OpenRouter-style `reasoning` object,
+# forwarded to the seller unchanged); effort: reasoning_effort.
+# Controls mirror the canonical model's lab + same-surface relay peers.
+base_model = "alibaba/qwen3.5-plus"
+structured_output = true
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "budget_tokens"
+min = 1
+max = 81_920
+
+[modalities]
+input = ["text"]

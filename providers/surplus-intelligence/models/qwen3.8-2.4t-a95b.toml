@@ -1,0 +1,9 @@
+base_model = "alibaba/qwen3.8-2.4t-a95b"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "xhigh"]
+
+[limit]
+context = 1_000_000
+output = 262_144

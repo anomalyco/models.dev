@@ -1,0 +1,11 @@
+base_model = "alibaba/qwen3-vl-30b-a3b-thinking"
+name = "Qwen3 VL 30B A3B"
+attachment = false
+reasoning_options = []
+
+[limit]
+context = 128_000
+output = 4_096
+
+[modalities]
+input = ["text"]

@@ -1,0 +1,9 @@
+# Despite the route name, live probes 2026-08-23 of the bare route
+# returned reasoning content on every request; kept on the glm-5.1 base
+# with no caller control.
+base_model = "zhipuai/glm-5.1"
+name = "GLM 5.1 Non-thinking (Morpheus Web)"
+reasoning_options = []
+
+[limit]
+output = 24_000

@@ -1,0 +1,19 @@
+# Toggle: reasoning.enabled true|false (OpenRouter-style `reasoning` object,
+# forwarded to the seller unchanged); effort: reasoning_effort.
+# Controls mirror the canonical model's lab + same-surface relay peers.
+base_model = "nvidia/nemotron-3-ultra-550b-a55b"
+name = "NVIDIA Nemotron 3 Ultra 550B"
+structured_output = true
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["medium", "high"]
+
+[[reasoning_options]]
+type = "budget_tokens"
+
+[limit]
+output = 16_384

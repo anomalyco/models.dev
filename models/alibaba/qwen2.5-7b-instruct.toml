@@ -1,0 +1,26 @@
+# Qwen2.5 7B Instruct (September 2024 release). 32K native context; capability
+# flags follow providers/openrouter/models/qwen/qwen-2.5-7b-instruct.toml.
+name = "Qwen2.5 7B Instruct"
+description = "Qwen instruction model for multilingual chat, reasoning, and tool use"
+family = "qwen"
+release_date = "2024-09-19"
+last_updated = "2024-09-19"
+attachment = false
+reasoning = false
+temperature = true
+tool_call = true
+structured_output = true
+knowledge = "2024-06"
+open_weights = true
+
+[limit]
+context = 32_768
+output = 8_192
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/Qwen/Qwen2.5-7B-Instruct"

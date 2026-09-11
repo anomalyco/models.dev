@@ -1,0 +1,14 @@
+base_model = "openai/gpt-5.4"
+base_model_omit = ["limit.input"]
+attachment = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "xhigh"]
+
+[limit]
+context = 1_000_000
+output = 131_072
+
+[modalities]
+input = ["text"]

@@ -1,0 +1,26 @@
+# Promoted from providers/openrouter/models/google/gemma-3-4b-it.toml so relay
+# hosts can base_model it.
+name = "Gemma 3 4B"
+description = "Open Gemma instruction model for efficient chat and self-hosted deployments"
+family = "gemma"
+release_date = "2025-03-13"
+last_updated = "2025-03-13"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = false
+structured_output = true
+knowledge = "2024-08"
+open_weights = true
+
+[limit]
+context = 131_072
+output = 16_384
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/google/gemma-3-4b-it"

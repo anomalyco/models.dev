@@ -1,0 +1,12 @@
+# Open marketplace for AI inference: each request is routed to the cheapest
+# seller currently offering the model, so realized prices float continuously
+# at or below a per-model reference price and depend on per-key routing
+# preferences (trusted-domain sellers only by default; untrusted sellers are
+# opt-in). Costs are therefore intentionally not cataloged for this provider.
+# Buyers can cap spend per request with the X-Max-Price-Per-1M header.
+# https://www.surplusintelligence.ai/docs/marketplace/pricing (accessed 2026-08-23)
+name = "Surplus Intelligence"
+env = ["SURPLUS_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+api = "https://api.surplusintelligence.ai/v1"
+doc = "https://www.surplusintelligence.ai/docs"

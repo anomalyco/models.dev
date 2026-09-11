@@ -1,0 +1,21 @@
+# xAI's August 2025 agentic coding model. 256K context, 10K max output.
+# https://x.ai/news/grok-code-fast-1
+name = "Grok Code Fast 1"
+description = "Fast Grok coding model for agentic programming and tool-driven workflows"
+family = "grok"
+release_date = "2025-08-26"
+last_updated = "2025-08-26"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[limit]
+context = 256_000
+output = 10_000
+
+[modalities]
+input = ["text"]
+output = ["text"]

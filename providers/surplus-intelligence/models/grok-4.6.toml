@@ -1,0 +1,11 @@
+base_model = "xai/grok-4.6"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high", "xhigh"]
+
+[limit]
+output = 200_000
+
+[modalities]
+input = ["text", "image", "pdf"]

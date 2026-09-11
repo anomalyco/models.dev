@@ -1,0 +1,22 @@
+# Writer's multimodal Palmyra; launched 2026-03-26 with a 4K context and 4K
+# max output, text + image in, client-side tool calling and structured
+# outputs. https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-writer-palmyra-vision-7b.html
+name = "Palmyra Vision 7B"
+description = "Writer's multimodal Palmyra for handwriting extraction, chart reading, and image compliance checks"
+family = "palmyra"
+release_date = "2026-03-26"
+last_updated = "2026-03-26"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[limit]
+context = 4_000
+output = 4_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
