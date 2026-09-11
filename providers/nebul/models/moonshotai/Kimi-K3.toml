@@ -1,11 +1,15 @@
-# Model reasons always-on; /model/info advertises no reasoning_efforts for it and
-# Nebul's docs cover reasoning_effort only: https://docs.nebul.io/docs/inference-api/advanced-topics/reasoning
+# Effort: reasoning_effort (Nebul docs: accepted for reasoning-capable models, ignored
+# only by non-reasoning models). Set mirrors same-surface peer Tinfoil (low|high|max);
+# /model/info does not enumerate efforts for this model.
+# https://docs.nebul.io/docs/inference-api/advanced-topics/reasoning
 base_model = "moonshotai/kimi-k3"
-
-reasoning_options = []
 
 [interleaved]
 field = "reasoning_content"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
 
 [cost]
 input = 4.73

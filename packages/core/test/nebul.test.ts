@@ -71,6 +71,15 @@ test("carries authored interleaved through sync", () => {
   expect(named?.model.interleaved).toEqual({ field: "reasoning_content" });
 });
 
+test("keeps authored effort sets when the host advertises none", () => {
+  const authored = [{ type: "effort" as const, values: ["low", "high", "max"] }];
+  const translated = nebul.translateModel(
+    nebulEntry("moonshotai/Kimi-K3", { reasoning_efforts: [] }),
+    context(existingWith(authored)),
+  );
+  expect(translated?.model.reasoning_options).toEqual(authored);
+});
+
 test("keeps existing entries when the source pricing or context is temporarily null", () => {
   const existing = {
     base_model: "zhipuai/glm-5.3",

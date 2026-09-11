@@ -1,11 +1,15 @@
-# Model reasons always-on; /model/info advertises no reasoning_efforts for it and
-# Nebul's docs cover reasoning_effort only: https://docs.nebul.io/docs/inference-api/advanced-topics/reasoning
+# Effort: reasoning_effort (Nebul docs: accepted for reasoning-capable models, ignored
+# only by non-reasoning models). Set is Fireworks/Vercel's low|medium|high|xhigh
+# intersected with Nebul's documented value set; xhigh is undocumented on Nebul.
+# https://docs.nebul.io/docs/inference-api/advanced-topics/reasoning
 base_model = "meta/muse-glimmer-30b"
-
-reasoning_options = []
 
 [interleaved]
 field = "reasoning_content"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high"]
 
 [cost]
 input = 0.7
