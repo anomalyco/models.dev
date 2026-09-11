@@ -17,7 +17,7 @@ function nearAIModel(overrides: Partial<NearAIModel> = {}): NearAIModel {
     id: "zai-org/GLM-5.1-FP8",
     object: "model",
     created: 1_759_104_000,
-    owned_by: "zai-org",
+    owned_by: "nearai",
     name: "GLM 5.1 FP8",
     pricing: { input: 1.4, output: 4.4, input_cache_read: "0.00000026" },
     context_length: 202_752,
