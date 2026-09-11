@@ -1,7 +1,6 @@
-# Bedrock model IDs and routes: https://github.com/openai/codex/pull/42805
+# Bedrock model IDs, routes, limits and pricing: https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-openai-gpt-6-astra.html
 # Bedrock context window: https://developers.openai.com/api/docs/guides/amazon-bedrock
-# In-region pricing inferred at 1.1x OpenAI-direct from the GPT-5.6 Sol precedent
-# (AWS card prices in-region and Geo CRIS at 1.1x, Global CRIS at 1.0x); no AWS Astra model card published yet.
+# In-region Standard pricing; Mantle is available in us-west-2 (Oregon) only.
 # Effort levels match OpenAI-native Astra (Low..Max, no "none"): https://developers.openai.com/api/docs/models/gpt-6-astra
 # Columns: input / 30m cache write / cache read / output (USD per 1M tokens)
 base_model = "openai/gpt-6-astra"

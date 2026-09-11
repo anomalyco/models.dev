@@ -1,6 +1,8 @@
 # Global cross-Region inference profile — served by Bedrock core (Converse), not Mantle, so no [provider] override.
 # Verified from eu-west-1: effort none|low|medium|high|xhigh|max all return 200.
 # Global pricing and Runtime capabilities: https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-openai-gpt-56-terra.html
+# Cache rates: AWS-published Responses pricing; the card's API coverage can lag live behavior.
+# Converse effort: additionalModelRequestFields.reasoning.effort = none|low|medium|high|xhigh|max.
 base_model = "openai/gpt-5.6-terra"
 reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh", "max"] }]
 base_model_omit = ["cost.context_over_200k", "experimental.modes.fast"]

@@ -1,6 +1,7 @@
-# Bedrock model IDs and reasoning support: https://github.com/openai/codex/pull/30285
+# Mantle Responses model ID, route and pricing: https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-openai-gpt-56-terra.html
+# Effort: reasoning.effort = none|low|medium|high|xhigh|max; https://developers.openai.com/api/docs/models/gpt-5.6-terra
 # Bedrock context window: https://developers.openai.com/api/docs/guides/amazon-bedrock
-# In-region on-demand pricing (US East N. Virginia & Ohio; also US West Oregon): https://aws.amazon.com/bedrock/pricing/
+# In-region Standard pricing for US commercial Regions; GovCloud rates differ.
 # Columns: input / 30m cache write / cache read / output (USD per 1M tokens)
 base_model = "openai/gpt-5.6-terra"
 reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh", "max"] }]
