@@ -1,8 +1,10 @@
 # https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-minimax-minimax-m2.html
 # https://aws.amazon.com/bedrock/pricing/ (US Standard pricing)
 # MiniMax M2 has always-on thinking, matching the first-party API.
+# Live Converse 2026-09-11: reasoningContent returned and outputConfig.textFormat enforced a JSON schema.
 base_model = "minimax/MiniMax-M2"
 reasoning_options = []
+interleaved = true
 structured_output = true
 
 [cost]
