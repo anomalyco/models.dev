@@ -1,14 +1,18 @@
-# Passthrough to the official DeepSeek API.
-# Toggle: `thinking.type = enabled|disabled`; effort: `reasoning_effort = low|high|max`
-# (Flash maps requested low→low). https://api-docs.deepseek.com/guides/thinking_mode/
-# Off-peak rate from the CURRENT DeepSeek price sheet effective 2026-08-16
-# (flash $0.22/$0.007/$0.66, pro $0.66/$0.022/$1.98 off-peak) plus a flat 10%;
-# peak (weekdays 01:00-04:00 and 06:00-10:00 UTC, Beijing-time weekends
-# off-peak) is 2x. https://api-docs.deepseek.com/quick_start/pricing/
-# (accessed 2026-08-29; note first-party catalog entries predate 2026-08-16).
-# Toggle verified end-to-end on this host 2026-08-29.
-# Reasoning tokens billed at the output rate.
-base_model = "deepseek/deepseek-v4-flash-0731"
+# Passthrough to the official DeepSeek API. Since 2026-09-10 04:00 UTC the
+# `deepseek-v4-flash` id is served by DeepSeek-V4.1-Flash and billed at the
+# Flash price, so the base is the V4.1 lab entry. Image input verified
+# end-to-end through above.dev on 2026-09-11.
+# Sources:
+#   https://api-docs.deepseek.com/quick_start/pricing  (upstream Flash rate:
+#     $0.15 in / $0.003 cache-hit / $0.60 out per MTok, off-peak; peak is 2x on
+#     weekdays 01:00-04:00 and 06:00-10:00 UTC; Beijing-time weekends off-peak)
+#   https://api-docs.deepseek.com/guides/thinking_mode/  (toggle
+#     `thinking.type = enabled|disabled`, effort `reasoning_effort = low|high|max`)
+#   https://above.dev/docs  (above resells every upstream rate at a flat x1.10,
+#     listed here at the off-peak rate; cost headers on each response)
+# V4 Pro is deliberately unchanged: DeepSeek cancelled its retirement on
+# 2026-09-11 "in response to user demand". Reasoning billed at the output rate.
+base_model = "deepseek/deepseek-v4.1-flash"
 name = "DeepSeek V4 Flash"
 
 [[reasoning_options]]
@@ -22,7 +26,7 @@ values = ["low", "high", "max"]
 field = "reasoning_content"
 
 [cost]
-input = 0.242
-output = 0.726
-reasoning = 0.726
-cache_read = 0.0077
+input = 0.165
+output = 0.66
+reasoning = 0.66
+cache_read = 0.0033
