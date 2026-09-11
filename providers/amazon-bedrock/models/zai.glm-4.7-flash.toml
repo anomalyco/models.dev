@@ -4,6 +4,7 @@
 # Live 2026-09-09: high returns reasoningContent; maxTokens=131072 accepted (card's 4K is not the cap).
 base_model = "zhipuai/glm-4.7-flash"
 reasoning_options = [{ type = "toggle" }]
+interleaved = true
 structured_output = true
 
 [cost]
