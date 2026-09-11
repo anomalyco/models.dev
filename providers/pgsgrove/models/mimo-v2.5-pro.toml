@@ -1,0 +1,11 @@
+base_model = "xiaomi/mimo-v2.5-pro"
+
+reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high"] }]
+
+[cost]
+input = 0.49
+output = 1.5
+cache_read = 0.1
+
+[limit]
+output = 32_768

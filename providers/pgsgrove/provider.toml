@@ -1,0 +1,15 @@
+# Reasoning HTTP format (accessed 2026-09-11):
+# OpenAI Chat: POST https://api.pgsgrove.com/v1/chat/completions. Off is
+# reasoning_effort = "none"; graded levels via reasoning_effort =
+# "low"|"medium"|"high". Reasoning is returned in reasoning_content
+# (DeepSeek-style), separate from content.
+# Anthropic Messages: POST https://api.pgsgrove.com/anthropic/v1/messages; toggle:
+# thinking.enabled = true|false; output_config.effort honored.
+# Sources:
+# https://api.pgsgrove.com/docs/reasoning
+# https://api.pgsgrove.com/docs/native-protocols
+name = "Phoenix Grove"
+env = ["PGS_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+doc = "https://api.pgsgrove.com/docs"
+api = "https://api.pgsgrove.com/v1"

@@ -1,0 +1,13 @@
+base_model = "nvidia/nemotron-3-ultra-550b-a55b"
+name = "Nemotron 3 Ultra 550B A55B Turbo"
+
+reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high"] }]
+
+[cost]
+input = 0.975
+output = 4.2
+cache_read = 0.195
+
+[limit]
+context = 262_144
+output = 32_768
