@@ -1,0 +1,13 @@
+# Sources (accessed 2026-09-11):
+# https://ofox.ai/models/qwen/qwen-plus
+# https://api.ofox.ai/v1/models/qwen/qwen-plus
+base_model = "alibaba/qwen-plus"
+reasoning = false
+
+[cost]
+input = 0.12
+output = 0.29
+cache_read = 0.023
+
+[limit]
+output = 32_000
