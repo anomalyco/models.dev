@@ -1,3 +1,8 @@
+# Prompt cache (chat): No native chat prefix cache — gateway documents semantic cache only.
+# Cache key (chat): none — no documented chat `prompt_cache_key` or `cache_control` field.
+# Cache headers: none
+# Cache policy: no chat prefix cache; to improve reuse keep same model, stable prefix order, identical tools.
+# Docs: https://github.com/Fast-Editor/Lynkr
 name = "Lynkr"
 # Lynkr is a self-hosted gateway: any non-empty API key is accepted locally;
 # provider credentials live in Lynkr's own configuration.
