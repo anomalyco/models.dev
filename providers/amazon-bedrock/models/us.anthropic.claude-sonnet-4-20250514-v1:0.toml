@@ -2,6 +2,7 @@
 # https://docs.aws.amazon.com/bedrock/latest/APIReference/API_ListInferenceProfiles.html
 # https://platform.claude.com/docs/en/build-with-claude/thinking-troubleshooting
 # Pricing: https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AmazonBedrockFoundationModels/current/us-east-1/index.json
+# Exact legacy Standard dimensions remain 1.0x ($3/$15), unlike newer Claude geo SKUs.
 # Profile verified from us-east-1; set AWS_REGION to a supported source (us-east-1, us-east-2, us-west-1, us-west-2).
 # Uses the native Bedrock provider's bedrock-runtime Converse/InvokeModel surface.
 # On-demand USD/MTok from us-east-1; 5-minute cache writes. Legacy, EOL October 14, 2026.

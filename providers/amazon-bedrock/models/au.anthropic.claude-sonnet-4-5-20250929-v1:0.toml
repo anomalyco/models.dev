@@ -4,7 +4,7 @@
 # AU source ap-southeast-2: regional on-demand USD/MTok; cache_write is the 5-minute rate.
 # Toggle: additionalModelRequestFields.thinking.type = enabled|disabled (Converse); thinking.type (InvokeModel).
 # Budget: additionalModelRequestFields.thinking.budget_tokens (Converse); thinking.budget_tokens (InvokeModel).
-base_model = "anthropic/claude-sonnet-4-5"
+base_model = "anthropic/claude-sonnet-4-5-20250929"
 reasoning_options = [{ type = "toggle" }, { type = "budget_tokens", min = 1_024 }]
 name = "Claude Sonnet 4.5 (AU)"
 structured_output = true
