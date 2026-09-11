@@ -50,6 +50,20 @@ test("preserves authored reasoning controls when the host exposes no efforts", (
   expect(translated?.model.reasoning_options).toEqual(authored);
 });
 
+test("preserves authored toggle and budget controls when the host advertises efforts", () => {
+  const authored = [
+    { type: "toggle" as const },
+    { type: "budget_tokens" as const },
+    { type: "effort" as const, values: ["low"] },
+  ];
+  const translated = nebul.translateModel(nebulEntry("zai-org/GLM-5.3"), context(existingWith(authored)));
+  expect(translated?.model.reasoning_options).toEqual([
+    { type: "toggle" },
+    { type: "budget_tokens" },
+    { type: "effort", values: ["low", "high", "max"] },
+  ]);
+});
+
 test("resolves base models across org renames and quantization suffixes", () => {
   const cases: [string, string | null, string][] = [
     ["Qwen/Qwen3.8-27B-FP8", "Qwen/Qwen3.8-27B-FP8", "alibaba/qwen3.8-27b"],

@@ -117,10 +117,13 @@ function isCatalogChatModel(entry: NebulEntry): boolean {
     && entry.model_name !== PING_MODEL && !DEPRECATED.has(entry.model_name) && !DENYLIST.test(entry.model_name);
 }
 
+// /model/info only describes the effort control; hand-authored toggle and
+// budget_tokens options must survive rewrites, so replace just the effort entry.
 function buildReasoningOptions(entry: NebulEntry, existing: ExistingModel | undefined) {
   const efforts = entry.model_info.reasoning_efforts ?? [];
   if (efforts.length === 0) return existing?.reasoning_options;
-  return [{ type: "effort" as const, values: efforts }];
+  const preserved = existing?.reasoning_options?.filter((option) => option.type !== "effort") ?? [];
+  return [...preserved, { type: "effort" as const, values: efforts }];
 }
 
 function resolveBaseModel(servedID: string, huggingfaceID: string | undefined): string | undefined {
