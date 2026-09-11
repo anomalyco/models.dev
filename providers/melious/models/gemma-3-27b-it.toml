@@ -1,0 +1,11 @@
+# Cost: converted from Melious's EUR list price for the default `balanced`
+# route at 1.1535 USD/EUR (ECB euro reference rate, 2026-08-07).
+# Sources: https://melious.ai/hub/models/gemma-3-27b-it and https://melious.ai/pricing
+base_model = "google/gemma-3-27b-it"
+
+[cost]
+input = 0.2884
+output = 0.5767
+
+[limit]
+context = 40_000

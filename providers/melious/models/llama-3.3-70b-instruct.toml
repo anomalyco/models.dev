@@ -1,0 +1,13 @@
+# Cost: converted from Melious's EUR list price for the default `balanced`
+# route at 1.1535 USD/EUR (ECB euro reference rate, 2026-08-07).
+# Sources: https://melious.ai/hub/models/llama-3.3-70b-instruct and https://melious.ai/pricing
+base_model = "meta/llama-3.3-70b-instruct"
+attachment = false
+structured_output = true
+
+[cost]
+input = 0.7498
+output = 0.7498
+
+[limit]
+context = 131_072

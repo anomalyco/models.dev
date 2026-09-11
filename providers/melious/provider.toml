@@ -1,0 +1,16 @@
+# Melious AI GmbH relays open-weight models on European infrastructure. Raw HTTP is
+# POST `/v1/chat/completions`; the OpenAI SDK works by pointing `base_url` at the API.
+# Reasoning: this host flattens every upstream thinking control into one OpenAI-style
+# `reasoning_effort` field accepting exactly low|medium|high for reasoning models, and
+# ignores it for non-reasoning models. There is no thinking/toggle field and no
+# reasoning budget field, so no model here uses `toggle` or `budget_tokens`.
+# https://melious.ai/docs/reference/chat-completions
+# Routing flavours are selected with a model-ID suffix (`:balanced`, `:speed`,
+# `:price`, `:eco`, `:batch`). A bare model ID resolves to `balanced`, which is what
+# the entries here describe. `preset` biases routing, not reasoning depth.
+# https://melious.ai/docs/concepts/routing
+name = "Melious"
+npm = "@ai-sdk/openai-compatible"
+api = "https://api.melious.ai/v1"
+env = ["MELIOUS_API_KEY"]
+doc = "https://melious.ai/docs/get-started/openai-sdk"

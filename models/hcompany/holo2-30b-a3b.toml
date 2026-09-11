@@ -1,0 +1,22 @@
+name = "Holo2 30B A3B"
+description = "Open GUI-grounding model that reads web, desktop, and mobile interfaces for computer-use agents"
+release_date = "2025-11-10"
+last_updated = "2025-11-10"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = true
+open_weights = true
+license = "Apache-2.0"
+
+[limit]
+context = 131_072
+output = 16_384
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/Hcompany/Holo2-30B-A3B"

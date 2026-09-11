@@ -1,0 +1,13 @@
+# Cost: converted from Melious's EUR list price for the default `balanced`
+# route at 1.1535 USD/EUR (ECB euro reference rate, 2026-08-07).
+# Sources: https://melious.ai/hub/models/mistral-small-3.2-24b-instruct and https://melious.ai/pricing
+base_model = "mistral/mistral-small-2506"
+attachment = true
+structured_output = true
+
+[cost]
+input = 0.1154
+output = 0.346
+
+[limit]
+context = 131_072

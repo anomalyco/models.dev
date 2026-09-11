@@ -1,0 +1,11 @@
+# Cost: converted from Melious's EUR list price for the default `balanced`
+# route at 1.1535 USD/EUR (ECB euro reference rate, 2026-08-07).
+# Sources: https://melious.ai/hub/models/bge-large-en-v1.5 and https://melious.ai/pricing
+# Limit: the hub reports a 8192-token context for this ID, but BGE Large EN v1.5 is
+# hard-capped at 512 positions, so the lab limit is kept rather than overridden.
+base_model = "baai/bge-large-en-v1.5"
+
+[cost]
+input = 0.0231
+output = 0
+

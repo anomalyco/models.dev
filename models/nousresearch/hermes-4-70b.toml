@@ -1,0 +1,30 @@
+name = "Hermes 4 70B"
+description = "Hybrid-reasoning Hermes 4 built on Llama 3.1 70B for deliberate analysis and tool use"
+family = "hermes"
+release_date = "2025-08-26"
+last_updated = "2025-08-26"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = true
+knowledge = "2023-12"
+open_weights = true
+license = "Llama 3.1 Community License"
+
+[limit]
+context = 128_000
+output = 16_384
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/NousResearch/Hermes-4-70B"
+
+[[links]]
+label = "Announcement"
+url = "https://hermes4.nousresearch.com"
+type = "announcement"

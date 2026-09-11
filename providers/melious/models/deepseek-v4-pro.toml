@@ -1,0 +1,10 @@
+# Cost: converted from Melious's EUR list price for the default `balanced`
+# route at 1.1535 USD/EUR (ECB euro reference rate, 2026-08-07).
+# Sources: https://melious.ai/hub/models/deepseek-v4-pro and https://melious.ai/pricing
+base_model = "deepseek/deepseek-v4-pro"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
+
+[cost]
+input = 1.8456
+output = 3.6912
+cache_read = 0.4729

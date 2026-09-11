@@ -1,0 +1,11 @@
+# Cost: converted from Melious's EUR list price for the default `balanced`
+# route at 1.1535 USD/EUR (ECB euro reference rate, 2026-08-07).
+# Sources: https://melious.ai/hub/models/glm-5 and https://melious.ai/pricing
+base_model = "zhipuai/glm-5"
+structured_output = true
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
+
+[cost]
+input = 1.0958
+output = 3.4028
+cache_read = 0.2884

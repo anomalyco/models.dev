@@ -1,0 +1,18 @@
+# Cost: converted from Melious's EUR list price for the default `balanced`
+# route at 1.1535 USD/EUR (ECB euro reference rate, 2026-08-07).
+# Sources: https://melious.ai/hub/models/deepseek-r1-0528 and https://melious.ai/pricing
+# Reasoning: R1 always reasons and exposes no effort dial. First-party
+# providers/deepseek/models/deepseek-reasoner.toml and OpenRouter's r1-0528 both
+# author [], so there is no caller-side control to forward here.
+base_model = "deepseek/deepseek-r1"
+name = "DeepSeek R1 0528"
+structured_output = true
+reasoning_options = []
+
+[cost]
+input = 0.7498
+output = 2.9991
+cache_read = 0.1846
+
+[limit]
+context = 164_000

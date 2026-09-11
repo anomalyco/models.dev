@@ -1,0 +1,14 @@
+# Cost: converted from Melious's EUR list price for the default `balanced`
+# route at 1.1535 USD/EUR (ECB euro reference rate, 2026-08-07).
+# Sources: https://melious.ai/hub/models/qwen3-coder-next and https://melious.ai/pricing
+# structured_output: the hub reports capabilities.structured_output = false for this ID,
+# unlike the lab entry.
+base_model = "alibaba/qwen3-coder-next"
+structured_output = false
+
+[cost]
+input = 0.1961
+output = 1.0381
+
+[limit]
+context = 131_072
