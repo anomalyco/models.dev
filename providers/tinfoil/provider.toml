@@ -1,3 +1,8 @@
+# Cache (chat): automatic prefix cache scoped by identity plus model plus prefix.
+# Use body: SDK-managed `user_cache_secret` — SDK adds the secret to eligible requests; raw HTTP sets the body field, not a header.
+# Use headers: none.
+# Use prefix: stable content first; prompts need a few thousand chars.
+# Docs: https://docs.tinfoil.sh/sdk/prompt-caching
 name = "Tinfoil"
 npm = "@ai-sdk/openai-compatible"
 api = "https://inference.tinfoil.sh/v1"

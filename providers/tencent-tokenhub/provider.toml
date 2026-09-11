@@ -1,3 +1,8 @@
+# Cache (chat): Tencent TokenHub documents a chat body field for KV-cache reuse scoped to conversation_id.
+# Use body: `prompt_cache_key` — one stable value per conversation.
+# Use headers: `X-Session-ID` — one stable value per user for instance affinity.
+# Use prefix: keep system prefix stable; append new messages at end.
+# Docs: https://cloud.tencent.com/document/product/1823/131410
 name = "Tencent TokenHub"
 env = ["TENCENT_TOKENHUB_API_KEY"]
 npm = "@ai-sdk/openai-compatible"
