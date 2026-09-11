@@ -1,16 +1,12 @@
-name = "DeepSeek-V3.1"
-description = "DeepSeek chat model for instruction following, coding, and analysis"
-family = "deepseek"
-release_date = "2025-09-18"
+# https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-deepseek-deepseek-v3-1.html
+# Runtime ID; Mantle uses deepseek.v3.1. Prices are US Standard.
+# Toggle: additionalModelRequestFields.reasoning_config = "high"; omit for default mode, matching V3.2.
+# Live 2026-09-09: high returns reasoningContent; maxTokens=81920 accepted (card's 8K is not the cap).
+base_model = "deepseek/deepseek-v3.1"
 last_updated = "2025-09-18"
-attachment = false
-reasoning = true
-reasoning_options = []
-temperature = true
-knowledge = "2024-07"
-tool_call = true
+reasoning_options = [{ type = "toggle" }]
+interleaved = true
 structured_output = true
-open_weights = true
 
 [cost]
 input = 0.58
@@ -19,7 +15,3 @@ output = 1.68
 [limit]
 context = 163_840
 output = 81_920
-
-[modalities]
-input = ["text"]
-output = ["text"]
