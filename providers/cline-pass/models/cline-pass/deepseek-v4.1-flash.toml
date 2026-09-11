@@ -1,0 +1,23 @@
+# ClinePass catalog: https://api.cline.bot/api/v1/ai/cline/recommended-models
+# (accessed 2026-09-11) — `clinePass` entry `cline-pass/deepseek-v4.1-flash`,
+# "Smarter and more efficient, with 1M context window".
+# Reference pricing is the underlying DeepSeek-V4.1-Flash off-peak rate, the same rate
+# models.dev records for the first-party DeepSeek entry (ClinePass footnotes DeepSeek
+# API pricing for the DeepSeek models): $0.15 / $0.60 / $0.003 per 1M tokens
+# (input / output / cache read); peak rates are $0.30 / $1.20 / $0.006. Reasoning
+# tokens bill at the output rate. Effort levels follow the DeepSeek V4.1 Flash
+# reference (low|high|max).
+# https://api-docs.deepseek.com/quick_start/pricing (accessed 2026-09-11)
+base_model = "deepseek/deepseek-v4.1-flash"
+name = "DeepSeek 4.1 Flash"
+description = "Smarter and more efficient, with 1M context window"
+reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.15
+output = 0.6
+reasoning = 0.6
+cache_read = 0.003
