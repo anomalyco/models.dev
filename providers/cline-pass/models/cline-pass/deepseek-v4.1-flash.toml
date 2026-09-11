@@ -1,17 +1,36 @@
 # ClinePass catalog: https://api.cline.bot/api/v1/ai/cline/recommended-models
-# (accessed 2026-09-11) — `clinePass` entry `cline-pass/deepseek-v4.1-flash`, whose
-# description is "Smarter and more efficient, with 1M context window".
-# Reference pricing is the underlying DeepSeek-V4.1-Flash off-peak rate, the same rate
-# models.dev records for the first-party DeepSeek entry (ClinePass footnotes DeepSeek
-# API pricing for the DeepSeek models): $0.15 / $0.60 / $0.003 per 1M tokens
-# (input / output / cache read); peak rates are $0.30 / $1.20 / $0.006. Reasoning
-# tokens bill at the output rate. Effort levels follow the DeepSeek V4.1 Flash
-# reference (low|high|max).
+# (accessed 2026-09-11) — `clinePass` entry `cline-pass/deepseek-v4.1-flash`. ClinePass
+# serves this Cline-branded slug with the description below; the underlying open-weights
+# model is DeepSeek-V4.1-Flash.
+# Reference pricing is the DeepSeek-V4.1-Flash off-peak rate: $0.15 / $0.60 / $0.003 per
+# 1M tokens (input / output / cache read); peak rates are $0.30 / $1.20 / $0.006.
+# Reasoning tokens bill at the output rate. Effort levels low|high|max follow the
+# DeepSeek V4.1 Flash reference.
 # https://api-docs.deepseek.com/quick_start/pricing (accessed 2026-09-11)
-base_model = "deepseek/deepseek-v4.1-flash"
 name = "DeepSeek 4.1 Flash"
 description = "Smarter and more efficient, with 1M context window"
-reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]
+family = "deepseek-flash"
+release_date = "2026-09-10"
+last_updated = "2026-09-10"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = true
+knowledge = "2025-05"
+
+[limit]
+context = 1_000_000
+output = 384_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
 
 [interleaved]
 field = "reasoning_content"
