@@ -1,12 +1,13 @@
 # Source: https://nan.builders/docs/models (accessed 2026-09-11)
-# 305B MoE, FP8, served as the Vision-Exp variant: it takes images as input.
-# 1M token context, 3B token monthly quota per member, 1.5M tpm. Vision, tool
-# calling and reasoning. Included in the membership, so no per-token price.
+# Documented as a 305B MoE, FP8, served as the Vision-Exp variant (images as
+# input). In practice the host redirects `deepseek-v4-flash` to DeepSeek V4.1
+# Flash, which is also multimodal (text+image). 1M token context, 3B token
+# monthly quota per member, 1.5M tpm. Vision, tool calling and reasoning.
+# Included in the membership, so no per-token price.
 # Reasoning: no caller control on this surface. NaN lists a reasoning mode but
 # exposes no request field for it anywhere in its docs (only gemma4/qwen3.6 show
-# `reasoning_config={}`) and no graded effort, so neither the DeepSeek toggle nor
-# its low|high|max levels reach this host.
-base_model = "deepseek/deepseek-v4-flash-vision-exp"
+# `reasoning_config={}`) and no graded effort.
+base_model = "deepseek/deepseek-v4.1-flash"
 name = "DeepSeek V4 Flash"
 reasoning_options = []
 
