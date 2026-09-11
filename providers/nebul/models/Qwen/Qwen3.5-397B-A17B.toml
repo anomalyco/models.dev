@@ -1,15 +1,14 @@
-# Efforts mirror Nebul's documented host-wide reasoning_effort enum (its docs
-# note the effort-to-budget mapping is model-specific guidance):
-# https://docs.nebul.io/docs/inference-api/advanced-topics/reasoning. Same-surface
-# peers expose a thinking toggle only, with no effort values to intersect.
+# Reasoning control per Nebul's docs: GET /v1/model/info `reasoning_efforts` is the
+# per-model source of truth for "the reasoning_effort values each model meaningfully
+# accepts" (https://docs.nebul.io/docs/inference-api/models/model-catalog). It
+# advertises none for this model, and the Chat Completions API documents no on/off
+# toggle (https://docs.nebul.io/docs/inference-api/models/chat-completions), so this
+# host exposes no caller control here.
 base_model = "alibaba/qwen3.5-397b-a17b"
+reasoning_options = []
 
 [interleaved]
 field = "reasoning_content"
-
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high", "max"]
 
 [cost]
 input = 0.63

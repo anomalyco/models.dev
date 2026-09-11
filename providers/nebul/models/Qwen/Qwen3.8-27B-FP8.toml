@@ -1,15 +1,14 @@
-# Effort: reasoning_effort (Nebul docs: accepted for reasoning-capable models, ignored
-# only by non-reasoning models). Set is OpenRouter's low|medium|xhigh plus Nebul's
-# documented high; xhigh is undocumented on Nebul and no peer advertises max.
-# https://docs.nebul.io/docs/inference-api/advanced-topics/reasoning
+# Reasoning control per Nebul's docs: GET /v1/model/info `reasoning_efforts` is the
+# per-model source of truth for "the reasoning_effort values each model meaningfully
+# accepts" (https://docs.nebul.io/docs/inference-api/models/model-catalog). It
+# advertises none for this model, and the Chat Completions API documents no on/off
+# toggle (https://docs.nebul.io/docs/inference-api/models/chat-completions), so this
+# host exposes no caller control here.
 base_model = "alibaba/qwen3.8-27b"
+reasoning_options = []
 
 [interleaved]
 field = "reasoning_content"
-
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high"]
 
 [cost]
 input = 0.21

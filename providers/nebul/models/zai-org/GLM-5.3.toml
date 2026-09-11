@@ -1,12 +1,14 @@
-# GLM-5.3 always reasons; efforts low|high|max per zhipuai's official entry
+# Reasoning control per Nebul's docs: GET /v1/model/info `reasoning_efforts` is the
+# per-model source of truth for "the reasoning_effort values each model meaningfully
+# accepts" (https://docs.nebul.io/docs/inference-api/models/model-catalog). It
+# advertises an empty list for this model, and the Chat Completions API documents no
+# on/off toggle (https://docs.nebul.io/docs/inference-api/models/chat-completions),
+# so this host exposes no caller control here.
 # Traces arrive in message.reasoning (Nebul docs), so interleaved = true
 base_model = "zhipuai/glm-5.3"
+reasoning_options = []
 
 interleaved = true
-
-[[reasoning_options]]
-type = "effort"
-values = ["low", "high", "max"]
 
 [cost]
 input = 1.47
