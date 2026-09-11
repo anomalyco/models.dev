@@ -1,3 +1,8 @@
+# Cache support (chat): automatic prefix caching by default
+# Cache key (chat): Use body `prompt_cache_key` for separate cache accounting
+# Cache headers: none
+# Cache policy: stable prefix + same model; explicit `prompt_cache_breakpoint` / `prompt_cache_options` with TTL 30m on GPT-5.6+, `prompt_cache_retention` 24h/in_memory on earlier models
+# Docs: https://platform.openai.com/docs/guides/prompt-caching
 name = "OpenAI"
 env = ["OPENAI_API_KEY"]
 npm = "@ai-sdk/openai"

@@ -1,3 +1,8 @@
+# Cache support (chat): explicit opt-in (Anthropic-only)
+# Cache key (chat): Use body `cache_control` with ephemeral breakpoints (top-level automatic or up to 4 per-block)
+# Cache headers: none
+# Cache policy: stable prefix + same model; moving breakpoint top-level or explicit per-block markers
+# Docs: https://docs.opper.ai/build/gateway/prompt-caching
 name = "Opper"
 env = ["OPPER_API_KEY"]
 npm = "@ai-sdk/openai-compatible"

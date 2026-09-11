@@ -1,3 +1,8 @@
+# Cache support (chat): automatic upstream prefix reuse where available
+# Cache key (chat): none — no `prompt_cache_key` field for Zen Go endpoints
+# Cache headers: none
+# Cache policy: stable prefix + same model; upstream reuse where available
+# Docs: https://opencode.ai/docs/zen#endpoints
 name = "OpenCode Go"
 env = ["OPENCODE_API_KEY"]
 npm = "@ai-sdk/openai-compatible"

@@ -1,3 +1,8 @@
+# Cache support (chat): automatic upstream prefix reuse where available
+# Cache key (chat): none — no `prompt_cache_key` field in Zen docs
+# Cache headers: none
+# Cache policy: stable prefix + same model; cached-read billing where upstream reuse applies
+# Docs: https://opencode.ai/docs/zen
 name = "OpenCode Zen"
 env = ["OPENCODE_API_KEY"]
 npm = "@ai-sdk/openai-compatible"

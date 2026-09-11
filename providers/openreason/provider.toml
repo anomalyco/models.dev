@@ -1,3 +1,8 @@
+# Cache support (chat): none documented
+# Cache key (chat): none — no `prompt_cache_key` field in router docs
+# Cache headers: none
+# Cache policy: stable prefix + same model and pinned endpoint; upstream reuse where available
+# Docs: https://openreason.app/docs
 name = "OpenReason"
 # Sovereignty-aware OpenAI-compatible router across US and EU inference.
 # Endpoints are pinned via the `@<endpoint-id>` suffix on the model slug

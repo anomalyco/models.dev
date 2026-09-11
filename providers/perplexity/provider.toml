@@ -1,3 +1,8 @@
+# Cache support (chat): none documented
+# Cache key (chat): none — no `prompt_cache_key` or `cache_control` in Sonar schema
+# Cache headers: none
+# Cache policy: stable prefix + same model; no cache usage fields documented
+# Docs: https://docs.perplexity.ai/api-reference/sonar-post
 name = "Perplexity"
 env = ["PERPLEXITY_API_KEY"]
 npm = "@ai-sdk/perplexity"

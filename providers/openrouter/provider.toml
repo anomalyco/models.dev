@@ -1,3 +1,8 @@
+# Cache support (chat): upstream-driven via sticky routing (10-min window)
+# Cache key (chat): Use body `prompt_cache_key` as sticky fallback; `session_id` preferred
+# Cache headers: none
+# Cache policy: stable prefix + same model and route; `session_id` preferred, key fallback within 10-min window
+# Docs: https://openrouter.ai/docs/features/prompt-caching
 name = "OpenRouter"
 env = ["OPENROUTER_API_KEY"]
 npm = "@openrouter/ai-sdk-provider"
