@@ -1,3 +1,8 @@
+# Cache key (chat): implicit auto-cache on supporting routes plus `caching: true` routing to a cache-capable provider (sticky by default; `stickyprovider: false` opts out; `:caching`/`:cache`/`:cached` model suffix)
+# Use headers: `anthropic-beta: prompt-caching-2024-07-31` (add `extended-cache-ttl-2025-04-11` for 1h TTL); `x-prompt-caching-cut-after: N` sets the last cached message index
+# Use body: `promptCaching`/`prompt_caching`/`cache_control` helper (`enabled`, `ttl` 5m/1h, `cutAfterMessageIndex`, `stickyProvider`, `explicitCacheControl`); inline `cache_control: {"type": "ephemeral"}` blocks (max 4 per request, Claude models)
+# Cache policy: stable prefix + same model; keep static content first byte-identical; Claude minimums 1024-4096 tokens; verify via `usage.cache_read_input_tokens` and `prompt_tokens_details.cached_tokens`
+# Docs: https://docs.nano-gpt.com/api-reference/miscellaneous/prompt-caching
 name = "NanoGPT"
 env = ["NANO_GPT_API_KEY"]
 npm = "@ai-sdk/openai-compatible"
