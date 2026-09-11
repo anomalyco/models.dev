@@ -1,8 +1,8 @@
-base_model = "deepseek/deepseek-v4.1-flash"
-
 # Efforts: reasoning_effort = low|high|max (advertised by /model/info reasoning_efforts).
 # reasoning_effort is Nebul's only documented reasoning control; no separate on/off toggle.
 # https://docs.nebul.io/docs/inference-api/advanced-topics/reasoning
+base_model = "deepseek/deepseek-v4.1-flash"
+
 [[reasoning_options]]
 type = "effort"
 values = ["low", "high", "max"]
