@@ -1,11 +1,8 @@
+# Model reasons always-on; Nebul exposes no thinking toggle or budget field (its
+# docs cover reasoning_effort only): https://docs.nebul.io/docs/inference-api/advanced-topics/reasoning
 base_model = "alibaba/qwen3.5-397b-a17b"
 
-# Controls per alibaba's official entry: thinking toggle + budget
-[[reasoning_options]]
-type = "toggle"
-
-[[reasoning_options]]
-type = "budget_tokens"
+reasoning_options = []
 
 [cost]
 input = 0.63

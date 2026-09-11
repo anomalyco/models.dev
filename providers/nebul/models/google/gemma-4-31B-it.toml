@@ -1,7 +1,8 @@
+# Model reasons always-on; Nebul exposes no caller control for it (its docs cover
+# reasoning_effort only): https://docs.nebul.io/docs/inference-api/advanced-topics/reasoning
 base_model = "google/gemma-4-31b-it"
 
-[[reasoning_options]]
-type = "toggle"
+reasoning_options = []
 
 [cost]
 input = 0.42

@@ -1,8 +1,8 @@
+# Hybrid reasoning; Nebul exposes no caller control for it (its docs cover
+# reasoning_effort only): https://docs.nebul.io/docs/inference-api/advanced-topics/reasoning
 base_model = "nvidia/nemotron-3-super-120b-a12b"
 
-# Nemotron 3 hybrid reasoning: on/off toggle (crusoe peer)
-[[reasoning_options]]
-type = "toggle"
+reasoning_options = []
 
 [cost]
 input = 0.32

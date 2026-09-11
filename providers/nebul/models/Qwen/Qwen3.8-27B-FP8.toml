@@ -1,12 +1,8 @@
+# Model reasons always-on; /model/info advertises no reasoning_efforts for it and
+# Nebul's docs cover reasoning_effort only: https://docs.nebul.io/docs/inference-api/advanced-topics/reasoning
 base_model = "alibaba/qwen3.8-27b"
 
-# Controls per deepinfra peer: thinking toggle + efforts
-[[reasoning_options]]
-type = "toggle"
-
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "xhigh"]
+reasoning_options = []
 
 [cost]
 input = 0.21

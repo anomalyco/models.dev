@@ -1,9 +1,8 @@
+# Model reasons always-on; /model/info advertises no reasoning_efforts for it and
+# Nebul's docs cover reasoning_effort only: https://docs.nebul.io/docs/inference-api/advanced-topics/reasoning
 base_model = "meta/muse-glimmer-30b"
 
-# Efforts per fireworks peer (models without API-exposed levels keep lab controls)
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high", "xhigh"]
+reasoning_options = []
 
 [cost]
 input = 0.7

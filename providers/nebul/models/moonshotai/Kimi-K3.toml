@@ -1,12 +1,8 @@
+# Model reasons always-on; /model/info advertises no reasoning_efforts for it and
+# Nebul's docs cover reasoning_effort only: https://docs.nebul.io/docs/inference-api/advanced-topics/reasoning
 base_model = "moonshotai/kimi-k3"
 
-# Controls per moonshot's official entry: thinking toggle + adaptive effort
-[[reasoning_options]]
-type = "toggle"
-
-[[reasoning_options]]
-type = "effort"
-values = ["low", "high", "max"]
+reasoning_options = []
 
 [cost]
 input = 4.73
