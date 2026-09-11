@@ -4,7 +4,7 @@ import { z } from "zod";
 
 import { describeModel } from "../../describe.js";
 import type { ExistingModel, SyncProvider, SyncedFullModel, SyncedModel } from "../index.js";
-import { factorBaseModel } from "./openrouter.js";
+import { factorBaseModel, modelMetadata } from "./openrouter.js";
 
 const API_ENDPOINT = "https://aihubmix.com/api/v1/models?type=llm";
 
@@ -159,6 +159,11 @@ export const aihubmix = {
   name: "AIHubMix",
   modelsDir: "providers/aihubmix/models",
   trackMissingModels: true,
+  // A rewrite keeps whatever leading comment the file already had, so a stale
+  // wire path would outlive the options it documents — and a model whose toggle
+  // folds into `effort = none` would keep advertising a toggle. translateModel
+  // re-derives the header from the response, so let it own the block.
+  authoritativeHeaders: true,
   // Routing aliases such as `alicloud-glm-5.1` are served but unlisted, so a
   // local file absent from the response is retained rather than deleted.
   deleteMissing: false,
@@ -202,7 +207,7 @@ export const aihubmix = {
       model: built,
       // A rewrite drops whatever header the file carried, so re-author it here
       // or the wire path is lost on the first sync that touches the model.
-      header: reasoningHeader(model, built),
+      header: composeHeader(context.header?.(model.model_id), reasoningHeader(model, built)),
     };
   },
 } satisfies SyncProvider<AihubmixModel>;
@@ -213,11 +218,28 @@ export function buildAihubmixModel(
   labIDs: LabMetadataIDs | undefined = labMetadataIDs,
   catalog: RelayCatalog | undefined = relayCatalog,
 ): SyncedModel | undefined {
-  const input = modalities(model.input_modalities, existing?.modalities?.input ?? ["text"]);
-  const output = modalities(model.output_modalities, existing?.modalities?.output ?? ["text"]);
+  const base = existing?.base_model ?? resolveBaseModel(model, labIDs, catalog);
+  // `dev` carries 77 aihubmix files, so most of the catalog arrives as a create
+  // with no file to union against. The lab entry the relay factors onto is the
+  // only baseline those have, and 14 creates in the current listing would
+  // otherwise write a narrowing override onto it (`gpt-4o` losing pdf,
+  // `qwen3.5-27b` losing audio).
+  const baseModalities = labModalities(base);
+  const input = modalities(model.input_modalities, [
+    ...(existing?.modalities?.input ?? []),
+    ...(baseModalities?.input ?? []),
+  ]);
+  const output = modalities(model.output_modalities, [
+    ...(existing?.modalities?.output ?? []),
+    ...(baseModalities?.output ?? []),
+  ]);
   const features = new Set((model.features ?? "").split(",").map((value) => value.trim()));
-  const reasoning = model.reasoning ?? existing?.reasoning ?? false;
-  const toolCall = model.tool_call ?? existing?.tool_call ?? false;
+  // The endpoint never sends `false`. 107 of 408 routes omit `reasoning` and 100
+  // omit `tool_call` rather than denying them, and no route sends `false` at
+  // all, so a missing flag means unknown. Reading it as `false` would write an
+  // override that turns off a reasoner or tool use the lab declares.
+  const reasoning = model.reasoning ?? existing?.reasoning;
+  const toolCall = model.tool_call ?? existing?.tool_call;
   const structuredOutput = features.has("structured_outputs") || existing?.structured_output;
   const name = model.model_name ?? existing?.name;
   const context = tokens(model.context_length);
@@ -252,7 +274,6 @@ export function buildAihubmixModel(
     cost: buildCost(model.pricing, existing?.cost),
   };
 
-  const base = existing?.base_model ?? resolveBaseModel(model, labIDs, catalog);
   if (base !== undefined) {
     return factorBaseModel(
       base,
@@ -279,8 +300,15 @@ export function buildAihubmixModel(
     return existing === undefined ? undefined : (existing as SyncedModel);
   }
 
+  // A standalone entry has no lab entry to inherit from, so the two flags have
+  // to resolve to a boolean here. Published reasoning options are the model's
+  // own statement that it reasons; absent both, the route is recorded as not.
+  const standaloneReasoning = reasoning ?? shared.reasoning_options !== undefined;
+  const standaloneToolCall = toolCall ?? false;
   return {
     ...shared,
+    reasoning: standaloneReasoning,
+    tool_call: standaloneToolCall,
     name,
     description:
       existing?.description ??
@@ -289,8 +317,8 @@ export function buildAihubmixModel(
         id: model.model_id,
         providerId: "aihubmix",
         name,
-        reasoning,
-        tool_call: toolCall,
+        reasoning: standaloneReasoning,
+        tool_call: standaloneToolCall,
         structured_output: structuredOutput,
         open_weights: openWeights,
         limit,
@@ -380,6 +408,21 @@ function foldsToggle(options: { type: string; values?: string[] }[]) {
   );
 }
 
+/**
+ * Lines this adapter authors, plus the hand-written wire paths it supersedes.
+ * Anything else in the header is a human note — a price citation, a live-test
+ * record — that the response cannot reproduce, so it is carried through.
+ */
+const WIRE_PATH_LINE = /^#\s*(Toggle|Effort|Budget|Off is effort)\b|\$\.|thinkingConfig|docs\.aihubmix\.com\/cn\/api/;
+
+function composeHeader(existingHeader: string | undefined, derived: string | undefined) {
+  const notes = (existingHeader ?? "")
+    .split("\n")
+    .filter((line) => line.trim() !== "" && !WIRE_PATH_LINE.test(line));
+  const header = (derived ?? "") + (notes.length > 0 ? `${notes.join("\n")}\n` : "");
+  return header === "" ? undefined : header;
+}
+
 function reasoningHeader(model: AihubmixModel, built: SyncedModel) {
   const options = built.reasoning_options;
   if (options === undefined) return undefined;
@@ -400,14 +443,27 @@ function reasoningHeader(model: AihubmixModel, built: SyncedModel) {
  * it. A modality the endpoint never listed can still be removed by editing the
  * file, which is where it came from.
  */
+/**
+ * The lab entry a relay factors onto, read for the one thing the endpoint can
+ * under-report. Returns nothing when the relay is standalone.
+ */
+function labModalities(base: string | undefined) {
+  if (base === undefined) return undefined;
+  const metadata = modelMetadata(base) as {
+    modalities?: { input?: string[]; output?: string[] };
+  };
+  return metadata.modalities;
+}
+
 function modalities(value: string | null | undefined, fallback: string[]) {
   const parsed = (value ?? "")
     .split(",")
     .map((entry) => entry.trim())
     .filter((entry) => ["text", "audio", "image", "video", "pdf"].includes(entry));
-  if (parsed.length === 0) return fallback as SyncedFullModel["modalities"]["input"];
+  const known = fallback.length > 0 ? fallback : ["text"];
+  if (parsed.length === 0) return known as SyncedFullModel["modalities"]["input"];
   // Endpoint order first, so a file only changes when its content changes.
-  return [...new Set([...parsed, ...fallback])] as SyncedFullModel["modalities"]["input"];
+  return [...new Set([...parsed, ...known])] as SyncedFullModel["modalities"]["input"];
 }
 
 /**

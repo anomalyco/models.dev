@@ -104,6 +104,12 @@ export interface SyncProvider<SourceModel> {
     context: {
       existing(id: string): ExistingModel | undefined;
       authored(id: string): ExistingModel | undefined;
+      /**
+       * The leading comment block already on the file, so a provider that owns
+       * its header (authoritativeHeaders) can refresh the part it generates
+       * without discarding notes a human wrote around it.
+       */
+      header?(id: string): string | undefined;
     },
   ): {
     id: string;
@@ -267,6 +273,9 @@ export async function syncProvider<SourceModel>(
         },
         authored(id) {
           return existing.get(`${id}.toml`)?.authored;
+        },
+        header(id) {
+          return existing.get(`${id}.toml`)?.header || undefined;
         },
       });
     } catch (error) {

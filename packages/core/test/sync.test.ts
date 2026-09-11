@@ -5342,24 +5342,86 @@ test("keeps authored reasoning budget bounds the AIHubMix endpoint omits", () =>
 });
 
 test("does not let a narrower AIHubMix modality list delete an accepted one", () => {
-  // The endpoint lists `text,image` for kimi-k2.5, whose file records video.
+  // The endpoint lists `text,image` for kimi-k2.5, whose lab entry records video.
+  // Most of the catalog arrives as a create with no file to union against, so
+  // the lab entry is the only baseline — and the narrowing must not be written.
+  const created = buildAihubmixModel(
+    aihubmixModel({ input_modalities: "text,image" }),
+    undefined,
+    aihubmixLabIDs,
+  );
+  expect(created?.modalities).toBeUndefined();
+
+  // Where the file is the wider record, its modality survives an update too.
   const authored: ExistingModel = {
     ...aihubmixAuthored,
-    modalities: { input: ["text", "image", "video"], output: ["text"] },
+    id: "minimax-m2",
+    modalities: { input: ["text", "image"], output: ["text"] },
   };
-  const model = buildAihubmixModel(
-    aihubmixModel({ input_modalities: "text,image" }),
+  const updated = buildAihubmixModel(
+    aihubmixModel({ model_id: "minimax-m2", vendor: "minimax", input_modalities: "text" }),
     authored,
     aihubmixLabIDs,
   );
-  expect(model?.modalities?.input).toEqual(["text", "image", "video"]);
+  expect(updated?.modalities?.input).toEqual(["text", "image"]);
+
   // A modality the endpoint adds still lands.
   const widened = buildAihubmixModel(
-    aihubmixModel({ input_modalities: "text,image,pdf" }),
-    { ...aihubmixAuthored, modalities: { input: ["text"], output: ["text"] } },
+    aihubmixModel({ model_id: "minimax-m2", vendor: "minimax", input_modalities: "text,image,pdf" }),
+    undefined,
     aihubmixLabIDs,
   );
   expect(widened?.modalities?.input).toEqual(["text", "image", "pdf"]);
+});
+
+test("refreshes the AIHubMix wire path without discarding a human note", () => {
+  // The header is authoritative so a stale wire path cannot outlive the options
+  // it documents, but a price citation or live-test record is not reproducible
+  // from the response and has to survive the rewrite.
+  const toggled = aihubmixModel({
+    vendor: "somelab",
+    model_id: "somelab-noted",
+    model_name: "SomeLab Noted",
+    release_date: "2026-05-01",
+    open_weights: false,
+    context_length: 262_144,
+    max_output: 65_536,
+    reasoning: true,
+    reasoning_options: [{ type: "toggle" }] as AihubmixModel["reasoning_options"],
+  });
+  aihubmix.parseModels({ data: [toggled] });
+  const translated = aihubmix.translateModel(toggled, {
+    existing: () => undefined,
+    authored: () => undefined,
+    header: () =>
+      "# Toggle: enable_thinking = true|false\n" +
+      "# AIHubMix Models API (queried 2026-08-11T09:45:11Z): input 1.69, output 5.07.\n",
+  });
+  expect(translated?.header).toStartWith("# Toggle:\n# $.enable_thinking = true|false");
+  // The hand-written wire path it supersedes is gone; the citation is not.
+  expect(translated?.header).not.toContain("# Toggle: enable_thinking");
+  expect(translated?.header).toContain("queried 2026-08-11T09:45:11Z");
+});
+
+test("reads a missing AIHubMix reasoning or tool flag as unknown, not as false", () => {
+  // 107 of 408 routes omit `reasoning` and 100 omit `tool_call`; none send
+  // `false`. A create must not write the omission as an override that turns off
+  // what the lab entry declares.
+  const created = buildAihubmixModel(
+    aihubmixModel({ input_modalities: "text,image,video,audio,pdf" }),
+    undefined,
+    aihubmixLabIDs,
+  );
+  expect(created?.reasoning).toBeUndefined();
+  expect(created?.tool_call).toBeUndefined();
+
+  // An explicit boolean is still honoured.
+  const denied = buildAihubmixModel(
+    aihubmixModel({ tool_call: false, input_modalities: "text,image,video,audio,pdf" }),
+    undefined,
+    aihubmixLabIDs,
+  );
+  expect(denied?.tool_call).toBe(false);
 });
 
 test("reads a zero AIHubMix limit as absent rather than a real ceiling", () => {
