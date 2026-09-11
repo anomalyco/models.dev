@@ -1,6 +1,6 @@
-# AIgateway forwards the OpenAI Chat Completions reasoning_effort value for
-# this model; "none" disables thinking, low/medium/high grade it.
-# budget_tokens is not forwarded.
+# Reasoning control for this model on AIgateway is a plain on/off toggle on
+# the OpenAI Chat Completions surface (enable_thinking boolean; the gateway
+# normalizes it). No graded effort levels and no budget_tokens are forwarded.
 base_model = "anthropic/claude-haiku-4-5"
 
 [cost]
@@ -8,5 +8,4 @@ input = 1
 output = 5
 
 [[reasoning_options]]
-type = "effort"
-values = ["none", "low", "medium", "high"]
+type = "toggle"
