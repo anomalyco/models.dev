@@ -1,0 +1,10 @@
+base_model = "anthropic/claude-opus-5"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
+
+[cost]
+input = 4.75
+output = 23.75
+
+[limit]
+context = 1000000
+output = 64000
