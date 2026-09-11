@@ -5282,6 +5282,65 @@ test("keeps AIHubMix audio and reasoning prices the endpoint never quotes", () =
   expect(model?.cost?.tiers?.[0]).toMatchObject({ input: 0.6, output: 3.2, input_audio: 1.9 });
 });
 
+test("keeps AIHubMix fields the endpoint has no surface for", () => {
+  // Fast mode, request-shape overrides and the input cap live on the file only.
+  const authored: ExistingModel = {
+    ...aihubmixAuthored,
+    limit: { context: 1_050_000, input: 922_000, output: 128_000 },
+    experimental: { modes: { fast: { cost: { input: 5, output: 30 }, provider: { body: { service_tier: "priority" } } } } },
+    provider: { body: { service_tier: "flex" } },
+  } as ExistingModel;
+  const model = buildAihubmixModel(
+    aihubmixModel({ context_length: 1_050_000, max_output: 128_000 }),
+    authored,
+    aihubmixLabIDs,
+  );
+  expect(model?.limit?.input).toBe(922_000);
+  expect(model?.experimental).toEqual(authored.experimental);
+  expect(model?.provider).toEqual(authored.provider);
+});
+
+test("reads an AIHubMix cache rate that just repeats input as no discount", () => {
+  // 6 models and 4 tiers echo `input` in `cache_read`; publishing it would
+  // understate a cached read by up to 10x.
+  const model = buildAihubmixModel(
+    aihubmixModel({
+      pricing: {
+        input: 2,
+        output: 8,
+        cache_read: 2,
+        tiers: [{ tier: { type: "context", size: 200_000 }, input: 4, output: 16, cache_read: 4 }],
+      },
+    }),
+    aihubmixAuthored,
+    aihubmixLabIDs,
+  );
+  expect(model?.cost?.cache_read).toBeUndefined();
+  expect(model?.cost?.tiers?.[0]?.cache_read).toBeUndefined();
+  // A genuine discount is still published.
+  const discounted = buildAihubmixModel(
+    aihubmixModel({ pricing: { input: 2, output: 8, cache_read: 0.2 } }),
+    aihubmixAuthored,
+    aihubmixLabIDs,
+  );
+  expect(discounted?.cost?.cache_read).toBe(0.2);
+});
+
+test("keeps authored reasoning budget bounds the AIHubMix endpoint omits", () => {
+  // The endpoint states that a budget exists but never its range, and a bare
+  // option on a `base_model` file would override the lab's real bounds.
+  const authored: ExistingModel = {
+    ...aihubmixAuthored,
+    reasoning_options: [{ type: "budget_tokens", min: 1_024, max: 32_000 }],
+  };
+  const model = buildAihubmixModel(
+    aihubmixModel({ reasoning: true, reasoning_options: [{ type: "budget_tokens" }] as AihubmixModel["reasoning_options"] }),
+    authored,
+    aihubmixLabIDs,
+  );
+  expect(model?.reasoning_options).toEqual([{ type: "budget_tokens", min: 1_024, max: 32_000 }]);
+});
+
 test("reads a zero AIHubMix limit as absent rather than a real ceiling", () => {
   // 102 of 415 models quote `max_output: 0` for a limit the endpoint does not know.
   const zeroed = buildAihubmixModel(

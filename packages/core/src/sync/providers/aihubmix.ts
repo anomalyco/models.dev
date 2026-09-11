@@ -42,6 +42,8 @@ const ReasoningOption = z
   .object({
     type: z.string(),
     values: z.array(z.string()).nullish(),
+    min: z.number().nullish(),
+    max: z.number().nullish(),
   })
   .passthrough();
 
@@ -228,17 +230,22 @@ export function buildAihubmixModel(
     context !== undefined && quoted !== undefined && quoted >= context ? undefined : quoted;
   const limit = {
     context: context ?? existing?.limit?.context,
+    // The endpoint models no input cap, so an authored one is the only record of it.
+    input: existing?.limit?.input,
     output: maxOutput ?? existing?.limit?.output,
   };
   const shared = {
     attachment: input.some((value) => value !== "text"),
     reasoning,
-    reasoning_options: reasoningOptions(model) ?? existing?.reasoning_options,
+    reasoning_options: reasoningOptions(model, existing) ?? existing?.reasoning_options,
     tool_call: toolCall,
     structured_output: structuredOutput,
-    // AIHubMix serves no temperature or interleaved flags; keep what was authored.
+    // AIHubMix serves no temperature, interleaved, fast-mode or request-shape
+    // surface; all four exist on the file and nowhere else, so keep them.
     temperature: existing?.temperature,
     interleaved: existing?.interleaved,
+    experimental: existing?.experimental,
+    provider: existing?.provider,
     status: model.retire_stage === "deprecated" ? ("deprecated" as const) : existing?.status,
     modalities: { input, output },
     limit,
@@ -336,11 +343,21 @@ function bareID(modelID: string) {
   return modelID.split("/").at(-1) ?? modelID;
 }
 
-function reasoningOptions(model: AihubmixModel): SyncedFullModel["reasoning_options"] {
+function reasoningOptions(
+  model: AihubmixModel,
+  existing?: ExistingModel,
+): SyncedFullModel["reasoning_options"] {
   if (model.reasoning_options == null) return undefined;
   const options = model.reasoning_options.flatMap((option) => {
-    if (option.type === "toggle" || option.type === "budget_tokens") {
-      return [{ type: option.type }];
+    if (option.type === "toggle") return [{ type: option.type }];
+    // The endpoint states that a budget exists but not its bounds. A bare option
+    // written onto a `base_model` file would override the lab's real range with
+    // an unbounded one, so the authored bounds are carried through.
+    if (option.type === "budget_tokens") {
+      const authored = existing?.reasoning_options?.find((entry) => entry.type === "budget_tokens");
+      const min = option.min ?? (authored?.type === "budget_tokens" ? authored.min : undefined);
+      const max = option.max ?? (authored?.type === "budget_tokens" ? authored.max : undefined);
+      return [{ type: "budget_tokens" as const, min: min ?? undefined, max: max ?? undefined }];
     }
     if (option.type !== "effort") return [];
     const values = (option.values ?? [])
@@ -399,7 +416,7 @@ function buildCost(
   return {
     input,
     output,
-    cache_read: price(pricing.cache_read),
+    cache_read: cacheRead(pricing.cache_read, input),
     cache_write: price(pricing.cache_write),
     // AIHubMix quotes only text and cache rates, so an audio or reasoning price
     // exists on the file and nowhere else. A rewrite would drop it.
@@ -425,7 +442,7 @@ function costTiers(
         tier: { type: tier.tier.type ?? "context", size: tier.tier.size },
         input,
         output,
-        cache_read: price(tier.cache_read),
+        cache_read: cacheRead(tier.cache_read, input),
         cache_write: price(tier.cache_write),
         input_audio: priced?.input_audio,
         output_audio: priced?.output_audio,
@@ -444,6 +461,17 @@ function costTiers(
 function tokens(value: number | null | undefined) {
   if (value == null || !Number.isFinite(value) || value <= 0) return undefined;
   return value;
+}
+
+/**
+ * Six models and four context tiers repeat the input price in `cache_read`,
+ * which is how the endpoint spells "no cache discount" rather than a real rate.
+ * Publishing it would understate a cached read by up to 10x. An omitted field
+ * already means "no such rate" here, so an echoed one is read the same way.
+ */
+function cacheRead(value: number | null | undefined, input: number) {
+  const parsed = price(value);
+  return parsed !== undefined && parsed >= input ? undefined : parsed;
 }
 
 function price(value: number | null | undefined) {
