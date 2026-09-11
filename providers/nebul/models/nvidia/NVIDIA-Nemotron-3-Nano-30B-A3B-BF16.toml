@@ -1,11 +1,15 @@
-# Hybrid reasoning; Nebul exposes no caller control for it (its docs cover
-# reasoning_effort only): https://docs.nebul.io/docs/inference-api/advanced-topics/reasoning
+# Efforts mirror Nebul's documented host-wide reasoning_effort enum (its docs
+# note the effort-to-budget mapping is model-specific guidance):
+# https://docs.nebul.io/docs/inference-api/advanced-topics/reasoning. Same-surface
+# peers expose a toggle only, with no effort values to intersect.
 base_model = "nvidia/nemotron-3-nano-30b-a3b"
-
-reasoning_options = []
 
 [interleaved]
 field = "reasoning_content"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high", "max"]
 
 [cost]
 input = 1

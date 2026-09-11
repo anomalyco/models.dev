@@ -1,6 +1,7 @@
 import { expect, test } from "bun:test";
 
 import type { ExistingModel } from "../src/sync/index.js";
+import { MissingReasoningOptionsError } from "../src/sync/missing-reasoning-options.js";
 import {
   NebulEntry,
   NebulResponse,
@@ -78,6 +79,14 @@ test("keeps authored effort sets when the host advertises none", () => {
     context(existingWith(authored)),
   );
   expect(translated?.model.reasoning_options).toEqual(authored);
+});
+
+test("fails closed when a reasoner advertises no efforts and none are authored", () => {
+  const entry = nebulEntry("zai-org/GLM-5.3", { reasoning_efforts: [] });
+  expect(() => nebul.translateModel(entry, context(undefined))).toThrow(MissingReasoningOptionsError);
+  expect(() =>
+    nebul.translateModel(entry, context({ base_model: "zhipuai/glm-5.3" } as ExistingModel)),
+  ).toThrow(MissingReasoningOptionsError);
 });
 
 test("keeps existing entries when the source pricing or context is temporarily null", () => {

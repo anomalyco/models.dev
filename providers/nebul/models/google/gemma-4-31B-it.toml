@@ -1,11 +1,15 @@
-# Model reasons always-on; Nebul exposes no caller control for it (its docs cover
-# reasoning_effort only): https://docs.nebul.io/docs/inference-api/advanced-topics/reasoning
+# Efforts mirror Nebul's documented host-wide reasoning_effort enum (its docs
+# note the effort-to-budget mapping is model-specific guidance):
+# https://docs.nebul.io/docs/inference-api/advanced-topics/reasoning. Same-surface
+# peers expose a toggle only, with no effort values to intersect.
 # Traces arrive inline as <thinking> inside the content (Nebul docs), so interleaved = true
 base_model = "google/gemma-4-31b-it"
 
-reasoning_options = []
-
 interleaved = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high", "max"]
 
 [cost]
 input = 0.42

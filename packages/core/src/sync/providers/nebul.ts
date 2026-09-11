@@ -3,7 +3,8 @@ import path from "node:path";
 import { z } from "zod";
 
 import type { ExistingModel, SyncProvider, SyncedModel } from "../index.js";
-import { factorBaseModel } from "./openrouter.js";
+import { MissingReasoningOptionsError } from "../missing-reasoning-options.js";
+import { factorBaseModel, modelMetadata } from "./openrouter.js";
 
 const API_ENDPOINT = "https://api.inference.nebul.io/model/info";
 const MODELS_DIR = path.join(import.meta.dirname, "..", "..", "..", "..", "..", "models");
@@ -95,6 +96,19 @@ export const nebul = {
       : existing?.cost;
     const limit = info.max_input_tokens != null ? { context: info.max_input_tokens } : existing?.limit;
     if (existing === undefined && (baseModel === undefined || cost === undefined || limit === undefined)) return undefined;
+    // Fail closed rather than emitting no reasoning_options: a reasoner with
+    // neither advertised efforts nor authored options would sync as an empty
+    // entry (no caller control). The runner keeps the file and lists it in the
+    // skipped notice so the options can be hand-authored.
+    const isReasoner = baseModel !== undefined
+      ? modelMetadata(baseModel).reasoning === true
+      : existing?.reasoning === true;
+    if (isReasoner && (info.reasoning_efforts ?? []).length === 0 && existing?.reasoning_options === undefined) {
+      throw new MissingReasoningOptionsError(
+        id,
+        `${id} is a reasoning model, but Nebul advertises no reasoning_efforts and the catalog entry has no reasoning_options; hand-author them`,
+      );
+    }
     const values = {
       interleaved: existing?.interleaved,
       reasoning_options: buildReasoningOptions(entry, existing),
@@ -134,7 +148,8 @@ function isCatalogChatModel(entry: NebulEntry): boolean {
 // Nebul documents exactly one reasoning control: reasoning_effort. When the
 // host advertises efforts, write that effort entry and nothing else —
 // lab-style toggles or budgets are not supported on this API. When it
-// advertises none, keep the authored options.
+// advertises none, keep the authored options; a reasoner with neither is
+// rejected above so no empty options entry is ever synced.
 function buildReasoningOptions(entry: NebulEntry, existing: ExistingModel | undefined) {
   const efforts = entry.model_info.reasoning_efforts ?? [];
   if (efforts.length === 0) return existing?.reasoning_options;
