@@ -1,0 +1,14 @@
+base_model = "zhipuai/glm-5.3-flash"
+name = "GLM 5.3 Flash FP4"
+
+reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]
+interleaved = true
+
+[limit]
+context = 1_048_576
+output = 131_072
+
+[cost]
+input = 0.15
+output = 0.5
+cache_read = 0
