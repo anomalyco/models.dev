@@ -1,3 +1,7 @@
+# Prompt caching (chat): Automatic KV prefix reuse with discounted cached input tokens plus session-aware routing to the replica holding the shared prefix.
+# Use headers: `x-session-affinity` stable per conversation or agent task across related requests.
+# To get a hit: Keep a stable shared prefix with append-only growth on the same model, reuse one session value per conversation, confirm via usage.prompt_tokens_details.cached_tokens.
+# Docs: https://docs.baseten.co/inference/model-apis/pricing-and-limits
 name = "Baseten"
 npm = "@ai-sdk/openai-compatible"
 # Raw HTTP reasoning controls (sources accessed 2026-06-25):
