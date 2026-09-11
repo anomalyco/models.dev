@@ -64,6 +64,17 @@ test("preserves authored toggle and budget controls when the host advertises eff
   ]);
 });
 
+test("carries authored interleaved through sync", () => {
+  const inline = nebul.translateModel(nebulEntry("zai-org/GLM-5.3"), context({ interleaved: true } as ExistingModel));
+  expect(inline?.model.interleaved).toBe(true);
+
+  const named = nebul.translateModel(
+    nebulEntry("deepseek-ai/DeepSeek-V4.1-Flash"),
+    context({ interleaved: { field: "reasoning_content" } } as ExistingModel),
+  );
+  expect(named?.model.interleaved).toEqual({ field: "reasoning_content" });
+});
+
 test("keeps existing entries when the source pricing or context is temporarily null", () => {
   const existing = {
     base_model: "zhipuai/glm-5.3",

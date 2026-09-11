@@ -96,6 +96,7 @@ export const nebul = {
     const limit = info.max_input_tokens != null ? { context: info.max_input_tokens } : existing?.limit;
     if (existing === undefined && (baseModel === undefined || cost === undefined || limit === undefined)) return undefined;
     const values = {
+      interleaved: existing?.interleaved,
       reasoning_options: buildReasoningOptions(entry, existing),
       cost,
       limit,

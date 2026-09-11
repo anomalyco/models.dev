@@ -1,5 +1,8 @@
 # GLM-5.3 always reasons; efforts low|high|max per zhipuai's official entry
+# Traces arrive in message.reasoning (Nebul docs), so interleaved = true
 base_model = "zhipuai/glm-5.3"
+
+interleaved = true
 
 [[reasoning_options]]
 type = "effort"

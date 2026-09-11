@@ -3,6 +3,9 @@
 # https://api.inference.nebul.io/model/info
 base_model = "mistral/mistral-medium-2604"
 
+[interleaved]
+field = "reasoning_content"
+
 [[reasoning_options]]
 type = "effort"
 values = ["low", "medium", "high", "max"]

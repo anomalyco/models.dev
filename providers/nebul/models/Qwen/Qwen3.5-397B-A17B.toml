@@ -4,6 +4,9 @@ base_model = "alibaba/qwen3.5-397b-a17b"
 
 reasoning_options = []
 
+[interleaved]
+field = "reasoning_content"
+
 [cost]
 input = 0.63
 output = 3.78

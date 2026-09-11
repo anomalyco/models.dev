@@ -3,6 +3,9 @@
 # https://docs.nebul.io/docs/inference-api/advanced-topics/reasoning
 base_model = "deepseek/deepseek-v4.1-flash"
 
+[interleaved]
+field = "reasoning_content"
+
 [[reasoning_options]]
 type = "effort"
 values = ["low", "high", "max"]
