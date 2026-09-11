@@ -1,10 +1,16 @@
+# Sources: https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-anthropic-claude-sonnet-4-5.html
+# https://platform.claude.com/docs/en/build-with-claude/thinking-troubleshooting
+# Pricing: https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AmazonBedrockFoundationModels/current/ap-southeast-2/index.json
+# AU source ap-southeast-2: regional on-demand USD/MTok; cache_write is the 5-minute rate.
+# Toggle: additionalModelRequestFields.thinking.type = enabled|disabled (Converse); thinking.type (InvokeModel).
+# Budget: additionalModelRequestFields.thinking.budget_tokens (Converse); thinking.budget_tokens (InvokeModel).
 base_model = "anthropic/claude-sonnet-4-5"
-reasoning_options = [{ type = "budget_tokens", min = 1_024 }]
+reasoning_options = [{ type = "toggle" }, { type = "budget_tokens", min = 1_024 }]
 name = "Claude Sonnet 4.5 (AU)"
 structured_output = true
 
 [cost]
-input = 3
-output = 15
-cache_read = 0.3
-cache_write = 3.75
+input = 3.30
+output = 16.50
+cache_read = 0.33
+cache_write = 4.125

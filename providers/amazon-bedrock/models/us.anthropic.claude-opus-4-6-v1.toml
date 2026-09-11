@@ -1,10 +1,16 @@
+# Sources: https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-anthropic-claude-opus-4-6.html
+# https://platform.claude.com/docs/en/build-with-claude/thinking-troubleshooting
+# Pricing: https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AmazonBedrockFoundationModels/current/us-east-1/index.json
+# US source us-east-1: regional on-demand USD/MTok; cache_write is the 5-minute rate.
+# Toggle: additionalModelRequestFields.thinking.type = adaptive|disabled (Converse); thinking.type (InvokeModel).
+# Manual thinking.type = enabled still accepts thinking.budget_tokens; effort is output_config.effort, both inside additionalModelRequestFields on Converse.
 base_model = "anthropic/claude-opus-4-6"
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "max"] }, { type = "budget_tokens", min = 1_024 }]
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "medium", "high", "max"] }, { type = "budget_tokens", min = 1_024 }]
 name = "Claude Opus 4.6 (US)"
 structured_output = true
 
 [cost]
-input = 5
-output = 25
-cache_read = 0.5
-cache_write = 6.25
+input = 5.50
+output = 27.50
+cache_read = 0.55
+cache_write = 6.875

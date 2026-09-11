@@ -1,5 +1,9 @@
+# Sources: https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-anthropic-claude-opus-4-1.html
+# https://platform.claude.com/docs/en/build-with-claude/thinking-troubleshooting
+# Toggle: additionalModelRequestFields.thinking.type = enabled|disabled (Converse); thinking.type (InvokeModel).
+# Budget: additionalModelRequestFields.thinking.budget_tokens (Converse); thinking.budget_tokens (InvokeModel).
 base_model = "anthropic/claude-opus-4-1-20250805"
-reasoning_options = [{ type = "budget_tokens", min = 1_024 }]
+reasoning_options = [{ type = "toggle" }, { type = "budget_tokens", min = 1_024 }]
 status = "deprecated"
 name = "Claude Opus 4.1 (US)"
 
