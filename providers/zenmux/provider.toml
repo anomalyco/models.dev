@@ -1,3 +1,8 @@
+# Prompt caching (chat): explicit breakpoint cache via body `cache_control` markers plus automatic prefix cache across routed models.
+# Use headers: cache activity surfaces in ZenMux Logs token details as `input_cache_read` and `input_cache_write`.
+# Use body: `cache_control` with `type: ephemeral` on stable blocks; tools, system, then messages order; up to 4 breakpoints.
+# To get a hit: place stable content first with `cache_control` on each reusable segment; minima 1024 Claude Sonnet/Opus, 2048 Haiku 3.5, 256 Qwen; reuse within the 5m TTL.
+# Docs: https://docs.zenmux.ai/guide/advanced/prompt-cache.html
 # OpenAI POST /api/v1/chat/completions: `reasoning_effort`, or `reasoning`
 # with `effort`, `max_tokens`, and `enabled`.
 # Anthropic POST /api/anthropic/v1/messages: `thinking.type` enabled|disabled;
