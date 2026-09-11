@@ -3,6 +3,8 @@
 # track the TEE catalog refresh, not the lab release (see models/deepseek/deepseek-v4-flash-0731.toml).
 # Verified live on POST https://cloud-api.near.ai/v1/chat/completions 2026-09-08:
 # reasoning_content present when on, absent when off
+# Only the toggle was probed, so no effort control is published: reasoning_effort was not
+# tested on this route and the narrower set is deliberate.
 base_model = "deepseek/deepseek-v4-flash-0731"
 name = "DeepSeek V4 Flash TEE"
 release_date = "2026-09-08"

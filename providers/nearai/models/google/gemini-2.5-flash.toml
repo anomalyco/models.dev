@@ -1,12 +1,8 @@
-# Toggle: generationConfig.thinkingConfig.thinkingBudget = 0 disables thinking
-# Budget: generationConfig.thinkingConfig.thinkingBudget, up to 24576 reasoning tokens
-# Copied from providers/google/models/gemini-2.5-flash.toml and the helicone peer.
-# https://ai.google.dev/gemini-api/docs/thinking
+# Toggle: reasoning.enabled = true|false. The 2026-09-08 probes on this gateway accepted the
+# OpenAI-compatible reasoning object while rejecting thinking.type and reasoning_effort, so that
+# is the field a caller can send here. Toggle-only follows the openrouter peer for this model.
 base_model = "google/gemini-2.5-flash"
-reasoning_options = [
-  { type = "toggle" },
-  { type = "budget_tokens", min = 0, max = 24_576 },
-]
+reasoning_options = [{ type = "toggle" }]
 
 [cost]
 input = 0.3
