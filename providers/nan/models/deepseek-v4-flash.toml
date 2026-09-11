@@ -1,14 +1,17 @@
 # Source: https://nan.builders/docs/models (accessed 2026-09-11)
-# Documented as a 305B MoE, FP8, served as the Vision-Exp variant (images as
-# input). In practice the host redirects `deepseek-v4-flash` to DeepSeek V4.1
-# Flash, which is also multimodal (text+image). 1M token context, 3B token
-# monthly quota per member, 1.5M tpm. Vision, tool calling and reasoning.
-# Included in the membership, so no per-token price.
-# Reasoning: no caller control on this surface. NaN lists a reasoning mode but
-# exposes no request field for it anywhere in its docs (only gemma4/qwen3.6 show
-# `reasoning_config={}`) and no graded effort.
+# NaN documents this id as the Vision-Exp variant, but the endpoint serves
+# DeepSeek V4.1 Flash. Evidence (2026-09-11): forced-choice self-identification
+# with randomized option order returned deepseek/deepseek-v4.1-flash 8/8; the id
+# deepseek-v4.1-flash is not directly callable here (401) while deepseek-v4-flash
+# is, matching DeepSeek's own legacy alias
+# (providers/deepseek/models/deepseek-v4-flash.toml). The model takes images
+# (text+image), consistent with V4.1 Flash; NaN serves open-weight models, which
+# V4.1 Flash is (MIT) and the experimental Vision-Exp entry is not.
+# 1M token context, 3B token monthly quota per member, 1.5M tpm. Included in the
+# membership, so no per-token price.
+# Reasoning: no caller control on this surface; NaN's request examples document
+# no reasoning field and reasoning_effort/thinking produced no measurable effect.
 base_model = "deepseek/deepseek-v4.1-flash"
-name = "DeepSeek V4 Flash"
 reasoning_options = []
 
 [cost]
