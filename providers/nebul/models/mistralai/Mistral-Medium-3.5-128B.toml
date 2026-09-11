@@ -1,6 +1,8 @@
 base_model = "mistral/mistral-medium-2604"
 
-# Efforts: reasoning_effort = low|medium|high|max (from /model/info reasoning_efforts)
+# Efforts: reasoning_effort = low|medium|high|max — exactly /model/info's advertised
+# reasoning_efforts for this model, superseding the lab's none|high set.
+# https://api.inference.nebul.io/model/info
 [[reasoning_options]]
 type = "effort"
 values = ["low", "medium", "high", "max"]
