@@ -1,3 +1,8 @@
+# Cache (chat): automatic prefix/KV cache — no key required for hits; shared keys route to warm backends.
+# Cache headers: none — Use no cache headers.
+# Cache body: Use body `prompt_cache_key` (replaces deprecated user) — accepted on Chat Completions per the prompt-caching guide; add a stable per-prefix value at scale.
+# Cache policy: stable content first, volatile last; hits surface at usage.prompt_tokens_details.cached_tokens and bill at the reduced cached rate.
+# Docs: https://dev.meta.ai/docs/prompt-caching
 # POST /compat/v1/chat/completions follows Meta's published Chat request
 # schema, which lists no toggle, effort, or reasoning-token-budget field.
 # https://llama.developer.meta.com/docs/api-reference/chat-completions (accessed 2026-06-25)

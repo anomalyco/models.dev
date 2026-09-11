@@ -1,3 +1,8 @@
+# Cache (chat): automatic prefix cache — documented as automatic only with no key param.
+# Cache headers: none — Use no cache headers.
+# Cache body: none — Use no body key field; no key param is in the request surface.
+# Cache policy: 1584-token blocks with lazy materialization (prefix must repeat ~3x to pay off); system prompt and tools byte-identical in stable order, volatile last; cached prefixes bill at the cached-input rate.
+# Docs: https://llmtech.eu/models/qwen3.8-27b
 name = "LLM Tech"
 env = ["LLMTECH_API_KEY"]
 npm = "@ai-sdk/openai-compatible"
