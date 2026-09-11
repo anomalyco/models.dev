@@ -1,6 +1,7 @@
 # Sources (accessed 2026-09-11):
 # https://huggingface.co/mistralai/Ministral-3-14B-Instruct-2512 (Apache 2.0, public safetensors)
 # https://mistral.ai/news/mistral-3
+# limit.output 262_144 per the HF card's own usage example (MAX_TOK = max_tokens = 262144).
 
 name = "Ministral 3 14B Instruct"
 description = "Efficient Mistral edge model balancing speed and cost for general-purpose tasks"
