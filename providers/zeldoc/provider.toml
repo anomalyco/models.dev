@@ -1,3 +1,8 @@
+# Prompt caching (chat): no documented prompt cache; hits depend on the downstream route.
+# Use headers: none.
+# Use body: none — no cache params or cached-token fields documented.
+# To get a hit: replay stable prefixes; treat usage as uncached.
+# Docs: https://docs.zeldoc.ai
 name = "Zeldoc"
 env = ["ZELDOC_API_KEY"]
 npm = "@ai-sdk/openai-compatible"

@@ -1,3 +1,8 @@
+# Prompt caching (chat): automatic prefix prompt cache on POST /v1/chat/completions.
+# Use headers: none.
+# Use body: none — no cache key field; hits via usage.prompt_tokens_details.cached_tokens (Anthropic: cache_read_input_tokens).
+# To get a hit: replay stable prefixes; prefix hits bill at the cache-hit price with free cache write.
+# Docs: https://platform.xiaomimimo.com/#/docs
 name = "Xiaomi"
 # Raw endpoints are POST https://api.xiaomimimo.com/v1/chat/completions and
 # POST https://api.xiaomimimo.com/anthropic/v1/messages. Both use

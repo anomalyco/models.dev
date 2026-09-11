@@ -1,3 +1,8 @@
+# Prompt caching (chat): no documented prompt cache on POST /v1/chat/completions.
+# Use headers: none.
+# Use body: none — schema allows model/messages/reasoning.effort only with no cache field.
+# To get a hit: replay stable prefixes; treat usage as uncached.
+# Docs: https://www.xpersona.co/api/v1/openapi/ai-public
 name = "Xpersona"
 # POST /v1/chat/completions accepts reasoning.effort set to "low", "medium",
 # "high", "xhigh", or "max"; no disable sentinel or token budget is documented.

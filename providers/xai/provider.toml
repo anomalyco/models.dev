@@ -1,3 +1,8 @@
+# Prompt caching (chat): automatic prefix cache on shared leading messages.
+# Use headers: `x-grok-conv-id` — same ID routes to the same server for per-server prefix hits.
+# Use body: none on chat — prompt_cache_key is Responses-only; hits via usage.prompt_tokens_details.cached_tokens.
+# To get a hit: replay stable prefixes with a stable conversation ID.
+# Docs: https://docs.x.ai/developers/advanced-api-usage/prompt-caching
 name = "xAI"
 env = ["XAI_API_KEY"]
 npm = "@ai-sdk/xai"
