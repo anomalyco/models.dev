@@ -5218,6 +5218,40 @@ test("authors the AIHubMix toggle wire-path header so a rewrite cannot drop it",
   expect(aihubmix.translateModel(plain, context)?.header).toBeUndefined();
 });
 
+test("keeps AIHubMix audio and reasoning prices the endpoint never quotes", () => {
+  // The endpoint models only text and cache rates, so an audio rate lives on the
+  // file and nowhere else -- at the top level and inside each context tier.
+  const authored: ExistingModel = {
+    ...aihubmixAuthored,
+    cost: {
+      input: 0.25,
+      output: 1.5,
+      input_audio: 1,
+      output_audio: 2,
+      reasoning: 3,
+      tiers: [
+        { tier: { type: "context", size: 32_000 }, input: 0.5, output: 3, input_audio: 1.9 },
+      ],
+    },
+  };
+  const model = buildAihubmixModel(
+    aihubmixModel({
+      pricing: {
+        input: 0.25,
+        output: 1.5,
+        tiers: [{ tier: { type: "context", size: 32_000 }, input: 0.6, output: 3.2 }],
+      },
+    }),
+    authored,
+    aihubmixLabIDs,
+  );
+  expect(model?.cost?.input_audio).toBe(1);
+  expect(model?.cost?.output_audio).toBe(2);
+  expect(model?.cost?.reasoning).toBe(3);
+  // The endpoint still owns the text rates it does quote.
+  expect(model?.cost?.tiers?.[0]).toMatchObject({ input: 0.6, output: 3.2, input_audio: 1.9 });
+});
+
 test("reads a zero AIHubMix limit as absent rather than a real ceiling", () => {
   // 102 of 415 models quote `max_output: 0` for a limit the endpoint does not know.
   const zeroed = buildAihubmixModel(

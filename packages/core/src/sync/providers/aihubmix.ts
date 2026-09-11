@@ -374,15 +374,25 @@ function buildCost(
     output,
     cache_read: price(pricing.cache_read),
     cache_write: price(pricing.cache_write),
-    tiers: costTiers(pricing) ?? authored?.tiers,
+    // AIHubMix quotes only text and cache rates, so an audio or reasoning price
+    // exists on the file and nowhere else. A rewrite would drop it.
+    input_audio: authored?.input_audio,
+    output_audio: authored?.output_audio,
+    reasoning: authored?.reasoning,
+    tiers: costTiers(pricing, authored?.tiers) ?? authored?.tiers,
   };
 }
 
-function costTiers(pricing: NonNullable<AihubmixModel["pricing"]>) {
+function costTiers(
+  pricing: NonNullable<AihubmixModel["pricing"]>,
+  authored: NonNullable<ExistingModel["cost"]>["tiers"],
+) {
   const tiers = (pricing.tiers ?? []).flatMap((tier) => {
     const input = price(tier.input);
     const output = price(tier.output);
     if (input === undefined || output === undefined) return [];
+    // Audio rates are per tier too, and the endpoint quotes none of them.
+    const priced = authored?.find((entry) => entry.tier.size === tier.tier.size);
     return [
       {
         tier: { type: tier.tier.type ?? "context", size: tier.tier.size },
@@ -390,6 +400,9 @@ function costTiers(pricing: NonNullable<AihubmixModel["pricing"]>) {
         output,
         cache_read: price(tier.cache_read),
         cache_write: price(tier.cache_write),
+        input_audio: priced?.input_audio,
+        output_audio: priced?.output_audio,
+        reasoning: priced?.reasoning,
       },
     ];
   });
