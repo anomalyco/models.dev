@@ -1,0 +1,11 @@
+# Sources (accessed 2026-09-09):
+# - Pricing and model details: GOAT plan (https://commandcode.ai/docs/plans/goat)
+# - Plan scope: GOAT only; Go/Pro/Max plans excluded (plan-specific provider, cf. alibaba-coding-plan)
+# - Reasoning: V4-flash baseline per providers/deepseek/models/deepseek-v4-flash.toml; effort=["low","high","max"] (gateway verified live 2026-09-11: 8 models/42 calls; none|minimal rejected by enum, enable_thinking ignored; toggle/budget omitted).
+base_model = "deepseek/deepseek-v4-flash-vision-exp"
+reasoning_options = [{ type = "effort", values = ["low","high","max"] }]
+
+[cost]
+input = 0.22
+output = 0.66
+cache_read = 0.007

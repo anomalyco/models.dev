@@ -1,0 +1,12 @@
+# Sources (accessed 2026-09-09):
+# - Pricing and model details: GOAT plan (https://commandcode.ai/docs/plans/goat)
+# - Plan scope: GOAT only; Go/Pro/Max plans excluded (plan-specific provider, cf. alibaba-coding-plan)
+# - Reasoning: GPT-5.6 baseline per providers/openai/models/gpt-5.6.toml (none dropped: gateway rejects it); effort=["low","medium","high","xhigh","max"] (gateway verified live 2026-09-11: 8 models/42 calls; none|minimal rejected by enum, enable_thinking ignored; toggle/budget omitted).
+base_model = "openai/gpt-5.6-sol"
+reasoning_options = [{ type = "effort", values = ["low","medium","high","xhigh","max"] }]
+
+[cost]
+input = 5.0
+output = 30.0
+cache_read = 0.5
+cache_write = 6.25

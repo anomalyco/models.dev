@@ -1,0 +1,13 @@
+# Sources (accessed 2026-09-11):
+# - Pricing and model details: GOAT plan (https://commandcode.ai/docs/plans/goat)
+# - Model page: https://commandcode.ai/models/ling-3-0-flash-sante-free (Free while it lasts, $0 across the board)
+# - Plan scope: GOAT only; Go/Pro/Max plans excluded (plan-specific provider, cf. alibaba-coding-plan)
+# - Reasoning: kilo relay baseline (["none","high"] minus gateway-rejected none) -> effort=["high"]; vercel uses [] (noted, not followed).
+base_model = "inclusionai/ling-3.0-flash-sante"
+name = "Ling 3.0 Flash Sante (Free)"
+reasoning_options = [{ type = "effort", values = ["high"] }]
+
+[cost]
+input = 0
+output = 0
+cache_read = 0
