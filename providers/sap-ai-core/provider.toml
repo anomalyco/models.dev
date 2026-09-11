@@ -1,3 +1,8 @@
+# Prompt caching (chat): Explicit ephemeral `cache_control` breakpoints on prompt-templating content blocks (Orchestration V2; Claude/Nova families); OpenAI/Gemini-backed models cache implicitly with no configuration.
+# Use headers: none.
+# Use body: `cache_control` (`{"type": "ephemeral"}` default 5-minute TTL, `"ttl": "1h"` on select Claude models).
+# To get a hit: Mark the breakpoint at the end of the stable prefix with enough cached tokens; keep shared content byte-identical and append-only.
+# Docs: https://help.sap.com/docs/sap-ai-core/generative-ai/prompt-caching
 name = "SAP AI Core"
 env = ["AICORE_SERVICE_KEY"]
 npm = "@jerome-benoit/sap-ai-provider-v2"
