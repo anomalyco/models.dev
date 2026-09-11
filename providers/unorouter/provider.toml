@@ -1,3 +1,8 @@
+# Cache key (chat): unknown — quickstart + integration guides document model/messages only; no cache key field found after 3 sources.
+# Use headers: unknown — no cache routing header documented.
+# Use body: unknown — chat schema covers model/messages/tools/streaming; stable prefixes route to upstream caches where available.
+# Cache policy: supported upstream prefix reuse; keep shared prefix stable with identical model + route; confirm via usage.prompt_tokens_details.cached_tokens where reported.
+# Docs: https://unorouter.com/en/docs/platform/quickstart
 name = "UnoRouter"
 env = ["UNOROUTER_API_KEY"]
 npm = "@ai-sdk/openai-compatible"

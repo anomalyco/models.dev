@@ -1,3 +1,8 @@
+# Cache key (chat): unknown — chat table lists model/messages/max_tokens/stream/temperature; no cache key field found after 3 sources.
+# Use headers: unknown — no cache routing header documented.
+# Use body: unknown — chat schema covers documented model/messages fields; keep payload to documented fields.
+# Cache policy: supported upstream reuse pattern; keep shared prefix stable for upstream prefix reuse where available.
+# Docs: https://vancine.com/docs/chat
 name = "Vancine"
 npm = "@ai-sdk/openai-compatible"
 env = ["VANCINE_API_KEY"]
