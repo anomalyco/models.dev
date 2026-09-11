@@ -1,0 +1,15 @@
+base_model = "nvidia/nemotron-3.5-lightning"
+name = "Nvidia Nemotron 3.5 Lightning TEE"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high"]
+
+[cost]
+input = 0.08
+output = 0.2
+cache_read = 0.04
+
+[limit]
+input = 262_144
+output = 65_536
