@@ -1,0 +1,14 @@
+# Sources (accessed 2026-09-11):
+# https://ofox.ai/models/qwen/qwen-turbo
+# https://api.ofox.ai/v1/models/qwen/qwen-turbo
+base_model = "alibaba/qwen-turbo"
+reasoning = false
+
+[cost]
+input = 0.05
+output = 0.09
+cache_read = 0.0086
+
+[limit]
+context = 128_000
+output = 16_000
