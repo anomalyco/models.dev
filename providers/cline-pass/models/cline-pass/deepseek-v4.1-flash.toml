@@ -1,6 +1,7 @@
 # ClinePass catalog: https://api.cline.bot/api/v1/ai/cline/recommended-models
-# (accessed 2026-09-11) — `clinePass` entry `cline-pass/deepseek-v4.1-flash`,
-# "Smarter and more efficient, with 1M context window".
+# (accessed 2026-09-11) — `clinePass` entry `cline-pass/deepseek-v4.1-flash`, whose
+# catalog name is that full slug and whose description is "Smarter and more efficient,
+# with 1M context window".
 # Reference pricing is the underlying DeepSeek-V4.1-Flash off-peak rate, the same rate
 # models.dev records for the first-party DeepSeek entry (ClinePass footnotes DeepSeek
 # API pricing for the DeepSeek models): $0.15 / $0.60 / $0.003 per 1M tokens
@@ -9,7 +10,7 @@
 # reference (low|high|max).
 # https://api-docs.deepseek.com/quick_start/pricing (accessed 2026-09-11)
 base_model = "deepseek/deepseek-v4.1-flash"
-name = "DeepSeek 4.1 Flash"
+name = "cline-pass/deepseek-v4.1-flash"
 description = "Smarter and more efficient, with 1M context window"
 reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]
 
