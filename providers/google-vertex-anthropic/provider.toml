@@ -1,3 +1,8 @@
+# Prompt cache: Anthropic cache breakpoints on Vertex Claude.
+# Use body: `cache_control` ephemeral blocks for explicit breakpoints.
+# Use headers: none.
+# Prefix/TTL/cost: 5-minute TTL on Vertex; 1024-token minimum; repeat exact prefix within TTL.
+# Docs: https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/partner-models/claude/prompt-caching
 name = "Vertex (Anthropic)"
 env = ["GOOGLE_VERTEX_PROJECT", "GOOGLE_VERTEX_LOCATION", "GOOGLE_APPLICATION_CREDENTIALS"]
 npm = "@ai-sdk/google-vertex/anthropic"

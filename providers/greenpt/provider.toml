@@ -1,3 +1,8 @@
+# Prompt cache: automatic repeated-prefix cache with discounted cached-input rates.
+# Use body: none; no parameter or SDK field for cache control.
+# Use headers: none; no header for cache control.
+# Prefix/TTL/cost: repeat identical prefix from start; per-model cached-input rates; hits via usage.prompt_tokens_details.cached_tokens.
+# Docs: https://docs.greenpt.ai/prompt-caching
 name = "GreenPT"
 npm = "@ai-sdk/openai-compatible"
 api = "https://api.greenpt.ai/v1"

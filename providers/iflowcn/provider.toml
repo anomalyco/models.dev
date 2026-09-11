@@ -1,3 +1,8 @@
+# Prompt cache: no documented prefix-cache policy.
+# Use body: none; platform docs publish Search endpoints without chat cache params.
+# Use headers: none.
+# Prefix/TTL/cost: no documented threshold, discount, TTL, or cached-token reporting.
+# Docs: https://platform.iflow.cn/en/docs
 name = "iFlow"
 env = ["IFLOW_API_KEY"]
 npm = "@ai-sdk/openai-compatible"

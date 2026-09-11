@@ -1,3 +1,8 @@
+# Prompt cache: automatic prefix cache with per-model Cache Read pricing.
+# Use body: none; chat schema lists model, messages, tools, and reasoning_effort without cache key.
+# Use headers: none.
+# Prefix/TTL/cost: repeat identical prefix; per-model Cache Read rate; hits via usage details cached-token reporting.
+# Docs: https://www.hpc-ai.com/doc/docs/Model-APIs/API-Reference/OpenAI-Compatible-API/Create-Chat-Completions/
 name = "HPC-AI"
 env = ["HPC_AI_API_KEY"]
 npm = "@ai-sdk/openai-compatible"

@@ -1,3 +1,8 @@
+# Prompt cache: implicit automatic prefix cache plus explicit context caching.
+# Use body: `cachedContents` via context-cache API; no chat-level cache key.
+# Use headers: none.
+# Prefix/TTL/cost: implicit hits automatic; explicit cache managed via context-cache API.
+# Docs: https://cloud.google.com/vertex-ai/generative-ai/docs/context-cache/context-cache-overview
 name = "Vertex"
 env = ["GOOGLE_VERTEX_PROJECT", "GOOGLE_VERTEX_LOCATION", "GOOGLE_APPLICATION_CREDENTIALS"]
 npm = "@ai-sdk/google-vertex"

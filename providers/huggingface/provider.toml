@@ -1,3 +1,8 @@
+# Prompt cache: no router-level prefix cache; downstream provider caching only.
+# Use body: none; router chat schema lists messages, tools, and reasoning controls without cache key.
+# Use headers: none.
+# Prefix/TTL/cost: no router threshold, discount, TTL, or cached-token reporting; usage reports prompt/completion/total only.
+# Docs: https://huggingface.co/docs/inference-providers/tasks/chat-completion
 name = "Hugging Face"
 env = ["HF_TOKEN"]
 npm = "@ai-sdk/openai-compatible"
