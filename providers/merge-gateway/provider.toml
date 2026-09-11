@@ -1,3 +1,8 @@
+# Prompt cache (chat): No gateway-level chat cache — prefix behavior follows the selected vendor route.
+# Cache key (chat): none — no gateway-level chat key field; vendor-native controls apply per route.
+# Cache headers: none
+# Cache policy: vendor-route controls only; to improve reuse keep same vendor route, model, and stable prefix order.
+# Docs: https://docs.merge.dev/merge-gateway/get-started
 # Reasoning request surfaces (sources accessed 2026-07-21):
 # - Reasoning support and controls are vendor-route capabilities. Use the exact
 #   model response from GET /v1/models and inspect
