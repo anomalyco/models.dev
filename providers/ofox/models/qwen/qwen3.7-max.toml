@@ -4,13 +4,18 @@
 # Toggle: enable_thinking true|false (Qwen/DashScope chat path through Ofox)
 # Budget: thinking_budget
 base_model = "alibaba/qwen3.7-max"
-reasoning_options = [{ type = "toggle" }, { type = "budget_tokens" }]
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "budget_tokens"
 
 [cost]
-input = 2.5
-output = 7.5
-cache_read = 0.5
-cache_write = 3.125
+input = 1.71
+output = 5.14
+cache_read = 0.17
+cache_write = 2.14
 
 [limit]
 context = 1_064_000

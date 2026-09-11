@@ -6,10 +6,15 @@
 # Toggle: enable_thinking true|false (hybrid; Qwen/DashScope surface through Ofox)
 # Budget: thinking_budget
 base_model = "alibaba/qwen3.8-flash"
-reasoning_options = [{ type = "toggle" }, { type = "budget_tokens" }]
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "budget_tokens"
 
 [cost]
-input = 0.15
-output = 0.47
-cache_read = 0.016
-cache_write = 0.2
+input = 0.11
+output = 0.39
+cache_read = 0.011
+cache_write = 0.14
