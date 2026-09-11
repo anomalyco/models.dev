@@ -1,0 +1,14 @@
+# Effort: reasoning_effort = low|medium|high. This host rejects none, so there is
+# no way to turn the reasoning off.
+base_model = "nvidia/nemotron-3-super-120b-a12b"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.3
+output = 0.9
+
+[limit]
+output = 65_536

@@ -1,0 +1,18 @@
+# Router alias resolved server-side to minimax/minimax-m3; controls and price are its own.
+# No caller control: reasoning_effort, enable_thinking, thinking, thinking.type,
+# reasoning.enabled and chat_template_kwargs.enable_thinking all leave the
+# reasoning on.
+base_model = "minimax/MiniMax-M3"
+name = "Lyceum Complex"
+description = "Routing alias that Lyceum resolves to minimax/minimax-m3"
+reasoning_options = []
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.4
+output = 2
+
+[limit]
+output = 65_536

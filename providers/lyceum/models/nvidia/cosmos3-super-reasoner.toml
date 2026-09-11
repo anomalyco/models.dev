@@ -1,0 +1,11 @@
+# Reasons into <think> blocks inside content when the system prompt asks for it;
+# reasoning_effort is accepted but changes nothing.
+base_model = "nvidia/cosmos3-super-reasoner"
+reasoning_options = []
+
+[cost]
+input = 0.1
+output = 0.3
+
+[limit]
+output = 65_536

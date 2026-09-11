@@ -1,0 +1,21 @@
+# https://hermes4.nousresearch.com (accessed 2026-09-02)
+name = "Hermes 4 70B"
+description = "Hybrid reasoning model from Nous Research, built on Llama 3.1 70B for deliberate analysis, math, code, and tool use"
+family = "hermes"
+release_date = "2025-08-26"
+last_updated = "2025-08-26"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = true
+license = "llama3.1"
+
+[limit]
+context = 131_072
+output = 131_072
+
+[modalities]
+input = ["text"]
+output = ["text"]

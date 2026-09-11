@@ -1,0 +1,21 @@
+# https://huggingface.co/Qwen/Qwen3-30B-A3B-Instruct-2507 (accessed 2026-09-02)
+name = "Qwen3 30B-A3B Instruct 2507"
+description = "Qwen3 Mixture-of-Experts instruction model for multilingual chat, coding, and tool use"
+family = "qwen"
+release_date = "2025-07-29"
+last_updated = "2025-07-29"
+attachment = false
+reasoning = false
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = true
+license = "apache-2.0"
+
+[limit]
+context = 262_144
+output = 16_384
+
+[modalities]
+input = ["text"]
+output = ["text"]

@@ -1,0 +1,16 @@
+# Always reasons. reasoning_effort = none is rejected, and no other wire control
+# turns it off: enable_thinking, thinking, thinking.type, reasoning.enabled and
+# chat_template_kwargs.enable_thinking all leave it on. reasoning.exclude = true
+# only hides the reasoning, which still burns the whole max_tokens budget.
+base_model = "minimax/MiniMax-M2.5"
+reasoning_options = []
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.3
+output = 1.2
+
+[limit]
+output = 65_536

@@ -1,0 +1,8 @@
+# The lab row carries attachment = true next to text-only modalities; this host
+# rejects an image_url content part outright, so the override is a real delta.
+base_model = "meta/llama-3.3-70b-instruct"
+attachment = false
+
+[cost]
+input = 0.13
+output = 0.4

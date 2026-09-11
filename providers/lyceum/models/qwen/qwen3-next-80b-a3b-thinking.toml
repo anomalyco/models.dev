@@ -1,0 +1,10 @@
+# No caller control: reasoning_effort, enable_thinking, thinking, thinking.type,
+# reasoning.enabled and chat_template_kwargs.enable_thinking all leave the
+# reasoning on.
+base_model = "alibaba/qwen3-next-80b-a3b-thinking"
+reasoning_options = []
+interleaved = true
+
+[cost]
+input = 0.15
+output = 1.2

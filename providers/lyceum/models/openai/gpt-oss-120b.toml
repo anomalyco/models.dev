@@ -1,0 +1,8 @@
+# Effort: reasoning_effort = low|medium|high; none and minimal are rejected.
+base_model = "openai/gpt-oss-120b"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
+interleaved = true
+
+[cost]
+input = 0.15
+output = 0.6
