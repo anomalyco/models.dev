@@ -1,7 +1,6 @@
-# Prompt caching (chat): no documented chat-level cache on the native wx.ai chat API.
-# Use headers: none.
-# Use body: none — no cache body field documented.
-# To get a hit: replay stable prefixes; treat usage as uncached.
+# Prompt caching (chat): unknown on POST /ml/v1/chat/completions.
+# Use body: stable model/messages prefix; confirm hits via usage where returned.
+# To get a hit: replay stable prefixes.
 # Docs: https://cloud.ibm.com/apidocs/watsonx-ai
 name = "watsonx.ai"
 env = ["WATSONX_AI_APIKEY", "WATSONX_AI_PROJECT_ID"]

@@ -1,8 +1,7 @@
-# Prompt caching (chat): automatic prefix prompt cache on POST /v1/chat/completions.
-# Use headers: none.
-# Use body: none — no cache key field; hits via usage.prompt_tokens_details.cached_tokens (Anthropic: cache_read_input_tokens).
-# To get a hit: replay stable prefixes; prefix hits bill at the cache-hit price with free cache write.
-# Docs: https://platform.xiaomimimo.com/#/docs
+# Prompt caching (chat): automatic prefix cache on POST /v1/chat/completions.
+# Use body: hits via usage.prompt_tokens_details.cached_tokens.
+# To get a hit: replay stable prefixes; prefix hits bill at the cache-hit price.
+# Docs: https://mimo.mi.com/docs/en-US/api/chat/openai-api
 name = "Xiaomi Token Plan (Europe)"
 # Raw endpoints are POST https://token-plan-ams.xiaomimimo.com/v1/chat/completions
 # and POST https://token-plan-ams.xiaomimimo.com/anthropic/v1/messages.
