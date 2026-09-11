@@ -1,3 +1,5 @@
+# Effort levels copied from providers/google/models/gemini-3.5-flash.toml and the openrouter,
+# vercel and google-vertex peers.
 base_model = "google/gemini-3.5-flash"
 reasoning_options = [{ type = "effort", values = ["minimal", "low", "medium", "high"] }]
 
@@ -5,7 +7,6 @@ reasoning_options = [{ type = "effort", values = ["minimal", "low", "medium", "h
 input = 1.5
 output = 9
 cache_read = 0.15
-input_audio = 1.5
 
 [modalities]
 input = ["text", "image"]

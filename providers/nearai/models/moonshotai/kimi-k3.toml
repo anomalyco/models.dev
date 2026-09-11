@@ -1,6 +1,8 @@
 # Toggle: chat_template_kwargs.thinking = true|false (on by default); reasoning_effort is ignored
 # Verified live on POST https://cloud-api.near.ai/v1/chat/completions 2026-09-08:
 # reasoning_content present when on, absent when off
+# The catalog advertises image input on this route. It was probed and rejected, so this entry
+# is text-only and carries no attachment support.
 base_model = "moonshotai/kimi-k3"
 attachment = false
 reasoning_options = [{ type = "toggle" }]

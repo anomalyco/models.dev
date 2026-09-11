@@ -1,5 +1,4 @@
 base_model = "openai/gpt-5.5"
-attachment = false
 reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh"] }]
 
 [cost]
@@ -14,4 +13,4 @@ output = 45
 cache_read = 1
 
 [modalities]
-input = ["text"]
+input = ["text", "image"]

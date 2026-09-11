@@ -1,8 +1,8 @@
-# Controls copied from the first-party providers/google entry for this model, per
-# the relay guidance in AGENTS.md. The wire path this gateway exposes them on was
-# not probed, so it is not documented here.
+# Toggle: generationConfig.thinkingConfig.thinkingBudget = 0 disables thinking
+# Budget: generationConfig.thinkingConfig.thinkingBudget, 512..24576 reasoning tokens
+# Copied from providers/google/models/gemini-2.5-flash-lite.toml and the google-vertex,
+# vercel and helicone peers. https://ai.google.dev/gemini-api/docs/thinking
 base_model = "google/gemini-2.5-flash-lite"
-attachment = false
 reasoning_options = [
   { type = "toggle" },
   { type = "budget_tokens", min = 512, max = 24_576 },
@@ -12,7 +12,6 @@ reasoning_options = [
 input = 0.1
 output = 0.4
 cache_read = 0.01
-input_audio = 0.3
 
 [modalities]
-input = ["text"]
+input = ["text", "image"]

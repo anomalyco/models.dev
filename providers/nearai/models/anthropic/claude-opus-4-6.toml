@@ -5,7 +5,6 @@
 # behaviour: it lists reasoning here and omits it on claude-opus-4-8, which
 # probing showed behaves the same.
 base_model = "anthropic/claude-opus-4-6"
-attachment = false
 reasoning_options = []
 
 [cost]
@@ -18,4 +17,4 @@ cache_write = 6.25
 context = 200_000
 
 [modalities]
-input = ["text"]
+input = ["text", "image"]
