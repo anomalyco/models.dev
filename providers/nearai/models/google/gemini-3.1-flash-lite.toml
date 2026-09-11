@@ -1,12 +1,8 @@
-# Effort levels copied from providers/google/models/gemini-3.1-flash-lite.toml; google-vertex,
-# openrouter and vercel list the same four.
 base_model = "google/gemini-3.1-flash-lite"
-reasoning_options = [{ type = "effort", values = ["minimal", "low", "medium", "high"] }]
+reasoning_options = []
 
 [cost]
 input = 0.25
 output = 1.5
 cache_read = 0.025
-
-[modalities]
-input = ["text", "image"]
+input_audio = 0.5

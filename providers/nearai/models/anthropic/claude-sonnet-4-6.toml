@@ -1,17 +1,8 @@
-# No caller-side reasoning control on this route. Every Anthropic route on this
-# gateway that was probed live on 2026-09-08 rejected thinking.type and
-# reasoning_effort and returned no reasoning_content for reasoning.*, and this
-# route shares that relay surface. supported_features does not track the
-# behaviour: it lists reasoning here and omits it on claude-opus-4-8, which
-# probing showed behaves the same.
 base_model = "anthropic/claude-sonnet-4-6"
-reasoning_options = []
+reasoning_options = [{ type = "toggle" }, { type = "budget_tokens", min = 1_024 }]
 
 [cost]
 input = 3
 output = 15
 cache_read = 0.3
 cache_write = 3.75
-
-[modalities]
-input = ["text", "image"]

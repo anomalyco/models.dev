@@ -1,13 +1,8 @@
-# Toggle: reasoning.enabled = true|false. The 2026-09-08 probes on this gateway accepted the
-# OpenAI-compatible reasoning object while rejecting thinking.type and reasoning_effort, so that
-# is the field a caller can send here. Toggle-only follows the openrouter peer for this model.
 base_model = "google/gemini-2.5-flash-lite"
-reasoning_options = [{ type = "toggle" }]
+reasoning_options = []
 
 [cost]
 input = 0.1
 output = 0.4
 cache_read = 0.01
-
-[modalities]
-input = ["text", "image"]
+input_audio = 0.3

@@ -1,11 +1,9 @@
 name = "NEAR AI Cloud"
 npm = "@ai-sdk/openai-compatible"
 # Gateway and direct TEE hosts use the same POST `/v1/chat/completions` API.
-# Routes NEAR AI hosts itself take `chat_template_kwargs.thinking|enable_thinking = true|false`;
+# Native GLM/Qwen controls use `chat_template_kwargs.enable_thinking = true|false`;
 # GPT-OSS uses `reasoning_effort = low|medium|high` and cannot be disabled.
-# Relayed routes take the OpenAI-compatible `reasoning` object (`reasoning.enabled`,
-# `reasoning.effort`, `reasoning.max_tokens`). The Anthropic relays accept it but return no
-# reasoning content, so those entries publish no caller-side control.
+# Third-party routes pass through their provider-native reasoning controls.
 # https://docs.near.ai/cloud/guides/openai-compatibility
 # https://docs.near.ai/cloud/reasoning-models (accessed 2026-06-25)
 api = "https://cloud-api.near.ai/v1"
