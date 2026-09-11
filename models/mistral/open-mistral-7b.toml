@@ -1,0 +1,25 @@
+# Source: https://docs.mistral.ai/models/mistral-7b-0-3 (accessed 2026-08-28)
+name = "Mistral 7B"
+description = "Mistral's first open 7B dense model for multilingual chat and instruction following"
+family = "mistral"
+release_date = "2023-09-27"
+last_updated = "2024-05-22"
+attachment = false
+reasoning = false
+temperature = true
+tool_call = true
+knowledge = "2023-12"
+open_weights = true
+license = "Apache 2.0"
+
+[limit]
+context = 32_768
+output = 8_192
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/mistralai/Mistral-7B-Instruct-v0.3"

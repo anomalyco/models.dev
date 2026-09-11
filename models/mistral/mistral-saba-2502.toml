@@ -1,0 +1,19 @@
+# Source: https://docs.mistral.ai/models/mistral-saba-25-02 (accessed 2026-08-28)
+name = "Mistral Saba"
+description = "Fine-tuned Mistral Small model trained on curated Middle East and South Asia datasets"
+family = "mistral-small"
+release_date = "2025-02-17"
+last_updated = "2025-02-17"
+attachment = false
+reasoning = false
+temperature = true
+tool_call = true
+open_weights = false
+
+[limit]
+context = 32_000
+output = 32_000
+
+[modalities]
+input = ["text"]
+output = ["text"]

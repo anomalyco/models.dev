@@ -1,0 +1,26 @@
+# Source: https://docs.mistral.ai/models/mistral-small-3-0-25-01 (accessed 2026-08-28)
+name = "Mistral Small 3.0"
+description = "Small efficient 24B open model for personal or commercial use"
+family = "mistral-small"
+release_date = "2025-01-30"
+last_updated = "2025-01-30"
+attachment = false
+reasoning = false
+temperature = true
+tool_call = true
+structured_output = true
+knowledge = "2024-07"
+open_weights = true
+license = "Apache 2.0"
+
+[limit]
+context = 32_768
+output = 32_768
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/mistralai/Mistral-Small-24B-Instruct-2501"

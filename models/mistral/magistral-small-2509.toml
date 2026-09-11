@@ -1,0 +1,21 @@
+# Source: https://docs.mistral.ai/models/magistral-small-1-2-25-09 (accessed 2026-08-28)
+name = "Magistral Small 1.2"
+description = "Small multimodal reasoning model update of September 2025"
+family = "magistral-small"
+release_date = "2025-09-18"
+last_updated = "2025-09-18"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+knowledge = "2025-06"
+open_weights = true
+license = "Apache 2.0"
+
+[limit]
+context = 128_000
+output = 128_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
