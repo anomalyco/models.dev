@@ -1,8 +1,17 @@
+# Controls copied from the first-party providers/google entry for this model, per
+# the relay guidance in AGENTS.md. The wire path this gateway exposes them on was
+# not probed, so it is not documented here.
 base_model = "google/gemini-2.5-flash"
-reasoning_options = []
+reasoning_options = [
+  { type = "toggle" },
+  { type = "budget_tokens", min = 0, max = 24_576 },
+]
 
 [cost]
 input = 0.3
 output = 2.5
 cache_read = 0.03
 input_audio = 1
+
+[modalities]
+input = ["text", "image"]
