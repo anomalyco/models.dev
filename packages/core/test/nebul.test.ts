@@ -50,18 +50,14 @@ test("preserves authored reasoning controls when the host exposes no efforts", (
   expect(translated?.model.reasoning_options).toEqual(authored);
 });
 
-test("preserves authored toggle and budget controls when the host advertises efforts", () => {
+test("replaces authored options with the advertised effort entry when efforts are advertised", () => {
   const authored = [
     { type: "toggle" as const },
     { type: "budget_tokens" as const },
     { type: "effort" as const, values: ["low"] },
   ];
   const translated = nebul.translateModel(nebulEntry("zai-org/GLM-5.3"), context(existingWith(authored)));
-  expect(translated?.model.reasoning_options).toEqual([
-    { type: "toggle" },
-    { type: "budget_tokens" },
-    { type: "effort", values: ["low", "high", "max"] },
-  ]);
+  expect(translated?.model.reasoning_options).toEqual([{ type: "effort", values: ["low", "high", "max"] }]);
 });
 
 test("carries authored interleaved through sync", () => {

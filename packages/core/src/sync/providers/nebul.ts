@@ -131,13 +131,14 @@ function isCatalogChatModel(entry: NebulEntry): boolean {
     && entry.model_name !== PING_MODEL && !DEPRECATED.has(entry.model_name) && !DENYLIST.test(entry.model_name);
 }
 
-// /model/info only describes the effort control; hand-authored toggle and
-// budget_tokens options must survive rewrites, so replace just the effort entry.
+// Nebul documents exactly one reasoning control: reasoning_effort. When the
+// host advertises efforts, write that effort entry and nothing else —
+// lab-style toggles or budgets are not supported on this API. When it
+// advertises none, keep the authored options.
 function buildReasoningOptions(entry: NebulEntry, existing: ExistingModel | undefined) {
   const efforts = entry.model_info.reasoning_efforts ?? [];
   if (efforts.length === 0) return existing?.reasoning_options;
-  const preserved = existing?.reasoning_options?.filter((option) => option.type !== "effort") ?? [];
-  return [...preserved, { type: "effort" as const, values: efforts }];
+  return [{ type: "effort" as const, values: efforts }];
 }
 
 function resolveBaseModel(servedID: string, huggingfaceID: string | undefined): string | undefined {
