@@ -1,3 +1,8 @@
+# Cache (chat): serverless cache is automatic with no header, parameter, or toggle.
+# Use body: none.
+# Use headers: none.
+# Use prefix: repeat the same prompt prefix on a cached-input-priced model; longest matching prefix bills at cached rate.
+# Docs: https://docs.together.ai/docs/serverless/overview
 name = "Together AI"
 env = ["TOGETHER_API_KEY"]
 npm = "@ai-sdk/togetherai"
