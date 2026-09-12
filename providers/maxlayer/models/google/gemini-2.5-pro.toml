@@ -1,0 +1,13 @@
+# Budget: reasoning.max_tokens (integer reasoning tokens)
+base_model = "google/gemini-2.5-pro"
+
+[[reasoning_options]]
+type = "budget_tokens"
+min = 128
+max = 32_768
+
+[cost]
+input = 1.42425
+output = 11.394
+cache_read = 0.142425
+cache_write = 0.427275

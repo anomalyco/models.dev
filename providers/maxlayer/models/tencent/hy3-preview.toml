@@ -1,0 +1,15 @@
+# Effort: reasoning.effort = none|low|high
+base_model = "tencent/hy3-preview"
+structured_output = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "high"]
+
+[cost]
+input = 0.205092
+output = 0.68364
+cache_read = 0.068364
+
+[limit]
+context = 262_144

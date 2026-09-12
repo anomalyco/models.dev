@@ -1,0 +1,20 @@
+# Toggle: reasoning.enabled = true|false
+# Effort: reasoning.effort = low|medium|high|max
+base_model = "anthropic/claude-sonnet-4-6"
+structured_output = true
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high", "max"]
+
+[cost]
+input = 3.4182
+output = 17.091
+cache_read = 0.34182
+cache_write = 4.27275
+
+[limit]
+output = 128_000

@@ -1,0 +1,21 @@
+# Toggle: reasoning.enabled = true|false
+# Budget: reasoning.max_tokens (integer reasoning tokens)
+base_model = "alibaba/qwen3.7-max"
+structured_output = true
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "budget_tokens"
+min = 1
+max = 262_144
+
+[cost]
+input = 1.680615
+output = 5.041845
+cache_read = 0.336123
+cache_write = 2.10077
+
+[limit]
+output = 131_072

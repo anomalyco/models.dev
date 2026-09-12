@@ -1,0 +1,21 @@
+# Toggle: reasoning.enabled = true|false
+# Effort: reasoning.effort = high|xhigh
+base_model = "zhipuai/glm-5.2"
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["high", "xhigh"]
+
+[cost]
+input = 1.100661
+output = 3.459219
+cache_read = 0.220133
+
+[limit]
+context = 1_048_576

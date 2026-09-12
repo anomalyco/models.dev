@@ -1,0 +1,12 @@
+# Budget: reasoning.max_tokens (integer reasoning tokens)
+base_model = "alibaba/qwen3.7-flash"
+structured_output = false
+
+[[reasoning_options]]
+type = "budget_tokens"
+
+[cost]
+input = 0.034182
+output = 0.148122
+cache_read = 0.006837
+cache_write = 0.043298

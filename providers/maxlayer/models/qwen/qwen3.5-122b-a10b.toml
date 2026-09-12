@@ -1,0 +1,15 @@
+# Toggle: reasoning.enabled = true|false
+base_model = "alibaba/qwen3.5-122b-a10b"
+
+[[reasoning_options]]
+type = "toggle"
+
+[cost]
+input = 0.296244
+output = 2.369952
+
+[limit]
+output = 262_144
+
+[modalities]
+input = ["text", "image", "video"]

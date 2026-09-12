@@ -1,0 +1,18 @@
+# Toggle: reasoning.enabled = true|false
+# Budget: reasoning.max_tokens (integer reasoning tokens)
+base_model = "anthropic/claude-haiku-4-5"
+structured_output = true
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "budget_tokens"
+min = 1024
+max = 63_999
+
+[cost]
+input = 1.1394
+output = 5.697
+cache_read = 0.11394
+cache_write = 1.42425

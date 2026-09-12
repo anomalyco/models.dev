@@ -1,0 +1,11 @@
+# Effort: reasoning.effort = minimal|low|medium|high|xhigh
+base_model = "meta/muse-spark-1.2"
+
+[[reasoning_options]]
+type = "effort"
+values = ["minimal", "low", "medium", "high", "xhigh"]
+
+[cost]
+input = 1.42425
+output = 4.84245
+cache_read = 0.17091

@@ -1,0 +1,23 @@
+# Toggle: reasoning.enabled = true|false
+# Effort: reasoning.effort = medium|high
+# Budget: reasoning.max_tokens (integer reasoning tokens)
+base_model = "nvidia/nemotron-3-ultra-550b-a55b"
+structured_output = true
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["medium", "high"]
+
+[[reasoning_options]]
+type = "budget_tokens"
+
+[cost]
+input = 0.68364
+output = 4.10184
+cache_read = 0.22788
+
+[limit]
+context = 512_288

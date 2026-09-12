@@ -1,0 +1,14 @@
+# Toggle: reasoning.enabled = true|false
+# Effort: reasoning.effort = low|medium|high
+base_model = "bytedance-seed/seed-2.0-code"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high"]
+
+[cost]
+input = 0.5697
+output = 3.4182

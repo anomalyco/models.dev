@@ -1,0 +1,18 @@
+# Toggle: reasoning.enabled = true|false
+# Effort: reasoning.effort = low|medium|high|xhigh|max
+base_model = "anthropic/claude-opus-4-8"
+name = "Claude Opus 4.8 (Fast)"
+structured_output = true
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high", "xhigh", "max"]
+
+[cost]
+input = 11.394
+output = 56.97
+cache_read = 1.1394
+cache_write = 14.2425
