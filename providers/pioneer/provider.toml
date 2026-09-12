@@ -1,3 +1,8 @@
+# Prompt caching (chat): explicit `cache_control` breakpoints on Claude/Anthropic-style models; automatic server-side prefix match on OpenAI/GPT-family models
+# Use headers: none.
+# Use body: `cache_control` — `{"type": "ephemeral"}` marker on the last stable content block (content-block array, not plain string); up to 4 markers; GPT-family ignores markers
+# To get a hit: send the stable prefix as content blocks with the marker and repeat the exact prefix; verify via `usage.prompt_tokens_details.cached_tokens` (chat) or `cache_read_input_tokens` (messages)
+# Docs: https://docs.pioneer.ai/api-reference/prompt-caching
 name = "Pioneer"
 env = ["PIONEER_API_KEY"]
 npm = "@ai-sdk/openai-compatible"
