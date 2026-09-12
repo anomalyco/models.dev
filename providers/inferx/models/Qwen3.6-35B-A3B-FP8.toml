@@ -1,11 +1,11 @@
-name = "Qwen3.6 35B A3B FP8"
+# Toggle: chat_template_kwargs.enable_thinking = true|false
 base_model = "alibaba/qwen3.6-35b-a3b"
-# API: chat_template_kwargs.enable_thinking (bool) — verified via live request, 2026-07-21
-reasoning_options = [{ type = "toggle" }]
+name = "Qwen 3.6 35B A3B (FP8)"
+
+reasoning_options = [
+  { type = "toggle" }
+]
 
 [cost]
-input = 0
-output = 0
-
-[limit]
-context = 262_000
+input = 0.018
+output = 0.128

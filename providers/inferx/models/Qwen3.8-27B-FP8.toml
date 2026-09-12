@@ -1,0 +1,10 @@
+# Toggle wire: {"chat_template_kwargs": {"enable_thinking": true|false}} — verified via live test
+base_model = "alibaba/qwen3.8-27b"
+name = "Qwen3.8 27B (FP8)"
+
+[cost]
+input = 0.018
+output = 0.128
+
+[[reasoning_options]]
+type = "toggle" # API: {"chat_template_kwargs": {"enable_thinking": false}}
