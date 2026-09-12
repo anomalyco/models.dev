@@ -1,3 +1,8 @@
+# Cache key (chat): automatic prefix cache with per-model cached-read billing
+# Use headers: repeat the stable prefix with identical model and params
+# Use body: repeat the stable prefix with identical model and params
+# Cache policy: stable prefix + same model; keep reusable context at the start byte-identical and append-only
+# Docs: https://opencode.ai/docs/zen
 name = "OpenCode Zen"
 env = ["OPENCODE_API_KEY"]
 npm = "@ai-sdk/openai-compatible"

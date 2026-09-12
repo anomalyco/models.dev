@@ -1,3 +1,8 @@
+# Cache key (chat): automatic engine prefix reuse with `cached_tokens` usage reporting
+# Use headers: repeat the stable prefix with identical model and params
+# Use body: repeat the stable prefix with identical model and params
+# Cache policy: stable prefix + same model; send follow-up turns with the full conversation for prefix reuse
+# Docs: https://pendra.ai/docs/api/chat-completions
 # Reasoning HTTP format (accessed 2026-08-24):
 # Pendra exposes an OpenAI-compatible surface and forwards chat-completions
 # request fields to the in-process engine, so `reasoning_effort` on

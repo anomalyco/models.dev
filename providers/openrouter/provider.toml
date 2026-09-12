@@ -1,3 +1,8 @@
+# Cache key (chat): automatic prefix cache with sticky routing keyed on session
+# Use headers: `x-session-id` with a stable session identifier routes repeats toward the warm provider
+# Use body: `session_id` with the same stable value; `prompt_cache_key` also pins routing
+# Cache policy: stable prefix + same model; reuse one session value per conversation sharing a prefix
+# Docs: https://openrouter.ai/docs/features/prompt-caching
 name = "OpenRouter"
 env = ["OPENROUTER_API_KEY"]
 npm = "@openrouter/ai-sdk-provider"
