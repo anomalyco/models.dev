@@ -1,0 +1,10 @@
+# Source: Poe GET /v1/models (accessed 2026-08-16).
+# Toggle: extra_body.enable_thinking true|false
+# Costs are USD/MTok from Poe pricing fields * 1e6.
+base_model = "tencent/hy3"
+reasoning_options = [{ type = "toggle" }]
+
+[cost]
+input = 0.1414
+output = 0.5859
+cache_read = 0.0354

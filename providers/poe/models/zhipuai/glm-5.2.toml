@@ -1,0 +1,10 @@
+# Source: Poe GET /v1/models (accessed 2026-08-16).
+# Toggle: extra_body.enable_thinking true|false
+# Costs are USD/MTok from Poe pricing fields * 1e6.
+base_model = "zhipuai/glm-5.2"
+reasoning_options = [{ type = "toggle" }]
+
+[cost]
+input = 1.5152
+output = 4.5455
+cache_read = 0.303

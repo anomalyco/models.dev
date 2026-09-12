@@ -1,0 +1,11 @@
+# Source: Poe GET /v1/models (accessed 2026-08-16).
+# Toggle: extra_body.enable_thinking true|false
+# Costs are USD/MTok from Poe pricing fields * 1e6.
+base_model = "deepseek/deepseek-v4-flash"
+name = "DeepSeek-V4-Flash"
+reasoning_options = [{ type = "toggle" }]
+
+[cost]
+input = 0.1414
+output = 0.2828
+cache_read = 0.0283
