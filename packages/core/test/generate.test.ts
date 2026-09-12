@@ -101,6 +101,33 @@ describe("catalog generation", () => {
     });
   });
 
+  test("Zenifra attachment support matches its served input modalities", async () => {
+    const root = path.join(import.meta.dirname, "..", "..", "..");
+    const providers = await generate(path.join(root, "providers"));
+    const models = providers.zenifra?.models ?? {};
+
+    const actual = Object.fromEntries(
+      Object.entries(models).map(([modelID, model]) => [
+        modelID,
+        model.attachment,
+      ]),
+    );
+
+    expect(actual).toEqual({
+      "zenifra/deepseek-v4-flash-0731": false,
+      "zenifra/deepseek-v4-pro": false,
+      "zenifra/glm-5.2": false,
+      "zenifra/kimi-k2.5": true,
+      "zenifra/kimi-k2.7-code": true,
+      "zenifra/kimi-k3": true,
+      "zenifra/qwen3.7-max": false,
+      "zenifra/qwen3.7-plus": true,
+      "zenifra/qwen3.8-27b": false,
+      "zenifra/qwen3.8-flash": true,
+      "zenifra/qwen3.8-max": true,
+    });
+  });
+
   test("base_model can factor metadata without changing provider JSON", async () => {
     await withFixture(async (root) => {
       await write(root, "providers/direct/provider.toml", providerToml("Direct"));
