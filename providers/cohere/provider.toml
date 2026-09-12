@@ -1,3 +1,8 @@
+# Cache key (chat): automatic inference cache with usage.cached_tokens reporting
+# Use headers: repeat the stable prefix with identical model and params
+# Use body: repeat the stable prefix with identical model and params
+# Cache policy: stable prefix + same model; keep system prompt and leading messages byte-identical and append-only
+# Docs: https://docs.cohere.com/reference/chat
 name = "Cohere"
 env = ["COHERE_API_KEY"]
 npm = "@ai-sdk/cohere"

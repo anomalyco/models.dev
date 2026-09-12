@@ -1,3 +1,8 @@
+# Cache key (chat): automatic prefix cache on select models with discounted cached input
+# Use headers: x-session-affinity with a stable session identifier routes repeats toward the warm instance
+# Use body: repeat the stable token prefix with identical params
+# Cache policy: stable prefix + same model; place static content first and reuse tool definitions across requests
+# Docs: https://developers.cloudflare.com/workers-ai/features/prompt-caching/
 name = "Cloudflare Workers AI"
 env = ["CLOUDFLARE_ACCOUNT_ID", "CLOUDFLARE_API_KEY"]
 npm = "@ai-sdk/openai-compatible"

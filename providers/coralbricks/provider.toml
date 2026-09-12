@@ -1,3 +1,8 @@
+# Cache key (chat): automatic prefix cache with free cached input and usage.prompt_tokens_details.cached_tokens reporting
+# Use headers: repeat the stable prefix with identical model and params
+# Use body: repeat the stable prefix with identical model and params; Responses threads continue with previous_response_id for server-side state
+# Cache policy: stable prefix + same model; keep reusable context at the start byte-identical and append-only
+# Docs: https://www.coralbricks.ai/docs.md
 name = "CoralBricks"
 env = ["CORAL_API_KEY"]
 npm = "@ai-sdk/openai-compatible"

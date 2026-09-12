@@ -1,3 +1,8 @@
+# Cache key (chat): automatic prefix reuse with usage cached_tokens and cost reporting
+# Use headers: repeat the stable prefix with identical model and params
+# Use body: repeat the stable prefix with identical model and params
+# Cache policy: stable prefix + same model; keep system prompt and leading messages byte-identical and append-only
+# Docs: https://crof.ai/docs.md
 name = "CrofAI"
 env = ["CROF_API_KEY"]
 npm = "@ai-sdk/openai-compatible"
