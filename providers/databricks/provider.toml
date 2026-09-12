@@ -1,7 +1,6 @@
-# Cache key (chat): body `cache_control` breakpoints on Databricks-hosted Claude models — `{"type": "ephemeral"}` on stable text/reasoning/image/tool content
-# Use headers: none
-# Use body: `cache_control` — `{"type": "ephemeral"}` marker on content blocks in `messages.content` and `tools`; Claude-hosted models only
-# Cache policy: keep identical prefixes on the same model with breakpoints set; reuse reports `cache_read_input_tokens`, writes report `cache_creation_input_tokens`
+# Prompt caching (chat): body `cache_control` breakpoints on Databricks-hosted Claude models — `{"type": "ephemeral"}` on stable text/reasoning/image/tool content.
+# Use body: `cache_control` — `{"type": "ephemeral"}` marker on content blocks in `messages.content` and `tools`; Claude-hosted models only.
+# To get a hit: keep identical prefixes on the same model with breakpoints set; reuse reports `cache_read_input_tokens`, writes report `cache_creation_input_tokens`.
 # Docs: https://docs.databricks.com/aws/en/machine-learning/model-serving/score-foundation-models
 name = "Databricks"
 npm = "@ai-sdk/openai-compatible"

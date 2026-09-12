@@ -1,7 +1,5 @@
-# Cache key (chat): none — MemoryAlloy cluster-wide KV cache with cache-aware routing is automatic; the chat API defines no cache request field
-# Use headers: none
-# Use body: none
-# Cache policy: repeat identical prefixes on the same model so requests route to warm nodes; no client control or retention window documented
+# Prompt caching (chat): automatic cluster-wide KV cache (MemoryAlloy) with cache-aware routing; the chat API defines no cache request field.
+# To get a hit: repeat identical prefixes on the same model so requests route to warm nodes; no client control or retention window documented.
 # Docs: https://docs.crusoecloud.com/serverless-inference/overview
 name = "Crusoe"
 env = ["CRUSOE_API_KEY"]

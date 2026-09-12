@@ -1,7 +1,6 @@
-# Cache key (chat): body `prompt_cache_key` — stable per-session string scoping reuse to an identical prefix on the same model; supported models only
-# Use headers: none
-# Use body: `prompt_cache_key` plus `prompt_cache_options` (`mode: explicit`, `ttl: 5m|1h`) to retain the prefix; `prompt_cache_breakpoint` (`mode: explicit`) on a content part ends the retained prefix
-# Cache policy: automatic prefix match plus guaranteed retention windows — keep stable content first with a byte-identical prefix; the first request carrying `ttl` writes the window, reuse omits `ttl` and bills the cache-read rate (`prompt_tokens_details.cached_tokens`/`cache_write_tokens`)
+# Prompt caching (chat): body `prompt_cache_key` — stable per-session string scoping reuse to an identical prefix on the same model; supported models only.
+# Use body: `prompt_cache_key` plus `prompt_cache_options` (`mode: explicit`, `ttl: 5m|1h`) to retain the prefix; `prompt_cache_breakpoint` (`mode: explicit`) on a content part ends the retained prefix.
+# To get a hit: keep stable content first with a byte-identical prefix; the first request carrying `ttl` writes the window, reuse omits `ttl` and bills the cache-read rate (`prompt_tokens_details.cached_tokens`/`cache_write_tokens`).
 # Docs: https://docs.deepinfra.com/chat/prompt-caching
 # Reasoning HTTP format (accessed 2026-06-25):
 # OpenAI Chat: POST https://api.deepinfra.com/v1/openai/chat/completions
