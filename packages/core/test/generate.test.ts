@@ -45,6 +45,62 @@ describe("catalog generation", () => {
     });
   });
 
+  test("Zenifra model IDs preserve the upstream namespace", async () => {
+    const root = path.join(import.meta.dirname, "..", "..", "..");
+    const providers = await generate(path.join(root, "providers"));
+    const modelIDs = Object.keys(providers.zenifra?.models ?? {});
+
+    expect(modelIDs).not.toEqual([]);
+    expect(modelIDs.every((modelID) => modelID.startsWith("zenifra/"))).toBe(true);
+  });
+
+  test("Zenifra exposes only native reasoning controls", async () => {
+    const root = path.join(import.meta.dirname, "..", "..", "..");
+    const providers = await generate(path.join(root, "providers"));
+    const models = providers.zenifra?.models ?? {};
+
+    const actual = Object.fromEntries(
+      Object.entries(models).map(([modelID, model]) => [
+        modelID,
+        model.reasoning_options,
+      ]),
+    );
+
+    expect(actual).toEqual({
+      "zenifra/deepseek-v4-flash-0731": [
+        { type: "toggle" },
+        { type: "effort", values: ["low", "high", "max"] },
+      ],
+      "zenifra/deepseek-v4-pro": [
+        { type: "toggle" },
+        { type: "effort", values: ["low", "high", "max"] },
+      ],
+      "zenifra/glm-5.2": [
+        { type: "toggle" },
+        { type: "effort", values: ["high", "max"] },
+      ],
+      "zenifra/kimi-k2.5": [{ type: "toggle" }],
+      "zenifra/kimi-k2.7-code": [],
+      "zenifra/kimi-k3": [
+        { type: "effort", values: ["low", "high", "max"] },
+      ],
+      "zenifra/qwen3.7-max": [{ type: "toggle" }],
+      "zenifra/qwen3.7-plus": [{ type: "toggle" }],
+      "zenifra/qwen3.8-27b": [
+        { type: "toggle" },
+        { type: "effort", values: ["low", "medium", "xhigh"] },
+      ],
+      "zenifra/qwen3.8-flash": [
+        { type: "toggle" },
+        { type: "effort", values: ["low", "medium", "xhigh"] },
+      ],
+      "zenifra/qwen3.8-max": [
+        { type: "toggle" },
+        { type: "effort", values: ["low", "medium", "xhigh"] },
+      ],
+    });
+  });
+
   test("base_model can factor metadata without changing provider JSON", async () => {
     await withFixture(async (root) => {
       await write(root, "providers/direct/provider.toml", providerToml("Direct"));
