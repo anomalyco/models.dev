@@ -1,0 +1,13 @@
+# https://commandcode.ai/models/kimi-k2-5
+# Toggle: thinking.type = enabled|disabled
+base_model = "moonshotai/kimi-k2.5"
+
+[cost]
+input = 0.6
+output = 3
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "toggle"

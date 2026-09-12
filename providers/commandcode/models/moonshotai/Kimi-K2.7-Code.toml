@@ -1,0 +1,11 @@
+# https://commandcode.ai/models/kimi-k2-7-code
+base_model = "moonshotai/kimi-k2.7-code"
+reasoning_options = []
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+cache_read = 0.19
+input = 0.95
+output = 4
