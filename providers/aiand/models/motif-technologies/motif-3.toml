@@ -1,18 +1,31 @@
+# Effort: reasoning_effort = none|high
+# Pricing: GET https://api.aiand.com/v1/models (accessed 2026-09-11)
+# Docs: https://docs.aiand.com/models/catalog/
+# Live probe 2026-09-11: none|high → 200; low → 400.
+# First-party Motif host entry (no shared lab base_model in catalog yet).
+# Reasoning side channel: message.reasoning_content
 name = "Motif 3"
 description = "Motif 3 is a large-scale, decoder-only Mixture-of-Experts (MoE) language model with 314 billion total parameters and 13.2 billion parameters activated per token."
 release_date = "2026-08-12"
-last_updated = "2026-08-12"
+last_updated = "2026-09-11"
 attachment = false
 reasoning = true
 temperature = false
 tool_call = false
 structured_output = false
 open_weights = false
-reasoning_options = []
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "high"]
+
+[interleaved]
+field = "reasoning_content"
 
 [cost]
 input = 0.5
 output = 2
+cache_read = 0.2
 
 [limit]
 context = 262_144

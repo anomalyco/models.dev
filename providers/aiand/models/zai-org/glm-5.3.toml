@@ -1,16 +1,16 @@
-# Source: GET https://api.aiand.com/v1/models (USD list prices; accessed
-# 2026-08-29). GET /v1/models reports context_window = 1048576 (shared base
-# model uses 1_000_000), so the exact figure is overridden here.
-# Lab / peer relays (zhipuai, zai, OpenRouter, Kilo) use always-on effort
-# low|high|max. ai&'s deployment differs: live reasoning_effort probe on
-# 2026-08-29 accepts none|low|xhigh|max (200); rejects minimal|medium|high
-# with 400 ("Supported values: none, low, xhigh, max"). effort=none returns
-# no reasoning_content (off); xhigh|max return reasoning_content.
+# Effort: reasoning_effort = low|high|max (always-on; no none)
+# Pricing: GET https://api.aiand.com/v1/models (accessed 2026-09-11)
+# Docs: https://docs.aiand.com/models/catalog/
+# Live probe 2026-09-11: low|high|max → 200; none|xhigh → 400.
+# Reasoning side channel: message.reasoning_content
 base_model = "zhipuai/glm-5.3"
 
 [[reasoning_options]]
 type = "effort"
-values = ["none", "low", "xhigh", "max"]
+values = ["low", "high", "max"]
+
+[interleaved]
+field = "reasoning_content"
 
 [cost]
 input = 1
