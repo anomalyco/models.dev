@@ -1,3 +1,7 @@
+# Prompt caching (chat): explicit `cache_control` breakpoints delimiting the stable prefix (tools, system, messages order)
+# Use body: `cache_control` — `{"type": "ephemeral"}` per content block for explicit breakpoints, or top-level for a server-placed breakpoint; `ttl` of `5m` or `1h`; per-model minimum prefix tokens
+# To get a hit: mark the end of the stable prefix and repeat the exact prefix within the TTL; confirm via `cache_read_input_tokens` and `cache_creation_input_tokens` in usage
+# Docs: https://platform.claude.com/docs/en/build-with-claude/prompt-caching
 name = "Anthropic"
 env = ["ANTHROPIC_API_KEY"]
 npm = "@ai-sdk/anthropic"

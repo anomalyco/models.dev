@@ -1,3 +1,7 @@
+# Prompt caching (chat): explicit `cache_control` checkpoints over a stable prefix, plus automatic server-side prefix match
+# Use body: `cache_control` — `{"type": "ephemeral"}` marker on the last stable content block; at most 4 markers, prefix of 1024+ tokens, 20-block lookback
+# To get a hit: place the marker at the end of the stable prefix and repeat the exact prefix within the 5-minute TTL; confirm via `prompt_tokens_details.cached_tokens` and `cache_creation_input_tokens` in usage
+# Docs: https://www.alibabacloud.com/help/en/model-studio/context-cache
 name = "Alibaba Coding Plan (China)"
 env = ["ALIBABA_CODING_PLAN_API_KEY"]
 npm = "@ai-sdk/openai-compatible"
