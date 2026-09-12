@@ -1,0 +1,22 @@
+# Effort: reasoning_effort controls thinking depth.
+# Documented at https://docs.neosantara.xyz/en/capability/reasoning
+base_model = "anthropic/claude-opus-4-7"
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high", "xhigh", "max"]
+
+[cost]
+input = 5
+output = 25
+cache_read = 0.5
+cache_write = 6.25
+
+[limit]
+context = 200_000
+
+[modalities]
+input = ["text", "image"]

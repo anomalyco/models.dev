@@ -1,0 +1,14 @@
+# Dedicated thinking variant: always-on reasoning with no caller control.
+# Matches lab providers/moonshotai/models/kimi-k2-thinking.toml and peers OpenRouter/Vercel.
+base_model = "moonshotai/kimi-k2-thinking"
+reasoning_options = []
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.6
+output = 2.5
+
+[limit]
+context = 256_000

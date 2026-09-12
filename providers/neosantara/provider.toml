@@ -1,0 +1,27 @@
+# Source (accessed 2026-09-03):
+# - https://docs.neosantara.xyz
+# - https://api.neosantara.xyz/v1/catalog  (models.dev / LLM Gateway shape, public, no key)
+#
+# The sync consumes the single /v1/catalog endpoint. The gateway does the host-specific work
+# upstream (USD-per-token pricing incl. IDR conversion and any discount, capability flags, and
+# the reasoning surface), so the sync is a thin, override-only translation.
+#
+# Reasoning: the catalog reports each model's real per-model effort surface in providers[].
+# reasoning_efforts, mapped to reasoning_options as:
+#   []          -> [] (always-on: reasons, no caller control)
+#   ["none"]    -> toggle (reasoning_effort = "none" is off; carries a leading wire comment)
+#   graded set  -> effort, using the model's real levels (lab + same-surface peers), never a
+#                  full enum. Host ceiling is none|minimal|low|medium|high|xhigh|max.
+# When off is expressed via reasoning_effort = "none" alongside graded levels, AGENTS.md strictly
+# requires authoring only `effort` with `none` in values and NO toggle. Only binary on/off models
+# (no graded levels, only ["none"]) author toggle alone with a wire comment. Dedicated headers
+# document always-on relays (minimax-m2.7, kimi-k2-thinking) and external citations.
+#
+# Streaming: Neosantara normalizes reasoning output across all upstream providers into the
+# OpenAI-compatible delta.reasoning_content field (see https://docs.neosantara.xyz/en/capability/reasoning).
+# All reasoning models therefore advertise interleaved.field = "reasoning_content".
+name = "Neosantara"
+env = ["NEOSANTARA_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+api = "https://api.neosantara.xyz/v1"
+doc = "https://docs.neosantara.xyz"

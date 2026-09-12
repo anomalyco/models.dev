@@ -1,0 +1,16 @@
+# Toggle: reasoning_effort = "none" turns thinking off; any other accepted value turns it on.
+# Documented at https://docs.neosantara.xyz/en/capability/reasoning
+base_model = "zhipuai/glm-4.7"
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "toggle"
+
+[cost]
+input = 0.625
+output = 1.875
+
+[limit]
+context = 200_000

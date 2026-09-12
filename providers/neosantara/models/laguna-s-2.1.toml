@@ -1,0 +1,16 @@
+# Toggle: reasoning_effort = "none" turns thinking off; any other accepted value turns it on.
+# Documented at https://docs.neosantara.xyz/en/capability/reasoning
+base_model = "poolside/laguna-s-2.1"
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "toggle"
+
+[cost]
+input = 0
+output = 0
+
+[limit]
+context = 262_144

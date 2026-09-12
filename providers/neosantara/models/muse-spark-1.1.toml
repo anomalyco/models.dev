@@ -1,0 +1,18 @@
+# Effort: reasoning_effort controls thinking depth.
+# Documented at https://docs.neosantara.xyz/en/capability/reasoning
+base_model = "meta/muse-spark-1.1"
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "effort"
+values = ["minimal", "low", "medium", "high", "xhigh"]
+
+[cost]
+input = 1.25
+output = 4.25
+cache_read = 0.15
+
+[modalities]
+input = ["text", "image"]

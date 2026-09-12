@@ -1,0 +1,13 @@
+# Deployment limitation: text-only deployment on this host; attachments disabled.
+base_model = "mistral/mistral-large-latest"
+attachment = false
+
+[cost]
+input = 0.5
+output = 1.5
+
+[limit]
+context = 128_000
+
+[modalities]
+input = ["text"]

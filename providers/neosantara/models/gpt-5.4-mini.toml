@@ -1,0 +1,20 @@
+# Effort: reasoning_effort = "none" turns thinking off; graded levels control depth.
+# Documented at https://docs.neosantara.xyz/en/capability/reasoning
+base_model = "openai/gpt-5.4-mini"
+base_model_omit = ["limit.input"]
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "xhigh"]
+
+[cost]
+input = 0.75
+output = 4.5
+cache_read = 0.075
+cache_write = 0.75
+
+[limit]
+context = 128_000
