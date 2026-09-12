@@ -1,7 +1,4 @@
-# Prompt cache (chat): No documented chat prefix cache.
-# Cache key (chat): none — request body is model/messages/max_tokens/temperature/stream/stream_options/response_format/tools/tool_choice; no key field.
-# Cache headers: none — response headers are x-request-id plus ratelimit only.
-# Cache policy: no prefix cache; usage is prompt/completion/total tokens only; to improve reuse keep same model with stable prefix order.
+# Prompt cache (chat): unknown — no documented chat prefix cache on POST /v1/chat/completions.
 # Docs: https://lucidquery.com/docs
 # POST /v1/chat/completions enables a trace with $.thinking = true; aliases are
 # $.include_reasoning and $.reasoning.enabled = true. The published request

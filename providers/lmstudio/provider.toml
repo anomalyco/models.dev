@@ -1,6 +1,4 @@
 # Prompt cache (chat): No documented cache — local server with no cached-token usage or cached-input billing.
-# Cache key (chat): none — closed payload of model/top_p/top_k/messages/temperature/max_tokens/stream/stop/penalties/logit_bias/repeat_penalty/seed; no `prompt_cache_key` field.
-# Cache headers: none
 # Cache policy: no chat cache; to reuse local KV keep same model with identical prefix order.
 # Docs: https://lmstudio.ai/docs/developer/openai-compat/chat-completions
 # Native POST /api/v1/chat: $.reasoning = "off"|"low"|"medium"|"high"|"on".
