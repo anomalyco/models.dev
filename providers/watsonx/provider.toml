@@ -1,6 +1,4 @@
 # Prompt caching (chat): unknown on POST /ml/v1/chat/completions.
-# Use body: stable model/messages prefix; confirm hits via usage where returned.
-# To get a hit: replay stable prefixes.
 # Docs: https://cloud.ibm.com/apidocs/watsonx-ai
 name = "watsonx.ai"
 env = ["WATSONX_AI_APIKEY", "WATSONX_AI_PROJECT_ID"]
