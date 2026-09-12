@@ -1,4 +1,5 @@
 # Source: GET https://ai.zenifra.com/v1/models (accessed 2026-09-12).
+# Conversion: Zenifra prices are BRL; models.dev costs use BRL / 5.20 = USD (project rate, applied 2026-09-12).
 # Reasoning is always on; Zenifra advertises effort levels low|high|max.
 base_model = "moonshotai/kimi-k3"
 attachment = false
@@ -12,6 +13,6 @@ output = 1_048_576
 shape = "completions"
 
 [cost]
-input = 14.7
-output = 73.49
-cache_read = 1.5
+input = 2.826923
+output = 14.132692
+cache_read = 0.288462

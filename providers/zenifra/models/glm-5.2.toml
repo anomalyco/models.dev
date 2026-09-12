@@ -1,4 +1,5 @@
 # Source: GET https://ai.zenifra.com/v1/models (accessed 2026-09-12).
+# Conversion: Zenifra prices are BRL; models.dev costs use BRL / 5.20 = USD (project rate, applied 2026-09-12).
 # Reasoning: reasoning_effort = low|medium|high|xhigh|max
 base_model = "zhipuai/glm-5.2"
 structured_output = false
@@ -13,6 +14,6 @@ context = 1_048_576
 shape = "completions"
 
 [cost]
-input = 5.7
-output = 20.0
-cache_read = 1.4
+input = 1.096154
+output = 3.846154
+cache_read = 0.269231
