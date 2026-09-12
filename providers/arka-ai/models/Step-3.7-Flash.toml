@@ -1,0 +1,14 @@
+# Cost: converted from Arka AI's RUB list price at 82.9977 RUB/USD (CBR rate captured 2026-08-13).
+# Sources: https://arka-ai.ru (pricing) and https://api.arka-ai.ru/v1/models.
+
+base_model = "stepfun/step-3.7-flash"
+reasoning_options = [
+  { type = "effort", values = ["low", "medium", "high"] },
+]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.240612
+output = 1.44367

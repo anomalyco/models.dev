@@ -1,0 +1,17 @@
+# Toggle: enable_thinking true|false (Arka also accepts thinking.type = enabled|disabled,
+# the zhipuai-native wire). First-party providers/zhipuai/models/glm-4.7-flash.toml
+# declares the same toggle. This route returned upstream_error (HTTP 400) at verification
+# time, so the wire is evidenced from Arka's verified GLM siblings (GLM-5, GLM-5.1)
+# served through the same gateway (accessed 2026-08-18).
+# Cost: converted from Arka AI's RUB list price at 82.9977 RUB/USD (CBR rate captured 2026-08-13).
+# Sources: https://arka-ai.ru (pricing) and https://api.arka-ai.ru/v1/models.
+
+base_model = "zhipuai/glm-4.7-flash"
+reasoning_options = [
+  { type = "toggle" },
+]
+
+[interleaved]
+field = "reasoning_content"
+
+# No per-token price published for this model.

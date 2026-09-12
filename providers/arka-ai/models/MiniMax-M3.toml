@@ -1,0 +1,15 @@
+# Toggle: enable_thinking true|false (thinking.type = disabled also accepted).
+# reasoning_content is not exposed; reasoning is visible only via
+# usage.completion_tokens_details.reasoning_tokens.
+# Verified live on https://api.arka-ai.ru/v1/chat/completions (accessed 2026-08-18).
+# Cost: converted from Arka AI's RUB list price at 82.9977 RUB/USD (CBR rate captured 2026-08-13).
+# Sources: https://arka-ai.ru (pricing) and https://api.arka-ai.ru/v1/models.
+
+base_model = "minimax/MiniMax-M3"
+reasoning_options = [
+  { type = "toggle" },
+]
+
+[cost]
+input = 0.374285
+output = 1.497139
