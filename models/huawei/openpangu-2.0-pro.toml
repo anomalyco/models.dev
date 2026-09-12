@@ -1,0 +1,25 @@
+name = "openPangu 2.0 Pro"
+description = "Large-scale MoE language model trained on Ascend NPU with 505B parameters, 18B active per token, 512K context"
+family = "pangu"
+release_date = "2026-07-10"
+last_updated = "2026-07-10"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = true
+knowledge = "2025-05"
+open_weights = true
+
+[limit]
+context = 512_000
+input = 500_000
+output = 128_000
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/openpangu/openPangu-2.0-Pro"

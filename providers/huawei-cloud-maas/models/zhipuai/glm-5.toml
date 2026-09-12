@@ -1,0 +1,27 @@
+# Pricing: CNY 4.00 input / 18.00 output per 1M tokens (0≤Token<32K)
+# Pricing: CNY 6.00 input / 22.00 output per 1M tokens (Token≥32K)
+# Converted at ~6.74 CNY/USD
+# Source: https://support.huaweicloud.com/price-maas/price-maas-0002.html (2026-08-13)
+# Toggle: chat_template_kwargs.thinking true|false
+# https://support.huaweicloud.com/model-call-maas/model-call-021.html (accessed 2026-08-13)
+base_model = "zhipuai/glm-5"
+
+[[reasoning_options]]
+type = "toggle"
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.59
+output = 2.67
+
+[[cost.tiers]]
+tier = { type = "context", size = 32_000 }
+input = 0.89
+output = 3.26
+
+[limit]
+context = 198_000
+input = 192_000
+output = 64_000
