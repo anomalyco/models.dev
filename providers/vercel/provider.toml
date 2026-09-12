@@ -1,7 +1,7 @@
-# Cache key (chat): supported — automatic gateway caching with implicit upstream reuse.
+# Prompt caching (chat): supported — automatic gateway caching with implicit upstream reuse.
 # Use headers: supported affinity for sticky routing; include session affinity header for locality.
 # Use body: `providerOptions.gateway` with caching='auto' (plus cache_ttl / cache_anchor_items on Responses).
-# Cache policy: enable gateway caching='auto', keep prefix stable, pin provider route where needed; confirm via cached-token usage.
+# To get a hit: enable gateway caching='auto', keep prefix stable, pin provider route where needed; confirm via cached-token usage.
 # Docs: https://vercel.com/docs/ai-gateway/models-and-providers/automatic-caching
 name = "Vercel AI Gateway"
 env = ["AI_GATEWAY_API_KEY"]

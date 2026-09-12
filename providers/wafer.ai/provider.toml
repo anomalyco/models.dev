@@ -1,7 +1,5 @@
-# Cache key (chat): supported — automatic server-side prefix cache with Cache-rate billing.
-# Use headers: unknown — hits are automatic with no header flag.
-# Use body: unknown — chat table defines model/messages/sampling only; keep payload to documented fields.
-# Cache policy: keep shared prefix stable; repeated prefixes bill at the Cache rate; confirm via model-card Cache pricing.
+# Prompt caching (chat): supported — automatic server-side prefix cache with Cache-rate billing.
+# To get a hit: keep shared prefix stable; repeated prefixes bill at the Cache rate; confirm via model-card Cache pricing.
 # Docs: https://docs.wafer.ai/serverless/api-reference
 name = "Wafer"
 # POST /v1/chat/completions normalizes thinking.type="enabled"|"disabled",

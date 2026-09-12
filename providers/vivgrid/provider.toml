@@ -1,7 +1,5 @@
-# Cache key (chat): supported — automatic implicit cache with Cached Token billing.
-# Use headers: unknown — no cache routing header documented.
-# Use body: unknown — schema lists model/messages/tools/reasoning_effort; hits bill at Cached Input rate with no extra key step.
-# Cache policy: keep shared prefix stable for implicit reuse; confirm via Cached Input billing on model pages.
+# Prompt caching (chat): supported — automatic implicit cache with Cached Token billing.
+# To get a hit: keep shared prefix stable for implicit reuse; confirm via Cached Input billing on model pages.
 # Docs: https://docs.vivgrid.com/models
 name = "Vivgrid"
 env = ["VIVGRID_API_KEY"]
