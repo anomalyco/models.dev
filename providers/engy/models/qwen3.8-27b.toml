@@ -1,0 +1,30 @@
+# Toggle: chat_template_kwargs.enable_thinking = true|false
+# Effort: reasoning_effort = low|medium|xhigh
+# Prices: https://api.engy.ai/v1/models; limits: authed https://engy.ai/api/v1/models (2026-08-28/30).
+# engy serves this deployment text+image only, so modalities.input is narrowed.
+# Live probe 2026-08-30, n=60/level at 32k: xhigh separates from low and medium (paired p<0.01), high
+# and max behave as xhigh (p>=0.87), medium vs low unsettled (p=0.44); toggle and none suppress 20/20.
+base_model = "alibaba/qwen3.8-27b"
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "xhigh"]
+
+[cost]
+input = 0.045
+output = 0.32
+cache_read = 0.015
+
+[limit]
+context = 1_000_000
+input = 936_000
+output = 64_000
+
+[modalities]
+input = ["text", "image"]
