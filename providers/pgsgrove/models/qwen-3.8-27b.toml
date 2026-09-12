@@ -1,0 +1,15 @@
+# Off: reasoning_effort = "none" (omit the field for the model default, which reasons); Effort: reasoning_effort = "low"|"medium". Live-verified 2026-09-11: "high" and "xhigh" are rejected upstream on this host (HTTP 502), so only the levels that complete are listed
+# https://api.pgsgrove.com/docs/reasoning (accessed 2026-09-11)
+base_model = "alibaba/qwen3.8-27b"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium"]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.52
+output = 3.9
+cache_read = 0.052

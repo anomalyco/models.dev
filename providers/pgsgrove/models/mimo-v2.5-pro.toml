@@ -1,0 +1,17 @@
+# Toggle: reasoning_effort = "none" disables reasoning; omit the field to reason (default). No graded levels on this model.
+# https://api.pgsgrove.com/docs/reasoning (accessed 2026-09-11)
+base_model = "xiaomi/mimo-v2.5-pro"
+
+[[reasoning_options]]
+type = "toggle"
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.49
+output = 1.5
+cache_read = 0.1
+
+[limit]
+output = 32_768

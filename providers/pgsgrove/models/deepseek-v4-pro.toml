@@ -1,0 +1,19 @@
+# Default is NO reasoning on this host (live-verified 2026-09-11); Effort: reasoning_effort = "high"|"max" turns thinking on (lab set; low/medium map up to high); "none" keeps it off
+# https://api.pgsgrove.com/docs/reasoning (accessed 2026-09-11)
+base_model = "deepseek/deepseek-v4-pro"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "high", "max"]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 1.65
+output = 3.3
+cache_read = 0.13
+
+[limit]
+context = 1_048_576
+output = 32_768

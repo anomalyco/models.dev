@@ -1,0 +1,20 @@
+# Off: reasoning_effort = "none" (omit the field for the model default, which reasons); Effort: reasoning_effort = "high"|"max" (lab set; low/medium map up to high)
+# https://api.pgsgrove.com/docs/reasoning (accessed 2026-09-11)
+base_model = "zhipuai/glm-5.2"
+name = "GLM-5.2 Turbo"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "high", "max"]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.975
+output = 3.00
+cache_read = 0.18
+
+[limit]
+context = 1_048_576
+output = 32_768
