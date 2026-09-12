@@ -1,0 +1,11 @@
+base_model = "tencent/hy3"
+base_model_omit = ["limit.input"]
+structured_output = true
+reasoning_options = []
+
+[cost]
+input = 0.14
+output = 0.58
+
+[limit]
+context = 262_144
