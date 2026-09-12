@@ -5,6 +5,11 @@ import path from "node:path";
 
 import { formatToml, preserveReasoningOptions, syncProvider, type ExistingModel, type SyncProvider } from "../src/sync/index.js";
 import {
+  aihubmix,
+  buildAihubmixModel,
+  type AihubmixModel,
+} from "../src/sync/providers/aihubmix.js";
+import {
   anthropic,
   buildAnthropicModel,
   parseAnthropicPricing,
@@ -1185,6 +1190,8 @@ test("tracks missing models except for unreliable first-party inventories", () =
   expect(openai.trackMissingModels).toBe(false);
   expect(pioneer.skipCreates).toBe(true);
   expect(pioneer.trackMissingModels).toBe(true);
+  expect(aihubmix.skipCreates).toBeUndefined();
+  expect(aihubmix.trackMissingModels).toBe(true);
   expect(ofox.skipCreates).toBe(true);
   expect(ofox.trackMissingModels).toBe(true);
   expect(tinfoil.skipCreates).toBe(true);
@@ -5013,4 +5020,478 @@ test("rejects synced model paths that differ only in case", async () => {
   } finally {
     await rm(root, { recursive: true, force: true });
   }
+});
+
+function aihubmixModel(overrides: Partial<AihubmixModel> = {}): AihubmixModel {
+  return {
+    model_id: "gemini-3.1-flash-lite",
+    model_name: "Gemini 3.1 Flash Lite",
+    vendor: "google",
+    pricing: { input: 0.25, output: 1.5, cache_read: 0.025 },
+    ...overrides,
+  };
+}
+
+const aihubmixAuthored: ExistingModel = {
+  id: "gemini-3.1-flash-lite",
+  name: "Gemini 3.1 Flash Lite",
+  attachment: true,
+  reasoning: true,
+  reasoning_options: [{ type: "effort", values: ["minimal", "low", "medium", "high"] }],
+  cost: { input: 0.25, output: 1.5, cache_read: 0.025, cache_write: 1 },
+  limit: { context: 1_048_576, output: 65_536 },
+  modalities: { input: ["text", "image", "audio", "video", "pdf"], output: ["text"] },
+};
+
+const aihubmixLabIDs = new Map(
+  [
+    "google/gemini-3.1-flash-lite",
+    "google/gemini-3.1-flash-lite-preview",
+    "openai/gpt-5.5",
+    "minimax/MiniMax-M2",
+  ].map((id) => [id.toLowerCase(), id]),
+);
+
+/** The listing every `variant_of` hop is resolved against. */
+const aihubmixCatalog = new Map(
+  [
+    aihubmixModel(),
+    aihubmixModel({
+      model_id: "gemini-3.1-flash-lite-preview",
+      variant_of: "gemini-3.1-flash-lite",
+    }),
+    aihubmixModel({ model_id: "minimax-m2", vendor: "minimax" }),
+  ].map((model) => [model.model_id, model]),
+);
+
+test("factors an AIHubMix relay onto the lab metadata it serves", () => {
+  const model = buildAihubmixModel(
+    aihubmixModel({
+      model_id: "gemini-3.1-flash-lite-nothink",
+      variant_of: "gemini-3.1-flash-lite",
+      context_length: 1_048_576,
+      max_output: 65_536,
+      input_modalities: "text,image",
+    }),
+    undefined,
+    aihubmixLabIDs,
+    aihubmixCatalog,
+  );
+  expect(model).toMatchObject({
+    base_model: "google/gemini-3.1-flash-lite",
+    cost: { input: 0.25, output: 1.5, cache_read: 0.025 },
+  });
+  // The relay only records what it actually changes.
+  expect(model).not.toHaveProperty("release_date");
+  expect(model).not.toHaveProperty("open_weights");
+});
+
+test("follows the AIHubMix variant chain back to the upstream lab model", () => {
+  // `coding-` and `-free` are routing modes, and the endpoint says so itself
+  // rather than the prefix and suffix being stripped from the ID here.
+  for (const id of ["coding-gemini-3.1-flash-lite", "gemini-3.1-flash-lite-free"]) {
+    const model = buildAihubmixModel(
+      aihubmixModel({ model_id: id, variant_of: "gemini-3.1-flash-lite" }),
+      undefined,
+      aihubmixLabIDs,
+      aihubmixCatalog,
+    );
+    expect(model).toMatchObject({ base_model: "google/gemini-3.1-flash-lite" });
+  }
+});
+
+test("factors an AIHubMix relay onto the nearest published model in its chain", () => {
+  // `-preview` is a variant of the base model and is itself published, so the
+  // relay records the preview it actually serves rather than the chain's root.
+  const model = buildAihubmixModel(
+    aihubmixModel({
+      model_id: "coding-gemini-3.1-flash-lite-preview",
+      variant_of: "gemini-3.1-flash-lite-preview",
+    }),
+    undefined,
+    aihubmixLabIDs,
+    aihubmixCatalog,
+  );
+  expect(model).toMatchObject({ base_model: "google/gemini-3.1-flash-lite-preview" });
+});
+
+test("resolves an AIHubMix relay against a lab that spells its ID differently", () => {
+  // AIHubMix lowercases every relay ID; the lab keeps `minimax/MiniMax-M2`.
+  const model = buildAihubmixModel(
+    aihubmixModel({ model_id: "coding-minimax-m2-free", vendor: "minimax", variant_of: "minimax-m2" }),
+    undefined,
+    aihubmixLabIDs,
+    aihubmixCatalog,
+  );
+  expect(model).toMatchObject({ base_model: "minimax/MiniMax-M2" });
+});
+
+test("skips an AIHubMix relay with neither base metadata nor standalone fields", () => {
+  const model = buildAihubmixModel(
+    aihubmixModel({ model_id: "house-brand-v1", vendor: null }),
+    undefined,
+    aihubmixLabIDs,
+    aihubmixCatalog,
+  );
+  expect(model).toBeUndefined();
+});
+
+test("resolves an AIHubMix lab whose namespace the catalog spells differently", () => {
+  // AIHubMix says `zhipu` where the catalog namespace is `zhipuai`.
+  const labIDs = new Map([["zhipuai/glm-5.3", "zhipuai/glm-5.3"]]);
+  const model = buildAihubmixModel(
+    aihubmixModel({ model_id: "coding-glm-5.3", vendor: "zhipu", variant_of: "glm-5.3" }),
+    undefined,
+    labIDs,
+    new Map(),
+  );
+  expect(model).toMatchObject({ base_model: "zhipuai/glm-5.3" });
+});
+
+test("skips an AIHubMix standalone entry the endpoint quotes no limits for", () => {
+  // A full catalog entry must carry its own limits; the endpoint sends 0 for a
+  // ceiling it does not know, which is read as absent rather than written.
+  const model = buildAihubmixModel(
+    aihubmixModel({
+      model_id: "house-brand-v1",
+      vendor: null,
+      release_date: "2026-01-01",
+      open_weights: false,
+      context_length: 0,
+      max_output: 0,
+    }),
+    undefined,
+    aihubmixLabIDs,
+    aihubmixCatalog,
+  );
+  expect(model).toBeUndefined();
+});
+
+test("normalizes AIHubMix reasoning options to the catalog vocabulary", () => {
+  const model = buildAihubmixModel(
+    aihubmixModel({
+      reasoning: true,
+      // `default` is AIHubMix-only, and it spells two efforts differently.
+      reasoning_options: [
+        { type: "effort", values: ["no_think", "instant", "high", "bogus"], default: "high" },
+        { type: "toggle", default: true },
+      ] as AihubmixModel["reasoning_options"],
+    }),
+    undefined,
+    aihubmixLabIDs,
+  );
+  // `AGENTS.md`: graded effort that already carries `none` stands alone. AIHubMix
+  // publishes both because it accepts either dialect's off switch and maps it.
+  expect(model?.reasoning_options).toEqual([{ type: "effort", values: ["none", "minimal", "high"] }]);
+});
+
+test("keeps the AIHubMix toggle when its effort list has no off value", () => {
+  const model = buildAihubmixModel(
+    aihubmixModel({
+      reasoning: true,
+      reasoning_options: [
+        { type: "effort", values: ["high", "max"] },
+        { type: "toggle" },
+      ] as AihubmixModel["reasoning_options"],
+    }),
+    undefined,
+    aihubmixLabIDs,
+  );
+  expect(model?.reasoning_options).toEqual([{ type: "effort", values: ["high", "max"] }, { type: "toggle" }]);
+});
+
+test("authors the AIHubMix toggle wire-path header so a rewrite cannot drop it", () => {
+  // Standalone relays, so the toggle stays on the written file instead of being
+  // factored onto a lab base model.
+  const standalone = {
+    vendor: "somelab",
+    release_date: "2026-05-01",
+    open_weights: false,
+    context_length: 262_144,
+    max_output: 65_536,
+  } satisfies Partial<AihubmixModel>;
+  const toggled = aihubmixModel({
+    ...standalone,
+    model_id: "somelab-thinker",
+    model_name: "SomeLab Thinker",
+    reasoning: true,
+    reasoning_options: [{ type: "toggle" }] as AihubmixModel["reasoning_options"],
+  });
+  const plain = aihubmixModel({
+    ...standalone,
+    model_id: "somelab-plain",
+    model_name: "SomeLab Plain",
+  });
+  aihubmix.parseModels({ data: [toggled, plain] });
+
+  const context = { existing: () => undefined, authored: () => undefined };
+  const translated = aihubmix.translateModel(toggled, context);
+  expect(translated?.model.reasoning_options).toEqual([{ type: "toggle" }]);
+  expect(translated?.header).toStartWith("# Toggle:\n# $.enable_thinking = true|false");
+  // Only a reasoning control needs the wire path spelled out; everything else stays bare.
+  expect(aihubmix.translateModel(plain, context)?.header).toBeUndefined();
+
+  // A toggle folded into `effort = none` still records where the off state lives.
+  const folded = aihubmixModel({
+    ...standalone,
+    model_id: "somelab-folded",
+    model_name: "SomeLab Folded",
+    reasoning: true,
+    reasoning_options: [
+      { type: "toggle" },
+      { type: "effort", values: ["no_think", "high"] },
+    ] as AihubmixModel["reasoning_options"],
+  });
+  aihubmix.parseModels({ data: [folded] });
+  const dropped = aihubmix.translateModel(folded, context);
+  expect(dropped?.model.reasoning_options).toEqual([{ type: "effort", values: ["none", "high"] }]);
+  expect(dropped?.header).toStartWith("# Off is effort=none");
+});
+
+test("keeps AIHubMix audio and reasoning prices the endpoint never quotes", () => {
+  // The endpoint models only text and cache rates, so an audio rate lives on the
+  // file and nowhere else -- at the top level and inside each context tier.
+  const authored: ExistingModel = {
+    ...aihubmixAuthored,
+    cost: {
+      input: 0.25,
+      output: 1.5,
+      input_audio: 1,
+      output_audio: 2,
+      reasoning: 3,
+      tiers: [
+        { tier: { type: "context", size: 32_000 }, input: 0.5, output: 3, input_audio: 1.9 },
+      ],
+    },
+  };
+  const model = buildAihubmixModel(
+    aihubmixModel({
+      pricing: {
+        input: 0.25,
+        output: 1.5,
+        tiers: [{ tier: { type: "context", size: 32_000 }, input: 0.6, output: 3.2 }],
+      },
+    }),
+    authored,
+    aihubmixLabIDs,
+  );
+  expect(model?.cost?.input_audio).toBe(1);
+  expect(model?.cost?.output_audio).toBe(2);
+  expect(model?.cost?.reasoning).toBe(3);
+  // The endpoint still owns the text rates it does quote.
+  expect(model?.cost?.tiers?.[0]).toMatchObject({ input: 0.6, output: 3.2, input_audio: 1.9 });
+});
+
+test("keeps AIHubMix fields the endpoint has no surface for", () => {
+  // Fast mode, request-shape overrides and the input cap live on the file only.
+  const authored: ExistingModel = {
+    ...aihubmixAuthored,
+    limit: { context: 1_050_000, input: 922_000, output: 128_000 },
+    experimental: { modes: { fast: { cost: { input: 5, output: 30 }, provider: { body: { service_tier: "priority" } } } } },
+    provider: { body: { service_tier: "flex" } },
+  } as ExistingModel;
+  const model = buildAihubmixModel(
+    aihubmixModel({ context_length: 1_050_000, max_output: 128_000 }),
+    authored,
+    aihubmixLabIDs,
+  );
+  expect(model?.limit?.input).toBe(922_000);
+  expect(model?.experimental).toEqual(authored.experimental);
+  expect(model?.provider).toEqual(authored.provider);
+});
+
+test("reads an AIHubMix cache rate that just repeats input as no discount", () => {
+  // 6 models and 4 tiers echo `input` in `cache_read`; publishing it would
+  // understate a cached read by up to 10x.
+  const model = buildAihubmixModel(
+    aihubmixModel({
+      pricing: {
+        input: 2,
+        output: 8,
+        cache_read: 2,
+        tiers: [{ tier: { type: "context", size: 200_000 }, input: 4, output: 16, cache_read: 4 }],
+      },
+    }),
+    aihubmixAuthored,
+    aihubmixLabIDs,
+  );
+  expect(model?.cost?.cache_read).toBeUndefined();
+  expect(model?.cost?.tiers?.[0]?.cache_read).toBeUndefined();
+  // A genuine discount is still published.
+  const discounted = buildAihubmixModel(
+    aihubmixModel({ pricing: { input: 2, output: 8, cache_read: 0.2 } }),
+    aihubmixAuthored,
+    aihubmixLabIDs,
+  );
+  expect(discounted?.cost?.cache_read).toBe(0.2);
+});
+
+test("keeps authored reasoning budget bounds the AIHubMix endpoint omits", () => {
+  // The endpoint states that a budget exists but never its range, and a bare
+  // option on a `base_model` file would override the lab's real bounds.
+  const authored: ExistingModel = {
+    ...aihubmixAuthored,
+    reasoning_options: [{ type: "budget_tokens", min: 1_024, max: 32_000 }],
+  };
+  const model = buildAihubmixModel(
+    aihubmixModel({ reasoning: true, reasoning_options: [{ type: "budget_tokens" }] as AihubmixModel["reasoning_options"] }),
+    authored,
+    aihubmixLabIDs,
+  );
+  expect(model?.reasoning_options).toEqual([{ type: "budget_tokens", min: 1_024, max: 32_000 }]);
+});
+
+test("does not let a narrower AIHubMix modality list delete an accepted one", () => {
+  // The endpoint lists `text,image` for kimi-k2.5, whose lab entry records video.
+  // Most of the catalog arrives as a create with no file to union against, so
+  // the lab entry is the only baseline — and the narrowing must not be written.
+  const created = buildAihubmixModel(
+    aihubmixModel({ input_modalities: "text,image" }),
+    undefined,
+    aihubmixLabIDs,
+  );
+  expect(created?.modalities).toBeUndefined();
+
+  // Where the file is the wider record, its modality survives an update too.
+  const authored: ExistingModel = {
+    ...aihubmixAuthored,
+    id: "minimax-m2",
+    modalities: { input: ["text", "image"], output: ["text"] },
+  };
+  const updated = buildAihubmixModel(
+    aihubmixModel({ model_id: "minimax-m2", vendor: "minimax", input_modalities: "text" }),
+    authored,
+    aihubmixLabIDs,
+  );
+  expect(updated?.modalities?.input).toEqual(["text", "image"]);
+
+  // A modality the endpoint adds still lands.
+  const widened = buildAihubmixModel(
+    aihubmixModel({ model_id: "minimax-m2", vendor: "minimax", input_modalities: "text,image,pdf" }),
+    undefined,
+    aihubmixLabIDs,
+  );
+  expect(widened?.modalities?.input).toEqual(["text", "image", "pdf"]);
+});
+
+test("refreshes the AIHubMix wire path without discarding a human note", () => {
+  // The header is authoritative so a stale wire path cannot outlive the options
+  // it documents, but a price citation or live-test record is not reproducible
+  // from the response and has to survive the rewrite.
+  const toggled = aihubmixModel({
+    vendor: "somelab",
+    model_id: "somelab-noted",
+    model_name: "SomeLab Noted",
+    release_date: "2026-05-01",
+    open_weights: false,
+    context_length: 262_144,
+    max_output: 65_536,
+    reasoning: true,
+    reasoning_options: [{ type: "toggle" }] as AihubmixModel["reasoning_options"],
+  });
+  aihubmix.parseModels({ data: [toggled] });
+  const translated = aihubmix.translateModel(toggled, {
+    existing: () => undefined,
+    authored: () => undefined,
+    header: () =>
+      "# Toggle: enable_thinking = true|false\n" +
+      "# AIHubMix Models API (queried 2026-08-11T09:45:11Z): input 1.69, output 5.07.\n",
+  });
+  expect(translated?.header).toStartWith("# Toggle:\n# $.enable_thinking = true|false");
+  // The hand-written wire path it supersedes is gone; the citation is not.
+  expect(translated?.header).not.toContain("# Toggle: enable_thinking");
+  expect(translated?.header).toContain("queried 2026-08-11T09:45:11Z");
+});
+
+test("reads a missing AIHubMix reasoning or tool flag as unknown, not as false", () => {
+  // 107 of 408 routes omit `reasoning` and 100 omit `tool_call`; none send
+  // `false`. A create must not write the omission as an override that turns off
+  // what the lab entry declares.
+  const created = buildAihubmixModel(
+    aihubmixModel({ input_modalities: "text,image,video,audio,pdf" }),
+    undefined,
+    aihubmixLabIDs,
+  );
+  expect(created?.reasoning).toBeUndefined();
+  expect(created?.tool_call).toBeUndefined();
+
+  // An explicit boolean is still honoured.
+  const denied = buildAihubmixModel(
+    aihubmixModel({ tool_call: false, input_modalities: "text,image,video,audio,pdf" }),
+    undefined,
+    aihubmixLabIDs,
+  );
+  expect(denied?.tool_call).toBe(false);
+});
+
+test("reads a zero AIHubMix limit as absent rather than a real ceiling", () => {
+  // 102 of 415 models quote `max_output: 0` for a limit the endpoint does not know.
+  const zeroed = buildAihubmixModel(
+    aihubmixModel({ context_length: 262_144, max_output: 0 }),
+    aihubmixAuthored,
+    aihubmixLabIDs,
+  );
+  const omitted = buildAihubmixModel(
+    aihubmixModel({ context_length: 262_144 }),
+    aihubmixAuthored,
+    aihubmixLabIDs,
+  );
+  expect(zeroed?.limit).toEqual(omitted?.limit);
+  expect(zeroed?.limit?.output).not.toBe(0);
+});
+
+test("syncs AIHubMix pricing over the authored entry", () => {
+  const model = buildAihubmixModel(
+    aihubmixModel({ pricing: { input: 0.2, output: 1.2, cache_read: 0.02, cache_write: 0.25 } }),
+    aihubmixAuthored,
+    aihubmixLabIDs,
+  );
+  expect(model?.cost).toMatchObject({
+    input: 0.2,
+    output: 1.2,
+    cache_read: 0.02,
+    cache_write: 0.25,
+  });
+});
+
+test("drops an authored AIHubMix rate the endpoint no longer quotes", () => {
+  // An omitted price field means the model has no such rate, not that it is unknown.
+  const model = buildAihubmixModel(
+    aihubmixModel({ pricing: { input: 0.25, output: 1.5 } }),
+    aihubmixAuthored,
+    aihubmixLabIDs,
+  );
+  expect(model?.cost?.cache_read).toBeUndefined();
+  expect(model?.cost?.cache_write).toBeUndefined();
+});
+
+test("keeps authored AIHubMix pricing when the endpoint quotes no rate at all", () => {
+  const model = buildAihubmixModel(
+    aihubmixModel({ pricing: null }),
+    aihubmixAuthored,
+    aihubmixLabIDs,
+  );
+  expect(model?.cost).toEqual(aihubmixAuthored.cost);
+});
+
+test("marks retired AIHubMix relays deprecated and stops tracking them", () => {
+  const retired = aihubmixModel({ retire_stage: "deprecated" });
+  expect(buildAihubmixModel(retired, aihubmixAuthored, aihubmixLabIDs)?.status).toBe("deprecated");
+  expect(aihubmix.sourceID?.(retired)).toBeUndefined();
+  expect(aihubmix.sourceID?.(aihubmixModel())).toBe("gemini-3.1-flash-lite");
+});
+
+test("writes per-tier audio pricing", () => {
+  const toml = formatToml({
+    name: "Doubao Seed 2.0 Lite",
+    cost: {
+      input: 0.09041,
+      output: 0.54246,
+      input_audio: 1.269,
+      tiers: [
+        { tier: { type: "context", size: 32_000 }, input: 0.13, output: 0.76, input_audio: 1.902 },
+      ],
+    },
+  } as never);
+  expect(toml).toContain("input_audio = 1.902");
 });

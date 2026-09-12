@@ -6,6 +6,7 @@ import { z } from "zod";
 import { AuthoredModel, AuthoredModelShape, ModelMetadata } from "../schema.js";
 import { openMissingModelIssues } from "./missing-issues.js";
 import { MissingReasoningOptionsError } from "./missing-reasoning-options.js";
+import { aihubmix } from "./providers/aihubmix.js";
 import { ambient } from "./providers/ambient.js";
 import { anthropic } from "./providers/anthropic.js";
 import { baseten } from "./providers/baseten.js";
@@ -103,6 +104,12 @@ export interface SyncProvider<SourceModel> {
     context: {
       existing(id: string): ExistingModel | undefined;
       authored(id: string): ExistingModel | undefined;
+      /**
+       * The leading comment block already on the file, so a provider that owns
+       * its header (authoritativeHeaders) can refresh the part it generates
+       * without discarding notes a human wrote around it.
+       */
+      header?(id: string): string | undefined;
     },
   ): {
     id: string;
@@ -130,6 +137,7 @@ export interface SyncResult {
 }
 
 export const providers: {
+  aihubmix: SyncProvider<any>;
   ambient: SyncProvider<any>;
   anthropic: SyncProvider<any>;
   baseten: SyncProvider<any>;
@@ -165,6 +173,7 @@ export const providers: {
   wandb: SyncProvider<any>;
   xai: SyncProvider<any>;
 } = {
+  aihubmix,
   ambient,
   anthropic,
   baseten,
@@ -203,6 +212,7 @@ export const providers: {
 
 export const groups = {
   aggregators: [
+    "aihubmix",
     "crossmodel",
     "edenai",
     "empiriolabs",
@@ -263,6 +273,9 @@ export async function syncProvider<SourceModel>(
         },
         authored(id) {
           return existing.get(`${id}.toml`)?.authored;
+        },
+        header(id) {
+          return existing.get(`${id}.toml`)?.header || undefined;
         },
       });
     } catch (error) {
@@ -1055,6 +1068,12 @@ export function formatToml(model: z.infer<typeof SyncedAuthoredModel>) {
       if (tier.reasoning !== undefined) lines.push(`reasoning = ${formatNumber(tier.reasoning)}`);
       if (tier.cache_read !== undefined) lines.push(`cache_read = ${formatNumber(tier.cache_read)}`);
       if (tier.cache_write !== undefined) lines.push(`cache_write = ${formatNumber(tier.cache_write)}`);
+      if (tier.input_audio !== undefined) {
+        lines.push(`input_audio = ${formatNumber(tier.input_audio)}`);
+      }
+      if (tier.output_audio !== undefined) {
+        lines.push(`output_audio = ${formatNumber(tier.output_audio)}`);
+      }
     }
   }
 
