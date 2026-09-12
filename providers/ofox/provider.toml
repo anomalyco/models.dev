@@ -1,3 +1,8 @@
+# Cache key (chat): automatic implicit prefix reuse on chat plus explicit `cache_control` on the Anthropic native route and `cachedContents` on the Gemini native route
+# Use headers: repeat the stable prefix with identical model and params
+# Use body: `cache_control: {"type": "ephemeral"}` on Anthropic Messages content blocks; `cachedContent` handle reference (created via `cachedContents`) on Gemini generateContent
+# Cache policy: stable prefix + same model; put long static content first byte-identical; verify via `usage` cache fields and console usage stats
+# Docs: https://ofox.ai/docs/develop/advanced/prompt-caching
 name = "Ofox"
 env = ["OFOX_API_KEY"]
 npm = "@ai-sdk/openai-compatible"
