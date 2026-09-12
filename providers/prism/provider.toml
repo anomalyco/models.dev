@@ -1,3 +1,11 @@
+# Raw HTTP routes are POST `/v1/chat/completions`, `/v1/responses`, and
+# `/v1/messages`. Chat uses `reasoning_effort = none|low|medium|high`, Responses
+# uses `reasoning.effort` with the same values, and Messages uses `thinking.type`
+# set to `enabled` or `disabled` with optional `budget_tokens` when enabled.
+# https://docs.prisminference.com/api-reference/chat-completions
+# https://docs.prisminference.com/api-reference/responses
+# https://docs.prisminference.com/guides/coding-agents
+# https://docs.prisminference.com/openapi.yaml
 name = "Prism"
 npm = "@ai-sdk/openai-compatible"
 env = ["PRISM_API_KEY"]
