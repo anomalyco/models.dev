@@ -1,0 +1,22 @@
+# Source: GET https://ai.zenifra.com/v1/models (accessed 2026-09-12).
+base_model = "alibaba/qwen3.7-plus"
+attachment = false
+structured_output = true
+reasoning_options = []
+
+[limit]
+output = 131_072
+
+[provider]
+shape = "completions"
+
+[cost]
+input = 1.5
+output = 5.7
+cache_read = 0.4
+
+[[cost.tiers]]
+tier = { type = "context", size = 256_001 }
+input = 4.4
+output = 17.2
+cache_read = 0.9
