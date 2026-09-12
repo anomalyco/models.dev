@@ -1,4 +1,5 @@
 # Source: GET https://ai.zenifra.com/v1/models (accessed 2026-09-12).
+# Conversion: Zenifra prices are BRL; models.dev costs use BRL / 5.20 = USD (project rate, applied 2026-09-12).
 # This model advertises both /v1/chat/completions and /v1/responses.
 # Reasoning: reasoning_effort = none|minimal|low|medium|high|xhigh|max
 base_model = "alibaba/qwen3.8-flash"
@@ -11,6 +12,6 @@ reasoning_options = [
 shape = "completions"
 
 [cost]
-input = 0.6
-output = 2.0
-cache_read = 0.1
+input = 0.115385
+output = 0.384615
+cache_read = 0.019231
