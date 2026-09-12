@@ -1,0 +1,15 @@
+# Efforts: reasoning_effort = low|medium|high|max — exactly /model/info's advertised
+# reasoning_efforts for this model, superseding the lab's none|high set.
+# https://api.inference.nebul.io/model/info
+base_model = "mistral/mistral-medium-2604"
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high", "max"]
+
+[cost]
+input = 1.65
+output = 8.25
