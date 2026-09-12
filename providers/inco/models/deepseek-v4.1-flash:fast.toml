@@ -1,0 +1,15 @@
+# Toggle: chat_template_kwargs.thinking = true|false (verified against Inco;
+# reasoning_effort and thinking.type are accepted but ignored). Reasoning is
+# off by default on this route; send thinking=true to enable it.
+# reasoning_content interleaved field verified against Inco responses.
+base_model = "deepseek/deepseek-v4.1-flash"
+
+[[reasoning_options]]
+type = "toggle"
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.6
+output = 2.4
