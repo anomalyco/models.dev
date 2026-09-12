@@ -1,3 +1,7 @@
+# Prompt caching (chat): automatic provider-native prefix caching with sticky routing via first-system/first-user hash; Anthropic routes use `cache_control`, OpenAI GPT-5.6 routes use `prompt_cache_breakpoint` with `prompt_cache_options` plus `prompt_cache_key` affinity.
+# Use body: `cache_control` at root plus per-block on Anthropic routes (5m plus 1h TTL); `prompt_cache_breakpoint` with `prompt_cache_options` plus `prompt_cache_key` on GPT-5.6 routes.
+# To get a hit: keep static prefix first on same model plus conversation; confirm via `prompt_tokens_details.cached_tokens` with catalog cache read plus write rates.
+# Docs: https://docs.fastrouter.ai/explore-features/prompt-caching
 name = "FastRouter"
 # Reasoning HTTP format (accessed 2026-06-25): POST /api/v1/chat/completions.
 # Controls are route-specific; use live GET /api/v1/models metadata and each
