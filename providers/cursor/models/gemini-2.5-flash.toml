@@ -1,0 +1,17 @@
+# Sources (accessed 2026-09-09):
+# - Pricing: https://cursor.com/docs/models-and-pricing
+# - Context/capabilities: https://cursor.com/docs
+# - npm mapping: cursor-opencode-provider src/pricing-data.ts + src/model-config.ts
+# Reasoning: Cursor wire surface carries thinking/effort variant params only (no reasoning-token budget field); see npm src/protocol/thinking.ts.
+# Toggle: requested_model.parameters thinking = true|false
+base_model = "google/gemini-2.5-flash"
+
+reasoning_options = [{ type = "toggle" }]
+
+[cost]
+input = 0.3
+output = 2.5
+cache_read = 0.03
+
+[limit]
+context = 1_000_000

@@ -1,0 +1,22 @@
+# Sources (accessed 2026-09-09):
+# - Pricing: https://cursor.com/docs/models-and-pricing
+# - Context/capabilities: https://cursor.com/docs
+# - npm mapping: cursor-opencode-provider src/pricing-data.ts + src/model-config.ts
+base_model = "xai/grok-4.6"
+attachment = false
+
+name = "Grok 4.6 Fast"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh"] }]
+
+[cost]
+input = 4
+output = 12
+cache_read = 1
+
+[limit]
+context = 256_000
+output = 32_000
+
+[modalities]
+input = ["text"]
+output = ["text"]

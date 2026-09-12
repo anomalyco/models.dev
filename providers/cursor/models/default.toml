@@ -1,0 +1,25 @@
+# Cursor's Auto router alias (wire id `default`) — sources accessed 2026-09-09:
+# - Cost/Balance/Intelligence modes, bills at routed model's rate: https://cursor.com/changelog/router (2026-07-22)
+# - Pricing ("Auto modes bill at the list price of the routed model"): https://cursor.com/docs/models-and-pricing
+# - Unpriced by design in the npm package (CURSOR_UNPRICED_MODEL_IDS): cursor-opencode-provider src/pricing.ts
+# - Capabilities (thinking/agent/images, 200k context) per AvailableModels fixture: cursor-opencode-provider test/models.test.ts
+# - OpenCode catalog output (32k base tier): cursor-opencode-provider src/model-config.ts
+# release_date marks the Router-powered Auto; Cursor does not publish the original Auto launch date.
+name = "Auto"
+description = "Cursor's Auto router (Cost, Balance, and Intelligence modes); bills at the list price of the model each request is routed to"
+release_date = "2026-07-22"
+last_updated = "2026-07-22"
+attachment = true
+reasoning = true
+reasoning_options = []
+temperature = false
+tool_call = true
+open_weights = false
+
+[limit]
+context = 200_000
+output = 32_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
