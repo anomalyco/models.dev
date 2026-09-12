@@ -1,7 +1,4 @@
-# Cache key (chat): Use headers/body none — automatic server-side prefix caching.
-# Cache headers: none
-# Cache policy: automatic server-side prefix caching; replay requests with a stable byte-identical prefix on the same model.
-# Cache verify: confirm hits via usage.prompt_tokens_details.cached_tokens.
+# Cache key (chat): unknown — no documented cache mechanism after ≥3 sources.
 # Docs: https://developer.infomaniak.com/docs/api/post/2/ai/%7Bproduct_id%7D/openai/v1/chat/completions
 name = "Infomaniak"
 npm = "@ai-sdk/openai-compatible"
