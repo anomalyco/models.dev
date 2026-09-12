@@ -1,7 +1,7 @@
-# Cache support (chat): automatic prefix reuse across multi-turn input replay
-# Cache key (chat): none — no chat `prompt_cache_key` body field; Responses API (`POST /v1/agent`, alias `/v1/responses`)
-# Cache headers: none
-# Cache policy: stable prefix + same model; cached-input billing where reuse applies
+# Cache key (chat): automatic prefix cache with per-model cache-read billing
+# Use headers: repeat the stable prefix with identical model and params
+# Use body: repeat the stable prefix with identical model and params
+# Cache policy: stable prefix + same model; keep reusable context at the start byte-identical and append-only
 # Docs: https://docs.perplexity.ai/docs/agent-api/models
 name = "Perplexity Agent"
 env = ["PERPLEXITY_API_KEY"]

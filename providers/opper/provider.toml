@@ -1,7 +1,7 @@
-# Cache support (chat): explicit opt-in (Anthropic-only)
-# Cache key (chat): Use body `cache_control` with ephemeral breakpoints (top-level automatic or up to 4 per-block)
-# Cache headers: none
-# Cache policy: stable prefix + same model; moving breakpoint top-level or explicit per-block markers
+# Cache key (chat): explicit Anthropic prefix cache with moving or per-block breakpoints
+# Use headers: repeat the stable prefix with identical model and params
+# Use body: `cache_control` top-level for automatic placement or per-block for up to 4 explicit breakpoints
+# Cache policy: stable prefix + same Anthropic model; reuse the large stable prefix across back-to-back calls
 # Docs: https://docs.opper.ai/build/gateway/prompt-caching
 name = "Opper"
 env = ["OPPER_API_KEY"]
