@@ -1,8 +1,5 @@
-# Cache (chat): no chat cache controls; per-model NIM `ChatRequest` sets `additionalProperties: false` (closed; e.g. meta/llama-3.3-70b-instruct).
-# Use headers: none.
-# Use body: none.
-# Prefix: no documented prefix-reuse behavior on the chat API; keep requests within the closed per-model schema.
-# Docs: https://docs.api.nvidia.com/nim/reference/llm-apis
+# Cache key (chat): unknown — no cache controls on the hosted chat API; prefix caching is a self-hosted NIM deployment flag, not a request field
+# Docs: https://docs.api.nvidia.com/nim/reference/llm-apis; https://docs.nvidia.com/nim/large-language-models/1.13.0/kv-cache-reuse.html; https://docs.nvidia.com/nim/large-language-models/2.0.4/reference/advanced-configuration.html
 name = "Nvidia"
 env = ["NVIDIA_API_KEY"]
 npm = "@ai-sdk/openai-compatible"

@@ -1,8 +1,5 @@
-# Cache (chat): automatic server-side prefix reuse with no request cache controls.
-# Use headers: none.
-# Use body: none.
-# Prefix: keep stable prefixes first with dynamic content last; hits in `usage.prompt_tokens_details.cached_tokens`.
-# Docs: https://docs.tokenfactory.nebius.com/api-reference/inference/create-chat-completion
+# Cache key (chat): unknown — no documented chat cache controls; KV cache appears only as internal serving infra and observability metrics
+# Docs: https://docs.tokenfactory.nebius.com/api-reference/inference/create-chat-completion; https://docs.tokenfactory.nebius.com/ai-models-inference/overview; https://docs.tokenfactory.nebius.com/ai-models-inference/observability
 name = "Nebius Token Factory"
 env = ["NEBIUS_API_KEY"]
 npm = "@ai-sdk/openai-compatible"

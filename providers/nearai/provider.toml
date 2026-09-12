@@ -1,7 +1,7 @@
-# Cache (chat): automatic engine prefix reuse on TEE-hosted models with no API changes required.
-# Use headers: none.
-# Use body: none.
-# Prefix: place stable content first and keep prefixes byte-identical; hits in `usage.prompt_tokens_details.cached_tokens`.
+# Cache key (chat): automatic prefix cache on TEE-hosted models with per-model input_cache_read billing
+# Use headers: repeat the stable prefix with identical model and params
+# Use body: repeat the stable prefix with identical model and params
+# Cache policy: stable prefix + same model; put system prompt and reference docs first byte-identical; verify via `usage.prompt_tokens_details.cached_tokens`
 # Docs: https://docs.near.ai/cloud/guides/prompt-caching
 name = "NEAR AI Cloud"
 npm = "@ai-sdk/openai-compatible"

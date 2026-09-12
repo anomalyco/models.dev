@@ -1,8 +1,5 @@
-# Cache (chat): no documented cache controls on the OpenAI-compatible chat API.
-# Use headers: none.
-# Use body: none.
-# Prefix: keep stable prefixes first; Bedrock-style `cachePoint` is a separate API surface.
-# Docs: https://nova.amazon.com/dev/documentation
+# Cache key (chat): unknown — no cache controls documented on the direct OpenAI-compatible chat API; `cachePoint` is Bedrock-only
+# Docs: https://nova.amazon.com/dev/documentation; https://docs.aws.amazon.com/bedrock/latest/userguide/prompt-caching.html; https://docs.langchain.com/oss/python/integrations/chat/amazon_nova
 name = "Nova"
 env = ["NOVA_API_KEY"]
 npm = "@ai-sdk/openai-compatible"

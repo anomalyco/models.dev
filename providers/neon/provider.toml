@@ -1,8 +1,8 @@
-# Cache (chat): no cache fields on unified chat; explicit caching lives on the native Anthropic route.
-# Use headers: none (chat); `anthropic-beta`/`anthropic-version` forwarded on the native Anthropic route.
-# Use body: none (chat); `cache_control` markers on the native Anthropic route.
-# Prefix: keep stable prefixes first for upstream reuse where available; verify via native route usage fields.
-# Docs: https://neon.com/docs/ai-gateway/chat-completions
+# Cache key (chat): explicit `cache_control` breakpoints via the native Anthropic Messages route
+# Use headers: `anthropic-version` plus `anthropic-beta` forwarded to Anthropic on the native route
+# Use body: `cache_control: {"type": "ephemeral"}` on native system/message content blocks
+# Cache policy: stable prefix + same Claude model; verify via native `usage.cache_creation_input_tokens` and `cache_read_input_tokens`
+# Docs: https://neon.com/docs/ai-gateway/anthropic-messages
 name = "Neon"
 npm = "@ai-sdk/openai-compatible"
 # Unified Chat is POST `/v1/chat/completions`. Native routes are POST
