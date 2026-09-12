@@ -1,0 +1,28 @@
+# Pool metadata: https://api.opper.ai/v3/models (2026-09-08).
+# No pool-wide effort control: at least one member does not forward reasoning_effort.
+# Context tiers are conservative pool price ceilings, including marginal-rate bands.
+base_model = "minimax/MiniMax-M3"
+structured_output = true
+
+reasoning_options = []
+
+[cost]
+input = 0.6
+output = 2.4
+cache_read = 0.12
+
+[[cost.tiers]]
+tier = { type = "context", size = 524288 }
+input = 1.2
+output = 4.8
+cache_read = 0.24
+
+[limit]
+context = 1000000
+output = 131072
+
+[modalities]
+input = ["text", "image"]
+
+[interleaved]
+field = "reasoning_content"

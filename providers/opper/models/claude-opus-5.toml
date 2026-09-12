@@ -1,0 +1,15 @@
+# Pool metadata: https://api.opper.ai/v3/models (2026-09-08).
+# No pool-wide effort control: at least one member does not forward reasoning_effort.
+base_model = "anthropic/claude-opus-5"
+structured_output = true
+
+reasoning_options = []
+
+[cost]
+input = 5.5
+output = 27.5
+cache_read = 0.55
+cache_write = 6.875
+
+[interleaved]
+field = "reasoning_content"

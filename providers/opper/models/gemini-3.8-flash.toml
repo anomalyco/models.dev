@@ -1,0 +1,16 @@
+# Pool metadata: https://api.opper.ai/v3/models (2026-09-08).
+# All five members have params but omit params.temperature; Opper drops sampling controls
+# for such cards before dispatch, so temperature is accepted but not respected.
+# No pool-wide effort control: at least one member does not forward reasoning_effort.
+base_model = "google/gemini-3.8-flash"
+temperature = false
+
+reasoning_options = []
+
+[cost]
+input = 0.825
+output = 4.125
+cache_read = 0.0825
+
+[interleaved]
+field = "reasoning_content"
