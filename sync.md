@@ -22,6 +22,7 @@ The grouped sync targets are available for local convenience, but CI syncs each 
 - `bun models:sync openai` syncs only OpenAI catalog availability.
 - `bun models:sync github-copilot` syncs only GitHub Copilot pricing.
 - `bun models:sync tinfoil` syncs only Tinfoil.
+- `bun models:sync nearai` syncs only NEAR AI Cloud.
 - `bun models:sync aggregators --dry-run` prints changes without writing model files.
 - `bun models:sync aggregators --new-only` creates new model files but skips updates and removals.
 - `bun models:sync <provider> --open-issues` opens GitHub issues for missing models (on by default only when `GITHUB_ACTIONS=true`).
@@ -258,6 +259,21 @@ xAI is implemented in `packages/core/src/sync/providers/xai.ts`.
 - Reasoning controls are preserved for reasoners and removed when the API reports `reasoning: false`. A reasoner without authored controls fails sync for manual review rather than inventing an empty control set.
 - New token-priced chat, safety, and embedding models are not created automatically (`skipCreates`); each missing ID opens a deduped GitHub issue for hand-authored metadata.
 - Per-request tool, TTS, transcription, realtime, and document-processing services are ignored because their pricing cannot be represented by the token-cost schema.
+
+## NEAR AI Cloud Notes
+
+- NEAR AI Cloud is implemented in `packages/core/src/sync/providers/nearai.ts`.
+- Source endpoint: `https://cloud-api.near.ai/v1/models`.
+- No authentication is required; the catalog is public, so the sync needs no repository secret.
+- Existing models are updated from API-authoritative input, output and cached-input pricing, and context windows. Nothing else is taken from the endpoint.
+- `pricing.input` and `pricing.output` are already dollars per million tokens, while `pricing.input_cache_read` is per token and is scaled. Every published price is rounded because the endpoint returns artifacts such as `1.4000000000000001`.
+- `context` is synced only for models NEAR AI hosts itself (`owned_by = "nearai"`), where `context_length` is the serving `max_model_len`. On relayed routes the figure comes from the upstream aggregator and is often rounded below the lab entry, so syncing it would publish a cap the host does not impose. Where it is synced it is taken as the lower of the two values, so a smaller verified cap survives.
+- `limit.output` is never synced. `max_output_length` is advisory rather than enforced: a request above it is accepted, and only exceeding the context window is rejected.
+- No capability is taken from the endpoint, because its capability fields are wrong in both directions. `supported_features` lists `reasoning` for relayed routes that accept every documented reasoning parameter and still return no reasoning content, and omits it for others that plainly reason. `input_modalities` advertises image input for routes that reject it, and also reports an `embedding` modality the schema has no value for.
+- `reasoning`, `reasoning_options`, `tool_call`, `structured_output`, `modalities`, `attachment`, `interleaved` and lifecycle `status` are all hand-authored.
+- New models are not created automatically (`skipCreates`) because the endpoint exposes no release date or knowledge cutoff, and most NEAR AI models reason and so need hand-authored controls.
+- Remote-only models are listed in the sync notice rather than filed as issues (`trackMissingModels: false`), because a substantial part of the catalog has no local entry.
+- Absence never removes a model (`deleteMissing: false`): a truncated response would be indistinguishable from a genuine withdrawal.
 
 ## OpenAI Notes
 
