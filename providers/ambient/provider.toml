@@ -1,3 +1,7 @@
+# Prompt caching (chat): explicit `cache_control` breakpoints on POST /v1/messages over a stable prefix
+# Use body: `cache_control` — `{"type": "ephemeral"}` on the last stable TextBlock in system or messages
+# To get a hit: keep the prefix stable with the breakpoint in place and repeat the exact prefix via Messages; confirm via cached-token counters in usage
+# Docs: https://api.ambient.xyz/openapi.json
 # Ambient's OpenAPI schema exposes reasoning.enabled, reasoning.effort, and
 # reasoning.max_tokens. Model-specific options follow each model's supported
 # reasoning modes (sources accessed 2026-07-17).
