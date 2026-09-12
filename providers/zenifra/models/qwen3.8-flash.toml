@@ -1,8 +1,8 @@
 # Source: GET https://ai.zenifra.com/v1/models (accessed 2026-09-12).
+# This model advertises both /v1/chat/completions and /v1/responses.
 # Reasoning: reasoning_effort = none|minimal|low|medium|high|xhigh|max
-base_model = "alibaba/qwen3.8-27b"
+base_model = "alibaba/qwen3.8-flash"
 attachment = false
-structured_output = false
 reasoning_options = [
   { type = "effort", values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"] },
 ]
@@ -11,6 +11,6 @@ reasoning_options = [
 shape = "completions"
 
 [cost]
-input = 1.2
-output = 4.5
-cache_read = 0.3
+input = 0.6
+output = 2.0
+cache_read = 0.1
