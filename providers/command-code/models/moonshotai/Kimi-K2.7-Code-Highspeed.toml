@@ -1,0 +1,19 @@
+# Model reasons but no verified graded control (2026-08-14: effort low=39/high=79/max=86
+# marginal; "always-on" falsified but levels too close to distinguish).
+# Emits reasoning via reasoning / reasoning_details.
+base_model = "moonshotai/kimi-k2.7-code-highspeed"
+name = "Kimi K2.7 Code HighSpeed"
+reasoning_options = []
+interleaved = { field = "reasoning_details" }
+
+[cost]
+input = 1.9
+output = 8
+cache_read = 0.38
+
+[limit]
+context = 262_000
+output = 262_000
+
+[modalities]
+input = ["text", "image"]

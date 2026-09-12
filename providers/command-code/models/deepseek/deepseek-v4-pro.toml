@@ -1,0 +1,13 @@
+# Toggle: thinking.type = enabled|disabled (live-verified 2026-08-14: rtok 600→99 when disabled).
+# Effort: reasoning_effort = high|max (lab baseline; low|medium|xhigh produce non-monotonic
+# rtok 205/142/257 — not graded control, 2026-08-14).
+# Emits reasoning via reasoning / reasoning_details.
+base_model = "deepseek/deepseek-v4-pro"
+name = "DeepSeek V4 Pro (latest)"
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["high", "max"] }]
+interleaved = { field = "reasoning_details" }
+
+[cost]
+input = 0.435
+output = 0.87
+cache_read = 0.003625
