@@ -1,0 +1,18 @@
+# Sources (accessed 2026-09-03):
+# - https://inference.tinfoil.sh/v1/models (id glm-5-3; context 1048576; pricing input 1.8 / output 5.75 / cache_read 0.45 per 1M)
+# - https://docs.tinfoil.sh/models/chat.md (GLM-5.3; 1M context; weights Inferact/GLM-5.3-NVFP4)
+# - https://docs.tinfoil.sh/guides/reasoning.md (glm-5-3 effort low|high|max; reasoning always on)
+# Effort: reasoning_effort = low|high|max on Tinfoil; reasoning is always on (no none; enable_thinking not honoured).
+base_model = "zhipuai/glm-5.3"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[cost]
+input = 1.8
+output = 5.75
+cache_read = 0.45
+
+[limit]
+context = 1_048_576
