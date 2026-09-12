@@ -1,11 +1,11 @@
 # Source: GET https://ai.zenifra.com/v1/models (accessed 2026-09-12).
 # Conversion: Zenifra prices are BRL; models.dev costs use BRL / 5.20 = USD (project rate, applied 2026-09-12).
 # Capabilities: structured_outputs = true.
-# Reasoning is supported but no caller control is listed in supported_parameters.
+# Toggle: enable_thinking = true|false; no native reasoning_effort levels.
 base_model = "alibaba/qwen3.7-plus"
 attachment = false
 structured_output = true
-reasoning_options = []
+reasoning_options = [{ type = "toggle" }]
 
 [limit]
 output = 131_072
