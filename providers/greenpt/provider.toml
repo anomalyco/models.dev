@@ -1,7 +1,5 @@
-# Prompt cache: automatic repeated-prefix cache with discounted cached-input rates.
-# Use body: none; no parameter or SDK field for cache control.
-# Use headers: none; no header for cache control.
-# Prefix/TTL/cost: repeat identical prefix from start; per-model cached-input rates; hits via usage.prompt_tokens_details.cached_tokens.
+# Cache key (chat): none — chat schema carries no cache key field; caching is automatic.
+# Cache policy: automatic repeated-prefix cache on supported models with discounted cached-input rates; keep stable prefix first byte-identical; confirm via `usage.prompt_tokens_details.cached_tokens`.
 # Docs: https://docs.greenpt.ai/prompt-caching
 name = "GreenPT"
 npm = "@ai-sdk/openai-compatible"

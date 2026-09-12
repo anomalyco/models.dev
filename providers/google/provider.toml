@@ -1,7 +1,6 @@
-# Prompt cache: implicit automatic prefix cache plus explicit context caching.
-# Use body: `cachedContents` for explicit context cache; no chat-level cache key.
-# Use headers: none.
-# Prefix/TTL/cost: Gemini 2.5+ min 2048 tokens, 3.x min 4096; hits via usage.total_cached_tokens.
+# Cache key (chat): none — chat carries no cache key field; explicit caching uses the separate `cachedContents` resource.
+# Use body: `cachedContents` — create a cache via the cachedContents API, then pass the cache name as `cachedContent` on the request.
+# Cache policy: implicit automatic prefix cache plus explicit cache reuse; keep stable prefix first on the same model; confirm via `usage.total_cached_tokens`.
 # Docs: https://ai.google.dev/gemini-api/docs/caching
 name = "Google"
 env = ["GOOGLE_API_KEY", "GOOGLE_GENERATIVE_AI_API_KEY", "GEMINI_API_KEY"]

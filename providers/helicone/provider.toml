@@ -1,7 +1,7 @@
-# Prompt cache: gateway response cache plus provider prefix cache and Anthropic breakpoints.
-# Use body: body key passthrough with `prompt_cache_key` for prefix control and Anthropic `cache_control`.
-# Use headers: `Helicone-Cache-Enabled` for gateway exact-match cache; plus Cache-Control max-age, Bucket-Max-Size, Seed.
-# Prefix/TTL/cost: provider prefix from 1024 tokens; Anthropic 5min/1h TTL, 1024-token minimum; gateway cache by max-age.
+# Cache key (chat): gateway response cache plus provider prefix cache with `prompt_cache_key` affinity.
+# Use headers: `Helicone-Cache-Enabled` plus `Cache-Control` max-age plus `Helicone-Cache-Bucket-Max-Size` plus `Helicone-Cache-Seed`; hits report `Helicone-Cache` HIT or MISS.
+# Use body: `prompt_cache_key` plus Anthropic `cache_control` passthrough to the upstream provider.
+# Cache policy: enable gateway cache headers for exact-match response reuse; use body keys for provider prefix control on 1024-plus token prefixes; confirm via Helicone-Cache header plus usage cached tokens.
 # Docs: https://docs.helicone.ai/gateway/concepts/prompt-caching
 name = "Helicone"
 env = ["HELICONE_API_KEY"]

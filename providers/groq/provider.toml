@@ -1,7 +1,5 @@
-# Prompt cache: automatic exact-prefix cache on supported models.
-# Use body: none for Chat Completions; provider documents body key for Responses API only.
-# Use headers: none.
-# Prefix/TTL/cost: gpt-oss-20b/120b; 128-1024 token minimum varies by model; 50% cached-input discount; 2h expiry; hits via usage.prompt_tokens_details.cached_tokens.
+# Cache key (chat): none — chat completions carry no cache key field; caching is automatic on supported models.
+# Cache policy: automatic exact-prefix cache with 50 percent cached-input discount plus 2-hour expiry; keep stable prefix first; confirm via `usage.prompt_tokens_details.cached_tokens`.
 # Docs: https://console.groq.com/docs/prompt-caching
 name = "Groq"
 env = ["GROQ_API_KEY"]

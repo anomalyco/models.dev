@@ -1,8 +1,6 @@
-# Prompt cache: automatic prefix cache with per-model cache_hit and cache_create pricing.
-# Use body: none; chat schema lists model, messages, stream, temperature, max_tokens, and tools only.
-# Use headers: none.
-# Prefix/TTL/cost: repeat identical prefix; Cache Read and Cache Write rates per model; no published minimum or expiry.
-# Docs: https://hyper.charm.land/docs/api/openai-chat-completions.html
+# Cache key (chat): none — chat schema lists model plus messages plus stream plus temperature plus max_tokens plus tools with no cache key field.
+# Cache policy: automatic prefix cache with per-model Cache Read plus Cache Write rates; keep stable prefix first on the same model.
+# Docs: https://hyper.charm.land/docs/models.html
 name = "Charm Hyper"
 env = ["HYPER_API_KEY"]
 npm = "@ai-sdk/openai-compatible"
