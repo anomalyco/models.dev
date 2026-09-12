@@ -1,3 +1,8 @@
+# Cache key (chat): Use body `cache_control` ephemeral breakpoint on Anthropic routes; automatic prefix caching on other routes.
+# Cache headers: none
+# Cache policy: repeat byte-identical prefix on the same model; Anthropic breakpoints use min ~1024 tokens, 5m TTL refreshed on hit, 1h via ttl.
+# Cache verify: confirm hits via GET /v1/requests cached_input_tokens.
+# Docs: https://impossibl.com/docs/prompt-caching.md
 name = "Impossibl"
 npm = "@ai-sdk/openai-compatible"
 api = "https://api.impossibl.com/v1"

@@ -1,3 +1,8 @@
+# Cache key (chat): Use body `cache_control` ephemeral breakpoints on Anthropic models; automatic prefix caching on OpenAI/Gemini-backed models.
+# Cache headers: none
+# Cache policy: Anthropic models use `cache_control` ephemeral breakpoints (min 1024 tokens Sonnet/Opus, 2048 Haiku); OpenAI/Gemini-backed models cache on repeated identical prefix.
+# Cache verify: confirm hits via usage.prompt_tokens_details.cached_tokens / cache_read_input_tokens.
+# Docs: https://docs.jiekou.ai/docs/feature/prompt-caching.md
 name = "Jiekou.AI"
 env = ["JIEKOU_API_KEY"]
 npm = "@ai-sdk/openai-compatible"
