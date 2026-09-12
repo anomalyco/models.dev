@@ -1,0 +1,21 @@
+# Source: GET https://ai.zenifra.com/v1/models (accessed 2026-09-12).
+# Conversion: Zenifra prices are BRL; models.dev costs use BRL / 5.20 = USD (project rate, applied 2026-09-12).
+# Toggle: enable_thinking = true|false.
+# Effort: reasoning_effort = high|max.
+base_model = "zhipuai/glm-5.2"
+structured_output = false
+reasoning_options = [
+  { type = "toggle" },
+  { type = "effort", values = ["high", "max"] },
+]
+
+[limit]
+context = 1_048_576
+
+[provider]
+shape = "completions"
+
+[cost]
+input = 1.096154
+output = 3.846154
+cache_read = 0.269231

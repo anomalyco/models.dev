@@ -1,0 +1,24 @@
+# Source: GET https://ai.zenifra.com/v1/models (accessed 2026-09-12).
+# Conversion: Zenifra prices are BRL; models.dev costs use BRL / 5.20 = USD (project rate, applied 2026-09-12).
+# Capabilities: structured_outputs = true.
+# Toggle: enable_thinking = true|false; no native reasoning_effort levels.
+base_model = "alibaba/qwen3.7-plus"
+structured_output = true
+reasoning_options = [{ type = "toggle" }]
+
+[limit]
+output = 131_072
+
+[provider]
+shape = "completions"
+
+[cost]
+input = 0.288462
+output = 1.096154
+cache_read = 0.076923
+
+[[cost.tiers]]
+tier = { type = "context", size = 256_001 }
+input = 0.846154
+output = 3.307692
+cache_read = 0.173077
