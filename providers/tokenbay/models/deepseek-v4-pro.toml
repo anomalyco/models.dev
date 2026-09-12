@@ -1,0 +1,19 @@
+# Toggle: thinking.type = enabled|disabled
+# Effort: reasoning_effort = high|max
+# https://www.tokenbay.com/docs/reference/text/openai/chat-completions
+base_model = "deepseek/deepseek-v4-pro"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["high", "max"]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.36975
+output = 0.7395
+cache_read = 0.003081

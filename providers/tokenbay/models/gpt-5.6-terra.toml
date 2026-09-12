@@ -1,0 +1,19 @@
+base_model = "openai/gpt-5.6-terra"
+reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh", "max"] }]
+
+[cost]
+input = 2.125
+output = 12.75
+cache_read = 0.2125
+cache_write = 2.65625
+
+[[cost.tiers]]
+tier = { type = "context", size = 272_000 }
+input = 4.25
+output = 19.125
+cache_read = 0.425
+cache_write = 5.3125
+
+[provider]
+npm = "@ai-sdk/openai"
+api = "https://api.tokenbay.com/v1"

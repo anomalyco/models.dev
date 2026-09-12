@@ -1,0 +1,20 @@
+# TokenBay's public catalog exposes input, output, and cache-read pricing for
+# Sol, but no cache-write SKU at either the base or long-context tier.
+# https://www.tokenbay.com/models (accessed 2026-08-12)
+base_model = "openai/gpt-5.6-sol"
+reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh", "max"] }]
+
+[cost]
+input = 4.25
+output = 25.50
+cache_read = 0.425
+
+[[cost.tiers]]
+tier = { type = "context", size = 272_000 }
+input = 8.50
+output = 38.25
+cache_read = 0.85
+
+[provider]
+npm = "@ai-sdk/openai"
+api = "https://api.tokenbay.com/v1"

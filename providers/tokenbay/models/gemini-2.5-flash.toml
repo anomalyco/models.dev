@@ -1,0 +1,22 @@
+# Native Gemini: POST https://api.tokenbay.com/v1beta/models/{model}:generateContent
+# Toggle/budget: generationConfig.thinkingConfig.thinkingBudget = 0 disables
+# thinking; positive values up to 24_576 set the reasoning-token budget.
+base_model = "google/gemini-2.5-flash"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "budget_tokens"
+min = 0
+max = 24_576
+
+[cost]
+input = 0.30
+output = 2.50
+cache_read = 0.03
+input_audio = 1.00
+
+[provider]
+npm = "@ai-sdk/google"
+api = "https://api.tokenbay.com/v1beta"
