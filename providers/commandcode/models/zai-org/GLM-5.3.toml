@@ -1,0 +1,18 @@
+# Pricing: https://commandcode.ai/models (accessed 2026-09-12)
+# Model ID is case-sensitive on this gateway: "zai-org/GLM-5.3" (verified
+# via POST /provider/v1/chat/completions; lowercase "zhipuai/glm-5.3" is rejected).
+# Effort: low|high|max with default max (thinking cannot be disabled on GLM-5.3).
+# Controls mirror the Zhipu BigModel API surface served through this gateway.
+base_model = "zhipuai/glm-5.3"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 1.40
+output = 4.40
+cache_read = 0.26

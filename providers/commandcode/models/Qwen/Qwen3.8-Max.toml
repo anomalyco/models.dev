@@ -1,0 +1,21 @@
+# Pricing: https://commandcode.ai/models (accessed 2026-09-12)
+# Model ID is case-sensitive on this gateway: "Qwen/Qwen3.8-Max" (verified
+# via POST /provider/v1/chat/completions; lowercase "alibaba/qwen3.8-max" is rejected).
+# Toggle: enable_thinking true|false (hybrid)
+# Effort: reasoning_effort = low|medium|xhigh (high accepted as alias)
+# Budget: thinking_budget (0..262144) cannot be combined with reasoning_effort
+# Controls mirror the Alibaba Model Studio API surface served through this gateway.
+base_model = "alibaba/qwen3.8-max"
+reasoning_options = [
+  { type = "toggle" },
+  { type = "effort", values = ["low", "medium", "xhigh"] },
+  { type = "budget_tokens", min = 0, max = 262_144 },
+]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 2.00
+output = 6.00
+cache_read = 0.25
