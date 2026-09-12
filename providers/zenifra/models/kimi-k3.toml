@@ -1,0 +1,17 @@
+# Source: GET https://ai.zenifra.com/v1/models (accessed 2026-09-12).
+# Reasoning is always on; Zenifra advertises effort levels low|high|max.
+base_model = "moonshotai/kimi-k3"
+attachment = false
+temperature = true
+reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]
+
+[limit]
+output = 1_048_576
+
+[provider]
+shape = "completions"
+
+[cost]
+input = 14.7
+output = 73.49
+cache_read = 1.5
