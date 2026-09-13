@@ -1,3 +1,6 @@
+# Cache key (chat): none — chat schema lists model plus messages plus stream plus temperature plus max_tokens plus tools with no cache key field.
+# Cache policy: automatic prefix cache with per-model Cache Read plus Cache Write rates; keep stable prefix first on the same model.
+# Docs: https://hyper.charm.land/docs/models.html
 name = "Charm Hyper"
 env = ["HYPER_API_KEY"]
 npm = "@ai-sdk/openai-compatible"

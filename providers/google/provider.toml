@@ -1,3 +1,7 @@
+# Cache key (chat): none — chat carries no cache key field; explicit caching uses the separate `cachedContents` resource.
+# Use body: `cachedContents` — create a cache via the cachedContents API, then pass the cache name as `cachedContent` on the request.
+# Cache policy: implicit automatic prefix cache plus explicit cache reuse; keep stable prefix first on the same model; confirm via `usage.total_cached_tokens`.
+# Docs: https://ai.google.dev/gemini-api/docs/caching
 name = "Google"
 env = ["GOOGLE_API_KEY", "GOOGLE_GENERATIVE_AI_API_KEY", "GEMINI_API_KEY"]
 npm = "@ai-sdk/google"
