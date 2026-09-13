@@ -1,0 +1,15 @@
+base_model = "mistral/ministral-3-14b-instruct-2512"
+name = "Ministral 3 14B (Infomaniak)"
+attachment = false
+tool_call = false
+structured_output = false
+
+[cost]
+input = 0.34776
+output = 0.46368
+
+[limit]
+context = 100_000
+
+[modalities]
+input = ["text"]

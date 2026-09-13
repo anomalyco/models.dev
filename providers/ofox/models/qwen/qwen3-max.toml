@@ -1,0 +1,18 @@
+# Sources (accessed 2026-09-10):
+# https://ofox.ai/models/qwen/qwen3-max
+# https://api.ofox.ai/v1/models/qwen/qwen3-max
+# https://www.alibabacloud.com/help/en/model-studio/deep-thinking
+# Toggle: enable_thinking true|false (hybrid; default off)
+# Budget: thinking_budget
+base_model = "alibaba/qwen3-max"
+reasoning = true
+reasoning_options = [{ type = "toggle" }, { type = "budget_tokens" }]
+
+[cost]
+input = 0.36
+output = 1.43
+cache_read = 0.072
+
+[limit]
+context = 256_000
+output = 64_000

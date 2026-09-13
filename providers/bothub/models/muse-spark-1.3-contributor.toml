@@ -1,0 +1,25 @@
+# Pricing live-verified 2026-09-11 via a chat completion usage.cost
+# (11 prompt + 200 completion tokens => exactly $0.10/$0.20 per 1M).
+# Listed on https://bothub.ru/muse-spark-1.3-contributor as 11,79/23,57 RUB per 1M.
+# Effort live-verified 2026-09-11: reasoning_effort accepts
+# [minimal, low, medium, high, xhigh]; "max" is rejected upstream
+# (Meta holds max back pending safety testing:
+# https://research.meta.ai/blog/introducing-muse-spark-1-3).
+# Wire: reasoning in message.reasoning, mirrored in reasoning_details (encrypted).
+# Output override: live test 2026-09-11 accepted >131k completion tokens on
+# bothub (lab file's 131_072 is stale); 943 718 per OpenRouter/llm-stats.
+base_model = "meta/muse-spark-1.3"
+name = "Muse Spark 1.3 Contributor"
+
+interleaved = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["minimal", "low", "medium", "high", "xhigh"]
+
+[cost]
+input = 0.1
+output = 0.2
+
+[limit]
+output = 943_718

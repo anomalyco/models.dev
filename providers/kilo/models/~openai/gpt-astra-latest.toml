@@ -1,0 +1,29 @@
+name = "OpenAI: GPT Astra Latest ($$$$)"
+description = "This model always redirects to the latest model in the OpenAI GPT Astra family."
+family = "gpt-astra"
+release_date = "2026-09-11"
+last_updated = "2026-09-11"
+attachment = true
+reasoning = true
+temperature = false
+tool_call = true
+structured_output = true
+open_weights = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high", "xhigh", "max"]
+
+[cost]
+input = 10
+output = 50
+cache_read = 1
+cache_write = 12.5
+
+[limit]
+context = 1_050_000
+output = 128_000
+
+[modalities]
+input = ["pdf", "image", "text"]
+output = ["text"]

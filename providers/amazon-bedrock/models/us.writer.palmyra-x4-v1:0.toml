@@ -1,5 +1,6 @@
-# US cross-Region inference profile, verified via ListInferenceProfiles from us-east-1.
-# US geo pricing (Price List us-east-1 standard): input/output USD per 1M tokens.
+# https://docs.aws.amazon.com/bedrock/latest/userguide/model-parameters-palmyra-x4.html
+# https://aws.amazon.com/bedrock/pricing/ — us-east-1 standard, USD per 1M tokens.
+# Bedrock's documented request has no caller-selectable reasoning control.
 base_model = "writer/palmyra-x4"
 reasoning_options = []
 name = "Palmyra X4 (US)"
@@ -7,3 +8,7 @@ name = "Palmyra X4 (US)"
 [cost]
 input = 2.50
 output = 10.00
+
+[limit]
+context = 122_880
+output = 8_192

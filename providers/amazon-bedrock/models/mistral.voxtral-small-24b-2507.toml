@@ -1,23 +1,11 @@
-name = "Voxtral Small 24B 2507"
-description = "Efficient Mistral model for fast chat, extraction, and production assistants"
-family = "mistral"
-release_date = "2025-07-01"
-last_updated = "2025-07-01"
-attachment = true
-reasoning = false
-temperature = true
-tool_call = true
+# https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-mistral-ai-voxtral-small-24b-2507.html
+# https://aws.amazon.com/bedrock/pricing/ — us-east-1 standard, USD per 1M tokens.
+base_model = "mistral/voxtral-small-24b-2507"
 structured_output = true
-open_weights = true
 
 [cost]
-input = 0.15
-output = 0.35
+input = 0.10
+output = 0.30
 
 [limit]
-context = 32_000
-output = 8192
-
-[modalities]
-input = ["text", "audio"]
-output = ["text"]
+output = 8_192

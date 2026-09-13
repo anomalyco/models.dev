@@ -20,6 +20,7 @@ The grouped sync targets are available for local convenience, but CI syncs each 
 - `bun models:sync kilo` syncs only Kilo.
 - `bun models:sync merge-gateway` syncs only Merge Gateway.
 - `bun models:sync openai` syncs only OpenAI catalog availability.
+- `bun models:sync ollama-cloud` syncs Ollama Cloud catalog availability.
 - `bun models:sync github-copilot` syncs only GitHub Copilot pricing.
 - `bun models:sync tinfoil` syncs only Tinfoil.
 - `bun models:sync aggregators --dry-run` prints changes without writing model files.
@@ -63,6 +64,8 @@ Requires `GH_TOKEN` on the sync workflow step. Local runs are notice-only unless
 The first Actions run may open a batch of issues per provider, including remote IDs the catalog intentionally omits (e.g. OpenAI whisper/tts/moderation surfaces, dated snapshots). This one-time volume is accepted by design: close unwanted issues once and the closed-title dedupe suppresses them permanently. If the dedupe list window (1000 labeled issues per provider) ever fills, the sync fails closed and creates nothing rather than risk duplicates.
 
 Pioneer and Ofox track remote-only chat models as missing-model issues. Their APIs are not authoritative enough to create complete TOMLs directly, so the issue-fixer agent researches the missing canonical and provider-specific metadata before opening a PR.
+
+Ollama Cloud tracks every remote-only ID from its public `/v1/models` endpoint as a missing-model issue. Existing provider TOMLs and entries absent from the endpoint are preserved because the inventory does not provide enough metadata to author complete entries or determine removals safely.
 
 OpenAI also sets `trackMissingModels: false`: `/v1/models` is scoped to the automation account and mixes public models with legacy, internal experiment, dated snapshot, and non-catalog IDs without lifecycle metadata. Existing OpenAI TOMLs are still preserved by the availability sync.
 

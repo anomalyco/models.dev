@@ -1,14 +1,8 @@
+# https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-mistral-ai-ministral-14b-3-0.html
+# Converse image input verified in us-east-1 on 2026-09-09: a yellow PNG was identified as "Yellow.".
+# https://aws.amazon.com/bedrock/pricing/ — us-east-1 standard, USD per 1M tokens.
+base_model = "mistral/ministral-3-14b-instruct-2512"
 name = "Ministral 14B 3.0"
-description = "Compact Mistral model for edge, latency-sensitive, and cost-efficient workloads"
-family = "ministral"
-release_date = "2024-12-01"
-last_updated = "2024-12-01"
-attachment = false
-reasoning = false
-temperature = true
-tool_call = true
-structured_output = true
-open_weights = false
 
 [cost]
 input = 0.20
@@ -17,7 +11,3 @@ output = 0.20
 [limit]
 context = 128_000
 output = 4_096
-
-[modalities]
-input = ["text"]
-output = ["text"]

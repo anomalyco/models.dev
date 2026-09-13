@@ -1,15 +1,10 @@
+# Model ID, Mantle /v1/responses route and limits: https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-openai-gpt-oss-120b.html
+# Standard US East (N. Virginia) pricing: https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AmazonBedrock/current/us-east-1/index.json
+# Effort: reasoning.effort = low|medium|high (Responses).
+# Native controls: https://huggingface.co/openai/gpt-oss-120b
+base_model = "openai/gpt-oss-120b"
 name = "gpt-oss-120b"
-description = "Open-weight GPT model for self-hosted reasoning and instruction-following workloads"
-family = "gpt-oss"
-release_date = "2025-08-05"
-last_updated = "2025-08-05"
-attachment = false
-reasoning = true
 reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
-temperature = true
-tool_call = true
-structured_output = true
-open_weights = true
 
 [cost]
 input = 0.15
@@ -18,10 +13,6 @@ output = 0.60
 [limit]
 context = 128_000
 output = 16_384
-
-[modalities]
-input = ["text"]
-output = ["text"]
 
 [provider]
 npm = "@ai-sdk/amazon-bedrock/mantle"

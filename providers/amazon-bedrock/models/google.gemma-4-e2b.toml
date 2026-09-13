@@ -1,0 +1,19 @@
+# https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-google-gemma-4-e2b.html
+# Effort: reasoning.effort = none|high on Mantle Responses, matching the Gemma 4 31B surface.
+# AWS recommends high to keep thinking in the reasoning channel.
+# Live 2026-09-09: high returns reasoning; strict JSON schema and max_output_tokens=8192 accepted.
+# https://aws.amazon.com/bedrock/pricing/ (US Standard pricing)
+base_model = "google/gemma-4-E2B-it"
+reasoning_options = [{ type = "effort", values = ["none", "high"] }]
+
+[cost]
+input = 0.04
+output = 0.08
+
+[modalities]
+input = ["text", "image", "audio", "video"]
+
+[provider]
+npm = "@ai-sdk/amazon-bedrock/mantle"
+api = "https://bedrock-mantle.${AWS_REGION}.api.aws/openai/v1"
+shape = "responses"

@@ -1,25 +1,16 @@
-name = "Qwen3 32B (dense)"
-description = "Qwen instruction model for multilingual chat, reasoning, and tool use"
-family = "qwen"
-release_date = "2025-09-18"
+# https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-qwen-qwen3-32b.html
+# Toggle: additionalModelRequestFields.reasoning_config = low|high (off|on).
+# Live 2026-09-09: high returns reasoningContent, low omits it; maxTokens=16384 accepted.
+# Runtime ID; US Standard pricing. No verified Bedrock reasoning-token budget.
+base_model = "alibaba/qwen3-32b"
 last_updated = "2025-09-18"
-attachment = false
-reasoning = true
-reasoning_options = []
-temperature = true
-knowledge = "2024-04"
-tool_call = true
+reasoning_options = [{ type = "toggle" }]
+interleaved = true
 structured_output = true
-open_weights = true
 
 [cost]
 input = 0.15
 output = 0.6
 
 [limit]
-context = 16_384
-output = 16_384
-
-[modalities]
-input = ["text"]
-output = ["text"]
+context = 32_768

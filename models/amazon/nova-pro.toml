@@ -1,3 +1,8 @@
+# Sources: https://docs.aws.amazon.com/nova/latest/userguide/what-is-nova.html
+# https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-amazon-nova-pro.html
+# Launch: https://aws.amazon.com/blogs/aws/introducing-amazon-nova-frontier-intelligence-and-industry-leading-price-performance/
+# PDF document input is supported through Bedrock Converse.
+# Output: the Nova V1 guide's 10K is confirmed by US Bedrock Converse boundary checks (2026-09-09).
 name = "Nova Pro"
 description = "Flagship model for demanding analysis, coding, and production agent workflows"
 family = "nova-pro"
@@ -12,8 +17,8 @@ open_weights = false
 
 [limit]
 context = 300_000
-output = 8_192
+output = 10_000
 
 [modalities]
-input = ["text", "image", "video"]
+input = ["text", "image", "video", "pdf"]
 output = ["text"]

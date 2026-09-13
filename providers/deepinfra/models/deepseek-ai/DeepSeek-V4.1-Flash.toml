@@ -2,11 +2,14 @@
 # https://api.deepinfra.com/models/deepseek-ai/DeepSeek-V4.1-Flash/schema/openai-chat-completions
 # https://recipes.vllm.ai/deepseek-ai/DeepSeek-V4.1-Flash (accessed 2026-09-10)
 base_model = "deepseek/deepseek-v4.1-flash"
-reasoning_options = [{ type = "effort", values = ["none", "low", "high", "xhigh", "max"] }]
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "high", "xhigh", "max"]
 
 [cost]
-input = 0.3
-output = 1.2
+input = 0.2
+output = 0.6
 cache_read = 0.006
 
 [limit]

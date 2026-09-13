@@ -1,0 +1,22 @@
+name = "Inference.net: Schematron V2 Small"
+description = "Schematron V2 Small is a 3B-parameter HTML-to-JSON extraction model from Inference.net. It prioritizes extraction quality for complex schemas and long pages. Extraction instructions must be supplied through a JSON schema..."
+release_date = "2026-09-12"
+last_updated = "2026-09-12"
+attachment = false
+reasoning = false
+temperature = true
+tool_call = false
+structured_output = true
+open_weights = false
+
+[cost]
+input = 0.05
+output = 0.23
+
+[limit]
+context = 128_000
+output = 4_096
+
+[modalities]
+input = ["text"]
+output = ["text"]
