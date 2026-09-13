@@ -1,9 +1,14 @@
+# Model controls: https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-anthropic-claude-opus-5.html
+# Pricing: Tokyo Standard dimensions, https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AmazonBedrockFoundationModels/current/ap-northeast-1/index.json
+# https://platform.claude.com/docs/en/build-with-claude/thinking-troubleshooting
+# Toggle: additionalModelRequestFields.thinking.type = adaptive|disabled (Converse); thinking.type (InvokeModel).
+# Effort: additionalModelRequestFields.output_config.effort (Converse); output_config.effort (InvokeModel). Disabled thinking requires low/medium/high.
 base_model = "anthropic/claude-opus-5"
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
 name = "Claude Opus 5 (JP)"
 
 [cost]
-input = 5
-output = 25
-cache_read = 0.5
-cache_write = 6.25
+input = 5.5
+output = 27.5
+cache_read = 0.55
+cache_write = 6.875
