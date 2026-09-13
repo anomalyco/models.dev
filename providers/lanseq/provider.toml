@@ -1,8 +1,5 @@
-# Lanseq is an open-weight multi-model inference provider.
-# Qwen3.8-27B INT4 is the initial live SKU. Additional model SKUs and capacity
-# will be added according to actual demand.
-# BLOCKED: verified public API base URL and model documentation URL are required.
-# api and doc are deliberately omitted rather than filled with invented URLs.
 name = "Lanseq"
 npm = "@ai-sdk/openai-compatible"
 env = ["LANSEQ_API_KEY"]
+api = "https://api.172.98.22.239.sslip.io/v1"
+doc = "https://api.172.98.22.239.sslip.io/docs"
