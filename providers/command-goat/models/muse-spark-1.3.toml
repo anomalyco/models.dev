@@ -1,0 +1,11 @@
+# Sources (accessed 2026-09-09):
+# - Pricing and model details: GOAT plan (https://commandcode.ai/docs/plans/goat)
+# - Plan scope: GOAT only; Go/Pro/Max plans excluded (plan-specific provider, cf. alibaba-coding-plan)
+# - Reasoning: baseline per providers/meta/models/muse-spark-1.3.toml; effort=["low","medium","high","xhigh","max"] (native minimal dropped: gateway rejects it) (gateway verified live 2026-09-11: 8 models/42 calls; none|minimal rejected by enum, enable_thinking ignored; toggle/budget omitted).
+base_model = "meta/muse-spark-1.3"
+reasoning_options = [{ type = "effort", values = ["low","medium","high","xhigh","max"] }]
+
+[cost]
+input = 1.25
+output = 4.25
+cache_read = 0.15

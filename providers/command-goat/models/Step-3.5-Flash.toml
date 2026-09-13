@@ -1,0 +1,15 @@
+# Sources (accessed 2026-09-09):
+# - Pricing and model details: GOAT plan (https://commandcode.ai/docs/plans/goat)
+# - Limits: context = 1_000_000 triple-evidenced (live /v1/models 2026-09-11 + GOAT docs table 1M row + DB; lab 256k is the outlier); output inherits lab.
+# - Plan scope: GOAT only; Go/Pro/Max plans excluded (plan-specific provider, cf. alibaba-coding-plan)
+# - Reasoning: baseline per providers/stepfun-ai/models/step-3.5-flash.toml; effort=["low","high"] (gateway verified live 2026-09-11: 8 models/42 calls; none|minimal rejected by enum, enable_thinking ignored; toggle/budget omitted).
+base_model = "stepfun/step-3.5-flash"
+reasoning_options = [{ type = "effort", values = ["low","high"] }]
+
+[limit]
+context = 1_000_000
+
+[cost]
+input = 0.1
+output = 0.3
+cache_read = 0.02
