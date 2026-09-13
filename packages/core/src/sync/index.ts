@@ -1065,6 +1065,17 @@ export function formatToml(model: z.infer<typeof SyncedAuthoredModel>) {
     if (model.limit.output !== undefined) lines.push(`output = ${formatInteger(model.limit.output)}`);
   }
 
+  if (model.parameters !== undefined) {
+    lines.push("", "[parameters]");
+    if (model.parameters.total !== undefined) lines.push(`total = ${formatInteger(model.parameters.total)}`);
+    if (model.parameters.active !== undefined) lines.push(`active = ${formatInteger(model.parameters.active)}`);
+    if (model.parameters.architecture !== undefined) {
+      lines.push(`architecture = ${quote(model.parameters.architecture)}`);
+    }
+    if (model.parameters.estimate !== undefined) lines.push(`estimate = ${model.parameters.estimate}`);
+    if (model.parameters.source !== undefined) lines.push(`source = ${quote(model.parameters.source)}`);
+  }
+
   if (model.modalities !== undefined) {
     lines.push("", "[modalities]");
     if (model.modalities.input !== undefined) {

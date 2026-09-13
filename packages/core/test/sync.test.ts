@@ -5014,3 +5014,38 @@ test("rejects synced model paths that differ only in case", async () => {
     await rm(root, { recursive: true, force: true });
   }
 });
+
+test("formatToml serializes the [parameters] block", () => {
+  const content = formatToml({
+    id: "example/model",
+    name: "Example Model",
+    attachment: false,
+    reasoning: true,
+    temperature: true,
+    tool_call: false,
+    structured_output: false,
+    release_date: "2025-06-01",
+    last_updated: "2025-06-01",
+    open_weights: true,
+    knowledge: "2025-01",
+    limit: { context: 131_072, output: 8_192 },
+    cost: { input: 0.15, output: 0.6 },
+    modalities: { input: ["text"], output: ["text"] },
+    parameters: {
+      total: 671_000_000_000,
+      active: 37_000_000_000,
+      architecture: "moe",
+      source: "https://huggingface.co/deepseek-ai/DeepSeek-V3",
+    },
+  });
+
+  expect(content).toContain("\n[parameters]\n");
+
+  const parsed = Bun.TOML.parse(content);
+  expect(parsed.parameters).toEqual({
+    total: 671_000_000_000,
+    active: 37_000_000_000,
+    architecture: "moe",
+    source: "https://huggingface.co/deepseek-ai/DeepSeek-V3",
+  });
+});
