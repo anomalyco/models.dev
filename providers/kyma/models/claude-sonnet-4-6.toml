@@ -1,0 +1,9 @@
+# Price source: https://api.kymaapi.com/v1/models (public, unauthenticated), accessed 2026-09-04.
+# On Kyma this id runs with thinking off unless reasoning_effort is set; measured 2026-09-04 (max_tokens=120, "What is 17*23? Think step by step."): 0 reasoning tokens by default.
+base_model = "anthropic/claude-sonnet-4-6"
+
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "max"] }]
+
+[cost]
+input = 4.05
+output = 20.25
