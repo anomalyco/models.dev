@@ -3,9 +3,7 @@
 # https://docs.prisminference.com/models
 # https://docs.prisminference.com/api-reference/chat-completions
 # Reasoning: reasoning_effort = none|low|medium|high; none disables reasoning.
-# Prism serves this model with text-only input.
 base_model = "deepseek/deepseek-v4.1-flash"
-attachment = false
 
 [interleaved]
 field = "reasoning_content"
@@ -21,7 +19,3 @@ cache_read = 0.07
 
 [limit]
 input = 1_000_000
-
-[modalities]
-input = ["text"]
-output = ["text"]
