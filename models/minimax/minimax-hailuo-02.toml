@@ -1,0 +1,17 @@
+name = "MiniMax Hailuo 02"
+description = "Proprietary text-to-video and image-to-video model for cinematic generation"
+family = "minimax"
+release_date = "2025-06"
+last_updated = "2025-06"
+attachment = true
+reasoning = false
+tool_call = false
+open_weights = false
+
+[limit]
+context = 4_096
+output = 0
+
+[modalities]
+input = ["text", "image"]
+output = ["video"]

@@ -1,0 +1,17 @@
+name = "GLM-ASR-2512"
+description = "Proprietary speech-to-text model covering multiple languages and Chinese dialects"
+release_date = "2025-12-10"
+last_updated = "2025-12-10"
+attachment = true
+reasoning = false
+temperature = false
+tool_call = false
+open_weights = false
+
+[limit]
+context = 32_000
+output = 8_192
+
+[modalities]
+input = ["audio"]
+output = ["text"]

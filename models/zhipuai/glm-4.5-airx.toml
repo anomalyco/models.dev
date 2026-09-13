@@ -1,0 +1,19 @@
+name = "GLM-4.5-AirX"
+description = "High-speed variant of GLM-4.5-Air for large-scale low-latency workloads"
+family = "glm-air"
+release_date = "2025-07-28"
+last_updated = "2025-07-28"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+knowledge = "2025-04"
+open_weights = false
+
+[limit]
+context = 131_072
+output = 98_304
+
+[modalities]
+input = ["text"]
+output = ["text"]

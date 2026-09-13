@@ -1,0 +1,21 @@
+name = "GLM-4-9B"
+description = "Open compact GLM model for multilingual chat, instruction following, and tool use"
+family = "glm"
+release_date = "2024-06-05"
+last_updated = "2024-06-05"
+attachment = false
+reasoning = false
+tool_call = true
+open_weights = true
+
+[limit]
+context = 131_072
+output = 4_096
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/zai-org/glm-4-9b-chat"

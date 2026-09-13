@@ -1,0 +1,19 @@
+# Model list, pricing and context limits: https://ai.paratera.com/#/lms/model (model square catalog API, accessed 2026-09-09)
+# RMB converted to USD at 1 USD = 6.7829 CNY: https://www.news.cn/fortune/20260902/02111c46d5fc4d7ba9fb8a67db1ba49e/c.html
+# Paratera lists this ID with GLM-5's description and 200K context, at a higher output price.
+# Toggle: thinking.type = enabled|disabled (verified against this API on 2026-09-02).
+# enable_thinking and reasoning_effort are accepted but ignored.
+base_model = "zhipuai/glm-5"
+name = "GLM-X-F"
+reasoning_options = [{ type = "toggle" }]
+
+[cost]
+input = 0.884577
+output = 3.243450
+cache_read = 0.221144
+
+[limit]
+context = 200_000
+
+[interleaved]
+field = "reasoning_content"

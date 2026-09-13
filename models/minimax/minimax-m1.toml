@@ -1,0 +1,21 @@
+name = "MiniMax M1"
+description = "Open long-context reasoning model for complex analysis, coding, and agentic tasks"
+family = "minimax"
+release_date = "2025-06-17"
+last_updated = "2025-06-17"
+attachment = false
+reasoning = true
+tool_call = true
+open_weights = true
+
+[limit]
+context = 1_000_000
+output = 40_000
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/MiniMaxAI/MiniMax-M1-80k"

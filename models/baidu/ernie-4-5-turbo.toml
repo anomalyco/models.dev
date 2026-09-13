@@ -1,0 +1,17 @@
+name = "ERNIE 4.5 Turbo"
+description = "Proprietary ERNIE text model for chat, long-document analysis, and tool use"
+family = "ernie"
+release_date = "2025-06-30"
+last_updated = "2025-06-30"
+attachment = false
+reasoning = false
+tool_call = true
+open_weights = false
+
+[limit]
+context = 131_072
+output = 8_192
+
+[modalities]
+input = ["text"]
+output = ["text"]

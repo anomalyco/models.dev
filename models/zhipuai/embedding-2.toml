@@ -1,0 +1,17 @@
+name = "Embedding-2"
+description = "Text embedding model for semantic search, retrieval, clustering, and ranking"
+family = "text-embedding"
+release_date = "2024-01"
+last_updated = "2024-01"
+attachment = false
+reasoning = false
+tool_call = false
+open_weights = false
+
+[limit]
+context = 8_192
+output = 1_024
+
+[modalities]
+input = ["text"]
+output = ["text"]
