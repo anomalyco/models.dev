@@ -2,6 +2,7 @@
 # or `reasoning.effort` with low|high|max (GLM-5.3 always reasons; thinking
 # cannot be disabled, so there is no toggle).
 # Sources: https://docs.ollama.com/capabilities/thinking, https://docs.ollama.com/openai
+# Costs: https://ollama.com/pricing (accessed 2026-09-10)
 # API-verified context: https://ollama.com/api/show (glm_dsa_moe.context_length = 1048576)
 base_model = "zhipuai/glm-5.3"
 open_weights = true
@@ -13,3 +14,8 @@ field = "reasoning_content"
 
 [limit]
 context = 1_048_576
+
+[cost]
+input = 1.40
+output = 4.40
+cache_read = 0.26

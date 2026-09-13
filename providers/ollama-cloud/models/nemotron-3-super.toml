@@ -1,3 +1,4 @@
+# Costs: https://ollama.com/pricing (accessed 2026-09-10)
 name = "nemotron-3-super"
 base_model = "nvidia/nemotron-3-super-120b-a12b"
 family = "nemotron"
@@ -8,6 +9,11 @@ tool_call = true
 release_date = "2026-03-11"
 last_updated = "2026-03-12"
 open_weights = true
+
+[cost]
+input = 0.015
+output = 0.60
+cache_read = 0.015
 
 [limit]
 context = 262144

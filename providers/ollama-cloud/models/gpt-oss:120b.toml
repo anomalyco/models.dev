@@ -1,3 +1,4 @@
+# Costs: https://ollama.com/pricing (accessed 2026-09-10)
 name = "gpt-oss:120b"
 description = "Open-weight GPT model for self-hosted reasoning and instruction-following workloads"
 family = "gpt-oss"
@@ -8,6 +9,11 @@ tool_call = true
 release_date = "2025-08-05"
 last_updated = "2026-01-19"
 open_weights = true
+
+[cost]
+input = 0.15
+output = 0.60
+cache_read = 0.014
 
 [limit]
 context = 131072
