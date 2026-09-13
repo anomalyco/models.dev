@@ -6,7 +6,7 @@
 # API-verified context: https://ollama.com/api/show (deepseek4.context_length = 1048576)
 # Output: Ollama has no separate output cap; deepseek4 peers on this host
 # (deepseek-v4-flash:0731, deepseek-v4-pro) serve output = 1048576.
-base_model = "deepseek/deepseek-v4-flash-0731"
+base_model = "deepseek/deepseek-v4-pro-0813"
 
 reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["high", "max"] }]
 
@@ -15,6 +15,6 @@ context = 1048576
 output = 1048576
 
 [cost]
-input = 0.22
-output = 0.66
-cache_read = 0.007
+input = 0.66
+output = 1.98
+cache_read = 0.022

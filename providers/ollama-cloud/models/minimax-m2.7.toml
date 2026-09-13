@@ -1,3 +1,4 @@
+# Costs: https://ollama.com/pricing (accessed 2026-09-10)
 name = "minimax-m2.7"
 description = "MiniMax model for chat, coding, office work, and agentic tasks"
 family = "minimax"
@@ -8,6 +9,11 @@ tool_call = true
 release_date = "2026-03-18"
 last_updated = "2026-03-18"
 open_weights = true
+
+[cost]
+input = 0.30
+output = 1.20
+cache_read = 0.06
 
 [limit]
 context = 196608

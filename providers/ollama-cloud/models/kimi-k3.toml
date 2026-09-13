@@ -4,12 +4,18 @@
 # Sources accessed 2026-07-27:
 # https://docs.ollama.com/api/tags
 # https://ollama.com/library/kimi-k3:cloud
+# Costs: https://ollama.com/pricing (accessed 2026-09-10)
 
 base_model = "moonshotai/kimi-k3"
 name = "kimi-k3"
 last_updated = "2026-07-27"
 
 reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "high", "max"] }]
+
+[cost]
+input = 3.00
+output = 15.00
+cache_read = 0.30
 
 [modalities]
 input = ["text", "image"]

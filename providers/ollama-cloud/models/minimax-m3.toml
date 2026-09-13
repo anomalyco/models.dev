@@ -1,3 +1,4 @@
+# Costs: https://ollama.com/pricing (accessed 2026-09-10)
 name = "minimax-m3"
 description = "MiniMax multimodal coding model for long-context reasoning and agent tasks"
 family = "minimax-m3"
@@ -11,6 +12,10 @@ tool_call = true
 knowledge = "2025-01"
 open_weights = true
 
+[cost]
+input = 0.60
+output = 2.40
+cache_read = 0.12
 
 [limit]
 context = 512_000
