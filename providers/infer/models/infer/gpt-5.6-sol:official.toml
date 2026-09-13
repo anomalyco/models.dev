@@ -1,0 +1,20 @@
+# Source: https://infer.flow7.org/api/public/catalog (2026-09-12 UTC)
+# Exact selector: infer/gpt-5.6-sol:official
+# Responses request reasoning.effort follows the underlying OpenAI model.
+base_model = "openai/gpt-5.6-sol"
+base_model_omit = ["limit.input"]
+name = "GPT-5.6 Sol (Official API)"
+reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh", "max"] }]
+
+[cost]
+input = 2.5
+output = 12.5
+cache_read = 0.25
+cache_write = 3.125
+
+[limit]
+context = 271999
+output = 128000
+
+[provider]
+shape = "responses"
