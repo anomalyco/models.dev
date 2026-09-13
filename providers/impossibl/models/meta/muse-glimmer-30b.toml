@@ -1,0 +1,11 @@
+# Pricing: https://api.impossibl.com/v1/models
+base_model = "meta/muse-glimmer-30b"
+
+[cost]
+input = 0.35
+output = 1.50
+cache_read = 0.04
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high", "xhigh"]

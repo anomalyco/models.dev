@@ -1,0 +1,11 @@
+# Pricing: https://api.impossibl.com/v1/models
+base_model = "meta/muse-spark-1.3"
+
+[cost]
+input = 1.25
+output = 4.25
+cache_read = 0.15
+
+[[reasoning_options]]
+type = "effort"
+values = ["minimal", "low", "medium", "high", "xhigh"]

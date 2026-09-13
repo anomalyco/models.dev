@@ -1,11 +1,11 @@
 # Pricing: https://api.impossibl.com/v1/models
-base_model = "openai/gpt-oss-120b"
+base_model = "zhipuai/glm-5.3-flash"
 
 [cost]
-input = 0.15
-output = 0.60
+input = 0.075
+output = 0.25
 cache_read = 0.015
 
 [[reasoning_options]]
 type = "effort"
-values = ["low", "medium", "high"]
+values = ["low", "high"]

@@ -1,13 +1,15 @@
 # Pricing: https://api.impossibl.com/v1/models
+# Toggle: {"generationConfig":{"thinkingConfig":{"thinkingBudget":0}}} disables
 base_model = "google/gemini-2.5-flash"
 
 [cost]
 input = 0.30
 output = 2.50
 cache_read = 0.03
+input_audio = 1.00
 
 [[reasoning_options]]
-type = "toggle" # API: {"generationConfig":{"thinkingConfig":{"thinkingBudget":0}}}
+type = "toggle" # API: {"generationConfig":{"thinkingConfig":{"thinkingBudget":0}}} disables
 
 [[reasoning_options]]
 type = "budget_tokens" # API: {"generationConfig":{"thinkingConfig":{"thinkingBudget":<n>}}}
