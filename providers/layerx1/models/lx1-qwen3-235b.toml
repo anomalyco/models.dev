@@ -1,0 +1,14 @@
+base_model = "alibaba/qwen3-235b-a22b"
+
+# reasoning: `reasoning` request field, effort ladder; `none` disables.
+reasoning_options = [
+  { type = "effort", values = ["none", "minimal", "low", "medium", "high", "max"] },
+]
+
+[cost]
+input = 0.22
+output = 0.88
+cache_read = 0.022
+
+[limit]
+context = 262_144

@@ -1,0 +1,19 @@
+base_model = "xai/grok-4.3"
+
+attachment = false
+
+# reasoning: `reasoning` request field, effort ladder; `none` disables.
+reasoning_options = [
+  { type = "effort", values = ["none", "minimal", "low", "medium", "high", "max"] },
+]
+
+[modalities]
+input = ["text"]
+
+[cost]
+input = 1.25
+output = 2.5
+cache_read = 0.2
+
+[limit]
+output = 32_000
