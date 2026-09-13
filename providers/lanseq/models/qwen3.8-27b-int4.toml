@@ -1,0 +1,20 @@
+# Lanseq's initial live SKU; serving specifications supplied by the operator.
+# Prices are USD per million tokens.
+# BLOCKED: add reasoning_options only after verifying the public API controls.
+base_model = "alibaba/qwen3.8-27b"
+name = "Qwen3.8-27B INT4"
+description = "Text-only INT4 deployment of Qwen3.8-27B, served by Lanseq"
+attachment = false
+
+[cost]
+input = 0.25
+output = 1.99
+cache_read = 0.045
+
+[limit]
+context = 70_000
+output = 8_192
+
+[modalities]
+input = ["text"]
+output = ["text"]
