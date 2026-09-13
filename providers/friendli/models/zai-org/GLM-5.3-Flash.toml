@@ -1,28 +1,26 @@
-# Toggle: chat_template_kwargs.enable_thinking = true | false
-# https://friendli.ai/docs/guides/reasoning
-# Effort: reasoning_effort = "high" | "max"
+# Effort: reasoning_effort = "low" | "high" | "max"
 # https://friendli.ai/docs/openapi/model-apis/chat-completions#body-reasoning-effort-one-of-0
 # Budget: reasoning_budget = positive integer reasoning-token cap (-1 = unlimited)
 # https://friendli.ai/docs/openapi/model-apis/chat-completions#body-reasoning-budget-one-of-0
-base_model = "zhipuai/glm-5.2"
+base_model = "zhipuai/glm-5.3-flash"
 
 [interleaved]
 field = "reasoning_content"
 
 [[reasoning_options]]
-type = "toggle"
-
-[[reasoning_options]]
 type = "effort"
-values = ["high", "max"]
+values = ["low", "high", "max"]
 
 [[reasoning_options]]
 type = "budget_tokens"
 
 [cost]
-input = 1.4
-output = 4.4
-cache_read = 0.26
+input = 0.15
+output = 0.5
+cache_read = 0.03
 
 [limit]
 context = 1_048_576
+
+[modalities]
+input = ["text", "image", "video"]
