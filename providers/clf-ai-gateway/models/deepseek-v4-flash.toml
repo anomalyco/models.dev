@@ -1,0 +1,23 @@
+base_model = "deepseek/deepseek-v4-flash-0731"
+
+# Wire: only OpenAI-style `reasoning_effort` is forwarded, verbatim. No on/off toggle
+# field is forwarded on this surface, so there is no "toggle" option to expose.
+# Host accept-set for deepseek-v4-flash: low, medium, high, xhigh (anything else -> 400 naming this set; public
+# in GET /v1/public/models -> capabilities.reasoning_efforts). Only the levels with a
+# MEASURED distinct effect are advertised — same prompt, 3 samples per level, median
+# reasoning_tokens, 2026-09-02: low 563 / medium 242 / high 199 / xhigh 226 (xhigh samples 1210/226/186) -> no consistent ordering; the accepted levels are not a reliable control.
+# Accepted levels are inert and no toggle is forwarded -> no real caller control here.
+reasoning_options = []
+
+# Current promotional pricing (40% off list), USD/MTok — what the API bills today.
+# Live source: GET /v1/public/models (nano-USD per token; /1000 = USD/MTok).
+[cost]
+input = 0.264
+output = 0.792
+cache_read = 0.008
+
+# This gateway's serving surface, measured (context probed to the boundary;
+# output verified via max_completion_tokens probes).
+[limit]
+context = 1_048_576
+output = 131_072
