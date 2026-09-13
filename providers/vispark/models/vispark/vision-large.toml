@@ -1,0 +1,36 @@
+# Vispark: Vision Large — first-party host (provider IS the lab, full inline allowed).
+# API model ID: vispark/vision-large — GET https://api.lab.vispark.in/v1/models (verified live 2026-09-13).
+# Cost source, USD/MTok, used verbatim: the provider's own models endpoint publishes
+# pricing.prompt = "0.00000737" and pricing.completion = "0.00002211" USD per token
+# (per-token USD strings) = input 7.37, output 22.11 per MTok.
+# Reasoning: always-on, no caller control — accepted params are only
+# temperature/max_tokens/top_p/top_k/stop/seed/frequency_penalty/presence_penalty/tools/
+# tool_choice/response_format — no reasoning_effort/thinking/enable_thinking/budget field;
+# Capabilities: temperature, top_p/top_k/stop/seed, tools, response_format json_object/json_schema,
+# multimodal input text+image+audio+video+pdf (base64/URL), text output, streaming + usage.
+# Limits: context 1_000_000 (context_length), output 65_536 (max_output_length) — same endpoint.
+# Release 2024-05-15: live endpoint returns created = 1715731200 (= 2024-05-15) per model,
+# Last updated 2026-09: current lineup as verified live 2026-09-13 (month precision).
+name = "Vision Large"
+description = "Vision Large: India's most advanced foundational intelligence. Delivers state-of-the-art reasoning, SOTA media processing, and complex tool usage. With 1M token context, it handles deep analysis and structured data with unmatched accuracy and cultural depth."
+release_date = "2024-05-15"
+last_updated = "2026-09"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = false
+reasoning_options = []
+
+[cost]
+input = 7.37
+output = 22.11
+
+[limit]
+context = 1_000_000
+output = 65_536
+
+[modalities]
+input = ["text", "image", "audio", "video", "pdf"]
+output = ["text"]

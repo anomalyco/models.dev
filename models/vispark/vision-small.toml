@@ -1,0 +1,26 @@
+# Lab metadata for Vispark Vision Small.
+# Provider-agnostic facts about the model Vispark built.
+# Served first-party by Vispark Lab via OpenAI-compatible API: https://api.lab.vispark.in/v1
+# Model list: GET https://api.lab.vispark.in/v1/models returns vispark/vision-small
+# (verified live 2026-09-13; context_length 1000000, max_output_length 65536 per entry).
+# Chat: POST https://api.lab.vispark.in/v1/chat/completions.
+# Release 2024-05-15: live endpoint returns created = 1715731200 (= 2024-05-15) per model,
+# Last updated 2026-09: current lineup as verified live 2026-09-13 (month precision).
+name = "Vision Small"
+description = "Vision Small: India's fast and efficient foundational AI. Trained from scratch with native multimodal understanding (text, audio, video) and deep cultural awareness. Features 1M token context for high-throughput, real-time interactions across 250+ languages."
+release_date = "2024-05-15"
+last_updated = "2026-09"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[limit]
+context = 1_000_000
+output = 65_536
+
+[modalities]
+input = ["text", "image", "audio", "video", "pdf"]
+output = ["text"]
