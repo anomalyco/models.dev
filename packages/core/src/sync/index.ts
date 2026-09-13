@@ -20,6 +20,7 @@ import { edenai } from "./providers/edenai.js";
 import { empiriolabs } from "./providers/empiriolabs.js";
 import { githubCopilot } from "./providers/github-copilot.js";
 import { google } from "./providers/google.js";
+import { hubris } from "./providers/hubris.js";
 import { hyper } from "./providers/hyper.js";
 import { huggingface } from "./providers/huggingface.js";
 import { inceptron } from "./providers/inceptron.js";
@@ -144,6 +145,7 @@ export const providers: {
   empiriolabs: SyncProvider<any>;
   "github-copilot": SyncProvider<any>;
   google: SyncProvider<any>;
+  hubris: SyncProvider<any>;
   hyper: SyncProvider<any>;
   huggingface: SyncProvider<any>;
   inceptron: SyncProvider<any>;
@@ -179,6 +181,7 @@ export const providers: {
   empiriolabs,
   "github-copilot": githubCopilot,
   google,
+  hubris,
   hyper,
   huggingface,
   inceptron,
@@ -206,6 +209,7 @@ export const groups = {
     "crossmodel",
     "edenai",
     "empiriolabs",
+    "hubris",
     "huggingface",
     "inceptron",
     "kilo",

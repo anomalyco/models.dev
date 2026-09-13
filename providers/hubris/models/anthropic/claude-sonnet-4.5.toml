@@ -1,0 +1,17 @@
+# FX: Hubris bills in RUB. USD/MTok below = public RUB price / Bank of Russia official rate 86.5857 RUB/USD (2026-09-05); kept until the rate drifts >3 %.
+# Toggle: reasoning.enabled = true|false
+# https://hubris.pw/docs
+base_model = "anthropic/claude-sonnet-4-5"
+structured_output = true
+
+[[reasoning_options]]
+type = "toggle"
+
+[cost]
+input = 4.3781
+output = 21.8906
+cache_read = 0.4378
+cache_write = 5.4726
+
+[limit]
+context = 1_000_000
