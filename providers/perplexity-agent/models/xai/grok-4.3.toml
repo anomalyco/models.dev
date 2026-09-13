@@ -1,0 +1,18 @@
+# Pricing: https://docs.perplexity.ai/docs/agent-api/models (accessed 2026-08-27)
+# Context tiers: <=200k / >200k.
+base_model = "xai/grok-4.3"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high", "xhigh"]
+
+[cost]
+input = 1.25
+output = 2.50
+cache_read = 0.20
+
+[[cost.tiers]]
+tier = { type = "context", size = 200_000 }
+input = 2.50
+output = 5.00
+cache_read = 0.20

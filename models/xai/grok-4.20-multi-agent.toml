@@ -1,0 +1,19 @@
+name = "Grok 4.20 Multi-Agent"
+description = "Multi-agent Grok for coordinated tool use, coding, and long-horizon tasks"
+family = "grok"
+release_date = "2026-03-09"
+last_updated = "2026-03-09"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = false
+structured_output = true
+open_weights = false
+
+[limit]
+context = 1_000_000
+output = 30_000
+
+[modalities]
+input = ["text", "image", "pdf"]
+output = ["text"]

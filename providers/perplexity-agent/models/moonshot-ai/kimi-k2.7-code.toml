@@ -1,12 +1,7 @@
-# Perplexity Agent API pricing scraped from
-# https://docs.perplexity.ai/docs/agent-api/models (accessed 2026-07-30).
-# Kimi K2.7 Code capability confirmation (force thinking, preserve_thinking,
-# reasoning_content field, instant/non-thinking mode unsupported) sourced from
-# https://huggingface.co/moonshotai/Kimi-K2.7-Code.
-# base_model inherits reasoning = true, so reasoning_options = [] is required
-
+# Deprecated: Agent API ID is now perplexity/kimi-k2.7-code
+# (https://docs.perplexity.ai/docs/agent-api/models, accessed 2026-08-27).
+status = "deprecated"
 base_model = "moonshotai/kimi-k2.7-code"
-last_updated = "2026-07-30"
 reasoning_options = []
 
 [interleaved]

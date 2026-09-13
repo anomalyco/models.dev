@@ -1,11 +1,11 @@
 # Pricing: https://docs.perplexity.ai/docs/agent-api/models (accessed 2026-08-27)
-base_model = "anthropic/claude-haiku-4-5"
+base_model = "anthropic/claude-fable-5"
 
 [[reasoning_options]]
 type = "effort"
 values = ["low", "medium", "high", "xhigh", "max"]
 
 [cost]
-input = 1.00
-output = 5.00
-cache_read = 0.10
+input = 10.00
+output = 50.00
+cache_read = 1.00

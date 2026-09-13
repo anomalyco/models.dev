@@ -1,0 +1,15 @@
+# Pricing: https://docs.perplexity.ai/docs/agent-api/models (accessed 2026-08-27)
+# Context tiers: <=200k / >200k. Reasoning is fixed by model ID (no effort control).
+base_model = "xai/grok-4.20-reasoning"
+reasoning_options = []
+
+[cost]
+input = 1.25
+output = 2.50
+cache_read = 0.20
+
+[[cost.tiers]]
+tier = { type = "context", size = 200_000 }
+input = 2.50
+output = 5.00
+cache_read = 0.20

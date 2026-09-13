@@ -1,18 +1,18 @@
 # Pricing: https://docs.perplexity.ai/docs/agent-api/models (accessed 2026-08-27)
-# Context tiers: <=272k / >272k.
-base_model = "openai/gpt-5.5"
+# Context tiers: <=272k / >272k. Cache-read = 10% of input rate.
+base_model = "openai/gpt-5.6-terra"
 
 [[reasoning_options]]
 type = "effort"
 values = ["low", "medium", "high", "xhigh", "max"]
 
 [cost]
-input = 5.00
-output = 30.00
-cache_read = 0.50
+input = 2.00
+output = 12.00
+cache_read = 0.20
 
 [[cost.tiers]]
 tier = { type = "context", size = 272_000 }
-input = 10.00
-output = 45.00
-cache_read = 0.50
+input = 4.00
+output = 18.00
+cache_read = 0.40

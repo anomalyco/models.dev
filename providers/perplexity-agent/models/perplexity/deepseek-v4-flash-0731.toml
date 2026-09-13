@@ -1,0 +1,15 @@
+# Perplexity Agent API pricing:
+# https://docs.perplexity.ai/docs/agent-api/models (accessed 2026-08-27)
+# Callable ID is perplexity/deepseek-v4-flash-0731 (not deepseek/).
+# Reasoning tokens billed at the output rate (no separate CoT price).
+# Effort: reasoning_effort = low|high|max (peer DeepSeek relay surface).
+base_model = "deepseek/deepseek-v4-flash-0731"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[cost]
+input = 0.13
+output = 0.26
+cache_read = 0.028
