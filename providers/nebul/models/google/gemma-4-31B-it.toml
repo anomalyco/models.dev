@@ -4,7 +4,8 @@
 # advertises none for this model, and the Chat Completions API documents no on/off
 # toggle (https://docs.nebul.io/docs/inference-api/models/chat-completions), so this
 # host exposes no caller control here.
-# Traces arrive inline as <thinking> inside the content (Nebul docs), so interleaved = true
+# Traces arrive inline as <thinking> inside the content, so interleaved = true
+# https://docs.nebul.io/docs/inference-api/advanced-topics/reasoning
 base_model = "google/gemma-4-31b-it"
 reasoning_options = []
 

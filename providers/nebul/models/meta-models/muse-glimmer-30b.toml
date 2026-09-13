@@ -4,6 +4,7 @@
 # advertises none for this model, and the Chat Completions API documents no on/off
 # toggle (https://docs.nebul.io/docs/inference-api/models/chat-completions), so this
 # host exposes no caller control here.
+# Trace field: reasoning_content per https://docs.nebul.io/docs/inference-api/advanced-topics/reasoning
 base_model = "meta/muse-glimmer-30b"
 
 reasoning_options = []
