@@ -1,0 +1,18 @@
+# Reasoning control per Nebul's docs: GET /v1/model/info `reasoning_efforts` is the
+# per-model source of truth for "the reasoning_effort values each model meaningfully
+# accepts" (https://docs.nebul.io/docs/inference-api/models/model-catalog). It
+# advertises none for this model — the live response also marks this served ID with
+# supports_reasoning = false — and the Chat Completions API documents no on/off
+# toggle (https://docs.nebul.io/docs/inference-api/models/chat-completions), so this
+# host exposes no caller control here.
+base_model = "moonshotai/kimi-k3"
+
+reasoning_options = []
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 4.73
+output = 23.63
+cache_read = 1.13
