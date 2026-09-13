@@ -1,0 +1,11 @@
+# Sources:
+# https://docs.cohere.com/docs/models
+# https://docs.cohere.com/docs/parse
+# https://docs.cohere.com/v2/reference/parse
+#
+# Cost intentionally omitted: Parse bills by pages (meta.billed_units.pages),
+# not public USD per-token rates. Trial API usage is free/rate-limited.
+#
+# API currently accepts document.type = image_url only (PDF/file URL not yet
+# supported on the reference), so provider inherits image→text modalities.
+base_model = "cohere/parse-v5.0"
