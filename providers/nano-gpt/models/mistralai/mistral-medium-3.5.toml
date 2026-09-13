@@ -1,0 +1,28 @@
+name = "Mistral Medium 3.5"
+description = "Mistral Medium 3.5 is a 128B dense open-weights flagship model for instruction-following, reasoning, coding, long-horizon agentic work, tool use, structured output, and multimodal prompts. It supports a 256k context window and configurable reasoning effort."
+family = "mistral-medium"
+release_date = "2026-04-29"
+last_updated = "2026-04-29"
+attachment = true
+reasoning = true
+tool_call = true
+structured_output = true
+open_weights = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "high"]
+
+[cost]
+input = 1.5
+output = 7.5
+cache_read = 0.75
+
+[limit]
+context = 256_000
+input = 256_000
+output = 32_768
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
