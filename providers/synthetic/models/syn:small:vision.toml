@@ -1,0 +1,19 @@
+base_model = "alibaba/qwen3.8-27b"
+name = "Synthetic Small Vision"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "xhigh"] }]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.45
+output = 2.2
+cache_read = 0.09
+cache_write = 0
+
+[limit]
+output = 65_536
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
