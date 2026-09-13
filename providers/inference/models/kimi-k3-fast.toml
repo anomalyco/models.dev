@@ -1,0 +1,17 @@
+# Pricing, limits, and reasoning controls from the inference.net public
+# model catalog: https://inference.net/models (accessed 2026-08-14).
+# Same weights as kimi-k3, served on a higher-throughput tier.
+base_model = "moonshotai/kimi-k3"
+name = "Kimi K3 Fast"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high"]
+
+[cost]
+input = 4.5
+output = 22.5
+cache_read = 0.45
+
+[limit]
+output = 1_048_576
