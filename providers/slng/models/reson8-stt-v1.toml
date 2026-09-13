@@ -1,0 +1,27 @@
+# Reson8 STT v1 via SLNG
+# Sources:
+# - https://docs.slng.ai/models — SLNG model catalog (EU region)
+# - Original per-minute pricing: $0.010/min, capped at $3.00 per million tokens
+name = "Reson8 STT v1"
+description = "Speech-to-text model for English with specialized terminology support"
+family = "reson8"
+release_date = "2024-01-01"
+last_updated = "2025-01-01"
+attachment = false
+reasoning = false
+temperature = false
+tool_call = false
+structured_output = false
+open_weights = false
+
+[cost]
+input = 3.00
+output = 3.00
+
+[limit]
+context = 0
+output = 0
+
+[modalities]
+input = ["audio"]
+output = ["text"]
