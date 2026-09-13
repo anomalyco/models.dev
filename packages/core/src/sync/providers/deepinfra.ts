@@ -148,6 +148,33 @@ function cacheCost(inputCost: number, rate: number | null | undefined) {
   return rate == null ? undefined : round(inputCost * rate);
 }
 
+// Within one tier segment the cached price is published twice: as the structured
+// `rate_per_input_token_cached` multiplier, and restated as an absolute price in
+// the free-text `full` string. They normally agree, but the string is
+// hand-written and can drift — `ByteDance/Seed-2.0-mini` currently reads
+// `$0.2 in ... $0.2 cached` above 128K, i.e. cached input priced identically to
+// fresh input, where the multiplier gives $0.04.
+//
+// Derive from the multiplier so that a segment's cached price is computed the
+// same way here as it is on the flat-pricing path below, and warn when the
+// string disagrees so a genuine rate change is visible rather than silent.
+function segmentCacheRead(
+  modelName: string,
+  input: number,
+  stated: number | undefined,
+  rate: number | null | undefined,
+) {
+  if (rate == null) return stated === undefined ? undefined : round(stated);
+  const derived = round(input * rate);
+  if (stated !== undefined && Math.abs(stated - derived) > 1e-9) {
+    console.warn(
+      `Deep Infra: ${modelName} states $${stated}/Mtok cached against a $${input}/Mtok input tier, `
+      + `but rate_per_input_token_cached=${rate} implies $${derived}/Mtok; using $${derived}/Mtok.`,
+    );
+  }
+  return derived;
+}
+
 function buildCost(
   model: DeepInfraModel,
   existing: ExistingModel | undefined,
@@ -157,6 +184,7 @@ function buildCost(
   // No usable API price — leave the curated cost untouched.
   if (inputCost === undefined || outputCost === undefined) return existing?.cost;
 
+  const cacheReadRate = model.pricing?.rate_per_input_token_cached;
   const cacheWriteRate = model.pricing?.rate_per_input_token_cache_write;
   const tiered = parseTieredPricing(model.pricing?.full);
 
@@ -166,13 +194,18 @@ function buildCost(
       input: round(base.input),
       output: round(base.output),
       reasoning: existing?.cost?.reasoning,
-      cache_read: base.cache_read === undefined ? undefined : round(base.cache_read),
-      cache_write: cacheWriteRate == null ? undefined : round(base.input * cacheWriteRate),
+      cache_read: segmentCacheRead(model.model_name, base.input, base.cache_read, cacheReadRate),
+      cache_write: cacheCost(base.input, cacheWriteRate),
       tiers: tiered.tiers.map((tier) => ({
         tier: { type: "context" as const, size: tier.size },
         input: round(tier.input),
         output: round(tier.output),
-        cache_read: tier.cache_read === undefined ? undefined : round(tier.cache_read),
+        cache_read: segmentCacheRead(model.model_name, tier.input, tier.cache_read, cacheReadRate),
+        // Both cache rates are multipliers on the *segment's* input price, so a
+        // context tier that doubles input doubles its cache prices too. Emitting
+        // cache_write only on the base tier would leave a long-context request
+        // priced at the short-context write rate.
+        cache_write: cacheCost(tier.input, cacheWriteRate),
       })),
     };
   }
