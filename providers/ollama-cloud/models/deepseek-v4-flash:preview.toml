@@ -1,0 +1,18 @@
+# Preview tag of deepseek-v4-flash, served by Ollama Cloud and listed by GET /v1/models.
+# API-verified context: https://ollama.com/api/show (deepseek4.context_length = 1048576)
+name = "deepseek-v4-flash:preview"
+description = "Preview release of the fast DeepSeek model for efficient chat, coding help, and agent loops"
+family = "deepseek-flash"
+attachment = false
+reasoning = true
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["high", "max"] }]
+tool_call = true
+open_weights = true
+
+[limit]
+context = 1048576
+output = 1048576
+
+[modalities]
+input = ["text"]
+output = ["text"]
