@@ -1,0 +1,15 @@
+# Pricing and context length: https://onlist.io/models/openai/gpt-oss-120b (accessed 2026-09-07)
+# Reasoning: effort via `reasoning_effort` / `reasoning.effort`, budget via `reasoning.max_tokens`; no on/off toggle on Onlist
+base_model = "openai/gpt-oss-120b"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high"]
+
+[cost]
+input = 0.037
+output = 0.17
+cache_read = 0.037
+
+[limit]
+output = 117_964

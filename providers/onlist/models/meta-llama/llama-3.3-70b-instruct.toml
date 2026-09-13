@@ -1,0 +1,12 @@
+# Pricing and context length: https://onlist.io/models/meta-llama/llama-3.3-70b-instruct (accessed 2026-09-07)
+base_model = "meta/llama-3.3-70b-instruct"
+attachment = false
+
+[cost]
+input = 0.13
+output = 0.4
+cache_read = 0.13
+
+[limit]
+context = 131_072
+output = 16_384
