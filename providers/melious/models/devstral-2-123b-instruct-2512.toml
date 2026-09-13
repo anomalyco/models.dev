@@ -1,0 +1,26 @@
+# Cost: Melious lists EUR; converted at 1.17 USD/EUR (ECB reference rate, captured 2026-08-20).
+# Sources: https://melious.ai/hub/models and
+# GET https://api.melious.ai/v1/models?include_meta=true
+# limit.output: no published cap; max_tokens = 16_384 is accepted on
+# this host, verified against the live API (bisected to +/-1024).
+# Reasoning: the catalog calls this non_reasoning, but the live endpoint returns
+# chain-of-thought in message.reasoning_content, so it is recorded as a reasoner.
+# Effort: reasoning_effort = low|medium|high
+# (https://melious.ai/docs/reference/chat-completions). No off state: an explicit
+# "none" still returns reasoning, so this host exposes no toggle.
+# Reasoning text comes back in message.reasoning_content.
+base_model = "mistral/devstral-2512"
+reasoning = true
+structured_output = true
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
+
+[cost]
+input = 0.468
+output = 2.34
+
+[limit]
+context = 200_000
+output = 16_384
+
+[interleaved]
+field = "reasoning_content"

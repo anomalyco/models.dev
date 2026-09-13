@@ -1,0 +1,23 @@
+# Cost: Melious lists EUR; converted at 1.17 USD/EUR (ECB reference rate, captured 2026-08-20).
+# Sources: https://melious.ai/hub/models and
+# GET https://api.melious.ai/v1/models?include_meta=true
+# limit.output: no published cap; max_tokens = 1_000_000 is accepted on
+# this host, verified against the live API.
+# cache_read: transparent prefix caching, reported back as usage.cached_tokens.
+# Effort: reasoning_effort = low|medium|high
+# (https://melious.ai/docs/reference/chat-completions). No off state: an explicit
+# "none" still returns reasoning, so this host exposes no toggle.
+# Reasoning text comes back in message.reasoning_content.
+base_model = "deepseek/deepseek-v4-flash-0731"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
+
+[cost]
+input = 0.117
+cache_read = 0.0234
+output = 0.351
+
+[limit]
+output = 1_000_000
+
+[interleaved]
+field = "reasoning_content"

@@ -1,0 +1,13 @@
+# Cost: Melious lists EUR; converted at 1.17 USD/EUR (ECB reference rate, captured 2026-08-20).
+# Sources: https://melious.ai/hub/models and
+# GET https://api.melious.ai/v1/models?include_meta=true
+base_model = "meta/llama-3.3-70b-instruct"
+structured_output = true
+attachment = false
+
+[cost]
+input = 0.702
+output = 0.7605
+
+[limit]
+context = 131_072
