@@ -1,0 +1,25 @@
+name = "Bee Brood 1.0"
+description = "Production multimodal reasoning for image and video analysis, tool-enabled workflows, and multi-step planning at controlled cost."
+attachment = true
+reasoning = true
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
+tool_call = true
+structured_output = false
+temperature = true
+open_weights = false
+release_date = "2026-07-10"
+last_updated = "2026-08-23"
+
+[modalities]
+input = ["text", "image", "video"]
+output = ["text"]
+
+[limit]
+context = 262144
+output = 16384
+
+[cost]
+input = 0.60
+output = 2.40
+cache_read = 0.06
+cache_write = 0.72
