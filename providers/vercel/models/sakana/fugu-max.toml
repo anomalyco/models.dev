@@ -1,0 +1,23 @@
+name = "Fugu Max"
+description = "Multi-agent model for routing expert agents across complex analytical tasks"
+family = "fugu"
+release_date = "2026-09-10"
+last_updated = "2026-09-10"
+attachment = true
+reasoning = true
+tool_call = true
+open_weights = false
+reasoning_options = []
+
+[cost]
+input = 2
+output = 6
+cache_read = 0.25
+
+[limit]
+context = 1_000_000
+output = 1_000_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
