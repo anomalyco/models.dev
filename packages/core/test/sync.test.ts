@@ -53,6 +53,7 @@ import {
 } from "../src/sync/providers/empiriolabs.js";
 import {
   buildOpenRouterModel,
+  mergeOpenRouterResponses,
   openrouter,
   resolveCanonicalBaseModel,
   type OpenRouterModel,
@@ -2168,6 +2169,46 @@ test("OpenRouter sync maps pricing.overrides into cost tiers", () => {
         cache_read: 0.6,
       }],
     },
+  });
+});
+
+test("OpenRouter sync merges image-only models and deduplicates IDs", () => {
+  const text = openRouterModel();
+  const image = openRouterModel({
+    id: "sourceful/riverflow-v2.5-pro",
+    architecture: {
+      input_modalities: ["text", "image"],
+      output_modalities: ["image"],
+    },
+  });
+
+  expect(mergeOpenRouterResponses([
+    { data: [text] },
+    { data: [image, text] },
+  ]).data.map((model) => model.id)).toEqual([
+    "anthropic/claude-sonnet-5",
+    "sourceful/riverflow-v2.5-pro",
+  ]);
+});
+
+test("OpenRouter sync uses image output pricing for image models", () => {
+  const model = buildOpenRouterModel(openRouterModel({
+    id: "sourceful/riverflow-v2.5-pro",
+    architecture: {
+      input_modalities: ["text", "image"],
+      output_modalities: ["image"],
+    },
+    pricing: {
+      prompt: "0",
+      completion: "0",
+      image_token: "0.000031",
+      image_output: "0.000032",
+    },
+  }), undefined, "sourceful/riverflow-2.5-pro");
+
+  expect(model).toMatchObject({
+    base_model: "sourceful/riverflow-2.5-pro",
+    cost: { input: 0, output: 32 },
   });
 });
 
