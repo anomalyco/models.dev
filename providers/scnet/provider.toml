@@ -1,0 +1,11 @@
+# SCNet pay-as-you-go model catalog and prices were verified in the signed-in
+# Console -> Model List on 2026-08-25. The public docs direct users there for
+# the current inventory, capabilities, and prices:
+# https://www.scnet.cn/ac/openapi/doc/2.0/moduleapi/tutorial/modulelist.html
+# https://www.scnet.cn/ac/openapi/doc/2.0/moduleapi/api/chat.html
+# CNY prices were converted to USD at 1 CNY = 0.14875 USD (2026-08-24 rate).
+name = "SCNet"
+env = ["SCNET_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+api = "https://api.scnet.cn/api/llm/v1"
+doc = "https://www.scnet.cn/ac/openapi/doc/2.0/moduleapi/tutorial/quickstart.html"

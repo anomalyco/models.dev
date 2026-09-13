@@ -1,0 +1,16 @@
+# SCNet catalog exposes no caller-controlled reasoning option for this Code SKU.
+# https://www.scnet.cn/ac/openapi/doc/2.0/moduleapi/api/chat.html
+# SCNet probe 2026-08-27: image input was positively confirmed with a semantic red-image probe.
+base_model = "moonshotai/kimi-k2.7-code"
+reasoning_options = []
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.966875
+output = 4.01625
+cache_read = 0.193375
+
+[modalities]
+input = ["text", "image"]

@@ -1,0 +1,21 @@
+# Effort: reasoning_effort = high|max
+# SCNet probe 2026-08-28: high and max produced distinct reasoning-token counts in an untruncated comparison.
+# SCNet probe 2026-08-27: image input was positively confirmed with a semantic red-image probe.
+# https://www.scnet.cn/ac/openapi/doc/2.0/moduleapi/api/chat.html
+attachment = true
+base_model = "zhipuai/glm-5.2"
+reasoning_options = [{ type = "effort", values = ["high", "max"] }]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 1.19
+output = 4.165
+cache_read = 0.2975
+
+[limit]
+context = 1_048_576
+
+[modalities]
+input = ["text", "image"]
