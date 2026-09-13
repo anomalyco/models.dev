@@ -304,21 +304,27 @@ function normalizeCost(model: Record<string, unknown>) {
   }
 
   const tiers = (cost as { tiers?: unknown }).tiers;
-  if (!Array.isArray(tiers) || tiers.length !== 1) {
+  if (!Array.isArray(tiers)) {
     return model;
   }
 
-  const contextOver200k = tiers.find((tier) => {
+  // Only context tiers feed the legacy field; a time tier alongside them must
+  // not suppress it.
+  const contextTiers = tiers.filter((tier): tier is { tier: Record<string, unknown> } => {
     if (tier === null || typeof tier !== "object" || Array.isArray(tier)) return false;
     const tierConfig = (tier as { tier?: unknown }).tier;
     if (tierConfig === null || typeof tierConfig !== "object" || Array.isArray(tierConfig)) return false;
     const type = (tierConfig as { type?: unknown }).type;
-    const size = (tierConfig as { size?: unknown }).size;
-    return (
-      (type === undefined || type === "context") &&
-      typeof size === "number" &&
-      size >= 200_000
-    );
+    return type === undefined || type === "context";
+  });
+
+  if (contextTiers.length !== 1) {
+    return model;
+  }
+
+  const contextOver200k = contextTiers.find((tier) => {
+    const size = (tier.tier as { size?: unknown }).size;
+    return typeof size === "number" && size >= 200_000;
   });
 
   if (contextOver200k === undefined) {

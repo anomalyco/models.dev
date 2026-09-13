@@ -91,14 +91,63 @@ const Cost = z.object({
     .optional(),
 }).strict();
 
+const ContextTier = z
+  .object({
+    type: z.literal("context").default("context"),
+    size: z.number().int().min(0, "Context tier size cannot be negative"),
+  })
+  .strict();
+
+// UTC "HH:MM-HH:MM" range, start inclusive and end exclusive. An end that
+// precedes its start wraps past midnight ("22:00-02:00").
+const TimeWindow = z
+  .string()
+  .regex(
+    /^([01]\d|2[0-3]):[0-5]\d-([01]\d|2[0-3]):[0-5]\d$/,
+    "Must be a UTC time range in HH:MM-HH:MM format",
+  )
+  .refine((window) => {
+    const [start, end] = window.split("-");
+    return start !== end;
+  }, "Time window cannot start and end at the same minute");
+
+// Time-of-day pricing: the tier's rates apply inside `windows`, and the base
+// cost applies outside all of them. Providers that bill peak/off-peak (DeepSeek
+// V4 since 2026-08-16) put the peak rate here and the off-peak rate in `[cost]`.
+// When a context tier and a time tier both match a request, the context tier
+// wins and the time tier is ignored — tiers replace the base cost, they never
+// compose. A provider that charges a combined long-context peak rate cannot be
+// expressed with one tier of each kind.
+const TimeTier = z
+  .object({
+    type: z.literal("time"),
+    windows: z
+      .array(TimeWindow)
+      .min(1, "Time tier must list at least one window"),
+  })
+  .strict();
+
+// A plain union rather than z.discriminatedUnion: authored context tiers omit
+// `type` and lean on the default, which a discriminated union cannot match.
 const CostTier = Cost.extend({
-  tier: z
-    .object({
-      type: z.literal("context").default("context"),
-      size: z.number().int().min(0, "Context tier size cannot be negative"),
-    })
-    .strict(),
+  tier: z.union([ContextTier, TimeTier]),
 }).strict();
+
+function toMinutes(time: string): number {
+  const [hours = 0, minutes = 0] = time.split(":").map(Number);
+  return hours * 60 + minutes;
+}
+
+/** Expands a window into [start, end) minute intervals, splitting midnight wraps. */
+function toIntervals(window: string): Array<[number, number]> {
+  const [start = 0, end = 0] = window.split("-").map(toMinutes);
+  return start < end
+    ? [[start, end]]
+    : [
+        [start, 24 * 60],
+        [0, end],
+      ];
+}
 
 const AuthoredCost = Cost.extend({
   context_over_200k: z.never().optional(),
@@ -344,13 +393,34 @@ function refineModel<
         const tiers = data.cost?.tiers;
         if (tiers === undefined) return true;
 
-        const sizes = tiers.map(
-          (tier: { tier: { size: number } }) => tier.tier.size,
+        const sizes = tiers.flatMap((entry: z.infer<typeof CostTier>) =>
+          entry.tier.type === "context" ? [entry.tier.size] : [],
         );
         return new Set(sizes).size === sizes.length;
       },
       {
         message: "Cost context tiers must not have duplicate sizes",
+        path: ["cost", "tiers"],
+      },
+    )
+    .refine(
+      (data) => {
+        const tiers = data.cost?.tiers;
+        if (tiers === undefined) return true;
+
+        const intervals = tiers.flatMap((entry: z.infer<typeof CostTier>) =>
+          entry.tier.type === "time"
+            ? entry.tier.windows.flatMap(toIntervals)
+            : [],
+        );
+        return intervals.every(([start, end], index) =>
+          intervals
+            .slice(index + 1)
+            .every(([other, otherEnd]) => start >= otherEnd || other >= end),
+        );
+      },
+      {
+        message: "Cost time tier windows must not overlap",
         path: ["cost", "tiers"],
       },
     );

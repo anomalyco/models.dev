@@ -241,6 +241,14 @@ function normalizeModelCost(model: z.infer<typeof AuthoredModel>): Model {
   return normalizeCost(model) as Model;
 }
 
+function isContextTier(tier: unknown): tier is { tier: Record<string, unknown> } {
+  if (tier === null || typeof tier !== "object" || Array.isArray(tier)) return false;
+  const tierConfig = (tier as { tier?: unknown }).tier;
+  if (tierConfig === null || typeof tierConfig !== "object" || Array.isArray(tierConfig)) return false;
+  const type = (tierConfig as { type?: unknown }).type;
+  return type === undefined || type === "context";
+}
+
 function normalizeCost(model: Record<string, unknown>) {
   const cost = model.cost;
   if (cost === undefined || cost === null || typeof cost !== "object" || Array.isArray(cost)) {
@@ -252,23 +260,19 @@ function normalizeCost(model: Record<string, unknown>) {
     return model;
   }
 
-  if (tiers.length !== 1) {
+  // Only context tiers feed the legacy field; a time tier alongside them must
+  // not suppress it.
+  const contextTiers = tiers.filter(isContextTier);
+
+  if (contextTiers.length !== 1) {
     return model;
   }
 
-  const contextOver200k = tiers.find((tier) => {
-    if (tier === null || typeof tier !== "object" || Array.isArray(tier)) return false;
-    const tierConfig = (tier as { tier?: unknown }).tier;
-    if (tierConfig === null || typeof tierConfig !== "object" || Array.isArray(tierConfig)) return false;
-    const type = (tierConfig as { type?: unknown }).type;
-    const size = (tierConfig as { size?: unknown }).size;
+  const contextOver200k = contextTiers.find((tier) => {
+    const size = (tier.tier as { size?: unknown }).size;
     // context_over_200k is a legacy compatibility field. It intentionally
     // includes higher thresholds; cost.tiers carries the exact threshold.
-    return (
-      (type === undefined || type === "context") &&
-      typeof size === "number" &&
-      size >= 200_000
-    );
+    return typeof size === "number" && size >= 200_000;
   });
 
   if (contextOver200k === undefined) {

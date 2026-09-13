@@ -109,6 +109,133 @@ describe("model schema", () => {
   });
 });
 
+describe("cost tiers", () => {
+  function withTiers(tiers: unknown) {
+    return AuthoredModel.safeParse({
+      ...baseModel({}),
+      cost: { input: 1, output: 2, tiers },
+    });
+  }
+
+  test("keeps accepting context tiers authored without an explicit type", () => {
+    const result = withTiers([{ tier: { size: 200_000 }, input: 2, output: 4 }]);
+
+    expect(result.success).toBe(true);
+    if (!result.success) return;
+    expect(result.data.cost?.tiers?.[0]?.tier).toEqual({
+      type: "context",
+      size: 200_000,
+    });
+  });
+
+  test("accepts time tiers with UTC windows", () => {
+    expect(
+      withTiers([
+        {
+          tier: { type: "time", windows: ["01:00-04:00", "06:00-10:00"] },
+          input: 0.44,
+          output: 1.32,
+          cache_read: 0.014,
+        },
+      ]).success,
+    ).toBe(true);
+  });
+
+  test("accepts a window that wraps past midnight", () => {
+    expect(
+      withTiers([
+        { tier: { type: "time", windows: ["22:00-02:00"] }, input: 2, output: 4 },
+      ]).success,
+    ).toBe(true);
+  });
+
+  test("rejects malformed windows", () => {
+    for (const window of [
+      "1:00-4:00",
+      "24:00-25:00",
+      "01:00",
+      "01:00-04:60",
+      "01:00 - 04:00",
+    ]) {
+      expect(
+        withTiers([
+          { tier: { type: "time", windows: [window] }, input: 2, output: 4 },
+        ]).success,
+      ).toBe(false);
+    }
+  });
+
+  test("rejects a window that starts and ends at the same minute", () => {
+    expect(
+      withTiers([
+        { tier: { type: "time", windows: ["01:00-01:00"] }, input: 2, output: 4 },
+      ]).success,
+    ).toBe(false);
+  });
+
+  test("rejects a time tier with no windows", () => {
+    expect(
+      withTiers([{ tier: { type: "time", windows: [] }, input: 2, output: 4 }])
+        .success,
+    ).toBe(false);
+  });
+
+  test("rejects overlapping windows within one tier", () => {
+    expect(
+      withTiers([
+        {
+          tier: { type: "time", windows: ["01:00-04:00", "03:00-06:00"] },
+          input: 2,
+          output: 4,
+        },
+      ]).success,
+    ).toBe(false);
+  });
+
+  test("rejects overlapping windows across tiers, including midnight wraps", () => {
+    expect(
+      withTiers([
+        { tier: { type: "time", windows: ["22:00-02:00"] }, input: 2, output: 4 },
+        { tier: { type: "time", windows: ["01:00-03:00"] }, input: 3, output: 5 },
+      ]).success,
+    ).toBe(false);
+  });
+
+  test("accepts adjacent windows, since the end is exclusive", () => {
+    expect(
+      withTiers([
+        {
+          tier: { type: "time", windows: ["01:00-04:00", "04:00-06:00"] },
+          input: 2,
+          output: 4,
+        },
+      ]).success,
+    ).toBe(true);
+  });
+
+  test("rejects duplicate context sizes alongside a time tier", () => {
+    expect(
+      withTiers([
+        { tier: { size: 200_000 }, input: 2, output: 4 },
+        { tier: { size: 200_000 }, input: 3, output: 5 },
+        { tier: { type: "time", windows: ["01:00-04:00"] }, input: 4, output: 6 },
+      ]).success,
+    ).toBe(false);
+  });
+
+  test("rejects unknown keys inside a tier", () => {
+    expect(
+      withTiers([
+        {
+          tier: { type: "time", windows: ["01:00-04:00"], timezone: "UTC" },
+          input: 2,
+          output: 4,
+        },
+      ]).success,
+    ).toBe(false);
+  });
+});
+
 describe("provider schema", () => {
   const mergeGatewayProvider = {
     id: "merge-gateway",
