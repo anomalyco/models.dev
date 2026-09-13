@@ -1,0 +1,27 @@
+# Effort: reasoning_effort = low|high|max
+# Prices: https://api.engy.ai/v1/models; limits: authed https://engy.ai/api/v1/models (2026-08-28/30).
+# Launch discount: page lists 0.15/0.50, billed 0.135/0.45. Served text+image, so input is narrowed.
+# "(Ox Alpha)" is the codename it was served under before the name went public; status unset.
+# Live probe 2026-08-30 at 8k, n=40 for low/medium/high, 20 for xhigh/max: low = medium (p=0.41)
+# < high (p=1.8e-05) < xhigh = max; none/minimal/enable_thinking=false measure as low; 0/320 empty.
+base_model = "zhipuai/glm-5.3-flash"
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[cost]
+input = 0.135
+output = 0.45
+cache_read = 0.027
+
+[limit]
+context = 262_144
+input = 229_376
+output = 32_768
+
+[modalities]
+input = ["text", "image"]

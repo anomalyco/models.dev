@@ -1,0 +1,26 @@
+# Toggle: chat_template_kwargs.thinking = true|false
+# Prices: https://api.engy.ai/v1/models (2026-09-03, raised 30% from 08-28); limits: authed
+# https://engy.ai/api/v1/models (2026-08-30). engy serves this text+image only, so input is narrowed.
+# Live probe 2026-08-30, n=40/level at 16k: reasoning_effort inert, every pair p>=0.61 (MWU);
+# thinking=false suppresses reasoning 40/40. temperature honoured (0 vs 1.5, 12 prompts x 3
+# replicates, 12/12, paired p=0.0005, 2026-08-31); the lab's false is Moonshot's own API.
+base_model = "moonshotai/kimi-k3"
+temperature = true
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "toggle"
+
+[cost]
+input = 1.95
+output = 9.75
+cache_read = 0.195
+
+[limit]
+input = 983_040
+output = 65_536
+
+[modalities]
+input = ["text", "image"]
