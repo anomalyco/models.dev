@@ -1,0 +1,13 @@
+# Kiro exposes no caller-configurable reasoning control for Claude Opus 4.5:
+# Source: https://kiro.dev/docs/cli/chat/effort/
+base_model = "anthropic/claude-opus-4-5"
+name = "Claude Opus 4.5"
+reasoning_options = []
+
+[cost]
+input = 0
+output = 0
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

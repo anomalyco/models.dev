@@ -1,0 +1,24 @@
+# Output: Kiro publishes no max_tokens cap for Auto; 64000 is the lowest cap among the
+# Claude models it routes to. Source: https://kiro.dev/docs/models/effort/
+name = "Auto"
+description = "Kiro's automatic model router that picks the optimal model per task to balance quality and cost."
+family = "claude-sonnet"
+release_date = "2025-09-17"
+last_updated = "2025-09-17"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = true
+open_weights = false
+
+[cost]
+input = 0
+output = 0
+
+[limit]
+context = 1_000_000
+output = 64_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
