@@ -1,0 +1,27 @@
+# First-party Lanseq deployment documentation:
+# https://api.lanseq.cloud/docs
+# Pricing: input = $0.25/M tokens, cache_read = $0.045/M tokens, output = $1.99/M tokens.
+# Limits: context = 70,000 tokens, max output = 8,192 tokens.
+# Reasoning wire control: reasoning_effort = none | low | medium | xhigh.
+
+base_model = "alibaba/qwen3.8-27b"
+name = "Qwen3.8-27B INT4"
+description = "Text-only INT4 deployment of Qwen3.8-27B served by Lanseq."
+attachment = false
+
+reasoning_options = [
+  { type = "effort", values = ["none", "low", "medium", "xhigh"] },
+]
+
+[cost]
+input = 0.25
+output = 1.99
+cache_read = 0.045
+
+[limit]
+context = 70_000
+output = 8_192
+
+[modalities]
+input = ["text"]
+output = ["text"]
