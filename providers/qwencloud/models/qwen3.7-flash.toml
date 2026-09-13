@@ -1,0 +1,13 @@
+base_model = "alibaba/qwen3.7-flash"
+[[reasoning_options]]
+type = "toggle"
+[[reasoning_options]]
+type = "budget_tokens"
+
+# Pricing is approximate for the QwenCloud International flash tier; adjust once
+# published international rates are confirmed.
+[cost]
+input = 0.10
+output = 0.40
+cache_read = 0.01
+cache_write = 0.10
