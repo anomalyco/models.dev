@@ -1,0 +1,13 @@
+# Always reasons on Inco; no caller control — toggle fields (thinking.type,
+# chat_template_kwargs.thinking/enable_thinking, reasoning) were tested and are
+# ignored. reasoning_content interleaved field verified against Inco responses.
+base_model = "minimax/MiniMax-M3"
+
+reasoning_options = []
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.3
+output = 1.2
