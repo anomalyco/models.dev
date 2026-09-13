@@ -1,0 +1,19 @@
+# Cost = Gondola's live fee-inclusive "from" quote (/v1/models): the cheapest active
+# lender's uniform pricing factor (a fraction of Venice list, applied to every model)
+# + a 2% platform fee. So each model is the same multiple of Venice list right now;
+# that multiple floats over time as supply shifts. Limits from /v1/models; modalities
+# mirror providers/venice/. https://api.gondola-ai.com/v1/models (accessed 2026-08-14)
+base_model = "xiaomi/mimo-v2.5"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high"]
+
+[cost]
+input = 0.1224
+output = 0.612
+cache_read = 0.02448
+
+[limit]
+context = 1000000
+output = 32768

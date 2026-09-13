@@ -1,0 +1,8 @@
+name = "Gondola"
+env = ["GONDOLA_API_KEY"]
+# No Gondola-specific SDK package: Gondola is a plain OpenAI-compatible endpoint,
+# so use the shared openai-compatible provider + the `api` base URL (same pattern
+# as the nano-gpt and deepseek entries).
+npm = "@ai-sdk/openai-compatible"
+api = "https://api.gondola-ai.com/v1"
+doc = "https://gondola-ai.com/guides"

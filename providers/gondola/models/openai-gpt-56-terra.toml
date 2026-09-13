@@ -1,0 +1,25 @@
+# Cost = Gondola's live fee-inclusive "from" quote (/v1/models): the cheapest active
+# lender's uniform pricing factor (a fraction of Venice list, applied to every model)
+# + a 2% platform fee. So each model is the same multiple of Venice list right now;
+# that multiple floats over time as supply shifts. Limits from /v1/models; modalities
+# mirror providers/venice/. https://api.gondola-ai.com/v1/models (accessed 2026-08-14)
+base_model = "openai/gpt-5.6-terra"
+base_model_omit = ["limit.input"]
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "xhigh", "max"]
+
+[cost]
+input = 0.95625
+output = 5.7375
+cache_read = 0.095625
+cache_write = 1.195313
+
+[limit]
+context = 1000000
+output = 32768
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

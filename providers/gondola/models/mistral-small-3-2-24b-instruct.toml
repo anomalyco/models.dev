@@ -1,0 +1,17 @@
+# Cost = Gondola's live fee-inclusive "from" quote (/v1/models): the cheapest active
+# lender's uniform pricing factor (a fraction of Venice list, applied to every model)
+# + a 2% platform fee. So each model is the same multiple of Venice list right now;
+# that multiple floats over time as supply shifts. Limits from /v1/models; modalities
+# mirror providers/venice/. https://api.gondola-ai.com/v1/models (accessed 2026-08-14)
+base_model = "mistral/mistral-small-2506"
+
+[cost]
+input = 0.028687
+output = 0.0765
+
+[limit]
+context = 256000
+
+[modalities]
+input = ["text"]
+output = ["text"]
