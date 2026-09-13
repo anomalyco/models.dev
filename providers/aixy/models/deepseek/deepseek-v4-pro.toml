@@ -1,0 +1,22 @@
+# Toggle: thinking.type = enabled|disabled
+# Reasoning tokens are billed at the output rate (no separate CoT price).
+# `completion_tokens_details.reasoning_tokens` is a subset of completion_tokens.
+# https://api-docs.deepseek.com/quick_start/pricing/ (accessed 2026-08-12)
+base_model = "deepseek/deepseek-v4-pro-0813"
+name = "DeepSeek V4 Pro"
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["high", "max"]
+
+[cost]
+input = 0.435
+output = 0.87
+reasoning = 0.87
+cache_read = 0.003625
