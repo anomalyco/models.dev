@@ -1,0 +1,15 @@
+base_model = "anthropic/claude-fable-5"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high", "xhigh", "max"]
+
+[cost]
+input = 9.27
+output = 46.35
+cache_read = 0.927
+cache_write = 11.5875
+
+[provider]
+npm = "@ai-sdk/anthropic"
+api = "https://api.saygm.com/v1"

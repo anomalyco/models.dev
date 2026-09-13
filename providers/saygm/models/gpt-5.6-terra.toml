@@ -1,0 +1,15 @@
+base_model = "openai/gpt-5.6-terra"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "xhigh", "max"]
+
+[cost]
+input = 1.854
+output = 11.124
+cache_read = 0.1854
+
+[[cost.tiers]]
+tier = { type = "context", size = 272_000 }
+input = 3.708
+output = 16.686

@@ -82,6 +82,13 @@ import {
 import { openai, parseOpenAIModels } from "../src/sync/providers/openai.js";
 import { ofox } from "../src/sync/providers/ofox.js";
 import { pioneer } from "../src/sync/providers/pioneer.js";
+import {
+  buildSaygmModel,
+  saygm,
+  SaygmResponse,
+  type SaygmModel,
+  usdPerMtok,
+} from "../src/sync/providers/saygm.js";
 import { google, shouldTrackGoogleModel } from "../src/sync/providers/google.js";
 import { buildTinfoilModel, tinfoil, type TinfoilModel } from "../src/sync/providers/tinfoil.js";
 import { resolveVeniceBaseModel } from "../src/sync/providers/venice.js";
@@ -204,6 +211,180 @@ function readyInceptronModel(overrides: Partial<InceptronModel> = {}): ReadyInce
     data: [inceptronModel(overrides)],
   })[0]!;
 }
+
+type SaygmPriceDimensions = NonNullable<SaygmModel["pricing"]>["dimensions"];
+
+function saygmPriceRange(
+  routeCeiling: SaygmPriceDimensions | undefined,
+  retail: SaygmPriceDimensions,
+): NonNullable<SaygmModel["price_range"]> {
+  return {
+    route_ceiling: routeCeiling === undefined
+      ? undefined
+      : { basis: "highest_eligible_offer", dimensions: routeCeiling },
+    ceiling: { basis: "published_retail", dimensions: retail },
+  };
+}
+
+function saygmModel(overrides: Partial<SaygmModel> = {}): SaygmModel {
+  const routeCeiling = {
+    input_per_mtok_ndollars: 2_500_000_000,
+    output_per_mtok_ndollars: 15_000_000_000,
+    cache_read_per_mtok_ndollars: 250_000_000,
+    long_context_threshold_tokens: 272_000,
+    long_context_input_per_mtok_ndollars: 5_000_000_000,
+    long_context_output_per_mtok_ndollars: 22_500_000_000,
+  };
+  return {
+    id: "gpt-5.4",
+    object: "model",
+    available: true,
+    api_shapes: ["chat.completions", "responses"],
+    pricing: {
+      basis: "cheapest_eligible_offer",
+      dimensions: {
+        input_per_mtok_ndollars: 1_500_000_000,
+        output_per_mtok_ndollars: 9_000_000_000,
+      },
+    },
+    price_range: saygmPriceRange(routeCeiling, {
+      input_per_mtok_ndollars: 3_000_000_000,
+      output_per_mtok_ndollars: 18_000_000_000,
+      cache_read_per_mtok_ndollars: 300_000_000,
+    }),
+    ...overrides,
+  };
+}
+
+test("converts SayGM highest-eligible-offer nanodollars into models.dev USD per Mtok costs", () => {
+  const built = buildSaygmModel(saygmModel(), {
+    base_model: "openai/gpt-5.4",
+    reasoning_options: [{ type: "effort", values: ["none", "low", "high"] }],
+  });
+
+  expect(built).toMatchObject({
+    base_model: "openai/gpt-5.4",
+    cost: {
+      input: 2.5,
+      output: 15,
+      cache_read: 0.25,
+      tiers: [{ tier: { type: "context", size: 272_000 }, input: 5, output: 22.5 }],
+    },
+  });
+  expect(usdPerMtok(1)).toBe(0.000000001);
+});
+
+test("uses SayGM's five-minute cache-write rate for models.dev", () => {
+  const built = buildSaygmModel(saygmModel({
+    id: "claude-haiku-4-5",
+    api_shapes: ["messages"],
+    price_range: saygmPriceRange(
+      {
+        input_per_mtok_ndollars: 1_000_000_000,
+        output_per_mtok_ndollars: 5_000_000_000,
+        cache_read_per_mtok_ndollars: 100_000_000,
+        cache_write_5m_per_mtok_ndollars: 1_250_000_000,
+        cache_write_1h_per_mtok_ndollars: 2_000_000_000,
+      },
+      {
+        input_per_mtok_ndollars: 1_200_000_000,
+        output_per_mtok_ndollars: 6_000_000_000,
+      },
+    ),
+  }), { base_model: "anthropic/claude-haiku-4-5" });
+
+  expect(built).toMatchObject({
+    cost: { input: 1, output: 5, cache_read: 0.1, cache_write: 1.25 },
+  });
+});
+
+test("retains authored SayGM cost fields the live route ceiling omits", () => {
+  const existing = {
+    base_model: "openai/gpt-5.4",
+    cost: {
+      input: 2,
+      output: 12,
+      cache_read: 0.2,
+      cache_write: 2.5,
+      tiers: [{ tier: { type: "context" as const, size: 272_000 }, input: 4, output: 20 }],
+    },
+  };
+
+  const built = buildSaygmModel(saygmModel({
+    price_range: saygmPriceRange(
+      {
+        input_per_mtok_ndollars: 2_500_000_000,
+        output_per_mtok_ndollars: 15_000_000_000,
+      },
+      {
+        input_per_mtok_ndollars: 3_000_000_000,
+        output_per_mtok_ndollars: 18_000_000_000,
+      },
+    ),
+  }), existing);
+
+  expect(built).toMatchObject({
+    cost: {
+      input: 2.5,
+      output: 15,
+      cache_read: 0.2,
+      cache_write: 2.5,
+      tiers: existing.cost.tiers,
+    },
+  });
+});
+
+test("retains reviewed SayGM pricing when the price range is absent", () => {
+  const existing = {
+    base_model: "openai/gpt-5.4",
+    cost: { input: 2.5, output: 15, cache_read: 0.25 },
+  };
+
+  const built = buildSaygmModel(saygmModel({ price_range: undefined }), existing);
+
+  expect(built).toEqual(existing);
+});
+
+test("falls back to SayGM retail when no live route ceiling is available", () => {
+  // An older gateway or a currently unroutable product can omit the new live
+  // bound. Retail is explicit and conservative, unlike the headline floor.
+  const existing = {
+    base_model: "openai/gpt-5.4",
+    cost: { input: 1.27, output: 6.36, cache_read: 0.13 },
+  };
+
+  const built = buildSaygmModel(saygmModel({
+    price_range: saygmPriceRange(
+      undefined,
+      {
+        input_per_mtok_ndollars: 2_000_000_000,
+        output_per_mtok_ndollars: 10_000_000_000,
+      },
+    ),
+  }), existing);
+
+  expect(built).toMatchObject({ cost: { input: 2, output: 10, cache_read: 0.13 } });
+});
+
+test("rejects incomplete or unrecognized SayGM pricing bases", () => {
+  const valid = saygmModel();
+  const missingLongOutput = structuredClone(valid);
+  delete missingLongOutput.price_range!.route_ceiling!.dimensions
+    .long_context_output_per_mtok_ndollars;
+  expect(() => SaygmResponse.parse({ object: "list", data: [missingLongOutput] })).toThrow(
+    "Long-context pricing requires a threshold plus input and output prices",
+  );
+
+  const unknownBasis = structuredClone(valid);
+  Object.assign(unknownBasis.price_range!.route_ceiling!, { basis: "wholesale_floor" });
+  expect(() => SaygmResponse.parse({ object: "list", data: [unknownBasis] })).toThrow();
+});
+
+test("keeps SayGM model lifecycle changes review-only", () => {
+  expect(saygm.skipCreates).toBe(true);
+  expect(saygm.deleteMissing).toBe(false);
+  expect(saygm.trackMissingModels).toBe(false);
+});
 
 test("builds current Inceptron models from explicit base metadata", () => {
   const models = parseInceptronModels({

@@ -1,0 +1,15 @@
+base_model = "openai/gpt-5.6-sol"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "xhigh", "max"]
+
+[cost]
+input = 3.708
+output = 18.54
+cache_read = 0.3708
+
+[[cost.tiers]]
+tier = { type = "context", size = 272_000 }
+input = 7.416
+output = 27.81
