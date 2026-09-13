@@ -1,0 +1,27 @@
+# Kunavo is an OpenAI-compatible gateway; the ids here are Kunavo's own and are
+# matched exactly (no date-suffixed aliases).
+#
+# Prices are Kunavo's list rates in USD per 1M tokens, from the live catalog at
+# https://kunavo.com/llms.txt (re-verified 2026-09-06). cache_read derives as
+# 0.10x input on the Anthropic-protocol models and 0.20x elsewhere, EXCEPT where
+# the catalog pins an explicit rate — claude-fable-5-1 pins $0.25 rather than the
+# derived $0.70. cache_write equals input on the Claude models because Kunavo
+# absorbs Anthropic's cache-write surcharge instead of passing it through.
+#
+# reasoning_options is empty by measurement, not by uncertainty. On the surface
+# this provider registers (OpenAI /v1/chat/completions), Kunavo builds the
+# upstream Anthropic request from an explicit field list — model, max_tokens,
+# messages, stream, temperature/top_p/top_k, stop, tools, tool_choice, system —
+# and carries no reasoning or thinking field across, so a caller-supplied
+# reasoning control has no effect on this endpoint. Anthropic `thinking` does
+# work on Kunavo's native Messages route (origin https://api.kunavo.com, client
+# appends /v1/messages), which relays the body untranslated; that surface is not
+# what this entry registers.
+base_model = "anthropic/claude-fable-5"
+reasoning_options = []
+
+[cost]
+input = 7
+output = 35
+cache_read = 0.7
+cache_write = 7
