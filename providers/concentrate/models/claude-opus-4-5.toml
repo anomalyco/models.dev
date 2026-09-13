@@ -1,0 +1,19 @@
+# Pricing, limits and reasoning surface as published for this ID.
+# Concentrate exposes the off switch as `reasoning_effort: none` rather than a
+# separate toggle, and every route declares it. Live probes on 2026-08-19 with an
+# identical prompt used 970 completion tokens at none against 2132 at high, so it
+# genuinely reduces thinking rather than being normalized away.
+# https://concentrate.ai/models/claude-opus-4-5
+base_model = "anthropic/claude-opus-4-5"
+structured_output = true
+
+interleaved = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high"]
+
+[cost]
+input = 5
+output = 25
+cache_read = 0.5
