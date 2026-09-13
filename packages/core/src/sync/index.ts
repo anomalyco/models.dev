@@ -1044,6 +1044,21 @@ export function formatToml(model: z.infer<typeof SyncedAuthoredModel>) {
     if (model.cost.output_audio !== undefined) {
       lines.push(`output_audio = ${formatNumber(model.cost.output_audio)}`);
     }
+    if (model.cost.discount !== undefined) {
+      lines.push(`discount = ${formatNumber(model.cost.discount)}`);
+    }
+    if (model.cost.input_list !== undefined) {
+      lines.push(`input_list = ${formatNumber(model.cost.input_list)}`);
+    }
+    if (model.cost.output_list !== undefined) {
+      lines.push(`output_list = ${formatNumber(model.cost.output_list)}`);
+    }
+    if (model.cost.cache_read_list !== undefined) {
+      lines.push(`cache_read_list = ${formatNumber(model.cost.cache_read_list)}`);
+    }
+    if (model.cost.cache_write_list !== undefined) {
+      lines.push(`cache_write_list = ${formatNumber(model.cost.cache_write_list)}`);
+    }
 
     for (const tier of model.cost.tiers ?? []) {
       lines.push("", "[[cost.tiers]]");
