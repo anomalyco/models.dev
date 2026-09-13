@@ -1,15 +1,20 @@
-name = "GLM-5.1 FP8"
-description = "Flagship GLM model for hybrid reasoning, coding, and agentic engineering"
-family = "glm"
-release_date = "2026-03-27"
-last_updated = "2026-03-27"
-attachment = false
-reasoning = true
+# NEAR AI Cloud TEE deployment (FP8). release_date/last_updated track the TEE catalog
+# refresh, not the lab release (see models/zhipuai/glm-5.1.toml).
+# Toggle: chat_template_kwargs.enable_thinking = true|false (on by default)
+# https://docs.near.ai/cloud/reasoning-models
+# limit.output is inherited from the lab (131_072) on purpose. The gateway's own
+# max_output_length says 16384, but that field is advisory and is not enforced:
+# verified 2026-09-10 on POST https://cloud-api.near.ai/v1/chat/completions,
+# max_tokens of 16384, 40000 and 131072 were all accepted, while 202752 and above
+# were rejected with "Requested token count exceeds the model's maximum context".
+# The binding limit is the 202_752 context window (max_model_len on
+# https://glm-5-1.completions.near.ai/v1/models), which is why context is overridden
+# here and output is not. See https://docs.near.ai/cloud/guides/integrations/model-discovery
+base_model = "zhipuai/glm-5.1"
+name = "GLM 5.1 FP8 TEE"
+release_date = "2026-09-08"
+last_updated = "2026-09-08"
 reasoning_options = [{ type = "toggle" }]
-temperature = true
-tool_call = true
-structured_output = true
-open_weights = true
 
 [interleaved]
 field = "reasoning_content"
@@ -17,11 +22,7 @@ field = "reasoning_content"
 [cost]
 input = 1.4
 output = 4.4
+cache_read = 0.26
 
 [limit]
 context = 202_752
-output = 16384
-
-[modalities]
-input = ["text"]
-output = ["text"]

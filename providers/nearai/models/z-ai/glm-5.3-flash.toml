@@ -1,0 +1,21 @@
+# Toggle: chat_template_kwargs.enable_thinking = true|false (on by default)
+# NEAR AI Cloud TEE deployment. release_date/last_updated track the TEE catalog
+# refresh, not the lab release (see models/zhipuai/glm-5.3-flash.toml).
+# Verified live on POST https://cloud-api.near.ai/v1/chat/completions 2026-09-08:
+# reasoning_content present when on, absent when off
+base_model = "zhipuai/glm-5.3-flash"
+name = "GLM 5.3 Flash TEE"
+release_date = "2026-09-08"
+last_updated = "2026-09-08"
+reasoning_options = [{ type = "toggle" }]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.075
+output = 0.25
+cache_read = 0.015
+
+[modalities]
+input = ["text", "image"]
