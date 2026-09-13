@@ -1,0 +1,16 @@
+# Source: GET https://ai.zenifra.com/v1/models (accessed 2026-09-12).
+# Conversion: Zenifra prices are BRL; models.dev costs use BRL / 5.20 = USD (project rate, applied 2026-09-12).
+base_model = "alibaba/qwen3.7-max"
+structured_output = true
+reasoning_options = []
+
+[limit]
+output = 131_072
+
+[provider]
+shape = "completions"
+
+[cost]
+input = 1.634615
+output = 4.903846
+cache_read = 0.326923

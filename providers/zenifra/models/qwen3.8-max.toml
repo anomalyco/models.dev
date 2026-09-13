@@ -1,0 +1,18 @@
+# Source: GET https://ai.zenifra.com/v1/models (accessed 2026-09-12).
+# Conversion: Zenifra prices are BRL; models.dev costs use BRL / 5.20 = USD (project rate, applied 2026-09-12).
+# This model advertises both /v1/chat/completions and /v1/responses.
+# Reasoning: reasoning_effort = none|minimal|low|medium|high|xhigh|max
+base_model = "alibaba/qwen3.8-max"
+attachment = false
+structured_output = true
+reasoning_options = [
+  { type = "effort", values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"] },
+]
+
+[provider]
+shape = "completions"
+
+[cost]
+input = 1.634615
+output = 4.923077
+cache_read = 0.134615
