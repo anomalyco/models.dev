@@ -1,0 +1,12 @@
+# Reasoning (verified 2026-09-09): Doubleword forwards reasoning_effort on
+# POST https://api.doubleword.ai/v1/chat/completions, validated server-side
+# against none|minimal|low|medium|high|xhigh|max (any other value returns 400),
+# uniformly across the catalog; effort is honoured (reasoning tokens scale with it).
+# Our (Doubleword) pricing: https://docs.doubleword.ai/inference-api/models
+base_model = "zhipuai/glm-5.1"
+reasoning_options = [{ type = "effort", values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"] }]
+
+[cost]
+input = 1.05
+cache_read = 0.26
+output = 3.5
