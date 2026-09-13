@@ -1,0 +1,26 @@
+# Sources: https://routerplex.com/models and https://routerplex.com/api/models (accessed 2026-08-31).
+# Cost is RouterPlex sell price (USD / 1M tokens). cache_read is listed only when
+# this host bills a discounted cache-hit rate; otherwise cached tokens are billed
+# at the input rate.
+# Toggle: `enable_thinking` true|false (also `reasoning_effort` on /v1/chat/completions). Budget: `thinking_budget` / `reasoning.max_tokens` 0..262144. Effort: `reasoning_effort` = low|medium|xhigh.
+base_model = "alibaba/qwen3.8-max"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = [ "low", "medium", "xhigh" ]
+
+[[reasoning_options]]
+type = "budget_tokens"
+min = 0
+max = 262_144
+
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 2
+output = 6

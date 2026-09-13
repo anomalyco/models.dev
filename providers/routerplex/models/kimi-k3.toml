@@ -1,0 +1,23 @@
+# Sources: https://routerplex.com/models and https://routerplex.com/api/models (accessed 2026-08-31).
+# Cost is RouterPlex sell price (USD / 1M tokens). cache_read is listed only when
+# this host bills a discounted cache-hit rate; otherwise cached tokens are billed
+# at the input rate.
+# Toggle: `thinking.type` = enabled|disabled. Effort: `reasoning_effort` = low|high|max.
+# No cache_read: Moonshot publishes a $0.30 cache-hit rate, but this gateway
+# bills cached prompt tokens at the full $3.00 input rate.
+base_model = "moonshotai/kimi-k3"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = [ "low", "high", "max" ]
+
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 3
+output = 15
