@@ -1,0 +1,11 @@
+base_model = "anthropic/claude-opus-4-8"
+name = "Claude 4.8 Opus"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "xhigh", "max"]
+
+[cost]
+input = 6.877
+output = 34.385
+cache_read = 0.6877

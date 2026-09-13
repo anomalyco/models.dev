@@ -1,0 +1,16 @@
+base_model = "tencent/hy4-preview"
+
+[interleaved]
+field = "reasoning_details"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high"]
+
+[cost]
+input = 1.147084
+output = 3.439875
+cache_read = 0.057767
+
+[limit]
+context = 1_048_576

@@ -1,0 +1,16 @@
+base_model = "inclusionai/ling-3.0-flash-fin"
+
+[interleaved]
+field = "reasoning_details"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high"]
+
+[cost]
+input = 0.082524
+output = 0.247572
+cache_read = 0.016505
+
+[limit]
+output = 235_929

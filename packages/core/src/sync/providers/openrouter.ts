@@ -51,6 +51,23 @@ const CANONICAL_PROVIDER_PREFIXES = {
   "zai-org": { provider: "zai", metadata: "zhipuai" },
 } as const;
 
+/**
+ * The first-party provider directory for a metadata lab id.
+ *
+ * `base_model` ids are spelled with the METADATA lab (`zhipuai/glm-4.7-flash`,
+ * `meta/llama-...`) while a lab's own reasoning ladder lives under its
+ * PROVIDER directory (`providers/zai`, `providers/llama`). The two coincide for
+ * most labs and not for these, and a lookup that assumes they coincide fails
+ * silently — the caller falls back to whatever it had, which for a relay means
+ * publishing the host's enum as if it were the lab's.
+ */
+export function providerDirForMetadataLab(metadata: string): string {
+  for (const entry of Object.values(CANONICAL_PROVIDER_PREFIXES)) {
+    if (entry.metadata === metadata) return entry.provider;
+  }
+  return metadata;
+}
+
 export const OpenRouterModel = z.object({
   id: z.string(),
   name: z.string(),

@@ -1,0 +1,16 @@
+base_model = "alibaba/qwen3.8-2.4t-a95b"
+
+[interleaved]
+field = "reasoning_details"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high"]
+
+[cost]
+input = 3.4385
+output = 8.59625
+cache_read = 0.6877
+
+[limit]
+output = 52_429

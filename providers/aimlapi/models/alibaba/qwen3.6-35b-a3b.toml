@@ -1,0 +1,17 @@
+base_model = "alibaba/qwen3.6-35b-a3b"
+name = "Qwen3.6 35B A3B"
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high"]
+
+[cost]
+input = 0.4875
+output = 2.925
+
+[limit]
+context = 256_000
+output = 252_000
