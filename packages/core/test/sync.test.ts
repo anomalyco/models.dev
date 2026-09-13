@@ -38,6 +38,7 @@ import {
   type EdenAIModel,
 } from "../src/sync/providers/edenai.js";
 import { buildHyperModel, type HyperModel } from "../src/sync/providers/hyper.js";
+import { buildKiloModel, type KiloModel } from "../src/sync/providers/kilo.js";
 import {
   buildInceptronModel,
   parseInceptronModels,
@@ -142,6 +143,37 @@ function nanoGptModel(overrides: Partial<NanoGptModel> = {}): NanoGptModel {
       completion: 1.32,
       cacheReadInputPer1kTokens: 0.000078,
     },
+    ...overrides,
+  };
+}
+
+function kiloModel(overrides: Partial<KiloModel> = {}): KiloModel {
+  return {
+    id: "anthropic/claude-opus-4-6",
+    name: "Claude Opus 4.6",
+    description: "API description from Kilo",
+    created: 1_782_777_600,
+    hugging_face_id: null,
+    knowledge_cutoff: "2026-01-31",
+    context_length: 1_000_000,
+    architecture: {
+      input_modalities: ["text", "image"],
+      output_modalities: ["text"],
+      tokenizer: "claude",
+    },
+    pricing: {
+      prompt: "0.000005",
+      completion: "0.000025",
+      internal_reasoning: "0.000025",
+      input_cache_read: "0.00000025",
+      input_cache_write: "0.00000375",
+    },
+    top_provider: {
+      context_length: 1_000_000,
+      max_completion_tokens: 128_000,
+      is_moderated: false,
+    },
+    supported_parameters: ["tools", "structured_outputs", "temperature"],
     ...overrides,
   };
 }
@@ -892,6 +924,50 @@ test("NanoGPT sync drops stale descriptions while first factoring existing model
   } finally {
     await rm(dir, { recursive: true, force: true });
   }
+});
+
+test("Kilo sync prefers API description over existing description", () => {
+  const model = buildKiloModel(
+    kiloModel({ description: "Updated API description" }),
+    { description: "Existing authored description" } as ExistingModel,
+  );
+  expect((model as SyncedFullModel).description).toBe("Updated API description");
+});
+
+test("Kilo sync falls back to existing description when API description is empty", () => {
+  const model = buildKiloModel(
+    kiloModel({ description: "" }),
+    { description: "Existing authored description" } as ExistingModel,
+  );
+  expect((model as SyncedFullModel).description).toBe("Existing authored description");
+});
+
+test("Kilo sync falls back to generated description when API and existing descriptions are missing", () => {
+  const model = buildKiloModel(
+    kiloModel({ description: undefined }),
+    undefined,
+  );
+  expect((model as SyncedFullModel).description).toBe(
+    "Flagship Claude model for deep reasoning, coding, and long-horizon agents",
+  );
+});
+
+test("Kilo sync prefers API description over existing description for base-model factored models", () => {
+  const model = buildKiloModel(
+    kiloModel({ description: "Updated API description" }),
+    { description: "Existing authored description" } as ExistingModel,
+    "anthropic/claude-opus-4-6",
+  );
+  expect(model.description).toBe("Updated API description");
+});
+
+test("Kilo sync falls back to existing description when API description is empty for base-model factored models", () => {
+  const model = buildKiloModel(
+    kiloModel({ description: "   " }),
+    { description: "Existing authored description" } as ExistingModel,
+    "anthropic/claude-opus-4-6",
+  );
+  expect(model.description).toBe("Existing authored description");
 });
 
 const anthropicPricingMarkdown = `
