@@ -1,3 +1,8 @@
+# Prompt caching (chat): Automatic server-side prefix reuse with no chat-level cache control; cache hits are reported per request.
+# Use headers: none.
+# Use body: none. Chat examples document model/messages/max_tokens only, with no cache params.
+# To get a hit: Keep shared prefixes stable and append-only; confirm via usage.prompt_tokens_details.cached_tokens, billed at the cache-read rate.
+# Docs: https://github.com/OpenSenseNova/SenseNova6.7/blob/main/API.md
 name = "SenseNova (China)"
 npm = "@ai-sdk/openai-compatible"
 env = ["SENSENOVA_API_KEY"]
