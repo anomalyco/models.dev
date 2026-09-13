@@ -1,0 +1,15 @@
+# Wire path (POST http://localhost:8402/v1/chat/completions on the local
+# `npx openzoo` proxy, OpenAI-compatible; reasoning controls ride the
+# OpenRouter-style top-level `reasoning` request object, which the proxy
+# forwards untouched when the caller sets it):
+#   toggle        -> $.reasoning.enabled    = true|false
+#   budget_tokens -> $.reasoning.max_tokens = <int>
+# Priced from the live catalog: GET /v1/models (free; same list on the hosted
+# https://api.openzoo.fun/v1/models and on the local proxy)
+# (prompt_price_per_1m = 0.03, completion_price_per_1m = 0.13)
+base_model = "alibaba/qwen3.7-flash"
+reasoning_options = [{ type = "toggle" }, { type = "budget_tokens", max = 262_144 }]
+
+[cost]
+input = 0.03
+output = 0.13
