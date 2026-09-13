@@ -1,0 +1,11 @@
+# Pricing: converted from CNY catalog (https://coderplan.ai/pricing, 2026-08-18) at 1 USD = 7.15 CNY
+base_model = "anthropic/claude-haiku-4-5"
+
+[[reasoning_options]]
+type = "budget_tokens"
+min = 1_024
+
+[cost]
+input = 0.07
+cache_read = 0.007
+output = 0.35
