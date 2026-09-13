@@ -1,3 +1,7 @@
+# Prompt caching (chat): automatic implicit prefix cache on POST /api/paas/v4/chat/completions.
+# Use body: hits via usage.prompt_tokens_details.cached_tokens.
+# To get a hit: replay stable system prompts and history; cached tokens bill at the discounted cached-input multiplier.
+# Docs: https://docs.z.ai/guides/capabilities/cache
 # Chat reasoning: POST https://api.z.ai/api/paas/v4/chat/completions with
 # `thinking.type = "enabled" | "disabled"` (default: enabled).
 # https://docs.z.ai/guides/capabilities/thinking (accessed 2026-06-25)
