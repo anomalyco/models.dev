@@ -1,0 +1,8 @@
+# Toggle via reasoning_effort: "none"/"minimal" disables reasoning,
+# any other value enables it (PleumRouter wire contract, not a native
+# provider param).
+base_model = "deepseek/deepseek-v4-flash"
+reasoning_options = [{ type = "toggle" }]
+[cost]
+input = 0.09
+output = 0.18
