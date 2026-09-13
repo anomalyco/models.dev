@@ -1,0 +1,17 @@
+# Thinking is always on: thinking.type=disabled is rejected (the error message
+# says the model always reasons and to use low, high or max); reasoning_effort
+# accepts low|high|max, default max (verified live 2026-08-30; none/minimal/
+# xhigh rejected with 400).
+# https://intl.cloud.tencent.com/document/product/1300/80637
+base_model = "zhipuai/glm-5.3"
+
+reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0
+output = 0
+cache_read = 0
+cache_write = 0
