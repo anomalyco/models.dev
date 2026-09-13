@@ -1,0 +1,25 @@
+name = "Claude 4 Sonnet Thinking"
+description = "Anthropic's Claude 4 Sonnet with the ability to show its thinking process step by step."
+family = "claude-sonnet"
+release_date = "2025-02-24"
+last_updated = "2025-02-24"
+attachment = true
+reasoning = true
+tool_call = true
+structured_output = true
+open_weights = false
+reasoning_options = []
+
+[cost]
+input = 3
+output = 15
+cache_read = 0.3
+
+[limit]
+context = 1_000_000
+input = 1_000_000
+output = 64_000
+
+[modalities]
+input = ["text", "image", "pdf"]
+output = ["text"]

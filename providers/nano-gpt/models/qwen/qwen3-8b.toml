@@ -1,0 +1,24 @@
+name = "Qwen 3 8B"
+description = "Qwen 3 8B is a 8B model. Supports switching between thinking and non thinking: trigger thinking with /think and /no_think anywhere in a prompt or system message to toggle chain-of-thought reasoning."
+family = "qwen"
+release_date = "2024-01-01"
+last_updated = "2024-01-01"
+attachment = false
+reasoning = false
+tool_call = false
+structured_output = false
+open_weights = true
+
+[cost]
+input = 0.47
+output = 0.47
+cache_read = 0.235
+
+[limit]
+context = 41_000
+input = 41_000
+output = 32_768
+
+[modalities]
+input = ["text"]
+output = ["text"]
