@@ -1,0 +1,15 @@
+# Pricing: https://zro.moonmath.ai/pricing (USD / 1M tokens)
+base_model = "zhipuai/glm-5.2"
+reasoning_options = [{ type = "effort", values = ["high", "max"] }]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 1.10
+output = 4.00
+cache_read = 0.20
+
+[limit]
+context = 524_288
+output = 64_000
