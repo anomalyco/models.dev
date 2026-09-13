@@ -1,0 +1,11 @@
+base_model = "xiaomi/mimo-v2.5"
+reasoning_options = []
+
+[cost]
+input = 0.1428
+output = 0.2857
+cache_read = 0.0799
+
+[limit]
+context = 1_000_000
+output = 128_000

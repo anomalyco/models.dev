@@ -1,0 +1,13 @@
+base_model = "alibaba/qwen3-max"
+attachment = true
+
+[cost]
+input = 0.3571
+output = 1.4285
+cache_read = 0.0714
+
+[limit]
+output = 32_768
+
+[modalities]
+input = ["text", "image"]

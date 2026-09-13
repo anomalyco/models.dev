@@ -1,0 +1,24 @@
+name = "GLM-4.5-AirX Thinking"
+description = "Flagship GLM model for hybrid reasoning, coding, and agentic engineering"
+family = "glm"
+release_date = "2026-08-17"
+last_updated = "2026-08-17"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+open_weights = false
+reasoning_options = []
+
+[cost]
+input = 0.5714
+output = 1.7142
+cache_read = 0.1142
+
+[limit]
+context = 128_000
+output = 9_600
+
+[modalities]
+input = ["text"]
+output = ["text"]

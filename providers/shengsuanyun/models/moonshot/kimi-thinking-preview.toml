@@ -1,0 +1,22 @@
+name = "Kimi-thinking-preview"
+description = "Kimi reasoning model for long-horizon research, planning, and tool use"
+family = "kimi-thinking"
+release_date = "2026-08-17"
+last_updated = "2026-08-17"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = true
+open_weights = false
+
+[cost]
+input = 28.5714
+output = 28.5714
+
+[limit]
+context = 128_000
+output = 128_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

@@ -1,0 +1,22 @@
+name = "GLM-4-plus"
+description = "Flagship GLM model for hybrid reasoning, coding, and agentic engineering"
+family = "glm"
+release_date = "2026-08-17"
+last_updated = "2026-08-17"
+attachment = false
+reasoning = false
+temperature = true
+tool_call = true
+open_weights = false
+
+[cost]
+input = 0.7142
+output = 0.7142
+
+[limit]
+context = 128_000
+output = 4_095
+
+[modalities]
+input = ["text"]
+output = ["text"]

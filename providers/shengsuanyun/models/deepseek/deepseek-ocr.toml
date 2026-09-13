@@ -1,0 +1,22 @@
+name = "DeepSeek-OCR"
+description = "OCR model for extracting structured text from documents and screenshots"
+family = "deepseek"
+release_date = "2026-08-17"
+last_updated = "2026-08-17"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = true
+open_weights = false
+
+[cost]
+input = 0.0428
+output = 0.1714
+
+[limit]
+context = 8_000
+output = 8_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

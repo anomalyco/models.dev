@@ -1,0 +1,23 @@
+name = "Gemini 3 Flash Preview"
+description = "Fast Gemini model balancing multimodal reasoning, tool use, and cost"
+family = "gemini"
+release_date = "2026-08-17"
+last_updated = "2026-08-17"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = true
+open_weights = false
+
+[cost]
+input = 0.5
+output = 3
+cache_read = 0.05
+
+[limit]
+context = 1_048_576
+output = 65_535
+
+[modalities]
+input = ["text", "image", "video"]
+output = ["text"]

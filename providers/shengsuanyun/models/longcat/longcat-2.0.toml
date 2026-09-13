@@ -1,0 +1,14 @@
+base_model = "meituan/longcat-2.0"
+attachment = true
+reasoning_options = []
+
+[cost]
+input = 0.2857
+output = 1.1428
+cache_read = 0.0057
+
+[limit]
+output = 128_000
+
+[modalities]
+input = ["text", "image"]

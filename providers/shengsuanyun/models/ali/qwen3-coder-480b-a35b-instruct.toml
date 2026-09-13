@@ -1,0 +1,12 @@
+base_model = "alibaba/qwen3-coder-480b-a35b-instruct"
+attachment = true
+
+[cost]
+input = 0.8571
+output = 3.4285
+
+[limit]
+context = 128_000
+
+[modalities]
+input = ["text", "image"]

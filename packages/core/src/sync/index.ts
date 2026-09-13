@@ -34,6 +34,7 @@ import { openrouter } from "./providers/openrouter.js";
 import { ovhcloud } from "./providers/ovhcloud.js";
 import { pioneer } from "./providers/pioneer.js";
 import { requesty } from "./providers/requesty.js";
+import { shengsuanyun } from "./providers/shengsuanyun.js";
 import { tinfoil } from "./providers/tinfoil.js";
 import { vercel } from "./providers/vercel.js";
 import { venice } from "./providers/venice.js";
@@ -159,6 +160,7 @@ export const providers: {
   ovhcloud: SyncProvider<any>;
   pioneer: SyncProvider<any>;
   requesty: SyncProvider<any>;
+  shengsuanyun: SyncProvider<any>;
   tinfoil: SyncProvider<any>;
   vercel: SyncProvider<any>;
   venice: SyncProvider<any>;
@@ -194,6 +196,7 @@ export const providers: {
   ovhcloud,
   pioneer,
   requesty,
+  shengsuanyun,
   tinfoil,
   vercel,
   venice,
@@ -216,6 +219,7 @@ export const groups = {
     "ofox",
     "requesty",
     "openrouter",
+    "shengsuanyun",
     "vercel",
   ],
   cloudflare: ["cloudflare-ai-gateway", "cloudflare-workers-ai"],
