@@ -1,0 +1,23 @@
+# Input modalities are this host's, from the input_modalities field of
+# https://cloud-api.near.ai/v1/models, which is narrower than the lab entry.
+# PDF is excluded on every route: a type: "file" content part fails schema
+# deserialisation gateway-wide (verified 2026-09-08).
+# No caller-side reasoning control on this route: every control is rejected or inert.
+# Verified live on POST https://cloud-api.near.ai/v1/chat/completions 2026-09-11.
+# thinking.type = "enabled" and reasoning_effort are both rejected outright.
+# reasoning.effort is accepted but is a proven no-op: six samples gave completion_tokens
+# of 473/438/389/434/398/356 with no parameter against 470/352/350/319/360/441 at low,
+# fully overlapping. At three samples the two looked separated; the gap dissolved at six.
+# No reply carries reasoning_content.
+# Text and image only: the lab entry adds pdf, and a type: "file" content part fails
+# schema deserialisation on every route.
+base_model = "anthropic/claude-fable-5"
+reasoning_options = []
+
+[cost]
+input = 10.0
+output = 50.0
+cache_read = 1.0
+
+[modalities]
+input = ["text", "image"]
