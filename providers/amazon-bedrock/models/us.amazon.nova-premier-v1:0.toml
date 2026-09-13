@@ -1,0 +1,16 @@
+# US cross-Region profile verified by ListInferenceProfiles (us-east-1, 2026-09-08).
+# Profile: https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-amazon-nova-premier.html
+# Pricing: https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AmazonBedrock/current/us-east-1/index.json
+# Standard us-east-1 reference rates, USD/MTok; rates vary by source Region. Cache writes billed at input rate; no surcharge.
+# Cache billing: https://docs.aws.amazon.com/bedrock/latest/userguide/prompt-caching.html
+# Live Converse (2026-09-09): Legacy access gate denies accounts without use in the last 30 days; profile retained for existing users.
+base_model = "amazon/nova-premier"
+name = "Nova Premier (US)"
+status = "deprecated"
+structured_output = false
+
+[cost]
+input = 2.50
+output = 12.50
+cache_read = 0.625
+cache_write = 2.50

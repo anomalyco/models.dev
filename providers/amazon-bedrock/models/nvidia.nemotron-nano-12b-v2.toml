@@ -1,23 +1,17 @@
+# https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-nvidia-nvidia-nemotron-nano-12b-v2-vl-bf16.html
+# https://aws.amazon.com/bedrock/pricing/ (US Standard pricing)
+# Live 2026-09-09: maxTokens=8192 accepted; reasoning_config=high returned no reasoningContent.
 name = "NVIDIA Nemotron Nano 12B v2 VL BF16"
 base_model = "nvidia/nemotron-nano-12b-v2-vl"
-family = "nemotron"
-release_date = "2024-12-01"
-last_updated = "2024-12-01"
-attachment = false
 reasoning = false
-temperature = true
-tool_call = true
 structured_output = true
-open_weights = false
 
 [cost]
 input = 0.20
 output = 0.60
 
 [limit]
-context = 128_000
-output = 4_096
+output = 8_192
 
 [modalities]
 input = ["text", "image"]
-output = ["text"]

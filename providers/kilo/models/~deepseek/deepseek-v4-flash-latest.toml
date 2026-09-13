@@ -1,4 +1,4 @@
-name = "DeepSeek V4 Flash Latest"
+name = "DeepSeek: DeepSeek V4 Flash Latest"
 description = "This model always redirects to the latest model in the DeepSeek V4 Flash family."
 family = "deepseek"
 release_date = "2026-08-01"
@@ -15,13 +15,13 @@ type = "effort"
 values = ["none", "low", "high", "max"]
 
 [cost]
-input = 0.05
-output = 0.16
-cache_read = 0.013
+input = 0.0352
+output = 0.1056
+cache_read = 0.00112
 
 [limit]
 context = 1_048_576
-output = 393_216
+output = 131_072
 
 [modalities]
 input = ["text"]

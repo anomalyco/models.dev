@@ -8,13 +8,11 @@ values = ["medium", "high", "xhigh"]
 [cost]
 input = 30
 output = 180
-cache_read = 3
 
 [[cost.tiers]]
 tier = { type = "context", size = 272_000 }
 input = 60
 output = 270
-cache_read = 6
 
 [modalities]
 input = ["text", "image", "pdf"]

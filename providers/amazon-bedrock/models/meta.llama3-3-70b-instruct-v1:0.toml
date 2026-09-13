@@ -1,23 +1,8 @@
+# https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-meta-llama-3-3-70b-instruct.html
+# https://aws.amazon.com/bedrock/pricing/ — us-east-1 standard, USD per 1M tokens.
+base_model = "meta/llama-3.3-70b-instruct"
 name = "Llama 3.3 70B Instruct"
-description = "Open Llama instruction model for multilingual chat, reasoning, and coding"
-family = "llama"
-release_date = "2024-12-06"
-last_updated = "2024-12-06"
-attachment = false
-reasoning = false
-temperature = true
-knowledge = "2023-12"
-tool_call = true
-open_weights = true
 
 [cost]
 input = 0.72
 output = 0.72
-
-[limit]
-context = 128_000
-output = 4_096
-
-[modalities]
-input = ["text"]
-output = ["text"]

@@ -1,6 +1,8 @@
 # Global cross-Region inference profile — served by Bedrock core (Converse), not Mantle, so no [provider] override.
-# Bedrock model IDs and routes: https://github.com/openai/codex/pull/42805
-# Global CRIS pricing inferred at 1.0x OpenAI-direct from the GPT-5.6 Sol AWS card precedent.
+# Bedrock model IDs, routes, limits and Global CRIS pricing: https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-openai-gpt-6-astra.html
+# Cache rates: AWS-published Responses pricing; the card's API coverage can lag live behavior.
+# Converse effort: additionalModelRequestFields.reasoning.effort = low|medium|high|xhigh|max.
+# Live check 2026-09-09 (us-east-1): outputConfig.textFormat enforces JSON schema despite a conflicting user instruction.
 # Effort levels match OpenAI-native Astra (Low..Max, no "none"): https://developers.openai.com/api/docs/models/gpt-6-astra
 base_model = "openai/gpt-6-astra"
 reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]

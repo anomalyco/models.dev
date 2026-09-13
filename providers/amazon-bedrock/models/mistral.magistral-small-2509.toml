@@ -1,15 +1,9 @@
-name = "Magistral Small 1.2"
-description = "Mistral reasoning model for transparent analysis, math, and complex decisions"
-family = "magistral"
-release_date = "2025-12-02"
-last_updated = "2025-12-02"
-attachment = false
-reasoning = true
+# https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-mistral-ai-magistral-small-2509.html
+# https://huggingface.co/mistralai/Magistral-Small-2509 — reasoning via the model's think tokens, no effort/budget field.
+# https://aws.amazon.com/bedrock/pricing/ — us-east-1 standard, USD per 1M tokens.
+base_model = "mistral/magistral-small-2509"
 reasoning_options = []
-temperature = true
-tool_call = true
 structured_output = true
-open_weights = true
 
 [cost]
 input = 0.50
@@ -18,7 +12,3 @@ output = 1.50
 [limit]
 context = 128_000
 output = 40_000
-
-[modalities]
-input = ["text", "image"]
-output = ["text"]

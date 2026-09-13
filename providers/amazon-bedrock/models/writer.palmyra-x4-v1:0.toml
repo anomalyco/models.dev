@@ -1,14 +1,8 @@
-name = "Palmyra X4"
-description = "Reasoning model for deliberate analysis, multi-step problem solving, and tool use"
-family = "palmyra"
-release_date = "2025-04-28"
-last_updated = "2025-04-28"
-attachment = false
-reasoning = true
+# https://docs.aws.amazon.com/bedrock/latest/userguide/model-parameters-palmyra-x4.html
+# https://aws.amazon.com/bedrock/pricing/ — us-east-1 standard, USD per 1M tokens.
+# Bedrock's documented request has no caller-selectable reasoning control.
+base_model = "writer/palmyra-x4"
 reasoning_options = []
-temperature = true
-tool_call = true
-open_weights = false
 
 [cost]
 input = 2.5
@@ -17,7 +11,3 @@ output = 10
 [limit]
 context = 122_880
 output = 8_192
-
-[modalities]
-input = ["text"]
-output = ["text"]

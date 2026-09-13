@@ -1,0 +1,11 @@
+base_model = "google/gemma-3-4b-it"
+name = "Gemma 3 4B IT (Amazon Bedrock)"
+tool_call = false
+structured_output = false
+
+[cost]
+input = 0.04
+output = 0.08
+
+[limit]
+context = 128_000
