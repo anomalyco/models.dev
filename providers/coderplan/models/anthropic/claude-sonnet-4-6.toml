@@ -1,0 +1,13 @@
+base_model = "anthropic/claude-sonnet-4-6"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "budget_tokens"
+min = 1_024
+max = 63_999
+
+[cost]
+input = 0.41
+output = 2.05
