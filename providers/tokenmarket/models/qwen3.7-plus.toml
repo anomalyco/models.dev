@@ -1,0 +1,16 @@
+# Alibaba Cloud (DashScope) channel. Hybrid thinking: the adapter maps effort
+# "none" to `enable_thinking = false` and forwards `reasoning.budget_tokens` as
+# `thinking_budget` (documented maximum 262,144 for the Qwen3.7 family).
+# Cost: the catalog publishes no discounted rate for this model, so the listed
+# vendor rate applies.
+base_model = "alibaba/qwen3.7-plus"
+reasoning_options = [{ type = "toggle" }, { type = "budget_tokens", max = 262_144 }]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.3
+output = 1.2
+cache_read = 0.03
+cache_write = 0.37
