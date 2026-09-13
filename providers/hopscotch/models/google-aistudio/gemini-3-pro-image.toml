@@ -1,0 +1,16 @@
+# Effort: reasoning_effort = low|high
+# https://platform.hopscotchlabs.ai/models
+base_model = "google/gemini-3-pro-image"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high"]
+
+[cost]
+input = 2
+output = 120
+cache_read = 2
+cache_write = 2
+
+[limit]
+context = 131_072
