@@ -1,4 +1,8 @@
+# Toggle: $.reasoning.enabled = true|false
 base_model = "zhipuai/glm-5.2"
+
+[[reasoning_options]]
+type = "toggle"
 
 [[reasoning_options]]
 type = "effort"
@@ -7,4 +11,3 @@ values = ["high", "xhigh"]
 [cost]
 input = 0
 output = 0
-

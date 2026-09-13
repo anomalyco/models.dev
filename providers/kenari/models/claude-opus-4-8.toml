@@ -1,4 +1,8 @@
+# Toggle: $.reasoning.enabled = true|false
 base_model = "anthropic/claude-opus-4-8"
+
+[[reasoning_options]]
+type = "toggle"
 
 [[reasoning_options]]
 type = "effort"
@@ -7,4 +11,3 @@ values = ["low", "medium", "high", "xhigh", "max"]
 [cost]
 input = 0
 output = 0
-
