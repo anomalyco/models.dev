@@ -1,0 +1,13 @@
+base_model = "zhipuai/glm-5.3"
+reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]
+
+# cost as described on the AKI.IO pricing page at https://aki.io/#pricing
+[cost]
+input = 1.00
+output = 3.50
+cache_read = 0.25
+
+[limit]
+context = 524_288
+output = 81_920
+
