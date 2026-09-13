@@ -1,0 +1,14 @@
+# Pricing (USD/MTok): https://nullsink.is/v1/models
+# API: https://nullsink.is/api/
+# Native OpenAI Responses API; Standard service tier.
+base_model = "openai/gpt-4o-mini"
+
+[cost]
+input = 0.15
+output = 0.6
+cache_read = 0.075
+cache_write = 0
+
+[provider]
+npm = "@ai-sdk/openai"
+shape = "responses"

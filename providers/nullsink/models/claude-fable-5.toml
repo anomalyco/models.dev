@@ -1,0 +1,26 @@
+# Pricing: https://nullsink.is/v1/models (USD per million tokens deducted from prepaid credit).
+# Funding service fees are charged when purchasing credit, separately from inference usage.
+# Native Messages API: https://nullsink.is/api/
+# Thinking is always adaptive; thinking.type = disabled is rejected.
+# Effort: output_config.effort = low|medium|high|xhigh|max.
+# Controls: https://platform.claude.com/docs/en/build-with-claude/effort
+# Thinking modes: https://platform.claude.com/docs/en/build-with-claude/thinking-troubleshooting
+# Adaptive thinking interleaves without a beta header; 1M context is the standard window.
+# Limits: https://platform.claude.com/docs/en/build-with-claude/context-windows#context-window-sizes-by-model
+# Structured outputs: https://platform.claude.com/docs/en/build-with-claude/structured-outputs (no beta required).
+# cache_write is the standard 5-minute rate; optional 1-hour cache writes cost $20/MTok.
+base_model = "anthropic/claude-fable-5"
+structured_output = true
+interleaved = true
+reasoning_options = [
+  { type = "effort", values = ["low", "medium", "high", "xhigh", "max"] },
+]
+
+[cost]
+input = 10
+output = 50
+cache_read = 1
+cache_write = 12.5
+
+[provider]
+npm = "@ai-sdk/anthropic"

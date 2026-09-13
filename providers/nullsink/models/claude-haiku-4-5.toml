@@ -1,0 +1,26 @@
+# Pricing: https://nullsink.is/v1/models (USD per million tokens deducted from prepaid credit).
+# Funding service fees are charged when purchasing credit, separately from inference usage.
+# Native Messages API: https://nullsink.is/api/
+# Toggle: thinking.type = enabled|disabled.
+# Budget: thinking.budget_tokens with thinking.type = enabled (minimum 1024).
+# Manual budgets: https://platform.claude.com/docs/en/build-with-claude/extended-thinking
+# Thinking modes: https://platform.claude.com/docs/en/build-with-claude/thinking-troubleshooting
+# No interleaved-thinking beta is forwarded; the standard context window is 200k.
+# Limits: https://platform.claude.com/docs/en/build-with-claude/context-windows#context-window-sizes-by-model
+# Structured outputs: https://platform.claude.com/docs/en/build-with-claude/structured-outputs (no beta required).
+# cache_write is the standard 5-minute rate; optional 1-hour cache writes cost $2/MTok.
+base_model = "anthropic/claude-haiku-4-5"
+structured_output = true
+reasoning_options = [
+  { type = "toggle" },
+  { type = "budget_tokens", min = 1_024 },
+]
+
+[cost]
+input = 1
+output = 5
+cache_read = 0.1
+cache_write = 1.25
+
+[provider]
+npm = "@ai-sdk/anthropic"
