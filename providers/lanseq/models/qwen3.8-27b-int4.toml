@@ -3,10 +3,16 @@ name = "Qwen3.8-27B INT4"
 description = "Text-only INT4 deployment of Qwen3.8-27B served by Lanseq."
 attachment = false
 
+# Verified against the live Lanseq OpenAI-compatible endpoint.
+# Request field: reasoning_effort
+# Accepted values: none, low, medium, xhigh
+# Rejected values include high, minimal, and max.
 reasoning_options = [
   { type = "effort", values = ["none", "low", "medium", "xhigh"] },
 ]
 
+# First-party Lanseq pricing and limits:
+# https://api.172.98.22.239.sslip.io/docs
 [cost]
 input = 0.25
 output = 1.99
