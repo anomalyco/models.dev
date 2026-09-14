@@ -1,0 +1,14 @@
+# Cost: Melious lists EUR; converted at 1.17 USD/EUR (ECB reference rate, captured 2026-08-20).
+# Sources: https://melious.ai/hub/models and
+# GET https://api.melious.ai/v1/models?include_meta=true
+# limit.output: no published cap; max_tokens = 4_096 is accepted on
+# this host, verified against the live API (bisected to +/-1024).
+base_model = "mistral/pixtral-12b"
+structured_output = true
+
+[cost]
+input = 0.234
+output = 0.234
+
+[limit]
+output = 4_096

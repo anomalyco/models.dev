@@ -1,0 +1,21 @@
+# Cost: Melious lists EUR; converted at 1.17 USD/EUR (ECB reference rate, captured 2026-08-20).
+# Sources: https://melious.ai/hub/models and
+# GET https://api.melious.ai/v1/models?include_meta=true
+# Effort: reasoning_effort = low|medium|high
+# (https://melious.ai/docs/reference/chat-completions). No off state: an explicit
+# "none" still returns reasoning, so this host exposes no toggle.
+# Reasoning text comes back in message.reasoning_content, consistent with every
+# other alibaba model on this host.
+base_model = "alibaba/qwen3-32b"
+structured_output = true
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
+
+[cost]
+input = 0.0936
+output = 0.2808
+
+[limit]
+context = 32_768
+
+[interleaved]
+field = "reasoning_content"
