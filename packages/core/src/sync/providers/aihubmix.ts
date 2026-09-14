@@ -164,8 +164,11 @@ export const aihubmix = {
   // folds into `effort = none` would keep advertising a toggle. translateModel
   // re-derives the header from the response, so let it own the block.
   authoritativeHeaders: true,
-  // Routing aliases such as `alicloud-glm-5.1` are served but unlisted, so a
-  // local file absent from the response is retained rather than deleted.
+  // The listing is AIHubMix's main model list, and a route rotates out of it for a
+  // spell without being retired, so a local file absent from one response is
+  // retained rather than deleted. It is not a licence to keep anything: a hidden
+  // channel alias (`zai-glm-5.1`, which the gateway answers by routing to the
+  // listed `glm-5.1`) is deliberately outside that list and does not belong here.
   deleteMissing: false,
   sourceID(model) {
     return model.retire_stage === "deprecated" ? undefined : model.model_id;
@@ -173,13 +176,13 @@ export const aihubmix = {
   missingNotice(paths) {
     return paths.map(
       (file) =>
-        `AIHubMix no longer lists ${file}; confirm it is still a served routing alias or deprecate it.`,
+        `AIHubMix does not list ${file} in its main model list; confirm the route rotated out for a spell, or drop the file if it is a hidden channel alias of a model already in the catalog.`,
     );
   },
   skippedNotice(ids) {
     return ids.map(
       (id) =>
-        `AIHubMix lists ${id} but the response carries neither a vendor/variant_of that resolves to lab metadata nor the release_date/open_weights/limits a standalone entry needs.`,
+        `AIHubMix lists ${id} but it cannot be written yet. If it names a vendor, add the lab model under \`models/${"<lab>/<model>"}.toml\` and the relay factors onto it automatically; if it names none, the response is missing the release_date/open_weights/limits a standalone entry has to carry.`,
     );
   },
   async fetchModels() {
@@ -224,7 +227,8 @@ export function buildAihubmixModel(
   // only baseline those have, and 14 creates in the current listing would
   // otherwise write a narrowing override onto it (`gpt-4o` losing pdf,
   // `qwen3.5-27b` losing audio).
-  const baseModalities = labModalities(base);
+  const lab = labMetadata(base);
+  const baseModalities = lab?.modalities;
   const input = modalities(model.input_modalities, [
     ...(existing?.modalities?.input ?? []),
     ...(baseModalities?.input ?? []),
@@ -250,11 +254,16 @@ export function buildAihubmixModel(
   const quoted = tokens(model.max_output);
   const maxOutput =
     context !== undefined && quoted !== undefined && quoted >= context ? undefined : quoted;
+  // Same class of bug as the modalities: the endpoint restates windows in decimal
+  // (8 glm routes quote 204800 as 200000) and quotes conservative output ceilings,
+  // and treating those as owned fields writes a narrowing override onto a limit the
+  // lab entry already states correctly. A restatement resolves to the accepted
+  // value; a genuine cap the host imposes still lands.
   const limit = {
-    context: context ?? existing?.limit?.context,
+    context: resolveLimit(context, existing?.limit?.context, lab?.limit?.context),
     // The endpoint models no input cap, so an authored one is the only record of it.
     input: existing?.limit?.input,
-    output: maxOutput ?? existing?.limit?.output,
+    output: resolveLimit(maxOutput, existing?.limit?.output, lab?.limit?.output),
   };
   const shared = {
     attachment: input.some((value) => value !== "text"),
@@ -282,6 +291,16 @@ export function buildAihubmixModel(
       existing?.base_model === base ? existing.base_model_omit : undefined,
     );
   }
+
+  // `vendor` names the lab that built the model, so this relay hosts someone
+  // else's model and belongs on `base_model` — AGENTS.md treats a full standalone
+  // definition for a nameable lab model as a blocker. Reaching here means the lab
+  // entry does not exist yet (81 of 407 routes, 38 of them complete enough that the
+  // endpoint answer alone would have satisfied the standalone guard), so the relay is
+  // reported for a human to add `models/<lab>/<id>.toml`, after which it factors
+  // with no change here. A file already in the repo keeps being updated: what it
+  // should have been is upstream's call, and freezing it would only stall its prices.
+  if (existing === undefined && model.vendor != null) return undefined;
 
   // A standalone entry must carry every required catalog field itself, and the
   // endpoint still leaves gaps: 304 of 408 models are dated, 289 state
@@ -378,9 +397,12 @@ function reasoningOptions(
   if (model.reasoning_options == null) return undefined;
   const options = model.reasoning_options.flatMap((option) => {
     if (option.type === "toggle") return [{ type: option.type }];
-    // The endpoint states that a budget exists but not its bounds. A bare option
-    // written onto a `base_model` file would override the lab's real range with
-    // an unbounded one, so the authored bounds are carried through.
+    // The endpoint states that a budget exists but not its bounds, so the bounds a
+    // file already carries are the only record of them and are carried through.
+    // There is no second baseline to fall back on: `ModelMetadata` has no
+    // `reasoning_options` field, so a bare budget written here cannot be shadowing
+    // a range stated on the lab entry — that range can only live on a provider file,
+    // and a budget range is a property of the host's API, not of the model.
     if (option.type === "budget_tokens") {
       const authored = existing?.reasoning_options?.find((entry) => entry.type === "budget_tokens");
       const min = option.min ?? (authored?.type === "budget_tokens" ? authored.min : undefined);
@@ -444,15 +466,51 @@ function reasoningHeader(model: AihubmixModel, built: SyncedModel) {
  * file, which is where it came from.
  */
 /**
- * The lab entry a relay factors onto, read for the one thing the endpoint can
- * under-report. Returns nothing when the relay is standalone.
+ * The lab entry a relay factors onto, read for what the endpoint can under-report:
+ * modalities it omits and windows it restates in decimal. Returns nothing when the
+ * relay is standalone. Reasoning controls are not here to be read: `ModelMetadata`
+ * has no `reasoning_options` field, so a lab entry cannot state them and only a
+ * provider file ever does.
  */
-function labModalities(base: string | undefined) {
+function labMetadata(base: string | undefined) {
   if (base === undefined) return undefined;
-  const metadata = modelMetadata(base) as {
+  return modelMetadata(base) as {
     modalities?: { input?: string[]; output?: string[] };
+    limit?: { context?: number; output?: number };
   };
-  return metadata.modalities;
+}
+
+/**
+ * A decimal restatement of a binary window can only lose `1000/1024` per K unit,
+ * so three nested unit swaps — 1024³ tokens quoted as 1000³ — is the floor of what
+ * a restatement can explain. The endpoint quotes 204800 as 200000 (0.977), 1048576
+ * as 1000000 (0.954) and 65536 as 65535; none of that is the host narrowing the
+ * window, and writing it as an override invents a difference that is not there.
+ * A real restriction sits far below: grok-code-fast-1 caps output at 10000 of
+ * 256000 (0.039) and gpt-5-chat-latest serves 128000 of a 400000 window (0.320).
+ */
+const UNIT_RESTATEMENT_FLOOR = 1000 ** 3 / 1024 ** 3;
+
+/**
+ * The limit to record. The endpoint speaks first and the file stands in when it
+ * says nothing — the authored value is not a worse version of the lab's but a
+ * narrower one on purpose, the host's own cap (`kimi-k2.5` serves 32768 of a
+ * 262144 window), so it is kept rather than widened away.
+ *
+ * Whichever of the two states the limit, it is only recorded if it is a limit: a
+ * value that merely restates an accepted window in decimal resolves to that
+ * window and no override is written. Applying the test to the stated value rather
+ * than to the endpoint's quote also retires the restatements an earlier sync
+ * already wrote onto three MiniMax files (128000 and 128100 of 131072).
+ */
+function resolveLimit(quoted?: number, authored?: number, lab?: number) {
+  const stated = quoted ?? authored;
+  if (stated === undefined) return undefined;
+  for (const accepted of [authored, lab]) {
+    if (accepted === undefined || stated >= accepted) continue;
+    if (stated / accepted >= UNIT_RESTATEMENT_FLOOR) return accepted;
+  }
+  return stated;
 }
 
 function modalities(value: string | null | undefined, fallback: string[]) {

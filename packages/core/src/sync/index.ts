@@ -81,7 +81,12 @@ export interface SyncProvider<SourceModel> {
    * deduped GitHub issue per missing model ID.
    */
   skipCreates?: boolean;
-  /** Report remote-only models skipped by skipCreates as GitHub issues. */
+  /**
+   * Open one deduped GitHub issue per model the provider skipped. Implied by
+   * skipCreates, and settable on its own by a provider that creates models but
+   * still skips the ones it cannot write — without it those skips produce a
+   * notice nobody acts on.
+   */
   trackMissingModels?: boolean;
   deleteMissing?: boolean;
   preserveSymlinks?: boolean;
@@ -498,7 +503,7 @@ export async function syncProvider<SourceModel>(
   ];
 
   const issueModels = [
-    ...(provider.skipCreates === true ? skippedRemote : []),
+    ...(provider.skipCreates === true || provider.trackMissingModels === true ? skippedRemote : []),
     ...missingReasoning.keys(),
   ];
   if (

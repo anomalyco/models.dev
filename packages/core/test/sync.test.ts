@@ -5202,9 +5202,10 @@ test("keeps the AIHubMix toggle when its effort list has no off value", () => {
 
 test("authors the AIHubMix toggle wire-path header so a rewrite cannot drop it", () => {
   // Standalone relays, so the toggle stays on the written file instead of being
-  // factored onto a lab base model.
+  // factored onto a lab base model. A standalone entry is only allowed where the
+  // response names no vendor — a named lab belongs on `base_model`.
   const standalone = {
-    vendor: "somelab",
+    vendor: null,
     release_date: "2026-05-01",
     open_weights: false,
     context_length: 262_144,
@@ -5379,7 +5380,7 @@ test("refreshes the AIHubMix wire path without discarding a human note", () => {
   // it documents, but a price citation or live-test record is not reproducible
   // from the response and has to survive the rewrite.
   const toggled = aihubmixModel({
-    vendor: "somelab",
+    vendor: null,
     model_id: "somelab-noted",
     model_name: "SomeLab Noted",
     release_date: "2026-05-01",
@@ -5472,6 +5473,109 @@ test("keeps authored AIHubMix pricing when the endpoint quotes no rate at all", 
     aihubmixLabIDs,
   );
   expect(model?.cost).toEqual(aihubmixAuthored.cost);
+});
+
+test("inherits a limit the AIHubMix endpoint only restates in decimal", () => {
+  // The lab window is 1_048_576 and the endpoint quotes 1_000_000 for it — the same
+  // window in decimal, not a cap — so the relay must inherit rather than write an
+  // override claiming it lost 48_576 tokens.
+  const restated = buildAihubmixModel(
+    aihubmixModel({ context_length: 1_000_000, max_output: 65_536 }),
+    undefined,
+    aihubmixLabIDs,
+  );
+  expect(restated?.limit?.context).toBeUndefined();
+
+  // A window the host genuinely restricts is far below any restatement and lands.
+  const capped = buildAihubmixModel(
+    aihubmixModel({ context_length: 128_000, max_output: 65_536 }),
+    undefined,
+    aihubmixLabIDs,
+  );
+  expect(capped?.limit?.context).toBe(128_000);
+
+  // And an authored cap survives an endpoint that quotes nothing for the ceiling.
+  const authored: ExistingModel = {
+    ...aihubmixAuthored,
+    limit: { context: 1_048_576, output: 32_768 },
+  };
+  const unknown = buildAihubmixModel(
+    aihubmixModel({ max_output: 0 }),
+    authored,
+    aihubmixLabIDs,
+  );
+  expect(unknown?.limit?.output).toBe(32_768);
+});
+
+test("does not author a standalone AIHubMix entry for a model a lab made", () => {
+  // Every field a standalone entry needs is present, but `vendor` names the lab
+  // that built the model and no `models/somelab/…` entry exists to factor onto.
+  // AGENTS.md makes that a blocker, so the relay is reported, not written.
+  const lab = {
+    vendor: "somelab",
+    model_id: "somelab-unmapped",
+    model_name: "SomeLab Unmapped",
+    release_date: "2026-05-01",
+    open_weights: false,
+    context_length: 262_144,
+    max_output: 65_536,
+  } satisfies Partial<AihubmixModel>;
+  expect(buildAihubmixModel(aihubmixModel(lab), undefined, aihubmixLabIDs)).toBeUndefined();
+  expect(aihubmix.sourceID?.(aihubmixModel(lab))).toBe("somelab-unmapped");
+
+  // A relay the response names no vendor for is the host's own alias, and still writes.
+  const hostOwn = buildAihubmixModel(
+    aihubmixModel({ ...lab, vendor: null }),
+    undefined,
+    aihubmixLabIDs,
+  );
+  expect(hostOwn?.name).toBe("SomeLab Unmapped");
+
+  // A standalone file already in the repo keeps being updated rather than freezing:
+  // what it should have been is upstream's call, and stalling its prices helps no one.
+  const authored: ExistingModel = {
+    id: "somelab-unmapped",
+    name: "SomeLab Unmapped",
+    release_date: "2026-05-01",
+    open_weights: false,
+    cost: { input: 1, output: 2 },
+    limit: { context: 262_144, output: 65_536 },
+    modalities: { input: ["text"], output: ["text"] },
+  };
+  const updated = buildAihubmixModel(aihubmixModel(lab), authored, aihubmixLabIDs);
+  expect(updated?.cost).toEqual({ input: 0.25, output: 1.5, cache_read: 0.025 });
+});
+
+test("opens missing-model issues for a provider that creates but still skips", async () => {
+  // aihubmix does not set skipCreates — it creates what it can — so gating the
+  // issue path on skipCreates left every relay it cannot write as a notice nobody
+  // acts on. An explicit trackMissingModels is the opt-in for exactly that case.
+  const dir = await mkdtemp(path.join(tmpdir(), "sync-track-"));
+  const modelsDir = path.join(dir, "providers", "tracked", "models");
+  await mkdir(modelsDir, { recursive: true });
+  try {
+    const result = await syncProvider({
+      id: "aihubmix",
+      name: "Tracked",
+      modelsDir,
+      trackMissingModels: true,
+      async fetchModels() {
+        return { data: [] };
+      },
+      parseModels() {
+        return [{ model_id: "unmapped-relay" }];
+      },
+      translateModel() {
+        return undefined;
+      },
+      sourceID(model: { model_id: string }) {
+        return model.model_id;
+      },
+    } as never, { dryRun: true, openIssues: true });
+    expect(result.notices.some((notice) => notice.includes("unmapped-relay"))).toBe(true);
+  } finally {
+    await rm(dir, { recursive: true, force: true });
+  }
 });
 
 test("marks retired AIHubMix relays deprecated and stops tracking them", () => {
