@@ -1,3 +1,8 @@
+# Prompt caching (chat): Automatic server-side reuse of prompt prefixes shared between internal orchestration calls; no client cache control.
+# Use headers: none.
+# Use body: none. Chat and Responses field tables define no `prompt_cache_key` or `cache_control`.
+# To get a hit: Resend stable context unchanged so internal calls share a prefix; confirm via usage.input_tokens_details.cached_tokens, billed at the discounted cached-input rate.
+# Docs: https://console.sakana.ai/models
 name = "Sakana AI"
 env = ["SAKANA_API_KEY"]
 npm = "@ai-sdk/openai-compatible"
