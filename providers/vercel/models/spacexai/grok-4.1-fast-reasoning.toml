@@ -1,12 +1,6 @@
+base_model = "xai/grok-4.1-fast-reasoning"
 name = "Grok 4.1 Fast Reasoning"
 description = "Fast Grok model for responsive chat, reasoning, and tool-assisted work"
-family = "grok"
-release_date = "2025-11-19"
-last_updated = "2025-11-19"
-attachment = true
-reasoning = true
-tool_call = true
-open_weights = false
 reasoning_options = []
 
 [cost]
@@ -20,4 +14,3 @@ output = 1_000_000
 
 [modalities]
 input = ["text", "image", "pdf"]
-output = ["text"]
