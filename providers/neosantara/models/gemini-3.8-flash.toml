@@ -1,0 +1,21 @@
+# Source (accessed 2026-09-06):
+# - https://api.neosantara.xyz/v1/models?currency=USD (pricing USD/MTok; modalities text+image+pdf, no video/audio)
+# - https://docs.neosantara.xyz/en/capability/reasoning (reasoning_effort levels; reasoning_content side channel)
+# - https://docs.neosantara.xyz/en/capability/image-understanding (image supported)
+# Effort: values match first-party providers/google/models/gemini-3.8-flash.toml (low/medium/high).
+# Cost: USD/MTok, matches first-party (0.75/3.75/0.075).
+# Modalities: catalog row gemini-3.8-flash lists text+image+pdf only; drops lab video,audio.
+# Interleaved: reasoning_content per host docs (host delta vs native).
+base_model = "google/gemini-3.8-flash"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.75
+output = 3.75
+cache_read = 0.075
+
+[modalities]
+input = ["text", "image", "pdf"]

@@ -1,0 +1,20 @@
+# Source (accessed 2026-09-06):
+# - https://api.neosantara.xyz/v1/models?currency=USD (pricing USD/MTok; modalities text+image, no video/pdf)
+# - https://docs.neosantara.xyz/en/capability/reasoning (reasoning_effort levels; reasoning_content side channel)
+# Effort: values match first-party providers/zai/models/glm-5.3-flash.toml (low/high/max).
+# Cost: USD/MTok list price (0.15/0.50/0.03); ZAI first-party currently promo 0.075/0.25/0.015 — difference is list-vs-promo, not currency.
+# Modalities: catalog row glm-5.3-flash lists text+image only; drops lab video,pdf.
+# Interleaved: reasoning_content per host docs (matches ZAI peer).
+base_model = "zhipuai/glm-5.3-flash"
+reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.15
+output = 0.50
+cache_read = 0.03
+
+[modalities]
+input = ["text", "image"]

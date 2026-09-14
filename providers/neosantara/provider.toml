@@ -1,0 +1,13 @@
+name = "Neosantara"
+env = ["NEOSANTARA_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+# OpenAI Chat is POST `v1/chat/completions`: `reasoning{ enabled, effort, max_tokens }` also supported
+# and `reasoning_effort = none|minimal|low|medium|high|xhigh|max`. 
+# Anthropic Messages is POST `/anthropic/v1/messages`:
+# thinking: { type: 'enabled|disabled|adaptive', budget_tokens }
+# Responses API is POST `/v1/responses`: `reasoning{ `effort = none|minimal|low|medium|high|xhigh|max`, summary = `auto|concise|detailed`, encrypted_content}
+# https://docs.neosantara.xyz/en/sdk/anthropic-compat/advanced#extended-thinking
+# https://docs.neosantara.xyz/en/capability/reasoning
+# Pricing can be seen in https://api.neosantara.xyz/v1/models with `currency = IDR|USD`
+doc = "https://docs.neosantara.xyz/en/models-overview"
+api = "https://api.neosantara.xyz/v1"
