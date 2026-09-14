@@ -5,13 +5,14 @@
 # Modalities: image + PDF accepted; video rejected (2026-07-24 probes).
 # Reasoning side channel: message.reasoning_content
 base_model = "moonshotai/kimi-k2.7-code"
+temperature = true
+
+[interleaved]
+field = "reasoning_content"
 
 [[reasoning_options]]
 type = "effort"
 values = ["high"]
-
-[interleaved]
-field = "reasoning_content"
 
 [cost]
 input = 0.75

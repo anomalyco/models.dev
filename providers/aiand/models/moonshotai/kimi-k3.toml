@@ -5,13 +5,14 @@
 # Modalities: text + image + PDF; video rejected on this host.
 # Reasoning side channel: message.reasoning_content
 base_model = "moonshotai/kimi-k3"
+temperature = true
+
+[interleaved]
+field = "reasoning_content"
 
 [[reasoning_options]]
 type = "effort"
 values = ["low", "high", "max"]
-
-[interleaved]
-field = "reasoning_content"
 
 [cost]
 input = 3
