@@ -4,25 +4,20 @@
 # Sources: GET https://api.melious.ai/v1/models?include_meta=true and
 # https://melious.ai/hub/models/glm-5 (both accessed 2026-09-14)
 # FX: https://www.ecb.europa.eu/stats/policy_and_exchange_rates/euro_reference_exchange_rates/html/eurofxref-graph-usd.en.html
-# Effort: reasoning_effort, the only reasoning control this host exposes. It forwards
-# no lab-native thinking field and has no reasoning budget, so no toggle or
-# budget_tokens here. zhipuai first-party exposes an on/off thinking toggle for this
-# model; that enum is not reachable through this API. The host accepts any effort
-# string without a 4xx, so acceptance proves nothing; the values below are the
-# documented ladder (low|medium|high) plus none, which was measured to be a real off
-# state -- reasoning_effort="none" returns usage.reasoning_tokens = 0 and no
-# reasoning_content. Because none is reachable, this is an effort list with none
-# rather than a toggle. minimal/xhigh/max are accepted but are undocumented and did
-# not produce behaviour distinct from high, so they are not authored. Measured
-# 2026-09-14 against api.melious.ai/v1/chat/completions on glm-5.3, deepseek-v4-pro
-# and kimi-k2.7-code.
+# Effort: reasoning_effort is the only reasoning control this host exposes, and it
+# forwards no lab-native thinking field and no reasoning budget. Measured against this
+# deployment on 2026-09-14, it has no effect on this model: reasoning_effort="none"
+# still returns reasoning (reasoning_content 2_444/2_239/686/3_907 chars across repeat
+# samples), and low/medium/high produce no ordered difference. reasoning_options is
+# therefore [] -- this model reasons, with no caller control on this host. That is an
+# affirmative measurement, not an untested default.
 # https://melious.ai/docs/reference/chat-completions (accessed 2026-09-14)
 # Reasoning text is returned in choices[].message.reasoning_content. cache_read:
 # usage.cached_tokens are billed at Melious's discounted prefix-cache rate.
 # limit.context: the catalog reports 203_000 for this deployment, not the lab's
 # 204_800.
 base_model = "zhipuai/glm-5"
-reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high"] }]
+reasoning_options = []
 
 [cost]
 input = 1.10124

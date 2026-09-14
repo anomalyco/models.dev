@@ -4,18 +4,15 @@
 # Sources: GET https://api.melious.ai/v1/models?include_meta=true and
 # https://melious.ai/hub/models/kimi-k2.6 (both accessed 2026-09-14)
 # FX: https://www.ecb.europa.eu/stats/policy_and_exchange_rates/euro_reference_exchange_rates/html/eurofxref-graph-usd.en.html
-# Effort: reasoning_effort, the only reasoning control this host exposes. It forwards
-# no lab-native thinking field and has no reasoning budget, so no toggle or
-# budget_tokens here. moonshotai first-party exposes an on/off thinking toggle for
-# this model; that enum is not reachable through this API. The host accepts any effort
-# string without a 4xx, so acceptance proves nothing; the values below are the
-# documented ladder (low|medium|high) plus none, which was measured to be a real off
-# state -- reasoning_effort="none" returns usage.reasoning_tokens = 0 and no
-# reasoning_content. Because none is reachable, this is an effort list with none
-# rather than a toggle. minimal/xhigh/max are accepted but are undocumented and did
-# not produce behaviour distinct from high, so they are not authored. Measured
-# 2026-09-14 against api.melious.ai/v1/chat/completions on glm-5.3, deepseek-v4-pro
-# and kimi-k2.7-code.
+# Effort: reasoning_effort is the only reasoning control this host exposes, and it
+# forwards no lab-native thinking field and no reasoning budget, so no toggle or
+# budget_tokens. Measured against this deployment on 2026-09-14:
+# reasoning_effort="none" is a real off state (usage.reasoning_tokens = 0 and no
+# reasoning_content), while low/medium/high all return reasoning with no ordered
+# difference in depth, so they are not published as separate grades. The host also
+# accepts undocumented values without a 4xx, so acceptance is not evidence. Because
+# off is reachable through the effort field this is an effort list containing none,
+# not a toggle.
 # https://melious.ai/docs/reference/chat-completions (accessed 2026-09-14)
 # Reasoning text is returned in choices[].message.reasoning_content. cache_read:
 # usage.cached_tokens are billed at Melious's discounted prefix-cache rate.
@@ -23,7 +20,7 @@
 # 262_144. limit.output: max_output_tokens is null for this model, so output is capped
 # at the served context rather than inheriting the lab's larger 262_144.
 base_model = "moonshotai/kimi-k2.6"
-reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high"] }]
+reasoning_options = [{ type = "effort", values = ["none", "high"] }]
 
 [cost]
 input = 0.81144
