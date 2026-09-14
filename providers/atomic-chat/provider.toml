@@ -1,3 +1,6 @@
+# Prompt caching (chat): Local OpenAI-compatible server with automatic prefix reuse via the loaded backend KV cache plus automatic TurboQuant KV compression.
+# To get a hit: Replay the same model with a byte-stable shared prefix and append-only turns; keep long system content plus tools first.
+# Docs: https://atomic.chat/blog/guides/what-is-kv-cache
 name = "Atomic Chat"
 env = ["ATOMIC_CHAT_API_KEY"]
 npm = "@ai-sdk/openai-compatible"

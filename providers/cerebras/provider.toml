@@ -1,3 +1,7 @@
+# Prompt caching (chat): Automatic prefix reuse in 128-token blocks with 5-minute guaranteed TTL up to 1 hour plus optional keyed routing for conversations sharing a prefix.
+# Use body: `prompt_cache_key` stable per conversation or workflow sharing a prefix, max 1024 chars, with one key per conversation; shared system prompts across many users stay on automatic reuse.
+# To get a hit: Place stable system content plus tools first with exact append-only prefixes, reuse the same key across the conversation, confirm via usage.prompt_tokens_details.cached_tokens.
+# Docs: https://inference-docs.cerebras.ai/capabilities/prompt-caching
 name = "Cerebras"
 env = ["CEREBRAS_API_KEY"]
 npm = "@ai-sdk/cerebras"
