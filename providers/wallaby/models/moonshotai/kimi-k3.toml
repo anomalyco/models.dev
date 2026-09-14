@@ -1,4 +1,13 @@
+# Effort: reasoning_effort = low|medium|high (verified on this host 2026-09-14:
+# graded reduction in reasoning tokens; "none"/"minimal" are accepted but do not
+# disable reasoning; omitting the parameter runs full effort — hence no "none"
+# in values and no toggle).
+# Pricing: https://wallabytoken.com/pricing.json (accessed 2026-09-14), USD per 1M tokens.
 base_model = "moonshotai/kimi-k3"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
+
+[interleaved]
+field = "reasoning_content"
 
 [cost]
 input = 2.70
