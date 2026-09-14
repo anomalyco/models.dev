@@ -1,7 +1,7 @@
 # Effort: reasoning_effort = low|high|max (always-on; no none)
 # Pricing: GET https://api.aiand.com/v1/models (accessed 2026-09-11)
 # Docs: https://docs.aiand.com/models/catalog/
-# K3 accepts only low|high|max (lab docs + host 400 on none/minimal/medium/xhigh).
+# Live probe 2026-09-14: low|high|max → 200; none/minimal/medium/xhigh → 400 (negative control).
 # Modalities: text + image + PDF; video rejected on this host.
 # Reasoning side channel: message.reasoning_content
 base_model = "moonshotai/kimi-k3"
