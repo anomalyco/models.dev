@@ -1,3 +1,6 @@
+# Prompt caching (chat): automatic prefix cache on POST /v1/chat/completions with stable-prefix reuse
+# To get a hit: reuse the same model with an identical stable prefix; confirm via `usage.prompt_tokens_details.cached_tokens`
+# Docs: https://amd-aim.github.io/radeon-cloud-docs/api/chat-completions/
 name = "AMD"
 env = ["AMD_API_KEY"]
 npm = "@ai-sdk/openai-compatible"

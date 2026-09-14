@@ -1,3 +1,7 @@
+# Prompt caching (chat): caller-scoped reuse via `prompt_cache_key` on POST /v1/chat/completions, with `prompt_cache_retention` TTL control
+# Use body: `prompt_cache_key` — string scoping cache reuse to an identical prefix; `prompt_cache_retention` — seconds the entry is retained
+# To get a hit: reuse the same key with the identical prefix within the retention window; confirm via cached-token counters in usage
+# Docs: https://docs.anyapi.ai/guides/parameters
 name = "AnyAPI"
 npm = "@ai-sdk/openai-compatible"
 # Raw HTTP reasoning controls (sources accessed 2026-06-25):
