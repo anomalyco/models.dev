@@ -1,3 +1,8 @@
+# Cache (chat): automatic best-effort KV prefix cache on warm replicas for cache-priced models.
+# Use body: none.
+# Use headers: none.
+# Use prefix: repeat stable prefixes on warm replicas; confirm via `prompt_tokens_details.cached_tokens`.
+# Docs: https://docs.tensorx.ai/api-reference/prompt-caching
 name = "TensorX"
 env = ["TENSORX_API_KEY"]
 npm = "@ai-sdk/openai-compatible"
