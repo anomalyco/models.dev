@@ -1,6 +1,9 @@
 base_model = "cohere/north-mini-code-1-0"
 name = "North Mini Code (Free)"
-reasoning_options = []
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "high"]
 
 [cost]
 input = 0

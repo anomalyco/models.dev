@@ -1,5 +1,13 @@
+# Toggle: $.reasoning.enabled = true|false
+# Effort: reasoning_effort = low|medium
 base_model = "nvidia/nemotron-3-super-120b-a12b"
-reasoning_options = []
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium"]
 
 [cost]
 input = 0
