@@ -162,6 +162,31 @@ test("parses nullable serving artifacts and unknown-host metadata from /model/in
   expect(parsed.data).toHaveLength(2);
 });
 
+test("fails closed on an empty catalog so sync cannot delete every local file", () => {
+  expect(() => nebul.parseModels({ data: [] })).toThrow("Nebul returned an empty model catalog");
+});
+
+test("fails closed when no entry matches the chat-model filter", () => {
+  expect(() =>
+    nebul.parseModels({
+      data: [
+        { model_name: "Some/Embedding", model_info: { mode: null, model_type: "embedding" } },
+        { model_name: "Some/Reranker", model_info: { mode: null, model_type: "rerank" } },
+      ],
+    }),
+  ).toThrow("Nebul returned no usable chat models");
+});
+
+test("parseModels keeps chat entries alongside filtered serving artifacts", () => {
+  const parsed = nebul.parseModels({
+    data: [
+      { model_name: "Some/Embedding", model_info: { mode: null, model_type: "embedding" } },
+      { model_name: "Some/Chat", model_info: { mode: "chat", model_type: "llm" } },
+    ],
+  });
+  expect(parsed).toHaveLength(2);
+});
+
 test("rejects unknown reasoning effort values from the host", () => {
   expect(() =>
     NebulResponse.parse({

@@ -72,11 +72,23 @@ export const nebul = {
     return response.json();
   },
   parseModels(raw) {
-    return NebulResponse.parse(raw).data;
+    const data = NebulResponse.parse(raw).data;
+    // An empty catalog is an upstream fault; syncing it would delete every
+    // local model file via the delete-missing pass, so fail loudly instead.
+    if (data.length === 0) {
+      throw new Error("Nebul returned an empty model catalog");
+    }
+    // Same failure mode if the response shape drifts and no entry matches the
+    // chat-model filter anymore (e.g. renamed model_type/mode values).
+    if (!data.some(isCatalogChatModel)) {
+      throw new Error("Nebul returned no usable chat models");
+    }
+    return data;
   },
   // Unauthenticated /model/info is the authoritative catalog: entries removed
   // server-side are removed here (deleteMissing defaults on), and new resolvable
-  // chat models are created with base_model overrides only.
+  // chat models are created with base_model overrides only. Whole-catalog faults
+  // fail closed in parseModels before any file is written or deleted.
   translateModel(entry, context) {
     if (!isCatalogChatModel(entry)) return undefined;
     const id = entry.model_name;

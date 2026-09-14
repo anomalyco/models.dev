@@ -279,6 +279,17 @@ xAI is implemented in `packages/core/src/sync/providers/xai.ts`.
 - New documented models open deduped missing-model issues for manual authoring (`skipCreates`); local models absent from the docs are retained (`deleteMissing: false`). Image generation, transcription, and self-hosted models are outside this sync's scope.
 - Missing tables, unknown pricing tiers, invalid prices/limits, and duplicate model rows fail before writing. Documentation format changes require updating the parser, not guessing defaults.
 
+## Nebul Notes
+
+Nebul is implemented in `packages/core/src/sync/providers/nebul.ts`.
+
+- Source endpoint: `https://api.inference.nebul.io/model/info` (the `/v1` alias also works). No authentication; with an API key the response would be project-scoped, so the sync intentionally calls it unauthenticated for the full public catalog.
+- The endpoint is treated as the authoritative catalog: entries removed server-side are removed locally, and new resolvable chat models are created with `base_model` overrides only.
+- Whole-catalog faults fail closed: an empty response, or one where nothing matches the chat-model filter (`model_type: "llm"`, `mode: "chat"`), throws in `parseModels` before any file is written or deleted — mirroring the LLM Gateway guards.
+- Per-model robustness is the inverse: an existing entry survives transient null pricing, a missing context limit, or a served alias that no longer resolves to lab metadata, keeping its authored `base_model`/`cost`/`limit`; only brand-new models require a fully-priced, resolvable source entry. Embeddings, rerankers, OCR/guard models, the ping health check, and server-side-superseded GLM-5.1/5.2 IDs skip silently.
+- `reasoning_options` come from the endpoint's per-model `reasoning_efforts` list, Nebul's only documented reasoning control. A reasoner with neither advertised efforts nor authored controls fails sync for manual authoring rather than writing an empty control set.
+- `interleaved`, `status`, and other fields the endpoint does not expose are preserved from existing files; the reasoning trace channel (`reasoning_content` vs `message.reasoning` vs inline `<thinking>`) is family-specific per Nebul's docs.
+
 ## OVHcloud Notes
 
 OVHcloud AI Endpoints is implemented in `packages/core/src/sync/providers/ovhcloud.ts`.
