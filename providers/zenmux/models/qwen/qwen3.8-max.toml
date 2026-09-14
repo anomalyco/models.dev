@@ -1,0 +1,26 @@
+base_model = "alibaba/qwen3.8-max"
+name = "Qwen3.8 Max"
+description = "2.4-trillion-parameter MoE flagship for coding, professional work, multimodal understanding, and long-horizon agentic workflows"
+family = "qwen"
+release_date = "2026-08-03"
+last_updated = "2026-08-03"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+open_weights = false
+reasoning_options = []
+
+[cost]
+input = 2
+output = 6
+cache_read = 0.17
+cache_write = 2.5
+
+[limit]
+context = 1_000_000
+output = 131_072
+
+[modalities]
+input = ["text", "image", "video", "pdf"]
+output = ["text"]

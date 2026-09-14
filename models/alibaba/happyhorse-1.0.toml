@@ -1,0 +1,17 @@
+name = "HappyHorse 1.0"
+description = "Happy Horse 1.0 is described as an open-source state-of-the-art AI video generator with native joint audio-video generation — meaning the Happy Horse AI video model produces video frames and the corresponding audio track (dialogue, ambient sound, Foley) together in a single forward pass, rather than generating silent video and dubbing it afterward.\nAccording to community-compiled architecture notes, the model is built around a 15-billion-parameter unified self-attention Transformer that processes text, image, video, and audio tokens within a single token sequence. It is reportedly built without dedicated cross-attention branches and without a separate audio module. Combined with DMD-2 distillation, the distilled variant is reported to generate 1080p video in roughly 38 seconds on an NVIDIA H100, using only 8 denoising steps without classifier-free guidance."
+release_date = "2026-04-26"
+last_updated = "2026-04-26"
+attachment = true
+reasoning = false
+temperature = false
+tool_call = false
+open_weights = false
+
+[limit]
+context = 0
+output = 0
+
+[modalities]
+input = ["text", "image", "video"]
+output = ["video"]

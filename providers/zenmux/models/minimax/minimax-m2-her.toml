@@ -1,0 +1,28 @@
+base_model = "minimax/MiniMax-M2-Her"
+name = "MiniMax-M2 Her"
+description = "MiniMax M2 variant tuned for conversational and character-driven agent interactions"
+family = "minimax"
+release_date = "2026-01-23"
+last_updated = "2026-01-23"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+open_weights = false
+reasoning_options = []
+
+[cost]
+input = 0.3
+output = 1.2
+
+[limit]
+context = 65_536
+output = 2_048
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[provider]
+npm = "@ai-sdk/anthropic"
+api = "https://zenmux.ai/api/anthropic/v1"

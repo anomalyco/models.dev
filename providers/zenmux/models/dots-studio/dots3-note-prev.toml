@@ -1,0 +1,25 @@
+base_model = "dots-studio/dots3-note-prev"
+name = "Dots3-Note Preview (Free)"
+description = "Dots Studio: Dots3-Note Preview (Free)"
+release_date = "2026-08-17"
+last_updated = "2026-08-17"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+knowledge = "2025-01-01"
+open_weights = false
+reasoning_options = []
+
+[cost]
+input = 0
+output = 0
+cache_read = 0
+
+[limit]
+context = 393_100
+output = 393_100
+
+[modalities]
+input = ["text", "image", "video", "audio"]
+output = ["text"]

@@ -1,0 +1,19 @@
+base_model = "meta/muse-image-1.0"
+name = "Muse Image 1.0"
+description = "Meta: Muse Image 1.0"
+release_date = "2026-08-27"
+last_updated = "2026-08-27"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = false
+knowledge = "2025-01-01"
+open_weights = false
+
+[limit]
+context = 66_000
+output = 0
+
+[modalities]
+input = ["text", "image"]
+output = ["image"]

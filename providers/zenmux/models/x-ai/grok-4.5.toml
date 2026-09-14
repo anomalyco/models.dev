@@ -1,4 +1,15 @@
 base_model = "xai/grok-4.5"
+name = "Grok 4.5"
+description = "xAI's Grok model for chat, coding, agentic tools, and lower hallucination risk"
+family = "grok"
+release_date = "2026-07-08"
+last_updated = "2026-07-08"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = false
 
 [[reasoning_options]]
 type = "effort"
@@ -15,5 +26,10 @@ input = 4
 output = 12
 cache_read = 1
 
+[limit]
+context = 500_000
+output = 500_000
+
 [modalities]
 input = ["text", "image", "pdf"]
+output = ["text"]

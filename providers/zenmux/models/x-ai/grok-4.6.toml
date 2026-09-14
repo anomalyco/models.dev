@@ -1,0 +1,33 @@
+base_model = "xai/grok-4.6"
+name = "Grok 4.6"
+description = "xAI's frontier model for long-running agents, coding, knowledge work, and visual projects"
+family = "grok"
+release_date = "2026-08-12"
+last_updated = "2026-08-12"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = true
+knowledge = "2026-02-01"
+open_weights = false
+reasoning_options = []
+
+[cost]
+input = 2
+output = 6
+cache_read = 0.5
+
+[[cost.tiers]]
+tier = { type = "context", size = 200_000 }
+input = 4
+output = 12
+cache_read = 1
+
+[limit]
+context = 500_000
+output = 500_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

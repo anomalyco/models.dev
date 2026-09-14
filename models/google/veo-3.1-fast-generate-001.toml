@@ -1,0 +1,17 @@
+name = "Veo 3.1 Fast"
+description = "Veo 3.1 Fast is a speed-optimized variant of Google DeepMind's flagship video generation model. It is designed to generate high-quality video significantly faster and at a lower cost than the standard Veo 3.1 Quality model, making it ideal for rapid prototyping and high-volume content creation."
+release_date = "2026-04-03"
+last_updated = "2026-04-03"
+attachment = true
+reasoning = false
+temperature = false
+tool_call = false
+open_weights = false
+
+[limit]
+context = 100_000
+output = 0
+
+[modalities]
+input = ["text", "image", "video"]
+output = ["video"]

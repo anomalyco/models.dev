@@ -1,0 +1,25 @@
+base_model = "mindai/macaron-v1-venti"
+name = "Macaron V1 Venti"
+description = "Mind Lab: Macaron V1 Venti"
+release_date = "2026-08-18"
+last_updated = "2026-08-18"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+knowledge = "2025-01-01"
+open_weights = false
+reasoning_options = []
+
+[cost]
+input = 1.5
+output = 4.5
+cache_read = 0.3
+
+[limit]
+context = 1_000_000
+output = 1_000_000
+
+[modalities]
+input = ["text"]
+output = ["text"]

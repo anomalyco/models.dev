@@ -1,0 +1,17 @@
+name = "FLUX.2 Pro"
+description = "A high-end image generation and editing model focused on frontier-level visual quality and reliability. It delivers strong prompt adherence, stable lighting, sharp textures, and consistent character/style reproduction across multi-reference inputs. Designed for production workloads, it balances speed and quality while supporting text-to-image and image editing up to 4 MP resolution.\n\n>**Pricing is as follows, [per the docs:](https://bfl.ai/pricing?category=flux.2)**  \n>**Input: We charge $0.015 for each megapixel on the input (i.e. reference images for editing)**  \n>**Output: The first megapixel is charged $0.03 and then each subsequent MP will be charged $0.015.**"
+release_date = "2025-11-25"
+last_updated = "2025-11-25"
+attachment = true
+reasoning = false
+temperature = false
+tool_call = false
+open_weights = false
+
+[limit]
+context = 47_000
+output = 47_000
+
+[modalities]
+input = ["text", "image"]
+output = ["image"]

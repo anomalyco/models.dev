@@ -1,0 +1,24 @@
+base_model = "meta/llama-3.3-70b-instruct"
+name = "Llama-3.3-70B-Instruct"
+description = "Popular open Llama workhorse for multilingual chat, coding, and self-hosting"
+family = "llama"
+release_date = "2024-12-06"
+last_updated = "2024-12-06"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = true
+knowledge = "2023-12"
+open_weights = true
+
+[cost]
+input = 0.6
+output = 1.2
+
+[limit]
+context = 128_000
+output = 4_096
+
+[modalities]
+input = ["text"]
+output = ["text"]

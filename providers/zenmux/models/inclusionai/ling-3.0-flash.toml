@@ -1,0 +1,25 @@
+base_model = "inclusionai/ling-3.0-flash"
+name = "Ling-3.0-flash"
+description = "inclusionAI: Ling-3.0-flash"
+release_date = "2026-07-23"
+last_updated = "2026-07-23"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+knowledge = "2025-01-01"
+open_weights = false
+reasoning_options = []
+
+[cost]
+input = 0.06
+output = 0.18
+cache_read = 0.012
+
+[limit]
+context = 262_144
+output = 262_144
+
+[modalities]
+input = ["text"]
+output = ["text"]

@@ -1,0 +1,25 @@
+base_model = "meituan/longcat-2.0"
+name = "LongCat-2.0"
+description = "Meituan LongCat-2.0, a reasoning model with tool calling and a 1M-token context window"
+family = "longcat"
+release_date = "2026-06-30"
+last_updated = "2026-06-30"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+open_weights = false
+reasoning_options = []
+
+[cost]
+input = 0.75
+output = 2.95
+cache_read = 0.015
+
+[limit]
+context = 1_000_000
+output = 131_072
+
+[modalities]
+input = ["text"]
+output = ["text"]

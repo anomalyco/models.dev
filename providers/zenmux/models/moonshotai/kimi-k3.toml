@@ -2,6 +2,20 @@
 # reasoning depth is set by output_config.effort, which only accepts "max".
 # Pricing: https://platform.kimi.ai/docs/pricing/chat-k3 (accessed 2026-07-17).
 base_model = "moonshotai/kimi-k3"
+name = "Kimi K3"
+description = "Multimodal Kimi model with 1M context and toggleable max-effort thinking for long-horizon agent work"
+family = "kimi-k3"
+release_date = "2026-07-16"
+last_updated = "2026-07-16"
+attachment = true
+reasoning = true
+temperature = false
+tool_call = true
+structured_output = true
+open_weights = true
+
+[interleaved]
+field = "reasoning_content"
 
 [[reasoning_options]]
 type = "toggle"
@@ -10,10 +24,15 @@ type = "toggle"
 type = "effort"
 values = ["max"]
 
-[interleaved]
-field = "reasoning_content"
-
 [cost]
-input = 3.0
-output = 15.0
+input = 3
+output = 15
 cache_read = 0.3
+
+[limit]
+context = 1_048_576
+output = 131_072
+
+[modalities]
+input = ["text", "image", "video"]
+output = ["text"]
