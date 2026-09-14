@@ -1,0 +1,33 @@
+# Sources (accessed 2026-09-11):
+# https://api-docs.deepseek.com/quick_start/pricing/
+# https://api-docs.deepseek.com/guides/thinking_mode/
+# models/deepseek/deepseek-v4.1-flash.toml
+# providers/deepseek/models/deepseek-flash.toml
+# Vancine serves DeepSeek V4.1 Flash as the platform model id deepseek-flash.
+# Reasoning HTTP format: thinking.type = "enabled" | "disabled";
+# reasoning_effort = "low" | "high" | "max". Flash maps low -> low
+# (unlike Pro). xhigh maps to high. Reasoning tokens are billed at the
+# output rate (no separate chain-of-thought price).
+# Interleaved field: reasoning_content.
+# Lab cost: input 0.15 / output 0.6 / reasoning 0.6 / cache_read 0.003
+# (USD/MTok, DeepSeek list price).
+# Vancine price basis: /api/pricing ModelRatio 0.12, CompletionRatio 4,
+# CacheRatio 0.02 converted to USD/1M tokens as input = model_ratio * 2 =
+# 0.24, output = input * completion_ratio = 0.96, cacheRead = input *
+# cache_ratio = 0.0048.
+base_model = "deepseek/deepseek-v4.1-flash"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.24
+output = 0.96
+cache_read = 0.0048

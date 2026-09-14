@@ -1,0 +1,19 @@
+# https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-google-gemma-4-26b-a4b.html
+# https://github.com/aws-samples/bedrock-claude-chatbot/blob/eeb2fa35339081d34ea9caa4e4d39cf1c189770a/agent/chat_agent.py
+# Effort: reasoning.effort = none|high on Mantle Responses, matching the Gemma 4 31B surface.
+# Live 2026-09-09: high returns reasoning; strict JSON schema and max_output_tokens=32768 accepted.
+# https://aws.amazon.com/bedrock/pricing/ (US Standard pricing)
+base_model = "google/gemma-4-26b-a4b-it"
+reasoning_options = [{ type = "effort", values = ["none", "high"] }]
+
+[cost]
+input = 0.13
+output = 0.40
+
+[modalities]
+input = ["text", "image", "video"]
+
+[provider]
+npm = "@ai-sdk/amazon-bedrock/mantle"
+api = "https://bedrock-mantle.${AWS_REGION}.api.aws/openai/v1"
+shape = "responses"

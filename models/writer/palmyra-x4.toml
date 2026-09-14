@@ -1,7 +1,9 @@
+# https://writer.com/blog/actions-with-palmyra-x4/
+# https://dev.writer.com/home/models
 name = "Palmyra X4"
-description = "Reasoning model for deliberate analysis, multi-step problem solving, and tool use"
+description = "Enterprise language model for workflow automation, coding, data analysis, and tool use"
 family = "palmyra"
-release_date = "2025-04-28"
+release_date = "2024-10-09"
 last_updated = "2025-04-28"
 attachment = false
 reasoning = true
@@ -10,8 +12,8 @@ tool_call = true
 open_weights = false
 
 [limit]
-context = 122_880
-output = 8_192
+context = 128_000
+output = 4_096
 
 [modalities]
 input = ["text"]

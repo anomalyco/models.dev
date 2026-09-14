@@ -1,0 +1,33 @@
+# Melious AI GmbH relays open-weight models built by other labs on European
+# infrastructure. It is not the lab for any model it serves, so every model entry
+# here uses base_model. Raw HTTP is POST /v1/chat/completions; the OpenAI SDK works
+# by pointing base_url at the API.
+# Reasoning: the only control on this surface is `reasoning_effort`. No lab-native
+# field is forwarded -- no thinking object, no enable_thinking, no reasoning budget --
+# so no entry here uses `toggle` or `budget_tokens`. The host also accepts any effort
+# string without a 4xx, including undocumented ones, so acceptance is not evidence.
+# Every model here was measured against this deployment on 2026-09-14 instead. Two
+# behaviours were found, and neither matches the vendor docs' low|medium|high ladder:
+# on 12 models reasoning_effort="none" is a real off state (usage.reasoning_tokens = 0
+# and no reasoning_content) while low, medium and high all reason with no ordered
+# difference in depth -- those are authored as effort ["none", "high"], an effort list
+# containing none rather than a toggle, because off is reachable through this field.
+# On glm-5, deepseek-r1-0528 and kimi-k2.5, "none" does not suppress reasoning and no
+# level grades, so those carry reasoning_options = [] -- an affirmative measurement of
+# no caller control, not an untested default. The catalog's own reasoning_type is not
+# a reliable guide: glm-5.3-flash is typed always-on yet honours "none", and glm-5 is
+# typed hybrid yet ignores it. Reasoning text is returned in
+# choices[].message.reasoning_content.
+# https://melious.ai/docs/reference/chat-completions (accessed 2026-09-14)
+# Routing: a flavour is selected with a model-ID suffix (`:balanced`, `:speed`,
+# `:price`, `:eco`, `:batch`). A bare chat model ID resolves to `balanced`, which is
+# what the ids and prices here describe; only bare ids are published. A `preset`
+# field biases routing, not reasoning depth.
+# https://melious.ai/docs/concepts/routing (accessed 2026-09-14)
+# Caching: usage.cached_tokens are prompt tokens served from the prefix cache and
+# are billed at a cheaper cache-read rate, recorded as cost.cache_read.
+name = "Melious"
+npm = "@ai-sdk/openai-compatible"
+api = "https://api.melious.ai/v1"
+env = ["MELIOUS_API_KEY"]
+doc = "https://melious.ai/docs/reference/models"

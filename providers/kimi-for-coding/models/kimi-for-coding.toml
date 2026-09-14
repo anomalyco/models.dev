@@ -1,5 +1,16 @@
-base_model = "moonshotai/kimi-k2.7-code"
-reasoning_options = []
+# https://www.kimi.com/code/docs/en/third-party-tools/opencode.html
+# Toggle: thinking.type = "enabled" | "disabled" | "adaptive"
+# Effort: output_config.effort = "low" | "high" | "max" (default: "max")
+# Retain the existing output limit; the K2.8 announcement only specifies context.
+base_model = "moonshotai/kimi-k2.8-preview"
+name = "kimi-for-coding"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
 
 [cost]
 input = 0

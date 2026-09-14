@@ -1,6 +1,13 @@
-# Global cross-Region inference profile, verified via ListInferenceProfiles (visible from all regions).
-# Global pricing (Price List us-east-1 global): input/output/cache-read USD per 1M tokens; Nova has no cache-write charge.
-# Toggle: reasoningConfig.type = enabled|disabled; Effort: reasoningConfig.maxReasoningEffort = low|medium|high
+# Global cross-Region profile verified by ListInferenceProfiles in six source Regions (2026-09-08).
+# Pricing: https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AmazonBedrock/current/us-east-1/index.json
+# Global us-east-1 reference rates (cross-region-global SKUs), USD/MTok; rates vary by source Region. Cache writes billed at input rate; no surcharge.
+# Cache billing: https://docs.aws.amazon.com/bedrock/latest/userguide/prompt-caching.html
+# Reasoning: https://docs.aws.amazon.com/nova/latest/nova2-userguide/extended-thinking.html
+# Toggle: additionalModelRequestFields.reasoningConfig.type = enabled|disabled (Converse).
+# Effort: additionalModelRequestFields.reasoningConfig.maxReasoningEffort = low|medium|high.
+# High effort requires omitting temperature, topP, topK, and maxTokens.
+# Bedrock output cap: US Converse boundary check (2026-09-09) accepts 65,535 and rejects 65,536.
+# Lab specs: https://docs.aws.amazon.com/nova/latest/nova2-userguide/what-is-nova-2.html
 base_model = "amazon/nova-2-lite"
 reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "medium", "high"] }]
 name = "Nova 2 Lite (Global)"
@@ -9,3 +16,7 @@ name = "Nova 2 Lite (Global)"
 input = 0.300
 output = 2.500
 cache_read = 0.075
+cache_write = 0.300
+
+[limit]
+output = 65_535

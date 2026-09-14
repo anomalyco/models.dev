@@ -1,3 +1,6 @@
+# Model ID, Mantle /openai/v1/responses route, 272K cap and US pricing: https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-openai-gpt-54.html
+# Bedrock capabilities: https://developers.openai.com/api/docs/guides/amazon-bedrock
+# Effort: reasoning.effort = none|low|medium|high|xhigh; https://developers.openai.com/api/docs/models/gpt-5.4
 base_model = "openai/gpt-5.4"
 reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh"] }]
 base_model_omit = ["cost.tiers", "cost.context_over_200k", "experimental.modes.fast", "limit.input"]
@@ -10,7 +13,6 @@ cache_read = 0.275
 
 [limit]
 context = 272_000
-output = 128_000
 
 [provider]
 npm = "@ai-sdk/amazon-bedrock/mantle"

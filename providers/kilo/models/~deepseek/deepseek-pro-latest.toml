@@ -1,0 +1,28 @@
+name = "DeepSeek: DeepSeek Pro Latest"
+description = "This model always redirects to the latest model in the DeepSeek Pro family."
+family = "deepseek"
+release_date = "2026-09-14"
+last_updated = "2026-09-14"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "high", "max"]
+
+[cost]
+input = 0.57948
+output = 1.73844
+cache_read = 0.018438
+
+[limit]
+context = 1_048_576
+output = 393_216
+
+[modalities]
+input = ["text"]
+output = ["text"]

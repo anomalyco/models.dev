@@ -1,0 +1,37 @@
+name = "GPT Luna Latest"
+description = "GPT model for general reasoning, writing, coding, and tool-assisted tasks"
+family = "gpt-luna"
+release_date = "2026-09-11"
+last_updated = "2026-09-11"
+attachment = true
+reasoning = true
+temperature = false
+tool_call = true
+structured_output = true
+knowledge = "2026-02-16"
+open_weights = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "xhigh", "max"]
+
+[cost]
+input = 0.2
+output = 1.2
+cache_read = 0.02
+cache_write = 0.25
+
+[[cost.tiers]]
+tier = { type = "context", size = 272_000 }
+input = 0.4
+output = 1.8
+cache_read = 0.04
+cache_write = 0.5
+
+[limit]
+context = 1_050_000
+output = 128_000
+
+[modalities]
+input = ["pdf", "image", "text"]
+output = ["text"]

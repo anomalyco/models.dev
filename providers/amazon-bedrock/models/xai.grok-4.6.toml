@@ -1,4 +1,6 @@
 # Source: https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-xai-grok-4-6.html
+# Mantle Responses; US Standard in-Region pricing.
+# Effort: reasoning.effort = low|medium|high|xhigh (always on).
 base_model = "xai/grok-4.6"
 reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh"] }]
 last_updated = "2026-08-18"
