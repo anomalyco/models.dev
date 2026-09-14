@@ -1,3 +1,8 @@
+# Cache key (chat): session affinity toward the warm upstream deployment with automatic prefix reuse
+# Use headers: `X-OrcaRouter-Session-Id` with a stable conversation value pins model and deployment
+# Use body: `prompt_cache_key` sharing a cacheable prefix resolves the session fallback
+# Cache policy: stable prefix + same model; reuse one session value per conversation
+# Docs: https://docs.orcarouter.ai/routing/session-affinity
 name = "OrcaRouter"
 env = ["ORCAROUTER_API_KEY"]
 npm = "@ai-sdk/openai-compatible"
