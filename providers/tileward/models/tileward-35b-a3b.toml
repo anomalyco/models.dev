@@ -1,0 +1,40 @@
+# Full standalone entry (Tileward is the host that produced this specific compressed artifact --
+# no shared lab identity exists for it elsewhere, so base_model does not apply).
+#
+# Sources, all checked 2026-09-14:
+# - context, cost, modalities: GET https://api.tileward.com/v1/models (live)
+# - compression ratio, base model, "as shipped" framing: https://tileward.com/llms.txt
+# - release_date: fwaa commit 7e76a7c, 2026-08-08 -- first cut onto the paid serving slot
+# - last_updated: served context window raised 262,144 -> unchanged ceiling, effective 2026-09-09
+# - tool_call: measured 60/60 (100%) in fwaa's own tool-calling reliability battery
+# - open_weights = false, no HF card link: the public card at
+#   https://huggingface.co/Tileward-Inc/Qwen3.6-35B-A3B-TW carries eval results only, no
+#   downloadable weights -- "served through Tileward's API rather than released as a download"
+#
+# reasoning = false: no documented, caller-exposed reasoning control was found for this model
+# (unlike gpt-oss's reasoning_effort); flagged for correction if that turns out wrong.
+# limit.output: no distinct max-output figure is published; set equal to context as the
+# defensible upper bound absent a smaller documented ceiling.
+name = "Tileward 35B-A3B"
+description = "Mixture-of-experts model compressed from Qwen3.6-35B-A3B, served by Tileward"
+family = "qwen"
+release_date = "2026-08-08"
+last_updated = "2026-09-09"
+attachment = false
+reasoning = false
+tool_call = true
+temperature = true
+structured_output = true
+open_weights = false
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[limit]
+context = 262_144
+output = 262_144
+
+[cost]
+input = 1.00
+output = 1.00

@@ -1,0 +1,12 @@
+# Verified against GET https://api.tileward.com/v1/models, 2026-09-14. cost is a single blended
+# USD/Mtoken rate (Tileward does not currently split input/output pricing), used for both fields.
+# context (131,072) matches the base entry, so [limit] is inherited and not restated.
+# Reasoning: Tileward forwards `reasoning_effort` unmodified to the served model (see fwaa's
+# OPENAI_CHAT_FIELDS allowlist); values match gpt-oss's own harmony reasoning_effort levels, same
+# as peer hosts of this model.
+base_model = "openai/gpt-oss-120b"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
+
+[cost]
+input = 0.40
+output = 0.40
