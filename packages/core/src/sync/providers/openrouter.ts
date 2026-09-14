@@ -440,7 +440,7 @@ function shouldPreserveFactoredName(
   return normalizeModelSlug(modelSlug) !== normalizeModelSlug(canonicalSlug);
 }
 
-function normalizeModelSlug(value: string) {
+export function normalizeModelSlug(value: string) {
   return value.toLowerCase().replaceAll(/[^a-z0-9]/g, "");
 }
 

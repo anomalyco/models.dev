@@ -5375,6 +5375,77 @@ test("does not let a narrower AIHubMix modality list delete an accepted one", ()
   expect(widened?.modalities?.input).toEqual(["text", "image", "pdf"]);
 });
 
+test("records an AIHubMix route's own name only where its ID is not the lab slug", () => {
+  // A factored create used to pass the file's name, so a route with no file yet
+  // recorded none at all and rendered as the lab model: `coding-glm-4.6-free`,
+  // `coding-glm-4.6` and `glm-4.6` all read "GLM-4.6".
+  const catalog = new Map(aihubmixCatalog);
+  const free = aihubmixModel({
+    model_id: "coding-gemini-3.1-flash-lite-free",
+    model_name: "Coding Gemini 3.1 Flash Lite (free)",
+    variant_of: "gemini-3.1-flash-lite",
+  });
+  catalog.set(free.model_id, free);
+  const created = buildAihubmixModel(free, undefined, aihubmixLabIDs, catalog);
+  expect(created).toMatchObject({
+    base_model: "google/gemini-3.1-flash-lite",
+    name: "Coding Gemini 3.1 Flash Lite (free)",
+  });
+
+  // An update keeps the name the file states. Four files spell their model the way
+  // its lab does (`MiMo-V2.5`) where the endpoint sends a storefront `Mimo V2.5`,
+  // and the endpoint's label is not a reason to rewrite a human's spelling.
+  const authored = buildAihubmixModel(
+    free,
+    { id: free.model_id, name: "Coding Gemini 3.1 Flash-Lite (free)" },
+    aihubmixLabIDs,
+    catalog,
+  );
+  expect(authored).toMatchObject({ name: "Coding Gemini 3.1 Flash-Lite (free)" });
+
+  // A relay that *is* that lab model keeps deferring to the lab's spelling, so a
+  // registry punctuating the same name differently does not become an override
+  // on every entry in the catalog.
+  // A blank label is not a name, and it is not merely ignored: `ModelBase.name` is
+  // `min(1)`, so a `""` handed through aborts the whole provider's sync at
+  // validation and writes no file at all. The endpoint types the field
+  // `nullish()`, so both shapes have to resolve to "no name".
+  for (const blank of [null, "", "   "]) {
+    const bare = aihubmixModel({
+      model_id: "coding-gemini-3.1-flash-lite-free",
+      model_name: blank as never,
+      variant_of: "gemini-3.1-flash-lite",
+    });
+    const built = buildAihubmixModel(bare, undefined, aihubmixLabIDs, catalog);
+    expect(built).toMatchObject({ base_model: "google/gemini-3.1-flash-lite" });
+    expect(built).not.toHaveProperty("name");
+  }
+
+  // A namespaced route is compared on the bare ID, because that is what resolved
+  // its base model: `relayChain` walks `bareID(model_id)`. Normalising the
+  // namespaced form would never equal its own slug, and the route would take a
+  // storefront override restating the lab's own name.
+  const namespaced = buildAihubmixModel(
+    // The label deliberately differs from the lab's, so an override would actually
+    // be recorded if the comparison used the namespaced form.
+    aihubmixModel({ model_id: "Google/gemini-3.1-flash-lite", model_name: "Gemini 3.1 Flash Lite Turbo" }),
+    undefined,
+    aihubmixLabIDs,
+    aihubmixCatalog,
+  );
+  expect(namespaced).toMatchObject({ base_model: "google/gemini-3.1-flash-lite" });
+  expect(namespaced).not.toHaveProperty("name");
+
+  const punctuated = buildAihubmixModel(
+    aihubmixModel({ model_name: "Gemini 3.1 Flash-Lite" }),
+    undefined,
+    aihubmixLabIDs,
+    aihubmixCatalog,
+  );
+  expect(punctuated).toMatchObject({ base_model: "google/gemini-3.1-flash-lite" });
+  expect(punctuated).not.toHaveProperty("name");
+});
+
 test("refreshes the AIHubMix wire path without discarding a human note", () => {
   // The header is authoritative so a stale wire path cannot outlive the options
   // it documents, but a price citation or live-test record is not reproducible
@@ -5390,7 +5461,16 @@ test("refreshes the AIHubMix wire path without discarding a human note", () => {
     reasoning: true,
     reasoning_options: [{ type: "toggle" }] as AihubmixModel["reasoning_options"],
   });
-  aihubmix.parseModels({ data: [toggled] });
+  const plain = aihubmixModel({
+    vendor: null,
+    model_id: "somelab-bare",
+    model_name: "SomeLab Bare",
+    release_date: "2026-05-01",
+    open_weights: false,
+    context_length: 262_144,
+    max_output: 65_536,
+  });
+  aihubmix.parseModels({ data: [toggled, plain] });
   const translated = aihubmix.translateModel(toggled, {
     existing: () => undefined,
     authored: () => undefined,
@@ -5402,6 +5482,51 @@ test("refreshes the AIHubMix wire path without discarding a human note", () => {
   // The hand-written wire path it supersedes is gone; the citation is not.
   expect(translated?.header).not.toContain("# Toggle: enable_thinking");
   expect(translated?.header).toContain("queried 2026-08-11T09:45:11Z");
+
+  // A note is recognised by what it opens with, not by mentioning a wire path or
+  // the docs host: two files on `dev` state a wire path together with a live test
+  // the response cannot reproduce, and a second statement of the same path costs
+  // nothing next to a deleted verification date.
+  const noted = aihubmix.translateModel(toggled, {
+    existing: () => undefined,
+    authored: () => undefined,
+    header: () =>
+      '# Native Messages prefers $.thinking.type = "adaptive" (verified live 2026-08-11).\n' +
+      "# https://docs.aihubmix.com/cn/api/Claude-Native\n",
+  });
+  expect(noted?.header).toContain("verified live 2026-08-11");
+  expect(noted?.header).toContain("docs.aihubmix.com/cn/api/Claude-Native");
+
+  // A dialect line is only dropped when a derived block restates it. With nothing
+  // derived there is nothing to restate, and one file's whole citation is that
+  // line byte for byte.
+  const citation = "# https://docs.aihubmix.com/cn/api/unified-inference\n";
+  expect(
+    aihubmix.translateModel(plain, {
+      existing: () => undefined,
+      authored: () => undefined,
+      header: () => citation,
+    })?.header,
+  ).toBe(citation);
+  // An opening is recognised after trimming, because `leadingComments` matches on
+  // the trimmed line but keeps the raw one — so an indented `# Toggle:` arrives
+  // here still indented, and would otherwise survive as a "note" restating the
+  // block written directly above it.
+  const indented = aihubmix.translateModel(toggled, {
+    existing: () => undefined,
+    authored: () => undefined,
+    header: () => "  # Toggle: enable_thinking = true|false\n",
+  })?.header;
+  expect(indented).not.toContain("# Toggle: enable_thinking");
+
+  // Written alongside a block that does restate it, it is not doubled.
+  const doubled =
+    aihubmix.translateModel(toggled, {
+      existing: () => undefined,
+      authored: () => undefined,
+      header: () => citation,
+    })?.header ?? "";
+  expect(doubled.split(citation.trim()).length - 1).toBe(1);
 });
 
 test("reads a missing AIHubMix reasoning or tool flag as unknown, not as false", () => {
@@ -5493,6 +5618,58 @@ test("inherits a limit the AIHubMix endpoint only restates in decimal", () => {
     aihubmixLabIDs,
   );
   expect(capped?.limit?.context).toBe(128_000);
+
+  // The restatement reads the same from the other side: the lab window is
+  // 1_048_576 and the endpoint quotes 1_048_576 against a provider file holding the
+  // decimal 1_000_000. Resolving to the lab is what lets `inheritedOverride` drop
+  // the key — resolving to the file's own spelling would pin 1_000_000 forever even
+  // though it is only an imprecise way of writing the same window.
+  const reverse = buildAihubmixModel(
+    aihubmixModel({ context_length: 1_048_576, max_output: 65_536 }),
+    { ...aihubmixAuthored, limit: { context: 1_000_000, output: 65_536 } },
+    aihubmixLabIDs,
+  );
+  expect(reverse?.limit?.context).toBeUndefined();
+
+  // With no lab entry to defer to, the file's own value is the accepted one, and the
+  // restatement still reads from either side: a host route quoting the binary
+  // 1_048_576 for the 1_000_000 already on the file keeps the file's number instead
+  // of rewriting it to say the same window differently.
+  const hostRestated = buildAihubmixModel(
+    aihubmixModel({
+      vendor: null,
+      model_id: "somelab-restated",
+      model_name: "SomeLab Restated",
+      release_date: "2026-05-01",
+      open_weights: false,
+      context_length: 1_048_576,
+      max_output: 65_536,
+    }),
+    { ...aihubmixAuthored, id: "somelab-restated", limit: { context: 1_000_000, output: 65_536 } },
+    aihubmixLabIDs,
+  );
+  expect(hostRestated?.limit?.context).toBe(1_000_000);
+
+  // A relay cannot serve a wider window than the model it relays, so a ceiling above
+  // the lab's own resolves to the lab's rather than advertising tokens no request can
+  // reach. Doubling the output is far past any restatement.
+  const overreach = buildAihubmixModel(
+    aihubmixModel({ context_length: 1_048_576, max_output: 131_072 }),
+    undefined,
+    aihubmixLabIDs,
+  );
+  expect(overreach?.limit?.output).toBeUndefined();
+
+  // The clamp applies to whatever the restatement resolved, not instead of it. An
+  // endpoint quoting back the same stale ceiling the file already holds resolves to
+  // that number — so clamping only afterwards is what catches it. `grok-4.5` did
+  // exactly this, recording a 1_000_000 output against a 500_000 lab window.
+  const stale = buildAihubmixModel(
+    aihubmixModel({ context_length: 1_048_576, max_output: 1_000_000 }),
+    { ...aihubmixAuthored, limit: { context: 1_048_576, output: 1_000_000 } },
+    aihubmixLabIDs,
+  );
+  expect(stale?.limit?.output).toBeUndefined();
 
   // And an authored cap survives an endpoint that quotes nothing for the ceiling.
   const authored: ExistingModel = {

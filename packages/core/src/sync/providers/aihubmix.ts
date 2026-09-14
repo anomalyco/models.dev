@@ -4,7 +4,7 @@ import { z } from "zod";
 
 import { describeModel } from "../../describe.js";
 import type { ExistingModel, SyncProvider, SyncedFullModel, SyncedModel } from "../index.js";
-import { factorBaseModel, modelMetadata } from "./openrouter.js";
+import { factorBaseModel, modelMetadata, normalizeModelSlug } from "./openrouter.js";
 
 const API_ENDPOINT = "https://aihubmix.com/api/v1/models?type=llm";
 
@@ -145,10 +145,15 @@ async function readLabMetadataIDs(modelsDir: string) {
 
 // The same off state is reachable from whichever dialect the caller speaks, so
 // an off switch has no single wire path. Name one per protocol.
-const DIALECTS =
+const DIALECT_PATHS =
   '# $.enable_thinking = true|false on the OpenAI-compatible /v1/chat/completions path (verified live 2026-09-11);\n' +
-  '# $.thinking.type = "enabled"|"disabled"|"adaptive" on /v1/messages; $.generationConfig.thinkingConfig on the Gemini path.\n' +
-  "# https://docs.aihubmix.com/cn/api/unified-inference\n";
+  '# $.thinking.type = "enabled"|"disabled"|"adaptive" on /v1/messages; $.generationConfig.thinkingConfig on the Gemini path.\n';
+// Cited on its own line, because a human wrote this exact line by hand in
+// `gemini-3.7-flash.toml` — it is a source for the whole gateway, not a claim
+// about one model's options, and so it is carried through as a note rather than
+// being owned by the block. The two lines above are only ever this adapter's own.
+const DIALECT_SOURCE = "# https://docs.aihubmix.com/cn/api/unified-inference\n";
+const DIALECTS = DIALECT_PATHS + DIALECT_SOURCE;
 const TOGGLE_HEADER = "# Toggle:\n" + DIALECTS;
 // Where the catalog spells the off state as `effort = none`, the other dialects
 // still reach it, and the folded toggle is the only place that was recorded.
@@ -286,7 +291,7 @@ export function buildAihubmixModel(
   if (base !== undefined) {
     return factorBaseModel(
       base,
-      { name: existing?.name, description: existing?.description, ...shared },
+      { name: factoredName(model, base, existing), description: existing?.description, ...shared },
       limit,
       existing?.base_model === base ? existing.base_model_omit : undefined,
     );
@@ -431,16 +436,80 @@ function foldsToggle(options: { type: string; values?: string[] }[]) {
 }
 
 /**
- * Lines this adapter authors, plus the hand-written wire paths it supersedes.
- * Anything else in the header is a human note — a price citation, a live-test
- * record — that the response cannot reproduce, so it is carried through.
+ * The display name to record on a factored entry. `inheritedOverride` already
+ * drops a name the lab entry states identically, but the two registries punctuate
+ * the same name differently — the endpoint writes `GLM 5.3` where the lab writes
+ * `GLM-5.3` — and taking the endpoint's spelling as an override on 78 entries
+ * would fight the lab's own naming across the catalog for no gain.
+ *
+ * So the endpoint's label is recorded only where the relay is not simply that lab
+ * model under another punctuation: its ID, normalised, differs from the base
+ * model's slug. That is the same test `shouldPreserveFactoredName` applies for
+ * OpenRouter, and it is what keeps `coding-glm-4.6-free` reading "Coding GLM 4.6
+ * (free)" instead of inheriting a bare "GLM-4.6" it shares with two other routes.
+ * A relay that *is* the lab model keeps deferring to the lab's spelling, including
+ * where the lab renamed it (`gemini-3-pro-image` shows as "Nano Banana Pro"). And
+ * the endpoint's label only ever fills a create: an update keeps the name the file
+ * states, so this cannot rewrite a spelling a human chose.
  */
-const WIRE_PATH_LINE = /^#\s*(Toggle|Effort|Budget|Off is effort)\b|\$\.|thinkingConfig|docs\.aihubmix\.com\/cn\/api/;
+function factoredName(model: AihubmixModel, base: string, existing: ExistingModel | undefined) {
+  // A name already on the file is a human's call and outranks the endpoint's label,
+  // which is a storefront string: 4 files spell their model the way its lab does
+  // (`MiMo-V2.5`, `MiniMax-M2.7`) where the endpoint sends `Mimo V2.5`. Handing it
+  // straight through stays correct anyway — `inheritedOverride` drops a name the lab
+  // states identically, which is what retires the 27 redundant ones `dev` carries.
+  if (existing?.name !== undefined) return existing.name;
+  // A blank label is not a name. `ModelBase.name` is `min(1)`, so writing one
+  // through would abort the whole provider's sync at validation rather than skip
+  // the field, and the standalone path never had to care because it only ever
+  // passed a name that had already been validated.
+  if (model.model_name == null || model.model_name.trim() === "") return undefined;
+  // Compared on the bare ID, because that is what resolved the base model:
+  // `relayChain` walks `bareID(model_id)`, so `Qwen/QwQ-32B` reaches
+  // `qwen/qwq-32b`. Normalising the namespaced form instead would never match its
+  // own slug, and each of the 10 namespaced routes would take a redundant
+  // storefront override the moment its lab file lands.
+  const slug = base.split("/").slice(1).join("/");
+  return normalizeModelSlug(bareID(model.model_id)) === normalizeModelSlug(slug) ? undefined : model.model_name;
+}
+
+/**
+ * A bare wire-path line, which the derived block restates in full. These four
+ * openings introduce nothing but the field to send, so replacing one loses
+ * nothing — `# Effort: reasoning_effort = low|high|max` says less than the block
+ * that supersedes it.
+ *
+ * Matching an opening rather than a substring is the point. Keying on `$.` or on
+ * the docs host would also delete lines that merely mention one: seven files on
+ * `dev` carry a header, and `claude-opus-5` and `qwen3.8-max` each state a wire
+ * path together with a dated live test the response cannot reproduce
+ * ("verified live 2026-08-11"). Those are notes, and notes are carried through
+ * even where they overlap the block — a second statement of the same wire path
+ * costs nothing, a deleted verification date cannot be recovered.
+ */
+const AUTHORED_OPENING = /^#\s*(Toggle|Effort|Budget|Off is effort)\b/;
 
 function composeHeader(existingHeader: string | undefined, derived: string | undefined) {
+  // The two wire-path lines are this adapter's own restatement of the block, so
+  // they go whether or not a block replaces them. Keeping them when nothing is
+  // derived is what left a route advertising a toggle it no longer has: the block
+  // vanished, its tail survived as a "note", and no later sync could tell the
+  // difference — the file never self-corrected.
+  //
+  // The source line is kept unless a derived block restates it, which is only to
+  // avoid stating it twice. It is a citation for the gateway rather than a claim
+  // about this model, and a human wrote this exact line in `gemini-3.7-flash`.
+  const authored = new Set(
+    (derived === undefined ? DIALECT_PATHS : DIALECTS)
+      .split("\n")
+      .map((line) => line.trim())
+      .filter((line) => line !== ""),
+  );
   const notes = (existingHeader ?? "")
     .split("\n")
-    .filter((line) => line.trim() !== "" && !WIRE_PATH_LINE.test(line));
+    .filter((line) =>
+      line.trim() !== "" && !AUTHORED_OPENING.test(line.trim()) && !authored.has(line.trim()),
+    );
   const header = (derived ?? "") + (notes.length > 0 ? `${notes.join("\n")}\n` : "");
   return header === "" ? undefined : header;
 }
@@ -506,11 +575,36 @@ const UNIT_RESTATEMENT_FLOOR = 1000 ** 3 / 1024 ** 3;
 function resolveLimit(quoted?: number, authored?: number, lab?: number) {
   const stated = quoted ?? authored;
   if (stated === undefined) return undefined;
-  for (const accepted of [authored, lab]) {
-    if (accepted === undefined || stated >= accepted) continue;
-    if (stated / accepted >= UNIT_RESTATEMENT_FLOOR) return accepted;
+  // The restatement reads the same from either side, so the comparison is a ratio
+  // rather than a direction: the endpoint quotes an accepted 204800 as 200000 and
+  // an accepted 1000000 as 1048576, and neither is the host stating a different
+  // window. Checking only the narrowing side left 20 routes writing an override
+  // that states no difference at all (`glm-5.3` recording 1048576 against a lab
+  // window of 1000000).
+  //
+  // The lab entry is tried first, because a restatement should resolve to the
+  // spelling that makes the override disappear: matching the lab means
+  // `inheritedOverride` drops the key entirely, while resolving to the value the
+  // provider file happens to hold would pin that spelling forever — `991000` is
+  // itself just an imprecise way of writing the lab's 1000000. The file's own
+  // value still decides where the lab states no such key, and a genuine host
+  // restriction falls below the floor and is written as the delta it is.
+  let resolved = stated;
+  for (const accepted of [lab, authored]) {
+    if (accepted === undefined) continue;
+    const ratio = Math.min(stated, accepted) / Math.max(stated, accepted);
+    if (ratio < UNIT_RESTATEMENT_FLOOR) continue;
+    resolved = accepted;
+    break;
   }
-  return stated;
+  // A relay cannot serve a wider window than the model it relays: the window is the
+  // model's property and a host can only restrict it. Applied to whatever the
+  // restatement resolved, not in place of it — an endpoint quoting the same stale
+  // ceiling the file already holds resolves to that number, and clamping only
+  // afterwards is what catches it (`grok-4.5` quoting the file's own 1000000 output
+  // against a lab window of 500000). Where the lab entry is the stale side,
+  // `models/` is where that gets corrected.
+  return lab !== undefined && resolved > lab ? lab : resolved;
 }
 
 function modalities(value: string | null | undefined, fallback: string[]) {

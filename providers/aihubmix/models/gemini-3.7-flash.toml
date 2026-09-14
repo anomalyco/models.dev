@@ -1,7 +1,7 @@
-base_model = "google/gemini-3.7-flash"
-
 # AIHubMix unified Chat: $.reasoning_effort = low|medium|high
 # https://docs.aihubmix.com/cn/api/unified-inference
+base_model = "google/gemini-3.7-flash"
+
 reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
 
 [cost]
