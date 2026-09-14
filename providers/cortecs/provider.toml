@@ -1,3 +1,8 @@
+# Cache key (chat): transparent provider-level prefix reuse with prompt_tokens_details.cached_tokens billing
+# Use headers: repeat the stable prefix with identical model and params
+# Use body: repeat the stable prefix with identical model and params; Anthropic-routed Claude models accept cache_control ephemeral breakpoints
+# Cache policy: stable prefix + same model; place reusable documents and instructions at the start byte-identical and append-only
+# Docs: https://docs.cortecs.ai/routing/prompt-caching
 name = "Cortecs"
 env = ["CORTECS_API_KEY"]
 npm = "@ai-sdk/openai-compatible"
