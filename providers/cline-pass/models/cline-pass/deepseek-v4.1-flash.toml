@@ -1,0 +1,11 @@
+# https://api.cline.bot/api/v1/ai/cline/recommended-models (clinePass id cline-pass/deepseek-v4.1-flash, accessed 2026-09-11)
+# https://docs.cline.bot/getting-started/clinepass (ClinePass reference pricing cites DeepSeek API pricing for Flash quota)
+# https://api-docs.deepseek.com/quick_start/pricing (DeepSeek-V4.1-Flash off-peak USD/MTok; ClinePass docs table still lists deepseek-v4-flash only)
+# Reasoning effort values match other ClinePass DeepSeek entries on this host.
+base_model = "deepseek/deepseek-v4.1-flash"
+reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh"] }]
+
+[cost]
+input = 0.15
+output = 0.6
+cache_read = 0.003

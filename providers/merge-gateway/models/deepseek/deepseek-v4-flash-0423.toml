@@ -1,0 +1,18 @@
+base_model = "deepseek/deepseek-v4-flash-0423"
+tool_call = false
+structured_output = false
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"]
+
+[cost]
+input = 0.139
+output = 0.278
+
+[limit]
+context = 131_072
+output = 32_768

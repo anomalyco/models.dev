@@ -1,15 +1,11 @@
+# Model ID, Runtime APIs and limits: https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-openai-gpt-oss-20b.html
+# Standard US East (N. Virginia) pricing: https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AmazonBedrock/current/us-east-1/index.json
+# Effort: additionalModelRequestFields.reasoning_effort = low|medium|high (Converse).
+# Request mapping: https://docs.aws.amazon.com/bedrock/latest/userguide/model-parameters-openai.html
+# AWS documents 16K max output. Converse accepts larger maxTokens settings up to the 128K context boundary, but that is not evidence of a larger generation cap.
+base_model = "openai/gpt-oss-20b"
 name = "gpt-oss-20b"
-description = "Open-weight GPT model for self-hosted reasoning and instruction-following workloads"
-family = "gpt-oss"
-release_date = "2025-08-05"
-last_updated = "2025-08-05"
-attachment = false
-reasoning = true
 reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
-temperature = true
-tool_call = true
-structured_output = true
-open_weights = true
 
 [cost]
 input = 0.07
@@ -18,7 +14,3 @@ output = 0.30
 [limit]
 context = 128_000
 output = 16_384
-
-[modalities]
-input = ["text"]
-output = ["text"]

@@ -1,4 +1,6 @@
-# Source: AWS Bedrock Grok 4.6 model card — Runtime profiles, pricing, and capabilities.
+# https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-xai-grok-4-6.html
+# Runtime Converse profile; Global CRIS Standard pricing. Structured outputs are Mantle-only.
+# Effort: additionalModelRequestFields.reasoning.effort = low|medium|high|xhigh, matching the US profile.
 base_model = "xai/grok-4.6"
 reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh"] }]
 name = "Grok 4.6 (Global)"

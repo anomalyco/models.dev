@@ -1,0 +1,28 @@
+# Coding Plan model name from https://www.volcengine.com/docs/82379/1928261
+# (accessed 2026-09-11), listed alongside kimi-k2.7-code. Subscription tier:
+# no per-token price.
+# reasoning_options mirror the lab (providers/moonshotai/models/kimi-k3.toml)
+# and the kimi-for-coding relay peer. Wire fields on this provider's OpenAI
+# path (provider.toml): POST /api/coding/v3/chat/completions takes
+# thinking.type = enabled|disabled plus reasoning_effort = low|high|max
+# (`adaptive` is the Moonshot lab surface, not accepted here); the separate
+# Anthropic path (/api/coding/v1/messages) uses output_config.effort.
+# Endpoint-specific effort behavior on this relay was not measured; the
+# baseline is copied per relay convention — adjust if wire probing shows
+# levels collapsing as they do on kimi-k2.7-code (see that file).
+base_model = "moonshotai/kimi-k3"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0
+output = 0
+cache_read = 0

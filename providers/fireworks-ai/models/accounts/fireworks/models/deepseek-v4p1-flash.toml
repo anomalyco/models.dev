@@ -1,0 +1,25 @@
+# Toggle: thinking.type = enabled|disabled (reasoning_effort = "none" or false also disables)
+# Effort: reasoning_effort = low|medium|high|xhigh|max
+#   medium and high produce identical output (medium promoted to high).
+#   low is a distinct tier, not promoted to high despite docs.
+#   xhigh and max are distinct tiers, not promoted despite docs.
+#   Verified 2026-09-10 across 4 prompts at temperature 0.
+# Reasoning: https://docs.fireworks.ai/api-reference/post-chatcompletions (accessed 2026-09-10)
+# Pricing: https://fireworks.ai/models/deepseek-ai/deepseek-v4p1-flash (accessed 2026-09-10)
+# Released on Fireworks Serverless API 2026-09-10.
+base_model = "deepseek/deepseek-v4.1-flash"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.22
+output = 0.66
+cache_read = 0.007

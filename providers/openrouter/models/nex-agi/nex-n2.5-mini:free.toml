@@ -3,7 +3,7 @@ description = "Efficient model for low-latency assistance, extraction, and routi
 family = "agi"
 release_date = "2026-09-08"
 last_updated = "2026-09-08"
-attachment = false
+attachment = true
 reasoning = true
 temperature = true
 tool_call = true
@@ -23,5 +23,5 @@ context = 262_144
 output = 235_929
 
 [modalities]
-input = ["text"]
+input = ["text", "image"]
 output = ["text"]

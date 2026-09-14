@@ -1,0 +1,28 @@
+# DeepSeek-V4.1-Flash, served as `deepseek-flash`.
+# The legacy names `deepseek-v4-flash` and `deepseek-v4-flash-vision-exp` are
+# still accepted, but those models are retired and requests are served by
+# DeepSeek-V4.1-Flash at the Flash price.
+# Reasoning tokens are billed at the output rate (no separate CoT price).
+# Off-peak rates are half of peak; models.dev records the off-peak rate.
+# OpenAI: `thinking.type = enabled|disabled`, `reasoning_effort = low|high|max`.
+# Anthropic: `thinking.type`, `output_config.effort = low|high|max`; budget ignored.
+# Flash maps requested low -> low (unlike Pro). xhigh -> high.
+# https://api-docs.deepseek.com/quick_start/pricing (accessed 2026-09-10)
+# https://api-docs.deepseek.com/guides/thinking_mode/ (accessed 2026-09-10)
+base_model = "deepseek/deepseek-v4.1-flash"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.15
+output = 0.6
+reasoning = 0.6
+cache_read = 0.003

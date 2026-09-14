@@ -1,0 +1,14 @@
+base_model = "deepseek/deepseek-v4.1-flash"
+description = "DeepSeek V4.1 Flash is a sparse mixture-of-experts model from DeepSeek, and the cost-efficient tier of the V4.1 family. DeepSeek reports that it exceeds V4 Pro on performance, speed, and task..."
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "high", "max"]
+
+[cost]
+input = 0.3
+output = 1.2
+cache_read = 0.006
+
+[limit]
+context = 1_048_576

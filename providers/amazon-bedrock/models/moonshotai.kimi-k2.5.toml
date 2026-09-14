@@ -1,17 +1,15 @@
-# See https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-moonshot-ai-kimi-k2-5.html
-name = "Kimi K2.5"
-description = "Kimi multimodal agent model for visual understanding, coding, and planning"
-family = "kimi"
-release_date = "2026-02-06"
+# https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-moonshot-ai-kimi-k2-5.html
+# https://github.com/aws-samples/bedrock-claude-chatbot/blob/eeb2fa35339081d34ea9caa4e4d39cf1c189770a/agent/chat_agent.py
+# Toggle: additionalModelRequestFields.reasoning_config = "high"; omit for default non-thinking mode.
+# Live 2026-09-09: high/omitted returns/omits reasoningContent; maxTokens=16384 accepted.
+# Live Converse 2026-09-09: inferenceConfig.temperature accepts both 0 and 1.
+# Runtime Converse; US Standard pricing.
+base_model = "moonshotai/kimi-k2.5"
+release_date = "2026-01-27"
 last_updated = "2026-02-06"
-attachment = false
-reasoning = true
-reasoning_options = []
+reasoning_options = [{ type = "toggle" }]
 temperature = true
-tool_call = true
-structured_output = true
 interleaved = true
-open_weights = true
 
 [cost]
 input = 0.6
@@ -19,8 +17,7 @@ output = 3
 
 [limit]
 context = 262_143
-output = 16_000
+output = 16_384
 
 [modalities]
 input = ["text", "image"]
-output = ["text"]

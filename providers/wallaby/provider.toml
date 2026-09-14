@@ -1,0 +1,9 @@
+# OpenAI-compatible API focused on Kimi K3. Reasoning effort is adjustable via
+# `reasoning_effort` (low/medium/high) and reasoning streams in the
+# `reasoning_content` field. `temperature` is accepted but normalized to 1.
+# https://wallabytoken.com/docs (accessed 2026-09-14)
+name = "Wallaby"
+npm = "@ai-sdk/openai-compatible"
+env = ["WALLABY_API_KEY"]
+api = "https://api.wallabytoken.com/v1"
+doc = "https://wallabytoken.com/docs"

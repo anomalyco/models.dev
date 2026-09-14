@@ -1,14 +1,18 @@
-# Source: https://docs.aiand.com/models/catalog/ (accessed 2026-07-18)
-# reasoning_effort verified by live probe on 2026-07-24: the backend rejects
-# "none", "minimal", and "xhigh" with 400 ("Supported values are: high,
-# medium, low"), so the array is narrowed from the gateway-wide documented
-# set. Invalid values also rejected with 400 (negative control).
+# Effort: reasoning_effort = low|medium|high
+# Pricing: GET https://api.aiand.com/v1/models (accessed 2026-09-11)
+# Docs: https://docs.aiand.com/models/catalog/
+# Live probe 2026-07-24: low|medium|high → 200; none|minimal|xhigh → 400.
+# Reasoning side channel: message.reasoning_content
 base_model = "openai/gpt-oss-120b"
 
 [[reasoning_options]]
 type = "effort"
 values = ["low", "medium", "high"]
 
+[interleaved]
+field = "reasoning_content"
+
 [cost]
 input = 0.15
 output = 0.60
+cache_read = 0.08

@@ -1,24 +1,16 @@
+# https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-nvidia-nemotron-nano-3-30b.html
+# AWS documents a 256K Bedrock context window; inherit the matching 262,144-token lab context.
+# https://aws.amazon.com/bedrock/pricing/ (US Standard pricing)
+# Live 2026-09-09: maxTokens=8192 accepted; chat_template_kwargs.enable_thinking had no visible effect.
 name = "NVIDIA Nemotron Nano 3 30B"
 base_model = "nvidia/nemotron-3-nano-30b-a3b"
-family = "nemotron"
-release_date = "2025-12-23"
 last_updated = "2025-12-23"
-attachment = false
-reasoning = true
 reasoning_options = []
-temperature = true
-tool_call = true
 structured_output = true
-open_weights = true
 
 [cost]
 input = 0.06
 output = 0.24
 
 [limit]
-context = 128_000
-output = 4_096
-
-[modalities]
-input = ["text"]
-output = ["text"]
+output = 8_192

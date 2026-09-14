@@ -1,0 +1,16 @@
+base_model = "alibaba/qwen3.6-27b"
+name = "Qwen3.6 27B Thinking"
+structured_output = false
+reasoning_options = []
+
+[cost]
+input = 0.203
+output = 2.24
+cache_read = 0.1015
+
+[limit]
+context = 260_096
+input = 260_096
+
+[modalities]
+input = ["text", "image", "video"]
