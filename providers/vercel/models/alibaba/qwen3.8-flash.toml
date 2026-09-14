@@ -6,10 +6,15 @@
 # Budget: providerOptions.alibaba.thinkingBudget -> thinking_budget (reasoning tokens)
 base_model = "alibaba/qwen3.8-flash"
 name = "Qwen 3.8 Flash"
-reasoning_options = [{ type = "toggle" }, { type = "budget_tokens" }]
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "budget_tokens"
 
 [cost]
-input = 0.16
+input = 0.15
 output = 0.47
 cache_read = 0.016
 cache_write = 0.2
