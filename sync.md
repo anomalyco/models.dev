@@ -9,6 +9,7 @@ The grouped sync targets are available for local convenience, but CI syncs each 
 ## Commands
 
 - `bun models:sync aggregators` syncs every provider in the `aggregators` group.
+- `bun models:sync aiand` syncs only ai&.
 - `bun models:sync openrouter` syncs only OpenRouter.
 - `bun models:sync cloudflare-workers-ai` syncs only Cloudflare Workers AI.
 - `bun models:sync cloudflare-ai-gateway` syncs only Cloudflare AI Gateway's proxied catalog.
@@ -359,3 +360,12 @@ Venice is implemented in `packages/core/src/sync/providers/venice.ts`.
 ## Standalone Generators
 
 Some provider scripts in `packages/core/script/generate-*.ts` are not wired into `bun models:sync`. When updating those scripts, preserve existing `base_model` and `base_model_omit` fields for generated TOMLs that already use model metadata inheritance. New inheritance-aware output should use `base_model`; do not reintroduce legacy `[extends]` syntax.
+
+## ai& Notes
+
+- Endpoint: `GET https://api.aiand.com/v1/api.json` (public, no auth). The module reads the `aiand` provider entry; `AIAND_API_URL` overrides the endpoint for staging dry runs.
+- The feed publishes this repo's `api.json` shape, so translation is near-identity. The feed is authoritative for prices (including `cache_read`), limits, capability flags, modalities, gateway-enforced `reasoning_options`, and `deprecated` status; the `aiand` entry lists only models whose catalog metadata is complete.
+- Curated values win for `name`, `description`, `knowledge`, `release_date`, and `last_updated` — the feed's `last_updated` tracks catalog-row edits, not model revisions, and release dates are lab metadata the gateway is not authoritative for. A curated alpha/beta `status` also survives a feed that omits one.
+- On base-factored files, lab-owned fields (`name`, `description`, `family`, `release_date`, `last_updated`, `knowledge`, `open_weights`) are never asserted from the feed: they come from the curated file, so an authored override survives and a new file inherits the lab entry. A new feed id resolves its `base_model` by normalized match against `models/` and is skipped with a report notice when nothing resolves — an unfactored full definition is never created. An empty feed fails the run rather than deleting the local catalog.
+- `family` passes through `ModelFamily.safeParse` and is omitted when unknown.
+- If effort filtering would empty a non-empty feed list (a vocabulary the schema doesn't know yet), the authored `reasoning_options` are preserved rather than publishing "no caller control".

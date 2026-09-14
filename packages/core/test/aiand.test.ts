@@ -1,0 +1,226 @@
+import { expect, test } from "bun:test";
+
+import {
+  aiand,
+  AiandModel,
+  AiandResponse,
+  buildAiandModel,
+  resolveAiandBaseModel,
+  type AiandModel,
+} from "../src/sync/providers/aiand.js";
+
+function aiandModel(overrides: Partial<AiandModel> = {}): AiandModel {
+  return {
+    id: "deepseek-ai/deepseek-v4-flash",
+    name: "deepseek-ai/DeepSeek-V4-Flash",
+    description: "Fast DeepSeek V4 lane for economical reasoning, coding, and long-context work",
+    family: "deepseek",
+    release_date: "2026-04-24",
+    last_updated: "2026-09-14",
+    attachment: false,
+    reasoning: true,
+    reasoning_options: [{ type: "effort", values: ["none", "high", "max"] }],
+    temperature: true,
+    tool_call: true,
+    structured_output: true,
+    cost: { input: 0.15, output: 0.25, cache_read: 0.08 },
+    limit: { context: 1_048_576, output: 384_000 },
+    modalities: { input: ["text"], output: ["text"] },
+    open_weights: true,
+    ...overrides,
+  };
+}
+
+test("translates a feed model near-identity when nothing is authored", () => {
+  const built = buildAiandModel(aiandModel(), undefined, null);
+  expect(built).toMatchObject({
+    name: "deepseek-ai/DeepSeek-V4-Flash",
+    family: "deepseek",
+    release_date: "2026-04-24",
+    reasoning: true,
+    reasoning_options: [{ type: "effort", values: ["none", "high", "max"] }],
+    structured_output: true,
+    cost: { input: 0.15, output: 0.25, cache_read: 0.08 },
+    limit: { context: 1_048_576, output: 384_000 },
+    open_weights: true,
+  });
+});
+
+test("curated name, knowledge, and last_updated win over the feed", () => {
+  const built = buildAiandModel(
+    aiandModel(),
+    { name: "DeepSeek V4 Flash", knowledge: "2025-05", last_updated: "2026-07-31" },
+    null,
+  );
+  expect(built.name).toBe("DeepSeek V4 Flash");
+  expect(built.knowledge).toBe("2025-05");
+  expect(built.last_updated).toBe("2026-07-31");
+});
+
+test("the feed's last_updated is row-edit noise: today only fills a blank", () => {
+  const built = buildAiandModel(aiandModel({ last_updated: undefined }), undefined, null, "2026-09-14");
+  expect(built.last_updated).toBe("2026-09-14");
+});
+
+test("a curated release_date wins over the feed's", () => {
+  const built = buildAiandModel(
+    aiandModel({ release_date: "2026-05-01" }),
+    { release_date: "2026-04-24" },
+    null,
+  );
+  expect(built.release_date).toBe("2026-04-24");
+});
+
+test("a vocabulary miss preserves authored reasoning options instead of publishing none", () => {
+  const built = buildAiandModel(
+    aiandModel({ reasoning_options: [{ type: "effort", values: ["turbo"] }] }),
+    { reasoning_options: [{ type: "effort", values: ["high"] }] },
+    null,
+  );
+  expect(built.reasoning_options).toEqual([{ type: "effort", values: ["high"] }]);
+});
+
+test("a family the enum does not know falls back to the curated value", () => {
+  const unknown = buildAiandModel(aiandModel({ family: "not-a-family" }), undefined, null);
+  expect(unknown.family).toBeUndefined();
+  const curated = buildAiandModel(aiandModel({ family: "not-a-family" }), { family: "deepseek" }, null);
+  expect(curated.family).toBe("deepseek");
+});
+
+test("unknown reasoning efforts and modalities are dropped without inventing 'no control'", () => {
+  const built = buildAiandModel(
+    aiandModel({
+      reasoning_options: [{ type: "effort", values: ["turbo"] }],
+      modalities: { input: ["text", "smell"], output: ["text"] },
+    }),
+    undefined,
+    null,
+  );
+  expect(built.reasoning_options).toBeUndefined();
+  expect(built.modalities?.input).toEqual(["text"]);
+});
+
+test("omitted reasoning_options assert nothing: authored options stay", () => {
+  const built = buildAiandModel(aiandModel({ reasoning_options: undefined }), {
+    reasoning_options: [{ type: "effort", values: ["high"] }],
+  });
+  expect(built.reasoning_options).toEqual([{ type: "effort", values: ["high"] }]);
+});
+
+test("an explicit empty list asserts no caller controls and is written as-is", () => {
+  const built = buildAiandModel(
+    aiandModel({ reasoning_options: [] }),
+    { reasoning_options: [{ type: "effort", values: ["high"] }] },
+    null,
+  );
+  expect(built.reasoning_options).toEqual([]);
+});
+
+test("parseModels refuses an empty feed instead of authorizing catalog deletion", () => {
+  expect(() => aiand.parseModels({ aiand: { models: {} } })).toThrow(/refusing an empty feed/);
+});
+
+test("modalities keep canonical order regardless of feed order", () => {
+  const built = buildAiandModel(
+    aiandModel({ modalities: { input: ["video", "text", "pdf", "image"], output: ["text"] } }),
+    undefined,
+    null,
+  );
+  expect(built.modalities?.input).toEqual(["text", "image", "video", "pdf"]);
+});
+
+test("factors against an authored base_model and never overrides family", () => {
+  const built = buildAiandModel(aiandModel(), {
+    base_model: "deepseek/deepseek-v4-flash",
+    base_model_omit: ["limit.input"],
+  });
+  expect(built).toMatchObject({
+    base_model: "deepseek/deepseek-v4-flash",
+    base_model_omit: ["limit.input"],
+  });
+  expect("family" in built ? built.family : undefined).toBeUndefined();
+});
+
+test("a curated status survives a feed that omits one; a feed status wins", () => {
+  const kept = buildAiandModel(aiandModel(), { status: "beta" }, null);
+  expect(kept.status).toBe("beta");
+  const overridden = buildAiandModel(aiandModel({ status: "deprecated" }), { status: "beta" }, null);
+  expect(overridden.status).toBe("deprecated");
+});
+
+test("authored-only cost fields ride along; feed prices are authoritative", () => {
+  const built = buildAiandModel(
+    aiandModel(),
+    { cost: { input: 9, output: 9, cache_write: 0.5 }, limit: { context: 1, input: 128_000, output: 1 } },
+    null,
+  );
+  expect(built.cost).toMatchObject({ input: 0.15, output: 0.25, cache_write: 0.5 });
+  expect(built.limit).toEqual({ context: 1_048_576, input: 128_000, output: 384_000 });
+});
+
+test("a non-reasoning feed model omits reasoning_options entirely", () => {
+  const built = buildAiandModel(
+    aiandModel({ reasoning: false, reasoning_options: undefined }),
+    undefined,
+    null,
+  );
+  expect(built.reasoning).toBe(false);
+  expect(built.reasoning_options).toBeUndefined();
+});
+
+test("a new feed id resolves its lab base model despite a different lab prefix", () => {
+  expect(resolveAiandBaseModel("deepseek-ai/deepseek-v4-flash", "DeepSeek V4 Flash")).toBe(
+    "deepseek/deepseek-v4-flash",
+  );
+  expect(resolveAiandBaseModel("openai/gpt-oss-120b", "GPT OSS 120B")).toBe("openai/gpt-oss-120b");
+  expect(resolveAiandBaseModel("unknown-lab/mystery-9", "Mystery 9")).toBeUndefined();
+});
+
+test("translateModel skips a new id with no resolvable base instead of writing a full definition", () => {
+  const context = { existing: () => undefined, authored: () => undefined };
+  const skipped = aiand.translateModel(
+    aiandModel({ id: "unknown-lab/mystery-9", name: "Mystery 9" }),
+    context,
+  );
+  expect(skipped).toBeUndefined();
+
+  const resolved = aiand.translateModel(aiandModel(), context);
+  expect(resolved?.model).toMatchObject({ base_model: "deepseek/deepseek-v4-flash" });
+});
+
+test("a new factored file inherits every lab-owned field instead of asserting the feed's", () => {
+  const context = { existing: () => undefined, authored: () => undefined };
+  const created = aiand.translateModel(
+    aiandModel({ description: "gateway blurb", release_date: "2099-01-01", open_weights: false }),
+    context,
+  );
+  expect(created?.model).toMatchObject({ base_model: "deepseek/deepseek-v4-flash" });
+  for (const field of ["name", "description", "family", "release_date", "last_updated", "open_weights"]) {
+    expect(created?.model).not.toHaveProperty(field);
+  }
+});
+
+test("a curated description wins over the feed's on a standalone file", () => {
+  const built = buildAiandModel(aiandModel(), { description: "curated" }, null);
+  expect(built.description).toBe("curated");
+});
+
+test("toggle and budget_tokens controls parse and pass through untouched", () => {
+  const model = AiandModel.parse({
+    ...aiandModel(),
+    reasoning_options: [{ type: "toggle" }, { type: "budget_tokens", min: 1024, max: 32_768 }],
+  });
+  const built = buildAiandModel(model, undefined, null);
+  expect(built.reasoning_options).toEqual([
+    { type: "toggle" },
+    { type: "budget_tokens", min: 1024, max: 32_768 },
+  ]);
+});
+
+test("parses the provider entry from the full api.json document", () => {
+  const parsed = AiandResponse.parse({
+    opencode: { models: {} },
+    aiand: { models: { "deepseek-ai/deepseek-v4-flash": aiandModel() } },
+  });
+  expect(Object.keys(parsed.aiand.models)).toEqual(["deepseek-ai/deepseek-v4-flash"]);
+});
