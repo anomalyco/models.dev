@@ -1,3 +1,6 @@
+# Prompt caching (chat): RouteLLM gateway routes POST /v1/chat/completions to the selected model with prompt-cache-aware routing; cache is the routed-model automatic prefix cache.
+# To get a hit: reuse the same routed model with an identical stable prefix and matching tools/order; repeat the identical prefix and confirm via the response usage block where reported.
+# Docs: https://abacus.ai/teams/routellm-apis
 name = "Abacus"
 npm = "@ai-sdk/openai-compatible"
 # Reasoning HTTP format (accessed 2026-06-25):
