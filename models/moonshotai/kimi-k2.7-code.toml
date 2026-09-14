@@ -15,6 +15,12 @@ open_weights = true
 context = 262_144
 output = 262_144
 
+[parameters]
+total = 1_026_879_376_368
+active = 32_000_000_000
+architecture = "moe"
+source = "https://huggingface.co/moonshotai/Kimi-K2.7-Code"
+
 [modalities]
 input = ["text", "image", "video"]
 output = ["text"]

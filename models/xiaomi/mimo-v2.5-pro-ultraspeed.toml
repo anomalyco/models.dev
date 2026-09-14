@@ -14,6 +14,11 @@ open_weights = true
 context = 1_048_576
 output = 131_072
 
+[parameters]
+total = 1_023_244_718_976
+architecture = "moe"
+source = "https://huggingface.co/XiaomiMiMo/MiMo-V2.5-Pro"
+
 [modalities]
 input = ["text"]
 output = ["text"]
