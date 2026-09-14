@@ -1,5 +1,6 @@
 # Live probes against the AMD Radeon Cloud Model API (accessed 2026-09-14):
-# GET /v1/models reports 1048576 context, text+image input, tools, reasoning,
+# GET /v1/models reports 1048576 context (higher than the lab entry's
+# 1_000_000, hence the [limit] override), text+image input, tools, reasoning,
 # streaming, and the same per-token pricing as DeepSeek-V4-Flash.
 # reasoning_effort could not be measured on this pool: every attempt returned
 # 503 no_available_workers. The enum below is taken from the sibling
@@ -15,3 +16,6 @@ reasoning_options = [
 input = 0.14
 output = 0.28
 cache_read = 0.0028
+
+[limit]
+context = 1_048_576

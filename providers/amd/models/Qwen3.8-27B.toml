@@ -5,8 +5,7 @@
 # none / minimal / xhigh / max with 422, but the routing backend only supports
 # xhigh (default) | medium | low and rejects "high" with 400. Usable
 # end-to-end values are therefore low and medium. With reasoning_effort
-# omitted the model thinks anyway (backend default tier); thinking text
-# arrives in choices[0].message.reasoning.
+# omitted the model thinks anyway (backend default tier).
 base_model = "alibaba/qwen3.8-27b"
 
 # AMD hosts a text-only deployment of this model: an image content part is
@@ -17,6 +16,11 @@ attachment = false
 reasoning_options = [
   { type = "effort", values = ["low", "medium"] },
 ]
+
+# Thinking is returned on choices[0].message.reasoning, a non-content field.
+# The schema's interleaved field enum only covers reasoning_content /
+# reasoning_details, so it is set bare.
+interleaved = true
 
 [cost]
 input = 0
