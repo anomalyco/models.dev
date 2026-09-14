@@ -1,0 +1,28 @@
+name = "Agnes 3.0 Flash"
+description = "New-generation text model with stronger agentic coding, tool orchestration, instruction adherence, and trustworthy delivery."
+release_date = "2026-09"
+last_updated = "2026-09"
+attachment = true
+reasoning = true
+tool_call = true
+structured_output = true
+temperature = true
+open_weights = false
+
+[cost]
+input = 0
+output = 0
+
+[limit]
+context = 512_000
+output = 65_536
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "toggle" # API: {"chat_template_kwargs": {"enable_thinking": true}}
