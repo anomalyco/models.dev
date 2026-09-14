@@ -1,3 +1,7 @@
+# Cache key (chat): none — chat carries no cache key field; explicit caching uses the Vertex context-cache API.
+# Use body: `cachedContents` — create via the cachedContents API, then reference the `cachedContent` resource name on generateContent.
+# Cache policy: implicit automatic prefix cache plus explicit cache reuse with 60-minute default TTL; keep stable prefix first; confirm via cachedContentTokenCount metadata.
+# Docs: https://cloud.google.com/vertex-ai/generative-ai/docs/context-cache/context-cache-overview
 name = "Vertex"
 env = ["GOOGLE_VERTEX_PROJECT", "GOOGLE_VERTEX_LOCATION", "GOOGLE_APPLICATION_CREDENTIALS"]
 npm = "@ai-sdk/google-vertex"
