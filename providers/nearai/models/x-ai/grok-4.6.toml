@@ -1,0 +1,21 @@
+# Effort: reasoning_effort = low|medium|high|xhigh. The route never returns
+# reasoning_content, so the control was measured by reply length instead.
+# Verified live on POST https://cloud-api.near.ai/v1/chat/completions 2026-09-11,
+# three samples per level at temperature 0, completion_tokens: no parameter
+# 1023/1211/994, low 623/513/731, medium 1180/1081/1379, high 1260/1108/1218,
+# xhigh 1184/1486/1377. low is clearly distinct, overlapping no other level;
+# medium, high and xhigh are accepted but overlap each other, so only the set of
+# accepted levels is claimed, never an ordering.
+# Text only, although the lab entry lists image: the same request carrying an image_url
+# part failed twice with "Provider returned error" while the text-only control succeeded.
+base_model = "xai/grok-4.6"
+attachment = false
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh"] }]
+
+[cost]
+input = 2.0
+output = 6.0
+cache_read = 0.5
+
+[modalities]
+input = ["text"]

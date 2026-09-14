@@ -1,0 +1,20 @@
+# Input modalities are this host's, from the input_modalities field of
+# https://cloud-api.near.ai/v1/models, which is narrower than the lab entry.
+# PDF is excluded on every route: a type: "file" content part fails schema
+# deserialisation gateway-wide (verified 2026-09-08).
+# Relayed to OpenAI; reasoning_effort passes through (https://docs.near.ai/cloud/reasoning-models).
+# Levels as OpenAI's own entry, providers/openai/models/gpt-6-astra.toml, which is how
+# every NEAR AI GPT-5 route is authored since anomalyco/models.dev#2313.
+# Flat pricing is deliberate: https://cloud-api.near.ai/v1/models publishes a single rate
+# per model and exposes no tier structure for any of them, so a context tier cannot be
+# derived from the host. The tiers on gpt-5.4 and gpt-5.5 were hand-authored, not synced.
+base_model = "openai/gpt-6-astra"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
+
+[cost]
+input = 10.0
+output = 50.0
+cache_read = 1.0
+
+[modalities]
+input = ["text", "image"]

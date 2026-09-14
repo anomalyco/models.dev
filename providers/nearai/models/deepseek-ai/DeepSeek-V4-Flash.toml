@@ -1,0 +1,25 @@
+# Toggle: chat_template_kwargs.thinking = true|false (OFF by default on this host)
+# Effort: reasoning_effort = high|max, the documented DeepSeek V4 baseline
+# Verified live on POST https://cloud-api.near.ai/v1/chat/completions 2026-09-11.
+# With no reasoning_effort usage.reasoning_tokens was 0, so effort also turns reasoning on.
+# Six samples per level at temperature 0 gave low 681/749/2598/1117/1032/560,
+# medium 1567/841/889/1160/790/867, high 237/370/420/316/385/229 and
+# max 857/957/782/1582/532/490. Only high is cleanly separated; low, medium and max
+# overlap each other, so there is no host evidence that low or medium is a distinct
+# level and the lab's documented low/medium -> high mapping stands. An earlier reading
+# of three samples suggested medium was distinct; six samples dissolved it.
+# Serves the bare Flash weights, not the 0731 build: prod/DeepSeek-V4-Flash-SGL-FP4-TP2x2.yaml
+# passes --model-path deepseek-ai/DeepSeek-V4-Flash, and the endpoint reports max_model_len 1048576.
+base_model = "deepseek/deepseek-v4-flash"
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["high", "max"] }]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.17
+output = 0.35
+cache_read = 0.035
+
+[limit]
+context = 1048576

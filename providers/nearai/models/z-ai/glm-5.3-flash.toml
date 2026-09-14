@@ -1,0 +1,28 @@
+# Input modalities are this host's, from the input_modalities field of
+# https://cloud-api.near.ai/v1/models, which is narrower than the lab entry.
+# PDF is excluded on every route: a type: "file" content part fails schema
+# deserialisation gateway-wide (verified 2026-09-08).
+# Toggle: chat_template_kwargs.enable_thinking = true|false (on by default)
+# Effort: reasoning_effort = low|high|max is also honoured, and sharply
+# Verified live on POST https://cloud-api.near.ai/v1/chat/completions, toggle 2026-09-08
+# and effort 2026-09-11 with three samples per level at temperature 0.
+# reasoning_tokens: no parameter 394/389/389, low 9/9/9, high 25/25/25, max 402/437/424.
+# Every level is deterministic and cleanly separated, so this route genuinely grades.
+# Note low and high both suppress reasoning far below the default, so the levels are
+# not ordered by cost and no ordering is claimed.
+base_model = "zhipuai/glm-5.3-flash"
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "high", "max"] }]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.15
+output = 0.5
+cache_read = 0.035
+
+[limit]
+context = 1048576
+
+[modalities]
+input = ["text", "image"]

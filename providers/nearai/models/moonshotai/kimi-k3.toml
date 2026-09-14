@@ -1,0 +1,24 @@
+# Toggle: chat_template_kwargs.thinking = true|false (on by default)
+# Effort: reasoning_effort = low|high|max is also honoured
+# Verified live on POST https://cloud-api.near.ai/v1/chat/completions, toggle 2026-09-08
+# and effort 2026-09-11 with six samples per level at temperature 0.
+# reasoning_tokens: no parameter 168/162/168/178/162/168, low 181/180/245/158/180/220,
+# high 271/280/245/216/217/245, max 163/166/166/162/166/168. high sits above the
+# no-parameter range with no overlap, so effort is honoured; low spans the baseline and
+# max is indistinguishable from it, so no ordering is claimed.
+# Text only, although /v1/models advertises image input: on 2026-09-10 a two-colour
+# test image was misread, while the same prompt without it said it could not see images.
+base_model = "moonshotai/kimi-k3"
+attachment = false
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "high", "max"] }]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 3.3
+output = 16.5
+cache_read = 0.33
+
+[modalities]
+input = ["text"]
