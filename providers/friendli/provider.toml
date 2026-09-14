@@ -1,3 +1,6 @@
+# Prompt caching (chat): automatic prefix caching with TCache reuse of encoded prefix representations; ServerlessChatCompletionBody carries model plus messages with `reasoning_effort` plus `reasoning_budget`, cache control lives server-side.
+# To get a hit: keep stable exact prefix on same model; confirm via usage `prompt_tokens_details.cached_tokens` with Cached Input pricing.
+# Docs: https://friendli.ai/docs/openapi/model-apis/chat-completions
 name = "Friendli"
 # Reasoning HTTP format (accessed 2026-08-29): POST /serverless/v1/chat/completions.
 # Toggle: chat_template_kwargs.enable_thinking = true | false; support is model-specific.
