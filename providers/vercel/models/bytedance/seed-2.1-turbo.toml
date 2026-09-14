@@ -1,3 +1,5 @@
+# Effort: reasoning.effort = none|minimal|low|medium|high|xhigh|max
+# https://vercel.com/docs/ai-gateway/sdks-and-apis/openai-chat-completions/reasoning
 name = "Seed 2.1 Turbo"
 description = "Multimodal reasoning model for visual analysis, planning, and tool use"
 family = "seed"
@@ -7,7 +9,7 @@ attachment = true
 reasoning = true
 tool_call = true
 open_weights = false
-reasoning_options = []
+reasoning_options = [{ type = "effort", values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"] }]
 
 [cost]
 input = 0.5

@@ -1,3 +1,5 @@
+# Effort: reasoning.effort = high|xhigh|max
+# https://console.sakana.ai/models
 name = "Fugu Max"
 description = "Multi-agent model for routing expert agents across complex analytical tasks"
 family = "fugu"
@@ -7,7 +9,7 @@ attachment = true
 reasoning = true
 tool_call = true
 open_weights = false
-reasoning_options = []
+reasoning_options = [{ type = "effort", values = ["high", "xhigh", "max"] }]
 
 [cost]
 input = 2
