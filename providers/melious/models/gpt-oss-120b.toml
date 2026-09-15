@@ -8,11 +8,13 @@
 # FX: https://www.ecb.europa.eu/stats/policy_and_exchange_rates/euro_reference_exchange_rates/html/eurofxref-graph-usd.en.html
 # Effort: reasoning_effort is the only reasoning control this host exposes, and
 # it forwards no lab-native thinking field and no reasoning budget, so no toggle
-# or budget_tokens. Unlike most models on this host, the documented
-# low/medium/high ladder really grades here. Measured on 2026-09-15 over three
-# prompts, median reasoning_content was 144 chars at low, 283 at medium and 719
-# at high -- monotonic. "none" is not an off state (318 chars, between low and
-# medium), so it is not published as a value.
+# or budget_tokens. This is the one model on this deployment where the
+# documented low/medium/high ladder really grades. Measured on 2026-09-15 over
+# six prompts with two repeats per level (n=12 per level): median
+# reasoning_content is 177 chars at low, 309 at medium and 647 at high; high
+# exceeds low on 6 of 6 prompts and medium falls between the two on 6 of 6.
+# "none" is not an off state (328 chars median, between low and medium), so it
+# is not published as a value.
 # https://melious.ai/docs/reference/chat-completions (accessed 2026-09-15)
 # Reasoning text is returned in choices[].message.reasoning_content.
 

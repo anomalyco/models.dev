@@ -6,13 +6,16 @@
 # FX: https://www.ecb.europa.eu/stats/policy_and_exchange_rates/euro_reference_exchange_rates/html/eurofxref-graph-usd.en.html
 # Effort: reasoning_effort is the only reasoning control this host exposes, and
 # it forwards no lab-native thinking field and no reasoning budget, so no toggle
-# or budget_tokens. Measured against this deployment on 2026-09-15 over three
-# prompts: reasoning_effort="none" is a real off state (usage.reasoning_tokens =
-# 0 and no reasoning_content on every sample), while low, medium and high all
-# return reasoning with no ordered difference in depth (median reasoning_content
-# 176/185/193 chars), so they are not published as separate grades. Because off
-# is reachable through the effort field this is an effort list containing none,
-# not a toggle.
+# or budget_tokens. Measured against this deployment on 2026-09-15 over six
+# prompts with two repeats per level (n=12 per level): reasoning_effort="none"
+# is a real off state -- usage.reasoning_tokens = 0 and no reasoning_content on
+# all 12 samples. low, medium and high do not form a ladder: medians 262/345/263
+# chars over ranges 115-675 / 115-602 / 153-704 that overlap almost entirely,
+# with medium above high on 1 of 6 prompts. high exceeds low on 5 of 6 prompts
+# here, but the two medians are 263 and 262 chars while medium sits above both,
+# so there is no usable ordering. They are therefore not published as separate
+# grades. Because off is reachable through the effort field this is an effort
+# list containing none, not a toggle.
 # https://melious.ai/docs/reference/chat-completions (accessed 2026-09-15)
 # Reasoning text is returned in choices[].message.reasoning_content.
 # cache_read: usage.cached_tokens are billed at Melious's discounted
