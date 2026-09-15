@@ -1,3 +1,6 @@
+# Prompt caching (chat): supported — automatic implicit cache with Cached Token billing.
+# To get a hit: keep shared prefix stable for implicit reuse; confirm via Cached Input billing on model pages.
+# Docs: https://docs.vivgrid.com/models
 name = "Vivgrid"
 env = ["VIVGRID_API_KEY"]
 api = "https://api.vivgrid.com/v1"
