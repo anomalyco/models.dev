@@ -1,0 +1,12 @@
+# Standard-speed endpoint at 2x credit pricing, see minimax-m3.toml for controls.
+base_model = "minimax/MiniMax-M3"
+name = "MiniMax M3 Fast"
+
+reasoning_options = []
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.6
+output = 2.4
