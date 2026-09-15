@@ -1,0 +1,28 @@
+# Sources (accessed 2026-09-15):
+# https://huggingface.co/Qwen/Qwen3-30B-A3B-Instruct-2507
+# https://qwenlm.github.io/blog/qwen3/
+# Non-thinking refresh of Qwen3-30B-A3B: instruct only, no <think> blocks.
+name = "Qwen3 30B-A3B Instruct 2507"
+description = "Updated open Qwen3 MoE instruct model for multilingual chat, coding, and tool use"
+family = "qwen"
+release_date = "2025-07-29"
+last_updated = "2025-07-29"
+attachment = false
+reasoning = false
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = true
+license = "Apache 2.0"
+
+[limit]
+context = 262_144
+output = 16_384
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/Qwen/Qwen3-30B-A3B-Instruct-2507"

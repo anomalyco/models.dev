@@ -1,0 +1,16 @@
+# Cost: Melious list price for the bare model ID -- the default `balanced` route
+# -- EUR 0.95 in / EUR 0.95 out per 1M tokens, converted at 1.1592 USD/EUR (ECB
+# euro reference rate, 2026-09-11).
+# Sources: GET https://api.melious.ai/v1/models?include_meta=true and
+# https://melious.ai/hub/models/qwen2.5-vl-72b-instruct (both accessed 2026-09-15)
+# FX: https://www.ecb.europa.eu/stats/policy_and_exchange_rates/euro_reference_exchange_rates/html/eurofxref-graph-usd.en.html
+# limit.context: this deployment serves 32_768 tokens, not the lab's 131_072.
+
+base_model = "alibaba/qwen2-5-vl-72b-instruct"
+
+[cost]
+input = 1.10124
+output = 1.10124
+
+[limit]
+context = 32_768

@@ -1,0 +1,37 @@
+# Cost: Melious list price for the bare model ID -- the default `balanced` route
+# -- EUR 2.30 in / EUR 5.50 out / EUR 0.58 cache read per 1M tokens, converted
+# at 1.1592 USD/EUR (ECB euro reference rate, 2026-09-11).
+# Sources: GET https://api.melious.ai/v1/models?include_meta=true and
+# https://melious.ai/hub/models/qwen3.8-max (both accessed 2026-09-15)
+# FX: https://www.ecb.europa.eu/stats/policy_and_exchange_rates/euro_reference_exchange_rates/html/eurofxref-graph-usd.en.html
+# Effort: reasoning_effort is the only reasoning control this host exposes, and
+# unlike the rest of this deployment it is validated for this model. Measured on
+# 2026-09-15: minimal, low and medium are accepted; "none", "high", "xhigh", an
+# unrecognised value and omitting the field altogether are all rejected with
+# HTTP 400, so reasoning cannot be turned off and the field is mandatory. Those
+# three levels are therefore the real caller control.
+# https://melious.ai/docs/reference/chat-completions (accessed 2026-09-15)
+# Reasoning text is returned in choices[].message.reasoning_content.
+# cache_read: usage.cached_tokens are billed at Melious's discounted
+# prefix-cache rate.
+# limit.context: this deployment serves 256_000 tokens, not the lab's 262_144.
+# name/base_model: Melious serves this under the ID `qwen3.8-max`, but its
+# catalog points at https://huggingface.co/Qwen/Qwen3.8-2.4T-A95B and reports
+# text-only input, so the underlying model is the open-weight twin rather than
+# the closed multimodal Qwen3.8 Max API product. The base is therefore
+# alibaba/qwen3.8-2.4t-a95b, with the host's own display name kept.
+
+base_model = "alibaba/qwen3.8-2.4t-a95b"
+name = "Qwen3.8 Max"
+reasoning_options = [{ type = "effort", values = ["minimal", "low", "medium"] }]
+
+[cost]
+input = 2.66616
+output = 6.3756
+cache_read = 0.672336
+
+[limit]
+context = 256_000
+
+[interleaved]
+field = "reasoning_content"
