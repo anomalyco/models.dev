@@ -1,0 +1,22 @@
+# Sources (accessed 2026-09-15):
+# https://www.alibabacloud.com/help/en/model-studio/kimi-k3 (China/Beijing USD
+# pricing, limits, capability table)
+# https://www.alibabacloud.com/help/en/model-studio/kimi-api (thinking-only:
+# enable_thinking cannot be disabled; no thinking_budget; no reasoning_effort;
+# text+image input only, no video; reasoning_content streamed in deltas)
+base_model = "moonshotai/kimi-k3"
+reasoning_options = []
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 2.827
+output = 14.133
+cache_read = 0.283
+
+[modalities]
+input = ["text", "image"]
+
+[limit]
+output = 1_048_576
