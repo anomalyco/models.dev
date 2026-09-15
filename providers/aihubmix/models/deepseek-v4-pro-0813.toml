@@ -1,11 +1,28 @@
-# Toggle: enable_thinking = true|false
-# Effort: reasoning_effort = high|max
-# AIHubMix effort levels returned HTTP 200 (validated 2026-08-31T04:17:24Z).
+# Toggle:
+# $.enable_thinking = true|false on the OpenAI-compatible /v1/chat/completions path (verified live 2026-09-11);
+# $.thinking.type = "enabled"|"disabled"|"adaptive" on /v1/messages; $.generationConfig.thinkingConfig on the Gemini path.
+# Effort: low|high|max
+# $.reasoning_effort on /v1/chat/completions (alias $.reasoning.effort, which is also the Responses field);
+# $.output_config.effort on /v1/messages, subject to model support.
+# https://docs.aihubmix.com/cn/api/unified-inference
+# These three are the lab's own published levels, passed through unchanged: DeepSeek
+# documents `reasoning_effort` as `Possible values: [low, high, max]`, with `medium`
+# and `xhigh` folded into `high` (api-docs.deepseek.com, checked 2026-08-13), and all
+# seven DeepSeek routes here carry the same set. Probing on 2026-09-15 could not
+# separate them on a single prompt (low/high/max → 522/564/510 reasoning tokens,
+# non-monotonic), which says something about that prompt, not about the enum.
+# Off is the toggle on this path; `none` is a level only on the Responses face.
 base_model = "deepseek/deepseek-v4-pro-0813"
-reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["high", "max"] }]
 
 [interleaved]
 field = "reasoning_content"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
 
 [cost]
 input = 0.6918
