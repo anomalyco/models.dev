@@ -102,16 +102,19 @@ export const aiand = {
     return models;
   },
   translateModel(model, context) {
-    const existing = context.existing(model.id);
-    const baseModel = existing?.base_model ?? resolveAiandBaseModel(model.id, model.name);
+    // `authored` is the raw TOML — the only thing that can carry a genuine
+    // override. `existing` is the base-resolved merge and would make inherited
+    // lab values look hand-written.
+    const authored = context.authored(model.id);
+    const baseModel = authored?.base_model ?? resolveAiandBaseModel(model.id, model.name);
     // A new feed model with no resolvable lab entry must never be written as
-    // an unfactored full definition; skip it (reported via sourceID) until a
-    // models/ file exists. An existing local file is always translated —
-    // skipping one would delete it.
-    if (existing === undefined && baseModel === undefined) return undefined;
+    // an unfactored full definition; it goes to the missing-model issue flow
+    // instead. An existing local file is always translated — skipping one
+    // would delete it.
+    if (authored === undefined && baseModel === undefined) return undefined;
     return {
       id: model.id,
-      model: buildAiandModel(model, existing, baseModel),
+      model: buildAiandModel(model, authored, baseModel),
     };
   },
   sourceID(model) {
@@ -131,92 +134,104 @@ export const aiand = {
   },
 } satisfies SyncProvider<AiandModel>;
 
+type HostFields = Omit<
+  SyncedFullModel,
+  "name" | "description" | "family" | "release_date" | "last_updated" | "knowledge" | "open_weights"
+>;
+
+/**
+ * `authored` is the provider TOML as written (not base-resolved). Host facts —
+ * pricing, limits, controls, capability flags, modalities, status, the side
+ * channel — are feed-authoritative. Lab-owned facts are never asserted from
+ * the gateway on a factored file: they appear only as deltas the authored
+ * file already carried on top of its base_model, so a full-inline file being
+ * factored for the first time (or a brand-new file) inherits the lab entry
+ * outright instead of re-emitting the lab's values as overrides.
+ */
 export function buildAiandModel(
   model: AiandModel,
-  existing: ExistingModel | undefined,
-  baseModel: string | null | undefined = existing?.base_model ?? resolveAiandBaseModel(model.id, model.name),
+  authored: ExistingModel | undefined,
+  baseModel: string | null | undefined = authored?.base_model ?? resolveAiandBaseModel(model.id, model.name),
   today = new Date().toISOString().slice(0, 10),
 ): SyncedModel {
-  // Unknown families must degrade to the curated value rather than fail
-  // validation, so a model whose family is not in the enum yet cannot stall
-  // the sync.
-  const family = ModelFamily.safeParse(model.family);
-  const reasoningOptions = resolveReasoningOptions(model, existing);
   const limit = {
     context: model.limit.context,
-    input: existing?.limit?.input,
+    input: authored?.limit?.input,
     output: model.limit.output,
   };
-  const values: SyncedFullModel = {
-    // Curated display names and descriptions win over the gateway's.
-    name: existing?.name ?? model.name,
-    description: existing?.description ?? model.description ?? model.name,
-    family: family.success ? family.data : existing?.family,
+  const host: HostFields = {
     attachment: model.attachment,
     reasoning: model.reasoning,
     // The schema refuses reasoning_options on a non-reasoner; a non-reasoning
     // feed model must not stall the sync on that refine.
-    reasoning_options: model.reasoning ? reasoningOptions : undefined,
+    reasoning_options: model.reasoning ? resolveReasoningOptions(model, authored) : undefined,
     tool_call: model.tool_call,
     structured_output: model.structured_output,
     temperature: model.temperature,
-    knowledge: existing?.knowledge,
-    // Release dates are lab metadata the gateway is not authoritative for;
-    // the curated (or base-resolved) value wins, and a wrong one gets fixed
-    // in the models/ lab file, not by a provider override.
-    release_date: existing?.release_date ?? model.release_date,
-    // The feed's last_updated tracks catalog-row edits, not model revisions,
-    // so the curated value wins to keep the hourly sync free of date churn.
-    last_updated: existing?.last_updated ?? model.last_updated ?? today,
     // Canonical order so a feed-side reordering never churns a TOML.
     modalities: {
       input: sortModalities(model.modalities.input.filter(isModality)),
       output: sortModalities(model.modalities.output.filter(isModality)),
     },
-    open_weights: model.open_weights ?? existing?.open_weights ?? false,
     limit,
     cost: {
       input: model.cost.input,
       output: model.cost.output,
-      reasoning: existing?.cost?.reasoning,
+      reasoning: authored?.cost?.reasoning,
       cache_read: model.cost.cache_read,
-      cache_write: existing?.cost?.cache_write,
-      input_audio: existing?.cost?.input_audio,
-      output_audio: existing?.cost?.output_audio,
-      tiers: existing?.cost?.tiers,
+      cache_write: authored?.cost?.cache_write,
+      input_audio: authored?.cost?.input_audio,
+      output_audio: authored?.cost?.output_audio,
+      tiers: authored?.cost?.tiers,
     },
     // Absence means active on the feed, and the feed owns deprecation: a
     // curated alpha/beta survives omission, a curated deprecated does not,
     // or a route the gateway reactivated would stay marked retired forever.
-    status: model.status ?? (existing?.status === "deprecated" ? undefined : existing?.status),
+    status: model.status ?? (authored?.status === "deprecated" ? undefined : authored?.status),
     // Every ai& reasoner streams its thinking in message.reasoning_content —
     // a gateway-wide side channel — so a brand-new reasoner gets it even
     // before the feed publishes `interleaved` itself.
     interleaved: model.reasoning
-      ? (normalizeInterleaved(model.interleaved) ?? existing?.interleaved ?? GATEWAY_INTERLEAVED)
+      ? (normalizeInterleaved(model.interleaved) ?? authored?.interleaved ?? GATEWAY_INTERLEAVED)
       : undefined,
   };
-  if (baseModel == null) return values;
-  // Lab-owned fields are never asserted from the gateway on a factored file:
-  // they come from the curated file (base-resolved, so an authored override
-  // survives and a new file inherits the lab entry). Host-specific facts —
-  // pricing, limits, controls, capability flags, modalities, status — stay
-  // feed-authoritative and factor to overrides only where they differ.
-  return factorBaseModel(
-    baseModel,
-    {
-      ...values,
-      name: existing?.name,
-      description: existing?.description,
-      family: undefined,
-      release_date: existing?.release_date,
-      last_updated: existing?.last_updated,
-      knowledge: existing?.knowledge,
-      open_weights: existing?.open_weights,
-    },
-    limit,
-    existing?.base_model_omit,
-  );
+
+  if (baseModel != null) {
+    // Only a file that already sat on this base can carry genuine lab-field
+    // deltas; anything else inherits the lab entry.
+    const deltas = authored?.base_model === baseModel ? authored : undefined;
+    return factorBaseModel(
+      baseModel,
+      {
+        ...host,
+        name: deltas?.name,
+        description: deltas?.description,
+        release_date: deltas?.release_date,
+        last_updated: deltas?.last_updated,
+        knowledge: deltas?.knowledge,
+        open_weights: deltas?.open_weights,
+      },
+      limit,
+      deltas?.base_model_omit,
+    );
+  }
+
+  // Standalone (no lab entry anywhere): curated values win for lab-owned
+  // fields, the feed fills the rest. Unknown families degrade to the curated
+  // value rather than fail validation.
+  const family = ModelFamily.safeParse(model.family);
+  return {
+    ...host,
+    name: authored?.name ?? model.name,
+    description: authored?.description ?? model.description ?? model.name,
+    family: family.success ? family.data : authored?.family,
+    // Release dates are lab metadata the gateway is not authoritative for.
+    release_date: authored?.release_date ?? model.release_date,
+    // The feed's last_updated tracks catalog-row edits, not model revisions.
+    last_updated: authored?.last_updated ?? model.last_updated ?? today,
+    knowledge: authored?.knowledge,
+    open_weights: model.open_weights ?? authored?.open_weights ?? false,
+  };
 }
 
 interface MetadataEntry {
@@ -288,9 +303,9 @@ function isReasoningEffort(value: string): value is ReasoningEffortValue {
  */
 function resolveReasoningOptions(
   model: AiandModel,
-  existing: ExistingModel | undefined,
+  authored: ExistingModel | undefined,
 ): SyncedFullModel["reasoning_options"] {
-  if (model.reasoning_options === undefined) return authoredReasoningOptions(existing);
+  if (model.reasoning_options === undefined) return authoredReasoningOptions(authored);
   if (model.reasoning_options.length === 0) return [];
   const feed = model.reasoning_options.flatMap((option) => {
     if (option.type === "effort") {
@@ -303,13 +318,13 @@ function resolveReasoningOptions(
     // schema already validated them at parse time.
     return [option];
   });
-  return feed.length > 0 ? feed : authoredReasoningOptions(existing);
+  return feed.length > 0 ? feed : authoredReasoningOptions(authored);
 }
 
 function authoredReasoningOptions(
-  existing: ExistingModel | undefined,
+  authored: ExistingModel | undefined,
 ): SyncedFullModel["reasoning_options"] {
-  const options = (existing?.reasoning_options ?? [])
+  const options = (authored?.reasoning_options ?? [])
     .map((option) => CatalogReasoningOption.safeParse(option))
     .flatMap((result) => (result.success ? [result.data] : []));
   return options.length > 0 ? options : undefined;

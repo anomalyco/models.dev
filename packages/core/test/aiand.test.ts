@@ -250,6 +250,60 @@ test("an unresolvable new id enters the missing-model issue flow", () => {
   expect(aiand.missingModelID(aiandModel({ id: "unknown-lab/mystery-9" }))).toBe("unknown-lab/mystery-9");
 });
 
+test("first factor of a full-inline file inherits the lab entry instead of re-emitting its stale lab fields", () => {
+  const fullInline = {
+    name: "Motif 3",
+    description: "old inline description",
+    release_date: "2026-08-12",
+    last_updated: "2026-09-11",
+    attachment: false,
+    reasoning: true,
+    temperature: false,
+    tool_call: false,
+    structured_output: false,
+    open_weights: false,
+    reasoning_options: [],
+    interleaved: { field: "reasoning_content" as const },
+    cost: { input: 0.5, output: 2 },
+    limit: { context: 262_144, output: 262_144 },
+    modalities: { input: ["text" as const], output: ["text" as const] },
+  };
+  const built = buildAiandModel(
+    aiandModel({
+      id: "motif-technologies/motif-3",
+      name: "Motif-Technologies/Motif-3",
+      reasoning_options: [{ type: "effort", values: ["none", "high"] }],
+      structured_output: false,
+      cost: { input: 0.5, output: 2, cache_read: 0.2 },
+      limit: { context: 262_144, output: 262_144 },
+    }),
+    fullInline,
+    "motif-technologies/motif-3",
+  );
+  expect(built).toMatchObject({ base_model: "motif-technologies/motif-3" });
+  for (const field of ["name", "description", "release_date", "last_updated", "open_weights", "family", "temperature", "tool_call"]) {
+    expect(built).not.toHaveProperty(field);
+  }
+  expect(built).toMatchObject({ cost: { cache_read: 0.2 }, interleaved: { field: "reasoning_content" } });
+});
+
+test("an already-factored file keeps its authored lab-field deltas and omit list", () => {
+  const built = buildAiandModel(aiandModel(), {
+    base_model: "deepseek/deepseek-v4-flash",
+    base_model_omit: ["limit.input"],
+    name: "DeepSeek V4 Flash (ai& lane)",
+    knowledge: "2025-06",
+  });
+  // Deltas that differ from the lab entry survive; identical values would be
+  // dropped by factoring as redundant, which is the point.
+  expect(built).toMatchObject({
+    base_model: "deepseek/deepseek-v4-flash",
+    base_model_omit: ["limit.input"],
+    name: "DeepSeek V4 Flash (ai& lane)",
+    knowledge: "2025-06",
+  });
+});
+
 test("parses the provider entry from the full api.json document", () => {
   const parsed = AiandResponse.parse({
     opencode: { models: {} },
