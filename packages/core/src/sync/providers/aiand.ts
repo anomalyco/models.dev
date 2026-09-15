@@ -114,6 +114,7 @@ export const aiand = {
     return model.id;
   },
   skippedNotice(ids) {
+    if (ids.length === 0) return [];
     return [
       `Skipped ${ids.length} feed model(s) with no resolvable base model — author a models/ lab file to list them: ${ids.join(", ")}`,
     ];
@@ -174,9 +175,10 @@ export function buildAiandModel(
       output_audio: existing?.cost?.output_audio,
       tiers: existing?.cost?.tiers,
     },
-    // Absence means active on the feed; a curated alpha/beta stays until the
-    // gateway publishes a status of its own.
-    status: model.status ?? existing?.status,
+    // Absence means active on the feed, and the feed owns deprecation: a
+    // curated alpha/beta survives omission, a curated deprecated does not,
+    // or a route the gateway reactivated would stay marked retired forever.
+    status: model.status ?? (existing?.status === "deprecated" ? undefined : existing?.status),
     interleaved: existing?.interleaved,
   };
   if (baseModel == null) return values;

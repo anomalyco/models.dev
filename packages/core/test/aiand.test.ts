@@ -141,11 +141,21 @@ test("factors against an authored base_model and never overrides family", () => 
   expect("family" in built ? built.family : undefined).toBeUndefined();
 });
 
-test("a curated status survives a feed that omits one; a feed status wins", () => {
+test("a curated alpha/beta survives a feed that omits status; a feed status wins", () => {
   const kept = buildAiandModel(aiandModel(), { status: "beta" }, null);
   expect(kept.status).toBe("beta");
   const overridden = buildAiandModel(aiandModel({ status: "deprecated" }), { status: "beta" }, null);
   expect(overridden.status).toBe("deprecated");
+});
+
+test("the feed owns deprecation: an omitted status clears a curated deprecated", () => {
+  const reactivated = buildAiandModel(aiandModel(), { status: "deprecated" }, null);
+  expect(reactivated.status).toBeUndefined();
+});
+
+test("skippedNotice stays silent on a clean sync", () => {
+  expect(aiand.skippedNotice([])).toEqual([]);
+  expect(aiand.skippedNotice(["unknown-lab/mystery-9"])).toHaveLength(1);
 });
 
 test("authored-only cost fields ride along; feed prices are authoritative", () => {
