@@ -1,5 +1,7 @@
-# Cost: Base (off-peak) rate; Peak hours bill 2x per Ollama's published
-# Base/Peak split. Pricing verified 2026-09-14: https://ollama.com/library/deepseek-v4-flash
+# Cost from https://ollama.com/pricing (accessed 2026-09-15). Ollama bills
+# Base (off-peak) and Peak (2x, 12:00-18:00 UTC Mon-Fri) rates; the schema
+# cannot express time-based tiers, so the Base rate is recorded. See
+# https://github.com/anomalyco/models.dev/issues/5913.
 name = "deepseek-v4-flash"
 description = "Fast DeepSeek model for efficient chat, coding help, and agent loops"
 family = "deepseek-flash"
