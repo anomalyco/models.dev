@@ -1,0 +1,25 @@
+# GLM-5.3 on Alibaba Bailian (Model Studio, Beijing): always-on thinking with
+# reasoning_effort low|high|max (default max). Thinking cannot be turned off
+# (enable_thinking only accepts true; passing false errors) and there is no
+# thinking_budget — so a single effort option, no toggle, no budget.
+# reasoning_content is streamed in deltas.
+# Pricing: Beijing CNY 8 / 28 / 2 (cache hit) per 1M tokens, same list price
+# as glm-5.2 on the same host (see providers/alibaba-cn/models/glm-5.2.toml).
+# Limits and modalities are identical to the zhipuai lab entry
+# (1M context, 131_072 output, text-only), so they are inherited and not restated.
+# https://bailian.console.aliyun.com/cn-beijing?tab=model#/model-market/detail/glm-5.3?serviceSite=asia-pacific-china
+# https://docs.bigmodel.cn/cn/guide/models/text/glm-5.3
+base_model = "zhipuai/glm-5.3"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 1.1
+output = 3.851
+cache_read = 0.275
+cache_write = 0
