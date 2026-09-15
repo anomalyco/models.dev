@@ -1,0 +1,20 @@
+# Toggle: reasoning.enabled = true|false
+# Rates: GET https://api.cheaperinference.com/v1/models (pricing_version sha256:d7fdd65d…, checked 2026-09-13T10:00:38Z)
+# Discounted marketplace rate, 30.00% off the model maker's list price ($3.0/$15.0 per 1M).
+base_model = "moonshotai/kimi-k3"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[cost]
+input = 2.1
+output = 10.5
+cache_read = 0.239969
+cache_write = 2.1
+
+[limit]
+context = 1000000

@@ -1,0 +1,21 @@
+# Toggle: reasoning.enabled = true|false
+# Rates: GET https://api.cheaperinference.com/v1/models (pricing_version sha256:d7fdd65d…, checked 2026-09-13T10:00:38Z)
+# Discounted marketplace rate, 57.60% off the model maker's list price ($0.076/$0.153 per 1M).
+base_model = "deepseek/deepseek-v4-flash-0731"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[cost]
+input = 0.032227
+output = 0.064454
+cache_read = 0.006445
+cache_write = 0.032227
+
+[limit]
+context = 1048576
+output = 65536

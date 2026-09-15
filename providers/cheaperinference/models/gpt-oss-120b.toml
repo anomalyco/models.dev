@@ -1,0 +1,13 @@
+# Rates: GET https://api.cheaperinference.com/v1/models (pricing_version sha256:d7fdd65d…, checked 2026-09-13T10:00:38Z)
+# Discounted marketplace rate, 60.00% off the model maker's list price ($0.1/$0.5 per 1M).
+base_model = "openai/gpt-oss-120b"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high"]
+
+[cost]
+input = 0.04
+output = 0.2
+cache_read = 0.0085
+cache_write = 0.04

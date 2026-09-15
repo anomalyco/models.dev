@@ -1,0 +1,13 @@
+# Rates: GET https://api.cheaperinference.com/v1/models (pricing_version sha256:d7fdd65d…, checked 2026-09-13T10:00:38Z)
+# Discounted marketplace rate, 30.00% off the model maker's list price ($5.0/$25.0 per 1M).
+base_model = "anthropic/claude-opus-5"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high", "xhigh", "max"]
+
+[cost]
+input = 3.5
+output = 17.5
+cache_read = 0.35
+cache_write = 4.25

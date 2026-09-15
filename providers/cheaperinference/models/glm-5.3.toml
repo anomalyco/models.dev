@@ -1,0 +1,13 @@
+# Rates: GET https://api.cheaperinference.com/v1/models (pricing_version sha256:d7fdd65d…, checked 2026-09-13T10:00:38Z)
+# Discounted marketplace rate, 45.00% off the model maker's list price ($1.4/$4.4 per 1M).
+base_model = "zhipuai/glm-5.3"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[cost]
+input = 0.77
+output = 2.42
+cache_read = 0.119
+cache_write = 0.77
