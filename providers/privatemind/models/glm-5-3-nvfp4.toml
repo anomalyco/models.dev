@@ -1,0 +1,16 @@
+# Effort: reasoning_effort = low|high|max (default high; always thinking, "off" returns 400)
+# https://docs.privatemind.com/chat-completions.html#reasoning-effort
+base_model = "zhipuai/glm-5.3"
+name = "GLM 5.3 753B-40B"
+description = "Frontier coding and agentic work, NVFP4 for Blackwell"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[cost]
+input = 2
+output = 7
+
+[limit]
+context = 524_288
