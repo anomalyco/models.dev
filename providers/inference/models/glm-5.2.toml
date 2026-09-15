@@ -1,0 +1,15 @@
+# Pricing, limits, and reasoning controls from the inference.net public
+# model catalog: https://inference.net/models (accessed 2026-08-14).
+# Served on inference.net's own GPUs (NVFP4 checkpoint), with a
+# 200K context window rather than the upstream 1M.
+base_model = "zhipuai/glm-5.2"
+reasoning_options = []
+
+[cost]
+input = 1.3
+output = 4.4
+cache_read = 0.2
+
+[limit]
+context = 200_000
+output = 128_000

@@ -1,0 +1,12 @@
+# Pricing, limits, and reasoning controls from the inference.net public
+# model catalog: https://inference.net/models (accessed 2026-08-14).
+base_model = "alibaba/qwen3.7-plus"
+reasoning_options = []
+
+[cost]
+input = 0.4
+output = 1.6
+cache_read = 0.08
+
+[limit]
+output = 128_000

@@ -1,0 +1,26 @@
+# First-party inference.net model. Structured web extraction fine-tune of
+# Granite 4.0 H Micro; the faster, cheaper tier of Schematron V2.
+# https://inference.net/models (accessed 2026-08-14)
+name = "Schematron V2 Turbo"
+description = "Fast structured web extraction model that turns raw HTML into JSON conforming to a caller-supplied schema"
+family = "schematron"
+release_date = "2026-04-16"
+last_updated = "2026-04-16"
+attachment = false
+reasoning = false
+temperature = true
+tool_call = false
+structured_output = true
+open_weights = false
+
+[cost]
+input = 0.03
+output = 0.15
+
+[limit]
+context = 128_000
+output = 8_192
+
+[modalities]
+input = ["text"]
+output = ["text"]
