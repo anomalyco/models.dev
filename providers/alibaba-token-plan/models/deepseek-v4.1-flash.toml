@@ -1,0 +1,29 @@
+# Reasoning HTTP format (accessed 2026-09-15):
+# Toggle: enable_thinking = true|false. Thinking content streams on
+# `reasoning_content`. Chat Completions `reasoning_effort` accepts the string
+# ladder documented for the DeepSeek-V4 series (low, high, max); the gateway's
+# own validation message additionally names minimal, medium, xhigh and ultra
+# as accepted strings. Integer effort values (1..100) appear in the API
+# reference for this model but are rejected by the Token Plan endpoint.
+# Structured output: response_format json_object works (probed 2026-09-15
+# on the plan gateway); strict json_schema is rejected with 400
+# "This response_format type is unavailable now" on this host. structured_output
+# is explicitly false below: omitting it would INHERIT the lab's true value.
+# Model availability: Token Plan model list (international, Singapore region,
+# probed via the authenticated /models endpoint on Team and Personal keys).
+# Sources:
+# https://docs.qwencloud.com/api-reference/chat/openai-chat
+# https://docs.qwencloud.com/token-plan/personal/token-plan-personal-overview
+base_model = "deepseek/deepseek-v4.1-flash"
+structured_output = false
+
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "high", "max"] }]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0
+output = 0
+cache_read = 0
+cache_write = 0
