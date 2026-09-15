@@ -1,0 +1,13 @@
+# No caller control: reasoning_effort is not read (an invalid value returns 200),
+# and toggle/budget fields are dropped by the gateway (unknown top-level keys -> 200).
+base_model = "zhipuai/glm-5v-turbo"
+name = "GLM 5V Turbo"
+reasoning_options = []
+
+[cost]
+input = 1.56
+output = 5.2
+cache_read = 0.312
+
+[limit]
+context = 202_752

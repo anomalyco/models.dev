@@ -1,0 +1,17 @@
+base_model = "zhipuai/glm-5.3-flash"
+name = "GLM 5.3 Flash"
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[cost]
+input = 0.195
+output = 0.65
+cache_read = 0.039
+
+[limit]
+context = 1_048_576
