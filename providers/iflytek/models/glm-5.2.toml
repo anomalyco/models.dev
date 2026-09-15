@@ -1,0 +1,22 @@
+# Sources (accessed 2026-09-14):
+# https://www.xfyun.cn/doc/spark/TokenPlan.html
+# https://www.xfyun.cn/doc/spark/推理服务-http.html
+# GLM-5.2: 1M context on this host (matches lab).
+# Reasoning: reasoning_effort = high|max per iFlytek host docs (only GLM-5.2
+# among GLM models supports graded effort on this host via
+# reasoning_effort or output_config.effort; GLM-5.1 and GLM-5 expose toggle
+# only).
+# Tool calling NOT supported on this host (only DeepSeek V3.2 and GLM-4.7).
+# Pricing: Token Plan points 800/200/2800 per 1M, converted at 7.25 CNY/USD.
+
+base_model = "zhipuai/glm-5.2"
+tool_call = false
+reasoning_options = [{ type = "effort", values = ["high", "max"] }]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 1.10
+output = 3.86
+cache_read = 0.28

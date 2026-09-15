@@ -445,6 +445,9 @@ export const ModelFamilyValues = [
 
   // Elephant
   "elephant",
+
+  // iFlytek Spark
+  "spark",
 ] as const;
 
 export const ModelFamily = z.enum(ModelFamilyValues);
