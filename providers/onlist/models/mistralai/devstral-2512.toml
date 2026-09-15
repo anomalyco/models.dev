@@ -1,0 +1,11 @@
+# Pricing and context length: https://onlist.io/models/mistralai/devstral-2512 (accessed 2026-09-07)
+base_model = "mistral/devstral-2512"
+attachment = true
+
+[cost]
+input = 0.4
+output = 2
+cache_read = 0.04
+
+[limit]
+output = 209_715

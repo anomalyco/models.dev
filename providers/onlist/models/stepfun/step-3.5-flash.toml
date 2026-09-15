@@ -1,0 +1,14 @@
+# Pricing and context length: https://onlist.io/models/stepfun/step-3.5-flash (accessed 2026-09-07)
+# Reasoning: effort via `reasoning_effort` / `reasoning.effort`, budget via `reasoning.max_tokens`; no on/off toggle on Onlist
+base_model = "stepfun/step-3.5-flash"
+base_model_omit = ["limit.input"]
+reasoning_options = []
+
+[cost]
+input = 0.1
+output = 0.3
+cache_read = 0.022222
+
+[limit]
+context = 262_144
+output = 65_536
