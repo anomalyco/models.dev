@@ -1,0 +1,16 @@
+# Model list, pricing and context limits: https://ai.paratera.com/#/lms/model (model square, accessed 2026-09-02)
+# RMB converted to USD at 1 USD = 6.7829 CNY: https://www.news.cn/fortune/20260902/02111c46d5fc4d7ba9fb8a67db1ba49e/c.html
+# Toggle: thinking.type = enabled|disabled (verified against this API on 2026-09-02).
+# enable_thinking and reasoning_effort are accepted but ignored.
+base_model = "zhipuai/glm-4.5-flash"
+reasoning_options = [{ type = "toggle" }]
+
+[cost]
+input = 0
+output = 0
+
+[limit]
+context = 128_000
+
+[interleaved]
+field = "reasoning_content"
