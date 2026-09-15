@@ -1,0 +1,17 @@
+# Served context from GET /provider/v1/models (accessed 2026-08-13): 200_000.
+# Model reasons but no verified caller control on this host (2026-08-14: enable_thinking/thinking_budget no-ops; effort low=828/high=742 non-monotonic; max 400-rejected).
+base_model = "alibaba/qwen3.6-plus"
+name = "Qwen 3.6 Plus"
+reasoning_options = []
+interleaved = { field = "reasoning_content" }
+
+[cost]
+input = 0.5
+output = 3
+cache_read = 0.1
+
+[limit]
+context = 200_000
+
+[modalities]
+input = ["text", "image"]

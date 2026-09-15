@@ -1,0 +1,15 @@
+# Model reasons but no verified graded control (2026-08-14: effort low=111/high=364/max=309
+# non-monotonic; chat_template_kwargs.reasoning_effort = no_think did not suppress reasoning).
+# Emits reasoning via reasoning / reasoning_details.
+base_model = "tencent/hy3"
+name = "Tencent Hy3"
+reasoning_options = []
+interleaved = { field = "reasoning_details" }
+
+[cost]
+input = 0.14
+output = 0.58
+cache_read = 0.035
+
+[limit]
+context = 262_144

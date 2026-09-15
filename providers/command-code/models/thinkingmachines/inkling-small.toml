@@ -1,0 +1,16 @@
+# Effort: reasoning_effort = low|medium|high|xhigh (max dropped — 70/302/174 non-monotonic, 2026-08-14).
+base_model = "thinkingmachines/inkling-small"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh"] }]
+interleaved = { field = "reasoning_details" }
+
+[cost]
+input = 0.5
+output = 1.2
+cache_read = 0.1
+
+[limit]
+context = 1_000_000
+output = 1_000_000
+
+[modalities]
+input = ["text", "image"]

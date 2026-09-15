@@ -1,0 +1,18 @@
+# Effort: reasoning_effort = high|xhigh (lab baseline; plan-gated from graded-effect probing).
+# 272K+ context tier mirrors first-party Sakana pricing (no-markup relay).
+base_model = "sakana/fugu-ultra"
+reasoning_options = [{ type = "effort", values = ["high", "xhigh"] }]
+
+[cost]
+input = 5
+output = 30
+cache_read = 0.5
+
+[[cost.tiers]]
+tier = { type = "context", size = 272_000 }
+input = 10
+output = 45
+cache_read = 1
+
+[limit]
+output = 1_000_000

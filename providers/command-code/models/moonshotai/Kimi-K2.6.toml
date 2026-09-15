@@ -1,0 +1,16 @@
+# Model reasons but no verified caller control (2026-08-14: effort low=371/high=395/max=238 non-monotonic).
+base_model = "moonshotai/kimi-k2.6"
+reasoning_options = []
+interleaved = { field = "reasoning_details" }
+
+[cost]
+input = 0.95
+output = 4
+cache_read = 0.16
+
+[limit]
+context = 256_000
+output = 256_000
+
+[modalities]
+input = ["text", "image"]
