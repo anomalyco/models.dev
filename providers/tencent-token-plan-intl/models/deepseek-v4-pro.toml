@@ -1,0 +1,23 @@
+# Toggle: thinking.type = enabled|disabled (default enabled)
+# Effort: reasoning_effort = high|max (default high). The endpoint accepts
+# low|medium|high|xhigh|max, but the sub-high levels are not distinct: over 3
+# runs per level on deepseek-v4-flash, low averaged MORE reasoning tokens than
+# high (160 vs 121). The lab maps low/medium to high and xhigh to max.
+# https://intl.cloud.tencent.com/document/product/1300/80637
+base_model = "deepseek/deepseek-v4-pro"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["high", "max"]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0
+output = 0
+cache_read = 0
+cache_write = 0
