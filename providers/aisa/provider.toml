@@ -1,0 +1,9 @@
+# AIsa Model Gateway: OpenAI-compatible chat/completions + responses at /v1,
+# Anthropic Messages at /v1/messages, Gemini generateContent at /v1beta.
+# Catalog and USD/MTok pricing: https://aisa.one/models (JSON: https://aisa.one/api/pricing/models)
+# API docs: https://aisa.one/docs/api-reference
+name = "AIsa"
+npm = "@ai-sdk/openai-compatible"
+env = ["AISA_API_KEY"]
+api = "https://api.aisa.one/v1"
+doc = "https://aisa.one/models"

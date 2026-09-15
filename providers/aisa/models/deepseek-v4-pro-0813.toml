@@ -1,0 +1,15 @@
+# Source: https://aisa.one/models (AIsa pricing API https://aisa.one/api/pricing/models,
+# catalog cached_at 2026-09-15, accessed 2026-09-15). All cost values USD per 1M tokens as published by AIsa.
+# AIsa is a multi-model relay: reasoning controls mirror the underlying lab API (pass-through).
+# Toggle: thinking.type = enabled|disabled
+# Effort: reasoning_effort = high|max
+base_model = "deepseek/deepseek-v4-pro-0813"
+reasoning_options = [
+  { type = "toggle" },
+  { type = "effort", values = ["high", "max"] },
+]
+
+[cost]
+input = 0.66
+output = 1.98
+cache_write = 0.066

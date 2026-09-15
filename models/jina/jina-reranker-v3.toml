@@ -1,0 +1,29 @@
+# Sources (accessed 2026-09-15):
+# https://jina.ai/models/jina-reranker-v3/
+# https://jina.ai/news/jina-reranker-v3-0-6b-listwise-reranker-for-sota-multilingual-retrieval/
+# https://huggingface.co/jinaai/jina-reranker-v3 (license cc-by-nc-4.0, base Qwen3-0.6B)
+# https://arxiv.org/abs/2509.25085
+# Reranker: returns relevance scores for up to 64 documents per call; no generated text (limit.output = 0).
+name = "jina-reranker-v3"
+description = "Multilingual listwise reranker scoring a query against up to 64 documents in one context window"
+release_date = "2025-10-01"
+last_updated = "2025-10-01"
+attachment = false
+reasoning = false
+temperature = false
+tool_call = false
+open_weights = true
+license = "CC-BY-NC-4.0"
+
+[limit]
+context = 131_072
+output = 0
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[[weights]]
+label = "Model weights"
+url = "https://huggingface.co/jinaai/jina-reranker-v3"
+format = "safetensors"

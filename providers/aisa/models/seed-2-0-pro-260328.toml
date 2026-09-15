@@ -1,0 +1,13 @@
+# Source: https://aisa.one/models (AIsa pricing API https://aisa.one/api/pricing/models,
+# catalog cached_at 2026-09-15, accessed 2026-09-15). All cost values USD per 1M tokens as published by AIsa.
+# AIsa is a multi-model relay: reasoning controls mirror the underlying lab API (pass-through).
+# Dated snapshot alias served by AIsa; inherits bytedance-seed/seed-2.0-pro metadata.
+# Effort: reasoning_effort = none|minimal|low|medium|high|xhigh|max (none/minimal disable thinking)
+base_model = "bytedance-seed/seed-2.0-pro"
+name = "Seed 2.0 Pro (260328)"
+reasoning_options = [{ type = "effort", values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"] }]
+
+[cost]
+input = 0.526316
+output = 3.157895
+cache_read = 0.526316

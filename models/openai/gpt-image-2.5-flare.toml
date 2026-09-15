@@ -1,0 +1,23 @@
+# Sources (accessed 2026-09-15):
+# https://developers.openai.com/api/docs/models/gpt-image-2.5-flare
+# https://developers.openai.com/api/docs/changelog (2026-09-08: GPT-Image-2.5 Flare and Sunburst)
+# https://developers.openai.com/api/docs/guides/image-generation
+# Image API + Responses image_generation tool; text and image (edit/reference) inputs.
+name = "GPT-Image-2.5 Flare"
+description = "Image model, OpenAI's fastest option for high-quality everyday image generation and editing"
+family = "gpt-image"
+release_date = "2026-09-08"
+last_updated = "2026-09-08"
+attachment = true
+reasoning = false
+temperature = false
+tool_call = false
+open_weights = false
+
+[limit]
+context = 0
+output = 0
+
+[modalities]
+input = ["text", "image"]
+output = ["image"]
