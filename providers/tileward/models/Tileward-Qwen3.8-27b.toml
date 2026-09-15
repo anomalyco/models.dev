@@ -7,7 +7,8 @@
 #
 # Verified against GET https://api.tileward.com/v1/models, 2026-09-15. cost is a single blended
 # USD/Mtoken rate (Tileward does not currently split input/output pricing), used for both fields.
-# name is the API's own "description" field for this model, same convention as tileward-35b-a3b.
+# name is the catalog display name set by fwaa migration 0062_serve_qwen38_27b, since
+# GET /v1/models exposes no name field of its own (only id, description, tileward.*).
 #
 # - base model, compression, upstream license: Tileward's own 4-bit (W4A16) compression of
 #   Qwen/Qwen3.8-27B (apache-2.0 upstream), served on vLLM
@@ -20,7 +21,7 @@
 # - limit.output: no distinct max-output figure is published; set equal to context as the
 #   defensible upper bound absent a smaller documented ceiling, matching the 35B-A3B convention.
 # - structured_output: same basis as the 35B-A3B entry.
-name = "Qwen3.8-27B compressed by Tileward to 4-bit weights. Text and image input, tool calling, 262,144-token context."
+name = "Tileward Qwen3.8-27B"
 description = "Dense model compressed from Qwen3.8-27B, served by Tileward"
 family = "qwen"
 release_date = "2026-09-15"
