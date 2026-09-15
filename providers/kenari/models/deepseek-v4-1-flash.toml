@@ -1,13 +1,13 @@
 # Toggle: $.reasoning.enabled = true|false
-# Effort: reasoning_effort = medium|high
-base_model = "nvidia/nemotron-3-ultra-550b-a55b"
+# Effort: reasoning_effort = low|high|max
+base_model = "deepseek/deepseek-v4.1-flash"
 
 [[reasoning_options]]
 type = "toggle"
 
 [[reasoning_options]]
 type = "effort"
-values = ["medium", "high"]
+values = ["low", "high", "max"]
 
 [cost]
 input = 0
