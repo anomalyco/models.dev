@@ -6,6 +6,9 @@
 # The endpoint returns tool-call arguments as JSON strings and requires the first message
 # of a tool-calling request to be a user message.
 base_model = "meta/llama-4-scout-17b-instruct"
+# opencode sends its system prompt first with tools; OCI rejects that for Llama models
+# (400 "Tool calling for this Llama model requires the first message to be a user message").
+tool_call = false
 
 [cost]
 input = 0.72
