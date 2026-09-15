@@ -16,6 +16,9 @@ const MODELS_DIR = path.join(import.meta.dirname, "..", "..", "..", "..", "..", 
 const API_ENDPOINT = process.env.AIAND_API_URL ?? "https://api.aiand.com/v1/api.json";
 
 const MODALITIES = ["text", "audio", "image", "video", "pdf"] as const;
+
+const GATEWAY_INTERLEAVED = { field: "reasoning_content" } as const;
+const INTERLEAVED_FIELDS = ["reasoning_content", "reasoning_details"] as const;
 type Modality = (typeof MODALITIES)[number];
 
 // The feed publishes the catalog's reasoning_options shape. Effort values are
@@ -62,6 +65,7 @@ export const AiandModel = z
       .passthrough(),
     open_weights: z.boolean().optional(),
     status: z.enum(["alpha", "beta", "deprecated"]).optional(),
+    interleaved: z.union([z.boolean(), z.object({ field: z.string() }).passthrough()]).optional(),
   })
   .passthrough();
 
@@ -113,10 +117,16 @@ export const aiand = {
   sourceID(model) {
     return model.id;
   },
+  // The only skip is "no lab base yet", never an intentional removal, so every
+  // skip enters the missing-model issue flow: the runner keeps any existing
+  // local entry and opens one deduped issue for the lab metadata.
+  missingModelID(model) {
+    return model.id;
+  },
   skippedNotice(ids) {
     if (ids.length === 0) return [];
     return [
-      `Skipped ${ids.length} feed model(s) with no resolvable base model — author a models/ lab file to list them: ${ids.join(", ")}`,
+      `Skipped ${ids.length} feed model(s) with no resolvable base model (missing-model issue flow): ${ids.join(", ")}`,
     ];
   },
 } satisfies SyncProvider<AiandModel>;
@@ -179,7 +189,12 @@ export function buildAiandModel(
     // curated alpha/beta survives omission, a curated deprecated does not,
     // or a route the gateway reactivated would stay marked retired forever.
     status: model.status ?? (existing?.status === "deprecated" ? undefined : existing?.status),
-    interleaved: existing?.interleaved,
+    // Every ai& reasoner streams its thinking in message.reasoning_content —
+    // a gateway-wide side channel — so a brand-new reasoner gets it even
+    // before the feed publishes `interleaved` itself.
+    interleaved: model.reasoning
+      ? (normalizeInterleaved(model.interleaved) ?? existing?.interleaved ?? GATEWAY_INTERLEAVED)
+      : undefined,
   };
   if (baseModel == null) return values;
   // Lab-owned fields are never asserted from the gateway on a factored file:
@@ -302,6 +317,17 @@ function authoredReasoningOptions(
 
 function isModality(value: string): value is Modality {
   return (MODALITIES as readonly string[]).includes(value);
+}
+
+function normalizeInterleaved(
+  value: AiandModel["interleaved"],
+): SyncedFullModel["interleaved"] | undefined {
+  if (value === true) return true;
+  if (value === undefined || value === false) return undefined;
+  const field = value.field;
+  return (INTERLEAVED_FIELDS as readonly string[]).includes(field)
+    ? { field: field as (typeof INTERLEAVED_FIELDS)[number] }
+    : undefined;
 }
 
 function sortModalities(values: Modality[]): Modality[] {

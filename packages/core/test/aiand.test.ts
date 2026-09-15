@@ -227,6 +227,29 @@ test("toggle and budget_tokens controls parse and pass through untouched", () =>
   ]);
 });
 
+test("a new reasoner gets the gateway's reasoning_content side channel; feed and authored values win over it", () => {
+  const created = buildAiandModel(aiandModel(), undefined, null);
+  expect(created.interleaved).toEqual({ field: "reasoning_content" });
+  const authored = buildAiandModel(aiandModel(), { interleaved: true }, null);
+  expect(authored.interleaved).toBe(true);
+  const fromFeed = buildAiandModel(
+    AiandModel.parse({ ...aiandModel(), interleaved: { field: "reasoning_details" } }),
+    { interleaved: true },
+    null,
+  );
+  expect(fromFeed.interleaved).toEqual({ field: "reasoning_details" });
+  const nonReasoner = buildAiandModel(
+    aiandModel({ reasoning: false, reasoning_options: undefined }),
+    { interleaved: true },
+    null,
+  );
+  expect(nonReasoner.interleaved).toBeUndefined();
+});
+
+test("an unresolvable new id enters the missing-model issue flow", () => {
+  expect(aiand.missingModelID(aiandModel({ id: "unknown-lab/mystery-9" }))).toBe("unknown-lab/mystery-9");
+});
+
 test("parses the provider entry from the full api.json document", () => {
   const parsed = AiandResponse.parse({
     opencode: { models: {} },
