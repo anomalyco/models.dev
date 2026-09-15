@@ -1,0 +1,18 @@
+# Sources (accessed 2026-09-11):
+# - Pricing and model details: GOAT plan (https://commandcode.ai/docs/plans/goat)
+# - Limits: context = 1_000_000 per live /v1/models 2026-09-11; output inherits lab (ds-flash: live-probed served cap 393216).
+# - Plan scope: GOAT only; Go/Pro/Max plans excluded (plan-specific provider, cf. alibaba-coding-plan)
+# - GOAT price per docs 2026-09-11 (was missing in local DB): list $2.00/$6.00/$0.40 per MTok
+#   (99%-off deal bills $0.435/$0.87/$0.0036; list kept DB-consistent, cf. MiniMax-M3/MiMo-V2.5).
+# - Limit: live 1M context vs lab 1_048_576 (real served delta, kept); output inherits lab.
+# - Reasoning: binary-only control per providers/xiaomi/models/mimo-v2.5.toml + relay peers; no per-model graded control evidenced -> [] (gateway verified live 2026-09-11: 8 models/42 calls; none|minimal rejected by enum, enable_thinking ignored; toggle/budget omitted).
+base_model = "xiaomi/mimo-v2.5-pro"
+reasoning_options = []
+
+[limit]
+context = 1_000_000
+
+[cost]
+input = 2.0
+output = 6.0
+cache_read = 0.40
