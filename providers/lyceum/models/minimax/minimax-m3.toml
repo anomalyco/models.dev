@@ -1,0 +1,19 @@
+# Sources (accessed 2026-09-15):
+# https://docs.lyceum.technology/docs/inference/serverless
+# https://lyceum.technology/products/inference/models
+base_model = "minimax/MiniMax-M3"
+reasoning_options = []
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.40
+output = 2.00
+cache_read = 0.10
+
+[limit]
+output = 65_536
+
+[modalities]
+input = ["text", "image"]

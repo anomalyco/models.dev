@@ -1,0 +1,17 @@
+# Sources (accessed 2026-09-15):
+# https://docs.lyceum.technology/docs/inference/serverless
+# https://lyceum.technology/products/inference/models
+# Toggle: reasoning_effort = high enables reasoning; omission leaves it off.
+base_model = "deepseek/deepseek-v4.1-flash"
+reasoning_options = [{ type = "toggle" }]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.50
+output = 1.50
+cache_read = 0.13
+
+[limit]
+output = 65_536

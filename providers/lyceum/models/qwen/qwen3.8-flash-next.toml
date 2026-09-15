@@ -1,0 +1,20 @@
+# Sources (accessed 2026-09-15):
+# https://docs.lyceum.technology/docs/inference/serverless
+# https://lyceum.technology/products/inference/models
+# Toggle: reasoning_effort = none or chat_template_kwargs.enable_thinking = false disables reasoning.
+base_model = "alibaba/qwen3.8-flash-next"
+reasoning_options = [{ type = "toggle" }]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.20
+output = 0.50
+cache_read = 0.05
+
+[limit]
+output = 65_536
+
+[modalities]
+input = ["text", "image"]
