@@ -1,0 +1,33 @@
+# Cost: Melious list price for the bare model ID -- the default `balanced` route
+# -- EUR 0.30 in / EUR 1.20 out / EUR 0.08 cache read per 1M tokens, converted
+# at 1.1592 USD/EUR (ECB euro reference rate, 2026-09-11).
+# Sources: GET https://api.melious.ai/v1/models?include_meta=true and
+# https://melious.ai/hub/models/minimax-m2.5 (both accessed 2026-09-15)
+# FX: https://www.ecb.europa.eu/stats/policy_and_exchange_rates/euro_reference_exchange_rates/html/eurofxref-graph-usd.en.html
+# Effort: reasoning_effort is the only reasoning control this host exposes, and
+# it forwards no lab-native thinking field and no reasoning budget. Measured
+# against this deployment on 2026-09-15, it has no effect on this model:
+# reasoning_effort="none" still returns reasoning (reasoning_content 941/729/585
+# chars across three prompts), and none/low/medium/high produce no ordered
+# difference (median 1008/1100/1140/1414 chars). reasoning_options is therefore
+# [] -- this model reasons, with no caller control on this host. That is an
+# affirmative measurement, not an untested default.
+# https://melious.ai/docs/reference/chat-completions (accessed 2026-09-15)
+# Reasoning text is returned in choices[].message.reasoning_content.
+# cache_read: usage.cached_tokens are billed at Melious's discounted
+# prefix-cache rate.
+# limit.context: this deployment serves 197_000 tokens, not the lab's 204_800.
+
+base_model = "minimax/MiniMax-M2.5"
+reasoning_options = []
+
+[cost]
+input = 0.34776
+output = 1.39104
+cache_read = 0.092736
+
+[limit]
+context = 197_000
+
+[interleaved]
+field = "reasoning_content"

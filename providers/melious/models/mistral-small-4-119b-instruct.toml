@@ -1,0 +1,31 @@
+# Cost: Melious list price for the bare model ID -- the default `balanced` route
+# -- EUR 0.15 in / EUR 0.60 out per 1M tokens, converted at 1.1592 USD/EUR (ECB
+# euro reference rate, 2026-09-11).
+# Sources: GET https://api.melious.ai/v1/models?include_meta=true and
+# https://melious.ai/hub/models/mistral-small-4-119b-instruct (both accessed 2026-09-15)
+# FX: https://www.ecb.europa.eu/stats/policy_and_exchange_rates/euro_reference_exchange_rates/html/eurofxref-graph-usd.en.html
+# Effort: reasoning_effort is the only reasoning control this host exposes, and
+# it forwards no lab-native thinking field and no reasoning budget, so no toggle
+# or budget_tokens. Measured against this deployment on 2026-09-15 over three
+# prompts: reasoning_effort="none" is a real off state (usage.reasoning_tokens =
+# 0 and no reasoning_content on every sample), while low, medium and high all
+# return reasoning with no ordered difference in depth (median reasoning_content
+# 1319/1319/1319 chars), so they are not published as separate grades. Because
+# off is reachable through the effort field this is an effort list containing
+# none, not a toggle.
+# https://melious.ai/docs/reference/chat-completions (accessed 2026-09-15)
+# Reasoning text is returned in choices[].message.reasoning_content.
+# limit.context: this deployment serves 262_144 tokens, not the lab's 256_000.
+
+base_model = "mistral/mistral-small-2603"
+reasoning_options = [{ type = "effort", values = ["none", "high"] }]
+
+[cost]
+input = 0.17388
+output = 0.69552
+
+[limit]
+context = 262_144
+
+[interleaved]
+field = "reasoning_content"

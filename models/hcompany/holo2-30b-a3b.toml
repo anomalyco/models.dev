@@ -1,0 +1,29 @@
+# Sources (accessed 2026-09-15):
+# https://huggingface.co/Hcompany/Holo2-30B-A3B
+# https://github.com/hcompai/hai-cookbook/tree/main/holo2
+# Finetuned from Qwen/Qwen3-VL-30B-A3B-Thinking, so the model keeps the
+# thinking behaviour of its base while specialising in GUI localisation and
+# navigation. Weights are CC-BY-NC-4.0 (non-commercial).
+name = "Holo2 30B A3B"
+description = "H Company vision-language model for GUI localisation, web and desktop navigation, and computer-use agents"
+release_date = "2025-11-10"
+last_updated = "2025-11-10"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = false
+open_weights = true
+license = "CC-BY-NC-4.0"
+
+[limit]
+context = 262_144
+output = 32_768
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/Hcompany/Holo2-30B-A3B"

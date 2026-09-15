@@ -1,0 +1,19 @@
+# Cost: Melious list price for the bare model ID -- the default `balanced` route
+# -- EUR 0.40 in / EUR 2.00 out per 1M tokens, converted at 1.1592 USD/EUR (ECB
+# euro reference rate, 2026-09-11).
+# Sources: GET https://api.melious.ai/v1/models?include_meta=true and
+# https://melious.ai/hub/models/devstral-2-123b-instruct-2512 (both accessed 2026-09-15)
+# FX: https://www.ecb.europa.eu/stats/policy_and_exchange_rates/euro_reference_exchange_rates/html/eurofxref-graph-usd.en.html
+# limit.context: this deployment serves 200_000 tokens, not the lab's 262_144.
+# limit.output: max_output_tokens is null for this model, so output is capped at
+# the served context rather than inheriting the lab's larger 262_144.
+
+base_model = "mistral/devstral-2512"
+
+[cost]
+input = 0.46368
+output = 2.3184
+
+[limit]
+context = 200_000
+output = 200_000
