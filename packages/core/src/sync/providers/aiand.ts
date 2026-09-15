@@ -5,6 +5,7 @@ import { z } from "zod";
 import { ModelFamily } from "../../family.js";
 import { ReasoningOption as CatalogReasoningOption } from "../../schema.js";
 import type { ExistingModel, SyncProvider, SyncedFullModel, SyncedModel } from "../index.js";
+import { MissingReasoningOptionsError } from "../missing-reasoning-options.js";
 import { factorBaseModel } from "./openrouter.js";
 
 const MODELS_DIR = path.join(import.meta.dirname, "..", "..", "..", "..", "..", "models");
@@ -168,7 +169,7 @@ export function buildAiandModel(
     reasoning: model.reasoning,
     // The schema refuses reasoning_options on a non-reasoner; a non-reasoning
     // feed model must not stall the sync on that refine.
-    reasoning_options: model.reasoning ? resolveReasoningOptions(model, authored) : undefined,
+    reasoning_options: model.reasoning ? requireReasoningOptions(model, authored) : undefined,
     tool_call: model.tool_call,
     structured_output: model.structured_output,
     temperature: model.temperature,
@@ -328,6 +329,25 @@ type ReasoningEffortValue = Extract<
 
 function isReasoningEffort(value: string): value is ReasoningEffortValue {
   return CatalogReasoningOption.safeParse({ type: "effort", values: [value] }).success;
+}
+
+/**
+ * A reasoner must never be written with an invented empty control set: `[]`
+ * means "no caller control", not uncertainty (AGENTS.md → Reasoning options).
+ * When the feed yields no schema-valid controls and nothing authored can be
+ * kept, the model fails sync for manual review — the runner preserves the
+ * local file and routes the id to the missing-model issue flow.
+ */
+function requireReasoningOptions(
+  model: AiandModel,
+  authored: ExistingModel | undefined,
+): SyncedFullModel["reasoning_options"] {
+  const options = resolveReasoningOptions(model, authored);
+  if (options !== undefined) return options;
+  throw new MissingReasoningOptionsError(
+    model.id,
+    "feed publishes reasoning = true without a schema-valid reasoning_options set and no authored controls exist to keep; research the ai& effort set before listing",
+  );
 }
 
 /**

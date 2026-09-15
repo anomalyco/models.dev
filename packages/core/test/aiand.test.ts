@@ -4,6 +4,7 @@ import { tmpdir } from "node:os";
 import path from "node:path";
 
 import { syncProvider } from "../src/sync/index.js";
+import { MissingReasoningOptionsError } from "../src/sync/missing-reasoning-options.js";
 
 import {
   aiand,
@@ -92,17 +93,24 @@ test("a family the enum does not know falls back to the curated value", () => {
   expect(curated.family).toBe("deepseek");
 });
 
-test("unknown reasoning efforts and modalities are dropped without inventing 'no control'", () => {
+test("unknown modalities are dropped", () => {
   const built = buildAiandModel(
-    aiandModel({
-      reasoning_options: [{ type: "effort", values: ["turbo"] }],
-      modalities: { input: ["text", "smell"], output: ["text"] },
-    }),
+    aiandModel({ modalities: { input: ["text", "smell"], output: ["text"] } }),
     undefined,
     null,
   );
-  expect(built.reasoning_options).toBeUndefined();
   expect(built.modalities?.input).toEqual(["text"]);
+});
+
+test("a reasoner with no schema-valid controls and nothing authored fails instead of writing []", () => {
+  const vocabularyMiss = aiandModel({ reasoning_options: [{ type: "effort", values: ["turbo"] }] });
+  expect(() => buildAiandModel(vocabularyMiss, undefined, null)).toThrow(MissingReasoningOptionsError);
+  const omitted = aiandModel({ reasoning_options: undefined });
+  expect(() => buildAiandModel(omitted, undefined, null)).toThrow(MissingReasoningOptionsError);
+  // Authored controls are the escape hatch, and an explicit [] is the feed's own assertion.
+  expect(buildAiandModel(omitted, { reasoning_options: [{ type: "effort", values: ["high"] }] }, null).reasoning_options)
+    .toEqual([{ type: "effort", values: ["high"] }]);
+  expect(buildAiandModel(aiandModel({ reasoning_options: [] }), undefined, null).reasoning_options).toEqual([]);
 });
 
 test("omitted reasoning_options assert nothing: authored options stay", () => {
@@ -384,6 +392,28 @@ test("runner-level: a full-inline file factored for the first time is written wi
   expect(written).toContain("cache_read = 0.2");
   expect(written).toContain('field = "reasoning_content"');
   expect(written.startsWith("# First-party Motif host entry")).toBe(true);
+});
+
+test("runner-level: a reasoner the feed leaves without controls is reported and its local file is left untouched", async () => {
+  const root = await mkdtemp(path.join(tmpdir(), "models-dev-aiand-missing-"));
+  const modelsDir = path.join(root, "providers", "aiand", "models");
+  const labDest = path.join(root, "models", "motif-technologies", "motif-3.toml");
+  await mkdir(path.dirname(labDest), { recursive: true });
+  await copyFile(path.join(import.meta.dirname, "..", "..", "..", "models", "motif-technologies", "motif-3.toml"), labDest);
+  const providerFile = path.join(modelsDir, "motif-technologies", "motif-3.toml");
+  await mkdir(path.dirname(providerFile), { recursive: true });
+  const original = ['base_model = "motif-technologies/motif-3"', "", "[cost]", "input = 0.5", "output = 2", ""].join("\n");
+  await Bun.write(providerFile, original);
+
+  const feed = aiandModel({ id: "motif-technologies/motif-3", name: "Motif-Technologies/Motif-3", reasoning_options: undefined });
+  const result = await syncProvider(
+    { ...aiand, modelsDir, fetchModels: async () => ({ aiand: { models: { [feed.id]: feed } } }) },
+    { openIssues: false },
+  );
+
+  expect(await readFile(providerFile, "utf8")).toBe(original);
+  expect(result.notices.join(" ")).toContain("motif-technologies/motif-3");
+  expect(result.notices.join(" ")).toContain("no authored controls");
 });
 
 test("parses the provider entry from the full api.json document", () => {
