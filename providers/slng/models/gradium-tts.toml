@@ -1,0 +1,27 @@
+# Gradium TTS via SLNG
+# Sources:
+# - https://docs.slng.ai/models — SLNG model catalog (EU region)
+# - Original per-minute pricing: $0.010/min converted to per-token at 195 tokens/min
+name = "Gradium TTS"
+description = "Text-to-speech model supporting German, English, Spanish, French, Japanese, Korean, and Portuguese"
+family = "gradium"
+release_date = "2024-01-01"
+last_updated = "2025-01-01"
+attachment = false
+reasoning = false
+temperature = true
+tool_call = false
+structured_output = false
+open_weights = false
+
+[cost]
+input = 51.28
+output = 51.28
+
+[limit]
+context = 32_768
+output = 16_384
+
+[modalities]
+input = ["text"]
+output = ["audio"]
