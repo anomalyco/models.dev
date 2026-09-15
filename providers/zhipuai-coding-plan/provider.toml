@@ -1,3 +1,8 @@
+# Prompt caching (chat): automatic implicit prefix cache on the coding chat endpoint with Cached Input credit deduction.
+# Use headers: standard Bearer auth on POST /api/coding/paas/v4/chat/completions; Cached Input deduction visible in billing detail.
+# Use body: model with messages; stable system prompt first with chat history appended.
+# To get a hit: replay identical system prompts and stable prefixes; Cached Input deduction confirms reuse.
+# Docs: https://docs.bigmodel.cn/cn/coding-plan/overview
 # OpenAI Chat endpoint: POST https://open.bigmodel.cn/api/coding/paas/v4/chat/completions.
 # GLM-5.2 maps low|medium|high to high and xhigh|max|ultracode to max.
 # https://docs.bigmodel.cn/cn/coding-plan/latest-model (accessed 2026-06-25)
