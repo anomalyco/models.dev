@@ -1,0 +1,20 @@
+# Pool metadata: https://api.opper.ai/v3/models (2026-09-08).
+# No pool-wide graded effort or toggle: members share only reasoning_effort=none.
+base_model = "alibaba/qwen3.8-max"
+structured_output = true
+
+reasoning_options = []
+
+[cost]
+input = 2
+output = 6
+cache_read = 0.25
+
+[limit]
+context = 983616
+
+[modalities]
+input = ["text", "image"]
+
+[interleaved]
+field = "reasoning_content"
