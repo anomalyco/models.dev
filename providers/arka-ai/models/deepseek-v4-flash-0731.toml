@@ -1,0 +1,19 @@
+# Toggle: enable_thinking true|false (Arka also accepts thinking.type = enabled|disabled)
+# Effort: reasoning_effort = low|high|max (all three levels verified live, matching the
+# first-party deepseek baseline; unlike alibaba's hosted copy, low is not mapped away)
+# Verified live on https://api.arka-ai.ru/v1/chat/completions (accessed 2026-08-18).
+# Cost: converted from Arka AI's RUB list price at 82.9977 RUB/USD (CBR rate captured 2026-08-13).
+# Sources: https://arka-ai.ru (pricing) and https://api.arka-ai.ru/v1/models.
+
+base_model = "deepseek/deepseek-v4-flash-0731"
+reasoning_options = [
+  { type = "toggle" },
+  { type = "effort", values = ["low", "high", "max"] },
+]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.178231
+output = 0.356462
