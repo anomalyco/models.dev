@@ -1,9 +1,11 @@
-# Sources (accessed 2026-09-11):
+# DeepSeek official sources and lab model (accessed 2026-09-11):
 # https://api-docs.deepseek.com/quick_start/pricing/
 # https://api-docs.deepseek.com/guides/thinking_mode/
 # models/deepseek/deepseek-v4.1-flash.toml
 # providers/deepseek/models/deepseek-flash.toml
-# Vancine serves DeepSeek V4.1 Flash as the platform model id deepseek-flash.
+# Vancine current platform model ID deepseek-v4.1-flash and public pricing
+# re-verified from https://vancine.com/api/pricing at 2026-09-15T07:51:35Z.
+# base_model remains deepseek/deepseek-v4.1-flash.
 # Reasoning HTTP format: thinking.type = "enabled" | "disabled";
 # reasoning_effort = "low" | "high" | "max". Flash maps low -> low
 # (unlike Pro). xhigh maps to high. Reasoning tokens are billed at the
