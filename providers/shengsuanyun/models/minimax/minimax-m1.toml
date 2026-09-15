@@ -1,0 +1,22 @@
+name = "MiniMax-M1"
+description = "MiniMax multimodal coding model for long-context reasoning and agent tasks"
+family = "minimax"
+release_date = "2026-08-17"
+last_updated = "2026-08-17"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = true
+open_weights = false
+
+[cost]
+input = 0.1142
+output = 1.1428
+
+[limit]
+context = 1_000_000
+output = 80_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

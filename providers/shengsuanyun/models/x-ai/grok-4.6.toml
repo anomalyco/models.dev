@@ -1,0 +1,11 @@
+base_model = "xai/grok-4.6"
+reasoning_options = []
+
+[cost]
+input = 2
+output = 6
+cache_read = 0.5
+
+[limit]
+context = 2_000_000
+output = 30_000
