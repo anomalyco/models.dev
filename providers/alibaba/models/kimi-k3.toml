@@ -1,0 +1,27 @@
+# Sources (accessed 2026-09-15):
+# https://www.qwencloud.com/models/kimi-k3 (Singapore/international pricing, limits)
+# https://www.alibabacloud.com/help/en/model-studio/kimi-k3 (limits, capability table)
+# https://www.alibabacloud.com/help/zh/model-studio/qwen-api-via-openai-chat-completions
+# (reasoning_effort) and /help/en/model-studio/kimi-api (text+image input only,
+# no video; reasoning_content streamed in deltas)
+# Effort: reasoning_effort = low|high|max (default max). Thinking is always on:
+# enable_thinking only accepts true (passing false errors), no thinking_budget.
+base_model = "moonshotai/kimi-k3"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 3.0
+output = 15.0
+cache_read = 0.3
+
+[modalities]
+input = ["text", "image"]
+
+[limit]
+output = 1_048_576
