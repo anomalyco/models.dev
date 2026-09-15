@@ -1,0 +1,16 @@
+# Budget: thinking.budget_tokens (integer reasoning tokens)
+# Effort: not forwarded. The anthropic parameter map sends thinking and no
+# reasoning_effort or output_config, so only the controls below can travel.
+# https://platform.hopscotchlabs.ai/models
+base_model = "anthropic/claude-opus-4-6"
+structured_output = true
+
+[[reasoning_options]]
+type = "budget_tokens"
+min = 1_024
+
+[cost]
+input = 5
+output = 25
+cache_read = 0.5
+cache_write = 6.25
