@@ -1,0 +1,11 @@
+# AIgateway forwards the OpenAI Chat Completions reasoning_effort value
+# (including "none" for off) for this model; no separate on/off wire is exposed.
+base_model = "moonshotai/kimi-k3"
+
+[cost]
+input = 3
+output = 15
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "high", "max"]

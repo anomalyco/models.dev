@@ -1,0 +1,11 @@
+# AIgateway bills GPT-5.4 at a flat rate from its list pricing; it does not
+# apply the lab's >272k long-context price step-up.
+base_model = "openai/gpt-5.4"
+
+[cost]
+input = 2.5
+output = 15
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "xhigh"]
