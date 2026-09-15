@@ -1,4 +1,9 @@
 import { expect, test } from "bun:test";
+import { copyFile, mkdir, mkdtemp, readFile } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import path from "node:path";
+
+import { syncProvider } from "../src/sync/index.js";
 
 import {
   aiand,
@@ -302,6 +307,83 @@ test("an already-factored file keeps its authored lab-field deltas and omit list
     name: "DeepSeek V4 Flash (ai& lane)",
     knowledge: "2025-06",
   });
+});
+
+test("a created reasoner with a toggle control gets a leading header naming the wire path", () => {
+  const context = { existing: () => undefined, authored: () => undefined };
+  const created = aiand.translateModel(
+    AiandModel.parse({ ...aiandModel(), reasoning_options: [{ type: "toggle" }, { type: "effort", values: ["high", "max"] }] }),
+    context,
+  );
+  expect(created?.header).toContain("# Toggle: reasoning_effort = \"none\" (off)");
+  expect(created?.header).toContain('# Effort: reasoning_effort = "high" | "max"');
+  expect(created?.header?.endsWith("\n")).toBe(true);
+});
+
+test("runner-level: a full-inline file factored for the first time is written without a lab-identical description", async () => {
+  const root = await mkdtemp(path.join(tmpdir(), "models-dev-aiand-"));
+  const modelsDir = path.join(root, "providers", "aiand", "models");
+  const labSource = path.join(import.meta.dirname, "..", "..", "..", "models", "motif-technologies", "motif-3.toml");
+  const labDest = path.join(root, "models", "motif-technologies", "motif-3.toml");
+  await mkdir(path.dirname(labDest), { recursive: true });
+  await copyFile(labSource, labDest);
+  const providerFile = path.join(modelsDir, "motif-technologies", "motif-3.toml");
+  await mkdir(path.dirname(providerFile), { recursive: true });
+  await Bun.write(providerFile, [
+    "# First-party Motif host entry (no shared lab base_model in catalog yet).",
+    'name = "Motif 3"',
+    'description = "Motif 3 is a large-scale, decoder-only Mixture-of-Experts (MoE) language model with 314 billion total parameters and 13.2 billion parameters activated per token."',
+    'release_date = "2026-08-12"',
+    'last_updated = "2026-09-11"',
+    "attachment = false",
+    "reasoning = true",
+    "temperature = false",
+    "tool_call = false",
+    "structured_output = false",
+    "open_weights = false",
+    "",
+    "[[reasoning_options]]",
+    'type = "effort"',
+    'values = ["none", "high"]',
+    "",
+    "[interleaved]",
+    'field = "reasoning_content"',
+    "",
+    "[cost]",
+    "input = 0.5",
+    "output = 2",
+    "",
+    "[limit]",
+    "context = 262_144",
+    "output = 262_144",
+    "",
+    "[modalities]",
+    'input = ["text"]',
+    'output = ["text"]',
+    "",
+  ].join("\n"));
+
+  const feed = aiandModel({
+    id: "motif-technologies/motif-3",
+    name: "Motif-Technologies/Motif-3",
+    reasoning_options: [{ type: "effort", values: ["none", "high"] }],
+    structured_output: false,
+    cost: { input: 0.5, output: 2, cache_read: 0.2 },
+    limit: { context: 262_144, output: 262_144 },
+  });
+  await syncProvider(
+    { ...aiand, modelsDir, fetchModels: async () => ({ aiand: { models: { [feed.id]: feed } } }) },
+    { openIssues: false },
+  );
+
+  const written = await readFile(providerFile, "utf8");
+  expect(written).toContain('base_model = "motif-technologies/motif-3"');
+  expect(written).not.toMatch(/^description = /m);
+  expect(written).not.toMatch(/^open_weights = /m);
+  expect(written).not.toMatch(/^release_date = /m);
+  expect(written).toContain("cache_read = 0.2");
+  expect(written).toContain('field = "reasoning_content"');
+  expect(written.startsWith("# First-party Motif host entry")).toBe(true);
 });
 
 test("parses the provider entry from the full api.json document", () => {

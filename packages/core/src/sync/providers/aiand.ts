@@ -85,6 +85,10 @@ export const aiand = {
   // runner's default preservation keeps the base_model reference but does not
   // drop fields identical to the base.
   preserveBaseModels: false,
+  // The runner would otherwise re-inject the pre-factor authored description
+  // whenever the translator leaves it unset — recreating a lab-identical
+  // override on every full-inline → factored transition.
+  preserveDescriptions: false,
   async fetchModels() {
     const response = await fetch(API_ENDPOINT);
     if (!response.ok) {
@@ -112,10 +116,10 @@ export const aiand = {
     // instead. An existing local file is always translated — skipping one
     // would delete it.
     if (authored === undefined && baseModel === undefined) return undefined;
-    return {
-      id: model.id,
-      model: buildAiandModel(model, authored, baseModel),
-    };
+    const built = buildAiandModel(model, authored, baseModel);
+    // Existing headers win; this only seeds a create, and a toggle control
+    // must never be written without its wire path.
+    return { id: model.id, model: built, header: reasoningHeader(built) };
   },
   sourceID(model) {
     return model.id;
@@ -232,6 +236,38 @@ export function buildAiandModel(
     knowledge: authored?.knowledge,
     open_weights: model.open_weights ?? authored?.open_weights ?? false,
   };
+}
+
+const DOCS_URL = "https://docs.aiand.com/models/catalog/";
+
+/**
+ * Leading comment block for a created file. ai& exposes one reasoning wire
+ * path — `reasoning_effort` on /v1/chat/completions and `reasoning.effort` on
+ * /v1/responses, enforced per model — so a toggle is "none" versus the graded
+ * levels on that same field.
+ */
+function reasoningHeader(model: SyncedModel): string | undefined {
+  const options = model.reasoning_options;
+  if (options === undefined || options.length === 0) return undefined;
+  const lines = [
+    `# Pricing: GET https://api.aiand.com/v1/api.json (synced hourly by the aiand module)`,
+    `# Docs: ${DOCS_URL}`,
+  ];
+  for (const option of options) {
+    if (option.type === "effort" && option.values.length > 0) {
+      lines.push(`# Effort: reasoning_effort = ${option.values.map((value) => `"${value}"`).join(" | ")}`);
+    }
+    if (option.type === "toggle") {
+      lines.push(
+        '# Toggle: reasoning_effort = "none" (off) vs the graded levels — field `reasoning_effort` on /v1/chat/completions, `reasoning.effort` on /v1/responses; enforced per model.',
+      );
+    }
+    if (option.type === "budget_tokens") {
+      lines.push("# Budget: ai& publishes no token-budget control; value carried from the feed as-is.");
+    }
+  }
+  lines.push("# Reasoning side channel: message.reasoning_content");
+  return `${lines.join("\n")}\n`;
 }
 
 interface MetadataEntry {
