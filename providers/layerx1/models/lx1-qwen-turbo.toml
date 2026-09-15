@@ -1,0 +1,14 @@
+base_model = "alibaba/qwen-turbo"
+
+# /v1/models reports no reasoning support for this id: it is absent
+# from both `capabilities.reasoning` and `supported_parameters`.
+reasoning = false
+
+[cost]
+input = 0.05
+output = 0.2
+cache_read = 0.01
+
+[limit]
+context = 98_304
+output = 8_192

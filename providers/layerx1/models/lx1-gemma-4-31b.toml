@@ -1,0 +1,18 @@
+base_model = "google/gemma-4-31b-it"
+
+attachment = false
+
+# reasoning: `reasoning` request field, effort ladder; `none` disables.
+reasoning_options = [
+  { type = "effort", values = ["none", "minimal", "low", "medium", "high", "max"] },
+]
+
+[modalities]
+input = ["text"]
+
+[cost]
+input = 0.14
+output = 0.4
+
+[limit]
+context = 256_000

@@ -1,0 +1,14 @@
+base_model = "minimax/MiniMax-M2.5"
+
+# reasoning: `reasoning` request field, effort ladder; `none` disables.
+reasoning_options = [
+  { type = "effort", values = ["none", "minimal", "low", "medium", "high", "max"] },
+]
+
+[cost]
+input = 0.3
+output = 1.2
+
+[limit]
+context = 196_608
+output = 8_192

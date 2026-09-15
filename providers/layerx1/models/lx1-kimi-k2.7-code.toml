@@ -1,0 +1,19 @@
+base_model = "moonshotai/kimi-k2.7-code"
+
+attachment = false
+
+# reasoning: `reasoning` request field, effort ladder; `none` disables.
+reasoning_options = [
+  { type = "effort", values = ["none", "minimal", "low", "medium", "high", "max"] },
+]
+
+[modalities]
+input = ["text"]
+
+[cost]
+input = 0.95
+output = 4
+cache_read = 0.19
+
+[limit]
+context = 131_072

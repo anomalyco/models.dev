@@ -1,0 +1,11 @@
+base_model = "deepseek/deepseek-v4-flash"
+
+# reasoning: `reasoning` request field, effort ladder; `none` disables.
+reasoning_options = [
+  { type = "effort", values = ["none", "minimal", "low", "medium", "high", "max"] },
+]
+
+[cost]
+input = 0.44
+output = 1.32
+cache_read = 0.014

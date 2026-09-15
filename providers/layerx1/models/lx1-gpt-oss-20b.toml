@@ -1,0 +1,13 @@
+base_model = "openai/gpt-oss-20b"
+
+# reasoning: `reasoning` request field, effort ladder; `none` disables.
+reasoning_options = [
+  { type = "effort", values = ["none", "minimal", "low", "medium", "high", "max"] },
+]
+
+[cost]
+input = 0.2
+output = 0.3
+
+[limit]
+context = 128_000
