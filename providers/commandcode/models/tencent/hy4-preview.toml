@@ -1,0 +1,12 @@
+# https://commandcode.ai/models/hy4-preview
+# Effort: reasoning_effort = none|high (off is effort=none)
+base_model = "tencent/hy4-preview"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "high"]
+
+[cost]
+cache_read = 0.042
+input = 0.834
+output = 2.501
