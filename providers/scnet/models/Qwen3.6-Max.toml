@@ -1,0 +1,21 @@
+# SCNet probe 2026-08-27: image input was positively confirmed with a semantic red-image probe.
+# Toggle: enable_thinking = true|false
+# Budget: thinking_budget = integer reasoning tokens
+# SCNet probe 2026-08-27: thinking_budget=128/1024 changed reasoning token counts on this SKU.
+# SCNet API exposes the thinking toggle and thinking_budget; no separate effort control is documented for this host.
+# SCNet OpenAI Chat API source:
+# https://www.scnet.cn/ac/openapi/doc/2.0/moduleapi/api/chat.html
+attachment = true
+base_model = "alibaba/qwen3.6-max-preview"
+name = "Qwen3.6-Max"
+reasoning_options = [{ type = "toggle" }, { type = "budget_tokens" }]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 2.23125
+output = 13.3875
+
+[modalities]
+input = ["text", "image"]

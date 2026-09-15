@@ -1,0 +1,22 @@
+# Toggle: enable_thinking = true|false
+# Effort: reasoning_effort = high|max
+# SCNet OpenAI Chat API source:
+# SCNet probe 2026-08-27: image input was positively confirmed with a semantic red-image probe.
+# https://www.scnet.cn/ac/openapi/doc/2.0/moduleapi/api/chat.html
+attachment = true
+base_model = "deepseek/deepseek-v4-pro-0813"
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["high", "max"] }]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 1.33875
+output = 4.01625
+cache_read = 0.133875
+
+[limit]
+context = 1_048_576
+
+[modalities]
+input = ["text", "image"]
