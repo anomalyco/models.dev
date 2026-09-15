@@ -1,0 +1,24 @@
+# Sources (accessed 2026-09-15):
+# https://www.alibabacloud.com/help/en/model-studio/happyhorse-1-1-r2v
+# https://www.alibabacloud.com/help/en/model-studio/happyhorse-reference-to-video-api-reference
+# Launch 2026-06-22: https://x.com/alibaba_cloud/status/2069018466108186728 ; https://technode.com/2026/06/23/alibaba-unveils-happyhorse-1-1-video-generation-model-launches-global-ai-filmmaking-competition/
+# Made by Alibaba's ATH AI Innovation Unit (not Tongyi/Wan). No snapshots published; last_updated = release.
+# Async DashScope video-synthesis endpoint: no temperature/tool/structured-output controls;
+# billed per second of output video, so no token limits (limit = 0).
+name = "HappyHorse 1.1 Reference-to-Video"
+description = "Video model for reference-guided generation from up to 9 reference images with auto-generated audio"
+release_date = "2026-06-22"
+last_updated = "2026-06-22"
+attachment = true
+reasoning = false
+temperature = false
+tool_call = false
+open_weights = false
+
+[limit]
+context = 0
+output = 0
+
+[modalities]
+input = ["text", "image"]
+output = ["video"]

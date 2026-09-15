@@ -1,0 +1,24 @@
+# Sources (accessed 2026-09-15):
+# https://www.alibabacloud.com/help/en/model-studio/wan2-7-image
+# https://www.alibabacloud.com/help/en/model-studio/wan-image-generation-and-editing-api-reference
+# https://www.alibabacloud.com/blog/alibaba-unveils-wan2-7-redefining-personalized-and-precision-image-creation_602995
+# Async DashScope image-synthesis endpoint: no temperature/tool/structured-output controls;
+# billed per image, so no token limits (limit = 0). No later snapshots published; last_updated = release.
+# thinking_mode is an inference-time planning switch, not a token-emitting reasoning mode; reasoning = false.
+name = "Wan2.7 Image"
+description = "Image model for text-to-image, multi-image reference, sequential image sets, and interactive editing (1K/2K)"
+release_date = "2026-04-01"
+last_updated = "2026-04-01"
+attachment = true
+reasoning = false
+temperature = false
+tool_call = false
+open_weights = false
+
+[limit]
+context = 0
+output = 0
+
+[modalities]
+input = ["text", "image"]
+output = ["image"]

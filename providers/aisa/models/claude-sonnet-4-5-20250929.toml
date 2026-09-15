@@ -1,0 +1,15 @@
+# Source: https://aisa.one/models (AIsa pricing API https://aisa.one/api/pricing/models,
+# catalog cached_at 2026-09-15, accessed 2026-09-15). All cost values USD per 1M tokens as published by AIsa.
+# AIsa is a multi-model relay: reasoning controls mirror the underlying lab API (pass-through).
+base_model = "anthropic/claude-sonnet-4-5-20250929"
+reasoning_options = [{ type = "budget_tokens", min = 1_024 }]
+
+[cost]
+input = 3.0
+output = 15.0
+cache_read = 0.3
+cache_write = 6.0
+
+[provider]
+npm = "@ai-sdk/anthropic"
+api = "https://api.aisa.one/v1"

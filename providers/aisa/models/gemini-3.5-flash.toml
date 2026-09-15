@@ -1,0 +1,14 @@
+# Source: https://aisa.one/models (AIsa pricing API https://aisa.one/api/pricing/models,
+# catalog cached_at 2026-09-15, accessed 2026-09-15). All cost values USD per 1M tokens as published by AIsa.
+# AIsa is a multi-model relay: reasoning controls mirror the underlying lab API (pass-through).
+base_model = "google/gemini-3.5-flash"
+reasoning_options = [{ type = "effort", values = ["minimal", "low", "medium", "high"] }]
+
+[cost]
+input = 1.5
+output = 9.0
+cache_read = 0.15
+
+[provider]
+npm = "@ai-sdk/google"
+api = "https://api.aisa.one/v1beta"
