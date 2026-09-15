@@ -9,6 +9,7 @@ The grouped sync targets are available for local convenience, but CI syncs each 
 ## Commands
 
 - `bun models:sync aggregators` syncs every provider in the `aggregators` group.
+- `bun models:sync aiand` syncs only ai&.
 - `bun models:sync openrouter` syncs only OpenRouter.
 - `bun models:sync cloudflare-workers-ai` syncs only Cloudflare Workers AI.
 - `bun models:sync cloudflare-ai-gateway` syncs only Cloudflare AI Gateway's proxied catalog.
@@ -359,3 +360,15 @@ Venice is implemented in `packages/core/src/sync/providers/venice.ts`.
 ## Standalone Generators
 
 Some provider scripts in `packages/core/script/generate-*.ts` are not wired into `bun models:sync`. When updating those scripts, preserve existing `base_model` and `base_model_omit` fields for generated TOMLs that already use model metadata inheritance. New inheritance-aware output should use `base_model`; do not reintroduce legacy `[extends]` syntax.
+
+## ai& Notes
+
+- Endpoint: `GET https://api.aiand.com/v1/api.json` (public, no auth). The module reads the `aiand` provider entry; `AIAND_API_URL` overrides the endpoint for staging dry runs.
+- The feed publishes this repo's `api.json` shape, so translation is near-identity. The feed is authoritative for prices (including `cache_read`), limits, capability flags, modalities, gateway-enforced `reasoning_options`, and `deprecated` status; the `aiand` entry lists only models whose catalog metadata is complete.
+- Curated values win for `name`, `description`, `knowledge`, `release_date`, and `last_updated` — the feed's `last_updated` tracks catalog-row edits, not model revisions, and release dates are lab metadata the gateway is not authoritative for. A curated alpha/beta `status` survives a feed that omits one; a curated `deprecated` does not, since the feed owns deprecation and absence means active.
+- On base-factored files, lab-owned fields (`name`, `description`, `family`, `release_date`, `last_updated`, `knowledge`, `open_weights`) are never asserted from the feed: they appear only as deltas the authored TOML already carried on top of its `base_model` (read via `context.authored()`, never the base-resolved merge), so a full-inline file being factored for the first time — or a new file — inherits the lab entry outright. A new feed id resolves its `base_model` by normalized match against `models/` and is skipped with a report notice when nothing resolves — an unfactored full definition is never created. An empty feed fails the run rather than deleting the local catalog.
+- `family` passes through `ModelFamily.safeParse` and is omitted when unknown.
+- A skipped new id is returned from `missingModelID` (the only skip is "no lab base yet"), so the runner preserves any existing local entry and opens a deduped missing-model issue for the lab metadata.
+- `preserveDescriptions` is off: the runner must not re-inject a pre-factor authored description when the translator leaves it unset, or a full-inline → factored transition would recreate a lab-identical override. Created files get a leading header from `translateModel` naming the single reasoning wire path (`reasoning_effort`, "none" = off). `toggle` and `budget_tokens` controls are parsed (so a feed that publishes one never aborts the run) but never written, from feed or authored file: ai& has no separate on/off or token-budget field, so they cannot be true of this host.
+- `interleaved` comes from the feed when published, else the authored value, else `{ field = "reasoning_content" }` for reasoners — every ai& reasoner streams thinking in `message.reasoning_content`, so a new reasoner is never created without its side channel.
+- A reasoner never gets an invented `[]`: an omitted feed list keeps the authored controls, and a non-empty list whose effort values the schema doesn't know yet does too; when neither yields a schema-valid set the model fails with `MissingReasoningOptionsError` — the runner preserves the local file and routes the id to the missing-model issue flow. Only an explicit `[]` published by the feed is written as "no caller control".
