@@ -1,0 +1,22 @@
+name = "Schematron V2 Turbo"
+description = "Efficient model for low-latency assistance, extraction, and routine automation"
+family = "o"
+release_date = "2026-04-16"
+last_updated = "2026-04-16"
+attachment = false
+reasoning = false
+tool_call = false
+open_weights = false
+
+[cost]
+input = 0.03
+output = 0.15
+cache_read = 0.03
+
+[limit]
+context = 128_000
+output = 8_192
+
+[modalities]
+input = ["text"]
+output = ["text"]
