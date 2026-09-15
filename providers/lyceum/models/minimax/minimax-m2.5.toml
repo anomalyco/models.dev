@@ -1,0 +1,17 @@
+# Sources (accessed 2026-09-15):
+# https://docs.lyceum.technology/docs/inference/serverless
+# https://lyceum.technology/products/inference/models
+# No reasoning control: reasoning_effort = none is rejected by the live API.
+base_model = "minimax/MiniMax-M2.5"
+reasoning_options = []
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.30
+output = 1.20
+cache_read = 0.07
+
+[limit]
+output = 65_536
