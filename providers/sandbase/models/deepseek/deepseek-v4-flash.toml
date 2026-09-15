@@ -1,0 +1,14 @@
+# Source: https://www.sandbase.ai/docs/api-reference/models/get
+# Effort: reasoning_effort = none|low|medium|high|max
+base_model = "deepseek/deepseek-v4-flash"
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "max"]
+
+[cost]
+input = 0.44
+output = 1.32
