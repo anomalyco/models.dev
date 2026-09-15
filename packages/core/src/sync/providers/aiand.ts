@@ -242,10 +242,10 @@ export function buildAiandModel(
 const DOCS_URL = "https://docs.aiand.com/models/catalog/";
 
 /**
- * Leading comment block for a created file. ai& exposes one reasoning wire
- * path — `reasoning_effort` on /v1/chat/completions and `reasoning.effort` on
- * /v1/responses, enforced per model — so a toggle is "none" versus the graded
- * levels on that same field.
+ * Leading comment block for a created file. ai& exposes one reasoning control
+ * — `reasoning_effort` on /v1/chat/completions and `reasoning.effort` on
+ * /v1/responses, enforced per model, with "none" as off — so the header names
+ * that path and states that no separate toggle or token budget exists.
  */
 function reasoningHeader(model: SyncedModel): string | undefined {
   const options = model.reasoning_options;
@@ -258,15 +258,10 @@ function reasoningHeader(model: SyncedModel): string | undefined {
     if (option.type === "effort" && option.values.length > 0) {
       lines.push(`# Effort: reasoning_effort = ${option.values.map((value) => `"${value}"`).join(" | ")}`);
     }
-    if (option.type === "toggle") {
-      lines.push(
-        '# Toggle: reasoning_effort = "none" (off) vs the graded levels — field `reasoning_effort` on /v1/chat/completions, `reasoning.effort` on /v1/responses; enforced per model.',
-      );
-    }
-    if (option.type === "budget_tokens") {
-      lines.push("# Budget: ai& publishes no token-budget control; value carried from the feed as-is.");
-    }
   }
+  lines.push(
+    "# Controls: reasoning_effort only (`reasoning_effort` on /v1/chat/completions, `reasoning.effort` on /v1/responses; \"none\" = off) — no separate toggle or token-budget field on this host.",
+  );
   lines.push("# Reasoning side channel: message.reasoning_content");
   return `${lines.join("\n")}\n`;
 }
@@ -364,15 +359,15 @@ function resolveReasoningOptions(
   if (model.reasoning_options === undefined) return authoredReasoningOptions(authored);
   if (model.reasoning_options.length === 0) return [];
   const feed = model.reasoning_options.flatMap((option) => {
-    if (option.type === "effort") {
-      const values = option.values.filter(
-        (value): value is ReasoningEffortValue => typeof value === "string" && isReasoningEffort(value),
-      );
-      return values.length > 0 ? [{ type: "effort" as const, values }] : [];
-    }
-    // toggle / budget_tokens carry no vocabulary to filter; the catalog
-    // schema already validated them at parse time.
-    return [option];
+    // ai& has exactly one reasoning control — `reasoning_effort`, enforced per
+    // model, where "off" is the "none" level. A toggle or token budget cannot
+    // be true of this host, so neither is ever written; parsing them keeps a
+    // feed that publishes one from aborting the run.
+    if (option.type !== "effort") return [];
+    const values = option.values.filter(
+      (value): value is ReasoningEffortValue => typeof value === "string" && isReasoningEffort(value),
+    );
+    return values.length > 0 ? [{ type: "effort" as const, values }] : [];
   });
   return feed.length > 0 ? feed : authoredReasoningOptions(authored);
 }
@@ -382,7 +377,7 @@ function authoredReasoningOptions(
 ): SyncedFullModel["reasoning_options"] {
   const options = (authored?.reasoning_options ?? [])
     .map((option) => CatalogReasoningOption.safeParse(option))
-    .flatMap((result) => (result.success ? [result.data] : []));
+    .flatMap((result) => (result.success && result.data.type === "effort" ? [result.data] : []));
   return options.length > 0 ? options : undefined;
 }
 

@@ -12,7 +12,6 @@ import {
   AiandResponse,
   buildAiandModel,
   resolveAiandBaseModel,
-  type AiandModel,
 } from "../src/sync/providers/aiand.js";
 
 function aiandModel(overrides: Partial<AiandModel> = {}): AiandModel {
@@ -228,16 +227,21 @@ test("a curated description wins over the feed's on a standalone file", () => {
   expect(built.description).toBe("curated");
 });
 
-test("toggle and budget_tokens controls parse and pass through untouched", () => {
+test("non-effort controls parse but are never written: ai& has no toggle or budget wire path", () => {
   const model = AiandModel.parse({
     ...aiandModel(),
-    reasoning_options: [{ type: "toggle" }, { type: "budget_tokens", min: 1024, max: 32_768 }],
+    reasoning_options: [{ type: "toggle" }, { type: "budget_tokens", min: 1024, max: 32_768 }, { type: "effort", values: ["high"] }],
   });
-  const built = buildAiandModel(model, undefined, null);
-  expect(built.reasoning_options).toEqual([
-    { type: "toggle" },
-    { type: "budget_tokens", min: 1024, max: 32_768 },
-  ]);
+  expect(buildAiandModel(model, undefined, null).reasoning_options).toEqual([{ type: "effort", values: ["high"] }]);
+
+  // Dropping them can't leave an invented [] behind: with nothing authored the model fails for review.
+  const toggleOnly = AiandModel.parse({ ...aiandModel(), reasoning_options: [{ type: "toggle" }] });
+  expect(() => buildAiandModel(toggleOnly, undefined, null)).toThrow(MissingReasoningOptionsError);
+
+  // A stale authored toggle is not carried forward on update either.
+  const authoredStale = { reasoning_options: [{ type: "toggle" as const }, { type: "effort" as const, values: ["high" as const] }] };
+  expect(buildAiandModel(aiandModel({ reasoning_options: undefined }), authoredStale, null).reasoning_options)
+    .toEqual([{ type: "effort", values: ["high"] }]);
 });
 
 test("a new reasoner gets the gateway's reasoning_content side channel; feed and authored values win over it", () => {
@@ -317,14 +321,16 @@ test("an already-factored file keeps its authored lab-field deltas and omit list
   });
 });
 
-test("a created reasoner with a toggle control gets a leading header naming the wire path", () => {
+test("a created reasoner gets a leading header naming the single effort wire path and no other control", () => {
   const context = { existing: () => undefined, authored: () => undefined };
   const created = aiand.translateModel(
     AiandModel.parse({ ...aiandModel(), reasoning_options: [{ type: "toggle" }, { type: "effort", values: ["high", "max"] }] }),
     context,
   );
-  expect(created?.header).toContain("# Toggle: reasoning_effort = \"none\" (off)");
   expect(created?.header).toContain('# Effort: reasoning_effort = "high" | "max"');
+  expect(created?.header).toContain("no separate toggle or token-budget field");
+  expect(created?.header).not.toContain("# Toggle:");
+  expect(created?.header).not.toContain("# Budget:");
   expect(created?.header?.endsWith("\n")).toBe(true);
 });
 
