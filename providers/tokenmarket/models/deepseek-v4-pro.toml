@@ -1,0 +1,21 @@
+# Alibaba Cloud (DashScope) channel.
+# Toggle: `enable_thinking = false` (effort "none") | `enable_thinking = true`.
+# Effort: `reasoning_effort = high | max`; low/medium collapse to high and xhigh
+# collapses to max on this channel, so only two levels are distinctly reachable.
+# `thinking_budget` is projected for the Qwen family only, so no budget_tokens here.
+base_model = "deepseek/deepseek-v4-pro"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["high", "max"]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.665
+output = 1.985
+cache_read = 0.0665
