@@ -1,0 +1,19 @@
+# Pricing: https://api.impossibl.com/v1/models
+base_model = "thinkingmachines/inkling"
+name = "Inkling (256K)"
+
+[cost]
+input = 3.74
+output = 9.36
+cache_read = 0.748
+
+[limit]
+context = 262_144
+output = 262_144
+
+[modalities]
+input = ["text", "image"]
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "minimal", "low", "medium", "high", "xhigh"]
