@@ -1,5 +1,5 @@
-base_model = "alibaba/qwen3.6-27b"
-reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high"] }]
+base_model = "alibaba/qwen3.8-27b"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "xhigh"] }]
 
 [interleaved]
 field = "reasoning_content"
@@ -9,6 +9,9 @@ input = 0.45
 output = 2.2
 cache_read = 0.09
 cache_write = 0
+
+[limit]
+output = 65_536
 
 [modalities]
 input = ["text", "image"]
