@@ -159,6 +159,16 @@ With `base_model`, do not restate fields already correct on the lab entry. Still
 - Convert other currencies and note rate/date in a **top-of-file** comment.
 - Optional keys on cost: `reasoning`, `cache_read`, `cache_write`, `input_audio`, `output_audio`.
 - **Context-based pricing → `[[cost.tiers]]`**, not `context_over_200k`.
+- **Promotional pricing → `discount`** plus the matching `*_list` keys. `discount` is the fraction already taken off (`0.35` = 35% off), and the ordinary price keys stay the price actually billed. `input_list`, `output_list`, `cache_read_list`, and `cache_write_list` record the provider's standard rate before that discount, so a promotion can be told apart from a real price cut. Only author them together — a `*_list` key without a `discount` says nothing.
+
+```toml
+[cost]
+input = 0.091      # billed
+output = 0.182
+discount = 0.35    # 35% off, already reflected above
+input_list = 0.14  # standard rate
+output_list = 0.28
+```
 
 ```toml
 [cost]

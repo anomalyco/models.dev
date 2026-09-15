@@ -55,6 +55,20 @@ export interface Cost {
   input_audio?: number
   /** Audio output price, USD per 1M tokens. */
   output_audio?: number
+  /**
+   * Fraction the prices above are already discounted by (0.35 = 35% off), for
+   * providers quoting a promotional rate. Every other price here is the
+   * discounted one actually billed, not the pre-discount rate.
+   */
+  discount?: number
+  /** Standard input price before `discount`, USD per 1M tokens. */
+  input_list?: number
+  /** Standard output price before `discount`, USD per 1M tokens. */
+  output_list?: number
+  /** Standard cache read price before `discount`, USD per 1M tokens. */
+  cache_read_list?: number
+  /** Standard cache write price before `discount`, USD per 1M tokens. */
+  cache_write_list?: number
 }
 
 /** Pricing that applies from a given context size upward. */
