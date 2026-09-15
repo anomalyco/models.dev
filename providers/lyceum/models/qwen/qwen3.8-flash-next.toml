@@ -1,9 +1,16 @@
 # Sources (accessed 2026-09-15):
 # https://docs.lyceum.technology/docs/inference/serverless
 # https://lyceum.technology/products/inference/models
-# Toggle: reasoning_effort = none or chat_template_kwargs.enable_thinking = false disables reasoning.
+# Toggle: chat_template_kwargs.enable_thinking = false disables reasoning; omission enables it.
+# Effort: reasoning_effort = low|medium|xhigh.
 base_model = "alibaba/qwen3.8-flash-next"
-reasoning_options = [{ type = "toggle" }]
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "xhigh"]
 
 [interleaved]
 field = "reasoning_content"

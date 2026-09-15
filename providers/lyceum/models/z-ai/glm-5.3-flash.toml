@@ -1,10 +1,17 @@
 # Sources (accessed 2026-09-15):
 # https://docs.lyceum.technology/docs/inference/serverless
 # https://lyceum.technology/products/inference/models
-# Toggle: reasoning_effort = none or chat_template_kwargs.enable_thinking = false disables reasoning.
+# Toggle: chat_template_kwargs.enable_thinking = false disables reasoning; omission enables it.
+# Effort: reasoning_effort = low|high|max.
 base_model = "zhipuai/glm-5.3-flash"
-reasoning_options = [{ type = "toggle" }]
 interleaved = true
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
 
 [cost]
 input = 0.20
