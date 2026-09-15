@@ -1,0 +1,20 @@
+# Pricing, limits and reasoning surface as published for this ID.
+# https://concentrate.ai/models/gpt-5.4
+base_model = "openai/gpt-5.4"
+
+interleaved = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "xhigh"]
+
+[cost]
+input = 2.5
+output = 15
+cache_read = 0.25
+
+[[cost.tiers]]
+tier = { type = "context", size = 272_000 }
+input = 5
+output = 22.5
+cache_read = 0.5
