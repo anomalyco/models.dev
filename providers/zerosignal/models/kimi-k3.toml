@@ -1,0 +1,18 @@
+# ZeroSignal is a multi-operator relay; operators set their own prices and serving
+# limits. Values below were read from GET /v1/models on the local zs-proxy on 2026-09-16:
+# cost is the lowest advertised operator rate, USD per 1M tokens, inclusive of the
+# protocol fee (what the caller pays); the routed operator may charge differently.
+# Effort values are the network's advertised `allowed_efforts` for this id. Any
+# [limit] override is the advertised context_length / max_completion_tokens.
+# https://docs.zerosignal.ai/for-users/pricing
+base_model = "moonshotai/kimi-k3"
+reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]
+
+[cost]
+input = 3.432
+output = 17.16
+cache_read = 0.3432
+
+[limit]
+context = 1_000_000
+output = 32_768
