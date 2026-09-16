@@ -60,6 +60,8 @@ Providers that cannot safely auto-create TOMLs set `skipCreates: true`. In GitHu
 4. Dispatches the Issue Fixer explicitly so issues created with `GITHUB_TOKEN` can still produce PRs
 5. If listing fails, creates nothing (fail closed)
 
+Every six hours, a recovery workflow checks the oldest open issues with all three automation labels. It redispatches up to three issues that are at least one hour old and have no closing pull request, so a missed or failed Issue Fixer run does not leave them stranded. The one-hour delay keeps the recovery run from racing the initial dispatch.
+
 Providers that can auto-create most models may instead return an ID from `missingModelID` only for `translateModel` skips that need manual metadata. The runner preserves an existing local entry for that ID while the issue is handled. Intentional skips return `undefined` and do not open issues.
 
 Requires `GH_TOKEN` on the sync workflow step. Local runs are notice-only unless `--open-issues`. Use `--no-issues` / `--dry-run` to skip creates. Each newly opened issue explicitly dispatches the issue-fixer workflow so an agent can research the missing metadata and open a model PR.
