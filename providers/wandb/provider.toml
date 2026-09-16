@@ -1,3 +1,7 @@
+# Prompt caching (chat): automatic prefix cache on POST /v1/chat/completions on supported models.
+# Use body: `cache_salt` isolates reuse; hits via usage.prompt_tokens_details.cached_tokens where returned.
+# To get a hit: replay stable prefixes with matching `cache_salt`.
+# Docs: https://docs.wandb.ai/inference/response-settings/prefix-caching
 name = "Weights & Biases"
 # POST /v1/chat/completions toggles eligible models with
 # chat_template_kwargs.enable_thinking=true|false; output is choices[].message.reasoning.

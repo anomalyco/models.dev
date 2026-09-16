@@ -1,3 +1,7 @@
+# Prompt caching (chat): automatic implicit prefix cache on POST /api/coding/paas/v4/chat/completions.
+# Use body: hits via usage.prompt_tokens_details.cached_tokens.
+# To get a hit: replay stable prefixes; plan credits bill cached input at the cached-input multiplier.
+# Docs: https://docs.z.ai/guides/capabilities/cache
 # OpenAI Chat endpoint: POST https://api.z.ai/api/coding/paas/v4/chat/completions.
 # Coding Plan models currently available: glm-5.2, glm-5-turbo, glm-4.7.
 # GLM-5.2 maps low|medium|high to high and xhigh|max|ultracode to max.
