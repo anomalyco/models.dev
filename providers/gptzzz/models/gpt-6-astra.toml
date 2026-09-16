@@ -1,10 +1,11 @@
-# GPTZZZ is an OpenAI-compatible relay. Effort values verified against the live
-# /v1/chat/completions endpoint on 2026-09-16: none, low, medium, high, xhigh, max
-# are accepted; minimal is rejected upstream.
+# GPTZZZ is an OpenAI-compatible relay. Effort values verified per model against the
+# live /v1/chat/completions endpoint on 2026-09-16. For gpt-6-astra the host rejects
+# none: "Unsupported value: 'none' is not supported with the 'gpt-6-astra' model.
+# Supported values are: 'low', 'medium', 'high', 'xhigh', and 'max'."
 # Prices are the published 0.2x group rate applied to OpenAI list pricing, cross-checked
 # against the cost/actual_cost fields returned by https://gptzzz.ai/v1/usage (2026-09-16).
 base_model = "openai/gpt-6-astra"
-reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh", "max"] }]
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
 
 [cost]
 input = 2.00

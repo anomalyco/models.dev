@@ -1,6 +1,6 @@
-# GPTZZZ is an OpenAI-compatible relay. Effort values verified against the live
-# /v1/chat/completions endpoint on 2026-09-16: none, low, medium, high, xhigh, max
-# are accepted; minimal is rejected upstream.
+# GPTZZZ is an OpenAI-compatible relay. Effort values verified per model against the
+# live /v1/chat/completions endpoint on 2026-09-16: none, low, medium, high, xhigh
+# and max are all accepted on this model; minimal is rejected upstream.
 # Prices are the published 0.2x group rate applied to OpenAI list pricing, cross-checked
 # against the cost/actual_cost fields returned by https://gptzzz.ai/v1/usage (2026-09-16).
 base_model = "openai/gpt-5.6-sol"
