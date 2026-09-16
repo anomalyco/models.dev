@@ -1,22 +1,10 @@
-name = "MiniMax M3"
-attachment = true
-reasoning = true
-tool_call = true
-temperature = true
-knowledge = "2025-06"
-release_date = "2025-06-01"
-last_updated = "2026-09-01"
-open_weights = false
+# SahabatMobile retail pricing (USD/MTok); source: https://sahabatmobile.com/docs
+# Toggle: enable_thinking true|false (proxied to upstream lab API)
+base_model = "minimax/MiniMax-M3"
+
+[[reasoning_options]]
+type = "toggle"
 
 [cost]
 input = 0.30
 output = 1.20
-
-[limit]
-context = 1000000
-input = 900000
-output = 65536
-
-[modalities]
-input = ["text", "image"]
-output = ["text"]
