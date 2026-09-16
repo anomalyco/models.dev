@@ -1,0 +1,12 @@
+# Model ID verified against POST /api/v3/chat/completions (2026-09-16): `glm-5-3-flash-260828`
+base_model = "zhipuai/glm-5.3-flash"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["minimal", "low", "medium", "high"]
+
+[interleaved]
+field = "reasoning_content"
