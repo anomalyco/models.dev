@@ -6,8 +6,12 @@
 # [limit] override is the advertised context_length / max_completion_tokens.
 # https://docs.zerosignal.ai/for-users/pricing
 # Measured 2026-09-16: none returns no reasoning trace (off); graded levels think.
+# Trace is returned in reasoning_content.
 base_model = "xai/grok-4.3"
 reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high"] }]
+
+[interleaved]
+field = "reasoning_content"
 
 [cost]
 input = 1.5125

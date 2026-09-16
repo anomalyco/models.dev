@@ -8,8 +8,12 @@
 # Measured 2026-09-16: none returns no reasoning trace (off); low/high/max think.
 # Off is effort=none, so no toggle. Moonshot's temperature rule applies through the
 # proxy: thinking modes require temperature 1, none requires 0.6.
+# Trace is returned in reasoning_content.
 base_model = "moonshotai/kimi-k3"
 reasoning_options = [{ type = "effort", values = ["none", "low", "high", "max"] }]
+
+[interleaved]
+field = "reasoning_content"
 
 [cost]
 input = 3.432

@@ -9,8 +9,12 @@
 # length): low and high return identical output (aliased); max is distinct; none
 # still produces a full reasoning trace, so off is not available on this host. The
 # operator advertises the full effort enum, but only high/max are distinct controls.
+# Trace is returned in reasoning_content.
 base_model = "zhipuai/glm-5.2"
 reasoning_options = [{ type = "effort", values = ["high", "max"] }]
+
+[interleaved]
+field = "reasoning_content"
 
 [cost]
 input = 1.694

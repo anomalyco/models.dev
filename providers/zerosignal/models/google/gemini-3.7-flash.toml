@@ -5,6 +5,11 @@
 # Effort values are the network's advertised `allowed_efforts` for this id. Any
 # [limit] override is the advertised context_length / max_completion_tokens.
 # https://docs.zerosignal.ai/for-users/pricing
+# Measured 2026-09-16: none is rejected ("Reasoning is mandatory for this endpoint"),
+# so off is unavailable; low returns zero reasoning tokens, medium/high graded, and
+# xhigh/max are accepted but do not exceed high, so the lab's set is kept. This
+# operator returns the trace in a field named `reasoning`, which is not one of the
+# schema's interleaved field values, so no [interleaved] is declared.
 base_model = "google/gemini-3.7-flash"
 reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
 

@@ -7,6 +7,8 @@
 # https://docs.zerosignal.ai/for-users/pricing
 # Measured 2026-09-16: none returns no reasoning trace (off); all graded levels are
 # accepted by this host, so the set matches the lab entry.
+# This operator returns the trace in a field named `reasoning`, not one of the schema's
+# interleaved field values, so no [interleaved] is declared.
 base_model = "openai/gpt-5.6-luna"
 reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh", "max"] }]
 

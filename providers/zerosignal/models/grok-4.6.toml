@@ -5,8 +5,14 @@
 # Effort values are the network's advertised `allowed_efforts` for this id. Any
 # [limit] override is the advertised context_length / max_completion_tokens.
 # https://docs.zerosignal.ai/for-users/pricing
+# Measured 2026-09-16: none and max are rejected by the host, so off is unavailable;
+# the graded levels are accepted and all think (token counts within noise of each
+# other, so the lab's set is kept). Trace is returned in reasoning_content.
 base_model = "xai/grok-4.6"
 reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh"] }]
+
+[interleaved]
+field = "reasoning_content"
 
 [cost]
 input = 2.42

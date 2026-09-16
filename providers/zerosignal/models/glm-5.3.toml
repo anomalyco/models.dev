@@ -5,8 +5,15 @@
 # Effort values are the network's advertised `allowed_efforts` for this id. Any
 # [limit] override is the advertised context_length / max_completion_tokens.
 # https://docs.zerosignal.ai/for-users/pricing
+# Measured 2026-09-16 (same prompt, max_tokens 3000, reasoning tokens from usage):
+# low/high/max accepted with graded traces; none, medium and xhigh are rejected by the
+# host ("always engages in thinking and cannot be disabled"), so off is unavailable.
+# Trace is returned in reasoning_content.
 base_model = "zhipuai/glm-5.3"
 reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]
+
+[interleaved]
+field = "reasoning_content"
 
 [cost]
 input = 1.694
