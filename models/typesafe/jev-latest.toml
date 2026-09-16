@@ -1,0 +1,23 @@
+# Sources:
+# - https://docs.typesafe.ai/introduction.md
+# - https://docs.typesafe.ai/api.md
+# - https://typesafe.ai/blog/introducing-system-one-models-and-jev
+# TypeSafe does not publish context or output token limits, so they remain unknown (0).
+name = "Jev"
+description = "System One model for fast, typed probabilistic decisions over text or structured state"
+release_date = "2026-09-15"
+last_updated = "2026-09-15"
+attachment = false
+reasoning = false
+temperature = false
+tool_call = false
+structured_output = true
+open_weights = false
+
+[limit]
+context = 0
+output = 0
+
+[modalities]
+input = ["text"]
+output = ["text"]
