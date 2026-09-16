@@ -1,0 +1,8 @@
+# Cost basis: USD cash price. The published catalog quotes account credit
+# (https://y-api.bestvirtualgoods.com/pricing); credit is topped up at a
+# promotional 20x rate, so every value here is the credit price / 20.
+name = "Y-API"
+env = ["Y_API_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+api = "https://api.y-api.bestvirtualgoods.com/v1"
+doc = "https://y-api.bestvirtualgoods.com/docs"
