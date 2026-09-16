@@ -113,7 +113,9 @@ export function expandFireworksModels(models: FireworksModel[]): FireworksCatalo
 
     for (const model of rows) {
       if (model.usage_identifier !== undefined) add(model.usage_identifier, model, []);
-      for (const alias of model.aliases ?? []) add(alias, model, []);
+      for (const alias of model.aliases ?? []) {
+        add(alias, model, model === defaultRow ? flagModes : []);
+      }
     }
   }
   return [...expanded.values()];
@@ -136,13 +138,23 @@ function catalogModalities(values: string[], fallback: Modality[]): Modality[] {
   return modalities.length === 0 ? fallback : modalities;
 }
 
-function pricing(model: Pick<FireworksModel, "pricing">, existing: NonNullable<SyncedFullModel["cost"]>) {
+function pricing(
+  model: Pick<FireworksModel, "id" | "pricing" | "serverless_mode">,
+  existing?: NonNullable<SyncedFullModel["cost"]>,
+): NonNullable<SyncedFullModel["cost"]> {
   const bySku = new Map(model.pricing.map((price) => [price.sku, Number(price.amount)]));
+  const input = bySku.get("LLM input tokens (uncached)") ?? existing?.input;
+  const output = bySku.get("LLM output tokens") ?? existing?.output;
+  if (input === undefined || output === undefined) {
+    throw new Error(
+      `Fireworks AI model ${model.id} ${model.serverless_mode} mode has incomplete token pricing`,
+    );
+  }
   return {
     ...existing,
-    input: bySku.get("LLM input tokens (uncached)") ?? existing.input,
-    cache_read: bySku.get("LLM input tokens (cached)") ?? existing.cache_read,
-    output: bySku.get("LLM output tokens") ?? existing.output,
+    input,
+    cache_read: bySku.get("LLM input tokens (cached)") ?? existing?.cache_read,
+    output,
   };
 }
 
@@ -218,11 +230,11 @@ export function buildFireworksModel(
     || limit.context === undefined
     || limit.output === undefined
     || modalities === undefined
-    || cost === undefined
   ) {
     throw new Error(`Fireworks AI model ${model.catalogId} has incomplete local TOML metadata required for sync`);
   }
 
+  const modelCost = pricing(model, cost);
   const input = catalogModalities(model.input_modalities, modalities.input);
   const outputModalities = catalogModalities(model.output_modalities, modalities.output);
   // Fireworks reports the advertised context window, while some deployments
@@ -248,7 +260,7 @@ export function buildFireworksModel(
     open_weights: openWeights,
     status: existing.status,
     interleaved: existing.interleaved,
-    cost: pricing(model, cost),
+    cost: modelCost,
     limit: {
       context,
       input: limit.input,
@@ -259,7 +271,7 @@ export function buildFireworksModel(
       output: outputModalities,
     },
     provider: provider(model, existing.provider),
-    experimental: experimental(model, cost, existing.experimental),
+    experimental: experimental(model, modelCost, existing.experimental),
   } satisfies SyncedFullModel;
 
   return existing.base_model === undefined

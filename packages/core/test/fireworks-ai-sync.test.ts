@@ -62,6 +62,7 @@ test("expands usage identifiers and aliases and attaches flag-only modes", () =>
     serverless_mode: "priority",
     service_tier: "priority",
   });
+  expect(models[1]?.flagModes).toHaveLength(1);
 });
 
 test("updates Fireworks pricing and modalities while preserving authored facts", () => {
@@ -86,6 +87,13 @@ test("updates Fireworks pricing and modalities while preserving authored facts",
       },
     },
   });
+});
+
+test("derives cost from Fireworks when the local model has no cost", () => {
+  const { cost: _, ...existing } = existingModel();
+  const model = buildFireworksModel(catalogModel(), existing);
+
+  expect(model.cost).toEqual({ input: 1.4, output: 4.4, cache_read: 0.14 });
 });
 
 test("uses the service-tier recipe for a priority-only model", () => {

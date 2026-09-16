@@ -1,7 +1,6 @@
-# https://fireworks.ai/models/fireworks/minimax-m2p7 (accessed 2026-09-15)
-# Serverless: $0.30 / $0.059 / $1.20 per 1M (input / cached input / output).
-# Context Length 196k on Fireworks (lab base is 204_800); HF MiniMaxAI/MiniMax-M2.7.
-# Not listed on docs.fireworks.ai/serverless/pricing headline table (no Priority tier published).
+# GET /v1/serverless/models lists MiniMax M2.7 as Priority-only at
+# $1.20 / $0.60 / $1.20 per 1M (input / cached input / output) with a
+# 196,608-token context on 2026-09-16.
 # $.reasoning_effort = "low" | "medium" | "high" (same Fireworks surface as MiniMax M3).
 # https://docs.fireworks.ai/guides/reasoning
 base_model = "minimax/MiniMax-M2.7"
@@ -14,9 +13,12 @@ type = "effort"
 values = ["low", "medium", "high"]
 
 [cost]
-input = 0.3
+input = 1.2
 output = 1.2
-cache_read = 0.059
+cache_read = 0.6
 
 [limit]
 context = 196_608
+
+[provider]
+body = { service_tier = "priority" }

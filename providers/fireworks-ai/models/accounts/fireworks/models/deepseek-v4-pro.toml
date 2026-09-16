@@ -1,8 +1,6 @@
-# Fireworks lists DeepSeek-V4-Pro (preview) as on-demand only — Serverless is
-# "Not supported", so there is no per-token serverless price to record.
-# Model page: https://fireworks.ai/models/fireworks/deepseek-v4-pro (accessed 2026-09-15)
-# Serverless catalog omits this id (only DeepSeek V4 Pro 0813 is priced):
-# https://docs.fireworks.ai/serverless/pricing (accessed 2026-09-15)
+# GET /v1/serverless/models lists DeepSeek V4 Pro on Standard and Priority
+# at $1.20 / $0.60 / $1.20 per 1M (input / cached input / output) on
+# 2026-09-16. Both serving modes currently have the same price.
 # Toggle: thinking.type = enabled|disabled (reasoning_effort = none|false also disables)
 # Effort: reasoning_effort = high|max; low/medium promote to high, xhigh to max
 # Reasoning API: https://docs.fireworks.ai/api-reference/post-chatcompletions (accessed 2026-09-15)
@@ -18,3 +16,12 @@ type = "toggle"
 [[reasoning_options]]
 type = "effort"
 values = ["high", "max"]
+
+[cost]
+input = 1.2
+output = 1.2
+cache_read = 0.6
+
+[experimental.modes.priority]
+cost = { input = 1.2, output = 1.2, cache_read = 0.6 }
+provider = { body = { service_tier = "priority" } }
