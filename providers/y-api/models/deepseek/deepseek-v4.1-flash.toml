@@ -1,9 +1,28 @@
 # Toggle: thinking.type = enabled|disabled
-# Effort: reasoning_effort = low|medium|high|xhigh|max
+# Effort: reasoning_effort = low|high|max
+#
+# This host ACCEPTS medium and xhigh (no 400) but does not act on them
+# distinctly, so they are not authored. Measured on this host, 2026-09-16:
+#
+#   this model, usage.completion_tokens_details.reasoning_tokens, n=3/level
+#     low 84/116/78   medium 108/108/104   high 109/139/104
+#     xhigh 131/87/132   max 140/134/128
+#   Adjacent levels overlap: medium's whole range (104-108) sits inside
+#   high's (104-139), and xhigh's (87-132) is wider than the gap to either
+#   neighbour. Nothing here separates medium from high, or xhigh from high.
+#
+#   control, sibling deepseek-v4-flash-0731 (same family, same host),
+#   reasoning_content length, n=5/level, means
+#     low 826 / medium 442 / high 453 / xhigh 648 / max 1801
+#   which is not monotonic at all (max ranged 414-6790).
+#
+# An effort level a caller cannot observe is worse than not offering it, so
+# this file authors the lab baseline set, matching the other Y-API DeepSeek
+# Flash entries.
 base_model = "deepseek/deepseek-v4.1-flash"
 reasoning_options = [
   { type = "toggle" },
-  { type = "effort", values = ["low", "medium", "high", "xhigh", "max"] },
+  { type = "effort", values = ["low", "high", "max"] },
 ]
 
 [interleaved]

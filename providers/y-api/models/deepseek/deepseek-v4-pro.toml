@@ -1,10 +1,21 @@
 # Toggle: thinking.type = enabled|disabled
 # Effort: reasoning_effort = high|max
+#
+# Interleaved field: this host does NOT emit reasoning_content for this model
+# (0 of 14 samples, 2026-09-16). It emits reasoning (string) plus
+# reasoning_details (list of one {type: "reasoning.text"}) on all 14 samples,
+# which is why the field below is reasoning_details and not the lab's
+# reasoning_content. The first-party DeepSeek V4 Pro entry uses
+# reasoning_content; this host's response shape differs, so the override
+# describes the host.
 base_model = "deepseek/deepseek-v4-pro"
 reasoning_options = [
   { type = "toggle" },
   { type = "effort", values = ["high", "max"] },
 ]
+
+[interleaved]
+field = "reasoning_details"
 
 [cost]
 input = 0.025

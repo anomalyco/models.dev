@@ -1,6 +1,18 @@
-# Cost basis: USD cash price. The published catalog quotes account credit
-# (https://y-api.bestvirtualgoods.com/pricing); credit is topped up at a
-# promotional 20x rate, so every value here is the credit price / 20.
+# Cost basis: USD cash price. The published catalog quotes account credit, and
+# credit is topped up at a promotional 20x rate, so every cost value here is
+# the credit price / 20.
+#
+# The 20x rate is stated by the service itself, in two places, both read
+# 2026-09-16:
+#   https://y-api.bestvirtualgoods.com/about
+#     "Top up $1 to receive $20 of account credit (limited-time rate; reverts
+#      to 1:10 afterwards)."
+#   https://y-api.bestvirtualgoods.com/pricing
+#     "limited-time top up $1 for $20 in credit (reverts to 1:10 afterwards)"
+#
+# Both pages also say the rate is limited-time and reverts to 1:10. When it
+# does, every cost below doubles. The service is not reachable from mainland
+# China and quotes no non-USD price, so no FX conversion is involved.
 name = "Y-API"
 env = ["Y_API_API_KEY"]
 npm = "@ai-sdk/openai-compatible"
