@@ -1,14 +1,25 @@
 # Reasoning HTTP format (accessed 2026-09-15):
-# Toggle: enable_thinking = true|false. Chat Completions `reasoning_effort`
-# accepts low, high (default), and max; medium and xhigh map to high.
-# Reasoning streams on `reasoning_content`.
-# Model availability: Token Plan Personal and Team editions (Singapore).
+# Toggle: enable_thinking = true|false. Thinking content streams on
+# `reasoning_content`. Chat Completions `reasoning_effort` accepts the string
+# ladder low/high (default)/max on the Token Plan gateway (probed 2026-09-15);
+# medium and xhigh are accepted as aliases per family precedent. The vendor
+# OpenAI-chat reference publishes integer effort (1-100); the plan gateway
+# rejects integers with a 400 for this id (probed 2026-09-15).
 # Sources:
 # https://docs.qwencloud.com/api-reference/chat/openai-chat
 # https://www.alibabacloud.com/help/en/model-studio/deepseek-api
 # https://www.alibabacloud.com/help/en/model-studio/token-plan-personal-overview
 # https://www.alibabacloud.com/help/en/model-studio/token-plan-team-overview
 base_model = "deepseek/deepseek-v4.1-flash"
+
+# Structured output: PARTIAL on this gateway despite the lab row's
+# structured_output = true. response_format json_object works, but strict
+# json_schema is rejected with 400 "This response_format type is unavailable
+# now" in both thinking modes (probed 2026-09-15 on the international Token
+# Plan gateway, Personal and Team editions). Omitting this field would
+# inherit the lab value and advertise an unsupported capability, so the
+# override is explicit.
+structured_output = false
 
 reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "high", "max"] }]
 
