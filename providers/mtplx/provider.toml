@@ -1,0 +1,9 @@
+# MTPLX serves an OpenAI-compatible API on the local Mac. No key is needed on
+# localhost; the SDK sends MTPLX_API_KEY when it is set, which the server
+# requires only when bound to a non-localhost address (--api-key).
+# https://mtplx.com/docs/opencode/
+name = "MTPLX"
+env = ["MTPLX_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+api = "http://127.0.0.1:8000/v1"
+doc = "https://mtplx.com/docs/opencode/"
