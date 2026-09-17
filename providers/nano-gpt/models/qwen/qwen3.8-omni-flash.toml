@@ -1,0 +1,28 @@
+name = "Qwen3.8 Omni Flash"
+description = "Qwen3.8 Omni Flash is a fast omni-modal reasoning model for understanding text, images, audio, and video. It is especially suited to meeting summaries, transcripts and subtitles, speaker-aware audiovisual analysis, and long-form content review. It returns text and supports a nearly one-million-token context window, tool calling, and structured output."
+family = "qwen"
+release_date = "2026-09-17"
+last_updated = "2026-09-17"
+attachment = true
+reasoning = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "high"]
+
+[cost]
+input = 0.15
+output = 0.47
+cache_read = 0.016
+
+[limit]
+context = 991_808
+input = 991_808
+output = 131_072
+
+[modalities]
+input = ["text", "image", "video", "audio"]
+output = ["text"]
