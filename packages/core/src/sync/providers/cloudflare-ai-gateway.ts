@@ -30,17 +30,60 @@ const NATIVE_NPM: Record<string, string> = {
   openai: "@ai-sdk/openai",
 };
 
+const Price = z.number().nonnegative();
+const ProviderDetail = z.object({
+  id: z.string().min(1),
+  pricing: z.record(Price),
+}).passthrough();
+
 const CatalogEntry = z.object({
   model_id: z.string().refine(isSafeModelID, "model_id must be a safe relative provider/model path"),
   task: z.string(),
   context_length: z.number().int().positive().nullish(),
-  pricing: z.record(z.number().nonnegative()).nullish(),
+  provider_details: z.array(ProviderDetail).nullish(),
 }).passthrough();
 const CatalogModel = CatalogEntry.extend({
   task: z.literal(TEXT_GENERATION),
   context_length: z.number().int().positive().nullish(),
-  pricing: z.record(z.number().nonnegative()),
+  provider_details: z.array(ProviderDetail).length(1),
 });
+
+const FlatPricing = z.object({
+  input_tokens: Price,
+  output_tokens: Price,
+  input_cached_tokens: Price.optional(),
+  input_cache_creation_tokens: Price.optional(),
+}).strict();
+
+const ContextPricing = z.object({
+  long_context_threshold_tokens: Price.int().positive(),
+  short_context_input_tokens: Price,
+  short_context_output_tokens: Price,
+  short_context_input_cached_tokens: Price.optional(),
+  short_context_input_cache_creation_tokens: Price.optional(),
+  long_context_input_tokens: Price,
+  long_context_output_tokens: Price,
+  long_context_input_cached_tokens: Price.optional(),
+  long_context_input_cache_creation_tokens: Price.optional(),
+}).strict();
+
+const Tier200kPricing = z.object({
+  under_200k_per_1m_input_tokens: Price,
+  under_200k_per_1m_output_tokens: Price,
+  under_200k_per_1m_input_cached_tokens: Price.optional(),
+  over_200k_per_1m_input_tokens: Price,
+  over_200k_per_1m_output_tokens: Price,
+  over_200k_per_1m_input_cached_tokens: Price.optional(),
+}).strict();
+
+const Tier512kPricing = z.object({
+  under_512k_per_1m_input_tokens: Price,
+  under_512k_per_1m_output_tokens: Price,
+  under_512k_per_1m_input_cached_tokens: Price.optional(),
+  over_512k_per_1m_input_tokens: Price,
+  over_512k_per_1m_output_tokens: Price,
+  over_512k_per_1m_input_cached_tokens: Price.optional(),
+}).strict();
 
 const CloudflareResponse = z.object({
   success: z.literal(true),
@@ -150,7 +193,7 @@ export function buildCloudflareAiGatewayModel(
 ): SyncedBaseModel {
   const id = catalog.model_id;
   // Pricing failures must not be hidden by missing reasoning controls.
-  const cost = proxiedCost(catalog.pricing, id);
+  const cost = proxiedCost(catalog.provider_details[0]!.pricing, id);
   const baseModel = curated.base_model ?? resolveBaseModel(id);
   if (baseModel === undefined) {
     throw new Error(`${id}: no lab file and no curated base_model; add it to skip or map it`);
@@ -441,39 +484,91 @@ async function mapLimit<T, R>(items: T[], limit: number, transform: (item: T) =>
   return results;
 }
 
-const FLAT_PRICING_KEYS: Record<string, "input" | "output" | "cache_read" | "cache_write"> = {
-  "Input tokens (per 1M)": "input",
-  "Output tokens (per 1M)": "output",
-  "Cached input tokens (per 1M)": "cache_read",
-  "Cache creation tokens (per 1M)": "cache_write",
-};
-const TIERED_PRICING_KEY = /^(Input|Output|Cached input)\s*(<=?|>=?)\s*(\d+)k\s*\(per 1M\)$/;
-const TIERED_PRICING_FIELDS = {
-  Input: "input",
-  Output: "output",
-  "Cached input": "cache_read",
-} as const;
-
 function proxiedCost(pricing: Record<string, number>, id: string): NonNullable<SyncedBaseModel["cost"]> {
-  const cost: NonNullable<SyncedBaseModel["cost"]> = {};
-  for (const [key, value] of Object.entries(pricing)) {
-    const flatField = FLAT_PRICING_KEYS[key];
-    if (flatField !== undefined) {
-      cost[flatField] = value;
-      continue;
+  try {
+    if ("long_context_threshold_tokens" in pricing) {
+      const value = ContextPricing.parse(pricing);
+      return contextCost(
+        value.long_context_threshold_tokens,
+        tokenCost(
+          value.short_context_input_tokens,
+          value.short_context_output_tokens,
+          value.short_context_input_cached_tokens,
+          value.short_context_input_cache_creation_tokens,
+        ),
+        tokenCost(
+          value.long_context_input_tokens,
+          value.long_context_output_tokens,
+          value.long_context_input_cached_tokens,
+          value.long_context_input_cache_creation_tokens,
+        ),
+      );
     }
-    const tier = TIERED_PRICING_KEY.exec(key);
-    if (tier !== null) {
-      const field = TIERED_PRICING_FIELDS[tier[1] as keyof typeof TIERED_PRICING_FIELDS];
-      if (tier[2]!.startsWith("<")) cost[field] = value;
-      continue;
+    if ("under_200k_per_1m_input_tokens" in pricing) {
+      const value = Tier200kPricing.parse(pricing);
+      return contextCost(
+        200_000,
+        tokenCost(
+          value.under_200k_per_1m_input_tokens,
+          value.under_200k_per_1m_output_tokens,
+          value.under_200k_per_1m_input_cached_tokens,
+        ),
+        tokenCost(
+          value.over_200k_per_1m_input_tokens,
+          value.over_200k_per_1m_output_tokens,
+          value.over_200k_per_1m_input_cached_tokens,
+        ),
+      );
     }
-    throw new Error(`${id}: unmapped pricing key "${key}"`);
+    if ("under_512k_per_1m_input_tokens" in pricing) {
+      const value = Tier512kPricing.parse(pricing);
+      return contextCost(
+        512_000,
+        tokenCost(
+          value.under_512k_per_1m_input_tokens,
+          value.under_512k_per_1m_output_tokens,
+          value.under_512k_per_1m_input_cached_tokens,
+        ),
+        tokenCost(
+          value.over_512k_per_1m_input_tokens,
+          value.over_512k_per_1m_output_tokens,
+          value.over_512k_per_1m_input_cached_tokens,
+        ),
+      );
+    }
+    const value = FlatPricing.parse(pricing);
+    return tokenCost(
+      value.input_tokens,
+      value.output_tokens,
+      value.input_cached_tokens,
+      value.input_cache_creation_tokens,
+    );
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      throw new Error(`${id}: unsupported structured pricing: ${error.message}`);
+    }
+    throw error;
   }
-  if (cost.input === undefined || cost.output === undefined) {
-    throw new Error(`${id}: catalog pricing must include input and output rates`);
-  }
-  return cost;
+}
+
+function tokenCost(input: number, output: number, cacheRead?: number, cacheWrite?: number) {
+  return {
+    input,
+    output,
+    ...(cacheRead === undefined ? {} : { cache_read: cacheRead }),
+    ...(cacheWrite === undefined ? {} : { cache_write: cacheWrite }),
+  };
+}
+
+function contextCost(
+  size: number,
+  short: ReturnType<typeof tokenCost>,
+  long: ReturnType<typeof tokenCost>,
+): NonNullable<SyncedBaseModel["cost"]> {
+  return {
+    ...short,
+    tiers: [{ ...long, tier: { type: "context", size } }],
+  };
 }
 
 function isSafeModelID(id: string) {
