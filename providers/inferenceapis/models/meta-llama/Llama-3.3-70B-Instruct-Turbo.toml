@@ -1,0 +1,11 @@
+# Prices and limits: https://inferenceapis.com/pricing and https://inferenceapis.com/models (accessed 2026-09-17)
+# Also answers to the retired Groq ids llama-3.3-70b-versatile and llama-3.1-8b-instant.
+base_model = "meta/llama-3.3-70b-instruct"
+structured_output = true
+
+[cost]
+input = 1.35
+output = 1.35
+
+[limit]
+context = 131_072
