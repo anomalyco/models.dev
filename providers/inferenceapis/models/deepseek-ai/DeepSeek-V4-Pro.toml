@@ -1,8 +1,10 @@
 # Prices and limits: https://inferenceapis.com/pricing and https://inferenceapis.com/models (accessed 2026-09-17)
 # Thinking off: reasoning_effort = "none", reasoning.enabled = false or thinking.type = "disabled"
 # (the gateway accepts any of the three spellings on every model that can disable thinking).
+# Effort (measured 2026-09-17): reasoning_effort = "max" roughly doubles reasoning tokens over the default; "low" and "medium" are
+# accepted but behave like "high" (the default), so only high|max are listed.
 base_model = "deepseek/deepseek-v4-pro"
-reasoning_options = [{ type = "toggle" }]
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["high", "max"] }]
 
 [interleaved]
 field = "reasoning_content"

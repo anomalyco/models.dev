@@ -3,6 +3,7 @@
 # (the gateway accepts any of the three spellings on every model that can disable thinking).
 # JSON mode and json_schema currently fail at the upstream host, so structured_output is off here. Text input only.
 base_model = "moonshotai/kimi-k2.7-code"
+attachment = false
 structured_output = false
 reasoning_options = [{ type = "toggle" }]
 
