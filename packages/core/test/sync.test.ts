@@ -4577,6 +4577,46 @@ test("Vercel sync accepts evaluation and unknown future model types", () => {
   });
 });
 
+test("Vercel family inference requires word boundaries", () => {
+  const [jev, rerank, o3] = vercel.parseModels({
+    data: [
+      {
+        id: "typesafe-ai/jev",
+        name: "Jev",
+        created: 1_755_815_280,
+        context_window: 0,
+        max_tokens: 0,
+        type: "evaluation",
+      },
+      {
+        id: "cohere/rerank-v3.5",
+        name: "Cohere Rerank 3.5",
+        created: 1_733_000_000,
+        context_window: 4_096,
+        max_tokens: 4_096,
+        type: "reranking",
+      },
+      {
+        id: "example/o3",
+        name: "o3",
+        created: 1_745_000_000,
+        context_window: 200_000,
+        max_tokens: 100_000,
+        type: "language",
+      },
+    ],
+  });
+
+  // No fuzzy subsequence matches ("yi") or single-letter substring matches ("o").
+  expect(buildVercelModel(jev!, undefined).family).toBeUndefined();
+  expect(buildVercelModel(rerank!, undefined).family).toBeUndefined();
+  // Genuine o-series IDs still match, and keep their stamp when re-synced.
+  expect(buildVercelModel(o3!, undefined).family).toBe("o");
+  expect(buildVercelModel(o3!, { family: "o" }).family).toBe("o");
+  // Existing bogus "o" stamps self-heal on the next sync.
+  expect(buildVercelModel(rerank!, { family: "o" }).family).toBeUndefined();
+});
+
 test("Vercel empty existing reasoning_options falls back to the route base menu", () => {
   const [model] = vercel.parseModels({
     data: [{
