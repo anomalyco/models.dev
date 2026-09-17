@@ -1,13 +1,19 @@
+# Toggle: enable_thinking = true|false
+# Effort: reasoning_effort = low|medium|xhigh
 # Served locally by MTPLX; the id is the one MTPLX reports on /v1/models.
 # Runs on the user's own Mac, so there is no per-token cost. Image input is
-# supported, video is not. Reasoning effort is the reasoning_effort request
-# field (low, medium, high, xhigh); enable_thinking = false turns thinking off.
+# supported, video is not. Thinking is switched with the enable_thinking
+# request field; reasoning_effort takes the three levels the Qwen 3.8 chat
+# template defines, low, medium and xhigh.
 base_model = "alibaba/qwen3.8-27b"
 name = "Qwen3.8 27B (MTPLX Optimized Quality)"
 
 [[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
 type = "effort"
-values = ["low", "medium", "high", "xhigh"]
+values = ["low", "medium", "xhigh"]
 
 [cost]
 input = 0
