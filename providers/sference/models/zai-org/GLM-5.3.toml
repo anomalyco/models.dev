@@ -1,12 +1,13 @@
-# Toggle: enable_thinking = true|false
+# Synced from GET /v1/models. GLM-5.3 always reasons: its chat template has no
+# enable_thinking handling, so the API rejects thinking-off requests with a 400
+# (verified against sference-platform thinking_policy, 2026-09-17). There is no
+# toggle and no effort control on this model — reasoning_options is empty.
 base_model = "zhipuai/glm-5.3"
 name = "GLM 5.3"
+reasoning_options = []
 
 [interleaved]
 field = "reasoning_content"
-
-[[reasoning_options]]
-type = "toggle"
 
 [cost]
 input = 1.2

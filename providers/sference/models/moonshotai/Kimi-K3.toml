@@ -1,4 +1,9 @@
+# Synced from GET /v1/models.
 # Toggle: enable_thinking = true|false
+# Effort: reasoning_effort = low|high|xhigh (chat) / reasoning.effort
+# (responses) — collapsed onto K3's template levels low|high|max (minimal→low,
+# medium→high, xhigh→max); other values drop to the template default.
+# Verified against sference-platform, 2026-09-17.
 base_model = "moonshotai/kimi-k3"
 attachment = false
 
@@ -7,6 +12,10 @@ field = "reasoning_content"
 
 [[reasoning_options]]
 type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "xhigh"]
 
 [cost]
 input = 3

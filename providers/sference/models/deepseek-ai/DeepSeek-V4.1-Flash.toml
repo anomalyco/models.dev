@@ -1,4 +1,9 @@
+# Synced from GET /v1/models.
 # Toggle: enable_thinking = true|false
+# Effort: reasoning_effort = high|xhigh (chat) / reasoning.effort (responses) —
+# the checkpoint encoder accepts max|high only (xhigh collapses to max); lower
+# levels enable thinking at the default depth, so only high and xhigh are
+# advertised. Verified against sference-platform, 2026-09-17.
 base_model = "deepseek/deepseek-v4.1-flash"
 
 [interleaved]
@@ -6,6 +11,10 @@ field = "reasoning_content"
 
 [[reasoning_options]]
 type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["high", "xhigh"]
 
 [cost]
 input = 0.5

@@ -53,8 +53,8 @@ test("buildSferenceModel inherits modalities when the catalog matches base", () 
   const model = buildSferenceModel(
     {
       ...baseModel(),
-      id: "Qwen/Qwen3-VL-30B-A3B-Instruct",
-      display_name: "Qwen3-VL 30B",
+      id: "deepseek-ai/DeepSeek-V4.1-Flash",
+      display_name: "DeepSeek V4.1 Flash",
       capabilities: {
         thinking: { supported: false },
         tools: { supported: true },
@@ -63,7 +63,7 @@ test("buildSferenceModel inherits modalities when the catalog matches base", () 
       },
     },
     undefined,
-    "alibaba/qwen3-vl-30b-a3b-instruct",
+    "deepseek/deepseek-v4.1-flash",
   ) as Record<string, unknown>;
   // Base already declares text+image input and attachment, so no override.
   expect(model.modalities).toBeUndefined();

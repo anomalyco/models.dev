@@ -1,4 +1,9 @@
-# Toggle: enable_thinking = true|false
+# Synced from GET /v1/models. GLM-5.3-Flash always reasons: the API rejects
+# thinking-off requests with a 400, so there is no toggle.
+# Effort: reasoning_effort = low|high|xhigh (chat) / reasoning.effort
+# (responses) — collapsed onto the template's low|high|max (minimal→low,
+# medium→high, xhigh→max); other values drop to the template default.
+# Verified against sference-platform, 2026-09-17.
 base_model = "zhipuai/glm-5.3-flash"
 name = "GLM 5.3 Flash"
 
@@ -6,7 +11,8 @@ name = "GLM 5.3 Flash"
 field = "reasoning_content"
 
 [[reasoning_options]]
-type = "toggle"
+type = "effort"
+values = ["low", "high", "xhigh"]
 
 [cost]
 input = 0.2

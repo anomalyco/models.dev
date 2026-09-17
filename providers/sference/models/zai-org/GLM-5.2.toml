@@ -1,24 +1,14 @@
-# Synced from GET /v1/models.
-# Toggle: enable_thinking = true|false
-# The effort option is hand-authored: the API
-# accepts OpenAI reasoning_effort on chat completions and responses (OpenAPI
-# schema/openapi.json; invalid values are rejected with a 400 listing the
-# accepted enum none|minimal|low|medium|high|xhigh — verified live
-# 2026-07-23, low/high probes return 200), and this model resolves every
-# accepted level onto two thinking depths — low selects the lighter one, high
-# the deeper one — so only those two distinct values are advertised.
+# Synced from GET /v1/models. GLM-5.2 is an alias whose lane dispatches to
+# GLM-5.3 weights, so it behaves like GLM-5.3: thinking cannot be disabled
+# (thinking-off requests are rejected with a 400) and there is no effort
+# control — reasoning_options is empty. Verified against sference-platform
+# thinking_policy, 2026-09-17.
 base_model = "zhipuai/glm-5.2"
 name = "GLM 5.2"
+reasoning_options = []
 
 [interleaved]
 field = "reasoning_content"
-
-[[reasoning_options]]
-type = "toggle"
-
-[[reasoning_options]]
-type = "effort"
-values = ["low", "high"]
 
 [cost]
 input = 1.2
