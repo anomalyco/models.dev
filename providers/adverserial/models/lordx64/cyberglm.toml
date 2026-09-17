@@ -1,0 +1,23 @@
+# REVIEW DRAFT ONLY: required unresolved fields are intentionally omitted.
+# Sources: https://adverserial.ai/ and https://adverserial.ai/docs.html
+# File structure may change to base_model after confirming model provenance.
+name = "CyberGLM"
+description = "CyberGLM served by Adverserial AI for cybersecurity workflows."
+attachment = false
+reasoning = true
+tool_call = true
+# Pending: release_date, last_updated, open_weights, reasoning_options.
+# Do not inherit upstream capabilities until deployment provenance is confirmed.
+
+[cost]
+input = 4.00
+output = 15.00
+cache_read = 0.40
+
+[limit]
+context = 524288
+# Pending: output. 65536 is a gateway default, not a verified maximum.
+
+[modalities]
+input = ["text"]
+output = ["text"]
