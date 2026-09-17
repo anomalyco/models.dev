@@ -7,7 +7,7 @@ import { factorBaseModel, resolveCanonicalBaseModel } from "./openrouter.js";
 
 const API_ENDPOINT = "https://ai-gateway.vercel.sh/v1/models";
 
-const ModelType = z.enum([
+const KnownModelType = z.enum([
   "language",
   "embedding",
   "image",
@@ -16,6 +16,7 @@ const ModelType = z.enum([
   "transcription",
   "speech",
   "realtime",
+  "evaluation",
 ]);
 
 const PricingTier = z.object({
@@ -42,7 +43,11 @@ export const VercelModel = z.object({
   released: z.number().optional(),
   context_window: z.number().optional().default(0),
   max_tokens: z.number().optional().default(0),
-  type: ModelType,
+  // Vercel adds new model types without notice ("evaluation" appeared Sep 2026
+  // and broke the sync with a ZodError). The trailing z.string() keeps the
+  // schema forward-compatible so future types fall through to the default
+  // text/text handling in buildVercelModel instead of failing the whole sync.
+  type: KnownModelType.or(z.string()),
   tags: z.array(z.string()).optional().default([]),
   pricing: Pricing.optional(),
 }).passthrough();

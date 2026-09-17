@@ -4540,6 +4540,43 @@ test("Vercel Claude Opus fast variants factor onto base opus metadata", () => {
   expect(synced).not.toHaveProperty("family");
 });
 
+test("Vercel sync accepts evaluation and unknown future model types", () => {
+  const [evaluation, future] = vercel.parseModels({
+    data: [
+      {
+        id: "typesafe-ai/jev",
+        name: "Jev",
+        created: 1_755_815_280,
+        released: 1_789_430_400,
+        context_window: 0,
+        max_tokens: 0,
+        type: "evaluation",
+        pricing: { input: "0.000000042", output: "0" },
+      },
+      {
+        id: "example/future-model",
+        name: "Future Model",
+        created: 1_755_815_280,
+        context_window: 8_000,
+        max_tokens: 4_000,
+        type: "something-new",
+      },
+    ],
+  });
+
+  expect(evaluation).toBeDefined();
+  expect(future).toBeDefined();
+  expect(buildVercelModel(evaluation!, undefined)).toMatchObject({
+    cost: { input: 0.042, output: 0 },
+    limit: { context: 0, output: 0 },
+    modalities: { input: ["text"], output: ["text"] },
+  });
+  expect(buildVercelModel(future!, undefined)).toMatchObject({
+    limit: { context: 8_000, output: 4_000 },
+    modalities: { input: ["text"], output: ["text"] },
+  });
+});
+
 test("Vercel empty existing reasoning_options falls back to the route base menu", () => {
   const [model] = vercel.parseModels({
     data: [{
