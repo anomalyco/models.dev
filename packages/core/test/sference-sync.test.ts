@@ -225,6 +225,16 @@ test("buildSferenceModel does not treat created as a release date", () => {
   ) as Record<string, unknown>;
   expect(factored.release_date).toBeUndefined();
 
+  // The catalog's `released` tracks the sference listing date, which can lag
+  // the canonical lab release — factored models must still inherit from base.
+  const factoredReleased = buildSferenceModel(
+    { ...baseModel(), released: "2026-07-20" },
+    undefined,
+    "alibaba/qwen3.6-35b-a3b",
+    "2026-07-17",
+  ) as Record<string, unknown>;
+  expect(factoredReleased.release_date).toBeUndefined();
+
   const inline = buildSferenceModel(
     { ...baseModel(), id: "custom-org/Custom", created: 1_712_345_678 },
     undefined,

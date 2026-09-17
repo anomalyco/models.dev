@@ -113,9 +113,13 @@ export const sference = {
     if (model.modality === "text_embedding") return undefined;
 
     const existing = context.existing(model.id);
+    const thinking = model.capabilities?.thinking?.supported === true;
     return {
       id: model.id,
       model: buildSferenceModel(model, existing, resolveBaseModel(model.id)),
+      // Every reasoning model gets the toggle wire-path header by default;
+      // hand-authored headers (e.g. effort documentation) win over this.
+      header: thinking ? `# Toggle: enable_thinking = true|false\n` : undefined,
     };
   },
 } satisfies SyncProvider<SferenceModel>;
@@ -207,10 +211,11 @@ export function buildSferenceModel(
 
   // `created` is the current request time (int(time.time())), not the model
   // release date, so it is not a useful release_date source. The catalog's
-  // `released` field (ISO YYYY-MM-DD) is the authoritative release date; when
-  // absent, factored models inherit it from base metadata and inline models
-  // default to today. `last_updated` is not exposed by the API, so preserve any
-  // hand-authored value or default to today for inline models.
+  // `released` field (ISO YYYY-MM-DD) tracks when sference listed the model,
+  // which can lag the canonical lab release date — so only inline models take
+  // it; factored models inherit release_date from base metadata instead.
+  // `last_updated` is not exposed by the API, so preserve any hand-authored
+  // value or default to today for inline models.
   const apiReleased = model.released ?? undefined;
   const values: Partial<SyncedFullModel> = {
     name,
@@ -226,7 +231,7 @@ export function buildSferenceModel(
       modalities: { input: apiInput, output: ["text"] },
     }) : undefined),
     family: baseModel == null ? inferFamily(model.id, name) ?? existing?.family : existing?.family,
-    release_date: apiReleased ?? existing?.release_date ?? (baseModel == null ? today : undefined),
+    release_date: baseModel == null ? (apiReleased ?? existing?.release_date ?? today) : undefined,
     last_updated: existing?.last_updated ?? (baseModel == null ? today : undefined),
     attachment,
     reasoning: thinking,

@@ -1,4 +1,6 @@
-# Synced from GET /v1/models. The effort option is hand-authored: the API
+# Synced from GET /v1/models.
+# Toggle: enable_thinking = true|false
+# The effort option is hand-authored: the API
 # accepts OpenAI reasoning_effort on chat completions and responses (OpenAPI
 # schema/openapi.json; invalid values are rejected with a 400 listing the
 # accepted enum none|minimal|low|medium|high|xhigh — verified live
@@ -6,7 +8,6 @@
 # xhigh; lower levels enable thinking at the default depth, so only high and
 # xhigh are advertised.
 base_model = "deepseek/deepseek-v4-flash"
-release_date = "2026-06-20"
 
 [interleaved]
 field = "reasoning_content"
@@ -19,8 +20,8 @@ type = "effort"
 values = ["high", "xhigh"]
 
 [cost]
-input = 0.14
-output = 0.28
+input = 0.28
+output = 0.56
 cache_read = 0.07
 
 [limit]

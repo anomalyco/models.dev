@@ -1,6 +1,6 @@
 # Toggle: enable_thinking = true|false
-base_model = "moonshotai/kimi-k3"
-attachment = false
+base_model = "zhipuai/glm-5.3"
+name = "GLM 5.3"
 
 [interleaved]
 field = "reasoning_content"
@@ -9,9 +9,9 @@ field = "reasoning_content"
 type = "toggle"
 
 [cost]
-input = 3
-output = 15
-cache_read = 0.45
+input = 1.2
+output = 4.2
+cache_read = 0.26
 
-[modalities]
-input = ["text"]
+[limit]
+context = 1_048_576

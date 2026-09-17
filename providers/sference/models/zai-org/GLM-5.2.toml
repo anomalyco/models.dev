@@ -1,4 +1,6 @@
-# Synced from GET /v1/models. The effort option is hand-authored: the API
+# Synced from GET /v1/models.
+# Toggle: enable_thinking = true|false
+# The effort option is hand-authored: the API
 # accepts OpenAI reasoning_effort on chat completions and responses (OpenAPI
 # schema/openapi.json; invalid values are rejected with a 400 listing the
 # accepted enum none|minimal|low|medium|high|xhigh — verified live
@@ -7,7 +9,6 @@
 # the deeper one — so only those two distinct values are advertised.
 base_model = "zhipuai/glm-5.2"
 name = "GLM 5.2"
-release_date = "2026-06-30"
 
 [interleaved]
 field = "reasoning_content"

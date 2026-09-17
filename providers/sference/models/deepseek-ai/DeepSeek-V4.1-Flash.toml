@@ -1,6 +1,5 @@
 # Toggle: enable_thinking = true|false
-base_model = "moonshotai/kimi-k3"
-attachment = false
+base_model = "deepseek/deepseek-v4.1-flash"
 
 [interleaved]
 field = "reasoning_content"
@@ -9,9 +8,9 @@ field = "reasoning_content"
 type = "toggle"
 
 [cost]
-input = 3
-output = 15
-cache_read = 0.45
+input = 0.5
+output = 1.5
+cache_read = 0.05
 
-[modalities]
-input = ["text"]
+[limit]
+context = 1_048_576
