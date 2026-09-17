@@ -1,6 +1,7 @@
 # Rate card: https://inference.boundless.network/models — USD per 1M tokens
 # Reasoning: reasoning_effort = none|low|medium|high (Responses: reasoning.effort)
 # Docs: https://inference.boundless.network/docs/api-compatibility
+# Modalities match the lab entry on this route — see the `supports` field for this ID in the catalog.
 
 base_model = "minimax/MiniMax-M3"
 reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high"] }]
