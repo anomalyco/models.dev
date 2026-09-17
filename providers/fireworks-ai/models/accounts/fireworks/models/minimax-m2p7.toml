@@ -1,9 +1,11 @@
+# Deprecated effective 2026-08-27: https://docs.fireworks.ai/updates/changelog
 # GET /v1/serverless/models lists MiniMax M2.7 as Priority-only at
 # $1.20 / $0.60 / $1.20 per 1M (input / cached input / output) with a
 # 196,608-token context on 2026-09-16.
 # $.reasoning_effort = "low" | "medium" | "high" (same Fireworks surface as MiniMax M3).
 # https://docs.fireworks.ai/guides/reasoning
 base_model = "minimax/MiniMax-M2.7"
+status = "deprecated"
 
 [interleaved]
 field = "reasoning_content"

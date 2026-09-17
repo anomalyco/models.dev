@@ -34,6 +34,7 @@ skip = [
   "google/gemini-3.6-flash",
   "google/gemini-3.7-flash",
   "google/gemini-3.8-flash",
+  "stealth/union-alpha",
 ]
 
 [models."anthropic/claude-fable-5"]
@@ -129,6 +130,14 @@ reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high
 
 [models."openai/gpt-5.6-terra"]
 reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh", "max"] }]
+
+# GPT-6 Astra has conflicting validation layers on Cloudflare's Responses route. The catalog
+# schema advertises none|low|medium|high, but `none` reaches OpenAI and is rejected upstream;
+# xhigh|max are rejected by Cloudflare before forwarding. POST /ai/v1/responses verified
+# low end-to-end and those three rejection paths on 2026-09-17.
+[models."openai/gpt-6-astra"]
+note = ["Effort: reasoning.effort = low|medium|high; Cloudflare rejects xhigh|max, and OpenAI rejects none after forwarding (live verified 2026-09-17)."]
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
 
 [models."openai/o3"]
 reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]

@@ -84,6 +84,9 @@ export const ModelFamilyValues = [
   "kimi-free",
   "kimi-thinking",
 
+  // Motif Technologies
+  "motif",
+
   // Poolside Laguna
   "laguna",
   "laguna-s",

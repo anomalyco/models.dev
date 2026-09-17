@@ -1,0 +1,24 @@
+name = "Jamba Mini"
+description = "AI21's efficient, lightweight hybrid SSM-Transformer model for a wide range of tasks"
+family = "jamba"
+release_date = "2026-01-01"
+last_updated = "2026-01-01"
+attachment = false
+reasoning = false
+tool_call = true
+structured_output = true
+temperature = true
+knowledge = "2024-08-22"
+open_weights = true
+
+[limit]
+context = 256_000
+output = 4_096
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/ai21labs/AI21-Jamba-Mini-1.6"

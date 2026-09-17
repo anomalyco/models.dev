@@ -1,0 +1,25 @@
+# Sources (accessed 2026-09-16):
+# Model overview (preview): https://docs.privatemode.ai/models/overview/#glm-53-flash
+# Pricing (EUR): https://docs.privatemode.ai/pricing/
+# Added in v1.56.0: https://docs.privatemode.ai/release/#v1560
+# Upstream: https://huggingface.co/zai-org/GLM-5.3-Flash
+# Effort: reasoning_effort = low|high|max (default max; always on).
+# Any other value including none is silently mapped to max; reasoning cannot be off.
+# Cost: EUR list prices converted at 1 EUR = 1.1555 USD (Frankfurter 2026-08-10),
+# matching other Privatemode catalog entries.
+# EUR/MTok: input 0.77 / output 3.87 / cached input 0.08
+# Host exposes text+image only (docs); lab base also lists video/pdf.
+base_model = "zhipuai/glm-5.3-flash"
+status = "beta"
+reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]
+
+[modalities]
+input = ["text", "image"]
+
+[cost]
+input = 0.8897
+output = 4.4718
+cache_read = 0.0924
+
+[limit]
+context = 256_000

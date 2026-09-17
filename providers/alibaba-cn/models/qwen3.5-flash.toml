@@ -2,7 +2,7 @@ name = "Qwen3.5 Flash"
 description = "Qwen vision-language model for visual reasoning, documents, and agent tasks"
 family = "qwen"
 release_date = "2026-02-23"
-last_updated = "2026-02-23"
+last_updated = "2026-09-11"
 attachment = true
 reasoning = true
 structured_output = true
@@ -20,8 +20,14 @@ max = 81_920
 
 [cost]
 input = 0.172
-output = 1.72
-reasoning = 1.72
+output = 1.033
+reasoning = 1.033
+
+[[cost.tiers]]
+tier = { type = "context", size = 256_000 }
+input = 0.689
+output = 4.133
+reasoning = 4.133
 
 [limit]
 context = 1_000_000

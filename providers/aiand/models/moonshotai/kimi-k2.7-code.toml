@@ -1,17 +1,19 @@
-# Effort: reasoning_effort = high (always-on; none/low rejected)
-# Pricing: GET https://api.aiand.com/v1/models (accessed 2026-09-11)
+# Effort: reasoning_effort = high (always-on)
+# Pricing: GET https://api.aiand.com/v1/api.json (accessed 2026-09-14); synced hourly by the aiand module.
 # Docs: https://docs.aiand.com/models/catalog/
-# Live probe 2026-09-11: high → 200; none|low → 400.
+# Live probe 2026-09-14: high → 200; none|minimal|low|medium|xhigh|max → 400.
 # Modalities: image + PDF accepted; video rejected (2026-07-24 probes).
+# temperature = true: the host accepts the parameter (live probe 2026-09-14: 200 at 0.0 and 1.8); the lab file records Moonshot's own API as false.
 # Reasoning side channel: message.reasoning_content
 base_model = "moonshotai/kimi-k2.7-code"
+temperature = true
+
+[interleaved]
+field = "reasoning_content"
 
 [[reasoning_options]]
 type = "effort"
 values = ["high"]
-
-[interleaved]
-field = "reasoning_content"
 
 [cost]
 input = 0.75

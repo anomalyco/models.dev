@@ -7,7 +7,7 @@ import { factorBaseModel, resolveCanonicalBaseModel } from "./openrouter.js";
 
 const API_ENDPOINT = "https://ai-gateway.vercel.sh/v1/models";
 
-const ModelType = z.enum([
+const KnownModelType = z.enum([
   "language",
   "embedding",
   "image",
@@ -16,6 +16,7 @@ const ModelType = z.enum([
   "transcription",
   "speech",
   "realtime",
+  "evaluation",
 ]);
 
 const PricingTier = z.object({
@@ -42,7 +43,11 @@ export const VercelModel = z.object({
   released: z.number().optional(),
   context_window: z.number().optional().default(0),
   max_tokens: z.number().optional().default(0),
-  type: ModelType,
+  // Vercel adds new model types without notice ("evaluation" appeared Sep 2026
+  // and broke the sync with a ZodError). The trailing z.string() keeps the
+  // schema forward-compatible so future types fall through to the default
+  // text/text handling in buildVercelModel instead of failing the whole sync.
+  type: KnownModelType.or(z.string()),
   tags: z.array(z.string()).optional().default([]),
   pricing: Pricing.optional(),
 }).passthrough();
@@ -107,12 +112,19 @@ export function buildVercelModel(
     : undefined;
   const cost = buildCost(model.pricing, existing?.cost);
 
+  // Self-heal bogus `family = "o"` stamps left by the old substring matcher
+  // (e.g. cohere rerank, fish-audio, alibaba wan). Same precedent as OpenRouter.
+  const inferredFamily = inferFamily(model.id, model.name);
+  const family = existing?.family === "o" && inferredFamily !== "o"
+    ? inferredFamily
+    : (existing?.family ?? inferredFamily);
+
   const synced: SyncedFullModel = {
     name: existing?.name ?? model.name,
     description: existing?.description ?? describeModel({
       id: model.id,
       name: existing?.name ?? model.name,
-      family: existing?.family ?? inferFamily(model.id, model.name),
+      family,
       reasoning: existing?.reasoning ?? tags.has("reasoning"),
       tool_call: model.type === "language"
         ? existing?.tool_call ?? tags.has("tool-use")
@@ -140,7 +152,7 @@ export function buildVercelModel(
           : ["text"],
       },
     }),
-    family: existing?.family ?? inferFamily(model.id, model.name),
+    family,
     release_date: releaseDate,
     last_updated: existing?.last_updated ?? releaseDate,
     attachment: existing?.attachment ?? (tags.has("vision") || tags.has("file-input")),
@@ -243,18 +255,21 @@ function inferFamily(modelID: string, name: string) {
   const kimiFamily = inferKimiFamily(modelID, name);
   if (kimiFamily !== undefined) return kimiFamily;
 
-  const targets = [modelID, name].map((value) => value.toLowerCase());
-  const families = [...ModelFamilyValues].sort((a, b) => b.length - a.length);
-  return families.find((family) => targets.some((target) => target.includes(family.toLowerCase())))
-    ?? families.find((family) => targets.some((target) => isSubsequence(target, family.toLowerCase())));
-}
-
-function isSubsequence(target: string, value: string) {
-  let index = 0;
-  for (const character of target) {
-    if (character === value[index]) index++;
-  }
-  return index === value.length;
+  // Word-boundary matching like the other gateway syncs. Deliberately no
+  // fuzzy/subsequence fallback: matching a family by scattered letters
+  // produces false positives (e.g. "typesafe-ai/jev" -> "yi"), and plain
+  // substring matching lets single-letter families like "o" match anything
+  // containing that letter (e.g. cohere rerank, fish-audio, alibaba wan).
+  const target = `${modelID} ${name}`.toLowerCase();
+  return [...ModelFamilyValues]
+    .sort((a, b) => b.length - a.length)
+    .find((family) => {
+      const value = family.toLowerCase().replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+      if (family === "o") {
+        return new RegExp(`(^|[^a-z0-9])${value}(?=\\d|$|[^a-z0-9])`).test(target);
+      }
+      return new RegExp(`(^|[^a-z0-9])${value}(?=$|[^a-z0-9])`).test(target);
+    });
 }
 
 function sameVercelModel(current: ExistingModel, desired: SyncedModel) {

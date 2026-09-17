@@ -1,7 +1,7 @@
 # Effort: reasoning_effort = none|high
-# Pricing: GET https://api.aiand.com/v1/models (accessed 2026-09-11)
+# Pricing: GET https://api.aiand.com/v1/api.json (accessed 2026-09-14); synced hourly by the aiand module.
 # Docs: https://docs.aiand.com/models/catalog/
-# Live probe 2026-09-11: none|high → 200; minimal|low|xhigh → 400.
+# Live probe 2026-09-14: none|high → 200; minimal|low|medium|xhigh|max → 400.
 # Modalities: image, video, and PDF accepted on this host (2026-07-24 probes).
 # Reasoning side channel: message.reasoning_content
 base_model = "google/gemma-4-31b-it"

@@ -1,0 +1,24 @@
+# Effort: reasoning_effort = low|high|max (top-level OpenAI Chat field, passed through as-is).
+# No toggle: thinking is always on at this gateway; thinking.type = "disabled" is accepted but ignored.
+# model = "Kimi-K3" (case-sensitive at this gateway).
+# Default context 256K; 1M is enabled per account on request, so the limit here is the default.
+# Max output 32K per the host guides (https://ainetcafe.com/k3/guides/kilo-code.html, cline.html, openhands.html).
+# Pricing: https://ainetcafe.com/k3/compare.html
+base_model = "moonshotai/kimi-k3"
+reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 2.10
+output = 10.50
+cache_read = 0.30
+
+[limit]
+context = 262_144
+output = 32_768
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
