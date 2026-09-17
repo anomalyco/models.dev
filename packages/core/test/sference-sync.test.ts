@@ -32,8 +32,9 @@ test("buildSferenceModel factors a catalog model onto its base_model", () => {
   expect("name" in model ? model.name : undefined).toBe("Qwen3.6 35B");
   // Pricing comes straight from the nested pricing object (already per-1M USD).
   expect("cost" in model ? model.cost : undefined).toEqual({ input: 0, output: 0 });
-  // Reasoning models emit the enable_thinking toggle.
-  expect("reasoning_options" in model ? model.reasoning_options : undefined).toEqual([{ type: "toggle" }]);
+  // New reasoning models get no reasoning_options: the control surface is
+  // hand-authored after verification, not guessed by the sync.
+  expect("reasoning_options" in model ? model.reasoning_options : undefined).toBeUndefined();
 });
 
 test("buildSferenceModel overrides modalities when the catalog is narrower than base", () => {
@@ -106,7 +107,7 @@ test("buildSferenceModel writes a full inline model when no base_model matches",
   expect(model.name).toBe("Custom Model");
   expect((model.cost as Record<string, unknown>).input).toBe(0);
   expect(model.reasoning).toBe(true);
-  expect(model.reasoning_options).toEqual([{ type: "toggle" }]);
+  expect(model.reasoning_options).toBeUndefined();
 });
 
 test("buildSferenceModel skips reasoning_options for non-reasoning models", () => {
@@ -245,7 +246,11 @@ test("buildSferenceModel does not treat created as a release date", () => {
 });
 
 test("formatToml serializes a factored sference model deterministically", () => {
-  const model = buildSferenceModel(baseModel(), undefined, "alibaba/qwen3.6-35b-a3b");
+  const model = buildSferenceModel(
+    baseModel(),
+    { reasoning_options: [{ type: "toggle" as const }] },
+    "alibaba/qwen3.6-35b-a3b",
+  );
   // formatToml accepts the authored model shape; cast the SyncedModel union.
   const toml = formatToml(model as Parameters<typeof formatToml>[0]);
   expect(toml).toContain('base_model = "alibaba/qwen3.6-35b-a3b"');

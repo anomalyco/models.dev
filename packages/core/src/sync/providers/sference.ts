@@ -113,13 +113,11 @@ export const sference = {
     if (model.modality === "text_embedding") return undefined;
 
     const existing = context.existing(model.id);
-    const thinking = model.capabilities?.thinking?.supported === true;
     return {
       id: model.id,
       model: buildSferenceModel(model, existing, resolveBaseModel(model.id)),
-      // Every reasoning model gets the toggle wire-path header by default;
-      // hand-authored headers (e.g. effort documentation) win over this.
-      header: thinking ? `# Toggle: enable_thinking = true|false\n` : undefined,
+      // No default header: the wire-path comment is hand-authored alongside
+      // hand-authored reasoning_options (existing headers always win anyway).
     };
   },
 } satisfies SyncProvider<SferenceModel>;
@@ -136,16 +134,16 @@ export function buildSferenceModel(
   const imageInput = caps.image_input?.supported === true;
   const pdfInput = caps.pdf_input?.supported === true;
 
-  // The catalog exposes an `enable_thinking` toggle (thinking.types.enabled)
-  // and the API accepts OpenAI `reasoning_effort` / `reasoning.effort`, but
-  // the catalog does not surface which effort levels each model acts on — and
-  // a silently-dropped level is not a supported control. Effort is therefore
-  // hand-authored per model: preserve any hand-authored reasoning_options and
-  // default new reasoning models to a toggle (the documented
-  // enable_thinking = true|false control).
-  const reasoningOptions = thinking
-    ? (existing?.reasoning_options ?? [{ type: "toggle" as const }])
-    : undefined;
+  // The catalog exposes thinking support (capabilities.thinking) and the API
+  // accepts `enable_thinking` plus OpenAI `reasoning_effort` /
+  // `reasoning.effort`, but the catalog does not surface which controls each
+  // model actually honors — and a silently-dropped level (or a toggle the
+  // checkpoint ignores, like the GLM-5.3 family) is not a supported control.
+  // reasoning_options is therefore strictly hand-authored: preserve what the
+  // existing file declares and leave new reasoning models unset, so an
+  // auto-created file fails validation until a human verifies the control
+  // surface instead of shipping a guessed toggle-only entry.
+  const reasoningOptions = thinking ? existing?.reasoning_options : undefined;
 
   // The public /v1/models endpoint exposes context_tokens, released, and
   // capabilities. For factored models, only API-authoritative values are

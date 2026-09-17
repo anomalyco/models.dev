@@ -67,7 +67,9 @@ test("syncProvider writes factored TOMLs from the public /v1/models shape", asyn
   expect(glm).toContain('base_model = "zhipuai/glm-5.2"');
   expect(glm).toContain("input = 1.2");
   expect(glm).toContain("cache_read = 0.26");
-  expect(glm).toContain("[[reasoning_options]]");
+  // New reasoning models ship with no caller controls (stamped by the sync
+  // framework) until the control surface is hand-authored after verification.
+  expect(glm).toContain("reasoning_options = []");
   // Context overrides base (1M vs 1M); output inherits from base (131_072).
   expect(glm).toContain("[limit]\ncontext = 1_048_576");
   expect(glm).not.toContain("output = 1_048_576");
