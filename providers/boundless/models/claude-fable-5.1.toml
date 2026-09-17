@@ -1,0 +1,18 @@
+# Rate card: https://inference.boundless.network/models — USD per 1M tokens
+# Reasoning: reasoning_effort = none|low|medium|high (Responses: reasoning.effort)
+# Docs: https://inference.boundless.network/docs/api-compatibility
+
+base_model = "anthropic/claude-fable-5-1"
+attachment = false
+reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high"] }]
+
+[cost]
+input = 10
+output = 50
+cache_read = 0.25
+
+[limit]
+context = 262_144
+
+[modalities]
+input = ["text"]
