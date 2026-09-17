@@ -1,6 +1,6 @@
 # Wire: only OpenAI-style `reasoning_effort` is forwarded.
 # Off is effort=none (no separate toggle field). Graded levels: low|high|max.
-# Pricing: https://zro.moonmath.ai/pricing (USD / 1M tokens)
+# Pricing: https://zro.moonmath.ai/pricing API tab (USD / 1M tokens, list; not the 50% promo).
 base_model = "deepseek/deepseek-v4.1-flash"
 reasoning_options = [{ type = "effort", values = ["none", "low", "high", "max"] }]
 

@@ -1,9 +1,8 @@
 # Wire: only OpenAI-style `reasoning_effort` is forwarded.
 # No on/off toggle field is forwarded on this surface, so there is no toggle option to expose.
 # Effort: reasoning_effort = low|high|max
-# Pricing: https://zro.moonmath.ai/pricing (USD / 1M tokens)
+# Pricing: https://zro.moonmath.ai/pricing API tab (USD / 1M tokens, list; not the 50% promo).
 base_model = "moonshotai/kimi-k3"
-temperature = true
 reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]
 
 [interleaved]
@@ -16,6 +15,3 @@ cache_read = 0.45
 
 [limit]
 output = 1_048_576
-
-[modalities]
-input = ["text", "image"]
