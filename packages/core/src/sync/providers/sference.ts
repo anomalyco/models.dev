@@ -5,6 +5,7 @@ import { z } from "zod";
 import { describeModel } from "../../describe.js";
 import { inferKimiFamily, ModelFamilyValues } from "../../family.js";
 import type { ExistingModel, SyncProvider, SyncedFullModel, SyncedModel } from "../index.js";
+import { MissingReasoningOptionsError } from "../missing-reasoning-options.js";
 import { factorBaseModel } from "./openrouter.js";
 
 // The OpenAI-compatible /v1/models endpoint is public (auth-optional): anonymous
@@ -113,6 +114,19 @@ export const sference = {
     if (model.modality === "text_embedding") return undefined;
 
     const existing = context.existing(model.id);
+    // Never auto-create a reasoning model: the catalog exposes thinking
+    // support but not which controls the checkpoint honors (the GLM-5.3
+    // family 400s on thinking-off; only some templates take effort levels;
+    // only DeepSeek-V4.1 takes a numeric budget). Guessing either way
+    // publishes a wrong control surface, so require hand-authored
+    // reasoning_options up front — the sync skips the model and opens a
+    // missing-model issue until a human verifies and authors them.
+    if (model.capabilities?.thinking?.supported === true && existing?.reasoning_options === undefined) {
+      throw new MissingReasoningOptionsError(
+        model.id,
+        "reasoning model without hand-authored reasoning_options: verify which thinking controls sference honors for it (enable_thinking toggle, reasoning_effort levels, numeric budget) and author them in the provider file",
+      );
+    }
     return {
       id: model.id,
       model: buildSferenceModel(model, existing, resolveBaseModel(model.id)),

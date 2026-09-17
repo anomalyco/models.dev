@@ -1,7 +1,8 @@
 import { expect, test } from "bun:test";
 
 import { formatToml, type ExistingModel } from "../src/sync/index.js";
-import { buildSferenceModel, type SferenceModel } from "../src/sync/providers/sference.js";
+import { MissingReasoningOptionsError } from "../src/sync/missing-reasoning-options.js";
+import { buildSferenceModel, sference, type SferenceModel } from "../src/sync/providers/sference.js";
 
 const baseModel = (overrides: Partial<SferenceModel> = {}): SferenceModel => ({
   id: "Qwen/Qwen3.6-35B-A3B",
@@ -108,6 +109,33 @@ test("buildSferenceModel writes a full inline model when no base_model matches",
   expect((model.cost as Record<string, unknown>).input).toBe(0);
   expect(model.reasoning).toBe(true);
   expect(model.reasoning_options).toBeUndefined();
+});
+
+test("translateModel refuses to auto-create a reasoning model without hand-authored options", () => {
+  // The catalog exposes thinking support but not which controls the host
+  // honors, so a new reasoning model must be skipped (the runner opens a
+  // missing-model issue) until a human verifies and authors the controls.
+  const context = { existing: () => undefined, authored: () => undefined };
+  expect(() => sference.translateModel(baseModel(), context)).toThrow(MissingReasoningOptionsError);
+
+  // An existing file with hand-authored reasoning_options (even a verified
+  // no-control []) unblocks the sync.
+  const withAuthored = {
+    existing: (id: string) =>
+      id === "Qwen/Qwen3.6-35B-A3B"
+        ? ({ reasoning_options: [] } as unknown as ExistingModel)
+        : undefined,
+    authored: () => undefined,
+  };
+  const translated = sference.translateModel(baseModel(), withAuthored);
+  expect(translated?.id).toBe("Qwen/Qwen3.6-35B-A3B");
+
+  // Non-thinking models are created without ceremony.
+  const nonThinking = sference.translateModel(
+    baseModel({ capabilities: { thinking: { supported: false } } }),
+    context,
+  );
+  expect(nonThinking?.id).toBe("Qwen/Qwen3.6-35B-A3B");
 });
 
 test("buildSferenceModel skips reasoning_options for non-reasoning models", () => {

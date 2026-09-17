@@ -9,11 +9,14 @@
 # values are rejected with a 400 listing the accepted enum
 # none|minimal|low|medium|high|xhigh. Distinct levels per model:
 # DeepSeek V4 family high|xhigh (xhigh collapses to max; lower levels
-# enable thinking at the default depth), Kimi K3 and GLM-5.3-Flash
-# low|high|xhigh (mapped onto template low|high|max). GLM-5.3 and GLM-5.2
-# have no effort control. No token-budget control. Effort options are
-# hand-authored per model because the public catalog does not surface
-# which levels each model acts on.
+# enable thinking at the default depth), DeepSeek V4.1 low|high|xhigh
+# (encoder aliases low=50 / high=75 / max=100 on its numeric 1-100
+# reasoning budget, which it also accepts directly — the only model with
+# a numeric budget; others refuse it with a 400), Kimi K3 and
+# GLM-5.3-Flash low|high|xhigh (mapped onto template low|high|max).
+# GLM-5.3 and GLM-5.2 have no effort control (levels accepted but
+# ignored). Effort options are hand-authored per model because the public
+# catalog does not surface which levels each model acts on.
 # Sources:
 # https://sference.com/docs/models
 # https://sference.com/docs/quickstart

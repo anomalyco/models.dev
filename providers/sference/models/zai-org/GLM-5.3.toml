@@ -1,7 +1,10 @@
 # Synced from GET /v1/models. GLM-5.3 always reasons: its chat template has no
 # enable_thinking handling, so the API rejects thinking-off requests with a 400
-# (verified against sference-platform thinking_policy, 2026-09-17). There is no
-# toggle and no effort control on this model — reasoning_options is empty.
+# (verified live 2026-09-17: enable_thinking=false and reasoning_effort="none"
+# both 400). Only GLM-5.3-Flash's template documents reasoning effort — named
+# levels are accepted here but change nothing (verified live: "low" and
+# "xhigh" produce the same depth) and a numeric budget is refused (400) — so
+# there is no caller control and reasoning_options is empty.
 base_model = "zhipuai/glm-5.3"
 name = "GLM 5.3"
 reasoning_options = []

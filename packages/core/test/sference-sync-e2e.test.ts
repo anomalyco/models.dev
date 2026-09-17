@@ -10,7 +10,7 @@ const mockCatalog: SferenceModel[] = [
     id: "Qwen/Qwen3.6-35B-A3B", object: "model", created: 1712345678, owned_by: "sference",
     display_name: "Qwen3.6 35B", provider: "Qwen", modality: "text_generation",
     context_tokens: 262144,
-    capabilities: { thinking: { supported: true, types: { enabled: { supported: true } } }, tools: { supported: true }, image_input: { supported: false }, pdf_input: { supported: false } },
+    capabilities: { thinking: { supported: false }, tools: { supported: true }, image_input: { supported: false }, pdf_input: { supported: false } },
     pricing: { input_per_million_usd: 0, output_per_million_usd: 0, cached_input_per_million_usd: null },
   },
   {
@@ -24,14 +24,14 @@ const mockCatalog: SferenceModel[] = [
     id: "deepseek-ai/DeepSeek-V4-Flash", object: "model", created: 1712345678, owned_by: "sference",
     display_name: "DeepSeek V4 Flash", provider: "DeepSeek", modality: "text_generation",
     context_tokens: 1048576,
-    capabilities: { thinking: { supported: true, types: { enabled: { supported: true } } }, tools: { supported: true }, image_input: { supported: false }, pdf_input: { supported: false } },
+    capabilities: { thinking: { supported: false }, tools: { supported: true }, image_input: { supported: false }, pdf_input: { supported: false } },
     pricing: { input_per_million_usd: 0.08, output_per_million_usd: 0.2, cached_input_per_million_usd: 0.02 },
   },
   {
     id: "bottlecapai/ThinkingCap-Qwen3.6-27B", object: "model", created: 1712345678, owned_by: "sference",
     display_name: "ThinkingCap Qwen3.6 27B", provider: "BottleCap AI", modality: "text_generation",
     context_tokens: 262144,
-    capabilities: { thinking: { supported: true, types: { enabled: { supported: true } } }, tools: { supported: true }, image_input: { supported: false }, pdf_input: { supported: false } },
+    capabilities: { thinking: { supported: false }, tools: { supported: true }, image_input: { supported: false }, pdf_input: { supported: false } },
     pricing: { input_per_million_usd: 0.4, output_per_million_usd: 2.6, cached_input_per_million_usd: null },
   },
 ];
@@ -59,17 +59,29 @@ test("syncProvider writes factored TOMLs from the public /v1/models shape", asyn
     },
   };
 
+  // GLM-5.2 is the only thinking model with hand-authored reasoning_options,
+  // so it is the only thinking model the sync may write; the other three
+  // catalog entries are non-thinking (a new reasoning model without authored
+  // controls is skipped via MissingReasoningOptionsError, covered in the
+  // unit tests).
+  await mkdir(path.join(modelsDir, "zai-org"), { recursive: true });
+  await writeFile(
+    path.join(modelsDir, "zai-org", "GLM-5.2.toml"),
+    '# Toggle: enable_thinking = true|false\nbase_model = "zhipuai/glm-5.2"\nreasoning_options = []\n',
+  );
+
   const result = await syncProvider(provider, { dryRun: false });
-  expect(result.created).toBe(4);
+  expect(result.created).toBe(3);
   expect(result.deleted).toBe(0);
 
   const glm = await readFile(path.join(modelsDir, "zai-org", "GLM-5.2.toml"), "utf8");
   expect(glm).toContain('base_model = "zhipuai/glm-5.2"');
   expect(glm).toContain("input = 1.2");
   expect(glm).toContain("cache_read = 0.26");
-  // New reasoning models ship with no caller controls (stamped by the sync
-  // framework) until the control surface is hand-authored after verification.
+  // Hand-authored reasoning_options (here: verified no-control []) and the
+  // wire-path header survive the sync.
   expect(glm).toContain("reasoning_options = []");
+  expect(glm).toContain("# Toggle: enable_thinking = true|false");
   // Context overrides base (1M vs 1M); output inherits from base (131_072).
   expect(glm).toContain("[limit]\ncontext = 1_048_576");
   expect(glm).not.toContain("output = 1_048_576");
