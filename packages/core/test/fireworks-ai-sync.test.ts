@@ -4,9 +4,12 @@ import type { ExistingModel } from "../src/sync/index.js";
 import {
   buildFireworksModel,
   expandFireworksModels,
+  fetchFireworksInventory,
   fetchFireworksModels,
+  type FireworksInventoryModel,
   FireworksResponse,
   fireworksAi,
+  mergeFireworksModels,
   type FireworksCatalogModel,
   type FireworksModel,
 } from "../src/sync/providers/fireworks-ai.js";
@@ -38,6 +41,92 @@ test("parses the Fireworks serverless model list", () => {
     context_length: 1_048_576,
     input_modalities: ["text", "image"],
   });
+});
+
+test("fetches Fireworks serverless inventory with the documented filter", async () => {
+  let request: Request | undefined;
+  const fetcher = (async (input: string | URL | Request, init?: RequestInit) => {
+    request = input instanceof Request
+      ? new Request(input, init)
+      : new Request(input.toString(), init);
+    return Response.json({ models: [inventoryModel()] });
+  }) as unknown as typeof fetch;
+
+  await fetchFireworksInventory("test-key", fetcher);
+
+  expect(request?.url).toStartWith("https://api.fireworks.ai/v1/accounts/fireworks/models?");
+  expect(new URL(request!.url).searchParams.get("filter")).toBe("supports_serverless=true");
+  expect(new URL(request!.url).searchParams.get("pageSize")).toBe("200");
+  expect(request?.headers.get("authorization")).toBe("Bearer test-key");
+});
+
+test("fetches every Fireworks serverless inventory page", async () => {
+  const requests: Request[] = [];
+  const fetcher = (async (input: string | URL | Request, init?: RequestInit) => {
+    const request = input instanceof Request
+      ? new Request(input, init)
+      : new Request(input.toString(), init);
+    requests.push(request);
+    return Response.json(
+      request.url.includes("pageToken=next")
+        ? { models: [inventoryModel({ name: "accounts/fireworks/models/two" })] }
+        : {
+          models: [inventoryModel({ name: "accounts/fireworks/models/one" })],
+          nextPageToken: "next",
+        },
+    );
+  }) as unknown as typeof fetch;
+
+  const models = await fetchFireworksInventory("test-key", fetcher);
+
+  expect(models.map((model) => model.name)).toEqual([
+    "accounts/fireworks/models/one",
+    "accounts/fireworks/models/two",
+  ]);
+  expect(new URL(requests[1]!.url).searchParams.get("pageToken")).toBe("next");
+});
+
+test("unions pricing IDs with generation models from serverless inventory", () => {
+  const models = mergeFireworksModels(
+    [fireworksModel()],
+    [
+      inventoryModel({ name: "accounts/fireworks/models/example" }),
+      inventoryModel({ name: "accounts/fireworks/models/inventory-only" }),
+      inventoryModel({ name: "accounts/fireworks/models/embedding", kind: "EMBEDDING_MODEL" }),
+      inventoryModel({ name: "accounts/fireworks/models/on-demand", supportsServerless: false }),
+    ],
+  );
+
+  expect(models.map((model) => model.catalogId)).toEqual([
+    "accounts/fireworks/models/example",
+    "accounts/fireworks/models/inventory-only",
+  ]);
+  expect(models[1]).toEqual({
+    catalogId: "accounts/fireworks/models/inventory-only",
+    inventoryOnly: true,
+  });
+});
+
+test("refuses destructive sync when either Fireworks source is empty", () => {
+  expect(() => mergeFireworksModels([], [inventoryModel()])).toThrow("empty serverless source");
+  expect(() => mergeFireworksModels([fireworksModel()], [])).toThrow("empty serverless source");
+});
+
+test("preserves inventory-only models while enabling deletion for models absent from both sources", () => {
+  const authored = {
+    base_model: "example/example",
+    cost: { input: 1, output: 2 },
+  };
+  const translated = fireworksAi.translateModel({
+    catalogId: "accounts/fireworks/models/example",
+    inventoryOnly: true,
+  }, {
+    existing: () => existingModel(),
+    authored: () => authored,
+  });
+
+  expect(fireworksAi.deleteMissing).toBe(true);
+  expect(translated?.model).toEqual(authored);
 });
 
 test("expands usage identifiers and aliases and attaches flag-only modes", () => {
@@ -186,6 +275,15 @@ function fireworksModel(overrides: Partial<FireworksModel> = {}): FireworksModel
     input_modalities: ["text", "image"],
     output_modalities: ["text"],
     created: 1_788_566_400,
+    ...overrides,
+  };
+}
+
+function inventoryModel(overrides: Partial<FireworksInventoryModel> = {}): FireworksInventoryModel {
+  return {
+    name: "accounts/fireworks/models/example",
+    kind: "HF_BASE_MODEL",
+    supportsServerless: true,
     ...overrides,
   };
 }
