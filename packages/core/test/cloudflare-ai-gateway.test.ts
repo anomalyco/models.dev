@@ -13,9 +13,9 @@ import {
 test("missing reasoning controls open issues without deleting existing models or blocking valid ones", async () => {
   const dir = await mkdtemp(path.join(import.meta.dirname, "../../../providers/.reasoning-sync-"));
   const modelsDir = path.join(dir, "models");
-  const ids = ["openai/gpt-6-astra", "openai/gpt-5.2"];
+  const ids = ["deepreinforce/ornith-1.0-9b", "deepreinforce/ornith-1.0-31b"];
   const file = path.join(modelsDir, `${ids[0]}.toml`);
-  const content = '# Keep authored controls\nbase_model = "openai/gpt-6-astra"\nreasoning_options = [{ type = "effort", values = ["high"] }]\n';
+  const content = '# Keep authored controls\nbase_model = "deepreinforce/ornith-1.0-9b"\nreasoning_options = [{ type = "effort", values = ["high"] }]\n';
   await mkdir(path.dirname(file), { recursive: true });
   await writeFile(file, content);
   const issues = spyOn(missingIssues, "openMissingModelIssues").mockResolvedValue([]);
@@ -107,7 +107,7 @@ test("maps structured provider pricing instead of display labels", () => {
     },
     undefined,
     {
-      reasoning_options: [{ type: "effort", values: ["low", "medium", "high", "xhigh", "max"] }],
+      reasoning_options: [{ type: "effort", values: ["low", "medium", "high"] }],
     },
   );
 

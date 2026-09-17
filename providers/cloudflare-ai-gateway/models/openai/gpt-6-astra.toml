@@ -1,8 +1,9 @@
+# Effort: reasoning.effort = low|medium|high; Cloudflare rejects xhigh|max, and OpenAI rejects none after forwarding (live verified 2026-09-17).
 base_model = "openai/gpt-6-astra"
 
 [[reasoning_options]]
 type = "effort"
-values = ["none", "low", "medium", "high"]
+values = ["low", "medium", "high"]
 
 [cost]
 input = 10
