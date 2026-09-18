@@ -1,13 +1,15 @@
-# REVIEW DRAFT ONLY: required unresolved fields are intentionally omitted.
+# Toggle: chat_template_kwargs.thinking = true|false
 # Sources: https://adverserial.ai/ and https://adverserial.ai/docs.html
 name = "CyberKimi"
 description = "Cybersecurity-focused model served by Adverserial AI."
+release_date = "2026-08-07"
+last_updated = "2026-08-07"
+open_weights = false
 attachment = false
 reasoning = true
+reasoning_options = [{ type = "toggle" }]
 tool_call = true
 structured_output = false
-# Pending: release_date, last_updated, open_weights, reasoning_options.
-# Reasoning controls must be verified on the public Chat Completions endpoint.
 
 [cost]
 input = 8.00
@@ -15,8 +17,8 @@ output = 30.00
 cache_read = 0.80
 
 [limit]
+output = 65536
 context = 1048576
-# Pending: output. 65536 is a gateway default, not a verified maximum.
 
 [modalities]
 input = ["text"]

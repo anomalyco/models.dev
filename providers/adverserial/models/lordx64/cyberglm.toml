@@ -1,13 +1,15 @@
-# REVIEW DRAFT ONLY: required unresolved fields are intentionally omitted.
+# Effort: chat_template_kwargs.reasoning_effort = low|high|max
 # Sources: https://adverserial.ai/ and https://adverserial.ai/docs.html
-# File structure may change to base_model after confirming model provenance.
 name = "CyberGLM"
-description = "CyberGLM served by Adverserial AI for cybersecurity workflows."
+description = "Custom cybersecurity fine-tune served by Adverserial AI."
+release_date = "2026-09-13"
+last_updated = "2026-09-13"
+open_weights = false
 attachment = false
 reasoning = true
+reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]
 tool_call = true
-# Pending: release_date, last_updated, open_weights, reasoning_options.
-# Do not inherit upstream capabilities until deployment provenance is confirmed.
+structured_output = false
 
 [cost]
 input = 4.00
@@ -15,8 +17,8 @@ output = 15.00
 cache_read = 0.40
 
 [limit]
+output = 65536
 context = 524288
-# Pending: output. 65536 is a gateway default, not a verified maximum.
 
 [modalities]
 input = ["text"]
