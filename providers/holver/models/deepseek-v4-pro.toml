@@ -1,7 +1,13 @@
 # Served by Holver (https://api.holver.id/v1, OpenAI-compatible,
 # Bearer $HOLVER_API_KEY). Catalog: https://holver.id/models.
 # Holver bills via credit packages, not per-model USD rates, so cost is
-# intentionally omitted. Reasoning controls mirror the lab model.
+# intentionally omitted.
+# Reasoning on this host: only the OpenAI-style top-level `reasoning_effort`
+# field is forwarded upstream (`thinking`/`enable_thinking`/`thinking_budget`
+# are not on Holver's forward whitelist). Holver does not read `reasoning_effort`
+# itself — it passes it through to the routed DeepSeek endpoint, so the
+# accepted values are the lab's own levels (`low` maps to `high` upstream, so
+# only the distinct tiers are listed).
 base_model = "deepseek/deepseek-v4-pro-0813"
 name = "DeepSeek V4 Pro"
-reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["high", "max"] }]
+reasoning_options = [{ type = "effort", values = ["high", "max"] }]

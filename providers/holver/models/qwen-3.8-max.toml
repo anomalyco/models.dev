@@ -1,8 +1,13 @@
 # Served by Holver (https://api.holver.id/v1, OpenAI-compatible,
-# Bearer $HOLVER_API_KEY) as "qwen-3.8-max". Toggle/effort/budget mirror the
-# lab model and verified OpenAI-compatible relays. Catalog:
-# https://holver.id/models. Holver bills via credit packages, not per-model
-# USD rates, so cost is intentionally omitted.
+# Bearer $HOLVER_API_KEY) as "qwen-3.8-max". Catalog: https://holver.id/models.
+# Holver bills via credit packages, not per-model USD rates, so cost is
+# intentionally omitted.
+# Reasoning on this host: only the OpenAI-style top-level `reasoning_effort`
+# field is forwarded upstream (`thinking`/`enable_thinking`/`thinking_budget`
+# are not on Holver's forward whitelist), so the lab's toggle and
+# `thinking_budget` controls are not reachable through this API. Holver does
+# not interpret `reasoning_effort` — it is passed through to the routed Qwen
+# endpoint, so the lab's own effort levels apply.
 base_model = "alibaba/qwen3.8-max"
 name = "Qwen 3.8 Max"
-reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "medium", "xhigh"] }, { type = "budget_tokens" }]
+reasoning_options = [{ type = "effort", values = ["low", "medium", "xhigh"] }]

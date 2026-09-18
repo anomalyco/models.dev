@@ -2,8 +2,12 @@
 # Bearer $HOLVER_API_KEY) as "gemini-3.1-pro". No GA lab file exists yet, so
 # this points at the preview lab entry for the same model. Catalog:
 # https://holver.id/models. Holver bills via credit packages, not per-model
-# USD rates, so cost is intentionally omitted. Reasoning controls mirror the
-# lab model.
+# USD rates, so cost is intentionally omitted.
+# Reasoning on this host: Holver forwards only the OpenAI-style top-level
+# `reasoning_effort` field upstream (`thinking`/`enable_thinking` are not on
+# Holver's forward whitelist). Holver does not interpret `reasoning_effort` —
+# it passes it through to the routed Gemini endpoint, so the lab's effort
+# levels apply.
 base_model = "google/gemini-3.1-pro-preview"
 name = "Gemini 3.1 Pro"
 description = "Reasoning-first Gemini for agentic coding and complex problem solving"
