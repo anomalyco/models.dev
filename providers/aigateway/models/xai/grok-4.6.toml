@@ -1,0 +1,11 @@
+# AIgateway bills Grok 4.6 at a flat rate from its list pricing; it does not
+# apply the lab's >200k long-context price step-up.
+base_model = "xai/grok-4.6"
+
+[cost]
+input = 2
+output = 6
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high", "xhigh"]

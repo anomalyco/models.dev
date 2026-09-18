@@ -1,0 +1,17 @@
+# Toggle: AIgateway's gateway source (audited per-model reasoning-control table,
+# verified against the CF Workers AI live schema for this model) maps the
+# caller's reasoning_effort="none" / enable_thinking:false onto
+# chat_template_kwargs.enable_thinking on the upstream dispatch wire.
+# Effort: reasoning_effort = high|max.
+base_model = "zhipuai/glm-5.2"
+
+[cost]
+input = 1.4
+output = 4.4
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["high", "max"]
