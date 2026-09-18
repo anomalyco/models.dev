@@ -1,7 +1,6 @@
 # Effort: reasoning_effort = low|high|max
 # https://zenmux.ai/docs/guide/advanced/reasoning.html
-base_model = "zhipuai/glm-5.3-flash"
-name = "GLM 5.3 FlashX"
+base_model = "zhipuai/glm-5.3-flashx"
 
 [[reasoning_options]]
 type = "effort"
@@ -14,6 +13,3 @@ cache_read = 0.075
 
 [interleaved]
 field = "reasoning_content"
-
-[limit]
-output = 128_000

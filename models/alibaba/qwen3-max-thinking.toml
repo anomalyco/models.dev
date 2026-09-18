@@ -1,0 +1,19 @@
+name = "Qwen3 Max Thinking"
+description = "Qwen3-Max-Thinking is an updated release built on the Qwen3 series, offering improved reasoning, instruction following, multilingual support, long-tail knowledge coverage, and tool use"
+family = "qwen"
+release_date = "2026-01-23"
+last_updated = "2026-01-23"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+knowledge = "2025-04"
+open_weights = false
+
+[limit]
+context = 256_000
+output = 32_000
+
+[modalities]
+input = ["text"]
+output = ["text"]

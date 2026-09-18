@@ -1,14 +1,7 @@
 # Toggle: reasoning.enabled = true|false
 # https://zenmux.ai/docs/guide/advanced/reasoning.html
+base_model = "zhipuai/glm-4.7-flash"
 name = "GLM 4.7 Flash (Free)"
-description = "Efficient GLM model for fast reasoning, coding, and agent workflows"
-release_date = "2026-01-19"
-last_updated = "2026-01-19"
-attachment = false
-reasoning = true
-temperature = true
-tool_call = true
-knowledge = "2025-01-01"
 open_weights = false
 
 [interleaved]
@@ -23,9 +16,4 @@ output = 0
 cache_read = 0
 
 [limit]
-context = 200_000
 output = 128_000
-
-[modalities]
-input = ["text"]
-output = ["text"]

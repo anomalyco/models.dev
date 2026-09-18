@@ -116,7 +116,10 @@ function hasMetadata(id: string) {
 function resolveMetadataId(model: ZenmuxModel) {
   const [owner, rawId] = model.slug.split("/");
 
-  const suffixes = new Set<string>([rawId, rawId.replaceAll(".", "-")]);
+  const suffixes = new Set<string>();
+  if (owner === "qwen" && rawId === "qwen3-max") suffixes.add("qwen3-max-thinking");
+  suffixes.add(rawId);
+  suffixes.add(rawId.replaceAll(".", "-"));
   if (owner === "bytedance" && rawId.startsWith("doubao-")) {
     const stripped = rawId.replace(/^doubao-/, "");
     suffixes.add(stripped);

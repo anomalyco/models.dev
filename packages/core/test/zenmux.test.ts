@@ -268,3 +268,23 @@ test("uses Gemini 2.5 thinking budget controls", () => {
   ]);
   expect(translated?.header).toContain("thinking_config.thinking_budget");
 });
+
+test("resolves Qwen Max Thinking to its dedicated lab identity", () => {
+  const [model] = zenzmux.parseModels({
+    success: true,
+    data: [pageModel({
+      slug: "qwen/qwen3-max",
+      supports_reasoning: 1,
+      supported_parameters: "tools,tool_choice",
+    })],
+  });
+
+  const translated = zenzmux.translateModel(model!, {
+    existing: () => undefined,
+    authored: () => undefined,
+  });
+
+  expect(translated?.model).toMatchObject({
+    base_model: "alibaba/qwen3-max-thinking",
+  });
+});
