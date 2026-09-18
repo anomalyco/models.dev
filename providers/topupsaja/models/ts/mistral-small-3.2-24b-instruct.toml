@@ -1,0 +1,10 @@
+base_model = "mistral/mistral-small-2506"
+
+[cost]
+input = 0.656
+output = 1.75
+cache_read = 0.328
+
+[limit]
+context = 256000
+output = 16384

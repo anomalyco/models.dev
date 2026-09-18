@@ -1,0 +1,12 @@
+base_model = "google/gemini-3.8-flash"
+
+reasoning_options = [{ type = "toggle" }]
+
+[cost]
+input = 4.5
+output = 22.5
+cache_read = 0.45
+
+[limit]
+context = 1048576
+output = 65536

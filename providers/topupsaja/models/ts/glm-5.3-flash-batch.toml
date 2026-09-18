@@ -1,0 +1,12 @@
+base_model = "zhipuai/glm-5.3-flash"
+
+reasoning_options = [{ type = "toggle" }]
+
+[cost]
+input = 0.525
+output = 1.75
+cache_read = 0.105
+
+[limit]
+context = 1048576
+output = 943718

@@ -1,0 +1,12 @@
+base_model = "alibaba/qwen3.7-flash"
+
+reasoning_options = [{ type = "toggle" }]
+
+[cost]
+input = 0.21
+output = 0.91
+cache_read = 0.042
+
+[limit]
+context = 1000000
+output = 65536

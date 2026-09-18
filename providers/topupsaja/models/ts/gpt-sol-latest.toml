@@ -1,0 +1,12 @@
+base_model = "openai/gpt-5.6-sol"
+
+reasoning_options = [{ type = "toggle" }]
+
+[cost]
+input = 12
+output = 60
+cache_read = 1.2
+
+[limit]
+context = 1050000
+output = 128000

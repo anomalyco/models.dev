@@ -1,0 +1,12 @@
+base_model = "meituan/longcat-2.0"
+
+reasoning_options = [{ type = "toggle" }]
+
+[cost]
+input = 2.1
+output = 8.4
+cache_read = 0.042
+
+[limit]
+context = 1048756
+output = 262144

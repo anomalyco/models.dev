@@ -1,0 +1,12 @@
+base_model = "moonshotai/kimi-k2.5"
+
+reasoning_options = [{ type = "toggle" }]
+
+[cost]
+input = 2.7
+output = 13.5
+cache_read = 0.42
+
+[limit]
+context = 262144
+output = 235929

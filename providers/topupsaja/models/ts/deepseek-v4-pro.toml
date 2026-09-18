@@ -1,0 +1,12 @@
+base_model = "deepseek/deepseek-v4-pro"
+
+reasoning_options = [{ type = "toggle" }]
+
+[cost]
+input = 9.6
+output = 19.2
+cache_read = 0.81
+
+[limit]
+context = 1048576
+output = 393216

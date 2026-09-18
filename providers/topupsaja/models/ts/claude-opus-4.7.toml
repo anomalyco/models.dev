@@ -1,0 +1,12 @@
+base_model = "anthropic/claude-opus-4-7"
+
+reasoning_options = [{ type = "toggle" }]
+
+[cost]
+input = 25
+output = 125
+cache_read = 2.5
+
+[limit]
+context = 1000000
+output = 128000
