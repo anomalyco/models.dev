@@ -1,7 +1,11 @@
 # Toggle: enable_thinking = true|false
 # https://zenmux.ai/docs/guide/advanced/reasoning.html
-base_model = "alibaba/qwen3-max-thinking"
+base_model = "alibaba/qwen3-max"
 name = "Qwen3-Max-Thinking"
+description = "Qwen reasoning model for deliberate problem solving, math, and coding"
+release_date = "2026-01-23"
+last_updated = "2026-01-23"
+reasoning = true
 
 [[reasoning_options]]
 type = "toggle"
@@ -25,3 +29,7 @@ input = 3
 output = 15
 cache_read = 0.3
 cache_write = 3.75
+
+[limit]
+context = 256_000
+output = 32_000
