@@ -1,10 +1,14 @@
 # Toggle: enable_thinking = true|false
+# Budget: thinking_budget (integer)
 # https://zenmux.ai/docs/guide/advanced/reasoning.html
 base_model = "alibaba/qwen3.6-plus"
 name = "Qwen3.6-Plus"
 
 [[reasoning_options]]
 type = "toggle"
+
+[[reasoning_options]]
+type = "budget_tokens"
 
 [cost]
 input = 0.5
