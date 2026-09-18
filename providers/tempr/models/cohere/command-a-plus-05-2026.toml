@@ -1,5 +1,7 @@
 base_model = "cohere/command-a-plus-05-2026"
 
+# Toggle: thinking.type = enabled|disabled
+# Budget: thinking.token_budget
 reasoning_options = [
   { type = "toggle" },
   { type = "budget_tokens", min = 1 },
