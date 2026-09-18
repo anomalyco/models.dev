@@ -251,6 +251,40 @@ test("rejects a catalog with no eligible proxied models", async () => {
   }
 });
 
+test("skips curated catalog models without compatible lab metadata", async () => {
+  const originalFetch = globalThis.fetch;
+  const originalToken = process.env.CLOUDFLARE_API_TOKEN;
+  const originalAccount = process.env.CLOUDFLARE_ACCOUNT_ID;
+  process.env.CLOUDFLARE_API_TOKEN = "test";
+  process.env.CLOUDFLARE_ACCOUNT_ID = "test";
+  globalThis.fetch = async (input) => {
+    if (String(input).endsWith("/schema")) return new Response(null, { status: 404 });
+    return new Response(JSON.stringify(catalogPage([
+      {
+        model_id: "typesafe/jev",
+        task: "Text Generation",
+        context_length: 32_000,
+        provider_details: providerDetails({ input_tokens: 0.042, output_tokens: 0 }),
+      },
+      {
+        model_id: "openai/gpt-4.1",
+        task: "Text Generation",
+        context_length: 1_047_576,
+        provider_details: providerDetails({ input_tokens: 2, output_tokens: 8 }),
+      },
+    ])));
+  };
+
+  try {
+    const models = await cloudflareAiGateway.fetchModels();
+    expect(models.map((model) => model.catalog.model_id)).toEqual(["openai/gpt-4.1"]);
+  } finally {
+    globalThis.fetch = originalFetch;
+    restoreEnv("CLOUDFLARE_API_TOKEN", originalToken);
+    restoreEnv("CLOUDFLARE_ACCOUNT_ID", originalAccount);
+  }
+});
+
 test("validates Cloudflare page metadata", async () => {
   const originalFetch = globalThis.fetch;
   const originalToken = process.env.CLOUDFLARE_API_TOKEN;
