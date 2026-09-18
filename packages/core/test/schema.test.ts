@@ -1,7 +1,7 @@
 import { describe, expect, test } from "bun:test";
 import { z } from "zod";
 
-import { AuthoredModel, Provider } from "../src/index.js";
+import { AuthoredModel, ModelMetadata, Provider } from "../src/index.js";
 
 type AuthoredModelData = z.infer<typeof AuthoredModel>;
 
@@ -105,6 +105,165 @@ describe("model schema", () => {
           }).success,
         ).toBe(false);
       }
+    }
+  });
+});
+
+describe("parameters schema", () => {
+  const metadata = {
+    id: "lab/model",
+    name: "Example Model",
+    description: "Example model for parameter schema tests",
+    open_weights: true,
+  };
+
+  test("accepts total-only parameters with source", () => {
+    expect(
+      ModelMetadata.safeParse({
+        ...metadata,
+        parameters: {
+          total: 30_500_000_000,
+          source: "https://huggingface.co/lab/model/blob/main/config.json",
+        },
+      }).success,
+    ).toBe(true);
+  });
+
+  test("accepts total-only estimate without source", () => {
+    expect(
+      ModelMetadata.safeParse({
+        ...metadata,
+        parameters: { total: 30_500_000_000, estimate: true },
+      }).success,
+    ).toBe(true);
+  });
+
+  test("rejects parameters with neither source nor estimate", () => {
+    expect(
+      ModelMetadata.safeParse({
+        ...metadata,
+        parameters: { total: 30_500_000_000 },
+      }).success,
+    ).toBe(false);
+
+    expect(
+      ModelMetadata.safeParse({
+        ...metadata,
+        parameters: { total: 30_500_000_000, estimate: false },
+      }).success,
+    ).toBe(false);
+  });
+
+  test("accepts MoE total with active and architecture", () => {
+    const result = ModelMetadata.safeParse({
+      ...metadata,
+      parameters: {
+        total: 671_000_000_000,
+        active: 37_000_000_000,
+        architecture: "moe",
+        source: "https://huggingface.co/lab/model/blob/main/config.json",
+      },
+    });
+
+    expect(result.success).toBe(true);
+  });
+
+  test("rejects active exceeding total", () => {
+    expect(
+      ModelMetadata.safeParse({
+        ...metadata,
+        parameters: {
+          total: 3_000_000_000,
+          active: 30_000_000_000,
+          architecture: "moe",
+        },
+      }).success,
+    ).toBe(false);
+  });
+
+  test("rejects zero or negative totals", () => {
+    expect(
+      ModelMetadata.safeParse({
+        ...metadata,
+        parameters: { total: 0 },
+      }).success,
+    ).toBe(false);
+  });
+
+  test("rejects unknown parameter fields", () => {
+    expect(
+      ModelMetadata.safeParse({
+        ...metadata,
+        parameters: { total: 1_000, layers: 32 },
+      }).success,
+    ).toBe(false);
+  });
+
+  test("rejects invalid source URLs", () => {
+    expect(
+      ModelMetadata.safeParse({
+        ...metadata,
+        parameters: { total: 1_000, source: "not-a-url" },
+      }).success,
+    ).toBe(false);
+  });
+
+  test("rejects unknown architecture values", () => {
+    expect(
+      ModelMetadata.safeParse({
+        ...metadata,
+        parameters: {
+          total: 1_000,
+          architecture: "sparse",
+          source: "https://huggingface.co/lab/model/blob/main/config.json",
+        },
+      }).success,
+    ).toBe(false);
+  });
+
+  test("rejects active parameters when architecture is not a MoE variant", () => {
+    // hybrid with MoE routing is allowed alongside moe
+    expect(
+      ModelMetadata.safeParse({
+        ...metadata,
+        parameters: {
+          total: 32_000_000_000,
+          active: 9_000_000_000,
+          architecture: "hybrid",
+          source: "https://huggingface.co/lab/model/blob/main/config.json",
+        },
+      }).success,
+    ).toBe(true);
+
+    for (const architecture of ["dense", undefined] as const) {
+      expect(
+        ModelMetadata.safeParse({
+          ...metadata,
+          parameters: {
+            total: 30_500_000_000,
+            active: 3_000_000_000,
+            architecture,
+            source: "https://huggingface.co/lab/model/blob/main/config.json",
+          },
+        }).success,
+      ).toBe(false);
+    }
+  });
+
+  test("rejects fractional parameter counts", () => {
+    for (const parameters of [
+      { total: 30_500_000_000.5 },
+      { total: 30_500_000_000, active: 3_200_000_000.5, architecture: "moe" },
+    ]) {
+      expect(
+        ModelMetadata.safeParse({
+          ...metadata,
+          parameters: {
+            ...parameters,
+            source: "https://huggingface.co/lab/model/blob/main/config.json",
+          },
+        }).success,
+      ).toBe(false);
     }
   });
 });

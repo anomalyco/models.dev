@@ -14,6 +14,10 @@ open_weights = true
 context = 262_144
 output = 65_536
 
+[parameters]
+total = 27_781_427_952
+source = "https://huggingface.co/Qwen/Qwen3.6-27B"
+
 [modalities]
 input = ["text", "image", "video", "audio"]
 output = ["text"]

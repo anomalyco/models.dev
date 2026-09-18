@@ -14,6 +14,12 @@ open_weights = true
 context = 262_144
 output = 65_536
 
+[parameters]
+total = 480_154_875_392
+active = 35_000_000_000
+architecture = "moe"
+source = "https://huggingface.co/Qwen/Qwen3-Coder-480B-A35B-Instruct"
+
 [modalities]
 input = ["text"]
 output = ["text"]

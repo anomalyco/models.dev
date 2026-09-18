@@ -143,6 +143,25 @@ With `base_model`, do not restate fields already correct on the lab entry. Still
 | `temperature` | Whether temperature is respected |
 | `structured_output` | Whether structured/JSON output is supported |
 | `license`, `links`, `weights`, `benchmarks` | Enrichment |
+| `parameters` | Parameter counts — see below |
+
+#### `parameters`
+
+```toml
+[parameters]
+total = 30_532_122_624             # required, raw count (never "30.5B")
+active = 3_300_000_000             # MoE/hybrid-with-MoE only: per-token activated params (3.3B per Qwen's card)
+architecture = "moe"              # "dense" | "moe" | "hybrid"
+estimate = false                   # true when inferred, not lab-published
+source = "https://huggingface.co/Qwen/Qwen3-30B-A3B/blob/main/config.json"
+```
+
+- **Raw units, always.** `total = 30_532_122_624`, not `30B`. Underscores are valid TOML and are the convention for every count in this catalogue — format `total` and `active` the same way within a block. Counts are whole numbers (schema enforces integers).
+- **Prefer the lab's published definition for `total`.** When a lab states a count on its own terms (e.g. Qwen's "30.5B total / 3.3B activated", which excludes aux tensors), use that figure and cite it; only fall back to the exact safetensors sum when the lab hasn't published one. If the lab's count and the safetensors sum materially disagree about what "total" means (e.g. rounded headline vs exact inventory), it's better to omit the block than to publish a number that contradicts the vendor's own figure.
+- **`active` only when MoE routing exists** (`architecture = "moe"`, or `"hybrid"` for hybrids that include MoE layers, e.g. Granite 4 H Small); it must not exceed `total`.
+- **`source` is required for non-estimates** — config.json, safetensors index, or the lab's announcement. Match the provenance discipline of `[[benchmarks]]`.
+- **`estimate = true`** marks counts parsed from the model name (`Qwen3-30B-A3B`) or third-party reporting (SemiAnalysis etc.). Estimates for closed models where the lab has never stated a number should not be added at all.
+- Absent `parameters` is honest data: do not guess sizes for closed flagships.
 
 ### Provider-only (never put these under `models/`)
 

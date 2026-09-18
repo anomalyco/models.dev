@@ -14,6 +14,14 @@ open_weights = true
 context = 131_072
 output = 32_768
 
+# OpenAI card: "117B parameters with 5.1B active parameters" (fp8 sum
+# below is the exact safetensors count of the 120B checkpoint).
+[parameters]
+total = 120_412_337_472
+active = 5_100_000_000
+architecture = "moe"
+source = "https://huggingface.co/openai/gpt-oss-safeguard-120b"
+
 [modalities]
 input = ["text"]
 output = ["text"]
