@@ -1,0 +1,21 @@
+name = "GPT-5.6"
+description = "Frontier GPT-5.6 model for complex professional work, coding, and agentic workflows"
+family = "gpt-sol"
+release_date = "2026-07-09"
+last_updated = "2026-07-09"
+knowledge = "2026-02-16"
+attachment = true
+reasoning = true
+tool_call = true
+structured_output = true
+temperature = false
+open_weights = false
+
+[limit]
+context = 1050000
+input = 922000
+output = 128000
+
+[modalities]
+input = ["text", "image", "pdf"]
+output = ["text"]

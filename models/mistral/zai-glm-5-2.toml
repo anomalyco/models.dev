@@ -1,0 +1,19 @@
+name = "GLM-5.2"
+description = "Open flagship GLM for long-horizon coding agents and million-token context work"
+family = "glm"
+release_date = "2026-06-13"
+last_updated = "2026-06-13"
+attachment = false
+reasoning = true
+tool_call = true
+structured_output = true
+temperature = true
+open_weights = true
+
+[limit]
+context = 1000000
+output = 131072
+
+[modalities]
+input = ["text"]
+output = ["text"]

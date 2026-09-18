@@ -1,0 +1,10 @@
+base_model = "mistral/zai-glm-5-2"
+
+reasoning_options = [
+  { type = "effort", values = ["none", "high", "max"] },
+]
+
+[cost]
+input = 1.4
+output = 4.4
+cache_read = 0.14

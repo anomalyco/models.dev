@@ -1,0 +1,19 @@
+name = "Mistral 7B"
+description = "Mistral model for multilingual chat, reasoning, and tool-assisted workflows"
+family = "mistral"
+release_date = "2023-09-27"
+last_updated = "2023-09-27"
+knowledge = "2023-12"
+attachment = false
+reasoning = false
+tool_call = true
+temperature = true
+open_weights = true
+
+[limit]
+context = 8000
+output = 8000
+
+[modalities]
+input = ["text"]
+output = ["text"]
