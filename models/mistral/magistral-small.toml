@@ -1,0 +1,19 @@
+name = "Magistral Small"
+description = "Mistral reasoning model for transparent analysis, math, and complex decisions"
+family = "magistral-small"
+release_date = "2025-03-17"
+last_updated = "2025-03-17"
+knowledge = "2025-06"
+attachment = false
+reasoning = true
+tool_call = true
+temperature = true
+open_weights = true
+
+[limit]
+context = 128000
+output = 128000
+
+[modalities]
+input = ["text"]
+output = ["text"]

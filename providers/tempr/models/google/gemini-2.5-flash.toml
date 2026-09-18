@@ -1,5 +1,7 @@
 base_model = "google/gemini-2.5-flash"
 
+# Toggle: generationConfig.thinkingConfig.thinkingBudget = 0 disables thinking
+# Budget: generationConfig.thinkingConfig.thinkingBudget (token budget when enabled)
 reasoning_options = [
   { type = "toggle" },
   { type = "budget_tokens", min = 0, max = 24576 },
