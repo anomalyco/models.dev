@@ -3,7 +3,6 @@
 # https://zenmux.ai/docs/guide/advanced/reasoning.html
 base_model = "deepseek/deepseek-v4-pro"
 name = "DeepSeek V4 Pro 0813"
-temperature = false
 
 [[reasoning_options]]
 type = "toggle"
@@ -16,3 +15,6 @@ values = ["high", "max"]
 input = 1.32
 output = 3.96
 cache_read = 0.022
+
+[interleaved]
+field = "reasoning_content"

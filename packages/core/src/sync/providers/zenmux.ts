@@ -287,13 +287,26 @@ function inferOutputLimit(model: ZenmuxModel) {
   return model.max_completion_tokens ?? 0;
 }
 
-function inferToolCall(model: ZenmuxModel) {
-  const supported = model.supported_parameters.split(",").map((value) => value.trim());
-  return supported.includes("tools") || supported.includes("tool_choice");
+function supportedParameters(model: ZenmuxModel) {
+  return model.supported_parameters
+    .split(",")
+    .map((value) => value.trim())
+    .filter((value) => value.length > 0);
 }
 
-function inferTemperature(model: ZenmuxModel) {
-  return model.supported_parameters.split(",").map((value) => value.trim()).includes("temperature");
+function inferToolCall(model: ZenmuxModel): boolean | undefined {
+  // An omitted parameter list is not evidence that a model cannot call tools.
+  return supportedParameters(model).some((value) => value === "tools" || value === "tool_choice")
+    ? true
+    : undefined;
+}
+
+function inferTemperature(model: ZenmuxModel): boolean | undefined {
+  // ZenMux's Anthropic route advertises generic parameters that are not valid
+  // while Extended Thinking is enabled; inherit the lab fact instead.
+  const [owner] = model.slug.split("/");
+  if (owner === "anthropic") return undefined;
+  return supportedParameters(model).includes("temperature") ? true : undefined;
 }
 
 function buildMetadata(model: ZenmuxModel): {
@@ -320,8 +333,8 @@ function buildMetadata(model: ZenmuxModel): {
     last_updated: model.publish_time,
     attachment: inputModalities.some((value) => value !== "text"),
     reasoning: model.supports_reasoning > 0,
-    temperature: inferTemperature(model),
-    tool_call: inferToolCall(model),
+    temperature: inferTemperature(model) ?? false,
+    tool_call: inferToolCall(model) ?? false,
     open_weights: false,
     modalities: {
       input: inputModalities,
@@ -345,7 +358,7 @@ const PEER_OWNER_ALIASES: Record<string, string[]> = {
   alibaba: ["qwen", "alibaba"],
   qwen: ["qwen", "alibaba"],
   "z-ai": ["z-ai", "zhipuai"],
-  zhipuai: ["z-ai", "zhipuai"],
+  zhipuai: ["zhipuai", "z-ai"],
 };
 
 function readReasoningOptions(filePath: string): ReasoningOptions | undefined {
@@ -379,8 +392,8 @@ function peerReasoningOptions(modelID: string): ReasoningOptions | undefined {
   ])];
   const owners = PEER_OWNER_ALIASES[owner] ?? [owner];
   const roots = owners.flatMap((peerOwner) => [
-    path.join(REPO_ROOT, "providers", "openrouter", "models", peerOwner),
     path.join(REPO_ROOT, "providers", peerOwner, "models"),
+    path.join(REPO_ROOT, "providers", "openrouter", "models", peerOwner),
   ]);
 
   for (const root of roots) {
@@ -469,7 +482,7 @@ function reasoningHeader(model: ZenmuxModel, options: ReasoningOptions | undefin
     const togglePath = owner === "anthropic" || owner === "deepseek" || owner === "minimax"
       ? "thinking.type = enabled|disabled"
       : owner === "google" && id.startsWith("gemini-2.5")
-        ? "thinking_budget = 0|positive integer"
+        ? "thinking_config.thinking_budget = 0|positive integer"
         : owner === "qwen"
           ? "enable_thinking = true|false"
           : "reasoning.enabled = true|false";
@@ -484,13 +497,28 @@ function reasoningHeader(model: ZenmuxModel, options: ReasoningOptions | undefin
   if (budget !== undefined) {
     const pathName = owner === "anthropic"
       ? "thinking.budget_tokens"
-      : owner === "google" || owner === "qwen"
-        ? "thinking_budget"
-        : "reasoning.max_tokens";
+      : owner === "google"
+        ? "thinking_config.thinking_budget"
+        : owner === "qwen"
+          ? "thinking_budget"
+          : "reasoning.max_tokens";
     lines.push(`# Budget: ${pathName} (integer)`);
   }
   lines.push("# https://zenmux.ai/docs/guide/advanced/reasoning.html");
   return `${lines.join("\n")}\n`;
+}
+
+function authoredOverrides(authored: ExistingModel | undefined): Partial<SyncedFullModel> {
+  if (authored === undefined) return {};
+
+  const {
+    base_model: _baseModel,
+    base_model_omit: _baseModelOmit,
+    temperature: _temperature,
+    tool_call: _toolCall,
+    ...overrides
+  } = authored;
+  return overrides as Partial<SyncedFullModel>;
 }
 
 function mergeCosts(
@@ -534,6 +562,12 @@ export const zenzmux = {
     const baseModel = authored?.base_model ?? resolveMetadataId(model);
     const reasoningOptions = reasoningOptionsFor(model, baseModel, authored);
     const cost = mergeCosts(authored?.cost, buildCost(model));
+    const temperature = inferTemperature(model);
+    const toolCall = inferToolCall(model);
+    const providerOverrideValue = providerOverride(owner);
+    const provider = providerOverrideValue === undefined
+      ? authored?.provider
+      : { ...(authored?.provider ?? {}), ...providerOverrideValue };
     const limit = {
       context: model.context_length,
       output: inferOutputLimit(model),
@@ -543,16 +577,19 @@ export const zenzmux = {
       output: normalizeModalities(model.output_modalities),
     };
     const hostValues = {
+      ...authoredOverrides(authored),
       name: stripDisplayOwner(model.name) || model.name,
       attachment: modalities.input.some((value) => value !== "text"),
       reasoning: model.supports_reasoning > 0,
-      reasoning_options: reasoningOptions,
-      temperature: inferTemperature(model),
-      tool_call: inferToolCall(model),
+      ...(model.supports_reasoning > 0 || authored?.reasoning_options !== undefined
+        ? { reasoning_options: model.supports_reasoning > 0 ? reasoningOptions : undefined }
+        : {}),
+      ...(temperature !== undefined ? { temperature } : {}),
+      ...(toolCall !== undefined ? { tool_call: toolCall } : {}),
       cost,
       limit,
       modalities,
-      provider: providerOverride(owner),
+      provider,
     } satisfies Partial<SyncedFullModel>;
     const header = reasoningHeader(model, reasoningOptions);
 
@@ -580,8 +617,8 @@ export const zenzmux = {
     const nextModel: SyncedModel = { base_model: model.slug };
     if (cost !== undefined) nextModel.cost = cost;
     if (reasoningOptions !== undefined) nextModel.reasoning_options = reasoningOptions;
-    const provider = providerOverride(owner);
-    if (provider !== undefined) nextModel.provider = provider;
+    const newProvider = providerOverride(owner);
+    if (newProvider !== undefined) nextModel.provider = newProvider;
 
     return {
       id: model.slug,

@@ -1,10 +1,16 @@
-# Toggle: thinking_budget = 0|positive integer
+# Toggle: thinking_config.thinking_budget = 0|positive integer
+# Budget: thinking_config.thinking_budget (integer)
 # https://zenmux.ai/docs/guide/advanced/reasoning.html
 base_model = "google/gemini-2.5-flash-lite"
 name = "Gemini 2.5 Flash Lite"
 
 [[reasoning_options]]
 type = "toggle"
+
+[[reasoning_options]]
+type = "budget_tokens"
+min = 512
+max = 24_576
 
 [cost]
 input = 0.1

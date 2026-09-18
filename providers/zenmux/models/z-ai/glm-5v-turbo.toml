@@ -3,6 +3,9 @@
 base_model = "zhipuai/glm-5v-turbo"
 name = "GLM 5V Turbo"
 
+[interleaved]
+field = "reasoning_content"
+
 [[reasoning_options]]
 type = "toggle"
 

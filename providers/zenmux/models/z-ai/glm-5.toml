@@ -3,6 +3,9 @@
 base_model = "zhipuai/glm-5"
 name = "GLM 5"
 
+[interleaved]
+field = "reasoning_content"
+
 [[reasoning_options]]
 type = "toggle"
 

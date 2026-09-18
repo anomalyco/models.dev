@@ -196,3 +196,75 @@ test("maps specialized cache-write prices", () => {
 
   expect(translated?.model.cost).toMatchObject({ cache_write: 3 });
 });
+
+test("prefers lab reasoning controls and preserves provider-only overrides", () => {
+  const [model] = zenzmux.parseModels({
+    success: true,
+    data: [pageModel({
+      slug: "z-ai/glm-5.2",
+      supports_reasoning: 1,
+      supported_parameters: "",
+    })],
+  });
+
+  const translated = zenzmux.translateModel(model!, {
+    existing: () => undefined,
+    authored: () => ({
+      base_model: "zhipuai/glm-5.2",
+      temperature: false,
+      tool_call: false,
+      interleaved: { field: "reasoning_content" },
+      experimental: { modes: { fast: { provider: { body: { speed: "fast" } } } } },
+    } as any),
+  });
+
+  expect(translated?.model.reasoning_options).toEqual([
+    { type: "effort", values: ["high", "max"] },
+  ]);
+  expect(translated?.model).not.toHaveProperty("temperature");
+  expect(translated?.model).not.toHaveProperty("tool_call");
+  expect(translated?.model).toHaveProperty("interleaved");
+  expect(translated?.model).toHaveProperty("experimental");
+});
+
+test("uses Anthropic lab controls instead of OpenRouter controls", () => {
+  const [model] = zenzmux.parseModels({
+    success: true,
+    data: [pageModel({
+      slug: "anthropic/claude-opus-5",
+      supports_reasoning: 1,
+      supported_parameters: "",
+    })],
+  });
+
+  const translated = zenzmux.translateModel(model!, {
+    existing: () => undefined,
+    authored: () => ({ base_model: "anthropic/claude-opus-5" }),
+  });
+
+  expect(translated?.model.reasoning_options).toEqual([
+    { type: "effort", values: ["low", "medium", "high", "xhigh", "max"] },
+  ]);
+});
+
+test("uses Gemini 2.5 thinking budget controls", () => {
+  const [model] = zenzmux.parseModels({
+    success: true,
+    data: [pageModel({
+      slug: "google/gemini-2.5-flash",
+      supports_reasoning: 1,
+      supported_parameters: "",
+    })],
+  });
+
+  const translated = zenzmux.translateModel(model!, {
+    existing: () => undefined,
+    authored: () => ({ base_model: "google/gemini-2.5-flash" }),
+  });
+
+  expect(translated?.model.reasoning_options).toEqual([
+    { type: "toggle" },
+    { type: "budget_tokens", min: 0, max: 24_576 },
+  ]);
+  expect(translated?.header).toContain("thinking_config.thinking_budget");
+});

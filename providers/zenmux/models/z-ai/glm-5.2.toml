@@ -1,17 +1,11 @@
-# Toggle: reasoning.enabled = true|false
-# Effort: reasoning_effort = high|xhigh
+# Effort: reasoning_effort = high|max
 # https://zenmux.ai/docs/guide/advanced/reasoning.html
 base_model = "zhipuai/glm-5.2"
 name = "GLM 5.2"
-temperature = false
-tool_call = false
-
-[[reasoning_options]]
-type = "toggle"
 
 [[reasoning_options]]
 type = "effort"
-values = ["high", "xhigh"]
+values = ["high", "max"]
 
 [cost]
 input = 1.4
