@@ -1,0 +1,27 @@
+name = "Ternary Bonsai 2 27B"
+description = "Ternary Bonsai 2 27B is a 27B-parameter reasoning model from PrismML derived from Qwen3.8-27B. It supports coding, mathematics, tool calling, and image understanding with a 262K-token context window."
+release_date = "2026-09-18"
+last_updated = "2026-09-18"
+attachment = true
+reasoning = true
+tool_call = true
+structured_output = true
+open_weights = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["medium", "xhigh"]
+
+[cost]
+input = 0.075
+output = 0.5
+cache_read = 0.0375
+
+[limit]
+context = 262_144
+input = 262_144
+output = 32_768
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
