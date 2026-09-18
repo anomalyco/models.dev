@@ -1,0 +1,26 @@
+# The coding-plan twin of the umans-ai PAYG entry: same model, cost 0 (the
+# plan convention — plan subscribers are not metered per token).
+# Toggle + effort: `none` is a REAL disable (can_disable=true on the live
+# card), effort low|high|max with think-HIGH the default (the V4.1 encoding
+# spec; verified against the released repo 2026-09-10 and the live card).
+# Live metadata: https://api.code.umans.ai/v1/models/info
+# limit.context/output mirror the gateway card exactly (1048576 native;
+# 393216 max output) — limit.output is cap-1 on purpose: the gateway 400s
+# max_tokens >= max_completion_tokens, so 393215 is the largest value that
+# serves (its advertised `recommended_max_tokens`).
+base_model = "deepseek/deepseek-v4.1-flash"
+name = "DeepSeek V4.1 Flash"
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "high", "max"] }]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0
+output = 0
+cache_read = 0
+cache_write = 0
+
+[limit]
+context = 1_048_576
+output = 393_215
