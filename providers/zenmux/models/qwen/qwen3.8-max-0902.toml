@@ -1,15 +1,13 @@
+# Effort: reasoning_effort = minimal|low|medium|high|xhigh
+# https://zenmux.ai/docs/guide/advanced/reasoning.html
 base_model = "alibaba/qwen3.8-max-0902"
-name = "Qwen3.8 Max 0902"
-description = "2026-09-02 upgraded snapshot of Qwen3.8 Max with stronger coding, collaborative agents, and multimodal document understanding"
-family = "qwen"
-release_date = "2026-09-02"
-last_updated = "2026-09-02"
-attachment = true
-reasoning = true
-temperature = true
-tool_call = true
-open_weights = false
-reasoning_options = []
+name = "Qwen3.8-Max-0902"
+temperature = false
+tool_call = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["minimal", "low", "medium", "high", "xhigh"]
 
 [cost]
 input = 2
@@ -18,9 +16,7 @@ cache_read = 0.25
 cache_write = 2.5
 
 [limit]
-context = 1_000_000
-output = 131_072
+output = 128_000
 
 [modalities]
-input = ["text", "image", "video", "pdf"]
-output = ["text"]
+input = ["text", "image", "video"]

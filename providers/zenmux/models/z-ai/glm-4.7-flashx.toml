@@ -1,17 +1,10 @@
+# Toggle: reasoning.enabled = true|false
+# https://zenmux.ai/docs/guide/advanced/reasoning.html
+base_model = "zhipuai/glm-4.7-flashx"
 name = "GLM 4.7 FlashX"
-description = "Efficient GLM model for fast reasoning, coding, and agent workflows"
-release_date = "2026-01-19"
-last_updated = "2026-01-19"
-attachment = false
-reasoning = true
-temperature = true
-tool_call = true
-knowledge = "2025-01-01"
-open_weights = false
-reasoning_options = []
 
-[interleaved]
-field = "reasoning_content"
+[[reasoning_options]]
+type = "toggle"
 
 [cost]
 input = 0.0728
@@ -19,9 +12,4 @@ output = 0.4367
 cache_read = 0.0146
 
 [limit]
-context = 200_000
-output = 64_000
-
-[modalities]
-input = ["text"]
-output = ["text"]
+output = 128_000

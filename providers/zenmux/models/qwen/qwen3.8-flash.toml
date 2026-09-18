@@ -1,15 +1,16 @@
+# Toggle: enable_thinking = true|false
+# Budget: thinking_budget (integer)
+# https://zenmux.ai/docs/guide/advanced/reasoning.html
 base_model = "alibaba/qwen3.8-flash"
-name = "Qwen3.8 Flash"
-description = "Qwen vision-language model for visual reasoning, documents, and agent tasks"
-family = "qwen"
-release_date = "2026-08-26"
-last_updated = "2026-08-26"
-attachment = true
-reasoning = true
-tool_call = true
-structured_output = true
-open_weights = false
-reasoning_options = []
+name = "Qwen3.8-Flash"
+temperature = false
+tool_call = false
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "budget_tokens"
 
 [cost]
 input = 0.16
@@ -18,9 +19,4 @@ cache_read = 0.016
 cache_write = 0.2
 
 [limit]
-context = 1_000_000
-output = 131_072
-
-[modalities]
-input = ["text", "image", "video"]
-output = ["text"]
+output = 1_000_000

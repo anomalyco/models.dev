@@ -1,12 +1,7 @@
+# Toggle: enable_thinking = true|false
+# https://zenmux.ai/docs/guide/advanced/reasoning.html
+base_model = "alibaba/qwen3.6-plus"
 name = "Qwen3.6-Plus"
-description = "Qwen instruction model for multilingual chat, reasoning, and tool use"
-release_date = "2026-03-30"
-last_updated = "2026-03-30"
-attachment = false
-reasoning = true
-temperature = true
-tool_call = true
-open_weights = false
 
 [[reasoning_options]]
 type = "toggle"
@@ -25,9 +20,7 @@ cache_read = 0.4
 cache_write = 2.5
 
 [limit]
-context = 1_000_000
 output = 64_000
 
 [modalities]
-input = ["text"]
-output = ["text"]
+input = ["text", "image", "pdf", "video"]

@@ -1,16 +1,13 @@
+# Effort: reasoning_effort = low|high|max
+# https://zenmux.ai/docs/guide/advanced/reasoning.html
 base_model = "zhipuai/glm-5.3-flash"
-name = "GLM-5.3-Flash"
-description = "Native multimodal GLM model for efficient coding and long-horizon agent tasks"
-family = "glm"
-release_date = "2026-08-26"
-last_updated = "2026-08-26"
-attachment = true
-reasoning = true
-temperature = true
-tool_call = true
-structured_output = true
-open_weights = true
-reasoning_options = []
+name = "GLM 5.3 Flash"
+temperature = false
+tool_call = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
 
 [cost]
 input = 0.15
@@ -18,9 +15,4 @@ output = 0.5
 cache_read = 0.03
 
 [limit]
-context = 1_000_000
-output = 131_072
-
-[modalities]
-input = ["text", "image", "video", "pdf"]
-output = ["text"]
+output = 128_000

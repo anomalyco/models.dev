@@ -1,10 +1,13 @@
-import { existsSync, readdirSync } from "node:fs";
+import { existsSync, readFileSync, readdirSync } from "node:fs";
 import path from "node:path";
 import { z } from "zod";
 
-import type { ExistingModel, SyncProvider, SyncedModel } from "../index.js";
+import type { ExistingModel, SyncProvider, SyncedFullModel, SyncedModel } from "../index.js";
+import { MissingReasoningOptionsError } from "../missing-reasoning-options.js";
+import { factorBaseModel } from "./openrouter.js";
 
 const API_ENDPOINT = "https://zenmux.ai/api/frontend/model/listByFilter";
+const REPO_ROOT = path.join(import.meta.dirname, "..", "..", "..", "..", "..");
 
 const PricingComponent = z.object({
   code: z.string(),
@@ -220,7 +223,7 @@ function buildCost(model: ZenmuxModel): SyncedModel["cost"] | undefined {
       ? buildRateMap(model, ["audio", "completion"])
       : buildRateMap(model, ["completion"]);
   const cacheRead = buildRateMap(model, ["input_cache_read"]);
-  const cacheWrite = buildRateMap(model, ["input_cache_write"]);
+  const cacheWrite = buildRateMap(model, ["input_cache_write", "input_cache_write_5_min", "input_cache_write_1_h"]);
 
   if (input.base === undefined || output.base === undefined) return undefined;
 
@@ -335,10 +338,186 @@ function providerOverride(owner: string) {
   return OWNER_PROVIDER_OVERRIDES[owner];
 }
 
+type ReasoningOptions = NonNullable<SyncedFullModel["reasoning_options"]>;
+type ModelCost = NonNullable<SyncedFullModel["cost"]>;
+
+const PEER_OWNER_ALIASES: Record<string, string[]> = {
+  alibaba: ["qwen", "alibaba"],
+  qwen: ["qwen", "alibaba"],
+  "z-ai": ["z-ai", "zhipuai"],
+  zhipuai: ["z-ai", "zhipuai"],
+};
+
+function readReasoningOptions(filePath: string): ReasoningOptions | undefined {
+  if (!existsSync(filePath)) return undefined;
+
+  try {
+    const parsed = Bun.TOML.parse(readFileSync(filePath, "utf8")) as { reasoning_options?: unknown };
+    return Array.isArray(parsed.reasoning_options)
+      ? parsed.reasoning_options as ReasoningOptions
+      : undefined;
+  } catch {
+    return undefined;
+  }
+}
+
+function peerReasoningOptions(modelID: string): ReasoningOptions | undefined {
+  const [owner, ...idParts] = modelID.split("/");
+  if (owner === undefined || idParts.length === 0) return undefined;
+
+  const rawID = idParts.join("/");
+  const ids = [...new Set([
+    rawID,
+    rawID.toLowerCase(),
+    rawID.replaceAll(".", "-"),
+    rawID.replace(/^MiniMax-/i, "minimax-"),
+    rawID.replace(/-flashx$/i, "-flash"),
+    rawID.replace(/-free$/i, ""),
+    rawID.replace(/-flash(?:-free)?$/i, ""),
+    rawID.replace(/-flash$/i, "-flash-02-23"),
+    ...(rawID.endsWith("-max") ? [`${rawID}-thinking`] : []),
+  ])];
+  const owners = PEER_OWNER_ALIASES[owner] ?? [owner];
+  const roots = owners.flatMap((peerOwner) => [
+    path.join(REPO_ROOT, "providers", "openrouter", "models", peerOwner),
+    path.join(REPO_ROOT, "providers", peerOwner, "models"),
+  ]);
+
+  for (const root of roots) {
+    for (const id of ids) {
+      const options = readReasoningOptions(path.join(root, `${id}.toml`));
+      if (options !== undefined) return options;
+    }
+  }
+
+  return undefined;
+}
+
+function curatedReasoningOptions(modelID: string): ReasoningOptions | undefined {
+  const [owner, id = ""] = modelID.split("/");
+
+  if (owner === "deepseek") {
+    if (id.includes("v4-flash")) {
+      return [
+        { type: "toggle" },
+        { type: "effort", values: ["low", "high", "max"] },
+      ];
+    }
+    if (id.includes("v4-pro")) {
+      return [
+        { type: "toggle" },
+        { type: "effort", values: ["high", "max"] },
+      ];
+    }
+  }
+
+  if (owner === "z-ai" && id === "glm-5.3-flashx") {
+    return [{ type: "effort", values: ["low", "high", "max"] }];
+  }
+
+  if (owner === "qwen" && id === "qwen3.5-flash") {
+    return [{ type: "toggle" }, { type: "budget_tokens" }];
+  }
+
+  // MiniMax M2.x exposes reasoning as always-on on its first-party API;
+  // an explicit empty set is therefore a known host capability, not feed uncertainty.
+  if (owner === "minimax" && /^minimax-m2(?:[.]|$)/i.test(id)) return [];
+
+  return undefined;
+}
+
+function reasoningOptionsFor(
+  model: ZenmuxModel,
+  baseModel: string | undefined,
+  authored: ExistingModel | undefined,
+): ReasoningOptions | undefined {
+  if (model.supports_reasoning === 0) return undefined;
+
+  const curated = curatedReasoningOptions(model.slug);
+  if (curated !== undefined) return curated;
+
+  const peer = peerReasoningOptions(baseModel ?? model.slug);
+  if (peer !== undefined) return peer;
+
+  // Keep a hand-authored non-empty control set when no peer catalog exists.
+  // An authored [] is deliberately not enough: [] means no caller control.
+  if (authored?.reasoning_options !== undefined && authored.reasoning_options.length > 0) {
+    return authored.reasoning_options as ReasoningOptions;
+  }
+
+  throw new MissingReasoningOptionsError(
+    model.slug,
+    "ZenMux reports reasoning = true but no lab/peer reasoning controls are known; refusing to write reasoning_options = []",
+  );
+}
+
+function reasoningHeader(model: ZenmuxModel, options: ReasoningOptions | undefined) {
+  const [owner, id = ""] = model.slug.split("/");
+  if (options === undefined) return undefined;
+  if (options.length === 0) {
+    if (owner === "minimax" && /^minimax-m2(?:[.]|$)/i.test(id)) {
+      return "# MiniMax M2.x reasoning is always on; ZenMux exposes no caller control.\n# https://zenmux.ai/docs/guide/advanced/reasoning.html\n";
+    }
+    return undefined;
+  }
+
+  const lines: string[] = [];
+  const effort = options.find((option) => option.type === "effort");
+  const budget = options.find((option) => option.type === "budget_tokens");
+
+  if (options.some((option) => option.type === "toggle")) {
+    const togglePath = owner === "anthropic" || owner === "deepseek" || owner === "minimax"
+      ? "thinking.type = enabled|disabled"
+      : owner === "google" && id.startsWith("gemini-2.5")
+        ? "thinking_budget = 0|positive integer"
+        : owner === "qwen"
+          ? "enable_thinking = true|false"
+          : "reasoning.enabled = true|false";
+    lines.push(`# Toggle: ${togglePath}`);
+  }
+  if (effort !== undefined) {
+    const pathName = owner === "google" && id.startsWith("gemini-3")
+      ? "thinking_level"
+      : "reasoning_effort";
+    lines.push(`# Effort: ${pathName} = ${effort.values.join("|")}`);
+  }
+  if (budget !== undefined) {
+    const pathName = owner === "anthropic"
+      ? "thinking.budget_tokens"
+      : owner === "google" || owner === "qwen"
+        ? "thinking_budget"
+        : "reasoning.max_tokens";
+    lines.push(`# Budget: ${pathName} (integer)`);
+  }
+  lines.push("# https://zenmux.ai/docs/guide/advanced/reasoning.html");
+  return `${lines.join("\n")}\n`;
+}
+
+function mergeCosts(
+  current: ExistingModel["cost"],
+  next: ModelCost | undefined,
+): ModelCost | undefined {
+  if (next === undefined) return current as ModelCost | undefined;
+  if (current === undefined) return next;
+
+  return {
+    ...current,
+    ...next,
+    reasoning: next.reasoning ?? current.reasoning,
+    cache_read: next.cache_read ?? current.cache_read,
+    cache_write: next.cache_write ?? current.cache_write,
+    input_audio: next.input_audio ?? current.input_audio,
+    output_audio: next.output_audio ?? current.output_audio,
+    tiers: next.tiers ?? current.tiers,
+  };
+}
+
 export const zenzmux = {
   id: "zenmux",
   name: "ZenMux",
   modelsDir: "providers/zenmux/models",
+  preserveDescriptions: false,
+  authoritativeHeaders: true,
   async fetchModels() {
     const response = await fetch(API_ENDPOINT);
     if (!response.ok) {
@@ -350,60 +529,59 @@ export const zenzmux = {
     return ZenmuxResponse.parse(raw).data;
   },
   translateModel(model, context) {
-    const existing = context.existing(model.slug);
-    const cost = buildCost(model);
+    const authored = context.authored(model.slug);
     const [owner] = model.slug.split("/");
-
-    if (existing !== undefined) {
-      if (cost !== undefined && typeof existing.cost === "object" && existing.cost !== null) {
-        return {
-          id: model.slug,
-          model: {
-            ...existing,
-            cost: {
-              ...existing.cost,
-              ...cost,
-              tiers: cost.tiers ?? existing.cost.tiers,
-            } as ExistingModel["cost"],
-          } as SyncedModel,
-        };
-      }
-
-      if (cost !== undefined) {
-        return {
-          id: model.slug,
-          model: {
-            ...existing,
-            cost,
-          } as SyncedModel,
-        };
-      }
-
-      return { id: model.slug, model: existing as SyncedModel };
-    }
-
-    const baseModel = resolveMetadataId(model);
+    const baseModel = authored?.base_model ?? resolveMetadataId(model);
+    const reasoningOptions = reasoningOptionsFor(model, baseModel, authored);
+    const cost = mergeCosts(authored?.cost, buildCost(model));
+    const limit = {
+      context: model.context_length,
+      output: inferOutputLimit(model),
+    };
+    const modalities = {
+      input: normalizeModalities(model.input_modalities),
+      output: normalizeModalities(model.output_modalities),
+    };
+    const hostValues = {
+      name: stripDisplayOwner(model.name) || model.name,
+      attachment: modalities.input.some((value) => value !== "text"),
+      reasoning: model.supports_reasoning > 0,
+      reasoning_options: reasoningOptions,
+      temperature: inferTemperature(model),
+      tool_call: inferToolCall(model),
+      cost,
+      limit,
+      modalities,
+      provider: providerOverride(owner),
+    } satisfies Partial<SyncedFullModel>;
+    const header = reasoningHeader(model, reasoningOptions);
 
     if (baseModel !== undefined) {
-      const nextModel: SyncedModel = {
-        base_model: baseModel,
+      return {
+        id: model.slug,
+        model: factorBaseModel(
+          baseModel,
+          hostValues,
+          limit,
+          authored?.base_model === baseModel ? authored.base_model_omit : undefined,
+        ),
+        header,
       };
-      if (cost !== undefined) nextModel.cost = cost;
-      const provider = providerOverride(owner);
-      if (provider !== undefined) {
-        nextModel.provider = provider;
-      }
-      return { id: model.slug, model: nextModel };
     }
 
-    const nextModel: SyncedModel = {
-      base_model: model.slug,
-    };
-    if (cost !== undefined) nextModel.cost = cost;
-    const provider = providerOverride(owner);
-    if (provider !== undefined) {
-      nextModel.provider = provider;
+    if (authored !== undefined) {
+      return {
+        id: model.slug,
+        model: { ...authored, ...hostValues } as SyncedModel,
+        header,
+      };
     }
+
+    const nextModel: SyncedModel = { base_model: model.slug };
+    if (cost !== undefined) nextModel.cost = cost;
+    if (reasoningOptions !== undefined) nextModel.reasoning_options = reasoningOptions;
+    const provider = providerOverride(owner);
+    if (provider !== undefined) nextModel.provider = provider;
 
     return {
       id: model.slug,
@@ -412,6 +590,7 @@ export const zenzmux = {
         id: model.slug,
         model: buildMetadata(model),
       },
+      header,
     };
   },
 } satisfies SyncProvider<ZenmuxModel>;

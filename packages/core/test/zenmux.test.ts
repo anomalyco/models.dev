@@ -101,3 +101,98 @@ test("maps token-priced image output when completion is absent", () => {
 
   expect(translated?.model.cost).toMatchObject({ input: 5, output: 30 });
 });
+
+test("keeps existing factored models override-only", () => {
+  const [model] = zenzmux.parseModels({
+    success: true,
+    data: [pageModel({
+      slug: "openai/gpt-5.4",
+      supports_reasoning: 1,
+      supported_parameters: "tools,tool_choice",
+    })],
+  });
+
+  const translated = zenzmux.translateModel(model!, {
+    existing: () => ({
+      name: "GPT-5.4",
+      reasoning: true,
+      limit: { context: 1_000_000, output: 128_000 },
+    }),
+    authored: () => ({
+      base_model: "openai/gpt-5.4",
+      cost: { input: 1 },
+      reasoning_options: [{ type: "effort", values: ["low", "medium", "high"] }],
+    }),
+  });
+
+  expect(translated?.model).toMatchObject({ base_model: "openai/gpt-5.4" });
+  expect(translated?.model).not.toHaveProperty("description");
+  expect(translated?.model).not.toHaveProperty("family");
+  expect(translated?.model).not.toHaveProperty("release_date");
+});
+
+test("does not invent empty reasoning controls", () => {
+  const [model] = zenzmux.parseModels({
+    success: true,
+    data: [pageModel({
+      slug: "example/reasoning-model",
+      supports_reasoning: 1,
+    })],
+  });
+
+  expect(() => zenzmux.translateModel(model!, {
+    existing: () => undefined,
+    authored: () => undefined,
+  })).toThrow("refusing to write reasoning_options = []");
+});
+
+test("uses DeepSeek V4 native reasoning controls", () => {
+  const [model] = zenzmux.parseModels({
+    success: true,
+    data: [pageModel({
+      slug: "deepseek/deepseek-v4-flash",
+      supports_reasoning: 1,
+      supported_parameters: "tools,tool_choice",
+    })],
+  });
+
+  const translated = zenzmux.translateModel(model!, {
+    existing: () => undefined,
+    authored: () => undefined,
+  });
+
+  expect(translated?.model.reasoning_options).toEqual([
+    { type: "toggle" },
+    { type: "effort", values: ["low", "high", "max"] },
+  ]);
+  expect(translated?.header).toContain("thinking.type = enabled|disabled");
+});
+
+test("maps specialized cache-write prices", () => {
+  const [model] = zenzmux.parseModels({
+    success: true,
+    data: [pageModel({
+      variable_pricings: JSON.stringify([
+        {
+          feeItemCode: "prompt",
+          feeRecords: [{ feeRate: 1, components: [{ code: "chargeUnit", value: "millionTokens" }] }],
+        },
+        {
+          feeItemCode: "completion",
+          feeRecords: [{ feeRate: 2, components: [{ code: "chargeUnit", value: "millionTokens" }] }],
+        },
+        {
+          feeItemCode: "input_cache_write_5_min",
+          feeRecords: [{ feeRate: 3, components: [{ code: "chargeUnit", value: "millionTokens" }] }],
+        },
+      ]),
+    })],
+  });
+
+  const translated = zenzmux.translateModel(model!, {
+    existing: () => undefined,
+    authored: () => undefined,
+  });
+
+  expect(translated?.model.cost).toMatchObject({ cache_write: 3 });
+});

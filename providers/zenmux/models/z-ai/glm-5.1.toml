@@ -1,16 +1,7 @@
-name = "GLM-5.1"
-description = "Flagship GLM model for hybrid reasoning, coding, and agentic engineering"
-release_date = "2026-04-03"
-last_updated = "2026-04-03"
-attachment = false
-reasoning = true
-temperature = true
-tool_call = true
-structured_output = true
-open_weights = false
-
-[interleaved]
-field = "reasoning_content"
+# Toggle: reasoning.enabled = true|false
+# https://zenmux.ai/docs/guide/advanced/reasoning.html
+base_model = "zhipuai/glm-5.1"
+name = "GLM 5.1"
 
 [[reasoning_options]]
 type = "toggle"
@@ -27,9 +18,4 @@ output = 4.098
 cache_read = 0.2927
 
 [limit]
-context = 200_000
-output = 131_072
-
-[modalities]
-input = ["text"]
-output = ["text"]
+output = 128_000

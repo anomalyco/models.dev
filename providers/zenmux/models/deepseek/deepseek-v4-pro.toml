@@ -1,36 +1,18 @@
+# Toggle: thinking.type = enabled|disabled
+# Effort: reasoning_effort = high|max
+# https://zenmux.ai/docs/guide/advanced/reasoning.html
 base_model = "deepseek/deepseek-v4-pro"
-name = "DeepSeek V4 Pro"
-description = "Open MoE flagship with million-token context for coding and long agent runs"
-family = "deepseek-thinking"
-release_date = "2026-04-24"
-last_updated = "2026-04-24"
-attachment = false
-reasoning = true
-temperature = true
-tool_call = true
-structured_output = true
-knowledge = "2025-05"
-open_weights = true
-
-[interleaved]
-field = "reasoning_content"
+name = "DeepSeek V4 Pro 0813"
+temperature = false
 
 [[reasoning_options]]
 type = "toggle"
 
 [[reasoning_options]]
 type = "effort"
-values = ["low", "medium", "high"]
+values = ["high", "max"]
 
 [cost]
 input = 1.32
 output = 3.96
 cache_read = 0.022
-
-[limit]
-context = 1_000_000
-output = 384_000
-
-[modalities]
-input = ["text"]
-output = ["text"]

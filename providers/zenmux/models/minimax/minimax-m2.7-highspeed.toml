@@ -1,13 +1,8 @@
+# MiniMax M2.x reasoning is always on; ZenMux exposes no caller control.
+# https://zenmux.ai/docs/guide/advanced/reasoning.html
+
+base_model = "minimax/MiniMax-M2.7-highspeed"
 name = "MiniMax M2.7 highspeed"
-description = "High-speed MiniMax model for low-latency coding and agent workflows"
-release_date = "2026-03-20"
-last_updated = "2026-03-20"
-attachment = true
-reasoning = true
-temperature = true
-tool_call = true
-knowledge = "2025-01-01"
-open_weights = false
 reasoning_options = []
 
 [cost]
@@ -15,14 +10,6 @@ input = 0.611
 output = 2.4439
 cache_read = 0.0611
 cache_write = 0.3819
-
-[limit]
-context = 204_800
-output = 131_070
-
-[modalities]
-input = ["text"]
-output = ["text"]
 
 [provider]
 npm = "@ai-sdk/anthropic"

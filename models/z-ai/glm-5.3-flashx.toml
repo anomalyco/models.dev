@@ -1,0 +1,17 @@
+name = "GLM 5.3 FlashX"
+description = "GLM-5.3-FlashX is a faster and smoother version of GLM-5.3-Flash, delivering inference speeds of up to 200 tokens/s. GLM-5.3-FlashX is a native multimodal model from Z.ai. It is suited for efficient coding and long-horizon agent tasks. Its hybrid sparse and linear attention architecture maintains accurate long-context behavior while reducing compute overhead."
+release_date = "2026-09-18"
+last_updated = "2026-09-18"
+attachment = true
+reasoning = true
+temperature = false
+tool_call = false
+open_weights = false
+
+[limit]
+context = 1_000_000
+output = 128_000
+
+[modalities]
+input = ["text", "image", "video", "pdf"]
+output = ["text"]

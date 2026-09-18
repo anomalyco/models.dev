@@ -1,15 +1,23 @@
+# Toggle: enable_thinking = true|false
+# Effort: reasoning_effort = low|medium|xhigh
+# Budget: thinking_budget (integer)
+# https://zenmux.ai/docs/guide/advanced/reasoning.html
 base_model = "alibaba/qwen3.8-max"
-name = "Qwen3.8 Max"
-description = "2.4-trillion-parameter MoE flagship for coding, professional work, multimodal understanding, and long-horizon agentic workflows"
-family = "qwen"
-release_date = "2026-08-03"
-last_updated = "2026-08-03"
-attachment = true
-reasoning = true
-temperature = true
-tool_call = true
-open_weights = false
-reasoning_options = []
+name = "Qwen3.8-Max"
+temperature = false
+tool_call = false
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "xhigh"]
+
+[[reasoning_options]]
+type = "budget_tokens"
+min = 0
+max = 262_144
 
 [cost]
 input = 2
@@ -18,9 +26,7 @@ cache_read = 0.17
 cache_write = 2.5
 
 [limit]
-context = 1_000_000
-output = 131_072
+output = 64_000
 
 [modalities]
-input = ["text", "image", "video", "pdf"]
-output = ["text"]
+input = ["text", "image", "video"]

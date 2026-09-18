@@ -1,16 +1,7 @@
+# Effort: reasoning_effort = none|low|medium|high|xhigh|max
+# https://zenmux.ai/docs/guide/advanced/reasoning.html
 base_model = "openai/gpt-5.6-sol"
-name = "GPT-5.6 Sol"
-description = "Frontier GPT-5.6 model for complex professional work, coding, and agentic workflows"
-family = "gpt-sol"
-release_date = "2026-07-09"
-last_updated = "2026-07-09"
-attachment = true
-reasoning = true
-temperature = false
-tool_call = true
-structured_output = true
-knowledge = "2026-02-16"
-open_weights = false
+tool_call = false
 
 [[reasoning_options]]
 type = "effort"
@@ -28,12 +19,3 @@ input = 8
 output = 30
 cache_read = 0.8
 cache_write = 10
-
-[limit]
-context = 1_050_000
-input = 922_000
-output = 128_000
-
-[modalities]
-input = ["text", "image", "pdf"]
-output = ["text"]

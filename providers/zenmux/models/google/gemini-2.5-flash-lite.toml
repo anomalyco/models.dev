@@ -1,25 +1,16 @@
-# Vertex `thinkingBudget`: -1 (dynamic) or 512..24576; no disable sentinel is listed.
-# https://docs.zenmux.ai/api/vertexai/generate-content.html (accessed 2026-06-25)
+# Toggle: thinking_budget = 0|positive integer
+# https://zenmux.ai/docs/guide/advanced/reasoning.html
+base_model = "google/gemini-2.5-flash-lite"
 name = "Gemini 2.5 Flash Lite"
-description = "Low-latency Gemini model for high-volume multimodal and agent workloads"
-release_date = "2025-07-22"
-last_updated = "2025-07-22"
-attachment = true
-reasoning = false
-temperature = true
-tool_call = true
-knowledge = "2025-01-01"
-open_weights = false
+
+[[reasoning_options]]
+type = "toggle"
 
 [cost]
 input = 0.1
 output = 0.4
 cache_read = 0.01
+cache_write = 1
 
 [limit]
-context = 1_048_000
-output = 64_000
-
-[modalities]
-input = ["pdf", "image", "text", "audio"]
-output = ["text"]
+output = 65_535
