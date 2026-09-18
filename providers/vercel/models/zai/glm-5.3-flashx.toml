@@ -1,0 +1,23 @@
+name = "GLM 5.3 FlashX"
+description = "GLM vision model for visual reasoning, documents, and multimodal agents"
+family = "glm"
+release_date = "2026-09-18"
+last_updated = "2026-09-18"
+attachment = true
+reasoning = true
+tool_call = true
+open_weights = false
+reasoning_options = []
+
+[cost]
+input = 0.37
+output = 1.25
+cache_read = 0.075
+
+[limit]
+context = 1_000_000
+output = 131_072
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
