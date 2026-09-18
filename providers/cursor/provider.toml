@@ -1,0 +1,12 @@
+# Cursor provider for models.dev (sources accessed 2026-09-09):
+# - Pricing: https://cursor.com/docs/models-and-pricing
+# - Model table (default/max context, Agent/Thinking/Images): https://cursor.com/docs
+# - npm package + model discovery: https://github.com/oakimov/cursor-opencode-provider
+#   (AvailableModels fetch + cursor-models.json cache; src/pricing-data.ts generated
+#   from the Cursor docs via scripts/generate-cursor-pricing.ts; OpenCode catalog
+#   mapping in src/model-config.ts)
+# Auth: CURSOR_API_KEY (API key from https://cursor.com/settings) or browser OAuth via the plugin.
+name = "Cursor"
+npm = "cursor-opencode-provider"
+env = ["CURSOR_API_KEY"]
+doc = "https://cursor.com/docs/models-and-pricing"
