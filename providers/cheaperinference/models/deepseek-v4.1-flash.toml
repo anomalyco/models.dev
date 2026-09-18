@@ -1,0 +1,25 @@
+# Image input verified on this host: a 32x32 solid-colour PNG as a data: URI was named correctly on
+# 4 of 4 colour probes (probed 2026-09-17).
+# Toggle: reasoning.enabled = true|false
+# Rates: GET https://api.cheaperinference.com/v1/models (pricing_version sha256:42cddd4d…, checked 2026-09-17T16:02:40Z)
+# Discounted marketplace rate, 59.72% off the model maker's list price ($0.3/$1.2 per 1M).
+base_model = "deepseek/deepseek-v4.1-flash"
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[cost]
+input = 0.120853
+output = 0.483412
+cache_read = 0.002417
+cache_write = 0.120853
+
+[limit]
+context = 1048576

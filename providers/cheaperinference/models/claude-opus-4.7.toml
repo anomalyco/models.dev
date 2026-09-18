@@ -1,0 +1,18 @@
+# Image input verified on this host: a 32x32 solid-colour PNG as a data: URI was named correctly on
+# 4 of 4 colour probes (probed 2026-09-17).
+# No reasoning on this host: 39 requests returned 200 with no reasoning_content and a reasoning token
+# count of 0 - plain, top-level reasoning_effort, reasoning.enabled, reasoning.effort,
+# reasoning.max_tokens, thinking.type = "enabled" with budget_tokens, and Google-style thinking_budget.
+# The most recent 21 of those were all answered by one route, Claude Platform on AWS, so this is that
+# route's steady behaviour rather than an artefact of the gateway picking a different upstream per
+# request. The catalog reports capabilities.reasoning false (probed 2026-09-17).
+# Rates: GET https://api.cheaperinference.com/v1/models (pricing_version sha256:6d2520b9…, checked 2026-09-17T07:00:28Z)
+# Discounted marketplace rate, 30.00% off the model maker's list price ($5.0/$25.0 per 1M).
+base_model = "anthropic/claude-opus-4-7"
+reasoning = false
+
+[cost]
+input = 3.5
+output = 17.5
+cache_read = 0.35
+cache_write = 4.25

@@ -1,0 +1,18 @@
+# Image input verified on this host: 2 of 4 colour probes exact, the others "lime" for green and
+# "magenta" for purple (probed 2026-09-17).
+# No reasoning on this host: of 41 requests, 39 returned no reasoning_content and a reasoning token count
+# of 0 or absent, across plain, top-level reasoning_effort, reasoning.enabled, reasoning.effort,
+# reasoning.max_tokens, thinking.type and thinking_budget; the most recent 21, covering all seven forms
+# three times each, returned nothing at all. Two early requests did reason (241 reasoning tokens once, 964
+# characters of reasoning_content once) but no request shape reproduces that, and the catalog reports
+# capabilities.reasoning false (probed 2026-09-17).
+# Rates: GET https://api.cheaperinference.com/v1/models (pricing_version sha256:6d2520b9…, checked 2026-09-17T07:00:28Z)
+# Discounted marketplace rate, 30.00% off the model maker's list price ($1.0/$5.0 per 1M).
+base_model = "anthropic/claude-haiku-4-5"
+reasoning = false
+
+[cost]
+input = 0.7
+output = 3.5
+cache_read = 0.07
+cache_write = 0.85

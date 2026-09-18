@@ -1,0 +1,22 @@
+# No usable image input on this host: the request is accepted but the image never reaches the model -
+# it answered NOIMAGE on 4 of 4 colour probes (probed 2026-09-17).
+# Toggle: reasoning.enabled = true|false
+# Rates: GET https://api.cheaperinference.com/v1/models (pricing_version sha256:6d2520b9…, checked 2026-09-17T07:00:28Z)
+# Discounted marketplace rate, 30.00% off the model maker's list price ($0.3/$1.2 per 1M).
+base_model = "minimax/MiniMax-M2.7"
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "toggle"
+
+[cost]
+input = 0.21
+output = 0.84
+cache_read = 0.0255
+cache_write = 0.255
+
+[limit]
+context = 198000
+output = 32768

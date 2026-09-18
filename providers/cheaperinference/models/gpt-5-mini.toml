@@ -1,0 +1,19 @@
+# No usable image input on this host: the request is accepted but the colour is guessed - 0 of 6 probes
+# right (orange, maroon, olive, magenta, cyan, turquoise) (probed 2026-09-17).
+# Rates: GET https://api.cheaperinference.com/v1/models (pricing_version sha256:6d2520b9…, checked 2026-09-17T07:00:28Z)
+# Discounted marketplace rate, 19.43% off the model maker's list price ($0.25/$2.0 per 1M).
+base_model = "openai/gpt-5-mini"
+attachment = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["minimal", "low", "medium", "high"]
+
+[cost]
+input = 0.201421
+output = 1.611374
+cache_read = 0.020142
+cache_write = 0.201421
+
+[modalities]
+input = ["text"]
