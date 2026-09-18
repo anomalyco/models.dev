@@ -1,0 +1,10 @@
+base_model = "cohere/command-a-plus-05-2026"
+
+reasoning_options = [
+  { type = "toggle" },
+  { type = "budget_tokens", min = 1 },
+]
+
+[cost]
+input = 2.5
+output = 10

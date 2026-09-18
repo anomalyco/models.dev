@@ -1,0 +1,19 @@
+name = "Qwen-Omni Turbo Realtime"
+description = "Qwen omni model for text, vision, audio, and multimodal agent tasks"
+family = "qwen"
+release_date = "2025-05-08"
+last_updated = "2025-05-08"
+knowledge = "2024-04"
+attachment = false
+reasoning = false
+tool_call = true
+temperature = true
+open_weights = false
+
+[limit]
+context = 32768
+output = 2048
+
+[modalities]
+input = ["text", "image", "audio"]
+output = ["text", "audio"]

@@ -1,0 +1,19 @@
+name = "Qwen2.5-Omni 7B"
+description = "Qwen omni model for text, vision, audio, and multimodal agent tasks"
+family = "qwen"
+release_date = "2024-12"
+last_updated = "2024-12"
+knowledge = "2024-04"
+attachment = false
+reasoning = false
+tool_call = true
+temperature = true
+open_weights = true
+
+[limit]
+context = 32768
+output = 2048
+
+[modalities]
+input = ["text", "image", "audio", "video"]
+output = ["text", "audio"]

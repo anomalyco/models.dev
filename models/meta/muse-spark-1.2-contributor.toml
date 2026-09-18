@@ -1,0 +1,19 @@
+name = "Muse Spark 1.2 Contributor"
+description = "Muse Spark 1.2 is a coding-focused update to Muse Spark 1.1 with improvements in code generation, complex debugging, codebase understanding, and end-to-end developer workflows."
+family = "muse"
+release_date = "2026-08-05"
+last_updated = "2026-08-05"
+attachment = true
+reasoning = true
+tool_call = true
+structured_output = true
+temperature = true
+open_weights = false
+
+[limit]
+context = 1048576
+output = 131072
+
+[modalities]
+input = ["text", "image", "video", "pdf", "audio"]
+output = ["text"]

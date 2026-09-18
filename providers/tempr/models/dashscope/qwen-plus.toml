@@ -1,0 +1,11 @@
+base_model = "alibaba/qwen-plus"
+
+reasoning_options = [
+  { type = "toggle" },
+  { type = "budget_tokens" },
+]
+
+[cost]
+input = 0.4
+output = 1.2
+reasoning = 4

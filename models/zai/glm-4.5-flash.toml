@@ -1,0 +1,19 @@
+name = "GLM-4.5-Flash"
+description = "Efficient GLM model for fast reasoning, coding, and agent workflows"
+family = "glm-flash"
+release_date = "2025-07-28"
+last_updated = "2025-07-28"
+knowledge = "2025-04"
+attachment = false
+reasoning = true
+tool_call = true
+temperature = true
+open_weights = true
+
+[limit]
+context = 131072
+output = 98304
+
+[modalities]
+input = ["text"]
+output = ["text"]

@@ -1,0 +1,11 @@
+base_model = "alibaba/qwen-turbo"
+
+reasoning_options = [
+  { type = "toggle" },
+  { type = "budget_tokens" },
+]
+
+[cost]
+input = 0.05
+output = 0.2
+reasoning = 0.5

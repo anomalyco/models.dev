@@ -1,0 +1,19 @@
+name = "GLM-5-Turbo"
+description = "Faster GLM-5 lane for coding agents that need lower latency"
+family = "glm"
+release_date = "2026-03-16"
+last_updated = "2026-03-16"
+attachment = false
+reasoning = true
+tool_call = true
+structured_output = true
+temperature = true
+open_weights = false
+
+[limit]
+context = 200000
+output = 131072
+
+[modalities]
+input = ["text"]
+output = ["text"]
