@@ -1,11 +1,21 @@
-# Effort: reasoning_effort = minimal|low|medium|high|xhigh
+# Toggle: enable_thinking = true|false
+# Effort: reasoning_effort = low|medium|xhigh
+# Budget: thinking_budget (0..262144)
 # https://zenmux.ai/docs/guide/advanced/reasoning.html
 base_model = "alibaba/qwen3.8-max-0902"
 name = "Qwen3.8-Max-0902"
 
 [[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
 type = "effort"
-values = ["minimal", "low", "medium", "high", "xhigh"]
+values = ["low", "medium", "xhigh"]
+
+[[reasoning_options]]
+type = "budget_tokens"
+min = 0
+max = 262_144
 
 [cost]
 input = 2
