@@ -1,12 +1,12 @@
-base_model = "deepseek/deepseek-v4-flash-0731"
+base_model = "deepseek/deepseek-v4.1-flash"
 reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high"] }]
 
 [interleaved]
 field = "reasoning_content"
 
 [cost]
-input = 0.08
-output = 0.1
+input = 0.1
+output = 0.5
 cache_read = 0.003
 
 [limit]
