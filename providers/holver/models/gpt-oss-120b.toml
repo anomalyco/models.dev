@@ -1,0 +1,7 @@
+# Served by Holver (https://api.holver.id/v1, OpenAI-compatible,
+# Bearer $HOLVER_API_KEY). Catalog: https://holver.id/models.
+# Holver bills via credit packages, not per-model USD rates, so cost is
+# intentionally omitted. Reasoning controls mirror the lab model.
+base_model = "openai/gpt-oss-120b"
+name = "GPT-OSS 120B"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]

@@ -1,0 +1,8 @@
+# Served by Holver (https://api.holver.id/v1, OpenAI-compatible,
+# Bearer $HOLVER_API_KEY) as "qwen-3.8-max". Toggle/effort/budget mirror the
+# lab model and verified OpenAI-compatible relays. Catalog:
+# https://holver.id/models. Holver bills via credit packages, not per-model
+# USD rates, so cost is intentionally omitted.
+base_model = "alibaba/qwen3.8-max"
+name = "Qwen 3.8 Max"
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "medium", "xhigh"] }, { type = "budget_tokens" }]

@@ -1,0 +1,7 @@
+# Served by Holver (https://api.holver.id/v1, OpenAI-compatible,
+# Bearer $HOLVER_API_KEY). Catalog: https://holver.id/models.
+# Holver bills via credit packages, not per-model USD rates, so cost is
+# intentionally omitted. Reasoning controls mirror the lab model.
+base_model = "deepseek/deepseek-v4-pro-0813"
+name = "DeepSeek V4 Pro"
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["high", "max"] }]

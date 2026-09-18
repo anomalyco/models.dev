@@ -1,0 +1,10 @@
+# Served by Holver (https://api.holver.id/v1, OpenAI-compatible,
+# Bearer $HOLVER_API_KEY) as "gemini-3.1-pro". No GA lab file exists yet, so
+# this points at the preview lab entry for the same model. Catalog:
+# https://holver.id/models. Holver bills via credit packages, not per-model
+# USD rates, so cost is intentionally omitted. Reasoning controls mirror the
+# lab model.
+base_model = "google/gemini-3.1-pro-preview"
+name = "Gemini 3.1 Pro"
+description = "Reasoning-first Gemini for agentic coding and complex problem solving"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]

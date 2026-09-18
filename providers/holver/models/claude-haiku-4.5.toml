@@ -1,0 +1,7 @@
+# Served by Holver (https://api.holver.id/v1, OpenAI-compatible,
+# Bearer $HOLVER_API_KEY). Catalog: https://holver.id/models.
+# Holver bills via credit packages, not per-model USD rates, so cost is
+# intentionally omitted. Reasoning controls mirror the lab model.
+base_model = "anthropic/claude-haiku-4-5"
+name = "Claude Haiku 4.5"
+reasoning_options = [{ type = "budget_tokens", min = 1_024 }]
