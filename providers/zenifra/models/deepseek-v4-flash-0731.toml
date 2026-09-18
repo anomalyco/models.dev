@@ -1,0 +1,19 @@
+# Source: GET https://ai.zenifra.com/v1/models (accessed 2026-09-12).
+# Conversion: Zenifra prices are BRL; models.dev costs use BRL / 5.20 = USD (project rate, applied 2026-09-12).
+# Reasoning: reasoning_effort = low|medium|high|xhigh|max
+base_model = "deepseek/deepseek-v4-flash-0731"
+structured_output = false
+reasoning_options = [
+  { type = "effort", values = ["low", "medium", "high", "xhigh", "max"] },
+]
+
+[limit]
+output = 393_216
+
+[provider]
+shape = "completions"
+
+[cost]
+input = 0.423077
+output = 1.269231
+cache_read = 0.055769
