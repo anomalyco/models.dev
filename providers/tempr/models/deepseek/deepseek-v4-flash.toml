@@ -1,8 +1,8 @@
-base_model = "deepseek/deepseek-v4-flash"
-
-reasoning = true
 # Toggle: thinking.type = enabled|disabled
 # Effort: reasoning_effort = low|high|max
+base_model = "deepseek/deepseek-v4.1-flash"
+
+reasoning = true
 reasoning_options = [
   { type = "toggle" },
   { type = "effort", values = ["low", "high", "max"] },

@@ -1,8 +1,8 @@
+# Toggle: enable_thinking = true|false
+# Budget: thinking_budget (integer reasoning tokens)
 base_model = "alibaba/qwen3.8-max"
 
 reasoning = true
-# Toggle: enable_thinking = true|false
-# Budget: thinking_budget (integer reasoning tokens)
 reasoning_options = [
   { type = "toggle" },
   { type = "effort", values = ["low", "medium", "xhigh"] },

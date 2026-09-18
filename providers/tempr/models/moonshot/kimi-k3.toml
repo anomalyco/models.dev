@@ -1,8 +1,8 @@
+# Toggle: thinking.type = enabled|disabled
+# Effort: reasoning_effort = low|high|max
 base_model = "moonshotai/kimi-k3"
 
 reasoning = true
-# Toggle: thinking.type = enabled|disabled
-# Effort: reasoning_effort = low|high|max
 reasoning_options = [
   { type = "toggle" },
   { type = "effort", values = ["low", "high", "max"] },
