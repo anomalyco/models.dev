@@ -1,10 +1,15 @@
+# No caller reasoning control on this host. Measured 2026-09-18: reasoning runs
+# whether or not `reasoning_effort` is sent, and the value does not grade the
+# output, so there is nothing here a caller can set.
 base_model = "moonshotai/kimi-k2.6"
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
+reasoning_options = []
+
+[interleaved]
+field = "reasoning_content"
 
 [cost]
 input = 0.735
 output = 3.43
 
 [limit]
-context = 262144
-output = 64000
+output = 64_000
