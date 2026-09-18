@@ -1,0 +1,19 @@
+name = "Qwen3 Max Thinking"
+description = "Thinking variant of Qwen3 Max for deliberate problem solving, math, coding, and tool use"
+family = "qwen"
+release_date = "2026-01-23"
+last_updated = "2026-01-23"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+knowledge = "2025-04"
+open_weights = false
+
+[limit]
+context = 262_144
+output = 32_000
+
+[modalities]
+input = ["text"]
+output = ["text"]
