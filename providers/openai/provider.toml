@@ -1,3 +1,8 @@
+# Cache key (chat): automatic prefix cache with `prompt_cache_key` for separate cache accounting
+# Use headers: repeat the stable prefix with identical model and params
+# Use body: `prompt_cache_key` plus `prompt_cache_options` and `prompt_cache_breakpoint` for explicit control
+# Cache policy: stable prefix + same model; keep reusable content first byte-identical and append-only
+# Docs: https://platform.openai.com/docs/guides/prompt-caching
 name = "OpenAI"
 env = ["OPENAI_API_KEY"]
 npm = "@ai-sdk/openai"
