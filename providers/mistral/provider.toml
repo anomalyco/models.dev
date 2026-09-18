@@ -1,3 +1,8 @@
+# Cache key (chat): body `prompt_cache_key` — stable conversation/session/workflow id scoping reuse to an identical prefix on the same model; hits report usage.prompt_tokens_details.cached_tokens at 10% input price
+# Use headers: repeat the stable prefix with identical model and prompt_cache_key
+# Use body: `prompt_cache_key` with a stable conversation/session/workflow id
+# Cache policy: stable prefix + same model and key; reuse one stable key per conversation and preserve the shared prompt prefix across turns; 64-token blocks with longer shared prefixes reusing more cached tokens
+# Docs: https://docs.mistral.ai/studio/conversations/advanced/prompt-caching
 name = "Mistral"
 env = ["MISTRAL_API_KEY"]
 npm = "@ai-sdk/mistral"

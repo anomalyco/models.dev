@@ -1,3 +1,8 @@
+# Cache key (chat): automatic prefix cache guided by position with static content first
+# Use headers: repeat the stable prefix with identical model and params
+# Use body: repeat the stable prefix with identical model and params
+# Cache policy: stable prefix + same model; put reusable fixed content (system instructions) first with dynamic input last
+# Docs: https://moark.ai/docs/products/apis/texts/text-generation
 # POST /v1/chat/completions is exposed by Moark's raw OpenAPI reference; its
 # request schema documents no toggle, effort, or reasoning-token-budget field.
 # https://moark.com/docs/openapi/v1 (accessed 2026-06-25)
