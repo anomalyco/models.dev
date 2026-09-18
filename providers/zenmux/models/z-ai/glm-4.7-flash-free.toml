@@ -4,22 +4,23 @@ release_date = "2026-01-19"
 last_updated = "2026-01-19"
 attachment = false
 reasoning = true
-reasoning_options = []
 temperature = true
 tool_call = true
 knowledge = "2025-01-01"
 open_weights = false
+reasoning_options = []
+
+[interleaved]
+field = "reasoning_content"
 
 [cost]
-input = 0.00
-output = 0.00
+input = 0
+output = 0
+cache_read = 0
 
 [limit]
 context = 200_000
 output = 64_000
-
-[interleaved]
-field = "reasoning_content"
 
 [modalities]
 input = ["text"]

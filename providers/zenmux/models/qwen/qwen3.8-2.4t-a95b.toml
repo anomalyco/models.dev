@@ -1,0 +1,27 @@
+base_model = "alibaba/qwen3.8-2.4t-a95b"
+name = "Qwen3.8 2.4T A95B"
+description = "Open-weight sparse MoE (2.4T total, 95B active), the open-weight twin of Qwen3.8 Max for coding, research, complex reasoning, and agentic workflows"
+family = "qwen"
+release_date = "2026-08-12"
+last_updated = "2026-08-12"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = true
+reasoning_options = []
+
+[cost]
+input = 2
+output = 6
+cache_read = 0.25
+cache_write = 2.5
+
+[limit]
+context = 262_144
+output = 131_072
+
+[modalities]
+input = ["text"]
+output = ["text"]

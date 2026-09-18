@@ -1,0 +1,17 @@
+name = "Qwen-Image-2.0"
+description = "Qwen-Image-2.0 is an image generation model launched by Qwen AI."
+release_date = "2026-03-03"
+last_updated = "2026-03-03"
+attachment = true
+reasoning = false
+temperature = false
+tool_call = false
+open_weights = false
+
+[limit]
+context = 1_024
+output = 0
+
+[modalities]
+input = ["text", "image"]
+output = ["image"]

@@ -1,0 +1,17 @@
+name = "Veo 3.1"
+description = "Veo 3.1 is Google's state-of-the-art model for generating high-fidelity, 8-second 720p, 1080p or 4k videos featuring stunning realism and natively generated audio. You can access this model programmatically using the Gemini API. To learn more about the available Veo model variants, see the Model Versions section."
+release_date = "2026-01-01"
+last_updated = "2026-01-01"
+attachment = true
+reasoning = false
+temperature = false
+tool_call = false
+open_weights = false
+
+[limit]
+context = 100_000
+output = 0
+
+[modalities]
+input = ["text", "image", "video"]
+output = ["video"]

@@ -1,0 +1,23 @@
+base_model = "openai/text-embedding-3-small"
+name = "Text Embedding 3 Small"
+description = "OpenAI: Text Embedding 3 Small"
+release_date = "2025-10-31"
+last_updated = "2025-10-31"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = false
+knowledge = "2025-01-01"
+open_weights = false
+
+[cost]
+input = 0.02
+output = 0
+
+[limit]
+context = 8_192
+output = 0
+
+[modalities]
+input = ["text"]
+output = []

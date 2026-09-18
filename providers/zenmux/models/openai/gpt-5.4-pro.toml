@@ -4,15 +4,23 @@ release_date = "2026-03-20"
 last_updated = "2026-03-20"
 attachment = true
 reasoning = true
-reasoning_options = [{ type = "effort", values = ["medium", "high", "xhigh"] }]
 temperature = true
 tool_call = true
 knowledge = "2025-08-31"
 open_weights = false
 
+[[reasoning_options]]
+type = "effort"
+values = ["medium", "high", "xhigh"]
+
 [cost]
-input = 45.00
-output = 225.00
+input = 30
+output = 180
+
+[[cost.tiers]]
+tier = { type = "context", size = 272_000 }
+input = 60
+output = 270
 
 [limit]
 context = 1_050_000

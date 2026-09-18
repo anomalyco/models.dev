@@ -1,0 +1,30 @@
+base_model = "anthropic/claude-fable-5-1"
+name = "Claude Fable 5.1"
+description = "Claude model for demanding reasoning and long-horizon agentic work"
+family = "claude-fable"
+release_date = "2026-09-01"
+last_updated = "2026-09-01"
+attachment = true
+reasoning = true
+temperature = false
+tool_call = true
+knowledge = "2026-06"
+open_weights = false
+reasoning_options = []
+
+[cost]
+input = 10
+output = 50
+cache_read = 0.25
+
+[limit]
+context = 1_000_000
+output = 128_000
+
+[modalities]
+input = ["text", "image", "pdf"]
+output = ["text"]
+
+[provider]
+npm = "@ai-sdk/anthropic"
+api = "https://zenmux.ai/api/anthropic/v1"
