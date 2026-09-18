@@ -1,0 +1,35 @@
+# Reasoning HTTP control (accessed 2026-09-10):
+# POST https://api.privatemind.com/v1/chat/completions accepts top-level
+# reasoning_effort = "off" | "low" | "medium" | "high" | "max".
+# On hybrid models (the entries here with [[reasoning_options]] type = "toggle"):
+# "off" disables thinking, and the other values all enable it equivalently
+# (qwen3-8-27b-fp8 returned a byte-identical trace at low, high and max, and
+# none at "off"). A binary toggle, not a graded effort control.
+# Thinking-only deployments publish capabilities.reasoning_mandatory = true
+# and carry type = "effort" only: "off" returns HTTP 400, the accepted
+# depths are listed in capabilities.reasoning_effort_levels (Kimi K3 and
+# GLM 5.3: low | high | max) and the level applied to a request that omits
+# the field is published as capabilities.reasoning_effort_default. A value
+# outside that list is accepted rather than rejected and resolves to a
+# served depth ("medium" on kimi-k3-chat returns 200).
+# A dial that lists "off" among its values carries both controls.
+# Feature-detect via supported_parameters + capabilities on GET /v1/models.
+#
+# Pricing (accessed 2026-09-10): GET /v1/models quotes list prices (USD per
+# MTok) to API-key callers only; the anonymous listing names models without
+# prices. The sync sends PRIVATEMIND_API_KEY when set and otherwise keeps
+# the authored [cost].
+#
+# temperature (accessed 2026-09-10): a live sampling control on these
+# deployments, advertised per-model in supported_parameters (the list is
+# curated per model, e.g. "reasoning" is absent on the Gemma build). The
+# Kimi K3 entries keep temperature = true over the lab entry's false; the
+# same true-over-false override on this base is carried by arcee, baseten,
+# chutes, kilo, neon, openrouter and synthetic.
+# https://docs.privatemind.com/chat-completions.html#reasoning-effort
+# https://api.privatemind.com/v1/models
+name = "PrivateMind"
+npm = "@ai-sdk/openai-compatible"
+api = "https://api.privatemind.com/v1"
+env = ["PRIVATEMIND_API_KEY"]
+doc = "https://docs.privatemind.com"
