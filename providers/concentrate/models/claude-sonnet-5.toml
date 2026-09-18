@@ -1,0 +1,21 @@
+# Concentrate exposes the off switch as `reasoning_effort: none` rather than a
+# separate toggle; all three routes (anthropic, azure, bedrock) declare it. This
+# ID returns no reasoning text, so effort was verified by output budget instead:
+# live probes on 2026-08-19 with an identical prompt produced 2_006 completion
+# tokens at none, 2_328 at low, 4_799 at high and 16_000 at max, so the tiers
+# have distinct effect. `max` is declared by the anthropic and azure routes; the
+# bedrock route stops at xhigh.
+# https://concentrate.ai/models/claude-sonnet-5
+base_model = "anthropic/claude-sonnet-5"
+structured_output = true
+
+interleaved = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "xhigh", "max"]
+
+[cost]
+input = 2
+output = 10
+cache_read = 0.2
