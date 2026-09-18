@@ -1,7 +1,5 @@
 base_model = "tencent/hy4-preview"
 
-reasoning_options = [{ type = "toggle" }]
-
 [cost]
 input = 5.004
 output = 15.006
@@ -10,3 +8,7 @@ cache_read = 0.252
 [limit]
 context = 1048576
 output = 64000
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "high"]

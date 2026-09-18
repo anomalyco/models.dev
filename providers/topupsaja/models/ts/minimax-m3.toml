@@ -1,6 +1,7 @@
-base_model = "minimax/MiniMax-M3"
+# Toggle: reasoning.enabled = true|false
+# https://openrouter.ai/docs/guides/best-practices/reasoning-tokens
 
-reasoning_options = [{ type = "toggle" }]
+base_model = "minimax/MiniMax-M3"
 
 [cost]
 input = 2.1
@@ -10,3 +11,6 @@ cache_read = 0.42
 [limit]
 context = 1048576
 output = 512000
+
+[[reasoning_options]]
+type = "toggle"

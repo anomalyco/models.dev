@@ -1,6 +1,7 @@
-base_model = "anthropic/claude-sonnet-5"
+# Toggle: reasoning.enabled = true|false
+# https://openrouter.ai/docs/guides/best-practices/reasoning-tokens
 
-reasoning_options = [{ type = "toggle" }]
+base_model = "anthropic/claude-sonnet-5"
 
 [cost]
 input = 12
@@ -10,3 +11,10 @@ cache_read = 1.2
 [limit]
 context = 1000000
 output = 128000
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high", "xhigh", "max"]

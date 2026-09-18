@@ -1,17 +1,4 @@
-name = "Mistral: Mistral Medium 3.5"
-description = "Mistral: Mistral Medium 3.5 served via TopUpSaja, an OpenAI-compatible AI relay."
-release_date = "2026-09-18"
-last_updated = "2026-09-18"
-attachment = true
-reasoning = true
-reasoning_options = [{ type = "toggle" }]
-tool_call = true
-temperature = true
-knowledge = "2025-06"
-open_weights = true
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+base_model = "mistral/mistral-medium-2604"
 
 [cost]
 input = 9
@@ -21,3 +8,7 @@ cache_read = 4.5
 [limit]
 context = 262144
 output = 209715
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "high"]

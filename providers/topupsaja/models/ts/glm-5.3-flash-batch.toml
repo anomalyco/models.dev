@@ -1,6 +1,6 @@
 base_model = "zhipuai/glm-5.3-flash"
 
-reasoning_options = [{ type = "toggle" }]
+name = "Z.ai: GLM 5.3 Flash (batch)"
 
 [cost]
 input = 0.525
@@ -10,3 +10,7 @@ cache_read = 0.105
 [limit]
 context = 1048576
 output = 943718
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]

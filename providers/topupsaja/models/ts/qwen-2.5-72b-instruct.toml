@@ -1,16 +1,4 @@
-name = "Qwen2.5 72B Instruct"
-description = "Qwen2.5 72B Instruct served via TopUpSaja, an OpenAI-compatible AI relay."
-release_date = "2026-09-18"
-last_updated = "2026-09-18"
-attachment = false
-reasoning = false
-tool_call = true
-temperature = true
-knowledge = "2025-06"
-open_weights = true
-[modalities]
-input = ["text"]
-output = ["text"]
+base_model = "alibaba/qwen-2.5-72b-instruct"
 
 [cost]
 input = 2.16

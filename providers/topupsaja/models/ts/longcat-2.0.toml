@@ -1,6 +1,7 @@
-base_model = "meituan/longcat-2.0"
+# Toggle: reasoning.enabled = true|false
+# https://openrouter.ai/docs/guides/best-practices/reasoning-tokens
 
-reasoning_options = [{ type = "toggle" }]
+base_model = "meituan/longcat-2.0"
 
 [cost]
 input = 2.1
@@ -10,3 +11,9 @@ cache_read = 0.042
 [limit]
 context = 1048756
 output = 262144
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "budget_tokens"

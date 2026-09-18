@@ -1,6 +1,7 @@
-base_model = "moonshotai/kimi-k3"
+# Toggle: reasoning.enabled = true|false
+# https://openrouter.ai/docs/guides/best-practices/reasoning-tokens
 
-reasoning_options = [{ type = "toggle" }]
+base_model = "moonshotai/kimi-k3"
 
 [cost]
 input = 11.7
@@ -10,3 +11,10 @@ cache_read = 1.357
 [limit]
 context = 1048576
 output = 943718
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
