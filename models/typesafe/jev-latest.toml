@@ -1,8 +1,8 @@
 # Sources:
-# - https://docs.typesafe.ai/introduction.md
+# - https://docs.typesafe.ai/models.md
 # - https://docs.typesafe.ai/api.md
 # - https://typesafe.ai/blog/introducing-system-one-models-and-jev
-# TypeSafe does not publish context or output token limits, so they remain unknown (0).
+# The 64k context limit covers the state plus all questions in one request.
 name = "Jev"
 description = "System One model for fast, typed probabilistic decisions over text or structured state"
 release_date = "2026-09-15"
@@ -15,7 +15,7 @@ structured_output = true
 open_weights = false
 
 [limit]
-context = 0
+context = 64000
 output = 0
 
 [modalities]

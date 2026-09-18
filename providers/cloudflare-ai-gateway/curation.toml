@@ -35,8 +35,12 @@ skip = [
   "google/gemini-3.7-flash",
   "google/gemini-3.8-flash",
   "stealth/union-alpha",
-  "typesafe/jev",
 ]
+
+# Cloudflare exposes TypeSafe's evaluation-only Jev alias over /ai/run. The shared
+# metadata marks its structured output support and lack of tool calling.
+[models."typesafe/jev"]
+base_model = "typesafe/jev-latest"
 
 [models."anthropic/claude-fable-5"]
 structured_output = true

@@ -251,7 +251,7 @@ test("rejects a catalog with no eligible proxied models", async () => {
   }
 });
 
-test("skips curated catalog models without compatible lab metadata", async () => {
+test("syncs Jev through shared TypeSafe metadata without inventing tool support", async () => {
   const originalFetch = globalThis.fetch;
   const originalToken = process.env.CLOUDFLARE_API_TOKEN;
   const originalAccount = process.env.CLOUDFLARE_ACCOUNT_ID;
@@ -277,7 +277,15 @@ test("skips curated catalog models without compatible lab metadata", async () =>
 
   try {
     const models = await cloudflareAiGateway.fetchModels();
-    expect(models.map((model) => model.catalog.model_id)).toEqual(["openai/gpt-4.1"]);
+    expect(models.map((model) => model.catalog.model_id)).toEqual(["typesafe/jev", "openai/gpt-4.1"]);
+    expect(cloudflareAiGateway.translateModel(models[0]!, {
+      existing: () => undefined,
+      authored: () => undefined,
+    }).model).toEqual({
+      base_model: "typesafe/jev-latest",
+      cost: { input: 0.042, output: 0 },
+      limit: { context: 32_000 },
+    });
   } finally {
     globalThis.fetch = originalFetch;
     restoreEnv("CLOUDFLARE_API_TOKEN", originalToken);
