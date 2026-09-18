@@ -1,3 +1,5 @@
+# TopUpSaja relays request bodies verbatim to OpenRouter /chat/completions
+
 base_model = "alibaba/qwen3.8-2.4t-a95b"
 
 [cost]
@@ -7,7 +9,6 @@ cache_read = 1.5
 
 [limit]
 context = 1048576
-output = 131072
 
 [[reasoning_options]]
 type = "effort"

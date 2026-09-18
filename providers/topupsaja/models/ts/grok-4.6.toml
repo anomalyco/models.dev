@@ -1,3 +1,5 @@
+# TopUpSaja relays request bodies verbatim to OpenRouter /chat/completions
+
 base_model = "xai/grok-4.6"
 
 [cost]
@@ -6,7 +8,6 @@ output = 36
 cache_read = 3
 
 [limit]
-context = 500000
 output = 450000
 
 [[reasoning_options]]

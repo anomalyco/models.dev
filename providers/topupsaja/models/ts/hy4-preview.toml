@@ -1,3 +1,5 @@
+# TopUpSaja relays request bodies verbatim to OpenRouter /chat/completions
+
 base_model = "tencent/hy4-preview"
 
 [cost]
@@ -7,7 +9,6 @@ cache_read = 0.252
 
 [limit]
 context = 1048576
-output = 64000
 
 [[reasoning_options]]
 type = "effort"

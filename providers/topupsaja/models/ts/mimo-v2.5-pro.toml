@@ -1,3 +1,5 @@
+# TopUpSaja relays request bodies verbatim to OpenRouter /chat/completions
+
 # Toggle: reasoning.enabled = true|false
 # https://openrouter.ai/docs/guides/best-practices/reasoning-tokens
 
@@ -10,7 +12,6 @@ cache_read = 0.022
 
 [limit]
 context = 1050000
-output = 131072
 
 [[reasoning_options]]
 type = "toggle"

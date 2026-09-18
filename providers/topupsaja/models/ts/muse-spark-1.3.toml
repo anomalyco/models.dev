@@ -1,4 +1,8 @@
+# TopUpSaja relays request bodies verbatim to OpenRouter /chat/completions
+
 base_model = "meta/muse-spark-1.3"
+
+reasoning_options = [{ type = "effort", values = ["minimal", "low", "medium", "high", "xhigh"] }]
 
 [cost]
 input = 7.5
@@ -6,9 +10,4 @@ output = 25.5
 cache_read = 0.9
 
 [limit]
-context = 1048576
 output = 943718
-
-[[reasoning_options]]
-type = "effort"
-values = ["minimal", "low", "medium", "high", "xhigh", "max"]

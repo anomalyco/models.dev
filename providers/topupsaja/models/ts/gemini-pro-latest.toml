@@ -1,12 +1,10 @@
+# TopUpSaja relays request bodies verbatim to OpenRouter /chat/completions
+
 base_model = "google/gemini-3-pro-preview"
 
-reasoning_options = []
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
 
 [cost]
 input = 12
 output = 72
 cache_read = 1.2
-
-[limit]
-context = 1048576
-output = 65536

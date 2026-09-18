@@ -1,3 +1,5 @@
+# TopUpSaja relays request bodies verbatim to OpenRouter /chat/completions
+
 base_model = "zhipuai/glm-5.3-flash"
 
 [cost]
@@ -7,7 +9,6 @@ cache_read = 0.105
 
 [limit]
 context = 1310720
-output = 131072
 
 [[reasoning_options]]
 type = "effort"

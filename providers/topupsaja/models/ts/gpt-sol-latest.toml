@@ -1,13 +1,11 @@
+# TopUpSaja relays request bodies verbatim to OpenRouter /chat/completions
+
 base_model = "openai/gpt-5.6-sol"
 
 [cost]
 input = 12
 output = 60
 cache_read = 1.2
-
-[limit]
-context = 1050000
-output = 128000
 
 [[reasoning_options]]
 type = "effort"
