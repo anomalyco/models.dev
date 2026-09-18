@@ -1,3 +1,4 @@
+# Open weights (MIT): https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash
 name = "DeepSeek V4.1 Flash"
 description = "DeepSeek V4.1 Flash model for reasoning and agentic coding"
 family = "deepseek-flash"
@@ -19,3 +20,7 @@ output = 384_000
 [modalities]
 input = ["text", "image"]
 output = ["text"]
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash"
