@@ -1,0 +1,13 @@
+# Tempr Gateway: https://temprhq.io/docs/gateway-chat-completions#reasoning
+# Effort: reasoning.effort = minimal|high (alias: top-level reasoning_effort)
+# /v1/messages: output_config.effort = minimal|high
+# /v1/responses: reasoning.effort = minimal|high
+base_model = "google/gemini-3.1-flash-image"
+
+reasoning_options = [
+  { type = "effort", values = ["minimal", "high"] },
+]
+
+[cost]
+input = 0.5
+output = 60

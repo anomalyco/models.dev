@@ -1,0 +1,19 @@
+name = "Open Mistral Nemo"
+description = "Legacy model retained for compatibility with older integrations"
+family = "mistral-nemo"
+release_date = "2024-07-01"
+last_updated = "2024-07-01"
+knowledge = "2024-07"
+attachment = false
+reasoning = false
+tool_call = true
+temperature = true
+open_weights = true
+
+[limit]
+context = 128000
+output = 128000
+
+[modalities]
+input = ["text"]
+output = ["text"]

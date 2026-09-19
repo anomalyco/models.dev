@@ -1,0 +1,22 @@
+# Tempr Gateway: https://temprhq.io/docs/gateway-chat-completions#reasoning
+# No reasoning control for this model: it reasons at its own depth, and the
+# x-tempr-reasoning-effort response header reports "default".
+base_model = "google/deep-research-max-preview-04-2026"
+name = "Deep Research Max Preview (Apr-21-2026)"
+temperature = true
+
+reasoning_options = []
+
+[cost]
+input = 2
+output = 12
+cache_read = 0.2
+
+[[cost.tiers]]
+tier = { type = "context", size = 200000 }
+input = 4
+output = 18
+cache_read = 0.4
+
+[limit]
+context = 131072

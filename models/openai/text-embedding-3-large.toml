@@ -1,0 +1,19 @@
+name = "text-embedding-3-large"
+description = "Embedding model for semantic search, retrieval, clustering, and ranking pipelines"
+family = "text-embedding"
+release_date = "2024-01-25"
+last_updated = "2024-01-25"
+knowledge = "2024-01"
+attachment = false
+reasoning = false
+tool_call = false
+temperature = false
+open_weights = false
+
+[limit]
+context = 8191
+output = 3072
+
+[modalities]
+input = ["text"]
+output = ["text"]

@@ -1,0 +1,19 @@
+name = "Devstral Small 2"
+description = "Legacy model retained for compatibility with older integrations"
+family = "devstral"
+release_date = "2025-12-09"
+last_updated = "2025-12-09"
+knowledge = "2025-12"
+attachment = false
+reasoning = false
+tool_call = true
+temperature = true
+open_weights = true
+
+[limit]
+context = 256000
+output = 256000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

@@ -1,0 +1,16 @@
+# Tempr Gateway: https://temprhq.io/docs/gateway-chat-completions#reasoning
+# Effort: reasoning.effort = minimal|low|medium|high|xhigh (alias: top-level reasoning_effort)
+# /v1/messages: output_config.effort = minimal|low|medium|high|xhigh
+# /v1/responses: reasoning.effort = minimal|low|medium|high|xhigh
+base_model = "openai/gpt-realtime-2.1"
+
+reasoning_options = [
+  { type = "effort", values = ["minimal", "low", "medium", "high", "xhigh"] },
+]
+
+[cost]
+input = 4
+output = 24
+cache_read = 0.4
+input_audio = 32
+output_audio = 64

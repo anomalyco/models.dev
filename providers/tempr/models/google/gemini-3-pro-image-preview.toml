@@ -1,0 +1,14 @@
+# Tempr Gateway: https://temprhq.io/docs/gateway-chat-completions#reasoning
+# No reasoning control for this model: it reasons at its own depth, and the
+# x-tempr-reasoning-effort response header reports "default".
+base_model = "google/gemini-3-pro-image-preview"
+name = "Nano Banana Pro"
+
+reasoning_options = []
+
+[cost]
+input = 2
+output = 120
+
+[limit]
+context = 131072
