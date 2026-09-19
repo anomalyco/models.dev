@@ -1,0 +1,11 @@
+# Budget: thinking_budget (integer reasoning tokens)
+base_model = "alibaba/qwen3-vl-30b-a3b"
+
+reasoning_options = [
+  { type = "budget_tokens" },
+]
+
+[cost]
+input = 0.2
+output = 0.8
+reasoning = 2.4

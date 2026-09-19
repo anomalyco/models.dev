@@ -1,0 +1,10 @@
+base_model = "inception/mercury-2"
+
+reasoning_options = [
+  { type = "effort", values = ["low", "medium", "high"] },
+]
+
+[cost]
+input = 0.25
+output = 0.75
+cache_read = 0.025

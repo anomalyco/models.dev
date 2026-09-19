@@ -1,0 +1,16 @@
+base_model = "xai/grok-4.20-multi-agent-0309"
+
+reasoning_options = [
+  { type = "effort", values = ["low", "medium", "high", "xhigh"] },
+]
+
+[cost]
+input = 1.25
+output = 2.5
+cache_read = 0.2
+
+[[cost.tiers]]
+tier = { type = "context", size = 200000 }
+input = 2.5
+output = 5
+cache_read = 0.4
