@@ -74,7 +74,10 @@ type Modality = "text" | "audio" | "image" | "video" | "pdf";
 // entry is skipped (MissingReasoningOptionsError) rather than written without
 // controls, so a new reasoning family surfaces as an explicit one-line addition.
 const REASONING_OPTIONS_BY_ID: Record<string, NonNullable<SyncedFullModel["reasoning_options"]>> = {
-  // GLM 5.3 / 5.3-Flash: toggle enable_thinking, effort low|high|max (default max)
+  // GLM 5.3 / 5.3-Flash: on by default, effort low|high|max (default max).
+  // TensorX exposes an on/off toggle via enable_thinking (docs.tensorx.ai/api-
+  // reference/reasoning), unlike first-party Z.AI, so toggle + effort is correct
+  // for this host.
   "z-ai/glm-5.3": [
     { type: "toggle" },
     { type: "effort", values: ["low", "high", "max"] },
@@ -97,6 +100,9 @@ const REASONING_OPTIONS_BY_ID: Record<string, NonNullable<SyncedFullModel["reaso
   "qwen/qwen3.8-27b": [{ type: "effort", values: ["low", "medium", "xhigh"] }],
   "qwen/qwen3.8-flash-next": [{ type: "effort", values: ["low", "medium", "xhigh"] }],
   // DeepSeek V4: off by default, toggle thinking, effort high|max when on
+  // DeepSeek V4: off by default, toggle thinking, effort high|max when on.
+  // TensorX docs: low/medium are accepted but map to high, so the effective
+  // caller-visible levels are high|max (same for Flash and Pro on this host).
   "deepseek/deepseek-v4-flash": [
     { type: "toggle" },
     { type: "effort", values: ["high", "max"] },
@@ -183,6 +189,7 @@ function resolveFactorBase(modelID: string, baseModel: string | undefined): stri
 function normalizeModel(
   model: TensorxSourceModel,
   existing: ExistingModel | undefined,
+  authored: ExistingModel | undefined,
   factorBase: string | undefined,
 ): SyncedModel {
   const reasoning = model.reasoning;
@@ -219,13 +226,16 @@ function normalizeModel(
     // vision is unreported do we preserve an authored modality override.
     const attachment = model.vision === true ? true : model.vision === false ? false : existing?.attachment;
     const modalities = model.vision === undefined ? existing?.modalities : undefined;
+    // Only carry lab-field deltas that are genuinely authored on this route (not
+    // the base-resolved merge), and only when it already factors onto this base.
+    const preserveDeltas = authored?.base_model === factorBase;
     return factorBaseModel(
       factorBase,
       {
-        name: existing?.name,
-        knowledge: existing?.knowledge,
-        release_date: existing?.release_date,
-        last_updated: existing?.last_updated,
+        name: preserveDeltas ? authored?.name : undefined,
+        knowledge: preserveDeltas ? authored?.knowledge : undefined,
+        release_date: preserveDeltas ? authored?.release_date : undefined,
+        last_updated: preserveDeltas ? authored?.last_updated : undefined,
         attachment,
         reasoning: reasoning === true ? true : reasoning === false ? false : undefined,
         reasoning_options: reasoningOptions,
@@ -395,7 +405,7 @@ export const tensorx = {
     if (factorBase === undefined && (existing === undefined || authored?.base_model !== undefined)) {
       return undefined;
     }
-    const built = normalizeModel(model, existing, factorBase);
+    const built = normalizeModel(model, existing, authored, factorBase);
     // A reasoning model must always carry real controls. TensorX /v1/model/info
     // only reports supports_reasoning, so the control shape must come from
     // REASONING_OPTIONS_BY_ID or the authored on-disk file. If neither provides
