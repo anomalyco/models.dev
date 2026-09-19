@@ -1,11 +1,13 @@
 base_model = "zhipuai/glm-5.3"
-# GLM-5.3 always reasons (thinking cannot be disabled); effort levels
-# low|high|max with default max.
-# https://docs.z.ai/guides/llm/glm-5.3
+# GLM-5.3 reasons by default; toggle enable_thinking, effort low|high (default max).
+# https://docs.tensorx.ai/api-reference/reasoning
+
+[[reasoning_options]]
+type = "toggle"
 
 [[reasoning_options]]
 type = "effort"
-values = ["low", "high", "max"]
+values = ["low", "high"]
 
 [cost]
 input = 1.75

@@ -1,6 +1,6 @@
 base_model = "alibaba/qwen3.8-flash-next"
-# Thinking is always on; reasoning_effort low|medium|xhigh (default xhigh).
-# https://qwen.ai/blog?id=qwen3.8-flash-next
+# Qwen3.8 always reasons; effort xhigh (default) | medium | low.
+# https://docs.tensorx.ai/api-reference/reasoning
 
 [[reasoning_options]]
 type = "effort"
@@ -12,5 +12,4 @@ output = 0.5
 cache_read = 0.05
 
 [limit]
-context = 262144
 output = 64000
