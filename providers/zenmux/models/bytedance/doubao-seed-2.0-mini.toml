@@ -1,0 +1,37 @@
+# Effort: reasoning_effort = none|minimal|low|medium|high|xhigh|max
+# ZenMux's 2026-09-19 page and both live OpenAI-/Anthropic-compatible lists
+# explicitly advertise text, image, video, and audio input for this route.
+# https://zenmux.ai/docs/api/openai/openai-list-models.html
+# https://zenmux.ai/docs/guide/advanced/reasoning.html
+base_model = "bytedance-seed/seed-2.0-mini"
+name = "Doubao-Seed-2.0-mini"
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"]
+
+[cost]
+input = 0.03
+output = 0.28
+cache_read = 0.01
+cache_write = 0.0024
+
+[[cost.tiers]]
+tier = { type = "context", size = 32_000 }
+input = 0.06
+output = 0.56
+cache_read = 0.02
+cache_write = 0.0024
+
+[[cost.tiers]]
+tier = { type = "context", size = 128_000 }
+input = 0.12
+output = 1.12
+cache_read = 0.03
+cache_write = 0.0024
+
+[modalities]
+input = ["text", "image", "video", "audio"]

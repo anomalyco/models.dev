@@ -1,26 +1,15 @@
+# https://zenmux.ai/docs/api/openai/openai-list-models.html
+# https://zenmux.ai/docs/guide/advanced/reasoning.html
+base_model = "minimax/MiniMax-M2.7-highspeed"
 name = "MiniMax M2.7 highspeed"
-description = "High-speed MiniMax model for low-latency coding and agent workflows"
-release_date = "2026-03-20"
-last_updated = "2026-03-20"
-attachment = true
-reasoning = true
+structured_output = true
 reasoning_options = []
-temperature = true
-tool_call = true
-knowledge = "2025-01-01"
-open_weights = false
 
 [cost]
 input = 0.611
 output = 2.4439
-
-[limit]
-context = 204_800
-output = 131_070
-
-[modalities]
-input = ["text"]
-output = ["text"]
+cache_read = 0.0611
+cache_write = 0.3819
 
 [provider]
 npm = "@ai-sdk/anthropic"

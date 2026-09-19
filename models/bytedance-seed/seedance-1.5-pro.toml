@@ -1,0 +1,17 @@
+name = "Doubao-Seedance-1.5-pro"
+description = "Seedance 1.5 Pro is a new-generation professional-grade audio-visual co-generation video model released by the Doubao large-model team. Building on its predecessor’s multi-shot storytelling and high-definition generation capabilities, it natively supports integrated audio-and-video output, aiming to deliver an end-to-end synchronized creation experience across visuals, voice, music, and sound effects. The model also includes a built-in first-and-last-frame feature: creators only need to set the opening and ending frames of a video to precisely lock in its style, composition, and characters, which then drives the model to generate smooth, natural motion between frames. By combining audio-visual co-generation with first/last-frame control, Seedance 1.5 Pro significantly improves the efficiency, controllability, and artistic expressiveness of professional video creation."
+release_date = "2025-12-15"
+last_updated = "2025-12-15"
+attachment = true
+reasoning = false
+temperature = false
+tool_call = false
+open_weights = false
+
+[limit]
+context = 100_000
+output = 0
+
+[modalities]
+input = ["text", "image"]
+output = ["video"]

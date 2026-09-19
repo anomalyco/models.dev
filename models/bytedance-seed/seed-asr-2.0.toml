@@ -1,0 +1,17 @@
+name = "Doubao-Seed-ASR-2.0"
+description = "Doubao ASR is ByteDance/Volcengine's large-model speech recognition service for transcribing recorded audio files into text. Built on a 2-billion-parameter audio encoder trained on massive real-world speech data, it delivers high-accuracy transcription across noisy, multi-speaker, and domain-specific recordings.\n\nKey capabilities:\n- High accuracy — ~30% lower error rate than traditional models, and 50%+ lower in vertical domains (music, tech, education, medical). Accent error rate down ~60%, noise/background-speech errors down 30–50%.\n- Multilingual & dialects — Chinese plus dialects (Shanghainese, Min Nan, etc.); the 2.0 model (Doubao-Seed-ASR-2.0) adds 13 foreign languages (Japanese, Korean, German, French, …) and context-aware inference for proper nouns, names, and homophones.\n- Rich text formatting — built-in automatic punctuation, inverse text normalization (numbers), semantic smoothing, and intelligent sentence segmentation — all individually toggleable.\n- Long-form audio — handles files up to 5 hours."
+release_date = "2026-06-29"
+last_updated = "2026-06-29"
+attachment = true
+reasoning = false
+temperature = false
+tool_call = false
+open_weights = false
+
+[limit]
+context = 1_024
+output = 1_024
+
+[modalities]
+input = ["audio"]
+output = ["text"]

@@ -1,0 +1,17 @@
+name = "MiniMax H3 Max"
+description = "MiniMax H3 Max is a video generation model jointly released by MiniMax and fal.ai, post-trained by fal.ai on MiniMax H3 and optimized for high-speed generation. It delivers mainstream 480P and 768P output and generates faster than MiniMax H3. It currently supports Text-to-Video and Image-to-Video, with Reference Generation coming soon."
+release_date = "2026-09-02"
+last_updated = "2026-09-02"
+attachment = true
+reasoning = false
+temperature = false
+tool_call = false
+open_weights = false
+
+[limit]
+context = 12_800
+output = 0
+
+[modalities]
+input = ["text", "image", "video", "audio"]
+output = ["video"]
