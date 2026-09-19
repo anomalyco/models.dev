@@ -1,0 +1,21 @@
+name = "MiniMax Text 01"
+description = "Open long-context language model for chat, writing, coding, and document understanding"
+family = "minimax"
+release_date = "2025-01-15"
+last_updated = "2025-01-15"
+attachment = false
+reasoning = false
+tool_call = false
+open_weights = true
+
+[limit]
+context = 1_000_000
+output = 131_072
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/MiniMaxAI/MiniMax-Text-01"

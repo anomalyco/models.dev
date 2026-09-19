@@ -1,0 +1,18 @@
+name = "ERNIE-5.0-Thinking-Preview"
+description = "Natively omni-modal ERNIE 5.0 preview with extended reasoning over text, image, audio, and video"
+family = "ernie"
+release_date = "2026-01-29"
+last_updated = "2026-01-29"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+open_weights = false
+
+[limit]
+context = 128_000
+output = 16_384
+
+[modalities]
+input = ["text", "image", "audio", "video"]
+output = ["text"]
