@@ -1,0 +1,25 @@
+# Served ID is zai-org/GLM-5.3 (Zhipu's Hugging Face org); canonical lab metadata lives at
+# models/zhipuai/glm-5.3.toml. This file carries Nebul-specific overrides only.
+# Reasoning control per Nebul's docs: GET /v1/model/info `reasoning_efforts` is the
+# per-model source of truth for "the reasoning_effort values each model meaningfully
+# accepts" (https://docs.nebul.io/docs/inference-api/models/model-catalog). The live
+# catalog (https://api.inference.nebul.io/model/info) advertises an empty list for
+# this exact ID — unlike sibling zai-org/GLM-5.3-Flash, which advertises
+# ["low","high","max"], so the differing values between the two IDs are intentional
+# — and the Chat Completions API documents no on/off toggle
+# (https://docs.nebul.io/docs/inference-api/models/chat-completions), so this host
+# exposes no caller control here.
+# Traces arrive in message.reasoning (GLM-5.x family), so interleaved = true
+# https://docs.nebul.io/docs/inference-api/advanced-topics/reasoning
+base_model = "zhipuai/glm-5.3"
+reasoning_options = []
+
+interleaved = true
+
+[cost]
+input = 1.47
+output = 4.62
+cache_read = 0.35
+
+[limit]
+context = 1_048_576

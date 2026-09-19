@@ -1,0 +1,20 @@
+# Efforts: reasoning_effort = low|high|max on POST /v1/chat/completions (verified live 2026-09-09)
+# Traces arrive in message.reasoning (GLM-5.x family), so interleaved = true
+# https://docs.nebul.io/docs/inference-api/advanced-topics/reasoning
+# limit.context = 1_048_572 is the live GET /v1/model/info max_input_tokens for this
+# exact ID (re-checked 2026-09-13); sibling GLM-5.3 is 1_048_576 — the 4-token
+# difference between the two IDs is real, not a typo.
+base_model = "zhipuai/glm-5.3-flash"
+
+interleaved = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[cost]
+input = 0.21
+output = 0.63
+
+[limit]
+context = 1_048_572
