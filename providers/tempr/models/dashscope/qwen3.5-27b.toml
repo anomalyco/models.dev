@@ -1,0 +1,15 @@
+# Tempr Gateway: https://temprhq.io/docs/gateway-chat-completions#reasoning
+# Toggle: reasoning.enabled = true|false (reasoning.effort = "none" also turns it off)
+# Budget: reasoning.max_tokens (integer reasoning tokens)
+# /v1/messages: thinking.type = enabled|disabled; thinking.budget_tokens
+# /v1/responses: reasoning.effort = none|low|medium|high (sized to a thinking budget)
+base_model = "alibaba/qwen3.5-27b"
+
+reasoning_options = [
+  { type = "toggle" },
+  { type = "budget_tokens" },
+]
+
+[cost]
+input = 0.3
+output = 2.4

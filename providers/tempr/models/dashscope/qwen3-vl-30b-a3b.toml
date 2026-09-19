@@ -1,0 +1,14 @@
+# Tempr Gateway: https://temprhq.io/docs/gateway-chat-completions#reasoning
+# Budget: reasoning.max_tokens (integer reasoning tokens)
+# /v1/messages: thinking.budget_tokens
+# /v1/responses: reasoning.effort = low|medium|high (sized to a thinking budget)
+base_model = "alibaba/qwen3-vl-30b-a3b"
+
+reasoning_options = [
+  { type = "budget_tokens" },
+]
+
+[cost]
+input = 0.2
+output = 0.8
+reasoning = 2.4

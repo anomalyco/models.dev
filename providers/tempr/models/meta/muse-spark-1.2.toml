@@ -1,0 +1,14 @@
+# Tempr Gateway: https://temprhq.io/docs/gateway-chat-completions#reasoning
+# Effort: reasoning.effort = minimal|low|medium|high|xhigh (alias: top-level reasoning_effort)
+# /v1/messages: output_config.effort = minimal|low|medium|high|xhigh
+# /v1/responses: reasoning.effort = minimal|low|medium|high|xhigh
+base_model = "meta/muse-spark-1.2"
+
+reasoning_options = [
+  { type = "effort", values = ["minimal", "low", "medium", "high", "xhigh"] },
+]
+
+[cost]
+input = 1.25
+output = 4.25
+cache_read = 0.15

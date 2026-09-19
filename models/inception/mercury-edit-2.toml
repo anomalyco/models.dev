@@ -1,0 +1,19 @@
+name = "Mercury Edit 2"
+description = "Code editing dLLM for autocomplete (FIM) and next-edit suggestions"
+family = "mercury"
+release_date = "2026-03-30"
+last_updated = "2026-03-30"
+attachment = false
+reasoning = false
+tool_call = false
+structured_output = false
+temperature = true
+open_weights = false
+
+[limit]
+context = 32000
+output = 8192
+
+[modalities]
+input = ["text"]
+output = ["text"]

@@ -1,0 +1,19 @@
+name = "Qwen3-LiveTranslate Flash Realtime"
+description = "Speech generation model for controllable voice, narration, and audio delivery"
+family = "qwen"
+release_date = "2025-09-22"
+last_updated = "2025-09-22"
+knowledge = "2024-04"
+attachment = false
+reasoning = false
+tool_call = false
+temperature = true
+open_weights = false
+
+[limit]
+context = 53248
+output = 4096
+
+[modalities]
+input = ["text", "image", "audio", "video"]
+output = ["text", "audio"]
