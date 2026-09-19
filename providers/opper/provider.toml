@@ -1,13 +1,20 @@
+# Sources (2026-09-08): https://api.opper.ai/v3/models?limit=0&type=llm
+# and authenticated https://api.opper.ai/v3/compat/models?type=model,pool.
+# Model IDs are bare Opper pool names; Opper selects the underlying provider.
+# Prices are USD/MTok ceilings across pool members, not a fixed rate for every
+# request. Cache-read discounts are listed only when all priced members offer
+# them. Context tiers include the highest marginal rates and whole-request
+# surcharges, so estimates can exceed the actual bill. No currency conversion
+# is needed: the catalog already converts non-USD provider prices to USD.
+# Limits do not exceed either the lab model or the pool's smallest known limit;
+# input modalities are restricted to those shared by the lab and pool members.
+# POST /v3/compat/chat/completions accepts top-level reasoning_effort. Native
+# thinking toggles and reasoning-token budgets are not exposed on this surface.
+# Effort options describe common pool controls; [] means no pool-wide control,
+# including pools where some adapters ignore effort. Reasoning output, when
+# present, uses message.reasoning_content or streaming delta.reasoning_content.
 name = "Opper"
 env = ["OPPER_API_KEY"]
 npm = "@ai-sdk/openai-compatible"
 api = "https://api.opper.ai/v3/compat"
-# Reasoning HTTP format (measured against POST /v3/compat/chat/completions, 2026-08-19):
-# top-level reasoning_effort takes an effort string that is passed through to the
-# upstream model API unchanged, so each model accepts its native set (Anthropic:
-# low|medium|high|max; OpenAI GPT-5.x: none|low|medium|high|xhigh and max where the
-# model supports it; Gemini: minimal|low|medium|high). Budget-token values are not
-# accepted on this surface, and no separate reasoning on/off toggle is exposed. Models with no upstream effort control accept the
-# parameter without effect, so those entries use reasoning_options = [].
-# Pricing is mirrored from GET /v3/compat/models (USD per token, no gateway markup).
 doc = "https://opper.ai/models"

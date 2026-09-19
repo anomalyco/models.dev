@@ -1,0 +1,15 @@
+# Pool metadata: https://api.opper.ai/v3/models (2026-09-08).
+# No pool-wide effort control: at least one member does not forward reasoning_effort.
+base_model = "alibaba/qwen3.6-35b-a3b"
+
+reasoning_options = []
+
+[cost]
+input = 0.248
+output = 1.485
+
+[modalities]
+input = ["text", "image"]
+
+[interleaved]
+field = "reasoning_content"
