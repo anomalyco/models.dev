@@ -64,46 +64,56 @@ type Modality = "text" | "audio" | "image" | "video" | "pdf";
 
 // TensorX /v1/model/info exposes only a `supports_reasoning` boolean — not the
 // control shape (toggle vs effort) nor the accepted effort levels. Those are
-// host-specific and can't be derived from the API, so they are maintained here,
-// keyed by TensorX model id. Models not in this map rely on the authored
-// reasoning_options already on disk; a brand-new reasoner with no entry is
-// skipped (MissingReasoningOptionsError) rather than written without controls.
+// host-specific and can't be derived from the API, so they are maintained here
+// from the authoritative docs (docs.tensorx.ai/api-reference/reasoning),
+// keyed by TensorX model id.
+//
+// Only models covered by the docs are listed. Models not in this map rely on
+// the authored reasoning_options already on disk; a brand-new reasoner with no
+// entry is skipped (MissingReasoningOptionsError) rather than written without
+// controls, so a new reasoning family surfaces as an explicit one-line addition.
 const REASONING_OPTIONS_BY_ID: Record<string, NonNullable<SyncedFullModel["reasoning_options"]>> = {
-  "z-ai/glm-5.3": [{ type: "effort", values: ["low", "high", "max"] }],
-  "z-ai/glm-5.3-flash": [{ type: "effort", values: ["low", "high", "max"] }],
-  "z-ai/glm-5": [{ type: "effort", values: ["none", "minimal", "low", "medium", "high", "xhigh", "max"] }],
-  "z-ai/glm-5.1": [
+  // GLM 5.3 / 5.3-Flash: toggle enable_thinking, effort low|high (default max)
+  "z-ai/glm-5.3": [
     { type: "toggle" },
-    { type: "effort", values: ["minimal", "low", "medium", "high", "xhigh", "max"] },
+    { type: "effort", values: ["low", "high"] },
   ],
+  "z-ai/glm-5.3-flash": [
+    { type: "toggle" },
+    { type: "effort", values: ["low", "high"] },
+  ],
+  // GLM 5.2: toggle enable_thinking, effort high|max
   "z-ai/glm-5.2": [
     { type: "toggle" },
-    { type: "effort", values: ["minimal", "low", "medium", "high", "xhigh", "max"] },
+    { type: "effort", values: ["high", "max"] },
   ],
-  "z-ai/glm-5-turbo": [
-    { type: "toggle" },
-    { type: "effort", values: ["minimal", "low", "medium", "high", "xhigh", "max"] },
-  ],
-  "z-ai/glm-5v-turbo": [
-    { type: "toggle" },
-    { type: "effort", values: ["minimal", "low", "medium", "high", "xhigh", "max"] },
-  ],
+  // GLM 5.1 / 5-Turbo / 5V-Turbo: toggle enable_thinking, no effort levels
+  "z-ai/glm-5.1": [{ type: "toggle" }],
+  "z-ai/glm-5-turbo": [{ type: "toggle" }],
+  "z-ai/glm-5v-turbo": [{ type: "toggle" }],
+  // Qwen 3.8: always-on reasoning, effort xhigh (default) | medium | low
   "qwen/qwen3.8-2.4t-a95b": [{ type: "effort", values: ["low", "medium", "xhigh"] }],
   "qwen/qwen3.8-27b": [{ type: "effort", values: ["low", "medium", "xhigh"] }],
   "qwen/qwen3.8-flash-next": [{ type: "effort", values: ["low", "medium", "xhigh"] }],
-  "qwen/qwen3.5-122b-a10b": [{ type: "effort", values: ["none", "minimal", "low", "medium", "high", "xhigh", "max"] }],
-  "qwen/qwen3.5-9b": [{ type: "effort", values: ["none", "minimal", "low", "medium", "high", "xhigh", "max"] }],
-  "deepseek/deepseek-r1-0528": [{ type: "effort", values: ["minimal", "low", "medium", "high", "xhigh", "max"] }],
-  "deepseek/deepseek-v3.2": [{ type: "effort", values: ["none", "minimal", "low", "medium", "high", "xhigh", "max"] }],
-  "deepseek/deepseek-v4.1-flash": [{ type: "toggle" }],
-  "deepseek/deepseek-v4-flash-0731": [{ type: "toggle" }],
-  "deepseek/deepseek-v4-pro": [{ type: "toggle" }],
-  "deepseek/deepseek-v4-pro-0813": [{ type: "toggle" }],
-  "moonshotai/kimi-k2.6": [{ type: "toggle" }],
-  "moonshotai/kimi-k2.7-code": [{ type: "toggle" }],
-  "moonshotai/kimi-k3": [{ type: "toggle" }],
+  // DeepSeek V4: off by default, toggle thinking, effort high|max when on
+  "deepseek/deepseek-v4.1-flash": [
+    { type: "toggle" },
+    { type: "effort", values: ["high", "max"] },
+  ],
+  "deepseek/deepseek-v4-flash-0731": [
+    { type: "toggle" },
+    { type: "effort", values: ["high", "max"] },
+  ],
+  "deepseek/deepseek-v4-pro": [
+    { type: "toggle" },
+    { type: "effort", values: ["high", "max"] },
+  ],
+  "deepseek/deepseek-v4-pro-0813": [
+    { type: "toggle" },
+    { type: "effort", values: ["high", "max"] },
+  ],
+  // MiniMax M3: thinking_mode modes (schema has no enum type, so a toggle)
   "minimax/minimax-m3": [{ type: "toggle" }],
-  "minimax/minimax-m2.5": [{ type: "effort", values: ["minimal", "low", "medium", "high", "xhigh", "max"] }],
 };
 
 // TensorX uses its own vendor prefixes that differ from the catalog lab ids.
@@ -246,6 +256,8 @@ function inferFamily(modelID: string, name: string): SyncedFullModel["family"] {
 // Toggle wire path per model id; models absent here use the DeepSeek/Kimi
 // `chat_template_kwargs.thinking` path.
 const TOGGLE_WIRE_BY_ID: Record<string, string> = {
+  "z-ai/glm-5.3": "enable_thinking",
+  "z-ai/glm-5.3-flash": "enable_thinking",
   "z-ai/glm-5.1": "enable_thinking",
   "z-ai/glm-5.2": "enable_thinking",
   "z-ai/glm-5-turbo": "enable_thinking",
