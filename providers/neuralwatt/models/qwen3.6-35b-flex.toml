@@ -1,0 +1,32 @@
+# Flex-tier variant of qwen3.6-35b: same model, context (131,056), vision,
+# and effort ladder as the standard tier; requested via the `-flex` model ID
+# or service_tier="flex" and requires stream=true (non-streaming requests
+# fall through to the standard tier). Cost is the flex rate: 0.65x of
+# standard pricing (35% off) per the flex-tier guide, applied to the standard
+# rates advertised by GET /v1/models ($0.29/$1.15/$0.029, checked 2026-09-18).
+# Budget: thinking_token_budget (integer reasoning tokens)
+# https://portal.neuralwatt.com/docs/guides/flex-tier
+# https://portal.neuralwatt.com/docs/api/chat-completions
+base_model = "alibaba/qwen3.6-35b-a3b"
+name = "Qwen3.6 35B Flex"
+
+interleaved = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "high"]
+
+[[reasoning_options]]
+type = "budget_tokens"
+
+[cost]
+input = 0.1885
+output = 0.7475
+cache_read = 0.01885
+
+[limit]
+context = 131_056
+output = 131_056
+
+[modalities]
+input = ["text", "image"]

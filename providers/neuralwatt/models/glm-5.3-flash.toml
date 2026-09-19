@@ -1,0 +1,35 @@
+# Exited preview 2026-09-11. Pricing, vision, and effort ladder from the
+# public GET /v1/models metadata (checked 2026-09-18): $0.15/$0.5/$0.03,
+# 1,048,560-token context, 20-image cap. Reasoning cannot be disabled
+# (reasoning.mandatory = true), so there is no none level and no toggle;
+# low, high and max are distinct efforts, with minimal/medium/xhigh accepted
+# as aliases onto them. Budget: thinking_token_budget (integer reasoning
+# tokens). Neuralwatt serves text+image input only (lab metadata also lists
+# video/pdf). JSON mode is off on this host, unlike the lab default.
+# https://portal.neuralwatt.com/docs/api/chat-completions
+# https://portal.neuralwatt.com/models/glm-5.3-flash
+base_model = "zhipuai/glm-5.3-flash"
+name = "GLM-5.3 Flash"
+structured_output = false
+
+interleaved = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[[reasoning_options]]
+type = "budget_tokens"
+
+[cost]
+input = 0.15
+output = 0.5
+cache_read = 0.03
+
+[limit]
+context = 1_048_560
+output = 1_048_560
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
