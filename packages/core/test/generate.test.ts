@@ -45,6 +45,47 @@ describe("catalog generation", () => {
     });
   });
 
+  test("time tiers generate alongside the legacy context_over_200k field", async () => {
+    await withFixture(async (root) => {
+      await write(root, "providers/provider/provider.toml", providerToml("Provider"));
+      await write(root, "models/lab/model.toml", modelMetadataToml());
+      await write(
+        root,
+        "providers/provider/models/model.toml",
+        `base_model = "lab/model"
+reasoning_options = []
+
+[cost]
+input = 0.22
+output = 0.66
+
+[[cost.tiers]]
+tier = { type = "context", size = 200_000 }
+input = 0.33
+output = 0.99
+
+[[cost.tiers]]
+tier = { type = "time", windows = ["01:00-04:00", "06:00-10:00"] }
+input = 0.44
+output = 1.32
+`,
+      );
+
+      const providers = await generate(path.join(root, "providers"));
+      const cost = providers.provider?.models.model?.cost;
+
+      expect(cost?.tiers).toEqual([
+        { tier: { type: "context", size: 200_000 }, input: 0.33, output: 0.99 },
+        {
+          tier: { type: "time", windows: ["01:00-04:00", "06:00-10:00"] },
+          input: 0.44,
+          output: 1.32,
+        },
+      ]);
+      expect(cost?.context_over_200k).toEqual({ input: 0.33, output: 0.99 });
+    });
+  });
+
   test("base_model can factor metadata without changing provider JSON", async () => {
     await withFixture(async (root) => {
       await write(root, "providers/direct/provider.toml", providerToml("Direct"));
