@@ -1,0 +1,25 @@
+# TopUpSaja relays request bodies verbatim to OpenRouter /chat/completions
+
+# Toggle: reasoning.enabled = true|false
+# https://openrouter.ai/docs/guides/best-practices/reasoning-tokens
+
+base_model = "deepseek/deepseek-v4-pro"
+
+[cost]
+input = 9.6
+output = 19.2
+cache_read = 0.81
+
+[limit]
+context = 1048576
+output = 393216
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["high", "xhigh"]
+
+[interleaved]
+field = "reasoning_content"

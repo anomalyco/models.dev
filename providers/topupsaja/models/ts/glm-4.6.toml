@@ -1,0 +1,19 @@
+# TopUpSaja relays request bodies verbatim to OpenRouter /chat/completions
+
+# Toggle: reasoning.enabled = true|false
+# https://openrouter.ai/docs/guides/best-practices/reasoning-tokens
+
+base_model = "zhipuai/glm-4.6"
+
+structured_output = true
+
+[cost]
+input = 2.58
+output = 10.5
+cache_read = 0.48
+
+[limit]
+output = 16384
+
+[[reasoning_options]]
+type = "toggle"

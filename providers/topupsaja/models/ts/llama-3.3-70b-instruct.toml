@@ -1,0 +1,12 @@
+base_model = "meta/llama-3.3-70b-instruct"
+
+structured_output = true
+
+[cost]
+input = 0.7
+output = 2.24
+cache_read = 0.35
+
+[limit]
+context = 131072
+output = 16384
