@@ -1,0 +1,10 @@
+# Effort: reasoning_effort = low|medium|high (lab baseline; xhigh|max dropped — flat in probes, 2026-08-14).
+# Command Code publishes flat rates here (cache_read differs from xAI list),
+# so xAI's 200K context tier is not assumed to pass through.
+base_model = "xai/grok-4.5"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
+
+[cost]
+input = 2
+output = 6
+cache_read = 0.5

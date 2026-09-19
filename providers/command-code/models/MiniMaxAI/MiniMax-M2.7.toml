@@ -1,0 +1,13 @@
+# Model reasons but no verified caller control (2026-08-14: effort low=261/high=187/max=211 non-monotonic).
+base_model = "minimax/MiniMax-M2.7"
+name = "MiniMax M2.7"
+reasoning_options = []
+interleaved = { field = "reasoning_details" }
+
+[cost]
+input = 0.3
+output = 1.2
+cache_read = 0.06
+
+[limit]
+context = 200_000

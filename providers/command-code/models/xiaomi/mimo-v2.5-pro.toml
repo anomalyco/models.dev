@@ -1,0 +1,16 @@
+# Toggle: thinking.type = enabled|disabled (verified on MiMo V2.5, same surface, 2026-08-14).
+# Effort dropped — low=9/high=16/max=11 flat in probes.
+# Permanent price cut reflected below (up to 99% off former list).
+# https://commandcode.ai/docs/resources/pricing-limits#mimo-v2.5-pro-99-off
+base_model = "xiaomi/mimo-v2.5-pro"
+name = "MiMo V2.5 Pro"
+reasoning_options = [{ type = "toggle" }]
+interleaved = { field = "reasoning_details" }
+
+[cost]
+input = 0.435
+output = 0.87
+cache_read = 0.0036
+
+[limit]
+context = 1_000_000

@@ -1,0 +1,17 @@
+# No reasoning emission observed on this host (2026-08-14: rtok=0 at default,
+# thinking.type=enabled, and effort=high; gateway validates the enum but nothing is emitted).
+# Model is a known reasoner — [] means no verified caller control, not no reasoning.
+base_model = "moonshotai/kimi-k2.5"
+reasoning_options = []
+
+[cost]
+input = 0.6
+output = 3
+cache_read = 0.1
+
+[limit]
+context = 256_000
+output = 256_000
+
+[modalities]
+input = ["text", "image"]

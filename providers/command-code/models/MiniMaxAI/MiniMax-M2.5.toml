@@ -1,0 +1,15 @@
+# Always-on reasoning; reasoning_effort measured but produces only erratic rtok variance
+# (baseline 379, low 688, max 540 — non-monotonic, 2026-08-14), so no caller control authored.
+# Emits reasoning via reasoning / reasoning_details.
+base_model = "minimax/MiniMax-M2.5"
+name = "MiniMax M2.5"
+reasoning_options = []
+interleaved = { field = "reasoning_details" }
+
+[cost]
+input = 0.3
+output = 1.2
+cache_read = 0.03
+
+[limit]
+context = 200_000
