@@ -1,0 +1,28 @@
+# Reasoning is mandatory (reasoning.mandatory = true), so there is no none
+# level and no toggle. The API supports low, high and max as distinct efforts
+# (default max); minimal, medium and xhigh are accepted as aliases onto them.
+# Budget: thinking_token_budget (integer reasoning tokens)
+# Exited preview 2026-09-11.
+# Pricing from the authenticated GET /v1/models metadata.pricing
+# (checked 2026-09-15).
+# https://portal.neuralwatt.com/docs/api/chat-completions
+# https://portal.neuralwatt.com/docs/api/models
+base_model = "zhipuai/glm-5.3-flash"
+interleaved = true
+structured_output = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[[reasoning_options]]
+type = "budget_tokens"
+
+[cost]
+input = 0.15
+output = 0.5
+cache_read = 0.03
+
+[limit]
+context = 1_048_560
+output = 131_072
