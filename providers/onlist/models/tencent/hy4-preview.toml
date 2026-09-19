@@ -1,0 +1,15 @@
+# Pricing and context length: https://onlist.io/models/tencent/hy4-preview (accessed 2026-09-07)
+# Reasoning: effort via `reasoning_effort` / `reasoning.effort`, budget via `reasoning.max_tokens`; no on/off toggle on Onlist
+base_model = "tencent/hy4-preview"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "high"]
+
+[cost]
+input = 0.834
+output = 2.501
+cache_read = 0.042
+
+[limit]
+context = 1_048_576

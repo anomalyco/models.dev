@@ -1,0 +1,13 @@
+# Pricing and context length: https://onlist.io/models/arcee-ai/trinity-large-thinking (accessed 2026-09-07)
+# Reasoning: effort via `reasoning_effort` / `reasoning.effort`, budget via `reasoning.max_tokens`; no on/off toggle on Onlist
+base_model = "arcee-ai/trinity-large-thinking"
+reasoning_options = []
+
+[cost]
+input = 0.25
+output = 0.8
+cache_read = 0.06
+
+[limit]
+context = 262_144
+output = 80_000

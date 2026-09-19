@@ -1,0 +1,16 @@
+# Pricing and context length: https://onlist.io/models/z-ai/glm-5.3 (accessed 2026-09-07)
+# Reasoning: effort via `reasoning_effort` / `reasoning.effort`, budget via `reasoning.max_tokens`; no on/off toggle on Onlist
+base_model = "zhipuai/glm-5.3"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[cost]
+input = 1.4
+output = 4.4
+cache_read = 0.14
+
+[limit]
+context = 1_048_576
+output = 943_718
