@@ -1,0 +1,20 @@
+# Toggle: $.thinking.type = "enabled"|"disabled"|"adaptive" as Moonshot's API takes it,
+# forwarded unchanged on /v1/chat/completions; adaptive depth via $.output_config.effort.
+# One official line at 80% of Moonshot's list.
+# https://ai.topxea.com/pricing/kimi-k3 (accessed 2026-09-19)
+base_model = "moonshotai/kimi-k3"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 2.4
+output = 12
+cache_read = 0.24

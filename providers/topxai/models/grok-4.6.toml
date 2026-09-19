@@ -1,0 +1,22 @@
+# Effort: $.reasoning.effort on /v1/responses, $.reasoning_effort on /v1/chat/completions,
+# forwarded unchanged. Shared-pool price, 50% of xAI's list. Requests whose input
+# reaches 200,000 tokens bill the whole request at the tier below.
+# https://ai.topxea.com/pricing/grok-4.6 (accessed 2026-09-19)
+base_model = "xai/grok-4.6"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high", "xhigh"]
+
+[cost]
+input = 1
+output = 3
+cache_read = 0.25
+cache_write = 1
+
+[[cost.tiers]]
+tier = { type = "context", size = 200_000 }
+input = 2
+output = 6
+cache_read = 0.5
+cache_write = 2
