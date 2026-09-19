@@ -1,0 +1,12 @@
+# ZenMux's 2026-09-19 catalog reports context_length=8192. The inherited
+# limit.output remains the lab embedding dimension rather than that token limit.
+# https://zenmux.ai/docs/api/openai/openai-list-models.html
+base_model = "openai/text-embedding-3-large"
+name = "Text Embedding 3 Large"
+
+[cost]
+input = 0.13
+output = 0
+
+[limit]
+context = 8_192

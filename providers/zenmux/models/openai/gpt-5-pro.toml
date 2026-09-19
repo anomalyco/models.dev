@@ -1,0 +1,20 @@
+# Effort: reasoning_effort = high
+# ZenMux's 2026-09-19 catalog and OpenAI-compatible model list explicitly
+# report max_completion_tokens=128000 for this hosted route.
+# https://zenmux.ai/docs/guide/advanced/reasoning.html
+# https://zenmux.ai/docs/api/openai/openai-list-models.html
+base_model = "openai/gpt-5-pro"
+
+[[reasoning_options]]
+type = "effort"
+values = ["high"]
+
+[cost]
+input = 15
+output = 120
+
+[limit]
+output = 128_000
+
+[modalities]
+input = ["image", "text", "pdf"]

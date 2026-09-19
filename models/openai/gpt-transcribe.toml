@@ -1,0 +1,25 @@
+# Sources:
+# - https://zenmux.ai/models
+# - https://zenmux.ai/docs/api/openai/openai-list-models.html
+# - https://zenmux.ai/docs/api/anthropic/anthropic-list-models.html
+# - https://zenmux.ai/docs/api/vertexai/google-list-models.html
+# Accessed 2026-09-19.
+name = "GPT Transcribe"
+description = "GPT Transcribe is a high-accuracy speech-to-text model from OpenAI. It is suited for recorded audio, streamed file transcription, and committed Realtime turns, with free-form context, keyword hints, and multiple language hints for specialized terms and multilingual speech."
+family = "gpt"
+release_date = "2026-08-06"
+last_updated = "2026-08-06"
+attachment = true
+reasoning = false
+temperature = false
+tool_call = false
+structured_output = false
+open_weights = false
+
+[limit]
+context = 15_000
+output = 15_000
+
+[modalities]
+input = ["audio"]
+output = ["text"]

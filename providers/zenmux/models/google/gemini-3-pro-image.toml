@@ -1,0 +1,14 @@
+# ZenMux's 2026-09-19 page catalog has supports_reasoning=0 and its live
+# Google-compatible model-list response has thinking=false for this exact id.
+# The lab's reasoning surface is therefore intentionally disabled on this host.
+# https://zenmux.ai/docs/api/vertexai/google-list-models.html
+base_model = "google/gemini-3-pro-image"
+name = "Nano Banana Pro (Gemini 3 Pro Image)"
+reasoning = false
+
+[cost]
+input = 2
+output = 120
+
+[limit]
+output = 8_192

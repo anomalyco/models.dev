@@ -1,0 +1,24 @@
+# Toggle: thinking.type = enabled|disabled|adaptive
+# Effort: output_config.effort = low|high|max
+# ZenMux's 2026-09-19 catalog explicitly reports max_completion_tokens=1048576.
+# https://zenmux.ai/docs/guide/advanced/reasoning.html
+# https://zenmux.ai/docs/api/openai/openai-list-models.html
+base_model = "moonshotai/kimi-k2.8-preview"
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[cost]
+input = 1
+output = 4
+cache_read = 0.25
+
+[limit]
+output = 1_048_576

@@ -1,0 +1,11 @@
+# ZenMux's 2026-09-19 OpenAI- and Anthropic-compatible model lists both report
+# reasoning disabled for this alias, so this is an intentional host override.
+# https://zenmux.ai/docs/api/openai/openai-list-models.html
+base_model = "openai/gpt-5.5-instant"
+name = "Chat Latest (GPT-5.5 Instant)"
+reasoning = false
+
+[cost]
+input = 5
+output = 30
+cache_read = 0.5
