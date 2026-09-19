@@ -1,0 +1,27 @@
+# Deepgram Nova 3 (Multi) STT via SLNG
+# Sources:
+# - https://docs.slng.ai/models — SLNG model catalog (India, AU, US regions, self-hosted)
+# - Original per-minute pricing: $0.0065/min, capped at $3.00 per million tokens
+name = "Deepgram Nova 3 (Multi)"
+description = "Multilingual speech-to-text model supporting English, Spanish, and Hindi"
+family = "nova"
+release_date = "2024-01-01"
+last_updated = "2025-01-01"
+attachment = false
+reasoning = false
+temperature = false
+tool_call = false
+structured_output = false
+open_weights = false
+
+[cost]
+input = 3.00
+output = 3.00
+
+[limit]
+context = 0
+output = 0
+
+[modalities]
+input = ["audio"]
+output = ["text"]
