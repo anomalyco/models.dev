@@ -1,6 +1,6 @@
 # TopUpSaja relays request bodies verbatim to OpenRouter /chat/completions
 
-base_model = "google/gemini-3.8-flash"
+base_model = "google/gemini-3.5-flash"
 
 name = "Gemini Flash Latest"
 
@@ -12,3 +12,6 @@ cache_read = 0.45
 [[reasoning_options]]
 type = "effort"
 values = ["low", "medium", "high"]
+
+[modalities]
+input = ["text", "image", "video", "pdf", "audio"]
