@@ -1,0 +1,18 @@
+# https://www.alibabacloud.com/help/en/model-studio/qwen-image-api
+name = "Qwen-Image-2.0-Pro"
+description = "Qwen-Image-2.0-Pro is an image generation model launched by Qwen AI."
+release_date = "2026-03-03"
+last_updated = "2026-03-03"
+attachment = true
+reasoning = false
+temperature = false
+tool_call = false
+open_weights = false
+
+[limit]
+context = 1_300
+output = 0
+
+[modalities]
+input = ["text", "image"]
+output = ["image"]

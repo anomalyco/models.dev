@@ -1,0 +1,18 @@
+# https://www.alibabacloud.com/help/en/model-studio/qwen-image-generation-and-editing-api-reference
+name = "Qwen-Image-3.0-Pro"
+description = "Rich content: Supports input of up to 4.5k tokens and dense information layout with images-within-images, enabling complex layouts like newspapers, storyboards, menus, and exam papers to be generated in a single pass. Authentic detail: Supports precise rendering of text as small as 10px, and vividly reproduces fine details such as micro-expressions, pores, and individual strands of hair—approaching the quality of real photography. Deep knowledge: Supports native rendering of 12 languages and 20+ fonts, realistic simulation of mainstream interfaces such as web pages, games, and live streams, fully incorporating external knowledge. Qwen-Image-3.0-Pro isn't just pursuing \"good looks\"—it's pursuing \"usefulness\", making image generation a truly deployable productivity tool."
+release_date = "2026-08-05"
+last_updated = "2026-08-05"
+attachment = true
+reasoning = false
+temperature = false
+tool_call = false
+open_weights = false
+
+[limit]
+context = 4_500
+output = 0
+
+[modalities]
+input = ["text", "image"]
+output = ["image"]
