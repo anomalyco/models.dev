@@ -1,0 +1,11 @@
+# Source: https://docs.anonrouter.ai/models and authenticated GET /v1/models (accessed 2026-09-10).
+# Reasoning wire: reasoning_effort; "none" disables reasoning when listed.
+base_model = "openai/gpt-5.3-codex"
+reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh"] }]
+
+[cost]
+input = 2.19
+output = 17.5
+
+[modalities]
+input = ["text", "image"]
