@@ -1,0 +1,23 @@
+name = "Ling-2.6-flash"
+description = "Ling-2.6-flash is a 100B-parameter text model focused on intelligence efficiency, delivering strong performance while minimizing token usage. It supports a 256K context window with up to 32K output tokens, function calling, structured output, and prompt caching. It is particularly well-suited for code completion and debugging, rapid document processing, and lightweight agent interactions."
+release_date = "2026-04-22"
+last_updated = "2026-04-22"
+attachment = false
+reasoning = false
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = true
+license = "MIT"
+
+[limit]
+context = 262_144
+output = 32_768
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/inclusionAI/Ling-2.6-flash"

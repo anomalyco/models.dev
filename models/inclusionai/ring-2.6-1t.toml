@@ -1,0 +1,23 @@
+name = "Ring-2.6-1T"
+description = "Ring-2.6-1T is a 1T-parameter-scale thinking model with 63B active parameters, built for real-world agent workflows that require both strong capability and operational efficiency. It is optimized for coding agents, tool use, and long-horizon task execution, delivering leading results on benchmarks including PinchBench, ClawEval, TAU2-Bench, and GAIA2-search.\n\nWith adaptive reasoning effort across high and xhigh modes, Ring-2.6-1T dynamically allocates reasoning budget based on task complexity. This enables stronger performance with lower token overhead, especially in tool-heavy and multi-turn agent workflows.\n\nRing-2.6-1T is designed for advanced coding agents, complex reasoning pipelines, and large-scale autonomous systems where execution quality, latency, and cost efficiency all matter."
+release_date = "2026-05-09"
+last_updated = "2026-05-09"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = true
+license = "MIT"
+
+[limit]
+context = 262_144
+output = 65_536
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/inclusionAI/Ring-2.6-1T"
