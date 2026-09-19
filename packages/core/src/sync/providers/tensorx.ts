@@ -52,7 +52,7 @@ type TensorxSourceModel = {
   mode: string | undefined;
   maxInput: number | undefined;
   maxOutput: number | undefined;
-  reasoning: boolean;
+  reasoning: boolean | undefined;
   toolCall: boolean;
   vision: boolean | undefined;
   inputCost: number | undefined;
@@ -186,9 +186,11 @@ function normalizeModel(
   factorBase: string | undefined,
 ): SyncedModel {
   const reasoning = model.reasoning;
-  const reasoningOptions = reasoning
+  const reasoningOptions = reasoning === true
     ? (REASONING_OPTIONS_BY_ID[model.id] ?? existing?.reasoning_options)
-    : undefined;
+    : reasoning === false
+      ? undefined
+      : existing?.reasoning_options;
   const toolCall = model.toolCall;
   const vision = model.vision;
   const cost = model.inputCost !== undefined && model.outputCost !== undefined
@@ -243,9 +245,10 @@ function normalizeModel(
         release_date: existing?.release_date,
         last_updated: existing?.last_updated,
         attachment: model.vision === true ? true : model.vision === false ? false : existing?.attachment,
-        reasoning: reasoning ? true : undefined,
+        reasoning: reasoning === true ? true : reasoning === false ? false : undefined,
         reasoning_options: reasoningOptions,
         tool_call: toolCall,
+        limit,
         modalities,
         cost,
       },
@@ -255,7 +258,7 @@ function normalizeModel(
   }
 
   const name = existing?.name ?? model.id.split("/").at(-1) ?? model.id;
-  const inlineReasoning = reasoning;
+  const inlineReasoning = reasoning ?? existing?.reasoning ?? false;
   const family = existing?.family ?? inferFamily(model.id, name);
   const textOnly: { input: Modality[]; output: Modality[] } = { input: ["text"], output: ["text"] };
   return {
@@ -374,7 +377,7 @@ export const tensorx = {
         mode: info.mode,
         maxInput: info.max_input_tokens ?? undefined,
         maxOutput: info.max_output_tokens ?? undefined,
-        reasoning: info.supports_reasoning === true,
+        reasoning: info.supports_reasoning === true ? true : info.supports_reasoning === false ? false : undefined,
         toolCall: info.supports_function_calling === true || info.supports_tool_choice === true,
         vision: info.supports_vision === true ? true : info.supports_vision === false ? false : undefined,
         inputCost: info.input_cost_per_token == null
