@@ -124,6 +124,16 @@ describe("provider schema", () => {
     expect(Provider.safeParse(mergeGatewayProvider).success).toBe(true);
   });
 
+  test("defaults omitted provider env to an empty list", () => {
+    const { env: _env, ...providerWithoutEnv } = mergeGatewayProvider;
+
+    const result = Provider.safeParse(providerWithoutEnv);
+
+    expect(result.success).toBe(true);
+    if (!result.success) return;
+    expect(result.data.env).toEqual([]);
+  });
+
   test("requires the compatibility API for the Merge Gateway package", () => {
     const { api: _api, ...providerWithoutApi } = mergeGatewayProvider;
 
