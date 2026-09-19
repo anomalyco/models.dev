@@ -1,15 +1,15 @@
+base_model = "minimax/MiniMax-M2.5-highspeed"
 name = "MiniMax M2.5 Highspeed"
 description = "High-speed MiniMax model for low-latency coding and agent workflows"
 family = "minimax-m2.5"
 release_date = "2026-02-12"
 last_updated = "2026-02-12"
-attachment = false
-reasoning = true
-reasoning_options = []
-temperature = true
-tool_call = true
 structured_output = true
 open_weights = false
+reasoning_options = []
+
+[interleaved]
+field = "reasoning_content"
 
 [cost]
 input = 0.6
@@ -17,12 +17,4 @@ output = 2.4
 cache_read = 0.03
 
 [limit]
-context = 204_800
 output = 131_100
-
-[interleaved]
-field = "reasoning_content"
-
-[modalities]
-input = ["text"]
-output = ["text"]

@@ -1,16 +1,12 @@
-name = "GLM-4.7-Flash"
+# Toggle: thinking.type = enabled|disabled
+# Verified with Novita chat/completions on 2026-09-17: disabling removes reasoning_content.
+base_model = "zhipuai/glm-4.7-flash"
+name = "GLM 4.7 Flash"
 description = "Efficient GLM model for fast reasoning, coding, and agent workflows"
-family = "glm-flash"
-release_date = "2026-01-19"
-last_updated = "2026-01-19"
-attachment = false
-reasoning = true
-reasoning_options = [{ type = "toggle" }]
-temperature = true
-tool_call = true
 structured_output = true
-knowledge = "2025-04"
-open_weights = true
+
+[[reasoning_options]]
+type = "toggle"
 
 [cost]
 input = 0.07
@@ -18,10 +14,4 @@ output = 0.4
 cache_read = 0.01
 
 [limit]
-context = 200_000
 output = 128_000
-
-
-[modalities]
-input = ["text"]
-output = ["text"]

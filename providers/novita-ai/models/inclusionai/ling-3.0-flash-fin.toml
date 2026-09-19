@@ -1,0 +1,15 @@
+# Toggle: thinking.type = enabled|disabled
+# Verified with Novita chat/completions on 2026-09-17: disabling removes reasoning_content.
+base_model = "inclusionai/ling-3.0-flash-fin"
+description = "Ling-3.0-flash-Fin is a finance-enhanced MoE model built on Ling-3.0-flash, with 124 billion total parameters and approximately 5.1 billion activated parameters. Designed for real-world investment workflows, it is optimized for complex multi-step tasks and long-horizon planning and execution. With a relatively small active parameter footprint, it delivers competitive financial performance while maintaining strong general capabilities in reasoning, coding, and mathematics."
+structured_output = false
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "toggle"
+
+[cost]
+input = 0
+output = 0

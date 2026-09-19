@@ -31,6 +31,7 @@ import { llmgateway, llmgatewayProviders } from "./providers/llmgateway.js";
 import { mergeGateway } from "./providers/merge-gateway.js";
 import { meta } from "./providers/meta.js";
 import { nanoGpt } from "./providers/nano-gpt.js";
+import { novitaAi } from "./providers/novita-ai.js";
 import { ollamaCloud } from "./providers/ollama-cloud.js";
 import { openai } from "./providers/openai.js";
 import { ofox } from "./providers/ofox.js";
@@ -86,6 +87,8 @@ export interface SyncProvider<SourceModel> {
   skipCreates?: boolean;
   /** Report remote-only models skipped by skipCreates as GitHub issues. */
   trackMissingModels?: boolean;
+  /** Maximum share of existing files that may disappear in one sync. */
+  maxMissingFraction?: number;
   deleteMissing?: boolean;
   preserveSymlinks?: boolean;
   preserveBaseModels?: boolean;
@@ -166,6 +169,7 @@ export const providers: {
   "merge-gateway": SyncProvider<any>;
   meta: SyncProvider<any>;
   "nano-gpt": SyncProvider<any>;
+  "novita-ai": SyncProvider<any>;
   ofox: SyncProvider<any>;
   "ollama-cloud": SyncProvider<any>;
   openai: SyncProvider<any>;
@@ -205,6 +209,7 @@ export const providers: {
   "merge-gateway": mergeGateway,
   meta,
   "nano-gpt": nanoGpt,
+  "novita-ai": novitaAi,
   ofox,
   "ollama-cloud": ollamaCloud,
   openai,
@@ -231,6 +236,7 @@ export const groups = {
     "llmgateway-providers",
     "merge-gateway",
     "nano-gpt",
+    "novita-ai",
     "ofox",
     "requesty",
     "openrouter",
@@ -379,6 +385,18 @@ export async function syncProvider<SourceModel>(
       content: header + formatToml(parsed.data),
       header,
     });
+  }
+
+  if (provider.deleteMissing !== false && provider.maxMissingFraction !== undefined) {
+    if (provider.maxMissingFraction < 0 || provider.maxMissingFraction > 1) {
+      throw new Error(`Invalid maxMissingFraction for ${provider.id}`);
+    }
+    const absent = [...existing.keys()].filter((file) =>
+      !desired.has(file) && !missingRemote.has(file.slice(0, -5)) && !missingReasoning.has(file.slice(0, -5))
+    ).length;
+    if (existing.size > 0 && absent / existing.size > provider.maxMissingFraction) {
+      throw new Error(`${provider.id} sync would delete ${absent}/${existing.size} existing models; refusing unusually large catalog shrink`);
+    }
   }
 
   const files: SyncResult["files"] = [];

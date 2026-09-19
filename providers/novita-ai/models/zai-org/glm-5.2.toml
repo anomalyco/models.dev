@@ -1,5 +1,9 @@
-name = "GLM-5.2"
 base_model = "zhipuai/glm-5.2"
+name = "GLM 5.2"
+description = "GLM-5.2 is Z.AI's latest flagship model, meticulously engineered for long-horizon autonomous tasks. Capable of working continuously on a single assignment for up to 8 hours, it autonomously manages the entire workflow—from initial planning and execution to iterative optimization and the delivery of production-grade results. With coding and agentic capabilities that rival leading proprietary frontier models, it excels particularly in sustained execution, complex engineering optimization, and real-world development scenarios. Its context window has been expanded from 200K to 1M tokens, making it an ideal foundational model for powering advanced autonomous agents and long-horizon coding assistants."
+
+[interleaved]
+field = "reasoning_content"
 
 [[reasoning_options]]
 type = "effort"
@@ -12,7 +16,3 @@ cache_read = 0.26
 
 [limit]
 context = 1_048_576
-output = 131_072
-
-[interleaved]
-field = "reasoning_content"

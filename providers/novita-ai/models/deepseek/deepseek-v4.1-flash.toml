@@ -1,0 +1,23 @@
+# Toggle: thinking.type = enabled|disabled
+# Effort: reasoning_effort = low|high|max
+# Verified with Novita chat/completions on 2026-09-17: disabling removes reasoning_content.
+base_model = "deepseek/deepseek-v4.1-flash"
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[cost]
+input = 0.3
+output = 1.2
+cache_read = 0.006
+
+[limit]
+context = 1_048_576
+output = 393_216

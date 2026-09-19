@@ -1,0 +1,19 @@
+# Toggle: thinking.type = enabled|disabled
+# Verified with Novita chat/completions on 2026-09-17: disabling removes reasoning_content.
+base_model = "nvidia/nemotron-3-nano-30b-a3b"
+name = "NVIDIA Nemotron 3 Nano 30B A3B"
+description = "Nemotron-3-Nano-30B-A3B is NVIDIA's compute-efficient, open-weight reasoning model built for agentic AI. Its Mixture-of-Experts design (30B total / 3.5B active) with a hybrid Mamba-2 + Transformer architecture delivers strong reasoning and tool use at a fraction of the compute required by comparable dense models. It supports a 256K context window, toggleable chain-of-thought reasoning, function calling, and structured (JSON) outputs — making it well-suited for long-context agents, coding, and math. Released under the NVIDIA Nemotron Open Model License and ready for commercial use."
+structured_output = true
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "toggle"
+
+[cost]
+input = 0.05
+output = 0.2
+
+[limit]
+output = 32_768

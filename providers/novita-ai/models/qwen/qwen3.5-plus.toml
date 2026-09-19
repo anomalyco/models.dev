@@ -1,0 +1,26 @@
+# Toggle: thinking.type = enabled|disabled
+# Budget: thinking_budget (integer reasoning tokens)
+# Verified with Novita chat/completions on 2026-09-17: disabling removes reasoning_content.
+base_model = "alibaba/qwen3.5-plus"
+name = "Qwen3.5-Plus"
+description = "The Qwen3.5 native vision-language series Plus models are based on a hybrid architecture design that integrates linear attention mechanisms with sparse Mixture-of-Experts (MoE), achieving higher inference efficiency. Across various task evaluations, the 3.5 series demonstrates exceptional performance comparable to current top-tier frontier models, marking a leap forward in both plain text and multimodal capabilities compared to the 3 series."
+attachment = true
+structured_output = true
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "budget_tokens"
+
+[cost]
+input = 0.4
+output = 2.4
+
+[[cost.tiers]]
+tier = { type = "context", size = 256_000 }
+input = 0.5
+output = 3

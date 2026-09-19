@@ -1,8 +1,18 @@
+# Toggle: thinking.type = enabled|disabled
+# Effort: reasoning_effort = high|max
+# Verified with Novita chat/completions on 2026-09-17: disabling removes reasoning_content.
 base_model = "deepseek/deepseek-v4-pro"
-reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "medium", "high", "xhigh"] }]
+description = "DeepSeek-V4-Pro is the next-generation flagship open-source large language model developed by DeepSeek, delivering comprehensive performance that rivals the world's premier closed-source models. Compared to its predecessor, V4-Pro achieves a breakthrough evolution in Agentic capabilities. It firmly holds the top position among open-source models in Agentic Coding, providing a high-quality, end-to-end code delivery experience that surpasses mainstream industry benchmarks (such as Sonnet 4.5). Furthermore, the model not only boasts an expansive repository of world knowledge that leads the open-source community, but it also demonstrates ultimate logical reasoning prowess in highly demanding evaluations—including mathematics, STEM, and competitive programming. In these rigorous domains, V4-Pro outperforms all publicly evaluated open-source models and matches the capabilities of global closed-source giants. As the ideal foundational model for building complex agentic workflows, professional-grade software developm"
 
 [interleaved]
 field = "reasoning_content"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["high", "max"]
 
 [cost]
 input = 1.6

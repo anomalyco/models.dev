@@ -1,0 +1,19 @@
+# Toggle: thinking.type = enabled|disabled
+# Budget: thinking_budget (integer reasoning tokens)
+# Verified with Novita chat/completions on 2026-09-17: disabling removes reasoning_content.
+base_model = "alibaba/qwen3.8-flash"
+description = "Qwen3.8-Flash is Alibaba's multimodal MoE model and an early preview of the Qwen4 architecture: 125B total parameters with only 6B activated per token, plus a 51B N-gram embedding, built on GDN + QSA hybrid attention. It accepts text, image and video input across a 1M-token context and emits up to 131K tokens, with thinking mode on by default and switchable off. Built for coding, agentic workflows, visual\nand long-document understanding, and long-video analysis at a fraction of the cost of comparable frontier models."
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "budget_tokens"
+
+[cost]
+input = 0.15
+output = 0.47
+cache_read = 0.016

@@ -1,8 +1,18 @@
+# Toggle: thinking.type = enabled|disabled
+# Effort: reasoning_effort = low|high|max
+# Verified with Novita chat/completions on 2026-09-17: disabling removes reasoning_content.
 base_model = "deepseek/deepseek-v4-flash"
-reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["minimal", "low", "medium", "high", "xhigh"] }]
+description = "DeepSeek-V4-Flash is a lightweight model meticulously designed by DeepSeek to deliver the ultimate combination of lightning-fast response times and unmatched cost-effectiveness. Engineered with fewer parameters and significantly lower activation overhead, V4-Flash provides an exceptionally fast and economical API service. At its core, V4-Flash demonstrates outstanding reasoning capabilities that closely rival the V4-Pro model. While featuring a slightly streamlined repository of world knowledge, it remains highly capable of satisfying the demands of most application scenarios. In Agentic applications, V4-Flash performs on par with the Pro version when handling standard and fundamental tasks. As the premier choice for developers prioritizing high concurrency, low latency, and cost efficiency, DeepSeek-V4-Flash serves as the optimal solution for deploying large-scale, high-frequency, and lightweight AI workloads."
 
 [interleaved]
 field = "reasoning_content"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
 
 [cost]
 input = 0.14

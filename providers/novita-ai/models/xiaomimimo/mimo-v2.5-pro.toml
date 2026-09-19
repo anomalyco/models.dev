@@ -1,18 +1,14 @@
 base_model = "xiaomi/mimo-v2.5-pro"
-reasoning_options = []
+name = "Xiaomi MiMo V2.5 Pro"
+description = "MiMo-V2.5-Pro is purpose-built to push the boundaries of complex software engineering and extreme long-horizon tasks. Compared to its predecessor, it achieves a comprehensive leap in general agentic capabilities, advancing the human-AI collaboration paradigm toward true \"autonomous delivery.\" Without human intervention, it stably orchestrates massive workflows requiring up to a thousand tool calls in a single session, not only precisely capturing implicit requirements within ultra-long contexts but also demonstrating exceptional global architectural planning and self-correction discipline. In core agentic scenarios and long-horizon complexities, MiMo-V2.5-Pro is fully equipped to go head-to-head with top-tier global models like Claude Opus 4.6 and GPT-5.4. Backed by this exceptionally high execution confidence and long-term logical consistency, it completely sheds the \"co-pilot\" label, ready to take on truly serious, professional-grade workloads in real-world business environments."
 last_updated = "2026-05-27"
 structured_output = true
+reasoning_options = []
 
 [interleaved]
 field = "reasoning_content"
 
 [cost]
-input = 0.522
-output = 1.044
-cache_read = 0.0043
-
-[[cost.tiers]]
-tier = { type = "context", size = 256_000 }
 input = 0.522
 output = 1.044
 cache_read = 0.0043

@@ -1,0 +1,22 @@
+# Toggle: thinking.type = enabled|disabled
+# Budget: thinking_budget (integer reasoning tokens)
+# Verified with Novita chat/completions on 2026-09-17: disabling removes reasoning_content.
+base_model = "alibaba/qwen3.6-35b-a3b"
+name = "Qwen3.6 35B A3B"
+description = "The Qwen3.6 35B-A3B native vision-language model is built on a hybrid architecture that integrates linear attention mechanisms with a sparse mixture-of-experts framework, achieving higher inference efficiency. Compared with the 3.5-35B-A3B, this model demonstrates significantly improved agentic coding capabilities, mathematical and code reasoning abilities, spatial intelligence, as well as object localization and object detection performance."
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "budget_tokens"
+
+[cost]
+input = 0.248
+output = 1.485
+
+[modalities]
+input = ["text", "image", "video"]

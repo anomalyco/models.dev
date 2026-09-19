@@ -169,6 +169,16 @@ CrossModel is implemented in `packages/core/src/sync/providers/crossmodel.ts`.
 - `structured_output` comes from `capabilities.json`; when that field is absent, the sync preserves an existing authored override.
 - Other intrinsic model facts remain inherited from the canonical `base_model` metadata.
 
+## Novita AI Notes
+
+- Novita AI uses the authenticated `https://api.novita.ai/openai/v1/models` endpoint as an account-visible served-model catalog. Set `NOVITA_API_KEY` locally or in the hourly workflow; local entries are retained when a key does not expose them.
+- The endpoint supplies current pricing, modalities, features, and limits; authored audio/reasoning prices and cache prices missing from its response remain intact. Tier-specific optional prices are retained only for an identical context threshold. Explicit zero input/output prices with no pricing or tiers mean a free model.
+- Existing authored descriptions and provider-specific reasoning controls remain curated: the API can truncate descriptions and does not describe each model's reasoning wire controls. New models lacking verified lab metadata, usable prices, or reasoning controls are skipped and tracked through deduped missing-model issues in GitHub Actions.
+- New reasoning models use an exact-ID list of live-tested `thinking.type = enabled|disabled` controls. Qwen routes with a tested `thinking_budget` expose `budget_tokens`; DeepSeek V4 routes with a tested `reasoning_effort` expose only the lab/peer-supported levels. The same field is ignored by some Novita routes (including GLM-5.3 Flash and DeepSeek V4 Pro 0813), so it must not be inferred for an entire lab or from a `reasoning` feature flag. Unknown controls are not published.
+- Missing-model issues are limited to chat-completion catalog rows with a usable context window; image, embedding, and other non-chat rows are intentionally ignored.
+- `/openai/v1/models` is not treated as authoritative for deletion because visibility can be account- or tier-scoped. The sync updates visible rows but does not remove absent local files.
+- An empty response is rejected; missing-model notices are limited to priced chat-completion rows that need manual lab metadata or verified controls. Image, embedding, unpriced, and other non-chat rows are intentionally ignored.
+
 ## OpenRouter Notes
 
 OpenRouter is implemented in `packages/core/src/sync/providers/openrouter.ts`.

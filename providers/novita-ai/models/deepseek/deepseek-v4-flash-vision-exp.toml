@@ -1,0 +1,25 @@
+# Toggle: thinking.type = enabled|disabled
+# Effort: reasoning_effort = low|high|max
+# Verified with Novita chat/completions on 2026-09-17: disabling removes reasoning_content.
+base_model = "deepseek/deepseek-v4-flash-vision-exp"
+description = "DeepSeek V4 Flash Vision Exp is an experimental vision-enabled version of DeepSeek V4 Flash 0731(opens in new tab) from DeepSeek, adding image understanding while matching the base model on text capabilities including agents, reasoning, and world knowledge. It is a sparse mixture-of-experts model with 13B active parameters out of 284B total.\n\nIt is suited for document and chart understanding, visual question answering, and multimodal agent workflows that interleave text and images."
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+
+[cost]
+input = 0.44
+output = 1.32
+cache_read = 0.028
+
+[limit]
+context = 1_048_576
+output = 393_216
