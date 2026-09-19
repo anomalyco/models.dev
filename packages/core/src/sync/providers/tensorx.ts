@@ -74,19 +74,19 @@ const REASONING_OPTIONS_BY_ID: Record<string, NonNullable<SyncedFullModel["reaso
   "z-ai/glm-5": [{ type: "effort", values: ["none", "minimal", "low", "medium", "high", "xhigh", "max"] }],
   "z-ai/glm-5.1": [
     { type: "toggle" },
-    { type: "effort", values: ["none", "minimal", "low", "medium", "high", "xhigh", "max"] },
+    { type: "effort", values: ["minimal", "low", "medium", "high", "xhigh", "max"] },
   ],
   "z-ai/glm-5.2": [
     { type: "toggle" },
-    { type: "effort", values: ["none", "minimal", "low", "medium", "high", "xhigh", "max"] },
+    { type: "effort", values: ["minimal", "low", "medium", "high", "xhigh", "max"] },
   ],
   "z-ai/glm-5-turbo": [
     { type: "toggle" },
-    { type: "effort", values: ["none", "minimal", "low", "medium", "high", "xhigh", "max"] },
+    { type: "effort", values: ["minimal", "low", "medium", "high", "xhigh", "max"] },
   ],
   "z-ai/glm-5v-turbo": [
     { type: "toggle" },
-    { type: "effort", values: ["none", "minimal", "low", "medium", "high", "xhigh", "max"] },
+    { type: "effort", values: ["minimal", "low", "medium", "high", "xhigh", "max"] },
   ],
   "qwen/qwen3.8-2.4t-a95b": [{ type: "effort", values: ["low", "medium", "xhigh"] }],
   "qwen/qwen3.8-27b": [{ type: "effort", values: ["low", "medium", "xhigh"] }],
@@ -107,6 +107,8 @@ const REASONING_OPTIONS_BY_ID: Record<string, NonNullable<SyncedFullModel["reaso
 };
 
 // TensorX uses its own vendor prefixes that differ from the catalog lab ids.
+// Orgs absent from this map are resolved as identity (e.g. openai, nvidia),
+// so identity labs already on disk keep receiving API cost/limit updates.
 const LAB_PREFIX_MAP: Record<string, string> = {
   "z-ai": "zhipuai",
   qwen: "alibaba",
@@ -122,8 +124,8 @@ function resolveLabModelID(modelID: string): string | undefined {
   if (cached !== undefined) return cached ?? undefined;
 
   const [org, ...parts] = modelID.split("/");
-  const mapped = org !== undefined ? LAB_PREFIX_MAP[org] : undefined;
-  if (mapped === undefined || parts.length === 0) return undefined;
+  if (org === undefined || parts.length === 0) return undefined;
+  const mapped = LAB_PREFIX_MAP[org] ?? org;
 
   let labDir: string | undefined;
   try {
@@ -241,13 +243,24 @@ function inferFamily(modelID: string, name: string): SyncedFullModel["family"] {
     });
 }
 
-function reasoningHeader(model: SyncedModel): string | undefined {
+// Toggle wire path per model id; models absent here use the DeepSeek/Kimi
+// `chat_template_kwargs.thinking` path.
+const TOGGLE_WIRE_BY_ID: Record<string, string> = {
+  "z-ai/glm-5.1": "enable_thinking",
+  "z-ai/glm-5.2": "enable_thinking",
+  "z-ai/glm-5-turbo": "enable_thinking",
+  "z-ai/glm-5v-turbo": "enable_thinking",
+  "minimax/minimax-m3": "thinking_mode",
+};
+
+function reasoningHeader(modelID: string, model: SyncedModel): string | undefined {
   const options = model.reasoning_options;
   if (options === undefined || options.length === 0) return undefined;
   const lines: string[] = [];
   for (const option of options) {
     if (option.type === "toggle") {
-      lines.push("# Toggle: chat_template_kwargs.thinking = true | false");
+      const field = TOGGLE_WIRE_BY_ID[modelID] ?? "thinking";
+      lines.push(`# Toggle: chat_template_kwargs.${field} = true | false`);
     }
     if (option.type === "effort") {
       const values = option.values.map((value) => `"${value}"`).join(" | ");
@@ -293,18 +306,18 @@ export const tensorx = {
       models.push({
         id: entry.model_name,
         mode: info.mode,
-        maxInput: info.max_input_tokens,
-        maxOutput: info.max_output_tokens,
+        maxInput: info.max_input_tokens ?? undefined,
+        maxOutput: info.max_output_tokens ?? undefined,
         reasoning: info.supports_reasoning === true,
         toolCall: info.supports_function_calling === true || info.supports_tool_choice === true,
         vision: info.supports_vision === true,
-        inputCost: info.input_cost_per_token === undefined
+        inputCost: info.input_cost_per_token == null
           ? undefined
           : Math.round(info.input_cost_per_token * PER_TOKEN_TO_PER_MILLION * 1_000_000) / 1_000_000,
-        outputCost: info.output_cost_per_token === undefined
+        outputCost: info.output_cost_per_token == null
           ? undefined
           : Math.round(info.output_cost_per_token * PER_TOKEN_TO_PER_MILLION * 1_000_000) / 1_000_000,
-        cacheRead: info.cache_read_input_token_cost === undefined
+        cacheRead: info.cache_read_input_token_cost == null
           ? undefined
           : Math.round(info.cache_read_input_token_cost * PER_TOKEN_TO_PER_MILLION * 1_000_000) / 1_000_000,
       });
@@ -338,7 +351,7 @@ export const tensorx = {
     return {
       id: model.id,
       model: built,
-      header: reasoningHeader(built),
+      header: reasoningHeader(model.id, built),
     };
   },
   sourceID(model: TensorxSourceModel) {
