@@ -1,0 +1,22 @@
+# SCNet probe 2026-08-27: image input succeeded on this host.
+# SCNet probe 2026-08-28: baseline and enable_thinking=false/true all returned
+# reasoning content; thinking_budget=128/1024 likewise showed no distinct effect.
+# This host therefore has affirmative always-on reasoning for this SKU; no caller
+# control is advertised.
+# SCNet OpenAI Chat API source:
+# https://www.scnet.cn/ac/openapi/doc/2.0/moduleapi/api/chat.html
+base_model = "alibaba/qwen3.5-122b-a10b"
+reasoning_options = []
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.119
+output = 0.952
+
+[limit]
+context = 102_400
+
+[modalities]
+input = ["text", "image"]
