@@ -219,13 +219,11 @@ function normalizeModel(
 
   if (factorBase !== undefined) {
     // /v1/model/info reports vision as a bare boolean only, not a full
-    // modality list. Never synthesize a text+image override from it: that
-    // would replace richer lab inputs (e.g. GLM-5V image/video/pdf) and lose
-    // real multimodal routes. When the API reports a boolean, set attachment
-    // alone and leave modalities unset so lab inheritance stands; only when
-    // vision is unreported do we preserve an authored modality override.
-    const attachment = model.vision === true ? true : model.vision === false ? false : existing?.attachment;
-    const modalities = model.vision === undefined ? existing?.modalities : undefined;
+    // modality list. Overriding either attachment or modalities from a boolean
+    // risks a contradiction with the lab's surface (e.g. attachment=false with
+    // inherited image/video input, or a synthesized narrow text+image set over a
+    // richer lab). Leave both to lab inheritance so attachment and modalities
+    // stay consistent and real multimodal routes are never lost.
     // Only carry lab-field deltas that are genuinely authored on this route (not
     // the base-resolved merge), and only when it already factors onto this base.
     const preserveDeltas = authored?.base_model === factorBase;
@@ -236,12 +234,10 @@ function normalizeModel(
         knowledge: preserveDeltas ? authored?.knowledge : undefined,
         release_date: preserveDeltas ? authored?.release_date : undefined,
         last_updated: preserveDeltas ? authored?.last_updated : undefined,
-        attachment,
         reasoning: reasoning === true ? true : reasoning === false ? false : undefined,
         reasoning_options: reasoningOptions,
         tool_call: toolCall,
         limit,
-        modalities,
         cost,
       },
       limit,
@@ -409,10 +405,14 @@ export const tensorx = {
     // A reasoning model must always carry real controls. TensorX /v1/model/info
     // only reports supports_reasoning, so the control shape must come from
     // REASONING_OPTIONS_BY_ID or the authored on-disk file. If neither provides
-    // one, require a map entry before writing a reasoning=true file — the runner
-    // would otherwise stamp reasoning_options = [] (policy-invalid). This also
-    // surfaces existing routes that gain reasoning without authored controls.
-    if (built.reasoning === true && built.reasoning_options === undefined) {
+    // one, require a map entry before writing a reasoning model — the runner
+    // would otherwise stamp reasoning_options = [] (policy-invalid). This treats
+    // an effective reasoner (API reports true, or the API is silent while the
+    // route reasons) the same as an API-true one.
+    const willReason =
+      model.reasoning === true
+      || (model.reasoning === undefined && (existing?.reasoning === true || authored?.reasoning === true));
+    if (willReason && built.reasoning_options === undefined) {
       throw new MissingReasoningOptionsError(
         model.id,
         "TensorX /v1/model/info only reports supports_reasoning (no control shape or effort levels); add an entry to REASONING_OPTIONS_BY_ID in providers/tensorx.ts, then re-sync",
