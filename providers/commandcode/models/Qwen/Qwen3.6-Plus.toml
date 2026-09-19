@@ -1,0 +1,15 @@
+# https://commandcode.ai/models/qwen3-6-plus
+# Toggle: enable_thinking true|false
+# Budget: thinking_budget
+base_model = "alibaba/qwen3.6-plus"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "budget_tokens"
+
+[cost]
+cache_read = 0.1
+input = 0.5
+output = 3

@@ -1,0 +1,14 @@
+# https://commandcode.ai/models/glm-5-3-flash
+base_model = "zhipuai/glm-5.3-flash"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+cache_read = 0.03
+input = 0.15
+output = 0.5

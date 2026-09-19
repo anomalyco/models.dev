@@ -1,0 +1,19 @@
+# https://commandcode.ai/models/kimi-k3
+# Toggle: thinking.type = enabled|disabled
+# Effort: output_config.effort = low|high|max
+base_model = "moonshotai/kimi-k3"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+cache_read = 0.3
+input = 3
+output = 15
