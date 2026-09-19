@@ -1,3 +1,7 @@
+# Prompt caching (chat): scoped Google plus Vertex-only explicit cache via `cached_content` in `cachedContents/{id}` format; `prompt_cache_key` serves as cache resource on those routes alongside `cached_content`.
+# Use body: `cached_content` handle plus `prompt_cache_key` on Google plus Vertex routes; other models follow upstream prefix reuse.
+# To get a hit: supply `cached_content` plus `prompt_cache_key` on Google plus Vertex routes with cache managed directly via Google.
+# Docs: https://docs.frogbot.ai/api-reference/chat-completions
 name = "FrogBot"
 # Reasoning HTTP format (accessed 2026-06-25): POST /api/v1/chat/completions.
 # JSON reasoning_effort: "low" | "medium" | "high"; Anthropic models also
