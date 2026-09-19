@@ -54,7 +54,7 @@ type TensorxSourceModel = {
   maxOutput: number | undefined;
   reasoning: boolean;
   toolCall: boolean;
-  vision: boolean;
+  vision: boolean | undefined;
   inputCost: number | undefined;
   outputCost: number | undefined;
   cacheRead: number | undefined;
@@ -209,14 +209,44 @@ function normalizeModel(
   };
 
   if (factorBase !== undefined) {
+    const authoredModalities = existing?.modalities;
+    const textOnly: Modality[] = ["text"];
+    const authoredInput: Modality[] = authoredModalities?.input
+      ? (authoredModalities.input as Modality[])
+      : [];
+    const authoredOutput: Modality[] = authoredModalities?.output
+      ? (authoredModalities.output as Modality[])
+      : [];
+    let modalities: SyncedFullModel["modalities"] | undefined;
+    if (model.vision === true) {
+      modalities = {
+        input: authoredInput.includes("image")
+          ? authoredInput
+          : [...(authoredInput.length > 0 ? authoredInput : textOnly), "image"],
+        output: authoredOutput.length > 0 ? authoredOutput : textOnly,
+      };
+    } else if (model.vision === false) {
+      const input = authoredInput.filter((value) => value !== "image");
+      modalities = {
+        input: input.length > 0 ? input : textOnly,
+        output: authoredOutput.length > 0 ? authoredOutput : textOnly,
+      };
+    } else {
+      // API did not report vision; preserve any authored modality override.
+      modalities = authoredModalities;
+    }
     return factorBaseModel(
       factorBase,
       {
-        attachment: vision === true ? true : undefined,
+        name: existing?.name,
+        knowledge: existing?.knowledge,
+        release_date: existing?.release_date,
+        last_updated: existing?.last_updated,
+        attachment: model.vision === true ? true : model.vision === false ? false : existing?.attachment,
         reasoning: reasoning ? true : undefined,
         reasoning_options: reasoningOptions,
         tool_call: toolCall,
-        limit,
+        modalities,
         cost,
       },
       limit,
@@ -346,7 +376,7 @@ export const tensorx = {
         maxOutput: info.max_output_tokens ?? undefined,
         reasoning: info.supports_reasoning === true,
         toolCall: info.supports_function_calling === true || info.supports_tool_choice === true,
-        vision: info.supports_vision === true,
+        vision: info.supports_vision === true ? true : info.supports_vision === false ? false : undefined,
         inputCost: info.input_cost_per_token == null
           ? undefined
           : Math.round(info.input_cost_per_token * PER_TOKEN_TO_PER_MILLION * 1_000_000) / 1_000_000,
