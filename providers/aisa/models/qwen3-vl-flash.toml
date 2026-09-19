@@ -1,0 +1,15 @@
+# Source: https://aisa.one/models (AIsa pricing API https://aisa.one/api/pricing/models,
+# catalog cached_at 2026-09-15, accessed 2026-09-15). All cost values USD per 1M tokens as published by AIsa.
+# AIsa is a multi-model relay: reasoning controls mirror the underlying lab API (pass-through).
+# Toggle: enable_thinking true|false
+# Budget: thinking_budget (integer reasoning tokens)
+base_model = "alibaba/qwen3-vl-flash"
+reasoning_options = [
+  { type = "toggle" },
+  { type = "budget_tokens" },
+]
+
+[cost]
+input = 0.035
+output = 0.28
+cache_read = 0.035

@@ -1,0 +1,24 @@
+# Sources (accessed 2026-09-15):
+# https://www.alibabacloud.com/help/en/model-studio/wan2-7-i2v
+# https://www.alibabacloud.com/help/en/model-studio/image-to-video-general-api-reference
+# https://www.alibabacloud.com/blog/alibaba-unveils-wan2-7-video-to-elevate-creators-from-executors-to-directors_603009
+# Snapshot wan2.7-i2v-2026-04-25.
+# Async DashScope video-synthesis endpoint: no temperature/tool/structured-output controls;
+# billed per second of output video, so no token limits (limit = 0).
+name = "Wan2.7 Image-to-Video"
+description = "Video model for first-frame, first+last-frame, and clip-continuation video generation with optional driving audio"
+release_date = "2026-04-07"
+last_updated = "2026-04-25"
+attachment = true
+reasoning = false
+temperature = false
+tool_call = false
+open_weights = false
+
+[limit]
+context = 0
+output = 0
+
+[modalities]
+input = ["text", "image", "video", "audio"]
+output = ["video"]
