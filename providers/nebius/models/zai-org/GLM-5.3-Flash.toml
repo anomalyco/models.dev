@@ -10,16 +10,15 @@
 # No discounted prompt-cache tier in the public catalog (no cache rate listed for this
 # model): cached and fresh input are billed identically, so cache_read = input
 # (same rationale as Kimi-K3 / DeepSeek-V4-Flash-0731).
-
 base_model = "zhipuai/glm-5.3-flash"
 attachment = false
+
+[interleaved]
+field = "reasoning_content"
 
 [[reasoning_options]]
 type = "effort"
 values = ["low", "high", "max"]
-
-[interleaved]
-field = "reasoning_content"
 
 [cost]
 input = 0.15
@@ -32,4 +31,3 @@ output = 1_024_000
 
 [modalities]
 input = ["text"]
-output = ["text"]
