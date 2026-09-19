@@ -1,0 +1,26 @@
+# Toggle: thinking.type = enabled|disabled (default enabled; verified live
+# 2026-08-30 -- disabled yields zero reasoning tokens and is the only real off
+# switch on this host: effort=none/minimal are accepted but do NOT skip
+# thinking, unlike the Zhipu native API)
+# Effort: reasoning_effort = high|max (default max). The host validates the
+# full enum none|minimal|low|medium|high|xhigh|max, but the lab documents the
+# effective levels as high|max (low/medium map to high, xhigh maps to max), so
+# only the real levels are offered.
+# https://intl.cloud.tencent.com/document/product/1300/80637
+base_model = "zhipuai/glm-5.2"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["high", "max"]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0
+output = 0
+cache_read = 0
+cache_write = 0

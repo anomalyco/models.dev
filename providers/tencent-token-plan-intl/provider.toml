@@ -1,0 +1,28 @@
+# Tencent Cloud Token Plan (International) -- subscription endpoint shared by
+# the Singapore-site Personal and Enterprise Token Plans (accessed 2026-08-30,
+# live-verified with personal, enterprise-pro, and enterprise-lite plan keys).
+# A dedicated Token Plan API Key (sk-tp-*) from the Token Plan console is
+# required; TokenHub pay-as-you-go keys are not accepted. Models are gated per
+# plan tier: personal plans serve auto, glm-5.2, kimi-k2.6,
+# deepseek-v4-pro-202606, deepseek-v4-flash-202605, minimax-m3; enterprise pro
+# additionally serves glm-5.3, kimi-k2.7-code(-highspeed), and the undated
+# deepseek-v4-pro/flash ids (kimi-k2.6 excluded); enterprise lite serves auto
+# only. Unauthorized models return 403/403002. Usage is limited to supported AI
+# coding tools per the plan terms.
+# Reasoning HTTP format: POST /plan/v3/chat/completions uses top-level
+# `thinking.type` (enabled/disabled; adaptive|disabled for minimax-m3) and
+# `reasoning_effort`; reasoning is returned at
+# `choices[].message.reasoning_content` or streamed at
+# `choices[].delta.reasoning_content`.
+# Sources:
+# https://intl.cloud.tencent.com/document/product/1300/81315 (personal plans)
+# https://intl.cloud.tencent.com/document/product/1300/81317 (personal quick start)
+# https://intl.cloud.tencent.com/document/product/1300/81489 (enterprise pro)
+# https://intl.cloud.tencent.com/document/product/1300/81490 (enterprise lite)
+# https://intl.cloud.tencent.com/document/product/1300/80637 (deep reasoning)
+
+name = "Tencent Token Plan (International)"
+env = ["TENCENT_TOKEN_PLAN_INTL_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+doc = "https://intl.cloud.tencent.com/document/product/1300/81315"
+api = "https://tokenhub-intl.tencentcloudmaas.com/plan/v3"
