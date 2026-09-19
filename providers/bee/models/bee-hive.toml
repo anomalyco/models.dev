@@ -1,0 +1,25 @@
+name = "Bee Hive 1.0"
+description = "Scalable Bee serving with quantum-reasoning routing and multi-base domain-adapter routing for shared knowledge workflows, document intelligence, and lower-cost cloud inference. Domain adapters activate per customer domain after evaluation."
+attachment = true
+reasoning = true
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
+tool_call = true
+structured_output = true
+temperature = true
+open_weights = false
+release_date = "2026-07-10"
+last_updated = "2026-08-23"
+
+[modalities]
+input = ["text", "image", "video"]
+output = ["text"]
+
+[limit]
+context = 262144
+output = 32768
+
+[cost]
+input = 5.00
+output = 20.00
+cache_read = 0.50
+cache_write = 6.00

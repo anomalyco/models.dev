@@ -1,0 +1,24 @@
+name = "Bee Swarm 1.0"
+description = "Premium reasoning, multi-model cloud execution, large-document analysis, and high-value technical work. Includes the evolution engine and stronger eval gates by default."
+attachment = true
+reasoning = true
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
+tool_call = false
+structured_output = false
+open_weights = false
+release_date = "2026-07-10"
+last_updated = "2026-08-23"
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[limit]
+context = 1000000
+output = 64000
+
+[cost]
+input = 25.00
+output = 150.00
+cache_read = 2.50
+cache_write = 30.00
