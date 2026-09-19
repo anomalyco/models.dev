@@ -1,0 +1,21 @@
+# Sources (accessed 2026-09-16):
+# https://api.verathos.ai/v1/models (model ID, pricing, context length)
+# https://github.com/verathos-ai/verathos/blob/main/docs/api.md (request fields)
+#
+# Served text-only (GGUF Q4_K_M mesh). No tool-calling parameters are
+# advertised; the mesh runtime accepts only text response_format.
+# Toggle: enable_thinking = true|false (top-level request field, default true)
+base_model = "alibaba/qwen3.6-35b-a3b"
+attachment = false
+tool_call = false
+structured_output = false
+
+[[reasoning_options]]
+type = "toggle"
+
+[cost]
+input = 0.08
+output = 0.40
+
+[modalities]
+input = ["text"]
