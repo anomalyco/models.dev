@@ -1,6 +1,8 @@
+# Thinking is mandatory; high is the only effective effort, so aliases add no caller control.
+# Source: Workers AI /ai/models/search?format=openrouter (2026-09-18).
 base_model = "moonshotai/kimi-k2.7-code"
-reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "medium", "high"] }]
 temperature = true
+reasoning_options = []
 
 [cost]
 input = 0.95
