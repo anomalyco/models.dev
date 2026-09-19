@@ -1,3 +1,8 @@
+# Tempr gap, not uncertainty: verified against Tempr's own source (Program.cs registers
+# only Anthropic/Gemini/Cohere behind a request translator; AnthropicRequestTranslator.cs /
+# GeminiRequestTranslator.cs / CohereRequestTranslator.cs implement no reasoning/thinking
+# field mapping in either direction) -- a caller of Tempr's OpenAI-compatible endpoint has
+# no way to set this lab's native reasoning control today.
 base_model = "google/gemini-3.5-flash"
 
 reasoning_options = []
