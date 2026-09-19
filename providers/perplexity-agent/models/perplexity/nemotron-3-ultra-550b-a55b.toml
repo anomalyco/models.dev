@@ -1,0 +1,14 @@
+# Perplexity Agent API pricing:
+# https://docs.perplexity.ai/docs/agent-api/models (accessed 2026-08-27)
+# Callable ID is perplexity/nemotron-3-ultra-550b-a55b.
+# Effort list matches prior Perplexity Agent Nemotron Super entry on this host.
+base_model = "nvidia/nemotron-3-ultra-550b-a55b"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high", "xhigh", "max"]
+
+[cost]
+input = 0.25
+output = 2.50
+cache_read = 0.25
