@@ -1,0 +1,11 @@
+# Local daemon on the user's machine. Fans out to the providers the user has
+# connected (subscriptions served locally, API keys via the hosted gateway)
+# behind three alias models with automatic fallback. Concrete provider/model
+# ids are also served and can be listed from GET /v1/models; the aliases below
+# are the stable entry points.
+# https://docs.openllm.sh/tools (accessed 2026-09-18)
+name = "OpenLLM"
+env = ["OPENLLM_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+api = "http://127.0.0.1:8787/v1"
+doc = "https://docs.openllm.sh/providers"

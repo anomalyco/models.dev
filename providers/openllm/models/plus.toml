@@ -1,0 +1,27 @@
+# Alias backed by the user's own fallback chain; the first entry decides the
+# serving model, so limits here are the alias's advertised defaults from
+# GET /v1/models (accessed 2026-09-18). Cost is 0: the user's own provider
+# accounts are billed, OpenLLM does not resell tokens.
+name = "Plus"
+description = "Default tier alias: balanced connected models with automatic fallback"
+family = "auto"
+release_date = "2026-06-01"
+last_updated = "2026-09-18"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[cost]
+input = 0
+output = 0
+
+[limit]
+context = 272_000
+output = 128_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
