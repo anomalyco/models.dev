@@ -58,6 +58,7 @@ type TensorxSourceModel = {
   inputCost: number | undefined;
   outputCost: number | undefined;
   cacheRead: number | undefined;
+  cacheWrite: number | undefined;
 };
 
 type Modality = "text" | "audio" | "image" | "video" | "pdf";
@@ -177,7 +178,7 @@ function normalizeModel(model: TensorxSourceModel, existing: ExistingModel | und
         input: model.inputCost,
         output: model.outputCost,
         cache_read: model.cacheRead ?? existing?.cost?.cache_read,
-        cache_write: existing?.cost?.cache_write,
+        cache_write: model.cacheWrite ?? existing?.cost?.cache_write,
       }
     : existing?.cost;
   const limit = {
@@ -254,7 +255,8 @@ function inferFamily(modelID: string, name: string): SyncedFullModel["family"] {
 }
 
 // Toggle wire path per model id; models absent here use the DeepSeek/Kimi
-// `chat_template_kwargs.thinking` path.
+// `chat_template_kwargs.thinking` path. MiniMax M3 uses a 3-mode enum rather
+// than a boolean, so its header prints the real value syntax.
 const TOGGLE_WIRE_BY_ID: Record<string, string> = {
   "z-ai/glm-5.3": "enable_thinking",
   "z-ai/glm-5.3-flash": "enable_thinking",
@@ -264,6 +266,9 @@ const TOGGLE_WIRE_BY_ID: Record<string, string> = {
   "z-ai/glm-5v-turbo": "enable_thinking",
   "minimax/minimax-m3": "thinking_mode",
 };
+const TOGGLE_VALUE_SYNTAX_BY_ID: Record<string, string> = {
+  "minimax/minimax-m3": '"enabled" | "adaptive" | "disabled"',
+};
 
 function reasoningHeader(modelID: string, model: SyncedModel): string | undefined {
   const options = model.reasoning_options;
@@ -272,7 +277,8 @@ function reasoningHeader(modelID: string, model: SyncedModel): string | undefine
   for (const option of options) {
     if (option.type === "toggle") {
       const field = TOGGLE_WIRE_BY_ID[modelID] ?? "thinking";
-      lines.push(`# Toggle: chat_template_kwargs.${field} = true | false`);
+      const values = TOGGLE_VALUE_SYNTAX_BY_ID[modelID] ?? "true | false";
+      lines.push(`# Toggle: chat_template_kwargs.${field} = ${values}`);
     }
     if (option.type === "effort") {
       const values = option.values.map((value) => `"${value}"`).join(" | ");
@@ -332,6 +338,9 @@ export const tensorx = {
         cacheRead: info.cache_read_input_token_cost == null
           ? undefined
           : Math.round(info.cache_read_input_token_cost * PER_TOKEN_TO_PER_MILLION * 1_000_000) / 1_000_000,
+        cacheWrite: info.cache_creation_input_token_cost == null
+          ? undefined
+          : Math.round(info.cache_creation_input_token_cost * PER_TOKEN_TO_PER_MILLION * 1_000_000) / 1_000_000,
       });
     }
     if (models.length === 0) {
@@ -347,14 +356,13 @@ export const tensorx = {
       return undefined;
     }
     const built = normalizeModel(model, existing);
-    // A brand-new reasoner has no authored controls to inherit and no API
-    // signal for the correct control shape; require a REASONING_OPTIONS_BY_ID
-    // entry before writing a reasoning=true file that would fail validation.
-    if (
-      existing === undefined
-      && built.reasoning === true
-      && built.reasoning_options === undefined
-    ) {
+    // A reasoning model must always carry real controls. TensorX /v1/model/info
+    // only reports supports_reasoning, so the control shape must come from
+    // REASONING_OPTIONS_BY_ID or the authored on-disk file. If neither provides
+    // one, require a map entry before writing a reasoning=true file — the runner
+    // would otherwise stamp reasoning_options = [] (policy-invalid). This also
+    // surfaces existing routes that gain reasoning without authored controls.
+    if (built.reasoning === true && built.reasoning_options === undefined) {
       throw new MissingReasoningOptionsError(
         model.id,
         "TensorX /v1/model/info only reports supports_reasoning (no control shape or effort levels); add an entry to REASONING_OPTIONS_BY_ID in providers/tensorx.ts, then re-sync",
