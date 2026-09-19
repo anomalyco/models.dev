@@ -241,7 +241,7 @@ function normalizeModel(
         cost,
       },
       limit,
-      existing?.base_model === factorBase ? existing.base_model_omit : undefined,
+      authored?.base_model === factorBase ? authored.base_model_omit : undefined,
     );
   }
 
@@ -301,8 +301,8 @@ function inferFamily(modelID: string, name: string): SyncedFullModel["family"] {
 }
 
 // Toggle wire path per model id; models absent here use the DeepSeek/Kimi
-// `chat_template_kwargs.thinking` path. MiniMax M3 uses a 3-mode enum rather
-// than a boolean, so its header prints the real value syntax.
+// `chat_template_kwargs.thinking` path. Off-map toggle routes (Kimi) are listed
+// explicitly so authoritativeHeaders always emits a correct leading header.
 const TOGGLE_WIRE_BY_ID: Record<string, string> = {
   "z-ai/glm-5.3": "enable_thinking",
   "z-ai/glm-5.3-flash": "enable_thinking",
@@ -311,6 +311,9 @@ const TOGGLE_WIRE_BY_ID: Record<string, string> = {
   "z-ai/glm-5-turbo": "enable_thinking",
   "z-ai/glm-5v-turbo": "enable_thinking",
   "minimax/minimax-m3": "thinking_mode",
+  "moonshotai/kimi-k2.6": "thinking",
+  "moonshotai/kimi-k2.7-code": "thinking",
+  "moonshotai/kimi-k3": "thinking",
 };
 const TOGGLE_VALUE_SYNTAX_BY_ID: Record<string, string> = {
   "minimax/minimax-m3": '"enabled" | "adaptive" | "disabled"',
