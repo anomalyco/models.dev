@@ -1,6 +1,6 @@
 # TopUpSaja relays request bodies verbatim to OpenRouter /chat/completions
 
-base_model = "meta/muse-spark-1.3-contributor"
+base_model = "meta/muse-spark-1.3"
 
 name = "Meta: Muse Spark 1.3 Contributor"
 
@@ -9,6 +9,9 @@ input = 0.7
 output = 1.4
 cache_read = 0.014
 
+[limit]
+output = 943718
+
 [[reasoning_options]]
 type = "effort"
-values = ["minimal", "low", "medium", "high", "xhigh", "max"]
+values = ["minimal", "low", "medium", "high", "xhigh"]
