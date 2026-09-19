@@ -1,0 +1,10 @@
+# Source: Poe GET /v1/models (accessed 2026-08-16).
+# Effort: extra_body.reasoning_effort = low|high|max (thinking always on)
+# Costs are USD/MTok from Poe pricing fields * 1e6.
+base_model = "moonshotai/kimi-k3"
+name = "Kimi-K3-EL"
+reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]
+
+[cost]
+input = 3.0303
+output = 15.1515
