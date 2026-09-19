@@ -1,3 +1,8 @@
+# Cache key (chat): none — models endpoint exposes supported_features/sampling params with no cache-key param.
+# Use headers: none
+# Use body: none
+# Cache policy: automatic prefix cache — keep shared prefix byte-identical and append-only; cache reads billed per model as input_cache_reads: Kimi-K3 0.45 (input 3), GLM-5.3-Flash 0.04 (input 0.15), GLM-5.2 0.16 (input 1), Qwen3.8-27B 0.09 (input 0.45), writes 0.
+# Docs: https://api.synthetic.new/openai/v1/models
 name = "Synthetic"
 env = ["SYNTHETIC_API_KEY"]
 npm = "@ai-sdk/openai-compatible"
