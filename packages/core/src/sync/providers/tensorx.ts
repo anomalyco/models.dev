@@ -211,32 +211,14 @@ function normalizeModel(
   };
 
   if (factorBase !== undefined) {
-    const authoredModalities = existing?.modalities;
-    const textOnly: Modality[] = ["text"];
-    const authoredInput: Modality[] = authoredModalities?.input
-      ? (authoredModalities.input as Modality[])
-      : [];
-    const authoredOutput: Modality[] = authoredModalities?.output
-      ? (authoredModalities.output as Modality[])
-      : [];
-    let modalities: SyncedFullModel["modalities"] | undefined;
-    if (model.vision === true) {
-      modalities = {
-        input: authoredInput.includes("image")
-          ? authoredInput
-          : [...(authoredInput.length > 0 ? authoredInput : textOnly), "image"],
-        output: authoredOutput.length > 0 ? authoredOutput : textOnly,
-      };
-    } else if (model.vision === false) {
-      const input = authoredInput.filter((value) => value !== "image");
-      modalities = {
-        input: input.length > 0 ? input : textOnly,
-        output: authoredOutput.length > 0 ? authoredOutput : textOnly,
-      };
-    } else {
-      // API did not report vision; preserve any authored modality override.
-      modalities = authoredModalities;
-    }
+    // /v1/model/info reports vision as a bare boolean only, not a full
+    // modality list. Never synthesize a text+image override from it: that
+    // would replace richer lab inputs (e.g. GLM-5V image/video/pdf) and lose
+    // real multimodal routes. When the API reports a boolean, set attachment
+    // alone and leave modalities unset so lab inheritance stands; only when
+    // vision is unreported do we preserve an authored modality override.
+    const attachment = model.vision === true ? true : model.vision === false ? false : existing?.attachment;
+    const modalities = model.vision === undefined ? existing?.modalities : undefined;
     return factorBaseModel(
       factorBase,
       {
@@ -244,7 +226,7 @@ function normalizeModel(
         knowledge: existing?.knowledge,
         release_date: existing?.release_date,
         last_updated: existing?.last_updated,
-        attachment: model.vision === true ? true : model.vision === false ? false : existing?.attachment,
+        attachment,
         reasoning: reasoning === true ? true : reasoning === false ? false : undefined,
         reasoning_options: reasoningOptions,
         tool_call: toolCall,
@@ -261,6 +243,13 @@ function normalizeModel(
   const inlineReasoning = reasoning ?? existing?.reasoning ?? false;
   const family = existing?.family ?? inferFamily(model.id, name);
   const textOnly: { input: Modality[]; output: Modality[] } = { input: ["text"], output: ["text"] };
+  const attachment = vision === true ? true : vision === false ? false : (existing?.attachment ?? false);
+  const modalities: SyncedFullModel["modalities"] = existing?.modalities
+    ? {
+        input: existing.modalities.input as Modality[],
+        output: existing.modalities.output as Modality[],
+      }
+    : textOnly;
   return {
     name,
     description:
@@ -274,10 +263,10 @@ function normalizeModel(
         tool_call: toolCall,
         structured_output: false,
         open_weights: true,
-        modalities: textOnly,
+        modalities,
       }),
     family,
-    attachment: vision === true,
+    attachment,
     reasoning: inlineReasoning,
     reasoning_options: reasoningOptions,
     tool_call: toolCall,
@@ -288,7 +277,7 @@ function normalizeModel(
     knowledge: existing?.knowledge,
     cost,
     limit: inlineLimit,
-    modalities: textOnly,
+    modalities,
   };
 }
 
