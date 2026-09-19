@@ -1,0 +1,18 @@
+# Output: Kiro caps max_tokens at 64000 for Claude Opus 4.6 (lab entry is 128_000)
+# Source: https://kiro.dev/docs/models/effort/ ("max_tokens limits per model")
+base_model = "anthropic/claude-opus-4-6"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high", "max"]
+
+[cost]
+input = 0
+output = 0
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[limit]
+output = 64_000
