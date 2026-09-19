@@ -74,14 +74,14 @@ type Modality = "text" | "audio" | "image" | "video" | "pdf";
 // entry is skipped (MissingReasoningOptionsError) rather than written without
 // controls, so a new reasoning family surfaces as an explicit one-line addition.
 const REASONING_OPTIONS_BY_ID: Record<string, NonNullable<SyncedFullModel["reasoning_options"]>> = {
-  // GLM 5.3 / 5.3-Flash: toggle enable_thinking, effort low|high (default max)
+  // GLM 5.3 / 5.3-Flash: toggle enable_thinking, effort low|high|max (default max)
   "z-ai/glm-5.3": [
     { type: "toggle" },
-    { type: "effort", values: ["low", "high"] },
+    { type: "effort", values: ["low", "high", "max"] },
   ],
   "z-ai/glm-5.3-flash": [
     { type: "toggle" },
-    { type: "effort", values: ["low", "high"] },
+    { type: "effort", values: ["low", "high", "max"] },
   ],
   // GLM 5.2: toggle enable_thinking, effort high|max
   "z-ai/glm-5.2": [
@@ -97,6 +97,10 @@ const REASONING_OPTIONS_BY_ID: Record<string, NonNullable<SyncedFullModel["reaso
   "qwen/qwen3.8-27b": [{ type: "effort", values: ["low", "medium", "xhigh"] }],
   "qwen/qwen3.8-flash-next": [{ type: "effort", values: ["low", "medium", "xhigh"] }],
   // DeepSeek V4: off by default, toggle thinking, effort high|max when on
+  "deepseek/deepseek-v4-flash": [
+    { type: "toggle" },
+    { type: "effort", values: ["high", "max"] },
+  ],
   "deepseek/deepseek-v4.1-flash": [
     { type: "toggle" },
     { type: "effort", values: ["high", "max"] },
@@ -165,8 +169,22 @@ function resolveLabModelID(modelID: string): string | undefined {
   return resolved;
 }
 
-function normalizeModel(model: TensorxSourceModel, existing: ExistingModel | undefined): SyncedModel {
-  const factorBase = resolveLabModelID(model.id);
+// Resolve the catalog lab id a route should factor onto, preferring the authored
+// base_model (which can differ from the TensorX id, e.g. r1-0528 -> r1) over a
+// literal id-to-lab filename match.
+function resolveFactorBase(modelID: string, baseModel: string | undefined): string | undefined {
+  if (baseModel !== undefined) {
+    const fromBase = resolveLabModelID(baseModel);
+    if (fromBase !== undefined) return fromBase;
+  }
+  return resolveLabModelID(modelID);
+}
+
+function normalizeModel(
+  model: TensorxSourceModel,
+  existing: ExistingModel | undefined,
+  factorBase: string | undefined,
+): SyncedModel {
   const reasoning = model.reasoning;
   const reasoningOptions = reasoning
     ? (REASONING_OPTIONS_BY_ID[model.id] ?? existing?.reasoning_options)
@@ -351,11 +369,11 @@ export const tensorx = {
   translateModel(model: TensorxSourceModel, context) {
     const existing = context.existing(model.id);
     const authored = context.authored(model.id);
-    const factorBase = resolveLabModelID(model.id);
+    const factorBase = resolveFactorBase(model.id, authored?.base_model);
     if (factorBase === undefined && (existing === undefined || authored?.base_model !== undefined)) {
       return undefined;
     }
-    const built = normalizeModel(model, existing);
+    const built = normalizeModel(model, existing, factorBase);
     // A reasoning model must always carry real controls. TensorX /v1/model/info
     // only reports supports_reasoning, so the control shape must come from
     // REASONING_OPTIONS_BY_ID or the authored on-disk file. If neither provides

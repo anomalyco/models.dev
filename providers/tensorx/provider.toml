@@ -1,8 +1,9 @@
 name = "TensorX"
 # Reasoning HTTP format: /v1/model/info reports only a supports_reasoning
 # boolean. Controls are model-specific and maintained in the sync module
-# (REASONING_OPTIONS_BY_ID): toggle = chat_template_kwargs.thinking;
-# effort = reasoning_effort = low|medium|xhigh (Qwen3.8) or low|high|max (GLM-5.3).
+# (REASONING_OPTIONS_BY_ID): toggle = chat_template_kwargs.thinking (DeepSeek V4),
+# enable_thinking (GLM), thinking_mode (MiniMax M3); effort = reasoning_effort =
+# low|medium|xhigh (Qwen3.8), low|high|max (GLM-5.3), high|max (DeepSeek V4).
 # https://docs.tensorx.ai/api-reference/reasoning
 env = ["TENSORX_API_KEY"]
 npm = "@ai-sdk/openai-compatible"
