@@ -1,0 +1,23 @@
+name = "Claude 3.5 Haiku"
+description = "Fast Claude model for responsive assistance, classification, and lightweight agents"
+family = "claude"
+release_date = "2026-08-17"
+last_updated = "2026-08-17"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = true
+open_weights = false
+
+[cost]
+input = 0.8
+output = 4
+cache_read = 0.08
+
+[limit]
+context = 200_000
+output = 8_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

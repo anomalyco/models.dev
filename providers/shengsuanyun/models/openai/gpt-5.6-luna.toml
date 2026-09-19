@@ -1,0 +1,14 @@
+base_model = "openai/gpt-5.6-luna"
+base_model_omit = ["limit.input"]
+reasoning_options = []
+
+[cost]
+input = 1
+output = 6
+cache_read = 0.1
+
+[limit]
+context = 400_000
+
+[modalities]
+input = ["text", "image"]

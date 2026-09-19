@@ -1,0 +1,22 @@
+name = "Hunyuan-T1-Vision"
+description = "Tencent Hy reasoning model for coding, instruction following, and agent tasks"
+family = "hunyuan"
+release_date = "2026-08-17"
+last_updated = "2026-08-17"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = true
+open_weights = false
+
+[cost]
+input = 0.4285
+output = 1.2857
+
+[limit]
+context = 32_000
+output = 8_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

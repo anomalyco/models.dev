@@ -1,0 +1,15 @@
+base_model = "deepseek/deepseek-v3.1"
+attachment = true
+reasoning_options = []
+
+[cost]
+input = 0.5714
+output = 1.7142
+cache_read = 0.2285
+
+[limit]
+context = 128_000
+output = 64_000
+
+[modalities]
+input = ["text", "image"]
