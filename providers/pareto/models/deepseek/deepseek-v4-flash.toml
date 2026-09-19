@@ -1,0 +1,22 @@
+# Paid Pareto Pass: $3/week, up to $20/day of usage; no additional token charges.
+# https://docs.paretoinference.com/pareto-pass
+# Effort: reasoning_effort = high|xhigh; Pareto forwards no reasoning toggle.
+# Effort levels and limits follow OpenRouter (accessed 2026-09-02).
+# https://openrouter.ai/api/v1/models
+base_model = "deepseek/deepseek-v4-flash"
+
+[[reasoning_options]]
+type = "effort"
+values = ["high", "xhigh"]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0
+output = 0
+cache_read = 0
+cache_write = 0
+
+[limit]
+context = 1_048_576
