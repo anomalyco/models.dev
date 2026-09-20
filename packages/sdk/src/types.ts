@@ -257,8 +257,12 @@ export interface Provider {
   api?: string
   /** Human-readable provider name. */
   name: string
+  /** Short summary of what this provider serves. */
+  description?: string
   /** URL of the provider's model documentation. */
   doc: string
+  /** URL of the provider's main website. */
+  website?: string
   /** Models offered by this provider, keyed by provider-scoped model ID. */
   models: Record<string, Model>
 }

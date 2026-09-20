@@ -88,7 +88,13 @@ npm = "@ai-sdk/openai-compatible"   # or the native AI SDK package
 env = ["EXAMPLE_API_KEY"]
 api = "https://api.example.com/v1" # required for openai-compatible
 doc = "https://example.com/docs"
+description = "One-line summary of what this host serves"   # optional
+website = "https://example.com"                             # optional
 ```
+
+`description` and `website` are optional; both surface on the provider page and in
+`api.json`. Keep `doc` pointed at the documentation/model list, and use `website` for
+the provider's main site.
 
 ### Logo (blocker for new providers)
 

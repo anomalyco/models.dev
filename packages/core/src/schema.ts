@@ -383,12 +383,20 @@ export const Provider = z
     npm: z.string().min(1, "Provider npm module cannot be empty"),
     api: z.string().optional(),
     name: z.string().min(1, "Provider name cannot be empty"),
+    description: z
+      .string()
+      .min(1, "Provider description cannot be empty")
+      .optional(),
     doc: z
       .string()
       .min(
         1,
         "Please provide a link to the provider documentation where models are listed",
       ),
+    website: z
+      .string()
+      .min(1, "Provider website cannot be empty")
+      .optional(),
     models: z.record(Model),
   })
   .strict()
@@ -400,6 +408,7 @@ export const Provider = z
       const isMergeGateway = data.npm === "merge-gateway-ai-sdk-provider";
       const isAnthropic = data.npm === "@ai-sdk/anthropic";
       const isKiro = data.npm === "kiro-acp-ai-provider";
+      const isAIHubMix = data.npm === "@aihubmix/ai-sdk-provider";
       const hasApi = data.api !== undefined;
 
       return (
@@ -415,6 +424,8 @@ export const Provider = z
         isOpenAI ||
         // kiro: api optional (always allowed)
         isKiro ||
+        // AIHubMix: native provider fronting an OpenAI-compatible gateway; api optional
+        isAIHubMix ||
         // all others: must NOT have api
         (!isOpenAI &&
           !isOpenAIcompatible &&
@@ -422,12 +433,13 @@ export const Provider = z
           !isMergeGateway &&
           !isAnthropic &&
           !isKiro &&
+          !isAIHubMix &&
           !hasApi)
       );
     },
     {
       message:
-        "'api' is required for openai-compatible, openrouter, and Merge Gateway; optional for anthropic, openai, and kiro; forbidden otherwise",
+        "'api' is required for openai-compatible, openrouter, and Merge Gateway; optional for anthropic, openai, kiro, and aihubmix; forbidden otherwise",
       path: ["api"],
     },
   );
