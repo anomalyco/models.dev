@@ -1,0 +1,28 @@
+name = "Step 5 Preview"
+description = "Step 5 Preview is StepFun's 600B sparse MoE frontier model for production-scale agents, activating 27B parameters per token. It is built for software engineering, long-horizon tool use, research, professional knowledge work, and finance, with native text, image, and video understanding and a 1M-token context window. ⚠️ Note: This model routes through StepFun, so privacy and logging guarantees may be limited."
+family = "step"
+release_date = "2026-09-20"
+last_updated = "2026-09-20"
+attachment = true
+reasoning = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high"]
+
+[cost]
+input = 1
+output = 2.7
+cache_read = 0.05
+
+[limit]
+context = 1_000_000
+input = 1_000_000
+output = 1_000_000
+
+[modalities]
+input = ["text", "image", "video"]
+output = ["text"]
