@@ -1,0 +1,23 @@
+# Tempr Gateway: https://temprhq.io/docs/gateway-chat-completions#reasoning
+# Toggle: reasoning.enabled = true|false (reasoning.effort = "none" also turns it off)
+# Effort: reasoning.effort = none|low|medium|high|max (alias: top-level reasoning_effort)
+# Budget: reasoning.max_tokens (integer reasoning tokens)
+# /v1/messages: thinking.type = enabled|disabled; output_config.effort = low|medium|high|max; thinking.budget_tokens
+# /v1/responses: reasoning.effort = none|low|medium|high|max
+base_model = "moonshotai/kimi-k3"
+release_date = "2026-07-27"
+last_updated = "2026-07-27"
+
+reasoning_options = [
+  { type = "toggle" },
+  { type = "effort", values = ["low", "medium", "high", "max"] },
+  { type = "budget_tokens", min = 1024 },
+]
+
+[cost]
+input = 3
+output = 15
+cache_read = 0.3
+
+[modalities]
+input = ["text", "image"]

@@ -1,0 +1,15 @@
+# Tempr Gateway: https://temprhq.io/docs/gateway-chat-completions#reasoning
+# No reasoning control for this model on this host: it reasons at its own depth,
+# and the x-tempr-reasoning-effort response header reports "default".
+base_model = "minimax/MiniMax-M2.7"
+status = "deprecated"
+
+reasoning_options = []
+
+[cost]
+input = 0.25
+output = 1
+cache_read = 0.05
+
+[limit]
+context = 196_608

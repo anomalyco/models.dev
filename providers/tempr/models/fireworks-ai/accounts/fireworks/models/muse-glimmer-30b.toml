@@ -1,0 +1,15 @@
+# Tempr Gateway: https://temprhq.io/docs/gateway-chat-completions#reasoning
+# Effort: reasoning.effort = low|medium|high|xhigh (alias: top-level reasoning_effort)
+# /v1/messages: output_config.effort = low|medium|high|xhigh
+# /v1/responses: reasoning.effort = low|medium|high|xhigh
+base_model = "meta/muse-glimmer-30b"
+status = "deprecated"
+
+reasoning_options = [
+  { type = "effort", values = ["low", "medium", "high", "xhigh"] },
+]
+
+[cost]
+input = 0.35
+output = 1.50
+cache_read = 0.04

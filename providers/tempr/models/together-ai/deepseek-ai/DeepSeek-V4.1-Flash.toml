@@ -1,0 +1,17 @@
+# Tempr Gateway: https://temprhq.io/docs/gateway-chat-completions#reasoning
+# Effort: reasoning.effort = low|high|max (alias: top-level reasoning_effort)
+# /v1/messages: output_config.effort = low|high|max
+# /v1/responses: reasoning.effort = low|high|max
+base_model = "deepseek/deepseek-v4.1-flash"
+
+reasoning_options = [
+  { type = "effort", values = ["low", "high", "max"] },
+]
+
+[cost]
+input = 0.3
+output = 1.2
+cache_read = 0.006
+
+[limit]
+context = 1_048_576

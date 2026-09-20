@@ -1,0 +1,17 @@
+# Tempr Gateway: https://temprhq.io/docs/gateway-chat-completions#reasoning
+# No caller control on Tempr: Tempr forwards no reasoning settings to this host at
+# all. It routes each model to whichever upstream provider serves it, and those providers
+# disagree -- most of its models have more than one, and every reasoning model does, so
+# there is no deterministic behaviour to expose (checked live 2026-09-20).
+base_model = "alibaba/qwen3-30b-a3b"
+description = "Qwen instruction model for multilingual chat, reasoning, and tool use"
+structured_output = true
+
+reasoning_options = []
+
+[cost]
+input = 0.12
+output = 0.5
+
+[limit]
+context = 40_960

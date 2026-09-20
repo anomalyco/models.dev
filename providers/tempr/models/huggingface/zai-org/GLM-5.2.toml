@@ -1,0 +1,15 @@
+# Tempr Gateway: https://temprhq.io/docs/gateway-chat-completions#reasoning
+# No caller control on Tempr: Tempr forwards no reasoning settings to this host at
+# all. It routes each model to whichever upstream provider serves it, and those providers
+# disagree -- most of its models have more than one, and every reasoning model does, so
+# there is no deterministic behaviour to expose (checked live 2026-09-20).
+base_model = "zhipuai/glm-5.2"
+
+reasoning_options = []
+
+[cost]
+input = 1.4
+output = 4.4
+
+[limit]
+context = 262_144

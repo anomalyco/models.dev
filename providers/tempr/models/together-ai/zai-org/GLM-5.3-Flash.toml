@@ -1,0 +1,19 @@
+# Tempr Gateway: https://temprhq.io/docs/gateway-chat-completions#reasoning
+# No caller control on Tempr for this model on this host, deliberately: its effort levels
+# don't behave as labelled here (checked live 2026-09-20), so Tempr exposes none rather
+# than a picker that does the opposite of what it says.
+base_model = "zhipuai/glm-5.3-flash"
+
+reasoning_options = []
+
+[cost]
+input = 0.15
+output = 0.50
+cache_read = 0.03
+
+[limit]
+context = 1_048_575
+output = 400_000
+
+[modalities]
+input = ["text", "image", "video"]

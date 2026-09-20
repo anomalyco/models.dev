@@ -1,0 +1,14 @@
+# Tempr Gateway: https://temprhq.io/docs/gateway-chat-completions#reasoning
+# Effort: reasoning.effort = low|medium|xhigh (alias: top-level reasoning_effort)
+# /v1/messages: output_config.effort = low|medium|xhigh
+# /v1/responses: reasoning.effort = low|medium|xhigh
+base_model = "alibaba/qwen3.8-2.4t-a95b"
+
+reasoning_options = [
+  { type = "effort", values = ["low", "medium", "xhigh"] },
+]
+
+[cost]
+input = 2.00
+output = 6.00
+cache_read = 0.25

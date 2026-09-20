@@ -1,0 +1,16 @@
+# Tempr Gateway: https://temprhq.io/docs/gateway-chat-completions#reasoning
+# Toggle: reasoning.enabled = true|false (reasoning.effort = "none" also turns it off)
+# Effort: reasoning.effort = none|low|medium|xhigh (alias: top-level reasoning_effort)
+# /v1/messages: thinking.type = enabled|disabled; output_config.effort = low|medium|xhigh
+# /v1/responses: reasoning.effort = none|low|medium|xhigh
+base_model = "alibaba/qwen3.8-27b"
+
+reasoning_options = [
+  { type = "toggle" },
+  { type = "effort", values = ["low", "medium", "xhigh"] },
+]
+
+[cost]
+input = 0.2
+output = 2.5
+cache_read = 0.05

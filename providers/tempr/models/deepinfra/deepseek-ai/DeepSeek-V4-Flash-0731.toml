@@ -1,0 +1,17 @@
+# Tempr Gateway: https://temprhq.io/docs/gateway-chat-completions#reasoning
+# Toggle: reasoning.enabled = true|false (reasoning.effort = "none" also turns it off)
+# /v1/messages: thinking.type = enabled|disabled
+# /v1/responses: reasoning.effort = "none" turns it off, any other level turns it on
+base_model = "deepseek/deepseek-v4-flash-0731"
+
+reasoning_options = [
+  { type = "toggle" },
+]
+
+[cost]
+input = 0.06
+output = 0.18
+cache_read = 0.015
+
+[limit]
+context = 1_048_576

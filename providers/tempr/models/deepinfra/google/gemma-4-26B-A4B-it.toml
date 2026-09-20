@@ -1,0 +1,13 @@
+# Tempr Gateway: https://temprhq.io/docs/gateway-chat-completions#reasoning
+# Toggle: reasoning.enabled = true|false (reasoning.effort = "none" also turns it off)
+# /v1/messages: thinking.type = enabled|disabled
+# /v1/responses: reasoning.effort = "none" turns it off, any other level turns it on
+base_model = "google/gemma-4-26b-a4b-it"
+
+reasoning_options = [
+  { type = "toggle" },
+]
+
+[cost]
+input = 0.07
+output = 0.34

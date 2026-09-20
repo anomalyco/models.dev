@@ -1,0 +1,14 @@
+# Tempr Gateway: https://temprhq.io/docs/gateway-chat-completions#reasoning
+# Effort: reasoning.effort = low|high|max (alias: top-level reasoning_effort)
+# /v1/messages: output_config.effort = low|high|max
+# /v1/responses: reasoning.effort = low|high|max
+base_model = "moonshotai/kimi-k3"
+
+reasoning_options = [
+  { type = "effort", values = ["low", "high", "max"] },
+]
+
+[cost]
+input = 3.00
+cache_read = 0.30
+output = 15.00

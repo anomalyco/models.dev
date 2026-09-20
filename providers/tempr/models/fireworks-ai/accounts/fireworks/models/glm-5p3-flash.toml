@@ -1,0 +1,22 @@
+# Tempr Gateway: https://temprhq.io/docs/gateway-chat-completions#reasoning
+# Effort: reasoning.effort = low|high|max (alias: top-level reasoning_effort)
+# /v1/messages: output_config.effort = low|high|max
+# /v1/responses: reasoning.effort = low|high|max
+base_model = "zhipuai/glm-5.3-flash"
+name = "GLM 5.3 Flash"
+last_updated = "2026-09-07"
+
+reasoning_options = [
+  { type = "effort", values = ["low", "high", "max"] },
+]
+
+[cost]
+input = 0.15
+output = 0.5
+cache_read = 0.03
+
+[limit]
+context = 1_048_573
+
+[modalities]
+input = ["text", "image"]

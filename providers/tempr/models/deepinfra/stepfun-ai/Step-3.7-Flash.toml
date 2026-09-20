@@ -1,0 +1,15 @@
+# Tempr Gateway: https://temprhq.io/docs/gateway-chat-completions#reasoning
+# No reasoning control for this model on this host: it reasons at its own depth,
+# and the x-tempr-reasoning-effort response header reports "default".
+base_model = "stepfun/step-3.7-flash"
+base_model_omit = ["limit.input"]
+
+reasoning_options = []
+
+[cost]
+input = 0.2
+output = 1.15
+cache_read = 0.04
+
+[limit]
+context = 262_144
