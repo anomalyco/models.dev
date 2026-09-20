@@ -22,6 +22,17 @@ You can access this data through an API.
 curl https://models.dev/api.json
 ```
 
+Specialized model types are omitted by default. Filter by one or more
+comma-separated model types, or use `all` for the complete catalog:
+
+```bash
+curl "https://models.dev/api.json?type=decision"
+curl "https://models.dev/api.json?type=all"
+```
+
+The currently supported model type is `decision`. The `type` parameter is also
+available on `models.json`, `catalog.json`, and `model-schema.json`.
+
 Use the **Model ID** field to do a lookup on any model; it's the identifier used by [AI SDK](https://ai-sdk.dev/).
 
 Provider-agnostic model metadata is available separately:
@@ -270,6 +281,7 @@ Models must conform to the following schema, as defined in `packages/core/src/sc
 **Model Schema:**
 
 - `name`: String — Display name of the model
+- `type` _(optional)_: String — Specialized model behavior; currently supports `decision`
 - `attachment`: Boolean — Supports file attachments
 - `reasoning`: Boolean — Supports reasoning / chain-of-thought
 - `tool_call`: Boolean - Supports tool calling

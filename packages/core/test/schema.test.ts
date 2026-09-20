@@ -70,6 +70,12 @@ describe("model schema", () => {
     expect(AuthoredModel.safeParse(model).success).toBe(false);
   });
 
+  test("accepts decision model types", () => {
+    const model = baseModel({ type: "decision" });
+
+    expect(AuthoredModel.safeParse(model).success).toBe(true);
+  });
+
   test("accepts calendar-valid model dates", () => {
     for (const field of dateFields) {
       for (const value of [
