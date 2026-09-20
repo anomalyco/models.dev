@@ -1,0 +1,49 @@
+# Toggle: thinking.type = enabled|disabled
+# Effort: reasoning_effort = low|high|max
+#
+# Resale of the official DeepSeek API. The Tium gateway forwards the
+# request body verbatim apart from `model`, `max_tokens` and
+# `stream_options`.
+# Tium bills a monthly allotment of weighted tokens (WT), not USD per token.
+# These are the effective USD rates at the subscription price: $2.8302/MWT (the
+# highest of the three tiers) x the published model multiplier, with the
+# per-model output and cache weights. Source: https://tium.ai/pricing
+# Prepaid credit packs bill at $3.56-$4.50/MWT.
+# Reasoning tokens are counted as output tokens and billed at the output rate.
+#
+# Verified live against api.tium.ai on 2026-09-09:
+#   thinking.type enabled/disabled both accepted, and disabled genuinely
+#     silences reasoning_content: a real toggle, not a rubber stamp.
+#   reasoning_content present in the response.
+#   Effort levels are accepted but not measurably graded. Over 3 runs on a
+#     fixed prompt, reasoning_content medians were low=1382, medium=699,
+#     high=1355, xhigh=995, max=1852 chars, overlapping and non-monotonic.
+#     `minimal`, `medium` and `xhigh` are accepted on the wire but omitted:
+#     no measurable effect and absent from the lab baseline.
+#     Caveat: many runs hit the 600-token max_tokens ceiling, which
+#     compresses differences at the top end, so this understates any
+#     grading that exists.
+#   `none` also returns zero reasoning_content, but the toggle already
+#     models off, so it is not published as an effort level (AGENTS.md
+#     section 3).
+#   Multimodal note: image and PDF parts are accepted with 200, but the base
+#     model is text-only and a 200 on a 16-token reply does not prove the
+#     model reads them. Not asserted here; inherits text-only deliberately.
+base_model = "deepseek/deepseek-v4-flash"
+reasoning_options = [
+  { type = "toggle" },
+  { type = "effort", values = ["low", "high", "max"] },
+]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.889
+output = 2.668
+reasoning = 2.668
+cache_read = 0.028
+
+[limit]
+context = 128000
+output = 32768
