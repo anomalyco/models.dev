@@ -86,10 +86,42 @@ async function request(path: string) {
     ASSETS: {
       fetch(input: Request) {
         const pathname = new URL(input.url).pathname;
-        if (pathname === "/_api.json") return Response.json(providers);
-        if (pathname === "/_models.json") return Response.json(models);
+        if (pathname === "/_api.json") {
+          return Response.json({
+            example: { ...providers.example, models: { text: textModel } },
+          });
+        }
+        if (pathname === "/_api-all.json") return Response.json(providers);
+        if (pathname === "/_api-decision.json") {
+          return Response.json({
+            example: { ...providers.example, models: { decision: decisionModel } },
+          });
+        }
+        if (pathname === "/_models.json") {
+          return Response.json({ text: textModel });
+        }
+        if (pathname === "/_models-all.json") return Response.json(models);
+        if (pathname === "/_models-decision.json") {
+          return Response.json({ decision: decisionModel });
+        }
         if (pathname === "/_catalog.json") {
+          return Response.json({
+            providers: {
+              example: { ...providers.example, models: { text: textModel } },
+            },
+            models: { text: textModel },
+          });
+        }
+        if (pathname === "/_catalog-all.json") {
           return Response.json({ providers, models });
+        }
+        if (pathname === "/_catalog-decision.json") {
+          return Response.json({
+            providers: {
+              example: { ...providers.example, models: { decision: decisionModel } },
+            },
+            models: { decision: decisionModel },
+          });
         }
         return new Response(null, { status: 404 });
       },

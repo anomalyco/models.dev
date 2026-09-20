@@ -2806,6 +2806,28 @@ test("resolves Eden AI aliases to the model they point at", () => {
   ).toBe("anthropic/claude-opus-5");
 });
 
+test("preserves model type when formatting synced TOML", () => {
+  const content = formatToml({
+    id: "typesafe/jev-latest",
+    type: "decision",
+    name: "Jev",
+    description: "System One model for typed decisions",
+    release_date: "2026-09-15",
+    last_updated: "2026-09-15",
+    attachment: false,
+    reasoning: false,
+    tool_call: false,
+    open_weights: false,
+    limit: { context: 64_000, output: 0 },
+    modalities: { input: ["text"], output: ["text"] },
+  });
+
+  expect(Bun.TOML.parse(content)).toMatchObject({
+    type: "decision",
+    name: "Jev",
+  });
+});
+
 test("formats interleaved as a root field before reasoning option tables", () => {
   const content = formatToml({
     id: "example/model",

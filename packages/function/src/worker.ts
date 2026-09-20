@@ -176,12 +176,19 @@ async function catalogResponse(
   }
 
   const assetUrl = new URL(url);
-  assetUrl.pathname = `/_${endpoint}.json`;
+  const suffix = filter === "default"
+    ? ""
+    : filter === "all"
+      ? "-all"
+      : filter.length === 1
+        ? `-${filter[0]}`
+        : undefined;
+  assetUrl.pathname = `/_${endpoint}${suffix ?? "-all"}.json`;
   assetUrl.search = "";
   const assetResponse = await env.ASSETS.fetch(
     new Request(assetUrl.toString(), request),
   );
-  if (!assetResponse.ok || filter === "all") return assetResponse;
+  if (!assetResponse.ok || suffix !== undefined) return assetResponse;
 
   const value = await assetResponse.json();
   const filtered = endpoint === "api"
