@@ -1,5 +1,5 @@
 import { ModelsDevError } from "./error.js"
-import type { Catalog, ModelMetadataMap, ProviderMap } from "./types.js"
+import type { Catalog, ModelCategory, ModelMetadataMap, ProviderMap } from "./types.js"
 
 /** Accepted anywhere headers can be passed. Same shapes as the standard `HeadersInit`. */
 export type HeadersInput = Headers | Record<string, string> | Array<[string, string]>
@@ -23,6 +23,11 @@ export interface RequestOptions {
   readonly headers?: HeadersInput
 }
 
+export interface CatalogRequestOptions extends RequestOptions {
+  /** Select one model category, or `all` to disable the default language-model filter. */
+  readonly category?: ModelCategory | "all"
+}
+
 /**
  * Creates a stateless models.dev client. Every method performs exactly one
  * `GET` and nothing is ever cached — callers who want caching should wrap
@@ -33,7 +38,7 @@ export function make(options: ClientOptions = {}) {
   const baseUrl = options.baseUrl ?? "https://models.dev"
   const base = baseUrl.endsWith("/") ? baseUrl : baseUrl + "/"
 
-  const request = async <A>(path: string, requestOptions?: RequestOptions): Promise<A> => {
+  const request = async <A>(path: string, requestOptions?: CatalogRequestOptions): Promise<A> => {
     const fetch = options.fetch ?? globalThis.fetch
     const headers = new Headers()
     for (const [key, value] of new Headers(options.headers)) headers.set(key, value)
@@ -41,7 +46,9 @@ export function make(options: ClientOptions = {}) {
 
     let response: Response
     try {
-      response = await fetch(new URL(path, base), {
+      const url = new URL(path, base)
+      if (requestOptions?.category !== undefined) url.searchParams.set("category", requestOptions.category)
+      response = await fetch(url, {
         method: "GET",
         headers,
         signal: requestOptions?.signal,
@@ -71,11 +78,11 @@ export function make(options: ClientOptions = {}) {
 
   return {
     /** All providers with their models, pricing, and limits (`/api.json`). */
-    providers: (requestOptions?: RequestOptions) => request<ProviderMap>("api.json", requestOptions),
+    providers: (requestOptions?: CatalogRequestOptions) => request<ProviderMap>("api.json", requestOptions),
     /** Provider-agnostic model metadata (`/models.json`). */
-    models: (requestOptions?: RequestOptions) => request<ModelMetadataMap>("models.json", requestOptions),
+    models: (requestOptions?: CatalogRequestOptions) => request<ModelMetadataMap>("models.json", requestOptions),
     /** Providers and model metadata in a single request (`/catalog.json`). */
-    catalog: (requestOptions?: RequestOptions) => request<Catalog>("catalog.json", requestOptions),
+    catalog: (requestOptions?: CatalogRequestOptions) => request<Catalog>("catalog.json", requestOptions),
   }
 }
 

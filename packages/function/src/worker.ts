@@ -5,6 +5,10 @@ export interface Env {
   LakeSecret: string;
 }
 
+const ModelCategories = ["system-one"] as const;
+type ModelCategory = (typeof ModelCategories)[number];
+type CategoryFilter = ModelCategory | "all" | undefined;
+
 export default {
   async fetch(
     request: Request,
@@ -64,12 +68,13 @@ export default {
     }
 
     if (url.pathname === "/model-schema.json") {
-      const apiUrl = new URL(url);
-      apiUrl.pathname = "/_api.json";
-      const apiResponse = await env.ASSETS.fetch(
-        new Request(apiUrl.toString(), request),
-      );
-      const providers = (await apiResponse.json()) as Record<
+      const category = parseCategory(url.searchParams.get("category"));
+      if (category instanceof Response) return category;
+      const apiAsset = await loadJsonAsset(env, request, url, "/_api.json");
+      const providers = filterProviders(
+        apiAsset.data,
+        category,
+      ) as Record<
         string,
         { models: Record<string, unknown> }
       >;
@@ -101,12 +106,39 @@ export default {
       });
     }
 
-    if (url.pathname === "/api.json") {
-      url.pathname = "/_api.json";
-    } else if (url.pathname === "/models.json") {
-      url.pathname = "/_models.json";
-    } else if (url.pathname === "/catalog.json") {
-      url.pathname = "/_catalog.json";
+    if (
+      url.pathname === "/api.json" ||
+      url.pathname === "/models.json" ||
+      url.pathname === "/catalog.json"
+    ) {
+      const category = parseCategory(url.searchParams.get("category"));
+      if (category instanceof Response) return category;
+      const assetPath =
+        url.pathname === "/api.json"
+          ? "/_api.json"
+          : url.pathname === "/models.json"
+            ? "/_models.json"
+            : "/_catalog.json";
+      if (category === "all") {
+        url.pathname = assetPath;
+        url.search = "";
+        return env.ASSETS.fetch(new Request(url.toString(), request));
+      }
+      const asset = await loadJsonAsset(env, request, url, assetPath);
+      const body =
+        url.pathname === "/api.json"
+          ? filterProviders(asset.data, category)
+          : url.pathname === "/models.json"
+            ? filterModels(asset.data, category)
+            : filterCatalog(asset.data, category);
+
+      const headers = new Headers(asset.response.headers);
+      headers.delete("Content-Length");
+      headers.delete("Content-Encoding");
+      headers.delete("ETag");
+      headers.set("Cache-Control", "public, max-age=3600");
+
+      return Response.json(body, { headers });
     } else if (
       url.pathname === "/" ||
       url.pathname === "/index.html" ||
@@ -142,6 +174,78 @@ export default {
     });
   },
 };
+
+function parseCategory(value: string | null): CategoryFilter | Response {
+  if (value === null) return undefined;
+  if (value === "all" || ModelCategories.includes(value as ModelCategory)) {
+    return value as CategoryFilter;
+  }
+  return Response.json(
+    {
+      error: `Invalid category. Expected one of: ${[...ModelCategories, "all"].join(", ")}`,
+    },
+    { status: 400 },
+  );
+}
+
+async function loadJsonAsset(
+  env: Env,
+  request: Request,
+  url: URL,
+  pathname: string,
+) {
+  const assetUrl = new URL(url);
+  assetUrl.pathname = pathname;
+  assetUrl.search = "";
+  const response = await env.ASSETS.fetch(
+    new Request(assetUrl.toString(), request),
+  );
+  return { data: await response.json(), response };
+}
+
+function filterProviders(value: unknown, category: CategoryFilter) {
+  if (category === "all") return value;
+  const providers = asRecord(value);
+  return Object.fromEntries(
+    Object.entries(providers).flatMap(([providerID, providerValue]) => {
+      const provider = asRecord(providerValue);
+      const models = filterModelEntries(provider.models, category);
+      if (Object.keys(models).length === 0) return [];
+      return [[providerID, { ...provider, models }]];
+    }),
+  );
+}
+
+function filterModels(value: unknown, category: CategoryFilter) {
+  if (category === "all") return value;
+  return filterModelEntries(value, category);
+}
+
+function filterCatalog(value: unknown, category: CategoryFilter) {
+  if (category === "all") return value;
+  const catalog = asRecord(value);
+  return {
+    ...catalog,
+    models: filterModels(catalog.models, category),
+    providers: filterProviders(catalog.providers, category),
+  };
+}
+
+function filterModelEntries(value: unknown, category: ModelCategory | undefined) {
+  return Object.fromEntries(
+    Object.entries(asRecord(value)).filter(([, modelValue]) => {
+      const model = asRecord(modelValue);
+      return model.category === category;
+    }),
+  );
+}
+
+function asRecord(value: unknown): Record<string, unknown> {
+  if (value === null || typeof value !== "object" || Array.isArray(value)) {
+    return {};
+  }
+  return value as Record<string, unknown>;
+}
 
 function isHtmlRoute(pathname: string) {
   return (

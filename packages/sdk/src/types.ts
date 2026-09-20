@@ -135,6 +135,9 @@ export interface BenchmarkResult {
   date?: string
 }
 
+/** Broad model interface category. */
+export type ModelCategory = "system-one"
+
 /**
  * Provider-agnostic model metadata as published by the lab.
  * Served by `GET https://models.dev/models.json`, keyed by `<lab>/<model>` ID.
@@ -145,6 +148,8 @@ export interface ModelMetadata {
   id: string
   name: string
   description: string
+  /** Broad model interface category. */
+  category?: ModelCategory
   family?: ModelFamily
   /** Supports file attachments. */
   attachment?: boolean
@@ -210,6 +215,8 @@ export interface Model {
   id: string
   name: string
   description: string
+  /** Broad model interface category. */
+  category?: ModelCategory
   family?: ModelFamily
   /** Supports file attachments. */
   attachment: boolean

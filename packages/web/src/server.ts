@@ -99,27 +99,9 @@ Bun.serve({
         },
       });
     },
-    "/api.json": () =>
-      Response.json(Providers, {
-        headers: {
-          "Cache-Control": "public, max-age=3600",
-        },
-      }),
-    "/models.json": () =>
-      Response.json(Models, {
-        headers: {
-          "Cache-Control": "public, max-age=3600",
-        },
-      }),
-    "/catalog.json": () =>
-      Response.json(
-        { models: Models, providers: Providers },
-        {
-          headers: {
-            "Cache-Control": "public, max-age=3600",
-          },
-        },
-      ),
+    "/api.json": (req) => catalogResponse(req, "providers"),
+    "/models.json": (req) => catalogResponse(req, "models"),
+    "/catalog.json": (req) => catalogResponse(req, "catalog"),
   },
 });
 
@@ -161,3 +143,50 @@ const server = Bun.serve({
 });
 
 console.log(`Server running at ${server.hostname}:${server.port}`);
+
+function catalogResponse(
+  request: Request,
+  endpoint: "providers" | "models" | "catalog",
+) {
+  const category = new URL(request.url).searchParams.get("category");
+  if (category !== null && category !== "system-one" && category !== "all") {
+    return Response.json(
+      { error: "Invalid category. Expected one of: system-one, all" },
+      { status: 400 },
+    );
+  }
+
+  const models = Object.fromEntries(
+    Object.entries(Models).filter(([, model]) =>
+      category === "all"
+        ? true
+        : category === null
+          ? model.category === undefined
+          : model.category === category,
+    ),
+  );
+  const providers = Object.fromEntries(
+    Object.entries(Providers).flatMap(([providerID, provider]) => {
+      const providerModels = Object.fromEntries(
+        Object.entries(provider.models).filter(([, model]) =>
+          category === "all"
+            ? true
+            : category === null
+              ? model.category === undefined
+              : model.category === category,
+        ),
+      );
+      if (Object.keys(providerModels).length === 0) return [];
+      return [[providerID, { ...provider, models: providerModels }]];
+    }),
+  );
+  const body =
+    endpoint === "providers"
+      ? providers
+      : endpoint === "models"
+        ? models
+        : { models, providers };
+  return Response.json(body, {
+    headers: { "Cache-Control": "public, max-age=3600" },
+  });
+}

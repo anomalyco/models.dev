@@ -42,6 +42,20 @@ test("models() and catalog() hit their endpoints, baseUrl subpath preserved", as
   ])
 })
 
+test("catalog endpoints accept a model category", async () => {
+  const { requests, layer } = stub({})
+  const program = Effect.gen(function* () {
+    const client = yield* Models.make()
+    yield* client.providers({ category: "system-one" })
+    yield* client.catalog({ category: "all" })
+  })
+  await program.pipe(Effect.provide(layer), Effect.runPromise)
+  expect(requests.map((request) => request.url)).toEqual([
+    "https://models.dev/api.json?category=system-one",
+    "https://models.dev/catalog.json?category=all",
+  ])
+})
+
 test("custom headers are sent", async () => {
   const { requests, layer } = stub({})
   const program = Effect.gen(function* () {

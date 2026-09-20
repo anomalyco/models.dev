@@ -61,6 +61,16 @@ describe("model schema", () => {
     expect(AuthoredModel.safeParse(model).success).toBe(true);
   });
 
+  test("accepts known model categories and rejects unknown categories", () => {
+    expect(
+      AuthoredModel.safeParse(baseModel({ category: "system-one" })).success,
+    ).toBe(true);
+    expect(
+      AuthoredModel.safeParse(baseModel({ category: "unknown" as never }))
+        .success,
+    ).toBe(false);
+  });
+
   test("rejects reasoning_options when reasoning is false", () => {
     const model = baseModel({
       reasoning: false,

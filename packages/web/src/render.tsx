@@ -1497,21 +1497,32 @@ function HelpDialog() {
         <h2>API</h2>
         <p>
           You can access provider data, provider-agnostic model metadata, or the
-          combined catalog through JSON endpoints.
+          combined catalog through JSON endpoints. Categorized models are
+          omitted by default; the links below request <code>category=all</code>
+          to include the complete catalog.
         </p>
         <div class="code-block">
           <code>
-            curl <a href="/api.json">https://models.dev/api.json</a>
+            curl{" "}
+            <a href="/api.json?category=all">
+              https://models.dev/api.json?category=all
+            </a>
           </code>
         </div>
         <div class="code-block">
           <code>
-            curl <a href="/models.json">https://models.dev/models.json</a>
+            curl{" "}
+            <a href="/models.json?category=all">
+              https://models.dev/models.json?category=all
+            </a>
           </code>
         </div>
         <div class="code-block">
           <code>
-            curl <a href="/catalog.json">https://models.dev/catalog.json</a>
+            curl{" "}
+            <a href="/catalog.json?category=all">
+              https://models.dev/catalog.json?category=all
+            </a>
           </code>
         </div>
         <h2>Logos</h2>

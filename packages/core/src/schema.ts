@@ -217,10 +217,15 @@ export const BenchmarkResult = z
   })
   .strict();
 
+export const ModelCategory = z.enum(["system-one"]);
+
+export type ModelCategory = z.infer<typeof ModelCategory>;
+
 const ModelMetadataBase = z.object({
   id: z.string(),
   name: z.string().min(1, "Model name cannot be empty"),
   description: z.string().min(1, "Model description cannot be empty"),
+  category: ModelCategory.optional(),
   family: ModelFamily.optional(),
   attachment: z.boolean().optional(),
   reasoning: z.boolean().optional(),
@@ -247,6 +252,7 @@ const ModelBase = z.object({
   id: z.string(),
   name: z.string().min(1, "Model name cannot be empty"),
   description: z.string().min(1, "Model description cannot be empty"),
+  category: ModelCategory.optional(),
   family: ModelFamily.optional(),
   attachment: z.boolean(),
   reasoning: z.boolean(),

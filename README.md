@@ -22,6 +22,17 @@ You can access this data through an API.
 curl https://models.dev/api.json
 ```
 
+The API omits categorized models by default. Use the `category` query parameter
+to select a model interface, or `all` to return the complete catalog:
+
+```bash
+curl 'https://models.dev/api.json?category=system-one'
+curl 'https://models.dev/api.json?category=all'
+```
+
+The currently supported category is `system-one`. The same filter is available
+on `/models.json`, `/catalog.json`, and `/model-schema.json`.
+
 Use the **Model ID** field to do a lookup on any model; it's the identifier used by [AI SDK](https://ai-sdk.dev/).
 
 Provider-agnostic model metadata is available separately:
