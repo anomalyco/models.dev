@@ -1,0 +1,20 @@
+# Tempr Gateway: https://temprhq.io/docs/gateway-chat-completions#reasoning
+# Off: reasoning.effort = "none" (or reasoning.enabled = false)
+# Effort: reasoning.effort = none|low|medium|high|xhigh (alias: top-level reasoning_effort)
+# /v1/messages: thinking.type = enabled|disabled; output_config.effort = low|medium|high|xhigh
+# /v1/responses: reasoning.effort = none|low|medium|high|xhigh
+base_model = "openai/gpt-5.5"
+base_model_omit = ["cost.tiers", "cost.context_over_200k", "experimental.modes.fast", "limit.input"]
+last_updated = "2026-06-01"
+
+reasoning_options = [
+  { type = "effort", values = ["none", "low", "medium", "high", "xhigh"] },
+]
+
+[cost]
+input = 5.50
+output = 33.00
+cache_read = 0.55
+
+[limit]
+context = 272_000

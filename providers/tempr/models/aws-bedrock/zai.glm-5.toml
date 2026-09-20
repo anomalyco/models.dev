@@ -1,0 +1,19 @@
+# Tempr Gateway: https://temprhq.io/docs/gateway-chat-completions#reasoning
+# Toggle: reasoning.enabled = true|false (reasoning.effort = "none" also turns it off)
+# /v1/messages: thinking.type = enabled|disabled
+# /v1/responses: reasoning.effort = "none" turns it off, any other level turns it on
+base_model = "zhipuai/glm-5"
+last_updated = "2026-03-18"
+structured_output = true
+interleaved = true
+
+reasoning_options = [
+  { type = "toggle" },
+]
+
+[cost]
+input = 1.00
+output = 3.20
+
+[limit]
+context = 202_752

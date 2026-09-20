@@ -1,0 +1,15 @@
+# Tempr Gateway: https://temprhq.io/docs/gateway-chat-completions#reasoning
+# No reasoning control for this model on this host: it reasons at its own depth,
+# and the x-tempr-reasoning-effort response header reports "default".
+name = "NVIDIA Nemotron 3 Super 120B A12B"
+base_model = "nvidia/nemotron-3-super-120b-a12b"
+structured_output = true
+
+reasoning_options = []
+
+[cost]
+input = 0.15
+output = 0.65
+
+[limit]
+output = 131_072

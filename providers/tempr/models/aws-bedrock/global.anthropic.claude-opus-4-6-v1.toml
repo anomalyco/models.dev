@@ -1,0 +1,21 @@
+# Tempr Gateway: https://temprhq.io/docs/gateway-chat-completions#reasoning
+# Toggle: reasoning.enabled = true|false (reasoning.effort = "none" also turns it off)
+# Effort: reasoning.effort = none|low|medium|high|max (alias: top-level reasoning_effort)
+# Budget: reasoning.max_tokens (integer reasoning tokens)
+# /v1/messages: thinking.type = enabled|disabled; output_config.effort = low|medium|high|max; thinking.budget_tokens
+# /v1/responses: reasoning.effort = none|low|medium|high|max
+base_model = "anthropic/claude-opus-4-6"
+name = "Claude Opus 4.6 (Global)"
+structured_output = true
+
+reasoning_options = [
+  { type = "toggle" },
+  { type = "effort", values = ["low", "medium", "high", "max"] },
+  { type = "budget_tokens", min = 1024 },
+]
+
+[cost]
+input = 5
+output = 25
+cache_read = 0.5
+cache_write = 6.25

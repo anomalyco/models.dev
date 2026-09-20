@@ -1,0 +1,24 @@
+# Tempr Gateway: https://temprhq.io/docs/gateway-chat-completions#reasoning
+# Toggle: reasoning.enabled = true|false (reasoning.effort = "none" also turns it off)
+# Effort: reasoning.effort = none|low|medium|high|max (alias: top-level reasoning_effort)
+# Budget: reasoning.max_tokens (integer reasoning tokens)
+# /v1/messages: thinking.type = enabled|disabled; output_config.effort = low|medium|high|max; thinking.budget_tokens
+# /v1/responses: reasoning.effort = none|low|medium|high|max
+base_model = "anthropic/claude-sonnet-4-6"
+name = "Claude Sonnet 4.6 (EU)"
+structured_output = true
+
+reasoning_options = [
+  { type = "toggle" },
+  { type = "effort", values = ["low", "medium", "high", "max"] },
+  { type = "budget_tokens", min = 1024 },
+]
+
+[cost]
+input = 3.3
+output = 16.5
+cache_read = 0.33
+cache_write = 4.125
+
+[limit]
+output = 128_000

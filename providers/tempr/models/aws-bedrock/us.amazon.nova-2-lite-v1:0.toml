@@ -1,0 +1,21 @@
+# Tempr Gateway: https://temprhq.io/docs/gateway-chat-completions#reasoning
+# Toggle: reasoning.enabled = true|false (reasoning.effort = "none" also turns it off)
+# Effort: reasoning.effort = none|low|medium|high (alias: top-level reasoning_effort)
+# /v1/messages: thinking.type = enabled|disabled; output_config.effort = low|medium|high
+# /v1/responses: reasoning.effort = none|low|medium|high
+base_model = "amazon/nova-2-lite"
+name = "Nova 2 Lite (US)"
+
+reasoning_options = [
+  { type = "toggle" },
+  { type = "effort", values = ["low", "medium", "high"] },
+]
+
+[cost]
+input = 0.33
+output = 2.75
+cache_read = 0.0825
+cache_write = 0.33
+
+[limit]
+output = 65_535

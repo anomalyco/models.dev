@@ -1,0 +1,22 @@
+# Tempr Gateway: https://temprhq.io/docs/gateway-chat-completions#reasoning
+# Off: reasoning.effort = "none" (or reasoning.enabled = false)
+# Effort: reasoning.effort = none|low|medium|high (alias: top-level reasoning_effort)
+# /v1/messages: thinking.type = enabled|disabled; output_config.effort = low|medium|high
+# /v1/responses: reasoning.effort = none|low|medium|high
+base_model = "xai/grok-4.3"
+last_updated = "2026-06-28"
+
+reasoning_options = [
+  { type = "effort", values = ["none", "low", "medium", "high"] },
+]
+
+[cost]
+input = 1.25
+output = 2.50
+cache_read = 0.20
+
+[limit]
+output = 131_072
+
+[modalities]
+input = ["text", "image"]
