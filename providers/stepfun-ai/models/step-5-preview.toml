@@ -1,0 +1,20 @@
+# Not a symlink to providers/stepfun: StepFun publishes Global pricing in USD
+# directly ($1.00 / $2.70 input-output, $0.05 cache hit per 1M tokens), so no
+# CNY conversion is used here (accessed 2026-09-20).
+# https://platform.stepfun.ai/docs/en/guides/pricing/details
+# Chat `reasoning_effort`, Messages `output_config.effort`, and Responses
+# `reasoning.effort` accept low/medium/high.
+# https://platform.stepfun.ai/docs/en/guides/models/step-5-preview
+base_model = "stepfun/step-5-preview"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high"]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 1.0
+output = 2.7
+cache_read = 0.05

@@ -1,0 +1,20 @@
+# Chat `reasoning_effort`, Messages `output_config.effort`, and Responses
+# `reasoning.effort` accept low/medium/high (accessed 2026-09-20).
+# https://platform.stepfun.com/docs/zh/guides/models/step-5-preview
+# Cost converted from CNY list price (¥7 / ¥20 / ¥0.35 per 1M tokens) at the
+# same 7.2973 CNY/USD rate used by the other stepfun entries (accessed
+# 2026-09-20).
+# https://platform.stepfun.com/docs/zh/guides/pricing/details
+base_model = "stepfun/step-5-preview"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high"]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.959
+output = 2.741
+cache_read = 0.048

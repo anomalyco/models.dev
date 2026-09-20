@@ -1,0 +1,20 @@
+name = "Step 5 Preview"
+description = "StepFun flagship preview model for agentic coding, long-context work, and multimodal prompts"
+family = "step"
+release_date = "2026-09-20"
+last_updated = "2026-09-20"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[limit]
+context = 1_000_000
+input = 1_000_000
+output = 1_000_000
+
+[modalities]
+input = ["text", "image", "video"]
+output = ["text"]
