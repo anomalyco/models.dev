@@ -1,9 +1,8 @@
-# Verified 2026-09-18 against https://api.kimi.ai/coding/v1/chat/completions
-# with kimi-code OAuth credentials; reasoning returned via reasoning_content.
+# Served over the Anthropic Messages protocol (see provider.toml).
 # k3-256k is the 256K-context variant of Kimi K3 on the Kimi For Coding
 # endpoint. Unlike full K3 it accepts no video input (image only).
 # reasoning_options per the Kimi Code docs:
-#   reasoning_effort = "low" | "high" | "max" (default "high")
+#   output_config.effort = "low" | "high" | "max" (default "high")
 # Cost is zeroed per this provider's subscription convention.
 base_model = "moonshotai/kimi-k3"
 name = "Kimi K3-256K"
@@ -24,6 +23,3 @@ context = 262_144
 
 [modalities]
 input = ["text", "image"]
-
-[interleaved]
-field = "reasoning_content"

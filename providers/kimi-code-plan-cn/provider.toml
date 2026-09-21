@@ -1,10 +1,16 @@
 # NOTE: api.kimi.com/coding serves BOTH Anthropic (/v1/messages) and
-# OpenAI-compatible (/v1/chat/completions) protocols. All four models
-# verified on /chat/completions 2026-09-18 with kimi-code OAuth credentials
-# (reasoning returned via reasoning_content). The global deployment
-# (api.kimi.ai) is the separate kimi-code-plan-global provider.
+# OpenAI-compatible (/v1/chat/completions) protocols. This provider uses the
+# Anthropic protocol: K3 "preserved thinking" round-trips as a signed thinking
+# block, whereas the OpenAI-compatible path streams an undocumented
+# `reasoning_details` shape (summary/encrypted entries carrying a stream-only
+# `index`) that the endpoint rejects on replay with
+# "the reasoning_details ... must not contain streaming index" (400).
+# Kimi's own Claude Code integration uses the same Anthropic base.
+# Verified 2026-09-20: tool loop + follow-up + third turn on /v1/messages with
+# k3 (thinking blocks carry an encrypted signature and replay cleanly).
+# The global deployment (api.kimi.ai) is the separate kimi-code-plan-global provider.
 name = "Kimi For Coding (kimi.com)"
 env = ["KIMI_API_KEY"]
-npm = "@ai-sdk/openai-compatible"
+npm = "@ai-sdk/anthropic"
 doc = "https://www.kimi.com/code/docs/en/kimi-code/models.html"
 api = "https://api.kimi.com/coding/v1"

@@ -1,6 +1,5 @@
 # https://www.kimi.com/code/docs/en/third-party-tools/opencode.html
-# OpenAI-compatible chat completions on api.kimi.com (verified 2026-09-18 with
-# kimi-code OAuth credentials; reasoning returned via reasoning_content).
+# Served over the Anthropic Messages protocol (see provider.toml).
 # Toggle: thinking.type = "enabled" | "disabled" | "adaptive"
 # Effort: output_config.effort = "low" | "high" | "max" (default: "max")
 # Retain the existing output limit; the K2.8 announcement only specifies context.
@@ -22,6 +21,3 @@ cache_write = 0
 
 [limit]
 output = 32_768
-
-[interleaved]
-field = "reasoning_content"

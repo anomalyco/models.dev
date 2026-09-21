@@ -1,5 +1,4 @@
-# Verified 2026-09-18 against https://api.kimi.ai/coding/v1/chat/completions
-# with kimi-code OAuth credentials; reasoning returned via reasoning_content.
+# Served over the Anthropic Messages protocol (see provider.toml).
 # reasoning_options mirror the Moonshot AI platform API surface:
 #   thinking.type = "enabled" | "disabled" | "adaptive"
 #   output_config.effort = "low" | "high" | "max"
@@ -18,6 +17,3 @@ input = 0
 output = 0
 cache_read = 0
 cache_write = 0
-
-[interleaved]
-field = "reasoning_content"
