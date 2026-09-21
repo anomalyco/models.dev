@@ -1,5 +1,10 @@
 name = "Volcengine Ark Agent Plan"
-env = ["ARK_API_KEY"]
+# The env var is deliberately NOT the pay-as-you-go ARK_API_KEY (which
+# providers/volcengine uses): the two surfaces have separate key spaces and
+# each rejects the other's key with 401, so sharing one variable would light
+# up both providers at once and let a user pick an entry their key cannot
+# serve — same double-listing hazard volcengine-coding-plan documents.
+env = ["ARK_AGENT_PLAN_API_KEY"]
 npm = "@ai-sdk/openai-compatible"
 # Agent Plan is a subscription tier (Small/Medium/Large/Max) with its own base
 # URL and API-key space. Volcengine warns that calling the pay-as-you-go

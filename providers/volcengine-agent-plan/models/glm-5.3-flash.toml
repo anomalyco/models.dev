@@ -12,9 +12,8 @@ values = ["low", "high", "max"]
 [interleaved]
 field = "reasoning_content"
 
-[limit]
-context = 1_000_000
-output = 131_072
+# limits inherit from the lab entry unchanged (context 1000000 / output 131072 match), so no [limit] override is authored.
+
 
 [cost]
 input = 0

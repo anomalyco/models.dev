@@ -13,9 +13,8 @@ type = "toggle"
 [interleaved]
 field = "reasoning_content"
 
-[limit]
-context = 1_000_000
-output = 384_000
+# limits inherit from the lab entry unchanged (context 1000000 / output 384000 match), so no [limit] override is authored.
+
 
 [cost]
 input = 0
