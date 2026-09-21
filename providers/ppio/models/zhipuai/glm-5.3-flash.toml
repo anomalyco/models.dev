@@ -1,0 +1,20 @@
+# CNY→USD rate: 6.718405, 2026-09-20, source: https://open.er-api.com/v6/latest/USD
+# CNY list price source: https://ppio.com/pricing
+# thinking.type is accepted but has no effect: thinking stays on.
+# Effort: reasoning_effort = low|high|max (default max)
+base_model = "zhipuai/glm-5.3-flash"
+reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.11908
+output = 0.41677
+cache_read = 0.03423
+
+[limit]
+context = 1_048_576
+
+[modalities]
+input = ["text", "image", "video"]
