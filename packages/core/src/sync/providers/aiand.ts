@@ -31,6 +31,28 @@ const FeedReasoningOption = z.union([
   CatalogReasoningOption,
 ]);
 
+const PRICE = z.number().nonnegative();
+const FeedCostFields = {
+  input: PRICE,
+  output: PRICE,
+  reasoning: PRICE.optional(),
+  cache_read: PRICE.optional(),
+  cache_write: PRICE.optional(),
+  input_audio: PRICE.optional(),
+  output_audio: PRICE.optional(),
+};
+const FeedCostTier = z
+  .object({
+    ...FeedCostFields,
+    tier: z
+      .object({
+        type: z.literal("context").default("context"),
+        size: z.number().int().nonnegative(),
+      })
+      .passthrough(),
+  })
+  .passthrough();
+
 export const AiandModel = z
   .object({
     id: z.string().min(1),
@@ -45,13 +67,7 @@ export const AiandModel = z
     temperature: z.boolean(),
     tool_call: z.boolean(),
     structured_output: z.boolean().optional(),
-    cost: z
-      .object({
-        input: z.number().nonnegative(),
-        output: z.number().nonnegative(),
-        cache_read: z.number().nonnegative().optional(),
-      })
-      .passthrough(),
+    cost: z.object({ ...FeedCostFields, tiers: z.array(FeedCostTier).optional() }).passthrough(),
     limit: z
       .object({
         context: z.number().int().positive(),
@@ -182,12 +198,14 @@ export function buildAiandModel(
     cost: {
       input: model.cost.input,
       output: model.cost.output,
-      reasoning: authored?.cost?.reasoning,
-      cache_read: model.cost.cache_read,
-      cache_write: authored?.cost?.cache_write,
-      input_audio: authored?.cost?.input_audio,
-      output_audio: authored?.cost?.output_audio,
-      tiers: authored?.cost?.tiers,
+      reasoning: model.cost.reasoning ?? authored?.cost?.reasoning,
+      cache_read: model.cost.cache_read ?? authored?.cost?.cache_read,
+      cache_write: model.cost.cache_write ?? authored?.cost?.cache_write,
+      input_audio: model.cost.input_audio ?? authored?.cost?.input_audio,
+      output_audio: model.cost.output_audio ?? authored?.cost?.output_audio,
+      // Unlike auxiliary prices, tiers are a complete source assertion: an
+      // omitted list means flat pricing and clears stale authored tiers.
+      tiers: model.cost.tiers,
     },
     // Absence means active on the feed, and the feed owns deprecation: a
     // curated alpha/beta survives omission, a curated deprecated does not,

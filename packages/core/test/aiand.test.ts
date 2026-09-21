@@ -173,11 +173,65 @@ test("skippedNotice stays silent on a clean sync", () => {
 test("authored-only cost fields ride along; feed prices are authoritative", () => {
   const built = buildAiandModel(
     aiandModel(),
-    { cost: { input: 9, output: 9, cache_write: 0.5 }, limit: { context: 1, input: 128_000, output: 1 } },
+    {
+      cost: { input: 9, output: 9, reasoning: 0.75, cache_write: 0.5, input_audio: 1.25 },
+      limit: { context: 1, input: 128_000, output: 1 },
+    },
     null,
   );
-  expect(built.cost).toMatchObject({ input: 0.15, output: 0.25, cache_write: 0.5 });
+  expect(built.cost).toMatchObject({
+    input: 0.15,
+    output: 0.25,
+    reasoning: 0.75,
+    cache_read: 0.08,
+    cache_write: 0.5,
+    input_audio: 1.25,
+  });
   expect(built.limit).toEqual({ context: 1_048_576, input: 128_000, output: 384_000 });
+});
+
+test("feed cost tiers and auxiliary prices replace authored values", () => {
+  const tiers = [{
+    tier: { type: "context" as const, size: 200_000 },
+    input: 0.3,
+    output: 0.5,
+    cache_read: 0.16,
+  }];
+  const model = AiandModel.parse({
+    ...aiandModel(),
+    cost: {
+      ...aiandModel().cost,
+      reasoning: 0.4,
+      cache_write: 0.12,
+      output_audio: 2,
+      tiers,
+    },
+  });
+  const built = buildAiandModel(model, {
+    cost: {
+      input: 9,
+      output: 9,
+      reasoning: 9,
+      cache_write: 9,
+      output_audio: 9,
+      tiers: [{ tier: { type: "context", size: 100_000 }, input: 9, output: 9 }],
+    },
+  }, null);
+
+  expect(built.cost).toMatchObject({ reasoning: 0.4, cache_write: 0.12, output_audio: 2 });
+  expect(built.cost?.tiers).toEqual(tiers);
+});
+
+test("omitted feed cost tiers clear authored tiers", () => {
+  const built = buildAiandModel(aiandModel(), {
+    cost: {
+      input: 9,
+      output: 9,
+      tiers: [{ tier: { type: "context", size: 200_000 }, input: 9, output: 9 }],
+    },
+  }, null);
+
+  expect(built.cost?.tiers).toBeUndefined();
 });
 
 test("a non-reasoning feed model omits reasoning_options entirely", () => {
