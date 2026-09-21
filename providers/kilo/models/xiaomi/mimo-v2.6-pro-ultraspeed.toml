@@ -1,0 +1,28 @@
+name = "Xiaomi: MiMo-V2.6-Pro-UltraSpeed"
+description = "MiMo-V2.6-Pro-UltraSpeed is the fast speed edition of Xiaomi's flagship foundation model, MiMo-V2.6-Pro. Built from the same 1T MiMo-V2.6-Pro checkpoint, it matches the original model in quality while delivering roughly 10x..."
+family = "mimo"
+release_date = "2026-09-21"
+last_updated = "2026-09-21"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "high"]
+
+[cost]
+input = 4.35
+output = 8.7
+cache_read = 0.036
+
+[limit]
+context = 1_048_576
+output = 131_072
+
+[modalities]
+input = ["text", "image", "video", "audio"]
+output = ["text"]
