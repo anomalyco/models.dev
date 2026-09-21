@@ -449,6 +449,38 @@ test("syncs CrossModel's structured-output capability", () => {
   });
 });
 
+test("clears stale CrossModel context tiers only when source pricing is usable", () => {
+  const existing: ExistingModel = {
+    base_model: "alibaba/qwen3.8-max",
+    cost: {
+      input: 9,
+      output: 27,
+      tiers: [
+        {
+          tier: { type: "context", size: 200_000 },
+          input: 18,
+          output: 54,
+        },
+      ],
+    },
+  };
+
+  const authoritative = buildCrossModel(crossModelModel(), existing);
+  const absent = buildCrossModel(crossModelModel({ pricing: undefined }), existing);
+  const unusable = buildCrossModel(
+    crossModelModel({
+      pricing: {
+        tiers: [{ threshold: 0, input_micro_per_1m: 1_880_000 }],
+      },
+    }),
+    existing,
+  );
+
+  expect(authoritative?.cost).toEqual({ input: 1.88, output: 5.63 });
+  expect(absent?.cost).toEqual(existing.cost);
+  expect(unusable?.cost).toEqual(existing.cost);
+});
+
 test("parses CrossModel's nullable reasoning controls", () => {
   const parsed = CrossModelResponse.parse({
     data: [
