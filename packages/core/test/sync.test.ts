@@ -4423,7 +4423,7 @@ test("retains Merge Gateway models missing from an API-key-scoped response", () 
   expect(mergeGateway.deleteMissing).toBe(false);
 });
 
-test("parses Vercel pricing tiers with an implicit zero minimum", () => {
+test("translates Vercel pricing tiers with an implicit zero minimum", () => {
   const [model] = vercel.parseModels({
     data: [{
       id: "openai/gpt-5.6-luna",
@@ -4440,14 +4440,36 @@ test("parses Vercel pricing tiers with an implicit zero minimum", () => {
           { cost: "0.0000001", max: 272_000 },
           { cost: "0.0000002", min: 272_000 },
         ],
+        input_tiers: [
+          { cost: "0.000001", max: 272_000 },
+          { cost: "0.000002", min: 272_000 },
+        ],
+        output_tiers: [
+          { cost: "0.000006", max: 272_000 },
+          { cost: "0.000009", min: 272_000 },
+        ],
       },
     }],
   });
 
   expect(model).toBeDefined();
-  expect(buildVercelModel(model!, undefined)).toMatchObject({
-    cost: { input: 1, output: 6, cache_read: 0.1 },
+  const synced = buildVercelModel(model!, undefined);
+  expect(synced).toMatchObject({
+    cost: {
+      input: 1,
+      output: 6,
+      cache_read: 0.1,
+      tiers: [{
+        tier: { type: "context", size: 272_000 },
+        input: 2,
+        output: 9,
+        cache_read: 0.2,
+      }],
+    },
   });
+  expect(vercel.sameModel?.({
+    cost: { input: 1, output: 6, cache_read: 0.1 },
+  }, synced)).toBe(false);
 });
 
 test("Vercel factored models inherit temperature from base metadata", () => {
