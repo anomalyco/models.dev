@@ -1,15 +1,16 @@
 base_model = "deepseek/deepseek-v4.1-flash"
 name = "DeepSeek V4.1 Flash FP4"
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "high", "max"] }]
 
 [limit]
 context = 1_048_576
 output = 131_072
 
 [cost]
-input = 0.22
-output = 0.66
+input = 0.3
+output = 1.2
 cache_read = 0
-cache_write = 0.07
+cache_write = 0.09
 
 [modalities]
 input = ["text"]
