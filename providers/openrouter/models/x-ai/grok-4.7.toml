@@ -1,14 +1,5 @@
-name = "Grok Latest"
+base_model = "xai/grok-4.7"
 description = "Grok model for agentic tool use, reasoning, coding, and live assistance"
-family = "grok"
-release_date = "2026-07-08"
-last_updated = "2026-07-08"
-attachment = true
-reasoning = true
-temperature = true
-tool_call = true
-structured_output = true
-open_weights = false
 
 [[reasoning_options]]
 type = "effort"
@@ -26,9 +17,7 @@ output = 9.6
 cache_read = 0.8
 
 [limit]
-context = 500_000
 output = 450_000
 
 [modalities]
 input = ["text", "image", "pdf"]
-output = ["text"]
