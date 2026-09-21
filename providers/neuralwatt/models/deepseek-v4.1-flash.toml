@@ -1,0 +1,23 @@
+# Pricing from the authenticated GET /v1/models metadata.pricing
+# (checked 2026-09-15).
+# Reasoning is not mandatory (reasoning.mandatory = false, on by default), so
+# off is effort=none and there is no separate toggle. The API supports none,
+# low, high, xhigh and max as distinct efforts (default high); aliases
+# medium -> high, minimal -> low.
+# https://portal.neuralwatt.com/docs/api/chat-completions
+# https://portal.neuralwatt.com/docs/api/models
+base_model = "deepseek/deepseek-v4.1-flash"
+interleaved = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "high", "xhigh", "max"]
+
+[cost]
+input = 0.15
+output = 0.6
+cache_read = 0.015
+
+[limit]
+context = 1_048_560
+output = 65_536
