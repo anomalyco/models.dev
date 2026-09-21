@@ -1,4 +1,5 @@
 # Served over the Anthropic Messages protocol (see provider.toml).
+# The Messages surface accepts text and image input only (no video).
 # reasoning_options mirror the Moonshot AI platform API surface:
 #   thinking.type = "enabled" | "disabled" | "adaptive"
 #   output_config.effort = "low" | "high" | "max"
@@ -17,3 +18,6 @@ input = 0
 output = 0
 cache_read = 0
 cache_write = 0
+
+[modalities]
+input = ["text", "image"]

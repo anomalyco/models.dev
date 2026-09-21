@@ -1,5 +1,8 @@
+# Served over the Anthropic Messages protocol (see provider.toml); it accepts
+# text and image input only (no video).
 # https://www.kimi.com/code/docs/en/third-party-tools/opencode.html
 # Served over the Anthropic Messages protocol (see provider.toml).
+# The Messages surface accepts text and image input only (no video).
 # Toggle: thinking.type = "enabled" | "disabled" | "adaptive"
 # Effort: output_config.effort = "low" | "high" | "max" (default: "max")
 # Retain the existing output limit; the K2.8 announcement only specifies context.
@@ -21,3 +24,6 @@ cache_write = 0
 
 [limit]
 output = 32_768
+
+[modalities]
+input = ["text", "image"]

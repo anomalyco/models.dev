@@ -1,4 +1,5 @@
 # Served over the Anthropic Messages protocol (see provider.toml).
+# The Messages surface accepts text and image input only (no video).
 # Toggle: thinking.type = "enabled" | "disabled" | "adaptive"
 # Effort: output_config.effort = "low" | "high" | "max" (default: "max")
 base_model = "moonshotai/kimi-k2.8-preview"
@@ -19,3 +20,6 @@ cache_write = 0
 
 [limit]
 output = 32_768
+
+[modalities]
+input = ["text", "image"]

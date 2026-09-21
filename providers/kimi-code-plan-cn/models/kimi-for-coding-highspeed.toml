@@ -1,3 +1,5 @@
+# Served over the Anthropic Messages protocol (see provider.toml); it accepts
+# text and image input only (no video).
 base_model = "moonshotai/kimi-k2.7-code-highspeed"
 name = "Kimi For Coding HighSpeed"
 reasoning_options = []
@@ -10,3 +12,6 @@ cache_write = 0
 
 [limit]
 output = 32_768
+
+[modalities]
+input = ["text", "image"]
