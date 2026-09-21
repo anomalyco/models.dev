@@ -1,0 +1,21 @@
+# Chat `reasoning_effort`, Messages `output_config.effort`, and Responses
+# `reasoning.effort` accept low/medium/high (accessed 2026-09-21).
+# https://platform.stepfun.ai/docs/en/guides/models/step-5-preview
+# Verified live: GET https://api.stepfun.ai/v1/models lists step-5-preview
+# with reasoning_effort_support_list ["low", "medium", "high"] and
+# max_input_tokens 1024000; POST /v1/chat/completions succeeds.
+# Pricing (USD/MTok): input 1.00, output 2.70, cache_read 0.05 (95% cache
+# discount), matching existing mirrors and vendor reporting.
+base_model = "stepfun/step-5-preview"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high"]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 1
+output = 2.7
+cache_read = 0.05
