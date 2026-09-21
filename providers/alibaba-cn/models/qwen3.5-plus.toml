@@ -18,15 +18,21 @@ type = "budget_tokens"
 max = 81_920
 
 [cost]
+input = 0.115
+output = 0.689
+reasoning = 0.689
+
+[[cost.tiers]]
+tier = { type = "context", size = 128_000 }
 input = 0.287
 output = 1.722
 reasoning = 1.722
 
 [[cost.tiers]]
 tier = { type = "context", size = 256_000 }
-input = 1.148
-output = 6.888
-reasoning = 6.888
+input = 0.574
+output = 3.444
+reasoning = 3.444
 
 [limit]
 context = 1_000_000
