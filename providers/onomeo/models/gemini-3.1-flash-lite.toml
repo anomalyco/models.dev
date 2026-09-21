@@ -1,0 +1,9 @@
+# onomeo documents image input only: PNG, JPEG, WebP or GIF data URLs, up to
+# 8 per request and 3 MB each.
+# Effort values follow the Google lab entry and OpenAI-compatible peers.
+# https://onomeo.com/docs#images (accessed 2026-09-21)
+base_model = "google/gemini-3.1-flash-lite"
+reasoning_options = [{ type = "effort", values = ["minimal", "low", "medium", "high"] }]
+
+[modalities]
+input = ["text", "image"]
