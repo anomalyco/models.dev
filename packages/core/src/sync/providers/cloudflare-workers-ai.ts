@@ -41,13 +41,7 @@ const CloudflareModel = z.object({
   max_output_length: z.number().nullable().optional(),
   input_modalities: z.array(z.string()).optional(),
   output_modalities: z.array(z.string()).optional(),
-  pricing: z.object({
-    prompt: z.string(),
-    completion: z.string(),
-    internal_reasoning: z.string().optional(),
-    input_cache_read: z.string().optional(),
-    input_cache_write: z.string().optional(),
-  }),
+  pricing: OpenRouterModel.shape.pricing,
   supported_features: z.array(z.string()).optional(),
   supported_sampling_parameters: z.array(z.string()).optional(),
 }).passthrough();
