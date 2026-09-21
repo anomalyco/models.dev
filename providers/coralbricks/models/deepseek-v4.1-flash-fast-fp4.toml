@@ -1,0 +1,16 @@
+base_model = "deepseek/deepseek-v4.1-flash"
+name = "DeepSeek V4.1 Flash FP4"
+
+[limit]
+context = 1_048_576
+output = 131_072
+
+[cost]
+input = 0.22
+output = 0.66
+cache_read = 0
+cache_write = 0.07
+
+[modalities]
+input = ["text"]
+output = ["text"]
