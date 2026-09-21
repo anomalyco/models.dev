@@ -1,0 +1,22 @@
+# Agent Plan model name from https://www.volcengine.com/docs/82379/2366394
+# (accessed 2026-09-21). Subscription tier: no per-token price.
+# No reasoning controls on the coding-plan peer (k2.7-code); same here.
+# Output cap measured via max_tokens rejection: 32768 (docs say 32K).
+base_model = "moonshotai/kimi-k2.7-code"
+
+# reasoning_options = [] matches the coding-plan peer: thinking is always on
+# with no caller control on the plan endpoint (not probed here; per relay
+# convention the lab's always-on surface is assumed).
+reasoning_options = []
+
+[interleaved]
+field = "reasoning_content"
+
+[limit]
+context = 262_144
+output = 32_768
+
+[cost]
+input = 0
+output = 0
+cache_read = 0

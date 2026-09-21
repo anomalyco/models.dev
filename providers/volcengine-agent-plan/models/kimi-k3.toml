@@ -1,0 +1,27 @@
+# Agent Plan model name from https://www.volcengine.com/docs/82379/2366394
+# (accessed 2026-09-21). Subscription tier: no per-token price.
+# Effort on this endpoint was not probed; mirrors the lab and the coding-plan
+# peer: thinking.type toggle + reasoning_effort = low|high|max.
+# Output cap measured via max_tokens rejection: 131072.
+# Context bisected (2026-09-21): OK at 1,043,718 prompt tokens, failing by
+# 1,048,000 — consistent with the 1M window plus overhead.
+base_model = "moonshotai/kimi-k3"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[interleaved]
+field = "reasoning_content"
+
+[limit]
+context = 1_043_000
+output = 131_072
+
+[cost]
+input = 0
+output = 0
+cache_read = 0

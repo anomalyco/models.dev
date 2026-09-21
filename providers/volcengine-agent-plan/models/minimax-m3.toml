@@ -1,0 +1,23 @@
+# Agent Plan model name from https://www.volcengine.com/docs/82379/2366394
+# (accessed 2026-09-21). Subscription tier: no per-token price.
+# Toggle on this endpoint was not probed; mirrors first-party MiniMax and the
+# coding-plan peer: thinking.type = enabled|disabled is the real switch.
+# Output cap measured via max_tokens rejection: 131072.
+# Context bisected (2026-09-21): OK at 1,039,437 prompt tokens, failing by
+# 1,043,718 — consistent with the 1M window plus request overhead.
+base_model = "minimax/MiniMax-M3"
+
+[[reasoning_options]]
+type = "toggle"
+
+[interleaved]
+field = "reasoning_content"
+
+[limit]
+context = 1_039_000
+output = 131_072
+
+[cost]
+input = 0
+output = 0
+cache_read = 0
