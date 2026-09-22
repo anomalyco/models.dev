@@ -1,6 +1,7 @@
 # Source: GET https://ai.zenifra.com/v1/models (accessed 2026-09-22).
 # Conversion: Zenifra prices are BRL; models.dev costs use BRL / 5.20 = USD (project rate).
 # No native reasoning_effort levels advertised; expose the model's thinking toggle only.
+# Toggle: enable_thinking = true|false (top-level chat/completions request).
 base_model = "alibaba/qwen3.6-plus"
 reasoning_options = [{ type = "toggle" }]
 
