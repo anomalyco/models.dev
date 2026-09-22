@@ -25,6 +25,8 @@ The following values are copied from the public catalog response (2026-09-22); n
 | `qwen3.7-max-preview` | 262144 | 131072, 262144 |
 | `minimax-m3` | 1048576 | 524288, 1048576 |
 
+For both `qwen3.6-plus` and `qwen3.6-flash`, the same public records set `max_output_tokens=32768` and `capabilities.input_modalities=["text"]`. The text-only and output overrides follow these host fields.
+
 For each two-band schedule, the first upper bound is the higher-price tier threshold. These are Reka's direct billing bands, which can differ from the lab's bands.
 
 The `qwen3.7-max-preview` API ID is a Reka alias for upstream `qwen3.7-max`, not a separate preview checkpoint. The operator's active routing record, inspected on 2026-09-22, contains `model_id="qwen3.7-max-preview"`, `upstream_id="qwen3.7-max"`, and `lifecycle="active"`. This is contributor-provided configuration evidence: that upstream mapping is not exposed in the public site catalog or integration feed. The API preserves Reka's alias in response `model`; that response field alone does not prove checkpoint identity. The entry therefore inherits `alibaba/qwen3.7-max` metadata and overrides only Reka's display name, context and pricing.
@@ -110,3 +112,15 @@ produced exactly:
 ```
 
 The absence of controls is based on the adapter's allowlist. The implementation is private; this transformation record is contributor-provided implementation evidence. Upstream defaults are used; the adapter also omits returned thinking blocks. This does not claim MiniMax's native API lacks a thinking toggle.
+
+
+A public API probe on 2026-09-22 used the arithmetic prompt above, `max_tokens=256`, and each option below. All four returned HTTP 200, `finish_reason=stop`, final content `391`, prompt/completion tokens 176/2, and no reasoning channel or reported reasoning tokens:
+
+| MiniMax request options | Reasoning chars |
+| --- | ---: |
+| `thinking={"type":"enabled","budget_tokens":1024}` | 0 |
+| `reasoning_effort="high"` | 0 |
+| `enable_thinking=true` | 0 |
+| `enable_thinking=false` | 0 |
+
+These observations corroborate the adapter audit; identical short responses alone do not prove that arbitrary reasoning controls are absent. The allowlisted request transformation remains the basis for `reasoning_options=[]`.
