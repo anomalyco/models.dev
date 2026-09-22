@@ -1,10 +1,21 @@
-# Always-on reasoner on this host: the serving template exposes no
-# enable_thinking or reasoning_effort knob, so [] means "no caller control".
+# Pinned model behind a stable yolo-auto id: NVIDIA Nemotron 3.5 Lightning 30B
+# A3B (NVFP4) served on our fleet, so it inherits the canonical
+# nvidia/nemotron-3.5-lightning facts and the nemotron family (NOT an auto
+# router). This file carries only host-specific deltas: the reasoning toggle we
+# expose and the flat-rate zero cost. No [limit] block: context/output inherit
+# 262144/262144 from the base model.
+# Verified against the live host on 2026-09-22:
+# - Reasoning is on by default; chat_template_kwargs.enable_thinking = false
+#   suppresses it entirely (response reasoning length dropped to 0), so the
+#   caller has a working toggle.
+# - reasoning_effort is ignored on this path (minimal/low/xhigh all still
+#   think), so no effort set is offered. This matches the lab provider entry
+#   providers/nvidia/models/nvidia/nemotron-3.5-lightning-30b-a3b.toml, which
+#   is reasoning_options = [{ type = "toggle" }].
+# - tool_call verified live.
+# Docs: https://yolo-auto.com/docs
 base_model = "nvidia/nemotron-3.5-lightning"
-reasoning_options = []
-
-[limit]
-context = 262_144
+reasoning_options = [{ type = "toggle" }]
 
 [cost]
 input = 0.0

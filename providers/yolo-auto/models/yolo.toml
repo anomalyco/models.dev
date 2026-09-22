@@ -1,25 +1,41 @@
-# Host-owned auto-router alias; unique to this host, so defined inline rather
-# than via base_model. The backing model is selected server-side and may
-# change at any time; these facts describe the contract the alias guarantees.
+# Host-owned auto-router alias (family = "auto"): the backing model is selected
+# server-side and may change, so this entry describes the contract the alias
+# guarantees rather than a pinned lab model. Unique to this host, so defined
+# inline rather than via base_model (openrouter/models/openrouter/auto.toml and
+# llmgateway/models/auto.toml precedent).
+# Verified against the live host on 2026-09-22:
+# - GET https://yolo-auto.com/v1/models: context_length 262144;
+#   thinking = [minimal, low, medium, high, xhigh] (the host's authoritative
+#   accepted-effort list, served per key).
+# - reasoning_effort has a distinct effect: 9 live samples on an identical
+#   prompt, high used more reasoning tokens (203-298) than low (122-232).
+# - Accepted effort (request path): reasoning_effort =
+#   none|off|minimal|low|medium|high|xhigh|max, where none/off disable thinking
+#   (modeled here as the toggle) and max is an xhigh alias.
+# - tool_call and json-mode response_format verified live.
+# temperature is false: this alias runs proxy-owned thinking-mode sampling, so a
+# caller temperature is not honoured (live: temperature=0 did not fix sampling).
+# open_weights is false: a rotating router makes no per-backend weight guarantee.
+# Docs: https://yolo-auto.com/docs
 name = "Yolo Auto"
 description = "Auto-router: server-side model selection behind one flat subscription"
+family = "auto"
 release_date = "2026-05-24"
 last_updated = "2026-09-22"
 attachment = true
 reasoning = true
-# Default is thinking-on at low. Toggle: chat_template_kwargs.enable_thinking
-# true|false. Effort: reasoning_effort = low|medium|xhigh (minimal/low->low,
-# high/xhigh/max->xhigh; none/off disables thinking).
 reasoning_options = [
-  { type = "effort", values = ["none", "low", "medium", "xhigh"] },
+  { type = "toggle" },
+  { type = "effort", values = ["minimal", "low", "medium", "high", "xhigh"] },
 ]
 tool_call = true
 structured_output = true
+temperature = false
 open_weights = false
 
 [limit]
 context = 262_144
-output = 131_072
+output = 262_144
 
 [modalities]
 input = ["text", "image"]
