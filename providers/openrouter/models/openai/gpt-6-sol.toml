@@ -1,14 +1,13 @@
-name = "GPT Luna Latest"
+name = "GPT-6 Sol"
 description = "GPT model for general reasoning, writing, coding, and tool-assisted tasks"
-family = "gpt-luna"
-release_date = "2026-09-11"
-last_updated = "2026-09-11"
+family = "gpt"
+release_date = "2026-09-22"
+last_updated = "2026-09-22"
 attachment = true
 reasoning = true
 temperature = false
 tool_call = true
 structured_output = true
-knowledge = "2026-02-16"
 open_weights = false
 
 [[reasoning_options]]
@@ -16,17 +15,17 @@ type = "effort"
 values = ["none", "low", "medium", "high", "xhigh", "max"]
 
 [cost]
-input = 0.1
-output = 0.5
-cache_read = 0.01
-cache_write = 0.125
+input = 2
+output = 10
+cache_read = 0.2
+cache_write = 2.5
 
 [[cost.tiers]]
 tier = { type = "context", size = 272_000 }
-input = 0.2
-output = 0.75
-cache_read = 0.02
-cache_write = 0.25
+input = 4
+output = 15
+cache_read = 0.4
+cache_write = 5
 
 [limit]
 context = 1_050_000
