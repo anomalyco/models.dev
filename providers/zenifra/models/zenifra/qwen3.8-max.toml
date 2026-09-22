@@ -10,6 +10,9 @@ reasoning_options = [
   { type = "effort", values = ["low", "medium", "xhigh"] },
 ]
 
+[modalities]
+input = ["text", "image", "video"]
+
 [provider]
 shape = "completions"
 
