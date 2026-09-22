@@ -1,0 +1,20 @@
+# Sources (accessed 2026-09-22):
+# https://nodeclub.ai/#modelos — qwen3.8-27b FP8, 262K context, 30 RPM
+# https://nodeclub.ai (Section 07) — flat €50/month, no per-token billing (cost = 0 by convention)
+# Effort: reasoning_effort = none|low|medium|xhigh (vLLM --reasoning-parser qwen3)
+# Probe: curl api.nodeclub.ai/v1/chat/completions → reasoning_content in response
+base_model = "alibaba/qwen3.8-27b"
+
+reasoning_options = [
+  { type = "effort", values = ["none", "low", "medium", "xhigh"] },
+]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0
+output = 0
+
+[limit]
+output = 16_384
