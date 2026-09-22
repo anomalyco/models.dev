@@ -2,14 +2,11 @@ name = "Yolo-Auto"
 npm = "@ai-sdk/openai-compatible"
 env = ["YOLO_AUTO_API_KEY"]
 # Flat subscription: one plan covers every model; per-token cost published as 0.0
-# (same convention as providers/opencode). `yolo` is a family = "auto" router
-# alias whose server-side target may change; `yolo-small` is a pinned NVIDIA
-# Nemotron model behind a stable id.
-# Reasoning controls (live host, accessed 2026-09-22): both aliases accept the
-# chat_template_kwargs.enable_thinking = true|false toggle. Only `yolo` also
-# accepts reasoning_effort = none|off|minimal|low|medium|high|xhigh|max, where
-# none/off disable thinking and max is an xhigh alias; the published level set
-# is GET /v1/models "thinking" = [minimal, low, medium, high, xhigh].
-# https://yolo-auto.com/docs (accessed 2026-09-22)
+# (same convention as providers/opencode). The two model ids are host-owned
+# auto-router aliases whose server-side backing models rotate without changing
+# the id, so the model files assert only the alias contract.
+# Toggle: chat_template_kwargs.enable_thinking (or .thinking) true|false.
+# Effort: top-level reasoning_effort; accepted levels are advertised per model
+# by GET /v1/models ("thinking" field). https://yolo-auto.com/docs (accessed 2026-09-22)
 api = "https://yolo-auto.com/v1"
 doc = "https://yolo-auto.com/docs"
