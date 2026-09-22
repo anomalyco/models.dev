@@ -150,6 +150,17 @@ CI automatically picks up providers registered in `providers` in `packages/core/
 
 Actions are pinned by commit SHA. Keep new workflow actions pinned the same way.
 
+## Parasail Notes
+
+Parasail is implemented in `packages/core/src/sync/providers/parasail.ts`.
+
+- Source endpoint: `https://platform.parasail.io/api/v1/prices/serverlessEndpoints`; no authentication required. It lists every public serverless alias with the Hugging Face model it serves, the served context length, per-1M-token prices, and feature tags. The OpenAI-compatible `/v1/models` endpoint carries no metadata, so it is not used.
+- Only public chat aliases (`parasail-…` with an output price) are synced; embeddings, TTS, and customer-private aliases are ignored.
+- Every model is factored onto a `models/` lab entry via `base_model`; the Hugging Face organisation and quantization suffixes (`-FP8`, `-NVFP4`, `-MXFP8`, RedHatAI/parasail-ai re-uploads) are normalised to the lab ID. Endpoints whose lab entry does not exist are skipped and listed in the report instead of being authored inline.
+- `cost` and `limit.context` are authoritative from the endpoint; `limit.output` is only published for some endpoints, so an authored value or the lab value is kept otherwise.
+- `reasoning_options` come from a verified per-family table in the module (probed against the endpoint with `reasoning_effort`), and existing authored options are preserved. A reasoning lab model without a verified entry raises `MissingReasoningOptionsError` rather than inventing controls.
+- Aliases that disappear from the endpoint are removed, because the endpoint is authoritative for what Parasail routes.
+
 ## Eden AI Notes
 
 - Source endpoint: `https://api.edenai.run/v3/models`; no authentication required.

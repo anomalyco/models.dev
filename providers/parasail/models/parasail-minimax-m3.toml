@@ -1,0 +1,14 @@
+# Parasail OpenAI Chat (POST https://api.parasail.io/v1/chat/completions)
+# model = "parasail-minimax-m3" (MiniMaxAI/MiniMax-M3-MXFP8).
+# Always-on reasoning: reasoning_effort is accepted but does not stop thinking. Verified against the endpoint on 2026-09-22.
+# Catalog: https://platform.parasail.io/api/v1/prices/serverlessEndpoints
+base_model = "minimax/MiniMax-M3"
+reasoning_options = []
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.3
+output = 1.2
+cache_read = 0.06

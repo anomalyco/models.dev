@@ -1,0 +1,20 @@
+# Parasail OpenAI Chat (POST https://api.parasail.io/v1/chat/completions)
+# model = "parasail-deepseek-v4-flash" (deepseek-ai/DeepSeek-V4-Flash).
+# Effort: reasoning_effort = "none"|"low"|"high"|"max". Verified against the endpoint on 2026-09-22.
+# Catalog: https://platform.parasail.io/api/v1/prices/serverlessEndpoints
+base_model = "deepseek/deepseek-v4-flash"
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "high", "max"]
+
+[cost]
+input = 0.14
+output = 0.28
+cache_read = 0.07
+
+[limit]
+context = 1_048_576

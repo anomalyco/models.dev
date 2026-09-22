@@ -1,0 +1,10 @@
+# Parasail OpenAI Chat (POST https://api.parasail.io/v1/chat/completions)
+# model = "parasail-qwen3-vl-235b-a22b-instruct" (Qwen/Qwen3-VL-235B-A22B-Instruct-FP8).
+# No reasoning control on this endpoint. Verified against the endpoint on 2026-09-22.
+# Catalog: https://platform.parasail.io/api/v1/prices/serverlessEndpoints
+base_model = "alibaba/qwen3-vl-235b-a22b-instruct"
+
+[cost]
+input = 0.21
+output = 1.9
+cache_read = 0.1

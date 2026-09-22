@@ -1,0 +1,17 @@
+# Reasoning HTTP format (verified against the endpoint on 2026-09-22):
+# OpenAI Chat: POST https://api.parasail.io/v1/chat/completions. The relay is
+# SGLang/vLLM-served and accepts `reasoning_effort`; it ignores DeepSeek's
+# `thinking.type` and Anthropic-style `thinking` blocks. Toggle-only models
+# stop thinking with reasoning_effort = "none" and think with any other value;
+# effort models forward the value to the model (DeepSeek/Kimi: none|low|high|max;
+# GPT-OSS Harmony: low|medium|high, rejects none). Thinking is returned as
+# `reasoning_content` (DeepSeek, GLM) or `reasoning` (Kimi, GPT-OSS).
+# Catalog source: https://platform.parasail.io/api/v1/prices/serverlessEndpoints
+# Sources:
+# https://docs.parasail.io/parasail-docs/quickstart/serverless
+# https://docs.parasail.io/parasail-docs/api-reference/models-endpoint
+name = "Parasail"
+env = ["PARASAIL_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+api = "https://api.parasail.io/v1"
+doc = "https://docs.parasail.io"
