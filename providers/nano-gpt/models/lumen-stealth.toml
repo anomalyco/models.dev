@@ -1,0 +1,23 @@
+name = "Lumen Stealth"
+description = "Experimental multimodal model focused on reasoning, creative writing, roleplay, and agentic workflows. Available temporarily for evaluation ahead of public release. During this evaluation, prompts and responses are logged and may be reviewed to evaluate and improve the model. Do not send sensitive or confidential information."
+release_date = "2026-09-22"
+last_updated = "2026-09-22"
+attachment = true
+reasoning = true
+tool_call = false
+structured_output = false
+open_weights = false
+reasoning_options = []
+
+[cost]
+input = 0.05
+output = 0
+
+[limit]
+context = 200_000
+input = 200_000
+output = 16_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
