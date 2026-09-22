@@ -1,26 +1,9 @@
+base_model = "anthropic/claude-opus-5-5"
 name = "Agentic Chat (Claude Opus 5.5)"
-description = "For complex agentic coding, long-running agentic tasks, and knowledge work"
-family = "claude-opus"
-release_date = "2026-09-22"
-last_updated = "2026-09-22"
-attachment = true
-reasoning = true
 reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
-temperature = false
-tool_call = true
-knowledge = "2026-01-31"
-open_weights = false
 
 [cost]
 input = 0
 output = 0
 cache_read = 0
 cache_write = 0
-
-[limit]
-context = 1000000
-output = 128000
-
-[modalities]
-input = ["text", "image", "pdf"]
-output = ["text"]
