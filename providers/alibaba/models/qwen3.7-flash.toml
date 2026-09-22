@@ -1,0 +1,42 @@
+# Sources (accessed 2026-09-22):
+# https://www.alibabacloud.com/help/en/model-studio/model-pricing (Singapore: qwen3.7-flash list)
+name = "Qwen3.7 Flash"
+description = "Lightweight multimodal Qwen model for high-throughput text, image, and video tasks"
+family = "qwen"
+release_date = "2026-07-15"
+last_updated = "2026-07-15"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "budget_tokens"
+
+[cost]
+input = 0.03
+output = 0.13
+
+[[cost.tiers]]
+tier = { size = 32_000 }
+input = 0.10
+output = 0.40
+
+[[cost.tiers]]
+tier = { size = 256_000 }
+input = 0.20
+output = 0.80
+
+[limit]
+context = 1_000_000
+input = 991_000
+output = 65_536
+
+[modalities]
+input = ["text", "image", "video"]
+output = ["text"]
