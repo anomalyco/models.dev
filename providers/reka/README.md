@@ -14,6 +14,21 @@ The catalog advertises Qwen 27B at context 262144/output 131072, DeepSeek V4 at 
 
 Some active handlers impose lower hard output ceilings than the public catalog: DeepSeek V4 43200, GLM 5.3 69000 and GLM 5.3 Flash 15000. These are not defaults: the affected handlers clamp larger requests. The entries use the ceiling supported across active backends. This is based on operator inspection of live backend configuration and serving code; no maximum-length generation test was run. The public catalog lists larger values; these entries use the smaller enforced ceiling. These operational ceilings were checked on 2026-09-22 and may change.
 
+## Exact catalog fields and alias mapping
+
+The following values are copied from the public catalog response (2026-09-22); no 1000-to-1024 conversion was applied. Match `data[].model_id`, then read `context_window` and `pricing.token_bands[].max_tokens`:
+
+| `model_id` | `context_window` | Token-band upper bounds |
+| --- | ---: | --- |
+| `qwen3.6-plus` | 1048576 | 262144, 1048576 |
+| `qwen3.6-flash` | 1048576 | 262144, 1048576 |
+| `qwen3.7-max-preview` | 262144 | 131072, 262144 |
+| `minimax-m3` | 1048576 | 524288, 1048576 |
+
+For each two-band schedule, the first upper bound is the higher-price tier threshold. These are Reka's direct billing bands, which can differ from the lab's bands.
+
+The `qwen3.7-max-preview` API ID is a Reka alias for upstream `qwen3.7-max`, not a separate preview checkpoint. The operator's active routing record, inspected on 2026-09-22, contains `model_id="qwen3.7-max-preview"`, `upstream_id="qwen3.7-max"`, and `lifecycle="active"`. This is contributor-provided configuration evidence: that upstream mapping is not exposed in the public site catalog or integration feed. The API preserves Reka's alias in response `model`; that response field alone does not prove checkpoint identity. The entry therefore inherits `alibaba/qwen3.7-max` metadata and overrides only Reka's display name, context and pricing.
+
 ## Reasoning controls
 
 | Route | Wire fields | Evidence |
