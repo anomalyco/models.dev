@@ -1,8 +1,13 @@
 # Model ID cline-pass/mimo-v2.6-flash; reference pricing from the Cline model
 # catalog https://api.cline.bot/api/v1/ai/cline/models (accessed 2026-09-22):
 # $0.14 / $0.28 / $0.0028 per 1M tokens (input/output/cache read).
+# Wire evidence (2026-09-22): POST /api/v1/chat/completions with
+# reasoning_effort = none|low|medium|high|xhigh|minimal|max returns HTTP 200;
+# an unknown level returns HTTP 500, so this host validates and exposes
+# exactly these seven effort levels. Xiaomi first-party API is
+# thinking.type = enabled|disabled; this relay adds the effort scale.
 base_model = "xiaomi/mimo-v2.6-flash"
-reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh"] }]
+reasoning_options = [{ type = "effort", values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"] }]
 
 [cost]
 input = 0.14
