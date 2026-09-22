@@ -1,0 +1,11 @@
+# Always-on reasoner on this host: the serving template exposes no
+# enable_thinking or reasoning_effort knob, so [] means "no caller control".
+base_model = "nvidia/nemotron-3.5-lightning"
+reasoning_options = []
+
+[limit]
+context = 262_144
+
+[cost]
+input = 0.0
+output = 0.0

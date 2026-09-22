@@ -1,0 +1,30 @@
+# Host-owned auto-router alias; unique to this host, so defined inline rather
+# than via base_model. The backing model is selected server-side and may
+# change at any time; these facts describe the contract the alias guarantees.
+name = "Yolo Auto"
+description = "Auto-router: server-side model selection behind one flat subscription"
+release_date = "2026-05-24"
+last_updated = "2026-09-22"
+attachment = true
+reasoning = true
+# Default is thinking-on at low. Toggle: chat_template_kwargs.enable_thinking
+# true|false. Effort: reasoning_effort = low|medium|xhigh (minimal/low->low,
+# high/xhigh/max->xhigh; none/off disables thinking).
+reasoning_options = [
+  { type = "effort", values = ["none", "low", "medium", "xhigh"] },
+]
+tool_call = true
+structured_output = true
+open_weights = false
+
+[limit]
+context = 262_144
+output = 131_072
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[cost]
+input = 0.0
+output = 0.0

@@ -1,0 +1,11 @@
+name = "Yolo-Auto"
+npm = "@ai-sdk/openai-compatible"
+env = ["YOLO_AUTO_API_KEY"]
+# Flat subscription: one plan covers every model; per-token cost published as 0.0
+# (same convention as providers/opencode). `yolo` is an auto-router alias whose
+# server-side target may change; `yolo-small` is a pinned fleet model.
+# Toggle: chat_template_kwargs.enable_thinking (or .thinking) true|false.
+# Effort: reasoning_effort = none|off|minimal|low|medium|high|xhigh|max;
+# collapsed upstream to low|medium|xhigh. https://yolo-auto.com/docs (accessed 2026-09-22)
+api = "https://yolo-auto.com/v1"
+doc = "https://yolo-auto.com/docs"
