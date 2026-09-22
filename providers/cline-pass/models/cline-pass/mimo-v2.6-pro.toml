@@ -1,0 +1,10 @@
+# Model ID cline-pass/mimo-v2.6-pro; reference pricing from the Cline model
+# catalog https://api.cline.bot/api/v1/ai/cline/models (accessed 2026-09-22):
+# $0.435 / $0.87 / $0.0036 per 1M tokens (input/output/cache read).
+base_model = "xiaomi/mimo-v2.6-pro"
+reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh"] }]
+
+[cost]
+input = 0.435
+output = 0.87
+cache_read = 0.0036
