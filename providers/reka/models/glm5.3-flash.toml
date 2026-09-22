@@ -1,3 +1,5 @@
+# Output is capped at 15000 by the serving handler, below the public catalog limit.
+# Live reasoning probe: none -> no reasoning; low -> reasoning_content (2026-09-22).
 # Direct API catalog and USD pricing (2026-09-22):
 # https://inference.api.reka.ai/v1/site/models?capability=chat
 # Effort: reasoning_effort = none|low|high|max; none disables thinking.
@@ -13,7 +15,7 @@ output = 0.5
 
 [limit]
 context = 262144
-output = 262144
+output = 15000
 
 [modalities]
 input = ["text", "image"]

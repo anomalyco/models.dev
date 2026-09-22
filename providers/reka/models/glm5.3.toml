@@ -1,3 +1,4 @@
+# Output cap follows the serving handler (69000), below the public catalog limit.
 # Direct API catalog and USD pricing (2026-09-22):
 # https://inference.api.reka.ai/v1/site/models?capability=chat
 # Effort: reasoning_effort = low|high|max. Reasoning cannot be disabled.
@@ -13,4 +14,4 @@ output = 3.96
 
 [limit]
 context = 262144
-output = 262144
+output = 69000

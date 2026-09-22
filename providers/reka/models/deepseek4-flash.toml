@@ -1,8 +1,9 @@
+# Toggle: chat_template_kwargs.thinking = true|false (live verified 2026-09-22).
 # Direct API catalog and USD pricing (2026-09-22):
 # https://inference.api.reka.ai/v1/site/models?capability=chat
 # Effort: reasoning_effort = low|high|max (forwarded to the serving engine).
 base_model = "deepseek/deepseek-v4-flash-0731"
-reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "high", "max"] }]
 
 [interleaved]
 field = "reasoning_content"
