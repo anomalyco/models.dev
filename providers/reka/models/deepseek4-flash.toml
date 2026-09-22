@@ -1,3 +1,6 @@
+# Default: thinking off unless a thinking/effort signal enables it.
+# Active backends clamp output as low as 43200; see ../README.md for evidence.
+# Public catalog context is 262144; its output 131072 exceeds this serving cap.
 # Toggle: chat_template_kwargs.thinking = true|false (live verified 2026-09-22).
 # Direct API catalog and USD pricing (2026-09-22):
 # https://inference.api.reka.ai/v1/site/models?capability=chat
@@ -14,4 +17,4 @@ output = 0.66
 
 [limit]
 context = 262144
-output = 131072
+output = 43200

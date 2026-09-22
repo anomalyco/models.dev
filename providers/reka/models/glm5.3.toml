@@ -1,4 +1,5 @@
-# Output cap follows the serving handler (69000), below the public catalog limit.
+# Serving clamps larger output requests to 69000; public catalog lists 262144.
+# See ../README.md for operator evidence and public API probe records.
 # Direct API catalog and USD pricing (2026-09-22):
 # https://inference.api.reka.ai/v1/site/models?capability=chat
 # Effort: reasoning_effort = low|high|max. Reasoning cannot be disabled.
