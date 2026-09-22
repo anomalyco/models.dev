@@ -1,0 +1,17 @@
+# Azure pricing page publishes GPT-6 pricing in the blog rather than the service pricing page; https://azure.microsoft.com/en-us/blog/gpt-6-astra-sol-and-luna-for-production-agents-in-microsoft-foundry/
+# Global Standard rates (short / long context). Data Zone US/EU are +10%/+20% vs Global.
+base_model = "openai/gpt-6-luna"
+reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh", "max"] }]
+
+[cost]
+input = 0.10
+output = 0.50
+cache_read = 0.01
+cache_write = 0.125
+
+[[cost.tiers]]
+tier = { type = "context", size = 272_000 }
+input = 0.20
+output = 0.75
+cache_read = 0.02
+cache_write = 0.25
