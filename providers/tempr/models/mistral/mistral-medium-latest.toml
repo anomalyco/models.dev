@@ -1,0 +1,14 @@
+# Tempr Gateway: https://temprhq.io/docs/gateway-chat-completions#reasoning
+# Off: reasoning.effort = "none" (or reasoning.enabled = false)
+# Effort: reasoning.effort = none|high (alias: top-level reasoning_effort)
+# /v1/messages: thinking.type = enabled|disabled; output_config.effort = high
+# /v1/responses: reasoning.effort = none|high
+base_model = "mistral/mistral-medium-latest"
+
+reasoning_options = [
+  { type = "effort", values = ["none", "high"] },
+]
+
+[cost]
+input = 1.5
+output = 7.5
