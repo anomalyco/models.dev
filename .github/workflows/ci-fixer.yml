@@ -160,7 +160,7 @@ jobs:
           Failed log excerpt:
           EOF
             cat "$LOG_FILE"
-          } | opencode run --agent ci-fixer -m opencode/grok-4.5 | tee "$RESPONSE_FILE"
+          } | opencode run --agent ci-fixer -m opencode/muse-spark-1.3 --variant xhigh | tee "$RESPONSE_FILE"
 
       - name: Check changed paths
         if: steps.budget.outputs.run == 'true' && steps.budget-cache.outputs.cache-hit != 'true'

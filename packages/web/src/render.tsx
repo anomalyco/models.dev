@@ -1497,21 +1497,22 @@ function HelpDialog() {
         <h2>API</h2>
         <p>
           You can access provider data, provider-agnostic model metadata, or the
-          combined catalog through JSON endpoints.
+          combined catalog through JSON endpoints. Specialized model types are
+          omitted by default; the site includes all model types.
         </p>
         <div class="code-block">
           <code>
-            curl <a href="/api.json">https://models.dev/api.json</a>
+            curl <a href="/api.json?type=all">https://models.dev/api.json?type=all</a>
           </code>
         </div>
         <div class="code-block">
           <code>
-            curl <a href="/models.json">https://models.dev/models.json</a>
+            curl <a href="/models.json?type=all">https://models.dev/models.json?type=all</a>
           </code>
         </div>
         <div class="code-block">
           <code>
-            curl <a href="/catalog.json">https://models.dev/catalog.json</a>
+            curl <a href="/catalog.json?type=all">https://models.dev/catalog.json?type=all</a>
           </code>
         </div>
         <h2>Logos</h2>

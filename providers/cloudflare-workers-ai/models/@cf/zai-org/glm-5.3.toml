@@ -1,7 +1,14 @@
+# Effort: reasoning_effort = low|high|max; thinking is mandatory.
+# Source: Workers AI /ai/models/search?format=openrouter (2026-09-18).
+# Context/output capped to Cloudflare Workers AI context window (1,048,576).
+# Search reports 1,310,720, exceeding AI Gateway max_completion_tokens.
 base_model = "zhipuai/glm-5.3"
 name = "Glm 5.3"
 description = "Flagship GLM model for hybrid reasoning, coding, and agentic engineering"
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
 
 [cost]
 input = 1.4
@@ -10,4 +17,4 @@ cache_read = 0.26
 
 [limit]
 context = 1_310_720
-output = 1_310_720
+output = 1_048_576

@@ -237,17 +237,75 @@ function price(value: string | undefined) {
     : undefined;
 }
 
+function tieredPrice(value: string | undefined, tiers: z.infer<typeof PricingTier>[] | undefined) {
+  const base = price(value);
+  const normalized = (tiers ?? [])
+    .map((tier, index, values) => ({
+      start: tier.min ?? (index === 0 ? 0 : values[index - 1]?.max ?? 0),
+      cost: price(tier.cost),
+    }))
+    .filter((tier): tier is { start: number; cost: number } => tier.cost !== undefined)
+    .sort((a, b) => a.start - b.start);
+
+  return {
+    base: normalized[0]?.cost ?? base,
+    thresholds: normalized.map((tier) => tier.start).filter((start) => start > 0),
+    at(threshold: number) {
+      return normalized.findLast((tier) => tier.start <= threshold)?.cost ?? base;
+    },
+  };
+}
+
 function buildCost(pricing: VercelModel["pricing"], existing?: ExistingModel["cost"]) {
-  const input = price(pricing?.input_tiers?.[0]?.cost ?? pricing?.input);
-  const output = price(pricing?.output_tiers?.[0]?.cost ?? pricing?.output);
+  const hasPricingTiers = [
+    pricing?.input_tiers,
+    pricing?.output_tiers,
+    pricing?.input_cache_read_tiers,
+    pricing?.input_cache_write_tiers,
+  ].some((tiers) => (tiers?.length ?? 0) > 0);
+  const inputPrice = tieredPrice(pricing?.input, pricing?.input_tiers);
+  const outputPrice = tieredPrice(pricing?.output, pricing?.output_tiers);
+  const cacheReadPrice = tieredPrice(pricing?.input_cache_read, pricing?.input_cache_read_tiers);
+  const cacheWritePrice = tieredPrice(pricing?.input_cache_write, pricing?.input_cache_write_tiers);
+  const input = inputPrice.base;
+  const output = outputPrice.base;
   if (input === undefined || output === undefined) return undefined;
+
+  const thresholds = new Set([
+    ...inputPrice.thresholds,
+    ...outputPrice.thresholds,
+    ...cacheReadPrice.thresholds,
+    ...cacheWritePrice.thresholds,
+  ]);
+  const tiers: NonNullable<NonNullable<ExistingModel["cost"]>["tiers"]> = [];
+  let previous = {
+    input,
+    output,
+    cache_read: cacheReadPrice.base,
+    cache_write: cacheWritePrice.base,
+  };
+  for (const size of [...thresholds].sort((a, b) => a - b)) {
+    const tierInput = inputPrice.at(size);
+    const tierOutput = outputPrice.at(size);
+    if (tierInput === undefined || tierOutput === undefined) continue;
+    const current = {
+      input: tierInput,
+      output: tierOutput,
+      cache_read: cacheReadPrice.at(size),
+      cache_write: cacheWritePrice.at(size),
+    };
+    if (JSON.stringify(current) === JSON.stringify(previous)) continue;
+    tiers.push({ tier: { type: "context", size }, ...current });
+    previous = current;
+  }
+
   return {
     input,
     output,
     reasoning: existing?.reasoning,
-    cache_read: price(pricing?.input_cache_read_tiers?.[0]?.cost ?? pricing?.input_cache_read),
-    cache_write: price(pricing?.input_cache_write_tiers?.[0]?.cost ?? pricing?.input_cache_write),
-    tiers: existing?.tiers,
+    cache_read: cacheReadPrice.base,
+    cache_write: cacheWritePrice.base,
+    tiers: hasPricingTiers ? (tiers.length > 0 ? tiers : undefined) : existing?.tiers,
   };
 }
 
@@ -291,6 +349,7 @@ function sameVercelModel(current: ExistingModel, desired: SyncedModel) {
     [current.cost?.output, desiredModel.cost?.output, true],
     [current.cost?.cache_read, desiredModel.cost?.cache_read, true],
     [current.cost?.cache_write, desiredModel.cost?.cache_write, true],
+    [current.cost?.tiers, desiredModel.cost?.tiers],
     [current.limit?.context, desiredModel.limit?.context],
     [current.limit?.input, desiredModel.limit?.input],
     [current.limit?.output, desiredModel.limit?.output],

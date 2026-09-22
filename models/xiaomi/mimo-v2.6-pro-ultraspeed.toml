@@ -1,0 +1,18 @@
+name = "MiMo-V2.6-Pro-UltraSpeed"
+description = "MiMo pro model for strong multimodal reasoning and agent execution"
+family = "mimo"
+release_date = "2026-09-21"
+last_updated = "2026-09-21"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+open_weights = false
+
+[limit]
+context = 1_048_576
+output = 131_072
+
+[modalities]
+input = ["text", "image", "video", "audio"]
+output = ["text"]

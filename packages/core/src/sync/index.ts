@@ -1011,6 +1011,7 @@ export function formatToml(model: z.infer<typeof SyncedAuthoredModel>) {
   if ("base_model_omit" in model && model.base_model_omit !== undefined) {
     lines.push(`base_model_omit = [${model.base_model_omit.map(quote).join(", ")}]`);
   }
+  if (model.type !== undefined) lines.push(`type = ${quote(model.type)}`);
   if (model.name !== undefined) lines.push(`name = ${quote(model.name)}`);
   if (model.description !== undefined) lines.push(`description = ${quote(model.description)}`);
   if (model.family !== undefined) lines.push(`family = ${quote(model.family)}`);

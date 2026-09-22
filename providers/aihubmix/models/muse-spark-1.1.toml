@@ -1,0 +1,20 @@
+# Sources (accessed 2026-09-20):
+# AIHubMix catalog row model_id=muse-spark-1.1 declares
+# input_modalities="text,image,video,audio,pdf". Audio is a host-catalog override
+# relative to the lab entry; this is a catalog declaration, not an inference test.
+# https://aihubmix.com/api/v1/models?type=llm (USD per million tokens)
+# https://dev.meta.ai/docs/models/
+# Effort: reasoning_effort = minimal|low|medium|high|xhigh on /v1/chat/completions.
+# https://docs.aihubmix.com/cn/api/unified-inference
+base_model = "meta/muse-spark-1.1"
+
+[[reasoning_options]]
+type = "effort"
+values = ["minimal", "low", "medium", "high", "xhigh"]
+
+[cost]
+input = 1.375
+output = 4.675
+
+[modalities]
+input = ["text", "image", "video", "audio", "pdf"]

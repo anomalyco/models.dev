@@ -1,0 +1,14 @@
+base_model = "xai/grok-4.7"
+description = "Grok 4.7 is SpaceXAI's smartest model with frontier performance on coding, knowledge work, and STEM."
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high", "xhigh"]
+
+[cost]
+input = 1.6
+output = 4.8
+cache_read = 0.4
+
+[limit]
+output = 450_000

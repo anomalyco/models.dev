@@ -449,6 +449,38 @@ test("syncs CrossModel's structured-output capability", () => {
   });
 });
 
+test("clears stale CrossModel context tiers only when source pricing is usable", () => {
+  const existing: ExistingModel = {
+    base_model: "alibaba/qwen3.8-max",
+    cost: {
+      input: 9,
+      output: 27,
+      tiers: [
+        {
+          tier: { type: "context", size: 200_000 },
+          input: 18,
+          output: 54,
+        },
+      ],
+    },
+  };
+
+  const authoritative = buildCrossModel(crossModelModel(), existing);
+  const absent = buildCrossModel(crossModelModel({ pricing: undefined }), existing);
+  const unusable = buildCrossModel(
+    crossModelModel({
+      pricing: {
+        tiers: [{ threshold: 0, input_micro_per_1m: 1_880_000 }],
+      },
+    }),
+    existing,
+  );
+
+  expect(authoritative?.cost).toEqual({ input: 1.88, output: 5.63 });
+  expect(absent?.cost).toEqual(existing.cost);
+  expect(unusable?.cost).toEqual(existing.cost);
+});
+
 test("parses CrossModel's nullable reasoning controls", () => {
   const parsed = CrossModelResponse.parse({
     data: [
@@ -2806,6 +2838,28 @@ test("resolves Eden AI aliases to the model they point at", () => {
   ).toBe("anthropic/claude-opus-5");
 });
 
+test("preserves model type when formatting synced TOML", () => {
+  const content = formatToml({
+    id: "typesafe/jev-latest",
+    type: "decision",
+    name: "Jev",
+    description: "System One model for typed decisions",
+    release_date: "2026-09-15",
+    last_updated: "2026-09-15",
+    attachment: false,
+    reasoning: false,
+    tool_call: false,
+    open_weights: false,
+    limit: { context: 64_000, output: 0 },
+    modalities: { input: ["text"], output: ["text"] },
+  });
+
+  expect(Bun.TOML.parse(content)).toMatchObject({
+    type: "decision",
+    name: "Jev",
+  });
+});
+
 test("formats interleaved as a root field before reasoning option tables", () => {
   const content = formatToml({
     id: "example/model",
@@ -4401,7 +4455,7 @@ test("retains Merge Gateway models missing from an API-key-scoped response", () 
   expect(mergeGateway.deleteMissing).toBe(false);
 });
 
-test("parses Vercel pricing tiers with an implicit zero minimum", () => {
+test("translates Vercel pricing tiers with an implicit zero minimum", () => {
   const [model] = vercel.parseModels({
     data: [{
       id: "openai/gpt-5.6-luna",
@@ -4418,14 +4472,36 @@ test("parses Vercel pricing tiers with an implicit zero minimum", () => {
           { cost: "0.0000001", max: 272_000 },
           { cost: "0.0000002", min: 272_000 },
         ],
+        input_tiers: [
+          { cost: "0.000001", max: 272_000 },
+          { cost: "0.000002", min: 272_000 },
+        ],
+        output_tiers: [
+          { cost: "0.000006", max: 272_000 },
+          { cost: "0.000009", min: 272_000 },
+        ],
       },
     }],
   });
 
   expect(model).toBeDefined();
-  expect(buildVercelModel(model!, undefined)).toMatchObject({
-    cost: { input: 1, output: 6, cache_read: 0.1 },
+  const synced = buildVercelModel(model!, undefined);
+  expect(synced).toMatchObject({
+    cost: {
+      input: 1,
+      output: 6,
+      cache_read: 0.1,
+      tiers: [{
+        tier: { type: "context", size: 272_000 },
+        input: 2,
+        output: 9,
+        cache_read: 0.2,
+      }],
+    },
   });
+  expect(vercel.sameModel?.({
+    cost: { input: 1, output: 6, cache_read: 0.1 },
+  }, synced)).toBe(false);
 });
 
 test("Vercel factored models inherit temperature from base metadata", () => {

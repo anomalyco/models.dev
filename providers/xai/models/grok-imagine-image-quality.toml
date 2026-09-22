@@ -1,0 +1,11 @@
+# Sources:
+# - https://docs.x.ai/docs/models
+# - https://docs.x.ai/developers/models/grok-imagine-image-quality
+# - https://docs.x.ai/developers/pricing
+# Pricing: $0.05/image (1K), $0.07/image (2K); image input $0.01/image (not token-based; no [cost] authored)
+# Aliases: grok-imagine-image-quality-20260403, grok-imagine-image-quality-latest, grok-imagine-image-pro
+base_model = "xai/grok-imagine-image-quality"
+
+[modalities]
+input = ["text", "image", "pdf"]
+output = ["image", "pdf"]

@@ -1,3 +1,13 @@
+import {
+  filterCatalogByModelType,
+  filterModelsByModelType,
+  filterProvidersByModelType,
+  InvalidModelTypeError,
+  MODEL_TYPES,
+  parseModelTypes,
+} from "@models.dev/core/src/filter.js";
+import type { ModelTypeValue } from "@models.dev/core/src/filter.js";
+
 export interface Env {
   ASSETS: any;
   PosthogToken: string;
@@ -64,11 +74,8 @@ export default {
     }
 
     if (url.pathname === "/model-schema.json") {
-      const apiUrl = new URL(url);
-      apiUrl.pathname = "/_api.json";
-      const apiResponse = await env.ASSETS.fetch(
-        new Request(apiUrl.toString(), request),
-      );
+      const apiResponse = await catalogResponse(url, request, env, "api");
+      if (!apiResponse.ok) return apiResponse;
       const providers = (await apiResponse.json()) as Record<
         string,
         { models: Record<string, unknown> }
@@ -102,11 +109,11 @@ export default {
     }
 
     if (url.pathname === "/api.json") {
-      url.pathname = "/_api.json";
+      return catalogResponse(url, request, env, "api");
     } else if (url.pathname === "/models.json") {
-      url.pathname = "/_models.json";
+      return catalogResponse(url, request, env, "models");
     } else if (url.pathname === "/catalog.json") {
-      url.pathname = "/_catalog.json";
+      return catalogResponse(url, request, env, "catalog");
     } else if (
       url.pathname === "/" ||
       url.pathname === "/index.html" ||
@@ -142,6 +149,81 @@ export default {
     });
   },
 };
+
+type CatalogEndpoint = "api" | "models" | "catalog";
+
+async function catalogResponse(
+  url: URL,
+  request: Request,
+  env: Env,
+  endpoint: CatalogEndpoint,
+) {
+  let filter;
+  try {
+    filter = parseModelTypes(url.searchParams.get("type"));
+  } catch (error) {
+    if (!(error instanceof InvalidModelTypeError)) throw error;
+    return Response.json(
+      {
+        error: error.message,
+        allowed: [...MODEL_TYPES, "all"],
+      },
+      {
+        status: 400,
+        headers: { "Access-Control-Allow-Origin": "*" },
+      },
+    );
+  }
+
+  const assetUrl = new URL(url);
+  const suffix = filter === "default"
+    ? ""
+    : filter === "all"
+      ? "-all"
+      : filter.length === 1
+        ? `-${filter[0]}`
+        : undefined;
+  assetUrl.pathname = `/_${endpoint}${suffix ?? "-all"}.json`;
+  assetUrl.search = "";
+  const assetResponse = await env.ASSETS.fetch(
+    new Request(assetUrl.toString(), request),
+  );
+  if (!assetResponse.ok || suffix !== undefined) return assetResponse;
+
+  const value = await assetResponse.json();
+  const filtered = endpoint === "api"
+    ? filterProvidersByModelType(
+        value as Record<string, CatalogProvider>,
+        filter,
+      )
+    : endpoint === "models"
+      ? filterModelsByModelType(
+          value as Record<string, CatalogModel>,
+          filter,
+        )
+      : filterCatalogByModelType(
+          value as {
+            providers: Record<string, CatalogProvider>;
+            models: Record<string, CatalogModel>;
+          },
+          filter,
+        );
+
+  const headers = new Headers(assetResponse.headers);
+  headers.delete("Content-Length");
+  headers.delete("ETag");
+  headers.set("Content-Type", "application/json");
+  headers.set("Cache-Control", "public, max-age=3600");
+  return new Response(JSON.stringify(filtered), { headers });
+}
+
+interface CatalogModel {
+  type?: ModelTypeValue;
+}
+
+interface CatalogProvider {
+  models: Record<string, CatalogModel>;
+}
 
 function isHtmlRoute(pathname: string) {
   return (
