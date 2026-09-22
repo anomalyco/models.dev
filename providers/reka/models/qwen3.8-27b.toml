@@ -1,10 +1,11 @@
 # Effort: reasoning_effort = none|low|medium|xhigh; none disables thinking.
-# Live verified 2026-09-22; the public catalog understates reasoning support.
+# Live verified 2026-09-22; catalog false is a marketplace forwarding policy.
+# none -> reasoning_tokens=0; low -> 51 on identical arithmetic input.
+# Budget: thinking_token_budget, forwarded to vLLM (live verified at 1 and 256).
 # Direct API catalog and USD pricing (2026-09-22):
 # https://inference.api.reka.ai/v1/site/models?capability=chat
 base_model = "alibaba/qwen3.8-27b"
-reasoning = true
-reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "xhigh"] }]
+reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "xhigh"] }, { type = "budget_tokens" }]
 
 [interleaved]
 field = "reasoning_content"
