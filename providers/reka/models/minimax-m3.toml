@@ -1,0 +1,17 @@
+# Direct API catalog and USD pricing (2026-09-22):
+# https://inference.api.reka.ai/v1/site/models?capability=chat
+# The OpenAI-to-Messages adapter does not forward caller reasoning controls.
+base_model = "minimax/MiniMax-M3"
+reasoning_options = []
+
+[cost]
+input = 0.3
+output = 1.2
+
+[[cost.tiers]]
+tier = { type = "context", size = 524288 }
+input = 0.6
+output = 2.4
+
+[modalities]
+input = ["text", "image"]

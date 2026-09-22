@@ -1,0 +1,19 @@
+# Direct API catalog and USD pricing (2026-09-22):
+# https://inference.api.reka.ai/v1/site/models?capability=chat
+# Effort: reasoning_effort = none|low|high|max; none disables thinking.
+base_model = "zhipuai/glm-5.3-flash"
+reasoning_options = [{ type = "effort", values = ["none", "low", "high", "max"] }]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.15
+output = 0.5
+
+[limit]
+context = 262144
+output = 262144
+
+[modalities]
+input = ["text", "image"]
