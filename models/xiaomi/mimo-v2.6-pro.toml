@@ -1,3 +1,5 @@
+# Weights are MIT-licensed on Hugging Face: https://huggingface.co/XiaomiMiMo/MiMo-V2.6-Pro-RL
+# Release notes confirm Pro + Flash open-sourced: https://mimo.mi.com/docs/en-US/news/latest/v2-6
 name = "MiMo-V2.6-Pro"
 description = "Stronger MiMo Pro tier for multimodal reasoning and coding-agent execution"
 family = "mimo"
@@ -8,7 +10,7 @@ reasoning = true
 temperature = true
 tool_call = true
 knowledge = "2026-09-22"
-open_weights = false
+open_weights = true
 
 [limit]
 context = 1_048_576
@@ -17,3 +19,7 @@ output = 131_072
 [modalities]
 input = ["text", "image", "audio", "video", "pdf"]
 output = ["text"]
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/XiaomiMiMo/MiMo-V2.6-Pro-RL"
