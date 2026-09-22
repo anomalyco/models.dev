@@ -2,6 +2,17 @@
 # model is selected server-side and rotates without changing this id, so no
 # lab-specific facts are asserted. Same pattern as openrouter/auto and
 # llmgateway/auto.
+# Toggle: chat_template_kwargs.enable_thinking = true|false (turns thinking on/off)
+# Effort: top-level reasoning_effort = minimal|low|medium|high|xhigh; the
+# gateway translates the level onto the current backend's thinking control.
+# Thinking is disabled either by that toggle or by reasoning_effort = none|off;
+# the effort list excludes none/off because they disable thinking rather than
+# select a level.
+# Verified live on 2026-09-22:
+# - GET /v1/models advertises thinking = [minimal, low, medium, high, xhigh].
+# - tool_call and json-mode response_format verified live.
+# - image input verified live: a red|green|blue color-strip image was read back
+#   in correct left-to-right order (Red LEFT / Green MIDDLE / Blue RIGHT).
 name = "Yolo Auto"
 description = "Flagship auto-router alias: server-side model selection behind one flat subscription"
 family = "auto"
@@ -9,10 +20,6 @@ release_date = "2026-08-27"
 last_updated = "2026-09-22"
 attachment = true
 reasoning = true
-# Toggle: chat_template_kwargs.enable_thinking = true|false (host-published
-# control; GET /v1/models advert thinking levels for this id).
-# Effort: top-level reasoning_effort = minimal|low|medium|high|xhigh; the
-# gateway translates the level onto the current backend's thinking control.
 reasoning_options = [
   { type = "toggle" },
   { type = "effort", values = ["minimal", "low", "medium", "high", "xhigh"] },
@@ -22,9 +29,16 @@ tool_call = true
 structured_output = true
 open_weights = false
 
+# No separate output cap is published. The gateway clamps max_tokens to
+# (context - prompt) on every request, so output is bounded by the window rather
+# than an independent limit. output = 131072 is the conservative value enforced
+# on every plan (free/solo/unlimited cap the window at 131072; only Pro raises
+# it to 262144) and the client window recommended at https://yolo-auto.com/docs,
+# so it is achievable as output on any plan with a short prompt. context keeps
+# the advertised 262144.
 [limit]
 context = 262_144
-output = 262_144
+output = 131_072
 
 [modalities]
 input = ["text", "image"]
