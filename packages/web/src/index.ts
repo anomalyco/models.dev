@@ -54,7 +54,10 @@ let lastFocusedElement: HTMLElement | null = null;
 let activeSearchIndex = 0;
 let rankedSearchResults: SearchResult[] = [];
 
-const searchItems = parseSearchIndex();
+let searchItems: SearchIndexItem[] = [];
+let searchIndexLoaded = false;
+let searchIndexLoading = false;
+let searchIndexRequest: Promise<void> | undefined;
 const compactNumberFormatter = new Intl.NumberFormat(undefined, {
   notation: "compact",
   maximumFractionDigits: 1,
@@ -93,16 +96,28 @@ helpModal?.addEventListener("click", (event) => {
 ////////////////////
 // Search
 ////////////////////
-function parseSearchIndex() {
-  const index = document.getElementById("search-index")?.textContent;
-  if (!index) return [];
-
-  try {
-    const parsed = JSON.parse(index);
-    return Array.isArray(parsed) ? (parsed as SearchIndexItem[]) : [];
-  } catch {
-    return [];
-  }
+// The index is ~700 KB, so it is fetched once on demand instead of being
+// embedded in every page. Prefetch starts as soon as the user shows intent.
+function loadSearchIndex() {
+  if (searchIndexLoaded) return Promise.resolve();
+  searchIndexLoading = true;
+  searchIndexRequest ??= fetch("/search-index.json")
+    .then((response) => {
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      return response.json();
+    })
+    .then((parsed) => {
+      if (!Array.isArray(parsed)) throw new Error("Invalid search index");
+      searchItems = parsed as SearchIndexItem[];
+      searchIndexLoaded = true;
+    })
+    .catch(() => {
+      searchIndexRequest = undefined;
+    })
+    .finally(() => {
+      searchIndexLoading = false;
+    });
+  return searchIndexRequest;
 }
 
 function normalizeSearchText(value: string) {
@@ -397,10 +412,13 @@ function renderSearchResults() {
   searchResults.append(fragment);
 
   const normalizedQuery = normalizeSearchText(query);
-  searchCount.textContent = normalizedQuery
-    ? `${rankedSearchResults.length} result${rankedSearchResults.length === 1 ? "" : "s"}`
-    : "Recently updated models, providers, and labs";
-  searchEmpty.hidden = rankedSearchResults.length > 0;
+  const loading = !searchIndexLoaded && searchIndexLoading;
+  searchCount.textContent = loading
+    ? "Loading…"
+    : normalizedQuery
+      ? `${rankedSearchResults.length} result${rankedSearchResults.length === 1 ? "" : "s"}`
+      : "Recently updated models, providers, and labs";
+  searchEmpty.hidden = loading || rankedSearchResults.length > 0;
 
   if (rankedSearchResults.length > 0) {
     searchInput.setAttribute("aria-activedescendant", "search-result-0");
@@ -420,7 +438,15 @@ function openSearchModal() {
       : null;
 
   if (!searchModal.open) searchModal.showModal();
-  renderSearchResults();
+  if (!searchIndexLoaded) {
+    const request = loadSearchIndex();
+    renderSearchResults();
+    void request.then(() => {
+      if (searchModal.open) renderSearchResults();
+    });
+  } else {
+    renderSearchResults();
+  }
   requestAnimationFrame(() => {
     searchInput.focus();
     searchInput.select();
@@ -441,6 +467,10 @@ function closestSearchResult(target: EventTarget | null) {
 
 searchTrigger?.addEventListener("click", openSearchModal);
 mobileSearchTrigger?.addEventListener("click", openSearchModal);
+for (const trigger of [searchTrigger, mobileSearchTrigger, mobileMenuTrigger]) {
+  trigger?.addEventListener("pointerenter", () => void loadSearchIndex());
+  trigger?.addEventListener("focus", () => void loadSearchIndex());
+}
 
 /////////////////////
 // Mobile Menu
@@ -500,7 +530,14 @@ searchResults?.addEventListener("click", (event) => {
   }
 });
 
-searchInput?.addEventListener("input", renderSearchResults);
+searchInput?.addEventListener("input", () => {
+  if (!searchIndexLoaded && !searchIndexLoading) {
+    void loadSearchIndex().then(() => {
+      if (searchModal?.open) renderSearchResults();
+    });
+  }
+  renderSearchResults();
+});
 
 searchInput?.addEventListener("keydown", (event) => {
   if (event.key === "Escape") {
