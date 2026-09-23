@@ -268,6 +268,7 @@ header .mobile-menu-trigger svg {
   margin-top: var(--header-height);
   overflow: auto;
   padding-bottom: 4rem;
+  scroll-padding-top: 3rem;
 }
 
 .overview,
@@ -440,7 +441,8 @@ header .mobile-menu-trigger svg {
 }
 
 .table-wrap {
-  overflow-x: auto;
+  /* No overflow here: a scrolling wrapper would trap the sticky headers. */
+  overflow: visible;
 }
 
 table {
@@ -469,14 +471,41 @@ table thead th {
 }
 
 th.sortable {
-  cursor: pointer;
+  padding: 0;
   user-select: none;
 }
 
-.sort-indicator {
-  display: inline-block;
-  width: 1rem;
-  text-align: center;
+.sort-button {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  width: 100%;
+  min-height: 46px;
+  padding: 0.75rem;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-transform: inherit;
+  cursor: pointer;
+}
+
+.sort-button:focus-visible {
+  outline: 2px solid var(--color-text);
+  outline-offset: -2px;
+}
+
+.sort-indicator:empty {
+  display: none;
+}
+
+th[data-type="number"] .sort-button {
+  justify-content: flex-end;
+}
+
+td.numeric {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
 }
 
 th,
@@ -490,7 +519,15 @@ td {
 }
 
 tbody td {
-  color: var(--color-text-tertiary);
+  color: var(--color-text-secondary);
+}
+
+tbody th {
+  font-weight: 400;
+}
+
+table .subtle {
+  color: var(--color-text-secondary);
 }
 
 tbody td:first-child,
@@ -499,7 +536,7 @@ tbody td:nth-child(3) {
   color: var(--color-text);
 }
 
-tbody tr:last-child td {
+tbody tr:last-child > * {
   border-bottom: 0;
 }
 

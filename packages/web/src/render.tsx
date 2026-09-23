@@ -734,9 +734,10 @@ function ProvidersPage(props: { providers: Array<[string, CatalogProvider]> }) {
         hideHeading
       >
         <table data-enhanced-table>
+          <caption class="sr-only">Providers</caption>
           <thead>
             <tr>
-              <SortableTh>Provider</SortableTh>
+              <SortableTh sort="ascending">Provider</SortableTh>
               <SortableTh type="number">Models</SortableTh>
               <SortableTh>Package</SortableTh>
               <SortableTh>API</SortableTh>
@@ -751,10 +752,10 @@ function ProvidersPage(props: { providers: Array<[string, CatalogProvider]> }) {
 
               return (
                 <tr data-search={`${provider.name} ${providerId} ${provider.npm} ${provider.api ?? ""}`}>
-                  <td data-sort={provider.name}>
+                  <th scope="row" data-sort={provider.name}>
                     <ProviderLink providerId={providerId} provider={provider} />
-                  </td>
-                  <td data-sort={String(models.length)}>{models.length}</td>
+                  </th>
+                  <td class="numeric" data-sort={String(models.length)}>{models.length}</td>
                   <td class="mono">{provider.npm}</td>
                   <td class="mono">
                     {provider.api ? (
@@ -782,9 +783,10 @@ function LabsPage(props: { labs: LabEntry[] }) {
   return (
       <TableSection title="Labs" count={props.labs.length} columns={5} hideHeading>
         <table data-enhanced-table>
+          <caption class="sr-only">Labs</caption>
           <thead>
             <tr>
-              <SortableTh>Lab</SortableTh>
+              <SortableTh sort="ascending">Lab</SortableTh>
               <SortableTh>Description</SortableTh>
               <SortableTh type="number">Models</SortableTh>
               <SortableTh type="number">Providers</SortableTh>
@@ -794,13 +796,13 @@ function LabsPage(props: { labs: LabEntry[] }) {
           <tbody>
             {props.labs.map((lab) => (
               <tr data-search={`${lab.name} ${lab.description ?? ""} ${lab.id} ${lab.families.join(" ")}`}>
-                <td data-sort={lab.name}>
+                <th scope="row" data-sort={lab.name}>
                   <LabLink labId={lab.id} labName={lab.name} />
                   <span class="subtle mono">{lab.id}</span>
-                </td>
+                </th>
                 <td>{lab.description ?? "-"}</td>
-                <td data-sort={String(lab.models.length)}>{lab.models.length}</td>
-                <td data-sort={String(lab.providerCount)}>{lab.providerCount}</td>
+                <td class="numeric" data-sort={String(lab.models.length)}>{lab.models.length}</td>
+                <td class="numeric" data-sort={String(lab.providerCount)}>{lab.providerCount}</td>
                 <td data-sort={sortDate(lab.lastUpdated)}>{lab.lastUpdated ?? "-"}</td>
               </tr>
             ))}
@@ -1007,6 +1009,7 @@ function ModelTable(props: {
       hideHeading={props.hideHeading}
     >
       <table data-enhanced-table>
+        <caption class="sr-only">{props.title}</caption>
         <thead>
           <tr>
             <SortableTh>Model</SortableTh>
@@ -1022,7 +1025,7 @@ function ModelTable(props: {
             <SortableTh>Weights</SortableTh>
             <SortableTh type="number">Price</SortableTh>
             <SortableTh>Release</SortableTh>
-            <SortableTh>Updated</SortableTh>
+            <SortableTh sort="descending">Updated</SortableTh>
           </tr>
         </thead>
         <tbody>
@@ -1033,33 +1036,30 @@ function ModelTable(props: {
               <tr
                 data-search={`${metadata.name} ${metadata.description} ${model.id} ${model.labName} ${metadata.family ?? ""} ${weightsText(metadata.open_weights)} ${booleanText(metadata.reasoning)} ${booleanText(metadata.tool_call)} ${booleanText(metadata.structured_output)} ${booleanText(metadata.temperature)}`}
               >
-                <td data-sort={metadata.name}>
+                <th scope="row" data-sort={metadata.name}>
                   <a class="primary-link" href={modelHref(model.id)}>
                     {metadata.name}
                   </a>
                   <span class="subtle mono">{model.id}</span>
-                </td>
+                </th>
                 {showLab && (
                   <td data-sort={model.labName}>
                     <LabLink labId={model.labId} labName={model.labName} />
                   </td>
                 )}
-                <td data-sort={String(model.providers.length)}>
+                <td class="numeric" data-sort={String(model.providers.length)}>
                   <a href={`${modelHref(model.id)}#providers`}>
                     {model.providers.length}
                   </a>
                 </td>
-                <td data-sort={sortNumber(metadata.limit?.context)}>
+                <td class="numeric" data-sort={sortNumber(metadata.limit?.context)}>
                   {formatNumber(metadata.limit?.context)}
                 </td>
-                <td data-sort={sortNumber(metadata.limit?.output)}>
+                <td class="numeric" data-sort={sortNumber(metadata.limit?.output)}>
                   {formatNumber(metadata.limit?.output)}
                 </td>
                 <td
-                  data-sort={[
-                    ...(metadata.modalities?.input ?? []),
-                    ...(metadata.modalities?.output ?? []),
-                  ].join(" ")}
+                  data-sort={(metadata.modalities?.input ?? []).join(" ")}
                   dangerouslySetInnerHTML={{
                     __html: renderModalities(metadata.modalities?.input),
                   }}
@@ -1079,7 +1079,7 @@ function ModelTable(props: {
                 <td data-sort={weightsText(metadata.open_weights)}>
                   <WeightsValue metadata={metadata} />
                 </td>
-                <td data-sort={sortNumber(model.minInputCost)}>
+                <td class="numeric" data-sort={sortNumber(model.minInputCost)}>
                   {costSummary(model.minInputCost, model.minOutputCost)}
                 </td>
                 <td data-sort={sortDate(metadata.release_date)}>
@@ -1108,12 +1108,13 @@ function ProviderModelsTable(props: {
 
   return (
     <table data-enhanced-table>
+      <caption class="sr-only">{props.mode === "model" ? "Providers" : "Models"}</caption>
       <thead>
         <tr>
           {props.mode === "model" ? (
-            <SortableTh>Provider</SortableTh>
+            <SortableTh sort="ascending">Provider</SortableTh>
           ) : (
-            <SortableTh>Model</SortableTh>
+            <SortableTh sort="ascending">Model</SortableTh>
           )}
           {showLab && <SortableTh>Lab</SortableTh>}
           <SortableTh>Model ID</SortableTh>
@@ -1139,11 +1140,11 @@ function ProviderModelsTable(props: {
               data-search={`${displayName} ${entry.model.description} ${entry.modelId} ${entry.provider.name} ${entry.providerId} ${lab?.name ?? ""} ${entry.model.family ?? ""} ${booleanText(entry.model.reasoning)} ${booleanText(entry.model.tool_call)} ${booleanText(entry.model.structured_output)} ${booleanText(entry.model.temperature)}`}
             >
               {props.mode === "model" ? (
-                <td data-sort={entry.provider.name}>
+                <th scope="row" data-sort={entry.provider.name}>
                   <ProviderLink providerId={entry.providerId} provider={entry.provider} />
-                </td>
+                </th>
               ) : (
-                <td data-sort={displayName}>
+                <th scope="row" data-sort={displayName}>
                   {canonical ? (
                     <a class="primary-link" href={modelHref(canonical.id)}>
                       {displayName}
@@ -1156,7 +1157,7 @@ function ProviderModelsTable(props: {
                   ) : (
                     <span class="subtle">Provider-specific</span>
                   )}
-                </td>
+                </th>
               )}
               {showLab && (
                 <td data-sort={lab?.name ?? ""}>
@@ -1169,13 +1170,13 @@ function ProviderModelsTable(props: {
                   copyValue={`${entry.providerId}/${entry.modelId}`}
                 />
               </td>
-              <td data-sort={sortNumber(entry.model.limit.context)}>
+              <td class="numeric" data-sort={sortNumber(entry.model.limit.context)}>
                 {formatNumber(entry.model.limit.context)}
               </td>
-              <td data-sort={sortNumber(entry.model.limit.output)}>
+              <td class="numeric" data-sort={sortNumber(entry.model.limit.output)}>
                 {formatNumber(entry.model.limit.output)}
               </td>
-              <td data-sort={sortNumber(entry.model.cost?.input)}>
+              <td class="numeric" data-sort={sortNumber(entry.model.cost?.input)}>
                 {costSummary(entry.model.cost?.input, entry.model.cost?.output)}
               </td>
               <td data-sort={booleanText(entry.model.reasoning)}>
@@ -1252,10 +1253,27 @@ function TableSection(props: {
   );
 }
 
-function SortableTh(props: { type?: "text" | "number"; children: unknown }) {
+function SortableTh(props: {
+  type?: "text" | "number";
+  sort?: "ascending" | "descending";
+  children: unknown;
+}) {
+  const type = props.type ?? "text";
+  const indicator = (
+    <span class="sort-indicator" aria-hidden="true">
+      {props.sort === "ascending" ? "↑" : props.sort === "descending" ? "↓" : ""}
+    </span>
+  );
+
+  // Numeric columns are right-aligned, so the arrow sits on the inner side
+  // and the label edge stays flush with the numbers below it.
   return (
-    <th class="sortable" data-type={props.type ?? "text"} scope="col">
-      {props.children} <span class="sort-indicator"></span>
+    <th class="sortable" data-type={type} scope="col" aria-sort={props.sort}>
+      <button type="button" class="sort-button">
+        {type === "number" ? indicator : null}
+        {props.children}
+        {type === "text" ? indicator : null}
+      </button>
     </th>
   );
 }
