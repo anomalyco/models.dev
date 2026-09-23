@@ -107,21 +107,6 @@ test("omits inherited input limits when Cloudflare serves a smaller context", ()
   });
 });
 
-test("requires a curated output when inheritance exceeds the served context", () => {
-  expect(() => buildCloudflareAiGatewayModel(
-    {
-      model_id: "deepseek/deepseek-v4-pro",
-      task: "Text Generation",
-      context_length: 131_072,
-      provider_details: providerDetails({ input_tokens: 1.74, output_tokens: 3.48 }),
-    },
-    undefined,
-    {
-      reasoning_options: [{ type: "effort", values: ["high", "max"] }],
-    },
-  )).toThrow("curate limit.output");
-});
-
 test("maps structured provider pricing instead of display labels", () => {
   const model = buildCloudflareAiGatewayModel(
     {

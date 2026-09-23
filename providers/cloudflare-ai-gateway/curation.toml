@@ -175,7 +175,6 @@ reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
 # proof that Cloudflare strips it, match the lab + Workers AI baseline: toggle + high/max.
 [models."deepseek/deepseek-v4-pro"]
 note = ["Toggle: thinking.type = enabled|disabled.", "Effort: reasoning_effort = high|max."]
-limit = { context = 131072, output = 384000 }
 reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["high", "max"] }]
 
 # Alibaba is a first-party lab; the catalog's OpenAI-compat schema exposes a generic
