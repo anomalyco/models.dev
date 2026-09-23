@@ -1,3 +1,7 @@
+# First-party API rejects max_tokens=131073 with range [1, 131072]
+# (POST https://dashscope-intl.aliyuncs.com/compatible-mode/v1/chat/completions,
+# model qwen3.7-plus, checked 2026-09-23).
+# Model card: https://www.qwencloud.com/models/qwen3.7-plus
 name = "Qwen3.7 Plus"
 description = "Multimodal Qwen workhorse for long-context agents, visual inputs, and coding"
 family = "qwen"
@@ -31,7 +35,7 @@ cache_write = 2.50
 
 [limit]
 context = 1_000_000
-output = 65_536
+output = 131_072
 
 [modalities]
 input = ["text", "image", "video"]
