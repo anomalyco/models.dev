@@ -1,6 +1,6 @@
 #!/usr/bin/env bun
 
-import { RenderedPages, Providers, Models, renderDocument } from "../src/render";
+import { RenderedPages, Providers, Models, SearchIndexJson, renderDocument } from "../src/render";
 import {
   filterCatalogByModelType,
   MODEL_TYPES,
@@ -78,6 +78,8 @@ for (const [route, rendered] of RenderedPages) {
   await fs.mkdir(path.dirname(filePath), { recursive: true });
   await Bun.write(filePath, renderDocument(template, rendered));
 }
+
+await Bun.write("./dist/search-index.json", SearchIndexJson);
 
 const catalog = { models: Models, providers: Providers };
 const variants: Array<[suffix: string, filter: ModelTypeFilter]> = [

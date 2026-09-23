@@ -127,6 +127,7 @@ const SearchItems = buildSearchItems(
 
 export const RenderedPages = buildPages();
 export const Rendered = RenderedPages.get("/")!.html;
+export const SearchIndexJson = JSON.stringify(SearchItems);
 
 export function normalizeRoute(pathname: string) {
   if (pathname !== "/" && pathname.endsWith("/")) {
@@ -469,7 +470,7 @@ function renderPage(
         <Header active={active} />
         <main class="page-scroll">{content}</main>
         <MobileMenu active={active} />
-        <SearchDialog items={SearchItems} />
+        <SearchDialog />
         <HelpDialog />
       </Fragment>,
     ),
@@ -1419,9 +1420,7 @@ function MobileMenu(props: { active: "models" | "providers" | "labs" }) {
   );
 }
 
-function SearchDialog(props: { items: SearchIndexItem[] }) {
-  const json = JSON.stringify(props.items).replace(/</g, "\\u003c");
-
+function SearchDialog() {
   return (
     <dialog
       id="search-modal"
@@ -1464,11 +1463,6 @@ function SearchDialog(props: { items: SearchIndexItem[] }) {
       <div id="search-count" class="search-count"></div>
       <div id="search-results" class="search-results" role="listbox"></div>
       <p id="search-empty" class="search-empty">No matching results.</p>
-      <script
-        id="search-index"
-        type="application/json"
-        dangerouslySetInnerHTML={{ __html: json }}
-      />
     </dialog>
   );
 }

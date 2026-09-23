@@ -54,7 +54,8 @@ let lastFocusedElement: HTMLElement | null = null;
 let activeSearchIndex = 0;
 let rankedSearchResults: SearchResult[] = [];
 
-const searchItems = parseSearchIndex();
+let searchItems: SearchIndexItem[] = [];
+let searchIndexRequest: Promise<void> | undefined;
 const compactNumberFormatter = new Intl.NumberFormat(undefined, {
   notation: "compact",
   maximumFractionDigits: 1,
@@ -93,16 +94,18 @@ helpModal?.addEventListener("click", (event) => {
 ////////////////////
 // Search
 ////////////////////
-function parseSearchIndex() {
-  const index = document.getElementById("search-index")?.textContent;
-  if (!index) return [];
-
-  try {
-    const parsed = JSON.parse(index);
-    return Array.isArray(parsed) ? (parsed as SearchIndexItem[]) : [];
-  } catch {
-    return [];
-  }
+// The index is ~700 KB, so it is fetched once on demand instead of being
+// embedded in every page. Prefetch starts as soon as the user shows intent.
+function loadSearchIndex() {
+  searchIndexRequest ??= fetch("/search-index.json")
+    .then((response) => (response.ok ? response.json() : []))
+    .then((parsed) => {
+      searchItems = Array.isArray(parsed) ? (parsed as SearchIndexItem[]) : [];
+    })
+    .catch(() => {
+      searchIndexRequest = undefined;
+    });
+  return searchIndexRequest;
 }
 
 function normalizeSearchText(value: string) {
@@ -397,10 +400,13 @@ function renderSearchResults() {
   searchResults.append(fragment);
 
   const normalizedQuery = normalizeSearchText(query);
-  searchCount.textContent = normalizedQuery
-    ? `${rankedSearchResults.length} result${rankedSearchResults.length === 1 ? "" : "s"}`
-    : "Recently updated models, providers, and labs";
-  searchEmpty.hidden = rankedSearchResults.length > 0;
+  const loading = searchItems.length === 0 && searchIndexRequest !== undefined;
+  searchCount.textContent = loading
+    ? "Loading…"
+    : normalizedQuery
+      ? `${rankedSearchResults.length} result${rankedSearchResults.length === 1 ? "" : "s"}`
+      : "Recently updated models, providers, and labs";
+  searchEmpty.hidden = loading || rankedSearchResults.length > 0;
 
   if (rankedSearchResults.length > 0) {
     searchInput.setAttribute("aria-activedescendant", "search-result-0");
@@ -421,6 +427,11 @@ function openSearchModal() {
 
   if (!searchModal.open) searchModal.showModal();
   renderSearchResults();
+  if (searchItems.length === 0) {
+    void loadSearchIndex().then(() => {
+      if (searchModal.open) renderSearchResults();
+    });
+  }
   requestAnimationFrame(() => {
     searchInput.focus();
     searchInput.select();
@@ -441,6 +452,10 @@ function closestSearchResult(target: EventTarget | null) {
 
 searchTrigger?.addEventListener("click", openSearchModal);
 mobileSearchTrigger?.addEventListener("click", openSearchModal);
+for (const trigger of [searchTrigger, mobileSearchTrigger, mobileMenuTrigger]) {
+  trigger?.addEventListener("pointerenter", () => void loadSearchIndex(), { once: true });
+  trigger?.addEventListener("focus", () => void loadSearchIndex(), { once: true });
+}
 
 /////////////////////
 // Mobile Menu
