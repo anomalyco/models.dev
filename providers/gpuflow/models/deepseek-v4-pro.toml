@@ -1,7 +1,9 @@
 # DeepSeek V4 Pro (checkpoint 0813) served in FP8 on 8x NVIDIA B200 in
 # Madrid with 1M context. Display name drops the checkpoint suffix used
-# by the lab entry. The engine emits interleaved reasoning in the
-# `reasoning` field (not reasoning_content).
+# by the lab entry. The host emits interleaved reasoning in both
+# `reasoning` (vLLM v0.20's native field) and `reasoning_content`
+# (OpenAI-compatible/DeepSeek convention; the gateway duplicates it) —
+# verified on the live API on 2026-09-23.
 # Toggle: reasoning.enabled = false | thinking.type = disabled |
 # enable_thinking = false (-> chat_template_kwargs.enable_thinking = false).
 # Effort: reasoning_effort = high|max (default high; the chat template maps
