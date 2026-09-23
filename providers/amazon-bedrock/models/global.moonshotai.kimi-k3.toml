@@ -7,6 +7,8 @@
 # verified effect. The bare model ID was rejected; an inference profile is required.
 # Global and US profiles returned reasoningContent.
 # Bedrock supports text and image input, but not the base model's video input.
+# Live Converse 2026-09-23: maxTokens=128000 accepted; 128001 rejected with
+# "exceeds the model limit of 128000".
 base_model = "moonshotai/kimi-k3"
 name = "Kimi K3 (Global)"
 reasoning_options = []
@@ -17,6 +19,9 @@ input = 3.00
 output = 15.00
 cache_read = 0.30
 cache_write = 3.75
+
+[limit]
+output = 128_000
 
 [modalities]
 input = ["text", "image"]
