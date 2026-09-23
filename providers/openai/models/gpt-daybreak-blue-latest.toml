@@ -1,0 +1,21 @@
+# Sources: https://developers.openai.com/api/docs/models/gpt-daybreak-blue-latest
+# https://developers.openai.com/api/docs/pricing
+base_model = "openai/gpt-5.6-sol"
+name = "Daybreak Blue"
+description = "Alias for flagship general-purpose models with safeguards for defensive cybersecurity work"
+release_date = "2026-08-07"
+last_updated = "2026-08-07"
+reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh", "max"] }]
+
+[cost]
+input = 4.00
+output = 20.00
+cache_read = 0.40
+cache_write = 5.00
+
+[[cost.tiers]]
+tier = { size = 272_000 }
+input = 8.00
+output = 30.00
+cache_read = 0.80
+cache_write = 10.00
