@@ -1,0 +1,21 @@
+name = "GPT-6 Sol"
+description = "GPT-6 Sol is OpenAI's mid-tier model in the GPT-6 family for sustained reasoning, coding, and agentic workloads."
+family = "gpt-sol"
+release_date = "2026-09-22"
+last_updated = "2026-09-22"
+attachment = true
+reasoning = true
+temperature = false
+tool_call = true
+structured_output = true
+knowledge = "2026-05-18"
+open_weights = false
+
+[limit]
+context = 1_050_000
+input = 922_000
+output = 128_000
+
+[modalities]
+input = ["text", "image", "pdf"]
+output = ["text"]
