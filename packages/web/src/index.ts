@@ -542,22 +542,26 @@ document.addEventListener("keydown", (event) => {
 ////////////////////
 function getCellSortValue(row: HTMLTableRowElement, index: number) {
   const cell = row.cells[index];
-  return cell?.getAttribute("data-sort") ?? cell?.textContent?.trim() ?? "";
+  const value =
+    cell?.getAttribute("data-sort") ?? cell?.textContent?.trim() ?? "";
+  return value === "-" ? "" : value;
 }
 
-function compareValues(a: string, b: string, type: string | null) {
+function compareValues(a: string, b: string, type: string | null, direction: SortDirection) {
   if (a === "" && b === "") return 0;
   if (a === "") return 1;
   if (b === "") return -1;
 
   if (type === "number") {
-    return Number(a) - Number(b);
+    const comparison = Number(a) - Number(b);
+    return direction === "asc" ? comparison : -comparison;
   }
 
-  return a.localeCompare(b, undefined, {
+  const comparison = a.localeCompare(b, undefined, {
     numeric: true,
     sensitivity: "base",
   });
+  return direction === "asc" ? comparison : -comparison;
 }
 
 function sortTable(
@@ -575,12 +579,12 @@ function sortTable(
   );
 
   rows.sort((rowA, rowB) => {
-    const comparison = compareValues(
+    return compareValues(
       getCellSortValue(rowA, column),
       getCellSortValue(rowB, column),
       type,
+      direction,
     );
-    return direction === "asc" ? comparison : -comparison;
   });
 
   for (const row of rows) {
@@ -602,11 +606,11 @@ function sortTable(
 }
 
 for (const table of tables) {
-  const headers = Array.from(table.querySelectorAll<HTMLTableCellElement>("th"));
+  const headers = Array.from(table.tHead?.rows[0]?.cells ?? []);
   headers.forEach((header, column) => {
     if (!header.classList.contains("sortable")) return;
 
-    header.addEventListener("click", () => {
+    header.querySelector("button")?.addEventListener("click", () => {
       const current = header.getAttribute("aria-sort");
       const direction: SortDirection =
         current === "ascending" ? "desc" : "asc";
