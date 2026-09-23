@@ -232,7 +232,7 @@ Google is implemented in `packages/core/src/sync/providers/google.ts`.
 - Source endpoint: `https://generativelanguage.googleapis.com/v1beta/models`.
 - Required auth: `GOOGLE_API_KEY`, `GEMINI_API_KEY`, or `GOOGLE_GENERATIVE_AI_API_KEY`.
 - Model IDs are derived from the `models/{model}` resource names.
-- The API is authoritative for display names, temperature metadata, and the `thinking` flag when present. Token limits normally come from the API, except Gemini 2.5 Computer Use and two Gemini 3.1 Flash Image variants whose model-specific cards document different limits.
+- The API is authoritative for display names, temperature metadata, and the `thinking` flag when present. Token limits normally come from the API, except Gemini 2.5 Computer Use, Gemini 3 Pro Image, and two Gemini 3.1 Flash Image variants whose model-specific cards document different limits.
 - Local Google models missing from the API response are removed.
 - New Google API models are not created automatically (`skipCreates`) and do not open missing-model issues because the endpoint is not lifecycle-authoritative.
 - Missing-model tracking is limited to recognizable public model families; opaque API codenames such as `ajax`, `perseus`, and `thorin` are ignored.

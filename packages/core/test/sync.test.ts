@@ -1236,6 +1236,7 @@ test("tracks public Google model families but not opaque internal IDs", () => {
 
 test.each([
   ["gemini-2.5-computer-use-preview-10-2025", 128_000, 64_000],
+  ["gemini-3-pro-image", 65_536, 32_768],
   ["gemini-3.1-flash-image", 131_072, 32_768],
   ["gemini-3.1-flash-lite-image", 65_536, 4_096],
 ])("preserves the %s model-card limits during Google sync", (id, context, output) => {
