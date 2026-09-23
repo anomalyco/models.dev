@@ -1,0 +1,18 @@
+# Source: https://routellm.abacus.ai/v1/models
+# RouteLLM input_modalities: [text]
+# RouteLLM output_modalities: [text]
+# RouteLLM context_length: 262144
+# RouteLLM max_completion_tokens: 65536
+# RouteLLM input_token_rate: 0.00000057
+# RouteLLM output_token_rate: 0.0000023
+# RouteLLM thinking: true
+# RouteLLM reports thinking: true for this ID, but the underlying lab model (Kimi K2 Instruct) is a non-reasoning model; Moonshot ships reasoning as the separate K2 Thinking SKU.
+base_model = "moonshotai/kimi-k2-instruct"
+
+[cost]
+input = 0.57
+output = 2.3
+
+[limit]
+output = 65_536
+

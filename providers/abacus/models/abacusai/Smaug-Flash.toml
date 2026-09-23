@@ -1,0 +1,18 @@
+# Source: https://routellm.abacus.ai/v1/models
+# RouteLLM input_modalities: [text]
+# RouteLLM output_modalities: [text]
+# RouteLLM context_length: 1000000
+# RouteLLM max_completion_tokens: 384000
+# RouteLLM input_token_rate: 0.0000001
+# RouteLLM output_token_rate: 0.0000004
+# RouteLLM cached_input_token_rate: 0.000000005
+# RouteLLM API does not report thinking: true for this ID.
+base_model = "abacusai/smaug-flash"
+reasoning = true
+reasoning_options = []
+
+[cost]
+input = 0.1
+output = 0.4
+cache_read = 0.005
+

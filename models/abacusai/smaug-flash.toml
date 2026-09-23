@@ -1,0 +1,28 @@
+# Sources:
+# https://abacus.ai/smaug
+# https://abacus.ai/help/platform-updates/2026-08-01-platform-update
+# https://routellm.abacus.ai/v1/models (catalog row for abacusai/Smaug-Flash)
+
+name = "Smaug Flash"
+description = "Smaug Flash is an Abacus.AI finetune of DeepSeek V4 Flash, tuned for agentic and coding tasks."
+family = "deepseek-flash"
+release_date = "2026-08-01"
+last_updated = "2026-08-01"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+knowledge = "2025-05"
+open_weights = true
+
+[limit]
+context = 1_000_000
+output = 384_000
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/abacusai/Smaug-Flash"

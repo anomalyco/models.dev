@@ -1,0 +1,21 @@
+# Source: https://routellm.abacus.ai/v1/models
+# RouteLLM input_modalities: [text, image]
+# RouteLLM output_modalities: [text]
+# RouteLLM context_length: 1000000
+# RouteLLM max_completion_tokens: 128000
+# RouteLLM input_token_rate: 0.000004
+# RouteLLM output_token_rate: 0.00002
+# RouteLLM cached_input_token_rate: 0.0000002
+# RouteLLM API does not report thinking: true for this ID.
+base_model = "anthropic/claude-opus-5-5"
+reasoning = true
+reasoning_options = []
+
+[cost]
+input = 4
+output = 20
+cache_read = 0.2
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
