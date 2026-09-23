@@ -1,0 +1,20 @@
+base_model = "openai/gpt-6-luna"
+name = "GPT-6 Luna (EU)"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "max"]
+
+[[reasoning_options]]
+type = "budget_tokens"
+
+[cost]
+input = 0.12
+output = 0.6
+cache_read = 0.012
+
+[[cost.tiers]]
+tier = { type = "context", size = 272_000 }
+input = 0.24
+output = 0.9
+cache_read = 0.024
