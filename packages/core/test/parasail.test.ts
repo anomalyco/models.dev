@@ -41,7 +41,7 @@ test("factors a verified reasoning endpoint onto its lab entry with provider-sid
 
   expect(built).toMatchObject({
     base_model: "deepseek/deepseek-v4.1-flash",
-    reasoning_options: [{ type: "effort", values: ["none", "low", "high", "max"] }],
+    reasoning_options: [{ type: "toggle" }, { type: "effort", values: ["low", "high", "max"] }],
     interleaved: { field: "reasoning_content" },
     cost: { input: 0.3, output: 1.2, cache_read: 0.006 },
     limit: { context: 1_048_576 },
@@ -101,6 +101,13 @@ test("preserves authored reasoning options, output limits, and base_model on res
     cost: { input: 0.25, output: 1.0 },
     limit: { context: 524_288, output: 65_536 },
   });
+});
+
+test("refuses an empty or non-chat-only feed instead of deleting the catalog", () => {
+  expect(() => parasail.parseModels([])).toThrow(/empty feed/);
+  expect(() =>
+    parasail.parseModels([endpoint({ externalAlias: "parasail-bge-m3", modelName: "BAAI/bge-m3", outputCost: null })]),
+  ).toThrow(/no public chat endpoints/);
 });
 
 test("skips non-chat and private endpoints", () => {

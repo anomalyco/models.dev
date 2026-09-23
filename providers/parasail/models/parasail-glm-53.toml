@@ -1,12 +1,15 @@
 # Parasail OpenAI Chat (POST https://api.parasail.io/v1/chat/completions)
 # model = "parasail-glm-53" (zai-org/GLM-5.3).
-# Always-on reasoning: reasoning_effort is accepted but does not stop thinking. Verified against the endpoint on 2026-09-22.
+# Effort: reasoning_effort = "low"|"high"|"max", forwarded to the model. Verified against the endpoint on 2026-09-22.
 # Catalog: https://platform.parasail.io/api/v1/prices/serverlessEndpoints
 base_model = "zhipuai/glm-5.3"
-reasoning_options = []
 
 [interleaved]
 field = "reasoning_content"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
 
 [cost]
 input = 1.4

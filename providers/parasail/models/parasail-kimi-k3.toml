@@ -1,12 +1,15 @@
 # Parasail OpenAI Chat (POST https://api.parasail.io/v1/chat/completions)
 # model = "parasail-kimi-k3" (moonshotai/Kimi-K3).
-# Effort: reasoning_effort = "none"|"low"|"high"|"max". Verified against the endpoint on 2026-09-22.
+# Toggle: reasoning_effort = "none" disables thinking (thinking.type is ignored by the relay). Effort: reasoning_effort = "low"|"high"|"max", forwarded to the model. Verified against the endpoint on 2026-09-22.
 # Catalog: https://platform.parasail.io/api/v1/prices/serverlessEndpoints
 base_model = "moonshotai/kimi-k3"
 
 [[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
 type = "effort"
-values = ["none", "low", "high", "max"]
+values = ["low", "high", "max"]
 
 [cost]
 input = 3
