@@ -2800,7 +2800,7 @@ test("preserves authored Eden AI limits absent from the catalog", () => {
       id: "scaleway/gpt-oss-120b",
       model_name: "gpt-oss-120b",
       owned_by: "scaleway",
-      context_length: 128_000,
+      context_length: null,
     }),
     {
       base_model: "openai/gpt-oss-120b",
