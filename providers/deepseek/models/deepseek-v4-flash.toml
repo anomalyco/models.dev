@@ -4,6 +4,8 @@
 # Toggle: thinking.type = enabled|disabled
 # Effort: reasoning_effort = low|high|max
 # https://api-docs.deepseek.com/quick_start/pricing (accessed 2026-09-10)
+# Served by deepseek-flash; Chat API max_tokens <= 393216:
+# https://api-docs.deepseek.com/api/create-chat-completion/
 base_model = "deepseek/deepseek-v4.1-flash"
 name = "DeepSeek V4 Flash"
 status = "deprecated"
@@ -23,3 +25,6 @@ input = 0.15
 output = 0.6
 reasoning = 0.6
 cache_read = 0.003
+
+[limit]
+output = 393_216

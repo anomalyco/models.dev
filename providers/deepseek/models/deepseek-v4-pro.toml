@@ -6,6 +6,7 @@
 # https://api-docs.deepseek.com/news/news260813/ (accessed 2026-09-20)
 # https://api-docs.deepseek.com/guides/thinking_mode/ (accessed 2026-09-20)
 # https://api-docs.deepseek.com/quick_start/pricing/ (accessed 2026-09-20)
+# Chat API max_tokens: 1..393216 (384K): https://api-docs.deepseek.com/api/create-chat-completion/
 # Reasoning tokens are billed at the output rate (no separate CoT price).
 # `completion_tokens_details.reasoning_tokens` is a subset of completion_tokens.
 # https://api-docs.deepseek.com/quick_start/pricing/ (accessed 2026-08-12)
@@ -27,3 +28,6 @@ input = 0.435
 output = 0.87
 reasoning = 0.87
 cache_read = 0.003625
+
+[limit]
+output = 393_216
