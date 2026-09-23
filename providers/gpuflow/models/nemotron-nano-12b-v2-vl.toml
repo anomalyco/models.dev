@@ -1,0 +1,21 @@
+# NVIDIA Nemotron Nano 12B v2 VL (NVFP4) on a MIG-sliced NVIDIA B200 in
+# Madrid. Vision surface only on this host: no tool calling, reasoning or
+# json_mode published. 128K context, up to 4 images per prompt.
+# https://api.gpuflow.ai/v1/models (accessed 2026-09-23)
+base_model = "nvidia/nemotron-nano-12b-v2-vl"
+name = "Nemotron Nano 12B v2 VL"
+status = "alpha"
+reasoning = false
+tool_call = false
+
+[cost]
+input = 0.06
+output = 0.24
+
+[limit]
+context = 131_072
+output = 16_384
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
