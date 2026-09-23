@@ -1,5 +1,5 @@
 import Index from "../index.html";
-import { getRenderedPage, Models, Providers, renderDocument } from "./render";
+import { getRenderedPage, Models, Providers, SearchIndexJson, renderDocument } from "./render";
 import {
   filterCatalogByModelType,
   filterModelsByModelType,
@@ -106,6 +106,10 @@ Bun.serve({
         },
       });
     },
+    "/search-index.json": () =>
+      new Response(SearchIndexJson, {
+        headers: { "Content-Type": "application/json" },
+      }),
     "/api.json": (req) => catalogResponse(req, "api"),
     "/models.json": (req) => catalogResponse(req, "models"),
     "/catalog.json": (req) => catalogResponse(req, "catalog"),
