@@ -3,8 +3,6 @@
 # JSON reasoning.enabled: true | false. Medium effort instead uses
 # chat_template_kwargs.medium_effort: true; otherwise effort defaults to high.
 # Sources: https://docs.together.ai/docs/inference/chat/reasoning#reasoning-effort
-# Served context_length=512288 for this ID in GET https://api.together.xyz/v1/models
-# (checked 2026-09-23).
 name = "Nemotron 3 Ultra 550B A55B"
 base_model = "nvidia/nemotron-3-ultra-550b-a55b"
 family = "nemotron"
@@ -24,8 +22,8 @@ output = 3.60
 cache_read = 0.20
 
 [limit]
-context = 512_288
-output = 512_288
+context = 512_300
+output = 512_300
 
 [modalities]
 input = ["text"]
