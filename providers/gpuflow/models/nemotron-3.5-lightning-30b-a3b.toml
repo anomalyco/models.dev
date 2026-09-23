@@ -9,6 +9,9 @@ base_model = "nvidia/nemotron-3.5-lightning"
 reasoning_options = [{ type = "toggle" }]
 structured_output = false
 
+[interleaved]
+field = "reasoning_content"
+
 [cost]
 input = 0.12
 output = 0.3
