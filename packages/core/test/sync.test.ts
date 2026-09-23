@@ -2754,6 +2754,28 @@ test("does not treat Eden AI case-only aliases as latest pointers", () => {
   });
 });
 
+test("preserves authored Eden AI limits absent from the catalog", () => {
+  const built = buildEdenAIModel(
+    edenAIModel({
+      id: "scaleway/gpt-oss-120b",
+      model_name: "gpt-oss-120b",
+      owned_by: "scaleway",
+      context_length: null,
+    }),
+    {
+      base_model: "openai/gpt-oss-120b",
+      base_model_omit: ["limit.input"],
+      limit: { context: 128_000, output: 32_768 },
+    },
+  );
+
+  expect(built).toMatchObject({
+    base_model: "openai/gpt-oss-120b",
+    base_model_omit: ["limit.input"],
+    limit: { context: 128_000, output: 32_768 },
+  });
+});
+
 test("builds Eden AI context tiers without reading time-based cache keys", () => {
   const model = edenAIModel({
     id: "openai/gpt-5.6-terra",

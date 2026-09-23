@@ -518,10 +518,14 @@ export function buildEdenAIModel(
     : undefined;
   if (reasoning && reasoningOptions === undefined) return undefined;
 
-  const limit =
-    model.context_length != null && model.context_length > 0
-      ? { context: model.context_length }
-      : undefined;
+  const context = model.context_length != null && model.context_length > 0
+    ? model.context_length
+    : existing?.limit?.context;
+  const limit = {
+    ...(context === undefined ? {} : { context }),
+    ...(existing?.limit?.input === undefined ? {} : { input: existing.limit.input }),
+    ...(existing?.limit?.output === undefined ? {} : { output: existing.limit.output }),
+  };
 
   return factorBaseModel(
     baseModel,
@@ -535,7 +539,8 @@ export function buildEdenAIModel(
       cost: buildCost(model, reasoning),
       limit,
     },
-    limit,
+    Object.keys(limit).length === 0 ? undefined : limit,
+    existing?.base_model_omit,
   );
 }
 

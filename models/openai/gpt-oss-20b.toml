@@ -1,3 +1,4 @@
+# Native 131,072-token completion limit: https://developers.openai.com/api/docs/models/gpt-oss-20b
 name = "GPT OSS 20B"
 description = "Open GPT reasoning model for self-hosted agents and controllable deployments"
 family = "gpt-oss"
@@ -12,7 +13,7 @@ open_weights = true
 
 [limit]
 context = 131_072
-output = 32_768
+output = 131_072
 
 [modalities]
 input = ["text"]
