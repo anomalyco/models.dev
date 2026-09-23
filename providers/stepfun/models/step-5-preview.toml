@@ -1,6 +1,7 @@
 # Chat `reasoning_effort`, Messages `output_config.effort`, and Responses
 # `reasoning.effort` accept low/medium/high (accessed 2026-09-20).
 # https://platform.stepfun.com/docs/zh/guides/models/step-5-preview
+# The model card lists 64k maximum output for this StepFun-operated route.
 # Cost converted from CNY list price (¥7 / ¥20 / ¥0.35 per 1M tokens) at the
 # same 7.2973 CNY/USD rate used by the other stepfun entries (accessed
 # 2026-09-20).
@@ -18,3 +19,6 @@ field = "reasoning_content"
 input = 0.959
 output = 2.741
 cache_read = 0.048
+
+[limit]
+output = 65_536
