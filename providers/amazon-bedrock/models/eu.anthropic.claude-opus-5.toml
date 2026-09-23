@@ -1,5 +1,9 @@
+# Sources: https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-anthropic-claude-opus-5.html
+# https://platform.claude.com/docs/en/build-with-claude/thinking-troubleshooting
+# Toggle: additionalModelRequestFields.thinking.type = adaptive|disabled (Converse); thinking.type (InvokeModel).
+# Effort: additionalModelRequestFields.output_config.effort (Converse); output_config.effort (InvokeModel). Disabled thinking requires low/medium/high.
 base_model = "anthropic/claude-opus-5"
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
 name = "Claude Opus 5 (EU)"
 
 [cost]

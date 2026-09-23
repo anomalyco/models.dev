@@ -1,0 +1,22 @@
+# Sources:
+# - https://x.ai/news/grok-4-1-fast
+# - https://docs.cloud.google.com/vertex-ai/generative-ai/docs/partner-models/grok/grok-4-1-fast
+name = "Grok 4.1 Fast (Reasoning)"
+description = "xAI's fast agentic tool-calling model with a 2M context window and built-in reasoning"
+family = "grok"
+release_date = "2025-11-19"
+last_updated = "2025-11-19"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[limit]
+context = 2_000_000
+output = 30_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

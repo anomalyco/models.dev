@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 import { ModelFamily } from "./family";
+import { MODEL_TYPES } from "./filter";
 
 type JsonValue =
   | string
@@ -148,6 +149,8 @@ const DateString = z
 
 const Modality = z.enum(["text", "audio", "image", "video", "pdf"]);
 
+export const ModelType = z.enum(MODEL_TYPES);
+
 const Modalities = z
   .object({
     input: z.array(Modality),
@@ -219,6 +222,7 @@ export const BenchmarkResult = z
 
 const ModelMetadataBase = z.object({
   id: z.string(),
+  type: ModelType.optional(),
   name: z.string().min(1, "Model name cannot be empty"),
   description: z.string().min(1, "Model description cannot be empty"),
   family: ModelFamily.optional(),
@@ -245,6 +249,7 @@ export type ModelMetadata = z.infer<typeof ModelMetadata>;
 
 const ModelBase = z.object({
   id: z.string(),
+  type: ModelType.optional(),
   name: z.string().min(1, "Model name cannot be empty"),
   description: z.string().min(1, "Model description cannot be empty"),
   family: ModelFamily.optional(),

@@ -1,0 +1,16 @@
+# GLM-5.3-FlashX uses the same model and forced-thinking effort levels as Flash.
+# https://docs.z.ai/guides/vlm/glm-5.3-flash
+base_model = "zhipuai/glm-5.3-flash"
+name = "GLM 5.3 FlashX"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[cost]
+input = 0.37
+output = 1.25
+cache_read = 0.075
+
+[modalities]
+input = ["text", "image"]

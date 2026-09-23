@@ -1,0 +1,21 @@
+# Coding Plan model name from https://www.volcengine.com/docs/82379/1928261
+# (accessed 2026-08-26). Subscription tier: no per-token price.
+# Toggle: thinking.type = enabled|disabled, POST /api/coding/v3/chat/completions
+# Toggle only, matching first-party MiniMax and minimax-coding-plan.
+# The same body also accepts reasoning_effort, but acceptance is not effect:
+# over n=3 runs per level on a hard arithmetic prompt, reasoning_content length was
+# minimal 1161/1033/805, high 1195/741/840, max 957/709/1088 -- fully overlapping,
+# so no graded control is declared. 'none' is likewise accepted without disabling
+# thinking (reasoning_tokens stays non-zero), so thinking.type is the real switch.
+base_model = "minimax/MiniMax-M3"
+
+[[reasoning_options]]
+type = "toggle"
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0
+output = 0
+cache_read = 0

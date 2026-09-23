@@ -1,9 +1,9 @@
 base_model = "openai/gpt-5.4-pro"
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
+reasoning_options = [{ type = "effort", values = ["medium", "high", "xhigh"] }]
 
 [cost]
-input = 60
-output = 270
+input = 30
+output = 180
 
 [[cost.tiers]]
 tier = { type = "context", size = 272_000 }

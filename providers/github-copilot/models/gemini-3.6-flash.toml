@@ -1,10 +1,19 @@
+# Pricing: https://docs.github.com/en/copilot/reference/copilot-billing/models-and-pricing
 base_model = "google/gemini-3.6-flash"
-reasoning_options = [{ type = "effort", values = ["minimal", "low", "medium", "high"] }, { type = "budget_tokens", min = 256, max = 32_000 }]
+
+[[reasoning_options]]
+type = "effort"
+values = ["minimal", "low", "medium", "high"]
+
+[[reasoning_options]]
+type = "budget_tokens"
+min = 256
+max = 32_000
 
 [cost]
-input = 1.5
-output = 7.5
-cache_read = 0.15
+input = 0.75
+output = 3.75
+cache_read = 0.075
 
 [limit]
 context = 1_000_000

@@ -1,0 +1,14 @@
+# Not yet live-probed on this endpoint (unlike the entries from #3769 —
+# no API access at submission time). NVIDIA Nemotron 3 models are
+# hybrid-reasoning with an on/off toggle, and the probed sibling on this
+# endpoint (Nemotron-3-Nano-Omni-Reasoning-30B-A3B) behaves as a toggle
+# with inert low/medium/high values, so this is encoded the same way.
+# No interleaved claim is made.
+base_model = "nvidia/nemotron-3-super-120b-a12b"
+reasoning_options = [{ type = "toggle" }]
+
+# Pricing: https://www.crusoe.ai/cloud/pricing (accessed 2026-09-04)
+[cost]
+input = 0.30
+output = 2.40
+cache_read = 0.15

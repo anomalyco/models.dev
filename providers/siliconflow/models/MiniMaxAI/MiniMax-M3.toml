@@ -1,0 +1,26 @@
+# Budget: thinking_budget (integer reasoning tokens, 128..32768) — SiliconFlow documents
+# thinking_budget for all reasoning models; enable_thinking is not enumerated for MiniMax
+# models on this host, so no toggle.
+# Sources: https://www.siliconflow.com/models (2026-09-08),
+# https://docs.siliconflow.com/en/api-reference/chat-completions/chat-completions
+base_model = "minimax/MiniMax-M3"
+
+
+reasoning_options = [{ type = "budget_tokens", min = 128, max = 32_768 }]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.3
+output = 1.2
+cache_read = 0.06
+
+[limit]
+output = 131_000
+
+# SiliconFlow serves image input but not video for this model
+# (model page "Support image input: Yes"): https://www.siliconflow.com/models/minimax-m3
+[modalities]
+input = ["text", "image"]
+output = ["text"]

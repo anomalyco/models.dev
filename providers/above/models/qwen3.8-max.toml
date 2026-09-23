@@ -1,0 +1,27 @@
+# Passthrough to Fireworks serverless.
+# Toggle: `reasoning_effort = "none"` disables thinking (also accepts
+# `chat_template_kwargs = {"thinking": false}`); verified end-to-end on this
+# host 2026-08-29. The Alibaba first-party effort levels and budget_tokens are
+# not exposed by this host.
+# Host deltas vs the lab base: image input verified end-to-end 2026-08-23
+# (video/pdf not supported on this host); output capped at 32,768.
+base_model = "alibaba/qwen3.8-max"
+name = "Qwen 3.8 Max"
+attachment = false
+
+[[reasoning_options]]
+type = "toggle"
+
+[interleaved]
+field = "reasoning_content"
+
+[modalities]
+input = ["text", "image"]
+
+[limit]
+output = 32_768
+
+[cost]
+input = 2.2
+output = 6.6
+cache_read = 0.275

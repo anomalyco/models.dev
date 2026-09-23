@@ -1,0 +1,23 @@
+# Launch: https://aws.amazon.com/blogs/aws/amazon-nova-premier-our-most-capable-model-for-complex-tasks-and-teacher-for-model-distillation/
+# Specs (including 10K output): https://docs.aws.amazon.com/nova/latest/userguide/what-is-nova.html
+# Prompted CoT, not a native thinking mode: https://docs.aws.amazon.com/nova/latest/userguide/prompting-chain-of-thought.html
+# Bedrock's generic Premier card conflicts on launch date, output limit, and reasoning; use the Nova V1 guide and launch announcement.
+name = "Nova Premier"
+description = "Multimodal model for complex analysis, long-context understanding, tool use, and model distillation"
+family = "nova"
+release_date = "2025-04-30"
+last_updated = "2025-04-30"
+attachment = true
+reasoning = false
+temperature = true
+knowledge = "2024-10"
+tool_call = true
+open_weights = false
+
+[limit]
+context = 1_000_000
+output = 10_000
+
+[modalities]
+input = ["text", "image", "video", "pdf"]
+output = ["text"]

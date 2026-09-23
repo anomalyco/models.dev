@@ -1,3 +1,5 @@
+# Toggle: reasoning.enabled = true|false
+# https://openrouter.ai/docs/guides/best-practices/reasoning-tokens
 name = "Qwen3 Max Thinking"
 description = "Qwen reasoning model for deliberate problem solving, math, and coding"
 family = "qwen"
@@ -11,9 +13,7 @@ structured_output = true
 open_weights = false
 
 [[reasoning_options]]
-type = "budget_tokens"
-min = 1
-max = 81_920
+type = "toggle"
 
 [cost]
 input = 0.78

@@ -1,0 +1,33 @@
+# Live probes against the AMD Radeon Cloud Model API (accessed 2026-09-14):
+# GET /v1/models reports 131072 context, text-only input (no vision on this
+# host), tools, reasoning, and free pricing (free: true).
+# reasoning_effort: the gateway validates the enum low|medium|high and rejects
+# none / minimal / xhigh / max with 422, but the routing backend only supports
+# xhigh (default) | medium | low and rejects "high" with 400. Usable
+# end-to-end values are therefore low and medium. With reasoning_effort
+# omitted the model thinks anyway (backend default tier).
+base_model = "alibaba/qwen3.8-27b"
+
+# AMD hosts a text-only deployment of this model: an image content part is
+# refused with 400 "does not support image input", so the multimodal base
+# entry (text + image + video) is narrowed here.
+attachment = false
+
+reasoning_options = [
+  { type = "effort", values = ["low", "medium"] },
+]
+
+# Thinking is returned on choices[0].message.reasoning, a non-content field.
+# The schema's interleaved field enum only covers reasoning_content /
+# reasoning_details, so it is set bare.
+interleaved = true
+
+[cost]
+input = 0
+output = 0
+
+[limit]
+context = 131_072
+
+[modalities]
+input = ["text"]

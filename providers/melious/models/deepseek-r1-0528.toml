@@ -1,0 +1,31 @@
+# Cost: Melious list price for the default `balanced` route -- EUR 0.60 in / EUR 2.40
+# out / EUR 0.16 cache read per 1M tokens -- converted at 1.1592 USD/EUR (ECB euro
+# reference rate, 2026-09-11).
+# Sources: GET https://api.melious.ai/v1/models?include_meta=true and
+# https://melious.ai/hub/models/deepseek-r1-0528 (both accessed 2026-09-14)
+# FX: https://www.ecb.europa.eu/stats/policy_and_exchange_rates/euro_reference_exchange_rates/html/eurofxref-graph-usd.en.html
+# Effort: reasoning_effort is the only reasoning control this host exposes, and it
+# forwards no lab-native thinking field and no reasoning budget. Measured against this
+# deployment on 2026-09-14, it has no effect on this model: reasoning_effort="none"
+# still returns reasoning (reasoning_content 2_786/3_010 chars across repeat samples),
+# and low/medium/high produce no ordered difference. reasoning_options is therefore []
+# -- this model reasons, with no caller control on this host. That is an affirmative
+# measurement, not an untested default.
+# https://melious.ai/docs/reference/chat-completions (accessed 2026-09-14)
+# Reasoning text is returned in choices[].message.reasoning_content. cache_read:
+# usage.cached_tokens are billed at Melious's discounted prefix-cache rate.
+# limit.context: the catalog reports 164_000 for this deployment, not the lab's
+# 128_000.
+base_model = "deepseek/deepseek-r1"
+reasoning_options = []
+
+[cost]
+input = 0.69552
+output = 2.78208
+cache_read = 0.185472
+
+[limit]
+context = 164_000
+
+[interleaved]
+field = "reasoning_content"

@@ -1,0 +1,17 @@
+# Availability: https://learn.microsoft.com/en-us/azure/foundry/foundry-models/concepts/models-sold-directly-by-azure-region-availability
+# Rates: https://azure.microsoft.com/en-us/pricing/details/cognitive-services/openai-service/
+base_model = "openai/gpt-6-luna"
+reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh", "max"] }]
+
+[cost]
+input = 0.10
+output = 0.50
+cache_read = 0.01
+cache_write = 0.125
+
+[[cost.tiers]]
+tier = { type = "context", size = 272_000 }
+input = 0.20
+output = 0.75
+cache_read = 0.02
+cache_write = 0.25

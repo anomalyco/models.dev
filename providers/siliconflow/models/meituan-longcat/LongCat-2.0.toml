@@ -1,0 +1,18 @@
+# Budget: thinking_budget (integer reasoning tokens, 128..32768) — SiliconFlow documents
+# thinking_budget for all reasoning models and enumerates enable_thinking only for specific
+# models (LongCat not among them), so no toggle on this host.
+# Sources: https://www.siliconflow.com/models (2026-09-08),
+# https://docs.siliconflow.com/en/api-reference/chat-completions/chat-completions
+base_model = "meituan/longcat-2.0"
+reasoning_options = [{ type = "budget_tokens", min = 128, max = 32_768 }]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.75
+output = 2.95
+cache_read = 0.015
+
+[limit]
+context = 1_049_000

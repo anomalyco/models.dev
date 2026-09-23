@@ -1,6 +1,7 @@
+# Toggle: reasoning.enabled = true|false
+# https://openrouter.ai/docs/guides/best-practices/reasoning-tokens
 name = "North Mini Code (free)"
 description = "Cohere coding model for practical software engineering and agentic edits"
-reasoning_options = []
 family = "north"
 release_date = "2026-06-17"
 last_updated = "2026-06-17"
@@ -10,6 +11,9 @@ temperature = true
 tool_call = true
 structured_output = false
 open_weights = true
+
+[[reasoning_options]]
+type = "toggle"
 
 [cost]
 input = 0

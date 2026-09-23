@@ -1,0 +1,24 @@
+base_model = "openai/gpt-6-astra"
+description = "GPT model for general reasoning, writing, coding, and tool-assisted tasks"
+family = "gpt"
+release_date = "2026-09-05"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high", "xhigh", "max"]
+
+[cost]
+input = 10
+output = 50
+cache_read = 1
+cache_write = 12.5
+
+[[cost.tiers]]
+tier = { type = "context", size = 272_000 }
+input = 20
+output = 75
+cache_read = 2
+cache_write = 25
+
+[modalities]
+input = ["text", "image"]

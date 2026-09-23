@@ -88,6 +88,9 @@ export function buildTinfoilModel(
   if (existing.cost === undefined || existing.limit?.context === undefined) {
     throw new Error(`Tinfoil model ${model.id} has incomplete local pricing or limits required for sync`);
   }
+  if (model.reasoning && existing.reasoning_options === undefined) {
+    throw new Error(`Tinfoil model ${model.id} requires hand-authored reasoning_options; the catalog exposes no reasoning controls`);
+  }
 
   const { base_model: baseModel, base_model_omit: baseModelOmit, ...current } = existing;
   const cost = {
@@ -102,6 +105,8 @@ export function buildTinfoilModel(
   };
   const values = {
     ...current,
+    reasoning: model.reasoning,
+    reasoning_options: model.reasoning ? existing.reasoning_options : undefined,
     cost,
     limit,
   } as SyncedFullModel;

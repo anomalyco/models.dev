@@ -1,0 +1,16 @@
+base_model = "xai/grok-4.7"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high", "xhigh"]
+
+[cost]
+input = 1.6
+output = 4.8
+cache_read = 0.4
+
+[limit]
+input = 500_000
+
+[modalities]
+input = ["text", "image"]

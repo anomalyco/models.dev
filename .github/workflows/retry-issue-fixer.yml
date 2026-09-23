@@ -1,0 +1,102 @@
+name: Retry stalled issue fixes
+
+on:
+  schedule:
+    - cron: "41 */6 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  issues: read
+  pull-requests: read
+
+concurrency:
+  group: retry-stalled-issue-fixes
+  cancel-in-progress: false
+
+jobs:
+  retry:
+    if: github.repository == 'anomalyco/models.dev'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Redispatch oldest issues without pull requests
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+
+          cutoff="$(date -u -d '1 hour ago' '+%Y-%m-%dT%H:%M:%SZ')"
+          owner="${GITHUB_REPOSITORY%/*}"
+          repo="${GITHUB_REPOSITORY#*/}"
+
+          issues="$({
+            gh issue list \
+              --repo "$GITHUB_REPOSITORY" \
+              --state open \
+              --label automation \
+              --label model-sync \
+              --label missing-model \
+              --limit 1000 \
+              --json number,createdAt,labels
+          } | jq --arg cutoff "$cutoff" '
+            map(select(.createdAt <= $cutoff)) | sort_by(.createdAt)
+          ')"
+
+          dispatched=0
+          dispatched_issues=()
+          while IFS= read -r issue; do
+            number="$(jq -r '.number' <<< "$issue")"
+            provider="$(jq -r '
+              [.labels[].name | select(startswith("provider:")) | ltrimstr("provider:")]
+              | first // empty
+            ' <<< "$issue")"
+
+            if [ -z "$provider" ] || [ "$provider" = "openai" ]; then
+              continue
+            fi
+
+            closing_prs="$(gh api graphql \
+              -F owner="$owner" \
+              -F repo="$repo" \
+              -F number="$number" \
+              -f query='query($owner: String!, $repo: String!, $number: Int!) {
+                repository(owner: $owner, name: $repo) {
+                  issue(number: $number) {
+                    closedByPullRequestsReferences(first: 1, includeClosedPrs: true) {
+                      totalCount
+                    }
+                  }
+                }
+              }' \
+              --jq '.data.repository.issue.closedByPullRequestsReferences.totalCount')"
+
+            if [ "$closing_prs" -gt 0 ]; then
+              continue
+            fi
+
+            jq -n \
+              --arg provider "$provider" \
+              --argjson issue_number "$number" \
+              '{
+                event_type: "missing-model",
+                client_payload: {
+                  provider: $provider,
+                  issue_number: $issue_number
+                }
+              }' \
+              | gh api "repos/$GITHUB_REPOSITORY/dispatches" --method POST --input -
+
+            dispatched=$((dispatched + 1))
+            dispatched_issues+=("#$number")
+            if [ "$dispatched" -eq 3 ]; then
+              break
+            fi
+          done < <(jq -c '.[]' <<< "$issues")
+
+          if [ "$dispatched" -eq 0 ]; then
+            echo "No stalled automated issues were eligible for retry." | tee -a "$GITHUB_STEP_SUMMARY"
+          else
+            printf 'Redispatched %d issue(s): %s\n' \
+              "$dispatched" "${dispatched_issues[*]}" \
+              | tee -a "$GITHUB_STEP_SUMMARY"
+          fi

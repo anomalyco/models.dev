@@ -1,0 +1,14 @@
+# Source: https://nan.builders/docs/models (accessed 2026-09-11)
+# ~753B MoE, FP8, sparse attention, text only: it does not take images.
+# Premium tier: callable only with a key on the GLM 5.3 premium membership.
+# 1M token context, 3,000M token quota per billing period, capped at 400M tokens
+# per rolling 4h window, 5 concurrent requests. Included in the tier, so no
+# per-token price.
+# Reasoning: no caller control on this surface. NaN documents a reasoning trace
+# but no request field for it.
+base_model = "zhipuai/glm-5.3"
+reasoning_options = []
+
+[cost]
+input = 0
+output = 0

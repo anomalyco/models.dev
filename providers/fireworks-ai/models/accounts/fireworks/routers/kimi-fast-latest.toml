@@ -1,0 +1,39 @@
+# Version-tracking Fast serving-path router for the current Kimi flagship.
+# Same quality as kimi-latest / pinned kimi-k3; Fast path aims for 100+ tok/s
+# at a higher $/token. Currently resolves to Kimi K3 Fast.
+# Docs: https://docs.fireworks.ai/ecosystem/fireconnect/models
+# Serving paths: https://docs.fireworks.ai/serverless/serving-paths
+# Pricing (Kimi K3 Fast row, accessed 2026-09-15):
+# https://docs.fireworks.ai/serverless/pricing — $4.50 / $0.45 / $22.50
+# per 1M (input / cached input / output). Pinned peer:
+# accounts/fireworks/routers/kimi-k3-fast.
+# Toggle: thinking.type = enabled|disabled (or thinking object)
+# Effort: reasoning_effort = low|medium|high|max
+# Budget: thinking.budget_tokens (N >= 1024); conflicts with reasoning_effort
+# https://docs.fireworks.ai/guides/reasoning
+base_model = "moonshotai/kimi-k3"
+name = "Kimi Fast Latest"
+release_date = "2026-07-27"
+last_updated = "2026-09-15"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high", "max"]
+
+[[reasoning_options]]
+type = "budget_tokens"
+min = 1_024
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 4.5
+output = 22.5
+cache_read = 0.45
+
+[modalities]
+input = ["text", "image"]

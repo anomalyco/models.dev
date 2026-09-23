@@ -2,9 +2,10 @@ base_model = "google/gemini-3.1-pro-preview"
 reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
 
 [cost]
-input = 4
-output = 18
+input = 2
+output = 12
 cache_read = 0.2
+input_audio = 2
 
 [[cost.tiers]]
 tier = { type = "context", size = 200_000 }

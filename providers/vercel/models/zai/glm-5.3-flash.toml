@@ -3,12 +3,15 @@
 # Thinking is always enabled; no toggle or reasoning-token budget.
 base_model = "zhipuai/glm-5.3-flash"
 name = "GLM 5.3 Flash"
-reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
 
 [cost]
-input = 0.075
-output = 0.25
-cache_read = 0.015
+input = 0.15
+output = 0.5
+cache_read = 0.03
 
 [limit]
 output = 131_000

@@ -1,0 +1,17 @@
+# NIM Chat schema: `reasoning_effort = none|high|max`; `none` disables thinking.
+# https://build.nvidia.com/deepseek-ai/deepseek-v4-pro-0813
+#
+# Pricing: hosted on NVIDIA's API trial tier and currently free — no separate
+# list rate is published for this ID. Source: this model's catalog card,
+# https://build.nvidia.com/deepseek-ai/deepseek-v4-pro-0813 (governed by the
+# NVIDIA API Trial Terms of Service).
+base_model = "deepseek/deepseek-v4-pro-0813"
+
+reasoning_options = [{ type = "effort", values = ["none", "high", "max"] }]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.0
+output = 0.0

@@ -1,0 +1,11 @@
+# Chat `reasoning_effort` accepts low/medium/high (accessed 2026-09-20).
+# https://platform.stepfun.com/docs/zh/guides/models/step-5-preview
+# Step Plan is subscription/credit based with no public per-token price, so no [cost].
+base_model = "stepfun/step-5-preview"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high"]
+
+[interleaved]
+field = "reasoning_content"

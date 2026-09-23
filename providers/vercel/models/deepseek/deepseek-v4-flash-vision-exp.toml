@@ -1,7 +1,17 @@
 base_model = "deepseek/deepseek-v4-flash-vision-exp"
-reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["high", "xhigh"] }]
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["high", "xhigh"]
 
 [cost]
 input = 0.22
 output = 0.66
 cache_read = 0.007
+
+[limit]
+context = 1_048_576
+output = 1_048_576

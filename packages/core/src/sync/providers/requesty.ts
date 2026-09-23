@@ -133,6 +133,9 @@ export function resolveRequestyBaseModel(id: string) {
     const bare = id.replace(REGION_SUFFIX, "");
     return (
         resolveModelMetadataBaseModel(bare) ??
+        (bare.startsWith("claude-")
+            ? resolveModelMetadataBaseModel(`anthropic/${bare}`)
+            : undefined) ??
         (ANTHROPIC_DOT_ZERO.test(bare)
             ? resolveModelMetadataBaseModel(`${bare}-0`)
             : undefined)
@@ -181,8 +184,9 @@ function reasoningOptions(
 }
 
 function buildCost(model: RequestyModel): SyncedFullModel["cost"] {
-    const input = model.input_price;
-    const output = model.output_price;
+    const base = model.pricing?.[0] ?? model;
+    const input = base.input_price;
+    const output = base.output_price;
     if (input == null || output == null) return undefined;
 
     const tiers = (model.pricing ?? []).slice(1).map((band) => ({
@@ -195,8 +199,8 @@ function buildCost(model: RequestyModel): SyncedFullModel["cost"] {
     return {
         input: pricePerMillion(input),
         output: pricePerMillion(output),
-        cache_read: chargedPricePerMillion(model.cached_price),
-        cache_write: chargedPricePerMillion(model.caching_price),
+        cache_read: chargedPricePerMillion(base.cached_price),
+        cache_write: chargedPricePerMillion(base.caching_price),
         tiers: tiers.length > 0 ? tiers : undefined,
     };
 }

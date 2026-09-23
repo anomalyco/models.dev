@@ -1,0 +1,27 @@
+name = "Nex AGI: Nex-N2.5-Pro (free)"
+description = "Nex-N2.5 is an agentic model built to turn goals into working, verified outcomes. Its core strength is agentic coding within a visual feedback loop: it can explore codebases, implement multi-file..."
+family = "agi"
+release_date = "2026-09-08"
+last_updated = "2026-09-08"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "medium", "high"]
+
+[cost]
+input = 0
+output = 0
+
+[limit]
+context = 262_144
+output = 235_929
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

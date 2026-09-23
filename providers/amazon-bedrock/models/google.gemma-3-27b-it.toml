@@ -1,24 +1,16 @@
-name = "Google Gemma 3 27B Instruct"
-description = "Open Gemma instruction model for efficient chat and self-hosted deployments"
-family = "gemma"
-attachment = true
-reasoning = false
-tool_call = true
+# https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-google-gemma-3-27b-pt.html
+# AWS's card title says PT, but its programmatic ID and discovery name specify IT.
+# https://aws.amazon.com/bedrock/pricing/ (US Standard pricing)
+# Live Converse (us-east-1, 2026-09-09): forced toolUse works, but native toolResult continuation fails with a role-alternation error.
+# Tool calling remains disabled because a complete native tool-use round trip is unavailable.
+base_model = "google/gemma-3-27b-it"
+tool_call = false
 structured_output = true
-temperature = true
-knowledge = "2025-07"
-release_date = "2025-07-27"
-last_updated = "2025-07-27"
-open_weights = true
 
 [cost]
-input = 0.12
-output = 0.2
+input = 0.23
+output = 0.38
 
 [limit]
 context = 202_752
 output = 8_192
-
-[modalities]
-input = ["text", "image"]
-output = ["text"]

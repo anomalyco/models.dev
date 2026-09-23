@@ -1,0 +1,13 @@
+name = "Bothub"
+env = ["BOTHUB_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+# Raw HTTP reasoning controls (live-verified 2026-08-29):
+# Chat POST `/v1/chat/completions` takes `reasoning_effort`; upstream
+# reasoning returns in the message side channel (`reasoning`, mirrored
+# in `reasoning_details`). Per-model request controls differ:
+# - nemotron-3-ultra-550b-a55b:free: effort none|medium|high
+# - gemma-4-31b-it:free: binary toggle (any non-none value enables
+#   thinking, `none` disables it)
+# https://bothub.ru
+api = "https://openai.bothub.ru/v1"
+doc = "https://bothub.ru/models"

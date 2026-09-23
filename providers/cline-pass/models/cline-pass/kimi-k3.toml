@@ -1,7 +1,9 @@
 # https://docs.cline.bot/getting-started/clinepass (accessed 2026-07-22)
 # Model ID cline-pass/kimi-k3; reference pricing $3 / $15 / $0.30 per 1M tokens (input/output/cache read).
+# Lab Moonshot K3: thinking.type + output_config.effort low|high|max (providers/moonshotai/models/kimi-k3.toml)
+# Effort: reasoning_effort = none|low|high|max (none disables; no medium/xhigh)
 base_model = "moonshotai/kimi-k3"
-reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh"] }]
+reasoning_options = [{ type = "effort", values = ["none", "low", "high", "max"] }]
 
 [cost]
 input = 3

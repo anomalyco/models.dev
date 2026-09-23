@@ -1,6 +1,51 @@
 import { expect, test } from "bun:test";
 
-import { resolveEmpiriolabsBaseModel } from "../src/sync/providers/empiriolabs.js";
+import { buildEmpiriolabsModel, resolveEmpiriolabsBaseModel } from "../src/sync/providers/empiriolabs.js";
+
+test.each([
+  {
+    name: "toggle-only",
+    parameters: [{ name: "enable_thinking" }],
+    expected: [{ type: "toggle" }],
+  },
+  {
+    name: "toggle and effort without none",
+    parameters: [
+      { name: "enable_thinking" },
+      { name: "reasoning_effort", options: ["low", "high"] },
+    ],
+    expected: [{ type: "toggle" }, { type: "effort", values: ["low", "high"] }],
+  },
+  {
+    name: "effort with none instead of a redundant toggle",
+    parameters: [
+      { name: "enable_thinking" },
+      { name: "reasoning_effort", options: ["none", "low", "high"] },
+    ],
+    expected: [{ type: "effort", values: ["none", "low", "high"] }],
+  },
+  {
+    name: "effort with none preserves the reasoning budget",
+    parameters: [
+      { name: "enable_thinking" },
+      { name: "reasoning_effort", options: ["none", "low", "high"] },
+      { name: "thinking_budget", min: 1_024, max: 32_768 },
+    ],
+    expected: [
+      { type: "effort", values: ["none", "low", "high"] },
+      { type: "budget_tokens", min: 1_024, max: 32_768 },
+    ],
+  },
+])("syncs EmpirioLabs reasoning controls: $name", ({ parameters, expected }) => {
+  const model = buildEmpiriolabsModel({
+    id: "qwen3-5-9b",
+    context_length: 262_144,
+    capabilities: { reasoning: true },
+    supported_parameters: parameters,
+  }, undefined);
+
+  expect(model?.reasoning_options).toEqual(expected);
+});
 
 test("resolves existing lab metadata without a hardcoded map", () => {
   expect(resolveEmpiriolabsBaseModel("muse-glimmer-30b")).toBe("meta/muse-glimmer-30b");

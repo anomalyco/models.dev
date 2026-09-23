@@ -1,24 +1,11 @@
-name = "Nova Lite"
-description = "Efficient model for low-latency assistance, extraction, and routine automation"
-family = "nova-lite"
-release_date = "2024-12-03"
-last_updated = "2024-12-03"
-attachment = true
-reasoning = false
-temperature = true
-knowledge = "2024-10"
-tool_call = true
-open_weights = false
+# Model: https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-amazon-nova-lite.html
+# Pricing: https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AmazonBedrock/current/us-east-1/index.json
+# Standard us-east-1 reference rates, USD/MTok; rates vary by source Region. Cache writes billed at input rate; no surcharge.
+# Cache billing: https://docs.aws.amazon.com/bedrock/latest/userguide/prompt-caching.html
+base_model = "amazon/nova-lite"
 
 [cost]
 input = 0.06
 output = 0.24
 cache_read = 0.015
-
-[limit]
-context = 300_000
-output = 8_192
-
-[modalities]
-input = ["text", "image", "video"]
-output = ["text"]
+cache_write = 0.06

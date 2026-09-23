@@ -1,0 +1,21 @@
+# Pricing: 30% off OpenCode Go Grok 4.7 rates, including long-context tiers.
+base_model = "xai/grok-4.7"
+name = "Grok 4.7 (30% Off)"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high", "xhigh"]
+
+[cost]
+input = 1.4
+output = 4.2
+cache_read = 0.35
+
+[[cost.tiers]]
+tier = { type = "context", size = 200_000 }
+input = 2.8
+output = 8.4
+cache_read = 0.7
+
+[provider]
+npm = "@ai-sdk/openai"

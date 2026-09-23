@@ -1,0 +1,22 @@
+# Sources (accessed 2026-08-28):
+# https://huggingface.co/Qwen/Qwen3.8-Flash-Next
+# https://docs.cortecs.ai/usage/reasoning
+# Effort: reasoning_effort = low|medium|xhigh, matching the lab and Cortecs Qwen3.8 peers.
+# No lab-only toggle or thinking budget claimed for this relay route.
+# Output limit: https://api.cortecs.ai/v1/models (max_output_tokens, not context_size).
+base_model = "alibaba/qwen3.8-flash-next"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "xhigh"]
+
+[cost]
+input = 0.201
+output = 0.5
+cache_read = 0.05
+
+[limit]
+output = 64_000
+
+[modalities]
+input = ["text", "image"]

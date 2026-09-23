@@ -1,5 +1,10 @@
+# Sources: https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-anthropic-claude-sonnet-4-6.html
+# Live eu-west-1 Converse (2026-09-09) accepts maxTokens=128000; Bedrock output override.
+# https://platform.claude.com/docs/en/build-with-claude/thinking-troubleshooting
+# Toggle: additionalModelRequestFields.thinking.type = adaptive|disabled (Converse); thinking.type (InvokeModel).
+# Manual thinking.type = enabled still accepts thinking.budget_tokens; effort is output_config.effort, both inside additionalModelRequestFields on Converse.
 base_model = "anthropic/claude-sonnet-4-6"
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "max"] }, { type = "budget_tokens", min = 1_024 }]
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "medium", "high", "max"] }, { type = "budget_tokens", min = 1_024 }]
 name = "Claude Sonnet 4.6 (EU)"
 structured_output = true
 
@@ -8,3 +13,6 @@ input = 3.3
 output = 16.5
 cache_read = 0.33
 cache_write = 4.125
+
+[limit]
+output = 128_000

@@ -1,0 +1,8 @@
+# Model ID cline-pass/muse-spark-1.3-contributor. Cline publishes no
+# ClinePass reference rate for this model: docs.cline.bot/getting-started/
+# clinepass has no row for it (accessed 2026-09-22) and the model is absent
+# from api.cline.bot/api/v1/ai/cline/models, so no [cost] block is declared.
+base_model = "meta/muse-spark-1.3"
+name = "Muse Spark 1.3 Contributor"
+
+reasoning_options = [{ type = "effort", values = ["minimal", "low", "medium", "high", "xhigh"] }]

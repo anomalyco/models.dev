@@ -575,13 +575,13 @@ export function resolveDigitalOceanBaseModel(id: string) {
   if (id.startsWith("gemma")) candidates.push(`google/${id}`);
 
   // anthropic-claude-5-sonnet → anthropic/claude-sonnet-5
-  const anthropicSwapped = id.match(/^anthropic-claude-(\d+(?:\.\d+)?)-(opus|sonnet|haiku)$/);
+  const anthropicSwapped = id.match(/^anthropic-claude-(\d+(?:\.\d+)?)-([a-z]+)$/);
   if (anthropicSwapped !== null) {
     candidates.push(`anthropic/claude-${anthropicSwapped[2]}-${anthropicSwapped[1]}`);
   }
   // anthropic-claude-opus-5 → anthropic/claude-opus-5
   // also normalize dotted versions: anthropic-claude-opus-4.6 → anthropic/claude-opus-4-6
-  const anthropicFamily = id.match(/^anthropic-claude-(opus|sonnet|haiku)-(\d+(?:\.\d+)?)$/);
+  const anthropicFamily = id.match(/^anthropic-claude-([a-z]+)-(\d+(?:\.\d+)?)$/);
   if (anthropicFamily !== null) {
     const version = anthropicFamily[2].replaceAll(".", "-");
     candidates.push(`anthropic/claude-${anthropicFamily[1]}-${anthropicFamily[2]}`);

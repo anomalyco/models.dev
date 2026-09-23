@@ -1,0 +1,12 @@
+# Toggle: enable_thinking; budget: thinking_budget
+base_model = "alibaba/qwen3.7-flash"
+reasoning_options = [
+  { type = "toggle" },
+  { type = "budget_tokens" },
+]
+
+[cost]
+input = 0.03
+output = 0.13
+cache_read = 0.006
+cache_write = 0.038

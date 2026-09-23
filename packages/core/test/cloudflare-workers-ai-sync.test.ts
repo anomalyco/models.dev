@@ -64,17 +64,17 @@ test("reads nested Responses API effort enums without inventing a toggle", () =>
   expect(synced.reasoning_options).toEqual([{ type: "effort", values: ["low", "high"] }]);
 });
 
-test("refreshes serialized control comments without losing unrelated notes or resyncing forever", async () => {
+test("refreshes serialized control comments without losing authored notes or resyncing forever", async () => {
   const directory = await mkdtemp("/tmp/opencode/workers-schema-");
   const raw = { data: [{ ...model, input_schema: inputSchema }] };
   const file = `${directory}/${model.id}.toml`;
   try {
     await mkdir(`${directory}/@cf/example`, { recursive: true });
-    await Bun.write(file, "# Context limit verified separately.\n# Toggle: thinking.type = enabled|disabled\n# Effort: reasoning_effort = high|max\n" + formatToml({ id: model.id, ...translate(raw) }));
+    await Bun.write(file, "# Context limit and reasoning behavior verified separately.\n# Toggle: thinking.type = enabled|disabled\n# Effort: reasoning_effort = high|max\n" + formatToml({ id: model.id, ...translate(raw) }));
     const provider = { ...cloudflareWorkersAi, modelsDir: directory, fetchModels: async () => raw };
     expect((await syncProvider(provider)).updated).toBe(1);
     const written = await Bun.file(file).text();
-    expect(written).toContain("# Context limit verified separately.");
+    expect(written).toContain("# Context limit and reasoning behavior verified separately.");
     expect(written).toContain("# Toggle: chat_template_kwargs.enable_thinking = true|false");
     expect(written).toContain("# Effort: reasoning_effort = low|medium|high");
     expect(written).not.toContain("thinking.type");
@@ -91,6 +91,32 @@ test("schema effort none replaces a separate toggle", () => {
     chat_template_kwargs: { properties: { enable_thinking: { type: "boolean" } } },
   } } }] });
   expect(synced.reasoning_options).toEqual([{ type: "effort", values: ["none", "low", "high"] }]);
+});
+
+test("does not emit a separate toggle header when effort includes none", () => {
+  const [parsed] = cloudflareWorkersAi.parseModels({ data: [{
+    ...model,
+    id: "@cf/google/gemma-4-26b-a4b-it",
+    input_schema: {},
+    reasoning: { mandatory: false, supported_efforts: ["none", "high"] },
+  }] });
+  const translated = cloudflareWorkersAi.translateModel(parsed!, {
+    existing: () => undefined,
+    authored: () => undefined,
+  });
+
+  expect(translated.header).toBeUndefined();
+  expect(translated.model.reasoning_options).toEqual([{ type: "effort", values: ["none", "high"] }]);
+});
+
+test("prefers model-specific reasoning metadata over generic schema controls", () => {
+  const synced = translate({ data: [{
+    ...model,
+    input_schema: inputSchema,
+    reasoning: { mandatory: false, supported_efforts: ["none", "high"] },
+  }] });
+
+  expect(synced.reasoning_options).toEqual([{ type: "effort", values: ["none", "high"] }]);
 });
 
 test.each([

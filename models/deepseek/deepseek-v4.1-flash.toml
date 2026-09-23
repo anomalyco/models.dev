@@ -1,0 +1,26 @@
+# Open weights (MIT): https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash
+name = "DeepSeek V4.1 Flash"
+description = "DeepSeek V4.1 Flash model for reasoning and agentic coding"
+family = "deepseek-flash"
+release_date = "2026-09-10"
+last_updated = "2026-09-10"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = true
+knowledge = "2025-05"
+open_weights = true
+license = "MIT"
+
+[limit]
+context = 1_000_000
+output = 384_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash"

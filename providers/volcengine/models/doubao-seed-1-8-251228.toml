@@ -5,16 +5,14 @@
 # here since the catalog has no output-length dimension.
 # Output tiering note applies to the base [cost] block only.
 # CNY list price source: https://www.volcengine.com/docs/82379/1544106
-# Toggle: thinking.type = enabled|disabled
-# Effort: reasoning_effort = minimal|low|medium|high
+# Effort: reasoning_effort = none|minimal|low|medium|high|xhigh|max
+# none/minimal disable thinking, so no separate toggle: sending effort alone
+# already enables it, and thinking.type=disabled + a graded effort is rejected.
 base_model = "bytedance-seed/seed-1-8"
 
 [[reasoning_options]]
-type = "toggle"
-
-[[reasoning_options]]
 type = "effort"
-values = ["minimal", "low", "medium", "high"]
+values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"]
 
 [interleaved]
 field = "reasoning_content"

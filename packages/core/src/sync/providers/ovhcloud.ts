@@ -103,15 +103,12 @@ export function buildOvhcloudModel(
   const outputCost = price(model.pricing?.completion);
   const cacheRead = price(model.pricing?.input_cache_reads);
   const cacheWrite = price(model.pricing?.input_cache_writes);
-  const cost =
-    (inputCost ?? 0) > 0 || (outputCost ?? 0) > 0
-      ? {
-          input: inputCost ?? 0,
-          output: outputCost ?? 0,
-          cache_read: cacheRead !== undefined && cacheRead > 0 ? cacheRead : undefined,
-          cache_write: cacheWrite !== undefined && cacheWrite > 0 ? cacheWrite : undefined,
-        }
-      : undefined;
+  const cost = {
+    input: inputCost ?? 0,
+    output: outputCost ?? 0,
+    cache_read: cacheRead !== undefined && cacheRead > 0 ? cacheRead : undefined,
+    cache_write: cacheWrite !== undefined && cacheWrite > 0 ? cacheWrite : undefined,
+  };
 
   return {
     base_model: existing?.base_model,

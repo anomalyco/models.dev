@@ -1,3 +1,5 @@
+# Toggle: reasoning.enabled = true|false
+# https://openrouter.ai/docs/guides/best-practices/reasoning-tokens
 base_model = "deepseek/deepseek-v3.2"
 description = "DeepSeek chat model for instruction following, coding, and analysis"
 
@@ -5,10 +7,10 @@ description = "DeepSeek chat model for instruction following, coding, and analys
 type = "toggle"
 
 [cost]
-input = 0.26
-output = 0.38
-cache_read = 0.13
+input = 0.269
+output = 0.4
+cache_read = 0.1345
 
 [limit]
 context = 163_840
-output = 147_456
+output = 65_536

@@ -1,3 +1,5 @@
+# Toggle: reasoning.enabled = true|false
+# https://openrouter.ai/docs/guides/best-practices/reasoning-tokens
 name = "ERNIE 4.5 VL 424B A47B "
 description = "Multimodal reasoning model for visual analysis, planning, and tool use"
 family = "ernie"
@@ -10,7 +12,9 @@ tool_call = false
 structured_output = false
 knowledge = "2025-03-31"
 open_weights = true
-reasoning_options = []
+
+[[reasoning_options]]
+type = "toggle"
 
 [cost]
 input = 0.42

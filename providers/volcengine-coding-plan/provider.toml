@@ -1,0 +1,42 @@
+name = "Volcengine Ark Coding Plan"
+env = ["ARK_CODING_PLAN_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+# Coding Plan is a subscription tier with its own base URL. Volcengine warns that
+# calling the pay-as-you-go https://ark.cn-beijing.volces.com/api/v3 with a Coding
+# Plan key does NOT draw down the subscription and bills separately, so the two
+# providers must stay distinct.
+# The env var is deliberately not ARK_API_KEY: /api/coding/v3 does not check which
+# plan a key belongs to, so a pay-as-you-go key reaches it and bills per token.
+# Sharing ARK_API_KEY would light up both providers at once and let a user pick a
+# Coding Plan entry while silently paying pay-as-you-go rates.
+# Reasoning HTTP format (accessed 2026-08-26):
+# OpenAI Chat: POST /api/coding/v3/chat/completions; `thinking.type` = enabled or
+# disabled (`auto` is rejected on most models); `reasoning_effort` is accepted on
+# every model but only some values have effect, so each file declares just the
+# levels it honours, measured on this endpoint (n=4-6 per level, 2026-08-27):
+#   doubao-seed-2.1-turbo / 2.0-lite / evolving -> none|low|high
+#       (medium overlaps low, xhigh and max overlap high rather than exceeding it)
+#   glm-5.3                                     -> low|high|max
+#       (rejects none and minimal outright; medium aliases low, xhigh aliases max)
+#   deepseek-v4-flash / -pro                    -> toggle only
+#       (graded values fully overlap; on Flash 'high' lands below 'low')
+#   kimi-k2.7-code                              -> no controls
+#   minimax-m3                                  -> toggle only
+#       (tolerates none but still spends reasoning tokens on it, so it is not an
+#        off switch there; thinking.type is)
+# Plaintext reasoning is in `choices[].message.reasoning_content`
+# and the encrypted block in `choices[].message.encrypted_content`.
+# Anthropic: base https://ark.cn-beijing.volces.com/api/coding, POST /v1/messages
+# with `thinking.type` and `output_config.effort`.
+# Model names here are the short console labels (doubao-seed-2.1-turbo). This
+# endpoint is the more permissive of the two: it accepts the dated IDs as well
+# (verified 2026-08-27 - doubao-seed-2-1-turbo-260628, doubao-seed-2-0-lite-260428
+# and glm-5-3-260930 all resolve here), whereas the pay-as-you-go /api/v3 accepts
+# only the dated form and 404s on a short label. The short labels are used because
+# they are what the Coding Plan console shows. `ark-code-latest` follows whichever
+# model is selected in the console.
+# Sources:
+# https://www.volcengine.com/docs/82379/1928261
+# https://www.volcengine.com/docs/82379/2546386
+doc = "https://www.volcengine.com/docs/82379/1928261"
+api = "https://ark.cn-beijing.volces.com/api/coding/v3"

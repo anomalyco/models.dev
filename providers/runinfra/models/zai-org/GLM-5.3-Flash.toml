@@ -1,0 +1,38 @@
+# Source: https://runinfra.ai/inference-api/glm-5-3-flash
+# Reasoning control, probed live on this serve 2026-08-27 (temperature 0, fixed prompt,
+# 3 repeats per level, completion tokens reproducible to the token at every level):
+# "low" 4, "high" 12, and "medium" / "xhigh" / "max" / the omitted default all 30. So only
+# "low" and "high" are distinct rungs; every other accepted value means maximum effort.
+# The serve states this itself when reasoning is switched off: reasoning_effort = "none"
+# returns HTTP 400 'reasoning_effort "none" is not supported: GLM 5.3 Flash cannot disable
+# thinking, and this serve treats every value outside "low" and "high" as maximum effort.'
+# Values outside the accepted set are refused rather than folded (probed "ultra", "bogus": 400).
+# Reasoning is interleaved into the stream, on a "reasoning" delta field rather than
+# "reasoning_content" (probed live). interleaved is declared as the bare boolean because the
+# schema's field enum covers only "reasoning_content" and "reasoning_details", and naming
+# either of those here would misdescribe what this serve actually emits.
+# Tool calling and structured output verified live the same day: a get_weather call
+# round-tripped with correct arguments, json_object parsed, and a strict json_schema validated.
+# cache_read is the cached input price and prefix caching is real, not declared: an identical
+# 4,200-token prompt repeated 6 times reported cached_tokens 0 then 5,760 on every later attempt.
+# context and output are what THIS deployment was launched with, both below the lab entry's
+# figures. Input modalities list only text and image because those are the two we serve and
+# proved; the lab entry's video and pdf are not claimed here.
+base_model = "zhipuai/glm-5.3-flash"
+interleaved = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[cost]
+input = 0.10
+output = 0.40
+cache_read = 0.01
+
+[limit]
+context = 1_048_576
+output = 32_768
+
+[modalities]
+input = ["text", "image"]

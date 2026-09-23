@@ -1,6 +1,10 @@
+# Toggle: reasoning.enabled = true|false
+# https://openrouter.ai/docs/guides/best-practices/reasoning-tokens
 base_model = "zhipuai/glm-5.2"
 name = "GLM 5.2 (free)"
 description = "Flagship GLM model for hybrid reasoning, coding, and agentic engineering"
+tool_call = false
+structured_output = false
 
 [[reasoning_options]]
 type = "toggle"
@@ -14,5 +18,5 @@ input = 0
 output = 0
 
 [limit]
-context = 256_000
-output = 230_400
+context = 32_768
+output = 29_491

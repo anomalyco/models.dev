@@ -1,0 +1,29 @@
+name = "GPT 6 Astra Pro"
+description = "GPT 6 Astra in Pro reasoning mode. Uses additional model work for difficult tasks, with higher latency and token usage at the same per-token rates. Reasoning effort remains independently configurable."
+family = "gpt"
+release_date = "2026-09-04"
+last_updated = "2026-09-04"
+attachment = true
+reasoning = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high", "xhigh", "max"]
+
+[cost]
+input = 10
+output = 50
+cache_read = 1
+cache_write = 12.5
+
+[limit]
+context = 1_050_000
+input = 1_050_000
+output = 128_000
+
+[modalities]
+input = ["text", "image", "pdf"]
+output = ["text"]

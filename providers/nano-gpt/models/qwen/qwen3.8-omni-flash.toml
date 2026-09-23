@@ -1,0 +1,15 @@
+base_model = "alibaba/qwen3.8-omni-flash"
+structured_output = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "high"]
+
+[cost]
+input = 0.15
+output = 0.47
+cache_read = 0.016
+
+[limit]
+context = 991_808
+input = 991_808

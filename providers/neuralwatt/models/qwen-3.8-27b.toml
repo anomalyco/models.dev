@@ -1,0 +1,35 @@
+# Left preview and joined the public GET /v1/models catalog; the output cap
+# was raised from 65,536 to 131,072 tokens (checked 2026-09-18).
+# Effort: reasoning_effort = none|low|medium|xhigh (default xhigh, reasoning
+# on by default); aliases max/xhigh/high -> xhigh and minimal -> low, per the
+# chat-completions per-model table (docs verified against the live API on
+# 2026-08-26). Off is effort=none, so no separate toggle.
+# Budget: thinking_token_budget (integer reasoning tokens) is accepted on this
+# model.
+# Neuralwatt serves text+image input only (lab metadata also lists video).
+# Pricing, context, output cap, and effort ladder from the model page and the
+# GET /v1/models metadata (checked 2026-09-18):
+# https://portal.neuralwatt.com/models/qwen-3.8-27b
+# https://portal.neuralwatt.com/docs/api/chat-completions
+base_model = "alibaba/qwen3.8-27b"
+interleaved = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "xhigh"]
+
+[[reasoning_options]]
+type = "budget_tokens"
+
+[cost]
+input = 0.45
+output = 3.2
+cache_read = 0.25
+
+[limit]
+context = 262_128
+output = 131_072
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

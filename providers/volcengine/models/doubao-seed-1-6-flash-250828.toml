@@ -1,7 +1,22 @@
 # Model ID verified against POST /api/v3/chat/completions (2026-08-26): `doubao-seed-1-6-flash-250828`
 # CNY→USD rate: 6.737012, 2026-08-26, source: https://open.er-api.com/v6/latest/USD
 # CNY list price source: https://www.volcengine.com/docs/82379/1544106
+# Toggle: thinking.type = enabled|disabled, POST /api/v3/chat/completions
+# (verified 2026-08-27: enabled -> 278 reasoning tokens, disabled -> 0). This model
+# reasons by default -- a bare request with no reasoning params returns 283 reasoning
+# tokens -- so the absence of a reasoning declaration here was wrong.
+# No graded effort: reasoning_effort is accepted but not separable. Over n=4 runs per
+# level, none 762/479/627/646, minimal 715/513/760/717, low 942/561/660/596,
+# high 599/502/586/837, max 575/863/714/598 -- fully overlapping, and 'none' does not
+# even switch thinking off here, so thinking.type is the only real control.
 base_model = "bytedance-seed/seed-1-6-flash"
+reasoning = true
+
+[[reasoning_options]]
+type = "toggle"
+
+[interleaved]
+field = "reasoning_content"
 
 [cost]
 input = 0.02227

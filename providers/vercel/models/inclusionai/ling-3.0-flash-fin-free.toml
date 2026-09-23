@@ -1,0 +1,14 @@
+# Toggle: reasoning.enabled = true|false (Chat Completions API)
+# https://vercel.com/docs/ai-gateway/sdks-and-apis/openai-chat-completions/reasoning
+# https://ai-gateway.vercel.sh/v1/models/inclusionai/ling-3.0-flash-fin-free/endpoints
+base_model = "inclusionai/ling-3.0-flash-fin"
+name = "Ling 3.0 Flash Fin (Free)"
+reasoning_options = [{ type = "toggle" }]
+
+[cost]
+input = 0
+output = 0
+
+[limit]
+context = 256_000
+output = 32_000

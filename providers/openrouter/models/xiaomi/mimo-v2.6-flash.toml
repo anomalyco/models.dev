@@ -1,0 +1,13 @@
+# Toggle: reasoning.enabled = true|false
+# https://openrouter.ai/docs/guides/best-practices/reasoning-tokens
+base_model = "xiaomi/mimo-v2.6-flash"
+description = "MiMo flash model for fast multimodal assistance and agent workflows"
+structured_output = true
+
+[[reasoning_options]]
+type = "toggle"
+
+[cost]
+input = 0.14
+output = 0.28
+cache_read = 0.0028

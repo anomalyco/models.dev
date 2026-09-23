@@ -1,8 +1,12 @@
+# Toggle: reasoning.enabled = true|false
+# https://openrouter.ai/docs/guides/best-practices/reasoning-tokens
 base_model = "moonshotai/kimi-k2.6"
-reasoning_options = []
 
 [interleaved]
 field = "reasoning_details"
+
+[[reasoning_options]]
+type = "toggle"
 
 [cost]
 input = 0.95

@@ -1,13 +1,27 @@
 base_model = "alibaba/qwen3.5-plus"
-reasoning_options = [{ type = "toggle" }, { type = "budget_tokens", min = 1, max = 81_920 }]
 name = "Qwen 3.5 Plus"
 attachment = true
 
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "budget_tokens"
+min = 1
+max = 81_920
+
 [cost]
 input = 0.4
-output = 2.4
+output = 2.5
 cache_read = 0.04
 cache_write = 0.5
+
+[[cost.tiers]]
+tier = { type = "context", size = 256_001 }
+input = 0.5
+output = 3
+cache_read = 0.05
+cache_write = 0.625
 
 [limit]
 output = 64_000

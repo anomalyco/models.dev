@@ -1,0 +1,28 @@
+name = "Granite 4.2 8B"
+description = "IBM Granite 4.2 8B is an Apache 2.0-licensed dense model with native step-by-step reasoning and specialized training for agentic work. It can plan before acting, sequence tools, navigate codebases, work in terminals, and verify results across coding, search, mathematics, science, and complex instruction-following tasks."
+family = "granite"
+release_date = "2026-08-31"
+last_updated = "2026-08-31"
+attachment = false
+reasoning = true
+tool_call = true
+structured_output = true
+open_weights = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "high"]
+
+[cost]
+input = 0.1
+output = 0.15
+cache_read = 0.05
+
+[limit]
+context = 131_072
+input = 131_072
+output = 117_964
+
+[modalities]
+input = ["text"]
+output = ["text"]

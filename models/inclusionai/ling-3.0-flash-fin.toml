@@ -1,0 +1,20 @@
+# https://novita.ai/models/model-detail/inclusionai-ling-3.0-flash-fin
+# https://openrouter.ai/api/v1/models/inclusionai/ling-3.0-flash-fin:free/endpoints
+# https://vercel.com/changelog/ling-3-0-flash-fin-now-available-on-ai-gateway-for-free
+name = "Ling 3.0 Flash Fin"
+description = "Finance-enhanced model for financial research, multi-step investment workflows, and long-horizon planning and execution"
+family = "ling"
+release_date = "2026-08-27"
+last_updated = "2026-08-27"
+attachment = false
+reasoning = true
+tool_call = true
+open_weights = false
+
+[limit]
+context = 262_144
+output = 32_768
+
+[modalities]
+input = ["text"]
+output = ["text"]

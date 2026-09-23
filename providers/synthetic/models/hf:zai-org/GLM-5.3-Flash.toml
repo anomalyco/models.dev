@@ -1,0 +1,19 @@
+# Pricing, limits, modalities, and reasoning efforts from the live model surface:
+# GET https://api.synthetic.new/openai/v1/models  (hf:zai-org/GLM-5.3-Flash)
+base_model = "zhipuai/glm-5.3-flash"
+reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]
+
+[interleaved]
+field = "reasoning_content"
+
+[modalities]
+input = ["text", "image"]
+
+[cost]
+input = 0.15
+output = 0.5
+cache_read = 0.04
+
+[limit]
+context = 524_288
+output = 65_536

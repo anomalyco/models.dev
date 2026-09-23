@@ -1,11 +1,12 @@
 base_model = "google/gemma-4-31b-it"
 name = "Gemma 4 31B"
-reasoning_options = [{ type = "toggle" }]
+reasoning_options = [{ type = "effort", values = ["none", "max"] }]
+interleaved = true
 
 [cost]
 input = 0.144
 output = 0.42
-cache_read = 0.036
+cache_read = 0.0144
 
 [limit]
 context = 262_128

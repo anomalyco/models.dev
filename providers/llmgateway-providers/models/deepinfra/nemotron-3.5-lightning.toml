@@ -1,0 +1,13 @@
+base_model = "nvidia/nemotron-3.5-lightning"
+name = "Nemotron 3.5 Lightning (DeepInfra)"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high"]
+
+[cost]
+input = 0.08
+output = 0.2
+
+[limit]
+output = 131_072

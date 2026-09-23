@@ -1,5 +1,9 @@
+# Toggle: enable_thinking; budget: thinking_budget
 base_model = "alibaba/qwen3.5-122b-a10b"
-reasoning_options = []
+reasoning_options = [
+  { type = "toggle" },
+  { type = "budget_tokens" },
+]
 
 [cost]
 input = 0.115

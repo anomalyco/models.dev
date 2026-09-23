@@ -1,0 +1,12 @@
+# https://docs.quiver.ai/api-reference/openresponses/createopenresponse
+base_model = "quiverai/arrow-2"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh"] }]
+
+[cost]
+input = 4
+output = 20
+cache_read = 0.4
+cache_write = 5
+
+[limit]
+output = 131_072

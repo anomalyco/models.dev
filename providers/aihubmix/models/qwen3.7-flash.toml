@@ -1,0 +1,22 @@
+# Toggle: enable_thinking = true|false
+# Budget: thinking_budget = integer reasoning tokens
+base_model = "alibaba/qwen3.7-flash"
+attachment = false
+reasoning_options = [{ type = "toggle" }, { type = "budget_tokens", max = 262_144 }]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.0282
+output = 0.1128
+cache_read = 0.00564
+cache_write = 0.03525
+
+[limit]
+context = 991_000
+output = 64_000
+
+[modalities]
+input = ["text"]
+output = ["text"]

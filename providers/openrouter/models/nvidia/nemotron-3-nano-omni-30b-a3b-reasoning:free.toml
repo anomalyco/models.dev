@@ -1,6 +1,11 @@
+# Toggle: reasoning.enabled = true|false
+# https://openrouter.ai/docs/guides/best-practices/reasoning-tokens
 base_model = "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning"
 name = "Nemotron 3 Nano Omni (free)"
 structured_output = false
+
+[[reasoning_options]]
+type = "toggle"
 
 [[reasoning_options]]
 type = "budget_tokens"

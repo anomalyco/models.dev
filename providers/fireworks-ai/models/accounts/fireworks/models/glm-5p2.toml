@@ -1,7 +1,8 @@
-name = "GLM 5.2"
-description = "Flagship GLM model for hybrid reasoning, coding, and agentic engineering"
+# Serverless deprecation announced for 2026-09-25: https://docs.fireworks.ai/updates/changelog
 # Fireworks' published schema does not document this model's toggle or "max"
 # effort mapping. https://docs.fireworks.ai/guides/reasoning (accessed 2026-06-25)
+name = "GLM 5.2"
+description = "Flagship GLM model for hybrid reasoning, coding, and agentic engineering"
 family = "glm"
 release_date = "2026-06-16"
 last_updated = "2026-06-16"
@@ -10,6 +11,10 @@ reasoning = true
 temperature = true
 tool_call = true
 open_weights = true
+status = "deprecated"
+
+[interleaved]
+field = "reasoning_content"
 
 [[reasoning_options]]
 type = "toggle"
@@ -19,8 +24,8 @@ type = "effort"
 values = ["high", "max"]
 
 [cost]
-input = 1.40
-output = 4.40
+input = 1.4
+output = 4.4
 cache_read = 0.14
 
 [limit]
@@ -31,5 +36,6 @@ output = 131_072
 input = ["text"]
 output = ["text"]
 
-[interleaved]
-field = "reasoning_content"
+[experimental.modes.priority]
+cost = { input = 1.75, output = 5.5, cache_read = 0.175 }
+provider = { body = { service_tier = "priority" } }

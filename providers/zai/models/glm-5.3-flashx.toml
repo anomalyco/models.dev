@@ -1,0 +1,21 @@
+# GLM-5.3-FlashX is the high-speed serving option for GLM-5.3-Flash.
+# https://docs.z.ai/guides/vlm/glm-5.3-flash
+# Pricing: https://docs.z.ai/guides/overview/pricing (accessed 2026-09-19)
+base_model = "zhipuai/glm-5.3-flash"
+name = "GLM-5.3-FlashX"
+description = "High-speed GLM-5.3-Flash serving option for coding and agent workflows"
+release_date = "2026-09-18"
+last_updated = "2026-09-18"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.37
+output = 1.25
+cache_read = 0.075
+cache_write = 0

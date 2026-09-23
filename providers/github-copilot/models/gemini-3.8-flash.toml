@@ -1,0 +1,21 @@
+# Sources:
+# - https://docs.github.com/en/copilot/reference/copilot-billing/models-and-pricing
+# - https://docs.github.com/en/copilot/reference/ai-models/supported-models
+# - https://api.githubcopilot.com/models
+# Pricing: Gemini 3.8 Flash promo $0.75/$0.075/$3.75 per 1M tokens through 2026-12-31
+# Reasoning: effort low|medium|high (matches lab + github-copilot gemini-3.7-flash peer)
+base_model = "google/gemini-3.8-flash"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
+
+[cost]
+input = 0.75
+output = 3.75
+cache_read = 0.075
+
+[limit]
+context = 1_000_000
+input = 936_000
+output = 64_000
+
+[modalities]
+input = ["text", "image"]

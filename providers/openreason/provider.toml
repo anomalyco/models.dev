@@ -1,0 +1,9 @@
+name = "OpenReason"
+# Sovereignty-aware OpenAI-compatible router across US and EU inference.
+# Endpoints are pinned via the `@<endpoint-id>` suffix on the model slug
+# (e.g. moonshotai/kimi-k2.7-code@baseten-us). See docs for the full list.
+# https://openreason.app
+env = ["OPENREASON_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+api = "https://api.openreason.app/v1"
+doc = "https://openreason.app/docs"

@@ -1,0 +1,28 @@
+# Passthrough to the official DeepSeek API.
+# Toggle: `thinking.type = enabled|disabled`; effort: `reasoning_effort = low|high|max`
+# (Flash maps requested low→low). https://api-docs.deepseek.com/guides/thinking_mode/
+# Off-peak rate from the CURRENT DeepSeek price sheet effective 2026-08-16
+# (flash $0.22/$0.007/$0.66, pro $0.66/$0.022/$1.98 off-peak) plus a flat 10%;
+# peak (weekdays 01:00-04:00 and 06:00-10:00 UTC, Beijing-time weekends
+# off-peak) is 2x. https://api-docs.deepseek.com/quick_start/pricing/
+# (accessed 2026-08-29; note first-party catalog entries predate 2026-08-16).
+# Toggle verified end-to-end on this host 2026-08-29.
+# Reasoning tokens billed at the output rate.
+base_model = "deepseek/deepseek-v4-flash-vision-exp"
+name = "DeepSeek V4 Flash Vision (Exp)"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.242
+output = 0.726
+reasoning = 0.726
+cache_read = 0.0077

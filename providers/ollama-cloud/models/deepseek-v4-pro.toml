@@ -1,3 +1,7 @@
+# Cost from https://ollama.com/pricing (accessed 2026-09-15). Ollama bills
+# Base (off-peak) and Peak (2x, 12:00-18:00 UTC Mon-Fri) rates; the schema
+# cannot express time-based tiers, so the Base rate is recorded. See
+# https://github.com/anomalyco/models.dev/issues/5913.
 name = "deepseek-v4-pro"
 description = "Flagship DeepSeek model for coding, reasoning, and agentic work"
 family = "deepseek-thinking"
@@ -16,3 +20,8 @@ output = 1048576
 [modalities]
 input = ["text"]
 output = ["text"]
+
+[cost]
+input = 0.66
+output = 1.98
+cache_read = 0.022

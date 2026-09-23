@@ -8,14 +8,14 @@ values = ["none", "low", "medium", "high", "max"]
 type = "budget_tokens"
 
 [cost]
-input = 3.6
-output = 18
-cache_read = 0.36
-cache_write = 4.5
+input = 4
+output = 20
+cache_read = 0.4
+cache_write = 5
 
 [[cost.tiers]]
 tier = { type = "context", size = 272_000 }
-input = 7.2
-output = 27
-cache_read = 0.72
-cache_write = 9
+input = 8
+output = 30
+cache_read = 0.8
+cache_write = 10

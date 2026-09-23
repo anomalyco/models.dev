@@ -1,0 +1,40 @@
+# Version-tracking router alias for the current GLM Flash model on Fireworks
+# Serverless (currently GLM 5.3 Flash / accounts/fireworks/models/glm-5p3-flash).
+# Short ID glm-flash-latest; canonical path accounts/fireworks/routers/glm-flash-latest.
+# Sources (accessed 2026-09-15):
+# - Alias target: FireConnect ROUTER_SPEC_ALIASES maps glm-flash-latest → glm-5p3-flash
+#   https://github.com/fw-ai/fireconnect/blob/main/packages/setup-cli/lib/fireworks/model-specs.mjs
+# - FireConnect models doc: glm-flash-latest is vision-capable GLM for image tasks
+#   https://docs.fireworks.ai/ecosystem/fireconnect/models
+# - Pricing / base model page (GLM 5.3 Flash Standard): $0.15 / $0.03 / $0.50 per 1M
+#   (input / cached input / output)
+#   https://docs.fireworks.ai/serverless/pricing
+#   https://fireworks.ai/models/fireworks/glm-5p3-flash
+# Limits, reasoning controls, and modalities match the sibling pinned
+# accounts/fireworks/models/glm-5p3-flash entry (thinking-only effort low/high/max;
+# Fireworks text+image serverless surface).
+base_model = "zhipuai/glm-5.3-flash"
+name = "GLM Flash Latest (GLM 5.3 Flash)"
+last_updated = "2026-09-15"
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[cost]
+input = 0.15
+output = 0.5
+cache_read = 0.03
+
+[limit]
+context = 1_048_573
+
+[modalities]
+input = ["text", "image"]
+
+[experimental.modes.priority]
+cost = { input = 0.1875, output = 0.625, cache_read = 0.0375 }
+provider = { body = { service_tier = "priority" } }

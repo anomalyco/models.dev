@@ -7,7 +7,7 @@ import { factorBaseModel, resolveCanonicalBaseModel } from "./openrouter.js";
 
 const API_ENDPOINT = "https://ai-gateway.vercel.sh/v1/models";
 
-const ModelType = z.enum([
+const KnownModelType = z.enum([
   "language",
   "embedding",
   "image",
@@ -16,6 +16,7 @@ const ModelType = z.enum([
   "transcription",
   "speech",
   "realtime",
+  "evaluation",
 ]);
 
 const PricingTier = z.object({
@@ -42,7 +43,11 @@ export const VercelModel = z.object({
   released: z.number().optional(),
   context_window: z.number().optional().default(0),
   max_tokens: z.number().optional().default(0),
-  type: ModelType,
+  // Vercel adds new model types without notice ("evaluation" appeared Sep 2026
+  // and broke the sync with a ZodError). The trailing z.string() keeps the
+  // schema forward-compatible so future types fall through to the default
+  // text/text handling in buildVercelModel instead of failing the whole sync.
+  type: KnownModelType.or(z.string()),
   tags: z.array(z.string()).optional().default([]),
   pricing: Pricing.optional(),
 }).passthrough();
@@ -107,12 +112,19 @@ export function buildVercelModel(
     : undefined;
   const cost = buildCost(model.pricing, existing?.cost);
 
+  // Self-heal bogus `family = "o"` stamps left by the old substring matcher
+  // (e.g. cohere rerank, fish-audio, alibaba wan). Same precedent as OpenRouter.
+  const inferredFamily = inferFamily(model.id, model.name);
+  const family = existing?.family === "o" && inferredFamily !== "o"
+    ? inferredFamily
+    : (existing?.family ?? inferredFamily);
+
   const synced: SyncedFullModel = {
     name: existing?.name ?? model.name,
     description: existing?.description ?? describeModel({
       id: model.id,
       name: existing?.name ?? model.name,
-      family: existing?.family ?? inferFamily(model.id, model.name),
+      family,
       reasoning: existing?.reasoning ?? tags.has("reasoning"),
       tool_call: model.type === "language"
         ? existing?.tool_call ?? tags.has("tool-use")
@@ -140,12 +152,14 @@ export function buildVercelModel(
           : ["text"],
       },
     }),
-    family: existing?.family ?? inferFamily(model.id, model.name),
+    family,
     release_date: releaseDate,
     last_updated: existing?.last_updated ?? releaseDate,
     attachment: existing?.attachment ?? (tags.has("vision") || tags.has("file-input")),
     reasoning: existing?.reasoning ?? tags.has("reasoning"),
-    reasoning_options: existing?.reasoning_options ?? base?.reasoning_options,
+    reasoning_options: existing?.reasoning_options?.length
+      ? existing.reasoning_options
+      : base?.reasoning_options,
     temperature: existing?.temperature,
     tool_call: model.type === "language"
       ? existing?.tool_call ?? tags.has("tool-use")
@@ -223,17 +237,75 @@ function price(value: string | undefined) {
     : undefined;
 }
 
+function tieredPrice(value: string | undefined, tiers: z.infer<typeof PricingTier>[] | undefined) {
+  const base = price(value);
+  const normalized = (tiers ?? [])
+    .map((tier, index, values) => ({
+      start: tier.min ?? (index === 0 ? 0 : values[index - 1]?.max ?? 0),
+      cost: price(tier.cost),
+    }))
+    .filter((tier): tier is { start: number; cost: number } => tier.cost !== undefined)
+    .sort((a, b) => a.start - b.start);
+
+  return {
+    base: normalized[0]?.cost ?? base,
+    thresholds: normalized.map((tier) => tier.start).filter((start) => start > 0),
+    at(threshold: number) {
+      return normalized.findLast((tier) => tier.start <= threshold)?.cost ?? base;
+    },
+  };
+}
+
 function buildCost(pricing: VercelModel["pricing"], existing?: ExistingModel["cost"]) {
-  const input = price(pricing?.input_tiers?.[0]?.cost ?? pricing?.input);
-  const output = price(pricing?.output_tiers?.[0]?.cost ?? pricing?.output);
+  const hasPricingTiers = [
+    pricing?.input_tiers,
+    pricing?.output_tiers,
+    pricing?.input_cache_read_tiers,
+    pricing?.input_cache_write_tiers,
+  ].some((tiers) => (tiers?.length ?? 0) > 0);
+  const inputPrice = tieredPrice(pricing?.input, pricing?.input_tiers);
+  const outputPrice = tieredPrice(pricing?.output, pricing?.output_tiers);
+  const cacheReadPrice = tieredPrice(pricing?.input_cache_read, pricing?.input_cache_read_tiers);
+  const cacheWritePrice = tieredPrice(pricing?.input_cache_write, pricing?.input_cache_write_tiers);
+  const input = inputPrice.base;
+  const output = outputPrice.base;
   if (input === undefined || output === undefined) return undefined;
+
+  const thresholds = new Set([
+    ...inputPrice.thresholds,
+    ...outputPrice.thresholds,
+    ...cacheReadPrice.thresholds,
+    ...cacheWritePrice.thresholds,
+  ]);
+  const tiers: NonNullable<NonNullable<ExistingModel["cost"]>["tiers"]> = [];
+  let previous = {
+    input,
+    output,
+    cache_read: cacheReadPrice.base,
+    cache_write: cacheWritePrice.base,
+  };
+  for (const size of [...thresholds].sort((a, b) => a - b)) {
+    const tierInput = inputPrice.at(size);
+    const tierOutput = outputPrice.at(size);
+    if (tierInput === undefined || tierOutput === undefined) continue;
+    const current = {
+      input: tierInput,
+      output: tierOutput,
+      cache_read: cacheReadPrice.at(size),
+      cache_write: cacheWritePrice.at(size),
+    };
+    if (JSON.stringify(current) === JSON.stringify(previous)) continue;
+    tiers.push({ tier: { type: "context", size }, ...current });
+    previous = current;
+  }
+
   return {
     input,
     output,
     reasoning: existing?.reasoning,
-    cache_read: price(pricing?.input_cache_read_tiers?.[0]?.cost ?? pricing?.input_cache_read),
-    cache_write: price(pricing?.input_cache_write_tiers?.[0]?.cost ?? pricing?.input_cache_write),
-    tiers: existing?.tiers,
+    cache_read: cacheReadPrice.base,
+    cache_write: cacheWritePrice.base,
+    tiers: hasPricingTiers ? (tiers.length > 0 ? tiers : undefined) : existing?.tiers,
   };
 }
 
@@ -241,18 +313,21 @@ function inferFamily(modelID: string, name: string) {
   const kimiFamily = inferKimiFamily(modelID, name);
   if (kimiFamily !== undefined) return kimiFamily;
 
-  const targets = [modelID, name].map((value) => value.toLowerCase());
-  const families = [...ModelFamilyValues].sort((a, b) => b.length - a.length);
-  return families.find((family) => targets.some((target) => target.includes(family.toLowerCase())))
-    ?? families.find((family) => targets.some((target) => isSubsequence(target, family.toLowerCase())));
-}
-
-function isSubsequence(target: string, value: string) {
-  let index = 0;
-  for (const character of target) {
-    if (character === value[index]) index++;
-  }
-  return index === value.length;
+  // Word-boundary matching like the other gateway syncs. Deliberately no
+  // fuzzy/subsequence fallback: matching a family by scattered letters
+  // produces false positives (e.g. "typesafe-ai/jev" -> "yi"), and plain
+  // substring matching lets single-letter families like "o" match anything
+  // containing that letter (e.g. cohere rerank, fish-audio, alibaba wan).
+  const target = `${modelID} ${name}`.toLowerCase();
+  return [...ModelFamilyValues]
+    .sort((a, b) => b.length - a.length)
+    .find((family) => {
+      const value = family.toLowerCase().replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+      if (family === "o") {
+        return new RegExp(`(^|[^a-z0-9])${value}(?=\\d|$|[^a-z0-9])`).test(target);
+      }
+      return new RegExp(`(^|[^a-z0-9])${value}(?=$|[^a-z0-9])`).test(target);
+    });
 }
 
 function sameVercelModel(current: ExistingModel, desired: SyncedModel) {
@@ -274,6 +349,7 @@ function sameVercelModel(current: ExistingModel, desired: SyncedModel) {
     [current.cost?.output, desiredModel.cost?.output, true],
     [current.cost?.cache_read, desiredModel.cost?.cache_read, true],
     [current.cost?.cache_write, desiredModel.cost?.cache_write, true],
+    [current.cost?.tiers, desiredModel.cost?.tiers],
     [current.limit?.context, desiredModel.limit?.context],
     [current.limit?.input, desiredModel.limit?.input],
     [current.limit?.output, desiredModel.limit?.output],

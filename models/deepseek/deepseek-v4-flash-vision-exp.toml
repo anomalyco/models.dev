@@ -1,14 +1,16 @@
+# Open weights (MIT): https://huggingface.co/deepseek-ai/DeepSeek-V4-Flash-Vision-Exp
 name = "DeepSeek V4 Flash Vision Exp"
 description = "Experimental multimodal DeepSeek V4 Flash model for image understanding, coding, and agentic work"
 family = "deepseek-flash"
 release_date = "2026-08-21"
-last_updated = "2026-08-21"
+last_updated = "2026-09-01"
 attachment = true
 reasoning = true
 temperature = true
 tool_call = true
 structured_output = true
-open_weights = false
+open_weights = true
+license = "MIT"
 
 [limit]
 context = 1_000_000
@@ -17,3 +19,7 @@ output = 384_000
 [modalities]
 input = ["text", "image"]
 output = ["text"]
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/deepseek-ai/DeepSeek-V4-Flash-Vision-Exp"

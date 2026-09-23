@@ -1,3 +1,5 @@
+# Toggle: reasoning.enabled = true|false
+# https://openrouter.ai/docs/guides/best-practices/reasoning-tokens
 name = "Sonar Deep Research"
 description = "Sonar search model for current answers, retrieval, and citation-backed chat"
 family = "sonar-deep-research"
@@ -9,7 +11,9 @@ temperature = true
 tool_call = false
 structured_output = false
 open_weights = false
-reasoning_options = []
+
+[[reasoning_options]]
+type = "toggle"
 
 [cost]
 input = 2

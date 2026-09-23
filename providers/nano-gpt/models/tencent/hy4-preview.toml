@@ -1,0 +1,16 @@
+base_model = "tencent/hy4-preview"
+name = "Tencent Hy4 Preview"
+structured_output = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "high"]
+
+[cost]
+input = 0.834
+output = 2.501
+cache_read = 0.042
+
+[limit]
+context = 1_048_576
+input = 1_048_576

@@ -1,0 +1,23 @@
+name = "Schematron V2 Turbo"
+description = "Inference.net's 3B-parameter HTML-to-JSON extraction model, optimized for throughput and low cost on high-volume workloads. It turns HTML into typed, structured data for web scraping and product catalog ingestion, with a 128K-token context window. Supply HTML in the user message and extraction instructions in a JSON schema via response_format; it does not follow ordinary chat or system prompts."
+release_date = "2026-09-12"
+last_updated = "2026-09-12"
+attachment = false
+reasoning = false
+tool_call = false
+structured_output = true
+open_weights = false
+
+[cost]
+input = 0.03
+output = 0.15
+cache_read = 0.015
+
+[limit]
+context = 128_000
+input = 128_000
+output = 8_192
+
+[modalities]
+input = ["text"]
+output = ["text"]

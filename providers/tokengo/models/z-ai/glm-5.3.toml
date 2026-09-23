@@ -1,0 +1,15 @@
+# Effort: reasoning_effort = low|high|max
+# Pricing (USD/MTok, accessed 2026-08-27):
+# - Public hub $1.40/$4.40: https://www.tokengo.com/models
+# - Exact console rates incl. cache $1.40/$4.40/$0.26 (TokenGo model table ratios)
+# TokenGo OpenAI-compatible extra_body; same effort set as typical GLM-5.3 openai-compat peers.
+base_model = "zhipuai/glm-5.3"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[cost]
+input = 1.4
+output = 4.4
+cache_read = 0.26

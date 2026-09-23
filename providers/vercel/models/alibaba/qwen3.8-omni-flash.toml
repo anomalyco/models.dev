@@ -1,0 +1,15 @@
+# Effort: reasoning_effort = none|minimal|low|medium|high|xhigh|max
+# Alibaba maps minimal to low and high|max to xhigh; none disables thinking.
+# https://www.alibabacloud.com/help/en/model-studio/qwen-omni
+base_model = "alibaba/qwen3.8-omni-flash"
+name = "Qwen 3.8 Omni Flash"
+reasoning_options = [{ type = "effort", values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"] }]
+
+[cost]
+input = 0.15
+output = 0.47
+cache_read = 0.016
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

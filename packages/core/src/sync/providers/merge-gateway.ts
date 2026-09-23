@@ -158,7 +158,14 @@ export const mergeGateway = {
   translateModel(model, context) {
     const existing = context.existing(model.model);
     const translated = buildMergeGatewayModel(model, existing, context.authored(model.model));
-    return translated === undefined ? undefined : { id: model.model, model: translated };
+    return translated === undefined ? undefined : {
+      id: model.model,
+      model: translated,
+      header: translated.reasoning_options?.some((option) => option.type === "toggle")
+        && translated.reasoning_options.some((option) => option.type === "budget_tokens")
+        ? '# Toggle: thinking.type = "enabled"|"disabled"; enabled requires thinking.budget_tokens.\n# https://docs.merge.dev/merge-gateway/features/reasoning\n'
+        : undefined,
+    };
   },
 } satisfies SyncProvider<MergeGatewayModel>;
 
@@ -179,6 +186,10 @@ export function mergeGatewayReasoningOptions(
     && effortValues.length > 0
   ) {
     options.push({ type: "effort" as const, values: [...effortValues] });
+  }
+
+  if (controls.includes("thinking.budget_tokens")) {
+    options.push({ type: "budget_tokens" });
   }
 
   return options;

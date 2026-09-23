@@ -1,0 +1,16 @@
+# Sources (accessed 2026-09-15):
+# https://api.iteracompute.com/v1/models (model ID, availability, capabilities, limits, and pricing)
+# https://iteracompute.com/docs.html (OpenAI-compatible API documentation)
+# Reasoning is mandatory and the public catalog exposes no caller-selectable reasoning control.
+# Prices are in USD per million tokens.
+base_model = "deepseek/deepseek-v4-flash-0731"
+reasoning_options = []
+
+[cost]
+input = 0.34
+output = 1.05
+cache_read = 0.035
+
+[limit]
+context = 970_000
+output = 393_216

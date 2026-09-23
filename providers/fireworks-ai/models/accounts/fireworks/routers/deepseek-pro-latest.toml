@@ -1,0 +1,34 @@
+# Version-tracking "latest" router for DeepSeek Pro on Fireworks Serverless
+# (standard path — not Fast). FireConnect documents the short ID
+# deepseek-pro-latest and expands it to accounts/fireworks/routers/deepseek-pro-latest.
+# Static + catalog resolution currently targets deepseek-v4-pro-0813:
+# https://docs.fireworks.ai/ecosystem/fireconnect/models
+# https://github.com/fw-ai/fireconnect/blob/main/packages/setup-cli/lib/fireworks/model-specs.mjs
+# (ROUTER_SPEC_ALIASES + DEEPSEEK_PRO_LATEST_BASE_CANDIDATES; accessed 2026-09-15)
+# Pricing matches DeepSeek V4 Pro (0813) standard serverless rates:
+# https://docs.fireworks.ai/serverless/pricing
+# https://fireworks.ai/models/deepseek-ai/deepseek-v4-pro-0813
+# Toggle: thinking.type = enabled|disabled (reasoning_effort = none|false also disables)
+# Effort: reasoning_effort = high|max; low/medium promote to high, xhigh to max
+# Reasoning: https://docs.fireworks.ai/api-reference/post-chatcompletions
+base_model = "deepseek/deepseek-v4-pro-0813"
+name = "DeepSeek Pro Latest"
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["high", "max"]
+
+[cost]
+input = 1.32
+output = 3.96
+cache_read = 0.044
+
+[experimental.modes.priority]
+cost = { input = 1.65, output = 4.95, cache_read = 0.055 }
+provider = { body = { service_tier = "priority" } }

@@ -1,0 +1,24 @@
+# Sources:
+# https://research.meta.ai/blog/introducing-muse-spark-1-3
+# https://dev.meta.ai/docs/models
+# https://openrouter.ai/meta/muse-spark-1.3 (OpenRouter Meta-hosted catalog snapshot, 2026-09-02)
+
+name = "Muse Spark 1.3"
+description = "Muse Spark 1.3 is a multimodal reasoning model from Meta for long-running agentic, multi-agent, and coding workflows. It improves long-horizon agent collaboration, instruction following, and coding efficiency relative to Muse Spark 1.2."
+family = "muse"
+release_date = "2026-09-02"
+last_updated = "2026-09-02"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[limit]
+context = 1_048_576
+output = 131_072
+
+[modalities]
+input = ["text", "image", "video", "pdf", "audio"]
+output = ["text"]

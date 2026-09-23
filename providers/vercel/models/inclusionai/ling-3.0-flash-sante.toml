@@ -1,0 +1,22 @@
+name = "Ling 3.0 Flash Sante"
+description = "Efficient model for low-latency assistance, extraction, and routine automation"
+family = "ling"
+release_date = "2026-09-04"
+last_updated = "2026-09-04"
+attachment = false
+reasoning = true
+tool_call = true
+open_weights = false
+reasoning_options = []
+
+[cost]
+input = 0
+output = 0
+
+[limit]
+context = 256_000
+output = 32_000
+
+[modalities]
+input = ["text"]
+output = ["text"]

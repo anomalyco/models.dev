@@ -1,7 +1,8 @@
-name = "Kimi K2.6"
-description = "Kimi reasoning model for long-horizon research, planning, and tool use"
+# Serverless deprecation announced for 2026-09-25: https://docs.fireworks.ai/updates/changelog
 # Fireworks documents thinking.type = "enabled", but no explicit disabled
 # value for this model. https://docs.fireworks.ai/guides/reasoning (accessed 2026-06-25)
+name = "Kimi K2.6"
+description = "Kimi reasoning model for long-horizon research, planning, and tool use"
 family = "kimi-thinking"
 release_date = "2026-04-17"
 last_updated = "2026-04-17"
@@ -10,14 +11,18 @@ reasoning = true
 temperature = true
 tool_call = true
 open_weights = true
+status = "deprecated"
+
+[interleaved]
+field = "reasoning_content"
 
 [[reasoning_options]]
 type = "toggle"
 
 [cost]
-cache_read = 0.16
 input = 0.95
-output = 4.00
+output = 4
+cache_read = 0.16
 
 [limit]
 context = 262_000
@@ -27,5 +32,6 @@ output = 262_000
 input = ["text", "image"]
 output = ["text"]
 
-[interleaved]
-field = "reasoning_content"
+[experimental.modes.priority]
+cost = { input = 1.5, output = 6, cache_read = 0.22 }
+provider = { body = { service_tier = "priority" } }

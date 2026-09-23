@@ -449,6 +449,38 @@ test("syncs CrossModel's structured-output capability", () => {
   });
 });
 
+test("clears stale CrossModel context tiers only when source pricing is usable", () => {
+  const existing: ExistingModel = {
+    base_model: "alibaba/qwen3.8-max",
+    cost: {
+      input: 9,
+      output: 27,
+      tiers: [
+        {
+          tier: { type: "context", size: 200_000 },
+          input: 18,
+          output: 54,
+        },
+      ],
+    },
+  };
+
+  const authoritative = buildCrossModel(crossModelModel(), existing);
+  const absent = buildCrossModel(crossModelModel({ pricing: undefined }), existing);
+  const unusable = buildCrossModel(
+    crossModelModel({
+      pricing: {
+        tiers: [{ threshold: 0, input_micro_per_1m: 1_880_000 }],
+      },
+    }),
+    existing,
+  );
+
+  expect(authoritative?.cost).toEqual({ input: 1.88, output: 5.63 });
+  expect(absent?.cost).toEqual(existing.cost);
+  expect(unusable?.cost).toEqual(existing.cost);
+});
+
 test("parses CrossModel's nullable reasoning controls", () => {
   const parsed = CrossModelResponse.parse({
     data: [
@@ -474,7 +506,13 @@ test("parses CrossModel's nullable reasoning controls", () => {
   });
 });
 
-test("syncs CrossModel's explicit reasoning controls", () => {
+test("preserves CrossModel's toggle-only reasoning control", () => {
+  const model = buildCrossModel(crossModelModel(), undefined);
+  expect(model?.reasoning_options).toEqual([{ type: "toggle" }]);
+});
+
+test.each([{ off: false }, { off: true }])("syncs CrossModel's reasoning controls (effort includes none: $off)", ({ off }) => {
+  const effort = off ? ["none", "low", "high", "max"] as const : ["low", "high", "max"] as const;
   const model = buildCrossModel(
     crossModelModel({
       capabilities: {
@@ -482,7 +520,7 @@ test("syncs CrossModel's explicit reasoning controls", () => {
         reasoning: {
           supported: true,
           toggle: true,
-          effort: ["low", "high", "max"],
+          effort: [...effort],
           budget_tokens: { min: 1_024, max: 32_000 },
         },
       },
@@ -492,8 +530,8 @@ test("syncs CrossModel's explicit reasoning controls", () => {
 
   expect(model).toMatchObject({
     reasoning_options: [
-      { type: "toggle" },
-      { type: "effort", values: ["low", "high", "max"] },
+      ...off ? [] : [{ type: "toggle" }],
+      { type: "effort", values: effort },
       { type: "budget_tokens", min: 1_024, max: 32_000 },
     ],
   });
@@ -917,6 +955,36 @@ test("parses current and future Anthropic pricing rows", () => {
   expect(standard.get("claude sonnet 5")).toMatchObject({ input: 3, output: 15 });
 });
 
+test.each([
+  "| Model | Base input tokens | 5m cache writes | 1h cache writes | Cache hits and refreshes | Output tokens |",
+  "| Model | Base input tokens | 5m cache writes | 1h cache writes | Cache hits & refreshes | Output tokens |",
+  "| Model | Base Input Tokens | 5m Cache Writes | 1h Cache Writes | Cache Hits and Refreshes | Output Tokens |",
+])("parses Anthropic pricing with header %s", (header) => {
+  const markdown = anthropicPricingMarkdown.replace(/^\| Model \|.*$/m, header);
+  const pricing = parseAnthropicPricing(markdown, new Date("2026-09-03T00:00:00Z"));
+
+  expect(pricing.size).toBe(5);
+  expect(pricing.get("claude opus 4.8")).toEqual({
+    input: 5,
+    output: 25,
+    cacheRead: 0.5,
+    cacheWrite: 6.25,
+    deprecated: false,
+  });
+});
+
+test.each([
+  "Model",
+  "Base Input Tokens",
+  "5m Cache Writes",
+  "Cache Hits & Refreshes",
+  "Output Tokens",
+])("rejects Anthropic pricing without the %s column", (column) => {
+  const markdown = anthropicPricingMarkdown.replace(`| ${column} |`, "| Unknown |");
+
+  expect(() => parseAnthropicPricing(markdown)).toThrow("Anthropic model pricing table has unexpected columns");
+});
+
 test("syncs Anthropic capabilities and exact effort levels", () => {
   const model = buildAnthropicModel(anthropicModel(), {
     name: "Claude Sonnet 5",
@@ -1222,6 +1290,31 @@ test("syncs Tinfoil cached-input pricing from the public model catalog", () => {
     },
     limit: { context: 384_000 },
   });
+});
+
+test.each([undefined, "zhipuai/glm-5.2"])("syncs Tinfoil reasoning with base model %s", (base_model) => {
+  const existing = { ...existingTinfoilGLM, base_model };
+  const enabled = buildTinfoilModel(tinfoilModel(), { ...existing, reasoning: false });
+  expect(enabled.reasoning_options).toEqual(existing.reasoning_options);
+  // Factored models inherit true from the lab; standalone models must author it.
+  expect(enabled.reasoning).toBe(base_model === undefined ? true : undefined);
+
+  const disabled = buildTinfoilModel(tinfoilModel({ reasoning: false }), existing);
+  expect(disabled.reasoning).toBe(false);
+  expect(disabled.reasoning_options).toBeUndefined();
+});
+
+test("requires authored Tinfoil controls instead of inventing an empty set", () => {
+  expect(() => buildTinfoilModel(tinfoilModel(), {
+    ...existingTinfoilGLM,
+    reasoning_options: undefined,
+  })).toThrow("requires hand-authored reasoning_options");
+
+  const model = buildTinfoilModel(tinfoilModel(), {
+    ...existingTinfoilGLM,
+    reasoning_options: [],
+  });
+  expect(model.reasoning_options).toEqual([]);
 });
 
 test("removes stale Tinfoil cache pricing when the public catalog omits it", () => {
@@ -1799,7 +1892,36 @@ test("resolves DigitalOcean IDs to canonical model metadata", () => {
   expect(resolveDigitalOceanBaseModel("mimo-v2.5-pro")).toBe("xiaomi/mimo-v2.5-pro");
   expect(resolveDigitalOceanBaseModel("anthropic-claude-5-sonnet")).toBe("anthropic/claude-sonnet-5");
   expect(resolveDigitalOceanBaseModel("anthropic-claude-opus-5")).toBe("anthropic/claude-opus-5");
+  expect(resolveDigitalOceanBaseModel("anthropic-claude-fable-5.1")).toBe("anthropic/claude-fable-5-1");
+  expect(resolveDigitalOceanBaseModel("anthropic-claude-5.1-fable")).toBe("anthropic/claude-fable-5-1");
+  expect(resolveDigitalOceanBaseModel("anthropic-claude-unknown-99.1")).toBeUndefined();
   expect(resolveDigitalOceanBaseModel("openai-gpt-5.6-luna")).toBe("openai/gpt-5.6-luna");
+});
+
+test("new DigitalOcean Fable models emit only base metadata overrides", () => {
+  const translated = digitalocean.translateModel(
+    digitalOceanModel({
+      id: "anthropic-claude-fable-5.1",
+      name: "Anthropic Claude Fable 5.1",
+      reasoning_efforts: ["low", "medium", "high", "xhigh", "max"],
+      modalities: { input: ["text", "image"], output: ["text"] },
+      max_output_tokens: 128_000,
+      created_at: "2026-09-01T00:00:00Z",
+      pricing: { input: 10, output: 50, cacheRead: 0.25, cacheWrite: 12.5 },
+    }),
+    { existing: () => undefined, authored: () => undefined },
+  );
+
+  expect(translated).toEqual({
+    id: "anthropic-claude-fable-5.1",
+    model: {
+      base_model: "anthropic/claude-fable-5-1",
+      name: "Anthropic Claude Fable 5.1",
+      reasoning_options: [{ type: "effort", values: ["low", "medium", "high", "xhigh", "max"] }],
+      cost: { input: 10, output: 50, cache_read: 0.25, cache_write: 12.5 },
+      modalities: { input: ["text", "image"] },
+    },
+  });
 });
 
 test("new DigitalOcean base models inherit intrinsic capabilities", () => {
@@ -2336,7 +2458,7 @@ test("deduplicates Eden AI case-only IDs without losing context metadata", () =>
   for (const data of [[lowercase, uppercase], [uppercase, lowercase]]) {
     const models = edenai.parseModels({ object: "list", data });
     expect(models).toEqual([{ ...lowercase, context_length: 786_432 }]);
-    expect(edenai.translateModel(models[0]!)).toMatchObject({
+    expect(edenai.translateModel(models[0]!, { existing: () => undefined, authored: () => undefined })).toMatchObject({
       id: lowercase.id,
       model: { base_model: "deepseek/deepseek-v4-flash-0731", limit: { context: 786_432 } },
     });
@@ -2377,9 +2499,8 @@ test("takes Eden AI reasoning options from the model's own lab entry", () => {
   ]);
 });
 
-test("skips Eden AI models whose reasoning control has no effort equivalent", () => {
-  // Lab and OpenRouter both expose these through budget_tokens, which Eden AI
-  // has no request field for.
+test("skips new Eden AI models whose reasoning control has no effort equivalent", () => {
+  // The sync does not yet map this route's budget control to Eden AI's API.
   expect(reasoningOptionsFor("google/gemini-2.5-pro")).toBeUndefined();
   expect(
     buildEdenAIModel(
@@ -2390,6 +2511,102 @@ test("skips Eden AI models whose reasoning control has no effort equivalent", ()
       }),
     ),
   ).toBeUndefined();
+});
+
+test("Eden AI preserves authored controls when reasoning mapping is unresolved", () => {
+  const authored: NonNullable<ExistingModel["reasoning_options"]>[] = [
+    [],
+    [{ type: "toggle" }],
+    [{ type: "effort", values: ["high"] }],
+    [{ type: "toggle" }, { type: "budget_tokens" }],
+  ];
+  for (const [id, base] of [
+    ["zai/glm-5", "zhipuai/glm-5"],
+    ["moonshot/kimi-k2.6", "moonshotai/kimi-k2.6"],
+    ["minimax/MiniMax-M3", "minimax/MiniMax-M3"],
+    ["deepinfra/nvidia/Nemotron-3-Nano-30B-A3B", "nvidia/nemotron-3-nano-30b-a3b"],
+    ["google/gemini-2.5-pro", "google/gemini-2.5-pro"],
+  ] as const) {
+    const model = edenAIModel({
+      id,
+      owned_by: id.slice(0, id.indexOf("/")),
+      model_name: id.slice(id.indexOf("/") + 1),
+    });
+    expect(buildEdenAIModel(model)).toBeUndefined();
+    for (const reasoning_options of authored) {
+      expect(buildEdenAIModel(model, { base_model: base, reasoning_options })).toMatchObject({
+        base_model: base,
+        reasoning_options,
+      });
+    }
+  }
+});
+
+test("Eden AI sync keeps listed models with unresolved reasoning controls", async () => {
+  const root = await mkdtemp(path.join(tmpdir(), "sync-edenai-"));
+  const modelsDir = path.join(root, "providers", "edenai", "models");
+  const repo = path.join(import.meta.dirname, "..", "..", "..");
+  const files = [
+    ["openai/gpt-4o-mini", "openai/gpt-4o-mini"],
+    ["zai/glm-5", "zhipuai/glm-5"],
+    ["retired/model", "openai/gpt-4o-mini"],
+  ] as const;
+
+  try {
+    for (const [id, base] of files) {
+      const destination = path.join(modelsDir, `${id}.toml`);
+      const metadata = path.join(root, "models", `${base}.toml`);
+      await mkdir(path.dirname(destination), { recursive: true });
+      await mkdir(path.dirname(metadata), { recursive: true });
+      await copyFile(path.join(repo, "models", `${base}.toml`), metadata);
+      await copyFile(
+        path.join(repo, "providers", "edenai", "models", `${id === "retired/model" ? "openai/gpt-4o-mini" : id}.toml`),
+        destination,
+      );
+    }
+    const glmPath = path.join(modelsDir, "zai/glm-5.toml");
+    const authored = (await readFile(glmPath, "utf8")).replace(
+      "reasoning_options = []",
+      'reasoning_options = [{ type = "toggle" }]',
+    );
+    const header = "# Toggle: extra_body.thinking.type = enabled|disabled\n";
+    await Bun.write(glmPath, header + authored);
+    const supported = edenAIModel({
+      id: "openai/gpt-4o-mini",
+      model_name: "gpt-4o-mini",
+      owned_by: "openai",
+      list_pricing: { input_cost_per_token: 0.000123, output_cost_per_token: 0.000456 },
+    });
+    const unresolved = edenAIModel({ id: "zai/glm-5", model_name: "glm-5", owned_by: "zai" });
+    const provider = {
+      ...edenai,
+      modelsDir,
+      async fetchModels() {
+        return { object: "list", data: [
+          supported,
+          { ...supported, id: "openai/gpt-4o-mini@us" },
+          unresolved,
+          { ...unresolved, id: "zai/glm-5@us" },
+        ] };
+      },
+    };
+
+    const result = await syncProvider(provider);
+    expect(result).toMatchObject({ created: 1, deleted: 1 });
+    expect(result.files.filter((file) => file.status === "deleted").map((file) => file.path)).toEqual([
+      path.join(modelsDir, "retired/model.toml"),
+    ]);
+    const content = await readFile(glmPath, "utf8");
+    expect(content).toStartWith(header);
+    expect(Bun.TOML.parse(content)).toMatchObject({
+      base_model: "zhipuai/glm-5",
+      reasoning_options: [{ type: "toggle" }],
+    });
+    expect(await Bun.file(path.join(modelsDir, "zai/glm-5@us.toml")).exists()).toBe(false);
+    expect(await Bun.file(path.join(modelsDir, "openai/gpt-4o-mini@us.toml")).exists()).toBe(true);
+  } finally {
+    await rm(root, { recursive: true, force: true });
+  }
 });
 
 test("omits Eden AI reasoning options for non-reasoning models", () => {
@@ -2428,7 +2645,112 @@ test("names Eden AI regional deployments after the canonical model", () => {
     ),
   ).toMatchObject({
     base_model: "anthropic/claude-opus-5",
-    name: "Claude Opus 5 (EU)",
+    name: "Claude Opus 5 (Amazon Bedrock, EU)",
+  });
+});
+
+test("names Eden AI latest aliases as Latest plus the current target", () => {
+  expect(
+    buildEdenAIModel(
+      edenAIModel({
+        id: "anthropic/claude-fable-latest",
+        model_name: "claude-fable-5-1",
+        owned_by: "anthropic",
+        alias_of: "anthropic/claude-fable-5-1",
+      }),
+    ),
+  ).toMatchObject({
+    base_model: "anthropic/claude-fable-5-1",
+    name: "Claude Fable Latest (Claude Fable 5.1)",
+  });
+  expect(
+    buildEdenAIModel(
+      edenAIModel({
+        id: "openai/gpt-latest",
+        model_name: "gpt-6-astra",
+        owned_by: "openai",
+        alias_of: "openai/gpt-6-astra",
+      }),
+    ),
+  ).toMatchObject({
+    base_model: "openai/gpt-6-astra",
+    name: "GPT Latest (GPT-6 Astra)",
+  });
+  expect(
+    buildEdenAIModel(
+      edenAIModel({
+        id: "vertex/gemini-flash-latest@us",
+        model_name: "gemini-3.8-flash",
+        owned_by: "vertex",
+        alias_of: "vertex/gemini-3.8-flash",
+      }),
+    ),
+  ).toMatchObject({
+    base_model: "google/gemini-3.8-flash",
+    name: "Gemini Flash Latest (Gemini 3.8 Flash, Vertex AI, US)",
+  });
+});
+
+test("names Eden AI non-primary hosts distinctly from the lab route", () => {
+  expect(
+    buildEdenAIModel(
+      edenAIModel({
+        id: "google/gemini-3.8-flash",
+        model_name: "gemini-3.8-flash",
+        owned_by: "google",
+      }),
+    ),
+  ).not.toHaveProperty("name");
+  expect(
+    buildEdenAIModel(
+      edenAIModel({
+        id: "vertex/gemini-3.8-flash",
+        model_name: "gemini-3.8-flash",
+        owned_by: "vertex",
+      }),
+    ),
+  ).toMatchObject({
+    base_model: "google/gemini-3.8-flash",
+    name: "Gemini 3.8 Flash (Vertex AI)",
+  });
+  expect(
+    buildEdenAIModel(
+      edenAIModel({
+        id: "vertex/gemini-3.8-flash@us",
+        model_name: "gemini-3.8-flash",
+        owned_by: "vertex",
+      }),
+    ),
+  ).toMatchObject({
+    base_model: "google/gemini-3.8-flash",
+    name: "Gemini 3.8 Flash (Vertex AI, US)",
+  });
+  expect(
+    buildEdenAIModel(
+      edenAIModel({
+        id: "deepinfra/openai/gpt-oss-120b",
+        model_name: "openai/gpt-oss-120b",
+        owned_by: "deepinfra",
+      }),
+    ),
+  ).toMatchObject({
+    base_model: "openai/gpt-oss-120b",
+    name: "GPT OSS 120B (Deep Infra)",
+  });
+});
+
+test("does not treat Eden AI case-only aliases as latest pointers", () => {
+  const built = buildEdenAIModel(
+    edenAIModel({
+      id: "flexai/deepseek-v4-flash-0731",
+      model_name: "DeepSeek-V4-Flash-0731",
+      owned_by: "flexai",
+      alias_of: "flexai/DeepSeek-V4-Flash-0731",
+    }),
+  );
+  expect(built).toMatchObject({
+    base_model: "deepseek/deepseek-v4-flash-0731",
+    name: "DeepSeek V4 Flash 0731 (FlexAI)",
   });
 });
 
@@ -2473,8 +2795,8 @@ test("keeps only the first-party Eden AI route when the lab's own API is relayed
 
   const firstParty = collectFirstPartyBaseModels([bedrock, direct]);
   expect(firstParty).toEqual(new Set(["anthropic/claude-opus-5"]));
-  expect(buildEdenAIModel(bedrock, firstParty)).toBeUndefined();
-  expect(buildEdenAIModel(direct, firstParty)).toMatchObject({
+  expect(buildEdenAIModel(bedrock, undefined, firstParty)).toBeUndefined();
+  expect(buildEdenAIModel(direct, undefined, firstParty)).toMatchObject({
     base_model: "anthropic/claude-opus-5",
   });
 });
@@ -2490,9 +2812,15 @@ test("keeps every Eden AI route for models with no first-party relay", () => {
 
   const firstParty = collectFirstPartyBaseModels(models);
   expect(firstParty.size).toBe(0);
+  const names = {
+    deepinfra: "GPT OSS 120B (Deep Infra)",
+    groq: "GPT OSS 120B (Groq)",
+    cerebras: "GPT OSS 120B (Cerebras)",
+  };
   for (const model of models) {
-    expect(buildEdenAIModel(model, firstParty)).toMatchObject({
+    expect(buildEdenAIModel(model, undefined, firstParty)).toMatchObject({
       base_model: "openai/gpt-oss-120b",
+      name: names[model.owned_by as keyof typeof names],
     });
   }
 });
@@ -2508,6 +2836,28 @@ test("resolves Eden AI aliases to the model they point at", () => {
       }),
     ),
   ).toBe("anthropic/claude-opus-5");
+});
+
+test("preserves model type when formatting synced TOML", () => {
+  const content = formatToml({
+    id: "typesafe/jev-latest",
+    type: "decision",
+    name: "Jev",
+    description: "System One model for typed decisions",
+    release_date: "2026-09-15",
+    last_updated: "2026-09-15",
+    attachment: false,
+    reasoning: false,
+    tool_call: false,
+    open_weights: false,
+    limit: { context: 64_000, output: 0 },
+    modalities: { input: ["text"], output: ["text"] },
+  });
+
+  expect(Bun.TOML.parse(content)).toMatchObject({
+    type: "decision",
+    name: "Jev",
+  });
 });
 
 test("formats interleaved as a root field before reasoning option tables", () => {
@@ -2790,6 +3140,45 @@ test("syncs OpenRouter reasoning efforts from model metadata", () => {
   });
 });
 
+test("syncs OpenRouter toggles without an effort selector", () => {
+  for (const supports_max_tokens of [undefined, true]) {
+    const source = openRouterModel({
+      reasoning: { mandatory: false, supports_max_tokens },
+    });
+    const translated = openrouter.translateModel(source, {
+      existing: () => undefined,
+      authored: () => undefined,
+    });
+    expect(translated?.model.reasoning_options).toEqual([
+      { type: "toggle" },
+      ...(supports_max_tokens ? [{ type: "budget_tokens" }] : []),
+    ]);
+    expect(translated?.header).toStartWith("# Toggle: reasoning.enabled = true|false\n");
+  }
+});
+
+test("does not derive OpenRouter controls for non-reasoning models", () => {
+  const model = buildOpenRouterModel(openRouterModel({
+    supported_parameters: ["temperature"],
+    reasoning: { mandatory: false, supports_max_tokens: true },
+  }), { reasoning_options: [{ type: "toggle" }] });
+  expect(model.reasoning).toBe(false);
+  expect(model.reasoning_options).toBeUndefined();
+});
+
+test("does not add OpenRouter toggles to mandatory or effort-none models", () => {
+  for (const reasoning of [
+    { mandatory: true, supports_max_tokens: true },
+    { mandatory: true, supported_efforts: ["none", "high"] as const },
+    { mandatory: false, supported_efforts: ["none", "high"] as const },
+    { mandatory: false, supported_efforts: null },
+  ]) {
+    const [source] = openrouter.parseModels({ data: [{ ...openRouterModel(), reasoning }] });
+    const model = buildOpenRouterModel(source!, undefined);
+    expect(model.reasoning_options?.some((option) => option.type === "toggle")).toBe(false);
+  }
+});
+
 test("uses OpenRouter model context when top provider reports a shorter context", () => {
   const model = buildOpenRouterModel(openRouterModel({
     context_length: 1_048_576,
@@ -2838,6 +3227,18 @@ test("factors OpenRouter Pro routes against canonical OpenAI metadata", () => {
   });
   expect("family" in model).toBe(false);
   expect("release_date" in model).toBe(false);
+});
+
+test("resolves dotted Claude versions without a family allowlist", () => {
+  expect(resolveCanonicalBaseModel("anthropic/claude-fable-5.1")).toBe("anthropic/claude-fable-5-1");
+  expect(resolveCanonicalBaseModel("anthropic/claude-fable-5.1-fast")).toBe("anthropic/claude-fable-5-1");
+  expect(resolveCanonicalBaseModel("anthropic/claude-opus-4.6")).toBe("anthropic/claude-opus-4-6");
+  expect(resolveCanonicalBaseModel("anthropic/claude-3.5-sonnet-20241022")).toBe("anthropic/claude-3-5-sonnet-20241022");
+  expect(resolveCanonicalBaseModel("anthropic/claude-unknown-99.1")).toBeUndefined();
+});
+
+test("resolves SpaceXAI provider IDs to canonical xAI metadata", () => {
+  expect(resolveCanonicalBaseModel("spacexai/grok-4.5")).toBe("xai/grok-4.5");
 });
 
 // Ensures Merge Gateway namespaces reuse the matching canonical model metadata.
@@ -3400,6 +3801,56 @@ test("strips image input when the deployment has no vision", () => {
   });
 });
 
+test("keeps the last LLM Gateway entry for case-insensitive duplicate IDs", () => {
+  const first = llmGatewayModel({ id: "qwen3.8-27b", family: "alibaba" });
+  const other = llmGatewayModel();
+  for (const id of [first.id, "Qwen3.8-27B"]) {
+    const last = llmGatewayModel({
+      id,
+      family: "consensusprotocol",
+      context_length: 32_768,
+      pricing: { prompt: "0.41e-6", completion: "2.5e-6" },
+    });
+    expect(llmgateway.parseModels({ data: [first, other, last] })).toEqual([last, other]);
+    expect(llmgateway.parseModels({ data: [last, other, first] })).toEqual([first, other]);
+  }
+  const nonText = llmGatewayModel({
+    id: first.id,
+    architecture: { input_modalities: ["text"], output_modalities: ["image"] },
+  });
+  expect(llmgateway.parseModels({ data: [first, nonText] })).toEqual([first]);
+});
+
+test("syncs the last LLM Gateway case variant without mixing source records", async () => {
+  const root = await mkdtemp(path.join(tmpdir(), "models-dev-llmgateway-case-"));
+  const modelsDir = path.join(root, "providers", "llmgateway", "models");
+  await mkdir(modelsDir, { recursive: true });
+  const first = llmGatewayModel({ id: "qwen3.8-27b", family: undefined });
+  const last = llmGatewayModel({
+    id: "Qwen3.8-27B",
+    family: undefined,
+    context_length: 32_768,
+    pricing: { prompt: "0.41e-6", completion: "2.5e-6" },
+  });
+  const provider = { ...llmgateway, modelsDir, fetchModels: async () => ({ data: [first, last] }) };
+
+  try {
+    await syncProvider({ ...provider, fetchModels: async () => ({ data: [first] }) });
+    const result = await syncProvider(provider);
+    expect(result).toMatchObject({ created: 1, updated: 0, deleted: 1 });
+    expect(await Bun.file(path.join(modelsDir, `${first.id}.toml`)).exists()).toBe(false);
+    const written = Bun.TOML.parse(await readFile(path.join(modelsDir, `${last.id}.toml`), "utf8"));
+    expect(written).toMatchObject({
+      cost: { input: 0.41, output: 2.5 },
+      limit: { context: 32_768 },
+    });
+    expect(written.cost).not.toHaveProperty("cache_write");
+    expect(await syncProvider(provider)).toMatchObject({ created: 0, updated: 0, deleted: 0, unchanged: 1 });
+  } finally {
+    await rm(root, { recursive: true, force: true });
+  }
+});
+
 test("refuses empty responses in both LLM Gateway syncs", () => {
   expect(() => llmgateway.parseModels({ data: [] })).toThrow("no text models");
   expect(() => llmgatewayProviders.parseModels({ data: [] })).toThrow("mapped view unavailable");
@@ -3678,6 +4129,56 @@ test("derives a Merge Gateway reasoning toggle when the selected route supports 
   expect(model).toMatchObject({ reasoning_options: [{ type: "toggle" }] });
 });
 
+test("syncs Merge Gateway explicitly advertised thinking budgets", () => {
+  const selected = mergeGatewayVendor();
+  selected.capabilities.supports_reasoning = true;
+  selected.capabilities.reasoning = {
+    configurable: true,
+    disable_supported: true,
+    default_enabled: false,
+    controls: ["thinking.budget_tokens"],
+    output_style: "reasoning_content",
+  };
+  const source = mergeGatewayModel({ vendors: { openai: selected } });
+  const translated = mergeGateway.translateModel(source, {
+    existing: () => ({ reasoning: true, reasoning_options: [] }),
+    authored: () => undefined,
+  });
+  expect(translated?.model.reasoning_options).toEqual([
+    { type: "toggle" },
+    { type: "budget_tokens" },
+  ]);
+  expect(translated?.header).toStartWith('# Toggle: thinking.type = "enabled"|"disabled"');
+
+  selected.capabilities.reasoning.disable_supported = false;
+  expect(buildMergeGatewayModel(source, { reasoning: true })?.reasoning_options).toEqual([
+    { type: "budget_tokens" },
+  ]);
+});
+
+test("does not infer Merge Gateway budgets from other controls or output limits", () => {
+  for (const controls of [undefined, [], ["thinking"], ["max_tokens"], ["reasoning.effort"]]) {
+    const selected = mergeGatewayVendor();
+    selected.capabilities.reasoning = { configurable: true, controls };
+    const model = buildMergeGatewayModel(mergeGatewayModel({ vendors: { openai: selected } }), {
+      reasoning: true,
+      reasoning_options: [],
+    });
+    expect(model?.reasoning_options).toEqual([]);
+  }
+});
+
+test("preserves curated Merge Gateway controls when a budget is advertised", () => {
+  const selected = mergeGatewayVendor();
+  selected.capabilities.reasoning = { controls: ["thinking.budget_tokens"] };
+  const reasoning_options = [{ type: "effort" as const, values: ["high"] }];
+  const model = buildMergeGatewayModel(mergeGatewayModel({ vendors: { openai: selected } }), {
+    reasoning: true,
+    reasoning_options,
+  });
+  expect(model?.reasoning_options).toEqual(reasoning_options);
+});
+
 // Effort control yields toggle + effort, not a bare toggle (claude-opus-5 regression).
 test("derives Merge Gateway toggle + effort from an effort control", () => {
   const selected = mergeGatewayVendor({
@@ -3954,7 +4455,7 @@ test("retains Merge Gateway models missing from an API-key-scoped response", () 
   expect(mergeGateway.deleteMissing).toBe(false);
 });
 
-test("parses Vercel pricing tiers with an implicit zero minimum", () => {
+test("translates Vercel pricing tiers with an implicit zero minimum", () => {
   const [model] = vercel.parseModels({
     data: [{
       id: "openai/gpt-5.6-luna",
@@ -3971,14 +4472,36 @@ test("parses Vercel pricing tiers with an implicit zero minimum", () => {
           { cost: "0.0000001", max: 272_000 },
           { cost: "0.0000002", min: 272_000 },
         ],
+        input_tiers: [
+          { cost: "0.000001", max: 272_000 },
+          { cost: "0.000002", min: 272_000 },
+        ],
+        output_tiers: [
+          { cost: "0.000006", max: 272_000 },
+          { cost: "0.000009", min: 272_000 },
+        ],
       },
     }],
   });
 
   expect(model).toBeDefined();
-  expect(buildVercelModel(model!, undefined)).toMatchObject({
-    cost: { input: 1, output: 6, cache_read: 0.1 },
+  const synced = buildVercelModel(model!, undefined);
+  expect(synced).toMatchObject({
+    cost: {
+      input: 1,
+      output: 6,
+      cache_read: 0.1,
+      tiers: [{
+        tier: { type: "context", size: 272_000 },
+        input: 2,
+        output: 9,
+        cache_read: 0.2,
+      }],
+    },
   });
+  expect(vercel.sameModel?.({
+    cost: { input: 1, output: 6, cache_read: 0.1 },
+  }, synced)).toBe(false);
 });
 
 test("Vercel factored models inherit temperature from base metadata", () => {
@@ -4091,6 +4614,149 @@ test("Vercel Claude Opus fast variants factor onto base opus metadata", () => {
   });
   expect(synced).not.toHaveProperty("description");
   expect(synced).not.toHaveProperty("family");
+});
+
+test("Vercel sync accepts evaluation and unknown future model types", () => {
+  const [evaluation, future] = vercel.parseModels({
+    data: [
+      {
+        id: "typesafe-ai/jev",
+        name: "Jev",
+        created: 1_755_815_280,
+        released: 1_789_430_400,
+        context_window: 0,
+        max_tokens: 0,
+        type: "evaluation",
+        pricing: { input: "0.000000042", output: "0" },
+      },
+      {
+        id: "example/future-model",
+        name: "Future Model",
+        created: 1_755_815_280,
+        context_window: 8_000,
+        max_tokens: 4_000,
+        type: "something-new",
+      },
+    ],
+  });
+
+  expect(evaluation).toBeDefined();
+  expect(future).toBeDefined();
+  expect(buildVercelModel(evaluation!, undefined)).toMatchObject({
+    cost: { input: 0.042, output: 0 },
+    limit: { context: 0, output: 0 },
+    modalities: { input: ["text"], output: ["text"] },
+  });
+  expect(buildVercelModel(future!, undefined)).toMatchObject({
+    limit: { context: 8_000, output: 4_000 },
+    modalities: { input: ["text"], output: ["text"] },
+  });
+});
+
+test("Vercel family inference requires word boundaries", () => {
+  const [jev, rerank, o3] = vercel.parseModels({
+    data: [
+      {
+        id: "typesafe-ai/jev",
+        name: "Jev",
+        created: 1_755_815_280,
+        context_window: 0,
+        max_tokens: 0,
+        type: "evaluation",
+      },
+      {
+        id: "cohere/rerank-v3.5",
+        name: "Cohere Rerank 3.5",
+        created: 1_733_000_000,
+        context_window: 4_096,
+        max_tokens: 4_096,
+        type: "reranking",
+      },
+      {
+        id: "example/o3",
+        name: "o3",
+        created: 1_745_000_000,
+        context_window: 200_000,
+        max_tokens: 100_000,
+        type: "language",
+      },
+    ],
+  });
+
+  // No fuzzy subsequence matches ("yi") or single-letter substring matches ("o").
+  expect(buildVercelModel(jev!, undefined).family).toBeUndefined();
+  expect(buildVercelModel(rerank!, undefined).family).toBeUndefined();
+  // Genuine o-series IDs still match, and keep their stamp when re-synced.
+  expect(buildVercelModel(o3!, undefined).family).toBe("o");
+  expect(buildVercelModel(o3!, { family: "o" }).family).toBe("o");
+  // Existing bogus "o" stamps self-heal on the next sync.
+  expect(buildVercelModel(rerank!, { family: "o" }).family).toBeUndefined();
+});
+
+test("Vercel empty existing reasoning_options falls back to the route base menu", () => {
+  const [model] = vercel.parseModels({
+    data: [{
+      id: "minimax/minimax-m2.7-free",
+      name: "MiniMax M2.7 (Free)",
+      created: 1_784_160_000,
+      context_window: 200_000,
+      max_tokens: 128_000,
+      type: "language",
+      tags: ["reasoning", "tool-use"],
+      pricing: { input: "0", output: "0" },
+    }],
+  });
+
+  const translated = vercel.translateModel(model!, {
+    existing(id) {
+      if (id === "minimax/minimax-m2.7-free") return { reasoning_options: [] };
+      if (id === "minimax/minimax-m2.7") {
+        return { reasoning_options: [{ type: "effort", values: ["low", "high"] }] };
+      }
+      return undefined;
+    },
+    authored() {
+      return undefined;
+    },
+  });
+
+  expect(translated?.model).toMatchObject({
+    reasoning_options: [{ type: "effort", values: ["low", "high"] }],
+  });
+});
+
+test("Vercel preserves a non-empty existing reasoning_options over the base menu", () => {
+  const [model] = vercel.parseModels({
+    data: [{
+      id: "minimax/minimax-m2.7-free",
+      name: "MiniMax M2.7 (Free)",
+      created: 1_784_160_000,
+      context_window: 200_000,
+      max_tokens: 128_000,
+      type: "language",
+      tags: ["reasoning", "tool-use"],
+      pricing: { input: "0", output: "0" },
+    }],
+  });
+
+  const translated = vercel.translateModel(model!, {
+    existing(id) {
+      if (id === "minimax/minimax-m2.7-free") {
+        return { reasoning_options: [{ type: "toggle" }] };
+      }
+      if (id === "minimax/minimax-m2.7") {
+        return { reasoning_options: [{ type: "effort", values: ["low", "high"] }] };
+      }
+      return undefined;
+    },
+    authored() {
+      return undefined;
+    },
+  });
+
+  expect(translated?.model).toMatchObject({
+    reasoning_options: [{ type: "toggle" }],
+  });
 });
 
 test("OpenRouter Claude Opus fast variants factor onto base opus metadata", () => {
@@ -4268,7 +4934,6 @@ test("syncs EmpirioLabs pricing tiers and reasoning controls", () => {
     base_model: "minimax/MiniMax-M3",
     structured_output: true,
     reasoning_options: [
-      { type: "toggle" },
       { type: "effort", values: ["none", "low", "medium", "high", "max"] },
       { type: "budget_tokens", min: 1_024, max: 32_768 },
     ],
@@ -4447,3 +5112,58 @@ function openRouterModel(overrides: Partial<OpenRouterModel> = {}): OpenRouterMo
     ...overrides,
   };
 }
+
+function caseFoldProvider(modelsDir: string, ids: string[]): SyncProvider<string> {
+  return {
+    id: "case-fold-test",
+    name: "Case fold test",
+    modelsDir,
+    async fetchModels() {
+      return ids;
+    },
+    parseModels(raw) {
+      return raw as string[];
+    },
+    translateModel(id) {
+      return {
+        id,
+        model: {
+          name: id,
+          description: "Case-fold guard test model.",
+          release_date: "2026-08-14",
+          last_updated: "2026-08-14",
+          attachment: false,
+          reasoning: false,
+          tool_call: false,
+          open_weights: false,
+          cost: { input: 1, output: 2 },
+          limit: { context: 8_192, output: 4_096 },
+          modalities: { input: ["text"], output: ["text"] },
+        },
+      };
+    },
+  };
+}
+
+test("rejects synced model paths that differ only in case", async () => {
+  const root = await mkdtemp(path.join(tmpdir(), "models-dev-case-fold-"));
+  const modelsDir = path.join(root, "providers", "case-fold-test", "models");
+  await mkdir(modelsDir, { recursive: true });
+
+  try {
+    await expect(
+      syncProvider(caseFoldProvider(modelsDir, ["Alpha", "alpha"])),
+    ).rejects.toThrow(/differ only in case/u);
+
+    await expect(
+      syncProvider(caseFoldProvider(modelsDir, ["beta", "beta"])),
+    ).rejects.toThrow(/Duplicate synced model path/u);
+
+    const clean = await syncProvider(
+      caseFoldProvider(modelsDir, ["Gamma", "delta"]),
+    );
+    expect(clean).toMatchObject({ created: 2, updated: 0, deleted: 0 });
+  } finally {
+    await rm(root, { recursive: true, force: true });
+  }
+});

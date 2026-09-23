@@ -1,11 +1,20 @@
+# Effort: reasoning_effort = high|max
+# https://zenmux.ai/docs/api/openai/openai-list-models.html
+# https://zenmux.ai/docs/guide/advanced/reasoning.html
 base_model = "zhipuai/glm-5.2"
 name = "GLM 5.2"
 
-[cost]
-input = 1.40
-output = 4.50
-cache_read = 0.26
+[interleaved]
+field = "reasoning_content"
 
 [[reasoning_options]]
 type = "effort"
 values = ["high", "max"]
+
+[cost]
+input = 0.98
+output = 3.08
+cache_read = 0.182
+
+[limit]
+output = 128_000
