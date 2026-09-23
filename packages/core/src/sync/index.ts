@@ -93,6 +93,8 @@ export interface SyncProvider<SourceModel> {
   /** Replace existing leading comments with translateModel.header. */
   authoritativeHeaders?: boolean;
   sameModel?(current: ExistingModel, desired: SyncedModel): boolean;
+  /** Refresh provider-owned comments while preserving unrelated authored notes. */
+  updateHeader?(current: string, generated: string): string;
   missingNotice?(paths: string[]): string[];
   /**
    * Remote ID to report when translateModel skips a source model. Return
@@ -368,12 +370,15 @@ export async function syncProvider<SourceModel>(
       throw parsed.error;
     }
 
+    const currentHeader = existing.get(relativePath)?.header ?? "";
     const translatedHeader = translated.header === undefined
       ? undefined
       : leadingComments(translated.header);
-    const header = provider.authoritativeHeaders
-      ? translatedHeader ?? ""
-      : (existing.get(relativePath)?.header || translatedHeader) ?? "";
+    const header = translatedHeader !== undefined && provider.updateHeader !== undefined
+      ? provider.updateHeader(currentHeader, translatedHeader)
+      : provider.authoritativeHeaders
+        ? translatedHeader ?? ""
+        : currentHeader || translatedHeader || "";
     desired.set(relativePath, {
       model: parsed.data,
       content: header + formatToml(parsed.data),
@@ -448,7 +453,8 @@ export async function syncProvider<SourceModel>(
       continue;
     }
 
-    const headerChanged = provider.authoritativeHeaders && current.header !== file.header;
+    const headerChanged = (provider.authoritativeHeaders || provider.updateHeader !== undefined)
+      && current.header !== file.header;
     if (
       headerChanged
       || !(provider.sameModel?.(current.authored, file.model)

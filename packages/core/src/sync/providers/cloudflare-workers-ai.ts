@@ -1,7 +1,8 @@
 import { z } from "zod";
-import { readFileSync, readdirSync } from "node:fs";
+import { readdirSync } from "node:fs";
 import path from "node:path";
 
+import { ReasoningOption } from "../../schema.js";
 import type { ExistingModel, SyncedFullModel, SyncedModel, SyncProvider } from "../index.js";
 import { MissingReasoningOptionsError } from "../missing-reasoning-options.js";
 import { buildOpenRouterModel, OpenRouterModel } from "./openrouter.js";
@@ -34,7 +35,10 @@ const METADATA_PUBLISHERS: Record<string, string> = {
 };
 
 const WorkersAiReasoning = OpenRouterModel.shape.reasoning.unwrap().partial({ mandatory: true });
-const WorkersAiModel = OpenRouterModel.extend({ reasoning: WorkersAiReasoning.optional() });
+const WorkersAiModel = OpenRouterModel.extend({
+  reasoning: WorkersAiReasoning.optional(),
+  input_schema: z.record(z.unknown()).optional(),
+});
 type WorkersAiModel = z.infer<typeof WorkersAiModel>;
 
 const CloudflareModel = z.object({
@@ -54,6 +58,7 @@ const CloudflareModel = z.object({
   supported_sampling_parameters: z.array(z.string()).optional(),
   // Validate reasoning separately so malformed controls do not discard the model.
   reasoning: z.unknown().optional(),
+  input_schema: z.record(z.unknown()).optional(),
 }).passthrough();
 
 const CloudflareResponse = z.object({
@@ -85,7 +90,14 @@ export const cloudflareWorkersAi = {
   name: "Cloudflare Workers AI",
   modelsDir: "providers/cloudflare-workers-ai/models",
   deleteMissing: false,
-  authoritativeHeaders: true,
+  updateHeader(current, generated) {
+    const notes = current.split("\n").filter((line) => {
+      const trimmed = line.trim();
+      return trimmed !== ""
+        && !/^# (?:Reasoning controls declared by Cloudflare's model input schema\.|Toggle:|Effort:|Budget:)/.test(trimmed);
+    });
+    return [...new Set([...generated.trim().split("\n"), ...notes])].join("\n") + "\n";
+  },
   async fetchModels() {
     const accountID = process.env.CLOUDFLARE_WORKERS_AI_SYNC_ACCOUNT_ID;
     const token = process.env.CLOUDFLARE_WORKERS_AI_SYNC_API_TOKEN;
@@ -104,7 +116,14 @@ export const cloudflareWorkersAi = {
       if (response !== undefined) rows.push(...modelRows(response));
     }
 
-    return { data: rows };
+    const models = parseCloudflareModels({ data: rows });
+    for (let i = 0; i < models.length; i += 4) {
+      await Promise.all(models.slice(i, i + 4).map(async (model) => {
+        model.input_schema = await fetchSchema(accountID, token, model.id.replace(/^workers-ai\//, ""));
+      }));
+    }
+
+    return { data: models };
   },
   parseModels(raw) {
     const models = parseCloudflareModels(raw);
@@ -114,35 +133,46 @@ export const cloudflareWorkersAi = {
   translateModel(model, context) {
     const id = model.id;
     const existing = context.existing(id);
-    if (existing === undefined && hasReasoning(model) && workersAiReasoningOptions(model) === undefined) {
+    const apiControls = workersAiReasoningOptions(model);
+    const controls = apiControls === undefined
+      && model.supported_parameters.some((value) => value === "reasoning" || value === "include_reasoning")
+        ? schemaReasoningOptions(model.input_schema)
+        : undefined;
+    if (
+      existing === undefined
+      && model.input_schema !== undefined
+      && hasReasoning(model)
+      && controls === undefined
+      && apiControls === undefined
+    ) {
       throw new MissingReasoningOptionsError(id, "Workers AI Search does not specify concrete reasoning controls; manual authoring is needed");
     }
-    const translated = buildWorkersAiModel(model, existing);
-    // Only read paths already present in the sync runner's catalogue map.
-    const header = existing === undefined ? "" : modelHeader(path.resolve(ROOT_DIR, this.modelsDir, `${id}.toml`));
-    if (header === undefined) return undefined;
-    // Remove only the exact generated line; preserve every other leading comment.
-    const preservedHeader = header.replace(TOGGLE_HEADER, "");
-    // Respect curated model-specific wire instructions, including Qwen's split lines.
-    const hasToggleWire = /\b(?:thinking\.type|chat_template_kwargs\.thinking|enable_thinking)\b/.test(preservedHeader);
+    const translated = {
+      ...buildWorkersAiModel(model, existing),
+      ...(controls && { reasoning_options: controls.options }),
+    };
+    if (controls !== undefined) return { id, model: translated, header: controls.header };
+
     const toggleHeader = ENABLE_THINKING_MODELS.has(id) ? TOGGLE_HEADER : "";
-    if (translated.reasoning_options?.some((option) => option.type === "toggle") && !hasToggleWire && !toggleHeader) {
-      if (existing === undefined) {
-        throw new MissingReasoningOptionsError(id, "Workers AI toggle wire path needs manual verification");
-      }
+    if (
+      translated.reasoning_options?.some((option) => option.type === "toggle")
+      && model.input_schema !== undefined
+      && !toggleHeader
+    ) {
+      if (existing === undefined) throw new MissingReasoningOptionsError(id, "Workers AI toggle wire path needs manual verification");
       console.warn(`Keeping catalogue reasoning for ${id}: Workers AI toggle wire path is unknown`);
       // Keep the reasoning boundary small: other usable properties still update.
       return {
         id,
         model: buildWorkersAiModel({ ...model, reasoning: undefined }, existing),
-        header,
       };
     }
     return {
       id,
       model: translated,
-      header: (translated.reasoning_options?.some((option) => option.type === "toggle") && !hasToggleWire ? toggleHeader : "")
-        + preservedHeader,
+      header: translated.reasoning_options?.some((option) => option.type === "toggle")
+        ? toggleHeader || undefined
+        : undefined,
     };
   },
 } satisfies SyncProvider<WorkersAiModel>;
@@ -153,15 +183,64 @@ function hasReasoning(model: WorkersAiModel) {
     || model.reasoning?.supports_max_tokens === true;
 }
 
-function modelHeader(file: string) {
-  try {
-    const lines = readFileSync(file, "utf8").split("\n");
-    const firstKey = lines.findIndex((line) => line.trim() !== "" && !line.trim().startsWith("#"));
-    return lines.slice(0, firstKey === -1 ? lines.length : firstKey).join("\n") + "\n";
-  } catch (error) {
-    console.warn(`Skipping Workers AI model with an unreadable catalogue header: ${file}`, error);
-    return undefined;
+const SchemaNode = z.object({
+  type: z.string().optional(),
+  enum: z.array(z.unknown()).optional(),
+  const: z.unknown().optional(),
+  properties: z.record(z.unknown()).optional(),
+  anyOf: z.array(z.unknown()).optional(),
+  oneOf: z.array(z.unknown()).optional(),
+});
+
+// Follow request properties and alternatives, not arbitrary nested message/tool schemas.
+function schemaFields(input: unknown, path: string[]): z.infer<typeof SchemaNode>[] {
+  const parsed = SchemaNode.safeParse(input);
+  if (!parsed.success) return [];
+  const node = parsed.data;
+  const fields = path.length === 0 ? [node] : schemaFields(node.properties?.[path[0]!], path.slice(1));
+  return fields.concat((node.anyOf ?? []).concat(node.oneOf ?? []).flatMap((branch) => schemaFields(branch, path)));
+}
+
+function schemaReasoningOptions(input: unknown) {
+  const options: z.infer<typeof ReasoningOption>[] = [];
+  const paths = [["reasoning_effort"], ["reasoning", "effort"]];
+  const values = [...new Set(paths.flatMap((path) => schemaFields(input, path))
+    .flatMap((node) => node.enum ?? []).filter((value) => typeof value === "string"))];
+  const effort = ReasoningOption.safeParse({ type: "effort", values });
+  const toggle = schemaFields(input, ["chat_template_kwargs", "enable_thinking"])
+    .some((node) => node.type === "boolean" && node.const === undefined &&
+      (node.enum === undefined || (node.enum.includes(true) && node.enum.includes(false))));
+  const comments = ["# Reasoning controls declared by Cloudflare's model input schema."];
+  if (toggle && !values.includes("none")) {
+    options.push({ type: "toggle" });
+    comments.push("# Toggle: chat_template_kwargs.enable_thinking = true|false");
   }
+  if (effort.success && values.some((value) => value !== "none")) {
+    options.push(effort.data);
+    for (const path of paths) {
+      if (schemaFields(input, path).some((node) => node.enum?.length)) {
+        comments.push(`# Effort: ${path.join(".")} = ${values.join("|")}`);
+      }
+    }
+  }
+  if (options.length === 0) return undefined;
+  return { options, header: comments.join("\n") + "\n" };
+}
+
+async function fetchSchema(accountID: string, token: string, model: string) {
+  const url = new URL(`${API_BASE}/${accountID}/ai/models/schema`);
+  url.searchParams.set("model", model);
+  const response = await fetch(url, {
+    headers: { Authorization: `Bearer ${token}` },
+    signal: AbortSignal.timeout(30_000),
+  });
+  if (!response.ok) {
+    throw new Error(`Cloudflare Workers AI schema request failed for ${model}: ${response.status}`);
+  }
+  return z.object({
+    success: z.literal(true),
+    result: z.object({ input: z.record(z.unknown()) }),
+  }).parse(await response.json()).result.input;
 }
 
 export function buildWorkersAiModel(
