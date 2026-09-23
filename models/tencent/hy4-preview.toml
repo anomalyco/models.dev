@@ -1,3 +1,4 @@
+# Source: https://cloud.tencent.com/document/product/1823/130055
 name = "Hy4 preview"
 description = "A next-generation productivity model with significantly enhanced Agent and complex task execution capabilities."
 family = "Hy"
@@ -10,8 +11,8 @@ tool_call = true
 open_weights = true
 
 [limit]
-context = 1_024_000
-output = 64_000
+context = 1_048_576
+output = 65_536
 
 [modalities]
 input = ["text"]

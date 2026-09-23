@@ -82,7 +82,7 @@ import {
 import { openai, parseOpenAIModels } from "../src/sync/providers/openai.js";
 import { ofox } from "../src/sync/providers/ofox.js";
 import { pioneer } from "../src/sync/providers/pioneer.js";
-import { google, shouldTrackGoogleModel } from "../src/sync/providers/google.js";
+import { buildGoogleModel, google, shouldTrackGoogleModel } from "../src/sync/providers/google.js";
 import { buildTinfoilModel, tinfoil, type TinfoilModel } from "../src/sync/providers/tinfoil.js";
 import { resolveVeniceBaseModel } from "../src/sync/providers/venice.js";
 import { buildVercelModel, vercel } from "../src/sync/providers/vercel.js";
@@ -302,7 +302,7 @@ test("builds current Inceptron models from explicit base metadata", () => {
     reasoning_options: [{ type: "effort", values: ["high", "max"] }],
     interleaved: { field: "reasoning_content" },
     cost: { input: 0.13, output: 0.28, cache_read: 0.03, cache_write: 0 },
-    limit: { context: 1_048_576, output: 1_048_576 },
+    limit: { output: 1_048_576 },
   });
 });
 
@@ -1232,6 +1232,46 @@ test("tracks public Google model families but not opaque internal IDs", () => {
   expect(shouldTrackGoogleModel("ajax")).toBe(false);
   expect(shouldTrackGoogleModel("perseus-2")).toBe(false);
   expect(shouldTrackGoogleModel("thorin")).toBe(false);
+});
+
+const existingGoogleModel: ExistingModel = {
+  name: "Google test model",
+  description: "Google model used to test sync limit preservation",
+  release_date: "2026-01-01",
+  last_updated: "2026-01-01",
+  attachment: false,
+  reasoning: false,
+  temperature: true,
+  tool_call: false,
+  open_weights: false,
+  limit: { context: 8, output: 9 },
+  modalities: { input: ["text"], output: ["text"] },
+};
+
+test.each([
+  ["deep-research-max-preview-04-2026", 1_048_576, 7],
+  ["deep-research-preview-04-2026", 1_048_576, 7],
+  ["gemini-2.5-computer-use-preview-10-2025", 128_000, 64_000],
+  ["gemini-3-pro-image", 65_536, 7],
+  ["gemini-3-pro-image-preview", 65_536, 7],
+  ["gemini-3.1-flash-image", 131_072, 32_768],
+  ["gemini-3.1-flash-lite-image", 6, 4_096],
+  ["gemini-3.5-live-translate-preview", 131_072, 65_536],
+  ["gemini-embedding-2", 6, 3_072],
+  ["gemini-omni-flash-preview", 1_048_576, 7],
+  ["lyria-3-clip-preview", 131_072, 7],
+  ["lyria-3-pro-preview", 131_072, 7],
+  ["veo-3.1-fast-generate-preview", 1_024, 1],
+  ["veo-3.1-generate-preview", 1_024, 1],
+  ["veo-3.1-lite-generate-preview", 1_024, 1],
+])("preserves documented Google limits for %s", (id, context, output) => {
+  const built = buildGoogleModel({
+    name: `models/${id}`,
+    inputTokenLimit: 6,
+    outputTokenLimit: 7,
+  }, existingGoogleModel);
+
+  expect(built.limit).toMatchObject({ context, output });
 });
 
 function tinfoilModel(overrides: Partial<TinfoilModel> = {}): TinfoilModel {

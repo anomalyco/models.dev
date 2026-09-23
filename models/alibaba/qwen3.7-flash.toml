@@ -1,3 +1,4 @@
+# Source: https://www.qwencloud.com/models/qwen3.7-flash
 name = "Qwen3.7 Flash"
 description = "Lightweight multimodal Qwen model for high-throughput text, image, and video tasks"
 family = "qwen"
@@ -12,8 +13,8 @@ open_weights = false
 
 [limit]
 context = 1_000_000
-input = 991_000
-output = 65_536
+input = 991_808
+output = 131_072
 
 [modalities]
 input = ["text", "image", "video"]

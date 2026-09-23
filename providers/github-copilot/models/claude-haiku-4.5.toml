@@ -1,3 +1,4 @@
+# Limits source (live CAPI, verified 2026-09-23): https://api.githubcopilot.com/models
 base_model = "anthropic/claude-haiku-4-5"
 reasoning_options = [{ type = "budget_tokens", min = 1_024, max = 32_000 }]
 
@@ -8,4 +9,6 @@ cache_read = 0.1
 cache_write = 1.25
 
 [limit]
-input = 136_000
+context = 200_000
+input = 128_000
+output = 32_000

@@ -86,6 +86,28 @@ test("builds Cloudflare AI Gateway overrides from catalog metadata", () => {
   });
 });
 
+test("omits inherited input limits when Cloudflare serves a smaller context", () => {
+  const model = buildCloudflareAiGatewayModel(
+    {
+      model_id: "openai/gpt-5",
+      task: "Text Generation",
+      context_length: 128_000,
+      provider_details: providerDetails({ input_tokens: 1.25, output_tokens: 10 }),
+    },
+    undefined,
+    {
+      reasoning_options: [{ type: "effort", values: ["minimal", "low", "medium", "high"] }],
+      limit: { context: 128_000, output: 16_384 },
+    },
+  );
+
+  expect(model).toMatchObject({
+    base_model: "openai/gpt-5",
+    base_model_omit: ["limit.input"],
+    limit: { context: 128_000, output: 16_384 },
+  });
+});
+
 test("maps structured provider pricing instead of display labels", () => {
   const model = buildCloudflareAiGatewayModel(
     {

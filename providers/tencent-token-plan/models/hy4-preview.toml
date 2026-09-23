@@ -7,6 +7,11 @@
 # https://cloud.tencent.com/document/product/1823/131208
 base_model = "tencent/hy4-preview"
 
+[limit]
+context = 1_024_000
+input = 960_000
+output = 64_000
+
 [[reasoning_options]]
 type = "toggle"
 

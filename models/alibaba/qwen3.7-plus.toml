@@ -1,3 +1,4 @@
+# Source: https://www.qwencloud.com/models/qwen3.7-plus
 name = "Qwen3.7 Plus"
 description = "Multimodal Qwen workhorse for long-context agents, visual inputs, and coding"
 family = "qwen"
@@ -12,7 +13,8 @@ open_weights = false
 
 [limit]
 context = 1_000_000
-output = 64_000
+input = 991_808
+output = 131_072
 
 [modalities]
 input = ["text", "image", "video"]

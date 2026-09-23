@@ -1,3 +1,4 @@
+# Source: https://huggingface.co/tencent/Hy3-preview
 name = "Hy3 preview"
 description = "Tencent Hy reasoning model for coding, instruction following, and agent tasks"
 family = "Hy"
@@ -10,8 +11,8 @@ tool_call = true
 open_weights = true
 
 [limit]
-context = 256_000
-output = 64_000
+context = 262_144
+output = 65_536
 
 [modalities]
 input = ["text"]

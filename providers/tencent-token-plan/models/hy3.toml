@@ -3,6 +3,11 @@
 # https://cloud.tencent.com/document/product/1823/131208
 base_model = "tencent/hy3"
 
+[limit]
+context = 256_000
+input = 192_000
+output = 128_000
+
 [[reasoning_options]]
 type = "toggle"
 

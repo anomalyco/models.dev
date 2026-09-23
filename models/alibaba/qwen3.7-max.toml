@@ -1,3 +1,4 @@
+# Source: https://www.qwencloud.com/models/qwen3.7-max
 name = "Qwen3.7 Max"
 description = "Qwen frontier model tuned for agent frameworks, coding assistants, and long tasks"
 family = "qwen"
@@ -11,7 +12,8 @@ open_weights = false
 
 [limit]
 context = 1_000_000
-output = 65_536
+input = 991_808
+output = 131_072
 
 [modalities]
 input = ["text"]

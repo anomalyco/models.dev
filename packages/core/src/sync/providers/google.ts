@@ -29,6 +29,30 @@ const GoogleResponse = z.object({
 
 type GoogleModel = z.infer<typeof GoogleModel>;
 
+type GoogleLimitOverride = Partial<Pick<SyncedFullModel["limit"], "context" | "output">>;
+
+// The generic Models API can lag the model-specific documentation or report
+// endpoint plumbing limits. Preserve limits published on Google's official model cards.
+// Sources: https://ai.google.dev/gemini-api/docs/models
+//          https://cloud.google.com/vertex-ai/generative-ai/docs/models
+const DOCUMENTED_LIMIT_OVERRIDES: Partial<Record<string, GoogleLimitOverride>> = {
+  "deep-research-max-preview-04-2026": { context: 1_048_576 },
+  "deep-research-preview-04-2026": { context: 1_048_576 },
+  "gemini-2.5-computer-use-preview-10-2025": { context: 128_000, output: 64_000 },
+  "gemini-3-pro-image": { context: 65_536 },
+  "gemini-3-pro-image-preview": { context: 65_536 },
+  "gemini-3.1-flash-image": { context: 131_072, output: 32_768 },
+  "gemini-3.1-flash-lite-image": { output: 4_096 },
+  "gemini-3.5-live-translate-preview": { context: 131_072, output: 65_536 },
+  "gemini-embedding-2": { output: 3_072 },
+  "gemini-omni-flash-preview": { context: 1_048_576 },
+  "lyria-3-clip-preview": { context: 131_072 },
+  "lyria-3-pro-preview": { context: 131_072 },
+  "veo-3.1-fast-generate-preview": { context: 1_024, output: 1 },
+  "veo-3.1-generate-preview": { context: 1_024, output: 1 },
+  "veo-3.1-lite-generate-preview": { context: 1_024, output: 1 },
+};
+
 const TrackedModelPrefixes = [
   "deep-research-",
   "gemini-",
@@ -132,6 +156,14 @@ export function buildGoogleModel(model: GoogleModel, existing: ExistingModel): S
     throw new Error(`Google model ${model.name} has incomplete local TOML metadata required for sync`);
   }
 
+  const id = model.name.replace(/^models\//, "");
+  const syncedLimit = {
+    input: limit.input,
+    context: model.inputTokenLimit,
+    output: model.outputTokenLimit,
+    ...DOCUMENTED_LIMIT_OVERRIDES[id],
+  };
+
   const synced: SyncedFullModel = {
     name: model.displayName ?? name,
     description: description ?? model.description ?? describeModel({
@@ -142,11 +174,7 @@ export function buildGoogleModel(model: GoogleModel, existing: ExistingModel): S
       tool_call: toolCall,
       structured_output: existing.structured_output,
       open_weights: openWeights,
-      limit: {
-        input: limit.input,
-        context: model.inputTokenLimit,
-        output: model.outputTokenLimit,
-      },
+      limit: syncedLimit,
       modalities,
     }),
     family: existing.family,
@@ -165,11 +193,7 @@ export function buildGoogleModel(model: GoogleModel, existing: ExistingModel): S
     status: existing.status,
     interleaved: existing.interleaved,
     cost: existing.cost,
-    limit: {
-      input: limit.input,
-      context: model.inputTokenLimit,
-      output: model.outputTokenLimit,
-    },
+    limit: syncedLimit,
     modalities,
   };
 

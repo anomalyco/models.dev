@@ -1,3 +1,4 @@
+# Source: https://platform.stepfun.ai/docs/en/guides/models/step-5-preview
 name = "Step 5 Preview"
 description = "StepFun's next-generation flagship base model for coding and professional knowledge work, with native text, image, and video input and a 1M-token context window"
 # release_date is StepFun's API catalog first-appearance timestamp (created=1789564127,
@@ -13,7 +14,7 @@ open_weights = false
 [limit]
 context = 1_000_000
 input = 1_000_000
-output = 1_000_000
+output = 65_536
 
 [modalities]
 input = ["text", "image", "video"]

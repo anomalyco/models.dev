@@ -225,7 +225,18 @@ export function buildCloudflareAiGatewayModel(
       : { context: catalog.context_length ?? existing?.limit?.context }),
     ...curated.limit,
   };
-  if (Object.keys(limit).length > 0) model.limit = limit;
+  if (Object.keys(limit).length > 0) {
+    model.limit = limit;
+    const baseLimit = readBaseLimit(baseModel);
+    if (
+      baseLimit?.input !== undefined
+      && limit.context !== undefined
+      && limit.input === undefined
+      && baseLimit.context !== limit.context
+    ) {
+      model.base_model_omit = ["limit.input"];
+    }
+  }
 
   const npm = NATIVE_NPM[id.split("/")[0]!];
   if (npm !== undefined) model.provider = { npm };
@@ -592,6 +603,14 @@ function baseReasoning(id: string) {
   const file = path.join(MODELS_ROOT, `${id}.toml`);
   return existsSync(file) && z.object({ reasoning: z.boolean().optional() }).passthrough()
     .parse(Bun.TOML.parse(readFileSync(file, "utf8"))).reasoning === true;
+}
+
+function readBaseLimit(id: string) {
+  const file = path.join(MODELS_ROOT, `${id}.toml`);
+  if (!existsSync(file)) return undefined;
+  return z.object({
+    limit: z.object({ context: z.number(), input: z.number().optional() }).optional(),
+  }).passthrough().parse(Bun.TOML.parse(readFileSync(file, "utf8"))).limit;
 }
 
 function noteHeader(note: string[] | undefined) {

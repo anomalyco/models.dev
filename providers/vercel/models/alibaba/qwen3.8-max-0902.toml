@@ -3,6 +3,7 @@
 # https://vercel.com/docs/ai-gateway/sdks-and-apis/openai-chat-completions/reasoning
 # https://docs.qwencloud.com/developer-guides/text-generation/thinking
 base_model = "alibaba/qwen3.8-max-0902"
+base_model_omit = ["limit.input"]
 description = "Qwen vision-language model for visual reasoning, documents, and agent tasks"
 reasoning_options = [
   { type = "toggle" },

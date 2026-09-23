@@ -1,4 +1,5 @@
 base_model = "alibaba/qwen3.7-plus"
+base_model_omit = ["limit.input"]
 structured_output = true
 reasoning_options = [{ type = "toggle" }, { type = "budget_tokens", max = 262_144 }]
 

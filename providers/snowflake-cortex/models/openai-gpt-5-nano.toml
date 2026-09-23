@@ -2,3 +2,6 @@ base_model = "openai/gpt-5-nano"
 status = "beta"
 
 reasoning_options = [{ type = "effort", values = ["none", "minimal", "low", "medium", "high"] }]
+
+[limit]
+output = 16_384

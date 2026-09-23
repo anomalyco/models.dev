@@ -1,3 +1,4 @@
+# Source: https://huggingface.co/deepseek-ai/DeepSeek-V4-Flash-0731
 name = "DeepSeek V4 Flash 0731"
 description = "Official DeepSeek V4 Flash release with enhanced agentic capabilities and integrated DSpark speculative decoding"
 family = "deepseek-flash"
@@ -13,8 +14,8 @@ open_weights = true
 license = "MIT"
 
 [limit]
-context = 1_000_000
-output = 384_000
+context = 1_048_576
+output = 393_216
 
 [modalities]
 input = ["text"]

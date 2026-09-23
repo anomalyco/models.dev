@@ -1,3 +1,5 @@
+# Limits source (paid/trial catalog): https://api.cerebras.ai/public/v1/models/qwen-3.8-27b
+# Docs: https://inference-docs.cerebras.ai/api-reference/models/public-models
 base_model = "alibaba/qwen3.8-27b"
 last_updated = "2026-09-03"
 # Model-specific reasoning HTTP values from the Cerebras launch contract:
@@ -9,8 +11,8 @@ input = 0.99
 output = 1.49
 
 [limit]
-context = 65_536
-output = 32_768
+context = 131_072
+output = 40_960
 
 [modalities]
 input = ["text", "image"]

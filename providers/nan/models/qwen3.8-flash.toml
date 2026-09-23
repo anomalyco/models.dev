@@ -5,6 +5,7 @@
 # Reasoning: on by default, with no caller control on this surface. NaN exposes
 # no request field to disable it.
 base_model = "alibaba/qwen3.8-flash"
+base_model_omit = ["limit.input"]
 reasoning_options = []
 
 [cost]

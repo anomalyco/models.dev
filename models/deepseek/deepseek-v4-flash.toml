@@ -1,3 +1,4 @@
+# Source: https://huggingface.co/deepseek-ai/DeepSeek-V4-Flash
 name = "DeepSeek V4 Flash"
 description = "Fast DeepSeek V4 lane for economical reasoning, coding, and long-context work"
 family = "deepseek-flash"
@@ -12,8 +13,8 @@ knowledge = "2025-05"
 open_weights = true
 
 [limit]
-context = 1_000_000
-output = 384_000
+context = 1_048_576
+output = 393_216
 
 [modalities]
 input = ["text"]

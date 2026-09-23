@@ -6,6 +6,10 @@
 # already enables it, and thinking.type=disabled + a graded effort is rejected.
 base_model = "bytedance-seed/seed-2.0-code"
 
+[limit]
+context = 256_000
+input = 224_000
+
 [[reasoning_options]]
 type = "effort"
 values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"]

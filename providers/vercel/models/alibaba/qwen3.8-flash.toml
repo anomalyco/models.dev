@@ -5,6 +5,7 @@
 # Toggle: providerOptions.alibaba.enableThinking true|false -> enable_thinking
 # Budget: providerOptions.alibaba.thinkingBudget -> thinking_budget (reasoning tokens)
 base_model = "alibaba/qwen3.8-flash"
+base_model_omit = ["limit.input"]
 name = "Qwen 3.8 Flash"
 
 [[reasoning_options]]
