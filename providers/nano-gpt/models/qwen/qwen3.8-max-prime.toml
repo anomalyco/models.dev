@@ -1,0 +1,28 @@
+name = "Qwen3.8 Max Prime"
+description = "Qwen3.8 Max Prime is a higher-throughput variant of Qwen3.8 Max for coding, complex analysis, and long-running agent workflows. It accepts text, image, and video input, supports tool calling and structured output, and has a 1M-token context window. Reasoning is always enabled."
+family = "qwen3.8-max"
+release_date = "2026-09-23"
+last_updated = "2026-09-23"
+attachment = true
+reasoning = true
+tool_call = true
+structured_output = true
+open_weights = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["minimal", "low", "medium", "high", "xhigh"]
+
+[cost]
+input = 4
+output = 12
+cache_read = 0.5
+
+[limit]
+context = 1_000_000
+input = 1_000_000
+output = 131_072
+
+[modalities]
+input = ["text", "image", "video"]
+output = ["text"]
