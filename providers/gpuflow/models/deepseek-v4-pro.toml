@@ -1,4 +1,4 @@
-# Toggle: reasoning.enabled = false | thinking.type = disabled |
+﻿# Toggle: reasoning.enabled = false | thinking.type = disabled |
 # enable_thinking = false (-> chat_template_kwargs.enable_thinking = false).
 # Effort: reasoning_effort = high|max (default high; the chat template maps
 # low/medium to high).
@@ -13,8 +13,9 @@ reasoning_options = [
   { type = "effort", values = ["high", "max"] },
 ]
 
-[interleaved]
-field = "reasoning_content"
+# The serving stack emits interleaved reasoning in the `reasoning` field
+# (not `reasoning_content`), which the current interleaved.field enum cannot
+# express, so no interleaved side channel is declared here.
 
 [cost]
 input = 0.8

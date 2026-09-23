@@ -1,4 +1,4 @@
-# GLM-5.3 753B (40B active MoE) quantized NVFP4, served on 8x NVIDIA B200
+﻿# GLM-5.3 753B (40B active MoE) quantized NVFP4, served on 8x NVIDIA B200
 # in Madrid. Reasoning is always on: the chat template only reads
 # reasoning_effort (low/high, anything else falls to max); it cannot be
 # disabled. Default effort is low.
@@ -10,8 +10,9 @@ name = "GLM-5.3 NVFP4"
 type = "effort"
 values = ["low", "high", "max"]
 
-[interleaved]
-field = "reasoning_content"
+# The serving stack emits interleaved reasoning in the `reasoning` field
+# (not `reasoning_content`), which the current interleaved.field enum cannot
+# express, so no interleaved side channel is declared here.
 
 [cost]
 input = 1.206

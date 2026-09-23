@@ -1,4 +1,4 @@
-# Qwen3 14B FP8 served on a MIG-sliced NVIDIA B200 in Madrid.
+﻿# Qwen3 14B FP8 served on a MIG-sliced NVIDIA B200 in Madrid.
 # 32K context as served (native 131K); tool calling is not exposed on
 # this host (reasoning + json_mode only).
 # https://api.gpuflow.ai/v1/models (accessed 2026-09-23)
@@ -10,7 +10,7 @@ structured_output = true
 # accessed 2026-09-23): reasoning.effort -> vLLM thinking budget
 # { none: 0 (off), minimal: 1024, low: 4000, medium: 4000, high: 8000,
 # xhigh: 16000 }. reasoning.max_tokens / thinking.budget_tokens set the
-# budget directly (MIN_THINKING_BUDGET = 1024; no declared max — the
+# budget directly (MIN_THINKING_BUDGET = 1024; no declared max â€” the
 # proxy trims the budget to fit the output limit). "none" in effort
 # covers off, so no separate toggle.
 reasoning_options = [
@@ -18,8 +18,9 @@ reasoning_options = [
   { type = "budget_tokens", min = 1024 },
 ]
 
-[interleaved]
-field = "reasoning_content"
+# The serving stack emits interleaved reasoning in the `reasoning` field
+# (not `reasoning_content`), which the current interleaved.field enum cannot
+# express, so no interleaved side channel is declared here.
 
 [cost]
 input = 0.2
