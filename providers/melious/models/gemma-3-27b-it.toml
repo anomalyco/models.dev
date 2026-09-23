@@ -1,0 +1,16 @@
+# Cost: Melious list price for the default `balanced` route -- EUR 0.25 in / EUR 0.5 out
+# per 1M tokens -- converted at 1.1490 USD/EUR (ECB euro reference rate, 2026-09-21).
+# Sources: https://melious.ai/hub/models/gemma-3-27b-it and https://melious.ai/pricing
+# FX: https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml
+# Limit: the hub publishes no parameters.max_tokens for this model, so output is
+# capped at the served context rather than inheriting the lab's larger value.
+base_model = "google/gemma-3-27b-it"
+structured_output = true
+
+[cost]
+input = 0.2873
+output = 0.5745
+
+[limit]
+context = 40_000
+output = 40_000
