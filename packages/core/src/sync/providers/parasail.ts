@@ -2,7 +2,7 @@ import { z } from "zod";
 
 import type { ExistingModel, SyncProvider, SyncedFullModel, SyncedModel } from "../index.js";
 import { MissingReasoningOptionsError } from "../missing-reasoning-options.js";
-import { factorBaseModel, modelMetadata, resolveCanonicalBaseModel } from "./openrouter.js";
+import { factorBaseModel, modelMetadata, resolveCanonicalBaseModel, resolveModelMetadataBaseModel } from "./openrouter.js";
 
 // Public Parasail serverless catalog. Richer than the OpenAI-compatible
 // `/v1/models` endpoint: it carries the API alias, the underlying Hugging Face
@@ -320,6 +320,9 @@ const HF_ORG_TO_LAB: Record<string, string> = {
   Qwen: "qwen",
   qwen: "qwen",
   "ByteDance-Seed": "bytedance-seed",
+  TheDrummer: "thedrummer",
+  Gryphe: "gryphe",
+  Sao10K: "sao10k",
 };
 
 // Re-uploads under a hosting organisation: the lab is inferred from the model name.
@@ -329,6 +332,13 @@ const REUPLOAD_ORGS = new Set(["RedHatAI", "parasail-ai", "nvidia", "bighuggyd"]
 const BASE_MODEL_OVERRIDES: Record<string, string> = {
   "meta-llama/Llama-4-Maverick-17B-128E-Instruct-FP8": "meta/llama-4-maverick-17b-instruct",
   "mistralai/Mistral-Small-3.2-24B-Instruct-2506": "mistral/mistral-small-2506",
+  "meta-llama/Llama-3.2-3B-Instruct": "meta/llama-3.2-3b",
+  "parasail-ai/Mistral-Nemo-Instruct-2407-FP8": "mistral/mistral-nemo",
+  "parasail-ai/qwen2.5-vl-72b-instruct-fp8-dynamic": "alibaba/qwen2-5-vl-72b-instruct",
+  "Gryphe/MythoMax-L2-13b": "gryphe/mythomax-13b",
+  "Sao10K/L3-8B-Lunaris-v1": "sao10k/lunaris-8b",
+  "TheDrummer/UnslopNemo-12B-v4.1": "thedrummer/unslopnemo-12b",
+  "bighuggyd/thedrummer_skyfall-36b-v2-fp8-dynamic": "thedrummer/skyfall-36b-v2",
 };
 
 const QUANT_SUFFIX = /-(fp8|fp8-dynamic|nvfp4|mxfp8|int4|int8|awq|gptq)$/i;
@@ -360,5 +370,6 @@ export function resolveParasailBaseModel(modelName: string | null | undefined) {
 
   const lab = REUPLOAD_ORGS.has(org) ? inferLab(modelPart) : HF_ORG_TO_LAB[org];
   if (lab === undefined) return undefined;
-  return resolveCanonicalBaseModel(`${lab}/${modelPart.toLowerCase()}`);
+  const candidate = `${lab}/${modelPart.toLowerCase()}`;
+  return resolveCanonicalBaseModel(candidate) ?? resolveModelMetadataBaseModel(candidate);
 }

@@ -32,7 +32,13 @@ test("maps Hugging Face names, including quantized re-uploads, to lab entries", 
   expect(resolveParasailBaseModel("RedHatAI/Llama-3.3-70B-Instruct-FP8-dynamic")).toBe("meta/llama-3.3-70b-instruct");
   expect(resolveParasailBaseModel("meta-llama/Llama-4-Maverick-17B-128E-Instruct-FP8")).toBe("meta/llama-4-maverick-17b-instruct");
   expect(resolveParasailBaseModel("openai/gpt-oss-120b")).toBe("openai/gpt-oss-120b");
-  expect(resolveParasailBaseModel("TheDrummer/Cydonia-24B-v4.1")).toBeUndefined();
+  expect(resolveParasailBaseModel("TheDrummer/Cydonia-24B-v4.1")).toBe("thedrummer/cydonia-24b-v4.1");
+  expect(resolveParasailBaseModel("bighuggyd/thedrummer_skyfall-36b-v2-fp8-dynamic")).toBe("thedrummer/skyfall-36b-v2");
+  expect(resolveParasailBaseModel("Sao10K/L3-8B-Lunaris-v1")).toBe("sao10k/lunaris-8b");
+  expect(resolveParasailBaseModel("ByteDance-Seed/UI-TARS-1.5-7B")).toBe("bytedance-seed/ui-tars-1.5-7b");
+  expect(resolveParasailBaseModel("parasail-ai/qwen2.5-vl-72b-instruct-fp8-dynamic")).toBe("alibaba/qwen2-5-vl-72b-instruct");
+  expect(resolveParasailBaseModel("meta-llama/Llama-3.2-3B-Instruct")).toBe("meta/llama-3.2-3b");
+  expect(resolveParasailBaseModel("BAAI/bge-m3")).toBeUndefined();
   expect(resolveParasailBaseModel(null)).toBeUndefined();
 });
 
@@ -123,7 +129,7 @@ test("skips non-chat and private endpoints", () => {
 
 test("skips endpoints without a lab entry instead of authoring inline definitions", () => {
   const translated = parasail.translateModel(
-    endpoint({ externalAlias: "parasail-cydonia-24-v41", modelName: "TheDrummer/Cydonia-24B-v4.1" }),
+    endpoint({ externalAlias: "parasail-unknown-model", modelName: "someorg/Unknown-Model-7B" }),
     { existing: () => undefined, authored: () => undefined },
   );
 
