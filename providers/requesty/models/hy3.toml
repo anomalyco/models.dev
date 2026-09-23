@@ -1,5 +1,4 @@
 base_model = "tencent/hy3"
-base_model_omit = ["limit.input"]
 structured_output = true
 
 [[reasoning_options]]
@@ -15,5 +14,4 @@ output = 0.58
 cache_read = 0.035
 
 [limit]
-context = 262_144
 output = 262_144

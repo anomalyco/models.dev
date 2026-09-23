@@ -226,6 +226,16 @@ export function buildCloudflareAiGatewayModel(
     ...curated.limit,
   };
   const baseLimit = readBaseLimit(baseModel);
+  if (
+    baseLimit?.output !== undefined
+    && servedLimit.context !== undefined
+    && servedLimit.output === undefined
+    && baseLimit.output > servedLimit.context
+  ) {
+    throw new Error(
+      `${id}: inherited output ${baseLimit.output} exceeds served context ${servedLimit.context}; curate limit.output`,
+    );
+  }
   const limit = {
     ...(servedLimit.context !== undefined && servedLimit.context !== baseLimit?.context
       ? { context: servedLimit.context }

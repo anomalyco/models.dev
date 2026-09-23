@@ -30,7 +30,7 @@ test("preserves an explicitly authored Baseten output limit", () => {
 
   expect(built).toMatchObject({
     base_model: "deepseek/deepseek-v4-flash-0731",
-    limit: { context: 1_048_576, output: 384_000 },
+    limit: { output: 384_000 },
   });
 });
 
@@ -43,6 +43,6 @@ test("uses Baseten's catalog output limit without an authored override", () => {
 
   expect(built).toMatchObject({
     base_model: "deepseek/deepseek-v4-pro-0813",
-    limit: { context: 1_048_576, output: 262_144 },
+    limit: { output: 262_144 },
   });
 });

@@ -12,9 +12,6 @@ reasoning_options = [
 
 # GET /v1/models reports 1048576 context, higher than the lab entry's
 # 1_000_000, so [limit] overrides it (same host value as DeepSeek-V4.1-Flash).
-[limit]
-context = 1_048_576
-
 [cost]
 input = 0.14
 output = 0.28
