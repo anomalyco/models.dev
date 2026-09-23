@@ -29,6 +29,16 @@ const GoogleResponse = z.object({
 
 type GoogleModel = z.infer<typeof GoogleModel>;
 
+// The generic Models API reports different token limits for these image
+// endpoints than Google's model-specific cards. Keep the documented limits
+// through regeneration instead of reintroducing stale provider overrides.
+// https://ai.google.dev/gemini-api/docs/models/gemini-3.1-flash-image
+// https://ai.google.dev/gemini-api/docs/models/gemini-3.1-flash-lite-image
+const DOCUMENTED_LIMIT_OVERRIDES: Record<string, Partial<Pick<SyncedFullModel["limit"], "context" | "output">>> = {
+  "gemini-3.1-flash-image": { context: 131_072, output: 32_768 },
+  "gemini-3.1-flash-lite-image": { context: 65_536, output: 4_096 },
+};
+
 const TrackedModelPrefixes = [
   "deep-research-",
   "gemini-",
@@ -132,6 +142,13 @@ export function buildGoogleModel(model: GoogleModel, existing: ExistingModel): S
     throw new Error(`Google model ${model.name} has incomplete local TOML metadata required for sync`);
   }
 
+  const syncedLimit = {
+    input: limit.input,
+    context: model.inputTokenLimit,
+    output: model.outputTokenLimit,
+    ...DOCUMENTED_LIMIT_OVERRIDES[model.name.replace(/^models\//, "")],
+  };
+
   const synced: SyncedFullModel = {
     name: model.displayName ?? name,
     description: description ?? model.description ?? describeModel({
@@ -142,11 +159,7 @@ export function buildGoogleModel(model: GoogleModel, existing: ExistingModel): S
       tool_call: toolCall,
       structured_output: existing.structured_output,
       open_weights: openWeights,
-      limit: {
-        input: limit.input,
-        context: model.inputTokenLimit,
-        output: model.outputTokenLimit,
-      },
+      limit: syncedLimit,
       modalities,
     }),
     family: existing.family,
@@ -165,11 +178,7 @@ export function buildGoogleModel(model: GoogleModel, existing: ExistingModel): S
     status: existing.status,
     interleaved: existing.interleaved,
     cost: existing.cost,
-    limit: {
-      input: limit.input,
-      context: model.inputTokenLimit,
-      output: model.outputTokenLimit,
-    },
+    limit: syncedLimit,
     modalities,
   };
 

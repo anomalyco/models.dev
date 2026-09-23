@@ -82,7 +82,7 @@ import {
 import { openai, parseOpenAIModels } from "../src/sync/providers/openai.js";
 import { ofox } from "../src/sync/providers/ofox.js";
 import { pioneer } from "../src/sync/providers/pioneer.js";
-import { google, shouldTrackGoogleModel } from "../src/sync/providers/google.js";
+import { buildGoogleModel, google, shouldTrackGoogleModel } from "../src/sync/providers/google.js";
 import { buildTinfoilModel, tinfoil, type TinfoilModel } from "../src/sync/providers/tinfoil.js";
 import { resolveVeniceBaseModel } from "../src/sync/providers/venice.js";
 import { buildVercelModel, vercel } from "../src/sync/providers/vercel.js";
@@ -1232,6 +1232,32 @@ test("tracks public Google model families but not opaque internal IDs", () => {
   expect(shouldTrackGoogleModel("ajax")).toBe(false);
   expect(shouldTrackGoogleModel("perseus-2")).toBe(false);
   expect(shouldTrackGoogleModel("thorin")).toBe(false);
+});
+
+test.each([
+  ["gemini-3.1-flash-image", 131_072, 32_768],
+  ["gemini-3.1-flash-lite-image", 65_536, 4_096],
+])("preserves the %s model-card limits during Google sync", (id, context, output) => {
+  const existing: ExistingModel = {
+    base_model: `google/${id}`,
+    name: id,
+    release_date: "2026-01-01",
+    last_updated: "2026-01-01",
+    attachment: true,
+    reasoning: true,
+    tool_call: false,
+    open_weights: false,
+    limit: { context, output },
+    modalities: { input: ["text", "image"], output: ["text", "image"] },
+  };
+  const built = buildGoogleModel({
+    name: `models/${id}`,
+    inputTokenLimit: 65_536,
+    outputTokenLimit: 65_536,
+  }, existing);
+
+  expect(built).toMatchObject({ base_model: `google/${id}` });
+  expect(built).not.toHaveProperty("limit");
 });
 
 function tinfoilModel(overrides: Partial<TinfoilModel> = {}): TinfoilModel {
