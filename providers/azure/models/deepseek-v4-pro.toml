@@ -15,3 +15,6 @@ output = 3.48
 shape = "completions"
 npm = "@ai-sdk/openai-compatible"
 api = "https://${AZURE_RESOURCE_NAME}.services.ai.azure.com/models"
+
+[limit]
+context = 1_000_000
