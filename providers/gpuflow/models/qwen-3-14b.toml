@@ -1,22 +1,18 @@
-# Qwen3 14B FP8 served on a MIG-sliced NVIDIA B200 in Madrid with 32K
-# context. Tool calling is not exposed on this host (reasoning + json_mode only).
+# Qwen3 14B FP8 served on a MIG-sliced NVIDIA B200 in Madrid.
+# 32K context as served (native 131K); tool calling is not exposed on
+# this host (reasoning + json_mode only).
 # https://api.gpuflow.ai/v1/models (accessed 2026-09-23)
-# https://huggingface.co/Qwen/Qwen3-14B-FP8
+base_model = "alibaba/qwen3-14b"
 name = "Qwen3 14B FP8"
-description = "Qwen3 14B dense reasoning model with hybrid thinking and non-thinking modes"
-family = "qwen"
-release_date = "2025-04-29"
-last_updated = "2026-09-23"
-attachment = false
-reasoning = true
-temperature = true
 tool_call = false
 structured_output = true
-open_weights = true
-
-# Effort maps to a thinking budget: none=0 (off), minimal=1024,
-# low=medium=4000, high=8000, xhigh=16000. reasoning.max_tokens /
-# thinking.budget_tokens set the budget directly (min 1024).
+# Effort surface verified against the GPU Flow proxy (translation.py,
+# accessed 2026-09-23): reasoning.effort -> vLLM thinking budget
+# { none: 0 (off), minimal: 1024, low: 4000, medium: 4000, high: 8000,
+# xhigh: 16000 }. reasoning.max_tokens / thinking.budget_tokens set the
+# budget directly (MIN_THINKING_BUDGET = 1024; no declared max — the
+# proxy trims the budget to fit the output limit). "none" in effort
+# covers off, so no separate toggle.
 reasoning_options = [
   { type = "effort", values = ["none", "minimal", "low", "medium", "high", "xhigh"] },
   { type = "budget_tokens", min = 1024 },
@@ -32,8 +28,3 @@ cache_read = 0.02
 
 [limit]
 context = 32_768
-output = 8_192
-
-[modalities]
-input = ["text"]
-output = ["text"]
