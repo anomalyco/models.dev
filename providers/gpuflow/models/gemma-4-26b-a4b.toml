@@ -1,14 +1,12 @@
-﻿# Toggle: enable_thinking = true|false (chat_template_kwargs passthrough).
+# Toggle: enable_thinking = true|false (chat_template_kwargs passthrough).
 # Gemma 4 26B-A4B IT (NVFP4) served on a MIG-sliced NVIDIA B200 in Madrid.
 # Text+image input, 32K context. json_mode is not exposed on this host.
+# The engine emits interleaved reasoning in the `reasoning` field
+# (not reasoning_content).
 # https://api.gpuflow.ai/v1/models (accessed 2026-09-23)
 base_model = "google/gemma-4-26b-a4b-it"
 structured_output = false
 reasoning_options = [{ type = "toggle" }]
-
-# The serving stack emits interleaved reasoning in the `reasoning` field
-# (not `reasoning_content`), which the current interleaved.field enum cannot
-# express, so no interleaved side channel is declared here.
 
 [cost]
 input = 0.12
