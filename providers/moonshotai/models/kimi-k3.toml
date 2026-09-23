@@ -1,6 +1,8 @@
 # API: thinking.type = "enabled" | "disabled" | "adaptive"; in adaptive mode the
 # reasoning depth is set by output_config.effort = "low" | "high" | "max".
 # Pricing: https://platform.kimi.ai/docs/pricing/chat-k3 (accessed 2026-07-17).
+# Chat API max_completion_tokens can be set up to 1048576 for Kimi K3:
+# https://platform.kimi.ai/docs/api/chat
 base_model = "moonshotai/kimi-k3"
 
 [[reasoning_options]]
@@ -17,3 +19,6 @@ field = "reasoning_content"
 input = 3.0
 output = 15.0
 cache_read = 0.3
+
+[limit]
+output = 1_048_576
