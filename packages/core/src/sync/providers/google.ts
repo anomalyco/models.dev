@@ -29,12 +29,14 @@ const GoogleResponse = z.object({
 
 type GoogleModel = z.infer<typeof GoogleModel>;
 
-// The generic Models API reports different token limits for these image
-// endpoints than Google's model-specific cards. Keep the documented limits
+// The generic Models API reports different token limits for these endpoints
+// than Google's model-specific cards. Keep the documented limits
 // through regeneration instead of reintroducing stale provider overrides.
 // https://ai.google.dev/gemini-api/docs/models/gemini-3.1-flash-image
 // https://ai.google.dev/gemini-api/docs/models/gemini-3.1-flash-lite-image
+// https://ai.google.dev/gemini-api/docs/models/gemini-2.5-computer-use-preview-10-2025
 const DOCUMENTED_LIMIT_OVERRIDES: Record<string, Partial<Pick<SyncedFullModel["limit"], "context" | "output">>> = {
+  "gemini-2.5-computer-use-preview-10-2025": { context: 128_000, output: 64_000 },
   "gemini-3.1-flash-image": { context: 131_072, output: 32_768 },
   "gemini-3.1-flash-lite-image": { context: 65_536, output: 4_096 },
 };
