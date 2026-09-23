@@ -16,18 +16,18 @@
 # `reasoning_effort` is forwarded on this surface: Kunavo maps the OpenAI chat
 # field onto the Responses request as `reasoning.effort` before dispatch.
 # Values follow the lab set as carried by same-surface peers for this model.
-base_model = "openai/gpt-5.6-terra"
-reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh", "max"] }]
+base_model = "openai/gpt-6-astra"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
 
 [cost]
-input = 0.7
-output = 4.2
-cache_read = 0.07
-cache_write = 0.875
+input = 4
+output = 20
+cache_read = 0.4
+cache_write = 5
 
 [[cost.tiers]]
 tier = { type = "context", size = 272_000 }
-input = 1.4
-output = 6.3
-cache_read = 0.14
-cache_write = 1.75
+input = 8
+output = 30
+cache_read = 0.8
+cache_write = 10

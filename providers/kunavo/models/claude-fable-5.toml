@@ -1,12 +1,17 @@
 # Kunavo is an OpenAI-compatible gateway; the ids here are Kunavo's own and are
 # matched exactly (no date-suffixed aliases).
 #
-# Prices are Kunavo's list rates in USD per 1M tokens, from the live catalog at
-# https://kunavo.com/llms.txt (re-verified 2026-09-06). cache_read derives as
-# 0.10x input on the Anthropic-protocol models and 0.20x elsewhere, EXCEPT where
-# the catalog pins an explicit rate — claude-fable-5-1 pins $0.25 rather than the
-# derived $0.70. cache_write equals input on the Claude models because Kunavo
-# absorbs Anthropic's cache-write surcharge instead of passing it through.
+# Prices are Kunavo's list rates in USD per 1M tokens, re-verified 2026-09-23:
+# input, output and the long-context tiers against the live catalog at
+# https://kunavo.com/llms.txt, cache prices against the per-model cache table
+# at https://kunavo.com/pricing. Each token class follows the vendor's own
+# price structure at the model's discount. cache_read is 0.10x input, and
+# 0.025x on Claude Fable 5.1, which Anthropic lists at that ratio. cache_write
+# is 1.25x input on the Claude models and on GPT-5.6 / GPT-6 Astra, and equals
+# input on GPT-5.5, which has no per-token write price. Where the vendor has a
+# long-context tier (Kunavo's GPT models, over 272K prompt tokens),
+# [[cost.tiers]] bills the whole request at 2x input, cache reads and writes
+# included, and 1.5x output. Claude has no tier.
 #
 # reasoning_options is empty by measurement, not by uncertainty. On the surface
 # this provider registers (OpenAI /v1/chat/completions), Kunavo builds the
@@ -24,4 +29,4 @@ reasoning_options = []
 input = 7
 output = 35
 cache_read = 0.7
-cache_write = 7
+cache_write = 8.75
