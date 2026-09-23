@@ -111,50 +111,51 @@ function price(value: number | null | undefined) {
 }
 
 /**
- * Provider-specific reasoning controls. Each entry mirrors the lab entry and
- * the same-surface peers (OpenRouter) for the family; Parasail forwards
- * `reasoning_effort` to the model, so graded control is the lab's. The toggle
- * wire on this relay is `reasoning_effort = "none"` (DeepSeek's `thinking.type`
- * is ignored), verified per family against api.parasail.io on 2026-09-22 by
- * reading the returned `reasoning_content` / `reasoning` field and
- * `usage.reasoning_tokens`; the evidence is in the PR that added each entry.
+ * Provider-specific reasoning controls, authored per AGENTS.md "Reasoning
+ * options": the graded levels are the lab / same-surface peer set (Parasail
+ * forwards `reasoning_effort` to the model), and the off control is modelled by
+ * how this relay exposes it. Every claim was verified against api.parasail.io
+ * on 2026-09-22 (evidence with response ids in the PR that added the entry).
  *
- * - DeepSeek V4 family and Kimi K3: toggle + effort low|high|max (lab set).
- * - Kimi K2.6, Qwen3.5/3.6/3.8, Gemma 4: toggle (lab / OpenRouter set); Gemma 4
- *   is off unless an effort is sent.
- * - GLM-5.2: toggle + effort high|max (lab set; `none` skips thinking there too).
- * - GLM-5.3 / GLM-5.3 Flash: effort low|high|max, no toggle (lab: always reasons).
- * - MiniMax M3: toggle via its native `thinking.type = "disabled"` (lab / OpenRouter set).
+ * - Off is `reasoning_effort = "none"` on the same field as the graded levels,
+ *   so DeepSeek V4 / Kimi K3 are `effort none|low|high|max` and GLM-5.2 is
+ *   `effort none|high|max`, with no `toggle` (§3, row 1).
+ * - Qwen3.8 27B: `effort none|low|medium|xhigh` (peer graded set; `none` stops).
+ * - Binary on/off only: Kimi K2.6, Qwen3.5/3.6, Gemma 4 via
+ *   `reasoning_effort = "none"` (Gemma 4 is off unless an effort is sent);
+ *   MiniMax M3 via its native `thinking.type = "disabled"`, which this relay
+ *   honours for MiniMax while `reasoning_effort = "none"` does not stop it.
+ * - GLM-5.3 / GLM-5.3 Flash: effort low|high|max, thinking cannot be disabled
+ *   (`none` leaks the thinking into content on GLM-5.3).
  * - GPT-OSS: effort low|medium|high (Harmony rejects none/minimal/xhigh/max).
  */
 type ReasoningOptions = NonNullable<SyncedFullModel["reasoning_options"]>;
 
 const TOGGLE: ReasoningOptions = [{ type: "toggle" }];
-const TOGGLE_EFFORT_LHM: ReasoningOptions = [{ type: "toggle" }, { type: "effort", values: ["low", "high", "max"] }];
-const TOGGLE_EFFORT_HM: ReasoningOptions = [{ type: "toggle" }, { type: "effort", values: ["high", "max"] }];
+const EFFORT_NONE_LHM: ReasoningOptions = [{ type: "effort", values: ["none", "low", "high", "max"] }];
+const EFFORT_NONE_HM: ReasoningOptions = [{ type: "effort", values: ["none", "high", "max"] }];
 const EFFORT_LHM: ReasoningOptions = [{ type: "effort", values: ["low", "high", "max"] }];
 const EFFORT_HARMONY: ReasoningOptions = [{ type: "effort", values: ["low", "medium", "high"] }];
-// MiniMax M3 keeps thinking on for `reasoning_effort = "none"`; its native
-// `thinking.type = "disabled"` is honoured, so the toggle uses that wire.
-const MINIMAX_M3: ReasoningOptions = TOGGLE;
+// Qwen3.8 27B forwards graded effort (peer set low|medium|xhigh) and `none` stops thinking.
+const EFFORT_NONE_LMX: ReasoningOptions = [{ type: "effort", values: ["none", "low", "medium", "xhigh"] }];
 
 const REASONING_OPTIONS: Record<string, ReasoningOptions> = {
-  "deepseek/deepseek-v4-flash": TOGGLE_EFFORT_LHM,
-  "deepseek/deepseek-v4-flash-0731": TOGGLE_EFFORT_LHM,
-  "deepseek/deepseek-v4-pro": TOGGLE_EFFORT_LHM,
-  "deepseek/deepseek-v4-pro-0813": TOGGLE_EFFORT_LHM,
-  "deepseek/deepseek-v4.1-flash": TOGGLE_EFFORT_LHM,
-  "moonshotai/kimi-k3": TOGGLE_EFFORT_LHM,
+  "deepseek/deepseek-v4-flash": EFFORT_NONE_LHM,
+  "deepseek/deepseek-v4-flash-0731": EFFORT_NONE_LHM,
+  "deepseek/deepseek-v4-pro": EFFORT_NONE_LHM,
+  "deepseek/deepseek-v4-pro-0813": EFFORT_NONE_LHM,
+  "deepseek/deepseek-v4.1-flash": EFFORT_NONE_LHM,
+  "moonshotai/kimi-k3": EFFORT_NONE_LHM,
   "moonshotai/kimi-k2.6": TOGGLE,
-  "zhipuai/glm-5.2": TOGGLE_EFFORT_HM,
+  "zhipuai/glm-5.2": EFFORT_NONE_HM,
   "zhipuai/glm-5.3": EFFORT_LHM,
   "zhipuai/glm-5.3-flash": EFFORT_LHM,
-  "minimax/MiniMax-M3": MINIMAX_M3,
+  "minimax/MiniMax-M3": TOGGLE,
   "alibaba/qwen3.5-397b-a17b": TOGGLE,
   "alibaba/qwen3.5-35b-a3b": TOGGLE,
   "alibaba/qwen3.5-9b": TOGGLE,
   "alibaba/qwen3.6-35b-a3b": TOGGLE,
-  "alibaba/qwen3.8-27b": TOGGLE,
+  "alibaba/qwen3.8-27b": EFFORT_NONE_LMX,
   "google/gemma-4-26b-a4b-it": TOGGLE,
   "google/gemma-4-31b-it": TOGGLE,
   "openai/gpt-oss-120b": EFFORT_HARMONY,
@@ -162,7 +163,9 @@ const REASONING_OPTIONS: Record<string, ReasoningOptions> = {
 };
 
 // The relay returns DeepSeek-style `reasoning_content` for these families and
-// accepts it back on assistant messages (verified with a tool follow-up).
+// accepts it back on assistant messages (verified with a tool follow-up). Kimi,
+// GPT-OSS and GLM-5.3 Flash return `reasoning` on this relay instead, which the
+// schema does not name, so nothing is claimed for them.
 const INTERLEAVED_REASONING_CONTENT = new Set([
   "deepseek/deepseek-v4-flash",
   "deepseek/deepseek-v4-flash-0731",
@@ -264,25 +267,32 @@ export function buildParasailModel(
 const OFF_BY_DEFAULT = new Set(["google/gemma-4-26b-a4b-it", "google/gemma-4-31b-it"]);
 // Families whose disable wire is not `reasoning_effort = "none"`.
 const TOGGLE_WIRE: Record<string, string> = {
-  "minimax/MiniMax-M3": "Toggle: thinking.type = \"disabled\" turns thinking off (reasoning_effort = \"none\" is ignored).",
+  "minimax/MiniMax-M3": "Toggle: thinking.type = enabled|disabled (reasoning_effort = \"none\" does not stop thinking on this relay).",
+};
+// Families whose thinking cannot be disabled on this relay.
+const ALWAYS_ON_NOTE: Record<string, string> = {
+  "zhipuai/glm-5.3": "Thinking cannot be disabled (reasoning_effort = \"none\" leaks the thinking into content).",
+  "zhipuai/glm-5.3-flash": "Thinking cannot be disabled (reasoning_effort = \"none\" still returns reasoning).",
 };
 
 function controlStatement(baseModel: string, options: ReasoningOptions | undefined) {
   if (options === undefined) return "No reasoning control on this endpoint.";
-  if (options.length === 0) {
-    return "Always-on reasoning: no caller control is offered.";
-  }
+  if (options.length === 0) return "Always-on reasoning: no caller control is offered.";
   const parts: string[] = [];
   for (const option of options) {
     if (option.type === "toggle") {
       parts.push(TOGGLE_WIRE[baseModel] ?? (OFF_BY_DEFAULT.has(baseModel)
-        ? "Toggle: thinking is off unless reasoning_effort is sent (e.g. \"high\"); reasoning_effort = \"none\" keeps it off."
-        : "Toggle: reasoning_effort = \"none\" disables thinking (thinking.type is ignored by the relay)."));
+        ? "Toggle: reasoning_effort = \"none\" (off, the default) | any effort such as \"high\" (on)."
+        : "Toggle: reasoning_effort = \"none\" (off) | any other value (on); thinking.type is ignored."));
     } else if (option.type === "effort") {
-      parts.push(`Effort: reasoning_effort = ${option.values.map((value) => `"${value}"`).join("|")}, forwarded to the model.`);
+      const graded = option.values.filter((value) => value !== "none").join("|");
+      parts.push(option.values.includes("none")
+        ? `Off is reasoning_effort = none; graded levels ${graded} are forwarded to the model, no toggle.`
+        : `Effort: reasoning_effort = ${graded}, forwarded to the model.`);
     }
   }
-  return parts.join(" ");
+  const note = ALWAYS_ON_NOTE[baseModel];
+  return note === undefined ? parts.join(" ") : `${parts.join(" ")} ${note}`;
 }
 
 function parasailHeader(model: ParasailEndpoint, baseModel: string) {

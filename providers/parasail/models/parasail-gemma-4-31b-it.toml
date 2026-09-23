@@ -1,6 +1,6 @@
 # Parasail OpenAI Chat (POST https://api.parasail.io/v1/chat/completions)
 # model = "parasail-gemma-4-31b-it" (RedHatAI/gemma-4-31B-it-FP8-Dynamic).
-# Toggle: thinking is off unless reasoning_effort is sent (e.g. "high"); reasoning_effort = "none" keeps it off. Verified against the endpoint on 2026-09-22.
+# Toggle: reasoning_effort = "none" (off, the default) | any effort such as "high" (on). Verified against the endpoint on 2026-09-22.
 # Catalog: https://platform.parasail.io/api/v1/prices/serverlessEndpoints
 base_model = "google/gemma-4-31b-it"
 

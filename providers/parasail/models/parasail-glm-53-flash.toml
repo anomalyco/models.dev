@@ -1,6 +1,6 @@
 # Parasail OpenAI Chat (POST https://api.parasail.io/v1/chat/completions)
 # model = "parasail-glm-53-flash" (zai-org/GLM-5.3-Flash).
-# Effort: reasoning_effort = "low"|"high"|"max", forwarded to the model. Verified against the endpoint on 2026-09-22.
+# Effort: reasoning_effort = low|high|max, forwarded to the model. Thinking cannot be disabled (reasoning_effort = "none" still returns reasoning). Verified against the endpoint on 2026-09-22.
 # Catalog: https://platform.parasail.io/api/v1/prices/serverlessEndpoints
 base_model = "zhipuai/glm-5.3-flash"
 

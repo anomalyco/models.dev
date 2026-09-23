@@ -41,7 +41,7 @@ test("factors a verified reasoning endpoint onto its lab entry with provider-sid
 
   expect(built).toMatchObject({
     base_model: "deepseek/deepseek-v4.1-flash",
-    reasoning_options: [{ type: "toggle" }, { type: "effort", values: ["low", "high", "max"] }],
+    reasoning_options: [{ type: "effort", values: ["none", "low", "high", "max"] }],
     interleaved: { field: "reasoning_content" },
     cost: { input: 0.3, output: 1.2, cache_read: 0.006 },
     limit: { context: 1_048_576 },

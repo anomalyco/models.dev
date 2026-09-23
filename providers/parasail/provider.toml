@@ -1,11 +1,13 @@
-# Reasoning HTTP format (verified against the endpoint on 2026-09-22):
-# OpenAI Chat: POST https://api.parasail.io/v1/chat/completions. The relay is
-# SGLang/vLLM-served and accepts `reasoning_effort`; it ignores DeepSeek's
-# `thinking.type` and Anthropic-style `thinking` blocks. Toggle-only models
-# stop thinking with reasoning_effort = "none" and think with any other value;
-# effort models forward the value to the model (DeepSeek/Kimi: none|low|high|max;
-# GPT-OSS Harmony: low|medium|high, rejects none). Thinking is returned as
-# `reasoning_content` (DeepSeek, GLM) or `reasoning` (Kimi, GPT-OSS).
+# Reasoning HTTP format (verified per model against the endpoint on 2026-09-22):
+# OpenAI Chat: POST https://api.parasail.io/v1/chat/completions. The relay
+# forwards `reasoning_effort` to the model. For DeepSeek V4, Kimi K3 and GLM-5.2
+# the off wire is reasoning_effort = "none" on the same field as the graded
+# levels; Kimi K2.6, Qwen3.5/3.6/3.8 and Gemma 4 are binary on/off through the
+# same field. DeepSeek's `thinking.type` is ignored for those families but is
+# honoured for MiniMax M3, where it is the only working off switch. GLM-5.3 and
+# GLM-5.3 Flash cannot be switched off. GPT-OSS (Harmony) takes low|medium|high
+# and rejects none/minimal/xhigh/max. Thinking is returned as `reasoning_content`
+# (DeepSeek, GLM-5.2/5.3, MiniMax) or `reasoning` (Kimi, GPT-OSS, GLM-5.3 Flash).
 # Catalog source: https://platform.parasail.io/api/v1/prices/serverlessEndpoints
 # Sources:
 # https://docs.parasail.io/parasail-docs/quickstart/serverless

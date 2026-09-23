@@ -1,6 +1,6 @@
 # Parasail OpenAI Chat (POST https://api.parasail.io/v1/chat/completions)
 # model = "parasail-deepseek-v4-pro-0813" (deepseek-ai/DeepSeek-V4-Pro-0813).
-# Toggle: reasoning_effort = "none" disables thinking (thinking.type is ignored by the relay). Effort: reasoning_effort = "low"|"high"|"max", forwarded to the model. Verified against the endpoint on 2026-09-22.
+# Off is reasoning_effort = none; graded levels low|high|max are forwarded to the model, no toggle. Verified against the endpoint on 2026-09-22.
 # Catalog: https://platform.parasail.io/api/v1/prices/serverlessEndpoints
 base_model = "deepseek/deepseek-v4-pro-0813"
 
@@ -8,11 +8,8 @@ base_model = "deepseek/deepseek-v4-pro-0813"
 field = "reasoning_content"
 
 [[reasoning_options]]
-type = "toggle"
-
-[[reasoning_options]]
 type = "effort"
-values = ["low", "high", "max"]
+values = ["none", "low", "high", "max"]
 
 [cost]
 input = 1.32
