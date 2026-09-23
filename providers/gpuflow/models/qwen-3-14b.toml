@@ -1,0 +1,34 @@
+# Qwen3 14B FP8 served on a MIG-sliced NVIDIA B200 in Madrid with 32K
+# context. Thinking mode is toggleable with a configurable budget.
+# https://api.gpuflow.ai/v1/models (accessed 2026-09-23)
+# https://huggingface.co/Qwen/Qwen3-14B-FP8
+name = "Qwen3 14B FP8"
+description = "Qwen3 14B dense reasoning model with hybrid thinking and non-thinking modes"
+family = "qwen"
+release_date = "2025-04-29"
+last_updated = "2026-09-23"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = true
+
+[[reasoning_options]]
+type = "toggle"
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.2
+output = 1.0
+cache_read = 0.02
+
+[limit]
+context = 32_768
+output = 8_192
+
+[modalities]
+input = ["text"]
+output = ["text"]
