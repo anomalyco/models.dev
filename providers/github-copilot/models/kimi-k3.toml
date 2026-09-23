@@ -1,4 +1,3 @@
-# Limits source (live CAPI, verified 2026-09-23): https://api.githubcopilot.com/models
 base_model = "moonshotai/kimi-k3"
 
 [[reasoning_options]]
@@ -13,8 +12,3 @@ cache_read = 0.30
 [modalities]
 input = ["text", "image"]
 output = ["text"]
-
-[limit]
-context = 1_048_576
-input = 917_504
-output = 131_072

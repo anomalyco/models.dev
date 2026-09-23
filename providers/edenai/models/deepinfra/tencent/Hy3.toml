@@ -1,5 +1,4 @@
 base_model = "tencent/hy3"
-base_model_omit = ["limit.input"]
 name = "Hy3 (Deep Infra)"
 structured_output = true
 
@@ -11,6 +10,3 @@ values = ["none", "low", "high"]
 input = 0.13
 output = 0.53
 cache_read = 0.033
-
-[limit]
-context = 262_144

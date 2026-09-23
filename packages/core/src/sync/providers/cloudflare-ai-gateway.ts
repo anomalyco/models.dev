@@ -219,23 +219,34 @@ export function buildCloudflareAiGatewayModel(
 
   model.cost = cost;
 
-  const limit = {
+  const servedLimit = {
     ...(catalog.context_length == null && existing?.limit?.context === undefined
       ? {}
       : { context: catalog.context_length ?? existing?.limit?.context }),
     ...curated.limit,
   };
+  const baseLimit = readBaseLimit(baseModel);
+  const limit = {
+    ...(servedLimit.context !== undefined && servedLimit.context !== baseLimit?.context
+      ? { context: servedLimit.context }
+      : {}),
+    ...(servedLimit.input !== undefined && servedLimit.input !== baseLimit?.input
+      ? { input: servedLimit.input }
+      : {}),
+    ...(servedLimit.output !== undefined && servedLimit.output !== baseLimit?.output
+      ? { output: servedLimit.output }
+      : {}),
+  };
   if (Object.keys(limit).length > 0) {
     model.limit = limit;
-    const baseLimit = readBaseLimit(baseModel);
-    if (
-      baseLimit?.input !== undefined
-      && limit.context !== undefined
-      && limit.input === undefined
-      && baseLimit.context !== limit.context
-    ) {
-      model.base_model_omit = ["limit.input"];
-    }
+  }
+  if (
+    baseLimit?.input !== undefined
+    && servedLimit.context !== undefined
+    && servedLimit.input === undefined
+    && baseLimit.context !== servedLimit.context
+  ) {
+    model.base_model_omit = ["limit.input"];
   }
 
   const npm = NATIVE_NPM[id.split("/")[0]!];
@@ -609,7 +620,11 @@ function readBaseLimit(id: string) {
   const file = path.join(MODELS_ROOT, `${id}.toml`);
   if (!existsSync(file)) return undefined;
   return z.object({
-    limit: z.object({ context: z.number(), input: z.number().optional() }).optional(),
+    limit: z.object({
+      context: z.number(),
+      input: z.number().optional(),
+      output: z.number().optional(),
+    }).optional(),
   }).passthrough().parse(Bun.TOML.parse(readFileSync(file, "utf8"))).limit;
 }
 

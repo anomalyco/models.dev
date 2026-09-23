@@ -81,7 +81,6 @@ test("builds Cloudflare AI Gateway overrides from catalog metadata", () => {
         cache_read: 0.5,
       }],
     },
-    limit: { context: 1_050_000 },
     provider: { npm: "@ai-sdk/openai" },
   });
 });
@@ -328,7 +327,6 @@ test("syncs Pareto through shared Unbiased metadata", () => {
   }, undefined)).toEqual({
     base_model: "unbiased/pareto",
     cost: { input: 2.5, output: 7.5, cache_read: 0.25 },
-    limit: { context: 262_144 },
   });
 });
 

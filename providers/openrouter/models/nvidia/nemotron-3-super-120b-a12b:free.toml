@@ -1,3 +1,5 @@
+# Toggle: reasoning.enabled = true|false
+# https://openrouter.ai/docs/guides/best-practices/reasoning-tokens
 base_model = "nvidia/nemotron-3-super-120b-a12b"
 name = "Nemotron 3 Super (free)"
 structured_output = true
@@ -17,4 +19,5 @@ input = 0
 output = 0
 
 [limit]
+context = 262_144
 output = 235_929
