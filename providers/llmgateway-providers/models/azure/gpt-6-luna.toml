@@ -1,0 +1,12 @@
+base_model = "openai/gpt-6-luna"
+name = "GPT-6 Luna (Azure)"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "xhigh", "max"]
+
+[cost]
+input = 0.1
+output = 0.5
+cache_read = 0.01
+cache_write = 0.125
