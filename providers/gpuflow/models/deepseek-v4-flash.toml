@@ -1,15 +1,17 @@
+# Toggle: reasoning.enabled = false | thinking.type = disabled |
+# enable_thinking = false (-> chat_template_kwargs.enable_thinking = false).
+# Effort: reasoning_effort = high|max (default high; the chat template maps
+# low/medium to high).
 # DeepSeek V4 Flash (checkpoint 0731) served in FP8 on 2x NVIDIA B200 in
 # Madrid with 512K context.
 # https://api.gpuflow.ai/v1/models (accessed 2026-09-23)
 base_model = "deepseek/deepseek-v4-flash-0731"
+name = "DeepSeek V4 Flash"
 
-# Toggle: reasoning enabled|disabled. Effort: high|max.
-[[reasoning_options]]
-type = "toggle"
-
-[[reasoning_options]]
-type = "effort"
-values = ["high", "max"]
+reasoning_options = [
+  { type = "toggle" },
+  { type = "effort", values = ["high", "max"] },
+]
 
 [interleaved]
 field = "reasoning_content"
