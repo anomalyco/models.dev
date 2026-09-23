@@ -1,7 +1,9 @@
 # Qwen3 14B FP8 served on a MIG-sliced NVIDIA B200 in Madrid. 32K context
-# as served (native 131K); tool calling is not exposed on this host
-# (reasoning + json_mode only) — verified empirically: a live tools request
-# returns finish_reason=stop with no tool_calls. The host emits interleaved reasoning in both `reasoning` (vLLM v0.20's
+# as served (native 131K). Tool calling verified on the live API on
+# 2026-09-23: the engine now runs vLLM's hermes tool parser (the Qwen3
+# original chat template emits tool calls in Hermes JSON, not the coder
+# XML format), and a live request returns finish_reason=tool_calls. The
+# host emits interleaved reasoning in both `reasoning` (vLLM v0.20's
 # native field) and `reasoning_content` (OpenAI-compatible/DeepSeek
 # convention; the gateway duplicates it) — verified on the live API on
 # 2026-09-23.
@@ -9,7 +11,6 @@
 # https://gpuflow.ai/es/docs
 base_model = "alibaba/qwen3-14b"
 name = "Qwen3 14B FP8"
-tool_call = false
 structured_output = true
 # Public API contract (https://gpuflow.ai/es/docs): reasoning.effort accepts
 # "low", "medium", "high" or "none" (off), and reasoning.max_tokens /
