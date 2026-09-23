@@ -1,7 +1,11 @@
+# Azure GPT-5 Pro: 400K context, 272K input, 128K output.
+# https://learn.microsoft.com/en-us/azure/foundry/foundry-models/concepts/models-sold-directly-by-azure#gpt-5
 base_model = "openai/gpt-5-pro"
 reasoning_options = [{ type = "effort", values = ["high"] }]
-base_model_omit = ["limit.input"]
 
 [cost]
 input = 15
 output = 120
+
+[limit]
+output = 128_000
