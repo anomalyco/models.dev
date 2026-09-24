@@ -19,3 +19,40 @@ output = 128_000
 [modalities]
 input = ["text", "image", "pdf"]
 output = ["text"]
+
+[[benchmarks]]
+name = "DeepSWE"
+score = 68.8
+metric = "score"
+version = "1.1"
+variant = "max effort"
+source = "https://openai.com/index/introducing-gpt-6-sol-and-luna/"
+date = "2026-09-22"
+
+[[benchmarks]]
+name = "AutomationBench"
+score = 33.2
+metric = "score"
+version = "1.0.6"
+variant = "xhigh effort"
+source = "https://openai.com/index/introducing-gpt-6-sol-and-luna/"
+date = "2026-09-22"
+
+[[benchmarks]]
+name = "Agents' Last Exam"
+score = 56.4
+metric = "score"
+version = "1"
+variant = "max effort"
+source = "https://openai.com/index/introducing-gpt-6-sol-and-luna/"
+date = "2026-09-22"
+
+[[benchmarks]]
+name = "OSWorld"
+score = 60.5
+metric = "partial reward"
+version = "2.0"
+dataset = "offline v2026.08.08"
+variant = "xhigh effort"
+source = "https://openai.com/index/introducing-gpt-6-sol-and-luna/"
+date = "2026-09-22"

@@ -1,3 +1,5 @@
+# Benchmarks use instruct weights, temperature=1.0, top_p=0.95; not the base-model table.
+# Source: https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash#instruct-model
 # Open weights (MIT): https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash
 name = "DeepSeek V4.1 Flash"
 description = "DeepSeek V4.1 Flash model for reasoning and agentic coding"
@@ -24,3 +26,286 @@ output = ["text"]
 [[weights]]
 label = "Hugging Face"
 url = "https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash"
+
+[[benchmarks]]
+name = "GPQA Diamond"
+score = 90.9
+metric = "pass@1"
+variant = "reasoning_effort=100"
+source = "https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash"
+
+[[benchmarks]]
+name = "MathArena Apex"
+score = 65.6
+metric = "pass@1"
+variant = "reasoning_effort=100"
+source = "https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash"
+
+[[benchmarks]]
+name = "Humanity's Last Exam"
+score = 36.8
+metric = "pass@1"
+variant = "reasoning_effort=100"
+dataset = "full set"
+source = "https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash"
+
+[[benchmarks]]
+name = "Humanity's Last Exam"
+score = 39.1
+metric = "pass@1"
+variant = "reasoning_effort=100"
+dataset = "text-only subset"
+source = "https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash"
+
+[[benchmarks]]
+name = "Codeforces"
+score = 3471
+metric = "rating"
+variant = "reasoning_effort=100"
+source = "https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash"
+
+[[benchmarks]]
+name = "Terminal-Bench"
+score = 90.6
+metric = "pass@1"
+variant = "reasoning_effort=100"
+version = "2.1"
+harness = "DeepSeek Harness minimal mode"
+source = "https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash"
+
+[[benchmarks]]
+name = "Terminal-Bench"
+score = 30.0
+metric = "pass@1"
+variant = "reasoning_effort=100"
+version = "3.0"
+harness = "DeepSeek Harness minimal mode"
+source = "https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash"
+
+[[benchmarks]]
+name = "Terminal-Bench"
+score = 31.2
+metric = "pass@1"
+variant = "reasoning_effort=100"
+version = "4.0"
+harness = "DeepSeek Harness minimal mode"
+source = "https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash"
+
+[[benchmarks]]
+name = "DeepSWE"
+score = 74.2
+metric = "resolved"
+variant = "reasoning_effort=100"
+version = "1.1"
+harness = "mini-swe-agent"
+source = "https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash"
+
+[[benchmarks]]
+name = "ProgramBench"
+score = 20.3
+metric = "almost@1"
+variant = "reasoning_effort=100"
+harness = "DeepSeek Harness minimal mode"
+source = "https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash"
+
+[[benchmarks]]
+name = "NL2Repo"
+score = 64.0
+metric = "score"
+variant = "reasoning_effort=100"
+harness = "DeepSeek Harness minimal mode"
+source = "https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash"
+
+[[benchmarks]]
+name = "CyberGym"
+score = 88.1
+metric = "pass@1"
+variant = "reasoning_effort=100"
+source = "https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash"
+
+[[benchmarks]]
+name = "ExploitGym"
+score = 15.3
+metric = "pass@1"
+variant = "reasoning_effort=100"
+source = "https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash"
+
+[[benchmarks]]
+name = "AutomationBench"
+score = 54.8
+metric = "pass@1"
+variant = "reasoning_effort=100"
+source = "https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash"
+
+[[benchmarks]]
+name = "Agents' Last Exam"
+score = 31.8
+metric = "pass@1"
+variant = "reasoning_effort=100"
+source = "https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash"
+
+[[benchmarks]]
+name = "SEC-Bench Pro"
+score = 62.8
+metric = "pass@1"
+variant = "reasoning_effort=100"
+harness = "Claude Code"
+source = "https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash"
+
+[[benchmarks]]
+name = "Humanity's Last Exam"
+score = 63.9
+metric = "pass@1"
+variant = "reasoning_effort=100; with tools"
+source = "https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash"
+
+[[benchmarks]]
+name = "Chartography"
+score = 78.9
+metric = "pass@1"
+variant = "reasoning_effort=100; with tools"
+harness = "Claude Code"
+source = "https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash"
+
+[[benchmarks]]
+name = "BabyVision"
+score = 89.6
+metric = "pass@1"
+variant = "reasoning_effort=100; with tools"
+harness = "Claude Code"
+source = "https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash"
+
+[[benchmarks]]
+name = "ZeroBench"
+score = 49.0
+metric = "pass@5"
+variant = "reasoning_effort=100; with tools"
+harness = "Claude Code"
+dataset = "main"
+source = "https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash"
+
+[[benchmarks]]
+name = "DeepSWE"
+score = 69.8
+metric = "resolved"
+variant = "reasoning_effort=100"
+version = "1.1"
+harness = "Claude Code"
+source = "https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash"
+
+[[benchmarks]]
+name = "Terminal-Bench"
+score = 88.0
+metric = "pass@1"
+variant = "reasoning_effort=100"
+version = "2.1"
+harness = "Claude Code"
+source = "https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash"
+
+[[benchmarks]]
+name = "DeepSWE"
+score = 65.6
+metric = "resolved"
+variant = "reasoning_effort=100"
+version = "1.1"
+harness = "Codex"
+source = "https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash"
+
+[[benchmarks]]
+name = "Terminal-Bench"
+score = 84.1
+metric = "pass@1"
+variant = "reasoning_effort=100"
+version = "2.1"
+harness = "Codex"
+source = "https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash"
+
+[[benchmarks]]
+name = "DeepSWE"
+score = 65.5
+metric = "resolved"
+variant = "reasoning_effort=100"
+version = "1.1"
+harness = "OpenCode"
+source = "https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash"
+
+[[benchmarks]]
+name = "Terminal-Bench"
+score = 85.0
+metric = "pass@1"
+variant = "reasoning_effort=100"
+version = "2.1"
+harness = "OpenCode"
+source = "https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash"
+
+[[benchmarks]]
+name = "DeepSWE"
+score = 66.2
+metric = "resolved"
+variant = "reasoning_effort=100"
+version = "1.1"
+harness = "Pi"
+source = "https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash"
+
+[[benchmarks]]
+name = "Terminal-Bench"
+score = 86.1
+metric = "pass@1"
+variant = "reasoning_effort=100"
+version = "2.1"
+harness = "Pi"
+source = "https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash"
+
+[[benchmarks]]
+name = "Terminal-Bench"
+score = 90.3
+metric = "pass@1"
+variant = "reasoning_effort=100"
+version = "2.1"
+harness = "mini-swe-agent"
+source = "https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash"
+
+[[benchmarks]]
+name = "DeepSWE"
+score = 72.6
+metric = "resolved"
+variant = "reasoning_effort=100"
+version = "1.1"
+harness = "DeepSeek Harness minimal mode"
+source = "https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash"
+
+[[benchmarks]]
+name = "DeepSWE"
+score = 70.5
+metric = "resolved"
+variant = "reasoning_effort=100"
+version = "1.1"
+harness = "DeepSeek Harness standard mode"
+source = "https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash"
+
+[[benchmarks]]
+name = "Terminal-Bench"
+score = 85.8
+metric = "pass@1"
+variant = "reasoning_effort=100"
+version = "2.1"
+harness = "DeepSeek Harness standard mode"
+source = "https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash"
+
+[[benchmarks]]
+name = "DeepSWE"
+score = 67.6
+metric = "resolved"
+variant = "reasoning_effort=100"
+version = "1.1"
+harness = "DeepSeek Harness PTC mode"
+source = "https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash"
+
+[[benchmarks]]
+name = "Terminal-Bench"
+score = 85.8
+metric = "pass@1"
+variant = "reasoning_effort=100"
+version = "2.1"
+harness = "DeepSeek Harness PTC mode"
+source = "https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash"

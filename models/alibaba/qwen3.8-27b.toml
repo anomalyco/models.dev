@@ -1,3 +1,4 @@
+# Benchmark caveats and evaluation harnesses: https://huggingface.co/Qwen/Qwen3.8-27B#evaluation
 # Sources (accessed 2026-08-15):
 # https://huggingface.co/Qwen/Qwen3.8-27B
 # https://huggingface.co/api/models/Qwen/Qwen3.8-27B
@@ -33,4 +34,203 @@ url = "https://huggingface.co/Qwen/Qwen3.8-27B"
 name = "SWE-bench Pro"
 score = 61.7
 metric = "resolved"
+source = "https://huggingface.co/Qwen/Qwen3.8-27B"
+
+[[benchmarks]]
+name = "Terminal-Bench"
+score = 73
+metric = "score"
+version = "2.1"
+harness = "Terminus"
+source = "https://huggingface.co/Qwen/Qwen3.8-27B"
+
+[[benchmarks]]
+name = "NL2Repo"
+score = 42.3
+metric = "score"
+harness = "Claude Code"
+source = "https://huggingface.co/Qwen/Qwen3.8-27B"
+
+[[benchmarks]]
+name = "DeepSWE"
+score = 42.2
+metric = "score"
+version = "1.1"
+harness = "Claude Code"
+source = "https://huggingface.co/Qwen/Qwen3.8-27B"
+
+[[benchmarks]]
+name = "QwenSWEBench"
+score = 79
+metric = "avg@3"
+harness = "Claude Code"
+dataset = "internal"
+source = "https://huggingface.co/Qwen/Qwen3.8-27B"
+
+[[benchmarks]]
+name = "CoWorkBench"
+score = 70.7
+metric = "score"
+dataset = "internal"
+source = "https://huggingface.co/Qwen/Qwen3.8-27B"
+
+[[benchmarks]]
+name = "JobBench"
+score = 33.4
+metric = "score"
+source = "https://huggingface.co/Qwen/Qwen3.8-27B"
+
+[[benchmarks]]
+name = "Agents' Last Exam"
+score = 20.4
+metric = "pass@1"
+source = "https://huggingface.co/Qwen/Qwen3.8-27B"
+
+[[benchmarks]]
+name = "Agents' Last Exam"
+score = 42.9
+metric = "score"
+source = "https://huggingface.co/Qwen/Qwen3.8-27B"
+
+[[benchmarks]]
+name = "IFBench"
+score = 79.5
+metric = "score"
+source = "https://huggingface.co/Qwen/Qwen3.8-27B"
+
+[[benchmarks]]
+name = "GPQA Diamond"
+score = 89.2
+metric = "score"
+source = "https://huggingface.co/Qwen/Qwen3.8-27B"
+
+[[benchmarks]]
+name = "Humanity's Last Exam"
+score = 30.8
+metric = "score"
+variant = "without tools; GPT-4o judge"
+source = "https://huggingface.co/Qwen/Qwen3.8-27B"
+
+[[benchmarks]]
+name = "LiveCodeBench"
+score = 90.3
+metric = "score"
+version = "6"
+source = "https://huggingface.co/Qwen/Qwen3.8-27B"
+
+[[benchmarks]]
+name = "OSWorld-Verified"
+score = 84.3
+metric = "score"
+source = "https://huggingface.co/Qwen/Qwen3.8-27B"
+
+[[benchmarks]]
+name = "WebArena-Verified"
+score = 64.8
+metric = "score"
+source = "https://huggingface.co/Qwen/Qwen3.8-27B"
+harness = "OSWorld scaffold; official WebArena-Verified grader"
+
+[[benchmarks]]
+name = "AndroidWorld"
+score = 81.9
+metric = "score"
+source = "https://huggingface.co/Qwen/Qwen3.8-27B"
+
+[[benchmarks]]
+name = "SWE-MM"
+score = 38.6
+metric = "score"
+source = "https://huggingface.co/Qwen/Qwen3.8-27B"
+
+[[benchmarks]]
+name = "RealWorldQA"
+score = 85.9
+metric = "score"
+source = "https://huggingface.co/Qwen/Qwen3.8-27B"
+
+[[benchmarks]]
+name = "ERQA"
+score = 65.5
+metric = "score"
+source = "https://huggingface.co/Qwen/Qwen3.8-27B"
+
+[[benchmarks]]
+name = "RecreationBench"
+score = 47.1
+metric = "score"
+dataset = "internal"
+source = "https://huggingface.co/Qwen/Qwen3.8-27B"
+
+[[benchmarks]]
+name = "ClawEval-MM"
+score = 57.4
+metric = "pass@3"
+source = "https://huggingface.co/Qwen/Qwen3.8-27B"
+
+[[benchmarks]]
+name = "ClawEval-MM"
+score = 56.9
+metric = "average score"
+source = "https://huggingface.co/Qwen/Qwen3.8-27B"
+
+[[benchmarks]]
+name = "Vision2Web"
+score = 62.9
+metric = "score"
+harness = "Claude Code"
+source = "https://huggingface.co/Qwen/Qwen3.8-27B"
+variant = "gpt-5.4-2026-03-05 judge"
+
+[[benchmarks]]
+name = "MathVision"
+score = 90
+metric = "score"
+variant = "without code interpreter"
+dataset = "corrected annotations"
+source = "https://huggingface.co/Qwen/Qwen3.8-27B"
+
+[[benchmarks]]
+name = "MathVision"
+score = 94.6
+metric = "score"
+variant = "with code interpreter"
+dataset = "corrected annotations"
+source = "https://huggingface.co/Qwen/Qwen3.8-27B"
+
+[[benchmarks]]
+name = "BabyVision"
+score = 65.7
+metric = "score"
+variant = "without code interpreter"
+source = "https://huggingface.co/Qwen/Qwen3.8-27B"
+
+[[benchmarks]]
+name = "BabyVision"
+score = 85.6
+metric = "score"
+variant = "with code interpreter"
+source = "https://huggingface.co/Qwen/Qwen3.8-27B"
+
+[[benchmarks]]
+name = "CharXiv Reasoning"
+score = 83.7
+metric = "score"
+variant = "without code interpreter"
+source = "https://huggingface.co/Qwen/Qwen3.8-27B"
+dataset = "corrected annotations"
+
+[[benchmarks]]
+name = "CharXiv Reasoning"
+score = 90.2
+metric = "score"
+variant = "with code interpreter"
+source = "https://huggingface.co/Qwen/Qwen3.8-27B"
+dataset = "corrected annotations"
+
+[[benchmarks]]
+name = "OmniDocBench"
+score = 91.1
+metric = "score"
+version = "1.5"
 source = "https://huggingface.co/Qwen/Qwen3.8-27B"
