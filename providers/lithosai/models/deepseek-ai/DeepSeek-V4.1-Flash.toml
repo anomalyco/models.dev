@@ -4,7 +4,9 @@
 # standard output price, with the published input and cache-read prices.
 # Context follows HF text_config.max_position_embeddings = 1048576:
 # https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash/blob/main/config.json
-# TODO: verify inherited output limit, modalities, attachment support,
+# Provider confirmed no separate output cap on 2026-09-24:
+# input + output <= 1048576; actual generation is bounded by remaining context.
+# TODO: verify inherited modalities, attachment support,
 # reasoning, temperature and structured_output against the Lithos endpoint.
 # TODO: author verified reasoning_options and reasoning response-field mapping.
 # Omitted reasoning_options is intentional; [] would falsely claim no controls.
@@ -17,3 +19,4 @@ cache_read = 0.003
 
 [limit]
 context = 1_048_576
+output = 1_048_576
