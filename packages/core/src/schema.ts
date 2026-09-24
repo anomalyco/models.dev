@@ -365,6 +365,7 @@ export const ModelShape = z
   .object({
     ...ModelBase.shape,
     cost: OutputCost.optional(),
+    base_model: z.string().min(1).optional(),
   })
   .strict();
 

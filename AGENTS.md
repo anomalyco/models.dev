@@ -68,7 +68,8 @@ base_model_omit = ["limit.input"]  # drop inherited keys after merge
 - Plain objects (`[limit]`, `[modalities]`, …) → deep-merge
 - Arrays and primitives → child replaces parent
 - Omitted fields → inherited from `models/`
-- `base_model` / `base_model_omit` are parse-time only — they do not appear in generated JSON
+- `base_model_omit` is parse-time only — it does not appear in generated JSON
+- `base_model` is kept on the generated provider entry (the `models.json` id it inherits from) so consumers can join a provider model to its lab model
 - Missing `base_model` target → validation error
 
 ## Adding a provider
