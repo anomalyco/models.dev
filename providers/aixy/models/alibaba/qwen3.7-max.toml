@@ -1,0 +1,23 @@
+# Source: https://www.alibabacloud.com/help/en/model-studio/models
+# Serving metadata: providers/alibaba/models/qwen3.7-max.toml (2026-09-24).
+# First-party API rejects max_tokens=131073 with range [1, 131072]
+# (POST https://dashscope-intl.aliyuncs.com/compatible-mode/v1/chat/completions,
+# model qwen3.7-max, checked 2026-09-23).
+# Model card: https://www.qwencloud.com/models/qwen3.7-max
+# Toggle: enable_thinking = true|false; reasoning budget: thinking_budget.
+base_model = "alibaba/qwen3.7-max"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "budget_tokens"
+
+[cost]
+input = 2.5
+output = 7.5
+cache_read = 0.5
+cache_write = 3.125
+
+[limit]
+output = 131_072

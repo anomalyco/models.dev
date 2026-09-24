@@ -1,0 +1,25 @@
+# Source: https://platform.claude.com/docs/en/models/overview
+# Serving metadata: providers/anthropic/models/claude-sonnet-5.toml (2026-09-24).
+# Native Anthropic Messages through Aixy; project key also supports x-api-key.
+# https://docs.aixy-gateway.com/integrations/claude-code
+# Toggle: thinking.type = adaptive|disabled; effort: output_config.effort.
+base_model = "anthropic/claude-sonnet-5"
+release_date = "2026-06-29"
+structured_output = true
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high", "xhigh", "max"]
+
+[cost]
+input = 2
+output = 10
+cache_read = 0.2
+cache_write = 2.5
+
+[provider]
+npm = "@ai-sdk/anthropic"
+api = "https://api.aixy-gateway.com/v1"

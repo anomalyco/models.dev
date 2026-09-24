@@ -1,0 +1,20 @@
+# Source: https://platform.claude.com/docs/en/models/overview
+# Serving metadata: providers/anthropic/models/claude-haiku-4-5.toml (2026-09-24).
+# Native Anthropic Messages through Aixy; project key also supports x-api-key.
+# https://docs.aixy-gateway.com/integrations/claude-code
+base_model = "anthropic/claude-haiku-4-5"
+structured_output = true
+
+[[reasoning_options]]
+type = "budget_tokens"
+min = 1024
+
+[cost]
+input = 1
+output = 5
+cache_read = 0.1
+cache_write = 1.25
+
+[provider]
+npm = "@ai-sdk/anthropic"
+api = "https://api.aixy-gateway.com/v1"
