@@ -1,0 +1,15 @@
+# Source: https://anyrouter.dev/api/v1/models (accessed 2026-09-24)
+# No reasoning params in this route's supported_parameters.
+base_model = "deepseek/deepseek-v4-flash"
+attachment = true
+reasoning_options = []
+
+[cost]
+input = 0.042448
+output = 0.084896
+
+[limit]
+context = 1_048_576
+
+[modalities]
+input = ["text", "image"]

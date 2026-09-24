@@ -1,0 +1,14 @@
+# Source: https://anyrouter.dev/api/v1/models (accessed 2026-09-24)
+# No reasoning params in this route's supported_parameters.
+base_model = "google/gemini-3.5-flash"
+reasoning_options = []
+
+[cost]
+input = 1.5
+output = 9
+
+[limit]
+context = 1_000_000
+
+[modalities]
+input = ["text", "image"]
