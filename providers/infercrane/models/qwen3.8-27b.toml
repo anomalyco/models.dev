@@ -1,10 +1,18 @@
-# Sources checked 2026-09-24:
+# Sources and live wire probes checked 2026-09-24:
 # https://docs.infercrane.com/model-apis
-# Toggle: reasoning.enabled = true|false. The API also accepts
-# reasoning_effort = none to disable reasoning and any non-none value to enable it.
+# https://huggingface.co/Qwen/Qwen3.8-27B
+# Toggle: reasoning.enabled = true|false; both returned HTTP 200.
+# Effort: reasoning_effort = low|medium|xhigh; each returned HTTP 200 with
+# distinct reasoning_content, while high returned HTTP 400 with the supported set.
+# Input boundary: an image_url content block returned HTTP 400 with
+# "This model endpoint accepts text input only"; video and file blocks share this guard.
+# Interleaved output: thinking responses returned choices[].message.reasoning_content.
 base_model = "alibaba/qwen3.8-27b"
 attachment = false
-reasoning_options = [{ type = "toggle" }]
+reasoning_options = [
+  { type = "toggle" },
+  { type = "effort", values = ["low", "medium", "xhigh"] },
+]
 
 [interleaved]
 field = "reasoning_content"
