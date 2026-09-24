@@ -1,12 +1,12 @@
 # Source: https://anyrouter.dev/api/v1/models (accessed 2026-09-24)
 # Params are forwarded upstream (https://anyrouter.dev/docs/features/provider-routing);
 # Toggle: reasoning.enabled = true|false
-# Effort: reasoning_effort = low|high|max (DeepSeek lab)
+# Effort: reasoning_effort = high|xhigh (OpenRouter same-surface peer)
 base_model = "deepseek/deepseek-v4-flash"
 attachment = true
 reasoning_options = [
   { type = "toggle" },
-  { type = "effort", values = ["low", "high", "max"] },
+  { type = "effort", values = ["high", "xhigh"] },
 ]
 
 [cost]
