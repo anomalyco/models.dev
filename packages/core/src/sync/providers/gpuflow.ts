@@ -68,21 +68,28 @@ const GpuflowCatalog = z.object({
 export type GpuflowCatalogModel = z.infer<typeof GpuflowCatalogModel>;
 
 /**
- * Hugging Face organization / OpenRouter vendor -> canonical lab directory
+ * OpenRouter vendor / Hugging Face organization -> canonical lab directory
  * under models/. Used only for NEW models; existing base_model declarations
  * always win (preserveBaseModel), so hand-curated resolutions are stable.
+ *
+ * Every entry below is backed by a live row of the GPU Flow catalog
+ * (https://api.gpuflow.ai/v1/models, verified 2026-09-23):
+ *   - openrouter.slug: "z-ai/glm-5.3", "qwen/*", "deepseek/*",
+ *     "nvidia/nemotron-3.5-lightning", "google/gemma-4-26b-a4b-it"
+ *   - hugging_face_id: "RadixArk/GLM-5.3-NVFP4", "Qwen/*",
+ *     "Inferact/Qwen3.8-27B-NVFP4", "RedHatAI/Qwen3-VL-32B-Instruct-NVFP4",
+ *     "deepseek-ai/*", "nvidia/*", "BSC-LT/ALIA-40b-instruct-2606"
+ * Unverified vendors are deliberately absent so future models cannot
+ * mis-resolve; they fail closed for manual authoring instead.
  */
 const CANONICAL_PREFIXES: Record<string, string> = {
   // OpenRouter vendor prefixes (from the `openrouter.slug` field)
   "z-ai": "zhipuai",
-  zai: "zhipuai",
   qwen: "alibaba",
   deepseek: "deepseek",
   nvidia: "nvidia",
   google: "google",
-  meta: "meta",
   // Hugging Face organization prefixes (from the `hugging_face_id` field)
-  "zai-org": "zhipuai",
   "deepseek-ai": "deepseek",
   Qwen: "alibaba",
   RedHatAI: "alibaba",
@@ -218,12 +225,6 @@ function hasParameter(model: GpuflowCatalogModel, name: string): boolean {
   );
 }
 
-function releaseDate(model: GpuflowCatalogModel): string | undefined {
-  const date = new Date(model.created * 1000);
-  if (Number.isNaN(date.getTime())) return undefined;
-  return date.toISOString().slice(0, 10);
-}
-
 /** GA text/vision chat model — the only rows models.dev should track. */
 function inScope(model: GpuflowCatalogModel): boolean {
   return model.is_ready && model.input_modalities.some((m) => m.type === "text");
@@ -339,39 +340,28 @@ export const gpuflow = {
       };
     }
 
-    // No canonical lab entry yet: emit a full model plus its lab metadata so
-    // the provider file validates standalone (mirrors the manual pattern
-    // used for unique models such as BSC's ALIA).
-    const release = releaseDate(model);
-    const full: SyncedFullModel = {
-      ...synced,
-      description: model.description ?? existing?.description,
-      release_date: existing?.release_date ?? release,
-      last_updated: release ?? existing?.last_updated,
-      open_weights: true,
-    };
+    // No canonical lab resolves AND no hand-authored file exists: fail
+    // closed. Never auto-generate lab stubs (bare provider IDs as metadata
+    // namespaces, generic descriptions, catalog `created` as release
+    // dates) — a human authors the base_model/lab pair and the next sync
+    // run picks it up. missingModelID already reports the skipped ID.
+    if (existing === undefined) {
+      return undefined;
+    }
+
+    // Hand-authored full model (no base_model by deliberate choice, e.g.
+    // a lab entry with its own models/ file authored by a human): sync
+    // only the catalog-owned fields; everything else is preserved.
     return {
       id: model.id,
-      model: full,
-      metadata: model.hugging_face_id !== undefined || model.description !== undefined
-        ? {
-            id: model.id,
-            model: {
-              name: model.name,
-              description: model.description ?? `${model.name} served by GPU Flow`,
-              release_date: release,
-              last_updated: release,
-              attachment: full.attachment,
-              reasoning,
-              temperature: full.temperature,
-              tool_call: full.tool_call,
-              structured_output: full.structured_output,
-              open_weights: true,
-              limit,
-              modalities,
-            },
-          }
-        : undefined,
+      model: {
+        ...synced,
+        description: existing.description,
+        release_date: existing.release_date,
+        last_updated: existing.last_updated,
+        open_weights: existing.open_weights,
+        knowledge: existing.knowledge,
+      },
     };
   },
 } satisfies SyncProvider<GpuflowCatalogModel>;

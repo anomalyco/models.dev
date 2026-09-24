@@ -1,11 +1,15 @@
 # Qwen3.8 27B (NVFP4) served on a MIG-sliced NVIDIA B200 in Madrid,
-# text-only (the lab entry includes image/video), 96K context. The engine
+# text-only (the lab entry includes image/video), 96K context.
 # The host emits interleaved reasoning in both `reasoning` (vLLM v0.20's
 # native field) and `reasoning_content` (OpenAI-compatible/DeepSeek
 # convention; the gateway duplicates it) — verified on the live API on
 # 2026-09-23.
+# Wire controls (public API, https://gpuflow.ai/es/docs): reasoning.effort
+# accepts "low", "medium", "high" or "none" (off), and reasoning.max_tokens
+# sets the thinking budget directly (verified live: with the output cap
+# fixed, the reasoning block scales with reasoning.max_tokens) — the same
+# field maps to thinking.budget_tokens in the Anthropic dialect.
 # https://api.gpuflow.ai/v1/models (accessed 2026-09-23)
-# https://gpuflow.ai/es/docs
 base_model = "alibaba/qwen3.8-27b"
 attachment = false
 

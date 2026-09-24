@@ -4,10 +4,10 @@
 # `reasoning` (vLLM v0.20's native field) and `reasoning_content`
 # (OpenAI-compatible/DeepSeek convention; the gateway duplicates it) —
 # verified on the live API on 2026-09-23.
-# Toggle: reasoning.enabled = false | thinking.type = disabled |
-# enable_thinking = false (-> chat_template_kwargs.enable_thinking = false).
-# Effort: reasoning_effort = high|max (default high; the chat template maps
-# low/medium to high).
+# Toggle: reasoning.effort = "none" — verified on the live API (2026-09-23):
+# a request with reasoning.effort "none" returns a direct answer with no
+# reasoning block; effort "high"/"max" (default high) grades the thinking,
+# and low/medium map to high at the chat template.
 # https://api.gpuflow.ai/v1/models (accessed 2026-09-23)
 base_model = "deepseek/deepseek-v4-flash-0731"
 name = "DeepSeek V4 Flash"
