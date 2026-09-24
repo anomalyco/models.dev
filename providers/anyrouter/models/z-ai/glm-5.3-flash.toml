@@ -1,0 +1,18 @@
+# Source: https://anyrouter.dev/api/v1/models (accessed 2026-09-24)
+# Toggle: reasoning.enabled true|false
+# Effort: reasoning_effort low|high|max
+base_model = "zhipuai/glm-5.3-flash"
+reasoning_options = [
+  { type = "toggle" },
+  { type = "effort", values = ["low", "high", "max"] },
+]
+
+[cost]
+input = 0.15
+output = 0.5
+
+[limit]
+context = 1_048_576
+
+[modalities]
+input = ["text", "image", "video"]

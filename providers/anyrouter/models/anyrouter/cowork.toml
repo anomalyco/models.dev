@@ -1,0 +1,23 @@
+# Preset router across the best tool-calling models for everyday assistant work,
+# one per upstream provider, with automatic fallback; billed at each hop's rate.
+# https://anyrouter.dev/model/anyrouter/cowork
+name = "AnyRouter Cowork"
+description = "Router across the best tool-calling models for everyday assistant work, with automatic fallback"
+family = "model-router"
+release_date = "2026-06-08"
+last_updated = "2026-06-08"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = false
+open_weights = false
+reasoning_options = []
+
+[limit]
+context = 2_000_000
+output = 131_072
+
+[modalities]
+input = ["text"]
+output = ["text"]

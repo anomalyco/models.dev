@@ -1,0 +1,12 @@
+# Source: https://anyrouter.dev/api/v1/models (accessed 2026-09-24)
+# Text-only route; no reasoning params in supported_parameters.
+base_model = "xai/grok-4.3"
+attachment = false
+reasoning_options = []
+
+[cost]
+input = 1.25
+output = 2.5
+
+[modalities]
+input = ["text"]

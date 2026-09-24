@@ -1,0 +1,23 @@
+# Preset router across the top tool-calling models for autonomous agents, ranked
+# by agentic score, with automatic fallback; billed at each hop's rate.
+# https://anyrouter.dev/model/anyrouter/hermes
+name = "AnyRouter Hermes"
+description = "Router across the top tool-calling models for autonomous agents, ranked by agentic score, with automatic fallback"
+family = "model-router"
+release_date = "2026-06-08"
+last_updated = "2026-06-08"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = false
+open_weights = false
+reasoning_options = []
+
+[limit]
+context = 2_000_000
+output = 131_072
+
+[modalities]
+input = ["text"]
+output = ["text"]

@@ -1,0 +1,27 @@
+# Preset router across $0 platform models plus the donated free pool; never
+# deducts credits. Free plan: 10 requests/day, paid plans: 1000/day.
+# https://anyrouter.dev/model/anyrouter/free
+name = "AnyRouter Free"
+description = "Router across free platform models and the donated free pool, with automatic fallback and no credit deduction"
+family = "model-router"
+release_date = "2026-06-08"
+last_updated = "2026-06-08"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = false
+open_weights = false
+reasoning_options = []
+
+[cost]
+input = 0
+output = 0
+
+[limit]
+context = 1_000_000
+output = 131_072
+
+[modalities]
+input = ["text"]
+output = ["text"]
