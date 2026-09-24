@@ -1,0 +1,26 @@
+# https://huggingface.co/deepseek-ai/DeepSeek-V3.1-Terminus
+name = "DeepSeek V3.1 Terminus"
+description = "DeepSeek V3.1 Terminus hybrid-reasoning model for coding, analysis, and agent workflows"
+family = "deepseek"
+release_date = "2025-09-22"
+last_updated = "2025-09-22"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = true
+knowledge = "2025-03-31"
+open_weights = true
+license = "MIT License"
+
+[limit]
+context = 163_840
+output = 32_768
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/deepseek-ai/DeepSeek-V3.1-Terminus"

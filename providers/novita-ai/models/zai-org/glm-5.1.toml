@@ -1,15 +1,14 @@
-name = "GLM-5.1"
+# Toggle: thinking.type = enabled|disabled
+# Verified with Novita chat/completions on 2026-09-17: disabling removes reasoning_content.
+base_model = "zhipuai/glm-5.1"
+name = "GLM 5.1"
 description = "Flagship GLM model for hybrid reasoning, coding, and agentic engineering"
-family = "glm"
-release_date = "2026-03-27"
-last_updated = "2026-03-27"
-attachment = false
-reasoning = true
-reasoning_options = [{ type = "toggle" }]
-temperature = true
-tool_call = true
-structured_output = true
-open_weights = true
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "toggle"
 
 [cost]
 input = 1.38
@@ -18,11 +17,3 @@ cache_read = 0.26
 
 [limit]
 context = 204_800
-output = 131_072
-
-[interleaved]
-field = "reasoning_content"
-
-[modalities]
-input = ["text"]
-output = ["text"]

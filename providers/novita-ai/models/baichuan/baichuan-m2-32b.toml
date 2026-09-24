@@ -1,24 +1,6 @@
-name = "baichuan-m2-32b"
-description = "Open-weight instruction model for adaptable chat and self-hosted production workloads"
-family = "baichuan"
-release_date = "2025-08-13"
-last_updated = "2025-08-13"
-attachment = false
-reasoning = false
-temperature = true
-knowledge = "2024-12"
-tool_call = false
-structured_output = false
-open_weights = true
+base_model = "baichuan/baichuan-m2-32b"
+description = "Baichuan-M2 is a medically-enhanced reasoning model specifically designed for real-world medical reasoning tasks. We begin with real-world medical questions and conduct reinforcement learning training based on a large-scale verifier system. While maintaining the model's general capabilities, the medical effectiveness of Baichuan-M2 has achieved breakthrough improvements.\n\nBaichuan-M2 is currently the world's best open-source medical model. On the HealthBench Benchmark, it surpasses all open-source models, including GPT-OSS-120B, as well as many cutting-edge closed-source models. It is the open-source model closest to GPT-5 in terms of medical capabilities.\n\nOur research demonstrates that a robust verifier is crucial for aligning model capabilities with real-world applications, and an end-to-end reinforcement learning approach fundamentally enhances the model's medical reasoning abilities. The release of Baichuan-M2 represents a significant advancement in the field of medical artificial intelligence, pushing t"
 
 [cost]
 input = 0.07
 output = 0.07
-
-[limit]
-context = 131072
-output = 131072
-
-[modalities]
-input = ["text"]
-output = ["text"]

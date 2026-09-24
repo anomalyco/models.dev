@@ -1,23 +1,8 @@
-name = "MiniMax M1"
-description = "MiniMax model for chat, coding, office work, and agentic tasks"
-family = "minimax"
-release_date = "2025-06-17"
-last_updated = "2025-06-17"
-attachment = false
-reasoning = true
+# Novita chat/completions 2026-09-20: plain and thinking.type enabled|disabled all emit <think> in content; neither setting turns reasoning off.
+base_model = "minimax/minimax-m1-80k"
+description = "MiniMax-M1: The World's First Open-Weight, Large-Scale Hybrid Attention Inference Model\n\nMiniMax-M1 adopts a Mixture of Experts (MoE) architecture and integrates the Flash Attention mechanism. The model contains a total of 456 billion parameters, with 45.9 billion parameters activated per token.\n\nNatively, the M1 model supports a context length of 1 million tokens—8 times that of DeepSeek R1. Additionally, by combining the CISPO algorithm with an efficient hybrid attention design for reinforcement learning training, MiniMax-M1 achieves industry-leading performance in long-context reasoning and real-world software engineering scenarios."
 reasoning_options = []
-temperature = true
-tool_call = true
-open_weights = true
 
 [cost]
 input = 0.55
 output = 2.2
-
-[limit]
-context = 1_000_000
-output = 40_000
-
-[modalities]
-input = ["text"]
-output = ["text"]

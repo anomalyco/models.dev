@@ -1,0 +1,18 @@
+name = "PaddleOCR VL"
+description = "PaddlePaddle vision-language model for document and image text extraction"
+release_date = "2025-10-22"
+last_updated = "2025-10-22"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = false
+structured_output = false
+open_weights = true
+
+[limit]
+context = 16_384
+output = 16_384
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

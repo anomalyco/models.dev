@@ -1,0 +1,20 @@
+name = "DeepSeek R1 0528"
+description = "DeepSeek R1 reasoning model updated in May 2025 for math and coding"
+family = "deepseek-thinking"
+release_date = "2025-05-28"
+last_updated = "2025-05-28"
+attachment = false
+reasoning = true
+temperature = true
+knowledge = "2024-07"
+tool_call = true
+structured_output = true
+open_weights = true
+
+[limit]
+context = 163_840
+output = 32_768
+
+[modalities]
+input = ["text"]
+output = ["text"]

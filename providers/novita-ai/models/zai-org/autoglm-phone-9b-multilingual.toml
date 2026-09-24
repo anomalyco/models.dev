@@ -1,21 +1,6 @@
-name = "AutoGLM-Phone-9B-Multilingual"
-description = "GLM vision model for visual reasoning, documents, and multimodal agents"
-release_date = "2025-12-10"
-last_updated = "2025-12-10"
-attachment = true
-reasoning = false
-temperature = true
-tool_call = false
-open_weights = true
+base_model = "zhipuai/autoglm-phone-9b-multilingual"
+description = "Phone Agent is a mobile intelligent assistant framework built on AutoGLM, capable of understanding smartphone screens through multimodal perception and executing automated operations to complete tasks.\nThe system controls devices via ADB (Android Debug Bridge), uses a vision-language model for screen understanding, and leverages intelligent planning to generate and execute action sequences.\n\nUsers can simply describe tasks in natural language—for example, “Open Xiaohongshu and search for food recommendations.”\nPhone Agent will automatically parse the intent, understand the current UI, plan the next steps, and carry out the entire workflow.\n\nThe system also includes:\n\nSensitive action confirmation mechanisms\nHuman-in-the-loop fallback for login or verification code scenarios\nRemote ADB debugging, allowing device connection via WiFi or network for flexible remote control and development"
 
 [cost]
 input = 0.035
 output = 0.138
-
-[limit]
-context = 65_536
-output = 65_536
-
-[modalities]
-input = ["text", "image"]
-output = ["text"]

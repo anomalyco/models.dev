@@ -1,24 +1,11 @@
-name = "Qwen3 235B A22b Thinking 2507"
-description = "Qwen reasoning model for deliberate problem solving, math, and coding"
-family = "qwen"
-release_date = "2025-07-25"
-last_updated = "2025-07-25"
-attachment = false
-reasoning = true
-reasoning_options = []
-temperature = true
-knowledge = "2025-04"
-tool_call = true
-open_weights = true
+# Budget: thinking_budget (integer reasoning tokens)
+base_model = "alibaba/qwen3-235b-a22b-thinking-2507"
+description = "The Qwen3-235B-A22B-Thinking-2507 represents the newest thinking-enabled model in the Qwen3 series, delivering groundbreaking improvements in reasoning capabilities. This advanced AI demonstrates significantly enhanced performance across logical reasoning, mathematics, scientific analysis, coding tasks, and academic benchmarks - matching or even surpassing human-expert level performance to achieve state-of-the-art results among open-source thinking models. Beyond its exceptional reasoning skills, the model shows markedly better general capabilities including more precise instruction following, sophisticated tool usage, highly natural text generation, and improved alignment with human preferences. It also features enhanced 256K long-context understanding, allowing it to maintain coherence and depth across extended documents and complex discussions."
+structured_output = false
+
+[[reasoning_options]]
+type = "budget_tokens"
 
 [cost]
 input = 0.3
-output = 3.0
-
-[limit]
-context = 131_072
-output = 32_768
-
-[modalities]
-input = ["text"]
-output = ["text"]
+output = 3

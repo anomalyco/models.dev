@@ -1,24 +1,18 @@
+# Toggle: thinking.type = enabled|disabled
+# Verified with Novita chat/completions on 2026-09-17: disabling removes reasoning_content.
+base_model = "google/gemma-4-26b-a4b-it"
 name = "Gemma 4 26B A4B"
-description = "Open Gemma instruction model for efficient chat and self-hosted deployments"
-family = "gemma"
-release_date = "2026-04-02"
-last_updated = "2026-04-02"
-attachment = true
-reasoning = true
-reasoning_options = [{ type = "toggle" }]
-temperature = true
-tool_call = true
-structured_output = true
-open_weights = true
+description = "Gemma 4 26B A4B is built for developers who need scalable performance without sacrificing core capabilities.Crucially, it retains the massive 256K-token context window of the 31B model, making it highly competitive for long-context RAG and processing extensive, image-rich document datasets. It fully supports the series' core innovations: native Thinking mode for advanced logic, Interleaved Multimodal Input for dynamic text-image workflows, and flawless document/UI parsing. Equipped with native Function Calling and robust coding proficiencies, the 26B A4B is the ideal, cost-effective engine for powering real-world agentic workflows, visual automation, and global applications across its 140+ pre-trained languages."
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "toggle"
 
 [cost]
 input = 0.13
 output = 0.4
 
 [limit]
-context = 262_144
 output = 131_072
-
-[modalities]
-input = ["text", "image"]
-output = ["text"]

@@ -1,21 +1,6 @@
-name = "Qwen MT Plus"
-description = "Translation model for multilingual conversion, localization, and cross-language workflows"
-release_date = "2025-09-03"
-last_updated = "2025-09-03"
-attachment = false
-reasoning = false
-temperature = true
-tool_call = false
-open_weights = true
+base_model = "alibaba/qwen-mt-plus"
+description = "Qwen-MT is a large language model optimized for machine translation, built upon the foundation of the Tongyi Qianwen model. It supports translation across 92 languages — including Chinese, English, Japanese, Korean, French, Spanish, German, Thai, Indonesian, Vietnamese, Arabic, and more — enabling seamless multilingual communication."
 
 [cost]
 input = 0.25
 output = 0.75
-
-[limit]
-context = 16_384
-output = 8_192
-
-[modalities]
-input = ["text"]
-output = ["text"]

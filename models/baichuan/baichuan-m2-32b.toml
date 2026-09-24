@@ -1,0 +1,20 @@
+name = "Baichuan M2 32B"
+description = "Open-weight Baichuan instruction model for chat and analysis"
+family = "baichuan"
+release_date = "2025-08-13"
+last_updated = "2025-08-13"
+attachment = false
+reasoning = false
+temperature = true
+tool_call = false
+structured_output = false
+knowledge = "2024-12"
+open_weights = true
+
+[limit]
+context = 131_072
+output = 131_072
+
+[modalities]
+input = ["text"]
+output = ["text"]

@@ -1,0 +1,25 @@
+# https://huggingface.co/Qwen/Qwen2.5-7B-Instruct
+name = "Qwen2.5 7B Instruct"
+description = "Open Qwen instruction model for multilingual chat, coding, and structured responses"
+family = "qwen"
+release_date = "2024-09-19"
+last_updated = "2024-09-19"
+attachment = false
+reasoning = false
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = true
+license = "Apache-2.0"
+
+[limit]
+context = 131_072
+output = 8_192
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/Qwen/Qwen2.5-7B-Instruct"

@@ -1,15 +1,13 @@
-name = "Deepseek V3.2"
+# Toggle: thinking.type = enabled|disabled
+# Verified with Novita chat/completions on 2026-09-17: disabling removes reasoning_content.
+base_model = "deepseek/deepseek-v3.2"
 description = "DeepSeek chat model for instruction following, coding, and analysis"
-family = "deepseek"
-release_date = "2025-12-01"
-last_updated = "2025-12-01"
-attachment = false
-reasoning = true
-reasoning_options = [{ type = "toggle" }]
-temperature = true
-tool_call = true
-structured_output = true
-open_weights = true
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "toggle"
 
 [cost]
 input = 0.269
@@ -19,10 +17,3 @@ cache_read = 0.1345
 [limit]
 context = 163_840
 output = 65_536
-
-[interleaved]
-field = "reasoning_content"
-
-[modalities]
-input = ["text"]
-output = ["text"]

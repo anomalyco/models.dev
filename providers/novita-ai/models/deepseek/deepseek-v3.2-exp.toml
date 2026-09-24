@@ -1,13 +1,10 @@
-name = "Deepseek V3.2 Exp"
-description = "DeepSeek chat model for instruction following, coding, and analysis"
-release_date = "2025-09-29"
-last_updated = "2025-09-29"
-attachment = false
-reasoning = true
-temperature = true
-tool_call = true
-structured_output = true
-open_weights = true
+# Toggle: thinking.type = enabled|disabled
+# Verified with Novita chat/completions on 2026-09-17: disabling removes reasoning_content.
+base_model = "deepseek/deepseek-v3.2-exp"
+description = "DeepSeek-V3.2-Exp is an experimental model introducing the groundbreaking DeepSeek Sparse Attention (DSA) mechanism for enhanced long-context processing efficiency.\n\nBuilt on V3.1-Terminus, DSA achieves fine-grained sparse attention while maintaining identical output quality. This delivers substantial computational efficiency improvements without compromising accuracy.\n\nComprehensive benchmarks confirm V3.2-Exp matches V3.1-Terminus performance, proving efficiency gains don't sacrifice capability. As both a powerful tool and research platform, it establishes new paradigms for efficient long-context AI processing.\n\n"
+
+[interleaved]
+field = "reasoning_content"
 
 [[reasoning_options]]
 type = "toggle"
@@ -15,11 +12,3 @@ type = "toggle"
 [cost]
 input = 0.27
 output = 0.41
-
-[limit]
-context = 163_840
-output = 65_536
-
-[modalities]
-input = ["text"]
-output = ["text"]

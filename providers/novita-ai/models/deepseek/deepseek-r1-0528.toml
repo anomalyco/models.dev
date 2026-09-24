@@ -1,25 +1,9 @@
-name = "DeepSeek R1 0528"
-description = "DeepSeek reasoning model for multi-step analysis, math, coding, and tools"
-family = "deepseek-thinking"
-release_date = "2025-05-28"
-last_updated = "2025-05-28"
-attachment = false
-reasoning = true
+# Novita chat/completions 2026-09-20: thinking.type enabled|disabled returns reasoning in content, not reasoning_content.
+base_model = "deepseek/deepseek-r1-0528"
+description = "DeepSeek R1 0528 is the latest open-source model released by the DeepSeek team, featuring impressive reasoning capabilities, particularly achieving performance comparable to OpenAI's o1 model in mathematics, coding, and reasoning tasks."
 reasoning_options = []
-temperature = true
-knowledge = "2024-07"
-tool_call = true
-structured_output = true
-open_weights = true
 
 [cost]
 input = 0.7
 output = 2.5
 cache_read = 0.35
-[limit]
-context = 163_840
-output = 32_768
-
-[modalities]
-input = ["text"]
-output = ["text"]

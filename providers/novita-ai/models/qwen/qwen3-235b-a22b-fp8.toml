@@ -1,13 +1,10 @@
+# Verified with Novita chat/completions on 2026-09-20: thinking enabled and disabled both return no reasoning_content or reasoning tokens.
+base_model = "alibaba/qwen3-235b-a22b"
 name = "Qwen3 235B A22B"
-description = "Qwen instruction model for multilingual chat, reasoning, and tool use"
-release_date = "2025-04-29"
-last_updated = "2025-04-29"
-attachment = false
-reasoning = true
-reasoning_options = []
-temperature = true
+description = "Achieves effective integration of inference and non-inference modes, enabling seamless switching between modes during conversations. The model's inference capability significantly surpasses that of QwQ, and its general capabilities exceed those of Qwen2.5-72B-Instruct, reaching the state-of-the-art (SOTA) level among models of the same scale."
+reasoning = false
 tool_call = false
-open_weights = true
+structured_output = true
 
 [cost]
 input = 0.2
@@ -16,7 +13,3 @@ output = 0.8
 [limit]
 context = 40_960
 output = 20_000
-
-[modalities]
-input = ["text"]
-output = ["text"]

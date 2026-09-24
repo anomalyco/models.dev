@@ -1,22 +1,8 @@
+base_model = "alibaba/qwen3-next-80b-a3b-instruct"
 name = "Qwen3 Next 80B A3B Instruct"
-description = "Qwen instruction model for multilingual chat, reasoning, and tool use"
-release_date = "2025-09-10"
-last_updated = "2025-09-10"
-attachment = false
-reasoning = false
-temperature = true
-tool_call = true
+description = "Qwen3-Next uses a highly sparse MoE design: 80B total parameters, but only ~3B activated per inference step. Experiments show that, with global load balancing, increasing total expert parameters while keeping activated experts fixed steadily reduces training loss.Compared to Qwen3’s MoE (128 total experts, 8 routed), Qwen3-Next expands to 512 total experts, combining 10 routed experts + 1 shared expert — maximizing resource usage without hurting performance.\nThe Qwen3-Next-80B-A3B-Instruct performs comparably to our flagship model Qwen3-235B-A22B-Instruct-2507, and shows clear advantages in tasks requiring ultra-long context (up to 256K tokens).\n"
 structured_output = true
-open_weights = true
 
 [cost]
 input = 0.15
 output = 1.5
-
-[limit]
-context = 131_072
-output = 32_768
-
-[modalities]
-input = ["text"]
-output = ["text"]

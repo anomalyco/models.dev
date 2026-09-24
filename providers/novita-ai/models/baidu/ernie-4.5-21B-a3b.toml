@@ -1,23 +1,7 @@
-name = "ERNIE 4.5 21B A3B"
-description = "Open-weight instruction model for adaptable chat and self-hosted production workloads"
-family = "ernie"
-release_date = "2025-06-30"
-last_updated = "2025-06-30"
-attachment = false
-reasoning = false
-temperature = true
-knowledge = "2025-03"
-tool_call = true
-open_weights = true
+# Novita returned rate limiting on 2026-09-20; retain the curated route.
+base_model = "baidu/ernie-4.5-21b-a3b"
+description = "The ERNIE 4.5 series of open-source models adopts a Mixture-of-Experts (MoE) architecture, representing an innovative multimodal heterogeneous model structure. It achieves cross-modal knowledge fusion through a parameter-sharing mechanism while retaining dedicated parameter spaces for individual modalities. This architecture is particularly well-suited for the continuous pre-training paradigm from large language models to multimodal models, significantly enhancing multimodal understanding capabilities while maintaining or even improving performance in text-based tasks. The models are efficiently trained, inferred, and deployed using the PaddlePaddle deep learning framework. During the pre-training of large language models, the Model FLOPs Utilization (MFU) reaches 47%. Experimental results demonstrate that this series of models achieves state-of-the-art (SOTA) performance across multiple text and multimodal benchmarks, with particularly outstanding results in instruction following, world knowledge memorizatio"
 
 [cost]
 input = 0.07
 output = 0.28
-
-[limit]
-context = 120_000
-output = 8_000
-
-[modalities]
-input = ["text"]
-output = ["text"]

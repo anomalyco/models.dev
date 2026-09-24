@@ -1,0 +1,19 @@
+name = "Qwen MT Plus"
+description = "Qwen translation model for multilingual conversion and localization"
+family = "qwen"
+release_date = "2025-09-03"
+last_updated = "2025-09-03"
+attachment = false
+reasoning = false
+temperature = true
+tool_call = false
+structured_output = false
+open_weights = true
+
+[limit]
+context = 16_384
+output = 8_192
+
+[modalities]
+input = ["text"]
+output = ["text"]

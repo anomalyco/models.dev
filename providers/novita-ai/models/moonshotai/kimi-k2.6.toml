@@ -1,8 +1,13 @@
+# Toggle: thinking.type = enabled|disabled
+# Verified with Novita chat/completions on 2026-09-17: disabling removes reasoning_content.
 base_model = "moonshotai/kimi-k2.6"
-reasoning_options = [{ type = "toggle" }]
+description = "Kimi K2.6 is an open-source, native multimodal agentic model that significantly advances practical capabilities in long-horizon coding, coding-driven design, and swarm-based task orchestration. It robustly executes complex, end-to-end development tasks across multiple programming languages and domains, seamlessly transforming simple prompts and visual inputs into production-ready, aesthetically precise interfaces and full-stack workflows. Uniquely engineered for high scalability, K2.6 can horizontally orchestrate up to 300 domain-specialized sub-agents through 4,000 coordinated steps, dynamically decomposing intricate tasks to deliver diverse end-to-end outputs—from documents and spreadsheets to fully functional websites—in a single autonomous run. Furthermore, its proactive execution capabilities empower persistent, 24/7 background agents to manage schedules, deploy code, and orchestrate cross-platform operations entirely without human oversight, establishing it as a premier foundational model for next-gener"
 
 [interleaved]
 field = "reasoning_content"
+
+[[reasoning_options]]
+type = "toggle"
 
 [cost]
 input = 0.8

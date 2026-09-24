@@ -1,12 +1,8 @@
+base_model = "meta/llama-4-maverick-17b-instruct"
 name = "Llama 4 Maverick Instruct"
-description = "Open multimodal Llama model for strong reasoning and fast responses"
-release_date = "2025-04-06"
-last_updated = "2025-04-06"
-attachment = true
-reasoning = false
-temperature = true
+description = "Llama 4 Maverick 17B Instruct (128E) is a high-capacity multimodal language model from Meta, built on a mixture-of-experts (MoE) architecture with 128 experts and 17 billion active parameters per forward pass (400B total). It supports multilingual text and image input, and produces multilingual text and code output across 12 supported languages. Optimized for vision-language tasks, Maverick is instruction-tuned for assistant-like behavior, image reasoning, and general-purpose multimodal interaction.\n\nMaverick features early fusion for native multimodality and a 1 million token context window. It was trained on a curated mixture of public, licensed, and Meta-platform data, covering ~22 trillion tokens, with a knowledge cutoff in August 2024. Released on April 5, 2025 under the Llama 4 Community License, Maverick is suited for research and commercial applications requiring advanced multimodal understanding and high model throughput."
 tool_call = false
-open_weights = true
+structured_output = true
 
 [cost]
 input = 0.27
@@ -15,7 +11,3 @@ output = 0.85
 [limit]
 context = 1_048_576
 output = 8_192
-
-[modalities]
-input = ["text", "image"]
-output = ["text"]

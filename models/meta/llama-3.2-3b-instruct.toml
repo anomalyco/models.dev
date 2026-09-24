@@ -1,0 +1,24 @@
+# https://huggingface.co/meta-llama/Llama-3.2-3B-Instruct
+name = "Llama 3.2 3B Instruct"
+description = "Small open Llama instruction model for multilingual chat and lightweight assistants"
+family = "llama"
+release_date = "2024-09-25"
+last_updated = "2024-09-25"
+attachment = false
+reasoning = false
+temperature = true
+tool_call = false
+open_weights = true
+license = "Llama 3.2 Community License"
+
+[limit]
+context = 131_072
+output = 8_192
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/meta-llama/Llama-3.2-3B-Instruct"

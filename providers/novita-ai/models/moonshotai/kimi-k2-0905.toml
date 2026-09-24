@@ -1,24 +1,6 @@
-name = "Kimi K2 0905"
-description = "Kimi model for long-context chat, coding, and agentic reasoning"
-family = "kimi-k2"
-release_date = "2025-09-05"
-last_updated = "2025-09-05"
-attachment = false
-reasoning = false
-temperature = true
-knowledge = "2024-10"
-tool_call = true
-structured_output = true
-open_weights = true
+base_model = "moonshotai/kimi-k2-0905"
+description = "Kimi K2 0905 is the September update of Kimi K2 0711. It is a large-scale Mixture-of-Experts (MoE) language model developed by Moonshot AI, featuring 1 trillion total parameters with 32 billion active per forward pass. It supports long-context inference up to 256k tokens, extended from the previous 128k.\nThis update improves agentic coding with higher accuracy and better generalization across scaffolds, and enhances frontend coding with more aesthetic and functional outputs for web, 3D, and related tasks. Kimi K2 is optimized for agentic capabilities, including advanced tool use, reasoning, and code synthesis. It excels across coding (LiveCodeBench, SWE-bench), reasoning (ZebraLogic, GPQA), and tool-use (Tau2, AceBench) benchmarks. The model is trained with a novel stack incorporating the MuonClip optimizer for stable large-scale MoE training."
 
 [cost]
 input = 0.6
 output = 2.5
-
-[limit]
-context = 262_144
-output = 262_144
-
-[modalities]
-input = ["text"]
-output = ["text"]

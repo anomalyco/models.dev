@@ -1,22 +1,6 @@
-name = "Hermes 2 Pro Llama 3 8B"
-description = "Open Llama instruction model for multilingual chat, reasoning, and coding"
-release_date = "2024-06-27"
-last_updated = "2024-06-27"
-attachment = false
-reasoning = false
-temperature = true
-tool_call = false
-structured_output = true
-open_weights = true
+base_model = "nousresearch/hermes-2-pro-llama-3-8b"
+description = "Hermes 2 Pro is an upgraded, retrained version of Nous Hermes 2, consisting of an updated and cleaned version of the OpenHermes 2.5 Dataset, as well as a newly introduced Function Calling and JSON Mode dataset developed in-house."
 
 [cost]
 input = 0.14
 output = 0.14
-
-[limit]
-context = 8_192
-output = 8_192
-
-[modalities]
-input = ["text"]
-output = ["text"]

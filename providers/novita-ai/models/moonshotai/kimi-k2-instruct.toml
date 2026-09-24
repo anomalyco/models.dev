@@ -1,21 +1,6 @@
-name = "Kimi K2 Instruct"
-description = "Kimi model for long-context chat, coding, and agentic reasoning"
-release_date = "2025-07-11"
-last_updated = "2025-07-11"
-attachment = false
-reasoning = false
-temperature = true
-tool_call = true
-open_weights = true
+base_model = "moonshotai/kimi-k2-instruct"
+description = "Kimi K2 is a state-of-the-art mixture-of-experts (MoE) language model with 32 billion activated parameters and 1 trillion total parameters. Trained with the Muon optimizer, Kimi K2 achieves exceptional performance across frontier knowledge, reasoning, and coding tasks while being meticulously optimized for agentic capabilities.Specifically designed for tool use, reasoning, and autonomous problem-solving."
 
 [cost]
 input = 0.57
 output = 2.3
-
-[limit]
-context = 131_072
-output = 32_768
-
-[modalities]
-input = ["text"]
-output = ["text"]

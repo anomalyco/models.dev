@@ -4996,6 +4996,19 @@ test("preserves the authored header comment block when rewriting a changed model
       "# Documented quirk: this route needs a manual note.\n# https://example.com/docs (accessed 2026-06-25)\n",
     );
     expect(written).toContain("input = 3");
+
+    const originalTranslate = provider.translateModel;
+    provider.authoritativeHeadersWhenPresent = true;
+    provider.translateModel = (model, context) => {
+      const translated = originalTranslate(model, context);
+      return translated === undefined ? undefined : { ...translated, header: "# Generated wire header\n" };
+    };
+    expect((await syncProvider(provider)).updated).toBe(1);
+    expect(await readFile(path.join(modelsDir, "example-model.toml"), "utf8")).toStartWith("# Generated wire header\n");
+
+    provider.translateModel = originalTranslate;
+    expect((await syncProvider(provider)).updated).toBe(0);
+    expect(await readFile(path.join(modelsDir, "example-model.toml"), "utf8")).toStartWith("# Generated wire header\n");
   } finally {
     await rm(dir, { recursive: true, force: true });
   }

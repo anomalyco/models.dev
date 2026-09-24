@@ -1,0 +1,19 @@
+name = "Qwen3 Omni 30B A3B Thinking"
+description = "Qwen3 omni reasoning model for multimodal text, vision, and audio tasks"
+family = "qwen"
+release_date = "2025-09-24"
+last_updated = "2025-09-24"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = true
+
+[limit]
+context = 65_536
+output = 16_384
+
+[modalities]
+input = ["text", "audio", "video", "image"]
+output = ["text"]

@@ -1,22 +1,14 @@
-name = "ERNIE 4.5 VL 424B A47B"
-description = "Multimodal reasoning model for visual analysis, planning, and tool use"
-release_date = "2025-06-30"
-last_updated = "2025-06-30"
-attachment = true
-reasoning = true
-reasoning_options = []
-temperature = true
-tool_call = false
-open_weights = true
+# Toggle: thinking.type = enabled|disabled
+# Verified with Novita chat/completions on 2026-09-20: enabled returns reasoning_content; disabled does not.
+base_model = "baidu/ernie-4.5-vl-424b-a47b"
+description = "The ERNIE 4.5 series of open-source models adopts a Mixture-of-Experts (MoE) architecture, representing an innovative multimodal heterogeneous model structure. It achieves cross-modal knowledge fusion through a parameter-sharing mechanism while retaining dedicated parameter spaces for individual modalities. This architecture is particularly well-suited for the continuous pre-training paradigm from large language models to multimodal models, significantly enhancing multimodal understanding capabilities while maintaining or even improving performance in text-based tasks. The models are efficiently trained, inferred, and deployed using the PaddlePaddle deep learning framework. During the pre-training of large language models, the Model FLOPs Utilization (MFU) reaches 47%. Experimental results demonstrate that this series of models achieves state-of-the-art (SOTA) performance across multiple text and multimodal benchmarks, with particularly outstanding results in instruction following, world knowledge memorizatio"
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "toggle"
 
 [cost]
 input = 0.42
 output = 1.25
-
-[limit]
-context = 123_000
-output = 16_000
-
-[modalities]
-input = ["text", "image"]
-output = ["text"]

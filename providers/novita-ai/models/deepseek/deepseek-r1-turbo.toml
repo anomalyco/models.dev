@@ -1,13 +1,15 @@
-name = "DeepSeek R1 (Turbo)	"
-description = "DeepSeek reasoning model for multi-step analysis, math, coding, and tools"
-release_date = "2025-03-05"
-last_updated = "2025-03-05"
-attachment = false
-reasoning = true
-reasoning_options = []
-temperature = true
-tool_call = true
-open_weights = true
+# Toggle: thinking.type = enabled|disabled
+# Verified with Novita chat/completions on 2026-09-20: enabled returns reasoning_content; disabled does not.
+base_model = "deepseek/deepseek-r1"
+name = "DeepSeek R1 Turbo"
+description = "DeepSeek R1 is the latest open-source model released by the DeepSeek team, featuring impressive reasoning capabilities, particularly achieving performance comparable to OpenAI's o1 model in mathematics, coding, and reasoning tasks."
+structured_output = true
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "toggle"
 
 [cost]
 input = 0.7
@@ -16,7 +18,3 @@ output = 2.5
 [limit]
 context = 64_000
 output = 16_000
-
-[modalities]
-input = ["text"]
-output = ["text"]
