@@ -1,7 +1,8 @@
 # Source: https://anyrouter.dev/api/v1/models (accessed 2026-09-24)
-# No reasoning params in this route's supported_parameters.
+# Params are forwarded upstream (https://anyrouter.dev/docs/features/provider-routing);
+# Effort: reasoning_effort = low|medium|high|xhigh (OpenRouter peers)
 base_model = "meta/muse-glimmer-30b"
-reasoning_options = []
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh"] }]
 
 [cost]
 input = 0.35

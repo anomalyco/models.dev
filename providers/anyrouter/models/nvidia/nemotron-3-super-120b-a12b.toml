@@ -1,7 +1,13 @@
 # Source: https://anyrouter.dev/api/v1/models (accessed 2026-09-24)
-# No reasoning params in this route's supported_parameters.
+# Params are forwarded upstream (https://anyrouter.dev/docs/features/provider-routing);
+# Toggle: reasoning.enabled = true|false
+# Effort: reasoning_effort = low|medium; Budget: reasoning.max_tokens (OpenRouter peers)
 base_model = "nvidia/nemotron-3-super-120b-a12b"
-reasoning_options = []
+reasoning_options = [
+  { type = "toggle" },
+  { type = "effort", values = ["low", "medium"] },
+  { type = "budget_tokens" },
+]
 
 [cost]
 input = 0.085

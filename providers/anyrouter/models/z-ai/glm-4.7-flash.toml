@@ -1,7 +1,8 @@
 # Source: https://anyrouter.dev/api/v1/models (accessed 2026-09-24)
-# No reasoning params in this route's supported_parameters.
+# Params are forwarded upstream (https://anyrouter.dev/docs/features/provider-routing);
+# Toggle: reasoning.enabled = true|false (Z.ai lab + OpenRouter peers)
 base_model = "zhipuai/glm-4.7-flash"
-reasoning_options = []
+reasoning_options = [{ type = "toggle" }]
 
 [cost]
 input = 0.06
