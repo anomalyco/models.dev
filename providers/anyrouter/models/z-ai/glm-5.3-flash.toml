@@ -1,11 +1,8 @@
 # Source: https://anyrouter.dev/api/v1/models (accessed 2026-09-24)
-# Toggle: reasoning.enabled true|false
-# Effort: reasoning_effort low|high|max
+# GLM-5.3-Flash always reasons (thinking cannot be disabled); this route exposes
+# reasoning_effort = low|high|max, matching lab + OpenRouter peers.
 base_model = "zhipuai/glm-5.3-flash"
-reasoning_options = [
-  { type = "toggle" },
-  { type = "effort", values = ["low", "high", "max"] },
-]
+reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]
 
 [cost]
 input = 0.15
