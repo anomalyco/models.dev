@@ -8,10 +8,12 @@
 # input + output <= 1048576; actual generation is bounded by remaining context.
 # Provider confirmed text-only input on 2026-09-24; no image/video attachments.
 # TODO: verify reasoning, temperature and structured_output on this endpoint.
-# TODO: author verified reasoning_options and reasoning response-field mapping.
-# Omitted reasoning_options is intentional; [] would falsely claim no controls.
+# Provisional effort: reasoning_effort = none|low|high|max; none disables thinking.
+# TODO: confirm effective effort values across tiers and reasoning response mapping.
+# Authoritative pricing/capabilities: LithosAI website/docs; this is a static snapshot.
 base_model = "moonshotai/kimi-k3"
 attachment = false
+reasoning_options = [{ type = "effort", values = ["none", "low", "high", "max"] }]
 name = "Kimi K3 Fast"
 
 [cost]
