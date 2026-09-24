@@ -1,0 +1,22 @@
+# Sources checked 2026-09-24:
+# https://docs.infercrane.com/model-apis
+# Toggle: reasoning.enabled = true|false. The API also accepts
+# reasoning_effort = none to disable reasoning and any non-none value to enable it.
+base_model = "alibaba/qwen3.8-27b"
+attachment = false
+reasoning_options = [{ type = "toggle" }]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.10
+output = 2.20
+
+[limit]
+context = 32_768
+output = 2_048
+
+[modalities]
+input = ["text"]
+output = ["text"]
