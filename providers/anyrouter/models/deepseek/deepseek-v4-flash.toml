@@ -3,12 +3,13 @@
 # text-only lab default). Params forwarded upstream
 # (docs/features/provider-routing).
 # Toggle: reasoning.enabled = true|false
-# Effort: reasoning_effort = low|high|max (DeepSeek lab; same as v4.1-flash sibling)
+# Effort: reasoning_effort = high|xhigh (OpenRouter same-model peer; AnyRouter
+# uses OpenRouter-style reasoning params)
 base_model = "deepseek/deepseek-v4-flash"
 attachment = true
 reasoning_options = [
   { type = "toggle" },
-  { type = "effort", values = ["low", "high", "max"] },
+  { type = "effort", values = ["high", "xhigh"] },
 ]
 
 [cost]
