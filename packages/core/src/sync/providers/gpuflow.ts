@@ -28,15 +28,22 @@ const ModelsdevReasoningOption = z.object({
 const ModelsdevLabBlock = z.object({
   name: z.string(),
   description: z.string(),
-  // Complete lab metadata requires an authoritative identity: the release
-  // date and license state come from the provider's declaration (HF card),
-  // never from the gateway listing time. Incomplete blocks fail closed.
+  // Complete lab metadata requires the provider-declared NATIVE identity:
+  // release date and license state from the HF card, and the model's own
+  // limit/modalities/attachment — never the as-served host caps and never
+  // the gateway listing time. Incomplete blocks fail closed.
   release_date: z.string().optional(),
   last_updated: z.string().optional(),
   open_weights: z.boolean().optional(),
   family: z.string().optional(),
   knowledge: z.string().optional(),
   weights_url: z.string().optional(),
+  attachment: z.boolean().optional(),
+  limit: z.object({ context: z.number(), output: z.number() }).optional(),
+  modalities: z.object({
+    input: z.array(z.string()),
+    output: z.array(z.string()),
+  }).optional(),
 });
 
 const ModelsdevBlock = z.object({
@@ -417,16 +424,25 @@ export const gpuflow = {
     // or family/knowledge.
     const labFileExists = metadataEntries().some((e) => e.id === baseModel);
     const lab = block?.lab;
+    // Lab metadata requires the provider-declared NATIVE identity —
+    // attachment/limit/modalities from the block (the model's own), never
+    // the as-served catalog caps. Incomplete blocks fail closed via
+    // missingModelID: the sync never writes host caps as lab truth.
     const labComplete =
       lab !== undefined &&
       lab.name !== undefined &&
       lab.description !== undefined &&
       lab.release_date !== undefined &&
-      lab.open_weights !== undefined;
+      lab.open_weights !== undefined &&
+      lab.attachment !== undefined &&
+      lab.limit !== undefined &&
+      lab.modalities !== undefined;
     if (!labFileExists && lab !== undefined && !labComplete) {
       return undefined; // reported via missingModelID for manual authoring
     }
-    const hasToggle = (block?.reasoning_options ?? []).some((o) => o.type === "toggle");
+    // Toggle check on the FINAL options (block with authored fallback), and
+    // the wire path only splices into the header when actually present.
+    const hasToggle = (reasoningOptions ?? []).some((o) => o.type === "toggle");
     if (hasToggle && block?.toggle_wire === undefined && authored === undefined) {
       // New files with a toggle control need the exact wire path in the
       // leading header (AGENTS.md); existing hand headers are preserved.
@@ -439,9 +455,11 @@ export const gpuflow = {
     const headerLines = [
       `# ${model.name} served by GPU Flow (${model.quantization ?? "open weights"}) on NVIDIA B200 in Madrid.`,
       `# Catalog and pricing: ${API_ENDPOINT} (hourly sync)`,
+      `# Wire controls and identity: ${SYNC_ENDPOINT} (the gateway's`,
+      `# modelsdev block, generated from the production whitelist)`,
     ];
-    if (hasToggle) {
-      headerLines.splice(1, 0, `# Toggle: ${block?.toggle_wire}`);
+    if (hasToggle && block?.toggle_wire !== undefined) {
+      headerLines.push(`# Toggle: ${block.toggle_wire}`);
     }
 
     if (!labFileExists && labComplete) {
@@ -455,7 +473,10 @@ export const gpuflow = {
             description: lab!.description,
             release_date: lab!.release_date,
             last_updated: lab!.last_updated ?? lab!.release_date,
-            attachment: synced.attachment,
+            // NATIVE facts from the declared block, never the served caps.
+            attachment: lab!.attachment,
+            limit: lab!.limit,
+            modalities: lab!.modalities,
             reasoning,
             temperature: synced.temperature,
             tool_call: synced.tool_call,
@@ -463,8 +484,6 @@ export const gpuflow = {
             open_weights: lab!.open_weights,
             family: lab!.family,
             knowledge: lab!.knowledge,
-            limit,
-            modalities,
             ...(lab!.weights_url !== undefined
               ? { weights: [{ label: "Hugging Face", url: lab!.weights_url }] }
               : {}),

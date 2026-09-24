@@ -4,11 +4,15 @@
 # native field) and `reasoning_content` (OpenAI-compatible/DeepSeek
 # convention; the gateway duplicates it) — verified on the live API on
 # 2026-09-23.
-# Wire controls (public API, https://gpuflow.ai/es/docs): reasoning.effort
-# accepts "low", "medium", "high" or "none" (off), and reasoning.max_tokens
-# sets the thinking budget directly (verified live: with the output cap
-# fixed, the reasoning block scales with reasoning.max_tokens) — the same
-# field maps to thinking.budget_tokens in the Anthropic dialect.
+# Wire controls (public API, https://gpuflow.ai/es/docs; gateway-declared
+# modelsdev block: https://api.gpuflow.ai/v1/models?audience=modelsdev):
+# reasoning.effort accepts "none" (off), "low" and "high" — each maps to a
+# distinct vLLM thinking budget (0 / 4,000 / 8,000 tokens; verified live
+# with a demanding prompt: low 16,307 reasoning chars vs high 30,332).
+# "medium" is accepted as an alias of low (same 4,000 budget, identical
+# output). reasoning.max_tokens sets the thinking budget directly (verified
+# live: with the output cap fixed, the reasoning block scales with it) and
+# maps to thinking.budget_tokens in the Anthropic dialect.
 # https://api.gpuflow.ai/v1/models (accessed 2026-09-23)
 base_model = "alibaba/qwen3.5-9b"
 attachment = false
@@ -18,7 +22,7 @@ field = "reasoning_content"
 
 [[reasoning_options]]
 type = "effort"
-values = ["none", "low", "medium", "high"]
+values = ["none", "low", "high"]
 
 [[reasoning_options]]
 type = "budget_tokens"
