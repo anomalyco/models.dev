@@ -2,6 +2,7 @@ import { lstatSync, readdirSync } from "node:fs";
 import path from "node:path";
 import { z } from "zod";
 
+import { MissingReasoningOptionsError } from "../missing-reasoning-options.js";
 import type { ExistingModel, SyncProvider, SyncedFullModel, SyncedModel } from "../index.js";
 import { factorBaseModel } from "./openrouter.js";
 
@@ -223,19 +224,27 @@ function releaseDate(model: GpuflowCatalogModel): string | undefined {
   return date.toISOString().slice(0, 10);
 }
 
+/** GA text/vision chat model — the only rows models.dev should track. */
+function inScope(model: GpuflowCatalogModel): boolean {
+  return model.is_ready && model.input_modalities.some((m) => m.type === "text");
+}
+
 export const gpuflow = {
   id: "gpuflow",
   name: "GPU Flow",
   modelsDir: "providers/gpuflow/models",
-  // Internal-only models (is_ready=false, e.g. dedicated Llama deployments)
-  // are intentionally not listed on models.dev: skip silently.
+  // The catalog is NOT lifecycle-authoritative: a vanished model (or a
+  // truncated /v1/models fetch) must never delete published entries.
+  // Removals are human decisions, like openai/ollama-cloud/merge-gateway.
+  deleteMissing: false,
+  // In-scope = GA text/vision chat model. Internal-only deployments
+  // (is_ready=false) and audio/music/pooling rows are skipped silently:
+  // no missing-model issues are opened for them.
   sourceID(model) {
-    return model.is_ready ? model.id : undefined;
+    return inScope(model) ? model.id : undefined;
   },
   missingModelID(model) {
-    // A GA model that vanished from the catalog stays on file; deleted
-    // entries are handled by humans.
-    return model.is_ready ? model.id : undefined;
+    return inScope(model) ? model.id : undefined;
   },
   async fetchModels() {
     const response = await fetch(API_ENDPOINT);
@@ -264,6 +273,19 @@ export const gpuflow = {
       output: model.output_modalities[0]?.max_length?.value ?? existing?.limit?.output ?? 0,
     };
     const reasoning = hasParameter(model, "reasoning");
+    // Fail closed: the catalog publishes the reasoning CAPABILITY but not
+    // the wire CONTROLS (effort levels, toggles, thinking budgets). Those
+    // are hand-documented per model from the gateway. A reasoner without
+    // hand-authored reasoning_options must never sync as [] ("no caller
+    // control" would be fabricated) — it is reported and left for a human.
+    if (reasoning && existing?.reasoning_options === undefined) {
+      throw new MissingReasoningOptionsError(
+        model.id,
+        "GPU Flow's catalog publishes the reasoning capability but not the wire controls; " +
+          "hand-author reasoning_options (reasoning.effort levels / budget per the gateway) " +
+          "in providers/gpuflow/models before syncing this model",
+      );
+    }
     const modalities = {
       input: inputModalities(model),
       output: outputModalities(model),
