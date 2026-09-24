@@ -8,6 +8,7 @@
 base_model = "nvidia/nemotron-nano-12b-v2-vl"
 reasoning = false
 tool_call = false
+structured_output = false
 
 [cost]
 input = 0.06
@@ -19,4 +20,3 @@ output = 16_384
 
 [modalities]
 input = ["text", "image"]
-output = ["text"]

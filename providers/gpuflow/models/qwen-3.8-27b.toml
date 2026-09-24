@@ -8,16 +8,16 @@
 # https://gpuflow.ai/es/docs
 base_model = "alibaba/qwen3.8-27b"
 attachment = false
-# Public API contract (https://gpuflow.ai/es/docs): reasoning.effort accepts
-# "low", "medium", "high" or "none" (off), and reasoning.max_tokens /
-# thinking.budget_tokens set the thinking budget directly.
-reasoning_options = [
-  { type = "effort", values = ["none", "low", "medium", "high"] },
-  { type = "budget_tokens" },
-]
 
 [interleaved]
 field = "reasoning_content"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high"]
+
+[[reasoning_options]]
+type = "budget_tokens"
 
 [cost]
 input = 0.1
@@ -30,4 +30,3 @@ output = 8_192
 
 [modalities]
 input = ["text"]
-output = ["text"]
