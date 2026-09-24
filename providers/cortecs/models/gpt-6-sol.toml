@@ -1,5 +1,7 @@
+# Effort: reasoning_effort = low|medium|high
+# https://docs.cortecs.ai/routing/reasoning
 base_model = "openai/gpt-6-sol"
-reasoning_options = []
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
 
 [cost]
 input = 2.4
