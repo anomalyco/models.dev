@@ -25,15 +25,29 @@ const ModelsdevReasoningOption = z.object({
   values: z.array(z.string()).optional(),
 });
 
+const ModelsdevLabBlock = z.object({
+  name: z.string(),
+  description: z.string(),
+  // Complete lab metadata requires an authoritative identity: the release
+  // date and license state come from the provider's declaration (HF card),
+  // never from the gateway listing time. Incomplete blocks fail closed.
+  release_date: z.string().optional(),
+  last_updated: z.string().optional(),
+  open_weights: z.boolean().optional(),
+  family: z.string().optional(),
+  knowledge: z.string().optional(),
+  weights_url: z.string().optional(),
+});
+
 const ModelsdevBlock = z.object({
   base_model: z.string().optional(),
   reasoning_options: z.array(ModelsdevReasoningOption).optional(),
   interleaved: z.object({ field: z.string() }).optional(),
   status: z.string().optional(),
-  lab: z.object({
-    name: z.string(),
-    description: z.string(),
-  }).passthrough().optional(),
+  // Exact wire path for a toggle control (required by AGENTS.md on files
+  // that declare a toggle; the gateway derives it from the mechanism).
+  toggle_wire: z.string().optional(),
+  lab: ModelsdevLabBlock.optional(),
 });
 
 const PricingEntry = z.object({
@@ -249,13 +263,6 @@ function inScope(model: GpuflowCatalogModel): boolean {
   return model.is_ready && model.input_modalities.some((m) => m.type === "text");
 }
 
-/** Catalog `created` (unix seconds) as an ISO date for lab metadata. */
-function releaseDate(model: GpuflowCatalogModel): string | undefined {
-  const date = new Date(model.created * 1000);
-  if (Number.isNaN(date.getTime())) return undefined;
-  return date.toISOString().slice(0, 10);
-}
-
 export const gpuflow = {
   id: "gpuflow",
   name: "GPU Flow",
@@ -287,22 +294,29 @@ export const gpuflow = {
     // The modelsdev block is the authoritative declaration from the GPU
     // Flow gateway (generated from its production whitelist). Internal-only
     // models never reach models.dev — unless they were published before and
-    // the block marks them deprecated, in which case the entry is synced
-    // with the deprecated status (no file is ever deleted: deleteMissing
-    // is off).
+    // the block marks them deprecated, in which case the authored file is
+    // re-synced with the deprecated status (override-only shape preserved:
+    // we spread the AUTHORED file, never the resolved merge; no file is
+    // ever deleted: deleteMissing is off).
     const block = model.modelsdev;
     if (!model.is_ready) {
-      if (block?.status === "deprecated" && context.existing(model.id) !== undefined) {
+      const authored = context.authored(model.id);
+      if (block?.status === "deprecated" && authored !== undefined) {
         return {
           id: model.id,
-          model: { ...context.existing(model.id)!, status: "deprecated" },
+          model: { ...authored, status: "deprecated" },
         };
       }
       return undefined;
     }
 
     const existing = context.existing(model.id);
-    const baseModel = block?.base_model ?? existing?.base_model ?? resolveCanonical(model);
+    const authored = context.authored(model.id);
+    // Hand-curated base_model declarations always win (preserveBaseModel);
+    // the block only resolves NEW ids, and the prefix map is the last
+    // resort for models predating the block.
+    const baseModel =
+      authored?.base_model ?? block?.base_model ?? resolveCanonical(model);
 
     const textInput = inputModality(model, "text");
     if (textInput === undefined) {
@@ -395,46 +409,75 @@ export const gpuflow = {
     }
 
     // New lab declared by the gateway (modelsdev.lab): emit the lab
-    // metadata file so the provider file validates. Gated on PROVIDER
-    // DECLARED data (name + description from the block, limits and dates
-    // from the catalog) — the sync never invents lab stubs.
+    // metadata file so the provider file validates — but ONLY from a
+    // COMPLETE provider-declared identity (name, description, release_date,
+    // open_weights all come from the block, i.e. the HF card — never from
+    // the gateway listing time). Incomplete blocks fail closed via
+    // missingModelID: the sync never fabricates lab dates, license state
+    // or family/knowledge.
     const labFileExists = metadataEntries().some((e) => e.id === baseModel);
-    if (!labFileExists && block?.lab !== undefined) {
-      const release = releaseDate(model);
+    const lab = block?.lab;
+    const labComplete =
+      lab !== undefined &&
+      lab.name !== undefined &&
+      lab.description !== undefined &&
+      lab.release_date !== undefined &&
+      lab.open_weights !== undefined;
+    if (!labFileExists && lab !== undefined && !labComplete) {
+      return undefined; // reported via missingModelID for manual authoring
+    }
+    const hasToggle = (block?.reasoning_options ?? []).some((o) => o.type === "toggle");
+    if (hasToggle && block?.toggle_wire === undefined && authored === undefined) {
+      // New files with a toggle control need the exact wire path in the
+      // leading header (AGENTS.md); existing hand headers are preserved.
+      throw new MissingReasoningOptionsError(
+        model.id,
+        "toggle control without a documented wire path; declare modelsdev.toggle_wire " +
+          "in the gateway block (e.g. 'enable_thinking = true|false') before syncing",
+      );
+    }
+    const headerLines = [
+      `# ${model.name} served by GPU Flow (${model.quantization ?? "open weights"}) on NVIDIA B200 in Madrid.`,
+      `# Catalog and pricing: ${API_ENDPOINT} (hourly sync)`,
+    ];
+    if (hasToggle) {
+      headerLines.splice(1, 0, `# Toggle: ${block?.toggle_wire}`);
+    }
+
+    if (!labFileExists && labComplete) {
       return {
         id: model.id,
         model: factorBaseModel(baseModel, synced, limit, existing?.base_model_omit),
         metadata: {
           id: baseModel,
           model: {
-            name: block.lab.name,
-            description: block.lab.description,
-            release_date: release,
-            last_updated: release,
+            name: lab!.name,
+            description: lab!.description,
+            release_date: lab!.release_date,
+            last_updated: lab!.last_updated ?? lab!.release_date,
             attachment: synced.attachment,
             reasoning,
             temperature: synced.temperature,
             tool_call: synced.tool_call,
             structured_output: synced.structured_output,
-            open_weights: true,
+            open_weights: lab!.open_weights,
+            family: lab!.family,
+            knowledge: lab!.knowledge,
             limit,
             modalities,
+            ...(lab!.weights_url !== undefined
+              ? { weights: [{ label: "Hugging Face", url: lab!.weights_url }] }
+              : {}),
           },
         },
-        header: [
-          `# ${model.name} served by GPU Flow (${model.quantization ?? "open weights"}) on NVIDIA B200 in Madrid.`,
-          `# Catalog and pricing: ${API_ENDPOINT} (hourly sync)`,
-        ].join("\n"),
+        header: headerLines.join("\n"),
       };
     }
 
     return {
       id: model.id,
       model: factorBaseModel(baseModel, synced, limit, existing?.base_model_omit),
-      header: [
-        `# ${model.name} served by GPU Flow (${model.quantization ?? "open weights"}) on NVIDIA B200 in Madrid.`,
-        `# Catalog and pricing: ${API_ENDPOINT} (hourly sync)`,
-      ].join("\n"),
+      header: headerLines.join("\n"),
     };
   },
 } satisfies SyncProvider<GpuflowCatalogModel>;
