@@ -1,5 +1,8 @@
 base_model = "google/gemini-3.8-flash"
-reasoning_options = []
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high"]
 
 [cost]
 input = 0.75

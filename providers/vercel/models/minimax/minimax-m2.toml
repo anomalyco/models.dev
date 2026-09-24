@@ -1,9 +1,10 @@
 base_model = "minimax/MiniMax-M2"
-reasoning_options = []
 name = "MiniMax M2"
-knowledge = "2024-10"
 
 interleaved = true
+
+[[reasoning_options]]
+type = "budget_tokens"
 
 [cost]
 input = 0.3

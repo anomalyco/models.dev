@@ -2,7 +2,13 @@ base_model = "alibaba/qwen3.7-flash"
 base_model_omit = ["limit.input"]
 name = "Qwen 3.7 Flash"
 description = "Qwen vision-language model for visual reasoning, documents, and agent tasks"
-reasoning_options = []
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"]
+
+[[reasoning_options]]
+type = "budget_tokens"
 
 [cost]
 input = 0.03
