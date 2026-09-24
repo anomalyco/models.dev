@@ -322,6 +322,8 @@ Fireworks AI is implemented in `packages/core/src/sync/providers/fireworks-ai.ts
 
 Vercel is intentionally not wired into `bun models:sync` right now. Keep using the existing `vercel:generate` script until Vercel sync behavior is redesigned and reviewed separately.
 
+`vercel:generate` reads `reasoning_options` from the public Vercel AI Gateway `/v1/models` catalog when present. It removes a redundant toggle if effort includes `none`, retains authored controls when catalog controls are absent or unrecognized, and treats an explicit empty list as no caller controls. This does not change the Vercel scheduling policy above.
+
 Do not add Vercel model changes to OpenRouter sync PRs.
 
 ## Chutes Notes

@@ -1,23 +1,14 @@
-name = "Qwen 3.8 Max Prime"
-description = "Qwen vision-language model for visual reasoning, documents, and agent tasks"
-family = "qwen3.8-max"
-release_date = "2026-09-23"
-last_updated = "2026-09-23"
-attachment = true
-reasoning = true
-tool_call = true
-open_weights = false
-reasoning_options = []
+# https://ai-gateway.vercel.sh/v1/models (alibaba/qwen3.8-max-prime, 2026-09-24)
+# https://vercel.com/docs/ai-gateway/sdks-and-apis/openai-chat-completions/reasoning
+# Effort: reasoning.effort = none|low|medium|high; none turns thinking off,
+# so the catalog's separate toggle is redundant. No budget is advertised.
+base_model = "alibaba/qwen3.8-max-prime"
+reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high"] }]
 
 [cost]
 input = 4
 output = 12
 cache_read = 0.5
 
-[limit]
-context = 1_000_000
-output = 131_072
-
 [modalities]
 input = ["text", "image"]
-output = ["text"]

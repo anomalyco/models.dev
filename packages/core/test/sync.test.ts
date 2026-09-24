@@ -4787,6 +4787,110 @@ test("Vercel preserves a non-empty existing reasoning_options over the base menu
   });
 });
 
+test("Vercel sync takes catalog reasoning controls over stale authored controls", () => {
+  const [model] = vercel.parseModels({
+    data: [{
+      id: "alibaba/qwen3.8-max-prime",
+      name: "Qwen 3.8 Max Prime",
+      created: 1_790_115_600,
+      context_window: 1_000_000,
+      max_tokens: 131_072,
+      type: "language",
+      tags: ["reasoning", "tool-use", "vision"],
+      reasoning_options: [
+        { type: "toggle" },
+        { type: "effort", values: ["none", "low", "medium", "high"] },
+      ],
+    }],
+  });
+
+  const translated = vercel.translateModel(model!, {
+    existing(id) {
+      return id === "alibaba/qwen3.8-max-prime"
+        ? { base_model: "alibaba/qwen3.8-max-prime", reasoning_options: [] }
+        : undefined;
+    },
+    authored() {
+      return undefined;
+    },
+  });
+
+  expect(translated?.model).toMatchObject({
+    base_model: "alibaba/qwen3.8-max-prime",
+    reasoning_options: [{ type: "effort", values: ["none", "low", "medium", "high"] }],
+  });
+  expect(vercel.sameModel?.({ reasoning_options: [] }, translated!.model)).toBe(false);
+});
+
+test("Vercel catalog budgets and toggles are synced when effort does not include none", () => {
+  const [model] = vercel.parseModels({
+    data: [{
+      id: "alibaba/qwen3.8-max-0902",
+      name: "Qwen 3.8 Max 0902",
+      created: 1_780_963_200,
+      type: "language",
+      tags: ["reasoning"],
+      reasoning_options: [
+        { type: "toggle" },
+        { type: "effort", values: ["low", "medium", "xhigh"] },
+        { type: "budget_tokens", min: 0, max: 262_144 },
+      ],
+    }],
+  });
+
+  const translated = vercel.translateModel(model!, {
+    existing(id) {
+      return id === "alibaba/qwen3.8-max-0902" ? { reasoning_options: [] } : undefined;
+    },
+    authored() {
+      return undefined;
+    },
+  });
+  expect(translated?.model.reasoning_options).toEqual([
+    { type: "toggle" },
+    { type: "effort", values: ["low", "medium", "xhigh"] },
+    { type: "budget_tokens", min: 0, max: 262_144 },
+  ]);
+  expect(translated?.header).toContain("# Toggle: reasoning.enabled = true|false");
+});
+
+test("Vercel missing, empty, and unknown catalog controls have distinct meanings", () => {
+  const base = {
+    id: "example/reasoner",
+    name: "Reasoner",
+    created: 1_780_963_200,
+    type: "language",
+    tags: ["reasoning"],
+  };
+  const authored = { reasoning_options: [{ type: "effort" as const, values: ["low" as const] }] };
+  const [missing, empty, unknown] = vercel.parseModels({
+    data: [
+      base,
+      { ...base, reasoning_options: [] },
+      { ...base, reasoning_options: [{ type: "effort", values: ["new-level"] }] },
+    ],
+  });
+
+  expect(buildVercelModel(missing!, authored).reasoning_options).toEqual(authored.reasoning_options);
+  expect(buildVercelModel(empty!, authored).reasoning_options).toEqual([]);
+  expect(buildVercelModel(unknown!, authored).reasoning_options).toEqual(authored.reasoning_options);
+});
+
+test("Vercel ignores catalog controls when the resolved model cannot reason", () => {
+  const [model] = vercel.parseModels({
+    data: [{
+      id: "example/non-reasoner",
+      name: "Non-Reasoner",
+      created: 1_780_963_200,
+      type: "language",
+      tags: [],
+      reasoning_options: [{ type: "effort", values: ["low", "high"] }],
+    }],
+  });
+
+  expect(buildVercelModel(model!, undefined).reasoning_options).toBeUndefined();
+});
+
 test("OpenRouter Claude Opus fast variants factor onto base opus metadata", () => {
   const model = buildOpenRouterModel(openRouterModel({
     id: "anthropic/claude-opus-5-fast",
