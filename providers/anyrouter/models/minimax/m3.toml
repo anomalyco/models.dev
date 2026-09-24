@@ -1,5 +1,7 @@
-# Source: https://anyrouter.dev/api/v1/models (accessed 2026-09-24)
-# Params are forwarded upstream (https://anyrouter.dev/docs/features/provider-routing);
+# Host contract (GET /api/v1/models, accessed 2026-09-24): context_length=1048576,
+# input_modalities=[text, image, video]. Flat USD/MTok — AnyRouter does not apply
+# the lab's >512k context tier. Params forwarded upstream
+# (docs/features/provider-routing).
 # Toggle: reasoning.enabled = true|false (MiniMax lab + OpenRouter peers)
 base_model = "minimax/MiniMax-M3"
 reasoning_options = [{ type = "toggle" }]

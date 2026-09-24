@@ -1,5 +1,6 @@
-# Source: https://anyrouter.dev/api/v1/models (accessed 2026-09-24)
-# Params are forwarded upstream (https://anyrouter.dev/docs/features/provider-routing);
+# Host contract (GET /api/v1/models, accessed 2026-09-24): context_length=1000000
+# (not the lab's 1048576), input_modalities=[text, image] (no video/audio/pdf on
+# this route). Params forwarded upstream (docs/features/provider-routing).
 # Effort: reasoning_effort = minimal|low|medium|high (Google lab + OpenRouter peers)
 base_model = "google/gemini-3.5-flash"
 reasoning_options = [{ type = "effort", values = ["minimal", "low", "medium", "high"] }]

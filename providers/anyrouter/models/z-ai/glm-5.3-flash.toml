@@ -1,6 +1,8 @@
-# Source: https://anyrouter.dev/api/v1/models (accessed 2026-09-24)
-# GLM-5.3-Flash always reasons (thinking cannot be disabled); this route exposes
-# reasoning_effort = low|high|max, matching lab + OpenRouter peers.
+# Host contract (GET /api/v1/models, accessed 2026-09-24): context_length=1048576,
+# input_modalities=[text, image, video] (no pdf on this route),
+# supported_parameters include reasoning, include_reasoning, reasoning_effort.
+# GLM-5.3-Flash always reasons (thinking cannot be disabled); effort
+# low|high|max matches lab + OpenRouter peers.
 base_model = "zhipuai/glm-5.3-flash"
 reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]
 
