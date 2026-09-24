@@ -1,0 +1,44 @@
+# Sources (accessed 2026-09-24):
+# - https://fireworks.ai/models/fireworks/ember-1 — Ember-1 model card: specialized Fireworks model built on Kimi K3, ~40% fewer tokens, $3.00/$0.30/$15.00 per 1M, 1040k context, image input + function calling supported, MoE 2.78T, Created 9/22/2026, Provider Fireworks, Kind Base model.
+# - https://app.fireworks.ai/models/fireworks/ember-1 — Hugging Face N/A (no open weights), Context 1M, usage example max_tokens 131072, Research Preview Serverless, Function-calling/LLM/Vision tags.
+# - https://fireworks.ai/blog/ember-1 (published 9/23/2026) — Fireworks' own model from Fireworks Research, built on Kimi K3, shorter reasoning traces, Research Preview on Serverless.
+# - https://docs.fireworks.ai/api-reference/post-chatcompletions and https://docs.fireworks.ai/guides/reasoning — reasoning_effort low|medium|high|max|xhigh|none and thinking.type enabled|disabled with budget_tokens >= 1024; Kimi K3 tiers: low selects Low, medium promotes to high, high selects High, xhigh promotes to max, max selects Max.
+# - Peer surface: providers/fireworks-ai/models/accounts/fireworks/models/kimi-k3.toml (same Fireworks serverless reasoning API, built on Kimi K3).
+# Toggle: thinking.type = enabled|disabled (reasoning_effort = none|false also disables)
+# Effort: reasoning_effort = low|medium|high|max; medium promotes to high, xhigh promotes to max
+# Budget: thinking.budget_tokens >= 1024 (integer reasoning-token cap)
+name = "Ember-1"
+description = "Specialized model from Fireworks built on Kimi K3, producing shorter reasoning traces with approximately 40% fewer tokens while maintaining comparable quality"
+release_date = "2026-09-22"
+last_updated = "2026-09-22"
+attachment = true
+reasoning = true
+tool_call = true
+open_weights = false
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high", "max"]
+
+[[reasoning_options]]
+type = "budget_tokens"
+min = 1_024
+
+[cost]
+input = 3
+output = 15
+cache_read = 0.3
+
+[limit]
+context = 1_048_576
+output = 131_072
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
