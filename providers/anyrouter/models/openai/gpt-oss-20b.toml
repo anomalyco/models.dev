@@ -1,5 +1,6 @@
-# Source: https://anyrouter.dev/api/v1/models (accessed 2026-09-24)
-# Params are forwarded upstream (https://anyrouter.dev/docs/features/provider-routing);
+# Host contract (GET /api/v1/models, accessed 2026-09-24): context_length=131072,
+# input_modalities=[text]. Params forwarded upstream
+# (docs/features/provider-routing).
 # Effort: reasoning_effort = low|medium|high (OpenRouter peers)
 base_model = "openai/gpt-oss-20b"
 reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
