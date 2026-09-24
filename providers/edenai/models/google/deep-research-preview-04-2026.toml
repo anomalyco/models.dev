@@ -1,0 +1,15 @@
+base_model = "google/deep-research-preview-04-2026"
+tool_call = false
+structured_output = false
+reasoning_options = []
+
+[cost]
+input = 2
+output = 12
+
+[limit]
+context = 131_072
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
