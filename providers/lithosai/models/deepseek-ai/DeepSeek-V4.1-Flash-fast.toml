@@ -6,11 +6,12 @@
 # https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash/blob/main/config.json
 # Provider confirmed no separate output cap on 2026-09-24:
 # input + output <= 1048576; actual generation is bounded by remaining context.
-# TODO: verify inherited modalities, attachment support,
-# reasoning, temperature and structured_output against the Lithos endpoint.
+# Provider confirmed text-only input on 2026-09-24; no image/video attachments.
+# TODO: verify reasoning, temperature and structured_output on this endpoint.
 # TODO: author verified reasoning_options and reasoning response-field mapping.
 # Omitted reasoning_options is intentional; [] would falsely claim no controls.
 base_model = "deepseek/deepseek-v4.1-flash"
+attachment = false
 name = "DeepSeek V4.1 Flash Fast"
 
 [cost]
@@ -21,3 +22,6 @@ cache_read = 0.005
 [limit]
 context = 1_048_576
 output = 1_048_576
+
+[modalities]
+input = ["text"]
