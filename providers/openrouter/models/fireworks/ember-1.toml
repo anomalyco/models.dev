@@ -1,10 +1,9 @@
 # Toggle: reasoning.enabled = true|false
 # https://openrouter.ai/docs/guides/best-practices/reasoning-tokens
-name = "DeepSeek Flash Latest"
-description = "Fast DeepSeek model for efficient chat, coding help, and agent loops"
-family = "deepseek-flash"
-release_date = "2026-09-14"
-last_updated = "2026-09-14"
+name = "Ember-1"
+description = "Multimodal reasoning model for visual analysis, planning, and tool use"
+release_date = "2026-09-24"
+last_updated = "2026-09-24"
 attachment = true
 reasoning = true
 temperature = true
@@ -20,9 +19,9 @@ type = "effort"
 values = ["low", "high", "max"]
 
 [cost]
-input = 0.04
-output = 1
-cache_read = 0.01
+input = 3
+output = 15
+cache_read = 0.3
 
 [limit]
 context = 1_048_576
