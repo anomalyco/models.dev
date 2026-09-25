@@ -1,0 +1,28 @@
+# Legacy alias, kept because above.dev still serves this id. Requests to
+# `deepseek-v4-flash` are accepted and served by DeepSeek-V4.1-Flash at the
+# same price as `deepseek-v4.1-flash`, which is the id published from
+# 2026-09-25. Same convention as providers/deepseek/models/deepseek-v4-flash.toml.
+# Sources:
+#   https://api-docs.deepseek.com/quick_start/pricing  (upstream Flash rate,
+#     off-peak; peak is 2x on weekdays 01:00-04:00 and 06:00-10:00 UTC)
+#   https://above.dev/docs  (flat x1.10 on every upstream rate; the docs table
+#     lists deepseek-v4-flash as an accepted alternative id)
+base_model = "deepseek/deepseek-v4.1-flash"
+name = "DeepSeek V4 Flash"
+status = "deprecated"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.165
+output = 0.66
+reasoning = 0.66
+cache_read = 0.0033
