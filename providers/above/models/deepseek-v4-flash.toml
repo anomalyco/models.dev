@@ -2,6 +2,9 @@
 # `deepseek-v4-flash` are accepted and served by DeepSeek-V4.1-Flash at the
 # same price as `deepseek-v4.1-flash`, which is the id published from
 # 2026-09-25. Same convention as providers/deepseek/models/deepseek-v4-flash.toml.
+# Reasoning controls are forwarded verbatim to DeepSeek:
+# Toggle: thinking.type = enabled|disabled
+# Effort: reasoning_effort = low|high|max
 # Sources:
 #   https://api-docs.deepseek.com/quick_start/pricing  (upstream Flash rate,
 #     off-peak; peak is 2x on weekdays 01:00-04:00 and 06:00-10:00 UTC)
