@@ -1,14 +1,5 @@
+base_model = "deepseek/deepseek-v4.1-flash"
 name = "DeepSeek V4.1 Flash"
-reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high"] }]
-description = "DeepSeek V4.1 Flash - multimodal MoE with 552B params, 1M context, CED architecture and controllable reasoning (1-100). Optimized for agentic workloads."
-attachment = true
-reasoning = true
-tool_call = true
-temperature = true
-
-[modalities]
-input = ["text", "image"]
-output = ["text"]
 
 [cost]
 input = 0.303
