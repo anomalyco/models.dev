@@ -173,6 +173,8 @@ Create a new TOML file in the provider's `models/` directory where the filename 
 
 If the model ID contains `/`, use subfolders. For example, for the model ID `openai/gpt-5`, create a folder `openai/` and place a file named `gpt-5.toml` inside it.
 
+Use the host's exact request ID from its catalog or API, not a normalized lab/model name. Do not add separators to an unusual but documented alias. A slash in the underlying lab model's name only affects the provider path if the **host's request ID** also contains that slash.
+
 ```toml
 name = "Model Display Name"
 attachment = true           # or false - supports file attachments
@@ -236,7 +238,7 @@ Rules:
 - Provider-specific fields (`cost`, `reasoning_options`, `interleaved`, `status`, `provider`, `experimental`) belong on the provider model when needed.
 - `id` still comes from the filename; do not add it to the TOML.
 
-**Reasoning options (short):** classify first-party lab vs multi-model relay (not by npm). Copy the underlying model’s controls from the lab entry and same-surface peers — often `low`/`medium`/`high` on GPT-style relays, but DeepSeek V4 is `toggle`+`high`/`max`, etc. Do not use `[]` from uncertainty on relays. Full policy: `AGENTS.md`.
+**Reasoning options (short):** classify first-party lab vs multi-model relay (not by npm). Use the underlying model’s lab entry and same-surface peers as the baseline, matching the served revision. Host-specific controls or different wire values need host evidence, not a guessed enum; DeepSeek V4's levels, for example, depend on the revision and API. Do not use `[]` from uncertainty on relays. Full policy: `AGENTS.md`.
 
 Use `base_model` when the wrapper model is materially the same as the source model and only differs by provider-specific pricing, limits, modalities, provider request shape, or lifecycle flags.
 
