@@ -1,0 +1,10 @@
+name = "CLF AI Gateway"
+env = ["CLF_AI_GATEWAY_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+# OpenAI-compatible gateway reselling Cloudflare Workers AI open-weight models
+# (GLM, Kimi, DeepSeek, Qwen) with prepaid credits. Runs on Workers AI upstream
+# by design and says so publicly: https://clfaigateway.dev/docs
+# Model IDs are the gateway's canonical names (glm-5.3, kimi-k2.7-code, ...);
+# the upstream @cf/... id is returned per model by GET /v1/public/models.
+doc = "https://clfaigateway.dev/docs"
+api = "https://api.clfaigateway.dev/v1"
