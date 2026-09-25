@@ -22,12 +22,26 @@ const JsonValue: z.ZodType<JsonValue> = z.lazy(() =>
   ]),
 );
 
+/**
+ * The catalog's effort levels, exported so a sync provider can filter an upstream
+ * list against this one rather than restating it. A provider that restates it
+ * silently drops any level added here until someone remembers to copy the
+ * addition across.
+ */
+export const REASONING_EFFORT_VALUES = [
+  "none",
+  "minimal",
+  "low",
+  "medium",
+  "high",
+  "xhigh",
+  "max",
+  "default",
+] as const;
+
 const ReasoningEffortValue = z.preprocess(
   (value) => (value === "null" ? null : value),
-  z.union([
-    z.null(),
-    z.enum(["none", "minimal", "low", "medium", "high", "xhigh", "max", "default"]),
-  ]),
+  z.union([z.null(), z.enum(REASONING_EFFORT_VALUES)]),
 );
 
 export const ReasoningOption = z
