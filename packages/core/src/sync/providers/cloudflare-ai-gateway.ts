@@ -18,6 +18,7 @@ const PROVIDER_DIR = path.join(
   "cloudflare-ai-gateway",
 );
 const MODELS_ROOT = path.join(import.meta.dirname, "..", "..", "..", "..", "..", "models");
+const PROVIDERS_ROOT = path.join(import.meta.dirname, "..", "..", "..", "..", "..", "providers");
 const CURATION_PATH = path.join(PROVIDER_DIR, "curation.toml");
 const TEXT_GENERATION = "Text Generation";
 const REQUEST_TIMEOUT_MS = 30_000;
@@ -207,7 +208,11 @@ export function buildCloudflareAiGatewayModel(
 
   if (baseReasoning(baseModel)) {
     const derived = deriveReasoningOptions(schemaInput);
-    const reasoningOptions = curated.reasoning_options ?? (derived.length > 0 ? derived : undefined);
+    // Cloudflare's schema can't tell whether a `thinking` field turns thinking off, so a model proxied
+    // to its lab's own API takes that API's reasoning controls before falling back to the schema.
+    const reasoningOptions = curated.reasoning_options
+      ?? nativeReasoningOptions(id, baseModel)
+      ?? (derived.length > 0 ? derived : undefined);
     if (reasoningOptions === undefined) {
       throw new MissingReasoningOptionsError(
         id,
@@ -592,6 +597,15 @@ function baseReasoning(id: string) {
   const file = path.join(MODELS_ROOT, `${id}.toml`);
   return existsSync(file) && z.object({ reasoning: z.boolean().optional() }).passthrough()
     .parse(Bun.TOML.parse(readFileSync(file, "utf8"))).reasoning === true;
+}
+
+function nativeReasoningOptions(id: string, baseModel: string) {
+  const lab = id.split("/")[0]!;
+  if (NATIVE_NPM[lab] === undefined || !baseModel.startsWith(`${lab}/`)) return undefined;
+  const file = path.join(PROVIDERS_ROOT, lab, "models", `${baseModel.slice(lab.length + 1)}.toml`);
+  if (!existsSync(file)) return undefined;
+  return z.object({ reasoning_options: z.array(ReasoningOption).optional() }).passthrough()
+    .parse(Bun.TOML.parse(readFileSync(file, "utf8"))).reasoning_options;
 }
 
 function noteHeader(note: string[] | undefined) {

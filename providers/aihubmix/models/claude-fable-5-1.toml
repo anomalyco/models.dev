@@ -1,5 +1,4 @@
-# Toggle: $.thinking.type = "enabled"|"disabled"|"adaptive" on the Anthropic-compatible
-# /v1/messages path; $.enable_thinking = true|false on /v1/chat/completions.
+# No toggle: thinking is always on for this model; thinking.type = "disabled" is rejected.
 # Effort: $.output_config.effort on /v1/messages; $.reasoning_effort on /v1/chat/completions.
 # https://docs.aihubmix.com/cn/api-reference/anthropic-compatible/create-a-message
 # Pricing, context window, max output and the effort levels come from
@@ -8,7 +7,7 @@
 # and cache write are unchanged from it, matching the sibling entry in this directory.
 base_model = "anthropic/claude-fable-5-1"
 structured_output = true
-reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
 interleaved = true
 
 [cost]
