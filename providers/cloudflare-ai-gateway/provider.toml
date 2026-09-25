@@ -1,3 +1,8 @@
+# Cache key (chat): gateway response cache keyed on provider, endpoint, model, auth, and full request body; custom key opts in
+# Use headers: cf-aig-cache-key, cf-aig-cache-ttl, cf-aig-skip-cache; cf-aig-cache-status reports HIT/MISS
+# Use body: repeat the identical body, model, and auth with caching enabled
+# Cache policy: stable prefix + same model; identical requests share the gateway cache entry within TTL
+# Docs: https://developers.cloudflare.com/ai-gateway/features/caching/
 name = "Cloudflare AI Gateway"
 env = ["CLOUDFLARE_API_TOKEN", "CLOUDFLARE_ACCOUNT_ID", "CLOUDFLARE_GATEWAY_ID"]
 npm = "ai-gateway-provider"
