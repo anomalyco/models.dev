@@ -1,3 +1,8 @@
+# Prompt caching (chat): per-request `cache_salt` scoping; inactive by default, enable per proxy or per request
+# Use headers: none.
+# Use body: `cache_salt` — string with >=256-bit entropy (via `extra_body`); same salt shares a cache; request value overrides proxy
+# To get a hit: reuse the same salt with an identical prefix; keep salts private (`openssl rand -base64 32`)
+# Docs: https://docs.privatemode.ai/api/prompt-caching/
 name = "Privatemode AI"
 env = ["PRIVATEMODE_API_KEY", "PRIVATEMODE_ENDPOINT"]
 npm = "@ai-sdk/openai-compatible"
