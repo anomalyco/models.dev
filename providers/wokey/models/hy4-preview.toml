@@ -5,10 +5,8 @@
 # Reasoning options copied from providers/tencent-tokenhub/models/hy4-preview.toml (Wokey relays the upstream API).
 # Toggle: thinking.type = enabled|disabled
 # Effort: reasoning_effort = none|high
+# Off is effort=none, so no separate toggle option (AGENTS.md reasoning options).
 base_model = "tencent/hy4-preview"
-
-[[reasoning_options]]
-type = "toggle"
 
 [[reasoning_options]]
 type = "effort"
