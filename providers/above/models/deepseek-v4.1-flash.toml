@@ -1,7 +1,9 @@
-# Passthrough to the official DeepSeek API. Since 2026-09-10 04:00 UTC the
-# `deepseek-v4-flash` id is served by DeepSeek-V4.1-Flash and billed at the
-# Flash price, so the base is the V4.1 lab entry. Image input verified
-# end-to-end through above.dev on 2026-09-11.
+# Passthrough to the official DeepSeek API, served by DeepSeek-V4.1-Flash
+# since 2026-09-10 04:00 UTC and billed at the Flash price, so the base is the
+# V4.1 lab entry. above.dev publishes this model as `deepseek-v4.1-flash` from
+# 2026-09-25; the earlier id `deepseek-v4-flash` is still accepted by the API,
+# so existing configs keep working. Image input verified end-to-end through
+# above.dev on 2026-09-11.
 # Sources:
 #   https://api-docs.deepseek.com/quick_start/pricing  (upstream Flash rate:
 #     $0.15 in / $0.003 cache-hit / $0.60 out per MTok, off-peak; peak is 2x on
