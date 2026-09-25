@@ -1,3 +1,8 @@
+# Prompt caching (chat): automatic implicit context cache; repeated system prompts and conversation history reuse prior compute at a discount.
+# Use headers: standard Bearer auth on POST /api/paas/v4/chat/completions; cache outcomes surface in `usage.prompt_tokens_details.cached_tokens`.
+# Use body: model with messages; stable system prompt first with history appended.
+# To get a hit: replay identical system prompts and stable prefixes; confirm via `usage.prompt_tokens_details.cached_tokens`.
+# Docs: https://docs.bigmodel.cn/cn/guide/capabilities/cache
 # Chat reasoning: POST https://open.bigmodel.cn/api/paas/v4/chat/completions with
 # `thinking.type = "enabled" | "disabled"` (default: enabled).
 # https://docs.bigmodel.cn/cn/guide/capabilities/thinking (accessed 2026-06-25)
