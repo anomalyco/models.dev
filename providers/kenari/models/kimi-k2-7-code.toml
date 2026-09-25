@@ -1,5 +1,8 @@
+# Toggle: $.reasoning.enabled = true|false
 base_model = "moonshotai/kimi-k2.7-code"
-reasoning_options = []
+
+[[reasoning_options]]
+type = "toggle"
 
 [cost]
 input = 0
