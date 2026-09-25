@@ -1,0 +1,21 @@
+# Toggle: $.thinking.type = "enabled"|"disabled" on /v1/messages (the Anthropic surface
+# TopxAI relays byte for byte); effort: $.output_config.effort. On the registered
+# /v1/chat/completions surface the relay forwards $.reasoning_effort unchanged.
+# Wire fields and pass-through: https://ai.topxea.com/docs/api-reference (accessed 2026-09-19)
+# Shared-pool price, 50% of Anthropic's list; cache lanes from the same table.
+# https://ai.topxea.com/pricing/claude-sonnet-5 (accessed 2026-09-19)
+base_model = "anthropic/claude-sonnet-5"
+structured_output = true
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high", "xhigh", "max"]
+
+[cost]
+input = 1
+output = 5
+cache_read = 0.1
+cache_write = 1.25

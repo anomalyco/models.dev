@@ -1,0 +1,23 @@
+# Effort: $.reasoning.effort on /v1/responses, $.reasoning_effort on /v1/chat/completions,
+# forwarded unchanged; the lab's level set for this model, including "none".
+# Shared-pool price, 50% of OpenAI's list. Requests whose input reaches 272,001
+# tokens bill the whole request at the tier below.
+# https://ai.topxea.com/pricing/gpt-5.6-sol (accessed 2026-09-19)
+base_model = "openai/gpt-5.6-sol"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "xhigh", "max"]
+
+[cost]
+input = 2
+output = 10
+cache_read = 0.2
+cache_write = 2.5
+
+[[cost.tiers]]
+tier = { type = "context", size = 272_000 }
+input = 4
+output = 15
+cache_read = 0.4
+cache_write = 5
