@@ -1,0 +1,19 @@
+# https://commandcode.ai/models/glm-5-2-fast
+base_model = "zhipuai/glm-5.2"
+description = "High-throughput GLM-5.2 with 1M context."
+name = "GLM-5.2 Fast"
+
+[[reasoning_options]]
+type = "effort"
+values = ["high", "max"]
+
+[interleaved]
+field = "reasoning_content"
+
+[limit]
+output = 128_000
+
+[cost]
+cache_read = 0.5
+input = 3
+output = 10.25

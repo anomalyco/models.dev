@@ -1,0 +1,15 @@
+# https://commandcode.ai/models/step-3-5-flash
+# Effort: reasoning_effort (Chat) / output_config.effort (Messages) = low|high
+base_model = "stepfun/step-3.5-flash"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high"]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+cache_read = 0.02
+input = 0.1
+output = 0.3

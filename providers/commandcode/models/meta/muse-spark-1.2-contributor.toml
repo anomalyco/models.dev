@@ -1,0 +1,12 @@
+# https://commandcode.ai/models/muse-spark-1-2-contributor
+base_model = "meta/muse-spark-1.2"
+name = "Muse Spark 1.2 Contributor"
+
+[[reasoning_options]]
+type = "effort"
+values = ["minimal", "low", "medium", "high", "xhigh"]
+
+[cost]
+cache_read = 0.002
+input = 0.1
+output = 0.2
