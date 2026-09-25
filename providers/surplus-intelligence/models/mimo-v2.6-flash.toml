@@ -1,0 +1,8 @@
+# Toggle: reasoning.enabled true|false (OpenRouter-style `reasoning` object,
+# forwarded to the seller unchanged); effort: reasoning_effort.
+# Controls mirror the canonical model's lab + same-surface relay peers.
+base_model = "xiaomi/mimo-v2.6-flash"
+structured_output = true
+
+[[reasoning_options]]
+type = "toggle"

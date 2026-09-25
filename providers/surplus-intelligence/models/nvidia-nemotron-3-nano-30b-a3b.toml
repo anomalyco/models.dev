@@ -1,0 +1,12 @@
+# Toggle: reasoning.enabled true|false (OpenRouter-style `reasoning` object,
+# forwarded to the seller unchanged); effort: reasoning_effort.
+# Controls mirror the canonical model's lab + same-surface relay peers.
+base_model = "nvidia/nemotron-3-nano-30b-a3b"
+name = "NVIDIA Nemotron 3 Nano 30B"
+
+[[reasoning_options]]
+type = "toggle"
+
+[limit]
+context = 128_000
+output = 16_384

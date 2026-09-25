@@ -1,0 +1,21 @@
+# Promoted from providers/openrouter/models/inception/mercury-2.toml so relay
+# hosts can base_model it. Inception Labs diffusion LLM.
+name = "Mercury 2"
+description = "Reasoning model for deliberate analysis, multi-step problem solving, and tool use"
+family = "mercury"
+release_date = "2026-03-04"
+last_updated = "2026-03-04"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[limit]
+context = 128_000
+output = 50_000
+
+[modalities]
+input = ["text"]
+output = ["text"]

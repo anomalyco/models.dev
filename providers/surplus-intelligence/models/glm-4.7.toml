@@ -1,0 +1,13 @@
+# Live probes 2026-09-23 (seller: bedrock): no reasoning content or
+# reasoning tokens with reasoning.enabled=true (req
+# 01M386RNF0P4NBJ1DDMEQMV29H, 01M386RNWR8WWWW4S2PD64Y3XZ) or false; 4-5
+# completion tokens either way, so the peer's toggle has no effect here.
+# The :web route (seller: morpheus) does honor it.
+base_model = "zhipuai/glm-4.7"
+name = "GLM 4.7"
+structured_output = true
+reasoning_options = []
+
+[limit]
+context = 128_000
+output = 32_768

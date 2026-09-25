@@ -1,0 +1,14 @@
+# Toggle: reasoning.enabled true|false (OpenRouter-style `reasoning` object,
+# forwarded to the seller unchanged); effort: reasoning_effort.
+# Controls mirror the canonical model's lab + same-surface relay peers.
+base_model = "alibaba/qwen3.6-35b-a3b"
+name = "Qwen 3.6 35B A3B"
+
+[[reasoning_options]]
+type = "toggle"
+
+[limit]
+output = 262_144
+
+[modalities]
+input = ["text", "image"]

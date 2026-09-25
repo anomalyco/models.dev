@@ -1,0 +1,13 @@
+# Toggle: reasoning.enabled true|false (OpenRouter-style `reasoning` object,
+# forwarded to the seller unchanged); effort: reasoning_effort.
+# Controls mirror the canonical model's lab + same-surface relay peers.
+base_model = "google/gemini-2.5-flash"
+
+[[reasoning_options]]
+type = "toggle"
+
+[limit]
+output = 65_535
+
+[modalities]
+input = ["text", "image"]

@@ -1,0 +1,11 @@
+# Toggle: reasoning.enabled true|false (OpenRouter-style `reasoning` object,
+# forwarded to the seller unchanged); effort: reasoning_effort.
+# Controls mirror the canonical model's lab + same-surface relay peers.
+base_model = "deepseek/deepseek-v3.2"
+
+[[reasoning_options]]
+type = "toggle"
+
+[limit]
+context = 160_000
+output = 32_768

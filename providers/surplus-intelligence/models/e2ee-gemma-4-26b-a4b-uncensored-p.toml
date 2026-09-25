@@ -1,0 +1,23 @@
+# Live probes 2026-09-23 (seller: venice): no reasoning content or
+# reasoning tokens even with reasoning.enabled=true (req
+# 01M386XFM84S3Q569B5YESWC73, 01M386XFKV0FKWN3GJD4C9DGSY); the catalog
+# also lists no reasoning feature or params for this route.
+name = "Gemma 4 26B A4B Uncensored (E2EE)"
+description = "Open Gemma instruction model for efficient chat and self-hosted deployments"
+family = "gemma"
+release_date = "2025-01-01"
+last_updated = "2025-01-01"
+attachment = false
+reasoning = false
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[limit]
+context = 262_144
+output = 65_536
+
+[modalities]
+input = ["text"]
+output = ["text"]

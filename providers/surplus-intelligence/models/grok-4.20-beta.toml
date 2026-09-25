@@ -1,0 +1,11 @@
+base_model = "xai/grok-4.20-0309-reasoning"
+name = "Grok 4.20 Beta"
+attachment = false
+reasoning_options = []
+
+[limit]
+context = 2_000_000
+output = 128_000
+
+[modalities]
+input = ["text"]
