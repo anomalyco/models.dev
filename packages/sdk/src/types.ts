@@ -212,6 +212,8 @@ export interface ModelProviderConfig {
 export interface Model {
   /** Provider-scoped model ID, e.g. "claude-opus-4-6". */
   id: string
+  /** Lab model this entry inherits from, as a models.json id; absent on standalone entries. */
+  base_model?: string
   type?: ModelType
   name: string
   description: string

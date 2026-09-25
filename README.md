@@ -41,7 +41,7 @@ Provider-agnostic model metadata is available separately:
 curl https://models.dev/models.json
 ```
 
-Use this for facts about the model itself, independent of where it is served. If you need both provider endpoints and model-only metadata in one response:
+Use this for facts about the model itself, independent of where it is served. A provider entry that inherits from a lab model carries `base_model`, the `models.json` id it inherits from, so `api.json` alone is enough to group provider models by lab model. If you need both provider endpoints and model-only metadata in one response:
 
 ```bash
 curl https://models.dev/catalog.json

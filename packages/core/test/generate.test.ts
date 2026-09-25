@@ -45,7 +45,7 @@ describe("catalog generation", () => {
     });
   });
 
-  test("base_model can factor metadata without changing provider JSON", async () => {
+  test("base_model can factor metadata without changing provider JSON beyond the pointer", async () => {
     await withFixture(async (root) => {
       await write(root, "providers/direct/provider.toml", providerToml("Direct"));
       await write(root, "providers/factored/provider.toml", providerToml("Factored"));
@@ -96,12 +96,9 @@ cache_read = 0.125
         },
       ]);
 
-      expect(catalog.providers.factored?.models.model).toEqual(
-        catalog.providers.direct?.models.model,
-      );
-      expect(catalog.providers.factored?.models.model).not.toHaveProperty(
-        "base_model",
-      );
+      const { base_model, ...factored } = catalog.providers.factored?.models.model ?? {};
+      expect(base_model).toBe("lab/model");
+      expect(factored).toEqual(catalog.providers.direct?.models.model);
       expect(catalog.providers.factored?.models.model).not.toHaveProperty(
         "benchmarks",
       );
@@ -193,21 +190,52 @@ input = ["text"]
     expect(matches).toEqual([]);
   });
 
-  test("repository provider JSON strips authored metadata pointers", async () => {
+  test("repository provider JSON keeps base_model and strips base_model_omit", async () => {
     const root = path.join(import.meta.dirname, "..", "..", "..");
     const providers = await generate(path.join(root, "providers"));
     const leaked: string[] = [];
+    let linked = 0;
 
     for (const [providerID, provider] of Object.entries(providers)) {
       for (const [modelID, model] of Object.entries(provider.models)) {
-        const encoded = stable(model);
-        if (encoded.includes("base_model") || encoded.includes("base_model_omit")) {
+        if ("base_model_omit" in model) {
           leaked.push(`${providerID}/${modelID}`);
         }
+        if (model.base_model !== undefined) linked += 1;
       }
     }
 
     expect(leaked).toEqual([]);
+    expect(linked).toBeGreaterThan(0);
+  });
+
+  test("base_model is emitted on the generated provider entry", async () => {
+    await withFixture(async (root) => {
+      await write(root, "providers/provider/provider.toml", providerToml("Provider"));
+      await write(root, "models/lab/model.toml", modelMetadataToml());
+      await write(
+        root,
+        "providers/provider/models/inherited.toml",
+        `base_model = "lab/model"
+base_model_omit = ["limit.input"]
+reasoning_options = []
+
+[cost]
+input = 1.25
+output = 2.50
+`,
+      );
+      await write(root, "providers/provider/models/standalone.toml", providerFieldsToml());
+
+      const providers = await generate(path.join(root, "providers"));
+      const inherited = providers.provider?.models.inherited;
+      const standalone = providers.provider?.models.standalone;
+
+      expect(inherited?.base_model).toBe("lab/model");
+      expect("base_model_omit" in (inherited ?? {})).toBe(false);
+      expect(inherited?.limit?.input).toBeUndefined();
+      expect(standalone?.base_model).toBeUndefined();
+    });
   });
 
   test("repository provider JSON excludes model-only metadata", async () => {
