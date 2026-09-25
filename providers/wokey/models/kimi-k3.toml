@@ -1,0 +1,24 @@
+# Sources (accessed 2026-09-25):
+# - https://api.wokey.ai/v1/models/pricing (public, no key; id "kimi-k3"; pricing_mode dynamic_discount)
+# - https://api.wokey.ai/v1/models (context_length, max_completion_tokens, input_modalities)
+# - https://wokey.ai/models/kimi-k3
+# Reasoning options copied from providers/moonshotai/models/kimi-k3.toml (Wokey relays the upstream API).
+# Toggle: thinking.type = enabled|disabled|adaptive
+# Effort (adaptive mode): output_config.effort = low|high|max
+# Input modalities narrowed to the list Wokey publishes for this model.
+base_model = "moonshotai/kimi-k3"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[cost]
+input = 0.9
+output = 4.5
+cache_read = 0.09
+
+[modalities]
+input = ["text", "image"]

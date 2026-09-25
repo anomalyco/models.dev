@@ -1,0 +1,31 @@
+# Sources (accessed 2026-09-25):
+# - https://api.wokey.ai/v1/models/pricing (public, no key; id "claude-sonnet-4-6"; pricing_mode dynamic_discount)
+# - https://api.wokey.ai/v1/models (context_length, max_completion_tokens, input_modalities)
+# - https://wokey.ai/models/claude-sonnet-4-6
+# Reasoning options copied from providers/anthropic/models/claude-sonnet-4-6.toml (Wokey relays the upstream API).
+# cache_write is the 5-minute cache write price; 1-hour cache write is 1.08 USD/MTok.
+# Input modalities narrowed to the list Wokey publishes for this model.
+# Request shape: Anthropic Messages API (POST https://api.wokey.ai/v1/messages).
+base_model = "anthropic/claude-sonnet-4-6"
+attachment = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high", "max"]
+
+[[reasoning_options]]
+type = "budget_tokens"
+min = 1024
+
+[cost]
+input = 0.54
+output = 2.7
+cache_read = 0.054
+cache_write = 0.675
+
+[modalities]
+input = ["text"]
+
+[provider]
+npm = "@ai-sdk/anthropic"
+api = "https://api.wokey.ai/v1"

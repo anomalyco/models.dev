@@ -1,0 +1,27 @@
+# Sources (accessed 2026-09-25):
+# - https://api.wokey.ai/v1/models/pricing (public, no key; id "claude-haiku-4-5"; pricing_mode dynamic_discount)
+# - https://api.wokey.ai/v1/models (context_length, max_completion_tokens, input_modalities)
+# - https://wokey.ai/models/claude-haiku-4-5
+# Reasoning options copied from providers/anthropic/models/claude-haiku-4-5.toml (Wokey relays the upstream API).
+# cache_write is the 5-minute cache write price; 1-hour cache write is 0.4 USD/MTok.
+# Input modalities narrowed to the list Wokey publishes for this model.
+# Request shape: Anthropic Messages API (POST https://api.wokey.ai/v1/messages).
+base_model = "anthropic/claude-haiku-4-5"
+attachment = false
+
+[[reasoning_options]]
+type = "budget_tokens"
+min = 1024
+
+[cost]
+input = 0.2
+output = 1
+cache_read = 0.02
+cache_write = 0.25
+
+[modalities]
+input = ["text"]
+
+[provider]
+npm = "@ai-sdk/anthropic"
+api = "https://api.wokey.ai/v1"
