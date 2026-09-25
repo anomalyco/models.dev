@@ -1,0 +1,16 @@
+# Thinking is always on: thinking.type=disabled is rejected ("only
+# type=enabled is allowed for this model"); reasoning_effort is silently
+# ignored (bogus values return 200; verified live 2026-08-30).
+# https://intl.cloud.tencent.com/document/product/1300/80637
+base_model = "moonshotai/kimi-k2.7-code-highspeed"
+
+reasoning_options = []
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0
+output = 0
+cache_read = 0
+cache_write = 0
