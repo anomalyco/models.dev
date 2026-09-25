@@ -1,0 +1,15 @@
+# Sources (accessed 2026-09-09):
+# - Pricing and model details: GOAT plan (https://commandcode.ai/docs/plans/goat)
+# - Limits: context = 1_000_000 per live /v1/models 2026-09-11; output inherits lab (ds-flash: live-probed served cap 393216).
+# - Plan scope: GOAT only; Go/Pro/Max plans excluded (plan-specific provider, cf. alibaba-coding-plan)
+# - Reasoning: K3 baseline per providers/moonshotai/models/kimi-k3.toml; effort=["low","high","max"] (gateway verified live 2026-09-11: 8 models/42 calls; none|minimal rejected by enum, enable_thinking ignored; toggle/budget omitted).
+base_model = "moonshotai/kimi-k3"
+reasoning_options = [{ type = "effort", values = ["low","high","max"] }]
+
+[limit]
+context = 1_000_000
+
+[cost]
+input = 3.0
+output = 15.0
+cache_read = 0.3

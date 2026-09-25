@@ -1,0 +1,15 @@
+# Sources (accessed 2026-09-09):
+# - Pricing and model details: GOAT plan (https://commandcode.ai/docs/plans/goat)
+# - Limits: context = 256_000 per live /v1/models 2026-09-11; output inherits lab (ds-flash: live-probed served cap 393216).
+# - Plan scope: GOAT only; Go/Pro/Max plans excluded (plan-specific provider, cf. alibaba-coding-plan)
+# - Reasoning: baseline per vercel+kilo relays and llmtr measured set (none/minimal dropped: gateway rejects them); effort=["low","medium","high","xhigh","max"] (gateway verified live 2026-09-11: 8 models/42 calls; none|minimal rejected by enum, enable_thinking ignored; toggle/budget omitted).
+base_model = "thinkingmachines/inkling"
+reasoning_options = [{ type = "effort", values = ["low","medium","high","xhigh","max"] }]
+
+[limit]
+context = 256_000
+
+[cost]
+input = 1.0
+output = 4.05
+cache_read = 0.17

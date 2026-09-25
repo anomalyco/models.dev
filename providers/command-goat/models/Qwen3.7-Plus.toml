@@ -1,0 +1,12 @@
+# Sources (accessed 2026-09-09):
+# - Pricing and model details: GOAT plan (https://commandcode.ai/docs/plans/goat)
+# - Plan scope: GOAT only; Go/Pro/Max plans excluded (plan-specific provider, cf. alibaba-coding-plan)
+# - Reasoning: graded effort verified live on Qwen3.7-Flash 2026-09-11 (same prompt reasoning_tokens: low=1024 < xhigh~=1640, replicated x2; 302ai relay shape); effort=["low","medium","xhigh"] (gateway verified live 2026-09-11: 8 models/42 calls; none|minimal rejected by enum, enable_thinking ignored; toggle/budget omitted).
+base_model = "alibaba/qwen3.7-plus"
+reasoning_options = [{ type = "effort", values = ["low","medium","xhigh"] }]
+
+[cost]
+input = 0.4
+output = 1.6
+cache_read = 0.08
+cache_write = 0.5

@@ -1,0 +1,14 @@
+# Sources (accessed 2026-09-11):
+# - Pricing and model details: GOAT plan (https://commandcode.ai/docs/plans/goat)
+# - Plan scope: GOAT only; Go/Pro/Max plans excluded (plan-specific provider, cf. alibaba-coding-plan)
+# - Cost per GOAT docs table 2026-09-11 ($0.10/$0.20/$0.002, corroborated by first-party providers/meta/models/muse-spark-1.2-contributor.toml).
+# - Limit inherits base (live 1048576 = base 2026-09-11).
+# - Reasoning: baseline per providers/meta/models/muse-spark-1.2.toml; effort=["low","medium","high","xhigh"] (native minimal dropped: gateway rejects it) (gateway verified live 2026-09-11: 8 models/42 calls; none|minimal rejected by enum, enable_thinking ignored; toggle/budget omitted).
+base_model = "meta/muse-spark-1.2"
+name = "Muse Spark 1.2 Contributor"
+reasoning_options = [{ type = "effort", values = ["low","medium","high","xhigh"] }]
+
+[cost]
+input = 0.10
+output = 0.20
+cache_read = 0.002

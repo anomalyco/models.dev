@@ -1,0 +1,14 @@
+name = "Command GOAT"
+# Plan scope: GOAT plan of Command Code (https://commandcode.ai/docs/plans/goat).
+# Command Code also sells Go/Pro/Max plans; prices and models below are GOAT-plan
+# data only, kept as a separate provider per plan-specific catalog convention
+# (cf. alibaba-coding-plan / alibaba-token-plan).
+# Reasoning HTTP format (verified 2026-09-09 via live probe): POST /provider/v1/chat/completions
+# with {"reasoning_effort": "low"|"medium"|"high"|"xhigh"|"max"}; any other value is
+# rejected with an explicit enum error naming exactly these five (no "none", no toggle found).
+# https://api.commandcode.ai/provider/v1/models
+# https://commandcode.ai/docs/plans/goat
+env = ["CMD_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+api = "https://api.commandcode.ai/provider/v1"
+doc = "https://commandcode.ai/docs/plans/goat"
