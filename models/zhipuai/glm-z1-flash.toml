@@ -1,0 +1,17 @@
+name = "GLM-Z1-Flash"
+description = "Fast proprietary GLM reasoning model for analysis, coding, and high-volume workloads"
+family = "glm"
+release_date = "2025-04-15"
+last_updated = "2025-04-15"
+attachment = false
+reasoning = true
+tool_call = true
+open_weights = false
+
+[limit]
+context = 32_768
+output = 16_384
+
+[modalities]
+input = ["text"]
+output = ["text"]

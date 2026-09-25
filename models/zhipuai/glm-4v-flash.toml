@@ -1,0 +1,17 @@
+name = "GLM-4V-Flash"
+description = "Fast proprietary vision-language model for image understanding and visual question answering"
+family = "glm"
+release_date = "2024-08"
+last_updated = "2024-08"
+attachment = true
+reasoning = false
+tool_call = false
+open_weights = false
+
+[limit]
+context = 4_096
+output = 4_096
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

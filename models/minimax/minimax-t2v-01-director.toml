@@ -1,0 +1,17 @@
+name = "MiniMax T2V-01 Director"
+description = "Proprietary text-to-video model with camera-direction controls"
+family = "minimax"
+release_date = "2025-01"
+last_updated = "2025-01"
+attachment = false
+reasoning = false
+tool_call = false
+open_weights = false
+
+[limit]
+context = 4_096
+output = 0
+
+[modalities]
+input = ["text"]
+output = ["video"]

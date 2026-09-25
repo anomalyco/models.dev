@@ -1,0 +1,23 @@
+name = "DeepSeek V3.1 Terminus"
+description = "V3.1 maintenance release with steadier language consistency and stronger agent behaviour"
+family = "deepseek"
+release_date = "2025-09-22"
+last_updated = "2025-09-22"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+knowledge = "2025-07"
+open_weights = true
+
+[limit]
+context = 131_072
+output = 65_536
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/deepseek-ai/DeepSeek-V3.1-Terminus"
