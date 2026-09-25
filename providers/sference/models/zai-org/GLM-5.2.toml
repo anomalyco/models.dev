@@ -1,0 +1,19 @@
+# Synced from GET /v1/models. GLM-5.2 is an alias whose lane dispatches to
+# GLM-5.3 weights, so it behaves like GLM-5.3: thinking cannot be disabled
+# (verified live 2026-09-17: reasoning_effort="none" → 400 naming the alias),
+# named effort levels are accepted but change nothing, and a numeric budget is
+# refused — there is no caller control and reasoning_options is empty.
+base_model = "zhipuai/glm-5.2"
+name = "GLM 5.2"
+reasoning_options = []
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 1.2
+output = 4.2
+cache_read = 0.26
+
+[limit]
+context = 1_048_576
