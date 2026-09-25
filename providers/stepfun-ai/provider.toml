@@ -1,3 +1,8 @@
+# Cache key (chat): none — Chat Completions param list has no cache key; caching is automatic.
+# Use headers: none
+# Use body: none
+# Cache policy: automatic prefix cache from 256 tokens — keep the first 256+ tokens byte-identical and append later content at the end; stable-prefix hits report cached_tokens in usage billed at 20%, LRU eviction.
+# Docs: https://platform.stepfun.ai/docs/en/guides/developer/prompt-cache.md
 name = "StepFun (Global)"
 env = ["STEPFUN_API_KEY"]
 npm = "@ai-sdk/openai-compatible"
