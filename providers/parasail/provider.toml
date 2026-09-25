@@ -1,0 +1,18 @@
+# Chat catalog, context windows, and output caps:
+# https://docs.parasail.io/parasail-docs/products/overview/models
+# Host prices (USD per million tokens) and cached-input rates:
+# https://platform.parasail.io/api/v1/prices/serverlessEndpoints
+# Additional pricing-API rows are not assumed to be chat models or to have known output caps.
+# Provider-specific capabilities:
+# https://docs.parasail.io/parasail-docs/guides/tool-function-calling
+# https://docs.parasail.io/parasail-docs/guides/structured-output
+# https://docs.parasail.io/parasail-docs/products/overview/model-specific-notes
+# Per-model headers identify reasoning fields and their evidence.
+# Model templates are source evidence, not confirmation of active deployment overrides.
+# Authentication and API base:
+# https://docs.parasail.io/parasail-docs/api-reference/authentication
+name = "Parasail"
+env = ["PARASAIL_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+api = "https://api.parasail.io/v1"
+doc = "https://docs.parasail.io/parasail-docs/products/overview/models"

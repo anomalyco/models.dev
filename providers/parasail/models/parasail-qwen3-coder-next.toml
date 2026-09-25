@@ -1,0 +1,12 @@
+# Pricing and serving limits (2026-09-22):
+# https://docs.parasail.io/parasail-docs/products/overview/models
+# https://platform.parasail.io/api/v1/prices/serverlessEndpoints
+base_model = "alibaba/qwen3-coder-next"
+
+[cost]
+input = 0.12
+output = 0.8
+cache_read = 0.07
+
+[limit]
+output = 262_144

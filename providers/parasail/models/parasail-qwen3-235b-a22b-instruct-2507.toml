@@ -1,0 +1,22 @@
+# Pricing and serving limits (2026-09-22):
+# https://docs.parasail.io/parasail-docs/products/overview/models
+# Public table row: parasail-qwen3-235b-a22b-instruct-2507; Context window=131,072; Max output=131,072.
+# This is the host's explicit Max output cell, not a cap inferred from context.
+# https://platform.parasail.io/api/v1/prices/serverlessEndpoints
+# Structured-output API: https://docs.parasail.io/parasail-docs/guides/structured-output
+# Guide: "validate structured-output support with a small test request"; this exact ID is not in its table.
+# Live POST /v1/chat/completions (2026-09-23): response_format.type="json_schema", strict=true,
+# required marker:string enum ["SCHEMA_ONLY_7142"], additionalProperties=false.
+# Prompt: "Reply with the plain text BANANA and no other text."; temperature=0, max_tokens=48.
+# This exact SKU returned {"marker":"SCHEMA_ONLY_7142"}, not the requested plain text.
+base_model = "alibaba/qwen3-235b-a22b-instruct-2507"
+structured_output = true
+
+[cost]
+input = 0.14
+output = 0.8
+cache_read = 0.05
+
+[limit]
+context = 131_072
+output = 131_072

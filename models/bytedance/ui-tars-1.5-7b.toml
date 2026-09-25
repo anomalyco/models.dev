@@ -1,0 +1,30 @@
+# https://github.com/bytedance/UI-TARS (2025-04-16 release)
+# https://huggingface.co/ByteDance-Seed/UI-TARS-1.5-7B/blob/main/config.json
+# Released config: max_position_embeddings = 128000 (shared sequence context).
+# The reviewed model card/config do not specify an independent native output cap.
+# Published repository snapshot has no generation_config.json:
+# https://huggingface.co/api/models/ByteDance-Seed/UI-TARS-1.5-7B/tree/main
+# https://github.com/bytedance/UI-TARS/blob/main/README_deploy.md gives configurable
+# endpoint token settings and a max_tokens=400 request example, not a native output limit.
+# Leave native output unspecified rather than copy a serving cap or request example.
+name = "UI-TARS 1.5 7B"
+description = "Open-weight vision-language model for screenshot grounding and GUI interaction with thought and action generation"
+release_date = "2025-04-16"
+last_updated = "2025-04-16"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = false
+open_weights = true
+license = "Apache-2.0"
+
+[limit]
+context = 128_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/ByteDance-Seed/UI-TARS-1.5-7B"

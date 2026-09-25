@@ -1,0 +1,20 @@
+# Pricing and serving limits (2026-09-22):
+# https://docs.parasail.io/parasail-docs/products/overview/models
+# https://platform.parasail.io/api/v1/prices/serverlessEndpoints
+# Effort: chat_template_kwargs.reasoning_effort = low|high|max
+# The catalog chat template always reasons; no on/off control.
+# OpenAI chat content supports media inputs, not native PDF documents.
+base_model = "zhipuai/glm-5.3-flash"
+reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]
+
+[cost]
+input = 0.15
+output = 0.5
+cache_read = 0.03
+
+[limit]
+context = 1_048_576
+output = 1_048_576
+
+[modalities]
+input = ["text", "image", "video"]

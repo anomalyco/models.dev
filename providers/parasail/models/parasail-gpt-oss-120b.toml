@@ -1,0 +1,19 @@
+# Pricing and serving limits (2026-09-22):
+# https://docs.parasail.io/parasail-docs/products/overview/models
+# https://platform.parasail.io/api/v1/prices/serverlessEndpoints
+# Effort: chat_template_kwargs.reasoning_effort = low|medium|high
+# Budget: custom_params.thinking_budget (not max_tokens).
+# Parasail's GPT-OSS docs define it as "Upper bound on internal reasoning tokens."
+# The GPT-OSS example sends custom_params: {"thinking_budget": 40}.
+# This host-specific budget is additional to the lab/peer effort-only baseline.
+# https://docs.parasail.io/parasail-docs/products/overview/model-specific-notes#gpt-oss-reasoning-control
+base_model = "openai/gpt-oss-120b"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }, { type = "budget_tokens" }]
+
+[cost]
+input = 0.1
+output = 0.75
+cache_read = 0.055
+
+[limit]
+output = 131_072
