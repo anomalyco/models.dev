@@ -1,0 +1,10 @@
+# Price source: https://api.kymaapi.com/v1/models (public, unauthenticated), accessed 2026-09-04.
+# Toggle: Kyma forwards `reasoning_effort` on this route; `reasoning_effort = "none"` (or `reasoning = { enabled = false }`) turns thinking off. Verified live 2026-09-04 on qwen-3.6-plus: 200 reasoning tokens by default, 0 with "none".
+# Effort: reasoning_effort = low|medium|high|xhigh|max selects depth when enabled.
+base_model = "anthropic/claude-sonnet-5"
+
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
+
+[cost]
+input = 2.7
+output = 13.5

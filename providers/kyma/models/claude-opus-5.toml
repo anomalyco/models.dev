@@ -1,0 +1,10 @@
+# Price source: https://api.kymaapi.com/v1/models (public, unauthenticated), accessed 2026-09-04.
+# Toggle: reasoning_effort = "none" disables thinking; verified live 2026-09-04 on claude-opus-5 (max_tokens=120, "What is 17*23? Think step by step."): 32 reasoning tokens by default, 0 with "none".
+# Effort: reasoning_effort = low|medium|high|xhigh|max selects depth when enabled.
+base_model = "anthropic/claude-opus-5"
+
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
+
+[cost]
+input = 6.75
+output = 33.75
