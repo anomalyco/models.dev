@@ -1,3 +1,4 @@
+# These are the Qwen3.8-Max column of the official model card, not a claim about a separately evaluated local checkpoint.
 # Sources (accessed 2026-08-06):
 # https://www.qwencloud.com/models/qwen3.8-max
 # https://www.qianwenai.com/models/qwen3.8-max
@@ -36,3 +37,230 @@ output = 131_072
 [modalities]
 input = ["text", "image", "video", "pdf"]
 output = ["text"]
+
+[[benchmarks]]
+name = "Terminal-Bench"
+score = 86.6
+metric = "avg@10"
+version = "2.1"
+harness = "Claude Code"
+variant = "5h timeout"
+source = "https://huggingface.co/Qwen/Qwen3.8-2.4T-A95B"
+
+[[benchmarks]]
+name = "SWE-Bench Pro"
+score = 67.7
+metric = "resolved"
+harness = "Claude Code"
+dataset = "Qwen refined and corrected task set"
+source = "https://huggingface.co/Qwen/Qwen3.8-2.4T-A95B"
+
+[[benchmarks]]
+name = "DeepSWE"
+score = 56.6
+metric = "score"
+version = "1.1"
+harness = "Claude Code"
+source = "https://huggingface.co/Qwen/Qwen3.8-2.4T-A95B"
+
+[[benchmarks]]
+name = "NL2Repo"
+score = 55.9
+metric = "score"
+harness = "Claude Code"
+source = "https://huggingface.co/Qwen/Qwen3.8-2.4T-A95B"
+
+[[benchmarks]]
+name = "FrontierSWE"
+score = 73.5
+metric = "dominance score"
+date = "2026-08-03"
+source = "https://huggingface.co/Qwen/Qwen3.8-2.4T-A95B"
+
+[[benchmarks]]
+name = "MLS-Bench-Lite"
+score = 41
+metric = "score"
+harness = "Claude Code"
+variant = "5h timeout"
+source = "https://huggingface.co/Qwen/Qwen3.8-2.4T-A95B"
+
+[[benchmarks]]
+name = "PaperBench"
+score = 93
+metric = "score"
+harness = "BasicAgent"
+variant = "Code-Dev; 3 runs; 12h timeout; Opus 4.6 judge"
+source = "https://huggingface.co/Qwen/Qwen3.8-2.4T-A95B"
+
+[[benchmarks]]
+name = "AndroidBench"
+score = 75.1
+metric = "avg@3"
+dataset = "95 public tasks"
+source = "https://huggingface.co/Qwen/Qwen3.8-2.4T-A95B"
+
+[[benchmarks]]
+name = "QwenSWEBench"
+score = 80.7
+metric = "avg@3"
+harness = "Claude Code"
+dataset = "internal"
+source = "https://huggingface.co/Qwen/Qwen3.8-2.4T-A95B"
+
+[[benchmarks]]
+name = "QwenQoderBench"
+score = 58.4
+metric = "avg@5"
+harness = "Claude Code"
+dataset = "internal"
+source = "https://huggingface.co/Qwen/Qwen3.8-2.4T-A95B"
+
+[[benchmarks]]
+name = "QwenReactBench"
+score = 1724
+metric = "Elo"
+dataset = "internal"
+source = "https://huggingface.co/Qwen/Qwen3.8-2.4T-A95B"
+
+[[benchmarks]]
+name = "QwenSVGBench"
+score = 1713
+metric = "Elo"
+dataset = "internal"
+source = "https://huggingface.co/Qwen/Qwen3.8-2.4T-A95B"
+
+[[benchmarks]]
+name = "CoWorkBench"
+score = 74.8
+metric = "score"
+dataset = "internal"
+source = "https://huggingface.co/Qwen/Qwen3.8-2.4T-A95B"
+
+[[benchmarks]]
+name = "WorkSpaceBench"
+score = 67.7
+metric = "score"
+source = "https://huggingface.co/Qwen/Qwen3.8-2.4T-A95B"
+
+[[benchmarks]]
+name = "JobBench"
+score = 53.4
+metric = "score"
+source = "https://huggingface.co/Qwen/Qwen3.8-2.4T-A95B"
+
+[[benchmarks]]
+name = "SkillsBench"
+score = 70.2
+metric = "avg@3"
+version = "1.1"
+dataset = "87 tasks"
+harness = "OpenCode"
+source = "https://huggingface.co/Qwen/Qwen3.8-2.4T-A95B"
+
+[[benchmarks]]
+name = "Agents' Last Exam"
+score = 27
+metric = "pass@1"
+source = "https://huggingface.co/Qwen/Qwen3.8-2.4T-A95B"
+
+[[benchmarks]]
+name = "Agents' Last Exam"
+score = 52.4
+metric = "score"
+source = "https://huggingface.co/Qwen/Qwen3.8-2.4T-A95B"
+
+[[benchmarks]]
+name = "AutomationBench"
+score = 27.3
+metric = "pass@1"
+dataset = "600 public tasks"
+source = "https://huggingface.co/Qwen/Qwen3.8-2.4T-A95B"
+
+[[benchmarks]]
+name = "Toolathlon-Verified"
+score = 72.5
+metric = "pass@1"
+source = "https://huggingface.co/Qwen/Qwen3.8-2.4T-A95B"
+
+[[benchmarks]]
+name = "WideSearch"
+score = 81.9
+metric = "average item F1"
+harness = "Qwen-Agent"
+source = "https://huggingface.co/Qwen/Qwen3.8-2.4T-A95B"
+
+[[benchmarks]]
+name = "Humanity's Last Exam"
+score = 56.2
+metric = "score"
+variant = "with tools"
+source = "https://huggingface.co/Qwen/Qwen3.8-2.4T-A95B"
+
+[[benchmarks]]
+name = "Humanity's Last Exam"
+score = 43.6
+metric = "score"
+variant = "without tools"
+source = "https://huggingface.co/Qwen/Qwen3.8-2.4T-A95B"
+
+[[benchmarks]]
+name = "GPQA Diamond"
+score = 92.6
+metric = "score"
+source = "https://huggingface.co/Qwen/Qwen3.8-2.4T-A95B"
+
+[[benchmarks]]
+name = "IFBench"
+score = 82.8
+metric = "score"
+source = "https://huggingface.co/Qwen/Qwen3.8-2.4T-A95B"
+
+[[benchmarks]]
+name = "$OneMillion-Bench"
+score = 52.5
+metric = "expert score"
+variant = "gemini-3.1-pro-preview judge"
+source = "https://huggingface.co/Qwen/Qwen3.8-2.4T-A95B"
+
+[[benchmarks]]
+name = "HealthBench"
+score = 60.2
+metric = "score"
+source = "https://huggingface.co/Qwen/Qwen3.8-2.4T-A95B"
+
+[[benchmarks]]
+name = "PLawBench"
+score = 73.2
+metric = "score"
+variant = "gemini-3.1-pro-preview judge"
+source = "https://huggingface.co/Qwen/Qwen3.8-2.4T-A95B"
+
+[[benchmarks]]
+name = "PRBench"
+score = 57.6
+metric = "score"
+variant = "legal"
+source = "https://huggingface.co/Qwen/Qwen3.8-2.4T-A95B"
+
+[[benchmarks]]
+name = "PRBench"
+score = 58.3
+metric = "score"
+variant = "finance"
+source = "https://huggingface.co/Qwen/Qwen3.8-2.4T-A95B"
+
+[[benchmarks]]
+name = "MRCR"
+score = 92.9
+metric = "score"
+version = "2"
+dataset = "256K; 8-needle"
+source = "https://huggingface.co/Qwen/Qwen3.8-2.4T-A95B"
+
+[[benchmarks]]
+name = "LongBench"
+score = 66.3
+metric = "score"
+version = "2"
+source = "https://huggingface.co/Qwen/Qwen3.8-2.4T-A95B"

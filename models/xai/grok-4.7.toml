@@ -19,3 +19,71 @@ output = 500_000
 [modalities]
 input = ["text", "image", "pdf"]
 output = ["text"]
+
+[[benchmarks]]
+name = "CursorBench"
+score = 46.3
+metric = "score"
+variant = "xhigh effort"
+version = "4.0"
+source = "https://x.ai/news/grok-4-7"
+date = "2026-09-21"
+
+[[benchmarks]]
+name = "DeepSWE"
+score = 71
+metric = "score"
+variant = "high effort"
+version = "1.1"
+source = "https://x.ai/news/grok-4-7"
+date = "2026-09-21"
+
+[[benchmarks]]
+name = "EEBench"
+score = 64
+metric = "score"
+variant = "xhigh effort"
+source = "https://x.ai/news/grok-4-7"
+date = "2026-09-21"
+
+[[benchmarks]]
+name = "AA-Briefcase"
+score = 1657
+metric = "Elo"
+variant = "xhigh effort"
+version = "1.1"
+source = "https://x.ai/news/grok-4-7"
+date = "2026-09-21"
+
+[[benchmarks]]
+name = "Terminal-Bench"
+score = 37.6
+metric = "score"
+variant = "xhigh effort"
+version = "4.0"
+source = "https://x.ai/news/grok-4-7"
+date = "2026-09-21"
+
+[[benchmarks]]
+name = "Harvey Legal Agent Benchmark"
+score = 19.6
+metric = "score"
+variant = "xhigh effort"
+source = "https://x.ai/news/grok-4-7"
+date = "2026-09-21"
+
+[[benchmarks]]
+name = "HealthBench"
+score = 56.7
+metric = "score"
+variant = "xhigh effort; professional"
+source = "https://x.ai/news/grok-4-7"
+date = "2026-09-21"
+
+[[benchmarks]]
+name = "GDPval"
+score = 1695
+metric = "Elo"
+variant = "xhigh effort"
+source = "https://x.ai/news/grok-4-7"
+date = "2026-09-21"

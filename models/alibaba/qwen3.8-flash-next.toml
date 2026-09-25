@@ -1,3 +1,4 @@
+# Benchmark caveats, corrected datasets, and evaluation harnesses are documented in the source model card.
 # Sources (accessed 2026-08-28):
 # https://huggingface.co/Qwen/Qwen3.8-Flash-Next
 # https://huggingface.co/api/models/Qwen/Qwen3.8-Flash-Next
@@ -34,3 +35,185 @@ output = ["text"]
 [[weights]]
 label = "Hugging Face"
 url = "https://huggingface.co/Qwen/Qwen3.8-Flash-Next"
+
+[[benchmarks]]
+name = "DeepSWE"
+score = 58.7
+metric = "score"
+version = "1.1"
+harness = "mini-swe-agent"
+source = "https://huggingface.co/Qwen/Qwen3.8-Flash-Next"
+
+[[benchmarks]]
+name = "SWE-Bench Pro"
+score = 62.5
+metric = "score"
+harness = "Claude Code"
+dataset = "Qwen refined and corrected task set"
+source = "https://huggingface.co/Qwen/Qwen3.8-Flash-Next"
+
+[[benchmarks]]
+name = "SWE-Bench Multilingual"
+score = 81
+metric = "score"
+harness = "mini-swe-agent"
+source = "https://huggingface.co/Qwen/Qwen3.8-Flash-Next"
+
+[[benchmarks]]
+name = "NL2Repo"
+score = 48.1
+metric = "score"
+harness = "Claude Code"
+source = "https://huggingface.co/Qwen/Qwen3.8-Flash-Next"
+
+[[benchmarks]]
+name = "CoWorkBench"
+score = 73.9
+metric = "score"
+dataset = "internal"
+source = "https://huggingface.co/Qwen/Qwen3.8-Flash-Next"
+
+[[benchmarks]]
+name = "JobBench"
+score = 55.7
+metric = "score"
+source = "https://huggingface.co/Qwen/Qwen3.8-Flash-Next"
+
+[[benchmarks]]
+name = "Agents' Last Exam"
+score = 24.3
+metric = "pass@1"
+source = "https://huggingface.co/Qwen/Qwen3.8-Flash-Next"
+
+[[benchmarks]]
+name = "Agents' Last Exam"
+score = 51.2
+metric = "score"
+source = "https://huggingface.co/Qwen/Qwen3.8-Flash-Next"
+
+[[benchmarks]]
+name = "Toolathlon-Verified"
+score = 73.5
+metric = "pass@1"
+source = "https://huggingface.co/Qwen/Qwen3.8-Flash-Next"
+
+[[benchmarks]]
+name = "IFBench"
+score = 81.3
+metric = "score"
+source = "https://huggingface.co/Qwen/Qwen3.8-Flash-Next"
+
+[[benchmarks]]
+name = "GPQA Diamond"
+score = 91.7
+metric = "score"
+source = "https://huggingface.co/Qwen/Qwen3.8-Flash-Next"
+
+[[benchmarks]]
+name = "Humanity's Last Exam"
+score = 35.9
+metric = "score"
+variant = "without tools; GPT-4o judge"
+source = "https://huggingface.co/Qwen/Qwen3.8-Flash-Next"
+
+[[benchmarks]]
+name = "LiveCodeBench"
+score = 91.9
+metric = "score"
+version = "6"
+source = "https://huggingface.co/Qwen/Qwen3.8-Flash-Next"
+
+[[benchmarks]]
+name = "ClawEval-MM"
+score = 64.4
+metric = "pass@3"
+source = "https://huggingface.co/Qwen/Qwen3.8-Flash-Next"
+
+[[benchmarks]]
+name = "ClawEval-MM"
+score = 60.4
+metric = "average score"
+source = "https://huggingface.co/Qwen/Qwen3.8-Flash-Next"
+
+[[benchmarks]]
+name = "RecreationBench"
+score = 49.9
+metric = "score"
+dataset = "internal"
+source = "https://huggingface.co/Qwen/Qwen3.8-Flash-Next"
+
+[[benchmarks]]
+name = "AndroidWorld"
+score = 84.5
+metric = "score"
+source = "https://huggingface.co/Qwen/Qwen3.8-Flash-Next"
+
+[[benchmarks]]
+name = "OSWorld"
+score = 19.4
+metric = "binary completion rate"
+version = "2.0"
+source = "https://huggingface.co/Qwen/Qwen3.8-Flash-Next"
+
+[[benchmarks]]
+name = "OSWorld"
+score = 52.3
+metric = "partial score"
+version = "2.0"
+source = "https://huggingface.co/Qwen/Qwen3.8-Flash-Next"
+
+[[benchmarks]]
+name = "Vision2Web"
+score = 64
+metric = "score"
+harness = "Claude Code"
+source = "https://huggingface.co/Qwen/Qwen3.8-Flash-Next"
+variant = "gpt-5.4-2026-03-05 judge"
+
+[[benchmarks]]
+name = "ERQA"
+score = 72.3
+metric = "score"
+source = "https://huggingface.co/Qwen/Qwen3.8-Flash-Next"
+
+[[benchmarks]]
+name = "LVBench"
+score = 76.6
+metric = "score"
+source = "https://huggingface.co/Qwen/Qwen3.8-Flash-Next"
+
+[[benchmarks]]
+name = "RealWorldQA"
+score = 88.5
+metric = "score"
+source = "https://huggingface.co/Qwen/Qwen3.8-Flash-Next"
+
+[[benchmarks]]
+name = "MathVision"
+score = 90.6
+metric = "score"
+variant = "without code interpreter"
+dataset = "corrected annotations"
+source = "https://huggingface.co/Qwen/Qwen3.8-Flash-Next"
+
+[[benchmarks]]
+name = "MathVision"
+score = 95.7
+metric = "score"
+variant = "with code interpreter"
+dataset = "corrected annotations"
+source = "https://huggingface.co/Qwen/Qwen3.8-Flash-Next"
+
+[[benchmarks]]
+name = "CharXiv Reasoning"
+score = 84.6
+metric = "score"
+variant = "without code interpreter"
+source = "https://huggingface.co/Qwen/Qwen3.8-Flash-Next"
+
+[[benchmarks]]
+name = "CharXiv Reasoning"
+score = 90.6
+metric = "score"
+variant = "with code interpreter"
+source = "https://huggingface.co/Qwen/Qwen3.8-Flash-Next"

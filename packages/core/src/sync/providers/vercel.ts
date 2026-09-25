@@ -8,6 +8,18 @@ import { factorBaseModel, resolveCanonicalBaseModel } from "./openrouter.js";
 
 const API_ENDPOINT = "https://ai-gateway.vercel.sh/v1/models";
 
+const OUTPUT_LIMIT_OVERRIDES: Record<string, number> = {
+  "alibaba/qwen3.6-27b": 65_536,
+  "amazon/nova-2-lite": 65_535,
+  "bytedance/seed-1.8": 32_768,
+  "deepseek/deepseek-v3.1-terminus": 32_768,
+  "inception/mercury-2": 50_000,
+  "minimax/minimax-m2": 196_608,
+  "quiverai/arrow-2": 65_536,
+  "quiverai/arrow-2-telos": 65_536,
+  "zai/glm-5-turbo": 131_072,
+};
+
 const KnownModelType = z.enum([
   "language",
   "embedding",
@@ -112,9 +124,9 @@ export function buildVercelModel(
   const context = model.context_window > 0
     ? model.context_window
     : existing?.limit?.context ?? 0;
-  const output = model.max_tokens > 0
+  const output = OUTPUT_LIMIT_OVERRIDES[model.id] ?? (model.max_tokens > 0
     ? model.max_tokens
-    : existing?.limit?.output ?? 0;
+    : existing?.limit?.output ?? 0);
   const input = model.id.startsWith("openai/") && context > output
     ? context - output
     : undefined;
