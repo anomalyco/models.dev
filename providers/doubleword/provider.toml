@@ -1,0 +1,11 @@
+name = "Doubleword"
+npm = "@ai-sdk/openai-compatible"
+api = "https://api.doubleword.ai/v1"
+env = ["DOUBLEWORD_API_KEY"]
+# Reasoning HTTP format (verified 2026-09-09):
+# POST https://api.doubleword.ai/v1/chat/completions
+# JSON reasoning_effort, validated server-side against
+# none | minimal | low | medium | high | xhigh | max (any other value is a 400),
+# uniformly across the catalog. Effort is honoured: reasoning token count scales
+# with the level. Source: the gateway's own 400 enumeration on an invalid value.
+doc = "https://docs.doubleword.ai"
