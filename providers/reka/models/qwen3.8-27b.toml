@@ -1,0 +1,21 @@
+# Default: thinking off when no reasoning signal is supplied.
+# Catalog: context_window=262144, max_output_tokens=131072.
+# Paired probe records and reproduction: ../README.md
+# Effort: reasoning_effort = none|low|medium|xhigh; none disables thinking.
+# Live verified 2026-09-22; catalog false is a marketplace forwarding policy.
+# none -> reasoning_tokens=0; low -> 51 on identical arithmetic input.
+# Budget: thinking_token_budget; effort=low with budget 1/256 yielded 0/51 reasoning tokens.
+# Direct API catalog and USD pricing (2026-09-22):
+# https://inference.api.reka.ai/v1/site/models?capability=chat
+base_model = "alibaba/qwen3.8-27b"
+reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "xhigh"] }, { type = "budget_tokens" }]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.2
+output = 2.5
+
+[limit]
+output = 131072
