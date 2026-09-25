@@ -1,0 +1,28 @@
+# Source: https://developers.openai.com/api/docs/models
+# Serving metadata: providers/openai/models/gpt-5.5.toml (2026-09-24).
+# Native Responses through Aixy preserves reasoning and tool-call controls.
+base_model = "openai/gpt-5.5"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "xhigh"]
+
+[cost]
+input = 5.0
+output = 30.0
+cache_read = 0.5
+
+[[cost.tiers]]
+tier = { size = 272_000, type = "context" }
+input = 10.0
+output = 45.0
+cache_read = 1.0
+
+[experimental.modes.fast]
+cost = { input = 12.5, output = 75.0, cache_read = 1.25 }
+provider = { body = { service_tier = "priority" } }
+
+[provider]
+npm = "@ai-sdk/openai"
+api = "https://api.aixy-gateway.com/v1"
+shape = "responses"

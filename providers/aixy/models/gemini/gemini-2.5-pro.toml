@@ -1,0 +1,19 @@
+# Source: https://ai.google.dev/gemini-api/docs/pricing
+# Serving metadata: providers/google/models/gemini-2.5-pro.toml (2026-09-24).
+base_model = "google/gemini-2.5-pro"
+
+[[reasoning_options]]
+type = "budget_tokens"
+min = 128
+max = 32_768
+
+[cost]
+input = 1.25
+output = 10.0
+cache_read = 0.125
+
+[[cost.tiers]]
+tier = { size = 200_000, type = "context" }
+input = 2.5
+output = 15.0
+cache_read = 0.25

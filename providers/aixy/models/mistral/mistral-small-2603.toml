@@ -1,0 +1,11 @@
+# Source: https://docs.mistral.ai/getting-started/models/
+# Serving metadata: providers/mistral/models/mistral-small-2603.toml (2026-09-24).
+base_model = "mistral/mistral-small-2603"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "high"]
+
+[cost]
+input = 0.15
+output = 0.6

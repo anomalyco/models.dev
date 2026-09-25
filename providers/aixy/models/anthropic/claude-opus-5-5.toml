@@ -1,0 +1,24 @@
+# Source: https://platform.claude.com/docs/en/models/overview
+# Serving metadata: providers/anthropic/models/claude-opus-5-5.toml (2026-09-24).
+# Native Anthropic Messages through Aixy; project key also supports x-api-key.
+# https://docs.aixy-gateway.com/integrations/claude-code
+base_model = "anthropic/claude-opus-5-5"
+structured_output = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high", "xhigh", "max"]
+
+[cost]
+input = 4
+output = 20
+cache_read = 0.2
+cache_write = 5
+
+[experimental.modes.fast]
+cost = { input = 8, output = 40, cache_read = 0.4, cache_write = 10 }
+provider = { body = { speed = "fast" }, headers = { anthropic-beta = "fast-mode-2026-02-01" } }
+
+[provider]
+npm = "@ai-sdk/anthropic"
+api = "https://api.aixy-gateway.com/v1"

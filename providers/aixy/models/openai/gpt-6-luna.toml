@@ -1,0 +1,35 @@
+# Source: https://developers.openai.com/api/docs/models
+# Serving metadata: providers/openai/models/gpt-6-luna.toml (2026-09-24).
+# Pricing: https://developers.openai.com/api/docs/models/gpt-6-luna
+# Reasoning and modes: https://developers.openai.com/api/docs/guides/latest-model?model=gpt-6-luna
+# Native Responses through Aixy preserves reasoning and tool-call controls.
+base_model = "openai/gpt-6-luna"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "xhigh", "max"]
+
+[cost]
+input = 0.1
+output = 0.5
+cache_read = 0.01
+cache_write = 0.125
+
+[[cost.tiers]]
+tier = { type = "context", size = 272_000 }
+input = 0.2
+output = 0.75
+cache_read = 0.02
+cache_write = 0.25
+
+[experimental.modes.fast]
+cost = { input = 0.2, output = 1.0, cache_read = 0.02, cache_write = 0.25 }
+provider = { body = { service_tier = "priority" } }
+
+[experimental.modes.pro]
+provider = { body = { reasoning = { mode = "pro" } } }
+
+[provider]
+npm = "@ai-sdk/openai"
+api = "https://api.aixy-gateway.com/v1"
+shape = "responses"

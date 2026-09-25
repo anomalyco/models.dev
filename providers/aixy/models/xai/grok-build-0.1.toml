@@ -1,0 +1,15 @@
+# Source: https://docs.x.ai/docs/models
+# Serving metadata: providers/xai/models/grok-build-0.1.toml (2026-09-24).
+base_model = "xai/grok-build-0.1"
+reasoning_options = []
+
+[cost]
+input = 1
+output = 2
+cache_read = 0.2
+
+[[cost.tiers]]
+tier = { size = 200_000, type = "context" }
+input = 2.0
+output = 4.0
+cache_read = 0.4
