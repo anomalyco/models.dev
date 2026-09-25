@@ -1,0 +1,20 @@
+# Effort: reasoning_effort = none|low|medium|high. Thinking is ON by default, and
+# none turns it off. Live probes on 2026-09-23 returned 200 OK for every listed
+# level. The set matches the same-surface peer baseline (ovhcloud, scaleway, crof,
+# digitalocean), because minimal, xhigh, and max showed no distinct effect.
+# The catalog reports supports_reasoning = false for this ID, and that is a false
+# negative. Traces arrive in reasoning_content. The costs match the Nebul API on
+# 2026-09-23.
+base_model = "alibaba/qwen3.5-397b-a17b"
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high"]
+
+[cost]
+input = 0.63
+output = 3.78
+cache_read = 0.15
