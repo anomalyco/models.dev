@@ -1,0 +1,14 @@
+# Toggle: enable_thinking true|false (OpenAI-compatible extra_body)
+base_model = "zhipuai/glm-4.7-flash"
+
+[[reasoning_options]]
+type = "toggle"
+
+[cost]
+input = 0.05385
+output = 0.36618
+
+[limit]
+context = 202_752
+output = 131_072
+
