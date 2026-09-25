@@ -1,3 +1,8 @@
+# Cache key (chat): none — on-disk context caching is automatic and enabled by default with no request cache field
+# Use headers: none
+# Use body: none
+# Cache policy: fully match a persisted cache-prefix unit (request-boundary, common-prefix, or fixed-interval unit at 64-token granularity) from the first token; best-effort with no code changes — verify via usage `prompt_cache_hit_tokens` versus `prompt_cache_miss_tokens`
+# Docs: https://api-docs.deepseek.com/guides/kv_cache
 name = "DeepSeek"
 env = ["DEEPSEEK_API_KEY"]
 npm = "@ai-sdk/openai-compatible"
