@@ -1,0 +1,28 @@
+name = "MiMo V2.6 Flash Uncensored"
+description = "A text-only, lower-refusal MiMo V2.6 Flash finetune served by Heabsy with a 1M-token context window, separate reasoning output, and tool calling."
+family = "mimo"
+release_date = "2026-09-25"
+last_updated = "2026-09-25"
+attachment = false
+reasoning = true
+tool_call = true
+structured_output = false
+open_weights = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "high"]
+
+[cost]
+input = 0.5
+output = 1.5
+cache_read = 0.275
+
+[limit]
+context = 1_048_576
+input = 1_048_576
+output = 65_536
+
+[modalities]
+input = ["text"]
+output = ["text"]
