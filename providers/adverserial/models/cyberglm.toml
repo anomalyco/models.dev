@@ -1,0 +1,25 @@
+# Effort: chat_template_kwargs.reasoning_effort = low|high|max
+# Sources: https://adverserial.ai/ and https://adverserial.ai/docs.html
+name = "CyberGLM"
+description = "Custom cybersecurity fine-tune served by Adverserial AI."
+release_date = "2026-09-13"
+last_updated = "2026-09-13"
+open_weights = false
+attachment = false
+reasoning = true
+reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]
+tool_call = true
+structured_output = false
+
+[cost]
+input = 4.00
+output = 15.00
+cache_read = 0.40
+
+[limit]
+output = 65536
+context = 524288
+
+[modalities]
+input = ["text"]
+output = ["text"]
