@@ -1,0 +1,13 @@
+# Cost: Melious list price for the default `balanced` route -- EUR 0.17 in / EUR 0.9 out
+# per 1M tokens -- converted at 1.1490 USD/EUR (ECB euro reference rate, 2026-09-21).
+# Sources: https://melious.ai/hub/models/qwen3-coder-next and https://melious.ai/pricing
+# FX: https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml
+base_model = "alibaba/qwen3-coder-next"
+structured_output = false
+
+[cost]
+input = 0.1953
+output = 1.0341
+
+[limit]
+context = 131_072
