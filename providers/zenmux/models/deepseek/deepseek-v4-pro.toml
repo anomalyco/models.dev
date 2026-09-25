@@ -1,8 +1,20 @@
-base_model = "deepseek/deepseek-v4-pro"
-reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "medium", "high"] }]
+# Toggle: thinking.type = enabled|disabled
+# Effort: reasoning_effort = high|max
+# ZenMux's undated deepseek-v4-pro slug is explicitly displayed as the 0813
+# snapshot in its 2026-09-19 catalog, so the dated base name is intentional.
+# https://zenmux.ai/docs/guide/advanced/reasoning.html
+# https://zenmux.ai/docs/api/openai/openai-list-models.html
+base_model = "deepseek/deepseek-v4-pro-0813"
 
 [interleaved]
 field = "reasoning_content"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["high", "max"]
 
 [cost]
 input = 0.435

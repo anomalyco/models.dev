@@ -1,0 +1,12 @@
+base_model = "google/gemini-omni-flash-preview"
+reasoning_options = []
+
+[cost]
+input = 1.5
+output = 17.5
+
+[limit]
+context = 131_072
+
+[modalities]
+output = ["text", "video"]

@@ -1,0 +1,25 @@
+# Sources:
+# - https://zenmux.ai/models
+# - https://zenmux.ai/docs/api/openai/openai-list-models.html
+# - https://zenmux.ai/docs/api/anthropic/anthropic-list-models.html
+# - https://zenmux.ai/docs/api/vertexai/google-list-models.html
+# Accessed 2026-09-19.
+name = "Veo 3.1 Lite"
+description = "Veo 3.1 Lite is Google DeepMind's most cost-efficient AI video generation model, released on March 31, 2026. It is designed to provide professional-grade video capabilities at a significantly lower price point, making it ideal for developers and content teams who need to scale high-volume video production"
+family = "veo"
+release_date = "2026-03-31"
+last_updated = "2026-03-31"
+attachment = true
+reasoning = false
+temperature = false
+tool_call = false
+structured_output = false
+open_weights = false
+
+[limit]
+context = 1_024
+output = 0
+
+[modalities]
+input = ["text", "image"]
+output = ["video"]

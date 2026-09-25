@@ -1,0 +1,12 @@
+# ZenMux's 2026-09-19 page catalog has supports_reasoning=0. Its live OpenAI-
+# and Anthropic-compatible entries expose no reasoning capability and no price;
+# the route is non-free, so cost is intentionally omitted rather than set to zero.
+# https://zenmux.ai/docs/api/openai/openai-list-models.html
+base_model = "google/gemma-4-31b-it"
+reasoning = false
+
+[limit]
+output = 65_535
+
+[modalities]
+input = ["image", "text", "video"]

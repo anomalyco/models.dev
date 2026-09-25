@@ -1,0 +1,25 @@
+# Sources:
+# - https://zenmux.ai/models
+# - https://zenmux.ai/docs/api/openai/openai-list-models.html
+# - https://zenmux.ai/docs/api/anthropic/anthropic-list-models.html
+# - https://zenmux.ai/docs/api/vertexai/google-list-models.html
+# Accessed 2026-09-19.
+name = "Veo 3.1 Fast"
+description = "Veo 3.1 Fast is a speed-optimized variant of Google DeepMind's flagship video generation model. It is designed to generate high-quality video significantly faster and at a lower cost than the standard Veo 3.1 Quality model, making it ideal for rapid prototyping and high-volume content creation."
+family = "veo"
+release_date = "2025-10-15"
+last_updated = "2026-01-01"
+attachment = true
+reasoning = false
+temperature = false
+tool_call = false
+structured_output = false
+open_weights = false
+
+[limit]
+context = 1_024
+output = 0
+
+[modalities]
+input = ["text", "image", "video"]
+output = ["video"]

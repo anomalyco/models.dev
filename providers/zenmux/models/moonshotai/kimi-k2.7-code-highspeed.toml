@@ -1,0 +1,13 @@
+# Response side channel: reasoning_content
+# https://zenmux.ai/docs/guide/advanced/reasoning.html
+base_model = "moonshotai/kimi-k2.7-code-highspeed"
+name = "Kimi K2.7 Code HighSpeed"
+reasoning_options = []
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 1.9
+output = 8
+cache_read = 0.38

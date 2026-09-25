@@ -1,0 +1,24 @@
+# Toggle: thinking.type = enabled|disabled
+# Effort: reasoning_effort = low|high|max
+# ZenMux's 2026-09-19 protocol lists publish discounted bands of USD 0.075 input,
+# 0.30 output, and 0.0015 cache-read per million tokens. Higher time bands of
+# 0.15/0.60/0.003 are intentionally omitted because the schema only models
+# context tiers, not time-of-day tiers.
+# https://zenmux.ai/docs/guide/advanced/reasoning.html
+# https://zenmux.ai/docs/api/openai/openai-list-models.html
+base_model = "deepseek/deepseek-v4.1-flash"
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[cost]
+input = 0.075
+output = 0.3
+cache_read = 0.0015

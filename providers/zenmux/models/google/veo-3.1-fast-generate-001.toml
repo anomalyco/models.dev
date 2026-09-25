@@ -1,0 +1,7 @@
+# ZenMux lists a 100,000-token host context and resolution-dependent per-second
+# video prices; the token-only cost schema cannot represent those prices.
+# https://zenmux.ai/docs/api/vertexai/google-list-models.html
+base_model = "google/veo-3.1-fast-generate-001"
+
+[limit]
+context = 100_000

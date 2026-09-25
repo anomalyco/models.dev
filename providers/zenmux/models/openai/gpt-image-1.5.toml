@@ -1,0 +1,12 @@
+base_model = "openai/gpt-image-1.5"
+
+[cost]
+input = 5
+output = 32
+cache_read = 1.25
+
+[limit]
+context = 10_000
+
+[modalities]
+output = ["image"]
