@@ -1,0 +1,11 @@
+base_model = "zhipuai/glm-5.3-flash"
+name = "GLM 5.3 Flash"
+
+[cost]
+input = 0.303
+output = 0.9091
+cache_read = 0.101
+
+[limit]
+context = 1048576
+output = 131072

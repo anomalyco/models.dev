@@ -1,0 +1,10 @@
+base_model = "nvidia/nemotron-3-super-120b-a12b"
+name = "Nexus 120B"
+
+[cost]
+input = 0.101
+output = 0.6061
+
+[limit]
+context = 131072
+output = 8192

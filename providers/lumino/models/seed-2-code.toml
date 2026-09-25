@@ -1,0 +1,19 @@
+name = "Seed 2.0 Code"
+description = "ByteDance coding model for real-world development, IDE-style workflows, and reliable code generation."
+attachment = false
+reasoning = true
+tool_call = true
+temperature = true
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[cost]
+input = 0.8081
+output = 4.5455
+cache_read = 0.202
+
+[limit]
+context = 256000
+output = 16384
