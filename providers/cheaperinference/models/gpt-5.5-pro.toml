@@ -1,0 +1,25 @@
+# Image input verified on this host through the /v1/responses layer this route requires: a 32x32
+# solid-colour PNG as a data: URI was named correctly on 4 of 5 attempts, the fifth a transient 502
+# (probed 2026-09-17).
+# /v1/chat/completions returns 400 "Pro reasoning mode requires the /v1/responses endpoint", and /v1/responses
+# answers, so this route is responses-shaped. There effort medium and high are accepted, low returns 400 and
+# xhigh fails upstream (probed 2026-09-16).
+# Rates: GET https://api.cheaperinference.com/v1/models (pricing_version sha256:6d2520b9…, checked 2026-09-17T07:00:28Z)
+# Discounted marketplace rate, 30.00% off the model maker's list price ($30.0/$180.0 per 1M).
+base_model = "openai/gpt-5.5-pro"
+
+[[reasoning_options]]
+type = "effort"
+values = ["medium", "high"]
+
+[cost]
+input = 21.0
+output = 126.0
+cache_read = 2.55
+cache_write = 21.0
+
+[limit]
+context = 1000000
+
+[provider]
+shape = "responses"

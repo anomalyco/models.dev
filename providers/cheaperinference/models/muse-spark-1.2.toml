@@ -1,0 +1,27 @@
+# No usable image input on this host: the request is accepted but the image never reaches the model -
+# NOIMAGE or an empty message on 6 of 6 colour probes (probed 2026-09-17).
+# Reasoning is returned in a reasoning_details field on the message: present on 3 of 3 untruncated probes
+# (runs cut short by max_tokens carry none), so the side channel is declared below (probed 2026-09-16).
+# Rates: GET https://api.cheaperinference.com/v1/models (pricing_version sha256:42cddd4d…, checked 2026-09-17T16:02:40Z)
+# Discounted marketplace rate, 15.00% off the model maker's list price ($1.25/$4.25 per 1M).
+base_model = "meta/muse-spark-1.2"
+attachment = false
+
+[interleaved]
+field = "reasoning_details"
+
+[[reasoning_options]]
+type = "effort"
+values = ["minimal", "low", "medium", "high", "xhigh"]
+
+[cost]
+input = 1.0625
+output = 3.6125
+cache_read = 0.10625
+cache_write = 1.0625
+
+[limit]
+output = 943718
+
+[modalities]
+input = ["text"]

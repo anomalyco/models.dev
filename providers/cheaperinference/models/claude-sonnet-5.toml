@@ -1,0 +1,30 @@
+# No usable image input on this host: the request is accepted but the image never reaches the model -
+# it answered NOIMAGE on 4 of 4 colour probes (probed 2026-09-17).
+# Effort: reasoning_effort = max
+# Measured on this host with one prompt, reasoning tokens: "max" 343 and 1199, while no field, "low",
+# "medium", "high" and "xhigh" returned 0 on 2 of 2 each, as did reasoning.enabled = true and
+# thinking.type = "enabled". An invalid value is accepted rather than rejected, so the level list comes
+# from what measurably changes the output, not from an error message (probed 2026-09-17).
+# Rates: GET https://api.cheaperinference.com/v1/models (pricing_version sha256:6d2520b9…, checked 2026-09-17T07:00:28Z)
+# Discounted marketplace rate, 30.00% off the model maker's list price ($2.0/$10.0 per 1M).
+base_model = "anthropic/claude-sonnet-5"
+attachment = false
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "effort"
+values = ["max"]
+
+[cost]
+input = 1.4
+output = 7.0
+cache_read = 0.14
+cache_write = 1.7
+
+[limit]
+output = 64000
+
+[modalities]
+input = ["text"]

@@ -1,0 +1,32 @@
+# Image input verified on this host: a 32x32 solid-colour PNG as a data: URI was named correctly on
+# 4 of 4 colour probes (probed 2026-09-17).
+# Toggle: reasoning.enabled = true|false
+# Effort: reasoning_effort = low|medium|high
+# Measured on this host with one prompt, reasoning tokens read from
+# usage.completion_tokens_details.reasoning_tokens. The toggle holds on every route the gateway picks:
+# reasoning.enabled = true reasoned on 9 of 9 requests (193-237 tokens) and reasoning.enabled = false
+# returned 0 on 12 of 12, while requests carrying no reasoning field returned 0 on 8 of 9. The effort
+# ladder is only forwarded by the route that answers as anthropic/claude-opus-4-5: "low" 32-33
+# (3 of 3), "medium" 32-105 (4 of 4) and "high" 230-255 (5 of 5), with "low" and "medium" overlapping
+# at the low end. The route that answers as claude-opus-4-5 through Amazon Bedrock returns 0 for every
+# effort value, so the toggle is the dependable control (probed 2026-09-17).
+# Rates: GET https://api.cheaperinference.com/v1/models (pricing_version sha256:6d2520b9…, checked 2026-09-17T07:00:28Z)
+# Discounted marketplace rate, 30.00% off the model maker's list price ($5.0/$25.0 per 1M).
+base_model = "anthropic/claude-opus-4-5"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high"]
+
+[cost]
+input = 3.5
+output = 17.5
+cache_read = 0.35
+cache_write = 4.25
+
+[limit]
+context = 198000
+output = 32768

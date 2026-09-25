@@ -1,0 +1,17 @@
+# Image input verified on this host: a 32x32 solid-colour PNG as a data: URI was named correctly on
+# 4 of 4 colour probes (probed 2026-09-17).
+# Reasoning is always on and takes no caller control: reasoning_content comes back on every request, including
+# with reasoning.enabled = false and with reasoning.effort = "none" (6 of 6 probed 2026-09-16).
+# Rates: GET https://api.cheaperinference.com/v1/models (pricing_version sha256:6d2520b9…, checked 2026-09-17T07:00:28Z)
+# Discounted marketplace rate, 30.00% off the model maker's list price ($2.5/$7.5 per 1M).
+base_model = "alibaba/qwen3.8-max"
+reasoning_options = []
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 1.75
+output = 5.25
+cache_read = 0.2125
+cache_write = 2.125

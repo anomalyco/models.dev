@@ -1,0 +1,25 @@
+# Image input verified on this host: a 32x32 solid-colour PNG as a data: URI was named correctly on
+# 4 of 4 colour probes (probed 2026-09-17).
+# Toggle: reasoning.enabled = true|false
+# Rates: GET https://api.cheaperinference.com/v1/models (pricing_version sha256:6d2520b9…, checked 2026-09-17T07:00:28Z)
+# Discounted marketplace rate, 30.00% off the model maker's list price ($0.214/$2.55 per 1M).
+base_model = "alibaba/qwen3.8-27b"
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "xhigh"]
+
+[cost]
+input = 0.1498
+output = 1.785
+cache_read = 0.01819
+cache_write = 0.1498
+
+[limit]
+output = 65536

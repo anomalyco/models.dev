@@ -1,0 +1,25 @@
+# No dependable image input on this host: 10 probes gave 3 colours right, "red" for green and one
+# NOIMAGE, so image input cannot be relied on here (probed 2026-09-17).
+# Rates: GET https://api.cheaperinference.com/v1/models (pricing_version sha256:6d2520b9…, checked 2026-09-17T07:00:28Z)
+# Discounted marketplace rate, 51.66% off the model maker's list price ($0.15/$0.5 per 1M).
+base_model = "zhipuai/glm-5.3-flash"
+attachment = false
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[cost]
+input = 0.072511
+output = 0.241706
+cache_read = 0.01275
+cache_write = 0.072511
+
+[limit]
+context = 1048576
+
+[modalities]
+input = ["text"]
