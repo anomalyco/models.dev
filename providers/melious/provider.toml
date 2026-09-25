@@ -8,7 +8,7 @@
 # string without a 4xx, including undocumented ones, so acceptance is not evidence.
 # Every model here was measured against this deployment on 2026-09-14 instead. Two
 # behaviours were found, and neither matches the vendor docs' low|medium|high ladder:
-# on 12 models reasoning_effort="none" is a real off state (usage.reasoning_tokens = 0
+# on 9 models reasoning_effort="none" is a real off state (usage.reasoning_tokens = 0
 # and no reasoning_content) while low, medium and high all reason with no ordered
 # difference in depth -- those are authored as effort ["none", "high"], an effort list
 # containing none rather than a toggle, because off is reachable through this field.
