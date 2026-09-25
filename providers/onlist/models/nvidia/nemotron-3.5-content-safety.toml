@@ -1,0 +1,12 @@
+# Pricing and context length: https://onlist.io/models/nvidia/nemotron-3.5-content-safety (accessed 2026-09-07)
+# Reasoning: effort via `reasoning_effort` / `reasoning.effort`, budget via `reasoning.max_tokens`; no on/off toggle on Onlist
+base_model = "nvidia/nemotron-3.5-content-safety"
+reasoning_options = []
+
+[cost]
+input = 0.2
+output = 0.2
+
+[limit]
+context = 131_072
+output = 117_964

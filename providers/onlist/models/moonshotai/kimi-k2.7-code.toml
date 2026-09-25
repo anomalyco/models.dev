@@ -1,0 +1,13 @@
+# Pricing and context length: https://onlist.io/models/moonshotai/kimi-k2.7-code (accessed 2026-09-07)
+# Reasoning: effort via `reasoning_effort` / `reasoning.effort`, budget via `reasoning.max_tokens`; no on/off toggle on Onlist
+base_model = "moonshotai/kimi-k2.7-code"
+temperature = true
+reasoning_options = []
+
+[cost]
+input = 0.55
+output = 2.5
+cache_read = 0.15
+
+[limit]
+output = 235_929
