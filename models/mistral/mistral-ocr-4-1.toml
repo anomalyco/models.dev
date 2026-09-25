@@ -1,0 +1,22 @@
+# Sources (accessed 2026-08-27):
+#   https://docs.mistral.ai/models/ocr-4-1
+#   https://docs.mistral.ai/inference/pricing
+# OCR is priced per 1,000 pages ($4 / $5 annotated), not per token.
+name = "OCR 4.1"
+description = "Document OCR with paragraph-level bounding boxes, structural block labels, and block-level confidence scores"
+family = "mistral-ocr"
+release_date = "2026-07-16"
+last_updated = "2026-07-16"
+attachment = true
+reasoning = false
+temperature = false
+tool_call = false
+open_weights = false
+
+[limit]
+context = 0
+output = 0
+
+[modalities]
+input = ["image", "pdf"]
+output = ["text"]
