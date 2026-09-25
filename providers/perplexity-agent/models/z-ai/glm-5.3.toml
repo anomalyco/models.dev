@@ -1,0 +1,14 @@
+# Perplexity Agent (OpenAI-compatible relay) pricing per:
+# https://docs.perplexity.ai/docs/agent-api/models#z-ai
+# Reasoning tokens billed at the output rate (no separate CoT price).
+# GLM-5.3 always reasons; low, high, and max are the effective effort levels.
+base_model = "zhipuai/glm-5.3"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[cost]
+input = 1.40
+output = 4.40
+cache_read = 0.26
