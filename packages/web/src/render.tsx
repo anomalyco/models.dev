@@ -357,12 +357,15 @@ function buildSearchItems(
       api: provider.api,
       releaseDate: providerLastReleased,
       updated: providerLastUpdated,
+      description: provider.description,
       tokens: [
         provider.name,
         providerId,
         provider.npm,
         provider.api,
         provider.doc,
+        provider.website,
+        provider.description,
       ].filter((token): token is string => Boolean(token)),
     });
   }
@@ -532,6 +535,7 @@ function providerPageMetadata(
         : undefined;
   const description = compactMetadataDescription(
     [
+      provider.description,
       `Browse ${plural(models.length, `${provider.name} model`)} on Models.dev.`,
       factSentence([
         labSummary,
@@ -611,6 +615,14 @@ function modalitySummary(input?: string[], output?: string[]) {
 
 function plural(count: number, singular: string, pluralForm = `${singular}s`) {
   return `${count} ${count === 1 ? singular : pluralForm}`;
+}
+
+function hostname(url: string) {
+  try {
+    return new URL(url).hostname.replace(/^www\./, "");
+  } catch {
+    return url;
+  }
 }
 
 function Header(props: { active: ActiveSection }) {
@@ -750,7 +762,7 @@ function ProvidersPage(props: { providers: Array<[string, CatalogProvider]> }) {
               );
 
               return (
-                <tr data-search={`${provider.name} ${providerId} ${provider.npm} ${provider.api ?? ""}`}>
+                <tr data-search={`${provider.name} ${providerId} ${provider.npm} ${provider.api ?? ""} ${provider.description ?? ""}`}>
                   <td data-sort={provider.name}>
                     <ProviderLink providerId={providerId} provider={provider} />
                   </td>
@@ -876,6 +888,7 @@ function ProviderPage(props: {
       <DetailHeader
         eyebrow={<a href="/providers">Providers</a>}
         title={props.provider.name}
+        description={props.provider.description}
         code={props.providerId}
         copyValue={props.providerId}
       />
@@ -889,6 +902,16 @@ function ProviderPage(props: {
             <a href={props.provider.doc} target="_blank" rel="noopener noreferrer">
               Provider docs
             </a>,
+          ],
+          [
+            "Website",
+            props.provider.website ? (
+              <a href={props.provider.website} target="_blank" rel="noopener noreferrer">
+                {hostname(props.provider.website)}
+              </a>
+            ) : (
+              "-"
+            ),
           ],
         ]}
       />

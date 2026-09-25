@@ -143,6 +143,8 @@ If the provider isn't already in `providers/`:
    npm = "@ai-sdk/provider" # AI SDK Package name
    env = ["PROVIDER_API_KEY"] # Environment Variable keys used for auth
    doc = "https://example.com/docs/models" # Link to provider's documentation
+   description = "One line on what this provider serves" # Optional
+   website = "https://example.com" # Optional, link to the provider's main site
    ```
 
    If the provider doesn’t publish an npm package but exposes an OpenAI-compatible endpoint, set the npm field accordingly and include the base URL:
