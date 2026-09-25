@@ -1,0 +1,16 @@
+# Model ID "amber" as used in the request field of
+# POST https://api.2ba.ai/v1/chat/completions (https://2ba.ai/docs, accessed 2026-09-25).
+# Provider states a 256k context window and image input support; no output
+# token limit is published. Flat-rate subscription, so no [cost] block.
+name = "amber"
+attachment = true
+reasoning = true
+tool_call = true
+open_weights = false
+
+[limit]
+context = 262_144 # provider states 256k
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
