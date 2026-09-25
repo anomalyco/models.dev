@@ -1,0 +1,26 @@
+# Effort: reasoning_effort accepts low|medium|xhigh. An unlisted value returns the
+# supported set verbatim, so this is read off the wire rather than from Alibaba's docs:
+#   "Unexpected reasoning effort minimal. Supported types are xhigh (default),
+#    medium, and low."
+# `none` also answered 200 on this host (5/5), but it is not in that enumeration, so
+# it is not authored here.
+#
+# No [interleaved]: this host returns the trace as a plain `reasoning` string
+# (`message` keys are content/reasoning/role/tool_calls), which is not a
+# schema-valid interleaved.field. Same reason the four OpenAI models omit it.
+#
+# [limit] is overridden. The Alibaba Cloud entry advertises a 1M context, but this
+# host caps this model well below that:
+#   "The input (2000052 tokens) is longer than the model's context length (262144 tokens)."
+# 262144 = 256K, so inheriting the base limit would overstate the window by ~4x.
+#
+# Cost: USD cash price (credit / 20), per the header in provider.toml.
+base_model = "alibaba/qwen3.8-flash"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "xhigh"] }]
+
+[limit]
+context = 262_144
+
+[cost]
+input = 0.01
+output = 0.025
