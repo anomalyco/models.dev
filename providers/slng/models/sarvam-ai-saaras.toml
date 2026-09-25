@@ -1,0 +1,27 @@
+# Sarvam AI Saaras STT via SLNG
+# Sources:
+# - https://docs.slng.ai/models — SLNG model catalog (India region)
+# - Original per-minute pricing: $0.0060/min, capped at $3.00 per million tokens
+name = "Sarvam AI Saaras"
+description = "Speech-to-text model supporting 15 Indian languages"
+family = "saaras"
+release_date = "2024-01-01"
+last_updated = "2025-01-01"
+attachment = false
+reasoning = false
+temperature = false
+tool_call = false
+structured_output = false
+open_weights = false
+
+[cost]
+input = 3.00
+output = 3.00
+
+[limit]
+context = 0
+output = 0
+
+[modalities]
+input = ["audio"]
+output = ["text"]
