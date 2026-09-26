@@ -1,0 +1,22 @@
+# Agent Plan model name from https://www.volcengine.com/docs/82379/2366394
+# (accessed 2026-09-21). Subscription tier: no per-token price.
+# Toggle on this endpoint was not probed; mirrors the lab and the coding-plan
+# peer: thinking.type = enabled|disabled, no graded effort.
+# Output: the wire accepts max_tokens far above 8M without error (output not
+# separately enforced on this endpoint; bounded by the context window), so the
+# lab's documented 384000 is kept.
+base_model = "deepseek/deepseek-v4-flash"
+
+[[reasoning_options]]
+type = "toggle"
+
+[interleaved]
+field = "reasoning_content"
+
+[limit]
+context = 1_035_000
+
+[cost]
+input = 0
+output = 0
+cache_read = 0

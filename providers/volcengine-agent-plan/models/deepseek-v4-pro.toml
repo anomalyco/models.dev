@@ -1,0 +1,20 @@
+# Agent Plan model name from https://www.volcengine.com/docs/82379/2366394
+# (accessed 2026-09-21). Subscription tier: no per-token price.
+# Toggle on this endpoint was not probed; mirrors the lab and the coding-plan
+# peer: thinking.type = enabled|disabled, no graded effort.
+# Output cap measured via max_tokens rejection: 393216 (docs say 384K).
+base_model = "deepseek/deepseek-v4-pro"
+
+[[reasoning_options]]
+type = "toggle"
+
+[interleaved]
+field = "reasoning_content"
+
+[limit]
+output = 393_216
+
+[cost]
+input = 0
+output = 0
+cache_read = 0
