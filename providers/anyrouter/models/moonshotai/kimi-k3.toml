@@ -1,0 +1,14 @@
+# Host contract (GET /api/v1/models, accessed 2026-09-24): context_length=1048576,
+# input_modalities=[text, image, video]. Params forwarded upstream
+# (docs/features/provider-routing).
+# Toggle: reasoning.enabled = true|false
+# Effort: reasoning_effort = low|high|max (Moonshot lab + OpenRouter peers)
+base_model = "moonshotai/kimi-k3"
+reasoning_options = [
+  { type = "toggle" },
+  { type = "effort", values = ["low", "high", "max"] },
+]
+
+[cost]
+input = 3
+output = 15

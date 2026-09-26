@@ -1,0 +1,15 @@
+# Host contract (GET /api/v1/models, accessed 2026-09-24): context_length=500000,
+# input_modalities=[text, image] (no pdf on this route), supported_parameters=
+# [max_tokens, temperature, top_p, stop, stream]. Flat USD/MTok — AnyRouter does
+# not apply the lab's >200k context tier. Params forwarded upstream, unsupported
+# ones ignored (docs/features/provider-routing).
+# Effort: reasoning_effort = low|medium|high|xhigh (xAI + OpenRouter peers)
+base_model = "xai/grok-4.7"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh"] }]
+
+[cost]
+input = 1.6
+output = 4.8
+
+[modalities]
+input = ["text", "image"]

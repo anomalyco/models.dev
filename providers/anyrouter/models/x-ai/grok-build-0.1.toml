@@ -1,0 +1,13 @@
+# Host contract (GET /api/v1/models, accessed 2026-09-24): context_length=256000,
+# input_modalities=[text, image] (no pdf on this route), supported_parameters=
+# [max_tokens, temperature, top_p, tools, tool_choice, response_format].
+# No reasoning controls on xAI/OpenRouter peers either -> reasoning_options = [].
+base_model = "xai/grok-build-0.1"
+reasoning_options = []
+
+[cost]
+input = 1
+output = 2
+
+[modalities]
+input = ["text", "image"]

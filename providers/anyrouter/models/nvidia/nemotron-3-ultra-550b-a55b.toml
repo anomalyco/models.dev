@@ -1,0 +1,11 @@
+# Host contract (GET /api/v1/models, accessed 2026-09-24): context_length=1000000,
+# input_modalities=[text]. Params forwarded upstream
+# (docs/features/provider-routing).
+# Toggle: reasoning.enabled = true|false (NVIDIA first-party is toggle-only;
+# no effort control on this route)
+base_model = "nvidia/nemotron-3-ultra-550b-a55b"
+reasoning_options = [{ type = "toggle" }]
+
+[cost]
+input = 0.5
+output = 2.5

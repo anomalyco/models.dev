@@ -1,0 +1,9 @@
+name = "AnyRouter"
+env = ["ANYROUTER_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+# OpenAI-compatible gateway (`/chat/completions`, `/messages`, `/responses`).
+# Reasoning controls are model-specific; `supported_parameters` in
+# `GET /api/v1/models` lists which routes accept `reasoning` / `reasoning_effort`.
+# https://anyrouter.dev/api/v1/models (accessed 2026-09-24)
+api = "https://anyrouter.dev/api/v1"
+doc = "https://docs.anyrouter.dev"

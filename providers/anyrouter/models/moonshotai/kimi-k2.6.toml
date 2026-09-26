@@ -1,0 +1,13 @@
+# Host contract (GET /api/v1/models, accessed 2026-09-24): context_length=262144,
+# input_modalities=[text, image] (no video on this route). Params forwarded
+# upstream (docs/features/provider-routing).
+# Toggle: reasoning.enabled = true|false (Moonshot lab + OpenRouter peers)
+base_model = "moonshotai/kimi-k2.6"
+reasoning_options = [{ type = "toggle" }]
+
+[cost]
+input = 0.95
+output = 4
+
+[modalities]
+input = ["text", "image"]

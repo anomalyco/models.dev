@@ -1,0 +1,23 @@
+# Host contract (GET /api/v1/models, accessed 2026-09-24): context_length=1048576,
+# input_modalities=[text, image] (this route accepts image input, unlike the
+# text-only lab default). Params forwarded upstream
+# (docs/features/provider-routing).
+# Toggle: reasoning.enabled = true|false
+# Effort: reasoning_effort = high|xhigh (OpenRouter same-model peer; AnyRouter
+# uses OpenRouter-style reasoning params)
+base_model = "deepseek/deepseek-v4-flash"
+attachment = true
+reasoning_options = [
+  { type = "toggle" },
+  { type = "effort", values = ["high", "xhigh"] },
+]
+
+[cost]
+input = 0.042448
+output = 0.084896
+
+[limit]
+context = 1_048_576
+
+[modalities]
+input = ["text", "image"]

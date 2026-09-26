@@ -1,0 +1,22 @@
+# Preset router across top-usage and stable models; billed at each hop's rate
+# ($0 on free hops), so no fixed cost. https://anyrouter.dev/model/anyrouter/auto
+name = "AnyRouter Auto"
+description = "Router across top-usage and stable models mixing free-tier and credit-billed routes, with health-aware fallback"
+family = "auto"
+release_date = "2026-06-08"
+last_updated = "2026-06-08"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = false
+open_weights = false
+reasoning_options = []
+
+[limit]
+context = 2_000_000
+output = 131_072
+
+[modalities]
+input = ["text"]
+output = ["text"]
