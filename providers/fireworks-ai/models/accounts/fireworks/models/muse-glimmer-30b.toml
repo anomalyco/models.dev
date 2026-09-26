@@ -1,0 +1,22 @@
+# Pricing (Standard $0.35/$0.04/$1.50, Priority $0.525/$0.06/$2.25 per 1M input/cached/output):
+# https://docs.fireworks.ai/serverless/pricing
+# Model path accounts/fireworks/models/muse-glimmer-30b, 131k context, image input, function calling:
+# https://fireworks.ai/models/fireworks/muse-glimmer-30b
+# Effort low|medium|high|xhigh ("selectable reasoning strength (low through xhigh)"):
+# https://fireworks.ai/models/fireworks/muse-glimmer-30b
+# https://fireworks.ai/blog/meta-muse-glimmer ("Reasoning effort ... with low, medium, high, and xhigh available")
+# Peer: https://openrouter.ai/meta/muse-glimmer-30b
+base_model = "meta/muse-glimmer-30b"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high", "xhigh"]
+
+[cost]
+input = 0.35
+output = 1.5
+cache_read = 0.04
+
+[experimental.modes.priority]
+cost = { input = 0.525, output = 2.25, cache_read = 0.06 }
+provider = { body = { service_tier = "priority" } }
