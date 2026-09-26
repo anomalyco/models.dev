@@ -1,0 +1,15 @@
+base_model = "mistral/mistral-small-2506"
+
+structured_output = true
+attachment = true
+
+[cost]
+input = 0.656
+output = 1.75
+cache_read = 0.328
+
+[limit]
+context = 256000
+
+[modalities]
+input = ["image", "text"]
