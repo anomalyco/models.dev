@@ -1,0 +1,9 @@
+# ZeroSignal is a pay-per-use inference network reached through a local proxy
+# (zs-proxy). The proxy serves an OpenAI-compatible API on 127.0.0.1:9376 and does
+# not check the API key: admission comes from the user's wallet, so any non-empty
+# value works. Docs: https://docs.zerosignal.ai/using-the-proxy/connecting-tools
+name = "ZeroSignal"
+npm = "@ai-sdk/openai-compatible"
+env = ["ZEROSIGNAL_API_KEY"]
+api = "http://127.0.0.1:9376/v1"
+doc = "https://docs.zerosignal.ai/using-the-proxy/quick-start"
