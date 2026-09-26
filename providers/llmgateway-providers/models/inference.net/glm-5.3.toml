@@ -1,15 +1,14 @@
 base_model = "zhipuai/glm-5.3"
-name = "GLM-5.3 (Together AI)"
+name = "GLM-5.3 (Inference.net)"
 
 [[reasoning_options]]
 type = "effort"
 values = ["low", "high", "max"]
 
 [cost]
-input = 1.4
-output = 4.4
-cache_read = 0.26
+input = 0.9
+output = 3
+cache_read = 0.15
 
 [limit]
 context = 1_048_576
-output = 943_717
