@@ -3,6 +3,7 @@
 # - https://api.wokey.ai/v1/models (context_length, max_completion_tokens, input_modalities)
 # - https://wokey.ai/models/grok-4.7
 # Reasoning options copied from providers/xai/models/grok-4.7.toml (Wokey relays the upstream API).
+# Pricing is flat per token at every context length: Wokey has no long-context tier or premium.
 # Input modalities narrowed to the list Wokey publishes for this model.
 base_model = "xai/grok-4.7"
 

@@ -3,6 +3,7 @@
 # - https://api.wokey.ai/v1/models (context_length, max_completion_tokens, input_modalities)
 # - https://wokey.ai/models/gpt-5.6-luna
 # Reasoning options copied from providers/openai/models/gpt-5.6-luna.toml (Wokey relays the upstream API).
+# Pricing is flat per token at every context length: Wokey has no long-context tier or premium.
 # Input modalities narrowed to the list Wokey publishes for this model.
 # Request shape: OpenAI Responses API (POST https://api.wokey.ai/v1/responses).
 base_model = "openai/gpt-5.6-luna"

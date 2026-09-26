@@ -3,7 +3,7 @@
 # - https://api.wokey.ai/v1/models (context_length, max_completion_tokens, input_modalities)
 # - https://wokey.ai/models/hy4-preview
 # Reasoning options copied from providers/tencent-tokenhub/models/hy4-preview.toml (Wokey relays the upstream API).
-# Toggle: thinking.type = enabled|disabled
+# Pricing is flat per token at every context length: Wokey has no long-context tier or premium.
 # Effort: reasoning_effort = none|high
 # Off is effort=none, so no separate toggle option (AGENTS.md reasoning options).
 base_model = "tencent/hy4-preview"
