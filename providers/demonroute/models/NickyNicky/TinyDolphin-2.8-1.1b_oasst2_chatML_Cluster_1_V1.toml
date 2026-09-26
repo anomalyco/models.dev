@@ -1,0 +1,24 @@
+# Source: https://demonroute.com/models (live catalog, extracted 2026-09-26).
+# release_date = Hugging Face repo creation date; where unavailable, catalog date is used.
+# limit.output mirrors context: host publishes no separate max-output (repo convention).
+name = "TinyDolphin-2.8-1.1b_oasst2_chatML_Cluster_1_V1"
+description = "Eric Hartford's uncensored line. Compliant, fast, no moralizing."
+attachment = false
+reasoning = false
+tool_call = false
+temperature = true
+release_date = "2024-01-23"
+last_updated = "2026-09-26"
+open_weights = true
+
+[cost]
+input = 0.12
+output = 0.24
+
+[limit]
+context = 4_096
+output = 4_096
+
+[modalities]
+input = ["text"]
+output = ["text"]

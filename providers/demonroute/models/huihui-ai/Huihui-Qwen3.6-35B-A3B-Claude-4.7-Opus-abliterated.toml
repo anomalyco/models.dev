@@ -1,0 +1,24 @@
+# Source: https://demonroute.com/models (live catalog, extracted 2026-09-26).
+# release_date = Hugging Face repo creation date; where unavailable, catalog date is used.
+# limit.output mirrors context: host publishes no separate max-output (repo convention).
+name = "Huihui-Qwen3.6-35B-A3B-Claude-4.7-Opus-abliterated"
+description = "Refusal-trained out, capability left in. The uncensored finetune done properly."
+attachment = false
+reasoning = false
+tool_call = false
+temperature = true
+release_date = "2026-04-21"
+last_updated = "2026-09-26"
+open_weights = true
+
+[cost]
+input = 1.20
+output = 12.00
+
+[limit]
+context = 262_144
+output = 262_144
+
+[modalities]
+input = ["text"]
+output = ["text"]

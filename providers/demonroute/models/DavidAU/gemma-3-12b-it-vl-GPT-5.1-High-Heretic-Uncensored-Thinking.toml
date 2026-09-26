@@ -1,0 +1,24 @@
+# Source: https://demonroute.com/models (live catalog, extracted 2026-09-26).
+# release_date = Hugging Face repo creation date; where unavailable, catalog date is used.
+# limit.output mirrors context: host publishes no separate max-output (repo convention).
+name = "gemma-3-12b-it-vl-GPT-5.1-High-Heretic-Uncensored-Thinking"
+description = "Refusal-trained out, capability left in. The uncensored finetune done properly."
+attachment = false
+reasoning = false
+tool_call = false
+temperature = true
+release_date = "2026-02-10"
+last_updated = "2026-09-26"
+open_weights = true
+
+[cost]
+input = 0.60
+output = 1.80
+
+[limit]
+context = 131_072
+output = 131_072
+
+[modalities]
+input = ["text"]
+output = ["text"]

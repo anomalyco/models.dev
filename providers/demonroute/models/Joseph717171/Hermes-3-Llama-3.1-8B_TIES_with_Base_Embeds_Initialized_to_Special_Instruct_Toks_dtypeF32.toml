@@ -1,0 +1,24 @@
+# Source: https://demonroute.com/models (live catalog, extracted 2026-09-26).
+# release_date = Hugging Face repo creation date; where unavailable, catalog date is used.
+# limit.output mirrors context: host publishes no separate max-output (repo convention).
+name = "Hermes-3-Llama-3.1-8B_TIES_with_Base_Embeds_Initialized_to_Special_Instruct_Toks_dtypeF32"
+description = "Nous Research finetune — steerable, honest, built for long conversations."
+attachment = false
+reasoning = false
+tool_call = false
+temperature = true
+release_date = "2024-10-23"
+last_updated = "2026-09-26"
+open_weights = true
+
+[cost]
+input = 0.60
+output = 0.96
+
+[limit]
+context = 131_072
+output = 131_072
+
+[modalities]
+input = ["text"]
+output = ["text"]

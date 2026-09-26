@@ -1,0 +1,24 @@
+# Source: https://demonroute.com/models (live catalog, extracted 2026-09-26).
+# release_date = Hugging Face repo creation date; where unavailable, catalog date is used.
+# limit.output mirrors context: host publishes no separate max-output (repo convention).
+name = "Qwen2.5-0.5B-Instruct-Gensyn-Swarm-freckled_bristly_dolphin"
+description = "Eric Hartford's uncensored line. Compliant, fast, no moralizing."
+attachment = false
+reasoning = false
+tool_call = false
+temperature = true
+release_date = "2025-04-16"
+last_updated = "2026-09-26"
+open_weights = true
+
+[cost]
+input = 0.12
+output = 0.24
+
+[limit]
+context = 32_768
+output = 32_768
+
+[modalities]
+input = ["text"]
+output = ["text"]
