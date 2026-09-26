@@ -1,0 +1,20 @@
+# TokenBay lists Luna at $1/$6/$0.10 before its 15% discount, rather than the
+# current OpenAI lab list; its public catalog exposes no cache-write SKU.
+# https://www.tokenbay.com/models (accessed 2026-08-12)
+base_model = "openai/gpt-5.6-luna"
+reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh", "max"] }]
+
+[cost]
+input = 0.85
+output = 5.10
+cache_read = 0.085
+
+[[cost.tiers]]
+tier = { type = "context", size = 272_000 }
+input = 1.70
+output = 7.65
+cache_read = 0.17
+
+[provider]
+npm = "@ai-sdk/openai"
+api = "https://api.tokenbay.com/v1"
