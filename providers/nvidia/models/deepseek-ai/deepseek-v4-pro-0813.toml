@@ -1,3 +1,4 @@
+# NVIDIA API: HTTP 410 Gone — end of life 2026-09-14T08:00:00Z (probed 2026-09-26 against integrate.api.nvidia.com)
 # NIM Chat schema: `reasoning_effort = none|high|max`; `none` disables thinking.
 # https://build.nvidia.com/deepseek-ai/deepseek-v4-pro-0813
 #
@@ -5,6 +6,7 @@
 # list rate is published for this ID. Source: this model's catalog card,
 # https://build.nvidia.com/deepseek-ai/deepseek-v4-pro-0813 (governed by the
 # NVIDIA API Trial Terms of Service).
+status = "deprecated"
 base_model = "deepseek/deepseek-v4-pro-0813"
 
 reasoning_options = [{ type = "effort", values = ["none", "high", "max"] }]
