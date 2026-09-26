@@ -1,0 +1,26 @@
+# Sources (accessed 2026-09-25):
+# - https://api.wokey.ai/v1/models/pricing (public, no key; id "deepseek-flash"; pricing_mode dynamic_discount)
+# - https://api.wokey.ai/v1/models (context_length, max_completion_tokens, input_modalities)
+# - https://wokey.ai/models/deepseek-flash
+# Reasoning options copied from providers/deepseek/models/deepseek-v4-flash.toml (Wokey relays the upstream API).
+# Time-of-day pricing: cost below is the peak price (UTC 01:00-04:00, 06:00-10:00).
+# Off-peak: input 0.112, output 0.448, cache_read 0.00224 USD/MTok.
+# Pricing is flat per token at every context length: Wokey has no long-context tier or premium.
+# Toggle: thinking.type = enabled|disabled
+# Effort: reasoning_effort = low|high|max
+# low is a distinct level since the V4 GA announcement ("low for simple tasks, high for
+# daily Agent workflows, max for complex tasks"): https://api-docs.deepseek.com/news/news260813/
+# (accessed 2026-09-26). Wokey forwards thinking and reasoning_effort to DeepSeek unchanged.
+base_model = "deepseek/deepseek-v4.1-flash"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[cost]
+input = 0.224
+output = 0.896
+cache_read = 0.00448
