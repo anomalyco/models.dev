@@ -1,0 +1,28 @@
+# Sources:
+# https://docs.cohere.com/docs/models
+# https://docs.cohere.com/v2/docs/transcribe
+# https://docs.cohere.com/v2/reference/create-audio-transcription
+# https://cohere.com/blog/transcribe
+# https://huggingface.co/CohereLabs/cohere-transcribe-03-2026
+name = "Cohere Transcribe"
+description = "Open-source 2B multilingual automatic speech recognition model for audio-to-text transcription"
+release_date = "2026-03-26"
+last_updated = "2026-03-26"
+attachment = false
+reasoning = false
+temperature = true
+tool_call = false
+open_weights = true
+license = "Apache-2.0"
+
+[limit]
+context = 0
+output = 0
+
+[modalities]
+input = ["audio"]
+output = ["text"]
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/CohereLabs/cohere-transcribe-03-2026"
