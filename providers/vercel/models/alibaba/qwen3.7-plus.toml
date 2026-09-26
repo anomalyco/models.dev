@@ -11,7 +11,8 @@ base_model = "alibaba/qwen3.7-plus"
 name = "Qwen 3.7 Plus"
 
 [[reasoning_options]]
-type = "toggle"
+type = "effort"
+values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"]
 
 [[reasoning_options]]
 type = "budget_tokens"
@@ -23,6 +24,13 @@ input = 0.4
 output = 1.6
 cache_read = 0.08
 cache_write = 0.5
+
+[[cost.tiers]]
+tier = { type = "context", size = 256_000 }
+input = 1.2
+output = 4.8
+cache_read = 0.24
+cache_write = 1.5
 
 [modalities]
 input = ["text", "image", "pdf"]

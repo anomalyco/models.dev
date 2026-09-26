@@ -1,0 +1,28 @@
+name = "GLM 5.3 Flash Cybersecurity"
+description = "GLM 5.3 Flash Cybersecurity is a cybersecurity-focused variant based on the uncensored model, with provider moderation for illegal activities. It supports always-on reasoning, image understanding, tool calling, and a 1,048,576-token context window."
+family = "glm"
+release_date = "2026-09-19"
+last_updated = "2026-09-19"
+attachment = true
+reasoning = true
+tool_call = true
+structured_output = false
+open_weights = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[cost]
+input = 0.15
+output = 0.5
+cache_read = 0.075
+
+[limit]
+context = 1_048_576
+input = 1_048_576
+output = 32_768
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

@@ -1,3 +1,4 @@
+# Scores and methodology: https://huggingface.co/inclusionAI/Ling-3.0-flash-Fin/blob/main/assets/ling-3.0-flash-fin-evaluation.png
 # https://novita.ai/models/model-detail/inclusionai-ling-3.0-flash-fin
 # https://openrouter.ai/api/v1/models/inclusionai/ling-3.0-flash-fin:free/endpoints
 # https://vercel.com/changelog/ling-3-0-flash-fin-now-available-on-ai-gateway-for-free
@@ -18,3 +19,76 @@ output = 32_768
 [modalities]
 input = ["text"]
 output = ["text"]
+
+[[benchmarks]]
+name = "FinFIRST"
+score = 52.85
+metric = "score"
+variant = "highest reasoning effort"
+harness = "ReAct with web search, visit, and Python"
+source = "https://huggingface.co/inclusionAI/Ling-3.0-flash-Fin"
+
+[[benchmarks]]
+name = "FinSearchComp Verified"
+score = 77.04
+metric = "score"
+variant = "highest reasoning effort"
+harness = "ReAct with web search, visit, and Python"
+dataset = "expert-validated internal set"
+source = "https://huggingface.co/inclusionAI/Ling-3.0-flash-Fin"
+
+[[benchmarks]]
+name = "FinCRAFT"
+score = 51.74
+metric = "score"
+variant = "highest reasoning effort"
+dataset = "internal"
+source = "https://huggingface.co/inclusionAI/Ling-3.0-flash-Fin"
+
+[[benchmarks]]
+name = "Finance Agent"
+score = 69.19
+metric = "strict-pass"
+variant = "highest reasoning effort; 10 runs"
+version = "1.1"
+source = "https://huggingface.co/inclusionAI/Ling-3.0-flash-Fin"
+
+[[benchmarks]]
+name = "Finance Agent"
+score = 59.81
+metric = "strict-pass"
+variant = "highest reasoning effort; 20 runs"
+version = "2"
+source = "https://huggingface.co/inclusionAI/Ling-3.0-flash-Fin"
+
+[[benchmarks]]
+name = "APEX-Agents"
+score = 29.17
+metric = "score"
+variant = "highest reasoning effort"
+source = "https://huggingface.co/inclusionAI/Ling-3.0-flash-Fin"
+
+[[benchmarks]]
+name = "SpreadsheetBench"
+score = 86.5
+metric = "score"
+variant = "highest reasoning effort; temperature=0.6; 120 turns; 3h timeout"
+version = "1"
+harness = "Claude Code 2.1.173"
+source = "https://huggingface.co/inclusionAI/Ling-3.0-flash-Fin"
+
+[[benchmarks]]
+name = "SpreadsheetBench"
+score = 21.81
+metric = "score"
+variant = "highest reasoning effort; temperature=0.6; 300 turns; 3h timeout"
+version = "2"
+harness = "Claude Code 2.1.173"
+source = "https://huggingface.co/inclusionAI/Ling-3.0-flash-Fin"
+
+[[benchmarks]]
+name = "tau3-bench"
+score = 41
+metric = "score"
+variant = "highest reasoning effort; banking"
+source = "https://huggingface.co/inclusionAI/Ling-3.0-flash-Fin"

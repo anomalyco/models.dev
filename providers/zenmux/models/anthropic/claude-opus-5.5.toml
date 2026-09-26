@@ -1,0 +1,18 @@
+# Effort: reasoning_effort = low|medium|high|xhigh|max
+# Source: https://zenmux.ai/api/frontend/model/listByFilter (accessed 2026-09-25)
+# https://zenmux.ai/docs/api/anthropic/anthropic-list-models.html
+base_model = "anthropic/claude-opus-5-5"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high", "xhigh", "max"]
+
+[cost]
+input = 4
+output = 20
+cache_read = 0.2
+cache_write = 5
+
+[provider]
+npm = "@ai-sdk/anthropic"
+api = "https://zenmux.ai/api/anthropic/v1"

@@ -1,0 +1,31 @@
+# Toggle: thinking.type = enabled|disabled
+# Sources: https://mimo.mi.com/models/zh-CN/mimo-v2.6-pro-ultraspeed and https://mimo.mi.com/docs/zh-CN/api/chat/openai-api
+name = "MiMo-V2.6-Pro-UltraSpeed"
+description = "MiMo pro model for strong multimodal reasoning and agent execution"
+family = "mimo"
+release_date = "2026-09-21"
+last_updated = "2026-09-21"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+open_weights = true
+
+[[reasoning_options]]
+type = "toggle"
+
+[cost]
+input = 4.35
+output = 8.7
+cache_read = 0.036
+
+[limit]
+context = 1_048_576
+output = 131_072
+
+[modalities]
+input = ["text", "image", "audio", "video"]
+output = ["text"]
+
+[interleaved]
+field = "reasoning_content"

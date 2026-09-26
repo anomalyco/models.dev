@@ -1,11 +1,11 @@
 base_model = "openai/gpt-oss-120b"
-tool_call = false
-structured_output = false
+name = "GPT OSS 120B (FlexAI)"
 
 [[reasoning_options]]
 type = "effort"
 values = ["low", "medium", "high"]
 
 [cost]
-input = 0.039
-output = 0.1
+input = 0.03
+output = 0.17
+cache_read = 0.0045

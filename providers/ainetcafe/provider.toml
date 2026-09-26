@@ -1,0 +1,11 @@
+# ainetcafe serves Kimi K3 from its own cluster (native MXFP4 weights).
+# OpenAI Chat: POST https://microquickjs.com/v1/chat/completions
+# Anthropic Messages: POST https://microquickjs.com/v1/messages
+# Reasoning is always on for Kimi-K3 (reasoning_content is returned; thinking.type = "disabled"
+# is accepted but ignored). Depth is set with top-level reasoning_effort = low|high|max.
+# Docs: https://ainetcafe.com/k3/guides/
+name = "ainetcafe"
+env = ["AINETCAFE_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+api = "https://microquickjs.com/v1"
+doc = "https://ainetcafe.com/k3/guides/"

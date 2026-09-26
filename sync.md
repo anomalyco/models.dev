@@ -9,6 +9,7 @@ The grouped sync targets are available for local convenience, but CI syncs each 
 ## Commands
 
 - `bun models:sync aggregators` syncs every provider in the `aggregators` group.
+- `bun models:sync aiand` syncs only ai&.
 - `bun models:sync openrouter` syncs only OpenRouter.
 - `bun models:sync cloudflare-workers-ai` syncs only Cloudflare Workers AI.
 - `bun models:sync cloudflare-ai-gateway` syncs only Cloudflare AI Gateway's proxied catalog.
@@ -20,6 +21,7 @@ The grouped sync targets are available for local convenience, but CI syncs each 
 - `bun models:sync kilo` syncs only Kilo.
 - `bun models:sync merge-gateway` syncs only Merge Gateway.
 - `bun models:sync openai` syncs only OpenAI catalog availability.
+- `bun models:sync ollama-cloud` syncs Ollama Cloud catalog availability.
 - `bun models:sync github-copilot` syncs only GitHub Copilot pricing.
 - `bun models:sync tinfoil` syncs only Tinfoil.
 - `bun models:sync aggregators --dry-run` prints changes without writing model files.
@@ -45,6 +47,7 @@ Sync runs also write `.sync/model-sync-report.md` for the automation workflow PR
 - Removes existing files that are no longer present in the desired synced set.
 - Writes `.sync/model-sync-report.md` for GitHub Actions.
 - When `skipCreates` is set and issue opens are enabled, opens one deduped GitHub issue per remote model missing from the local catalog (via `gh`).
+- When a provider selectively skips only some models, `missingModelID` can preserve existing metadata and mark those skips for the same deduped issue flow without disabling safe automatic creates.
 
 Because the runner removes files missing from the desired set, a provider module should only skip source models when deleting existing local files for those skipped IDs is intentional.
 
@@ -58,11 +61,17 @@ Providers that cannot safely auto-create TOMLs set `skipCreates: true`. In GitHu
 4. Dispatches the Issue Fixer explicitly so issues created with `GITHUB_TOKEN` can still produce PRs
 5. If listing fails, creates nothing (fail closed)
 
+Every six hours, a recovery workflow checks the oldest open issues with all three automation labels. It redispatches up to three issues that are at least one hour old and have no closing pull request, so a missed or failed Issue Fixer run does not leave them stranded. The one-hour delay keeps the recovery run from racing the initial dispatch.
+
+Providers that can auto-create most models may instead return an ID from `missingModelID` only for `translateModel` skips that need manual metadata. The runner preserves an existing local entry for that ID while the issue is handled. Intentional skips return `undefined` and do not open issues.
+
 Requires `GH_TOKEN` on the sync workflow step. Local runs are notice-only unless `--open-issues`. Use `--no-issues` / `--dry-run` to skip creates. Each newly opened issue explicitly dispatches the issue-fixer workflow so an agent can research the missing metadata and open a model PR.
 
 The first Actions run may open a batch of issues per provider, including remote IDs the catalog intentionally omits (e.g. OpenAI whisper/tts/moderation surfaces, dated snapshots). This one-time volume is accepted by design: close unwanted issues once and the closed-title dedupe suppresses them permanently. If the dedupe list window (1000 labeled issues per provider) ever fills, the sync fails closed and creates nothing rather than risk duplicates.
 
 Pioneer and Ofox track remote-only chat models as missing-model issues. Their APIs are not authoritative enough to create complete TOMLs directly, so the issue-fixer agent researches the missing canonical and provider-specific metadata before opening a PR.
+
+Ollama Cloud tracks every remote-only ID from its public `/v1/models` endpoint as a missing-model issue. Existing provider TOMLs and entries absent from the endpoint are preserved because the inventory does not provide enough metadata to author complete entries or determine removals safely.
 
 OpenAI also sets `trackMissingModels: false`: `/v1/models` is scoped to the automation account and mixes public models with legacy, internal experiment, dated snapshot, and non-catalog IDs without lifecycle metadata. Existing OpenAI TOMLs are still preserved by the availability sync.
 
@@ -144,6 +153,8 @@ Actions are pinned by commit SHA. Keep new workflow actions pinned the same way.
 ## Eden AI Notes
 
 - Source endpoint: `https://api.edenai.run/v3/models`; no authentication required.
+- Latest aliases (`alias_of` plus an ID ending in `-latest`) get a distinct display name such as `Claude Fable Latest (Claude Fable 5.1)` so they do not collide with the versioned target in UIs that key on `name`. Case-only `alias_of` duplicates are not treated as latest aliases.
+- Extra labels (current target, host, region) share one parenthetical, e.g. `Gemini Flash Latest (Gemini 3.8 Flash, Vertex AI)` and `GPT OSS 120B (Deep Infra)`. The lab's own API keeps the unsuffixed canonical name; other hosts (Vertex AI, Deep Infra, Groq, Together AI, …) are named.
 - Reasoning effort options are derived from the lab's provider entry or OpenRouter. A toggle-only or budget-only control is not an effort list; do not invent effort levels.
 - When the effort mapper cannot resolve controls, preserve the existing route's authored `reasoning_options` while syncing other authoritative fields. Do not replace authored toggle, effort, or budget controls with `[]`.
 - New reasoning models with neither a resolved mapping nor authored controls remain skipped for manual authoring. No empty placeholder is generated, so the normal auto-merge policy remains unchanged; legitimate always-on `[]` entries are not blanket-blocked.
@@ -221,7 +232,7 @@ Google is implemented in `packages/core/src/sync/providers/google.ts`.
 - Source endpoint: `https://generativelanguage.googleapis.com/v1beta/models`.
 - Required auth: `GOOGLE_API_KEY`, `GEMINI_API_KEY`, or `GOOGLE_GENERATIVE_AI_API_KEY`.
 - Model IDs are derived from the `models/{model}` resource names.
-- The API is authoritative for display names, token limits, temperature metadata, and the `thinking` flag when present.
+- The API is authoritative for display names, temperature metadata, and the `thinking` flag when present. Token limits normally come from the API, except Gemini 2.5 Computer Use, Gemini 3 Pro Image, and two Gemini 3.1 Flash Image variants whose model-specific cards document different limits.
 - Local Google models missing from the API response are removed.
 - New Google API models are not created automatically (`skipCreates`) and do not open missing-model issues because the endpoint is not lifecycle-authoritative.
 - Missing-model tracking is limited to recognizable public model families; opaque API codenames such as `ajax`, `perseus`, and `thorin` are ignored.
@@ -234,6 +245,7 @@ GitHub Copilot is implemented in `packages/core/src/sync/providers/github-copilo
 - The YML contains only token rates, so the sync only updates `[cost]`: `input`, `cached_input` (as `cache_read`), `cache_write`, `output`, and long-context rows as `cost.tiers`.
 - Display names are converted to file IDs, with minimal special case logic to match existing model entries.
 - Unmatched rows open missing-model issues, and local entries missing from the source are kept.
+- When removing a fully retired Copilot model, add its pricing-table slug to `IGNORED_ROWS` so stale pricing rows cannot trigger translation or missing-model issues. Models still served to some subscribers (such as Sonnet 4.6 on annual plans) remain eligible.
 
 ## xAI Notes
 
@@ -286,6 +298,18 @@ OVHcloud AI Endpoints is implemented in `packages/core/src/sync/providers/ovhclo
 - `attachment` is derived from non-text `input_modalities`, and `open_weights` from the presence of `hugging_face_id`.
 - `release_date`/`last_updated` default to the catalog `created` timestamp but preserve any existing hand-authored dates; `knowledge`, `family`, `status`, `interleaved`, and `limit.input` are preserved when present.
 
+## Fireworks AI Notes
+
+Fireworks AI is implemented in `packages/core/src/sync/providers/fireworks-ai.ts`.
+
+- Run it with `bun models:sync fireworks-ai` or `bun fireworks:sync`.
+- Source endpoint: `https://api.fireworks.ai/v1/serverless/models`; required auth: `FIREWORKS_API_KEY`.
+- The serverless catalog exposes one row per serving mode with live per-million-token pricing, invocation identifiers, aliases, advertised context length, and input/output modalities.
+- Standard rows update base-model IDs. Fast and other alternate-resource rows update the model or router named by `usage_identifier`; their aliases are tracked as additional invocation IDs. Standard-path aliases inherit the base model's flag modes. Flag-only modes such as Priority become priced `experimental.modes` with the required request-body `service_tier` instead of duplicate catalog IDs. A priority-only model remains discoverable with that service-tier recipe on its base ID.
+- New text/vision invocation IDs are reported but not created automatically because the endpoint does not yet provide output limits, reasoning controls, tool support, or open-weight status. Embedding/reranking rows are ignored because the catalog provider entries describe generation models.
+- Pricing and modalities come from the matching serverless serving mode; complete API pricing can seed an existing model whose authored TOML has no cost. Existing exact context caps smaller than the advertised API value are preserved, while a lower API ceiling is applied. Authored output limits, reasoning options, tool support, and other metadata not exposed by the endpoint are preserved.
+- Models absent from the serverless response are retained for manual lifecycle review.
+
 ## DigitalOcean Notes
 
 - DigitalOcean is implemented in `packages/core/src/sync/providers/digitalocean.ts`.
@@ -297,6 +321,8 @@ OVHcloud AI Endpoints is implemented in `packages/core/src/sync/providers/ovhclo
 ## Vercel Status
 
 Vercel is intentionally not wired into `bun models:sync` right now. Keep using the existing `vercel:generate` script until Vercel sync behavior is redesigned and reviewed separately.
+
+`vercel:generate` reads `reasoning_options` from the public Vercel AI Gateway `/v1/models` catalog when present. It removes a redundant toggle if effort includes `none`, retains authored controls when catalog controls are absent or unrecognized, and treats an explicit empty list as no caller controls. This does not change the Vercel scheduling policy above.
 
 Do not add Vercel model changes to OpenRouter sync PRs.
 
@@ -338,3 +364,15 @@ Venice is implemented in `packages/core/src/sync/providers/venice.ts`.
 ## Standalone Generators
 
 Some provider scripts in `packages/core/script/generate-*.ts` are not wired into `bun models:sync`. When updating those scripts, preserve existing `base_model` and `base_model_omit` fields for generated TOMLs that already use model metadata inheritance. New inheritance-aware output should use `base_model`; do not reintroduce legacy `[extends]` syntax.
+
+## ai& Notes
+
+- Endpoint: `GET https://api.aiand.com/v1/api.json` (public, no auth). The module reads the `aiand` provider entry; `AIAND_API_URL` overrides the endpoint for staging dry runs.
+- The feed publishes this repo's `api.json` shape, so translation is near-identity. The feed is authoritative for prices (including `cache_read`), limits, capability flags, modalities, gateway-enforced `reasoning_options`, and `deprecated` status; the `aiand` entry lists only models whose catalog metadata is complete.
+- Curated values win for `name`, `description`, `knowledge`, `release_date`, and `last_updated` — the feed's `last_updated` tracks catalog-row edits, not model revisions, and release dates are lab metadata the gateway is not authoritative for. A curated alpha/beta `status` survives a feed that omits one; a curated `deprecated` does not, since the feed owns deprecation and absence means active.
+- On base-factored files, lab-owned fields (`name`, `description`, `family`, `release_date`, `last_updated`, `knowledge`, `open_weights`) are never asserted from the feed: they appear only as deltas the authored TOML already carried on top of its `base_model` (read via `context.authored()`, never the base-resolved merge), so a full-inline file being factored for the first time — or a new file — inherits the lab entry outright. A new feed id resolves its `base_model` by normalized match against `models/` and is skipped with a report notice when nothing resolves — an unfactored full definition is never created. An empty feed fails the run rather than deleting the local catalog.
+- `family` passes through `ModelFamily.safeParse` and is omitted when unknown.
+- A skipped new id is returned from `missingModelID` (the only skip is "no lab base yet"), so the runner preserves any existing local entry and opens a deduped missing-model issue for the lab metadata.
+- `preserveDescriptions` is off: the runner must not re-inject a pre-factor authored description when the translator leaves it unset, or a full-inline → factored transition would recreate a lab-identical override. Created files get a leading header from `translateModel` naming the single reasoning wire path (`reasoning_effort`, "none" = off). `toggle` and `budget_tokens` controls are parsed (so a feed that publishes one never aborts the run) but never written, from feed or authored file: ai& has no separate on/off or token-budget field, so they cannot be true of this host.
+- `interleaved` comes from the feed when published, else the authored value, else `{ field = "reasoning_content" }` for reasoners — every ai& reasoner streams thinking in `message.reasoning_content`, so a new reasoner is never created without its side channel.
+- A reasoner never gets an invented `[]`: an omitted feed list keeps the authored controls, and a non-empty list whose effort values the schema doesn't know yet does too; when neither yields a schema-valid set the model fails with `MissingReasoningOptionsError` — the runner preserves the local file and routes the id to the missing-model issue flow. Only an explicit `[]` published by the feed is written as "no caller control".

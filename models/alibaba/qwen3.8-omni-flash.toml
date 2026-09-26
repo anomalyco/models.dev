@@ -1,0 +1,20 @@
+# Sources (accessed 2026-09-18):
+# https://www.alibabacloud.com/help/en/model-studio/qwen3-8-omni-flash
+# https://www.alibabacloud.com/help/en/model-studio/qwen-omni
+name = "Qwen3.8 Omni Flash"
+description = "Qwen omni model for text, vision, audio, and multimodal agent tasks"
+family = "qwen"
+release_date = "2026-09-17"
+last_updated = "2026-09-17"
+attachment = true
+reasoning = true
+tool_call = true
+open_weights = false
+
+[limit]
+context = 1_000_000
+output = 131_072
+
+[modalities]
+input = ["text", "image", "audio", "video"]
+output = ["text"]

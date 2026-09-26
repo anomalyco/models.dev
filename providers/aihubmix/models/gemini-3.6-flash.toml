@@ -1,0 +1,14 @@
+# Effort: minimal|low|medium|high
+# $.reasoning_effort on /v1/chat/completions (alias $.reasoning.effort, which is also the Responses field);
+# $.output_config.effort on /v1/messages, subject to model support.
+# https://docs.aihubmix.com/cn/api/unified-inference
+base_model = "google/gemini-3.6-flash"
+
+[[reasoning_options]]
+type = "effort"
+values = ["minimal", "low", "medium", "high"]
+
+[cost]
+input = 1.5
+output = 7.5
+cache_read = 0.15

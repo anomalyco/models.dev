@@ -1,0 +1,13 @@
+# Reasoning is always enabled on this route; no caller toggle is exposed.
+# Source: https://zenmux.ai/api/frontend/model/listByFilter (accessed 2026-09-25)
+base_model = "moonshotai/kimi-k2.7-code"
+name = "Kimi K2.7 Code HighSpeed"
+reasoning_options = []
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 1.9
+output = 8
+cache_read = 0.38

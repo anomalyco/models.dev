@@ -1,6 +1,7 @@
 base_model = "stepfun/step-3.7-flash"
 base_model_omit = ["limit.input"]
-structured_output = false
+name = "Step 3.7 Flash (Deep Infra)"
+structured_output = true
 
 [[reasoning_options]]
 type = "effort"

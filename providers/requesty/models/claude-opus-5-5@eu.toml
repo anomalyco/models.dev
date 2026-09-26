@@ -1,0 +1,16 @@
+base_model = "anthropic/claude-opus-5-5"
+name = "Claude Opus 5.5 (EU)"
+structured_output = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "max"]
+
+[[reasoning_options]]
+type = "budget_tokens"
+
+[cost]
+input = 4.4
+output = 22
+cache_read = 0.22
+cache_write = 5.5

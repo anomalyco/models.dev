@@ -1,0 +1,11 @@
+base_model = "alibaba/qwen3.8-27b"
+# Thinking is always on; reasoning_effort low|medium|xhigh (default xhigh).
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "xhigh"]
+
+[cost]
+input = 0.4
+output = 2.4
+cache_read = 0.1

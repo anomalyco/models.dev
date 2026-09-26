@@ -1,3 +1,6 @@
+# https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-xai-grok-4-3.html
+# Mantle Responses only for this catalog route; US Standard pricing.
+# Effort: reasoning.effort = none|low|medium|high.
 base_model = "xai/grok-4.3"
 reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high"] }]
 last_updated = "2026-06-28"
@@ -8,7 +11,6 @@ output = 2.50
 cache_read = 0.20
 
 [limit]
-context = 1_000_000
 output = 131_072
 
 [modalities]

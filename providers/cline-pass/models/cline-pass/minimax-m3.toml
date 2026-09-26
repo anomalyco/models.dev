@@ -1,5 +1,8 @@
+# https://docs.cline.bot/getting-started/clinepass
+# Lab MiniMax-M3: thinking on/off only (providers/minimax/models/MiniMax-M3.toml)
+# Toggle: thinking / reasoning enabled|disabled (no graded effort on lab)
 base_model = "minimax/MiniMax-M3"
-reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh"] }]
+reasoning_options = [{ type = "toggle" }]
 
 [cost]
 input = 0.3

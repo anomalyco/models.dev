@@ -1,0 +1,25 @@
+# Verified 2026-09-18 against https://api.kimi.ai/coding/v1/chat/completions
+# with kimi-code OAuth credentials; reasoning returned via reasoning_content.
+# Toggle: thinking.type = "enabled" | "disabled" | "adaptive"
+# Effort: output_config.effort = "low" | "high" | "max" (default: "max")
+base_model = "moonshotai/kimi-k2.8-preview"
+name = "kimi-for-coding"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[cost]
+input = 0
+output = 0
+cache_read = 0
+cache_write = 0
+
+[limit]
+output = 32_768
+
+[interleaved]
+field = "reasoning_content"

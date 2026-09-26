@@ -1,5 +1,8 @@
+# https://docs.cline.bot/getting-started/clinepass
+# Lab Xiaomi MiMo-V2.5: thinking on/off only (providers/xiaomi/models/mimo-v2.5.toml)
+# Toggle: thinking / reasoning enabled|disabled (no graded effort on lab)
 base_model = "xiaomi/mimo-v2.5"
-reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh"] }]
+reasoning_options = [{ type = "toggle" }]
 
 [cost]
 input = 0.14

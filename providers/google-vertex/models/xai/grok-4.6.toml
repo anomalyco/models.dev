@@ -1,0 +1,25 @@
+# Sources:
+# - https://docs.cloud.google.com/vertex-ai/generative-ai/docs/partner-models/grok/grok-4-6
+# - https://docs.cloud.google.com/vertex-ai/generative-ai/docs/partner-models/grok/capabilities/reasoning
+# - https://cloud.google.com/gemini-enterprise-agent-platform/generative-ai/pricing
+base_model = "xai/grok-4.6"
+reasoning_options = []
+status = "beta"
+
+[cost]
+input = 2
+output = 6
+cache_read = 0.5
+
+[[cost.tiers]]
+tier = { type = "context", size = 200_000 }
+input = 4
+output = 12
+cache_read = 1
+
+[limit]
+context = 524_288
+
+[provider]
+npm = "@ai-sdk/openai-compatible"
+api = "https://${GOOGLE_VERTEX_ENDPOINT}/v1/projects/${GOOGLE_VERTEX_PROJECT}/locations/${GOOGLE_VERTEX_LOCATION}/endpoints/openapi"

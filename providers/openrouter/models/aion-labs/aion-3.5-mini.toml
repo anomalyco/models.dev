@@ -1,0 +1,27 @@
+name = "Aion 3.5 Mini"
+description = "Efficient model for low-latency assistance, extraction, and routine automation"
+release_date = "2026-09-23"
+last_updated = "2026-09-23"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = false
+open_weights = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[cost]
+input = 0.7
+output = 1.4
+cache_read = 0.18
+
+[limit]
+context = 262_144
+output = 32_768
+
+[modalities]
+input = ["text"]
+output = ["text"]

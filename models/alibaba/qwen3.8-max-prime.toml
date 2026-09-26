@@ -1,0 +1,25 @@
+# Sources (accessed 2026-09-24):
+# https://vercel.com/ai-gateway/models/qwen3.8-max-prime
+# https://openrouter.ai/qwen/qwen3.8-max-prime
+# High-throughput Alibaba Qwen3.8 Max SKU; OpenRouter lists video input in
+# addition to the text and image input exposed by Vercel's gateway.
+
+name = "Qwen 3.8 Max Prime"
+description = "High-throughput edition of Qwen3.8 Max for coding, professional work, multimodal understanding, and long-running agent workflows"
+family = "qwen3.8-max"
+release_date = "2026-09-23"
+last_updated = "2026-09-23"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[limit]
+context = 1_000_000
+output = 131_072
+
+[modalities]
+input = ["text", "image", "video"]
+output = ["text"]

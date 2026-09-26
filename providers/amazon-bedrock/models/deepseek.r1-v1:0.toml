@@ -1,24 +1,14 @@
-name = "DeepSeek-R1"
-description = "DeepSeek reasoning model for multi-step analysis, math, coding, and tools"
-family = "deepseek-thinking"
-release_date = "2025-01-20"
-last_updated = "2025-05-29"
-attachment = false
-reasoning = true
+# https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-deepseek-deepseek-r1.html
+# https://docs.aws.amazon.com/bedrock/latest/userguide/model-parameters-deepseek.html
+# Runtime accepts 32,768 output tokens; 8,192 is the quality recommendation.
+# R1 has always-on reasoning and no reasoning toggle, effort, or budget parameter.
+# US Standard pricing; use the us.deepseek.r1-v1:0 profile for on-demand Converse.
+# Live US profile (us-east-1, 2026-09-09): toolConfig rejected with HTTP 400,
+# "This model doesn't support tool use." with AUTO or omitted toolChoice.
+base_model = "deepseek/deepseek-r1"
 reasoning_options = []
-temperature = true
-knowledge = "2024-07"
-tool_call = true
-open_weights = false
+tool_call = false
 
 [cost]
 input = 1.35
 output = 5.4
-
-[limit]
-context = 128_000
-output = 32_768
-
-[modalities]
-input = ["text"]
-output = ["text"]

@@ -1,14 +1,7 @@
+base_model = "meta/llama-3.1-70b-instruct"
 name = "Llama 3.1 70B"
 description = "Efficient conversational model optimized for responsive multilingual chatbot interactions."
-family = "llama"
-release_date = "2024-07-23"
-last_updated = "2024-07-23"
-attachment = false
-reasoning = false
-temperature = true
-tool_call = true
 structured_output = true
-open_weights = true
 
 [cost]
 input = 0.8
@@ -18,7 +11,3 @@ cache_read = 0.8
 [limit]
 context = 131_072
 output = 131_072
-
-[modalities]
-input = ["text"]
-output = ["text"]

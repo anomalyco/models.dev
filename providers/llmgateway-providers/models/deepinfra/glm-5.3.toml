@@ -1,0 +1,14 @@
+base_model = "zhipuai/glm-5.3"
+name = "GLM-5.3 (DeepInfra)"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "high", "max"]
+
+[cost]
+input = 1.2
+output = 4
+cache_read = 0.2
+
+[limit]
+context = 1_048_576

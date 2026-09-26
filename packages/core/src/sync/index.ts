@@ -5,6 +5,8 @@ import { z } from "zod";
 
 import { AuthoredModel, AuthoredModelShape, ModelMetadata } from "../schema.js";
 import { openMissingModelIssues } from "./missing-issues.js";
+import { MissingReasoningOptionsError } from "./missing-reasoning-options.js";
+import { aiand } from "./providers/aiand.js";
 import { ambient } from "./providers/ambient.js";
 import { anthropic } from "./providers/anthropic.js";
 import { baseten } from "./providers/baseten.js";
@@ -17,6 +19,8 @@ import { deepinfra } from "./providers/deepinfra.js";
 import { digitalocean } from "./providers/digitalocean.js";
 import { edenai } from "./providers/edenai.js";
 import { empiriolabs } from "./providers/empiriolabs.js";
+import { fireworksAi } from "./providers/fireworks-ai.js";
+import { friendli } from "./providers/friendli.js";
 import { githubCopilot } from "./providers/github-copilot.js";
 import { google } from "./providers/google.js";
 import { hyper } from "./providers/hyper.js";
@@ -27,6 +31,7 @@ import { llmgateway, llmgatewayProviders } from "./providers/llmgateway.js";
 import { mergeGateway } from "./providers/merge-gateway.js";
 import { meta } from "./providers/meta.js";
 import { nanoGpt } from "./providers/nano-gpt.js";
+import { ollamaCloud } from "./providers/ollama-cloud.js";
 import { openai } from "./providers/openai.js";
 import { ofox } from "./providers/ofox.js";
 import { openrouter } from "./providers/openrouter.js";
@@ -95,6 +100,12 @@ export interface SyncProvider<SourceModel> {
    * undefined to skip silently (no notice, no missing-model issue).
    */
   sourceID?(model: SourceModel): string | undefined;
+  /**
+   * Return the ID when a source model skipped by translateModel needs a
+   * missing-model issue. Existing local metadata for that ID is preserved.
+   * Return undefined for intentional skips.
+   */
+  missingModelID?(model: SourceModel): string | undefined;
   skippedNotice?(ids: string[]): string[];
   fetchModels(): Promise<unknown>;
   parseModels(raw: unknown): SourceModel[];
@@ -130,6 +141,7 @@ export interface SyncResult {
 }
 
 export const providers: {
+  aiand: SyncProvider<any>;
   ambient: SyncProvider<any>;
   anthropic: SyncProvider<any>;
   baseten: SyncProvider<any>;
@@ -142,6 +154,8 @@ export const providers: {
   digitalocean: SyncProvider<any>;
   edenai: SyncProvider<any>;
   empiriolabs: SyncProvider<any>;
+  "fireworks-ai": SyncProvider<any>;
+  friendli: SyncProvider<any>;
   "github-copilot": SyncProvider<any>;
   google: SyncProvider<any>;
   hyper: SyncProvider<any>;
@@ -154,6 +168,7 @@ export const providers: {
   meta: SyncProvider<any>;
   "nano-gpt": SyncProvider<any>;
   ofox: SyncProvider<any>;
+  "ollama-cloud": SyncProvider<any>;
   openai: SyncProvider<any>;
   openrouter: SyncProvider<any>;
   ovhcloud: SyncProvider<any>;
@@ -166,6 +181,7 @@ export const providers: {
   wandb: SyncProvider<any>;
   xai: SyncProvider<any>;
 } = {
+  aiand,
   ambient,
   anthropic,
   baseten,
@@ -178,6 +194,8 @@ export const providers: {
   digitalocean,
   edenai,
   empiriolabs,
+  "fireworks-ai": fireworksAi,
+  friendli,
   "github-copilot": githubCopilot,
   google,
   hyper,
@@ -190,6 +208,7 @@ export const providers: {
   meta,
   "nano-gpt": nanoGpt,
   ofox,
+  "ollama-cloud": ollamaCloud,
   openai,
   openrouter,
   ovhcloud,
@@ -221,7 +240,7 @@ export const groups = {
     "vercel",
   ],
   cloudflare: ["cloudflare-ai-gateway", "cloudflare-workers-ai"],
-  direct: ["ambient", "anthropic", "baseten", "chutes", "cortecs", "deepinfra", "digitalocean", "github-copilot", "google", "hyper", "meta", "openai", "ovhcloud", "pioneer", "saygm", "tinfoil", "venice", "wandb", "xai"],
+  direct: ["aiand", "ambient", "anthropic", "baseten", "chutes", "cortecs", "deepinfra", "digitalocean", "fireworks-ai", "friendli", "github-copilot", "google", "hyper", "meta", "ollama-cloud", "openai", "ovhcloud", "pioneer", "saygm", "tinfoil", "venice", "wandb", "xai"],
 } as const;
 
 type ProviderID = keyof typeof providers;
@@ -254,19 +273,31 @@ export async function syncProvider<SourceModel>(
   const caseNormalizedDesiredPaths = new Map<string, string>();
   const desiredMetadata = new Map<string, { model: z.infer<typeof ModelMetadata>; content: string }>();
   const skippedRemote: string[] = [];
+  const missingRemote = new Set<string>();
+  const missingReasoning = new Map<string, string>();
 
   for (const sourceModel of sourceModels) {
-    const translated = provider.translateModel(sourceModel, {
-      existing(id) {
-        return existing.get(`${id}.toml`)?.toml;
-      },
-      authored(id) {
-        return existing.get(`${id}.toml`)?.authored;
-      },
-    });
+    let translated: ReturnType<typeof provider.translateModel>;
+    try {
+      translated = provider.translateModel(sourceModel, {
+        existing(id) {
+          return existing.get(`${id}.toml`)?.toml;
+        },
+        authored(id) {
+          return existing.get(`${id}.toml`)?.authored;
+        },
+      });
+    } catch (error) {
+      if (!(error instanceof MissingReasoningOptionsError)) throw error;
+      missingReasoning.set(error.modelId, error.message);
+      console.warn(error.message);
+      continue;
+    }
     if (translated === undefined) {
       const skippedID = provider.sourceID?.(sourceModel);
       if (skippedID !== undefined) skippedRemote.push(skippedID);
+      const missingID = provider.missingModelID?.(sourceModel);
+      if (missingID !== undefined) missingRemote.add(missingID);
       continue;
     }
 
@@ -446,6 +477,14 @@ export async function syncProvider<SourceModel>(
   const missingLocal: string[] = [];
   for (const relativePath of new Set([...existing.keys(), ...brokenSymlinks])) {
     if (desired.has(relativePath)) continue;
+    if (missingRemote.has(relativePath.slice(0, -5))) {
+      unchanged++;
+      continue;
+    }
+    if (missingReasoning.has(relativePath.slice(0, -5))) {
+      unchanged++;
+      continue;
+    }
     if (provider.deleteMissing === false) {
       missingLocal.push(relativePath);
       console.log(`Retaining model missing from source: ${relativePath}`);
@@ -468,22 +507,27 @@ export async function syncProvider<SourceModel>(
   }
 
   const notices = [
+    ...missingReasoning.values(),
     ...provider.skippedNotice?.(skippedRemote) ?? [],
     ...provider.missingNotice?.(missingLocal) ?? [],
   ];
 
+  const issueModels = [...new Set([
+    ...missingRemote.values(),
+    ...(provider.skipCreates === true ? skippedRemote : []),
+    ...missingReasoning.keys(),
+  ])];
   if (
-    provider.skipCreates === true
-    && provider.trackMissingModels !== false
-    && skippedRemote.length > 0
+    provider.trackMissingModels !== false
+    && issueModels.length > 0
     && options.openIssues === true
   ) {
     try {
       notices.push(
         ...await openMissingModelIssues(
           { id: provider.id, name: provider.name, modelsDir: provider.modelsDir },
-          skippedRemote,
-          { dryRun: options.dryRun },
+          issueModels,
+          { dryRun: options.dryRun, reasons: Object.fromEntries(missingReasoning) },
         ),
       );
     } catch (error) {
@@ -970,6 +1014,7 @@ export function formatToml(model: z.infer<typeof SyncedAuthoredModel>) {
   if ("base_model_omit" in model && model.base_model_omit !== undefined) {
     lines.push(`base_model_omit = [${model.base_model_omit.map(quote).join(", ")}]`);
   }
+  if (model.type !== undefined) lines.push(`type = ${quote(model.type)}`);
   if (model.name !== undefined) lines.push(`name = ${quote(model.name)}`);
   if (model.description !== undefined) lines.push(`description = ${quote(model.description)}`);
   if (model.family !== undefined) lines.push(`family = ${quote(model.family)}`);

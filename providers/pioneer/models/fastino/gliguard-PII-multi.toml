@@ -1,0 +1,36 @@
+# Sources:
+# - Pioneer live catalog GET https://api.pioneer.ai/v1/models (id fastino/gliguard-PII-multi: display_name, max_input_tokens 8192, max_tokens 8192, prices 0.15, capabilities all false)
+# - Pioneer base-models GET https://api.pioneer.ai/base-models (label GLiNER2-Guardrails-PII-Multi, context_window 8192, license Apache-2.0, release_month Jul 2026)
+# - Fastino release blog https://fastino.ai/blog/gliner2-guardrails-pii-multi-safety-moderation-privacy-filtering-small-language-model (released July 8 2026, 0.3B param, single forward pass, Apache 2.0)
+# - Fastino model page https://fastino.ai/models/gliner2-guardrails-pii-multi (300M-param multilingual safety moderation + PII detection, open weights)
+# - Hugging Face https://huggingface.co/fastino/GLiNER2-Guardrails-PII-Multi (Apache-2.0, 0.3B params, unified safety moderation + PII detection)
+name = "GLiNER2-Guardrails-PII-Multi"
+description = "A 300M-parameter multilingual model that runs LLM safety moderation and PII detection in a single forward pass."
+release_date = "2026-07-08"
+last_updated = "2026-07-08"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+open_weights = true
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high"]
+
+[cost]
+input = 0.15
+output = 0.15
+cache_read = 0.15
+cache_write = 0.15
+
+[limit]
+context = 8_192
+output = 8_192
+
+[modalities]
+input = ["text"]
+output = ["text"]

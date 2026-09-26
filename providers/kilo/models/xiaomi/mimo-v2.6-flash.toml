@@ -1,0 +1,12 @@
+base_model = "xiaomi/mimo-v2.6-flash"
+description = "MiMo-V2.6-Flash is an open-source foundation model developed by Xiaomi. Built on a Mixture-of-Experts architecture with 309B total parameters and 15B activated per token, it employs a hybrid attention mechanism for..."
+structured_output = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "high"]
+
+[cost]
+input = 0.14
+output = 0.28
+cache_read = 0.0028

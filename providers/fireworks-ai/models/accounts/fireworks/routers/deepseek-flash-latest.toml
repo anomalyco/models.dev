@@ -1,0 +1,36 @@
+# Version-tracking standard-path router for current DeepSeek Flash
+# (tracks the live Flash SKU; currently DeepSeek V4.1 Flash).
+# Short ID: deepseek-flash-latest
+# Full model: accounts/fireworks/routers/deepseek-flash-latest
+# FireConnect: https://docs.fireworks.ai/ecosystem/fireconnect/models
+#   (latest vs fast; pinned deepseek-v4-flash deprecated → deepseek-flash-latest)
+# Underlying serverless model: accounts/fireworks/models/deepseek-v4p1-flash
+# Pricing (Standard / Priority, input / cached / output per 1M):
+#   https://docs.fireworks.ai/serverless/pricing (accessed 2026-09-15)
+#   https://fireworks.ai/models/deepseek-ai/deepseek-v4p1-flash (accessed 2026-09-15)
+#   Standard $0.22 / $0.007 / $0.66; Priority $0.275 / $0.00875 / $0.825
+# Toggle: thinking.type = enabled|disabled (reasoning_effort = "none" or false also disables)
+# Effort: reasoning_effort = low|medium|high|xhigh|max
+#   Same surface as accounts/fireworks/models/deepseek-v4p1-flash (verified peer 2026-09-10).
+# Reasoning API: https://docs.fireworks.ai/api-reference/post-chatcompletions
+base_model = "deepseek/deepseek-v4.1-flash"
+name = "DeepSeek Flash Latest"
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[cost]
+input = 0.22
+output = 0.66
+cache_read = 0.007
+
+[experimental.modes.priority]
+cost = { input = 0.275, output = 0.825, cache_read = 0.00875 }
+provider = { body = { service_tier = "priority" } }

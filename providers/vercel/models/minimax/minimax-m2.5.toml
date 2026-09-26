@@ -1,6 +1,8 @@
 base_model = "minimax/MiniMax-M2.5"
 name = "MiniMax M2.5"
-reasoning_options = []
+
+[[reasoning_options]]
+type = "budget_tokens"
 
 [cost]
 input = 0.3

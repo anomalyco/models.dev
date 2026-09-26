@@ -1,0 +1,16 @@
+# Pool metadata: https://api.opper.ai/v3/models (2026-09-08).
+# No pool-wide effort control: members do not share a supported effort level.
+base_model = "moonshotai/kimi-k3"
+attachment = false
+
+reasoning_options = []
+
+[cost]
+input = 3
+output = 15
+
+[modalities]
+input = ["text"]
+
+[interleaved]
+field = "reasoning_content"

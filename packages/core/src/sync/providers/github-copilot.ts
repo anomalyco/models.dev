@@ -38,7 +38,17 @@ const FILE_ALIASES: Record<string, string> = {
 const IGNORED_ROWS = new Set([
   // Goes in [experimental.modes.fast] under claude-opus-4.8
   "claude-opus-4.8-fast-mode-preview",
-  // No matching model in repo
+  // Retired models can remain in the pricing table; do not rediscover them.
+  // https://docs.github.com/en/copilot/reference/ai-models/supported-models#model-retirement-history
+  // Sonnet 4.6 is still available to annual-plan subscribers and stays eligible.
+  "claude-sonnet-4",
+  "claude-sonnet-4.5",
+  "claude-opus-4.5",
+  "claude-opus-4.6",
+  "gemini-3.1-pro",
+  "gpt-4.1",
+  "gpt-5.2",
+  "gpt-5.2-codex",
   "raptor-mini",
 ]);
 

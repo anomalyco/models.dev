@@ -1,4 +1,9 @@
+# Serverless deprecation announced for 2026-09-25: https://docs.fireworks.ai/updates/changelog
 base_model = "deepseek/deepseek-v4-flash-0731"
+status = "deprecated"
+
+[interleaved]
+field = "reasoning_content"
 
 [[reasoning_options]]
 type = "toggle"
@@ -7,10 +12,11 @@ type = "toggle"
 type = "effort"
 values = ["low", "high", "max"]
 
-[interleaved]
-field = "reasoning_content"
-
 [cost]
 input = 0.22
 output = 0.66
 cache_read = 0.007
+
+[experimental.modes.priority]
+cost = { input = 0.275, output = 0.825, cache_read = 0.00875 }
+provider = { body = { service_tier = "priority" } }

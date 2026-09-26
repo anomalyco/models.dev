@@ -1,3 +1,4 @@
+# Cost from https://ollama.com/pricing (accessed 2026-09-15).
 name = "gemma4:31b"
 description = "Open Gemma instruction model for efficient chat and self-hosted deployments"
 family = "gemma"
@@ -17,3 +18,8 @@ output = 262144
 [modalities]
 input = ["text","image"]
 output = ["text"]
+
+[cost]
+input = 0.14
+output = 0.4
+cache_read = 0.05

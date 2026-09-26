@@ -1,0 +1,24 @@
+# Global cross-Region inference profile — served by Bedrock core (Converse), not Mantle, so no [provider] override.
+# Profile ID verified via ListInferenceProfiles (ACTIVE) on 2026-09-22; AWS has not published a GPT-6 Sol model card yet.
+# Global CRIS pricing = OpenAI API list rates: https://developers.openai.com/api/docs/models/gpt-6-sol
+# Converse effort: additionalModelRequestFields.reasoning.effort = none|low|medium|high|xhigh|max (Bedrock's validation error on the Luna twin lists these; matches OpenAI-native Sol).
+# Live Converse check 2026-09-22 (eu-west-1, global profile): tool call + tool-result round trip; effort low/xhigh/max accepted.
+base_model = "openai/gpt-6-sol"
+reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh", "max"] }]
+name = "GPT-6 Sol (Global)"
+
+[cost]
+input = 2.00
+output = 10.00
+cache_read = 0.20
+cache_write = 2.50
+
+[[cost.tiers]]
+tier = { size = 272_000 }
+input = 4.00
+output = 15.00
+cache_read = 0.40
+cache_write = 5.00
+
+[modalities]
+input = ["text", "image"]

@@ -1,9 +1,16 @@
+# Sources: https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-anthropic-claude-opus-4-6.html
+# Live (2026-09-09): bare ID succeeds in eu-west-2; us-east-1 rejects it as profile-only.
+# https://platform.claude.com/docs/en/build-with-claude/thinking-troubleshooting
+# Pricing: https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AmazonBedrockFoundationModels/current/eu-west-2/index.json
+# Runtime in-region availability: eu-west-2; regional on-demand USD/MTok, 5-minute cache writes.
+# Toggle: additionalModelRequestFields.thinking.type = adaptive|disabled (Converse); thinking.type (InvokeModel).
+# Manual thinking.type = enabled still accepts thinking.budget_tokens; effort is output_config.effort, both inside additionalModelRequestFields on Converse.
 base_model = "anthropic/claude-opus-4-6"
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "max"] }, { type = "budget_tokens", min = 1_024 }]
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "medium", "high", "max"] }, { type = "budget_tokens", min = 1_024 }]
 structured_output = true
 
 [cost]
-input = 5
-output = 25
-cache_read = 0.5
-cache_write = 6.25
+input = 5.50
+output = 27.50
+cache_read = 0.55
+cache_write = 6.875

@@ -1,0 +1,13 @@
+base_model = "alibaba/qwen3.8-omni-flash"
+description = "Qwen3.8 Omni Flash is an omni-modal reasoning model from Alibaba, the first Qwen model built around agentic capabilities with native audio-video understanding. It is suited for audio-video analysis and summarization,..."
+temperature = true
+structured_output = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "high"]
+
+[cost]
+input = 0.15
+output = 0.47
+cache_read = 0.016

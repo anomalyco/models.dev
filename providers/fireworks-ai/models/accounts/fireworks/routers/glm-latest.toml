@@ -1,0 +1,37 @@
+# Version-tracking standard-path router for the current flagship GLM.
+# FireConnect documents glm-latest as a Latest (standard path) alias that
+# moves to the current model automatically:
+# https://docs.fireworks.ai/ecosystem/fireconnect/models
+# Current target is GLM 5.3 (accounts/fireworks/models/glm-5p3). FireConnect
+# main maps ROUTER_SPEC_ALIASES["glm-latest"] = "glm-5p3" and resolves
+# candidates ["glm-5p3", "glm-5p2"] preferring the first present in catalog:
+# https://github.com/fw-ai/fireconnect/blob/main/packages/setup-cli/lib/fireworks/model-specs.mjs
+# Pricing matches GLM 5.3 Standard on the serverless pricing page (accessed
+# 2026-09-15): $1.40 / $0.26 / $4.40 per 1M (input / cached input / output).
+# Priority tier: $1.75 / $0.325 / $5.50.
+# https://docs.fireworks.ai/serverless/pricing
+# Limits, reasoning, and interleaved field match the sibling
+# accounts/fireworks/models/glm-5p3 entry (thinking-only; effort low/high/max).
+base_model = "zhipuai/glm-5.3"
+name = "GLM Latest"
+last_updated = "2026-09-15"
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[cost]
+input = 1.4
+output = 4.4
+cache_read = 0.26
+
+[limit]
+context = 1_048_573
+output = 262_144
+
+[experimental.modes.priority]
+cost = { input = 1.75, output = 5.5, cache_read = 0.325 }
+provider = { body = { service_tier = "priority" } }

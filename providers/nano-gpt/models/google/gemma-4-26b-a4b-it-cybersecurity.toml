@@ -1,0 +1,25 @@
+name = "Gemma 4 26B A4B Cybersecurity"
+description = "Gemma 4 26B A4B Cybersecurity is a cybersecurity-focused variant based on the uncensored model, with provider moderation for illegal activities. It supports optional reasoning, image understanding, tool calling, and a 262,144-token context window."
+family = "gemma"
+release_date = "2026-09-19"
+last_updated = "2026-09-19"
+attachment = true
+reasoning = true
+tool_call = true
+structured_output = false
+open_weights = true
+reasoning_options = []
+
+[cost]
+input = 0.1056
+output = 0.3344
+cache_read = 0.0528
+
+[limit]
+context = 262_144
+input = 262_144
+output = 32_768
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

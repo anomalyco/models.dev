@@ -1,0 +1,14 @@
+base_model = "deepseek/deepseek-v4.1-flash"
+description = "Fast DeepSeek model for efficient chat, coding help, and agent loops"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "high", "max"]
+
+[cost]
+input = 0.375
+output = 1.5
+cache_read = 0.0075
+
+[limit]
+output = 131_072

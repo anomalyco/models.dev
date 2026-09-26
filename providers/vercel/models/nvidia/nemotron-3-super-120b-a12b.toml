@@ -3,7 +3,8 @@ name = "NVIDIA Nemotron 3 Super 120B A12B"
 tool_call = false
 
 [[reasoning_options]]
-type = "toggle"
+type = "effort"
+values = ["none", "low", "high"]
 
 [cost]
 input = 0.15

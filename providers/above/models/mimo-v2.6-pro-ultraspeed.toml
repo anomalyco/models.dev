@@ -1,0 +1,30 @@
+# Passthrough to the official MiMo API (api.xiaomimimo.com).
+# Toggle: `thinking.type = enabled|disabled`, as providers/xiaomi; verified
+# end-to-end on this host 2026-09-22 (enabled returns reasoning_content and
+# non-zero reasoning_tokens, disabled returns neither).
+# The commercial release of the UltraSpeed beta Xiaomi withdrew on 2026-09-07,
+# priced for throughput rather than cost: same V2.6 Pro weights, roughly 10x
+# the standard route. Measured through above.dev on 2026-09-22, an identical
+# 120-token completion ran at 67.6 tok/s here against 14.3 tok/s on
+# mimo-v2.6-pro. Upstream rate limits are tighter than the standard route.
+# Sources:
+#   https://mimo.mi.com/docs/en-US/price/pay-as-you-go  (real-time API table:
+#     mimo-v2.6-pro-ultraspeed CNY 30 in / 0.25 cache-hit / 60 out per MTok;
+#     overseas USD $4.35 / $0.036 / $8.70)
+#   https://mimo.mi.com/docs/news/latest/v2-6  (V2.6 lineup announcement,
+#     UltraSpeed described as flagship V2.6-Pro performance at higher speed)
+# RMB upstream (CNY 30/0.25/60 per MTok; overseas USD list $4.35/$0.036/$8.70)
+# converted at 6.5 CNY/USD, then a flat 10% markup; rounded to 4dp.
+base_model = "xiaomi/mimo-v2.6-pro-ultraspeed"
+name = "MiMo V2.6 Pro UltraSpeed"
+
+[[reasoning_options]]
+type = "toggle"
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 5.0769
+output = 10.1538
+cache_read = 0.0423

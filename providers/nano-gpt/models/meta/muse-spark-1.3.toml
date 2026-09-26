@@ -1,13 +1,4 @@
-name = "Muse Spark 1.3"
-description = "Meta's Muse Spark 1.3 is a frontier multimodal reasoning model for long-horizon coding and agentic workflows, with strong gains in computer use, browsing, professional tool use, codebase understanding, instruction following, and million-token retrieval. It accepts text, images, audio, video, and files, supports tool calling and structured output, and always reasons before answering."
-family = "muse"
-release_date = "2026-09-02"
-last_updated = "2026-09-02"
-attachment = true
-reasoning = true
-tool_call = true
-structured_output = true
-open_weights = false
+base_model = "meta/muse-spark-1.3"
 
 [[reasoning_options]]
 type = "effort"
@@ -19,10 +10,5 @@ output = 4.25
 cache_read = 0.15
 
 [limit]
-context = 1_048_576
 input = 1_048_576
 output = 943_718
-
-[modalities]
-input = ["text", "image", "video", "audio", "pdf"]
-output = ["text"]

@@ -1,0 +1,17 @@
+# Verified 2026-09-18 against https://api.kimi.ai/coding/v1/chat/completions
+# with kimi-code OAuth credentials; reasoning returned via reasoning_content.
+base_model = "moonshotai/kimi-k2.7-code-highspeed"
+name = "Kimi For Coding HighSpeed"
+reasoning_options = []
+
+[cost]
+input = 0
+output = 0
+cache_read = 0
+cache_write = 0
+
+[limit]
+output = 32_768
+
+[interleaved]
+field = "reasoning_content"

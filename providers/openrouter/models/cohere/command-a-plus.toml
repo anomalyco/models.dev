@@ -1,0 +1,29 @@
+# Toggle: reasoning.enabled = true|false
+# https://openrouter.ai/docs/guides/best-practices/reasoning-tokens
+name = "Command A+"
+description = "Cohere command model for multilingual enterprise agents, tools, and chat"
+family = "command-a"
+release_date = "2026-09-22"
+last_updated = "2026-09-22"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[[reasoning_options]]
+type = "toggle"
+
+[cost]
+input = 0.3
+output = 1.5
+cache_read = 0.15
+
+[limit]
+context = 192_000
+output = 64_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

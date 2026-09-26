@@ -1,0 +1,18 @@
+# Model ID verified against POST /api/v3/chat/completions (2026-09-16): `glm-5-3-flash-260828`
+# CNY→USD rate: 6.737012, 2026-08-26, source: https://open.er-api.com/v6/latest/USD
+# CNY list price source: https://docs.volcengine.com/docs/82379/1449737 (深度思考) + 智谱官方价目表
+# GLM-5.3-Flash always reasons (thinking cannot be disabled on this model ID)
+# Effort: reasoning_effort = low|high|max
+base_model = "zhipuai/glm-5.3-flash"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.11875
+output = 0.41563
+cache_read = 0.03414

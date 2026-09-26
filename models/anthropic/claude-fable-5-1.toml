@@ -1,3 +1,5 @@
+# Launch evaluations enable production safeguards: cyber tasks may fall back to Opus 4.8, biology tasks to Opus 5.
+# OSWorld uses the August 2026 task release and scores safeguard interventions as zero, without fallback.
 name = "Claude Fable 5.1"
 description = "Claude model for demanding reasoning and long-horizon agentic work"
 family = "claude-fable"
@@ -17,3 +19,83 @@ output = 128_000
 [modalities]
 input = ["text", "image", "pdf"]
 output = ["text"]
+
+[[benchmarks]]
+name = "Terminal-Bench-Science"
+score = 52.6
+metric = "score"
+variant = "production safeguards with fallback"
+version = "0.1"
+source = "https://www.anthropic.com/claude-fable-and-mythos-5-1"
+date = "2026-09-01"
+
+[[benchmarks]]
+name = "Terminal-Bench"
+score = 55.8
+metric = "score"
+variant = "production safeguards with fallback"
+version = "4.0"
+source = "https://www.anthropic.com/claude-fable-and-mythos-5-1"
+date = "2026-09-01"
+
+[[benchmarks]]
+name = "GDPval-AA"
+score = 1853
+metric = "Elo"
+variant = "production safeguards with fallback"
+version = "2"
+source = "https://www.anthropic.com/claude-fable-and-mythos-5-1"
+date = "2026-09-01"
+
+[[benchmarks]]
+name = "OSWorld"
+score = 77.9
+metric = "partial score"
+variant = "production safeguards; interventions score zero; no fallback"
+version = "2.0"
+source = "https://www.anthropic.com/claude-fable-and-mythos-5-1"
+date = "2026-09-01"
+dataset = "August 2026 task release"
+
+[[benchmarks]]
+name = "OSWorld"
+score = 41.7
+metric = "strict success rate"
+variant = "production safeguards; interventions score zero; no fallback"
+version = "2.0"
+source = "https://www.anthropic.com/claude-fable-and-mythos-5-1"
+date = "2026-09-01"
+dataset = "August 2026 task release"
+
+[[benchmarks]]
+name = "Humanity's Last Exam"
+score = 60.9
+metric = "score"
+variant = "without tools; production safeguards with fallback"
+source = "https://www.anthropic.com/claude-fable-and-mythos-5-1"
+date = "2026-09-01"
+
+[[benchmarks]]
+name = "Humanity's Last Exam"
+score = 65
+metric = "score"
+variant = "with tools; production safeguards with fallback"
+source = "https://www.anthropic.com/claude-fable-and-mythos-5-1"
+date = "2026-09-01"
+
+[[benchmarks]]
+name = "AutomationBench"
+score = 31.4
+metric = "pass rate"
+variant = "production safeguards with fallback"
+source = "https://www.anthropic.com/claude-fable-and-mythos-5-1"
+date = "2026-09-01"
+
+[[benchmarks]]
+name = "CursorBench"
+score = 73.4
+metric = "score"
+variant = "max effort; production safeguards with fallback"
+version = "3.2.0"
+source = "https://www.anthropic.com/claude-fable-and-mythos-5-1"
+date = "2026-09-01"

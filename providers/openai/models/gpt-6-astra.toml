@@ -1,0 +1,24 @@
+# Pricing: https://developers.openai.com/api/docs/models/gpt-6-astra
+# Reasoning and modes: https://developers.openai.com/api/docs/guides/latest-model?model=gpt-6-astra
+base_model = "openai/gpt-6-astra"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
+
+[cost]
+input = 10.00
+output = 50.00
+cache_read = 1.00
+cache_write = 12.50
+
+[[cost.tiers]]
+tier = { size = 272_000 }
+input = 20.00
+output = 75.00
+cache_read = 2.00
+cache_write = 25.00
+
+[experimental.modes.fast]
+cost = { input = 20.00, output = 100.00, cache_read = 2.00, cache_write = 25.00 }
+provider = { body = { service_tier = "priority" } }
+
+[experimental.modes.pro]
+provider = { body = { reasoning = { mode = "pro" } } }

@@ -1,3 +1,5 @@
+# First-party MiniMax API model overview lists a 1,000,000-token context.
+# https://platform.minimax.io/docs/guides/text-generation
 name = "MiniMax-M3"
 description = "MiniMax multimodal model for long-context coding, perception, and agent planning"
 family = "minimax"
@@ -24,7 +26,7 @@ output = 2.40
 cache_read = 0.12
 
 [limit]
-context = 1_048_576
+context = 1_000_000
 output = 512_000
 
 [modalities]

@@ -1,0 +1,16 @@
+# Toggle: enable_thinking true|false
+# Effort: reasoning_effort = low|medium|xhigh
+# Budget: thinking_budget (integer reasoning tokens)
+base_model = "alibaba/qwen3.8-flash"
+reasoning_options = [
+  { type = "toggle" },
+  { type = "effort", values = ["low", "medium", "xhigh"] },
+  { type = "budget_tokens" },
+]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.18
+output = 0.564
