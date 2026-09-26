@@ -1,0 +1,29 @@
+# Fireworks GLM 5.2 (accounts/fireworks/models/glm-5p2) — Z.ai flagship MoE, MIT.
+# Model: https://fireworks.ai/models/fireworks/glm-5p2 (accessed 2026-09-26) — model path accounts/fireworks/models/glm-5p2, provider Z.ai, 1_048_576 max_position_embeddings / 1040k usable window, $1.40/$0.14/$4.40 serverless pricing, function calling supported, image input not supported.
+# Pricing: https://docs.fireworks.ai/serverless/pricing (accessed 2026-09-26) — GLM 5.2 Standard $1.40/$0.14/$4.40, Priority $1.75/$0.18/$5.50.
+# Reasoning: https://docs.fireworks.ai/api-reference/post-chatcompletions (accessed 2026-09-26) — GLM 5.2 two tiers High|Max; low|medium collapse to high, xhigh selects max, default Max, none|false disables; reasoning via reasoning_content, history default interleaved.
+# Toggle: thinking.type = enabled|disabled (reasoning_effort = "none" or false also disables)
+# Effort: reasoning_effort = high|max
+base_model = "zhipuai/glm-5.2"
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["high", "max"]
+
+[cost]
+input = 1.4
+output = 4.4
+cache_read = 0.14
+
+[limit]
+context = 1_048_576
+
+[experimental.modes.priority]
+cost = { input = 1.75, output = 5.5, cache_read = 0.18 }
+provider = { body = { service_tier = "priority" } }
