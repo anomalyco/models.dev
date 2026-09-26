@@ -1,0 +1,20 @@
+# GPTZZZ is an OpenAI-compatible relay. Effort values verified per model against the
+# live /v1/chat/completions endpoint on 2026-09-16: none, low, medium, high, xhigh
+# and max are all accepted on this model; minimal is rejected upstream.
+# Prices are the published 0.2x group rate applied to OpenAI list pricing, cross-checked
+# against the cost/actual_cost fields returned by https://gptzzz.ai/v1/usage (2026-09-16).
+base_model = "openai/gpt-5.6-sol"
+reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh", "max"] }]
+
+[cost]
+input = 0.8
+output = 4.00
+cache_read = 0.08
+cache_write = 1.00
+
+[[cost.tiers]]
+tier = { size = 272_000 }
+input = 1.6
+output = 6.00
+cache_read = 0.16
+cache_write = 2.00
