@@ -1,0 +1,19 @@
+# Toggle: chat_template_kwargs.enable_thinking = true|false
+# Source: https://huggingface.co/ornith-ai/Ornith-1.5-397B (chat template exposes enable_thinking;
+# the model card documents a 262,144-token context and evaluates with max_new_tokens=131072)
+base_model = "deepreinforce/ornith-1.5-397b"
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "toggle"
+
+[cost]
+input = 0.7
+output = 2.2
+cache_read = 0.13
+
+[limit]
+context = 262_144
+output = 131_072

@@ -1,0 +1,25 @@
+# Routed over the Responses API: OpenAI rejects function tools combined with
+# reasoning_effort on /v1/chat/completions for this model.
+base_model = "openai/gpt-6-luna"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "xhigh", "max"]
+
+[cost]
+input = 0.085
+output = 0.425
+cache_read = 0.0085
+cache_write = 0.10625
+
+[[cost.tiers]]
+tier = { type = "context", size = 272_000 }
+input = 0.17
+output = 0.6375
+cache_read = 0.017
+cache_write = 0.2125
+
+[provider]
+npm = "@ai-sdk/openai"
+api = "https://api.saygm.com/v1"
+shape = "responses"
