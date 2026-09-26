@@ -1,0 +1,18 @@
+# Kimi K2.6 on Fireworks Serverless (accounts/fireworks/models/kimi-k2p6).
+# Pricing: https://fireworks.ai/models/fireworks/kimi-k2p6 — $0.95 / $0.16 / $4.00 per 1M tokens (input/cached input/output).
+# Catalog: same page lists provider Moonshot AI, Hugging Face moonshotai/Kimi-K2.6, 262k context, function calling and image input supported.
+# Lab: https://huggingface.co/moonshotai/Kimi-K2.6 (Moonshot AI, open weights).
+# Toggle: thinking.type = enabled|disabled (reasoning_effort = "none" or false also disables).
+# Reasoning: https://docs.fireworks.ai/guides/reasoning — reasoning surfaces via reasoning_content; Kimi K2.6 default reasoning_history is interleaved per https://docs.fireworks.ai/api-reference/post-chatcompletions.
+base_model = "moonshotai/kimi-k2.6"
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "toggle"
+
+[cost]
+input = 0.95
+output = 4
+cache_read = 0.16
