@@ -1,0 +1,24 @@
+# Pricing and limits from GET https://void.blackbit.sh/v1/models (accessed 2026-09-22).
+# https://docs.blackbit.sh/docs/void/models/language
+# limit.context = max_input_tokens; limit.output = max_output_tokens. max_input_tokens=1048600 max_output_tokens=1048600 (GET /v1/models 2026-09-22).
+# cache_read = input * model_info.cache_read_multiplier (0.0083).
+# Toggle: thinking.type = enabled|disabled on /chat/completions.
+# Effort: reasoning_effort = low|high|max
+# https://api-docs.deepseek.com/guides/thinking_mode/ (accessed 2026-09-22)
+base_model = "deepseek/deepseek-v4-pro"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[cost]
+input = 1.74
+output = 3.48
+cache_read = 0.014442
+
+[limit]
+context = 1_048_600
+output = 1_048_600

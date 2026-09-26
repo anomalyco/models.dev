@@ -1,0 +1,13 @@
+# Pricing and limits from GET https://void.blackbit.sh/v1/models (accessed 2026-09-22).
+# https://docs.blackbit.sh/docs/void/models/language
+# limit.context = max_input_tokens; limit.output = max_output_tokens. max_input_tokens=256000 max_output_tokens=256000 (GET /v1/models 2026-09-22).
+# Lab file models/mistral/mistral-large-2512.toml is Mistral Large 3. It does not reason.
+base_model = "mistral/mistral-large-2512"
+
+[cost]
+input = 0.50
+output = 1.50
+
+[limit]
+context = 256_000
+output = 256_000
