@@ -1,0 +1,20 @@
+# Confidential (TEE) id; served inside a TEE by the same enclave deployments as
+# https://llm.chutes.ai/v1/models, whose limits and chat-template controls this entry follows.
+# Toggle: chat_template_kwargs.thinking = true|false
+base_model = "deepseek/deepseek-v3.2"
+name = "DeepSeek V3.2 TEE"
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "toggle"
+
+[cost]
+input = 0.93
+output = 0.93
+cache_read = 0.093
+
+[limit]
+context = 131_072
+output = 65_536

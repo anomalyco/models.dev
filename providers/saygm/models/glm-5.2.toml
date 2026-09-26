@@ -1,0 +1,14 @@
+# Effort: reasoning_effort = high|max (Z.ai maps low/medium to high and xhigh to max)
+base_model = "zhipuai/glm-5.2"
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "effort"
+values = ["high", "max"]
+
+[cost]
+input = 1.26
+output = 3.96
+cache_read = 0.234

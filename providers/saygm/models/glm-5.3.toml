@@ -1,0 +1,14 @@
+# GLM-5.3 always reasons; effort low|high|max with default max.
+base_model = "zhipuai/glm-5.3"
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[cost]
+input = 1.26
+output = 3.96
+cache_read = 0.234
