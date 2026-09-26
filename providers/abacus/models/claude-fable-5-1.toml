@@ -1,0 +1,20 @@
+# Source: https://routellm.abacus.ai/v1/models
+# RouteLLM input_modalities: [text, image]
+# RouteLLM output_modalities: [text]
+# RouteLLM context_length: 1000000
+# RouteLLM max_completion_tokens: 128000
+# RouteLLM input_token_rate: 0.00001
+# RouteLLM output_token_rate: 0.00005
+# RouteLLM cached_input_token_rate: 0.00000025
+# RouteLLM thinking: true
+base_model = "anthropic/claude-fable-5-1"
+reasoning_options = []
+
+[cost]
+input = 10
+output = 50
+cache_read = 0.25
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

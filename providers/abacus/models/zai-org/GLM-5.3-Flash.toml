@@ -1,0 +1,23 @@
+# Source: https://routellm.abacus.ai/v1/models
+# RouteLLM input_modalities: [text, image]
+# RouteLLM output_modalities: [text]
+# RouteLLM context_length: 1048576
+# RouteLLM max_completion_tokens: 131072
+# RouteLLM input_token_rate: 0.00000015
+# RouteLLM output_token_rate: 0.0000005
+# RouteLLM cached_input_token_rate: 0.00000003
+# RouteLLM API does not report thinking: true for this ID.
+base_model = "zhipuai/glm-5.3-flash"
+reasoning_options = []
+
+[cost]
+input = 0.15
+output = 0.5
+cache_read = 0.03
+
+[limit]
+context = 1_048_576
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
