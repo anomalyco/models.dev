@@ -1,3 +1,8 @@
+# Cache (chat): gateway replay plus translation — same endpoint as llmgateway with a provider-pinned catalog.
+# Cache headers: Use headers `x-llmgateway-cache`/`x-no-cache` — HIT signals gateway replay; per-request bypass is available.
+# Cache body: none — Use no body key field; the gateway derives its own key from request params and translates cache_control per upstream.
+# Cache policy: $0 byte-identical replay (opt-in per project, TTL default 60s); stable prefix first; provider-pinned `provider/model-id` on the same endpoint.
+# Docs: https://docs.llmgateway.io/features/caching
 # The provider-pinned LLM Gateway catalog: one entry per upstream provider
 # mapping, addressed as `provider/model-id` — the format the gateway accepts to
 # pin a request to a specific upstream provider. The aggregated, auto-routed
