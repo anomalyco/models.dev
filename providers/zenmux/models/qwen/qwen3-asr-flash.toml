@@ -1,0 +1,13 @@
+# ZenMux's list flags this route as reasoning-capable, but the transcription API
+# exposes neither a reasoning request control nor a reasoning response channel;
+# lab and first-party metadata both classify Qwen3 ASR Flash as non-reasoning.
+# Host limits: page max_context=1000000 and max_completion_tokens=65536;
+# OpenAI list independently reports context_length=1000000.
+# ZenMux pricing is non-token-denominated for this route and is intentionally omitted.
+# https://zenmux.ai/docs/api/openai/openai-list-models.html
+base_model = "alibaba/qwen3-asr-flash"
+name = "Qwen3 ASR Flash"
+
+[limit]
+context = 1_000_000
+output = 65_536

@@ -1,0 +1,14 @@
+# Host limits: the 2026-09-19 ZenMux page reports context_length=256000 and max_completion_tokens=128000.
+# https://zenmux.ai/docs/api/openai/openai-list-models.html
+base_model = "alibaba/qwen3-235b-a22b-instruct-2507"
+name = "Qwen3 235B A22B Instruct 2507"
+structured_output = true
+
+[cost]
+input = 0.28
+output = 1.11
+cache_read = 0.056
+
+[limit]
+context = 256_000
+output = 128_000

@@ -1,0 +1,32 @@
+# Toggle: reasoning.enabled = true|false
+# Effort: reasoning_effort = low|medium|xhigh
+# Budget: reasoning.max_tokens (integer reasoning tokens)
+# ZenMux's 2026-09-19 page explicitly reports max_completion_tokens=1000000 for
+# this route; the 1M output limit is therefore an intentional host override.
+# https://zenmux.ai/docs/api/openai/openai-list-models.html
+# https://zenmux.ai/docs/guide/advanced/reasoning.html
+base_model = "alibaba/qwen3.8-flash"
+name = "Qwen3.8-Flash"
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "xhigh"]
+
+[[reasoning_options]]
+type = "budget_tokens"
+max = 262_144
+
+[cost]
+input = 0.16
+output = 0.47
+cache_read = 0.016
+cache_write = 0.2
+
+[limit]
+output = 1_000_000
