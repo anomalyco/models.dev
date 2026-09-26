@@ -1,0 +1,15 @@
+# Toggle wire: {"chat_template_kwargs": {"enable_thinking": true|false}} — verified live on InferX
+# Effort wire: {"reasoning_effort": "low"|"high"|"max"} — verified live on InferX, all three populate reasoning output
+base_model = "deepseek/deepseek-v4-flash-0731"
+
+[cost]
+input = 0.056
+output = 0.112
+cache_read = 0.0112
+
+[[reasoning_options]]
+type = "toggle" # API: {"chat_template_kwargs": {"enable_thinking": false}}
+
+[[reasoning_options]]
+type = "effort" # API: {"reasoning_effort": "low"|"high"|"max"}
+values = ["low", "high", "max"]
