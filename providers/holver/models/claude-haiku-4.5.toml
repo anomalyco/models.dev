@@ -1,0 +1,14 @@
+# Served by Holver (https://api.holver.id/v1, OpenAI-compatible,
+# Bearer $HOLVER_API_KEY). Catalog: https://holver.id/models.
+# Holver bills via credit packages, not per-model USD rates, so cost is
+# intentionally omitted.
+# Reasoning on this host: only the OpenAI-style top-level `reasoning_effort`
+# field is forwarded upstream. The Anthropic-native `thinking.budget_tokens`
+# control is not reachable here: Holver's /v1/messages translation drops
+# `thinking` before forwarding, and the chat-completions whitelist excludes
+# it. Holver does not interpret `reasoning_effort` — it passes it through to
+# the routed Claude endpoint, so the effort ladder is used (same surface as
+# the daoxe OpenAI-compatible relay).
+base_model = "anthropic/claude-haiku-4-5"
+name = "Claude Haiku 4.5"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]

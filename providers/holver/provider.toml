@@ -1,0 +1,9 @@
+# Holver is an OpenAI-compatible AI model gateway (https://holver.id).
+# Base URL and Bearer auth verified against the public docs
+# (https://holver.id/docs, BASE_URL = "https://api.holver.id/v1") and a live
+# GET https://api.holver.id/v1/models (401 without key, OpenAI-style error).
+name = "Holver"
+env = ["HOLVER_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+api = "https://api.holver.id/v1"
+doc = "https://holver.id/docs"
