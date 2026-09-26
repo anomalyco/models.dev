@@ -89,10 +89,6 @@ describe("catalog generation", () => {
       "zenifra/qwen3.6-plus": [{ type: "toggle" }],
       "zenifra/qwen3.7-max": [{ type: "toggle" }],
       "zenifra/qwen3.7-plus": [{ type: "toggle" }],
-      "zenifra/qwen3.8-27b": [
-        { type: "toggle" },
-        { type: "effort", values: ["low", "medium", "xhigh"] },
-      ],
       "zenifra/qwen3.8-flash": [
         { type: "toggle" },
         { type: "effort", values: ["low", "medium", "xhigh"] },
@@ -128,7 +124,6 @@ describe("catalog generation", () => {
       "zenifra/qwen3.6-plus": true,
       "zenifra/qwen3.7-max": false,
       "zenifra/qwen3.7-plus": true,
-      "zenifra/qwen3.8-27b": false,
       "zenifra/qwen3.8-flash": true,
       "zenifra/qwen3.8-max": true,
     });
@@ -151,7 +146,6 @@ describe("catalog generation", () => {
       context: 991_808,
       output: 65_536,
     });
-    expect(models["zenifra/qwen3.8-27b"]?.modalities?.input).toEqual(["text"]);
     expect(models["zenifra/qwen3.8-max"]?.modalities?.input).toEqual(["text", "image", "video"]);
 
     expect(models["zenifra/glm-5.1"]?.cost).toEqual({
