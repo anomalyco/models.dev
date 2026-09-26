@@ -1,0 +1,19 @@
+# CNY→USD rate: 6.718405, 2026-09-20, source: https://open.er-api.com/v6/latest/USD
+# CNY list price source: https://ppio.com/pricing
+# limit.output follows PPIO: GET /openai/v1/models/moonshotai/kimi-k3 reports
+# max_output_tokens = 1048576, and the API accepts max_tokens = 1048576.
+# Toggle: thinking.type = enabled|disabled
+# Effort: reasoning_effort = low|high|max (default max)
+base_model = "moonshotai/kimi-k3"
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "high", "max"] }]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 2.9769
+output = 14.88449
+cache_read = 0.29769
+
+[limit]
+output = 1_048_576

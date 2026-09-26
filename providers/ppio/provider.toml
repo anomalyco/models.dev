@@ -1,0 +1,20 @@
+name = "PPIO"
+env = ["PPIO_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+# Reasoning controls, verified against POST /openai/v1/chat/completions (2026-09-21).
+# `thinking.type` = enabled|disabled toggles thinking; `reasoning_effort` sets
+# effort. Which control a model exposes differs:
+# - Toggle only: the Qwen 3.5, 3.6 and 3.8-27b models, deepseek-v3.2,
+#   minimax-m3, kimi-k2.5, kimi-k2.6, mimo-v2.5, mimo-v2.5-pro, glm-4.5-air,
+#   glm-4.5v, glm-4.6, glm-4.6v, glm-4.7, glm-4.7-flash, glm-5, glm-5.1.
+#   minimax-m3 takes adaptive|disabled; `enabled` is rejected.
+# - Effort only: qwen3.8-2.4t-a95b, glm-5.2, glm-5.3, glm-5.3-flash. For the
+#   glm-5.3 pair `thinking.type` is accepted but ignored, thinking stays on.
+# - Toggle and effort: the DeepSeek V4 family and kimi-k3.
+# - No caller control: the minimax-m2 family, kimi-k2-thinking, kimi-k2.7-code.
+#   `thinking.type` is accepted but ignored, thinking stays on.
+# deepseek-v3.2 is the one model that starts with thinking off; every other
+# reasoning model thinks by default. Responses carry the reasoning side
+# channel in `reasoning_content`.
+doc = "https://ppio.com/model-api/product/llm-api"
+api = "https://api.ppio.com/openai/v1"
