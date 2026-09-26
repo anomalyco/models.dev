@@ -1,10 +1,15 @@
+# onomeo is in public beta: not every feature is guaranteed to work, and user
+# feedback is welcome at https://onomeo.com/feedback.
 # onomeo has no per-token USD price, so its model files carry no [cost] table.
-# Calls spend site credits: each reply deducts usage.total_tokens (visible text
-# sent plus received; reasoning is not charged), and premium models deduct more
-# per call. Credits come from a free daily check-in (1,200 a day, rising to
-# 3,500 on a 7-day streak); optional $5 membership and top-up packs add credits.
-# Limits: 12 requests/min per key, 60 requests per 5 hours per account.
-# https://onomeo.com/docs (accessed 2026-09-21)
+# Calls spend site credits; the cost per reply varies by model and is listed at
+# https://onomeo.com/models. Credits come from a free daily check-in: 50,000 on
+# day 1, rising to 200,000 a day from day 7 of a streak (a missed day resets it).
+# The bigger premium models (none are listed here) share a cap of 50,000 credits
+# a day for accounts that have not paid. Optional: $5 one-time buys 1,000,000
+# credits. Limits: 12 requests/min per key, 60 requests per 5 hours per account,
+# 120 per 5 hours per IP, and a site-wide pool of 450 per 5 hours shared by
+# accounts that have not bought credits.
+# https://onomeo.com/api/info (accessed 2026-09-26)
 # https://onomeo.com/integrations/opencode (accessed 2026-09-21)
 name = "onomeo"
 env = ["ONOMEO_API_KEY"]
