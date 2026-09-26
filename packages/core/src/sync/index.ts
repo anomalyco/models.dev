@@ -7,6 +7,7 @@ import { AuthoredModel, AuthoredModelShape, ModelMetadata } from "../schema.js";
 import { openMissingModelIssues } from "./missing-issues.js";
 import { MissingReasoningOptionsError } from "./missing-reasoning-options.js";
 import { aiand } from "./providers/aiand.js";
+import { aimlapi } from "./providers/aimlapi.js";
 import { ambient } from "./providers/ambient.js";
 import { anthropic } from "./providers/anthropic.js";
 import { baseten } from "./providers/baseten.js";
@@ -141,6 +142,7 @@ export interface SyncResult {
 
 export const providers: {
   aiand: SyncProvider<any>;
+  aimlapi: SyncProvider<any>;
   ambient: SyncProvider<any>;
   anthropic: SyncProvider<any>;
   baseten: SyncProvider<any>;
@@ -180,6 +182,7 @@ export const providers: {
   xai: SyncProvider<any>;
 } = {
   aiand,
+  aimlapi,
   ambient,
   anthropic,
   baseten,
@@ -221,6 +224,7 @@ export const providers: {
 
 export const groups = {
   aggregators: [
+    "aimlapi",
     "crossmodel",
     "edenai",
     "empiriolabs",
