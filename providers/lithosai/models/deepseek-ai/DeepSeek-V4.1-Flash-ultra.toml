@@ -1,0 +1,28 @@
+# Pricing: https://www.lithosai.com/pricing (2026-09-23).
+# Provider representative confirmed these USD/MTok rates on 2026-09-24:
+# standard output price, with the published input and cache-read prices.
+# Context follows HF text_config.max_position_embeddings = 1048576:
+# https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash/blob/main/config.json
+# Output limit inherits the lab baseline; no enlarged host output limit is advertised.
+# Provider confirmed text-only input on 2026-09-24; no image/video attachments.
+# Toggle: thinking.type = enabled|disabled
+# Effort: reasoning_effort = low|high|max
+# API schema: https://docs.lithosai.com/openapi.yaml
+# Other capabilities inherit the base model metadata; no live audit is claimed.
+# Provider confirmed no separate reasoning/cache-write surcharges or context bands (2026-09-25).
+# Authoritative pricing/capabilities: LithosAI website/docs; this is a static snapshot.
+base_model = "deepseek/deepseek-v4.1-flash"
+attachment = false
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "high", "max"] }]
+name = "DeepSeek V4.1 Flash Ultra"
+
+[cost]
+input = 0.35
+output = 2.8
+cache_read = 0.007
+
+[limit]
+context = 1_048_576
+
+[modalities]
+input = ["text"]
