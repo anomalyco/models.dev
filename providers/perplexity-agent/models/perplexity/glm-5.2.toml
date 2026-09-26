@@ -1,0 +1,17 @@
+# Perplexity Agent API pricing:
+# https://docs.perplexity.ai/docs/agent-api/models (accessed 2026-08-27)
+# Callable ID is perplexity/glm-5.2. Cache-read $0.26/1M from PRICING calculator.
+# Effort matches Z.AI first-party effective levels high|max.
+base_model = "zhipuai/glm-5.2"
+
+[[reasoning_options]]
+type = "effort"
+values = ["high", "max"]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 1.40
+output = 4.40
+cache_read = 0.26
