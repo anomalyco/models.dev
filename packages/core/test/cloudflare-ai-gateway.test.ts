@@ -162,6 +162,27 @@ test("ignores advertised reasoning controls for non-reasoning base models", () =
   expect(model.reasoning_options).toBeUndefined();
 });
 
+test("prefers the native provider's reasoning controls over the proxied schema", () => {
+  const model = buildCloudflareAiGatewayModel(
+    {
+      model_id: "anthropic/claude-opus-5.5",
+      task: "Text Generation",
+      context_length: 1_000_000,
+      provider_details: providerDetails({ input_tokens: 4, output_tokens: 20 }),
+    },
+    {
+      properties: {
+        thinking: { type: "object" },
+        output_config: { properties: { effort: { enum: ["low", "medium", "high"] } } },
+      },
+    },
+  );
+
+  expect(model.reasoning_options).toEqual([
+    { type: "effort", values: ["low", "medium", "high", "xhigh", "max"] },
+  ]);
+});
+
 test("fails closed on unknown pricing fields", () => {
   expect(() => buildCloudflareAiGatewayModel({
     model_id: "openai/gpt-4.1",
