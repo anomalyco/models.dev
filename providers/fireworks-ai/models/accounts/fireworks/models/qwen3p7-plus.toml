@@ -1,0 +1,20 @@
+# Fireworks Qwen3.7 Plus (accounts/fireworks/models/qwen3p7-plus).
+# Sources (accessed 2026-09-26):
+# https://fireworks.ai/models/fireworks/qwen3p7-plus — model path, Provider Qwen, 262k context, $0.40/$0.08/$1.60 per 1M input/cached/output, image input + function calling supported
+# https://fireworks.ai/blog/qwen-3p7-plus — Model ID accounts/fireworks/models/qwen3p7-plus, text+image input text output, thinking and non-thinking selectable per request, 262k context
+# Toggle: thinking.type = enabled|disabled
+base_model = "alibaba/qwen3.7-plus"
+
+[[reasoning_options]]
+type = "toggle"
+
+[cost]
+input = 0.4
+output = 1.6
+cache_read = 0.08
+
+[limit]
+context = 262_144
+
+[modalities]
+input = ["text", "image"]
