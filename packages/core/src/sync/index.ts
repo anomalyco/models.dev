@@ -36,6 +36,7 @@ import { openai } from "./providers/openai.js";
 import { ofox } from "./providers/ofox.js";
 import { openrouter } from "./providers/openrouter.js";
 import { ovhcloud } from "./providers/ovhcloud.js";
+import { parasail } from "./providers/parasail.js";
 import { pioneer } from "./providers/pioneer.js";
 import { requesty } from "./providers/requesty.js";
 import { tinfoil } from "./providers/tinfoil.js";
@@ -171,6 +172,7 @@ export const providers: {
   openai: SyncProvider<any>;
   openrouter: SyncProvider<any>;
   ovhcloud: SyncProvider<any>;
+  parasail: SyncProvider<any>;
   pioneer: SyncProvider<any>;
   requesty: SyncProvider<any>;
   tinfoil: SyncProvider<any>;
@@ -210,6 +212,7 @@ export const providers: {
   openai,
   openrouter,
   ovhcloud,
+  parasail,
   pioneer,
   requesty,
   tinfoil,
@@ -237,7 +240,7 @@ export const groups = {
     "vercel",
   ],
   cloudflare: ["cloudflare-ai-gateway", "cloudflare-workers-ai"],
-  direct: ["aiand", "ambient", "anthropic", "baseten", "chutes", "cortecs", "deepinfra", "digitalocean", "fireworks-ai", "friendli", "github-copilot", "google", "hyper", "meta", "ollama-cloud", "openai", "ovhcloud", "pioneer", "tinfoil", "venice", "wandb", "xai"],
+  direct: ["aiand", "ambient", "anthropic", "baseten", "chutes", "cortecs", "deepinfra", "digitalocean", "fireworks-ai", "friendli", "github-copilot", "google", "hyper", "meta", "ollama-cloud", "openai", "ovhcloud", "parasail", "pioneer", "tinfoil", "venice", "wandb", "xai"],
 } as const;
 
 type ProviderID = keyof typeof providers;

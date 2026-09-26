@@ -1,0 +1,10 @@
+# Parasail OpenAI Chat (POST https://api.parasail.io/v1/chat/completions)
+# model = "parasail-cydonia-24-v41" (TheDrummer/Cydonia-24B-v4.1).
+# No reasoning control on this endpoint. Verified against the endpoint on 2026-09-22.
+# Catalog: https://platform.parasail.io/api/v1/prices/serverlessEndpoints
+base_model = "thedrummer/cydonia-24b-v4.1"
+
+[cost]
+input = 0.3
+output = 0.5
+cache_read = 0.15

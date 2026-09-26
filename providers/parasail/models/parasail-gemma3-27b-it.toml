@@ -1,0 +1,10 @@
+# Parasail OpenAI Chat (POST https://api.parasail.io/v1/chat/completions)
+# model = "parasail-gemma3-27b-it" (RedHatAI/gemma-3-27b-it-FP8-dynamic).
+# No reasoning control on this endpoint. Verified against the endpoint on 2026-09-22.
+# Catalog: https://platform.parasail.io/api/v1/prices/serverlessEndpoints
+base_model = "google/gemma-3-27b-it"
+
+[cost]
+input = 0.08
+output = 0.45
+cache_read = 0.04
