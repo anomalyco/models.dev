@@ -1,0 +1,32 @@
+# Pricing: https://docs.fireworks.ai/serverless/pricing (accessed 2026-09-26)
+#   DeepSeek V4 Flash (0731): Standard $0.22 / $0.007 / $0.66, Priority $0.275 / $0.00875 / $0.825
+# Model: https://fireworks.ai/models/deepseek-ai/deepseek-v4-flash-0731 (accessed 2026-09-26)
+#   model path accounts/fireworks/models/deepseek-v4-flash-0731; max_position_embeddings 1048576, serves 1040k context
+# Toggle: thinking.type = enabled|disabled (reasoning_effort = "none" or false also disables)
+# Effort: reasoning_effort = low|high|max (DeepSeek V4: medium promoted to high, xhigh promoted to max)
+# Reasoning: https://docs.fireworks.ai/api-reference/post-chatcompletions (accessed 2026-09-26)
+#   DeepSeek V4 three tiers Low/High/Max; reasoning in reasoning_content. Same surface as
+#   accounts/fireworks/models/deepseek-v4p1-flash peer (verified 2026-09-10).
+base_model = "deepseek/deepseek-v4-flash-0731"
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[cost]
+input = 0.22
+output = 0.66
+cache_read = 0.007
+
+[limit]
+context = 1_048_576
+
+[experimental.modes.priority]
+cost = { input = 0.275, output = 0.825, cache_read = 0.00875 }
+provider = { body = { service_tier = "priority" } }
