@@ -1,0 +1,13 @@
+# Kiro exposes no caller-configurable reasoning control for Claude Sonnet 4:
+# Source: https://kiro.dev/docs/cli/chat/effort/
+base_model = "anthropic/claude-sonnet-4-0"
+name = "Claude Sonnet 4"
+reasoning_options = []
+
+[cost]
+input = 0
+output = 0
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
