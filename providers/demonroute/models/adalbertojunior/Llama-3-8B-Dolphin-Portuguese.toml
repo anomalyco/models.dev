@@ -1,0 +1,24 @@
+# Source: https://demonroute.com/models (live catalog, extracted 2026-09-26).
+# release_date = Hugging Face repo creation date; where unavailable, catalog date is used.
+# limit.output mirrors context: host publishes no separate max-output (repo convention).
+name = "Llama-3-8B-Dolphin-Portuguese"
+description = "Eric Hartford's uncensored line. Compliant, fast, no moralizing."
+attachment = false
+reasoning = false
+tool_call = false
+temperature = true
+release_date = "2024-04-27"
+last_updated = "2026-09-26"
+open_weights = true
+
+[cost]
+input = 1.11
+output = 1.14
+
+[limit]
+context = 8_192
+output = 8_192
+
+[modalities]
+input = ["text"]
+output = ["text"]

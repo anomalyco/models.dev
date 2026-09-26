@@ -1,0 +1,24 @@
+# Source: https://demonroute.com/models (live catalog, extracted 2026-09-26).
+# release_date = Hugging Face repo creation date; where unavailable, catalog date is used.
+# limit.output mirrors context: host publishes no separate max-output (repo convention).
+name = "gemma-4-12B-coder-fable5-composer2.5-v1-uncensored-heretic"
+description = "No lecture layer. Answers the prompt you actually wrote."
+attachment = false
+reasoning = false
+tool_call = false
+temperature = true
+release_date = "2026-06-21"
+last_updated = "2026-09-26"
+open_weights = true
+
+[cost]
+input = 3.60
+output = 14.40
+
+[limit]
+context = 262_144
+output = 262_144
+
+[modalities]
+input = ["text"]
+output = ["text"]

@@ -1,0 +1,24 @@
+# Source: https://demonroute.com/models (live catalog, extracted 2026-09-26).
+# release_date = Hugging Face repo creation date; where unavailable, catalog date is used.
+# limit.output mirrors context: host publishes no separate max-output (repo convention).
+name = "magnum-v4-12b"
+description = "Anthropic-style prose at a fraction of the cost. A cult favorite for a reason."
+attachment = false
+reasoning = false
+tool_call = false
+temperature = true
+release_date = "2024-10-20"
+last_updated = "2026-09-26"
+open_weights = true
+
+[cost]
+input = 2.61
+output = 2.97
+
+[limit]
+context = 1_024_000
+output = 1_024_000
+
+[modalities]
+input = ["text"]
+output = ["text"]

@@ -1,0 +1,24 @@
+# Source: https://demonroute.com/models (live catalog, extracted 2026-09-26).
+# release_date = Hugging Face repo creation date; where unavailable, catalog date is used.
+# limit.output mirrors context: host publishes no separate max-output (repo convention).
+name = "Gemma3-27B-it-vl-GLM-4.7-Uncensored-Heretic-Deep-Reasoning"
+description = "Gemma 27B heretic abliteration with GLM-4.7 reasoning grafted in. Thinks long, refuses nothing."
+attachment = false
+reasoning = false
+tool_call = false
+temperature = true
+release_date = "2026-03-17"
+last_updated = "2026-09-26"
+open_weights = true
+
+[cost]
+input = 1.20
+output = 3.60
+
+[limit]
+context = 131_072
+output = 131_072
+
+[modalities]
+input = ["text"]
+output = ["text"]

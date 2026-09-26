@@ -1,0 +1,24 @@
+# Source: https://demonroute.com/models (live catalog, extracted 2026-09-26).
+# release_date = Hugging Face repo creation date; where unavailable, catalog date is used.
+# limit.output mirrors context: host publishes no separate max-output (repo convention).
+name = "Fallen-Llama-3.3-R1-70B-v1"
+description = "TheDrummer special. RP community royalty."
+attachment = false
+reasoning = false
+tool_call = false
+temperature = true
+release_date = "2025-02-27"
+last_updated = "2026-09-26"
+open_weights = true
+
+[cost]
+input = 7.80
+output = 9.00
+
+[limit]
+context = 131_072
+output = 131_072
+
+[modalities]
+input = ["text"]
+output = ["text"]

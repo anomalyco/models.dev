@@ -1,0 +1,24 @@
+# Source: https://demonroute.com/models (live catalog, extracted 2026-09-26).
+# release_date = Hugging Face repo creation date; where unavailable, catalog date is used.
+# limit.output mirrors context: host publishes no separate max-output (repo convention).
+name = "llama-3-70B-Instruct-abliterated"
+description = "Refusal-trained out, capability left in. The uncensored finetune done properly."
+attachment = false
+reasoning = false
+tool_call = false
+temperature = true
+release_date = "2024-05-07"
+last_updated = "2026-09-26"
+open_weights = true
+
+[cost]
+input = 10.50
+output = 24.90
+
+[limit]
+context = 8_192
+output = 8_192
+
+[modalities]
+input = ["text"]
+output = ["text"]

@@ -1,0 +1,24 @@
+# Source: https://demonroute.com/models (live catalog, extracted 2026-09-26).
+# release_date = Hugging Face repo creation date; where unavailable, catalog date is used.
+# limit.output mirrors context: host publishes no separate max-output (repo convention).
+name = "Guanaco-13B-Uncensored"
+description = "No lecture layer. Answers the prompt you actually wrote."
+attachment = false
+reasoning = false
+tool_call = false
+temperature = true
+release_date = "2023-09-07"
+last_updated = "2026-09-26"
+open_weights = true
+
+[cost]
+input = 4.50
+output = 6.30
+
+[limit]
+context = 4_096
+output = 4_096
+
+[modalities]
+input = ["text"]
+output = ["text"]
