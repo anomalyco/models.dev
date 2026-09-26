@@ -1,0 +1,22 @@
+name = "LLaDA2.1-flash"
+description = "LLaDA 2.1 is a diffusion language model in the LLaDA series, enhanced with editing capabilities. It delivers strong task performance while significantly improving inference speed."
+release_date = "2026-03-16"
+last_updated = "2026-03-16"
+attachment = false
+reasoning = false
+temperature = false
+tool_call = false
+open_weights = true
+license = "Apache 2.0"
+
+[limit]
+context = 32_000
+output = 32_000
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/inclusionAI/LLaDA2.1-flash"

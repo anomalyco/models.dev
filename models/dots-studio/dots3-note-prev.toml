@@ -1,0 +1,23 @@
+# https://huggingface.co/dots-studio/dots3-note-prev
+name = "Dots3-Note Preview"
+description = "dots3-note-prev is a preview large language model designed for general conversation and complex tasks, with a focus on instruction following, reasoning, code generation, and multilingual interaction. As a preview release, its features and performance may continue to evolve."
+release_date = "2026-08-17"
+last_updated = "2026-08-17"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+open_weights = true
+license = "Apache 2.0"
+
+[limit]
+context = 524_288
+output = 524_288
+
+[modalities]
+input = ["text", "image", "video", "audio"]
+output = ["text"]
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/dots-studio/dots3-note-prev"

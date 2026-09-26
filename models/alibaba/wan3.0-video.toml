@@ -1,0 +1,17 @@
+name = "Wan3.0-Video"
+description = "Wan3.0 is an All-in-One reference-based video generation model that supports Text-to-Video, Image-to-Video (first frame/first-last frame), and Reference-based Video Generation. It can generate videos up to 30 seconds long at 30fps."
+release_date = "2026-08-24"
+last_updated = "2026-08-24"
+attachment = true
+reasoning = false
+temperature = false
+tool_call = false
+open_weights = false
+
+[limit]
+context = 20_000
+output = 0
+
+[modalities]
+input = ["text", "image", "pdf", "audio", "video"]
+output = ["video"]

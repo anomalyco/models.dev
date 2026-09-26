@@ -1,0 +1,18 @@
+# Effort: reasoning_effort = none|low|high
+# https://zenmux.ai/docs/api/openai/openai-list-models.html
+# https://zenmux.ai/docs/guide/advanced/reasoning.html
+base_model = "tencent/hy3"
+base_model_omit = ["limit.input"]
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "high"]
+
+[cost]
+input = 0.147
+output = 0.589
+cache_read = 0.037
+
+[limit]
+context = 262_144
+output = 131_072

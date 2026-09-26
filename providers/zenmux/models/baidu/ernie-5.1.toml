@@ -1,13 +1,13 @@
 # https://zenmux.ai/docs/api/openai/openai-list-models.html
 # https://zenmux.ai/docs/guide/advanced/reasoning.html
-base_model = "baidu/ernie-5.0-thinking-preview"
+base_model = "baidu/ernie-5.1"
 reasoning_options = []
 
 [cost]
-input = 0.84
-output = 3.37
+input = 0.588
+output = 2.646
 
 [[cost.tiers]]
 tier = { type = "context", size = 32_000 }
-input = 1.41
-output = 5.62
+input = 0.882
+output = 3.235

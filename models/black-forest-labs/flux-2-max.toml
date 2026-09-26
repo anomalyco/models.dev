@@ -1,0 +1,17 @@
+name = "FLUX.2 Max"
+description = "FLUX.2 [max] is the new top-tier image model from Black Forest Labs, pushing image quality, prompt understanding, and editing consistency to the highest level yet.\n\n>**Pricing is as follows, [per the docs:](https://bfl.ai/pricing?category=flux.2)**   \n>**Input: We charge $0.03 for each megapixel on the input (i.e. reference images for editing)**  \n>**Output: The first generated megapixel is charged $0.07. Each subsequent megapixel is charged $0.03.**"
+release_date = "2025-12-16"
+last_updated = "2025-12-16"
+attachment = true
+reasoning = false
+temperature = false
+tool_call = false
+open_weights = false
+
+[limit]
+context = 47_000
+output = 47_000
+
+[modalities]
+input = ["text", "image"]
+output = ["image"]

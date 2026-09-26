@@ -1,0 +1,17 @@
+name = "Wan3.0-Video-Prime"
+description = "Wan3.0-Video-Prime is the high-speed version of Wan3.0’s video generation model. It matches the capabilities of the standard Wan3.0-Video model, supports comprehensive reference inputs across four modalities, generates videos up to 30 seconds long, and delivers immersive audiovisual experiences with significantly faster end-to-end performance."
+release_date = "2026-08-24"
+last_updated = "2026-08-24"
+attachment = true
+reasoning = false
+temperature = false
+tool_call = false
+open_weights = false
+
+[limit]
+context = 20_000
+output = 0
+
+[modalities]
+input = ["text", "image", "pdf", "audio", "video"]
+output = ["video"]

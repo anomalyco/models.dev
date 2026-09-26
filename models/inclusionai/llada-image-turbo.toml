@@ -1,0 +1,22 @@
+name = "LLaDA-Image-Turbo"
+description = "LLaDA-Image is a competitive 6B-parameter open-source unified image generation and editing model family. It includes LLaDA-Image, a 50-step Base model for high-quality text-to-image generation and instruction-guided editing, and LLaDA-Image-Turbo, a 4-step distilled model for fast generation and editing. Both variants support practical text-to-image generation, VQ-conditioned generation, reference-image editing, and Chinese--English text rendering."
+release_date = "2026-09-04"
+last_updated = "2026-09-04"
+attachment = true
+reasoning = false
+temperature = false
+tool_call = false
+open_weights = true
+license = "Apache 2.0"
+
+[limit]
+context = 2_000
+output = 10_000
+
+[modalities]
+input = ["text", "image"]
+output = ["image"]
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/inclusionAI/LLaDA-Image-Turbo"

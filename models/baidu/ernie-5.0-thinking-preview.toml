@@ -1,0 +1,18 @@
+name = "ERNIE 5.0"
+description = "The new-generation Wenxin model, Wenxin 5.0, is a natively multimodal large model. It adopts a native unified multimodal modeling approach to jointly model text, images, audio, and video, providing comprehensive multimodal capabilities. Wenxin 5.0’s core abilities have been comprehensively upgraded and it performs excellently on benchmark datasets, with particularly strong results in multimodal understanding, instruction following, creative writing, factuality, agent planning, and tool use"
+release_date = "2026-01-22"
+last_updated = "2026-01-22"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[limit]
+context = 128_000
+output = 64_000
+
+[modalities]
+input = ["text", "image", "video"]
+output = ["text"]

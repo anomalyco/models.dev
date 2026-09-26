@@ -1,0 +1,19 @@
+# Effort: reasoning_effort = high|xhigh|max
+# https://zenmux.ai/docs/api/openai/openai-list-models.html
+# https://zenmux.ai/docs/guide/advanced/reasoning.html
+base_model = "sakana/fugu-ultra-v2"
+
+[[reasoning_options]]
+type = "effort"
+values = ["high", "xhigh", "max"]
+
+[cost]
+input = 5
+output = 30
+cache_read = 0.5
+
+[[cost.tiers]]
+tier = { type = "context", size = 272_000 }
+input = 10
+output = 45
+cache_read = 1
