@@ -1,0 +1,28 @@
+name = "GLM 5.3 Uncensored"
+description = "An experimental uncensored version of the full GLM 5.3 reasoning model for chat, creative writing, coding, and tool use. It may show unusual behavior or inconsistent response quality."
+family = "glm"
+release_date = "2026-09-26"
+last_updated = "2026-09-26"
+attachment = false
+reasoning = true
+tool_call = true
+structured_output = false
+open_weights = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[cost]
+input = 1.25
+output = 2.25
+cache_read = 0.3
+
+[limit]
+context = 1_048_576
+input = 1_048_576
+output = 131_072
+
+[modalities]
+input = ["text"]
+output = ["text"]
