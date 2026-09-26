@@ -1,0 +1,21 @@
+# Kimi K2.7 Code on Fireworks serverless: accounts/fireworks/models/kimi-k2p7-code.
+# Pricing Standard $0.95/$0.19/$4.00, Priority $1.425/$0.285/$6.00 (USD per 1M):
+# https://docs.fireworks.ai/serverless/pricing (accessed 2026-09-26)
+# Model card (Moonshot AI provider, 262k context, image input, function calling):
+# https://fireworks.ai/models/fireworks/kimi-k2p7-code (accessed 2026-09-26)
+# Day-0 support, pricing matches Moonshot, model path:
+# https://fireworks.ai/blog/kimi-k2p7-code (published 2026-06-12)
+# Lab thinking always-on for kimi-k2.7-code (reasoning_effort not supported,
+# thinking.type disabled errors) -> reasoning_options = []:
+# https://platform.kimi.ai/docs/guide/use-thinking-models (accessed 2026-09-26)
+base_model = "moonshotai/kimi-k2.7-code"
+reasoning_options = []
+
+[cost]
+input = 0.95
+output = 4
+cache_read = 0.19
+
+[experimental.modes.priority]
+cost = { input = 1.425, output = 6, cache_read = 0.285 }
+provider = { body = { service_tier = "priority" } }
