@@ -1,0 +1,14 @@
+# Alibaba Cloud (DashScope) channel. Kimi K2.7 Code is a thinking-only model:
+# thinking cannot be disabled, but the channel exposes `thinking_budget`, so
+# budget_tokens is the only caller-selectable reasoning control.
+# https://www.alibabacloud.com/help/en/model-studio/kimi-api
+base_model = "moonshotai/kimi-k2.7-code"
+reasoning_options = [{ type = "budget_tokens" }]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.768
+output = 3.176
+cache_read = 0.152
