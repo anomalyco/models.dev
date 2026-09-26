@@ -1,0 +1,27 @@
+# Fireworks hosts DeepSeek-V4-Flash-Vision-Exp as accounts/fireworks/models/deepseek-v4-flash-vision-exp (Ready).
+# Model: https://fireworks.ai/models/deepseek-ai/deepseek-v4-flash-vision-exp (accessed 2026-09-26) — model path, Ready state, image input + function calling supported.
+# Pricing: https://docs.fireworks.ai/serverless/pricing (accessed 2026-09-26) — Standard $0.22 / $0.007 / $0.66; Priority $0.275 / $0.00875 / $0.825 per 1M input/cached/output.
+# Toggle: thinking.type = enabled|disabled (reasoning_effort = "none" or false also disables)
+# Effort: reasoning_effort = low|high|max (DeepSeek V4 tiers: medium promoted to high, xhigh promoted to max)
+# Reasoning: https://docs.fireworks.ai/api-reference/post-chatcompletions (accessed 2026-09-26); guide https://docs.fireworks.ai/guides/reasoning
+# Peer surface: accounts/fireworks/models/deepseek-v4p1-flash and lab providers/deepseek/models/deepseek-v4-flash-vision-exp (both toggle + low/high/max).
+base_model = "deepseek/deepseek-v4-flash-vision-exp"
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[cost]
+input = 0.22
+output = 0.66
+cache_read = 0.007
+
+[experimental.modes.priority]
+cost = { input = 0.275, output = 0.825, cache_read = 0.00875 }
+provider = { body = { service_tier = "priority" } }
