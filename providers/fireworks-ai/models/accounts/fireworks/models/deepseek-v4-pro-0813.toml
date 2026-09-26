@@ -1,0 +1,34 @@
+# Model path: accounts/fireworks/models/deepseek-v4-pro-0813
+# Pricing (Standard $1.32/$0.044/$3.96, Priority $1.65/$0.055/$4.95 per 1M input/cached/output):
+# https://docs.fireworks.ai/serverless/pricing (accessed 2026-09-26)
+# https://fireworks.ai/models/deepseek-ai/deepseek-v4-pro-0813 (accessed 2026-09-26)
+# Reasoning levels low|high|max and reasoning_content side channel:
+# https://fireworks.ai/models/deepseek-ai/deepseek-v4-pro-0813 (FAQ, accessed 2026-09-26)
+# https://docs.fireworks.ai/guides/reasoning (accessed 2026-09-26)
+# Context max_position_embeddings 1048576, function calling supported:
+# https://fireworks.ai/models/deepseek-ai/deepseek-v4-pro-0813 (accessed 2026-09-26)
+# Toggle: thinking.type = enabled|disabled
+# Effort: reasoning_effort = low|high|max
+base_model = "deepseek/deepseek-v4-pro-0813"
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[limit]
+context = 1_048_576
+
+[cost]
+input = 1.32
+output = 3.96
+cache_read = 0.044
+
+[experimental.modes.priority]
+cost = { input = 1.65, output = 4.95, cache_read = 0.055 }
+provider = { body = { service_tier = "priority" } }
