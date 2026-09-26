@@ -1,15 +1,15 @@
 base_model = "zhipuai/glm-5.3-flash"
-name = "GLM-5.3 Flash (Together AI)"
+name = "GLM-5.3 Flash (Inference.net)"
 
 [[reasoning_options]]
 type = "effort"
 values = ["low", "high", "max"]
 
 [cost]
-input = 0.15
-output = 0.5
-cache_read = 0.03
+input = 0.09
+output = 0.28
+cache_read = 0.02
 
 [limit]
 context = 1_048_576
-output = 943_717
+output = 128_000
