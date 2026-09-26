@@ -1,0 +1,8 @@
+name = "2ba.ai"
+env = ["2BA_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+# 2ba.ai is a flat-rate subscription service (EUR 20/month) and publishes no
+# per-token cost schedule, so model TOMLs carry no [cost] block.
+# https://2ba.ai (accessed 2026-09-25)
+api = "https://api.2ba.ai/v1"
+doc = "https://2ba.ai/docs"
