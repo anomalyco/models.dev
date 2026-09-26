@@ -10,14 +10,17 @@ const NanoDollars = z.number().int().nonnegative().max(Number.MAX_SAFE_INTEGER);
 const PriceDimensions = z.object({
   input_per_mtok_ndollars: NanoDollars,
   output_per_mtok_ndollars: NanoDollars,
+  image_output_per_mtok_ndollars: NanoDollars.optional(),
   cache_read_per_mtok_ndollars: NanoDollars.optional(),
+  cache_write_per_mtok_ndollars: NanoDollars.optional(),
   cache_write_5m_per_mtok_ndollars: NanoDollars.optional(),
   cache_write_1h_per_mtok_ndollars: NanoDollars.optional(),
   audio_input_per_mtok_ndollars: NanoDollars.optional(),
-  audio_output_per_mtok_ndollars: NanoDollars.optional(),
   long_context_threshold_tokens: z.number().int().positive().max(Number.MAX_SAFE_INTEGER).optional(),
   long_context_input_per_mtok_ndollars: NanoDollars.optional(),
   long_context_output_per_mtok_ndollars: NanoDollars.optional(),
+  long_context_cache_read_per_mtok_ndollars: NanoDollars.optional(),
+  long_context_cache_write_per_mtok_ndollars: NanoDollars.optional(),
 }).passthrough().superRefine((dimensions, context) => {
   const longContext = [
     dimensions.long_context_threshold_tokens,
@@ -62,14 +65,28 @@ export const SaygmModel = z.object({
   object: z.literal("model"),
   available: z.boolean(),
   api_shapes: z.array(z.string().min(1)),
-  pricing: Pricing.optional(),
-  price_range: PriceRange.optional(),
+  // Listed-but-unpriced ids (coming soon) carry null pricing.
+  pricing: Pricing.nullish(),
+  price_range: PriceRange.nullish(),
 }).passthrough();
 
 export const SaygmResponse = z.object({
   object: z.literal("list"),
-  data: z.array(SaygmModel),
+  data: z.preprocess(dropPerImageModels, z.array(SaygmModel)),
 }).passthrough();
+
+// models.dev costs are per token, so per-image SKUs (e.g. FLUX) cannot be represented.
+function dropPerImageModels(data: unknown) {
+  if (!Array.isArray(data)) return data;
+  return data.filter((entry) => !isPerImagePriced(entry));
+}
+
+function isPerImagePriced(entry: unknown) {
+  const pricing = (entry as { pricing?: { dimensions?: unknown } | null } | null)?.pricing;
+  const dimensions = pricing?.dimensions;
+  return typeof dimensions === "object" && dimensions !== null
+    && "output_per_image_ndollars" in dimensions;
+}
 
 export type SaygmModel = z.infer<typeof SaygmModel>;
 
@@ -133,7 +150,7 @@ export async function fetchSaygmModels(fetcher: typeof fetch = fetch) {
 
 export function buildSaygmModel(model: SaygmModel, existing: ExistingModel): SyncedModel {
   const priceRange = model.price_range;
-  if (priceRange === undefined) {
+  if (priceRange === undefined || priceRange === null) {
     // A partial or older response with no explicit bounds must not erase the
     // last reviewed price or infer one from the optimistic headline `pricing`.
     return existing as SyncedModel;
@@ -150,15 +167,20 @@ export function buildSaygmModel(model: SaygmModel, existing: ExistingModel): Syn
   const cost: NonNullable<ExistingModel["cost"]> = {
     ...existing.cost,
     input: usdPerMtok(dimensions.input_per_mtok_ndollars),
-    output: usdPerMtok(dimensions.output_per_mtok_ndollars),
+    // Image-generation models bill generated images as image output tokens;
+    // models.dev lab catalogs publish that rate as `output`.
+    output: usdPerMtok(dimensions.image_output_per_mtok_ndollars ?? dimensions.output_per_mtok_ndollars),
     cache_read: optionalUsdPerMtok(dimensions.cache_read_per_mtok_ndollars) ?? existing.cost?.cache_read,
     // models.dev has one cache-write field; its provider catalogs conventionally
-    // use Anthropic's standard five-minute write rate.
+    // use Anthropic's standard five-minute write rate. OpenAI models carry a
+    // single unqualified cache-write rate.
     cache_write:
-      optionalUsdPerMtok(dimensions.cache_write_5m_per_mtok_ndollars) ?? existing.cost?.cache_write,
+      optionalUsdPerMtok(
+        dimensions.cache_write_5m_per_mtok_ndollars ?? dimensions.cache_write_per_mtok_ndollars,
+      ) ?? existing.cost?.cache_write,
+    // SayGM also lists an audio-output rate on text-output models; none of its
+    // catalog generates audio, so only the audio-input rate is published.
     input_audio: optionalUsdPerMtok(dimensions.audio_input_per_mtok_ndollars) ?? existing.cost?.input_audio,
-    output_audio:
-      optionalUsdPerMtok(dimensions.audio_output_per_mtok_ndollars) ?? existing.cost?.output_audio,
   };
 
   if (dimensions.long_context_threshold_tokens !== undefined) {
@@ -171,6 +193,8 @@ export function buildSaygmModel(model: SaygmModel, existing: ExistingModel): Syn
       tier: { type: "context", size: dimensions.long_context_threshold_tokens },
       input: usdPerMtok(longInput),
       output: usdPerMtok(longOutput),
+      cache_read: optionalUsdPerMtok(dimensions.long_context_cache_read_per_mtok_ndollars),
+      cache_write: optionalUsdPerMtok(dimensions.long_context_cache_write_per_mtok_ndollars),
     }];
   }
 

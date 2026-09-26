@@ -298,6 +298,66 @@ test("uses SayGM's five-minute cache-write rate for models.dev", () => {
   });
 });
 
+test("maps SayGM OpenAI cache-write and long-context cache rates", () => {
+  const built = buildSaygmModel(saygmModel({
+    id: "gpt-6-sol",
+    price_range: saygmPriceRange(
+      {
+        input_per_mtok_ndollars: 1_700_000_000,
+        output_per_mtok_ndollars: 8_500_000_000,
+        cache_read_per_mtok_ndollars: 170_000_000,
+        cache_write_per_mtok_ndollars: 2_125_000_000,
+        long_context_threshold_tokens: 272_000,
+        long_context_input_per_mtok_ndollars: 3_400_000_000,
+        long_context_output_per_mtok_ndollars: 12_750_000_000,
+        long_context_cache_read_per_mtok_ndollars: 340_000_000,
+        long_context_cache_write_per_mtok_ndollars: 4_250_000_000,
+      },
+      {
+        input_per_mtok_ndollars: 2_000_000_000,
+        output_per_mtok_ndollars: 10_000_000_000,
+      },
+    ),
+  }), { base_model: "openai/gpt-6-sol" });
+
+  expect(built).toMatchObject({
+    cost: {
+      input: 1.7,
+      output: 8.5,
+      cache_read: 0.17,
+      cache_write: 2.125,
+      tiers: [{
+        tier: { type: "context", size: 272_000 },
+        input: 3.4,
+        output: 12.75,
+        cache_read: 0.34,
+        cache_write: 4.25,
+      }],
+    },
+  });
+});
+
+test("publishes the SayGM image-output rate as output for image-generation models", () => {
+  const built = buildSaygmModel(saygmModel({
+    id: "gemini-3.1-flash-image",
+    api_shapes: ["generateContent"],
+    price_range: saygmPriceRange(
+      {
+        input_per_mtok_ndollars: 460_000_000,
+        output_per_mtok_ndollars: 2_760_000_000,
+        image_output_per_mtok_ndollars: 55_200_000_000,
+      },
+      {
+        input_per_mtok_ndollars: 500_000_000,
+        output_per_mtok_ndollars: 3_000_000_000,
+        image_output_per_mtok_ndollars: 60_000_000_000,
+      },
+    ),
+  }), { base_model: "google/gemini-3.1-flash-image" });
+
+  expect(built).toMatchObject({ cost: { input: 0.46, output: 55.2 } });
+});
+
 test("retains authored SayGM cost fields the live route ceiling omits", () => {
   const existing = {
     base_model: "openai/gpt-5.4",
@@ -378,6 +438,32 @@ test("rejects incomplete or unrecognized SayGM pricing bases", () => {
   const unknownBasis = structuredClone(valid);
   Object.assign(unknownBasis.price_range!.route_ceiling!, { basis: "wholesale_floor" });
   expect(() => SaygmResponse.parse({ object: "list", data: [unknownBasis] })).toThrow();
+});
+
+test("skips per-image SayGM SKUs and accepts unpriced coming-soon ids", () => {
+  const perImage = {
+    ...saygmModel({ id: "flux.2-klein-4b", api_shapes: ["images.generations"] }),
+    pricing: {
+      basis: "cheapest_eligible_offer",
+      dimensions: { output_per_image_ndollars: 13_500_000 },
+    },
+    price_range: {
+      ceiling: {
+        basis: "published_retail",
+        dimensions: { output_per_image_ndollars: 15_000_000 },
+      },
+    },
+  };
+  const comingSoon = { ...saygmModel({ id: "claude-fable-5-2" }), pricing: null, price_range: null };
+
+  const parsed = SaygmResponse.parse({
+    object: "list",
+    data: [saygmModel(), perImage, comingSoon],
+  });
+
+  expect(parsed.data.map((model) => model.id)).toEqual(["gpt-5.4", "claude-fable-5-2"]);
+  const existing = { base_model: "anthropic/claude-fable-5-2", cost: { input: 1, output: 2 } };
+  expect(buildSaygmModel(parsed.data[1]!, existing)).toEqual(existing);
 });
 
 test("keeps SayGM model lifecycle changes review-only", () => {
