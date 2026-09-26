@@ -1,0 +1,28 @@
+# Fast serving-path router for GLM 5.2 — same weights/quality as Standard, faster serving.
+# Model ID: accounts/fireworks/routers/glm-5p2-fast
+# https://docs.fireworks.ai/serverless/serving-paths
+# Pricing (per 1M input / cached input / output): $2.10 / $0.21 / $6.60
+# https://docs.fireworks.ai/serverless/pricing
+# https://fireworks.ai/blog/glm-5p2-fast (published 2026-06-30)
+# Reasoning: GLM 5.2 two tiers High/Max — 'high' selects High, 'low'/'medium' collapse
+# to 'high', 'max'/'xhigh' select Max, omitted defaults to Max; 'none'/false disables.
+# https://docs.fireworks.ai/api-reference/post-chatcompletions
+# Toggle: thinking.type = enabled|disabled (reasoning_effort = "none" or false also disables)
+# Effort: reasoning_effort = high|max
+base_model = "zhipuai/glm-5.2"
+name = "GLM 5.2 Fast"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["high", "max"]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 2.10
+output = 6.60
+cache_read = 0.21
