@@ -1,0 +1,9 @@
+# Source: https://aisa.one/models (AIsa pricing API https://aisa.one/api/pricing/models,
+# catalog cached_at 2026-09-15, accessed 2026-09-15). All cost values USD per 1M tokens as published by AIsa.
+# AIsa is a multi-model relay: reasoning controls mirror the underlying lab API (pass-through).
+base_model = "openai/gpt-image-2.5-sunburst"
+
+[cost]
+input = 8.0
+output = 30.0
+cache_read = 2.0

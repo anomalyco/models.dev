@@ -1,0 +1,24 @@
+# Sources (accessed 2026-09-15):
+# https://www.alibabacloud.com/help/en/model-studio/wan2-7-t2v
+# https://www.alibabacloud.com/help/en/model-studio/text-to-video-api-reference
+# https://www.alibabacloud.com/blog/alibaba-unveils-wan2-7-video-to-elevate-creators-from-executors-to-directors_603009
+# Snapshots wan2.7-t2v-2026-04-25 and wan2.7-t2v-2026-06-12; optional audio_url (WAV/MP3, 2-30 s) input.
+# Async DashScope video-synthesis endpoint: no temperature/tool/structured-output controls;
+# billed per second of output video, so no token limits (limit = 0).
+name = "Wan2.7 Text-to-Video"
+description = "Video model for text-to-video generation with auto-generated or user-supplied audio track"
+release_date = "2026-04-07"
+last_updated = "2026-06-12"
+attachment = true
+reasoning = false
+temperature = false
+tool_call = false
+open_weights = false
+
+[limit]
+context = 0
+output = 0
+
+[modalities]
+input = ["text", "audio"]
+output = ["video"]
