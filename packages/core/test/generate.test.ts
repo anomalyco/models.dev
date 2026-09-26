@@ -45,6 +45,160 @@ describe("catalog generation", () => {
     });
   });
 
+  test("Zenifra model IDs preserve the upstream namespace", async () => {
+    const root = path.join(import.meta.dirname, "..", "..", "..");
+    const providers = await generate(path.join(root, "providers"));
+    const modelIDs = Object.keys(providers.zenifra?.models ?? {});
+
+    expect(modelIDs).not.toEqual([]);
+    expect(modelIDs.every((modelID) => modelID.startsWith("zenifra/"))).toBe(true);
+  });
+
+  test("Zenifra exposes only native reasoning controls", async () => {
+    const root = path.join(import.meta.dirname, "..", "..", "..");
+    const providers = await generate(path.join(root, "providers"));
+    const models = providers.zenifra?.models ?? {};
+
+    const actual = Object.fromEntries(
+      Object.entries(models).map(([modelID, model]) => [
+        modelID,
+        model.reasoning_options,
+      ]),
+    );
+
+    expect(actual).toEqual({
+      "zenifra/deepseek-v4-flash-0731": [
+        { type: "toggle" },
+        { type: "effort", values: ["low", "high", "max"] },
+      ],
+      "zenifra/deepseek-v4-pro": [
+        { type: "toggle" },
+        { type: "effort", values: ["high", "max"] },
+      ],
+      "zenifra/glm-5.1": [{ type: "toggle" }],
+      "zenifra/glm-5.2": [
+        { type: "toggle" },
+        { type: "effort", values: ["high", "max"] },
+      ],
+      "zenifra/kimi-k2.5": [{ type: "toggle" }],
+      "zenifra/kimi-k2.7-code": [],
+      "zenifra/kimi-k3": [
+        { type: "effort", values: ["low", "high", "max"] },
+      ],
+      "zenifra/qwen3.6-flash": [{ type: "toggle" }],
+      "zenifra/qwen3.6-plus": [{ type: "toggle" }],
+      "zenifra/qwen3.7-max": [{ type: "toggle" }],
+      "zenifra/qwen3.7-plus": [{ type: "toggle" }],
+      "zenifra/qwen3.8-27b": [
+        { type: "toggle" },
+        { type: "effort", values: ["low", "medium", "xhigh"] },
+      ],
+      "zenifra/qwen3.8-flash": [
+        { type: "toggle" },
+        { type: "effort", values: ["low", "medium", "xhigh"] },
+      ],
+      "zenifra/qwen3.8-max": [
+        { type: "toggle" },
+        { type: "effort", values: ["low", "medium", "xhigh"] },
+      ],
+    });
+  });
+
+  test("Zenifra attachment support matches its served input modalities", async () => {
+    const root = path.join(import.meta.dirname, "..", "..", "..");
+    const providers = await generate(path.join(root, "providers"));
+    const models = providers.zenifra?.models ?? {};
+
+    const actual = Object.fromEntries(
+      Object.entries(models).map(([modelID, model]) => [
+        modelID,
+        model.attachment,
+      ]),
+    );
+
+    expect(actual).toEqual({
+      "zenifra/deepseek-v4-flash-0731": false,
+      "zenifra/deepseek-v4-pro": false,
+      "zenifra/glm-5.1": false,
+      "zenifra/glm-5.2": false,
+      "zenifra/kimi-k2.5": true,
+      "zenifra/kimi-k2.7-code": true,
+      "zenifra/kimi-k3": true,
+      "zenifra/qwen3.6-flash": true,
+      "zenifra/qwen3.6-plus": true,
+      "zenifra/qwen3.7-max": false,
+      "zenifra/qwen3.7-plus": true,
+      "zenifra/qwen3.8-27b": false,
+      "zenifra/qwen3.8-flash": true,
+      "zenifra/qwen3.8-max": true,
+    });
+  });
+
+  test("Zenifra serves current limits, modalities, and converted tier prices", async () => {
+    const root = path.join(import.meta.dirname, "..", "..", "..");
+    const providers = await generate(path.join(root, "providers"));
+    const models = providers.zenifra?.models ?? {};
+
+    expect(models["zenifra/glm-5.1"]?.limit).toEqual({
+      context: 202_745,
+      output: 131_072,
+    });
+    expect(models["zenifra/qwen3.6-flash"]?.limit).toEqual({
+      context: 991_808,
+      output: 65_536,
+    });
+    expect(models["zenifra/qwen3.6-plus"]?.limit).toEqual({
+      context: 991_808,
+      output: 65_536,
+    });
+    expect(models["zenifra/qwen3.8-27b"]?.modalities?.input).toEqual(["text"]);
+    expect(models["zenifra/qwen3.8-max"]?.modalities?.input).toEqual(["text", "image", "video"]);
+
+    expect(models["zenifra/glm-5.1"]?.cost).toEqual({
+      input: 1.144231,
+      output: 4.578846,
+      cache_read: 0.228846,
+      tiers: [{
+        tier: { type: "context", size: 32_001 },
+        input: 1.526923,
+        output: 5.340385,
+        cache_read: 0.305769,
+      }],
+    });
+    expect(models["zenifra/qwen3.6-flash"]?.cost).toEqual({
+      input: 0.163462,
+      output: 0.980769,
+      cache_read: 0.017308,
+      context_over_200k: {
+        input: 0.653846,
+        output: 3.923077,
+        cache_read: 0.065385,
+      },
+      tiers: [{
+        tier: { type: "context", size: 256_001 },
+        input: 0.653846,
+        output: 3.923077,
+        cache_read: 0.065385,
+      }],
+    });
+    expect(models["zenifra/qwen3.6-plus"]?.cost).toEqual({
+      input: 0.275,
+      output: 1.636538,
+      cache_read: 0.028846,
+      context_over_200k: {
+        input: 1.092308,
+        output: 6.540385,
+        cache_read: 0.111538,
+      },
+      tiers: [{
+        tier: { type: "context", size: 256_001 },
+        input: 1.092308,
+        output: 6.540385,
+        cache_read: 0.111538,
+      }],
+    });
+  });
+
   test("base_model can factor metadata without changing provider JSON", async () => {
     await withFixture(async (root) => {
       await write(root, "providers/direct/provider.toml", providerToml("Direct"));
