@@ -1,0 +1,15 @@
+# DiscreteStack's low-latency tier, serving zhipuai/glm-5.3-flash in the host's
+# non-reasoning configuration: thinking is disabled server-side and callers cannot
+# enable it, hence reasoning = false with no reasoning_options. Limits and modalities
+# verified via https://setup.discretestack.com (accessed 2026-09-17). Flat-rate
+# licensed host: no per-token pricing is published, so cost fields are omitted.
+base_model = "zhipuai/glm-5.3-flash"
+name = "DiscreteStack Stable Fast"
+description = "DiscreteStack's lowest-latency tier for high-volume everyday coding without reasoning overhead"
+reasoning = false
+
+[limit]
+output = 32_000
+
+[modalities]
+input = ["text", "image"]
