@@ -82,6 +82,16 @@ reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhig
 structured_output = true
 reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
 
+# Claude Opus 5.5 rejects thinking.type = disabled even when Cloudflare's schema
+# advertises a thinking field. Pin the Anthropic Messages route to effort only.
+# https://platform.claude.com/docs/en/models/opus-5-5/whats-new-opus-5-5#thinking-cant-be-disabled
+[models."anthropic/claude-opus-5.5"]
+note = [
+  "Effort: output_config.effort = low|medium|high|xhigh|max; adaptive thinking cannot be disabled.",
+  "Source: https://platform.claude.com/docs/en/models/opus-5-5/whats-new-opus-5-5#thinking-cant-be-disabled",
+]
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
+
 [models."anthropic/claude-sonnet-4.5"]
 structured_output = true
 limit = { context = 1000000 }
