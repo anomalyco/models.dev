@@ -1,10 +1,9 @@
-base_model = "xiaomi/mimo-v2.6-flash"
+base_model = "alibaba/qwen3.5-122b-a10b"
 
 [[reasoning_options]]
 type = "effort"
 values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"]
 
 [cost]
-input = 0.14
-output = 0.28
-cache_read = 0.0028
+input = 0.4
+output = 3.2
