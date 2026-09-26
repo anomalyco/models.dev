@@ -1,0 +1,17 @@
+# Reasoning: none forwarded. This host rebuilds each deepinfra request from a
+# fixed parameter map and sends nothing else: frequency_penalty,
+# max_completion_tokens, max_tokens, messages, model, n, presence_penalty, stop,
+# stream, stream_options, temperature, tool_choice, tools, top_p. It has no
+# reasoning_effort and no thinking field.
+# https://platform.hopscotchlabs.ai/models
+base_model = "tencent/hy3"
+base_model_omit = ["limit.input"]
+structured_output = true
+reasoning_options = []
+
+[cost]
+input = 0.14
+output = 0.58
+
+[limit]
+context = 262_144
