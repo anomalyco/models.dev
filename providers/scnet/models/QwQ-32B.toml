@@ -1,0 +1,11 @@
+# SCNet catalog exposes no caller-controlled reasoning option for this SKU.
+# https://www.scnet.cn/ac/openapi/doc/2.0/moduleapi/api/chat.html
+base_model = "alibaba/qwq-32b"
+reasoning_options = []
+
+[cost]
+input = 0.14875
+output = 0.44625
+
+[limit]
+context = 32_768
