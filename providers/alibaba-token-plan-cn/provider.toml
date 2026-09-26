@@ -16,9 +16,12 @@
 # https://help.aliyun.com/zh/model-studio/deep-thinking
 # https://help.aliyun.com/zh/model-studio/compatibility-with-openai-responses-api
 # https://www.alibabacloud.com/help/en/model-studio/anthropic-api-messages
+# Base URL (verified 2026-09-24):
+# https://platform.qianwenai.com/docs/token-plan/team/token-plan-team-quickstart
+# https://platform.qianwenai.com/docs/token-plan/personal/token-plan-personal-quickstart
 
 name = "Alibaba Token Plan (China)"
 env = ["ALIBABA_TOKEN_PLAN_API_KEY"]
 npm = "@ai-sdk/openai-compatible"
 doc = "https://www.alibabacloud.com/help/zh/model-studio/token-plan-overview"
-api = "https://token-plan.cn-beijing.maas.aliyuncs.com/compatible-mode/v1"
+api = "https://token-plan.maas.qianwenaiapi.com/compatible-mode/v1"
