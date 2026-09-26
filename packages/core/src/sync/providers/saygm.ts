@@ -82,11 +82,19 @@ function dropPerImageModels(data: unknown) {
 }
 
 function isPerImagePriced(entry: unknown) {
-  const pricing = (entry as { pricing?: { dimensions?: unknown } | null } | null)?.pricing;
-  const dimensions = pricing?.dimensions;
-  return typeof dimensions === "object" && dimensions !== null
-    && "output_per_image_ndollars" in dimensions;
+  const model = entry as {
+    pricing?: PricedBlock;
+    price_range?: Record<string, PricedBlock> | null;
+  } | null;
+  const blocks = [model?.pricing, ...Object.values(model?.price_range ?? {})];
+  return blocks.some((block) => {
+    const dimensions = block?.dimensions;
+    return typeof dimensions === "object" && dimensions !== null
+      && "output_per_image_ndollars" in dimensions;
+  });
 }
+
+type PricedBlock = { dimensions?: unknown } | null | undefined;
 
 export type SaygmModel = z.infer<typeof SaygmModel>;
 
@@ -181,6 +189,7 @@ export function buildSaygmModel(model: SaygmModel, existing: ExistingModel): Syn
     // SayGM also lists an audio-output rate on text-output models; none of its
     // catalog generates audio, so only the audio-input rate is published.
     input_audio: optionalUsdPerMtok(dimensions.audio_input_per_mtok_ndollars) ?? existing.cost?.input_audio,
+    output_audio: undefined,
   };
 
   if (dimensions.long_context_threshold_tokens !== undefined) {

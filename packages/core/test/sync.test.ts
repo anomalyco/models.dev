@@ -455,15 +455,25 @@ test("skips per-image SayGM SKUs and accepts unpriced coming-soon ids", () => {
     },
   };
   const comingSoon = { ...saygmModel({ id: "claude-fable-5-2" }), pricing: null, price_range: null };
+  const unpricedPerImage = { ...perImage, id: "flux.2-pro", pricing: null };
 
   const parsed = SaygmResponse.parse({
     object: "list",
-    data: [saygmModel(), perImage, comingSoon],
+    data: [saygmModel(), perImage, comingSoon, unpricedPerImage],
   });
 
   expect(parsed.data.map((model) => model.id)).toEqual(["gpt-5.4", "claude-fable-5-2"]);
   const existing = { base_model: "anthropic/claude-fable-5-2", cost: { input: 1, output: 2 } };
   expect(buildSaygmModel(parsed.data[1]!, existing)).toEqual(existing);
+});
+
+test("clears a stale SayGM audio-output rate", () => {
+  const built = buildSaygmModel(saygmModel(), {
+    base_model: "openai/gpt-5.4",
+    cost: { input: 2, output: 12, output_audio: 12 },
+  });
+
+  expect(built.cost?.output_audio).toBeUndefined();
 });
 
 test("keeps SayGM model lifecycle changes review-only", () => {
