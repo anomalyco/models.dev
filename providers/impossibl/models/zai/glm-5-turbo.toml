@@ -1,4 +1,5 @@
 # Pricing: https://api.impossibl.com/v1/models
+# Toggle: {"reasoning_effort":"none"} disables
 base_model = "zhipuai/glm-5-turbo"
 
 [cost]
@@ -7,4 +8,4 @@ output = 4.00
 cache_read = 0.24
 
 [[reasoning_options]]
-type = "toggle" # API: {"reasoning_effort":"none"}
+type = "toggle" # API: {"reasoning_effort":"none"} disables

@@ -1,0 +1,19 @@
+# Pricing: https://api.impossibl.com/v1/models
+base_model = "openai/gpt-6-astra"
+
+[cost]
+input = 10.00
+output = 50.00
+cache_read = 1.00
+cache_write = 12.50
+
+[[cost.tiers]]
+tier = { size = 272_000 }
+input = 20.00
+output = 75.00
+cache_read = 2.00
+cache_write = 25.00
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high", "xhigh"]

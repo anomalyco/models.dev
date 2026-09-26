@@ -5,7 +5,8 @@ base_model = "google/gemini-3.1-flash-lite"
 input = 0.25
 output = 1.50
 cache_read = 0.025
+input_audio = 0.50
 
 [[reasoning_options]]
-type = "effort" # API: {"generationConfig":{"thinkingConfig":{"thinkingLevel":"low"}}}
+type = "effort" # API: {"generationConfig":{"thinkingConfig":{"thinkingLevel":"<value>"}}}
 values = ["minimal", "low", "medium", "high"]
