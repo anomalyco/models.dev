@@ -1,0 +1,28 @@
+name = "MiMo V2.6 Flash Uncensored Thinking"
+description = "MiMo V2.6 Flash Uncensored with maximum thinking enabled. Supports a 1M-token context window and tool calling."
+family = "mimo"
+release_date = "2026-09-26"
+last_updated = "2026-09-26"
+attachment = false
+reasoning = true
+tool_call = true
+structured_output = false
+open_weights = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["max"]
+
+[cost]
+input = 0.5
+output = 1.5
+cache_read = 0.275
+
+[limit]
+context = 1_048_576
+input = 1_048_576
+output = 65_536
+
+[modalities]
+input = ["text"]
+output = ["text"]

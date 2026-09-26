@@ -1,0 +1,26 @@
+name = "Qwen3.8 27B Uncensored TEE"
+description = "HauhauCS's Aggressive finetune of Qwen3.8 27B reduces refusal behavior for creative writing, coding, and image analysis. It supports reasoning, tool calling, and structured output with a 262K-token context. Runs inside a TEE (Trusted Execution Environment), with provider attestation support."
+release_date = "2026-09-25"
+last_updated = "2026-09-25"
+attachment = true
+reasoning = true
+tool_call = true
+structured_output = true
+open_weights = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "xhigh"]
+
+[cost]
+input = 0.3
+output = 1.5
+
+[limit]
+context = 262_144
+input = 262_144
+output = 262_144
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
