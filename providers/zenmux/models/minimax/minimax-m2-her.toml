@@ -1,0 +1,16 @@
+# Host reasoning override: page supports_reasoning=0 and OpenAI capabilities.reasoning=false.
+# https://zenmux.ai/docs/api/openai/openai-list-models.html
+base_model = "minimax/MiniMax-M2-Her"
+name = "MiniMax M2-her"
+reasoning = false
+
+[cost]
+input = 0.3
+output = 1.2
+
+[limit]
+context = 64_000
+
+[provider]
+npm = "@ai-sdk/anthropic"
+api = "https://zenmux.ai/api/anthropic/v1"

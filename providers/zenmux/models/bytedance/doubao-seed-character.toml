@@ -1,0 +1,33 @@
+# Toggle: reasoning.enabled = true|false
+# Effort: reasoning_effort = minimal|low|high
+# https://zenmux.ai/docs/api/openai/openai-list-models.html
+# https://zenmux.ai/docs/guide/advanced/reasoning.html
+base_model = "bytedance-seed/seed-character"
+name = "Doubao-Seed-Character"
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["minimal", "low", "high"]
+
+[cost]
+input = 0.1179
+output = 0.2947
+cache_read = 0.0236
+cache_write = 0.0025
+
+[[cost.tiers]]
+tier = { type = "context", size = 32_000 }
+input = 0.1768
+output = 0.8842
+cache_read = 0.0236
+cache_write = 0.0025
+
+[limit]
+context = 128_000
+output = 32_000

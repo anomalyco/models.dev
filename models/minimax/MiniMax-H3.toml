@@ -1,0 +1,22 @@
+name = "MiniMax H3"
+description = "MiniMax H3 is a lightweight, open-weights video generation model from MiniMax. It is designed for precise multimodal editing and controlled content generation, including instruction-guided edits, text and brand rendering, and video-to-video motion transfer.\n\nThe model is suited for commercial creative workflows across advertising, e-commerce, gaming, and interface design, with native audiovisual output for reference-driven generation."
+release_date = "2026-07-31"
+last_updated = "2026-07-31"
+attachment = true
+reasoning = false
+temperature = false
+tool_call = false
+open_weights = true
+license = "MiniMax H3 Community License Agreement"
+
+[limit]
+context = 12_800
+output = 12_800
+
+[modalities]
+input = ["text", "image", "audio", "video"]
+output = ["video"]
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/MiniMaxAI/MiniMax-H3"

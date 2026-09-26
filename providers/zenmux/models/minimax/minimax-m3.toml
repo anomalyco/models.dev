@@ -1,9 +1,25 @@
+# Toggle: thinking.type = enabled|disabled
+# https://zenmux.ai/docs/api/openai/openai-list-models.html
+# https://zenmux.ai/docs/guide/advanced/reasoning.html
 base_model = "minimax/MiniMax-M3"
-reasoning_options = [{ type = "toggle" }]
+name = "MiniMax M3"
+
+[[reasoning_options]]
+type = "toggle"
 
 [cost]
-input = 0.60
-output = 2.40
+input = 0.27
+output = 1.08
+cache_read = 0.054
+
+[[cost.tiers]]
+tier = { type = "context", size = 512_000 }
+input = 0.54
+output = 2.16
+cache_read = 0.108
+
+[limit]
+context = 1_000_000
 
 [provider]
 npm = "@ai-sdk/anthropic"
