@@ -4,11 +4,13 @@
 # capabilities=[chat, streaming, function-calling, coding]. `cost` is the
 # primary route's rate; the preset bills per hop.
 # Bills at each hop's rate.
-# AnyRouter is a single OpenAI-compatible gateway, so reasoning is one uniform
-# control for every model here rather than per-lab controls: the same request
-# field is accepted on every model and forwarded to whichever route serves the
-# request.
-# Effort: reasoning_effort = low|medium|high
+# AnyRouter forwards `reasoning_effort` to whichever route serves the request
+# without validating it, so the rungs a route accepts are whatever that
+# route's upstream allows. Measured live on 2026-09-27, `low` and `high` are
+# accepted on every route reachable from a plain key, while `medium` and
+# `xhigh` are rejected with 400 on some of them, so this publishes the
+# intersection only.
+# Effort: reasoning_effort = low|high
 name = "AnyRouter Hermes"
 description = "Router across the top tool-calling models for autonomous agents, ranked by agentic score, with automatic fallback"
 family = "model-router"
@@ -16,7 +18,7 @@ release_date = "2026-06-08"
 last_updated = "2026-06-08"
 attachment = false
 reasoning = true
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
+reasoning_options = [{ type = "effort", values = ["low", "high"] }]
 temperature = true
 tool_call = true
 structured_output = false
