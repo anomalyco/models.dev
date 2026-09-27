@@ -97,11 +97,11 @@ test("fetches the public Zenifra catalog without authentication", async () => {
     return Response.json({ object: "list", data: [zenifraModel()] });
   }) as unknown as typeof fetch;
 
-  const raw = await fetchZenifraModels(undefined, fetcher);
+  const raw = parseZenifraModels(await fetchZenifraModels(undefined, fetcher));
 
   expect(request?.url).toBe("https://ai.zenifra.com/v1/models");
   expect(request?.headers.get("authorization")).toBeNull();
-  expect(raw.data).toHaveLength(1);
+  expect(raw).toHaveLength(1);
 });
 
 test("adds optional bearer authentication when a Zenifra key is configured", async () => {
@@ -124,6 +124,21 @@ test("rejects an empty Zenifra catalog before destructive sync", () => {
   );
 });
 
+test("rejects Zenifra pricing units that are not per million tokens", () => {
+  const invalidCatalog: unknown = {
+    object: "list",
+    data: [zenifraModel({
+      pricing: {
+        input: 0.6,
+        output: 2,
+        unit: "per_image",
+      },
+    })],
+  };
+
+  expect(() => parseZenifraModels(invalidCatalog)).toThrow();
+});
+
 test("maps Zenifra prices, tiers, limits, capabilities, and modalities", () => {
   const result = buildZenifraModel(
     zenifraModel({ id: "zenifra/test" }),
@@ -144,14 +159,14 @@ test("maps Zenifra prices, tiers, limits, capabilities, and modalities", () => {
     limit: { context: 1_000_000, output: 131_072 },
     modalities: { input: ["text", "image", "video"], output: ["text"] },
     cost: {
-      input: 0.115385,
-      output: 0.384615,
-      cache_read: 0.019231,
+      input: 0.113208,
+      output: 0.377358,
+      cache_read: 0.018868,
       tiers: [{
         tier: { type: "context", size: 256_001 },
-        input: 0.653846,
-        output: 3.923077,
-        cache_read: 0.065385,
+        input: 0.641509,
+        output: 3.849057,
+        cache_read: 0.064151,
       }],
     },
   });
@@ -164,6 +179,32 @@ test("derives temperature support from the API parameters", () => {
   );
 
   expect(result.temperature).toBe(true);
+});
+
+test("refreshes authored reasoning effort values from the explicit API control set", () => {
+  const result = buildZenifraModel(
+    zenifraModel({
+      supported_parameters: ["reasoning_effort"],
+      capabilities: {
+        reasoning: {
+          supported: true,
+          always_on: false,
+          effort_levels: ["high", "max"],
+        },
+      },
+    }),
+    existingModel({
+      reasoning_options: [
+        { type: "toggle" },
+        { type: "effort", values: ["low", "medium", "xhigh"] },
+      ],
+    }),
+  );
+
+  expect(result.reasoning_options).toEqual([
+    { type: "toggle" },
+    { type: "effort", values: ["high", "max"] },
+  ]);
 });
 
 test("resolves Zenifra routes to canonical model metadata", () => {
@@ -260,7 +301,7 @@ test("preserves authored pricing fields omitted by a partial feed", () => {
   const result = buildZenifraModel(
     zenifraModel({
       id: "zenifra/partial-pricing",
-      pricing: { input: 0.6, output: 2 },
+      pricing: { input: 0.6, output: 2, unit: "per_million_tokens" },
     }),
     existingModel({
       base_model: undefined,
@@ -278,8 +319,8 @@ test("preserves authored pricing fields omitted by a partial feed", () => {
   );
 
   expect(result.cost).toMatchObject({
-    input: 0.115385,
-    output: 0.384615,
+    input: 0.113208,
+    output: 0.377358,
     cache_read: 0.5,
     cache_write: 0.2,
     input_audio: 3,

@@ -7,10 +7,9 @@ import { factorBaseModel, resolveModelMetadataBaseModel } from "./openrouter.js"
 
 const API_ENDPOINT = "https://ai.zenifra.com/v1/models";
 
-// Zenifra publishes its model prices in BRL per million tokens. Keep this in
-// sync with the rate used by the authored catalog until the API publishes a
-// currency field or the project adopts dynamic FX conversion.
-const BRL_PER_USD = 5.2;
+// Zenifra publishes its model prices in BRL per million tokens. Convert them to
+// the USD values consumed by models.dev using the project's fixed BRL/USD rate.
+const BRL_PER_USD = 5.3;
 
 const ZenifraPricingTier = z.object({
   min_input_tokens: z.number().int().nonnegative(),
@@ -23,6 +22,7 @@ const ZenifraPricingTier = z.object({
 const ZenifraPricing = z.object({
   input: z.number().nonnegative(),
   output: z.number().nonnegative(),
+  unit: z.literal("per_million_tokens"),
   cache_read_input: z.number().nonnegative().optional(),
   context_tiers: z.array(ZenifraPricingTier).optional(),
 }).passthrough();
@@ -227,7 +227,7 @@ export function buildZenifraModel(
       ?? (parameters === undefined ? existing?.structured_output : parameters.has("structured_outputs")),
     status: existing?.status,
     interleaved: existing?.interleaved,
-    provider: { shape: "completions" },
+    provider: { shape: "completions" as const },
     cost: buildCost(model, existing, reasoning),
     limit,
     modalities: { input, output },
@@ -266,23 +266,27 @@ function resolveReasoningOptions(
   model: ZenifraModel,
   authored: ExistingModel | undefined,
 ): SyncedFullModel["reasoning_options"] {
-  if (authored?.reasoning_options !== undefined) {
-    return authored.reasoning_options.flatMap((option) => {
-      const parsed = ReasoningOption.safeParse(option);
-      return parsed.success ? [parsed.data] : [];
-    });
-  }
+  const authoredOptions = authored?.reasoning_options?.flatMap((option) => {
+    const parsed = ReasoningOption.safeParse(option);
+    return parsed.success ? [parsed.data] : [];
+  });
 
   const levels = model.supported_parameters?.includes("reasoning_effort")
     ? model.capabilities?.reasoning?.effort_levels
       ?.filter((value): value is ReasoningEffort => REASONING_EFFORTS.has(value as ReasoningEffort))
     : undefined;
   if (levels !== undefined && levels.length > 0) {
-    return [{ type: "effort", values: [...new Set(levels)] }];
+    const preservedControls = authoredOptions?.filter((option) => option.type !== "effort") ?? [];
+    return [
+      ...preservedControls,
+      { type: "effort", values: [...new Set(levels)] },
+    ];
   }
 
-  if (model.capabilities?.reasoning?.always_on === true) return [];
-  return undefined;
+  if (model.capabilities?.reasoning?.always_on === true) {
+    return authoredOptions?.filter((option) => option.type !== "toggle") ?? [];
+  }
+  return authoredOptions;
 }
 
 function buildCost(

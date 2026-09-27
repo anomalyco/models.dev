@@ -273,7 +273,7 @@ xAI is implemented in `packages/core/src/sync/providers/xai.ts`.
 
 - Zenifra is implemented in `packages/core/src/sync/providers/zenifra.ts`.
 - Source endpoint: `https://ai.zenifra.com/v1/models`; no authentication is required for the public catalog. `ZENIFRA_AI_KEY` is accepted locally or when the endpoint is configured to require a key.
-- The endpoint's prices are BRL per million tokens and are converted to USD using the `5.20 BRL/USD` rate used by the authored catalog. Off-peak prices are not represented because the catalog cost schema has no time-of-day dimension.
+- The endpoint's prices are BRL per million tokens and are converted to USD using the project's fixed `5.30 BRL/USD` rate. Off-peak prices are not represented because the catalog cost schema has no time-of-day dimension.
 - Context tiers, context/output limits, modalities, attachment support, tool calling, structured output, and temperature support come from the endpoint when published.
 - Existing authored reasoning options are preserved when the endpoint does not provide an unambiguous wire field. New reasoning models without safe controls open a deduplicated missing-model issue instead of receiving an invented empty option set.
 - Model IDs are mapped to canonical `models/` metadata; unknown remote IDs are reported for manual authoring. Zenifra models absent from a successful response are retained for manual lifecycle review because the public feed has no deletion signal.
