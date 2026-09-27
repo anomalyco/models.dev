@@ -182,7 +182,13 @@ test("reports new Zenifra routes without canonical metadata", () => {
 test("requires authored controls for an inline reasoner with no safe feed controls", () => {
   const model = zenifraModel({
     id: "zenifra/inline-reasoner",
-    capabilities: { reasoning: { supported: true } },
+    capabilities: {
+      reasoning: {
+        supported: true,
+        effort_levels: ["low", "medium", "xhigh"],
+      },
+    },
+    supported_parameters: ["temperature"],
   });
 
   expect(() => buildZenifraModel(
@@ -219,6 +225,74 @@ test("preserves authored capabilities when optional feed fields are absent", () 
     structured_output: true,
     reasoning_options: [],
   });
+});
+
+test("does not stamp defaults when a new canonical route omits optional fields", () => {
+  const result = buildZenifraModel(zenifraModel({
+    input_modalities: undefined,
+    output_modalities: undefined,
+    context_length: undefined,
+    max_output_tokens: undefined,
+    capabilities: undefined,
+    supported_parameters: undefined,
+  }), undefined);
+
+  expect(result).toMatchObject({ base_model: "alibaba/qwen3.8-flash" });
+  expect(result).not.toHaveProperty("attachment");
+  expect(result).not.toHaveProperty("limit");
+  expect(result).not.toHaveProperty("modalities");
+  expect(result).not.toHaveProperty("tool_call");
+  expect(result).not.toHaveProperty("temperature");
+});
+
+test("preserves authored pricing fields omitted by a partial feed", () => {
+  const result = buildZenifraModel(
+    zenifraModel({
+      id: "zenifra/partial-pricing",
+      pricing: { input: 0.6, output: 2 },
+    }),
+    existingModel({
+      base_model: undefined,
+      reasoning_options: [],
+      cost: {
+        input: 1,
+        output: 2,
+        cache_read: 0.5,
+        cache_write: 0.2,
+        input_audio: 3,
+        output_audio: 4,
+        tiers: [{ tier: { type: "context", size: 256_001 }, input: 2, output: 4 }],
+      },
+    }),
+  );
+
+  expect(result.cost).toMatchObject({
+    input: 0.115385,
+    output: 0.384615,
+    cache_read: 0.5,
+    cache_write: 0.2,
+    input_audio: 3,
+    output_audio: 4,
+    tiers: [{ tier: { type: "context", size: 256_001 }, input: 2, output: 4 }],
+  });
+});
+
+test("clears reasoning cost when the feed disables reasoning", () => {
+  const result = buildZenifraModel(
+    zenifraModel({
+      id: "zenifra/non-reasoning",
+      capabilities: { reasoning: { supported: false } },
+    }),
+    existingModel({
+      base_model: undefined,
+      reasoning: true,
+      reasoning_options: undefined,
+      cost: { input: 1, output: 2, reasoning: 0.5 },
+    }),
+  );
+
+  expect(result.reasoning).toBe(false);
+  expect(result.cost?.reasoning).toBeUndefined();
 });
 
 test("retains missing Zenifra routes instead of deleting on feed omission", () => {

@@ -122,7 +122,14 @@ export const zenifra = {
 
     // A new relay route without canonical metadata is not safe to author as a
     // full inline model. Existing entries remain available for manual review.
-    if (existing === undefined && baseModel === undefined) return undefined;
+    if (
+      existing === undefined
+      && (
+        baseModel === undefined
+        || model.pricing?.input === undefined
+        || model.pricing.output === undefined
+      )
+    ) return undefined;
 
     return {
       id: model.id,
@@ -169,34 +176,45 @@ export function buildZenifraModel(
   baseModel = existing?.base_model ?? resolveZenifraBaseModel(model.id),
   authored: ExistingModel | undefined = existing,
 ): SyncedModel {
-  const input = modalities(model.input_modalities, existing?.modalities?.input ?? ["text"]);
-  const output = modalities(model.output_modalities, existing?.modalities?.output ?? ["text"]);
+  const input = model.input_modalities === undefined
+    ? existing?.modalities?.input
+    : modalities(model.input_modalities, ["text"]);
+  const output = model.output_modalities === undefined
+    ? existing?.modalities?.output
+    : modalities(model.output_modalities, ["text"]);
   const capabilities = model.capabilities;
   const parameters = model.supported_parameters === undefined
     ? undefined
     : new Set(model.supported_parameters);
   const sourceReasoning = capabilities?.reasoning?.supported;
-  const reasoning = sourceReasoning ?? existing?.reasoning ?? false;
-  const reasoningOptions = reasoning
+  const reasoning = sourceReasoning
+    ?? existing?.reasoning
+    ?? (baseModel === undefined ? false : undefined);
+  const reasoningOptions = reasoning === true
     ? resolveReasoningOptions(model, authored)
     : undefined;
 
-  if (reasoning && reasoningOptions === undefined && !baseHasReasoningOptions(baseModel)) {
+  if (reasoning === true && reasoningOptions === undefined && !baseHasReasoningOptions(baseModel)) {
     throw new MissingReasoningOptionsError(
       model.id,
       "Zenifra exposes reasoning without a safe control set or authored reasoning_options",
     );
   }
 
-  const context = model.context_length ?? existing?.limit?.context ?? 0;
-  const outputLimit = model.max_output_tokens ?? existing?.limit?.output ?? context;
+  const context = model.context_length
+    ?? existing?.limit?.context
+    ?? (baseModel === undefined ? 0 : undefined);
+  const outputLimit = model.max_output_tokens
+    ?? existing?.limit?.output
+    ?? context
+    ?? (baseModel === undefined ? 0 : undefined);
   const limit = {
     context,
     input: existing?.limit?.input,
     output: outputLimit,
   };
   const hostValues = {
-    attachment: input.some((value) => value !== "text"),
+    attachment: input === undefined ? existing?.attachment : input.some((value) => value !== "text"),
     reasoning,
     reasoning_options: reasoningOptions,
     temperature: parameters === undefined ? existing?.temperature : parameters.has("temperature"),
@@ -210,7 +228,7 @@ export function buildZenifraModel(
     status: existing?.status,
     interleaved: existing?.interleaved,
     provider: { shape: "completions" },
-    cost: buildCost(model, existing),
+    cost: buildCost(model, existing, reasoning),
     limit,
     modalities: { input, output },
   };
@@ -228,6 +246,19 @@ export function buildZenifraModel(
     knowledge: existing?.knowledge,
     open_weights: existing?.open_weights ?? false,
     ...hostValues,
+    attachment: hostValues.attachment ?? existing?.attachment ?? false,
+    reasoning: hostValues.reasoning ?? false,
+    tool_call: hostValues.tool_call ?? existing?.tool_call ?? false,
+    structured_output: hostValues.structured_output ?? existing?.structured_output ?? false,
+    limit: {
+      ...limit,
+      context: context ?? 0,
+      output: outputLimit ?? context ?? 0,
+    },
+    modalities: {
+      input: input ?? ["text"],
+      output: output ?? ["text"],
+    },
   } satisfies SyncedFullModel;
 }
 
@@ -266,6 +297,7 @@ function baseHasReasoningOptions(baseModel: string | undefined) {
 function buildCost(
   model: ZenifraModel,
   existing: ExistingModel | undefined,
+  reasoning: boolean | undefined,
 ): SyncedFullModel["cost"] | undefined {
   const pricing = model.pricing;
   if (pricing === undefined) return existing?.cost;
@@ -288,10 +320,18 @@ function buildCost(
   return {
     input,
     output,
-    reasoning: existing?.cost?.reasoning,
-    cache_read: pricing.cache_read_input === undefined ? undefined : usd(pricing.cache_read_input),
+    reasoning: reasoning === false ? undefined : existing?.cost?.reasoning,
+    cache_read: pricing.cache_read_input === undefined
+      ? existing?.cost?.cache_read
+      : usd(pricing.cache_read_input),
     cache_write: existing?.cost?.cache_write,
-    tiers: tiers.length > 0 ? tiers : undefined,
+    input_audio: existing?.cost?.input_audio,
+    output_audio: existing?.cost?.output_audio,
+    tiers: pricing.context_tiers === undefined
+      ? existing?.cost?.tiers
+      : tiers.length > 0
+        ? tiers
+        : undefined,
   };
 }
 
