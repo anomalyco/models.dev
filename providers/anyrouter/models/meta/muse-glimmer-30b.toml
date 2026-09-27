@@ -1,13 +1,16 @@
 # Host contract (GET /api/v1/models?all=1, read 2026-09-24, re-verified
 # 2026-09-27): context_length=131072, input_modalities=[text, image],
-# supported_parameters=[max_tokens, temperature, top_p, stop, stream, tools,
-# tool_choice], capabilities=[chat, streaming, function-calling, reasoning,
-# vision, coding, agentic].
-# Context and modalities both match the lab entry, so only cost and
-# reasoning_options are authored. Flat 0.35/1.5 USD/MTok.
-# Effort: reasoning_effort = low|medium|high|xhigh (OpenRouter peers).
+# capabilities=[chat, streaming, function-calling, reasoning, vision, coding,
+# agentic].
+# Context and modalities match the lab entry, so only cost and
+# reasoning_options are authored.
+# AnyRouter is a single OpenAI-compatible gateway, so reasoning is one uniform
+# control for every model here rather than per-lab controls: the same request
+# field is accepted on every model and forwarded to whichever route serves the
+# request.
+# Effort: reasoning_effort = low|medium|high
 base_model = "meta/muse-glimmer-30b"
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh"] }]
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
 
 [cost]
 input = 0.35

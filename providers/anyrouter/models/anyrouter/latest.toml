@@ -1,13 +1,14 @@
-# Preset router to the latest stable production chat model actually serving
-# traffic (no preview/experimental SKUs), with automatic fallback.
-# Host contract (GET /api/v1/models?all=1, re-verified 2026-09-27):
-# context_length=1000000, top_provider.max_completion_tokens=64000,
-# input_modalities=[text], supported_parameters=[max_tokens, temperature,
-# top_p, stop, stream] (no reasoning or response_format controls of its
-# own), and capabilities=[chat, streaming, function-calling, coding,
-# vision] (no structured-output). `cost` is the primary route's rate
-# (google-agent-platform gemini-3.5-flash); the router bills per hop.
-# https://anyrouter.dev/model/anyrouter/latest
+# Router preset on the AnyRouter gateway. Host contract (GET
+# /api/v1/models?all=1, read 2026-09-24, re-verified 2026-09-27):
+# context_length=1000000, max output 64000, input_modalities=[text],
+# capabilities=[chat, streaming, function-calling, coding, vision]. `cost` is
+# the primary route's rate; the preset bills per hop.
+# Bills at each hop's rate.
+# AnyRouter is a single OpenAI-compatible gateway, so reasoning is one uniform
+# control for every model here rather than per-lab controls: the same request
+# field is accepted on every model and forwarded to whichever route serves the
+# request.
+# Effort: reasoning_effort = low|medium|high
 name = "AnyRouter Latest"
 description = "Router to the latest stable production chat model serving traffic, with automatic fallback"
 family = "model-router"
@@ -15,11 +16,11 @@ release_date = "2026-06-08"
 last_updated = "2026-06-08"
 attachment = false
 reasoning = true
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
 temperature = true
 tool_call = true
 structured_output = false
 open_weights = false
-reasoning_options = []
 
 [cost]
 input = 1.5

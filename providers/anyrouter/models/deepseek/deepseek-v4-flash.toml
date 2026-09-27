@@ -1,19 +1,17 @@
 # Host contract (GET /api/v1/models?all=1, read 2026-09-24, re-verified
 # 2026-09-27): context_length=1048576, input_modalities=[text, image],
-# supported_parameters=[max_tokens, temperature, top_p, stop, stream],
 # capabilities=[chat, streaming, function-calling, coding, reasoning, vision,
 # agentic].
-# This route takes image input where the lab entry is text-only, hence the
-# attachment/modalities/context overrides. Flat 0.042448/0.084896 USD/MTok,
-# with no >200k context tier.
-# Toggle: reasoning.enabled = true|false
-# Effort: reasoning_effort = high|xhigh (OpenRouter same-model peer).
+# This route takes image input, hence the attachment, modalities and context
+# overrides.
+# AnyRouter is a single OpenAI-compatible gateway, so reasoning is one uniform
+# control for every model here rather than per-lab controls: the same request
+# field is accepted on every model and forwarded to whichever route serves the
+# request.
+# Effort: reasoning_effort = low|medium|high
 base_model = "deepseek/deepseek-v4-flash"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
 attachment = true
-reasoning_options = [
-  { type = "toggle" },
-  { type = "effort", values = ["high", "xhigh"] },
-]
 
 [cost]
 input = 0.042448

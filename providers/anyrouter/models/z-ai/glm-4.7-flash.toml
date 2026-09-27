@@ -1,12 +1,15 @@
 # Host contract (GET /api/v1/models?all=1, read 2026-09-24, re-verified
 # 2026-09-27): context_length=200000, input_modalities=[text],
-# supported_parameters=[max_tokens, temperature, top_p, stop, stream],
 # capabilities=[chat, reasoning, streaming, function-calling, coding].
-# Context and modalities both match the lab entry, so only cost and
-# reasoning_options are authored. Flat 0.06/0.40 USD/MTok.
-# Toggle: reasoning.enabled = true|false (Z.ai lab + OpenRouter peers)
+# Context and modalities match the lab entry, so only cost and
+# reasoning_options are authored.
+# AnyRouter is a single OpenAI-compatible gateway, so reasoning is one uniform
+# control for every model here rather than per-lab controls: the same request
+# field is accepted on every model and forwarded to whichever route serves the
+# request.
+# Effort: reasoning_effort = low|medium|high
 base_model = "zhipuai/glm-4.7-flash"
-reasoning_options = [{ type = "toggle" }]
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
 
 [cost]
 input = 0.06
