@@ -3,20 +3,22 @@
 # capabilities=[chat, reasoning, streaming, function-calling, coding],
 # price 0.06/0.4. Context and modalities match the lab entry; the host caps
 # output at 128000, just under the lab's 131072, so output is the one override.
-# Reasoning: no caller control is published. providers/zai and the OpenRouter
-# peer both publish this model as toggle-only, and the chat surface has no
-# toggle to forward — the host documents the toggle as a Responses-endpoint
-# control (`reasoning.enabled`) and the upstreams refuse the `reasoning` object
-# outright. This route also validates no effort value at all: a nonsense value
-# is accepted like any other, so accepting `low` is not evidence of a graded
-# control. Probed 2026-09-27: `none` returned 0 reasoning tokens where `low`
-# returned 600, so the off sentinel does work, but the route is intermittent for
-# a plain key (502 from z-ai-coding-byok on most attempts) and neither baseline
-# carries an effort ladder, so nothing is promised beyond the toggle neither
-# baseline can express here. See the provider header.
-# Effort: not published — see above
+# Reasoning: providers/zai and the OpenRouter peer both publish this model as
+# toggle-only, and the chat surface has no toggle to forward — the host
+# documents the toggle as a Responses-endpoint control (`reasoning.enabled`) and
+# the upstreams refuse the `reasoning` object outright. Neither baseline
+# carries an effort ladder, and this route validates no effort value at all
+# (a nonsense value is accepted like any other), so the one control that does
+# work here is the off sentinel: across two rounds of probing on 2026-09-27,
+# every run the route served of `none` returned 0 reasoning tokens, against 600
+# for `low` at max_tokens=600 and 399 at max_tokens=400. That is what is
+# published. The route is intermittent for a plain key — 502 from
+# z-ai-coding-byok on most attempts, and 404 "No upstream available" on the
+# rest — so the numbers are from the runs that got through, not from a clean
+# sample. See the provider header.
+# Effort: reasoning_effort = none
 base_model = "zhipuai/glm-4.7-flash"
-reasoning_options = []
+reasoning_options = [{ type = "effort", values = ["none"] }]
 
 [cost]
 input = 0.06
