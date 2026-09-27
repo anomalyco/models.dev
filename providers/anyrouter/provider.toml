@@ -1,28 +1,23 @@
 # OpenAI-compatible gateway (`/chat/completions`, `/messages`, `/responses`).
-# AnyRouter forwards `reasoning_effort` to whichever route serves the request and
-# does not validate it, so the rungs a model accepts are whatever that route's
-# upstream allows — and those upstreams disagree. Measured live 2026-09-27 by
-# sending each value to POST /api/v1/chat/completions and reading the upstream's
-# own 400 message:
-#   openrouter-pool    max|xhigh|high|medium|low|minimal|none
-#   huggingface-pool   low|medium|high          (rejects xhigh)
-#   nvidia-byok        rejects medium
-#   z-ai-coding-byok   no validation, accepts any value
-#   hermes-agent       accepts low|medium|high|xhigh
-# Every model therefore publishes one uniform ladder, [low, high] — the
-# intersection accepted by every upstream above. It is a deliberate deviation
-# from the lab + same-surface peer baseline AGENTS.md prescribes for relays,
-# because a caller cannot address the upstream behind a single gateway endpoint
-# and so cannot act on per-model variation. It is also deliberately narrower
-# than any one route supports, which is the price of one contract: minimal,
-# none, xhigh and max are really available on some routes and are not published.
-# The full measurement and the request to normalize this are the PR at
-# anomalyco/models.dev#8023 and the ticket tracked alongside it.
+# AnyRouter forwards `reasoning_effort` to whichever route serves the request
+# and does not validate it, so the rungs a model accepts are whatever that
+# route's upstream allows — and the accepted set differs per model id, not per
+# backend, since the same backend can serve two models with different sets.
+# Every entry was probed on 2026-09-27 with each of none, minimal, low, medium,
+# high, xhigh and max, reading the upstream's own 400 where one came back;
+# the per-file comments record what each route accepts and what is published.
+# Measured examples: deepseek-v4.1-flash rejects `minimal` and `medium`;
+# gpt-oss-20b accepts exactly low, medium and high; the nemotron, m3,
+# muse-glimmer and preset routes accept all seven. There is no toggle field:
+# `reasoning: true` and `reasoning: false` both return 400 on every route that
+# could be reached. The 8 BYOK-only routes could not be exercised at all and
+# fall back to their lab entry, flagged as unverified in each file.
 # Note that `GET /api/v1/models` lists only models the caller can reach; add
 # `?all=1` for the full catalog, otherwise BYOK-only routes look removed.
 # Sources: https://anyrouter.dev/api/v1/models?all=1 (read 2026-09-24,
-# re-verified 2026-09-27) and
-# https://docs.anyrouter.dev/features/models-catalog
+# re-verified 2026-09-27),
+# https://docs.anyrouter.dev/features/models-catalog, and live probes of
+# https://anyrouter.dev/api/v1/chat/completions on 2026-09-27
 name = "AnyRouter"
 env = ["ANYROUTER_API_KEY"]
 npm = "@ai-sdk/openai-compatible"
