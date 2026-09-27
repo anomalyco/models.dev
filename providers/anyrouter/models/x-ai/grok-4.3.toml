@@ -1,13 +1,16 @@
 # Host contract (GET /api/v1/models?all=1, read 2026-09-24, re-verified
 # 2026-09-27): context_length=1000000, input_modalities=[text],
-# supported_parameters=[max_tokens, temperature, top_p, stop, stream],
 # capabilities=[chat, streaming, function-calling, coding].
-# Text-only route, so this narrows the lab's [text, image, pdf] and sets
-# attachment=false. Price 1.25/2.5 matches the OpenRouter peer exactly.
-# Effort: reasoning_effort = none|low|medium|high (xAI + OpenRouter peers).
+# Text-only on this route, so modalities narrow to [text] and attachment drops
+# to false.
+# AnyRouter is a single OpenAI-compatible gateway, so reasoning is one uniform
+# control for every model here rather than per-lab controls: the same request
+# field is accepted on every model and forwarded to whichever route serves the
+# request.
+# Effort: reasoning_effort = low|medium|high
 base_model = "xai/grok-4.3"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
 attachment = false
-reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high"] }]
 
 [cost]
 input = 1.25

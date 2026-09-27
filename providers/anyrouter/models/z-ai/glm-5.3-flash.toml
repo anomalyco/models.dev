@@ -1,18 +1,15 @@
 # Host contract (GET /api/v1/models?all=1, read 2026-09-24, re-verified
 # 2026-09-27): context_length=1048576, input_modalities=[text, image, video],
-# supported_parameters=[max_tokens, temperature, top_p, top_k, tools,
-# tool_choice, response_format, reasoning, include_reasoning,
-# reasoning_effort], capabilities=[chat, streaming, reasoning, coding,
-# agentic, function-calling, vision].
-# The only route here that documents reasoning params itself. Context is
-# 1048576 rather than the lab's 1000000, and no pdf, so modalities narrow from
-# the lab's [text, image, video, pdf]. Price 0.15/0.50 matches the OpenRouter
-# peer.
-# GLM-5.3-Flash always reasons (thinking cannot be disabled), so effort is the
-# only control and there is no toggle.
-# Effort: reasoning_effort = low|high|max (Z.ai lab + OpenRouter peers).
+# capabilities=[chat, streaming, reasoning, coding, agentic, function-calling,
+# vision].
+# Context is 1048576 and no pdf, so modalities narrow to [text, image, video].
+# AnyRouter is a single OpenAI-compatible gateway, so reasoning is one uniform
+# control for every model here rather than per-lab controls: the same request
+# field is accepted on every model and forwarded to whichever route serves the
+# request.
+# Effort: reasoning_effort = low|medium|high
 base_model = "zhipuai/glm-5.3-flash"
-reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
 
 [cost]
 input = 0.15
