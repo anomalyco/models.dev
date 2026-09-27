@@ -1,11 +1,18 @@
 # Host contract (GET /api/v1/models?all=1, read 2026-09-24, re-verified
-# 2026-09-27): context_length=1000000, input_modalities=[text],
-# capabilities=[chat, streaming, function-calling, coding].
+# 2026-09-27): context_length=1000000, max_completion_tokens not declared,
+# capabilities=[chat, streaming, function-calling, coding], price 1.25/2.5.
 # Text-only on this route, so modalities narrow to [text] and attachment drops
-# to false.
-# AnyRouter forwards `reasoning_effort` without validating it. This route is
-# BYOK-only and returned 404/502 on every value, so it is unverified on this
-# host and falls back to the lab entry's effort set.
+# to false. The host publishes a flat rate with no long-context tier, so there
+# are no cost tiers here even though the lab and the peer carry one.
+# Reasoning: chat takes the flat `reasoning_effort`, `none` is the disable
+# sentinel, and there is no toggle or budget on this surface (see the provider
+# header).
+# Unverified on this host: with a plain key every effort value returns 404
+# (a 404 whose message is "Model ... is a Bring Your Own Key (BYOK) only
+# model") — the serving routes are BYOK-only — so no rung could be measured
+# here. providers/xai
+# and the OpenRouter peer publish the same ladder for this model, `none` as the
+# off position included, so that is published unchanged.
 # Effort: reasoning_effort = none|low|medium|high
 base_model = "xai/grok-4.3"
 reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high"] }]

@@ -1,16 +1,21 @@
-# Router preset on the AnyRouter gateway. Host contract (GET
-# /api/v1/models?all=1, read 2026-09-24, re-verified 2026-09-27):
-# context_length=1000000, max output 65536, input_modalities=[text],
-# capabilities=[chat, streaming, function-calling, coding, vision]. `cost` is
-# the primary route's rate; the preset bills per hop.
-# Tools are optional on this preset; it bills at each hop's rate, so free hops
-# are $0.
-# AnyRouter forwards `reasoning_effort` to the serving route without
-# validating it. Probed https://anyrouter.dev/api/v1/chat/completions on
-# 2026-09-27: this route (backend `nvidia`) accepts none, minimal, low,
-# medium, high, xhigh, max. Every rung is accepted here, so this publishes the
-# graded core.
-# Effort: reasoning_effort = low|medium|high
+# Router preset on the AnyRouter gateway; the served model is chosen per
+# request. Host contract (GET /api/v1/models?all=1, read 2026-09-24,
+# re-verified 2026-09-27): context_length=1000000, max_completion_tokens=65536,
+# capabilities=[chat, streaming, function-calling, coding, vision]. The
+# preset's own supported_parameters ([max_tokens, temperature, top_p, stop,
+# stream]) is the legacy model-level projection the host documents, not a
+# promise shared by every route; the members it resolves do take tools and
+# reasoning. Tools are optional on this preset.
+# No [cost]: the preset bills whichever route it resolves at that route's rate,
+# so there is no single per-token price. Free hops are $0.
+# Reasoning: chat takes the flat `reasoning_effort`, `none` is the disable
+# sentinel, and there is no toggle on this surface (see the provider header).
+# Probed 2026-09-27: all seven rungs are accepted, `none` returns 0 reasoning
+# tokens, and `low` returned 3,000 reasoning tokens served by
+# nvidia/nemotron-3-ultra-550b-a55b. Published: `none` plus the graded core —
+# the graded rungs are accepted on every value tested, and how much depth one
+# buys depends on the member the router picked for the request.
+# Effort: reasoning_effort = none|low|medium|high
 name = "AnyRouter Auto"
 description = "Router across top-usage and stable models mixing free-tier and credit-billed routes, with health-aware fallback"
 family = "model-router"
@@ -18,15 +23,11 @@ release_date = "2026-06-08"
 last_updated = "2026-06-08"
 attachment = false
 reasoning = true
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
+reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high"] }]
 temperature = true
 tool_call = true
 structured_output = false
 open_weights = false
-
-[cost]
-input = 1.5
-output = 9.0
 
 [limit]
 context = 1_000_000

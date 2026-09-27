@@ -1,18 +1,24 @@
 # Host contract (GET /api/v1/models?all=1, read 2026-09-24, re-verified
-# 2026-09-27): context_length=200000, input_modalities=[text],
-# capabilities=[chat, reasoning, streaming, function-calling, coding].
-# Context and modalities match the lab entry, so only cost and
-# reasoning_options are authored.
-# AnyRouter forwards `reasoning_effort` to the serving route without
-# validating it. Probed https://anyrouter.dev/api/v1/chat/completions on
-# 2026-09-27: this route accepts every value sent, including a nonsense one.
-# This route validates nothing — it accepts every value sent, including a
-# nonsense one — so the graded core is published for consistency with the rest
-# of the provider.
-# Effort: reasoning_effort = low|medium|high
+# 2026-09-27): context_length=200000, max_completion_tokens=128000,
+# capabilities=[chat, reasoning, streaming, function-calling, coding],
+# price 0.06/0.4. Context and modalities match the lab entry; the host caps
+# output at 128000, just under the lab's 131072, so output is the one override.
+# Reasoning: providers/zai and the OpenRouter peer both publish this model as
+# toggle-only, and the chat surface has no toggle to forward (see the provider
+# header). Probed /api/v1/chat/completions 2026-09-27: this route validates no
+# effort value at all — a nonsense value is accepted like any other — so the
+# graded rungs are not published. The one control that is real is off: `none`
+# returned 0 reasoning tokens where `low` returned 600 (capped by max_tokens),
+# so the disable sentinel is published alone. The route is intermittent for a
+# plain key (502 from z-ai-coding-byok on most attempts), which is why the
+# numbers are single runs.
+# Effort: reasoning_effort = none
 base_model = "zhipuai/glm-4.7-flash"
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
+reasoning_options = [{ type = "effort", values = ["none"] }]
 
 [cost]
 input = 0.06
 output = 0.4
+
+[limit]
+output = 128_000

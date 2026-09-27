@@ -1,21 +1,27 @@
 # Host contract (GET /api/v1/models?all=1, read 2026-09-24, re-verified
-# 2026-09-27): context_length=1048576, input_modalities=[text, image, video],
+# 2026-09-27): context_length=1048576, max_completion_tokens=16384,
 # capabilities=[chat, coding, reasoning, agentic, vision, function-calling,
-# structured-output, streaming].
-# Context and modalities match the lab entry, so only cost and
-# reasoning_options are authored.
-# AnyRouter forwards `reasoning_effort` to the serving route without
-# validating it. Probed https://anyrouter.dev/api/v1/chat/completions on
-# 2026-09-27: this route (backend `openrouter-pool`) accepts none, minimal,
-# low, medium, high, xhigh, max. Every rung is accepted here, so this
-# publishes the graded core.
-# Honored effect measured the same day: `none`=349 (one run 0), low=611,
-# medium=551, high=846, so depth rises with the value and `none` reaches 0.
-# Same prompt each time, mean of two runs at max_tokens=700.
-# Effort: reasoning_effort = low|medium|high
+# structured-output, streaming], price 0.3/1.2. Context and modalities match the
+# lab entry; the host caps output at 16384, well under the lab's 512000, so
+# output is the one override.
+# Reasoning: chat takes the flat `reasoning_effort`, `none` is the disable
+# sentinel, and there is no toggle or budget on this surface (see the provider
+# header).
+# Both providers/minimax and the OpenRouter peer publish this model as
+# toggle-only, so the ladder has to earn itself here: probed
+# /api/v1/chat/completions 2026-09-27, `none` returned 0 reasoning tokens and
+# `high` returned 1188 with a prompt that forces multi-step work, and on the
+# earlier run of the same day low=611, medium=551, high=846 — graded depth that
+# tracks the value, with a real off position. All seven rungs are accepted; the
+# route was out of upstream credit for `low` and `medium` on the second run, so
+# their numbers are from the first.
+# Effort: reasoning_effort = none|low|medium|high
 base_model = "minimax/MiniMax-M3"
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
+reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high"] }]
 
 [cost]
 input = 0.3
 output = 1.2
+
+[limit]
+output = 16_384
