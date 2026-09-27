@@ -8,6 +8,9 @@
 # 2026-09-27: this route (backend `openrouter-pool`) accepts none, minimal,
 # low, medium, high, xhigh, max. Every rung is accepted here, so this
 # publishes the graded core.
+# Honored effect measured the same day: `none`=0, low=483, medium=592,
+# high=558, so `none` is a real off position and depth rises with the value.
+# Same prompt each time, mean of two runs at max_tokens=700.
 # Effort: reasoning_effort = low|medium|high
 base_model = "nvidia/nemotron-3-super-120b-a12b"
 reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]

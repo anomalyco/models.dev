@@ -8,6 +8,9 @@
 # xhigh, max, and rejects `minimal` and `medium` with 400. That leaves
 # low|high as the graded set, and `none` is a real off position here
 # (reasoning_tokens drops to 0).
+# Honored effect measured the same day: `none`=0, low=537, high=700, so `none`
+# is a real off position and depth rises with the value.
+# Same prompt each time, mean of two runs at max_tokens=700.
 # Effort: reasoning_effort = none|low|high
 base_model = "deepseek/deepseek-v4.1-flash"
 reasoning_options = [{ type = "effort", values = ["none", "low", "high"] }]
