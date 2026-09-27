@@ -1,11 +1,20 @@
 # Host contract (GET /api/v1/models?all=1, read 2026-09-24, re-verified
-# 2026-09-27): context_length=1048576, input_modalities=[text, image, video],
+# 2026-09-27): context_length=1048576, max_completion_tokens=131072,
 # capabilities=[chat, streaming, reasoning, coding, agentic, function-calling,
-# vision].
-# Context is 1048576 and no pdf, so modalities narrow to [text, image, video].
-# AnyRouter forwards `reasoning_effort` without validating it. This route is
-# BYOK-only and returned 404/502 on every value, so it is unverified on this
-# host and falls back to the lab entry's effort set.
+# vision], price 0.15/0.5. This is the one id of the twenty whose listing
+# advertises the reasoning fields itself —
+# supported_parameters=[max_tokens, temperature, top_p, top_k, tools,
+# tool_choice, response_format, reasoning, include_reasoning, reasoning_effort]
+# — and context is 1048576 with no pdf, so modalities narrow to
+# [text, image, video].
+# Reasoning: chat takes the flat `reasoning_effort`, `none` is the disable
+# sentinel, and there is no toggle or budget on this surface (see the provider
+# header).
+# Unverified on this host: with a plain key every effort value returns 404 "No
+# upstream available for model z-ai/glm-5.3-flash" — the routes that do serve
+# it need credit this key does not have — so no rung could be measured here.
+# providers/zai and the OpenRouter peer publish the same ladder for this model,
+# so that is published unchanged.
 # Effort: reasoning_effort = low|high|max
 base_model = "zhipuai/glm-5.3-flash"
 reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]

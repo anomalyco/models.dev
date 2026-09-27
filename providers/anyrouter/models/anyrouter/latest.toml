@@ -1,15 +1,21 @@
-# Router preset on the AnyRouter gateway. Host contract (GET
-# /api/v1/models?all=1, read 2026-09-24, re-verified 2026-09-27):
-# context_length=1000000, max output 64000, input_modalities=[text],
-# capabilities=[chat, streaming, function-calling, coding, vision]. `cost` is
-# the primary route's rate; the preset bills per hop.
-# Bills at each hop's rate.
-# AnyRouter forwards `reasoning_effort` to the serving route without
-# validating it. Probed https://anyrouter.dev/api/v1/chat/completions on
-# 2026-09-27: this route (backend `nvidia`) accepts minimal, low, medium,
-# high, xhigh, max. Six of the seven rungs are accepted here, so this
-# publishes the graded core.
-# Effort: reasoning_effort = low|medium|high
+# Router preset on the AnyRouter gateway; the served model is chosen per
+# request. Host contract (GET /api/v1/models?all=1, read 2026-09-24,
+# re-verified 2026-09-27): context_length=1000000, max_completion_tokens=64000,
+# capabilities=[chat, streaming, function-calling, coding, vision]. The
+# preset's own supported_parameters ([max_tokens, temperature, top_p, stop,
+# stream]) is the legacy model-level projection the host documents, not a
+# promise shared by every route; the members it resolves do take tools and
+# reasoning.
+# No [cost]: the preset bills whichever route it resolves at that route's rate,
+# so there is no single per-token price. Free hops are $0.
+# Reasoning: chat takes the flat `reasoning_effort`, `none` is the disable
+# sentinel, and there is no toggle on this surface (see the provider header).
+# Probed 2026-09-27: all seven rungs are accepted (200), served by
+# meta/muse-glimmer-30b, which reports no reasoning tokens at all — so `none`
+# cannot be separated from the graded rungs by measurement on this preset. Both
+# are published: `none` is the host-documented disable sentinel on the chat
+# path, and low, medium and high are accepted on every value tested.
+# Effort: reasoning_effort = none|low|medium|high
 name = "AnyRouter Latest"
 description = "Router to the latest stable production chat model serving traffic, with automatic fallback"
 family = "model-router"
@@ -17,15 +23,11 @@ release_date = "2026-06-08"
 last_updated = "2026-06-08"
 attachment = false
 reasoning = true
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
+reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high"] }]
 temperature = true
 tool_call = true
 structured_output = false
 open_weights = false
-
-[cost]
-input = 1.5
-output = 9.0
 
 [limit]
 context = 1_000_000

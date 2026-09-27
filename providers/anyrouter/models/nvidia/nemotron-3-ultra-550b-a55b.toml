@@ -1,17 +1,24 @@
 # Host contract (GET /api/v1/models?all=1, read 2026-09-24, re-verified
-# 2026-09-27): context_length=1000000, input_modalities=[text],
-# capabilities=[chat, streaming, reasoning, function-calling, thinking].
-# Context and modalities match the lab entry, so only cost and
-# reasoning_options are authored.
-# AnyRouter forwards `reasoning_effort` to the serving route without
-# validating it. Probed https://anyrouter.dev/api/v1/chat/completions on
-# 2026-09-27: this route (backend `nvidia-pool`) accepts none, minimal, low,
-# medium, high, xhigh, max. Every rung is accepted here, so this publishes the
-# graded core.
-# Effort: reasoning_effort = low|medium|high
+# 2026-09-27): context_length=1000000, max_completion_tokens=65536,
+# capabilities=[chat, streaming, reasoning, function-calling, thinking],
+# price 0.5/2.5. Context and modalities match the lab entry; the host caps
+# output at 65536, under the lab's 128000, so output is the one override.
+# Reasoning: providers/nvidia publishes this model as toggle-only and the
+# OpenRouter peer as toggle + medium|high + budget_tokens, none of which this
+# host can forward on chat (see the provider header). Probed
+# /api/v1/chat/completions 2026-09-27: all seven rungs are accepted and `none`
+# returned 0 reasoning tokens, but graded depth did not separate at n=3
+# (max_tokens=1500: low=615, high=471, max=287), so the peer's graded set is
+# published rather than a wider one this route's own numbers do not support.
+# No budget: `reasoning.max_tokens` is a Responses-endpoint control per the
+# host's docs.
+# Effort: reasoning_effort = none|medium|high
 base_model = "nvidia/nemotron-3-ultra-550b-a55b"
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
+reasoning_options = [{ type = "effort", values = ["none", "medium", "high"] }]
 
 [cost]
 input = 0.5
 output = 2.5
+
+[limit]
+output = 65_536

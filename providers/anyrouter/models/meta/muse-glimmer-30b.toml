@@ -1,16 +1,16 @@
 # Host contract (GET /api/v1/models?all=1, read 2026-09-24, re-verified
-# 2026-09-27): context_length=131072, input_modalities=[text, image],
+# 2026-09-27): context_length=131072, max_completion_tokens not declared,
 # capabilities=[chat, streaming, function-calling, reasoning, vision, coding,
-# agentic].
-# Context and modalities match the lab entry, so only cost and
-# reasoning_options are authored.
-# AnyRouter forwards `reasoning_effort` to the serving route without
-# validating it. Probed https://anyrouter.dev/api/v1/chat/completions on
-# 2026-09-27: this route (backend `nvidia-byok`) accepts none, minimal, low,
-# medium, high, xhigh, max. `xhigh` is published alongside the graded core
-# because the route accepts it and it is part of this model's published
-# effort set; `none`, `minimal` and `max` are left off to keep the ladder
-# from becoming the full enum.
+# agentic], price 0.35/1.5. Context and modalities match the lab entry, so only
+# cost and reasoning_options are authored.
+# Reasoning: chat takes the flat `reasoning_effort`, `none` is the disable
+# sentinel, and there is no toggle or budget on this surface (see the provider
+# header).
+# Probed /api/v1/chat/completions 2026-09-27: all seven rungs are accepted
+# (200), including `minimal` and `xhigh` on the same `nvidia-byok` route that
+# rejects both for deepseek-v4.1-flash — the accepted set is per model id, not
+# per backend. This route reports no reasoning tokens, so the rungs are accepted
+# but not separable by measurement, and the peer's ladder is published as is.
 # Effort: reasoning_effort = low|medium|high|xhigh
 base_model = "meta/muse-glimmer-30b"
 reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh"] }]

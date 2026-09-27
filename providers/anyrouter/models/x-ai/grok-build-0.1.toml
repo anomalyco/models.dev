@@ -1,11 +1,17 @@
 # Host contract (GET /api/v1/models?all=1, read 2026-09-24, re-verified
-# 2026-09-27): context_length=256000, input_modalities=[text, image],
+# 2026-09-27): context_length=256000, max_completion_tokens not declared,
 # capabilities=[chat, coding, reasoning, vision, function-calling,
-# structured-output, streaming].
-# No pdf on this route, so modalities narrow to [text, image].
-# AnyRouter forwards `reasoning_effort` without validating it. This route is
-# BYOK-only and returned 404/502 on every value, so it is unverified on this
-# host and falls back to the lab entry, which publishes no caller control.
+# structured-output, streaming], price 1/2. No pdf on this route, so modalities
+# narrow to [text, image]. The host publishes a flat rate with no long-context
+# tier, so there are no cost tiers here even though the peer carries one.
+# Reasoning: providers/xai and the OpenRouter peer both publish this model as
+# `reasoning_options = []` — it reasons, and the caller has no control — and
+# that is published unchanged. Chat takes the flat `reasoning_effort`, and there
+# is no toggle or budget on this surface (see the provider header).
+# Unverified on this host: with a plain key every effort value returns 404
+# (a 404 whose message is "Model ... is a Bring Your Own Key (BYOK) only
+# model") — the serving routes are BYOK-only — so no rung could be measured
+# here.
 base_model = "xai/grok-build-0.1"
 reasoning_options = []
 

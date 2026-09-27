@@ -1,19 +1,21 @@
 # Host contract (GET /api/v1/models?all=1, read 2026-09-24, re-verified
-# 2026-09-27): context_length=262144, input_modalities=[text],
-# capabilities=[chat, streaming].
-# Context and modalities match the lab entry, so only cost and
-# reasoning_options are authored.
-# AnyRouter forwards `reasoning_effort` to the serving route without
-# validating it. Probed https://anyrouter.dev/api/v1/chat/completions on
-# 2026-09-27: this route (backend `openrouter-pool`) accepts none, minimal,
-# low, medium, high, xhigh, max. Every rung is accepted here, so this
-# publishes the graded core.
-# Honored effect measured the same day: `none`=0, low=483, medium=592,
-# high=558, so `none` is a real off position and depth rises with the value.
-# Same prompt each time, mean of two runs at max_tokens=700.
-# Effort: reasoning_effort = low|medium|high
+# 2026-09-27): context_length=262144, max_completion_tokens not declared,
+# capabilities=[chat, streaming], price 0.085/0.4. Context and modalities match
+# the lab entry, so only cost and reasoning_options are authored.
+# Reasoning: providers/nvidia publishes this model as toggle-only and the
+# OpenRouter peer as toggle + low|medium + budget_tokens, none of which this
+# host can forward on chat (see the provider header), so the ladder is measured
+# instead. Probed /api/v1/chat/completions 2026-09-27 with a prompt that forces
+# multi-step work: `none` returned 0 reasoning tokens, and mean of 3 at
+# max_tokens=1500, low=663 and high=916, so depth tracks the value. All seven
+# rungs are accepted; the peer also publishes `medium` and the lab publishes no
+# graded rung at all, so the graded core is published and `high` is included
+# because it is accepted and measurably deeper than `low`. No budget is
+# published: `reasoning.max_tokens` is a Responses-endpoint control per the
+# host's docs, not a chat one.
+# Effort: reasoning_effort = none|low|medium|high
 base_model = "nvidia/nemotron-3-super-120b-a12b"
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
+reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high"] }]
 
 [cost]
 input = 0.085

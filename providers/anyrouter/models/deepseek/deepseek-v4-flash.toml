@@ -1,21 +1,21 @@
 # Host contract (GET /api/v1/models?all=1, read 2026-09-24, re-verified
-# 2026-09-27): context_length=1048576, input_modalities=[text, image],
+# 2026-09-27): context_length=1048576, max_completion_tokens=384000,
 # capabilities=[chat, streaming, function-calling, coding, reasoning, vision,
-# agentic].
-# This route takes image input, hence the attachment, modalities and context
-# overrides.
-# AnyRouter forwards `reasoning_effort` without validating it. This route is
-# BYOK-only and returned 404/502 on every value, so it is unverified on this
-# host and falls back to the lab entry.
-# Toggle: unverified on this host. No toggle field was accepted on any route
-#     that could be reached — `reasoning: true` and `reasoning: false` both
-#     return 400. Kept from the lab entry and flagged in the PR.
+# agentic], price 0.042448/0.084896. This route takes image input, hence the
+# attachment, modalities and context overrides.
+# Reasoning: chat takes the flat `reasoning_effort`, `none` is the disable
+# sentinel, and there is no toggle or budget on this surface (see the provider
+# header) — so the lab's toggle is dropped and its ladder is published.
+# Unverified on this host: the route is BYOK-only, so a plain key gets 404
+# (a 404 whose message is "Model ... is a Bring Your Own Key (BYOK) only
+# model") on every effort value sent, including a nonsense one. No rung could be
+# measured here.
+# providers/deepseek publishes toggle + low|high|max and the OpenRouter peer
+# normalizes the same model to toggle + high|xhigh; both agree the graded
+# controls are the DeepSeek rungs, so the lab ladder is the fallback.
 # Effort: reasoning_effort = low|high|max
 base_model = "deepseek/deepseek-v4-flash"
-reasoning_options = [
-  { type = "toggle" },
-  { type = "effort", values = ["low", "high", "max"] },
-]
+reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]
 attachment = true
 
 [cost]
