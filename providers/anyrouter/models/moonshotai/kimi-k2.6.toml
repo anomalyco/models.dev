@@ -2,15 +2,17 @@
 # 2026-09-27): context_length=262144, max_completion_tokens not declared,
 # capabilities=[chat, reasoning, streaming, function-calling, vision],
 # price 0.95/4. No video on this route, so modalities narrow to [text, image].
-# Reasoning: providers/moonshotai and the OpenRouter peer both publish this
-# model as toggle-only, and the chat surface has no toggle to forward (see the
-# provider header) — so the only caller control left is the host's documented
-# disable sentinel, `none`, which is what this publishes.
+# Reasoning: no caller control is published. providers/moonshotai and the
+# OpenRouter peer both publish this model as toggle-only, and the chat surface
+# has no toggle to forward — the host documents the toggle as a
+# Responses-endpoint control (`reasoning.enabled`) and the upstreams refuse the
+# `reasoning` object outright (400 "Validation: Unsupported parameter(s):
+# `reasoning`"). Neither baseline carries an effort ladder, so with the toggle
+# gone there is no control left to publish. See the provider header.
 # Unverified on this host: every effort value returns 502 "All upstream
 # providers failed" for a plain key, because the serving routes are BYOK-only.
-# Effort: reasoning_effort = none
 base_model = "moonshotai/kimi-k2.6"
-reasoning_options = [{ type = "effort", values = ["none"] }]
+reasoning_options = []
 
 [cost]
 input = 0.95

@@ -8,14 +8,12 @@
 # reasoning.
 # No [cost]: the preset bills whichever route it resolves at that route's rate,
 # so there is no single per-token price. Free hops are $0.
-# Reasoning: chat takes the flat `reasoning_effort`, `none` is the disable
-# sentinel, and there is no toggle on this surface (see the provider header).
-# Probed 2026-09-27: all seven rungs are accepted (200), served by
-# meta/muse-glimmer-30b, which reports no reasoning tokens at all — so `none`
-# cannot be separated from the graded rungs by measurement on this preset. Both
-# are published: `none` is the host-documented disable sentinel on the chat
-# path, and low, medium and high are accepted on every value tested.
-# Effort: reasoning_effort = none|low|medium|high
+# Reasoning: no caller control is published. Probed /api/v1/chat/completions
+# 2026-09-27: every rung is accepted (200), but the member this preset resolved
+# (meta/muse-glimmer-30b) reports no reasoning tokens for any value, so no
+# rung — including the off sentinel — can be shown to change anything, and a
+# rung that is merely accepted is not a control. Chat takes the flat
+# `reasoning_effort` and has no toggle (see the provider header).
 name = "AnyRouter Latest"
 description = "Router to the latest stable production chat model serving traffic, with automatic fallback"
 family = "model-router"
@@ -23,7 +21,7 @@ release_date = "2026-06-08"
 last_updated = "2026-06-08"
 attachment = false
 reasoning = true
-reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high"] }]
+reasoning_options = []
 temperature = true
 tool_call = true
 structured_output = false

@@ -7,15 +7,14 @@
 # every route; the members it resolves do take tools and reasoning.
 # No [cost]: the preset bills whichever route it resolves at that route's rate,
 # so there is no single per-token price.
-# Reasoning: chat takes the flat `reasoning_effort`, `none` is the disable
-# sentinel, and there is no toggle on this surface (see the provider header).
-# Probed 2026-09-27 with a prompt that forces multi-step work, mean of two runs
-# at max_tokens=3000: `none` = 0 reasoning tokens, and low, medium and high all
-# returned 3,000 — the member served (poolside/laguna-s-2.1) reasons to the
-# whole budget, so the graded rungs are accepted but not separable on this
-# preset. `none` is the uniform control, and it is published with the graded
-# core that every rung accepts.
-# Effort: reasoning_effort = none|low|medium|high
+# Reasoning: no caller control is published. Probed /api/v1/chat/completions
+# 2026-09-27: the routes this preset resolved served a member that refuses the
+# off sentinel — 400 "Reasoning is mandatory for this endpoint and cannot be
+# disabled." — while low, medium and high each returned 0 reasoning tokens on
+# the member it did serve (stealth/space-bunny-alpha). A value the host answers
+# with a 400 is not a control, and nothing else could be verified, so nothing is
+# published. Chat takes the flat `reasoning_effort` and has no toggle (see the
+# provider header).
 name = "AnyRouter Hermes"
 description = "Router across the top tool-calling models for autonomous agents, ranked by agentic score, with automatic fallback"
 family = "model-router"
@@ -23,7 +22,7 @@ release_date = "2026-06-08"
 last_updated = "2026-06-08"
 attachment = false
 reasoning = true
-reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high"] }]
+reasoning_options = []
 temperature = true
 tool_call = true
 structured_output = false

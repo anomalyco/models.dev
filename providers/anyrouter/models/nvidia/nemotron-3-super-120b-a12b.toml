@@ -2,20 +2,22 @@
 # 2026-09-27): context_length=262144, max_completion_tokens not declared,
 # capabilities=[chat, streaming], price 0.085/0.4. Context and modalities match
 # the lab entry, so only cost and reasoning_options are authored.
-# Reasoning: providers/nvidia publishes this model as toggle-only and the
-# OpenRouter peer as toggle + low|medium + budget_tokens, none of which this
-# host can forward on chat (see the provider header), so the ladder is measured
-# instead. Probed /api/v1/chat/completions 2026-09-27 with a prompt that forces
-# multi-step work: `none` returned 0 reasoning tokens, and mean of 3 at
-# max_tokens=1500, low=663 and high=916, so depth tracks the value. All seven
-# rungs are accepted; the peer also publishes `medium` and the lab publishes no
-# graded rung at all, so the graded core is published and `high` is included
-# because it is accepted and measurably deeper than `low`. No budget is
-# published: `reasoning.max_tokens` is a Responses-endpoint control per the
-# host's docs, not a chat one.
-# Effort: reasoning_effort = none|low|medium|high
+# Reasoning: chat takes the flat `reasoning_effort`, `none` is the disable
+# sentinel, and there is no toggle or budget on this surface — the host
+# documents both as Responses-endpoint controls and the upstreams refuse the
+# `reasoning` object (see the provider header). providers/nvidia publishes this
+# model as toggle-only and the OpenRouter peer as toggle + low|medium +
+# budget_tokens, so the graded set published here is the peer's, which this
+# route accepts, and the toggle is dropped because it has no wire here.
+# Probed /api/v1/chat/completions 2026-09-27 with a prompt that forces
+# multi-step work, three runs per value at max_tokens=2000 — the route is
+# deterministic, all three runs returned the same number: none=0, low=612,
+# medium=589, high=770. `none` is a real off position (0 against 589-770), and
+# `high` is left off because it is in neither baseline. No budget is published:
+# `reasoning.max_tokens` is a Responses-endpoint control per the host's docs.
+# Effort: reasoning_effort = none|low|medium
 base_model = "nvidia/nemotron-3-super-120b-a12b"
-reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high"] }]
+reasoning_options = [{ type = "effort", values = ["none", "low", "medium"] }]
 
 [cost]
 input = 0.085
