@@ -24,6 +24,7 @@ The grouped sync targets are available for local convenience, but CI syncs each 
 - `bun models:sync ollama-cloud` syncs Ollama Cloud catalog availability.
 - `bun models:sync github-copilot` syncs only GitHub Copilot pricing.
 - `bun models:sync tinfoil` syncs only Tinfoil.
+- `bun models:sync zenifra` syncs only Zenifra.
 - `bun models:sync aggregators --dry-run` prints changes without writing model files.
 - `bun models:sync aggregators --new-only` creates new model files but skips updates and removals.
 - `bun models:sync <provider> --open-issues` opens GitHub issues for missing models (on by default only when `GITHUB_ACTIONS=true`).
@@ -267,6 +268,16 @@ xAI is implemented in `packages/core/src/sync/providers/xai.ts`.
 - Reasoning controls are preserved for reasoners and removed when the API reports `reasoning: false`. A reasoner without authored controls fails sync for manual review rather than inventing an empty control set.
 - New token-priced chat, safety, and embedding models are not created automatically (`skipCreates`); each missing ID opens a deduped GitHub issue for hand-authored metadata.
 - Per-request tool, TTS, transcription, realtime, and document-processing services are ignored because their pricing cannot be represented by the token-cost schema.
+
+## Zenifra Notes
+
+- Zenifra is implemented in `packages/core/src/sync/providers/zenifra.ts`.
+- Source endpoint: `https://ai.zenifra.com/v1/models`; no authentication is required for the public catalog. `ZENIFRA_AI_KEY` is accepted locally or when the endpoint is configured to require a key.
+- The endpoint's prices are BRL per million tokens and are converted to USD using the `5.20 BRL/USD` rate used by the authored catalog. Off-peak prices are not represented because the catalog cost schema has no time-of-day dimension.
+- Context tiers, context/output limits, modalities, attachment support, tool calling, structured output, and temperature support come from the endpoint when published.
+- Existing authored reasoning options are preserved when the endpoint does not provide an unambiguous wire field. New reasoning models without safe controls open a deduplicated missing-model issue instead of receiving an invented empty option set.
+- Model IDs are mapped to canonical `models/` metadata; unknown remote IDs are reported for manual authoring. Zenifra models absent from a successful non-empty response are removed from the provider catalog.
+- An empty response is rejected before deletion so a transient or truncated feed cannot erase the local catalog.
 
 ## OpenAI Notes
 
