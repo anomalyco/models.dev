@@ -276,8 +276,8 @@ xAI is implemented in `packages/core/src/sync/providers/xai.ts`.
 - The endpoint's prices are BRL per million tokens and are converted to USD using the `5.20 BRL/USD` rate used by the authored catalog. Off-peak prices are not represented because the catalog cost schema has no time-of-day dimension.
 - Context tiers, context/output limits, modalities, attachment support, tool calling, structured output, and temperature support come from the endpoint when published.
 - Existing authored reasoning options are preserved when the endpoint does not provide an unambiguous wire field. New reasoning models without safe controls open a deduplicated missing-model issue instead of receiving an invented empty option set.
-- Model IDs are mapped to canonical `models/` metadata; unknown remote IDs are reported for manual authoring. Zenifra models absent from a successful non-empty response are removed from the provider catalog.
-- An empty response is rejected before deletion so a transient or truncated feed cannot erase the local catalog.
+- Model IDs are mapped to canonical `models/` metadata; unknown remote IDs are reported for manual authoring. Zenifra models absent from a successful response are retained for manual lifecycle review because the public feed has no deletion signal.
+- An empty response is rejected before syncing so a transient or truncated feed cannot change the local catalog.
 
 ## OpenAI Notes
 

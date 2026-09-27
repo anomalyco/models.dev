@@ -118,7 +118,7 @@ test("adds optional bearer authentication when a Zenifra key is configured", asy
 
 test("rejects an empty Zenifra catalog before destructive sync", () => {
   expect(() => parseZenifraModels({ object: "list", data: [] })).toThrow(
-    "Zenifra returned an empty model catalog; refusing destructive sync",
+    "Zenifra returned an empty model catalog; refusing to sync",
   );
 });
 
@@ -189,4 +189,42 @@ test("requires authored controls for an inline reasoner with no safe feed contro
     model,
     existingModel({ base_model: undefined, reasoning_options: undefined }),
   )).toThrow(MissingReasoningOptionsError);
+});
+
+test("preserves authored capabilities when optional feed fields are absent", () => {
+  const result = buildZenifraModel(
+    zenifraModel({
+      id: "zenifra/inline-model",
+      capabilities: undefined,
+      input_modalities: undefined,
+      output_modalities: undefined,
+      supported_parameters: undefined,
+    }),
+    existingModel({
+      base_model: undefined,
+      attachment: true,
+      modalities: { input: ["text", "image"], output: ["text"] },
+      temperature: true,
+      tool_call: true,
+      structured_output: true,
+      reasoning_options: [],
+    }),
+  );
+
+  expect(result).toMatchObject({
+    attachment: true,
+    modalities: { input: ["text", "image"], output: ["text"] },
+    temperature: true,
+    tool_call: true,
+    structured_output: true,
+    reasoning_options: [],
+  });
+});
+
+test("retains missing Zenifra routes instead of deleting on feed omission", () => {
+  expect(zenifra.deleteMissing).toBe(false);
+  expect(zenifra.missingNotice?.(["kimi-k3.toml"])).toEqual([
+    "1 local Zenifra models were absent from the live API and were retained for manual lifecycle review.",
+    "Retained local paths: `kimi-k3.toml`",
+  ]);
 });

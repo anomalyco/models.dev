@@ -1,8 +1,9 @@
+import { z } from "zod";
+
 import { ReasoningOption } from "../../schema.js";
 import { MissingReasoningOptionsError } from "../missing-reasoning-options.js";
 import type { ExistingModel, SyncProvider, SyncedFullModel, SyncedModel } from "../index.js";
-import { factorBaseModel, resolveModelMetadataBaseModel } from "./openrouter.js";
-import { z } from "zod";
+import { factorBaseModel, modelMetadata, resolveModelMetadataBaseModel } from "./openrouter.js";
 
 const API_ENDPOINT = "https://ai.zenifra.com/v1/models";
 
@@ -84,7 +85,10 @@ export const zenifra = {
   id: "zenifra",
   name: "Zenifra",
   modelsDir: "providers/zenifra/models",
-  deleteMissing: true,
+  // A valid but partial public feed must not erase the local catalog. Missing
+  // routes are retained for manual lifecycle review until Zenifra publishes a
+  // deletion-specific signal.
+  deleteMissing: false,
   sourceID(model: ZenifraModel) {
     return model.id;
   },
@@ -96,6 +100,13 @@ export const zenifra = {
     return [
       `${ids.length} Zenifra models were skipped because they could not be mapped to canonical models.dev metadata.`,
       `Skipped remote IDs: ${ids.map((id) => `\`${id}\``).join(", ")}`,
+    ];
+  },
+  missingNotice(paths: string[]) {
+    if (paths.length === 0) return [];
+    return [
+      `${paths.length} local Zenifra models were absent from the live API and were retained for manual lifecycle review.`,
+      `Retained local paths: ${paths.map((path) => `\`${path}\``).join(", ")}`,
     ];
   },
   async fetchModels() {
@@ -139,7 +150,7 @@ export async function fetchZenifraModels(
 export function parseZenifraModels(raw: unknown) {
   const models = ZenifraResponse.parse(raw).data;
   if (models.length === 0) {
-    throw new Error("Zenifra returned an empty model catalog; refusing destructive sync");
+    throw new Error("Zenifra returned an empty model catalog; refusing to sync");
   }
   return models;
 }
@@ -161,14 +172,16 @@ export function buildZenifraModel(
   const input = modalities(model.input_modalities, existing?.modalities?.input ?? ["text"]);
   const output = modalities(model.output_modalities, existing?.modalities?.output ?? ["text"]);
   const capabilities = model.capabilities;
-  const parameters = new Set(model.supported_parameters ?? []);
+  const parameters = model.supported_parameters === undefined
+    ? undefined
+    : new Set(model.supported_parameters);
   const sourceReasoning = capabilities?.reasoning?.supported;
   const reasoning = sourceReasoning ?? existing?.reasoning ?? false;
   const reasoningOptions = reasoning
     ? resolveReasoningOptions(model, authored)
     : undefined;
 
-  if (reasoning && reasoningOptions === undefined && baseModel === undefined) {
+  if (reasoning && reasoningOptions === undefined && !baseHasReasoningOptions(baseModel)) {
     throw new MissingReasoningOptionsError(
       model.id,
       "Zenifra exposes reasoning without a safe control set or authored reasoning_options",
@@ -182,25 +195,18 @@ export function buildZenifraModel(
     input: existing?.limit?.input,
     output: outputLimit,
   };
-  const values: SyncedFullModel = {
-    name: existing?.name ?? model.id,
-    description: existing?.description ?? model.id,
-    family: existing?.family,
-    release_date: existing?.release_date ?? dateFromTimestamp(model.created),
-    last_updated: existing?.last_updated ?? dateFromTimestamp(model.created),
+  const hostValues = {
     attachment: input.some((value) => value !== "text"),
     reasoning,
     reasoning_options: reasoningOptions,
-    temperature: parameters.has("temperature"),
+    temperature: parameters === undefined ? existing?.temperature : parameters.has("temperature"),
     tool_call: capabilities?.function_calling
-      ?? capabilities?.tool_choice
-      ?? (parameters.has("tools") || parameters.has("tool_choice")),
+      ?? (parameters === undefined
+        ? existing?.tool_call
+        : parameters.has("tools") || parameters.has("tool_choice")),
     structured_output: capabilities?.structured_outputs
       ?? capabilities?.response_schema
-      ?? existing?.structured_output
-      ?? false,
-    knowledge: existing?.knowledge,
-    open_weights: existing?.open_weights ?? false,
+      ?? (parameters === undefined ? existing?.structured_output : parameters.has("structured_outputs")),
     status: existing?.status,
     interleaved: existing?.interleaved,
     provider: { shape: "completions" },
@@ -209,28 +215,52 @@ export function buildZenifraModel(
     modalities: { input, output },
   };
 
-  return baseModel === undefined
-    ? values
-    : factorBaseModel(baseModel, values, limit, authored?.base_model_omit);
+  if (baseModel !== undefined) {
+    return factorBaseModel(baseModel, hostValues, limit, authored?.base_model_omit);
+  }
+
+  return {
+    name: existing?.name ?? model.id,
+    description: existing?.description ?? model.id,
+    family: existing?.family,
+    release_date: existing?.release_date ?? dateFromTimestamp(model.created),
+    last_updated: existing?.last_updated ?? dateFromTimestamp(model.created),
+    knowledge: existing?.knowledge,
+    open_weights: existing?.open_weights ?? false,
+    ...hostValues,
+  } satisfies SyncedFullModel;
 }
 
 function resolveReasoningOptions(
   model: ZenifraModel,
   authored: ExistingModel | undefined,
 ): SyncedFullModel["reasoning_options"] {
-  const authoredOptions = authored?.reasoning_options?.flatMap((option) => {
-    const parsed = ReasoningOption.safeParse(option);
-    return parsed.success ? [parsed.data] : [];
-  });
-  if (authoredOptions !== undefined && authoredOptions.length > 0) return authoredOptions;
+  if (authored?.reasoning_options !== undefined) {
+    return authored.reasoning_options.flatMap((option) => {
+      const parsed = ReasoningOption.safeParse(option);
+      return parsed.success ? [parsed.data] : [];
+    });
+  }
 
-  const levels = model.capabilities?.reasoning?.effort_levels
-    ?.filter((value): value is ReasoningEffort => REASONING_EFFORTS.has(value as ReasoningEffort));
+  const levels = model.supported_parameters?.includes("reasoning_effort")
+    ? model.capabilities?.reasoning?.effort_levels
+      ?.filter((value): value is ReasoningEffort => REASONING_EFFORTS.has(value as ReasoningEffort))
+    : undefined;
   if (levels !== undefined && levels.length > 0) {
     return [{ type: "effort", values: [...new Set(levels)] }];
   }
 
-  return model.capabilities?.reasoning?.always_on === true ? [] : undefined;
+  if (model.capabilities?.reasoning?.always_on === true) return [];
+  return undefined;
+}
+
+function baseHasReasoningOptions(baseModel: string | undefined) {
+  if (baseModel === undefined) return false;
+  try {
+    return Array.isArray(modelMetadata(baseModel).reasoning_options);
+  } catch {
+    return false;
+  }
 }
 
 function buildCost(
