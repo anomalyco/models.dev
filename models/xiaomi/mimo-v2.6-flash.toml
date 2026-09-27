@@ -1,3 +1,4 @@
+# Benchmarks: official MiMo-V2.6 RL checkpoint evaluation table; metrics left as score where unspecified.
 name = "MiMo-V2.6-Flash"
 description = "MiMo Flash model for multimodal coding agents and long-context automation"
 family = "mimo"
@@ -20,3 +21,103 @@ output = ["text"]
 [[weights]]
 label = "Hugging Face"
 url = "https://huggingface.co/XiaomiMiMo/MiMo-V2.6-Flash-RL"
+
+[[benchmarks]]
+name = "DeepSWE"
+score = 67.9
+metric = "score"
+version = "1.1"
+source = "https://huggingface.co/XiaomiMiMo/MiMo-V2.6-Flash-RL"
+
+[[benchmarks]]
+name = "ProgramBench"
+score = 26
+metric = "score"
+source = "https://huggingface.co/XiaomiMiMo/MiMo-V2.6-Flash-RL"
+
+[[benchmarks]]
+name = "MiMo Code Bench"
+score = 61.2
+metric = "score"
+source = "https://huggingface.co/XiaomiMiMo/MiMo-V2.6-Flash-RL"
+
+[[benchmarks]]
+name = "AutomationBench"
+score = 52.3
+metric = "score"
+version = "1.0.6"
+source = "https://huggingface.co/XiaomiMiMo/MiMo-V2.6-Flash-RL"
+
+[[benchmarks]]
+name = "Toolathlon-Verified"
+score = 73.6
+metric = "score"
+source = "https://huggingface.co/XiaomiMiMo/MiMo-V2.6-Flash-RL"
+
+[[benchmarks]]
+name = "Agents' Last Exam"
+score = 27.6
+metric = "score"
+source = "https://huggingface.co/XiaomiMiMo/MiMo-V2.6-Flash-RL"
+
+[[benchmarks]]
+name = "Terminal-Bench"
+score = 28.8
+metric = "score"
+version = "4.0"
+source = "https://huggingface.co/XiaomiMiMo/MiMo-V2.6-Flash-RL"
+
+[[benchmarks]]
+name = "Terminal-Bench"
+score = 87.6
+metric = "score"
+version = "2.1"
+source = "https://huggingface.co/XiaomiMiMo/MiMo-V2.6-Flash-RL"
+
+[[benchmarks]]
+name = "OSWorld-Verified"
+score = 80.8
+metric = "score"
+source = "https://huggingface.co/XiaomiMiMo/MiMo-V2.6-Flash-RL"
+
+[[benchmarks]]
+name = "JobBench"
+score = 61.2
+metric = "score"
+source = "https://huggingface.co/XiaomiMiMo/MiMo-V2.6-Flash-RL"
+
+[[benchmarks]]
+name = "CyberGym"
+score = 95.1
+metric = "score"
+source = "https://huggingface.co/XiaomiMiMo/MiMo-V2.6-Flash-RL"
+
+[[benchmarks]]
+name = "MiMo Cyber Bench"
+score = 77.2
+metric = "score"
+source = "https://huggingface.co/XiaomiMiMo/MiMo-V2.6-Flash-RL"
+
+[[benchmarks]]
+name = "ExploitGym"
+score = 6
+metric = "score"
+source = "https://huggingface.co/XiaomiMiMo/MiMo-V2.6-Flash-RL"
+
+[[benchmarks]]
+name = "ExploitBench"
+score = 25.3
+metric = "score"
+source = "https://huggingface.co/XiaomiMiMo/MiMo-V2.6-Flash-RL"
+
+[[benchmarks]]
+name = "SEC-Bench Pro"
+score = 47.5
+metric = "score"
+source = "https://huggingface.co/XiaomiMiMo/MiMo-V2.6-Flash-RL"
+
+[[benchmarks]]
+name = "MiMo VisualCoding"
+score = 71.5
+metric = "score"
+source = "https://huggingface.co/XiaomiMiMo/MiMo-V2.6-Flash-RL"

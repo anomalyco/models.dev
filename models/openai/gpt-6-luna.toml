@@ -19,3 +19,12 @@ output = 128_000
 [modalities]
 input = ["text", "image", "pdf"]
 output = ["text"]
+
+[[benchmarks]]
+name = "DeepSWE"
+score = 66.6
+metric = "score"
+version = "1.1"
+variant = "max effort"
+source = "https://openai.com/index/introducing-gpt-6-sol-and-luna/"
+date = "2026-09-22"

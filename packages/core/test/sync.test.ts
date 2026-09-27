@@ -3224,6 +3224,19 @@ test("uses OpenRouter model context when top provider reports a shorter context"
   });
 });
 
+test("uses a verified OpenRouter output limit over catalog metadata", () => {
+  const model = buildOpenRouterModel(openRouterModel({
+    id: "minimax/minimax-01",
+    context_length: 1_000_192,
+    top_provider: {
+      context_length: 1_000_192,
+      max_completion_tokens: 900_172,
+    },
+  }), undefined);
+
+  expect(model.limit?.output).toBe(40_000);
+});
+
 test("factors OpenRouter Pro routes against canonical OpenAI metadata", () => {
   const model = buildOpenRouterModel(openRouterModel({
     id: "openai/gpt-5.6-sol-pro",
@@ -4530,6 +4543,39 @@ test("translates Vercel pricing tiers with an implicit zero minimum", () => {
   expect(vercel.sameModel?.({
     cost: { input: 1, output: 6, cache_read: 0.1 },
   }, synced)).toBe(false);
+});
+
+test("uses verified Vercel output limits over catalog metadata", () => {
+  const limits = {
+    "alibaba/qwen3.6-27b": 65_536,
+    "amazon/nova-2-lite": 65_535,
+    "bytedance/seed-1.8": 32_768,
+    "deepseek/deepseek-v3.1-terminus": 32_768,
+    "inception/mercury-2": 50_000,
+    "minimax/minimax-m2": 196_608,
+    "quiverai/arrow-2": 65_536,
+    "quiverai/arrow-2-telos": 65_536,
+    "zai/glm-5-turbo": 131_072,
+  };
+
+  for (const [id, output] of Object.entries(limits)) {
+    const [model] = vercel.parseModels({
+      data: [{
+        id,
+        name: id,
+        created: 1_780_963_200,
+        context_window: 1_000_000,
+        max_tokens: 1_000_000,
+        type: "language",
+      }],
+    });
+
+    const inherited = [
+      "alibaba/qwen3.6-27b",
+      "zai/glm-5-turbo",
+    ].includes(id);
+    expect(buildVercelModel(model!, undefined).limit?.output).toBe(inherited ? undefined : output);
+  }
 });
 
 test("Vercel factored models inherit temperature from base metadata", () => {

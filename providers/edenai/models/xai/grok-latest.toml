@@ -1,5 +1,5 @@
-base_model = "xai/grok-4.6"
-name = "Grok Latest (Grok 4.6)"
+base_model = "xai/grok-4.7"
+name = "Grok Latest (Grok 4.7)"
 
 [[reasoning_options]]
 type = "effort"
@@ -12,9 +12,6 @@ cache_read = 0.5
 
 [[cost.tiers]]
 tier = { type = "context", size = 200_000 }
-input = 4
-output = 12
-cache_read = 1
-
-[modalities]
-input = ["text", "image", "pdf"]
+input = 3.2
+output = 9.6
+cache_read = 0.8

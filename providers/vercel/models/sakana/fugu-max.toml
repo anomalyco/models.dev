@@ -9,7 +9,10 @@ attachment = true
 reasoning = true
 tool_call = true
 open_weights = false
-reasoning_options = [{ type = "effort", values = ["high", "xhigh", "max"] }]
+
+[[reasoning_options]]
+type = "effort"
+values = ["high", "xhigh"]
 
 [cost]
 input = 2

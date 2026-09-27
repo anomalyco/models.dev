@@ -1,3 +1,5 @@
+# Launch evaluations use adaptive thinking and production safeguards, with Opus 4.8 fallback for cyber and Opus 5 for bio/frontier-LLM development.
+# AutomationBench disables fallback and counts safeguard-triggered tasks as failures; Terminal-Bench uses xhigh effort.
 name = "Claude Opus 5.5"
 description = "Claude model for long-running agentic coding and knowledge work"
 family = "claude-opus"
@@ -17,3 +19,82 @@ output = 128_000
 [modalities]
 input = ["text", "image", "pdf"]
 output = ["text"]
+
+[[benchmarks]]
+name = "Terminal-Bench"
+score = 66.4
+metric = "score"
+variant = "xhigh effort; production safeguards with fallback"
+version = "4.0"
+source = "https://www.anthropic.com/claude-opus-5-5"
+date = "2026-09-22"
+
+[[benchmarks]]
+name = "FrontierCode"
+score = 54.4
+metric = "score"
+variant = "max effort; production safeguards with fallback"
+version = "1.1"
+dataset = "Main"
+source = "https://www.anthropic.com/claude-opus-5-5"
+date = "2026-09-22"
+
+[[benchmarks]]
+name = "CursorBench"
+score = 57.8
+metric = "score"
+variant = "max effort; production safeguards with fallback"
+version = "4.0"
+source = "https://www.anthropic.com/claude-opus-5-5"
+date = "2026-09-22"
+
+[[benchmarks]]
+name = "GDPval-AA"
+score = 1846
+metric = "Elo"
+variant = "max effort; production safeguards with fallback"
+version = "2.1"
+source = "https://www.anthropic.com/claude-opus-5-5"
+date = "2026-09-22"
+
+[[benchmarks]]
+name = "AutomationBench"
+score = 40
+metric = "pass rate"
+variant = "max effort; production safeguards; no fallback"
+source = "https://www.anthropic.com/claude-opus-5-5"
+date = "2026-09-22"
+
+[[benchmarks]]
+name = "Humanity's Last Exam"
+score = 67.7
+metric = "score"
+variant = "max effort; with tools; production safeguards with fallback"
+source = "https://www.anthropic.com/claude-opus-5-5"
+date = "2026-09-22"
+
+[[benchmarks]]
+name = "Terminal-Bench-Science"
+score = 58.7
+metric = "score"
+variant = "max effort; production safeguards with fallback"
+version = "0.1"
+source = "https://www.anthropic.com/claude-opus-5-5"
+date = "2026-09-22"
+
+[[benchmarks]]
+name = "OSWorld"
+score = 81.8
+metric = "partial score"
+variant = "max effort; production safeguards with fallback"
+version = "2.0"
+source = "https://www.anthropic.com/claude-opus-5-5"
+date = "2026-09-22"
+
+[[benchmarks]]
+name = "Chartography"
+score = 89
+metric = "score"
+variant = "max effort; with tools; production safeguards with fallback"
+source = "https://www.anthropic.com/claude-opus-5-5"
+date = "2026-09-22"
