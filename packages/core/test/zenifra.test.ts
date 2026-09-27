@@ -1,6 +1,8 @@
 import { expect, test } from "bun:test";
+import { mkdir, mkdtemp, rm } from "node:fs/promises";
+import path from "node:path";
 
-import type { ExistingModel } from "../src/sync/index.js";
+import { syncProvider, type ExistingModel } from "../src/sync/index.js";
 import { MissingReasoningOptionsError } from "../src/sync/missing-reasoning-options.js";
 import {
   buildZenifraModel,
@@ -179,6 +181,15 @@ test("reports new Zenifra routes without canonical metadata", () => {
   expect(zenifra.missingModelID?.(model)).toBe("zenifra/new-model");
 });
 
+test("skips a new canonical route when reasoning metadata is omitted", () => {
+  const model = zenifraModel({ capabilities: undefined });
+
+  expect(zenifra.translateModel(model, {
+    existing: () => undefined,
+    authored: () => undefined,
+  })).toBeUndefined();
+});
+
 test("requires authored controls for an inline reasoner with no safe feed controls", () => {
   const model = zenifraModel({
     id: "zenifra/inline-reasoner",
@@ -282,6 +293,7 @@ test("clears reasoning cost when the feed disables reasoning", () => {
     zenifraModel({
       id: "zenifra/non-reasoning",
       capabilities: { reasoning: { supported: false } },
+      pricing: undefined,
     }),
     existingModel({
       base_model: undefined,
@@ -301,4 +313,53 @@ test("retains missing Zenifra routes instead of deleting on feed omission", () =
     "1 local Zenifra models were absent from the live API and were retained for manual lifecycle review.",
     "Retained local paths: `kimi-k3.toml`",
   ]);
+});
+
+test("sync runner retains local files absent from the Zenifra feed", async () => {
+  const root = await mkdtemp(path.join(import.meta.dirname, "zenifra-sync-"));
+  const modelsDir = path.join(root, "models");
+  await mkdir(modelsDir, { recursive: true });
+  await Bun.write(path.join(modelsDir, "legacy.toml"), `name = "Legacy"
+description = "Legacy model retained for lifecycle review"
+attachment = false
+reasoning = false
+tool_call = false
+open_weights = false
+release_date = "2026-01-01"
+last_updated = "2026-01-01"
+
+[limit]
+context = 1000
+output = 100
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[cost]
+input = 1
+output = 1
+`);
+
+  try {
+    const result = await syncProvider({
+      ...zenifra,
+      modelsDir,
+      fetchModels: async () => ({
+        object: "list",
+        data: [zenifraModel({
+          id: "zenifra/unknown",
+          capabilities: { reasoning: { supported: false } },
+          supported_parameters: [],
+        })],
+      }),
+    }, { dryRun: true, openIssues: false });
+
+    expect(result.deleted).toBe(0);
+    expect(result.notices).toContain(
+      "1 local Zenifra models were absent from the live API and were retained for manual lifecycle review.",
+    );
+  } finally {
+    await rm(root, { recursive: true, force: true });
+  }
 });

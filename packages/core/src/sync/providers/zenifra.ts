@@ -3,7 +3,7 @@ import { z } from "zod";
 import { ReasoningOption } from "../../schema.js";
 import { MissingReasoningOptionsError } from "../missing-reasoning-options.js";
 import type { ExistingModel, SyncProvider, SyncedFullModel, SyncedModel } from "../index.js";
-import { factorBaseModel, modelMetadata, resolveModelMetadataBaseModel } from "./openrouter.js";
+import { factorBaseModel, resolveModelMetadataBaseModel } from "./openrouter.js";
 
 const API_ENDPOINT = "https://ai.zenifra.com/v1/models";
 
@@ -128,6 +128,7 @@ export const zenifra = {
         baseModel === undefined
         || model.pricing?.input === undefined
         || model.pricing.output === undefined
+        || model.capabilities?.reasoning === undefined
       )
     ) return undefined;
 
@@ -194,7 +195,7 @@ export function buildZenifraModel(
     ? resolveReasoningOptions(model, authored)
     : undefined;
 
-  if (reasoning === true && reasoningOptions === undefined && !baseHasReasoningOptions(baseModel)) {
+  if (reasoning === true && reasoningOptions === undefined && (existing === undefined || baseModel === undefined)) {
     throw new MissingReasoningOptionsError(
       model.id,
       "Zenifra exposes reasoning without a safe control set or authored reasoning_options",
@@ -206,7 +207,6 @@ export function buildZenifraModel(
     ?? (baseModel === undefined ? 0 : undefined);
   const outputLimit = model.max_output_tokens
     ?? existing?.limit?.output
-    ?? context
     ?? (baseModel === undefined ? 0 : undefined);
   const limit = {
     context,
@@ -285,26 +285,17 @@ function resolveReasoningOptions(
   return undefined;
 }
 
-function baseHasReasoningOptions(baseModel: string | undefined) {
-  if (baseModel === undefined) return false;
-  try {
-    return Array.isArray(modelMetadata(baseModel).reasoning_options);
-  } catch {
-    return false;
-  }
-}
-
 function buildCost(
   model: ZenifraModel,
   existing: ExistingModel | undefined,
   reasoning: boolean | undefined,
 ): SyncedFullModel["cost"] | undefined {
   const pricing = model.pricing;
-  if (pricing === undefined) return existing?.cost;
+  if (pricing === undefined) return clearReasoningCost(existing?.cost, reasoning);
 
   const input = usd(pricing.input);
   const output = usd(pricing.output);
-  if (input === undefined || output === undefined) return existing?.cost;
+  if (input === undefined || output === undefined) return clearReasoningCost(existing?.cost, reasoning);
 
   const tiers = (pricing.context_tiers ?? [])
     .filter((tier) => tier.min_input_tokens > 0)
@@ -333,6 +324,15 @@ function buildCost(
         ? tiers
         : undefined,
   };
+}
+
+function clearReasoningCost(
+  cost: SyncedFullModel["cost"] | undefined,
+  reasoning: boolean | undefined,
+) {
+  if (cost === undefined || reasoning !== false) return cost;
+  const { reasoning: _reasoning, ...withoutReasoning } = cost;
+  return withoutReasoning;
 }
 
 function usd(value: number | undefined) {
