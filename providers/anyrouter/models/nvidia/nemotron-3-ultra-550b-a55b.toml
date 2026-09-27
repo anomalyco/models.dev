@@ -1,8 +1,12 @@
-# Host contract (GET /api/v1/models, accessed 2026-09-24): context_length=1000000,
-# input_modalities=[text]. Params forwarded upstream
-# (docs/features/provider-routing).
-# Toggle: reasoning.enabled = true|false (NVIDIA first-party is toggle-only;
-# no effort control on this route)
+# Host contract (GET /api/v1/models?all=1, read 2026-09-24, re-verified
+# 2026-09-27): context_length=1000000, input_modalities=[text],
+# supported_parameters=[max_tokens, temperature, top_p, stop, stream],
+# capabilities=[chat, streaming, reasoning, function-calling, thinking].
+# Context and modalities both match the lab entry, so only cost and
+# reasoning_options are authored. Flat 0.50/2.50 USD/MTok.
+# Toggle: reasoning.enabled = true|false
+# NVIDIA first-party is toggle-only; the OpenRouter peer adds effort and a
+# budget, but this route documents neither.
 base_model = "nvidia/nemotron-3-ultra-550b-a55b"
 reasoning_options = [{ type = "toggle" }]
 

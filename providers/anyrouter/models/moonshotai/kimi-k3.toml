@@ -1,6 +1,10 @@
-# Host contract (GET /api/v1/models, accessed 2026-09-24): context_length=1048576,
-# input_modalities=[text, image, video]. Params forwarded upstream
-# (docs/features/provider-routing).
+# Host contract (GET /api/v1/models?all=1, read 2026-09-24, re-verified
+# 2026-09-27): context_length=1048576, input_modalities=[text, image, video],
+# supported_parameters=[max_tokens, temperature, top_p, stop, stream],
+# capabilities=[chat, reasoning, streaming, function-calling, vision, coding,
+# agentic].
+# Context and modalities both match the lab entry, so only cost and
+# reasoning_options are authored. Price 3.0/15.0 matches the OpenRouter peer.
 # Toggle: reasoning.enabled = true|false
 # Effort: reasoning_effort = low|high|max (Moonshot lab + OpenRouter peers)
 base_model = "moonshotai/kimi-k3"

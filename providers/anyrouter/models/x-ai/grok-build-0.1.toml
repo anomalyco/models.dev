@@ -1,7 +1,13 @@
-# Host contract (GET /api/v1/models, accessed 2026-09-24): context_length=256000,
-# input_modalities=[text, image] (no pdf on this route), supported_parameters=
-# [max_tokens, temperature, top_p, tools, tool_choice, response_format].
-# No reasoning controls on xAI/OpenRouter peers either -> reasoning_options = [].
+# Host contract (GET /api/v1/models?all=1, read 2026-09-24, re-verified
+# 2026-09-27): context_length=256000, input_modalities=[text, image],
+# supported_parameters=[max_tokens, temperature, top_p, tools, tool_choice,
+# response_format], capabilities=[chat, coding, reasoning, vision,
+# function-calling, structured-output, streaming].
+# No pdf on this route, so modalities narrow from the lab's [text, image,
+# pdf]. Flat 1.00/2.00 USD/MTok (matches the OpenRouter peer); no >200k
+# context tier here.
+# No reasoning controls on the xAI or OpenRouter peers either ->
+#     reasoning_options = [].
 base_model = "xai/grok-build-0.1"
 reasoning_options = []
 

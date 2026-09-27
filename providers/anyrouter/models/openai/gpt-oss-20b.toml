@@ -1,6 +1,9 @@
-# Host contract (GET /api/v1/models, accessed 2026-09-24): context_length=131072,
-# input_modalities=[text]. Params forwarded upstream
-# (docs/features/provider-routing).
+# Host contract (GET /api/v1/models?all=1, read 2026-09-24, re-verified
+# 2026-09-27): context_length=131072, input_modalities=[text],
+# supported_parameters=[max_tokens, temperature, top_p, stop, stream],
+# capabilities=[chat, streaming, reasoning, function-calling, coding].
+# Context and modalities both match the lab entry, so only cost and
+# reasoning_options are authored. Flat 0.03/0.14 USD/MTok.
 # Effort: reasoning_effort = low|medium|high (OpenRouter peers)
 base_model = "openai/gpt-oss-20b"
 reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]

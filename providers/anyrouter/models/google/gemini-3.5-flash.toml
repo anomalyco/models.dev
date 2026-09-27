@@ -1,7 +1,12 @@
-# Host contract (GET /api/v1/models, accessed 2026-09-24): context_length=1000000
-# (not the lab's 1048576), input_modalities=[text, image] (no video/audio/pdf on
-# this route). Params forwarded upstream (docs/features/provider-routing).
-# Effort: reasoning_effort = minimal|low|medium|high (Google lab + OpenRouter peers)
+# Host contract (GET /api/v1/models?all=1, read 2026-09-24, re-verified
+# 2026-09-27): context_length=1000000, input_modalities=[text, image],
+# supported_parameters=[max_tokens, temperature, top_p, stop, stream],
+# capabilities=[chat, streaming, function-calling, vision, coding].
+# Context is 1000000 rather than the lab's 1048576, and only text/image are
+# served here against the lab's five input modalities. Price 1.5/9.0 matches
+# the OpenRouter peer.
+# Effort: reasoning_effort = minimal|low|medium|high (Google lab + OpenRouter
+#     peers).
 base_model = "google/gemini-3.5-flash"
 reasoning_options = [{ type = "effort", values = ["minimal", "low", "medium", "high"] }]
 
