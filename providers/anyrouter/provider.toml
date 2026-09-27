@@ -2,7 +2,16 @@
 # AnyRouter is one gateway in front of many upstreams, so it exposes a single
 # client-facing reasoning contract rather than per-lab controls: the same
 # request field is accepted on every model and forwarded to whichever route
-# serves the request.
+# serves the request. Every model therefore publishes one effort ladder,
+# [low, medium, high].
+# This is a deliberate deviation from the lab + same-surface peer baseline that
+# AGENTS.md prescribes for relays, on the grounds that a caller of this API
+# cannot reach the upstream the request lands on, so the per-lab variation is
+# not part of the surface a client can address. Known costs: no off switch, and
+# a rung may clamp on routes whose backend accepts a narrower set. The reasoning
+# is argued in full on PR anomalyco/models.dev#8023; the API gap behind it is
+# filed as a ticket (AnyRouter publishes accepted effort values on none of its
+# 206 listings as of 2026-09-27).
 # Note that `GET /api/v1/models` lists only models the caller can reach; add
 # `?all=1` for the full catalog, otherwise BYOK-only routes look removed.
 # Sources: https://anyrouter.dev/api/v1/models?all=1 (read 2026-09-24,
