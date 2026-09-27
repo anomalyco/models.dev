@@ -9,6 +9,9 @@
 # high. It rejects none, minimal, xhigh, max with 400. That is the complete
 # accepted set; the upstream names it: `reasoning_effort` must be one of
 # `low`, `medium`, or `high`.
+# Honored effect measured the same day: low=273, medium=629, high=698, so
+# depth rises with the value.
+# Same prompt each time, mean of two runs at max_tokens=700.
 # Effort: reasoning_effort = low|medium|high
 base_model = "openai/gpt-oss-20b"
 reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
