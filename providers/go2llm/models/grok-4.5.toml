@@ -1,0 +1,15 @@
+# Pricing source: https://go2llm.tech/api/pricing (USD per 1M tokens; retrieved 2026-09-27).
+# Canonical model source: providers/xai/models/grok-4.5.toml.
+
+base_model = "xai/grok-4.5"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
+
+[cost]
+input = 0.201
+output = 0.603
+cache_read = 0.03015
+cache_write = 0.251
+
+[modalities]
+input = ["text"]
+output = ["text"]
