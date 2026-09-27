@@ -1,5 +1,11 @@
 # Preset router across $0 platform models plus the donated free pool; never
 # deducts credits. Free plan: 10 requests/day, paid plans: 1000/day.
+# Host contract (GET /api/v1/models?all=1, re-verified 2026-09-27):
+# context_length=1000000, top_provider.max_completion_tokens=131072,
+# input_modalities=[text], supported_parameters=[max_tokens, temperature,
+# top_p, stop, stream] (no reasoning or response_format controls of its
+# own), and capabilities=[chat, streaming, function-calling] (no
+# structured-output).
 # https://anyrouter.dev/model/anyrouter/free
 name = "AnyRouter Free"
 description = "Router across free platform models and the donated free pool, with automatic fallback and no credit deduction"

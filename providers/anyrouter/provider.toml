@@ -1,9 +1,14 @@
+# OpenAI-compatible gateway (`/chat/completions`, `/messages`, `/responses`).
+# Most routes are BYOK passthroughs whose published price matches the
+# OpenRouter peer exactly, so each entry's `reasoning_options` follows its lab
+# entry plus the same-surface OpenRouter peer baseline.
+# Note that `GET /api/v1/models` lists only models the caller can reach; add
+# `?all=1` for the full catalog, otherwise BYOK-only routes look removed.
+# Sources: https://anyrouter.dev/api/v1/models?all=1 (read 2026-09-24,
+# re-verified 2026-09-27) and
+# https://docs.anyrouter.dev/features/models-catalog
 name = "AnyRouter"
 env = ["ANYROUTER_API_KEY"]
 npm = "@ai-sdk/openai-compatible"
-# OpenAI-compatible gateway (`/chat/completions`, `/messages`, `/responses`).
-# Reasoning controls are model-specific; `supported_parameters` in
-# `GET /api/v1/models` lists which routes accept `reasoning` / `reasoning_effort`.
-# https://anyrouter.dev/api/v1/models (accessed 2026-09-24)
 api = "https://anyrouter.dev/api/v1"
 doc = "https://docs.anyrouter.dev"

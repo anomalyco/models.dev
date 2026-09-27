@@ -1,8 +1,16 @@
-# Preset router across top-usage and stable models; billed at each hop's rate
-# ($0 on free hops), so no fixed cost. https://anyrouter.dev/model/anyrouter/auto
+# Preset router across top-usage and stable models with health-aware fallback.
+# Host contract (GET /api/v1/models?all=1, re-verified 2026-09-27):
+# context_length=1000000, top_provider.max_completion_tokens=65536,
+# input_modalities=[text], supported_parameters=[max_tokens, temperature,
+# top_p, stop, stream] (no reasoning or response_format controls of its
+# own), and capabilities=[chat, streaming, function-calling, coding,
+# vision] (no structured-output). `cost` is the primary route's rate
+# (google-agent-platform gemini-3.5-flash); the router bills per hop, so
+# free hops are $0.
+# https://anyrouter.dev/model/anyrouter/auto
 name = "AnyRouter Auto"
 description = "Router across top-usage and stable models mixing free-tier and credit-billed routes, with health-aware fallback"
-family = "auto"
+family = "model-router"
 release_date = "2026-06-08"
 last_updated = "2026-06-08"
 attachment = false
@@ -13,9 +21,13 @@ structured_output = false
 open_weights = false
 reasoning_options = []
 
+[cost]
+input = 1.5
+output = 9.0
+
 [limit]
-context = 2_000_000
-output = 131_072
+context = 1_000_000
+output = 65_536
 
 [modalities]
 input = ["text"]

@@ -1,8 +1,12 @@
-# Host contract (GET /api/v1/models, accessed 2026-09-24): context_length=1048576,
-# input_modalities=[text, image]. Params forwarded upstream
-# (docs/features/provider-routing).
+# Host contract (GET /api/v1/models?all=1, read 2026-09-24, re-verified
+# 2026-09-27): context_length=1048576, input_modalities=[text, image],
+# supported_parameters=[max_tokens, temperature, top_p, stop, stream],
+# capabilities=[chat, streaming, function-calling, coding, reasoning, vision].
+# Context and modalities both match the lab entry, so only context is
+# overridden, from the lab's 1000000. Flat 0.155/0.62 USD/MTok, with no >200k
+# context tier.
 # Toggle: reasoning.enabled = true|false
-# Effort: reasoning_effort = low|high|max (DeepSeek lab + OpenRouter peers)
+# Effort: reasoning_effort = low|high|max (DeepSeek lab + OpenRouter peers).
 base_model = "deepseek/deepseek-v4.1-flash"
 reasoning_options = [
   { type = "toggle" },

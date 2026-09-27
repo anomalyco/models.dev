@@ -1,7 +1,11 @@
-# Host contract (GET /api/v1/models, accessed 2026-09-24): context_length=1048576,
-# input_modalities=[text, image, video]. Flat USD/MTok — AnyRouter does not apply
-# the lab's >512k context tier. Params forwarded upstream
-# (docs/features/provider-routing).
+# Host contract (GET /api/v1/models?all=1, read 2026-09-24, re-verified
+# 2026-09-27): context_length=1048576, input_modalities=[text, image, video],
+# supported_parameters=[max_tokens, temperature, top_p, stop, stream],
+# capabilities=[chat, coding, reasoning, agentic, vision, function-calling,
+# structured-output, streaming].
+# Context and modalities both match the lab entry, so only cost and
+# reasoning_options are authored. Flat 0.30/1.20 USD/MTok; AnyRouter does not
+# apply the lab's >512k context tier.
 # Toggle: reasoning.enabled = true|false (MiniMax lab + OpenRouter peers)
 base_model = "minimax/MiniMax-M3"
 reasoning_options = [{ type = "toggle" }]
