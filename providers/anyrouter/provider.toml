@@ -1,17 +1,23 @@
 # OpenAI-compatible gateway (`/chat/completions`, `/messages`, `/responses`).
-# AnyRouter is one gateway in front of many upstreams, so it exposes a single
-# client-facing reasoning contract rather than per-lab controls: the same
-# request field is accepted on every model and forwarded to whichever route
-# serves the request. Every model therefore publishes one effort ladder,
-# [low, medium, high].
-# This is a deliberate deviation from the lab + same-surface peer baseline that
-# AGENTS.md prescribes for relays, on the grounds that a caller of this API
-# cannot reach the upstream the request lands on, so the per-lab variation is
-# not part of the surface a client can address. Known costs: no off switch, and
-# a rung may clamp on routes whose backend accepts a narrower set. The reasoning
-# is argued in full on PR anomalyco/models.dev#8023; the API gap behind it is
-# filed as a ticket (AnyRouter publishes accepted effort values on none of its
-# 206 listings as of 2026-09-27).
+# AnyRouter forwards `reasoning_effort` to whichever route serves the request and
+# does not validate it, so the rungs a model accepts are whatever that route's
+# upstream allows — and those upstreams disagree. Measured live 2026-09-27 by
+# sending each value to POST /api/v1/chat/completions and reading the upstream's
+# own 400 message:
+#   openrouter-pool    max|xhigh|high|medium|low|minimal|none
+#   huggingface-pool   low|medium|high          (rejects xhigh)
+#   nvidia-byok        rejects medium
+#   z-ai-coding-byok   no validation, accepts any value
+#   hermes-agent       accepts low|medium|high|xhigh
+# Every model therefore publishes one uniform ladder, [low, high] — the
+# intersection accepted by every upstream above. It is a deliberate deviation
+# from the lab + same-surface peer baseline AGENTS.md prescribes for relays,
+# because a caller cannot address the upstream behind a single gateway endpoint
+# and so cannot act on per-model variation. It is also deliberately narrower
+# than any one route supports, which is the price of one contract: minimal,
+# none, xhigh and max are really available on some routes and are not published.
+# The full measurement and the request to normalize this are the PR at
+# anomalyco/models.dev#8023 and the ticket tracked alongside it.
 # Note that `GET /api/v1/models` lists only models the caller can reach; add
 # `?all=1` for the full catalog, otherwise BYOK-only routes look removed.
 # Sources: https://anyrouter.dev/api/v1/models?all=1 (read 2026-09-24,
