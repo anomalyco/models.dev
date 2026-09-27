@@ -1,0 +1,15 @@
+# QuickSilver Pro is an OpenAI-compatible relay: it forwards `reasoning` and
+# `reasoning_effort` through to the upstream model unchanged.
+# Effort: reasoning_effort = none|low|medium|high|xhigh|max
+# Docs: https://quicksilverpro.io/docs (accessed 2026-09-26)
+base_model = "openai/gpt-6-luna"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "xhigh", "max"]
+
+[cost]
+input = 0.1
+output = 0.5
+cache_read = 0.01
+cache_write = 0.125
