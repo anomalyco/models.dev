@@ -1,9 +1,10 @@
 base_model = "zhipuai/glm-5.3"
-name = "GLM-5.3 (Together AI)"
+name = "GLM-5.3 (Fireworks AI)"
+structured_output = false
 
 [[reasoning_options]]
 type = "effort"
-values = ["low", "high", "max"]
+values = ["xhigh", "max"]
 
 [cost]
 input = 1.4
@@ -12,4 +13,3 @@ cache_read = 0.26
 
 [limit]
 context = 1_048_576
-output = 943_717
