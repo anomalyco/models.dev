@@ -1,0 +1,16 @@
+# Qwen3.8 27B served by Heabsy on dedicated GPUs in the EEA (EEA tier, zero data retention).
+# Pricing (USD per 1M tokens: input 0.40, cached input 0.05, output 3.00) and limits:
+# https://heabsy.com/models (accessed 2026-09-28). API: https://api.heabsy.com/docs
+
+base_model = "alibaba/qwen3.8-27b"
+
+[[reasoning_options]]
+type = "toggle"
+
+[cost]
+input = 0.40
+output = 3.00
+cache_read = 0.05
+
+[modalities]
+input = ["text", "image"]
