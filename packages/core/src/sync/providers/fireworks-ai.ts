@@ -167,7 +167,7 @@ export function mergeFireworksModels(
   }
   const today = now.toISOString().slice(0, 10);
   const available = inventory.filter((model) => {
-    if (model.kind !== "HF_BASE_MODEL" || !model.supportsServerless) return false;
+    if (!model.supportsServerless) return false;
     const date = model.deprecationDate;
     // A date has no time zone. Keep the model through that UTC day rather than
     // removing it prematurely on the announced deprecation day.
@@ -176,18 +176,18 @@ export function mergeFireworksModels(
       : `${date.year}-${String(date.month).padStart(2, "0")}-${String(date.day).padStart(2, "0")}`;
     return lastDay === undefined || lastDay >= today;
   });
-  if (available.length === 0) {
-    throw new Error("Fireworks AI returned an empty active serverless inventory; refusing destructive sync");
-  }
   // Pricing rows can outlive serverless deployments. Only expand modes and
-  // aliases for base models that the availability inventory still lists.
+  // aliases for models that the availability inventory still lists.
   const availableIds = new Set(available.map((model) => model.name));
   const expanded = expandFireworksModels(serverless.filter((model) => availableIds.has(model.id)));
   const ids = new Set(expanded.map((model) => model.catalogId));
+  const inventoryOnly = available.filter((model) => model.kind === "HF_BASE_MODEL" && !ids.has(model.name));
+  if (!expanded.some(supportsCatalogModel) && inventoryOnly.length === 0) {
+    throw new Error("Fireworks AI returned an empty active serverless inventory; refusing destructive sync");
+  }
   return [
     ...expanded,
-    ...available
-      .filter((model) => !ids.has(model.name))
+    ...inventoryOnly
       .map((model): FireworksInventoryCatalogModel => ({
         catalogId: model.name,
         inventoryOnly: true,

@@ -118,6 +118,14 @@ test("unions pricing IDs with generation models from serverless inventory", () =
   });
 });
 
+test("keeps priced serverless generation models even when they are not HF base models", () => {
+  const priced = fireworksModel({ id: "accounts/fireworks/models/flumina" });
+  const inventory = inventoryModel({ name: priced.id, kind: "FLUMINA_BASE_MODEL" });
+
+  expect(mergeFireworksModels([priced], [inventory]).map((model) => model.catalogId))
+    .toEqual([priced.id]);
+});
+
 test("does not report retired pricing rows or their aliases as missing models", async () => {
   const dir = await mkdtemp(path.join(tmpdir(), "fireworks-sync-"));
   const modelsDir = path.join(dir, "providers/fireworks-ai/models");
@@ -196,6 +204,9 @@ test("refuses destructive sync when either Fireworks source is empty", () => {
   expect(() => mergeFireworksModels([fireworksModel()], [])).toThrow("empty serverless source");
   expect(() => mergeFireworksModels([fireworksModel()], [
     inventoryModel({ supportsServerless: false }),
+  ])).toThrow("empty active serverless inventory");
+  expect(() => mergeFireworksModels([fireworksModel({ output_modalities: ["embeddings"] })], [
+    inventoryModel({ kind: "EMBEDDING_MODEL" }),
   ])).toThrow("empty active serverless inventory");
 });
 
