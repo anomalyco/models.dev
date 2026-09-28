@@ -8,6 +8,10 @@
 # Reasoning matches the standard tier: mandatory, low/high/max efforts
 # (default max; aliases xhigh -> max, medium -> high, minimal -> low).
 # Budget: thinking_token_budget (integer reasoning tokens)
+# Neuralwatt serves text+image input only (host capabilities.vision = true,
+# limits.max_images = 20 in GET /v1/models, checked 2026-09-28); the lab's
+# video/PDF inputs are not exposed on this host, so narrow the modalities
+# inherited from zhipuai/glm-5.3-flash, per the qwen-3.8-27b precedent.
 # https://portal.neuralwatt.com/docs/guides/flex-tier
 # https://portal.neuralwatt.com/docs/api/chat-completions
 base_model = "zhipuai/glm-5.3-flash"
@@ -30,3 +34,7 @@ cache_read = 0.0195
 [limit]
 context = 1_048_560
 output = 131_072
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

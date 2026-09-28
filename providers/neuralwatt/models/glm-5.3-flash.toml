@@ -5,6 +5,10 @@
 # Exited preview 2026-09-11.
 # Pricing from the authenticated GET /v1/models metadata.pricing
 # (checked 2026-09-15).
+# Neuralwatt serves text+image input only (host capabilities.vision = true,
+# limits.max_images = 20 in GET /v1/models, checked 2026-09-28); the lab's
+# video/PDF inputs are not exposed on this host, so narrow the modalities
+# inherited from zhipuai/glm-5.3-flash, per the qwen-3.8-27b precedent.
 # https://portal.neuralwatt.com/docs/api/chat-completions
 # https://portal.neuralwatt.com/docs/api/models
 base_model = "zhipuai/glm-5.3-flash"
@@ -26,3 +30,7 @@ cache_read = 0.03
 [limit]
 context = 1_048_560
 output = 131_072
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
