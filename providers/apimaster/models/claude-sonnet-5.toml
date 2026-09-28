@@ -3,7 +3,7 @@
 # (https://apimaster.ai/docs/en/faq); this is that channel's price on https://apimaster.ai/zh/models/claude-api?model=claude-sonnet-5
 # (read 2026-09-28). The other 17 channel(s), up to 2.4 / 12, serve only when it is unavailable.
 # Effort: reasoning_effort = low|medium|high|xhigh|max
-# No toggle: thinking.type=disabled with reasoning_effort=high still reasoned in 2 of 2 requests; thinking.type=enabled alone did not (tested 2026-09-28).
+# No toggle: with reasoning_effort=high, thinking.type=disabled still reasoned in 10 of 10 requests (same amount as without it); thinking.type=enabled + budget alone reasoned in 0 of 5 (tested 2026-09-28).
 base_model = "anthropic/claude-sonnet-5"
 reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
 
