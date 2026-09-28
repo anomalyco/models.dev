@@ -1,0 +1,20 @@
+# Sources:
+# - https://ofox.ai/models/z-ai/glm-5.3-flashx (Ofox list $0.37/$1.25/M, cache read $0.075/M; 1M context; 131K output; always-on thinking low/high/max)
+# - https://docs.z.ai/guides/overview/pricing (Z.AI list: GLM-5.3-FlashX $0.37 input / $1.25 output / $0.075 cached input per 1M)
+# - https://docs.z.ai/guides/vlm/glm-5.3-flash (Flash/FlashX share weights; thinking.type only enabled; 1M context; model codes glm-5.3-flash/glm-5.3-flashx)
+# - https://vercel.com/changelog/glm-5-3-flashx-now-available-on-ai-gateway (FlashX high-speed serving option, ~200 tok/s, available 2026-09-18)
+# Effort: reasoning_effort = low|high|max (thinking always on)
+base_model = "zhipuai/glm-5.3-flash"
+name = "GLM-5.3-FlashX"
+description = "High-speed GLM-5.3-Flash serving option for coding and agent workflows"
+release_date = "2026-09-18"
+last_updated = "2026-09-18"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[cost]
+input = 0.37
+output = 1.25
+cache_read = 0.075
