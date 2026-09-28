@@ -1,12 +1,4 @@
-name = "Claude Sonnet 5.5"
-description = "Balanced Claude model for coding, analysis, agent workflows, and cost control"
-family = "claude-sonnet"
-release_date = "2026-09-28"
-last_updated = "2026-09-28"
-attachment = true
-reasoning = true
-tool_call = true
-open_weights = false
+base_model = "anthropic/claude-sonnet-5-5"
 
 [[reasoning_options]]
 type = "effort"
@@ -17,11 +9,3 @@ input = 2
 output = 10
 cache_read = 0.2
 cache_write = 2.5
-
-[limit]
-context = 1_000_000
-output = 128_000
-
-[modalities]
-input = ["text", "image", "pdf"]
-output = ["text"]
