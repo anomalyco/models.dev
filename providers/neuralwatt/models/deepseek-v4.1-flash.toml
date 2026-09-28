@@ -4,6 +4,8 @@
 # off is effort=none and there is no separate toggle. The API supports none,
 # low, high, xhigh and max as distinct efforts (default high); aliases
 # medium -> high, minimal -> low.
+# Output cap from GET /v1/models metadata.limits.max_output_tokens
+# (re-checked 2026-09-28).
 # https://portal.neuralwatt.com/docs/api/chat-completions
 # https://portal.neuralwatt.com/docs/api/models
 base_model = "deepseek/deepseek-v4.1-flash"
@@ -20,4 +22,4 @@ cache_read = 0.015
 
 [limit]
 context = 1_048_560
-output = 65_536
+output = 393_216
