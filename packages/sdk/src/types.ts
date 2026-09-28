@@ -212,6 +212,8 @@ export interface ModelProviderConfig {
 export interface Model {
   /** Provider-scoped model ID, e.g. "claude-opus-4-6". */
   id: string
+  /** Canonical lab/model ID when this provider offering is linked to model metadata. */
+  canonical_model_id?: string
   type?: ModelType
   name: string
   description: string

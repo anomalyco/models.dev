@@ -364,6 +364,8 @@ function refineModel<
 export const ModelShape = z
   .object({
     ...ModelBase.shape,
+    /** Canonical lab/model ID for this provider offering, when linked to model metadata. */
+    canonical_model_id: z.string().optional(),
     cost: OutputCost.optional(),
   })
   .strict();
