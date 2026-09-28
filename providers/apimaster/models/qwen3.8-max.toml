@@ -1,9 +1,10 @@
 # Metadata is inherited from the upstream Alibaba entry.
 # Price: lowest of 3 channels on https://apimaster.ai/zh/models/qwen-api?model=qwen3.8-max
 # (read 2026-09-28). A "from" price: channels range up to 2 / 6.
-# Effort: reasoning_effort = none|low|medium|xhigh
+# Toggle: enable_thinking = true|false
+# Effort: reasoning_effort = low|medium|xhigh
 base_model = "alibaba/qwen3.8-max"
-reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "xhigh"] }]
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "medium", "xhigh"] }]
 
 [cost]
 input = 0.988
