@@ -2,8 +2,9 @@
 # Price: the default route. APIMaster routes to the lowest-cost stable channel first
 # (https://apimaster.ai/docs/en/faq); this is that channel's price on https://apimaster.ai/zh/models/qwen-api?model=qwen3.8-flash
 # (read 2026-09-28). The other 1 channel(s), up to 0.15 / 0.45, serve only when it is unavailable.
-# No caller control on this host: reasoning stays on with enable_thinking=false,
-# thinking.type=disabled and reasoning_effort=none (tested 2026-09-25 and 2026-09-28).
+# No caller control on this host: reasoning stayed on in every request with
+# enable_thinking=false (4), thinking.type=disabled (2) and reasoning_effort=none (2);
+# thinking_budget=100 was not honoured (tested 2026-09-25 and 2026-09-28).
 base_model = "alibaba/qwen3.8-flash"
 reasoning_options = []
 

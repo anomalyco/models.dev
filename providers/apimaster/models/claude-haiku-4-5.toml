@@ -2,10 +2,12 @@
 # Price: the default route. APIMaster routes to the lowest-cost stable channel first
 # (https://apimaster.ai/docs/en/faq); this is that channel's price on https://apimaster.ai/zh/models/claude-api?model=claude-haiku-4-5
 # (read 2026-09-28). The other 8 channel(s), up to 1 / 5, serve only when it is unavailable.
-# This host returns no reasoning for this model: reasoning_effort (low/high) and
-# thinking {type: enabled, budget_tokens} both came back without any (tested 2026-09-28).
+# Toggle: thinking.type = enabled|disabled
+# Budget: thinking.budget_tokens
+# Channel-dependent here: with thinking enabled, 3 of 10 requests returned reasoning
+# (2026-09-28); the others were served by a channel that returns none.
 base_model = "anthropic/claude-haiku-4-5"
-reasoning = false
+reasoning_options = [{ type = "toggle" }, { type = "budget_tokens" }]
 
 [cost]
 input = 0.1125
