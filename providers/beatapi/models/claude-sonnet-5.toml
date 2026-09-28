@@ -1,0 +1,10 @@
+# BeatAPI public retail pricing (USD per million tokens): https://api.beatapi.io/v1/pricing
+# Source snapshot: 2026-09-28. Model ID: claude-sonnet-5.
+base_model = "anthropic/claude-sonnet-5"
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
+
+[cost]
+input = 1
+output = 5
+cache_read = 0.1
+cache_write = 1.25

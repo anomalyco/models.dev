@@ -1,0 +1,10 @@
+# BeatAPI public retail pricing (USD per million tokens): https://api.beatapi.io/v1/pricing
+# Source snapshot: 2026-09-28. Model ID: claude-fable-5-1.
+base_model = "anthropic/claude-fable-5-1"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
+
+[cost]
+input = 5
+output = 25
+cache_read = 0.125
+cache_write = 6.25

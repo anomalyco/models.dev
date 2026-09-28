@@ -1,0 +1,10 @@
+# BeatAPI public retail pricing (USD per million tokens): https://api.beatapi.io/v1/pricing
+# Source snapshot: 2026-09-28. Model ID: qwen3.7-max.
+base_model = "alibaba/qwen3.7-max"
+reasoning_options = [{ type = "toggle" }, { type = "budget_tokens" }]
+
+[cost]
+input = 1.0325
+output = 3.0975
+cache_read = 0.2065
+cache_write = 1.2908

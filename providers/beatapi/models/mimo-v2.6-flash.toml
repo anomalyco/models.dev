@@ -1,0 +1,9 @@
+# BeatAPI public retail pricing (USD per million tokens): https://api.beatapi.io/v1/pricing
+# Source snapshot: 2026-09-28. Model ID: mimo-v2.6-flash.
+base_model = "xiaomi/mimo-v2.6-flash"
+reasoning_options = [{ type = "toggle" }]
+
+[cost]
+input = 0.098
+output = 0.196
+cache_read = 0.00196
