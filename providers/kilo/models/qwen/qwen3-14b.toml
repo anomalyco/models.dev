@@ -1,4 +1,4 @@
-name = "Qwen: Qwen3 14B"
+name = "Qwen: Qwen3 14B (retires Oct 9)"
 description = "Qwen instruction model for multilingual chat, reasoning, and tool use"
 family = "qwen"
 release_date = "2025-04-28"
@@ -19,8 +19,8 @@ input = 0.2275
 output = 0.91
 
 [limit]
-context = 40_960
-output = 16_384
+context = 131_072
+output = 8_192
 
 [modalities]
 input = ["text"]
