@@ -18,6 +18,13 @@ const ENABLE_THINKING_MODELS = new Set([
   "@cf/zai-org/glm-4.7-flash",
   "@cf/zai-org/glm-5.2",
 ]);
+// Search and the model pages report 1,310,720 for these, but the serving backend rejects any request over 1,048,576
+// tokens. The sync re-derives context from search, so the served window is pinned here. It only ever lowers a window.
+const SERVED_CONTEXT = new Map([
+  ["@cf/zai-org/glm-5.3", 1_048_576],
+  ["@cf/zai-org/glm-5.3-flash", 1_048_576],
+  ["@cf/deepseek-ai/deepseek-v4-flash-0731", 1_048_576],
+]);
 const ROOT_DIR = path.join(import.meta.dirname, "..", "..", "..", "..", "..");
 const MODELS_DIR = path.join(ROOT_DIR, "models");
 const metadataFilesByPublisher = new Map<string, string[]>();
@@ -172,8 +179,10 @@ export function buildWorkersAiModel(
   const reasoning = reasoningOptions !== undefined
     ? true
     : existing?.reasoning ?? hasReasoning(model);
+  const context = Math.min(model.context_length, SERVED_CONTEXT.get(model.id) ?? model.context_length);
   const source = {
     ...model,
+    context_length: context,
     reasoning: undefined,
     supported_parameters: [
       ...model.supported_parameters.filter((parameter) => !["reasoning", "include_reasoning"].includes(parameter)),
@@ -182,6 +191,7 @@ export function buildWorkersAiModel(
     name: existing?.name ?? model.name,
     top_provider: {
       ...model.top_provider,
+      context_length: context,
       max_completion_tokens: existing?.limit?.output ?? model.top_provider.max_completion_tokens,
     },
   };
