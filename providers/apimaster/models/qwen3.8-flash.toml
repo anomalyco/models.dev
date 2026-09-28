@@ -1,0 +1,10 @@
+# Metadata is inherited from the upstream Alibaba entry.
+# Price: lowest of 2 channels on https://apimaster.ai/zh/models/qwen-api?model=qwen3.8-flash
+# (read 2026-09-28). A "from" price: channels range up to 0.15 / 0.45.
+# Reasoning is always on here: enable_thinking and reasoning_effort had no effect (tested 2026-09-25).
+base_model = "alibaba/qwen3.8-flash"
+reasoning_options = []
+
+[cost]
+input = 0.089344
+output = 0.301537

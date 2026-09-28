@@ -1,0 +1,10 @@
+# Metadata is inherited from the upstream Moonshot entry.
+# Price: lowest of 7 channels on https://apimaster.ai/zh/models/kimi-api?model=kimi-k3
+# (read 2026-09-28). A "from" price: channels range up to 3 / 15.
+# Effort: reasoning_effort = low|high|max
+base_model = "moonshotai/kimi-k3"
+reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]
+
+[cost]
+input = 2.1
+output = 10.5

@@ -1,0 +1,10 @@
+# Metadata is inherited from the upstream MiniMax entry.
+# Price: lowest of 3 channels on https://apimaster.ai/zh/models/minimax-api?model=minimax-m3
+# (read 2026-09-28). A "from" price: channels range up to 0.6 / 2.4.
+# Toggle: thinking.type = adaptive|disabled (MiniMax docs: "enabled" is not a valid value)
+base_model = "minimax/MiniMax-M3"
+reasoning_options = [{ type = "toggle" }]
+
+[cost]
+input = 0.3
+output = 1.2

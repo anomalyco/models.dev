@@ -1,0 +1,10 @@
+# Metadata is inherited from the upstream OpenAI entry.
+# Price: lowest of 15 channels on https://apimaster.ai/zh/models/openai-api?model=gpt-6-astra
+# (read 2026-09-28). A "from" price: channels range up to 2.37781 / 11.889.
+# Effort: reasoning_effort = low|medium|high|xhigh|max
+base_model = "openai/gpt-6-astra"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
+
+[cost]
+input = 0.446535
+output = 2.23267
