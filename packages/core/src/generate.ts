@@ -119,7 +119,10 @@ async function generateProviders(
           model.error.cause = { modelPath, toml: merged };
           throw model.error;
         }
-        provider.data.models[modelID] = normalizeModelCost(model.data);
+        provider.data.models[modelID] = {
+          ...normalizeModelCost(model.data),
+          base_model: toml.base_model,
+        };
         continue;
       }
       const model = AuthoredModel.safeParse(toml);
