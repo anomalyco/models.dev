@@ -1,6 +1,7 @@
 # Metadata is inherited from the upstream Zhipu entry.
-# Price: lowest of 6 channels on https://apimaster.ai/zh/models/glm-api?model=glm-5.3
-# (read 2026-09-28). A "from" price: channels range up to 1.4 / 4.4.
+# Price: the default route. APIMaster routes to the lowest-cost stable channel first
+# (https://apimaster.ai/docs/en/faq); this is that channel's price on https://apimaster.ai/zh/models/glm-api?model=glm-5.3
+# (read 2026-09-28). The other 5 channel(s), up to 1.4 / 4.4, serve only when it is unavailable.
 # Effort: reasoning_effort = low|high|max
 base_model = "zhipuai/glm-5.3"
 reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]

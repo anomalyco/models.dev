@@ -1,6 +1,7 @@
 # Metadata is inherited from the upstream OpenAI entry.
-# Price: lowest of 21 channels on https://apimaster.ai/zh/models/openai-api?model=gpt-5.6-terra
-# (read 2026-09-28). A "from" price: channels range up to 2 / 12.
+# Price: the default route. APIMaster routes to the lowest-cost stable channel first
+# (https://apimaster.ai/docs/en/faq); this is that channel's price on https://apimaster.ai/zh/models/openai-api?model=gpt-5.6-terra
+# (read 2026-09-28). The other 20 channel(s), up to 2 / 12, serve only when it is unavailable.
 # Effort: reasoning_effort = none|low|medium|high|xhigh|max
 base_model = "openai/gpt-5.6-terra"
 reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh", "max"] }]

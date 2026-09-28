@@ -1,6 +1,7 @@
 # Metadata is inherited from the upstream Alibaba entry.
-# Price: lowest of 3 channels on https://apimaster.ai/zh/models/qwen-api?model=qwen3.8-max
-# (read 2026-09-28). A "from" price: channels range up to 2 / 6.
+# Price: the default route. APIMaster routes to the lowest-cost stable channel first
+# (https://apimaster.ai/docs/en/faq); this is that channel's price on https://apimaster.ai/zh/models/qwen-api?model=qwen3.8-max
+# (read 2026-09-28). The other 2 channel(s), up to 2 / 6, serve only when it is unavailable.
 # Toggle: enable_thinking = true|false
 # Effort: reasoning_effort = low|medium|xhigh
 base_model = "alibaba/qwen3.8-max"
