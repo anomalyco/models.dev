@@ -2,6 +2,7 @@
 # Price: lowest of 13 channels on https://apimaster.ai/zh/models/claude-api?model=claude-opus-5
 # (read 2026-09-28). A "from" price: channels range up to 5 / 25.
 # Effort: reasoning_effort = low|medium|high|xhigh|max
+# No toggle: reasoning is on by default and thinking.type=disabled still reasoned (tested 2026-09-28).
 base_model = "anthropic/claude-opus-5"
 reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
 

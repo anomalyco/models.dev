@@ -2,6 +2,7 @@
 # Price: lowest of 18 channels on https://apimaster.ai/zh/models/claude-api?model=claude-sonnet-4-6
 # (read 2026-09-28). A "from" price: channels range up to 3 / 15.
 # Effort: reasoning_effort = low|medium|high|max
+# No toggle: thinking.type=disabled with reasoning_effort=high still reasoned; thinking.type=enabled alone did not (tested 2026-09-28).
 base_model = "anthropic/claude-sonnet-4-6"
 reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "max"] }]
 

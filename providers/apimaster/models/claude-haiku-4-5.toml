@@ -1,10 +1,10 @@
 # Metadata is inherited from the upstream Anthropic entry.
 # Price: lowest of 9 channels on https://apimaster.ai/zh/models/claude-api?model=claude-haiku-4-5
 # (read 2026-09-28). A "from" price: channels range up to 1 / 5.
-# No caller control on this host: no reasoning is returned with reasoning_effort (low/high)
-# or thinking {type: enabled, budget_tokens} (tested 2026-09-28).
+# This host returns no reasoning for this model: reasoning_effort (low/high) and
+# thinking {type: enabled, budget_tokens} both came back without any (tested 2026-09-28).
 base_model = "anthropic/claude-haiku-4-5"
-reasoning_options = []
+reasoning = false
 
 [cost]
 input = 0.1125
