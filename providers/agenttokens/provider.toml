@@ -1,0 +1,10 @@
+name = "AgentTokens"
+env = ["AGENTTOKENS_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+# OpenAI-compatible Chat Completions at POST `/v1/chat/completions` (streaming, tools,
+# json_schema response_format, image inputs). Prepaid, metered per token.
+# Reasoning is on by default. Accepts `reasoning_effort = minimal|low|medium|high`
+# (`minimal` disables thinking) and `reasoning = { enabled = false }` as a toggle.
+# https://agenttokens.dev/docs (accessed 2026-09-28)
+api = "https://api.agenttokens.dev/v1"
+doc = "https://agenttokens.dev/docs"
