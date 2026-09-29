@@ -22,11 +22,11 @@
 # work on Kunavo's native Messages route (origin https://api.kunavo.com, client
 # appends /v1/messages), which relays the body untranslated; that surface is not
 # what this entry registers.
-base_model = "anthropic/claude-sonnet-4-6"
+base_model = "anthropic/claude-opus-5-5"
 reasoning_options = []
 
 [cost]
-input = 2.1
-output = 10.5
-cache_read = 0.21
-cache_write = 2.625
+input = 2.8
+output = 14
+cache_read = 0.14
+cache_write = 3.5
