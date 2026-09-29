@@ -1,12 +1,12 @@
 # Metadata is inherited from the upstream DeepSeek entry.
 # Price: the default route. APIMaster routes to the lowest-cost stable channel first
 # (https://apimaster.ai/docs/en/faq); this is that channel's price on https://apimaster.ai/zh/models/deepseek-api?model=deepseek-v4-flash
-# (read 2026-09-28). The other 6 channel(s), up to 0.22 / 0.66, serve only when it is unavailable.
+# (read 2026-09-29). The other 6 channel(s), up to 0.44 / 1.32, serve only when it is unavailable.
 # Toggle: thinking.type = enabled|disabled
 # Effort: reasoning_effort = low|high|max
 base_model = "deepseek/deepseek-v4-flash"
 reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "high", "max"] }]
 
 [cost]
-input = 0.0792
-output = 0.2376
+input = 0.1584
+output = 0.4752

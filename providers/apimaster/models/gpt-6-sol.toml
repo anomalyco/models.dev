@@ -1,12 +1,12 @@
 # Metadata is inherited from the upstream OpenAI entry.
 # Price: the default route. APIMaster routes to the lowest-cost stable channel first
-# (https://apimaster.ai/docs/en/faq). The model is not on the marketplace pages yet, so this
-# is the channel price billed for live requests on 2026-09-29 (lowest seen in the billing log).
+# (https://apimaster.ai/docs/en/faq); this is that channel's price in the model selector on https://apimaster.ai/
+# (data: https://apimaster.ai/api/marketplace-data?model=gpt-6-sol, read 2026-09-29). The other 11 channel(s), up to 0.475562 / 2.37781, serve only when it is unavailable.
 # Effort: reasoning_effort = none|low|medium|high|xhigh|max
 # effort=none returned no reasoning in 5 of 6 requests (2026-09-29).
 base_model = "openai/gpt-6-sol"
 reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh", "max"] }]
 
 [cost]
-input = 0.089307
-output = 0.446535
+input = 0.10707
+output = 0.535349
