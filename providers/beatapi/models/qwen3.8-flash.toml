@@ -1,7 +1,10 @@
+# Toggle: thinking.type = enabled|disabled
+# Measured on BeatAPI /v1/chat/completions, 2026-09-28.
+# enable_thinking=false, thinking_budget and reasoning_effort are not reliably honored here.
 # BeatAPI public retail pricing (USD per million tokens): https://api.beatapi.io/v1/pricing
 # Source snapshot: 2026-09-28. Model ID: qwen3.8-flash.
 base_model = "alibaba/qwen3.8-flash"
-reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "medium", "xhigh"] }, { type = "budget_tokens", max = 262144 }]
+reasoning_options = [{ type = "toggle" }]
 
 [cost]
 input = 0.105

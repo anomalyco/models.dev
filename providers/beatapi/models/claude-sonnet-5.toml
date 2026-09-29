@@ -1,7 +1,10 @@
+# Effort: reasoning_effort = low|medium|high; BeatAPI converts these to Anthropic thinking.
+# Measured on BeatAPI /v1/chat/completions, 2026-09-28: xhigh/max and the `thinking` body
+# field are not forwarded, so there is no toggle; omit reasoning_effort for no thinking.
 # BeatAPI public retail pricing (USD per million tokens): https://api.beatapi.io/v1/pricing
 # Source snapshot: 2026-09-28. Model ID: claude-sonnet-5.
 base_model = "anthropic/claude-sonnet-5"
-reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
 
 [cost]
 input = 1

@@ -1,5 +1,6 @@
 # BeatAPI public retail pricing (USD per million tokens): https://api.beatapi.io/v1/pricing
 # Source snapshot: 2026-09-28. Model ID: grok-4.20-multi-agent-0309.
+# Input: a PDF `file` content part returns HTTP 400 on this route (measured 2026-09-28).
 base_model = "xai/grok-4.20-multi-agent-0309"
 reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh"] }]
 
@@ -13,3 +14,6 @@ tier = { type = "context", size = 200_000 }
 input = 2.5
 output = 5
 cache_read = 0.4
+
+[modalities]
+input = ["text", "image"]

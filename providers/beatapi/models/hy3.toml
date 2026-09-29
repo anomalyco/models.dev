@@ -1,7 +1,10 @@
+# Toggle: thinking.type = enabled|disabled
+# Measured on BeatAPI /v1/chat/completions, 2026-09-28: reasoning_effort=none does not
+# disable reasoning here and low/medium/high are not graded, so no effort list.
 # BeatAPI public retail pricing (USD per million tokens): https://api.beatapi.io/v1/pricing
 # Source snapshot: 2026-09-28. Model ID: hy3.
 base_model = "tencent/hy3"
-reasoning_options = [{ type = "effort", values = ["none", "low", "high"] }]
+reasoning_options = [{ type = "toggle" }]
 
 [cost]
 input = 0.0924

@@ -1,7 +1,11 @@
+# Effort: reasoning_effort = low|high|max (forwarded unchanged)
+# Measured on BeatAPI /v1/chat/completions, 2026-09-28.
+# Thinking cannot be turned off here: thinking.type=disabled, enable_thinking=false,
+# chat_template_kwargs.thinking=false and reasoning.enabled=false all still reason.
 # BeatAPI public retail pricing (USD per million tokens): https://api.beatapi.io/v1/pricing
 # Source snapshot: 2026-09-28. Model ID: kimi-k3.
 base_model = "moonshotai/kimi-k3"
-reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "high", "max"] }]
+reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]
 
 [cost]
 input = 2.1

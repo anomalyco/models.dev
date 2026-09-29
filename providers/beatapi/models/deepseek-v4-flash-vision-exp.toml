@@ -1,9 +1,0 @@
-# BeatAPI public retail pricing (USD per million tokens): https://api.beatapi.io/v1/pricing
-# Source snapshot: 2026-09-28. Model ID: deepseek-v4-flash-vision-exp.
-base_model = "deepseek/deepseek-v4-flash-vision-exp"
-reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "high", "max"] }]
-
-[cost]
-input = 0.11
-output = 0.33
-cache_read = 0.0035

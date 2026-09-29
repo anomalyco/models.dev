@@ -1,7 +1,11 @@
+# Toggle: thinking.type = enabled|disabled
+# Effort: reasoning_effort = low|high|max (DeepSeek V4 levels)
+# Measured on BeatAPI /v1/chat/completions, 2026-09-28: a counting prompt used
+# 2382 / 3402 / 4322 reasoning tokens at low / high / max.
 # BeatAPI public retail pricing (USD per million tokens): https://api.beatapi.io/v1/pricing
 # Source snapshot: 2026-09-28. Model ID: deepseek-v4-pro-0813.
 base_model = "deepseek/deepseek-v4-pro-0813"
-reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["high", "max"] }]
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "high", "max"] }]
 
 [cost]
 input = 0.33

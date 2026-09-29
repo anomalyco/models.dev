@@ -1,7 +1,10 @@
+# Measured on BeatAPI /v1/chat/completions, 2026-09-28.
+# No caller reasoning control on this route: enable_thinking=false and thinking.type=disabled
+# still return reasoning_content, and thinking_budget=64 is exceeded.
 # BeatAPI public retail pricing (USD per million tokens): https://api.beatapi.io/v1/pricing
 # Source snapshot: 2026-09-28. Model ID: qwen3.7-max.
 base_model = "alibaba/qwen3.7-max"
-reasoning_options = [{ type = "toggle" }, { type = "budget_tokens" }]
+reasoning_options = []
 
 [cost]
 input = 1.0325
