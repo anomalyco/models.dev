@@ -1,0 +1,18 @@
+base_model = "deepseek/deepseek-v4.1-flash"
+name = "DeepSeek V4.1 Flash (FlexAI)"
+attachment = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "high", "max"]
+
+[cost]
+input = 0.14
+output = 0.42
+cache_read = 0.021
+
+[limit]
+context = 1_048_576
+
+[modalities]
+input = ["text"]
