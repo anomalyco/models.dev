@@ -2,15 +2,21 @@
 # Reasoning controls: https://docs.requesty.ai/features/reasoning
 base_model = "openai/gpt-6.1-sol"
 name = "GPT-6.1 Sol (EU)"
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "max"] }, { type = "budget_tokens" }]
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "max"]
+
+[[reasoning_options]]
+type = "budget_tokens"
 
 [cost]
-input = 2.40
-output = 12.00
+input = 2.4
+output = 12
 cache_read = 0.12
 
 [[cost.tiers]]
 tier = { type = "context", size = 272_000 }
-input = 4.80
-output = 18.00
+input = 4.8
+output = 18
 cache_read = 0.24
