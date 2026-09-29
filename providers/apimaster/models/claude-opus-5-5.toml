@@ -1,0 +1,13 @@
+# Metadata is inherited from the upstream Anthropic entry.
+# Price: the default route. APIMaster routes to the lowest-cost stable channel first
+# (https://apimaster.ai/docs/en/faq). The model is not on the marketplace pages yet, so this
+# is the channel price billed for live requests on 2026-09-29 (lowest seen in the billing log).
+# Effort: reasoning_effort = low|medium|high|xhigh|max, sent upstream as output_config.effort.
+# Same prompt, 4 requests each: low used ~160 completion tokens, max ~340 (2026-09-29).
+# No toggle: thinking cannot be disabled on this model (Anthropic docs).
+base_model = "anthropic/claude-opus-5-5"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
+
+[cost]
+input = 1.33819
+output = 6.69096
