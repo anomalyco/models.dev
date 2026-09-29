@@ -1,14 +1,15 @@
 # Metadata is inherited from the upstream Anthropic entry.
 # Price: the default route. APIMaster routes to the lowest-cost stable channel first
 # (https://apimaster.ai/docs/en/faq); this is that channel's price on https://apimaster.ai/zh/models/claude-api?model=claude-haiku-4-5
-# (read 2026-09-28). The other 8 channel(s), up to 1 / 5, serve only when it is unavailable.
-# Toggle: thinking.type = enabled|disabled
-# Budget: thinking.budget_tokens
-# Channel-dependent here: with thinking enabled, 3 of 10 requests returned reasoning
-# (2026-09-28); the others were served by a channel that returns none.
+# (data: https://apimaster.ai/api/marketplace-data?model=claude-haiku-4-5, read 2026-09-29). Channels reserved for
+# claude_code clients are excluded; the other 4 open channel(s), up to 1 / 5, serve only on failover.
+# No caller control on this host: on the default route (the channel that billed 45 of 45 requests),
+# thinking.type=enabled returned no reasoning in 16 of 16 requests, and budget_tokens 1024 vs 12000
+# gave the same output length (8 each) (2026-09-29). An earlier run saw reasoning in 3 of 10, from
+# failover channels.
 base_model = "anthropic/claude-haiku-4-5"
-reasoning_options = [{ type = "toggle" }, { type = "budget_tokens" }]
+reasoning_options = []
 
 [cost]
-input = 0.1125
-output = 0.5625
+input = 0.178832
+output = 0.894162
