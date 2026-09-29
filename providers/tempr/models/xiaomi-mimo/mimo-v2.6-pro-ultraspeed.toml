@@ -1,0 +1,14 @@
+# Tempr Gateway: https://temprhq.io/docs/gateway-chat-completions#reasoning
+# Toggle: reasoning.enabled = true|false (reasoning.effort = "none" also turns it off)
+# /v1/messages: thinking.type = enabled|disabled
+# /v1/responses: reasoning.effort = "none" turns it off, any other level turns it on
+base_model = "xiaomi/mimo-v2.6-pro-ultraspeed"
+
+reasoning_options = [
+  { type = "toggle" },
+]
+
+[cost]
+input = 4.35
+output = 8.7
+cache_read = 0.036
