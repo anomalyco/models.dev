@@ -1,0 +1,28 @@
+# Community fine-tune (not a lab release): base weights meta-llama/Llama-3.1-70B; no models/ lab entry exists,
+# so it is authored inline like the providers/nano-gpt peer entries for community fine-tunes.
+# Pricing (USD/1M): https://api.demonroute.com/api/pricing (model_ratio x 2, x completion_ratio) and
+# https://demonroute.com/models, both checked 2026-09-29. Context: DemonRoute catalog.
+# limit.output: API rejects max_tokens above 32768 for this model (probed 2026-09-29).
+# Dates: Hugging Face repo createdAt / lastModified for https://huggingface.co/NousResearch/Hermes-3-Llama-3.1-70B
+name = "Hermes 3 Llama 3.1 70B"
+description = "Nous Research fine-tune of Llama 3.1 70B for steerable chat, roleplay, and instruction following"
+family = "hermes"
+release_date = "2024-07-29"
+last_updated = "2024-09-08"
+attachment = false
+reasoning = false
+tool_call = false
+temperature = true
+open_weights = true
+
+[cost]
+input = 2.16
+output = 2.16
+
+[limit]
+context = 131_072
+output = 32_768
+
+[modalities]
+input = ["text"]
+output = ["text"]
