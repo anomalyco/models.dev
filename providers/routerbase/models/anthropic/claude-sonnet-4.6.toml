@@ -1,0 +1,17 @@
+# Effort: reasoning_effort = low|medium|high|max
+base_model = "anthropic/claude-sonnet-4-6"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "max"] }]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 2.85
+output = 14.25
+cache_read = 0.3
+
+[limit]
+output = 128_000
+
+[modalities]
+input = ["text", "image"]

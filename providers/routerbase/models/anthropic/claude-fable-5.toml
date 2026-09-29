@@ -1,0 +1,14 @@
+# Effort: reasoning_effort = low|medium|high|xhigh|max
+base_model = "anthropic/claude-fable-5"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 10.0
+output = 50.0
+cache_read = 1.0
+
+[modalities]
+input = ["text", "image"]

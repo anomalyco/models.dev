@@ -1,0 +1,13 @@
+# RouterBase is a multi-model relay with an OpenAI-compatible Chat Completions
+# API (POST /v1/chat/completions). Request-body fields RouterBase does not
+# interpret itself, such as `reasoning_effort`, `thinking` and
+# `enable_thinking`, are forwarded unchanged to the model's upstream API, so
+# each model's reasoning_options follow its lab entry and same-surface peers.
+# Reasoning text is returned in choices[].message.reasoning_content
+# (delta.reasoning_content when streaming).
+# https://docs.routerbase.com/api-reference/chat-completions
+name = "RouterBase"
+env = ["ROUTERBASE_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+api = "https://routerbase.com/v1"
+doc = "https://docs.routerbase.com"

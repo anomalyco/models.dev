@@ -1,0 +1,17 @@
+# Effort: reasoning_effort = low|medium|high
+base_model = "google/gemini-2.5-pro"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 1.0625
+output = 8.5
+cache_read = 0.125
+
+[limit]
+output = 65_535
+
+[modalities]
+input = ["text", "image"]

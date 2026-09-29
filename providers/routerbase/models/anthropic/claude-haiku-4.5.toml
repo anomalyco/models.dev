@@ -1,0 +1,14 @@
+# Effort: reasoning_effort = low|medium|high
+base_model = "anthropic/claude-haiku-4-5"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.95
+output = 4.75
+cache_read = 0.1
+
+[modalities]
+input = ["text", "image"]
