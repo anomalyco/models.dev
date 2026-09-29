@@ -6,6 +6,14 @@
 # Reasoning text is returned in choices[].message.reasoning_content
 # (delta.reasoning_content when streaming).
 # https://docs.routerbase.com/api-reference/chat-completions
+#
+# Sources, all read 2026-09-29. Limits (`[limit]` context / output):
+# GET https://routerbase.com/v1/models, fields `context_length` and
+# `max_completion_tokens`. Costs (`[cost]`, USD per 1M tokens): what RouterBase
+# charges, the list rate minus the per-model discount, from
+# GET https://routerbase.com/api/models/{id}/pricing (`input_per_1m`,
+# `output_per_1m`, `discount`, `cached_input_per_1m`); cache reads bill at the
+# listed cached rate. Both endpoints are public (no key).
 name = "RouterBase"
 env = ["ROUTERBASE_API_KEY"]
 npm = "@ai-sdk/openai-compatible"

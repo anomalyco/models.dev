@@ -1,8 +1,9 @@
+# Always-on reasoning (tested 2026-09-29 on the upstream route RouterBase
+# forwards these fields to unchanged: every request reasons, with or without
+# `reasoning_effort` / `thinking`; the trace arrives inline as <think> in
+# content, not in reasoning_content)
 base_model = "minimax/MiniMax-M1-80k"
 reasoning_options = []
-
-[interleaved]
-field = "reasoning_content"
 
 [cost]
 input = 0.34

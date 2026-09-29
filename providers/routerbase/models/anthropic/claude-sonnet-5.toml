@@ -1,9 +1,9 @@
-# Effort: reasoning_effort = low|medium|high|xhigh|max
+# No caller control (tested 2026-09-29 on the upstream route RouterBase forwards
+# these fields to unchanged: `reasoning_effort` none/low/high, `thinking`
+# disabled/enabled with budget_tokens all return the same short answer with no
+# reasoning output)
 base_model = "anthropic/claude-sonnet-5"
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
-
-[interleaved]
-field = "reasoning_content"
+reasoning_options = []
 
 [cost]
 input = 2.0
