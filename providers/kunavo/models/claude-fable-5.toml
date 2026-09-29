@@ -13,15 +13,17 @@
 # [[cost.tiers]] bills the whole request at 2x input, cache reads and writes
 # included, and 1.5x output. Claude has no tier.
 #
-# reasoning_options is empty by measurement, not by uncertainty. On the surface
-# this provider registers (OpenAI /v1/chat/completions), Kunavo builds the
-# upstream Anthropic request from an explicit field list — model, max_tokens,
-# messages, stream, temperature/top_p/top_k, stop, tools, tool_choice, system —
-# and carries no reasoning or thinking field across, so a caller-supplied
-# reasoning control has no effect on this endpoint. Anthropic `thinking` does
-# work on Kunavo's native Messages route (origin https://api.kunavo.com, client
-# appends /v1/messages), which relays the body untranslated; that surface is not
-# what this entry registers.
+# reasoning_options = [] states that the registered surface has no caller
+# reasoning control, and that is documented by the host, not inferred. On the
+# surface this provider registers (OpenAI /v1/chat/completions), Kunavo builds
+# the upstream Anthropic request from a fixed field list — model, max_tokens,
+# messages (system role included), stream, temperature/top_p/top_k, stop,
+# tools, tool_choice, response_format — so reasoning_effort, thinking and any
+# other reasoning field are dropped for Claude ids on this endpoint. Host doc:
+# https://kunavo.com/docs/chat#reasoning (the "Claude" row: "Not forwarded").
+# Anthropic `thinking` does work on Kunavo's native Messages route (origin
+# https://api.kunavo.com, client appends /v1/messages), which is not the
+# surface this entry registers.
 base_model = "anthropic/claude-fable-5"
 reasoning_options = []
 

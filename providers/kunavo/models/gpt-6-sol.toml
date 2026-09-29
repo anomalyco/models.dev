@@ -14,10 +14,14 @@
 # included, and 1.5x output. Claude has no tier.
 #
 # `reasoning_effort` is forwarded on this surface: Kunavo maps the OpenAI chat
-# field onto the Responses request as `reasoning.effort` before dispatch.
-# Values follow the lab set as carried by same-surface peers for this model.
+# field onto the Responses request as `reasoning.effort`, value for value,
+# before dispatch (host doc: https://kunavo.com/docs/chat#reasoning). Values
+# are the lab set. `none` measured end to end 2026-09-30 on the upstream this
+# id is served from: effort "none" answered 200 with 0 reasoning tokens, "max"
+# answered 200 with reasoning tokens on the same prompt; a value outside the
+# set comes back 400 naming none|minimal|low|medium|high|xhigh|max.
 base_model = "openai/gpt-6-sol"
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
+reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh", "max"] }]
 
 [cost]
 input = 0.8
