@@ -1,6 +1,14 @@
-# Effort: reasoning_effort = low|medium|high|xhigh|max
+# Budget: thinking.budget_tokens (forwarded unchanged; tested on Haiku 4.5 and
+# Sonnet 4.5 on the same route). Effort, as in the lab entry: reasoning_effort = low|medium|high|xhigh|max
 base_model = "anthropic/claude-fable-5"
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high", "xhigh", "max"]
+
+[[reasoning_options]]
+type = "budget_tokens"
+min = 1_024
 
 [interleaved]
 field = "reasoning_content"

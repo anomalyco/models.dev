@@ -1,9 +1,9 @@
-# No caller control (tested 2026-09-29 on the upstream route RouterBase forwards
-# these fields to unchanged: `reasoning_effort` none/low/high, `thinking`
-# disabled/enabled with budget_tokens all return the same short answer with no
-# reasoning output)
+# No reasoning on this route (tested 2026-09-29 on the upstream route RouterBase
+# forwards these fields to unchanged: `reasoning_effort` none/low/high and
+# `thinking` disabled/enabled with budget_tokens all return the plain answer with
+# no reasoning output), so reasoning = false.
 base_model = "anthropic/claude-sonnet-5"
-reasoning_options = []
+reasoning = false
 
 [cost]
 input = 2.0
