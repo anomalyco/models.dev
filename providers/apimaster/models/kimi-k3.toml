@@ -1,7 +1,7 @@
 # Metadata is inherited from the upstream Moonshot entry.
 # Price: the default route. APIMaster routes to the lowest-cost stable channel first
 # (https://apimaster.ai/docs/en/faq); this is that channel's price on https://apimaster.ai/zh/models/kimi-api?model=kimi-k3
-# (read 2026-09-28). The other 6 channel(s), up to 3 / 15, serve only when it is unavailable.
+# (read 2026-09-28). The other 6 channel(s), up to 3 / 15, serve only when it is unavailable and bill at their own price.
 # Effort: reasoning_effort = low|high|max
 # No toggle: thinking.type=disabled (14 requests) and enable_thinking=false (7) all still returned reasoning (tested 2026-09-28).
 base_model = "moonshotai/kimi-k3"

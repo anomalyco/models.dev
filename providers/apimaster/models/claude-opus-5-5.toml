@@ -2,7 +2,7 @@
 # Price: the default route. APIMaster routes to the lowest-cost stable channel first
 # (https://apimaster.ai/docs/en/faq); this is that channel's price on https://apimaster.ai/ (model selector)
 # (data: https://apimaster.ai/api/marketplace-data?model=claude-opus-5-5, read 2026-09-29). Channels reserved for
-# claude_code clients are excluded; the other 1 open channel(s), up to 1.96273 / 9.81367, serve only on failover.
+# claude_code clients are excluded; the other 1 open channel(s), up to 1.96273 / 9.81367, serve only on failover and bill at their own price.
 # Effort: reasoning_effort = low|medium|high|xhigh|max, sent upstream as output_config.effort.
 # Same prompt, 4 requests each: low used ~160 completion tokens, max ~340 (2026-09-29).
 # No toggle: thinking cannot be disabled on this model (Anthropic docs).
