@@ -1,16 +1,35 @@
 # Model ID "amber" as used in the request field of
-# POST https://api.2ba.ai/v1/chat/completions (https://2ba.ai/docs, accessed 2026-09-25).
-# Provider states a 256k context window and image input support; no output
-# token limit is published. Flat-rate subscription, so no [cost] block.
+# POST https://api.2ba.ai/v1/chat/completions (https://2ba.ai/docs, accessed 2026-09-29).
+# 2BA describes amber as its default multimodal coding model with text and
+# vision input (https://2ba.ai/static/llms.txt, accessed 2026-09-29).
+# Earliest public documentation is the SWE-bench Verified run dated
+# 2026-09-02 (https://2ba.ai/quality).
+# Context: serving stack runs --max-model-len 262144; no separate output
+# cap is published, so served output is bounded by the same window.
+# Flat-rate subscription, so no [cost] block.
 name = "amber"
+description = "2BA's default multimodal coding model for coding agents, with text and vision input."
 attachment = true
 reasoning = true
 tool_call = true
 open_weights = false
+release_date = "2026-09-02"
+last_updated = "2026-09-29"
 
 [limit]
-context = 262_144 # provider states 256k
+context = 262_144 # provider states 256k context window
+output = 262_144 # no separate output cap; served output bounded by the 256k window
 
 [modalities]
 input = ["text", "image"]
 output = ["text"]
+
+[[reasoning_options]]
+type = "effort"
+# Wire contract (chat template): canonical effort tiers low, medium, high,
+# ultra (default medium). Aliases: xhigh/max resolve to high, minimal/none
+# to low.
+values = ["low", "medium", "high", "ultra"]
+
+[interleaved]
+field = "reasoning"
