@@ -1,0 +1,15 @@
+# Managed catalog and rates: https://router.requesty.ai/v1/models/managed
+# Reasoning controls: https://docs.requesty.ai/features/reasoning
+base_model = "openai/gpt-6.1-sol"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "max"] }, { type = "budget_tokens" }]
+
+[cost]
+input = 2.00
+output = 10.00
+cache_read = 0.10
+
+[[cost.tiers]]
+tier = { type = "context", size = 272_000 }
+input = 4.00
+output = 15.00
+cache_read = 0.20
