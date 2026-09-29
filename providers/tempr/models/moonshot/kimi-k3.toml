@@ -1,11 +1,12 @@
 # Tempr Gateway: https://temprhq.io/docs/gateway-chat-completions#reasoning
-# No off switch on this host: reasoning.effort = "none" maps to the lowest level below.
-# Effort: reasoning.effort = low|high|max (alias: top-level reasoning_effort)
-# /v1/messages: output_config.effort = low|high|max
-# /v1/responses: reasoning.effort = low|high|max
+# Toggle: reasoning.enabled = true|false (reasoning.effort = "none" also turns it off)
+# Effort: reasoning.effort = none|low|high|max (alias: top-level reasoning_effort)
+# /v1/messages: thinking.type = enabled|disabled; output_config.effort = low|high|max
+# /v1/responses: reasoning.effort = none|low|high|max
 base_model = "moonshotai/kimi-k3"
 
 reasoning_options = [
+  { type = "toggle" },
   { type = "effort", values = ["low", "high", "max"] },
 ]
 
