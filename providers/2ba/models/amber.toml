@@ -27,9 +27,10 @@ output = ["text"]
 [[reasoning_options]]
 type = "effort"
 # Wire contract (chat template): canonical effort tiers low, medium, high,
-# ultra (default medium). Aliases: xhigh/max resolve to high, minimal/none
-# to low.
-values = ["low", "medium", "high", "ultra"]
+# xhigh (default medium). Aliases on the wire: max resolves to xhigh,
+# minimal/none to low. Ultra is an internal tier alias of xhigh and is not
+# part of the public API contract.
+values = ["low", "medium", "high", "xhigh"]
 
 [interleaved]
-field = "reasoning"
+field = "reasoning_content"
