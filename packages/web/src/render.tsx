@@ -27,7 +27,6 @@ const Catalog = await generateCatalog(root);
 export const Models = Catalog.models;
 export const Providers = Catalog.providers;
 
-const BaseModelRefs = await loadProviderBaseModelRefs(root);
 const LabMetadata = loadLabMetadata(root);
 const ProviderLogoSvgs = new Map<string, string>();
 const LabLogoSvgs = new Map<string, string>();
@@ -146,37 +145,6 @@ export function renderDocument(template: string, page: RenderedPage) {
     .replace("<!--static-->", page.html);
 }
 
-async function loadProviderBaseModelRefs(root: string) {
-  const refs = new Map<string, string>();
-  const providersDirectory = path.join(root, "providers");
-  if (!existsSync(providersDirectory)) return refs;
-
-  for await (const modelPath of new Bun.Glob("*/models/**/*.toml").scan({
-    cwd: providersDirectory,
-    absolute: true,
-    followSymlinks: true,
-  })) {
-    const parts = path.relative(providersDirectory, modelPath).split(path.sep);
-    const [providerId, modelsSegment, ...modelParts] = parts;
-    if (!providerId || modelsSegment !== "models" || modelParts.length === 0) {
-      continue;
-    }
-
-    const modelId = modelParts.join("/").slice(0, -5);
-    const toml = await import(modelPath, {
-      with: {
-        type: "toml",
-      },
-    }).then((mod) => mod.default as { base_model?: unknown });
-
-    if (typeof toml.base_model === "string") {
-      refs.set(`${providerId}/${modelId}`, toml.base_model);
-    }
-  }
-
-  return refs;
-}
-
 function buildModelEntries() {
   const entries = new Map<string, ModelEntry>();
 
@@ -205,6 +173,7 @@ function buildProviderModelEntries(models: Map<string, ModelEntry>) {
         models,
         providerId,
         modelId,
+        model,
       );
 
       entries.push({
@@ -397,8 +366,9 @@ function resolveCanonicalModelId(
   models: Map<string, ModelEntry>,
   providerId: string,
   modelId: string,
+  model: CatalogProviderModel,
 ) {
-  const baseModelId = BaseModelRefs.get(`${providerId}/${modelId}`);
+  const baseModelId = model.canonical_model_id;
   if (baseModelId && models.has(baseModelId)) return baseModelId;
   if (models.has(modelId)) return modelId;
 

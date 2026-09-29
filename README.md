@@ -127,6 +127,8 @@ output = 32_000
 
 Provider fields win over model metadata during generation. Use this when the underlying model is the same but a provider serves it with different context limits, modalities, features, or pricing.
 
+Generated provider models that use `base_model` expose its canonical lab/model ID as `canonical_model_id` in `api.json` and `catalog.json`. Consumers can use this field to attribute a provider-specific model ID to its originating lab without guessing from the model name.
+
 ### Adding a New Provider Model
 
 To add a new model, start by checking if the provider already exists in the `providers/` directory. If not, then:
