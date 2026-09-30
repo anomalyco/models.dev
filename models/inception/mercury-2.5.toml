@@ -1,0 +1,20 @@
+name = "Mercury 2.5"
+description = "Mercury 2.5 is the fastest reasoning LLM, and the latest diffusion LLM (dLLM) from Inception"
+family = "mercury"
+release_date = "2026-09-08"
+last_updated = "2026-09-10"
+attachment = false
+reasoning = true
+temperature = true
+knowledge = "2025-11-01"
+tool_call = true
+structured_output = true
+open_weights = false
+
+[limit]
+context = 260_000
+output = 65_536
+
+[modalities]
+input = ["text"]
+output = ["text"]
