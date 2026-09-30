@@ -1,0 +1,23 @@
+# US cross-Region inference profile — served by Bedrock core (Converse), not Mantle, so no [provider] override.
+# Model IDs, routes and Geo CRIS pricing: https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-openai-gpt-6-1-sol.html
+# Effort levels match OpenAI-native 6.1 Sol (low|medium|high|xhigh|max, no none): https://developers.openai.com/api/docs/models/gpt-6.1-sol
+# Converse input is text+image per AWS card and OpenAI model docs; overrides lab pdf.
+base_model = "openai/gpt-6.1-sol"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
+name = "GPT-6.1 Sol (US)"
+
+[cost]
+input = 2.20
+output = 11.00
+cache_read = 0.11
+cache_write = 2.75
+
+[[cost.tiers]]
+tier = { size = 272_000 }
+input = 4.40
+output = 16.50
+cache_read = 0.22
+cache_write = 5.50
+
+[modalities]
+input = ["text", "image"]
