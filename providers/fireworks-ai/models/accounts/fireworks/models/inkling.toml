@@ -1,8 +1,14 @@
 base_model = "thinkingmachines/inkling"
-
 reasoning_options = []
 
 [cost]
-input = 1.00
+input = 1
 output = 4.05
 cache_read = 0.17
+
+[modalities]
+input = ["text", "image"]
+
+[experimental.modes.priority]
+cost = { input = 1, output = 4.05, cache_read = 0.17 }
+provider = { body = { service_tier = "priority" } }
