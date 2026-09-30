@@ -3,6 +3,8 @@
 # Reasoning controls: Anthropic Messages enables thinking with thinking.type =
 # "enabled" and thinking.budget_tokens; omit thinking to disable it. Reasoning
 # is returned in separate thinking content blocks.
+# Context: 5M tokens via TIMRUN auto compaction (Marathon), vs. 1M on the base model.
+# Multimodal: accepts text and image input (attachment and modalities inherited from base model).
 # Sources (accessed 2026-09-30):
 #   https://api.subconscious.dev/v1/models
 #   https://www.subconscious.dev/pricing
@@ -20,3 +22,6 @@ type = "budget_tokens" # API: {"thinking": {"type": "enabled", "budget_tokens": 
 input = 0.14
 output = 0.28
 cache_read = 0.0028
+
+[limit]
+context = 5_000_000
