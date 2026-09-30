@@ -1,0 +1,22 @@
+# Subconscious serves DeepSeek V4.1 Flash Marathon as subconscious/deepseek-v4.1-flash-marathon.
+# Pricing (USD per 1M tokens): cached $0.0028, input $0.14, output $0.28.
+# Reasoning controls: Anthropic Messages enables thinking with thinking.type =
+# "enabled" and thinking.budget_tokens; omit thinking to disable it. Reasoning
+# is returned in separate thinking content blocks.
+# Sources (accessed 2026-09-30):
+#   https://api.subconscious.dev/v1/models
+#   https://www.subconscious.dev/pricing
+#   https://docs.subconscious.dev/features/thinking
+base_model = "deepseek/deepseek-v4.1-flash"
+name = "DeepSeek V4.1 Flash Marathon"
+
+[[reasoning_options]]
+type = "toggle" # API: omit thinking to disable; {"thinking": {"type": "enabled", "budget_tokens": <n>}} to enable
+
+[[reasoning_options]]
+type = "budget_tokens" # API: {"thinking": {"type": "enabled", "budget_tokens": <n>}}
+
+[cost]
+input = 0.14
+output = 0.28
+cache_read = 0.0028

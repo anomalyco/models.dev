@@ -1,13 +1,14 @@
-# Subconscious serves GLM-5.2 as subconscious/glm-5.2.
+# Subconscious serves GLM-5.3 Marathon as subconscious/glm-5.3-marathon.
 # Pricing (USD per 1M tokens): cached $0.26, input $1.40, output $4.40.
 # Reasoning controls: Anthropic Messages enables thinking with thinking.type =
 # "enabled" and thinking.budget_tokens; omit thinking to disable it. Reasoning
 # is returned in separate thinking content blocks.
-# Sources (accessed 2026-07-06):
+# Sources (accessed 2026-09-30):
+#   https://api.subconscious.dev/v1/models
 #   https://www.subconscious.dev/pricing
-#   https://www.subconscious.dev/blog/subconscious-glm-5-2-makes-compact-obsolete
 #   https://docs.subconscious.dev/features/thinking
-base_model = "zhipuai/glm-5.2"
+base_model = "zhipuai/glm-5.3"
+name = "GLM-5.3 Marathon"
 
 [[reasoning_options]]
 type = "toggle" # API: omit thinking to disable; {"thinking": {"type": "enabled", "budget_tokens": <n>}} to enable
