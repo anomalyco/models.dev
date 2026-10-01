@@ -1,0 +1,17 @@
+# NIM wire syntax (verified against integrate.api.nvidia.com/v1, 2026-10-01):
+#   Effort: top-level "reasoning_effort" = "none" | "minimal" | "low" | "medium" | "high" | "xhigh" | "max"
+#   "none" disables thinking; thinking is also off when the field is omitted.
+# Limit: the endpoint rejects requests above max_total_tokens = 250000.
+# Pricing: free endpoint on NVIDIA's API trial tier; no list rate is published.
+# https://build.nvidia.com/google/diffusiongemma-26b-a4b-it
+base_model = "google/diffusiongemma-26b-a4b-it"
+
+reasoning_options = [{ type = "effort", values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"] }]
+
+[cost]
+input = 0.0
+output = 0.0
+
+[limit]
+context = 250_000
+output = 32_768

@@ -1,0 +1,26 @@
+# Model card: https://huggingface.co/google/diffusiongemma-26B-A4B-it
+# Output limit follows the Gemma 4 26B A4B base it is built on; the card states no separate cap.
+name = "DiffusionGemma 26B A4B IT"
+description = "Gemma 4 based discrete text diffusion model for fast chat, reasoning, and tool use"
+family = "gemma"
+release_date = "2026-06-09"
+last_updated = "2026-07-15"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+knowledge = "2025-01"
+open_weights = true
+license = "Apache 2.0"
+
+[limit]
+context = 262_144
+output = 32_768
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/google/diffusiongemma-26B-A4B-it"
