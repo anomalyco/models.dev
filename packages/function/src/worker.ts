@@ -48,13 +48,10 @@ export default {
       );
 
       ctx.waitUntil(
-        fetch(JSON.parse(env.LakeEndpoint).value, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${JSON.parse(env.LakeToken).value}`,
-          },
-          body: JSON.stringify([
+        sendHit(
+          JSON.parse(env.LakeEndpoint).value,
+          JSON.parse(env.LakeToken).value,
+          JSON.stringify([
             hitEvent(new Date().toISOString(), {
               method: request.method,
               path: url.pathname,
@@ -63,7 +60,7 @@ export default {
               cf_country: country,
             }),
           ]),
-        }),
+        ),
       );
     }
 
@@ -134,7 +131,9 @@ export default {
       return logoResponse;
     }
 
-    const response = await env.ASSETS.fetch(new Request(url.toString(), request));
+    const response = await env.ASSETS.fetch(
+      new Request(url.toString(), request),
+    );
     if (response.status !== 404) return response;
 
     return new Response(null, {
@@ -143,6 +142,29 @@ export default {
     });
   },
 };
+
+async function sendHit(endpoint: string, token: string, body: string) {
+  for (let attempt = 0; attempt < 3; attempt++) {
+    const response = await fetch(endpoint, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body,
+      signal: AbortSignal.timeout(5_000),
+    }).catch(() => undefined);
+    await response?.body?.cancel();
+    if (response?.ok) return;
+    const retryable =
+      !response || response.status === 429 || response.status >= 500;
+    if (!retryable || attempt === 2)
+      throw new Error(
+        `Lake hit delivery failed: ${response?.status ?? "network error"}`,
+      );
+    await new Promise((resolve) => setTimeout(resolve, 250 * 2 ** attempt));
+  }
+}
 
 type CatalogEndpoint = "api" | "models" | "catalog";
 

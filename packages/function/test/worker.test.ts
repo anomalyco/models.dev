@@ -68,10 +68,7 @@ describe("catalog API model type filtering", () => {
     const response = await request("/model-schema.json?type=all");
     const body = await response.json();
 
-    expect(body.$defs.Model.enum).toEqual([
-      "example/decision",
-      "example/text",
-    ]);
+    expect(body.$defs.Model.enum).toEqual(["example/decision", "example/text"]);
   });
 
   test("rejects unknown model types", async () => {
@@ -82,6 +79,50 @@ describe("catalog API model type filtering", () => {
 });
 
 describe("hit tracking", () => {
+  test("retries temporary stream failures with the original event", async () => {
+    const bodies: string[] = [];
+    const fetch = spyOn(globalThis, "fetch").mockImplementation(
+      async (input, init) => {
+        if (String(input).includes("posthog"))
+          return new Response(null, { status: 204 });
+        bodies.push(String(init?.body));
+        return new Response(null, { status: bodies.length === 1 ? 503 : 204 });
+      },
+    );
+    const pending: Promise<unknown>[] = [];
+    try {
+      await request("/api.json", { "user-agent": "bun/1.3.14" }, (promise) =>
+        pending.push(promise),
+      );
+      await Promise.all(pending);
+      expect(bodies).toHaveLength(2);
+      expect(bodies[0]).toBe(bodies[1]);
+    } finally {
+      fetch.mockRestore();
+    }
+  });
+
+  test("reports permanent stream rejections", async () => {
+    const fetch = spyOn(globalThis, "fetch").mockImplementation(
+      async (input) =>
+        new Response(null, {
+          status: String(input).includes("posthog") ? 204 : 401,
+        }),
+    );
+    const pending: Promise<unknown>[] = [];
+    try {
+      await request("/api.json", { "user-agent": "opencode/test" }, (promise) =>
+        pending.push(promise),
+      );
+      const results = await Promise.allSettled(pending);
+      expect(
+        results.filter((result) => result.status === "rejected"),
+      ).toHaveLength(1);
+    } finally {
+      fetch.mockRestore();
+    }
+  });
+
   test("sends opencode hits to the lake event stream", async () => {
     const sent: Request[] = [];
     const fetch = spyOn(globalThis, "fetch").mockImplementation(
@@ -147,7 +188,10 @@ async function request(
         if (pathname === "/_api-all.json") return Response.json(providers);
         if (pathname === "/_api-decision.json") {
           return Response.json({
-            example: { ...providers.example, models: { decision: decisionModel } },
+            example: {
+              ...providers.example,
+              models: { decision: decisionModel },
+            },
           });
         }
         if (pathname === "/_models.json") {
@@ -171,7 +215,10 @@ async function request(
         if (pathname === "/_catalog-decision.json") {
           return Response.json({
             providers: {
-              example: { ...providers.example, models: { decision: decisionModel } },
+              example: {
+                ...providers.example,
+                models: { decision: decisionModel },
+              },
             },
             models: { decision: decisionModel },
           });
