@@ -1,0 +1,10 @@
+# Cost: list, the most any lender on Aile may charge. Lenders price at a margin of it,
+# so a request often costs less; the per-request quote (x-aile-price) is binding.
+base_model = "anthropic/claude-haiku-4-5-20251001"
+reasoning_options = [{ type = "budget_tokens", min = 1024 }]
+
+[cost]
+input = 1
+output = 5
+cache_read = 0.1
+cache_write = 1.25
