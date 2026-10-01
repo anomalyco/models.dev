@@ -1,0 +1,13 @@
+# Pinned snapshot of Apex. The "callstack/Apex" alias always points at the newest one
+# (https://apex.callstack.com/models). A pinned snapshot never changes while it is available,
+# and Callstack gives at least six months' notice before retiring one.
+base_model = "callstack/apex"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "xhigh"]
+
+[cost]
+input = 0.50
+output = 3.00
+cache_read = 0.20

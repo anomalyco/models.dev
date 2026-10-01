@@ -1,0 +1,77 @@
+# Sources (accessed 2026-10-01):
+# - https://apex.callstack.com/models — identity, base model (Qwen, used under licence),
+#   262,144-token context, text+image focus on RN/React work, GA since 2026-10-01
+# - https://apex.callstack.com/legal/training-data-summary — knowledge cutoff: latest data
+#   collection September 2026; weights not distributed (hosted service only)
+# - https://www.npmjs.com/package/@callstack/apex v0.3.0 — limits Callstack ships to coding
+#   tools: context 262_144, input 240_000, output 16_384; attachment true; input modalities
+#   ["text", "image"] (vision); tool_call true; reasoning true
+# - https://rn-evals.vercel.app — React Native agent evals by Callstack
+# - https://nextjs.org/evals — Next.js agent evals; Apex is listed under the name
+#   "Pixel Canary" (run 2026-09-25, OpenCode harness, 31 tasks: 28/31 without docs, 30/31 with)
+# Apex is general-purpose but strongest on React Native, Next.js, and React.
+name = "Apex"
+description = "Agentic coding model for React Native and React work on mobile and web"
+family = "apex"
+release_date = "2026-10-01"
+last_updated = "2026-10-01"
+attachment = true
+reasoning = true
+tool_call = true
+knowledge = "2026-09"
+open_weights = false
+
+[limit]
+context = 262_144
+input = 240_000
+output = 16_384
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[[links]]
+label = "Model page"
+url = "https://apex.callstack.com/models"
+type = "model_card"
+
+[[links]]
+label = "Pricing"
+url = "https://apex.callstack.com/"
+type = "other"
+
+[[links]]
+label = "Setup CLI"
+url = "https://www.npmjs.com/package/@callstack/apex"
+type = "docs"
+
+[[benchmarks]]
+name = "React Native Evals"
+score = 87.8
+metric = "score"
+harness = "React Native Evals"
+dataset = "66 React Native tasks across navigation, animation, async state, lists, and RN APIs"
+source = "https://rn-evals.vercel.app"
+date = "2026-10-01"
+
+# The Next.js leaderboard rounds to whole percents (90% / 97%); these are the exact
+# pass@4 rates from its per-task results payload, 30/31 and 28/31.
+[[benchmarks]]
+name = "Next.js Agent Evals"
+score = 96.8
+metric = "pass@4"
+harness = "OpenCode"
+variant = "bundled Next.js docs (AGENTS.md) in context"
+dataset = "31 Next.js agent tasks"
+source = "https://nextjs.org/evals"
+date = "2026-09-25"
+
+[[benchmarks]]
+name = "Next.js Agent Evals"
+score = 90.3
+metric = "pass@4"
+harness = "OpenCode"
+variant = "without Next.js docs"
+dataset = "31 Next.js agent tasks"
+source = "https://nextjs.org/evals"
+date = "2026-09-25"

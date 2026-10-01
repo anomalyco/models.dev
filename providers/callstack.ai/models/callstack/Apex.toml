@@ -1,0 +1,18 @@
+# Latest alias. Served model IDs (accessed 2026-10-01):
+# - "callstack/Apex" — alias for the newest snapshot, used by the @callstack/apex CLI and the
+#   console's curl example at https://platform.callstack.ai. The model page documents the same
+#   alias as the bare "apex".
+# - "apex-20261001" — pinned snapshot; see ../apex-20261001.toml
+# Effort: reasoning_effort = none|low|medium|xhigh (OpenAI-compatible request field; the
+# @callstack/apex CLI defaults it to "medium" and exposes exactly these four levels).
+# Anthropic-compatible shape is served on the same host at POST /v1/messages.
+base_model = "callstack/apex"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "xhigh"]
+
+[cost]
+input = 0.50
+output = 3.00
+cache_read = 0.20
