@@ -189,6 +189,25 @@ test("requires curation rather than inferring a toggle from a thinking field", (
   }).reasoning_options).toEqual([{ type: "toggle" }]);
 });
 
+test("uses Cloudflare's curated route controls for Kimi K3 and Fireworks DeepSeek V4 Pro", () => {
+  const translate = (model_id: string) => cloudflareAiGateway.translateModel({
+    catalog: {
+      model_id,
+      task: "Text Generation" as const,
+      provider_details: providerDetails({ input_tokens: 1, output_tokens: 2 }),
+    },
+  }, { authored: () => undefined, existing: () => undefined }).model.reasoning_options;
+
+  expect(translate("moonshotai/kimi-k3")).toEqual([
+    { type: "effort", values: ["low", "high", "max"] },
+  ]);
+  expect(translate("deepseek/deepseek-v4-pro")).toEqual([
+    { type: "effort", values: ["none", "low", "high", "max"] },
+  ]);
+  expect(translate("anthropic/claude-sonnet-5")).toContainEqual({ type: "toggle" });
+  expect(translate("alibaba/qwen3.8-max")).toContainEqual({ type: "toggle" });
+});
+
 test("ignores advertised reasoning controls for non-reasoning base models", () => {
   const model = buildCloudflareAiGatewayModel(
     {

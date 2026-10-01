@@ -157,13 +157,16 @@ reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
 # expose (native-format providers). Values mirror models.dev's merge-gateway provider, which
 # proxies the same upstreams. Google uses thinkingConfig.thinkingBudget / thinking_level.
 #
-# DeepSeek: toggle-only would only be correct if AI Gateway drops the effort field on this
-# route (merge-gateway's own toggle-only shape is backed by a live-tested selected-route
-# comment specific to *their* relay, not evidence about Cloudflare's). Absent host-specific
-# proof that Cloudflare strips it, match the lab + Workers AI baseline: toggle + high/max.
+# Cloudflare serves this DeepSeek V4 Pro route via Fireworks. Fireworks' V4 renderer
+# accepts reasoning_effort=none to disable thinking and low|high|max for graded effort;
+# off is an effort value, not a separate thinking.type toggle.
+# https://docs.fireworks.ai/api-reference/post-chatcompletions
 [models."deepseek/deepseek-v4-pro"]
-note = ["Toggle: thinking.type = enabled|disabled.", "Effort: reasoning_effort = high|max."]
-reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["high", "max"] }]
+note = [
+  "Off: reasoning_effort = none; effort: low|high|max (Fireworks route).",
+  "Source: https://docs.fireworks.ai/api-reference/post-chatcompletions",
+]
+reasoning_options = [{ type = "effort", values = ["none", "low", "high", "max"] }]
 
 # Alibaba is a first-party lab; the catalog's OpenAI-compat schema exposes a generic
 # `reasoning_effort` enum, but Alibaba's real API (see providers/alibaba/models/qwen3.7-plus.toml)
@@ -208,10 +211,10 @@ reasoning_options = []
 
 [models."moonshotai/kimi-k3"]
 note = [
-  "API: thinking.type = enabled|disabled|adaptive; in adaptive mode the",
-  "reasoning depth is set by output_config.effort = low|high|max.",
+  "Kimi K3 always thinks; thinking.type is not supported. Effort: reasoning_effort = low|high|max.",
+  "Sources: https://platform.kimi.ai/docs/api/models-overview ; https://developers.cloudflare.com/ai/models/moonshotai/kimi-k3/",
 ]
-reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "high", "max"] }]
+reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]
 
 [models."thinkingmachines/inkling"]
 note = [
