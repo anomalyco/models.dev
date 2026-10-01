@@ -9,6 +9,7 @@ a time. Counts recover a committed append even if checkpointing was interrupted.
 
 import json
 import sys
+from datetime import datetime
 
 
 def argument(name):
@@ -120,7 +121,7 @@ def main():
         if not target_count:
             # The validated source has no null timestamps. Coalesce also makes
             # Spark's static schema non-nullable for the raw table's required field.
-            rows = source.withColumn("timestamp", F.coalesce("timestamp", F.lit("1970-01-01T00:00:00Z").cast("timestamp"))).withColumn("__ingest_ts", F.current_timestamp())
+            rows = source.withColumn("timestamp", F.coalesce("timestamp", F.lit(datetime(1970, 1, 1)))).withColumn("__ingest_ts", F.current_timestamp())
             if target == "r2.default.event":
                 rows = rows.select(
                     "__ingest_ts", F.lit("models").alias("source"), F.lit("hit").alias("type"), "timestamp",
