@@ -1,6 +1,7 @@
 # Bedrock model IDs, routes, limits and pricing: https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-openai-gpt-6-astra.html
 # Bedrock context window: https://developers.openai.com/api/docs/guides/amazon-bedrock
-# In-region Standard pricing; Mantle is available in us-west-2 (Oregon) only.
+# Mantle Regional: us-east-1 (Standard + Ultrafast) and us-west-2 (Standard only); this entry carries In-Region Standard pricing.
+# Ultrafast via service_tier=ultrafast at 6x Standard: https://developers.openai.com/api/docs/guides/ultrafast-mode
 # Effort levels match OpenAI-native Astra (Low..Max, no "none"): https://developers.openai.com/api/docs/models/gpt-6-astra
 # Columns: input / 30m cache write / cache read / output (USD per 1M tokens)
 base_model = "openai/gpt-6-astra"
@@ -24,3 +25,7 @@ cache_write = 27.50
 npm = "@ai-sdk/amazon-bedrock/mantle"
 api = "https://bedrock-mantle.${AWS_REGION}.api.aws/openai/v1"
 shape = "responses"
+
+[experimental.modes.ultrafast]
+cost = { input = 66.00, output = 330.00, cache_read = 6.60, cache_write = 82.50 }
+provider = { body = { service_tier = "ultrafast" } }
