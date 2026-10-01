@@ -91,6 +91,9 @@ export const ModelFamilyValues = [
   "laguna",
   "laguna-s",
 
+  // Callstack Apex
+  "apex",
+
   // Mistral family
   "mistral",
   "mistral-large",
