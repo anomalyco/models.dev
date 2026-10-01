@@ -27,10 +27,9 @@ It reads two live Cloudflare sources plus one local curation file:
   canonical (dotted) `model_id` per model, description, context limits, and pricing.
   This is why ids look like `anthropic/claude-haiku-4.5`, not `claude-haiku-4-5`.
 - **Per-model catalog schema** — `GET /accounts/{id}/ai/catalog/models/{id}/schema`. Used to
-  derive `reasoning_options` when it explicitly specifies a control: for example, a Boolean
-  switch, `thinking.type` with both on and off values, or an effort enum. The presence of a
-  `thinking` field alone does not prove thinking can be turned off. Incomplete native-format
-  schemas fall back to curation (see below).
+  derive effort values when it enumerates them. A `thinking` or `enable_thinking` field does
+  not establish that this route can turn reasoning off; toggles and controls missing from
+  the schema are curated (see below).
 
 Everything the generator can read is derived: `cost`, `limit.context`, and `reasoning_options`.
 `name` and `description` are intentionally **not** written — they inherit from `base_model`
@@ -120,8 +119,9 @@ It is hand-authored and not touched by the generator.
 
 ## Known limitations
 
-- Some native-format provider schemas omit or underspecify reasoning controls. These must
-  be curated; new reasoning models with neither explicit schema controls nor curation
-  hard-fail rather than gaining an inferred toggle or an invented empty control list.
+- Some native-format provider schemas omit or underspecify reasoning controls, and the
+  presence of a thinking field alone is not reliable toggle evidence. Those controls must
+  be curated; new reasoning models with neither effort enum nor curation hard-fail rather
+  than gaining an inferred toggle or an invented empty control list.
 - `structured_output` requires a live conformance test when adding a model; the schema
   advertises `response_format` even for models that don't honour it.

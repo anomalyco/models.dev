@@ -126,7 +126,7 @@ test("maps structured provider pricing instead of display labels", () => {
   });
 });
 
-test("derives nested Cloudflare reasoning controls", () => {
+test("derives nested Cloudflare effort values without inventing a toggle", () => {
   expect(deriveReasoningOptions({
     properties: {
       thinking: { type: "boolean" },
@@ -138,10 +138,7 @@ test("derives nested Cloudflare reasoning controls", () => {
         },
       },
     },
-  })).toEqual([
-    { type: "toggle" },
-    { type: "effort", values: ["low", "medium", "high"] },
-  ]);
+  })).toEqual([{ type: "effort", values: ["low", "medium", "high"] }]);
 });
 
 test("does not turn Opus 5.5's adaptive-only thinking schema into an off switch", () => {
@@ -168,36 +165,28 @@ test("does not turn Opus 5.5's adaptive-only thinking schema into an off switch"
   ]);
 });
 
-test("only derives a thinking toggle when the schema permits both on and off", () => {
-  expect(deriveReasoningOptions({
-    properties: { thinking: { properties: { type: { enum: ["adaptive", "disabled"] } } } },
-  })).toEqual([{ type: "toggle" }]);
-  expect(deriveReasoningOptions({
-    properties: { thinking: { oneOf: [
-      { properties: { type: { const: "adaptive" } } },
-      { properties: { type: { const: "disabled" } } },
-    ] } },
-  })).toEqual([{ type: "toggle" }]);
+test("requires curation rather than inferring a toggle from a thinking field", () => {
   expect(deriveReasoningOptions({
     properties: { thinking: { type: "object" } },
   })).toEqual([]);
   expect(deriveReasoningOptions({
-    properties: { enable_thinking: { enum: [true] } },
+    properties: { thinking: { properties: { type: { enum: ["adaptive", "disabled"] } } } },
   })).toEqual([]);
   expect(deriveReasoningOptions({
     properties: { enable_thinking: { type: "boolean" } },
-  })).toEqual([{ type: "toggle" }]);
-  expect(deriveReasoningOptions({
-    properties: {
-      enable_thinking: { type: "boolean" },
-      reasoning_effort: { enum: ["none", "low", "high"] },
-    },
-  })).toEqual([{ type: "effort", values: ["none", "low", "high"] }]);
+  })).toEqual([]);
   expect(() => buildCloudflareAiGatewayModel({
     model_id: "anthropic/claude-opus-5.5",
     task: "Text Generation",
     provider_details: providerDetails({ input_tokens: 4, output_tokens: 20 }),
   }, { properties: { thinking: { type: "object" } } })).toThrow("no reasoning_options");
+  expect(buildCloudflareAiGatewayModel({
+    model_id: "alibaba/qwen3.7-plus",
+    task: "Text Generation",
+    provider_details: providerDetails({ input_tokens: 1, output_tokens: 2 }),
+  }, { properties: { enable_thinking: { type: "boolean" } } }, {
+    reasoning_options: [{ type: "toggle" }],
+  }).reasoning_options).toEqual([{ type: "toggle" }]);
 });
 
 test("ignores advertised reasoning controls for non-reasoning base models", () => {
