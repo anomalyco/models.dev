@@ -33,7 +33,7 @@ test("resumes accepted batches and rejects changed exports or destinations", asy
   const server = Bun.serve({
     port: 0,
     async fetch(request) {
-      const rows = await request.json();
+      const rows = await request.json() as { payload: { path: string } }[];
       if (received.length === 10_000 && !rejected) {
         rejected = true;
         return new Response("stop", { status: 400 });

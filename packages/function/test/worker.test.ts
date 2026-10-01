@@ -82,7 +82,7 @@ describe("hit tracking", () => {
   test("retries temporary stream failures with the original event", async () => {
     const bodies: string[] = [];
     const fetch = spyOn(globalThis, "fetch").mockImplementation(
-      async (input, init) => {
+      async (input: RequestInfo | URL, init?: RequestInit) => {
         if (String(input).includes("posthog"))
           return new Response(null, { status: 204 });
         bodies.push(String(init?.body));
@@ -104,7 +104,7 @@ describe("hit tracking", () => {
 
   test("reports permanent stream rejections", async () => {
     const fetch = spyOn(globalThis, "fetch").mockImplementation(
-      async (input) =>
+      async (input: RequestInfo | URL) =>
         new Response(null, {
           status: String(input).includes("posthog") ? 204 : 401,
         }),
