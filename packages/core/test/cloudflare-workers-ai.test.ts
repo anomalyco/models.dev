@@ -94,3 +94,19 @@ test("never raises a context window or pins other models", () => {
   expect(translatedContext("@cf/zai-org/glm-5.3", 262_144)).toBe(262_144);
   expect(translatedContext("@cf/test/unpinned", 1_310_720)).toBe(1_310_720);
 });
+
+test("marks Clef routes as decisions even when Workers AI search labels them text generation", () => {
+  for (const id of ["@cf/cloudflare/clef", "@cf/cloudflare/clef-flash"]) {
+    const [source] = cloudflareWorkersAi.parseModels({ result: { data: [searchRow(id, 65_536)] } });
+    const translated = cloudflareWorkersAi.translateModel(source!, {
+      existing: () => undefined,
+      authored: () => undefined,
+    });
+    expect(translated?.model.type).toBe("decision");
+  }
+  const [other] = cloudflareWorkersAi.parseModels({ result: { data: [searchRow("@cf/test/chat", 65_536)] } });
+  expect(cloudflareWorkersAi.translateModel(other!, {
+    existing: () => undefined,
+    authored: () => undefined,
+  })?.model.type).toBeUndefined();
+});

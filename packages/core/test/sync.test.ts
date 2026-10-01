@@ -4696,6 +4696,7 @@ test("Vercel sync accepts evaluation and unknown future model types", () => {
       {
         id: "typesafe-ai/jev",
         name: "Jev",
+        description: "Decision model for typed classification and scoring",
         created: 1_755_815_280,
         released: 1_789_430_400,
         context_window: 0,
@@ -4717,6 +4718,8 @@ test("Vercel sync accepts evaluation and unknown future model types", () => {
   expect(evaluation).toBeDefined();
   expect(future).toBeDefined();
   expect(buildVercelModel(evaluation!, undefined)).toMatchObject({
+    type: "decision",
+    description: "Decision model for typed classification and scoring",
     cost: { input: 0.042, output: 0 },
     limit: { context: 0, output: 0 },
     modalities: { input: ["text"], output: ["text"] },
@@ -4725,6 +4728,36 @@ test("Vercel sync accepts evaluation and unknown future model types", () => {
     limit: { context: 8_000, output: 4_000 },
     modalities: { input: ["text"], output: ["text"] },
   });
+  expect(buildVercelModel(future!, undefined).type).toBeUndefined();
+});
+
+test("Vercel sync preserves Liquid d1 as a decision model via its lab metadata", () => {
+  const [model] = vercel.parseModels({
+    data: [{
+      id: "liquid/d1",
+      name: "Liquid d1",
+      description: "Liquid d1 is a decision model for classification, routing, and scoring",
+      created: 1_755_815_280,
+      released: 1_790_640_000,
+      context_window: 65_536,
+      max_tokens: 0,
+      type: "evaluation",
+      pricing: { input: "0.00000004", output: "0" },
+    }],
+  });
+  const translated = vercel.translateModel(model!, {
+    existing: (id) => id === "liquid/d1" ? { base_model: "liquid/d1", cost: { input: 0.04, output: 0 } } : undefined,
+    authored: () => undefined,
+  });
+
+  expect(translated?.model).toMatchObject({
+    base_model: "liquid/d1",
+    cost: { input: 0.04, output: 0 },
+  });
+  expect(translated?.model).not.toHaveProperty("type"); // inherited from lab metadata
+  expect(translated?.model).not.toHaveProperty("description"); // don't reintroduce a generic chat description
+  expect(vercel.sameModel?.({ name: "Liquid d1" },
+    { name: "Liquid d1", type: "decision" })).toBe(false);
 });
 
 test("Vercel family inference requires word boundaries", () => {

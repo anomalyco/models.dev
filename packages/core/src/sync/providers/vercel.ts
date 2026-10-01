@@ -52,6 +52,7 @@ const Pricing = z.object({
 export const VercelModel = z.object({
   id: z.string(),
   name: z.string(),
+  description: z.string().optional(),
   created: z.number(),
   released: z.number().optional(),
   context_window: z.number().optional().default(0),
@@ -141,8 +142,11 @@ export function buildVercelModel(
   const reasoning = existing?.reasoning ?? tags.has("reasoning");
 
   const synced: SyncedFullModel = {
+    type: model.type === "evaluation" ? "decision" : existing?.type,
     name: existing?.name ?? model.name,
-    description: existing?.description ?? describeModel({
+    description: model.type === "evaluation"
+      ? existing?.description ?? model.description ?? "Decision model for typed evaluation of shared state"
+      : existing?.description ?? describeModel({
       id: model.id,
       name: existing?.name ?? model.name,
       family,
@@ -217,7 +221,13 @@ export function buildVercelModel(
   if (baseModel === undefined) return synced;
 
   return factorBaseModel(baseModel, {
+    type: synced.type,
     name: synced.name,
+    // The lab describes the decision task; a generic gateway chat description
+    // must not override it when the provider file has no curated description.
+    description: model.type === "evaluation" && existing?.description === undefined
+      ? undefined
+      : synced.description,
     attachment: synced.attachment,
     reasoning: synced.reasoning,
     reasoning_options: synced.reasoning_options,
@@ -374,6 +384,7 @@ function sameVercelModel(current: ExistingModel, desired: SyncedModel) {
   const fields: Array<[unknown, unknown, boolean?]> = [
     [current.base_model, desiredModel.base_model],
     [current.base_model_omit, desiredModel.base_model_omit],
+    [current.type, desiredModel.type],
     [current.name, desiredModel.name],
     [current.description, desiredModel.description],
     [current.family, desiredModel.family],

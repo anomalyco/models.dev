@@ -18,6 +18,12 @@ const ENABLE_THINKING_MODELS = new Set([
   "@cf/zai-org/glm-4.7-flash",
   "@cf/zai-org/glm-5.2",
 ]);
+// Workers AI search reports these as text generation, but their served API takes
+// state + typed questions and returns decisions rather than chat completions.
+const DECISION_MODELS = new Set([
+  "@cf/cloudflare/clef",
+  "@cf/cloudflare/clef-flash",
+]);
 // Search and the model pages report 1,310,720 for these, but the serving backend rejects any request over 1,048,576
 // tokens. The sync re-derives context from search, so the served window is pinned here. It only ever lowers a window.
 const SERVED_CONTEXT = new Map([
@@ -204,15 +210,17 @@ export function buildWorkersAiModel(
     existingWithReasoningOptions,
     existing?.base_model ?? resolveCloudflareBaseModel(model),
   );
-  if ("base_model" in synced) return synced;
+  const type = DECISION_MODELS.has(model.id) ? "decision" : existing?.type;
+  const typed = type === undefined ? synced : { ...synced, type: "decision" as const };
+  if ("base_model" in typed) return typed;
   return {
-    ...synced,
-    name: existing?.name ?? synced.name,
-    release_date: existing?.release_date ?? synced.release_date,
-    last_updated: existing?.last_updated ?? synced.last_updated,
+    ...typed,
+    name: existing?.name ?? typed.name,
+    release_date: existing?.release_date ?? typed.release_date,
+    last_updated: existing?.last_updated ?? typed.last_updated,
     limit: {
-      ...synced.limit,
-      output: existing?.limit?.output ?? synced.limit.output,
+      ...typed.limit,
+      output: existing?.limit?.output ?? typed.limit.output,
     },
   };
 }

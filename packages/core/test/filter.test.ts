@@ -49,7 +49,7 @@ describe("model type filtering", () => {
     expect(filterCatalogByModelType(catalog, "all")).toEqual(catalog);
   });
 
-  test("every repository Jev model inherits decision and is omitted by default", async () => {
+  test("Jev, Clef, and Liquid d1 are decision models omitted by default", async () => {
     const root = path.join(import.meta.dir, "..", "..", "..");
     const catalog = await generateCatalog(root);
     const jevModels = Object.values(catalog.providers).flatMap((provider) =>
@@ -72,11 +72,20 @@ describe("model type filtering", () => {
 
     const decisions = filterCatalogByModelType(catalog, ["decision"]);
     expect(decisions.models["typesafe/jev-latest"]?.type).toBe("decision");
-    expect(
-      Object.values(decisions.providers).flatMap((provider) =>
-        Object.values(provider.models),
-      ).length,
-    ).toBe(jevModels.length);
+    expect(decisions.models["liquid/d1"]?.type).toBe("decision");
+    for (const id of ["@cf/cloudflare/clef", "@cf/cloudflare/clef-flash"]) {
+      expect(catalog.providers["cloudflare-workers-ai"]?.models[id]?.type).toBe("decision");
+      expect(defaults.providers["cloudflare-workers-ai"]?.models[id]).toBeUndefined();
+      expect(decisions.providers["cloudflare-workers-ai"]?.models[id]?.type).toBe("decision");
+    }
+    expect(defaults.providers.vercel?.models["liquid/d1"]).toBeUndefined();
+    expect(decisions.providers.vercel?.models["liquid/d1"]?.type).toBe("decision");
+    const typedModels = Object.values(catalog.providers).flatMap((provider) =>
+      Object.values(provider.models).filter((model) => model.type === "decision"),
+    );
+    expect(Object.values(decisions.providers).flatMap((provider) =>
+      Object.values(provider.models),
+    ).length).toBe(typedModels.length);
   });
 });
 
