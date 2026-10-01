@@ -1,0 +1,16 @@
+# Pricing: https://bothub.ru/models (accessed 2026-09-10) — includes the
+# site's current -20% promo (list 13.15/47.33 RUB per 1M tokens).
+# RUB converted to USD at the CBR rate 85.4594 RUB/USD (2026-09-10).
+# Controls mirrored from the lab entry: GLM-5.3-Flash always reasons;
+# effort low|high|max with default max, no toggle.
+base_model = "zhipuai/glm-5.3-flash"
+
+interleaved = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[cost]
+input = 0.12
+output = 0.44

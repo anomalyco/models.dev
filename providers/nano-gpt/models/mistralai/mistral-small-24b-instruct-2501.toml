@@ -1,0 +1,23 @@
+name = "Mistral Small 24B"
+description = "Mistral Small 24B hosted by IONOS in Berlin, Germany. Zero data retention."
+family = "mistral-small"
+release_date = "2026-09-10"
+last_updated = "2026-09-10"
+attachment = false
+reasoning = false
+tool_call = true
+structured_output = false
+open_weights = true
+
+[cost]
+input = 0.1155
+output = 0.3465
+
+[limit]
+context = 32_768
+input = 32_768
+output = 8_192
+
+[modalities]
+input = ["text"]
+output = ["text"]

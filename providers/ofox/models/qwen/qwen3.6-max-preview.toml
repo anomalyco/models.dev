@@ -1,0 +1,17 @@
+# Sources (accessed 2026-09-10):
+# https://ofox.ai/models/qwen/qwen3.6-max-preview
+# https://api.ofox.ai/v1/models/qwen/qwen3.6-max-preview
+# Toggle: enable_thinking true|false (Qwen/DashScope chat path through Ofox)
+# Budget: thinking_budget
+base_model = "alibaba/qwen3.6-max-preview"
+reasoning_options = [{ type = "toggle" }, { type = "budget_tokens" }]
+
+[cost]
+input = 2.15
+output = 12.86
+cache_read = 0.2
+cache_write = 1.17
+
+[limit]
+context = 256_000
+output = 64_000

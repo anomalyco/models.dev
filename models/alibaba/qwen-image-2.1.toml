@@ -1,0 +1,42 @@
+# Source: https://huggingface.co/Qwen/Qwen-Image-2.1 (accessed 2026-09-26)
+# Unified text-to-image generation and image editing model: 7B visual
+# generation component (32 single-stream DiT layers), native RGBA transparency,
+# editing with up to 10 reference images. Weights published under the Qwen
+# Research License Agreement. First published on 2026-09-14 (Hugging Face
+# createdAt); last updated 2026-09-21. Context follows the qwen-image-2.0 API
+# convention on Alibaba's first-party host (8,192 prompt tokens, no token
+# output budget); the number of output images is a request parameter, not a
+# token limit.
+name = "Qwen-Image-2.1"
+description = "Unified text-to-image generation and image editing model with native RGBA transparency and reference-image editing"
+family = "qwen"
+release_date = "2026-09-14"
+last_updated = "2026-09-21"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = false
+open_weights = true
+license = "qwen-research"
+
+[limit]
+context = 8_192
+output = 0
+
+[modalities]
+input = ["text", "image"]
+output = ["image"]
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/Qwen/Qwen-Image-2.1"
+
+[[links]]
+label = "Blog"
+url = "https://qwen.ai/blog?id=qwen-image-2.1"
+type = "announcement"
+
+[[links]]
+label = "GitHub"
+url = "https://github.com/QwenLM/Qwen-Image-2.1"
+type = "docs"

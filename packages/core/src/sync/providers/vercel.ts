@@ -2,12 +2,25 @@ import { z } from "zod";
 
 import { describeModel } from "../../describe.js";
 import { inferKimiFamily, ModelFamilyValues } from "../../family.js";
+import { ReasoningOption } from "../../schema.js";
 import type { ExistingModel, SyncProvider, SyncedFullModel, SyncedModel } from "../index.js";
 import { factorBaseModel, resolveCanonicalBaseModel } from "./openrouter.js";
 
 const API_ENDPOINT = "https://ai-gateway.vercel.sh/v1/models";
 
-const ModelType = z.enum([
+const OUTPUT_LIMIT_OVERRIDES: Record<string, number> = {
+  "alibaba/qwen3.6-27b": 65_536,
+  "amazon/nova-2-lite": 65_535,
+  "bytedance/seed-1.8": 32_768,
+  "deepseek/deepseek-v3.1-terminus": 32_768,
+  "inception/mercury-2": 50_000,
+  "minimax/minimax-m2": 196_608,
+  "quiverai/arrow-2": 65_536,
+  "quiverai/arrow-2-telos": 65_536,
+  "zai/glm-5-turbo": 131_072,
+};
+
+const KnownModelType = z.enum([
   "language",
   "embedding",
   "image",
@@ -16,6 +29,7 @@ const ModelType = z.enum([
   "transcription",
   "speech",
   "realtime",
+  "evaluation",
 ]);
 
 const PricingTier = z.object({
@@ -42,8 +56,15 @@ export const VercelModel = z.object({
   released: z.number().optional(),
   context_window: z.number().optional().default(0),
   max_tokens: z.number().optional().default(0),
-  type: ModelType,
+  // Vercel adds new model types without notice ("evaluation" appeared Sep 2026
+  // and broke the sync with a ZodError). The trailing z.string() keeps the
+  // schema forward-compatible so future types fall through to the default
+  // text/text handling in buildVercelModel instead of failing the whole sync.
+  type: KnownModelType.or(z.string()),
   tags: z.array(z.string()).optional().default([]),
+  // Keep the catalog parse forward-compatible with new control shapes or
+  // effort values; unresolved options retain the authored menu below.
+  reasoning_options: z.array(z.unknown()).optional(),
   pricing: Pricing.optional(),
 }).passthrough();
 
@@ -73,13 +94,17 @@ export const vercel = {
     const routeBase = freeRouteBase(model.id);
     const baseModel = existing?.base_model ?? resolveVercelBaseModel(model.id);
     const inherited = routeBase === undefined ? undefined : context.existing(routeBase);
+    const translated = buildVercelModel(
+      model,
+      existing,
+      inherited ?? (baseModel === undefined || baseModel === model.id ? undefined : context.existing(baseModel)),
+    );
     return {
       id: model.id,
-      model: buildVercelModel(
-        model,
-        existing,
-        inherited ?? (baseModel === undefined || baseModel === model.id ? undefined : context.existing(baseModel)),
-      ),
+      model: translated,
+      header: translated.reasoning_options?.some((option) => option.type === "toggle")
+        ? "# Toggle: reasoning.enabled = true|false\n# https://vercel.com/docs/ai-gateway/sdks-and-apis/openai-chat-completions/reasoning\n"
+        : undefined,
     };
   },
   sameModel(current, desired) {
@@ -99,21 +124,29 @@ export function buildVercelModel(
   const context = model.context_window > 0
     ? model.context_window
     : existing?.limit?.context ?? 0;
-  const output = model.max_tokens > 0
+  const output = OUTPUT_LIMIT_OVERRIDES[model.id] ?? (model.max_tokens > 0
     ? model.max_tokens
-    : existing?.limit?.output ?? 0;
+    : existing?.limit?.output ?? 0);
   const input = model.id.startsWith("openai/") && context > output
     ? context - output
     : undefined;
   const cost = buildCost(model.pricing, existing?.cost);
+
+  // Self-heal bogus `family = "o"` stamps left by the old substring matcher
+  // (e.g. cohere rerank, fish-audio, alibaba wan). Same precedent as OpenRouter.
+  const inferredFamily = inferFamily(model.id, model.name);
+  const family = existing?.family === "o" && inferredFamily !== "o"
+    ? inferredFamily
+    : (existing?.family ?? inferredFamily);
+  const reasoning = existing?.reasoning ?? tags.has("reasoning");
 
   const synced: SyncedFullModel = {
     name: existing?.name ?? model.name,
     description: existing?.description ?? describeModel({
       id: model.id,
       name: existing?.name ?? model.name,
-      family: existing?.family ?? inferFamily(model.id, model.name),
-      reasoning: existing?.reasoning ?? tags.has("reasoning"),
+      family,
+      reasoning,
       tool_call: model.type === "language"
         ? existing?.tool_call ?? tags.has("tool-use")
         : tags.has("tool-use"),
@@ -140,14 +173,12 @@ export function buildVercelModel(
           : ["text"],
       },
     }),
-    family: existing?.family ?? inferFamily(model.id, model.name),
+    family,
     release_date: releaseDate,
     last_updated: existing?.last_updated ?? releaseDate,
     attachment: existing?.attachment ?? (tags.has("vision") || tags.has("file-input")),
-    reasoning: existing?.reasoning ?? tags.has("reasoning"),
-    reasoning_options: existing?.reasoning_options?.length
-      ? existing.reasoning_options
-      : base?.reasoning_options,
+    reasoning,
+    reasoning_options: reasoning ? vercelReasoningOptions(model, existing, base) : undefined,
     temperature: existing?.temperature,
     tool_call: model.type === "language"
       ? existing?.tool_call ?? tags.has("tool-use")
@@ -203,6 +234,26 @@ export function buildVercelModel(
   }, synced.limit, existing?.base_model_omit);
 }
 
+function vercelReasoningOptions(
+  model: VercelModel,
+  existing: ExistingModel | undefined,
+  base: ExistingModel | undefined,
+): SyncedFullModel["reasoning_options"] {
+  const authored = existing?.reasoning_options?.length
+    ? existing.reasoning_options
+    : base?.reasoning_options ?? existing?.reasoning_options;
+  if (model.reasoning_options === undefined) return authored;
+  if (model.reasoning_options.length === 0) return [];
+
+  const parsed = model.reasoning_options.map((option) => ReasoningOption.safeParse(option));
+  if (parsed.some((result) => !result.success)) return authored;
+  const options = parsed.flatMap((result) => result.success ? [result.data] : []);
+  // An effort of "none" already disables reasoning; don't duplicate the off
+  // control with the catalog's separate toggle.
+  const effortHasNone = options.some((option) => option.type === "effort" && option.values.includes("none"));
+  return effortHasNone ? options.filter((option) => option.type !== "toggle") : options;
+}
+
 function resolveVercelBaseModel(modelID: string) {
   const routeBase = freeRouteBase(modelID);
   return resolveCanonicalBaseModel(modelID)
@@ -225,17 +276,75 @@ function price(value: string | undefined) {
     : undefined;
 }
 
+function tieredPrice(value: string | undefined, tiers: z.infer<typeof PricingTier>[] | undefined) {
+  const base = price(value);
+  const normalized = (tiers ?? [])
+    .map((tier, index, values) => ({
+      start: tier.min ?? (index === 0 ? 0 : values[index - 1]?.max ?? 0),
+      cost: price(tier.cost),
+    }))
+    .filter((tier): tier is { start: number; cost: number } => tier.cost !== undefined)
+    .sort((a, b) => a.start - b.start);
+
+  return {
+    base: normalized[0]?.cost ?? base,
+    thresholds: normalized.map((tier) => tier.start).filter((start) => start > 0),
+    at(threshold: number) {
+      return normalized.findLast((tier) => tier.start <= threshold)?.cost ?? base;
+    },
+  };
+}
+
 function buildCost(pricing: VercelModel["pricing"], existing?: ExistingModel["cost"]) {
-  const input = price(pricing?.input_tiers?.[0]?.cost ?? pricing?.input);
-  const output = price(pricing?.output_tiers?.[0]?.cost ?? pricing?.output);
+  const hasPricingTiers = [
+    pricing?.input_tiers,
+    pricing?.output_tiers,
+    pricing?.input_cache_read_tiers,
+    pricing?.input_cache_write_tiers,
+  ].some((tiers) => (tiers?.length ?? 0) > 0);
+  const inputPrice = tieredPrice(pricing?.input, pricing?.input_tiers);
+  const outputPrice = tieredPrice(pricing?.output, pricing?.output_tiers);
+  const cacheReadPrice = tieredPrice(pricing?.input_cache_read, pricing?.input_cache_read_tiers);
+  const cacheWritePrice = tieredPrice(pricing?.input_cache_write, pricing?.input_cache_write_tiers);
+  const input = inputPrice.base;
+  const output = outputPrice.base;
   if (input === undefined || output === undefined) return undefined;
+
+  const thresholds = new Set([
+    ...inputPrice.thresholds,
+    ...outputPrice.thresholds,
+    ...cacheReadPrice.thresholds,
+    ...cacheWritePrice.thresholds,
+  ]);
+  const tiers: NonNullable<NonNullable<ExistingModel["cost"]>["tiers"]> = [];
+  let previous = {
+    input,
+    output,
+    cache_read: cacheReadPrice.base,
+    cache_write: cacheWritePrice.base,
+  };
+  for (const size of [...thresholds].sort((a, b) => a - b)) {
+    const tierInput = inputPrice.at(size);
+    const tierOutput = outputPrice.at(size);
+    if (tierInput === undefined || tierOutput === undefined) continue;
+    const current = {
+      input: tierInput,
+      output: tierOutput,
+      cache_read: cacheReadPrice.at(size),
+      cache_write: cacheWritePrice.at(size),
+    };
+    if (JSON.stringify(current) === JSON.stringify(previous)) continue;
+    tiers.push({ tier: { type: "context", size }, ...current });
+    previous = current;
+  }
+
   return {
     input,
     output,
     reasoning: existing?.reasoning,
-    cache_read: price(pricing?.input_cache_read_tiers?.[0]?.cost ?? pricing?.input_cache_read),
-    cache_write: price(pricing?.input_cache_write_tiers?.[0]?.cost ?? pricing?.input_cache_write),
-    tiers: existing?.tiers,
+    cache_read: cacheReadPrice.base,
+    cache_write: cacheWritePrice.base,
+    tiers: hasPricingTiers ? (tiers.length > 0 ? tiers : undefined) : existing?.tiers,
   };
 }
 
@@ -243,18 +352,21 @@ function inferFamily(modelID: string, name: string) {
   const kimiFamily = inferKimiFamily(modelID, name);
   if (kimiFamily !== undefined) return kimiFamily;
 
-  const targets = [modelID, name].map((value) => value.toLowerCase());
-  const families = [...ModelFamilyValues].sort((a, b) => b.length - a.length);
-  return families.find((family) => targets.some((target) => target.includes(family.toLowerCase())))
-    ?? families.find((family) => targets.some((target) => isSubsequence(target, family.toLowerCase())));
-}
-
-function isSubsequence(target: string, value: string) {
-  let index = 0;
-  for (const character of target) {
-    if (character === value[index]) index++;
-  }
-  return index === value.length;
+  // Word-boundary matching like the other gateway syncs. Deliberately no
+  // fuzzy/subsequence fallback: matching a family by scattered letters
+  // produces false positives (e.g. "typesafe-ai/jev" -> "yi"), and plain
+  // substring matching lets single-letter families like "o" match anything
+  // containing that letter (e.g. cohere rerank, fish-audio, alibaba wan).
+  const target = `${modelID} ${name}`.toLowerCase();
+  return [...ModelFamilyValues]
+    .sort((a, b) => b.length - a.length)
+    .find((family) => {
+      const value = family.toLowerCase().replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+      if (family === "o") {
+        return new RegExp(`(^|[^a-z0-9])${value}(?=\\d|$|[^a-z0-9])`).test(target);
+      }
+      return new RegExp(`(^|[^a-z0-9])${value}(?=$|[^a-z0-9])`).test(target);
+    });
 }
 
 function sameVercelModel(current: ExistingModel, desired: SyncedModel) {
@@ -276,6 +388,7 @@ function sameVercelModel(current: ExistingModel, desired: SyncedModel) {
     [current.cost?.output, desiredModel.cost?.output, true],
     [current.cost?.cache_read, desiredModel.cost?.cache_read, true],
     [current.cost?.cache_write, desiredModel.cost?.cache_write, true],
+    [current.cost?.tiers, desiredModel.cost?.tiers],
     [current.limit?.context, desiredModel.limit?.context],
     [current.limit?.input, desiredModel.limit?.input],
     [current.limit?.output, desiredModel.limit?.output],

@@ -1,0 +1,20 @@
+# Reasoning HTTP format (accessed 2026-09-14):
+# Toggle: enable_thinking = true|false. Chat Completions `reasoning_effort`
+# accepts low, high (default), and max; medium and xhigh map to high.
+# Reasoning streams on `reasoning_content`.
+# Model availability: Token Plan model list (China, Beijing region only).
+# Sources:
+# https://platform.qianwenai.com/docs/api-reference/chat/openai-chat
+# https://help.aliyun.com/zh/model-studio/token-plan-personal-overview
+base_model = "deepseek/deepseek-v4.1-flash"
+
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "high", "max"] }]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0
+output = 0
+cache_read = 0
+cache_write = 0

@@ -1,0 +1,22 @@
+# Alibaba Token Plan (Singapore) lists model ID glm-5.3 (Zhipu AI).
+# Subscription plan: no per-token USD price (Credits billing).
+# Always-on thinking; effort via reasoning_effort = low|high|max (default max).
+# Same control surface as Model Studio glm-5.3 / lab peers; thinking cannot be
+# disabled (no toggle). Interleaved reasoning on reasoning_content.
+# https://docs.modelstudio.console.alibabacloud.com/en/model-studio/token-plan-personal-overview
+# https://docs.modelstudio.console.alibabacloud.com/en/model-studio/token-plan-team-overview
+# https://docs.z.ai/guides/llm/glm-5.3
+base_model = "zhipuai/glm-5.3"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0
+output = 0
+cache_read = 0
+cache_write = 0

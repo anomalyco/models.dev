@@ -1,5 +1,5 @@
 import { ModelsDevError } from "./error.js"
-import type { Catalog, ModelMetadataMap, ProviderMap } from "./types.js"
+import type { Catalog, ModelMetadataMap, ModelType, ProviderMap } from "./types.js"
 
 /** Accepted anywhere headers can be passed. Same shapes as the standard `HeadersInit`. */
 export type HeadersInput = Headers | Record<string, string> | Array<[string, string]>
@@ -21,6 +21,8 @@ export interface RequestOptions {
   readonly signal?: AbortSignal
   /** Extra headers for this request. Overrides client-level headers. */
   readonly headers?: HeadersInput
+  /** Specialized model types to include. Omit for standard models; use `"all"` for the complete catalog. */
+  readonly modelTypes?: "all" | readonly ModelType[]
 }
 
 /**
@@ -41,7 +43,15 @@ export function make(options: ClientOptions = {}) {
 
     let response: Response
     try {
-      response = await fetch(new URL(path, base), {
+      const url = new URL(path, base)
+      const modelTypes = requestOptions?.modelTypes
+      if (modelTypes === "all") {
+        url.searchParams.set("type", "all")
+      } else if (modelTypes && modelTypes.length > 0) {
+        url.searchParams.set("type", modelTypes.join(","))
+      }
+
+      response = await fetch(url, {
         method: "GET",
         headers,
         signal: requestOptions?.signal,

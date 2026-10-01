@@ -1,0 +1,28 @@
+name = "Fugu Max"
+description = "Sakana AI's cost-performance Fugu model uses learned multi-agent orchestration to route tasks across expert models for reasoning, coding, and tool use."
+family = "fugu"
+release_date = "2026-09-11"
+last_updated = "2026-09-11"
+attachment = true
+reasoning = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["high", "xhigh", "max"]
+
+[cost]
+input = 2
+output = 6
+cache_read = 0.25
+
+[limit]
+context = 1_000_000
+input = 1_000_000
+output = 128_000
+
+[modalities]
+input = ["text", "image", "pdf"]
+output = ["text"]

@@ -1,0 +1,20 @@
+# Sources (accessed 2026-09-15):
+# https://api.iteracompute.com/v1/models (model ID, availability, capabilities, limits, and pricing)
+# https://iteracompute.com/docs.html (OpenAI-compatible API documentation)
+# Reasoning is mandatory and the public catalog exposes no caller-selectable reasoning control.
+# Prices are in USD per million tokens.
+base_model = "moonshotai/kimi-k3"
+structured_output = false
+reasoning_options = []
+
+[cost]
+input = 3.00
+output = 14.90
+cache_read = 0.29
+
+[limit]
+context = 1_048_576
+output = 999_999
+
+[modalities]
+input = ["text", "image"]

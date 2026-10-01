@@ -1,3 +1,4 @@
+# Cost from https://ollama.com/pricing (accessed 2026-09-15).
 name = "minimax-m2.7"
 description = "MiniMax model for chat, coding, office work, and agentic tasks"
 family = "minimax"
@@ -16,3 +17,8 @@ output = 196608
 [modalities]
 input = ["text"]
 output = ["text"]
+
+[cost]
+input = 0.3
+output = 1.2
+cache_read = 0.06

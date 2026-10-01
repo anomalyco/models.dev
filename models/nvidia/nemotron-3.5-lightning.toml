@@ -1,3 +1,5 @@
+# NVIDIA BF16 reasoning evaluation, not the NVFP4 checkpoint. Benchmark-specific recipes:
+# https://github.com/NVIDIA-NeMo/Gym/tree/main/nemotron_recipes/lightning-3.5/reproducibility.md
 name = "Nemotron 3.5 Lightning 30B A3B"
 description = "Fast NVIDIA Nemotron MoE for reliable agentic tasks across enterprise workloads"
 family = "nemotron"
@@ -17,3 +19,113 @@ output = 262_144
 [modalities]
 input = ["text"]
 output = ["text"]
+
+[[benchmarks]]
+name = "MMLU-Pro"
+score = 81.94
+metric = "score"
+variant = "BF16; reasoning"
+harness = "NeMo Gym / NeMo Evaluator SDK"
+source = "https://huggingface.co/nvidia/NVIDIA-Nemotron-3.5-Lightning-30B-A3B-BF16"
+
+[[benchmarks]]
+name = "AA-Omniscience"
+score = 17.5
+metric = "score"
+variant = "BF16; reasoning"
+harness = "NeMo Gym / NeMo Evaluator SDK"
+source = "https://huggingface.co/nvidia/NVIDIA-Nemotron-3.5-Lightning-30B-A3B-BF16"
+
+[[benchmarks]]
+name = "SciCode"
+score = 32.6
+metric = "score"
+variant = "BF16; reasoning"
+harness = "NeMo Gym / NeMo Evaluator SDK"
+source = "https://huggingface.co/nvidia/NVIDIA-Nemotron-3.5-Lightning-30B-A3B-BF16"
+
+[[benchmarks]]
+name = "PinchBench"
+score = 85.37
+metric = "score"
+variant = "BF16; reasoning"
+harness = "NeMo Gym / NeMo Evaluator SDK"
+source = "https://huggingface.co/nvidia/NVIDIA-Nemotron-3.5-Lightning-30B-A3B-BF16"
+
+[[benchmarks]]
+name = "BrowseComp"
+score = 36.97
+metric = "score"
+variant = "BF16; reasoning"
+harness = "NeMo Gym / NeMo Evaluator SDK"
+source = "https://huggingface.co/nvidia/NVIDIA-Nemotron-3.5-Lightning-30B-A3B-BF16"
+
+[[benchmarks]]
+name = "AA-LCR"
+score = 52
+metric = "score"
+variant = "BF16; reasoning"
+harness = "NeMo Gym / NeMo Evaluator SDK"
+source = "https://huggingface.co/nvidia/NVIDIA-Nemotron-3.5-Lightning-30B-A3B-BF16"
+
+[[benchmarks]]
+name = "GPQA Diamond"
+score = 75.44
+metric = "accuracy"
+variant = "BF16; reasoning; no tools"
+source = "https://huggingface.co/nvidia/NVIDIA-Nemotron-3.5-Lightning-30B-A3B-BF16"
+
+[[benchmarks]]
+name = "Humanity's Last Exam"
+score = 11.72
+metric = "accuracy"
+variant = "BF16; reasoning; no tools"
+dataset = "text-only"
+source = "https://huggingface.co/nvidia/NVIDIA-Nemotron-3.5-Lightning-30B-A3B-BF16"
+
+[[benchmarks]]
+name = "SWE-Bench Verified"
+score = 51.56
+metric = "accuracy"
+variant = "BF16; reasoning"
+harness = "NeMo Evaluator"
+source = "https://huggingface.co/nvidia/NVIDIA-Nemotron-3.5-Lightning-30B-A3B-BF16"
+
+[[benchmarks]]
+name = "SWE-Bench Multilingual"
+score = 39.33
+metric = "accuracy"
+variant = "BF16; reasoning"
+harness = "NeMo Evaluator"
+source = "https://huggingface.co/nvidia/NVIDIA-Nemotron-3.5-Lightning-30B-A3B-BF16"
+
+[[benchmarks]]
+name = "Terminal-Bench"
+score = 24.58
+metric = "accuracy"
+variant = "BF16; reasoning"
+harness = "NeMo Evaluator"
+version = "2.1"
+source = "https://huggingface.co/nvidia/NVIDIA-Nemotron-3.5-Lightning-30B-A3B-BF16"
+
+[[benchmarks]]
+name = "tau3-bench"
+score = 9.28
+metric = "score"
+variant = "BF16; reasoning; banking"
+source = "https://huggingface.co/nvidia/NVIDIA-Nemotron-3.5-Lightning-30B-A3B-BF16"
+
+[[benchmarks]]
+name = "GDPval-AA"
+score = 832
+metric = "Elo"
+variant = "BF16; reasoning"
+version = "2"
+source = "https://huggingface.co/nvidia/NVIDIA-Nemotron-3.5-Lightning-30B-A3B-BF16"
+
+[[benchmarks]]
+name = "IFBench"
+score = 71.88
+metric = "accuracy"
+variant = "BF16; reasoning; loose"
+source = "https://huggingface.co/nvidia/NVIDIA-Nemotron-3.5-Lightning-30B-A3B-BF16"

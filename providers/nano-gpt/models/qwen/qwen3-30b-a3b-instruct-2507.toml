@@ -1,0 +1,24 @@
+name = "Qwen3 30B A3B Instruct 2507"
+description = "Qwen3-30B-A3B-Instruct-2507 is a 30.5B-parameter mixture-of-experts language model from Qwen, with 3.3B active parameters per inference. Significant improvements in general capabilities, including instruction following, logical reasoning, text comprehension, mathematics, science, coding and tool usage."
+family = "qwen"
+release_date = "2025-02-20"
+last_updated = "2025-02-20"
+attachment = false
+reasoning = false
+tool_call = false
+structured_output = false
+open_weights = true
+
+[cost]
+input = 0.2
+output = 0.5
+cache_read = 0.1
+
+[limit]
+context = 256_000
+input = 256_000
+output = 32_768
+
+[modalities]
+input = ["text"]
+output = ["text"]

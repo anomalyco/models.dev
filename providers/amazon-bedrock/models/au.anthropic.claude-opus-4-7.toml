@@ -1,8 +1,11 @@
-# AU cross-Region inference profile, verified via ListInferenceProfiles from ap-southeast-2.
-# AU geo pricing (Price List ap-southeast-2 standard): input/output/cache-read/cache-write USD per 1M tokens.
-# Note: sibling au.* entries are priced at 1.0x; the Price List bills AU-geo calls at the 1.1x standard rate.
+# Sources: https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-anthropic-claude-opus-4-7.html
+# https://platform.claude.com/docs/en/build-with-claude/thinking-troubleshooting
+# Pricing: https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AmazonBedrockFoundationModels/current/ap-southeast-2/index.json
+# AU source ap-southeast-2: standard regional USD/MTok; cache_write is the 5-minute rate.
+# Toggle: additionalModelRequestFields.thinking.type = adaptive|disabled (Converse); thinking.type (InvokeModel).
+# Effort: additionalModelRequestFields.output_config.effort (Converse); output_config.effort (InvokeModel).
 base_model = "anthropic/claude-opus-4-7"
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
 name = "Claude Opus 4.7 (AU)"
 
 [cost]

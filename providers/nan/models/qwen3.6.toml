@@ -1,15 +1,15 @@
-# Source: https://nan.builders/docs/models (accessed 2026-09-03)
-# 35B total MoE, 3B active per token, FP8, 256K context, vision, XML tool
-# calling. MTP speculative decoding (~2x throughput). No token counter, 1.5M tpm.
-# Sampling defaults temp=0.6, top_p=0.95. NaN's own client configs confirm
-# maxTokens 65536 as the model ceiling. Included in the membership, so no
-# per-token price.
-# Toggle: `reasoning_config={}` in the request body enables reasoning mode --
-# the only reasoning field NaN documents. No graded effort.
+# Source: https://nan.builders/docs/models (accessed 2026-09-11)
+# Flagship model. 35B total MoE, 3B active per token, FP8, 256K token context,
+# multimodal with vision, XML tool calling, MTP speculative decoding
+# (~2x throughput), 1.5M tpm. Sampling defaults temp=0.6, top_p=0.95.
+# Included in the membership, so no per-token price.
+# Effort: reasoning_effort = none|low|medium|high|max. NaN's reasoning table
+# ("the table is the contract", accessed 2026-09-28): none (and its alias
+# minimal) skips reasoning; low/medium/high/max cap it at 2,048 / 8,192 /
+# 16,384 / 32,768 tokens. Default is on with a 16,384-token budget. Off is
+# effort=none, so no toggle.
 base_model = "alibaba/qwen3.6-35b-a3b"
-
-[[reasoning_options]]
-type = "toggle"
+reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "max"] }]
 
 [cost]
 input = 0

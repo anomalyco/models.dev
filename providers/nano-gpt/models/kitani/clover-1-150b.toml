@@ -1,0 +1,23 @@
+name = "Clover 1 150B Preview"
+description = "Kitani's 150B multimodal reasoning model for coding, tool use, and everyday assistance. This is a preview release and may have reliability issues."
+release_date = "2026-09-24"
+last_updated = "2026-09-24"
+attachment = true
+reasoning = true
+tool_call = true
+structured_output = false
+open_weights = false
+reasoning_options = []
+
+[cost]
+input = 0.15
+output = 0.8
+
+[limit]
+context = 200_000
+input = 200_000
+output = 100_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

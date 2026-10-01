@@ -1,5 +1,8 @@
-# CA cross-Region inference profile, verified via ListInferenceProfiles from ca-central-1.
-# CA geo pricing (Price List ca-central-1 standard): input/output/cache-read USD per 1M tokens; Nova has no cache-write charge.
+# CA cross-Region profile verified by ListInferenceProfiles (ca-central-1, 2026-09-08).
+# Model: https://docs.aws.amazon.com/nova/latest/userguide/what-is-nova.html
+# Pricing: https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AmazonBedrock/current/ca-central-1/index.json
+# Standard ca-central-1 reference rates, USD/MTok; rates vary by source Region. Cache writes billed at input rate; no surcharge.
+# Cache billing: https://docs.aws.amazon.com/bedrock/latest/userguide/prompt-caching.html
 base_model = "amazon/nova-lite"
 name = "Nova Lite (CA)"
 
@@ -7,3 +10,4 @@ name = "Nova Lite (CA)"
 input = 0.064
 output = 0.256
 cache_read = 0.016
+cache_write = 0.064

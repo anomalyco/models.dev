@@ -1,0 +1,31 @@
+# Toggle:
+# $.enable_thinking = true|false on the OpenAI-compatible /v1/chat/completions path (verified live 2026-09-11);
+# $.thinking.type = "enabled"|"disabled"|"adaptive" on /v1/messages; $.generationConfig.thinkingConfig on the Gemini path.
+# Effort: low|medium|xhigh
+# $.reasoning_effort on /v1/chat/completions (alias $.reasoning.effort, which is also the Responses field);
+# $.output_config.effort on /v1/messages, subject to model support.
+# Budget:
+# integer $.reasoning.max_tokens on /v1/chat/completions; $.thinking.budget_tokens >= 1024 on /v1/messages;
+# integer $.generationConfig.thinkingConfig.thinkingBudget on the Gemini path (-1 dynamic, 0 off where supported);
+# the Responses path carries effort but has no reasoning-token budget field.
+# https://docs.aihubmix.com/cn/api/unified-inference
+base_model = "alibaba/qwen3.8-flash"
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "xhigh"]
+
+[[reasoning_options]]
+type = "budget_tokens"
+
+[cost]
+input = 0.1126
+output = 0.380025
+cache_read = 0.014075
+cache_write = 0.175937

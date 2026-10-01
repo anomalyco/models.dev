@@ -1,0 +1,17 @@
+name = "Grok Voice TTS 1.0"
+description = "Convert text into spoken audio with a single API call. The API supports a rich set of expressive voices, inline speech tags for fine-grained delivery control, and output formats from high-fidelity MP3 to telephony-optimized μ-law."
+release_date = "2026-07-31"
+last_updated = "2026-07-31"
+attachment = false
+reasoning = false
+temperature = false
+tool_call = false
+open_weights = false
+
+[limit]
+context = 15_000
+output = 15_000
+
+[modalities]
+input = ["text"]
+output = ["audio"]

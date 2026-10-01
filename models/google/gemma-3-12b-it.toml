@@ -1,0 +1,25 @@
+# https://ai.google.dev/gemma/docs/core/model_card_3
+# https://blog.google/technology/developers/gemma-3/
+name = "Gemma 3 12B IT"
+description = "Open multimodal Gemma instruction model for multilingual text generation and image understanding"
+family = "gemma"
+release_date = "2025-03-12"
+last_updated = "2025-03-12"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = true
+knowledge = "2024-08"
+open_weights = true
+
+[limit]
+context = 131_072
+output = 131_072
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/google/gemma-3-12b-it"

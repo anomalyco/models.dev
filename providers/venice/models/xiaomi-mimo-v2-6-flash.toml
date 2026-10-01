@@ -1,0 +1,17 @@
+base_model = "xiaomi/mimo-v2.6-flash"
+description = "MiMo flash model for fast multimodal assistance and agent workflows"
+release_date = "2026-09-28"
+last_updated = "2026-09-28"
+structured_output = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high"]
+
+[cost]
+input = 0.175
+output = 0.35
+cache_read = 0.00375
+
+[limit]
+context = 1_000_000

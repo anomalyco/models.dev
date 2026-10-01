@@ -1,0 +1,17 @@
+base_model = "alibaba/qwen3.8-omni-flash"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "xhigh"]
+
+[[reasoning_options]]
+type = "budget_tokens"
+
+[cost]
+input = 0.13
+output = 0.43
+cache_read = 0.016
+cache_write = 0.13

@@ -1,13 +1,22 @@
+# First-party API rejects max_tokens=131073 with range [1, 131072]
+# (POST https://dashscope-intl.aliyuncs.com/compatible-mode/v1/chat/completions,
+# model qwen3.7-plus, checked 2026-09-23).
+# Model card: https://www.qwencloud.com/models/qwen3.7-plus
+# Singapore USD list pricing: https://www.alibabacloud.com/help/en/model-studio/model-pricing
+# Explicit cache prices: https://www.alibabacloud.com/help/en/model-studio/context-cache
+# Toggle: enable_thinking true|false
+# Budget: thinking_budget (integer reasoning tokens)
 name = "Qwen3.7 Plus"
 description = "Multimodal Qwen workhorse for long-context agents, visual inputs, and coding"
 family = "qwen"
 release_date = "2026-06-02"
 last_updated = "2026-06-04"
-attachment = false
+attachment = true
 reasoning = true
 temperature = true
 knowledge = "2025-04"
 tool_call = true
+structured_output = true
 open_weights = false
 
 [[reasoning_options]]
@@ -16,22 +25,25 @@ type = "toggle"
 [[reasoning_options]]
 type = "budget_tokens"
 
+[interleaved]
+field = "reasoning_content"
+
 [cost]
-input = 0.50
-output = 3.00
-cache_read = 0.05
-cache_write = 0.625
+input = 0.40
+output = 1.60
+cache_read = 0.04
+cache_write = 0.50
 
 [[cost.tiers]]
 tier = { size = 256_000 }
-input = 2.00
-output = 6.00
-cache_read = 0.20
-cache_write = 2.50
+input = 1.20
+output = 4.80
+cache_read = 0.12
+cache_write = 1.50
 
 [limit]
 context = 1_000_000
-output = 65_536
+output = 131_072
 
 [modalities]
 input = ["text", "image", "video"]

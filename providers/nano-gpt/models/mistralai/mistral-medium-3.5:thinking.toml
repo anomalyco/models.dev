@@ -1,0 +1,28 @@
+name = "Mistral Medium 3.5 Thinking"
+description = "Mistral Medium 3.5 with reasoning enabled by default (reasoning_effort=high), for complex coding, agentic, and multi-step reasoning prompts."
+family = "mistral-medium"
+release_date = "2026-04-30"
+last_updated = "2026-04-30"
+attachment = true
+reasoning = true
+tool_call = true
+structured_output = true
+open_weights = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "high"]
+
+[cost]
+input = 1.5
+output = 7.5
+cache_read = 0.75
+
+[limit]
+context = 256_000
+input = 256_000
+output = 32_768
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

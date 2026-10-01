@@ -531,7 +531,7 @@ searchInput?.addEventListener("keydown", (event) => {
 
 document.addEventListener("keydown", (event) => {
   const key = event.key.toLowerCase();
-  if ((event.metaKey || event.ctrlKey) && (key === "k" || key === "f")) {
+  if ((event.metaKey || event.ctrlKey) && key === "k") {
     event.preventDefault();
     openSearchModal();
   }

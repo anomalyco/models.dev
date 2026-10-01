@@ -1,0 +1,12 @@
+# Sources (accessed 2026-09-10):
+# https://ofox.ai/models/qwen/qwen3-coder-next
+# https://api.ofox.ai/v1/models/qwen/qwen3-coder-next
+base_model = "alibaba/qwen3-coder-next"
+
+[cost]
+input = 0.2
+output = 1.5
+
+[limit]
+context = 256_000
+output = 64_000

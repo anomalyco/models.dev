@@ -1,0 +1,14 @@
+base_model = "alibaba/qwen3.6-plus"
+name = "Qwen 3.6 Plus"
+reasoning = false
+structured_output = false
+
+[cost]
+input = 0.325
+output = 1.95
+cache_read = 0.0325
+cache_write = 0.40625
+
+[limit]
+context = 991_808
+input = 991_808

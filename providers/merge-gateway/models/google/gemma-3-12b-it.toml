@@ -1,0 +1,12 @@
+base_model = "google/gemma-3-12b-it"
+name = "Gemma 3 12B"
+tool_call = false
+structured_output = false
+
+[cost]
+input = 0.09
+output = 0.29
+
+[limit]
+context = 128_000
+output = 8_192

@@ -1,0 +1,22 @@
+base_model = "openai/gpt-6-luna"
+description = "GPT model for general reasoning, writing, coding, and tool-assisted tasks"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "xhigh", "max"]
+
+[cost]
+input = 0.125
+output = 0.625
+cache_read = 0.0125
+cache_write = 0.15625
+
+[[cost.tiers]]
+tier = { type = "context", size = 272_000 }
+input = 0.25
+output = 0.9375
+cache_read = 0.025
+cache_write = 0.3125
+
+[modalities]
+input = ["text", "image"]

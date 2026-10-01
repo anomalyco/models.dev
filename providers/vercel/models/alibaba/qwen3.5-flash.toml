@@ -3,7 +3,8 @@ name = "Qwen 3.5 Flash"
 description = "Qwen vision-language model for visual reasoning, documents, and agent tasks"
 
 [[reasoning_options]]
-type = "toggle"
+type = "effort"
+values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"]
 
 [[reasoning_options]]
 type = "budget_tokens"
@@ -13,7 +14,7 @@ max = 81_920
 [cost]
 input = 0.1
 output = 0.4
-cache_read = 0.001
+cache_read = 0.01
 cache_write = 0.125
 
 [limit]

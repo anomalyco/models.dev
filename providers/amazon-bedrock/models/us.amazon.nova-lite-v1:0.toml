@@ -1,5 +1,8 @@
-# US cross-Region inference profile, verified via ListInferenceProfiles from us-east-1.
-# US geo pricing (Price List us-east-1 standard): input/output/cache-read USD per 1M tokens; Nova has no cache-write charge.
+# US cross-Region profile verified by ListInferenceProfiles (us-east-1, 2026-09-08).
+# Model: https://docs.aws.amazon.com/nova/latest/userguide/what-is-nova.html
+# Pricing: https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AmazonBedrock/current/us-east-1/index.json
+# Standard us-east-1 reference rates, USD/MTok; rates vary by source Region. Cache writes billed at input rate; no surcharge.
+# Cache billing: https://docs.aws.amazon.com/bedrock/latest/userguide/prompt-caching.html
 base_model = "amazon/nova-lite"
 name = "Nova Lite (US)"
 
@@ -7,3 +10,4 @@ name = "Nova Lite (US)"
 input = 0.06
 output = 0.24
 cache_read = 0.015
+cache_write = 0.06

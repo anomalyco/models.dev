@@ -1,0 +1,41 @@
+# Version-tracking Standard-path router for the current Kimi flagship
+# (currently Kimi K3). Short ID `kimi-latest` expands to
+# accounts/fireworks/routers/kimi-latest.
+# https://docs.fireworks.ai/ecosystem/fireconnect/models
+# Pricing matches Kimi K3 Standard / Priority (USD per 1M tokens):
+# Standard $3.00 / $0.30 / $15.00, Priority $3.75 / $0.375 / $18.75
+# https://docs.fireworks.ai/serverless/pricing
+# Toggle: thinking.type = enabled|disabled
+# Effort: reasoning_effort = low|medium|high|max
+# Budget: thinking.budget_tokens (min 1024; conflicts with reasoning_effort)
+# https://docs.fireworks.ai/guides/reasoning
+base_model = "moonshotai/kimi-k3"
+name = "Kimi Latest"
+release_date = "2026-07-27"
+last_updated = "2026-09-15"
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high", "max"]
+
+[[reasoning_options]]
+type = "budget_tokens"
+min = 1_024
+
+[cost]
+input = 3
+output = 15
+cache_read = 0.3
+
+[modalities]
+input = ["text", "image"]
+
+[experimental.modes.priority]
+cost = { input = 3.75, output = 18.75, cache_read = 0.375 }
+provider = { body = { service_tier = "priority" } }

@@ -1,0 +1,28 @@
+# Sources:
+# - https://tokenfactory.nebius.com/ (model catalog)
+# - https://tokenfactory.nebius.com/api/public/models_info (pricing, context, max length)
+# Accessed 2026-09-18.
+# Effort: reasoning_effort = none|low|high|max (none = thinking off). Same gateway
+# behavior as the other DeepSeek V4 entries on this host (DeepSeek-V4-Flash-0731,
+# DeepSeek-V4-Pro): the generic schema accepts none/minimal/low/medium/high/xhigh/max,
+# but the mid tiers collapse (minimal=low=medium, high=xhigh) and none disables
+# thinking, leaving none/low/high/max as the distinct levels.
+# Served window: models_info max_model_len = 979_000 for this snapshot with no separate
+# output cap, so context and output both take the full served window.
+# No discounted prompt-cache tier is published in the public catalog: cached and fresh
+# input are billed identically, so cache_read = input (same rationale as
+# DeepSeek-V4-Flash-0731 / Kimi-K3 / GLM-5.3-Flash).
+base_model = "deepseek/deepseek-v4-pro-0813"
+reasoning_options = [{ type = "effort", values = ["none", "low", "high", "max"] }]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 1.32
+output = 3.96
+cache_read = 1.32
+
+[limit]
+context = 979_000
+output = 979_000

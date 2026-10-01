@@ -1,18 +1,12 @@
-name = "GLM-5"
-description = "Flagship GLM model for hybrid reasoning, coding, and agentic engineering"
-family = "glm"
-release_date = "2026-03-18"
+# https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-zai-glm-5.html
+# https://aws.amazon.com/bedrock/pricing/ (US Standard pricing)
+# Toggle: additionalModelRequestFields.reasoning_config = "high"; omit for default mode, matching GLM-4.7.
+# Live 2026-09-09: high returns reasoningContent; maxTokens=131072 accepted.
+base_model = "zhipuai/glm-5"
 last_updated = "2026-03-18"
-attachment = false
-reasoning = true
-reasoning_options = []
-temperature = true
-tool_call = true
+reasoning_options = [{ type = "toggle" }]
 structured_output = true
-open_weights = true
-
-[interleaved]
-field = "reasoning_content"
+interleaved = true
 
 [cost]
 input = 1.00
@@ -20,8 +14,3 @@ output = 3.20
 
 [limit]
 context = 202_752
-output = 101_376
-
-[modalities]
-input = ["text"]
-output = ["text"]

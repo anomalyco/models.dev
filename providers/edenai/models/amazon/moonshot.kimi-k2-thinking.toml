@@ -1,7 +1,6 @@
 base_model = "moonshotai/kimi-k2-thinking"
 name = "Kimi K2 Thinking (Amazon Bedrock)"
-tool_call = false
-structured_output = false
+structured_output = true
 reasoning_options = []
 
 [cost]
@@ -9,4 +8,4 @@ input = 0.6
 output = 2.5
 
 [limit]
-context = 128_000
+context = 256_000

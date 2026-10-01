@@ -1,0 +1,26 @@
+# Sources (accessed 2026-09-14):
+# https://huggingface.co/openbmb/MiniCPM5-2B (model card, config.json)
+# Hub createdAt 2026-09-06, lastModified 2026-09-12; open-weights drop of
+# MiniCPM5-2B with BF16 final release (RL + OPD post-training).
+name = "MiniCPM5-2B"
+description = "Dense 2B-class open-source model for on-device and resource-constrained use, with native long-context support, tool calling, and agentic tasks"
+release_date = "2026-09-06"
+last_updated = "2026-09-12"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+open_weights = true
+license = "apache-2.0"
+
+[limit]
+context = 131_072
+output = 131_072
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/openbmb/MiniCPM5-2B"

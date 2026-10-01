@@ -1,3 +1,5 @@
+# Toggle: reasoning.enabled = true|false
+# https://vercel.com/docs/ai-gateway/sdks-and-apis/openai-chat-completions/reasoning
 name = "Ling 3.0 Flash"
 description = "Efficient model for low-latency assistance, extraction, and routine automation"
 family = "ling"
@@ -7,12 +9,14 @@ attachment = false
 reasoning = true
 tool_call = true
 open_weights = false
-reasoning_options = []
+
+[[reasoning_options]]
+type = "toggle"
 
 [cost]
-input = 0.06
-output = 0.18
-cache_read = 0.012
+input = 0.021
+output = 0.063
+cache_read = 0.0042
 
 [limit]
 context = 256_000

@@ -1,0 +1,25 @@
+# Mantle in-region route (Responses API); the us. Converse profile is a separate file.
+# Model IDs, routes and Standard pricing: https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-openai-gpt-6-1-sol.html
+# OpenAI-native limits, pricing and effort (low|medium|high|xhigh|max, no none): https://developers.openai.com/api/docs/models/gpt-6.1-sol
+# In-region Standard pricing for us-east-1 (Mantle); 10% premium over OpenAI list rates per AWS card.
+# Columns: input / 30m cache write / cache read / output (USD per 1M tokens)
+base_model = "openai/gpt-6.1-sol"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
+
+[cost]
+input = 2.20
+output = 11.00
+cache_read = 0.11
+cache_write = 2.75
+
+[[cost.tiers]]
+tier = { size = 272_000 }
+input = 4.40
+output = 16.50
+cache_read = 0.22
+cache_write = 5.50
+
+[provider]
+npm = "@ai-sdk/amazon-bedrock/mantle"
+api = "https://bedrock-mantle.${AWS_REGION}.api.aws/openai/v1"
+shape = "responses"

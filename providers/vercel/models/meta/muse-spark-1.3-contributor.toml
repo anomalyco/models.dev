@@ -1,3 +1,9 @@
+# Effort: reasoning_effort / reasoning.effort = minimal|low|medium|high|xhigh
+# Empty [] was incorrect: Muse Spark exposes graded effort; OpenCode treats [] as no variants.
+# max is Standard-tier muse-spark-1.3 only (not Contributor) per Meta reasoning docs.
+# https://ai.developer.meta.com/docs/reasoning
+# https://dev.meta.ai/docs/reasoning
+# https://vercel.com/docs/ai-gateway/sdks-and-apis/openai-chat-completions/reasoning
 name = "Muse Spark 1.3 Contributor"
 description = "Open Llama multimodal model for image understanding and text reasoning"
 family = "muse"
@@ -7,7 +13,7 @@ attachment = true
 reasoning = true
 tool_call = true
 open_weights = false
-reasoning_options = []
+reasoning_options = [{ type = "effort", values = ["minimal", "low", "medium", "high", "xhigh"] }]
 
 [cost]
 input = 0.1

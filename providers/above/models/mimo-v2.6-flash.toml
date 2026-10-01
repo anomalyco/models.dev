@@ -1,0 +1,26 @@
+# Passthrough to the official MiMo API (api.xiaomimimo.com).
+# Toggle: `thinking.type = enabled|disabled`, as providers/xiaomi; verified
+# end-to-end on this host 2026-09-22 (serves under its own id, returns
+# well-formed tool_calls).
+# Sources:
+#   https://mimo.mi.com/docs/en-US/price/pay-as-you-go  (real-time API table:
+#     mimo-v2.6-flash CNY 1 in / 0.02 cache-hit / 2 out per MTok; overseas USD
+#     $0.14 / $0.0028 / $0.28. Cache WRITE is free, limited time)
+#   https://mimo.mi.com/docs/en-US/quick-start/summary/model  (1M context,
+#     128K max output, function call and structured output)
+# RMB upstream (CNY 1/0.02/2 per MTok; overseas USD list $0.14/$0.0028/$0.28)
+# converted at 6.5 CNY/USD (operator rate set 2026-07, spot ~6.79; buffer
+# covers FX drift), then a flat 10% markup; rounded to 4dp. Checked 2026-09-22.
+base_model = "xiaomi/mimo-v2.6-flash"
+name = "MiMo V2.6 Flash"
+
+[[reasoning_options]]
+type = "toggle"
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.1692
+output = 0.3385
+cache_read = 0.0034

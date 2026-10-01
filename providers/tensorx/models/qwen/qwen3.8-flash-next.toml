@@ -1,0 +1,15 @@
+base_model = "alibaba/qwen3.8-flash-next"
+# Qwen3.8 always reasons; effort xhigh (default) | medium | low.
+# https://docs.tensorx.ai/api-reference/reasoning
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "xhigh"]
+
+[cost]
+input = 0.2
+output = 0.5
+cache_read = 0.05
+
+[limit]
+output = 64000
