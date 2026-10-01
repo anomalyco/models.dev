@@ -5,7 +5,8 @@
 #   - base_model: any proxied id whose canonical file name differs from its catalog id.
 #   - structured_output: a quality judgement. Cloudflare advertises response_format for
 #     nearly every model, but several do not honour it, so this stays hand-set.
-#   - reasoning_options: the catalog has no reasoning schema, so reasoning shapes are curated.
+#   - reasoning_options: per-model schemas sometimes expose controls, but incomplete or
+#     route-specific reasoning shapes are curated here.
 #   - interleaved: whether a wire returns reasoning content as a separate field. Never
 #     inheritable from base_model (this deployment's wire format can differ from the lab's).
 #   - limit.output: the catalog's max_output_tokens is not a reliable ceiling (verified wrong

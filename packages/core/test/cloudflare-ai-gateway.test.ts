@@ -144,6 +144,62 @@ test("derives nested Cloudflare reasoning controls", () => {
   ]);
 });
 
+test("does not turn Opus 5.5's adaptive-only thinking schema into an off switch", () => {
+  const schema = {
+    properties: {
+      thinking: {
+        type: "object",
+        properties: { type: { type: "string", const: "adaptive" } },
+      },
+      output_config: {
+        properties: { effort: { enum: ["low", "medium", "high", "xhigh", "max"] } },
+      },
+    },
+  };
+  expect(deriveReasoningOptions(schema)).toEqual([
+    { type: "effort", values: ["low", "medium", "high", "xhigh", "max"] },
+  ]);
+  expect(buildCloudflareAiGatewayModel({
+    model_id: "anthropic/claude-opus-5.5",
+    task: "Text Generation",
+    provider_details: providerDetails({ input_tokens: 4, output_tokens: 20 }),
+  }, schema).reasoning_options).toEqual([
+    { type: "effort", values: ["low", "medium", "high", "xhigh", "max"] },
+  ]);
+});
+
+test("only derives a thinking toggle when the schema permits both on and off", () => {
+  expect(deriveReasoningOptions({
+    properties: { thinking: { properties: { type: { enum: ["adaptive", "disabled"] } } } },
+  })).toEqual([{ type: "toggle" }]);
+  expect(deriveReasoningOptions({
+    properties: { thinking: { oneOf: [
+      { properties: { type: { const: "adaptive" } } },
+      { properties: { type: { const: "disabled" } } },
+    ] } },
+  })).toEqual([{ type: "toggle" }]);
+  expect(deriveReasoningOptions({
+    properties: { thinking: { type: "object" } },
+  })).toEqual([]);
+  expect(deriveReasoningOptions({
+    properties: { enable_thinking: { enum: [true] } },
+  })).toEqual([]);
+  expect(deriveReasoningOptions({
+    properties: { enable_thinking: { type: "boolean" } },
+  })).toEqual([{ type: "toggle" }]);
+  expect(deriveReasoningOptions({
+    properties: {
+      enable_thinking: { type: "boolean" },
+      reasoning_effort: { enum: ["none", "low", "high"] },
+    },
+  })).toEqual([{ type: "effort", values: ["none", "low", "high"] }]);
+  expect(() => buildCloudflareAiGatewayModel({
+    model_id: "anthropic/claude-opus-5.5",
+    task: "Text Generation",
+    provider_details: providerDetails({ input_tokens: 4, output_tokens: 20 }),
+  }, { properties: { thinking: { type: "object" } } })).toThrow("no reasoning_options");
+});
+
 test("ignores advertised reasoning controls for non-reasoning base models", () => {
   const model = buildCloudflareAiGatewayModel(
     {

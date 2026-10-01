@@ -265,7 +265,9 @@ export function deriveReasoningOptions(
 
       for (const [property, rawSchema] of Object.entries(value)) {
         const propertySchema = rawSchema as Record<string, unknown>;
-        if (property === "enable_thinking" || property === "thinking") hasToggle = true;
+        if (property === "enable_thinking" || property === "thinking") {
+          hasToggle ||= supportsThinkingToggle(property, rawSchema);
+        }
         if (property === "effort" || property === "reasoning_effort") {
           const candidates = [propertySchema, ...arrayValue(propertySchema.anyOf), ...arrayValue(propertySchema.oneOf)];
           for (const candidate of candidates) {
@@ -280,9 +282,33 @@ export function deriveReasoningOptions(
   visit(schemaInput);
 
   const options: NonNullable<SyncedBaseModel["reasoning_options"]> = [];
-  if (hasToggle) options.push({ type: "toggle" });
+  if (hasToggle && !effortValues?.includes("none")) options.push({ type: "toggle" });
   if (effortValues !== undefined) options.push({ type: "effort", values: effortValues });
   return options;
+}
+
+function supportsThinkingToggle(property: "thinking" | "enable_thinking", schema: unknown): boolean {
+  const values = new Set<unknown>();
+  const visit = (node: unknown) => {
+    if (node === null || typeof node !== "object" || Array.isArray(node)) return;
+    const field = node as Record<string, unknown>;
+    // A constrained schema is not evidence that both values are accepted.
+    if (field.not !== undefined || field.allOf !== undefined) return;
+    if (field.const !== undefined) values.add(field.const);
+    if (Array.isArray(field.enum)) field.enum.forEach((value) => values.add(value));
+    if (field.type === "boolean" && field.const === undefined && field.enum === undefined) {
+      values.add(true);
+      values.add(false);
+    }
+    if (property === "thinking" && field.properties !== null && typeof field.properties === "object") {
+      visit((field.properties as Record<string, unknown>).type);
+    }
+    for (const branch of [...arrayValue(field.anyOf), ...arrayValue(field.oneOf)]) visit(branch);
+  };
+  visit(schema);
+
+  return values.has(true) && values.has(false)
+    || property === "thinking" && values.has("disabled") && (values.has("adaptive") || values.has("enabled"));
 }
 
 function arrayValue(value: unknown): Array<Record<string, unknown>> {
