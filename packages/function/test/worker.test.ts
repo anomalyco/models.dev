@@ -1,4 +1,4 @@
-import { describe, expect, test } from "bun:test";
+import { describe, expect, spyOn, test } from "bun:test";
 
 import worker, { type Env } from "../src/worker.js";
 
@@ -81,8 +81,61 @@ describe("catalog API model type filtering", () => {
   });
 });
 
-async function request(path: string) {
+describe("hit tracking", () => {
+  test("sends opencode hits to the lake event stream", async () => {
+    const sent: Request[] = [];
+    const fetch = spyOn(globalThis, "fetch").mockImplementation(
+      async (input: RequestInfo | URL, init?: RequestInit) => {
+        sent.push(new Request(input, init));
+        return new Response(null, { status: 204 });
+      },
+    );
+    const pending: Promise<unknown>[] = [];
+    try {
+      await request(
+        "/api.json?type=all",
+        {
+          "user-agent": "opencode/1.18.34",
+          "cf-connecting-ip": "203.0.113.45",
+          "cf-ipcountry": "US",
+        },
+        (promise) => pending.push(promise),
+      );
+      await Promise.all(pending);
+    } finally {
+      fetch.mockRestore();
+    }
+
+    const lake = sent.find((item) => item.url === "https://stream.example/");
+    expect(lake?.method).toBe("POST");
+    expect(lake?.headers.get("authorization")).toBe("Bearer lake-token");
+    const events = await lake?.json();
+    expect(events).toEqual([
+      {
+        source: "models",
+        type: "hit",
+        timestamp: expect.any(String),
+        payload: {
+          method: "GET",
+          path: "/api.json",
+          useragent: "opencode/1.18.34",
+          ip: "203.0.113.45",
+          cf_country: "US",
+        },
+      },
+    ]);
+  });
+});
+
+async function request(
+  path: string,
+  headers: Record<string, string> = { "user-agent": "test" },
+  waitUntil: (promise: Promise<unknown>) => void = () => {},
+) {
   const env = {
+    PosthogToken: secret("posthog-token"),
+    LakeEndpoint: secret("https://stream.example/"),
+    LakeToken: secret("lake-token"),
     ASSETS: {
       fetch(input: Request) {
         const pathname = new URL(input.url).pathname;
@@ -129,10 +182,12 @@ async function request(path: string) {
   } as unknown as Env;
 
   return worker.fetch(
-    new Request(`https://models.dev${path}`, {
-      headers: { "user-agent": "test" },
-    }),
+    new Request(`https://models.dev${path}`, { headers }),
     env,
-    { waitUntil() {} } as unknown as ExecutionContext,
+    { waitUntil } as unknown as ExecutionContext,
   );
+}
+
+function secret(value: string) {
+  return JSON.stringify({ value });
 }

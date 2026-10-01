@@ -21,8 +21,8 @@ export default $config({
       domain: $app.stage === "dev" ? "models.dev" : undefined,
       link: [
         new sst.Secret("PosthogToken"),
-        new sst.Secret("LakeUrl"),
-        new sst.Secret("LakeSecret"),
+        new sst.Secret("LakeEndpoint"),
+        new sst.Secret("LakeToken"),
       ],
       handler: "./packages/function/src/worker.ts",
       assets: {
