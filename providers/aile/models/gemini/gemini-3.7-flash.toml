@@ -1,0 +1,10 @@
+# Cost: list, the most any lender on Aile may charge. Lenders price at a margin of it,
+# so a request often costs less; the per-request quote (x-aile-price) is binding.
+base_model = "google/gemini-3.7-flash"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
+
+[cost]
+input = 1.5
+output = 7.5
+cache_read = 0.15
+cache_write = 1.583333

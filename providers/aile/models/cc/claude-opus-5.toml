@@ -1,0 +1,10 @@
+# Cost: list, the most any lender on Aile may charge. Lenders price at a margin of it,
+# so a request often costs less; the per-request quote (x-aile-price) is binding.
+base_model = "anthropic/claude-opus-5"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
+
+[cost]
+input = 5
+output = 25
+cache_read = 0.5
+cache_write = 6.25

@@ -1,0 +1,15 @@
+# Cost: list, the most any lender on Aile may charge. Lenders price at a margin of it,
+# so a request often costs less; the per-request quote (x-aile-price) is binding.
+base_model = "openai/gpt-6-luna"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
+
+[cost]
+input = 0.1
+output = 0.5
+cache_read = 0.01
+cache_write = 0.125
+
+[limit]
+context = 872000
+output = 128000
+input = 744000

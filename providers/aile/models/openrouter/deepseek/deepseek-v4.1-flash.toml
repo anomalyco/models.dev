@@ -1,0 +1,9 @@
+# Cost: list, the most any lender on Aile may charge. Lenders price at a margin of it,
+# so a request often costs less; the per-request quote (x-aile-price) is binding.
+base_model = "deepseek/deepseek-v4.1-flash"
+reasoning_options = [{ type = "effort", values = ["none", "low", "high", "xhigh", "max"] }]
+
+[cost]
+input = 0.027
+output = 0.6
+cache_read = 0.027
