@@ -1,0 +1,14 @@
+# Pricing: https://void-api.tech/api/models/catalog
+# Model metadata and reasoning controls: models.dev providers/anthropic/models/claude-haiku-4-5.toml
+# Budget: thinking.budget_tokens via the LiteLLM Anthropic adapter.
+base_model = "anthropic/claude-haiku-4-5"
+
+[[reasoning_options]]
+type = "budget_tokens"
+min = 1024
+
+[cost]
+input = 0.19
+output = 0.95
+cache_read = 0.023
+cache_write = 0.185

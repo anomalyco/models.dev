@@ -1,0 +1,14 @@
+# Pricing: https://void-api.tech/api/models/catalog
+# Model metadata and reasoning controls: models.dev providers/openai/models/gpt-6.1-sol.toml
+# Effort: reasoning_effort on the OpenAI-compatible chat endpoint.
+base_model = "openai/gpt-6.1-sol"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high", "xhigh", "max"]
+
+[cost]
+input = 0.108
+output = 0.54
+cache_read = 0.00753
+cache_write = 0.1047

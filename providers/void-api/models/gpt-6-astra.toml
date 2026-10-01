@@ -1,0 +1,14 @@
+# Pricing: https://void-api.tech/api/models/catalog
+# Model metadata and reasoning controls: models.dev providers/openai/models/gpt-6-astra.toml
+# Effort: reasoning_effort on the OpenAI-compatible chat endpoint.
+base_model = "openai/gpt-6-astra"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high", "xhigh", "max"]
+
+[cost]
+input = 0.54
+output = 2.7
+cache_read = 0.48
+cache_write = 0.54

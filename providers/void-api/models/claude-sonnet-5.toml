@@ -1,0 +1,18 @@
+# Pricing: https://void-api.tech/api/models/catalog
+# Model metadata and reasoning controls: models.dev providers/anthropic/models/claude-sonnet-5.toml
+# Toggle: thinking.type = enabled|disabled (adaptive models also accept adaptive).
+# Effort: reasoning_effort on the OpenAI-compatible chat endpoint.
+base_model = "anthropic/claude-sonnet-5"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high", "xhigh", "max"]
+
+[cost]
+input = 0.51
+output = 1.55
+cache_read = 0.046
+cache_write = 0.64

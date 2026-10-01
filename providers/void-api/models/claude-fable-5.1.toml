@@ -1,0 +1,14 @@
+# Pricing: https://void-api.tech/api/models/catalog
+# Model metadata and reasoning controls: models.dev providers/anthropic/models/claude-fable-5-1.toml
+# Effort: reasoning_effort on the OpenAI-compatible chat endpoint.
+base_model = "anthropic/claude-fable-5-1"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high", "xhigh", "max"]
+
+[cost]
+input = 1.08
+output = 5.4
+cache_read = 0.029
+cache_write = 1.08
