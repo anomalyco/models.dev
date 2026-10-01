@@ -1,5 +1,7 @@
 # Model card: https://huggingface.co/google/diffusiongemma-26B-A4B-it
-# Output limit follows the Gemma 4 26B A4B base it is built on; the card states no separate cap.
+# Context: config.json text_config.max_position_embeddings = 262144 (card: "up to 256K tokens").
+# Output limit is an estimate: neither the card nor the repo config publishes an output cap,
+# so it mirrors models/google/gemma-4-26b-a4b-it.toml, the architecture this model is built on.
 name = "DiffusionGemma 26B A4B IT"
 description = "Gemma 4 based discrete text diffusion model for fast chat, reasoning, and tool use"
 family = "gemma"
