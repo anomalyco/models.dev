@@ -1,0 +1,16 @@
+# FutureInfra bills in KRW. USD = KRW / 1355.84 (open.er-api.com, 2026-10-01).
+# KRW per 1M tokens: input 3567, output 17837
+base_model = "anthropic/claude-sonnet-5-5"
+description = "Balanced Claude model for coding, analysis, agent workflows, and cost control"
+temperature = true
+structured_output = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high", "xhigh", "max"]
+
+[cost]
+input = 2.6311
+output = 13.1553
+cache_read = 0.2631
+cache_write = 3.2889
