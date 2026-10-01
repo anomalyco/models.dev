@@ -9,3 +9,11 @@ values = ["none", "low", "medium", "high", "max"]
 input = 0.22
 output = 1.32
 cache_read = 0.022
+cache_write = 0.275
+
+[[cost.tiers]]
+tier = { type = "context", size = 272_000 }
+input = 0.44
+output = 1.98
+cache_read = 0.044
+cache_write = 0.55
