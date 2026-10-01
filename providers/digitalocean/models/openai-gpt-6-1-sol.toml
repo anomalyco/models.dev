@@ -1,13 +1,5 @@
+base_model = "openai/gpt-6.1-sol"
 name = "OpenAI GPT-6.1 Sol"
-description = "GPT model for general reasoning, writing, coding, and tool-assisted tasks"
-family = "gpt"
-release_date = "2026-09-30"
-last_updated = "2026-09-30"
-attachment = true
-reasoning = true
-temperature = true
-tool_call = true
-open_weights = false
 
 [[reasoning_options]]
 type = "effort"
@@ -24,10 +16,5 @@ input = 4
 output = 15
 cache_read = 0.2
 
-[limit]
-context = 1_050_000
-output = 128_000
-
 [modalities]
 input = ["text", "image"]
-output = ["text"]
