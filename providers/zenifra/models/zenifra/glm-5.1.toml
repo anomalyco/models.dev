@@ -1,0 +1,25 @@
+# Source: GET https://ai.zenifra.com/v1/models (accessed 2026-09-22).
+# Conversion: Zenifra prices are BRL; models.dev costs use BRL / 5.30 = USD (project rate).
+# No native reasoning_effort levels advertised; expose the model's thinking toggle only.
+# Toggle: enable_thinking = true|false (top-level chat/completions request).
+base_model = "zhipuai/glm-5.1"
+
+[[reasoning_options]]
+type = "toggle"
+
+[cost]
+input = 1.122642
+output = 4.492453
+cache_read = 0.224528
+
+[[cost.tiers]]
+tier = { type = "context", size = 32_001 }
+input = 1.498113
+output = 5.239623
+cache_read = 0.3
+
+[limit]
+context = 202_745
+
+[provider]
+shape = "completions"
