@@ -99,9 +99,11 @@ export const flexai = {
     const localID = BaseModels[model.id];
     if (localID === undefined) return undefined;
     const existing = context.existing(localID);
+    const translated = buildFlexAIModel(model, existing?.base_model ?? localID, existing);
     return {
       id: localID,
-      model: buildFlexAIModel(model, existing?.base_model ?? localID, existing),
+      model: translated,
+      header: reasoningHeader(translated),
     };
   },
   missingModelID(model) {
@@ -120,6 +122,29 @@ export const flexai = {
     ];
   },
 } satisfies SyncProvider<FlexAIModel>;
+
+/**
+ * Leading wire comment for a model with a reasoning control.
+ *
+ * Only the leading header block survives re-serialisation -- every other
+ * comment in the file is dropped on the next sync -- so the wire path has to
+ * live here rather than beside the option it documents.
+ */
+function reasoningHeader(model: SyncedModel): string | undefined {
+  const options = (model as { reasoning_options?: { type: string }[] })
+    .reasoning_options;
+  if (!options || options.length === 0) return undefined;
+  const lines = [];
+  if (options.some((option) => option.type === "toggle")) {
+    lines.push('# Toggle: thinking.type = "enabled" | "disabled"');
+  }
+  if (options.some((option) => option.type === "effort")) {
+    lines.push("# Effort: reasoning_effort = <one of the values below>");
+  }
+  if (lines.length === 0) return undefined;
+  lines.push("# https://docs.flex.ai/inference-api/agents/langchain");
+  return lines.join("\n") + "\n";
+}
 
 /**
  * Token cost from the API, in the catalog's per-1M unit.
