@@ -1,8 +1,9 @@
 # QuickSilver Pro is an OpenAI-compatible relay: it forwards `reasoning` and
 # `reasoning_effort` through to the upstream model unchanged.
 # Toggle: reasoning.enabled = true|false
-# Effort: reasoning_effort = high|xhigh
-# Docs: https://quicksilverpro.io/docs (accessed 2026-09-26)
+# Effort: reasoning_effort = low|high|max
+# Docs: https://quicksilverpro.io/docs (accessed 2026-10-02)
+# Pricing: https://quicksilverpro.io/models/deepseek-v4-pro/ and https://quicksilverpro.io/pricing.json
 base_model = "deepseek/deepseek-v4-pro"
 
 [[reasoning_options]]
@@ -10,7 +11,7 @@ type = "toggle"
 
 [[reasoning_options]]
 type = "effort"
-values = ["high", "xhigh"]
+values = ["low", "high", "max"]
 
 [interleaved]
 field = "reasoning_content"
