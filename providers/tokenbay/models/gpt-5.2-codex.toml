@@ -1,0 +1,11 @@
+base_model = "openai/gpt-5.2-codex"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh"] }]
+
+[cost]
+input = 1.4875
+output = 11.90
+cache_read = 0.14875
+
+[provider]
+npm = "@ai-sdk/openai"
+api = "https://api.tokenbay.com/v1"

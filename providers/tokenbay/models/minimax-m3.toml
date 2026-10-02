@@ -1,0 +1,19 @@
+# Toggle: chat_template_kwargs.thinking_mode = enabled|disabled
+base_model = "minimax/MiniMax-M3"
+
+[[reasoning_options]]
+type = "toggle"
+
+[limit]
+context = 1_000_000
+
+[cost]
+input = 0.30
+output = 1.20
+cache_read = 0.06
+
+[[cost.tiers]]
+tier = { type = "context", size = 512_000 }
+input = 0.60
+output = 2.40
+cache_read = 0.12
