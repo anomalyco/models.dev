@@ -1,0 +1,25 @@
+# Source: https://huggingface.co/Qwen/Qwen3-30B-A3B-Thinking-2507
+# (config.json max_position_embeddings = 262_144). Thinking-only release: it
+# reasons on every request and exposes no switch to disable it.
+name = "Qwen3 30B A3B Thinking 2507"
+description = "Thinking-only Qwen3 MoE with 3B active parameters for math, coding, and long-horizon reasoning"
+family = "qwen"
+release_date = "2025-07-29"
+last_updated = "2025-07-30"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+open_weights = true
+
+[limit]
+context = 262_144
+output = 32_768
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/Qwen/Qwen3-30B-A3B-Thinking-2507"
