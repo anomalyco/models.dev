@@ -1,0 +1,11 @@
+# Reasoning: none forwarded. This host rebuilds each moonshot request from a
+# fixed parameter map and sends nothing else: max_completion_tokens, max_tokens,
+# messages, model, stream, stream_options, temperature, tool_choice, tools,
+# top_p. It has no reasoning_effort and no thinking field.
+# https://platform.hopscotchlabs.ai/models
+base_model = "moonshotai/kimi-k2.7-code-highspeed"
+reasoning_options = []
+
+[cost]
+input = 1.9
+output = 8
