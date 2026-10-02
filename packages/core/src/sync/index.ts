@@ -20,6 +20,7 @@ import { digitalocean } from "./providers/digitalocean.js";
 import { edenai } from "./providers/edenai.js";
 import { empiriolabs } from "./providers/empiriolabs.js";
 import { fireworksAi } from "./providers/fireworks-ai.js";
+import { flexai } from "./providers/flexai.js";
 import { friendli } from "./providers/friendli.js";
 import { githubCopilot } from "./providers/github-copilot.js";
 import { google } from "./providers/google.js";
@@ -154,6 +155,7 @@ export const providers: {
   edenai: SyncProvider<any>;
   empiriolabs: SyncProvider<any>;
   "fireworks-ai": SyncProvider<any>;
+  flexai: SyncProvider<any>;
   friendli: SyncProvider<any>;
   "github-copilot": SyncProvider<any>;
   google: SyncProvider<any>;
@@ -193,6 +195,7 @@ export const providers: {
   edenai,
   empiriolabs,
   "fireworks-ai": fireworksAi,
+  flexai,
   friendli,
   "github-copilot": githubCopilot,
   google,
@@ -237,7 +240,7 @@ export const groups = {
     "vercel",
   ],
   cloudflare: ["cloudflare-ai-gateway", "cloudflare-workers-ai"],
-  direct: ["aiand", "ambient", "anthropic", "baseten", "chutes", "cortecs", "deepinfra", "digitalocean", "fireworks-ai", "friendli", "github-copilot", "google", "hyper", "meta", "ollama-cloud", "openai", "ovhcloud", "pioneer", "tinfoil", "venice", "wandb", "xai"],
+  direct: ["aiand", "ambient", "anthropic", "baseten", "chutes", "cortecs", "deepinfra", "digitalocean", "fireworks-ai", "flexai", "friendli", "github-copilot", "google", "hyper", "meta", "ollama-cloud", "openai", "ovhcloud", "pioneer", "tinfoil", "venice", "wandb", "xai"],
 } as const;
 
 type ProviderID = keyof typeof providers;
