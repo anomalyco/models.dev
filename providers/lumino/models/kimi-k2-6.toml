@@ -1,0 +1,12 @@
+base_model = "moonshotai/kimi-k2.6"
+name = "Kimi K2.6"
+reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high"] }]
+
+[cost]
+input = 1.1111
+output = 5.3535
+cache_read = 0.202
+
+[limit]
+context = 262144
+output = 16384
