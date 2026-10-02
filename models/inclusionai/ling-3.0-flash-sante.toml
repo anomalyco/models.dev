@@ -1,0 +1,22 @@
+# https://commandcode.ai/models/ling-3-0-flash-sante-free
+# https://openrouter.ai/api/v1/models/inclusionai/ling-3.0-flash-sante:free/endpoints
+# Sibling: models/inclusionai/ling-3.0-flash-fin.toml (same 262144/32768 envelope)
+name = "Ling 3.0 Flash Sante"
+description = "Ling 3.0 Flash Sante is a health and medicine-focused mixture-of-experts model from InclusionAI, built on Ling 3.0 Flash with 5.1B active parameters out of 124B total"
+family = "ling"
+release_date = "2026-09-04"
+last_updated = "2026-09-04"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = false
+open_weights = false
+
+[limit]
+context = 262_144
+output = 32_768
+
+[modalities]
+input = ["text"]
+output = ["text"]

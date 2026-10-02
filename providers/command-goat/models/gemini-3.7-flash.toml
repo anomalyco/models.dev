@@ -1,0 +1,12 @@
+# Sources (accessed 2026-09-09):
+# - Pricing and model details: GOAT plan (https://commandcode.ai/docs/plans/goat)
+# - Plan scope: GOAT only; Go/Pro/Max plans excluded (plan-specific provider, cf. alibaba-coding-plan)
+# - Reasoning: baseline per providers/google/models/gemini-3.8-flash.toml; effort=["low","medium","high"] (gateway verified live 2026-09-11: 8 models/42 calls; none|minimal rejected by enum, enable_thinking ignored; toggle/budget omitted).
+base_model = "google/gemini-3.7-flash"
+reasoning_options = [{ type = "effort", values = ["low","medium","high"] }]
+
+[cost]
+input = 1.5
+output = 7.5
+cache_read = 0.15
+cache_write = 0.08334
