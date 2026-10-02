@@ -1,0 +1,18 @@
+# Effort: reasoning_effort = none|minimal|low|medium|high|xhigh|max
+# https://zenmux.ai/docs/api/openai/openai-list-models.html
+# https://zenmux.ai/docs/guide/advanced/reasoning.html
+base_model = "bytedance-seed/seed-evolving"
+name = "Doubao-Seed-Evolving"
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"]
+
+[cost]
+input = 0.8848
+output = 4.424
+cache_read = 0.177
+cache_write = 0.0025

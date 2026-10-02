@@ -1,0 +1,17 @@
+name = "Doubao-Seedream-5.0-lite"
+description = "“Doubao-Seedream-5.0-lite is ByteDance’s latest image-generation model. For the first time, it integrates an online retrieval feature, enabling it to incorporate real-time web information and improve the timeliness of generated images. At the same time, the model’s intelligence has been further upgraded, allowing it to accurately interpret complex instructions and visual content. In addition, the model has been enhanced in terms of the breadth of world knowledge, reference consistency, and generation quality in professional scenarios, better meeting enterprise-level visual creation needs.”"
+release_date = "2026-02-28"
+last_updated = "2026-02-28"
+attachment = true
+reasoning = false
+temperature = false
+tool_call = false
+open_weights = false
+
+[limit]
+context = 100_000
+output = 0
+
+[modalities]
+input = ["text", "image"]
+output = ["image"]
