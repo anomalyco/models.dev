@@ -1,11 +1,22 @@
-# Latest alias. Served model IDs (accessed 2026-10-01):
-# - "callstack/Apex" — alias for the newest snapshot, used by the @callstack/apex CLI and the
-#   console's curl example at https://platform.callstack.ai. The model page documents the same
-#   alias as the bare "apex".
-# - "apex-20261001" — pinned snapshot; see ../apex-20261001.toml
-# Effort: reasoning_effort = none|low|medium|xhigh (OpenAI-compatible request field; the
-# @callstack/apex CLI defaults it to "medium" and exposes exactly these four levels).
+# Latest alias. Effort: reasoning_effort = none|low|medium|xhigh (OpenAI-compatible request
+# field; Callstack's CLI defaults it to "medium" and exposes exactly these four levels).
 # Anthropic-compatible shape is served on the same host at POST /v1/messages.
+#
+# Model ID — evidence that "callstack/Apex" is the `model` string this API receives
+# (public sources, accessed 2026-10-02):
+# - https://github.com/callstack/apex-cli (MIT) pins it in src/assistants.js#L7:
+#   MODEL = 'callstack/Apex' with BASE_URL = 'https://api.callstack.ai/v1', and writes that
+#   constant into the OpenCode / Codex / Copilot / Pi configs it generates and to `--model`.
+#   Pinned blob: https://raw.githubusercontent.com/callstack/apex-cli/02d146d120abbbce6b08be1c7d17d58dd50e52f1/src/assistants.js
+# - Same constants ship in the published package every user runs:
+#   https://registry.npmjs.org/@callstack/apex/-/apex-0.3.0.tgz (npm shasum
+#   6c2cb09d04a7d9d3441cba90c0db0c30c04ec2bf), and the README documents
+#   `apex run opencode  opencode --model callstack.ai/callstack/Apex`.
+# - Callstack's own RN benchmark posts it the same way: the live payload at
+#   https://rn-evals.vercel.app reports solverModel "apex/callstack/Apex", where the `apex/`
+#   prefix selects api.callstack.ai and the remainder is the upstream model id.
+# Callstack's model page (https://apex.callstack.com/models) documents the same alias as the
+# bare `apex`; the pinned snapshot next to this file is `apex-20261001`.
 base_model = "callstack/apex"
 
 [[reasoning_options]]
