@@ -1,0 +1,9 @@
+# Source: https://aisa.one/models (AIsa pricing API https://aisa.one/api/pricing/models,
+# catalog cached_at 2026-09-15, accessed 2026-09-15). All cost values USD per 1M tokens as published by AIsa.
+# AIsa is a multi-model relay: reasoning controls mirror the underlying lab API (pass-through).
+base_model = "alibaba/qwen3-coder-plus"
+
+[cost]
+input = 0.7
+output = 3.5
+cache_read = 0.7

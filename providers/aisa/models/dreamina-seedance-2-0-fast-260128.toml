@@ -1,0 +1,7 @@
+# Source: https://aisa.one/models (AIsa pricing API https://aisa.one/api/pricing/models,
+# catalog cached_at 2026-09-15, accessed 2026-09-15). All cost values USD per 1M tokens as published by AIsa.
+# AIsa is a multi-model relay: reasoning controls mirror the underlying lab API (pass-through).
+# Dated snapshot alias served by AIsa; inherits bytedance-seed/seedance-2.0-fast metadata.
+# Billed per video token on AIsa (video-generation route); no per-text-token price, cost omitted.
+base_model = "bytedance-seed/seedance-2.0-fast"
+name = "Seedance 2.0 Fast (260128)"
