@@ -1,0 +1,22 @@
+# Source: https://openrouter.ai/api/v1/models
+# Serving metadata: providers/openrouter/models/moonshotai/kimi-k3.toml (2026-09-24).
+# Toggle: reasoning.enabled = true|false
+# https://openrouter.ai/docs/guides/best-practices/reasoning-tokens
+base_model = "moonshotai/kimi-k3"
+description = "Kimi multimodal agent model for visual understanding, coding, and planning"
+temperature = true
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[cost]
+input = 3
+output = 15
+cache_read = 0.3
+
+[limit]
+output = 943_718

@@ -1,0 +1,35 @@
+# Source: https://developers.openai.com/api/docs/models
+# Serving metadata: providers/openai/models/gpt-6-astra.toml (2026-09-24).
+# Pricing: https://developers.openai.com/api/docs/models/gpt-6-astra
+# Reasoning and modes: https://developers.openai.com/api/docs/guides/latest-model?model=gpt-6-astra
+# Native Responses through Aixy preserves reasoning and tool-call controls.
+base_model = "openai/gpt-6-astra"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high", "xhigh", "max"]
+
+[cost]
+input = 10.0
+output = 50.0
+cache_read = 1.0
+cache_write = 12.5
+
+[[cost.tiers]]
+tier = { size = 272_000, type = "context" }
+input = 20.0
+output = 75.0
+cache_read = 2.0
+cache_write = 25.0
+
+[experimental.modes.fast]
+cost = { input = 20.0, output = 100.0, cache_read = 2.0, cache_write = 25.0 }
+provider = { body = { service_tier = "priority" } }
+
+[experimental.modes.pro]
+provider = { body = { reasoning = { mode = "pro" } } }
+
+[provider]
+npm = "@ai-sdk/openai"
+api = "https://api.aixy-gateway.com/v1"
+shape = "responses"
