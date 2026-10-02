@@ -1,5 +1,5 @@
-# Bedrock runtime requires the global inference profile for on-demand access; geo profiles
-# are not available. The bare ID is supported only through bedrock-mantle, not this provider.
+# Bedrock runtime serves on-demand traffic through the global inference profile (global.anthropic.claude-sonnet-5-5);
+# geo profiles us./eu.anthropic.claude-sonnet-5-5 are also available. The bare ID is supported only through bedrock-mantle, not this provider.
 # https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-anthropic-claude-sonnet-5-5.html
 # Pricing and reasoning: https://platform.claude.com/docs/en/models/sonnet-5-5/overview
 # Lowest thinking setting is between_tools, not disabled; no true off toggle.
