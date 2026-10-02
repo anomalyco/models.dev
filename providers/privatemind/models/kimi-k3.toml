@@ -1,0 +1,22 @@
+# Effort: reasoning_effort = low|high|max (default high; always thinking, "off" returns 400)
+# https://docs.privatemind.com/chat-completions.html#reasoning-effort
+# Modalities: text and image. This deployment refuses `video_url`, and `file` is not a supported part type on this API.
+base_model = "moonshotai/kimi-k3"
+name = "Kimi K3 2.8T-104B"
+description = "Frontier agentic coding, native vision, 500K context"
+temperature = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[cost]
+input = 4
+output = 14
+cache_read = 0.4
+
+[limit]
+context = 500_000
+
+[modalities]
+input = ["text", "image"]
