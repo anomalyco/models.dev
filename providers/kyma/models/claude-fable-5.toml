@@ -1,0 +1,8 @@
+# Price source: https://api.kymaapi.com/v1/models (public, unauthenticated), accessed 2026-09-04.
+base_model = "anthropic/claude-fable-5"
+
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
+
+[cost]
+input = 13.5
+output = 67.5

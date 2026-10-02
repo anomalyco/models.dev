@@ -1,0 +1,31 @@
+<!--
+  Kyma API — single-colour mark. Ψ (psi), the brand letterform.
+
+  Redrawn as vector from public/logo.png, which is the real logo and exists only
+  as raster (1024×1024 gold Ψ on a navy tile). There was no vector source in the
+  repo; public/icon.svg holds a different, older mark and is referenced by
+  nothing — do not mistake it for the brand.
+
+  What this keeps from the gold original: the serif letterform — flat caps top
+  and bottom of the stem, arms that sweep outward and taper toward the tips.
+  What it deliberately drops, because a single colour cannot carry them: the
+  metallic gradient, the 3D relief, the concentric wave rings, and the rounded
+  navy tile. Those stay in logo.png for web, social and the app icon. Two assets
+  on purpose — this is the one for surfaces whose background we do not control.
+
+  Required by external catalogs. models.dev's AGENTS.md makes it a hard blocker
+  and an automated reviewer enforces it: "No fixed size or hardcoded colors — use
+  currentColor for fills/strokes so the logo adapts to light/dark themes. Prefer
+  a square viewBox." charmbracelet/catwalk wants the same. Verified legible down
+  to 16px, which is roughly how large it renders in a provider list.
+
+  Also the right asset for READMEs, favicons and badges.
+  If the brand mark ever changes, redraw this from the new original.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+  <path d="M9.2 3.0h5.6v1.05H9.2z"/>
+  <path d="M11.15 3.3h1.7v17.1h-1.7z"/>
+  <path d="M8.5 19.8h7v1.15h-7z"/>
+  <path d="M2.25 4.05c2.6.15 3.75 1.7 3.75 4.6 0 2.85 1.75 4.7 5.15 5.1v1.95C6.35 15.2 3.6 12.4 3.6 8.5c0-2.05-.4-2.95-1.35-3.1z"/>
+  <path d="M21.75 4.05c-2.6.15-3.75 1.7-3.75 4.6 0 2.85-1.75 4.7-5.15 5.1v1.95c4.8-.5 7.55-3.3 7.55-7.2 0-2.05.4-2.95 1.35-3.1z"/>
+</svg>

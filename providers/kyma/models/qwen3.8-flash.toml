@@ -1,0 +1,10 @@
+# Price source: https://api.kymaapi.com/v1/models (public, unauthenticated), accessed 2026-09-04.
+# Toggle: reasoning_effort = "none" disables thinking; Kyma forwards reasoning_effort on this route, verified live 2026-09-04 on qwen-3.6-plus (max_tokens=120, "What is 17*23? Think step by step."): 200 reasoning tokens by default, 0 with "none".
+# Effort: reasoning_effort = low|medium|xhigh selects depth when enabled (lab set; no budget_tokens field on this host).
+base_model = "alibaba/qwen3.8-flash"
+
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "medium", "xhigh"] }]
+
+[cost]
+input = 0.203
+output = 0.635

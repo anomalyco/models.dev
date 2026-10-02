@@ -1,0 +1,13 @@
+# Price source: https://api.kymaapi.com/v1/models (public, unauthenticated), accessed 2026-09-04.
+# Toggle: Kyma forwards `reasoning_effort` on this route; `reasoning_effort = "none"` (or `reasoning = { enabled = false }`) turns thinking off. Verified live 2026-09-04 on qwen-3.6-plus: 200 reasoning tokens by default, 0 with "none".
+# Modalities: this route accepts image input but not video (lab lists video too). Verified live 2026-09-04: an image request returned a correct answer; https://api.kymaapi.com/v1/models publishes input_modalities as text+image only for this id.
+base_model = "alibaba/qwen3.6-plus"
+
+reasoning_options = [{ type = "toggle" }]
+
+[cost]
+input = 0.655
+output = 3.93
+
+[modalities]
+input = ["text", "image"]
