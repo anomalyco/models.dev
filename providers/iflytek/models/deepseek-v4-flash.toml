@@ -1,0 +1,30 @@
+# Sources (accessed 2026-09-14):
+# https://www.xfyun.cn/doc/spark/TokenPlan.html
+# https://www.xfyun.cn/doc/spark/推理服务-http.html
+# DeepSeek-V4-Flash: 1M context, fast economical reasoning model.
+# Toggle: thinking.type = enabled|disabled (OpenAI format) per host docs;
+# effort = low|high|max per host docs (host supports thinking intensity
+# control for DeepSeek V4 via reasoning_effort or output_config.effort).
+# Tool calling NOT supported on this host (only DeepSeek V3.2 and GLM-4.7).
+# Pricing: Token Plan points 100/20/200 per 1M, converted at 7.25 CNY/USD.
+
+base_model = "deepseek/deepseek-v4-flash"
+tool_call = false
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.14
+output = 0.28
+cache_read = 0.03
+
+[limit]
+output = 131_072
