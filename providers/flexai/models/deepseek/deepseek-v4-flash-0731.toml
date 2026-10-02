@@ -1,11 +1,25 @@
+# Toggle: thinking.type = "enabled" | "disabled" (default: disabled)
+# Effort: reasoning_effort = medium | max
+# Measured on FlexAI 2026-10-02 (reasoning tokens, n=4, max_tokens 4000):
+#   default 0 · minimal 0 · low 0 · medium 1783 · high 1978 · max 4000 (capped)
+# minimal and low return zero reasoning tokens, i.e. they are the disabled
+# state the toggle already expresses; medium and high overlap and are not
+# separable; max saturates the budget. Only the two separable on-levels are
+# declared. The gateway validates reasoning_effort against a uniform
+# minimal|low|medium|high|max enum shared across models, so acceptance of a
+# value is not evidence that it is honoured here.
+# https://docs.flex.ai/inference-api/agents/langchain
 base_model = "deepseek/deepseek-v4-flash-0731"
 
 [interleaved]
 field = "reasoning_content"
 
 [[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
 type = "effort"
-values = ["minimal", "low", "medium", "high", "max"]
+values = ["medium", "max"]
 
 [cost]
 input = 0.06
