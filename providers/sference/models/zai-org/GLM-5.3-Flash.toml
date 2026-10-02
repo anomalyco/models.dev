@@ -1,0 +1,28 @@
+# Synced from GET /v1/models. GLM-5.3-Flash always reasons: the API rejects
+# thinking-off requests with a 400 (verified live 2026-09-17:
+# enable_thinking=false → 400), so there is no toggle.
+# Effort: reasoning_effort = low|high|xhigh (chat) / reasoning.effort
+# (responses) — collapsed onto the template's low|high|max (minimal→low,
+# medium→high, xhigh→max); other values drop to the template default, and a
+# numeric budget is refused (400). Verified live 2026-09-17: low and xhigh
+# produce distinct reasoning depths.
+base_model = "zhipuai/glm-5.3-flash"
+name = "GLM 5.3 Flash"
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "xhigh"]
+
+[cost]
+input = 0.2
+output = 0.6
+cache_read = 0.07
+
+[limit]
+context = 1_048_576
+
+[modalities]
+input = ["text", "image"]
