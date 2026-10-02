@@ -1,0 +1,13 @@
+# Measured on this host, 2026-09-18: `reasoning_effort` grades monotonically.
+# Median reasoning_content over three runs of one prompt — low 261 chars,
+# medium 406, high 1170. Reasoning is always produced; the field only changes
+# how much.
+base_model = "openai/gpt-oss-120b"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.03626
+output = 0.1666
