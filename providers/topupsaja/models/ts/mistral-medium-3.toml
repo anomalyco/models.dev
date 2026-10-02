@@ -1,0 +1,14 @@
+base_model = "mistral/mistral-medium-2505"
+
+structured_output = true
+
+[cost]
+input = 2.4
+output = 12
+cache_read = 0.24
+
+[limit]
+output = 104857
+
+[modalities]
+input = ["text", "image", "pdf"]

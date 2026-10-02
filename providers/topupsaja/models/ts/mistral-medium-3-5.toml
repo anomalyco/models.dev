@@ -1,0 +1,18 @@
+# TopUpSaja relays request bodies verbatim to OpenRouter /chat/completions
+
+base_model = "mistral/mistral-medium-2604"
+
+[cost]
+input = 9
+output = 45
+cache_read = 4.5
+
+[limit]
+output = 209715
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "high"]
+
+[modalities]
+input = ["text", "image", "pdf"]

@@ -1,0 +1,12 @@
+# TopUpSaja relays request bodies verbatim to OpenRouter /chat/completions
+
+base_model = "google/gemini-3.5-flash"
+
+[cost]
+input = 9
+output = 54
+cache_read = 0.9
+
+[[reasoning_options]]
+type = "effort"
+values = ["minimal", "low", "medium", "high"]

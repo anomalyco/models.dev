@@ -1,0 +1,14 @@
+base_model = "mistral/voxtral-small-24b-2507"
+
+structured_output = true
+
+[cost]
+input = 0.7
+output = 2.1
+cache_read = 0.07
+
+[limit]
+output = 26214
+
+[modalities]
+input = ["text", "audio", "pdf"]
