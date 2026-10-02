@@ -1,0 +1,13 @@
+base_model = "openai/gpt-oss-20b"
+
+[cost]
+input = 0.02
+output = 0.1
+cache_read = 0.003
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high"]
