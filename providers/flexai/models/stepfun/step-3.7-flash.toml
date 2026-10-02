@@ -1,11 +1,18 @@
+# Thinking-only: the gateway rejects {"thinking": {"type": "disabled"}} with
+# "Model 'Step-3.7-Flash' is thinking-only and cannot [be disabled]", so no
+# caller-facing off switch exists.
+# reasoning_effort is ACCEPTED (the gateway validates against a uniform
+# minimal|low|medium|high|max enum shared by every non-gpt-oss model here) but
+# is NOT honoured on this model. Measured on FlexAI 2026-10-02, reasoning
+# tokens, n=3 per level: default 1839, minimal 1749, low 1282, medium 1901,
+# high 1879, max 1442 -- every level overlaps the default, so no effort levels
+# are declared.
+# https://docs.flex.ai/inference-api/agents/langchain
 base_model = "stepfun/step-3.7-flash"
+reasoning_options = []
 
 [interleaved]
 field = "reasoning_content"
-
-[[reasoning_options]]
-type = "effort"
-values = ["minimal", "low", "medium", "high", "max"]
 
 [cost]
 input = 0.2
