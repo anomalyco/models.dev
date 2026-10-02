@@ -1,0 +1,24 @@
+# Pricing: GET https://api.aiand.com/v1/api.json (synced hourly by the aiand module)
+# Docs: https://docs.aiand.com/models/catalog/
+# Effort: reasoning_effort = "low" | "high" | "max"
+# Controls: reasoning_effort only (`reasoning_effort` on /v1/chat/completions, `reasoning.effort` on /v1/responses; "none" = off) — no separate toggle or token-budget field on this host.
+# Reasoning side channel: message.reasoning_content
+base_model = "zhipuai/glm-5.3-flash"
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[cost]
+input = 0.15
+output = 0.5
+cache_read = 0.03
+
+[limit]
+context = 1_048_550
+
+[modalities]
+input = ["text", "image", "video"]
