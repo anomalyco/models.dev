@@ -1,0 +1,15 @@
+# CNY→USD rate: 6.718405, 2026-09-20, source: https://open.er-api.com/v6/latest/USD
+# CNY list price source: https://ppio.com/pricing
+# thinking.type is accepted but has no effect: thinking stays on.
+base_model = "minimax/MiniMax-M2.5"
+structured_output = true
+reasoning_options = []
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.31257
+output = 1.2503
+cache_read = 0.03126
+cache_write = 0.39072

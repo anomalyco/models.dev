@@ -1,0 +1,24 @@
+# CNY→USD rate: 6.718405, 2026-09-20, source: https://open.er-api.com/v6/latest/USD
+# CNY list price source: https://ppio.com/pricing
+# cache_read is published only for the 32768+ band (CNY 0.4); PPIO lists no
+# cache_read rate for the 1-32768 band.
+# Toggle: thinking.type = enabled|disabled
+base_model = "zhipuai/glm-4.6v"
+structured_output = true
+reasoning_options = [{ type = "toggle" }]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.14884
+output = 0.44653
+
+[[cost.tiers]]
+tier = { type = "context", size = 32_768 }
+input = 0.29769
+output = 0.89307
+cache_read = 0.05954
+
+[limit]
+context = 131_072

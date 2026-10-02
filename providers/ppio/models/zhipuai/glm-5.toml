@@ -1,0 +1,23 @@
+# CNY→USD rate: 6.718405, 2026-09-20, source: https://open.er-api.com/v6/latest/USD
+# CNY list price source: https://ppio.com/pricing
+# Toggle: thinking.type = enabled|disabled
+base_model = "zhipuai/glm-5"
+structured_output = true
+reasoning_options = [{ type = "toggle" }]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.59538
+output = 2.67921
+cache_read = 0.14884
+
+[[cost.tiers]]
+tier = { type = "context", size = 32_000 }
+input = 0.89307
+output = 3.27459
+cache_read = 0.22327
+
+[limit]
+context = 202_800
