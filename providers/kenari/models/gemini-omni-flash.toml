@@ -5,13 +5,11 @@
 # Billed per unit, not per token, so the per-token `cost` above is 0:
 #   USD 0.02 per second (360p) - output_video on the videos endpoint
 #   USD 0.0429 per second (720p) - output_video on the videos endpoint
-# kenari publishes no reasoning options for this id; the baseline was copied
-# from the same lab model on vercel (providers/vercel/models/google/gemini-omni-flash-preview.toml), per AGENTS.md.
+# kenari publishes no reasoning options for this id; the baseline is the model's
+# own lab entry (providers/google/models/gemini-omni-flash-preview.toml), per AGENTS.md.
 base_model = "google/gemini-omni-flash-preview"
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "low", "medium", "high"]
+reasoning_options = []
 
 [cost]
 input = 0

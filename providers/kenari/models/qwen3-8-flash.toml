@@ -2,14 +2,17 @@
 #   https://kenari.id/v1/models          (capabilities, context, reasoning options)
 #   https://kenari.id/api/public/pricing  (prices; usd_idr_rate = 17500)
 # IDR prices were converted to USD per 1M tokens by dividing by that rate.
-# kenari publishes no reasoning options for this id; the baseline was copied
-# from the same lab model on openrouter (providers/openrouter/models/qwen/qwen3.8-flash.toml), per AGENTS.md.
-# Toggle: reasoning.enabled = true|false
+# kenari publishes no reasoning options for this id; the baseline is the model's
+# own lab entry (providers/alibaba/models/qwen3.8-flash.toml), per AGENTS.md.
+# Toggle: reasoning.enabled = true|false   (kenari, https://kenari.id/docs/reasoning)
+# Effort: reasoning_effort = low|medium|xhigh
+# Budget: reasoning.max_tokens (integer reasoning-token budget)
 base_model = "alibaba/qwen3.8-flash"
 
 reasoning_options = [
   { type = "toggle" },
-  { type = "budget_tokens" },
+  { type = "effort", values = ["low", "medium", "xhigh"] },
+  { type = "budget_tokens", max = 262144 },
 ]
 
 [cost]
