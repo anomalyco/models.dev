@@ -1,0 +1,19 @@
+# Effort: reasoning_effort = none|low|high (tested 2026-09-29 on the upstream
+# route RouterBase forwards these fields to unchanged: no field or `none`
+# returns no reasoning, `low` / `high` return reasoning; `thinking` is ignored)
+base_model = "google/gemini-2.5-flash-lite"
+reasoning_options = [{ type = "effort", values = ["none", "low", "high"] }]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.085
+output = 0.34
+cache_read = 0.01
+
+[limit]
+output = 65_535
+
+[modalities]
+input = ["text", "image"]

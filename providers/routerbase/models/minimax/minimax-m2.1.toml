@@ -1,0 +1,13 @@
+# Always-on reasoning (tested 2026-09-29 on the upstream route RouterBase
+# forwards these fields to unchanged: every request returns reasoning_content,
+# with or without `reasoning_effort` / `thinking`)
+base_model = "minimax/MiniMax-M2.1"
+reasoning_options = []
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.255
+output = 1.02
+cache_read = 0.03

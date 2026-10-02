@@ -1,0 +1,27 @@
+# Facts consolidated from existing host entries for this model:
+# providers/alibaba/models/qwen2-5-72b-instruct.toml (first-party: knowledge,
+# limits) and providers/openrouter/models/qwen/qwen-2.5-72b-instruct.toml (release date).
+name = "Qwen2.5 72B Instruct"
+description = "Qwen instruction model for multilingual chat, reasoning, and tool use"
+family = "qwen"
+release_date = "2024-09-19"
+last_updated = "2024-09-19"
+attachment = false
+reasoning = false
+temperature = true
+tool_call = true
+structured_output = true
+knowledge = "2024-04"
+open_weights = true
+
+[limit]
+context = 131_072
+output = 8_192
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/Qwen/Qwen2.5-72B-Instruct"

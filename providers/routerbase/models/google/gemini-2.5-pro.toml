@@ -1,0 +1,19 @@
+# Effort: reasoning_effort = low|high (tested 2026-09-29 on the upstream route
+# RouterBase forwards these fields to unchanged: always reasons, `none` does not
+# turn it off, `high` spends roughly twice the reasoning of `low`)
+base_model = "google/gemini-2.5-pro"
+reasoning_options = [{ type = "effort", values = ["low", "high"] }]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 1.0625
+output = 8.5
+cache_read = 0.125
+
+[limit]
+output = 65_535
+
+[modalities]
+input = ["text", "image"]

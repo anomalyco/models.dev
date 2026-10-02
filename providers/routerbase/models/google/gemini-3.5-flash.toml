@@ -1,0 +1,14 @@
+# Effort: reasoning_effort = minimal|low|medium|high
+base_model = "google/gemini-3.5-flash"
+reasoning_options = [{ type = "effort", values = ["minimal", "low", "medium", "high"] }]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 1.05
+output = 6.3
+cache_read = 0.15
+
+[modalities]
+input = ["text", "image"]

@@ -1,0 +1,14 @@
+# Effort: reasoning_effort = low|medium|high
+base_model = "openai/o3"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 1.9
+output = 7.6
+cache_read = 0.5
+
+[modalities]
+input = ["text", "image"]

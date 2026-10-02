@@ -1,0 +1,21 @@
+# Budget: thinking = { type = "enabled", budget_tokens = N } (tested 2026-09-29
+# on the upstream route RouterBase forwards these fields to unchanged: off by
+# default, `thinking.budget_tokens` turns reasoning on and returns it in
+# reasoning_content; `reasoning_effort` is ignored), same control as the lab
+# entry
+base_model = "anthropic/claude-sonnet-4-5"
+
+[[reasoning_options]]
+type = "budget_tokens"
+min = 1_024
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 2.85
+output = 14.25
+cache_read = 0.3
+
+[modalities]
+input = ["text", "image"]
