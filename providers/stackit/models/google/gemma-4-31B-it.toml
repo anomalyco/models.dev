@@ -1,0 +1,20 @@
+# Reasoning: STACKIT OpenAI-compatible API does not expose a caller toggle, effort, or budget
+# for Gemma-4. Verified via provider.toml (2026-06-25) and STACKIT docs:
+# https://docs.stackit.cloud/de/products/data-and-ai/ai-model-serving/basics/available-shared-models/
+# No per-model reasoning control documented in STACKIT catalog tables or API schema.
+# Baseline (providers/google, providers/openrouter) uses toggle but STACKIT does not forward it.
+# Sources (accessed 2026-09-09):
+# https://docs.stackit.cloud/de/products/data-and-ai/ai-model-serving/basics/available-shared-models/#gemma-4-31b
+# Limits: Context 256K, output 4096
+# Modalities: text + images in, text out
+base_model = "google/gemma-4-31b-it"
+structured_output = false
+reasoning_options = []
+
+[cost]
+input = 0.53
+output = 0.76
+
+[limit]
+context = 256_000
+output = 4_096
