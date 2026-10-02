@@ -1,0 +1,13 @@
+# wire (probed 2026-09-06 on api.commandcode.ai): OpenAI-compatible `reasoning_effort`
+# accepts low|medium|high|xhigh|max; "none" is rejected with HTTP 400.
+# No on/off toggle exposed - reasoning stays available at every level.
+
+base_model = "minimax/MiniMax-M3"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high", "xhigh", "max"]
