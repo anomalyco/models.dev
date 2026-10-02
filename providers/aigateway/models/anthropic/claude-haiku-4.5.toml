@@ -1,0 +1,11 @@
+# Reasoning control for this model on AIgateway is a plain on/off toggle on
+# the OpenAI Chat Completions surface (enable_thinking boolean; the gateway
+# normalizes it). No graded effort levels and no budget_tokens are forwarded.
+base_model = "anthropic/claude-haiku-4-5"
+
+[cost]
+input = 1
+output = 5
+
+[[reasoning_options]]
+type = "toggle"
