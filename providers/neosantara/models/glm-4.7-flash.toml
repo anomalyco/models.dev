@@ -1,0 +1,20 @@
+# Source (accessed 2026-09-06):
+# - https://api.neosantara.xyz/v1/models?currency=USD (pricing USD/MTok, free tier 0/0/0/0)
+# - https://docs.neosantara.xyz/en/capability/reasoning (reasoning_effort none disables thinking on toggleable IDs, e.g. glm-4.5-flash; reasoning_content side channel)
+# Toggle: reasoning_effort = "none" is off; default (field omitted) is on. No graded effort on this ID.
+# Cost: USD/MTok free tier, matches first-party providers/zai/models/glm-4.7-flash.toml (0/0/0/0).
+# Modalities: inherits lab text-only (no override; host adds no vision).
+# Interleaved: reasoning_content per host docs (host delta vs native).
+base_model = "zhipuai/glm-4.7-flash"
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "toggle"
+
+[cost]
+input = 0
+output = 0
+cache_read = 0
+cache_write = 0
