@@ -14,6 +14,15 @@ open_weights = true
 context = 131_072
 output = 98_304
 
+# Zai card: "GLM-4.5-Air adopts a more compact design with 106 billion
+# total parameters and 12 billion active"; total below is the exact
+# safetensors sum (FP8 weights).
+[parameters]
+total = 110_468_824_832
+active = 12_000_000_000
+architecture = "moe"
+source = "https://huggingface.co/zai-org/GLM-4.5-Air"
+
 [modalities]
 input = ["text"]
 output = ["text"]

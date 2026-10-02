@@ -14,6 +14,11 @@ open_weights = true
 context = 128_000
 output = 32_768
 
+[parameters]
+total = 107_710_933_120
+architecture = "moe"
+source = "https://huggingface.co/zai-org/GLM-4.6V"
+
 [modalities]
 input = ["text", "image", "video"]
 output = ["text"]

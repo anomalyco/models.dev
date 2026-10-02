@@ -14,6 +14,12 @@ open_weights = true
 context = 131_072
 output = 32_768
 
+[parameters]
+total = 20_914_757_184
+active = 3_600_000_000
+architecture = "moe"
+source = "https://huggingface.co/openai/gpt-oss-20b"
+
 [modalities]
 input = ["text"]
 output = ["text"]

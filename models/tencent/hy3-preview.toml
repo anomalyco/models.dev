@@ -13,6 +13,11 @@ open_weights = true
 context = 256_000
 output = 64_000
 
+[parameters]
+total = 298_786_155_776
+architecture = "moe"
+source = "https://huggingface.co/tencent/Hy3-preview"
+
 [modalities]
 input = ["text"]
 output = ["text"]

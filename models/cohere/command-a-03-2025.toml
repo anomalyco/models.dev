@@ -14,6 +14,10 @@ open_weights = true
 context = 256_000
 output = 8_000
 
+[parameters]
+total = 111_057_580_032
+source = "https://huggingface.co/CohereLabs/c4ai-command-a-03-2025"
+
 [modalities]
 input = ["text"]
 output = ["text"]

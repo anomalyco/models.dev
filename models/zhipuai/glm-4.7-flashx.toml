@@ -14,6 +14,11 @@ open_weights = true
 context = 200_000
 output = 131_072
 
+[parameters]
+total = 31_221_488_576
+architecture = "moe"
+source = "https://huggingface.co/zai-org/GLM-4.7-Flash"
+
 [modalities]
 input = ["text"]
 output = ["text"]

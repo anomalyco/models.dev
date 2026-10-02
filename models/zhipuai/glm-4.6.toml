@@ -14,6 +14,15 @@ open_weights = true
 context = 204_800
 output = 131_072
 
+# Same architecture family as GLM-4.5 (355B total / 32B active per the
+# Zai GLM-4.5 announcement; 4.6 keeps that architecture per its card).
+# total below is the exact safetensors sum of the 4.6 FP8 checkpoint.
+[parameters]
+total = 356_785_898_816
+active = 32_000_000_000
+architecture = "moe"
+source = "https://huggingface.co/zai-org/GLM-4.6"
+
 [modalities]
 input = ["text"]
 output = ["text"]
