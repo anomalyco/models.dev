@@ -1,0 +1,10 @@
+base_model = "deepseek/deepseek-v3.1"
+reasoning_options = []
+
+[cost]
+input = 0.3
+output = 0.95
+cache_read = 0.13
+
+[limit]
+output = 65_536
