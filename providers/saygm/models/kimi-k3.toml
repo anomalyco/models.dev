@@ -1,0 +1,18 @@
+# Toggle: thinking.type = enabled|disabled
+# Effort: output_config.effort = low|high|max
+base_model = "moonshotai/kimi-k3"
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[cost]
+input = 2.7
+output = 13.5
+cache_read = 0.27
