@@ -1,0 +1,26 @@
+# Weights: https://huggingface.co/RekaAI/reka-edge-2603
+# Direct API catalog and USD pricing (2026-09-22):
+# https://inference.api.reka.ai/v1/site/models?capability=chat
+name = "Reka Edge 2603"
+description = "Multimodal model for analyzing text, images, documents, and rich media"
+family = "reka"
+release_date = "2026-03-10"
+last_updated = "2026-03-10"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = true
+
+[cost]
+input = 0.1
+output = 0.1
+
+[limit]
+context = 16384
+output = 16384
+
+[modalities]
+input = ["text", "image", "video"]
+output = ["text"]
