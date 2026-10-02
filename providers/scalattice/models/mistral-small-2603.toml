@@ -1,0 +1,20 @@
+# Effort: none|high (OpenAI-compatible reasoning_effort; copied from Mistral Small 4).
+base_model = "mistral/mistral-small-2603"
+attachment = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "high"]
+
+[cost]
+input = 0.15899
+output = 0.63596
+
+[limit]
+context = 262_144
+output = 256_000
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
