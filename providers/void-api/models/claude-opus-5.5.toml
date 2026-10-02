@@ -1,6 +1,6 @@
-# Pricing: https://void-api.tech/api/models/catalog
-# Model metadata and reasoning controls: models.dev providers/anthropic/models/claude-opus-5-5.toml
-# Effort: reasoning_effort on the OpenAI-compatible chat endpoint.
+# Void sync reasoning v1: anthropic/claude-opus-5-5 f012357cab17fcb01cf5ae79b5c5d9a860723351549af7847be7ef0edc663804
+# Reasoning controls: first-party base anthropic/claude-opus-5-5, translated via LiteLLM.
+# Effort: reasoning_effort (chat), reasoning.effort (Responses).
 base_model = "anthropic/claude-opus-5-5"
 
 [[reasoning_options]]

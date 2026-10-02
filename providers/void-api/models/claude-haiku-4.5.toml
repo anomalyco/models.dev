@@ -1,11 +1,11 @@
-# Pricing: https://void-api.tech/api/models/catalog
-# Model metadata and reasoning controls: models.dev providers/anthropic/models/claude-haiku-4-5.toml
-# Budget: thinking.budget_tokens via the LiteLLM Anthropic adapter.
+# Void sync reasoning v1: anthropic/claude-haiku-4-5 7544da5da8e688bc47bb80b9c95e2b72d4ccf158290d4d49be75aada8e998ed7
+# Reasoning controls: first-party base anthropic/claude-haiku-4-5, translated via LiteLLM.
+# Budget: thinking.type = enabled, thinking.budget_tokens (chat only); max_tokens must exceed the budget.
 base_model = "anthropic/claude-haiku-4-5"
 
 [[reasoning_options]]
 type = "budget_tokens"
-min = 1024
+min = 1_024
 
 [cost]
 input = 0.19
