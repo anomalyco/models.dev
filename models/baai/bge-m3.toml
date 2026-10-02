@@ -1,0 +1,26 @@
+# Source: https://huggingface.co/BAAI/bge-m3 (MIT)
+# XLM-RoBERTa encoder; config.json max_position_embeddings = 8_194, hidden_size
+# = 1_024 (the dense embedding dimension, recorded here as the output limit in
+# the convention used by the other embedding entries).
+name = "BGE-M3"
+description = "Multilingual embedding model for semantic search, retrieval, and ranking across 100+ languages"
+family = "bge"
+release_date = "2024-01-27"
+last_updated = "2024-07-03"
+attachment = false
+reasoning = false
+temperature = false
+tool_call = false
+open_weights = true
+
+[limit]
+context = 8_194
+output = 1_024
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/BAAI/bge-m3"
