@@ -1,3 +1,8 @@
+# Prompt caching (chat): automatic prefix cache with session-affinity routing; no parameter required for basic reuse
+# Use headers: `x-session-id` for session affinity (plus `x-parent-session-id` fan-out, `x-session-affinity`/`x-runinfra-session` aliases)
+# Use body: `prompt_cache_key` — string routing identity when no session header (consumed at gateway); `runinfra.sessionId` — session identity taking precedence over headers
+# To get a hit: keep a byte-identical prefix with the same model and pin multi-turn sessions with `x-session-id`; verify via `usage.prompt_tokens_details.cached_tokens`
+# Docs: https://runinfra.ai/docs/cookbook/prompt-caching.md
 # Docs: https://runinfra.ai/docs
 # Per-model pages: https://runinfra.ai/inference-api/<slug>
 # API: OpenAI-compatible chat completions at https://api.runinfra.ai/v1 (/chat/completions, /models)
