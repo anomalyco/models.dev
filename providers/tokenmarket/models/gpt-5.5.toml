@@ -1,0 +1,16 @@
+# GPT Hub channel: the adapter only strips the gateway-canonical `reasoning`
+# object and forwards native `reasoning_effort`. Upstream GPT-5.5 tops out at
+# xhigh (max arrived with 5.6). Modalities follow Token Market's own catalog,
+# which lists text and image input only.
+base_model = "openai/gpt-5.5"
+reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh"] }]
+
+[cost]
+input = 0.75
+output = 4.5
+cache_read = 0.075
+cache_write = 0.75
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
