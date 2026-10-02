@@ -1,0 +1,15 @@
+# Pricing and serving limits (2026-09-22):
+# https://docs.parasail.io/parasail-docs/products/overview/models
+# https://platform.parasail.io/api/v1/prices/serverlessEndpoints
+# Tool support: https://docs.parasail.io/parasail-docs/guides/tool-function-calling
+# Structured output: https://docs.parasail.io/parasail-docs/guides/structured-output
+# Inherited image support is consistent with the catalog's model template;
+# the active deployment's image limits / language-model-only flag are not public.
+base_model = "google/gemma-3-27b-it"
+tool_call = false
+structured_output = true
+
+[cost]
+input = 0.08
+output = 0.45
+cache_read = 0.04

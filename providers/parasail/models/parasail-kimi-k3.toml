@@ -1,0 +1,25 @@
+# Pricing and serving limits (2026-09-22):
+# https://docs.parasail.io/parasail-docs/products/overview/models
+# Public table row: parasail-kimi-k3; Context window=1,048,576; Max output=1,048,576.
+# This is the host's explicit Max output cell, not a cap inferred from context.
+# https://platform.parasail.io/api/v1/prices/serverlessEndpoints
+# Toggle: chat_template_kwargs.thinking = true|false
+# Effort: chat_template_kwargs.thinking_effort = low|high|max
+# Authenticated POST https://api.parasail.io/v1/chat/completions verified on 2026-09-23.
+# Probe user message: "Compute 17 * 23. Reply with only the integer."; temperature=0, seed=42.
+# Effort probes (max_tokens=1, return_token_ids=true): all three prompt_token_ids differ.
+# Prompt lengths low/high/max=102/102/101; low and high differ by one token despite equal length.
+# Toggle probes observed zero reasoning tokens when off and nonzero at all three efforts when on.
+# An invalid effort also returned HTTP 200, so acceptance alone was not used as evidence.
+# https://huggingface.co/moonshotai/Kimi-K3/blob/main/tokenization_kimi.py
+# https://huggingface.co/moonshotai/Kimi-K3/blob/main/encoding_k3.py
+base_model = "moonshotai/kimi-k3"
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "high", "max"] }]
+
+[cost]
+input = 3
+output = 15
+cache_read = 0.3
+
+[limit]
+output = 1_048_576
