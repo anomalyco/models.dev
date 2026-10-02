@@ -1,0 +1,17 @@
+name = "FLUX.3 Video"
+description = "FLUX.3 Video is a video generation model from Black Forest Labs. It supports text-to-video, image-guided generation with opening and closing keyframes, and video continuation workflows, making it suited for controlled creative production, scene animation, and extending existing clips. It can generate synchronized audio alongside the video."
+release_date = "2026-08-04"
+last_updated = "2026-08-04"
+attachment = true
+reasoning = false
+temperature = false
+tool_call = false
+open_weights = false
+
+[limit]
+context = 12_800
+output = 0
+
+[modalities]
+input = ["text", "image", "video"]
+output = ["video"]

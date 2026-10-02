@@ -1,0 +1,17 @@
+name = "V4"
+description = "SkyReels V4 is a unified multimodal video foundation model that generates, edits, and inpaints video and audio simultaneously using a dual-stream architecture with shared text encoding and efficient high-resolution processing."
+release_date = "2026-04-20"
+last_updated = "2026-04-20"
+attachment = true
+reasoning = false
+temperature = false
+tool_call = false
+open_weights = false
+
+[limit]
+context = 1_280
+output = 1_280
+
+[modalities]
+input = ["text", "image", "video", "audio"]
+output = ["video"]

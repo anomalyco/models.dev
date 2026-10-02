@@ -1,0 +1,17 @@
+name = "Kling-3.0-Omni"
+description = "Kling 3.0 Omni is the All-in-One multimodal model of the series, representing the most powerful integration of capabilities. It breaks down the barriers between text, image, audio, and video, treating all inputs as prompts to enable native audio-visual output."
+release_date = "2026-07-31"
+last_updated = "2026-07-31"
+attachment = true
+reasoning = false
+temperature = false
+tool_call = false
+open_weights = false
+
+[limit]
+context = 20_000
+output = 0
+
+[modalities]
+input = ["text", "image", "video"]
+output = ["video"]

@@ -7,7 +7,8 @@ temperature = true
 tool_call = true
 release_date = "2026-06-30"
 last_updated = "2026-06-30"
-open_weights = false
+open_weights = true
+license = "MIT"
 
 [limit]
 context = 1_000_000
@@ -16,6 +17,10 @@ output = 131_072
 [modalities]
 input = ["text"]
 output = ["text"]
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/meituan-longcat/LongCat-2.0"
 
 [[benchmarks]]
 name = "SWE-Bench Pro"

@@ -1,0 +1,17 @@
+name = "Agnes 2.5 Pro"
+description = "Agnes 2.5 Pro is the commercial stable release of Agnes 2.5 Pro Alpha, built for advanced coding, scientific reasoning, long-context analysis, agentic workflows, and multimodal understanding. It supports text and image inputs, text outputs, tool calling, streaming, and OpenAI-compatible Chat Completions and Responses APIs."
+release_date = "2026-08-01"
+last_updated = "2026-08-01"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+open_weights = false
+
+[limit]
+context = 1_048_576
+output = 65_536
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

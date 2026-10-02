@@ -1,0 +1,22 @@
+name = "MiMo-V2.5-ASR"
+description = "MiMo-V2.5-ASR is an open-source speech recognition model developed by Xiaomi MiMo. It supports bilingual Chinese–English recognition, a wide range of Chinese dialects, code-switching, lyrics transcription, knowledge-intensive content, noisy environments, multi-speaker scenarios, and other challenging acoustic conditions.\n\nThrough large-scale mid-training, high-quality supervised fine-tuning (SFT), and novel reinforcement learning (RL) algorithms, MiMo-V2.5-ASR achieves state-of-the-art performance across multiple authoritative benchmarks."
+release_date = "2026-07-07"
+last_updated = "2026-07-07"
+attachment = true
+reasoning = false
+temperature = false
+tool_call = false
+open_weights = true
+license = "MIT"
+
+[limit]
+context = 1_024
+output = 1_024
+
+[modalities]
+input = ["audio"]
+output = ["text"]
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/XiaomiMiMo/MiMo-V2.5-ASR"
