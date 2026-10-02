@@ -1,0 +1,18 @@
+# Source: GET https://ai.zenifra.com/v1/models (accessed 2026-09-12).
+# Conversion: Zenifra prices are BRL; models.dev costs use BRL / 5.20 = USD (project rate, applied 2026-09-12).
+base_model = "moonshotai/kimi-k2.7-code"
+attachment = false
+temperature = true
+reasoning_options = []
+
+[limit]
+context = 229_376
+output = 16_384
+
+[provider]
+shape = "completions"
+
+[cost]
+input = 0.903846
+output = 3.730769
+cache_read = 0.067308
