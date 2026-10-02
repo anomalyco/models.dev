@@ -1,0 +1,11 @@
+# Served by Holver (https://api.holver.id/v1, OpenAI-compatible,
+# Bearer $HOLVER_API_KEY) as "gpt-6.0-astra". Catalog: https://holver.id/models.
+# Holver bills via credit packages, not per-model USD rates, so cost is
+# intentionally omitted.
+# Reasoning on this host: Holver forwards only the OpenAI-style top-level
+# `reasoning_effort` field upstream (`reasoning.mode`/`thinking` are not on
+# Holver's forward whitelist). Holver does not interpret `reasoning_effort` —
+# it passes it through to the routed GPT endpoint, so the lab's effort levels
+# apply.
+base_model = "openai/gpt-6-astra"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
