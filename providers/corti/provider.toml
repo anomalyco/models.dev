@@ -1,0 +1,13 @@
+name = "Corti"
+env = ["CORTI_BEARER"]
+npm = "@ai-sdk/openai-compatible"
+# Chat Completions: POST /v1/chat/completions; reasoning is always-on for
+# corti-s1 and corti-s1-mini (returned in `reasoning` field); -instant
+# variants produce no reasoning. Effort via `reasoning_effort = high|max`
+# (corti-s1 only; mini has no effort control).
+# Responses: POST /v1/responses; reasoning as `type: "reasoning"` output items.
+# Anthropic Messages: POST /anthropic/v1/messages; reasoning not exposed.
+# https://docs.corti.ai/models/models (accessed 2026-09-03)
+# https://ai.eu.corti.app/v1/models (accessed 2026-09-03)
+api = "https://ai.eu.corti.app/v1"
+doc = "https://docs.corti.ai"
