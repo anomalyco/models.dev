@@ -1,0 +1,18 @@
+# onomeo is in public beta: not every feature is guaranteed to work, and user
+# feedback is welcome at https://onomeo.com/feedback.
+# Every model listed here is one of onomeo's free models: it spends no credits,
+# so its [cost] is 0. Free models are limited by calls instead: 12 requests/min
+# per key, 60 per 5 hours per account (a long request counts as several), 120
+# per 5 hours per IP, and a site-wide pool of 1,500 per 5 hours shared by all
+# accounts. The bigger premium models (none are listed here) spend site credits
+# at a per-model rate listed at https://onomeo.com/models, capped at 50,000
+# credits a day per account that has not paid. Credits come from a free daily
+# check-in: 20,000 on day 1, rising to 50,000 a day from day 7 of a streak (a
+# missed day resets it). Optional: $5 a month buys 3,000,000 credits a month.
+# https://onomeo.com/api/info (accessed 2026-09-29)
+# https://onomeo.com/integrations/opencode (accessed 2026-09-21)
+name = "onomeo"
+env = ["ONOMEO_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+api = "https://onomeo.com/v1"
+doc = "https://onomeo.com/docs"
