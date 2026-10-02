@@ -1,0 +1,16 @@
+# Pricing and context length: https://onlist.io/models/deepseek/deepseek-v4-flash-0731 (accessed 2026-09-07)
+# Reasoning: effort via `reasoning_effort` / `reasoning.effort`, budget via `reasoning.max_tokens`; no on/off toggle on Onlist
+base_model = "deepseek/deepseek-v4-flash-0731"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[cost]
+input = 0.065
+output = 0.18
+cache_read = 0.016
+
+[limit]
+context = 1_048_576
+output = 131_072

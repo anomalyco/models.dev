@@ -1,0 +1,11 @@
+# Pricing and context length: https://onlist.io/models/z-ai/glm-4.5-air (accessed 2026-09-07)
+# Toggle: top-level `thinking` = { type: "enabled"|"disabled" } (Z.AI field, not OpenRouter's `reasoning.enabled`)
+base_model = "zhipuai/glm-4.5-air"
+
+[[reasoning_options]]
+type = "toggle"
+
+[cost]
+input = 0.13
+output = 0.85
+cache_read = 0.025

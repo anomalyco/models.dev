@@ -1,0 +1,16 @@
+# Pricing and context length: https://onlist.io/models/thinkingmachines/inkling-small (accessed 2026-09-07)
+# Reasoning: effort via `reasoning_effort` / `reasoning.effort`, budget via `reasoning.max_tokens`; no on/off toggle on Onlist
+base_model = "thinkingmachines/inkling-small"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "minimal", "low", "medium", "high", "max"]
+
+[cost]
+input = 0.45
+output = 1.2
+cache_read = 0.1
+
+[limit]
+output = 262_144
+context = 524_288

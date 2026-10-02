@@ -1,0 +1,12 @@
+# Pricing and context length: https://onlist.io/models/google/gemma-4-26b-a4b-it (accessed 2026-09-07)
+# Reasoning: effort via `reasoning_effort` / `reasoning.effort`, budget via `reasoning.max_tokens`; no on/off toggle on Onlist
+base_model = "google/gemma-4-26b-a4b-it"
+reasoning_options = []
+
+[cost]
+input = 0.1
+output = 0.3
+cache_read = 0.041667
+
+[limit]
+output = 16_384

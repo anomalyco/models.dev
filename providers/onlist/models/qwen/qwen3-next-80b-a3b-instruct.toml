@@ -1,0 +1,11 @@
+# Pricing and context length: https://onlist.io/models/qwen/qwen3-next-80b-a3b-instruct (accessed 2026-09-07)
+base_model = "alibaba/qwen3-next-80b-a3b-instruct"
+
+[cost]
+input = 0.1
+output = 1.1
+cache_read = 0.07
+
+[limit]
+context = 262_144
+output = 235_929

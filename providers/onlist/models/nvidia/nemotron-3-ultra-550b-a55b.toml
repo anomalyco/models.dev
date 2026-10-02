@@ -1,0 +1,19 @@
+# Pricing and context length: https://onlist.io/models/nvidia/nemotron-3-ultra-550b-a55b (accessed 2026-09-07)
+# Reasoning: effort via `reasoning_effort` / `reasoning.effort`, budget via `reasoning.max_tokens`; no on/off toggle on Onlist
+base_model = "nvidia/nemotron-3-ultra-550b-a55b"
+
+[[reasoning_options]]
+type = "effort"
+values = ["medium", "high"]
+
+[[reasoning_options]]
+type = "budget_tokens"
+
+[cost]
+input = 0.6
+output = 3.6
+cache_read = 0.18
+
+[limit]
+context = 256_000
+output = 32_768
