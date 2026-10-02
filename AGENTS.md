@@ -196,13 +196,15 @@ Any provider model with `reasoning = true` **must** set `reasoning_options` for 
 Do **not** invent a universal `low`/`medium`/`high` for every reasoner.
 
 1. Open `providers/<lab>/models/…` for the underlying model (and 1–2 solid peers on the same kind of host).
-2. Author **that** effort list (and toggle/budget if those entries have them and this host exposes the same kind of control).
+2. Use that effort list as the baseline (and toggle/budget when this host exposes them). Exact-host evidence can establish a different set; cite it rather than forcing a peer's controls onto this host.
 3. Common cases:
    - GPT-style on relays → often `low` / `medium` / `high` (add `none` / `xhigh` only if native/peers have them)
-   - DeepSeek V4 → `toggle` + `high` / `max` (not L/M/H; lab maps low/medium→high)
+   - Original DeepSeek V4 controls → `toggle` + `high` / `max` (not L/M/H); verify the served revision and API before copying this example to a newer alias
    - Always-on / no control → `[]`
 4. On relays: **do not** use `[]` just because you could not re-test this host. Empty means **no caller control**, not uncertainty.
 5. Never invent `budget_tokens` unless this host (or the lab API it clearly proxies) has a real **reasoning** budget field. Not `max_tokens`.
+
+Compare exact model revisions and wire semantics, not just family names. Quote host documentation for exceptions such as a host-only reasoning-token budget. A discovered model-file template or generic kwargs forwarding is not proof that the active deployment's custom renderer honors a field; retain only the supported subset when a specific forwarding gap remains unresolved.
 
 ### 3. Toggle
 
