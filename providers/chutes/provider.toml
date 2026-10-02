@@ -1,3 +1,8 @@
+# Cache key (chat): automatic prefix cache with per-model input_cache_read billing
+# Use headers: repeat the stable prefix with identical model and sampling params
+# Use body: repeat the stable prefix with identical model and sampling params
+# Cache policy: stable prefix + same model; keep system prompt and leading messages byte-identical and append-only
+# Docs: https://llm.chutes.ai/v1/models
 name = "Chutes"
 env = ["CHUTES_API_KEY"]
 npm = "@ai-sdk/openai-compatible"
