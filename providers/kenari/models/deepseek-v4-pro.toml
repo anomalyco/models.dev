@@ -1,10 +1,17 @@
+# Kenari relay of deepseek/deepseek-v4-pro - authored 2026-10-02 from the provider's public API:
+#   https://kenari.id/v1/models          (capabilities, context, reasoning options)
+#   https://kenari.id/api/public/pricing  (prices; usd_idr_rate = 17500)
+# IDR prices were converted to USD per 1M tokens by dividing by that rate.
+# Toggle: thinking.type = enabled|disabled
+# Effort: reasoning_effort = low|high|max
 base_model = "deepseek/deepseek-v4-pro"
 
-[[reasoning_options]]
-type = "effort"
-values = ["high", "xhigh"]
+reasoning_options = [
+  { type = "toggle" },
+  { type = "effort", values = ["low", "high", "max"] },
+]
 
 [cost]
-input = 0
-output = 0
-
+input = 0.5714
+output = 1.14
+cache_read = 0.0057

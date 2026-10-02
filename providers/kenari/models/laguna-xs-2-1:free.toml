@@ -1,0 +1,16 @@
+# Kenari relay of poolside/laguna-xs-2.1 - authored 2026-10-02 from the provider's public API:
+#   https://kenari.id/v1/models          (capabilities, context, reasoning options)
+#   https://kenari.id/api/public/pricing  (prices; usd_idr_rate = 17500)
+# IDR prices were converted to USD per 1M tokens by dividing by that rate.
+# kenari publishes no reasoning options for this id; the baseline was copied
+# from the same lab model on openrouter (providers/openrouter/models/poolside/laguna-xs-2.1.toml), per AGENTS.md.
+base_model = "poolside/laguna-xs-2.1"
+name = "Laguna XS 2.1 (Free)"
+
+reasoning_options = [
+  { type = "toggle" },
+]
+
+[cost]
+input = 0
+output = 0
