@@ -60,7 +60,7 @@ export function renderModalityIcon(modality: string) {
       : modality[0]!.toUpperCase() + modality.slice(1);
   const icon = MODALITY_ICONS[modality];
   if (!icon) return "";
-  return `<span class="modality-icon" data-tooltip="${label}">${icon}</span>`;
+  return `<span class="modality-icon" data-tooltip="${label}" role="img" aria-label="${label}">${icon}</span>`;
 }
 
 export function renderModalities(modalities?: string[]) {
