@@ -1,0 +1,13 @@
+# Measured on BeatAPI /v1/chat/completions, 2026-09-28.
+# Reasoning is always on here: thinking.type=disabled, enable_thinking=false,
+# chat_template_kwargs.thinking=false, reasoning.enabled=false and reasoning_effort=none
+# all still return reasoning_content, so no caller control is listed.
+# BeatAPI public retail pricing (USD per million tokens): https://api.beatapi.io/v1/pricing
+# Source snapshot: 2026-09-28. Model ID: kimi-k2.6.
+base_model = "moonshotai/kimi-k2.6"
+reasoning_options = []
+
+[cost]
+input = 0.665
+output = 2.8
+cache_read = 0.112
