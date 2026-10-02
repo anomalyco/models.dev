@@ -1,17 +1,27 @@
+# Toggle: thinking.type = "enabled" | "disabled" (default: disabled)
+# Effort: reasoning_effort = medium | max
+# Measured on FlexAI 2026-10-02 (reasoning tokens, n=4, max_tokens 4000):
+#   default 0 · minimal 0 · low 0 · medium 3297 · high 2653 · max 4000 (capped)
+# minimal and low return zero reasoning tokens, i.e. the disabled state the
+# toggle already expresses; medium and high overlap and are not separable;
+# max saturates the budget. Only the two separable on-levels are declared.
+# https://docs.flex.ai/inference-api/agents/langchain
 base_model = "zhipuai/glm-5.2"
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["medium", "max"]
 
 [cost]
 input = 0.5625
 output = 1.8
 cache_read = 0.0844
 
-[interleaved]
-field = "reasoning_content"
-
-[[reasoning_options]]
-type = "effort"
-values = ["minimal", "low", "medium", "high", "max"]
-
-# FlexAI serves GLM-5.2 at 128K, below the model's 1M native window.
 [limit]
 context = 131_072
