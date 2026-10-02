@@ -1,0 +1,23 @@
+# Source: https://huggingface.co/Qwen/Qwen3-8B (config.json max_position_embeddings = 40_960)
+name = "Qwen3 8B"
+description = "Dense Qwen3 model with switchable thinking for multilingual chat, reasoning, and tool use"
+family = "qwen"
+release_date = "2025-04-28"
+last_updated = "2025-07-26"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+open_weights = true
+
+[limit]
+context = 40_960
+output = 32_768
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/Qwen/Qwen3-8B"
