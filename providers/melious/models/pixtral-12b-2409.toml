@@ -1,0 +1,10 @@
+# Cost: Melious list price for the default `balanced` route -- EUR 0.2 in / EUR 0.2 out
+# per 1M tokens -- converted at 1.1490 USD/EUR (ECB euro reference rate, 2026-09-21).
+# Sources: https://melious.ai/hub/models/pixtral-12b-2409 and https://melious.ai/pricing
+# FX: https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml
+base_model = "mistral/pixtral-12b"
+structured_output = true
+
+[cost]
+input = 0.2298
+output = 0.2298
