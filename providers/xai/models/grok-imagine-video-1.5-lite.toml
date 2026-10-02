@@ -2,3 +2,6 @@
 # - https://docs.x.ai/developers/models/grok-imagine-video-1.5-lite
 # - https://docs.x.ai/developers/models (Imagine pricing: grok-imagine-video-1.5-lite $0.020/sec; per-second billing, no [cost] authored)
 base_model = "xai/grok-imagine-video-1.5-lite"
+
+[modalities]
+input = ["text", "image", "pdf"]
