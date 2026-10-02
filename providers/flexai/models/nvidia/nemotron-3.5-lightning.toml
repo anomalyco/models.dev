@@ -1,0 +1,19 @@
+base_model = "nvidia/nemotron-3.5-lightning"
+
+[cost]
+input = 0.08
+output = 0.2
+cache_read = 0.012
+
+[interleaved]
+field = "reasoning_content"
+
+# Thinking is off unless the caller enables it; the gateway drops reasoning_effort
+# for these models, so the control is a toggle: {"thinking": {"type": "enabled"}}.
+[[reasoning_options]]
+type = "toggle"
+
+# FlexAI serves the NVFP4 checkpoint (nvidia/NVIDIA-Nemotron-3.5-Lightning-30B-A3B-NVFP4),
+# whose config.json reports a 1M position limit; the base entry describes the BF16 build.
+[limit]
+context = 1_048_576
