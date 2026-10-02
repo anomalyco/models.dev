@@ -2,10 +2,10 @@
 base_model = "google/gemini-3.6-flash"
 
 [cost]
-input = 1.50
-output = 7.50
-cache_read = 0.15
+input = 0.75
+output = 3.75
+cache_read = 0.075
 
 [[reasoning_options]]
-type = "effort" # API: {"generationConfig":{"thinkingConfig":{"thinkingLevel":"low"}}}
+type = "effort" # API: {"generationConfig":{"thinkingConfig":{"thinkingLevel":"<value>"}}}
 values = ["minimal", "low", "medium", "high"]
