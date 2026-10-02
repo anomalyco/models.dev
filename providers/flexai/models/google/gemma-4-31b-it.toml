@@ -1,0 +1,14 @@
+base_model = "google/gemma-4-31b-it"
+
+[cost]
+input = 0.1
+output = 0.34
+cache_read = 0.015
+
+[interleaved]
+field = "reasoning_content"
+
+# Thinking is off unless the caller enables it; the gateway drops reasoning_effort
+# for these models, so the control is a toggle: {"thinking": {"type": "enabled"}}.
+[[reasoning_options]]
+type = "toggle"
