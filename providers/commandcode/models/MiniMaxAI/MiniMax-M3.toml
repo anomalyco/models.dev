@@ -1,0 +1,21 @@
+# Pricing: https://commandcode.ai/models (accessed 2026-09-12)
+# Model ID is case-sensitive on this gateway: "MiniMaxAI/MiniMax-M3" (verified
+# via POST /provider/v1/chat/completions; lowercase "minimax/minimax-m3" is rejected).
+# A 50%-off deal applies automatically: input $0.30 / output $1.20 /
+# cache_read $0.06 per 1M tokens (regular $0.60 / $2.40 / $0.12).
+# Toggle mirrors the MiniMax API surface served through this gateway.
+base_model = "minimax/MiniMax-M3"
+
+[[reasoning_options]]
+type = "toggle"
+
+[cost]
+input = 0.30
+output = 1.20
+cache_read = 0.06
+
+[[cost.tiers]]
+tier = { size = 512_000 }
+input = 0.60
+output = 2.40
+cache_read = 0.12
