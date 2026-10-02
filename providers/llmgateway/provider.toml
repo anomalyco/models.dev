@@ -1,3 +1,8 @@
+# Cache (chat): gateway replay plus translation — $0 byte-identical replay plus provider cache-control translation/injection (Automatic/Client-managed/Disabled).
+# Cache headers: Use headers `x-llmgateway-cache`/`x-no-cache` — HIT signals gateway replay; per-request bypass is available.
+# Cache body: none — Use no body key field; the gateway derives its own key from request params.
+# Cache policy: opt-in per project, TTL default 60s; stable prefix first; verify via metadata.cached and usage.prompt_tokens_details.cached_tokens.
+# Docs: https://docs.llmgateway.io/features/caching
 # POST /v1/chat/completions accepts $.reasoning_effort = none|minimal|low|
 # medium|high|xhigh|max. Its raw schema lists $.reasoning.effort = low|medium|
 # high; the two effort paths are mutually exclusive. $.reasoning.max_tokens
