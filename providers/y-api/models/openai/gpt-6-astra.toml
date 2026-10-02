@@ -1,0 +1,9 @@
+# Effort: reasoning_effort = low|medium|high|xhigh — no `none` and no `max`, per the
+# live API error text; no reasoning text is exposed.
+# This model also rejects `max_tokens` and requires `max_completion_tokens`.
+base_model = "openai/gpt-6-astra"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh"] }]
+
+[cost]
+input = 0.5
+output = 2.5

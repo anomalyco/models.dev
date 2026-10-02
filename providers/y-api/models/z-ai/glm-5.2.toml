@@ -1,0 +1,15 @@
+# Effort: reasoning_effort = high|max; thinking is always on.
+#
+# Interleaved field: reasoning_details, not the lab's reasoning_content. This
+# host returned reasoning_content on 0 of 10 calls (2026-09-16); it returned
+# reasoning_details ({type: "reasoning.text"}) on 8 of 10, the other 2 carrying
+# no side channel at all. The field that exists is the one authored.
+base_model = "zhipuai/glm-5.2"
+reasoning_options = [{ type = "effort", values = ["high", "max"] }]
+
+[interleaved]
+field = "reasoning_details"
+
+[cost]
+input = 0.07
+output = 0.22

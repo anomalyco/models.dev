@@ -1,0 +1,8 @@
+# Effort: reasoning_effort = none|low|medium|high|xhigh
+# The live API rejects `max` for this model; no reasoning text is exposed.
+base_model = "openai/gpt-5.6-terra"
+reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh"] }]
+
+[cost]
+input = 0.1
+output = 0.6

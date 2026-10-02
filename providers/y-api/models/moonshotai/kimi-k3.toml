@@ -1,0 +1,15 @@
+# Toggle: thinking.type = enabled|disabled
+# Effort: reasoning_effort = low|high|max
+# Reasoning text arrives as reasoning_details, not reasoning_content (live API, 2026-09-16).
+base_model = "moonshotai/kimi-k3"
+reasoning_options = [
+  { type = "toggle" },
+  { type = "effort", values = ["low", "high", "max"] },
+]
+
+[interleaved]
+field = "reasoning_details"
+
+[cost]
+input = 0.15
+output = 0.75
