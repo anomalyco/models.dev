@@ -1,0 +1,20 @@
+# Source: https://docs.maritaca.ai/pt/modelos (accessed 2026-09-28)
+# release_date inferred from the Sabiá 4 technical report (arXiv 2603.10213); verify.
+name = "Sabiá 4 Thinking"
+description = "Reasoning model in the Sabiá family with frontier-quality Portuguese and Brazilian-context performance at low cost."
+release_date = "2026-03-13"
+last_updated = "2026-03-13"
+attachment = false
+reasoning = true
+tool_call = true
+structured_output = true
+temperature = true
+open_weights = false
+
+[limit]
+context = 1_000_000
+output = 32_000
+
+[modalities]
+input = ["text"]
+output = ["text"]
