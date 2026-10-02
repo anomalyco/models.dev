@@ -1,3 +1,8 @@
+# Cache key (chat): none — Step Plan params identical to open platform, which defines no cache key.
+# Use headers: none
+# Use body: none
+# Cache policy: shares open-platform automatic prefix cache from 256 tokens — keep the first 256+ tokens byte-identical and append-only; billing consistent with open platform, converted to Step Plan credits.
+# Docs: https://platform.stepfun.com/docs/zh/guides/developer/prompt-cache.md
 name = "StepFun Step Plan (China)"
 env = ["STEPFUN_API_KEY"]
 npm = "@ai-sdk/openai-compatible"
