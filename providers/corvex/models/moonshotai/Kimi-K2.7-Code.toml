@@ -1,0 +1,24 @@
+# Serving facts (verified live 2026-08-25): 262,144-token context, image input
+# supported, no video. Reasoning HTTP control: `reasoning_effort` accepts
+# none/minimal/low/medium/high/xhigh/max and "none" disables reasoning
+# (`chat_template_kwargs.enable_thinking` is ignored by this model). Free GA
+# launch: cost 0.
+# Sources:
+# https://docs.corvex.cloud/models/moonshotai/Kimi-K2.7-Code
+# https://docs.corvex.cloud/integrations/opencode
+base_model = "moonshotai/kimi-k2.7-code"
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"]
+
+[cost]
+input = 0
+output = 0
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
