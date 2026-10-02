@@ -1,0 +1,17 @@
+base_model = "zhipuai/glm-5.2"
+
+[cost]
+input = 0.5625
+output = 1.8
+cache_read = 0.0844
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "effort"
+values = ["minimal", "low", "medium", "high", "max"]
+
+# FlexAI serves GLM-5.2 at 128K, below the model's 1M native window.
+[limit]
+context = 131_072
