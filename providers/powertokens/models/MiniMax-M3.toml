@@ -1,0 +1,21 @@
+# Pricing: https://powertokens.ai/pricing (USD per 1M tokens, accessed 2026-10-01)
+# Request fields: https://docs.powertokens.ai/en/zmodelChat/minimax/miniMax-M3.md (accessed 2026-10-01)
+# Endpoint matrix: https://docs.powertokens.ai/en/ecosystem-tools/text-model-protocols.md
+# Toggle: thinking.type = adaptive|disabled (omitted = on). PowerTokens relays
+# /v1/chat/completions to MiniMax chatcompletion_v2; field per MiniMax docs:
+# https://platform.minimax.io/docs/api-reference/text-openai-api (accessed 2026-10-01)
+base_model = "minimax/MiniMax-M3"
+
+[[reasoning_options]]
+type = "toggle"
+
+[cost]
+input = 0.6
+output = 2.4
+cache_read = 0.12
+
+[[cost.tiers]]
+tier = { type = "context", size = 512_000 }
+input = 1.2
+output = 4.8
+cache_read = 0.24

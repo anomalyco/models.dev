@@ -1,0 +1,13 @@
+# Pricing: https://powertokens.ai/pricing (USD per 1M tokens, accessed 2026-10-01)
+# Request fields: https://docs.powertokens.ai/en/zmodelChat/minimax/miniMax-M2.7.md (accessed 2026-10-01)
+# Endpoint matrix: https://docs.powertokens.ai/en/ecosystem-tools/text-model-protocols.md
+# Always reasons; no caller control (same as the first-party MiniMax entry)
+base_model = "minimax/MiniMax-M2.7"
+
+reasoning_options = []
+
+[cost]
+input = 0.3
+output = 1.2
+cache_read = 0.06
+cache_write = 0.375
