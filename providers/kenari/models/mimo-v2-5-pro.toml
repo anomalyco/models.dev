@@ -3,7 +3,8 @@
 #   https://kenari.id/api/public/pricing  (prices; usd_idr_rate = 17500)
 # IDR prices were converted to USD per 1M tokens by dividing by that rate.
 # kenari publishes no reasoning options for this id; the baseline was copied
-# from the same lab model on openrouter (providers/openrouter/models/xiaomi/mimo-v2.5-pro.toml), per AGENTS.md.
+# from the same lab model on aihubmix (providers/aihubmix/models/mimo-v2.5-pro.toml), per AGENTS.md.
+# Toggle: $.enable_thinking = true|false on /v1/chat/completions.
 base_model = "xiaomi/mimo-v2.5-pro"
 
 reasoning_options = [
