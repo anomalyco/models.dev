@@ -1,6 +1,7 @@
-# Sources (accessed 2026-09-24):
-# Model overview (preview): https://docs.privatemode.ai/models/overview/#glm-53-flash
+# Sources (accessed 2026-10-02):
+# Model overview (preview, 1M context): https://docs.privatemode.ai/models/overview/#glm-53-flash
 # Pricing (EUR): https://docs.privatemode.ai/pricing/
+# Context 1M in v1.57.0, still current in v1.58.0: https://docs.privatemode.ai/release/#v1570
 # Added in v1.56.0: https://docs.privatemode.ai/release/#v1560
 # Upstream: https://huggingface.co/zai-org/GLM-5.3-Flash
 # Effort: reasoning_effort = low|high|max (default max; always on).
@@ -20,6 +21,3 @@ input = ["text", "image"]
 input = 0.2311
 output = 0.7511
 cache_read = 0.0578
-
-[limit]
-context = 256_000
