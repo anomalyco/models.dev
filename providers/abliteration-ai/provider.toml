@@ -1,3 +1,8 @@
+# Prompt caching (chat): automatic prompt-prefix cache on POST /v1/chat/completions, active by default; cache reads billed at 10% of input rate.
+# Use headers: `x-abliteration-session-id` — include the same opaque affinity value per conversation on any generation endpoint; with both key and header present the header provides the routing hint.
+# Use body: `prompt_cache_key` — top-level string (e.g. `conv_7d2a9f`) for Chat Completions/Responses; stable per-workload value improving reuse as a routing hint.
+# To get a hit: keep same project+model with identical system/developer instructions, message history/order, tools/order, and reasoning/output settings; place stable content first and let the first request begin returning before parallel calls; confirm via usage.prompt_tokens_details.cached_tokens.
+# Docs: https://docs.abliteration.ai/capabilities/prompt-caching.md
 # Reasoning controls for the whole API surface (verified 2026-07-28):
 # https://docs.abliteration.ai/capabilities/thinking
 # Both models reason by default. Effort ladder, least to most:

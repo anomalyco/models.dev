@@ -1,3 +1,6 @@
+# Prompt caching (chat): OpenAI-style chat API with automatic prefix cache; cached input billed at 10% of input price.
+# To get a hit: reuse the same model with an identical stable prefix, appending new content last; confirm via cached-input billing.
+# Docs: https://wiki.agnes-ai.com/en/docs/pricing.md
 name = "Agnes AI"
 env = ["AGNES_API_KEY"]
 npm = "@ai-sdk/openai-compatible"

@@ -1,3 +1,7 @@
+# Prompt caching (chat): automatic 1024-token prefix cache on POST /v1/chat/completions; GPT-5.6 series adds key-assisted matching plus explicit breakpoints with 30-minute minimum retention.
+# Use body: `prompt_cache_key` — top-level string with a stable per-workload value (≈15 req/min per key); `prompt_cache_options` — object with `mode: implicit|explicit` and `ttl: 30m` only; `prompt_cache_breakpoint` — object `{"mode": "explicit"}` inside content blocks to pin the stable-prefix boundary (max 4 new writes per request; reads use the longest match of the recent 50).
+# To get a hit: place fixed long instructions/tools first (≥1024 tokens), keep the same key/model with byte-identical prefix incl. tools order, detail, response_format, and reasoning_effort, and append new messages only; confirm via usage.prompt_tokens_details.cached_tokens; GPT-5.6 writes bill 1.25x and reads 0.1x, with 30-minute minimum retention on GPT-5.6 and 5–10 minute quiet-window retention before that (max 1 h).
+# Docs: https://docs.aihubmix.com/cn/api/GPT-Cache.md
 name = "AIHubMix"
 npm = "@aihubmix/ai-sdk-provider"
 # Raw Chat: $.reasoning_effort = "none"|"minimal"|"low"|"medium"|"high"|"xhigh"; aliases are $.reasoning.effort and integer $.reasoning.max_tokens. "none" disables models that permit it. https://docs.aihubmix.com/cn/api/unified-inference (accessed 2026-06-25)
