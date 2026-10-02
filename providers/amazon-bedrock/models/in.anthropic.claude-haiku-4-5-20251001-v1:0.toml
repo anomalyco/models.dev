@@ -1,0 +1,16 @@
+# India geographic cross-Region profile: https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-anthropic-claude-haiku-4-5.html
+# AWS explicitly excludes structured outputs for this profile.
+# Pricing: https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AmazonBedrockFoundationModels/current/ap-south-1/index.json
+# ap-south-1 standard regional USD/MTok; cache_write is the 5-minute rate.
+# Toggle: additionalModelRequestFields.thinking.type = enabled|disabled (Converse); thinking.type (InvokeModel).
+# Budget: additionalModelRequestFields.thinking.budget_tokens (Converse); thinking.budget_tokens (InvokeModel).
+base_model = "anthropic/claude-haiku-4-5-20251001"
+name = "Claude Haiku 4.5 (India)"
+reasoning_options = [{ type = "toggle" }, { type = "budget_tokens", min = 1_024 }]
+structured_output = false
+
+[cost]
+input = 1.10
+output = 5.50
+cache_read = 0.11
+cache_write = 1.375
