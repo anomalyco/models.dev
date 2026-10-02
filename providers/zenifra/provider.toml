@@ -1,3 +1,8 @@
+# Prompt caching (chat): unknown; docs describe OpenAI-compatible chat on `alibaba/qwen3.6-35b-a3b` with console cost tracking.
+# Use headers: Authorization Bearer key created in the console, with per-key budgets scoping spend.
+# Use body: model with messages; same-model stable prefixes favor reuse.
+# To get a hit: replay identical stable prefixes on the same model; confirm via console usage and response usage where reported.
+# Docs: https://docs.zenifra.com/en/docs/ai
 name = "Zenifra"
 env = ["ZENIFRA_AI_KEY"]
 npm = "@ai-sdk/openai-compatible"
