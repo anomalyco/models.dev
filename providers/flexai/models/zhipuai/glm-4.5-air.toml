@@ -1,0 +1,14 @@
+base_model = "zhipuai/glm-4.5-air"
+
+[cost]
+input = 0.14
+output = 0.86
+cache_read = 0.021
+
+[interleaved]
+field = "reasoning_content"
+
+# Thinking is off unless the caller enables it; the gateway drops reasoning_effort
+# for these models, so the control is a toggle: {"thinking": {"type": "enabled"}}.
+[[reasoning_options]]
+type = "toggle"
