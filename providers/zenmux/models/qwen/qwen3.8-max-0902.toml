@@ -1,34 +1,33 @@
 # Toggle: reasoning.enabled = true|false
+# Effort: reasoning_effort = low|medium|xhigh
 # Budget: reasoning.max_tokens (integer reasoning tokens)
 # ZenMux's 2026-09-19 page and both live OpenAI-/Anthropic-compatible lists
-# explicitly include file input; the catalog represents that host modality as PDF.
+# advertise text, image, and video input only; PDF is intentionally omitted.
 # https://zenmux.ai/docs/api/openai/openai-list-models.html
 # https://zenmux.ai/docs/guide/advanced/reasoning.html
-base_model = "alibaba/qwen3.6-plus"
-name = "Qwen3.6-Plus"
-structured_output = true
+base_model = "alibaba/qwen3.8-max-0902"
+name = "Qwen3.8-Max-0902"
 
 [[reasoning_options]]
 type = "toggle"
 
 [[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "xhigh"]
+
+[[reasoning_options]]
 type = "budget_tokens"
+min = 0
+max = 262_144
 
 [cost]
-input = 0.5
-output = 3
-cache_read = 0.05
-cache_write = 0.625
-
-[[cost.tiers]]
-tier = { type = "context", size = 256_000 }
 input = 2
 output = 6
-cache_read = 0.2
+cache_read = 0.17
 cache_write = 2.5
 
 [limit]
-output = 64_000
+output = 128_000
 
 [modalities]
-input = ["text", "image", "pdf", "video"]
+input = ["text", "image", "video"]
