@@ -1,0 +1,20 @@
+# Default is NO reasoning on this checkpoint; Effort: reasoning_effort = "low"|"high"|"max" turns thinking on; "none" keeps it off
+# https://api.pgsgrove.com/docs/reasoning (accessed 2026-09-11)
+base_model = "deepseek/deepseek-v4-flash-0731"
+name = "DeepSeek V4 Flash 0731 Turbo"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "high", "max"]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.18
+output = 0.345
+cache_read = 0.0375
+
+[limit]
+context = 1_048_576
+output = 32_768
