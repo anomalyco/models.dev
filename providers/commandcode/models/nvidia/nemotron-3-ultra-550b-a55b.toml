@@ -1,0 +1,11 @@
+# https://commandcode.ai/models/nemotron-3-ultra-550b-a55b
+# Toggle: reasoning.enabled = true|false
+base_model = "nvidia/nemotron-3-ultra-550b-a55b"
+
+[[reasoning_options]]
+type = "toggle"
+
+[cost]
+cache_read = 0.12
+input = 0.6
+output = 2.4

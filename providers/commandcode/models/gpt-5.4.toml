@@ -1,0 +1,17 @@
+# https://commandcode.ai/models/gpt-5-4
+# Gateway caps context at 400K vs lab 1_050_000.
+# CommandCode flat-prices through the 400K cap; no 272K long-context tier applies on this host.
+base_model = "openai/gpt-5.4"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "xhigh"]
+
+[cost]
+cache_read = 0.25
+input = 2.5
+output = 15
+
+[limit]
+context = 400_000
+input = 400_000

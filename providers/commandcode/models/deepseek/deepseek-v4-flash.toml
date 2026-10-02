@@ -1,0 +1,21 @@
+# https://commandcode.ai/models/deepseek-v4-flash
+# Time-of-day pricing since 2026-08-16, peak UTC 01:00-04:00 and 06:00-10:00:
+# peak input 0.44 / output 1.32 / cache_read 0.014; [cost] below is the off-peak rate.
+# Toggle: thinking.type = enabled|disabled
+# Effort: reasoning_effort = low|high|max
+base_model = "deepseek/deepseek-v4-flash-0731"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+cache_read = 0.007
+input = 0.22
+output = 0.66

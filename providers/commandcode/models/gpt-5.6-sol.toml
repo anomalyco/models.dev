@@ -1,0 +1,20 @@
+# https://commandcode.ai/models/gpt-5-6-sol
+# Price bands: standard ≤272K context, long >272K.
+base_model = "openai/gpt-5.6-sol"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "xhigh", "max"]
+
+[cost]
+cache_read = 0.5
+cache_write = 6.25
+input = 5
+output = 30
+
+[[cost.tiers]]
+cache_read = 1.0
+cache_write = 12.50
+input = 10.00
+output = 45.00
+tier = { size = 272_000 }
