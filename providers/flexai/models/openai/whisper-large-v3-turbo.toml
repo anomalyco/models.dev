@@ -1,5 +1,5 @@
-base_model = "openai/whisper-large-v3-turbo"
-
 # [cost] intentionally omitted: FlexAI bills transcription per minute of
-# audio ($0.000667/min), not per token — same treatment
-# as providers/mistral/models/voxtral-mini-latest.toml.
+# audio ($0.000667/min), not per token — same treatment as
+# providers/mistral/models/voxtral-mini-latest.toml.
+# Kept in the leading block: only that survives re-serialisation.
+base_model = "openai/whisper-large-v3-turbo"

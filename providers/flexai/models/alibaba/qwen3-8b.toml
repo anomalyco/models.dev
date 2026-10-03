@@ -14,7 +14,5 @@ cache_read = 0.0175
 [interleaved]
 field = "reasoning_content"
 
-# Thinking is off unless the caller enables it; the gateway drops reasoning_effort
-# for this model, so the control is a toggle: {"thinking": {"type": "enabled"}}.
 [[reasoning_options]]
 type = "toggle"

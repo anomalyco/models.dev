@@ -1,10 +1,12 @@
 # Thinking-only: the gateway rejects {"thinking": {"type": "disabled"}} with
 # "Model 'GLM-5.3-Flash' is thinking-only and cannot [be disabled]".
-# Effort: reasoning_effort = low | medium | max
+# Effort: reasoning_effort = low | high | max
 # Measured on FlexAI 2026-10-02 (reasoning tokens, n=4, max_tokens 4000):
 #   minimal 89 · low 83 · medium 311 · high 292 · max 1184
 # Three separable bands, not five levels: minimal tracks low, and high tracks
 # medium. The declared values are the band representatives.
+# medium and high are one measured band; it is named `high` here because
+# that is the name every peer entry for this model uses.
 # https://docs.flex.ai/inference-api/agents/langchain
 base_model = "zhipuai/glm-5.3-flash"
 
@@ -13,7 +15,7 @@ field = "reasoning_content"
 
 [[reasoning_options]]
 type = "effort"
-values = ["low", "medium", "max"]
+values = ["low", "high", "max"]
 
 [cost]
 input = 0.09
