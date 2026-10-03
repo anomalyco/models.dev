@@ -1,0 +1,9 @@
+# Inferway: pay-as-you-go, OpenAI-compatible Chat Completions API at
+# https://api.inferway.ai/v1 (public model list with limits and prices:
+# GET https://api.inferway.ai/v1/models). OpenCode setup guide:
+# https://inferway.ai/docs/tools/opencode
+name = "Inferway"
+npm = "@ai-sdk/openai-compatible"
+env = ["INFERWAY_API_KEY"]
+api = "https://api.inferway.ai/v1"
+doc = "https://inferway.ai/models"
