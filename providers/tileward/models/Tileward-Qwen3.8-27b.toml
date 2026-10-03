@@ -1,0 +1,47 @@
+# Full standalone entry (Tileward is the host that produced this specific compressed artifact --
+# no shared lab identity exists for it elsewhere, so base_model does not apply). Filename is the
+# literal API id: the Tileward API does not lowercase ids, and this file sits directly under
+# models/ (no subfolder) so path -> id derivation yields "Tileward-Qwen3.8-27b" exactly.
+#
+# Replaces gpt-oss-120b, withdrawn from api.tileward.com/v1 the same day this model shipped.
+#
+# Verified against GET https://api.tileward.com/v1/models, 2026-09-15. cost is a single blended
+# USD/Mtoken rate (Tileward does not currently split input/output pricing), used for both fields.
+# name is the catalog display name set by fwaa migration 0062_serve_qwen38_27b, since
+# GET /v1/models exposes no name field of its own (only id, description, tileward.*).
+#
+# - base model, compression, upstream license: Tileward's own 4-bit (W4A16) compression of
+#   Qwen/Qwen3.8-27B (apache-2.0 upstream), served on vLLM
+# - tool_call: measured -- tool calls parse correctly with vLLM's qwen3_xml parser
+# - reasoning: probed live with a real chat completion, 2026-09-15. Default (no
+#   chat_template_kwargs) returns content only, reasoning null. With
+#   chat_template_kwargs: {"enable_thinking": true}, the model's thinking trace comes back in a
+#   separate message.reasoning field and content holds only the final answer -- a caller-exposed,
+#   binary reasoning toggle, same mechanism as InferX's Qwen3.6-27B-FP8 entry.
+# - limit.output: no distinct max-output figure is published; set equal to context as the
+#   defensible upper bound absent a smaller documented ceiling, matching the 35B-A3B convention.
+# - structured_output: same basis as the 35B-A3B entry.
+name = "Tileward Qwen3.8-27B"
+description = "Dense model compressed from Qwen3.8-27B, served by Tileward"
+family = "qwen"
+release_date = "2026-09-15"
+last_updated = "2026-09-15"
+attachment = true
+reasoning = true
+reasoning_options = [{ type = "toggle" }]
+tool_call = true
+temperature = true
+structured_output = true
+open_weights = false
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[limit]
+context = 262_144
+output = 262_144
+
+[cost]
+input = 1.00
+output = 1.00
