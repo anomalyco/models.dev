@@ -1,0 +1,20 @@
+# Image input verified on this host: a 32x32 solid-colour PNG as a data: URI was named correctly on
+# 4 of 4 colour probes (probed 2026-09-17).
+# Reasoning is billed and counted but never returned: 8 of 8 probes reported
+# usage.completion_tokens_details.reasoning_tokens (235-385) while the message carried only content,
+# so there is no side channel to declare here (probed 2026-09-16).
+# Effort: reasoning_effort = minimal|low|medium|high, and thinking cannot be turned off - the host
+# rejects reasoning_effort = "none" with unsupported_reasoning_effort, "Gemini 3 thinking cannot be
+# disabled. Supported reasoning effort values are minimal, low, medium, and high." (probed 2026-09-17).
+# Rates: GET https://api.cheaperinference.com/v1/models, kept current by the cheaperinference sync module.
+base_model = "google/gemini-3.6-flash"
+
+[[reasoning_options]]
+type = "effort"
+values = ["minimal", "low", "medium", "high"]
+
+[cost]
+input = 0.525
+output = 2.625
+cache_read = 0.0525
+cache_write = 0.525

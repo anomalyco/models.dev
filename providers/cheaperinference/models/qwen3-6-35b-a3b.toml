@@ -1,0 +1,24 @@
+# No image input on this host: an image_url part carrying a 32x32 PNG as a data: URI is rejected with
+# 400 on 6 of 6 requests while a text-only control answers 200 (probed 2026-09-17).
+# Toggle: reasoning.enabled = true|false
+# Rates: GET https://api.cheaperinference.com/v1/models, kept current by the cheaperinference sync module.
+base_model = "alibaba/qwen3.6-35b-a3b"
+attachment = false
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "toggle"
+
+[cost]
+input = 0.1736
+output = 1.0395
+cache_read = 0.1736
+cache_write = 0.1736
+
+[limit]
+output = 262_144
+
+[modalities]
+input = ["text"]
