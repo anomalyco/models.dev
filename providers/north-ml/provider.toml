@@ -1,0 +1,7 @@
+# North ML — first-party host for its own Fiber 1 models.
+# API: https://api.north-ml.space/v1 (OpenAI-compatible; GET /v1/models, POST /v1/chat/completions)
+name = "North ML"
+npm = "@ai-sdk/openai-compatible"
+env = ["NORTH_ML_API_KEY"]
+api = "https://api.north-ml.space/v1"
+doc = "https://north-ml.space/api"

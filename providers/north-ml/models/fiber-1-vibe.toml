@@ -1,0 +1,27 @@
+# North ML: Fiber 1 Vibe — first-party host (provider IS the lab, full inline allowed).
+# Model list: GET https://api.north-ml.space/v1/models returns fiber-1-vibe.
+# Proprietary ~191M-parameter model (fiber.parameters = 191221040 on the models endpoint).
+# Context, pricing, and capabilities supplied by North ML (official values).
+# Cost: preview list price, USD/MTok.
+# Reasoning: built in, with no documented request field to control it.
+name = "Fiber 1 Vibe"
+description = "North ML's proprietary ~191M-parameter small model in its faster Vibe mode, with a lighter reasoning budget."
+release_date = "2026-10-01"
+last_updated = "2026-10-01"
+attachment = false
+reasoning = true
+tool_call = false
+open_weights = false
+reasoning_options = []
+
+[cost]
+input = 0.05
+output = 0.05
+
+[limit]
+context = 4_096
+output = 4_096
+
+[modalities]
+input = ["text"]
+output = ["text"]
