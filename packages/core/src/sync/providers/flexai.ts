@@ -11,6 +11,7 @@ const API_ENDPOINT = process.env.FLEXAI_MODELS_URL ?? "https://api.flex.ai/v1/mo
 // API does not express (see translateModel).
 const BaseModels: Record<string, string> = {
   "DeepSeek-V4-Flash-0731": "deepseek/deepseek-v4-flash-0731",
+  "DeepSeek-V4.1-Flash": "deepseek/deepseek-v4.1-flash",
   "FLUX.1-schnell": "black-forest-labs/flux.1-schnell",
   "GLM-4.5-Air-FP8": "zhipuai/glm-4.5-air",
   "GLM-5.2": "zhipuai/glm-5.2",
@@ -30,6 +31,7 @@ const BaseModels: Record<string, string> = {
   "Qwen3.6-27B-FP8": "alibaba/qwen3.6-27b",
   "Qwen3.6-35B-A3B-FP8": "alibaba/qwen3.6-35b-a3b",
   "Qwen3.8-27B": "alibaba/qwen3.8-27b",
+  "Qwen3.8-Flash-Next": "alibaba/qwen3.8-flash-next",
   "Step-3.7-Flash": "stepfun/step-3.7-flash",
   "bge-m3": "baai/bge-m3",
   "gemma-4-26B-A4B-it": "google/gemma-4-26b-a4b-it",
@@ -191,6 +193,11 @@ function buildFlexAIModel(
       reasoning: existing?.reasoning,
       reasoning_options: existing?.reasoning_options,
       interleaved: existing?.interleaved,
+      // Preserved, not re-derived: /v1/models under-reports here. It lists
+      // DeepSeek V4.1 Flash as text-only when it reads images, and it cannot
+      // express that a model accepts an image part and ignores it. It also
+      // cannot express that the base entry's video input is not served.
+      modalities: existing?.modalities,
       status: existing?.status,
       limit,
     },
