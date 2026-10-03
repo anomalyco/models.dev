@@ -1,0 +1,12 @@
+# Parasail OpenAI Chat (POST https://api.parasail.io/v1/chat/completions)
+# model = "parasail-mythomax-13b" (Gryphe/MythoMax-L2-13b).
+# No reasoning control on this endpoint. Verified against the endpoint on 2026-09-22.
+# Catalog: https://platform.parasail.io/api/v1/prices/serverlessEndpoints
+base_model = "gryphe/mythomax-13b"
+
+[cost]
+input = 0.08
+output = 0.11
+
+[limit]
+context = 4_096

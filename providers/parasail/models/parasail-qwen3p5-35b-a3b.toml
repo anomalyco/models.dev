@@ -1,0 +1,13 @@
+# Parasail OpenAI Chat (POST https://api.parasail.io/v1/chat/completions)
+# model = "parasail-qwen3p5-35b-a3b" (Qwen/Qwen3.5-35B-A3B-FP8).
+# Toggle: reasoning_effort = "none" (off) | any other value (on); thinking.type is ignored. Verified against the endpoint on 2026-09-22.
+# Catalog: https://platform.parasail.io/api/v1/prices/serverlessEndpoints
+base_model = "alibaba/qwen3.5-35b-a3b"
+
+[[reasoning_options]]
+type = "toggle"
+
+[cost]
+input = 0.15
+output = 1
+cache_read = 0.05

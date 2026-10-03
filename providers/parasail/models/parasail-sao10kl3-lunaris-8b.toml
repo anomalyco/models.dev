@@ -1,0 +1,12 @@
+# Parasail OpenAI Chat (POST https://api.parasail.io/v1/chat/completions)
+# model = "parasail-sao10kl3-lunaris-8b" (Sao10K/L3-8B-Lunaris-v1).
+# No reasoning control on this endpoint. Verified against the endpoint on 2026-09-22.
+# Catalog: https://platform.parasail.io/api/v1/prices/serverlessEndpoints
+base_model = "sao10k/lunaris-8b"
+
+[cost]
+input = 0.04
+output = 0.05
+
+[limit]
+context = 8_192
