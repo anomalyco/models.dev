@@ -1,0 +1,32 @@
+# Reasoning wire path on POST https://api.thegrid.ai/v1/chat/completions:
+#   toggle -> `reasoning = { enabled = true | false }`
+#   effort -> `reasoning_effort = "low" | "medium" | "high" | "xhigh" | "max"`
+# The instrument reports `reasoning.mandatory = false` at GET /v1/models, which is
+# the same shape the max-tier instruments use for their caller toggle.
+name = "Claude Opus Latest"
+description = "Lab latest market for Claude Opus frontier supply. You contract for the latest qualifying route, not a specific model."
+# contract spec: https://thegrid.ai/docs/instrument-specifications/current-instruments
+release_date = "2026-07-06"
+last_updated = "2026-07-30"
+attachment = true
+reasoning = true
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
+temperature = false
+tool_call = true
+structured_output = true
+open_weights = false
+
+[interleaved]
+field = "reasoning_content"
+
+[limit]
+context = 1_000_000
+input = 922_000
+output = 128_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+# Pricing on The Grid is variable.
+# Tokens trade on an open market, so cost is not fixed and is intentionally omitted here.
