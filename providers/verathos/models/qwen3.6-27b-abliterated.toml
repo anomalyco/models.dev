@@ -1,0 +1,38 @@
+# Sources (accessed 2026-09-16):
+# https://api.verathos.ai/v1/models (model ID, pricing, context length)
+# https://github.com/verathos-ai/verathos/blob/main/docs/api.md (request fields)
+# https://huggingface.co/huihui-ai/Huihui-Qwen3.6-27B-abliterated (community
+# fine-tune of Qwen/Qwen3.6-27B, Apache-2.0, published 2026-04-23)
+#
+# Community fine-tune with no lab identity, so authored inline. Verathos serves
+# the AWQ INT4 build (shawnw3i/Huihui-Qwen3.6-27B-abliterated-AWQ-MTP) text-only.
+# Output limit follows the Qwen3.6 27B base model.
+# No tool-calling parameters are advertised and structured output is not
+# documented, so both are disabled.
+# Toggle: enable_thinking = true|false (top-level request field, default true)
+name = "Qwen3.6 27B Abliterated"
+description = "Community Qwen3.6 27B fine-tune with the refusal direction removed"
+family = "qwen"
+release_date = "2026-04-23"
+last_updated = "2026-04-23"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = false
+structured_output = false
+open_weights = true
+
+[[reasoning_options]]
+type = "toggle"
+
+[cost]
+input = 0.12
+output = 0.80
+
+[limit]
+context = 262_144
+output = 65_536
+
+[modalities]
+input = ["text"]
+output = ["text"]
