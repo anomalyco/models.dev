@@ -1,0 +1,12 @@
+# Pricing and limits: Blackfuel serverless catalog (accessed 2026-10-03).
+# https://docs.blackfuel.ai/docs/getting-started/models-catalog
+# EU-hosted variant: requests are served from European data centers.
+# Effort: reasoning_effort = none, high
+base_model = "google/gemma-4-31b-it"
+name = "Gemma 4 31B IT (EU)"
+reasoning_options = [{ type = "effort", values = ["none", "high"] }]
+
+[cost]
+input = 0.20
+output = 0.50
+cache_read = 0.04
