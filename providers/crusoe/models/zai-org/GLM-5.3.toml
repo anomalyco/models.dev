@@ -1,0 +1,20 @@
+# Probed live endpoint 2026-09-29 (POST /v1/chat/completions, temperature 0,
+# 3 repeats per level): reasoning is on by default; reasoning_effort "none"
+# disables it (0 reasoning tokens). "low" (~80 tokens) and "high" (~75) are
+# short rungs; "medium", "max" and the omitted default all behave as max
+# (~200-300), matching GLM-5.3's native low/high/max. Reasoning text arrives
+# interleaved with tool_calls, usually in the message field named
+# "reasoning" (some replicas return "reasoning_content").
+base_model = "zhipuai/glm-5.3"
+reasoning_options = [{ type = "effort", values = ["none", "low", "high", "max"] }]
+interleaved = true
+
+# Pricing: https://www.crusoe.ai/cloud/pricing and live GET /v1/models
+# (accessed 2026-09-29)
+[cost]
+input = 1.40
+output = 4.40
+cache_read = 0.26
+
+[limit]
+context = 1_048_576
