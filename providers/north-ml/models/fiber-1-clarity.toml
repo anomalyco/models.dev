@@ -1,9 +1,11 @@
 # North ML: Fiber 1 Clarity — first-party host (provider IS the lab, full inline allowed).
-# Model list: GET https://api.north-ml.space/v1/models returns fiber-1-clarity.
-# Proprietary ~191M-parameter model (fiber.parameters = 191221040 on the models endpoint).
-# Context, pricing, and capabilities supplied by North ML (official values).
-# Cost: preview list price, USD/MTok.
-# Reasoning: built in, with no documented request field to control it.
+# Source: GET https://api.north-ml.space/v1/models, entry id = "fiber-1-clarity", owned_by = "north-ml".
+# Context: fiber.max_context = 32768. Output: not published separately; set to max_context
+# (North ML confirms output may use the full context).
+# Cost: fiber.list_price_mtok_usd = 0.08 (USD/MTok, input and output); fiber.billing_note marks
+# this as preview pricing ("theoretical pricing; API may be free during preview").
+# Parameters: fiber.parameters = 191221040 (~191M, proprietary).
+# Reasoning: fixed fiber.thinking_token_budget = 512; no request-level reasoning field in the API docs.
 name = "Fiber 1 Clarity"
 description = "North ML's proprietary ~191M-parameter small model in its Clarity mode, with a deeper reasoning budget."
 release_date = "2026-10-01"
@@ -19,8 +21,8 @@ input = 0.08
 output = 0.08
 
 [limit]
-context = 16_384
-output = 16_384
+context = 32_768
+output = 32_768
 
 [modalities]
 input = ["text"]
