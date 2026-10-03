@@ -1,0 +1,14 @@
+# Void sync reasoning v1: openai/gpt-6-luna 5a6b2f2a93e3392f356fa7342e9d4157f3a16d748af78539acd3c4a0b28b3fdb
+# Reasoning controls: first-party base openai/gpt-6-luna, translated via LiteLLM.
+# Effort: reasoning_effort (chat), reasoning.effort (Responses).
+base_model = "openai/gpt-6-luna"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "xhigh", "max"]
+
+[cost]
+input = 0.044
+output = 0.22
+cache_read = 0.0044
+cache_write = 0.046

@@ -1,9 +1,10 @@
 import path from "node:path";
 import { lstat, mkdir, readdir, rm } from "node:fs/promises";
-import { mergeDeep } from "remeda";
 import { z } from "zod";
 
 import { AuthoredModel, AuthoredModelShape, ModelMetadata } from "../schema.js";
+import { ExistingModelFields, resolveBaseModel } from "./base-model.js";
+export { resolveBaseModel } from "./base-model.js";
 import { openMissingModelIssues } from "./missing-issues.js";
 import { MissingReasoningOptionsError } from "./missing-reasoning-options.js";
 import { aiand } from "./providers/aiand.js";
@@ -41,6 +42,7 @@ import { requesty } from "./providers/requesty.js";
 import { tinfoil } from "./providers/tinfoil.js";
 import { vercel } from "./providers/vercel.js";
 import { venice } from "./providers/venice.js";
+import { voidApi } from "./providers/void-api.js";
 import { wandb } from "./providers/wandb.js";
 import { xai } from "./providers/xai.js";
 
@@ -51,12 +53,6 @@ const ExistingModelType = AuthoredModelShape.partial()
   })
   .strict();
 
-const ExistingModel = AuthoredModelShape.deepPartial()
-  .extend({
-    base_model: z.string().optional(),
-    base_model_omit: z.array(z.string()).optional(),
-  })
-  .strict();
 
 const SyncedBaseModel = AuthoredModelShape.deepPartial()
   .extend({
@@ -79,6 +75,9 @@ export interface SyncProvider<SourceModel> {
   name: string;
   modelsDir: string;
   metadataNamespace?: string;
+  /** Load lab metadata for translators even when no existing entry uses a base. */
+  needsMetadata?: boolean;
+  firstPartyBaseIDs?(models: SourceModel[]): string[];
   /**
    * Do not create new local TOMLs for remote-only models. Instead open one
    * deduped GitHub issue per missing model ID.
@@ -113,6 +112,11 @@ export interface SyncProvider<SourceModel> {
     context: {
       existing(id: string): ExistingModel | undefined;
       authored(id: string): ExistingModel | undefined;
+      /** Canonical lab metadata and provider-authored peers, supplied by the runner. */
+      metadata?(id: string): Record<string, unknown> | undefined;
+      firstParty?(baseID: string): ExistingModel | undefined;
+      authoredIDs?(): string[];
+      authoredHeader?(id: string): string | undefined;
     },
   ): {
     id: string;
@@ -176,6 +180,7 @@ export const providers: {
   tinfoil: SyncProvider<any>;
   vercel: SyncProvider<any>;
   venice: SyncProvider<any>;
+  "void-api": SyncProvider<any>;
   wandb: SyncProvider<any>;
   xai: SyncProvider<any>;
 } = {
@@ -215,6 +220,7 @@ export const providers: {
   tinfoil,
   vercel,
   venice,
+  "void-api": voidApi,
   wandb,
   xai,
 };
@@ -235,6 +241,7 @@ export const groups = {
     "requesty",
     "openrouter",
     "vercel",
+    "void-api",
   ],
   cloudflare: ["cloudflare-ai-gateway", "cloudflare-workers-ai"],
   direct: ["aiand", "ambient", "anthropic", "baseten", "chutes", "cortecs", "deepinfra", "digitalocean", "fireworks-ai", "friendli", "github-copilot", "google", "hyper", "meta", "ollama-cloud", "openai", "ovhcloud", "pioneer", "tinfoil", "venice", "wandb", "xai"],
@@ -262,6 +269,10 @@ export async function syncProvider<SourceModel>(
   const { models: existing, brokenSymlinks } = existingState;
   let { modelMetadata } = existingState;
   const sourceModels = provider.parseModels(await provider.fetchModels());
+  // Metadata is runner-owned: translators must not scan catalog files themselves.
+  const firstPartyBaseIDs = new Set(provider.firstPartyBaseIDs?.(sourceModels) ?? []);
+  if (provider.needsMetadata || firstPartyBaseIDs.size > 0) modelMetadata ??= await readModelMetadata(provider.modelsDir);
+  const firstParty = await readFirstPartyModels(provider.modelsDir, firstPartyBaseIDs, modelMetadata ?? {});
   const desired = new Map<string, {
     model: z.infer<typeof SyncedAuthoredModel>;
     content: string;
@@ -280,6 +291,10 @@ export async function syncProvider<SourceModel>(
         existing(id) {
           return existing.get(`${id}.toml`)?.toml;
         },
+        metadata(id) { return modelMetadata?.[id]; },
+        firstParty(baseID) { return firstParty.get(baseID); },
+        authoredIDs() { return [...existing.keys()].map((file) => file.slice(0, -5)); },
+        authoredHeader(id) { return existing.get(`${id}.toml`)?.header; },
         authored(id) {
           return existing.get(`${id}.toml`)?.authored;
         },
@@ -641,7 +656,7 @@ async function readExisting(modelsDir: string) {
       }
       throw error;
     }
-    const parsed = ExistingModel.safeParse(Bun.TOML.parse(text));
+    const parsed = ExistingModelFields.safeParse(Bun.TOML.parse(text));
     if (!parsed.success) {
       parsed.error.cause = { path: filePath };
       throw parsed.error;
@@ -714,42 +729,50 @@ async function readModelMetadata(modelsDir: string) {
   return result;
 }
 
+async function readFirstPartyModels(
+  modelsDir: string,
+  baseIDs: Set<string>,
+  metadata: Record<string, Record<string, unknown>>,
+) {
+  const candidates = new Map<string, Array<{ id: string; model: ExistingModel }>>();
+  const providersDir = path.dirname(path.dirname(modelsDir));
+  for (const providerID of new Set([...baseIDs].map((id) => id.split("/")[0]!))) {
+    if (!/^[a-z0-9-]+$/.test(providerID)) throw new Error(`Invalid first-party provider: ${providerID}`);
+    const directory = path.join(providersDir, providerID, "models");
+    try {
+      await lstat(directory);
+    } catch (error) {
+      if (error instanceof Error && "code" in error && error.code === "ENOENT") continue;
+      throw error;
+    }
+    for (const { file } of await tomlFiles(directory)) {
+      const parsed = ExistingModelFields.safeParse(Bun.TOML.parse(await Bun.file(path.join(directory, file)).text()));
+      if (!parsed.success) continue;
+      const id = `${providerID}/${file.slice(0, -5).split(path.sep).join("/")}`;
+      const baseID = parsed.data.base_model ?? id;
+      if (!baseIDs.has(baseID)) continue;
+      try {
+        const model = resolveBaseModel(parsed.data, metadata, file) as ExistingModel;
+        candidates.set(baseID, [...candidates.get(baseID) ?? [], { id, model }]);
+      } catch {
+        // unresolved first-party identities cannot seed controls.
+      }
+    }
+  }
+  const result = new Map<string, ExistingModel>();
+  for (const [baseID, entries] of candidates) {
+    const exact = entries.find((entry) => entry.id === baseID);
+    const chosen = exact ?? entries[0]!;
+    if (!exact && entries.some(({ model }) => stable([model.reasoning, model.reasoning_options]) !== stable([chosen.model.reasoning, chosen.model.reasoning_options]))) continue;
+    result.set(baseID, chosen.model);
+  }
+  return result;
+}
+
 function modelMetadataDir(modelsDir: string) {
   return path.join(path.dirname(path.dirname(path.dirname(modelsDir))), "models");
 }
 
-function resolveBaseModel(
-  authored: ExistingModel,
-  modelMetadata: Record<string, Record<string, unknown>>,
-  modelPath: string,
-) {
-  const baseModelID = authored.base_model;
-  if (baseModelID === undefined) return authored;
-
-  const base = modelMetadata[baseModelID];
-  if (base === undefined) {
-    throw new Error(`Unable to resolve base_model: ${baseModelID}`, {
-      cause: { modelPath, toml: authored },
-    });
-  }
-
-  const merged = structuredClone(
-    mergeDeep(
-      base,
-      Object.fromEntries(
-        Object.entries(authored).filter(([, value]) => value !== undefined),
-      ),
-    ),
-  ) as Record<string, unknown>;
-  applyOmit(merged, authored.base_model_omit ?? []);
-
-  const parsed = ExistingModel.safeParse(merged);
-  if (!parsed.success) {
-    parsed.error.cause = { modelPath, toml: merged };
-    throw parsed.error;
-  }
-  return parsed.data as ExistingModel;
-}
 
 function inheritableModelMetadata(model: Record<string, unknown>) {
   const {
@@ -766,48 +789,6 @@ function inheritableModelMetadata(model: Record<string, unknown>) {
   );
 }
 
-function applyOmit(target: Record<string, unknown>, paths: string[]) {
-  omitLoop: for (const omit of paths) {
-    const parts = omit.split(".");
-    const parents: Array<{ value: Record<string, unknown>; key: string }> = [];
-    let current = target;
-
-    for (const part of parts.slice(0, -1)) {
-      const next = current[part];
-      if (
-        next === undefined ||
-        next === null ||
-        typeof next !== "object" ||
-        Array.isArray(next)
-      ) {
-        continue omitLoop;
-      }
-      parents.push({ value: current, key: part });
-      current = next as Record<string, unknown>;
-    }
-
-    const lastPart = parts.at(-1);
-    if (lastPart === undefined || !(lastPart in current)) continue;
-
-    delete current[lastPart];
-
-    for (let index = parents.length - 1; index >= 0; index--) {
-      const parent = parents[index];
-      if (parent === undefined) continue;
-      const value = parent.value[parent.key];
-      if (
-        value === null ||
-        value === undefined ||
-        typeof value !== "object" ||
-        Array.isArray(value) ||
-        Object.keys(value).length > 0
-      ) {
-        break;
-      }
-      delete parent.value[parent.key];
-    }
-  }
-}
 
 async function tomlFiles(root: string, dir = "") {
   const result: Array<{ file: string; symlink: boolean }> = [];

@@ -1,0 +1,18 @@
+# Void sync reasoning v1: anthropic/claude-sonnet-5 eb1d14c898c380aa0e9f0bd7adcf17dc6dc47608d6da40c19498306a25502de3
+# Reasoning controls: first-party base anthropic/claude-sonnet-5, translated via LiteLLM.
+# Toggle: thinking.type = enabled|disabled (chat only; enabled is translated to adaptive when required).
+# Effort: reasoning_effort (chat), reasoning.effort (Responses).
+base_model = "anthropic/claude-sonnet-5"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high", "xhigh", "max"]
+
+[cost]
+input = 0.51
+output = 1.55
+cache_read = 0.046
+cache_write = 0.64
