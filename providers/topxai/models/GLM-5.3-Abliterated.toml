@@ -1,0 +1,38 @@
+# Effort: $.reasoning_effort on /v1/chat/completions, forwarded unchanged; the base
+# GLM-5.3 always reasons with low|high|max. A commercially fine-tuned GLM-5.3 with its
+# refusal alignment removed, served from TopxAI's own private deployment rather than
+# Z.ai's API; text only. Unique to this host, so defined inline.
+# https://ai.topxea.com/docs/glm-5-3-abliterated (accessed 2026-09-19)
+name = "GLM-5.3-Abliterated"
+description = "Fine-tuned GLM-5.3 with refusal alignment removed, on TopxAI's private deployment; text only"
+family = "glm"
+release_date = "2026-09-18"
+last_updated = "2026-09-18"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+# The base GLM-5.3 always reasons with effort low|high|max; the fine-tune keeps
+# the same request shape on /v1/chat/completions ($.reasoning_effort).
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 4
+output = 7
+cache_read = 0.4
+
+[limit]
+context = 1_000_000
+output = 131_072
+
+[modalities]
+input = ["text"]
+output = ["text"]
