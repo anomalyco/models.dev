@@ -1,0 +1,32 @@
+# DeepSeek V4 Flash (checkpoint 0731) served in FP8 on 2x NVIDIA B200 in
+# Madrid with 512K context. Display name drops the checkpoint suffix used
+# by the lab entry. The host emits interleaved reasoning in both
+# `reasoning` (vLLM v0.20's native field) and `reasoning_content`
+# (OpenAI-compatible/DeepSeek convention; the gateway duplicates it) —
+# verified on the live API on 2026-09-23.
+# Effort: reasoning.effort = none|high|max (gateway-declared modelsdev
+# block: https://api.gpuflow.ai/v1/models?audience=modelsdev). "none"
+# disables thinking — verified on the live API: effort "none" returns a
+# direct answer with no reasoning block. "high" (default) and "max" are
+# distinct levels; "low" and "medium" are accepted aliases that map to
+# high at the chat template (identical output to high, verified live:
+# 255 reasoning chars each on the same prompt).
+# https://api.gpuflow.ai/v1/models (accessed 2026-09-23)
+base_model = "deepseek/deepseek-v4-flash-0731"
+name = "DeepSeek V4 Flash"
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "high", "max"]
+
+[cost]
+input = 0.14
+output = 0.28
+cache_read = 0.014
+
+[limit]
+context = 524_288
+output = 16_384

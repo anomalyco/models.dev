@@ -1,0 +1,18 @@
+# Qwen3-VL 32B Instruct (NVFP4, RedHatAI checkpoint) on a MIG-sliced
+# NVIDIA B200 in Madrid, served for OCR and document understanding.
+# Vision-only surface on this host: no tool calling, json_mode or
+# reasoning published (catalog: vision feature only). 64K context,
+# up to 4 images per prompt.
+# https://api.gpuflow.ai/v1/models (accessed 2026-09-23)
+base_model = "alibaba/qwen3-vl-32b-instruct"
+name = "Qwen3-VL 32B OCR"
+tool_call = false
+structured_output = false
+
+[cost]
+input = 0.1
+output = 0.35
+
+[limit]
+context = 65_536
+output = 16_384
