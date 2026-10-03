@@ -1,0 +1,14 @@
+# Pricing and limits: Blackfuel serverless catalog (accessed 2026-10-03).
+# https://docs.blackfuel.ai/docs/getting-started/models-catalog
+# Effort: reasoning_effort = low, medium, high
+base_model = "openai/gpt-oss-120b"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
+
+[cost]
+input = 0.15
+output = 0.60
+cache_read = 0.03
+
+[limit]
+context = 128_000
+output = 32_768

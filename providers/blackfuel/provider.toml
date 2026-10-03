@@ -1,0 +1,10 @@
+name = "Blackfuel"
+# Reasoning HTTP format (accessed 2026-10-03): POST /v1/chat/completions accepts
+# top-level reasoning_effort; each model accepts the subset listed in its
+# GET /v1/models reasoning.supported_efforts. "none" turns reasoning off.
+# The thinking pass is returned in message.reasoning, the answer in message.content.
+# https://docs.blackfuel.ai/docs/guides/reasoning
+env = ["BLACKFUEL_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+api = "https://api.blackfuel.ai/v1"
+doc = "https://docs.blackfuel.ai/docs/getting-started/models-catalog"
