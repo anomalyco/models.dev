@@ -1,3 +1,7 @@
+# Prompt caching (chat): explicit `cachePoint` checkpoints after the stable prefix (Converse API); `cache_control` ephemeral blocks in InvokeModel Anthropic bodies
+# Use body: `cachePoint` — `{"type": "default"}` checkpoint in system, messages, or tool config; per-model minimum prefix tokens with 5m/1h TTL
+# To get a hit: place the checkpoint after the stable prefix (keeping tools, system, messages order stable) and repeat the exact prefix within the TTL; confirm via `cacheReadInputTokens` and `cacheWriteInputTokens` in usage
+# Docs: https://docs.aws.amazon.com/bedrock/latest/userguide/prompt-caching.html
 name = "Amazon Bedrock"
 env = ["AWS_ACCESS_KEY_ID", "AWS_SECRET_ACCESS_KEY", "AWS_REGION", "AWS_BEARER_TOKEN_BEDROCK"]
 npm = "@ai-sdk/amazon-bedrock"
