@@ -1,0 +1,15 @@
+# Tium is a resale gateway that serves other labs' models behind one
+# OpenAI-compatible API. Base: https://api.tium.ai/v1
+# Endpoints: GET /v1/models, POST /v1/chat/completions, POST /v1/completions.
+# POST /v1/responses returns 404, so clients defaulting to the Responses
+# API (Codex CLI) need the chat-completions wire format.
+# Auth: Authorization: Bearer <key>.
+# Billing is a monthly allotment of weighted tokens, not USD per token; the
+# per-model USD rates and their derivation are in the model files.
+# Pricing: https://tium.ai/pricing
+# Verified live against api.tium.ai on 2026-09-09.
+name = "Tium"
+npm = "@ai-sdk/openai-compatible"
+api = "https://api.tium.ai/v1"
+env = ["TIUM_API_KEY"]
+doc = "https://tium.ai/models"
