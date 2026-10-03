@@ -1,0 +1,23 @@
+# Toggle: thinking.type = "enabled" | "disabled" (default: disabled)
+# Measured on FlexAI 2026-10-02: reasoning_tokens 0 by default and when
+# disabled, non-zero when enabled. reasoning_effort is accepted by the
+# gateway for this model but produces no distinct effect, so no effort
+# levels are declared.
+# FlexAI serves the NVFP4 checkpoint (nvidia/NVIDIA-Nemotron-3.5-Lightning-30B-A3B-NVFP4),
+# whose config.json reports a 1M position limit; the base entry describes the BF16 build.
+# https://docs.flex.ai/inference-api/agents/langchain
+base_model = "nvidia/nemotron-3.5-lightning"
+
+[cost]
+input = 0.08
+output = 0.2
+cache_read = 0.012
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "toggle"
+
+[limit]
+context = 1_048_576

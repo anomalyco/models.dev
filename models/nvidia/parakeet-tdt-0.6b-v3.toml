@@ -1,0 +1,25 @@
+# Source: https://huggingface.co/nvidia/parakeet-tdt-0.6b-v3 (CC-BY-4.0)
+# Token-and-Duration Transducer ASR. Limits follow the convention used by the
+# Whisper entries: an audio model has no token context window.
+name = "Parakeet TDT 0.6B v3"
+description = "Speech transcription model for accurate audio-to-text and captioning workflows"
+family = "parakeet"
+release_date = "2025-08-04"
+last_updated = "2026-08-05"
+attachment = false
+reasoning = false
+temperature = false
+tool_call = false
+open_weights = true
+
+[limit]
+context = 448
+output = 448
+
+[modalities]
+input = ["audio"]
+output = ["text"]
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/nvidia/parakeet-tdt-0.6b-v3"

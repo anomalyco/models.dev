@@ -1,0 +1,18 @@
+# Toggle: thinking.type = "enabled" | "disabled" (default: disabled)
+# Measured on FlexAI 2026-10-02: reasoning_tokens 0 by default and when
+# disabled, non-zero when enabled. reasoning_effort is accepted by the
+# gateway for this model but produces no distinct effect, so no effort
+# levels are declared.
+# https://docs.flex.ai/inference-api/agents/langchain
+base_model = "alibaba/qwen3.5-9b"
+
+[cost]
+input = 0.1
+output = 0.15
+cache_read = 0.015
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "toggle"

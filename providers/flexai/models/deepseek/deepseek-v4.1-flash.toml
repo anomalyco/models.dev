@@ -1,0 +1,28 @@
+# Always-on reasoner: {"thinking": {"type": "disabled"}} is accepted but the
+# model still reasons, and reasoning_effort shows no separable effect, so no
+# caller-facing control is exposed.
+# Measured on FlexAI 2026-10-02, UNCAPPED (max_tokens 32000, n=3), so no
+# result is budget-limited:
+#   default 870-1386 · enabled 659-1196 · disabled 1240-1589
+#   minimal 1397 · low 1131 · medium 1097 · high 1367 · xhigh 1385 · max 1237 (medians)
+# Disabled reasons MORE than default, and the effort medians span 1097-1397
+# with per-sample ranges overlapping every neighbour -- no level separates. The gateway validates reasoning_effort
+# against a uniform minimal|low|medium|high|max enum shared across models, so
+# acceptance is not evidence of a distinct honoured effect.
+# Vision: reads images, verified on two solid-colour fixtures. FlexAI's own
+# /v1/models reports input_modalities ["text"] for this model, which understates
+# it; the base entry's text+image is correct.
+# https://docs.flex.ai/inference-api/agents/langchain
+base_model = "deepseek/deepseek-v4.1-flash"
+reasoning_options = []
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.14
+output = 0.42
+cache_read = 0.021
+
+[limit]
+context = 1_048_576

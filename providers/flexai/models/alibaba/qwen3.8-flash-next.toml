@@ -1,0 +1,26 @@
+# Always-on reasoner: {"thinking": {"type": "disabled"}} is accepted but the
+# model still reasons, and every reasoning_effort level saturates the token
+# budget identically, so no caller-facing control is exposed.
+# Measured on FlexAI 2026-10-02, UNCAPPED (max_tokens 32000, n=3) after an
+# earlier capped run was rightly challenged as proving nothing:
+#   default 1543-2665 · enabled 2296-3493 · disabled 2793-9093
+#   minimal 3177 · low 5688 · medium 2200 · high 6495 · xhigh 3979 · max 5132 (medians)
+# Disabled reasons MORE than default, and the effort medians are
+# non-monotonic with heavy overlap -- no level separates.
+# Modalities: reads images (verified on two solid-colour fixtures), but video
+# is NOT served here -- a video_url part is coerced to image_url and rejected,
+# and input_video returns 500 -- so the base entry's video input is overridden.
+# https://docs.flex.ai/inference-api/agents/langchain
+base_model = "alibaba/qwen3.8-flash-next"
+reasoning_options = []
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.15
+output = 0.47
+cache_read = 0.0225
+
+[modalities]
+input = ["text", "image"]
