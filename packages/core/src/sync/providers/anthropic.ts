@@ -296,9 +296,7 @@ export function buildAnthropicModel(
   existing: ExistingModel | undefined,
   baseModel?: string,
 ): SyncedModel {
-  const name = model.canonical_id !== undefined && !model.display_name.endsWith("(latest)")
-    ? `${model.display_name} (latest)`
-    : model.display_name;
+  const name = model.display_name.replace(/\s*\(latest\)\s*$/i, "");
   const reasoning = model.capabilities.thinking?.supported ?? existing?.reasoning ?? false;
   const input = [
     "text" as const,
