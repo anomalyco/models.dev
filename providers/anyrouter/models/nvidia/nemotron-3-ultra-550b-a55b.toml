@@ -1,0 +1,27 @@
+# Host contract (GET /api/v1/models?all=1, read 2026-09-24, re-verified
+# 2026-09-27): context_length=1000000, max_completion_tokens=65536,
+# capabilities=[chat, streaming, reasoning, function-calling, thinking],
+# price 0.5/2.5. Context and modalities match the lab entry; the host caps
+# output at 65536, under the lab's 128000, so output is the one override.
+# Reasoning: chat takes the flat `reasoning_effort`, `none` is the disable
+# sentinel, and there is no toggle or budget on this surface (see the provider
+# header). providers/nvidia publishes this model as toggle-only and the
+# OpenRouter peer as toggle + medium|high + budget_tokens, so the peer's graded
+# set is published and the toggle is dropped because it has no wire here.
+# Probed /api/v1/chat/completions 2026-09-27: all seven rungs are accepted, and
+# `none` is a real off position (0 reasoning tokens, reproduced on every run),
+# but graded depth does not separate on this route — at max_tokens=1500, n=3,
+# low=615, high=471, max=287, and at 2000 low=530, medium=464, high=539 — so
+# the published graded set stays the peer's rather than widening to rungs this
+# route's own numbers do not support. No budget: `reasoning.max_tokens` is a
+# Responses-endpoint control per the host's docs.
+# Effort: reasoning_effort = none|medium|high
+base_model = "nvidia/nemotron-3-ultra-550b-a55b"
+reasoning_options = [{ type = "effort", values = ["none", "medium", "high"] }]
+
+[cost]
+input = 0.5
+output = 2.5
+
+[limit]
+output = 65_536
