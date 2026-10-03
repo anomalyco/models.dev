@@ -1,3 +1,7 @@
+# Kenari relay of zhipuai/glm-5.3 - authored 2026-10-02 from the provider's public API:
+#   https://kenari.id/v1/models          (capabilities, context, reasoning options)
+#   https://kenari.id/api/public/pricing  (prices; usd_idr_rate = 17500)
+# IDR prices were converted to USD per 1M tokens by dividing by that rate.
 base_model = "zhipuai/glm-5.3"
 
 [[reasoning_options]]
@@ -5,5 +9,6 @@ type = "effort"
 values = ["low", "high", "max"]
 
 [cost]
-input = 0
-output = 0
+input = 0.2857
+output = 3.43
+cache_read = 0.2857
