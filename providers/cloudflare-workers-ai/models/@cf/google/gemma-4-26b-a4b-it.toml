@@ -2,8 +2,8 @@
 # Source: Workers AI /ai/models/search?format=openrouter (2026-09-18).
 # Per-model Search config normalizes low/medium to high; these are aliases,
 # not distinct levels despite the generic sync-input.json effort enum.
-
 base_model = "google/gemma-4-26b-a4b-it"
+
 interleaved = true
 
 [[reasoning_options]]
@@ -13,6 +13,7 @@ values = ["none", "high"]
 [cost]
 input = 0.1
 output = 0.3
+cache_read = 0.05
 
 [limit]
 context = 256_000
