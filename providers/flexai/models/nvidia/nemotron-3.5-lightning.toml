@@ -3,6 +3,8 @@
 # disabled, non-zero when enabled. reasoning_effort is accepted by the
 # gateway for this model but produces no distinct effect, so no effort
 # levels are declared.
+# FlexAI serves the NVFP4 checkpoint (nvidia/NVIDIA-Nemotron-3.5-Lightning-30B-A3B-NVFP4),
+# whose config.json reports a 1M position limit; the base entry describes the BF16 build.
 # https://docs.flex.ai/inference-api/agents/langchain
 base_model = "nvidia/nemotron-3.5-lightning"
 
@@ -17,7 +19,5 @@ field = "reasoning_content"
 [[reasoning_options]]
 type = "toggle"
 
-# FlexAI serves the NVFP4 checkpoint (nvidia/NVIDIA-Nemotron-3.5-Lightning-30B-A3B-NVFP4),
-# whose config.json reports a 1M position limit; the base entry describes the BF16 build.
 [limit]
 context = 1_048_576

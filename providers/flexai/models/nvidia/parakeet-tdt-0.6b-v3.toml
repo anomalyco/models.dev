@@ -1,5 +1,5 @@
-base_model = "nvidia/parakeet-tdt-0.6b-v3"
-
 # [cost] intentionally omitted: FlexAI bills this model per minute of audio
-# ($0.0015/minute_audio), which the token-denominated cost schema
-# cannot express — same treatment as providers/mistral/models/voxtral-mini-latest.toml.
+# ($0.0015/minute_audio), which the token-denominated cost schema cannot
+# express — same treatment as providers/mistral/models/voxtral-mini-latest.toml.
+# Kept in the leading block: only that survives re-serialisation.
+base_model = "nvidia/parakeet-tdt-0.6b-v3"
