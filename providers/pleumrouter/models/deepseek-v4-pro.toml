@@ -1,0 +1,8 @@
+# Toggle via reasoning_effort: "none"/"minimal" disables reasoning,
+# any other value enables it (PleumRouter wire contract, not a native
+# provider param).
+base_model = "deepseek/deepseek-v4-pro"
+reasoning_options = [{ type = "toggle" }]
+[cost]
+input = 0.66
+output = 1.98
