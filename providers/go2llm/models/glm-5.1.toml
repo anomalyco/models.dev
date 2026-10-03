@@ -1,0 +1,13 @@
+# Pricing source: https://go2llm.tech/api/pricing (USD per 1M tokens; retrieved 2026-09-27).
+# Canonical model source: providers/zai/models/glm-5.1.toml.
+# Toggle: Chat Completions `/v1/chat/completions` `thinking.type` = enabled|disabled (copied from the first-party model control; Go2LLM was not live-tested).
+
+base_model = "zhipuai/glm-5.1"
+name = "GLM 5.1"
+reasoning_options = [{ type = "toggle" }]
+
+[cost]
+input = 0.171
+output = 0.537
+cache_read = 0.03175
+cache_write = 0.214

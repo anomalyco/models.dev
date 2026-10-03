@@ -1,0 +1,15 @@
+# Pricing source: https://go2llm.tech/api/pricing (USD per 1M tokens; retrieved 2026-09-27).
+# Canonical model source: providers/anthropic/models/claude-opus-5-5.toml.
+
+base_model = "anthropic/claude-opus-5-5"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
+
+[cost]
+input = 2.57
+output = 12.85
+cache_read = 0.15
+cache_write = 3.21
+
+[modalities]
+input = ["text"]
+output = ["text"]

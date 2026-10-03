@@ -1,0 +1,16 @@
+# Pricing source: https://go2llm.tech/api/pricing (USD per 1M tokens; retrieved 2026-09-27).
+# Canonical model source: providers/anthropic/models/claude-sonnet-5.toml.
+# Toggle: Anthropic Messages `/v1/messages` `thinking.type` = enabled|disabled (copied from the first-party model control; Go2LLM was not live-tested).
+
+base_model = "anthropic/claude-sonnet-5"
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
+
+[cost]
+input = 0.329
+output = 1.64
+cache_read = 0.03288
+cache_write = 0.411
+
+[modalities]
+input = ["text"]
+output = ["text"]
