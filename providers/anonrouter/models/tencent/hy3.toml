@@ -1,0 +1,12 @@
+# Source: https://docs.anonrouter.ai/models and authenticated GET /v1/models (accessed 2026-09-11).
+# Reasoning wire: reasoning_effort; "none" disables reasoning when listed.
+base_model = "tencent/hy3"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
+
+[cost]
+input = 0.14
+output = 0.58
+
+[limit]
+context = 262_144
+output = 131_072
