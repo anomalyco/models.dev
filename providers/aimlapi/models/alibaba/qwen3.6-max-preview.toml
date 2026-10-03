@@ -1,0 +1,11 @@
+# No caller control: reasoning_effort is validated (invalid value -> 400) but low/high
+# do not order reasoning tokens; toggle/budget fields are dropped by the gateway.
+base_model = "alibaba/qwen3.6-max-preview"
+reasoning_options = []
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.65
+output = 3.9

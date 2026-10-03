@@ -1,0 +1,17 @@
+base_model = "bytedance-seed/seed-2.0-lite"
+name = "Seed-2.0-Lite"
+
+[interleaved]
+field = "reasoning_details"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high"]
+
+[cost]
+input = 0.34385
+output = 2.7508
+
+[limit]
+context = 262_144
+output = 131_072
