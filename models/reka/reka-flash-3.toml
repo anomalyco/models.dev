@@ -1,0 +1,32 @@
+# Sources (accessed 2026-10-02):
+# https://reka.ai/news/introducing-reka-flash (announced 2025-03-10; release_date)
+# https://huggingface.co/RekaAI/reka-flash-3 (Apache-2.0)
+# https://developer.reka.ai/models (64k context; tools not supported on this model)
+# limit.output: max output declared by Reka for its own endpoint, published at
+# https://openrouter.ai/rekaai/reka-flash-3 (max_completion_tokens, accessed 2026-10-03).
+# Primarily an English model with limited multilingual understanding.
+name = "Reka Flash 3"
+description = "21B general-purpose reasoning model trained from scratch for low-latency chat, coding, and instruction following"
+family = "reka"
+release_date = "2025-03-10"
+last_updated = "2025-03-10"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = false
+structured_output = true
+open_weights = true
+license = "Apache-2.0"
+
+[limit]
+context = 65_536
+output = 58_982
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/RekaAI/reka-flash-3"
+format = "safetensors"
