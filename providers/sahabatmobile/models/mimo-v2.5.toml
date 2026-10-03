@@ -1,0 +1,10 @@
+# SahabatMobile retail pricing (USD/MTok); source: https://sahabatmobile.com/docs
+# Toggle: thinking.type = "enabled"|"disabled" (proxied to upstream Xiaomi API)
+base_model = "xiaomi/mimo-v2.5"
+
+[[reasoning_options]]
+type = "toggle"
+
+[cost]
+input = 0.15
+output = 0.45
