@@ -5,12 +5,6 @@ structured_output = true
 type = "effort"
 values = ["low", "medium", "high", "xhigh", "max"]
 
-[cost]
-input = 2
-output = 10
-cache_read = 0.2
-cache_write = 2.5
-
 [provider]
 npm = "@ai-sdk/anthropic"
 api = "https://api.openai-proxy.org/anthropic/v1"

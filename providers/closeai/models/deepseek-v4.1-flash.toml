@@ -1,3 +1,5 @@
+# Toggle: thinking.type = enabled|disabled
+# Effort: reasoning_effort = low|high|max
 base_model = "deepseek/deepseek-v4.1-flash"
 
 [[reasoning_options]]
@@ -12,9 +14,3 @@ field = "reasoning_content"
 
 [limit]
 output = 393216
-
-[cost]
-input = 0.15
-output = 0.6
-reasoning = 0.6
-cache_read = 0.003
