@@ -1,0 +1,20 @@
+base_model = "deepseek/deepseek-v4.1-flash"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[interleaved]
+field = "reasoning_content"
+
+[limit]
+output = 393216
+
+[cost]
+input = 0.15
+output = 0.6
+reasoning = 0.6
+cache_read = 0.003
