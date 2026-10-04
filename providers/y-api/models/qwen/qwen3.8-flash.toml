@@ -14,7 +14,7 @@
 #   "The input (2000052 tokens) is longer than the model's context length (262144 tokens)."
 # 262144 = 256K, so inheriting the base limit would overstate the window by ~4x.
 #
-# Cost: USD cash price (credit / 20), per the header in provider.toml.
+# Cost: USD cash price (credit / 10), per the header in provider.toml.
 base_model = "alibaba/qwen3.8-flash"
 reasoning_options = [{ type = "effort", values = ["low", "medium", "xhigh"] }]
 
@@ -22,5 +22,5 @@ reasoning_options = [{ type = "effort", values = ["low", "medium", "xhigh"] }]
 context = 262_144
 
 [cost]
-input = 0.01
-output = 0.025
+input = 0.02
+output = 0.05
