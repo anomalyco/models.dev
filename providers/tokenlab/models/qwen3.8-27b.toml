@@ -1,0 +1,19 @@
+# Prices, limits and vision/tool/structured-output support come from the
+# TokenLab public model data (accessed 2026-10-05):
+# https://tokenlab.sh/api/public/model-data/models/qwen3.8-27b/pricing
+# Prices are for the default delivery option (Auto):
+# https://tokenlab.sh/docs/en/guides/billing
+# Toggle: thinking.type = enabled|disabled
+# Budget: thinking.budget_tokens
+base_model = "alibaba/qwen3.8-27b"
+reasoning_options = [{ type = "toggle" }, { type = "budget_tokens" }]
+
+[cost]
+input = 0.5
+output = 3
+cache_read = 0.1
+cache_write = 0.625
+
+[limit]
+context = 991_808
+output = 131_072

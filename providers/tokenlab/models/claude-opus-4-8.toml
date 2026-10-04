@@ -1,0 +1,15 @@
+# Prices, limits and vision/tool/structured-output support come from the
+# TokenLab public model data (accessed 2026-10-05):
+# https://tokenlab.sh/api/public/model-data/models/claude-opus-4-8/pricing
+# Prices are for the default delivery option (Auto):
+# https://tokenlab.sh/docs/en/guides/billing
+# No request field changed reasoning on this API (reasoning_effort and thinking tested 2026-10-05).
+base_model = "anthropic/claude-opus-4-8"
+structured_output = true
+reasoning_options = []
+
+[cost]
+input = 1.5
+output = 7.5
+cache_read = 0.15
+cache_write = 1.875
