@@ -1590,6 +1590,51 @@ test("filters unmanaged DigitalOcean models and joins catalog data by ID", () =>
   });
 });
 
+test("omits retired DigitalOcean models absent from the catalog even without lifecycle metadata", () => {
+  const retired = [
+    "anthropic-claude-3.7-sonnet",
+    "anthropic-claude-3.5-sonnet",
+    "anthropic-claude-3.5-haiku",
+    "anthropic-claude-3-opus",
+  ];
+  const models = parseDigitalOceanModels({
+    models: [
+      ...retired.map((id) => ({ id, name: id, type: "chat" })),
+      { id: "openai-gpt-6-1-sol", name: "OpenAI GPT-6.1 Sol", lifecycle_status: "active" },
+    ],
+    catalog: [{
+      model_id: "openai-gpt-6-1-sol",
+      name: "OpenAI GPT-6.1 Sol",
+      context_window: "256000",
+      max_output_tokens: "32768",
+      availability: ["serverless"],
+      modalities: { input: ["text"], output: ["text"] },
+      pricing: { input_price_per_million: 0.000001, output_price_per_million: 0.000002 },
+    }],
+  });
+
+  expect(models).toHaveLength(1);
+  expect(models[0]?.id).toBe("openai-gpt-6-1-sol");
+});
+
+test("preserves existing DigitalOcean status if a catalog-listed row omits lifecycle", () => {
+  const [model] = parseDigitalOceanModels({
+    models: [{ id: "example", name: "Example" }],
+    catalog: [{
+      model_id: "example",
+      name: "Example",
+      context_window: "128000",
+      max_output_tokens: "8192",
+      availability: ["serverless"],
+      modalities: { output: ["text"] },
+      pricing: { input_price_per_million: 0.000001, output_price_per_million: 0.000002 },
+    }],
+  });
+
+  expect(model?.lifecycle_status).toBeUndefined();
+  expect(buildDigitalOceanModel(model!, { status: "deprecated" }).status).toBe("deprecated");
+});
+
 test("maps DigitalOcean 1M catalog pricing to its 200K threshold", () => {
   const models = parseDigitalOceanModels({
     models: [digitalOceanModel({ pricing: undefined })],

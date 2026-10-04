@@ -34,6 +34,36 @@ test("fetches the Fireworks serverless catalog with bearer auth", async () => {
   expect(request?.headers.get("authorization")).toBe("Bearer test-key");
 });
 
+test("ignores FireRouter auto without accepting incomplete model rows", async () => {
+  const router = {
+    id: "firerouter/auto",
+    object: "model",
+    kind: "router",
+    display_name: "FireRouter Auto",
+    pricing_mode: "auto",
+    usage_identifier: "auto",
+    created: 1790634780,
+  };
+  const fetcher = (async () => Response.json({
+    object: "list",
+    data: [fireworksModel(), router],
+  })) as unknown as typeof fetch;
+
+  expect((await fetchFireworksModels("test-key", fetcher)).data.map((model) => model.id))
+    .toEqual(["accounts/fireworks/models/example"]);
+
+  expect(() => mergeFireworksModels(
+    FireworksResponse.parse({ object: "list", data: [router] }).data,
+    [inventoryModel()],
+  )).toThrow("empty serverless source");
+
+  const malformed = (async () => Response.json({
+    object: "list",
+    data: [fireworksModel(), { ...router, kind: "model" }],
+  })) as unknown as typeof fetch;
+  expect(fetchFireworksModels("test-key", malformed)).rejects.toThrow();
+});
+
 test("parses the Fireworks serverless model list", () => {
   const parsed = FireworksResponse.parse({
     object: "list",

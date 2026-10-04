@@ -35,9 +35,21 @@ export const FireworksModel = z.object({
   created: z.number().int().nonnegative(),
 }).passthrough();
 
+const FireworksRouter = z.object({
+  id: z.string().min(1),
+  object: z.literal("model"),
+  kind: z.literal("router"),
+  pricing_mode: z.string().min(1),
+  usage_identifier: z.string().min(1),
+}).passthrough();
+
 export const FireworksResponse = z.object({
   object: z.literal("list"),
-  data: z.array(FireworksModel),
+  // FireRouter auto shares the endpoint but routes to other models and has
+  // neither fixed modalities nor model-level token pricing.
+  // TODO: Sync routers separately once we can represent dynamic model selection and pricing.
+  data: z.array(z.union([FireworksRouter, FireworksModel]))
+    .transform((rows) => rows.filter((row): row is z.infer<typeof FireworksModel> => row.kind !== "router")),
 }).passthrough();
 
 export const FireworksInventoryModel = z.object({
