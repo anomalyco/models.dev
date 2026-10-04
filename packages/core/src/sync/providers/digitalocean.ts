@@ -263,15 +263,9 @@ async function fetchAllDigitalOceanCatalog(fetcher: typeof fetch) {
 export function parseDigitalOceanModels(raw: unknown): DigitalOceanSourceModel[] {
   const response = DigitalOceanResponse.parse(raw);
   const catalog = new Map(response.catalog.map((model) => [model.model_id, model]));
-  const managed = response.models
+  return response.models
     .map((model) => mergeCatalogModel(model, catalog.get(model.id)))
     .filter(isManagedTextModel);
-  for (const model of managed) {
-    if (model.lifecycle_status === undefined) {
-      throw new Error(`DigitalOcean managed model ${model.id} is missing lifecycle_status`);
-    }
-  }
-  return managed;
 }
 
 function mergeCatalogModel(
@@ -408,9 +402,11 @@ function isReasoningEffort(value: string | null): value is ReasoningEffort {
 }
 
 function status(
-  lifecycleStatus: string,
+  lifecycleStatus: string | undefined,
   existing: ExistingModel["status"],
 ): ExistingModel["status"] {
+  // Retired models can remain in the models feed with no lifecycle status.
+  if (lifecycleStatus === undefined) return "deprecated";
   const lifecycle = lifecycleStatus.trim().toLowerCase().replaceAll("_", "-");
   if (lifecycle.length === 0) return existing;
   if (lifecycle === "deprecated" || lifecycle === "end-of-life") return "deprecated";
@@ -462,9 +458,6 @@ export function buildDigitalOceanModel(
     ? existing.base_model
     : resolveDigitalOceanBaseModel(model.id),
 ): SyncedModel {
-  if (model.lifecycle_status === undefined) {
-    throw new Error(`DigitalOcean managed model ${model.id} is missing lifecycle_status`);
-  }
   const remoteInput = normalizeModalities(model.modalities?.input ?? [], []);
   const remoteOutput = normalizeModalities(model.modalities?.output ?? [], []);
   const input = remoteInput.length > 0 ? remoteInput : existing?.modalities?.input ?? ["text"];

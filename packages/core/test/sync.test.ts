@@ -1617,8 +1617,8 @@ test("omits retired DigitalOcean models absent from the catalog even without lif
   expect(models[0]?.id).toBe("openai-gpt-6-1-sol");
 });
 
-test("rejects DigitalOcean models selected for sync without lifecycle metadata", () => {
-  expect(() => parseDigitalOceanModels({
+test("deprecates DigitalOcean models selected for sync without lifecycle metadata", () => {
+  const [model] = parseDigitalOceanModels({
     models: [{ id: "example", name: "Example" }],
     catalog: [{
       model_id: "example",
@@ -1629,7 +1629,10 @@ test("rejects DigitalOcean models selected for sync without lifecycle metadata",
       modalities: { output: ["text"] },
       pricing: { input_price_per_million: 0.000001, output_price_per_million: 0.000002 },
     }],
-  })).toThrow("DigitalOcean managed model example is missing lifecycle_status");
+  });
+
+  expect(buildDigitalOceanModel(model!, { status: "beta" }).status).toBe("deprecated");
+  expect(buildDigitalOceanModel(model!).status).toBe("deprecated");
 });
 
 test("maps DigitalOcean 1M catalog pricing to its 200K threshold", () => {
