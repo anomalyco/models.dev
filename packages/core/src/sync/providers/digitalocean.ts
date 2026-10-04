@@ -11,6 +11,7 @@ const CATALOG_API = "https://api.digitalocean.com/v2/gen-ai/models/catalog?limit
 export const DigitalOceanModel = z.object({
   id: z.string().min(1),
   name: z.string().min(1),
+  // The models endpoint also returns retired rows absent from the public catalog.
   lifecycle_status: z.string().optional(),
   type: z.string().optional(),
   thinking: z.boolean().optional(),
@@ -262,9 +263,15 @@ async function fetchAllDigitalOceanCatalog(fetcher: typeof fetch) {
 export function parseDigitalOceanModels(raw: unknown): DigitalOceanSourceModel[] {
   const response = DigitalOceanResponse.parse(raw);
   const catalog = new Map(response.catalog.map((model) => [model.model_id, model]));
-  return response.models
+  const managed = response.models
     .map((model) => mergeCatalogModel(model, catalog.get(model.id)))
     .filter(isManagedTextModel);
+  for (const model of managed) {
+    if (model.lifecycle_status === undefined) {
+      throw new Error(`DigitalOcean managed model ${model.id} is missing lifecycle_status`);
+    }
+  }
+  return managed;
 }
 
 function mergeCatalogModel(
@@ -401,10 +408,9 @@ function isReasoningEffort(value: string | null): value is ReasoningEffort {
 }
 
 function status(
-  lifecycleStatus: string | undefined,
+  lifecycleStatus: string,
   existing: ExistingModel["status"],
 ): ExistingModel["status"] {
-  if (lifecycleStatus === undefined) return existing;
   const lifecycle = lifecycleStatus.trim().toLowerCase().replaceAll("_", "-");
   if (lifecycle.length === 0) return existing;
   if (lifecycle === "deprecated" || lifecycle === "end-of-life") return "deprecated";
@@ -456,6 +462,9 @@ export function buildDigitalOceanModel(
     ? existing.base_model
     : resolveDigitalOceanBaseModel(model.id),
 ): SyncedModel {
+  if (model.lifecycle_status === undefined) {
+    throw new Error(`DigitalOcean managed model ${model.id} is missing lifecycle_status`);
+  }
   const remoteInput = normalizeModalities(model.modalities?.input ?? [], []);
   const remoteOutput = normalizeModalities(model.modalities?.output ?? [], []);
   const input = remoteInput.length > 0 ? remoteInput : existing?.modalities?.input ?? ["text"];
