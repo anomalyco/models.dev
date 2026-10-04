@@ -150,6 +150,7 @@ With `base_model`, do not restate fields already correct on the lab entry. Still
 | --- | --- |
 | `cost`, `reasoning_options` | Host pricing and API controls |
 | `interleaved` | Reasoning side channel on **this** API (`reasoning_content` / `reasoning_details`, or `true`) |
+| `rate_limits` | Published per-tier limits on **this** host (`[[rate_limits]]` with `tier`, `rpm`, `rpd`, `tpm`, `input_tpm`, `output_tpm`); lowest tier first; cite the source in a top-of-file comment |
 | `status` | Lifecycle on **this** host: `alpha` / `beta` / `deprecated` |
 | `provider`, `experimental` | Request-shape overrides / experimental modes |
 

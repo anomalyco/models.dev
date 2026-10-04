@@ -175,6 +175,32 @@ const ProviderModelLimit = LimitBase.extend({
 
 const UrlString = z.string().url("Must be a valid URL");
 
+const RateLimitValue = z
+  .number()
+  .int("Rate limit must be an integer")
+  .positive("Rate limit must be positive")
+  .optional();
+
+const RateLimit = z
+  .object({
+    tier: z.string().min(1, "Rate limit tier cannot be empty").optional(),
+    rpm: RateLimitValue,
+    rpd: RateLimitValue,
+    tpm: RateLimitValue,
+    input_tpm: RateLimitValue,
+    output_tpm: RateLimitValue,
+  })
+  .strict()
+  .refine(
+    (data) =>
+      data.rpm !== undefined ||
+      data.rpd !== undefined ||
+      data.tpm !== undefined ||
+      data.input_tpm !== undefined ||
+      data.output_tpm !== undefined,
+    { message: "Rate limit must set at least one of rpm, rpd, tpm, input_tpm, output_tpm" },
+  );
+
 export const ModelLink = z
   .object({
     label: z.string().min(1, "Link label cannot be empty").optional(),
@@ -275,6 +301,8 @@ const ModelBase = z.object({
   modalities: Modalities,
   open_weights: z.boolean(),
   limit: ProviderModelLimit,
+  /** Published rate limits on this host, one entry per usage tier. */
+  rate_limits: z.array(RateLimit).optional(),
   status: z.enum(["alpha", "beta", "deprecated"]).optional(),
   experimental: z
     .object({

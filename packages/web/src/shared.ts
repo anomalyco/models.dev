@@ -75,6 +75,40 @@ export function costSummary(input?: number, output?: number) {
   return `${formatCost(input)} / ${formatCost(output)}`;
 }
 
+interface RateLimitValues {
+  tier?: string;
+  rpm?: number;
+  rpd?: number;
+  tpm?: number;
+  input_tpm?: number;
+  output_tpm?: number;
+}
+
+function compactNumber(value: number) {
+  return value.toLocaleString("en-US", { notation: "compact", maximumFractionDigits: 1 });
+}
+
+export function rateLimitSummary(limit?: RateLimitValues) {
+  if (!limit) return "-";
+  const parts: string[] = [];
+  if (limit.rpm !== undefined) parts.push(`${compactNumber(limit.rpm)} RPM`);
+  if (limit.rpd !== undefined) parts.push(`${compactNumber(limit.rpd)} RPD`);
+  if (limit.tpm !== undefined) parts.push(`${compactNumber(limit.tpm)} TPM`);
+  if (limit.input_tpm !== undefined) parts.push(`${compactNumber(limit.input_tpm)} ITPM`);
+  if (limit.output_tpm !== undefined) parts.push(`${compactNumber(limit.output_tpm)} OTPM`);
+  return parts.length > 0 ? parts.join(" · ") : "-";
+}
+
+export function rateLimitDetails(limits?: RateLimitValues[]) {
+  if (!limits || limits.length === 0) return undefined;
+  return limits
+    .map((limit) => {
+      const summary = rateLimitSummary(limit);
+      return limit.tier ? `${limit.tier}: ${summary}` : summary;
+    })
+    .join("\n");
+}
+
 export function capabilitySummary(capabilities: Array<[string, boolean | undefined]>) {
   const active = capabilities
     .filter(([, value]) => value === true)

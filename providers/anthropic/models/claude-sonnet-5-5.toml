@@ -1,3 +1,4 @@
+# Rate limits: https://platform.claude.com/docs/en/api/rate-limits (checked 2026-10-03)
 # Thinking: adaptive (default) or between_tools (lowest setting; still returns thinking between tools).
 # disabled is rejected; between_tools works only at low, medium, or high effort.
 # https://platform.claude.com/docs/en/models/sonnet-5-5/migration-guide#turn-off-up-front-thinking
@@ -11,3 +12,21 @@ input = 2
 output = 10
 cache_read = 0.2
 cache_write = 2.5
+
+[[rate_limits]]
+tier = "Start"
+rpm = 1_000
+input_tpm = 2_000_000
+output_tpm = 400_000
+
+[[rate_limits]]
+tier = "Build"
+rpm = 5_000
+input_tpm = 5_000_000
+output_tpm = 1_000_000
+
+[[rate_limits]]
+tier = "Scale"
+rpm = 10_000
+input_tpm = 10_000_000
+output_tpm = 2_000_000
