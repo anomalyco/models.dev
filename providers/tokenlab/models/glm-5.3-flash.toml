@@ -4,8 +4,9 @@
 # Prices are for the default delivery option (Auto):
 # https://tokenlab.sh/docs/en/guides/billing
 # Always reasons; thinking.type = disabled has no effect on this API (tested 2026-10-05).
+# Effort: reasoning_effort = low|high|max
 base_model = "zhipuai/glm-5.3-flash"
-reasoning_options = []
+reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]
 
 [cost]
 input = 0.15
