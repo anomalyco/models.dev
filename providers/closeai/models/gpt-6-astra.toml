@@ -1,0 +1,22 @@
+base_model = "openai/gpt-6-astra"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high", "xhigh", "max"]
+
+[cost]
+input = 10.0
+output = 50.0
+cache_read = 1.0
+cache_write = 12.5
+
+[[cost.tiers]]
+tier = { size = 272000 }
+input = 20.0
+output = 75.0
+cache_read = 2.0
+cache_write = 25.0
+
+[provider]
+npm = "@ai-sdk/openai"
+api = "https://api.openai-proxy.org/v1"
