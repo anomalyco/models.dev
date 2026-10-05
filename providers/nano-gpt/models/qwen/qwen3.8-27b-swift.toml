@@ -1,0 +1,25 @@
+name = "Qwen 3.8 27B Swift"
+description = "Qwen 3.8 27B Swift is a finetune for fast responses, served by Aoru in NVFP4 with a 262,144-token context window. It supports image understanding, tool calling, and optional reasoning."
+family = "qwen"
+release_date = "2026-10-05"
+last_updated = "2026-10-05"
+attachment = true
+reasoning = true
+tool_call = true
+structured_output = false
+open_weights = true
+reasoning_options = []
+
+[cost]
+input = 0.25
+output = 1.5
+cache_read = 0.125
+
+[limit]
+context = 262_144
+input = 262_144
+output = 32_768
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
