@@ -5,6 +5,8 @@
 # https://tokenlab.sh/docs/en/guides/billing
 # Toggle: thinking.type = enabled|disabled
 # Budget: thinking.budget_tokens
+# Limits are TokenLab's hosted window from the model data above (max input 991,808,
+# max output 131,072); hosted peers list a 1M context. 262,144 is the open-weights window.
 base_model = "alibaba/qwen3.8-27b"
 reasoning_options = [{ type = "toggle" }, { type = "budget_tokens" }]
 

@@ -6,7 +6,7 @@
 # Toggle: thinking.type = enabled|disabled
 # Budget: thinking.budget_tokens
 base_model = "alibaba/qwen3.8-flash"
-reasoning_options = [{ type = "toggle" }, { type = "budget_tokens", max = 262_144 }]
+reasoning_options = [{ type = "toggle" }, { type = "budget_tokens" }]
 
 [cost]
 input = 0.15

@@ -7,7 +7,7 @@
 # Budget: thinking.budget_tokens
 base_model = "alibaba/qwen3.8-max"
 structured_output = true
-reasoning_options = [{ type = "toggle" }, { type = "budget_tokens", min = 0, max = 262_144 }]
+reasoning_options = [{ type = "toggle" }, { type = "budget_tokens" }]
 
 [cost]
 input = 2

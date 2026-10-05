@@ -5,6 +5,7 @@
 # https://tokenlab.sh/docs/en/guides/billing
 # Toggle: thinking.type = enabled|disabled
 # Effort: reasoning_effort = low|high|max
+# thinking.type = disabled cut reasoning_tokens to 0 (65, 72 and 90 without it).
 base_model = "moonshotai/kimi-k3"
 reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "high", "max"] }]
 

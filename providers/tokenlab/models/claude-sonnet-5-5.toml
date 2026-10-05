@@ -4,6 +4,7 @@
 # Prices are for the default delivery option (Auto):
 # https://tokenlab.sh/docs/en/guides/billing
 # Effort: reasoning_effort = low|medium|high|xhigh|max
+# No none level: Anthropic does not allow thinking to be turned off on this model.
 base_model = "anthropic/claude-sonnet-5-5"
 structured_output = true
 reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
