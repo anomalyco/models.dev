@@ -1,3 +1,5 @@
+# Native model details: 16,000-token context and 2,000 max output tokens.
+# https://developers.openai.com/api/docs/models/gpt-realtime-whisper
 name = "GPT Realtime Whisper"
 description = "Streaming speech-to-text model for low-latency transcript deltas from live audio"
 family = "whisper"
@@ -10,8 +12,8 @@ tool_call = false
 open_weights = false
 
 [limit]
-context = 0
-output = 0
+context = 16_000
+output = 2_000
 
 [modalities]
 input = ["audio"]

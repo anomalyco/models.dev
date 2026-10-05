@@ -1,0 +1,27 @@
+# CNY→USD rate: 6.721845, 2026-09-18, source: https://open.er-api.com/v6/latest/USD
+# Sources (accessed 2026-09-18):
+# https://bailian.console.aliyun.com/cn-beijing?tab=model#/model-market/detail/deepseek-v4.1-flash?serviceSite=asia-pacific-china
+# https://help.aliyun.com/zh/model-studio/deepseek-api — capability table,
+# reasoning_effort ladder, max_tokens default (393_216, shared with thinking)
+# https://help.aliyun.com/zh/model-studio/billing-for-model-studio — Beijing
+# peak/off-peak pricing: CNY 2/1 input, 8/4 output per 1M tokens with context
+# cache discount; peak price converted to USD using the rate above (off-peak
+# is half).
+# Hybrid reasoning: enable_thinking = true|false toggles thinking;
+# reasoning_effort = low|high|max (default high) — low is only supported on
+# v4.1-flash / v4-flash-0731 / v4-pro-0813, and v4.1-flash is the current
+# low-tier bearer. reasoning_content streams in deltas. Responses API
+# supported (Beijing and Singapore only). Limits and modalities are identical
+# to the deepseek lab entry (1M context, 384_000 output, text+image input),
+# so they are inherited and not restated.
+base_model = "deepseek/deepseek-v4.1-flash"
+
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "high", "max"] }]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.29754
+output = 1.19015
+cache_read = 0.01488

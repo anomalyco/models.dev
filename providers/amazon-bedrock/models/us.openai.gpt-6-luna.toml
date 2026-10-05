@@ -1,0 +1,24 @@
+# US cross-Region inference profile — served by Bedrock core (Converse), not Mantle, so no [provider] override.
+# Profile ID verified via ListInferenceProfiles (ACTIVE) on 2026-09-22; AWS has not published a GPT-6 Luna model card yet.
+# Geo CRIS pricing = OpenAI API list rates + AWS's 10% fee (as stated on the GPT-6 Astra card): https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-openai-gpt-6-astra.html
+# Converse effort: additionalModelRequestFields.reasoning.effort = none|low|medium|high|xhigh|max (Bedrock's own validation error lists these).
+# Live Converse check 2026-09-22 (eu-west-1, global profile): tool call + tool-result round trip; effort low/xhigh/max accepted.
+base_model = "openai/gpt-6-luna"
+reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh", "max"] }]
+name = "GPT-6 Luna (US)"
+
+[cost]
+input = 0.11
+output = 0.55
+cache_read = 0.011
+cache_write = 0.1375
+
+[[cost.tiers]]
+tier = { size = 272_000 }
+input = 0.22
+output = 0.825
+cache_read = 0.022
+cache_write = 0.275
+
+[modalities]
+input = ["text", "image"]

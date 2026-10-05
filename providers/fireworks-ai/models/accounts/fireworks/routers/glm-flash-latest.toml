@@ -34,3 +34,7 @@ context = 1_048_573
 
 [modalities]
 input = ["text", "image"]
+
+[experimental.modes.priority]
+cost = { input = 0.1875, output = 0.625, cache_read = 0.0375 }
+provider = { body = { service_tier = "priority" } }

@@ -1,24 +1,23 @@
+# Toggle: reasoning.enabled = true|false
+# https://zenmux.ai/docs/api/openai/openai-list-models.html
+# https://zenmux.ai/docs/guide/advanced/reasoning.html
+base_model = "zhipuai/glm-4.5-air"
 name = "GLM 4.5 Air"
-description = "Efficient GLM model for fast reasoning, coding, and agent workflows"
-release_date = "2025-07-25"
-last_updated = "2025-07-25"
-attachment = false
-reasoning = true
-reasoning_options = [{ type = "toggle" }]
-temperature = true
-tool_call = true
-knowledge = "2025-01-01"
-open_weights = false
+
+[[reasoning_options]]
+type = "toggle"
 
 [cost]
-input = 0.11
-output = 0.56
-cache_read = 0.02
+input = 0.1165
+output = 0.2911
+cache_read = 0.0233
+
+[[cost.tiers]]
+tier = { type = "context", size = 32_000 }
+input = 0.1747
+output = 1.1645
+cache_read = 0.0349
 
 [limit]
 context = 128_000
-output = 64_000
-
-[modalities]
-input = ["text"]
-output = ["text"]
+output = 96_000

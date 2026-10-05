@@ -1,0 +1,22 @@
+# Sources:
+# - https://unbiased.ai/model-card/
+# - https://developers.cloudflare.com/ai/models/unbiased/pareto/
+# - https://openrouter.ai/api/v1/models/unbiased/pareto/endpoints
+name = "Pareto"
+description = "Blended multimodal model that runs multiple language models in parallel and returns a synthesized answer"
+release_date = "2026-09-17"
+last_updated = "2026-09-17"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = true
+structured_output = false
+open_weights = false
+
+[limit]
+context = 262_144
+output = 131_072
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

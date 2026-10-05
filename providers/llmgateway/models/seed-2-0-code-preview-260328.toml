@@ -1,0 +1,28 @@
+name = "Seed 2.0 Code Preview (260328)"
+description = "Coding model for repository understanding, refactors, and agentic engineering tasks"
+family = "seed"
+release_date = "2026-03-28"
+last_updated = "2026-03-28"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = false
+open_weights = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["minimal", "low", "medium", "high"]
+
+[cost]
+input = 0.5
+output = 3
+cache_read = 0.1
+
+[limit]
+context = 262_144
+output = 262_144
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

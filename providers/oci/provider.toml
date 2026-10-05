@@ -1,0 +1,22 @@
+# OCI Generative AI, OpenAI-compatible endpoint (accessed 2026-09-14):
+# POST https://inference.generativeai.<region>.oci.oraclecloud.com/openai/v1/chat/completions
+# Auth: an OCI Generative AI API key sent as `Authorization: Bearer <key>` (create one with
+# `oci generative-ai api-key create`; keys are regional and compartment-scoped, no other
+# header is needed). The default URL below targets us-chicago-1; for the other supported
+# regions (us-ashburn-1, us-phoenix-1, eu-frankfurt-1, ap-hyderabad-1, ap-osaka-1) set the
+# provider baseURL option in the consuming tool.
+# Reasoning: reasoning_effort = low|medium|high on gpt-oss and Grok 4.3/4.6; the Grok 4.20
+# reasoning variants reject reasoning_effort (400). gpt-oss streams reasoning as
+# `reasoning_content` deltas. Streaming clients must accept gzip (the endpoint negotiates
+# zstd and compresses each streamed chunk as a separate frame).
+# Models below are the ones Oracle lists for API-key access to this endpoint (Meta Llama,
+# xAI Grok, OpenAI gpt-oss); Cohere models are served by the native OCI API only.
+# Sources:
+# https://docs.oracle.com/en-us/iaas/Content/generative-ai/openai-compatible-api.htm
+# https://docs.oracle.com/en-us/iaas/Content/generative-ai/api-keys.htm
+# https://docs.oracle.com/en-us/iaas/Content/generative-ai/pretrained-models.htm
+name = "OCI Generative AI"
+env = ["OCI_GENAI_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+api = "https://inference.generativeai.us-chicago-1.oci.oraclecloud.com/openai/v1"
+doc = "https://docs.oracle.com/en-us/iaas/Content/generative-ai/pretrained-models.htm"

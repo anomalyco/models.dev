@@ -23,3 +23,7 @@ output = 4_096
 [modalities]
 input = ["text", "image"]
 output = ["text"]
+
+[experimental.modes.fast]
+cost = { input = 8.75, output = 26.25 }
+provider = { body = { service_tier = "priority" } }

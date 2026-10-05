@@ -1,0 +1,15 @@
+base_model = "xiaomi/mimo-v2.6-pro"
+name = "MiMo V2.6 Pro (DeepInfra)"
+structured_output = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"]
+
+[cost]
+input = 0.435
+output = 0.87
+cache_read = 0.0036
+
+[limit]
+output = 65_536

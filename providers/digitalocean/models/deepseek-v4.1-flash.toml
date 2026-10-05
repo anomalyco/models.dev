@@ -1,5 +1,4 @@
 base_model = "deepseek/deepseek-v4.1-flash"
-attachment = false
 
 [[reasoning_options]]
 type = "effort"
@@ -13,6 +12,3 @@ cache_read = 0.006
 [limit]
 context = 1_048_576
 output = 1_048_576
-
-[modalities]
-input = ["text"]

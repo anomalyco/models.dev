@@ -5,6 +5,7 @@ export const MAX_CREATED_MODELS = 10;
 export const MAX_DELETED_MODELS = 10;
 export const MAX_MODEL_CHURN = 15;
 const REVIEWED_REASONING_PROVIDERS = new Set([
+  "aiand",
   "crossmodel",
   "edenai",
   "empiriolabs",
@@ -16,6 +17,7 @@ const REVIEWED_REASONING_PROVIDERS = new Set([
   "nano-gpt",
   "openrouter",
   "venice",
+  "vercel",
 ]);
 
 export interface CatalogChange {

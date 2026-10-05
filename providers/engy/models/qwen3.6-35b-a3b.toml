@@ -1,0 +1,26 @@
+# Toggle: chat_template_kwargs.enable_thinking = true|false
+# Prices: https://api.engy.ai/v1/models; limits: authed https://engy.ai/api/v1/models (2026-08-28/30).
+# engy serves this deployment text-only, so modalities and attachment are narrowed.
+# Live probe 2026-08-31, n=36/level at 8,192 (the cap): reasoning_effort inert, every pair p>=0.39
+# (MWU); toggle and none suppress reasoning 36/36. No effort control is offered.
+base_model = "alibaba/qwen3.6-35b-a3b"
+attachment = false
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "toggle"
+
+[cost]
+input = 0.045
+output = 0.3
+cache_read = 0.015
+
+[limit]
+context = 208_192
+input = 200_000
+output = 8_192
+
+[modalities]
+input = ["text"]

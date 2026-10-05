@@ -1,0 +1,24 @@
+# Pricing: https://developers.openai.com/api/docs/models/gpt-6-luna
+# Reasoning and modes: https://developers.openai.com/api/docs/guides/latest-model?model=gpt-6-luna
+base_model = "openai/gpt-6-luna"
+reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh", "max"] }]
+
+[cost]
+input = 0.10
+output = 0.50
+cache_read = 0.01
+cache_write = 0.125
+
+[[cost.tiers]]
+tier = { type = "context", size = 272_000 }
+input = 0.20
+output = 0.75
+cache_read = 0.02
+cache_write = 0.25
+
+[experimental.modes.fast]
+cost = { input = 0.20, output = 1.00, cache_read = 0.02, cache_write = 0.25 }
+provider = { body = { service_tier = "priority" } }
+
+[experimental.modes.pro]
+provider = { body = { reasoning = { mode = "pro" } } }

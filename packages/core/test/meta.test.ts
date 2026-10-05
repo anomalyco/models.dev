@@ -23,7 +23,7 @@ const models = `
 `;
 
 const pricing = `
-### Standard tier {#standard-tier}
+### Standard tier
 
 | Usage | Price per 1M tokens |
 | :---- | :---- |
@@ -31,7 +31,7 @@ const pricing = `
 | Input | $1.25 |
 | Output | $4.25 |
 
-### Contributor tier {#contributor-tier}
+### Contributor tier
 
 | Usage | Price per 1M tokens |
 | :---- | :---- |
@@ -60,6 +60,12 @@ test("parses public text models, tier prices in USD/MTok, and context windows", 
   ]);
   expect(parseMetaModels({ ...source, pricing: pricing.replace("$0.002", "$0") })[1]?.cost.cache_read).toBe(0);
   expect(parseMetaModels({ ...source, models: models.replaceAll("1,048,576", "1048576") })[0]?.context).toBe(1_048_576);
+  expect(parseMetaModels({
+    ...source,
+    pricing: pricing
+      .replace("### Standard tier", "### Standard tier {#standard-tier}")
+      .replace("### Contributor tier", "### Contributor tier {#contributor-tier}"),
+  })).toHaveLength(2);
 });
 
 test("rejects incomplete or changed docs rather than guessing prices or limits", () => {

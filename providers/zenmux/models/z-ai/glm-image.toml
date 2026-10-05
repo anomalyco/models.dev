@@ -1,0 +1,9 @@
+# ZenMux's 2026-09-19 page and live Google-compatible list expose text input only;
+# image editing exists in the lab model but is unavailable on this hosted route.
+# ZenMux pricing is non-token-denominated for this route and is intentionally omitted.
+# https://zenmux.ai/docs/api/openai/openai-list-models.html
+base_model = "zhipuai/glm-image"
+attachment = false
+
+[modalities]
+input = ["text"]

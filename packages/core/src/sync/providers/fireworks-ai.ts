@@ -4,6 +4,13 @@ import type { ExistingModel, SyncProvider, SyncedFullModel, SyncedModel } from "
 import { factorBaseModel } from "./openrouter.js";
 
 const API_ENDPOINT = "https://api.fireworks.ai/v1/serverless/models";
+const INVENTORY_ENDPOINT = "https://api.fireworks.ai/v1/accounts/fireworks/models";
+// Fireworks announced GLM 5.2 serverless retirement for 2026-09-25, but on
+// 2026-09-28 List Models still returns supportsServerless=true and no date.
+// https://docs.fireworks.ai/updates/changelog (2026-09-12)
+const DEPRECATION_DATE_FALLBACK: Record<string, string> = {
+  "accounts/fireworks/models/glm-5p2": "2026-09-25",
+};
 
 const FireworksPrice = z.object({
   sku: z.string().min(1),
@@ -28,60 +35,106 @@ export const FireworksModel = z.object({
   created: z.number().int().nonnegative(),
 }).passthrough();
 
-export const FireworksResponse = z.object({
-  object: z.literal("list"),
-  data: z.array(FireworksModel),
+const FireworksRouter = z.object({
+  id: z.string().min(1),
+  object: z.literal("model"),
+  kind: z.literal("router"),
+  pricing_mode: z.string().min(1),
+  usage_identifier: z.string().min(1),
 }).passthrough();
 
+export const FireworksResponse = z.object({
+  object: z.literal("list"),
+  // FireRouter auto shares the endpoint but routes to other models and has
+  // neither fixed modalities nor model-level token pricing.
+  // TODO: Sync routers separately once we can represent dynamic model selection and pricing.
+  data: z.array(z.union([FireworksRouter, FireworksModel]))
+    .transform((rows) => rows.filter((row): row is z.infer<typeof FireworksModel> => row.kind !== "router")),
+}).passthrough();
+
+export const FireworksInventoryModel = z.object({
+  name: z.string().min(1),
+  kind: z.string().min(1),
+  supportsServerless: z.boolean(),
+  deprecationDate: z.object({
+    year: z.number().int().min(1),
+    month: z.number().int().min(1).max(12),
+    day: z.number().int().min(1).max(31),
+  }).nullish(),
+}).passthrough();
+
+export const FireworksInventoryResponse = z.object({
+  models: z.array(FireworksInventoryModel),
+  nextPageToken: z.string().optional(),
+}).passthrough();
+
+const FireworksSyncResponse = z.object({
+  serverless: FireworksResponse,
+  inventory: z.array(FireworksInventoryModel),
+});
+
 export type FireworksModel = z.infer<typeof FireworksModel>;
+export type FireworksInventoryModel = z.infer<typeof FireworksInventoryModel>;
 export type FireworksCatalogModel = FireworksModel & {
   catalogId: string;
   flagModes: FireworksModel[];
 };
+export type FireworksInventoryCatalogModel = {
+  catalogId: string;
+  inventoryOnly: true;
+};
+
+type FireworksSourceModel = FireworksCatalogModel | FireworksInventoryCatalogModel;
 
 export const fireworksAi = {
   id: "fireworks-ai",
   name: "Fireworks AI",
   modelsDir: "providers/fireworks-ai/models",
   skipCreates: true,
-  // The endpoint describes the public serverless catalog, but it still lacks
-  // enough intrinsic metadata and reasoning controls to create safe entries.
-  deleteMissing: false,
+  // The pricing feed supplies invocation IDs and serving modes, while List
+  // Models fills inventory gaps. A model absent from both is not serverless.
+  deleteMissing: true,
   sourceID(model) {
     return supportsCatalogModel(model) ? model.catalogId : undefined;
   },
   skippedNotice(ids) {
     if (ids.length === 0) return [];
     return [
-      `${ids.length} Fireworks serverless text/vision IDs were not created because the endpoint does not yet provide output limits, reasoning controls, tool support, or open-weight status. Existing models are still updated from API-authoritative fields.`,
+      `${ids.length} Fireworks serverless text/vision IDs were not created because the sources do not yet provide enough output limits, reasoning controls, tool support, or open-weight status. Existing models are still updated from API-authoritative fields.`,
       `Skipped remote IDs: ${ids.map((id) => `\`${id}\``).join(", ")}`,
-    ];
-  },
-  missingNotice(paths) {
-    if (paths.length === 0) return [];
-    return [
-      `${paths.length} local Fireworks models were absent from the serverless catalog and were retained for manual lifecycle review.`,
-      `Retained local paths: ${paths.map((item) => `\`${item}\``).join(", ")}`,
     ];
   },
   async fetchModels() {
     const key = process.env.FIREWORKS_API_KEY;
     if (key === undefined) throw new Error("Fireworks AI sync requires FIREWORKS_API_KEY");
-    return fetchFireworksModels(key);
+    const [serverless, inventory] = await Promise.all([
+      fetchFireworksModels(key),
+      fetchFireworksInventory(key),
+    ]);
+    return { serverless, inventory };
   },
   parseModels(raw) {
-    return expandFireworksModels(FireworksResponse.parse(raw).data);
+    const parsed = FireworksSyncResponse.parse(raw);
+    return mergeFireworksModels(parsed.serverless.data, parsed.inventory);
   },
   translateModel(model, context) {
     if (!supportsCatalogModel(model)) return undefined;
     const existing = context.existing(model.catalogId);
     if (existing === undefined) return undefined;
+    const authored = context.authored(model.catalogId);
+    if ("inventoryOnly" in model && authored === undefined) {
+      throw new Error(`Fireworks AI model ${model.catalogId} has no local TOML to preserve`);
+    }
+    if ("inventoryOnly" in model) {
+      // The shared runner validates translated models before writing them.
+      return { id: model.catalogId, model: authored as SyncedModel };
+    }
     return {
       id: model.catalogId,
       model: buildFireworksModel(model, existing),
     };
   },
-} satisfies SyncProvider<FireworksCatalogModel>;
+} satisfies SyncProvider<FireworksSourceModel>;
 
 export async function fetchFireworksModels(
   key: string,
@@ -94,6 +147,64 @@ export async function fetchFireworksModels(
     throw new Error(`Fireworks AI models request failed: ${response.status} ${response.statusText}`);
   }
   return FireworksResponse.parse(await response.json());
+}
+
+export async function fetchFireworksInventory(
+  key: string,
+  fetcher: typeof fetch = fetch,
+  pageToken?: string,
+): Promise<FireworksInventoryModel[]> {
+  const url = new URL(INVENTORY_ENDPOINT);
+  url.searchParams.set("filter", "supports_serverless=true");
+  url.searchParams.set("pageSize", "200");
+  if (pageToken !== undefined) url.searchParams.set("pageToken", pageToken);
+  const response = await fetcher(url, {
+    headers: { Authorization: `Bearer ${key}` },
+  });
+  if (!response.ok) {
+    throw new Error(`Fireworks AI inventory request failed: ${response.status} ${response.statusText}`);
+  }
+  const page = FireworksInventoryResponse.parse(await response.json());
+  if (page.nextPageToken === undefined || page.nextPageToken.length === 0) return page.models;
+  return [...page.models, ...await fetchFireworksInventory(key, fetcher, page.nextPageToken)];
+}
+
+export function mergeFireworksModels(
+  serverless: FireworksModel[],
+  inventory: FireworksInventoryModel[],
+  now = new Date(),
+): FireworksSourceModel[] {
+  if (serverless.length === 0 || inventory.length === 0) {
+    throw new Error("Fireworks AI returned an empty serverless source; refusing destructive sync");
+  }
+  const today = now.toISOString().slice(0, 10);
+  const available = inventory.filter((model) => {
+    if (!model.supportsServerless) return false;
+    const date = model.deprecationDate;
+    // A date has no time zone. Keep the model through that UTC day rather than
+    // removing it prematurely on the announced deprecation day.
+    const lastDay = date == null
+      ? DEPRECATION_DATE_FALLBACK[model.name]
+      : `${date.year}-${String(date.month).padStart(2, "0")}-${String(date.day).padStart(2, "0")}`;
+    return lastDay === undefined || lastDay >= today;
+  });
+  // Pricing rows can outlive serverless deployments. Only expand modes and
+  // aliases for models that the availability inventory still lists.
+  const availableIds = new Set(available.map((model) => model.name));
+  const expanded = expandFireworksModels(serverless.filter((model) => availableIds.has(model.id)));
+  const ids = new Set(expanded.map((model) => model.catalogId));
+  const inventoryOnly = available.filter((model) => model.kind === "HF_BASE_MODEL" && !ids.has(model.name));
+  if (!expanded.some(supportsCatalogModel) && inventoryOnly.length === 0) {
+    throw new Error("Fireworks AI returned an empty active serverless inventory; refusing destructive sync");
+  }
+  return [
+    ...expanded,
+    ...inventoryOnly
+      .map((model): FireworksInventoryCatalogModel => ({
+        catalogId: model.name,
+        inventoryOnly: true,
+      })),
+  ];
 }
 
 export function expandFireworksModels(models: FireworksModel[]): FireworksCatalogModel[] {
@@ -113,7 +224,9 @@ export function expandFireworksModels(models: FireworksModel[]): FireworksCatalo
 
     for (const model of rows) {
       if (model.usage_identifier !== undefined) add(model.usage_identifier, model, []);
-      for (const alias of model.aliases ?? []) add(alias, model, []);
+      for (const alias of model.aliases ?? []) {
+        add(alias, model, model === defaultRow ? flagModes : []);
+      }
     }
   }
   return [...expanded.values()];
@@ -123,8 +236,8 @@ export function expandFireworksModels(models: FireworksModel[]): FireworksCatalo
   }
 }
 
-function supportsCatalogModel(model: FireworksCatalogModel) {
-  return model.output_modalities.includes("text");
+function supportsCatalogModel(model: FireworksSourceModel) {
+  return "inventoryOnly" in model || model.output_modalities.includes("text");
 }
 
 type Modality = SyncedFullModel["modalities"]["input"][number];
@@ -136,13 +249,23 @@ function catalogModalities(values: string[], fallback: Modality[]): Modality[] {
   return modalities.length === 0 ? fallback : modalities;
 }
 
-function pricing(model: Pick<FireworksModel, "pricing">, existing: NonNullable<SyncedFullModel["cost"]>) {
+function pricing(
+  model: Pick<FireworksModel, "id" | "pricing" | "serverless_mode">,
+  existing?: NonNullable<SyncedFullModel["cost"]>,
+): NonNullable<SyncedFullModel["cost"]> {
   const bySku = new Map(model.pricing.map((price) => [price.sku, Number(price.amount)]));
+  const input = bySku.get("LLM input tokens (uncached)") ?? existing?.input;
+  const output = bySku.get("LLM output tokens") ?? existing?.output;
+  if (input === undefined || output === undefined) {
+    throw new Error(
+      `Fireworks AI model ${model.id} ${model.serverless_mode} mode has incomplete token pricing`,
+    );
+  }
   return {
     ...existing,
-    input: bySku.get("LLM input tokens (uncached)") ?? existing.input,
-    cache_read: bySku.get("LLM input tokens (cached)") ?? existing.cache_read,
-    output: bySku.get("LLM output tokens") ?? existing.output,
+    input,
+    cache_read: bySku.get("LLM input tokens (cached)") ?? existing?.cache_read,
+    output,
   };
 }
 
@@ -218,11 +341,11 @@ export function buildFireworksModel(
     || limit.context === undefined
     || limit.output === undefined
     || modalities === undefined
-    || cost === undefined
   ) {
     throw new Error(`Fireworks AI model ${model.catalogId} has incomplete local TOML metadata required for sync`);
   }
 
+  const modelCost = pricing(model, cost);
   const input = catalogModalities(model.input_modalities, modalities.input);
   const outputModalities = catalogModalities(model.output_modalities, modalities.output);
   // Fireworks reports the advertised context window, while some deployments
@@ -248,7 +371,7 @@ export function buildFireworksModel(
     open_weights: openWeights,
     status: existing.status,
     interleaved: existing.interleaved,
-    cost: pricing(model, cost),
+    cost: modelCost,
     limit: {
       context,
       input: limit.input,
@@ -259,7 +382,7 @@ export function buildFireworksModel(
       output: outputModalities,
     },
     provider: provider(model, existing.provider),
-    experimental: experimental(model, cost, existing.experimental),
+    experimental: experimental(model, modelCost, existing.experimental),
   } satisfies SyncedFullModel;
 
   return existing.base_model === undefined

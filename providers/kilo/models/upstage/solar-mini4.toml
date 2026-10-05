@@ -1,0 +1,28 @@
+name = "Upstage: Solar Mini 4"
+description = "Solar Mini 4 is Upstage's compact, cost-efficient language model, a 35B-parameter mixture-of-experts with 3B active parameters and a 524K context window. It is built for agentic use cases where response..."
+family = "solar"
+release_date = "2026-09-23"
+last_updated = "2026-09-23"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"]
+
+[cost]
+input = 0.1
+output = 0.4
+cache_read = 0.01
+
+[limit]
+context = 524_288
+output = 131_072
+
+[modalities]
+input = ["text"]
+output = ["text"]

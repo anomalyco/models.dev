@@ -1,7 +1,10 @@
 # Effort: reasoning_effort = none|low|medium|xhigh
-# Pricing: GET https://api.aiand.com/v1/models (accessed 2026-09-11)
+# Pricing: GET https://api.aiand.com/v1/api.json (accessed 2026-09-14); synced hourly by the aiand module.
 # Docs: https://docs.aiand.com/models/catalog/
-# Live probe 2026-08-29: none|low|medium|xhigh → 200; minimal|high|max → 400.
+# Live probe 2026-09-14: none|low|medium|xhigh → 200; minimal|max → 400. high also
+# returns 200 via ai&'s announced substitution (X-Reasoning-Effort: xhigh) and is
+# deliberately not listed.
+# Modalities: image, video, and PDF accepted on this host (catalog vision|video|document).
 # Reasoning side channel: message.reasoning_content
 base_model = "alibaba/qwen3.8-27b"
 

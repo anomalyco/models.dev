@@ -1,0 +1,19 @@
+# OCI list price, pay as you go, USD per 1M tokens (public price list parts B112086/B112087/
+# B112589-B112592, accessed 2026-09-14); the higher band applies above 200K prompt tokens.
+# OCI also sells a priority tier at twice these prices (service_tier), not modelled here.
+# Model is hosted by xAI and called through OCI. Limits from
+# https://docs.oracle.com/en-us/iaas/Content/generative-ai/xai-grok-4-6.htm (500K context).
+# Effort: reasoning_effort mirrors xAI's controls for this model.
+base_model = "xai/grok-4.6"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh"] }]
+
+[cost]
+input = 2.00
+output = 6.00
+cache_read = 0.50
+
+[[cost.tiers]]
+tier = { type = "context", size = 200_000 }
+input = 4.00
+output = 12.00
+cache_read = 1.00

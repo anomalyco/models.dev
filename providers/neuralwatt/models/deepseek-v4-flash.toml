@@ -8,6 +8,8 @@
 # is rejected with a 400 on this model, so it is not declared.
 # https://portal.neuralwatt.com/docs/api/models
 # https://portal.neuralwatt.com/pricing
+# Output cap raised to 393,216 tokens per GET /v1/models (checked
+# 2026-09-18; was 65,536).
 # https://portal.neuralwatt.com/docs/api/chat-completions
 base_model = "deepseek/deepseek-v4-flash"
 interleaved = true
@@ -23,4 +25,4 @@ cache_read = 0.028
 
 [limit]
 context = 1_048_560
-output = 65_536
+output = 393_216

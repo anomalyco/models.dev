@@ -1,0 +1,16 @@
+# Pool metadata: https://api.opper.ai/v3/models (2026-09-08).
+# No pool-wide effort control: at least one member does not forward reasoning_effort.
+base_model = "google/gemma-4-31b-it"
+
+reasoning_options = []
+
+[cost]
+input = 0.46488
+output = 2.44062
+
+[limit]
+context = 256000
+output = 8192
+
+[interleaved]
+field = "reasoning_content"

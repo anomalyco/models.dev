@@ -1,0 +1,20 @@
+# OCI list price, pay as you go, USD per 1M tokens (public price list, parts B112004/B112005,
+# accessed 2026-09-14). Context and output limits from
+# https://docs.oracle.com/en-us/iaas/Content/generative-ai/openai-gpt-oss-120b.htm: 128,000 tokens
+# prompt + response; Oracle documents a 16,000-token response cap in its playground and no
+# larger API cap, so 16,384 is used here.
+# Effort: reasoning_effort = low|medium|high (accepted on this endpoint, 2026-09-14).
+# Reasoning is streamed in `reasoning_content` deltas.
+base_model = "openai/gpt-oss-120b"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.15
+output = 0.60
+
+[limit]
+context = 128_000
+output = 16_384

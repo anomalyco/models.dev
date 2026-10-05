@@ -1,0 +1,27 @@
+# Toggle: thinking.type = enabled|disabled
+# Effort: reasoning_effort = low|high|max (string aliases of the V4.1 numeric
+# 1-100 budget: low=50 / high=75 / max=100; numerics pass through)
+# `none` is a REAL disable (can_disable=true on the live card — a non-thinking
+# "chat" mode); think-HIGH is the default. Verified against the released repo
+# 2026-09-10 and the live card since then. Live metadata:
+# levels none/low/high/max, default high: https://api.code.umans.ai/v1/models/info
+# Pay-per-token (llm-gateway 00357, released 2026-09-18): Umans AI's public
+# rate, which is what GET /v1/models renders ($0.15 / $0.60 / $0.028 per 1M).
+# limit.context/output mirror the gateway card exactly (1048576 native;
+# 393216 max output) — limit.output is cap-1 on purpose: the gateway 400s
+# max_tokens >= max_completion_tokens (393216), so 393215 is the largest
+# value that serves (its advertised `recommended_max_tokens`).
+base_model = "deepseek/deepseek-v4.1-flash"
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "high", "max"] }]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.15
+output = 0.60
+cache_read = 0.028
+
+[limit]
+context = 1_048_576
+output = 393_215

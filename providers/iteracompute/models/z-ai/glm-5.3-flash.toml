@@ -1,0 +1,20 @@
+# Sources (accessed 2026-09-15):
+# https://api.iteracompute.com/v1/models (model ID, availability, capabilities, limits, pricing, and capacity)
+# https://iteracompute.com/docs.html (OpenAI-compatible API documentation)
+# Effort wire path: reasoning.effort = low|high|max. Reasoning is mandatory.
+# Prices are in USD per million tokens.
+base_model = "zhipuai/glm-5.3-flash"
+structured_output = false
+reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]
+
+[cost]
+input = 0.14
+output = 0.49
+cache_read = 0.03
+
+[limit]
+context = 1_048_576
+output = 131_072
+
+[modalities]
+input = ["text", "image"]
