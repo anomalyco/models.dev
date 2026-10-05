@@ -1,0 +1,19 @@
+name = "Atlas Cloud"
+env = ["ATLASCLOUD_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+api = "https://api.atlascloud.ai/v1"
+doc = "https://atlascloud.ai/docs"
+# Relay provider: Atlas Cloud runs the open-weight models listed here and also
+# proxies closed lab endpoints (OpenAI, Anthropic, Google, xAI) that are not
+# listed, because several of those IDs are advertised by GET /v1/models yet
+# rejected at call time.
+# Reasoning controls verified live against POST https://api.atlascloud.ai/v1/chat/completions (2026-10-06):
+# - `reasoning_effort`: every value in the catalog enum is accepted
+#   (none, minimal, low, medium, high, xhigh, max, default) and the returned
+#   `reasoning_content` length tracks it; `none` returns none at all.
+# - `thinking.type = enabled|disabled` and `enable_thinking = true|false`:
+#   both switch reasoning off on DeepSeek, GLM, Kimi, Qwen, Hunyuan and LongCat.
+# - MiniMax: both toggles are rejected (400 invalid request params) on M3 and
+#   accepted-but-ignored on M2.5, so only `reasoning_effort` is listed for them.
+# - Xiaomi MiMo: the parameters are accepted but no `reasoning_content` is ever
+#   returned, so no reasoning control is listed.

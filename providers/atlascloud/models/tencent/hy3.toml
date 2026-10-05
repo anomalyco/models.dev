@@ -1,0 +1,11 @@
+base_model = "tencent/hy3"
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"] }]
+
+[cost]
+input = 0.2
+output = 0.8
+cache_read = 0.05
+
+[limit]
+context = 262_144
+output = 131_072
