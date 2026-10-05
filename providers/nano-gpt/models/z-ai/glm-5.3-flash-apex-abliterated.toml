@@ -1,0 +1,28 @@
+name = "Apex Flash 1 Abliterated"
+description = "Apex Flash 1 Abliterated is an experimental derivative of Cantina Security and Yeta's Apex Flash 1 with modified refusal behavior."
+family = "glm"
+release_date = "2026-10-05"
+last_updated = "2026-10-05"
+attachment = true
+reasoning = true
+tool_call = true
+structured_output = false
+open_weights = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[cost]
+input = 0.15
+output = 0.5
+cache_read = 0.075
+
+[limit]
+context = 1_048_576
+input = 1_048_576
+output = 32_768
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
