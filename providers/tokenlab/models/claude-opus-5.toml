@@ -3,10 +3,11 @@
 # https://tokenlab.sh/api/public/model-data/models/claude-opus-5/pricing
 # Prices are for the default delivery option (Auto):
 # https://tokenlab.sh/docs/en/guides/billing
+# Toggle: reasoning_effort = none turns thinking off
 # Effort: reasoning_effort = low|medium|high|xhigh|max
 base_model = "anthropic/claude-opus-5"
 structured_output = true
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
 
 [cost]
 input = 1.5
