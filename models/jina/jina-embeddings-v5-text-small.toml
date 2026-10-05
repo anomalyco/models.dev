@@ -1,0 +1,28 @@
+# Sources (accessed 2026-09-15):
+# https://jina.ai/models/jina-embeddings-v5-text-small/
+# https://jina.ai/news/jina-embeddings-v5-text-distilling-4b-quality-into-sub-1b-multilingual-embeddings/
+# https://huggingface.co/jinaai/jina-embeddings-v5-text-small (license cc-by-nc-4.0, base Qwen3-0.6B-Base)
+# limit.output = default embedding dimension (1024; Matryoshka down to 32).
+name = "jina-embeddings-v5-text-small"
+description = "Compact multilingual text embedding model distilled from Qwen3-Embedding-4B with task LoRA adapters and Matryoshka truncation"
+release_date = "2026-02-18"
+last_updated = "2026-02-18"
+attachment = false
+reasoning = false
+temperature = false
+tool_call = false
+open_weights = true
+license = "CC-BY-NC-4.0"
+
+[limit]
+context = 32_768
+output = 1_024
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[[weights]]
+label = "Model weights"
+url = "https://huggingface.co/jinaai/jina-embeddings-v5-text-small"
+format = "safetensors"

@@ -1,0 +1,11 @@
+# Source: https://aisa.one/models (AIsa pricing API https://aisa.one/api/pricing/models,
+# catalog cached_at 2026-09-15, accessed 2026-09-15). All cost values USD per 1M tokens as published by AIsa.
+# AIsa is a multi-model relay: reasoning controls mirror the underlying lab API (pass-through).
+# Dated snapshot alias served by AIsa; inherits bytedance-seed/seed-1-6-flash metadata.
+base_model = "bytedance-seed/seed-1-6-flash"
+name = "Seed 1.6 Flash (250715)"
+
+[cost]
+input = 0.071053
+output = 0.284211
+cache_read = 0.071053

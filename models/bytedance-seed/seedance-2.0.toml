@@ -1,0 +1,25 @@
+# Sources (accessed 2026-09-15):
+# https://seed.bytedance.com/en/seedance2_0
+# https://docs.byteplus.com/en/docs/ModelArk/1330310 (model list: dreamina-seedance-2-0-260128)
+# https://docs.byteplus.com/en/docs/ModelArk/2291680 (tutorial: 0-9 images, 0-3 videos, 0-3 audio references)
+# Public launch 2026-02-12 (https://www.ithome.com/0/921/367.htm); Ark API GA 2026-04-14 (https://www.stdaily.com/web/gdxw/2026-04/14/content_502009.html).
+# Async video-generation task API: no temperature/tool/structured-output controls;
+# billed per video token / second of output, so no text token limits (limit = 0).
+name = "Seedance 2.0"
+description = "Multimodal video model for text/image/omni-reference-to-video, video editing and extension with native audio (up to 4K, 15 s)"
+family = "seed"
+release_date = "2026-02-12"
+last_updated = "2026-04-14"
+attachment = true
+reasoning = false
+temperature = false
+tool_call = false
+open_weights = false
+
+[limit]
+context = 0
+output = 0
+
+[modalities]
+input = ["text", "image", "video", "audio"]
+output = ["video"]

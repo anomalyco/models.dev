@@ -1,0 +1,25 @@
+# Sources (accessed 2026-09-15):
+# https://seed.bytedance.com/en/seedream5_0_lite
+# https://seed.bytedance.com/en/blog/deeper-thinking-more-accurate-generation-introducing-seedream-5-0-lite (2026-02-13)
+# https://docs.byteplus.com/en/docs/ModelArk/1824121 (up to 14 reference images; 2K/3K/4K output; streaming)
+# https://docs.byteplus.com/en/docs/ModelArk/1330310 (seedream-5-0-260128, alias seedream-5-0-lite-260128)
+# Image-generation API: no temperature/tool/structured-output controls; billed per image (limit = 0).
+# "Deep thinking" here is internal generation planning, not a token-emitting reasoning mode; reasoning = false.
+name = "Seedream 5.0 Lite"
+description = "Unified multimodal image model for text-to-image, single/multi-reference editing and sequential generation up to 4K"
+family = "seed"
+release_date = "2026-02-13"
+last_updated = "2026-02-13"
+attachment = true
+reasoning = false
+temperature = false
+tool_call = false
+open_weights = false
+
+[limit]
+context = 0
+output = 0
+
+[modalities]
+input = ["text", "image"]
+output = ["image"]
