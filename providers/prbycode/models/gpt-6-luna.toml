@@ -1,6 +1,2 @@
+reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh", "max"] }]
 base_model = "openai/gpt-6-luna"
-reasoning_options = [{ type = "toggle" }]
-
-[limit]
-context = 1050000
-output = 128000

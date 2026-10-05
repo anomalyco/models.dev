@@ -1,6 +1,5 @@
+reasoning_options = [
+  { type = "effort", values = ["low", "medium", "high", "max"] },
+  { type = "budget_tokens", min = 1024 },
+]
 base_model = "anthropic/claude-opus-4-6"
-reasoning_options = [{ type = "toggle" }]
-
-[limit]
-context = 1000000
-output = 128000

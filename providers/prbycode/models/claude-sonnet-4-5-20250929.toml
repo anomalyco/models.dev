@@ -1,6 +1,2 @@
+reasoning_options = [{ type = "budget_tokens", min = 1024 }]
 base_model = "anthropic/claude-sonnet-4-5-20250929"
-reasoning_options = [{ type = "toggle" }]
-
-[limit]
-context = 200000
-output = 64000

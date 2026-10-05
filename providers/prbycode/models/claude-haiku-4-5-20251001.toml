@@ -1,6 +1,2 @@
+reasoning_options = [{ type = "budget_tokens", min = 1024 }]
 base_model = "anthropic/claude-haiku-4-5-20251001"
-reasoning_options = [{ type = "toggle" }]
-
-[limit]
-context = 200000
-output = 64000
