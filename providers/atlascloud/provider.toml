@@ -6,7 +6,9 @@ doc = "https://atlascloud.ai/docs"
 # Relay provider: Atlas Cloud runs the open-weight models listed here and also
 # proxies closed lab endpoints (OpenAI, Anthropic, Google, xAI) that are not
 # listed, because several of those IDs are advertised by GET /v1/models yet
-# rejected at call time.
+# rejected at call time. The same is true of a few open-weight IDs: the whole
+# catalog was called twice, four hours apart (2026-10-06), and only models that
+# answered in the later sweep are listed.
 # Reasoning controls verified live against POST https://api.atlascloud.ai/v1/chat/completions (2026-10-06):
 # - `reasoning_effort`: every value in the catalog enum is accepted
 #   (none, minimal, low, medium, high, xhigh, max, default) and the returned
