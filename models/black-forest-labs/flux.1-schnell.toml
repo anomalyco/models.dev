@@ -1,7 +1,9 @@
 # Source: https://huggingface.co/black-forest-labs/FLUX.1-schnell (Apache-2.0)
 # Rectified-flow transformer distilled for 1-4 step text-to-image generation.
-# Image models carry no token budget, following the convention of the other
-# text-to-image entries in this catalogue.
+# Prompt budget: 256 T5 tokens -- the reference implementation loads T5 with
+# max_length=256 for flux-schnell (512 for dev):
+# https://github.com/black-forest-labs/flux/blob/main/src/flux/cli.py
+# output = 0 per the other text-to-image entries (glm-image, qwen-image-2.1).
 name = "FLUX.1 [schnell]"
 description = "Fast distilled text-to-image model generating images in one to four steps"
 family = "flux"
@@ -14,7 +16,7 @@ tool_call = false
 open_weights = true
 
 [limit]
-context = 0
+context = 256
 output = 0
 
 [modalities]
