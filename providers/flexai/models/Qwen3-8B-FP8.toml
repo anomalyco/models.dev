@@ -3,6 +3,8 @@
 # disabled, non-zero when enabled. reasoning_effort is accepted by the
 # gateway for this model but produces no distinct effect, so no effort
 # levels are declared.
+# Context: FlexAI serves 40_960 (no YaRN scaling): GET /v1/models context_length,
+# and the server's max_tokens error states "maximum context length of 40960".
 # https://docs.flex.ai/inference-api/agents/langchain
 base_model = "alibaba/qwen3-8b"
 
@@ -16,3 +18,6 @@ field = "reasoning_content"
 
 [[reasoning_options]]
 type = "toggle"
+
+[limit]
+context = 40_960
