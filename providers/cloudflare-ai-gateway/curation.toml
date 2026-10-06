@@ -97,6 +97,15 @@ structured_output = true
 note = ["Toggle: thinking.type = adaptive|disabled.", "Effort: output_config.effort = low|medium|high|xhigh|max."]
 reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
 
+# Claude Sonnet 5.5: adaptive thinking on by default; disabled is rejected, so no toggle.
+# between_tools is the lowest setting (low|medium|high only), not a full off. Effort only.
+[models."anthropic/claude-sonnet-5.5"]
+note = [
+  "Effort: output_config.effort = low|medium|high|xhigh|max (Anthropic Messages API; adaptive thinking on by default, disabled rejected).",
+  "Sources: https://platform.claude.com/docs/en/build-with-claude/effort ; https://platform.claude.com/docs/en/models/sonnet-5-5/overview ; https://platform.claude.com/docs/en/models/sonnet-5-5/migration-guide",
+]
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
+
 [models."openai/gpt-5"]
 reasoning_options = [{ type = "effort", values = ["minimal", "low", "medium", "high"] }]
 
