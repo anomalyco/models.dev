@@ -10,6 +10,8 @@
 # value is not evidence that it is honoured here.
 # medium and high are one measured band; it is named `high` here because
 # that is the name every peer entry for this model uses.
+# Context: 1_048_576 is the served window (GET /v1/models context_length, and the
+# server's max_tokens error states "maximum context length of 1048576").
 # https://docs.flex.ai/inference-api/agents/langchain
 base_model = "deepseek/deepseek-v4-flash-0731"
 
