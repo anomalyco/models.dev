@@ -1,0 +1,20 @@
+# Effort: reasoning_effort = low | medium | high
+# This model takes a model-specific enum, unlike the rest of the FlexAI
+# fleet: the gateway rejects any other value with "Unsupported
+# reasoning_effort '<x>' for gpt-oss; expected one of low, medium, high"
+# (probed 2026-10-02), where every other served model reports a uniform
+# minimal|low|medium|high|max enum.
+# https://docs.flex.ai/inference-api/agents/langchain
+base_model = "openai/gpt-oss-120b"
+
+[cost]
+input = 0.03
+output = 0.17
+cache_read = 0.0045
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high"]

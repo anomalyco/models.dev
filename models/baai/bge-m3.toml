@@ -1,0 +1,27 @@
+# Source: https://huggingface.co/BAAI/bge-m3 (MIT)
+# Max input 8_192 tokens per the model card ("inputs ... up to 8192 tokens",
+# max_length=8192); config.json's max_position_embeddings of 8_194 includes
+# XLM-RoBERTa's two-position offset. hidden_size = 1_024 (the dense embedding
+# dimension, recorded as the output limit per the other embedding entries).
+name = "BGE-M3"
+description = "Multilingual embedding model for semantic search, retrieval, and ranking across 100+ languages"
+family = "bge"
+release_date = "2024-01-27"
+last_updated = "2024-07-03"
+attachment = false
+reasoning = false
+temperature = false
+tool_call = false
+open_weights = true
+
+[limit]
+context = 8_192
+output = 1_024
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/BAAI/bge-m3"

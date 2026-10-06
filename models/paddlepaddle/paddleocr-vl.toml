@@ -1,0 +1,24 @@
+# Source: https://huggingface.co/PaddlePaddle/PaddleOCR-VL (Apache-2.0)
+# config.json max_position_embeddings = 131_072. Document-parsing VLM: it
+# expects an image and is not a general chat model.
+name = "PaddleOCR-VL"
+description = "Document parsing vision-language model for OCR, tables, formulas, and layout extraction"
+release_date = "2025-10-16"
+last_updated = "2026-08-08"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = false
+open_weights = true
+
+[limit]
+context = 131_072
+output = 32_768
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/PaddlePaddle/PaddleOCR-VL"

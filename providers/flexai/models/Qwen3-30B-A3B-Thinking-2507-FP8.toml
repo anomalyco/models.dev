@@ -1,0 +1,16 @@
+# Always-on reasoner: thinking cannot be disabled on this endpoint and reasoning_effort has no
+# effect, so no caller-facing
+# control is exposed and reasoning_options is empty.
+# https://docs.flex.ai/inference-api/agents/langchain
+base_model = "alibaba/qwen3-30b-a3b-thinking-2507"
+
+
+reasoning_options = []
+
+[cost]
+input = 0.2
+output = 2.4
+cache_read = 0.03
+
+[interleaved]
+field = "reasoning_content"

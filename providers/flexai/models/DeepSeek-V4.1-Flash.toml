@@ -1,0 +1,32 @@
+# Toggle: thinking.type = "enabled" | "disabled" (default: disabled)
+# Effort: reasoning_effort = high | max
+# Re-measured on FlexAI 2026-10-05 (length of reasoning_content; 3 prompts x 4
+# runs, max_tokens 32000, so nothing is budget-limited):
+#   default 0 (12/12 no reasoning) · thinking disabled 0 · low 0
+#   thinking enabled 407 · high 524 · max 644 (medians; max > high on every prompt)
+# low returns no reasoning, i.e. the off state the toggle already expresses, so
+# only the two on-levels are declared -- the DeepSeek V4 pattern.
+# Context: 1_048_576 is the served window (GET /v1/models context_length, and
+# the server's own max_tokens error states "maximum context length of 1048576").
+# Vision: reads images, verified on two solid-colour fixtures. /v1/models reports
+# input_modalities ["text"] for this model, which understates it.
+# https://docs.flex.ai/inference-api/agents/langchain
+base_model = "deepseek/deepseek-v4.1-flash"
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.14
+output = 0.42
+cache_read = 0.021
+
+[limit]
+context = 1_048_576
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["high", "max"]

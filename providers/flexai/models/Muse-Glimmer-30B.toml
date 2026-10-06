@@ -1,0 +1,28 @@
+# Thinking-only: the gateway rejects {"thinking": {"type": "disabled"}} with
+# "Model 'Muse-Glimmer-30B' is thinking-only and cannot [be disabled]".
+# Effort: reasoning_effort = low | medium | high
+# Measured on FlexAI 2026-10-02 (reasoning tokens, n=5, max_tokens 8000):
+#   minimal 492 · low 475 · medium 901 · high 1584 · max 1555
+# Three separable bands, not five levels: minimal tracks low, and max tracks
+# high. The declared values are the band representatives. The gateway
+# validates reasoning_effort against a uniform minimal|low|medium|high|max
+# enum shared across models, so acceptance is not evidence of a distinct
+# honoured effect.
+# Re-checked 2026-10-05: low 772 · medium 1705 · high 2645 (median reasoning_content
+# chars). xhigh (in the OpenRouter peer's set) is rejected here with 400
+# "Unsupported reasoning_effort 'xhigh'; expected one of minimal, low, medium,
+# high, max", so it is not declared.
+# https://docs.flex.ai/inference-api/agents/langchain
+base_model = "meta/muse-glimmer-30b"
+
+[cost]
+input = 0.3
+output = 1.2
+cache_read = 0.045
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high"]
