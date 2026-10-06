@@ -1,0 +1,20 @@
+# Confidential (TEE) id; served inside a TEE by the same enclave deployments as
+# https://llm.chutes.ai/v1/models, whose limits and chat-template controls this entry follows.
+# Toggle: chat_template_kwargs.thinking = true|false
+base_model = "moonshotai/kimi-k2.6"
+name = "Kimi K2.6 TEE"
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "toggle"
+
+[cost]
+input = 0.465
+output = 2.6505
+cache_read = 0.0465
+
+[limit]
+context = 262_144
+output = 65_535
