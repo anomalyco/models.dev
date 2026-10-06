@@ -1,0 +1,28 @@
+name = "Agnes 3.0 Flash"
+description = "Low-cost model for coding, tool use, and multi-turn agent tasks. Supports text and image input, optional thinking, and a 512K-token context window."
+attachment = true
+reasoning = true
+tool_call = true
+structured_output = false
+temperature = true
+release_date = "2026-09"
+last_updated = "2026-09"
+open_weights = true
+
+[cost]
+input = 0
+output = 0
+
+[limit]
+context = 512_000
+output = 65_536
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "toggle" # API: {"chat_template_kwargs": {"enable_thinking": true}}

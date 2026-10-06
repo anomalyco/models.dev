@@ -1,0 +1,22 @@
+# Coding Plan model name from https://www.volcengine.com/docs/82379/1928261
+# (accessed 2026-10-06), listed alongside doubao-seed-2.0-mini / 2.1-lite.
+# Subscription tier: no per-token price.
+# Effort: not independently measured on this endpoint. none|low|high is copied
+# from the doubao-seed-2.x family on the same path (doubao-seed-2.0-lite and
+# doubao-seed-2.1-turbo, see git history) where medium overlapped low and
+# xhigh/max overlapped high rather than exceeding them. 'none' rather than a
+# toggle because thinking.type=disabled sent together with a graded effort was
+# rejected as an invalid combination there.
+base_model = "bytedance-seed/seed-2.1-pro"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "high"]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0
+output = 0
+cache_read = 0

@@ -1,0 +1,20 @@
+# Coding Plan model name from https://www.volcengine.com/docs/82379/1928261
+# (accessed 2026-10-06), listed alongside deepseek-v4-flash / -pro.
+# Subscription tier: no per-token price.
+# Toggle: copied from deepseek-v4-flash on the same path (POST
+# /api/coding/v3/chat/completions, verified there: enabled -> reasoning_tokens
+# 57, disabled -> 0), not independently re-measured on v4.1-flash. As on
+# v4-flash, graded reasoning_effort is accepted but not separable there, so only
+# the toggle is declared, matching the toggle the lab (providers/deepseek)
+# exposes.
+base_model = "deepseek/deepseek-v4.1-flash"
+
+[[reasoning_options]]
+type = "toggle"
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0
+output = 0
