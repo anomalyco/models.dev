@@ -1,0 +1,16 @@
+# https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-zai-glm-5-3.html
+# https://aws.amazon.com/bedrock/pricing/ (Z AI > GLM 5.3, Global CRIS Standard; cache_write is the 30-minute rate)
+# Cross-Region inference only: us.zai.glm-5.3 / global.zai.glm-5.3; in-Region on-demand is not supported.
+# Reasoning is always on with selectable effort (AWS launch post). AWS's Invoke sample sends
+# reasoning_effort = "max"; levels mirror the lab and peer hosts: low|high|max, no toggle.
+# Not live-probed on Bedrock (model access is limited to eligible customers).
+base_model = "zhipuai/glm-5.3"
+name = "GLM-5.3 (Global)"
+reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]
+interleaved = true
+
+[cost]
+input = 1.68
+output = 5.28
+cache_read = 0.312
+cache_write = 2.10
