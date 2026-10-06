@@ -40,7 +40,17 @@ const BaseModels: Record<string, string> = {
   "gpt-oss-120b": "openai/gpt-oss-120b",
   "gpt-oss-20b": "openai/gpt-oss-20b",
   "parakeet-tdt-0.6b-v3": "nvidia/parakeet-tdt-0.6b-v3",
-  "whisper-large-v3-turbo": "openai/whisper-large-v3-turbo",};
+  "whisper-large-v3-turbo": "openai/whisper-large-v3-turbo",
+};
+
+// Toggle wire per model where it is not thinking.type. On these models
+// thinking.type is accepted but does not disable reasoning; the chat-template
+// switch does (measured 2026-10-05).
+const ToggleWire: Record<string, string> = {
+  "Qwen3.8-27B": "chat_template_kwargs.enable_thinking = true | false",
+  "Qwen3.8-Flash-Next": "chat_template_kwargs.enable_thinking = true | false",
+};
+const DEFAULT_TOGGLE_WIRE = 'thinking.type = "enabled" | "disabled"';
 
 const FlexAIPricing = z
   .object({
@@ -106,7 +116,7 @@ export const flexai = {
     return {
       id: model.id,
       model: translated,
-      header: reasoningHeader(translated),
+      header: reasoningHeader(model.id, translated),
     };
   },
   missingModelID(model) {
@@ -133,13 +143,13 @@ export const flexai = {
  * comment in the file is dropped on the next sync -- so the wire path has to
  * live here rather than beside the option it documents.
  */
-function reasoningHeader(model: SyncedModel): string | undefined {
+function reasoningHeader(id: string, model: SyncedModel): string | undefined {
   const options = (model as { reasoning_options?: { type: string }[] })
     .reasoning_options;
   if (!options || options.length === 0) return undefined;
   const lines = [];
   if (options.some((option) => option.type === "toggle")) {
-    lines.push('# Toggle: thinking.type = "enabled" | "disabled"');
+    lines.push(`# Toggle: ${ToggleWire[id] ?? DEFAULT_TOGGLE_WIRE}`);
   }
   if (options.some((option) => option.type === "effort")) {
     lines.push("# Effort: reasoning_effort = <one of the values below>");
