@@ -6,7 +6,8 @@ import { factorBaseModel } from "./openrouter.js";
 const API_ENDPOINT = process.env.FLEXAI_MODELS_URL ?? "https://api.flex.ai/v1/models";
 
 // FlexAI serves a fixed, operator-curated fleet, so every served id maps to an
-// authored base model. An id absent from this map is reported as a missing
+// authored base model. Keys are the served ids, which are also the file names
+// (the catalog id is the id a client sends); values are each file's base_model. An id absent from this map is reported as a missing
 // model rather than authored automatically: the entries carry probed facts the
 // API does not express (see translateModel).
 const BaseModels: Record<string, string> = {
@@ -95,15 +96,15 @@ export const flexai = {
     return FlexAIResponse.parse(raw).data;
   },
   translateModel(model, context) {
-    // FlexAI's served id (e.g. "Qwen3-8B-FP8") is not the catalog's id for the
-    // entry: these files are overrides keyed by the base model they extend
-    // (e.g. "alibaba/qwen3-8b"), so the local id is the mapped base model.
-    const localID = BaseModels[model.id];
-    if (localID === undefined) return undefined;
-    const existing = context.existing(localID);
-    const translated = buildFlexAIModel(model, existing?.base_model ?? localID, existing);
+    // The catalog id is the served id (e.g. "Qwen3-8B-FP8"): it is what a
+    // client sends, and FlexAI rejects the base model's path-style id. The base
+    // model (e.g. "alibaba/qwen3-8b") is only what the entry extends.
+    const baseModel = BaseModels[model.id];
+    if (baseModel === undefined) return undefined;
+    const existing = context.existing(model.id);
+    const translated = buildFlexAIModel(model, existing?.base_model ?? baseModel, existing);
     return {
-      id: localID,
+      id: model.id,
       model: translated,
       header: reasoningHeader(translated),
     };
