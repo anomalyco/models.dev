@@ -4,11 +4,15 @@ family = "mistral-large"
 release_date = "2026-10-06"
 last_updated = "2026-10-06"
 attachment = true
-reasoning = false
+reasoning = true
 temperature = true
 tool_call = true
 structured_output = true
 open_weights = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "high"]
 
 [cost]
 input = 1.36
