@@ -8,6 +8,10 @@
 # validates reasoning_effort against a uniform minimal|low|medium|high|max
 # enum shared across models, so acceptance is not evidence of a distinct
 # honoured effect.
+# Re-checked 2026-10-05: low 772 · medium 1705 · high 2645 (median reasoning_content
+# chars). xhigh (in the OpenRouter peer's set) is rejected here with 400
+# "Unsupported reasoning_effort 'xhigh'; expected one of minimal, low, medium,
+# high, max", so it is not declared.
 # https://docs.flex.ai/inference-api/agents/langchain
 base_model = "meta/muse-glimmer-30b"
 
