@@ -1,3 +1,5 @@
+# Toggle: reasoning.enabled = true|false
+# https://vercel.com/docs/ai-gateway/sdks-and-apis/openai-chat-completions/reasoning
 name = "Gemini Nano Banana 2.1"
 description = "Image model for prompt-driven generation, editing, and visual design workflows"
 family = "nano-banana"
@@ -9,12 +11,16 @@ tool_call = false
 open_weights = false
 
 [[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
 type = "effort"
-values = ["none", "low", "medium", "high"]
+values = ["minimal", "medium", "high"]
 
 [cost]
 input = 1.5
 output = 7.5
+cache_read = 0.15
 
 [limit]
 context = 131_072
