@@ -1,0 +1,13 @@
+# Parasail OpenAI Chat (POST https://api.parasail.io/v1/chat/completions)
+# model = "parasail-mistral-small-32-24b" (mistralai/Mistral-Small-3.2-24B-Instruct-2506).
+# No reasoning control on this endpoint. Verified against the endpoint on 2026-09-22.
+# Catalog: https://platform.parasail.io/api/v1/prices/serverlessEndpoints
+base_model = "mistral/mistral-small-2506"
+
+[cost]
+input = 0.09
+output = 0.3
+cache_read = 0.05
+
+[limit]
+context = 131_072

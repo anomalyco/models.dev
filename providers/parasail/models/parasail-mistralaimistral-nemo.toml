@@ -1,0 +1,12 @@
+# Parasail OpenAI Chat (POST https://api.parasail.io/v1/chat/completions)
+# model = "parasail-mistralaimistral-nemo" (parasail-ai/Mistral-Nemo-Instruct-2407-FP8).
+# No reasoning control on this endpoint. Verified against the endpoint on 2026-09-22.
+# Catalog: https://platform.parasail.io/api/v1/prices/serverlessEndpoints
+base_model = "mistral/mistral-nemo"
+
+[cost]
+input = 0.03
+output = 0.03
+
+[limit]
+context = 131_072
