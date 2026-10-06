@@ -1,0 +1,8 @@
+# Sources: https://docs.mistral.ai/inference/pricing (Codestral $0.3 input, $0.03 cached, $0.9 output)
+# https://docs.mistral.ai/models/codestral-25-08 (128k context, pricing, July 30 2025)
+base_model = "mistral/codestral-2508"
+
+[cost]
+input = 0.30
+output = 0.90
+cache_read = 0.03
