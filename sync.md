@@ -20,6 +20,7 @@ The grouped sync targets are available for local convenience, but CI syncs each 
 - `bun models:sync xai` syncs only xAI.
 - `bun models:sync kilo` syncs only Kilo.
 - `bun models:sync merge-gateway` syncs only Merge Gateway.
+- `bun models:sync mistral` syncs only Mistral.
 - `bun models:sync openai` syncs only OpenAI catalog availability.
 - `bun models:sync ollama-cloud` syncs Ollama Cloud catalog availability.
 - `bun models:sync github-copilot` syncs only GitHub Copilot pricing.
@@ -246,6 +247,20 @@ GitHub Copilot is implemented in `packages/core/src/sync/providers/github-copilo
 - Display names are converted to file IDs, with minimal special case logic to match existing model entries.
 - Unmatched rows open missing-model issues, and local entries missing from the source are kept.
 - When removing a fully retired Copilot model, add its pricing-table slug to `IGNORED_ROWS` so stale pricing rows cannot trigger translation or missing-model issues. Models still served to some subscribers (such as Sonnet 4.6 on annual plans) remain eligible.
+
+## Mistral Notes
+
+Mistral is implemented in `packages/core/src/sync/providers/mistral.ts`.
+
+- Run it with `bun models:sync mistral` or `bun mistral:sync`.
+- Source endpoint: `https://api.mistral.ai/v1/models`; required auth: `MISTRAL_API_KEY`.
+- Every alias is listed as its own row, so existing alias TOMLs such as `mistral-small-latest` are updated from the model the alias currently resolves to.
+- The API is authoritative for the served context window (`max_context_length`), tool calling, reasoning support, image and audio input, and deprecation. The served context can be smaller than the documented one; Mistral Large 4 serves 524,288 tokens although its model card advertises 1M.
+- Pricing, output limits, reasoning controls, dates, and other metadata stay hand-authored because the endpoint does not expose them.
+- A model that newly reports reasoning without authored `reasoning_options` fails closed with a missing-model issue instead of getting invented controls.
+- Embedding, OCR, moderation, transcription, and TTS rows are ignored; existing TOMLs for them are kept unchanged.
+- New chat models are not created automatically (`skipCreates`). Each opens one deduped missing-model issue under its canonical ID (the row whose `id` equals its `name`), not once per alias.
+- Local models absent from the response are retained (`deleteMissing: false`) because the listing is scoped to the key's workspace and drops retired models.
 
 ## xAI Notes
 

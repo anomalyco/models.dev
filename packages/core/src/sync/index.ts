@@ -30,6 +30,7 @@ import { kilo } from "./providers/kilo.js";
 import { llmgateway, llmgatewayProviders } from "./providers/llmgateway.js";
 import { mergeGateway } from "./providers/merge-gateway.js";
 import { meta } from "./providers/meta.js";
+import { mistral } from "./providers/mistral.js";
 import { nanoGpt } from "./providers/nano-gpt.js";
 import { ollamaCloud } from "./providers/ollama-cloud.js";
 import { openai } from "./providers/openai.js";
@@ -165,6 +166,7 @@ export const providers: {
   "llmgateway-providers": SyncProvider<any>;
   "merge-gateway": SyncProvider<any>;
   meta: SyncProvider<any>;
+  mistral: SyncProvider<any>;
   "nano-gpt": SyncProvider<any>;
   ofox: SyncProvider<any>;
   "ollama-cloud": SyncProvider<any>;
@@ -204,6 +206,7 @@ export const providers: {
   "llmgateway-providers": llmgatewayProviders,
   "merge-gateway": mergeGateway,
   meta,
+  mistral,
   "nano-gpt": nanoGpt,
   ofox,
   "ollama-cloud": ollamaCloud,
@@ -237,7 +240,7 @@ export const groups = {
     "vercel",
   ],
   cloudflare: ["cloudflare-ai-gateway", "cloudflare-workers-ai"],
-  direct: ["aiand", "ambient", "anthropic", "baseten", "chutes", "cortecs", "deepinfra", "digitalocean", "fireworks-ai", "friendli", "github-copilot", "google", "hyper", "meta", "ollama-cloud", "openai", "ovhcloud", "pioneer", "tinfoil", "venice", "wandb", "xai"],
+  direct: ["aiand", "ambient", "anthropic", "baseten", "chutes", "cortecs", "deepinfra", "digitalocean", "fireworks-ai", "friendli", "github-copilot", "google", "hyper", "meta", "mistral", "ollama-cloud", "openai", "ovhcloud", "pioneer", "tinfoil", "venice", "wandb", "xai"],
 } as const;
 
 type ProviderID = keyof typeof providers;
