@@ -1,0 +1,16 @@
+# Source: https://docs.mistral.ai/models/mistral-large-4-0 (accessed 2026-10-06)
+# Public preview. Cost is the current 50%-off preview price; list price is
+# $1.36 input / $4.18 output / $0.14 cached input per MTok.
+# Effort: reasoning_effort = none|high, as for other Mistral reasoning models
+# (https://docs.mistral.ai/studio/conversations/reasoning).
+base_model = "mistral/mistral-large-4"
+status = "beta"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "high"]
+
+[cost]
+input = 0.68
+output = 2.09
+cache_read = 0.07
