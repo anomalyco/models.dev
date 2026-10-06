@@ -1,0 +1,11 @@
+base_model = "google/gemma-3-27b-it"
+name = "Gemma 3 27B IT (Nebius)"
+structured_output = true
+
+[cost]
+input = 0.1
+output = 0.3
+cache_read = 0.1
+
+[limit]
+context = 110_000

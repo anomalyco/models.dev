@@ -1,4 +1,5 @@
 # Host rates and limits: https://api.tokenfactory.corvex.cloud/v1/models (2026-10-06).
+# Host documentation states: maximum output 393,216 tokens, subject to remaining context space.
 # https://docs.corvex.cloud/models/zai-org/GLM-5.3 explicitly documents the output
 # ceiling: input tokens + requested output must fit within the context window.
 # Effort: reasoning_effort = low|high|max; no off control. The model's template

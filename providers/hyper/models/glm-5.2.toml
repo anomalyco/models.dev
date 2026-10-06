@@ -1,11 +1,10 @@
 base_model = "zhipuai/glm-5.2"
 release_date = "2026-06-30"
 last_updated = "2026-07-22"
-attachment = true
 
 [[reasoning_options]]
 type = "effort"
-values = ["none", "high", "max"]
+values = ["high", "xhigh"]
 
 [cost]
 input = 1.52432
@@ -13,8 +12,4 @@ output = 4.79072
 cache_read = 0.152432
 
 [limit]
-context = 1_048_576
 output = 32_768
-
-[modalities]
-input = ["text", "image"]

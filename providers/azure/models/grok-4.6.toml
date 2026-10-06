@@ -1,0 +1,14 @@
+# Source: https://learn.microsoft.com/en-us/azure/foundry/foundry-models/how-to/use-foundry-models-grok
+# Pricing: https://azure.microsoft.com/en-us/pricing/details/ai-foundry-models/grok/
+# Azure's public pricing page does not list Grok 4.6 rates as of 2026-09-02.
+# Omit cost rather than assume xAI's token/cache rates or >200k context tier.
+base_model = "xai/grok-4.6"
+status = "beta"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high", "xhigh"]
+
+[limit]
+context = 200_000
+output = 128_000

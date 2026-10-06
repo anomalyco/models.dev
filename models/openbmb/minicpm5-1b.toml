@@ -1,0 +1,25 @@
+# Sources (accessed 2026-09-03):
+# https://huggingface.co/openbmb/MiniCPM5-1B (model card, config)
+# https://github.com/OpenBMB/MiniCPM (release announcement 2026-05-19)
+name = "MiniCPM5-1B"
+description = "Dense 1B-class open-source model for on-device and resource-constrained use, with native long-context support, Think / No Think chat modes, and tool calling"
+release_date = "2026-05-19"
+last_updated = "2026-05-19"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+open_weights = true
+license = "apache-2.0"
+
+[limit]
+context = 131_072
+output = 131_072
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/openbmb/MiniCPM5-1B"

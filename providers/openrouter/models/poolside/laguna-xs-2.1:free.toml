@@ -1,7 +1,11 @@
+# Toggle: reasoning.enabled = true|false
+# https://openrouter.ai/docs/guides/best-practices/reasoning-tokens
 base_model = "poolside/laguna-xs-2.1"
 name = "Laguna XS 2.1 (free)"
 description = "Free provider route for experiments, demos, and cost-sensitive chat workloads"
-reasoning_options = []
+
+[[reasoning_options]]
+type = "toggle"
 
 [cost]
 input = 0

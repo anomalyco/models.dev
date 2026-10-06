@@ -1,0 +1,11 @@
+name = "above.dev"
+env = ["ABOVE_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+# OpenAI-compatible gateway selling upstream cost plus a flat 10% on every
+# token class, with the full upstream cache-hit discount passed through.
+# DeepSeek models use time-of-day pricing (peak = 2x, weekdays 01:00-04:00 and
+# 06:00-10:00 UTC; weekends off-peak); costs below are the off-peak rate.
+# Every response reports its exact cost in the `x-cost-usd` header.
+# https://above.dev/llms.txt
+api = "https://api.above.dev/v1"
+doc = "https://above.dev/docs"

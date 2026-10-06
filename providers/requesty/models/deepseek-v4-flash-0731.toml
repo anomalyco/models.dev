@@ -4,13 +4,10 @@ base_model = "deepseek/deepseek-v4-flash-0731"
 type = "effort"
 values = ["none", "low", "medium", "high", "max"]
 
-[[reasoning_options]]
-type = "budget_tokens"
-
 [cost]
-input = 0.126
-output = 0.252
-cache_read = 0.063
+input = 0.28
+output = 0.56
+cache_read = 0.07
 
 [limit]
 context = 1_048_576

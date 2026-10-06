@@ -1,3 +1,4 @@
+# Cost from https://ollama.com/pricing (accessed 2026-09-15).
 name = "glm-5.1"
 description = "Flagship GLM model for hybrid reasoning, coding, and agentic engineering"
 family = "glm"
@@ -19,3 +20,8 @@ output = 131072
 [modalities]
 input = ["text"]
 output = ["text"]
+
+[cost]
+input = 1.0
+output = 3.2
+cache_read = 0.2

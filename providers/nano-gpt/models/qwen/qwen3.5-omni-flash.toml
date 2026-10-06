@@ -1,0 +1,19 @@
+name = "Qwen3.5 Omni Flash"
+description = "Qwen3.5 Omni Flash is Qwen's fast multimodal model. We verified live support for text prompts, images, audio files, and direct video URLs on Alibaba's chat-completions-compatible API. Alibaba describes Flash as a fully evolved version of Qwen3 Omni with audio input support across 60+ languages."
+family = "qwen3.5"
+release_date = "2026-03-30"
+last_updated = "2026-03-30"
+attachment = true
+reasoning = false
+tool_call = false
+structured_output = false
+open_weights = false
+
+[limit]
+context = 49_152
+input = 49_152
+output = 16_384
+
+[modalities]
+input = ["text", "image", "video", "audio"]
+output = ["text"]

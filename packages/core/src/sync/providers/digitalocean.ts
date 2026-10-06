@@ -11,7 +11,8 @@ const CATALOG_API = "https://api.digitalocean.com/v2/gen-ai/models/catalog?limit
 export const DigitalOceanModel = z.object({
   id: z.string().min(1),
   name: z.string().min(1),
-  lifecycle_status: z.string(),
+  // The models endpoint also returns retired rows absent from the public catalog.
+  lifecycle_status: z.string().optional(),
   type: z.string().optional(),
   thinking: z.boolean().optional(),
   reasoning_efforts: z.array(z.string()).optional(),
@@ -401,9 +402,11 @@ function isReasoningEffort(value: string | null): value is ReasoningEffort {
 }
 
 function status(
-  lifecycleStatus: string,
+  lifecycleStatus: string | undefined,
   existing: ExistingModel["status"],
 ): ExistingModel["status"] {
+  // Retired models can remain in the models feed with no lifecycle status.
+  if (lifecycleStatus === undefined) return "deprecated";
   const lifecycle = lifecycleStatus.trim().toLowerCase().replaceAll("_", "-");
   if (lifecycle.length === 0) return existing;
   if (lifecycle === "deprecated" || lifecycle === "end-of-life") return "deprecated";
@@ -575,13 +578,13 @@ export function resolveDigitalOceanBaseModel(id: string) {
   if (id.startsWith("gemma")) candidates.push(`google/${id}`);
 
   // anthropic-claude-5-sonnet → anthropic/claude-sonnet-5
-  const anthropicSwapped = id.match(/^anthropic-claude-(\d+(?:\.\d+)?)-(opus|sonnet|haiku)$/);
+  const anthropicSwapped = id.match(/^anthropic-claude-(\d+(?:\.\d+)?)-([a-z]+)$/);
   if (anthropicSwapped !== null) {
     candidates.push(`anthropic/claude-${anthropicSwapped[2]}-${anthropicSwapped[1]}`);
   }
   // anthropic-claude-opus-5 → anthropic/claude-opus-5
   // also normalize dotted versions: anthropic-claude-opus-4.6 → anthropic/claude-opus-4-6
-  const anthropicFamily = id.match(/^anthropic-claude-(opus|sonnet|haiku)-(\d+(?:\.\d+)?)$/);
+  const anthropicFamily = id.match(/^anthropic-claude-([a-z]+)-(\d+(?:\.\d+)?)$/);
   if (anthropicFamily !== null) {
     const version = anthropicFamily[2].replaceAll(".", "-");
     candidates.push(`anthropic/claude-${anthropicFamily[1]}-${anthropicFamily[2]}`);

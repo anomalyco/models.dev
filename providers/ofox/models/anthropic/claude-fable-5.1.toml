@@ -1,0 +1,17 @@
+# Sources:
+# - https://ofox.ai/models/anthropic/claude-fable-5.1 (pricing, context, capabilities; accessed 2026-09-03)
+# - https://api.ofox.ai/v2/models/catalog (remote id anthropic/claude-fable-5.1)
+# - Lab: models/anthropic/claude-fable-5-1.toml; first-party effort: providers/anthropic/models/claude-fable-5-1.toml
+# Effort: Anthropic adaptive thinking effort on Ofox Anthropic protocol (same surface as other ofox anthropic/* entries)
+base_model = "anthropic/claude-fable-5-1"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
+
+[cost]
+input = 10
+output = 50
+cache_read = 0.25
+cache_write = 12.5
+
+[provider]
+npm = "@ai-sdk/anthropic"
+api = "https://api.ofox.ai/anthropic/v1"

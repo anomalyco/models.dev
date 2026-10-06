@@ -1,0 +1,30 @@
+# Coding Plan model name from https://www.volcengine.com/docs/82379/1928261
+# (accessed 2026-08-26). Subscription tier: no per-token price.
+# Effort: POST /api/coding/v3/chat/completions accepts low|medium|high|xhigh|max,
+# but only the three effective levels are declared. This model reports
+# reasoning_tokens = 0 on every level, so the measure is reasoning_content length;
+# over n=5 runs per level on a prompt hard enough to consume the thinking budget:
+#   low    0 0 0 0 0          medium 0 0 0 0 0            -> medium aliases low
+#   high   169 149 0 188 0
+#   xhigh  2840 1943 3338 4655 6279  max 2363 4567 2962 4606 2327
+#                                                          -> xhigh aliases max
+# Three distinct tiers, matching the lab (providers/zai) and the coding-plan peers.
+# Volcengine's mapping table (82379/1449737) covers glm-5-2-260617 but not 5.3, and
+# that row disagrees with what 5.3 does here (it maps low/medium to high, whereas
+# 5.3 returns no reasoning at all on both), so these levels are set from the
+# measurements above rather than from that table.
+# No toggle: both reasoning_effort=none|minimal and thinking.type=disabled are
+# rejected with 'not supported by this model'.
+base_model = "zhipuai/glm-5.3"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0
+output = 0
+cache_read = 0

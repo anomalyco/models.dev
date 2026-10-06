@@ -1,7 +1,6 @@
 # Source: https://api-gateway.merge.dev/v1/models?model=deepseek%2Fdeepseek-v4-flash (accessed 2026-07-21)
 # Selected route reasoning.controls = ["thinking"], disable_supported = true.
 base_model = "deepseek/deepseek-v4-flash"
-structured_output = false
 
 [interleaved]
 field = "reasoning_content"
@@ -10,6 +9,9 @@ field = "reasoning_content"
 type = "toggle"
 
 [cost]
-input = 0.22
-output = 0.66
+input = 0.035
+output = 0.07
 cache_read = 0.007
+
+[limit]
+context = 1_048_576

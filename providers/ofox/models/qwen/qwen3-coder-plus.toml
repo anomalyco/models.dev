@@ -1,0 +1,14 @@
+# Sources (accessed 2026-09-10):
+# https://ofox.ai/models/qwen/qwen3-coder-plus
+# https://api.ofox.ai/v1/models/qwen/qwen3-coder-plus
+base_model = "alibaba/qwen3-coder-plus"
+
+[cost]
+input = 1.8
+output = 9
+cache_read = 0.2
+cache_write = 1
+
+[limit]
+context = 1_000_000
+output = 64_000

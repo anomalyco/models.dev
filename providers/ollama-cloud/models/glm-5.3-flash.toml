@@ -1,0 +1,15 @@
+# Cost from https://ollama.com/pricing (accessed 2026-09-15).
+base_model = "zhipuai/glm-5.3-flash"
+open_weights = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.15
+output = 0.5
+cache_read = 0.03

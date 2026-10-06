@@ -1,3 +1,5 @@
+# Toggle: reasoning.enabled = true|false
+# https://openrouter.ai/docs/guides/best-practices/reasoning-tokens
 name = "LongCat 2.0"
 description = "Reasoning model for deliberate analysis, multi-step problem solving, and tool use"
 family = "longcat"
@@ -9,6 +11,9 @@ temperature = true
 tool_call = true
 structured_output = false
 open_weights = true
+
+[[reasoning_options]]
+type = "toggle"
 
 [[reasoning_options]]
 type = "budget_tokens"

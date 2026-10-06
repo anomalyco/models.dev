@@ -113,7 +113,9 @@ export const llmgateway = {
     if (data.length === 0) {
       throw new Error("LLM Gateway returned no text models");
     }
-    return data;
+    // Case-insensitive ID conflicts use the last entry, including its original
+    // casing and complete record; never mix metadata from different routes.
+    return [...new Map(data.map((model) => [model.id.toLowerCase(), model])).values()];
   },
   translateModel(model, context) {
     const translated = buildLLMGatewayModel(model, context.existing(model.id));

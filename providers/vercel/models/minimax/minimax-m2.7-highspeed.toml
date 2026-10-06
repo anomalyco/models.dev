@@ -1,7 +1,9 @@
 base_model = "minimax/MiniMax-M2.7-highspeed"
-reasoning_options = []
 name = "MiniMax M2.7 High Speed"
 attachment = true
+
+[[reasoning_options]]
+type = "budget_tokens"
 
 [cost]
 input = 0.6

@@ -1,7 +1,10 @@
 base_model = "alibaba/qwen3.7-max"
 release_date = "2026-05-28"
 last_updated = "2026-07-22"
-reasoning_options = []
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "minimal", "low", "medium", "high"]
 
 [cost]
 input = 2.5

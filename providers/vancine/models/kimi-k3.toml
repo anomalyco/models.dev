@@ -1,0 +1,24 @@
+# Sources (accessed 2026-07-17):
+# https://platform.kimi.ai/docs/pricing/chat-k3
+# https://platform.moonshot.ai/docs/api/chat
+# Lab reasoning controls: thinking.type = "enabled" | "disabled" | "adaptive";
+# in adaptive mode the depth is set by output_config.effort = "low"|"high"|"max".
+# Interleaved field: reasoning_content.
+# Lab cost: input 3.00 / output 15.00 / cache_read 0.30 (USD/MTok).
+# Vancine public pricing (/api/pricing) is 2.40 / 12.00 / 0.24 (USD/MTok).
+base_model = "moonshotai/kimi-k3"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 2.40
+output = 12.00
+cache_read = 0.24

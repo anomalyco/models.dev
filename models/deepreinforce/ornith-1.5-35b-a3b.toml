@@ -1,0 +1,28 @@
+name = "Ornith 1.5 35B A3B"
+description = "Mixture-of-experts coding-reasoning model for agentic software tasks, tool use, and image understanding"
+family = "ornith"
+release_date = "2026-08-18"
+last_updated = "2026-08-23"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = true
+license = "MIT"
+
+[limit]
+context = 262_144
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/ornith-ai/Ornith-1.5-35B-A3B"
+
+[[links]]
+label = "Model card"
+url = "https://huggingface.co/ornith-ai/Ornith-1.5-35B-A3B"
+type = "model_card"

@@ -1,0 +1,16 @@
+# AIHubMix pricing per https://aihubmix.com/model/deepseek-v4.1-flash (accessed 2026-09-11).
+# Base/off-peak rate: input $0.155, output $0.62, cache $0.0031 per 1M tokens.
+# Peak rate (01:00-04:00, 06:00-10:00 UTC) is 2x: input $0.3098, output $1.2392, cache $0.0062.
+# Toggle: enable_thinking = true|false
+# Effort: reasoning_effort = low|high|max
+# AIHubMix effort levels returned HTTP 200 (validated 2026-08-31T04:17:24Z).
+base_model = "deepseek/deepseek-v4.1-flash"
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "high", "max"] }]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.155
+output = 0.62
+cache_read = 0.0031

@@ -1,0 +1,26 @@
+# Source: https://runinfra.ai/inference-api/ornith-1-5-35b
+# Reasoning control, probed live on this serve 2026-08-27 (temperature 0, fixed prompt,
+# 3 repeats per level, reproducible to the token): reasoning_effort = "none" completes in 4
+# tokens while the omitted default completes in 78, and "low", "medium", "high", "xhigh" and
+# "max" all complete in 78, identical to the default. So the control is an on/off toggle and
+# no graded ladder is claimed. Values outside the accepted set are refused (probed "bogus": 400).
+# Reasoning streams on a "reasoning_content" delta field (probed live).
+# cache_read is the cached input price and prefix caching is real, not declared: an identical
+# 4,200-token prompt repeated 6 times reported cached_tokens 0 then 6,976 on every later attempt.
+# The output budget is what THIS deployment was launched with; the context window matches the
+# lab entry and is therefore not restated here.
+base_model = "deepreinforce/ornith-1.5-35b-a3b"
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "toggle"
+
+[cost]
+input = 0.10
+output = 0.40
+cache_read = 0.01
+
+[limit]
+output = 32_768

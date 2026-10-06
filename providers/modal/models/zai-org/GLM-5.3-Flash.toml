@@ -1,0 +1,24 @@
+# Modal Shared Endpoint model ID: zai-org/GLM-5.3-Flash.
+# Pricing is USD per 1M tokens: prompt $0.45, cached prompt $0.09,
+# and completion $1.50.
+# Modal documents text, image, and video input with a 1M-token context window.
+# Effort: reasoning_effort = low|high|max; defaults to max.
+# https://modal.com/library/zai/glm-5-3-flash
+# https://huggingface.co/zai-org/GLM-5.3-Flash
+base_model = "zhipuai/glm-5.3-flash"
+name = "GLM 5.3 Flash"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.45
+output = 1.5
+cache_read = 0.09
+
+[modalities]
+input = ["text", "image", "video"]

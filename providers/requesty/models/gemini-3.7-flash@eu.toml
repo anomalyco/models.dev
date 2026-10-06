@@ -5,13 +5,10 @@ name = "Gemini 3.7 Flash (EU)"
 type = "effort"
 values = ["none", "low", "medium", "high", "max"]
 
-[[reasoning_options]]
-type = "budget_tokens"
-
 [cost]
-input = 0.66
-output = 3.3
-cache_read = 0.066
+input = 0.825
+output = 4.125
+cache_read = 0.0825
 
 [limit]
 output = 65_535

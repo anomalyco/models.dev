@@ -1,0 +1,26 @@
+name = "Apodex: Apodex 1.1 Mini (free)"
+description = "Apodex 1.1 Mini is a reasoning-first model from Apodex, built for complex, long-horizon research and forecasting tasks. It works directly with files, data, code, and tools to produce verifiable results,..."
+release_date = "2026-10-01"
+last_updated = "2026-10-01"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "high"]
+
+[cost]
+input = 0
+output = 0
+
+[limit]
+context = 262_144
+output = 235_929
+
+[modalities]
+input = ["text"]
+output = ["text"]

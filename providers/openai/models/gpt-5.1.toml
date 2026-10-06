@@ -6,7 +6,7 @@ last_updated = "2025-11-13"
 attachment = true
 reasoning = true
 reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high"] }]
-temperature = false
+temperature = true
 knowledge = "2024-09-30"
 tool_call = true
 structured_output = true
@@ -25,3 +25,11 @@ output = 128_000
 [modalities]
 input = ["text", "image"]
 output = ["text"]
+
+[experimental.modes.fast]
+cost = { input = 2.50, output = 20.00, cache_read = 0.25 }
+provider = { body = { service_tier = "priority" } }
+
+[experimental.modes.flex]
+cost = { input = 0.625, output = 5.00, cache_read = 0.0625 }
+provider = { body = { service_tier = "flex" } }

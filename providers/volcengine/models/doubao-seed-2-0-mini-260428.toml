@@ -1,0 +1,37 @@
+# Model ID verified against POST /api/v3/chat/completions (2026-08-26): `doubao-seed-2-0-mini-260428`
+# CNY→USD rate: 6.737012, 2026-08-26, source: https://open.er-api.com/v6/latest/USD
+# CNY list price source: https://www.volcengine.com/docs/82379/1544106
+# Effort: reasoning_effort = none|minimal|low|medium|high|xhigh|max
+# none/minimal disable thinking, so no separate toggle: sending effort alone
+# already enables it, and thinking.type=disabled + a graded effort is rejected.
+# Output limit: the lab default is 32_000, but this host accepts up to 131_072
+# (verified 2026-08-27: max_tokens=131072 -> 200, 132000 -> 400 invalid), matching
+# what openrouter/kilo/nano-gpt already declare for this model. Overridden below.
+base_model = "bytedance-seed/seed-2.0-mini"
+
+[limit]
+output = 131_072
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.02969
+output = 0.29687
+cache_read = 0.00594
+
+[[cost.tiers]]
+tier = { type = "context", size = 32_000 }
+input = 0.05937
+output = 0.59374
+cache_read = 0.01187
+
+[[cost.tiers]]
+tier = { type = "context", size = 128_000 }
+input = 0.11875
+output = 1.18747
+cache_read = 0.02375

@@ -6,11 +6,11 @@
 import "sst"
 declare module "sst" {
   export interface Resource {
-    "LakeSecret": {
+    "LakeEndpoint": {
       "type": "sst.sst.Secret"
       "value": string
     }
-    "LakeUrl": {
+    "LakeToken": {
       "type": "sst.sst.Secret"
       "value": string
     }

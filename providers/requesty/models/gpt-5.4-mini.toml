@@ -4,10 +4,7 @@ base_model = "openai/gpt-5.4-mini"
 type = "effort"
 values = ["none", "low", "medium", "high", "max"]
 
-[[reasoning_options]]
-type = "budget_tokens"
-
 [cost]
-input = 0.675
-output = 4.05
-cache_read = 0.0675
+input = 0.75
+output = 4.5
+cache_read = 0.075

@@ -1,0 +1,7 @@
+# Cost: 302.AI bills Sol at GPT-5.5 rates ($5.000/$30.000 per MTok, intentionally above OpenAI list $4/$20), per live catalog https://api.302.ai/v1/models (retrieved 2026-09-08)
+base_model = "openai/gpt-5.6-sol"
+reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh", "max"] }]
+
+[cost]
+input = 5.0
+output = 30.0

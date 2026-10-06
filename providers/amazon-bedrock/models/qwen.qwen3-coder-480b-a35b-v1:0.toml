@@ -1,24 +1,13 @@
-name = "Qwen3 Coder 480B A35B Instruct"
-description = "Qwen coding model for software agents, repository edits, and code reasoning"
-family = "qwen"
-release_date = "2025-09-18"
+# https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-qwen-qwen3-coder-480b-a35b-instruct.html
+# AWS Price List: USW2-Qwen3Coder-480B-A35B-{input,output}-tokens (Standard).
+base_model = "alibaba/qwen3-coder-480b-a35b-instruct"
+release_date = "2025-07-23"
 last_updated = "2025-09-18"
-attachment = false
-reasoning = false
-temperature = true
-knowledge = "2024-04"
-tool_call = true
 structured_output = true
-open_weights = true
 
 [cost]
-input = 0.22
+input = 0.45
 output = 1.8
 
 [limit]
 context = 131_072
-output = 65_536
-
-[modalities]
-input = ["text"]
-output = ["text"]

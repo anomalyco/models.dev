@@ -1,3 +1,6 @@
+# Prices verified against SiliconFlow international, GLM-5.1 model page
+# (https://www.siliconflow.com/models/glm-5-1, accessed 2026-09-08):
+# input $1.19, cached input $0.6, output $3.74 per M tokens.
 name = "zai-org/GLM-5.1"
 description = "Flagship GLM model for hybrid reasoning, coding, and agentic engineering"
 family = "glm"
@@ -15,14 +18,14 @@ open_weights = true
 field = "reasoning_content"
 
 [cost]
-input = 1.4
-output = 4.4
-cache_read = 0.26
+input = 1.19
+output = 3.74
+cache_read = 0.6
 cache_write = 0
 
 [limit]
 context = 205_000
-output = 205_000
+output = 131_000
 
 [modalities]
 input = ["text"]

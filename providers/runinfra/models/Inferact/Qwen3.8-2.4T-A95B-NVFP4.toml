@@ -8,11 +8,15 @@
 # It is not published as a separate rung because it is not a distinct behaviour, only the
 # OpenAI ladder's word for the maximum, and this serve's maximum is "xhigh". Callers that
 # send "high" are served rather than refused.
-# Reasoning cannot be turned off: reasoning_effort = "none" is rejected with HTTP 400
-# "Disabling thinking is not supported." That refusal is deliberate and is NOT folded, so a
-# caller asking to switch reasoning off learns the model has no off switch instead of being
-# silently charged the most expensive setting. enable_thinking / chat_template_kwargs /
-# thinking_budget are accepted but have no effect.
+# Reasoning cannot be turned off: reasoning_effort = "none" is rejected with HTTP 400, and the
+# refusal is deliberate rather than folded, so such a request is never silently served and
+# billed at the most expensive setting.
+# ONE CLAIM THAT SAT HERE WAS CORRECTED 2026-08-27 after re-measuring the buyer path. It used
+# to say the caller learns this model has no off switch. That is not what happens. The gateway
+# authors every rejection sentence a buyer reads and answers an unrecognised refusal with a
+# generic one, so a caller sending "none" learns the request was rejected and no more. The
+# reason is recorded because the claim was true when written and quietly stopped being true.
+# enable_thinking / chat_template_kwargs / thinking_budget are accepted but have no effect.
 # cache_read is the cached input price. JSON mode went live on this host 2026-08-17,
 # verified on the public path: 3 of 3 json_object responses parsed and 3 of 3 strict
 # json_schema responses validated, at 0.35x baseline latency, so structured_output now

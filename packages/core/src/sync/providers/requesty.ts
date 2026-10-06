@@ -26,6 +26,7 @@ const MODELS_DIR = path.join(
 );
 const TOKENS_PER_MILLION = 1_000_000;
 const PRICE_DECIMALS = 1_000_000;
+// Documented shared values; xhigh is model-specific and not in the catalog API.
 const REASONING_EFFORTS = ["none", "low", "medium", "high", "max"] as const;
 const REGION_SUFFIX = /@[a-z0-9-]+$/i;
 const ANTHROPIC_DOT_ZERO = /^claude-(?:opus|sonnet|haiku)-\d+$/;
@@ -133,6 +134,9 @@ export function resolveRequestyBaseModel(id: string) {
     const bare = id.replace(REGION_SUFFIX, "");
     return (
         resolveModelMetadataBaseModel(bare) ??
+        (bare.startsWith("claude-")
+            ? resolveModelMetadataBaseModel(`anthropic/${bare}`)
+            : undefined) ??
         (ANTHROPIC_DOT_ZERO.test(bare)
             ? resolveModelMetadataBaseModel(`${bare}-0`)
             : undefined)
@@ -174,15 +178,15 @@ function reasoningOptions(
         return;
     }
 
-    return [
-        { type: "effort", values: [...REASONING_EFFORTS] },
-        { type: "budget_tokens" },
-    ];
+    // The synced OpenAI-compatible route exposes reasoning_effort, not a
+    // separate budget_tokens control. Numeric efforts can be mapped to tiers.
+    return [{ type: "effort", values: [...REASONING_EFFORTS] }];
 }
 
 function buildCost(model: RequestyModel): SyncedFullModel["cost"] {
-    const input = model.input_price;
-    const output = model.output_price;
+    const base = model.pricing?.[0] ?? model;
+    const input = base.input_price;
+    const output = base.output_price;
     if (input == null || output == null) return undefined;
 
     const tiers = (model.pricing ?? []).slice(1).map((band) => ({
@@ -195,8 +199,8 @@ function buildCost(model: RequestyModel): SyncedFullModel["cost"] {
     return {
         input: pricePerMillion(input),
         output: pricePerMillion(output),
-        cache_read: chargedPricePerMillion(model.cached_price),
-        cache_write: chargedPricePerMillion(model.caching_price),
+        cache_read: chargedPricePerMillion(base.cached_price),
+        cache_write: chargedPricePerMillion(base.caching_price),
         tiers: tiers.length > 0 ? tiers : undefined,
     };
 }

@@ -4,16 +4,15 @@ base_model = "openai/gpt-5.6-terra"
 type = "effort"
 values = ["none", "low", "medium", "high", "max"]
 
-[[reasoning_options]]
-type = "budget_tokens"
-
 [cost]
-input = 1.8
-output = 10.8
-cache_read = 0.18
+input = 2
+output = 12
+cache_read = 0.2
+cache_write = 2.5
 
 [[cost.tiers]]
 tier = { type = "context", size = 272_000 }
-input = 3.6
-output = 16.2
-cache_read = 0.36
+input = 4
+output = 18
+cache_read = 0.4
+cache_write = 5

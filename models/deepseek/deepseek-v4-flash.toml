@@ -1,3 +1,4 @@
+# Added benchmarks are from the original V4 preview instruct-model comparison, not the later 0731/0813 releases.
 name = "DeepSeek V4 Flash"
 description = "Fast DeepSeek V4 lane for economical reasoning, coding, and long-context work"
 family = "deepseek-flash"
@@ -27,4 +28,156 @@ url = "https://huggingface.co/deepseek-ai/DeepSeek-V4-Flash"
 name = "SWE-Bench Verified"
 score = 79
 metric = "resolved"
+source = "https://huggingface.co/deepseek-ai/DeepSeek-V4-Flash"
+
+[[benchmarks]]
+name = "MMLU-Pro"
+score = 86.2
+metric = "EM"
+variant = "preview checkpoint; max effort"
+source = "https://huggingface.co/deepseek-ai/DeepSeek-V4-Flash"
+
+[[benchmarks]]
+name = "SimpleQA-Verified"
+score = 34.1
+metric = "pass@1"
+variant = "preview checkpoint; max effort"
+source = "https://huggingface.co/deepseek-ai/DeepSeek-V4-Flash"
+
+[[benchmarks]]
+name = "Chinese SimpleQA"
+score = 78.9
+metric = "pass@1"
+variant = "preview checkpoint; max effort"
+source = "https://huggingface.co/deepseek-ai/DeepSeek-V4-Flash"
+
+[[benchmarks]]
+name = "GPQA Diamond"
+score = 88.1
+metric = "pass@1"
+variant = "preview checkpoint; max effort"
+source = "https://huggingface.co/deepseek-ai/DeepSeek-V4-Flash"
+
+[[benchmarks]]
+name = "Humanity's Last Exam"
+score = 34.8
+metric = "pass@1"
+variant = "preview checkpoint; max effort; without tools"
+source = "https://huggingface.co/deepseek-ai/DeepSeek-V4-Flash"
+
+[[benchmarks]]
+name = "LiveCodeBench"
+score = 91.6
+metric = "pass@1"
+variant = "preview checkpoint; max effort"
+source = "https://huggingface.co/deepseek-ai/DeepSeek-V4-Flash"
+
+[[benchmarks]]
+name = "Codeforces"
+score = 3052
+metric = "rating"
+variant = "preview checkpoint; max effort"
+source = "https://huggingface.co/deepseek-ai/DeepSeek-V4-Flash"
+
+[[benchmarks]]
+name = "HMMT"
+score = 94.8
+metric = "pass@1"
+variant = "preview checkpoint; max effort"
+dataset = "February 2026"
+source = "https://huggingface.co/deepseek-ai/DeepSeek-V4-Flash"
+
+[[benchmarks]]
+name = "IMOAnswerBench"
+score = 88.4
+metric = "pass@1"
+variant = "preview checkpoint; max effort"
+source = "https://huggingface.co/deepseek-ai/DeepSeek-V4-Flash"
+
+[[benchmarks]]
+name = "MathArena Apex"
+score = 33
+metric = "pass@1"
+variant = "preview checkpoint; max effort"
+source = "https://huggingface.co/deepseek-ai/DeepSeek-V4-Flash"
+
+[[benchmarks]]
+name = "MathArena Apex Shortlist"
+score = 85.7
+metric = "pass@1"
+variant = "preview checkpoint; max effort"
+source = "https://huggingface.co/deepseek-ai/DeepSeek-V4-Flash"
+
+[[benchmarks]]
+name = "MRCR"
+score = 78.7
+metric = "MMR"
+variant = "preview checkpoint; max effort"
+dataset = "1M context"
+source = "https://huggingface.co/deepseek-ai/DeepSeek-V4-Flash"
+
+[[benchmarks]]
+name = "CorpusQA"
+score = 60.5
+metric = "accuracy"
+variant = "preview checkpoint; max effort"
+dataset = "1M context"
+source = "https://huggingface.co/deepseek-ai/DeepSeek-V4-Flash"
+
+[[benchmarks]]
+name = "Terminal-Bench"
+score = 56.9
+metric = "accuracy"
+variant = "preview checkpoint; max effort"
+version = "2.0"
+source = "https://huggingface.co/deepseek-ai/DeepSeek-V4-Flash"
+
+[[benchmarks]]
+name = "SWE-Bench Pro"
+score = 52.6
+metric = "resolved"
+variant = "preview checkpoint; max effort"
+source = "https://huggingface.co/deepseek-ai/DeepSeek-V4-Flash"
+
+[[benchmarks]]
+name = "SWE-Bench Multilingual"
+score = 73.3
+metric = "resolved"
+variant = "preview checkpoint; max effort"
+source = "https://huggingface.co/deepseek-ai/DeepSeek-V4-Flash"
+
+[[benchmarks]]
+name = "BrowseComp"
+score = 73.2
+metric = "pass@1"
+variant = "preview checkpoint; max effort"
+source = "https://huggingface.co/deepseek-ai/DeepSeek-V4-Flash"
+
+[[benchmarks]]
+name = "Humanity's Last Exam"
+score = 45.1
+metric = "pass@1"
+variant = "preview checkpoint; max effort; with tools"
+source = "https://huggingface.co/deepseek-ai/DeepSeek-V4-Flash"
+
+[[benchmarks]]
+name = "MCP Atlas"
+score = 69
+metric = "pass@1"
+variant = "preview checkpoint; max effort"
+dataset = "public"
+source = "https://huggingface.co/deepseek-ai/DeepSeek-V4-Flash"
+
+[[benchmarks]]
+name = "GDPval-AA"
+score = 1395
+metric = "Elo"
+variant = "preview checkpoint; max effort"
+source = "https://huggingface.co/deepseek-ai/DeepSeek-V4-Flash"
+
+[[benchmarks]]
+name = "Toolathlon"
+score = 47.8
+metric = "pass@1"
+variant = "preview checkpoint; max effort"
 source = "https://huggingface.co/deepseek-ai/DeepSeek-V4-Flash"

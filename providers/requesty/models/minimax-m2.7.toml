@@ -5,14 +5,11 @@ structured_output = true
 type = "effort"
 values = ["none", "low", "medium", "high", "max"]
 
-[[reasoning_options]]
-type = "budget_tokens"
-
 [cost]
-input = 0.27
-output = 1.08
-cache_read = 0.054
-cache_write = 1.08
+input = 0.3
+output = 1.2
+cache_read = 0.06
+cache_write = 1.2
 
 [limit]
 context = 200_000

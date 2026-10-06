@@ -5,6 +5,7 @@ export const MAX_CREATED_MODELS = 10;
 export const MAX_DELETED_MODELS = 10;
 export const MAX_MODEL_CHURN = 15;
 const REVIEWED_REASONING_PROVIDERS = new Set([
+  "aiand",
   "crossmodel",
   "edenai",
   "empiriolabs",
@@ -16,6 +17,7 @@ const REVIEWED_REASONING_PROVIDERS = new Set([
   "nano-gpt",
   "openrouter",
   "venice",
+  "vercel",
 ]);
 
 export interface CatalogChange {
@@ -54,6 +56,14 @@ export async function classifyAutoMerge(
   if (deleted > MAX_DELETED_MODELS) reasons.push(`${deleted} models deleted (limit ${MAX_DELETED_MODELS})`);
   if (created + deleted > MAX_MODEL_CHURN) {
     reasons.push(`${created + deleted} models created or deleted (limit ${MAX_MODEL_CHURN})`);
+  }
+  if (
+    models.some((change) =>
+      change.status === "deleted"
+      && change.path.startsWith("providers/cloudflare-ai-gateway/models/")
+    )
+  ) {
+    reasons.push("Cloudflare AI Gateway model deletions require manual review");
   }
 
   const reasoningMetadata = async (path: string, loader: typeof load) => {

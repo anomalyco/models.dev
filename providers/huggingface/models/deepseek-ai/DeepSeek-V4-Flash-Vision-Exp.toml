@@ -1,0 +1,15 @@
+# HF relay: reasoning_effort = low|high|max, matching the native model and relay peers.
+# HF documents no shared thinking toggle or numeric reasoning budget.
+# https://huggingface.co/docs/inference-providers/en/tasks/chat-completion (accessed 2026-09-03)
+# https://api-docs.deepseek.com/guides/thinking_mode (accessed 2026-09-03)
+base_model = "deepseek/deepseek-v4-flash-vision-exp"
+description = "Fast DeepSeek model for efficient chat, coding help, and agent loops"
+open_weights = true
+reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]
+
+[cost]
+input = 0.44
+output = 1.32
+
+[limit]
+context = 1_048_576

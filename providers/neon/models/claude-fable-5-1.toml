@@ -1,0 +1,19 @@
+# Chat Completions `reasoning_effort` is rejected (`Extra inputs are not permitted`).
+# Effort is the Anthropic Messages control: thinking.type adaptive + output_config.effort.
+# No toggle: thinking.type.disabled is rejected, same as claude-fable-5.
+# json_schema on /v1/chat/completions is translated via forced tool use; this
+# model rejects that (INVALID_PARAMETER_VALUE). Measured 2026-09-04.
+# [cost] is the neon.com/models list for this id (10 / 50 / cache_read 0.25 /
+# cache_write 12.5). Sibling claude-fable-5 publishes cache_read = 1; do not
+# copy that onto 5.1.
+base_model = "anthropic/claude-fable-5-1"
+structured_output = false
+reasoning_options = [
+  { type = "effort", values = ["low", "medium", "high", "xhigh", "max"] },
+]
+
+[cost]
+input = 10
+output = 50
+cache_read = 0.25
+cache_write = 12.5

@@ -1,0 +1,21 @@
+# Toggle: thinking.type = enabled|disabled
+# Effort: reasoning_effort = low|high|max
+# Source: https://zenmux.ai/api/frontend/model/listByFilter (accessed 2026-09-25)
+# ZenMux's time-of-day promotional rates are intentionally omitted from static token costs.
+# https://zenmux.ai/docs/api/openai/openai-list-models.html
+base_model = "deepseek/deepseek-v4.1-flash"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.15
+output = 0.6
+cache_read = 0.003

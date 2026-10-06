@@ -1,3 +1,9 @@
+# Chinese mainland deployment is tiered on input tokens per request; every
+# token in a request bills at its tier's unit price. The 0.87/3.48 previously
+# published here matches neither band; both bands below are taken from the
+# vendor page. No cache-read price is published for either band, so the
+# existing curated cache_read is retained on the base and not restated.
+# https://www.alibabacloud.com/help/en/model-studio/model-pricing (accessed 2026-08-26)
 name = "GLM-5.1"
 description = "Flagship GLM model for hybrid reasoning, coding, and agentic engineering"
 family = "glm"
@@ -21,9 +27,14 @@ max = 131_072
 field = "reasoning_content"
 
 [cost]
-input = 0.87
-output = 3.48
+input = 0.825
+output = 3.301
 cache_read = 0.17
+
+[[cost.tiers]]
+tier = { type = "context", size = 32_000 }
+input = 1.1
+output = 3.851
 
 [limit]
 context = 202_752

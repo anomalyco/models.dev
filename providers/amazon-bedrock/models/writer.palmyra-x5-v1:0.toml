@@ -1,14 +1,10 @@
-name = "Palmyra X5"
-description = "Reasoning model for deliberate analysis, multi-step problem solving, and tool use"
-family = "palmyra"
-release_date = "2025-04-28"
-last_updated = "2025-04-28"
+# https://docs.aws.amazon.com/bedrock/latest/userguide/model-parameters-palmyra-x5.html
+# https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-writer-palmyra-x5.html
+# https://aws.amazon.com/bedrock/pricing/ — us-east-1 standard, USD per 1M tokens.
+# Bedrock accepts text only and documents no caller-selectable reasoning control.
+base_model = "writer/palmyra-x5"
 attachment = false
-reasoning = true
 reasoning_options = []
-temperature = true
-tool_call = true
-open_weights = false
 
 [cost]
 input = 0.6
@@ -16,8 +12,7 @@ output = 6
 
 [limit]
 context = 1_040_000
-output = 8_192
+input = 1_040_000
 
 [modalities]
 input = ["text"]
-output = ["text"]

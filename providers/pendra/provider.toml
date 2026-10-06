@@ -1,0 +1,12 @@
+# Reasoning HTTP format (accessed 2026-08-24):
+# Pendra exposes an OpenAI-compatible surface and forwards chat-completions
+# request fields to the in-process engine, so `reasoning_effort` on
+# POST /api/v1/chat/completions is honoured by models that support it
+# (e.g. gpt-oss). There is no separate reasoning toggle/budget request field.
+# https://pendra.ai/docs/integrations/opencode
+# https://pendra.ai/docs/api/chat-completions
+name = "Pendra"
+env = ["PENDRA_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+api = "https://api.pendra.ai/api/v1"
+doc = "https://pendra.ai/docs/integrations/opencode"

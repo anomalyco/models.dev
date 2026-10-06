@@ -1,5 +1,11 @@
+# Sources: https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-anthropic-claude-opus-4-1.html
+# Exact us-east-1 Standard dimensions are $15/$75 with $1.50/$18.75 cache rates; this legacy SKU is not in the newer 1.1x band.
+# Pricing: https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AmazonBedrockFoundationModels/current/us-east-1/index.json
+# https://platform.claude.com/docs/en/build-with-claude/thinking-troubleshooting
+# Toggle: additionalModelRequestFields.thinking.type = enabled|disabled (Converse); thinking.type (InvokeModel).
+# Budget: additionalModelRequestFields.thinking.budget_tokens (Converse); thinking.budget_tokens (InvokeModel).
 base_model = "anthropic/claude-opus-4-1-20250805"
-reasoning_options = [{ type = "budget_tokens", min = 1_024 }]
+reasoning_options = [{ type = "toggle" }, { type = "budget_tokens", min = 1_024 }]
 status = "deprecated"
 name = "Claude Opus 4.1 (US)"
 

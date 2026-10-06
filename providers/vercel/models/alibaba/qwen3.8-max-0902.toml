@@ -1,0 +1,24 @@
+# Toggle: reasoning.enabled = true|false
+# Effort and budget match Qwen3.8 Max; reasoning.effort and reasoning.max_tokens are mutually exclusive.
+# https://vercel.com/docs/ai-gateway/sdks-and-apis/openai-chat-completions/reasoning
+# https://docs.qwencloud.com/developer-guides/text-generation/thinking
+base_model = "alibaba/qwen3.8-max-0902"
+description = "Qwen vision-language model for visual reasoning, documents, and agent tasks"
+reasoning_options = [
+  { type = "toggle" },
+  { type = "effort", values = ["low", "medium", "xhigh"] },
+  { type = "budget_tokens", min = 0, max = 262_144 },
+]
+
+[cost]
+input = 2
+output = 6
+cache_read = 0.25
+cache_write = 2.5
+
+[limit]
+context = 991_000
+output = 128_000
+
+[modalities]
+input = ["text", "image", "pdf"]

@@ -36,6 +36,7 @@ export const CortecsModel = z.object({
     cache_write_cost: z.number().nonnegative().optional(),
   }).passthrough(),
   context_size: z.number().int().positive(),
+  max_output_tokens: z.number().int().positive().optional(),
   input_modalities: z.array(z.string()).transform(modalities).default(["text"]),
   output_modalities: z.array(z.string()).transform(modalities).default(["text"]),
   supported_features: z.array(z.string()).default([]),
@@ -97,7 +98,7 @@ export function buildCortecsModel(
   const limit = {
     context: model.context_size,
     input: existing?.limit?.input,
-    output: authored?.limit?.output ?? model.context_size,
+    output: model.max_output_tokens ?? authored?.limit?.output ?? model.context_size,
   };
   const cost = {
     input: usd(model.pricing.input_token),

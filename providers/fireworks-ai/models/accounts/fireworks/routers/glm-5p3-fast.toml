@@ -1,0 +1,40 @@
+# Fast serving-path router for GLM 5.3 — same model, faster serving (the
+# chat-completions response echoes the underlying
+# accounts/fireworks/models/glm-5p3):
+# https://docs.fireworks.ai/serverless/serving-paths
+# Router is live on Fireworks accounts but not yet listed on the public
+# pricing page (which currently lists GLM 5.2 Fast only). Pricing confirmed
+# from a Fireworks account rate card (2026-09-07): $2.10 / $0.39 / $6.60
+# per 1M (input / cached input / output) — a 1.5x premium over GLM 5.3
+# standard, matching the GLM 5.2 Fast premium over GLM 5.2.
+# Limits and release verified 2026-09-07: GET /v1/models reports
+# context_length 1_048_576 and a created timestamp of 2026-08-28 (identical
+# to glm-5p3 — router launched with the base model); an over-limit probe
+# (1_200_012 prompt tokens) was rejected
+# with "model maximum context length: 1048572" — the enforced prompt cap
+# sits 4 tokens below the advertised context_length, so that value is
+# recorded here. Fireworks performs no pre-flight max_tokens validation
+# (2_000_000 accepted); output = 262_144 per the Baseten/Vercel-documented
+# generation ceiling for the same weights.
+# Thinking-only, effort tiers identical to the sibling glm-5p3 entry:
+# low/high/max (max/xhigh select max).
+base_model = "zhipuai/glm-5.3"
+name = "GLM 5.3 Fast"
+release_date = "2026-08-28"
+last_updated = "2026-09-07"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 2.10
+output = 6.60
+cache_read = 0.39
+
+[limit]
+context = 1_048_572
+output = 262_144

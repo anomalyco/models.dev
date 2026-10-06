@@ -1,0 +1,24 @@
+name = "OrcaRouter Free"
+description = "Built-in router over the free tier that scores each request's difficulty and sends light work to the smaller free model and harder work to the stronger one. Priced at zero and never falls back to a paid model."
+family = "auto"
+release_date = "2026-08-27"
+last_updated = "2026-08-27"
+attachment = false
+reasoning = true
+reasoning_options = []
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[cost]
+input = 0
+output = 0
+
+[limit]
+context = 65_536
+output = 32_768
+
+[modalities]
+input = ["text"]
+output = ["text"]

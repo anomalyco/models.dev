@@ -1,9 +1,10 @@
-base_model = "anthropic/claude-sonnet-5"
+base_model = "anthropic/claude-sonnet-5-5"
+name = "Claude Sonnet Latest (Claude Sonnet 5.5)"
 structured_output = true
 
 [[reasoning_options]]
 type = "effort"
-values = ["none", "low", "medium", "high", "xhigh", "max"]
+values = ["low", "medium", "high", "xhigh", "max"]
 
 [cost]
 input = 2

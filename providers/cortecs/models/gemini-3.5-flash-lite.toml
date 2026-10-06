@@ -8,9 +8,10 @@ values = ["minimal", "low", "medium", "high"]
 input = 0.33
 output = 2.749
 cache_read = 0.033
+cache_write = 0.082
 
 [limit]
-output = 1_048_576
+output = 65_535
 
 [modalities]
 input = ["text", "image", "audio", "pdf"]

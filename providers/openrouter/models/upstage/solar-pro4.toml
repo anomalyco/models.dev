@@ -1,3 +1,5 @@
+# Toggle: reasoning.enabled = true|false
+# https://openrouter.ai/docs/guides/best-practices/reasoning-tokens
 name = "Solar Pro 4"
 description = "Flagship model for demanding analysis, coding, and production agent workflows"
 family = "solar"
@@ -9,12 +11,15 @@ temperature = true
 tool_call = true
 structured_output = true
 open_weights = false
-reasoning_options = []
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"]
 
 [cost]
-input = 0.03
-output = 0.12
-cache_read = 0.006
+input = 0.09
+output = 0.36
+cache_read = 0.018
 
 [limit]
 context = 524_288

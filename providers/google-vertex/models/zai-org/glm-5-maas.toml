@@ -1,17 +1,10 @@
-name = "GLM-5"
-description = "Flagship GLM model for hybrid reasoning, coding, and agentic engineering"
 # POST .../endpoints/openapi/chat/completions; toggle with
 # $.chat_template_kwargs.enable_thinking = true | false.
 # https://cloud.google.com/vertex-ai/generative-ai/docs/maas/capabilities/thinking (accessed 2026-06-25)
-family = "glm"
-release_date = "2026-02-11"
-last_updated = "2026-02-11"
-attachment = false
-reasoning = true
+# Vertex quota (global): 128,000 maximum output, 200,000 context length.
+# https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/maas/zaiorg/glm-5
+base_model = "zhipuai/glm-5"
 reasoning_options = [{ type = "toggle" }]
-temperature = true
-tool_call = true
-open_weights = true
 status = "deprecated"
 
 [interleaved]
@@ -23,12 +16,8 @@ output = 3.20
 cache_read = 0.10
 
 [limit]
-context = 202752
-output = 131072
-
-[modalities]
-input = ["text"]
-output = ["text"]
+context = 200_000
+output = 128_000
 
 [provider]
 npm = "@ai-sdk/openai-compatible"

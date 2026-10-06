@@ -4,14 +4,14 @@
 # https://api.llmgateway.io/v1/models providers[].reasoning_efforts (accessed 2026-07-23)
 base_model = "moonshotai/kimi-k2.6"
 
-[[reasoning_options]]
-type = "effort" # API: {"reasoning_effort": "<v>"} or {"reasoning": {"effort": "<v>"}}
-values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"]
-
 [interleaved]
 field = "reasoning_content"
 
+[[reasoning_options]]
+type = "effort"
+values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"]
+
 [cost]
-input = 0.22
-output = 1.137
-cache_read = 0.048
+input = 0.6
+output = 3.05
+cache_read = 0.13

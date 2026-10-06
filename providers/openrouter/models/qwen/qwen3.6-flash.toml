@@ -1,12 +1,9 @@
+# Toggle: reasoning.enabled = true|false
+# https://openrouter.ai/docs/guides/best-practices/reasoning-tokens
 base_model = "alibaba/qwen3.6-flash"
 
 [[reasoning_options]]
 type = "toggle"
-
-[[reasoning_options]]
-type = "budget_tokens"
-min = 1
-max = 81_920
 
 [cost]
 input = 0.1875

@@ -1,23 +1,12 @@
-name = "Llama 4 Scout 17B Instruct"
-description = "Open multimodal Llama model for long-context analysis and efficient agents"
-family = "llama"
-release_date = "2025-04-05"
-last_updated = "2025-04-05"
-attachment = true
-reasoning = false
-temperature = true
-knowledge = "2024-08"
-tool_call = true
-open_weights = true
+# https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-meta-llama-4-scout-17b-instruct.html
+# AWS documents the Bedrock context window as 10M tokens; inherit the matching lab context.
+# Converse US profile verified 2026-09-09: maxTokens=8192 succeeds; 16384 exceeds the explicit 8192 limit.
+# https://aws.amazon.com/bedrock/pricing/ — us-east-1 standard, USD per 1M tokens.
+base_model = "meta/llama-4-scout-17b-instruct"
 
 [cost]
 input = 0.17
 output = 0.66
 
 [limit]
-context = 3_500_000
-output = 16_384
-
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+output = 8_192

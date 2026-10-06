@@ -1,0 +1,33 @@
+# Source: https://huggingface.co/Motif-Technologies/Motif-3 (accessed
+# 2026-09-14): repo created 2026-08-07, 155 safetensors shards, ungated,
+# MIT license.
+# tool_call: the model card documents agentic tool use and ships a vLLM
+# --tool-call-parser motif; live probe on 2026-09-14 returned a real
+# tool_calls response (finish_reason = tool_calls).
+# temperature: the card evaluates at sampling temperature 1.0; live probe on
+# 2026-09-14 accepted 0.2 and 1.7, with 1.7 visibly changing the output.
+name = "Motif 3"
+family = "motif"
+description = "Motif 3 is a large-scale, decoder-only Mixture-of-Experts (MoE) language model with 314 billion total parameters and 13.2 billion parameters activated per token."
+release_date = "2026-08-07"
+last_updated = "2026-08-07"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = false
+open_weights = true
+license = "MIT"
+
+[limit]
+context = 262_144
+output = 262_144
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[[weights]]
+label = "Model weights"
+url = "https://huggingface.co/Motif-Technologies/Motif-3"
+format = "safetensors"

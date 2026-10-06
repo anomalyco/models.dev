@@ -1,0 +1,10 @@
+# Toggle: reasoning.enabled = true|false
+base_model = "minimax/MiniMax-M3"
+reasoning_options = [{ type = "toggle" }]
+
+[cost]
+input = 0.20
+output = 0.90
+
+[limit]
+context = 524_288

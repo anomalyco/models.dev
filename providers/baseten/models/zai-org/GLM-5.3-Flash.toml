@@ -1,0 +1,22 @@
+# Effort: reasoning_effort = low|high|max; reasoning cannot be disabled.
+# https://docs.baseten.co/inference/model-apis/reasoning
+base_model = "zhipuai/glm-5.3-flash"
+name = "GLM 5.3 Flash"
+description = "GLM vision model for visual reasoning, documents, and multimodal agents"
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[cost]
+input = 0.15
+output = 0.5
+
+[limit]
+context = 1_048_576
+
+[modalities]
+input = ["text", "image"]

@@ -1,0 +1,10 @@
+name = "engy"
+env = ["ENGY_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+# Raw HTTP reasoning controls (live 2026-08-30), authored per model. POST /v1/chat/completions
+# forwards chat_template_kwargs to the chat template (enable_thinking on glm-5.2 and Qwen, thinking
+# on DeepSeek and Kimi; the GLM-5.3 templates do not switch it off) and takes reasoning_effort
+# none|minimal|low|medium|high|xhigh|max; no budget field. Docs list no models; doc is pricing.
+# Limits: authed GET https://engy.ai/api/v1/models; context = max_input + max_output.
+api = "https://api.engy.ai/v1"
+doc = "https://engy.ai/pricing"

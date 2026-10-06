@@ -1,8 +1,14 @@
 base_model = "anthropic/claude-opus-4-5"
-reasoning_options = [{ type = "toggle" }, { type = "budget_tokens", min = 1_024 }]
 name = "Claude Opus 4.5"
 
 interleaved = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high"]
+
+[[reasoning_options]]
+type = "budget_tokens"
 
 [cost]
 input = 5

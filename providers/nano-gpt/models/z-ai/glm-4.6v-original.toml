@@ -1,0 +1,24 @@
+name = "GLM 4.6V Original"
+description = "GLM-4.6V scales its context window to 128k tokens in training, and achieves SoTA performance in visual understanding among models of similar parameter scales. Integrates native Function Calling capabilities, bridging 'visual perception' and 'executable action' for multimodal agents. Direct via Z-AI (Zhipu)."
+family = "glm"
+release_date = "2025-12-08"
+last_updated = "2025-12-08"
+attachment = true
+reasoning = false
+tool_call = false
+structured_output = false
+open_weights = true
+
+[cost]
+input = 0.6
+output = 0.9
+cache_read = 0.3
+
+[limit]
+context = 128_000
+input = 128_000
+output = 24_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

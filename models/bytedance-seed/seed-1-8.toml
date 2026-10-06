@@ -6,10 +6,11 @@ description = "ByteDance Seed model for multimodal reasoning, long-context analy
 family = "seed"
 release_date = "2025-12-28"
 last_updated = "2025-12-28"
-attachment = false
+attachment = true
 reasoning = true
 temperature = true
 tool_call = true
+structured_output = true
 open_weights = false
 
 [limit]
@@ -17,5 +18,5 @@ context = 256_000
 output = 64_000
 
 [modalities]
-input = ["text"]
+input = ["text", "image"]
 output = ["text"]

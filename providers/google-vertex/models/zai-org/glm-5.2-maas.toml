@@ -1,0 +1,24 @@
+# POST .../endpoints/openapi/chat/completions; toggle with
+# $.chat_template_kwargs.enable_thinking = true | false.
+# Sources:
+# - https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/maas/zaiorg/glm-52
+# - https://cloud.google.com/gemini-enterprise-agent-platform/generative-ai/pricing
+base_model = "zhipuai/glm-5.2"
+reasoning_options = [{ type = "toggle" }]
+status = "beta"
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 1.40
+output = 4.40
+cache_read = 0.14
+
+[limit]
+context = 1_000_000
+output = 64_000
+
+[provider]
+npm = "@ai-sdk/openai-compatible"
+api = "https://${GOOGLE_VERTEX_ENDPOINT}/v1/projects/${GOOGLE_VERTEX_PROJECT}/locations/${GOOGLE_VERTEX_LOCATION}/endpoints/openapi"

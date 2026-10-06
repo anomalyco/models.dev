@@ -1,0 +1,16 @@
+base_model = "xiaomi/mimo-v2.6-pro-ultraspeed"
+name = "MiMo V2.6 Pro UltraSpeed"
+structured_output = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "high"]
+
+[cost]
+input = 4.35
+output = 8.7
+cache_read = 0.036
+cache_write = 0
+
+[limit]
+input = 1_048_576

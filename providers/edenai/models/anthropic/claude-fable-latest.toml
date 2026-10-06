@@ -1,4 +1,5 @@
-base_model = "anthropic/claude-fable-5"
+base_model = "anthropic/claude-fable-5-1"
+name = "Claude Fable Latest (Claude Fable 5.1)"
 structured_output = true
 
 [[reasoning_options]]
@@ -8,5 +9,5 @@ values = ["low", "medium", "high", "xhigh", "max"]
 [cost]
 input = 10
 output = 50
-cache_read = 1
+cache_read = 0.25
 cache_write = 12.5

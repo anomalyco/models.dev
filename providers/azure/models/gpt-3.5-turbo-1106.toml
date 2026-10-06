@@ -1,3 +1,5 @@
+# OpenAI lists the 1106 snapshot with a 4,096-token maximum output:
+# https://developers.openai.com/api/docs/models/gpt-3.5-turbo
 name = "GPT-3.5 Turbo 1106"
 description = "Compact GPT model for low-latency assistance and high-volume workloads"
 family = "gpt"
@@ -17,7 +19,7 @@ output = 2.00
 
 [limit]
 context = 16384
-output = 16384
+output = 4_096
 
 [modalities]
 input = ["text"]

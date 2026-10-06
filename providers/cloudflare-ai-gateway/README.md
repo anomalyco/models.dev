@@ -18,15 +18,18 @@ One command regenerates every model TOML:
 CLOUDFLARE_API_TOKEN=xxx CLOUDFLARE_ACCOUNT_ID=xxx bun run cloudflare-ai-gateway:generate
 ```
 
+The sync also accepts `CLOUDFLARE_PRODUCTION_API_TOKEN` and
+`CLOUDFLARE_PRODUCTION_ACCOUNT_ID_AI_GATEWAY_SANDBOX` directly.
+
 It reads two live Cloudflare sources plus one local curation file:
 
 - **Proxied catalog** — `GET /accounts/{id}/ai/catalog/models`. The source of truth: one
-  canonical (dotted) `model_id` per model, description, context/output limits, and pricing.
+  canonical (dotted) `model_id` per model, description, context limits, and pricing.
   This is why ids look like `anthropic/claude-haiku-4.5`, not `claude-haiku-4-5`.
 - **Per-model catalog schema** — `GET /accounts/{id}/ai/catalog/models/{id}/schema`. Used to
-  derive `reasoning_options` for providers whose schema is OpenAI-compatible (xAI, Alibaba,
-  OpenAI). Native-format providers (Google, Anthropic, DeepSeek, Moonshot) don't expose the
-  knob here — those fall back to curation (see below).
+  derive effort values when it enumerates them. A `thinking` or `enable_thinking` field does
+  not establish that this route can turn reasoning off; toggles and controls missing from
+  the schema are curated (see below).
 
 Everything the generator can read is derived: `cost`, `limit.context`, and `reasoning_options`.
 `name` and `description` are intentionally **not** written — they inherit from `base_model`
@@ -44,7 +47,7 @@ bun run cloudflare-ai-gateway:generate --check
 ```
 
 Exits non-zero if the committed TOMLs are out of date with the live catalog + curation.
-Used in CI.
+The same shared provider runs hourly; use `--check` for local drift checks.
 
 ### Offline / fixtures
 
@@ -116,8 +119,9 @@ It is hand-authored and not touched by the generator.
 
 ## Known limitations
 
-- `reasoning_options` for native-format providers (Google, Anthropic, DeepSeek, Moonshot)
-  can't be derived from Cloudflare's schema and must be curated. New reasoning models from
-  these providers hard-fail until their knob is added to `curation.toml`.
+- Some native-format provider schemas omit or underspecify reasoning controls, and the
+  presence of a thinking field alone is not reliable toggle evidence. Those controls must
+  be curated; new reasoning models with neither effort enum nor curation hard-fail rather
+  than gaining an inferred toggle or an invented empty control list.
 - `structured_output` requires a live conformance test when adding a model; the schema
   advertises `response_format` even for models that don't honour it.

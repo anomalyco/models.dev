@@ -1,0 +1,16 @@
+# Pricing and reasoning controls verified against the AMD Token Factory API
+# (accessed 2026-09-03): GET /v1/models and live POST /v1/chat/completions.
+# reasoning_effort is a validated enum none|minimal|low|medium|high|xhigh|max
+# (invalid values return 400) and affects generation; no reasoning_content is
+# ever returned (stream + non-stream), so no toggle and no interleaved channel.
+# Vision verified live: image input is accepted and understood.
+base_model = "deepseek/deepseek-v4-flash-vision-exp"
+
+reasoning_options = [
+  { type = "effort", values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"] },
+]
+
+[cost]
+input = 0.14
+output = 0.28
+cache_read = 0.0028

@@ -1,0 +1,15 @@
+# Toggle: enable_thinking true|false
+# Pricing (USD/MTok, accessed 2026-08-27):
+# - Public hub $0.40/$2.65: https://www.tokengo.com/models
+# - Exact console rates incl. cache $0.40/$2.65/$0.20 (TokenGo model table ratios)
+# TokenGo OpenAI-compatible extra_body; same on/off control as typical Qwen relays.
+# No thinking_budget on this host (generic relays omit DashScope budget).
+base_model = "alibaba/qwen3.5-397b-a17b"
+
+[[reasoning_options]]
+type = "toggle"
+
+[cost]
+input = 0.4
+output = 2.65
+cache_read = 0.2

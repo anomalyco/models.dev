@@ -13,13 +13,10 @@ open_weights = false
 type = "effort"
 values = ["none", "low", "medium", "high", "max"]
 
-[[reasoning_options]]
-type = "budget_tokens"
-
 [cost]
-input = 0.045
-output = 0.18
-cache_read = 0.009
+input = 0.05
+output = 0.2
+cache_read = 0.01
 
 [limit]
 context = 262_144

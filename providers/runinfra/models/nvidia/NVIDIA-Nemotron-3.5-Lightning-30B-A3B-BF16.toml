@@ -6,6 +6,9 @@
 # own run-to-run variance (baseline 570/642 tokens across repeats, medium 588/642), so no graded
 # control is claimed. enable_thinking / chat_template_kwargs / thinking_budget are accepted but
 # have no effect. The control is a toggle.
+# cache_read is the cached input price, added 2026-08-27 after prefix caching was confirmed on
+# this serve rather than assumed: an identical 4,200-token prompt repeated 6 times reported
+# cached_tokens 0 on the first attempt and 4,352 on all five that followed.
 base_model = "nvidia/nemotron-3.5-lightning"
 
 [[reasoning_options]]
@@ -14,6 +17,7 @@ type = "toggle"
 [cost]
 input = 0.05
 output = 0.15
+cache_read = 0.01
 
 [limit]
 output = 32_768

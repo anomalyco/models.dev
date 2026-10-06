@@ -3,7 +3,7 @@ import path from "node:path";
 
 import { z } from "zod";
 
-import type { SyncProvider, SyncedFullModel, SyncedModel } from "../index.js";
+import type { ExistingModel, SyncProvider, SyncedFullModel, SyncedModel } from "../index.js";
 import {
   factorBaseModel,
   modelMetadata,
@@ -59,6 +59,8 @@ const MODALITY_BY_EDENAI: Record<
 };
 
 // Upstreams that are the lab's own API for models under that namespace.
+// The first entry is the unsuffixed display route when several first-party
+// hosts exist (Google AI Studio vs Vertex AI).
 const LAB_UPSTREAMS: Record<string, readonly string[]> = {
   alibaba: ["qwen"],
   amazon: ["amazon"],
@@ -74,6 +76,29 @@ const LAB_UPSTREAMS: Record<string, readonly string[]> = {
   perplexity: ["perplexityai"],
   xai: ["xai"],
   zhipuai: ["zai"],
+};
+
+const ROUTE_LABELS: Record<string, string> = {
+  amazon: "Amazon Bedrock",
+  azure: "Azure",
+  cerebras: "Cerebras",
+  cloudflare: "Cloudflare",
+  compactifai: "CompactifAI",
+  databricks: "Databricks",
+  deepinfra: "Deep Infra",
+  fireworks_ai: "Fireworks AI",
+  flexai: "FlexAI",
+  groq: "Groq",
+  infomaniak: "Infomaniak",
+  ionos: "IONOS",
+  lilac: "Lilac",
+  nebius: "Nebius",
+  ovhcloud: "OVHcloud",
+  qwen: "Alibaba",
+  scaleway: "Scaleway",
+  tensorx: "TensorX",
+  together_ai: "Together AI",
+  vertex: "Vertex AI",
 };
 
 type ReasoningOption = NonNullable<
@@ -217,23 +242,62 @@ function hasOutputLimit(baseModel: string) {
   );
 }
 
-function regionVariantName(model: EdenAIModel, baseModel: string) {
+function titleCaseSlug(slug: string) {
+  return slug
+    .split(/[-_]/)
+    .filter((word) => word.length > 0)
+    .map((word) =>
+      word.toLowerCase() === "gpt"
+        ? "GPT"
+        : word[0]!.toUpperCase() + word.slice(1).toLowerCase(),
+    )
+    .join(" ");
+}
+
+function isLatestAlias(model: EdenAIModel) {
+  if (model.alias_of == null) return false;
+  const id = model.id.replace(REGION_SUFFIX, "");
+  const target = model.alias_of.replace(REGION_SUFFIX, "");
+  if (id.toLowerCase() === target.toLowerCase()) return false;
+  const slug = id.split("/").at(-1) ?? id;
+  return /(?:^|-)latest$/i.test(slug);
+}
+
+function routeLabel(model: EdenAIModel, baseModel: string) {
+  const lab = baseModel.split("/")[0] ?? "";
+  const primary = LAB_UPSTREAMS[lab]?.[0];
+  if (model.owned_by === primary) return undefined;
+  return ROUTE_LABELS[model.owned_by] ?? titleCaseSlug(model.owned_by);
+}
+
+function displayName(model: EdenAIModel, baseModel: string) {
   const region = REGION_SUFFIX.exec(model.id)?.[0].slice(1);
-  if (region === undefined) return undefined;
+  const latest = isLatestAlias(model);
+  const route = routeLabel(model, baseModel);
+  if (region === undefined && !latest && route === undefined) return undefined;
 
   const canonical = canonicalModelName(baseModel);
   if (canonical === undefined) return undefined;
-  return `${canonical} (${region.toUpperCase()})`;
+
+  const head = latest
+    ? titleCaseSlug(model.id.replace(REGION_SUFFIX, "").split("/").at(-1) ?? "")
+    : canonical;
+  const details = [
+    ...(latest ? [canonical] : []),
+    ...(route !== undefined ? [route] : []),
+    ...(region !== undefined ? [region.toUpperCase()] : []),
+  ];
+  return `${head} (${details.join(", ")})`;
 }
 
 // ========================================
 // Reasoning options
 // ========================================
 
-// Eden AI's only reasoning control is `reasoning_effort`, so a model is
-// published with the effort list its lab entry (or an established relay peer)
-// already documents. Peers exposing only `toggle` / `budget_tokens` have no
-// equivalent here, and those models are skipped rather than given a guess.
+// This sync currently maps only `reasoning_effort`, using the effort list the
+// lab entry (or an established relay peer) documents. Toggle / budget controls
+// need route-specific mappings. Preserve authored controls when unresolved;
+// skip new models rather than inventing an empty control set.
 function effortValues(options: unknown): string[] | "always-on" | undefined {
   if (!Array.isArray(options)) return undefined;
   if (options.length === 0) return "always-on";
@@ -425,6 +489,7 @@ function mapModalities(values: readonly string[] | null | undefined) {
 
 export function buildEdenAIModel(
   model: EdenAIModel,
+  existing?: ExistingModel,
   firstParty: ReadonlySet<string> = firstPartyBaseModels,
 ): SyncedModel | undefined {
   const baseModel = resolveEdenAIBaseModel(model);
@@ -449,7 +514,7 @@ export function buildEdenAIModel(
   // the lab entry owns it and only the effort controls are authored here.
   const reasoning = modelMetadata(baseModel).reasoning === true;
   const reasoningOptions = reasoning
-    ? reasoningOptionsFor(baseModel)
+    ? reasoningOptionsFor(baseModel) ?? existing?.reasoning_options
     : undefined;
   if (reasoning && reasoningOptions === undefined) return undefined;
 
@@ -461,7 +526,7 @@ export function buildEdenAIModel(
   return factorBaseModel(
     baseModel,
     {
-      name: regionVariantName(model, baseModel),
+      name: displayName(model, baseModel),
       modalities,
       attachment: input?.some((value) => value !== "text"),
       reasoning_options: reasoningOptions,
@@ -494,12 +559,24 @@ export const edenai = {
     return response.json();
   },
   parseModels(raw) {
-    const models = EdenAIResponse.parse(raw).data;
+    const unique = new Map<string, EdenAIModel>();
+    for (const model of EdenAIResponse.parse(raw).data) {
+      const key = model.id.toLowerCase();
+      const previous = unique.get(key);
+      // Eden AI publishes case-only duplicates that collide on macOS. Keep the
+      // lowercase API ID, but retain context metadata supplied by its duplicate.
+      const preferred = model.id === key ? model : previous ?? model;
+      unique.set(key, {
+        ...preferred,
+        context_length: preferred.context_length ?? previous?.context_length ?? model.context_length,
+      });
+    }
+    const models = [...unique.values()];
     firstPartyBaseModels = collectFirstPartyBaseModels(models);
     return models;
   },
-  translateModel(model) {
-    const built = buildEdenAIModel(model);
+  translateModel(model, context) {
+    const built = buildEdenAIModel(model, context.existing(model.id));
     if (built === undefined) return undefined;
     return { id: model.id, model: built };
   },

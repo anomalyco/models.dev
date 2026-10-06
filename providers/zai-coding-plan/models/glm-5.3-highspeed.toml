@@ -1,0 +1,17 @@
+base_model = "zhipuai/glm-5.3"
+name = "GLM-5.3 Highspeed"
+
+# Effort levels mirror the base GLM-5.3 (low, high, max).
+# https://docs.bigmodel.cn/cn/coding-plan/latest-model
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0
+output = 0
+cache_read = 0
+cache_write = 0

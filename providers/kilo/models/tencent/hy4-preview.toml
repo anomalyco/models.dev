@@ -1,0 +1,15 @@
+base_model = "tencent/hy4-preview"
+description = "Tencent: Hy4 preview is a mixture-of-experts model from Tencent, with 49B active parameters out of 770B total. It is designed for coding agents, complex tool-use workflows, and productivity tasks that..."
+structured_output = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "high"]
+
+[cost]
+input = 0.834
+output = 2.501
+cache_read = 0.042
+
+[limit]
+context = 1_048_576

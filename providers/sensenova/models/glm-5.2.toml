@@ -1,0 +1,18 @@
+# Sources (accessed 2026-08-28):
+# https://platform.sensenova.cn/docs
+# Reasoning: host documents reasoning_effort none|low|medium|high (default
+# medium), but live calls show no grading: none disables reasoning and
+# low|medium|high produce indistinguishable reasoning volume. Aligned to the
+# lab-effective level (Z.AI GLM-5.2: high/max; max absent on this host).
+base_model = "zhipuai/glm-5.2"
+reasoning_options = [
+  { type = "effort", values = ["none", "high"] },
+]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0
+output = 0
+cache_read = 0

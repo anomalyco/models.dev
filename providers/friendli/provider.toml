@@ -1,7 +1,11 @@
 name = "Friendli"
-# Reasoning HTTP format (accessed 2026-06-25): POST /serverless/v1/chat/completions.
-# Toggle: chat_template_kwargs.enable_thinking = true | false; support is
-# model-specific. No effort or reasoning-token budget field is documented.
+# Reasoning HTTP format (accessed 2026-08-29): POST /serverless/v1/chat/completions.
+# Toggle: chat_template_kwargs.enable_thinking = true | false; support is model-specific.
+# Effort: reasoning_effort = minimal|low|medium|high|xhigh|max|ultracode; reasoning
+# models only, available options depend on the model.
+# Budget: reasoning_budget (positive integer reasoning-token cap); reasoning models only.
+# https://friendli.ai/docs/openapi/model-apis/chat-completions#body-reasoning-effort-one-of-0
+# https://friendli.ai/docs/openapi/model-apis/chat-completions#body-reasoning-budget-one-of-0
 # https://friendli.ai/docs/guides/reasoning
 env = ["FRIENDLI_TOKEN"]
 npm = "@ai-sdk/openai-compatible"

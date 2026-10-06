@@ -1,0 +1,35 @@
+# Sources:
+# - https://tokenfactory.nebius.com/ (model catalog)
+# - https://tokenfactory.nebius.com/model-catalog.md (pricing)
+# - https://tokenfactory.nebius.com/api/public/models_info (context, max length)
+# - https://docs.bigmodel.cn/cn/guide/models/vlm/glm-5.3-flash (effort set; thinking
+#   cannot be disabled, so there is no toggle — effort per lab: low|high|max, default max)
+# Accessed 2026-08-29.
+# Text-only on this host: Token Factory serves GLM-5.3-Flash as text2text with no
+# image/video use cases, unlike the multimodal lab model — attachment stays false.
+# No discounted prompt-cache tier in the public catalog (no cache rate listed for this
+# model): cached and fresh input are billed identically, so cache_read = input
+# (same rationale as Kimi-K3 / DeepSeek-V4-Flash-0731).
+
+base_model = "zhipuai/glm-5.3-flash"
+attachment = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.15
+output = 0.5
+cache_read = 0.15
+
+[limit]
+context = 1_024_000
+output = 1_024_000
+
+[modalities]
+input = ["text"]
+output = ["text"]

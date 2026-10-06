@@ -1,0 +1,19 @@
+# Source: https://nan.builders/docs/models (accessed 2026-09-11)
+# NaN documents this id as the Vision-Exp variant, but the endpoint serves
+# DeepSeek V4.1 Flash. Evidence (2026-09-11): forced-choice self-identification
+# with randomized option order returned deepseek/deepseek-v4.1-flash 8/8; the id
+# deepseek-v4.1-flash is not directly callable here (401) while deepseek-v4-flash
+# is, matching DeepSeek's own legacy alias
+# (providers/deepseek/models/deepseek-v4-flash.toml). The model takes images
+# (text+image), consistent with V4.1 Flash; NaN serves open-weight models, which
+# V4.1 Flash is (MIT) and the experimental Vision-Exp entry is not.
+# 1M token context, 3B token monthly quota per member, 1.5M tpm. Included in the
+# membership, so no per-token price.
+# Reasoning: no caller control on this surface; NaN's request examples document
+# no reasoning field and reasoning_effort/thinking produced no measurable effect.
+base_model = "deepseek/deepseek-v4.1-flash"
+reasoning_options = []
+
+[cost]
+input = 0
+output = 0

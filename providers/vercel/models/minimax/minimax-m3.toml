@@ -2,7 +2,7 @@ base_model = "minimax/MiniMax-M3"
 name = "MiniMax M3"
 
 [[reasoning_options]]
-type = "toggle"
+type = "budget_tokens"
 
 [cost]
 input = 0.3
@@ -10,8 +10,7 @@ output = 1.2
 cache_read = 0.06
 
 [limit]
-context = 1_000_000
-output = 1_000_000
+context = 512_000
 
 [modalities]
 input = ["text", "image", "pdf"]

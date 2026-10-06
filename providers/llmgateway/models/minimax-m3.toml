@@ -5,13 +5,10 @@
 base_model = "minimax/MiniMax-M3"
 
 [[reasoning_options]]
-type = "effort" # API: {"reasoning_effort": "<v>"} or {"reasoning": {"effort": "<v>"}}
+type = "effort"
 values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"]
 
 [cost]
 input = 0.3
 output = 1.2
 cache_read = 0.06
-
-[limit]
-context = 1_048_576

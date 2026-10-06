@@ -1,3 +1,6 @@
+# Sources: https://www.siliconflow.com/models (2026-09-08)
+# Cost values are the published USD list prices on SiliconFlow international
+# (https://www.siliconflow.com/pricing, accessed 2026-09-08), not FX conversions by this PR.
 base_model = "zhipuai/glm-5.2"
 reasoning_options = [{ type = "effort", values = ["high", "max"] }]
 
@@ -5,8 +8,8 @@ reasoning_options = [{ type = "effort", values = ["high", "max"] }]
 field = "reasoning_content"
 
 [cost]
-input = 1.4
-output = 4.4
+input = 1.302
+output = 4.092
 cache_read = 0.26
 cache_write = 0
 

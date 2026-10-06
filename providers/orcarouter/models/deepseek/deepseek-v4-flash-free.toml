@@ -1,0 +1,14 @@
+# Toggle: thinking true|false
+base_model = "deepseek/deepseek-v4-flash"
+name = "DeepSeek V4 Flash (free)"
+reasoning_options = [
+  { type = "toggle" },
+  { type = "effort", values = ["low", "high", "max"] },
+]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0
+output = 0

@@ -1,15 +1,19 @@
 # Pricing: https://docs.github.com/en/copilot/reference/copilot-billing/models-and-pricing
-# GPT-5.6 Terra reduced rates (matches OpenAI 2026-07-30 cut); long-context threshold >272K
 base_model = "openai/gpt-5.6-terra"
-reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh", "max"] }]
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "xhigh", "max"]
 
 [cost]
-input = 2.00
-output = 12.00
-cache_read = 0.20
+input = 2
+output = 12
+cache_read = 0.2
+cache_write = 2.5
 
 [[cost.tiers]]
 tier = { type = "context", size = 272_000 }
-input = 4.00
-output = 18.00
-cache_read = 0.40
+input = 4
+output = 18
+cache_read = 0.4
+cache_write = 5

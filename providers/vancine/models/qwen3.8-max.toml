@@ -1,0 +1,31 @@
+# Sources (accessed 2026-08-04):
+# https://www.qwencloud.com/models/qwen3.8-max
+# https://docs.qwencloud.com/developer-guides/text-generation/thinking
+# https://help.aliyun.com/zh/model-studio/model-pricing
+# Lab reasoning controls: enable_thinking true|false (toggle);
+# reasoning_effort = low|medium|xhigh (default xhigh; high is alias for xhigh);
+# thinking_budget 0..262144 (cannot be combined with reasoning_effort).
+# Interleaved field: reasoning_content.
+# Lab cost: input 2.00 / output 6.00 / cache_read 0.25 / cache_write 2.50.
+# Vancine public pricing (/api/pricing) is 1.60 / 4.80 / 0.20 / n/a (USD/MTok).
+base_model = "alibaba/qwen3.8-max"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "xhigh"]
+
+[[reasoning_options]]
+type = "budget_tokens"
+min = 0
+max = 262_144
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 1.60
+output = 4.80
+cache_read = 0.20

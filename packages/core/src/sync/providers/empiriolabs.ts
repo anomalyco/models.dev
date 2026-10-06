@@ -191,6 +191,9 @@ function reasoningOptions(model: EmpiriolabsModel): SyncedModel["reasoning_optio
     if (budget.max !== undefined) option.max = budget.max;
     options.push(option);
   }
+  if (options.some((option) => option.type === "effort" && option.values.includes("none"))) {
+    return options.filter((option) => option.type !== "toggle");
+  }
   return options;
 }
 

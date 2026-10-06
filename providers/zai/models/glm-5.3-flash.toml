@@ -1,0 +1,19 @@
+base_model = "zhipuai/glm-5.3-flash"
+# GLM-5.3-Flash reasons by default; effort levels low|high|max, and thinking can
+# be suppressed with {"thinking": {"type": "disabled"}}.
+# https://z.ai/blog/glm-5.3-flash
+# Pricing: https://docs.z.ai/guides/overview/pricing (accessed 2026-09-19)
+# Served by https://api.z.ai/api/paas/v4 (verified against GET /models 2026-08-26).
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.15
+output = 0.50
+cache_read = 0.03
+cache_write = 0

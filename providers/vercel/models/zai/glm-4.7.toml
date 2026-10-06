@@ -1,3 +1,5 @@
+# Toggle: reasoning.enabled = true|false
+# https://vercel.com/docs/ai-gateway/sdks-and-apis/openai-chat-completions/reasoning
 base_model = "zhipuai/glm-4.7"
 name = "GLM 4.7"
 
@@ -9,7 +11,6 @@ type = "toggle"
 [cost]
 input = 0.6
 output = 2.2
-cache_read = 0.12
 
 [limit]
 context = 200_000

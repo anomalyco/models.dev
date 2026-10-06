@@ -1,3 +1,4 @@
+# https://github.com/meta-llama/llama-models/blob/main/models/llama4/MODEL_CARD.md
 name = "Llama 4 Scout 17B Instruct"
 description = "Open Llama with long-context vision for efficient multimodal agents"
 family = "llama"
@@ -11,7 +12,7 @@ knowledge = "2024-08"
 open_weights = true
 
 [limit]
-context = 3_500_000
+context = 10_000_000
 output = 16_384
 
 [modalities]

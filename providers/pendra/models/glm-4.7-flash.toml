@@ -1,0 +1,9 @@
+base_model = "zhipuai/glm-4.7-flash"
+
+# Hybrid reasoning; Pendra exposes no configurable effort/budget control.
+reasoning_options = []
+
+# Self-hosted on your own workers — no per-token charge at the API.
+[cost]
+input = 0
+output = 0

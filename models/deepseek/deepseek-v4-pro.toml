@@ -1,3 +1,4 @@
+# Added benchmarks are from the original V4 preview instruct-model comparison, not the later 0731/0813 releases.
 name = "DeepSeek V4 Pro"
 description = "Open MoE flagship with million-token context for coding and long agent runs"
 family = "deepseek-thinking"
@@ -62,3 +63,155 @@ harness = "Claude Code"
 variant = "high"
 version = "2.1"
 source = "https://artificialanalysis.ai/agents/coding-agents"
+
+[[benchmarks]]
+name = "MMLU-Pro"
+score = 87.5
+metric = "EM"
+variant = "preview checkpoint; max effort"
+source = "https://huggingface.co/deepseek-ai/DeepSeek-V4-Pro"
+
+[[benchmarks]]
+name = "SimpleQA-Verified"
+score = 57.9
+metric = "pass@1"
+variant = "preview checkpoint; max effort"
+source = "https://huggingface.co/deepseek-ai/DeepSeek-V4-Pro"
+
+[[benchmarks]]
+name = "Chinese SimpleQA"
+score = 84.4
+metric = "pass@1"
+variant = "preview checkpoint; max effort"
+source = "https://huggingface.co/deepseek-ai/DeepSeek-V4-Pro"
+
+[[benchmarks]]
+name = "GPQA Diamond"
+score = 90.1
+metric = "pass@1"
+variant = "preview checkpoint; max effort"
+source = "https://huggingface.co/deepseek-ai/DeepSeek-V4-Pro"
+
+[[benchmarks]]
+name = "Humanity's Last Exam"
+score = 37.7
+metric = "pass@1"
+variant = "preview checkpoint; max effort; without tools"
+source = "https://huggingface.co/deepseek-ai/DeepSeek-V4-Pro"
+
+[[benchmarks]]
+name = "LiveCodeBench"
+score = 93.5
+metric = "pass@1"
+variant = "preview checkpoint; max effort"
+source = "https://huggingface.co/deepseek-ai/DeepSeek-V4-Pro"
+
+[[benchmarks]]
+name = "Codeforces"
+score = 3206
+metric = "rating"
+variant = "preview checkpoint; max effort"
+source = "https://huggingface.co/deepseek-ai/DeepSeek-V4-Pro"
+
+[[benchmarks]]
+name = "HMMT"
+score = 95.2
+metric = "pass@1"
+variant = "preview checkpoint; max effort"
+dataset = "February 2026"
+source = "https://huggingface.co/deepseek-ai/DeepSeek-V4-Pro"
+
+[[benchmarks]]
+name = "IMOAnswerBench"
+score = 89.8
+metric = "pass@1"
+variant = "preview checkpoint; max effort"
+source = "https://huggingface.co/deepseek-ai/DeepSeek-V4-Pro"
+
+[[benchmarks]]
+name = "MathArena Apex"
+score = 38.3
+metric = "pass@1"
+variant = "preview checkpoint; max effort"
+source = "https://huggingface.co/deepseek-ai/DeepSeek-V4-Pro"
+
+[[benchmarks]]
+name = "MathArena Apex Shortlist"
+score = 90.2
+metric = "pass@1"
+variant = "preview checkpoint; max effort"
+source = "https://huggingface.co/deepseek-ai/DeepSeek-V4-Pro"
+
+[[benchmarks]]
+name = "MRCR"
+score = 83.5
+metric = "MMR"
+variant = "preview checkpoint; max effort"
+dataset = "1M context"
+source = "https://huggingface.co/deepseek-ai/DeepSeek-V4-Pro"
+
+[[benchmarks]]
+name = "CorpusQA"
+score = 62
+metric = "accuracy"
+variant = "preview checkpoint; max effort"
+dataset = "1M context"
+source = "https://huggingface.co/deepseek-ai/DeepSeek-V4-Pro"
+
+[[benchmarks]]
+name = "Terminal-Bench"
+score = 67.9
+metric = "accuracy"
+variant = "preview checkpoint; max effort"
+version = "2.0"
+source = "https://huggingface.co/deepseek-ai/DeepSeek-V4-Pro"
+
+[[benchmarks]]
+name = "SWE-Bench Pro"
+score = 55.4
+metric = "resolved"
+variant = "preview checkpoint; max effort"
+source = "https://huggingface.co/deepseek-ai/DeepSeek-V4-Pro"
+
+[[benchmarks]]
+name = "SWE-Bench Multilingual"
+score = 76.2
+metric = "resolved"
+variant = "preview checkpoint; max effort"
+source = "https://huggingface.co/deepseek-ai/DeepSeek-V4-Pro"
+
+[[benchmarks]]
+name = "BrowseComp"
+score = 83.4
+metric = "pass@1"
+variant = "preview checkpoint; max effort"
+source = "https://huggingface.co/deepseek-ai/DeepSeek-V4-Pro"
+
+[[benchmarks]]
+name = "Humanity's Last Exam"
+score = 48.2
+metric = "pass@1"
+variant = "preview checkpoint; max effort; with tools"
+source = "https://huggingface.co/deepseek-ai/DeepSeek-V4-Pro"
+
+[[benchmarks]]
+name = "MCP Atlas"
+score = 73.6
+metric = "pass@1"
+variant = "preview checkpoint; max effort"
+dataset = "public"
+source = "https://huggingface.co/deepseek-ai/DeepSeek-V4-Pro"
+
+[[benchmarks]]
+name = "GDPval-AA"
+score = 1554
+metric = "Elo"
+variant = "preview checkpoint; max effort"
+source = "https://huggingface.co/deepseek-ai/DeepSeek-V4-Pro"
+
+[[benchmarks]]
+name = "Toolathlon"
+score = 51.8
+metric = "pass@1"
+variant = "preview checkpoint; max effort"
+source = "https://huggingface.co/deepseek-ai/DeepSeek-V4-Pro"

@@ -1,0 +1,27 @@
+name = "Fireworks: Ember-1"
+description = "Ember-1 is a specialized reasoning model from Fireworks Research, built on [Kimi K3](https://openrouter.ai/moonshotai/kimi-k3). It is designed to make every token go further: it produces shorter reasoning traces, using roughly 40%..."
+release_date = "2026-09-24"
+last_updated = "2026-09-24"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "high", "max"]
+
+[cost]
+input = 3
+output = 15
+cache_read = 0.3
+
+[limit]
+context = 1_048_576
+output = 943_718
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

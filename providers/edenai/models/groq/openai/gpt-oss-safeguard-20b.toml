@@ -1,0 +1,11 @@
+base_model = "openai/gpt-oss-safeguard-20b"
+name = "GPT OSS Safeguard 20B (Groq)"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high"]
+
+[cost]
+input = 0.075
+output = 0.3
+cache_read = 0.0375

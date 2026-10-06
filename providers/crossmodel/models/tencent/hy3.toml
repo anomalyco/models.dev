@@ -2,9 +2,6 @@ base_model = "tencent/hy3"
 structured_output = true
 
 [[reasoning_options]]
-type = "toggle"
-
-[[reasoning_options]]
 type = "effort"
 values = ["none", "low", "high"]
 
@@ -16,4 +13,4 @@ cache_write = 0.16
 
 [limit]
 context = 262_144
-output = 262_144
+output = 131_072

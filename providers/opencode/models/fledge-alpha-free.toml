@@ -1,0 +1,29 @@
+# OpenCode-only free-tier preview alias; upstream /opencode/v1/models metadata
+# supplied by the operator on 2026-10-01. The served endpoint lists text/image
+# input, a 1,048,576-token context, and up to 131,072 output tokens.
+# Input, output, and reasoning tokens share the context budget.
+# Effort: reasoning_effort = low|high|max (OpenCode route mapping supplied 2026-10-01).
+name = "Fledge Alpha Free"
+description = "Free-tier preview reasoning model with text and image input and tool use"
+release_date = "2026-10-01"
+last_updated = "2026-10-01"
+attachment = true
+reasoning = true
+reasoning_options = [
+  { type = "effort", values = ["low", "high", "max"] },
+]
+tool_call = true
+temperature = true
+open_weights = false
+
+[cost]
+input = 0
+output = 0
+
+[limit]
+context = 1_048_576
+output = 131_072
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

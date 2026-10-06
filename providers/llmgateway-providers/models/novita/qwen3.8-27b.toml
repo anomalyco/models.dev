@@ -1,0 +1,17 @@
+base_model = "alibaba/qwen3.8-27b"
+name = "Qwen3.8 27B (NovitaAI)"
+attachment = false
+structured_output = false
+reasoning_options = []
+
+[cost]
+input = 0.42
+output = 3
+cache_read = 0.085
+
+[limit]
+context = 1_000_000
+output = 131_072
+
+[modalities]
+input = ["text"]

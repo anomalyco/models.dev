@@ -1,0 +1,15 @@
+# Effort: reasoning_effort = low|high|max; GLM-5.3 always reasons.
+# HF exposes model/provider-specific effort; use the lab's supported levels.
+# https://docs.z.ai/guides/llm/glm-5.3
+# https://huggingface.co/docs/inference-providers/en/tasks/chat-completion
+base_model = "zhipuai/glm-5.3"
+description = "Flagship GLM model for hybrid reasoning, coding, and agentic engineering"
+open_weights = true
+reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]
+
+[cost]
+input = 1.4
+output = 4.4
+
+[limit]
+context = 1_048_576

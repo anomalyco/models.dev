@@ -1,3 +1,6 @@
+# International (Singapore) deployment is tiered on input tokens per request;
+# every token in a request bills at its tier's unit price.
+# https://www.alibabacloud.com/help/en/model-studio/model-pricing (accessed 2026-08-26)
 name = "Qwen3-Coder 480B-A35B Instruct"
 description = "Open Qwen coding heavyweight for repository reasoning and agentic engineering"
 family = "qwen"
@@ -13,6 +16,16 @@ open_weights = true
 [cost]
 input = 1.50
 output = 7.50
+
+[[cost.tiers]]
+tier = { type = "context", size = 32_000 }
+input = 2.7
+output = 13.5
+
+[[cost.tiers]]
+tier = { type = "context", size = 128_000 }
+input = 4.5
+output = 22.5
 
 [limit]
 context = 262_144

@@ -1,0 +1,28 @@
+name = "Mercury 2.5 Preview"
+description = "Mercury 2.5 Preview is Inception's latest and most intelligent diffusion language model. Instead of generating tokens strictly one at a time, it produces and refines multiple tokens in parallel, reaching up to 1,107 tokens per second on standard GPUs. It delivers a 10+ point intelligence gain over Mercury 2, with tunable reasoning, parallel tool calls, schema-aligned JSON output, and a 260K context window. It is built for latency-sensitive production work such as search agents, voice pipelines, customer support, rapid coding iteration, and coding subagents."
+family = "mercury"
+release_date = "2026-09-01"
+last_updated = "2026-09-01"
+attachment = false
+reasoning = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high"]
+
+[cost]
+input = 0.04
+output = 0.15
+cache_read = 0.004
+
+[limit]
+context = 260_000
+input = 260_000
+output = 65_536
+
+[modalities]
+input = ["text"]
+output = ["text"]
