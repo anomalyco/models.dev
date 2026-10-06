@@ -1,0 +1,20 @@
+# Effort: reasoning_effort = low|high|max. The set matches the catalog and the zai
+# and OpenRouter entries for the same model. Traces arrive in reasoning_content.
+# The costs and context match https://api.inference.nebul.io/v1/model/info on
+# 2026-09-23.
+base_model = "zhipuai/glm-5.3"
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[cost]
+input = 1.47
+output = 4.62
+cache_read = 0.35
+
+[limit]
+context = 1_048_576
