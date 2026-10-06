@@ -1,9 +1,11 @@
 # Prices, limits and vision/tool/structured-output support come from the
-# TokenLab public model data (accessed 2026-10-05):
+# TokenLab public model data (accessed 2026-10-06):
 # https://tokenlab.sh/api/public/model-data/models/gpt-5.4/pricing
 # Prices are for the default delivery option (Auto):
 # https://tokenlab.sh/docs/en/guides/billing
 # Effort: reasoning_effort = none|low|medium|high|xhigh
+# Context is TokenLab's hosted window: the pricing data above lists maxInputTokens
+# tiers of 272,000 and 400,000. The lab's 1,050,000 is not offered on this host.
 base_model = "openai/gpt-5.4"
 reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh"] }]
 
@@ -11,6 +13,12 @@ reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high
 input = 1.75
 output = 10.5
 cache_read = 0.175
+
+[[cost.tiers]]
+tier = { type = "context", size = 272_000 }
+input = 3.5
+output = 15.75
+cache_read = 0.35
 
 [limit]
 context = 400_000
