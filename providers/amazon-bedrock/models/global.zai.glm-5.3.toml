@@ -1,12 +1,16 @@
 # https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-zai-glm-5-3.html
 # https://aws.amazon.com/bedrock/pricing/ (Z AI > GLM 5.3, Global CRIS Standard; cache_write is the 30-minute rate)
-# Cross-Region inference only: us.zai.glm-5.3 / global.zai.glm-5.3; in-Region on-demand is not supported.
-# Reasoning is always on with selectable effort (AWS launch post). AWS's Invoke sample sends
-# reasoning_effort = "max"; levels mirror the lab and peer hosts: low|high|max, no toggle.
-# Not live-probed on Bedrock (model access is limited to eligible customers).
+# Effort: additionalModelRequestFields.reasoning_effort = none|low|high|max (off is effort=none; no toggle).
+# Live Converse 2026-10-06 (us-east-2, US and Global profiles): default returns reasoningContent;
+# none returned no reasoningContent on 4 of 4 prompts; low < high < max in reasoning length.
+# medium and xhigh are also accepted, but GLM-5.3's native levels are low|high|max and single
+# probes put medium near high and xhigh near max, so they are omitted. minimal is rejected.
+# The bare zai.glm-5.3 ID is rejected; an inference profile is required.
+# maxTokens=128000 accepted; 128001 and 131072 rejected ("exceeds the model limit of 128000").
+# Text input only: image content blocks are rejected. Tool calls and streamed reasoning verified.
 base_model = "zhipuai/glm-5.3"
 name = "GLM-5.3 (Global)"
-reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]
+reasoning_options = [{ type = "effort", values = ["none", "low", "high", "max"] }]
 interleaved = true
 
 [cost]
@@ -14,3 +18,6 @@ input = 1.68
 output = 5.28
 cache_read = 0.312
 cache_write = 2.10
+
+[limit]
+output = 128_000
