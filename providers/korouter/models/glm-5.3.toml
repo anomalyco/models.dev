@@ -1,0 +1,12 @@
+# KoRouter serves glm-5.3 at 50% below the Zhipu list price.
+# Prices read from https://korouter.ai/models on 2026-10-06 (the same catalog that bills requests).
+base_model = "zhipuai/glm-5.3"
+reasoning_options = [
+  { type = "effort", values = ["low", "high", "max"] },
+]
+
+[cost]
+input = 0.70
+output = 2.20
+cache_read = 0.13
+cache_write = 0.70

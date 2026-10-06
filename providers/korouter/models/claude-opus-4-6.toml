@@ -1,0 +1,13 @@
+# KoRouter serves claude-opus-4-6 at 35% below the Anthropic list price.
+# Prices read from https://korouter.ai/models on 2026-10-06 (the same catalog that bills requests).
+base_model = "anthropic/claude-opus-4-6"
+reasoning_options = [
+  { type = "effort", values = ["low", "medium", "high", "max"] },
+  { type = "budget_tokens", min = 1024 },
+]
+
+[cost]
+input = 3.25
+output = 16.25
+cache_read = 0.325
+cache_write = 4.06

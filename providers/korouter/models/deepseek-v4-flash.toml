@@ -1,0 +1,13 @@
+# KoRouter serves deepseek-v4-flash at 92% below the DeepSeek list price.
+# Prices read from https://korouter.ai/models on 2026-10-06 (the same catalog that bills requests).
+base_model = "deepseek/deepseek-v4-flash"
+reasoning_options = [
+  { type = "toggle" },
+  { type = "effort", values = ["low", "high", "max"] },
+]
+
+[cost]
+input = 0.024
+output = 0.096
+cache_read = 0.00048
+cache_write = 0.024

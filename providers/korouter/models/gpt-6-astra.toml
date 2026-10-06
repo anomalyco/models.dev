@@ -1,0 +1,12 @@
+# KoRouter serves gpt-6-astra at 63% below the OpenAI list price.
+# Prices read from https://korouter.ai/models on 2026-10-06 (the same catalog that bills requests).
+base_model = "openai/gpt-6-astra"
+reasoning_options = [
+  { type = "effort", values = ["low", "medium", "high", "xhigh", "max"] },
+]
+
+[cost]
+input = 3.70
+output = 18.50
+cache_read = 0.37
+cache_write = 4.63

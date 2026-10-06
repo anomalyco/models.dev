@@ -1,0 +1,12 @@
+# KoRouter serves claude-haiku-4-5 at 35% below the Anthropic list price.
+# Prices read from https://korouter.ai/models on 2026-10-06 (the same catalog that bills requests).
+base_model = "anthropic/claude-haiku-4-5"
+reasoning_options = [
+  { type = "budget_tokens", min = 1024 },
+]
+
+[cost]
+input = 0.65
+output = 3.25
+cache_read = 0.065
+cache_write = 0.8125
