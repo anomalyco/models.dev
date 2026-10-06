@@ -1,0 +1,31 @@
+# Synced from GET /v1/models.
+# Toggle: enable_thinking = true|false (verified live 2026-09-17: off → 200,
+# no reasoning pass).
+# Effort: reasoning_effort = low|high|xhigh (chat) / reasoning.effort
+# (responses) — V4.1's encoder aliases low=50, high=75, max=100 on its numeric
+# reasoning budget (minimal→50, medium→75, xhigh→100).
+# Budget: reasoning_effort = <integer 1-100> — the same field also takes the
+# raw numeric budget directly. Note the denomination is V4.1's 1-100 effort
+# scale (rendered into the prompt as "Reasoning Effort: {n} (range 1-100)"),
+# not a token count. Out-of-range values → 400; every other sference model
+# refuses budgets with a 400. Verified live 2026-09-17: budget 30 < low <
+# xhigh produce distinct reasoning depths.
+base_model = "deepseek/deepseek-v4.1-flash"
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "xhigh"]
+
+[cost]
+input = 0.5
+output = 1.5
+cache_read = 0.05
+
+[limit]
+context = 1_048_576
