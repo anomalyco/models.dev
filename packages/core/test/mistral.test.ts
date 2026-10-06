@@ -6,6 +6,8 @@ import {
   buildMistralModel,
   fetchMistralModels,
   mistral,
+  parseMistralModels,
+  parseSupportedEfforts,
   type MistralModel,
 } from "../src/sync/providers/mistral.js";
 
@@ -56,14 +58,14 @@ test("Mistral sync is registered for direct and hourly runs", () => {
 });
 
 test("fetches /v1/models with MISTRAL_API_KEY and fails without one", async () => {
-  let request: { url: string; auth: string | null } | undefined;
+  const requests: Array<{ url: string; auth: string | null }> = [];
   const fetcher = (async (input: Parameters<typeof fetch>[0], init?: RequestInit) => {
-    request = { url: String(input), auth: new Headers(init?.headers).get("authorization") };
-    return Response.json({ object: "list", data: [model()] });
+    requests.push({ url: String(input), auth: new Headers(init?.headers).get("authorization") });
+    return Response.json({ object: "list", data: [model({ capabilities: { ...model().capabilities, reasoning: false } })] });
   }) as typeof fetch;
 
-  await expect(fetchMistralModels("test-key", fetcher)).resolves.toMatchObject({ data: [model()] });
-  expect(request).toEqual({ url: "https://api.mistral.ai/v1/models", auth: "Bearer test-key" });
+  await expect(fetchMistralModels("test-key", fetcher)).resolves.toMatchObject({ reasoning_efforts: {} });
+  expect(requests).toEqual([{ url: "https://api.mistral.ai/v1/models", auth: "Bearer test-key" }]);
   await expect(fetchMistralModels("", fetcher)).rejects.toThrow("MISTRAL_API_KEY");
 
   const key = process.env.MISTRAL_API_KEY;
@@ -73,6 +75,67 @@ test("fetches /v1/models with MISTRAL_API_KEY and fails without one", async () =
   } finally {
     if (key !== undefined) process.env.MISTRAL_API_KEY = key;
   }
+});
+
+test("probes reasoning efforts once per model and attaches them to every alias", async () => {
+  const probes: Array<Record<string, unknown>> = [];
+  const fetcher = (async (input: Parameters<typeof fetch>[0], init?: RequestInit) => {
+    if (String(input).endsWith("/models")) {
+      return Response.json({
+        object: "list",
+        data: [
+          model(),
+          model({ id: "mistral-small-latest" }),
+          model({ id: "glm-5-2", name: "glm-5-2" }),
+          model({
+            id: "mistral-embed",
+            name: "mistral-embed",
+            capabilities: { ...model().capabilities, completion_chat: false },
+          }),
+        ],
+      });
+    }
+    const body = JSON.parse(String(init?.body)) as Record<string, unknown>;
+    probes.push(body);
+    if (body.model === "glm-5-2") return Response.json({ choices: [] });
+    return Response.json({
+      object: "error",
+      message: "reasoning_effort minimal is not supported for this model, supported values: [<ReasoningEffort.high: 'high'>, <ReasoningEffort.none: 'none'>]",
+    }, { status: 400 });
+  }) as typeof fetch;
+
+  const parsed = parseMistralModels(await fetchMistralModels("test-key", fetcher));
+
+  expect(probes).toEqual([
+    {
+      model: "mistral-small-2603",
+      messages: [{ role: "user", content: "hi" }],
+      reasoning_effort: "minimal",
+      max_tokens: 1,
+    },
+    expect.objectContaining({ model: "glm-5-2" }),
+  ]);
+  expect(parsed.map((row) => [row.id, row.reasoning_efforts])).toEqual([
+    ["mistral-small-2603", ["none", "high"]],
+    ["mistral-small-latest", ["none", "high"]],
+    ["glm-5-2", undefined],
+    ["mistral-embed", undefined],
+  ]);
+});
+
+test("parses each reasoning_effort rejection format Mistral returns", () => {
+  expect(parseSupportedEfforts(
+    "reasoning_effort minimal is not supported for this model, supported values: [<ReasoningEffort.high: 'high'>, <ReasoningEffort.none: 'none'>]",
+  )).toEqual(["none", "high"]);
+  expect(parseSupportedEfforts(
+    "reasoning_effort 'minimal' is not supported for this model; supported values: ['low', 'high', 'max']",
+  )).toEqual(["low", "high", "max"]);
+  expect(parseSupportedEfforts(
+    "reasoning_effort='minimal' is not supported for this model. Must be one of (<ReasoningEffort.none: 'none'>, <ReasoningEffort.high: 'high'>)",
+  )).toEqual(["none", "high"]);
+  expect(parseSupportedEfforts("reasoning_effort is not enabled for this model")).toEqual([]);
+  expect(parseSupportedEfforts("Rate limit exceeded")).toBeUndefined();
+  expect(parseSupportedEfforts("supported values: ['turbo']")).toBeUndefined();
 });
 
 test("reports each missing chat model once under its canonical row", () => {
@@ -140,6 +203,26 @@ test("requires authored reasoning controls instead of inventing them", () => {
     model({ capabilities: { ...model().capabilities, reasoning: false } }),
     existingSmall,
   )).toMatchObject({ reasoning: false, reasoning_options: undefined });
+});
+
+test("flags authored reasoning controls that disagree with the live API", () => {
+  expect(() => buildMistralModel(
+    model({ reasoning_efforts: ["none", "high"] }),
+    { ...existingSmall, reasoning_options: [] },
+  )).toThrow("Mistral accepts reasoning_effort [none, high] for mistral-small-2603, but the authored reasoning_options effort values are []");
+  expect(() => buildMistralModel(
+    model({ reasoning_efforts: ["low", "high", "max"] }),
+    existingSmall,
+  )).toThrow(MissingReasoningOptionsError);
+
+  expect(buildMistralModel(
+    model({ reasoning_efforts: ["none", "high"] }),
+    { ...existingSmall, reasoning_options: [{ type: "effort", values: ["high", "none"] }] },
+  )).toMatchObject({ reasoning: true });
+  expect(buildMistralModel(model({ reasoning_efforts: undefined }), existingSmall))
+    .toMatchObject({ reasoning: true });
+  expect(buildMistralModel(model({ reasoning_efforts: [] }), { ...existingSmall, reasoning_options: [] }))
+    .toMatchObject({ reasoning_options: [] });
 });
 
 test("maps Mistral deprecation to catalog status", () => {

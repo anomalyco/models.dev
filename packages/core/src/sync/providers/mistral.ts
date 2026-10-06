@@ -4,7 +4,12 @@ import { MissingReasoningOptionsError } from "../missing-reasoning-options.js";
 import type { ExistingModel, SyncedFullModel, SyncedModel, SyncProvider } from "../index.js";
 import { factorBaseModel } from "./openrouter.js";
 
-const API_ENDPOINT = "https://api.mistral.ai/v1/models";
+const API_BASE = "https://api.mistral.ai/v1";
+const EFFORT_VALUES = ["none", "minimal", "low", "medium", "high", "xhigh", "max"] as const;
+// Mistral rejects an unsupported effort with the model's accepted values, but
+// silently accepts the value on some models (zai-glm-5-2). "minimal" is the
+// least likely value to be supported, so it gives the most useful rejection.
+const PROBE_EFFORT = "minimal";
 
 const MistralCapabilities = z.object({
   completion_chat: z.boolean(),
@@ -28,7 +33,14 @@ export const MistralResponse = z.object({
   data: z.array(MistralModel),
 }).passthrough();
 
-export type MistralModel = z.infer<typeof MistralModel>;
+export type MistralModel = z.infer<typeof MistralModel> & {
+  /**
+   * reasoning_effort values Mistral reports as accepted, from a rejected probe
+   * request. [] means the API refuses reasoning_effort; undefined means the
+   * probe could not determine the set.
+   */
+  reasoning_efforts?: string[];
+};
 
 type Modality = "text" | "audio" | "image" | "video" | "pdf";
 
@@ -62,7 +74,7 @@ export const mistral = {
     return fetchMistralModels();
   },
   parseModels(raw) {
-    return MistralResponse.parse(raw).data;
+    return parseMistralModels(raw);
   },
   translateModel(model, context) {
     if (!model.capabilities.completion_chat) {
@@ -85,13 +97,76 @@ export async function fetchMistralModels(
   fetcher: typeof fetch = fetch,
 ) {
   if (key === undefined || key === "") throw new Error("Mistral sync requires MISTRAL_API_KEY");
-  const response = await fetcher(API_ENDPOINT, {
+  const response = await fetcher(`${API_BASE}/models`, {
     headers: { Authorization: `Bearer ${key}` },
   });
   if (!response.ok) {
     throw new Error(`Mistral models request failed: ${response.status} ${response.statusText}`);
   }
-  return MistralResponse.parse(await response.json());
+  const models = MistralResponse.parse(await response.json());
+
+  // Aliases share their canonical model's controls, so probe each model once.
+  const names = [...new Set(
+    models.data
+      .filter((model) => model.capabilities.completion_chat && model.capabilities.reasoning)
+      .map((model) => model.name),
+  )];
+  const efforts: Record<string, string[] | null> = {};
+  for (const name of names) {
+    efforts[name] = await probeReasoningEfforts(name, key, fetcher) ?? null;
+  }
+  return { ...models, reasoning_efforts: efforts };
+}
+
+export function parseMistralModels(raw: unknown): MistralModel[] {
+  const efforts = z.record(z.array(z.string()).nullable()).optional()
+    .parse((raw as { reasoning_efforts?: unknown } | null)?.reasoning_efforts) ?? {};
+  return MistralResponse.parse(raw).data.map((model) => ({
+    ...model,
+    reasoning_efforts: efforts[model.name] ?? undefined,
+  }));
+}
+
+async function probeReasoningEfforts(model: string, key: string, fetcher: typeof fetch) {
+  try {
+    const response = await fetcher(`${API_BASE}/chat/completions`, {
+      method: "POST",
+      headers: { Authorization: `Bearer ${key}`, "Content-Type": "application/json" },
+      body: JSON.stringify({
+        model,
+        messages: [{ role: "user", content: "hi" }],
+        reasoning_effort: PROBE_EFFORT,
+        max_tokens: 1,
+      }),
+    });
+    if (response.ok) return undefined;
+    const body = await response.json() as { message?: unknown };
+    return typeof body.message === "string" ? parseSupportedEfforts(body.message) : undefined;
+  } catch (error) {
+    console.warn(`Mistral reasoning_effort probe failed for ${model}: ${error instanceof Error ? error.message : String(error)}`);
+    return undefined;
+  }
+}
+
+/** Reads the accepted values from Mistral's reasoning_effort rejection. */
+export function parseSupportedEfforts(message: string): string[] | undefined {
+  if (/reasoning_effort is not enabled/i.test(message)) return [];
+  const list = message.split(/supported values|must be one of/i)[1];
+  if (list === undefined) return undefined;
+  const values = new Set([...list.matchAll(/'([a-z]+)'/g)].map((match) => match[1]!));
+  const known = EFFORT_VALUES.filter((value) => values.has(value));
+  return known.length === values.size && known.length > 0 ? known : undefined;
+}
+
+function authoredEfforts(existing: ExistingModel): string[] {
+  const values = (existing.reasoning_options ?? [])
+    .flatMap((option) => option.type === "effort" ? option.values : [])
+    .map((value) => String(value));
+  const rank = (value: string) => {
+    const index = EFFORT_VALUES.indexOf(value as typeof EFFORT_VALUES[number]);
+    return index === -1 ? EFFORT_VALUES.length : index;
+  };
+  return [...new Set(values)].sort((a, b) => rank(a) - rank(b));
 }
 
 function inputModalities(model: MistralModel, existing: ExistingModel): Modality[] {
@@ -121,6 +196,15 @@ export function buildMistralModel(model: MistralModel, existing: ExistingModel):
       model.id,
       "Mistral reports reasoning support, but /v1/models exposes no reasoning controls; author reasoning_options from a live reasoning_effort check",
     );
+  }
+  if (model.capabilities.reasoning && model.reasoning_efforts !== undefined) {
+    const authored = authoredEfforts(existing);
+    if (authored.join() !== model.reasoning_efforts.join()) {
+      throw new MissingReasoningOptionsError(
+        model.id,
+        `Mistral accepts reasoning_effort [${model.reasoning_efforts.join(", ")}] for ${model.name}, but the authored reasoning_options effort values are [${authored.join(", ")}]`,
+      );
+    }
   }
 
   const { base_model: baseModel, base_model_omit: baseModelOmit, ...current } = existing;
