@@ -1,9 +1,9 @@
-# KoRouter serves claude-haiku-4-5 at 35% below the Anthropic list price.
-# Prices read from https://korouter.ai/models on 2026-10-06 (the same catalog that bills requests).
+# Prices read from https://korouter.ai/models/claude-haiku-4-5 on 2026-10-06 (the same catalog that bills requests).
+# Host surface: OpenAI-compatible chat completions at https://korouter.ai/v1.
+# No caller control on this surface: the model rejects reasoning_effort
+# ("This model does not support the effort parameter") and chat completions has no thinking budget field.
 base_model = "anthropic/claude-haiku-4-5"
-reasoning_options = [
-  { type = "budget_tokens", min = 1024 },
-]
+reasoning_options = []
 
 [cost]
 input = 0.65

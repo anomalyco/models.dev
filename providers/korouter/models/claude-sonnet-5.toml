@@ -1,10 +1,8 @@
-# KoRouter serves claude-sonnet-5 at 35% below the Anthropic list price.
-# Prices read from https://korouter.ai/models on 2026-10-06 (the same catalog that bills requests).
+# Prices read from https://korouter.ai/models/claude-sonnet-5 on 2026-10-06 (the same catalog that bills requests).
+# Host surface: OpenAI-compatible chat completions at https://korouter.ai/v1.
+# Effort: reasoning_effort = low|medium|high|xhigh|max (omit for the model default; medium and above request extended thinking with a derived budget; none is rejected)
 base_model = "anthropic/claude-sonnet-5"
-reasoning_options = [
-  { type = "toggle" },
-  { type = "effort", values = ["low", "medium", "high", "xhigh", "max"] },
-]
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
 
 [cost]
 input = 1.30

@@ -1,9 +1,8 @@
-# KoRouter serves kimi-k3 at 30% below the Kimi list price.
-# Prices read from https://korouter.ai/models on 2026-10-06 (the same catalog that bills requests).
+# Prices read from https://korouter.ai/models/kimi-k3 on 2026-10-06 (the same catalog that bills requests).
+# Host surface: OpenAI-compatible chat completions at https://korouter.ai/v1.
+# Effort: reasoning_effort = low|high|max
 base_model = "moonshotai/kimi-k3"
-reasoning_options = [
-  { type = "effort", values = ["low", "high", "max"] },
-]
+reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]
 
 [cost]
 input = 2.10

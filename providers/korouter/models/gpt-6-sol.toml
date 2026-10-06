@@ -1,8 +1,16 @@
-# KoRouter serves gpt-6-sol at 63% below the OpenAI list price.
-# Prices read from https://korouter.ai/models on 2026-10-06 (the same catalog that bills requests).
+# Prices read from https://korouter.ai/models/gpt-6-sol on 2026-10-06 (the same catalog that bills requests).
+# Host surface: OpenAI-compatible chat completions at https://korouter.ai/v1.
+# Effort: reasoning_effort = none|low|medium|high|xhigh|max
 base_model = "openai/gpt-6-sol"
 reasoning_options = [
-  { type = "effort", values = ["none", "low", "medium", "high", "xhigh", "max"] },
+  { type = "effort", values = [
+    "none",
+    "low",
+    "medium",
+    "high",
+    "xhigh",
+    "max",
+  ] },
 ]
 
 [cost]
@@ -10,3 +18,10 @@ input = 0.74
 output = 3.70
 cache_read = 0.074
 cache_write = 0.925
+
+[[cost.tiers]]
+tier = { type = "context", size = 272_000 }
+input = 1.48
+output = 5.55
+cache_read = 0.148
+cache_write = 1.85

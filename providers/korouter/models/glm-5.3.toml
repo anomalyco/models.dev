@@ -1,9 +1,8 @@
-# KoRouter serves glm-5.3 at 50% below the Zhipu list price.
-# Prices read from https://korouter.ai/models on 2026-10-06 (the same catalog that bills requests).
+# Prices read from https://korouter.ai/models/glm-5.3 on 2026-10-06 (the same catalog that bills requests).
+# Host surface: OpenAI-compatible chat completions at https://korouter.ai/v1.
+# Effort: reasoning_effort = low|high|max
 base_model = "zhipuai/glm-5.3"
-reasoning_options = [
-  { type = "effort", values = ["low", "high", "max"] },
-]
+reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]
 
 [cost]
 input = 0.70
