@@ -1,0 +1,22 @@
+# Source: https://docs.mistral.ai/models/zai-glm-5-2 — Z.ai GLM 5.2 is a third-party Z.ai
+# model served by Mistral without modifications; 1M context, 128k max output.
+# Alias: Mistral live API serves the same GLM-5.2 model as `glm-5-2` (canonical name)
+# with `zai-glm-5-2` as the prefixed id/alias row (max_context_length 1048576,
+# aliases ["glm-5-2"]); both IDs share pricing/limits per live API observation quoted in
+# https://github.com/BerriAI/litellm/pull/37110 (fallback source).
+# Pricing: $1.4 input / $0.14 cached / $4.4 output per MTok per Mistral docs.
+# Effort: reasoning_effort = none|high|max, same native mapping as the zai-glm-5-2 peer.
+base_model = "zhipuai/glm-5.2"
+status = "beta"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "high", "max"]
+
+[cost]
+input = 1.4
+output = 4.4
+cache_read = 0.14
+
+[limit]
+context = 1_048_576
