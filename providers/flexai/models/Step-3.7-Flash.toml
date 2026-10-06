@@ -1,12 +1,13 @@
-# Thinking-only: the gateway rejects {"thinking": {"type": "disabled"}} with
-# "Model 'Step-3.7-Flash' is thinking-only and cannot [be disabled]", so no
-# caller-facing off switch exists.
-# reasoning_effort is ACCEPTED (the gateway validates against a uniform
-# minimal|low|medium|high|max enum shared by every non-gpt-oss model here) but
-# is NOT honoured on this model. Measured on FlexAI 2026-10-02, reasoning
-# tokens, n=3 per level: default 1839, minimal 1749, low 1282, medium 1901,
-# high 1879, max 1442 -- every level overlaps the default, so no effort levels
-# are declared.
+# No caller control is declared, deliberately. Re-measured on FlexAI 2026-10-05
+# (length of reasoning_content; 3 prompts x 4 runs, max_tokens 32000):
+#   default 1898 · low 2553 · medium 616 · high 562 (medians)
+#   thinking.type disabled 1675 · enable_thinking=false 2017 · thinking=false 1922
+# reasoning_effort is accepted and changes output, but INVERTED on this host:
+# medium/high reason 3-4x less than low or the default, on all three prompts.
+# Publishing the lab's low|medium|high would tell clients `high` means more
+# reasoning when here it means less; no switch turns reasoning off.
+# Context: 262_144 is the served window (GET /v1/models context_length, and the
+# server's max_tokens error states "maximum context length of 262144").
 # https://docs.flex.ai/inference-api/agents/langchain
 base_model = "stepfun/step-3.7-flash"
 reasoning_options = []

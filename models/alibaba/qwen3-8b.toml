@@ -1,4 +1,7 @@
-# Source: https://huggingface.co/Qwen/Qwen3-8B (config.json max_position_embeddings = 40_960)
+# Source: https://huggingface.co/Qwen/Qwen3-8B -- "Context Length: 32,768 natively
+# and 131,072 tokens with YaRN" (the card's validated window, which the Alibaba
+# and OpenRouter entries also serve). config.json max_position_embeddings is
+# 40_960 without RoPE scaling; hosts serving that should override.
 name = "Qwen3 8B"
 description = "Dense Qwen3 model with switchable thinking for multilingual chat, reasoning, and tool use"
 family = "qwen"
@@ -11,7 +14,7 @@ tool_call = true
 open_weights = true
 
 [limit]
-context = 40_960
+context = 131_072
 output = 32_768
 
 [modalities]

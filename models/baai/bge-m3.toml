@@ -1,7 +1,8 @@
 # Source: https://huggingface.co/BAAI/bge-m3 (MIT)
-# XLM-RoBERTa encoder; config.json max_position_embeddings = 8_194, hidden_size
-# = 1_024 (the dense embedding dimension, recorded here as the output limit in
-# the convention used by the other embedding entries).
+# Max input 8_192 tokens per the model card ("inputs ... up to 8192 tokens",
+# max_length=8192); config.json's max_position_embeddings of 8_194 includes
+# XLM-RoBERTa's two-position offset. hidden_size = 1_024 (the dense embedding
+# dimension, recorded as the output limit per the other embedding entries).
 name = "BGE-M3"
 description = "Multilingual embedding model for semantic search, retrieval, and ranking across 100+ languages"
 family = "bge"
@@ -14,7 +15,7 @@ tool_call = false
 open_weights = true
 
 [limit]
-context = 8_194
+context = 8_192
 output = 1_024
 
 [modalities]
