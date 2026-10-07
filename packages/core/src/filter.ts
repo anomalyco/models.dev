@@ -47,7 +47,7 @@ export function parseModelTypes(value: string | null): ModelTypeFilter {
 function includesModel(model: TypedModel, filter: ModelTypeFilter) {
   if (filter === "all") return true;
   const type = model.type ?? "chat";
-  if (filter === "default") return type === "chat";
+  if (filter === "default") return type !== "decision";
   return filter.includes(type);
 }
 
