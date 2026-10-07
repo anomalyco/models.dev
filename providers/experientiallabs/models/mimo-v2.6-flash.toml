@@ -1,10 +1,11 @@
+# Reasoning controls copied from the providers/xiaomi/models/mimo-v2.6-flash.toml lab baseline.
+# Toggle: thinking.type = enabled|disabled
 base_model = "xiaomi/mimo-v2.6-flash"
 attachment = false
 structured_output = true
 
 [[reasoning_options]]
-type = "effort"
-values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"]
+type = "toggle"
 
 [cost]
 input = 0.14

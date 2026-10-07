@@ -1,10 +1,10 @@
+# Reasoning controls copied from the providers/zhipuai/models/glm-5v-turbo.toml lab baseline.
 base_model = "zhipuai/glm-5v-turbo"
 name = "GLM 5V Turbo"
 structured_output = true
 
 [[reasoning_options]]
-type = "effort"
-values = ["medium"]
+type = "toggle"
 
 [cost]
 input = 1.2

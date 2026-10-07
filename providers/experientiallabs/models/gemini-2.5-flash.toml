@@ -1,8 +1,13 @@
+# Reasoning controls copied from the providers/google/models/gemini-2.5-flash.toml lab baseline.
 base_model = "google/gemini-2.5-flash"
 
 [[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high"]
+type = "toggle"
+
+[[reasoning_options]]
+type = "budget_tokens"
+min = 0
+max = 24_576
 
 [cost]
 input = 0.3

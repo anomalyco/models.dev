@@ -1,8 +1,9 @@
+# Reasoning controls copied from the providers/openrouter/models/poolside/laguna-xs-2.1.toml relay peer baseline.
+# Toggle: reasoning.enabled = true|false
 base_model = "poolside/laguna-xs-2.1"
 
 [[reasoning_options]]
-type = "effort"
-values = ["medium"]
+type = "toggle"
 
 [cost]
 input = 0.06

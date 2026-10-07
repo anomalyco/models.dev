@@ -1,10 +1,18 @@
+# Reasoning controls copied from the providers/openrouter/models/nvidia/nemotron-3-super-120b-a12b.toml relay peer baseline.
+# Toggle: reasoning.enabled = true|false
 base_model = "nvidia/nemotron-3-super-120b-a12b"
 name = "Nemotron 3 Super"
 structured_output = true
 
 [[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
 type = "effort"
 values = ["low", "medium"]
+
+[[reasoning_options]]
+type = "budget_tokens"
 
 [cost]
 input = 0.15

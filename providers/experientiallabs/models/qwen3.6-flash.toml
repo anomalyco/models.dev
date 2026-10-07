@@ -1,8 +1,11 @@
+# Reasoning controls copied from the providers/alibaba/models/qwen3.6-flash.toml lab baseline.
 base_model = "alibaba/qwen3.6-flash"
 
 [[reasoning_options]]
-type = "effort"
-values = ["medium"]
+type = "toggle"
+
+[[reasoning_options]]
+type = "budget_tokens"
 
 [cost]
 input = 0.1875

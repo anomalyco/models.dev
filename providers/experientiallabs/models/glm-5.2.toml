@@ -1,9 +1,10 @@
+# Reasoning controls copied from the providers/zhipuai/models/glm-5.2.toml lab baseline.
 base_model = "zhipuai/glm-5.2"
 name = "GLM 5.2"
 
 [[reasoning_options]]
 type = "effort"
-values = ["high", "xhigh"]
+values = ["high"]
 
 [cost]
 input = 1.54

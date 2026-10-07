@@ -1,10 +1,5 @@
 base_model = "alibaba/qwen3-max"
-reasoning = true
 structured_output = true
-
-[[reasoning_options]]
-type = "effort"
-values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"]
 
 [cost]
 input = 0.78

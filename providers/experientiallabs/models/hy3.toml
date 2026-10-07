@@ -1,9 +1,10 @@
+# Reasoning controls copied from the providers/openrouter/models/tencent/hy3.toml relay peer baseline.
 base_model = "tencent/hy3"
 structured_output = true
 
 [[reasoning_options]]
 type = "effort"
-values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"]
+values = ["none", "low", "high"]
 
 [cost]
 input = 0.132

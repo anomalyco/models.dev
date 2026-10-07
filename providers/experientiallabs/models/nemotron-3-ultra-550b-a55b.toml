@@ -1,10 +1,18 @@
+# Reasoning controls copied from the providers/openrouter/models/nvidia/nemotron-3-ultra-550b-a55b.toml relay peer baseline.
+# Toggle: reasoning.enabled = true|false
 base_model = "nvidia/nemotron-3-ultra-550b-a55b"
 name = "Nemotron 3 Ultra"
 structured_output = true
 
 [[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
 type = "effort"
-values = ["none", "low", "medium", "high", "xhigh", "max"]
+values = ["medium", "high"]
+
+[[reasoning_options]]
+type = "budget_tokens"
 
 [cost]
 input = 0.66

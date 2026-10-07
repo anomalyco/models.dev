@@ -1,9 +1,10 @@
+# Reasoning controls copied from the providers/sakana/models/fugu-ultra.toml lab baseline.
 base_model = "sakana/fugu-ultra"
 name = "Fugu Ultra v2"
 
 [[reasoning_options]]
 type = "effort"
-values = ["high", "xhigh", "max"]
+values = ["high", "xhigh"]
 
 [cost]
 input = 5

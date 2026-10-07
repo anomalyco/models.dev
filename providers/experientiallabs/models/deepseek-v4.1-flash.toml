@@ -1,8 +1,13 @@
+# Reasoning controls copied from the providers/openrouter/models/deepseek/deepseek-v4.1-flash.toml relay peer baseline.
+# Toggle: reasoning.enabled = true|false
 base_model = "deepseek/deepseek-v4.1-flash"
 
 [[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
 type = "effort"
-values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"]
+values = ["low", "high", "max"]
 
 [cost]
 input = 0.3

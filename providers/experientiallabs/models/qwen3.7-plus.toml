@@ -1,9 +1,14 @@
+# Reasoning controls copied from the providers/alibaba/models/qwen3.7-plus.toml lab baseline.
+# Toggle: enable_thinking true|false
+# Budget: thinking_budget (integer reasoning tokens)
 base_model = "alibaba/qwen3.7-plus"
 structured_output = true
 
 [[reasoning_options]]
-type = "effort"
-values = ["medium"]
+type = "toggle"
+
+[[reasoning_options]]
+type = "budget_tokens"
 
 [cost]
 input = 0.4

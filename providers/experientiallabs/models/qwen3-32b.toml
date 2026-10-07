@@ -1,7 +1,13 @@
+# Reasoning controls copied from the providers/alibaba/models/qwen3-32b.toml lab baseline.
 base_model = "alibaba/qwen3-32b"
 name = "Qwen3 32b"
 structured_output = true
-reasoning_options = []
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "budget_tokens"
 
 [cost]
 input = 0.15

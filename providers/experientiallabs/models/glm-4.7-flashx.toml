@@ -1,6 +1,9 @@
+# Reasoning controls copied from the providers/zhipuai/models/glm-4.7-flashx.toml lab baseline.
 base_model = "zhipuai/glm-4.7-flashx"
 name = "GLM 4.7 FlashX"
-reasoning_options = []
+
+[[reasoning_options]]
+type = "toggle"
 
 [cost]
 input = 0.07

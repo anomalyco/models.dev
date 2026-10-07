@@ -1,5 +1,11 @@
+# Reasoning controls copied from the providers/openrouter/models/bytedance-seed/seed-2.0-code.toml relay peer baseline.
+# Toggle: reasoning.enabled = true|false
+# Effort: reasoning.effort = low|medium|high
 base_model = "bytedance-seed/seed-2.0-code"
 name = "Seed-2.0-Code"
+
+[[reasoning_options]]
+type = "toggle"
 
 [[reasoning_options]]
 type = "effort"

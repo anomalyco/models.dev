@@ -1,6 +1,10 @@
+# Reasoning controls copied from the providers/openrouter/models/openai/gpt-oss-safeguard-20b.toml relay peer baseline.
 base_model = "openai/gpt-oss-safeguard-20b"
 name = "Gpt Oss Safeguard 20b"
-reasoning_options = []
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high"]
 
 [cost]
 input = 0.07

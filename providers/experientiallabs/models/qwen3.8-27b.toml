@@ -1,8 +1,13 @@
+# Reasoning controls copied from the providers/openrouter/models/qwen/qwen3.8-27b.toml relay peer baseline.
+# Toggle: reasoning.enabled = true|false
 base_model = "alibaba/qwen3.8-27b"
 
 [[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
 type = "effort"
-values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"]
+values = ["low", "medium", "xhigh"]
 
 [cost]
 input = 0.32

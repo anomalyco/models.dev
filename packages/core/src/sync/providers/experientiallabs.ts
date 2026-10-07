@@ -1,7 +1,13 @@
+import { existsSync, readFileSync } from "node:fs";
+import path from "node:path";
 import { z } from "zod";
 
 import type { ExistingModel, SyncProvider, SyncedFullModel, SyncedModel } from "../index.js";
-import { factorBaseModel, resolveCanonicalBaseModel, resolveModelMetadataBaseModel } from "./openrouter.js";
+import {
+  factorBaseModel,
+  resolveCanonicalBaseModel,
+  resolveModelMetadataBaseModel,
+} from "./openrouter.js";
 
 // Experiential Labs exposes a public, unauthenticated model catalog, so no
 // API key is needed or used for this sync.
@@ -119,6 +125,9 @@ export const experientiallabs = {
   id: "experientiallabs",
   name: "Experiential Labs",
   modelsDir: "providers/experientiallabs/models",
+  // The sync generates the wire-path headers for copied reasoning controls,
+  // so its header must win over any stale header from a previous run.
+  authoritativeHeaders: true,
   sourceID(entry) {
     return entry.model.slug;
   },
@@ -160,7 +169,8 @@ export const experientiallabs = {
     if (built === undefined) return undefined;
     return {
       id: model.slug,
-      model: built,
+      model: built.model,
+      header: built.header,
     };
   },
 } satisfies SyncProvider<ExperientialEntry>;
@@ -236,17 +246,157 @@ function orderedUsableRungs(entry: ExperientialEntry): ExperientialRung[] {
   return ordered;
 }
 
-// Effort control is documented per serving rung. The default route's values
-// are authoritative for the host surface; when it does not list efforts,
-// fall forward to the first serving rung that does.
-function reasoningOptions(rungs: ExperientialRung[]): SyncedModel["reasoning_options"] {
+// Effort values reported by the gateway's serving rungs. These are used only
+// to trim the lab baseline down to values the gateway also accepts; they are
+// never a control source on their own (gateway-reported enums can be broader
+// than the surface the lab documents).
+function hostEffortValues(rungs: ExperientialRung[]): string[] | undefined {
   for (const rung of rungs) {
     const efforts = (rung.capabilities?.supported_reasoning_efforts ?? []).filter(
       (value): value is EffortValue => (EFFORT_VALUES as string[]).includes(value),
     );
-    if (efforts.length > 0) return [{ type: "effort", values: efforts }];
+    if (efforts.length > 0) return efforts;
   }
   return undefined;
+}
+
+// Reasoning controls come from the lab's first-party model definition
+// (providers/<lab>/models/<model>.toml), falling back to the canonical
+// metadata file. The lab baseline owns which controls exist (toggle, effort,
+// budget_tokens) and the wire paths for them; the gateway only narrows the
+// effort values.
+const REPO_ROOT = path.join(import.meta.dirname, "..", "..", "..", "..", "..");
+const PROVIDERS_DIR = path.join(REPO_ROOT, "providers");
+
+const LabReasoningOption = z.union([
+  z.object({ type: z.literal("toggle") }).passthrough(),
+  z.object({ type: z.literal("effort"), values: z.array(z.string()) }).passthrough(),
+  z
+    .object({ type: z.literal("budget_tokens"), min: z.number().optional(), max: z.number().optional() })
+    .passthrough(),
+]);
+
+const LabReasoning = z
+  .object({
+    reasoning: z.boolean().optional(),
+    reasoning_options: z.array(LabReasoningOption).optional(),
+  })
+  .passthrough();
+
+export type LabReasoningOption = z.infer<typeof LabReasoningOption>;
+
+interface LabControls {
+  reasoning?: boolean;
+  options?: LabReasoningOption[];
+  wireComments: string[];
+  sourcePath: string;
+  kind: "lab" | "peer";
+}
+
+const labControlsCache = new Map<string, LabControls | undefined>();
+
+function labControls(baseModel: string): LabControls | undefined {
+  if (!labControlsCache.has(baseModel)) {
+    labControlsCache.set(baseModel, readLabControls(baseModel));
+  }
+  return labControlsCache.get(baseModel);
+}
+
+// OpenRouter nests relay peer models under its own provider ids, which
+// differ from the canonical metadata dir for a few labs.
+const OPENROUTER_DIR_ALIASES: Record<string, string[]> = {
+  zhipuai: ["z-ai"],
+  alibaba: ["qwen"],
+  mistral: ["mistralai"],
+};
+
+function readCandidate(filePath: string): { text: string; parsed: unknown } | undefined {
+  let text: string;
+  try {
+    text = readFileSync(filePath, "utf8");
+  } catch {
+    return undefined;
+  }
+  try {
+    return { text, parsed: Bun.TOML.parse(text) };
+  } catch {
+    // Windows checkouts without core.symlinks materialize git symlinks as
+    // plain text files containing the link target path. Resolve such
+    // stand-ins and read the real file; on Linux readFileSync already
+    // follows the symlink, so both platforms see the same content.
+    const target = text.trim();
+    if (!/[/\\]/.test(target) || !/\.toml$/i.test(target)) return undefined;
+    const resolved = path.resolve(path.dirname(filePath), target);
+    if (!existsSync(resolved)) return undefined;
+    try {
+      const resolvedText = readFileSync(resolved, "utf8");
+      return { text: resolvedText, parsed: Bun.TOML.parse(resolvedText) };
+    } catch {
+      return undefined;
+    }
+  }
+}
+
+function readLabControls(baseModel: string): LabControls | undefined {
+  const [lab, modelID] = baseModel.split("/");
+  if (lab === undefined || modelID === undefined) return undefined;
+  // Priority: the lab's first-party provider definition, then the canonical
+  // metadata file, then the OpenRouter relay peer. Lab layers are
+  // authoritative — an explicit `reasoning_options = []` authored by the lab
+  // means "no caller control" and blocks the peer fallback; the peer is only
+  // consulted when the lab layers do not state options at all.
+  const openrouterDirs = [...(OPENROUTER_DIR_ALIASES[lab] ?? []), lab].filter(
+    (dir, index, all) => all.indexOf(dir) === index,
+  );
+  const candidates: Array<{ filePath: string; sourcePath: string; kind: "lab" | "peer" }> = [
+    {
+      filePath: path.join(PROVIDERS_DIR, lab, "models", `${modelID}.toml`),
+      sourcePath: `providers/${lab}/models/${modelID}.toml`,
+      kind: "lab",
+    },
+    {
+      filePath: path.join(REPO_ROOT, "models", `${baseModel}.toml`),
+      sourcePath: `models/${baseModel}.toml`,
+      kind: "lab",
+    },
+    ...openrouterDirs.map((dir) => ({
+      filePath: path.join(PROVIDERS_DIR, "openrouter", "models", dir, `${modelID}.toml`),
+      sourcePath: `providers/openrouter/models/${dir}/${modelID}.toml`,
+      kind: "peer" as const,
+    })),
+  ];
+  let reasoningSource: LabControls | undefined;
+  let optionsSource: LabControls | undefined;
+  for (const candidate of candidates) {
+    if (!existsSync(candidate.filePath)) continue;
+    const read = readCandidate(candidate.filePath);
+    if (read === undefined) continue;
+    const text = read.text;
+    const parsed = read.parsed;
+    const data = LabReasoning.safeParse(parsed);
+    if (!data.success) continue;
+    const controls: LabControls = {
+      reasoning: data.data.reasoning,
+      options: data.data.reasoning_options,
+      wireComments: text
+        .split("\n")
+        .map((line) => line.trim())
+        .filter((line) => /^#\s*(toggle|effort|budget)\b/i.test(line)),
+      sourcePath: candidate.sourcePath,
+      kind: candidate.kind,
+    };
+    if (reasoningSource === undefined && data.data.reasoning !== undefined) reasoningSource = controls;
+    if (optionsSource === undefined && data.data.reasoning_options !== undefined) optionsSource = controls;
+  }
+  const source = optionsSource ?? reasoningSource;
+  if (source === undefined) return undefined;
+  return {
+    reasoning: reasoningSource?.reasoning,
+    options: optionsSource?.options,
+    wireComments: optionsSource?.wireComments ?? reasoningSource?.wireComments ?? [],
+    sourcePath: source.sourcePath,
+    kind: source.kind,
+  };
 }
 
 function buildCost(
@@ -392,7 +542,7 @@ export function buildExperientiallabsModel(
   entry: ExperientialEntry,
   existing: ExistingModel | undefined,
   baseModel = existing?.base_model ?? resolveExperientiallabsBaseModel(entry.model.slug, entry.model.icon),
-): SyncedModel | undefined {
+): { model: SyncedModel; header?: string } | undefined {
   const model = entry.model;
   const rungs = orderedUsableRungs(entry);
   const rung = rungs[0];
@@ -401,12 +551,36 @@ export function buildExperientiallabsModel(
   const input = modalities(model.input_modalities, ["text"]);
   const output = modalities(model.output_modalities, ["text"]);
   const attachment = input.some((value) => value !== "text");
-  const reasoning = rungs.some((candidate) => candidate.capabilities?.supports_reasoning === true)
+  // The lab baseline owns the reasoning flag; gateway rung hints only apply
+  // when the lab definition does not state one.
+  const lab = baseModel !== undefined ? labControls(baseModel) : undefined;
+  const hostReasoning = rungs.some((candidate) => candidate.capabilities?.supports_reasoning === true)
     || params.reasoning === true
     || existing?.reasoning === true;
+  const reasoning = lab?.reasoning ?? hostReasoning;
   const toolCall = params.tools === true || existing?.tool_call === true;
   const structuredOutput = params.structured_outputs === true || existing?.structured_output === true;
   const temperature = params.temperature === true || existing?.temperature === true;
+
+  // Copy the lab's reasoning controls verbatim (toggle, effort values,
+  // budget_tokens bounds), trimming effort values to those the gateway's
+  // serving rungs also report. When the lab documents no controls, leave
+  // reasoning_options unset so the runner inherits the canonical baseline
+  // (or stamps [] when none exists anywhere) — never invent controls.
+  let reasoningOptions: SyncedModel["reasoning_options"] | undefined;
+  let header: string | undefined;
+  if (reasoning && lab?.options !== undefined && lab.options.length > 0) {
+    const hostEfforts = hostEffortValues(rungs);
+    reasoningOptions = lab.options.map((option) => {
+      if (option.type !== "effort" || hostEfforts === undefined) return option;
+      const trimmed = option.values.filter((value) => hostEfforts.includes(value));
+      return trimmed.length > 0 ? { ...option, values: trimmed } : option;
+    });
+    header = [
+      `# Reasoning controls copied from the ${lab.sourcePath} ${lab.kind === "peer" ? "relay peer" : "lab"} baseline.`,
+      ...lab.wireComments,
+    ].join("\n") + "\n";
+  }
 
   const cost = buildCost(rung, existing);
   const context = model.context_window ?? existing?.limit?.context;
@@ -434,7 +608,7 @@ export function buildExperientiallabsModel(
     last_updated: lastUpdated,
     attachment,
     reasoning,
-    reasoning_options: reasoning ? reasoningOptions(rungs) : undefined,
+    reasoning_options: reasoningOptions,
     temperature: temperature || undefined,
     tool_call: toolCall,
     structured_output: structuredOutput || undefined,
@@ -448,7 +622,10 @@ export function buildExperientiallabsModel(
   };
 
   if (baseModel !== undefined) {
-    return factorBaseModel(baseModel, values, limit, existing?.base_model_omit);
+    return {
+      model: factorBaseModel(baseModel, values, limit, existing?.base_model_omit),
+      header,
+    };
   }
 
   if (existing === undefined) return undefined;
@@ -464,5 +641,5 @@ export function buildExperientiallabsModel(
     throw new Error(`Experiential Labs model ${model.slug} has incomplete local metadata required for sync`);
   }
 
-  return values as SyncedFullModel;
+  return { model: values as SyncedFullModel, header };
 }

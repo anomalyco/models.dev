@@ -1,8 +1,14 @@
+# Reasoning controls copied from the providers/alibaba/models/qwen3.7-flash.toml lab baseline.
+# Toggle: enable_thinking true|false
+# Budget: thinking_budget (integer reasoning tokens, maximum 262144)
 base_model = "alibaba/qwen3.7-flash"
 
 [[reasoning_options]]
-type = "effort"
-values = ["medium"]
+type = "toggle"
+
+[[reasoning_options]]
+type = "budget_tokens"
+max = 262_144
 
 [cost]
 input = 0.03

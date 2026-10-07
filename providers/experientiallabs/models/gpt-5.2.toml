@@ -1,9 +1,10 @@
+# Reasoning controls copied from the providers/openai/models/gpt-5.2.toml lab baseline.
 base_model = "openai/gpt-5.2"
 attachment = false
 
 [[reasoning_options]]
 type = "effort"
-values = ["none", "minimal", "low", "medium", "high", "xhigh"]
+values = ["none", "low", "medium", "high", "xhigh"]
 
 [cost]
 input = 1.75

@@ -1,9 +1,10 @@
+# Reasoning controls copied from the providers/openrouter/models/thinkingmachines/inkling.toml relay peer baseline.
 base_model = "thinkingmachines/inkling"
 structured_output = true
 
 [[reasoning_options]]
 type = "effort"
-values = ["none", "low", "medium", "high", "xhigh", "max"]
+values = ["none", "low", "medium", "high", "max"]
 
 [cost]
 input = 1.1

@@ -1,10 +1,13 @@
+# Reasoning controls copied from the providers/alibaba/models/qwen3.5-27b.toml lab baseline.
 base_model = "alibaba/qwen3.5-27b"
 name = "Qwen3.5 27b"
 attachment = false
 
 [[reasoning_options]]
-type = "effort"
-values = ["none", "minimal", "low", "medium", "high", "xhigh"]
+type = "toggle"
+
+[[reasoning_options]]
+type = "budget_tokens"
 
 [cost]
 input = 0.195
