@@ -1,14 +1,6 @@
-name = "Anthropic: Claude Haiku 5.5"
+base_model = "anthropic/claude-haiku-5-5"
 description = "Claude Haiku 5.5 is Anthropic's small, fast model for high-volume, cost-sensitive work such as summarization, subagents, and browser use. It succeeds Claude Haiku 4.5 with stronger coding, computer use, and..."
-family = "claude-haiku"
-release_date = "2026-10-07"
-last_updated = "2026-10-07"
-attachment = true
-reasoning = true
 temperature = true
-tool_call = true
-structured_output = true
-open_weights = false
 
 [[reasoning_options]]
 type = "effort"
@@ -19,11 +11,3 @@ input = 0.1
 output = 0.5
 cache_read = 0.01
 cache_write = 0.125
-
-[limit]
-context = 1_000_000
-output = 128_000
-
-[modalities]
-input = ["text", "image", "pdf"]
-output = ["text"]
