@@ -1,12 +1,13 @@
 # CrowLLM relays this model on POST /v1/chat/completions (OpenAI-compatible).
 # cost is the gateway's live billing rate: USD/MTok = 2 x model_ratio, output = input x completion_ratio.
 # Source: https://crowllm.com/api/pricing (accessed 2026-10-07).
-# Effort: reasoning_effort = none|low|medium|xhigh (top-level, forwarded verbatim)
+# Served id, verbatim from GET https://crowllm.com/v1/models (accessed 2026-10-07): "qwen-3.8-27b:free".
+# Effort: reasoning_effort = low|medium|xhigh (top-level, forwarded verbatim)
 # reasoning_options mirror providers/nebius for the same model on this surface.
 # Live gateway row: model_ratio=0, completion_ratio=1, cache_ratio=None, enable_groups=['free', 'pro'].
 base_model = "alibaba/qwen3.8-27b"
 name = "Qwen3.8 27B (free)"
-reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "xhigh"] } ]
+reasoning_options = [{ type = "effort", values = ["low", "medium", "xhigh"] } ]
 
 [cost]
 input = 0
