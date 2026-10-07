@@ -1,0 +1,16 @@
+base_model = "tencent/hy3-preview"
+name = "Hy3 Preview"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "high"]
+
+[cost]
+input = 0.18
+output = 0.6
+cache_read = 0.06
+
+[limit]
+context = 262_144
+input = 196_608
+output = 65_536

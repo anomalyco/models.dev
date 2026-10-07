@@ -1,0 +1,16 @@
+base_model = "thinkingmachines/inkling"
+structured_output = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "xhigh", "max"]
+
+[cost]
+input = 1.1
+output = 4.46
+cache_read = 0.19
+
+[limit]
+context = 524_288
+input = 262_144
+output = 262_144

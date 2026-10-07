@@ -1,0 +1,15 @@
+base_model = "zhipuai/glm-5-turbo"
+name = "GLM 5 Turbo"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"]
+
+[cost]
+input = 1.2
+output = 4
+cache_read = 0.24
+
+[limit]
+context = 202_752
+input = 71_680

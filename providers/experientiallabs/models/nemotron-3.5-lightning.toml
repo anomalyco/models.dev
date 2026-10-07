@@ -1,0 +1,15 @@
+base_model = "nvidia/nemotron-3.5-lightning"
+name = "Nemotron 3.5 Lightning"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "xhigh", "max"]
+
+[cost]
+input = 0.06
+output = 0.22
+cache_read = 0.01
+
+[limit]
+input = 131_072
+output = 131_072

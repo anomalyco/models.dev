@@ -9,6 +9,7 @@ const REVIEWED_REASONING_PROVIDERS = new Set([
   "crossmodel",
   "edenai",
   "empiriolabs",
+  "experientiallabs",
   "hyper",
   "kilo",
   "llmgateway",

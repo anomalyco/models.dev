@@ -1,0 +1,20 @@
+base_model = "minimax/MiniMax-M3"
+name = "Minimax M3"
+attachment = false
+structured_output = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["medium"]
+
+[cost]
+input = 0.3
+output = 1.2
+cache_read = 0.06
+
+[limit]
+context = 1_000_000
+input = 1_000_000
+
+[modalities]
+input = ["text"]

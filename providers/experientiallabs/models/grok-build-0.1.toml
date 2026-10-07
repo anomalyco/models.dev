@@ -1,0 +1,13 @@
+base_model = "xai/grok-build-0.1"
+
+[[reasoning_options]]
+type = "effort"
+values = ["medium"]
+
+[cost]
+input = 1
+output = 2
+cache_read = 0.2
+
+[limit]
+input = 256_000

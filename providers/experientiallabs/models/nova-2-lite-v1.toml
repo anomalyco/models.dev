@@ -1,0 +1,14 @@
+base_model = "amazon/nova-2-lite"
+
+[[reasoning_options]]
+type = "effort"
+values = ["medium"]
+
+[cost]
+input = 0.3
+output = 2.5
+cache_read = 0.3
+
+[limit]
+input = 934_465
+output = 65_535

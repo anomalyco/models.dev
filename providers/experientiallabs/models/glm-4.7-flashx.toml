@@ -1,0 +1,12 @@
+base_model = "zhipuai/glm-4.7-flashx"
+name = "GLM 4.7 FlashX"
+reasoning_options = []
+
+[cost]
+input = 0.07
+output = 0.4
+cache_read = 0.01
+
+[limit]
+context = 204_800
+input = 73_728

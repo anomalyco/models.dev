@@ -1,0 +1,14 @@
+base_model = "poolside/laguna-s-2.1"
+
+[[reasoning_options]]
+type = "effort"
+values = ["medium"]
+
+[cost]
+input = 0.09
+output = 0.18
+cache_read = 0.009
+
+[limit]
+input = 917_504
+output = 131_072

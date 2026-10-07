@@ -1,0 +1,12 @@
+base_model = "openai/gpt-4"
+attachment = false
+structured_output = true
+
+[cost]
+input = 30
+output = 60
+cache_read = 30
+
+[limit]
+context = 8_191
+input = 8_191

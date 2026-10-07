@@ -1,0 +1,20 @@
+base_model = "alibaba/qwen3.7-flash"
+
+[[reasoning_options]]
+type = "effort"
+values = ["medium"]
+
+[cost]
+input = 0.03
+output = 0.13
+cache_read = 0.006
+
+[[cost.tiers]]
+tier = { type = "context", size = 32_001 }
+input = 0.1
+output = 0.4
+cache_read = 0.02
+
+[limit]
+input = 934_464
+output = 65_536

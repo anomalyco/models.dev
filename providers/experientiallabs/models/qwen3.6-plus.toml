@@ -1,0 +1,13 @@
+base_model = "alibaba/qwen3.6-plus"
+structured_output = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "minimal", "low", "medium", "high", "xhigh"]
+
+[cost]
+input = 0.325
+output = 1.95
+
+[limit]
+input = 934_464

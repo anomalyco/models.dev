@@ -1,0 +1,14 @@
+base_model = "openai/gpt-4o-mini"
+name = "GPT-4o Mini"
+attachment = false
+
+[cost]
+input = 0.15
+output = 0.6
+cache_read = 0.075
+
+[limit]
+input = 111_616
+
+[modalities]
+input = ["text"]

@@ -1,0 +1,14 @@
+base_model = "xai/grok-4.20-0309-reasoning"
+name = "Grok 4.20"
+
+[[reasoning_options]]
+type = "effort"
+values = ["medium"]
+
+[cost]
+input = 1.25
+output = 2.5
+cache_read = 0.2
+
+[limit]
+input = 1_000_000

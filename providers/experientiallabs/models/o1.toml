@@ -1,0 +1,17 @@
+base_model = "openai/o1"
+attachment = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high"]
+
+[cost]
+input = 15
+output = 60
+cache_read = 7.5
+
+[limit]
+input = 100_000
+
+[modalities]
+input = ["text"]

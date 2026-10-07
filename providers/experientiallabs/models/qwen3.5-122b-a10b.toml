@@ -1,0 +1,17 @@
+base_model = "alibaba/qwen3.5-122b-a10b"
+name = "Qwen3.5 122b A10b"
+attachment = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "minimal", "low", "medium", "high", "xhigh"]
+
+[cost]
+input = 0.29
+output = 2.4
+
+[limit]
+input = 196_608
+
+[modalities]
+input = ["text"]

@@ -1,0 +1,14 @@
+base_model = "google/gemini-flash-lite-latest"
+attachment = false
+reasoning = false
+tool_call = false
+
+[cost]
+input = 0
+output = 0
+
+[limit]
+input = 1_048_576
+
+[modalities]
+input = ["text"]

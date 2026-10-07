@@ -1,0 +1,16 @@
+base_model = "meituan/longcat-2.0"
+name = "LongCat 2.0"
+
+[[reasoning_options]]
+type = "effort"
+values = ["medium"]
+
+[cost]
+input = 0.3
+output = 1.2
+cache_read = 0.006
+
+[limit]
+context = 1_048_576
+input = 786_432
+output = 262_144

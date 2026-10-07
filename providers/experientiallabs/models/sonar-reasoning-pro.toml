@@ -1,0 +1,13 @@
+base_model = "perplexity/sonar-reasoning-pro"
+
+[[reasoning_options]]
+type = "effort"
+values = ["medium"]
+
+[cost]
+input = 2
+output = 8
+cache_read = 2
+
+[limit]
+input = 128_000
