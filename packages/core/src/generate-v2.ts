@@ -331,13 +331,12 @@ function toApiV2(model: Model, provider: Provider): ApiV2 {
     "";
   const base_url = rawBaseUrl.replace(/\/+$/, "");
 
-  const { protocol, path } = resolveProtocolAndPath(model, provider, npm, shape);
+  const protocol = resolveProtocol(model, provider, npm, shape);
   const opencodeai = resolveOpencodePackage(model, provider, npm, shape);
   const compatibility = toCompatibilityV2(model);
 
   const entry: ApiEntryV2 = {
     base_url,
-    path,
     sdk: {
       ...(model.type === "decision" ? {} : { aisdk: npm }),
       ...(opencodeai !== undefined ? { opencodeai } : {}),
@@ -348,54 +347,38 @@ function toApiV2(model: Model, provider: Provider): ApiV2 {
   return { [protocol]: entry } as ApiV2;
 }
 
-function resolveProtocolAndPath(
+function resolveProtocol(
   model: Model,
   provider: Provider,
   npm: string,
   shape: "responses" | "completions" | undefined,
-): { protocol: ApiProtocolV2; path: string } {
+): ApiProtocolV2 {
   if (model.type === "decision") {
-    if (provider.id === "cloudflare-workers-ai") {
-      return { protocol: "workers-ai-run", path: `/run/${model.id}` };
-    }
-    if (provider.id === "vercel") {
-      return { protocol: "evaluate", path: "/evaluate" };
-    }
-    return { protocol: "system-one", path: "/systemone" };
+    if (provider.id === "cloudflare-workers-ai") return "workers-ai-run";
+    if (provider.id === "vercel") return "evaluate";
+    return "systemone";
   }
 
-  if (npm === "@ai-sdk/anthropic") {
-    return { protocol: "messages", path: "/messages" };
-  }
-  if (npm === "@ai-sdk/google-vertex/anthropic") {
-    return { protocol: "messages", path: `/models/${model.id}:streamRawPredict` };
+  if (npm === "@ai-sdk/anthropic" || npm === "@ai-sdk/google-vertex/anthropic") {
+    return "messages";
   }
   if (npm === "@ai-sdk/openai" || npm === "@ai-sdk/azure") {
-    return shape === "completions"
-      ? { protocol: "chat-completions", path: "/chat/completions" }
-      : { protocol: "responses", path: "/responses" };
+    return shape === "completions" ? "chat-completions" : "responses";
   }
   if (npm === "@ai-sdk/amazon-bedrock") {
-    return { protocol: "converse", path: `/model/${model.id}/converse` };
+    return "converse";
   }
   if (npm === "@ai-sdk/amazon-bedrock/mantle") {
-    return model.id.includes("gpt-oss")
-      ? { protocol: "chat-completions", path: "/chat/completions" }
-      : { protocol: "responses", path: "/responses" };
+    return model.id.includes("gpt-oss") ? "chat-completions" : "responses";
   }
   if (npm === "@ai-sdk/google" || npm === "@ai-sdk/google-vertex") {
-    return {
-      protocol: "generate-content",
-      path: `/models/${model.id}:generateContent`,
-    };
+    return "generate-content";
   }
   if (npm === "@ai-sdk/cohere") {
-    return { protocol: "cohere-chat", path: "/chat" };
+    return "cohere-chat";
   }
 
-  return shape === "responses"
-    ? { protocol: "responses", path: "/responses" }
-    : { protocol: "chat-completions", path: "/chat/completions" };
+  return shape === "responses" ? "responses" : "chat-completions";
 }
 
 function resolveOpencodePackage(

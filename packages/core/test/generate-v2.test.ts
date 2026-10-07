@@ -126,9 +126,8 @@ describe("v2 catalog generation", () => {
     expect(providersV2["azure-cognitive-services"]).toBeUndefined();
     expect(providersV2["google-vertex-anthropic"]).toBeUndefined();
     expect(providersV2.opencode?.models["jev-1.13"]?.api).toEqual({
-      "system-one": {
+      systemone: {
         base_url: "https://opencode.ai/zen/v1",
-        path: "/systemone",
         sdk: {
           opencodeai: "@opencode/ai/providers/typesafe-ai",
         },
