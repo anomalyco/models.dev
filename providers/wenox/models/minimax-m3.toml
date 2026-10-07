@@ -1,0 +1,13 @@
+name = "MiniMax M3"
+reasoning = true
+tool_call = true
+structured_output = false
+attachment = true
+
+[limit]
+context = 1000000
+output = 128000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
