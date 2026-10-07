@@ -3,7 +3,6 @@
 # Pricing is by prompt length: prompts over 100,000 tokens use the higher tier.
 # https://platform.claude.com/docs/en/models/haiku-5-5/overview
 base_model = "anthropic/claude-haiku-5-5"
-structured_output = true
 
 [[reasoning_options]]
 type = "toggle"
@@ -19,7 +18,7 @@ cache_read = 0.01
 cache_write = 0.125
 
 [[cost.tiers]]
-tier = { size = 100_000 }
+tier = { type = "context", size = 100_000 }
 input = 0.5
 output = 2.5
 cache_read = 0.05
