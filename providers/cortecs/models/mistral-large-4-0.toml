@@ -1,14 +1,10 @@
-name = "mistral-large-4-0"
-description = "Mistral Large 4 is a trillion-parameter multimodal MoE model built for frontier-level reasoning, enterprise workloads, and multilingual applications, with 49B active parameters per token."
-release_date = "2026-10-06"
-last_updated = "2026-10-06"
-attachment = true
-reasoning = true
-temperature = false
-tool_call = true
-structured_output = true
-open_weights = false
-reasoning_options = []
+# Effort: OpenAI reasoning_effort, routed to Mistral's native none|high levels
+# (see providers/mistral/models/mistral-large-4.toml).
+base_model = "mistral/mistral-large-4"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "high"]
 
 [cost]
 input = 0.765
@@ -17,8 +13,3 @@ cache_read = 0.079
 
 [limit]
 context = 1_000_000
-output = 262_144
-
-[modalities]
-input = ["text", "image"]
-output = ["text"]
