@@ -1,0 +1,87 @@
+# Specs: https://platform.claude.com/docs/en/models/haiku-5-5/overview
+# Evaluations: https://www.anthropic.com/claude-haiku-5-5
+name = "Claude Haiku 5.5"
+description = "Fastest Claude model for high-volume classification, extraction, routing, and subagent work"
+family = "claude-haiku"
+release_date = "2026-10-07"
+last_updated = "2026-10-07"
+attachment = true
+reasoning = true
+temperature = false
+tool_call = true
+open_weights = false
+knowledge = "2026-06"
+
+[limit]
+context = 1_000_000
+output = 128_000
+
+[modalities]
+input = ["text", "image", "pdf"]
+output = ["text"]
+
+[[benchmarks]]
+name = "GDPval-AA"
+score = 1620
+metric = "Elo"
+version = "2.1"
+source = "https://www.anthropic.com/claude-haiku-5-5"
+date = "2026-10-07"
+
+[[benchmarks]]
+name = "AA-Briefcase"
+score = 1578
+metric = "Elo"
+version = "1.1"
+source = "https://www.anthropic.com/claude-haiku-5-5"
+date = "2026-10-07"
+
+[[benchmarks]]
+name = "OSWorld"
+score = 72.4
+metric = "partial score"
+variant = "offline subset"
+version = "2.1"
+source = "https://www.anthropic.com/claude-haiku-5-5"
+date = "2026-10-07"
+
+[[benchmarks]]
+name = "Humanity's Last Exam"
+score = 45.9
+metric = "score"
+variant = "no tools"
+source = "https://www.anthropic.com/claude-haiku-5-5"
+date = "2026-10-07"
+
+[[benchmarks]]
+name = "Humanity's Last Exam"
+score = 57.4
+metric = "score"
+variant = "with tools"
+source = "https://www.anthropic.com/claude-haiku-5-5"
+date = "2026-10-07"
+
+[[benchmarks]]
+name = "Terminal-Bench"
+score = 39.2
+metric = "score"
+version = "4.0"
+source = "https://www.anthropic.com/claude-haiku-5-5"
+date = "2026-10-07"
+
+[[benchmarks]]
+name = "FrontierCode"
+score = 46.4
+metric = "score"
+version = "1.1"
+dataset = "Main"
+source = "https://www.anthropic.com/claude-haiku-5-5"
+date = "2026-10-07"
+
+[[benchmarks]]
+name = "Chartography"
+score = 46.4
+metric = "score"
+variant = "no tools"
+source = "https://www.anthropic.com/claude-haiku-5-5"
+date = "2026-10-07"
