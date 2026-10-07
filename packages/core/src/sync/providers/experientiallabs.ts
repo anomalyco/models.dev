@@ -247,11 +247,9 @@ function orderedUsableRungs(entry: ExperientialEntry): ExperientialRung[] {
 }
 
 // Effort values reported by this model's usable serving rungs in the catalog.
-// These are used for two purposes: trimming the lab baseline down to values
-// the gateway also accepts, and (when no lab/peer effort baseline exists)
-// reporting the values this model's serving rungs document. Rung-reported
-// values are always attributed as per-model gateway capability data in the
-// header, never presented as lab controls.
+// Used ONLY to trim the lab/peer baseline down to values the gateway also
+// accepts - the gateway rung enum is never a values source by itself, and no
+// effort values are ever synthesized from it when the baseline has none.
 function unionEffortValues(rungs: ExperientialRung[]): EffortValue[] {
   const union = new Set<string>();
   for (const rung of rungs) {
@@ -605,10 +603,10 @@ export function buildExperientiallabsModel(
   // Only effort controls are emitted: toggles and budget_tokens from the
   // source are dropped with a note citing that evidence, and source wire
   // comments are never copied because they describe the source's surface.
-  // Values come from the lab/peer baseline, trimmed to the effort values the
-  // model's serving rungs also report; when the baseline has no effort
-  // levels, the rung-reported values are used and attributed as per-model
-  // gateway capability data. An explicit [] is written when nothing survives
+  // Values come ONLY from the lab/peer baseline, trimmed to the effort values
+  // the model's serving rungs also report; when the baseline has no effort
+  // levels, nothing is synthesized from rung data - the gateway enum alone is
+  // never a values source. An explicit [] is written when nothing survives
   // so the runner never resurrects stale options from a previous file state.
   let reasoningOptions: SyncedModel["reasoning_options"] | undefined;
   let header: string | undefined;
@@ -619,22 +617,15 @@ export function buildExperientiallabsModel(
       lab.options.some((option) => option.type === "effort" && option.values.includes(value)),
     );
     let values: EffortValue[] = labValues;
-    if (labValues.length > 0 && hostUnion.length > 0) {
+    if (hostUnion.length > 0) {
       const trimmed = labValues.filter((value) => hostUnion.includes(value));
       if (trimmed.length > 0) values = trimmed;
-    } else if (labValues.length === 0) {
-      values = hostUnion;
     }
     reasoningOptions = values.length > 0 ? [{ type: "effort", values }] : [];
     const headerLines = [
       `# Reasoning controls copied from the ${lab.sourcePath} ${lab.kind === "peer" ? "relay peer" : "lab"} baseline.`,
     ];
     if (values.length > 0) headerLines.push(`# Effort: reasoning_effort = ${values.join("|")}`);
-    if (values.length > 0 && labValues.length === 0) {
-      headerLines.push(
-        "# Effort values reported by this model's serving rungs in the Experiential Labs catalog (per-model capability data); no lab/peer effort baseline exists.",
-      );
-    }
     if (droppedControls > 0) {
       headerLines.push(
         "# Toggle and budget controls from the source are not emitted: the Experiential Labs OpenAI-compatible chat surface exposes no native on/off or budget request field - enable_thinking and thinking are translated to reasoning_effort and thinking_budget is rejected on unqualified routes (live-tested 2026-10-07; see platform.experientiallabs.ai/llms.txt).",
@@ -642,7 +633,7 @@ export function buildExperientiallabsModel(
     }
     if (values.length === 0) {
       headerLines.push(
-        "# Reasoning controls: none - the model's serving rungs report no reasoning-effort controls in the Experiential Labs catalog, no lab/peer effort baseline exists, and the chat surface exposes no native on/off or budget field (live-tested 2026-10-07; see platform.experientiallabs.ai/llms.txt).",
+        "# Reasoning controls: none emitted - the lab/peer baseline documents no effort levels, and its toggle/budget controls have no native request fields on this surface. Affirmative host evidence (live-tested 2026-10-07 on glm-5.3-flash): enable_thinking -> x-experiential-ignored-parameters [\"enable_thinking->translated(reasoning_effort)\"]; thinking {\"type\":\"enabled\"} -> [\"thinking->translated(reasoning_effort)\"]; thinking_budget:512 -> HTTP 400 unsupported_parameter (\"This route cannot preserve a numeric thinking budget. Choose a qualified Anthropic, Gemini 2.5 or Qwen Cloud model, or remove the budget.\"); reasoning_effort itself passes through unchanged (platform.experientiallabs.ai/llms.txt).",
       );
     }
     header = headerLines.join("\n") + "\n";

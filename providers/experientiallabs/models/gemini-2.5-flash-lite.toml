@@ -1,13 +1,9 @@
 # Reasoning controls copied from the providers/google/models/gemini-2.5-flash-lite.toml lab baseline.
-# Effort: reasoning_effort = low|medium|high
-# Effort values reported by this model's serving rungs in the Experiential Labs catalog (per-model capability data); no lab/peer effort baseline exists.
 # Toggle and budget controls from the source are not emitted: the Experiential Labs OpenAI-compatible chat surface exposes no native on/off or budget request field - enable_thinking and thinking are translated to reasoning_effort and thinking_budget is rejected on unqualified routes (live-tested 2026-10-07; see platform.experientiallabs.ai/llms.txt).
+# Reasoning controls: none emitted - the lab/peer baseline documents no effort levels, and its toggle/budget controls have no native request fields on this surface. Affirmative host evidence (live-tested 2026-10-07 on glm-5.3-flash): enable_thinking -> x-experiential-ignored-parameters ["enable_thinking->translated(reasoning_effort)"]; thinking {"type":"enabled"} -> ["thinking->translated(reasoning_effort)"]; thinking_budget:512 -> HTTP 400 unsupported_parameter ("This route cannot preserve a numeric thinking budget. Choose a qualified Anthropic, Gemini 2.5 or Qwen Cloud model, or remove the budget."); reasoning_effort itself passes through unchanged (platform.experientiallabs.ai/llms.txt).
 base_model = "google/gemini-2.5-flash-lite"
 name = "Gemini 2.5 Flash Lite"
-
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high"]
+reasoning_options = []
 
 [cost]
 input = 0.1
