@@ -1,9 +1,8 @@
-# Prices read from https://korouter.ai/models/claude-haiku-4-5 on 2026-10-06 (the same catalog that bills requests).
+# Prices read from https://korouter.ai/models/claude-haiku-4-5 on 2026-10-07 (the same catalog that bills requests).
 # Host surface: OpenAI-compatible chat completions at https://korouter.ai/v1.
-# Toggle: thinking.type = enabled|disabled (Anthropic-native thinking object, accepted on chat completions)
-# reasoning_effort is rejected upstream ("This model does not support the effort parameter"), so no effort levels.
+# No reasoning control on this surface: reasoning_effort is rejected upstream ("This model does not support the effort parameter").
 base_model = "anthropic/claude-haiku-4-5"
-reasoning_options = [{ type = "toggle" }]
+reasoning_options = []
 
 [cost]
 input = 0.65

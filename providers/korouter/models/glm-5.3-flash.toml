@@ -1,10 +1,10 @@
-# Prices read from https://korouter.ai/models/glm-5.3 on 2026-10-07 (the same catalog that bills requests).
+# Prices read from https://korouter.ai/models/glm-5.3-flash on 2026-10-07 (the same catalog that bills requests).
 # Host surface: OpenAI-compatible chat completions at https://korouter.ai/v1.
 # Effort: reasoning_effort = low|high|max
-base_model = "zhipuai/glm-5.3"
+base_model = "zhipuai/glm-5.3-flash"
 reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]
 
 [cost]
-input = 0.7154
-output = 2.25
-cache_read = 0.1329
+input = 0.0743
+output = 0.2475
+cache_read = 0.0149
