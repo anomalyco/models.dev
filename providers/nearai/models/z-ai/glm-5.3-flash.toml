@@ -1,0 +1,24 @@
+# Effort: reasoning_effort = low|high|max, the lab's set.
+# none is accepted but not listed: reasoning tokens drop to 0 and the model works the problem out in the reply instead.
+# Context is the served window: a request above 1048576 tokens is rejected naming that limit.
+# Input: text and image; "video_url" and "file" content parts are rejected (HTTP 400).
+# Measured on https://cloud-api.near.ai/v1/chat/completions, 2026-10-07.
+base_model = "zhipuai/glm-5.3-flash"
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[cost]
+input = 0.15
+output = 0.5
+cache_read = 0.035
+
+[limit]
+context = 1_048_576
+
+[modalities]
+input = ["text", "image"]

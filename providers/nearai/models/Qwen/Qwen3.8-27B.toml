@@ -1,0 +1,20 @@
+# Effort: reasoning_effort = none|low|medium|xhigh; none turns reasoning off.
+# high, max and minimal are rejected (HTTP 400: "Supported types are xhigh (default), medium, and low").
+# Input: text and image; "video_url" and "file" content parts are rejected (HTTP 400).
+# Measured on https://cloud-api.near.ai/v1/chat/completions, 2026-10-07.
+base_model = "alibaba/qwen3.8-27b"
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "xhigh"]
+
+[cost]
+input = 0.44
+output = 3.3
+cache_read = 0.044
+
+[modalities]
+input = ["text", "image"]

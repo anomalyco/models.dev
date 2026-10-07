@@ -1,0 +1,15 @@
+# No reasoning control: reasoning_effort is accepted and changes nothing.
+# none, minimal, low, medium and high each produced 1900-3500 thinking tokens per reply, read as total_tokens - prompt_tokens - completion_tokens.
+# Input: text and image; "video_url" and "file" content parts are rejected (HTTP 400).
+# An "input_audio" part is accepted but not heard: counted beeps were answered no better than with no audio.
+# Measured on https://cloud-api.near.ai/v1/chat/completions, 2026-10-07.
+base_model = "google/gemini-3.8-flash"
+reasoning_options = []
+
+[cost]
+input = 0.75
+output = 3.75
+cache_read = 0.075
+
+[modalities]
+input = ["text", "image"]

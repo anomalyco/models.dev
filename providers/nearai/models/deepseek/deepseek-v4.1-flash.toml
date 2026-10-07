@@ -1,0 +1,14 @@
+# Effort: reasoning_effort = none|low|high|max; none turns reasoning off.
+# No structured output: response_format json_schema is rejected (HTTP 400); json_object is accepted.
+# Measured on https://cloud-api.near.ai/v1/chat/completions, 2026-10-07.
+base_model = "deepseek/deepseek-v4.1-flash"
+structured_output = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "high", "max"]
+
+[cost]
+input = 0.3
+output = 1.2
+cache_read = 0.006
