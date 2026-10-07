@@ -1,9 +1,10 @@
 # Reasoning controls copied from the providers/xai/models/grok-4.3.toml lab baseline.
+# Effort: reasoning_effort = none|low|medium|high
 base_model = "xai/grok-4.3"
 
 [[reasoning_options]]
 type = "effort"
-values = ["low", "medium", "high"]
+values = ["none", "low", "medium", "high"]
 
 [cost]
 input = 1.25

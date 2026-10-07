@@ -1,21 +1,12 @@
 # Reasoning controls copied from the providers/alibaba/models/qwen3.8-max.toml lab baseline.
-# Toggle: enable_thinking true|false (hybrid)
-# Effort: reasoning_effort = low|medium|xhigh (default xhigh); high accepted as alias → xhigh
-# Budget: thinking_budget (0..262144) cannot be combined with reasoning_effort
+# Effort: reasoning_effort = low|medium|xhigh
+# Toggle and budget controls from the source are not emitted: the Experiential Labs OpenAI-compatible chat surface exposes no native on/off or budget request field - enable_thinking and thinking are translated to reasoning_effort and thinking_budget is rejected on unqualified routes (live-tested 2026-10-07; see platform.experientiallabs.ai/llms.txt).
 base_model = "alibaba/qwen3.8-max"
 structured_output = true
 
 [[reasoning_options]]
-type = "toggle"
-
-[[reasoning_options]]
 type = "effort"
 values = ["low", "medium", "xhigh"]
-
-[[reasoning_options]]
-type = "budget_tokens"
-min = 0
-max = 262_144
 
 [cost]
 input = 2

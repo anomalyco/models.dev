@@ -1,9 +1,7 @@
 # Reasoning controls copied from the providers/openrouter/models/deepseek/deepseek-v4-flash-0731.toml relay peer baseline.
-# Toggle: reasoning.enabled = true|false https://openrouter.ai/docs/guides/best-practices/reasoning-tokens
+# Effort: reasoning_effort = low|high|max
+# Toggle and budget controls from the source are not emitted: the Experiential Labs OpenAI-compatible chat surface exposes no native on/off or budget request field - enable_thinking and thinking are translated to reasoning_effort and thinking_budget is rejected on unqualified routes (live-tested 2026-10-07; see platform.experientiallabs.ai/llms.txt).
 base_model = "deepseek/deepseek-v4-flash-0731"
-
-[[reasoning_options]]
-type = "toggle"
 
 [[reasoning_options]]
 type = "effort"

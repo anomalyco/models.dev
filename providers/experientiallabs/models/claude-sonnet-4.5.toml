@@ -1,11 +1,10 @@
 # Reasoning controls copied from the providers/anthropic/models/claude-sonnet-4-5.toml lab baseline.
+# Toggle and budget controls from the source are not emitted: the Experiential Labs OpenAI-compatible chat surface exposes no native on/off or budget request field - enable_thinking and thinking are translated to reasoning_effort and thinking_budget is rejected on unqualified routes (live-tested 2026-10-07; see platform.experientiallabs.ai/llms.txt).
+# Reasoning controls: none - the model's serving rungs report no reasoning-effort controls in the Experiential Labs catalog, no lab/peer effort baseline exists, and the chat surface exposes no native on/off or budget field (live-tested 2026-10-07; see platform.experientiallabs.ai/llms.txt).
 base_model = "anthropic/claude-sonnet-4-5"
 name = "Claude Sonnet 4.5"
 structured_output = true
-
-[[reasoning_options]]
-type = "budget_tokens"
-min = 1_024
+reasoning_options = []
 
 [cost]
 input = 3

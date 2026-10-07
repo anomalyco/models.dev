@@ -1,9 +1,12 @@
 # Reasoning controls copied from the providers/openrouter/models/qwen/qwen3.5-9b.toml relay peer baseline.
-# Toggle: reasoning.enabled = true|false https://openrouter.ai/docs/guides/best-practices/reasoning-tokens
+# Effort: reasoning_effort = medium
+# Effort values reported by this model's serving rungs in the Experiential Labs catalog (per-model capability data); no lab/peer effort baseline exists.
+# Toggle and budget controls from the source are not emitted: the Experiential Labs OpenAI-compatible chat surface exposes no native on/off or budget request field - enable_thinking and thinking are translated to reasoning_effort and thinking_budget is rejected on unqualified routes (live-tested 2026-10-07; see platform.experientiallabs.ai/llms.txt).
 base_model = "alibaba/qwen3.5-9b"
 
 [[reasoning_options]]
-type = "toggle"
+type = "effort"
+values = ["medium"]
 
 [cost]
 input = 0.1

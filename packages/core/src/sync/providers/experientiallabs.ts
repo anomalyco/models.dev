@@ -246,18 +246,20 @@ function orderedUsableRungs(entry: ExperientialEntry): ExperientialRung[] {
   return ordered;
 }
 
-// Effort values reported by the gateway's serving rungs. These are used only
-// to trim the lab baseline down to values the gateway also accepts; they are
-// never a control source on their own (gateway-reported enums can be broader
-// than the surface the lab documents).
-function hostEffortValues(rungs: ExperientialRung[]): string[] | undefined {
+// Effort values reported by this model's usable serving rungs in the catalog.
+// These are used for two purposes: trimming the lab baseline down to values
+// the gateway also accepts, and (when no lab/peer effort baseline exists)
+// reporting the values this model's serving rungs document. Rung-reported
+// values are always attributed as per-model gateway capability data in the
+// header, never presented as lab controls.
+function unionEffortValues(rungs: ExperientialRung[]): EffortValue[] {
+  const union = new Set<string>();
   for (const rung of rungs) {
-    const efforts = (rung.capabilities?.supported_reasoning_efforts ?? []).filter(
-      (value): value is EffortValue => (EFFORT_VALUES as string[]).includes(value),
-    );
-    if (efforts.length > 0) return efforts;
+    for (const value of rung.capabilities?.supported_reasoning_efforts ?? []) {
+      if ((EFFORT_VALUES as string[]).includes(value)) union.add(value);
+    }
   }
-  return undefined;
+  return EFFORT_VALUES.filter((value) => union.has(value));
 }
 
 // Reasoning controls come from the lab's first-party model definition
@@ -288,7 +290,6 @@ export type LabReasoningOption = z.infer<typeof LabReasoningOption>;
 interface LabControls {
   reasoning?: boolean;
   options?: LabReasoningOption[];
-  wireComments: string[];
   sourcePath: string;
   kind: "lab" | "peer";
 }
@@ -325,38 +326,6 @@ const PEER_DIR_ALIASES: Record<string, string[]> = {
 const FIRST_PARTY_DIR_ALIASES: Record<string, string[]> = {
   "arcee-ai": ["arcee"],
 };
-
-// Wire comments must carry their full documented sentence: lab files wrap
-// long wire docs across lines ("... see / # the release blog)"), and a
-// keyword-only filter would copy a dangling half-sentence. After a matched
-// wire line, absorb following comment lines while the previous line has no
-// sentence terminator and the next line reads as a continuation.
-function extractWireComments(text: string): string[] {
-  const comments = text
-    .split("\n")
-    .map((line) => line.trim())
-    .filter((line) => line.startsWith("#"))
-    .map((line) => line.slice(1).trim());
-  const result: string[] = [];
-  let pending: string | undefined;
-  for (const comment of comments) {
-    if (/^(toggle|effort|budget)\b/i.test(comment)) {
-      if (pending !== undefined) result.push(pending);
-      pending = `# ${comment}`;
-      continue;
-    }
-    if (pending === undefined) continue;
-    const openEnded = !/[.:;!?)]$/.test(pending.trimEnd());
-    if (openEnded && /^[a-z0-9(]/.test(comment)) {
-      pending = `${pending} ${comment}`;
-    } else {
-      result.push(pending);
-      pending = undefined;
-    }
-  }
-  if (pending !== undefined) result.push(pending);
-  return result;
-}
 
 function readCandidate(filePath: string): { text: string; parsed: unknown } | undefined {
   let text: string;
@@ -444,14 +413,12 @@ function readLabControls(baseModel: string, slug: string): LabControls | undefin
     if (!existsSync(candidate.filePath)) continue;
     const read = readCandidate(candidate.filePath);
     if (read === undefined) continue;
-    const text = read.text;
     const parsed = read.parsed;
     const data = LabReasoning.safeParse(parsed);
     if (!data.success) continue;
     const controls: LabControls = {
       reasoning: data.data.reasoning,
       options: data.data.reasoning_options,
-      wireComments: extractWireComments(text),
       sourcePath: candidate.sourcePath,
       kind: candidate.kind,
     };
@@ -463,7 +430,6 @@ function readLabControls(baseModel: string, slug: string): LabControls | undefin
   return {
     reasoning: reasoningSource?.reasoning,
     options: optionsSource?.options,
-    wireComments: optionsSource?.wireComments ?? reasoningSource?.wireComments ?? [],
     sourcePath: source.sourcePath,
     kind: source.kind,
   };
@@ -632,39 +598,54 @@ export function buildExperientiallabsModel(
   const structuredOutput = params.structured_outputs === true || existing?.structured_output === true;
   const temperature = params.temperature === true || existing?.temperature === true;
 
-  // Copy the lab's reasoning controls verbatim (toggle, effort values,
-  // budget_tokens bounds), trimming effort values to those the gateway's
-  // serving rungs also report. When the lab documents no controls, leave
-  // reasoning_options unset so the runner inherits the canonical baseline
-  // (or stamps [] when none exists anywhere) — never invent controls.
+  // The Experiential Labs chat surface exposes exactly one verified reasoning
+  // wire: reasoning_effort (llms.txt; live-tested 2026-10-07 — enable_thinking
+  // and the DeepSeek-style thinking object are both translated to
+  // reasoning_effort, and thinking_budget is rejected on unqualified routes).
+  // Only effort controls are emitted: toggles and budget_tokens from the
+  // source are dropped with a note citing that evidence, and source wire
+  // comments are never copied because they describe the source's surface.
+  // Values come from the lab/peer baseline, trimmed to the effort values the
+  // model's serving rungs also report; when the baseline has no effort
+  // levels, the rung-reported values are used and attributed as per-model
+  // gateway capability data. An explicit [] is written when nothing survives
+  // so the runner never resurrects stale options from a previous file state.
   let reasoningOptions: SyncedModel["reasoning_options"] | undefined;
   let header: string | undefined;
   if (reasoning && lab?.options !== undefined && lab.options.length > 0) {
-    const hostEfforts = hostEffortValues(rungs);
-    // Fail closed on unwired toggles: the repo requires every copied toggle
-    // to carry its request-field wire path, and the Experiential Labs
-    // OpenAI-compatible chat surface exposes no boolean on/off field
-    // (reasoning is disabled via reasoning_effort = "none" where the route
-    // supports it, per platform.experientiallabs.ai/llms.txt). Drop toggle
-    // entries whose source file documents no "# Toggle:" wire comment.
-    const toggleWired = lab.wireComments.some((line) => /^#\s*toggle\b/i.test(line));
-    const kept = lab.options.filter((option) => option.type !== "toggle" || toggleWired);
-    reasoningOptions = kept.length > 0
-      ? kept.map((option) => {
-          if (option.type !== "effort" || hostEfforts === undefined) return option;
-          const trimmed = option.values.filter((value) => hostEfforts.includes(value));
-          return trimmed.length > 0 ? { ...option, values: trimmed } : option;
-        })
-      : undefined;
-    header = [
+    const hostUnion = unionEffortValues(rungs);
+    const droppedControls = lab.options.filter((option) => option.type !== "effort").length;
+    const labValues = EFFORT_VALUES.filter((value) =>
+      lab.options.some((option) => option.type === "effort" && option.values.includes(value)),
+    );
+    let values: EffortValue[] = labValues;
+    if (labValues.length > 0 && hostUnion.length > 0) {
+      const trimmed = labValues.filter((value) => hostUnion.includes(value));
+      if (trimmed.length > 0) values = trimmed;
+    } else if (labValues.length === 0) {
+      values = hostUnion;
+    }
+    reasoningOptions = values.length > 0 ? [{ type: "effort", values }] : [];
+    const headerLines = [
       `# Reasoning controls copied from the ${lab.sourcePath} ${lab.kind === "peer" ? "relay peer" : "lab"} baseline.`,
-      ...lab.wireComments,
-      ...(kept.length < lab.options.length
-        ? [
-            "# Toggle omitted: the source documents a thinking toggle without a request-field wire path, and the Experiential Labs OpenAI-compatible chat surface has no native on/off field - enable_thinking is translated to reasoning_effort (live-tested 2026-10-07: x-experiential-ignored-parameters: [\"enable_thinking->translated(reasoning_effort)\"]; see platform.experientiallabs.ai/llms.txt).",
-          ]
-        : []),
-    ].join("\n") + "\n";
+    ];
+    if (values.length > 0) headerLines.push(`# Effort: reasoning_effort = ${values.join("|")}`);
+    if (values.length > 0 && labValues.length === 0) {
+      headerLines.push(
+        "# Effort values reported by this model's serving rungs in the Experiential Labs catalog (per-model capability data); no lab/peer effort baseline exists.",
+      );
+    }
+    if (droppedControls > 0) {
+      headerLines.push(
+        "# Toggle and budget controls from the source are not emitted: the Experiential Labs OpenAI-compatible chat surface exposes no native on/off or budget request field - enable_thinking and thinking are translated to reasoning_effort and thinking_budget is rejected on unqualified routes (live-tested 2026-10-07; see platform.experientiallabs.ai/llms.txt).",
+      );
+    }
+    if (values.length === 0) {
+      headerLines.push(
+        "# Reasoning controls: none - the model's serving rungs report no reasoning-effort controls in the Experiential Labs catalog, no lab/peer effort baseline exists, and the chat surface exposes no native on/off or budget field (live-tested 2026-10-07; see platform.experientiallabs.ai/llms.txt).",
+      );
+    }
+    header = headerLines.join("\n") + "\n";
   } else if (reasoning && lab?.options !== undefined && lab.options.length === 0) {
     // The lab itself authors `reasoning_options = []` — record the provenance
     // of the empty set instead of leaving the stamped [] unexplained.
