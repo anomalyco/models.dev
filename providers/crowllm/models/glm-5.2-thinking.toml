@@ -1,7 +1,7 @@
 # CrowLLM relays this model on POST /v1/chat/completions (OpenAI-compatible).
 # cost is the gateway's live billing rate: USD/MTok = 2 x model_ratio, output = input x completion_ratio.
-# Source: https://crowllm.com/api/pricing (accessed 2026-10-07).
-# Served id, verbatim from GET https://crowllm.com/v1/models (accessed 2026-10-07): "glm-5.2-thinking".
+# Source: https://crowllm.com/api/pricing (accessed 2026-10-08).
+# Served id, verbatim from GET https://crowllm.com/v1/models (accessed 2026-10-08): "glm-5.2-thinking".
 # Always-on alias: reasoning is enabled for this id and cannot be turned off here;
 # `glm-5.2` is the id that takes the thinking control.
 # Effort: reasoning_effort = high|max (top-level, forwarded verbatim)

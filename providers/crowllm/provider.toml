@@ -8,10 +8,11 @@
 # That no-pass rate is already at or under each lab's own published price.
 # cost is converted from the gateway's live billing ratios at
 # USD/MTok = 2 x model_ratio, output = input x completion_ratio, cache_read = 2 x cache_ratio.
-# Ids ending in `:free` are the zero-rated shelf: no card and no trial timer. Five served ids
-# carry that suffix but bill from earned credit (`qwen-3.8-max:free`, `gemini-3.8-flash:free`,
-# `mimo-v2-6-flash:free`, `minimax-m3:free`, `glm-5.3-flash:free`) and are left out of this
-# catalog, since `:free` means zero-rated here.
+# Ids ending in `:free` are the zero-rated shelf: no card and no trial timer. Six served ids
+# carry that suffix but bill real credit (`qwen-3.8-max:free` 1, `gemini-3.8-flash:free` 0.375,
+# `mimo-v2-6-flash:free` 0.09, `glm-5.3-flash:free` 0.075, `glm-5.3-flash-thinking:free` 0.075,
+# `deepseek-v4-flash:free` 0.025) and are left out of this catalog, since `:free` means
+# zero-rated here.
 # Catalog: https://crowllm.com/v1/models (public, no key) | Rates: https://crowllm.com/api/pricing
 # Passes: https://crowllm.com/pricing | Docs: https://crowllm.com/docs
 # Each model's # Toggle/# Effort/# Budget comment names the field as the gateway handles it:
