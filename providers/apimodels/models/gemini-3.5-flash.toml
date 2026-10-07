@@ -1,0 +1,13 @@
+# Sources (accessed 2026-10-08):
+# - Pricing: https://apimodels.app/models/gemini-3.5-flash ($0.662 input / $3.971 output per 1M tokens)
+# - Model ID: https://api.apimodels.app/v1/models ("gemini-3.5-flash")
+base_model = "google/gemini-3.5-flash"
+reasoning_options = [{ type = "effort", values = ["minimal", "low", "medium", "high"] }]
+
+[cost]
+input = 0.662
+output = 3.971
+
+[provider]
+npm = "@ai-sdk/google"
+api = "https://api.apimodels.app/v1beta"
