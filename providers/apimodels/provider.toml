@@ -1,0 +1,14 @@
+# Multi-model relay: one APIMODELS_API_KEY serves three request surfaces.
+# - OpenAI POST https://api.apimodels.app/v1/chat/completions (default; GPT, Grok, GLM):
+#   `reasoning_effort` is forwarded unchanged to the upstream model.
+# - Anthropic POST https://api.apimodels.app/v1/messages (Claude, per-model [provider]):
+#   native passthrough of `thinking` and `output_config.effort`; auth via x-api-key.
+# - Gemini POST https://api.apimodels.app/v1beta/models/{model}:generateContent (Gemini,
+#   per-model [provider]): native passthrough of `generationConfig.thinkingConfig`;
+#   auth via x-goog-api-key.
+# Model list and IDs: https://api.apimodels.app/v1/models (accessed 2026-10-08)
+name = "apimodels.app"
+env = ["APIMODELS_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+api = "https://api.apimodels.app/v1"
+doc = "https://apimodels.app/docs"

@@ -1,0 +1,10 @@
+# Sources (accessed 2026-10-08):
+# - Pricing: https://apimodels.app/models/grok-4.6 ($1.50 input / $4.50 output / $0.375 cache read per 1M tokens)
+# - Model ID: https://api.apimodels.app/v1/models ("grok-4.6")
+base_model = "xai/grok-4.6"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh"] }]
+
+[cost]
+input = 1.5
+output = 4.5
+cache_read = 0.375

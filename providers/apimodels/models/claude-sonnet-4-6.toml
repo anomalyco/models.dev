@@ -1,0 +1,16 @@
+# Sources (accessed 2026-10-08):
+# - Pricing: https://apimodels.app/models/claude-sonnet-4-6 ($1.059 input / $5.295 output per 1M tokens)
+# - Model ID: https://api.apimodels.app/v1/models ("claude-sonnet-4-6")
+base_model = "anthropic/claude-sonnet-4-6"
+reasoning_options = [
+  { type = "effort", values = ["low", "medium", "high", "max"] },
+  { type = "budget_tokens", min = 1_024 },
+]
+
+[cost]
+input = 1.059
+output = 5.295
+
+[provider]
+npm = "@ai-sdk/anthropic"
+api = "https://api.apimodels.app/v1"
