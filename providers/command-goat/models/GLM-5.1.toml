@@ -1,0 +1,11 @@
+# Sources (accessed 2026-09-09):
+# - Pricing and model details: GOAT plan (https://commandcode.ai/docs/plans/goat)
+# - Plan scope: GOAT only; Go/Pro/Max plans excluded (plan-specific provider, cf. alibaba-coding-plan)
+# - Reasoning: binary-only per providers/zhipuai/models/glm-5.1.toml; no per-model graded control evidenced -> [] (gateway verified live 2026-09-11: 8 models/42 calls; none|minimal rejected by enum, enable_thinking ignored; toggle/budget omitted).
+base_model = "zhipuai/glm-5.1"
+reasoning_options = []
+
+[cost]
+input = 1.4
+output = 4.4
+cache_read = 0.26

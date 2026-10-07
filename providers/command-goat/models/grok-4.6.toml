@@ -1,0 +1,11 @@
+# Sources (accessed 2026-09-09):
+# - Pricing and model details: GOAT plan (https://commandcode.ai/docs/plans/goat)
+# - Plan scope: GOAT only; Go/Pro/Max plans excluded (plan-specific provider, cf. alibaba-coding-plan)
+# - Reasoning: baseline per providers/xai/models/grok-4.6.toml; effort=["low","medium","high","xhigh"] (gateway verified live 2026-09-11: 8 models/42 calls; none|minimal rejected by enum, enable_thinking ignored; toggle/budget omitted).
+base_model = "xai/grok-4.6"
+reasoning_options = [{ type = "effort", values = ["low","medium","high","xhigh"] }]
+
+[cost]
+input = 2.0
+output = 6.0
+cache_read = 0.5

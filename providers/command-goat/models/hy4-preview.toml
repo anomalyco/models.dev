@@ -1,0 +1,15 @@
+# Sources (accessed 2026-09-09):
+# - Pricing and model details: GOAT plan (https://commandcode.ai/docs/plans/goat)
+# - Limits: context = 1_048_576 per live /v1/models 2026-09-11; output inherits lab (ds-flash: live-probed served cap 393216).
+# - Plan scope: GOAT only; Go/Pro/Max plans excluded (plan-specific provider, cf. alibaba-coding-plan)
+# - Reasoning: hy baseline per tencent-tokenhub/token-plan hy3.toml + hy4-preview.toml (none dropped); effort=["high"] (gateway verified live 2026-09-11: 8 models/42 calls; none|minimal rejected by enum, enable_thinking ignored; toggle/budget omitted).
+base_model = "tencent/hy4-preview"
+reasoning_options = [{ type = "effort", values = ["high"] }]
+
+[limit]
+context = 1_048_576
+
+[cost]
+input = 0.834
+output = 2.501
+cache_read = 0.042
