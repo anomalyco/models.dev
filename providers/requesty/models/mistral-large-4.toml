@@ -1,5 +1,8 @@
 base_model = "mistral/mistral-large-4"
-reasoning = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "max"]
 
 [cost]
 input = 0.68
@@ -7,5 +10,5 @@ output = 2.09
 cache_read = 0.07
 
 [limit]
-context = 1_000_000
-output = 1_000_000
+context = 524_288
+output = 524_288
