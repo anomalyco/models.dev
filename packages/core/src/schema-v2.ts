@@ -301,9 +301,14 @@ export type CompatibilityV2 = z.infer<typeof CompatibilityV2>;
 export const CapabilitiesOverrideV2 = CapabilitiesV2.partial();
 export type CapabilitiesOverrideV2 = z.infer<typeof CapabilitiesOverrideV2>;
 
+export const ApiBaseUrlV2 = z.union([
+  z.string().url("Must be a valid URL"),
+  z.string().regex(/^\$\{[A-Z0-9_]+\}/, "Must be a valid URL or env var template"),
+]);
+
 export const ApiEntryV2 = z
   .object({
-    base_url: z.string(),
+    base_url: ApiBaseUrlV2,
     sdk: SdkV2.optional(),
     compatibility: CompatibilityV2.optional(),
     capabilities: CapabilitiesOverrideV2.optional(),

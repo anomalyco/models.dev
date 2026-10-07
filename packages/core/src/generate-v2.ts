@@ -28,6 +28,7 @@ import {
 // High-level catalog generation
 // ---------------------------------------------------------------------------
 
+// Legacy v1 provider aliases superseded by canonical `azure` and `google-vertex` in v2.
 const IGNORED_PROVIDERS = new Set([
   "azure-cognitive-services",
   "google-vertex-anthropic",
@@ -40,10 +41,20 @@ export async function generateV2(
   const baseModels = await generateModels(modelsDir);
 
   const providers: Record<string, ProviderV2> = {};
+  const nameToProviderID = new Map<string, string>();
   for await (const providerPath of scanTomls(providersDir, "*/provider.toml")) {
     const providerID = path.basename(path.dirname(providerPath));
     if (IGNORED_PROVIDERS.has(providerID)) continue;
     const provider = await loadProviderV2(providerPath, baseModels);
+    const nameKey = provider.name.toLowerCase();
+    const existingID = nameToProviderID.get(nameKey);
+    if (existingID !== undefined) {
+      throw new Error(
+        `Duplicate provider name "${provider.name}" used by both "${existingID}" and "${provider.id}". Provider names must be unique.`,
+        { cause: { providerIDs: [existingID, provider.id], name: provider.name } },
+      );
+    }
+    nameToProviderID.set(nameKey, provider.id);
     providers[provider.id] = provider;
   }
 
