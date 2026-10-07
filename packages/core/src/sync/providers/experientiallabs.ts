@@ -572,6 +572,35 @@ export function resolveExperientiallabsBaseModel(id: string, icon?: string | nul
   return undefined;
 }
 
+// Per-family live-test evidence (2026-10-07) for dropped toggle/budget
+// controls: the Experiential Labs chat surface exposes no native on/off or
+// budget request field on any serving route. Keyed by canonical lab prefix
+// of the resolved base model.
+const FAMILY_ROUTE_EVIDENCE: Record<string, string> = {
+  anthropic:
+    "thinking_budget is rejected on the Anthropic serving route (live-tested 2026-10-07 on claude-haiku-4.5 and claude-sonnet-4.5: HTTP 400 unsupported_parameter)",
+  google:
+    "thinking_budget is rejected and enable_thinking is translated to reasoning_effort on the Google serving routes (live-tested 2026-10-07 on gemini-2.5-flash, gemini-2.5-pro and gemma-4-26b-a4b-it: HTTP 400 unsupported_parameter; on gemma-4-26b-a4b-it x-experiential-ignored-parameters [\"enable_thinking->translated(reasoning_effort)\"])",
+  alibaba:
+    "thinking_budget is rejected and enable_thinking is translated to reasoning_effort (live-tested 2026-10-07 on qwen3.5-122b-a10b and qwen3.5-27b: HTTP 400 unsupported_parameter; x-experiential-ignored-parameters [\"enable_thinking->translated(reasoning_effort)\"])",
+  deepseek:
+    "thinking_budget is rejected and thinking/enable_thinking are translated to reasoning_effort (live-tested 2026-10-07 on deepseek-v4-pro-0813: HTTP 400 unsupported_parameter; x-experiential-ignored-parameters [\"thinking->translated(reasoning_effort)\"]; the route's own error lists supported efforts low|high|max)",
+  zhipuai:
+    "thinking_budget is rejected and enable_thinking is translated to reasoning_effort (live-tested 2026-10-07 on glm-5.3-flash: HTTP 400 unsupported_parameter; x-experiential-ignored-parameters [\"enable_thinking->translated(reasoning_effort)\"])",
+  xiaomi:
+    "enable_thinking is translated to reasoning_effort (live-tested 2026-10-07 on mimo-v2.5: x-experiential-ignored-parameters [\"enable_thinking->translated(reasoning_effort)\"])",
+  moonshotai:
+    "enable_thinking is translated to reasoning_effort, and the resulting reasoning_effort is then dropped (live-tested 2026-10-07 on kimi-k2.6, single request on the azure route: x-experiential-ignored-parameters [\"enable_thinking->translated(reasoning_effort)\", \"reasoning_effort\"])",
+  minimax:
+    "enable_thinking is translated to reasoning_effort, which the MiniMax serving route rejects entirely (live-tested 2026-10-07 on minimax-m3: HTTP 400 unsupported_parameter, param reasoning_effort)",
+};
+
+// Fallback for labs whose serving routes were not directly tested: the same
+// gateway surface absorbed every on/off and budget field (rejected or
+// translated).
+const GENERAL_ROUTE_EVIDENCE =
+  "(live-tested battery 2026-10-07: thinking_budget rejected on Anthropic, Google, Qwen, DeepSeek and GLM routes; enable_thinking and thinking translated to reasoning_effort on Qwen, DeepSeek, GLM, Xiaomi, Moonshot and Google routes)";
+
 export function buildExperientiallabsModel(
   entry: ExperientialEntry,
   existing: ExistingModel | undefined,
@@ -599,7 +628,8 @@ export function buildExperientiallabsModel(
   // The Experiential Labs chat surface exposes exactly one verified reasoning
   // wire: reasoning_effort (llms.txt; live-tested 2026-10-07 — enable_thinking
   // and the DeepSeek-style thinking object are both translated to
-  // reasoning_effort, and thinking_budget is rejected on unqualified routes).
+  // reasoning_effort, and thinking_budget is rejected on every tested serving
+  // route; per-family evidence is cited in the generated notes).
   // Only effort controls are emitted: toggles and budget_tokens from the
   // source are dropped with a note citing that evidence, and source wire
   // comments are never copied because they describe the source's surface.
@@ -622,18 +652,20 @@ export function buildExperientiallabsModel(
       if (trimmed.length > 0) values = trimmed;
     }
     reasoningOptions = values.length > 0 ? [{ type: "effort", values }] : [];
+    const labPrefix = baseModel?.split("/")[0] ?? "";
+    const familyEvidence = FAMILY_ROUTE_EVIDENCE[labPrefix] ?? GENERAL_ROUTE_EVIDENCE;
     const headerLines = [
       `# Reasoning controls copied from the ${lab.sourcePath} ${lab.kind === "peer" ? "relay peer" : "lab"} baseline.`,
     ];
     if (values.length > 0) headerLines.push(`# Effort: reasoning_effort = ${values.join("|")}`);
     if (droppedControls > 0) {
       headerLines.push(
-        "# Toggle and budget controls from the source are not emitted: the Experiential Labs OpenAI-compatible chat surface exposes no native on/off or budget request field - enable_thinking and thinking are translated to reasoning_effort and thinking_budget is rejected on unqualified routes (live-tested 2026-10-07; see platform.experientiallabs.ai/llms.txt).",
+        `# Toggle and budget controls from the source are not emitted: the Experiential Labs chat surface exposes no native on/off or budget request field - ${familyEvidence} (see platform.experientiallabs.ai/llms.txt).`,
       );
     }
     if (values.length === 0) {
       headerLines.push(
-        "# Reasoning controls: none emitted - the lab/peer baseline documents no effort levels, and its toggle/budget controls have no native request fields on this surface. Affirmative host evidence (live-tested 2026-10-07 on glm-5.3-flash): enable_thinking -> x-experiential-ignored-parameters [\"enable_thinking->translated(reasoning_effort)\"]; thinking {\"type\":\"enabled\"} -> [\"thinking->translated(reasoning_effort)\"]; thinking_budget:512 -> HTTP 400 unsupported_parameter (\"This route cannot preserve a numeric thinking budget. Choose a qualified Anthropic, Gemini 2.5 or Qwen Cloud model, or remove the budget.\"); reasoning_effort itself passes through unchanged (platform.experientiallabs.ai/llms.txt).",
+        `# Reasoning controls: none emitted - the lab/peer baseline documents no effort levels, and its toggle/budget controls have no native request fields on this surface: ${familyEvidence}. reasoning_effort is the only reasoning wire and passes through unchanged where the route supports it (platform.experientiallabs.ai/llms.txt).`,
       );
     }
     header = headerLines.join("\n") + "\n";

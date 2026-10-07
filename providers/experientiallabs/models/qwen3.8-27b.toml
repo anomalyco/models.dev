@@ -1,6 +1,6 @@
 # Reasoning controls copied from the providers/openrouter/models/qwen/qwen3.8-27b.toml relay peer baseline.
 # Effort: reasoning_effort = low|medium|xhigh
-# Toggle and budget controls from the source are not emitted: the Experiential Labs OpenAI-compatible chat surface exposes no native on/off or budget request field - enable_thinking and thinking are translated to reasoning_effort and thinking_budget is rejected on unqualified routes (live-tested 2026-10-07; see platform.experientiallabs.ai/llms.txt).
+# Toggle and budget controls from the source are not emitted: the Experiential Labs chat surface exposes no native on/off or budget request field - thinking_budget is rejected and enable_thinking is translated to reasoning_effort (live-tested 2026-10-07 on qwen3.5-122b-a10b and qwen3.5-27b: HTTP 400 unsupported_parameter; x-experiential-ignored-parameters ["enable_thinking->translated(reasoning_effort)"]) (see platform.experientiallabs.ai/llms.txt).
 base_model = "alibaba/qwen3.8-27b"
 
 [[reasoning_options]]
