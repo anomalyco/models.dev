@@ -1,0 +1,17 @@
+# Sources (accessed 2026-10-08):
+# - Pricing: https://apimodels.app/models/gpt-6-luna ($0.09 input / $0.45 output / $0.009 cache read per 1M tokens)
+#   Input above 272K tokens bills the whole request at 2x input and cache read, 1.5x output.
+# - Model ID: https://api.apimodels.app/v1/models ("gpt-6-luna")
+base_model = "openai/gpt-6-luna"
+reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh", "max"] }]
+
+[cost]
+input = 0.09
+output = 0.45
+cache_read = 0.009
+
+[[cost.tiers]]
+tier = { type = "context", size = 272_000 }
+input = 0.18
+output = 0.675
+cache_read = 0.018
