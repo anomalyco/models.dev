@@ -327,6 +327,12 @@ export const ApiProtocolV2Values = [
   "images",
   "videos",
   "realtime",
+  "live",
+  "rerank",
+  "speech",
+  "transcriptions",
+  "embeddings",
+  "embed-content",
 ] as const;
 
 export const KnownApiProtocolV2 = z.enum(ApiProtocolV2Values);

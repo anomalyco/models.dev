@@ -138,6 +138,7 @@ With `base_model`, do not restate fields already correct on the lab entry. Still
 
 | Field | Notes |
 | --- | --- |
+| `type` | Model category (`"chat"`, `"image"`, `"video"`, `"embedding"`, `"reranking"`, `"decision"`, `"transcription"`, `"speech"`, `"realtime"`). Defaults to `"chat"` when omitted; set explicitly on non-chat models |
 | `family` | Model family slug — set when known |
 | `knowledge` | Knowledge cutoff (`YYYY-MM` or `YYYY-MM-DD`) |
 | `temperature` | Whether temperature is respected |
