@@ -3,6 +3,7 @@
 # Source: https://crowllm.com/api/pricing (accessed 2026-10-07).
 # Effort: reasoning_effort = low|medium|high|xhigh (top-level, forwarded verbatim)
 # reasoning_options mirror providers/xai for the same model on this surface.
+# Live gateway row: model_ratio=0, completion_ratio=1, cache_ratio=None, enable_groups=['free', 'starter', 'pro'].
 base_model = "xai/grok-4.7"
 name = "Grok 4.7 (free)"
 reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh"] } ]

@@ -3,6 +3,7 @@
 # Source: https://crowllm.com/api/pricing (accessed 2026-10-07).
 # Effort: reasoning_effort = minimal|low|medium|high|xhigh (top-level, forwarded verbatim)
 # reasoning_options mirror providers/meta for the same model on this surface.
+# Live gateway row: model_ratio=0, completion_ratio=1, cache_ratio=None, enable_groups=['free', 'pro'].
 base_model = "meta/muse-spark-1.1"
 name = "Muse Spark 1.1 (free)"
 reasoning_options = [{ type = "effort", values = ["minimal", "low", "medium", "high", "xhigh"] } ]

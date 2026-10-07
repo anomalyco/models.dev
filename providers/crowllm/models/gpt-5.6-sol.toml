@@ -3,6 +3,7 @@
 # Source: https://crowllm.com/api/pricing (accessed 2026-10-07).
 # Effort: reasoning_effort = none|low|medium|high|xhigh|max (top-level, forwarded verbatim)
 # reasoning_options mirror providers/openai for the same model on this surface.
+# Live gateway row: model_ratio=1.095, completion_ratio=3.191780821918, cache_ratio=None, enable_groups=['pro'].
 base_model = "openai/gpt-5.6-sol"
 reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh", "max"] } ]
 

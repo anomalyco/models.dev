@@ -3,6 +3,7 @@
 # Source: https://crowllm.com/api/pricing (accessed 2026-10-07).
 # Effort: reasoning_effort = none|low|medium|xhigh (top-level, forwarded verbatim)
 # reasoning_options mirror providers/nebius for the same model on this surface.
+# Live gateway row: model_ratio=0, completion_ratio=1, cache_ratio=None, enable_groups=['free', 'pro'].
 base_model = "alibaba/qwen3.8-27b"
 name = "Qwen3.8 27B (free)"
 reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "xhigh"] } ]

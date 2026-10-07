@@ -5,6 +5,7 @@
 # `glm-5.3` is the id that takes the thinking control.
 # Effort: reasoning_effort = low|high|max (top-level, forwarded verbatim)
 # reasoning_options mirror providers/zhipuai for the same model on this surface.
+# Live gateway row: model_ratio=0.645, completion_ratio=2.627906976744, cache_ratio=None, enable_groups=['pro'].
 base_model = "zhipuai/glm-5.3"
 name = "GLM-5.3 Thinking"
 reasoning_options = [{ type = "effort", values = ["low", "high", "max"] } ]

@@ -5,6 +5,7 @@
 # `deepseek-v4-pro` is the id that takes the thinking control.
 # Effort: reasoning_effort = low|high|max (top-level, forwarded verbatim)
 # reasoning_options mirror providers/deepseek for the same model on this surface.
+# Live gateway row: model_ratio=0.275, completion_ratio=3.272727272727, cache_ratio=None, enable_groups=['pro'].
 base_model = "deepseek/deepseek-v4-pro"
 name = "DeepSeek V4 Pro Thinking"
 reasoning_options = [{ type = "effort", values = ["low", "high", "max"] } ]

@@ -4,6 +4,7 @@
 # Toggle: enable_thinking = true|false (Qwen hybrid thinking)
 # Budget: thinking_budget = integer reasoning tokens; the gateway only forwards it for Qwen thinking-budget models
 # reasoning_options mirror providers/alibaba for the same model on this surface.
+# Live gateway row: model_ratio=0, completion_ratio=1, cache_ratio=None, enable_groups=['free', 'pro'].
 base_model = "alibaba/qwen3.6-plus"
 name = "Qwen3.6 Plus (free)"
 reasoning_options = [{ type = "toggle" }, { type = "budget_tokens" } ]

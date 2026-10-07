@@ -5,6 +5,7 @@
 # `kimi-k3` is the id that takes the thinking control.
 # Effort: reasoning_effort = low|high|max (top-level, forwarded verbatim)
 # reasoning_options mirror providers/moonshotai for the same model on this surface.
+# Live gateway row: model_ratio=1.115, completion_ratio=5.825112107623, cache_ratio=0.067264573991, enable_groups=['pro'].
 base_model = "moonshotai/kimi-k3"
 name = "Kimi K3 Thinking"
 reasoning_options = [{ type = "effort", values = ["low", "high", "max"] } ]

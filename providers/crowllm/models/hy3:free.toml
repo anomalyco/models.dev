@@ -3,6 +3,7 @@
 # Source: https://crowllm.com/api/pricing (accessed 2026-10-07).
 # Effort: reasoning_effort = none|low|high (top-level, forwarded verbatim)
 # reasoning_options mirror providers/opencode-go for the same model on this surface.
+# Live gateway row: model_ratio=0, completion_ratio=1, cache_ratio=None, enable_groups=['free', 'pro'].
 base_model = "tencent/hy3"
 name = "Hy3 (free)"
 reasoning_options = [{ type = "effort", values = ["none", "low", "high"] } ]

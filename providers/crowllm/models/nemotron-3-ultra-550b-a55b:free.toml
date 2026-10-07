@@ -3,6 +3,7 @@
 # Source: https://crowllm.com/api/pricing (accessed 2026-10-07).
 # Toggle: chat_template_kwargs.enable_thinking = true|false (forwarded verbatim to the serving stack)
 # reasoning_options mirror providers/nvidia for the same model on this surface.
+# Live gateway row: model_ratio=0, completion_ratio=1, cache_ratio=None, enable_groups=['free', 'pro'].
 base_model = "nvidia/nemotron-3-ultra-550b-a55b"
 name = "Nemotron 3 Ultra 550B A55B (free)"
 reasoning_options = [{ type = "toggle" } ]

@@ -3,6 +3,7 @@
 # Source: https://crowllm.com/api/pricing (accessed 2026-10-07).
 # Effort: reasoning_effort = low|medium|high|xhigh|max; the gateway maps low/medium/high to Claude thinking budgets of 1280/2048/4096 tokens
 # reasoning_options mirror providers/anthropic for the same model on this surface.
+# Live gateway row: model_ratio=1, completion_ratio=5, cache_ratio=None, enable_groups=['pro'].
 base_model = "anthropic/claude-opus-5-5"
 reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] } ]
 

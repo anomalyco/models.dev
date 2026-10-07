@@ -3,6 +3,7 @@
 # Source: https://crowllm.com/api/pricing (accessed 2026-10-07).
 # Effort: reasoning_effort = low|high|max (top-level, forwarded verbatim)
 # reasoning_options mirror providers/zhipuai for the same model on this surface.
+# Live gateway row: model_ratio=0.645, completion_ratio=2.627906976744, cache_ratio=None, enable_groups=['pro'].
 base_model = "zhipuai/glm-5.3"
 reasoning_options = [{ type = "effort", values = ["low", "high", "max"] } ]
 

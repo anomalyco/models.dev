@@ -5,6 +5,7 @@
 # `grok-4.7` is the id that takes the thinking control.
 # Effort: reasoning_effort = low|medium|high|xhigh (top-level, forwarded verbatim)
 # reasoning_options mirror providers/xai for the same model on this surface.
+# Live gateway row: model_ratio=0.845, completion_ratio=2.952662721893, cache_ratio=None, enable_groups=['pro'].
 base_model = "xai/grok-4.7"
 name = "Grok 4.7 Thinking"
 reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh"] } ]
