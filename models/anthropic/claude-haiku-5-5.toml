@@ -1,7 +1,8 @@
-# Specs: https://platform.claude.com/docs/en/models/haiku-5-5/overview
+# Specifications: https://platform.claude.com/docs/en/models/haiku-5-5/overview
+# Thinking and sampling: https://platform.claude.com/docs/en/models/haiku-5-5/migration-guide
 # Evaluations: https://www.anthropic.com/claude-haiku-5-5
 name = "Claude Haiku 5.5"
-description = "Fastest Claude model for high-volume classification, extraction, routing, and subagent work"
+description = "Fast Claude model for responsive assistance, classification, and lightweight agents"
 family = "claude-haiku"
 release_date = "2026-10-07"
 last_updated = "2026-10-07"
@@ -9,8 +10,9 @@ attachment = true
 reasoning = true
 temperature = false
 tool_call = true
-open_weights = false
+structured_output = true
 knowledge = "2026-06"
+open_weights = false
 
 [limit]
 context = 1_000_000

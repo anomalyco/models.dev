@@ -10,6 +10,18 @@ const EFFORT_VALUES = ["none", "minimal", "low", "medium", "high", "xhigh", "max
 // silently accepts the value on some models (zai-glm-5-2). "minimal" is the
 // least likely value to be supported, so it gives the most useful rejection.
 const PROBE_EFFORT = "minimal";
+// /v1/models still serves these rows with `deprecation: null`, but Mistral's
+// model docs list them as deprecated or retired:
+// https://github.com/mistralai/platform-docs-public/tree/main/src/schema/models/models
+const DEPRECATED_IDS = new Set([
+  // Leanstral 1.5 (leanstral-1-5.ts): deprecated 2026-09-29, retired 2026-09-30.
+  "labs-leanstral-1-5-1",
+  // Z.ai GLM 5.2 (zai-glm-5-2.ts): deprecated 2026-09-29, retires 2026-10-31.
+  "glm-5-2",
+  "zai-glm-5-2",
+  // Magistral Medium 1.2 (magistral-medium-1-2-25-09.ts): deprecated 2026-05-22, retired 2026-07-31.
+  "magistral-medium-latest",
+]);
 
 const MistralCapabilities = z.object({
   completion_chat: z.boolean(),
@@ -216,7 +228,7 @@ export function buildMistralModel(model: MistralModel, existing: ExistingModel):
     reasoning: model.capabilities.reasoning,
     reasoning_options: model.capabilities.reasoning ? existing.reasoning_options : undefined,
     tool_call: model.capabilities.function_calling,
-    status: model.deprecation !== null
+    status: model.deprecation !== null || DEPRECATED_IDS.has(model.id)
       ? "deprecated"
       : existing.status === "deprecated" ? undefined : existing.status,
     limit,
