@@ -4,13 +4,15 @@ import {
   filterCatalogByModelType,
   filterModelsByModelType,
   filterProvidersByModelType,
+  generateV2,
   InvalidModelTypeError,
   parseModelTypes,
-  toProvidersV2,
 } from "@models.dev/core";
 import path from "path";
 
-const ProvidersV2 = toProvidersV2(Providers);
+const ProvidersV2 = await generateV2(
+  path.join(import.meta.dir, "..", "..", "..", "providers"),
+);
 
 const assetPort = Number(Bun.env.ASSET_PORT ?? 16000);
 

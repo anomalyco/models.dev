@@ -1,15 +1,10 @@
 import { describe, expect, test } from "bun:test";
 import path from "node:path";
 
-import {
-  generateCatalog,
-  ProviderV2,
-  toModelV2,
-  toProvidersV2,
-} from "../src/index.js";
+import { generateV2, ProviderV2, toModelV2 } from "../src/index.js";
 import type { Model, Provider } from "../src/index.js";
 
-describe("v1 to v2 transform", () => {
+describe("v2 catalog generation", () => {
   test("translates v1 model fields into v2 shape", () => {
     const provider: Provider = {
       id: "openai",
@@ -123,10 +118,9 @@ describe("v1 to v2 transform", () => {
     });
   });
 
-  test("transforms entire catalog into valid ProviderV2 entries", async () => {
-    const root = path.join(import.meta.dir, "..", "..", "..");
-    const catalog = await generateCatalog(root);
-    const providersV2 = toProvidersV2(catalog.providers);
+  test("generates entire v2 catalog from TOMLs into valid ProviderV2 entries", async () => {
+    const providersDir = path.join(import.meta.dir, "..", "..", "..", "providers");
+    const providersV2 = await generateV2(providersDir);
 
     expect(Object.keys(providersV2).length).toBeGreaterThan(0);
     for (const provider of Object.values(providersV2)) {
