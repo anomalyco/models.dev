@@ -1,7 +1,16 @@
-# Void sync reasoning v1: openai/gpt-6-astra f012357cab17fcb01cf5ae79b5c5d9a860723351549af7847be7ef0edc663804
-# Reasoning controls: first-party base openai/gpt-6-astra, translated via LiteLLM.
 # Effort: reasoning_effort (chat), reasoning.effort (Responses).
-base_model = "openai/gpt-6-astra"
+name = "GPT-6 Astra"
+description = "GPT-6 Astra is OpenAI's most capable model for complex reasoning, coding, computer use, research, and document creation."
+family = "gpt-astra"
+release_date = "2026-09-04"
+last_updated = "2026-09-04"
+attachment = true
+reasoning = true
+temperature = false
+tool_call = true
+structured_output = true
+knowledge = "2026-04-30"
+open_weights = false
 
 [[reasoning_options]]
 type = "effort"
@@ -12,3 +21,12 @@ input = 0.54
 output = 2.7
 cache_read = 0.048
 cache_write = 0.54
+
+[limit]
+context = 1_050_000
+input = 922_000
+output = 128_000
+
+[modalities]
+input = ["text", "image", "pdf"]
+output = ["text"]

@@ -1,8 +1,16 @@
-# Void sync reasoning v1: anthropic/claude-sonnet-5 eb1d14c898c380aa0e9f0bd7adcf17dc6dc47608d6da40c19498306a25502de3
-# Reasoning controls: first-party base anthropic/claude-sonnet-5, translated via LiteLLM.
 # Toggle: thinking.type = enabled|disabled (chat only; enabled is translated to adaptive when required).
 # Effort: reasoning_effort (chat), reasoning.effort (Responses).
-base_model = "anthropic/claude-sonnet-5"
+name = "Claude Sonnet 5"
+description = "Everyday Claude agent model for coding, planning, browsing, and general work"
+family = "claude-sonnet"
+release_date = "2026-06-30"
+last_updated = "2026-06-30"
+attachment = true
+reasoning = true
+temperature = false
+tool_call = true
+knowledge = "2026-01-31"
+open_weights = false
 
 [[reasoning_options]]
 type = "toggle"
@@ -16,3 +24,11 @@ input = 0.51
 output = 1.55
 cache_read = 0.046
 cache_write = 0.64
+
+[limit]
+context = 1_000_000
+output = 128_000
+
+[modalities]
+input = ["text", "image", "pdf"]
+output = ["text"]

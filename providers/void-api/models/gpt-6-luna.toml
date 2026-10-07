@@ -1,7 +1,16 @@
-# Void sync reasoning v1: openai/gpt-6-luna 5a6b2f2a93e3392f356fa7342e9d4157f3a16d748af78539acd3c4a0b28b3fdb
-# Reasoning controls: first-party base openai/gpt-6-luna, translated via LiteLLM.
 # Effort: reasoning_effort (chat), reasoning.effort (Responses).
-base_model = "openai/gpt-6-luna"
+name = "GPT-6 Luna"
+description = "OpenAI's most efficient model for focused, high-volume tasks"
+family = "gpt-luna"
+release_date = "2026-09-22"
+last_updated = "2026-09-22"
+attachment = true
+reasoning = true
+temperature = false
+tool_call = true
+structured_output = true
+knowledge = "2026-05-18"
+open_weights = false
 
 [[reasoning_options]]
 type = "effort"
@@ -12,3 +21,12 @@ input = 0.044
 output = 0.22
 cache_read = 0.0044
 cache_write = 0.046
+
+[limit]
+context = 1_050_000
+input = 922_000
+output = 128_000
+
+[modalities]
+input = ["text", "image", "pdf"]
+output = ["text"]

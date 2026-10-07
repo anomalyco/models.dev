@@ -1,7 +1,15 @@
-# Void sync reasoning v1: anthropic/claude-opus-5-5 f012357cab17fcb01cf5ae79b5c5d9a860723351549af7847be7ef0edc663804
-# Reasoning controls: first-party base anthropic/claude-opus-5-5, translated via LiteLLM.
 # Effort: reasoning_effort (chat), reasoning.effort (Responses).
-base_model = "anthropic/claude-opus-5-5"
+name = "Claude Opus 5.5"
+description = "Claude model for long-running agentic coding and knowledge work"
+family = "claude-opus"
+release_date = "2026-09-22"
+last_updated = "2026-09-22"
+attachment = true
+reasoning = true
+temperature = false
+tool_call = true
+knowledge = "2026-06"
+open_weights = false
 
 [[reasoning_options]]
 type = "effort"
@@ -12,3 +20,11 @@ input = 0.64
 output = 2.4
 cache_read = 0.0446
 cache_write = 0.6206
+
+[limit]
+context = 1_000_000
+output = 128_000
+
+[modalities]
+input = ["text", "image", "pdf"]
+output = ["text"]
