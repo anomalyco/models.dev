@@ -123,6 +123,8 @@ describe("v2 catalog generation", () => {
     const providersV2 = await generateV2(providersDir);
 
     expect(Object.keys(providersV2).length).toBeGreaterThan(0);
+    expect(providersV2["azure-cognitive-services"]).toBeUndefined();
+    expect(providersV2["google-vertex-anthropic"]).toBeUndefined();
     expect(providersV2.opencode?.models["jev-1.13"]?.api).toEqual({
       "system-one": {
         base_url: "https://opencode.ai/zen/v1",

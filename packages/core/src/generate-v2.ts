@@ -28,6 +28,11 @@ import {
 // High-level catalog generation
 // ---------------------------------------------------------------------------
 
+const IGNORED_PROVIDERS = new Set([
+  "azure-cognitive-services",
+  "google-vertex-anthropic",
+]);
+
 export async function generateV2(
   providersDir: string,
 ): Promise<Record<string, ProviderV2>> {
@@ -36,6 +41,8 @@ export async function generateV2(
 
   const providers: Record<string, ProviderV2> = {};
   for await (const providerPath of scanTomls(providersDir, "*/provider.toml")) {
+    const providerID = path.basename(path.dirname(providerPath));
+    if (IGNORED_PROVIDERS.has(providerID)) continue;
     const provider = await loadProviderV2(providerPath, baseModels);
     providers[provider.id] = provider;
   }
@@ -206,6 +213,7 @@ function toReasoningSupportV2(model: Model): ReasoningSupportV2 {
 const DEFAULT_NPM_BASE_URLS: Record<string, string> = {
   "@ai-sdk/openai": "https://api.openai.com/v1",
   "@ai-sdk/anthropic": "https://api.anthropic.com/v1",
+  "@ai-sdk/azure": "https://${AZURE_RESOURCE_NAME}.openai.azure.com/openai/v1",
   "@ai-sdk/google": "https://generativelanguage.googleapis.com/v1beta",
   "@ai-sdk/google-vertex":
     "https://${GOOGLE_VERTEX_LOCATION}-aiplatform.googleapis.com/v1beta1/projects/${GOOGLE_VERTEX_PROJECT}/locations/${GOOGLE_VERTEX_LOCATION}/publishers/google",
@@ -233,12 +241,6 @@ const DEFAULT_NPM_BASE_URLS: Record<string, string> = {
   "@qvac/ai-sdk-provider": "http://localhost:8080/v1",
   "@jerome-benoit/sap-ai-provider-v2": "${AICORE_DEPLOYMENT_URL}",
   "gitlab-ai-provider": "https://gitlab.com/api/v4",
-};
-
-const DEFAULT_PROVIDER_BASE_URLS: Record<string, string> = {
-  azure: "https://${AZURE_RESOURCE_NAME}.openai.azure.com/openai/v1",
-  "azure-cognitive-services":
-    "https://${AZURE_COGNITIVE_SERVICES_RESOURCE_NAME}.openai.azure.com/openai/v1",
 };
 
 const OPENCODE_PACKAGES: Record<string, string> = {
@@ -325,7 +327,6 @@ function toApiV2(model: Model, provider: Provider): ApiV2 {
   const rawBaseUrl =
     model.provider?.api ??
     provider.api ??
-    DEFAULT_PROVIDER_BASE_URLS[provider.id] ??
     DEFAULT_NPM_BASE_URLS[npm] ??
     "";
   const base_url = rawBaseUrl.replace(/\/+$/, "");
