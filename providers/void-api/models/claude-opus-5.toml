@@ -1,15 +1,5 @@
-# Effort: reasoning_effort (chat), reasoning.effort (Responses).
-name = "Claude Opus 5"
-description = "Strongest Claude Opus model for coding, agents, and professional work"
-family = "claude-opus"
-release_date = "2026-07-24"
-last_updated = "2026-07-24"
-attachment = true
-reasoning = true
-temperature = false
-tool_call = true
-knowledge = "2026-05"
-open_weights = false
+# Effort: reasoning_effort (/v1/chat/completions).
+base_model = "anthropic/claude-opus-5"
 
 [[reasoning_options]]
 type = "effort"
@@ -20,11 +10,3 @@ input = 0.8
 output = 3
 cache_read = 0.069
 cache_write = 0.64
-
-[limit]
-context = 1_000_000
-output = 128_000
-
-[modalities]
-input = ["text", "image", "pdf"]
-output = ["text"]

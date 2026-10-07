@@ -1,16 +1,5 @@
-# Effort: reasoning_effort (chat), reasoning.effort (Responses).
-name = "GPT-6 Astra"
-description = "GPT-6 Astra is OpenAI's most capable model for complex reasoning, coding, computer use, research, and document creation."
-family = "gpt-astra"
-release_date = "2026-09-04"
-last_updated = "2026-09-04"
-attachment = true
-reasoning = true
-temperature = false
-tool_call = true
-structured_output = true
-knowledge = "2026-04-30"
-open_weights = false
+# Effort: reasoning_effort (/v1/chat/completions).
+base_model = "openai/gpt-6-astra"
 
 [[reasoning_options]]
 type = "effort"
@@ -21,12 +10,3 @@ input = 0.54
 output = 2.7
 cache_read = 0.048
 cache_write = 0.54
-
-[limit]
-context = 1_050_000
-input = 922_000
-output = 128_000
-
-[modalities]
-input = ["text", "image", "pdf"]
-output = ["text"]

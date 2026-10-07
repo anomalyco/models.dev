@@ -1,15 +1,5 @@
-# Effort: reasoning_effort (chat), reasoning.effort (Responses).
-name = "Claude Sonnet 5.5"
-description = "Fast Claude model for everyday coding, agents, and knowledge work"
-family = "claude-sonnet"
-release_date = "2026-09-28"
-last_updated = "2026-09-28"
-attachment = true
-reasoning = true
-temperature = false
-tool_call = true
-knowledge = "2026-06"
-open_weights = false
+# Effort: reasoning_effort (/v1/chat/completions).
+base_model = "anthropic/claude-sonnet-5-5"
 
 [[reasoning_options]]
 type = "effort"
@@ -20,11 +10,3 @@ input = 0.51
 output = 1.55
 cache_read = 0.046
 cache_write = 0.64
-
-[limit]
-context = 1_000_000
-output = 128_000
-
-[modalities]
-input = ["text", "image", "pdf"]
-output = ["text"]

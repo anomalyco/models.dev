@@ -1,16 +1,5 @@
-# Effort: reasoning_effort (chat), reasoning.effort (Responses).
-name = "GPT-6.1 Sol"
-description = "Near-Astra performance for complex coding, computer use, and professional work at a lower cost."
-family = "gpt-sol"
-release_date = "2026-09-29"
-last_updated = "2026-09-29"
-attachment = true
-reasoning = true
-temperature = false
-tool_call = true
-structured_output = true
-knowledge = "2026-04-30"
-open_weights = false
+# Effort: reasoning_effort (/v1/chat/completions).
+base_model = "openai/gpt-6.1-sol"
 
 [[reasoning_options]]
 type = "effort"
@@ -21,12 +10,3 @@ input = 0.108
 output = 0.54
 cache_read = 0.00753
 cache_write = 0.1047
-
-[limit]
-context = 1_050_000
-input = 922_000
-output = 128_000
-
-[modalities]
-input = ["text", "image", "pdf"]
-output = ["text"]

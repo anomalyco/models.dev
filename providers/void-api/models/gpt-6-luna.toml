@@ -1,16 +1,5 @@
-# Effort: reasoning_effort (chat), reasoning.effort (Responses).
-name = "GPT-6 Luna"
-description = "OpenAI's most efficient model for focused, high-volume tasks"
-family = "gpt-luna"
-release_date = "2026-09-22"
-last_updated = "2026-09-22"
-attachment = true
-reasoning = true
-temperature = false
-tool_call = true
-structured_output = true
-knowledge = "2026-05-18"
-open_weights = false
+# Effort: reasoning_effort (/v1/chat/completions).
+base_model = "openai/gpt-6-luna"
 
 [[reasoning_options]]
 type = "effort"
@@ -21,12 +10,3 @@ input = 0.044
 output = 0.22
 cache_read = 0.0044
 cache_write = 0.046
-
-[limit]
-context = 1_050_000
-input = 922_000
-output = 128_000
-
-[modalities]
-input = ["text", "image", "pdf"]
-output = ["text"]
