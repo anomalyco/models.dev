@@ -3,11 +3,12 @@ import { existsSync } from "node:fs";
 import { mergeDeep } from "remeda";
 import { z } from "zod";
 
+import { generateModels } from "./generate.js";
 import {
-  Provider,
   AuthoredModel,
   AuthoredModelShape,
   ModelMetadata,
+  Provider,
   type Model,
 } from "./schema.js";
 import {
@@ -25,215 +26,85 @@ import {
   type ReasoningSupportV2,
   type ToolsSupportV2,
 } from "./schema-v2.js";
-import { generateModels } from "./generate.js";
 
-const BaseModel = AuthoredModelShape.deepPartial()
-  .extend({
-    id: z.string(),
-    base_model: z.string().min(1, "Base model cannot be empty"),
-    base_model_omit: z.array(z.string()).optional(),
-  })
-  .strict();
+// ---------------------------------------------------------------------------
+// High-level catalog generation
+// ---------------------------------------------------------------------------
 
 export async function generateV2(
-  directory: string,
+  providersDir: string,
 ): Promise<Record<string, ProviderV2>> {
-  const modelsDirectory = path.join(path.dirname(directory), "models");
-  const models = await generateModels(modelsDirectory);
+  const modelsDir = path.join(path.dirname(providersDir), "models");
+  const baseModels = await generateModels(modelsDir);
 
-  return generateProvidersV2(directory, models);
-}
-
-async function generateProvidersV2(
-  directory: string,
-  models: Record<string, ModelMetadata>,
-): Promise<Record<string, ProviderV2>> {
-  const result: Record<string, ProviderV2> = {};
-
-  for await (const providerPath of new Bun.Glob("*/provider.toml").scan({
-    cwd: directory,
-    absolute: true,
-  })) {
-    const providerID = path.basename(path.dirname(providerPath));
-    const toml = await import(providerPath, {
-      with: {
-        type: "toml",
-      },
-    }).then((mod) => structuredClone(mod.default));
-    toml.id = providerID;
-    toml.models = {};
-
-    const v1Provider = Provider.safeParse(toml);
-    if (!v1Provider.success) {
-      v1Provider.error.cause = { providerPath, toml };
-      throw v1Provider.error;
-    }
-
-    const modelsPath = path.join(directory, providerID, "models");
-    if (!existsSync(modelsPath)) {
-      throw new Error(`Provider "${providerID}" has no models`, {
-        cause: { providerPath },
-      });
-    }
-
-    const v2Models: Record<string, ModelV2> = {};
-    for await (const modelPath of new Bun.Glob("**/*.toml").scan({
-      cwd: modelsPath,
-      absolute: true,
-      followSymlinks: true,
-    })) {
-      const modelID = path
-        .relative(modelsPath, modelPath)
-        .split(path.sep)
-        .join("/")
-        .slice(0, -5);
-      const modelToml = await import(modelPath, {
-        with: {
-          type: "toml",
-        },
-      }).then((mod) => structuredClone(mod.default));
-      modelToml.id = modelID;
-
-      if (modelToml.base_model !== undefined) {
-        const baseModel = BaseModel.safeParse(modelToml);
-        if (!baseModel.success) {
-          baseModel.error.cause = { modelPath, toml: modelToml };
-          throw baseModel.error;
-        }
-
-        const merged = mergeBaseModel(baseModel.data, models, modelPath);
-        const authored = AuthoredModel.safeParse(merged);
-        if (!authored.success) {
-          authored.error.cause = { modelPath, toml: merged };
-          throw authored.error;
-        }
-
-        v2Models[modelID] = toModelV2(
-          {
-            ...authored.data,
-            canonical_model_id: baseModel.data.base_model,
-          },
-          v1Provider.data,
-        );
-        continue;
-      }
-
-      const authored = AuthoredModel.safeParse(modelToml);
-      if (!authored.success) {
-        authored.error.cause = { modelPath, toml: modelToml };
-        throw authored.error;
-      }
-
-      v2Models[modelID] = toModelV2(authored.data, v1Provider.data);
-    }
-
-    if (Object.keys(v2Models).length === 0) {
-      throw new Error(`Provider "${providerID}" has no models`, {
-        cause: { providerPath },
-      });
-    }
-
-    const providerV2 = ProviderV2.safeParse({
-      id: v1Provider.data.id,
-      name: v1Provider.data.name,
-      doc: v1Provider.data.doc,
-      env: v1Provider.data.env,
-      models: v2Models,
-    });
-    if (!providerV2.success) {
-      providerV2.error.cause = { providerPath, toml };
-      throw providerV2.error;
-    }
-
-    result[providerID] = providerV2.data;
+  const providers: Record<string, ProviderV2> = {};
+  for await (const providerPath of scanTomls(providersDir, "*/provider.toml")) {
+    const provider = await loadProviderV2(providerPath, baseModels);
+    providers[provider.id] = provider;
   }
 
-  return result;
+  return providers;
 }
 
-function mergeBaseModel(
-  model: z.infer<typeof BaseModel>,
-  models: Record<string, ModelMetadata>,
+async function loadProviderV2(
+  providerPath: string,
+  baseModels: Record<string, ModelMetadata>,
+): Promise<ProviderV2> {
+  const providerDir = path.dirname(providerPath);
+  const providerID = path.basename(providerDir);
+  const rawProvider = { ...(await readToml(providerPath)), id: providerID, models: {} };
+  const v1Provider = parseWithCause(Provider, rawProvider, {
+    providerPath,
+    toml: rawProvider,
+  });
+
+  const modelsDir = path.join(providerDir, "models");
+  if (!existsSync(modelsDir)) {
+    throw new Error(`Provider "${providerID}" has no models`, {
+      cause: { providerPath },
+    });
+  }
+
+  const models: Record<string, ModelV2> = {};
+  for await (const modelPath of scanTomls(modelsDir, "**/*.toml")) {
+    const model = await loadModelV2(modelPath, modelsDir, v1Provider, baseModels);
+    models[model.id] = model;
+  }
+
+  if (Object.keys(models).length === 0) {
+    throw new Error(`Provider "${providerID}" has no models`, {
+      cause: { providerPath },
+    });
+  }
+
+  return parseWithCause(
+    ProviderV2,
+    {
+      id: v1Provider.id,
+      name: v1Provider.name,
+      doc: v1Provider.doc,
+      env: v1Provider.env,
+      models,
+    },
+    { providerPath, toml: rawProvider },
+  );
+}
+
+async function loadModelV2(
   modelPath: string,
-) {
-  const base = models[model.base_model];
-  if (base === undefined) {
-    throw new Error(`Unable to resolve base_model: ${model.base_model}`, {
-      cause: { modelPath, toml: model },
-    });
-  }
-
-  const { base_model: _baseModel, base_model_omit: omit, ...overrides } = model;
-  const merged: Record<string, unknown> = structuredClone(
-    mergeDeep(inheritableModelMetadata(base), overrides),
-  );
-
-  applyOmit(merged, omit ?? []);
-  return merged;
+  modelsDir: string,
+  provider: Provider,
+  baseModels: Record<string, ModelMetadata>,
+): Promise<ModelV2> {
+  const modelID = modelIdFromPath(modelsDir, modelPath);
+  const rawModel = { ...(await readToml(modelPath)), id: modelID };
+  const resolved = resolveV1Model(rawModel, baseModels, modelPath);
+  return toModelV2(resolved, provider);
 }
 
-function inheritableModelMetadata(model: ModelMetadata) {
-  const {
-    id: _id,
-    benchmarks: _benchmarks,
-    license: _license,
-    links: _links,
-    weights: _weights,
-    ...metadata
-  } = model;
-
-  return Object.fromEntries(
-    Object.entries(metadata).filter(([, value]) => value !== undefined),
-  );
-}
-
-function applyOmit(target: Record<string, unknown>, paths: string[]) {
-  omitLoop: for (const omit of paths) {
-    const parts = omit.split(".");
-    const parents: Array<{
-      value: Record<string, unknown>;
-      key: string;
-    }> = [];
-    let current = target;
-
-    for (const part of parts.slice(0, -1)) {
-      const next = current[part];
-      if (
-        next === undefined ||
-        next === null ||
-        typeof next !== "object" ||
-        Array.isArray(next)
-      ) {
-        continue omitLoop;
-      }
-      parents.push({ value: current, key: part });
-      current = next as Record<string, unknown>;
-    }
-
-    const lastPart = parts.at(-1);
-    if (lastPart === undefined || !(lastPart in current)) {
-      continue;
-    }
-
-    delete current[lastPart];
-
-    for (let index = parents.length - 1; index >= 0; index--) {
-      const parent = parents[index];
-      if (parent === undefined) continue;
-      const value = parent.value[parent.key];
-      if (
-        value === null ||
-        value === undefined ||
-        typeof value !== "object" ||
-        Array.isArray(value) ||
-        Object.keys(value).length > 0
-      ) {
-        break;
-      }
-      delete parent.value[parent.key];
-    }
-  }
-}
+// ---------------------------------------------------------------------------
+// V1 -> V2 model transformation
+// ---------------------------------------------------------------------------
 
 export function toModelV2(model: Model, provider: Provider): ModelV2 {
   const cost = toCostV2(model.cost);
@@ -263,15 +134,12 @@ export function toModelV2(model: Model, provider: Provider): ModelV2 {
 }
 
 function toModalitiesV2(modalities: Model["modalities"]): ModalitiesV2 {
+  const normalize = (modality: string) =>
+    modality === "pdf" ? "application/pdf" : modality;
+
   return {
-    input: modalities.input.map(
-      (modality): InputModalityV2 =>
-        modality === "pdf" ? "application/pdf" : modality,
-    ),
-    output: modalities.output.map(
-      (modality): OutputModalityV2 =>
-        modality === "pdf" ? "application/pdf" : modality,
-    ),
+    input: modalities.input.map(normalize) as InputModalityV2[],
+    output: modalities.output.map(normalize) as OutputModalityV2[],
   };
 }
 
@@ -299,26 +167,24 @@ function toReasoningSupportV2(model: Model): ReasoningSupportV2 {
 
   const options = model.reasoning_options ?? [];
   const hasToggle = options.some((option) => option.type === "toggle");
-  const effortOption = options.find((option) => option.type === "effort");
-  const budgetOption = options.find(
-    (option) => option.type === "budget_tokens",
-  );
+  const effort = options.find((option) => option.type === "effort");
+  const budget = options.find((option) => option.type === "budget_tokens");
 
   return {
     supported: true,
     ...(hasToggle ? { toggle: true } : {}),
-    ...(effortOption !== undefined
+    ...(effort !== undefined
       ? {
-          effort: effortOption.values.map((value) =>
+          effort: effort.values.map((value) =>
             value === null ? "default" : value,
           ),
         }
       : {}),
-    ...(budgetOption !== undefined
+    ...(budget !== undefined
       ? {
           budget: {
-            ...(budgetOption.min !== undefined ? { min: budgetOption.min } : {}),
-            ...(budgetOption.max !== undefined ? { max: budgetOption.max } : {}),
+            ...(budget.min !== undefined ? { min: budget.min } : {}),
+            ...(budget.max !== undefined ? { max: budget.max } : {}),
           },
         }
       : {}),
@@ -342,30 +208,172 @@ function toCostV2(cost: Model["cost"]): CostV2 | undefined {
 function toExperimentalV2(
   experimental: Model["experimental"],
 ): ExperimentalV2 | undefined {
-  if (experimental === undefined) return undefined;
-  const modes = experimental.modes
-    ? Object.fromEntries(
-        Object.entries(experimental.modes).map(([modeName, mode]) => {
-          const entry: ExperimentalModeV2 = {
-            ...(mode.cost !== undefined ? { cost: toCostV2(mode.cost) } : {}),
-            ...(mode.provider?.body !== undefined
-              ? { body: mode.provider.body }
-              : {}),
-            ...(mode.provider?.headers !== undefined
-              ? { headers: mode.provider.headers }
-              : {}),
-          };
-          return [modeName, entry];
-        }),
-      )
-    : undefined;
+  if (!experimental?.modes) return undefined;
 
-  return {
-    ...(modes !== undefined ? { modes } : {}),
-  };
+  const modes = Object.fromEntries(
+    Object.entries(experimental.modes).map(([name, mode]) => {
+      const entry: ExperimentalModeV2 = {
+        ...(mode.cost !== undefined ? { cost: toCostV2(mode.cost) } : {}),
+        ...(mode.provider?.body !== undefined
+          ? { body: mode.provider.body }
+          : {}),
+        ...(mode.provider?.headers !== undefined
+          ? { headers: mode.provider.headers }
+          : {}),
+      };
+      return [name, entry];
+    }),
+  );
+
+  return { modes };
 }
 
 function toApiV2(_model: Model, _provider: Provider): ApiV2 {
   // Populated by API protocol mapping
   return {} as ApiV2;
+}
+
+// ---------------------------------------------------------------------------
+// Base model inheritance & file helpers
+// ---------------------------------------------------------------------------
+
+const BaseModel = AuthoredModelShape.deepPartial()
+  .extend({
+    id: z.string(),
+    base_model: z.string().min(1, "Base model cannot be empty"),
+    base_model_omit: z.array(z.string()).optional(),
+  })
+  .strict();
+
+function resolveV1Model(
+  rawModel: Record<string, unknown>,
+  baseModels: Record<string, ModelMetadata>,
+  modelPath: string,
+): Model {
+  if (rawModel.base_model === undefined) {
+    return parseWithCause(AuthoredModel, rawModel, {
+      modelPath,
+      toml: rawModel,
+    });
+  }
+
+  const baseModel = parseWithCause(BaseModel, rawModel, {
+    modelPath,
+    toml: rawModel,
+  });
+  const merged = mergeBaseModel(baseModel, baseModels, modelPath);
+  const authored = parseWithCause(AuthoredModel, merged, {
+    modelPath,
+    toml: merged,
+  });
+
+  return {
+    ...authored,
+    canonical_model_id: baseModel.base_model,
+  };
+}
+
+function mergeBaseModel(
+  model: z.infer<typeof BaseModel>,
+  baseModels: Record<string, ModelMetadata>,
+  modelPath: string,
+): Record<string, unknown> {
+  const base = baseModels[model.base_model];
+  if (base === undefined) {
+    throw new Error(`Unable to resolve base_model: ${model.base_model}`, {
+      cause: { modelPath, toml: model },
+    });
+  }
+
+  const { base_model: _baseModel, base_model_omit: omit, ...overrides } = model;
+  const merged: Record<string, unknown> = structuredClone(
+    mergeDeep(inheritableMetadata(base), overrides),
+  );
+
+  omitPaths(merged, omit ?? []);
+  return merged;
+}
+
+function inheritableMetadata(model: ModelMetadata): Record<string, unknown> {
+  const {
+    id: _id,
+    benchmarks: _benchmarks,
+    license: _license,
+    links: _links,
+    weights: _weights,
+    ...metadata
+  } = model;
+
+  return Object.fromEntries(
+    Object.entries(metadata).filter(([, value]) => value !== undefined),
+  );
+}
+
+function omitPaths(target: Record<string, unknown>, paths: string[]) {
+  for (const rawPath of paths) {
+    const parts = rawPath.split(".");
+    const trail: Array<{ parent: Record<string, unknown>; key: string }> = [];
+    let current: Record<string, unknown> | undefined = target;
+
+    for (const part of parts.slice(0, -1)) {
+      const next = current[part];
+      if (!isPlainObject(next)) {
+        current = undefined;
+        break;
+      }
+      trail.push({ parent: current, key: part });
+      current = next;
+    }
+
+    const leaf = parts.at(-1);
+    if (!current || leaf === undefined || !(leaf in current)) continue;
+    delete current[leaf];
+
+    for (const { parent, key } of trail.reverse()) {
+      const child = parent[key];
+      if (isPlainObject(child) && Object.keys(child).length === 0) {
+        delete parent[key];
+      } else {
+        break;
+      }
+    }
+  }
+}
+
+function isPlainObject(value: unknown): value is Record<string, unknown> {
+  return value !== null && typeof value === "object" && !Array.isArray(value);
+}
+
+function scanTomls(cwd: string, pattern: string) {
+  return new Bun.Glob(pattern).scan({
+    cwd,
+    absolute: true,
+    followSymlinks: true,
+  });
+}
+
+async function readToml(filePath: string): Promise<Record<string, unknown>> {
+  const mod = await import(filePath, { with: { type: "toml" } });
+  return structuredClone(mod.default);
+}
+
+function modelIdFromPath(modelsDir: string, modelPath: string): string {
+  return path
+    .relative(modelsDir, modelPath)
+    .split(path.sep)
+    .join("/")
+    .slice(0, -5);
+}
+
+function parseWithCause<T>(
+  schema: z.ZodType<T>,
+  data: unknown,
+  cause: Record<string, unknown>,
+): T {
+  const parsed = schema.safeParse(data);
+  if (!parsed.success) {
+    parsed.error.cause = cause;
+    throw parsed.error;
+  }
+  return parsed.data;
 }
