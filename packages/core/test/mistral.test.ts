@@ -234,6 +234,15 @@ test("maps Mistral deprecation to catalog status", () => {
     .toMatchObject({ status: "beta" });
 });
 
+test("keeps docs-deprecated models deprecated when /v1/models omits deprecation", () => {
+  const leanstral = model({ id: "labs-leanstral-1-5-1", name: "labs-leanstral-1-5-1", aliases: [] });
+  expect(buildMistralModel(leanstral, { ...existingSmall, status: "deprecated" }))
+    .toMatchObject({ status: "deprecated" });
+  const glm = model({ id: "zai-glm-5-2", name: "glm-5-2", aliases: ["zai-glm-5-2"] });
+  expect(buildMistralModel(glm, { ...existingSmall, status: "beta" }))
+    .toMatchObject({ status: "deprecated" });
+});
+
 test("writes only provider overrides for base_model entries", () => {
   const synced = buildMistralModel(
     model({
