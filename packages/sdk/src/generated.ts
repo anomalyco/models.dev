@@ -95,6 +95,7 @@ export type ModelFamily =
   | "kimi-thinking"
   | "laguna"
   | "laguna-s"
+  | "leanstral"
   | "ling"
   | "ling-flash-free"
   | "liquid"
