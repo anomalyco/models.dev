@@ -1,14 +1,17 @@
 # CrowLLM is a single-endpoint gateway: every model below is served on
 # POST /v1/chat/completions with one key.
-# cost is the pay-as-you-go rate, converted from the gateway's live billing ratios at
+# The headline deal is the pass: $4.99 credits $25 of API usage, $9.99 credits $50,
+# $19.99 credits $110 - five times the same money (5.5x on the top pass), spent
+# through the same key as a plain top-up. The cost below is the rate WITHOUT a
+# pass, so a pass holder's effective rate is a fifth of what is listed here
+# (DeepSeek V4 Flash works out to $0.028/$0.11 per MTok on a pass).
+# That no-pass rate is already at or under each lab's own published price.
+# cost is converted from the gateway's live billing ratios at
 # USD/MTok = 2 x model_ratio, output = input x completion_ratio, cache_read = 2 x cache_ratio.
-# Those rates already sit at or under each lab's published price, and subscription passes
-# stretch the same money about fivefold (a $9.99 pass credits $50 of API usage), so the
-# effective rate for a pass holder is roughly a fifth of the cost listed here.
 # Ids ending in `:free` are the free shelf: no card and no trial timer. Where a `:free` id
 # still carries a rate, that model is billed from credit earned on the shelf rather than a top-up.
 # Catalog: https://crowllm.com/v1/models (public, no key) | Rates: https://crowllm.com/api/pricing
-# Docs: https://crowllm.com/docs | Live price table: https://crowllm.com/pricing
+# Passes: https://crowllm.com/pricing | Docs: https://crowllm.com/docs
 name = "CrowLLM"
 npm = "@ai-sdk/openai-compatible"
 env = ["CROWLLM_API_KEY"]
