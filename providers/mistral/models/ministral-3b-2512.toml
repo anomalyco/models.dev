@@ -5,5 +5,8 @@ base_model = "mistral/ministral-3-3b-instruct-2512"
 
 [cost]
 input = 0.1
-cache_read = 0.01
 output = 0.1
+cache_read = 0.01
+
+[limit]
+context = 131_072

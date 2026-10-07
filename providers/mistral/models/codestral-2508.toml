@@ -3,6 +3,9 @@
 base_model = "mistral/codestral-2508"
 
 [cost]
-input = 0.30
-output = 0.90
+input = 0.3
+output = 0.9
 cache_read = 0.03
+
+[limit]
+context = 256_000

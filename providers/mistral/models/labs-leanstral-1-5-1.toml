@@ -15,18 +15,17 @@ temperature = true
 tool_call = true
 structured_output = true
 open_weights = true
-status = "deprecated"
 
 [[reasoning_options]]
 type = "effort"
 values = ["none", "high"]
 
 [cost]
-input = 0.00
-output = 0.00
+input = 0
+output = 0
 
 [limit]
-context = 256_000
+context = 262_144
 output = 128_000
 
 [modalities]
