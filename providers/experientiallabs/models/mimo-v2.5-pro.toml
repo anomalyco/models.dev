@@ -1,9 +1,8 @@
 # Reasoning controls copied from the providers/xiaomi/models/mimo-v2.5-pro.toml lab baseline.
+# Toggle omitted: the source documents a thinking toggle without a request-field wire path, and the Experiential Labs OpenAI-compatible chat surface has no native on/off field - enable_thinking is translated to reasoning_effort (live-tested 2026-10-07: x-experiential-ignored-parameters: ["enable_thinking->translated(reasoning_effort)"]; see platform.experientiallabs.ai/llms.txt).
 base_model = "xiaomi/mimo-v2.5-pro"
 structured_output = true
-
-[[reasoning_options]]
-type = "toggle"
+reasoning_options = []
 
 [cost]
 input = 0.435

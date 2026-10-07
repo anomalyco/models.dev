@@ -306,13 +306,57 @@ function labControls(baseModel: string, slug: string): LabControls | undefined {
   return labControlsCache.get(cacheKey);
 }
 
-// OpenRouter nests relay peer models under its own provider ids, which
-// differ from the canonical metadata dir for a few labs.
-const OPENROUTER_DIR_ALIASES: Record<string, string[]> = {
+// Relay peers are consulted only when the lab layers state no options at
+// all. OpenRouter nests peer models under its own provider ids, Vercel
+// nests them under the lab's metadata dir, and Cortecs keeps a flat
+// models/ dir; probe all three layouts in a fixed, deterministic order.
+const PEER_DIRS = ["openrouter", "vercel", "cortecs"] as const;
+
+// Peer dirs can nest relay models under lab ids that differ from the
+// canonical metadata dir for a few labs.
+const PEER_DIR_ALIASES: Record<string, string[]> = {
   zhipuai: ["z-ai"],
   alibaba: ["qwen"],
   mistral: ["mistralai"],
 };
+
+// A few labs publish their first-party provider files under a dir name that
+// differs from the canonical metadata dir.
+const FIRST_PARTY_DIR_ALIASES: Record<string, string[]> = {
+  "arcee-ai": ["arcee"],
+};
+
+// Wire comments must carry their full documented sentence: lab files wrap
+// long wire docs across lines ("... see / # the release blog)"), and a
+// keyword-only filter would copy a dangling half-sentence. After a matched
+// wire line, absorb following comment lines while the previous line has no
+// sentence terminator and the next line reads as a continuation.
+function extractWireComments(text: string): string[] {
+  const comments = text
+    .split("\n")
+    .map((line) => line.trim())
+    .filter((line) => line.startsWith("#"))
+    .map((line) => line.slice(1).trim());
+  const result: string[] = [];
+  let pending: string | undefined;
+  for (const comment of comments) {
+    if (/^(toggle|effort|budget)\b/i.test(comment)) {
+      if (pending !== undefined) result.push(pending);
+      pending = `# ${comment}`;
+      continue;
+    }
+    if (pending === undefined) continue;
+    const openEnded = !/[.:;!?)]$/.test(pending.trimEnd());
+    if (openEnded && /^[a-z0-9(]/.test(comment)) {
+      pending = `${pending} ${comment}`;
+    } else {
+      result.push(pending);
+      pending = undefined;
+    }
+  }
+  if (pending !== undefined) result.push(pending);
+  return result;
+}
 
 function readCandidate(filePath: string): { text: string; parsed: unknown } | undefined {
   let text: string;
@@ -345,17 +389,17 @@ function readLabControls(baseModel: string, slug: string): LabControls | undefin
   const [lab, modelID] = baseModel.split("/");
   if (lab === undefined || modelID === undefined) return undefined;
   // Priority: the lab's first-party provider definition, then the canonical
-  // metadata file, then the OpenRouter relay peer. Lab layers are
-  // authoritative — an explicit `reasoning_options = []` authored by the lab
-  // means "no caller control" and blocks the peer fallback; the peer is only
-  // consulted when the lab layers do not state options at all.
-  const openrouterDirs = [...(OPENROUTER_DIR_ALIASES[lab] ?? []), lab].filter(
+  // metadata file, then relay peers. Lab layers are authoritative — an
+  // explicit `reasoning_options = []` authored by the lab means "no caller
+  // control" and blocks the peer fallback; peers are only consulted when
+  // the lab layers do not state options at all.
+  const labDirs = [...(FIRST_PARTY_DIR_ALIASES[lab] ?? []), lab].filter(
     (dir, index, all) => all.indexOf(dir) === index,
   );
-  // OpenRouter names peer files after the upstream provider id, which can
-  // keep deployment suffixes the canonical id drops (nova-2-lite-v1.toml) or
-  // use dashes where the canonical id uses dots (seed-2-1-turbo.toml). Probe
-  // the canonical id plus the catalog slug and its dot/dash spellings.
+  // Peers name files after the upstream provider id, which can keep
+  // deployment suffixes the canonical id drops (nova-2-lite-v1.toml) or use
+  // dashes where the canonical id uses dots (seed-2-1-turbo.toml). Probe the
+  // canonical id plus the catalog slug and its dot/dash spellings.
   const peerFiles = [
     ...new Set([
       modelID,
@@ -365,24 +409,34 @@ function readLabControls(baseModel: string, slug: string): LabControls | undefin
       slug.replace(/\./g, "-"),
     ]),
   ];
+  const peerDirs = [...(PEER_DIR_ALIASES[lab] ?? []), lab].filter(
+    (dir, index, all) => all.indexOf(dir) === index,
+  );
   const candidates: Array<{ filePath: string; sourcePath: string; kind: "lab" | "peer" }> = [
-    {
-      filePath: path.join(PROVIDERS_DIR, lab, "models", `${modelID}.toml`),
-      sourcePath: `providers/${lab}/models/${modelID}.toml`,
-      kind: "lab",
-    },
+    ...labDirs.map((dir) => ({
+      filePath: path.join(PROVIDERS_DIR, dir, "models", `${modelID}.toml`),
+      sourcePath: `providers/${dir}/models/${modelID}.toml`,
+      kind: "lab" as const,
+    })),
     {
       filePath: path.join(REPO_ROOT, "models", `${baseModel}.toml`),
       sourcePath: `models/${baseModel}.toml`,
-      kind: "lab",
+      kind: "lab" as const,
     },
-    ...openrouterDirs.flatMap((dir) =>
-      peerFiles.map((file) => ({
-        filePath: path.join(PROVIDERS_DIR, "openrouter", "models", dir, `${file}.toml`),
-        sourcePath: `providers/openrouter/models/${dir}/${file}.toml`,
+    ...PEER_DIRS.flatMap((peerDir) => [
+      ...peerDirs.flatMap((dir) =>
+        peerFiles.map((file) => ({
+          filePath: path.join(PROVIDERS_DIR, peerDir, "models", dir, `${file}.toml`),
+          sourcePath: `providers/${peerDir}/models/${dir}/${file}.toml`,
+          kind: "peer" as const,
+        })),
+      ),
+      ...peerFiles.map((file) => ({
+        filePath: path.join(PROVIDERS_DIR, peerDir, "models", `${file}.toml`),
+        sourcePath: `providers/${peerDir}/models/${file}.toml`,
         kind: "peer" as const,
       })),
-    ),
+    ]),
   ];
   let reasoningSource: LabControls | undefined;
   let optionsSource: LabControls | undefined;
@@ -397,10 +451,7 @@ function readLabControls(baseModel: string, slug: string): LabControls | undefin
     const controls: LabControls = {
       reasoning: data.data.reasoning,
       options: data.data.reasoning_options,
-      wireComments: text
-        .split("\n")
-        .map((line) => line.trim())
-        .filter((line) => /^#\s*(toggle|effort|budget)\b/i.test(line)),
+      wireComments: extractWireComments(text),
       sourcePath: candidate.sourcePath,
       kind: candidate.kind,
     };
@@ -590,15 +641,34 @@ export function buildExperientiallabsModel(
   let header: string | undefined;
   if (reasoning && lab?.options !== undefined && lab.options.length > 0) {
     const hostEfforts = hostEffortValues(rungs);
-    reasoningOptions = lab.options.map((option) => {
-      if (option.type !== "effort" || hostEfforts === undefined) return option;
-      const trimmed = option.values.filter((value) => hostEfforts.includes(value));
-      return trimmed.length > 0 ? { ...option, values: trimmed } : option;
-    });
+    // Fail closed on unwired toggles: the repo requires every copied toggle
+    // to carry its request-field wire path, and the Experiential Labs
+    // OpenAI-compatible chat surface exposes no boolean on/off field
+    // (reasoning is disabled via reasoning_effort = "none" where the route
+    // supports it, per platform.experientiallabs.ai/llms.txt). Drop toggle
+    // entries whose source file documents no "# Toggle:" wire comment.
+    const toggleWired = lab.wireComments.some((line) => /^#\s*toggle\b/i.test(line));
+    const kept = lab.options.filter((option) => option.type !== "toggle" || toggleWired);
+    reasoningOptions = kept.length > 0
+      ? kept.map((option) => {
+          if (option.type !== "effort" || hostEfforts === undefined) return option;
+          const trimmed = option.values.filter((value) => hostEfforts.includes(value));
+          return trimmed.length > 0 ? { ...option, values: trimmed } : option;
+        })
+      : undefined;
     header = [
       `# Reasoning controls copied from the ${lab.sourcePath} ${lab.kind === "peer" ? "relay peer" : "lab"} baseline.`,
       ...lab.wireComments,
+      ...(kept.length < lab.options.length
+        ? [
+            "# Toggle omitted: the source documents a thinking toggle without a request-field wire path, and the Experiential Labs OpenAI-compatible chat surface has no native on/off field - enable_thinking is translated to reasoning_effort (live-tested 2026-10-07: x-experiential-ignored-parameters: [\"enable_thinking->translated(reasoning_effort)\"]; see platform.experientiallabs.ai/llms.txt).",
+          ]
+        : []),
     ].join("\n") + "\n";
+  } else if (reasoning && lab?.options !== undefined && lab.options.length === 0) {
+    // The lab itself authors `reasoning_options = []` — record the provenance
+    // of the empty set instead of leaving the stamped [] unexplained.
+    header = `# Reasoning controls copied from the ${lab.sourcePath} ${lab.kind === "peer" ? "relay peer" : "lab"} baseline: it authors \`reasoning_options = []\` — no caller control is documented.\n`;
   }
 
   const cost = buildCost(rung, existing);

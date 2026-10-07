@@ -1,6 +1,10 @@
+# Reasoning controls copied from the providers/vercel/models/openai/gpt-oss-safeguard-120b.toml relay peer baseline.
 base_model = "openai/gpt-oss-safeguard-120b"
 name = "Gpt Oss Safeguard 120b"
-reasoning_options = []
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high"]
 
 [cost]
 input = 0.15

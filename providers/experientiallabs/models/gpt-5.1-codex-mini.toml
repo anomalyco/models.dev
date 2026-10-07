@@ -1,10 +1,8 @@
 # Reasoning controls copied from the providers/openrouter/models/openai/gpt-5.1-codex-mini.toml relay peer baseline.
+# Toggle omitted: the source documents a thinking toggle without a request-field wire path, and the Experiential Labs OpenAI-compatible chat surface has no native on/off field - enable_thinking is translated to reasoning_effort (live-tested 2026-10-07: x-experiential-ignored-parameters: ["enable_thinking->translated(reasoning_effort)"]; see platform.experientiallabs.ai/llms.txt).
 base_model = "openai/gpt-5.1-codex-mini"
 name = "GPT-5.1 Codex Mini"
 attachment = false
-
-[[reasoning_options]]
-type = "toggle"
 
 [[reasoning_options]]
 type = "effort"
