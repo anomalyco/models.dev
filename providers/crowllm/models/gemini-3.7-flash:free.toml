@@ -1,6 +1,7 @@
 # CrowLLM relays this model on POST /v1/chat/completions (OpenAI-compatible).
 # cost is the gateway's live billing rate: USD/MTok = 2 x model_ratio, output = input x completion_ratio.
 # Source: https://crowllm.com/api/pricing (accessed 2026-10-07).
+# Effort: extra_body.google.thinking_config.thinking_level = low|medium|high (forwarded to generationConfig.thinkingConfig)
 # reasoning_options mirror providers/google for the same model on this surface.
 base_model = "google/gemini-3.7-flash"
 name = "Gemini 3.7 Flash (free)"

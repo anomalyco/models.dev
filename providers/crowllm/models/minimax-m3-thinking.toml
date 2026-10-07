@@ -1,10 +1,12 @@
 # CrowLLM relays this model on POST /v1/chat/completions (OpenAI-compatible).
 # cost is the gateway's live billing rate: USD/MTok = 2 x model_ratio, output = input x completion_ratio.
 # Source: https://crowllm.com/api/pricing (accessed 2026-10-07).
+# Always-on alias: reasoning is enabled for this id and cannot be turned off here;
+# `minimax-m3` is the id that takes the thinking control.
 # reasoning_options mirror providers/minimax for the same model on this surface.
 base_model = "minimax/MiniMax-M3"
 name = "MiniMax-M3 Thinking"
-reasoning_options = [{ type = "toggle" } ]
+reasoning_options = [ ]
 
 [cost]
 input = 0.25

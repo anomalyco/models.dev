@@ -1,6 +1,7 @@
 # CrowLLM relays this model on POST /v1/chat/completions (OpenAI-compatible).
 # cost is the gateway's live billing rate: USD/MTok = 2 x model_ratio, output = input x completion_ratio.
 # Source: https://crowllm.com/api/pricing (accessed 2026-10-07).
+# Effort: reasoning_effort = none|low|medium|high|xhigh|max (top-level, forwarded verbatim)
 # reasoning_options mirror providers/openai for the same model on this surface.
 base_model = "openai/gpt-5.6-sol"
 name = "GPT-5.6 Sol (free)"

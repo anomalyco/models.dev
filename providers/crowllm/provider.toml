@@ -12,6 +12,10 @@
 # still carries a rate, that model is billed from credit earned on the shelf rather than a top-up.
 # Catalog: https://crowllm.com/v1/models (public, no key) | Rates: https://crowllm.com/api/pricing
 # Passes: https://crowllm.com/pricing | Docs: https://crowllm.com/docs
+# Each model's # Toggle/# Effort/# Budget comment names the field as the gateway handles it:
+# the request body is parsed in relaykit/dto/openai_request.go and forwarded per upstream by
+# relaykit/relayconvert (OpenAI -> Gemini/Claude/DeepSeek) and relay/channel/<lab>/adaptor.go.
+# Source: https://github.com/QuantumNous/new-api (CrowLLM runs this gateway).
 name = "CrowLLM"
 npm = "@ai-sdk/openai-compatible"
 env = ["CROWLLM_API_KEY"]
