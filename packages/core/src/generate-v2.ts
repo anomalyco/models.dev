@@ -260,23 +260,20 @@ function resolveV1Model(
 }
 
 function omitPaths(target: Record<string, unknown>, paths: string[]) {
-  for (const rawPath of paths) {
+  omitLoop: for (const rawPath of paths) {
     const parts = rawPath.split(".");
     const trail: Array<{ parent: Record<string, unknown>; key: string }> = [];
-    let current: Record<string, unknown> | undefined = target;
+    let current: Record<string, unknown> = target;
 
     for (const part of parts.slice(0, -1)) {
       const next = current[part];
-      if (!isPlainObject(next)) {
-        current = undefined;
-        break;
-      }
+      if (!isPlainObject(next)) continue omitLoop;
       trail.push({ parent: current, key: part });
       current = next;
     }
 
     const leaf = parts.at(-1);
-    if (!current || leaf === undefined || !(leaf in current)) continue;
+    if (leaf === undefined || !(leaf in current)) continue;
     delete current[leaf];
 
     for (const { parent, key } of trail.reverse()) {
@@ -307,11 +304,11 @@ async function readToml(filePath: string): Promise<Record<string, unknown>> {
   return structuredClone(mod.default);
 }
 
-function parseWithCause<T>(
-  schema: z.ZodType<T>,
+function parseWithCause<S extends z.ZodTypeAny>(
+  schema: S,
   data: unknown,
   cause: Record<string, unknown>,
-): T {
+): z.output<S> {
   const parsed = schema.safeParse(data);
   if (!parsed.success) {
     parsed.error.cause = cause;
