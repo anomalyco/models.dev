@@ -1,0 +1,16 @@
+# CrowLLM is a single-endpoint gateway: every model below is served on
+# POST /v1/chat/completions with one key.
+# cost is the pay-as-you-go rate, converted from the gateway's live billing ratios at
+# USD/MTok = 2 x model_ratio, output = input x completion_ratio, cache_read = 2 x cache_ratio.
+# Those rates already sit at or under each lab's published price, and subscription passes
+# stretch the same money about fivefold (a $9.99 pass credits $50 of API usage), so the
+# effective rate for a pass holder is roughly a fifth of the cost listed here.
+# Ids ending in `:free` are the free shelf: no card and no trial timer. Where a `:free` id
+# still carries a rate, that model is billed from credit earned on the shelf rather than a top-up.
+# Catalog: https://crowllm.com/v1/models (public, no key) | Rates: https://crowllm.com/api/pricing
+# Docs: https://crowllm.com/docs | Live price table: https://crowllm.com/pricing
+name = "CrowLLM"
+npm = "@ai-sdk/openai-compatible"
+env = ["CROWLLM_API_KEY"]
+api = "https://crowllm.com/v1"
+doc = "https://crowllm.com/docs"

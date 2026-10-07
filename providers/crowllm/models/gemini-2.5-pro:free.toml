@@ -1,0 +1,11 @@
+# CrowLLM relays this model on POST /v1/chat/completions (OpenAI-compatible).
+# cost is the gateway's live billing rate: USD/MTok = 2 x model_ratio, output = input x completion_ratio.
+# Source: https://crowllm.com/api/pricing (accessed 2026-10-07).
+# reasoning_options mirror providers/google for the same model on this surface.
+base_model = "google/gemini-2.5-pro"
+name = "Gemini 2.5 Pro (free)"
+reasoning_options = [{ type = "budget_tokens", min = 128, max = 32768 } ]
+
+[cost]
+input = 0
+output = 0

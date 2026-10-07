@@ -1,0 +1,11 @@
+# CrowLLM relays this model on POST /v1/chat/completions (OpenAI-compatible).
+# cost is the gateway's live billing rate: USD/MTok = 2 x model_ratio, output = input x completion_ratio.
+# Source: https://crowllm.com/api/pricing (accessed 2026-10-07).
+# reasoning_options mirror providers/xiaomi for the same model on this surface.
+base_model = "xiaomi/mimo-v2.6-flash"
+name = "MiMo-V2.6-Flash (free)"
+reasoning_options = [{ type = "toggle" } ]
+
+[cost]
+input = 0.18
+output = 0.28
