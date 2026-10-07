@@ -1,7 +1,7 @@
 /** @jsx jsx */
 /** @jsxImportSource hono/jsx */
 
-import { generateCatalog, toProvidersV2 } from "@models.dev/core";
+import { generateCatalog } from "@models.dev/core";
 import type { Model, ModelMetadata, Provider } from "@models.dev/core";
 import { Fragment } from "hono/jsx";
 import { renderToString } from "hono/jsx/dom/server";
@@ -26,7 +26,6 @@ const Catalog = await generateCatalog(root);
 
 export const Models = Catalog.models;
 export const Providers = Catalog.providers;
-export const ProvidersV2 = toProvidersV2(Catalog.providers);
 
 const LabMetadata = loadLabMetadata(root);
 const ProviderLogoSvgs = new Map<string, string>();

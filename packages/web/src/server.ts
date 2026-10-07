@@ -1,13 +1,16 @@
 import Index from "../index.html";
-import { getRenderedPage, Models, Providers, ProvidersV2, renderDocument } from "./render";
+import { getRenderedPage, Models, Providers, renderDocument } from "./render";
 import {
   filterCatalogByModelType,
   filterModelsByModelType,
   filterProvidersByModelType,
   InvalidModelTypeError,
   parseModelTypes,
+  toProvidersV2,
 } from "@models.dev/core";
 import path from "path";
+
+const ProvidersV2 = toProvidersV2(Providers);
 
 const assetPort = Number(Bun.env.ASSET_PORT ?? 16000);
 
