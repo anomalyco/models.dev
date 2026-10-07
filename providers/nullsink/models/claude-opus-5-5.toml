@@ -1,0 +1,18 @@
+# Pricing (USD/MTok): https://nullsink.is/v1/models
+# Native Anthropic Messages route: https://nullsink.is/api/
+# Effort: output_config.effort = low|medium|high|xhigh|max; adaptive thinking is always on.
+# Controls: https://platform.claude.com/docs/en/models/opus-5-5/overview
+# cache_write is the standard 5-minute rate; optional 1-hour cache writes cost $8/MTok.
+base_model = "anthropic/claude-opus-5-5"
+structured_output = true
+interleaved = true
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
+
+[cost]
+input = 4
+output = 20
+cache_read = 0.2
+cache_write = 5
+
+[provider]
+npm = "@ai-sdk/anthropic"

@@ -1,0 +1,20 @@
+# Pricing (USD/MTok): https://nullsink.is/v1/models
+# Served through Tinfoil using nullsink's Chat Completions route: https://nullsink.is/api/
+# Hosted context and experimental status: https://inference.tinfoil.sh/v1/models
+# Hosted weights and modalities: https://docs.tinfoil.sh/models/chat
+# Effort: reasoning_effort = none|low|high|xhigh|max; none disables reasoning.
+# Controls: https://docs.tinfoil.sh/guides/reasoning#supported-values-per-model (accessed 2026-10-07)
+base_model = "deepseek/deepseek-v4.1-flash"
+status = "beta"
+reasoning_options = [{ type = "effort", values = ["none", "low", "high", "xhigh", "max"] }]
+
+[cost]
+input = 0.65
+output = 1.45
+cache_read = 0.13
+
+[limit]
+context = 1_048_576
+
+[provider]
+shape = "completions"

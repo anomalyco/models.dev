@@ -1,0 +1,19 @@
+# Pricing (USD/MTok): https://nullsink.is/v1/models
+# Served through Tinfoil using nullsink's Chat Completions route: https://nullsink.is/api/
+# Hosted context and capabilities: https://inference.tinfoil.sh/v1/models
+# Hosted weights and modalities: https://docs.tinfoil.sh/models/chat
+# Effort: reasoning_effort = low|high|max; reasoning is always on, with no caller token budget.
+# Controls: https://docs.tinfoil.sh/guides/reasoning#supported-values-per-model
+base_model = "zhipuai/glm-5.3"
+reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]
+
+[cost]
+input = 1.8
+output = 5.75
+cache_read = 0.45
+
+[limit]
+context = 1_048_576
+
+[provider]
+shape = "completions"
