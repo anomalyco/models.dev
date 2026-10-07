@@ -295,11 +295,15 @@ interface LabControls {
 
 const labControlsCache = new Map<string, LabControls | undefined>();
 
-function labControls(baseModel: string): LabControls | undefined {
-  if (!labControlsCache.has(baseModel)) {
-    labControlsCache.set(baseModel, readLabControls(baseModel));
+// The cache key includes the catalog slug: peer lookups probe slug-derived
+// filename spellings, so two slugs resolving to the same base model can find
+// different peer files.
+function labControls(baseModel: string, slug: string): LabControls | undefined {
+  const cacheKey = `${baseModel}|${slug}`;
+  if (!labControlsCache.has(cacheKey)) {
+    labControlsCache.set(cacheKey, readLabControls(baseModel, slug));
   }
-  return labControlsCache.get(baseModel);
+  return labControlsCache.get(cacheKey);
 }
 
 // OpenRouter nests relay peer models under its own provider ids, which
@@ -337,7 +341,7 @@ function readCandidate(filePath: string): { text: string; parsed: unknown } | un
   }
 }
 
-function readLabControls(baseModel: string): LabControls | undefined {
+function readLabControls(baseModel: string, slug: string): LabControls | undefined {
   const [lab, modelID] = baseModel.split("/");
   if (lab === undefined || modelID === undefined) return undefined;
   // Priority: the lab's first-party provider definition, then the canonical
@@ -348,6 +352,19 @@ function readLabControls(baseModel: string): LabControls | undefined {
   const openrouterDirs = [...(OPENROUTER_DIR_ALIASES[lab] ?? []), lab].filter(
     (dir, index, all) => all.indexOf(dir) === index,
   );
+  // OpenRouter names peer files after the upstream provider id, which can
+  // keep deployment suffixes the canonical id drops (nova-2-lite-v1.toml) or
+  // use dashes where the canonical id uses dots (seed-2-1-turbo.toml). Probe
+  // the canonical id plus the catalog slug and its dot/dash spellings.
+  const peerFiles = [
+    ...new Set([
+      modelID,
+      slug,
+      applyVersionDots(slug),
+      modelID.replace(/\./g, "-"),
+      slug.replace(/\./g, "-"),
+    ]),
+  ];
   const candidates: Array<{ filePath: string; sourcePath: string; kind: "lab" | "peer" }> = [
     {
       filePath: path.join(PROVIDERS_DIR, lab, "models", `${modelID}.toml`),
@@ -359,11 +376,13 @@ function readLabControls(baseModel: string): LabControls | undefined {
       sourcePath: `models/${baseModel}.toml`,
       kind: "lab",
     },
-    ...openrouterDirs.map((dir) => ({
-      filePath: path.join(PROVIDERS_DIR, "openrouter", "models", dir, `${modelID}.toml`),
-      sourcePath: `providers/openrouter/models/${dir}/${modelID}.toml`,
-      kind: "peer" as const,
-    })),
+    ...openrouterDirs.flatMap((dir) =>
+      peerFiles.map((file) => ({
+        filePath: path.join(PROVIDERS_DIR, "openrouter", "models", dir, `${file}.toml`),
+        sourcePath: `providers/openrouter/models/${dir}/${file}.toml`,
+        kind: "peer" as const,
+      })),
+    ),
   ];
   let reasoningSource: LabControls | undefined;
   let optionsSource: LabControls | undefined;
@@ -553,7 +572,7 @@ export function buildExperientiallabsModel(
   const attachment = input.some((value) => value !== "text");
   // The lab baseline owns the reasoning flag; gateway rung hints only apply
   // when the lab definition does not state one.
-  const lab = baseModel !== undefined ? labControls(baseModel) : undefined;
+  const lab = baseModel !== undefined ? labControls(baseModel, model.slug) : undefined;
   const hostReasoning = rungs.some((candidate) => candidate.capabilities?.supports_reasoning === true)
     || params.reasoning === true
     || existing?.reasoning === true;
