@@ -1,0 +1,17 @@
+name = "Corleth Dream Ultra"
+description = "Text-to-image generation and reference-image editing model. Running exclusively on the Corleth media chip. Higher compute variant of Corleth Dream."
+attachment = true
+reasoning = false
+tool_call = false
+temperature = false
+open_weights = false
+release_date = "2026-10"
+last_updated = "2026-10-07"
+
+[limit]
+context = 0
+output = 0
+
+[modalities]
+input = ["text", "image"]
+output = ["image"]
