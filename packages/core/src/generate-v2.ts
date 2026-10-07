@@ -13,7 +13,10 @@ import {
 } from "./schema.js";
 import {
   ProviderV2,
+  type ApiEntryV2,
+  type ApiProtocolV2,
   type ApiV2,
+  type CompatibilityV2,
   type ExperimentalModeV2,
   type InputModalityV2,
   type ModelV2,
@@ -95,8 +98,17 @@ async function loadProviderV2(
 // ---------------------------------------------------------------------------
 
 export function toModelV2(model: Model, provider: Provider): ModelV2 {
+  const type = model.type ?? "chat";
   const normalizeModality = (m: string) =>
     m === "pdf" ? "application/pdf" : m;
+  const outputModalities: OutputModalityV2[] =
+    type === "decision"
+      ? ["decision"]
+      : type === "embedding"
+        ? ["embedding"]
+        : type === "reranking"
+          ? ["reranking"]
+          : (model.modalities.output.map(normalizeModality) as OutputModalityV2[]);
   const stripLegacyCost = ({
     context_over_200k: _legacy,
     ...cost
@@ -107,7 +119,7 @@ export function toModelV2(model: Model, provider: Provider): ModelV2 {
     ...(model.canonical_model_id !== undefined
       ? { canonical_id: model.canonical_model_id }
       : {}),
-    type: model.type ?? "chat",
+    type,
     name: model.name,
     description: model.description,
     ...(model.family !== undefined ? { family: model.family } : {}),
@@ -118,19 +130,25 @@ export function toModelV2(model: Model, provider: Provider): ModelV2 {
     ...(model.status !== undefined ? { status: model.status } : {}),
     modalities: {
       input: model.modalities.input.map(normalizeModality) as InputModalityV2[],
-      output: model.modalities.output.map(normalizeModality) as OutputModalityV2[],
+      output: outputModalities,
     },
     capabilities: {
       tools: model.tool_call ? { supported: true } : { supported: false },
       reasoning: toReasoningSupportV2(model),
-      ...(model.structured_output !== undefined
+      ...(model.structured_output !== undefined && type !== "decision"
         ? { structured_output: model.structured_output }
         : {}),
       ...(model.temperature !== undefined
         ? { temperature: model.temperature }
         : {}),
     },
-    limit: { ...model.limit },
+    limit: {
+      context: model.limit.context,
+      ...(model.limit.input !== undefined ? { input: model.limit.input } : {}),
+      ...(type === "decision" && model.limit.output === 0
+        ? {}
+        : { output: model.limit.output }),
+    },
     ...(model.cost !== undefined ? { cost: stripLegacyCost(model.cost) } : {}),
     api: toApiV2(model, provider),
     ...(model.experimental?.modes
@@ -187,9 +205,237 @@ function toReasoningSupportV2(model: Model): ReasoningSupportV2 {
   };
 }
 
-function toApiV2(_model: Model, _provider: Provider): ApiV2 {
-  // Populated by API protocol mapping
-  return {} as ApiV2;
+const DEFAULT_NPM_BASE_URLS: Record<string, string> = {
+  "@ai-sdk/openai": "https://api.openai.com/v1",
+  "@ai-sdk/anthropic": "https://api.anthropic.com/v1",
+  "@ai-sdk/google": "https://generativelanguage.googleapis.com/v1beta",
+  "@ai-sdk/google-vertex":
+    "https://${GOOGLE_VERTEX_LOCATION}-aiplatform.googleapis.com/v1beta1/projects/${GOOGLE_VERTEX_PROJECT}/locations/${GOOGLE_VERTEX_LOCATION}/publishers/google",
+  "@ai-sdk/google-vertex/anthropic":
+    "https://${GOOGLE_VERTEX_LOCATION}-aiplatform.googleapis.com/v1/projects/${GOOGLE_VERTEX_PROJECT}/locations/${GOOGLE_VERTEX_LOCATION}/publishers/anthropic",
+  "@ai-sdk/amazon-bedrock":
+    "https://bedrock-runtime.${AWS_REGION}.amazonaws.com",
+  "@ai-sdk/mistral": "https://api.mistral.ai/v1",
+  "@ai-sdk/cerebras": "https://api.cerebras.ai/v1",
+  "@ai-sdk/xai": "https://api.x.ai/v1",
+  "@ai-sdk/groq": "https://api.groq.com/openai/v1",
+  "@ai-sdk/deepinfra": "https://api.deepinfra.com/v1/openai",
+  "@ai-sdk/togetherai": "https://api.together.xyz/v1",
+  "@ai-sdk/cohere": "https://api.cohere.com/v2",
+  "@ai-sdk/perplexity": "https://api.perplexity.ai",
+  "@ai-sdk/gateway": "https://ai-gateway.vercel.sh/v1/ai",
+  "@ai-sdk/vercel": "https://api.v0.dev/v1",
+  "venice-ai-sdk-provider": "https://api.venice.ai/api/v1",
+  "ai-gateway-provider":
+    "https://gateway.ai.cloudflare.com/v1/${CLOUDFLARE_ACCOUNT_ID}/${CLOUDFLARE_GATEWAY_ID}",
+  "@aihubmix/ai-sdk-provider": "https://aihubmix.com/v1",
+  "@saladtechnologies-oss/ai-sdk-provider":
+    "https://api.salad.com/api/public",
+  "watsonx-ai-provider": "https://${WATSONX_REGION}.ml.cloud.ibm.com",
+  "@qvac/ai-sdk-provider": "http://localhost:8080/v1",
+  "@jerome-benoit/sap-ai-provider-v2": "${AICORE_DEPLOYMENT_URL}",
+  "gitlab-ai-provider": "https://gitlab.com/api/v4",
+};
+
+const DEFAULT_PROVIDER_BASE_URLS: Record<string, string> = {
+  azure: "https://${AZURE_RESOURCE_NAME}.openai.azure.com/openai/v1",
+  "azure-cognitive-services":
+    "https://${AZURE_COGNITIVE_SERVICES_RESOURCE_NAME}.openai.azure.com/openai/v1",
+};
+
+const OPENCODE_PACKAGES: Record<string, string> = {
+  "@ai-sdk/amazon-bedrock": "@opencode/ai/providers/amazon-bedrock",
+  "@ai-sdk/alibaba": "@opencode/ai/providers/alibaba/chat",
+  "@ai-sdk/anthropic": "@opencode/ai/providers/anthropic",
+  "@ai-sdk/azure": "@opencode/ai/providers/azure/responses",
+  "@ai-sdk/cerebras": "@opencode/ai/providers/cerebras",
+  "@ai-sdk/cohere": "@opencode/ai/providers/cohere",
+  "@ai-sdk/deepinfra": "@opencode/ai/providers/deepinfra",
+  "@ai-sdk/google": "@opencode/ai/providers/google",
+  "@ai-sdk/google-vertex": "@opencode/ai/providers/google-vertex",
+  "@ai-sdk/google-vertex/anthropic":
+    "@opencode/ai/providers/google-vertex/messages",
+  "@ai-sdk/groq": "@opencode/ai/providers/groq",
+  "@ai-sdk/mistral": "@opencode/ai/providers/mistral",
+  "@ai-sdk/openai": "@opencode/ai/providers/openai",
+  "@ai-sdk/openai-compatible": "@opencode/ai/providers/openai-compatible",
+  "@ai-sdk/togetherai": "@opencode/ai/providers/togetherai",
+  "@ai-sdk/xai": "@opencode/ai/providers/xai",
+  "@ai-sdk/gateway": "@opencode/ai/providers/vercel-ai-gateway",
+  "@openrouter/ai-sdk-provider": "@opencode/ai/providers/openrouter",
+  "ai-gateway-provider": "@opencode/ai/providers/cloudflare-ai-gateway",
+  "venice-ai-sdk-provider": "@opencode/ai/providers/venice",
+};
+
+const hostProtocols = (name: string) => ({
+  "@ai-sdk/openai-compatible": `@opencode/ai/providers/${name}/chat`,
+  "@ai-sdk/anthropic": `@opencode/ai/providers/${name}/messages`,
+  "@ai-sdk/openai": `@opencode/ai/providers/${name}/responses`,
+});
+
+const OPENCODE_HOSTS: Record<string, Record<string, string>> = {
+  alibaba: hostProtocols("alibaba"),
+  "alibaba-cn": hostProtocols("alibaba"),
+  "alibaba-coding-plan": hostProtocols("alibaba"),
+  "alibaba-coding-plan-cn": hostProtocols("alibaba"),
+  "alibaba-token-plan": hostProtocols("alibaba"),
+  "alibaba-token-plan-cn": hostProtocols("alibaba"),
+  baseten: { "@ai-sdk/openai-compatible": "@opencode/ai/providers/baseten" },
+  "cloudflare-ai-gateway": {
+    "@ai-sdk/anthropic": "@opencode/ai/providers/cloudflare-ai-gateway",
+    "@ai-sdk/openai": "@opencode/ai/providers/cloudflare-ai-gateway",
+    "@ai-sdk/openai-compatible":
+      "@opencode/ai/providers/cloudflare-ai-gateway",
+    "ai-gateway-provider": "@opencode/ai/providers/cloudflare-ai-gateway",
+  },
+  cohere: {
+    "@ai-sdk/openai-compatible": "@opencode/ai/providers/cohere/chat",
+  },
+  "cloudflare-workers-ai": {
+    "@ai-sdk/openai-compatible":
+      "@opencode/ai/providers/cloudflare-workers-ai",
+  },
+  deepseek: {
+    "@ai-sdk/openai-compatible": "@opencode/ai/providers/deepseek",
+  },
+  digitalocean: {
+    "@ai-sdk/openai-compatible": "@opencode/ai/providers/digitalocean",
+  },
+  "fireworks-ai": {
+    "@ai-sdk/openai-compatible": "@opencode/ai/providers/fireworks",
+  },
+  "google-vertex": {
+    "@ai-sdk/openai-compatible": "@opencode/ai/providers/google-vertex/chat",
+  },
+  "kimi-for-coding": hostProtocols("moonshot"),
+  meta: hostProtocols("meta"),
+  minimax: hostProtocols("minimax"),
+  "minimax-cn": hostProtocols("minimax"),
+  "minimax-coding-plan": hostProtocols("minimax"),
+  "minimax-cn-coding-plan": hostProtocols("minimax"),
+  moonshotai: hostProtocols("moonshot"),
+  "moonshotai-cn": hostProtocols("moonshot"),
+  zai: { "@ai-sdk/openai-compatible": "@opencode/ai/providers/zai/chat" },
+  "zai-coding-plan": hostProtocols("zai-coding-plan"),
+  zhipuai: { "@ai-sdk/openai-compatible": "@opencode/ai/providers/zai/chat" },
+  "zhipuai-coding-plan": hostProtocols("zai-coding-plan"),
+};
+
+function toApiV2(model: Model, provider: Provider): ApiV2 {
+  const npm = model.provider?.npm ?? provider.npm;
+  const shape = model.provider?.shape;
+  const rawBaseUrl =
+    model.provider?.api ??
+    provider.api ??
+    DEFAULT_PROVIDER_BASE_URLS[provider.id] ??
+    DEFAULT_NPM_BASE_URLS[npm] ??
+    "";
+  const base_url = rawBaseUrl.replace(/\/+$/, "");
+
+  const { protocol, path } = resolveProtocolAndPath(model, provider, npm, shape);
+  const opencodeai = resolveOpencodePackage(model, provider, npm, shape);
+  const compatibility = toCompatibilityV2(model);
+
+  const entry: ApiEntryV2 = {
+    base_url,
+    path,
+    sdk: {
+      ...(model.type === "decision" ? {} : { aisdk: npm }),
+      ...(opencodeai !== undefined ? { opencodeai } : {}),
+    },
+    ...(compatibility !== undefined ? { compatibility } : {}),
+  };
+
+  return { [protocol]: entry } as ApiV2;
+}
+
+function resolveProtocolAndPath(
+  model: Model,
+  provider: Provider,
+  npm: string,
+  shape: "responses" | "completions" | undefined,
+): { protocol: ApiProtocolV2; path: string } {
+  if (model.type === "decision") {
+    if (provider.id === "cloudflare-workers-ai") {
+      return { protocol: "workers-ai-run", path: `/run/${model.id}` };
+    }
+    if (provider.id === "vercel") {
+      return { protocol: "evaluate", path: "/evaluate" };
+    }
+    return { protocol: "system-one", path: "/systemone" };
+  }
+
+  if (npm === "@ai-sdk/anthropic") {
+    return { protocol: "messages", path: "/messages" };
+  }
+  if (npm === "@ai-sdk/google-vertex/anthropic") {
+    return { protocol: "messages", path: `/models/${model.id}:streamRawPredict` };
+  }
+  if (npm === "@ai-sdk/openai" || npm === "@ai-sdk/azure") {
+    return shape === "completions"
+      ? { protocol: "chat-completions", path: "/chat/completions" }
+      : { protocol: "responses", path: "/responses" };
+  }
+  if (npm === "@ai-sdk/amazon-bedrock") {
+    return { protocol: "converse", path: `/model/${model.id}/converse` };
+  }
+  if (npm === "@ai-sdk/amazon-bedrock/mantle") {
+    return model.id.includes("gpt-oss")
+      ? { protocol: "chat-completions", path: "/chat/completions" }
+      : { protocol: "responses", path: "/responses" };
+  }
+  if (npm === "@ai-sdk/google" || npm === "@ai-sdk/google-vertex") {
+    return {
+      protocol: "generate-content",
+      path: `/models/${model.id}:generateContent`,
+    };
+  }
+  if (npm === "@ai-sdk/cohere") {
+    return { protocol: "cohere-chat", path: "/chat" };
+  }
+
+  return shape === "responses"
+    ? { protocol: "responses", path: "/responses" }
+    : { protocol: "chat-completions", path: "/chat/completions" };
+}
+
+function resolveOpencodePackage(
+  model: Model,
+  provider: Provider,
+  npm: string,
+  shape: "responses" | "completions" | undefined,
+): string | undefined {
+  if (model.type === "decision") {
+    if (provider.id === "opencode") return "@opencode/ai/providers/opencode-zen";
+    if (provider.id === "vivgrid") return "@opencode/ai/providers/typesafe-ai";
+    if (provider.id === "cloudflare-workers-ai")
+      return "@opencode/ai/providers/cloudflare-workers-ai";
+    if (provider.id === "vercel")
+      return "@opencode/ai/providers/vercel-ai-gateway";
+  }
+
+  const host = OPENCODE_HOSTS[provider.id]?.[npm];
+  if (host) return host;
+  if (npm === "@ai-sdk/amazon-bedrock/mantle") {
+    return `@opencode/ai/providers/amazon-bedrock/mantle/${
+      model.id.includes("gpt-oss") ? "chat" : "responses"
+    }`;
+  }
+  if (npm === "@ai-sdk/azure" && shape === "completions") {
+    return "@opencode/ai/providers/azure/chat";
+  }
+  return OPENCODE_PACKAGES[npm];
+}
+
+function toCompatibilityV2(model: Model): CompatibilityV2 | undefined {
+  if (
+    model.interleaved !== undefined &&
+    typeof model.interleaved === "object" &&
+    model.interleaved.field === "reasoning_content"
+  ) {
+    return { reasoning_field: "reasoning_content" };
+  }
+  return undefined;
 }
 
 // ---------------------------------------------------------------------------
@@ -301,7 +547,7 @@ function scanTomls(cwd: string, pattern: string) {
 
 async function readToml(filePath: string): Promise<Record<string, unknown>> {
   const mod = await import(filePath, { with: { type: "toml" } });
-  return structuredClone(mod.default);
+  return mod.default;
 }
 
 function parseWithCause<S extends z.ZodTypeAny>(

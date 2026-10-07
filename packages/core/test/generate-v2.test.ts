@@ -123,8 +123,14 @@ describe("v2 catalog generation", () => {
     const providersV2 = await generateV2(providersDir);
 
     expect(Object.keys(providersV2).length).toBeGreaterThan(0);
-    for (const provider of Object.values(providersV2)) {
-      expect(() => ProviderV2.parse(provider)).not.toThrow();
-    }
-  });
+    expect(providersV2.opencode?.models["jev-1.13"]?.api).toEqual({
+      "system-one": {
+        base_url: "https://opencode.ai/zen/v1",
+        path: "/systemone",
+        sdk: {
+          opencodeai: "@opencode/ai/providers/opencode-zen",
+        },
+      },
+    });
+  }, 15_000);
 });

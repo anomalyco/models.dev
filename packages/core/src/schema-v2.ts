@@ -303,7 +303,8 @@ export type CapabilitiesOverrideV2 = z.infer<typeof CapabilitiesOverrideV2>;
 
 export const ApiEntryV2 = z
   .object({
-    url: z.string(),
+    base_url: z.string(),
+    path: z.string(),
     sdk: SdkV2.optional(),
     compatibility: CompatibilityV2.optional(),
     capabilities: CapabilitiesOverrideV2.optional(),
