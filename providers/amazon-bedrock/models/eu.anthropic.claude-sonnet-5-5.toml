@@ -1,5 +1,7 @@
 # Sources: https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-anthropic-claude-sonnet-5-5.html
 # https://platform.claude.com/docs/en/about-claude/pricing
+# Cache read $0.11/MTok (50% reduction effective 2026-10-07 with 10% regional premium over $0.10 global): https://aws.amazon.com/bedrock/pricing/
+# https://www.anthropic.com/pricing and https://platform.claude.com/docs/en/about-claude/pricing#prompt-caching
 # Geo inference ID eu.anthropic.claude-sonnet-5-5; Bedrock regional endpoints carry a 10% premium over global endpoints.
 # Effort: additionalModelRequestFields.output_config.effort (Converse); output_config.effort (InvokeModel).
 base_model = "anthropic/claude-sonnet-5-5"
@@ -10,5 +12,5 @@ structured_output = false
 [cost]
 input = 2.2
 output = 11
-cache_read = 0.22
+cache_read = 0.11
 cache_write = 2.75
