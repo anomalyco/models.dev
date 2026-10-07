@@ -249,15 +249,15 @@ const OPENCODE_PACKAGES: Record<string, string> = {
   "@ai-sdk/anthropic": "@opencode/ai/providers/anthropic",
   "@ai-sdk/azure": "@opencode/ai/providers/azure/responses",
   "@ai-sdk/cerebras": "@opencode/ai/providers/cerebras",
-  "@ai-sdk/cohere": "@opencode/ai/providers/cohere",
+  "@ai-sdk/cohere": "@opencode/ai/providers/cohere/chat",
   "@ai-sdk/deepinfra": "@opencode/ai/providers/deepinfra",
   "@ai-sdk/google": "@opencode/ai/providers/google",
-  "@ai-sdk/google-vertex": "@opencode/ai/providers/google-vertex",
+  "@ai-sdk/google-vertex": "@opencode/ai/providers/google-vertex/gemini",
   "@ai-sdk/google-vertex/anthropic":
     "@opencode/ai/providers/google-vertex/messages",
   "@ai-sdk/groq": "@opencode/ai/providers/groq",
   "@ai-sdk/mistral": "@opencode/ai/providers/mistral",
-  "@ai-sdk/openai": "@opencode/ai/providers/openai",
+  "@ai-sdk/openai": "@opencode/ai/providers/openai/responses",
   "@ai-sdk/openai-compatible": "@opencode/ai/providers/openai-compatible",
   "@ai-sdk/togetherai": "@opencode/ai/providers/togetherai",
   "@ai-sdk/xai": "@opencode/ai/providers/xai",
@@ -406,12 +406,11 @@ function resolveOpencodePackage(
   shape: "responses" | "completions" | undefined,
 ): string | undefined {
   if (model.type === "decision") {
-    if (provider.id === "opencode") return "@opencode/ai/providers/opencode-zen";
-    if (provider.id === "vivgrid") return "@opencode/ai/providers/typesafe-ai";
     if (provider.id === "cloudflare-workers-ai")
       return "@opencode/ai/providers/cloudflare-workers-ai";
     if (provider.id === "vercel")
       return "@opencode/ai/providers/vercel-ai-gateway";
+    return "@opencode/ai/providers/typesafe-ai";
   }
 
   const host = OPENCODE_HOSTS[provider.id]?.[npm];
@@ -421,8 +420,14 @@ function resolveOpencodePackage(
       model.id.includes("gpt-oss") ? "chat" : "responses"
     }`;
   }
+  if (npm === "@ai-sdk/openai" && shape === "completions") {
+    return "@opencode/ai/providers/openai/chat";
+  }
   if (npm === "@ai-sdk/azure" && shape === "completions") {
     return "@opencode/ai/providers/azure/chat";
+  }
+  if (npm === "@ai-sdk/openai-compatible" && shape === "responses") {
+    return "@opencode/ai/providers/openai-compatible/responses";
   }
   return OPENCODE_PACKAGES[npm];
 }

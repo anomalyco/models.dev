@@ -128,7 +128,7 @@ describe("v2 catalog generation", () => {
         base_url: "https://opencode.ai/zen/v1",
         path: "/systemone",
         sdk: {
-          opencodeai: "@opencode/ai/providers/opencode-zen",
+          opencodeai: "@opencode/ai/providers/typesafe-ai",
         },
       },
     });
