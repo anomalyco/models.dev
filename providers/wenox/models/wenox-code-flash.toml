@@ -1,0 +1,13 @@
+name = "WenOX Code Flash"
+reasoning = true
+tool_call = true
+structured_output = true
+attachment = true
+
+[limit]
+context = 512000
+output = 65536
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
