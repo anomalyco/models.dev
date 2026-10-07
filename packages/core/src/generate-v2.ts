@@ -101,14 +101,12 @@ export function toModelV2(model: Model, provider: Provider): ModelV2 {
   const type = model.type ?? "chat";
   const normalizeModality = (m: string) =>
     m === "pdf" ? "application/pdf" : m;
-  const outputModalities: OutputModalityV2[] =
-    type === "decision"
-      ? ["decision"]
-      : type === "embedding"
-        ? ["embedding"]
-        : type === "reranking"
-          ? ["reranking"]
-          : (model.modalities.output.map(normalizeModality) as OutputModalityV2[]);
+  const outputModalities = ((): OutputModalityV2[] => {
+    if (type === "decision" || type === "embedding" || type === "reranking") {
+      return [type];
+    }
+    return model.modalities.output.map(normalizeModality) as OutputModalityV2[];
+  })();
   const stripLegacyCost = ({
     context_over_200k: _legacy,
     ...cost
