@@ -4,6 +4,8 @@
 # Hosted weights and modalities: https://docs.tinfoil.sh/models/chat
 # Effort: reasoning_effort = none|low|high|xhigh|max; none disables reasoning.
 # Controls: https://docs.tinfoil.sh/guides/reasoning#supported-values-per-model (accessed 2026-10-07)
+# Live nullsink check (2026-10-07): all five levels return HTTP 200; minimal and medium return HTTP 400.
+# The older Tinfoil peer's seven-level list was copied from DeepSeek V4 Flash, not V4.1.
 base_model = "deepseek/deepseek-v4.1-flash"
 status = "beta"
 reasoning_options = [{ type = "effort", values = ["none", "low", "high", "xhigh", "max"] }]
