@@ -1,16 +1,7 @@
 # Toggle: reasoning.enabled = true|false
 # https://openrouter.ai/docs/guides/best-practices/reasoning-tokens
-name = "Claude Haiku Latest"
-description = "Fast Claude model for responsive assistance, classification, and lightweight agents"
-family = "claude-haiku"
-release_date = "2026-04-27"
-last_updated = "2026-04-27"
-attachment = true
-reasoning = true
+base_model = "anthropic/claude-haiku-5-5"
 temperature = true
-tool_call = true
-structured_output = true
-open_weights = false
 
 [[reasoning_options]]
 type = "toggle"
@@ -31,11 +22,3 @@ input = 0.5
 output = 2.5
 cache_read = 0.05
 cache_write = 0.625
-
-[limit]
-context = 1_000_000
-output = 128_000
-
-[modalities]
-input = ["text", "image", "pdf"]
-output = ["text"]
