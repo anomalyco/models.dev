@@ -1,12 +1,33 @@
+# WenOX Go billing: 1,000 Credits = $1.00 USD.
+# Cost below is the USD-equivalent per 1M tokens.
+# Effort: reasoning_effort = none|minimal|low|medium|high|xhigh|max.
+# Live probe 2026-10-07: all listed values accepted; none disables reasoning,
+# all other values return reasoning_content; invalid values return HTTP 400.
+
 name = "WenOX Code"
+description = "WenOX coding model for software development and agentic workloads"
+release_date = "2026-09-22"
+last_updated = "2026-10-07"
+
+attachment = true
 reasoning = true
+reasoning_options = [
+  { type = "effort", values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"] },
+]
 tool_call = true
 structured_output = false
-attachment = true
+open_weights = false
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.15
+output = 0.50
 
 [limit]
-context = 1000000
-output = 128000
+context = 1_000_000
+output = 128_000
 
 [modalities]
 input = ["text", "image"]
