@@ -3,7 +3,8 @@
 # Source: https://crowllm.com/api/pricing (accessed 2026-10-08).
 # Served id, verbatim from GET https://crowllm.com/v1/models (accessed 2026-10-08): "qwen-3.8-27b:free".
 # Effort: reasoning_effort = low|medium|xhigh (top-level, forwarded verbatim)
-# reasoning_options mirror providers/nebius for the same model on this surface.
+# reasoning_options mirror providers/cortecs for the same model on this surface.
+# Set adjusted from providers/nebius: `none` dropped: on this gateway thinking is turned off with enable_thinking, and no Qwen source agrees on a none level.
 # Live gateway row: model_ratio=0, completion_ratio=1, cache_ratio=None, enable_groups=['free', 'pro'].
 base_model = "alibaba/qwen3.8-27b"
 name = "Qwen3.8 27B (free)"
