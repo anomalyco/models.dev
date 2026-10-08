@@ -7,6 +7,8 @@
 # Request bodies are decoded strictly: unknown fields such as `thinking` or a `reasoning` object return HTTP 400.
 # `reasoning_effort` is accepted only for values in reasoning_efforts; any other value, or any value when the
 # field is absent, returns HTTP 400 unsupported_parameter (see the errors table on the doc page).
+# Verified against the live API on 2026-10-08: an unlisted reasoning_effort returns HTTP 400 unsupported_parameter and a
+# `thinking` object returns HTTP 400 invalid_json (redacted transcript in the models.dev PR that added this provider).
 # So the effort set below is exactly reasoning_efforts; xhigh/max are rejected. Reasoning text is never returned
 # (supports_reasoning=false), hence no [interleaved]. unsupported_parameters are rejected with HTTP 400;
 # requests above max_prompt_bytes return HTTP 400 context_length_exceeded, so limit.input is dropped.
