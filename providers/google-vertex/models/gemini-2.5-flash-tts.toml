@@ -1,6 +1,11 @@
+# Token limits (input 8,192, output 16,384): https://docs.cloud.google.com/text-to-speech/docs/gemini-tts
 base_model = "google/gemini-2.5-flash-tts"
 temperature = false
 
 [cost]
 input = 0.5
 output = 10
+
+[limit]
+input = 8_192
+output = 16_384

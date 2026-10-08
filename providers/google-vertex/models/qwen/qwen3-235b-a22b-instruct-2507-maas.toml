@@ -1,14 +1,12 @@
 name = "Qwen3 235B A22B Instruct"
 description = "Qwen instruction model for multilingual chat, reasoning, and tool use"
-# POST .../endpoints/openapi/chat/completions; this Instruct variant has no
-# documented toggle, effort, or reasoning-token budget field.
-# https://cloud.google.com/vertex-ai/generative-ai/docs/maas/capabilities/thinking (accessed 2026-06-25)
+# The Instruct-2507 variant does not think (model card: "Thinking: Not supported").
+# https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/maas/qwen/qwen3-235b (accessed 2026-10-08)
 family = "qwen"
 release_date = "2025-08-13"
 last_updated = "2025-08-13"
 attachment = false
-reasoning = true
-reasoning_options = []
+reasoning = false
 temperature = true
 tool_call = true
 structured_output = true
