@@ -1,7 +1,9 @@
 # Pricing, context window and max output:
 # https://docs.vivgrid.com/models/claude-haiku-5-5 (accessed 2026-10-08)
+# Toggle: thinking.type = adaptive|disabled (disabled is accepted at effort high or below)
+# Effort: output_config.effort = low|medium|high|xhigh|max
+# https://platform.claude.com/docs/en/build-with-claude/effort#recommended-effort-levels-for-claude-haiku-5-5
 base_model = "anthropic/claude-haiku-5-5"
-structured_output = true
 reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
 
 [cost]
