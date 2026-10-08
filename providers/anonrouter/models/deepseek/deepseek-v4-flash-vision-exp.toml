@@ -1,4 +1,4 @@
-# Source: https://docs.anonrouter.ai/models and authenticated GET /v1/models (accessed 2026-09-11).
+# Source: https://anonrouter.ai/models public catalog, primary route (accessed 2026-10-07).
 # Reasoning wire: reasoning_effort; "none" disables reasoning when listed.
 base_model = "deepseek/deepseek-v4-flash-vision-exp"
 reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high"] }]
@@ -9,4 +9,4 @@ output = 1.32
 
 [limit]
 context = 1_048_576
-output = 16_384
+output = 262_144

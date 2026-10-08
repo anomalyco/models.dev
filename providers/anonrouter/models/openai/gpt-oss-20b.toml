@@ -1,11 +1,12 @@
-# Source: https://docs.anonrouter.ai/models and authenticated GET /v1/models (accessed 2026-09-11).
+# Source: https://anonrouter.ai/models public catalog, primary route (accessed 2026-10-07).
 # Reasoning wire: reasoning_effort; "none" disables reasoning when listed.
 base_model = "openai/gpt-oss-20b"
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
+reasoning_options = []
 
 [cost]
-input = 0.03
-output = 0.14
+input = 0.07
+output = 0.3
 
 [limit]
-output = 131_072
+context = 128_000
+output = 16_000
