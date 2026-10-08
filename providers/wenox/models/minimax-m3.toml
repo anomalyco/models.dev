@@ -1,14 +1,10 @@
 # WenOX Go billing: 1,000 Credits = $1.00 USD.
 # Cost below is the USD-equivalent per 1M tokens.
-# Effort: reasoning_effort = none|minimal|low|medium|high|xhigh|max.
-# Live probe 2026-10-07: all listed values accepted; none disables reasoning,
-# all other values return reasoning_content; invalid values return HTTP 400.
+# MiniMax-M3 reasoning control follows the upstream lab toggle baseline.
 
 base_model = "minimax/MiniMax-M3"
 
-reasoning_options = [
-  { type = "effort", values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"] },
-]
+reasoning_options = [{ type = "toggle" }]
 
 [interleaved]
 field = "reasoning_content"
