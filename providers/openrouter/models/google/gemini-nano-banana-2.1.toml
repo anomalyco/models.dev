@@ -1,16 +1,10 @@
 # Toggle: reasoning.enabled = true|false
 # https://openrouter.ai/docs/guides/best-practices/reasoning-tokens
-name = "Nano Banana 2.1"
+base_model = "google/gemini-nano-banana-2.1"
 description = "Image model for prompt-driven generation, editing, and visual design workflows"
-family = "nano-banana"
-release_date = "2026-10-06"
-last_updated = "2026-10-06"
-attachment = true
-reasoning = true
 temperature = true
 tool_call = true
 structured_output = true
-open_weights = false
 
 [[reasoning_options]]
 type = "toggle"
@@ -29,4 +23,3 @@ output = 58_982
 
 [modalities]
 input = ["image", "text"]
-output = ["image", "text"]
