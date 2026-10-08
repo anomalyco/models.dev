@@ -1,16 +1,16 @@
 # Toggle: reasoning.enabled = true|false
+# Budget: reasoning.max_tokens (integer reasoning tokens)
 # https://zenmux.ai/docs/api/openai/openai-list-models.html
 # https://zenmux.ai/docs/guide/advanced/reasoning.html
-base_model = "xiaomi/mimo-v2.5"
-structured_output = true
-
-[interleaved]
-field = "reasoning_content"
+base_model = "meituan/longcat-2.0"
 
 [[reasoning_options]]
 type = "toggle"
 
+[[reasoning_options]]
+type = "budget_tokens"
+
 [cost]
-input = 0.12
-output = 0.232
-cache_read = 0.00232
+input = 0.75
+output = 2.95
+cache_read = 0.015

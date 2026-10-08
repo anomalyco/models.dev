@@ -1,0 +1,17 @@
+name = "Kling-3.0"
+description = "Kling 3.0 is the flagship video generation model in the Kling series, built on a deeply integrated unified multimodal training framework. It supports text-to-video and image-to-video generation, producing clips of up to 15 seconds"
+release_date = "2026-07-31"
+last_updated = "2026-07-31"
+attachment = true
+reasoning = false
+temperature = false
+tool_call = false
+open_weights = false
+
+[limit]
+context = 20_000
+output = 0
+
+[modalities]
+input = ["text", "image"]
+output = ["video"]

@@ -1,0 +1,17 @@
+name = "Agnes Image 2.1 Flash"
+description = "Agnes Image 2.1 Flash is an upgraded image generation model optimized for high-information-density visuals, complex compositions, and rich semantic detail. It supports text-to-image generation, image-to-image editing, and multi-image composition workflows, while preserving composition and subject layout during edits. The model can return results as image URLs or Base64 data for flexible integration."
+release_date = "2026-08-12"
+last_updated = "2026-08-12"
+attachment = true
+reasoning = false
+temperature = false
+tool_call = false
+open_weights = false
+
+[limit]
+context = 121_233
+output = 0
+
+[modalities]
+input = ["text", "image"]
+output = ["image"]

@@ -1,0 +1,22 @@
+name = "Macaron V1 Tall"
+description = "Macaron-V1-Tall is the efficient model of the Macaron-V1 family, built on Qwen3.6-35B-A3B with four specialist LoRA adapters for Chat, Agent, Coding, and GenUI. It follows the same routed Mixture of LoRA (MoL) design as Macaron-V1-Venti, bringing Macaron’s personal-intelligence, coding, tool-use, and code-native Generative UI capabilities to a smaller and more accessible deployment profile."
+release_date = "2026-08-19"
+last_updated = "2026-08-19"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+open_weights = true
+license = "MIT"
+
+[limit]
+context = 256_000
+output = 32_000
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/mindlab-research/Macaron-V1-Tall"

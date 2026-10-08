@@ -1,0 +1,17 @@
+name = "Muse Image 1.0"
+description = "Muse Image is an agentic image generation model from Meta that generates and edits images from text and reference images. Unlike single-pass image models, it reasons before it renders, breaking down multi-part prompts and refining its output within the chain of thought, and invokes web search for factual accuracy on knowledge-intensive prompts.\n\nThe model supports text-to-image generation, targeted image editing, multi-image composition, reference-image conditioning for style and subject consistency across a series, and precise text rendering within generated images. Iterative editing works by passing the previous output image back with a new instruction."
+release_date = "2026-08-27"
+last_updated = "2026-08-27"
+attachment = true
+reasoning = false
+temperature = false
+tool_call = false
+open_weights = false
+
+[limit]
+context = 66_000
+output = 0
+
+[modalities]
+input = ["text", "image"]
+output = ["image"]

@@ -1,0 +1,23 @@
+# https://huggingface.co/internlm/Atria-Dawn-Preview
+name = "Atria Dawn Preview"
+description = "Atria Dawn Preview is a preview version of a new-generation agentic model developed by the Shanghai Artificial Intelligence Laboratory. Trained on a 744B-parameter MoE foundation model, it is designed for research and engineering scenarios that require continuous environmental understanding, tool use, and multi-step task completion. The model helps users drive open-ended problems toward executable, verifiable, and reproducible results. It can support problem analysis, solution design, tool use, code implementation, experiment execution, result analysis, and failure recovery by combining task objectives with environmental feedback.\n\nAtria Dawn Preview empowers agentic tasks across four dimensions, with a particular focus on end-to-end delivery in real-world productivity scenarios such as scientific automation and office work:\nDiscovery: Retrieving and organizing evidence, conducting deep research, and turning research questions into executable experimental plans.\nCreation: Building software, interactive applications, games, data visualizations, and machine learning systems.\nDelivery: Transforming documents, data, and design requirements into reports, presentations, and other structured deliverables.\nCybersecurity: Analyzing security issues, validating vulnerabilities, applying fixes, and performing re-validation in authorized environments."
+release_date = "2026-09-14"
+last_updated = "2026-09-14"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+open_weights = true
+license = "MIT"
+
+[limit]
+context = 262_144
+output = 65_536
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/internlm/Atria-Dawn-Preview"
