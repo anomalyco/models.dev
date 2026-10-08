@@ -1,0 +1,25 @@
+name = "claude-haiku-5.5"
+description = "Claude Haiku 5.5 is Anthropic’s fastest and most cost-efficient small model, built for high-volume workloads that require responsive performance, low operating costs, and reliable handling of repetitive tasks and lightweight agentic workflows."
+release_date = "2026-10-08"
+last_updated = "2026-10-08"
+attachment = true
+reasoning = true
+temperature = false
+tool_call = true
+structured_output = true
+open_weights = false
+reasoning_options = []
+
+[cost]
+input = 0.113
+output = 0.563
+cache_read = 0.011
+cache_write = 0.14
+
+[limit]
+context = 1_000_000
+output = 128_000
+
+[modalities]
+input = ["text", "image", "pdf"]
+output = ["text"]
