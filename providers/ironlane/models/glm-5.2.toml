@@ -1,21 +1,18 @@
-# Served through Ironlane.ai routing. Cost = provider list price (pass-through).
-# Toggle: reasoning.enabled = true|false
+# Ironlane routes pass-through to the lowest-priced healthy provider and bills the
+# provider list price (https://ironlane.ai/pricing). GLM 5.2 figures mirror the
+# Z.ai first-party entry (Ironlane forwards to Z.ai): list 1.4 / 4.4, cache 0.26;
+# reasoning effort high|max, returned in `reasoning_content`.
+# Source: https://docs.z.ai/api-reference
 base_model = "zhipuai/glm-5.2"
+
+[[reasoning_options]]
+type = "effort"
+values = ["high", "max"]
 
 [interleaved]
 field = "reasoning_content"
 
-[[reasoning_options]]
-type = "toggle"
-
-[[reasoning_options]]
-type = "effort"
-values = ["high", "xhigh"]
-
 [cost]
-input = 0.03
-output = 10
-cache_read = 0.03
-
-[limit]
-context = 1_048_576
+input = 1.4
+output = 4.4
+cache_read = 0.26
