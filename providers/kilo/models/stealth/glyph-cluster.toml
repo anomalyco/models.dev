@@ -1,0 +1,28 @@
+name = "Stealth: Glyph Cluster (free)"
+description = "Your prompts and completions may be retained and used to train or improve the provider's services. Glyph Cluster is a reasoning model for coding and long-context analysis, served through Vercel AI Gateway during its stealth period at no cost. It supports function calling and streaming, takes text input only, and does not support structured outputs. Zero Data Retention is not available for this model."
+release_date = "2025-08-26"
+last_updated = "2025-08-26"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = false
+open_weights = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high", "xhigh"]
+
+[cost]
+input = 0
+output = 0
+reasoning = 0
+cache_read = 0
+
+[limit]
+context = 256_000
+output = 256_000
+
+[modalities]
+input = ["text"]
+output = ["text"]
