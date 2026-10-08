@@ -1,6 +1,6 @@
 # Toggle: reasoning.enabled = true|false
 # https://openrouter.ai/docs/guides/best-practices/reasoning-tokens
-name = "Ling 3.0 Flash Sante (free)"
+name = "Ling 3.0 Flash Sante"
 description = "Efficient model for low-latency assistance, extraction, and routine automation"
 family = "ling"
 release_date = "2026-09-04"
@@ -16,8 +16,9 @@ open_weights = false
 type = "toggle"
 
 [cost]
-input = 0
-output = 0
+input = 0.042
+output = 0.1232
+cache_read = 0.0084
 
 [limit]
 context = 262_144
