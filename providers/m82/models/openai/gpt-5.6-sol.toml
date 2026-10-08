@@ -1,0 +1,30 @@
+# Served by M82 Router (https://m82router.com), an OpenAI-compatible, NPR-prepaid gateway.
+# Source: https://m82router.com/api/documentation (read 2026-10-08). M82 publishes prices in NPR;
+# USD below = NPR per million tokens / 162.099 (M82's fixed NPR/USD peg on that date).
+
+# Beta limits: every reply is capped at 4,096 output tokens; text-only input (no image_url parts);
+# JSON mode is not advertised as verified. Tool calls and streaming are verified.
+# Reasoning: request `reasoning_effort` none|low|medium|high (default medium). Reasoning text is never returned.
+# Rejected request fields (HTTP 400): temperature, top_p, stop, logprobs, top_logprobs. Prompt bytes capped at 267_904.
+base_model = "openai/gpt-5.6-sol"
+base_model_omit = ["limit.input"]  # lab input limit exceeds the beta context window
+attachment = false
+structured_output = false
+status = "beta"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high"]
+
+[cost]
+input = 2.1
+output = 10.5
+cache_read = 0.21
+
+[limit]
+context = 272_000
+output = 4_096
+
+[modalities]
+input = ["text"]
+output = ["text"]

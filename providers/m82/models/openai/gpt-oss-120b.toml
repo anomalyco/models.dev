@@ -1,0 +1,20 @@
+# Served by M82 Router (https://m82router.com), an OpenAI-compatible, NPR-prepaid gateway.
+# Source: https://m82router.com/api/documentation (read 2026-10-08). M82 publishes prices in NPR;
+# USD below = NPR per million tokens / 162.099 (M82's fixed NPR/USD peg on that date).
+
+# Beta limits: every reply is capped at 4,096 output tokens; text-only input (no image_url parts);
+# JSON mode is not advertised as verified. Tool calls and streaming are verified.
+# Reasoning: not exposed or controllable through M82, so recorded as reasoning = false.
+base_model = "openai/gpt-oss-120b"
+name = "gpt-oss-120b"
+reasoning = false
+structured_output = false
+status = "beta"
+
+[cost]
+input = 0.03885
+output = 0.1785
+
+[limit]
+context = 131_072
+output = 4_096
