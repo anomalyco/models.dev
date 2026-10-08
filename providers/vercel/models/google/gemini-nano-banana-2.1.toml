@@ -1,14 +1,8 @@
 # Toggle: reasoning.enabled = true|false
 # https://vercel.com/docs/ai-gateway/sdks-and-apis/openai-chat-completions/reasoning
+base_model = "google/gemini-nano-banana-2.1"
 name = "Gemini Nano Banana 2.1"
 description = "Image model for prompt-driven generation, editing, and visual design workflows"
-family = "nano-banana"
-release_date = "2026-10-06"
-last_updated = "2026-10-06"
-attachment = true
-reasoning = true
-tool_call = false
-open_weights = false
 
 [[reasoning_options]]
 type = "toggle"
@@ -22,10 +16,5 @@ input = 1.5
 output = 7.5
 cache_read = 0.15
 
-[limit]
-context = 131_072
-output = 32_768
-
 [modalities]
 input = ["text", "image"]
-output = ["text", "image"]
