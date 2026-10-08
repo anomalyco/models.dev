@@ -1,0 +1,21 @@
+# Served through Ironlane.ai routing. Cost = provider list price (pass-through).
+# Toggle: reasoning.enabled = true|false
+base_model = "zhipuai/glm-5.2"
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["high", "xhigh"]
+
+[cost]
+input = 0.03
+output = 10
+cache_read = 0.03
+
+[limit]
+context = 1_048_576
