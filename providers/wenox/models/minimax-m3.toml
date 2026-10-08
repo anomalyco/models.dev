@@ -1,9 +1,12 @@
-# WenOX Go billing: 1,000 Credits = $1.00 USD.
-# Cost below is the USD-equivalent per 1M tokens.
-# MiniMax-M3 reasoning control follows the upstream lab toggle baseline.
+# WenOX service contract: https://docs.wenox.co/models#capabilities
+# Retail pricing: https://docs.wenox.co/models#pricing-policy
+# Conversion verified 2026-10-08: 1,000 Credits = $1.00 USD; costs per 1M tokens.
+# Flat input/output prices throughout the supported context range.
+# Control/response probes: https://docs.wenox.co/model-verification/2026-10-08.json
+# Toggle: thinking.type = enabled|disabled; https://docs.wenox.co/models#reasoning-controls
+# MiniMax-M3: lab/same-surface peers use toggle; this WenOX wire was probed.
 
 base_model = "minimax/MiniMax-M3"
-
 reasoning_options = [{ type = "toggle" }]
 
 [interleaved]
