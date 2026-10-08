@@ -1,0 +1,11 @@
+# Toggle: thinking enabled|disabled
+base_model = "google/gemini-3.1-flash-lite-image"
+reasoning_options = [
+  { type = "toggle" },
+  { type = "effort", values = ["minimal", "high"] },
+]
+
+[cost]
+input = 0.25
+output = 1.5
+cache_read = 0.025

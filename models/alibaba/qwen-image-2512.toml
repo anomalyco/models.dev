@@ -1,0 +1,19 @@
+name = "Qwen Image 2512"
+description = "Qwen Image 2512 is an improved version of Qwen Image with better text rendering, finer natural textures, and more realistic human generation."
+family = "qwen"
+type = "image"
+release_date = "2025-12-31"
+last_updated = "2025-12-31"
+attachment = false
+reasoning = false
+temperature = false
+tool_call = false
+open_weights = true
+
+[limit]
+context = 4096
+output = 4096
+
+[modalities]
+input = ["text"]
+output = ["image"]

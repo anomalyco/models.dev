@@ -1,0 +1,19 @@
+name = "FLUX Kontext Pro"
+description = "FLUX.1 Kontext [pro] is an advanced image generation and editing model from Black Forest Labs that supports both text prompts and reference images for in-context modifications."
+family = "flux"
+type = "image"
+release_date = "2025-05-29"
+last_updated = "2025-05-29"
+attachment = false
+reasoning = false
+temperature = false
+tool_call = false
+open_weights = false
+
+[limit]
+context = 4096
+output = 4096
+
+[modalities]
+input = ["text"]
+output = ["image"]

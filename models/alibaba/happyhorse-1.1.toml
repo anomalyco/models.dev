@@ -1,0 +1,18 @@
+name = "HappyHorse 1.1"
+description = "HappyHorse 1.1 is Alibaba's closed-weight cinematic video generation model, producing clips of 3-15 seconds with synchronized audio and multilingual lip-synced dialogue generated in a single pass."
+type = "video"
+release_date = "2025-06-27"
+last_updated = "2025-06-27"
+attachment = true
+reasoning = false
+temperature = false
+tool_call = false
+open_weights = false
+
+[limit]
+context = 4096
+output = 0
+
+[modalities]
+input = ["text", "image", "video"]
+output = ["video"]

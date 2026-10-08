@@ -1,0 +1,19 @@
+name = "Nova 3"
+description = "Deepgram Nova-3 is a fast, accurate speech-to-text model served through Telnyx's OpenAI-compatible transcription endpoint."
+type = "transcription"
+release_date = "2025-04-03"
+last_updated = "2025-04-03"
+attachment = true
+reasoning = false
+temperature = false
+tool_call = false
+structured_output = true
+open_weights = false
+
+[limit]
+context = 4096
+output = 4096
+
+[modalities]
+input = ["audio"]
+output = ["text"]

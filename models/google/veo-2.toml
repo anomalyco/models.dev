@@ -1,0 +1,19 @@
+name = "Veo 2"
+description = "google/veo2 is Google DeepMind’s AI video generation model for creating high-quality, realistic videos from text prompts or image references."
+family = "veo"
+type = "video"
+release_date = "2025-04-09"
+last_updated = "2025-04-09"
+attachment = true
+reasoning = false
+temperature = false
+tool_call = false
+open_weights = false
+
+[limit]
+context = 4096
+output = 0
+
+[modalities]
+input = ["text", "image"]
+output = ["video"]

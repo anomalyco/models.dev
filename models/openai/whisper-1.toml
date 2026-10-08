@@ -1,0 +1,20 @@
+name = "Whisper-1"
+description = "Whisper-1 is OpenAI’s speech-to-text (and translation) model for audio transcription."
+family = "whisper"
+type = "transcription"
+release_date = "2023-01-01"
+last_updated = "2023-01-01"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = false
+structured_output = true
+open_weights = false
+
+[limit]
+context = 4096
+output = 4096
+
+[modalities]
+input = ["audio"]
+output = ["text"]

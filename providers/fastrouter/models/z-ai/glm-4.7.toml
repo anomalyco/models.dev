@@ -1,0 +1,11 @@
+# Toggle: reasoning enabled|disabled on POST /api/v1/chat/completions
+base_model = "zhipuai/glm-4.7"
+reasoning_options = [{ type = "toggle" }]
+
+[cost]
+input = 0.4
+output = 1.75
+cache_read = 0.08
+
+[limit]
+context = 202_752

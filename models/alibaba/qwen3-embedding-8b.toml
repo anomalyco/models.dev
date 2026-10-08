@@ -1,0 +1,19 @@
+name = "Qwen3 Embedding 8B"
+description = "Qwen3-Embedding-8B is the largest model in the Qwen3 Embedding series, purpose-built for text embedding and retrieval tasks."
+family = "qwen"
+type = "embedding"
+release_date = "2025-06-04"
+last_updated = "2025-06-04"
+attachment = false
+reasoning = false
+temperature = false
+tool_call = false
+open_weights = true
+
+[limit]
+context = 32_768
+output = 1
+
+[modalities]
+input = ["text"]
+output = ["text"]

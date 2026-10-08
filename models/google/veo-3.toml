@@ -1,0 +1,19 @@
+name = "Veo 3"
+description = "google/veo3 is Google DeepMind’s advanced AI video generation model that creates high-quality, cinematic videos with synchronized audio from text prompts or image references."
+family = "veo"
+type = "video"
+release_date = "2025-05-21"
+last_updated = "2025-05-21"
+attachment = true
+reasoning = false
+temperature = false
+tool_call = false
+open_weights = false
+
+[limit]
+context = 4096
+output = 0
+
+[modalities]
+input = ["text", "image"]
+output = ["video"]

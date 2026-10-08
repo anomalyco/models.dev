@@ -1,0 +1,7 @@
+# Toggle: reasoning enabled|disabled on POST /api/v1/chat/completions
+base_model = "alibaba/qwen3-14b"
+reasoning_options = [{ type = "toggle" }]
+
+[cost]
+input = 0.12
+output = 0.24

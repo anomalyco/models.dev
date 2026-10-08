@@ -1,0 +1,20 @@
+name = "Seedream 5.0 Lite"
+description = "Seedream 5.0 Lite is ByteDance's fast, cost-efficient image-generation model from the Seedream family, built on a unified generation-editing architecture that runs text-to-image, single-image editing, multi-image fusion, and batch sequence generation through one endpoint."
+family = "seed"
+type = "image"
+release_date = "2026-02-13"
+last_updated = "2026-02-13"
+attachment = false
+reasoning = false
+temperature = false
+tool_call = false
+structured_output = true
+open_weights = false
+
+[limit]
+context = 4096
+output = 0
+
+[modalities]
+input = ["text"]
+output = ["image"]

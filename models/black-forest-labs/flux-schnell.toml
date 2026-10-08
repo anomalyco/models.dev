@@ -1,0 +1,19 @@
+name = "FLUX Schnell"
+description = "FLUX.1 [schnell] is a 12-billion-parameter rectified flow transformer model for text-to-image generation, developed by Black Forest Labs."
+family = "flux"
+type = "image"
+release_date = "2024-08-21"
+last_updated = "2024-08-21"
+attachment = false
+reasoning = false
+temperature = false
+tool_call = false
+open_weights = true
+
+[limit]
+context = 4096
+output = 0
+
+[modalities]
+input = ["text"]
+output = ["image"]

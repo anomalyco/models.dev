@@ -1,0 +1,19 @@
+name = "Mistral Small 3"
+description = "A 24B parameter model optimized for speed and efficiency while rivaling models 3x its size like Llama 3.3 70B."
+family = "mistral"
+release_date = "2025-01-30"
+last_updated = "2025-01-30"
+attachment = false
+reasoning = false
+temperature = true
+tool_call = false
+structured_output = true
+open_weights = true
+
+[limit]
+context = 28_000
+output = 14_000
+
+[modalities]
+input = ["text"]
+output = ["text"]

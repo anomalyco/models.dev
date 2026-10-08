@@ -1,0 +1,19 @@
+name = "GPT Transcribe"
+description = "GPT Transcribe is OpenAI's speech-to-text model for completed audio files, streamed file transcripts, and committed turns in Realtime sessions over WebSocket."
+type = "transcription"
+release_date = "2026-07-27"
+last_updated = "2026-07-27"
+attachment = true
+reasoning = false
+temperature = false
+tool_call = false
+structured_output = true
+open_weights = false
+
+[limit]
+context = 4096
+output = 4096
+
+[modalities]
+input = ["audio"]
+output = ["text"]

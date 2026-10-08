@@ -1,0 +1,11 @@
+# Toggle: reasoning enabled|disabled on POST /api/v1/chat/completions
+base_model = "deepseek/deepseek-r1"
+reasoning_options = [{ type = "toggle" }]
+
+[cost]
+input = 0.5
+output = 2.18
+
+[limit]
+context = 163_840
+output = 163_840

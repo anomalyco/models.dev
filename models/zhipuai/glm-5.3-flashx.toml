@@ -1,0 +1,19 @@
+name = "GLM-5.3-FlashX"
+description = "GLM-5.3-FlashX is Z.ai's high-speed serving variant of GLM-5.3-Flash, delivering inference speeds of up to 200 tokens/s for faster responses."
+family = "glm"
+release_date = "2026-09-18"
+last_updated = "2026-09-18"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = true
+
+[limit]
+context = 1_048_576
+output = 131_072
+
+[modalities]
+input = ["text", "image", "video"]
+output = ["text"]

@@ -1,0 +1,18 @@
+name = "Wan 2.7"
+description = "Wan 2.7 is Alibaba Tongyi Lab's flagship video generation model, offering text-to-video, image-to-video, reference-to-video, and instruction-based video editing through one endpoint."
+type = "video"
+release_date = "2026-04-01"
+last_updated = "2026-04-01"
+attachment = true
+reasoning = false
+temperature = false
+tool_call = false
+open_weights = false
+
+[limit]
+context = 4096
+output = 4096
+
+[modalities]
+input = ["text", "image", "video", "audio"]
+output = ["video"]

@@ -1,0 +1,19 @@
+name = "Seedance Pro"
+description = "Seedance 1.0 Pro is the full version of the Seedance model (ByteDance) with professional-level capabilities."
+family = "seed"
+type = "video"
+release_date = "2025-02-12"
+last_updated = "2025-02-12"
+attachment = true
+reasoning = false
+temperature = false
+tool_call = false
+open_weights = false
+
+[limit]
+context = 8192
+output = 4096
+
+[modalities]
+input = ["text", "image"]
+output = ["video"]
