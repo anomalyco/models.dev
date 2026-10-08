@@ -8,10 +8,10 @@
 # `reasoning_effort` is accepted only for values in reasoning_efforts; any other value, or any value when the
 # field is absent, returns HTTP 400 unsupported_parameter (see the errors table on the doc page).
 # No reasoning text is returned (supports_reasoning=false) and no control is accepted (no reasoning_efforts
-# field; `thinking` is an unknown field), so this host records reasoning = false.
+# field; `thinking` is an unknown field): reasoning stays as the lab records it, with reasoning_options = [].
 base_model = "openai/gpt-oss-120b"
-reasoning = false
 structured_output = false
+reasoning_options = []
 
 [cost]
 input = 0.03885
