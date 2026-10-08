@@ -1,5 +1,12 @@
 base_model = "alibaba/qwen3.8-flash"
 name = "Qwen3.8 Flash"
+description = "Qwen3.8 fast low-cost Flash model with a 1M-token context window for high-throughput workloads."
+release_date = "2026-08-26"
+last_updated = "2026-08-26"
+attachment = false
+reasoning = false
+tool_call = true
+open_weights = true
 reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high"] }]
 
 [cost]
@@ -10,3 +17,7 @@ cache_read = 0.1053
 [limit]
 context = 976000
 output = 16384
+
+[modalities]
+input = ["text"]
+output = ["text"]

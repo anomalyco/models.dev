@@ -1,5 +1,12 @@
 base_model = "nvidia/nemotron-3-super-120b-a12b"
 name = "Nexus 120B"
+description = "Nvidia's high-performance MoE model. Excellent for complex reasoning, technical chat, and diverse knowledge tasks."
+release_date = "2026-03-11"
+last_updated = "2026-03-11"
+attachment = false
+reasoning = true
+tool_call = true
+open_weights = true
 reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high"] }]
 
 [cost]
@@ -9,3 +16,7 @@ output = 0.6316
 [limit]
 context = 131072
 output = 8192
+
+[modalities]
+input = ["text"]
+output = ["text"]

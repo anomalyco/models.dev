@@ -1,5 +1,12 @@
 base_model = "deepseek/deepseek-v4.1-flash"
 name = "DeepSeek V4.1 Flash"
+description = "DeepSeek V4.1 Flash - multimodal MoE with 552B params, 1M context, CED architecture and controllable reasoning (1-100). Optimized for agentic workloads."
+release_date = "2026-09-10"
+last_updated = "2026-09-10"
+attachment = false
+reasoning = true
+tool_call = true
+open_weights = true
 reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high"] }]
 
 [cost]
@@ -10,3 +17,7 @@ cache_read = 0.1053
 [limit]
 context = 1048576
 output = 131072
+
+[modalities]
+input = ["text"]
+output = ["text"]

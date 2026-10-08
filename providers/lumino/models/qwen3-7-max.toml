@@ -1,5 +1,12 @@
 base_model = "alibaba/qwen3.7-max"
 name = "Qwen3.7 Max"
+description = "Qwen flagship model for advanced reasoning, coding, instruction following, and agent-centric workloads."
+release_date = "2026-05-21"
+last_updated = "2026-05-21"
+attachment = false
+reasoning = true
+tool_call = true
+open_weights = true
 reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high"] }]
 
 [cost]
@@ -10,3 +17,7 @@ cache_read = 0.8421
 [limit]
 context = 256000
 output = 32768
+
+[modalities]
+input = ["text"]
+output = ["text"]
