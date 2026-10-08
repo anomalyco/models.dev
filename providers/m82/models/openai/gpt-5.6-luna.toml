@@ -2,10 +2,15 @@
 # Source: https://m82router.com/api/documentation (read 2026-10-08). M82 publishes prices in NPR;
 # USD below = NPR per million tokens / 162.099 (M82's fixed NPR/USD peg on that date).
 
-# Beta limits: every reply is capped at 4,096 output tokens; text-only input (no image_url parts);
-# JSON mode is not advertised as verified. Tool calls and streaming are verified.
-# Reasoning: request `reasoning_effort` none|low|medium|high (default medium). Reasoning text is never returned.
-# Rejected request fields (HTTP 400): temperature, top_p, stop, logprobs, top_logprobs. Prompt bytes capped at 267_904.
+# Catalog record for this model (same URL, models[].id == "openai/gpt-5.6-luna"): context_window=272000, max_output_tokens=4096, supports_tools=true, supports_streaming=true, supports_json=false, supports_vision=false, supports_reasoning=false, reasoning_efforts=["none", "low", "medium", "high"], unsupported_parameters=["temperature", "top_p", "stop", "logprobs", "top_logprobs"], max_prompt_bytes=267904.
+# limit.output = max_output_tokens (max_tokens above it returns HTTP 400 invalid_max_tokens).
+# attachment/modalities = supports_vision; structured_output = supports_json.
+# Request bodies are decoded strictly: unknown fields such as `thinking` or a `reasoning` object return HTTP 400.
+# `reasoning_effort` is accepted only for values in reasoning_efforts; any other value, or any value when the
+# field is absent, returns HTTP 400 unsupported_parameter (see the errors table on the doc page).
+# So the effort set below is exactly reasoning_efforts; xhigh/max are rejected. Reasoning text is never returned
+# (supports_reasoning=false), hence no [interleaved]. unsupported_parameters are rejected with HTTP 400;
+# requests above max_prompt_bytes return HTTP 400 context_length_exceeded, so limit.input is dropped.
 base_model = "openai/gpt-5.6-luna"
 base_model_omit = ["limit.input"]  # lab input limit exceeds the beta context window
 attachment = false

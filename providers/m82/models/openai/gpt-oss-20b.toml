@@ -2,11 +2,15 @@
 # Source: https://m82router.com/api/documentation (read 2026-10-08). M82 publishes prices in NPR;
 # USD below = NPR per million tokens / 162.099 (M82's fixed NPR/USD peg on that date).
 
-# Beta limits: every reply is capped at 4,096 output tokens; text-only input (no image_url parts);
-# JSON mode is not advertised as verified. Tool calls and streaming are verified.
-# Reasoning: not exposed or controllable through M82, so recorded as reasoning = false.
+# Catalog record for this model (same URL, models[].id == "openai/gpt-oss-20b"): context_window=131072, max_output_tokens=4096, supports_tools=true, supports_streaming=true, supports_json=false, supports_vision=false, supports_reasoning=false.
+# limit.output = max_output_tokens (max_tokens above it returns HTTP 400 invalid_max_tokens).
+# attachment/modalities = supports_vision; structured_output = supports_json.
+# Request bodies are decoded strictly: unknown fields such as `thinking` or a `reasoning` object return HTTP 400.
+# `reasoning_effort` is accepted only for values in reasoning_efforts; any other value, or any value when the
+# field is absent, returns HTTP 400 unsupported_parameter (see the errors table on the doc page).
+# No reasoning text is returned (supports_reasoning=false) and no control is accepted (no reasoning_efforts
+# field; `thinking` is an unknown field), so this host records reasoning = false.
 base_model = "openai/gpt-oss-20b"
-name = "gpt-oss-20b"
 reasoning = false
 structured_output = false
 status = "beta"

@@ -2,6 +2,7 @@
 # Source: https://m82router.com/api/documentation (read 2026-10-08). M82 publishes prices in NPR;
 # USD below = NPR per million tokens / 162.099 (M82's fixed NPR/USD peg on that date).
 
+# Catalog record for this model (same URL, models[].id == "typesafe/jev-1.13.0"): context_window=32000, max_output_tokens=1, supports_tools=false, supports_streaming=false, supports_json=false, supports_vision=false, supports_reasoning=false.
 # Decision model: served at POST /v1/decisions, not /chat/completions. Pinned Jev 1.13 release.
 base_model = "typesafe/jev-latest"
 name = "Jev 1.13"
