@@ -1,0 +1,40 @@
+# Sources (accessed 2026-10-08):
+# - Model id, 262,144 context, prices: https://unrestricted.sh/models/qwen3.8-27b-uncensored
+# - Base URL, endpoints, reasoning levels, reasoning in reasoning_content: https://unrestricted.sh/reference
+# - Output limit (32,768 in the provider config): https://unrestricted.sh/guides/opencode
+# - release_date: the day the current model went live on this API
+# Standalone entry, not base_model: this is an uncensored fine-tune of Qwen3.8 27B
+# (different weights), served text-only, like the other uncensored fine-tunes here.
+# Effort: reasoning_effort = none|low|medium|high (none turns reasoning off), so no toggle
+# Live-tested on /v1/chat/completions (2026-10-05): tool calls round-trip,
+# temperature is applied, json_schema response_format is enforced,
+# reasoning_content replayed on an assistant tool-call turn is read back,
+# and effort none returns no reasoning.
+name = "Qwen3.8 27B Uncensored"
+description = "Uncensored fine-tune of Qwen3.8 27B for coding and chat"
+family = "qwen"
+release_date = "2026-09-15"
+last_updated = "2026-09-15"
+attachment = false
+reasoning = true
+reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high"] }]
+tool_call = true
+structured_output = true
+temperature = true
+open_weights = true
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 2.00
+output = 5.00
+cache_read = 0.50
+
+[limit]
+context = 262_144
+output = 32_768
+
+[modalities]
+input = ["text"]
+output = ["text"]
