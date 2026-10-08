@@ -1,0 +1,20 @@
+# Served by M82 Router (https://m82router.com), an OpenAI-compatible gateway with one key for every model.
+# Source: https://m82router.com/api/documentation (read 2026-10-08). Costs are USD per million tokens.
+
+# Catalog record for this model (same URL, models[].id == "qwen/qwen3-coder-next"): context_window=262144, max_output_tokens=4096, supports_tools=true, supports_streaming=true, supports_json=false, supports_vision=false, supports_reasoning=false.
+# limit.output = max_output_tokens (max_tokens above it returns HTTP 400 invalid_max_tokens).
+# attachment/modalities = supports_vision; structured_output = supports_json.
+# Request bodies are decoded strictly: unknown fields such as `thinking` or a `reasoning` object return HTTP 400.
+# `reasoning_effort` is accepted only for values in reasoning_efforts; any other value, or any value when the
+# field is absent, returns HTTP 400 unsupported_parameter (see the errors table on the doc page).
+base_model = "alibaba/qwen3-coder-next"
+structured_output = false
+
+[cost]
+input = 0.126
+output = 0.84
+cache_read = 0.0735
+
+[limit]
+context = 262_144
+output = 4_096
