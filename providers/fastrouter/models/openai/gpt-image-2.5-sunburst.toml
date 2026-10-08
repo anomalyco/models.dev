@@ -3,3 +3,10 @@ base_model = "openai/gpt-image-2.5-sunburst"
 [limit]
 context = 128_000
 output = 4096
+
+# FastRouter token price, USD per 1M tokens.
+
+[cost]
+input = 8
+output = 30
+cache_read = 2

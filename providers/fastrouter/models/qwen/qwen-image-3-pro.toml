@@ -1,1 +1,7 @@
 base_model = "alibaba/qwen-image-3-pro"
+
+# FastRouter image price at 1K, USD per image. 2K output is 0.075.
+
+[cost]
+input = 0.003
+output = 0.04
