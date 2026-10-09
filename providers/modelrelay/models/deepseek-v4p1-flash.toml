@@ -1,5 +1,7 @@
 # Source: GET https://api.modelrelay.ai/v1/models (accessed 2026-10-09)
 # Upstream route: Fireworks accounts/fireworks/models/deepseek-v4p1-flash.
+# Limits: ModelRelay serves a 1,048,576-token window and caps output at 131,072
+# (platform/account/current_catalog.go; /v1/models context_length, top_provider.max_completion_tokens).
 # Effort: reasoning_effort (Chat Completions) = none|low|medium|high
 # https://docs.modelrelay.ai/core/reasoning-effort
 base_model = "deepseek/deepseek-v4.1-flash"
