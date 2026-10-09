@@ -1,0 +1,23 @@
+name = "Qwen3 Embedding 8B"
+description = "Largest Qwen3 embedding model for multilingual retrieval, ranking, and code search"
+family = "qwen"
+release_date = "2025-06-03"
+last_updated = "2025-06-03"
+attachment = false
+reasoning = false
+temperature = false
+tool_call = false
+open_weights = true
+license = "Apache-2.0"
+
+[limit]
+context = 32_768
+output = 1
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/Qwen/Qwen3-Embedding-8B"
