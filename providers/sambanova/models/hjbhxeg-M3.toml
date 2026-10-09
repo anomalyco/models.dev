@@ -1,20 +1,17 @@
 # SambaNova serves hjbhxeg-M3 with a 1M context window and 1M max output tokens.
 # Pricing from GET https://api.sambanova.ai/v1/models (probed 2026-10-09): USD per million tokens.
 # https://docs.sambanova.ai/cloud/docs/get-started/supported-models
-# Toggle: hjbhxeg-M3 thinking mode. SambaNova is OpenAI-compatible; same-surface peers
-# (openrouter) forward reasoning.enabled.
+# SambaNova does not document a reasoning wire control for hjbhxeg-M3.
 # hjbhxeg-M3 runs as text-only on SambaCloud (image/video input not accepted).
 # https://docs.sambanova.ai/docs/en/models/sambacloud-models
 base_model = "minimax/MiniMax-M3"
 
-attachment = false
+reasoning_options = []
 
-[[reasoning_options]]
-type = "toggle"
+attachment = false
 
 [modalities]
 input = ["text"]
-output = ["text"]
 
 [cost]
 input = 0.60
