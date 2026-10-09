@@ -1,0 +1,11 @@
+# Source: https://api.redpill.ai/v1/models
+# Toggle: reasoning.enabled = true|false
+base_model = "nvidia/nemotron-3.5-lightning"
+
+[[reasoning_options]]
+type = "toggle"
+
+[cost]
+input = 0.07
+output = 0.2
+cache_read = 0.04
