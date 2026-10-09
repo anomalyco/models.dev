@@ -4,9 +4,15 @@
 # SambaNova is a multi-model relay; no reasoning_effort control is exposed for hjbhxeg-M3.
 # hjbhxeg-M3 runs as text-only on SambaCloud (image/video input not accepted).
 # https://docs.sambanova.ai/docs/en/models/sambacloud-models
-base_model = "minimax/hjbhxeg-M3"
+base_model = "minimax/MiniMax-M3"
 
 reasoning_options = []
+
+attachment = false
+
+[modalities]
+input = ["text"]
+output = ["text"]
 
 [cost]
 input = 0.60
@@ -15,5 +21,3 @@ cache_read = 0.06
 
 [limit]
 output = 1_048_576
-
-base_model_omit = ["attachment", "modalities"]
