@@ -1,0 +1,16 @@
+base_model = "alibaba/qwen3.6-35b-a3b"
+description = "Qwen instruction model for multilingual chat, reasoning, and tool use"
+attachment = false
+reasoning_options = []
+
+[cost]
+input = 0.15
+output = 1
+cache_read = 0.15
+cache_write = 0
+
+[limit]
+output = 262_144
+
+[modalities]
+input = ["text"]

@@ -2,6 +2,7 @@
 # Ambient request schema: https://api.ambient.xyz/openapi.json
 # Model controls: https://openrouter.ai/api/v1/models (qwen/qwen3.6-27b)
 base_model = "alibaba/qwen3.6-27b"
+attachment = false
 
 [[reasoning_options]]
 type = "toggle"
@@ -17,4 +18,4 @@ context = 32_768
 output = 8_192
 
 [modalities]
-input = ["text", "image"]
+input = ["text"]
