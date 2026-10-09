@@ -1,0 +1,20 @@
+# Model ID: https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/partner-models/claude/haiku-5-5
+# Pricing and reasoning: https://platform.claude.com/docs/en/models/haiku-5-5/overview
+# Toggle: thinking.type = adaptive|disabled (disabled only at low, medium, or high effort)
+# Effort: output_config.effort = low|medium|high|xhigh|max
+base_model = "anthropic/claude-haiku-5-5"
+structured_output = true
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
+
+[cost]
+input = 0.10
+output = 0.50
+cache_read = 0.01
+cache_write = 0.125
+
+[[cost.tiers]]
+tier = { type = "context", size = 100_000 }
+input = 0.50
+output = 2.50
+cache_read = 0.05
+cache_write = 0.625

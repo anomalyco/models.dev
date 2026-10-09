@@ -1,0 +1,25 @@
+# Pool metadata: https://api.opper.ai/v3/models (2026-09-08).
+# Effort: top-level reasoning_effort; levels shared by the pool members.
+# Context tiers are conservative pool price ceilings, including marginal-rate bands.
+base_model = "openai/gpt-5.6-terra"
+
+reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh", "max"] }]
+
+[cost]
+input = 2
+output = 12
+cache_read = 0.2
+cache_write = 2.5
+
+[[cost.tiers]]
+tier = { type = "context", size = 272000 }
+input = 4
+output = 18
+cache_read = 0.4
+cache_write = 5
+
+[limit]
+context = 1000000
+
+[interleaved]
+field = "reasoning_content"

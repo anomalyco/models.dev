@@ -1,0 +1,17 @@
+# Sources:
+# - https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/partner-models/llama/llama4-scout (us-east5 only)
+# - https://cloud.google.com/gemini-enterprise-agent-platform/generative-ai/pricing
+base_model = "meta/llama-4-scout-17b-instruct"
+structured_output = true
+
+[cost]
+input = 0.25
+output = 0.70
+
+[limit]
+context = 1_310_720
+output = 8_192
+
+[provider]
+npm = "@ai-sdk/openai-compatible"
+api = "https://${GOOGLE_VERTEX_ENDPOINT}/v1/projects/${GOOGLE_VERTEX_PROJECT}/locations/${GOOGLE_VERTEX_LOCATION}/endpoints/openapi"

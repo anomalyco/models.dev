@@ -51,6 +51,14 @@ const VERIFIED_NON_REASONING = new Set([
   "qwen/qwen3-235b-a22b-fp8",
   "qwen/qwen3-next-80b-a3b-instruct",
 ]);
+// Novita's inventory overstates these output limits; chat/completions rejects
+// larger max_tokens values (verified 2026-09-24 in #8029).
+const OUTPUT_LIMIT_OVERRIDES: Record<string, number> = {
+  "minimax/minimax-m2.5": 131_072,
+  "minimax/minimax-m2.5-highspeed": 131_072,
+  "moonshotai/kimi-k2-0905": 98_304,
+  "moonshotai/kimi-k2-thinking": 98_304,
+};
 // Novita's inventory lists image input, but both routes answer that they cannot see images.
 const VERIFIED_TEXT_ONLY = new Set(["openai/gpt-oss-20b", "openai/gpt-oss-120b"]);
 const VERIFIED_ALWAYS_ON = new Set([
@@ -213,7 +221,7 @@ function buildNovitaModel(model: NovitaAIModel, existing: ExistingModel | undefi
   const context = model.context_size && model.context_size > 0
     ? model.context_size
     : resolved?.limit?.context ?? 0;
-  const outputLimit = model.max_output_tokens ?? resolved?.limit?.output ?? context;
+  const outputLimit = OUTPUT_LIMIT_OVERRIDES[model.id] ?? model.max_output_tokens ?? resolved?.limit?.output ?? context;
   const modelCost = cost(model, existing);
   // Novita's GLM-5.3 description claims reasoning cannot be disabled, but
   // its chat API returns no reasoning when thinking.type is disabled.

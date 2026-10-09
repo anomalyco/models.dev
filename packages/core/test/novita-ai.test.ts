@@ -321,6 +321,21 @@ test("Novita AI sync rejects rows outside the priced chat-completions catalog", 
   })).toBeUndefined();
 });
 
+test("Novita AI keeps verified output limits when the catalog overstates them", () => {
+  const context = { authored: () => undefined, existing: () => undefined };
+  const pricing = { prompt: { price_per_m_decimal: "0.3" }, completion: { price_per_m_decimal: "1.2" } };
+  const minimax = novitaAi.translateModel(novitaAiModel({ id: "minimax/minimax-m2.5", context_size: 204_800, max_output_tokens: 131_100, features: [], pricing }), context);
+  // Matches the lab limit, so no provider override is written.
+  expect(minimax?.model).not.toHaveProperty("limit.output");
+  const kimi = novitaAi.translateModel(novitaAiModel({ id: "moonshotai/kimi-k2-0905", context_size: 262_144, max_output_tokens: 262_144, features: [], pricing }), context);
+  expect(kimi?.model).not.toHaveProperty("limit.output");
+  const thinking = novitaAi.translateModel(novitaAiModel({ id: "moonshotai/kimi-k2-thinking", context_size: 262_144, max_output_tokens: 262_144, features: ["reasoning"], pricing }), {
+    authored: () => ({ base_model: "moonshotai/kimi-k2-thinking", reasoning_options: [] }) as ExistingModel,
+    existing: () => ({ reasoning: true, limit: { context: 262_144, output: 262_144 } }) as ExistingModel,
+  });
+  expect(thinking?.model).toMatchObject({ limit: { output: 98_304 } });
+});
+
 test("Novita AI does not advertise GPT-OSS image input that the chat API ignores", () => {
   const pricing = { prompt: { price_per_m_decimal: "0.1" }, completion: { price_per_m_decimal: "0.2" } };
   for (const id of ["openai/gpt-oss-20b", "openai/gpt-oss-120b"]) {

@@ -1,0 +1,17 @@
+# Sources (accessed 2026-09-20):
+# https://aihubmix.com/api/v1/models?type=llm (USD per million tokens)
+# https://platform.minimaxi.com/docs/api-reference/text-chat-openai.md
+# Toggle: enable_thinking = true|false on /v1/chat/completions.
+# https://docs.aihubmix.com/cn/api/unified-inference
+base_model = "minimax/MiniMax-M3"
+structured_output = true
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "toggle"
+
+[cost]
+input = 0.288
+output = 1.152

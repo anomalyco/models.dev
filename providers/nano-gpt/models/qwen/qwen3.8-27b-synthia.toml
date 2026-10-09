@@ -1,0 +1,24 @@
+name = "Qwen 3.8 27B Synthia"
+description = "Qwen 3.8 27B Synthia is a text-only roleplay finetune served by Aoru in NVFP4 with a 262,144-token context window."
+family = "qwen"
+release_date = "2026-10-05"
+last_updated = "2026-10-05"
+attachment = false
+reasoning = false
+tool_call = false
+structured_output = false
+open_weights = true
+
+[cost]
+input = 0.1
+output = 0.6
+cache_read = 0.05
+
+[limit]
+context = 262_144
+input = 262_144
+output = 32_768
+
+[modalities]
+input = ["text"]
+output = ["text"]

@@ -1,0 +1,26 @@
+# Sources:
+# - https://docs.vivgrid.com/models/viv-fast
+# - https://docs.vivgrid.com/api/model-api
+name = "Viv Fast"
+description = "Fast coding model"
+release_date = "2026-09-21"
+last_updated = "2026-09-21"
+reasoning = true
+knowledge = "2026-09"
+temperature = false
+open_weights = false
+tool_call = true
+structured_output = true
+attachment = true
+
+[limit]
+context = 1_000_000
+output = 256_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[[links]]
+label = "Model docs"
+url = "https://docs.vivgrid.com/models/viv-fast"

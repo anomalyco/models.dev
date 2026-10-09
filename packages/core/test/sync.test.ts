@@ -82,7 +82,7 @@ import {
 import { openai, parseOpenAIModels } from "../src/sync/providers/openai.js";
 import { ofox } from "../src/sync/providers/ofox.js";
 import { pioneer } from "../src/sync/providers/pioneer.js";
-import { google, shouldTrackGoogleModel } from "../src/sync/providers/google.js";
+import { buildGoogleModel, google, shouldTrackGoogleModel } from "../src/sync/providers/google.js";
 import { buildTinfoilModel, tinfoil, type TinfoilModel } from "../src/sync/providers/tinfoil.js";
 import { resolveVeniceBaseModel } from "../src/sync/providers/venice.js";
 import { buildVercelModel, vercel } from "../src/sync/providers/vercel.js";
@@ -447,6 +447,38 @@ test("syncs CrossModel's structured-output capability", () => {
     base_model: "alibaba/qwen3.8-max",
     structured_output: true,
   });
+});
+
+test("clears stale CrossModel context tiers only when source pricing is usable", () => {
+  const existing: ExistingModel = {
+    base_model: "alibaba/qwen3.8-max",
+    cost: {
+      input: 9,
+      output: 27,
+      tiers: [
+        {
+          tier: { type: "context", size: 200_000 },
+          input: 18,
+          output: 54,
+        },
+      ],
+    },
+  };
+
+  const authoritative = buildCrossModel(crossModelModel(), existing);
+  const absent = buildCrossModel(crossModelModel({ pricing: undefined }), existing);
+  const unusable = buildCrossModel(
+    crossModelModel({
+      pricing: {
+        tiers: [{ threshold: 0, input_micro_per_1m: 1_880_000 }],
+      },
+    }),
+    existing,
+  );
+
+  expect(authoritative?.cost).toEqual({ input: 1.88, output: 5.63 });
+  expect(absent?.cost).toEqual(existing.cost);
+  expect(unusable?.cost).toEqual(existing.cost);
 });
 
 test("parses CrossModel's nullable reasoning controls", () => {
@@ -1202,6 +1234,34 @@ test("tracks public Google model families but not opaque internal IDs", () => {
   expect(shouldTrackGoogleModel("thorin")).toBe(false);
 });
 
+test.each([
+  ["gemini-2.5-computer-use-preview-10-2025", 128_000, 64_000],
+  ["gemini-3-pro-image", 65_536, 32_768],
+  ["gemini-3.1-flash-image", 131_072, 32_768],
+  ["gemini-3.1-flash-lite-image", 65_536, 4_096],
+])("preserves the %s model-card limits during Google sync", (id, context, output) => {
+  const existing: ExistingModel = {
+    base_model: `google/${id}`,
+    name: id,
+    release_date: "2026-01-01",
+    last_updated: "2026-01-01",
+    attachment: true,
+    reasoning: true,
+    tool_call: false,
+    open_weights: false,
+    limit: { context, output },
+    modalities: { input: ["text", "image"], output: ["text", "image"] },
+  };
+  const built = buildGoogleModel({
+    name: `models/${id}`,
+    inputTokenLimit: 65_536,
+    outputTokenLimit: 65_536,
+  }, existing);
+
+  expect(built).toMatchObject({ base_model: `google/${id}` });
+  expect(built).not.toHaveProperty("limit");
+});
+
 function tinfoilModel(overrides: Partial<TinfoilModel> = {}): TinfoilModel {
   return {
     id: "glm-5-2",
@@ -1528,6 +1588,51 @@ test("filters unmanaged DigitalOcean models and joins catalog data by ID", () =>
       },
     },
   });
+});
+
+test("omits retired DigitalOcean models absent from the catalog even without lifecycle metadata", () => {
+  const retired = [
+    "anthropic-claude-3.7-sonnet",
+    "anthropic-claude-3.5-sonnet",
+    "anthropic-claude-3.5-haiku",
+    "anthropic-claude-3-opus",
+  ];
+  const models = parseDigitalOceanModels({
+    models: [
+      ...retired.map((id) => ({ id, name: id, type: "chat" })),
+      { id: "openai-gpt-6-1-sol", name: "OpenAI GPT-6.1 Sol", lifecycle_status: "active" },
+    ],
+    catalog: [{
+      model_id: "openai-gpt-6-1-sol",
+      name: "OpenAI GPT-6.1 Sol",
+      context_window: "256000",
+      max_output_tokens: "32768",
+      availability: ["serverless"],
+      modalities: { input: ["text"], output: ["text"] },
+      pricing: { input_price_per_million: 0.000001, output_price_per_million: 0.000002 },
+    }],
+  });
+
+  expect(models).toHaveLength(1);
+  expect(models[0]?.id).toBe("openai-gpt-6-1-sol");
+});
+
+test("deprecates DigitalOcean models selected for sync without lifecycle metadata", () => {
+  const [model] = parseDigitalOceanModels({
+    models: [{ id: "example", name: "Example" }],
+    catalog: [{
+      model_id: "example",
+      name: "Example",
+      context_window: "128000",
+      max_output_tokens: "8192",
+      availability: ["serverless"],
+      modalities: { output: ["text"] },
+      pricing: { input_price_per_million: 0.000001, output_price_per_million: 0.000002 },
+    }],
+  });
+
+  expect(buildDigitalOceanModel(model!, { status: "beta" }).status).toBe("deprecated");
+  expect(buildDigitalOceanModel(model!).status).toBe("deprecated");
 });
 
 test("maps DigitalOcean 1M catalog pricing to its 200K threshold", () => {
@@ -2806,6 +2911,28 @@ test("resolves Eden AI aliases to the model they point at", () => {
   ).toBe("anthropic/claude-opus-5");
 });
 
+test("preserves model type when formatting synced TOML", () => {
+  const content = formatToml({
+    id: "typesafe/jev-latest",
+    type: "decision",
+    name: "Jev",
+    description: "System One model for typed decisions",
+    release_date: "2026-09-15",
+    last_updated: "2026-09-15",
+    attachment: false,
+    reasoning: false,
+    tool_call: false,
+    open_weights: false,
+    limit: { context: 64_000, output: 0 },
+    modalities: { input: ["text"], output: ["text"] },
+  });
+
+  expect(Bun.TOML.parse(content)).toMatchObject({
+    type: "decision",
+    name: "Jev",
+  });
+});
+
 test("formats interleaved as a root field before reasoning option tables", () => {
   const content = formatToml({
     id: "example/model",
@@ -3140,6 +3267,19 @@ test("uses OpenRouter model context when top provider reports a shorter context"
       output: 8_192,
     },
   });
+});
+
+test("uses a verified OpenRouter output limit over catalog metadata", () => {
+  const model = buildOpenRouterModel(openRouterModel({
+    id: "minimax/minimax-01",
+    context_length: 1_000_192,
+    top_provider: {
+      context_length: 1_000_192,
+      max_completion_tokens: 900_172,
+    },
+  }), undefined);
+
+  expect(model.limit?.output).toBe(40_000);
 });
 
 test("factors OpenRouter Pro routes against canonical OpenAI metadata", () => {
@@ -4401,7 +4541,7 @@ test("retains Merge Gateway models missing from an API-key-scoped response", () 
   expect(mergeGateway.deleteMissing).toBe(false);
 });
 
-test("parses Vercel pricing tiers with an implicit zero minimum", () => {
+test("translates Vercel pricing tiers with an implicit zero minimum", () => {
   const [model] = vercel.parseModels({
     data: [{
       id: "openai/gpt-5.6-luna",
@@ -4418,14 +4558,70 @@ test("parses Vercel pricing tiers with an implicit zero minimum", () => {
           { cost: "0.0000001", max: 272_000 },
           { cost: "0.0000002", min: 272_000 },
         ],
+        input_tiers: [
+          { cost: "0.000001", max: 272_000 },
+          { cost: "0.000002", min: 272_000 },
+        ],
+        output_tiers: [
+          { cost: "0.000006", max: 272_000 },
+          { cost: "0.000009", min: 272_000 },
+        ],
       },
     }],
   });
 
   expect(model).toBeDefined();
-  expect(buildVercelModel(model!, undefined)).toMatchObject({
-    cost: { input: 1, output: 6, cache_read: 0.1 },
+  const synced = buildVercelModel(model!, undefined);
+  expect(synced).toMatchObject({
+    cost: {
+      input: 1,
+      output: 6,
+      cache_read: 0.1,
+      tiers: [{
+        tier: { type: "context", size: 272_000 },
+        input: 2,
+        output: 9,
+        cache_read: 0.2,
+      }],
+    },
   });
+  expect(vercel.sameModel?.({
+    cost: { input: 1, output: 6, cache_read: 0.1 },
+  }, synced)).toBe(false);
+});
+
+test("uses verified Vercel output limits over catalog metadata", () => {
+  const limits = {
+    "alibaba/qwen3.6-27b": 65_536,
+    "amazon/nova-2-lite": 65_535,
+    "bytedance/seed-1.8": 32_768,
+    "deepseek/deepseek-v3.1-terminus": 32_768,
+    "inception/mercury-2": 50_000,
+    "minimax/minimax-m2": 196_608,
+    "quiverai/arrow-2": 65_536,
+    "quiverai/arrow-2-telos": 65_536,
+    "zai/glm-5-turbo": 131_072,
+  };
+
+  for (const [id, output] of Object.entries(limits)) {
+    const [model] = vercel.parseModels({
+      data: [{
+        id,
+        name: id,
+        created: 1_780_963_200,
+        context_window: 1_000_000,
+        max_tokens: 1_000_000,
+        type: "language",
+      }],
+    });
+
+    const inherited = [
+      "alibaba/qwen3.6-27b",
+      "deepseek/deepseek-v3.1-terminus",
+      "zai/glm-5-turbo",
+    ].includes(id);
+    expect(buildVercelModel(model!, undefined).limit?.output).toBe(inherited ? undefined : output);
+  }
 });
 
 test("Vercel factored models inherit temperature from base metadata", () => {
@@ -4540,6 +4736,116 @@ test("Vercel Claude Opus fast variants factor onto base opus metadata", () => {
   expect(synced).not.toHaveProperty("family");
 });
 
+test("Vercel sync accepts evaluation and unknown future model types", () => {
+  const [evaluation, future] = vercel.parseModels({
+    data: [
+      {
+        id: "typesafe-ai/jev",
+        name: "Jev",
+        description: "Decision model for typed classification and scoring",
+        created: 1_755_815_280,
+        released: 1_789_430_400,
+        context_window: 0,
+        max_tokens: 0,
+        type: "evaluation",
+        pricing: { input: "0.000000042", output: "0" },
+      },
+      {
+        id: "example/future-model",
+        name: "Future Model",
+        created: 1_755_815_280,
+        context_window: 8_000,
+        max_tokens: 4_000,
+        type: "something-new",
+      },
+    ],
+  });
+
+  expect(evaluation).toBeDefined();
+  expect(future).toBeDefined();
+  expect(buildVercelModel(evaluation!, undefined)).toMatchObject({
+    type: "decision",
+    description: "Decision model for typed classification and scoring",
+    cost: { input: 0.042, output: 0 },
+    limit: { context: 0, output: 0 },
+    modalities: { input: ["text"], output: ["text"] },
+  });
+  expect(buildVercelModel(future!, undefined)).toMatchObject({
+    limit: { context: 8_000, output: 4_000 },
+    modalities: { input: ["text"], output: ["text"] },
+  });
+  expect(buildVercelModel(future!, undefined).type).toBeUndefined();
+});
+
+test("Vercel sync preserves Liquid d1 as a decision model via its lab metadata", () => {
+  const [model] = vercel.parseModels({
+    data: [{
+      id: "liquid/d1",
+      name: "Liquid d1",
+      description: "Liquid d1 is a decision model for classification, routing, and scoring",
+      created: 1_755_815_280,
+      released: 1_790_640_000,
+      context_window: 65_536,
+      max_tokens: 0,
+      type: "evaluation",
+      pricing: { input: "0.00000004", output: "0" },
+    }],
+  });
+  const translated = vercel.translateModel(model!, {
+    existing: (id) => id === "liquid/d1" ? { base_model: "liquid/d1", cost: { input: 0.04, output: 0 } } : undefined,
+    authored: () => undefined,
+  });
+
+  expect(translated?.model).toMatchObject({
+    base_model: "liquid/d1",
+    cost: { input: 0.04, output: 0 },
+  });
+  expect(translated?.model).not.toHaveProperty("type"); // inherited from lab metadata
+  expect(translated?.model).not.toHaveProperty("description"); // don't reintroduce a generic chat description
+  expect(vercel.sameModel?.({ name: "Liquid d1" },
+    { name: "Liquid d1", type: "decision" })).toBe(false);
+});
+
+test("Vercel family inference requires word boundaries", () => {
+  const [jev, rerank, o3] = vercel.parseModels({
+    data: [
+      {
+        id: "typesafe-ai/jev",
+        name: "Jev",
+        created: 1_755_815_280,
+        context_window: 0,
+        max_tokens: 0,
+        type: "evaluation",
+      },
+      {
+        id: "cohere/rerank-v3.5",
+        name: "Cohere Rerank 3.5",
+        created: 1_733_000_000,
+        context_window: 4_096,
+        max_tokens: 4_096,
+        type: "reranking",
+      },
+      {
+        id: "example/o3",
+        name: "o3",
+        created: 1_745_000_000,
+        context_window: 200_000,
+        max_tokens: 100_000,
+        type: "language",
+      },
+    ],
+  });
+
+  // No fuzzy subsequence matches ("yi") or single-letter substring matches ("o").
+  expect(buildVercelModel(jev!, undefined).family).toBeUndefined();
+  expect(buildVercelModel(rerank!, undefined).family).toBeUndefined();
+  // Genuine o-series IDs still match, and keep their stamp when re-synced.
+  expect(buildVercelModel(o3!, undefined).family).toBe("o");
+  expect(buildVercelModel(o3!, { family: "o" }).family).toBe("o");
+  // Existing bogus "o" stamps self-heal on the next sync.
+  expect(buildVercelModel(rerank!, { family: "o" }).family).toBeUndefined();
+});
+
 test("Vercel empty existing reasoning_options falls back to the route base menu", () => {
   const [model] = vercel.parseModels({
     data: [{
@@ -4604,6 +4910,110 @@ test("Vercel preserves a non-empty existing reasoning_options over the base menu
   expect(translated?.model).toMatchObject({
     reasoning_options: [{ type: "toggle" }],
   });
+});
+
+test("Vercel sync takes catalog reasoning controls over stale authored controls", () => {
+  const [model] = vercel.parseModels({
+    data: [{
+      id: "alibaba/qwen3.8-max-prime",
+      name: "Qwen 3.8 Max Prime",
+      created: 1_790_115_600,
+      context_window: 1_000_000,
+      max_tokens: 131_072,
+      type: "language",
+      tags: ["reasoning", "tool-use", "vision"],
+      reasoning_options: [
+        { type: "toggle" },
+        { type: "effort", values: ["none", "low", "medium", "high"] },
+      ],
+    }],
+  });
+
+  const translated = vercel.translateModel(model!, {
+    existing(id) {
+      return id === "alibaba/qwen3.8-max-prime"
+        ? { base_model: "alibaba/qwen3.8-max-prime", reasoning_options: [] }
+        : undefined;
+    },
+    authored() {
+      return undefined;
+    },
+  });
+
+  expect(translated?.model).toMatchObject({
+    base_model: "alibaba/qwen3.8-max-prime",
+    reasoning_options: [{ type: "effort", values: ["none", "low", "medium", "high"] }],
+  });
+  expect(vercel.sameModel?.({ reasoning_options: [] }, translated!.model)).toBe(false);
+});
+
+test("Vercel catalog budgets and toggles are synced when effort does not include none", () => {
+  const [model] = vercel.parseModels({
+    data: [{
+      id: "alibaba/qwen3.8-max-0902",
+      name: "Qwen 3.8 Max 0902",
+      created: 1_780_963_200,
+      type: "language",
+      tags: ["reasoning"],
+      reasoning_options: [
+        { type: "toggle" },
+        { type: "effort", values: ["low", "medium", "xhigh"] },
+        { type: "budget_tokens", min: 0, max: 262_144 },
+      ],
+    }],
+  });
+
+  const translated = vercel.translateModel(model!, {
+    existing(id) {
+      return id === "alibaba/qwen3.8-max-0902" ? { reasoning_options: [] } : undefined;
+    },
+    authored() {
+      return undefined;
+    },
+  });
+  expect(translated?.model.reasoning_options).toEqual([
+    { type: "toggle" },
+    { type: "effort", values: ["low", "medium", "xhigh"] },
+    { type: "budget_tokens", min: 0, max: 262_144 },
+  ]);
+  expect(translated?.header).toContain("# Toggle: reasoning.enabled = true|false");
+});
+
+test("Vercel missing, empty, and unknown catalog controls have distinct meanings", () => {
+  const base = {
+    id: "example/reasoner",
+    name: "Reasoner",
+    created: 1_780_963_200,
+    type: "language",
+    tags: ["reasoning"],
+  };
+  const authored = { reasoning_options: [{ type: "effort" as const, values: ["low" as const] }] };
+  const [missing, empty, unknown] = vercel.parseModels({
+    data: [
+      base,
+      { ...base, reasoning_options: [] },
+      { ...base, reasoning_options: [{ type: "effort", values: ["new-level"] }] },
+    ],
+  });
+
+  expect(buildVercelModel(missing!, authored).reasoning_options).toEqual(authored.reasoning_options);
+  expect(buildVercelModel(empty!, authored).reasoning_options).toEqual([]);
+  expect(buildVercelModel(unknown!, authored).reasoning_options).toEqual(authored.reasoning_options);
+});
+
+test("Vercel ignores catalog controls when the resolved model cannot reason", () => {
+  const [model] = vercel.parseModels({
+    data: [{
+      id: "example/non-reasoner",
+      name: "Non-Reasoner",
+      created: 1_780_963_200,
+      type: "language",
+      tags: [],
+      reasoning_options: [{ type: "effort", values: ["low", "high"] }],
+    }],
+  });
+
+  expect(buildVercelModel(model!, undefined).reasoning_options).toBeUndefined();
 });
 
 test("OpenRouter Claude Opus fast variants factor onto base opus metadata", () => {

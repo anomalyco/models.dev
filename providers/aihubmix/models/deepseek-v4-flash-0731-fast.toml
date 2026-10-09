@@ -1,0 +1,24 @@
+# Toggle:
+# $.enable_thinking = true|false on the OpenAI-compatible /v1/chat/completions path (verified live 2026-09-11);
+# $.thinking.type = "enabled"|"disabled"|"adaptive" on /v1/messages; $.generationConfig.thinkingConfig on the Gemini path.
+# Effort: low|high|max
+# $.reasoning_effort on /v1/chat/completions (alias $.reasoning.effort, which is also the Responses field);
+# $.output_config.effort on /v1/messages, subject to model support.
+# https://docs.aihubmix.com/cn/api/unified-inference
+base_model = "deepseek/deepseek-v4-flash-0731"
+name = "DeepSeek V4 Flash 0731 Fast"
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[cost]
+input = 0.28
+output = 1.4
+cache_read = 0.07

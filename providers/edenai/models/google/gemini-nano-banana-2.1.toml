@@ -1,0 +1,17 @@
+base_model = "google/gemini-nano-banana-2.1"
+tool_call = true
+structured_output = true
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "minimal", "high"]
+
+[cost]
+input = 1.5
+output = 7.5
+
+[limit]
+context = 65_536
+
+[modalities]
+input = ["image", "text"]

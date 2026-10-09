@@ -1,0 +1,10 @@
+base_model = "mistral/mistral-large-4"
+reasoning_options = [{ type = "effort", values = ["none", "high"] }]
+
+[cost]
+input = 0.68
+output = 2.09
+cache_read = 0.07
+
+[limit]
+context = 524_288

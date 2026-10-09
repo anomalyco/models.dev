@@ -1,0 +1,15 @@
+# Effort: OpenAI reasoning_effort, routed to Mistral's native none|high levels
+# (see providers/mistral/models/mistral-large-4.toml).
+base_model = "mistral/mistral-large-4"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "high"]
+
+[cost]
+input = 0.765
+output = 2.351
+cache_read = 0.079
+
+[limit]
+context = 1_000_000

@@ -1,0 +1,29 @@
+name = "OpenAI: GPT-6 Sol Pro"
+description = "GPT-6 Sol Pro is the same underlying model as [GPT-6 Sol](https://openrouter.ai/openai/gpt-6-sol), served with `reasoning.mode` set to `pro` for higher-quality responses on complex tasks. Learn more in OpenAI's docs: https://developers.openai.com/api/docs/guides/reasoning#reasoning-mode"
+family = "gpt"
+release_date = "2026-09-22"
+last_updated = "2026-09-22"
+attachment = true
+reasoning = true
+temperature = false
+tool_call = true
+structured_output = true
+open_weights = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "xhigh", "max"]
+
+[cost]
+input = 2
+output = 10
+cache_read = 0.2
+cache_write = 2.5
+
+[limit]
+context = 1_050_000
+output = 128_000
+
+[modalities]
+input = ["pdf", "image", "text"]
+output = ["text"]

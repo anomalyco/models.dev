@@ -1,0 +1,23 @@
+name = "Pareto 26.10 Preview"
+description = "Pareto is a multimodal composite model built for research, coding, and agentic workflows, while delivering frontier-level performance across a broad range of general-purpose tasks. This is a preview of the..."
+release_date = "2026-10-01"
+last_updated = "2026-10-01"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = true
+structured_output = false
+open_weights = false
+
+[cost]
+input = 0.8
+output = 3.2
+cache_read = 0.03
+
+[limit]
+context = 1_048_576
+output = 131_072
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

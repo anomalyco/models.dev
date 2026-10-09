@@ -1,0 +1,14 @@
+# Effort: OpenAI reasoning_effort, mapped by Cortecs to Claude output_config.effort.
+# Matches the other Cortecs Claude 5.5 entries; Haiku 5.5 has adaptive thinking only,
+# so no manual budget_tokens control.
+base_model = "anthropic/claude-haiku-5-5"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high"]
+
+[cost]
+input = 0.113
+output = 0.563
+cache_read = 0.011
+cache_write = 0.14

@@ -1,0 +1,14 @@
+base_model = "zhipuai/glm-4.6v-flash"
+# Free Flash tier on Z.AI; cost shape mirrors providers/zai/models/glm-4.5-flash.toml.
+# Lab metadata (limits/modalities) lives in models/zhipuai/glm-4.6v-flash.toml.
+# https://z.ai/blog/glm-4.6v
+# https://huggingface.co/zai-org/GLM-4.6V-Flash
+
+[[reasoning_options]]
+type = "toggle"
+
+[cost]
+input = 0
+output = 0
+cache_read = 0
+cache_write = 0

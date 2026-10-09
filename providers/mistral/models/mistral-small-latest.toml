@@ -1,3 +1,4 @@
+# Cached-input pricing: https://docs.mistral.ai/inference/pricing (2026-09-29)
 name = "Mistral Small (latest)"
 description = "Efficient Mistral model for fast chat, extraction, and production assistants"
 family = "mistral-small"
@@ -6,8 +7,8 @@ last_updated = "2026-03-16"
 attachment = true
 reasoning = true
 temperature = true
-knowledge = "2025-06"
 tool_call = true
+knowledge = "2025-06"
 open_weights = true
 
 [[reasoning_options]]
@@ -16,10 +17,11 @@ values = ["none", "high"]
 
 [cost]
 input = 0.15
-output = 0.60
+output = 0.6
+cache_read = 0.015
 
 [limit]
-context = 256_000
+context = 262_144
 output = 256_000
 
 [modalities]

@@ -42,7 +42,7 @@ function table(markdown: string, header: string[]) {
 }
 
 function tierCost(markdown: string, tier: string) {
-  const sections = markdown.split(/^### /m).filter((section) => section.split("\n")[0]?.includes(`{#${tier}}`));
+  const sections = markdown.split(/^### /m).filter((section) => sectionID(section) === tier);
   if (sections.length !== 1) throw new Error(`Meta docs need exactly one pricing section for ${tier}`);
   const prices = new Map<string, number>();
   for (const [usage, price] of table(sections[0]!, ["Usage", "Price per 1M tokens"])) {
@@ -56,6 +56,13 @@ function tierCost(markdown: string, tier: string) {
     output: prices.get("Output"),
     cache_read: prices.get("Cached input"),
   };
+}
+
+function sectionID(section: string) {
+  const heading = section.split("\n")[0]?.trim() ?? "";
+  const explicit = heading.match(/\{#([a-z0-9-]+)\}$/)?.[1];
+  if (explicit !== undefined) return explicit;
+  return heading.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
 }
 
 export function parseMetaModels(raw: unknown): MetaModel[] {

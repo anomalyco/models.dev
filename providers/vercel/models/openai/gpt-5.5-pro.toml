@@ -10,6 +10,11 @@ values = ["medium", "high", "xhigh"]
 input = 30
 output = 180
 
+[[cost.tiers]]
+tier = { type = "context", size = 272_000 }
+input = 60
+output = 270
+
 [limit]
 context = 1_000_000
 input = 872_000

@@ -1,3 +1,4 @@
+# Scores and detailed evaluation recipes: https://huggingface.co/tencent/Hy3/blob/main/assets/benchmark-appendix.png
 # https://cloud.tencent.com/document/product/1823/130051
 name = "Hy3"
 description = "Tencent Hy reasoning model for coding, instruction following, and agent tasks"
@@ -27,4 +28,235 @@ url = "https://huggingface.co/tencent/Hy3"
 name = "SWE-Bench Verified"
 score = 78
 metric = "resolved"
+source = "https://huggingface.co/tencent/Hy3"
+
+[[benchmarks]]
+name = "SWE-Bench Multilingual"
+score = 75.8
+metric = "score"
+variant = "highest reasoning effort"
+harness = "SWE-agent"
+source = "https://huggingface.co/tencent/Hy3"
+
+[[benchmarks]]
+name = "SWE-Bench Pro"
+score = 57.9
+metric = "score"
+variant = "highest reasoning effort"
+harness = "SWE-agent"
+source = "https://huggingface.co/tencent/Hy3"
+
+[[benchmarks]]
+name = "Terminal-Bench"
+score = 71.7
+metric = "score"
+variant = "highest reasoning effort; 4h timeout; 500 episodes"
+version = "2.1"
+harness = "Terminus 2"
+source = "https://huggingface.co/tencent/Hy3"
+
+[[benchmarks]]
+name = "NL2Repo"
+score = 45.6
+metric = "score"
+variant = "highest reasoning effort; 250 turns; 12000s timeout"
+harness = "Claude Code"
+source = "https://huggingface.co/tencent/Hy3"
+
+[[benchmarks]]
+name = "DeepSWE"
+score = 28
+metric = "score"
+variant = "highest reasoning effort; 2h timeout"
+harness = "mini-swe-agent"
+source = "https://huggingface.co/tencent/Hy3"
+
+[[benchmarks]]
+name = "BrowseComp"
+score = 84.2
+metric = "score"
+variant = "highest reasoning effort"
+harness = "Tencent internal search harness"
+source = "https://huggingface.co/tencent/Hy3"
+
+[[benchmarks]]
+name = "WideSearch"
+score = 76.4
+metric = "score"
+variant = "highest reasoning effort"
+harness = "Tencent internal search harness"
+source = "https://huggingface.co/tencent/Hy3"
+
+[[benchmarks]]
+name = "DeepSearchQA"
+score = 91
+metric = "score"
+variant = "highest reasoning effort"
+harness = "Tencent internal search harness"
+source = "https://huggingface.co/tencent/Hy3"
+
+[[benchmarks]]
+name = "MCP Atlas"
+score = 79.1
+metric = "score"
+variant = "highest reasoning effort; April 2026; 100 tool calls"
+dataset = "500 public tasks"
+harness = "Scale AI"
+source = "https://huggingface.co/tencent/Hy3"
+
+[[benchmarks]]
+name = "Toolathlon"
+score = 48.5
+metric = "score"
+variant = "highest reasoning effort"
+source = "https://huggingface.co/tencent/Hy3"
+
+[[benchmarks]]
+name = "APEX-Agents"
+score = 25.6
+metric = "pass@1"
+variant = "highest reasoning effort"
+source = "https://huggingface.co/tencent/Hy3"
+
+[[benchmarks]]
+name = "ClawEval"
+score = 68.5
+metric = "pass@3"
+variant = "highest reasoning effort"
+source = "https://huggingface.co/tencent/Hy3"
+harness = "Tencent internal harness"
+version = "20260325"
+dataset = "105 queries"
+
+[[benchmarks]]
+name = "WildClawBench"
+score = 53.6
+metric = "score"
+variant = "highest reasoning effort"
+dataset = "35 text-only tasks"
+harness = "OpenClaw"
+source = "https://huggingface.co/tencent/Hy3"
+
+[[benchmarks]]
+name = "SkillsBench"
+score = 55.3
+metric = "average over 3 runs"
+variant = "highest reasoning effort"
+dataset = "79 text-only tasks"
+harness = "Claude Code"
+source = "https://huggingface.co/tencent/Hy3"
+
+[[benchmarks]]
+name = "Humanity's Last Exam"
+score = 53.2
+metric = "score"
+variant = "highest reasoning effort; with tools"
+dataset = "text-only"
+source = "https://huggingface.co/tencent/Hy3"
+
+[[benchmarks]]
+name = "Humanity's Last Exam"
+score = 37
+metric = "score"
+variant = "highest reasoning effort; without tools"
+dataset = "text-only"
+source = "https://huggingface.co/tencent/Hy3"
+
+[[benchmarks]]
+name = "GPQA Diamond"
+score = 90.4
+metric = "score"
+variant = "highest reasoning effort"
+source = "https://huggingface.co/tencent/Hy3"
+
+[[benchmarks]]
+name = "FrontierScience"
+score = 21.3
+metric = "score"
+variant = "highest reasoning effort; research"
+source = "https://huggingface.co/tencent/Hy3"
+
+[[benchmarks]]
+name = "FrontierScience"
+score = 74.8
+metric = "score"
+variant = "highest reasoning effort; olympiad"
+source = "https://huggingface.co/tencent/Hy3"
+
+[[benchmarks]]
+name = "USAMO"
+score = 72
+metric = "score"
+variant = "highest reasoning effort"
+version = "2026"
+source = "https://huggingface.co/tencent/Hy3"
+
+[[benchmarks]]
+name = "MathArena Apex"
+score = 38.7
+metric = "score"
+variant = "highest reasoning effort"
+source = "https://huggingface.co/tencent/Hy3"
+
+[[benchmarks]]
+name = "ArxivMath"
+score = 52.2
+metric = "score"
+variant = "highest reasoning effort"
+source = "https://huggingface.co/tencent/Hy3"
+
+[[benchmarks]]
+name = "HorizonMath"
+score = 7.1
+metric = "pass@12"
+variant = "highest reasoning effort"
+source = "https://huggingface.co/tencent/Hy3"
+
+[[benchmarks]]
+name = "PHYBench"
+score = 77.4
+metric = "score"
+variant = "highest reasoning effort"
+source = "https://huggingface.co/tencent/Hy3"
+
+[[benchmarks]]
+name = "CMT Benchmark"
+score = 37.8
+metric = "score"
+variant = "highest reasoning effort"
+source = "https://huggingface.co/tencent/Hy3"
+
+[[benchmarks]]
+name = "IMOAnswerBench"
+score = 90
+metric = "score"
+variant = "highest reasoning effort"
+source = "https://huggingface.co/tencent/Hy3"
+
+[[benchmarks]]
+name = "SuperChem"
+score = 54.9
+metric = "score"
+variant = "highest reasoning effort"
+source = "https://huggingface.co/tencent/Hy3"
+
+[[benchmarks]]
+name = "CL-bench"
+score = 23.8
+metric = "score"
+variant = "highest reasoning effort"
+source = "https://huggingface.co/tencent/Hy3"
+
+[[benchmarks]]
+name = "CL-bench-life"
+score = 17
+metric = "score"
+variant = "highest reasoning effort"
+source = "https://huggingface.co/tencent/Hy3"
+
+[[benchmarks]]
+name = "AA-LCR"
+score = 73.4
+metric = "score"
+variant = "highest reasoning effort"
 source = "https://huggingface.co/tencent/Hy3"

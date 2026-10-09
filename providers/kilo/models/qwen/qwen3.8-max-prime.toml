@@ -1,0 +1,11 @@
+base_model = "alibaba/qwen3.8-max-prime"
+description = "Qwen3.8 Max Prime is a higher-throughput variant of Qwen3.8 Max from Alibaba's Qwen team, served as a separate SKU at a higher price point. It accepts text, image, and video..."
+
+[[reasoning_options]]
+type = "effort"
+values = ["minimal", "low", "medium", "high", "xhigh"]
+
+[cost]
+input = 4
+output = 12
+cache_read = 0.5

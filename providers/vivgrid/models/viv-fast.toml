@@ -1,0 +1,10 @@
+# Pricing, context window and max output:
+# https://docs.vivgrid.com/models/viv-fast (accessed 2026-09-21)
+base_model = "vivgrid/viv-fast"
+# Effort: reasoning_effort = low|high|max
+reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]
+
+[cost]
+input = 0.13
+output = 0.40
+cache_read = 0.05

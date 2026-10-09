@@ -1,0 +1,13 @@
+# Sources:
+# - https://github.blog/changelog/2026-09-22-claude-opus-5-5-is-now-available-in-github-copilot/
+# - https://docs.github.com/en/copilot/reference/copilot-billing/models-and-pricing
+# - https://www.anthropic.com/claude-opus-5-5
+# - https://platform.claude.com/docs/en/models/opus-5-5/overview
+base_model = "anthropic/claude-opus-5-5"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
+
+[cost]
+input = 4
+output = 20
+cache_read = 0.2
+cache_write = 5

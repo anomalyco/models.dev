@@ -1,0 +1,12 @@
+# Sources: https://developers.openai.com/api/docs/models/gpt-daybreak-red-latest
+# https://developers.openai.com/api/docs/pricing
+base_model = "openai/gpt-5.6-cyber"
+name = "Daybreak Red"
+description = "Alias for advanced cybersecurity models for authorized vulnerability research and security testing"
+reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh", "max"] }]
+
+[cost]
+input = 12.50
+output = 75.00
+cache_read = 1.25
+cache_write = 15.625

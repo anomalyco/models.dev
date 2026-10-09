@@ -1,0 +1,15 @@
+base_model = "xiaomi/mimo-v2.6-flash"
+name = "MiMo-V2.6-Flash Free"
+reasoning_options = []
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0
+output = 0
+cache_read = 0
+
+[limit]
+context = 200_000
+output = 32_000

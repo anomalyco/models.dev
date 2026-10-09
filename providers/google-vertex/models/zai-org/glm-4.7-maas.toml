@@ -1,6 +1,6 @@
 # Source: https://cloud.google.com/gemini-enterprise-agent-platform/generative-ai/pricing
 name = "GLM-4.7"
-description = "GLM vision model for visual reasoning, documents, and multimodal agents"
+description = "GLM model for coding, tool use, and complex reasoning"
 # POST .../endpoints/openapi/chat/completions; toggle with
 # $.chat_template_kwargs.enable_thinking = true | false.
 # https://cloud.google.com/vertex-ai/generative-ai/docs/maas/capabilities/thinking (accessed 2026-06-25)
@@ -30,7 +30,7 @@ context = 200_000
 output = 128_000
 
 [modalities]
-input = ["text", "pdf"]
+input = ["text"]
 output = ["text"]
 
 [provider]

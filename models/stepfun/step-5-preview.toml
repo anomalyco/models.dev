@@ -1,0 +1,20 @@
+name = "Step 5 Preview"
+description = "StepFun's next-generation flagship base model for coding and professional knowledge work, with native text, image, and video input and a 1M-token context window"
+# release_date is StepFun's API catalog first-appearance timestamp (created=1789564127,
+# 2026-09-16 13:08 UTC) — no dated launch announcement was found on the model docs page.
+release_date = "2026-09-16"
+last_updated = "2026-09-20"
+attachment = true
+reasoning = true
+tool_call = true
+structured_output = true
+open_weights = false
+
+[limit]
+context = 1_000_000
+input = 1_000_000
+output = 1_000_000
+
+[modalities]
+input = ["text", "image", "video"]
+output = ["text"]

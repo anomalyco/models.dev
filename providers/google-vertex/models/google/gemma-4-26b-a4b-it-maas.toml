@@ -1,0 +1,23 @@
+# Sources:
+# - https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/maas/google/gemma-4-26b-a4b-it (Experimental)
+# - https://cloud.google.com/gemini-enterprise-agent-platform/generative-ai/pricing
+# Toggle: chat_template_kwargs.enable_thinking = true|false (off by default). Live test 2026-10-08:
+# true returns reasoning_content, false returns none.
+base_model = "google/gemma-4-26b-a4b-it"
+reasoning_options = [{ type = "toggle" }]
+status = "alpha"
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.15
+output = 0.60
+cache_read = 0.015
+
+[limit]
+output = 128_000
+
+[provider]
+npm = "@ai-sdk/openai-compatible"
+api = "https://${GOOGLE_VERTEX_ENDPOINT}/v1/projects/${GOOGLE_VERTEX_PROJECT}/locations/${GOOGLE_VERTEX_LOCATION}/endpoints/openapi"

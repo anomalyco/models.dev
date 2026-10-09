@@ -1,0 +1,20 @@
+# https://ai-gateway.vercel.sh/v1/models (liquid/d1, type = evaluation)
+name = "Liquid d1"
+type = "decision"
+description = "System One decision model for typed classification, routing, and scoring over shared state"
+family = "liquid"
+release_date = "2026-09-29"
+last_updated = "2026-09-29"
+attachment = false
+reasoning = false
+tool_call = false
+structured_output = true
+open_weights = false
+
+[limit]
+context = 65_536
+output = 0
+
+[modalities]
+input = ["text"]
+output = ["text"]

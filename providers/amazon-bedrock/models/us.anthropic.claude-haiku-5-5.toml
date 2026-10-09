@@ -1,0 +1,23 @@
+# Sources: https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-anthropic-claude-haiku-5-5.html
+# https://platform.claude.com/docs/en/about-claude/pricing
+# Geo inference ID us.anthropic.claude-haiku-5-5; Bedrock regional endpoints carry a 10% premium over global endpoints.
+# Toggle: additionalModelRequestFields.thinking.type = adaptive|disabled (Converse); thinking.type (InvokeModel) — disabled only at high effort or below.
+# Effort: additionalModelRequestFields.output_config.effort (Converse); output_config.effort (InvokeModel) — low, medium, high, xhigh, max; default medium.
+# Structured outputs not supported on Bedrock runtime.
+base_model = "anthropic/claude-haiku-5-5"
+name = "Claude Haiku 5.5 (US)"
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
+structured_output = false
+
+[cost]
+input = 0.11
+output = 0.55
+cache_read = 0.011
+cache_write = 0.1375
+
+[[cost.tiers]]
+tier = { type = "context", size = 100_000 }
+input = 0.55
+output = 2.75
+cache_read = 0.055
+cache_write = 0.6875

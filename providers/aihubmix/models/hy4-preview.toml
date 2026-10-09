@@ -1,0 +1,28 @@
+# Off is effort=none; graded levels — no toggle. The same off elsewhere:
+# $.enable_thinking = true|false on the OpenAI-compatible /v1/chat/completions path (verified live 2026-09-11);
+# $.thinking.type = "enabled"|"disabled"|"adaptive" on /v1/messages; $.generationConfig.thinkingConfig on the Gemini path.
+# Effort: none|high
+# $.reasoning_effort on /v1/chat/completions (alias $.reasoning.effort, which is also the Responses field);
+# $.output_config.effort on /v1/messages, subject to model support.
+# Budget:
+# integer $.reasoning.max_tokens on /v1/chat/completions; $.thinking.budget_tokens >= 1024 on /v1/messages;
+# integer $.generationConfig.thinkingConfig.thinkingBudget on the Gemini path (-1 dynamic, 0 off where supported);
+# the Responses path carries effort but has no reasoning-token budget field.
+# https://docs.aihubmix.com/cn/api/unified-inference
+base_model = "tencent/hy4-preview"
+structured_output = true
+
+[interleaved]
+field = "reasoning_content"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "high"]
+
+[[reasoning_options]]
+type = "budget_tokens"
+
+[cost]
+input = 0.845
+output = 2.535
+cache_read = 0.04225

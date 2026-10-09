@@ -1,3 +1,4 @@
+# Scores: https://raw.githubusercontent.com/zai-org/GLM-5/refs/heads/main/resources/bench_53.png
 # Open weights: https://huggingface.co/zai-org/GLM-5.3-Flash (MIT, safetensors)
 name = "GLM-5.3-Flash"
 description = "Native multimodal GLM model for efficient coding and long-horizon agent tasks"
@@ -18,3 +19,52 @@ output = 131_072
 [modalities]
 input = ["text", "image", "video", "pdf"]
 output = ["text"]
+
+[[benchmarks]]
+name = "Terminal-Bench"
+score = 84.3
+metric = "pass@1"
+variant = "max effort"
+version = "2.1"
+harness = "Claude Code 2.1.207"
+source = "https://huggingface.co/zai-org/GLM-5.3-Flash"
+
+[[benchmarks]]
+name = "DeepSWE"
+score = 63.4
+metric = "resolved"
+variant = "max effort"
+version = "1.1"
+harness = "mini-swe-agent"
+source = "https://huggingface.co/zai-org/GLM-5.3-Flash"
+
+[[benchmarks]]
+name = "Agents' Last Exam"
+score = 26.3
+metric = "score"
+variant = "max effort"
+source = "https://huggingface.co/zai-org/GLM-5.3-Flash"
+
+[[benchmarks]]
+name = "AutomationBench"
+score = 48.8
+metric = "pass@1"
+variant = "max effort"
+version = "1.0.6"
+source = "https://huggingface.co/zai-org/GLM-5.3-Flash"
+
+[[benchmarks]]
+name = "Humanity's Last Exam"
+score = 55.3
+metric = "accuracy"
+variant = "max effort; with tools"
+dataset = "full set"
+source = "https://huggingface.co/zai-org/GLM-5.3-Flash"
+
+[[benchmarks]]
+name = "GDPval-AA"
+score = 1773
+metric = "Elo"
+variant = "max effort"
+version = "2"
+source = "https://huggingface.co/zai-org/GLM-5.3-Flash"

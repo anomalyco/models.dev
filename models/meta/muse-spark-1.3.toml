@@ -1,3 +1,5 @@
+# Benchmark methodology: https://research.meta.ai/static/muse-spark-1-3-multimodal-evaluation-methodology
+# Scores: https://research.meta.ai/articles/introducing-muse-1-3/benchmarks/benchmark-scorecard-v6.webp
 # Sources:
 # https://research.meta.ai/blog/introducing-muse-spark-1-3
 # https://dev.meta.ai/docs/models
@@ -22,3 +24,120 @@ output = 131_072
 [modalities]
 input = ["text", "image", "video", "pdf", "audio"]
 output = ["text"]
+
+[[benchmarks]]
+name = "GDPval-AA"
+score = 1754
+metric = "Elo"
+variant = "max effort"
+version = "2"
+harness = "Stirrup"
+source = "https://research.meta.ai/blog/introducing-muse-spark-1-3"
+date = "2026-09-02"
+
+[[benchmarks]]
+name = "JobBench"
+score = 64.9
+metric = "mean rubric score"
+variant = "max effort"
+harness = "OpenCode"
+source = "https://research.meta.ai/blog/introducing-muse-spark-1-3"
+date = "2026-09-02"
+
+[[benchmarks]]
+name = "OSWorld"
+score = 66.9
+metric = "mean partial score"
+variant = "max effort"
+version = "2.0"
+dataset = "08.08"
+harness = "Meta internal evaluation framework"
+source = "https://research.meta.ai/blog/introducing-muse-spark-1-3"
+date = "2026-09-02"
+
+[[benchmarks]]
+name = "OSWorld"
+score = 32.0
+metric = "binary completion rate"
+variant = "max effort"
+version = "2.0"
+dataset = "08.08"
+harness = "Meta internal evaluation framework"
+source = "https://research.meta.ai/blog/introducing-muse-spark-1-3"
+date = "2026-09-02"
+
+[[benchmarks]]
+name = "DeepSearchQA"
+score = 90.3
+metric = "F1"
+variant = "max effort"
+harness = "Meta browser harness"
+source = "https://research.meta.ai/blog/introducing-muse-spark-1-3"
+date = "2026-09-02"
+
+[[benchmarks]]
+name = "Agentic IF Index"
+score = 57.8
+metric = "score"
+variant = "max effort"
+dataset = "Meta internal"
+source = "https://research.meta.ai/blog/introducing-muse-spark-1-3"
+date = "2026-09-02"
+
+[[benchmarks]]
+name = "AutomationBench"
+score = 49.6
+metric = "pass@1"
+variant = "max effort"
+dataset = "public v3 task set"
+source = "https://research.meta.ai/blog/introducing-muse-spark-1-3"
+date = "2026-09-02"
+
+[[benchmarks]]
+name = "MRCR"
+score = 98.5
+metric = "mean sequence-match ratio"
+variant = "max effort"
+version = "2"
+dataset = "8-needle, 256K-512K"
+source = "https://research.meta.ai/blog/introducing-muse-spark-1-3"
+date = "2026-09-02"
+
+[[benchmarks]]
+name = "MRCR"
+score = 98.1
+metric = "mean sequence-match ratio"
+variant = "max effort"
+version = "2"
+dataset = "8-needle, 512K-1M"
+source = "https://research.meta.ai/blog/introducing-muse-spark-1-3"
+date = "2026-09-02"
+
+[[benchmarks]]
+name = "DeepSWE"
+score = 75.4
+metric = "pass@1"
+variant = "max effort"
+version = "1.1"
+harness = "mini-swe-agent"
+source = "https://research.meta.ai/blog/introducing-muse-spark-1-3"
+date = "2026-09-02"
+
+[[benchmarks]]
+name = "SWE-Atlas Codebase QnA"
+score = 59.4
+metric = "pass@1"
+variant = "max effort"
+harness = "mini-swe-agent"
+source = "https://research.meta.ai/blog/introducing-muse-spark-1-3"
+date = "2026-09-02"
+
+[[benchmarks]]
+name = "Terminal-Bench"
+score = 88.8
+metric = "pass@1"
+variant = "max effort"
+version = "2.1"
+harness = "Muse Code"
+source = "https://research.meta.ai/blog/introducing-muse-spark-1-3"
+date = "2026-09-02"
