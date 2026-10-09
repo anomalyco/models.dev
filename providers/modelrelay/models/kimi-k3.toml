@@ -1,11 +1,13 @@
 # Source: GET https://api.modelrelay.ai/v1/models (accessed 2026-10-09)
 # Upstream route: Fireworks accounts/fireworks/models/kimi-k3 (Standard, not the Fast router).
 # Output limit: no published output-only ceiling; ModelRelay reports the full window.
-# Effort: reasoning_effort (Chat Completions) = low|high
+# Always reasoning: none is an alias for low, so it is not listed.
+# Effort: reasoning_effort (Chat Completions) = low|high|max (Moonshot's levels; max verified with a served request 2026-10-09).
+# Effort table: github.com/tensor-systems/modelrelay providers/effort/matrix.go
 # https://docs.modelrelay.ai/core/reasoning-effort
 base_model = "moonshotai/kimi-k3"
 
-reasoning_options = [{ type = "effort", values = ["low", "high"] }]
+reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]
 
 [cost]
 input = 3

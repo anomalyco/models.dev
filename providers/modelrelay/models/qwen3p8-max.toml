@@ -1,11 +1,11 @@
 # Source: GET https://api.modelrelay.ai/v1/models (accessed 2026-10-09)
-# Upstream route: Fireworks accounts/fireworks/models/qwen3p8-max, served text-only here: ModelRelay
-# routes it through its text-only OpenAI-compatible adapter (platform/account/current_catalog.go),
-# and an image part is rejected.
-# Effort: reasoning_effort (Chat Completions) = none|low|medium|high
+# Upstream route: Fireworks accounts/fireworks/models/qwen3p8-max. Image input verified 2026-10-09.
+# Off is reasoning_effort=none (0 reasoning tokens, verified 2026-10-09); graded levels — no toggle.
+# Effort: reasoning_effort (Chat Completions) = none|low|medium|high. Fireworks gives these distinct
+# thinking budgets (high, xhigh and max share one, so only high is listed).
+# Effort table: github.com/tensor-systems/modelrelay providers/effort/matrix.go
 # https://docs.modelrelay.ai/core/reasoning-effort
 base_model = "alibaba/qwen3.8-max"
-attachment = false
 temperature = false
 
 reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high"] }]
@@ -16,4 +16,4 @@ output = 6
 cache_read = 0.25
 
 [modalities]
-input = ["text"]
+input = ["text", "image"]
