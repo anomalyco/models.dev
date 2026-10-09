@@ -1,0 +1,16 @@
+# Toggle: reasoning = {"enabled": true|false} (supported_parameters: reasoning)
+# Effort: reasoning_effort = "low"|"high"|"max" (supported_parameters: reasoning_effort; matches the OpenRouter peer set)
+# Source: https://router.hostinger.com/v1/models
+base_model = "deepseek/deepseek-v4.1-flash"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[cost]
+input = 0.264
+output = 0.792
+cache_read = 0.0084

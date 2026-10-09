@@ -1,0 +1,18 @@
+# The router lists `reasoning` (toggle) and `reasoning_effort` in supported_parameters for glm-5.2.
+# Toggle: reasoning = {"enabled": true|false}
+# Effort: reasoning_effort = "high"|"xhigh" (raw wire levels, matching the OpenRouter peer;
+# the lab maps other levels onto these)
+# Source: https://router.hostinger.com/v1/models
+base_model = "zhipuai/glm-5.2"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["high", "xhigh"]
+
+[cost]
+input = 1.68
+output = 8.4
+cache_read = 0.168
