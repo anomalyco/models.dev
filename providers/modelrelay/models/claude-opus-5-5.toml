@@ -1,0 +1,17 @@
+# Source: GET https://api.modelrelay.ai/v1/models (accessed 2026-10-09)
+# none is accepted and mapped to Anthropic effort low (thinking stays on); default medium.
+# Effort: reasoning_effort (Chat Completions) = none|low|medium|high|xhigh|max
+# https://docs.modelrelay.ai/core/reasoning-effort
+# Input: Chat Completions takes only text and image_url parts; a PDF file part is rejected with 400 (verified 2026-10-09).
+base_model = "anthropic/claude-opus-5-5"
+
+reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh", "max"] }]
+
+[cost]
+input = 4
+output = 20
+cache_read = 0.2
+cache_write = 5
+
+[modalities]
+input = ["text", "image"]

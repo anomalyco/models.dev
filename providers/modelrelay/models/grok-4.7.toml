@@ -1,0 +1,22 @@
+# Source: GET https://api.modelrelay.ai/v1/models (accessed 2026-10-09)
+# none is accepted and mapped to xAI effort low. Long-context band starts above 200,000 input tokens.
+# Effort: reasoning_effort (Chat Completions) = none|low|medium|high|xhigh
+# https://docs.modelrelay.ai/core/reasoning-effort
+base_model = "xai/grok-4.7"
+temperature = false
+
+reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh"] }]
+
+[cost]
+input = 2
+output = 6
+cache_read = 0.5
+
+[[cost.tiers]]
+tier = { type = "context", size = 200_000 }
+input = 4
+output = 12
+cache_read = 1
+
+[modalities]
+input = ["text", "image"]

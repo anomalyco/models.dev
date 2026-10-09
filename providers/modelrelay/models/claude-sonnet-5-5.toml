@@ -1,0 +1,17 @@
+# Source: GET https://api.modelrelay.ai/v1/models (accessed 2026-10-09)
+# none uses between-tools thinking at low effort; default high.
+# Effort: reasoning_effort (Chat Completions) = none|low|medium|high|xhigh|max
+# https://docs.modelrelay.ai/core/reasoning-effort
+# Input: Chat Completions takes only text and image_url parts; a PDF file part is rejected with 400 (verified 2026-10-09).
+base_model = "anthropic/claude-sonnet-5-5"
+
+reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh", "max"] }]
+
+[cost]
+input = 2
+output = 10
+cache_read = 0.2
+cache_write = 2.5
+
+[modalities]
+input = ["text", "image"]

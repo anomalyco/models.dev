@@ -1,0 +1,22 @@
+# Source: GET https://api.modelrelay.ai/v1/models (accessed 2026-10-09)
+# Served by Fireworks, with Together and NEAR AI as failover routes. Their effort ladders
+# differ (Fireworks/Together low|medium|high, NEAR AI none|low|high), so only the values
+# every route accepts are listed. Cost is the Fireworks price, as /v1/models reports.
+# Effort: reasoning_effort (Chat Completions) = low|high
+# https://docs.modelrelay.ai/core/reasoning-effort
+base_model = "zhipuai/glm-5.3-flash"
+temperature = false
+
+reasoning_options = [{ type = "effort", values = ["low", "high"] }]
+
+[cost]
+input = 0.15
+output = 0.5
+cache_read = 0.029
+
+[limit]
+context = 1_048_576
+output = 131_072
+
+[modalities]
+input = ["text", "image"]

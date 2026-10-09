@@ -1,0 +1,19 @@
+# Source: GET https://api.modelrelay.ai/v1/models (accessed 2026-10-09)
+# Upstream route: Fireworks accounts/fireworks/models/kimi-k3 (Standard, not the Fast router).
+# Output limit: no published output-only ceiling; ModelRelay reports the full window.
+# Effort: reasoning_effort (Chat Completions) = low|high
+# https://docs.modelrelay.ai/core/reasoning-effort
+base_model = "moonshotai/kimi-k3"
+
+reasoning_options = [{ type = "effort", values = ["low", "high"] }]
+
+[cost]
+input = 3
+output = 15
+cache_read = 0.3
+
+[limit]
+output = 1_048_576
+
+[modalities]
+input = ["text", "image"]
