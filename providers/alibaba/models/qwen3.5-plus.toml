@@ -1,3 +1,7 @@
+# Sources (accessed 2026-10-09):
+# https://www.alibabacloud.com/help/en/model-studio/model-pricing (Singapore)
+# https://www.alibabacloud.com/help/en/model-studio/context-cache
+# Explicit-only in Singapore: hit 10% of input, creation 125%. Implicit not supported.
 name = "Qwen3.5 Plus"
 description = "Qwen vision-language model for visual reasoning, documents, and agent tasks"
 family = "qwen"
@@ -20,6 +24,8 @@ type = "budget_tokens"
 input = 0.4
 output = 2.4
 reasoning = 2.4
+cache_read = 0.04
+cache_write = 0.5
 
 
 [limit]

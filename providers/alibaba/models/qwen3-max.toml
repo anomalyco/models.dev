@@ -1,3 +1,8 @@
+# Sources (accessed 2026-10-09):
+# https://www.alibabacloud.com/help/en/model-studio/model-pricing (Singapore)
+# https://www.alibabacloud.com/help/en/model-studio/context-cache
+# Implicit hit 20% of input; explicit creation 125%, explicit hit 10%; modes mutually exclusive.
+# cache_read uses implicit 20% where supported, else explicit 10%.
 name = "Qwen3 Max"
 description = "Flagship Qwen3 model for coding agents, complex reasoning, and tool use"
 family = "qwen"
@@ -13,6 +18,8 @@ open_weights = false
 [cost]
 input = 1.2
 output = 6
+cache_read = 0.24
+cache_write = 1.5
 
 [limit]
 context = 262_144
