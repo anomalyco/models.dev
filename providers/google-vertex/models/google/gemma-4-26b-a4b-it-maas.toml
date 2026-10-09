@@ -1,10 +1,11 @@
 # Sources:
 # - https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/maas/google/gemma-4-26b-a4b-it (Experimental)
 # - https://cloud.google.com/gemini-enterprise-agent-platform/generative-ai/pricing
-# Toggle: chat_template_kwargs.enable_thinking = true|false (off by default). Live test 2026-10-08:
-# true returns reasoning_content, false returns none.
+# No usable reasoning control: chat_template_kwargs.enable_thinking (off by default) only takes effect without
+# a system message. Live test 2026-10-08: enable_thinking=true streamed reasoning_content for user-only requests,
+# but none once a system message was present, with or without tools.
 base_model = "google/gemma-4-26b-a4b-it"
-reasoning_options = [{ type = "toggle" }]
+reasoning_options = []
 status = "alpha"
 
 [interleaved]
