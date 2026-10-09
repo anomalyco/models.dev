@@ -1,0 +1,37 @@
+# Sources (accessed 2026-09-16):
+# https://api.verathos.ai/v1/models (model ID, pricing, context length)
+# https://github.com/verathos-ai/verathos/blob/main/docs/api.md (request fields)
+# https://huggingface.co/JonathanColetti/Qwen3.8-27B-Uncensored-GGUF (community
+# fine-tune of Qwen/Qwen3.8-27B, Apache-2.0, created 2026-08-14, updated 2026-08-29)
+#
+# Community fine-tune with no lab identity, so authored inline. Verathos serves
+# the GGUF Q4_K_M build on its mesh runtime, text-only. Output limit follows the
+# Qwen3.8 27B base model. No tool-calling parameters are advertised; the mesh
+# runtime accepts only text response_format.
+# Toggle: enable_thinking = true|false (top-level request field, default true)
+name = "Qwen3.8 27B Uncensored"
+description = "Community Qwen3.8 27B fine-tune tuned to answer without refusals"
+family = "qwen"
+release_date = "2026-08-14"
+last_updated = "2026-08-29"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = false
+structured_output = false
+open_weights = true
+
+[[reasoning_options]]
+type = "toggle"
+
+[cost]
+input = 0.12
+output = 0.90
+
+[limit]
+context = 262_144
+output = 32_768
+
+[modalities]
+input = ["text"]
+output = ["text"]

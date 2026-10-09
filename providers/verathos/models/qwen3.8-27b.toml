@@ -1,0 +1,21 @@
+# Sources (accessed 2026-09-16):
+# https://api.verathos.ai/v1/models (model ID, pricing, context length)
+# https://github.com/verathos-ai/verathos/blob/main/docs/api.md (request fields)
+#
+# Served text-only (FP8 / GGUF Q4_K_M). No tool-calling parameters are
+# advertised and structured output is not documented, so both are disabled.
+# Toggle: enable_thinking = true|false (top-level request field, default true)
+base_model = "alibaba/qwen3.8-27b"
+attachment = false
+tool_call = false
+structured_output = false
+
+[[reasoning_options]]
+type = "toggle"
+
+[cost]
+input = 0.15
+output = 1.10
+
+[modalities]
+input = ["text"]

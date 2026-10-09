@@ -1,0 +1,15 @@
+# Sources (accessed 2026-09-16):
+# https://api.verathos.ai/v1/models (public model list: IDs, USD per 1M token prices, context lengths)
+# https://github.com/verathos-ai/verathos/blob/main/docs/api.md (OpenAI-compatible request fields)
+# https://verathos.ai/skill.txt (API keys, base URL)
+#
+# Reasoning control: `enable_thinking` is a top-level boolean on
+# POST /v1/chat/completions (default true), forwarded to the model's chat
+# template. No effort or budget field is documented.
+# Tool calling: GET /v1/models reports an empty `supported_parameters` list for
+# every model, so no model advertises tools yet.
+name = "Verathos"
+npm = "@ai-sdk/openai-compatible"
+env = ["VERATHOS_API_KEY"]
+api = "https://api.verathos.ai/v1"
+doc = "https://verathos.ai/docs"
