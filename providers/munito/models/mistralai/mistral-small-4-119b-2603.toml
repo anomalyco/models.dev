@@ -1,0 +1,14 @@
+base_model = "mistral/mistral-small-2603"
+name = "Mistral Small 4"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "high"]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.16
+cache_read = 0.016
+output = 0.63

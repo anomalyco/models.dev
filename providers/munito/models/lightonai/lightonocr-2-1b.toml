@@ -1,0 +1,23 @@
+# https://huggingface.co/lightonai/LightOnOCR-2-1B
+name = "LightOnOCR-2-1B"
+description = "Compact open-weights OCR model that turns document pages into clean Markdown"
+release_date = "2026-01-19"
+last_updated = "2026-01-19"
+attachment = true
+reasoning = false
+tool_call = false
+temperature = false
+open_weights = true
+
+[cost]
+# Billed per page: $0.004/page
+input = 0.004
+output = 0.004
+
+[limit]
+context = 131_072
+output = 16_384
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

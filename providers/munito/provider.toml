@@ -1,0 +1,10 @@
+name = "Munito"
+npm = "@ai-sdk/openai-compatible"
+env = ["MUNITO_API_KEY"]
+api = "https://api.munito.ai/inference/v1"
+doc = "https://docs.munito.ai"
+# One endpoint per provider on models.dev: this entry is the OpenAI-compatible
+# /v1/chat/completions + /v1/responses surface. The same key and model ids also
+# work over the Anthropic Messages API at https://api.munito.ai/inference
+# (POST /messages, X-API-Key auth) — see https://docs.munito.ai/api/createMessage.
+# Anthropic-native clients should point their SDK at that base URL directly.

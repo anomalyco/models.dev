@@ -1,0 +1,22 @@
+name = "OCR Fast"
+description = "Lowest-latency document OCR route; billed per page"
+release_date = "2026-09-01"
+last_updated = "2026-09-01"
+attachment = true
+reasoning = false
+tool_call = false
+temperature = false
+open_weights = false
+
+[cost]
+# Billed per page: $0.002/page
+input = 0.002
+output = 0.002
+
+[limit]
+context = 2097152
+output = 16384
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
