@@ -1,0 +1,19 @@
+name = "Gemma 4 26B"
+description = "Gemma 4 26B is a 31B-parameter dense multimodal model from Google DeepMind, handling text, image, and audio input to generate text output."
+family = "gemma"
+release_date = "2026-07-09"
+last_updated = "2026-07-09"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = true
+
+[limit]
+context = 262_144
+output = 32_768
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

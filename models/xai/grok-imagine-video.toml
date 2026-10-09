@@ -1,0 +1,19 @@
+name = "Grok Imagine (Video)"
+description = "x-ai/grok-imagine-video is xAI’s video generation model for creating short clips from text or images, with native synchronized audio such as dialogue, sound effects, and music."
+family = "grok"
+type = "video"
+release_date = "2026-05-18"
+last_updated = "2026-05-18"
+attachment = true
+reasoning = false
+temperature = false
+tool_call = false
+open_weights = false
+
+[limit]
+context = 1_024
+output = 0
+
+[modalities]
+input = ["text", "image"]
+output = ["video"]

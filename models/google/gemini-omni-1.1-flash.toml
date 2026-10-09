@@ -1,0 +1,20 @@
+name = "Gemini Omni 1.1 Flash"
+description = "Gemini Omni 1.1 Flash is Google's high-performance multimodal video generation and editing model, built on native multimodality (processing text, image, audio, and video simultaneously), conversational editing via the Interactions API, and world knowledge combining physics understanding with Gemini's broader knowledge."
+family = "gemini-flash"
+type = "video"
+release_date = "2025-08-27"
+last_updated = "2025-08-27"
+attachment = true
+reasoning = false
+temperature = false
+tool_call = false
+structured_output = true
+open_weights = false
+
+[limit]
+context = 1_048_576
+output = 57_920
+
+[modalities]
+input = ["text", "image", "video", "audio"]
+output = ["video"]

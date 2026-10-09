@@ -1,0 +1,18 @@
+name = "intfloat/e5-base-v2"
+description = "Open-source E5-base-v2 embedding model (768-dim) fine-tuned for retrieval and semantic search."
+type = "embedding"
+release_date = "2024-01-10"
+last_updated = "2024-01-10"
+attachment = false
+reasoning = false
+temperature = false
+tool_call = false
+open_weights = false
+
+[limit]
+context = 512
+output = 768
+
+[modalities]
+input = ["text"]
+output = ["text"]

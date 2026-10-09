@@ -1,0 +1,19 @@
+name = "TTS-1"
+description = "OpenAI: TTS-1 is a text-to-speech model optimised for real-time use cases, converting text into natural-sounding spoken audio with low latency."
+type = "speech"
+release_date = "2023-11-06"
+last_updated = "2023-11-06"
+attachment = false
+reasoning = false
+temperature = false
+tool_call = false
+structured_output = true
+open_weights = false
+
+[limit]
+context = 4096
+output = 4096
+
+[modalities]
+input = ["text"]
+output = ["audio"]

@@ -1,0 +1,19 @@
+name = "Grok Imagine Image"
+description = "Grok Imagine Image is xAI’s text-to-image generation model for creating visuals from prompts, with support for both text and image inputs."
+family = "grok"
+type = "image"
+release_date = "2026-05-15"
+last_updated = "2026-05-15"
+attachment = false
+reasoning = false
+temperature = false
+tool_call = false
+open_weights = false
+
+[limit]
+context = 16_000
+output = 0
+
+[modalities]
+input = ["text"]
+output = ["image"]

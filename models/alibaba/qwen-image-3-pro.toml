@@ -1,0 +1,19 @@
+name = "Qwen Image 3.0 Pro"
+description = "Qwen-Image 3.0 Pro is the high-quality tier of the Qwen-Image 3.0 series, offering stronger text rendering, more realistic textures, and better semantic adherence for both text-to-image (T2I) and image-to-image/editing (I2I)."
+family = "qwen"
+type = "image"
+release_date = "2026-08-05"
+last_updated = "2026-08-05"
+attachment = true
+reasoning = false
+temperature = false
+tool_call = false
+open_weights = true
+
+[limit]
+context = 0
+output = 0
+
+[modalities]
+input = ["text", "image"]
+output = ["image"]

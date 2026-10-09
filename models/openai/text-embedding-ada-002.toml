@@ -1,0 +1,18 @@
+name = "text-embedding-ada-002"
+description = "text-embedding-ada-002 (often called ada v2) is an earlier-generation OpenAI embedding model for general semantic tasks like text and code search, clustering, and classification."
+type = "embedding"
+release_date = "2024-01-25"
+last_updated = "2024-01-25"
+attachment = false
+reasoning = false
+temperature = false
+tool_call = false
+open_weights = false
+
+[limit]
+context = 8_192
+output = 1_536
+
+[modalities]
+input = ["text"]
+output = ["text"]

@@ -1,0 +1,19 @@
+name = "FLUX Dev"
+description = "FLUX.1 [dev] is a 12 billion parameter text-to-image model from Black Forest Labs for high-quality image generation and editing."
+family = "flux"
+type = "image"
+release_date = "2024-08-21"
+last_updated = "2024-08-21"
+attachment = false
+reasoning = false
+temperature = false
+tool_call = false
+open_weights = true
+
+[limit]
+context = 0
+output = 0
+
+[modalities]
+input = ["text"]
+output = ["image"]

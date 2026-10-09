@@ -1,0 +1,19 @@
+name = "Qwen3 14B"
+description = "A versatile dense model offering powerful reasoning abilities paired with efficient dialogue processing."
+family = "qwen"
+release_date = "2025-04-28"
+last_updated = "2025-04-28"
+attachment = false
+reasoning = true
+temperature = true
+tool_call = false
+structured_output = true
+open_weights = true
+
+[limit]
+context = 40_960
+output = 40_960
+
+[modalities]
+input = ["text"]
+output = ["text"]
