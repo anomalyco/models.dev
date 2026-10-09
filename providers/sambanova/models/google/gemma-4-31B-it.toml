@@ -1,7 +1,11 @@
 # SambaNova serves gemma-4-31B-it with a 131k context window and 131k max output tokens.
-# https://api.sambanova.ai/v1/models (probed 2026-10-09)
+# Pricing from GET https://api.sambanova.ai/v1/models (probed 2026-10-09).
 # https://docs.sambanova.ai/cloud/docs/get-started/supported-models
+# Toggle: reasoning enabled via Gemma's thinking mode toggle.
 base_model = "google/gemma-4-31b-it"
+
+[[reasoning_options]]
+type = "toggle"
 
 [cost]
 input = 0.38

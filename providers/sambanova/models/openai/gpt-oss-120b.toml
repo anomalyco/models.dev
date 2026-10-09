@@ -1,5 +1,5 @@
 # SambaNova serves gpt-oss-120b with a 131k context window and 131k max output tokens.
-# https://api.sambanova.ai/v1/models (probed 2026-10-09)
+# Pricing from GET https://api.sambanova.ai/v1/models (probed 2026-10-09).
 # https://docs.sambanova.ai/cloud/docs/get-started/supported-models
 # SambaNova exposes reasoning_effort (low/medium/high) for gpt-oss-120b via the Responses API.
 # https://docs.sambanova.ai/docs/en/features/responses
@@ -14,5 +14,4 @@ input = 0.22
 output = 0.59
 
 [limit]
-context = 131_072
 output = 131_072

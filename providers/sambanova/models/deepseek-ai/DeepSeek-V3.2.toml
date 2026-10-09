@@ -1,7 +1,11 @@
 # SambaNova serves DeepSeek-V3.2 with a 32k context window and 7,168 max output tokens.
-# https://api.sambanova.ai/v1/models (probed 2026-10-09)
+# Pricing from GET https://api.sambanova.ai/v1/models (probed 2026-10-09).
 # https://docs.sambanova.ai/cloud/docs/get-started/supported-models
+# Toggle: reasoning enabled via DeepSeek-V3.2's hybrid thinking/non-thinking modes.
 base_model = "deepseek/deepseek-v3.2"
+
+[[reasoning_options]]
+type = "toggle"
 
 [cost]
 input = 3.00
