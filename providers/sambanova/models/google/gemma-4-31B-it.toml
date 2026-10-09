@@ -1,0 +1,22 @@
+name = "Gemma 4 31B IT"
+description = "Google's Gemma 4 31B instruction-tuned model with multimodal input support"
+release_date = "2025-12-01"
+last_updated = "2025-12-01"
+attachment = true
+reasoning = false
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = true
+
+[cost]
+input = 0.38
+output = 1.15
+
+[limit]
+context = 131_072
+output = 131_072
+
+[modalities]
+input = ["text", "image", "video"]
+output = ["text"]

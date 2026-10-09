@@ -1,0 +1,22 @@
+name = "DeepSeek V3.2"
+description = "DeepSeek V3.2 chat model for general-purpose text generation"
+release_date = "2025-12-01"
+last_updated = "2025-12-01"
+attachment = false
+reasoning = false
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = true
+
+[cost]
+input = 3.00
+output = 4.50
+
+[limit]
+context = 32_768
+output = 7_168
+
+[modalities]
+input = ["text"]
+output = ["text"]

@@ -1,0 +1,22 @@
+name = "Llama 3.3 70B Instruct"
+description = "Meta's Llama 3.3 70B instruction-tuned model for chat and assistant use cases"
+release_date = "2024-12-06"
+last_updated = "2024-12-06"
+attachment = false
+reasoning = false
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = true
+
+[cost]
+input = 0.60
+output = 1.20
+
+[limit]
+context = 131_072
+output = 3_072
+
+[modalities]
+input = ["text"]
+output = ["text"]
