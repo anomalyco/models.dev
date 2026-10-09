@@ -1,0 +1,24 @@
+# https://huggingface.co/Sao10K/L3-70B-Euryale-v2.1
+name = "L3 70B Euryale V2.1"
+description = "Llama 3 70B fine-tune for creative dialogue and roleplay"
+family = "llama"
+release_date = "2024-06-11"
+last_updated = "2024-06-11"
+attachment = false
+reasoning = false
+tool_call = false
+temperature = true
+open_weights = true
+license = "CC-BY-NC-4.0"
+
+[limit]
+context = 8_192
+output = 8_192
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/Sao10K/L3-70B-Euryale-v2.1"

@@ -1,0 +1,10 @@
+# https://novita.ai/models/model-detail/baai-bge-reranker-v2-m3
+# https://novita.ai/docs/api-reference/model-apis-llm-create-rerank
+base_model = "baai/bge-reranker-v2-m3"
+
+[cost]
+input = 0.01
+output = 0.01
+
+[limit]
+context = 8_000

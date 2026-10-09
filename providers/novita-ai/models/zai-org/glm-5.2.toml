@@ -1,4 +1,5 @@
-name = "GLM-5.2"
+# https://novita.ai/models/model-detail/zai-org-glm-5.2
+# Effort: reasoning_effort = none|high|max; none suppresses reasoning. Native graded baseline retained.
 base_model = "zhipuai/glm-5.2"
 
 [[reasoning_options]]
@@ -12,7 +13,6 @@ cache_read = 0.26
 
 [limit]
 context = 1_048_576
-output = 131_072
 
 [interleaved]
 field = "reasoning_content"

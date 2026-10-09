@@ -1,0 +1,15 @@
+# https://novita.ai/models/model-detail/qwen-qwen3.6-35b-a3b
+# Toggle: thinking.type = enabled|disabled
+# Budget: thinking_budget (reasoning tokens)
+base_model = "alibaba/qwen3.6-35b-a3b"
+reasoning_options = [{ type = "toggle" }, { type = "budget_tokens" }]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.248
+output = 1.485
+
+[modalities]
+input = ["text", "image", "video"]

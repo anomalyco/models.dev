@@ -1,0 +1,25 @@
+# https://macaron.im/mindlab/research/introducing-macaron-v1
+# https://huggingface.co/mindlab-research/Macaron-V1-Venti
+# Output limit: https://novita.ai/models/model-detail/mindai-macaron-v1-venti
+name = "Macaron V1 Venti"
+description = "GLM-5.2-based Mixture-of-LoRA model with specialists for chat, personal agents, coding, and generative UI"
+release_date = "2026-07-21"
+last_updated = "2026-07-21"
+attachment = false
+reasoning = true
+tool_call = true
+temperature = true
+open_weights = true
+license = "MIT"
+
+[limit]
+context = 1_048_576
+output = 131_072
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/mindlab-research/Macaron-V1-Venti"

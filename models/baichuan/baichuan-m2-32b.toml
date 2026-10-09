@@ -1,0 +1,24 @@
+# https://huggingface.co/baichuan-inc/Baichuan-M2-32B
+name = "Baichuan M2 32B"
+description = "Open medical model trained for clinical reasoning and patient interaction with on, off, and auto thinking modes"
+family = "baichuan"
+release_date = "2025-08-13"
+last_updated = "2025-08-13"
+attachment = false
+reasoning = true
+tool_call = false
+temperature = true
+open_weights = true
+license = "Apache-2.0"
+
+[limit]
+context = 131_072
+output = 131_072
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/baichuan-inc/Baichuan-M2-32B"

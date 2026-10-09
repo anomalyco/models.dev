@@ -1,0 +1,19 @@
+# https://openrouter.ai/baidu/cobuddy
+# https://novita.ai/models/model-detail/baidu-cobuddy
+name = "CoBuddy"
+description = "Baidu Qianfan model optimized for code generation and tool-using coding agents"
+release_date = "2026-05-06"
+last_updated = "2026-05-06"
+attachment = false
+reasoning = true
+tool_call = true
+temperature = true
+open_weights = false
+
+[limit]
+context = 131_072
+output = 65_536
+
+[modalities]
+input = ["text"]
+output = ["text"]

@@ -1,0 +1,25 @@
+# https://huggingface.co/inclusionAI/Ling-3.0-flash
+# https://openrouter.ai/inclusionai/ling-3.0-flash
+name = "Ling 3.0 Flash"
+description = "Hybrid-linear MoE reasoning model with 124B total and 5.1B active parameters for efficient agents"
+family = "ling"
+release_date = "2026-07-23"
+last_updated = "2026-07-23"
+attachment = false
+reasoning = true
+tool_call = true
+temperature = true
+open_weights = true
+license = "MIT"
+
+[limit]
+context = 262_144
+output = 32_768
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/inclusionAI/Ling-3.0-flash"

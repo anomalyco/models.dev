@@ -1,13 +1,7 @@
-name = "DeepSeek R1 0528 Qwen3 8B"
-description = "DeepSeek reasoning model for multi-step analysis, math, coding, and tools"
-release_date = "2025-05-29"
-last_updated = "2025-05-29"
-attachment = false
-reasoning = true
+# https://novita.ai/models/model-detail/deepseek-deepseek-r1-0528-qwen3-8b
+# Always-on distilled reasoning model; live availability checks returned 503, not MODEL_NOT_FOUND.
+base_model = "deepseek/deepseek-r1-0528-qwen3-8b"
 reasoning_options = []
-temperature = true
-tool_call = false
-open_weights = true
 
 [cost]
 input = 0.06
@@ -15,8 +9,3 @@ output = 0.09
 
 [limit]
 context = 128_000
-output = 32_000
-
-[modalities]
-input = ["text"]
-output = ["text"]

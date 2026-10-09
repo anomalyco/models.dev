@@ -1,0 +1,24 @@
+# https://huggingface.co/deepseek-ai/DeepSeek-R1-0528-Qwen3-8B
+name = "DeepSeek R1 0528 Qwen3 8B"
+description = "DeepSeek R1 0528 distilled into Qwen3 8B for mathematics, coding, and reasoning"
+family = "deepseek-thinking"
+release_date = "2025-05-29"
+last_updated = "2025-05-29"
+attachment = false
+reasoning = true
+tool_call = false
+temperature = true
+open_weights = true
+license = "MIT"
+
+[limit]
+context = 131_072
+output = 32_000
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/deepseek-ai/DeepSeek-R1-0528-Qwen3-8B"

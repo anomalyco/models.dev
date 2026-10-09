@@ -1,7 +1,13 @@
+# Route is absent from Novita's public catalog but still answers live requests (2026-10-09).
+# Always-on reasoning; enable_thinking, chat_template_kwargs.enable_thinking, and effort=none did not suppress it.
+# Preserve curated pricing: /models does not return this route.
 base_model = "minimax/MiniMax-M2.7-highspeed"
 reasoning_options = []
 last_updated = "2026-05-27"
 structured_output = true
+
+[interleaved]
+field = "reasoning_content"
 
 [cost]
 input = 0.6

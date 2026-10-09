@@ -1,0 +1,25 @@
+# https://www.apodex.com/blog/apodex-1.1-scaling-agentic-intelligence-for-complex-work
+# https://huggingface.co/apodex/Apodex-1.1-mini
+# Output limit: https://novita.ai/models/model-detail/apodex-apodex-1.1-mini
+name = "Apodex 1.1 Mini"
+description = "Open-weight 35B MoE model for long-horizon research, forecasting, and tool-assisted work"
+release_date = "2026-08-24"
+last_updated = "2026-08-24"
+attachment = false
+reasoning = true
+tool_call = true
+temperature = true
+open_weights = true
+license = "Apache-2.0"
+
+[limit]
+context = 262_144
+output = 262_144
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/apodex/Apodex-1.1-mini"

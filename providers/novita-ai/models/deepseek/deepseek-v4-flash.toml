@@ -1,5 +1,9 @@
+# https://novita.ai/models/model-detail/deepseek-deepseek-v4-flash
+# Toggle: thinking.type = enabled|disabled
+# Effort: reasoning_effort = high|max (native baseline; low accepted as an alias).
+# Explicit effort=high currently returns MODEL_NOT_FOUND, while default, low, and max requests work; retain the route.
 base_model = "deepseek/deepseek-v4-flash"
-reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["minimal", "low", "medium", "high", "xhigh"] }]
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["high", "max"] }]
 
 [interleaved]
 field = "reasoning_content"
