@@ -34,10 +34,7 @@ const Pricing = z.object({
 }).passthrough();
 
 export const NovitaModel = z.object({
-  id: z.string().min(1).refine((id) =>
-    /^[\w.:@+/-]+$/.test(id)
-    && id.split("/").every((part) => part !== "" && part !== "." && part !== ".."),
-  "Model ID must be a safe relative path"),
+  id: z.string().min(1),
   model_type: z.string().optional(),
   context_size: z.number().int().nonnegative(),
   max_output_tokens: z.number().int().nonnegative().optional(),

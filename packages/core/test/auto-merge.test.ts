@@ -31,24 +31,6 @@ test("requires manual review for bulk additions", async () => {
   expect(decision.reasons).toContain("11 models created (limit 10)");
 });
 
-test("requires manual review for any new Novita model, including non-reasoners", async () => {
-  const decision = await classifyAutoMerge(
-    [{ status: "created", path: "providers/novita-ai/models/new-model.toml" }],
-    async () => fullModel(false),
-  );
-  expect(decision.safe).toBe(false);
-  expect(decision.reasons).toContain("New Novita AI models require manual review");
-});
-
-test("allows existing Novita price/limit updates without changing reasoning controls", async () => {
-  const decision = await classifyAutoMerge(
-    [{ status: "updated", path: "providers/novita-ai/models/reasoner.toml" }],
-    async () => `${fullModel(true, 'reasoning_options = [{ type = "toggle" }]')}\n[cost]\ninput = 1\n`,
-    async () => `${fullModel(true, 'reasoning_options = [{ type = "toggle" }]')}\n[cost]\ninput = 2\n`,
-  );
-  expect(decision.safe).toBe(true);
-});
-
 test("requires manual review for Cloudflare AI Gateway deletions", async () => {
   const decision = await classifyAutoMerge([
     {

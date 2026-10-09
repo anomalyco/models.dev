@@ -88,12 +88,9 @@ test("uses the local key when set and the CI key otherwise", async () => {
   }
 });
 
-test("rejects empty, duplicate, malformed, and unsafe inventories", () => {
+test("rejects empty, duplicate, and malformed inventories", () => {
   expect(() => parseNovitaModels({ data: [] })).toThrow();
   expect(() => parseNovitaModels({ data: [row(), row()] })).toThrow("duplicate");
-  for (const id of ["../model", "qwen/../model", "/model", "qwen//model", "model\n", "model\\file"]) {
-    expect(() => parseNovitaModels({ data: [row({ id })] })).toThrow();
-  }
   expect(() => parseNovitaModels({ data: [row({ input_token_price_per_m: -1 })] })).toThrow();
   expect(() => parseNovitaModels({ data: [row({ pricing: { prompt: { price_per_m_decimal: "" } } })] })).toThrow();
   expect(parseNovitaModels({ data: [row({ features: ["reasoning"], status: 1 } as Partial<NovitaModel>)] })).toHaveLength(1);

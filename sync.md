@@ -254,7 +254,7 @@ GitHub Copilot is implemented in `packages/core/src/sync/providers/github-copilo
 - CI key: `NOVITA_AI_API_KEY`; locally `NOVITA_AI_MODELS_DEV_KEY` takes precedence when set.
 - Sync existing chat models' input/output/cache prices, context/output limits, and context pricing tiers only. Preserve curated capabilities, reasoning controls, dates, descriptions, optional pricing, and leading wire/source comments.
 - Decimal `price_per_m_decimal` fields are USD/MTok; legacy integer fields are scaled by 10,000.
-- New eligible models use the existing missing-model issue-fixer pipeline to open PRs for manual review; Novita model creations cannot auto-merge. Price/limit-only updates use the normal auto-merge policy.
+- New eligible models use the existing missing-model issue-fixer pipeline, which opens separate PRs without enabling auto-merge. The update-only sync PRs use the normal auto-merge policy; no provider-specific exception is needed.
 - Never delete entries absent from the account-scoped inventory. In particular, the list omits working embedding/reranking routes. These remain hand-authored.
 - Skip deferred Sao10K routes, known unadvertised/development aliases, non-chat rows, zero-limit placeholders, and unpriced rows.
 
