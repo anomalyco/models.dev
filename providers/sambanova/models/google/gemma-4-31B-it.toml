@@ -1,10 +1,12 @@
 # SambaNova serves gemma-4-31B-it with a 131k context window and 131k max output tokens.
-# Pricing from GET https://api.sambanova.ai/v1/models (probed 2026-10-09).
+# Pricing from GET https://api.sambanova.ai/v1/models (probed 2026-10-09): USD per million tokens.
 # https://docs.sambanova.ai/cloud/docs/get-started/supported-models
-# SambaNova does not expose a reasoning toggle/effort wire field for gemma-4-31B-it.
+# Toggle: Gemma thinking mode. SambaNova is OpenAI-compatible; same-surface peers
+# (openrouter, deepinfra, chutes) forward enable_thinking or thinking.type.
 base_model = "google/gemma-4-31b-it"
 
-reasoning_options = []
+[[reasoning_options]]
+type = "toggle"
 
 [cost]
 input = 0.38
