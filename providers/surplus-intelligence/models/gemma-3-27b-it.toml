@@ -1,0 +1,12 @@
+base_model = "google/gemma-3-27b-it"
+name = "Gemma 3 27B"
+attachment = false
+tool_call = false
+structured_output = true
+
+[limit]
+context = 40_000
+output = 4_096
+
+[modalities]
+input = ["text"]

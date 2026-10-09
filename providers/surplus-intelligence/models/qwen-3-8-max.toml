@@ -1,0 +1,12 @@
+base_model = "alibaba/qwen3.8-max"
+name = "Qwen 3.8 Max"
+attachment = false
+temperature = false
+structured_output = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["minimal", "low", "medium", "high", "xhigh"]
+
+[modalities]
+input = ["text"]

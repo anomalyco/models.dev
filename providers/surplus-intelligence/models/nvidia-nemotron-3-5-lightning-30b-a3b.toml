@@ -1,0 +1,13 @@
+# Toggle: reasoning.enabled true|false (OpenRouter-style `reasoning` object,
+# forwarded to the seller unchanged); effort: reasoning_effort.
+# Controls mirror the canonical model's lab + same-surface relay peers.
+base_model = "nvidia/nemotron-3.5-lightning"
+name = "NVIDIA Nemotron 3.5 Lightning 30B"
+temperature = false
+
+[[reasoning_options]]
+type = "toggle"
+
+[limit]
+context = 1_000_000
+output = 32_768
