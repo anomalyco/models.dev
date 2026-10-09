@@ -1,0 +1,15 @@
+base_model = "google/gemini-nano-banana-2.1"
+name = "Nano Banana 2.1 (Vertex AI)"
+attachment = false
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "minimal", "high"]
+
+[cost]
+input = 1.5
+output = 7.5
+
+[modalities]
+input = ["text"]
+output = ["text"]
