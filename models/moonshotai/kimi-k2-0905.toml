@@ -1,0 +1,27 @@
+# Facts consolidated from existing host entries for this model:
+# providers/helicone/models/kimi-k2-0905.toml (release date) and
+# providers/openrouter/models/moonshotai/kimi-k2-0905.toml (limits, capabilities).
+# Knowledge cutoff omitted: existing entries disagree.
+name = "Kimi K2 0905"
+description = "Kimi model for long-context chat, coding, and agentic reasoning"
+family = "kimi-k2"
+release_date = "2025-09-05"
+last_updated = "2025-09-05"
+attachment = false
+reasoning = false
+temperature = true
+tool_call = true
+structured_output = true
+open_weights = true
+
+[limit]
+context = 262_144
+output = 98_304
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/moonshotai/Kimi-K2-Instruct-0905"

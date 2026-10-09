@@ -1,0 +1,17 @@
+# Effort, as in the lab entry (adaptive effort, no budget): reasoning_effort = low|medium|high|xhigh|max
+base_model = "anthropic/claude-opus-5"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high", "xhigh", "max"]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 5.0
+output = 25.0
+cache_read = 0.5
+
+[modalities]
+input = ["text", "image"]

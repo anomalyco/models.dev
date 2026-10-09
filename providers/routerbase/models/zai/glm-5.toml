@@ -1,0 +1,14 @@
+# Toggle: thinking.type = enabled|disabled
+base_model = "zhipuai/glm-5"
+reasoning_options = [{ type = "toggle" }]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.9
+output = 2.88
+cache_read = 0.2
+
+[limit]
+context = 202_800

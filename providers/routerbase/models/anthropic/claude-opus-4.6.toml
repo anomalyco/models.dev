@@ -1,0 +1,22 @@
+# Budget: thinking.budget_tokens (forwarded unchanged; tested on Haiku 4.5 and
+# Sonnet 4.5 on the same route). Effort, as in the lab entry: reasoning_effort = low|medium|high|max
+base_model = "anthropic/claude-opus-4-6"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high", "max"]
+
+[[reasoning_options]]
+type = "budget_tokens"
+min = 1_024
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 4.75
+output = 23.75
+cache_read = 0.5
+
+[modalities]
+input = ["text", "image"]

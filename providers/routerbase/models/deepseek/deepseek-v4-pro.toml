@@ -1,0 +1,19 @@
+# Toggle: thinking.type = enabled|disabled (tested 2026-09-29 on the upstream
+# route RouterBase forwards these fields to unchanged: reasons by default,
+# `thinking.type = "disabled"` turns it off; `reasoning_effort = "none"` does
+# not)
+# Effort: reasoning_effort = low|high|max, as in the lab entry (forwarded
+# unchanged)
+base_model = "deepseek/deepseek-v4-pro"
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "high", "max"] }]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 1.479
+output = 2.958
+cache_read = 0.135
+
+[limit]
+output = 393_216
