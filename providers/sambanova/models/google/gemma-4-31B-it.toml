@@ -1,13 +1,7 @@
-name = "Gemma 4 31B IT"
-description = "Google's Gemma 4 31B instruction-tuned model with multimodal input support"
-release_date = "2025-12-01"
-last_updated = "2025-12-01"
-attachment = true
-reasoning = false
-temperature = true
-tool_call = true
-structured_output = true
-open_weights = true
+# SambaNova serves gemma-4-31B-it with a 131k context window and 131k max output tokens.
+# https://api.sambanova.ai/v1/models (probed 2026-10-09)
+# https://docs.sambanova.ai/cloud/docs/get-started/supported-models
+base_model = "google/gemma-4-31b-it"
 
 [cost]
 input = 0.38
@@ -16,7 +10,3 @@ output = 1.15
 [limit]
 context = 131_072
 output = 131_072
-
-[modalities]
-input = ["text", "image", "video"]
-output = ["text"]

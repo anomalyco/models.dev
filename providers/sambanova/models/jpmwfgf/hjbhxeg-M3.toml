@@ -1,15 +1,8 @@
-name = "MiniMax M3"
-description = "MiniMax M3 reasoning model with 1M token context window"
-release_date = "2025-12-01"
-last_updated = "2025-12-01"
-attachment = false
-reasoning = true
-temperature = true
-tool_call = true
-structured_output = true
-open_weights = true
-
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
+# SambaNova serves hjbhxeg-M3 with a 1M context window and 1M max output tokens.
+# https://api.sambanova.ai/v1/models (probed 2026-10-09)
+# https://docs.sambanova.ai/cloud/docs/get-started/supported-models
+# SambaNova is a multi-model relay; no reasoning_effort control is exposed for hjbhxeg-M3.
+base_model = "minimax/hjbhxeg-M3"
 
 [cost]
 input = 0.60
@@ -19,7 +12,3 @@ cache_read = 0.06
 [limit]
 context = 1_048_576
 output = 1_048_576
-
-[modalities]
-input = ["text"]
-output = ["text"]

@@ -1,13 +1,7 @@
-name = "DeepSeek V3.1"
-description = "DeepSeek V3.1 chat model for general-purpose text generation"
-release_date = "2025-08-21"
-last_updated = "2025-08-21"
-attachment = false
-reasoning = false
-temperature = true
-tool_call = true
-structured_output = true
-open_weights = true
+# SambaNova serves DeepSeek-V3.1 with a 131k context window and 7,168 max output tokens.
+# https://api.sambanova.ai/v1/models (probed 2026-10-09)
+# https://docs.sambanova.ai/cloud/docs/get-started/supported-models
+base_model = "deepseek/deepseek-v3.1"
 
 [cost]
 input = 3.00
@@ -16,7 +10,3 @@ output = 4.50
 [limit]
 context = 131_072
 output = 7_168
-
-[modalities]
-input = ["text"]
-output = ["text"]

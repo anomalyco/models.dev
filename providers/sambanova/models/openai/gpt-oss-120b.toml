@@ -1,15 +1,13 @@
-name = "GPT OSS 120B"
-description = "OpenAI's open-weight 120B reasoning model"
-release_date = "2025-08-05"
-last_updated = "2025-08-05"
-attachment = false
-reasoning = true
-temperature = true
-tool_call = true
-structured_output = true
-open_weights = true
+# SambaNova serves gpt-oss-120b with a 131k context window and 131k max output tokens.
+# https://api.sambanova.ai/v1/models (probed 2026-10-09)
+# https://docs.sambanova.ai/cloud/docs/get-started/supported-models
+# SambaNova exposes reasoning_effort (low/medium/high) for gpt-oss-120b via the Responses API.
+# https://docs.sambanova.ai/docs/en/features/responses
+base_model = "openai/gpt-oss-120b"
 
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high"]
 
 [cost]
 input = 0.22
@@ -18,7 +16,3 @@ output = 0.59
 [limit]
 context = 131_072
 output = 131_072
-
-[modalities]
-input = ["text"]
-output = ["text"]
