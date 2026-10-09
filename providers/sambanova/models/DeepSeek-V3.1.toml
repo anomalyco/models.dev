@@ -1,10 +1,14 @@
-# SambaNova serves DeepSeek-V3.1 with a 131k context window and 7,168 max output tokens.
-# Pricing from GET https://api.sambanova.ai/v1/models (probed 2026-10-09): USD per million tokens.
-# https://docs.sambanova.ai/cloud/docs/get-started/supported-models
-# SambaNova does not document a reasoning wire control for DeepSeek-V3.1 on the chat-completions endpoint.
+# Toggle: chat_template_kwargs.enable_thinking = true|false
+# SambaNova DeepSeek hybrid thinking toggle on POST /v1/chat/completions.
+# https://docs.sambanova.ai/docs/en/features/text-generation (DeepSeek-V3.2 thinking mode: chat_template_kwargs.enable_thinking true returns reasoning field; same DeepSeek hybrid family)
+# https://docs.sambanova.ai/docs/api-reference/chat-completions/create-chat-based-completion (EnableThinking: deepseek models; chat_template_kwargs.enable_thinking example true)
+# https://community.sambanova.ai/t/deepseek-v3-1-an-approach-for-thinking-and-tool-use/1330 (V3.1 thinking via extra_body chat_template_kwargs.enable_thinking)
+# Context 128k per https://docs.sambanova.ai/docs/en/models/sambacloud-models (DeepSeek-V3.1 128k, inherits lab 131072); max output 7168 per OpenRouter SambaNova endpoint max_completion_tokens.
+# Pricing USD/MTok per https://cloud.sambanova.ai/plans/pricing: DeepSeek-V3.1 input 3.00 / output 4.50.
 base_model = "deepseek/deepseek-v3.1"
 
-reasoning_options = []
+[[reasoning_options]]
+type = "toggle"
 
 [cost]
 input = 3.00

@@ -1,0 +1,20 @@
+# Toggle: chat_template_kwargs.enable_thinking = true|false
+# SambaNova forwards chat_template_kwargs on POST /v1/chat/completions (OpenAPI additionalProperties true; EnableThinking documented for thinking models).
+# https://docs.sambanova.ai/docs/api-reference/chat-completions/create-chat-based-completion
+# Baseline toggle from first-party providers/minimax/models/MiniMax-M3.toml plus relays providers/openrouter/models/minimax/minimax-m3.toml (reasoning.enabled) and providers/novita-ai/models/minimax/minimax-m3.toml (thinking.type enabled|disabled).
+# MiniMax-M3 text-only on SambaCloud per https://docs.sambanova.ai/docs/en/models/sambacloud-models Note (image/video not accepted); context 1M inherits lab 1048576; output inherits lab 512000 (SambaNova max-output unpublished).
+# Pricing USD/MTok per https://cloud.sambanova.ai/plans/pricing: MiniMax-M3 input 0.60 / output 2.40 / cached 0.06.
+base_model = "minimax/MiniMax-M3"
+
+attachment = false
+
+[[reasoning_options]]
+type = "toggle"
+
+[modalities]
+input = ["text"]
+
+[cost]
+input = 0.60
+output = 2.40
+cache_read = 0.06
