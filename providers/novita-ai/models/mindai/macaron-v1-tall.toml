@@ -1,9 +1,9 @@
 # https://novita.ai/models/model-detail/mindai-macaron-v1-tall
-# Toggle: reasoning_effort = none|high (off|on); this field, not thinking.type, suppresses reasoning.
-# Other accepted effort values were not demonstrated to be distinct depth controls, so only the verified binary control is represented.
+# Effort: reasoning_effort = none|high; this field, not thinking.type, suppresses reasoning with none.
+# Other accepted effort values were not demonstrated to be distinct depth controls, so only the verified off/on effort values are represented.
 # thinking.type=disabled does not suppress reasoning on this route; thinking_budget is not honored.
 base_model = "mindlab/macaron-v1-tall"
-reasoning_options = [{ type = "toggle" }]
+reasoning_options = [{ type = "effort", values = ["none", "high"] }]
 
 [interleaved]
 field = "reasoning_content"

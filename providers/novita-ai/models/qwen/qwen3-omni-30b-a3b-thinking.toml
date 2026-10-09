@@ -1,9 +1,9 @@
 # https://novita.ai/models/model-detail/qwen-qwen3-omni-30b-a3b-thinking
-# Live requests emit no reasoning by default or when disabled; thinking.type=enabled and enable_thinking=true are rejected.
-# This route currently does not expose the underlying checkpoint's thinking mode.
+# https://huggingface.co/Qwen/Qwen3-Omni-30B-A3B-Thinking
+# Native thinking-only checkpoint; no caller toggle/budget is established. Novita rejects the tested enable/effort controls and emits no separate reasoning on the tested prompts, which does not establish that the checkpoint lacks reasoning capability.
 # Preserve the curated input-audio rate, which the inventory does not return; output-audio pricing is inapplicable to this text-output checkpoint.
 base_model = "alibaba/qwen3-omni-30b-a3b-thinking"
-reasoning = false
+reasoning_options = []
 structured_output = true
 
 [cost]

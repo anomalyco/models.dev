@@ -1,8 +1,8 @@
 # https://novita.ai/models/model-detail/deepseek-deepseek-v4-flash-0731
 # Toggle: thinking.type = enabled|disabled
-# Effort: reasoning_effort = high|max (native baseline; low accepted as an alias).
+# Effort: reasoning_effort = low|high|max (current same-surface baseline; all three values verified on Novita).
 base_model = "deepseek/deepseek-v4-flash-0731"
-reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["high", "max"] }]
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "high", "max"] }]
 
 [interleaved]
 field = "reasoning_content"

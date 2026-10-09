@@ -1,7 +1,9 @@
 # https://novita.ai/models/model-detail/baichuan-baichuan-m2-32b
-# Novita does not advertise reasoning for this route; preserve its non-reasoning serving mode, not the lab's broader thinking capability.
+# https://huggingface.co/baichuan-inc/Baichuan-M2-32B
+# Toggle: chat_template_kwargs.thinking_mode = on|off (native OpenAI-compatible serving baseline).
+# Novita probes returned server_overload for default/on/off requests; the toggle is not live-verified on this host. Missing inventory features are not evidence that the checkpoint cannot reason.
 base_model = "baichuan/baichuan-m2-32b"
-reasoning = false
+reasoning_options = [{ type = "toggle" }]
 
 [cost]
 input = 0.07
