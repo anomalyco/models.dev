@@ -1,0 +1,16 @@
+# Source: https://api.lowrouter.ai/v1/models (auto_routing, read 2026-10-09)
+# Routes: Mistral La Plateforme, eu, global and us endpoints.
+# Cost: highest EUR price across those routes (EUR 0.1402 input / 0.561 output
+# per MTok), converted at 1.1186 USD/EUR (ECB reference rate, 2026-10-08).
+# Effort: reasoning_effort = none|high, forwarded unchanged to Mistral
+# (https://lowrouter.ai/docs/guides/request-parameters). Same values as
+# providers/mistral for this model.
+base_model = "mistral/mistral-small-2603"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "high"]
+
+[cost]
+input = 0.1569
+output = 0.6275
