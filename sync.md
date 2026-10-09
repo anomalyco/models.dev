@@ -248,6 +248,16 @@ GitHub Copilot is implemented in `packages/core/src/sync/providers/github-copilo
 - Unmatched rows open missing-model issues, and local entries missing from the source are kept.
 - When removing a fully retired Copilot model, add its pricing-table slug to `IGNORED_ROWS` so stale pricing rows cannot trigger translation or missing-model issues. Models still served to some subscribers (such as Sonnet 4.6 on annual plans) remain eligible.
 
+## Novita AI Notes
+
+- Source: `https://api.novita.ai/openai/v1/models`.
+- CI key: `NOVITA_AI_API_KEY`; locally `NOVITA_AI_MODELS_DEV_KEY` takes precedence when set.
+- Sync existing chat models' input/output/cache prices, context/output limits, and context pricing tiers only. Preserve curated capabilities, reasoning controls, dates, descriptions, optional pricing, and leading wire/source comments.
+- Decimal `price_per_m_decimal` fields are USD/MTok; legacy integer fields are scaled by 10,000.
+- New eligible models use the existing missing-model issue-fixer pipeline to open PRs for manual review; Novita model creations cannot auto-merge. Price/limit-only updates use the normal auto-merge policy.
+- Never delete entries absent from the account-scoped inventory. In particular, the list omits working embedding/reranking routes. These remain hand-authored.
+- Skip deferred Sao10K routes, known unadvertised/development aliases, non-chat rows, zero-limit placeholders, and unpriced rows.
+
 ## Mistral Notes
 
 Mistral is implemented in `packages/core/src/sync/providers/mistral.ts`.

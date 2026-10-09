@@ -57,6 +57,9 @@ export async function classifyAutoMerge(
   if (created + deleted > MAX_MODEL_CHURN) {
     reasons.push(`${created + deleted} models created or deleted (limit ${MAX_MODEL_CHURN})`);
   }
+  if (models.some((change) => change.status === "created" && change.path.startsWith("providers/novita-ai/models/"))) {
+    reasons.push("New Novita AI models require manual review");
+  }
   if (
     models.some((change) =>
       change.status === "deleted"
