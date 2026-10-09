@@ -139,6 +139,19 @@ describe("v2 catalog generation", () => {
         },
       },
     });
+    expect(
+      providersV2["google-vertex"]?.models["gemini-2.5-pro"]?.api[
+        "generate-content"
+      ]?.base_url,
+    ).toBe(
+      "https://${GOOGLE_VERTEX_ENDPOINT}/v1beta1/projects/${GOOGLE_VERTEX_PROJECT}/locations/${GOOGLE_VERTEX_LOCATION}/publishers/google",
+    );
+    expect(
+      providersV2["google-vertex"]?.models["claude-haiku-5-5@default"]?.api
+        .messages?.base_url,
+    ).toBe(
+      "https://${GOOGLE_VERTEX_ENDPOINT}/v1/projects/${GOOGLE_VERTEX_PROJECT}/locations/${GOOGLE_VERTEX_LOCATION}/publishers/anthropic",
+    );
   }, 15_000);
 
   test("validates cache capabilities and duration strings", () => {

@@ -227,9 +227,9 @@ const DEFAULT_NPM_BASE_URLS: Record<string, string> = {
   "@ai-sdk/azure": "https://${AZURE_RESOURCE_NAME}.openai.azure.com/openai/v1",
   "@ai-sdk/google": "https://generativelanguage.googleapis.com/v1beta",
   "@ai-sdk/google-vertex":
-    "https://${GOOGLE_VERTEX_LOCATION}-aiplatform.googleapis.com/v1beta1/projects/${GOOGLE_VERTEX_PROJECT}/locations/${GOOGLE_VERTEX_LOCATION}/publishers/google",
+    "https://${GOOGLE_VERTEX_ENDPOINT}/v1beta1/projects/${GOOGLE_VERTEX_PROJECT}/locations/${GOOGLE_VERTEX_LOCATION}/publishers/google",
   "@ai-sdk/google-vertex/anthropic":
-    "https://${GOOGLE_VERTEX_LOCATION}-aiplatform.googleapis.com/v1/projects/${GOOGLE_VERTEX_PROJECT}/locations/${GOOGLE_VERTEX_LOCATION}/publishers/anthropic",
+    "https://${GOOGLE_VERTEX_ENDPOINT}/v1/projects/${GOOGLE_VERTEX_PROJECT}/locations/${GOOGLE_VERTEX_LOCATION}/publishers/anthropic",
   "@ai-sdk/amazon-bedrock":
     "https://bedrock-runtime.${AWS_REGION}.amazonaws.com",
   "@ai-sdk/mistral": "https://api.mistral.ai/v1",
