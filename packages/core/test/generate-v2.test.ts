@@ -150,7 +150,7 @@ describe("v2 catalog generation", () => {
       providersV2["google-vertex"]?.models["claude-haiku-5-5@default"]?.api
         .messages?.base_url,
     ).toBe(
-      "https://${GOOGLE_VERTEX_ENDPOINT}/v1/projects/${GOOGLE_VERTEX_PROJECT}/locations/${GOOGLE_VERTEX_LOCATION}/publishers/anthropic",
+      "https://${GOOGLE_VERTEX_ENDPOINT}/v1/projects/${GOOGLE_VERTEX_PROJECT}/locations/${GOOGLE_VERTEX_LOCATION}/publishers/anthropic/models",
     );
   }, 15_000);
 
